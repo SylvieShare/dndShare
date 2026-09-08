@@ -187,3 +187,21 @@ describe('character feature actions', () => {
     expect(featureActionEffectPatch({ exhaustion: { level: 6 } }, capped.menu_effects[0])).toBeNull()
   })
 })
+
+
+describe('action editor resource and menu values', () => {
+  it('keeps resource-free target actions usable even if a schema supplied a default cost', () => {
+    const items = new Map([['10', { id: 10, name: 'Эффект', data: { feature_actions: [{ title: 'Применить', resource_cost: 1, target_kind: 'weapon', status_effect_code: 'magic' }] } }]])
+    const [action] = collectCharacterFeatureActions({ abilities_class: [{ id: 10 }], lvl: { level: 1 } }, items)
+    expect(action.resource_cost).toBe(0)
+    expect(action.resource).toBeNull()
+  })
+  it('resolves a local resource when the optional other-item ID is cleared', () => {
+    const items = new Map([['10', { id: 10, name: 'Ресурс', data: { feature_actions: [{ title: 'Применить', uses_resource: true, resource_item_id: null }] } }]])
+    const resource = { key: 'r', source: { valueId: 'abilities_class', entryKey: '10' } }
+    expect(collectCharacterFeatureActions({ abilities_class: [{id:10}], lvl:{level:1} }, items, [resource])[0].resource).toBe(resource)
+  })
+  it('treats an empty maximum as no upper bound', () => {
+    for (const max of [null, '']) expect(featureActionEffectPatch({exhaustion:{level:3}}, {kind:'adjust_counter',value_id:'exhaustion',counter_key:'level',delta:1,min:0,max})).toEqual({exhaustion:{level:4}})
+  })
+})

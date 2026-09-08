@@ -4,7 +4,7 @@ export const RESOURCE_KEYS = [
   'max_use', 'resource_color', 'manual_size', 'max_use_stat', 'max_use_min',
   'max_use_stat_multiplier', 'max_use_bonus', 'max_use_level_multiplier', 'max_use_scaling',
   'rollback_short_rest', 'rollback_long_rest', 'rollback_short_rest_level',
-  'short_rest_recovery', 'short_rest_recovery_level', 'use_resources',
+  'short_rest_recovery', 'short_rest_recovery_level',
 ]
 const BASIC_KEYS = ['desc', 'level']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
@@ -39,6 +39,15 @@ export function hasFieldValue(value) {
   return value !== undefined && value !== null && value !== '' && value !== false
 }
 
+const DEPENDENCY_NAMES = {
+  feature_actions: 'Действие на листе', granted_spells: 'Дарованное заклинание',
+  use_resources: 'Отдельный ресурс', choices: 'Выбор', status_effects: 'Связанный эффект',
+  defenses: 'Защита', derived_effects: 'Изменение показателя', scaling: 'Шаг прогрессии',
+  display_scaling: 'Подпись по уровню', hp_bonuses: 'Бонус хитов', passive_effects: 'Пассивный эффект',
+  roll_triggers: 'Событие броска', roll_adjustments: 'Изменение броска', critical_damage: 'Урон при крите',
+  weapon_damage: 'Дополнительный урон оружия', sheet_widgets: 'Виджет листа', choice_defenses: 'Защита по выбору',
+}
+
 export function abilityEditorProfile(fields, typeId) {
   const bindings = Number(typeId) === 3 ? BINDING_KEYS.slice(0, 2)
     : Number(typeId) === 4 ? BINDING_KEYS.slice(2) : []
@@ -46,7 +55,7 @@ export function abilityEditorProfile(fields, typeId) {
   const resourceFields = fields.filter(field => RESOURCE_KEYS.includes(field.key))
   const blocks = fields.filter(field => !BASIC_KEYS.includes(field.key)
     && !BINDING_KEYS.includes(field.key) && !RESOURCE_KEYS.includes(field.key))
-    .map(field => ({ key: field.key, name: field.name, hint: BLOCK_HINTS[field.key], fields: [field] }))
+    .map(field => ({ key: field.key, name: DEPENDENCY_NAMES[field.key] || field.name, hint: BLOCK_HINTS[field.key], fields: [field], repeatable: field.type === 'object_array' }))
   if (resourceFields.length) blocks.push({ key: 'resources', name: 'Ресурс и восстановление', hint: BLOCK_HINTS.resources, fields: resourceFields })
   blocks.sort((a, b) => {
     const rank = key => BLOCK_ORDER.includes(key) ? BLOCK_ORDER.indexOf(key) : BLOCK_ORDER.length

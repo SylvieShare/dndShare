@@ -122,6 +122,10 @@ ability toggles and `status_effect` for adding or removing linked effects.
 - `GET /api/items/search`, `GET /api/items/search-multi`; оба принимают
   publication scope, включая `sourceVersionId`, и ищут case-insensitive
   подстроку одновременно в русском `name` и английском `nameEn`.
+- `GET /api/items/rule-references?kind=&q=` — типизированные ключи и источники
+  из актуального JSON публичных и собственных предметов; поддерживает `itemId`,
+  `excludeItemId`, `limit`, `offset`. Контракт и типы —
+  [поиск связей](features/ability-editor.md#поиск-связей).
 - `POST /api/items`, `PUT /api/items/{id}`
 - `POST /api/items/{id}/make-base`
 - `POST /api/items/{id}/icon-image` (multipart PNG/WebP, максимум 5 МБ)

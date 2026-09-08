@@ -66,6 +66,7 @@
       @close="picker.open = false"
     />
     <template #footer>
+      <p v-for="(issue, index) in [...editorValidation.values()]" :key="index" role="alert" class="iem-required-hint">{{ issue }}</p>
       <p v-if="saveError" role="alert" class="iem-required-hint">{{ saveError }}</p>
       <div class="iem-actions">
         <span v-if="missingRequiredFields.length" class="iem-required-hint">Заполните обязательные поля</span>
@@ -138,7 +139,8 @@ const missingRequiredFields = computed(() => editableTypeFields.value.filter((fi
   if (typeof value === 'string') return !value.trim()
   return value == null
 }))
-const canSubmit = computed(() => ready.value && !!formName.value.trim() && missingRequiredFields.value.length === 0)
+const editorValidation = reactive(new Map())
+const canSubmit = computed(() => ready.value && !!formName.value.trim() && missingRequiredFields.value.length === 0 && editorValidation.size === 0)
 const picker = reactive({ open: false, typeId: null, onPick: null })
 const iconFileInput = ref(null)
 const iconFile = ref(null)
@@ -146,7 +148,13 @@ const iconPreviewUrl = ref('')
 const iconRemoved = ref(false)
 const hasIconPreview = computed(() => !!iconPreviewUrl.value || (!iconRemoved.value && !!(props.item?.iconImageUrl || props.item?.svg)))
 const fieldEditor = useItemFieldEditor(formData, openItemPicker)
-Object.defineProperty(fieldEditor, 'zIndex', { get: () => props.zIndex })
+Object.defineProperties(fieldEditor, {
+  zIndex: { get: () => props.zIndex },
+  itemId: { get: () => props.item?.id || 0 },
+  itemData: { get: () => formData },
+  itemName: { get: () => formName.value },
+})
+fieldEditor.setValidationError = (key, message) => message ? editorValidation.set(key, message) : editorValidation.delete(key)
 provide(itemFieldEditorKey, fieldEditor)
 
 onBeforeUnmount(revokeIconPreview)

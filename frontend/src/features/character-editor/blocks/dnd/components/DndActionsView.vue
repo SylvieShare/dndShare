@@ -40,7 +40,7 @@
                   <strong>{{ action.title }}</strong>
                   <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
                 </span>
-                <span v-if="action.description" class="dav-description">{{ action.description }}</span>
+                <DndRichContent v-if="action.description" class="dav-description" :html="action.description" @click.stop />
                 <span v-if="linkedActions(action).length" class="dav-linked-actions">
                   <span
                     v-for="linked in linkedActions(action)"
@@ -143,6 +143,7 @@
 </template>
 
 <script setup>
+import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import { computed, ref } from 'vue'
 import { BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'

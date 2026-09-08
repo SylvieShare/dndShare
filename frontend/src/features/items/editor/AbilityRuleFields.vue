@@ -1,10 +1,10 @@
 <template>
   <div class="ability-rule-fields">
-    <AbilityRuleField v-for="field in basicFields" :key="field.key" :field="field" :hide-label="field.key === hideLabelFor" :model-value="data[field.key]" @update:model-value="value => update(field.key, value)" />
+    <AbilityRuleField v-for="field in basicFields" :key="field.key" :field="field" :context-data="data" :hide-label="field.key === hideLabelFor" :model-value="data[field.key]" @update:model-value="value => update(field.key, value)" />
     <details v-if="advancedFields.length" class="ability-advanced" :open="hasAdvancedValues || undefined">
       <summary>Дополнительные настройки <span>{{ advancedFields.length }}</span></summary>
       <div class="ability-rule-fields">
-        <AbilityRuleField v-for="field in advancedFields" :key="field.key" :field="field" :hide-label="field.key === hideLabelFor" :model-value="data[field.key]" @update:model-value="value => update(field.key, value)" />
+        <AbilityRuleField v-for="field in advancedFields" :key="field.key" :field="field" :context-data="data" :hide-label="field.key === hideLabelFor" :model-value="data[field.key]" @update:model-value="value => update(field.key, value)" />
       </div>
     </details>
   </div>

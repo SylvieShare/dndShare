@@ -11,6 +11,8 @@
 .ability-empty > svg { color: var(--accent); }
 .ability-empty p { color: var(--text-2); margin: 8px 0 4px; }
 .ability-rule-row { padding: 12px; }
+.ability-rule-row > details > summary { padding-right: 32px; }
+.ability-action-fields { display: flex; flex-direction: column; gap: 16px; }
 .ability-resource-fields, .ability-rule-rows, .ability-block-options, .ability-source-options { display: flex; flex-direction: column; gap: 12px; }
 .ability-block-options, .ability-source-options { margin-top: 16px; }
 .ability-rule-row summary, .ability-dependency > details > summary { cursor: pointer; color: var(--text-2); font-size: 13px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }

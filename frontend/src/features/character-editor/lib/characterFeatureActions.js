@@ -37,6 +37,10 @@ function statusRequirementsMet(definition, codes) {
   return requirements(definition?.required_status_codes).every(code => codes.has(code))
 }
 
+function numericBound(value, fallback) {
+  return value != null && value !== '' && Number.isFinite(Number(value)) ? Number(value) : fallback
+}
+
 function menuEffects(values, definitions) {
   return (Array.isArray(definitions) ? definitions : []).flatMap((definition, index) => {
     if (definition?.kind !== 'adjust_counter') return []
@@ -45,8 +49,8 @@ function menuEffects(values, definitions) {
     if (!valueId || !counterKey) return []
     const container = values?.[valueId]
     const current = Math.floor(Number(container?.[counterKey]) || 0)
-    const min = Number.isFinite(Number(definition.min)) ? Number(definition.min) : 0
-    const max = Number.isFinite(Number(definition.max)) ? Number(definition.max) : Number.MAX_SAFE_INTEGER
+    const min = numericBound(definition.min, 0)
+    const max = numericBound(definition.max, Number.MAX_SAFE_INTEGER)
     const delta = Number(definition.delta) || 0
     const next = Math.max(min, Math.min(max, current + delta))
     return [{
@@ -74,7 +78,7 @@ function matchingResource(resources, valueId, ownedEntry, definition) {
     )) || null
   }
   const resourceItemId = Number(definition.resource_item_id)
-  if (Number.isFinite(resourceItemId)) {
+  if (Number.isFinite(resourceItemId) && resourceItemId > 0) {
     return resources.find(resource => (
       Number(resource.item_id) === resourceItemId
       && (!definition.resource_key || resource.source?.resourceKey === definition.resource_key)
@@ -110,7 +114,8 @@ function contributedActions(values, itemsById, resources) {
         requirements: requirements(definition.requirements),
         suggest_action_codes: requirements(definition.suggest_action_codes),
         priority: Number(definition.priority) || 0,
-        resource_cost: Math.max(0, Number(definition.resource_cost) || 0),
+        resource_cost: definition.uses_resource || definition.resource_key || definition.resource_pool_key || Number(definition.resource_item_id) > 0
+          ? Math.max(0, Number(definition.resource_cost) || 0) : 0,
         resource: matchingResource(resources, valueId, ownedEntry, definition),
         target_kind: String(definition.target_kind || ''),
         status_effect_code: String(definition.status_effect_code || ''),
@@ -151,8 +156,8 @@ export function featureActionEffectPatch(values, effect) {
   const container = values?.[valueId]
   const currentValue = container && typeof container === 'object' && !Array.isArray(container) ? container : {}
   const current = Math.floor(Number(currentValue[counterKey]) || 0)
-  const min = Number.isFinite(Number(effect.min)) ? Number(effect.min) : 0
-  const max = Number.isFinite(Number(effect.max)) ? Number(effect.max) : Number.MAX_SAFE_INTEGER
+  const min = numericBound(effect.min, 0)
+  const max = numericBound(effect.max, Number.MAX_SAFE_INTEGER)
   const next = Math.max(min, Math.min(max, current + (Number(effect.delta) || 0)))
   if (next === current) return null
   return { [valueId]: { ...currentValue, [counterKey]: next } }

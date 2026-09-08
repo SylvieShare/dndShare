@@ -7,13 +7,14 @@
     </div>
     <div class="ability-editor-mechanics">
       <div class="ability-editor-intro"><h3>Механика и зависимости</h3><p>Добавьте только то, что даёт эта способность.</p></div>
-      <BaseTile v-if="!activeBlocks.length" class="ability-empty"><Sparkles :size="24" /><p>Можно ограничиться описанием.</p><span>Заклинания, ресурсы и другие правила добавляются отдельными блоками.</span></BaseTile>
-      <BaseTile v-for="block in activeBlocks" :key="block.key" class="ability-dependency">
-        <RemoveButton icon="trash" class="ability-dependency-remove" :label="`Удалить блок «${block.name}»`" :title="`Удалить блок «${block.name}»`" @click="pendingRemove = block" />
+      <BaseTile v-if="!entries.length" class="ability-empty"><Sparkles :size="24" /><p>Можно ограничиться описанием.</p><span>Заклинания, ресурсы и другие правила добавляются отдельными блоками.</span></BaseTile>
+      <BaseTile v-for="card in entries" :key="card.id" class="ability-dependency">
+        <RemoveButton icon="trash" class="ability-dependency-remove" :label="`Удалить блок «${cardTitle(card)}»`" :title="`Удалить блок «${cardTitle(card)}»`" @click="pendingRemove = card" />
         <details open>
-          <summary :title="block.hint">{{ block.name }}</summary>
-          <AbilityResourceFields v-if="block.key === 'resources'" :fields="block.fields" :data="data" />
-          <AbilityRuleFields v-else :fields="block.fields" :data="data" :hide-label-for="block.key" @update:data="updateData" />
+          <summary :title="card.block.hint">{{ cardTitle(card) }}</summary>
+          <AbilityActionEditor v-if="card.key === 'feature_actions'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
+          <AbilityResourceFields v-else-if="card.key === 'resources'" :fields="card.block.fields" :data="data" />
+          <AbilityRuleFields v-else :fields="card.block.repeatable ? card.block.fields[0].fields : card.block.fields" :data="card.index == null ? data : data[card.key][card.index]" :hide-label-for="card.index == null ? card.key : ''" :advanced="card.block.repeatable" @update:data="value => update(card, value)" />
         </details>
       </BaseTile>
       <button v-if="availableBlocks.length" type="button" class="ability-add-dependency" @click="adding = true"><Plus :size="16" /> Добавить зависимость</button>
@@ -27,7 +28,7 @@
         <p v-if="!filteredBlocks.length">Подходящих блоков нет.</p>
       </div>
     </AppModalFrame>
-    <ConfirmDialog v-if="pendingRemove" title="Убрать блок?" :message="`Настройки «${pendingRemove.name}» будут удалены из этой формы. Изменение применится после сохранения способности.`" confirm-text="Убрать" :z-index="zIndex + 300" @confirm="remove" @close="pendingRemove = null" @cancel="pendingRemove = null" />
+    <ConfirmDialog v-if="pendingRemove" title="Убрать блок?" :message="`Настройки «${cardTitle(pendingRemove)}» будут удалены из этой формы. Изменение применится после сохранения способности.`" confirm-text="Убрать" :z-index="zIndex + 300" @confirm="remove" @close="pendingRemove = null" @cancel="pendingRemove = null" />
   </div>
 </template>
 
@@ -35,29 +36,32 @@
 import { computed, ref } from 'vue'
 import { AppModalFrame, BaseTile, ConfirmDialog, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
 import { Plus, Sparkles } from '@lucide/vue'
+import AbilityActionEditor from './AbilityActionEditor.vue'
+import { useAbilityDependencies } from './useAbilityDependencies'
 import AbilityResourceFields from './AbilityResourceFields.vue'
 import AbilityRuleFields from './AbilityRuleFields.vue'
-import { abilityEditorProfile, activeAbilityBlocks, addAbilityBlock, removeAbilityBlock } from './abilityEditorProfile'
+import { abilityEditorProfile } from './abilityEditorProfile'
 
 const props = defineProps({ fields: { type: Array, required: true }, data: { type: Object, required: true }, typeId: { type: Number, required: true }, zIndex: { type: Number, default: 4500 } })
 const profile = computed(() => abilityEditorProfile(props.fields, props.typeId))
-const enabled = ref(activeAbilityBlocks(profile.value.blocks, props.data))
-const activeBlocks = computed(() => profile.value.blocks.filter(block => enabled.value.includes(block.key)))
-const availableBlocks = computed(() => profile.value.blocks.filter(block => !enabled.value.includes(block.key)))
+const { entries, available: availableBlocks, add: addDependency, remove: removeDependency, update } = useAbilityDependencies(profile, props.data)
+function cardTitle(card) {
+  const row = card.index == null ? null : props.data[card.key][card.index]
+  const title = row?.title || row?.label
+  return `${card.block.name}${title ? ` · ${title}` : card.index == null ? '' : ` · ${card.index + 1}`}`
+}
 const adding = ref(false)
 const search = ref('')
 const pendingRemove = ref(null)
 const filteredBlocks = computed(() => availableBlocks.value.filter(block => `${block.name} ${block.hint || ''}`.toLocaleLowerCase('ru').includes(search.value.toLocaleLowerCase('ru'))))
 function updateData(value) { Object.assign(props.data, value) }
 function add(block) {
-  addAbilityBlock(block, props.data)
-  enabled.value.push(block.key)
+  addDependency(block)
   adding.value = false
   search.value = ''
 }
 function remove() {
-  removeAbilityBlock(pendingRemove.value, props.data)
-  enabled.value = enabled.value.filter(key => key !== pendingRemove.value.key)
+  removeDependency(pendingRemove.value)
   pendingRemove.value = null
 }
 </script>
