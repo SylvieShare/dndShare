@@ -30,6 +30,8 @@
         <div v-else class="journal-blank"><Feather :size="26" /><strong>Первая глава ещё впереди</strong><span>{{ canEdit ? 'Нажмите «Новый раздел», чтобы начать летопись.' : 'Мастер пока не добавил разделы.' }}</span></div>
       </template>
       <template v-else>
+        <FormTextInput v-if="sessionUuid || canSelectSource" v-model:value="newJournalName" class="journal-name-input" :disabled="busy"
+          aria-label="Название дневника" placeholder="Название дневника (необязательно)" :maxlength="160" />
         <button v-if="sessionUuid || canSelectSource" class="journal-start" type="button" :disabled="busy" @click="createJournal">
           <Plus :size="16" />{{ sessionUuid ? 'Создать дневник кампании' : 'Создать личный дневник' }}
         </button>
@@ -50,7 +52,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { BookMarked, Feather, Plus } from '@lucide/vue'
-import { ConfirmDialog, ToggleSwitch } from '@sylvieshare/share-ui'
+import { ConfirmDialog, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
 import DndDiarySessionCard from '@/features/character-editor/blocks/dnd/components/DndDiarySessionCard.vue'
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import { defaultEvent, defaultSession, normalizeSession, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
@@ -67,6 +69,7 @@ const sections = computed(() => journal.value?.sections || [])
 const { selectedId, selectedSection } = useJournalSectionSelection(journal)
 const eventCount = computed(() => sections.value.reduce((sum, section) => sum + section.events.length, 0))
 const sectionDraft = ref(null)
+const newJournalName = ref('')
 const creatingSection = ref(false)
 const removingSection = ref(null)
 const removingEvent = ref(null)
@@ -79,7 +82,7 @@ function setEditing(id, editing) {
   setInlineEditing(Boolean(editingId.value))
   if (focusEventId.value === id) focusEventId.value = ''
 }
-async function createJournal() { await createRoot('').catch(() => {}) }
+async function createJournal() { await createRoot(newJournalName.value).then(() => { newJournalName.value = '' }).catch(() => {}) }
 function openSection(section) {
   if (locked.value || !canEdit.value) return
   creatingSection.value = !section
