@@ -1,5 +1,5 @@
 <template>
-  <span class="dd">
+  <span class="dd" :style="{ '--dd-size': `${size}px`, '--dd-font-size': `${Math.max(12, Math.round(size * .38))}px` }">
     <template v-for="(g, gi) in groups" :key="gi">
       <span v-if="gi > 0" class="dd-op dd-op-between">+</span>
       <span class="dd-grp" :style="{ '--dc': g.typeColor }">
@@ -11,7 +11,7 @@
               <SystemDie
                 v-if="part.diceSides"
                 :sides="part.diceSides"
-                :size="42"
+                :size="size"
                 :color="g.typeColor"
               />
               <span v-else class="dd-text">{{ dieText(part) }}</span>
@@ -42,6 +42,7 @@ const props = defineProps({
   parts: { type: Array, default: () => [] },
   modifier: { type: Number, default: 0 },
   defaultColor: { type: String, default: 'var(--warning)' },
+  size: { type: Number, default: 42 },
 })
 
 const groups = computed(() => {
@@ -94,7 +95,7 @@ function dieText(part) {
 
 .dd-count,
 .dd-text,
-.dd-term { color: var(--dc); font-size: 16px; font-weight: 800; }
+.dd-term { color: var(--dc); font-size: var(--dd-font-size); font-weight: 800; }
 
 .dd-type {
   color: var(--dc);
@@ -110,6 +111,6 @@ function dieText(part) {
 .dd-op-between {
   display: inline-flex;
   align-items: center;
-  height: 42px;
+  height: var(--dd-size);
 }
 </style>

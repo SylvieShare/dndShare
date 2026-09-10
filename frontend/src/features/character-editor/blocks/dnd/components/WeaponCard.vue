@@ -43,11 +43,11 @@
 
     <template #default="{ close: closeMenu }">
       <RowActionItem
-        v-if="ctx.item(entry)"
+        v-if="ctx.item(entry) && !hasDamage"
         action="attack"
         @click="rollAttack(closeMenu)"
       >Бросок на атаку</RowActionItem>
-      <DamageRollOptions v-if="hasDamage" :actions="weaponDamageActions" :versatile="hasTwoHandedDamage" @roll="options => rollDamage(closeMenu, options)" />
+      <DamageRollOptions v-if="hasDamage" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
 
       <RowActionSeparator v-if="ctx.item(entry)" />
       <RowActionItem
@@ -122,9 +122,9 @@ function editWeapon(closeMenu) {
   closeMenu()
   openEditor()
 }
-function rollAttack(closeMenu) {
+function rollAttack(closeMenu, options) {
   closeMenu()
-  ctx.rollAttack(props.entry)
+  ctx.rollAttack(props.entry, options)
 }
 function rollDamage(closeMenu, options) {
   closeMenu()

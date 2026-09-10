@@ -16,6 +16,8 @@ function abilityRows(values, itemsById, field) {
       return [{
         ...rule,
         key: `${valueId}:${entry.uid || entry.id}:${field}:${field === 'weapon_damage' ? rule.key : index}`,
+        requires_damage_key: field === 'weapon_damage' && rule.requires_damage_key
+          ? `${valueId}:${entry.uid || entry.id}:${field}:${rule.requires_damage_key}` : null,
         owner_level: ownerLevel,
         weapon_uid: item.data?.weapon && ['weapon_damage', 'critical_damage'].includes(field) ? entry.uid : null,
         source_label: item.name || 'Способность',

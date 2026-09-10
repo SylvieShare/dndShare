@@ -74,4 +74,7 @@ export function renameWeaponDamageKey(owner, rule, key) {
   for (const widget of owner.sheet_widgets || []) {
     if (widget.value_source === 'weapon_damage' && widget.weapon_damage_key === previous) widget.weapon_damage_key = key
   }
+  for (const dependent of owner.weapon_damage || []) {
+    if (dependent.requires_damage_key === previous) dependent.requires_damage_key = key
+  }
 }

@@ -56,6 +56,16 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 			want.([]any)[index] = replacement
 		}
 	}
+	var conditionalFields []any
+	if err := json.Unmarshal([]byte(strings.Split(schemaConditionalWeaponDamageSQL, "$fields$")[1]), &conditionalFields); err != nil {
+		t.Fatal(err)
+	}
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] == "weapon_damage" {
+			field["fields"] = append(conditionalFields, field["fields"].([]any)...)
+		}
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

@@ -2,6 +2,13 @@
   <div class="ability-action-fields">
     <AbilityRuleFields :fields="fieldsFor(['label'])" :data="data" @update:data="update" />
     <RuleKeyField :model-value="data.key" :title="data.label" :used-keys="otherKeys" @update:model-value="setKey" />
+    <AbilityRuleFields :fields="fieldsFor(['condition', 'attack_mode'])" :data="data" @update:data="update" />
+    <FormField v-if="otherRules.length || data.requires_damage_key" label="Требует другого переключателя" title="Этот урон можно включить только вместе с выбранным правилом того же предмета или способности." vertical>
+      <FormSelect :value="data.requires_damage_key || ''" aria-label="Требует другого переключателя" @update:value="value => data.requires_damage_key = value || undefined">
+        <option value="">Независимый переключатель</option>
+        <option v-for="rule in otherRules" :key="rule.key" :value="rule.key">{{ rule.label || rule.key }}</option>
+      </FormSelect>
+    </FormField>
     <AbilityRuleFields :fields="fieldsFor(['weapon_kind', 'dice'])" :data="data" @update:data="update" />
     <FormField label="Количество костей растёт с уровнем" title="Источник уровня указан ниже и настраивается у способности.">
       <ToggleSwitch :model-value="scaled" aria-label="Количество костей растёт с уровнем" @update:model-value="setScaled" />
@@ -17,10 +24,11 @@
 </template>
 <script setup>
 import { computed, inject, onScopeDispose, watchEffect } from 'vue'
-import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
+import { FormField, FormSelect, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
 import { weaponDamageLabel } from '@/shared/lib/abilityProgression'
 import { renameWeaponDamageKey } from './actionEditorModel'
+import { weaponDamageDependencyError } from '@/shared/lib/weaponDamageOptions'
 import RuleKeyField from './RuleKeyField.vue'
 import AbilityLevelSource from './AbilityLevelSource.vue'
 import AbilityRuleFields from './AbilityRuleFields.vue'
@@ -38,6 +46,7 @@ const fieldsFor = keys => keys.map(key => props.fields.find(field => field.key =
 const preview = computed(() => Array.from({ length: 20 }, (_, i) => ({ level: i + 1, value: weaponDamageLabel(props.data, i + 1) }))
   .filter((row, i, rows) => row.value && (!i || row.value !== rows[i - 1].value)))
 const otherKeys = computed(() => (editor.itemData?.weapon_damage || []).filter(row => row !== props.data).map(row => row.key))
+const otherRules = computed(() => (editor.itemData?.weapon_damage || []).filter(row => row !== props.data && row.key))
 function setKey(value) { renameWeaponDamageKey(editor.itemData || {}, props.data, value) }
 function update(value) { Object.assign(props.data, value) }
 function setScaled(value) {
@@ -47,7 +56,7 @@ function setScaled(value) {
 const validationKey = Symbol('weapon-damage')
 watchEffect(() => {
   const count = Number(scaled.value ? props.data.dice_count_level_divisor : props.data.dice_count)
-  editor.setValidationError?.(validationKey, !props.data.key || otherKeys.value.includes(props.data.key) || !props.data.dice || !Number.isInteger(count) || count < 1 ? 'Дополнительный урон: задайте уникальный ключ, кость и целое положительное количество или шаг уровней.' : '')
+  editor.setValidationError?.(validationKey, !props.data.key || otherKeys.value.includes(props.data.key) || !props.data.dice || !Number.isInteger(count) || count < 1 ? 'Дополнительный урон: задайте уникальный ключ, кость и целое положительное количество или шаг уровней.' : weaponDamageDependencyError(editor.itemData?.weapon_damage || [], props.data))
 })
 onScopeDispose(() => editor.setValidationError?.(validationKey, ''))
 </script>

@@ -148,6 +148,7 @@ import {
   weaponEntryToOwnedEntry,
 } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 import { selectedWeaponDamageExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
+import { damageAttackMode, selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
 import {
   improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
   PRESET_ATTACK_ART_ITEM_IDS,
@@ -266,7 +267,7 @@ function weaponEffectContext(entry) {
   return {
     kind: 'attack',
     abilitySuggestId: weaponAbilitySuggestId(entry, base, propertyItems(entry), statsVar.value),
-    weaponKind: base?.data?.is_long_range ? 'ranged' : 'melee',
+    weaponKind: entry._attackMode === 'thrown' || base?.data?.is_long_range ? 'ranged' : 'melee',
     targetId: entry.uid,
   }
 }
@@ -298,7 +299,8 @@ const improvisedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM
 
 const dice = useDiceStore()
 
-function rollAttack(entry) {
+function rollAttack(entry, { actionKeys = [] } = {}) {
+  entry = { ...entry, _attackMode: damageAttackMode(weaponDamageActions(entry), actionKeys) }
   const bonus = attackBonus(entry)
   const context = weaponEffectContext(entry)
   const resolved = charCtx.characterRolls?.resolve?.('auto', context)
@@ -339,14 +341,16 @@ function rollPresetDamage(kind, critical = false) {
 }
 
 function rollDamage(entry, { critical = false, twoHanded = false, actionKeys = [] } = {}) {
+  const actions = weaponDamageActions(entry)
+  entry = { ...entry, _attackMode: damageAttackMode(actions, actionKeys) }
+  if (entry._attackMode === 'thrown') twoHanded = false
   const baseExpression = critical
     ? (twoHanded ? criticalDamageExpressionTwoHanded(entry, extraCriticalDice(entry)) : criticalDamageExpression(entry, extraCriticalDice(entry)))
     : (twoHanded ? damageExpressionTwoHanded(entry) : damageExpression(entry))
-  const actions = weaponDamageActions(entry)
   const primary = damagePartsRaw(entry)[0] || {}
   const expr = selectedWeaponDamageExpression({ baseExpression, actions, actionKeys, critical, damageType: primary.type, damageTypeColor: primary.typeColor })
   if (!expr || expr === '0') return
-  const labels = actions.filter(action => actionKeys.includes(action.key)).map(action => action.label || action.source_label)
+  const labels = selectedDamageActions(actions, actionKeys).map(action => action.label || action.source_label)
   dice.roll(`${critical ? 'Критический урон' : 'Урон'}${twoHanded ? ' (2р)' : ''}: ${itemTitle(entry)}${labels.length ? ` — ${labels.join(', ')}` : ''}`, expr)
 }
 
@@ -372,7 +376,7 @@ function weaponDamageActions(entry) {
 function extraCriticalDice(entry) {
   return charCtx.characterCombatEffects?.extraCriticalWeaponDice?.({
     weaponUid: entry.uid,
-    melee: !item(entry)?.data?.is_long_range,
+    melee: entry._attackMode !== 'thrown' && !item(entry)?.data?.is_long_range,
   }) || 0
 }
 

@@ -3,24 +3,41 @@
     <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
       <ToggleSwitch v-model="critical" aria-label="Критическое попадание" />
     </FormField>
-    <FormField v-if="versatile" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
+    <FormField v-if="versatile && !thrown" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
       <ToggleSwitch v-model="twoHanded" aria-label="Двумя руками" />
     </FormField>
-    <FormField v-for="action in actions" :key="action.key" :label="`${action.label || action.source_label} · ${action.dice_count}${action.dice.replace('d', 'к')}`" :title="action.once_per_turn ? 'Добавляйте только при выполнении условий способности, не чаще одного раза за ход. Ход не отслеживается автоматически.' : 'Добавить урон этой способности к текущему броску.'">
-      <ToggleSwitch :model-value="selected.includes(action.key)" :aria-label="action.label || action.source_label" @update:model-value="value => select(action.key, value)" />
-    </FormField>
-    <RowActionItem action="damage" @click="$emit('roll', { critical, twoHanded: versatile && twoHanded, actionKeys: selected })">Бросить урон</RowActionItem>
+    <div v-for="option in menuOptions" :key="option.key" :class="{ 'damage-dependent-option': option.nested }">
+      <FormField :label="option.label" :title="option.hint">
+        <span v-if="option.damageParts.length" class="damage-option-formula" :aria-label="`Добавит ${option.formula}`" role="img">
+          <span aria-hidden="true">+</span>
+          <DamageDice :parts="option.damageParts" :size="26" :default-color="option.disabled ? 'var(--text-muted)' : 'var(--accent-soft)'" aria-hidden="true" />
+        </span>
+        <ToggleSwitch :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => select(option.key, value)" />
+      </FormField>
+      <small v-if="option.condition" class="damage-option-condition">{{ option.condition }}</small>
+    </div>
+    <RowActionItem v-if="canAttack" action="attack" @click="$emit('attack', options)">Бросок на атаку</RowActionItem>
+    <RowActionItem action="damage" @click="$emit('roll', options)">Бросить урон</RowActionItem>
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-defineProps({ actions: { type: Array, default: () => [] }, versatile: Boolean })
-defineEmits(['roll'])
+import DamageDice from './DamageDice.vue'
+import { damageAttackMode, selectedDamageActions, toggleDamageAction, weaponDamageMenuOptions } from '@/shared/lib/weaponDamageOptions'
+const props = defineProps({ actions: { type: Array, default: () => [] }, versatile: Boolean, canAttack: Boolean })
+defineEmits(['roll', 'attack'])
 const critical = ref(false), twoHanded = ref(false), selected = ref([])
-function select(key, value) { selected.value = value ? [...new Set([...selected.value, key])] : selected.value.filter(entry => entry !== key) }
+const thrown = computed(() => damageAttackMode(props.actions, selected.value) === 'thrown')
+const menuOptions = computed(() => weaponDamageMenuOptions(props.actions, selected.value, critical.value))
+const options = computed(() => ({ critical: critical.value, twoHanded: props.versatile && twoHanded.value && !thrown.value,
+  actionKeys: selectedDamageActions(props.actions, selected.value).map(action => action.key) }))
+function select(key, value) { selected.value = toggleDamageAction(props.actions, selected.value, key, value) }
 </script>
 <style scoped>
 .damage-roll-options { display: flex; flex-direction: column; gap: 10px; padding: 8px; min-width: 240px; }
+.damage-dependent-option { margin-left: 8px; padding-left: 10px; border-left: 2px solid var(--border); }
+.damage-option-condition { display: block; max-width: 300px; color: var(--text-muted); font-size: 11px; line-height: 1.4; margin-top: 4px; }
+.damage-option-formula { display: inline-flex; align-items: center; gap: 3px; flex: none; white-space: nowrap; color: var(--text-muted); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
 </style>

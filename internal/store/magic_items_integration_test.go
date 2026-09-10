@@ -112,5 +112,11 @@ INSERT INTO dndshare.item VALUES
 
 	exec(schemaExplicitInventoryWeaponsSQL)
 	check(`SELECT f->>'hint' LIKE '%Переместить в оружие%' FROM dndshare.item_type,jsonb_array_elements(fields) f WHERE id=19 AND f->>'key'='weapon'`)
+	exec(`UPDATE dndshare.item_type SET fields=fields || '[{"key":"weapon_damage","type":"object_array","fields":[{"key":"dice","type":"dice"}]}]'::jsonb WHERE id IN (4,19);
+INSERT INTO dndshare.item VALUES (261,'Дварфийский метатель',19,NULL,'{"desc":"keep","weapon":{"base_item_id":53,"magic_bonus":3}}');`)
+	exec(schemaConditionalWeaponDamageSQL)
+	check(`SELECT data->>'desc'='keep' AND data#>>'{weapon,base_item_id}'='53' AND data#>>'{weapon_damage,0,attack_mode}'='thrown' AND data#>>'{weapon_damage,1,requires_damage_key}'='throw' AND data#>>'{weapon_damage,1,dice_count}'='1' FROM dndshare.item WHERE id=261`)
+	check(`SELECT count(*)=2 FROM dndshare.item_type,jsonb_array_elements(fields) f,jsonb_array_elements(f->'fields') child WHERE id IN (4,19) AND f->>'key'='weapon_damage' AND child->>'key'='requires_damage_key'`)
+	check(`SELECT (SELECT f->'fields' FROM dndshare.item_type,jsonb_array_elements(fields) f WHERE id=4 AND f->>'key'='weapon_damage')=(SELECT f->'fields' FROM dndshare.item_type,jsonb_array_elements(fields) f WHERE id=19 AND f->>'key'='weapon_damage')`)
 
 }
