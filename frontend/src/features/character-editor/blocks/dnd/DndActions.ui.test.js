@@ -8,6 +8,16 @@ const editorSource = readFileSync(fileURLToPath(new URL('./components/DndActions
 const resourcesSource = readFileSync(fileURLToPath(new URL('../generic/BlockResources.vue', import.meta.url)), 'utf8')
 
 describe('character action block', () => {
+  it('floats the icon and single charge together so descriptions regain full width below', () => {
+    const media = viewSource.slice(viewSource.indexOf('class="dav-action-media"'), viewSource.indexOf('class="dav-copy"'))
+    expect(media).toContain('class="dav-action-icon"')
+    expect(media).toContain('v-if="resourceTotal(action) === 1"')
+    expect(media).toContain("$emit('toggle-resource', action, 1)")
+    expect(viewSource).toContain('.dav-action { display: flow-root;')
+    expect(viewSource).toContain('.dav-action-media { float: left;')
+    expect(viewSource).not.toContain('.dav-copy { display: flex;')
+    expect(viewSource).toContain('.dav-resource--stacked { clear: both;')
+  })
   it('groups action economy, uses source icons and resolves linked action tooltips', () => {
     expect(viewSource).toContain('v-for="group in groups"')
     expect(viewSource).not.toContain('Источник: {{ action.source_label }}')

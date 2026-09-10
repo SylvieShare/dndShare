@@ -6,6 +6,11 @@ rules helpers. Handbook navigation/data ownership is described in
 
 ## Editing
 
+`ItemSourcePicker` is shared by the item editor and character source settings
+(including the creation wizard). Its “Выбрать все” checkbox selects or clears
+the whole source list, not just search results, and indicates partial selection.
+Embedded mode reuses the same list inside an existing settings dialog.
+
 `ItemEditModal.vue` renders `item_type.fields`. Supported field renderers
 include scalar text/number/bool, description, suggest/suggest arrays, system dice,
 `int_by_suggest`, object/object arrays and nested blocks. It uses shared form,

@@ -31,11 +31,23 @@
               'action-menu-source--open': open,
             }"
           >
-            <span class="dav-action-icon" aria-hidden="true">
-              <ItemIcon v-if="action.item" :item="action.item" :size="34" :fallback-to-type="false" />
-              <component v-else :is="groupIcon(action.action_type)" :size="19" :stroke-width="2" />
+            <span class="dav-action-media">
+              <span class="dav-action-icon" aria-hidden="true">
+                <ItemIcon v-if="action.item" :item="action.item" :size="34" :fallback-to-type="false" />
+                <component v-else :is="groupIcon(action.action_type)" :size="19" :stroke-width="2" />
+              </span>
+              <span v-if="resourceTotal(action) === 1" class="dav-resource dav-resource--single" :title="action.resource.title">
+                <SpellSlotSphere
+                  :spent="resourceValue(action) < 1"
+                  :size="RESOURCE_ORB_SIZE"
+                  :color="action.resource.color_point || undefined"
+                  :interactive="manage"
+                  @pointerdown.stop
+                  @click.stop="manage && $emit('toggle-resource', action, 1)"
+                />
+              </span>
             </span>
-            <span class="dav-copy">
+            <div class="dav-copy">
               <span class="dav-title-row">
                 <strong>{{ action.title }}</strong>
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
@@ -71,21 +83,7 @@
                   />
                 </span>
               </span>
-            </span>
-            <span
-              v-if="resourceTotal(action) === 1"
-              class="dav-resource dav-resource--single"
-              :title="action.resource.title"
-            >
-              <SpellSlotSphere
-                :spent="resourceValue(action) < 1"
-                :size="RESOURCE_ORB_SIZE"
-                :color="action.resource.color_point || undefined"
-                :interactive="manage"
-                @pointerdown.stop
-                @click.stop="manage && $emit('toggle-resource', action, 1)"
-              />
-            </span>
+            </div>
           </article>
         </template>
 
@@ -258,22 +256,25 @@ function hideActionTooltip() {
 .dav-group--free { --dav-tone: var(--success); }
 .dav-group-head { width: 100%; display: grid; grid-template-columns: auto auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
-.dav-action { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 9px; align-items: start; padding: 10px 2px; cursor: default; transition: background-color .12s; }
+.dav-action { display: flow-root; padding: 10px 2px; cursor: default; transition: background-color .12s; }
+.dav-action-media { float: left; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 36px; margin: 0 9px 5px 0; }
 .dav-action--clickable { cursor: pointer; }
 .dav-action--clickable:hover, .dav-action.action-menu-source--open { background: color-mix(in srgb, var(--dav-tone) 5%, transparent); }
 .dav-action-icon { display: grid; width: 36px; height: 36px; place-items: center; overflow: hidden; color: var(--dav-tone); }
 .dav-action-icon :deep(.item-icon) { width: 34px; height: 34px; }
-.dav-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.dav-copy { min-width: 0; overflow-wrap: anywhere; }
 .dav-title-row { display: flex; min-width: 0; align-items: center; gap: 6px; }
 .dav-title-row strong { min-width: 0; color: var(--text-1); font-size: 12px; line-height: 1.25; }
-.dav-description { color: var(--text-2); font-size: 10px; line-height: 1.4; }
+.dav-description { margin-top: 3px; color: var(--text-2); font-size: 10px; line-height: 1.4; }
+.dav-description :deep(ul), .dav-description :deep(ol) { list-style-position: inside; margin-left: 0; }
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
-.dav-requirements { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; color: var(--text-muted); font-size: 9px; line-height: 1.35; }
+.dav-requirements { display: block; margin-top: 2px; color: var(--text-muted); font-size: 9px; line-height: 1.35; }
+.dav-requirements > span { display: block; margin-top: 2px; }
 .dav-requirements > span::before { margin-right: 5px; color: var(--dav-tone); content: '•'; }
 .dav-resource { display: flex; min-width: 0; align-items: center; gap: 6px; }
 .dav-resource--single { align-self: center; }
-.dav-resource--stacked { flex-wrap: wrap; margin-top: 4px; }
+.dav-resource--stacked { clear: both; flex-wrap: wrap; padding-top: 4px; }
 .dav-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .dav-group :deep(.ram-custom-trigger:has(.dav-resource:active)) { transform: none; }
 .dav-group :deep(.ram-custom-trigger:has(.dav-action:not(.dav-action--clickable)):active) { transform: none; }

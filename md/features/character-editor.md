@@ -163,7 +163,12 @@ sortable collections use `useSortable`. Full selection rules are documented in
 `md/frontend.md`.
 
 Spellbook settings use `DndSpellbookSettingsModal`; both character settings
-entry points reuse `ContentSourcesModal`. Handbook item viewing and search are
+entry points reuse `ContentSourcesModal`. The wizard and character settings use
+the item editor's `ItemSourcePicker` through `ContentSourceSelector`: a compact
+trigger in the wizard and an embedded list in the settings dialog. “Выбрать все”
+selects all books, independent of search; clearing it selects none. Character
+settings retain the dynamic `all` mode and a separate Legacy switch.
+Handbook item viewing and search are
 independent `features/handbook` components. Character-specific item actions are
 supplied through the detail modal footer instead of being implemented by the
 handbook renderer.
@@ -607,8 +612,9 @@ controls. A row without any available menu action is non-clickable and does not
 show hover or press feedback. The block owns one shared tile; rows inside
 it have no nested card background. A resource bound to a source action is shown
 on that action as the same color-coded charge spheres used by the resources
-tile: one charge stays at the right edge, while several charges wrap below the
-action text. Short- and long-rest recovery icons sit immediately to the right
+tile: one charge sits under the icon in a floated left column, while several
+charges wrap below the action text. The description flows around the icon and
+single charge, returning to the full row width below them. Short- and long-rest recovery icons sit immediately to the right
 of the action name, and the bound resource is omitted from the shared resources
 tile to avoid a duplicate control.
 Relentless Endurance contributes a special action bound to its existing single
