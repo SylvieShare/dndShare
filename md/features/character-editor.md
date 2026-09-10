@@ -605,8 +605,9 @@ of the action name, and the bound resource is omitted from the shared resources
 tile to avoid a duplicate control.
 Relentless Endurance contributes a special action bound to its existing single
 long-rest charge. Its summary states the optional effect (stay at 1 HP when
-reduced to 0); bullet points state the instant-death exclusion, no action or
-reaction cost, and one use recovered after a long rest. Spending the charge
+reduced to 0); bullet points state the instant-death exclusion and no action or
+reaction cost. The charge and rest icon communicate the use limit and recovery
+without a duplicate bullet point. Spending the charge
 does not automatically change HP.
 The spheres remain owner-interactive and write through the shared resource
 source contract without triggering the press
