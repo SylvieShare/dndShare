@@ -7,13 +7,14 @@
     :subtitle="subtitle"
     :icon-fallback-to-type="false"
   >
-    <template #icon>
+    <template v-if="!kind.includes('class')" #icon>
       <span class="origin-list-portrait" :class="`origin-list-portrait--${kind}`">
         <img v-if="imageUrl" :src="imageUrl" alt="" aria-hidden="true" />
         <span v-else>{{ monogram }}</span>
         <small>{{ kindLabel }}</small>
       </span>
     </template>
+    <template #icon-fallback><span class="origin-list-monogram">{{ monogram }}</span></template>
     <template #metric>
       <span class="origin-list-metric">
         <strong>{{ metricValue }}</strong>
@@ -108,6 +109,7 @@ watch(parentId, id => id != null && ensureItemNames([id]), { immediate: true })
   font-weight: 700;
 }
 .origin-list-portrait img { width: 100%; height: 100%; object-fit: cover; }
+.origin-list-monogram { color: var(--text-muted); font: 700 28px var(--font-display); }
 .origin-list-portrait::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 52%, color-mix(in srgb, var(--scrim) 82%, transparent)); pointer-events: none; }
 .origin-list-portrait small { position: absolute; z-index: 1; right: 5px; bottom: 4px; color: var(--text-on-accent); font: 750 7px/1 var(--font-ui); letter-spacing: .08em; text-transform: uppercase; text-shadow: 0 1px 4px var(--scrim); }
 .origin-list-portrait--subrace,

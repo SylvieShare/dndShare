@@ -352,6 +352,12 @@ runes while belonging to the same visual family.
 Store the result as a lossless `128×128` RGBA WebP and inspect it at both 128
 and 64 px on light and dark surfaces.
 
+All 15 base class records and 41 subclass records have dedicated system raster
+icons. Class/subclass list rows and origin-relation cards use the shared
+`ItemIcon` projection (raster first, then SVG), not a cropped cover. The full
+emblem stays visible with `object-fit: contain`, without portrait shading or
+an overlaid type badge; covers remain independent detail-header artwork.
+
 Subclass icons follow an **inherited-anchor rule**. When the parent has a strong
 carrier shape, every sibling keeps it and replaces the dominant internal sign:
 wizard schools share the open spellbook, paladin oaths share the tower shield,
@@ -428,8 +434,8 @@ one controlled magical effect rather than ancestry.
   watermarks, photorealistic skin, painterly noise, gore or busy scenery.
 
 Installing a class cover does not replace or delete its compact icon.
-Subclasses keep the cover-only fallback contract and show a monogram until a
-dedicated cover is assigned.
+Subclass covers remain independent from their compact icons: an absent cover
+uses the type's detail-header fallback and does not hide the subclass emblem.
 
 ### Background cover art direction
 

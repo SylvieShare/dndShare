@@ -24,8 +24,9 @@
           class="origin-relation-card"
           @click="viewItem = related"
         >
-          <span class="origin-relation-media">
-            <img v-if="related.coverImageUrl || related.iconImageUrl" :src="related.coverImageUrl || related.iconImageUrl" alt="" aria-hidden="true" />
+          <span class="origin-relation-media" :class="{ 'origin-relation-media--emblem': kind.includes('class') }">
+            <ItemIcon v-if="kind.includes('class') && (related.iconImageUrl || related.svg)" :item="related" :size="64" :fallback-to-type="false" />
+            <img v-else-if="!kind.includes('class') && (related.coverImageUrl || related.iconImageUrl)" :src="related.coverImageUrl || related.iconImageUrl" alt="" aria-hidden="true" />
             <span v-else>{{ monogram(related.name) }}</span>
           </span>
           <span class="origin-relation-copy">
@@ -93,6 +94,7 @@ import { computed, ref, watch } from 'vue'
 import { Backpack, BookOpen, ChevronRight, GitBranch, ListChecks, ShieldCheck, Sparkles, WandSparkles } from '@lucide/vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import ClassProgression from './ClassProgression.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -233,6 +235,7 @@ function monogram(name) { return String(name || '?').trim().slice(0, 1).toLocale
 .origin-relation-card > svg { width: 17px; color: var(--text-muted); }
 .origin-relation-media { width: 86px; height: 78px; display: grid; place-items: center; overflow: hidden; border-radius: 9px; background: color-mix(in srgb, var(--accent) 12%, var(--bg)); color: var(--accent-soft); font-family: var(--font-display); font-size: 28px; font-weight: 700; }
 .origin-relation-media img { width: 100%; height: 100%; object-fit: cover; }
+.origin-relation-media--emblem { background: transparent; }
 .origin-relation-copy { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .origin-relation-copy small { color: var(--accent-soft); font-size: 8px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .origin-relation-copy strong { overflow: hidden; color: var(--text-1); font-family: var(--font-display); font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
