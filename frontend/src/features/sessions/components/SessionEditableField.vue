@@ -26,6 +26,7 @@
     </header>
 
     <div v-if="fieldOpen" class="session-editable-field-editor">
+      <slot name="editor" :value="editorValue" :update="updateValue">
       <textarea
         v-if="multiline"
         ref="inputElement"
@@ -33,7 +34,7 @@
         :rows="rows"
         :maxlength="maxlength || undefined"
         :placeholder="placeholder"
-        :disabled="saving"
+        :disabled="saving || committing"
         @input="updateValue($event.target.value)"
         @keydown.meta.enter.prevent="submit"
         @keydown.ctrl.enter.prevent="submit"
@@ -46,21 +47,23 @@
         type="text"
         :maxlength="maxlength || undefined"
         :placeholder="placeholder"
-        :disabled="saving"
+        :disabled="saving || committing"
         @input="updateValue($event.target.value)"
         @keydown.enter.prevent="submit"
         @keydown.esc.prevent="cancel"
       />
+      </slot>
+      <p v-if="saveError" role="alert">{{ saveError }}</p>
       <div v-if="!forceOpen" class="session-editable-field-controls">
         <span>⌘ Enter — сохранить</span>
-        <button type="button" :disabled="saving" aria-label="Отменить" title="Отменить" @click="cancel"><X :size="15" /></button>
-        <button type="button" class="primary" :disabled="saving || !canSave" aria-label="Сохранить" title="Сохранить" @click="submit">
+        <button type="button" :disabled="saving || committing" aria-label="Отменить" title="Отменить" @click="cancel"><X :size="15" /></button>
+        <button type="button" class="primary" :disabled="saving || committing || !canSave" aria-label="Сохранить" title="Сохранить" @click="submit">
           <LoaderCircle v-if="saving" class="session-editable-field-spinner" :size="15" />
           <Check v-else :size="15" />
         </button>
       </div>
     </div>
-    <p v-else>{{ displayText || emptyText }}</p>
+    <slot v-else name="display"><p>{{ displayText || emptyText }}</p></slot>
   </article>
 </template>
 
@@ -69,7 +72,9 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { Check, LoaderCircle, Pencil, X } from '@lucide/vue'
 
 const props = defineProps({
-  modelValue: { type: [String, Number], default: '' },
+  modelValue: { type: [String, Number, Object, Array], default: '' },
+  displayValue: { type: String, default: undefined },
+  persist: { type: Function, default: null },
   label: { type: String, required: true },
   icon: { type: [Object, Function], default: null },
   editable: { type: Boolean, default: false },
@@ -87,21 +92,27 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'save'])
 const localOpen = ref(false)
-const localValue = ref(String(props.modelValue ?? ''))
+const copyValue = value => value && typeof value === 'object' ? JSON.parse(JSON.stringify(value)) : value ?? ''
+const localValue = ref(copyValue(props.modelValue))
+const saveError = ref('')
+const committing = ref(false)
 const inputElement = ref(null)
 const fieldOpen = computed(() => props.forceOpen || localOpen.value)
-const editorValue = computed(() => props.forceOpen ? String(props.modelValue ?? '') : localValue.value)
-const displayText = computed(() => String(props.modelValue ?? '').trim())
-const canSave = computed(() => !props.required || editorValue.value.trim().length > 0)
+const editorValue = computed(() => props.forceOpen ? props.modelValue : localValue.value)
+const displayText = computed(() => props.displayValue ?? String(props.modelValue ?? '').trim())
+const canSave = computed(() => !props.required || String(editorValue.value ?? '').trim().length > 0)
+
+watch(() => props.forceOpen, () => { localOpen.value = false })
 
 watch(() => props.modelValue, value => {
-  if (!localOpen.value) localValue.value = String(value ?? '')
+  if (!localOpen.value) localValue.value = copyValue(value)
 })
 
 if (props.forceOpen && props.autofocus) nextTick(() => inputElement.value?.focus())
 
 function open() {
-  localValue.value = String(props.modelValue ?? '')
+  saveError.value = ''
+  localValue.value = copyValue(props.modelValue)
   localOpen.value = true
   nextTick(() => inputElement.value?.focus())
 }
@@ -113,14 +124,21 @@ function updateValue(value) {
 
 function cancel() {
   if (props.forceOpen) return
-  localValue.value = String(props.modelValue ?? '')
+  localValue.value = copyValue(props.modelValue)
   localOpen.value = false
 }
 
-function submit() {
-  if (props.forceOpen || props.saving || !canSave.value) return
-  emit('save', localValue.value)
-  localOpen.value = false
+async function submit() {
+  if (props.forceOpen || props.saving || committing.value || !canSave.value) return
+  committing.value = true
+  saveError.value = ''
+  try {
+    if (props.persist && await props.persist(localValue.value) === false) return
+    emit('save', localValue.value)
+    localOpen.value = false
+  } catch (error) {
+    saveError.value = error?.message || 'Не удалось сохранить поле'
+  } finally { committing.value = false }
 }
 </script>
 

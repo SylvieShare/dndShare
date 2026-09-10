@@ -35,68 +35,43 @@
 
     <SessionEntityDetail
       v-if="selected"
+      :key="selected.id"
       :title="selected.name"
       :eyebrow="materialType(selected.kind).label"
       :accent="materialType(selected.kind).color"
       :editable="isDm"
-      :title-editable="isDm"
+      :title-editable="isDm && !detailEditing"
+      :editing="detailEditing"
       :saving="saving"
       :back-label="backLabel"
       edit-aria-label="Редактировать материал"
-      @edit="editing = selected"
-      @save-title="saveMaterialField('name', $event)"
+      @edit="detailEditing = true"
+      :persist-title="saveTitle"
       @back="$emit('back')"
     >
-      <template #visual><component :is="materialType(selected.kind).icon" :size="32" /></template>
-      <template v-if="selected.caption" #summary>{{ selected.caption }}</template>
+      <template v-if="!detailEditing" #visual><component :is="materialType(selected.kind).icon" :size="32" /></template>
       <template #meta><span>{{ contextLabel(selected) }}</span><span>{{ selected.relations?.length || 0 }} связей</span></template>
       <template #actions-before><button type="button" class="primary" @click="presentation.showMaterial(selected)"><Cast :size="16" />Транслировать</button></template>
       <template v-if="isDm" #actions-after><button type="button" class="danger" title="Удалить" aria-label="Удалить материал" @click="removeSelected"><Trash2 :size="15" /></button></template>
 
-      <section class="session-world-section material-preview-section">
-        <div class="session-world-section-title"><span>Просмотр</span></div>
-        <div class="material-preview-stage" :class="[`material-preview-stage--${selected.kind}`, selected.kind === 'note' ? `material-note--${selected.noteStyle}` : '']">
-          <img v-if="selected.kind === 'image' || selected.kind === 'map'" :src="selected.assetUrl" :alt="selected.name" />
-          <video v-else-if="selected.kind === 'video'" :src="selected.assetUrl" controls playsinline preload="metadata" />
-          <article v-else class="material-copy-content">{{ selected.content }}</article>
-        </div>
-      </section>
-      <section v-if="isDm" class="session-world-section">
-        <div class="session-world-section-title"><span>Содержимое</span></div>
-        <SessionEditableField
-          v-if="selected.kind === 'text' || selected.kind === 'note'"
-          :model-value="selected.content || ''"
-          :label="selected.kind === 'note' ? 'Текст записки' : 'Текст материала'"
-          :icon="AlignLeft"
-          editable
-          required
+      <section class="session-world-section">
+        <SessionEntityForm
+          :key="selected.id"
+          type="material"
+          :entity="selected"
+          :editable="isDm"
+          :editing="detailEditing"
           :saving="saving"
-          :rows="9"
-          :maxlength="20000"
-          placeholder="Текст для экрана игроков…"
-          wide
-          @save="saveMaterialField('content', $event)"
-        />
-        <SessionEditableField
-          v-else
-          :model-value="selected.caption || ''"
-          label="Подпись для игроков"
-          :icon="Captions"
-          editable
-          :saving="saving"
-          :rows="3"
-          :maxlength="2000"
-          placeholder="Необязательная подпись к материалу"
-          empty-text="Подпись пока не добавлена."
-          wide
-          @save="saveMaterialField('caption', $event)"
+          :locations="world.locations.value"
+          :relation-items="relationItems"
+          :save="saveDetail"
+          @edit-request="detailEditing = true"
+          @cancel="detailEditing = false"
+          @saved="detailEditing = false"
+          @open-entity="openRelated"
         />
       </section>
-      <section class="session-world-section">
-        <div class="session-world-section-title"><span>Связи</span><small>{{ selected.relations?.length || 0 }}</small></div>
-        <UniversalRelationList :relations="selected.relations" :items="relationItems" @open="openRelated" />
-      </section>
-      <section class="session-world-section">
+      <section v-if="!detailEditing" class="session-world-section">
         <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selected.scenarioUsages?.length || 0 }}</small></div>
         <ScenarioUsageList :usages="selected.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
       </section>
@@ -112,14 +87,15 @@
 </template>
 
 <script setup>
+import { entityDraft, entityPayload } from '@/features/sessions/lib/sessionEntityForm'
+
 import { computed, ref, watch } from 'vue'
-import { AlignLeft, Captions, Cast, LibraryBig, Plus, Search, Trash2 } from '@lucide/vue'
+import { Cast, LibraryBig, Plus, Search, Trash2 } from '@lucide/vue'
 import MaterialEditorModal from '@/features/sessions/components/MaterialEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
-import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
+import SessionEntityForm from '@/features/sessions/components/SessionEntityForm.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
-import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import { MATERIAL_TYPES, materialType } from '@/features/sessions/lib/sessionMaterials'
 import { adjacentSessionListItemId, scrollSessionListItemIntoView } from '@/features/sessions/lib/sessionListNavigation'
 
@@ -152,6 +128,20 @@ watch([allMaterials, () => props.selectedMaterialId], ([list, routeId]) => {
 	const candidate = list.find(item => item.id === Number(routeId)) || list[0]
 	if (candidate) selectedId.value = candidate.id
 }, { immediate: true })
+const detailEditing = ref(false)
+watch(() => selected.value?.id, () => { detailEditing.value = false })
+async function saveDetail(payload) {
+  if (!props.isDm || saving.value) return false
+  const entity = selected.value
+  if (!entity) return false
+  saving.value = true
+  try {
+    await props.materials.update(entity.id, payload)
+    await props.world.load(true).catch(() => {})
+  } finally { saving.value = false }
+  return true
+}
+
 function contextLabel(material) {
 	const usages = material.scenarioUsages || []
 	const count = usages.length
@@ -183,30 +173,12 @@ async function saveMaterial(payload) {
     selectedId.value = saved.id; editing.value = false
   } catch { actionError.value = 'Не удалось сохранить материал' } finally { saving.value = false }
 }
-function materialPayload(material, patch = {}) {
-  const needsAsset = !['text', 'note'].includes(material.kind)
-  return {
-    kind: material.kind,
-    name: material.name,
-    caption: needsAsset ? (material.caption || null) : null,
-    content: needsAsset ? null : (material.content || ''),
-    noteStyle: material.kind === 'note' ? material.noteStyle : null,
-    assetId: needsAsset ? material.assetId : null,
-    relations: (material.relations || []).map(relation => ({ ...relation })),
-    ...patch,
-  }
+async function saveTitle(value) {
+  const draft = entityDraft('material', selected.value)
+  draft.name = value
+  return saveDetail(entityPayload('material', draft))
 }
-async function saveMaterialField(field, value) {
-  const material = selected.value
-  if (!material) return
-  const normalized = field === 'name' || field === 'content' ? value.trim() : (value.trim() || null)
-  if ((field === 'name' || field === 'content') && !normalized) return
-  saving.value = true; actionError.value = ''
-  try {
-    await props.materials.update(material.id, materialPayload(material, { [field]: normalized }))
-    await props.world.load(true).catch(() => {})
-  } catch { actionError.value = 'Не удалось сохранить материал' } finally { saving.value = false }
-}
+
 async function removeSelected() {
   if (!selected.value || !window.confirm(`Удалить материал «${selected.value.name}»?`)) return
   actionError.value = ''
@@ -219,6 +191,5 @@ defineExpose({ moveSelection })
 <style scoped>
 .materials-groups { min-height: 0; flex: 1; overflow: auto; padding: 1px 2px 10px; }.materials-groups section { display: flex; flex-direction: column; gap: 3px; margin-bottom: 13px; }.materials-groups h3 { margin: 4px 7px; color: var(--text-muted); font-size: 8px; text-transform: uppercase; letter-spacing: .11em; }.materials-groups button { width: 100%; min-width: 0; display: flex; align-items: center; gap: 9px; padding: 6px 7px; border: 0; border-radius: 9px; background: transparent; color: var(--text-2); text-align: left; cursor: pointer; }.materials-groups button:hover { background: color-mix(in srgb, var(--text-on-accent) 5%, transparent); }.materials-groups button.active { background: color-mix(in srgb, var(--accent) 13%, transparent); }
 .material-list-thumb { width: 48px; height: 40px; display: grid; flex: none; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--accent-soft); }.material-list-thumb img { width: 100%; height: 100%; object-fit: cover; }.material-list-copy { min-width: 0; display: flex; flex: 1; flex-direction: column; gap: 2px; }.material-list-copy strong, .material-list-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.material-list-copy strong { color: var(--text-1); font-size: 12px; }.material-list-copy small { color: var(--text-muted); font-size: 9px; }
-.material-preview-section { align-items: stretch; }.material-preview-stage { width: min(900px, 100%); max-height: 58vh; display: grid; align-self: center; place-items: center; overflow: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); box-shadow: 0 18px 55px color-mix(in srgb, var(--bg) 55%, transparent); }.material-preview-stage img, .material-preview-stage video { max-width: 100%; max-height: 58vh; display: block; object-fit: contain; }.material-preview-stage video { width: 100%; }.material-copy-content { box-sizing: border-box; width: 100%; min-height: 280px; padding: clamp(28px, 5vw, 72px); color: var(--text-1); font-family: var(--font-prose); font-size: clamp(19px, 2vw, 31px); line-height: 1.65; white-space: pre-wrap; }.material-preview-stage--note { max-width: 720px; border-radius: 5px; }.material-note--parchment { background: var(--material-note-parchment-bg); color: var(--material-note-parchment-text); }.material-note--letter { background: var(--material-note-letter-bg); color: var(--material-note-letter-text); }.material-note--dossier { background: var(--material-note-dossier-bg); color: var(--material-note-dossier-text); box-shadow: inset 0 0 0 8px var(--material-note-dossier-border), var(--shadow-lg); }.material-note--arcane { border-color: color-mix(in srgb, var(--accent) 65%, var(--border)); background: radial-gradient(circle at 50% 20%, var(--material-note-arcane-glow), var(--material-note-arcane-bg) 72%); color: var(--material-note-arcane-text); }.material-note--parchment .material-copy-content, .material-note--letter .material-copy-content, .material-note--dossier .material-copy-content, .material-note--arcane .material-copy-content { color: inherit; }
 .materials-state--error, .material-action-error { color: var(--danger); }.materials-state { margin: auto; max-width: 260px; padding: 24px; color: var(--text-muted); font-size: 11px; text-align: center; }.material-action-error { font-size: 11px; }
 </style>

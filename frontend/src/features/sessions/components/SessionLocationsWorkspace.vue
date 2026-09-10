@@ -48,19 +48,21 @@
 
     <SessionEntityDetail
       v-if="selectedLocation"
+      :key="selectedLocation.id"
       :title="selectedLocation.name"
       :accent="selectedKind.color"
-      :cover-url="sessionImageUrl(selectedLocation)"
+      :cover-url="detailEditing ? '' : sessionImageUrl(selectedLocation)"
       :editable="isDm"
-      :title-editable="isDm"
+      :title-editable="isDm && !detailEditing"
+      :editing="detailEditing"
       :saving="world.saving.value"
       :back-label="backLabel"
       edit-aria-label="Редактировать локацию"
-      @edit="openEdit(selectedLocation)"
-      @save-title="saveLocationField('name', $event)"
+      @edit="detailEditing = true"
+      :persist-title="saveTitle"
       @back="$emit('back')"
     >
-      <template #visual><img :src="sessionImageUrl(selectedLocation)" alt="" /></template>
+      <template v-if="!detailEditing" #visual><img :src="sessionImageUrl(selectedLocation)" alt="" /></template>
       <template #context>
           <div class="session-world-breadcrumbs">
             <button
@@ -72,6 +74,7 @@
           </div>
       </template>
       <template #eyebrow><component :is="selectedKindIcon" :size="14" />{{ selectedKind.label }}</template>
+      <template v-if="isDm" #actions-after><button type="button" class="danger" aria-label="Удалить объект" @click="requestLocationDelete(selectedLocation)"><Trash2 :size="15" /></button></template>
       <template #meta>
         <span>{{ childLocations.length }} {{ ruPlural(childLocations.length, 'вложенное место', 'вложенных места', 'вложенных мест') }}</span>
         <span>{{ selectedLocation.relations?.length || 0 }} связей</span>
@@ -81,24 +84,7 @@
           <button type="button" @click="openNpcCreate"><UserPlus :size="15" />Добавить NPC</button>
       </template>
 
-      <section class="session-world-section session-world-description">
-        <div class="session-world-section-title"><span>О месте</span></div>
-        <SessionEditableField
-          :model-value="selectedLocation.description || ''"
-          label="Описание и атмосфера"
-          :icon="AlignLeft"
-          :editable="isDm"
-          :saving="world.saving.value"
-          :rows="7"
-          :maxlength="5000"
-          placeholder="Атмосфера, особенности, важные детали и заметки мастера"
-          empty-text="Описание пока не добавлено."
-          wide
-          @save="saveLocationField('description', $event)"
-        />
-      </section>
-
-      <section v-if="childLocations.length" class="session-world-section">
+      <section v-if="!detailEditing && childLocations.length" class="session-world-section">
         <div class="session-world-section-title"><span>Внутри</span><small>{{ childLocations.length }}</small></div>
         <div class="session-world-card-grid">
           <button
@@ -115,12 +101,24 @@
           </button>
         </div>
       </section>
-
       <section class="session-world-section">
-        <div class="session-world-section-title"><span>Связи</span><small>{{ selectedLocation.relations?.length || 0 }}</small></div>
-        <UniversalRelationList :relations="selectedLocation.relations" :items="relationItems" @open="openRelated" />
+        <SessionEntityForm
+          :key="selectedLocation.id"
+          type="location"
+          :entity="selectedLocation"
+          :editable="isDm"
+          :editing="detailEditing"
+          :saving="world.saving.value"
+          :locations="locations"
+          :relation-items="relationItems"
+          :save="saveDetail"
+          @edit-request="detailEditing = true"
+          @cancel="detailEditing = false"
+          @saved="detailEditing = false"
+          @open-entity="openRelated"
+        />
       </section>
-      <section class="session-world-section">
+      <section v-if="!detailEditing" class="session-world-section">
         <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selectedLocation.scenarioUsages?.length || 0 }}</small></div>
         <ScenarioUsageList :usages="selectedLocation.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
       </section>
@@ -169,20 +167,22 @@
 </template>
 
 <script setup>
+import { entityDraft, entityPayload } from '@/features/sessions/lib/sessionEntityForm'
+
 import { computed, ref, watch } from 'vue'
 import {
-  AlignLeft, Blocks, ChevronRight, Compass, DoorOpen, FolderPlus, House, Landmark,
+  Blocks, ChevronRight, Compass, DoorOpen, FolderPlus, House, Landmark,
   Map, MapPin, MapPinned, Plus, Route, Search, Trees, UserPlus,
 } from '@lucide/vue'
+import { Trash2 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import LocationEditorModal from '@/features/sessions/components/LocationEditorModal.vue'
 import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
-import SessionEditableField from '@/features/sessions/components/SessionEditableField.vue'
+import SessionEntityForm from '@/features/sessions/components/SessionEntityForm.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
-import UniversalRelationList from '@/features/sessions/components/UniversalRelationList.vue'
 import {
   buildLocationForest, locationBreadcrumb, locationDescendantIds, locationKind,
   locationSearchMatches, ruPlural,
@@ -236,6 +236,20 @@ const visibleLocations = computed(() => {
 const breadcrumbs = computed(() => locationBreadcrumb(selectedLocation.value, props.world.locationsById.value))
 const childLocations = computed(() => locations.value.filter(location => location.parentLocationId === selectedLocation.value?.id).sort((a, b) => a.sortOrder - b.sortOrder))
 
+const detailEditing = ref(false)
+const pendingEditLocationId = ref(null)
+watch(() => selectedLocation.value?.id, id => {
+  detailEditing.value = id === pendingEditLocationId.value
+  pendingEditLocationId.value = null
+})
+async function saveDetail(payload) {
+  if (!props.isDm || props.world.saving.value) return false
+  const entity = selectedLocation.value
+  if (!entity) return false
+  await props.world.saveLocation(entity, payload)
+  return true
+}
+
 function expandedKey() { return `dnd-share:session-location-tree:v1:${props.sessionUuid}` }
 function readExpanded() {
   try { return new Set(JSON.parse(localStorage.getItem(expandedKey()) || '[]').map(Number)) } catch { return new Set() }
@@ -263,9 +277,8 @@ function openCreate(parentId = null) {
   locationEditorOpen.value = true
 }
 function openEdit(location) {
-  editingLocation.value = location
-  defaultParentId.value = null
-  locationEditorOpen.value = true
+  if (selectedLocation.value?.id === location.id) detailEditing.value = true
+  else { pendingEditLocationId.value = location.id; emit('select-location', location.id) }
 }
 function openNpcCreate() { npcEditorOpen.value = true }
 function openRelated(item) {
@@ -288,24 +301,12 @@ async function saveLocation(data) {
     emit('select-location', id || editingLocation.value?.id)
   } catch { /* error is rendered */ }
 }
-function locationPayload(location, patch = {}) {
-  return {
-    parentLocationId: location.parentLocationId || null,
-    name: location.name,
-    kind: location.kind,
-    description: location.description || null,
-    imageId: location.imageId,
-    relations: (location.relations || []).map(relation => ({ ...relation })),
-    ...patch,
-  }
+async function saveTitle(value) {
+  const draft = entityDraft('location', selectedLocation.value)
+  draft.name = value
+  return saveDetail(entityPayload('location', draft))
 }
-async function saveLocationField(field, value) {
-  const location = selectedLocation.value
-  if (!location) return
-  const normalized = field === 'name' ? value.trim() : (value.trim() || null)
-  if (field === 'name' && !normalized) return
-  try { await props.world.saveLocation(location, locationPayload(location, { [field]: normalized })) } catch { /* error is rendered */ }
-}
+
 async function saveNpc(data) {
   try { await props.world.saveNpc(null, data); closeEditors() } catch { /* error is rendered */ }
 }

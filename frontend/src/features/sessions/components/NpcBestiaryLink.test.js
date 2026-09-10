@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')
-const npcEditor = read('./NpcEditorModal.vue')
+const npcEditor = read('./SessionEntityForm.vue') + read('../lib/sessionEntityForm.js')
 const npcCanvasPreview = read('./SceneEntityBlockPreview.vue')
 
 describe('prepared NPC bestiary link', () => {

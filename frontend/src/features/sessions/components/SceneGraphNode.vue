@@ -11,7 +11,6 @@
     </div>
     <div class="scene-graph-node-copy">
       <strong>{{ scene.name }}</strong>
-      <small>{{ spotlight ? 'Двойной клик — к сценариям' : 'Двойной клик — открыть холст' }}</small>
     </div>
   </article>
 </template>
@@ -114,5 +113,4 @@ const status = computed(() => sceneStatus(props.scene.status))
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.scene-graph-node-copy small { overflow: hidden; color: var(--text-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 </style>

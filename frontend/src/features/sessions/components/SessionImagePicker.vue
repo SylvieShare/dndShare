@@ -1,8 +1,8 @@
 <template>
   <div class="session-image-field">
-    <div class="session-image-current">
-      <img v-if="displayedUrl" :src="displayedUrl" :alt="displayedLabel" :style="customSelected ? customPreviewStyle : null" />
-      <div v-else class="session-image-placeholder"><Images :size="22" /></div>
+    <div class="session-image-current" :class="{ 'session-image-current--compact': hidePreview }">
+      <img v-if="displayedUrl && !hidePreview" :src="displayedUrl" :alt="displayedLabel" :style="customSelected ? customPreviewStyle : null" />
+      <div v-else-if="!hidePreview" class="session-image-placeholder"><Images :size="22" /></div>
       <div class="session-image-current-copy">
         <small>Текущее изображение</small>
         <strong>{{ displayedLabel }}</strong>
@@ -58,6 +58,7 @@ import { groupSessionImages } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
   modelValue: { type: Number, default: 0 },
+  hidePreview: { type: Boolean, default: false },
   catalog: { type: String, default: 'story' },
   defaultKey: { type: String, default: '' },
   currentUrl: { type: String, default: '' },
@@ -135,4 +136,5 @@ function requestUpload() { pickerOpen.value = false; emit('upload') }
 .session-image-option span { position: absolute; z-index: 1; right: 8px; bottom: 6px; left: 8px; overflow: hidden; font-size: 11px; font-weight: 700; text-align: left; text-overflow: ellipsis; text-shadow: 0 1px 3px var(--bg); white-space: nowrap; }
 .session-image-option.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent); }
 @media (max-width: 640px) { .session-image-current { grid-template-columns: 92px minmax(0, 1fr); }.session-image-current > img, .session-image-placeholder { width: 92px; }.session-image-current-actions { grid-column: 1 / -1; }.session-image-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.session-image-current--compact { min-height: 0; grid-template-columns: minmax(0, 1fr) auto; }
 </style>

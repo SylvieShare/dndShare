@@ -266,11 +266,18 @@ selected entity. All four catalogues render the selected record through one
 `SessionEntityDetail` header and body shell. It owns the shared title,
 visual/accent, metadata, action layout and labelled `Редактировать` button;
 each catalogue supplies only its domain-specific visual, secondary actions and
-content sections. For a DM, the title and text cards also expose pencil actions:
-one field can be opened and saved without leaving the detail, while the full
-editor reuses the same `SessionEditableField` presentation with every field
-already open. Quest goal, condition, reward, consequences and notes keep separate
-cards with semantic icons.
+content sections. `SessionEntityForm` supplies the same fields for viewing,
+editing and creation. For a DM, every editable value has a visible pencil,
+including NPC race, role, portrait, color and bestiary reference, location type,
+parent and image, quest status, and material type, contents and presentation style.
+`Редактировать` expands all fields in place with one save/cancel pair; modal
+frames are used for creation and canvas creation flows. Images, video and styled
+text are previewed only in view mode, inside their editable field; editing shows
+inputs and asset selection without a duplicate preview. A material type change
+opens the full form so dependent contents or assets can be supplied together.
+Single-field saves use current entity data to preserve other fields, and failed
+saves keep the draft open for retry. Quest goal, condition, reward, consequences
+and notes keep separate cards with semantic icons.
 
 Opening a location, NPC, quest or material from `UniversalRelationList` pushes
 the current entity into a per-session navigation stack. The detail header then
@@ -317,10 +324,13 @@ uses a broad fantasy fallback. Locations, NPCs, materials and quests use one
 symmetric relation model. Every entity can link to any entity of those four
 types, including another entity of its own type, with an optional private note.
 `Добавить связь` opens one picker: the DM can search across the complete
-catalogue or filter a type. Editors show only current links with remove actions,
-while detail views sort them and split them into type sections with readable 44–48 px previews
-and full-size primary/secondary text. Editors use the
-shared `ColorPresetPicker`, `SessionImagePicker`, form controls and modal frame.
+catalogue or filter a type. The shared relation list groups links by type in both
+modes, with a dashed plus to the right of the `Связи` heading and a trash button
+in each link card's corner. These actions save immediately in view mode and
+change the draft in full edit mode. The source and existing links are excluded
+from the picker. Link notes have their own pencils and are expanded during full
+editing. The trash action is separate from card navigation. Editors use the
+shared `ColorPresetPicker`, `SessionImagePicker` and form controls.
 Each detail view has a separate read-only `На холстах сценариев` section. It is
 derived from actual reference/material blocks, deduplicates scenarios, shows a
 block count and opens the selected scenario. It cannot be edited from an entity
@@ -399,7 +409,9 @@ metadata, controls and counters remain in the UI face. Full NPC, location and
 quest detail paragraphs follow the same split; their list-card snippets remain
 UI text.
 
-A scenario can directly select one session location in its main editor; this
+A scenario selects one session location through the universal relation search picker
+with its type fixed to `location`; the editor shows the location path and allows
+clearing the selection. This
 link is separate from universal entity relations and from location reference
 blocks on the scenario canvas. Scenarios themselves are not a player-display mode: the master broadcasts a
 specific material from the header library or a scenario block. The third-level `image` block
@@ -583,7 +595,7 @@ optional shared-catalogue image, or deletes the scenario. At least the location
 or the image is required; an explicit image overrides the location image. Its optional top status chip uses the same
 semantic color as the menu and bulk action and is omitted for `none`; the lower
 title surface uses the same translucent treatment as a chapter and has no
-redundant `Сценарий` label or generated scenario number. A single click anywhere on a scenario card opens
+redundant `Сценарий` label, generated scenario number or double-click hint. A single click anywhere on a scenario card opens
 its launch, open-elements, status, edit and delete actions without a separate
 ellipsis trigger; double click still opens the scenario block canvas. The scene
 image continues beneath the translucent lower copy surface just as it does on a

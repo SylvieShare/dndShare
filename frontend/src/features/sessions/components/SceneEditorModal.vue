@@ -10,10 +10,19 @@
         </FormSelect>
       </FormField>
       <FormField label="Локация" vertical>
-        <FormSelect v-model:value="draft.locationId">
-          <option :value="0">Без привязки</option>
-          <option v-for="location in locationOptions" :key="location.id" :value="location.id">{{ location.label }}</option>
-        </FormSelect>
+        <div class="scene-location-field">
+          <button type="button" class="scene-location-pick" @click="locationPickerOpen = true">
+            {{ selectedLocationLabel || 'Выбрать локацию' }}
+          </button>
+          <RemoveButton v-if="draft.locationId" label="Убрать привязку к локации" @click="draft.locationId = 0" />
+        </div>
+        <UniversalRelationPickerModal
+          v-if="locationPickerOpen"
+          :items="locationOptions"
+          fixed-type="location"
+          @close="locationPickerOpen = false"
+          @select="selectLocation"
+        />
       </FormField>
     </div>
 
@@ -43,12 +52,14 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue'
-import { AppModalFrame } from '@sylvieshare/share-ui'
+import { computed, reactive, ref } from 'vue'
+import { AppModalFrame, RemoveButton } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormSelect } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
+import UniversalRelationPickerModal from '@/features/sessions/components/UniversalRelationPickerModal.vue'
+import { buildSessionEntityCatalog } from '@/features/sessions/lib/sessionEntityRelations'
 import SessionImagePicker from '@/features/sessions/components/SessionImagePicker.vue'
 import { SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 import { locationBreadcrumb } from '@/features/sessions/lib/sessionWorld'
@@ -66,13 +77,21 @@ const draft = reactive({
   imageId: props.scene?.imageId ?? 0,
 })
 const locationsById = computed(() => new Map(props.locations.map(location => [location.id, location])))
-const locationOptions = computed(() => props.locations
-  .map(location => ({
-    id: location.id,
-    label: locationBreadcrumb(location, locationsById.value).map(item => item.name).join(' / '),
+const locationPickerOpen = ref(false)
+const locationOptions = computed(() => buildSessionEntityCatalog({ locations: { value: props.locations } })
+  .map(item => ({
+    ...item,
+    subtitle: locationBreadcrumb(locationsById.value.get(item.id), locationsById.value).map(location => location.name).join(' / '),
   }))
-  .sort((left, right) => left.label.localeCompare(right.label, 'ru')))
+  .sort((left, right) => left.subtitle.localeCompare(right.subtitle, 'ru')))
 const selectedLocation = computed(() => locationsById.value.get(Number(draft.locationId)) || null)
+const selectedLocationLabel = computed(() => selectedLocation.value
+  ? locationBreadcrumb(selectedLocation.value, locationsById.value).map(location => location.name).join(' / ')
+  : '')
+function selectLocation(item) {
+  draft.locationId = Number(item.id)
+  locationPickerOpen.value = false
+}
 const currentImageUrl = computed(() => {
   if (draft.imageId && Number(draft.imageId) === Number(props.scene?.imageId)) return props.scene?.imageUrl || ''
   return selectedLocation.value?.imageUrl || ''
@@ -94,6 +113,9 @@ function submit() {
 
 <style scoped>
 .scene-editor-main-grid { display: grid; grid-template-columns: minmax(0, 1fr) 190px minmax(220px, .8fr); gap: 14px; }
+.scene-location-field { display: flex; align-items: center; gap: 8px; }
+.scene-location-pick { flex: 1; min-width: 0; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text-1); font: inherit; text-align: left; cursor: pointer; }
+.scene-location-pick:hover { border-color: var(--accent); }
 .scene-image-section { display: flex; flex-direction: column; gap: 10px; }
 .scene-image-title { color: var(--text-2); font-size: 13px; font-weight: 600; }
 @media (max-width: 820px) { .scene-editor-main-grid { grid-template-columns: 1fr; } }

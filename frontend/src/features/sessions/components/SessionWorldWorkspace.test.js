@@ -17,7 +17,6 @@ const locationEditor = read('./LocationEditorModal.vue')
 const npcs = read('./SessionNpcsWorkspace.vue')
 const npcEditor = read('./NpcEditorModal.vue')
 const relationPicker = read('./WorldRelationPickerModal.vue')
-const universalEditor = read('./UniversalRelationEditor.vue')
 const universalList = read('./UniversalRelationList.vue')
 const universalPicker = read('./UniversalRelationPickerModal.vue')
 const quests = read('./SessionQuestsWorkspace.vue')
@@ -26,6 +25,8 @@ const materials = read('./SessionMaterialsWorkspace.vue')
 const music = read('./SessionMusicWorkspace.vue')
 const chronicle = read('./SessionChronicleWorkspace.vue')
 const entityDetail = read('./SessionEntityDetail.vue')
+const entityForm = read('./SessionEntityForm.vue')
+const entityFormModel = read('../lib/sessionEntityForm.js')
 const editableField = read('./SessionEditableField.vue')
 const scenarioUsages = read('./ScenarioUsageList.vue')
 const imagePicker = read('./SessionImagePicker.vue')
@@ -88,10 +89,10 @@ describe('session world workspaces', () => {
     expect(entityDetail).toContain('session-entity-detail-title-edit')
     expect(editableField).toContain('session-editable-field-pencil')
     for (const workspace of [locations, npcs, quests, materials]) {
-      expect(workspace).toContain('<SessionEditableField')
-      expect(workspace).toContain('@save-title=')
+      expect(workspace).toContain('<SessionEntityForm')
+      expect(workspace).toContain(':persist-title=')
     }
-    expect(materials).toContain('<div class="session-world-section-title"><span>Просмотр</span></div>')
+    expect(entityForm).toContain('<SessionMaterialPreview :material="entity" />')
   })
 
   it('keeps a ten-step back stack for universal relation navigation', () => {
@@ -159,19 +160,19 @@ describe('session world workspaces', () => {
   })
 
 	it('edits universal entity relationships without scenarios', () => {
-	expect(locationEditor).toContain('<UniversalRelationEditor')
-	expect(npcEditor).toContain('<UniversalRelationEditor')
-	expect(npcEditor).toContain('relations: draft.relations')
-	expect(npcs).toContain('<UniversalRelationList')
+	expect(locationEditor).toContain('<SessionEntityForm')
+	expect(npcEditor).toContain('<SessionEntityForm')
+	expect(entityFormModel).toContain('relations: draft.relations.map')
+	expect(entityForm).toContain('<UniversalRelationList')
     expect(relationPicker).toContain('type="search"')
-	expect(universalEditor).toContain('groupResolvedRelations')
+	expect(universalList).toContain('groupResolvedRelations')
 	expect(universalPicker).toContain("{ key: 'all', label: 'Все' }")
 	expect(universalPicker).toContain('Искать по всем объектам')
 	expect(universalPicker).toContain('SESSION_ENTITY_TYPES')
 	expect(universalPicker).toContain('creatableTypes')
 	expect(universalPicker).toContain('class="entity-picker-create"')
 	expect(read('../lib/sessionEntityRelations.js')).not.toContain("{ key: 'scene', label: 'Сценарии'")
-	expect(quests).toContain('Связи')
+	expect(universalList).toContain('Связи')
   })
 
 	it('shows canvas-derived scenario usage and opens its block canvas', () => {
@@ -199,17 +200,14 @@ describe('session world workspaces', () => {
 
   it('keeps quest goal, condition, reward, consequences and notes separate', () => {
     for (const field of ['draft.goal', 'draft.condition', 'draft.reward', 'draft.consequences', 'draft.notes']) {
-      expect(questEditor).toContain(field)
+      expect(entityFormModel).toContain(field)
     }
     for (const label of ['Цель', 'Условие', 'Награда', 'Последствия', 'Заметки']) {
-      expect(quests).toContain(label)
+      expect(entityFormModel).toContain(label)
     }
     expect(quests).toContain("[item.name,item.goal,item.condition,item.reward,item.consequences,item.notes]")
     expect(questEditor).not.toContain('draft.description')
-    for (const icon of ['Target', 'KeyRound', 'Gift', 'GitFork', 'NotebookPen']) {
-      expect(quests).toContain(icon)
-      expect(questEditor).toContain(icon)
-    }
+
   })
 
   it('opens one grouped image catalogue from the current image preview', () => {
@@ -220,17 +218,17 @@ describe('session world workspaces', () => {
     expect(imagePicker).toContain('.session-image-option img { width: 100%; height: auto;')
     expect(imagePicker).not.toContain('height: 112px')
     expect(imagePicker).not.toContain('role="tablist"')
-    expect(npcEditor).toContain('catalog="npc"')
+    expect(entityFormModel).toContain("catalog: 'npc'")
   })
 
   it('selects an NPC race from handbook items and randomizes a race-aware name', () => {
-    expect(npcEditor).toContain('<FormSelect v-model:value="draft.raceItemId"')
-    expect(npcEditor).toContain('itemsApi.list(RACE_ITEM_TYPE, 500)')
-    expect(npcEditor).toContain('itemsApi.list(SUBRACE_ITEM_TYPE, 500)')
-    expect(npcEditor).toContain('data?.race')
-    expect(npcEditor).toContain('randomDndName(selectedRace.value, Math.random, draft.name)')
-    expect(npcEditor).toContain('raceItemId: Number(draft.raceItemId) || null')
-    expect(npcEditor).toContain('aria-label="Случайное имя"')
+    expect(entityForm).toContain("field.input === 'race'")
+    expect(entityForm).toContain('itemsApi.list(RACE_ITEM_TYPE, 500)')
+    expect(entityForm).toContain('itemsApi.list(SUBRACE_ITEM_TYPE, 500)')
+    expect(entityForm).toContain('data?.race')
+    expect(entityForm).toContain('randomDndName(selectedRace, Math.random, draft.name)')
+    expect(entityFormModel).toContain('raceItemId: Number(draft.raceItemId) || null')
+    expect(entityForm).toContain('aria-label="Случайное имя"')
     expect(npcs).toContain('[npc.raceName, npc.role]')
     expect(npcs).toContain('[selectedNpc.raceName, selectedNpc.role]')
   })

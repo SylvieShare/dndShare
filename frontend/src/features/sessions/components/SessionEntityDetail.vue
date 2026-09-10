@@ -15,19 +15,19 @@
         </button>
         <div v-if="$slots.context" class="session-entity-detail-context"><slot name="context" /></div>
         <div class="session-entity-detail-eyebrow"><slot name="eyebrow">{{ eyebrow }}</slot></div>
-        <div class="session-entity-detail-title-row">
+        <div v-if="!editing" class="session-entity-detail-title-row">
           <template v-if="titleEditing">
             <input
               ref="titleInput"
               v-model="titleDraft"
               type="text"
               maxlength="160"
-              :disabled="saving"
+              :disabled="saving || titleSaving"
               @keydown.enter.prevent="saveTitle"
               @keydown.esc.prevent="cancelTitle"
             />
-            <button type="button" :disabled="saving" aria-label="Отменить изменение названия" @click="cancelTitle"><X :size="15" /></button>
-            <button type="button" class="primary" :disabled="saving || !titleDraft.trim()" aria-label="Сохранить название" @click="saveTitle"><Check :size="15" /></button>
+            <button type="button" :disabled="saving || titleSaving" aria-label="Отменить изменение названия" @click="cancelTitle"><X :size="15" /></button>
+            <button type="button" class="primary" :disabled="saving || titleSaving || !titleDraft.trim()" aria-label="Сохранить название" @click="saveTitle"><Check :size="15" /></button>
           </template>
           <template v-else>
             <h2>{{ title }}</h2>
@@ -41,13 +41,14 @@
             ><Pencil :size="14" /></button>
           </template>
         </div>
+        <p v-if="titleError" role="alert">{{ titleError }}</p>
         <div v-if="$slots.summary" class="session-entity-detail-summary"><slot name="summary" /></div>
         <div v-if="$slots.meta" class="session-entity-detail-meta"><slot name="meta" /></div>
       </div>
 
       <div v-if="editable || $slots['actions-before'] || $slots['actions-after']" class="session-entity-detail-actions">
         <slot name="actions-before" />
-        <button v-if="editable" type="button" class="session-entity-detail-edit" :aria-label="editAriaLabel" @click="$emit('edit')">
+        <button v-if="editable && !editing" type="button" class="session-entity-detail-edit" :disabled="saving || titleSaving" :aria-label="editAriaLabel" @click="$emit('edit')">
           <Pencil :size="15" />Редактировать
         </button>
         <slot name="actions-after" />
@@ -69,6 +70,8 @@ const props = defineProps({
   eyebrow: { type: String, default: '' },
   accent: { type: String, default: 'var(--accent)' },
   coverUrl: { type: String, default: '' },
+  editing: Boolean,
+  persistTitle: { type: Function, default: null },
   editable: { type: Boolean, default: false },
   titleEditable: { type: Boolean, default: false },
   saving: { type: Boolean, default: false },
@@ -78,14 +81,19 @@ const props = defineProps({
 
 const emit = defineEmits(['edit', 'save-title', 'back'])
 const titleEditing = ref(false)
+const titleError = ref('')
+const titleSaving = ref(false)
 const titleDraft = ref(props.title)
 const titleInput = ref(null)
+
+watch(() => props.editing, () => { cancelTitle() })
 
 watch(() => props.title, value => {
   if (!titleEditing.value) titleDraft.value = value
 })
 
 function openTitle() {
+  titleError.value = ''
   titleDraft.value = props.title
   titleEditing.value = true
   nextTick(() => titleInput.value?.focus())
@@ -94,11 +102,16 @@ function cancelTitle() {
   titleEditing.value = false
   titleDraft.value = props.title
 }
-function saveTitle() {
+async function saveTitle() {
   const value = titleDraft.value.trim()
-  if (!value || props.saving) return
-  emit('save-title', value)
-  titleEditing.value = false
+  if (!value || props.saving || titleSaving.value) return
+  titleSaving.value = true; titleError.value = ''
+  try {
+    if (props.persistTitle && await props.persistTitle(value) === false) return
+    emit('save-title', value)
+    titleEditing.value = false
+  } catch (cause) { titleError.value = cause.message || 'Не удалось сохранить название' }
+  finally { titleSaving.value = false }
 }
 
 const detailStyle = computed(() => ({
@@ -123,7 +136,7 @@ const detailStyle = computed(() => ({
 .session-entity-detail-title-row > button { width: 31px; height: 31px; display: grid; flex: none; place-items: center; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--surface-raised) 78%, transparent); color: var(--text-muted); cursor: pointer; }
 .session-entity-detail-title-row > button:hover:not(:disabled) { border-color: color-mix(in srgb, var(--entity-detail-color) 54%, var(--border)); color: var(--text-1); }
 .session-entity-detail-title-row > button.primary { border-color: var(--entity-detail-color); background: var(--entity-detail-color); color: var(--text-on-accent); }
-.session-entity-detail-title-edit { opacity: 0; transition: opacity .15s; }
+.session-entity-detail-title-edit { opacity: 1; }
 .session-entity-detail-title-row:hover .session-entity-detail-title-edit, .session-entity-detail-title-edit:focus-visible { opacity: 1; }
 .session-entity-detail-title-row input { box-sizing: border-box; width: min(560px, 62vw); min-height: 43px; padding: 6px 10px; border: 1px solid var(--entity-detail-color); border-radius: 9px; outline: 0; background: color-mix(in srgb, var(--surface) 88%, transparent); color: var(--text-1); font: 700 clamp(22px, 2.6vw, 32px)/1.1 var(--font-display); box-shadow: 0 0 0 3px color-mix(in srgb, var(--entity-detail-color) 14%, transparent); }
 .session-entity-detail-summary { max-width: 680px; color: var(--text-2); font-size: 11px; line-height: 1.45; }
