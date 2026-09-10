@@ -15,7 +15,7 @@
       </span>
     </template>
     <template #icon-fallback><span class="origin-list-monogram">{{ monogram }}</span></template>
-    <template #metric>
+    <template v-if="kind === 'subclass' || kind === 'subrace'" #metric>
       <span class="origin-list-metric">
         <strong>{{ metricValue }}</strong>
         <small>{{ metricLabel }}</small>
@@ -34,13 +34,10 @@ import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemN
 import {
   abilityNames,
   asiLabel,
-  hitDieLabel,
   originKind,
   originKindLabel,
   originParentId,
-  originRelationIds,
   plainOriginDescription,
-  spellcastingLabel,
   subclassGrantedSpellMetric,
   subclassSpellcastingLabel,
 } from '@/features/items/lib/originPresentation'
@@ -54,24 +51,20 @@ const data = computed(() => props.item.data || {})
 const kind = computed(() => originKind(props.type?.id || props.item.typeId))
 const kindLabel = computed(() => originKindLabel(props.type?.id || props.item.typeId))
 const parentId = computed(() => originParentId(props.item))
-const relationIds = computed(() => originRelationIds(props.item))
 const parentName = computed(() => parentId.value == null ? '' : itemName(parentId.value))
 const imageUrl = computed(() => props.item.coverImageUrl || props.item.iconImageUrl || '')
 const monogram = computed(() => String(props.item.name || '?').trim().slice(0, 1).toLocaleUpperCase('ru'))
 const subclassSpellMetric = computed(() => subclassGrantedSpellMetric(data.value))
 const metricValue = computed(() => {
-  if (kind.value === 'class') return hitDieLabel(data.value)
   if (kind.value === 'subclass') return subclassSpellMetric.value.value
   return asiLabel(data.value)?.split(' · ')[0] || '·'
 })
 const metricLabel = computed(() => {
-  if (kind.value === 'class') return 'кость'
   if (kind.value === 'subclass') return subclassSpellMetric.value.label
   return 'бонус'
 })
 const relationBadge = computed(() => {
-  if (kind.value === 'race') return relationIds.value.length ? `${relationIds.value.length} подрас.` : ''
-  if (kind.value === 'class') return relationIds.value.length ? `${relationIds.value.length} подкл.` : ''
+  if (kind.value === 'race' || kind.value === 'class') return ''
   return parentName.value
 })
 const subtitle = computed(() => {

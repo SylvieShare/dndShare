@@ -58,7 +58,6 @@ describe('handbook list controls', () => {
     expect(originList).toContain('origin-list-metric')
     expect(originList).toContain('origin-list-relation')
     expect(originList).toContain('originParentId')
-    expect(originList).toContain('originRelationIds')
   })
 
   it('places weapon damage in the shared metric column and price at the trailing edge', () => {

@@ -8,6 +8,16 @@ vi.mock('@/features/handbook/objects/lib/itemNames', () => ({
 }))
 
 describe('class emblems in handbook rows', () => {
+  it.each([8, 9])('omits the metric column and child counts for base origin type %s', async typeId => {
+    const html = await renderToString(createSSRApp(OriginListItem, {
+      item: { id: 10, typeId, name: 'Происхождение', data: { hit_die: 'd8', asi: [{ ability: 1, bonus: 2 }], subclasses: [11, 12], subraces: [13, 14] } },
+      type: { id: typeId },
+    }))
+    expect(html).not.toContain('oli-metric')
+    expect(html).not.toContain('origin-list-relation')
+    expect(html).toContain('Происхождение')
+  })
+
   it.each([9, 17])('shows the dedicated icon instead of the cover for type %s', async typeId => {
     const html = await renderToString(createSSRApp(OriginListItem, {
       item: { id: 10, typeId, name: 'Школа магии', iconImageUrl: '/school-icon.webp', coverImageUrl: '/school-cover.jpg', data: {} },
