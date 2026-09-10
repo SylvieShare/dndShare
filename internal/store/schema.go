@@ -259,6 +259,9 @@ var schemaAbilityRuleLinksSQL string
 //go:embed schema/79_relentless_endurance_action.sql
 var schemaRelentlessEnduranceActionSQL string
 
+//go:embed schema/81_ability_dependency_editor.sql
+var schemaAbilityDependencyEditorSQL string
+
 //go:embed schema/80_relentless_endurance_copy.sql
 var schemaRelentlessEnduranceCopySQL string
 
@@ -351,6 +354,7 @@ var schemaParts = []struct {
 	{"ability-rule-links", schemaAbilityRuleLinksSQL},
 	{"relentless-endurance-action", schemaRelentlessEnduranceActionSQL},
 	{"relentless-endurance-copy", schemaRelentlessEnduranceCopySQL},
+	{"ability-dependency-editor", schemaAbilityDependencyEditorSQL},
 	{"relentless-endurance-resource-hint", schemaRelentlessEnduranceResourceHintSQL},
 }
 

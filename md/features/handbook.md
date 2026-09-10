@@ -364,3 +364,7 @@ is documented in `md/features/starting-shop.md`.
 Handbook MCP read/write tools mirror the current HTTP/store model. Create/update
 must use current field names and item ids. There are no aliases for historical
 field names. See `md/features/mcp.md`.
+
+Иконка и обложка редактируются в `ItemEditModal` для всех типов объектов.
+Файлы выбираются с локальным предпросмотром, сохраняются через item media API;
+удаление снимает индивидуальное оформление, возвращая оформление типа.

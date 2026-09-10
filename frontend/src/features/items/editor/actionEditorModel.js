@@ -29,7 +29,7 @@ export function changeActionResource(data, mode, reference) {
 }
 export function localRuleReferences(data, itemId, itemName) {
   const references = []
-  const add = (kind, block, row, key = row.key || '') => references.push({ kind, block, key, title: row.title || row.label || itemName || 'Текущая способность', itemId: itemId || 0, itemName: itemName || 'Текущая способность' })
+  const add = (kind, block, row, key = row.key || '') => references.push({ kind, block, key, title: row.title || row.label || row.text || itemName || 'Текущая способность', itemId: itemId || 0, itemName: itemName || 'Текущая способность' })
   if (data.max_use != null || data.max_use_stat != null || data.max_use_level_multiplier != null || data.max_use_scaling || data.manual_size) add('resource', 'Ресурс способности', data, '')
   for (const [field, kind, block] of [['use_resources','resource','Отдельный ресурс'],['class_resources','resource_pool','Ресурс класса'],['feature_actions','action','Действие на листе'],['choices','choice','Выбор'],['status_effects','effect_link','Связанный эффект'],['sheet_widgets','widget','Виджет листа'],['weapon_damage','weapon_damage','Дополнительный урон оружия']]) {
     for (const row of data[field] || []) if (row.key) add(kind, block, row)

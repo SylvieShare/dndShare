@@ -130,7 +130,13 @@ ability toggles and `status_effect` for adding or removing linked effects.
 - `POST /api/items/{id}/make-base`
 - `POST /api/items/{id}/icon-image` (multipart PNG/WebP, максимум 5 МБ)
 - `DELETE /api/items/{id}/icon`
+- `POST /api/items/{id}/cover-image` (multipart PNG/WebP/JPEG, максимум 5 МБ)
+- `DELETE /api/items/{id}/cover`
 - `DELETE /api/items/{id}`
+
+Изображения меняет автор объекта или администратор справочника. Замена обложки
+не меняет иконку и наоборот; снятые изображения очищаются только при отсутствии
+других ссылок.
 
 Item DTO содержит `customSourceId` только у пользовательского контента. При
 `POST /api/items` сервер в одной транзакции получает/создаёт default

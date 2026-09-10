@@ -71,6 +71,15 @@ describe('character defenses', () => {
     }])
   })
 
+  it('resolves a story defense from an active feat choice and ignores disabled sources', () => {
+    const values = { abilities_feats: [{ id: 10, choices: { ancestry: ['red'] } }], abilities_story: [{ id: 11 }] }
+    const items = new Map([['11', { id: 11, data: { choice_defenses: [{ source_item_id: 10, choice_key: 'ancestry', options: [{ value: 'red', damage_type: 5, kind: 'resistance' }] }] } }]])
+    const sources = [createAbilityDefenseSource('abilities_story')]
+    expect(collectCharacterDefenses(values, items, sources)).toMatchObject([{ damage_type: 5 }])
+    values.abilities_feats[0].requirements_met = false
+    expect(collectCharacterDefenses(values, items, sources)).toEqual([])
+  })
+
   it('shows defenses contributed by an active status effect', () => {
     const values = { states: [{ uid: 'rage', effect_id: 100 }] }
     const items = new Map([['100', {

@@ -14,7 +14,11 @@
         <details open>
           <summary :title="card.block.hint">{{ cardTitle(card) }}</summary>
           <AbilityActionEditor v-if="card.key === 'feature_actions'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
-          <AbilityResourceFields v-else-if="card.key === 'resources'" :fields="card.block.fields" :data="data" />
+          <AbilityResourceFields v-else-if="['resources', 'use_resources'].includes(card.key)" :fields="card.key === 'resources' ? card.block.fields : card.block.fields[0].fields" :data="card.key === 'resources' ? data : data[card.key][card.index]" :independent="card.key === 'use_resources'" />
+          <AbilityChoiceEditor v-else-if="card.key === 'choices'" :fields="card.block.fields[0].fields" :data="data.choices[card.index]" />
+          <AbilityChoiceDefenseEditor v-else-if="card.key === 'choice_defenses'" :fields="card.block.fields[0].fields" :data="data.choice_defenses[card.index]" />
+          <AbilityPrerequisiteEditor v-else-if="card.key === 'prereq'" :fields="card.block.fields[0].fields" :data="data.prereq" />
+          <AbilityDependencyEditor v-else-if="dependencyManifest[card.key]" :kind="card.key" :fields="card.block.fields[0].fields" :data="data[card.key][card.index]" />
           <AbilityProgressionEditor v-else-if="card.key === 'progression'" :data="data" />
           <AbilityWeaponDamageEditor v-else-if="card.key === 'weapon_damage'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityStatusEffectEditor v-else-if="card.key === 'status_effects'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
@@ -39,6 +43,11 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { dependencyManifest } from './abilityDependencyManifest'
+import AbilityDependencyEditor from './AbilityDependencyEditor.vue'
+import AbilityChoiceEditor from './AbilityChoiceEditor.vue'
+import AbilityChoiceDefenseEditor from './AbilityChoiceDefenseEditor.vue'
+import AbilityPrerequisiteEditor from './AbilityPrerequisiteEditor.vue'
 import { AppModalFrame, BaseTile, ConfirmDialog, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
 import { Plus, Sparkles } from '@lucide/vue'
 import AbilityLevelSource from './AbilityLevelSource.vue'
@@ -57,7 +66,7 @@ const profile = computed(() => abilityEditorProfile(props.fields, props.typeId))
 const { entries, available: availableBlocks, add: addDependency, remove: removeDependency, update } = useAbilityDependencies(profile, props.data)
 function cardTitle(card) {
   const row = card.index == null ? null : props.data[card.key][card.index]
-  const title = row?.title || row?.label
+  const title = row?.title || row?.label || row?.text || card.block.fields[0].fields?.find(f => f.key === 'kind')?.options?.find(o => o.value === row?.kind)?.label
   return `${card.block.name}${title ? ` · ${title}` : card.index == null ? '' : ` · ${card.index + 1}`}`
 }
 const adding = ref(false)

@@ -3,21 +3,26 @@
     <component :is="hideLabel ? 'div' : FormField"
       v-bind="hideLabel ? { role: 'group', 'aria-label': field.name, title: hint } : { label: field.name + (field.required ? ' *' : ''), vertical: true, title: hint }"
     >
-      <RuleReferenceList v-if="field.key === 'required_status_codes'" :model-value="modelValue || []" kind="status" :label="field.name" @update:model-value="set" />
+      <div v-if="field.type === 'enum_array'" class="ability-multi">
+        <FormField v-for="option in options" :key="option.value" :label="option.label">
+          <ToggleSwitch :model-value="(modelValue || []).some(v => String(v) === String(option.value))" :aria-label="option.label" @update:model-value="checked => set(checked ? [...(modelValue || []), option.value] : (modelValue || []).filter(v => String(v) !== String(option.value)))" />
+        </FormField>
+      </div>
+      <RuleReferenceList v-else-if="field.key === 'required_status_codes'" :model-value="modelValue || []" kind="status" :label="field.name" @update:model-value="set" />
       <div v-else-if="referenceKind" class="ability-reference">
         <RuleReferencePicker :kind="referenceKind" :value="modelValue" :label="field.name" :only-current="referenceKind !== 'resource_pool' && referenceKind !== 'status'" :scope-item-id="field.key === 'choice_key' ? contextData.source_item_id || 0 : 0" @pick="entry => set(entry.key)" />
         <RemoveButton v-if="modelValue" icon="trash" :label="`Убрать: ${field.name}`" @click="set('')" />
       </div>
       <InputDescription v-else-if="field.type === 'description'" editable :block="{ id: field.key, content: { placeholder: 'Как работает способность…' } }" :value="modelValue || ''" @update:value="(_, value) => set(value)" />
-      <ToggleSwitch v-else-if="['bool', 'boolean'].includes(field.type)" :model-value="!!modelValue" :aria-label="field.name" @update:model-value="set" />
+      <ToggleSwitch v-else-if="['bool', 'boolean'].includes(field.type)" :model-value="!!(modelValue ?? field.default)" :aria-label="field.name" @update:model-value="set" />
       <FormTextInput v-else-if="['int', 'float'].includes(field.type)" type="number" :step="field.type === 'float' ? 'any' : 1" :aria-label="field.name" :value="modelValue ?? ''" placeholder="Не задано" @update:value="value => set(numberOrNull(value))" />
       <FormTextarea v-else-if="['textarea', 'text_array'].includes(field.type)" :aria-label="field.name" :value="field.type === 'text_array' ? (modelValue || []).join(', ') : modelValue || ''" @update:value="setText" />
       <ColorPresetPicker v-else-if="field.type === 'color'" inline allow-custom :model-value="modelValue || ''" @update:model-value="set" />
       <div v-else-if="field.type === 'item'" class="ability-reference">
-        <button type="button" class="ability-link" :aria-label="field.name" :aria-required="field.required || undefined" @click="editor.openItemPicker(field.item_type, id => { set(id); editor.ensureItemNames([id]) })">{{ editor.itemRefLabel(modelValue) }}</button>
-        <button v-if="modelValue != null" type="button" class="ability-link" :aria-label="`Очистить: ${field.name}`" @click="set(null)">×</button>
+        <button type="button" class="ability-link" :aria-label="field.name" :aria-required="field.required || undefined" @click="editor.openItemPicker(field.item_type, id => { set(id); editor.ensureItemNames([id]) })">{{ editor.itemRefLabel(modelValue?.id ?? modelValue) }}</button>
+        <RemoveButton v-if="modelValue != null" icon="trash" :label="`Очистить: ${field.name}`" @click="set(null)" />
       </div>
-      <FormSelect v-else-if="['select', 'suggest', 'dice'].includes(field.type)" :aria-label="field.name" :value="modelValue ?? ''" @update:value="setSelect">
+      <FormSelect v-else-if="['select', 'suggest', 'dice'].includes(field.type)" :aria-label="field.name" :value="modelValue ?? field.default ?? ''" @update:value="setSelect">
         <option value="">{{ field.emptyLabel || 'Не выбрано' }}</option>
         <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
       </FormSelect>
@@ -25,7 +30,7 @@
         <button v-for="id in modelValue || []" :key="id" type="button" class="ability-link" :aria-label="`Убрать ${editor.getSuggestLabel(editor.getSuggestId(field), id)}`" @click="set(modelValue.filter(value => value !== id))">{{ editor.getSuggestLabel(editor.getSuggestId(field), id) }} ×</button>
         <FormSelect :aria-label="`Добавить: ${field.name}`" value="" @update:value="value => value !== '' && set([...(modelValue || []), Number(value)])">
           <option value="">Добавить…</option>
-          <option v-for="option in options.filter(option => !(modelValue || []).includes(option.value))" :key="option.value" :value="option.value">{{ option.label }}</option>
+          <option v-for="option in options.filter(option => !(modelValue || []).some(v => String(v) === String(option.value)))" :key="option.value" :value="option.value">{{ option.label }}</option>
         </FormSelect>
       </div>
       <ItemMultiSelect
@@ -74,7 +79,7 @@ const pendingRow = ref(null)
 const referenceKind = computed(() => ({ weapon_damage_key: 'weapon_damage', resource_key: 'resource', resource_pool_key: 'resource_pool', status_effect_code: 'status', choice_key: 'choice', status_effect_key: 'effect_link' })[props.field.key])
 const itemReference = computed(() => itemSelectionField(props.field))
 const hint = computed(() => abilityFieldHint(props.field))
-const wide = computed(() => ['description', 'object', 'object_array', 'text_array', 'suggest_array', 'textarea'].includes(props.field.type))
+const wide = computed(() => ['description', 'object', 'object_array', 'text_array', 'suggest_array', 'enum_array', 'textarea'].includes(props.field.type))
 const options = computed(() => {
   if (props.field.type === 'dice') return SYSTEM_DICE.map(die => ({ value: die.id, label: die.value }))
   if (['suggest', 'suggest_array'].includes(props.field.type)) return editor.getSuggests(editor.getSuggestId(props.field)).map(row => ({ value: row.id, label: row.value }))
@@ -83,7 +88,7 @@ const options = computed(() => {
 const expandedRow = ref((props.modelValue || []).length === 1 ? 0 : -1)
 const rowKeys = ref([])
 const set = value => emit('update:modelValue', value)
-function setSelect(value) { set(props.field.type === 'suggest' ? numberOrNull(value) : value || null) }
+function setSelect(value) { set(props.field.type === 'suggest' || props.field.numeric ? numberOrNull(value) : value || null) }
 function setText(value) { set(props.field.type === 'text_array' ? value.split(',').map(entry => entry.trim()).filter(Boolean) : value) }
 function updateRow(index, value) { set(props.modelValue.map((row, rowIndex) => rowIndex === index ? value : row)) }
 function addRow() {

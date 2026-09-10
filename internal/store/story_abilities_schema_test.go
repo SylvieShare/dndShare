@@ -47,6 +47,15 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 		}
 	}
 	want = append(want.([]any), levelFields...)
+	var dependencyPatch map[string]any
+	if err := json.Unmarshal([]byte(strings.Split(schemaAbilityDependencyEditorSQL, "$dependency_fields$")[1]), &dependencyPatch); err != nil {
+		t.Fatal(err)
+	}
+	for index, raw := range want.([]any) {
+		if replacement, ok := dependencyPatch[raw.(map[string]any)["key"].(string)]; ok {
+			want.([]any)[index] = replacement
+		}
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

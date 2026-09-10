@@ -40,7 +40,8 @@ func TestItemRuleReferences(t *testing.T) {
  (3,8,'Чужое',4,'{"use_resources":[{"key":"secret","title":"Скрытый ресурс"}]}'),
  (4,NULL,'Паладин',9,'{"class_resources":[{"key":"channel","title":"Божественный канал"}]}'),
  (5,NULL,'Ярость',15,'{"code":"rage"}'),
- (6,NULL,'Пустое',4,'{"use_resources":null,"feature_actions":{},"max_use":null}');`)
+ (6,NULL,'Пустое',4,'{"use_resources":null,"feature_actions":{},"max_use":null}'),
+ (7,NULL,'Компетентность',4,'{"choices":[{"key":"expertise","text":"Выберите навыки или инструменты"}]}');`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	s := &Store{pool: pool}
 	search := func(user *int64, kind, query string, itemID, excludeID int64, limit, offset int) []ItemRuleReference {
@@ -78,6 +79,9 @@ func TestItemRuleReferences(t *testing.T) {
 	}
 	if refs := search(nil, "counter", "", 0, 0, 40, 0); len(refs) != 1 || refs[0].ValueID != "exhaustion" {
 		t.Fatalf("counter target: %+v", refs)
+	}
+	if choices := search(nil, "choice", "инструменты", 0, 0, 40, 0); len(choices) != 1 || choices[0].Title != "Выберите навыки или инструменты" {
+		t.Fatalf("choice should be found by its visible prompt: %+v", choices)
 	}
 	first, second := search(&user, "resource", "", 0, 0, 1, 0), search(&user, "resource", "", 0, 0, 1, 1)
 	if len(first) != 1 || len(second) != 1 || first[0] == second[0] {

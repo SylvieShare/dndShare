@@ -1,6 +1,6 @@
-.ability-editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.ability-editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: stretch; min-height: 0; flex: 1; grid-template-rows: minmax(0, 1fr); }
 .ability-editor-main, .ability-editor-mechanics { display: flex; flex-direction: column; min-width: 0; gap: 18px; }
-.ability-editor-main { position: sticky; top: 0; }
+.ability-editor-main, .ability-editor-mechanics { overflow-y: auto; min-height: 0; padding-inline-end: 8px; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .ability-editor-intro h3 { margin: 0 0 6px; color: var(--text-1); font: 600 22px var(--font-display); }
 .ability-editor-intro p, .ability-block-hint { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.5; }
 .ability-rule-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
@@ -47,7 +47,8 @@
 .ability-source-trigger:hover { color: var(--accent); }
 @media (max-width: 760px) {
   .ability-editor { grid-template-columns: 1fr; gap: 26px; }
-  .ability-editor-main { position: static; }
+  .ability-editor-main, .ability-editor-mechanics { overflow: visible; padding-inline-end: 0; scrollbar-gutter: auto; }
+  .ability-editor { flex: none; grid-template-rows: auto; }
 }
 @media (max-width: 420px) {
   .ability-rule-fields { grid-template-columns: 1fr; }
@@ -63,3 +64,6 @@
 .ability-progression-preview > span { display: flex; flex-direction: column; gap: 3px; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: var(--r-sm); }
 .ability-progression-preview small { color: var(--text-muted); font-size: 10px; }
 .ability-progression-preview strong { color: var(--text-2); font-size: 13px; }
+
+.ability-condition-fields { display: flex; flex-direction: column; gap: 12px; border-inline-start: 2px solid var(--border-strong); padding-inline-start: 12px; min-width: 0; }
+.ability-row-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }

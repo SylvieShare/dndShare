@@ -1,3 +1,4 @@
+import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 import { collectStatusDefenses } from './characterStatuses'
@@ -83,7 +84,7 @@ export function createAbilityDefenseSource(valueId) {
           }]
         })
         const selected = (Array.isArray(item.data?.choice_defenses) ? item.data.choice_defenses : []).flatMap((rule, index) => {
-          const sourceEntry = entries.find((candidate) => String(candidate?.id) === String(rule?.source_item_id))
+          const sourceEntry = ABILITY_VALUE_IDS.flatMap(key => (Array.isArray(values[key]) ? values[key] : []).filter(candidate => featureEntryActive(key, candidate))).find(candidate => String(candidate?.id) === String(rule?.source_item_id))
           const choices = Array.isArray(sourceEntry?.choices?.[rule?.choice_key]) ? sourceEntry.choices[rule.choice_key] : []
           return choices.flatMap((choice) => (Array.isArray(rule?.options) ? rule.options : []).flatMap((option) => {
             const damageType = normalizedDamageType(option?.damage_type)

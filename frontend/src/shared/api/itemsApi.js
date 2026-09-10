@@ -42,6 +42,14 @@ export const itemsApi = {
     if (!response.ok) throw new Error(String(response.status))
     return response.json()
   },
+  async uploadCoverImage(id, file) {
+    const form = new FormData()
+    form.append('file', file)
+    const response = await fetch(`/api/items/${id}/cover-image`, { method: 'POST', body: form })
+    if (!response.ok) throw new Error(String(response.status))
+    return response.json()
+  },
+  clearCover(id) { return fetchDelete('/items/' + id + '/cover') },
   clearIcon(id) {
     return fetchDelete('/items/' + id + '/icon')
   },

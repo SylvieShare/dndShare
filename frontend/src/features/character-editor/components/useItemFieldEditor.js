@@ -68,7 +68,7 @@ export function useItemFieldEditor(formData, openItemPicker) {
     const ids = []
     for (const field of fields || []) {
       const value = data?.[field.key]
-      if (field.type === 'item' && value != null) ids.push(value)
+      if (field.type === 'item' && value != null) ids.push(value?.id ?? value)
       else if (field.type === 'object' && value) ids.push(...collectItemRefIds(field.fields, value))
       else if (field.type === 'object_array' && Array.isArray(value)) {
         for (const row of value) ids.push(...collectItemRefIds(field.fields, row))

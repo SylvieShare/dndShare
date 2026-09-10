@@ -1,5 +1,5 @@
 <template>
-  <AppModalFrame wide :extra-wide="isAbility" :title="item ? (isAbility ? 'Редактировать способность' : 'Редактировать предмет') : (isAbility ? 'Новая способность' : typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="zIndex" @close="$emit('close')">
+  <AppModalFrame :body-scroll="!isAbility || narrow" wide :extra-wide="isAbility" :title="item ? (isAbility ? 'Редактировать способность' : 'Редактировать предмет') : (isAbility ? 'Новая способность' : typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="zIndex" @close="$emit('close')">
 
     <div v-if="loadError" role="alert"><p>{{ loadError }}</p><button type="button" class="ability-link" @click="loadForm">Повторить загрузку</button></div>
     <p v-else-if="!ready" class="iem-required-hint">Загрузка формы…</p>
@@ -21,35 +21,7 @@
         />
       </FormField>
 
-      <FormField v-if="typeId === 5" label="Иконка" title="PNG или WebP, до 5 МБ" vertical>
-        <div class="iem-icon-editor">
-          <div class="iem-icon-preview" :class="{ empty: !hasIconPreview }">
-            <img v-if="iconPreviewUrl" :src="iconPreviewUrl" alt="" />
-            <ItemIcon
-              v-else-if="!iconRemoved && (item?.iconImageUrl || item?.svg)"
-              :item="item"
-              :fallback-to-type="false"
-              :size="64"
-            />
-            <span v-else>Нет иконки</span>
-          </div>
-          <div class="iem-icon-actions">
-            <button type="button" class="iem-icon-button" @click="iconFileInput?.click()">
-              {{ hasIconPreview ? 'Заменить' : 'Выбрать файл' }}
-            </button>
-            <button v-if="hasIconPreview" type="button" class="iem-icon-button danger" @click="removeIcon">
-              Удалить
-            </button>
-          </div>
-          <input
-            ref="iconFileInput"
-            type="file"
-            accept="image/png,image/webp,.png,.webp"
-            hidden
-            @change="onIconFileChange"
-          />
-        </div>
-      </FormField>
+      <ItemMediaEditor :item="persistedItem || item" :media="media" :z-index="zIndex" />
 
       <ItemSourcePicker v-if="showPublicationSources && contentSources.length" v-model="selectedContentSourceIds" :sources="contentSources" :z-index="zIndex + 200" />
       <div v-if="!isAbility" class="iem-fields-grid">
@@ -85,15 +57,15 @@ import AbilityEditor from '@/features/items/editor/AbilityEditor.vue'
 import ItemSourcePicker from '@/features/items/editor/ItemSourcePicker.vue'
 import { ABILITY_TYPE_IDS } from '@/shared/lib/abilityTypes'
 import '@/features/items/editor/abilityEditor.css'
-import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref } from 'vue'
-import { AppModalFrame } from '@sylvieshare/share-ui'
+import { computed, nextTick, onMounted, provide, reactive, ref } from 'vue'
+import { AppModalFrame, useMediaQuery } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemSchemaField from './ItemSchemaField.vue'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import ItemMediaEditor from '@/features/items/editor/ItemMediaEditor.vue'
+import { useItemMedia } from '@/features/items/editor/useItemMedia'
 import { fetchPost, fetchPut } from '@/shared/api/http'
-import { itemsApi } from '@/shared/api/itemsApi'
 import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
@@ -142,11 +114,9 @@ const missingRequiredFields = computed(() => editableTypeFields.value.filter((fi
 const editorValidation = reactive(new Map())
 const canSubmit = computed(() => ready.value && !!formName.value.trim() && missingRequiredFields.value.length === 0 && editorValidation.size === 0)
 const picker = reactive({ open: false, typeId: null, onPick: null })
-const iconFileInput = ref(null)
-const iconFile = ref(null)
-const iconPreviewUrl = ref('')
-const iconRemoved = ref(false)
-const hasIconPreview = computed(() => !!iconPreviewUrl.value || (!iconRemoved.value && !!(props.item?.iconImageUrl || props.item?.svg)))
+const narrow = useMediaQuery('(max-width: 760px)')
+const persistedItem = ref(null)
+const media = useItemMedia()
 const fieldEditor = useItemFieldEditor(formData, openItemPicker)
 Object.defineProperties(fieldEditor, {
   zIndex: { get: () => props.zIndex },
@@ -157,7 +127,6 @@ Object.defineProperties(fieldEditor, {
 fieldEditor.setValidationError = (key, message) => message ? editorValidation.set(key, message) : editorValidation.delete(key)
 provide(itemFieldEditorKey, fieldEditor)
 
-onBeforeUnmount(revokeIconPreview)
 
 onMounted(loadForm)
 
@@ -211,31 +180,11 @@ function onItemPicked(item) {
   picker.open = false
 }
 
-function revokeIconPreview() {
-  if (iconPreviewUrl.value) URL.revokeObjectURL(iconPreviewUrl.value)
-  iconPreviewUrl.value = ''
-}
-
-function onIconFileChange(event) {
-  const file = event.target.files?.[0]
-  if (!file) return
-  revokeIconPreview()
-  iconFile.value = file
-  iconPreviewUrl.value = URL.createObjectURL(file)
-  iconRemoved.value = false
-  event.target.value = ''
-}
-
-function removeIcon() {
-  revokeIconPreview()
-  iconFile.value = null
-  iconRemoved.value = true
-}
-
 async function submit() {
   if (!canSubmit.value || saving.value) return
   saving.value = true
   saveError.value = ''
+  let contentSaved = false
   try {
     const data = normalizeDataForSave({ ...formData }, typeFields.value)
     let saved
@@ -245,25 +194,23 @@ async function submit() {
     }
     if (showPublicationSources.value) payload.contentSourceIds = selectedContentSourceIds.value
     if (props.showNameEn) payload.nameEn = formNameEn.value.trim() || null
-    if (props.item) {
-      await fetchPut('/items/' + props.item.id, payload)
-      saved = { ...props.item, ...payload }
+    if (persistedItem.value || props.item) {
+      const current = persistedItem.value || props.item
+      await fetchPut('/items/' + current.id, payload)
+      saved = { ...current, ...payload }
     } else {
       saved = await fetchPost('/items', { typeId: props.typeId, ...payload })
       if (props.showNameEn) saved = { ...saved, nameEn: payload.nameEn }
     }
-    if (props.typeId === 5 && iconFile.value) {
-      const icon = await itemsApi.uploadIconImage(saved.id, iconFile.value)
-      saved = { ...saved, iconSvgId: null, svg: null, ...icon }
-    } else if (props.typeId === 5 && iconRemoved.value && props.item) {
-      await itemsApi.clearIcon(saved.id)
-      saved = { ...saved, iconSvgId: null, iconImageId: null, svg: null, iconImageUrl: null }
-    }
+    persistedItem.value = saved
+    contentSaved = true
+    await media.save(persistedItem.value)
+    saved = persistedItem.value
     itemTypesStore.reset()
     emit('saved', saved)
     emit('close')
   } catch (error) {
-    saveError.value = `Не удалось сохранить: ${error.message}`
+    saveError.value = contentSaved ? `Объект сохранён, но загрузка изображений не завершена: ${error.message}. Повторите сохранение.` : `Не удалось сохранить: ${error.message}`
   } finally {
     saving.value = false
   }
