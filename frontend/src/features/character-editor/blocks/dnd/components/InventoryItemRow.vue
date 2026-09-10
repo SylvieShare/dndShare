@@ -31,6 +31,7 @@
           </span>
         </span>
         <span v-if="entryTypeId(entry) === MAGIC_ITEM_TYPE_ID && entry.display.base?.data?.attunement !== 'none'" class="di-item-meta">{{ entry.params?.magic?.attuned ? 'Настроен' : 'Требует настройки' }}</span>
+        <span v-if="entry.display.base?.data?.weapon && !entry.display.base.data.weapon.base_item_id && !entry.params?.weapon_base_item_id" class="di-item-meta">Выберите оружейную основу в магических свойствах</span>
         <span v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
           <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
           <span v-if="toolProficiencyRank(entry) >= 2" class="di-item-proficient">Компетентность</span>

@@ -2,6 +2,7 @@
   <AppModalFrame :title="item.name" subtitle="Магические свойства экземпляра" :z-index="4500" @close="$emit('close')">
     <div class="ability-rule-fields">
       <p>{{ active ? 'Свойства предмета действуют на листе.' : !levelAvailable ? 'Свойства пока недоступны на этом уровне.' : equipped || item.data?.activation === 'carried' ? 'Для магических свойств нужна настройка.' : 'Переместите предмет в «Экипировано», чтобы его свойства действовали.' }}</p>
+      <MagicWeaponBase :item="item" :entry="entry" @pick="setWeaponBase" />
       <FormField v-if="item.data?.attunement !== 'none'" label="Настроен на персонажа" :title="item.data?.attunement_requirement || 'Отметьте после настройки на этот экземпляр.'">
         <ToggleSwitch :model-value="!!state.attuned" aria-label="Настроен на персонажа" @update:model-value="value => save({ attuned: value })" />
       </FormField>
@@ -19,10 +20,11 @@
 <script setup>
 import { computed, inject, ref, unref } from 'vue'
 import { AppModalFrame, FormField, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
+import MagicWeaponBase from './MagicWeaponBase.vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { actionableItemChoices } from '@/features/items/lib/itemChoices'
-import { magicItemActive, updateMagicItemState } from '@/features/character-editor/lib/characterMagicItems'
+import { magicItemActive, updateMagicItemState, mapInventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
 const props = defineProps({ item: Object, uid: String, items: Object })
 const emit = defineEmits(['close', 'update:items'])
 const equipped = computed(() => (props.items?.equipped || []).some(entry => entry.uid === props.uid))
@@ -34,5 +36,6 @@ const state = computed(() => entry.value?.params?.magic || {})
 const active = computed(() => magicItemActive(props.item, entry.value, equipped.value, values.value))
 const hasChoices = computed(() => actionableItemChoices(props.item).length > 0)
 const choosing = ref(false)
+function setWeaponBase(id) { emit('update:items', mapInventoryEntries(props.items, row => row.uid === props.uid ? { ...row, params: { ...row.params, weapon_base_item_id: id } } : row)) }
 function save(patch) { emit('update:items', updateMagicItemState(props.items, props.uid, patch)) }
 </script>

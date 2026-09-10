@@ -18,7 +18,7 @@ import {
   startingWealthFormula,
 } from '@/features/character-editor/settings/dnd/creation/startingShop'
 
-const CATALOGUE_TYPE_IDS = [1, 2, 10, 12, 13, 14]
+const CATALOGUE_TYPE_IDS = [1, 2, 10, 12, 13, 14, 19]
 
 function inventoryEntry(item, count = 1, type = null) {
   return {

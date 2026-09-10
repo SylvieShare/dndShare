@@ -1831,5 +1831,115 @@
       "key": "level_source",
       "value": "class"
     }
+  },
+  {
+    "key": "treasure",
+    "name": "Участвует в генераторе сокровищ",
+    "type": "object",
+    "optional": true,
+    "hint": "Включайте только предметы, которые мастер может получить случайным подбором. Не влияет на стартовый магазин.",
+    "fields": [
+      {
+        "key": "weight",
+        "name": "Вес выпадения",
+        "type": "int",
+        "min": 1,
+        "max": 1000,
+        "default": 10,
+        "required": true,
+        "hint": "Относительный вес среди подходящих предметов: 20 выпадает вдвое чаще 10. Это не процент."
+      },
+      {
+        "key": "min_level",
+        "name": "С уровня группы",
+        "type": "int",
+        "min": 1,
+        "max": 20,
+        "default": 1,
+        "required": true
+      },
+      {
+        "key": "max_level",
+        "name": "До уровня группы",
+        "type": "int",
+        "min": 1,
+        "max": 20,
+        "default": 20,
+        "required": true
+      }
+    ]
+  },
+  {
+    "key": "weapon",
+    "name": "Используется как оружие",
+    "type": "object",
+    "optional": true,
+    "hint": "Экипированный предмет появится в оружии. Основа задаёт урон и владение; магические зависимости остаются у этого экземпляра.",
+    "fields": [
+      {
+        "key": "base_item_id",
+        "name": "Фиксированная основа",
+        "type": "item",
+        "item_type": 1,
+        "hint": "Выберите, если предмет всегда имеет один вид: например, кинжал. Пусто — игрок выбирает основу экземпляра."
+      },
+      {
+        "key": "allowed_base_item_ids",
+        "name": "Допустимые основы на выбор",
+        "type": "item_array",
+        "item_type": 1,
+        "hint": "Пустой список разрешает любой вид оружия. Показывается, если фиксированная основа не задана."
+      },
+      {
+        "key": "magic_bonus",
+        "name": "Бонус к атаке и урону",
+        "type": "int",
+        "min": 0,
+        "max": 3,
+        "default": 0,
+        "hint": "Прибавка только этого оружия. Не нужно повторять её в зависимостях."
+      },
+      {
+        "key": "bonus_without_attunement",
+        "name": "Бонус действует без настройки",
+        "type": "bool",
+        "hint": "Отметьте только если правило предмета отдельно разрешает этот бонус до настройки."
+      },
+      {
+        "key": "damage_type",
+        "name": "Заменить основной тип урона",
+        "type": "suggest",
+        "suggest_id": 12,
+        "optional": true
+      },
+      {
+        "key": "extra_tags",
+        "name": "Добавить свойства оружия",
+        "type": "suggest_array",
+        "suggest_id": 14,
+        "optional": true
+      },
+      {
+        "key": "extra_proficiencies",
+        "name": "Дополнительные владения",
+        "type": "suggest_array",
+        "suggest_id": 4,
+        "optional": true
+      },
+      {
+        "key": "range_min",
+        "name": "Изменить обычную дистанцию, фт.",
+        "type": "int",
+        "min": 0,
+        "optional": true
+      },
+      {
+        "key": "range_max",
+        "name": "Изменить предельную дистанцию, фт.",
+        "type": "int",
+        "min": 0,
+        "optional": true
+      }
+    ]
   }
 ]

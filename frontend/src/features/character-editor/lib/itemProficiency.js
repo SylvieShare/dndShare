@@ -29,6 +29,7 @@ function normalized(value) {
 }
 
 export function itemProficiencyRule(item) {
+  if (Number(item?.typeId) === 19 && item?.data?.weapon) return RULES[1]
   return RULES[Number(item?.typeId)] || null
 }
 

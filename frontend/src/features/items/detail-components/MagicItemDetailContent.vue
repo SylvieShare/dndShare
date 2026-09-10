@@ -6,6 +6,11 @@
       <p>{{ data.activation === 'carried' ? 'Свойства действуют, пока предмет находится в инвентаре.' : 'Свойства действуют, когда предмет экипирован или находится в руках.' }}</p>
     </DetailSection>
     <ItemDetailContent :item="item" :show-title="false" :economy-in-header="economyInHeader" />
+    <DetailSection v-if="data.weapon" label="Оружие на листе">
+      <p>Экипированный предмет добавляет атаку в блок оружия. Настройка и заряды остаются у того же экземпляра в инвентаре.</p>
+      <p v-if="!data.weapon.base_item_id">Выберите оружейную основу в «Магических свойствах» экземпляра.</p>
+      <p v-if="data.weapon.magic_bonus">Бонус к атаке и урону: +{{ data.weapon.magic_bonus }}<template v-if="data.attunement === 'required' && !data.weapon.bonus_without_attunement"> после настройки</template>.</p>
+    </DetailSection>
     <DetailSection v-if="data.max_use || data.use_resources?.length || data.recharge_note" label="Заряды и восстановление">
       <p v-if="data.max_use">Максимум зарядов: {{ data.max_use }}</p>
       <p v-for="resource in data.use_resources || []" :key="resource.key">{{ resource.title }}<template v-if="resource.max_use != null">: {{ resource.max_use }}</template></p>

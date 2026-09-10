@@ -133,6 +133,7 @@ const TYPE_LABELS = [
   { id: 12, label: 'Доспехи' },
   { id: 10, label: 'Зелья' },
   { id: 13, label: 'Транспорт' },
+  { id: 19, label: 'Магические предметы' },
 ]
 const activeType = ref(2)
 const query = ref('')

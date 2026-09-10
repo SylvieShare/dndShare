@@ -1,11 +1,14 @@
 import { ref } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 
+import { resolveMagicWeapon, weaponBaseId } from '@/features/character-editor/lib/magicWeapons'
+
 export function useWeaponItems({ tagMap, tagDetailsMap }) {
   const itemMap = ref({})
 
   function item(entry) {
-    return itemMap.value[entry.item_id] || null
+    const raw = itemMap.value[entry.item_id] || null
+    return entry._inventory ? resolveMagicWeapon(raw, entry, itemMap.value) : raw
   }
 
   function itemTitle(entry) {
@@ -59,11 +62,12 @@ export function useWeaponItems({ tagMap, tagDetailsMap }) {
   async function loadItems(entries) {
     const ids = [...new Set(entries.map(e => e.item_id).filter(Boolean))]
     const missing = ids.filter(id => !itemMap.value[id])
-    if (!missing.length) return
-    const res = await itemsApi.byIds(missing)
+    const res = missing.length ? await itemsApi.byIds(missing) : { items: [] }
     const next = { ...itemMap.value }
     for (const it of res.items || []) next[it.id] = it
-    itemMap.value = next
+    const baseIds = [...new Set(entries.map(entry => weaponBaseId(next[entry.item_id], entry)).filter(id => id && !next[id]))]
+    if (baseIds.length) for (const base of (await itemsApi.byIds(baseIds)).items || []) next[base.id] = base
+    if (missing.length || baseIds.length) itemMap.value = { ...itemMap.value, ...next }
   }
 
   function addItem(it) {

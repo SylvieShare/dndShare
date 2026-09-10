@@ -6,7 +6,7 @@ export const RESOURCE_KEYS = [
   'rollback_short_rest', 'rollback_long_rest', 'rollback_short_rest_level',
   'short_rest_recovery', 'short_rest_recovery_level',
 ]
-export const MAGIC_ITEM_PROPERTY_KEYS = ['desc', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'recharge_note', 'cost', 'weight', 'consumable', 'is_container', 'equipment_category', 'measurement', 'unit_cost_copper', 'unit_weight', 'contents', 'armor', 'category', 'required_armor_proficiency', 'strength_required', 'stealth_disadvantage', 'available_in_starting_shop']
+export const MAGIC_ITEM_PROPERTY_KEYS = ['weapon', 'treasure', 'desc', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'recharge_note', 'cost', 'weight', 'consumable', 'is_container', 'equipment_category', 'measurement', 'unit_cost_copper', 'unit_weight', 'contents', 'armor', 'category', 'required_armor_proficiency', 'strength_required', 'stealth_disadvantage', 'available_in_starting_shop']
 const BASIC_KEYS = ['desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',

@@ -1,0 +1,30 @@
+.master-tools { max-width: 1360px; margin: 0 auto; padding: 32px 28px; }
+.tools-header { margin-bottom: 20px; }
+.tools-header h1 { margin: 6px 0; font-family: var(--font-display); font-size: 40px; }
+.tools-header p, .tools-muted { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
+.tools-eyebrow { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
+.tools-columns { display: grid; grid-template-columns: minmax(300px, 390px) minmax(0, 1fr); gap: 28px; align-items: start; padding-top: 24px; }
+.tools-settings { display: flex; flex-direction: column; gap: 18px; padding: 24px; }
+.tools-settings h2, .tools-result h2 { margin: 0; font-family: var(--font-display); font-size: 28px; }
+.tools-settings p { margin: 0; }
+.tools-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px; }
+.tools-result { min-width: 0; }
+.tools-result-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.tools-empty { padding: 52px 24px; display: flex; align-items: center; flex-direction: column; text-align: center; gap: 14px; color: var(--text-muted); }
+.tools-empty p { max-width: 420px; line-height: 1.7; }
+.tools-scene { padding: 28px; }
+.tools-scene-lead { font-size: 18px; line-height: 1.8; }
+.tools-scene section { margin-top: 26px; padding-left: 18px; border-left: 2px solid var(--border); }
+.tools-scene h3 { font-size: 13px; color: var(--accent); }
+.tools-scene section p { line-height: 1.75; color: var(--text-2); }
+.treasure-item { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.treasure-item:hover { background: var(--surface-raised); }
+.treasure-note { display: block; padding: 0 20px 12px; }
+@media (min-width: 901px) {
+  .tools-settings, .tools-result { max-height: calc(100dvh - 255px); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+}
+@media (max-width: 900px) {
+  .master-tools { padding: 24px 16px; }
+  .tools-columns { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
+@media (max-width: 400px) { .tools-fields { grid-template-columns: minmax(0, 1fr); } }

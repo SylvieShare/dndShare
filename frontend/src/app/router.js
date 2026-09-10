@@ -17,6 +17,7 @@ import ViewJoinSession from '@/features/sessions/pages/ViewJoinSession'
 import ViewAccount from '@/features/account/pages/ViewAccount.vue'
 import ViewEncounterScreen from '@/features/sessions/pages/ViewEncounterScreen.vue'
 import ViewSession from '@/features/sessions/pages/ViewSession'
+import ViewMasterTools from '@/features/master-tools/pages/ViewMasterTools.vue'
 import ViewSessions from '@/features/sessions/pages/ViewSessions'
 import { fetchGet } from '@/shared/api/http'
 import { getSessions } from '@/shared/api/sessionsApi'
@@ -40,8 +41,9 @@ const sectionOrder = {
     handbook: 0,
     rules: 1,
     sessions: 2,
-    characters: 3,
-    admin: 4,
+    tools: 3,
+    characters: 4,
+    admin: 5,
 }
 
 export const pageTransitionName = ref('page-forward')
@@ -90,6 +92,7 @@ function setPrefetch(fullPath, promise) {
 }
 
 const routes = [
+    { path: '/tools', name: 'MasterTools', component: ViewMasterTools, meta: { title: 'Инструменты', section: 'tools', depth: 0 } },
     {
         path: '/',
         name: "Home",

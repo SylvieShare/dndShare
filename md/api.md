@@ -518,3 +518,12 @@ expose participant or character-sheet data:
 
 `POST /mcp` — bearer-authenticated JSON-RPC endpoint. Его tool contract описан
 в `md/features/mcp.md`; он не имеет HTTP compatibility aliases.
+
+### Инструменты мастера
+
+`GET /api/master-tools/treasure-pool` требует авторизации. Возвращает обычный
+`{items:[Item]}` только для публичного и собственного снаряжения типов
+1/2/10/12/13/14/19 с объектом `data.treasure`. Поддерживает стандартные параметры
+content scope, включая `sourceVersionId` и `contentSourceIds`. Случайный выбор
+и фильтры уровня/редкости выполняет клиент; запрос не выдаёт предметы персонажу.
+Полный контракт: [инструменты мастера](features/master-tools.md).

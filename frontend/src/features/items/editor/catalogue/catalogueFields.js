@@ -113,6 +113,7 @@ export function catalogueField(field, typeId, path) {
 
 export function catalogueFieldVisible(field, data, typeId, path, root = data) {
   if (typeId === 19 && ['category', 'required_armor_proficiency', 'strength_required', 'stealth_disadvantage'].includes(path)) return !!data.armor
+  if (path === 'weapon.allowed_base_item_ids') return !data.base_item_id
   if (path === 'identity.source') return false
   if (path === 'spellcasting.progression') return false
   if (typeId === 1 && ['range_min', 'range_max'].includes(path)) return !!data.is_long_range || (data.tags || []).some(tag => [1, 4, 6, 11].includes(Number(tag))) || data.range_min != null || data.range_max != null

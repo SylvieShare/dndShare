@@ -34,6 +34,7 @@ const subtitle = computed(() => {
   const parts = [
     data.value.type || data.value.subtype,
     ...(Number(props.item.typeId || props.type?.id) === 19 ? [magicItemRarity(data.value.rarity), magicAttunementLabel(data.value.attunement)] : []),
+    data.value.weapon?.magic_bonus ? `Оружейный бонус +${data.value.weapon.magic_bonus}` : null,
     weightLabel,
     data.value.is_container ? 'Контейнер' : null,
     data.value.consumable ? 'Расходуемый' : null,

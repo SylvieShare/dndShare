@@ -69,6 +69,7 @@ import CharacterEntryPickerModal from '@/features/character-editor/components/Ch
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { collectCharacterFeatureActions, featureActionEffectPatch, groupCharacterFeatureActions } from '@/features/character-editor/lib/characterFeatureActions'
+import { equippedMagicWeapons, intrinsicWeaponBonus, weaponBaseId } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from '@/features/character-editor/blocks/dnd/lib/itemEntry'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -98,14 +99,14 @@ const targetEntries = computed(() => {
   const action = targetAction.value
   if (!action || action.target_kind !== 'weapon') return []
   const parameter = action.target_parameter || 'weapon_uid'
-  return (Array.isArray(props.values?.weapon) ? props.values.weapon : []).map((entry, index) => {
+  return [...(Array.isArray(props.values?.weapon) ? props.values.weapon : []), ...equippedMagicWeapons(props.values, Object.fromEntries(itemsById.value))].map((entry, index) => {
     const item = itemsById.value.get(String(entry.item_id)) || null
     const active = !!targetEffect.value && !!charCtx.characterStatuses?.activeByParam?.(
       targetEffect.value,
       parameter,
       entry.uid,
     )
-    const magicBonus = Math.max(0, Number(entry.params?.magic_bonus) || 0)
+    const magicBonus = Math.max(0, Number(entry.params?.magic_bonus) || 0) + intrinsicWeaponBonus(entry, item, props.values)
     return {
       key: entry.uid || `${entry.item_id}-${index}`,
       value: entry,
@@ -193,12 +194,14 @@ async function openTargetPicker(action) {
   targetAction.value = action
   targetLoading.value = true
   const targetItemIds = action.target_kind === 'weapon'
-    ? (props.values?.weapon || []).map(entry => entry.item_id).filter(id => id != null)
+    ? [...(props.values?.weapon || []), ...(props.values?.items?.equipped || [])].map(entry => entry.item_id).filter(id => id != null)
     : []
   await Promise.all([
     charCtx.characterResources?.ensureItems?.(targetItemIds),
     charCtx.characterStatuses?.ensureCatalog?.(),
   ])
+  const bases = (props.values?.items?.equipped || []).map(entry => weaponBaseId(itemsById.value.get(String(entry.item_id)), entry)).filter(Boolean)
+  if (bases.length) await charCtx.characterResources?.ensureItems?.(bases)
   targetLoading.value = false
 }
 

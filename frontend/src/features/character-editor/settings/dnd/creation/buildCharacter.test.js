@@ -222,6 +222,19 @@ describe('buildCharacterData starting equipment', () => {
     expect(result.data.values.proficiencies['Инструменты']).toEqual(['Кости'])
   })
 
+  it('splits starting magic equipment into independent inventory instances', () => {
+    const result = buildCharacterData({
+      race: selection(1, 'Человек'), charClass: selection(2, 'Плут'),
+      equipment: [{ item_id: 263, name: 'Клинок', typeId: 19, count: 2, params: {} }],
+      suggestValue: () => '',
+    })
+    const copies = result.data.values.items.sections[0].items
+    expect(copies).toHaveLength(2)
+    expect(new Set(copies.map(e => e.uid)).size).toBe(2)
+    expect(copies.every(e => e.count === 1 && e.item_id === 263)).toBe(true)
+    expect(result.data.values.weapon).toBeUndefined()
+  })
+
   it('puts handbook weapons into the dedicated weapon block instead of inventory', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),

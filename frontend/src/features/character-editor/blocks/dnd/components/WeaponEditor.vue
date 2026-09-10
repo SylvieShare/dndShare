@@ -12,7 +12,7 @@
           @update:model-value="ctx.setField(index, 'stat_suggest_id', $event)"
         />
       </FormField>
-      <FormField vertical label="Магия">
+      <FormField :label="entry._inventory ? 'Дополнительный бонус' : 'Магия'" vertical>
         <MultiToggle
           :options="ctx.magicOptions"
           :model-value="entry.params?.magic_bonus ?? 0"

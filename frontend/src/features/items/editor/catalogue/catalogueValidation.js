@@ -29,6 +29,8 @@ export function catalogueValidation(fields, data, typeId) {
     }
   }
   walk(fields, data)
+  if (data.treasure && Number(data.treasure.min_level) > Number(data.treasure.max_level)) errors.push('Сокровища: нижняя граница уровня не может превышать верхнюю.')
+  if (data.weapon?.range_min != null && data.weapon?.range_max != null && Number(data.weapon.range_min) > Number(data.weapon.range_max)) errors.push('Оружие: предельная дистанция не может быть меньше обычной.')
   if (typeId === 1 && data.range_max != null && data.range_min != null && Number(data.range_max) < Number(data.range_min)) errors.push('Предельная дистанция не может быть меньше обычной.')
   if (typeId === 15 && ['rounds', 'minutes', 'hours'].includes(data.duration?.kind) && !(Number(data.duration.value) > 0)) errors.push('Укажите длительность эффекта больше нуля.')
   return [...new Set(errors)]

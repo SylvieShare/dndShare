@@ -63,5 +63,42 @@
   { "key": "for_exotic_mount", "name": "Для экзотического скакуна", "type": "boolean", "show_on": { "key": "tack_kind", "value": "exotic_saddle" } },
   { "key": "cost", "name": "Стоимость", "type": "int_by_suggest", "suggest_type_id": 17 },
   {"key":"weight","name":"Вес, фнт.","type":"float"},
-  { "key": "available_in_starting_shop", "name": "Доступно в магазине при создании", "type": "boolean", "filter": true }
+  { "key": "available_in_starting_shop", "name": "Доступно в магазине при создании", "type": "boolean", "filter": true },
+{
+  "key": "treasure",
+  "name": "Участвует в генераторе сокровищ",
+  "type": "object",
+  "optional": true,
+  "hint": "Включайте только предметы, которые мастер может получить случайным подбором. Не влияет на стартовый магазин.",
+  "fields": [
+    {
+      "key": "weight",
+      "name": "Вес выпадения",
+      "type": "int",
+      "min": 1,
+      "max": 1000,
+      "default": 10,
+      "required": true,
+      "hint": "Относительный вес среди подходящих предметов: 20 выпадает вдвое чаще 10. Это не процент."
+    },
+    {
+      "key": "min_level",
+      "name": "С уровня группы",
+      "type": "int",
+      "min": 1,
+      "max": 20,
+      "default": 1,
+      "required": true
+    },
+    {
+      "key": "max_level",
+      "name": "До уровня группы",
+      "type": "int",
+      "min": 1,
+      "max": 20,
+      "default": 20,
+      "required": true
+    }
+  ]
+}
 ]

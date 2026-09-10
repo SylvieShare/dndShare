@@ -314,6 +314,9 @@ export function buildCharacterData(input) {
     params: { ...(entry.params || {}) },
     override: entry.item_id == null ? { name: entry.name || 'Предмет' } : null,
   })
+  const inventoryEntries = (list, prefix) => list.flatMap((entry, i) => Number(entry.typeId) === 19
+    ? Array.from({ length: Math.max(1, Number(entry.count) || 1) }, (_, copy) => ({ ...ownedEntry(entry, `${i}_${copy}`, prefix), count: 1 }))
+    : [ownedEntry(entry, i, prefix)])
   if (weapons.length) {
     values.weapon = weapons.flatMap((entry) => Array.from(
       { length: Math.max(1, Number(entry.count) || 1) },
@@ -323,11 +326,11 @@ export function buildCharacterData(input) {
   if (potions.length) values.potions = potions.map((entry, index) => ownedEntry(entry, index, 'potion'))
   if (inventory.length || equippedArmor.length) {
     values.items = {
-      equipped: equippedArmor.map((entry, i) => ownedEntry(entry, i, 'worn')),
+      equipped: inventoryEntries(equippedArmor, 'worn'),
       sections: inventory.length ? [{
         id: 'bag',
         name: 'Снаряжение',
-        items: inventory.map((entry, i) => ownedEntry(entry, i, 'eq')),
+        items: inventoryEntries(inventory, 'eq'),
       }] : [],
     }
   }

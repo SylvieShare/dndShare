@@ -194,6 +194,8 @@ import { SAVE_ABBR, STAT_FULL, STAT_KEYS, STAT_SHORT, SUGGEST16_TO_STAT } from '
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { normalizeCounters } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
 import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { equippedMagicWeapons, resolveMagicWeapon, weaponBaseId, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
+import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { abilityModifiersBySuggest, weaponAbilityModifier } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 import { dieLabel } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
@@ -204,7 +206,7 @@ import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { collectCharacterHpBonuses } from '@/features/character-editor/lib/characterHitPoints'
 import { normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import {
-  collectCharacterDerivedEffects,
+  collectCharacterDerivedEffects, derivedGrantedProficiencies,
   derivedArmorRules,
   derivedNumericBonus,
   derivedProficiency,
@@ -316,18 +318,18 @@ function attackParts(entry, item) {
   const baseParts = (item?.data?.attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type }))
   const extraParts = (entry.add_attacks || []).map(part => ({ ...part, diceKey: part.dice_id, typeKey: part.type_suggest_id }))
   const result = [...baseParts, ...extraParts].map(part => [diceLabel(part.diceKey) ? `${Number(part.count) || 1}${diceLabel(part.diceKey)}` : '', damageType(part.typeKey)].filter(Boolean).join(' ')).filter(Boolean)
-  const flat = weaponStatMod(entry, item) + (Number(entry.params?.magic_bonus) || 0)
+  const flat = weaponStatMod(entry, item) + (Number(entry.params?.magic_bonus) || 0) + intrinsicWeaponBonus(entry, item, values.value)
   if (flat && result.length) result[0] += ` ${signed(flat)}`
   return result.join(' + ')
 }
-const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.value.weapon : []).slice(0, 8).map((entry, index) => {
-  const item = itemById(entry.item_id); const statMod = weaponStatMod(entry, item)
+const attacks = computed(() => [...(Array.isArray(values.value.weapon) ? values.value.weapon : []), ...equippedMagicWeapons(values.value, catalog.value)].slice(0, 8).map((entry, index) => {
+  const raw = itemById(entry.item_id); const item = entry._inventory ? resolveMagicWeapon(raw, entry, catalog.value) : raw; const statMod = weaponStatMod(entry, item)
   const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'weapon_attack_bonus', values.value, {
     kind: 'attack',
     weaponKind: item?.data?.is_long_range ? 'ranged' : 'melee',
     targetId: entry.uid,
   }).total
-  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.params?.magic_bonus) || 0) + (entry.proficient ? profBonus.value : 0) + sourceBonus, damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
+  return { key: `${entry.item_id}-${index}`, name: item?.name || `Оружие #${entry.item_id || '—'}`, bonus: statMod + (Number(entry.params?.magic_bonus) || 0) + intrinsicWeaponBonus(entry, item, values.value) + (entry.proficient || hasItemProficiency(item, values.value, id => suggest.items(id), derivedGrantedProficiencies(printDerivedEffects.value, 'weapon_proficiency')) ? profBonus.value : 0) + sourceBonus, damage: attackParts(entry, item), properties: weaponProperties(item), description: entry.desc || '' }
 }))
 const attackBlankRows = computed(() => Math.max(0, 5 - attacks.value.length))
 const proficiencyGroups = computed(() => Object.entries(values.value.proficiencies || {}).map(([name, value]) => ({ name, value: Array.isArray(value) ? value.map(text).filter(Boolean).join(', ') : text(value) })).filter(group => group.value))
@@ -516,7 +518,11 @@ async function load() {
     response.value = res; const itemIds = collectItemIds(res.data?.values || {})
     const tasks = [3, 7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
-    await Promise.all(tasks); document.title = `${characterName.value} — лист для печати`
+    await Promise.all(tasks);
+    const bases = [...new Set((values.value.items?.equipped || []).map(entry => weaponBaseId(catalog.value[entry.item_id], entry)).filter(Boolean))]
+    if (bases.length) for (const item of (await itemsApi.byIds(bases)).items || []) catalog.value[item.id] = item
+    await suggest.ensure(4)
+    document.title = `${characterName.value} — лист для печати`
   } catch (e) { error.value = e?.message || 'Произошла ошибка при загрузке.' } finally { loading.value = false }
 }
 function goBack() { router.push({ name: 'Character', params: { uuid: route.params.uuid } }) }

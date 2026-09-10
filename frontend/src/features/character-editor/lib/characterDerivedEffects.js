@@ -30,6 +30,7 @@ function choiceMatches(rule, entry) {
 }
 
 function targetMatches(rule, entry, context) {
+  if (rule.weapon_uid && rule.weapon_uid !== context.targetId) return false
   const targetIds = asArray(rule?.target_ids)
   if (targetIds.length) {
     return context.targetId != null && targetIds.some(value => String(value) === String(context.targetId))
@@ -72,6 +73,7 @@ export function collectCharacterDerivedEffects(values = {}, itemsById = new Map(
         ownerLevel,
         source_label: item.name || 'Способность',
         source_entry: entry,
+        weapon_uid: item.data?.weapon && ['weapon_attack_bonus', 'weapon_damage_bonus', 'critical_threshold'].includes(rule.kind) ? entry.uid : null,
       }]
     })
   }))

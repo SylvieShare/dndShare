@@ -71,7 +71,7 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, BookOpenCheck, CircleAlert, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
+import { BookOpen, BookOpenCheck, Dices, CircleAlert, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
@@ -90,6 +90,7 @@ const icons = {
   handbook: BookOpen,
   rules: BookOpenCheck,
   sessions: ScrollText,
+  tools: Dices,
   characters: Users,
   'create-character': UserRoundPlus,
   admin: Shield,

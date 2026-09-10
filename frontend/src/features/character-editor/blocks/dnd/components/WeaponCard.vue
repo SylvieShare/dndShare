@@ -65,7 +65,8 @@
         :icon="ArrowRightLeft"
         tone="info"
         @click="moveToItems(closeMenu)"
-      >Переместить в вещи</RowActionItem>
+      >{{ entry._inventory ? 'Убрать в рюкзак' : 'Переместить в вещи' }}</RowActionItem>
+      <RowActionItem v-if="ctx.charCtx.ownerMode && entry._inventory" action="edit" @click="closeMenu(); ctx.openMagicInstance(entry)">Магические свойства</RowActionItem>
       <RowActionSeparator v-if="ctx.charCtx.ownerMode" />
       <RowActionItem
         v-if="ctx.charCtx.ownerMode"

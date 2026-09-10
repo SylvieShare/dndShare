@@ -17,6 +17,7 @@ function abilityRows(values, itemsById, field) {
         ...rule,
         key: `${valueId}:${entry.uid || entry.id}:${field}:${field === 'weapon_damage' ? rule.key : index}`,
         owner_level: ownerLevel,
+        weapon_uid: item.data?.weapon && ['weapon_damage', 'critical_damage'].includes(field) ? entry.uid : null,
         source_label: item.name || 'Способность',
       }]
     })
@@ -49,8 +50,9 @@ export function matchingRollAdjustments(effects, scope, context = {}) {
   })
 }
 
-export function extraCriticalWeaponDice(effects, { melee = false } = {}) {
+export function extraCriticalWeaponDice(effects, { melee = false, weaponUid } = {}) {
   return (effects?.criticalDamage || []).reduce((sum, rule) => {
+    if (rule.weapon_uid && rule.weapon_uid !== weaponUid) return sum
     if (rule.weapon_kind === 'melee' && !melee) return sum
     return sum + Math.max(0, Number(rule.extra_weapon_dice) || 0)
   }, 0)
@@ -66,7 +68,7 @@ function weaponKindMatches(rule, context) {
 
 export function matchingWeaponDamageActions(effects, context = {}) {
   return (effects?.weaponDamage || [])
-    .filter(rule => weaponKindMatches(rule, context))
+    .filter(rule => (!rule.weapon_uid || rule.weapon_uid === context.weaponUid) && weaponKindMatches(rule, context))
     .map(rule => ({ ...rule, dice_count: weaponDamageDiceCount(rule, rule.owner_level) }))
     .filter(rule => rule.dice_count > 0 && String(rule.dice || '').trim())
 }

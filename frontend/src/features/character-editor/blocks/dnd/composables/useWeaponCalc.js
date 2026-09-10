@@ -15,13 +15,14 @@ export function useWeaponCalc({
   itemTwoHandedAttacks,
   isProficient = (entry) => !!entry.proficient,
   damageBonusModifier = () => 0,
+  magicBonusModifier = () => 0,
 }) {
   function statMod(entry) {
     return weaponAbilityModifier(entry, item(entry), propertyItems(entry), statsVar.value)
   }
 
   function magicBonus(entry) {
-    return Number(entry.params?.magic_bonus) || 0
+    return (Number(entry.params?.magic_bonus) || 0) + (Number(magicBonusModifier(entry)) || 0)
   }
 
   function attackBonus(entry) {
