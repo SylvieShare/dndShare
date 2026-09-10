@@ -256,6 +256,9 @@ var schemaAbilityEditorDamageSQL string
 //go:embed schema/78_ability_rule_links.sql
 var schemaAbilityRuleLinksSQL string
 
+//go:embed schema/79_relentless_endurance_action.sql
+var schemaRelentlessEnduranceActionSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -340,6 +343,7 @@ var schemaParts = []struct {
 	{"journal-graph", schemaJournalGraphSQL},
 	{"ability-editor-damage", schemaAbilityEditorDamageSQL},
 	{"ability-rule-links", schemaAbilityRuleLinksSQL},
+	{"relentless-endurance-action", schemaRelentlessEnduranceActionSQL},
 }
 
 const (

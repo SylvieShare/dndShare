@@ -602,8 +602,12 @@ on that action as the same color-coded charge spheres used by the resources
 tile: one charge stays at the right edge, while several charges wrap below the
 action text. Short- and long-rest recovery icons sit immediately to the right
 of the action name, and the bound resource is omitted from the shared resources
-tile to avoid a duplicate control. The spheres remain owner-interactive and
-write through the shared resource source contract without triggering the press
+tile to avoid a duplicate control.
+Relentless Endurance contributes a special action bound to its existing single
+long-rest charge. Its description states the trigger (reduced to 0 HP without
+instant death); spending the charge does not automatically change HP.
+The spheres remain owner-interactive and write through the shared resource
+source contract without triggering the press
 animation of the surrounding action row; spending from the action menu
 remains available when the action declares a positive cost. Other consequences
 declared by the action also stay in its row menu. Cunning Action is one source row linking Dash,
