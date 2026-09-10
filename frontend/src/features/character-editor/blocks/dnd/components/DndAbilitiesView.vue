@@ -16,7 +16,7 @@
       <div v-for="i in skeletonCount" :key="i" class="abv-skeleton"></div>
     </div>
 
-    <div v-else class="abv-list">
+    <SectionList v-else embedded>
       <div v-if="!entries.length" class="abv-empty">—</div>
 
       <RowActionMenu
@@ -98,13 +98,13 @@
           </RowActionItem>
         </template>
       </RowActionMenu>
-    </div>
+    </SectionList>
   </div>
 </template>
 
 <script setup>
 import { Activity, Plus } from '@lucide/vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
+import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
@@ -215,9 +215,7 @@ function select(entry, close, action) {
 .abv-status:disabled { cursor: default; opacity: .45; }
 
 .abv--expanded { gap: 8px; padding: 13px; }
-.abv--expanded .abv-list { gap: 0; }
 .abv--expanded .abv-card { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: start; gap: 13px; min-height: 88px; padding: 13px 2px; border: 0; border-radius: 0; background: transparent; }
-.abv--expanded .abv-card + .abv-card { border-top: 1px solid var(--border); }
 .abv--expanded .abv-card:hover { background: color-mix(in srgb, var(--accent) 4%, transparent); }
 .abv--expanded .abv-icon { width: 64px; height: 64px; color: var(--text-2); }
 .abv--expanded .abv-name { font-size: 15px; font-weight: 750; white-space: normal; overflow: visible; }

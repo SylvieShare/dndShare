@@ -26,7 +26,7 @@ describe('ability rows', () => {
     expect(viewSource).not.toContain('class="abv-badge')
     expect(viewSource).toContain('.abv--expanded .abv-description {')
     expect(viewSource).toMatch(/\.abv--expanded \.abv-card \{[^}]*grid-template-columns: 64px minmax\(0, 1fr\);/)
-    expect(viewSource).toContain('.abv--expanded .abv-card + .abv-card { border-top: 1px solid var(--border); }')
+    expect(viewSource).toContain('<SectionList v-else embedded>')
     expect(viewSource).toMatch(/\.abv--expanded \.abv-card \{[^}]*border: 0;/)
     expect(viewSource).toContain('<template v-if="manage" #aside>')
     expect(viewSource).toContain('class="abv-add"')

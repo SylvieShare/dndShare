@@ -1,7 +1,7 @@
 <template>
   <RowActionMenu block :title="`Действия: ${title}`">
     <template #trigger="{ open }">
-      <BaseTile
+      <article
         class="pac-card action-menu-source"
         :class="{ 'action-menu-source--open': open }"
       >
@@ -29,7 +29,7 @@
             />
           </div>
         </div>
-      </BaseTile>
+      </article>
     </template>
 
     <template #default="{ close }">
@@ -41,7 +41,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { BaseTile, RowActionMenu } from '@sylvieshare/share-ui'
+import { RowActionMenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import DamageRollOptions from './DamageRollOptions.vue'
@@ -86,7 +86,6 @@ const flatDamageTitle = computed(() => (
 .pac-card {
   position: relative;
   box-sizing: border-box;
-  padding-left: 16px;
   overflow: clip;
   cursor: pointer;
 }

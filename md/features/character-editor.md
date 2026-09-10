@@ -541,9 +541,17 @@ independent click targets. Logical groups use the shared action-menu separator.
 Attack, damage, critical damage and feature damage actions use distinct Lucide
 icons instead of the generic ellipsis. The source tile stays highlighted while
 its menu is open; spell, inventory and potion action menus follow the same
-interaction rule. A labelled separator below the weapon list introduces two
-always-available full-width rows for Strength-based unarmed and
-improvised-weapon attack, damage and critical rolls.
+interaction rule. Weapons share one **Оружие** tile with row separators and an
+owner-only **Добавить оружие** footer. A second **Базовые атаки** tile contains
+two always-available rows for Strength-based unarmed and improvised-weapon
+attack, damage and critical rolls, also separated by a line.
+`share-ui/SectionList` owns the common surface, heading and separators for
+weapons, basic attacks and spell levels (including granted spells). Ability
+categories and action types use its embedded list inside their existing tiles.
+Separators divide menu-trigger roots, so expanded and compact ability rows both
+show them correctly. Spell row transitions and weapon/spell sortable containers
+are passed through the same component. The weapon table variant remains a table
+inside the weapon group.
 Unarmed attacks include proficiency and deal `max(0, 1 + Strength modifier)`;
 the generic improvised weapon is not proficient and deals `1d4 + Strength`.
 The rows reuse the weapon tile geometry and `AttackDamage`: attack is a numeric

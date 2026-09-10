@@ -35,22 +35,16 @@
     <section v-if="grantedSpellsByLevel.length" class="sp-standalone">
       <div class="sp-standalone-title">Дарованные заклинания</div>
       <div class="spells-groups">
-        <BaseTile v-for="group in grantedSpellsByLevel" :key="`grant:${group.level}`" class="spell-group">
-          <div class="sg-header">
-            <span class="sg-lvl">{{ groupTitle(group.level) }}</span>
-            <span class="sg-line"></span>
-          </div>
-          <div class="sg-spells">
-            <SpellCard
-              v-for="(entry, idx) in group.items"
-              :key="entry.ref.key"
-              :entry="entry"
-              :level="group.level"
-              :idx="idx"
-              standalone
-            />
-          </div>
-        </BaseTile>
+        <SectionList v-for="group in grantedSpellsByLevel" :key="`grant:${group.level}`" :title="groupTitle(group.level)">
+          <SpellCard
+            v-for="(entry, idx) in group.items"
+            :key="entry.ref.key"
+            :entry="entry"
+            :level="group.level"
+            :idx="idx"
+            standalone
+          />
+        </SectionList>
       </div>
     </section>
 
@@ -109,26 +103,21 @@
         </span>
       </div>
 
-      <BaseTile v-for="group in spellsByLevel" :key="group.level" class="spell-group">
-        <div class="sg-header">
-          <span class="sg-lvl">{{ groupTitle(group.level) }}</span>
-          <span class="sg-line"></span>
-        </div>
-        <TransitionGroup
-          tag="div"
-          name="sp-row"
-          class="sg-spells"
-          :data-sortable-container="'level-' + group.level"
-        >
-          <SpellCard
-            v-for="(entry, idx) in displayLevel(group.level)"
-            :key="entry.ref.key"
-            :entry="entry"
-            :level="group.level"
-            :idx="idx"
-          />
-        </TransitionGroup><!-- sg-spells -->
-      </BaseTile>
+      <SectionList
+        v-for="group in spellsByLevel"
+        :key="group.level"
+        :title="groupTitle(group.level)"
+        transition-name="sp-row"
+        :list-attrs="{ 'data-sortable-container': 'level-' + group.level }"
+      >
+        <SpellCard
+          v-for="(entry, idx) in displayLevel(group.level)"
+          :key="entry.ref.key"
+          :entry="entry"
+          :level="group.level"
+          :idx="idx"
+        />
+      </SectionList>
     </div>
 
     <!-- Поиск / добавление -->
@@ -215,7 +204,7 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import SpellCard from '@/features/character-editor/blocks/dnd/components/SpellCard.vue'
 import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/SpellSlotsBar.vue'
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { SectionList } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'

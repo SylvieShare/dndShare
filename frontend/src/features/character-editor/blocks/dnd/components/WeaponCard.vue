@@ -5,7 +5,7 @@
     :disabled="draggedThisGesture || (!ctx.charCtx.ownerMode && !ctx.item(entry))"
   >
     <template #trigger="{ open: menuOpen }">
-      <BaseTile
+      <article
         ref="cardEl"
         class="w-card action-menu-source"
         :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry), 'action-menu-source--open': menuOpen }"
@@ -38,7 +38,7 @@
             <WeaponEditor :entry="entry" :index="index" @close="close" />
           </template>
         </MorphEditorShell>
-      </BaseTile>
+      </article>
     </template>
 
     <template #default="{ close: closeMenu }">
@@ -80,7 +80,6 @@
 <script setup>
 import { ArrowRightLeft } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -140,10 +139,9 @@ function deleteWeapon(closeMenu) {
 </script>
 
 <style scoped>
-/* The same semantic tile is used on desktop and mobile: one weapon, one surface. */
+/* The enclosing SectionList owns the surface and row separators. */
 .w-card {
   position: relative;
-  padding-left: 16px;
   overflow: clip;
   cursor: pointer;
   transition: background 0.12s;
@@ -163,8 +161,7 @@ function deleteWeapon(closeMenu) {
   line-height: 1.45;
 }
 
-/* morph window header — wraps the shared row so it morphs cleanly into the window. The left padding
-   matches `.w-card` so the icon stays flush; the row's own padding lives inside WeaponCardView. */
-.w-morph-row { padding: 0 0 0 16px; }
+/* Keep the shared row geometry when opening the editor. */
+.w-morph-row { min-width: 0; }
 
 </style>

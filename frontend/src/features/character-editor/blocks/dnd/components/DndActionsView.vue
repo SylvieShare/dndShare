@@ -7,129 +7,128 @@
       @edit="$emit('manage')"
     />
 
-    <section v-for="group in groups" :key="group.value" class="dav-group" :class="`dav-group--${group.value}`">
-      <header class="dav-group-head">
-        <component :is="groupIcon(group.value)" :size="15" :stroke-width="2" />
-        <span>{{ group.label }}</span>
-        <i></i>
-      </header>
+    <SectionList v-for="group in groups" embedded :key="group.value" class="dav-group" :class="`dav-group--${group.value}`">
+      <template #header>
+        <div class="dav-group-head">
+          <component :is="groupIcon(group.value)" :size="15" :stroke-width="2" />
+          <span>{{ group.label }}</span>
+          <i></i>
+        </div>
+      </template>
 
-      <div class="dav-list">
-        <RowActionMenu
-          v-for="(action, actionIndex) in group.actions"
-          :key="action.key"
-          block
-          :title="`Действия: ${action.title}`"
-          :disabled="!canOpenActionMenu(action)"
-        >
-          <template #trigger="{ open }">
-            <article
-              class="dav-action action-menu-source"
-              :class="{
-                'dav-action--divided': actionIndex > 0,
-                'dav-action--clickable': canOpenActionMenu(action),
-                'action-menu-source--open': open,
-              }"
-            >
-              <span class="dav-action-icon" aria-hidden="true">
-                <ItemIcon v-if="action.item" :item="action.item" :size="34" :fallback-to-type="false" />
-                <component v-else :is="groupIcon(action.action_type)" :size="19" :stroke-width="2" />
+      <RowActionMenu
+        v-for="action in group.actions"
+        :key="action.key"
+        block
+        :title="`Действия: ${action.title}`"
+        :disabled="!canOpenActionMenu(action)"
+      >
+        <template #trigger="{ open }">
+          <article
+            class="dav-action action-menu-source"
+            :class="{
+              'dav-action--clickable': canOpenActionMenu(action),
+              'action-menu-source--open': open,
+            }"
+          >
+            <span class="dav-action-icon" aria-hidden="true">
+              <ItemIcon v-if="action.item" :item="action.item" :size="34" :fallback-to-type="false" />
+              <component v-else :is="groupIcon(action.action_type)" :size="19" :stroke-width="2" />
+            </span>
+            <span class="dav-copy">
+              <span class="dav-title-row">
+                <strong>{{ action.title }}</strong>
+                <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
-              <span class="dav-copy">
-                <span class="dav-title-row">
-                  <strong>{{ action.title }}</strong>
-                  <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
-                </span>
-                <DndRichContent v-if="action.description" class="dav-description" :html="action.description" @click.stop />
-                <span v-if="linkedActions(action).length" class="dav-linked-actions">
-                  <span
-                    v-for="linked in linkedActions(action)"
-                    :key="linked.code"
-                    class="dav-linked-action"
-                    @mouseenter="showActionTooltip($event, linked)"
-                    @mouseleave="hideActionTooltip"
-                  >{{ linked.value }}</span>
-                </span>
-                <span v-if="action.requirements.length" class="dav-requirements">
-                  <span v-for="requirement in action.requirements" :key="requirement">{{ requirement }}</span>
-                </span>
+              <DndRichContent v-if="action.description" class="dav-description" :html="action.description" @click.stop />
+              <span v-if="linkedActions(action).length" class="dav-linked-actions">
                 <span
-                  v-if="resourceTotal(action) > 1"
-                  class="dav-resource dav-resource--stacked"
-                  :title="action.resource.title"
-                >
-                  <span class="dav-resource-pips">
-                    <SpellSlotSphere
-                      v-for="pip in resourceTotal(action)"
-                      :key="pip"
-                      :spent="pip > resourceValue(action)"
-                      :size="RESOURCE_ORB_SIZE"
-                      :color="action.resource.color_point || undefined"
-                      :interactive="manage"
-                      @pointerdown.stop
-                      @click.stop="manage && $emit('toggle-resource', action, pip)"
-                    />
-                  </span>
-                </span>
+                  v-for="linked in linkedActions(action)"
+                  :key="linked.code"
+                  class="dav-linked-action"
+                  @mouseenter="showActionTooltip($event, linked)"
+                  @mouseleave="hideActionTooltip"
+                >{{ linked.value }}</span>
+              </span>
+              <span v-if="action.requirements.length" class="dav-requirements">
+                <span v-for="requirement in action.requirements" :key="requirement">{{ requirement }}</span>
               </span>
               <span
-                v-if="resourceTotal(action) === 1"
-                class="dav-resource dav-resource--single"
+                v-if="resourceTotal(action) > 1"
+                class="dav-resource dav-resource--stacked"
                 :title="action.resource.title"
               >
-                <SpellSlotSphere
-                  :spent="resourceValue(action) < 1"
-                  :size="RESOURCE_ORB_SIZE"
-                  :color="action.resource.color_point || undefined"
-                  :interactive="manage"
-                  @pointerdown.stop
-                  @click.stop="manage && $emit('toggle-resource', action, 1)"
-                />
+                <span class="dav-resource-pips">
+                  <SpellSlotSphere
+                    v-for="pip in resourceTotal(action)"
+                    :key="pip"
+                    :spent="pip > resourceValue(action)"
+                    :size="RESOURCE_ORB_SIZE"
+                    :color="action.resource.color_point || undefined"
+                    :interactive="manage"
+                    @pointerdown.stop
+                    @click.stop="manage && $emit('toggle-resource', action, pip)"
+                  />
+                </span>
               </span>
-            </article>
-          </template>
+            </span>
+            <span
+              v-if="resourceTotal(action) === 1"
+              class="dav-resource dav-resource--single"
+              :title="action.resource.title"
+            >
+              <SpellSlotSphere
+                :spent="resourceValue(action) < 1"
+                :size="RESOURCE_ORB_SIZE"
+                :color="action.resource.color_point || undefined"
+                :interactive="manage"
+                @pointerdown.stop
+                @click.stop="manage && $emit('toggle-resource', action, 1)"
+              />
+            </span>
+          </article>
+        </template>
 
-          <template #default="{ close }">
-            <RowActionItem
-              v-if="canSpendResource(action)"
-              :icon="BatteryLow"
-              tone="warning"
-              :disabled="action.resource.value < action.resource_cost"
-              @click="spendResource(action, close)"
-            >
-              Потратить {{ action.resource_cost }}: {{ action.resource.title }}
-              <template #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
-            </RowActionItem>
-            <RowActionItem
-              v-if="canActivateTarget(action)"
-              :icon="Sparkles"
-              tone="accent"
-              :disabled="targetActivationDisabled(action)"
-              @click="activateTarget(action, close)"
-            >
-              Выбрать цель и применить
-              <template v-if="action.resource" #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
-            </RowActionItem>
-            <RowActionItem
-              v-for="effect in action.menu_effects || []"
-              :key="effect.key"
-              :icon="BatteryLow"
-              :tone="effect.tone || 'danger'"
-              :disabled="effect.disabled"
-              @click="applyEffect(action, effect, close)"
-            >
-              {{ effect.title }}
-              <template #suffix>{{ effect.suffix }}</template>
-            </RowActionItem>
-            <RowActionSeparator v-if="(canSpendResource(action) || canActivateTarget(action) || action.menu_effects?.length) && !action.readonly" />
-            <RowActionItem v-if="!action.readonly" action="edit" @click="edit(action, close)">Редактировать</RowActionItem>
-            <RowActionSeparator v-if="!action.readonly" />
-            <RowActionItem v-if="!action.readonly" action="delete" tone="danger" @click="remove(action, close)">Удалить</RowActionItem>
-          </template>
-        </RowActionMenu>
+        <template #default="{ close }">
+          <RowActionItem
+            v-if="canSpendResource(action)"
+            :icon="BatteryLow"
+            tone="warning"
+            :disabled="action.resource.value < action.resource_cost"
+            @click="spendResource(action, close)"
+          >
+            Потратить {{ action.resource_cost }}: {{ action.resource.title }}
+            <template #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
+          </RowActionItem>
+          <RowActionItem
+            v-if="canActivateTarget(action)"
+            :icon="Sparkles"
+            tone="accent"
+            :disabled="targetActivationDisabled(action)"
+            @click="activateTarget(action, close)"
+          >
+            Выбрать цель и применить
+            <template v-if="action.resource" #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
+          </RowActionItem>
+          <RowActionItem
+            v-for="effect in action.menu_effects || []"
+            :key="effect.key"
+            :icon="BatteryLow"
+            :tone="effect.tone || 'danger'"
+            :disabled="effect.disabled"
+            @click="applyEffect(action, effect, close)"
+          >
+            {{ effect.title }}
+            <template #suffix>{{ effect.suffix }}</template>
+          </RowActionItem>
+          <RowActionSeparator v-if="(canSpendResource(action) || canActivateTarget(action) || action.menu_effects?.length) && !action.readonly" />
+          <RowActionItem v-if="!action.readonly" action="edit" @click="edit(action, close)">Редактировать</RowActionItem>
+          <RowActionSeparator v-if="!action.readonly" />
+          <RowActionItem v-if="!action.readonly" action="delete" tone="danger" @click="remove(action, close)">Удалить</RowActionItem>
+        </template>
+      </RowActionMenu>
 
-      </div>
-    </section>
+    </SectionList>
 
     <ItemTooltip
       v-if="tooltip.visible"
@@ -146,7 +145,7 @@
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import { computed, ref } from 'vue'
 import { BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
+import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
@@ -253,16 +252,14 @@ function hideActionTooltip() {
 <style scoped>
 .dav { display: flex; min-width: 0; flex-direction: column; gap: 13px; padding: 11px 12px 12px; box-sizing: border-box; }
 .dav--panel { padding-right: 14px; }
-.dav-group { --dav-tone: var(--accent); display: flex; flex-direction: column; gap: 5px; }
+.dav-group { --dav-tone: var(--accent); }
 .dav-group--bonus_action { --dav-tone: var(--info); }
 .dav-group--reaction { --dav-tone: var(--warning); }
 .dav-group--free { --dav-tone: var(--success); }
-.dav-group-head { display: grid; grid-template-columns: auto auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
+.dav-group-head { width: 100%; display: grid; grid-template-columns: auto auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
-.dav-list { display: flex; flex-direction: column; }
 .dav-action { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 9px; align-items: start; padding: 10px 2px; cursor: default; transition: background-color .12s; }
 .dav-action--clickable { cursor: pointer; }
-.dav-action--divided { border-top: 1px solid var(--border); }
 .dav-action--clickable:hover, .dav-action.action-menu-source--open { background: color-mix(in srgb, var(--dav-tone) 5%, transparent); }
 .dav-action-icon { display: grid; width: 36px; height: 36px; place-items: center; overflow: hidden; color: var(--dav-tone); }
 .dav-action-icon :deep(.item-icon) { width: 34px; height: 34px; }
@@ -278,6 +275,6 @@ function hideActionTooltip() {
 .dav-resource--single { align-self: center; }
 .dav-resource--stacked { flex-wrap: wrap; margin-top: 4px; }
 .dav-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.dav-list :deep(.ram-custom-trigger:has(.dav-resource:active)) { transform: none; }
-.dav-list :deep(.ram-custom-trigger:has(.dav-action:not(.dav-action--clickable)):active) { transform: none; }
+.dav-group :deep(.ram-custom-trigger:has(.dav-resource:active)) { transform: none; }
+.dav-group :deep(.ram-custom-trigger:has(.dav-action:not(.dav-action--clickable)):active) { transform: none; }
 </style>

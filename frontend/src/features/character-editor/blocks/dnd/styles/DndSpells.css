@@ -5,16 +5,6 @@
 .sp-casting-warning { display: flex; flex-direction: column; gap: 3px; margin-bottom: 12px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--danger) 50%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--text-2); font-size: 12px; line-height: 1.4; }
 .sp-casting-warning strong { color: var(--danger); }
 
-.sg-lvl {
-  display: block;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  line-height: 1.15;
-  text-transform: uppercase;
-}
-
 /* ── Группы заклинаний (каждый уровень — своя строка) ── */
 .spells-groups {
   display: flex;
@@ -68,20 +58,6 @@
   font-weight: 700;
 }
 
-.spell-group {
-  min-width: 0;
-  padding: 16px 18px 8px;
-  overflow: clip;
-}
-
-.sg-spells {
-  display: flex;
-  flex-direction: column;
-}
-.sg-spells :deep(.ram-custom-trigger + .ram-custom-trigger .spell-row) {
-  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
-}
-
 /* Row removal: collapse height + fade + slide out. No `*-move` rule on purpose — live drag
    reordering (handled by useSortable) must not trigger FLIP moves that fight the drag ghost. */
 .sp-row-leave-active {
@@ -106,21 +82,6 @@
 }
 .sp-row-enter-active { transition: opacity 0.22s ease, transform 0.26s ease; }
 .sp-row-enter-from { opacity: 0; transform: translateX(18px); }
-
-.sg-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.sg-line {
-  min-width: 20px;
-  flex: 1;
-  height: 1px;
-  background: color-mix(in srgb, var(--text-muted) 42%, transparent);
-}
-
 
 /* ── Search / add ─────────────────────────────── */
 .sp-add-section {
@@ -193,13 +154,7 @@
     gap: 12px;
   }
 
-  .spell-group {
-    padding: 12px 14px 4px;
-  }
 
-  .sg-header {
-    margin-bottom: 4px;
-  }
 
   .sp-stat-row {
     grid-template-columns: 1fr;

@@ -1,60 +1,60 @@
-﻿<template>
+<template>
   <div class="weapons-block">
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
     </div>
-    <BaseTile v-if="entries.length === 0 && !canAddItems" class="w-empty">Нет записей</BaseTile>
-
-    <div v-else-if="variant === 'list'" class="w-list" data-sortable-container="weapons">
+    <SectionList title="Оружие" :list-attrs="{ 'data-sortable-container': 'weapons' }">
+      <template v-if="variant !== 'list' && entries.length" #body>
+        <table class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
+          <colgroup v-if="charCtx.ownerMode">
+            <col class="w-order-col" />
+            <col class="w-name-col" />
+            <col class="w-stat-col" />
+            <col class="w-magic-col" />
+            <col class="w-damage-col" />
+            <col class="w-delete-col" />
+          </colgroup>
+          <colgroup v-else>
+            <col class="w-name-col" />
+            <col class="w-attack-col" />
+            <col class="w-damage-col" />
+            <col class="w-props-col" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th v-if="charCtx.ownerMode"></th>
+              <th>Название</th>
+              <th v-if="charCtx.ownerMode">Стата / владение</th>
+              <th v-if="charCtx.ownerMode">Магия</th>
+              <th v-if="!charCtx.ownerMode">Атака</th>
+              <th>{{ charCtx.ownerMode ? 'Доп урон' : 'Урон' }}</th>
+              <th v-if="!charCtx.ownerMode">Свойства</th>
+              <th v-if="charCtx.ownerMode"></th>
+            </tr>
+          </thead>
+          <tbody data-sortable-container="weapons">
+            <WeaponTableRow
+              v-for="(entry, index) in displayEntries"
+              :key="entry._key"
+              :entry="entry"
+              :index="index"
+            />
+          </tbody>
+        </table>
+      </template>
+      <div v-if="!entries.length" class="w-empty">Нет оружия</div>
       <WeaponCard
         v-for="(entry, index) in displayEntries"
         :key="entry._key"
         :entry="entry"
         :index="index"
       />
-    </div>
+      <template v-if="canAddItems" #footer>
+        <button class="w-picker-btn" @click="pickerOpen = true">+ Добавить оружие...</button>
+      </template>
+    </SectionList>
 
-    <table v-else class="w-table" :class="{ 'w-edit': charCtx.ownerMode }">
-      <colgroup v-if="charCtx.ownerMode">
-        <col class="w-order-col" />
-        <col class="w-name-col" />
-        <col class="w-stat-col" />
-        <col class="w-magic-col" />
-        <col class="w-damage-col" />
-        <col class="w-delete-col" />
-      </colgroup>
-      <colgroup v-else>
-        <col class="w-name-col" />
-        <col class="w-attack-col" />
-        <col class="w-damage-col" />
-        <col class="w-props-col" />
-      </colgroup>
-      <thead>
-        <tr>
-          <th v-if="charCtx.ownerMode"></th>
-          <th>Название</th>
-          <th v-if="charCtx.ownerMode">Стата / владение</th>
-          <th v-if="charCtx.ownerMode">Магия</th>
-          <th v-if="!charCtx.ownerMode">Атака</th>
-          <th>{{ charCtx.ownerMode ? 'Доп урон' : 'Урон' }}</th>
-          <th v-if="!charCtx.ownerMode">Свойства</th>
-          <th v-if="charCtx.ownerMode"></th>
-        </tr>
-      </thead>
-      <tbody data-sortable-container="weapons">
-        <WeaponTableRow
-          v-for="(entry, index) in displayEntries"
-          :key="entry._key"
-          :entry="entry"
-          :index="index"
-        />
-      </tbody>
-    </table>
-
-    <div class="w-preset-divider" role="separator" aria-label="Базовые атаки">
-      <span>Базовые атаки</span>
-    </div>
-    <div class="w-preset-grid" aria-label="Базовые атаки">
+    <SectionList title="Базовые атаки">
       <PresetAttackCard
         title="Рукопашный удар"
         subtitle="Сила · урон 1 + модификатор"
@@ -78,11 +78,8 @@
         @damage="rollPresetDamage('improvised')"
         @critical="rollPresetDamage('improvised', true)"
       />
-    </div>
+    </SectionList>
 
-    <div v-if="canAddItems" class="w-add">
-      <button class="w-picker-btn" @click="pickerOpen = true">+ Добавить оружие...</button>
-    </div>
     <ItemPickerModal
       v-if="pickerOpen && block.content.item_type_id"
       :item-type-ids="[block.content.item_type_id]"
@@ -118,7 +115,7 @@ function nextKey() { return ++keyCounter }
 
 <script setup>
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { SectionList } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'
