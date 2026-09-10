@@ -17,10 +17,10 @@
       <ToggleSwitch :model-value="resourceMode !== 'none'" aria-label="Расходовать ресурс" @update:model-value="value => setResourceMode(value ? 'self' : 'none')" />
     </FormField>
     <template v-if="resourceMode !== 'none'">
-      <FormField label="Источник расхода" vertical title="У действия может быть один источник расхода: эта способность, отдельный ресурс или общий ресурс класса.">
+      <FormField label="Источник расхода" vertical title="У действия может быть один источник расхода: основной, отдельный ресурс или общий ресурс класса.">
         <FormSelect :value="resourceMode" aria-label="Источник расхода" @update:value="setResourceMode">
-          <option value="self">Основной ресурс этой способности</option>
-          <option value="selected">Выбрать ресурс способности</option>
+          <option value="self">{{ editor.itemTypeId === 19 ? 'Заряды этого предмета' : 'Основной ресурс этой способности' }}</option>
+          <option value="selected">{{ editor.itemTypeId === 19 ? 'Выбрать ресурс' : 'Выбрать ресурс способности' }}</option>
           <option value="pool">Общий ресурс класса</option>
         </FormSelect>
       </FormField>

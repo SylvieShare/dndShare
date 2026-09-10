@@ -1,11 +1,11 @@
-import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { featureEntryActive } from '@/features/character-editor/lib/featureEntryState'
 import { collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
 
-const VALUE_IDS = ABILITY_VALUE_IDS
+const VALUE_IDS = FEATURE_VALUE_IDS
 
 function asArray(value) { return Array.isArray(value) ? value : [] }
 function number(value, fallback = 0) {
@@ -59,7 +59,7 @@ function contextMatches(rule, entry, context = {}) {
 }
 
 export function collectCharacterDerivedEffects(values = {}, itemsById = new Map()) {
-  const ownedEffects = VALUE_IDS.flatMap((valueId) => asArray(values?.[valueId]).flatMap((entry) => {
+  const ownedEffects = VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById).flatMap((entry) => {
     if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []

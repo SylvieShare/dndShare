@@ -351,6 +351,12 @@ async function resolveItem(itemId) {
   const res = await itemsApi.byIds([itemId])
   const item = (res?.items || [])[0]
   if (!item) return null
+  if (item.typeId && item.typeId !== selectedType.value?.id) {
+    const query = { ...route.query, type: item.typeId, item: item.id }
+    for (const key of ['q', 'group', 'filters']) delete query[key]
+    await router.replace({ query })
+    return null
+  }
   items.value = [item, ...items.value]
   return item
 }

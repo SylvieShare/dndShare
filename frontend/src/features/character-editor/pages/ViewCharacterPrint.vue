@@ -178,7 +178,7 @@
 </template>
 
 <script setup>
-import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
 
 import { computed, defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -505,7 +505,7 @@ function collectItemIds(data) {
   for (const entry of data.weapon || []) add(entry.item_id)
   const inv = normalizeValue(data.items); inv.equipped.forEach(entry => add(entry.item_id)); inv.sections.forEach(section => section.items.forEach(entry => add(entry.item_id)))
   ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.item_id)); (Array.isArray(data.tools) ? data.tools : []).forEach(entry => add(entry.item_id)); (data.spells?.tabs || []).forEach(tab => (tab.spells || []).forEach(entry => add(entry.id))); (data.spells?.grants || []).forEach(entry => add(entry.id))
-  for (const key of ABILITY_VALUE_IDS) (data[key] || []).forEach(entry => add(entry.id))
+  featureItemIds(data).forEach(add)
   return [...ids]
 }
 async function load() {

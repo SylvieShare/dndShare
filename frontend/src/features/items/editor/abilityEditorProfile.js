@@ -6,6 +6,7 @@ export const RESOURCE_KEYS = [
   'rollback_short_rest', 'rollback_long_rest', 'rollback_short_rest_level',
   'short_rest_recovery', 'short_rest_recovery_level',
 ]
+export const MAGIC_ITEM_PROPERTY_KEYS = ['desc', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'recharge_note', 'cost', 'weight', 'consumable', 'is_container', 'equipment_category', 'measurement', 'unit_cost_copper', 'unit_weight', 'contents', 'armor', 'category', 'required_armor_proficiency', 'strength_required', 'stealth_disadvantage', 'available_in_starting_shop']
 const BASIC_KEYS = ['desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
@@ -49,7 +50,7 @@ const DEPENDENCY_NAMES = {
 }
 
 export function abilityEditorProfile(fields, typeId) {
-  const basicKeys = Number(typeId) === 7 ? [...BASIC_KEYS, 'description', 'repeatable', 'unique_choice_key'] : BASIC_KEYS
+  const basicKeys = Number(typeId) === 19 ? [...BASIC_KEYS, ...MAGIC_ITEM_PROPERTY_KEYS] : Number(typeId) === 7 ? [...BASIC_KEYS, 'description', 'repeatable', 'unique_choice_key'] : BASIC_KEYS
   const bindings = Number(typeId) === 3 ? BINDING_KEYS.slice(0, 2)
     : Number(typeId) === 4 ? BINDING_KEYS.slice(2) : []
   const primary = fields.filter(field => basicKeys.includes(field.key) || bindings.includes(field.key))
@@ -64,6 +65,10 @@ export function abilityEditorProfile(fields, typeId) {
     const rank = key => BLOCK_ORDER.includes(key) ? BLOCK_ORDER.indexOf(key) : BLOCK_ORDER.length
     return rank(a.key) - rank(b.key)
   })
+  if (Number(typeId) === 19) for (const block of blocks) {
+    block.hint = block.hint?.replaceAll('способности', 'предмета').replaceAll('способность', 'предмет')
+    if (block.key === 'resources') block.name = 'Заряды и восстановление'
+  }
   return { primary, blocks }
 }
 

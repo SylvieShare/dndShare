@@ -17,6 +17,7 @@ const classGroups = [
   group('equipment', 'Стартовое снаряжение', 'starting_equipment', true),
 ]
 export const catalogueProfiles = {
+  19: { title: 'Магический предмет', primary: ['desc', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation'], groups: [group('economy', 'Цена, вес и использование', 'cost weight consumable recharge_note available_in_starting_shop'), group('storage', 'Хранение и содержимое', 'is_container contents equipment_category measurement unit_cost_copper unit_weight'), group('armor', 'Доспех или щит', 'armor category required_armor_proficiency strength_required stealth_disadvantage')] },
   1: { title: 'Оружие', primary: ['notes'], groups: [group('weapon', 'Вид и свойства', 'is_military is_long_range tags required_weapon_proficiencies'), group('damage', 'Урон и дистанция', 'attacks universe_attacks range_min range_max'), economy] },
   2: { title: 'Предмет', primary: ['desc'], groups: [group('kind', 'Назначение', 'equipment_category rarity is_container consumable measurement unit_cost_copper unit_weight'), economy, group('pack', 'Содержимое набора', 'contents', true), group('armor', 'Правило защиты', 'armor', true)] },
   5: { title: 'Заклинание', primary: ['lvl', 'schoolId', 'description', 'classes'], groups: [group('casting', 'Сотворение', 'time range duration concentration ritual components'), group('damage', 'Урон', 'damage', true), group('healing', 'Лечение', 'heal', true), group('effects', 'Накладываемые эффекты', 'status_effects', true)] },

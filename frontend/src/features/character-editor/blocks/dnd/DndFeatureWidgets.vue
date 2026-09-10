@@ -72,6 +72,7 @@
 
 <script setup>
 import { computed, inject, watch } from 'vue'
+import { featureEntries, patchFeatureEntries } from '@/features/character-editor/lib/characterMagicItems'
 import { Flame } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -123,7 +124,7 @@ function toggle(widget) {
     patch = charCtx.characterResources?.setAvailable?.(widget.resource.key, Number(widget.resource.value) - 1) || {}
   }
   if (widget.status_effect_link) {
-    if (activating) {
+    if (activating || widget.value_id === 'magic_items') {
       const link = charCtx.characterStatuses?.links?.(widget.item)
         ?.find(row => String(row.key) === String(widget.status_effect_link.key))
       if (!link?.effect) return
@@ -133,10 +134,11 @@ function toggle(widget) {
       if (!patch.states) return
     }
   } else {
-    const currentRows = patch[widget.value_id] || values.value[widget.value_id] || []
-    patch[widget.value_id] = currentRows.map(entry => String(entry.uid || entry.id || '') === widget.entry_key
+    const currentValues = { ...values.value, ...patch }
+    const currentRows = featureEntries(currentValues, widget.value_id, itemsById.value)
+    Object.assign(patch, patchFeatureEntries(currentValues, widget.value_id, currentRows.map(entry => String(entry.uid || entry.id || '') === widget.entry_key
       ? { ...entry, widget_states: { ...(entry.widget_states || {}), [widget.state_key]: activating } }
-      : entry)
+      : entry)))
   }
   charCtx.updateValues(patch)
   charCtx.logSessionEvent?.({

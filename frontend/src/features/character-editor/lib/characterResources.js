@@ -1,3 +1,4 @@
+import { MAGIC_VALUE_ID, featureEntries, inventoryItemIds, patchFeatureEntries } from './characterMagicItems'
 import { abilityOwnerLevel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 
@@ -141,11 +142,12 @@ export function createAbilityResourceSource(valueId, color) {
   return {
     id: `abilities:${valueId}`,
     itemIds(values) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      if (valueId === MAGIC_VALUE_ID) return inventoryItemIds(values)
+      const entries = featureEntries(values, valueId)
       return entries.map((entry) => entry?.id).filter((id) => id != null)
     },
     collect(values, itemsById) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      const entries = featureEntries(values, valueId, itemsById)
       return entries.flatMap((entry) => {
         if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
@@ -163,7 +165,7 @@ export function createAbilityResourceSource(valueId, color) {
             total,
             ...rest,
             readonly: true,
-            source_label: 'способности',
+            source_label: valueId === MAGIC_VALUE_ID ? 'магического предмета' : 'способности',
             source: {
               sourceId: this.id,
               valueId,
@@ -175,8 +177,8 @@ export function createAbilityResourceSource(valueId, color) {
         })
       })
     },
-    setAvailable(values, resource, available) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+    setAvailable(values, resource, available, itemsById) {
+      const entries = featureEntries(values, valueId, itemsById, true)
       const key = resource.source?.entryKey
       if (!entries.some((entry) => entryKey(entry) === key)) return {}
       const nextValue = Math.min(nonNegativeInt(available), nonNegativeInt(resource.total))
@@ -184,14 +186,11 @@ export function createAbilityResourceSource(valueId, color) {
         key: resource.source?.resourceKey,
         multiple: !!resource.source?.multiple,
       }
-      return {
-        [valueId]: entries.map((entry) => entryKey(entry) === key
-          ? withAbilityAvailable(entry, definition, nextValue)
-          : entry),
-      }
+      return patchFeatureEntries(values, valueId, entries.map(entry => entryKey(entry) === key
+        ? withAbilityAvailable(entry, definition, nextValue) : entry))
     },
     restore(values, itemsById, kind) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      const entries = featureEntries(values, valueId, itemsById, true)
       const recoveredNames = []
       let changed = false
       const next = entries.map((entry) => {
@@ -212,7 +211,7 @@ export function createAbilityResourceSource(valueId, color) {
         }
         return nextEntry
       })
-      return { patch: changed ? { [valueId]: next } : {}, recoveredNames }
+      return { patch: changed ? patchFeatureEntries(values, valueId, next) : {}, recoveredNames }
     },
   }
 }
@@ -306,6 +305,7 @@ export function createClassResourceSource(valueId = 'class_resource_counts', col
 }
 
 export const DND_CHARACTER_RESOURCE_SOURCES = [
+  createAbilityResourceSource(MAGIC_VALUE_ID, '#c084fc'),
   createManualResourceSource('resources'),
   createClassResourceSource(),
   createAbilityResourceSource('abilities_feats', '#c084fc'),
@@ -326,7 +326,7 @@ export function setCharacterResourceAvailable(values, itemsById, resourceKey, av
   const resource = collectCharacterResources(values, itemsById, sources).find((row) => row.key === resourceKey)
   if (!resource) return {}
   const source = sources.find((candidate) => candidate.id === resource.source?.sourceId)
-  return source?.setAvailable(values, resource, available) || {}
+  return source?.setAvailable(values, resource, available, itemsById) || {}
 }
 
 export function restoreCharacterResources(values, itemsById, kind, sources = DND_CHARACTER_RESOURCE_SOURCES) {

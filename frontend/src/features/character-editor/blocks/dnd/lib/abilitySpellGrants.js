@@ -1,4 +1,5 @@
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { MAGIC_ITEM_TYPE_ID, MAGIC_VALUE_ID, featureEntries } from '@/features/character-editor/lib/characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { itemChoices } from '@/features/items/lib/itemChoices'
 
@@ -9,7 +10,7 @@ function number(value) {
 }
 
 function sourceKey(source) {
-  return `${source?.kind || ''}:${source?.item_id ?? ''}`
+  return `${source?.kind || ''}:${source?.item_id ?? ''}${source?.entry_key ? `:${source.entry_key}` : ''}`
 }
 
 function grantKey(spellId, source) {
@@ -32,55 +33,62 @@ function choiceCastingAbility(item, ownedEntry, choice) {
 export function abilitySpellGrantRows(items, values = {}) {
   const rows = []
   for (const item of items || []) {
+    if (item?.typeId && ![3, 4, 7, 18, MAGIC_ITEM_TYPE_ID].includes(Number(item.typeId))) continue
     const data = item?.data || {}
-    const ownedEntry = ABILITY_VALUE_IDS
+    const ownedEntries = Number(item.typeId) === MAGIC_ITEM_TYPE_ID
+      ? featureEntries(values, MAGIC_VALUE_ID, new Map([[String(item.id), item]]))
+      : [ABILITY_VALUE_IDS
       .flatMap((key) => Array.isArray(values?.[key]) ? values[key] : [])
-      .find((entry) => String(entry?.id) === String(item.id))
-    if (ownedEntry?.requirements_met === false) continue
-    const ownerLevel = abilityOwnerLevel(data, values)
-    for (const rule of (Array.isArray(data.granted_spells) ? data.granted_spells : [])) {
-      const spellId = number(rule?.spell?.id ?? rule?.spell)
-      const unlockLevel = number(rule?.level) ?? number(data.level) ?? 1
-      if (spellId == null || ownerLevel < unlockLevel) continue
-      const castingAbility = number(rule?.ability)
-      const castLevel = number(rule?.cast_level)
-      rows.push({
-        spellId,
-        castingAbility,
-        castLevel,
-        slotless: !!rule?.slotless,
-        countsAsKnown: !!rule?.counts_as_known,
-        source: {
-          kind: 'ability',
-          item_id: item.id,
-          label: item.name || 'Способность',
-          ...(castingAbility != null ? { casting_ability: castingAbility } : {}),
-          ...(castLevel != null ? { cast_level: castLevel } : {}),
-        },
-      })
-    }
-    for (const choice of itemChoices(item).filter((rule) => rule.grant_spells)) {
-      const unlockLevel = number(choice.level) ?? number(data.level) ?? 1
-      if (ownerLevel < unlockLevel) continue
-      for (const selected of (Array.isArray(ownedEntry?.choices?.[choice.key]) ? ownedEntry.choices[choice.key] : [])) {
-        const spellId = number(selected)
-        if (spellId == null) continue
-        const castingAbility = choiceCastingAbility(item, ownedEntry, choice)
-        const castLevel = number(choice.cast_level)
+      .find((entry) => String(entry?.id) === String(item.id))]
+    for (const ownedEntry of ownedEntries) {
+      const sourceIdentity = Number(item.typeId) === MAGIC_ITEM_TYPE_ID
+        ? { kind: 'magic_item', entry_key: ownedEntry.uid } : { kind: 'ability' }
+      if (ownedEntry?.requirements_met === false) continue
+      const ownerLevel = abilityOwnerLevel(data, values)
+      for (const rule of (Array.isArray(data.granted_spells) ? data.granted_spells : [])) {
+        const spellId = number(rule?.spell?.id ?? rule?.spell)
+        const unlockLevel = number(rule?.level) ?? number(data.level) ?? 1
+        if (spellId == null || ownerLevel < unlockLevel) continue
+        const castingAbility = number(rule?.ability)
+        const castLevel = number(rule?.cast_level)
         rows.push({
           spellId,
           castingAbility,
           castLevel,
-          slotless: !!choice.slotless,
-          countsAsKnown: !!choice.counts_as_known,
+          slotless: !!rule?.slotless,
+          countsAsKnown: !!rule?.counts_as_known,
           source: {
-            kind: 'ability',
+            ...sourceIdentity,
             item_id: item.id,
             label: item.name || 'Способность',
             ...(castingAbility != null ? { casting_ability: castingAbility } : {}),
             ...(castLevel != null ? { cast_level: castLevel } : {}),
           },
         })
+      }
+      for (const choice of itemChoices(item).filter((rule) => rule.grant_spells)) {
+        const unlockLevel = number(choice.level) ?? number(data.level) ?? 1
+        if (ownerLevel < unlockLevel) continue
+        for (const selected of (Array.isArray(ownedEntry?.choices?.[choice.key]) ? ownedEntry.choices[choice.key] : [])) {
+          const spellId = number(selected)
+          if (spellId == null) continue
+          const castingAbility = choiceCastingAbility(item, ownedEntry, choice)
+          const castLevel = number(choice.cast_level)
+          rows.push({
+            spellId,
+            castingAbility,
+            castLevel,
+            slotless: !!choice.slotless,
+            countsAsKnown: !!choice.counts_as_known,
+            source: {
+              ...sourceIdentity,
+              item_id: item.id,
+              label: item.name || 'Способность',
+              ...(castingAbility != null ? { casting_ability: castingAbility } : {}),
+              ...(castLevel != null ? { cast_level: castLevel } : {}),
+            },
+          })
+        }
       }
     }
   }
@@ -89,7 +97,7 @@ export function abilitySpellGrantRows(items, values = {}) {
 
 export function syncAbilityGrantedSpells(grants, grantRows) {
   const retained = (Array.isArray(grants) ? grants : [])
-    .filter((entry) => entry?.source?.kind !== 'ability')
+    .filter((entry) => !['ability', 'magic_item'].includes(entry?.source?.kind))
     .map((entry) => ({ ...entry, source: entry.source ? { ...entry.source } : {} }))
   const desired = new Map()
   for (const row of grantRows || []) {

@@ -197,6 +197,7 @@
 
 <script setup>
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
 
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 
@@ -838,12 +839,7 @@ function spellAbilityLabel(entry) {
   return statOptions.value.find((stat) => String(stat.value) === String(ability))?.label || ''
 }
 
-function abilityIds() {
-  return [...new Set(ABILITY_VALUE_IDS
-    .flatMap((key) => Array.isArray(props.values?.[key]) ? props.values[key] : [])
-    .map((entry) => entry?.id)
-    .filter((id) => id != null))]
-}
+function abilityIds() { return featureItemIds(props.values) }
 
 let grantSyncSequence = 0
 async function syncExternalAbilitySpells() {
@@ -936,6 +932,7 @@ watch(
     abilities: ABILITY_VALUE_IDS
       .flatMap((key) => Array.isArray(props.values?.[key]) ? props.values[key] : [])
       .map((entry) => ({ id: entry.id, choices: entry.choices })),
+    items: props.values?.items,
     level: props.values?.lvl?.level,
     classes: props.values?.classes,
   }),

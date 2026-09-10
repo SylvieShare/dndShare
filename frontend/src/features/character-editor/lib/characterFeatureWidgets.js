@@ -1,10 +1,10 @@
 import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
-import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityLevelContext } from '@/shared/lib/abilityLevelSource'
 import { featureEntryActive } from './featureEntryState'
-import { ownedAbilityStatusSource, statusEffectActive, statusEffectLinks } from './characterStatuses'
+import { ownedAbilityStatusSource, linkedStatusActive, statusEffectActive, statusEffectLinks } from './characterStatuses'
 
-const VALUE_IDS = ABILITY_VALUE_IDS
+const VALUE_IDS = FEATURE_VALUE_IDS
 
 function entryKey(entry) {
   return String(entry?.uid || entry?.id || '')
@@ -36,7 +36,7 @@ function widgetValue(definition, data, level) {
 }
 
 export function collectCharacterFeatureWidgets(values, itemsById, resources = []) {
-  const parts = VALUE_IDS.flatMap(valueId => (Array.isArray(values?.[valueId]) ? values[valueId] : []).flatMap(entry => {
+  const parts = VALUE_IDS.flatMap(valueId => featureEntries(values, valueId, itemsById).flatMap(entry => {
     if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []
@@ -44,7 +44,8 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
     const definitions = Array.isArray(item.data?.sheet_widgets) ? item.data.sheet_widgets : []
     return definitions.flatMap((definition, index) => {
       if (!missingClass && level < Math.max(1, Number(definition?.level) || 1)) return []
-      const key = String(definition.key || `${valueId}:${entryKey(entry)}:${index}`)
+      const stateKey = String(definition.key || `${valueId}:${entryKey(entry)}:${index}`)
+      const key = valueId === 'magic_items' ? `magic:${entryKey(entry)}:${stateKey}` : stateKey
       const resolvedResource = resources.find(row => (
         row.source?.valueId === valueId
         && row.source?.entryKey === entryKey(entry)
@@ -75,10 +76,10 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
         priority: Number(definition.priority) || 0,
         value_id: valueId,
         entry_key: entryKey(entry),
-        state_key: key,
+        state_key: stateKey,
         active: statusEffectLink
-          ? statusEffectActive(values, statusEffectLink)
-          : !!entry.widget_states?.[key],
+          ? (valueId === 'magic_items' ? linkedStatusActive(values, item, statusEffectLink, statusSource) : statusEffectActive(values, statusEffectLink))
+          : !!entry.widget_states?.[stateKey],
         status_effect_link: statusEffectLink,
         status_source: statusSource,
         resource: missingClass ? null : resource,

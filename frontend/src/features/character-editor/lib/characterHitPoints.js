@@ -1,3 +1,4 @@
+import { MAGIC_VALUE_ID, featureEntries } from './characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 
@@ -9,7 +10,7 @@ export function createAbilityHpBonusSource(valueId, category) {
   return {
     id: `abilities:${valueId}`,
     collect(values, itemsById) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      const entries = featureEntries(values, valueId, itemsById)
       return entries.flatMap((entry) => {
         if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
@@ -26,7 +27,7 @@ export function createAbilityHpBonusSource(valueId, category) {
             title: rule.title || item.name || 'Способность',
             value,
             readonly: true,
-            source_label: `способность «${item.name || 'Без названия'}»`,
+            source_label: `${valueId === MAGIC_VALUE_ID ? 'предмет' : 'способность'} «${item.name || 'Без названия'}»`,
             source: { sourceId: this.id, category, itemId: item.id, entryKey: entryKey(entry) },
           }]
         })
@@ -36,6 +37,7 @@ export function createAbilityHpBonusSource(valueId, category) {
 }
 
 export const DND_CHARACTER_HP_BONUS_SOURCES = [
+  createAbilityHpBonusSource(MAGIC_VALUE_ID, 'item'),
   createAbilityHpBonusSource('abilities_race', 'race'),
   createAbilityHpBonusSource('abilities_class', 'class'),
   createAbilityHpBonusSource('abilities_story', 'story'),

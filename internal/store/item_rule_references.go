@@ -33,8 +33,8 @@ WITH refs AS (
   CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(i.data::jsonb->spec.field)='array' THEN i.data::jsonb->spec.field ELSE '[]'::jsonb END) e
   WHERE COALESCE(e->>'key','')<>''
   UNION ALL
-  SELECT 'resource','Ресурс способности','',i.name,''
-  WHERE i.type_id IN (3,4,7,18) AND (
+  SELECT 'resource',CASE WHEN i.type_id=19 THEN 'Заряды предмета' ELSE 'Ресурс способности' END,'',i.name,''
+  WHERE i.type_id IN (3,4,7,18,19) AND (
    i.data::jsonb->>'max_use' IS NOT NULL OR i.data::jsonb->>'max_use_stat' IS NOT NULL
    OR i.data::jsonb->>'max_use_level_multiplier' IS NOT NULL
    OR i.data::jsonb->>'max_use_scaling'='true' OR i.data::jsonb->>'manual_size'='true')

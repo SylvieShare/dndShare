@@ -112,6 +112,7 @@ export function catalogueField(field, typeId, path) {
 }
 
 export function catalogueFieldVisible(field, data, typeId, path, root = data) {
+  if (typeId === 19 && ['category', 'required_armor_proficiency', 'strength_required', 'stealth_disadvantage'].includes(path)) return !!data.armor
   if (path === 'identity.source') return false
   if (path === 'spellcasting.progression') return false
   if (typeId === 1 && ['range_min', 'range_max'].includes(path)) return !!data.is_long_range || (data.tags || []).some(tag => [1, 4, 6, 11].includes(Number(tag))) || data.range_min != null || data.range_max != null
@@ -138,6 +139,7 @@ export function catalogueFieldVisible(field, data, typeId, path, root = data) {
 
 export function updateCatalogueValue(data, field, value, path, typeId) {
   const next = { ...data, [field.key]: value }
+  if (path === 'attunement' && value !== 'required') delete next.attunement_requirement
   if (path === 'armor.shield') for (const key of value ? ['ac', 'use_dex', 'dex_cap'] : ['shield_bonus']) delete next[key]
   if (path === 'armor.use_dex' && !value) delete next.dex_cap
   if (path === 'duration.kind' && !['rounds', 'minutes', 'hours'].includes(value)) delete next.value

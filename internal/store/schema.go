@@ -16,6 +16,9 @@ import (
 // The explicit order is part of the database contract: later sections may
 // reference objects and seed data created by earlier ones.
 
+//go:embed schema/86_magic_items.sql
+var schemaMagicItemsSQL string
+
 //go:embed schema/85_session_optional_images.sql
 var schemaSessionOptionalImagesSQL string
 
@@ -372,6 +375,7 @@ var schemaParts = []struct {
 	{"journal-headers", schemaJournalHeadersSQL},
 	{"catalogue-editing", schemaCatalogueEditingSQL},
 	{"session-optional-images", schemaSessionOptionalImagesSQL},
+	{"magic-items", schemaMagicItemsSQL},
 }
 
 const (

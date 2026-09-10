@@ -21,7 +21,7 @@ function manualArmorBonuses(values) {
 }
 
 function isArmorItem(item) {
-  return Number(item?.typeId) === 12 && item?.data?.armor && typeof item.data.armor === 'object'
+  return [12, 19].includes(Number(item?.typeId)) && item?.data?.armor && typeof item.data.armor === 'object'
 }
 
 function armorProficient(item, values, suggestItems, grantedProficiencies) {
@@ -89,6 +89,7 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
   const abilityFormula = best(formulas)
   const bodyValue = body?.value ?? abilityFormula?.value ?? 10 + dexterity
   const abilityBonuses = (Array.isArray(derivedRules?.bonuses) ? derivedRules.bonuses : []).filter((rule) => {
+    if (rule.allow_shield === false && shield) return false
     if (rule.requires_armor && !body) return false
     if (rule.requires_no_armor && body) return false
     if (rule.forbid_heavy_armor && body?.item?.data?.category === 'heavy') return false

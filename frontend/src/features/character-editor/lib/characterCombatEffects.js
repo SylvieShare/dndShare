@@ -1,12 +1,12 @@
 import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
-import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 
-const VALUE_IDS = ABILITY_VALUE_IDS
+const VALUE_IDS = FEATURE_VALUE_IDS
 
 function abilityRows(values, itemsById, field) {
-  return VALUE_IDS.flatMap((valueId) => (Array.isArray(values?.[valueId]) ? values[valueId] : []).flatMap((entry) => {
+  return VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById).flatMap((entry) => {
     if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []

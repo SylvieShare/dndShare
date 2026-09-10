@@ -49,107 +49,7 @@
             class="di-rows"
             :data-sortable-container="sectionGroup(section.id)"
           >
-            <RowActionMenu
-              v-for="(entry, idx) in displaySectionItems(section.id)"
-              :key="entry.uid"
-              block
-              :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
-            >
-              <template #trigger="{ open: menuOpen }">
-                <div
-                  class="di-row action-menu-source"
-                  :class="{
-                    'sortable-placeholder': sortable.isSource(entry),
-                    'di-row-draggable': canDrag,
-                    'di-row-tool': isToolEntry(entry),
-                    'action-menu-source--open': menuOpen,
-                  }"
-                  :data-sortable-key="entry.uid"
-                  @pointerdown="onRowDown($event, entry, section.id, idx)"
-                  @mouseenter="e => showTooltip(e, entry)"
-                  @mouseleave="hideTooltip"
-                >
-                  <InventoryItemIcon
-                    :svg="entry.display.svg"
-                    :image-url="entry.display.iconImageUrl"
-                    :type-image-url="entry.display.typeImageUrl"
-                  />
-
-                  <span class="di-row-copy">
-                    <span class="di-row-name" :title="entry.display.name">
-                      <span class="di-row-name-text">{{ entry.display.name }}</span>
-                      <span v-if="entry.count > 1" class="di-count-badge">
-                        <span class="di-count-x">x</span>{{ entry.count }}
-                      </span>
-                    </span>
-                    <span v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
-                      <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
-                      <span v-if="toolProficiencyRank(entry) >= 2" class="di-item-proficient">Компетентность</span>
-                      <span v-else-if="toolProficiencyRank(entry) >= 1" class="di-item-proficient">Владение</span>
-                      <template v-if="armorMeta(entry)">
-                        <span :class="armorMeta(entry).active ? 'di-item-armor' : 'di-item-muted'">
-                          {{ armorMeta(entry).active ? (armorMeta(entry).shield ? `Щит +${armorMeta(entry).value} КД` : `КД ${armorMeta(entry).value}`) : 'Не учитывается в КД' }}
-                        </span>
-                        <span v-if="!armorMeta(entry).proficient" class="di-item-danger">Нет владения</span>
-                        <span v-if="armorMeta(entry).stealthDisadvantage" class="di-item-danger">Помеха Скрытности</span>
-                      </template>
-                    </span>
-                  </span>
-                </div>
-              </template>
-
-              <template #default="{ close }">
-                <RowActionItem
-                  v-if="entry.item_id != null"
-                  action="view"
-                  @click="viewEntry(entry, close)"
-                >Открыть описание</RowActionItem>
-                <RowActionSubmenu v-if="isToolEntry(entry)" label="Характеристика для проверки" :min-width="230">
-                  <template #trigger="{ open }">
-                    <RowActionItem :icon="Dices" tone="accent" submenu :submenu-open="open">Бросок</RowActionItem>
-                  </template>
-                  <template #default="{ close: closeAbilities }">
-                    <RowActionItem
-                      v-for="ability in toolAbilityOptions"
-                      :key="ability.key"
-                      :icon="Dices"
-                      @click="rollTool(entry, ability, closeAbilities, close)"
-                    >
-                      {{ ability.label }}
-                      <template #suffix>{{ signed(toolCheckBonus(entry, ability)) }}</template>
-                    </RowActionItem>
-                  </template>
-                </RowActionSubmenu>
-                <RowActionItem
-                  v-if="canMoveToSpecialized(entry)"
-                  :icon="ArrowRightLeft"
-                  tone="info"
-                  @click="moveToSpecialized(section.id, entry, close)"
-                >Переместить в «{{ specializedDestination(entry).label }}»</RowActionItem>
-                <RowActionItem
-                  v-if="canManage"
-                  action="replenish"
-                  tone="success"
-                  @click="addEntry(section.id, entry, close)"
-                >Добавить +1</RowActionItem>
-                <RowActionItem
-                  v-if="canManage && entry.count > 1"
-                  action="delete"
-                  @click="deleteOneEntry(section.id, entry, close)"
-                >Удалить одну</RowActionItem>
-                <RowActionItem
-                  v-if="canManage && entry.item_id == null"
-                  action="edit"
-                  @click="editEntry(section.id, entry, close)"
-                >Изменить</RowActionItem>
-                <RowActionItem
-                  v-if="canManage"
-                  action="delete"
-                  tone="danger"
-                  @click="deleteEntry(section.id, entry, close)"
-                >Удалить</RowActionItem>
-              </template>
-            </RowActionMenu>
+            <InventoryItemRow v-for="(entry, idx) in displaySectionItems(section.id)" :key="entry.uid" :entry="entry" :section-id="section.id" :index="idx" />
 
             <div v-if="!visibleItems(section).length" class="di-empty">пусто</div>
           </div>
@@ -182,6 +82,8 @@
         <ItemTooltipDetails :item="tooltip.item" />
       </template>
     </ItemTooltip>
+
+    <MagicItemInstanceModal v-if="magicSelection" :item="catalog[magicSelection.item_id]" :uid="magicSelection.uid" :items="model" @update:items="emitModel" @close="magicSelection = null" />
 
     <ItemViewModal
       v-if="modalItem"
@@ -222,21 +124,21 @@
 </template>
 
 <script setup>
+import { useInventoryRowActions } from './composables/useInventoryRowActions'
 import InventorySkeleton from './components/InventorySkeleton.vue'
+import InventoryItemRow from './components/InventoryItemRow.vue'
+import MagicItemInstanceModal from './components/MagicItemInstanceModal.vue'
+import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
 import { RemoveButton } from '@sylvieshare/share-ui'
-import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { ArrowRightLeft, Dices } from '@lucide/vue'
+import { computed, provide, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
 
-import { BaseTile, RowActionSubmenu } from '@sylvieshare/share-ui'
-import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
+import { BaseTile } from '@sylvieshare/share-ui'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import ItemTooltipDetails from '@/features/items/detail-components/ItemTooltipDetails'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
 import { SectionLabel } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -273,9 +175,9 @@ const catalog = reactive({})
 const loading = ref(true)
 const contentHidden = ref(false)
 const modalSelection = ref(null)
+const magicSelection = ref(null)
 const pickerOpen = ref(false)
 const pickerSectionId = ref(null)
-const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
 const form = reactive({ open: false, sectionId: null, entry: null, baseItem: null, instanceFields: [] })
 const confirmDel = reactive({ open: false, id: null, name: '' })
 const renamingId = ref(null)
@@ -286,6 +188,7 @@ const diceStore = useDiceStore()
 const toolAbilityOptions = STAT_KEYS.map((key, index) => ({ key, suggestId: index + 1, label: STAT_FULL[key] }))
 
 const model = computed(() => normalizeValue(props.value))
+const { tooltip, showTooltip, hideTooltip, viewEntry, deleteOneEntry, addEntry, editEntry, deleteEntry } = useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry })
 
 const allSections = computed(() => [
   { id: EQUIPPED_ID, name: EQUIPPED_NAME, items: model.value.equipped, locked: true },
@@ -554,6 +457,11 @@ function increment(sectionId, uid) {
   const list = itemsRef(next, sectionId)
   const entry = list?.find(item => item.uid === uid)
   if (!entry) return null
+  if (Number(catalog[entry.item_id]?.typeId) === MAGIC_ITEM_TYPE_ID) {
+    list.push({ uid: makeEntryUid(), item_id: entry.item_id, count: 1, params: {}, override: entry.override ? { ...entry.override } : null })
+    emitModel(next)
+    return 1
+  }
   entry.count = Math.min(999, Math.max(1, Number(entry.count) || 1) + 1)
   emitModel(next)
   return entry.count
@@ -583,7 +491,8 @@ function onPickerPick(item, qty = 1) {
   const list = itemsRef(next, pickerSectionId.value) || next.sections[0]?.items
   if (!list) return
   const type = typeById.value[item.typeId]
-  list.push({ uid: makeEntryUid(), item_id: item.id, count: n, params: defaultInstanceParams(type, item), override: null })
+  const copies = item.typeId === MAGIC_ITEM_TYPE_ID ? n : 1
+  for (let index = 0; index < copies; index += 1) list.push({ uid: makeEntryUid(), item_id: item.id, count: copies > 1 ? 1 : n, params: defaultInstanceParams(type, item), override: null })
   emitModel(next)
   logSessionEntryAdded(charCtx, { kind: 'item', title: item.name, itemId: item.id, count: n })
 }
@@ -625,61 +534,34 @@ function onInlineFormSave(fields) {
   if (isNew) logSessionEntryAdded(charCtx, { kind: 'item', title: fields.name })
 }
 
-function viewEntry(entry, close) {
-  modalSelection.value = { sectionId: findSectionOfEntry(entry.uid), uid: entry.uid, item_id: entry.item_id }
-  close()
-}
-
-function deleteOneEntry(sectionId, entry, close) {
-  decrement(sectionId, entry.uid)
-  close()
-}
-
-function addEntry(sectionId, entry, close) {
-  const remaining = increment(sectionId, entry.uid)
-  charCtx.logSessionEvent?.({
-    type: 'item_added',
-    action: `Добавлено: ${entry.display.name}`,
-    data: { itemId: entry.item_id || null, remaining },
-  })
-  close()
-}
-
-function editEntry(sectionId, entry, close) {
-  openInlineForm(sectionId, entry)
-  close()
-}
-
-function deleteEntry(sectionId, entry, close) {
-  removeEntry(sectionId, entry.uid)
-  close()
-}
-
-function findSectionOfEntry(uid) {
-  if (model.value.equipped.some(i => i.uid === uid)) return EQUIPPED_ID
-  for (const s of model.value.sections) {
-    if (s.items.some(i => i.uid === uid)) return s.id
-  }
-  return model.value.sections[0]?.id || null
-}
-
-function showTooltip(e, entry) {
-  const d = entry.display
-  if (!d.desc && !d.cost && d.weight == null) return
-  const rect = e.currentTarget.getBoundingClientRect()
-  const above = window.innerHeight - rect.bottom < 150
-  const detailItem = d.base
-    ? { ...d.base, data: { ...(d.base.data || {}), cost: d.cost || null, weight: d.weight } }
-    : (d.isCustom ? { name: d.name, data: { desc: d.desc, consumable: d.consumable } } : null)
-  Object.assign(tooltip, {
-    visible: true, name: d.name, desc: d.desc,
-    item: detailItem,
-    x: Math.min(rect.left, window.innerWidth - 320),
-    top: above ? null : rect.bottom + 6,
-    bottom: above ? window.innerHeight - rect.top + 6 : null,
-  })
-}
-function hideTooltip() { tooltip.visible = false }
+provide('inventoryRowCtx', reactive({
+  draggedThisGesture,
+  canManage,
+  sortable,
+  canDrag,
+  onRowDown,
+  showTooltip,
+  hideTooltip,
+  isToolEntry,
+  entryHasProficiency,
+  armorMeta,
+  toolCategoryLabel,
+  toolProficiencyRank,
+  entryTypeId,
+  viewEntry,
+  toolAbilityOptions,
+  rollTool,
+  signed,
+  toolCheckBonus,
+  canMoveToSpecialized,
+  moveToSpecialized,
+  specializedDestination,
+  addEntry,
+  deleteOneEntry,
+  editEntry,
+  deleteEntry,
+  openMagic(entry, close) { magicSelection.value = entry; close() },
+}))
 
 onMounted(async () => {
   try {

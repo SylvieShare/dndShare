@@ -1,3 +1,4 @@
+import { MAGIC_VALUE_ID, featureEntries } from './characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 
@@ -9,7 +10,7 @@ export function createAbilityPassiveEffectSource(valueId) {
   return {
     id: `abilities:${valueId}`,
     collect(values, itemsById) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      const entries = featureEntries(values, valueId, itemsById)
       return entries.flatMap((entry) => {
         if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
@@ -32,6 +33,7 @@ export function createAbilityPassiveEffectSource(valueId) {
 }
 
 export const DND_CHARACTER_PASSIVE_EFFECT_SOURCES = [
+  createAbilityPassiveEffectSource(MAGIC_VALUE_ID),
   createAbilityPassiveEffectSource('abilities_feats'),
   createAbilityPassiveEffectSource('abilities_race'),
   createAbilityPassiveEffectSource('abilities_class'),

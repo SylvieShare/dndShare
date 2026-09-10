@@ -5,6 +5,7 @@
 </template>
 
 <script setup>
+import { magicItemRarity, magicAttunementLabel } from '@/features/items/lib/magicItemPresentation'
 import { computed } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { measuredItemEconomy } from '@/features/items/lib/itemInstance'
@@ -32,6 +33,7 @@ const subtitle = computed(() => {
     : null
   const parts = [
     data.value.type || data.value.subtype,
+    ...(Number(props.item.typeId || props.type?.id) === 19 ? [magicItemRarity(data.value.rarity), magicAttunementLabel(data.value.attunement)] : []),
     weightLabel,
     data.value.is_container ? 'Контейнер' : null,
     data.value.consumable ? 'Расходуемый' : null,

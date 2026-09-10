@@ -1,4 +1,4 @@
-import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 import { collectCharacterStatuses } from './characterStatuses'
@@ -81,6 +81,7 @@ function matchingResource(resources, valueId, ownedEntry, definition) {
   if (Number.isFinite(resourceItemId) && resourceItemId > 0) {
     return resources.find(resource => (
       Number(resource.item_id) === resourceItemId
+      && (valueId !== 'magic_items' || resourceItemId !== Number(ownedEntry.id) || resource.source?.entryKey === entryKey(ownedEntry))
       && (!definition.resource_key || resource.source?.resourceKey === definition.resource_key)
     )) || null
   }
@@ -96,9 +97,7 @@ function matchingResource(resources, valueId, ownedEntry, definition) {
 
 function contributedActions(values, itemsById, resources) {
   const statusCodes = activeStatusCodes(values, itemsById)
-  return ABILITY_VALUE_IDS.flatMap(valueId => (
-    Array.isArray(values?.[valueId]) ? values[valueId] : []
-  ).flatMap(ownedEntry => {
+  return FEATURE_VALUE_IDS.flatMap(valueId => featureEntries(values, valueId, itemsById).flatMap(ownedEntry => {
     if (!featureEntryActive(valueId, ownedEntry)) return []
     const item = itemsById.get(String(ownedEntry.id))
     if (!item) return []

@@ -1,4 +1,4 @@
-import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
+import { MAGIC_VALUE_ID, FEATURE_VALUE_IDS, featureEntries, inventoryItemIds } from './characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 import { collectStatusDefenses } from './characterStatuses'
@@ -34,7 +34,7 @@ export function createManualDefenseSource(valueId = 'defenses') {
     id: `manual:${valueId}`,
     itemIds: () => [],
     collect(values) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      const entries = featureEntries(values, valueId)
       return entries.flatMap((entry, index) => {
         const damageType = normalizedDamageType(entry?.damage_type)
         if (damageType == null) return []
@@ -55,11 +55,12 @@ export function createAbilityDefenseSource(valueId) {
   return {
     id: `abilities:${valueId}`,
     itemIds(values) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      if (valueId === MAGIC_VALUE_ID) return inventoryItemIds(values)
+      const entries = featureEntries(values, valueId)
       return entries.map((entry) => entry?.id).filter((id) => id != null)
     },
     collect(values, itemsById) {
-      const entries = Array.isArray(values?.[valueId]) ? values[valueId] : []
+      const entries = featureEntries(values, valueId, itemsById)
       return entries.flatMap((entry) => {
         if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
@@ -74,7 +75,7 @@ export function createAbilityDefenseSource(valueId) {
             damage_type: damageType,
             kind: normalizedKind(rule?.kind),
             readonly: true,
-            source_label: `способность «${item.name || 'Без названия'}»`,
+            source_label: `${valueId === MAGIC_VALUE_ID ? 'предмет' : 'способность'} «${item.name || 'Без названия'}»`,
             source: {
               sourceId: this.id,
               valueId,
@@ -84,7 +85,8 @@ export function createAbilityDefenseSource(valueId) {
           }]
         })
         const selected = (Array.isArray(item.data?.choice_defenses) ? item.data.choice_defenses : []).flatMap((rule, index) => {
-          const sourceEntry = ABILITY_VALUE_IDS.flatMap(key => (Array.isArray(values[key]) ? values[key] : []).filter(candidate => featureEntryActive(key, candidate))).find(candidate => String(candidate?.id) === String(rule?.source_item_id))
+          const sourceEntry = String(entry.id) === String(rule?.source_item_id) ? entry
+            : FEATURE_VALUE_IDS.flatMap(key => featureEntries(values, key, itemsById).filter(candidate => featureEntryActive(key, candidate))).find(candidate => String(candidate?.id) === String(rule?.source_item_id))
           const choices = Array.isArray(sourceEntry?.choices?.[rule?.choice_key]) ? sourceEntry.choices[rule.choice_key] : []
           return choices.flatMap((choice) => (Array.isArray(rule?.options) ? rule.options : []).flatMap((option) => {
             const damageType = normalizedDamageType(option?.damage_type)
@@ -94,7 +96,7 @@ export function createAbilityDefenseSource(valueId) {
               damage_type: damageType,
               kind: normalizedKind(option?.kind),
               readonly: true,
-              source_label: `способность «${item.name || 'Без названия'}»`,
+              source_label: `${valueId === MAGIC_VALUE_ID ? 'предмет' : 'способность'} «${item.name || 'Без названия'}»`,
               source: { sourceId: this.id, valueId, entryKey: entryKey(entry), itemId: item.id },
             }]
           }))
@@ -106,6 +108,7 @@ export function createAbilityDefenseSource(valueId) {
 }
 
 export const DND_CHARACTER_DEFENSE_SOURCES = [
+  createAbilityDefenseSource(MAGIC_VALUE_ID),
   createManualDefenseSource('defenses'),
   createAbilityDefenseSource('abilities_feats'),
   createAbilityDefenseSource('abilities_race'),

@@ -91,7 +91,9 @@ async function load() {
       itemTypesStore.ensureType(props.itemTypeId).catch(() => null),
       props.item ? Promise.resolve(props.item) : (props.itemId != null ? loadItem(props.itemId) : Promise.resolve(null)),
     ])
-    type.value = typeRes ?? { id: props.itemTypeId, name: '', fields: [] }
+    const actualTypeId = itemRes?.typeId || props.itemTypeId
+    type.value = (actualTypeId === props.itemTypeId ? typeRes : await itemTypesStore.ensureType(actualTypeId))
+      ?? { id: actualTypeId, name: '', fields: [] }
     item.value = itemRes
   } finally {
     loading.value = false

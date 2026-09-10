@@ -139,6 +139,7 @@ import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailCo
 import EnemyDetailSummary from '@/features/items/detail-components/EnemyDetailSummary.vue'
 import FeatDetailContent from '@/features/items/detail-components/FeatDetailContent'
 import GearDetailSummary from '@/features/items/detail-components/GearDetailSummary.vue'
+import MagicItemDetailContent from '@/features/items/detail-components/MagicItemDetailContent.vue'
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
 import OriginDetailContent from '@/features/items/detail-components/OriginDetailContent.vue'
 import OriginDetailSummary from '@/features/items/detail-components/OriginDetailSummary.vue'
@@ -159,6 +160,7 @@ import { dieLabel } from '@/shared/lib/systemDice'
 const CUSTOM_RENDERERS = {
   1: WeaponDetailContent,
   2: ItemDetailContent,
+  19: MagicItemDetailContent,
   3: AbilityDetailContent,
   4: AbilityDetailContent,
   18: AbilityDetailContent,
@@ -194,12 +196,12 @@ const isArmor = computed(() => props.type?.id === 12)
 const isSpell = computed(() => props.type?.id === 5)
 const isTransport = computed(() => props.type?.id === 13)
 const isTool = computed(() => props.type?.id === 14)
-const isGear = computed(() => props.type?.id === 2)
+const isGear = computed(() => [2, 19].includes(props.type?.id))
 const isStatusEffect = computed(() => props.type?.id === 15)
 const isOrigin = computed(() => [8, 9, 16, 17].includes(props.type?.id))
 const customRendererProps = computed(() => {
   if (isOrigin.value) return { summaryInHeader: props.showTitle }
-  if (props.type?.id === 2 || props.type?.id === 14) return { economyInHeader: true }
+  if ([2, 14, 19].includes(props.type?.id)) return { economyInHeader: true }
   if (props.type?.id === 5) return { summaryInHeader: true }
   return {}
 })

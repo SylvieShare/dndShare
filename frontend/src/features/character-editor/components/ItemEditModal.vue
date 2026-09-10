@@ -3,7 +3,7 @@
 
     <div v-if="loadError" role="alert"><p>{{ loadError }}</p><button type="button" class="ability-link" @click="loadForm">Повторить загрузку</button></div>
     <p v-else-if="!ready" class="iem-required-hint">Загрузка формы…</p>
-    <component v-else :is="isAbility ? AbilityEditor : CatalogueEditor" :fields="editableTypeFields" :data="formData" :type-id="typeId" :z-index="zIndex">
+    <component v-else :is="(isAbility || typeId === 19) ? AbilityEditor : CatalogueEditor" :fields="editableTypeFields" :data="formData" :type-id="typeId" :z-index="zIndex">
       <FormField label="Название" title="Название способности или объекта в справочнике и на листе персонажа." vertical>
         <FormTextInput
           ref="nameInput"
@@ -117,6 +117,7 @@ const media = useItemMedia()
 const fieldEditor = useItemFieldEditor(formData, openItemPicker)
 Object.defineProperties(fieldEditor, {
   zIndex: { get: () => props.zIndex },
+  itemTypeId: { get: () => props.typeId },
   itemId: { get: () => props.item?.id || 0 },
   itemData: { get: () => formData },
   itemName: { get: () => formName.value },
@@ -148,7 +149,7 @@ async function loadForm() {
       Object.assign(formData, JSON.parse(JSON.stringify(props.item.data || {})))
       selectedContentSourceIds.value = [...(props.item.contentSourceIds || [])]
     } else {
-      Object.assign(formData, defaultDataForFields(isAbility.value ? typeFields.value.filter(field => field.key === 'level') : typeFields.value))
+      Object.assign(formData, defaultDataForFields((isAbility.value || props.typeId === 19) ? typeFields.value.filter(field => ['level', ...(props.typeId === 19 ? ['attunement', 'activation'] : [])].includes(field.key)) : typeFields.value))
       formName.value = props.initialName
       formNameEn.value = props.initialNameEn
       selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault).map((source) => source.id)

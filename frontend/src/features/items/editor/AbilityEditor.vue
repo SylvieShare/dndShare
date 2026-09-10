@@ -1,13 +1,19 @@
 <template>
   <div class="ability-editor">
     <div class="ability-editor-main">
-      <div class="ability-editor-intro"><h3>{{ typeId === 7 ? 'Описание черты' : 'Описание способности' }}</h3><p>Название и правила, которые увидит игрок.</p></div>
+      <div class="ability-editor-intro"><h3>{{ typeId === 19 ? 'Магический предмет' : typeId === 7 ? 'Описание черты' : 'Описание способности' }}</h3><p>Название и правила, которые увидит игрок.</p></div>
       <slot />
-      <AbilityRuleFields :fields="profile.primary.filter(field => !['level_source', 'level_class_id'].includes(field.key))" :data="data" @update:data="updateData" />
-      <AbilityLevelSource :data="data" />
+      <MagicItemProperties v-if="typeId === 19" :fields="profile.primary.filter(field => !['level', 'level_source', 'level_class_id'].includes(field.key))" :data="data" />
+      <AbilityRuleFields v-else :fields="profile.primary.filter(field => !['level_source', 'level_class_id'].includes(field.key))" :data="data" @update:data="updateData" />
+      <details v-if="typeId === 19" class="ability-advanced">
+        <summary>Зависимость от уровня</summary>
+        <AbilityRuleFields :fields="profile.primary.filter(f => f.key === 'level').map(f => ({ ...f, name: 'С уровня владельца' }))" :data="data" @update:data="updateData" />
+        <AbilityLevelSource :data="data" />
+      </details>
+      <AbilityLevelSource v-else :data="data" />
     </div>
     <div class="ability-editor-mechanics">
-      <div class="ability-editor-intro"><h3>Механика и зависимости</h3><p>Добавьте только то, что даёт эта способность.</p></div>
+      <div class="ability-editor-intro"><h3>Механика и зависимости</h3><p>{{ typeId === 19 ? 'Свойства включаются на листе при выполнении условий предмета.' : 'Добавьте только то, что даёт эта способность.' }}</p></div>
       <BaseTile v-if="!entries.length" class="ability-empty"><Sparkles :size="24" /><p>Можно ограничиться описанием.</p><span>Заклинания, ресурсы и другие правила добавляются отдельными блоками.</span></BaseTile>
       <BaseTile v-for="card in entries" :key="card.id" class="ability-dependency">
         <RemoveButton icon="trash" class="ability-dependency-remove" :label="`Удалить блок «${cardTitle(card)}»`" :title="`Удалить блок «${cardTitle(card)}»`" @click="pendingRemove = card" />
@@ -23,7 +29,7 @@
           <AbilityWeaponDamageEditor v-else-if="card.key === 'weapon_damage'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityStatusEffectEditor v-else-if="card.key === 'status_effects'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityMechanicEditor v-else-if="['sheet_widgets', 'usage'].includes(card.key)" :kind="card.key" :data="card.index == null ? data[card.key] : data[card.key][card.index]" :fields="card.block.fields[0].fields" />
-          <CatalogueFields v-else-if="typeId === 7" :fields="card.block.repeatable ? card.block.fields[0].fields : card.block.fields" :data="card.index == null ? data : data[card.key][card.index]" :root-data="data" :type-id="typeId" :path="card.block.repeatable ? card.key : ''" :hide-label-for="card.index == null ? card.key : ''" @update:data="value => update(card, value)" />
+          <CatalogueFields v-else-if="[7, 19].includes(typeId)" :fields="card.block.repeatable ? card.block.fields[0].fields : card.block.fields" :data="card.index == null ? data : data[card.key][card.index]" :root-data="data" :type-id="typeId" :path="card.block.repeatable ? card.key : ''" :hide-label-for="card.index == null ? card.key : ''" @update:data="value => update(card, value)" />
           <AbilityRuleFields v-else :fields="card.block.repeatable ? card.block.fields[0].fields : card.block.fields" :data="card.index == null ? data : data[card.key][card.index]" :hide-label-for="card.index == null ? card.key : ''" :advanced="card.block.repeatable" @update:data="value => update(card, value)" />
         </details>
       </BaseTile>
@@ -38,11 +44,12 @@
         <p v-if="!filteredBlocks.length">Подходящих блоков нет.</p>
       </div>
     </AppModalFrame>
-    <ConfirmDialog v-if="pendingRemove" title="Убрать блок?" :message="`Настройки «${cardTitle(pendingRemove)}» будут удалены из этой формы. Изменение применится после сохранения способности.`" confirm-text="Убрать" :z-index="zIndex + 300" @confirm="remove" @close="pendingRemove = null" @cancel="pendingRemove = null" />
+    <ConfirmDialog v-if="pendingRemove" title="Убрать блок?" :message="`Настройки «${cardTitle(pendingRemove)}» будут удалены из этой формы. Изменение применится после сохранения записи.`" confirm-text="Убрать" :z-index="zIndex + 300" @confirm="remove" @close="pendingRemove = null" @cancel="pendingRemove = null" />
   </div>
 </template>
 
 <script setup>
+import MagicItemProperties from './MagicItemProperties.vue'
 import { computed, ref } from 'vue'
 import CatalogueFields from './catalogue/CatalogueFields.vue'
 import { dependencyManifest } from './abilityDependencyManifest'
