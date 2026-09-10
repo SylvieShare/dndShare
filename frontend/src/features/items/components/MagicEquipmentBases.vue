@@ -4,17 +4,21 @@
     <div v-else-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="load">Повторить</ActionButton></div>
     <p v-else-if="!bases.length">Подходящих основ нет. Уточните варианты у автора предмета.</p>
     <div v-else class="magic-bases-grid" :role="selectable ? 'radiogroup' : undefined" :aria-label="label">
-      <HandbookListItem v-for="base in bases" :key="base.id" :item="base" :type="{ id: base.typeId }"
-        :role="selectable ? 'radio' : 'button'" :tabindex="0" :aria-checked="selectable ? Number(modelValue) === Number(base.id) : undefined"
-        :class="{ 'magic-base-selected': selectable && Number(modelValue) === Number(base.id) }"
-        @click="activate(base)" @keydown.enter.prevent="activate(base)" @keydown.space.prevent="activate(base)" />
+      <BaseTile v-for="base in bases" :key="base.id" interactive class="magic-base-tile"
+        :tint="selectable && Number(modelValue) === Number(base.id)"
+        :framed="selectable && Number(modelValue) === Number(base.id)"
+        :role="selectable ? 'radio' : 'button'" :tabindex="0" :aria-label="base.name"
+        :aria-checked="selectable ? Number(modelValue) === Number(base.id) : undefined"
+        @click="activate(base)" @keydown.enter.prevent="activate(base)" @keydown.space.prevent="activate(base)">
+        <HandbookListItem :item="base" :type="{ id: base.typeId }" />
+      </BaseTile>
     </div>
     <ItemViewModal v-if="view" :item="view" :item-id="view.id" :item-type-id="view.typeId" :z-index="zIndex + 100" @close="view = null" />
   </div>
 </template>
 <script setup>
 import { ref, watch } from 'vue'
-import { ActionButton, LoadingState } from '@sylvieshare/share-ui'
+import { ActionButton, BaseTile, LoadingState } from '@sylvieshare/share-ui'
 import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -41,6 +45,7 @@ watch(() => [props.item.id, props.kind, JSON.stringify(props.item.data?.[props.k
 </script>
 <style scoped>
 .magic-bases-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.magic-base-selected { outline: 2px solid var(--accent); outline-offset: -2px; }
+.magic-base-tile { padding: 8px 10px; min-width: 0; }
+.magic-base-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (max-width: 540px) { .magic-bases-grid { grid-template-columns: minmax(0, 1fr); } }
 </style>

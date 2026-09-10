@@ -4,8 +4,9 @@
     <DetailSection v-for="kind in kinds" :key="kind" :label="kind === 'weapon' ? 'Подходящее оружие' : 'Подходящие доспехи и щиты'">
       <p>Основа определяет обычные характеристики. Выберите её при добавлении предмета персонажу.</p>
       <MagicEquipmentBases :item="item" :kind="kind" />
-      <MagicRuleFields :fields="equipmentFields(kind)" :data="data[kind]" :items="references" :labels="labels" />
     </DetailSection>
+    <MagicEquipmentAdditions v-for="kind in kinds" :key="`${kind}-additions`" :item="item" :kind="kind" />
+    <ItemTreasureSummary :treasure="data.treasure" />
     <p v-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="hydrate">Повторить</ActionButton></p>
     <DetailSection v-for="field in details" :key="field.key" :label="field.name">
       <MagicRuleFields headless :fields="[field]" :data="data" :items="references" :labels="labels" />
@@ -18,6 +19,8 @@ import { ActionButton } from '@sylvieshare/share-ui'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import ItemDetailContent from './ItemDetailContent.vue'
 import MagicRuleFields from './MagicRuleFields.vue'
+import MagicEquipmentAdditions from './MagicEquipmentAdditions.vue'
+import ItemTreasureSummary from './ItemTreasureSummary.vue'
 import MagicEquipmentBases from '@/features/items/components/MagicEquipmentBases.vue'
 import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -28,10 +31,9 @@ const data = computed(() => props.item.data || {})
 const kinds = computed(() => magicEquipmentKinds(props.item))
 // Each remaining schema field is rendered, including newly added mechanics. These
 // fields already have a dedicated presentation in the cover, body or base list.
-const dedicated = new Set(['desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color'])
+const dedicated = new Set(['desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color', 'treasure'])
 const details = computed(() => (props.type?.fields || []).filter(f => !dedicated.has(f.key) && present(data.value[f.key])))
 function present(v) { return v != null && v !== '' && v !== false && (!Array.isArray(v) || v.length > 0) && (typeof v !== 'object' || Object.keys(v).length > 0) }
-function equipmentFields(kind) { return (props.type?.fields?.find(f => f.key === kind)?.fields || []).filter(f => !['base_item_id', 'allowed_base_item_ids'].includes(f.key)) }
 const suggest = useSuggestStore(), references = ref({}), error = ref(''), labels = ref({})
 let sequence = 0
 async function hydrate() {
