@@ -10,7 +10,7 @@ describe('level hit points and spell-slot gains', () => {
     const html = await render({ level: 1, hitDie: 'd10', hitPoints: '10 + мод. ТЕЛ' })
     expect(html).toContain('Хиты на старте')
     expect(html).toContain('>10</strong>')
-    expect(html).toContain('максимум кости')
+    expect(html).toContain('макс. кости')
     expect(html).not.toContain('или 6')
     expect(html).not.toContain('Изменения ячеек')
   })
@@ -31,5 +31,12 @@ describe('level hit points and spell-slot gains', () => {
     expect(html).toContain('1 → 2 круг')
     expect(html).toContain('Магия договора')
     expect(html).toContain('Короткий отдых')
+  })
+
+  it('omits the visible +1 for a single new slot but retains its accessible count', async () => {
+    const html = await render({ level: 2, slotChanges: [{ kind: 'added', level: 1, count: 1 }] })
+    expect(html).not.toContain('level-gains-slot-count')
+    expect(html).toContain('Добавляется 1 яч. 1 круга')
+    expect(html).toContain('1 круг')
   })
 })

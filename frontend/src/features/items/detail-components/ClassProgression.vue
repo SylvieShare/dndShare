@@ -26,22 +26,13 @@
           <div class="progression-body">
             <div v-if="row.choices.length" class="progression-level-heading"><small>Есть выбор</small></div>
             <ClassLevelGains :level="row.level" :hit-points="row.hitPoints" :hit-die="classItem.data?.hit_die" :slot-changes="row.slotChanges" />
-            <div v-if="row.features.length" class="progression-features">
-              <small class="progression-caption">Получаете способности</small>
-              <button v-for="feature in row.features" :key="feature.id" type="button" class="progression-item" @click="$emit('open-item', feature)">
-                <HandbookListItem :item="feature" :type="itemTypes.getType(4)" />
-                <span v-for="gain in row.improvements.filter(gain => gain.item.id === feature.id)" :key="gain.text" class="progression-resource">{{ gain.text }}</span>
-              </button>
-            </div>
+            <ClassProgressionFeatures :features="row.features" :improvements="row.improvements" :type="itemTypes.getType(4)" @open-item="$emit('open-item', $event)" />
             <ul v-if="row.choices.length" class="progression-choices">
               <li v-for="(choice, index) in row.choices" :key="index">
                 <GitBranch :size="14" aria-hidden="true" />
                 <div><strong>{{ choice.text }} · {{ choice.count }}</strong><small v-if="choice.options">{{ choice.options }}</small></div>
               </li>
             </ul>
-            <div v-for="(gain, index) in row.improvements.filter(gain => !row.features.some(feature => feature.id === gain.item.id))" :key="`gain-${index}`" class="progression-gain">
-              <button type="button" class="progression-item" @click="$emit('open-item', gain.item)"><HandbookListItem :item="gain.item" :type="itemTypes.getType(4)" /></button><span>Усиление: {{ gain.text }}</span>
-            </div>
             <p v-for="resource in row.resources" :key="resource" class="progression-resource">{{ resource }}</p>
             <div v-if="row.spells.length" class="progression-spells">
               <span>Дарованные заклинания</span>
@@ -70,6 +61,7 @@ import { classProgression } from '@/features/items/lib/classProgression'
 import { loadClassProgressionAbilities } from '@/features/items/lib/loadClassProgressionAbilities'
 import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
 import ClassLevelGains from './ClassLevelGains.vue'
+import ClassProgressionFeatures from './ClassProgressionFeatures.vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
 
 const props = defineProps({
@@ -131,8 +123,6 @@ function hasEvents(row) { return row.features.length || row.choices.length || ro
 .progression-body { min-width: 0; padding: 15px 0 22px; border-top: 1px solid var(--border); }
 .progression-level-heading { display: flex; justify-content: space-between; gap: 8px; color: var(--text-muted); font-size: 10px; margin-bottom: 10px; }
 .progression-level-heading > small { color: var(--accent-soft); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
-.progression-features { display: grid; gap: 6px; }
-.progression-caption { color: var(--text-muted); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
 .progression-item { width: 100%; min-width: 0; }
 .progression-item:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
 .progression-body button, .progression-message button { padding: 0; background: none; border: none; color: var(--accent-soft); font-family: inherit; text-align: left; cursor: pointer; }
@@ -142,8 +132,6 @@ function hasEvents(row) { return row.features.length || row.choices.length || ro
 .progression-choices svg { flex: none; margin-top: 2px; }
 .progression-choices strong { font-weight: 550; }
 .progression-choices small { display: block; margin-top: 4px; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
-.progression-gain { display: grid; gap: 4px; font-size: 12px; margin-top: 9px; color: var(--text-2); }
-.progression-gain button { font-size: inherit; }
 .progression-resource, .progression-quiet { font-size: 12px; color: var(--text-muted); margin: 10px 0 0; }
 .progression-spells { display: grid; gap: 6px; margin-top: 12px; font-size: 12px; }
 .progression-spells > span { color: var(--text-muted); }

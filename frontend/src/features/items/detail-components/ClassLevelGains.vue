@@ -7,7 +7,7 @@
           <div class="level-gains-roll" aria-hidden="true">
             <strong v-if="level === 1" class="level-gains-number">{{ sides }}</strong>
             <SystemDie v-else :sides="sides" :size="36" color="var(--danger)" />
-            <span class="level-gains-alternative">{{ level === 1 ? 'максимум кости' : `или ${fixedGain}` }}</span>
+            <span class="level-gains-alternative">{{ level === 1 ? 'макс. кости' : `или ${fixedGain}` }}</span>
           </div>
           <span class="level-gains-plus" aria-hidden="true">+</span>
           <div class="level-gains-stat" aria-hidden="true"><strong>ТЕЛ</strong><span>модификатор</span></div>
@@ -20,7 +20,7 @@
       <div class="level-gains-slots">
         <div v-for="(slot, index) in slotChanges" :key="index" class="level-gains-slot">
           <div class="level-gains-slot-value" role="img" :aria-label="slot.kind === 'added' ? `Добавляется ${slot.count} яч. ${slot.level} круга` : `${slot.count} яч. усиливаются с ${slot.fromLevel} до ${slot.level} круга`">
-            <strong class="level-gains-slot-count" aria-hidden="true">{{ slot.kind === 'added' ? '+' : '' }}{{ slot.count }}</strong>
+            <strong v-if="slot.kind !== 'added' || slot.count !== 1" class="level-gains-slot-count" aria-hidden="true">{{ slot.kind === 'added' ? '+' : '' }}{{ slot.count }}</strong>
             <div class="level-gains-slot-icon" aria-hidden="true">
               <SpellSlotSphere :level="slot.level" :size="28" :interactive="false" />
               <small>{{ slot.kind === 'upgraded' ? `${slot.fromLevel} → ` : '' }}{{ slot.level }} круг</small>
@@ -56,7 +56,8 @@ const fixedGain = computed(() => avgHitDie(sides.value))
 .level-gains-hp { flex: 0 1 210px; min-width: 0; padding: 12px 14px; }
 .level-gains-heading { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 10px; font-weight: 650; }
 .level-gains-hp .level-gains-heading svg { color: var(--danger); }
-.level-gains-formula { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 10px; color: var(--text-1); }
+.level-gains-formula { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; margin-top: 10px; color: var(--text-1); }
+.level-gains-formula > strong { grid-column: 1 / -1; }
 .level-gains-roll, .level-gains-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .level-gains-number { min-height: 36px; font: 650 30px/36px var(--font-display); color: var(--danger); }
 .level-gains-alternative, .level-gains-stat span { font-size: 10px; color: var(--text-muted); }
