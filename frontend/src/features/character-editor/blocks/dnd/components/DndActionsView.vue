@@ -259,7 +259,7 @@ function hideActionTooltip() {
 .dav-group-head { width: 100%; display: grid; grid-template-columns: auto auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
 .dav-action { display: flow-root; padding: 10px 2px; cursor: default; transition: background-color .12s; }
-.dav-action-media { float: left; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 36px; margin: 0 9px 5px 0; }
+.dav-action-media { float: left; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 36px; margin: 0 9px 5px 0; }
 .dav-action--clickable { cursor: pointer; }
 .dav-action--clickable:hover, .dav-action.action-menu-source--open { background: color-mix(in srgb, var(--dav-tone) 5%, transparent); }
 .dav-action-icon { display: grid; width: 36px; height: 36px; place-items: center; overflow: hidden; color: var(--dav-tone); }
