@@ -110,4 +110,7 @@ INSERT INTO dndshare.item VALUES
 	check(`SELECT NOT EXISTS (SELECT f FROM dndshare.item_type,jsonb_array_elements(fields) f WHERE id=19 AND f->>'key' IN ('armor','category','required_armor_proficiency'))`)
 	check(`SELECT NOT EXISTS (SELECT id,f->>'key' FROM dndshare.item_type,jsonb_array_elements(fields) f GROUP BY id,f->>'key' HAVING count(*)>1)`)
 
+	exec(schemaExplicitInventoryWeaponsSQL)
+	check(`SELECT f->>'hint' LIKE '%Переместить в оружие%' FROM dndshare.item_type,jsonb_array_elements(fields) f WHERE id=19 AND f->>'key'='weapon'`)
+
 }

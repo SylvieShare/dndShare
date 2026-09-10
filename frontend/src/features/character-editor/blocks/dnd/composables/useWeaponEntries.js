@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import { cleanEntry, defaultEntry, normalizeAddAttacks, normalizeWeaponParams } from '../lib/weaponEntry'
 import { equippedMagicWeapons, saveMagicWeaponRows } from '@/features/character-editor/lib/magicWeapons'
 import { appendInventoryEntry, takeInventoryEntry } from '../lib/itemPlacement'
+import { setInventoryWeaponEnabled } from '@/features/character-editor/lib/inventoryWeapons'
 import { EQUIPPED_ID } from '../lib/itemSection'
 
 export function useWeaponEntries({ props, emit, charCtx, itemMap, loadItems }) {
@@ -11,7 +12,7 @@ export function useWeaponEntries({ props, emit, charCtx, itemMap, loadItems }) {
   async function reload() {
     const token = ++request
     loadError.value = ''
-    try { await loadItems([...(props.value || []), ...(props.values?.items?.equipped || [])]) }
+    try { await loadItems([...(props.value || []), ...(props.values?.items?.equipped || []).filter(entry => entry.params?.weapon_enabled === true)]) }
     catch { if (token === request) loadError.value = 'Не удалось загрузить оружие и его основы.' }
   }
   watch([() => props.value, () => props.values?.items, itemMap], () => {
@@ -28,14 +29,17 @@ export function useWeaponEntries({ props, emit, charCtx, itemMap, loadItems }) {
     if (charCtx.updateValues && JSON.stringify(items) !== JSON.stringify(props.values?.items)) charCtx.updateValues({ [props.block.id]: weapon, items })
     else emit('update:value', props.block.id, weapon)
   }
+  function hideInventoryWeapon(entry) {
+    if (entry?._inventory) charCtx.updateValues({ items: setInventoryWeaponEnabled(props.values?.items, entry.uid, false) })
+  }
   function removeInventoryWeapon(entry, discard = false) {
     if (!entry?._inventory) return false
     const taken = takeInventoryEntry(props.values?.items, EQUIPPED_ID, entry.uid)
     if (!taken) return true
-    const patch = { items: discard ? taken.inventory : appendInventoryEntry(taken.inventory, taken.entry) }
+    const patch = { items: discard ? taken.inventory : appendInventoryEntry(taken.inventory, { ...taken.entry, params: { ...taken.entry.params, weapon_enabled: false } }) }
     if (discard && charCtx.characterStatuses?.removeByParam) patch.states = charCtx.characterStatuses.removeByParam('weapon_uid', entry.uid)
     charCtx.updateValues(patch)
     return true
   }
-  return { entries, emitChange, removeInventoryWeapon, loadError, reload }
+  return { entries, emitChange, hideInventoryWeapon, removeInventoryWeapon, loadError, reload }
 }

@@ -7,7 +7,7 @@ import { ref } from 'vue'
 
 const sword = { id: 49, typeId: 1, name: 'Меч', data: { attacks: [{ count: 1, dice_id: 'd8', type: 2 }], tags: [10], required_weapon_proficiencies: [27, 16], universe_attacks: [{ count: 1, dice_id: 'd10', type: 2 }] } }
 const magic = { id: 263, typeId: 19, name: 'Солнечный клинок', data: { weapon: { base_item_id: 49, magic_bonus: 2, damage_type: 7, extra_tags: [11], extra_proficiencies: [17] }, attunement: 'required', activation: 'equipped' } }
-const entry = { uid: 'blade', item_id: 263, count: 1, params: { magic: { attuned: true, remaining: 2 }, note: 'keep' } }
+const entry = { uid: 'blade', item_id: 263, count: 1, params: { weapon_enabled: true, magic: { attuned: true, remaining: 2 }, note: 'keep' } }
 const values = () => ({ lvl: { level: 7 }, items: { equipped: [structuredClone(entry)], sections: [] } })
 const catalogue = { 49: sword, 263: magic }
 
@@ -21,6 +21,22 @@ describe('magic weapon inventory projection', () => {
     expect(state.weapon).toBeUndefined()
     state.items.sections.push({ items: state.items.equipped }); state.items.equipped = []
     expect(equippedMagicWeapons(state, catalogue)).toEqual([])
+  })
+  it('does not create attacks from equipment until explicitly enabled', () => {
+    const state = values()
+    delete state.items.equipped[0].params.weapon_enabled
+    expect(equippedMagicWeapons(state, catalogue)).toEqual([])
+    state.items.equipped[0].params.weapon_enabled = true
+    expect(equippedMagicWeapons(state, catalogue)).toHaveLength(1)
+    state.items.equipped[0].params.weapon_enabled = false
+    expect(equippedMagicWeapons(state, catalogue)).toEqual([])
+  })
+  it('recalculates base stats with magical overrides and the instance name', () => {
+    const updated = { ...sword, data: { ...sword.data, attacks: [{ count: 2, dice_id: 'd6', type: 2 }] } }
+    const row = { ...entry, override: { name: 'Мой клинок', desc: '<p>История</p>' } }
+    const weapon = resolveMagicWeapon(magic, row, { 49: updated })
+    expect(weapon).toMatchObject({ name: 'Мой клинок', data: { desc: '<p>История</p>', attacks: [{ count: 2, dice_id: 'd6', type: 7 }] } })
+    expect(updated.data.attacks[0].type).toBe(2)
   })
   it('requires a valid per-instance choice for variable weapons', () => {
     const item = { ...magic, data: { weapon: { allowed_base_item_ids: [49] } } }

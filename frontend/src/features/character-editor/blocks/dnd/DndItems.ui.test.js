@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-const source = ['./DndItems.vue', './components/InventoryItemRow.vue', './composables/useInventoryRowActions.js']
+const source = ['./DndItems.vue', './components/InventoryItemRow.vue', './composables/useInventoryRowActions.js', './composables/useInventoryEquipmentActions.js']
   .map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')).join('\n')
 const iconSource = readFileSync(fileURLToPath(new URL('../../components/InventoryItemIcon.vue', import.meta.url)), 'utf8')
 const blocks = JSON.parse(readFileSync(fileURLToPath(new URL('../../settings/dnd/blocks.json', import.meta.url)), 'utf8'))

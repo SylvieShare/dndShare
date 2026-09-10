@@ -16,6 +16,9 @@ import (
 // The explicit order is part of the database contract: later sections may
 // reference objects and seed data created by earlier ones.
 
+//go:embed schema/89_explicit_inventory_weapons.sql
+var schemaExplicitInventoryWeaponsSQL string
+
 //go:embed schema/88_magic_equipment_bases.sql
 var schemaMagicEquipmentBasesSQL string
 
@@ -384,6 +387,7 @@ var schemaParts = []struct {
 	{"magic-items", schemaMagicItemsSQL},
 	{"master-tools", schemaMasterToolsSQL},
 	{"magic-equipment-bases", schemaMagicEquipmentBasesSQL},
+	{"explicit-inventory-weapons", schemaExplicitInventoryWeaponsSQL},
 }
 
 const (

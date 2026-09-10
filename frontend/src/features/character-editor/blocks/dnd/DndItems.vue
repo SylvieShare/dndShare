@@ -93,6 +93,7 @@
       @close="modalSelection = null"
     />
 
+    <MagicEquipmentInstanceModal v-if="pendingWeapon" :item="pendingWeapon.item" :params="pendingWeapon.params" confirm-label="Переместить в оружие" @close="pendingWeapon = null" @confirm="confirmWeapon" />
     <MagicEquipmentInstanceModal v-if="pendingCopy" :item="pendingCopy.item" @close="pendingCopy = null" @confirm="params => { increment(pendingCopy.sectionId, pendingCopy.uid, params); pendingCopy = null }" />
     <ItemPickerModal
       configure-instance
@@ -146,6 +147,8 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
+import { clearStowedWeaponFlags } from '@/features/character-editor/lib/inventoryWeapons'
+import { useInventoryEquipmentActions } from './composables/useInventoryEquipmentActions'
 import { magicBaseParams, magicEquipmentKinds, magicBaseId } from '@/features/items/lib/magicEquipmentBases'
 import { applicableInstanceFields, defaultInstanceParams, mergeEditedInstanceParams } from '@/features/items/lib/itemInstance'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
@@ -165,11 +168,6 @@ import {
   makeSectionId,
   normalizeValue,
 } from '@/features/character-editor/blocks/dnd/lib/itemSection'
-import {
-  appendOwnedEntry,
-  ownedEntryToWeapons,
-  takeInventoryEntry,
-} from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 
 const props = defineProps({ block: Object, value: { default: null } })
 const emit = defineEmits(['update:value'])
@@ -324,27 +322,9 @@ function rollTool(entry, ability, closeAbilities, closeMenu) {
   closeMenu()
 }
 
-function specializedDestination(entry) {
-  const typeId = entryTypeId(entry)
-  return specializedDestinations.value.find(destination => Number(destination.type_id) === typeId) || null
-}
-
-function canMoveToSpecialized(entry) {
-  return canManage.value && typeof charCtx.updateValues === 'function' && !!specializedDestination(entry)
-}
-
-function moveToSpecialized(sectionId, entry, close) {
-  const destination = specializedDestination(entry)
-  const taken = takeInventoryEntry(model.value, sectionId, entry.uid)
-  if (!destination || !taken) return
-  const currentValues = charCtx.values || {}
-  const targetId = destination.value_id
-  const target = targetId === 'weapon'
-    ? [...(Array.isArray(currentValues.weapon) ? currentValues.weapon : []), ...ownedEntryToWeapons(taken.entry)]
-    : appendOwnedEntry(currentValues[targetId], taken.entry)
-  charCtx.updateValues({ items: taken.inventory, [targetId]: target })
-  close()
-}
+const { pendingWeapon, confirmWeapon, hideWeapon, isInWeapons, specializedDestination, canMoveToSpecialized, moveToSpecialized } = useInventoryEquipmentActions({
+  model, catalog, specializedDestinations, canManage, charCtx, entryTypeId,
+})
 
 function sectionItems(sectionId) {
   if (sectionId === EQUIPPED_ID) return model.value.equipped.map(entryWithDisplay)
@@ -378,7 +358,7 @@ const sortable = useSortable({
     const [moved] = fromList.splice(idx, 1)
     const adjustedIdx = (fromSecId === toSecId && idx < toIndex) ? toIndex - 1 : toIndex
     toList.splice(Math.min(adjustedIdx, toList.length), 0, moved)
-    emit('update:value', props.block.id, next)
+    emitModel(next)
   },
 })
 
@@ -403,7 +383,7 @@ function onRowDown(e, entry, sectionId, idx) {
 }
 
 function emitModel(next) {
-  emit('update:value', props.block.id, next)
+  emit('update:value', props.block.id, clearStowedWeaponFlags(next))
 }
 
 function startRename(id) {
@@ -563,6 +543,8 @@ provide('inventoryRowCtx', reactive({
   canMoveToSpecialized,
   moveToSpecialized,
   specializedDestination,
+  isInWeapons,
+  hideWeapon,
   addEntry,
   deleteOneEntry,
   editEntry,

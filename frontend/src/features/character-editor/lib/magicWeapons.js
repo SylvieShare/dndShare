@@ -14,15 +14,15 @@ export function resolveMagicWeapon(item, entry, itemsById) {
   physical.required_weapon_proficiencies = [...new Set([...(physical.required_weapon_proficiencies || []), ...(rule.extra_proficiencies || [])])]
   if (rule.range_min != null) physical.range_min = rule.range_min
   if (rule.range_max != null) physical.range_max = rule.range_max
-  return { ...item, data: { ...item.data, ...physical, subtype: base.name } }
+  return { ...item, name: entry?.override?.name ?? item.name, data: { ...item.data, ...physical, desc: entry?.override?.desc ?? item.data.desc, subtype: base.name } }
 }
 
 export function equippedMagicWeapons(values, itemsById) {
   return (values?.items?.equipped || []).flatMap(entry => {
     const item = itemsById[entry.item_id]
-    if (!entry.uid || Number(entry.count ?? 1) <= 0 || !resolveMagicWeapon(item, entry, itemsById)) return []
+    if (entry.params?.weapon_enabled !== true || !entry.uid || Number(entry.count ?? 1) <= 0 || !resolveMagicWeapon(item, entry, itemsById)) return []
     return [{ ...entry.params?._weapon_state, uid: entry.uid, item_id: entry.item_id,
-      params: entry.params || {}, _inventory: true, _key: entry.uid }]
+      params: entry.params || {}, override: entry.override, _inventory: true, _key: entry.uid }]
   })
 }
 

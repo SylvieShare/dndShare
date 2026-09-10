@@ -100,7 +100,7 @@
       @close="modalItemId = null"
     />
 
-    <ConfirmDialog v-if="pendingMagicRemoval" title="Удалить предмет?" message="Экземпляр будет удалён из инвентаря вместе с его настройкой и зарядами. Чтобы сохранить его, выберите «Убрать в рюкзак»." :z-index="4600" @confirm="removeInventoryWeapon(pendingMagicRemoval, true); pendingMagicRemoval = null" @cancel="pendingMagicRemoval = null" @close="pendingMagicRemoval = null" />
+    <ConfirmDialog v-if="pendingMagicRemoval" title="Удалить предмет?" message="Экземпляр будет удалён из инвентаря вместе с его настройкой и зарядами. Чтобы сохранить его, выберите «Убрать из оружия» или «Убрать в рюкзак»." :z-index="4600" @confirm="removeInventoryWeapon(pendingMagicRemoval, true); pendingMagicRemoval = null" @cancel="pendingMagicRemoval = null" @close="pendingMagicRemoval = null" />
     <MagicItemInstanceModal v-if="magicInstance" :item="itemMap[magicInstance.item_id]" :uid="magicInstance.uid" :items="values.items" @update:items="items => charCtx.updateValues({ items })" @close="magicInstance = null" />
 
     <ItemTooltip
@@ -228,7 +228,7 @@ const {
   addItem,
 } = useWeaponItems({ tagMap, tagDetailsMap })
 
-const { entries, emitChange, removeInventoryWeapon, loadError, reload } = useWeaponEntries({
+const { entries, emitChange, hideInventoryWeapon, removeInventoryWeapon, loadError, reload } = useWeaponEntries({
   props, emit, charCtx, itemMap,
   loadItems: list => loadItemsRaw([...list, ...Object.values(PRESET_ATTACK_ART_ITEM_IDS).map(item_id => ({ item_id }))]),
 })
@@ -423,7 +423,7 @@ function addWeapon(it, quantity = 1, params = {}) {
   if (!weaponEligibility(it).eligible) return
   const entry = { ...defaultEntry(), item_id: it.id }
   if (Number(it.typeId) === 19) {
-    const owned = { uid: entry.uid, item_id: it.id, count: 1, params, override: null }
+    const owned = { uid: entry.uid, item_id: it.id, count: 1, params: { ...params, weapon_enabled: true }, override: null }
     const inventory = props.values?.items || { equipped: [], sections: [] }
     charCtx.updateValues({ items: { ...inventory, equipped: [...(inventory.equipped || []), owned] } })
     addItem(it)
@@ -513,6 +513,7 @@ function hidePropertyTooltip() { tooltip.visible = false }
 
 provide('weaponsBlockCtx', reactive({
   charCtx,
+  hideInventoryWeapon,
   openMagicInstance: entry => { magicInstance.value = entry },
   sortable,
   item,

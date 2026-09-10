@@ -30,6 +30,7 @@
             <span class="di-count-x">x</span>{{ entry.count }}
           </span>
         </span>
+        <span v-if="isInWeapons(entry)" class="di-item-meta">В оружии</span>
         <span v-if="entryTypeId(entry) === MAGIC_ITEM_TYPE_ID && entry.display.base?.data?.attunement !== 'none'" class="di-item-meta">{{ entry.params?.magic?.attuned ? 'Настроен' : 'Требует настройки' }}</span>
         <span v-if="entry.display.base?.data?.armor_base && !entry.display.base.data.armor_base.base_item_id && !entry.params?.armor_base_item_id" class="di-item-meta">Выберите основу доспеха в магических свойствах</span>
         <span v-if="entry.display.base?.data?.weapon && !entry.display.base.data.weapon.base_item_id && !entry.params?.weapon_base_item_id" class="di-item-meta">Выберите оружейную основу в магических свойствах</span>
@@ -78,6 +79,7 @@
       tone="info"
       @click="moveToSpecialized(sectionId, entry, close)"
     >Переместить в «{{ specializedDestination(entry).label }}»</RowActionItem>
+    <RowActionItem v-if="canManage && isInWeapons(entry)" :icon="ArrowRightLeft" tone="info" @click="hideWeapon(entry, close)">Убрать из оружия</RowActionItem>
     <RowActionItem
       v-if="canManage"
       action="replenish"
@@ -134,6 +136,8 @@ const {
   canMoveToSpecialized,
   moveToSpecialized,
   specializedDestination,
+  isInWeapons,
+  hideWeapon,
   addEntry,
   deleteOneEntry,
   editEntry,

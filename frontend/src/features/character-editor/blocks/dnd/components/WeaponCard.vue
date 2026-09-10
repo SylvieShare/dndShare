@@ -60,6 +60,7 @@
         action="edit"
         @click="editWeapon(closeMenu)"
       >Редактировать</RowActionItem>
+      <RowActionItem v-if="ctx.charCtx.ownerMode && entry._inventory" :icon="ArrowRightLeft" tone="info" @click="closeMenu(); ctx.hideInventoryWeapon(entry)">Убрать из оружия</RowActionItem>
       <RowActionItem
         v-if="ctx.canMoveWeaponToItems(entry)"
         :icon="ArrowRightLeft"

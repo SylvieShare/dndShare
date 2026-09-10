@@ -379,6 +379,22 @@ using a new specialization silhouette. A subclass must therefore read as part
 of its class family and remain distinguishable from every sibling at `64×64`;
 it must not be a simple recolor of the base-class emblem.
 
+### Item identity across icon and cover
+
+For all item covers, use the item's icon as an identity reference, not as a
+composition to enlarge one-to-one. The cover may show a more complete object,
+more carefully resolved construction, richer material detail and a better
+viewing angle. Change the camera, lighting, framing and scene when this improves
+readability and presentation.
+
+Keep the same object: preserve its construction, proportions, materials, main
+colors, distinctive parts, symbols and ornament motifs. Extra detail should
+clarify the existing design or reveal a plausible previously unseen surface;
+it must not contradict the icon or replace recognizable details with different
+ones. Compare the pair before installation. Greater fidelity and a better angle
+are welcome; a redesign into a different object is not. The catalogue facts and
+each item type's established aspect ratio, style and UI-safe areas still apply.
+
 ### Starting-shop gear art direction
 
 Mundane purchasable gear uses one object-focused flat-cartoon family. The pilot
