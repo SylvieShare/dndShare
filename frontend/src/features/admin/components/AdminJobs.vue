@@ -3,7 +3,7 @@
     <section class="section">
       <h2 class="section-title">Доступные задачи</h2>
       <div v-if="startError" class="state-msg error">{{ startError }}</div>
-      <div v-if="loadingAvailable" class="state-msg">Загрузка...</div>
+      <LoadingState v-if="loadingAvailable" class="state-msg" label="Загрузка..." compact />
       <div v-else-if="!available.length" class="state-msg">Нет доступных задач</div>
       <div v-else class="jobs-grid">
         <div v-for="job in available" :key="job.code" class="job-card">
@@ -24,7 +24,7 @@
 
     <section class="section">
       <h2 class="section-title">История запусков</h2>
-      <div v-if="loadingRuns" class="state-msg">Загрузка...</div>
+      <LoadingState v-if="loadingRuns" class="state-msg" label="Загрузка..." compact />
       <div v-else-if="!runs.length" class="state-msg">Запусков нет</div>
       <table v-else class="data-table">
         <thead>
@@ -104,6 +104,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { cancelJob, getAvailableJobs, getJobRuns, startJob } from '../api/adminJobsApi'

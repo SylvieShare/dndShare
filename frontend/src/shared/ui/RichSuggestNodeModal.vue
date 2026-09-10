@@ -2,6 +2,7 @@
   <AppModalFrame title="Термин справочника" :z-index="4600" @close="$emit('close')">
     <div class="rsm-form">
       <FormField label="Раздел" vertical>
+        <LoadingIndicator v-if="loadingTypes" label="Загружаем разделы…" size="xs" />
         <FormSelect v-model:value="typeId" :disabled="loadingTypes || Boolean(loadError)" @change="picked = null">
           <option value="" disabled>{{ typePlaceholder }}</option>
           <option v-for="type in types" :key="type.id" :value="String(type.id)">{{ type.name }}</option>
@@ -41,6 +42,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref, watch } from 'vue'
 import { AppModalFrame, FormField, FormSelect } from '@sylvieshare/share-ui'
 import { suggestApi } from '@/shared/api/suggestApi'

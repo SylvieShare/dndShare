@@ -83,7 +83,7 @@
       <div class="form-actions">
         <button type="button" class="cancel-button" :disabled="submitting" @click="closeForm">Отмена</button>
         <button type="submit" form="error-report-form" class="submit-button" :disabled="submitting || screenshotCapturing || !description.trim()">
-          {{ submitting ? 'Отправка…' : 'Отправить' }}
+          <LoadingIndicator v-if="submitting" label="Отправка…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ submitting ? 'Отправка…' : 'Отправить' }}
         </button>
       </div>
     </template>
@@ -95,6 +95,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { createErrorReport } from '../api/errorReportApi'

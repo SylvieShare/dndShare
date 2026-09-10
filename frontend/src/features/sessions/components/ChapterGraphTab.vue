@@ -32,7 +32,7 @@
 
     <div class="chapter-canvas-stage">
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
-      <div v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading">Загружаем карту кампании…</div>
+      <LoadingState v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading" label="Загружаем карту кампании…" compact />
       <SessionGraphCanvas
         v-else-if="!graph.loading.value"
         v-show="primaryView === 'story'"
@@ -186,6 +186,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { ArrowLeft, ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks, Repeat2 } from '@lucide/vue'
 import ArcEditorModal from '@/features/sessions/components/ArcEditorModal.vue'

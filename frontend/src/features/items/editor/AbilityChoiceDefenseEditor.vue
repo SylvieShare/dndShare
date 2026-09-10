@@ -4,7 +4,7 @@
       <RuleReferencePicker kind="choice" :value="data.choice_key" :owner-id="data.source_item_id" label="Выбор другой способности" @pick="pick" />
     </FormField>
     <p v-if="error" role="alert">{{ error }} <AddButton label="Повторить" @click="load" /></p>
-    <p v-else-if="loading" role="status">Загрузка вариантов…</p>
+    <LoadingState v-else-if="loading" label="Загрузка вариантов…" compact />
     <div v-for="(row, index) in data.options || []" :key="index" class="ability-condition-fields">
       <div class="ability-row-heading"><strong>{{ optionLabel(row.value) }}</strong><RemoveButton icon="trash" :label="`Удалить защиту ${optionLabel(row.value)}`" @click="pending = index" /></div>
       <AbilityRuleFields :fields="defenseFields" :data="row" @update:data="value => Object.assign(row, value)" />
@@ -16,6 +16,7 @@
   </div>
 </template>
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, inject, onScopeDispose, ref, watch, watchEffect } from 'vue'
 import { AddButton, ConfirmDialog, FormField, FormSelect, RemoveButton } from '@sylvieshare/share-ui'
 import { parseItemChoiceFilter } from '@/features/items/lib/itemChoices'

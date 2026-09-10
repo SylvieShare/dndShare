@@ -8,16 +8,9 @@
       </button>
     </div>
 
-    <div v-if="loading" class="chars-grid">
-      <div v-for="n in 2" :key="n" class="char-skeleton">
-        <div class="sk-ava" />
-        <div class="sk-lines">
-          <div class="sk-line sk-name" />
-          <div class="sk-line sk-who" />
-          <div class="sk-line sk-meta" />
-        </div>
-      </div>
-    </div>
+    <LoadingState v-if="loading" label="Загружаем персонажей…" />
+
+    <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="loadChars()">Повторить</button></div>
 
     <template v-else>
       <section v-for="group in groupedChars" :key="group.key" class="char-section">
@@ -65,6 +58,7 @@ export default { name: 'ViewListCharacters' }
 </script>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharBox from "@/features/character-list/components/CharBox"
@@ -81,6 +75,7 @@ const accountStore = useAccountStore()
 const templateStore = useTemplateStore()
 const chars = ref([])
 const sessionsByChar = ref({})
+const loadError = ref('')
 const loading = ref(true)
 const showModal = ref(false)
 const creating = ref(false)
@@ -109,14 +104,15 @@ const groupedChars = computed(() => {
 })
 
 function loadChars(preFetched) {
+  loadError.value = ''
   loading.value = true
   const promise = preFetched || fetchGet('/chars')
   promise.then(res => {
     chars.value = res?.chars || []
     accountStore.setHasCharacters(chars.value.length > 0)
     sessionsByChar.value = res?.sessionsByChar || {}
-    loading.value = false
-  })
+  }).catch(() => { loadError.value = 'Не удалось загрузить персонажей.' })
+    .finally(() => { loading.value = false })
 }
 
 function templateById(id) {
@@ -284,48 +280,6 @@ onActivated(() => {
   text-align: center;
 }
 
-.char-skeleton {
-  height: 124px;
-  background: var(--surface);
-  border-radius: var(--r-lg);
-  display: flex;
-  align-items: stretch;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.sk-ava {
-  flex-shrink: 0;
-  width: 96px;
-  align-self: stretch;
-  background: var(--surface-raised);
-  animation: sk-pulse 1.4s ease-in-out infinite;
-}
-
-.sk-lines {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 14px;
-}
-
-.sk-line {
-  height: 10px;
-  border-radius: 5px;
-  background: var(--surface-raised);
-  animation: sk-pulse 1.4s ease-in-out infinite;
-}
-
-.sk-name  { width: 60%; animation-delay: 0.1s; }
-.sk-who   { width: 80%; animation-delay: 0.2s; }
-.sk-meta  { width: 40%; animation-delay: 0.3s; }
-
-@keyframes sk-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
 
 @media (max-width: 640px) {
   .page {

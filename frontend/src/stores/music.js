@@ -11,17 +11,22 @@ export const useMusicStore = defineStore('music', () => {
   const tags = ref([])
   const libraryLoaded = ref(false)
   const libraryLoading = ref(false)
+  const libraryError = ref('')
 
   async function ensureLibrary(force = false) {
     if (libraryLoaded.value && !force) return
     if (libraryLoading.value) return
     libraryLoading.value = true
+    libraryError.value = ''
     try {
       const [t, a, g] = await Promise.all([musicApi.getTracks(), musicApi.getAlbums(), musicApi.getTags()])
       tracks.value = t?.tracks ?? []
       albums.value = a?.albums ?? []
       tags.value = g?.tags ?? []
       libraryLoaded.value = true
+    } catch (error) {
+      libraryError.value = 'Не удалось загрузить музыкальную библиотеку.'
+      throw error
     } finally {
       libraryLoading.value = false
     }
@@ -162,7 +167,7 @@ export const useMusicStore = defineStore('music', () => {
 
   return {
     // library state
-    tracks, albums, tags, libraryLoaded, libraryLoading, albumOrder,
+    tracks, albums, tags, libraryLoaded, libraryLoading, libraryError, albumOrder,
     ensureLibrary, trackById, albumById,
     uploadTrack, renameTrack, deleteTrack, deleteTracks,
     createAlbum, updateAlbum, deleteAlbum,

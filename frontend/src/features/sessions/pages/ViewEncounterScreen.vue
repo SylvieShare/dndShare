@@ -19,13 +19,7 @@
       Включить звук
     </button>
 
-    <section v-if="loading" class="encounter-screen__empty" aria-live="polite">
-      <div class="encounter-screen__sigil encounter-screen__sigil--loading">
-        <Swords :size="54" aria-hidden="true" />
-      </div>
-      <p class="encounter-screen__empty-label">Подключаемся к сессии</p>
-      <h2>Готовим экран игроков…</h2>
-    </section>
+    <LoadingState v-if="loading" class="encounter-screen__empty" label="Подключаемся к сессии…" fill />
 
     <section v-else-if="fatalError" class="encounter-screen__empty" role="alert">
       <div class="encounter-screen__sigil encounter-screen__sigil--error">
@@ -197,6 +191,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { CircleAlert, HeartPulse, Images, Skull, Swords, Timer, UserRound, Volume2, WifiOff } from '@lucide/vue'

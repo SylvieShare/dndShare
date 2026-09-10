@@ -11,6 +11,8 @@
       </div>
 
       <div class="sms-list">
+        <LoadingState v-if="loading" label="Загружаем варианты…" compact />
+        <div v-else-if="error" class="sms-empty" role="alert">{{ error }} <button type="button" @click="reload">Повторить</button></div>
         <div
           v-for="item in items"
           :key="item.id"
@@ -31,7 +33,7 @@
             @click.stop="toggleTip($event, item)"
           ><span class="sms-info-btn-inner">?</span></button>
         </div>
-        <div v-if="!items.length" class="sms-empty">Нет вариантов</div>
+        <div v-if="!loading && !error && !items.length" class="sms-empty">Нет вариантов</div>
       </div>
     </div>
 
@@ -54,18 +56,21 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
+import { useSuggestLoading } from '@/shared/composables/useSuggestLoading'
 import { onMounted, ref } from 'vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SuggestEditModal from '@/shared/ui/SuggestEditModal'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import { useSwipeToClose } from '@/shared/lib/useSwipeToClose'
 
-defineProps({
+const props = defineProps({
   suggestTypeId: { type: [Number, String], required: true },
   items: { type: Array, default: () => [] },
   activeIds: { type: Array, default: () => [] },
   title: { type: String, default: '' },
 })
+const { loading, error, reload } = useSuggestLoading(() => props.suggestTypeId)
 const emit = defineEmits(['toggle', 'close', 'created'])
 
 const panel = ref(null)

@@ -1031,3 +1031,6 @@ Runtime accepts only current session/encounter JSON. If the encounter model
 changes, add an idempotent correction to
 `internal/store/schema/04_sessions.sql`, update all producers/consumers, then
 remove the previous keys and any read-time converter.
+
+Первое открытие сессии, приглашения, мира и рабочих разделов использует LoadingState вместо произвольных skeleton-карточек. Общие индикаторы применяются к загрузке изображений и операциям в контролах; реальный прогресс и статусы соединения сохраняются.
+Общий контракт: [состояния загрузки](../loading-states.md).

@@ -21,11 +21,12 @@
           <span>{{ scene.name }}</span>
         </div>
         <button type="button" :disabled="loading" title="Обновить список" aria-label="Обновить список боёв" @click="loadCombats">
-          <RefreshCw :size="15" :class="{ 'scenario-combats-refresh--loading': loading }" />
+          <LoadingIndicator v-if="loading" label="Обновление списка боёв" :size="15" />
+          <RefreshCw v-else :size="15" />
         </button>
       </div>
 
-      <div v-if="loading && !loaded" class="scenario-combats-state">Загружаем бои…</div>
+      <LoadingState v-if="loading && !loaded" class="scenario-combats-state" label="Загружаем бои…" compact />
       <div v-else-if="error" class="scenario-combats-state scenario-combats-state--error" role="alert">{{ error }}</div>
       <div v-else-if="!combats.length" class="scenario-combats-state">В этом сценарии пока нет боевых блоков.</div>
       <div v-else class="scenario-combats-list">
@@ -49,6 +50,7 @@
 </template>
 
 <script setup>
+import { LoadingState, LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch } from 'vue'
 import { ListPlus, Plus, RefreshCw, Swords } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
@@ -125,7 +127,7 @@ function pick(combat) {
 .scenario-combats-heading button { width: 30px; height: 30px; display: grid; flex: 0 0 30px; place-items: center; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text-2); cursor: pointer; }
 .scenario-combats-heading button:hover:not(:disabled) { border-color: var(--border-strong); color: var(--text-1); }
 .scenario-combats-heading button:disabled { cursor: wait; opacity: .5; }
-.scenario-combats-refresh--loading { animation: scenario-combats-spin .8s linear infinite; }
+
 
 .scenario-combats-state { padding: 18px 12px; border: 1px dashed var(--border); border-radius: 9px; color: var(--text-muted); font-size: 11px; line-height: 1.45; text-align: center; }
 .scenario-combats-state--error { border-color: color-mix(in srgb, var(--danger) 35%, var(--border)); color: var(--danger); }
@@ -138,6 +140,5 @@ function pick(combat) {
 .scenario-combats-copy strong { overflow: hidden; color: var(--text-1); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .scenario-combats-copy small { color: var(--text-muted); font-size: 10px; }
 
-@keyframes scenario-combats-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .scenario-combats-refresh--loading { animation: none; } }
+
 </style>

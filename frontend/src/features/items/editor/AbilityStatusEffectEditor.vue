@@ -2,7 +2,7 @@
   <div class="ability-action-fields">
     <AbilityRuleFields :fields="fields.filter(field => field.key === 'effect')" :data="data" @update:data="pickEffect" />
     <RuleKeyField v-model="data.key" :title="effect?.name" :used-keys="otherKeys" />
-    <span v-if="loading" role="status">Загрузка настроек эффекта…</span>
+    <LoadingIndicator v-if="loading" label="Загрузка настроек эффекта…" size="xs" inline show-label />
     <button v-if="error" type="button" class="ability-link" @click="loadEffect">Не удалось загрузить эффект. Повторить</button>
     <div v-for="parameter in parameters" :key="parameter.key" class="ability-action-fields">
       <FormField :label="parameter.label" vertical :title="`Параметр эффекта ${parameter.key}. Значение можно брать из прогрессии этой способности.`">
@@ -18,6 +18,7 @@
   </div>
 </template>
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, onScopeDispose, ref, watch, watchEffect } from 'vue'
 import { FormField, FormSelect, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'

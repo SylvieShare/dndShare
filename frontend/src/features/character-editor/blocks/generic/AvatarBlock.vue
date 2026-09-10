@@ -20,11 +20,11 @@
     :aria-label="canUpload ? 'Действия с портретом' : undefined"
   >
     <!-- Картинка -->
-    <img v-if="imageUrl" :src="imageUrl" class="avatar-img" alt="avatar" />
+    <img v-if="imageUrl && !uploading" :src="imageUrl" class="avatar-img" alt="avatar" />
 
     <!-- Загрузка -->
     <div v-else-if="uploading" class="avatar-overlay">
-      <span class="avatar-spinner"></span>
+      <LoadingIndicator label="Загрузка портрета" size="sm" />
     </div>
 
     <!-- Пустой плейсхолдер в режиме редактирования -->
@@ -37,7 +37,7 @@
     </div>
 
     <!-- Оверлей действий при наведении поверх картинки -->
-    <div v-if="imageUrl && charCtx.ownerMode" class="avatar-change-overlay">
+    <div v-if="imageUrl && !uploading && charCtx.ownerMode" class="avatar-change-overlay">
       <span>Изменить</span>
     </div>
 
@@ -78,6 +78,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import AvatarCropModal from '@/features/character-editor/components/AvatarCropModal.vue'
@@ -346,18 +347,7 @@ onBeforeUnmount(clearCropObjectUrl)
 }
 
 /* Спиннер */
-.avatar-spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  border-top-color: color-mix(in srgb, var(--accent) 75%, transparent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 
 .avatar-actions { display: flex; flex-direction: column; gap: 2px; padding: 5px; }
 .avatar-actions button {

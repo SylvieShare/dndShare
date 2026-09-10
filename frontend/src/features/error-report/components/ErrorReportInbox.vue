@@ -165,7 +165,7 @@
           <div>
             <span>{{ answerDraft.length }} / 4000</span>
             <button type="submit" :disabled="answering || !answerDraft.trim()">
-              {{ answering ? 'Отправляем…' : 'Отправить ответ' }}
+              <LoadingIndicator v-if="answering" label="Отправляем…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ answering ? 'Отправляем…' : 'Отправить ответ' }}
             </button>
           </div>
         </form>
@@ -175,6 +175,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'

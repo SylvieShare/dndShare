@@ -6,7 +6,7 @@
         <p>Заявки, отправленные через выбор проблемного элемента.</p>
       </div>
       <button class="refresh-button" type="button" :disabled="loading" @click="load">
-        {{ loading ? 'Загрузка…' : 'Обновить' }}
+        <LoadingIndicator v-if="loading" label="Загрузка…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ loading ? 'Загрузка…' : 'Обновить' }}
       </button>
     </div>
 
@@ -23,7 +23,7 @@
     </div>
 
     <div v-if="error" class="state-msg error">{{ error }}</div>
-    <div v-if="loading && !reports.length" class="state-msg">Загрузка...</div>
+    <LoadingState v-if="loading && !reports.length" class="state-msg" label="Загрузка..." compact />
     <div v-else-if="!reports.length && !error" class="state-msg">Заявок нет</div>
     <div v-else-if="!filteredReports.length && !error" class="state-msg">В этом разделе заявок нет</div>
     <div v-else-if="filteredReports.length" class="reports-list">
@@ -66,7 +66,7 @@
               :disabled="deletingIds.has(report.id)"
               @click="onDelete(report)"
             >
-              {{ deletingIds.has(report.id) ? 'Удаление…' : 'Удалить навсегда' }}
+              <LoadingIndicator v-if="deletingIds.has(report.id)" label="Удаление…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ deletingIds.has(report.id) ? 'Удаление…' : 'Удалить навсегда' }}
             </button>
           </div>
         </div>
@@ -172,7 +172,7 @@
               type="submit"
               :disabled="answeringIds.has(report.id) || !replyDrafts[report.id]?.trim()"
             >
-              {{ answeringIds.has(report.id) ? 'Отправка…' : 'Ответить' }}
+              <LoadingIndicator v-if="answeringIds.has(report.id)" label="Отправка…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ answeringIds.has(report.id) ? 'Отправка…' : 'Ответить' }}
             </button>
           </form>
         </section>
@@ -192,6 +192,8 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { answerErrorReport, approveSeriousErrorReportChange, deleteErrorReport, getErrorReports, reopenErrorReport, setErrorReportApproval } from '../api/adminApi'

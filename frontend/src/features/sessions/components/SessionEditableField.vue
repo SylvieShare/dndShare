@@ -61,7 +61,7 @@
         <span>⌘ Enter — сохранить</span>
         <button type="button" :disabled="saving || committing" aria-label="Отменить" title="Отменить" @click="cancel"><X :size="15" /></button>
         <button type="button" class="primary" :disabled="saving || committing || !canSave" aria-label="Сохранить" title="Сохранить" @click="submit">
-          <LoaderCircle v-if="saving" class="session-editable-field-spinner" :size="15" />
+          <LoadingIndicator v-if="saving" label="Сохранение" :size="15" />
           <Check v-else :size="15" />
         </button>
       </div>
@@ -71,8 +71,9 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, nextTick, ref, watch } from 'vue'
-import { Check, LoaderCircle, Pencil, X } from '@lucide/vue'
+import { Check, Pencil, X } from '@lucide/vue'
 
 const props = defineProps({
   modelValue: { type: [String, Number, Object, Array], default: '' },
@@ -167,9 +168,9 @@ async function submit() {
 .session-editable-field-controls span { margin-right: auto; color: var(--text-muted); font-size: 8px; }
 .session-editable-field-controls button.primary { border-color: color-mix(in srgb, var(--entity-detail-color, var(--accent)) 72%, var(--border)); background: var(--entity-detail-color, var(--accent)); color: var(--text-on-accent); }
 .session-editable-field-controls button:disabled { opacity: .55; cursor: default; }
-.session-editable-field-spinner { animation: session-editable-field-spin .8s linear infinite; }
-@keyframes session-editable-field-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .session-editable-field { transition: none; }.session-editable-field-spinner { animation: none; } }
+
+
+@media (prefers-reduced-motion: reduce) { .session-editable-field { transition: none; } }
 .session-editable-field-pencil { border: 0; background: none; border-radius: 0; }
 .session-editable-field--compact { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; gap: 5px; }
 .session-editable-field--compact header { justify-content: flex-start; gap: 3px; }

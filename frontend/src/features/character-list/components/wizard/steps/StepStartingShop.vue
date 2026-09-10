@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <div v-if="shopLoading" class="shop-empty">Загружаем каталог…</div>
+        <LoadingState v-if="shopLoading" class="shop-empty" label="Загружаем каталог…" compact />
         <div v-else-if="!visibleItems.length" class="shop-empty">В этой категории ничего не найдено.</div>
         <div v-else class="shop-items">
           <div v-for="item in visibleItems" :key="item.id" class="shop-item">
@@ -112,6 +112,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import { Dices, Plus, Search, ShoppingBasket, X } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'

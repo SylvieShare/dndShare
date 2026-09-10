@@ -28,7 +28,8 @@
       <div v-if="open" class="hs-dropdown">
         <Transition name="hs-status" mode="out-in">
           <div v-if="searchStatus" :key="searchStatus.key" class="hs-status">
-            {{ searchStatus.text }}
+            <LoadingIndicator v-if="loading" :label="searchStatus.text" size="xs" inline show-label />
+            <template v-else>{{ searchStatus.text }}</template>
           </div>
         </Transition>
 
@@ -80,6 +81,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { BookOpenCheck } from '@lucide/vue'

@@ -2,7 +2,7 @@
   <AppModalFrame :body-scroll="narrow" wide extra-wide :title="item ? (typeId === 7 ? 'Редактировать черту' : isAbility ? 'Редактировать способность' : 'Редактировать запись') : (typeId === 7 ? 'Новая черта' : isAbility ? 'Новая способность' : typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="zIndex" @close="$emit('close')">
 
     <div v-if="loadError" role="alert"><p>{{ loadError }}</p><button type="button" class="ability-link" @click="loadForm">Повторить загрузку</button></div>
-    <p v-else-if="!ready" class="iem-required-hint">Загрузка формы…</p>
+    <LoadingState v-else-if="!ready" class="iem-required-hint" label="Загрузка формы…" compact />
     <component v-else :is="(isAbility || typeId === 19) ? AbilityEditor : CatalogueEditor" :fields="editableTypeFields" :data="formData" :type-id="typeId" :z-index="zIndex">
       <FormField label="Название" title="Название способности или объекта в справочнике и на листе персонажа." vertical>
         <FormTextInput
@@ -41,7 +41,7 @@
         <span v-if="missingRequiredFields.length" class="iem-required-hint">Заполните обязательные поля</span>
         <button class="iem-cancel" @click="$emit('close')">Отмена</button>
         <button class="iem-submit" :disabled="!canSubmit || saving" @click="submit">
-          {{ saving ? '...' : (item ? 'Сохранить' : 'Создать') }}
+          <LoadingIndicator v-if="saving" label="..." size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ saving ? '...' : (item ? 'Сохранить' : 'Создать') }}
         </button>
       </div>
     </template>
@@ -49,6 +49,8 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { canSelectItemPublication } from '@/features/items/lib/itemPermissions'
 import AbilityEditor from '@/features/items/editor/AbilityEditor.vue'
 import CatalogueEditor from '@/features/items/editor/catalogue/CatalogueEditor.vue'

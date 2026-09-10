@@ -2,11 +2,13 @@
   <span v-if="!itemId">Не привязан</span>
   <button v-else type="button" class="session-bestiary-reference" :aria-label="`Открыть в справочнике: ${item?.name || fallbackName}`" @click="opened = true">
     <HandbookListItem v-if="item" :item="item" :type="type" />
-    <span v-else>{{ loading ? 'Загрузка…' : fallbackName }}</span>
+    <LoadingIndicator v-else-if="loading" label="Загрузка существа…" size="xs" inline show-label />
+    <span v-else>{{ fallbackName }}</span>
   </button>
   <ItemViewModal v-if="opened && itemId" :item-id="Number(itemId)" :item-type-id="6" :item="item" :z-index="9300" @close="opened = false" @saved="item = $event" />
 </template>
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch } from 'vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { itemsApi } from '@/shared/api/itemsApi'

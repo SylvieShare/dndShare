@@ -18,7 +18,7 @@
             @keydown.enter="handleJoin"
           />
           <button class="btn-join" :disabled="!joinCode.trim() || joining" @click="handleJoin">
-            {{ joining ? '...' : 'Войти' }}
+            <LoadingIndicator v-if="joining" label="..." size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ joining ? '...' : 'Войти' }}
           </button>
         </div>
         <button class="btn-create" @click="showModal = true">+ Создать сессию</button>
@@ -38,11 +38,9 @@
       </button>
     </div>
 
-    <template v-if="loading">
-      <div class="cards-list">
-        <div v-for="n in 4" :key="n" class="card-skeleton" />
-      </div>
-    </template>
+    <LoadingState v-if="loading" label="Загружаем сессии…" />
+
+    <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="loadSessions()">Повторить</button></div>
 
     <template v-else-if="hasAnything">
       <template v-if="showGm && gmSessions.length">
@@ -95,7 +93,7 @@
               @enter="handleJoin"
             />
             <button type="submit" class="empty-join-button" :disabled="!joinCode.trim() || joining" aria-label="Войти в сессию">
-              <span>{{ joining ? 'Проверяем…' : 'Войти' }}</span>
+              <span><LoadingIndicator v-if="joining" label="Проверяем…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ joining ? 'Проверяем…' : 'Войти' }}</span>
               <ArrowRight :size="17" />
             </button>
           </form>
@@ -141,6 +139,8 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowRight, KeyRound, Plus, Sparkles } from '@lucide/vue'
@@ -160,6 +160,7 @@ const FILTERS = [
 const router = useRouter()
 const route = useRoute()
 const sessions = ref([])
+const loadError = ref('')
 const loading = ref(true)
 const showModal = ref(false)
 const joinCode = ref('')
@@ -183,10 +184,12 @@ function applySessionsResponse(res) {
 }
 
 function loadSessions(preFetched) {
+  loadError.value = ''
   loading.value = true
   const promise = preFetched || getSessions()
   promise
     .then(res => { if (res) applySessionsResponse(res) })
+    .catch(() => { loadError.value = 'Не удалось загрузить сессии.' })
     .finally(() => { loading.value = false })
 }
 
@@ -463,16 +466,6 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   gap: 12px;
 }
 
-.card-skeleton {
-  height: 188px;
-  border-radius: var(--r-lg);
-  background: var(--bg);
-  animation: sk-pulse 1.4s ease-in-out infinite;
-}
-
-.card-skeleton:nth-child(even) {
-  animation-delay: 0.2s;
-}
 
 .empty-state {
   display: flex;
@@ -612,10 +605,6 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
   color: var(--danger);
 }
 
-@keyframes sk-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
 
 @media (max-width: 640px) {
   .page {
@@ -644,6 +633,6 @@ onMounted(() => loadSessions(consumePrefetch(route.fullPath)))
     min-height: 230px;
   }
 
-  .card-skeleton { height: 278px; }
+
 }
 </style>

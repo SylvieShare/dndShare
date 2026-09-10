@@ -149,7 +149,7 @@
       @delete="requestNestedEdgeDelete"
     />
 
-    <div v-if="activeLoading" class="session-graph-state">{{ loadingLabel }}</div>
+    <LoadingState v-if="activeLoading" class="session-graph-state" :label="loadingLabel" compact />
     <div v-if="activeError || actionError" class="session-graph-error" role="alert">{{ actionError || activeError }}</div>
 
     <SceneEditorModal
@@ -204,6 +204,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, inject, ref, watch } from 'vue'
 import { ArrowLeft } from '@lucide/vue'
 import CanvasActionDock from '@/features/sessions/components/CanvasActionDock.vue'

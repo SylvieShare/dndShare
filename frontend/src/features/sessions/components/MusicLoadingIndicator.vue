@@ -1,16 +1,8 @@
 <template>
-  <LoaderCircle class="music-loading-indicator" :size="size" aria-hidden="true" />
+  <LoadingIndicator label="Загрузка трека" :size="size" aria-hidden="true" />
 </template>
 
 <script setup>
-import { LoaderCircle } from '@lucide/vue'
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 defineProps({ size: { type: Number, default: 14 } })
 </script>
-
-<style scoped>
-.music-loading-indicator { flex-shrink: 0; animation: music-loading-spin 1s linear infinite; }
-@keyframes music-loading-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) {
-  .music-loading-indicator { animation: none; }
-}
-</style>

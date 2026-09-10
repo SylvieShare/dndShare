@@ -1,6 +1,8 @@
 <template>
   <div class="sd-dropdown">
-    <template v-if="filtered.length > 0">
+    <LoadingState v-if="loading" label="Загружаем варианты…" compact />
+    <div v-else-if="error" class="sd-empty" role="alert">{{ error }} <button type="button" @mousedown.prevent="reload">Повторить</button></div>
+    <template v-else-if="filtered.length > 0">
       <div
         v-for="item in filtered"
         :key="item.id"
@@ -21,10 +23,10 @@
         <span v-if="item.userId != null" class="sd-custom-mark" title="Ваш вариант">✦</span>
       </div>
     </template>
-    <div v-if="canAdd" class="sd-add" @mousedown.prevent="addNew">
+    <div v-if="!loading && !error && canAdd" class="sd-add" @mousedown.prevent="addNew">
       + Добавить «{{ query.trim() }}»
     </div>
-    <div v-if="filtered.length === 0 && !canAdd" class="sd-empty">
+    <div v-if="!loading && !error && filtered.length === 0 && !canAdd" class="sd-empty">
       Ничего не найдено
     </div>
     <ItemTooltip
@@ -39,6 +41,8 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
+import { useSuggestLoading } from '@/shared/composables/useSuggestLoading'
 import { ref, computed } from 'vue'
 import { fetchPost, fetchDelete } from "@/shared/api/http"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
@@ -49,6 +53,7 @@ const props = defineProps({
   typeId: { type: [Number, String], required: true },
   exclude: { type: Array, default: () => [] },
 })
+const { loading, error, reload } = useSuggestLoading(() => props.typeId)
 const emit = defineEmits(['pick', 'pick-item', 'added', 'deleted'])
 
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })

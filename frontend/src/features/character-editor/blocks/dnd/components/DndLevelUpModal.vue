@@ -1,7 +1,7 @@
 <template>
   <AppModalFrame title="Повышение уровня" :subtitle="`${total} → ${newTotal}`" @close="$emit('close')">
 
-    <p v-if="loading" class="lu-muted">Загрузка справочника…</p>
+    <LoadingState v-if="loading" class="lu-muted" label="Загрузка справочника…" compact />
 
     <!-- ── Шаг 1: за кого повышаемся ── -->
     <template v-else-if="step === 'pick'">
@@ -270,6 +270,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { Trash2 } from '@lucide/vue'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 

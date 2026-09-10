@@ -286,19 +286,6 @@
   padding: 2px;
 }
 
-.loading-placeholder {
-  flex: 1;
-  margin: 24px;
-  border-radius: 16px;
-  background: var(--bg);
-  animation: sk-pulse 1.4s ease-in-out infinite;
-  min-height: 200px;
-}
-
-@keyframes sk-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .workspace-dock--left,

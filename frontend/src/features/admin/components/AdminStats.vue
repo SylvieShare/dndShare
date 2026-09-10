@@ -1,6 +1,6 @@
 <template>
   <div class="admin-stats">
-    <div v-if="loading" class="state-msg">Загрузка...</div>
+    <LoadingState v-if="loading" class="state-msg" label="Загрузка..." compact />
     <div v-else-if="error" class="state-msg error">{{ error }}</div>
     <template v-else>
       <div class="stats-grid">
@@ -85,6 +85,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { SegmentDonutChart } from '@sylvieshare/share-ui'
 import { formatBytes } from '@/shared/lib/storageUsage'

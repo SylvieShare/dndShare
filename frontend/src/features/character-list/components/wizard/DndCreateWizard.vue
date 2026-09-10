@@ -42,7 +42,7 @@
           </select>
         </FormField>
 
-        <p v-if="loading" class="wz-muted">Загрузка справочника…</p>
+        <LoadingState v-if="loading" class="wz-muted" label="Загрузка справочника…" compact />
         <p v-else-if="!races.length && !classes.length" class="wz-muted">В справочнике пока нет рас и классов. Их нужно завести (Фаза наполнения).</p>
       </section>
 
@@ -112,7 +112,7 @@
       <button v-if="!isLast" class="wz-btn" :disabled="!canNext" @click="next">Далее</button>
       <div v-else class="wz-nav-actions">
         <button class="wz-btn soft" :disabled="creating || !templateName" @click="openPreview">Предпросмотр листа</button>
-        <button class="wz-btn" :disabled="creating || !canNext" @click="submit">{{ creating ? 'Создание…' : 'Создать' }}</button>
+        <button class="wz-btn" :disabled="creating || !canNext" @click="submit"><LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать' }}</button>
       </div>
     </div>
 
@@ -126,6 +126,8 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, provide, ref } from 'vue'
 import DndStatAssign from './DndStatAssign.vue'
 import CharacterSheetModal from '@/features/character-editor/components/CharacterSheetModal.vue'

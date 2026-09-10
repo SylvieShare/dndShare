@@ -10,7 +10,7 @@
       </button>
     </nav>
 
-    <PrintPage v-if="loading" message><div class="paper-message">Готовим лист персонажа…</div></PrintPage>
+    <PrintPage v-if="loading" message><LoadingState label="Готовим лист персонажа…" /></PrintPage>
     <PrintPage v-else-if="error" message>
       <div class="paper-message paper-message--error"><strong>Не удалось открыть персонажа</strong><span>{{ error }}</span></div>
     </PrintPage>
@@ -178,6 +178,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
 
 import { computed, defineComponent, h, onBeforeUnmount, onMounted, ref } from 'vue'

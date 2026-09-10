@@ -80,7 +80,7 @@
 
     <div class="sep-body">
       <div class="sep-body-inner">
-        <div v-if="store.loading" class="sep-empty">Загружаем хронику…</div>
+        <LoadingState v-if="store.loading" class="sep-empty" label="Загружаем хронику…" compact />
         <div v-else-if="!store.events.length" class="sep-empty">Здесь появятся игровые события</div>
         <div v-else-if="!filteredEvents.length" class="sep-empty sep-empty--filtered">
           <span>По выбранным фильтрам событий нет</span>
@@ -158,6 +158,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { BasePopover, FormSelect, MultiToggle } from '@sylvieshare/share-ui'

@@ -29,6 +29,7 @@
           <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
         </div>
 
+        <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
         <div v-else-if="template" class="desktop-tabs">
           <div
             v-for="index in visitedTabIndexes"
@@ -82,7 +83,7 @@ const previewMode = computed(() => Boolean(props.draft))
 const isMobile = ref(false)
 
 const {
-  loading, template, data, charCtx, isOwner, publicVisible,
+  loading, loadError, template, data, charCtx, isOwner, publicVisible,
   toolbarTabs, charName, charSub, toolbarBlocksList,
   load, loadPreview, blocksForTab, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
@@ -139,14 +140,15 @@ function onUpdateVar(patch) {
   scheduleSave()
 }
 
-onMounted(async () => {
+async function initializeCharacter() {
   if (previewMode.value) loadPreview(props.draft)
-  else await load()
+  else if (!await load()) return
   charCtx.ownerMode = canEdit.value
   const tabs = getInitialTabs()
   const defaultIdx = tabs.findIndex(tab => tab.default)
   setActiveTab(defaultIdx >= 0 ? defaultIdx : 0)
-})
+}
+onMounted(initializeCharacter)
 </script>
 
 <style scoped>

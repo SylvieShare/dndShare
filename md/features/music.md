@@ -111,3 +111,6 @@ falls back to polling when SSE is unavailable. Browser autoplay rejection is a
 visible recoverable state rather than a silent failure. Track metadata cache is
 owned by the music store. A newly uploaded track absent from a saved order is
 appended as current product behavior, not treated as an old data format.
+
+Загрузка библиотеки отделена от буферизации трека: до ответа виден LoadingState, при ошибке доступен повтор. MusicLoadingIndicator — тонкий адаптер общего LoadingIndicator с музыкальной подписью и размером кнопки.
+Общий контракт: [состояния загрузки](../loading-states.md).

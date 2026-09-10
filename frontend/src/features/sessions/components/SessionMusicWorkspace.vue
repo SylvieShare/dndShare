@@ -59,6 +59,8 @@
         </div>
 
         <div class="ml-tracks" data-sortable-container="tracks">
+          <LoadingState v-if="musicStore.libraryLoading" label="Загружаем музыкальную библиотеку…" />
+          <div v-else-if="musicStore.libraryError" class="ml-empty" role="alert">{{ musicStore.libraryError }} <button type="button" @click="reloadLibrary">Повторить</button></div>
           <MusicTrackRow
             v-for="track in organizer.sortable.displayItems('tracks')"
             :key="track.id"
@@ -80,7 +82,7 @@
             @change-albums="onChangeAlbums"
             @change-tags="onChangeTags"
           />
-          <div v-if="!displayedTracks.length" class="ml-empty">Нет треков</div>
+          <div v-if="!musicStore.libraryLoading && !musicStore.libraryError && !displayedTracks.length" class="ml-empty">Нет треков</div>
         </div>
         </section>
 
@@ -158,6 +160,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { AppModalFrame, ConfirmDialog, TextPromptDialog } from '@sylvieshare/share-ui'
@@ -198,7 +201,8 @@ const { dropActive, uploadStatus, fileInputEl, openFilePicker, onDragEnter, onDr
 const visibleStatus = computed(() => uploadStatus.value || organizerStatus.value)
 
 watch(selectedAlbumId, async id => { if (id) await musicStore.loadAlbumTracks(id).catch(() => {}) })
-onMounted(() => musicStore.ensureLibrary())
+function reloadLibrary() { return musicStore.ensureLibrary(true).catch(() => {}) }
+onMounted(() => musicStore.ensureLibrary().catch(() => {}))
 
 const filteredTracks = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()

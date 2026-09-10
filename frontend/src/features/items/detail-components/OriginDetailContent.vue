@@ -15,7 +15,7 @@
 
     <DetailSection v-if="relationItems.length || relationLoading" :label="relationTitle">
       <template #icon><GitBranch /></template>
-      <div v-if="relationLoading" class="origin-loading">Загрузка связей…</div>
+      <LoadingState v-if="relationLoading" class="origin-loading" label="Загрузка связей…" compact />
       <div v-else class="origin-relations">
         <button
           v-for="related in relationItems"
@@ -90,6 +90,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { Backpack, BookOpen, ChevronRight, GitBranch, ListChecks, ShieldCheck, Sparkles, WandSparkles } from '@lucide/vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'

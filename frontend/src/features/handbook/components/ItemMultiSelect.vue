@@ -25,7 +25,7 @@
               <HandbookListItem :item="item" :type="rowType(item)" :show-chevron="false" />
             </button>
           </BaseTile>
-          <p v-if="loading" class="item-multi__status" role="status">Загрузка…</p>
+          <LoadingState v-if="loading" class="item-multi__status" label="Загрузка…" compact />
           <div v-else-if="error" class="item-multi__status" role="alert">
             {{ error }} <AddButton label="Повторить" variant="inline" @click="retry" />
           </div>
@@ -45,6 +45,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { Check, Square } from '@lucide/vue'
 import { AddButton, AppModalFrame, BaseTile, FormActionButtons, FormField, FormSelect, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'

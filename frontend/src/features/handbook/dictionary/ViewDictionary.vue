@@ -22,6 +22,8 @@
           :items="items"
           :selected-item="selectedItem"
           :loading="loading"
+          :load-error="loadError"
+          @retry="fetchItems(selectedType.id)"
           class="dict-grid-slot"
           @select="selectItem"
         />
@@ -83,6 +85,8 @@ const types = ref([])
 const selectedType = ref(null)
 const items = ref([])
 const loading = ref(false)
+const loadError = ref('')
+let listRequest = 0
 const selectedItem = ref(null)
 const createSheetOpen = ref(false)
 const editModalOpen = ref(false)
@@ -108,12 +112,16 @@ async function fetchTypes() {
 }
 
 async function fetchItems(typeId) {
+  const request = ++listRequest
+  loadError.value = ''
   loading.value = true
   try {
     const res = await suggestApi.list(typeId)
-    items.value = res.items || []
+    if (request === listRequest) items.value = res.items || []
+  } catch {
+    if (request === listRequest) loadError.value = 'Не удалось загрузить словарь.'
   } finally {
-    loading.value = false
+    if (request === listRequest) loading.value = false
   }
 }
 

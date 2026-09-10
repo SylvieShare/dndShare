@@ -11,7 +11,7 @@
         <kbd v-if="showShortcutHints" class="session-world-list-navigation-hint">↑ ↓</kbd>
         <span v-if="allMaterials.length">{{ filteredCount }}</span>
       </label>
-      <div v-if="materials.loading.value" class="materials-state">Загружаем материалы…</div>
+      <LoadingState v-if="materials.loading.value" class="materials-state" label="Загружаем материалы…" compact />
       <div v-else-if="materials.error.value" class="materials-state materials-state--error">{{ materials.error.value }}</div>
       <div v-else-if="!allMaterials.length" class="session-world-sidebar-empty">
         <LibraryBig :size="28" /><strong>Соберите материалы</strong>
@@ -81,6 +81,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 
 import { computed, ref, watch } from 'vue'
 import { Cast, LibraryBig, Plus, Search, Trash2 } from '@lucide/vue'

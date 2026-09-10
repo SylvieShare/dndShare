@@ -52,3 +52,5 @@ describe('NPC bestiary reference', () => {
     expect(form.all(el => el.type === 'dialog')[0].props['data-item']).toBe(42); form.unmount()
   })
 })
+
+vi.mock('@sylvieshare/share-ui', async importOriginal => ({ ...await importOriginal(), LoadingIndicator: { props: ['label'], setup: props => () => h('span', { role: 'status' }, props.label) } }))

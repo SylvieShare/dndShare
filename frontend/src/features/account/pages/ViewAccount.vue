@@ -67,7 +67,7 @@
           </p>
 
           <button class="primary-action" type="submit" :disabled="changingPassword || !canChangePassword">
-            <LoaderCircle v-if="changingPassword" class="spin" :size="16" aria-hidden="true" />
+            <LoadingIndicator v-if="changingPassword" label="Сохранение пароля" size="xs" />
             <LockKeyhole v-else :size="16" aria-hidden="true" />
             {{ changingPassword ? 'Сохраняем…' : 'Изменить пароль' }}
           </button>
@@ -81,10 +81,7 @@
         role="tabpanel"
         aria-labelledby="account-storage-tab"
       >
-        <div v-if="storageLoading" class="storage-loading" aria-label="Загрузка статистики">
-          <div class="storage-loading__chart" />
-          <div class="storage-loading__lines"><i /><i /><i /></div>
-        </div>
+        <LoadingState v-if="storageLoading" label="Загружаем статистику хранилища…" />
 
         <div v-else-if="storageError" class="storage-error" role="alert">
           <CircleAlert :size="28" aria-hidden="true" />
@@ -158,6 +155,8 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import {
@@ -167,7 +166,6 @@ import {
   FileImage,
   Film,
   HardDrive,
-  LoaderCircle,
   LockKeyhole,
   Music2,
   ShieldCheck,

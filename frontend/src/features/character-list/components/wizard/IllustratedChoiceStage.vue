@@ -1,7 +1,7 @@
 <template>
   <div class="illustrated-choice">
     <h1 class="illustrated-choice-title">{{ title }}</h1>
-    <p v-if="loading" class="illustrated-choice-muted">{{ loadingText }}</p>
+    <LoadingState v-if="loading" :label="loadingText" />
     <p v-else-if="empty" class="illustrated-choice-muted">{{ emptyText }}</p>
     <template v-else>
       <div ref="stage" class="illustrated-choice-stage">
@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { nextTick, ref, watch } from 'vue'
 
 const props = defineProps({

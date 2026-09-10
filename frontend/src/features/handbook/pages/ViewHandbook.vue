@@ -52,6 +52,8 @@
             :selected-item="selectedItem"
             :items="filteredItems"
             :loading="loading"
+            :load-error="loadError"
+            @retry="fetchItems(searchQ, failedAppend)"
             :loading-more="loadingMore"
             :has-more="hasMore"
             :group-by="groupBy"
@@ -143,6 +145,8 @@ const selectedType = ref(null)
 const items = ref([])
 const selectedItem = ref(null)
 const loading = ref(false)
+const loadError = ref('')
+const failedAppend = ref(false)
 const loadingMore = ref(false)
 const hasMore = ref(false)
 const itemPageSize = 30
@@ -289,6 +293,7 @@ async function fetchItems(q, append = false) {
   if (!selectedType.value) return
   if (append && (!hasMore.value || loading.value || loadingMore.value)) return
 
+  loadError.value = ''
   const requestId = ++itemsRequestSeq
   const offset = append ? itemOffset : 0
 
@@ -335,6 +340,11 @@ async function fetchItems(q, append = false) {
     }
     itemOffset = offset + next.length
     hasMore.value = !groupBy.value && next.length === pageSize
+  } catch {
+    if (requestId === itemsRequestSeq) {
+      failedAppend.value = append
+      loadError.value = 'Не удалось загрузить объекты.'
+    }
   } finally {
     if (requestId === itemsRequestSeq) {
       loading.value = false
@@ -363,6 +373,7 @@ async function resolveItem(itemId) {
 
 // ── Type / item selection ────────────────────────────────────────────────────
 function selectType(type, requestedSourceVersionID = null) {
+  items.value = []
   selectedType.value = type
   sourceVersionId.value = versionForType(type, requestedSourceVersionID)
   selectedItem.value = null

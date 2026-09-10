@@ -10,7 +10,7 @@
     >
       <img v-if="imageUrl" :src="imageUrl" alt="" />
       <span v-else>{{ monogram }}</span>
-      <span v-if="uploading" class="dci-icon-spinner" aria-label="Загрузка"></span>
+      <LoadingIndicator v-if="uploading" class="dci-loading" label="Загрузка иконки" size="sm" />
     </button>
     <div v-else class="dci-icon" aria-hidden="true">
       <img v-if="imageUrl" :src="imageUrl" alt="" />
@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 
@@ -91,6 +92,7 @@ async function clearIcon() {
 </script>
 
 <style scoped>
+.dci-loading { position: absolute; inset: 0; background: color-mix(in srgb, var(--surface) 70%, transparent); }
 .dci-icon-wrap {
   position: relative;
   width: 88px;
@@ -118,15 +120,7 @@ async function clearIcon() {
 .dci-icon--interactive { cursor: pointer; }
 .dci-icon--interactive:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .dci-icon img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.dci-icon-spinner {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  border: 3px solid color-mix(in srgb, var(--text-on-accent) 28%, transparent);
-  border-top-color: var(--text-on-accent);
-  border-radius: 50%;
-  animation: dci-icon-spin 0.8s linear infinite;
-}
+
 .dci-icon-menu { display: flex; flex-direction: column; gap: 2px; padding: 5px; }
 .dci-icon-menu button {
   width: 100%;
@@ -143,5 +137,5 @@ async function clearIcon() {
 .dci-icon-menu button:hover { background: var(--surface-raised); color: var(--text-1); }
 .dci-icon-menu .dci-icon-clear { color: var(--danger); }
 .dci-icon-error { max-width: 220px; padding: 6px 10px; color: var(--danger); font-size: 10px; line-height: 1.35; }
-@keyframes dci-icon-spin { to { transform: rotate(360deg); } }
+
 </style>

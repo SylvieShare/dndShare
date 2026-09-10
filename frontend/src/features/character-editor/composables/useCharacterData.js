@@ -23,6 +23,7 @@ import {
 
 export function useCharacterData(uuid, isMobile) {
   const loading = ref(true)
+  const loadError = ref('')
   const template = ref(null)
   const accessors = ref(null)
   const data = ref({ values: {}, var: {} })
@@ -132,12 +133,20 @@ export function useCharacterData(uuid, isMobile) {
   }
 
   async function load() {
-    const fromSeed = loadSync()
-    if (fromSeed) return fromSeed
-    if (!uuid) return null
-    await useAccountStore().ensureAuth()
-    const res = await fetchGet('/char/' + uuid)
-    return apply(res)
+    loadError.value = ''
+    loading.value = true
+    try {
+      const fromSeed = loadSync()
+      if (fromSeed) return fromSeed
+      if (!uuid) throw new Error('Missing character UUID')
+      await useAccountStore().ensureAuth()
+      return apply(await fetchGet('/char/' + uuid))
+    } catch {
+      loadError.value = 'Не удалось загрузить лист персонажа.'
+      return null
+    } finally {
+      loading.value = false
+    }
   }
 
   function loadPreview(preview) {
@@ -301,6 +310,7 @@ export function useCharacterData(uuid, isMobile) {
 
   return {
     loading,
+    loadError,
     template,
     data,
     charCtx,

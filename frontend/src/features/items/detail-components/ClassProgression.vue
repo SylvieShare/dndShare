@@ -14,7 +14,7 @@
         </FormSelect>
       </label>
     </div>
-    <p v-if="loading" class="progression-message" role="status">Загружаем классовые умения…</p>
+    <LoadingState v-if="loading" class="progression-message" label="Загружаем классовые умения…" compact />
     <div v-else-if="error" class="progression-message" role="alert">
       Не удалось загрузить развитие класса. <button type="button" @click="load">Повторить</button>
     </div>
@@ -52,6 +52,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { GitBranch, TrendingUp } from '@lucide/vue'
 import { FormSelect } from '@sylvieshare/share-ui'

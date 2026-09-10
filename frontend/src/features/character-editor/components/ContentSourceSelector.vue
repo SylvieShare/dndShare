@@ -1,6 +1,6 @@
 <template>
   <div class="source-selector">
-    <p v-if="loading" class="source-hint">Загрузка источников…</p>
+    <LoadingState v-if="loading" class="source-hint" label="Загрузка источников…" compact />
     <p v-else-if="!sources.length" class="source-hint">Для этой редакции источники пока не заведены.</p>
     <ItemSourcePicker
       v-else
@@ -23,6 +23,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'

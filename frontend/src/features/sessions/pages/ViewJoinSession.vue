@@ -1,10 +1,6 @@
 <template>
   <div class="join-page">
-    <div v-if="loading" class="join-loading">
-      <div class="sk-hero" />
-      <div class="sk-row" />
-      <div class="sk-row" />
-    </div>
+    <LoadingState v-if="loading" label="Загружаем приглашение…" />
 
     <div v-else-if="error === 'auth'" class="join-state">
       <div class="state-card">
@@ -50,9 +46,7 @@
           <p class="picker-sub">Клик по карточке — и ты в игре.</p>
         </div>
 
-        <div v-if="loadingChars" class="chars-grid">
-          <div v-for="n in 3" :key="n" class="char-skeleton" />
-        </div>
+        <LoadingState v-if="loadingChars" label="Загружаем персонажей…" />
 
         <div v-else-if="chars.length" class="chars-grid">
           <button
@@ -114,6 +108,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CharacterCreateModal from '@/features/character-list/components/CharacterCreateModal'
@@ -265,9 +260,6 @@ onMounted(async () => {
   gap: 20px;
 }
 
-.join-loading { display: flex; flex-direction: column; gap: 14px; }
-.sk-hero { height: 180px; border-radius: 18px; background: var(--bg); animation: sk-pulse 1.4s ease-in-out infinite; }
-.sk-row { height: 64px; border-radius: 12px; background: var(--bg); animation: sk-pulse 1.4s ease-in-out infinite; }
 
 .join-state {
   flex: 1;
@@ -381,12 +373,6 @@ onMounted(async () => {
   gap: 12px;
 }
 
-.char-skeleton {
-  height: 92px;
-  border-radius: 14px;
-  background: var(--bg);
-  animation: sk-pulse 1.4s ease-in-out infinite;
-}
 
 .char-tile {
   position: relative;
@@ -493,10 +479,6 @@ onMounted(async () => {
   text-align: center;
 }
 
-@keyframes sk-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
 
 @media (max-width: 640px) {
   .join-page { padding: 20px 14px 48px; gap: 20px; }

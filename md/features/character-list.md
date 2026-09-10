@@ -403,3 +403,6 @@ List ↔ sheet uses router navigation. Clone calls
 `POST /api/char/{uuid}/clone`; delete calls `DELETE /api/char/{uuid}` after a
 shared confirmation dialog. Feature code must not use browser confirm/prompt or
 implement a second card-to-sheet data resolver.
+
+Первая загрузка списка и выбора персонажа при вступлении использует общий LoadingState. Ошибка списка останавливает ожидание и предлагает повтор; она не отображается как пустой список.
+Общий контракт: [состояния загрузки](../loading-states.md).

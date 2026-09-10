@@ -37,12 +37,13 @@
       @click="$emit('create-incomplete')"
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="2.5 3" /><path d="M12 8v4l2.5 1.5" /></svg>
-      {{ creating ? 'Создание…' : 'Создать неполноценного' }}
+      <LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать неполноценного' }}
     </button>
   </nav>
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 defineProps({
   steps: { type: Array, required: true },
   current: { type: Number, default: 0 },

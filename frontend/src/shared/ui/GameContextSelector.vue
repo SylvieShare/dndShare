@@ -22,7 +22,7 @@
       <div v-if="open" class="game-context-panel game-context-panel--popover" aria-label="Выбор игрового контекста">
         <div class="game-context-heading">
           <span>Игровой контекст</span>
-          <LoaderCircle v-if="store.loading || store.saving" class="game-context-spinner" aria-label="Сохранение" />
+          <LoadingIndicator v-if="store.loading || store.saving" :label="store.saving ? 'Сохранение' : 'Загрузка'" :size="16" />
           <Check v-else-if="store.ready" class="game-context-saved" aria-label="Выбор сохранён" />
         </div>
 
@@ -57,8 +57,9 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
-import { BookMarked, Check, ChevronDown, LoaderCircle } from '@lucide/vue'
+import { BookMarked, Check, ChevronDown } from '@lucide/vue'
 import { ValueSelect } from '@sylvieshare/share-ui'
 import { useGameContextStore } from '@/stores/gameContext'
 
@@ -144,10 +145,6 @@ onMounted(() => store.ensure().catch(() => null))
   margin-left: auto;
 }
 
-.game-context-spinner {
-  color: var(--accent);
-  animation: game-context-spin .8s linear infinite;
-}
 
 .game-context-saved { color: var(--success); }
 
@@ -275,7 +272,6 @@ onMounted(() => store.ensure().catch(() => null))
   transform: translateY(-4px) scale(.985);
 }
 
-@keyframes game-context-spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 640px) {
   .game-context--compact { width: 34px; flex-shrink: 0; }
@@ -289,7 +285,7 @@ onMounted(() => store.ensure().catch(() => null))
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .game-context-spinner { animation-duration: 1.8s; }
+
   .game-context-trigger-chevron,
   .game-context-popover-enter-active,
   .game-context-popover-leave-active { transition: none; }

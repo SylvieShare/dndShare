@@ -1,6 +1,6 @@
 <template>
   <section class="journal-workspace" :class="{ 'journal-workspace--session': sessionUuid }">
-    <div v-if="loading" class="journal-state"><BookMarked :size="30" /><span>Открываем летопись…</span></div>
+    <LoadingState v-if="loading" class="journal-state" label="Открываем летопись…" />
     <template v-else>
       <BaseTile class="journal-header">
         <header class="journal-cover">
@@ -52,6 +52,7 @@
   </section>
 </template>
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { BookMarked, Feather, Plus } from '@lucide/vue'
 import { BaseTile, ConfirmDialog, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'

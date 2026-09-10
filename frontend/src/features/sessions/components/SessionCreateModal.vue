@@ -23,7 +23,7 @@
           <span class="source-name">{{ src.name }}</span>
           <span v-if="sourceVersionLabel(src)" class="source-version">{{ sourceVersionLabel(src) }}</span>
         </button>
-        <div v-if="loadingSources" class="source-loading">Загрузка…</div>
+        <LoadingState v-if="loadingSources" class="source-loading" label="Загрузка…" compact />
       </div>
     </FormField>
 
@@ -50,6 +50,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { onMounted, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'

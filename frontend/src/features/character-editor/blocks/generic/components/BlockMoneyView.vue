@@ -3,7 +3,7 @@
        Padding is owned by the wrapper (BaseTile / morph face); this is just the content. -->
   <div class="money-view">
     <div v-if="title" class="sheet-tile-title money-title">{{ title }}</div>
-    <div v-if="loading" class="money-empty">Загрузка...</div>
+    <LoadingState v-if="loading" class="money-empty" label="Загрузка..." compact />
     <div v-else class="money-line">
       <template v-if="coins.length">
         <span v-for="coin in coins" :key="coin.id" class="money-amount" :title="coin.title">
@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 defineProps({
   title: { type: String, default: '' },
   loading: { type: Boolean, default: false },

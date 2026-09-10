@@ -16,7 +16,7 @@
     <AppModalFrame v-if="pickerOpen" extra-wide title="Выбрать изображение" @close="closePicker">
       <div class="session-image-browser">
         <p v-if="errorMessage" class="session-image-state error" role="alert">{{ errorMessage }}</p>
-        <span v-if="disabled" role="status">Сохраняем изображение…</span>
+        <LoadingState v-if="disabled" label="Сохраняем изображение…" compact />
         <nav v-if="categories.length" class="session-image-category-nav" aria-label="Категории изображений">
           <button v-for="category in categories" :key="category.key" type="button" @click="scrollTo(category.key)">{{ category.label }}</button>
         </nav>
@@ -24,7 +24,7 @@
           <Upload :size="18" />
           <span><strong>Загрузить своё</strong><small>PNG, JPG или WebP до 15 МБ</small></span>
         </button>
-        <div v-if="loading" class="session-image-state">Загружаем изображения…</div>
+        <LoadingState v-if="loading" class="session-image-state" label="Загружаем изображения…" compact />
         <div v-else-if="loadError" class="session-image-state error">Не удалось загрузить каталог</div>
         <div v-else class="session-image-sections">
           <section v-for="category in categories" :key="category.key" :ref="element => rememberSection(category.key, element)" class="session-image-section">
@@ -53,6 +53,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { Images, Upload } from '@lucide/vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'

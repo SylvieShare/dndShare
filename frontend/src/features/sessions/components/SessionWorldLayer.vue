@@ -1,8 +1,5 @@
 <template>
-  <div v-if="world.loading.value && !world.loaded.value" class="session-world-loading">
-    <div class="session-world-loading-mark"><Map :size="24" /></div>
-    <span>Собираем мир сессии…</span>
-  </div>
+  <LoadingState v-if="world.loading.value && !world.loaded.value" class="session-world-loading" label="Собираем мир сессии…" fill />
   <div v-else-if="world.error.value && !world.loaded.value" class="session-world-loading session-world-loading--error">
     <AlertCircle :size="26" />
     <strong>Не удалось открыть раздел</strong>
@@ -69,8 +66,9 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
-import { AlertCircle, Map } from '@lucide/vue'
+import { AlertCircle } from '@lucide/vue'
 import SessionLocationsWorkspace from '@/features/sessions/components/SessionLocationsWorkspace.vue'
 import SessionNpcsWorkspace from '@/features/sessions/components/SessionNpcsWorkspace.vue'
 import SessionMaterialsWorkspace from '@/features/sessions/components/SessionMaterialsWorkspace.vue'
@@ -162,10 +160,9 @@ defineExpose({
 
 <style scoped>
 .session-world-loading { position: absolute; z-index: 5; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 9px; color: var(--text-muted); font-size: 11px; }
-.session-world-loading-mark { width: 54px; height: 54px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border)); border-radius: 16px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--accent-soft); animation: session-world-pulse 1.4s ease-in-out infinite; }
+
 .session-world-loading--error > svg { color: var(--danger); }
 .session-world-loading--error strong { color: var(--text-1); font-size: 13px; }
 .session-world-loading--error button { padding: 7px 10px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface-raised); color: var(--text-1); font: inherit; font-size: 10px; cursor: pointer; }
-@keyframes session-world-pulse { 50% { opacity: 0.48; transform: scale(0.96); } }
-@media (prefers-reduced-motion: reduce) { .session-world-loading-mark { animation: none; } }
+
 </style>

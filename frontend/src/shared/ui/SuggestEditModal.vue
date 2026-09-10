@@ -45,6 +45,7 @@
         <div v-if="svgPreviewText || form.svg" class="sem-svg-preview" v-html="svgPreviewText || form.svg"></div>
         <div class="sem-svg-actions">
           <button class="sem-svg-upload-btn" :disabled="uploadingSvg" @click="svgFileInput.click()">
+            <LoadingIndicator v-if="uploadingSvg" label="Загрузка SVG" size="xs" />
             {{ uploadingSvg ? 'Загрузка...' : 'Загрузить SVG' }}
           </button>
           <button v-if="svgPreviewText || form.svg" class="sem-svg-clear-btn" :disabled="uploadingSvg" @click="clearSvg">Удалить</button>
@@ -78,6 +79,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'

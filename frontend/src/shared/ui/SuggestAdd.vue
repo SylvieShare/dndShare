@@ -53,6 +53,8 @@
         />
       </div>
       <div class="sa-panel-list">
+        <LoadingState v-if="loading" label="Загружаем варианты…" compact />
+        <div v-else-if="error" class="sa-panel-empty" role="alert">{{ error }} <button type="button" @click="reload">Повторить</button></div>
         <div
           v-for="item in panelFiltered"
           :key="item.id"
@@ -69,7 +71,7 @@
             @click.stop="deletePanelItem(item)"
           >×</button>
         </div>
-        <div v-if="panelFiltered.length === 0" class="sa-panel-empty">
+        <div v-if="!loading && !error && panelFiltered.length === 0" class="sa-panel-empty">
           Ничего не найдено
         </div>
       </div>
@@ -86,6 +88,8 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
+import { useSuggestLoading } from '@/shared/composables/useSuggestLoading'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import SuggestDropdown from '@/shared/ui/SuggestDropdown'
 import SuggestEditModal from '@/shared/ui/SuggestEditModal'
@@ -100,6 +104,7 @@ const props = defineProps({
   exclude: { type: Array, default: () => [] },
   filterPicked: { type: Boolean, default: true },
 })
+const { loading, error, reload } = useSuggestLoading(() => props.suggestTypeId)
 const emit = defineEmits(['pick'])
 
 const root = ref(null)
@@ -150,7 +155,7 @@ onBeforeUnmount(() => {
 function openPicker() {
   open.value = true
   query.value = ''
-  useSuggestStore().ensure(props.suggestTypeId)
+  reload()
   if (!isMobile.value) {
     nextTick(() => input.value?.focus())
   } else {

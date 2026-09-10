@@ -31,7 +31,7 @@
 .primary-action:hover:not(:disabled) { filter: brightness(1.1); }
 .primary-action:active:not(:disabled) { transform: translateY(1px); }
 .primary-action:disabled { opacity: .45; cursor: not-allowed; }
-.spin { animation: account-spin .9s linear infinite; }
+
 
 .storage-overview { display: grid; grid-template-columns: minmax(360px, 1.35fr) minmax(200px, .65fr); align-items: center; gap: 32px; padding: 4px 0 38px; }
 .storage-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
@@ -61,14 +61,7 @@
 .uploads-empty span, .storage-error span { font-size: 11px; }
 .storage-error { color: var(--danger); }
 .storage-error button { margin-top: 8px; padding: 7px 11px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--surface-raised); color: var(--text-1); font: inherit; font-size: 11px; cursor: pointer; }
-.storage-loading { display: flex; min-height: 320px; align-items: center; justify-content: center; gap: 45px; }
-.storage-loading__chart { width: 190px; height: 190px; border: 18px solid var(--surface-raised); border-top-color: color-mix(in srgb, var(--accent) 24%, var(--surface-raised)); border-radius: 50%; animation: account-pulse 1.4s ease-in-out infinite; }
-.storage-loading__lines { display: flex; width: min(270px, 36%); flex-direction: column; gap: 14px; }
-.storage-loading__lines i { height: 16px; border-radius: 6px; background: var(--surface-raised); animation: account-pulse 1.4s ease-in-out infinite; }
-.storage-loading__lines i:nth-child(2) { width: 82%; animation-delay: .12s; }.storage-loading__lines i:nth-child(3) { width: 64%; animation-delay: .24s; }
 
-@keyframes account-spin { to { transform: rotate(360deg); } }
-@keyframes account-pulse { 50% { opacity: .48; } }
 
 @media (max-width: 760px) {
   .account-page { padding: 22px 14px 42px; }
@@ -77,9 +70,8 @@
   .account-identity p { display: none; }
   .account-panel { min-height: 360px; padding: 24px 18px 32px; }
   .storage-overview { grid-template-columns: 1fr; gap: 22px; }
-  .storage-loading { flex-direction: column; }
-  .storage-loading__chart { width: 150px; height: 150px; }
-  .storage-loading__lines { width: 85%; }
+
+
 }
 
 @media (max-width: 460px) {
@@ -95,6 +87,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spin, .storage-loading__chart, .storage-loading__lines i { animation: none; }
-  .primary-action, .upload-row { transition: none; }
+
 }

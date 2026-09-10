@@ -21,11 +21,12 @@
       <AddButton label="Выбрать видео" :disabled="uploading" @click="fileInput?.click()" />
     </template>
     <input ref="fileInput" type="file" :accept="video ? 'video/*' : 'image/*'" hidden @change="upload" />
-    <span v-if="uploading && !direct">Загрузка…</span>
+    <LoadingIndicator v-if="uploading && !direct" label="Загрузка…" size="xs" inline show-label />
     <span v-if="error && !direct" class="entity-asset-error" role="alert">{{ error }}</span>
   </div>
 </template>
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref } from 'vue'
 import { AddButton } from '@sylvieshare/share-ui'
 import SessionImagePicker from './SessionImagePicker.vue'

@@ -40,6 +40,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useSuggestLoading } from '@/shared/composables/useSuggestLoading'
 import SuggestDropdown from '@/shared/ui/SuggestDropdown'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -91,9 +92,7 @@ const firstFiltered = computed(() => {
   return available.find(item => item.value.toLowerCase().includes(q)) || null
 })
 
-watch(() => props.suggestTypeId, (typeId) => {
-  if (typeId) suggestStore.ensure(typeId)
-}, { immediate: true })
+useSuggestLoading(() => props.suggestTypeId)
 
 watch(open, (v) => {
   if (v) query.value = ''

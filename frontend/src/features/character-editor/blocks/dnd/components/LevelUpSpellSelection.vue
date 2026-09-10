@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <p v-if="loading" class="lus-muted">Загрузка заклинаний…</p>
+    <LoadingState v-if="loading" class="lus-muted" label="Загрузка заклинаний…" compact />
     <div v-else class="lus-chips">
       <button
         v-for="entry in selected"
@@ -43,6 +43,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { Trash2 } from '@lucide/vue'
 import { computed, onMounted, ref, watch } from 'vue'
 

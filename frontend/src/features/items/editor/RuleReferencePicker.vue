@@ -13,7 +13,7 @@
           <code v-if="entry.key">{{ entry.key }}</code>
         </button>
       </BaseTile>
-      <p v-if="loading" role="status">Загрузка…</p>
+      <LoadingState v-if="loading" label="Загрузка…" compact />
       <p v-else-if="error" role="alert">{{ error }} <AddButton label="Повторить" @click="load()" /></p>
       <p v-else-if="!results.length">Подходящих связей нет. Сначала создайте нужный ресурс или эффект.</p>
       <AddButton v-else-if="hasMore" label="Показать ещё" @click="load(true)" />
@@ -21,6 +21,7 @@
   </AppModalFrame>
 </template>
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, inject, onScopeDispose, ref, watch } from 'vue'
 import { AddButton, AppModalFrame, BaseTile, FormTextInput } from '@sylvieshare/share-ui'
 import { fetchGet } from '@/shared/api/http'

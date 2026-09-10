@@ -39,7 +39,8 @@
         </div>
       </div>
       <div class="list-body" @scroll="onScroll">
-        <div v-if="loading" class="empty-hint">Загрузка...</div>
+        <LoadingState v-if="loading" class="empty-hint" label="Загрузка..." compact />
+        <div v-else-if="loadError && !items.length" class="empty-hint" role="alert">{{ loadError }} <button type="button" @click="$emit('retry')">Повторить</button></div>
         <div v-else-if="items.length === 0" class="empty-hint">Нет объектов</div>
         <div v-else class="items-list">
 
@@ -85,9 +86,9 @@
             </div>
           </template>
 
-          <div v-if="loadingMore" class="list-tail list-loading">
-            <span class="list-spinner" aria-hidden="true"></span>
-            <span>Подгружаем ещё</span>
+          <div v-if="loadError" class="list-tail" role="alert">{{ loadError }} <button type="button" @click="$emit('retry')">Повторить</button></div>
+          <div v-else-if="loadingMore" class="list-tail list-loading">
+            <LoadingIndicator label="Подгружаем ещё" size="xs" inline show-label />
           </div>
           <button v-else-if="hasMore" class="list-tail list-more" @click="$emit('load-more')">
             Загрузить ещё
@@ -99,6 +100,8 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { findFieldByPath, getByPath, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
@@ -110,6 +113,7 @@ const props = defineProps({
   type: { type: Object, default: null },
   selectedItem: { type: Object, default: null },
   items: { type: Array, default: () => [] },
+  loadError: { type: String, default: '' },
   loading: { type: Boolean, default: false },
   loadingMore: { type: Boolean, default: false },
   hasMore: { type: Boolean, default: false },
@@ -128,6 +132,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
+  'retry',
   'select',
   'load-more',
   'update:group-by',
@@ -198,7 +203,7 @@ watch([() => props.groupBy, groupedItems], ([group]) => {
 }, { immediate: true })
 
 function onScroll(e) {
-  if (!props.hasMore || props.loading || props.loadingMore) return
+  if (!props.hasMore || props.loading || props.loadingMore || props.loadError) return
   const el = e.currentTarget
   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 80) emit('load-more')
 }
@@ -348,14 +353,7 @@ function onScroll(e) {
   background: linear-gradient(180deg, color-mix(in srgb, var(--popover-bg) 74%, transparent), var(--popover-bg) 42%), color-mix(in srgb, var(--accent) 8%, transparent);
   color: var(--accent-soft);
 }
-.list-spinner {
-  width: 14px; height: 14px;
-  border: 2px solid color-mix(in srgb, var(--accent-soft) 25%, transparent);
-  border-top-color: var(--accent-soft);
-  border-radius: 50%;
-  animation: spin .75s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {

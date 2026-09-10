@@ -5,8 +5,9 @@
     </template>
     <template v-else>
       <!-- Item grid -->
-      <div v-if="loading" class="empty-hint">Загрузка...</div>
-      <div v-else-if="items.length === 0" class="empty-hint">Нет значений</div>
+      <LoadingState v-if="loading" class="empty-hint" label="Загрузка..." compact />
+      <div v-else-if="loadError && !items.length" class="empty-hint" role="alert">{{ loadError }} <button type="button" @click="$emit('retry')">Повторить</button></div>
+        <div v-else-if="items.length === 0" class="empty-hint">Нет значений</div>
       <div v-else class="items-grid">
         <button
           v-for="item in items"
@@ -45,16 +46,18 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import SvgIcon from '@/shared/ui/SvgIcon'
 
 defineProps({
   type: { type: Object, default: null },
   items: { type: Array, default: () => [] },
   selectedItem: { type: Object, default: null },
+  loadError: { type: String, default: '' },
   loading: { type: Boolean, default: false },
 })
 
-defineEmits(['select'])
+defineEmits(['select', 'retry'])
 
 function stripTags(html) {
   return html ? html.replace(/<[^>]*>/g, '') : ''

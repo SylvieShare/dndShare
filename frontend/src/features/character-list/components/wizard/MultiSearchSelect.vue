@@ -32,7 +32,7 @@
         <template v-if="canCreate">
           <span>Ничего не найдено</span>
           <button class="mss-create" :disabled="creating" @mousedown.prevent="create">
-            {{ creating ? 'Добавляем…' : `Добавить «${query.trim()}»` }}
+            <LoadingIndicator v-if="creating" label="Добавляем…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Добавляем…' : `Добавить «${query.trim()}»` }}
           </button>
         </template>
         <span v-else>Ничего не найдено</span>
@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { fetchPost } from '@/shared/api/http'
 import { shouldOpenDropUp } from '@/features/character-list/components/wizard/dropdownPlacement'

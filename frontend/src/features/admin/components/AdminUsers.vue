@@ -1,6 +1,6 @@
 <template>
   <div class="admin-users">
-    <div v-if="loading" class="state-msg">Загрузка...</div>
+    <LoadingState v-if="loading" class="state-msg" label="Загрузка..." compact />
     <div v-else-if="error" class="state-msg error">{{ error }}</div>
     <template v-else>
       <table class="data-table">
@@ -76,6 +76,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { onMounted, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'

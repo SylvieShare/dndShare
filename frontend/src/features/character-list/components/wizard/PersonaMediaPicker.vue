@@ -21,7 +21,7 @@
           <span>Перетащи изображение или выбери файл</span>
         </div>
         <div v-if="uploading === 'portrait'" class="media-progress">
-          <LoaderCircle :size="28" aria-hidden="true" />
+          <LoadingIndicator label="Загрузка изображения" size="sm" />
           <span>Загрузка…</span>
         </div>
       </div>
@@ -66,7 +66,7 @@
           <span>Выбрать иконку</span>
         </div>
         <div v-if="uploading === 'icon'" class="media-progress">
-          <LoaderCircle :size="24" aria-hidden="true" />
+          <LoadingIndicator label="Загрузка изображения" size="sm" />
         </div>
       </div>
 
@@ -100,8 +100,9 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, ref } from 'vue'
-import { CircleUserRound, Crop, ImagePlus, LoaderCircle, Trash2, Upload } from '@lucide/vue'
+import { CircleUserRound, Crop, ImagePlus, Trash2, Upload } from '@lucide/vue'
 import AvatarCropModal from '@/features/character-editor/components/AvatarCropModal.vue'
 
 const props = defineProps({
@@ -306,7 +307,7 @@ onBeforeUnmount(clearCropObjectUrl)
 .icon-placeholder { gap: 6px; padding: 10px; }
 .icon-placeholder span { display: none; }
 .media-progress { background: color-mix(in srgb, var(--surface) 78%, transparent); backdrop-filter: blur(3px); font-size: 11px; }
-.media-progress svg { animation: media-spin .8s linear infinite; }
+
 .media-actions { display: flex; gap: 5px; min-width: 0; }
 .media-actions button {
   display: inline-flex;
@@ -331,7 +332,7 @@ onBeforeUnmount(clearCropObjectUrl)
 .icon-actions .action-label { display: none; }
 .icon-actions .danger { margin-left: 0; }
 .media-error { grid-column: 1 / -1; margin: 0; color: var(--danger); font-size: 11px; }
-@keyframes media-spin { to { transform: rotate(360deg); } }
+
 
 @media (max-width: 700px) {
   .portrait-drop { border-radius: 15px; }

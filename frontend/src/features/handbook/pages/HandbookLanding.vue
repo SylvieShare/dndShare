@@ -36,6 +36,7 @@
     <!-- ── Right: content ── -->
     <div class="hb-content">
       <div v-if="selectedSource" class="hb-content-inner">
+        <div v-if="catalogError" role="alert">{{ catalogError }} <button type="button" @click="fetchTypesForSource(selectedSourceId)">Повторить</button></div>
 
         <!-- Header -->
         <div class="hb-header">
@@ -55,7 +56,7 @@
           <span class="hb-section-meta">· ядро {{ selectedSource.name }}<template v-if="selectedVersion"> ({{ selectedVersion.version }})</template> · только чтение</span>
         </div>
 
-        <div v-if="loadingTypes" class="hb-loading">Загрузка…</div>
+        <LoadingState v-if="loadingTypes" class="hb-loading" label="Загрузка…" compact />
         <div v-else class="hb-collection-groups">
           <section v-for="group in collectionGroups" :key="group.key" class="hb-collection-group">
             <div class="hb-collection-group-header">
@@ -104,7 +105,7 @@
           <span class="hb-section-meta">· справочные таблицы — типы, школы, размеры</span>
         </div>
 
-        <div v-if="loadingDicts" class="hb-loading">Загрузка…</div>
+        <LoadingState v-if="loadingDicts" class="hb-loading" label="Загрузка…" compact />
         <div v-else class="hb-dicts-grid">
           <router-link
             v-for="dict in suggestTypes"
@@ -132,13 +133,16 @@
 
       </div>
 
-      <div v-else class="hb-loading">Загрузка…</div>
+      <div v-else-if="sourceError" class="hb-loading" role="alert">{{ sourceError }} <button type="button" @click="fetchSources">Повторить</button></div>
+      <LoadingState v-else-if="sourceLoading" class="hb-loading" label="Загружаем источники…" />
+      <p v-else class="hb-loading">Нет доступных источников</p>
     </div>
 
   </div>
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { visibleHandbookType } from "@/shared/lib/abilityTypes"
 import { computed, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
@@ -156,6 +160,10 @@ const selectedSourceId = ref(null)
 const selectedSourceVersionId = ref(null)
 const itemTypes = ref([])
 const suggestTypes = ref([])
+const sourceLoading = ref(true)
+const sourceError = ref('')
+const catalogError = ref('')
+let catalogRequest = 0
 const loadingTypes = ref(false)
 const loadingDicts = ref(false)
 
@@ -250,14 +258,24 @@ function childTypeNames(type) {
 }
 
 async function fetchSources() {
-  await gameContextStore.ensure()
-  sources.value = gameContextStore.sources
-  const preferredID = props.sourceVersionId || gameContextStore.sourceVersionId
-  const source = sources.value.find(item => item.versions?.some(version => Number(version.id) === Number(preferredID))) || sources.value[0]
-  if (source) selectSource(source)
+  sourceLoading.value = true
+  sourceError.value = ''
+  try {
+    await gameContextStore.ensure()
+    sources.value = gameContextStore.sources
+    const preferredID = props.sourceVersionId || gameContextStore.sourceVersionId
+    const source = sources.value.find(item => item.versions?.some(version => Number(version.id) === Number(preferredID))) || sources.value[0]
+    if (source) selectSource(source)
+  } catch {
+    sourceError.value = 'Не удалось загрузить источники.'
+  } finally {
+    sourceLoading.value = false
+  }
 }
 
 async function fetchTypesForSource(sourceId) {
+  const request = ++catalogRequest
+  catalogError.value = ''
   loadingTypes.value = true
   loadingDicts.value = true
   try {
@@ -265,11 +283,16 @@ async function fetchTypesForSource(sourceId) {
       itemTypesStore.ensureBySource(sourceId),
       fetchGet(`/suggest/types?sourceId=${sourceId}`),
     ])
+    if (request !== catalogRequest) return
     itemTypes.value = types
     suggestTypes.value = dictsRes?.items || []
+  } catch {
+    if (request === catalogRequest) catalogError.value = 'Не удалось загрузить разделы справочника.'
   } finally {
-    loadingTypes.value = false
-    loadingDicts.value = false
+    if (request === catalogRequest) {
+      loadingTypes.value = false
+      loadingDicts.value = false
+    }
   }
 }
 

@@ -11,6 +11,7 @@
         <option value="">{{ standardLoading ? 'Загрузка стандартных действий…' : 'Вставить стандартное действие…' }}</option>
         <option v-for="entry in standardActions" :key="entry.id" :value="entry.id">{{ entry.value }}</option>
       </FormSelect>
+      <LoadingIndicator v-if="standardLoading" label="Загрузка стандартных действий" size="xs" />
       <button v-if="standardError" class="ability-link" type="button" @click="loadStandardActions">Не удалось загрузить стандартные действия. Повторить</button>
     </FormField>
     <FormField label="Расходовать ресурс" vertical title="Если выключено, действие не списывает использования. Если включено, выберите, откуда и сколько списывать.">
@@ -61,6 +62,7 @@
   </div>
 </template>
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, onMounted, onScopeDispose, ref, watchEffect } from 'vue'
 import { FormField, FormSelect, FormTextInput, FormTextarea, ToggleSwitch, createRichNodeHtml } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'

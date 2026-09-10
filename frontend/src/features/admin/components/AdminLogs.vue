@@ -2,11 +2,11 @@
   <div class="admin-logs">
     <div class="logs-toolbar">
       <button class="btn-danger" :disabled="!logs.length || deleting" @click="onDeleteAll">
-        {{ deleting ? 'Удаление...' : 'Удалить все логи' }}
+        <LoadingIndicator v-if="deleting" label="Удаление..." size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ deleting ? 'Удаление...' : 'Удалить все логи' }}
       </button>
     </div>
 
-    <div v-if="loading" class="state-msg">Загрузка...</div>
+    <LoadingState v-if="loading" class="state-msg" label="Загрузка..." compact />
     <div v-else-if="error" class="state-msg error">{{ error }}</div>
     <div v-else-if="!logs.length" class="state-msg">Логов нет</div>
     <template v-else>
@@ -55,6 +55,8 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { LoadingState } from '@sylvieshare/share-ui'
 import { onMounted, ref } from 'vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { deleteAllLogs, deleteLog, getLogs } from '../api/adminApi'

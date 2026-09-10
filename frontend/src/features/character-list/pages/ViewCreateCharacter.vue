@@ -46,7 +46,7 @@
           <button v-if="!isLast" class="btn next" :class="{ disabled: !canNext }" :aria-disabled="!canNext" @click="next">Далее</button>
           <template v-else>
             <button class="btn soft" type="button" :disabled="creating || !dndTemplateId" @click="openPreview">Предпросмотр листа</button>
-            <button class="btn create" :disabled="creating" @click="createNow">{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
+            <button class="btn create" :disabled="creating" @click="createNow"><LoadingIndicator v-if="creating" label="Создание…" size="xs" aria-hidden="true" style="color: inherit; margin-right: 6px" />{{ creating ? 'Создание…' : 'Создать персонажа' }}</button>
           </template>
         </div>
       </div>
@@ -80,6 +80,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import CreateStepRail from '@/features/character-list/components/wizard/CreateStepRail.vue'

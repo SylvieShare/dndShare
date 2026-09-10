@@ -27,6 +27,8 @@ vi.mock('@sylvieshare/share-ui', async importOriginal => {
   const { h } = await import('vue')
   return {
     ...(await importOriginal()),
+    LoadingIndicator: { props: ['label'], setup: props => () => h('span', { role: 'status' }, props.label) },
+    LoadingState: { props: ['label'], setup: props => () => h('div', { role: 'status' }, props.label) },
     ActionMenu: { setup: (_, { slots }) => () => h('menu', [...(slots.trigger?.({ open: true }) || []), ...(slots.default?.({ close() {} }) || [])]) },
     ActionMenuItem: { setup: (_, { slots, attrs }) => () => h('button', attrs, slots.default?.()) },
     AppModalFrame: { setup: (_, { slots }) => () => h('dialog', [...(slots.default?.() || []), ...(slots.footer?.() || [])]) },

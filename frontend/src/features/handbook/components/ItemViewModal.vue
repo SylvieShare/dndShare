@@ -18,7 +18,8 @@
       </button>
 
       <div class="iv-body">
-        <div v-if="loading" class="iv-loading">Загрузка…</div>
+        <LoadingState v-if="loading" class="iv-loading" label="Загрузка…" compact />
+        <div v-else-if="loadError" class="iv-loading" role="alert">{{ loadError }} <button type="button" @click="load">Повторить</button></div>
         <HandbookItemDetail v-else :item="item" :type="type" :can-edit="canEdit" @edit="editOpen = true" :show-title="true" :actor-name="actorName" />
       </div>
 
@@ -40,6 +41,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { useAccountStore } from '@/stores/account'
 import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
@@ -78,6 +80,8 @@ const emit = defineEmits(['close', 'saved'])
 const item = ref(props.item)
 const type = ref(null)
 const loading = ref(false)
+const loadError = ref('')
+let loadVersion = 0
 const modal = ref(null)
 const editOpen = ref(false)
 const accountStore = useAccountStore()
@@ -85,18 +89,26 @@ const canEdit = computed(() => canEditHandbookItem(item.value, accountStore))
 
 const itemTypesStore = useItemTypesStore()
 async function load() {
+  const request = ++loadVersion
   loading.value = true
+  loadError.value = ''
   try {
     const [typeRes, itemRes] = await Promise.all([
       itemTypesStore.ensureType(props.itemTypeId).catch(() => null),
       props.item ? Promise.resolve(props.item) : (props.itemId != null ? loadItem(props.itemId) : Promise.resolve(null)),
     ])
+    if (request !== loadVersion) return
+    if (!itemRes) throw new Error('Item unavailable')
     const actualTypeId = itemRes?.typeId || props.itemTypeId
-    type.value = (actualTypeId === props.itemTypeId ? typeRes : await itemTypesStore.ensureType(actualTypeId))
+    const resolvedType = (actualTypeId === props.itemTypeId ? typeRes : await itemTypesStore.ensureType(actualTypeId))
       ?? { id: actualTypeId, name: '', fields: [] }
+    if (request !== loadVersion) return
+    type.value = resolvedType
     item.value = itemRes
+  } catch {
+    if (request === loadVersion) loadError.value = 'Не удалось загрузить объект.'
   } finally {
-    loading.value = false
+    if (request === loadVersion) loading.value = false
   }
 }
 

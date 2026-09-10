@@ -1,9 +1,7 @@
 <template>
   <AppModalFrame wide :title="title" :subtitle="sessionName" @close="$emit('close')">
 
-    <div v-if="loadingChars" class="chars-loading">
-      <div v-for="n in 3" :key="n" class="char-skeleton" />
-    </div>
+    <LoadingState v-if="loadingChars" label="Загружаем персонажей…" />
 
     <div v-else-if="availableChars.length" class="chars-grid">
       <div
@@ -44,6 +42,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { AppModalFrame, ConfirmDialog } from '@sylvieshare/share-ui'
@@ -243,18 +242,6 @@ onMounted(async () => {
   color: var(--text-muted);
 }
 
-.chars-loading {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.char-skeleton {
-  height: 74px;
-  border-radius: 12px;
-  background: var(--surface-raised);
-  animation: sk-pulse 1.4s ease-in-out infinite;
-}
 
 .no-chars {
   font-size: 14px;
@@ -270,8 +257,5 @@ onMounted(async () => {
   text-align: center;
 }
 
-@keyframes sk-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
+
 </style>

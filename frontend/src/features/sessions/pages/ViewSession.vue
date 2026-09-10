@@ -30,9 +30,7 @@
       @saved="applySessionEdit"
     />
 
-    <template v-if="loading">
-      <div class="loading-placeholder" />
-    </template>
+    <LoadingState v-if="loading" label="Открываем сессию…" fill />
 
     <SessionPlayerView
       v-else-if="session && !isDm"
@@ -253,6 +251,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, watch } from 'vue'
 import { ListChecks, LogIn, PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'

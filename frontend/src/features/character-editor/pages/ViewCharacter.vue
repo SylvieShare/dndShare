@@ -104,6 +104,7 @@
       <div v-if="loading" class="character-loading">
           <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
         </div>
+      <div v-else-if="loadError" role="alert">{{ loadError }} <button type="button" @click="initializeCharacter">Повторить</button></div>
       <div v-else-if="isMobile && template" class="mobile-swipe-stage" :class="{ dragging: tabDragActive, settling: tabDragSettling }">
         <div ref="mobileTrackEl" class="mobile-swipe-track" :style="mobileSwipeTrackStyle">
           <div
@@ -208,7 +209,7 @@ const TabPane = CharacterTabPane
 // ── Composables ───────────────────────────────────────────────────────
 
 const {
-  loading, template, data, charCtx, isOwner, publicVisible,
+  loading, loadError, template, data, charCtx, isOwner, publicVisible,
   version, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
   loadSessions, pollVersion, refreshFromServer,
   activeTabs, toolbarTabs, mobileTabs,
@@ -475,8 +476,6 @@ onMounted(async () => {
   startViewportHeightSync()
   window.scrollTo(0, 0)
 
-  const savedQueryTab = route.query.tab
-
   mediaQuery = window.matchMedia('(max-width: 640px)')
   isMobile.value = mediaQuery.matches
   onMediaQueryChange = e => {
@@ -484,6 +483,11 @@ onMounted(async () => {
   }
   mediaQuery.addEventListener('change', onMediaQueryChange)
 
+  await initializeCharacter()
+})
+
+async function initializeCharacter() {
+  const savedQueryTab = route.query.tab
   const res = await load()
   if (!res) return
 
@@ -510,7 +514,7 @@ onMounted(async () => {
   await loadSessions()
   await syncEventSessionContext()
   startVersionPolling()
-})
+}
 
 onBeforeUnmount(() => {
   stopVersionPolling()

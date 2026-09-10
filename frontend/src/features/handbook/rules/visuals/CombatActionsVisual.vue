@@ -1,6 +1,6 @@
 <template>
   <div class="combat-actions">
-    <div v-if="loading" class="combat-actions-status">Загружаем словарь действий…</div>
+    <LoadingState v-if="loading" class="combat-actions-status" label="Загружаем словарь действий…" compact />
     <BaseTile v-else-if="error" class="combat-actions-status" color="var(--warning)" tint>
       Не удалось загрузить действия. Обнови страницу или открой словарь позже.
     </BaseTile>
@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
