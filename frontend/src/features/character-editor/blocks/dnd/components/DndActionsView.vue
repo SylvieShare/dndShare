@@ -52,7 +52,9 @@
                 <strong>{{ action.title }}</strong>
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
-              <DndRichContent v-if="action.description" class="dav-description" :html="action.description" @click.stop />
+              <div v-if="action.description" class="dav-description">
+                <DndRichContent :html="action.description" @click.stop />
+              </div>
               <span v-if="linkedActions(action).length" class="dav-linked-actions">
                 <span
                   v-for="linked in linkedActions(action)"
@@ -264,12 +266,12 @@ function hideActionTooltip() {
 .dav-action-icon :deep(.item-icon) { width: 34px; height: 34px; }
 .dav-copy { min-width: 0; overflow-wrap: anywhere; }
 .dav-title-row { display: flex; min-width: 0; align-items: center; gap: 6px; }
-.dav-title-row strong { min-width: 0; color: var(--text-1); font-size: 12px; line-height: 1.25; }
-.dav-description { margin-top: 3px; color: var(--text-2); font-size: 10px; line-height: 1.4; }
-.dav-description :deep(ul), .dav-description :deep(ol) { list-style-position: inside; margin-left: 0; }
+.dav-title-row strong { min-width: 0; color: var(--text-1); font-size: 13px; line-height: 1.3; }
+.dav-description { margin-top: 4px; color: var(--text-2); font-size: 12px; line-height: 1.45; }
+.dav-description :deep(ul), .dav-description :deep(ol) { clear: both; padding-top: 4px; }
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
-.dav-requirements { display: block; margin-top: 2px; color: var(--text-muted); font-size: 9px; line-height: 1.35; }
+.dav-requirements { display: block; clear: both; padding-top: 4px; color: var(--text-muted); font-size: 10px; line-height: 1.4; }
 .dav-requirements > span { display: block; margin-top: 2px; }
 .dav-requirements > span::before { margin-right: 5px; color: var(--dav-tone); content: '•'; }
 .dav-resource { display: flex; min-width: 0; align-items: center; gap: 6px; }

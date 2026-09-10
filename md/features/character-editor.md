@@ -614,7 +614,11 @@ it have no nested card background. A resource bound to a source action is shown
 on that action as the same color-coded charge spheres used by the resources
 tile: one charge sits under the icon in a floated left column, while several
 charges wrap below the action text. The description flows around the icon and
-single charge, returning to the full row width below them. Short- and long-rest recovery icons sit immediately to the right
+single charge, returning to the full row width below them. Requirements and
+rich-text bullet/numbered lists always start below the icon and charge, from the
+left side of the row. Action names use bold 13px text above 12px prose;
+the prose size is set on a native wrapper so RichContent's inherited font does
+not reset it to the surrounding sheet size. Short- and long-rest recovery icons sit immediately to the right
 of the action name, and the bound resource is omitted from the shared resources
 tile to avoid a duplicate control.
 Relentless Endurance contributes a special action bound to its existing single
