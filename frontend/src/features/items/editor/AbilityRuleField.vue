@@ -71,7 +71,7 @@ const props = defineProps({ field: { type: Object, required: true }, modelValue:
 const emit = defineEmits(['update:modelValue'])
 const editor = inject(itemFieldEditorKey)
 const pendingRow = ref(null)
-const referenceKind = computed(() => ({ resource_key: 'resource', resource_pool_key: 'resource_pool', status_effect_code: 'status', choice_key: 'choice', status_effect_key: 'effect_link' })[props.field.key])
+const referenceKind = computed(() => ({ weapon_damage_key: 'weapon_damage', resource_key: 'resource', resource_pool_key: 'resource_pool', status_effect_code: 'status', choice_key: 'choice', status_effect_key: 'effect_link' })[props.field.key])
 const itemReference = computed(() => itemSelectionField(props.field))
 const hint = computed(() => abilityFieldHint(props.field))
 const wide = computed(() => ['description', 'object', 'object_array', 'text_array', 'suggest_array', 'textarea'].includes(props.field.type))

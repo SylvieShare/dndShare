@@ -33,6 +33,20 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 		}
 		field["fields"] = fields
 	}
+	var levelFields []any
+	if err := json.Unmarshal([]byte(strings.Split(schemaAbilityRuleLinksSQL, "$level_fields$")[1]), &levelFields); err != nil {
+		t.Fatal(err)
+	}
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] == "weapon_damage" {
+			field["fields"] = append(field["fields"].([]any), map[string]any{"name": "Ключ", "key": "key", "type": "text", "required": true})
+		}
+		if field["key"] == "sheet_widgets" {
+			field["fields"] = append(field["fields"].([]any), map[string]any{"name": "Правило урона", "key": "weapon_damage_key", "type": "text", "show_on": map[string]any{"key": "value_source", "value": "weapon_damage"}})
+		}
+	}
+	want = append(want.([]any), levelFields...)
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

@@ -16,7 +16,7 @@ type ItemRuleReference struct {
 
 func ValidRuleReferenceKind(kind string) bool {
 	switch kind {
-	case "resource", "resource_pool", "action", "status", "choice", "widget", "counter", "effect_link":
+	case "resource", "resource_pool", "action", "status", "choice", "widget", "counter", "effect_link", "weapon_damage":
 		return true
 	}
 	return false
@@ -27,9 +27,9 @@ WITH refs AS (
  SELECT i.id, i.name, r.kind, r.block, r.key, COALESCE(NULLIF(r.title,''),i.name) AS title, r.value_id
  FROM dndshare.item i
  CROSS JOIN LATERAL (
-  SELECT spec.kind, spec.block, COALESCE(e->>'key','') AS key, e->>'title' AS title, '' AS value_id
+  SELECT spec.kind, spec.block, COALESCE(e->>'key','') AS key, COALESCE(e->>'title', e->>'label') AS title, '' AS value_id
   FROM (VALUES ('resource','use_resources','Отдельный ресурс'),('resource_pool','class_resources','Ресурс класса'),
-   ('action','feature_actions','Действие на листе'),('choice','choices','Выбор'),('widget','sheet_widgets','Виджет листа'),('effect_link','status_effects','Связанный эффект')) AS spec(kind,field,block)
+   ('action','feature_actions','Действие на листе'),('choice','choices','Выбор'),('widget','sheet_widgets','Виджет листа'),('effect_link','status_effects','Связанный эффект'),('weapon_damage','weapon_damage','Дополнительный урон оружия')) AS spec(kind,field,block)
   CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(i.data::jsonb->spec.field)='array' THEN i.data::jsonb->spec.field ELSE '[]'::jsonb END) e
   WHERE COALESCE(e->>'key','')<>''
   UNION ALL

@@ -770,3 +770,12 @@ startup schema, а не job registry.
 `item.data` не преобразуется: все расширения схемы используют текущие ключи.
 В JSON персонажа сюжетные экземпляры находятся в `abilities_story`, с тем же
 форматом, что `abilities_race` и `abilities_class`.
+
+Миграция `78_ability_rule_links.sql` добавляет `weapon_damage[].key`, явную
+ссылку `sheet_widgets[].weapon_damage_key` и поля источника уровня способности
+`level_source`/`level_class_id`. Полные схемы типов 3/4/18 остаются одинаковыми.
+Существующие панели получают ссылку на ранее отображавшееся правило;
+пользовательские ключи и явно заданные связи сохраняются, конфликты ключей
+устраняются. Проверка `TestAbilityRuleLinksMigration` выполняет SQL на отдельной
+локальной базе с `DNDSHARE_ABILITY_LINK_TEST_DSN` и сверяет мигрированные схемы
+с `resources/items`.

@@ -3,6 +3,7 @@ import { computed, effectScope, reactive } from 'vue'
 import { abilityEditorProfile } from './abilityEditorProfile'
 import { useAbilityDependencies } from './useAbilityDependencies'
 import { mechanicFields, updateMechanic } from './abilityMechanicManifest'
+import { renameWeaponDamageKey, localRuleReferences } from './actionEditorModel'
 import { effectParameterOptions, setEffectParameter } from './effectParameterOptions'
 import { automaticAbilityLabel, progressionError, weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
 import { abilityScalingLabel } from '@/shared/lib/dndAbilityUses'
@@ -29,7 +30,7 @@ describe('readable ability mechanics', () => {
       expect(automaticAbilityLabel(data, level)).toBe(`${Math.ceil(level / 2)}к6`)
     }
     expect(abilityScalingLabel(data, { lvl: { level: 12 }, classes: [{ id: 1, level: 3 }, { id: 2, level: 9 }] })).toBe('2к6')
-    expect(abilityScalingLabel({ ...data, display_scaling: [{ level: 1, label: 'Своя подпись' }] }, { lvl: { level: 4 } })).toBe('Своя подпись')
+    expect(abilityScalingLabel({ ...data, display_scaling: [{ level: 1, label: 'Своя подпись' }] }, { lvl: { level: 4 }, classes: [{ id: 1, level: 4 }] })).toBe('Своя подпись')
   })
   it('keeps the class roadmap after redundant Sneak Attack tables are removed', () => {
     const feature = { id: 10, name: 'Скрытая атака', data: { level: 1, class_ids: [{ id: 1 }], weapon_damage: [{ dice: 'd6', dice_count_level_divisor: 2 }] } }
@@ -53,6 +54,24 @@ describe('readable ability mechanics', () => {
     expect(data.parameter_bindings).toEqual([{ key: 'damage_bonus', source: 'scaling_value' }])
     setEffectParameter(data, 'damage_bonus', '')
     expect(data.parameter_bindings).toEqual([])
+  })
+  it('keeps explicit panel links when a damage key is renamed and clears the link when its source mode changes', () => {
+    const rule = { key: 'old', label: 'Скрытая атака' }
+    const panel = { value_source: 'weapon_damage', weapon_damage_key: 'old' }
+    const owner = { weapon_damage: [rule], sheet_widgets: [panel] }
+    renameWeaponDamageKey(owner, rule, 'new')
+    expect(panel.weapon_damage_key).toBe('new')
+    expect(localRuleReferences(owner, 68, 'Способность')).toContainEqual({ kind: 'weapon_damage', block: 'Дополнительный урон оружия', key: 'new', title: 'Скрытая атака', itemName: 'Способность', itemId: 68 })
+    updateMechanic('sheet_widgets', panel, { ...panel, value_source: 'scaling' })
+    expect(panel.weapon_damage_key).toBeUndefined()
+  })
+  it('does not steal another rule’s panel after entering and correcting a duplicate key', () => {
+    const first = { key: 'first' }, second = { key: 'second' }
+    const panel = { value_source: 'weapon_damage', weapon_damage_key: 'second' }
+    const owner = { weapon_damage: [first, second], sheet_widgets: [panel] }
+    renameWeaponDamageKey(owner, first, 'second')
+    renameWeaponDamageKey(owner, first, 'third')
+    expect(panel.weapon_damage_key).toBe('second')
   })
   it('rejects duplicate progression levels and invalid resource amounts', () => {
     expect(progressionError({ scaling: [{ level: 1 }, { level: '1' }] })).toContain('одинакового')

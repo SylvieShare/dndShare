@@ -10,7 +10,8 @@
         <ItemIcon class="fw-icon" :item="widget.item" :size="42" :fallback-to-type="false" />
         <div class="fw-title">
           <strong>{{ widget.title }}</strong>
-          <span v-if="widget.description">{{ widget.description }}</span>
+          <span v-if="widget.unavailable" role="status">{{ widget.unavailable }}</span>
+          <span v-else-if="widget.description">{{ widget.description }}</span>
         </div>
         <div v-if="widget.dice" class="fw-dice" :aria-label="widget.value">
           <DamageDice
@@ -78,6 +79,7 @@ watch(
 function canToggle(widget) {
   if (!charCtx.ownerMode) return false
   if (widget.active) return true
+  if (widget.unavailable) return false
   if (widget.resource?.unlimited) return true
   return !widget.resource || Number(widget.resource.total) <= 0 || Number(widget.resource.value) > 0
 }

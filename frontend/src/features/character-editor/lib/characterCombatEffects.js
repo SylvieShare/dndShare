@@ -15,7 +15,7 @@ function abilityRows(values, itemsById, field) {
       if (ownerLevel < Math.max(1, Number(rule?.level) || 1)) return []
       return [{
         ...rule,
-        key: `${valueId}:${entry.uid || entry.id}:${field}:${index}`,
+        key: `${valueId}:${entry.uid || entry.id}:${field}:${field === 'weapon_damage' ? rule.key : index}`,
         owner_level: ownerLevel,
         source_label: item.name || 'Способность',
       }]

@@ -442,7 +442,12 @@ eligible.
 
 `weapon_damage` is the shared contract for an ability-owned optional damage
 action. It declares the die, a fixed or owner-level-scaled count, eligible weapon
-kinds, a toggle label and whether the contributed dice double on a critical hit.
+kinds, a stable local key, a toggle label and whether the contributed dice double
+on a critical hit. Widgets select a rule by `weapon_damage_key`; reordering
+never changes the link. Missing links are reported instead of selecting the first rule.
+Ability `level_source` selects character level, a specific `level_class_id`, or
+the declared class/subclass bindings. A missing specified class produces level 0
+and an unavailable panel; character level is not substituted.
 The weapon menu combines selected extras, the critical toggle and the versatile
 grip into one damage roll; it does not enumerate combinations as menu actions.
 Sneak Attack uses this contract with `ceil(rogue level / 2)d6` and appears only

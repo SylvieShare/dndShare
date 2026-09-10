@@ -253,6 +253,9 @@ var schemaJournalGraphSQL string
 //go:embed schema/77_ability_editor_damage.sql
 var schemaAbilityEditorDamageSQL string
 
+//go:embed schema/78_ability_rule_links.sql
+var schemaAbilityRuleLinksSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -336,6 +339,7 @@ var schemaParts = []struct {
 	{"journal-entry-audit", schemaJournalEntryAuditSQL},
 	{"journal-graph", schemaJournalGraphSQL},
 	{"ability-editor-damage", schemaAbilityEditorDamageSQL},
+	{"ability-rule-links", schemaAbilityRuleLinksSQL},
 }
 
 const (

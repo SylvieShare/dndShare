@@ -1,6 +1,6 @@
 import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
-import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
+import { abilityLevelContext } from '@/shared/lib/abilityLevelSource'
 import { featureEntryActive } from './featureEntryState'
 import { ownedAbilityStatusSource, statusEffectActive, statusEffectLinks } from './characterStatuses'
 
@@ -16,9 +16,9 @@ function currentScaling(data, level) {
     .sort((left, right) => (Number(right.level) || 0) - (Number(left.level) || 0))[0] || null
 }
 
-function featureDice(data, level) {
-  const rule = (Array.isArray(data?.weapon_damage) ? data.weapon_damage : [])[0]
-  if (!rule) return { value: '', dice: null }
+function featureDice(definition, data, level) {
+  const rule = (data?.weapon_damage || []).find(rule => rule.key && rule.key === definition.weapon_damage_key)
+  if (!rule) return { value: '', dice: null, unavailable: 'Правило урона не выбрано или удалено' }
   if (level < Math.max(1, Number(rule.level) || 1)) return { value: '', dice: null }
   const scaled = weaponDamageDiceCount(rule, level)
   const rawDie = String(rule.dice || '').trim()
@@ -30,7 +30,7 @@ function featureDice(data, level) {
 }
 
 function widgetValue(definition, data, level) {
-  if (definition.value_source === 'weapon_damage') return featureDice(data, level)
+  if (definition.value_source === 'weapon_damage') return featureDice(definition, data, level)
   if (definition.value_source === 'scaling') return { value: String(currentScaling(data, level)?.value || ''), dice: null }
   return { value: String(definition.value || ''), dice: null }
 }
@@ -40,10 +40,10 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
     if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []
-    const level = abilityOwnerLevel(item.data || {}, values)
+    const { level, missingClass } = abilityLevelContext(item.data || {}, values)
     const definitions = Array.isArray(item.data?.sheet_widgets) ? item.data.sheet_widgets : []
     return definitions.flatMap((definition, index) => {
-      if (level < Math.max(1, Number(definition?.level) || 1)) return []
+      if (!missingClass && level < Math.max(1, Number(definition?.level) || 1)) return []
       const key = String(definition.key || `${valueId}:${entryKey(entry)}:${index}`)
       const resolvedResource = resources.find(row => (
         row.source?.valueId === valueId
@@ -51,7 +51,7 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
         && (!definition.resource_key || row.source?.resourceKey === definition.resource_key)
       )) || null
       const scaling = currentScaling(item.data || {}, level)
-      const metric = widgetValue(definition, item.data || {}, level)
+      const metric = missingClass ? { value: '', dice: null, unavailable: 'Нет нужного класса' } : widgetValue(definition, item.data || {}, level)
       const resource = resolvedResource || (definition.kind === 'toggle' && Number(scaling?.uses) === 0
         ? { value: '∞', total: '∞', unlimited: true }
         : null)
@@ -68,6 +68,7 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
           .filter(Boolean),
         tone: definition.tone || 'accent',
         value: metric.value,
+        unavailable: metric.unavailable || '',
         dice: metric.dice,
         active_label: definition.active_label || 'Активно',
         inactive_label: definition.inactive_label || 'Активировать',
@@ -80,7 +81,7 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
           : !!entry.widget_states?.[key],
         status_effect_link: statusEffectLink,
         status_source: statusSource,
-        resource,
+        resource: missingClass ? null : resource,
         item,
       }]
     })

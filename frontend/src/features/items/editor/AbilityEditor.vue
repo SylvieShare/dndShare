@@ -3,7 +3,8 @@
     <div class="ability-editor-main">
       <div class="ability-editor-intro"><h3>Описание способности</h3><p>Название и правила, которые увидит игрок.</p></div>
       <slot />
-      <AbilityRuleFields :fields="profile.primary" :data="data" @update:data="updateData" />
+      <AbilityRuleFields :fields="profile.primary.filter(field => !['level_source', 'level_class_id'].includes(field.key))" :data="data" @update:data="updateData" />
+      <AbilityLevelSource :data="data" />
     </div>
     <div class="ability-editor-mechanics">
       <div class="ability-editor-intro"><h3>Механика и зависимости</h3><p>Добавьте только то, что даёт эта способность.</p></div>
@@ -40,6 +41,7 @@
 import { computed, ref } from 'vue'
 import { AppModalFrame, BaseTile, ConfirmDialog, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
 import { Plus, Sparkles } from '@lucide/vue'
+import AbilityLevelSource from './AbilityLevelSource.vue'
 import AbilityProgressionEditor from './AbilityProgressionEditor.vue'
 import AbilityWeaponDamageEditor from './AbilityWeaponDamageEditor.vue'
 import AbilityStatusEffectEditor from './AbilityStatusEffectEditor.vue'

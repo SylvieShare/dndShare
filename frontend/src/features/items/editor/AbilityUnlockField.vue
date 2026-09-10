@@ -1,7 +1,7 @@
 <template>
   <div class="ability-action-fields">
     <FormField label="Открыть позже получения способности" title="По умолчанию правило доступно сразу вместе со способностью."><ToggleSwitch :model-value="later" aria-label="Открыть позже получения способности" @update:model-value="setLater" /></FormField>
-    <FormField v-if="later" label="Доступно с уровня" vertical title="Уровень связанного класса, а без привязки — персонажа."><FormTextInput v-model:value="data.level" type="number" :min="base" max="20" aria-label="Доступно с уровня" /></FormField>
+    <FormField v-if="later" label="Доступно с уровня" vertical title="Уровень выбранного источника расчётов способности."><FormTextInput v-model:value="data.level" type="number" :min="base" max="20" aria-label="Доступно с уровня" /></FormField>
   </div>
 </template>
 <script setup>

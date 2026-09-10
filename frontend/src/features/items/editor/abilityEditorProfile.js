@@ -6,7 +6,7 @@ export const RESOURCE_KEYS = [
   'rollback_short_rest', 'rollback_long_rest', 'rollback_short_rest_level',
   'short_rest_recovery', 'short_rest_recovery_level',
 ]
-const BASIC_KEYS = ['desc', 'level']
+const BASIC_KEYS = ['desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
   'weapon_damage', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']

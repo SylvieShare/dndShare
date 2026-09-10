@@ -13,11 +13,11 @@ describe('character feature widgets', () => {
       name: 'Скрытая атака',
       data: {
         class_ids: [{ id: 4015 }],
-        weapon_damage: [{ dice: 'd6', dice_count_level_divisor: 2, dice_count_rounding: 'up' }],
+        weapon_damage: [{ key: 'sneak', dice: 'd6', dice_count_level_divisor: 2, dice_count_rounding: 'up' }],
         sheet_widgets: [{
           key: 'sneak_attack',
           kind: 'metric',
-          value_source: 'weapon_damage',
+          value_source: 'weapon_damage', weapon_damage_key: 'sneak',
           details: ['Фехтовальное или дальнобойное оружие', 'Без помехи', ''],
         }],
       },

@@ -491,8 +491,9 @@
       { "name": "Подходящее оружие", "key": "weapon_kind", "type": "select", "default": "any", "options": [{ "value": "any", "label": "Любое" }, { "value": "melee", "label": "Рукопашное" }, { "value": "ranged", "label": "Дальнобойное" }, { "value": "finesse", "label": "Фехтовальное" }, { "value": "finesse_or_ranged", "label": "Фехтовальное или дальнобойное" }] },
       { "name": "Удваивать кости при крите", "key": "double_on_critical", "type": "bool", "default": true },
       { "name": "Раз в ход", "key": "once_per_turn", "type": "bool" },
-      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
-    ]
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
+    {"name": "Ключ", "key": "key", "type": "text", "required": true}
+  ]
   },
   {
     "name": "Виджеты листа", "key": "sheet_widgets", "type": "object_array",
@@ -508,8 +509,9 @@
       { "name": "Подпись включения", "key": "inactive_label", "type": "text" },
       { "name": "Подпись активности", "key": "active_label", "type": "text" },
       { "name": "Порядок", "key": "priority", "type": "int" },
-      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
-    ]
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
+    {"name": "Правило урона", "key": "weapon_damage_key", "type": "text", "show_on": {"key": "value_source", "value": "weapon_damage"}}
+  ]
   },
   {
     "name": "Защиты по выбору", "key": "choice_defenses", "type": "object_array",
@@ -590,5 +592,7 @@
     "name": "Страница источника",
     "key": "source_page",
     "type": "int"
-  }
+  },
+  {"name": "Уровень для расчётов", "key": "level_source", "type": "select", "default": "bound", "options": [{"value": "bound", "label": "По привязке способности"}, {"value": "class", "label": "Определённый класс"}, {"value": "character", "label": "Общий уровень персонажа"}]},
+  {"name": "Класс для расчётов", "key": "level_class_id", "type": "item", "item_type": 9, "show_on": {"key": "level_source", "value": "class"}}
 ]

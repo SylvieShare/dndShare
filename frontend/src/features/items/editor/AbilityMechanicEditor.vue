@@ -6,6 +6,7 @@
       <RuleReferencePicker kind="widget" :value="data.key" label="Дополнить панель" @pick="entry => data.key = entry.key" />
     </FormField>
     <AbilityRuleFields :fields="mainFields" :data="data" @update:data="update" />
+    <AbilityLevelSource v-if="kind === 'sheet_widgets' && data.value_source" :data="editor.itemData || {}" readonly />
     <template v-for="gate in gates" :key="gate.title">
       <FormField :label="gate.title" :title="`Включите, чтобы настроить: ${gate.keys.map(key => fields.find(field => field.key === key)?.name).join(', ')}.`">
         <ToggleSwitch :model-value="enabled[gate.title]" :aria-label="gate.title" @update:model-value="value => setGate(gate, value)" />
@@ -21,6 +22,7 @@ import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
 import { abilityMechanicManifest, mechanicFields, updateMechanic } from './abilityMechanicManifest'
 import { hasFieldValue } from './abilityEditorProfile'
+import AbilityLevelSource from './AbilityLevelSource.vue'
 import AbilityRuleFields from './AbilityRuleFields.vue'
 import RuleKeyField from './RuleKeyField.vue'
 import RuleReferencePicker from './RuleReferencePicker.vue'
@@ -38,7 +40,7 @@ watchEffect(() => {
   let error = ''
   if (props.kind === 'sheet_widgets') {
     if (props.data.kind === 'toggle' && !props.data.status_effect_key) error = 'Панель на листе: выберите связанный эффект для переключателя.'
-    if (props.data.value_source === 'weapon_damage' && !editor.itemData?.weapon_damage?.length) error = 'Панель на листе: добавьте правило дополнительного урона.'
+    if (props.data.value_source === 'weapon_damage' && !editor.itemData?.weapon_damage?.some(row => row.key && row.key === props.data.weapon_damage_key)) error = 'Панель на листе: выберите существующее правило дополнительного урона.'
     if (props.data.value_source === 'scaling' && !editor.itemData?.scaling?.length) error = 'Панель на листе: добавьте таблицу развития с уровнем.'
     if (props.data.kind === 'note' && !props.data.key) error = 'Панель на листе: выберите панель для дополнения.'
   }

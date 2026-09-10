@@ -1,3 +1,4 @@
+import { abilityLevelContext } from './abilityLevelSource'
 import { automaticAbilityLabel } from './abilityProgression'
 import { abilityModifier, resolveNumValue } from '@/shared/lib/dnd'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
@@ -7,22 +8,7 @@ function nonNegativeInt(value) {
 }
 
 export function abilityOwnerLevel(itemData, values = {}) {
-  const data = itemData || {}
-  const classIds = new Set((data.class_ids || []).map((entry) => String(entry?.id ?? entry)))
-  const subclassIds = new Set((data.subclass_ids || []).map((entry) => String(entry?.id ?? entry)))
-  const classes = Array.isArray(values?.classes) ? values.classes : []
-  const matchingLevels = classes.filter((entry) => (
-    classIds.has(String(entry?.id))
-    || subclassIds.has(String(entry?.subclass?.id))
-  )).map((entry) => nonNegativeInt(entry?.level))
-  const sheetLevel = nonNegativeInt(values?.lvl?.level)
-  if (matchingLevels.length) {
-    // The sheet level is authoritative for a single-class character; explicit
-    // per-class levels become authoritative once multiclassing is present.
-    if (classes.length === 1 && sheetLevel > 0) return sheetLevel
-    return Math.max(...matchingLevels)
-  }
-  return sheetLevel
+  return abilityLevelContext(itemData || {}, values).level
 }
 
 /** Resolve the live charge maximum configured on an ability handbook item. */

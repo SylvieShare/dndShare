@@ -8,7 +8,7 @@
         <thead><tr><th>С уровня</th><th>Значение</th><th v-if="uses || data.max_use_scaling">Использований</th><th><span class="sr-only">Удаление</span></th></tr></thead>
         <tbody>
           <tr v-for="(row, index) in data.scaling || []" :key="index">
-            <td><FormTextInput :value="row.level" @update:value="value => row.level = numberOrNull(value)" type="number" min="1" max="20" :aria-label="`С уровня, строка ${index + 1}`" title="Уровень связанного класса, а без привязки — персонажа. Значение действует до следующей строки." /></td>
+            <td><FormTextInput :value="row.level" @update:value="value => row.level = numberOrNull(value)" type="number" min="1" max="20" :aria-label="`С уровня, строка ${index + 1}`" title="Уровень выбранного источника расчётов способности. Значение действует до следующей строки." /></td>
             <td><FormTextInput v-model:value="row.value" :aria-label="`Значение, строка ${index + 1}`" placeholder="Например, +2" title="Значение, которое используют эффект и панель на листе." /></td>
             <td v-if="uses || data.max_use_scaling"><FormTextInput :value="row.uses" @update:value="value => row.uses = numberOrNull(value)" type="number" min="0" :aria-label="`Использований, строка ${index + 1}`" title="Максимум использований. 0 — без ограничения." /></td>
             <td><RemoveButton icon="trash" :label="`Удалить изменение с уровня ${row.level}`" @click="pending = { key: 'scaling', index }" /></td>
