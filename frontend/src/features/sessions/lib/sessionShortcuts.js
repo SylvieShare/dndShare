@@ -2,6 +2,7 @@ export const SESSION_VIEW_SHORTCUTS = Object.freeze({
   story: 'Digit1',
   locations: 'Digit2',
   npcs: 'Digit3',
+  quests: 'Digit4',
   materials: 'Digit5',
   music: 'Digit6',
   journal: 'Digit7',
