@@ -3,12 +3,15 @@
     class="session-editable-field"
     :class="{
       'session-editable-field--open': fieldOpen,
+      'session-editable-field--compact': compact,
+      'session-editable-field--headline': headline,
       'session-editable-field--wide': wide,
       'session-editable-field--empty': !displayText,
     }"
   >
     <header>
-      <span class="session-editable-field-label">
+      <component :is="headline ? 'h2' : 'span'" v-if="compact && !fieldOpen" class="session-editable-field-value" :title="label">{{ displayText || label }}</component>
+      <span v-if="!compact || fieldOpen" class="session-editable-field-label">
         <component :is="icon" v-if="icon" :size="15" />
         <strong>{{ label }}</strong>
       </span>
@@ -63,7 +66,7 @@
         </button>
       </div>
     </div>
-    <slot v-else name="display"><p>{{ displayText || emptyText }}</p></slot>
+    <slot v-else-if="!compact" name="display"><p>{{ displayText || emptyText }}</p></slot>
   </article>
 </template>
 
@@ -76,6 +79,8 @@ const props = defineProps({
   displayValue: { type: String, default: undefined },
   persist: { type: Function, default: null },
   label: { type: String, required: true },
+  compact: Boolean,
+  headline: Boolean,
   icon: { type: [Object, Function], default: null },
   editable: { type: Boolean, default: false },
   forceOpen: { type: Boolean, default: false },
@@ -165,4 +170,13 @@ async function submit() {
 .session-editable-field-spinner { animation: session-editable-field-spin .8s linear infinite; }
 @keyframes session-editable-field-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .session-editable-field { transition: none; }.session-editable-field-spinner { animation: none; } }
+.session-editable-field-pencil { border: 0; background: none; border-radius: 0; }
+.session-editable-field--compact { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; gap: 5px; }
+.session-editable-field--compact header { justify-content: flex-start; gap: 3px; }
+.session-editable-field--compact .session-editable-field-label { flex: initial; }
+.session-editable-field-value { min-width: 0; margin: 0; color: var(--text-2); font: 12px/1.45 var(--font-ui); overflow-wrap: anywhere; }
+.session-editable-field--headline .session-editable-field-value { color: var(--text-1); font: 700 clamp(27px, 3vw, 38px)/1.12 var(--font-display); }
+.session-editable-field--compact.session-editable-field--open { width: min(100%, 440px); }
+.session-editable-field--headline.session-editable-field--open { width: 100%; }
+.session-editable-field--headline input { font: 700 26px/1.2 var(--font-display); }
 </style>

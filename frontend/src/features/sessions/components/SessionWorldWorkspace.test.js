@@ -25,7 +25,7 @@ const materials = read('./SessionMaterialsWorkspace.vue')
 const music = read('./SessionMusicWorkspace.vue')
 const chronicle = read('./SessionChronicleWorkspace.vue')
 const entityDetail = read('./SessionEntityDetail.vue')
-const entityForm = read('./SessionEntityForm.vue')
+const entityForm = read('./SessionEntityForm.vue') + read('./SessionEntityFormField.vue') + read('./SessionEntityFormBody.vue')
 const entityFormModel = read('../lib/sessionEntityForm.js')
 const editableField = read('./SessionEditableField.vue')
 const scenarioUsages = read('./ScenarioUsageList.vue')
@@ -85,12 +85,12 @@ describe('session world workspaces', () => {
       expect(workspace).toContain('<SessionEntityDetail')
     }
     expect(entityDetail).toContain('session-entity-detail-head')
-    expect(entityDetail).toContain('<Pencil :size="15" />Редактировать')
-    expect(entityDetail).toContain('session-entity-detail-title-edit')
+    expect(entityDetail).not.toContain('>Редактировать')
+    expect(entityDetail).toContain('<slot name="heading">')
     expect(editableField).toContain('session-editable-field-pencil')
     for (const workspace of [locations, npcs, quests, materials]) {
       expect(workspace).toContain('<SessionEntityForm')
-      expect(workspace).toContain(':persist-title=')
+      expect(workspace).toContain('<SessionEntityFormHeader')
     }
     expect(entityForm).toContain('<SessionMaterialPreview :material="entity" />')
   })
@@ -230,7 +230,7 @@ describe('session world workspaces', () => {
     expect(entityFormModel).toContain('raceItemId: Number(draft.raceItemId) || null')
     expect(entityForm).toContain('aria-label="Случайное имя"')
     expect(npcs).toContain('[npc.raceName, npc.role]')
-    expect(npcs).toContain('[selectedNpc.raceName, selectedNpc.role]')
+    expect(entityForm).toContain("npc: ['name', 'raceItemId', 'role']")
   })
 
   it('keeps one aggregate world state behind typed API mutations', () => {

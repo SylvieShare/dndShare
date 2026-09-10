@@ -8,10 +8,14 @@ import SessionEntityForm from './SessionEntityForm.vue'
 import SessionEditableField from './SessionEditableField.vue'
 import UniversalRelationList from './UniversalRelationList.vue'
 import SessionMaterialPreview from './SessionMaterialPreview.vue'
+import SessionEntityFormHeader from './SessionEntityFormHeader.vue'
+import SessionEntityFormBody from './SessionEntityFormBody.vue'
+import SessionEntityFormField from './SessionEntityFormField.vue'
+import SessionEntityFormVisual from './SessionEntityFormVisual.vue'
 
 // Vitest's Node transform supplies SSR setup; attach the client templates to
 // exercise the real event handlers with Vue's in-memory renderer.
-for (const [component, file] of [[SessionEntityForm, './SessionEntityForm.vue'], [SessionEditableField, './SessionEditableField.vue'], [UniversalRelationList, './UniversalRelationList.vue'], [SessionMaterialPreview, './SessionMaterialPreview.vue']]) {
+for (const [component, file] of [[SessionEntityForm, './SessionEntityForm.vue'], [SessionEditableField, './SessionEditableField.vue'], [UniversalRelationList, './UniversalRelationList.vue'], [SessionMaterialPreview, './SessionMaterialPreview.vue'], [SessionEntityFormHeader, './SessionEntityFormHeader.vue'], [SessionEntityFormBody, './SessionEntityFormBody.vue'], [SessionEntityFormField, './SessionEntityFormField.vue'], [SessionEntityFormVisual, './SessionEntityFormVisual.vue']]) {
   const { descriptor } = parse(readFileSync(new URL(file, import.meta.url), 'utf8'))
   const script = compileScript(descriptor, { id: file })
   const { code } = compile(descriptor.template.content, { mode: 'function', prefixIdentifiers: true, bindingMetadata: script.bindings })
@@ -22,6 +26,7 @@ for (const [component, file] of [[SessionEntityForm, './SessionEntityForm.vue'],
 vi.mock('@sylvieshare/share-ui', async () => {
   const { h } = await import('vue')
   return {
+    AppModalFrame: { setup: (_, { slots }) => () => h('dialog', [...(slots.default?.() || []), ...(slots.footer?.() || [])]) },
     FormSelect: { props: ['value'], emits: ['update:value'], setup: (props, { emit, slots }) => () => h('select', { value: props.value, onChange: event => emit('update:value', event.target.value) }, slots.default?.()) },
     ColorPresetPicker: { render: () => h('div') },
     AddButton: { props: ['label'], emits: ['click'], setup: (props, { emit }) => () => h('button', { 'aria-label': props.label, onClick: () => emit('click') }) },
@@ -29,7 +34,7 @@ vi.mock('@sylvieshare/share-ui', async () => {
     FormActionButtons: { props: ['canSubmit'], emits: ['submit', 'cancel'], setup: (props, { emit }) => () => h('footer', [h('button', { 'aria-label': 'Сохранить всё', disabled: !props.canSubmit, onClick: () => emit('submit') }), h('button', { 'aria-label': 'Отменить всё', onClick: () => emit('cancel') })]) },
   }
 })
-vi.mock('./SessionEntityAssetInput.vue', () => ({ default: { render: () => h('div', { 'data-asset-input': true }) } }))
+vi.mock('./SessionEntityAssetInput.vue', () => ({ default: { emits: ['update:modelValue'], setup: (_, { emit }) => () => h('button', { 'aria-label': 'Выбрать тестовое изображение', onClick: () => emit('update:modelValue', { id: 55, url: '/new.png' }) }) } }))
 vi.mock('./UniversalRelationPickerModal.vue', () => ({ default: { render: () => null } }))
 vi.mock('@/features/handbook/components/ItemPickerModal.vue', () => ({ default: { render: () => null } }))
 vi.mock('@/shared/api/itemsApi', () => ({ itemsApi: { list: vi.fn(async () => ({ items: [] })) } }))
@@ -128,7 +133,7 @@ describe('shared session entity editing', () => {
 
   it('opens a material type change with all dependent fields and does not reuse an incompatible asset', async () => {
     const form = mountForm({ type: 'material', entity: { id: 1, kind: 'image', name: 'Карта', assetId: 9, assetUrl: '/map.png', relations: [] } })
-    expect(form.all(el => el.type === 'img')).toHaveLength(1)
+    expect(form.all(el => el.type === 'img')).toHaveLength(2)
     form.byLabel('Редактировать поле «Тип материала»').props.onClick()
     await flush()
     form.all(el => el.type === 'select')[0].props.onChange({ target: { value: 'video' } })
@@ -153,6 +158,31 @@ describe('shared session entity editing', () => {
     await flush()
     expect(form.save).toHaveBeenCalledWith(expect.objectContaining({ name: 'Новый заголовок', goal: 'Новая цель', notes: 'Секрет' }))
     expect(form.editing.value).toBe(false)
+    form.unmount()
+  })
+
+  it('keeps NPC race and role in the header and changes the portrait through its image', async () => {
+    const form = mountForm({ type: 'npc', entity: { id: 1, name: 'Мира', raceName: 'Эльф', raceItemId: 12, role: 'Проводник', imageId: 9, imageUrl: '/old.png', relations: [] } })
+    const role = form.byLabel('Редактировать поле «Роль»')
+    expect(role.parent.parent.parent.props.class).toContain('entity-form-heading')
+    expect(form.byLabel('Редактировать поле «Портрет»')).toBeUndefined()
+    form.byLabel('Сменить изображение').props.onClick()
+    await flush()
+    form.byLabel('Выбрать тестовое изображение').props.onClick()
+    await flush()
+    form.byLabel('Сохранить всё').props.onClick()
+    await flush()
+    expect(form.save).toHaveBeenCalledWith(expect.objectContaining({ imageId: 55, role: 'Проводник', raceItemId: 12 }))
+    form.unmount()
+  })
+
+  it('keeps location type beside its heading and has no parent or image field in the body', () => {
+    const form = mountForm({ type: 'location', entity: { id: 1, name: 'Город', kind: 'settlement', parentLocationId: 7, imageId: 9, imageUrl: '/city.png', relations: [] } })
+    const type = form.byLabel('Редактировать поле «Тип»')
+    expect(type.parent.parent.parent.props.class).toContain('entity-form-heading')
+    expect(form.byLabel('Редактировать поле «Внутри локации»')).toBeUndefined()
+    expect(form.byLabel('Редактировать поле «Изображение»')).toBeUndefined()
+    expect(form.byLabel('Сменить изображение')).toBeDefined()
     form.unmount()
   })
 

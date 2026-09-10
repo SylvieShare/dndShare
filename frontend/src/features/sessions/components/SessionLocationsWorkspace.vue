@@ -46,83 +46,77 @@
       </div>
     </aside>
 
-    <SessionEntityDetail
+    <SessionEntityForm
       v-if="selectedLocation"
       :key="selectedLocation.id"
-      :title="selectedLocation.name"
-      :accent="selectedKind.color"
-      :cover-url="detailEditing ? '' : sessionImageUrl(selectedLocation)"
+      type="location"
+      :entity="selectedLocation"
       :editable="isDm"
-      :title-editable="isDm && !detailEditing"
       :editing="detailEditing"
       :saving="world.saving.value"
-      :back-label="backLabel"
-      edit-aria-label="Редактировать локацию"
-      @edit="detailEditing = true"
-      :persist-title="saveTitle"
-      @back="$emit('back')"
+      :locations="locations"
+      :relation-items="relationItems"
+      :save="saveDetail"
+      @edit-request="detailEditing = true"
+      @cancel="detailEditing = false"
+      @saved="detailEditing = false"
+      @open-entity="openRelated"
     >
-      <template v-if="!detailEditing" #visual><img :src="sessionImageUrl(selectedLocation)" alt="" /></template>
-      <template #context>
-          <div class="session-world-breadcrumbs">
-            <button
-              v-for="item in breadcrumbs.slice(0, -1)"
-              :key="item.id"
-              type="button"
-              @click="$emit('select-location', item.id)"
-            >{{ item.name }}</button>
-          </div>
-      </template>
-      <template #eyebrow><component :is="selectedKindIcon" :size="14" />{{ selectedKind.label }}</template>
-      <template v-if="isDm" #actions-after><button type="button" class="danger" aria-label="Удалить объект" @click="requestLocationDelete(selectedLocation)"><Trash2 :size="15" /></button></template>
-      <template #meta>
-        <span>{{ childLocations.length }} {{ ruPlural(childLocations.length, 'вложенное место', 'вложенных места', 'вложенных мест') }}</span>
-        <span>{{ selectedLocation.relations?.length || 0 }} связей</span>
-      </template>
-      <template v-if="isDm" #actions-before>
-          <button type="button" @click="openCreate(selectedLocation.id)"><FolderPlus :size="15" />Вложить место</button>
-          <button type="button" @click="openNpcCreate"><UserPlus :size="15" />Добавить NPC</button>
-      </template>
+      <SessionEntityDetail
+        :title="selectedLocation.name"
+        :accent="selectedKind.color"
+        :cover-url="detailEditing ? '' : sessionImageUrl(selectedLocation)"
+        :back-label="backLabel"
+        @back="$emit('back')"
+      >
+        <template #visual><SessionEntityFormVisual /></template>
+        <template #heading><SessionEntityFormHeader /></template>
+        <template #context>
+            <div class="session-world-breadcrumbs">
+              <button
+                v-for="item in breadcrumbs.slice(0, -1)"
+                :key="item.id"
+                type="button"
+                @click="$emit('select-location', item.id)"
+              >{{ item.name }}</button>
+            </div>
+        </template>
+        <template v-if="isDm" #actions-after><button type="button" class="danger" aria-label="Удалить объект" @click="requestLocationDelete(selectedLocation)"><Trash2 :size="15" /></button></template>
+        <template #meta>
+          <span>{{ childLocations.length }} {{ ruPlural(childLocations.length, 'вложенное место', 'вложенных места', 'вложенных мест') }}</span>
+          <span>{{ selectedLocation.relations?.length || 0 }} связей</span>
+        </template>
+        <template v-if="isDm" #actions-before>
+            <button type="button" @click="openCreate(selectedLocation.id)"><FolderPlus :size="15" />Вложить место</button>
+            <button type="button" @click="openNpcCreate"><UserPlus :size="15" />Добавить NPC</button>
+        </template>
 
-      <section v-if="!detailEditing && childLocations.length" class="session-world-section">
-        <div class="session-world-section-title"><span>Внутри</span><small>{{ childLocations.length }}</small></div>
-        <div class="session-world-card-grid">
-          <button
-            v-for="location in childLocations"
-            :key="location.id"
-            type="button"
-            class="session-world-link-card session-world-link-card--image"
-            :style="{ '--card-image': `url(${sessionImageUrl(location)})`, '--entity-color': locationKind(location.kind).color }"
-            @click="$emit('select-location', location.id)"
-          >
-            <span>{{ locationKind(location.kind).shortLabel }}</span>
-            <strong>{{ location.name }}</strong>
-            <ChevronRight :size="15" />
-          </button>
-        </div>
-      </section>
-      <section class="session-world-section">
-        <SessionEntityForm
-          :key="selectedLocation.id"
-          type="location"
-          :entity="selectedLocation"
-          :editable="isDm"
-          :editing="detailEditing"
-          :saving="world.saving.value"
-          :locations="locations"
-          :relation-items="relationItems"
-          :save="saveDetail"
-          @edit-request="detailEditing = true"
-          @cancel="detailEditing = false"
-          @saved="detailEditing = false"
-          @open-entity="openRelated"
-        />
-      </section>
-      <section v-if="!detailEditing" class="session-world-section">
-        <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selectedLocation.scenarioUsages?.length || 0 }}</small></div>
-        <ScenarioUsageList :usages="selectedLocation.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
-      </section>
-    </SessionEntityDetail>
+        <section v-if="!detailEditing && childLocations.length" class="session-world-section">
+          <div class="session-world-section-title"><span>Внутри</span><small>{{ childLocations.length }}</small></div>
+          <div class="session-world-card-grid">
+            <button
+              v-for="location in childLocations"
+              :key="location.id"
+              type="button"
+              class="session-world-link-card session-world-link-card--image"
+              :style="{ '--card-image': `url(${sessionImageUrl(location)})`, '--entity-color': locationKind(location.kind).color }"
+              @click="$emit('select-location', location.id)"
+            >
+              <span>{{ locationKind(location.kind).shortLabel }}</span>
+              <strong>{{ location.name }}</strong>
+              <ChevronRight :size="15" />
+            </button>
+          </div>
+        </section>
+        <section class="session-world-section">
+          <SessionEntityFormBody />
+        </section>
+        <section v-if="!detailEditing" class="session-world-section">
+          <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selectedLocation.scenarioUsages?.length || 0 }}</small></div>
+          <ScenarioUsageList :usages="selectedLocation.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
+        </section>
+      </SessionEntityDetail>
+    </SessionEntityForm>
 
     <main v-else class="session-world-detail session-world-detail--empty">
       <MapPinned :size="44" />
@@ -167,12 +161,10 @@
 </template>
 
 <script setup>
-import { entityDraft, entityPayload } from '@/features/sessions/lib/sessionEntityForm'
 
 import { computed, ref, watch } from 'vue'
 import {
-  Blocks, ChevronRight, Compass, DoorOpen, FolderPlus, House, Landmark,
-  Map, MapPin, MapPinned, Plus, Route, Search, Trees, UserPlus,
+  ChevronRight, FolderPlus, Map, MapPinned, Plus, Search, UserPlus,
 } from '@lucide/vue'
 import { Trash2 } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
@@ -181,6 +173,9 @@ import LocationTreeRow from '@/features/sessions/components/LocationTreeRow.vue'
 import NpcEditorModal from '@/features/sessions/components/NpcEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionEntityForm from '@/features/sessions/components/SessionEntityForm.vue'
+import SessionEntityFormBody from './SessionEntityFormBody.vue'
+import SessionEntityFormHeader from './SessionEntityFormHeader.vue'
+import SessionEntityFormVisual from './SessionEntityFormVisual.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import {
@@ -212,9 +207,7 @@ const npcEditorOpen = ref(false)
 const pendingDelete = ref(null)
 const listElement = ref(null)
 
-const icons = { compass: Compass, landmark: Landmark, blocks: Blocks, house: House, door: DoorOpen, trees: Trees, route: Route, 'map-pin': MapPin }
 const selectedKind = computed(() => locationKind(selectedLocation.value?.kind))
-const selectedKindIcon = computed(() => icons[selectedKind.value.icon] || MapPin)
 const forest = computed(() => buildLocationForest(locations.value))
 const filteredForest = computed(() => {
   const filter = nodes => nodes.flatMap(node => {
@@ -301,11 +294,7 @@ async function saveLocation(data) {
     emit('select-location', id || editingLocation.value?.id)
   } catch { /* error is rendered */ }
 }
-async function saveTitle(value) {
-  const draft = entityDraft('location', selectedLocation.value)
-  draft.name = value
-  return saveDetail(entityPayload('location', draft))
-}
+
 
 async function saveNpc(data) {
   try { await props.world.saveNpc(null, data); closeEditors() } catch { /* error is rendered */ }

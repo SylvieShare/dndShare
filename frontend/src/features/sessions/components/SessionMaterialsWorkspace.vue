@@ -33,50 +33,44 @@
       </div>
     </aside>
 
-    <SessionEntityDetail
+    <SessionEntityForm
       v-if="selected"
       :key="selected.id"
-      :title="selected.name"
-      :eyebrow="materialType(selected.kind).label"
-      :accent="materialType(selected.kind).color"
+      type="material"
+      :entity="selected"
       :editable="isDm"
-      :title-editable="isDm && !detailEditing"
       :editing="detailEditing"
       :saving="saving"
-      :back-label="backLabel"
-      edit-aria-label="Редактировать материал"
-      @edit="detailEditing = true"
-      :persist-title="saveTitle"
-      @back="$emit('back')"
+      :locations="world.locations.value"
+      :relation-items="relationItems"
+      :save="saveDetail"
+      @edit-request="detailEditing = true"
+      @cancel="detailEditing = false"
+      @saved="detailEditing = false"
+      @open-entity="openRelated"
     >
-      <template v-if="!detailEditing" #visual><component :is="materialType(selected.kind).icon" :size="32" /></template>
-      <template #meta><span>{{ contextLabel(selected) }}</span><span>{{ selected.relations?.length || 0 }} связей</span></template>
-      <template #actions-before><button type="button" class="primary" @click="presentation.showMaterial(selected)"><Cast :size="16" />Транслировать</button></template>
-      <template v-if="isDm" #actions-after><button type="button" class="danger" title="Удалить" aria-label="Удалить материал" @click="removeSelected"><Trash2 :size="15" /></button></template>
+      <SessionEntityDetail
+        :title="selected.name"
+        :accent="materialType(selected.kind).color"
+        :back-label="backLabel"
+        @back="$emit('back')"
+      >
+        <template #visual><SessionEntityFormVisual /></template>
+        <template #heading><SessionEntityFormHeader /></template>
+        <template #meta><span>{{ contextLabel(selected) }}</span><span>{{ selected.relations?.length || 0 }} связей</span></template>
+        <template #actions-before><button type="button" class="primary" @click="presentation.showMaterial(selected)"><Cast :size="16" />Транслировать</button></template>
+        <template v-if="isDm" #actions-after><button type="button" class="danger" title="Удалить" aria-label="Удалить материал" @click="removeSelected"><Trash2 :size="15" /></button></template>
 
-      <section class="session-world-section">
-        <SessionEntityForm
-          :key="selected.id"
-          type="material"
-          :entity="selected"
-          :editable="isDm"
-          :editing="detailEditing"
-          :saving="saving"
-          :locations="world.locations.value"
-          :relation-items="relationItems"
-          :save="saveDetail"
-          @edit-request="detailEditing = true"
-          @cancel="detailEditing = false"
-          @saved="detailEditing = false"
-          @open-entity="openRelated"
-        />
-      </section>
-      <section v-if="!detailEditing" class="session-world-section">
-        <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selected.scenarioUsages?.length || 0 }}</small></div>
-        <ScenarioUsageList :usages="selected.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
-      </section>
-      <span v-if="actionError" class="material-action-error">{{ actionError }}</span>
-    </SessionEntityDetail>
+        <section class="session-world-section">
+          <SessionEntityFormBody />
+        </section>
+        <section v-if="!detailEditing" class="session-world-section">
+          <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selected.scenarioUsages?.length || 0 }}</small></div>
+          <ScenarioUsageList :usages="selected.scenarioUsages" :scenes="world.scenes.value" @open="openScenario" />
+        </section>
+        <span v-if="actionError" class="material-action-error">{{ actionError }}</span>
+      </SessionEntityDetail>
+    </SessionEntityForm>
     <main v-else class="session-world-detail session-world-detail--empty">
       <LibraryBig :size="44" /><strong>{{ allMaterials.length ? 'Выберите материал в списке' : 'Здесь появится библиотека показа' }}</strong>
       <span>Материал можно подготовить один раз и использовать в сценах или отправлять на экран вручную.</span>
@@ -87,13 +81,15 @@
 </template>
 
 <script setup>
-import { entityDraft, entityPayload } from '@/features/sessions/lib/sessionEntityForm'
 
 import { computed, ref, watch } from 'vue'
 import { Cast, LibraryBig, Plus, Search, Trash2 } from '@lucide/vue'
 import MaterialEditorModal from '@/features/sessions/components/MaterialEditorModal.vue'
 import SessionEntityDetail from '@/features/sessions/components/SessionEntityDetail.vue'
 import SessionEntityForm from '@/features/sessions/components/SessionEntityForm.vue'
+import SessionEntityFormBody from './SessionEntityFormBody.vue'
+import SessionEntityFormHeader from './SessionEntityFormHeader.vue'
+import SessionEntityFormVisual from './SessionEntityFormVisual.vue'
 import SessionLibraryWorkspace from '@/features/sessions/components/SessionLibraryWorkspace.vue'
 import ScenarioUsageList from '@/features/sessions/components/ScenarioUsageList.vue'
 import { MATERIAL_TYPES, materialType } from '@/features/sessions/lib/sessionMaterials'
@@ -173,11 +169,7 @@ async function saveMaterial(payload) {
     selectedId.value = saved.id; editing.value = false
   } catch { actionError.value = 'Не удалось сохранить материал' } finally { saving.value = false }
 }
-async function saveTitle(value) {
-  const draft = entityDraft('material', selected.value)
-  draft.name = value
-  return saveDetail(entityPayload('material', draft))
-}
+
 
 async function removeSelected() {
   if (!selected.value || !window.confirm(`Удалить материал «${selected.value.name}»?`)) return

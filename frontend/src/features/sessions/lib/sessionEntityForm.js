@@ -1,5 +1,5 @@
 import { Badge, Gift, GitFork, KeyRound, NotebookPen, ScrollText, Target, UserRound, MapPin, LibraryBig } from '@lucide/vue'
-import { LOCATION_KINDS, locationBreadcrumb, locationDescendantIds } from './sessionWorld'
+import { LOCATION_KINDS } from './sessionWorld'
 import { QUEST_STATUSES } from './sessionEntityRelations'
 import { MATERIAL_TYPES, NOTE_STYLES } from './sessionMaterials'
 
@@ -48,7 +48,7 @@ export function entityDraftValid(type, draft) {
   return true
 }
 
-export function entityFields(type, draft, entity, locations = []) {
+export function entityFields(type, draft) {
   const icons = { goal: Target, condition: KeyRound, reward: Gift, consequences: GitFork, notes: NotebookPen, description: NotebookPen }
   const text = (key, label, maxlength = 5000, rows = 5) => ({ key, label, icon: icons[key], input: 'text', multiline: true, maxlength, rows, wide: true })
   const select = (key, label, options) => ({ key, label, input: 'select', options })
@@ -62,10 +62,7 @@ export function entityFields(type, draft, entity, locations = []) {
     text('description', 'Характер, мотивация и заметки'),
   ]
   if (type === 'location') {
-    const excluded = entity?.id ? new Set([entity.id, ...locationDescendantIds(entity.id, locations)]) : new Set()
-    const byId = new Map(locations.map(item => [item.id, item]))
-    const parents = locations.filter(item => !excluded.has(item.id)).map(item => ({ key: item.id, label: locationBreadcrumb(item, byId).map(part => part.name).join(' / ') })).sort((a, b) => a.label.localeCompare(b.label, 'ru'))
-    return [...fields, select('kind', 'Тип', LOCATION_KINDS), select('parentLocationId', 'Внутри локации', [{ key: '', label: 'На верхнем уровне' }, ...parents]),
+    return [...fields, select('kind', 'Тип', LOCATION_KINDS),
       { key: 'image', label: 'Изображение', input: 'image', catalog: 'story' }, text('description', 'Описание и атмосфера')]
   }
   if (type === 'quest') return [...fields, select('status', 'Статус', QUEST_STATUSES), text('goal', 'Цель'), text('condition', 'Условие'), text('reward', 'Награда'), text('consequences', 'Последствия'), text('notes', 'Заметки')]

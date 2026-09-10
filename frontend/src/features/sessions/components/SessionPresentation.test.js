@@ -12,7 +12,7 @@ const blockEditor = read('./SceneBlockEditorModal.vue')
 const blockMenu = read('./SceneBlockMenus.vue')
 const publicScreen = read('../pages/ViewEncounterScreen.vue')
 const publicStyles = read('../pages/styles/ViewEncounterScreen.css')
-const materialEditor = read('./SessionEntityForm.vue') + read('./SessionEntityAssetInput.vue') + read('../lib/sessionEntityForm.js')
+const materialEditor = read('./SessionEntityForm.vue') + read('./SessionEntityFormBody.vue') + read('./SessionEntityAssetInput.vue') + read('../lib/sessionEntityForm.js')
 const encounter = read('./EncounterTab.vue')
 const libraryShell = read('./SessionLibraryWorkspace.vue')
 const presentationState = read('../composables/useSessionPresentation.js')
@@ -122,7 +122,7 @@ describe('session presentation workspace', () => {
     expect(publicScreen).toContain("presentationMaterial?.kind === 'note'")
     expect(publicStyles).toContain('.presentation-note--parchment')
     expect(workspace).not.toContain(':cover-url="[\'image\', \'map\'].includes(selected.kind)')
-    expect(workspace).toContain('<template v-if="!detailEditing" #visual><component :is="materialType(selected.kind).icon"')
+    expect(workspace).toContain('<template #visual><SessionEntityFormVisual /></template>')
   })
 
   it('uses reusable relation editing for material contexts and keeps screen launch in the header control', () => {

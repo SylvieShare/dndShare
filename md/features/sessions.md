@@ -264,17 +264,18 @@ canvas. The selected mode is stored per session in local storage; `view`,
 still a temporary overlay. Opening it from either world workspace keeps that
 workspace mounted underneath and closing combat returns to the same mode and
 selected entity. All four catalogues render the selected record through one
-`SessionEntityDetail` header and body shell. It owns the shared title,
-visual/accent, metadata, action layout and labelled `Редактировать` button;
-each catalogue supplies only its domain-specific visual, secondary actions and
-content sections. `SessionEntityForm` supplies the same fields for viewing,
-editing and creation. For a DM, every editable value has a visible pencil,
-including NPC race, role, portrait, color and bestiary reference, location type,
-parent and image, quest status, and material type, contents and presentation style.
-`Редактировать` expands all fields in place with one save/cancel pair; modal
-frames are used for creation and canvas creation flows. Images, video and styled
-text are previewed only in view mode, inside their editable field; editing shows
-inputs and asset selection without a duplicate preview. A material type change
+`SessionEntityDetail` header and body shell. `SessionEntityForm` owns one draft
+shared by its header, visual and body components. There is no general
+`Редактировать` button in the detail header. Borderless pencils without a
+background sit next to each editable value. The location kind, NPC race and
+role, quest status, and material type and note style are edited in the header
+alongside the name; they are not repeated as cards below it. Full edit flows
+(such as creation, the location tree edit action and changing a material type)
+expand those same header values into inputs in place.
+Clicking the header image or media icon changes the location image, NPC portrait
+or material asset. Locations and NPCs have no separate image card in the body.
+Materials keep their full image/video or styled text preview in the body when
+viewed; full editing does not duplicate the preview. A material type change
 opens the full form so dependent contents or assets can be supplied together.
 Single-field saves use current entity data to preserve other fields, and failed
 saves keep the draft open for retry. Quest goal, condition, reward, consequences
@@ -307,8 +308,9 @@ location-to-location graph edges or geographic canvas state.
 
 A location stores a semantic kind, shared-catalogue image, description, parent
 and sibling order. Scenarios are not universal relation targets. The location
-editor excludes itself and all descendants from its parent picker,
-and deletion is blocked until direct children are moved or deleted.
+form has no `Внутри локации` field: hierarchy is changed through the location
+tree. Editing other fields preserves the parent. Deletion is blocked until
+direct children are moved or deleted.
 
 Prepared NPCs live in one searchable session catalogue. A record has a name,
 an optional race item, optional role and description, card color and a portrait.
@@ -326,7 +328,7 @@ symmetric relation model. Every entity can link to any entity of those four
 types, including another entity of its own type, with an optional private note.
 `Добавить связь` opens one picker: the DM can search across the complete
 catalogue or filter a type. The shared relation list groups links by type in both
-modes, with a dashed plus to the right of the `Связи` heading and a trash button
+modes, with a dashed plus immediately beside the `Связи` heading and a trash button
 in each link card's corner. These actions save immediately in view mode and
 change the draft in full edit mode. The source and existing links are excluded
 from the picker. Link notes have their own pencils and are expanded during full

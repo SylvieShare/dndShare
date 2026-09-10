@@ -11,10 +11,12 @@ describe('session entity form payloads', () => {
     expect(npc.relations[0].note).toBe('Живёт здесь')
   })
 
-  it('excludes a location and all descendants from parent choices', () => {
-    const locations = [{ id: 1, name: 'Город' }, { id: 2, name: 'Дом', parentLocationId: 1 }, { id: 3, name: 'Комната', parentLocationId: 2 }, { id: 4, name: 'Лес' }]
-    const options = entityFields('location', entityDraft('location', locations[1]), locations[1], locations).find(field => field.key === 'parentLocationId').options
-    expect(options.map(item => item.key)).toEqual(['', 1, 4])
+  it('preserves hierarchy when editing a location and exposes no parent selector', () => {
+    const location = { id: 2, name: 'Дом', kind: 'building', parentLocationId: 1, imageId: 7 }
+    const draft = entityDraft('location', location)
+    draft.name = 'Старый дом'
+    expect(entityFields('location', draft).some(field => field.key === 'parentLocationId')).toBe(false)
+    expect(entityPayload('location', draft)).toMatchObject({ parentLocationId: 1, imageId: 7, name: 'Старый дом' })
   })
 
   it('normalizes empty references and keeps all quest text fields independent', () => {

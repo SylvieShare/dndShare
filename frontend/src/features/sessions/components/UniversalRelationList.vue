@@ -81,7 +81,7 @@ function updateNote(relation, value) {
 </script>
 <style scoped>
 .entity-relations { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.entity-relations-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.entity-relations-heading { display: flex; align-items: center; justify-content: flex-start; gap: 8px; }
 .entity-relations-heading strong { color: var(--text-1); font-size: 12px; }
 .entity-relations-heading small { margin-left: 6px; color: var(--text-muted); }
 .entity-relation-list { display: flex; flex-direction: column; gap: 12px; }

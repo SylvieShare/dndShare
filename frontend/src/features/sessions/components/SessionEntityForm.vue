@@ -1,93 +1,21 @@
 <template>
-  <div class="session-entity-form">
-    <div class="session-entity-form-fields">
-      <SessionEditableField
-        v-for="field in visibleFields"
-        :key="field.key"
-        :model-value="draft[field.key]"
-        :label="field.label"
-        :icon="field.icon"
-        :display-value="displayValue(field)"
-        :editable="editable"
-        :force-open="editing"
-        :multiline="!!field.multiline"
-        :rows="field.rows || 4"
-        :maxlength="field.maxlength || 0"
-        :required="!!field.required"
-        :wide="!!field.wide"
-        :saving="saving || busy || uploading"
-        :persist="value => saveField(field.key, value)"
-        @update:model-value="updateField(field.key, $event)"
-      >
-        <template v-if="field.key === 'name' && type === 'npc' && editing" #actions>
-          <button type="button" class="session-entity-random-name" aria-label="Случайное имя" @click="draft.name = randomDndName(selectedRace, Math.random, draft.name)"><Dices :size="16" /></button>
-        </template>
-        <template v-if="field.input !== 'text'" #editor="{ value, update }">
-          <FormSelect v-if="field.input === 'select' || field.input === 'race'" :value="value" :disabled="saving || busy || (field.input === 'race' && racesLoading)" @update:value="update($event)">
-            <option v-if="field.input === 'race'" value="">Не выбрана</option>
-            <option v-for="option in field.input === 'race' ? raceOptions : field.options" :key="option.key" :value="option.key">{{ option.label }}</option>
-          </FormSelect>
-          <ColorPresetPicker v-else-if="field.input === 'color'" inline allow-custom :model-value="value" @update:model-value="update($event || '#7c5cff')" />
-          <SessionEntityAssetInput
-            v-else-if="field.input === 'image' || field.input === 'video'"
-            :model-value="value"
-            :catalog="field.catalog || 'story'"
-            :video="field.input === 'video'"
-            :allow-upload="!!field.allowUpload"
-            @update:model-value="update"
-            @busy="uploading = $event"
-          />
-          <div v-else-if="field.input === 'bestiary'" class="session-entity-reference-input">
-            <AddButton :label="value ? 'Сменить существо' : 'Выбрать существо'" @click="openBestiary(update)" />
-            <RemoveButton v-if="value" icon="trash" label="Убрать привязку к бестиарию" @click="update('')" />
-            <span>{{ referenceNames[value] || (Number(value) === Number(entity?.bestiaryItemId) ? entity?.bestiaryItemName : '') || (value ? `Существо #${value}` : 'Не выбрано') }}</span>
-          </div>
-        </template>
-        <template v-if="type === 'material' && ['content', 'asset'].includes(field.key)" #display>
-          <SessionMaterialPreview :material="entity" />
-        </template>
-        <template v-else-if="field.input === 'image'" #display>
-          <img v-if="draft[field.key].url" class="session-entity-form-image" :src="draft[field.key].url" :alt="field.label" :style="{ objectPosition: `${(draft[field.key].focalX ?? .5) * 100}% ${(draft[field.key].focalY ?? .5) * 100}%` }" />
-          <p v-else>{{ draft[field.key].id ? 'Изображение выбрано' : 'Не выбрано' }}</p>
-        </template>
-        <template v-else-if="field.input === 'color'" #display><span class="session-entity-color-value"><i :style="{ background: draft.color }" />{{ draft.color }}</span></template>
-      </SessionEditableField>
+  <slot>
+    <div class="session-entity-form">
+      <header class="session-entity-form-header"><SessionEntityFormVisual /><SessionEntityFormHeader /></header>
+      <SessionEntityFormBody />
     </div>
-    <UniversalRelationList
-      :relations="draft.relations"
-      :items="relationItems"
-      :source-type="type"
-      :source-id="entity?.id"
-      :editable="editable"
-      :force-open="editing"
-      :saving="saving || busy"
-      :persist="changeRelations"
-      @open="$emit('open-entity', $event)"
-    />
-    <p v-if="error || racesError" class="session-entity-form-error" role="alert">{{ error || racesError }}</p>
-    <FormActionButtons
-      v-if="editing"
-      :submit-text="entity ? 'Сохранить' : 'Создать'"
-      :loading="saving || busy || uploading"
-      :can-submit="entityDraftValid(type, draft)"
-      @cancel="$emit('cancel')"
-      @submit="submit"
-    />
-    <ItemPickerModal v-if="bestiaryUpdate" :item-type-ids="[6]" title="Привязать существо из бестиария" :z-index="9200" @close="bestiaryUpdate = null" @pick="pickBestiary" />
-  </div>
+  </slot>
+  <ItemPickerModal v-if="bestiaryUpdate" :item-type-ids="[6]" title="Привязать существо из бестиария" :z-index="9200" @close="bestiaryUpdate = null" @pick="pickBestiary" />
 </template>
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { Dices } from '@lucide/vue'
-import { AddButton, ColorPresetPicker, FormActionButtons, FormSelect, RemoveButton } from '@sylvieshare/share-ui'
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import SessionEditableField from './SessionEditableField.vue'
-import SessionMaterialPreview from './SessionMaterialPreview.vue'
-import SessionEntityAssetInput from './SessionEntityAssetInput.vue'
-import UniversalRelationList from './UniversalRelationList.vue'
+import SessionEntityFormHeader from './SessionEntityFormHeader.vue'
+import SessionEntityFormVisual from './SessionEntityFormVisual.vue'
+import SessionEntityFormBody from './SessionEntityFormBody.vue'
+import { SESSION_ENTITY_FORM } from '../lib/sessionEntityFormContext'
 import { entityDraft, entityDraftValid, entityFields, entityPayload } from '../lib/sessionEntityForm'
 import { itemsApi } from '@/shared/api/itemsApi'
-import { randomDndName } from '@/shared/lib/dndNames'
 import { RACE_ITEM_TYPE, SUBRACE_ITEM_TYPE, itemReferenceId } from '@/shared/lib/dndItemTypes'
 
 const props = defineProps({
@@ -112,8 +40,11 @@ const racesError = ref('')
 const referenceNames = reactive({})
 const bestiaryUpdate = ref(null)
 let pendingKind = null
-const fields = computed(() => entityFields(props.type, draft, props.entity, props.locations))
-const visibleFields = computed(() => fields.value.filter(field => props.editing || field.key !== 'name'))
+const fields = computed(() => entityFields(props.type, draft))
+const headerKeys = computed(() => ({ location: ['kind', 'name'], npc: ['name', 'raceItemId', 'role'], quest: ['status', 'name'], material: ['kind', 'name', 'noteStyle'] }[props.type] || ['name']))
+const headerFields = computed(() => headerKeys.value.map(key => fields.value.find(field => field.key === key)).filter(Boolean))
+const visualField = computed(() => fields.value.find(field => ['image', 'asset'].includes(field.key)))
+const bodyFields = computed(() => fields.value.filter(field => !headerKeys.value.includes(field.key) && !['image', 'asset'].includes(field.key)))
 const selectedRace = computed(() => races.value.find(race => Number(race.id) === Number(draft.raceItemId)) || (draft.raceItemId && Number(draft.raceItemId) === Number(props.entity?.raceItemId) && props.entity?.raceName ? { name: props.entity.raceName } : null))
 const raceOptions = computed(() => {
   const byId = new Map(races.value.map(race => [race.id, race]))
@@ -186,14 +117,15 @@ function pickBestiary(item) {
   bestiaryUpdate.value?.(item.id)
   bestiaryUpdate.value = null
 }
+
+provide(SESSION_ENTITY_FORM, {
+  props, draft, busy, uploading, error, racesError, headerFields, bodyFields, visualField,
+  raceOptions, racesLoading, referenceNames, selectedRace, displayValue, saveField, updateField,
+  openBestiary, changeRelations, submit,
+  openEntity: item => emit('open-entity', item), cancel: () => emit('cancel'),
+})
 </script>
 <style scoped>
 .session-entity-form { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
-.session-entity-form-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.session-entity-form-image { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; }
-.session-entity-color-value, .session-entity-reference-input { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.session-entity-color-value i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); }
-.session-entity-form-error { color: var(--danger); }
-.session-entity-random-name { display: grid; place-items: center; padding: 5px; border: 0; background: transparent; color: var(--accent); cursor: pointer; }
-@media (max-width: 720px) { .session-entity-form-fields { grid-template-columns: 1fr; } }
+.session-entity-form-header { display: flex; align-items: flex-start; gap: 18px; }
 </style>
