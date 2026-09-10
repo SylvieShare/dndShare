@@ -13,6 +13,10 @@ describe('journal reading and inline editing', () => {
   it('puts the source switch in the cover and only renders the selected section', () => {
     const cover = workspace.match(/<header class="journal-cover">[\s\S]*?<\/header>/)[0]
     expect(cover).toContain('<JournalSourceSwitch')
+    expect(cover).toContain('v-if="showSourceSwitch"')
+    expect(workspace).toContain("sources.value.some(source => source.kind === 'session')")
+    expect(workspace).not.toContain('Создать личный дневник')
+    expect(workspace).toContain('<FormTextInput v-if="sessionUuid"')
     expect(cover).toContain("sessionUuid && canManage && journal.kind === 'session'")
     expect(workspace).toContain('<JournalSectionTabs')
     const header = workspace.match(/<BaseTile class="journal-header">[\s\S]*?<\/BaseTile>/)[0]

@@ -85,10 +85,17 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
     const version = ++requestVersion
     if (!quiet) loading.value = true
     try {
-      const response = characterUuid
+      let response = characterUuid
         ? await getCharacterJournal(characterUuid)
         : await getSessionJournal(sessionUuid)
-      if (version !== requestVersion) return null
+      if (version !== requestVersion || disposed) return null
+      // Only the owner initializes an empty diary. Keep an existing source untouched.
+      if (characterUuid && response?.journal === null && response.canSelectSource) {
+        await createCharacterJournal(characterUuid, '')
+        if (version !== requestVersion || disposed) return null
+        response = await getCharacterJournal(characterUuid)
+      }
+      if (version !== requestVersion || disposed) return null
       // Empty source lists are omitted by the API, but must clear stale options.
       sources.value = response?.sources || []
       error.value = ''
@@ -123,7 +130,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
 
   async function createRoot(name) {
     const result = await mutate(() => characterUuid
-      ? createCharacterJournal(characterUuid, name)
+      ? createCharacterJournal(characterUuid, '')
       : createSessionJournal(sessionUuid, name))
     if (characterUuid) await load({ quiet: true })
     return result

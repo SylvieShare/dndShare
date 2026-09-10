@@ -1,5 +1,5 @@
 <template>
-  <div class="journal-source-switch">
+  <div v-if="sessionSources.length" class="journal-source-switch">
     <MultiToggle
       :model-value="journal?.kind || 'personal'"
       :options="options"
@@ -15,7 +15,6 @@
         </option>
       </FormSelect>
     </label>
-    <small v-else-if="!sessionSources.length">Дневник сессии появится, когда мастер создаст его для вашей группы.</small>
   </div>
 </template>
 
@@ -44,7 +43,6 @@ function selectKind(kind) {
 
 <style scoped>
 .journal-source-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
-.journal-source-switch > small { max-width: 320px; color: var(--text-muted); font-size: 10px; line-height: 1.5; }
 .journal-session-select { display: flex; min-width: 0; align-items: center; gap: 8px; color: var(--text-muted); font-size: 10px; }
 .journal-session-select :deep(select) { max-width: 280px; }
 @media (max-width: 720px) {

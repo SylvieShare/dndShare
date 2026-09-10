@@ -34,6 +34,76 @@ afterEach(() => {
 })
 
 describe('journal source lifecycle', () => {
+  it('automatically creates an empty personal diary without a name before revealing it', async () => {
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce({ journal: null, canSelectSource: true })
+    let finishCreation
+    vi.mocked(api.createCharacterJournal).mockReturnValueOnce(new Promise(resolve => { finishCreation = resolve }))
+    const loaded = response('personal', [{ uuid: 'personal', kind: 'personal' }])
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(loaded)
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    hooks.mounted()
+    await flush()
+    expect(api.createCharacterJournal).toHaveBeenCalledWith('character', '')
+    expect(workspace.loading.value).toBe(true)
+    finishCreation(loaded)
+    await flush()
+    expect(workspace.loading.value).toBe(false)
+    expect(workspace.journal.value.uuid).toBe('personal')
+    expect(workspace.sources.value).toEqual(loaded.sources)
+  })
+
+  it.each(['personal', 'session'])('does not replace an existing %s diary', async kind => {
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response(kind))
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    await workspace.load()
+    expect(workspace.journal.value.kind).toBe(kind)
+    expect(api.createCharacterJournal).not.toHaveBeenCalled()
+  })
+
+  it('never auto-creates a diary while viewing another character or a session', async () => {
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce({ journal: null, canSelectSource: false })
+    await useJournalWorkspace({ characterUuid: 'other' }).load()
+    vi.mocked(api.getSessionJournal).mockResolvedValueOnce({ journal: null, canManage: true })
+    await useJournalWorkspace({ sessionUuid: 'session' }).load()
+    expect(api.createCharacterJournal).not.toHaveBeenCalled()
+    expect(api.createSessionJournal).not.toHaveBeenCalled()
+  })
+
+  it('keeps initialization failures visible and supports retry', async () => {
+    vi.mocked(api.getCharacterJournal).mockResolvedValue({ journal: null, canSelectSource: true })
+    vi.mocked(api.createCharacterJournal).mockRejectedValueOnce(new Error('Нет соединения'))
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    await workspace.load()
+    expect(workspace.error.value).toBe('Нет соединения')
+    expect(workspace.loading.value).toBe(false)
+    vi.mocked(api.createCharacterJournal).mockResolvedValueOnce(response())
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce({ journal: null, canSelectSource: true }).mockResolvedValueOnce(response())
+    await workspace.load()
+    expect(workspace.error.value).toBe('')
+    expect(workspace.journal.value.uuid).toBe('personal')
+  })
+
+  it('ignores a stale empty response instead of automatically replacing a newer source', async () => {
+    let resolveLoad
+    vi.mocked(api.getCharacterJournal).mockReturnValueOnce(new Promise(resolve => { resolveLoad = resolve }))
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    const loading = workspace.load()
+    vi.mocked(api.setCharacterJournal).mockResolvedValueOnce(response('session'))
+    await workspace.selectSource('session')
+    resolveLoad({ journal: null, canSelectSource: true })
+    await loading
+    expect(api.createCharacterJournal).not.toHaveBeenCalled()
+    expect(workspace.journal.value.uuid).toBe('session')
+  })
+
+  it('does not ask for a personal name when switching away from a session diary', async () => {
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    vi.mocked(api.createCharacterJournal).mockResolvedValueOnce(response())
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response())
+    await workspace.createRoot('Unused input')
+    expect(api.createCharacterJournal).toHaveBeenCalledWith('character', '')
+  })
+
   it('loads and saves quest objectives in the journal payload', async () => {
     const quest = { reward: 'Карта', objectives: [{ id: 'key', text: 'Найти ключ', done: false }] }
     const loaded = { ...response(), journal: { ...response().journal, sections: [{ id: 1, events: [{ id: 2, type: 'quest', changedAt: 'v1', payload: { quest } }] }] } }

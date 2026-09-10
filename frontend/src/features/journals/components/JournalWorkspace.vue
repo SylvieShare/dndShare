@@ -9,8 +9,8 @@
             <span class="journal-kicker">{{ journal?.kind === 'session' || sessionUuid ? 'Дневник кампании' : 'Личный дневник' }}</span>
             <h2>{{ journal?.name || 'Начало вашей истории' }}</h2>
           </div>
-          <div class="journal-cover-controls">
-            <JournalSourceSwitch v-if="canSelectSource" :journal="journal" :sources="sources" :busy="locked"
+          <div v-if="showSourceSwitch || (sessionUuid && canManage && journal)" class="journal-cover-controls">
+            <JournalSourceSwitch v-if="showSourceSwitch" :journal="journal" :sources="sources" :busy="locked"
               @select="uuid => selectSource(uuid).catch(() => {})" @create-personal="createJournal" />
             <ToggleSwitch v-if="sessionUuid && canManage && journal.kind === 'session'" :model-value="journal.playersCanEdit" :disabled="locked"
               label="Игроки могут редактировать дневник" @update:model-value="value => setPlayerEditing(value).catch(() => {})" />
@@ -31,12 +31,13 @@
         <div v-else class="journal-blank"><Feather :size="26" /><strong>Первая глава ещё впереди</strong><span>{{ canEdit ? 'Нажмите «Новый раздел», чтобы начать летопись.' : 'Мастер пока не добавил разделы.' }}</span></div>
       </template>
       <template v-else>
-        <FormTextInput v-if="sessionUuid || canSelectSource" v-model:value="newJournalName" class="journal-name-input" :disabled="busy"
+        <FormTextInput v-if="sessionUuid" v-model:value="newJournalName" class="journal-name-input" :disabled="busy"
           aria-label="Название дневника" placeholder="Название дневника (необязательно)" :maxlength="160" />
-        <button v-if="sessionUuid || canSelectSource" class="journal-start" type="button" :disabled="busy" @click="createJournal">
-          <Plus :size="16" />{{ sessionUuid ? 'Создать дневник кампании' : 'Создать личный дневник' }}
+        <button v-if="sessionUuid" class="journal-start" type="button" :disabled="busy" @click="createJournal">
+          <Plus :size="16" />Создать дневник кампании
         </button>
         <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
+        <button v-if="characterUuid && error" class="journal-start" type="button" :disabled="busy" @click="load()">Повторить загрузку</button>
       </template>
     </template>
     <DndDiarySessionModal v-if="sectionDraft" :z-index="3600" :session="sectionDraft" :mode="creatingSection ? 'create' : 'edit'" :busy="busy"
@@ -63,10 +64,11 @@ import JournalSourceSwitch from './JournalSourceSwitch.vue'
 import JournalSectionTabs from './JournalSectionTabs.vue'
 const props = defineProps({ characterUuid: { type: String, default: '' }, sessionUuid: { type: String, default: '' } })
 const { journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
-  createRoot, selectSource, createSection, updateSection, removeSection: deleteSection,
+  load, createRoot, selectSource, createSection, updateSection, removeSection: deleteSection,
   createEntry, updateEntry, removeEntry, setPlayerEditing, reorderEntries, setDragging, setInlineEditing,
 } = useJournalWorkspace({ characterUuid: props.characterUuid, sessionUuid: props.sessionUuid })
 const sections = computed(() => journal.value?.sections || [])
+const showSourceSwitch = computed(() => canSelectSource.value && sources.value.some(source => source.kind === 'session'))
 const { selectedId, selectedSection } = useJournalSectionSelection(journal)
 const sectionDraft = ref(null)
 const newJournalName = ref('')

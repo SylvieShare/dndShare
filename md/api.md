@@ -69,6 +69,9 @@ sessions и выдаёт текущему браузеру новый token.
   owner-only source choices and the effective edit/source-selection flags;
 - `POST /api/char/{uuid}/journals` creates the character's only personal journal
   or selects and returns it if it already exists (including all sections);
+  the UI calls it automatically with an empty name on the owner's first visit
+  without a selected accessible journal; the default name is `Личный дневник`.
+  Reading the journal endpoint itself does not create data.
   `PUT /api/char/{uuid}/journal-source` selects an eligible personal or session
   journal by UUID. Personal choices are restricted to this character, not other
   characters of the same owner; session choices exclude deleted sessions;

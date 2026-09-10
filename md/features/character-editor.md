@@ -694,8 +694,11 @@ Both desktop and mobile use the same vertical `JournalTimeline`; there is no
 separate journal window or canvas. Custom diary blocks render this workspace too.
 Entries remain in journal tables rather than character JSON.
 
-The source switch (`Личный` / `Сессии`) is in the header. Each character has
-at most one personal journal; the session choice needs an eligible campaign.
+The source switch (`Личный` / `Сессии`) appears in the header only when a session
+journal is available. Without one there is no source selector or campaign hint.
+The owner's first visit initializes a missing personal journal automatically,
+without asking for a name; an existing selected journal is left untouched.
+Each character has at most one personal journal.
 Horizontal section tabs show one section at a time. Full event cards grow with
 their contents, newest first, with a connecting line through their centers.
 Creation and section/order controls sit at the top right of the event area.
