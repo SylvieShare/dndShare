@@ -25,7 +25,7 @@
           <div class="progression-marker"><strong>{{ row.level }}</strong><span>уровень</span></div>
           <div class="progression-body">
             <div v-if="row.choices.length" class="progression-level-heading"><small>Есть выбор</small></div>
-            <p v-if="row.hitPoints" class="progression-hp">{{ row.level === 1 ? 'Хиты на старте' : 'Прирост хитов' }}: {{ row.hitPoints }}</p>
+            <ClassLevelGains :level="row.level" :hit-points="row.hitPoints" :hit-die="classItem.data?.hit_die" :slot-changes="row.slotChanges" />
             <div v-if="row.features.length" class="progression-features">
               <small class="progression-caption">Получаете способности</small>
               <button v-for="feature in row.features" :key="feature.id" type="button" class="progression-item" @click="$emit('open-item', feature)">
@@ -52,18 +52,6 @@
                 <small v-if="spell.option">При выборе: {{ spell.option }}</small>
               </div>
             </div>
-            <div v-if="row.slotChanges.length" class="progression-magic">
-              <div v-for="(slot, index) in row.slotChanges" :key="index" class="progression-slot">
-                <div class="progression-slot-value" role="img" :aria-label="slot.kind === 'added' ? `Добавляется ${slot.count} яч. ${slot.level} круга` : `${slot.count} яч. усиливаются с ${slot.fromLevel} до ${slot.level} круга`">
-                  <strong class="progression-slot-count" aria-hidden="true">{{ slot.kind === 'added' ? '+' : '' }}{{ slot.count }}</strong>
-                  <div class="progression-slot-icon" aria-hidden="true">
-                    <SpellSlotSphere :level="slot.level" :size="28" :interactive="false" />
-                    <small>{{ slot.kind === 'upgraded' ? `${slot.fromLevel} → ` : '' }}{{ slot.level }} круг</small>
-                  </div>
-                </div>
-                <small v-if="slot.pact" class="progression-slot-note">Магия договора · короткий отдых</small>
-              </div>
-            </div>
             <p v-if="!hasEvents(row)" class="progression-quiet">Других изменений в справочнике не указано.</p>
           </div>
         </li>
@@ -81,7 +69,7 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { classProgression } from '@/features/items/lib/classProgression'
 import { loadClassProgressionAbilities } from '@/features/items/lib/loadClassProgressionAbilities'
 import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
-import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
+import ClassLevelGains from './ClassLevelGains.vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
 
 const props = defineProps({
@@ -142,7 +130,6 @@ function hasEvents(row) { return row.features.length || row.choices.length || ro
 .progression-level--choice .progression-marker strong { color: var(--accent-soft); }
 .progression-body { min-width: 0; padding: 15px 0 22px; border-top: 1px solid var(--border); }
 .progression-level-heading { display: flex; justify-content: space-between; gap: 8px; color: var(--text-muted); font-size: 10px; margin-bottom: 10px; }
-.progression-hp { margin: 0 0 12px; color: var(--text-muted); font-size: 11px; }
 .progression-level-heading > small { color: var(--accent-soft); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
 .progression-features { display: grid; gap: 6px; }
 .progression-caption { color: var(--text-muted); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
@@ -160,12 +147,6 @@ function hasEvents(row) { return row.features.length || row.choices.length || ro
 .progression-resource, .progression-quiet { font-size: 12px; color: var(--text-muted); margin: 10px 0 0; }
 .progression-spells { display: grid; gap: 6px; margin-top: 12px; font-size: 12px; }
 .progression-spells > span { color: var(--text-muted); }
-.progression-magic { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.progression-slot { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 6px 12px 6px 0; color: var(--text-2); font-size: 12px; }
-.progression-slot-value { display: flex; align-items: flex-start; gap: 8px; }
-.progression-slot-count { line-height: 28px; font-size: 16px; }
-.progression-slot-icon { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.progression-slot-icon small, .progression-slot-note { color: var(--text-muted); font-size: 10px; }
 .progression-message { padding: 18px 0; color: var(--text-muted); font-size: 13px; }
 @media (max-width: 600px) { .progression-intro { flex-direction: column; gap: 12px; } .progression-selector { flex: auto; width: 100%; } .progression-level { grid-template-columns: 42px minmax(0, 1fr); gap: 10px; } }
 </style>
