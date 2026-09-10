@@ -4,6 +4,7 @@ import { parseAsiLevels, grantedSpellRows, dieFaceOf, avgHitDie } from '@/featur
 import { computeSpellSlotPools } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
 import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
 import { itemChoices } from './itemChoices'
+import { progressionSlotChanges } from './progressionSlotChanges'
 
 const rows = value => Array.isArray(value) ? value : []
 const atLevel = value => Math.max(1, Number(value) || 1)
@@ -17,8 +18,11 @@ function resourceChanges(item, level) {
     if (level !== start && !scaling.some(row => Number(row.level) === level)) return []
     const count = scaling[0]?.uses ?? resource.max_use
     if (count == null) return []
+    const previousCount = level === start ? 0 : (scaling.find(row => Number(row.level) < level)?.uses ?? resource.max_use ?? 0)
+    const delta = Number(count) - Number(previousCount)
+    if (!delta) return []
     const rest = resource.rollback_short_rest ? 'короткий отдых' : resource.rollback_long_rest ? 'длинный отдых' : ''
-    return [`${resource.title || resource.key}: ${count}${rest ? ` · ${rest}` : ''}`]
+    return [`${resource.title || resource.key}: ${delta > 0 ? '+' : ''}${delta}${rest ? ` · ${rest}` : ''}`]
   })
 }
 
@@ -29,6 +33,7 @@ export function classProgression(classItem, subclass, abilities = []) {
   const subclassLevel = atLevel(data.subclass_level)
   const asiLevels = parseAsiLevels(data.asi_levels)
   const hitDie = dieFaceOf(data.hit_die)
+  const seenSpells = new Set()
   return Array.from({ length: 20 }, (_, index) => {
     const level = index + 1
     const activeSubclass = level >= subclassLevel ? subclass : null
@@ -67,6 +72,9 @@ export function classProgression(classItem, subclass, abilities = []) {
     const slots = computeSpellSlotPools([entry], itemMap)
     const casting = spellcastingRulesAt(activeSubclass, level) || spellcastingRulesAt(classItem, level)
     const previousSubclass = level - 1 >= subclassLevel ? subclass : null
+    const previousSlots = level > 1 ? computeSpellSlotPools([
+      { id: classItem.id, level: level - 1, subclass: previousSubclass ? { id: previousSubclass.id } : null },
+    ], { [classItem.id]: classItem, ...(previousSubclass ? { [previousSubclass.id]: previousSubclass } : {}) }) : null
     const previous = level > 1
       ? spellcastingRulesAt(previousSubclass, level - 1) || spellcastingRulesAt(classItem, level - 1)
       : null
@@ -79,9 +87,14 @@ export function classProgression(classItem, subclass, abilities = []) {
     const spellEntries = [...sources, ...active].flatMap(item => grantedSpellRows([item])
       .filter(spell => Math.max(atLevel(item.data?.level), spell.level) === level)
       .map(spell => [`${spell.spellId}:${spell.option || ''}`, spell]))
-    const spells = [...new Map(spellEntries).values()]
+    const spells = [...new Map(spellEntries)].flatMap(([key, spell]) => {
+      if (seenSpells.has(key)) return []
+      seenSpells.add(key)
+      return [spell]
+    })
     return {
-      level, proficiency: 2 + Math.floor(index / 4), features, choices, improvements, slots, casting,
+      level, features, choices, improvements, slots, casting,
+      slotChanges: progressionSlotChanges(slots, previousSlots),
       hitPoints: hitDie ? (level === 1 ? `${hitDie} + мод. ТЕЛ` : `1к${hitDie} (или ${avgHitDie(hitDie)}) + мод. ТЕЛ`) : '',
       resources: sources.flatMap(item => resourceChanges(item, level)), spells,
     }

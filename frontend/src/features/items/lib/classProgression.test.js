@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { classProgression } from './classProgression'
+import { progressionSlotChanges } from './progressionSlotChanges'
 
 const fighter = { id: 10, data: { hit_die: 'd10', subclass_level: 3, asi_levels: '4,6,8,12,14,16,19', skill_choice: { count: 2 } } }
 const feature = (id, level, extra = {}) => ({ id, name: `Умение ${id}`, typeId: 4, data: { class_ids: [{ id: 10 }], level, ...extra } })
 
 describe('class handbook roadmap', () => {
-  it('shows all levels with class-specific ASI, hit points and proficiency', () => {
+  it('shows class-specific ASI and hit points without total-character proficiency', () => {
     const road = classProgression(fighter)
     expect(road).toHaveLength(20)
     expect(road[0].hitPoints).toBe('10 + мод. ТЕЛ')
@@ -14,7 +15,7 @@ describe('class handbook roadmap', () => {
     expect(road[2].choices[0].text).toBe('Выбрать подкласс')
     expect(road[5].choices[0].text).toContain('Повышение характеристик')
     expect(road[6].choices).toEqual([])
-    expect(road.filter(row => [1, 5, 9, 13, 17].includes(row.level)).map(row => row.proficiency)).toEqual([2, 3, 4, 5, 6])
+    expect(road.every(row => !('proficiency' in row))).toBe(true)
   })
 
   it('isolates subclasses and emits delayed choices and scaling at the right level', () => {
@@ -59,10 +60,43 @@ describe('class handbook roadmap', () => {
     const item = { ...fighter, data: { ...fighter.data, class_resources: [{ title: 'Ки', level: 2, max_use: 2, rollback_short_rest: true, scaling: [{ level: 5, uses: 5 }] }] } }
     const road = classProgression(item, null, [feature(1, 3, { granted_spells: [{ spell: { id: 70 } }] })])
     expect(road[0].resources).toEqual([])
-    expect(road[1].resources).toEqual(['Ки: 2 · короткий отдых'])
+    expect(road[1].resources).toEqual(['Ки: +2 · короткий отдых'])
     expect(road[2].resources).toEqual([])
-    expect(road[4].resources).toEqual(['Ки: 5 · короткий отдых'])
+    expect(road[4].resources).toEqual(['Ки: +3 · короткий отдых'])
     expect(road[2].spells.map(spell => spell.spellId)).toEqual([70])
+  })
+
+  it('shows only added ordinary slots and stays silent when the pool is unchanged', () => {
+    const road = classProgression({ id: 1, data: { caster_progression: 'full' } })
+    expect(road[0].slotChanges).toEqual([{ kind: 'added', level: 1, count: 2, pact: false }])
+    expect(road[2].slotChanges).toEqual([
+      { kind: 'added', level: 1, count: 1, pact: false },
+      { kind: 'added', level: 2, count: 2, pact: false },
+    ])
+    expect(road[11].slotChanges).toEqual([])
+    const third = classProgression(fighter, { id: 20, data: { caster_progression: 'third' } })
+    expect(third[1].slotChanges).toEqual([])
+    expect(third[2].slotChanges).toEqual([{ kind: 'added', level: 1, count: 2, pact: false }])
+  })
+
+  it('distinguishes upgraded pact slots from new slots, including simultaneous changes', () => {
+    const road = classProgression({ id: 1, data: { caster_progression: 'pact' } })
+    expect(road[2].slotChanges).toEqual([{ kind: 'upgraded', level: 2, fromLevel: 1, count: 2, pact: true }])
+    expect(road[3].slotChanges).toEqual([])
+    expect(road[10].slotChanges).toEqual([{ kind: 'added', level: 5, count: 1, pact: true }])
+    expect(progressionSlotChanges({ totals: [], pact: { count: 3, slotLevel: 3 } }, { totals: [], pact: { count: 2, slotLevel: 2 } })).toEqual([
+      { kind: 'upgraded', level: 3, fromLevel: 2, count: 2, pact: true },
+      { kind: 'added', level: 3, count: 1, pact: true },
+    ])
+  })
+
+  it('does not repeat an already granted spell, but preserves alternative conditions', () => {
+    const road = classProgression(fighter, null, [
+      feature(1, 1, { granted_spells: [{ spell: 70 }] }),
+      feature(2, 3, { granted_spells: [{ spell: 70 }, { spell: 71, option: 'Лес' }, { spell: 71, option: 'Горы' }] }),
+    ])
+    expect(road[0].spells.map(spell => spell.spellId)).toEqual([70])
+    expect(road[2].spells.map(spell => [spell.spellId, spell.option])).toEqual([[71, 'Лес'], [71, 'Горы']])
   })
 
   it('inherits base casting when a subclass has only a note and counts initial subclass choices', () => {
