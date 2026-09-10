@@ -612,7 +612,8 @@ controls. A row without any available menu action is non-clickable and does not
 show hover or press feedback. The block owns one shared tile; rows inside
 it have no nested card background. A resource bound to a source action is shown
 on that action as the same color-coded charge spheres used by the resources
-tile: one charge sits 8px under the icon in a floated left column, while several
+tile: one charge sits 5px under the icon in a floated left column with a 9px
+right and 2px bottom margin, while several
 charges wrap below the action text. The description flows around the icon and
 single charge, returning to the full row width below them. Requirements and
 rich-text bullet/numbered lists always start below the icon and charge, from the
