@@ -114,6 +114,7 @@ describe('shared session entity editing', () => {
     await flush()
     expect(form.all(el => el.type === 'textarea')).toHaveLength(5)
     expect(form.all(el => el.type === 'select')).toHaveLength(1)
+    expect(form.all(el => ['input', 'textarea'].includes(el.type)).every(el => el.props.placeholder?.trim())).toBe(true)
     form.all(el => el.type === 'textarea')[0].props.onInput({ target: { value: 'Несохранённое' } })
     await flush()
     form.byLabel('Отменить всё').props.onClick()

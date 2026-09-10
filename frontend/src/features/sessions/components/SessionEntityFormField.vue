@@ -4,7 +4,7 @@
           <ColorPresetPicker v-if="editable" :model-value="draft.color" allow-custom aria-label="Цвет карточки" custom-label="Свой цвет" :z-index="9300" @update:model-value="changeColor" />
           <i v-else :style="{ background: draft.color }" aria-label="Цвет карточки" />
         </span>
-        <InlineEdit v-else :model-value="draft[field.key]" :display-value="displayValue(field) ?? (draft[field.key] || field.label)" :label="field.label"
+        <InlineEdit v-else :model-value="draft[field.key]" :display-value="displayValue(field) ?? (draft[field.key] || field.label)" :label="field.label" :placeholder="field.placeholder || field.label"
           :edit-label="`Редактировать поле «${field.label}»`" confirm-label="Сохранить" cancel-label="Отменить" error-label="Не удалось сохранить"
           :editable="editable" :force-open="editing" :disabled="saving || busy || uploading || (field.input === 'race' && racesLoading)"
           :options="inlineOptions" :required="!!field.required" :maxlength="field.maxlength || 0"
@@ -13,7 +13,7 @@
       </template>
       <SessionEditableField v-else
         :model-value="draft[field.key]"
-        :label="field.label"
+        :label="field.label" :placeholder="field.placeholder || field.label"
         :icon="field.icon"
         :display-value="displayValue(field)"
         :editable="editable"

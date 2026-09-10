@@ -49,12 +49,21 @@ export function entityDraftValid(type, draft) {
 
 export function entityFields(type, draft) {
   const icons = { goal: Target, condition: KeyRound, reward: Gift, consequences: GitFork, notes: NotebookPen, description: NotebookPen }
-  const text = (key, label, maxlength = 5000, rows = 5) => ({ key, label, icon: icons[key], input: 'text', multiline: true, maxlength, rows, wide: true })
+  const placeholders = {
+    name: { npc: 'Имя NPC', location: 'Название локации', quest: 'Название задания', material: 'Название материала' }[type],
+    role: 'Роль NPC',
+    description: type === 'npc' ? 'Характер, мотивация и важные сведения о NPC' : 'Опишите место, атмосферу и важные детали',
+    goal: 'Что нужно сделать героям', condition: 'Условия и сроки выполнения',
+    reward: 'Что получат герои за выполнение', consequences: 'Что изменится после успеха или провала',
+    notes: 'Заметки для мастера', content: draft.kind === 'note' ? 'Напишите текст записки' : 'Напишите текст материала',
+    caption: 'Подпись, которую увидят игроки',
+  }
+  const text = (key, label, maxlength = 5000, rows = 5) => ({ key, label, placeholder: placeholders[key], icon: icons[key], input: 'text', multiline: true, maxlength, rows, wide: true })
   const select = (key, label, options) => ({ key, label, input: 'select', options })
-  const fields = [{ key: 'name', icon: { npc: UserRound, location: MapPin, quest: ScrollText, material: LibraryBig }[type], label: type === 'npc' ? 'Имя' : 'Название', input: 'text', maxlength: 160, required: true }]
+  const fields = [{ key: 'name', icon: { npc: UserRound, location: MapPin, quest: ScrollText, material: LibraryBig }[type], label: type === 'npc' ? 'Имя' : 'Название', placeholder: placeholders.name, input: 'text', maxlength: 160, required: true }]
   if (type === 'npc') return [...fields,
     { key: 'raceItemId', label: 'Раса', input: 'race' },
-    { key: 'role', icon: Badge, label: 'Роль', input: 'text', maxlength: 160 },
+    { key: 'role', icon: Badge, label: 'Роль', placeholder: placeholders.role, input: 'text', maxlength: 160 },
     { key: 'image', label: 'Портрет', input: 'image', catalog: 'npc', allowUpload: true },
     { key: 'color', label: 'Цвет карточки', input: 'color' },
     text('description', 'Характер, мотивация и заметки'),

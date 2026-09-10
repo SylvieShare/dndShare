@@ -273,7 +273,9 @@ alongside the name; they are not repeated as cards below it. Full edit flows
 (such as creation, the location tree edit action and changing a material type)
 expand those same header values into inputs in place. Text and enum header fields
 use the shared `InlineEdit`: row height stays fixed, and confirm/cancel sit inside
-the input on the right. NPCs without a race show `Раса не выбрана`; their color
+the input on the right. Width follows the current text or selected enum label,
+with a 120px minimum and room reserved for both buttons, capped by the container.
+Creation fields show descriptive placeholders without pre-filling saved data. NPCs without a race show `Раса не выбрана`; their color
 uses the shared `ColorPresetPicker` popover in the header.
 Clicking a location or NPC header image opens an action menu: add/replace opens
 the catalogue directly, while clear saves `imageId: null`. Both entities support
