@@ -31,12 +31,12 @@
     </div>
 
     <!-- ── Skills ── -->
-    <div class="skills">
+    <div class="skills" :aria-busy="skillsLoading">
       <template v-if="skillsLoading">
         <div v-for="index in skillSkeletonCount" :key="index" class="skill-item skill-skeleton">
-          <span class="skill-skeleton-dot"></span>
-          <span class="skill-skeleton-name"></span>
-          <span class="skill-skeleton-bonus"></span>
+          <SkeletonBlock width="60%" height="12px" />
+          <span class="skill-line"></span>
+          <SkeletonBlock width="38px" height="22px" />
         </div>
       </template>
 
@@ -89,6 +89,7 @@
 </template>
 
 <script setup>
+import { SkeletonBlock } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, ref } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
@@ -232,23 +233,6 @@ onBeforeUnmount(hideTooltip)
 }
 
 .skill-skeleton { pointer-events: none; }
-.skill-skeleton-dot,
-.skill-skeleton-name,
-.skill-skeleton-bonus {
-  display: block;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--surface), var(--surface-raised), var(--surface));
-  background-size: 180% 100%;
-  animation: skill-loading 1.1s ease-in-out infinite;
-}
-.skill-skeleton-dot { width: 8px; height: 8px; flex-shrink: 0; }
-.skill-skeleton-name { height: 10px; flex: 1; }
-.skill-skeleton-bonus { width: 38px; height: 22px; border-radius: 7px; flex-shrink: 0; }
-@keyframes skill-loading {
-  0% { background-position: 120% 0; }
-  100% { background-position: -80% 0; }
-}
-
 .skill-name {
   color: var(--text-2);
   font-size: 13px;

@@ -20,20 +20,6 @@
 }
 .di-collapse-btn:hover { color: var(--text-2); }
 
-/* ─── Skeleton ─── */
-.di-skeleton {
-  height: 38px;
-  border-radius: 10px;
-  background: var(--surface-raised);
-  margin-bottom: 6px;
-  animation: di-shimmer 1.3s ease-in-out infinite;
-  opacity: 0.4;
-}
-@keyframes di-shimmer {
-  0%, 100% { opacity: 0.3; }
-  50%       { opacity: 0.55; }
-}
-
 /* ─── Section ─── */
 .di-section {
   display: flex;
@@ -44,8 +30,6 @@
 }
 .di-section:last-child { margin-bottom: 12px; }
 
-.di-skeleton-tile { gap: 0; }
-.di-skeleton-tile .di-skeleton { margin-bottom: 0; }
 
 .di-section-head {
   display: flex;

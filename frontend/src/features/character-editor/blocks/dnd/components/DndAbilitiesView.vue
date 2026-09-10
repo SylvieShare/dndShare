@@ -12,8 +12,17 @@
       </template>
     </SheetBlockTitle>
 
-    <div v-if="loading" class="abv-list">
-      <div v-for="i in skeletonCount" :key="i" class="abv-skeleton"></div>
+    <div v-if="loading" class="abv-list" aria-busy="true" aria-label="Загрузка способностей">
+      <div v-for="i in skeletonCount" :key="i" class="abv-card abv-skeleton" aria-hidden="true">
+        <SkeletonBlock class="abv-icon" width="" height="" />
+        <div class="abv-copy abv-skeleton-copy">
+          <SkeletonBlock width="65%" :height="expanded ? '16px' : '12px'" />
+          <template v-if="expanded">
+            <SkeletonBlock />
+            <SkeletonBlock width="82%" />
+          </template>
+        </div>
+      </div>
     </div>
 
     <SectionList v-else embedded>
@@ -103,6 +112,7 @@
 </template>
 
 <script setup>
+import { SkeletonBlock } from '@sylvieshare/share-ui'
 import { Activity, Plus } from '@lucide/vue'
 import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
@@ -142,18 +152,8 @@ function select(entry, close, action) {
 
 .abv-empty { color: var(--text-muted); font-size: 13px; padding: 4px 6px; }
 
-.abv-skeleton {
-  height: 28px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--text-on-accent) 6%, var(--surface));
-  animation: abv-shimmer 1.3s ease-in-out infinite;
-}
-.abv-skeleton:nth-child(2) { animation-delay: 0.15s; width: 80%; }
-.abv-skeleton:nth-child(3) { animation-delay: 0.3s;  width: 65%; }
-@keyframes abv-shimmer {
-  0%, 100% { opacity: 0.35; }
-  50%      { opacity: 0.6; }
-}
+.abv-skeleton { pointer-events: none; }
+.abv-skeleton-copy { display: flex; flex-direction: column; justify-content: center; gap: 9px; width: 100%; }
 
 .abv-card {
   display: flex;

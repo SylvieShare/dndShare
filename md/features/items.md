@@ -110,7 +110,9 @@ entries and selected choices.
   falling back to the item type's `coverImageUrl`. Every built-in item type owns
   that fallback, so the header always uses cover geometry and never substitutes
   the compact icon. A missing or failed image keeps the same type profile over
-  the neutral header background instead of switching layouts. The technical item ID is
+  the neutral header background instead of switching layouts. While a new cover
+  loads and decodes, the previous artwork is hidden and a centered loading
+  indicator appears over that background; it stops on success or error. The technical item ID is
   rendered as muted metadata at the bottom of the detail content, never on the
   artwork. Cover height is a per-handbook-type presentation profile without a
   shared maximum: the default follows the asset's intrinsic ratio, while a type

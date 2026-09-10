@@ -25,11 +25,8 @@
       <div v-if="previewMode" class="csm-preview-note">Предпросмотр черновика · только чтение</div>
 
       <div class="csm-body">
-        <div v-if="loading" class="container sk-container">
-          <div class="sk-block" style="width:100%; height:52px" />
-          <div class="sk-block" style="width:180px; height:160px" />
-          <div class="sk-block" style="width:180px; height:160px" />
-          <div class="sk-block" style="width:100%; height:90px" />
+        <div v-if="loading" class="character-loading">
+          <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
         </div>
 
         <div v-else-if="template" class="desktop-tabs">
@@ -63,6 +60,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, onMounted, ref } from 'vue'
 import { AppModal } from '@sylvieshare/share-ui'
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
@@ -159,7 +157,5 @@ onMounted(async () => {
 .container { margin: 0 auto; padding: 18px 16px 28px; background: transparent; }
 .desktop-tabs { display: flex; flex-direction: column; min-height: 100%; }
 .desktop-tabs > .container { display: flex; flex: 1 1 auto; flex-direction: column; width: 100%; min-height: 0; }
-.sk-container { max-width: 900px; }
-.sk-block { margin-bottom: 12px; border-radius: 12px; background: var(--popover-bg); animation: sk-pulse 1.4s ease-in-out infinite; }
-@keyframes sk-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+.character-loading { min-height: 100%; display: grid; place-items: center; padding: 32px; box-sizing: border-box; }
 </style>

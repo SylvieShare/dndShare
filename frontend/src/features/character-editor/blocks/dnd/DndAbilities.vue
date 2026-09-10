@@ -184,7 +184,7 @@ const modalItem = computed(() => {
   return item || { name: modalEntry.value.name, data: {} }
 })
 
-const skeletonCount = computed(() => Math.max(1, stored.value.length) || 2)
+const skeletonCount = computed(() => stored.value.length)
 const usedIds       = computed(() => stored.value
   .filter((storedEntry) => !catalog.value.find((item) => item.id === storedEntry.id)?.data?.repeatable)
   .map((storedEntry) => storedEntry.id))

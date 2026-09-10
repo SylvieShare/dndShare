@@ -43,7 +43,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).not.toContain('object-position: center top;')
   })
 
-  it('preloads and quickly crossfades covers without resetting bestiary geometry', () => {
+  it('preloads covers over a centered loading placeholder with type geometry', () => {
     expect(headerSource).toContain("if ([3, 4, 5, 7, 10, 18].includes(typeId)) return '5 / 2'")
     expect(headerSource).toContain("if ([2, 8, 9, 11, 13, 14, 16, 17].includes(typeId)) return '3 / 2'")
     expect(headerSource).toContain("if (typeId === 1 || typeId === 6 || typeId === 12) return '4 / 3'")
@@ -51,7 +51,12 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain('const image = new Image()')
     expect(headerSource).toContain('await image.decode()')
     expect(headerSource).toContain(':key="displayedCoverUrl"')
-    expect(headerSource).toContain('class="item-detail-cover item-detail-cover-previous"')
+    expect(headerSource).not.toContain('previousCoverUrl')
+    expect(headerSource).toContain("displayedCoverUrl.value = ''\n    coverLoading.value = Boolean(url)")
+    expect(headerSource).toContain('v-if="coverLoading" class="item-detail-cover-loading"')
+    expect(headerSource).toContain('place-items: center;')
+    expect(headerSource).toContain('{ immediate: true }')
+    expect(headerSource).toContain('if (requestVersion !== coverRequestVersion) return')
     expect(headerSource).toContain('animation: item-detail-cover-enter 160ms')
     expect(headerSource).toContain('@media (prefers-reduced-motion: reduce)')
     expect(headerSource).not.toContain("coverAspectRatio.value = '4 / 1'")

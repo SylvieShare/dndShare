@@ -9,17 +9,9 @@
     :style="coverStyle"
   >
     <img
-      v-if="previousCoverUrl"
-      class="item-detail-cover item-detail-cover-previous"
-      :src="previousCoverUrl"
-      alt=""
-      aria-hidden="true"
-    />
-    <img
       v-if="coverImageAvailable"
       :key="displayedCoverUrl"
-      class="item-detail-cover"
-      :class="{ 'item-detail-cover-entering': previousCoverUrl }"
+      class="item-detail-cover item-detail-cover-entering"
       :src="displayedCoverUrl"
       alt=""
       aria-hidden="true"
@@ -27,6 +19,10 @@
       @error="onCoverError"
     />
     <div class="item-detail-shade" aria-hidden="true"></div>
+
+    <div v-if="coverLoading" class="item-detail-cover-loading">
+      <LoadingIndicator label="Загрузка обложки" />
+    </div>
 
     <div class="item-detail-overlay">
       <div class="item-detail-content">
@@ -54,6 +50,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -116,10 +113,9 @@ function coverAspectRatioForDimensions(width, height, typeId) {
 const coverFailed = ref(false)
 const coverAspectRatio = ref(defaultCoverAspectRatio(props.type?.id))
 const requestedCoverUrl = computed(() => props.item.coverImageUrl || props.type?.coverImageUrl || '')
-const displayedCoverUrl = ref(requestedCoverUrl.value)
-const previousCoverUrl = ref('')
+const displayedCoverUrl = ref('')
+const coverLoading = ref(false)
 let coverRequestVersion = 0
-let coverSwapTimer = null
 
 const coverImageAvailable = computed(() => Boolean(displayedCoverUrl.value) && !coverFailed.value)
 const titleOnlyShade = computed(() => [3, 4, 7, 18].includes(props.type?.id))
@@ -135,16 +131,13 @@ watch(
   () => [requestedCoverUrl.value, props.type?.id],
   ([url, typeId]) => {
     const requestVersion = ++coverRequestVersion
+    if (url && url === displayedCoverUrl.value && !coverFailed.value) return
+    displayedCoverUrl.value = ''
+    coverLoading.value = Boolean(url)
     coverFailed.value = false
     coverAspectRatio.value = defaultCoverAspectRatio(typeId)
 
-    if (!url) {
-      clearCoverSwapTimer()
-      previousCoverUrl.value = ''
-      displayedCoverUrl.value = ''
-      return
-    }
-    if (url === displayedCoverUrl.value) return
+    if (!url) return
 
     const image = new Image()
     image.decoding = 'async'
@@ -161,38 +154,24 @@ watch(
         image.naturalHeight,
         typeId,
       )
-      clearCoverSwapTimer()
       coverFailed.value = false
-      previousCoverUrl.value = displayedCoverUrl.value
       displayedCoverUrl.value = url
-      if (previousCoverUrl.value) {
-        coverSwapTimer = globalThis.setTimeout(() => {
-          previousCoverUrl.value = ''
-          coverSwapTimer = null
-        }, 180)
-      }
+      coverLoading.value = false
     }
     image.onerror = () => {
       if (requestVersion !== coverRequestVersion) return
-      clearCoverSwapTimer()
-      previousCoverUrl.value = ''
       displayedCoverUrl.value = ''
+      coverLoading.value = false
       coverFailed.value = true
     }
     image.src = url
   },
+  { immediate: true },
 )
 
 onBeforeUnmount(() => {
   coverRequestVersion += 1
-  clearCoverSwapTimer()
 })
-
-function clearCoverSwapTimer() {
-  if (coverSwapTimer == null) return
-  globalThis.clearTimeout(coverSwapTimer)
-  coverSwapTimer = null
-}
 
 function onCoverLoad(event) {
   const width = event.currentTarget?.naturalWidth
@@ -202,6 +181,7 @@ function onCoverLoad(event) {
 
 function onCoverError() {
   coverFailed.value = true
+  coverLoading.value = false
 }
 </script>
 
@@ -267,8 +247,13 @@ function onCoverError() {
   object-position: center;
 }
 
-.item-detail-cover-previous {
-  z-index: -3;
+.item-detail-cover-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  color: var(--text-on-accent);
 }
 
 .item-detail-cover-entering {

@@ -226,18 +226,4 @@
   }
 }
 
-.sk-container {
-  max-width: 900px;
-}
-
-.sk-block {
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: inset 0 0 0 1px var(--border);
-  animation: sk-pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes sk-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
+.character-loading { min-height: 100%; display: grid; place-items: center; padding: 32px; box-sizing: border-box; }

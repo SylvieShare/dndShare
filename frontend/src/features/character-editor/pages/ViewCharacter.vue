@@ -101,15 +101,9 @@
       @touchend.passive="e => { if (!isMobile) onTouchEnd(e) }"
       @touchcancel.passive="() => { if (!isMobile) cancelTouch() }"
     >
-      <div v-if="loading" class="container sk-container">
-        <div class="sk-block" style="width:100%; height:52px" />
-        <div class="sk-block" style="width:180px; height:160px" />
-        <div class="sk-block" style="width:180px; height:160px" />
-        <div class="sk-block" style="width:180px; height:160px" />
-        <div class="sk-block" style="width:100%; height:90px" />
-        <div class="sk-block" style="width:260px; height:120px" />
-        <div class="sk-block" style="width:260px; height:120px" />
-      </div>
+      <div v-if="loading" class="character-loading">
+          <LoadingIndicator label="Загружаем лист персонажа…" size="lg" show-label />
+        </div>
       <div v-else-if="isMobile && template" class="mobile-swipe-stage" :class="{ dragging: tabDragActive, settling: tabDragSettling }">
         <div ref="mobileTrackEl" class="mobile-swipe-track" :style="mobileSwipeTrackStyle">
           <div
@@ -170,6 +164,7 @@
 </template>
 
 <script setup>
+import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'

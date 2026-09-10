@@ -12,11 +12,7 @@
     </SectionLabel>
 
     <template v-if="!contentHidden">
-      <div v-if="loading" class="di-list-col">
-        <BaseTile v-for="i in 3" :key="i" class="di-section di-skeleton-tile">
-          <div class="di-skeleton"></div>
-        </BaseTile>
-      </div>
+      <InventorySkeleton v-if="loading" :sections="allSections" />
 
       <template v-else>
         <BaseTile
@@ -226,6 +222,7 @@
 </template>
 
 <script setup>
+import InventorySkeleton from './components/InventorySkeleton.vue'
 import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { ArrowRightLeft, Dices } from '@lucide/vue'
