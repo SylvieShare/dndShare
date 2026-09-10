@@ -1,5 +1,5 @@
 import { markRaw } from 'vue'
-import { Flag, MessagesSquare, Sparkles, Sunrise, Swords } from '@lucide/vue'
+import { Flag, Heading, MessagesSquare, Sparkles, Sunrise, Swords } from '@lucide/vue'
 import { normalizeJournalQuest } from '@/features/journals/lib/journalQuest'
 
 // Pure helpers for the DND_DIARY block value: a chronological array of sessions
@@ -10,9 +10,10 @@ import { normalizeJournalQuest } from '@/features/journals/lib/journalQuest'
 export const EVENT_TYPES = [
   { value: 'battle', label: 'Бой', color: 'var(--danger)', icon: markRaw(Swords) },
   { value: 'dialog', label: 'Диалог', color: 'var(--accent)', icon: markRaw(MessagesSquare) },
-  { value: 'event', label: 'Событие', color: 'var(--accent)', icon: markRaw(Sparkles) },
+  { value: 'event', label: 'Событие', color: 'var(--info)', icon: markRaw(Sparkles) },
   { value: 'newday', label: 'Новый день', color: 'var(--warning)', icon: markRaw(Sunrise) },
   { value: 'quest', label: 'Задание', color: 'var(--accent-soft)', icon: markRaw(Flag) },
+  { value: 'header', label: 'Заголовок', color: 'var(--text-2)', icon: markRaw(Heading) },
 ]
 
 const TYPE_VALUES = EVENT_TYPES.map(t => t.value)

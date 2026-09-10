@@ -687,7 +687,9 @@ spell-slot sphere previews the continuous range affected by a click: a charged
 sphere and the charged spheres to its right, or a spent sphere and the spent
 spheres to its left. Read-only spheres do not show this interaction preview.
 
-The `Дневник` sheet tab contains quests, the shared `JournalWorkspace`, and notes.
+The `Дневник` sheet tab contains the shared `JournalWorkspace` (including quest
+entries) and notes. The separate quests block is no longer in the default layouts;
+its existing values are preserved for custom schemas.
 Both desktop and mobile use the same vertical `JournalTimeline`; there is no
 separate journal window or canvas. Custom diary blocks render this workspace too.
 Entries remain in journal tables rather than character JSON.
@@ -697,13 +699,16 @@ at most one personal journal; the session choice needs an eligible campaign.
 Horizontal section tabs show one section at a time. Full event cards grow with
 their contents, newest first, with a connecting line through their centers.
 Creation and section/order controls sit at the top right of the event area.
-There is no separate toolbar row, zoom, layout action, or detail side panel.
+There is no zoom, layout action, or detail side panel. Filters sit above the list.
 
-Creation asks only for a type, then opens the title inline. Quiet pencils edit
-individual fields, dialogue lines and combatants. Existing types are immutable.
+Creation asks only for a type, then opens a whole-entry draft. One header pencil
+edits all fields, dialogue lines, combatants and quest objectives. Save is atomic,
+cancel leaves the original untouched, and existing types are immutable.
+The header-only entry type is available for titled separators. Every card uses
+a type-colored frame and a faint top-right icon watermark.
 Dialogue voices retain scenario colors and stack speaker above text on mobile.
 Battle rows use handbook artwork with a single batched lookup per section.
-Source and audit tooltips remain in each card's footer.
+Source and audit are hidden behind an information icon beside edit/delete in the header.
 
 Desktop events can be dragged by their header or moved with keyboard arrows.
 On touch-capable devices headers permit native vertical scrolling; the order

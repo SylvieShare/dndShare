@@ -77,6 +77,7 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	beforeGraph := contentHash()
 	exec(schemaJournalGraphSQL)
 	exec(schemaJournalQuestsSQL)
+	exec(schemaJournalHeadersSQL)
 	if contentHash() != beforeGraph {
 		t.Fatal("graph migration must preserve all entry content and audit")
 	}

@@ -215,7 +215,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { BookOpenText, History, Images, Map, Music2, NotebookPen, Pause, Pencil, Play, ScrollText, SkipForward, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, History, Images, Map, Music2, NotebookPen, Pause, Pencil, Play, SkipForward, Swords, UsersRound } from '@lucide/vue'
 import { BasePopover, reorderByDrop, useSortable } from '@sylvieshare/share-ui'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
@@ -256,7 +256,6 @@ const primaryViews = [
   { key: 'story', label: 'Сюжет', icon: BookOpenText, shortcut: '1' },
   { key: 'locations', label: 'Локации', icon: Map, shortcut: '2' },
   { key: 'npcs', label: 'NPC', icon: UsersRound, shortcut: '3' },
-  { key: 'quests', label: 'Задания', icon: ScrollText, shortcut: '4' },
   { key: 'materials', label: 'Материалы', icon: Images, shortcut: '5' },
 ]
 const shortcutLabels = sessionShortcutLabels()

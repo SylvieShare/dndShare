@@ -22,6 +22,9 @@ var schemaFoundationSQL string
 //go:embed schema/82_journal_quests.sql
 var schemaJournalQuestsSQL string
 
+//go:embed schema/84_journal_headers.sql
+var schemaJournalHeadersSQL string
+
 //go:embed schema/02_handbook.sql
 var schemaHandbookSQL string
 
@@ -360,6 +363,7 @@ var schemaParts = []struct {
 	{"ability-dependency-editor", schemaAbilityDependencyEditorSQL},
 	{"relentless-endurance-resource-hint", schemaRelentlessEnduranceResourceHintSQL},
 	{"journal-quests", schemaJournalQuestsSQL},
+	{"journal-headers", schemaJournalHeadersSQL},
 }
 
 const (

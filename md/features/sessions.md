@@ -103,9 +103,9 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header centers the switch between `Сюжет`, `Бой`,
-`Локации`, `NPC`, `Задания`, `Материалы`, `Музыка`, `Дневник` and `Хроника` independently of the title/arc and tool groups. `Сюжет` and `Бой`
+`Локации`, `NPC`, `Материалы`, `Музыка`, `Дневник` and `Хроника` independently of the title/arc and tool groups. `Сюжет` and `Бой`
 form the first navigation group and a vertical divider separates them from the
-four world catalogues; a second divider separates the final music-library tab. The
+three world catalogues; a second divider separates the final music-library tab. The
 participant rail remains on the left and the
 right tool rail is removed. In `Сюжет` the chapter canvas fills all available
 width below `AppHeader`; only the participant rail reserves a horizontal safe
@@ -167,7 +167,9 @@ timer and dice controls by its own vertical divider.
 Кнопки добавления, редактирования раздела и изменения порядка стоят справа
 сверху области событий. Холста, масштаба и отдельной панели подробностей нет.
 
-Карандаши редактируют содержимое на месте, существующий тип неизменяем.
+Один карандаш в шапке открывает общий черновик карточки с сохранением/отменой.
+Рамка окрашена по типу; справа сверху — едва видимый водяной знак иконки.
+Отдельный тип `Заголовок` разделяет ленту. Существующий тип неизменяем.
 На desktop заголовок служит ручкой перетаскивания; на touch-устройствах
 прокрутка не перехватывается, порядок меняется кнопками вверх/вниз.
 Изменение порядка проверяет исходную последовательность ID и не меняет
@@ -175,9 +177,12 @@ timer and dice controls by its own vertical divider.
 
 `В дневник` в меню блока сценария сохраняет снимок источника, цвета диалогов
 и ссылки на существ. Иконки бестиария видны в карточках; подсказки источника
-и времени/автора — внизу справа. Polling приостановлен во время правки и drag.
+и времени/автора — под иконкой информации рядом с карандашом и корзиной.
+Polling приостановлен во время правки и drag.
 Черновик сохраняется при ошибке; параллельная устаревшая правка отклоняется.
 Подробнее: [Дневники](./journals.md).
+Отдельная вкладка `Задания` и её shortcut удалены. Задания дневника остаются
+в общей ленте; прежний каталог доступен из связей сценария, данные не удаляются.
 
 `Хроника` открывает отдельный центральный workspace с `SessionEventsPanel` и
 доступна через `Alt`/`Option` + `8`. Панель занимает полезную высоту workspace и
@@ -251,7 +256,7 @@ creature card opened from the encounter.
 
 ## Locations and prepared NPCs
 
-`Локации`, `NPC`, `Задания` and `Материалы` are DM-only primary central workspaces, not extra permanent
+`Локации`, `NPC` and `Материалы` are DM-only primary central workspaces, not extra permanent
 side panels. Their surfaces sit over the same tokenized dot field as the story
 canvas. The selected mode is stored per session in local storage; `view`,
 `location`, `npc`, `material` and `quest` query parameters preserve a shareable selection. Combat is

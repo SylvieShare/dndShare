@@ -26,8 +26,8 @@ describe('vertical journal rendering', () => {
       ownerMode: true, saveEvent: async () => {},
     }))
     expect(html.indexOf('Добавить событие')).toBeLessThan(html.indexOf('diary-timeline-event'))
-    expect(html).toContain('Изменить название')
-    expect(html).toContain('Редактировать описание')
+    expect(html).toContain('Редактировать запись')
+    expect(html).not.toContain('Редактировать описание')
     expect(html).not.toContain('История растёт вверх')
   })
 })

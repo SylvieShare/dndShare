@@ -12,7 +12,7 @@ import (
 )
 
 var journalEntryTypes = map[string]bool{
-	"battle": true, "dialog": true, "event": true, "newday": true, "quest": true,
+	"battle": true, "dialog": true, "event": true, "newday": true, "quest": true, "header": true,
 }
 
 type journalResponse struct {

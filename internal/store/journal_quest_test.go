@@ -17,6 +17,9 @@ func testJournalQuest(t *testing.T, s *Store) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if _, err := s.CreateJournalEntry(ctx, journal.ID, sectionID, 1, JournalEntryMutation{Type: "header", Title: "Перед рассветом"}); err != nil {
+		t.Fatalf("header entry: %v", err)
+	}
 	payload := json.RawMessage(`{"quest":{"reward":"Карта","objectives":[{"id":"key","text":"Найти ключ","done":false}]}}`)
 	id, err := s.CreateJournalEntry(ctx, journal.ID, sectionID, 1, JournalEntryMutation{Type: "quest", Title: "Маяк", Payload: payload})
 	if err != nil {

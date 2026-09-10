@@ -344,10 +344,6 @@
         },
         "children": [
           {
-            "ref": "quests",
-            "kind": "block"
-          },
-          {
             "ref": "diary",
             "kind": "block"
           },

@@ -34,7 +34,7 @@ describe('journal reading and inline editing', () => {
     expect(timeline).not.toContain('node-height')
     expect(timeline.indexOf('<JournalEventTypePicker')).toBeLessThan(timeline.indexOf('data-sortable-container'))
   })
-  it('renders colored dialogue without type counters, with inline pencils and delete', async () => {
+  it('renders colored dialogue with a single entry edit action and delete', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {
       event: { id: '1', type: 'dialog', title: 'У ворот', desc: '', dialogue: [{ id: 'a', speaker: 'Страж', text: 'Стой!' }], combatants: [] },
       editable: true, saveEvent: async () => {},
@@ -43,7 +43,8 @@ describe('journal reading and inline editing', () => {
     expect(html).toContain('Страж')
     expect(html).toContain('Стой!')
     expect(html).toContain('--voice:')
-    expect(html).toContain('Редактировать реплику')
+    expect(html).toContain('Редактировать запись')
+    expect(html).not.toContain('Редактировать реплику')
     expect(html).toContain('Удалить событие')
     expect(html).not.toContain('Голосов:')
     expect(html).not.toContain('Участников:')
@@ -54,7 +55,7 @@ describe('journal reading and inline editing', () => {
     }))
     expect(html).toContain('Рассвет')
     expect(html).not.toContain('Удалить событие')
-    expect(html).not.toContain('Изменить название')
+    expect(html).not.toContain('Редактировать запись')
     expect(html).not.toContain('tabindex="0"')
     expect(html).not.toContain('НОВЫЙ ДЕНЬ')
   })
@@ -65,7 +66,7 @@ describe('journal reading and inline editing', () => {
     expect(metadata).toContain('@focus=')
     expect(row).toContain('<BaseTile')
   })
-  it('shows task checklists and bottom author/time without relation badges', async () => {
+  it('shows task checklists and hides author/time behind the header info icon', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {
       event: { id: 'quest', type: 'quest', title: 'Маяк', desc: 'До рассвета', createdAt: '2026-09-10T19:00:00Z', authorName: 'Лиссара',
         quest: { reward: 'Карта', objectives: [{ id: 'key', text: 'Найти ключ', done: true }, { id: 'lens', text: 'Разрушить линзу', done: false }] } },
@@ -78,11 +79,25 @@ describe('journal reading and inline editing', () => {
     expect(html).toContain('aria-checked="true"')
     expect(html).toContain('disabled')
     expect(html).toContain('Карта')
-    expect(html).toContain('Лиссара')
-    expect(html).toContain('datetime="2026-09-10T19:00:00Z"')
-    expect(html.indexOf('diary-meta')).toBeGreaterThan(html.indexOf('journal-quest-progress'))
+    expect(html).not.toContain('Лиссара')
+    expect(html).not.toContain('datetime="2026-09-10T19:00:00Z"')
+    expect(html).toContain('Информация о записи')
+    expect(html.indexOf('diary-meta')).toBeLessThan(html.indexOf('journal-quest-progress'))
     expect(html).not.toContain('link-chip')
     expect(html).not.toContain('Редактировать пункт')
+  })
+  it('frames every entry and repeats its icon as a noninteractive watermark', async () => {
+    const html = await renderToString(createSSRApp(DndDiaryEventRow, {
+      event: { id: 'h', type: 'header', title: 'Перед рассветом', desc: 'Не показывается' }, saveEvent: async () => {},
+    }))
+    expect(html).toContain('base-tile--framed')
+    expect(html).toContain('diary-event-watermark')
+    expect(html).toContain('aria-hidden="true"')
+    expect(html).toContain('Перед рассветом')
+    expect(html).not.toContain('diary-event-content')
+    expect(html).not.toContain('Не показывается')
+    expect(row).toContain('opacity: .035')
+    expect(row).toContain('pointer-events: none')
   })
   it('renders bestiary artwork and resolves names for imported battles', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {

@@ -364,6 +364,8 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   2000 characters. Checklist edits use the same permissions, audit and
   `expectedChangedAt` conflict protection as other entries. Completion is derived
   from all objectives being checked (an empty checklist is not complete).
+- Journal type `header` is a title-only separator in the UI. Like all existing
+  entries its type is immutable, and whole-entry edits require `expectedChangedAt`.
 - `PATCH /api/journals/{journalUuid}/settings` accepts `{playersCanEdit: boolean}`
   and is restricted to the campaign owner. Other users receive HTTP 403;
 - Journal responses include `graph: {revision,nodes,links}`. Nodes contain

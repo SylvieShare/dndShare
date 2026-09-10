@@ -1,7 +1,7 @@
 <template>
   <MultiToggle v-model="source" :options="sourceOptions" aria-label="Источник участника" />
   <button v-if="value.source === 'handbook'" class="diary-inline-add" type="button" @click="picker = true">{{ value.itemName || 'Выбрать из бестиария' }}</button>
-  <FormTextInput v-else :value="value.name" aria-label="Имя участника" placeholder="Имя участника" autofocus @update:value="update({ name: $event })" />
+  <FormTextInput v-else :value="value.name" aria-label="Имя участника" placeholder="Имя участника" @update:value="update({ name: $event })" />
   <div class="diary-combatant-fields">
     <label>Количество<FormNumberInput :value="value.count" :min="1" :max="999" @change="update({ count: $event })" /></label>
     <template v-if="value.source === 'custom'">

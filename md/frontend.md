@@ -81,10 +81,12 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` в G
 | Универсальные связи сущностей сессии | `features/sessions/components/UniversalRelationEditor.vue`, `UniversalRelationPickerModal.vue`, `UniversalRelationList.vue` | Один типизированный каталог для локаций, NPC, материалов и заданий. Picker поддерживает общий поиск, фильтр или закреплённый тип и опциональные пунктирные create-actions в заголовках групп; editor — заметки/удаление, display-list сортирует и группирует по типу. Сценарии не являются targets универсальных связей. |
 | Использование объекта на холстах | `features/sessions/components/ScenarioUsageList.vue` | Read-only список сценариев для локации, NPC, задания или материала строится из `scenarioUsages`, показывает контекст арки/главы и число блоков. Клик открывает соответствующий холст; добавление и удаление выполняются только на самом холсте. |
 
-Дневник использует `JournalInlineForm` для правки поля внутри карточки `BaseTile`
+Дневник использует `JournalInlineForm` для общего черновика записи внутри карточки `BaseTile`
 в вертикальной ленте, а не `SessionEditableField`: нужны составные реплики,
 участники боя и rich-text, сохранение черновика при ошибке и проверка версии.
-Формы используют общие `Form*`, `FormActionButtons` и `InputDescription`.
+`JournalEventFields` редактирует название, описание и составные списки, которые
+сохраняются одной операцией. Формы используют общие `Form*`, `FormActionButtons`
+и `InputDescription`. В просмотре отдельных карандашей у строк нет.
 `JournalEditButton` задаёт тихий карандаш и увеличенную touch-область.
 
 `JournalWorkspace` / `JournalTimeline` — единые компоненты вкладок персонажа

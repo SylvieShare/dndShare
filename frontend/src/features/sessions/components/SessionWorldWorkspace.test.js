@@ -48,7 +48,7 @@ describe('session world workspaces', () => {
     expect(toolbar).toContain("{ key: 'story', label: 'Сюжет'")
     expect(toolbar).toContain("{ key: 'locations', label: 'Локации'")
     expect(toolbar).toContain("{ key: 'npcs', label: 'NPC'")
-    expect(toolbar).toContain("{ key: 'quests', label: 'Задания'")
+    expect(toolbar).not.toContain("{ key: 'quests', label: 'Задания'")
     expect(toolbar).toContain("{ key: 'music', label: 'Музыка'")
     expect(toolbar).toContain("{ key: 'events', label: 'Хроника'")
     expect(graphTab).toContain('v-show="primaryView === \'story\'"')
@@ -62,7 +62,6 @@ describe('session world workspaces', () => {
     expect(layer).toContain("activeView === 'quests'")
     expect(sessionView).toContain('<SessionMusicWorkspace v-if="primaryView === \'music\'"')
     expect(sessionView).toContain('<SessionChronicleWorkspace v-else-if="primaryView === \'events\'"')
-    expect(toolbar.indexOf("{ key: 'quests', label: 'Задания'")).toBeLessThan(toolbar.indexOf("{ key: 'materials', label: 'Материалы'"))
   })
 
   it('renders music as a central workspace instead of a fullscreen library modal', () => {

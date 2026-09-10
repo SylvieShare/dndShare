@@ -1,9 +1,8 @@
 <template>
-  <footer v-if="source || audit.length" class="diary-meta" @click.stop @keydown.esc.stop="hide">
-    <button v-if="audit.length" type="button" :aria-label="auditLabel"
+  <span v-if="source || audit.length" class="diary-meta" @click.stop @keydown.esc.stop="hide">
+    <button type="button" aria-label="Информация о записи"
       @mouseenter="show('audit', $event)" @mouseleave="hide" @focus="show('audit', $event)" @blur="hide" @click="show('audit', $event)">
-      <Clock3 :size="15" />
-      <span>{{ audit[0].author }}</span><span aria-hidden="true">·</span><time :datetime="audit[0].at">{{ formatDiaryShortTimestamp(audit[0].at) }}</time><span v-if="audit.length > 1">· ред.</span>
+      <Info :size="16" />
     </button>
     <ItemTooltip v-if="tooltip" :title="tooltip.kind === 'source' ? 'Из сценария' : 'История записи'"
       :x="tooltip.x" :top="tooltip.top" :bottom="tooltip.bottom" :width="320">
@@ -18,19 +17,18 @@
         <div v-if="source" class="diary-meta-source">{{ source }}</div>
       </template>
     </ItemTooltip>
-  </footer>
+  </span>
 </template>
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { Clock3 } from '@lucide/vue'
+import { Info } from '@lucide/vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
-import { diaryAuditRows, diarySourceLabel, formatDiaryTimestamp, formatDiaryShortTimestamp } from '../lib/diaryMetadata'
+import { diaryAuditRows, diarySourceLabel, formatDiaryTimestamp } from '../lib/diaryMetadata'
 
 const props = defineProps({ event: { type: Object, required: true } })
 const source = computed(() => diarySourceLabel(props.event))
 const audit = computed(() => diaryAuditRows(props.event))
-const auditLabel = computed(() => audit.value.map(row => `${row.label}: ${formatDiaryTimestamp(row.at)} · ${row.author}`).join('. '))
 const tooltip = ref(null)
 function show(kind, event) {
   const rect = event.currentTarget.getBoundingClientRect()
@@ -54,7 +52,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .diary-meta { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 2px; }
-.diary-meta button { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; min-height: 32px; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--text-muted); cursor: help; font: 10px var(--font-ui); text-align: right; }
+.diary-meta button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 7px; background: transparent; color: var(--text-muted); cursor: help; }
+@media (pointer: coarse) { .diary-meta button { width: 40px; height: 40px; } }
 .diary-meta button span { overflow-wrap: anywhere; }
 .diary-meta button time { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .diary-meta button:hover, .diary-meta button:focus-visible { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }

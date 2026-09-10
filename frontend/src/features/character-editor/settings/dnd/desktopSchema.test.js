@@ -79,10 +79,10 @@ describe('D&D desktop sheet schema', () => {
   it('keeps diary collections independent and gives notes their own surface', () => {
     const diary = innerTabs.children.find(tab => tab.title === 'Дневник')
 
-    expect(diary.content.children[0].ref).toBe('quests')
-    expect(diary.content.children[1].ref).toBe('diary')
-    expect(diary.content.children[2].props?.tile).toBe(true)
-    expect(diary.content.children[2].children?.[0]?.ref).toBe('notes')
+    expect(diary.content.children.some(block => block.ref === 'quests')).toBe(false)
+    expect(diary.content.children[0].ref).toBe('diary')
+    expect(diary.content.children[1].props?.tile).toBe(true)
+    expect(diary.content.children[1].children?.[0]?.ref).toBe('notes')
   })
 
   it('groups conditions, exhaustion and inspiration in one desktop status block', () => {
