@@ -134,4 +134,5 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 		testJournalEntryAudit(t, s)
 	})
 	t.Run("graph branches, merges and conflicts", func(t *testing.T) { testJournalGraph(t, s) })
+	t.Run("timeline order preserves content and graph", func(t *testing.T) { testJournalTimelineOrder(t, s) })
 }

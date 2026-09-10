@@ -13,7 +13,7 @@ vi.mock('@/shared/api/journalsApi', () => ({
   createCharacterJournal: vi.fn(), createSessionJournal: vi.fn(), setCharacterJournal: vi.fn(),
   createJournalSection: vi.fn(), updateJournalSection: vi.fn(), deleteJournalSection: vi.fn(),
   createJournalEntry: vi.fn(), updateJournalEntry: vi.fn(), deleteJournalEntry: vi.fn(),
-  setJournalPlayerEditing: vi.fn(), updateJournalGraph: vi.fn(),
+  setJournalPlayerEditing: vi.fn(), reorderJournalEntries: vi.fn(),
 }))
 const flush = async () => { for (let i = 0; i < 6; i++) await Promise.resolve() }
 const response = (uuid = 'personal', sources = []) => ({
@@ -80,7 +80,7 @@ describe('journal source lifecycle', () => {
     expect(workspace.canManage.value).toBe(false)
   })
 
-  it('protects dragging from polls and saves coordinates with their original graph version', async () => {
+  it('protects dragging from polls and sends the original order when reordering', async () => {
     vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response())
     const workspace = useJournalWorkspace({ characterUuid: 'character' })
     hooks.mounted()
@@ -95,20 +95,20 @@ describe('journal source lifecycle', () => {
     expect(api.getCharacterJournal).toHaveBeenCalledTimes(2)
     expect(workspace.journal.value.uuid).toBe('personal')
     workspace.setDragging(false)
-    vi.mocked(api.updateJournalGraph).mockResolvedValueOnce(response())
-    const patch = { expectedRevision: 4, positions: [{ id: 3, positionX: 100, positionY: 20 }] }
-    await workspace.updateGraph(patch)
-    expect(api.updateJournalGraph).toHaveBeenCalledWith('personal', patch)
+    workspace.journal.value.sections = [{ id: 'section', events: [{ id: '3' }, { id: '4' }] }]
+    vi.mocked(api.reorderJournalEntries).mockResolvedValueOnce(response())
+    await workspace.reorderEntries('section', ['4', '3'])
+    expect(api.reorderJournalEntries).toHaveBeenCalledWith('personal', 'section', [4, 3], [3, 4])
   })
 
-  it('refreshes current graph after a conflict and retains the error', async () => {
+  it('refreshes current timeline after a conflict and retains the error', async () => {
     vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response())
     const workspace = useJournalWorkspace({ characterUuid: 'character' })
     hooks.mounted()
     await flush()
-    vi.mocked(api.updateJournalGraph).mockRejectedValueOnce(new Error('Обновите дневник'))
+    vi.mocked(api.reorderJournalEntries).mockRejectedValueOnce(new Error('Обновите дневник'))
     vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response())
-    await expect(workspace.updateGraph({ expectedRevision: 1, positions: [] })).rejects.toThrow('Обновите дневник')
+    await expect(workspace.reorderEntries('section', [])).rejects.toThrow('Обновите дневник')
     expect(workspace.journal.value.uuid).toBe('personal')
     expect(workspace.error.value).toBe('Обновите дневник')
     expect(workspace.busy.value).toBe(false)

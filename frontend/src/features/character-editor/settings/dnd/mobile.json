@@ -335,7 +335,7 @@
     },
     {
       "svg": "/static/edit-note.svg",
-      "title": "Заметки",
+      "title": "Дневник",
       "content": {
         "kind": "layout",
         "type": "column",
@@ -345,6 +345,10 @@
         "children": [
           {
             "ref": "quests",
+            "kind": "block"
+          },
+          {
+            "ref": "diary",
             "kind": "block"
           },
           {

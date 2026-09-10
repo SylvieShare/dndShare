@@ -42,6 +42,7 @@ type journalEntryRequest struct {
 func init() { registerRoutes((*Server).routesJournals) }
 
 func (s *Server) routesJournals(mux *http.ServeMux) {
+	mux.HandleFunc("PUT /api/journals/{journalUuid}/sections/{sectionId}/entries/order", s.handleReorderJournalEntries)
 	mux.HandleFunc("PUT /api/journals/{journalUuid}/graph", s.handleUpdateJournalGraph)
 	mux.HandleFunc("PATCH /api/journals/{journalUuid}/settings", s.handleJournalPlayerEditing)
 	mux.HandleFunc("GET /api/char/{uuid}/journal", s.handleGetCharacterJournal)
@@ -282,6 +283,10 @@ func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.Jo
 }
 
 func writeJournalError(w http.ResponseWriter, err error) {
+	if errors.Is(err, store.ErrJournalOrderConflict) {
+		conflict(w, "Порядок событий изменился. Дневник обновлён; повторите перемещение.")
+		return
+	}
 	if errors.Is(err, store.ErrJournalReadOnly) {
 		forbidden(w)
 		return

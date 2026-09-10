@@ -7,7 +7,7 @@ import DndDiaryEventRow from './components/DndDiaryEventRow.vue'
 
 const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')
 const workspace = read('../../../journals/components/JournalWorkspace.vue')
-const timeline = read('../../../journals/components/JournalGraphWorkspace.vue')
+const timeline = read('../../../journals/components/JournalTimeline.vue')
 const row = read('./components/DndDiaryEventRow.vue')
 describe('journal reading and inline editing', () => {
   it('puts the source switch in the cover and only renders the selected section', () => {
@@ -15,20 +15,23 @@ describe('journal reading and inline editing', () => {
     expect(cover).toContain('<JournalSourceSwitch')
     expect(cover).toContain("sessionUuid && canManage && journal.kind === 'session'")
     expect(workspace).toContain('<JournalSectionTabs')
-    expect(workspace).toContain('<JournalGraphWorkspace v-if="selectedSection"')
+    expect(workspace).toContain('<JournalTimeline v-if="selectedSection"')
     expect(workspace).not.toContain('MorphEditorShell')
     expect(workspace).not.toContain('DndDiaryEventEditor')
     const tabs = read('../../../journals/components/JournalSectionTabs.vue')
     expect(tabs).toContain('overflow-x: auto')
     expect(tabs.indexOf('Новый раздел')).toBeLessThan(tabs.indexOf('role="tablist"'))
   })
-  it('shares the narrative canvas and keeps the editor outside draggable nodes', () => {
-    expect(timeline).toContain('<NarrativeGraphCanvas')
-    expect(timeline).toContain('<JournalGraphNode')
-    expect(timeline).toContain('journal-event-panel')
-    expect(timeline).toContain(':allow-drag="false"')
-    expect(timeline).not.toContain('useSortable')
-    expect(timeline.indexOf('<JournalEventTypePicker')).toBeLessThan(timeline.indexOf('<NarrativeGraphCanvas'))
+  it('uses a content-height timeline with actions at the top right and native touch scrolling', () => {
+    expect(timeline).not.toContain('NarrativeGraphCanvas')
+    expect(timeline).not.toContain('journal-event-panel')
+    expect(timeline).toContain('useSortable')
+    expect(timeline).toContain(':allow-drag="!touchPointer"')
+    expect(timeline).toContain('diary-order-actions')
+    expect(timeline).toContain('position: absolute; top: 0; right: 0')
+    expect(timeline).not.toContain('diary-timeline-toolbar')
+    expect(timeline).not.toContain('node-height')
+    expect(timeline.indexOf('<JournalEventTypePicker')).toBeLessThan(timeline.indexOf('data-sortable-container'))
   })
   it('renders colored dialogue without type counters, with inline pencils and delete', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {

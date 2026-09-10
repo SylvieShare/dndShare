@@ -357,6 +357,14 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - Journal responses include `graph: {revision,nodes,links}`. Nodes contain
   `{id,positionX,positionY}`, links `{fromId,toId,label}`. Sections, entries and
   graph are read from one repeatable-read snapshot.
+- `PUT /api/journals/{journalUuid}/sections/{sectionId}/entries/order` accepts
+  `{entryIds,expectedEntryIds}`, both complete chronological ID arrays (up to
+  5,000 entries). The server locks the journal first, checks editing permission
+  and the section's current order, then updates positions atomically. Stale order,
+  missing, duplicate or foreign entries return 409. Content, audit and stored
+  graph remain unchanged. The UI displays the reverse order (newest first).
+  The journal UI is a vertical timeline; graph data and endpoints remain stored
+  independently and are not used to render or edit the timeline.
 - `PUT /api/journals/{journalUuid}/graph` accepts
   `{expectedRevision, links?, positions?}`. `links`, when supplied, is the complete
   proposed set for this journal (including other sections); `positions` updates

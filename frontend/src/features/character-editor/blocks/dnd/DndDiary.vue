@@ -1,11 +1,11 @@
 <template>
-  <CharacterJournalButton v-if="characterUuid" />
+  <JournalWorkspace v-if="characterUuid" :character-uuid="characterUuid" />
   <div v-else class="diary-preview-note">Дневник станет доступен после создания персонажа.</div>
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
-import CharacterJournalButton from '@/features/journals/components/CharacterJournalButton.vue'
+import JournalWorkspace from '@/features/journals/components/JournalWorkspace.vue'
 
 defineProps({ block: Object, value: { default: null } })
 const charCtx = inject('charCtx', {})

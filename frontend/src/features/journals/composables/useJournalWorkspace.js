@@ -12,7 +12,7 @@ import {
   setJournalPlayerEditing,
   updateJournalEntry,
   updateJournalSection,
-  updateJournalGraph,
+  reorderJournalEntries,
 } from '@/shared/api/journalsApi'
 import { normalizeEvent } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 
@@ -137,8 +137,9 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   const updateEntry = event => mutate(() => updateJournalEntry(journal.value.uuid, event.id, entryPayload(event)))
   const removeEntry = entryId => mutate(() => deleteJournalEntry(journal.value.uuid, entryId))
   const setPlayerEditing = enabled => mutate(() => setJournalPlayerEditing(journal.value.uuid, enabled))
-  async function updateGraph(patch) {
-    try { return await mutate(() => updateJournalGraph(journal.value.uuid, patch)) }
+  async function reorderEntries(sectionId, ids) {
+    const expected = journal.value.sections.find(section => section.id === sectionId)?.events.map(event => Number(event.id)) || []
+    try { return await mutate(() => reorderJournalEntries(journal.value.uuid, sectionId, ids.map(Number), expected)) }
     catch (reason) {
       const message = error.value
       await load({ quiet: true })
@@ -173,7 +174,7 @@ export function useJournalWorkspace({ characterUuid = '', sessionUuid = '' }) {
   return {
     journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
     load, createRoot, selectSource, createSection, updateSection, removeSection,
-    createEntry, updateEntry, removeEntry, updateGraph,
+    createEntry, updateEntry, removeEntry, reorderEntries,
     setPlayerEditing, setDragging, setInlineEditing,
   }
 }

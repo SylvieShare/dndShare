@@ -25,10 +25,10 @@ describe('D&D mobile sheet schema', () => {
   })
 
   it('keeps the mobile diary equivalent to the desktop diary section', () => {
-    const diary = schema.layouts.mobile.tabs.find(tab => tab.title === 'Заметки')
+    const diary = schema.layouts.mobile.tabs.find(tab => tab.title === 'Дневник')
 
     expect(diary?.svg).toBe('/static/edit-note.svg')
-    expect(diary?.content?.children?.map(block => block.ref)).toEqual(['quests', 'notes'])
+    expect(diary?.content?.children?.map(block => block.ref)).toEqual(['quests', 'diary', 'notes'])
   })
 
   it('shows actions and expanded feature cards on the mobile abilities tab', () => {

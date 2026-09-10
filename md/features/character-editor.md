@@ -667,41 +667,35 @@ spell-slot sphere previews the continuous range affected by a click: a charged
 sphere and the charged spheres to its right, or a spent sphere and the spent
 spheres to its left. Read-only spheres do not show this interaction preview.
 
-The journal is opened with `CharacterJournalButton` in the character identity
-header (mobile: toolbar). It uses a fullscreen `JournalWindow`, not a sheet tab.
-The former diary tab is now `Заметки`; its quests and notes are preserved.
-Custom schemas using the diary block get the same launcher. Entries are stored
-in journal tables, not character JSON.
+The `Дневник` sheet tab contains quests, the shared `JournalWorkspace`, and notes.
+Both desktop and mobile use the same vertical `JournalTimeline`; there is no
+separate journal window or canvas. Custom diary blocks render this workspace too.
+Entries remain in journal tables rather than character JSON.
 
-The shared `JournalWorkspace` has the `Личный` / `Сессии` source switch in its
-header. Each character has at most one personal journal. The session option is
-disabled without an eligible campaign journal; multiple sessions use a select.
-The horizontal section selector shows one section at a time. Both character
-and DM views use `JournalGraphWorkspace`: compact event nodes on a canvas,
-with full content and inline pencils in the selected event's side panel.
-On mobile that panel overlays the canvas. New events ask only for a type and
-then open the title for inline editing; an existing type cannot be changed.
+The source switch (`Личный` / `Сессии`) is in the header. Each character has
+at most one personal journal; the session choice needs an eligible campaign.
+Horizontal section tabs show one section at a time. Full event cards grow with
+their contents, newest first, with a connecting line through their centers.
+Creation and section/order controls sit at the top right of the event area.
+There is no separate toolbar row, zoom, layout action, or detail side panel.
 
-Several outgoing links create branches; several incoming links merge them.
-Links can cross sections in the same journal, and the connections panel
-navigates to the target section. Cycles and cross-journal links are rejected.
-Dragging moves nodes without changing their contents or history; explicit
-`Упорядочить` uses a Worker-based layered layout, growing upwards.
+Creation asks only for a type, then opens the title inline. Quiet pencils edit
+individual fields, dialogue lines and combatants. Existing types are immutable.
+Dialogue voices retain scenario colors and stack speaker above text on mobile.
+Battle rows use handbook artwork with a single batched lookup per section.
+Source and audit tooltips remain in each card's footer.
 
-Dialogue voices keep scenario colors. Battle previews show up to three compact
-combatant rows with handbook `ItemIcon` artwork; the side panel shows all rows.
-One batched lookup per selected section resolves item references. Saved names
-are retained, with handbook names or neutral placeholders when appropriate.
-Types and aggregate participant/voice counts are not written as text.
-The full event footer shows source and audit tooltips, including known authors.
+Desktop events can be dragged by their header or moved with keyboard arrows.
+On touch-capable devices headers permit native vertical scrolling; the order
+control reveals explicit up/down buttons instead. Reordering sends both the
+expected and desired ID order, and stale/concurrent moves return 409.
+It does not rewrite content, authorship, or the graph stored by the former canvas.
+That graph is preserved in the database but is not drawn or edited by the UI.
 
-Editing remains server-authorized: the DM always edits, participants only while
-`playersCanEdit` is enabled. This setting appears only in the DM's session-page
-header. Read-only users can navigate and zoom but cannot change nodes or links.
-Local inline drafts have save/cancel controls and survive failed saves.
-`expectedChangedAt` protects content; graph revisions protect links and positions.
-Polling pauses while editing, linking, dragging or arranging. Source/section
-switching is blocked during those interactions. See [Journals](./journals.md).
+Inline drafts keep save/cancel controls and remain on failure; content saves
+require `expectedChangedAt`. Polling and source/section navigation pause during
+editing and dragging. The DM always edits; players require `playersCanEdit`.
+Only the DM's session-page header shows that setting. See [Journals](./journals.md).
 
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
 `RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом
