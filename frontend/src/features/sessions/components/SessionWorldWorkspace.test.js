@@ -230,7 +230,7 @@ describe('session world workspaces', () => {
     expect(entityFormModel).toContain('raceItemId: Number(draft.raceItemId) || null')
     expect(entityForm).toContain('aria-label="Случайное имя"')
     expect(npcs).toContain('[npc.raceName, npc.role]')
-    expect(entityForm).toContain("npc: ['name', 'raceItemId', 'role']")
+    expect(entityForm).toContain("npc: ['name', 'raceItemId', 'role', 'color']")
   })
 
   it('keeps one aggregate world state behind typed API mutations', () => {

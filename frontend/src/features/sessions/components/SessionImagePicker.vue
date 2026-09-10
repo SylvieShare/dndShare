@@ -1,6 +1,6 @@
 <template>
-  <div class="session-image-field">
-    <div class="session-image-current" :class="{ 'session-image-current--compact': hidePreview }">
+  <div class="session-image-field" :class="{ 'session-image-field--dialog': dialogOnly }">
+    <div v-if="!dialogOnly" class="session-image-current" :class="{ 'session-image-current--compact': hidePreview }">
       <img v-if="displayedUrl && !hidePreview" :src="displayedUrl" :alt="displayedLabel" :style="customSelected ? customPreviewStyle : null" />
       <div v-else-if="!hidePreview" class="session-image-placeholder"><Images :size="22" /></div>
       <div class="session-image-current-copy">
@@ -13,12 +13,14 @@
       </div>
     </div>
 
-    <AppModalFrame v-if="pickerOpen" extra-wide title="Выбрать изображение" @close="pickerOpen = false">
+    <AppModalFrame v-if="pickerOpen" extra-wide title="Выбрать изображение" @close="closePicker">
       <div class="session-image-browser">
+        <p v-if="errorMessage" class="session-image-state error" role="alert">{{ errorMessage }}</p>
+        <span v-if="disabled" role="status">Сохраняем изображение…</span>
         <nav v-if="categories.length" class="session-image-category-nav" aria-label="Категории изображений">
           <button v-for="category in categories" :key="category.key" type="button" @click="scrollTo(category.key)">{{ category.label }}</button>
         </nav>
-        <button v-if="allowUpload" type="button" class="session-image-upload" @click="requestUpload">
+        <button v-if="allowUpload" type="button" class="session-image-upload" :disabled="disabled" @click="requestUpload">
           <Upload :size="18" />
           <span><strong>Загрузить своё</strong><small>PNG, JPG или WebP до 15 МБ</small></span>
         </button>
@@ -33,6 +35,7 @@
                 :key="image.id"
                 type="button"
                 role="radio"
+                :disabled="disabled"
                 class="session-image-option"
                 :class="{ active: !customSelected && modelValue === image.id }"
                 :aria-checked="!customSelected && modelValue === image.id"
@@ -57,6 +60,9 @@ import { loadSessionImageCatalog } from '@/features/sessions/lib/sessionImageCat
 import { groupSessionImages } from '@/features/sessions/lib/sessionImages'
 
 const props = defineProps({
+  dialogOnly: Boolean,
+  disabled: Boolean,
+  errorMessage: { type: String, default: '' },
   modelValue: { type: Number, default: 0 },
   hidePreview: { type: Boolean, default: false },
   catalog: { type: String, default: 'story' },
@@ -70,8 +76,8 @@ const props = defineProps({
   emptyLabel: { type: String, default: 'Не выбрано' },
   emptyActionLabel: { type: String, default: 'Не выбирать' },
 })
-const emit = defineEmits(['select', 'upload'])
-const pickerOpen = ref(false)
+const emit = defineEmits(['select', 'upload', 'close'])
+const pickerOpen = ref(props.dialogOnly)
 const images = ref([])
 const loading = ref(true)
 const loadError = ref(false)
@@ -103,12 +109,14 @@ function rememberSection(key, element) {
   else sections.delete(key)
 }
 function scrollTo(key) { sections.get(key)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
-function selectImage(image) { emit('select', image); pickerOpen.value = false }
+function selectImage(image) { if (props.disabled) return; emit('select', image); if (!props.dialogOnly) pickerOpen.value = false }
+function closePicker() { if (props.disabled) return; pickerOpen.value = false; emit('close') }
 function clearImage() { emit('select', { id: 0 }) }
-function requestUpload() { pickerOpen.value = false; emit('upload') }
+function requestUpload() { if (!props.dialogOnly) pickerOpen.value = false; emit('upload') }
 </script>
 
 <style scoped>
+.session-image-field--dialog { display: contents; }
 .session-image-field { min-width: 0; }
 .session-image-current { min-height: 104px; display: grid; grid-template-columns: 126px minmax(0, 1fr) auto; align-items: center; gap: 14px; overflow: hidden; padding: 9px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-raised); }
 .session-image-current > img, .session-image-placeholder { width: 126px; height: 86px; display: grid; place-items: center; border-radius: 8px; object-fit: cover; background: var(--surface); color: var(--text-muted); }

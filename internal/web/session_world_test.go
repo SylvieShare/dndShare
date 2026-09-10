@@ -10,7 +10,7 @@ import (
 
 func TestLocationMutationValidatesKindAndImage(t *testing.T) {
 	valid := locationMutationRequest{
-		Name: "  Старый город  ", Kind: "settlement", ImageID: 12,
+		Name: "  Старый город  ", Kind: "settlement", ImageID: worldImageID(12),
 		Relations: []store.SessionEntityRelation{{Type: store.SessionEntityQuest, ID: 2}},
 	}
 	recorder := httptest.NewRecorder()
@@ -30,7 +30,7 @@ func TestLocationMutationValidatesKindAndImage(t *testing.T) {
 	}
 
 	invalid = valid
-	invalid.ImageID = 0
+	invalid.ImageID = worldImageID(0)
 	recorder = httptest.NewRecorder()
 	if _, ok := locationMutation(recorder, invalid); ok {
 		t.Fatal("non-positive image id accepted")
@@ -53,7 +53,7 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	mutation, ok := npcMutation(recorder, npcMutationRequest{
 		Name: "  Мира  ", RaceItemID: &raceItemID, BestiaryItemID: &bestiaryItemID, Role: &role, Color: "#A06CE8",
-		ImageID:   25,
+		ImageID:   worldImageID(25),
 		Relations: []store.SessionEntityRelation{{Type: "npc", ID: 7, Note: &note}},
 	})
 	if !ok {
@@ -62,12 +62,12 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 	if mutation.Name != "Мира" || mutation.RaceItemID == nil || *mutation.RaceItemID != 42 || mutation.BestiaryItemID == nil || *mutation.BestiaryItemID != 1635 || mutation.Role == nil || *mutation.Role != "Проводник" || mutation.Color != "#a06ce8" {
 		t.Fatalf("unexpected mutation: %+v", mutation)
 	}
-	if mutation.ImageID != 25 || mutation.Relations[0].Note == nil || *mutation.Relations[0].Note != "Старый долг" {
+	if (mutation.ImageID == nil || *mutation.ImageID != 25) || mutation.Relations[0].Note == nil || *mutation.Relations[0].Note != "Старый долг" {
 		t.Fatalf("unexpected image or NPC link mutation: %+v", mutation)
 	}
 
 	recorder = httptest.NewRecorder()
-	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", Color: "red", ImageID: 25}); ok {
+	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", Color: "red", ImageID: worldImageID(25)}); ok {
 		t.Fatal("non-hex npc color accepted")
 	}
 	if !strings.Contains(recorder.Body.String(), "цвет") {
@@ -76,13 +76,13 @@ func TestNpcMutationNormalizesColorAndText(t *testing.T) {
 
 	invalidRaceID := int64(0)
 	recorder = httptest.NewRecorder()
-	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", RaceItemID: &invalidRaceID, ImageID: 25}); ok {
+	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", RaceItemID: &invalidRaceID, ImageID: worldImageID(25)}); ok {
 		t.Fatal("non-positive race item id accepted")
 	}
 
 	invalidBestiaryID := int64(-1)
 	recorder = httptest.NewRecorder()
-	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", BestiaryItemID: &invalidBestiaryID, ImageID: 25}); ok {
+	if _, ok := npcMutation(recorder, npcMutationRequest{Name: "Мира", BestiaryItemID: &invalidBestiaryID, ImageID: worldImageID(25)}); ok {
 		t.Fatal("non-positive bestiary item id accepted")
 	}
 }
@@ -110,5 +110,23 @@ func TestQuestMutationNormalizesStructuredDetails(t *testing.T) {
 		mutation.Consequences == nil || *mutation.Consequences != "Гильдия закроет тракт" ||
 		mutation.Notes == nil || *mutation.Notes != "Засада у старого моста" {
 		t.Fatalf("quest details were not normalized: %+v", mutation)
+	}
+}
+
+func worldImageID(value int64) *int64 { return &value }
+
+func TestWorldEntitiesAllowClearingImages(t *testing.T) {
+	location, ok := locationMutation(httptest.NewRecorder(), locationMutationRequest{Name: "Город", Kind: "settlement"})
+	if !ok || location.ImageID != nil {
+		t.Fatal("location without image must be accepted")
+	}
+	npc, ok := npcMutation(httptest.NewRecorder(), npcMutationRequest{Name: "Мира"})
+	if !ok || npc.ImageID != nil {
+		t.Fatal("NPC without image must be accepted")
+	}
+	for _, id := range []int64{0, -1} {
+		if _, ok := npcMutation(httptest.NewRecorder(), npcMutationRequest{Name: "Мира", ImageID: &id}); ok {
+			t.Fatal("invalid non-null image id accepted")
+		}
 	}
 }

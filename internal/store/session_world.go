@@ -20,7 +20,7 @@ type SessionLocation struct {
 	Name             string                  `json:"name"`
 	Kind             string                  `json:"kind"`
 	Description      *string                 `json:"description,omitempty"`
-	ImageID          int64                   `json:"imageId"`
+	ImageID          *int64                  `json:"imageId"`
 	ImageURL         string                  `json:"imageUrl"`
 	ImageCatalogKey  *string                 `json:"imageCatalogKey,omitempty"`
 	SortOrder        int                     `json:"sortOrder"`
@@ -39,7 +39,7 @@ type SessionNPC struct {
 	Role             *string                 `json:"role,omitempty"`
 	Description      *string                 `json:"description,omitempty"`
 	Color            string                  `json:"color"`
-	ImageID          int64                   `json:"imageId"`
+	ImageID          *int64                  `json:"imageId"`
 	ImageURL         string                  `json:"imageUrl"`
 	ImageCatalogKey  *string                 `json:"imageCatalogKey,omitempty"`
 	ImageFocalX      float64                 `json:"imageFocalX"`
@@ -101,7 +101,7 @@ type SessionLocationMutation struct {
 	Name             string
 	Kind             string
 	Description      *string
-	ImageID          int64
+	ImageID          *int64
 	Relations        []SessionEntityRelation
 }
 
@@ -112,7 +112,7 @@ type SessionNPCMutation struct {
 	Role           *string
 	Description    *string
 	Color          string
-	ImageID        int64
+	ImageID        *int64
 	ImageFocalX    float64
 	ImageFocalY    float64
 	Relations      []SessionEntityRelation
@@ -159,10 +159,10 @@ func scanSessionNPC(row pgx.Row) (SessionNPC, error) {
 func (s *Store) GetSessionLocation(ctx context.Context, id int64) (SessionLocation, error) {
 	return scanSessionLocation(s.pool.QueryRow(ctx, `
 		SELECT location.id, location.session_id, location.parent_location_id, location.name,
-		       location.kind, location.description, location.image_id, image.url, catalog.catalog_key,
+		       location.kind, location.description, location.image_id, COALESCE(image.url, ''), catalog.catalog_key,
 		       location.sort_order
 		FROM dndshare.session_location location
-		JOIN dndshare.storage_image image ON image.id = location.image_id AND image.deleted = false
+		LEFT JOIN dndshare.storage_image image ON image.id = location.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = location.image_id
 		WHERE location.id = $1`, id))
 }
@@ -171,12 +171,12 @@ func (s *Store) GetSessionNPC(ctx context.Context, id int64) (SessionNPC, error)
 	return scanSessionNPC(s.pool.QueryRow(ctx, `
 		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
 		       npc.description, npc.color, npc.sort_order, race.name,
-		       npc.image_id, image.url, catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
+		       npc.image_id, COALESCE(image.url, ''), catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
 		       npc.bestiary_item_id, bestiary.name
 		FROM dndshare.session_npc npc
 		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
 		LEFT JOIN dndshare.item bestiary ON bestiary.id = npc.bestiary_item_id
-		JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
+		LEFT JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = npc.image_id
 		WHERE npc.id = $1`, id))
 }
@@ -191,10 +191,10 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 
 	locationRows, err := s.pool.Query(ctx, `
 		SELECT location.id, location.session_id, location.parent_location_id, location.name,
-		       location.kind, location.description, location.image_id, image.url, catalog.catalog_key,
+		       location.kind, location.description, location.image_id, COALESCE(image.url, ''), catalog.catalog_key,
 		       location.sort_order
 		FROM dndshare.session_location location
-		JOIN dndshare.storage_image image ON image.id = location.image_id AND image.deleted = false
+		LEFT JOIN dndshare.storage_image image ON image.id = location.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = location.image_id
 		WHERE location.session_id = $1
 		ORDER BY location.parent_location_id NULLS FIRST, location.sort_order, location.id`, sessionID)
@@ -218,12 +218,12 @@ func (s *Store) GetSessionWorld(ctx context.Context, sessionID int64) (SessionWo
 	npcRows, err := s.pool.Query(ctx, `
 		SELECT npc.id, npc.session_id, npc.name, npc.race_item_id, npc.role,
 		       npc.description, npc.color, npc.sort_order, race.name,
-		       npc.image_id, image.url, catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
+		       npc.image_id, COALESCE(image.url, ''), catalog.catalog_key, npc.image_focal_x, npc.image_focal_y,
 		       npc.bestiary_item_id, bestiary.name
 		FROM dndshare.session_npc npc
 		LEFT JOIN dndshare.item race ON race.id = npc.race_item_id
 		LEFT JOIN dndshare.item bestiary ON bestiary.id = npc.bestiary_item_id
-		JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
+		LEFT JOIN dndshare.storage_image image ON image.id = npc.image_id AND image.deleted = false
 		LEFT JOIN dndshare.session_image_catalog catalog ON catalog.image_id = npc.image_id
 		WHERE npc.session_id = $1
 		ORDER BY npc.sort_order, npc.id`, sessionID)

@@ -16,6 +16,9 @@ import (
 // The explicit order is part of the database contract: later sections may
 // reference objects and seed data created by earlier ones.
 
+//go:embed schema/85_session_optional_images.sql
+var schemaSessionOptionalImagesSQL string
+
 //go:embed schema/01_foundation.sql
 var schemaFoundationSQL string
 
@@ -368,6 +371,7 @@ var schemaParts = []struct {
 	{"journal-quests", schemaJournalQuestsSQL},
 	{"journal-headers", schemaJournalHeadersSQL},
 	{"catalogue-editing", schemaCatalogueEditingSQL},
+	{"session-optional-images", schemaSessionOptionalImagesSQL},
 }
 
 const (

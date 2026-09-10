@@ -268,12 +268,22 @@ selected entity. All four catalogues render the selected record through one
 shared by its header, visual and body components. There is no general
 `Редактировать` button in the detail header. Borderless pencils without a
 background sit next to each editable value. The location kind, NPC race and
-role, quest status, and material type and note style are edited in the header
+role and color, quest status, and material type and note style are edited in the header
 alongside the name; they are not repeated as cards below it. Full edit flows
 (such as creation, the location tree edit action and changing a material type)
-expand those same header values into inputs in place.
-Clicking the header image or media icon changes the location image, NPC portrait
-or material asset. Locations and NPCs have no separate image card in the body.
+expand those same header values into inputs in place. Text and enum header fields
+use the shared `InlineEdit`: row height stays fixed, and confirm/cancel sit inside
+the input on the right. NPCs without a race show `Раса не выбрана`; their color
+uses the shared `ColorPresetPicker` popover in the header.
+Clicking a location or NPC header image opens an action menu: add/replace opens
+the catalogue directly, while clear saves `imageId: null`. Both entities support
+an empty image and then show their type icon. The image catalogue stays open if
+saving fails. A location required as a scenario's only visual source cannot be
+deleted until the scenario is given another source. Material assets are changed
+through their header icon. Locations and NPCs have no separate image card in the body.
+The NPC bestiary reference appears below its description as a `HandbookListItem`;
+clicking it opens `ItemViewModal`. Nested locations (`Внутри`) also appear directly
+below the location description, before universal relations.
 Materials keep their full image/video or styled text preview in the body when
 viewed; full editing does not duplicate the preview. A material type change
 opens the full form so dependent contents or assets can be supplied together.

@@ -38,7 +38,7 @@ type locationMutationRequest struct {
 	Name             string                        `json:"name"`
 	Kind             string                        `json:"kind"`
 	Description      *string                       `json:"description"`
-	ImageID          int64                         `json:"imageId"`
+	ImageID          *int64                        `json:"imageId"`
 	Relations        []store.SessionEntityRelation `json:"relations"`
 }
 
@@ -49,7 +49,7 @@ type npcMutationRequest struct {
 	Role           *string                       `json:"role"`
 	Description    *string                       `json:"description"`
 	Color          string                        `json:"color"`
-	ImageID        int64                         `json:"imageId"`
+	ImageID        *int64                        `json:"imageId"`
 	ImageFocalX    float64                       `json:"imageFocalX"`
 	ImageFocalY    float64                       `json:"imageFocalY"`
 	Relations      []store.SessionEntityRelation `json:"relations"`
@@ -95,7 +95,7 @@ func locationMutation(
 		badRequest(w, "Некорректная родительская локация")
 		return store.SessionLocationMutation{}, false
 	}
-	if req.ImageID <= 0 {
+	if req.ImageID != nil && *req.ImageID <= 0 {
 		badRequest(w, "Выберите изображение локации")
 		return store.SessionLocationMutation{}, false
 	}
@@ -134,7 +134,7 @@ func npcMutation(w http.ResponseWriter, req npcMutationRequest) (store.SessionNP
 		badRequest(w, "Некорректный цвет NPC")
 		return store.SessionNPCMutation{}, false
 	}
-	if req.ImageID <= 0 {
+	if req.ImageID != nil && *req.ImageID <= 0 {
 		badRequest(w, "Выберите изображение NPC")
 		return store.SessionNPCMutation{}, false
 	}
@@ -206,7 +206,7 @@ func (s *Server) handleCreateSessionLocation(w http.ResponseWriter, r *http.Requ
 	if !ok {
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, mutation.ImageID, "story") {
+	if mutation.ImageID != nil && !s.validateSessionImage(w, r, userID, *mutation.ImageID, "story") {
 		return
 	}
 	id, err := s.store.CreateSessionLocation(r.Context(), session.ID, mutation)
@@ -240,15 +240,15 @@ func (s *Server) handleUpdateSessionLocation(w http.ResponseWriter, r *http.Requ
 	if !ok {
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, mutation.ImageID, "story") {
+	if mutation.ImageID != nil && !s.validateSessionImage(w, r, userID, *mutation.ImageID, "story") {
 		return
 	}
 	if err := s.store.UpdateSessionLocation(r.Context(), session.ID, id, mutation); err != nil {
 		writeSessionWorldStoreError(w, err)
 		return
 	}
-	if previous.ImageID != mutation.ImageID {
-		s.deleteOldImage(r, userID, previous.ImageID)
+	if previous.ImageID != nil && (mutation.ImageID == nil || *previous.ImageID != *mutation.ImageID) {
+		s.deleteOldImage(r, userID, *previous.ImageID)
 	}
 	s.writeSessionWorldMutation(w, r, session.ID, id)
 }
@@ -297,7 +297,9 @@ func (s *Server) handleDeleteSessionLocation(w http.ResponseWriter, r *http.Requ
 		writeSessionWorldStoreError(w, err)
 		return
 	}
-	s.deleteOldImage(r, userID, location.ImageID)
+	if location.ImageID != nil {
+		s.deleteOldImage(r, userID, *location.ImageID)
+	}
 	s.writeSessionWorldMutation(w, r, session.ID, 0)
 }
 
@@ -315,7 +317,7 @@ func (s *Server) handleCreateSessionNPC(w http.ResponseWriter, r *http.Request) 
 	if !ok {
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, mutation.ImageID, "npc") {
+	if mutation.ImageID != nil && !s.validateSessionImage(w, r, userID, *mutation.ImageID, "npc") {
 		return
 	}
 	id, err := s.store.CreateSessionNPC(r.Context(), session.ID, mutation)
@@ -349,15 +351,15 @@ func (s *Server) handleUpdateSessionNPC(w http.ResponseWriter, r *http.Request) 
 	if !ok {
 		return
 	}
-	if !s.validateSessionImage(w, r, userID, mutation.ImageID, "npc") {
+	if mutation.ImageID != nil && !s.validateSessionImage(w, r, userID, *mutation.ImageID, "npc") {
 		return
 	}
 	if err := s.store.UpdateSessionNPC(r.Context(), session.ID, id, mutation); err != nil {
 		writeSessionWorldStoreError(w, err)
 		return
 	}
-	if previous.ImageID != mutation.ImageID {
-		s.deleteOldImage(r, userID, previous.ImageID)
+	if previous.ImageID != nil && (mutation.ImageID == nil || *previous.ImageID != *mutation.ImageID) {
+		s.deleteOldImage(r, userID, *previous.ImageID)
 	}
 	s.writeSessionWorldMutation(w, r, session.ID, id)
 }
@@ -380,6 +382,8 @@ func (s *Server) handleDeleteSessionNPC(w http.ResponseWriter, r *http.Request) 
 		writeSessionWorldStoreError(w, err)
 		return
 	}
-	s.deleteOldImage(r, userID, npc.ImageID)
+	if npc.ImageID != nil {
+		s.deleteOldImage(r, userID, *npc.ImageID)
+	}
 	s.writeSessionWorldMutation(w, r, session.ID, 0)
 }

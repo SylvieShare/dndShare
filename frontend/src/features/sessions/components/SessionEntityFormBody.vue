@@ -2,7 +2,10 @@
   <div class="session-entity-form-body">
     <SessionMaterialPreview v-if="type === 'material' && !editing && entity && ['image', 'map', 'video'].includes(draft.kind)" :material="entity" />
     <div class="session-entity-form-fields">
-      <SessionEntityFormField v-for="field in bodyFields" :key="field.key" :field="field" />
+      <template v-for="field in bodyFields" :key="field.key">
+        <SessionEntityFormField :field="field" />
+        <div v-if="field.key === 'description' && $slots['after-description']" class="session-entity-after-description"><slot name="after-description" /></div>
+      </template>
     </div>
     <UniversalRelationList
       :relations="draft.relations"
@@ -41,6 +44,7 @@ const { draft, busy, uploading, error, racesError, bodyFields, changeRelations, 
 <style scoped>
 .session-entity-form-body { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 .session-entity-form-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.session-entity-after-description { grid-column: 1 / -1; }
 .session-entity-form-error { color: var(--danger); }
 @media (max-width: 720px) { .session-entity-form-fields { grid-template-columns: 1fr; } }
 </style>

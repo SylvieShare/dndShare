@@ -91,7 +91,10 @@
             <button type="button" @click="openNpcCreate"><UserPlus :size="15" />Добавить NPC</button>
         </template>
 
-        <section v-if="!detailEditing && childLocations.length" class="session-world-section">
+        <section class="session-world-section">
+          <SessionEntityFormBody>
+            <template v-if="!detailEditing && childLocations.length" #after-description>
+        <section class="session-world-section">
           <div class="session-world-section-title"><span>Внутри</span><small>{{ childLocations.length }}</small></div>
           <div class="session-world-card-grid">
             <button
@@ -108,8 +111,8 @@
             </button>
           </div>
         </section>
-        <section class="session-world-section">
-          <SessionEntityFormBody />
+            </template>
+          </SessionEntityFormBody>
         </section>
         <section v-if="!detailEditing" class="session-world-section">
           <div class="session-world-section-title"><span>На холстах сценариев</span><small>{{ selectedLocation.scenarioUsages?.length || 0 }}</small></div>

@@ -283,6 +283,19 @@ func (s *Store) DeleteSessionLocation(ctx context.Context, sessionID, locationID
 	if err := ensureSessionEntityNotUsedBySceneTx(ctx, tx, sessionID, SessionEntityLocation, locationID); err != nil {
 		return err
 	}
+	var needsLocation bool
+	if err := tx.QueryRow(ctx, `
+		SELECT EXISTS (
+			SELECT 1 FROM dndshare.session_scene scene
+			JOIN dndshare.session_location location ON location.id = scene.location_id
+			WHERE location.id = $1 AND location.session_id = $2
+			  AND location.image_id IS NULL AND scene.image_id IS NULL
+		)`, locationID, sessionID).Scan(&needsLocation); err != nil {
+		return err
+	}
+	if needsLocation {
+		return ErrWorldEntityInUse
+	}
 	if err := deleteSessionEntityRelationsTx(ctx, tx, sessionID, SessionEntityLocation, locationID); err != nil {
 		return err
 	}

@@ -23,9 +23,12 @@ for (const [component, file] of [[SessionEntityForm, './SessionEntityForm.vue'],
 }
 
 
-vi.mock('@sylvieshare/share-ui', async () => {
+vi.mock('@sylvieshare/share-ui', async importOriginal => {
   const { h } = await import('vue')
   return {
+    ...(await importOriginal()),
+    ActionMenu: { setup: (_, { slots }) => () => h('menu', [...(slots.trigger?.({ open: true }) || []), ...(slots.default?.({ close() {} }) || [])]) },
+    ActionMenuItem: { setup: (_, { slots, attrs }) => () => h('button', attrs, slots.default?.()) },
     AppModalFrame: { setup: (_, { slots }) => () => h('dialog', [...(slots.default?.() || []), ...(slots.footer?.() || [])]) },
     FormSelect: { props: ['value'], emits: ['update:value'], setup: (props, { emit, slots }) => () => h('select', { value: props.value, onChange: event => emit('update:value', event.target.value) }, slots.default?.()) },
     ColorPresetPicker: { render: () => h('div') },
@@ -35,6 +38,7 @@ vi.mock('@sylvieshare/share-ui', async () => {
   }
 })
 vi.mock('./SessionEntityAssetInput.vue', () => ({ default: { emits: ['update:modelValue'], setup: (_, { emit }) => () => h('button', { 'aria-label': 'Выбрать тестовое изображение', onClick: () => emit('update:modelValue', { id: 55, url: '/new.png' }) }) } }))
+vi.mock('./SessionBestiaryReference.vue', () => ({ default: { render: () => null } }))
 vi.mock('./UniversalRelationPickerModal.vue', () => ({ default: { render: () => null } }))
 vi.mock('@/features/handbook/components/ItemPickerModal.vue', () => ({ default: { render: () => null } }))
 vi.mock('@/shared/api/itemsApi', () => ({ itemsApi: { list: vi.fn(async () => ({ items: [] })) } }))
@@ -164,13 +168,11 @@ describe('shared session entity editing', () => {
   it('keeps NPC race and role in the header and changes the portrait through its image', async () => {
     const form = mountForm({ type: 'npc', entity: { id: 1, name: 'Мира', raceName: 'Эльф', raceItemId: 12, role: 'Проводник', imageId: 9, imageUrl: '/old.png', relations: [] } })
     const role = form.byLabel('Редактировать поле «Роль»')
-    expect(role.parent.parent.parent.props.class).toContain('entity-form-heading')
+    expect(role.parent.parent.parent.props.class).toContain('entity-form-heading-field')
     expect(form.byLabel('Редактировать поле «Портрет»')).toBeUndefined()
-    form.byLabel('Сменить изображение').props.onClick()
+    form.all(el => el.type === 'button' && el.children.some(child => child.text === 'Заменить изображение'))[0].props.onClick()
     await flush()
     form.byLabel('Выбрать тестовое изображение').props.onClick()
-    await flush()
-    form.byLabel('Сохранить всё').props.onClick()
     await flush()
     expect(form.save).toHaveBeenCalledWith(expect.objectContaining({ imageId: 55, role: 'Проводник', raceItemId: 12 }))
     form.unmount()
@@ -179,10 +181,20 @@ describe('shared session entity editing', () => {
   it('keeps location type beside its heading and has no parent or image field in the body', () => {
     const form = mountForm({ type: 'location', entity: { id: 1, name: 'Город', kind: 'settlement', parentLocationId: 7, imageId: 9, imageUrl: '/city.png', relations: [] } })
     const type = form.byLabel('Редактировать поле «Тип»')
-    expect(type.parent.parent.parent.props.class).toContain('entity-form-heading')
+    expect(type.parent.parent.parent.props.class).toContain('entity-form-heading-field')
     expect(form.byLabel('Редактировать поле «Внутри локации»')).toBeUndefined()
     expect(form.byLabel('Редактировать поле «Изображение»')).toBeUndefined()
-    expect(form.byLabel('Сменить изображение')).toBeDefined()
+    expect(form.byLabel('Действия с изображением')).toBeDefined()
+    form.unmount()
+  })
+
+  it('clears an image immediately and allows saving an NPC without a portrait', async () => {
+    const form = mountForm({ type: 'npc', entity: { id: 1, name: 'Мира', imageId: 9, imageUrl: '/old.png', relations: [] } })
+    expect(form.all(el => el.text === 'Раса не выбрана').length).toBeGreaterThan(0)
+    const clear = form.all(el => el.type === 'button' && el.children.some(child => child.text === 'Очистить'))[0]
+    clear.props.onClick(); await flush()
+    expect(form.save).toHaveBeenCalledWith(expect.objectContaining({ imageId: null }))
+    expect(form.all(el => el.type === 'img')).toHaveLength(0)
     form.unmount()
   })
 

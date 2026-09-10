@@ -27,11 +27,11 @@ export function entityDraft(type, entity = {}, defaults = {}) {
 export function entityPayload(type, draft) {
   const base = { name: draft.name.trim(), relations: draft.relations.map(item => ({ ...item })) }
   const nullable = value => value.trim() || null
-  if (type === 'location') return { ...base, kind: draft.kind, parentLocationId: Number(draft.parentLocationId) || null, description: nullable(draft.description), imageId: draft.image.id }
+  if (type === 'location') return { ...base, kind: draft.kind, parentLocationId: Number(draft.parentLocationId) || null, description: nullable(draft.description), imageId: draft.image.id || null }
   if (type === 'npc') return {
     ...base, raceItemId: Number(draft.raceItemId) || null, bestiaryItemId: Number(draft.bestiaryItemId) || null,
     role: nullable(draft.role), description: nullable(draft.description), color: draft.color,
-    imageId: draft.image.id, imageFocalX: draft.image.focalX ?? .5, imageFocalY: draft.image.focalY ?? .5,
+    imageId: draft.image.id || null, imageFocalX: draft.image.focalX ?? .5, imageFocalY: draft.image.focalY ?? .5,
   }
   if (type === 'quest') return {
     ...base, status: draft.status, goal: nullable(draft.goal), condition: nullable(draft.condition),
@@ -43,7 +43,6 @@ export function entityPayload(type, draft) {
 
 export function entityDraftValid(type, draft) {
   if (!draft.name.trim()) return false
-  if (type === 'npc' || type === 'location') return !!draft.image.id
   if (type === 'material') return ['text', 'note'].includes(draft.kind) ? !!draft.content.trim() : !!draft.asset.id
   return true
 }
@@ -58,8 +57,8 @@ export function entityFields(type, draft) {
     { key: 'role', icon: Badge, label: 'Роль', input: 'text', maxlength: 160 },
     { key: 'image', label: 'Портрет', input: 'image', catalog: 'npc', allowUpload: true },
     { key: 'color', label: 'Цвет карточки', input: 'color' },
-    { key: 'bestiaryItemId', label: 'Бестиарий', input: 'bestiary' },
     text('description', 'Характер, мотивация и заметки'),
+    { key: 'bestiaryItemId', label: 'Бестиарий', input: 'bestiary', wide: true },
   ]
   if (type === 'location') {
     return [...fields, select('kind', 'Тип', LOCATION_KINDS),

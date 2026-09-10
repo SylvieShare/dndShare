@@ -27,6 +27,12 @@ describe('session entity form payloads', () => {
     expect(entityPayload('npc', npc)).toMatchObject({ raceItemId: null, bestiaryItemId: null })
   })
 
+  it.each(['npc', 'location'])('saves %s with an explicitly empty image', type => {
+    const draft = entityDraft(type, { name: 'Без изображения' })
+    expect(entityDraftValid(type, draft)).toBe(true)
+    expect(entityPayload(type, draft).imageId).toBeNull()
+  })
+
   it('validates material content and drops fields that do not belong to its type', () => {
     const draft = entityDraft('material', { kind: 'note', name: 'Письмо', content: 'Текст', assetId: 12, caption: 'Подпись', noteStyle: 'letter' })
     expect(entityDraftValid('material', draft)).toBe(true)

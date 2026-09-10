@@ -41,7 +41,7 @@ const referenceNames = reactive({})
 const bestiaryUpdate = ref(null)
 let pendingKind = null
 const fields = computed(() => entityFields(props.type, draft))
-const headerKeys = computed(() => ({ location: ['kind', 'name'], npc: ['name', 'raceItemId', 'role'], quest: ['status', 'name'], material: ['kind', 'name', 'noteStyle'] }[props.type] || ['name']))
+const headerKeys = computed(() => ({ location: ['kind', 'name'], npc: ['name', 'raceItemId', 'role', 'color'], quest: ['status', 'name'], material: ['kind', 'name', 'noteStyle'] }[props.type] || ['name']))
 const headerFields = computed(() => headerKeys.value.map(key => fields.value.find(field => field.key === key)).filter(Boolean))
 const visualField = computed(() => fields.value.find(field => ['image', 'asset'].includes(field.key)))
 const bodyFields = computed(() => fields.value.filter(field => !headerKeys.value.includes(field.key) && !['image', 'asset'].includes(field.key)))
@@ -72,7 +72,7 @@ onMounted(async () => {
 })
 function displayValue(field) {
   const value = draft[field.key]
-  if (field.input === 'race') return raceOptions.value.find(item => Number(item.key) === Number(value))?.label || 'Не выбрана'
+  if (field.input === 'race') return raceOptions.value.find(item => Number(item.key) === Number(value))?.label || 'Раса не выбрана'
   if (field.input === 'bestiary') return value ? referenceNames[value] || props.entity?.bestiaryItemName || `Существо #${value}` : 'Не привязан'
   if (field.options) return field.options.find(item => String(item.key) === String(value))?.label || 'Не выбрано'
   if (field.input === 'video') return value.id ? 'Видеофайл выбран' : 'Не выбран'
