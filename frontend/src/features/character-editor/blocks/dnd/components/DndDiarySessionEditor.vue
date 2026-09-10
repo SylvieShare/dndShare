@@ -1,26 +1,26 @@
 <template>
   <div class="dse-form">
-    <div class="dse-field">
-      <span class="dse-lab">Название</span>
+    <FormField label="Название" vertical>
       <FormTextInput
         :value="session.title"
+        aria-label="Название раздела"
         :placeholder="titlePlaceholder"
         @update:value="v => $emit('update', { title: v })"
       />
-    </div>
-    <div class="dse-field">
-      <span class="dse-lab">Дата</span>
+    </FormField>
+    <FormField label="Дата" vertical>
       <FormTextInput
         :value="session.date"
+        aria-label="Дата раздела"
         placeholder="12 июля / 3-й день Хаммера…"
         @update:value="v => $emit('update', { date: v })"
       />
-    </div>
+    </FormField>
   </div>
 </template>
 
 <script setup>
-import { FormTextInput } from '@sylvieshare/share-ui'
+import { FormField, FormTextInput } from '@sylvieshare/share-ui'
 
 defineProps({
   session: { type: Object, required: true },
@@ -30,13 +30,5 @@ defineEmits(['update'])
 </script>
 
 <style scoped>
-.dse-form { display: flex; flex-direction: column; gap: 14px; }
-.dse-field { display: flex; flex-direction: column; gap: 6px; }
-.dse-lab {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
+.dse-form { display: flex; flex-direction: column; min-width: 0; gap: 18px; }
 </style>

@@ -1,10 +1,11 @@
 .journal-workspace { width: 100%; min-width: 0; display: flex; flex-direction: column; gap: 14px; color: var(--text-1); container: journal / inline-size; }
 .journal-workspace--session { height: 100%; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; padding-right: 8px; scrollbar-gutter: stable; }
 .journal-workspace > * { flex-shrink: 0; }
-.journal-cover, .journal-chapters, .journal-edit-hint, .journal-error { width: 100%; max-width: 1040px; align-self: center; box-sizing: border-box; }
+.journal-header, .journal-edit-hint, .journal-error { width: 100%; max-width: 1040px; align-self: center; box-sizing: border-box; }
+.journal-header { min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 20px; }
 .journal-state { min-height: 220px; display: grid; place-items: center; align-content: center; gap: 12px; color: var(--text-muted); font-size: 13px; }
 .journal-state svg { color: var(--accent); }
-.journal-cover { position: relative; display: flex; gap: 14px; align-items: center; padding: 8px 0; }
+.journal-cover { position: relative; display: flex; gap: 14px; align-items: center; min-width: 0; }
 .journal-cover-icon { width: 40px; height: 40px; display: grid; place-items: center; flex-shrink: 0; color: var(--accent); }
 .journal-cover-copy { min-width: 0; flex: 1; }
 .journal-cover h2 { margin: 4px 0 0; font-family: var(--font-display); font-size: 23px; line-height: 1.15; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -20,4 +21,4 @@
 .journal-edit-hint { margin: -8px 0 0; color: var(--text-muted); font-size: 12px; }
 .journal-section-navigation { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .journal-section-navigation > :first-child { flex: 1; min-width: 0; }
-@container journal (max-width: 740px) { .journal-cover { flex-wrap: wrap; gap: 10px; } .journal-cover-controls { order: 5; width: 100%; max-width: none; align-items: flex-start; } .journal-cover-controls :deep(.journal-source-switch) { justify-content: flex-start; } .journal-cover h2 { font-size: 20px; } .journal-cover-icon { display: none; } }
+@container journal (max-width: 740px) { .journal-header { padding: 16px; gap: 16px; } .journal-cover { flex-wrap: wrap; gap: 10px; } .journal-cover-controls { order: 5; width: 100%; max-width: none; align-items: flex-start; } .journal-cover-controls :deep(.journal-source-switch) { justify-content: flex-start; } .journal-cover h2 { font-size: 20px; } .journal-cover-icon { display: none; } }

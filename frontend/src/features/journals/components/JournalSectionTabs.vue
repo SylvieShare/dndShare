@@ -35,7 +35,7 @@ function navigate(event, index) {
 }
 </script>
 <style scoped>
-.journal-chapters { display: flex; align-items: stretch; gap: 14px; min-width: 0; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.journal-chapters { display: flex; align-items: stretch; gap: 14px; min-width: 0; border-top: 1px solid var(--border); padding-top: 16px; }
 .journal-chapters-new { display: inline-flex; flex: none; align-items: center; gap: 8px; padding: 10px 14px; border: 1px dashed var(--border-strong); border-radius: 10px; background: transparent; color: var(--accent); font: 600 12px var(--font-ui); cursor: pointer; }
 .journal-chapters-strip { position: relative; display: flex; min-width: 0; gap: 8px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
 .journal-chapters-strip button { display: flex; flex: none; align-items: center; gap: 10px; max-width: 320px; padding: 12px 16px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--text-muted); font: 600 13px var(--font-ui); cursor: pointer; white-space: nowrap; }

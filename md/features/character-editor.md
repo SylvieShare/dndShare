@@ -705,7 +705,7 @@ Creation asks only for a type, then opens a whole-entry draft. One header pencil
 edits all fields, dialogue lines, combatants and quest objectives. Save is atomic,
 cancel leaves the original untouched, and existing types are immutable.
 The header-only entry type is available for titled separators. Every card uses
-a type-colored frame and a faint top-right icon watermark.
+a type-colored frame and an icon beside the title, without a background watermark.
 Dialogue voices retain scenario colors and stack speaker above text on mobile.
 Battle rows use handbook artwork with a single batched lookup per section.
 Source and audit are hidden behind an information icon beside edit/delete in the header.

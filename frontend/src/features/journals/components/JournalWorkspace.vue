@@ -2,22 +2,24 @@
   <section class="journal-workspace" :class="{ 'journal-workspace--session': sessionUuid }">
     <div v-if="loading" class="journal-state"><BookMarked :size="30" /><span>Открываем летопись…</span></div>
     <template v-else>
-      <header class="journal-cover">
-        <div class="journal-cover-icon"><BookMarked :size="27" /></div>
-        <div class="journal-cover-copy">
-          <span class="journal-kicker">{{ journal?.kind === 'session' || sessionUuid ? 'Дневник кампании' : 'Личный дневник' }}</span>
-          <h2>{{ journal?.name || 'Начало вашей истории' }}</h2>
-        </div>
-        <div class="journal-cover-controls">
-          <JournalSourceSwitch v-if="canSelectSource" :journal="journal" :sources="sources" :busy="locked"
-            @select="uuid => selectSource(uuid).catch(() => {})" @create-personal="createJournal" />
-          <ToggleSwitch v-if="sessionUuid && canManage && journal.kind === 'session'" :model-value="journal.playersCanEdit" :disabled="locked"
-            label="Игроки могут редактировать дневник" @update:model-value="value => setPlayerEditing(value).catch(() => {})" />
-        </div>
-      </header>
-      <template v-if="journal">
-        <JournalSectionTabs :sections="sections" :selected-id="selectedId" :editable="canEdit" :disabled="locked"
+      <BaseTile class="journal-header">
+        <header class="journal-cover">
+          <div class="journal-cover-icon"><BookMarked :size="27" /></div>
+          <div class="journal-cover-copy">
+            <span class="journal-kicker">{{ journal?.kind === 'session' || sessionUuid ? 'Дневник кампании' : 'Личный дневник' }}</span>
+            <h2>{{ journal?.name || 'Начало вашей истории' }}</h2>
+          </div>
+          <div class="journal-cover-controls">
+            <JournalSourceSwitch v-if="canSelectSource" :journal="journal" :sources="sources" :busy="locked"
+              @select="uuid => selectSource(uuid).catch(() => {})" @create-personal="createJournal" />
+            <ToggleSwitch v-if="sessionUuid && canManage && journal.kind === 'session'" :model-value="journal.playersCanEdit" :disabled="locked"
+              label="Игроки могут редактировать дневник" @update:model-value="value => setPlayerEditing(value).catch(() => {})" />
+          </div>
+        </header>
+        <JournalSectionTabs v-if="journal" :sections="sections" :selected-id="selectedId" :editable="canEdit" :disabled="locked"
           @select="selectedId = $event" @create="openSection()" />
+      </BaseTile>
+      <template v-if="journal">
         <p v-if="editingId" class="journal-edit-hint">Сохраните правку или отмените её, чтобы переключить раздел.</p>
         <p v-else-if="!canEdit && journal.kind === 'session'" class="journal-edit-hint">Только чтение · записи добавляет мастер</p>
         <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
@@ -51,7 +53,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { BookMarked, Feather, Plus } from '@lucide/vue'
-import { ConfirmDialog, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
+import { BaseTile, ConfirmDialog, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
 import JournalTimeline from './JournalTimeline.vue'
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import { defaultEvent, defaultSession, normalizeSession, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'

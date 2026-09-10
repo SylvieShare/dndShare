@@ -15,6 +15,9 @@ describe('journal reading and inline editing', () => {
     expect(cover).toContain('<JournalSourceSwitch')
     expect(cover).toContain("sessionUuid && canManage && journal.kind === 'session'")
     expect(workspace).toContain('<JournalSectionTabs')
+    const header = workspace.match(/<BaseTile class="journal-header">[\s\S]*?<\/BaseTile>/)[0]
+    expect(header).toContain('<header class="journal-cover">')
+    expect(header).toContain('<JournalSectionTabs')
     expect(workspace).toContain('<JournalTimeline v-if="selectedSection"')
     expect(workspace).not.toContain('MorphEditorShell')
     expect(workspace).not.toContain('DndDiaryEventEditor')
@@ -86,18 +89,17 @@ describe('journal reading and inline editing', () => {
     expect(html).not.toContain('link-chip')
     expect(html).not.toContain('Редактировать пункт')
   })
-  it('frames every entry and repeats its icon as a noninteractive watermark', async () => {
+  it('frames every entry with an icon only in its header, without watermarks', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {
       event: { id: 'h', type: 'header', title: 'Перед рассветом', desc: 'Не показывается' }, saveEvent: async () => {},
     }))
     expect(html).toContain('base-tile--framed')
-    expect(html).toContain('diary-event-watermark')
-    expect(html).toContain('aria-hidden="true"')
+    expect(html).not.toContain('diary-event-watermark')
+    expect(html).toContain('diary-event-icon')
     expect(html).toContain('Перед рассветом')
     expect(html).not.toContain('diary-event-content')
     expect(html).not.toContain('Не показывается')
-    expect(row).toContain('opacity: .035')
-    expect(row).toContain('pointer-events: none')
+    expect(row).not.toContain('watermark')
   })
   it('renders bestiary artwork and resolves names for imported battles', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {

@@ -1,6 +1,5 @@
 <template>
   <BaseTile class="diary-event" :class="['diary-event--' + event.type, { 'diary-event--compact': compact }]" :color="meta.color" framed>
-    <component :is="meta.icon" class="diary-event-watermark" :size="96" aria-hidden="true" />
     <header class="diary-event-header" :class="{ 'diary-event-header--draggable': draggable }"
       :tabindex="draggable ? 0 : undefined" :aria-label="draggable ? 'Переместить событие: перетащите заголовок или используйте стрелки вверх и вниз' : undefined"
       @pointerdown="drag" @keydown="move">
@@ -13,7 +12,7 @@
       </div>
     </header>
     <JournalInlineForm v-if="editor" class="diary-event-editor" label="Редактирование записи" :busy="busy || saving" :error="error" @save="save" @cancel="cancel">
-      <JournalEventFields :value="editor.value" @update:value="editor.value = $event" />
+      <JournalEventFields :value="editor.value" :items-by-id="itemsById" @update:value="editor.value = $event" />
     </JournalInlineForm>
     <div v-else-if="!headingOnly" class="diary-event-content">
       <DndDiaryDialogue v-if="event.type === 'dialog'" :lines="event.dialogue" />
@@ -71,8 +70,7 @@ const descHtml = computed(() => /<[a-z][\s\S]*>/i.test(props.event.desc || '') ?
 const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() !== '')
 </script>
 <style scoped>
-.diary-event { min-width: 0; --r-lg: 14px; isolation: isolate; }
-.diary-event-watermark { position: absolute; z-index: 0; top: 8px; right: 12px; width: 96px; height: 96px; color: var(--tile-color); opacity: .035; pointer-events: none; user-select: none; stroke-width: 1.2; }
+.diary-event { min-width: 0; --r-lg: 14px; isolation: isolate; container: diary-event / inline-size; }
 .diary-event-header { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; padding: 16px 20px; min-width: 0; border-radius: 14px 14px 0 0; border-bottom: 1px solid color-mix(in srgb, var(--tile-color) 14%, var(--border)); background: color-mix(in srgb, var(--tile-color) 3%, transparent); }
 .diary-event-header--draggable { cursor: grab; touch-action: none; }
 .diary-event-header--draggable:active { cursor: grabbing; }
@@ -83,20 +81,19 @@ const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&
 .diary-event-actions :deep(.diary-pencil) { margin: 0; }
 .diary-event-content { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px 22px 20px; }
 .diary-event-prose { min-width: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
-.diary-event-editor { position: relative; z-index: 1; padding: 18px 22px; }
+.diary-event-editor { position: relative; z-index: 1; padding: 20px 22px; }
 .diary-event--header .diary-event-header, .diary-event--newday .diary-event-header { border-bottom: 0; border-radius: 14px; }
 .diary-event--header h3 { font-size: 30px; }
 .diary-event--compact .diary-event-header { padding: 14px 16px; }
 .diary-event--compact .diary-event-header h3 { font-size: 22px; }
 .diary-event :deep(.diary-empty-copy) { color: var(--text-muted); font: italic 13px/1.7 var(--font-prose); }
-@media (max-width: 720px) {
+@container diary-event (max-width: 600px) {
   .diary-event-header { padding: 14px 12px; gap: 7px; }
   .diary-event-header h3 { font-size: 23px; }
   .diary-event-actions { margin-left: auto; }
   .diary-event-icon { width: 24px; }
   .diary-event-content, .diary-event-editor { padding: 14px 16px 18px; }
   .diary-event-prose { font-size: 13px; }
-  .diary-event-watermark { width: 80px; height: 80px; right: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .diary-event { transition: none; } }
 </style>
