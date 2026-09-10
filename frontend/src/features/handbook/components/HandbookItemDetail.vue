@@ -132,6 +132,7 @@ import { useSuggestStore } from '@/stores/suggest'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { getSuggestId, isFieldVisible } from '@/features/handbook/objects/lib/schemaFields'
 import AbilityDetailContent from '@/features/items/detail-components/AbilityDetailContent'
+import BackgroundDetailContent from '@/features/items/detail-components/BackgroundDetailContent.vue'
 import ArmorDetailContent from '@/features/items/detail-components/ArmorDetailContent'
 import ArmorDetailSummary from '@/features/items/detail-components/ArmorDetailSummary.vue'
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent'
@@ -167,6 +168,7 @@ const CUSTOM_RENDERERS = {
   8: OriginDetailContent,
   9: OriginDetailContent,
   10: PotionDetailContent,
+  11: BackgroundDetailContent,
   12: ArmorDetailContent,
   13: TransportDetailContent,
   14: ItemDetailContent,

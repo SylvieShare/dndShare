@@ -1,0 +1,194 @@
+[
+  {
+    "key": "skills",
+    "name": "Владение навыками",
+    "type": "suggest_array",
+    "suggest_id": 15
+  },
+  {
+    "key": "languages",
+    "name": "Языки",
+    "type": "suggest_array",
+    "suggest_id": 6
+  },
+  {
+    "key": "lang_choice",
+    "name": "Языки на выбор",
+    "type": "object",
+    "fields": [
+      {
+        "key": "count",
+        "name": "Количество",
+        "type": "int",
+        "default": 1
+      }
+    ]
+  },
+  {
+    "key": "tool_prof",
+    "name": "Владение инструментами",
+    "type": "suggest_array",
+    "suggest_id": 5
+  },
+  {
+    "key": "feature",
+    "name": "Черта предыстории",
+    "type": "text"
+  },
+  {
+    "key": "feature_desc",
+    "name": "Описание черты",
+    "type": "description"
+  },
+  {
+    "key": "description",
+    "name": "Описание",
+    "type": "description"
+  },
+  {
+    "key": "tool_items",
+    "name": "Инструменты справочника",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "item_id",
+        "name": "Предмет",
+        "type": "item",
+        "item_type": 14
+      },
+      {
+        "key": "count",
+        "name": "Количество",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "key": "params",
+        "name": "Параметры экземпляра",
+        "type": "object",
+        "fields": [
+          {
+            "key": "length_ft",
+            "name": "Длина, фт.",
+            "type": "int"
+          },
+          {
+            "key": "magic_bonus",
+            "name": "Магический бонус",
+            "type": "int"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "equipment_items",
+    "name": "Стартовое снаряжение справочника",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "item_id",
+        "name": "Предмет",
+        "type": "item",
+        "item_type": 2
+      },
+      {
+        "key": "count",
+        "name": "Количество",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "key": "params",
+        "name": "Параметры экземпляра",
+        "type": "object",
+        "fields": [
+          {
+            "key": "length_ft",
+            "name": "Длина, фт.",
+            "type": "int"
+          },
+          {
+            "key": "magic_bonus",
+            "name": "Магический бонус",
+            "type": "int"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "starting_coins",
+    "name": "Стартовые монеты",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "currency_id",
+        "name": "Валюта",
+        "type": "suggest",
+        "suggest_id": 17
+      },
+      {
+        "key": "amount",
+        "name": "Количество",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "key": "item_choices",
+    "name": "Выборы предметов предыстории",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "key",
+        "name": "Ключ",
+        "type": "text"
+      },
+      {
+        "key": "label",
+        "name": "Название",
+        "type": "text"
+      },
+      {
+        "key": "option_item_ids",
+        "name": "Варианты снаряжения",
+        "type": "item_array",
+        "item_type": 2
+      },
+      {
+        "key": "grants_tool_proficiency",
+        "name": "Даёт владение инструментом",
+        "type": "boolean"
+      },
+      {
+        "key": "grants_tool_item",
+        "name": "Показывать среди инструментов",
+        "type": "boolean"
+      },
+      {
+        "key": "grants_equipment_item",
+        "name": "Выдавать в снаряжение",
+        "type": "boolean"
+      },
+      {
+        "key": "replace_tool_prof_id",
+        "name": "Заменяет владение",
+        "type": "suggest",
+        "suggest_id": 5
+      },
+      {
+        "key": "replace_tool_item_id",
+        "name": "Заменяет инструмент",
+        "type": "item",
+        "item_type": 14
+      },
+      {
+        "key": "replace_equipment_item_id",
+        "name": "Заменяет предмет",
+        "type": "item",
+        "item_type": 2
+      }
+    ]
+  }
+]

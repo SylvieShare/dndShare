@@ -7,6 +7,7 @@ const PAGE_SIZE = 40
 
 export function useItemMultiSelect(props, emit) {
   const open = ref(false)
+  const activeTypeId = ref(props.itemTypeId)
   const search = ref('')
   const draft = ref([])
   const items = ref([])
@@ -52,7 +53,7 @@ export function useItemMultiSelect(props, emit) {
     const query = search.value.trim()
     const path = query ? `/items/search?q=${encodeURIComponent(query)}&` : '/items?'
     try {
-      const response = await fetchGet(`${path}typeId=${props.itemTypeId}&limit=${PAGE_SIZE}&offset=${offset}`)
+      const response = await fetchGet(`${path}typeId=${activeTypeId.value}&limit=${PAGE_SIZE}&offset=${offset}`)
       if (version !== request || disposed) return
       const page = response?.items || []
       remember(page)
@@ -85,6 +86,14 @@ export function useItemMultiSelect(props, emit) {
     close()
   }
 
+  function selectType(id) {
+    const next = Number(id)
+    if (!next || next === activeTypeId.value) return
+    clearTimeout(timer)
+    activeTypeId.value = next
+    if (open.value) load()
+  }
+
   watch(search, () => {
     clearTimeout(timer)
     if (!open.value) return
@@ -97,7 +106,7 @@ export function useItemMultiSelect(props, emit) {
   onScopeDispose(() => { disposed = true; clearTimeout(timer); request++ })
 
   return {
-    open, search, draft, items, selectedItems, loading, error, hydrationError, hasMore,
+    open, search, draft, items, selectedItems, loading, error, hydrationError, hasMore, activeTypeId, selectType,
     begin, close, apply, hydrate,
     updateItem: item => remember([item]),
     toggle: id => { draft.value = toggleItemId(draft.value, id) },

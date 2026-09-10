@@ -1,7 +1,7 @@
 <template>
   <div class="ability-editor">
     <div class="ability-editor-main">
-      <div class="ability-editor-intro"><h3>Описание способности</h3><p>Название и правила, которые увидит игрок.</p></div>
+      <div class="ability-editor-intro"><h3>{{ typeId === 7 ? 'Описание черты' : 'Описание способности' }}</h3><p>Название и правила, которые увидит игрок.</p></div>
       <slot />
       <AbilityRuleFields :fields="profile.primary.filter(field => !['level_source', 'level_class_id'].includes(field.key))" :data="data" @update:data="updateData" />
       <AbilityLevelSource :data="data" />
@@ -23,6 +23,7 @@
           <AbilityWeaponDamageEditor v-else-if="card.key === 'weapon_damage'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityStatusEffectEditor v-else-if="card.key === 'status_effects'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityMechanicEditor v-else-if="['sheet_widgets', 'usage'].includes(card.key)" :kind="card.key" :data="card.index == null ? data[card.key] : data[card.key][card.index]" :fields="card.block.fields[0].fields" />
+          <CatalogueFields v-else-if="typeId === 7" :fields="card.block.repeatable ? card.block.fields[0].fields : card.block.fields" :data="card.index == null ? data : data[card.key][card.index]" :root-data="data" :type-id="typeId" :path="card.block.repeatable ? card.key : ''" :hide-label-for="card.index == null ? card.key : ''" @update:data="value => update(card, value)" />
           <AbilityRuleFields v-else :fields="card.block.repeatable ? card.block.fields[0].fields : card.block.fields" :data="card.index == null ? data : data[card.key][card.index]" :hide-label-for="card.index == null ? card.key : ''" :advanced="card.block.repeatable" @update:data="value => update(card, value)" />
         </details>
       </BaseTile>
@@ -43,6 +44,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import CatalogueFields from './catalogue/CatalogueFields.vue'
 import { dependencyManifest } from './abilityDependencyManifest'
 import AbilityDependencyEditor from './AbilityDependencyEditor.vue'
 import AbilityChoiceEditor from './AbilityChoiceEditor.vue'

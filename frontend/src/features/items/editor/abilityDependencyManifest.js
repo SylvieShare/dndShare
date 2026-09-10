@@ -27,6 +27,8 @@ export const dependencyManifest = {
       target_from_choice: { name: 'Применять к выбранным игроком вариантам' },
       choice_values: { name: 'Только выбранные варианты', hint: 'Без ограничения подходят любые ответы игрока.' },
       group: { name: 'Группа заменяющих бонусов', hint: 'В одной группе применяется наибольший бонус скорости, а не сумма. Одинаковое имя объединяет правила.' },
+      value_parameter: { name: 'Название параметра величины', hint: 'Источник эффекта сможет передать своё значение под этим именем. Без параметра действует указанная величина.' },
+      target_parameter: { name: 'Название параметра цели', hint: 'Источник эффекта передаёт выбранную цель, например оружие, под этим именем.' },
     },
     gates: [
       { title: 'Добавить характеристику или мастерство', keys: ['ability_modifier', 'proficiency_multiplier', 'minimum'], when: d => bonusKinds.includes(d.kind) },
@@ -35,6 +37,8 @@ export const dependencyManifest = {
       { title: 'Только без владения', keys: ['only_without_proficiency'], when: d => bonusKinds.includes(d.kind) },
       { title: 'Условия по снаряжению', keys: ['requires_armor', 'requires_no_armor', 'forbid_heavy_armor', 'allow_shield'], when: d => armorKinds.includes(d.kind) },
       { title: 'Своя подпись правила', keys: ['label'] },
+      { title: 'Величину задаёт источник эффекта', keys: ['value_parameter'], when: d => (derivedKinds[d.kind] || []).includes('value') },
+      { title: 'Цель задаёт источник эффекта', keys: ['target_parameter'], when: d => ['weapon_attack_bonus', 'weapon_damage_bonus'].includes(d.kind) },
       { title: 'Заменяет меньший бонус скорости', keys: ['group'], when: d => d.kind === 'speed_bonus' },
     ],
   },

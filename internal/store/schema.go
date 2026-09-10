@@ -274,6 +274,9 @@ var schemaRelentlessEnduranceCopySQL string
 //go:embed schema/81_relentless_endurance_resource_hint.sql
 var schemaRelentlessEnduranceResourceHintSQL string
 
+//go:embed schema/84_catalogue_editing.sql
+var schemaCatalogueEditingSQL string
+
 var schemaParts = []struct {
 	name string
 	sql  string
@@ -364,6 +367,7 @@ var schemaParts = []struct {
 	{"relentless-endurance-resource-hint", schemaRelentlessEnduranceResourceHintSQL},
 	{"journal-quests", schemaJournalQuestsSQL},
 	{"journal-headers", schemaJournalHeadersSQL},
+	{"catalogue-editing", schemaCatalogueEditingSQL},
 }
 
 const (

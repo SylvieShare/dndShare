@@ -13,6 +13,11 @@
       <div v-else class="idc-no-desc">Описание отсутствует</div>
     </DetailSection>
 
+    <DetailSection v-if="data.armor && (data.armor.ac != null || data.armor.shield)" label="Защита">
+      <template #icon><ShieldCheck /></template>
+      <span>{{ data.armor.shield ? `+${data.armor.shield_bonus ?? 2} к КД` : `КД ${data.armor.ac}${data.armor.use_dex ? ` + Ловкость${data.armor.dex_cap != null ? ` (не более +${data.armor.dex_cap})` : ''}` : ''}` }}</span>
+    </DetailSection>
+
     <DetailSection v-if="contents.length" label="Содержимое набора">
       <template #icon><Package /></template>
       <div class="idc-contents">
@@ -49,7 +54,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { BookOpen, Package, PackageOpen } from '@lucide/vue'
+import { BookOpen, Package, PackageOpen, ShieldCheck } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'

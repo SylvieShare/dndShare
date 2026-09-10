@@ -62,6 +62,6 @@
   { "key": "rider_stability_advantage", "name": "Преимущество для удержания в седле", "type": "boolean", "show_on": { "key": "tack_kind", "value": "military_saddle" } },
   { "key": "for_exotic_mount", "name": "Для экзотического скакуна", "type": "boolean", "show_on": { "key": "tack_kind", "value": "exotic_saddle" } },
   { "key": "cost", "name": "Стоимость", "type": "int_by_suggest", "suggest_type_id": 17 },
-  { "key": "weight", "name": "Вес, фнт.", "type": "int" },
+  {"key":"weight","name":"Вес, фнт.","type":"float"},
   { "key": "available_in_starting_shop", "name": "Доступно в магазине при создании", "type": "boolean", "filter": true }
 ]

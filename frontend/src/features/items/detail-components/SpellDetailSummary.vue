@@ -3,6 +3,8 @@
     <div v-if="levelLabel || school" class="spell-summary-kind">
       <strong v-if="levelLabel">{{ levelLabel }}</strong>
       <span v-if="school">{{ school }}</span>
+      <span v-if="data.concentration">Концентрация</span>
+      <span v-if="data.ritual">Ритуал</span>
     </div>
 
     <div class="spell-summary-casting">
@@ -27,7 +29,7 @@
       <div class="spell-summary-grid">
         <CoverStatCard v-if="data.time" :icon="Clock3" label="Время" :value="data.time" size="compact" />
         <CoverStatCard v-if="data.range" :icon="LocateFixed" label="Дистанция" :value="data.range" size="compact" />
-        <CoverStatCard v-if="data.duration" :icon="Hourglass" label="Длительность" :value="data.duration" size="compact" />
+        <CoverStatCard v-if="data.duration" :icon="Hourglass" label="Длительность" :value="spellDurationLabel(data.duration)" size="compact" />
       </div>
     </div>
   </div>
@@ -38,6 +40,7 @@ import { computed } from 'vue'
 import { Clock3, Hourglass, LocateFixed, Shapes } from '@lucide/vue'
 import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
+import { spellDurationLabel } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 
 const props = defineProps({
   item: { type: Object, required: true },

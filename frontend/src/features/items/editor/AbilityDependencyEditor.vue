@@ -13,7 +13,7 @@
       </div>
     </template>
     <AbilityLevelSource v-if="kind === 'hp_bonuses' && enabled['Прибавка за уровень']" :data="editor.itemData || {}" readonly />
-    <AbilityUnlockField :data="data" />
+    <AbilityUnlockField v-if="allowUnlock" :data="data" />
   </div>
 </template>
 <script setup>
@@ -27,11 +27,11 @@ import AbilityUnlockField from './AbilityUnlockField.vue'
 import AbilityLevelSource from './AbilityLevelSource.vue'
 import AbilityDerivedTargets from './AbilityDerivedTargets.vue'
 import AbilityChoiceCondition from './AbilityChoiceCondition.vue'
-const props = defineProps({ kind: String, data: Object, fields: Array })
+const props = defineProps({ kind: String, data: Object, fields: Array, allowUnlock: { type: Boolean, default: true } })
 const editor = inject(itemFieldEditorKey, {})
 const manifest = computed(() => dependencyManifest[props.kind])
 const enabled = reactive(Object.fromEntries(manifest.value.gates.map(g => [g.title, g.keys.some(k => k === 'allow_shield' ? props.data[k] === false : hasFieldValue(props.data[k]))])))
-const gates = computed(() => manifest.value.gates.filter(g => !g.when || g.when(props.data)).map(g => ({ ...g, keys: g.keys.filter(key => !manifest.value.main(props.data).includes(key)) })))
+const gates = computed(() => manifest.value.gates.filter(g => !g.when || g.when(props.data)).map(g => ({ ...g, keys: g.keys.filter(key => !manifest.value.main(props.data).includes(key)) })).filter(g => fieldsFor(g.keys).length))
 const fieldsFor = keys => dependencyFields(props.kind, props.fields, keys, props.data)
 const validationKey = Symbol('dependency')
 watchEffect(() => {

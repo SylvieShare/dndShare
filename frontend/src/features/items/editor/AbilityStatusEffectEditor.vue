@@ -7,7 +7,7 @@
     <div v-for="parameter in parameters" :key="parameter.key" class="ability-action-fields">
       <FormField :label="parameter.label" vertical :title="`Параметр эффекта ${parameter.key}. Значение можно брать из прогрессии этой способности.`">
         <FormSelect :value="binding(parameter.key)?.source || ''" :aria-label="parameter.label" @update:value="source => setEffectParameter(data, parameter.key, source)">
-          <option value="">Как в самом эффекте</option><option value="scaling_value">Из прогрессии способности</option><option value="fixed">Задать число</option>
+          <option value="">Как в самом эффекте</option><option v-if="allowScaling" value="scaling_value">Из прогрессии способности</option><option value="fixed">Задать число</option>
         </FormSelect>
       </FormField>
       <FormField v-if="binding(parameter.key)?.source === 'fixed'" label="Значение" vertical :title="`Постоянное значение: ${parameter.label}.`"><FormTextInput :value="binding(parameter.key).value" type="number" :aria-label="`Значение: ${parameter.label}`" @update:value="value => setEffectParameter(data, parameter.key, 'fixed', Number(value))" /></FormField>
@@ -25,7 +25,7 @@ import { itemFieldEditorKey } from '@/features/character-editor/components/useIt
 import AbilityRuleFields from './AbilityRuleFields.vue'
 import RuleKeyField from './RuleKeyField.vue'
 import { effectParameterOptions, setEffectParameter } from './effectParameterOptions'
-const props = defineProps({ data: Object, fields: Array })
+const props = defineProps({ data: Object, fields: Array, allowScaling: { type: Boolean, default: true } })
 const editor = inject(itemFieldEditorKey, {})
 const effect = ref(null), loading = ref(false), error = ref(false)
 let request = 0

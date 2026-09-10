@@ -94,8 +94,16 @@
         "key": "scaling",
         "type": "text",
         "default": "none",
-        "filter_values": ["none", "slot", "cantrip"],
-        "filter_labels": { "none": "нет", "slot": "за круг ячейки", "cantrip": "за уровень героя" }
+        "filter_values": [
+          "none",
+          "slot",
+          "cantrip"
+        ],
+        "filter_labels": {
+          "none": "нет",
+          "slot": "за круг ячейки",
+          "cantrip": "за уровень героя"
+        }
       },
       {
         "name": "Снарядов/лучей",
@@ -122,8 +130,7 @@
           {
             "name": "Кубик",
             "key": "dice_id",
-            "type": "suggest",
-            "suggest_id": 11
+            "type": "dice"
           },
           {
             "name": "Вид урона",
@@ -152,8 +159,7 @@
           {
             "name": "Кубик",
             "key": "dice_id",
-            "type": "suggest",
-            "suggest_id": 11
+            "type": "dice"
           },
           {
             "name": "Вид урона",
@@ -185,8 +191,16 @@
         "key": "scaling",
         "type": "text",
         "default": "none",
-        "filter_values": ["none", "slot", "cantrip"],
-        "filter_labels": { "none": "нет", "slot": "за круг ячейки", "cantrip": "за уровень героя" }
+        "filter_values": [
+          "none",
+          "slot",
+          "cantrip"
+        ],
+        "filter_labels": {
+          "none": "нет",
+          "slot": "за круг ячейки",
+          "cantrip": "за уровень героя"
+        }
       },
       {
         "name": "Кубики (база)",
@@ -202,8 +216,7 @@
           {
             "name": "Кубик",
             "key": "dice_id",
-            "type": "suggest",
-            "suggest_id": 11
+            "type": "dice"
           }
         ]
       },
@@ -221,8 +234,7 @@
           {
             "name": "Кубик",
             "key": "dice_id",
-            "type": "suggest",
-            "suggest_id": 11
+            "type": "dice"
           }
         ]
       }
@@ -232,5 +244,8 @@
     "name": "Описание",
     "key": "description",
     "type": "description"
-  }
+  },
+  {"key":"concentration","name":"Требует концентрации","type":"bool"},
+  {"key":"ritual","name":"Можно сотворить ритуалом","type":"bool"},
+  {"key":"status_effects","name":"Связанные эффекты","type":"object_array","fields":[{"key":"key","name":"Ключ","type":"text"},{"key":"effect","name":"Эффект","type":"item","item_type":15},{"key":"parameter_bindings","name":"Параметры","type":"object_array","fields":[{"key":"key","name":"Параметр","type":"text"},{"key":"source","name":"Источник","type":"select","options":[{"label":"Текущее значение прогрессии","value":"scaling_value"},{"label":"Постоянное значение","value":"fixed"}]},{"key":"value","name":"Значение","type":"int"}]},{"key":"concentration","name":"Концентрация","type":"bool"},{"key":"duration","name":"Длительность","type":"object","fields":[{"key":"kind","name":"Вид","type":"select","default":"manual","options":[{"label":"До ручного снятия","value":"manual"},{"label":"Раунды","value":"rounds"},{"label":"Минуты","value":"minutes"},{"label":"Часы","value":"hours"},{"label":"До отдыха","value":"until_rest"},{"label":"Постоянно","value":"permanent"}]},{"key":"value","name":"Значение","type":"int"}]}]}
 ]

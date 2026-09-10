@@ -1,0 +1,278 @@
+[
+  {
+    "key": "desc",
+    "name": "Описание",
+    "type": "description"
+  },
+  {
+    "key": "polarity",
+    "name": "Полярность",
+    "type": "select",
+    "filter": true,
+    "default": "neutral",
+    "options": [
+      {
+        "label": "Положительный",
+        "value": "positive"
+      },
+      {
+        "label": "Отрицательный",
+        "value": "negative"
+      },
+      {
+        "label": "Нейтральный",
+        "value": "neutral"
+      }
+    ]
+  },
+  {
+    "key": "color",
+    "name": "Цвет",
+    "type": "color",
+    "default": "#7c5cff"
+  },
+  {
+    "key": "stacking",
+    "name": "Наложение",
+    "type": "select",
+    "default": "single",
+    "options": [
+      {
+        "label": "Один экземпляр",
+        "value": "single"
+      },
+      {
+        "label": "Несколько экземпляров",
+        "value": "multiple"
+      }
+    ]
+  },
+  {
+    "key": "duration",
+    "name": "Длительность",
+    "type": "object",
+    "fields": [
+      {
+        "key": "kind",
+        "name": "Вид",
+        "type": "select",
+        "default": "manual",
+        "options": [
+          {
+            "label": "До ручного снятия",
+            "value": "manual"
+          },
+          {
+            "label": "Раунды",
+            "value": "rounds"
+          },
+          {
+            "label": "Минуты",
+            "value": "minutes"
+          },
+          {
+            "label": "Часы",
+            "value": "hours"
+          },
+          {
+            "label": "До отдыха",
+            "value": "until_rest"
+          },
+          {
+            "label": "Постоянно",
+            "value": "permanent"
+          }
+        ]
+      },
+      {
+        "key": "value",
+        "name": "Значение",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "key": "concentration",
+    "name": "Концентрация",
+    "type": "bool"
+  },
+  {
+    "key": "derived_effects",
+    "name": "Производные эффекты",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "kind",
+        "name": "Вид",
+        "type": "select",
+        "options": [
+          {
+            "label": "Бонус КД",
+            "value": "armor_bonus"
+          },
+          {
+            "label": "Бонус скорости",
+            "value": "speed_bonus"
+          },
+          {
+            "label": "Бонус проверки",
+            "value": "check_bonus"
+          },
+          {
+            "label": "Бонус навыка",
+            "value": "skill_bonus"
+          },
+          {
+            "label": "Бонус спасброска",
+            "value": "save_bonus"
+          },
+          {
+            "label": "Бонус атаки оружием",
+            "value": "weapon_attack_bonus"
+          },
+          {
+            "label": "Бонус урона оружием",
+            "value": "weapon_damage_bonus"
+          },
+          {
+            "label": "Режим броска",
+            "value": "roll_mode"
+          },
+          {
+            "label": "Запрет действия",
+            "value": "activity_block"
+          }
+        ]
+      },
+      {
+        "key": "value",
+        "name": "Значение",
+        "type": "int"
+      },
+      {
+        "key": "value_parameter",
+        "name": "Параметр значения",
+        "type": "text"
+      },
+      {
+        "key": "ability_ids",
+        "name": "Характеристики",
+        "type": "suggest_array",
+        "suggest_id": 16
+      },
+      {
+        "key": "weapon_kind",
+        "name": "Вид оружия",
+        "type": "select",
+        "options": [
+          {
+            "label": "Любое",
+            "value": "any"
+          },
+          {
+            "label": "Рукопашное",
+            "value": "melee"
+          },
+          {
+            "label": "Дальнобойное",
+            "value": "ranged"
+          }
+        ]
+      },
+      {
+        "key": "scopes",
+        "name": "Области броска",
+        "type": "text_array"
+      },
+      {
+        "key": "mode",
+        "name": "Режим",
+        "type": "select",
+        "options": [
+          {
+            "label": "Преимущество",
+            "value": "advantage"
+          },
+          {
+            "label": "Помеха",
+            "value": "disadvantage"
+          }
+        ]
+      },
+      {
+        "key": "label",
+        "name": "Пояснение",
+        "type": "text"
+      },
+      {
+        "key": "ability_modifier",
+        "name": "Характеристика-модификатор",
+        "type": "suggest",
+        "suggest_id": 16
+      },
+      {
+        "key": "minimum",
+        "name": "Минимальный бонус",
+        "type": "int"
+      },
+      {
+        "key": "target_parameter",
+        "name": "Параметр цели",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "key": "defenses",
+    "name": "Защиты",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "damage_type",
+        "name": "Тип урона",
+        "type": "suggest",
+        "suggest_id": 12
+      },
+      {
+        "key": "kind",
+        "name": "Вид защиты",
+        "type": "select",
+        "default": "resistance",
+        "options": [
+          {
+            "label": "Сопротивление",
+            "value": "resistance"
+          },
+          {
+            "label": "Невосприимчивость",
+            "value": "immunity"
+          },
+          {
+            "label": "Уязвимость",
+            "value": "vulnerability"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "level",
+    "name": "Уровень",
+    "type": "int"
+  },
+  {
+    "key": "thesis",
+    "name": "Тезис",
+    "type": "textarea"
+  },
+  {
+    "key": "code",
+    "name": "Ключ эффекта",
+    "type": "text"
+  },
+  {
+    "key": "max_level",
+    "name": "Максимальная ступень",
+    "type": "int"
+  }
+]

@@ -3,7 +3,7 @@
     <component :is="hideLabel ? 'div' : FormField"
       v-bind="hideLabel ? { role: 'group', 'aria-label': field.name, title: hint } : { label: field.name + (field.required ? ' *' : ''), vertical: true, title: hint }"
     >
-      <div v-if="field.type === 'option_array'" class="ability-rule-rows">
+      <div v-if="['option_array', 'suggest_array'].includes(field.type)" class="ability-rule-rows">
         <BaseTile v-for="value in modelValue || []" :key="value" class="ability-selection-row">
           <span>{{ options.find(option => String(option.value) === String(value))?.label || value }}</span>
           <RemoveButton icon="trash" :label="`Убрать ${options.find(option => String(option.value) === String(value))?.label || value}`" @click="set(modelValue.filter(v => String(v) !== String(value)))" />
@@ -23,9 +23,9 @@
         <RuleReferencePicker :kind="referenceKind" :value="modelValue" :label="field.name" :only-current="referenceKind !== 'resource_pool' && referenceKind !== 'status'" :scope-item-id="field.key === 'choice_key' ? contextData.source_item_id || 0 : 0" @pick="entry => set(entry.key)" />
         <RemoveButton v-if="modelValue" icon="trash" :label="`Убрать: ${field.name}`" @click="set('')" />
       </div>
-      <InputDescription v-else-if="field.type === 'description'" editable :block="{ id: field.key, content: { placeholder: 'Как работает способность…' } }" :value="modelValue || ''" @update:value="(_, value) => set(value)" />
+      <InputDescription v-else-if="field.type === 'description'" editable :block="{ id: field.key, content: { placeholder: field.placeholder || 'Описание и правила…' } }" :value="modelValue || ''" @update:value="(_, value) => set(value)" />
       <ToggleSwitch v-else-if="['bool', 'boolean'].includes(field.type)" :model-value="!!(modelValue ?? field.default)" :aria-label="field.name" @update:model-value="set" />
-      <FormTextInput v-else-if="['int', 'float'].includes(field.type)" type="number" :step="field.type === 'float' ? 'any' : 1" :aria-label="field.name" :value="modelValue ?? ''" placeholder="Не задано" @update:value="value => set(numberOrNull(value))" />
+      <FormTextInput v-else-if="['int', 'float'].includes(field.type)" type="number" :step="field.type === 'float' ? 'any' : 1" :min="field.min" :max="field.max" :aria-label="field.name" :value="modelValue ?? ''" :placeholder="field.placeholder || 'Не задано'" @update:value="value => set(numberOrNull(value))" />
       <FormTextarea v-else-if="['textarea', 'text_array'].includes(field.type)" :aria-label="field.name" :value="field.type === 'text_array' ? (modelValue || []).join(', ') : modelValue || ''" @update:value="setText" />
       <ColorPresetPicker v-else-if="field.type === 'color'" inline allow-custom :model-value="modelValue || ''" @update:model-value="set" />
       <div v-else-if="field.type === 'item'" class="ability-reference">
@@ -36,13 +36,6 @@
         <option value="">{{ field.emptyLabel || 'Не выбрано' }}</option>
         <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
       </FormSelect>
-      <div v-else-if="field.type === 'suggest_array'" class="ability-multi">
-        <button v-for="id in modelValue || []" :key="id" type="button" class="ability-link" :aria-label="`Убрать ${editor.getSuggestLabel(editor.getSuggestId(field), id)}`" @click="set(modelValue.filter(value => value !== id))">{{ editor.getSuggestLabel(editor.getSuggestId(field), id) }} ×</button>
-        <FormSelect :aria-label="`Добавить: ${field.name}`" value="" @update:value="value => value !== '' && set([...(modelValue || []), Number(value)])">
-          <option value="">Добавить…</option>
-          <option v-for="option in options.filter(option => !(modelValue || []).some(v => String(v) === String(option.value)))" :key="option.value" :value="option.value">{{ option.label }}</option>
-        </FormSelect>
-      </div>
       <ItemMultiSelect
         v-else-if="itemReference"
         :model-value="(modelValue || []).map(row => row.id)"
@@ -62,7 +55,7 @@
         </BaseTile>
         <button type="button" class="ability-link" @click="addRow">+ Добавить запись</button>
       </div>
-      <FormTextInput v-else :aria-label="field.name" :value="modelValue ?? ''" @update:value="set" />
+      <FormTextInput v-else :aria-label="field.name" :placeholder="field.placeholder" :value="modelValue ?? ''" @update:value="set" />
     </component>
     <ConfirmDialog v-if="pendingRow != null" title="Удалить запись?" :message="`Запись «${rowTitle(modelValue[pendingRow], pendingRow)}» будет удалена после сохранения способности.`" :z-index="(editor.zIndex || 4500) + 300" @confirm="removeRow(pendingRow)" @cancel="pendingRow = null" @close="pendingRow = null" />
   </div>
@@ -86,7 +79,7 @@ const props = defineProps({ field: { type: Object, required: true }, modelValue:
 const emit = defineEmits(['update:modelValue'])
 const editor = inject(itemFieldEditorKey)
 const pendingRow = ref(null)
-const referenceKind = computed(() => ({ weapon_damage_key: 'weapon_damage', resource_key: 'resource', resource_pool_key: 'resource_pool', status_effect_code: 'status', choice_key: 'choice', status_effect_key: 'effect_link' })[props.field.key])
+const referenceKind = computed(() => props.field.type === 'text' && ({ weapon_damage_key: 'weapon_damage', resource_key: 'resource', resource_pool_key: 'resource_pool', status_effect_code: 'status', choice_key: 'choice', unique_choice_key: 'choice', depends_on_choice: 'choice', casting_ability_choice_key: 'choice', status_effect_key: 'effect_link' })[props.field.key])
 const itemReference = computed(() => itemSelectionField(props.field))
 const hint = computed(() => abilityFieldHint(props.field))
 const wide = computed(() => ['description', 'object', 'object_array', 'text_array', 'suggest_array', 'enum_array', 'option_array', 'textarea'].includes(props.field.type))

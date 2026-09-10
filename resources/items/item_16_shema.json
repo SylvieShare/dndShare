@@ -78,5 +78,9 @@
     "name": "Описание",
     "key": "description",
     "type": "description"
-  }
+  },
+  {"key":"asi_choice","name":"Характеристики на выбор","type":"object","fields":[{"key":"count","name":"Сколько характеристик","type":"int","default":1},{"key":"bonus","name":"Бонус каждой","type":"int","default":1}]},
+  {"key":"lang_choice","name":"Языки на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1},{"key":"from","name":"Доступные варианты","type":"suggest_array","suggest_id":6}]},
+  {"key":"skill_choice","name":"Навыки на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1},{"key":"from","name":"Доступные варианты","type":"suggest_array","suggest_id":15}]},
+  {"key":"feat_choice","name":"Черта на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1}]}
 ]

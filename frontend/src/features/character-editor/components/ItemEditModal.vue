@@ -1,9 +1,9 @@
 <template>
-  <AppModalFrame :body-scroll="!isAbility || narrow" wide :extra-wide="isAbility" :title="item ? (isAbility ? 'Редактировать способность' : 'Редактировать предмет') : (isAbility ? 'Новая способность' : typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="zIndex" @close="$emit('close')">
+  <AppModalFrame :body-scroll="narrow" wide extra-wide :title="item ? (typeId === 7 ? 'Редактировать черту' : isAbility ? 'Редактировать способность' : 'Редактировать запись') : (typeId === 7 ? 'Новая черта' : isAbility ? 'Новая способность' : typeName ? `Новый элемент в «${typeName}»` : 'Новый элемент')" :z-index="zIndex" @close="$emit('close')">
 
     <div v-if="loadError" role="alert"><p>{{ loadError }}</p><button type="button" class="ability-link" @click="loadForm">Повторить загрузку</button></div>
     <p v-else-if="!ready" class="iem-required-hint">Загрузка формы…</p>
-    <component v-else :is="isAbility ? AbilityEditor : 'div'" v-bind="isAbility ? { fields: editableTypeFields, data: formData, typeId, zIndex } : {}">
+    <component v-else :is="isAbility ? AbilityEditor : CatalogueEditor" :fields="editableTypeFields" :data="formData" :type-id="typeId" :z-index="zIndex">
       <FormField label="Название" title="Название способности или объекта в справочнике и на листе персонажа." vertical>
         <FormTextInput
           ref="nameInput"
@@ -24,14 +24,11 @@
       <ItemMediaEditor :item="persistedItem || item" :media="media" :z-index="zIndex" />
 
       <ItemSourcePicker v-if="showPublicationSources && contentSources.length" v-model="selectedContentSourceIds" :sources="contentSources" :z-index="zIndex + 200" />
-      <div v-if="!isAbility" class="iem-fields-grid">
-        <ItemSchemaField v-for="field in editableTypeFields" :key="field.key" :field="field" />
-      </div>
     </component>
 
     <ItemPickerModal
       v-if="picker.open"
-      :item-type-ids="[picker.typeId]"
+      :item-type-ids="picker.typeId === 2 ? itemTypesStore.relatedTypeIds(2) : [picker.typeId]"
       :z-index="zIndex + 400"
       title="Выбрать предмет"
       @pick="onItemPicked"
@@ -54,13 +51,13 @@
 <script setup>
 import { canSelectItemPublication } from '@/features/items/lib/itemPermissions'
 import AbilityEditor from '@/features/items/editor/AbilityEditor.vue'
+import CatalogueEditor from '@/features/items/editor/catalogue/CatalogueEditor.vue'
 import ItemSourcePicker from '@/features/items/editor/ItemSourcePicker.vue'
 import { ABILITY_TYPE_IDS } from '@/shared/lib/abilityTypes'
 import '@/features/items/editor/abilityEditor.css'
 import { computed, nextTick, onMounted, provide, reactive, ref } from 'vue'
 import { AppModalFrame, useMediaQuery } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import ItemSchemaField from './ItemSchemaField.vue'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import ItemMediaEditor from '@/features/items/editor/ItemMediaEditor.vue'
@@ -93,7 +90,7 @@ const nameInput = ref(null)
 const ready = ref(false)
 const loadError = ref('')
 const saveError = ref('')
-const isAbility = computed(() => ABILITY_TYPE_IDS.includes(props.typeId))
+const isAbility = computed(() => ABILITY_TYPE_IDS.includes(props.typeId) || props.typeId === 7)
 const typeFields = ref([])
 const editableTypeFields = computed(() => typeFields.value.filter(field => !field.readonly))
 const showPublicationSources = computed(() => canSelectItemPublication(props.item))
@@ -156,7 +153,6 @@ async function loadForm() {
       formNameEn.value = props.initialNameEn
       selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault).map((source) => source.id)
     }
-    if (!isAbility.value) fieldEditor.ensureContainerFields(typeFields.value)
     fieldEditor.initSections(typeFields.value)
     fieldEditor.ensureItemNames(fieldEditor.collectItemRefIds(typeFields.value, formData))
 

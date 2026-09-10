@@ -49,11 +49,12 @@ const DEPENDENCY_NAMES = {
 }
 
 export function abilityEditorProfile(fields, typeId) {
+  const basicKeys = Number(typeId) === 7 ? [...BASIC_KEYS, 'description', 'repeatable', 'unique_choice_key'] : BASIC_KEYS
   const bindings = Number(typeId) === 3 ? BINDING_KEYS.slice(0, 2)
     : Number(typeId) === 4 ? BINDING_KEYS.slice(2) : []
-  const primary = fields.filter(field => BASIC_KEYS.includes(field.key) || bindings.includes(field.key))
+  const primary = fields.filter(field => basicKeys.includes(field.key) || bindings.includes(field.key))
   const resourceFields = fields.filter(field => RESOURCE_KEYS.includes(field.key))
-  const blocks = fields.filter(field => !BASIC_KEYS.includes(field.key)
+  const blocks = fields.filter(field => !basicKeys.includes(field.key)
     && !BINDING_KEYS.includes(field.key) && !RESOURCE_KEYS.includes(field.key) && !['scaling', 'display_scaling'].includes(field.key))
     .map(field => ({ key: field.key, name: DEPENDENCY_NAMES[field.key] || field.name, hint: BLOCK_HINTS[field.key], fields: [field], repeatable: field.type === 'object_array' }))
   const progression = fields.filter(field => ['scaling', 'display_scaling'].includes(field.key))

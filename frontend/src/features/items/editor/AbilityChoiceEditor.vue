@@ -17,14 +17,15 @@
       <FormSelect :value="data.from_item_type_id || ''" aria-label="Коллекция справочника" @update:value="changeItemType"><option value="">Выберите коллекцию</option><option v-for="type in itemTypes.allTypes" :key="type.id" :value="type.id">{{ type.name }}</option></FormSelect>
     </FormField>
     <AbilityChoiceFilter v-if="data.source === 'item' && data.from_item_type_id" :data="data" />
-    <AbilityChoiceOptions v-if="!data.source || data.source === 'inline'" v-model="data.options" />
+    <AbilityChoiceOptions v-if="!data.source || data.source === 'inline'" v-model="data.options" :fields="fields.find(f => f.key === 'options')?.fields" />
     <AbilityRuleFields :fields="fieldsFor(['unique_across_takes'])" :data="data" @update:data="update" />
     <AbilityRuleFields v-if="['suggest', 'suggest_union'].includes(data.source)" :fields="eligibilityFields" :data="data" @update:data="update" />
     <template v-if="data.source === 'item' && Number(data.from_item_type_id) === 5">
       <AbilityRuleFields :fields="fieldsFor(['grant_spells'])" :data="data" @update:data="update" />
       <AbilityRuleFields v-if="data.grant_spells" :fields="fieldsFor(['casting_ability', 'slotless'])" :data="data" @update:data="update" />
     </template>
-    <AbilityUnlockField :data="data" />
+    <AbilityChoiceExtras :data="data" :fields="fields" />
+    <AbilityUnlockField v-if="fields.some(f => f.key === 'level')" :data="data" />
   </div>
 </template>
 <script setup>
@@ -38,6 +39,7 @@ import AbilityRuleFields from './AbilityRuleFields.vue'
 import AbilityUnlockField from './AbilityUnlockField.vue'
 import AbilityChoiceOptions from './AbilityChoiceOptions.vue'
 import AbilityChoiceFilter from './AbilityChoiceFilter.vue'
+import AbilityChoiceExtras from './AbilityChoiceExtras.vue'
 const props = defineProps({ data: Object, fields: Array })
 const editor = inject(itemFieldEditorKey, {})
 const itemTypes = useItemTypesStore()
@@ -63,7 +65,7 @@ function update(value) {
 }
 function changeSource(source) {
   if (source === props.data.source) return
-  for (const key of ['from_suggest_id', 'from_item_type_id', 'suggest_sources', 'options', 'item_filter', 'grant_spells', 'casting_ability', 'slotless', 'requires_proficiency', 'exclude_rank']) delete props.data[key]
+  for (const key of ['from_suggest_id', 'from_item_type_id', 'suggest_sources', 'options', 'item_filter', 'item_filter_from_choice', 'grant_spells', 'casting_ability', 'casting_ability_choice_key', 'cast_level', 'slotless', 'ability_bonus', 'grant_proficiency', 'requires_proficiency', 'exclude_rank']) delete props.data[key]
   props.data.source = source
 }
 function changeItemType(value) {

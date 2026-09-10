@@ -32,13 +32,16 @@
   },
   {
     "key": "weight",
-    "name": "Вес",
-    "type": "int"
+    "name": "Вес, фнт.",
+    "type": "float"
   },
   {
     "key": "available_in_starting_shop",
     "name": "Доступно в магазине при создании",
     "type": "boolean",
     "filter": true
-  }
+  },
+  {"key":"rarity","name":"Редкость","type":"suggest","suggest_id":23,"filter":true},
+  {"key":"is_container","name":"Контейнер","type":"bool"},
+  {"key":"type","name":"Подтип инструмента","type":"text"}
 ]

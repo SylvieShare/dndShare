@@ -6,6 +6,7 @@
       <AbilityRuleFields :fields="fields.find(f => f.key === 'min_stats')?.fields || []" :data="row" @update:data="v => Object.assign(row, v)" />
     </div>
     <AddButton label="Добавить минимум характеристики" @click="data.min_stats = [...(data.min_stats || []), { value: 13 }]" />
+    <AbilityRuleFields :fields="fields.filter(f => !['text', 'min_stats'].includes(f.key))" :data="data" @update:data="v => Object.assign(data, v)" />
     <ConfirmDialog v-if="pending != null" title="Удалить требование?" message="Характеристика больше не будет ограничивать получение способности." :z-index="(editor.zIndex || 4500) + 300" @confirm="remove" @close="pending = null" @cancel="pending = null" />
   </div>
 </template>

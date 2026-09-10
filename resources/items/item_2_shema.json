@@ -24,8 +24,8 @@
   },
   {
     "key": "weight",
-    "name": "Вес",
-    "type": "int"
+    "name": "Вес, фнт.",
+    "type": "float"
   },
   {
     "key": "is_container",
@@ -64,8 +64,11 @@
   {
     "key": "unit_weight",
     "name": "Вес единицы, фнт.",
-    "type": "int",
-    "show_on": { "key": "measurement", "value": "length" }
+    "type": "float",
+    "show_on": {
+      "key": "measurement",
+      "value": "length"
+    }
   },
   {
     "key": "contents",
@@ -90,5 +93,7 @@
     "name": "Доступно в магазине при создании",
     "type": "boolean",
     "filter": true
-  }
+  },
+  {"key":"rarity","name":"Редкость","type":"suggest","suggest_id":23,"filter":true},
+  {"key":"type","name":"Подтип предмета","type":"text"}
 ]

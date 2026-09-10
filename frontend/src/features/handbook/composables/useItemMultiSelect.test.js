@@ -68,6 +68,24 @@ describe('item multiselect', () => {
     expect(fetchGet).toHaveBeenLastCalledWith('/items?typeId=9&limit=40&offset=40')
   })
 
+  it('keeps a combined selection while switching catalogues and ignores the previous collection response', async () => {
+    let resolveOld
+    fetchGet.mockImplementationOnce(() => new Promise(resolve => { resolveOld = resolve }))
+      .mockResolvedValueOnce({ items: [{ id: 393, typeId: 14, name: 'Набор для грима' }] })
+    const { select, emit } = setup([70])
+    select.begin()
+    select.selectType(14)
+    await flush()
+    select.toggle(393)
+    resolveOld({ items: [{ id: 1 }] })
+    await flush()
+    expect(select.items.value.map(i => i.id)).toEqual([393])
+    expect(select.draft.value).toEqual([70, 393])
+    expect(fetchGet).toHaveBeenLastCalledWith('/items?typeId=14&limit=40&offset=0')
+    select.apply()
+    expect(emit).toHaveBeenCalledWith('update:modelValue', [70, 393])
+  })
+
   it('preserves unavailable selected IDs after a failed hydration and permits removal', async () => {
     itemsApi.byIds.mockRejectedValue(new Error('offline'))
     const { select, emit } = setup([5, 6])

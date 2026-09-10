@@ -13,8 +13,7 @@
       {
         "key": "dice_id",
         "name": "Кубик",
-        "type": "suggest",
-        "suggest_id": 11
+        "type": "dice"
       },
       {
         "key": "type",
@@ -65,8 +64,7 @@
       {
         "key": "dice_id",
         "name": "Кубик",
-        "type": "suggest",
-        "suggest_id": 11
+        "type": "dice"
       },
       {
         "key": "type",
@@ -89,7 +87,8 @@
       "value": [
         1,
         4,
-        6
+        6,
+        11
       ]
     }
   },
@@ -102,7 +101,8 @@
       "value": [
         1,
         4,
-        6
+        6,
+        11
       ]
     }
   },
@@ -114,8 +114,8 @@
   },
   {
     "key": "weight",
-    "name": "Вес",
-    "type": "int"
+    "name": "Вес, фнт.",
+    "type": "float"
   },
   {
     "key": "notes",

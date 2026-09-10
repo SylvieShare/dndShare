@@ -1,5 +1,10 @@
 # Handbook
 
+Композиция форм всех коллекций и результаты их проверки описаны в
+[редакторе справочников](catalogue-editor.md). Черты используют общий редактор
+зависимостей способностей. Предыстории имеют собственную карточку с владениями,
+снаряжением и выборами; все ссылки в ней показываются по названиям.
+
 Frontend lives in `features/handbook`, item details/editors in
 `features/items`, shared API in `shared/api/itemsApi.js`. Backend routes are in
 `internal/web/items.go` and `suggests.go`; data access is in `internal/store`.

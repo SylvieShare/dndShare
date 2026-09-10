@@ -3,7 +3,7 @@
     <div v-if="selectedItems.length" class="item-multi__rows">
       <BaseTile v-for="item in selectedItems" :key="item.id" class="item-multi__selected">
         <button type="button" class="item-multi__row-button" :aria-label="`Открыть: ${item.name}`" @click="previewId = item.id">
-          <HandbookListItem :item="item" :type="itemType" />
+          <HandbookListItem :item="item" :type="rowType(item)" />
         </button>
         <RemoveButton icon="trash" :label="`Убрать: ${item.name}`" variant="inline" @click="remove(item.id)" />
       </BaseTile>
@@ -15,13 +15,14 @@
 
     <AppModalFrame v-if="open" wide :title="label" :z-index="zIndex" @close="close">
       <div class="item-multi__picker">
+        <FormField v-if="availableTypes.length > 1" label="Коллекция" vertical title="Выбирайте предметы из разных разделов снаряжения в один список."><FormSelect :value="activeTypeId" aria-label="Коллекция" @update:value="selectType"><option v-for="type in availableTypes" :key="type.id" :value="type.id">{{ type.name }}</option></FormSelect></FormField>
         <FormTextInput v-model:value="search" placeholder="Поиск по названию — RU / EN…" aria-label="Поиск записей" />
         <div class="item-multi__rows" :aria-busy="loading">
           <BaseTile v-for="item in items" :key="item.id" interactive :tint="draft.includes(item.id)">
             <button type="button" class="item-multi__row-button" :aria-pressed="draft.includes(item.id)" @click="toggle(item.id)">
               <Check v-if="draft.includes(item.id)" :size="20" class="item-multi__check" aria-hidden="true" />
               <Square v-else :size="20" class="item-multi__check-space" aria-hidden="true" />
-              <HandbookListItem :item="item" :type="itemType" :show-chevron="false" />
+              <HandbookListItem :item="item" :type="rowType(item)" :show-chevron="false" />
             </button>
           </BaseTile>
           <p v-if="loading" class="item-multi__status" role="status">Загрузка…</p>
@@ -39,14 +40,14 @@
         </div>
       </template>
     </AppModalFrame>
-    <ItemViewModal v-if="previewId" :item-id="previewId" :item-type-id="itemTypeId" :z-index="zIndex + 100" @close="previewId = null" @saved="updateItem" />
+    <ItemViewModal v-if="previewId" :item-id="previewId" :item-type-id="selectedItems.find(i => i.id === previewId)?.typeId || itemTypeId" :z-index="zIndex + 100" @close="previewId = null" @saved="updateItem" />
   </div>
 </template>
 
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { Check, Square } from '@lucide/vue'
-import { AddButton, AppModalFrame, BaseTile, FormActionButtons, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
+import { AddButton, AppModalFrame, BaseTile, FormActionButtons, FormField, FormSelect, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
 import ItemViewModal from './ItemViewModal.vue'
@@ -55,16 +56,19 @@ import { useItemMultiSelect } from '../composables/useItemMultiSelect'
 const props = defineProps({
   modelValue: { type: Array, default: () => [] },
   itemTypeId: { type: Number, required: true },
+  includeChildTypes: Boolean,
   label: { type: String, default: 'Выбор записей' },
   zIndex: { type: Number, default: 4700 },
 })
 const emit = defineEmits(['update:modelValue'])
 const types = useItemTypesStore()
 const itemType = computed(() => types.getType(props.itemTypeId) || { id: props.itemTypeId })
+const availableTypes = computed(() => (props.includeChildTypes ? types.relatedTypeIds(props.itemTypeId) : [props.itemTypeId]).map(id => types.getType(id) || { id, name: props.label }))
+const rowType = item => types.getType(item.typeId) || itemType.value
 watch(() => props.itemTypeId, id => types.ensureType(id).catch(() => null), { immediate: true })
 const previewId = ref(null)
 const {
-  open, search, draft, items, selectedItems, loading, error, hydrationError, hasMore,
+  open, search, draft, items, selectedItems, loading, error, hydrationError, hasMore, activeTypeId, selectType,
   begin, close, apply, hydrate, updateItem, toggle, remove, loadMore, retry,
 } = useItemMultiSelect(props, emit)
 </script>

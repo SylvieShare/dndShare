@@ -78,5 +78,10 @@
     "fields": [
       { "name": "Подраса", "key": "id", "type": "item", "item_type": 16 }
     ]
-  }
+  },
+  {"key":"asi_choice","name":"Характеристики на выбор","type":"object","fields":[{"key":"count","name":"Сколько характеристик","type":"int","default":1},{"key":"bonus","name":"Бонус каждой","type":"int","default":1}]},
+  {"key":"lang_choice","name":"Языки на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1},{"key":"from","name":"Доступные варианты","type":"suggest_array","suggest_id":6}]},
+  {"key":"skill_choice","name":"Навыки на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1},{"key":"from","name":"Доступные варианты","type":"suggest_array","suggest_id":15}]},
+  {"key":"feat_choice","name":"Черта на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1}]},
+  {"key":"variants","name":"Варианты расы","type":"object_array","fields":[{"key":"label","name":"Название варианта","type":"text"},{"key":"value","name":"Ключ","type":"text"},{"key":"desc","name":"Краткое описание","type":"text"},{"key":"asi","name":"Бонусы характеристик","type":"object_array","fields":[{"key":"ability","name":"Характеристика","type":"suggest","suggest_id":16},{"key":"bonus","name":"Бонус","type":"int","default":1}]},{"key":"asi_choice","name":"Характеристики на выбор","type":"object","fields":[{"key":"count","name":"Сколько характеристик","type":"int","default":1},{"key":"bonus","name":"Бонус каждой","type":"int","default":1}]},{"key":"lang_choice","name":"Языки на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1},{"key":"from","name":"Доступные варианты","type":"suggest_array","suggest_id":6}]},{"key":"skill_choice","name":"Навыки на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1},{"key":"from","name":"Доступные варианты","type":"suggest_array","suggest_id":15}]},{"key":"feat_choice","name":"Черта на выбор","type":"object","fields":[{"key":"count","name":"Сколько выбрать","type":"int","default":1}]}]}
 ]

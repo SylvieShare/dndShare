@@ -1,5 +1,9 @@
 # Frontend
 
+Редакторы объектов справочника используют предметные профили композиции в
+`features/items/editor/catalogue`. Общие поля и механики переиспользуют компоненты
+редактора способностей и share-ui. Подробности: [редактор справочников](features/catalogue-editor.md).
+
 Актуальная реализация — Vue 3, Composition API, Pinia, vue-router и Vite 8 в
 `frontend/`. Старого Vue CLI, webpack, Axios и серверных JSON-шаблонов листа в
 проекте нет.

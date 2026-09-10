@@ -8,8 +8,7 @@
   {
     "name": "Кость хитов",
     "key": "hit_die",
-    "type": "suggest",
-    "suggest_id": 11
+    "type": "dice"
   },
   {
     "name": "Основные характеристики",
@@ -85,30 +84,138 @@
     "type": "object",
     "fields": [
       {
-        "name": "Характеристика заклинаний",
         "key": "ability",
+        "name": "Характеристика заклинаний",
         "type": "suggest",
         "suggest_id": 16
       },
       {
-        "name": "Заговоров на 1 уровне",
         "key": "cantrips_known",
+        "name": "Заговоров на 1 уровне",
         "type": "int"
       },
       {
-        "name": "Заклинаний на 1 уровне",
         "key": "spells_known",
+        "name": "Заклинаний на 1 уровне",
         "type": "int"
       },
       {
-        "name": "Подготавливает заклинания",
         "key": "prepares",
+        "name": "Подготавливает заклинания",
         "type": "bool"
       },
       {
-        "name": "Примечание",
         "key": "note",
+        "name": "Примечание",
         "type": "description"
+      },
+      {
+        "key": "progression",
+        "name": "Тип прогрессии",
+        "type": "select",
+        "options": [
+          {
+            "label": "Полный заклинатель",
+            "value": "full"
+          },
+          {
+            "label": "Половина уровня",
+            "value": "half"
+          },
+          {
+            "label": "Половина с округлением вверх",
+            "value": "halfup"
+          },
+          {
+            "label": "Треть уровня",
+            "value": "third"
+          },
+          {
+            "label": "Магия договора",
+            "value": "pact"
+          }
+        ]
+      },
+      {
+        "key": "list_class",
+        "name": "Список заклинаний класса",
+        "type": "item",
+        "item_type": 9
+      },
+      {
+        "key": "known_progression",
+        "name": "Прогрессия известных заклинаний",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "level",
+            "name": "Уровень класса",
+            "type": "int"
+          },
+          {
+            "key": "cantrips",
+            "name": "Заговоров",
+            "type": "int"
+          },
+          {
+            "key": "spells",
+            "name": "Заклинаний",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "key": "allowed_schools",
+        "name": "Основные школы",
+        "type": "suggest_array",
+        "suggest_id": 7
+      },
+      {
+        "key": "unrestricted_progression",
+        "name": "Прогрессия исключений школ",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "level",
+            "name": "Уровень класса",
+            "type": "int"
+          },
+          {
+            "key": "count",
+            "name": "Количество",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "key": "start_level",
+        "name": "Уровень начала заклинательства",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "key": "selection_mode",
+        "name": "Режим выбора на повышении",
+        "type": "select",
+        "options": [
+          {
+            "label": "Известные заклинания",
+            "value": "known"
+          },
+          {
+            "label": "Подготавливаемые заклинания",
+            "value": "prepared"
+          },
+          {
+            "label": "Книга заклинаний",
+            "value": "spellbook"
+          }
+        ]
+      },
+      {
+        "key": "level_up_choices",
+        "name": "Новых заклинаний за уровень",
+        "type": "int"
       }
     ]
   },
@@ -161,5 +268,8 @@
     "fields": [
       { "name": "Подкласс", "key": "id", "type": "item", "item_type": 17 }
     ]
-  }
+  },
+  {"key":"caster_progression","name":"Рост ячеек заклинаний","type":"select","options":[{"label":"Полный заклинатель","value":"full"},{"label":"Половина уровня","value":"half"},{"label":"Половина с округлением вверх","value":"halfup"},{"label":"Треть уровня","value":"third"},{"label":"Магия договора","value":"pact"}]},
+  {"key":"granted_spells","name":"Даруемые заклинания","type":"object_array","fields":[{"key":"level","name":"Уровень класса","type":"int","default":1},{"key":"spell","name":"Заклинание","type":"item","item_type":5},{"key":"option","name":"Вариант (напр. местность)","type":"text"}]},
+  {"key":"short_description","name":"Короткое описание","type":"text"}
 ]
