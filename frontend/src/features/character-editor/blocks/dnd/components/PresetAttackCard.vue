@@ -34,8 +34,7 @@
 
     <template #default="{ close }">
       <RowActionItem action="attack" @click="run(close, 'attack')">Бросок на атаку</RowActionItem>
-      <RowActionItem action="damage" @click="run(close, 'damage')">Бросок на урон</RowActionItem>
-      <RowActionItem action="critical" tone="warning" @click="run(close, 'critical')">Бросок на критический урон</RowActionItem>
+      <DamageRollOptions @roll="options => run(close, options.critical ? 'critical' : 'damage')" />
     </template>
   </RowActionMenu>
 </template>
@@ -45,6 +44,7 @@ import { computed } from 'vue'
 import { BaseTile, RowActionMenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import DamageRollOptions from './DamageRollOptions.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 
 const props = defineProps({

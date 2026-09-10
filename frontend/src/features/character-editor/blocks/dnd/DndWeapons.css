@@ -1,0 +1,200 @@
+.weapons-block {
+  min-width: 0;
+  color: var(--text-1);
+}
+.w-armor-warning { margin-bottom: 12px; padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--danger) 50%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--danger) 9%, transparent); color: var(--text-2); font-size: 11px; line-height: 1.45; }
+
+.w-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.w-preset-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.w-preset-divider {
+  display: grid;
+  grid-template-columns: minmax(18px, 1fr) auto minmax(18px, 1fr);
+  gap: 14px;
+  align-items: center;
+  margin: 24px 0 14px;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.w-preset-divider::before, .w-preset-divider::after { height: 1px; background: color-mix(in srgb, var(--text-muted) 28%, transparent); content: ''; }
+
+.w-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.w-table:not(.w-edit) .w-name-col { width: 30%; }
+.w-table:not(.w-edit) .w-attack-col { width: 68px; }
+.w-table:not(.w-edit) .w-damage-col { width: 30%; }
+.w-table:not(.w-edit) .w-props-col { width: 40%; }
+
+.w-table.w-edit .w-order-col { width: 28px; }
+.w-table.w-edit .w-name-col { width: 25%; }
+.w-table.w-edit .w-stat-col { width: 132px; }
+.w-table.w-edit .w-magic-col { width: 72px; }
+.w-table.w-edit .w-damage-col { width: auto; }
+.w-table.w-edit .w-delete-col { width: 38px; }
+
+.w-table th {
+  padding: 0 6px 7px;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-muted) 30%, transparent);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.w-table td {
+  min-height: 42px;
+  padding: 8px 6px;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
+  vertical-align: middle;
+}
+
+.w-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.w-props-sep {
+  color: var(--text-muted);
+}
+
+.w-add {
+  margin-top: 12px;
+}
+
+.w-picker-btn {
+  width: 100%;
+  min-height: 34px;
+  border: 1px dashed color-mix(in srgb, var(--text-muted) 46%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.w-picker-btn:hover {
+  color: var(--text-1);
+  border-color: color-mix(in srgb, var(--text-2) 58%, transparent);
+  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
+}
+
+.w-empty {
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 16px 20px;
+}
+
+@media (max-width: 760px) {
+  .w-list-header {
+    display: none;
+  }
+
+  .w-card {
+    padding: 0 0 0 16px;
+  }
+
+  .w-card-view,
+  .w-card-view-edit {
+    grid-template-columns: max-content minmax(0, 1fr);
+    grid-template-areas:
+      "title title"
+      "attack damage"
+      "props props";
+    gap: 8px 12px;
+  }
+
+  .w-card-view .w-name-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .w-card-order {
+    position: absolute;
+    top: 10px;
+    left: 8px;
+  }
+
+  .w-card-editing .w-card-title {
+    padding-left: 20px;
+    padding-right: 58px;
+  }
+
+  .w-card-title {
+    padding-right: 0;
+  }
+
+  .w-name-main {
+    display: flex;
+    width: 100%;
+  }
+
+  .w-name {
+    font-size: 15px;
+  }
+
+  .w-range {
+    margin-top: 4px;
+    white-space: normal;
+  }
+
+  .w-attack-chip {
+    justify-self: start;
+    min-width: 72px;
+    min-height: 36px;
+  }
+
+  .w-damage-view {
+    align-self: center;
+  }
+
+  .w-props-inline {
+    padding-top: 2px;
+  }
+
+  .w-card-edit-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .w-card-extra {
+    max-width: none;
+  }
+
+  .w-card-edit-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .w-card-edit-grid .w-stat-select {
+    grid-column: 1 / -1;
+  }
+
+  .w-extra-row {
+    grid-template-columns: 32px minmax(0, 1fr) 30px;
+  }
+
+  .w-extra-row .w-type {
+    grid-column: 2 / -1;
+  }
+
+  .w-empty { padding: 16px; }
+}

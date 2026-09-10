@@ -1,3 +1,4 @@
+import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
@@ -18,11 +19,8 @@ function currentScaling(data, level) {
 function featureDice(data, level) {
   const rule = (Array.isArray(data?.weapon_damage) ? data.weapon_damage : [])[0]
   if (!rule) return { value: '', dice: null }
-  const fixed = Math.max(0, Number(rule.dice_count) || 0)
-  const divisor = Math.max(0, Number(rule.dice_count_level_divisor) || 0)
-  const scaled = divisor
-    ? (rule.dice_count_rounding === 'down' ? Math.floor(level / divisor) : Math.ceil(level / divisor))
-    : fixed
+  if (level < Math.max(1, Number(rule.level) || 1)) return { value: '', dice: null }
+  const scaled = weaponDamageDiceCount(rule, level)
   const rawDie = String(rule.dice || '').trim()
   const sides = Number(rawDie.replace(/^d/i, '')) || null
   const die = rawDie.replace(/^d/i, 'к')

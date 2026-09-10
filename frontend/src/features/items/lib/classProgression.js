@@ -1,3 +1,4 @@
+import { automaticAbilityLabel } from '@/shared/lib/abilityProgression'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { parseAsiLevels, grantedSpellRows, dieFaceOf, avgHitDie } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { computeSpellSlotPools } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
@@ -57,7 +58,10 @@ export function classProgression(classItem, subclass, abilities = []) {
       })),
       ...rows(item.data?.display_scaling).filter(row => Number(row.level) === level && row.label)
         .map(row => ({ item, text: row.label })),
-    ]).filter(row => row.text)
+      ...(!rows(item.data?.scaling).length && !rows(item.data?.display_scaling).length
+        && automaticAbilityLabel(item.data, level) !== automaticAbilityLabel(item.data, level - 1)
+        ? [{ item, text: automaticAbilityLabel(item.data, level) }] : []),
+    ]).filter((row, index, all) => row.text && all.findIndex(other => other.item.id === row.item.id && other.text === row.text) === index)
     const entry = { id: classItem.id, level, subclass: activeSubclass ? { id: activeSubclass.id } : null }
     const itemMap = { [classItem.id]: classItem, ...(activeSubclass ? { [activeSubclass.id]: activeSubclass } : {}) }
     const slots = computeSpellSlotPools([entry], itemMap)

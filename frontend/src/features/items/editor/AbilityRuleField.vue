@@ -18,7 +18,7 @@
         <button v-if="modelValue != null" type="button" class="ability-link" :aria-label="`Очистить: ${field.name}`" @click="set(null)">×</button>
       </div>
       <FormSelect v-else-if="['select', 'suggest', 'dice'].includes(field.type)" :aria-label="field.name" :value="modelValue ?? ''" @update:value="setSelect">
-        <option value="">Не выбрано</option>
+        <option value="">{{ field.emptyLabel || 'Не выбрано' }}</option>
         <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
       </FormSelect>
       <div v-else-if="field.type === 'suggest_array'" class="ability-multi">

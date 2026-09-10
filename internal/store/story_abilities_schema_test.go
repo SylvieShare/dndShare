@@ -17,6 +17,22 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 	if err := json.Unmarshal([]byte(parts[1]), &want); err != nil {
 		t.Fatal(err)
 	}
+	// Migration 77 replaces combinatorial menu captions with independent toggles.
+	// The historical migration 72 snapshot itself remains immutable.
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] != "weapon_damage" {
+			continue
+		}
+		var fields []any
+		for _, rawChild := range field["fields"].([]any) {
+			child := rawChild.(map[string]any)
+			if child["key"] != "menu_label" && child["key"] != "critical_menu_label" {
+				fields = append(fields, child)
+			}
+		}
+		field["fields"] = fields
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

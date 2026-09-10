@@ -30,8 +30,7 @@
           </button>
         </template>
         <template #default="{ close }">
-          <RowActionItem action="damage" @click="rollDamage(close, false)">Обычный урон</RowActionItem>
-          <RowActionItem action="critical" tone="warning" @click="rollDamage(close, true)">Критический урон</RowActionItem>
+          <DamageRollOptions @roll="options => rollDamage(close, options.critical)" />
         </template>
       </RowActionMenu>
     </span>
@@ -84,7 +83,7 @@
 import { computed } from 'vue'
 
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import DamageRollOptions from './DamageRollOptions.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 
 // Shared attack/damage display used by both spells and weapons. `rollable` turns the displayed values

@@ -377,8 +377,10 @@ school-exception allowance. Mage Hand Legerdemain marks its granted Mage Hand
 as counting toward the cantrip limit.
 
 Ability items may expose `display_scaling [{level,label}]`. The sheet and print
-views resolve the latest row against the owning class level; Sneak Attack uses
-it to show the current damage dice directly beside its name.
+views resolve the latest row against the owning class level. Without an explicit
+label they derive current weapon-damage dice or the scaling value. Sneak Attack
+uses its damage formula for the label, widget and class roadmap; it does not
+store duplicate level tables.
 
 Race abilities, class abilities and feats remain separate canonical arrays and
 use their corresponding handbook item types and independent editors. Desktop
@@ -440,7 +442,9 @@ eligible.
 
 `weapon_damage` is the shared contract for an ability-owned optional damage
 action. It declares the die, a fixed or owner-level-scaled count, eligible weapon
-kinds, menu labels and whether the contributed dice double on a critical hit.
+kinds, a toggle label and whether the contributed dice double on a critical hit.
+The weapon menu combines selected extras, the critical toggle and the versatile
+grip into one damage roll; it does not enumerate combinations as menu actions.
 Sneak Attack uses this contract with `ceil(rogue level / 2)d6` and appears only
 for finesse or ranged weapons; runtime code does not check its name or item id.
 The `once_per_turn` flag is preserved for encounter-aware usage tracking, but a

@@ -1,3 +1,4 @@
+import { automaticAbilityLabel } from './abilityProgression'
 import { abilityModifier, resolveNumValue } from '@/shared/lib/dnd'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
@@ -85,5 +86,5 @@ export function abilityScalingLabel(itemData, values = {}) {
   const rows = (Array.isArray(itemData?.display_scaling) ? itemData.display_scaling : [])
     .filter((row) => row?.label && nonNegativeInt(row.level) <= abilityOwnerLevel(itemData, values))
     .sort((left, right) => nonNegativeInt(right.level) - nonNegativeInt(left.level))
-  return rows[0]?.label ? String(rows[0].label) : ''
+  return rows[0]?.label ? String(rows[0].label) : automaticAbilityLabel(itemData, abilityOwnerLevel(itemData, values))
 }

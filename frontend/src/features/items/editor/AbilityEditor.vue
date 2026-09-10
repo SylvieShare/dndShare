@@ -14,6 +14,10 @@
           <summary :title="card.block.hint">{{ cardTitle(card) }}</summary>
           <AbilityActionEditor v-if="card.key === 'feature_actions'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityResourceFields v-else-if="card.key === 'resources'" :fields="card.block.fields" :data="data" />
+          <AbilityProgressionEditor v-else-if="card.key === 'progression'" :data="data" />
+          <AbilityWeaponDamageEditor v-else-if="card.key === 'weapon_damage'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
+          <AbilityStatusEffectEditor v-else-if="card.key === 'status_effects'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
+          <AbilityMechanicEditor v-else-if="['sheet_widgets', 'usage'].includes(card.key)" :kind="card.key" :data="card.index == null ? data[card.key] : data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityRuleFields v-else :fields="card.block.repeatable ? card.block.fields[0].fields : card.block.fields" :data="card.index == null ? data : data[card.key][card.index]" :hide-label-for="card.index == null ? card.key : ''" :advanced="card.block.repeatable" @update:data="value => update(card, value)" />
         </details>
       </BaseTile>
@@ -36,6 +40,10 @@
 import { computed, ref } from 'vue'
 import { AppModalFrame, BaseTile, ConfirmDialog, FormTextInput, RemoveButton } from '@sylvieshare/share-ui'
 import { Plus, Sparkles } from '@lucide/vue'
+import AbilityProgressionEditor from './AbilityProgressionEditor.vue'
+import AbilityWeaponDamageEditor from './AbilityWeaponDamageEditor.vue'
+import AbilityStatusEffectEditor from './AbilityStatusEffectEditor.vue'
+import AbilityMechanicEditor from './AbilityMechanicEditor.vue'
 import AbilityActionEditor from './AbilityActionEditor.vue'
 import { useAbilityDependencies } from './useAbilityDependencies'
 import AbilityResourceFields from './AbilityResourceFields.vue'

@@ -52,3 +52,14 @@
 @media (max-width: 420px) {
   .ability-rule-fields { grid-template-columns: 1fr; }
 }
+
+.ability-progression-table { overflow-x: auto; }
+.ability-progression-table table { width: 100%; border-collapse: collapse; }
+.ability-progression-table th { text-align: left; color: var(--text-muted); font-size: 12px; font-weight: 500; }
+.ability-progression-table td, .ability-progression-table th { padding: 6px 4px; }
+.ability-progression-table td:first-child { width: 80px; }
+.ability-progression-label { display: grid; grid-template-columns: 80px minmax(0, 1fr) auto; gap: 10px; align-items: end; }
+.ability-progression-preview { display: flex; flex-wrap: wrap; gap: 8px; }
+.ability-progression-preview > span { display: flex; flex-direction: column; gap: 3px; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: var(--r-sm); }
+.ability-progression-preview small { color: var(--text-muted); font-size: 10px; }
+.ability-progression-preview strong { color: var(--text-2); font-size: 13px; }

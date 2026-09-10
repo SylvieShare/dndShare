@@ -9,7 +9,7 @@ export const RESOURCE_KEYS = [
 const BASIC_KEYS = ['desc', 'level']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
-  'defenses', 'derived_effects', 'prereq', 'usage', 'scaling', 'display_scaling']
+  'weapon_damage', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
 
 export const BLOCK_HINTS = {
   granted_spells: 'Заклинания, которые способность добавляет персонажу, и правила их сотворения.',
@@ -45,7 +45,7 @@ const DEPENDENCY_NAMES = {
   defenses: 'Защита', derived_effects: 'Изменение показателя', scaling: 'Шаг прогрессии',
   display_scaling: 'Подпись по уровню', hp_bonuses: 'Бонус хитов', passive_effects: 'Пассивный эффект',
   roll_triggers: 'Событие броска', roll_adjustments: 'Изменение броска', critical_damage: 'Урон при крите',
-  weapon_damage: 'Дополнительный урон оружия', sheet_widgets: 'Виджет листа', choice_defenses: 'Защита по выбору',
+  weapon_damage: 'Дополнительный урон оружия', sheet_widgets: 'Панель на листе', choice_defenses: 'Защита по выбору',
 }
 
 export function abilityEditorProfile(fields, typeId) {
@@ -54,8 +54,10 @@ export function abilityEditorProfile(fields, typeId) {
   const primary = fields.filter(field => BASIC_KEYS.includes(field.key) || bindings.includes(field.key))
   const resourceFields = fields.filter(field => RESOURCE_KEYS.includes(field.key))
   const blocks = fields.filter(field => !BASIC_KEYS.includes(field.key)
-    && !BINDING_KEYS.includes(field.key) && !RESOURCE_KEYS.includes(field.key))
+    && !BINDING_KEYS.includes(field.key) && !RESOURCE_KEYS.includes(field.key) && !['scaling', 'display_scaling'].includes(field.key))
     .map(field => ({ key: field.key, name: DEPENDENCY_NAMES[field.key] || field.name, hint: BLOCK_HINTS[field.key], fields: [field], repeatable: field.type === 'object_array' }))
+  const progression = fields.filter(field => ['scaling', 'display_scaling'].includes(field.key))
+  if (progression.length) blocks.push({ key: 'progression', name: 'Развитие с уровнем', hint: 'Одна таблица изменений. Значение действует до следующей строки; подпись на листе рассчитывается автоматически.', fields: progression })
   if (resourceFields.length) blocks.push({ key: 'resources', name: 'Ресурс и восстановление', hint: BLOCK_HINTS.resources, fields: resourceFields })
   blocks.sort((a, b) => {
     const rank = key => BLOCK_ORDER.includes(key) ? BLOCK_ORDER.indexOf(key) : BLOCK_ORDER.length
@@ -77,7 +79,8 @@ export function activeAbilityBlocks(blocks, data) {
 
 export function addAbilityBlock(block, data) {
   for (const field of block.fields) {
-    if (field.type === 'object_array' && block.fields.length === 1) data[field.key] = [defaultDataForFields(field.fields)]
+    if (block.key === 'progression') data[field.key] = []
+    else if (field.type === 'object_array' && block.fields.length === 1) data[field.key] = [defaultDataForFields(field.fields)]
     else if (field.type === 'object') data[field.key] = defaultDataForFields(field.fields)
     else if (field.default !== undefined) data[field.key] = field.default
   }

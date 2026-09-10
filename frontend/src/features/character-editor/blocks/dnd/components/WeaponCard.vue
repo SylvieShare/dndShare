@@ -47,44 +47,7 @@
         action="attack"
         @click="rollAttack(closeMenu)"
       >Бросок на атаку</RowActionItem>
-      <RowActionItem
-        v-if="hasDamage"
-        action="damage"
-        @click="rollDamage(closeMenu)"
-      >Бросок на урон</RowActionItem>
-      <RowActionItem
-        v-if="hasTwoHandedDamage"
-        action="damage"
-        @click="rollDamageTwoHanded(closeMenu)"
-      >Бросок на урон двумя руками</RowActionItem>
-      <RowActionItem
-        v-if="hasDamage"
-        action="critical"
-        tone="warning"
-        @click="rollCritical(closeMenu)"
-      >Бросок на критический урон</RowActionItem>
-      <RowActionItem
-        v-if="hasTwoHandedDamage"
-        action="critical"
-        tone="warning"
-        @click="rollCriticalTwoHanded(closeMenu)"
-      >Бросок на критический урон двумя руками</RowActionItem>
-
-      <template v-if="weaponDamageActions.length">
-        <RowActionSeparator />
-        <template v-for="action in weaponDamageActions" :key="action.key">
-          <RowActionItem
-            action="feature-damage"
-            tone="accent"
-            @click="rollWeaponDamageAction(closeMenu, action, false)"
-          >{{ action.menu_label || `Бросок: ${action.label || action.source_label}` }}</RowActionItem>
-          <RowActionItem
-            action="feature-critical"
-            tone="warning"
-            @click="rollWeaponDamageAction(closeMenu, action, true)"
-          >{{ action.critical_menu_label || `Критический бросок: ${action.label || action.source_label}` }}</RowActionItem>
-        </template>
-      </template>
+      <DamageRollOptions v-if="hasDamage" :actions="weaponDamageActions" :versatile="hasTwoHandedDamage" @roll="options => rollDamage(closeMenu, options)" />
 
       <RowActionSeparator v-if="ctx.item(entry)" />
       <RowActionItem
@@ -123,6 +86,7 @@ import RichContent from '@/shared/ui/DndRichContent.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
+import DamageRollOptions from './DamageRollOptions.vue'
 import WeaponCardView from '@/features/character-editor/blocks/dnd/components/WeaponCardView.vue'
 import WeaponEditor from '@/features/character-editor/blocks/dnd/components/WeaponEditor.vue'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
@@ -161,25 +125,9 @@ function rollAttack(closeMenu) {
   closeMenu()
   ctx.rollAttack(props.entry)
 }
-function rollDamage(closeMenu) {
+function rollDamage(closeMenu, options) {
   closeMenu()
-  ctx.rollDamage(props.entry)
-}
-function rollDamageTwoHanded(closeMenu) {
-  closeMenu()
-  ctx.rollDamageTwoHanded(props.entry)
-}
-function rollCritical(closeMenu) {
-  closeMenu()
-  ctx.rollCriticalDamage(props.entry)
-}
-function rollCriticalTwoHanded(closeMenu) {
-  closeMenu()
-  ctx.rollCriticalDamage(props.entry, true)
-}
-function rollWeaponDamageAction(closeMenu, action, critical) {
-  closeMenu()
-  ctx.rollWeaponDamageAction(props.entry, action, critical)
+  ctx.rollDamage(props.entry, options)
 }
 function moveToItems(closeMenu) {
   closeMenu()

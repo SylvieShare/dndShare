@@ -19,3 +19,10 @@ export function weaponDamageActionExpression({
     : ''
   return [base, extra].filter(Boolean).join('+')
 }
+
+/** Combine independent extras once; the base weapon expression is already critical-aware. */
+export function selectedWeaponDamageExpression({ baseExpression, actions = [], actionKeys = [], ...options }) {
+  const selected = new Set(actionKeys)
+  return actions.filter(action => selected.delete(action.key)).reduce((base, action) =>
+    weaponDamageActionExpression({ ...options, baseExpression: base, action }), baseExpression)
+}

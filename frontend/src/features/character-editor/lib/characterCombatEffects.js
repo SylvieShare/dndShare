@@ -1,3 +1,4 @@
+import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
@@ -63,17 +64,9 @@ function weaponKindMatches(rule, context) {
   return true
 }
 
-function weaponDamageDiceCount(rule) {
-  const fixed = Math.max(0, Number(rule.dice_count) || 0)
-  const divisor = Math.max(0, Number(rule.dice_count_level_divisor) || 0)
-  if (!divisor) return fixed
-  const scaled = Math.max(0, Number(rule.owner_level) || 0) / divisor
-  return rule.dice_count_rounding === 'down' ? Math.floor(scaled) : Math.ceil(scaled)
-}
-
 export function matchingWeaponDamageActions(effects, context = {}) {
   return (effects?.weaponDamage || [])
     .filter(rule => weaponKindMatches(rule, context))
-    .map(rule => ({ ...rule, dice_count: weaponDamageDiceCount(rule) }))
+    .map(rule => ({ ...rule, dice_count: weaponDamageDiceCount(rule, rule.owner_level) }))
     .filter(rule => rule.dice_count > 0 && String(rule.dice || '').trim())
 }
