@@ -358,6 +358,12 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   Existing entry types cannot be changed (HTTP 400). Entry PATCH requires
   `expectedChangedAt` from the loaded entry. A stale timestamp returns HTTP 409
   without modifying the entry, its authorship or content; omission returns 400;
+- Journal type `quest` stores `payload.quest: {reward, objectives: [{id, text, done}]}`.
+  Up to 100 objectives are accepted; IDs must be nonempty and unique (up to
+  100 bytes), text nonblank and up to 500 Unicode characters, reward up to
+  2000 characters. Checklist edits use the same permissions, audit and
+  `expectedChangedAt` conflict protection as other entries. Completion is derived
+  from all objectives being checked (an empty checklist is not complete).
 - `PATCH /api/journals/{journalUuid}/settings` accepts `{playersCanEdit: boolean}`
   and is restricted to the campaign owner. Other users receive HTTP 403;
 - Journal responses include `graph: {revision,nodes,links}`. Nodes contain

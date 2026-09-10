@@ -26,9 +26,10 @@ describe('journal reading and inline editing', () => {
     expect(timeline).not.toContain('NarrativeGraphCanvas')
     expect(timeline).not.toContain('journal-event-panel')
     expect(timeline).toContain('useSortable')
-    expect(timeline).toContain(':allow-drag="!touchPointer"')
+    expect(timeline).toContain(':allow-drag="!touchPointer && filter === \'all\'"')
     expect(timeline).toContain('diary-order-actions')
-    expect(timeline).toContain('position: absolute; top: 0; right: 0')
+    expect(timeline).toContain('diary-section-toolbar')
+    expect(timeline).toContain('margin-left: auto')
     expect(timeline).not.toContain('diary-timeline-toolbar')
     expect(timeline).not.toContain('node-height')
     expect(timeline.indexOf('<JournalEventTypePicker')).toBeLessThan(timeline.indexOf('data-sortable-container'))
@@ -63,6 +64,25 @@ describe('journal reading and inline editing', () => {
     expect(metadata).toContain('<ItemTooltip')
     expect(metadata).toContain('@focus=')
     expect(row).toContain('<BaseTile')
+  })
+  it('shows task checklists and bottom author/time without relation badges', async () => {
+    const html = await renderToString(createSSRApp(DndDiaryEventRow, {
+      event: { id: 'quest', type: 'quest', title: 'Маяк', desc: 'До рассвета', createdAt: '2026-09-10T19:00:00Z', authorName: 'Лиссара',
+        quest: { reward: 'Карта', objectives: [{ id: 'key', text: 'Найти ключ', done: true }, { id: 'lens', text: 'Разрушить линзу', done: false }] } },
+      editable: false, saveEvent: async () => {},
+    }))
+    expect(html).toContain('Найти ключ')
+    expect(html).toContain('Разрушить линзу')
+    expect(html).toContain('1 / 2 пунктов')
+    expect(html).toContain('role="checkbox"')
+    expect(html).toContain('aria-checked="true"')
+    expect(html).toContain('disabled')
+    expect(html).toContain('Карта')
+    expect(html).toContain('Лиссара')
+    expect(html).toContain('datetime="2026-09-10T19:00:00Z"')
+    expect(html.indexOf('diary-meta')).toBeGreaterThan(html.indexOf('journal-quest-progress'))
+    expect(html).not.toContain('link-chip')
+    expect(html).not.toContain('Редактировать пункт')
   })
   it('renders bestiary artwork and resolves names for imported battles', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {

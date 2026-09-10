@@ -35,6 +35,7 @@ function normalizedJournal(value) {
           id: String(event.id),
           dialogue: event.payload?.dialogue,
           combatants: event.payload?.combatants,
+          quest: event.payload?.quest,
         }),
         id: String(event.id),
       })),
@@ -51,6 +52,7 @@ function entryPayload(event) {
     payload: {
       dialogue: event.dialogue || [],
       combatants: event.combatants || [],
+      ...(event.type === 'quest' ? { quest: event.quest } : {}),
     },
   }
 }

@@ -21,3 +21,10 @@ export function formatDiaryTimestamp(value) {
     hour: '2-digit', minute: '2-digit', second: '2-digit',
   })
 }
+
+export function formatDiaryShortTimestamp(value) {
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? 'Время неизвестно' : date.toLocaleString('ru-RU', {
+    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
+  })
+}

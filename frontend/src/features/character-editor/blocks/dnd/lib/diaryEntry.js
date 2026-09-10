@@ -1,5 +1,6 @@
 import { markRaw } from 'vue'
-import { MessagesSquare, Sparkles, Sunrise, Swords } from '@lucide/vue'
+import { Flag, MessagesSquare, Sparkles, Sunrise, Swords } from '@lucide/vue'
+import { normalizeJournalQuest } from '@/features/journals/lib/journalQuest'
 
 // Pure helpers for the DND_DIARY block value: a chronological array of sessions
 //   { id, title, date, events: [{ id, type, title, desc, dialogue, combatants }] }
@@ -11,6 +12,7 @@ export const EVENT_TYPES = [
   { value: 'dialog', label: 'Диалог', color: 'var(--accent)', icon: markRaw(MessagesSquare) },
   { value: 'event', label: 'Событие', color: 'var(--accent)', icon: markRaw(Sparkles) },
   { value: 'newday', label: 'Новый день', color: 'var(--warning)', icon: markRaw(Sunrise) },
+  { value: 'quest', label: 'Задание', color: 'var(--accent-soft)', icon: markRaw(Flag) },
 ]
 
 const TYPE_VALUES = EVENT_TYPES.map(t => t.value)
@@ -35,7 +37,7 @@ export function defaultSession() {
 }
 
 export function defaultEvent() {
-  return { id: makeEventId(), type: 'event', title: '', desc: '', dialogue: [], combatants: [] }
+  return { id: makeEventId(), type: 'event', title: '', desc: '', dialogue: [], combatants: [], quest: normalizeJournalQuest() }
 }
 
 export function defaultDialogueLine() {
@@ -100,6 +102,7 @@ export function normalizeEvent(e) {
     desc: typeof src.desc === 'string' ? src.desc : '',
     dialogue: Array.isArray(src.dialogue) ? src.dialogue.map(normalizeDialogueLine) : [],
     combatants: Array.isArray(src.combatants) ? src.combatants.map(normalizeCombatant) : [],
+    quest: normalizeJournalQuest(src.quest),
   }
 }
 

@@ -12,7 +12,7 @@ import (
 )
 
 var journalEntryTypes = map[string]bool{
-	"battle": true, "dialog": true, "event": true, "newday": true,
+	"battle": true, "dialog": true, "event": true, "newday": true, "quest": true,
 }
 
 type journalResponse struct {
@@ -276,6 +276,10 @@ func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.Jo
 	}
 	if !json.Valid(req.Payload) || len(req.Payload) > 100_000 {
 		badRequest(w, "Некорректные данные записи")
+		return store.JournalEntryMutation{}, false
+	}
+	if req.Type == "quest" && !validJournalQuestPayload(req.Payload) {
+		badRequest(w, "Некорректное задание: до 100 пунктов с уникальными идентификаторами, текст до 500 символов, награда до 2000 символов")
 		return store.JournalEntryMutation{}, false
 	}
 	return store.JournalEntryMutation{Type: req.Type, Title: req.Title, Description: req.Description, Payload: req.Payload, ExpectedChangedAt: req.ExpectedChangedAt,

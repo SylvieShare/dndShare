@@ -76,6 +76,7 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	exec(schemaJournalEntryAuditSQL)
 	beforeGraph := contentHash()
 	exec(schemaJournalGraphSQL)
+	exec(schemaJournalQuestsSQL)
 	if contentHash() != beforeGraph {
 		t.Fatal("graph migration must preserve all entry content and audit")
 	}
@@ -135,4 +136,5 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	})
 	t.Run("graph branches, merges and conflicts", func(t *testing.T) { testJournalGraph(t, s) })
 	t.Run("timeline order preserves content and graph", func(t *testing.T) { testJournalTimelineOrder(t, s) })
+	t.Run("quest checklist persists with conflict protection", func(t *testing.T) { testJournalQuest(t, s) })
 }

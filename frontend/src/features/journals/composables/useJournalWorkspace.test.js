@@ -34,6 +34,19 @@ afterEach(() => {
 })
 
 describe('journal source lifecycle', () => {
+  it('loads and saves quest objectives in the journal payload', async () => {
+    const quest = { reward: 'Карта', objectives: [{ id: 'key', text: 'Найти ключ', done: false }] }
+    const loaded = { ...response(), journal: { ...response().journal, sections: [{ id: 1, events: [{ id: 2, type: 'quest', changedAt: 'v1', payload: { quest } }] }] } }
+    vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(loaded)
+    const workspace = useJournalWorkspace({ characterUuid: 'character' })
+    hooks.mounted()
+    await flush()
+    const event = workspace.journal.value.sections[0].events[0]
+    expect(event.quest).toEqual(quest)
+    vi.mocked(api.updateJournalEntry).mockResolvedValueOnce(loaded)
+    await workspace.updateEntry({ ...event, quest: { ...quest, objectives: [{ ...quest.objectives[0], done: true }] } })
+    expect(api.updateJournalEntry).toHaveBeenCalledWith('personal', '2', expect.objectContaining({ type: 'quest', expectedChangedAt: 'v1', payload: expect.objectContaining({ quest: { ...quest, objectives: [{ ...quest.objectives[0], done: true }] } }) }))
+  })
   it('pauses background replacement while an inline draft is open and refreshes after closing', async () => {
     vi.mocked(api.getCharacterJournal).mockResolvedValueOnce(response())
     const workspace = useJournalWorkspace({ characterUuid: 'character' })

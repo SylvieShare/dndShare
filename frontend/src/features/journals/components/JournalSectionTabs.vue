@@ -41,7 +41,7 @@ function navigate(event, index) {
 .journal-chapters-strip button { display: flex; flex: none; align-items: center; gap: 10px; max-width: 320px; padding: 12px 16px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--text-muted); font: 600 13px var(--font-ui); cursor: pointer; white-space: nowrap; }
 .journal-chapters-strip button > span:not(.journal-chapter-number) { overflow: hidden; text-overflow: ellipsis; }
 .journal-chapters-strip button.active { color: var(--text-1); border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
-.journal-chapter-number { color: var(--accent); font-family: var(--font-display); font-size: 17px; }
+.journal-chapter-number { color: var(--accent-soft); font-family: var(--font-ui); font-size: 12px; font-variant-numeric: tabular-nums; }
 .journal-chapters-strip small { font-size: 10px; color: var(--text-muted); }
 button:hover { color: var(--text-1); } button:disabled { opacity: .5; cursor: default; }
 @media (max-width: 720px) { .journal-chapters { gap: 8px; } .journal-chapters-new { max-width: 110px; padding: 9px; font-size: 11px; text-align: left; } .journal-chapters-strip button { max-width: 220px; padding: 10px; } }

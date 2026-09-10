@@ -22,7 +22,7 @@ function choose(type) { if (!props.disabled) { open.value = false; emit('create'
 watch(() => props.disabled, value => { if (value) open.value = false })
 </script>
 <style scoped>
-.journal-add-event { display: inline-flex; align-items: center; gap: 9px; padding: 12px 18px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--accent) 10%, var(--surface)); color: var(--accent); font: 700 13px var(--font-ui); cursor: pointer; }
+.journal-add-event { display: inline-flex; align-items: center; gap: 9px; padding: 10px 14px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 10px; background: var(--accent); color: var(--text-on-accent); font: 700 13px var(--font-ui); cursor: pointer; }
 .journal-add-event:disabled { opacity: .5; cursor: default; }
 .journal-add-event--quiet { background: transparent; border-color: transparent; color: var(--text-2); }
 .journal-event-types { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }

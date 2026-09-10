@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="diary-event" :class="['diary-event--' + event.type, { 'diary-event--compact': compact }]" :color="meta.color" framed>
+  <BaseTile class="diary-event" :class="['diary-event--' + event.type, { 'diary-event--compact': compact }]" :color="meta.color" :framed="event.type === 'quest'">
     <header class="diary-event-header" :class="{ 'diary-event-header--draggable': draggable, 'diary-event-header--editing': editor?.kind === 'title' }"
       :tabindex="draggable ? 0 : undefined" :aria-label="draggable ? 'Переместить событие: перетащите заголовок или используйте стрелки вверх и вниз' : undefined"
       @pointerdown="drag" @keydown="move">
@@ -25,6 +25,8 @@
         <span v-else class="diary-empty-copy">{{ event.type === 'event' ? 'Что произошло в этот момент?' : 'Добавить заметку' }}</span>
         <JournalEditButton v-if="editable" :disabled="controlsDisabled" label="Редактировать описание" @click="start('desc', event.desc)" />
       </div>
+      <JournalQuest v-if="event.type === 'quest'" :value="event.quest" :editable="editable" :busy="busy || locked || saving" :editor="editor" :error="error"
+        @edit="start" @save="submit" @cancel="cancel" @toggle="toggleObjective" @retry-toggle="saveObjectiveToggle" />
     </div>
     <DndDiaryEventMetadata class="diary-event-footer" :event="event" />
   </BaseTile>
@@ -40,6 +42,8 @@ import { useJournalInlineEdit } from '@/features/journals/composables/useJournal
 import DndDiaryDialogue from './DndDiaryDialogue.vue'
 import DndDiaryCombatants from './DndDiaryCombatants.vue'
 import DndDiaryEventMetadata from './DndDiaryEventMetadata.vue'
+import JournalQuest from '@/features/journals/components/JournalQuest.vue'
+import { normalizeJournalQuest } from '@/features/journals/lib/journalQuest'
 import { eventTypeMeta } from '../lib/diaryEntry'
 const props = defineProps({ event: { type: Object, required: true }, itemsById: { type: Map, default: () => new Map() }, allowDrag: { type: Boolean, default: true }, compact: Boolean, editable: Boolean, busy: Boolean, locked: Boolean, focusTitle: Boolean, saveEvent: { type: Function, required: true } })
 const emit = defineEmits(['drag', 'move', 'remove', 'editing'])
@@ -47,6 +51,15 @@ const { editor, error, saving, start, cancel, submit } = useJournalInlineEdit(pr
 const meta = computed(() => eventTypeMeta(props.event.type))
 const controlsDisabled = computed(() => props.busy || props.locked || saving.value || Boolean(editor.value))
 const draggable = computed(() => props.allowDrag && props.editable && !controlsDisabled.value)
+function toggleObjective(objective, done) {
+  start('quest-toggle', { ...objective, done })
+  if (editor.value?.kind === 'quest-toggle') saveObjectiveToggle()
+}
+function saveObjectiveToggle() {
+  const quest = normalizeJournalQuest(props.event.quest)
+  const selected = editor.value.value
+  submit({ quest: { ...quest, objectives: quest.objectives.map(row => row.id === selected.id ? { ...row, done: selected.done } : row) } })
+}
 function drag(pointer) {
   if (!draggable.value || pointer.target.closest('button, input, textarea, a, [contenteditable="true"]')) return
   emit('drag', pointer)
@@ -62,24 +75,24 @@ const descHtml = computed(() => /<[a-z][\s\S]*>/i.test(props.event.desc || '') ?
 const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() !== '')
 </script>
 <style scoped>
-.diary-event { min-width: 0; --r-lg: 18px; }
-.diary-event-header { display: flex; align-items: flex-start; gap: 16px; padding: 24px 28px 20px; min-width: 0; border-radius: 18px 18px 0 0; }
+.diary-event { min-width: 0; --r-lg: 14px; }
+.diary-event-header { display: flex; align-items: flex-start; gap: 10px; padding: 18px 22px 10px; min-width: 0; border-radius: 14px 14px 0 0; }
 .diary-event-header--draggable { cursor: grab; touch-action: none; }
 .diary-event-header--draggable:active { cursor: grabbing; }
 .diary-event-header--draggable:hover { background: color-mix(in srgb, var(--tile-color) 4%, transparent); }
-.diary-event-icon { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--tile-color) 9%, transparent); }
-.diary-event-title { display: flex; flex: 1; min-width: 0; gap: 8px; align-items: center; min-height: 44px; }
-.diary-event-title h3 { margin: 0; color: var(--text-1); font: 700 clamp(21px, 2vw, 27px)/1.3 var(--font-display); overflow-wrap: anywhere; }
+.diary-event-icon { display: grid; place-items: center; flex: none; width: 28px; height: 34px; }
+.diary-event-title { display: flex; flex: 1; min-width: 0; gap: 8px; align-items: center; min-height: 34px; }
+.diary-event-title h3 { margin: 0; color: var(--text-1); font: 700 clamp(23px, 2vw, 27px)/1.15 var(--font-display); overflow-wrap: anywhere; }
 .diary-event-title :deep(.journal-inline-form) { width: 100%; padding: 0; }
 .diary-event-header--editing { flex-wrap: wrap; }
 .diary-event-header--editing .diary-event-title { flex-basis: 100%; order: 3; }
 .diary-event-header--editing > :last-child { margin-left: auto; }
-.diary-event-header :deep(.remove-button) { margin-top: 7px; }
-.diary-event-content { display: flex; flex-direction: column; gap: 18px; padding: 0 28px 8px; }
-.diary-event-description { display: flex; align-items: flex-start; gap: 14px; min-width: 0; padding: 8px 0; }
-.diary-event-prose { flex: 1; min-width: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 15px; line-height: 1.85; overflow-wrap: anywhere; }
+.diary-event-header :deep(.remove-button) { margin-top: 1px; }
+.diary-event-content { display: flex; flex-direction: column; gap: 10px; padding: 0 22px 8px; }
+.diary-event-description { display: flex; align-items: flex-start; gap: 14px; min-width: 0; padding: 4px 0; }
+.diary-event-prose { flex: 1; min-width: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
 .diary-event-description > .diary-empty-copy { flex: 1; }
-.diary-event-footer { padding: 0 24px 16px; }
+.diary-event-footer { padding: 0 22px 12px; }
 .diary-event--newday .diary-event-header { padding-bottom: 14px; }
 .diary-event--newday .diary-event-icon { border-radius: 50%; }
 .diary-event--compact .diary-event-header { padding: 18px 16px 12px; gap: 8px; }
@@ -92,10 +105,10 @@ const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&
 .diary-event :deep(.diary-inline-add:disabled) { opacity: .4; cursor: default; }
 .diary-event :deep(.diary-empty-copy) { color: var(--text-muted); font: italic 13px/1.7 var(--font-prose); }
 @media (max-width: 720px) {
-  .diary-event-header { padding: 18px 16px; gap: 10px; }
-  .diary-event-icon { width: 34px; height: 34px; } .diary-event-icon svg { width: 20px; }
-  .diary-event-title { min-height: 34px; } .diary-event-title h3 { font-size: 20px; }
-  .diary-event-content { padding: 0 16px 8px; } .diary-event-prose { font-size: 14px; }
+  .diary-event-header { padding: 16px 16px 10px; gap: 8px; }
+  .diary-event-icon { width: 24px; height: 34px; } .diary-event-icon svg { width: 20px; }
+  .diary-event-title { min-height: 34px; } .diary-event-title h3 { font-size: 25px; }
+  .diary-event-content { padding: 0 16px 8px; } .diary-event-prose { font-size: 13px; }
   .diary-event-footer { padding: 0 12px 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .diary-event { transition: none; } }

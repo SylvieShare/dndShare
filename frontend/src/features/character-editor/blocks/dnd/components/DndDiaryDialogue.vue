@@ -40,10 +40,10 @@ function save() {
 </script>
 <style scoped>
 .diary-dialogue { display: flex; flex-direction: column; min-width: 0; }
-.diary-voice { display: grid; grid-template-columns: minmax(80px, .25fr) minmax(0, 1fr) auto; gap: 16px; align-items: start; padding: 18px 0; border-top: 1px solid var(--border); }
+.diary-voice { display: grid; grid-template-columns: minmax(66px, .18fr) minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 10px 0; }
 .diary-voice :deep(.journal-inline-form) { grid-column: 1 / -1; padding: 0; }
 .diary-speaker { font-size: 13px; font-weight: 750; color: var(--voice); line-height: 1.8; overflow-wrap: anywhere; }
-.diary-voice p { margin: 0; padding-left: 18px; border-left: 3px solid var(--voice); color: var(--text-2); font-family: var(--font-prose); font-size: 15px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
+.diary-voice p { margin: 0; padding-left: 14px; border-left: 2px solid var(--voice); color: var(--text-2); font-family: var(--font-prose); font-size: 14px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
 @media (max-width: 720px) {
   .diary-voice { gap: 8px; grid-template-columns: minmax(0, 1fr) auto; }
   .diary-speaker { font-size: 12px; }
