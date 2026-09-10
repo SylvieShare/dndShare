@@ -67,7 +67,7 @@ export function cloneModel(model) {
   }
 }
 
-export function entryDisplayData(entry, catalog, typeById = {}) {
+export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2) {
   const base = entry.item_id != null ? (catalog[entry.item_id] || null) : null
   const ov = entry.override || {}
   const namedBase = base ? { ...base, name: ov.name ?? base.name } : { name: ov.name ?? '—', data: {} }
@@ -86,6 +86,6 @@ export function entryDisplayData(entry, catalog, typeById = {}) {
   const isCustom = entry.item_id == null
   const svg = base?.svg ?? ''
   const iconImageUrl = base?.iconImageUrl || ''
-  const typeImageUrl = !iconImageUrl && !svg ? (typeById[base?.typeId]?.iconImageUrl || '') : ''
+  const typeImageUrl = !iconImageUrl && !svg ? (typeById[base?.typeId ?? (isCustom ? rootTypeId : null)]?.iconImageUrl || '') : ''
   return { name, desc, consumable, cost, weight, isCustom, svg, iconImageUrl, typeImageUrl, base }
 }

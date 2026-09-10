@@ -170,6 +170,11 @@ entries and selected choices.
 
 ### System media workflow
 
+- Types 2 («Вещи») and 19 («Магические предметы») share a transparent
+  `128×128` lossless WebP mystery-cube icon with a question mark, matching their
+  common fallback cover. It also appears on simplified character inventory
+  entries; item-level raster icons and SVG retain priority.
+
 - Install new system raster media only through MCP
   `handbook_item_set_system_image` or `handbook_item_type_set_system_image`,
   using `slot="icon"` or `slot="cover"` and `preservePrevious=true` when

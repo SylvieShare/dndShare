@@ -17,9 +17,23 @@ describe('inventory item presentation', () => {
     const result = entryDisplayData(
       { item_id: null, params: {}, override: { name: 'Верёвка' } },
       {},
+      { 2: { iconImageUrl: '/mystery-cube.webp' } },
     )
 
-    expect(result).toMatchObject({ name: 'Верёвка', svg: '', isCustom: true })
+    expect(result).toMatchObject({ name: 'Верёвка', svg: '', isCustom: true, typeImageUrl: '/mystery-cube.webp' })
+  })
+
+  it('uses the block collection for simplified entries', () => {
+    expect(entryDisplayData({ item_id: null }, {}, {
+      2: { iconImageUrl: '/items.webp' },
+      19: { iconImageUrl: '/magic.webp' },
+    }, 19).typeImageUrl).toBe('/magic.webp')
+  })
+
+  it('keeps a referenced item SVG ahead of the collection placeholder', () => {
+    expect(entryDisplayData({ item_id: 47 }, {
+      47: { name: 'Предмет', typeId: 2, svg: '<svg/>', data: {} },
+    }, { 2: { iconImageUrl: '/mystery-cube.webp' } }).typeImageUrl).toBe('')
   })
 
   it('does not invent an icon for a referenced item without SVG', () => {

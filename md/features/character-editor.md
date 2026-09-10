@@ -534,8 +534,8 @@ sections never double as equipped. Entry override
 is for a custom name/description/count metadata, while referenced item content
 comes from handbook. A referenced row prefers `iconImageUrl`, then `svg`, then
 the collection image. Weapon, armor and ordinary item rows retain type-specific
-content composition; simplified custom inventory rows leave the image slot empty
-instead of showing a placeholder. Inventory glyphs are neutral gray, frameless
+content composition; simplified custom inventory rows use the root collection's
+icon as a placeholder (the mystery cube for «Вещи»). Inventory glyphs are neutral gray, frameless
 and use a 64×64 px slot. Weapon cards use the same 64×64 slot and prefer the
 handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
 weapon-specific attack, damage and property composition remains unchanged. A

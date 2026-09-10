@@ -237,7 +237,7 @@ const toolTypeId = computed(() => Number(props.block.content?.tool_type_id) || 1
 function sectionGroup(id) { return 'sec_' + id }
 
 function entryWithDisplay(entry) {
-  return { ...entry, display: entryDisplayData(entry, catalog, typeById.value) }
+  return { ...entry, display: entryDisplayData(entry, catalog, typeById.value, rootTypeId.value) }
 }
 
 function entryTypeId(entry) {
