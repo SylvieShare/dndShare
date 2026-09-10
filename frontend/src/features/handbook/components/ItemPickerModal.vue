@@ -111,6 +111,8 @@
           </button>
         </div>
 
+        <MagicEquipmentInstanceModal v-if="basePending" :item="basePending" :z-index="zIndex + 200" @close="basePending = null" @confirm="finishPick" />
+
         <ItemEditModal
           v-if="editOpen && selectedItem && canEditSelected"
           :type-id="selectedItem.typeId || activeTypeId"
@@ -144,6 +146,8 @@ import HandbookItemList from '@/features/handbook/components/HandbookItemList'
 import { useAccountStore } from '@/stores/account'
 import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
+import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
+import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
@@ -158,6 +162,7 @@ const props = defineProps({
   title: { type: String, default: 'Выбрать' },
   searchPlaceholder: { type: String, default: 'Поиск по названию — RU / EN...' },
   excludeItems: { type: Array, default: () => [] },
+  configureInstance: Boolean,
   allowQuantity: { type: Boolean, default: false },
   createShowNameEn: { type: Boolean, default: false },
   itemEligibility: { type: Function, default: null },
@@ -169,6 +174,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'pick'])
 const quantity = ref(1)
+const basePending = ref(null)
 const charCtx = inject('charCtx', null)
 const createWizard = inject('createWizard', null)
 const effectiveContentSources = computed(() =>
@@ -391,8 +397,12 @@ watch(normalizedFixedFilters, (next, previous) => {
 
 function pick() {
   if (!selectedItem.value || !selectedEligibility.value.eligible) return
+  if (props.configureInstance && magicEquipmentKinds(selectedItem.value).length) { basePending.value = selectedItem.value; return }
+  finishPick()
+}
+function finishPick(params = {}) {
   const qty = props.allowQuantity ? Math.max(1, Math.min(999, Math.floor(Number(quantity.value) || 1))) : 1
-  emit('pick', selectedItem.value, qty)
+  emit('pick', basePending.value || selectedItem.value, qty, params)
   emit('close')
 }
 

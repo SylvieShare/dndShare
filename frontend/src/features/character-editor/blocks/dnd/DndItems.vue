@@ -93,7 +93,9 @@
       @close="modalSelection = null"
     />
 
+    <MagicEquipmentInstanceModal v-if="pendingCopy" :item="pendingCopy.item" @close="pendingCopy = null" @confirm="params => { increment(pendingCopy.sectionId, pendingCopy.uid, params); pendingCopy = null }" />
     <ItemPickerModal
+      configure-instance
       v-if="pickerOpen && pickerTypeIds.length"
       :item-type-ids="pickerTypeIds"
       title="Предметы"
@@ -143,7 +145,9 @@ import { SectionLabel } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
-import { applicableInstanceFields, defaultInstanceParams } from '@/features/items/lib/itemInstance'
+import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
+import { magicBaseParams, magicEquipmentKinds, magicBaseId } from '@/features/items/lib/magicEquipmentBases'
+import { applicableInstanceFields, defaultInstanceParams, mergeEditedInstanceParams } from '@/features/items/lib/itemInstance'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { abilityModifier, formatBonus as signed, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
@@ -172,6 +176,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 
 const catalog = reactive({})
+const pendingCopy = ref(null)
 const loading = ref(true)
 const contentHidden = ref(false)
 const modalSelection = ref(null)
@@ -452,13 +457,15 @@ function decrement(sectionId, uid) {
   emitModel(next)
 }
 
-function increment(sectionId, uid) {
+function increment(sectionId, uid, selectedParams = null) {
   const next = cloneModel(model.value)
   const list = itemsRef(next, sectionId)
   const entry = list?.find(item => item.uid === uid)
   if (!entry) return null
   if (Number(catalog[entry.item_id]?.typeId) === MAGIC_ITEM_TYPE_ID) {
-    list.push({ uid: makeEntryUid(), item_id: entry.item_id, count: 1, params: {}, override: entry.override ? { ...entry.override } : null })
+    const item = catalog[entry.item_id], params = selectedParams || entry.params
+    if (magicEquipmentKinds(item).some(kind => !magicBaseId(item, params, kind))) { pendingCopy.value = { item, sectionId, uid }; return null }
+    list.push({ uid: makeEntryUid(), item_id: entry.item_id, count: 1, params: magicBaseParams(item, params), override: entry.override ? { ...entry.override } : null })
     emitModel(next)
     return 1
   }
@@ -480,7 +487,7 @@ function openPicker(sectionId) {
   pickerOpen.value = true
 }
 
-function onPickerPick(item, qty = 1) {
+function onPickerPick(item, qty = 1, params = {}) {
   const n = Math.max(1, Math.min(999, Math.floor(Number(qty) || 1)))
   if (!catalog[item.id]) catalog[item.id] = item
   itemsApi.byIds([item.id]).then((response) => {
@@ -492,7 +499,7 @@ function onPickerPick(item, qty = 1) {
   if (!list) return
   const type = typeById.value[item.typeId]
   const copies = item.typeId === MAGIC_ITEM_TYPE_ID ? n : 1
-  for (let index = 0; index < copies; index += 1) list.push({ uid: makeEntryUid(), item_id: item.id, count: copies > 1 ? 1 : n, params: defaultInstanceParams(type, item), override: null })
+  for (let index = 0; index < copies; index += 1) list.push({ uid: makeEntryUid(), item_id: item.id, count: copies > 1 ? 1 : n, params: { ...defaultInstanceParams(type, item), ...params }, override: null })
   emitModel(next)
   logSessionEntryAdded(charCtx, { kind: 'item', title: item.name, itemId: item.id, count: n })
 }
@@ -518,7 +525,7 @@ function onInlineFormSave(fields) {
       if (fields.desc !== (baseData.desc || '')) ov.desc = fields.desc
       if (fields.consumable !== !!baseData.consumable) ov.consumable = fields.consumable
       item.override = Object.keys(ov).length ? ov : null
-      item.params = { ...(fields.params || {}) }
+      item.params = mergeEditedInstanceParams(item.params, fields.params, form.instanceFields)
     }
   } else {
     list.push({

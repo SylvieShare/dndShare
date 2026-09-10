@@ -194,6 +194,7 @@ import { SAVE_ABBR, STAT_FULL, STAT_KEYS, STAT_SHORT, SUGGEST16_TO_STAT } from '
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { normalizeCounters } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
 import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
+import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import { equippedMagicWeapons, resolveMagicWeapon, weaponBaseId, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { abilityModifiersBySuggest, weaponAbilityModifier } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
@@ -519,7 +520,7 @@ async function load() {
     const tasks = [3, 7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
     await Promise.all(tasks);
-    const bases = [...new Set((values.value.items?.equipped || []).map(entry => weaponBaseId(catalog.value[entry.item_id], entry)).filter(Boolean))]
+    const bases = [...new Set((values.value.items?.equipped || []).flatMap(entry => [weaponBaseId(catalog.value[entry.item_id], entry), armorBaseId(catalog.value[entry.item_id], entry)]).filter(Boolean))]
     if (bases.length) for (const item of (await itemsApi.byIds(bases)).items || []) catalog.value[item.id] = item
     await suggest.ensure(4)
     document.title = `${characterName.value} — лист для печати`

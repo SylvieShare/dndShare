@@ -54,7 +54,7 @@
               class="shop-add"
               :disabled="!canBuyShopItem(item)"
               :title="canBuyShopItem(item) ? `Купить за ${priceLabel(item)}` : 'Не хватает монет'"
-              @click="addShopItem(item)"
+              @click="buy(item)"
             >
               <Plus :size="15" aria-hidden="true" />
               {{ priceLabel(item) }}
@@ -93,6 +93,7 @@
       </aside>
     </div>
 
+    <MagicEquipmentInstanceModal v-if="pendingPurchase" :item="pendingPurchase" @close="pendingPurchase = null" @confirm="confirmPurchase" />
     <ItemViewModal
       v-if="viewItem"
       :item="viewItem"
@@ -116,6 +117,8 @@ import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import { Dices, Plus, Search, ShoppingBasket, X } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
+import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
+import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { formatCopper, itemCostCopper } from '@/features/character-editor/settings/dnd/creation/startingShop'
@@ -138,6 +141,9 @@ const TYPE_LABELS = [
 const activeType = ref(2)
 const query = ref('')
 const viewItem = ref(null)
+const pendingPurchase = ref(null)
+function buy(item) { if (magicEquipmentKinds(item).length) pendingPurchase.value = item; else addShopItem(item) }
+function confirmPurchase(params) { addShopItem({ ...pendingPurchase.value, params }); pendingPurchase.value = null }
 const rerollConfirmOpen = ref(false)
 const categories = computed(() => TYPE_LABELS.map((category) => ({
   ...category,

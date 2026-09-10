@@ -1,3 +1,4 @@
+import { resolveMagicArmor } from '@/features/character-editor/lib/magicArmor'
 import { abilityModifier, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
@@ -42,7 +43,7 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
   const strength = resolveNumValue(values?.STR?.value ?? 10)
   const equipped = normalizeValue(values?.items).equipped
   const candidates = equipped.flatMap((entry, index) => {
-    const item = itemFrom(items, entry.item_id)
+    const item = resolveMagicArmor(itemFrom(items, entry.item_id), entry, items, values)
     if (!isArmorItem(item)) return []
     const rule = item.data.armor
     const shield = rule.shield === true || item.data.category === 'shield'

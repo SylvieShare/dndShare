@@ -30,6 +30,7 @@ function normalized(value) {
 
 export function itemProficiencyRule(item) {
   if (Number(item?.typeId) === 19 && item?.data?.weapon) return RULES[1]
+  if (Number(item?.typeId) === 19 && item?.data?.armor_base) return RULES[12]
   return RULES[Number(item?.typeId)] || null
 }
 

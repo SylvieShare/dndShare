@@ -94,4 +94,20 @@ INSERT INTO dndshare.item VALUES
 	check(`SELECT data->>'available_in_starting_shop'='true' AND data#>>'{treasure,weight}'='10' FROM dndshare.item WHERE id=35`)
 	check(`SELECT count(*)=7 FROM dndshare.item_type,jsonb_array_elements(fields) f WHERE f->>'key'='treasure'`)
 	check(`SELECT NOT EXISTS (SELECT id,f->>'key' FROM dndshare.item_type,jsonb_array_elements(fields) f GROUP BY id,f->>'key' HAVING count(*)>1)`)
+	exec(`INSERT INTO dndshare.item VALUES
+(222,'Мифриловый доспех',19,NULL,'{"type":"броня","desc":"keep"}'),
+(211,'Доспех',19,NULL,'{"type":"броня","rarity":3}'),
+(93,'Амулет здоровья',19,NULL,'{"type":"чудесный предмет"}'),
+(94,'Боеприпасы',19,NULL,'{"type":"оружие"}'),
+(9999,'Амулет автора',19,7,'{"type":"чудесный предмет"}');`)
+	exec(schemaMagicEquipmentBasesSQL)
+	check(`SELECT data#>>'{armor_base,base_item_id}'='4457' AND data#>>'{armor_base,magic_bonus}'='1' AND NOT (data ? 'armor') FROM dndshare.item WHERE id=1423`)
+	check(`SELECT data->>'desc'='keep' AND data#>>'{armor_base,ignore_strength}'='true' AND data#>>'{armor_base,ignore_stealth_disadvantage}'='true' AND jsonb_array_length(data#>'{armor_base,allowed_base_item_ids}')=8 FROM dndshare.item WHERE id=222`)
+	check(`SELECT data#>>'{armor_base,magic_bonus}'='2' AND jsonb_array_length(data#>'{armor_base,allowed_base_item_ids}')=12 FROM dndshare.item WHERE id=211`)
+	check(`SELECT data->>'type'='амулет' FROM dndshare.item WHERE id=93`)
+	check(`SELECT data->>'type'='боеприпасы' FROM dndshare.item WHERE id=94`)
+	check(`SELECT data->>'type'='чудесный предмет' FROM dndshare.item WHERE id=9999`)
+	check(`SELECT NOT EXISTS (SELECT f FROM dndshare.item_type,jsonb_array_elements(fields) f WHERE id=19 AND f->>'key' IN ('armor','category','required_armor_proficiency'))`)
+	check(`SELECT NOT EXISTS (SELECT id,f->>'key' FROM dndshare.item_type,jsonb_array_elements(fields) f GROUP BY id,f->>'key' HAVING count(*)>1)`)
+
 }

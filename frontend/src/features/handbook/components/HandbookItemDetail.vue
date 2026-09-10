@@ -21,6 +21,9 @@
         <template v-else-if="isTool" #summary>
           <ToolDetailSummary :item="item" />
         </template>
+        <template v-else-if="type?.id === 19" #summary>
+          <MagicItemDetailSummary :item="item" />
+        </template>
         <template v-else-if="isGear" #summary>
           <GearDetailSummary :item="item" :type="type" />
         </template>
@@ -139,6 +142,7 @@ import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailCo
 import EnemyDetailSummary from '@/features/items/detail-components/EnemyDetailSummary.vue'
 import FeatDetailContent from '@/features/items/detail-components/FeatDetailContent'
 import GearDetailSummary from '@/features/items/detail-components/GearDetailSummary.vue'
+import MagicItemDetailSummary from '@/features/items/detail-components/MagicItemDetailSummary.vue'
 import MagicItemDetailContent from '@/features/items/detail-components/MagicItemDetailContent.vue'
 import ItemDetailContent from '@/features/items/detail-components/ItemDetailContent'
 import OriginDetailContent from '@/features/items/detail-components/OriginDetailContent.vue'

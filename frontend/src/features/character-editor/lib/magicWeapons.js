@@ -1,14 +1,8 @@
+import { magicBaseId } from '@/features/items/lib/magicEquipmentBases'
 import { magicItemActive, mapInventoryEntries } from './characterMagicItems'
 
 const PHYSICAL_KEYS = ['attacks', 'universe_attacks', 'tags', 'is_military', 'is_long_range', 'range_min', 'range_max', 'required_weapon_proficiencies']
-export function weaponBaseId(item, entry) {
-  const rule = item?.data?.weapon
-  if (!rule || Number(item.typeId) !== 19) return null
-  if (rule.base_item_id) return Number(rule.base_item_id)
-  const chosen = Number(entry?.params?.weapon_base_item_id)
-  if (!chosen || rule.allowed_base_item_ids?.length && !rule.allowed_base_item_ids.map(Number).includes(chosen)) return null
-  return chosen
-}
+export const weaponBaseId = (item, entry) => magicBaseId(item, entry?.params, 'weapon')
 
 export function resolveMagicWeapon(item, entry, itemsById) {
   const base = itemsById[String(weaponBaseId(item, entry))]

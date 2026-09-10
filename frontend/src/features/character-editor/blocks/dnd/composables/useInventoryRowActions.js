@@ -15,7 +15,7 @@ export function useInventoryRowActions({ model, modalSelection, charCtx, increme
 
   function addEntry(sectionId, entry, close) {
     const remaining = increment(sectionId, entry.uid)
-    charCtx.logSessionEvent?.({
+    if (remaining != null) charCtx.logSessionEvent?.({
       type: 'item_added',
       action: `Добавлено: ${entry.display.name}`,
       data: { itemId: entry.item_id || null, remaining },

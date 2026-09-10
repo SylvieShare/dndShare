@@ -1,45 +1,62 @@
 <template>
   <div class="magic-item-detail">
-    <DetailSection label="Магические свойства">
-      <p>{{ rarity }} · {{ data.type || 'Магический предмет' }}</p>
-      <p>{{ attunement }}<template v-if="data.attunement_requirement">: {{ data.attunement_requirement }}</template></p>
-      <p>{{ data.activation === 'carried' ? 'Свойства действуют, пока предмет находится в инвентаре.' : 'Свойства действуют, когда предмет экипирован или находится в руках.' }}</p>
-    </DetailSection>
     <ItemDetailContent :item="item" :show-title="false" :economy-in-header="economyInHeader" />
-    <DetailSection v-if="data.weapon" label="Оружие на листе">
-      <p>Экипированный предмет добавляет атаку в блок оружия. Настройка и заряды остаются у того же экземпляра в инвентаре.</p>
-      <p v-if="!data.weapon.base_item_id">Выберите оружейную основу в «Магических свойствах» экземпляра.</p>
-      <p v-if="data.weapon.magic_bonus">Бонус к атаке и урону: +{{ data.weapon.magic_bonus }}<template v-if="data.attunement === 'required' && !data.weapon.bonus_without_attunement"> после настройки</template>.</p>
+    <DetailSection v-for="kind in kinds" :key="kind" :label="kind === 'weapon' ? 'Подходящее оружие' : 'Подходящие доспехи и щиты'">
+      <p>Основа определяет обычные характеристики. Выберите её при добавлении предмета персонажу.</p>
+      <MagicEquipmentBases :item="item" :kind="kind" />
+      <MagicRuleFields :fields="equipmentFields(kind)" :data="data[kind]" :items="references" :labels="labels" />
     </DetailSection>
-    <DetailSection v-if="data.max_use || data.use_resources?.length || data.recharge_note" label="Заряды и восстановление">
-      <p v-if="data.max_use">Максимум зарядов: {{ data.max_use }}</p>
-      <p v-for="resource in data.use_resources || []" :key="resource.key">{{ resource.title }}<template v-if="resource.max_use != null">: {{ resource.max_use }}</template></p>
-      <p v-if="data.rollback_short_rest">Восстанавливаются после короткого отдыха</p>
-      <p v-if="data.rollback_long_rest">Восстанавливаются после продолжительного отдыха</p>
-      <p v-if="data.recharge_note">{{ data.recharge_note }}</p>
-    </DetailSection>
-    <DetailSection v-if="rules.length" label="На листе персонажа">
-      <div v-for="(rule, index) in rules" :key="index"><strong>{{ rule.title }}</strong> {{ rule.value }}<p v-if="rule.note">{{ rule.note }}</p></div>
+    <p v-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="hydrate">Повторить</ActionButton></p>
+    <DetailSection v-for="field in details" :key="field.key" :label="field.name">
+      <MagicRuleFields headless :fields="[field]" :data="data" :items="references" :labels="labels" />
     </DetailSection>
   </div>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { ActionButton } from '@sylvieshare/share-ui'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import ItemDetailContent from './ItemDetailContent.vue'
-import { statusRulePresentation } from '@/features/items/lib/statusEffectPresentation'
-import { magicItemRarity, magicAttunementLabel } from '@/features/items/lib/magicItemPresentation'
-const props = defineProps({ item: Object, economyInHeader: Boolean })
+import MagicRuleFields from './MagicRuleFields.vue'
+import MagicEquipmentBases from '@/features/items/components/MagicEquipmentBases.vue'
+import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
+import { itemsApi } from '@/shared/api/itemsApi'
+import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
+import { useSuggestStore } from '@/stores/suggest'
+const props = defineProps({ item: Object, type: Object, economyInHeader: Boolean })
 const data = computed(() => props.item.data || {})
-const rarity = computed(() => magicItemRarity(data.value.rarity))
-const attunement = computed(() => magicAttunementLabel(data.value.attunement))
-const rules = computed(() => [
-  ...(data.value.derived_effects || []).map(statusRulePresentation),
-  ...(data.value.feature_actions || []).map(row => ({ title: row.title || 'Действие', value: row.uses_resource ? `Расход: ${row.resource_cost || 1}` : '' })),
-  ...(data.value.passive_effects || []).map(row => ({ title: row.title, value: row.description })),
-])
+const kinds = computed(() => magicEquipmentKinds(props.item))
+// Each remaining schema field is rendered, including newly added mechanics. These
+// fields already have a dedicated presentation in the cover, body or base list.
+const dedicated = new Set(['desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color'])
+const details = computed(() => (props.type?.fields || []).filter(f => !dedicated.has(f.key) && present(data.value[f.key])))
+function present(v) { return v != null && v !== '' && v !== false && (!Array.isArray(v) || v.length > 0) && (typeof v !== 'object' || Object.keys(v).length > 0) }
+function equipmentFields(kind) { return (props.type?.fields?.find(f => f.key === kind)?.fields || []).filter(f => !['base_item_id', 'allowed_base_item_ids'].includes(f.key)) }
+const suggest = useSuggestStore(), references = ref({}), error = ref(''), labels = ref({})
+let sequence = 0
+async function hydrate() {
+  const seq = ++sequence, ids = new Set(), names = {}
+  error.value = ''; references.value = {}
+  function walk(fields, values) {
+    if (!values) return
+    for (const field of fields || []) {
+      const v = values[field.key]
+      if (v == null) continue
+      if (field.type === 'item') ids.add(Number(v))
+      if (field.type === 'item_array') v.forEach(id => ids.add(Number(id)))
+      if (field.type === 'object') walk(field.fields, v)
+      if (field.type === 'object_array') v.forEach(row => { if (row.key && (row.title || row.name || row.label)) names[row.key] = row.title || row.name || row.label; walk(field.fields, row) })
+    }
+  }
+  walk(props.type?.fields, data.value); labels.value = names
+  try {
+    const [result] = await Promise.all([ids.size ? itemsApi.byIds([...ids]) : { items: [] }, ...[...collectSuggestIds(props.type?.fields || [])].map(id => suggest.ensure(id))])
+    if (seq === sequence) references.value = Object.fromEntries((result.items || []).map(item => [item.id, item]))
+  } catch { if (seq === sequence) error.value = 'Не удалось загрузить названия связанных правил.' }
+}
+watch(() => [props.item, props.type], hydrate, { immediate: true })
 </script>
 <style scoped>
-.magic-item-detail { display: flex; flex-direction: column; gap: 14px; }
-.magic-item-detail p { margin: 4px 0; }
+.magic-item-detail { display: flex; flex-direction: column; gap: 16px; }
+.magic-item-detail p { margin: 4px 0 10px; color: var(--text-muted); }
 </style>

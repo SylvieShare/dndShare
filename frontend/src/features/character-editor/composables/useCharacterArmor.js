@@ -1,3 +1,4 @@
+import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import { computed, watch } from 'vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
@@ -8,6 +9,9 @@ export function useCharacterArmor(values, characterResources, characterDerivedEf
   const equippedIds = computed(() => normalizeValue(values.value?.items).equipped
     .map(entry => entry.item_id)
     .filter(id => id != null))
+
+  const baseIds = computed(() => normalizeValue(values.value?.items).equipped.map(entry => armorBaseId(characterResources.itemsById?.value?.get(String(entry.item_id)), entry)).filter(Boolean))
+  watch(() => baseIds.value.join(','), () => characterResources.ensureItems(baseIds.value), { immediate: true })
 
   async function hydrate() {
     await Promise.all([

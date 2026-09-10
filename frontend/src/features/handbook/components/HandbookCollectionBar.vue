@@ -214,7 +214,7 @@ const visibleFilterFields = computed(() => props.filterFields.filter(hasAvailabl
 function isBoolField(f) { return f?.type === 'bool' || f?.type === 'boolean' }
 function hasFilterValues(f) { return Array.isArray(f?.filter_values) && f.filter_values.length > 0 }
 function hasItemFilterOptions(f) { return itemFilterOptions.value[f.path]?.length > 0 }
-function hasChoiceOptions(f) { return hasFilterValues(f) || hasItemFilterOptions(f) }
+function hasChoiceOptions(f) { return hasFilterValues(f) || hasItemFilterOptions(f) || (f.type === 'select' && f.options?.length > 0) }
 function suggestOptions(f) { return props.filterSuggests[getSuggestId(f)] || [] }
 function hasAvailableOptions(f) {
   return isBoolField(f) || hasChoiceOptions(f) ||
@@ -223,6 +223,7 @@ function hasAvailableOptions(f) {
 
 function filterValueOptions(f) {
   if (itemFilterOptions.value[f.path]?.length) return itemFilterOptions.value[f.path]
+  if (f.type === 'select' && f.options?.length && !hasFilterValues(f)) return f.options
   const labels = f.filter_labels || {}
   return (f.filter_values || []).map(v => ({
     value: v,

@@ -723,3 +723,11 @@ Runtime поддерживает только текущий контракт. �
 формы повторяют размеры и состав строк, не подменяют неизвестную раскладку.
 
 Полный контракт и карта использования: [состояния загрузки](loading-states.md).
+
+`MagicEquipmentBases` — доменный список допустимых основ магического предмета.
+Он использует стандартный `HandbookListItem` и общий контракт
+`magicEquipmentBases` для просмотра и выбора. `MagicEquipmentInstanceModal`
+с общими `AppModalFrame`/`ActionButton` проверяет выбор до добавления в инвентарь,
+оружие или стартовый магазин. `MagicItemDetailSummary` использует существующие
+`CoverSummaryLayout`, `CoverStatCard` и `CoverSummaryRail`; остаток заполненной
+схемы выводит доменный `MagicRuleFields` со ссылками, словарями и rich content.

@@ -82,6 +82,7 @@
     </SectionList>
 
     <ItemPickerModal
+      configure-instance
       v-if="pickerOpen && block.content.item_type_id"
       :item-type-ids="[block.content.item_type_id, 19]"
       :item-eligibility="weaponEligibility"
@@ -418,11 +419,11 @@ function removeAttack(index, attackIndex) {
   emitChange()
 }
 
-function addWeapon(it) {
+function addWeapon(it, quantity = 1, params = {}) {
   if (!weaponEligibility(it).eligible) return
   const entry = { ...defaultEntry(), item_id: it.id }
   if (Number(it.typeId) === 19) {
-    const owned = { uid: entry.uid, item_id: it.id, count: 1, params: {}, override: null }
+    const owned = { uid: entry.uid, item_id: it.id, count: 1, params, override: null }
     const inventory = props.values?.items || { equipped: [], sections: [] }
     charCtx.updateValues({ items: { ...inventory, equipped: [...(inventory.equipped || []), owned] } })
     addItem(it)

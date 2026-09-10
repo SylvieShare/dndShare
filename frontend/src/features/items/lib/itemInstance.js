@@ -93,3 +93,10 @@ export function instanceDisplayName(item, params, type) {
   const labels = instanceParamLabels(params, applicableInstanceFields(type, item))
   return [item?.name || '—', ...labels].join(' · ')
 }
+
+// Editing visible instance fields must preserve state owned by other panels.
+export function mergeEditedInstanceParams(current, edited, fields = []) {
+  const next = { ...plainObject(current) }
+  for (const field of fields) delete next[field.key]
+  return { ...next, ...normalizeInstanceParams(edited, fields) }
+}
