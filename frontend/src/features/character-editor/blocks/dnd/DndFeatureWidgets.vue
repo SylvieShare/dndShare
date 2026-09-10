@@ -27,10 +27,27 @@
       </ul>
 
       <div v-if="widget.resource || widget.kind === 'toggle'" class="fw-footer">
-        <span v-if="widget.resource" class="fw-resource">
-          <small>Доступно</small>
-          <b>{{ widget.resource.value }}/{{ widget.resource.total }}</b>
-        </span>
+        <div v-if="widget.resource" class="fw-resource" :aria-label="`${widget.resource.title || widget.title}: ${widget.resource.unlimited ? 'без ограничений' : `${widget.resource.value} из ${widget.resource.total}`}`">
+          <span v-if="widget.resource.unlimited" class="fw-unlimited">Без ограничений</span>
+          <div v-else class="fw-resource-pips">
+            <SpellSlotSphere
+              v-for="pip in widget.resource.total"
+              :key="pip"
+              :spent="pip > widget.resource.value"
+              :size="30"
+              :color="widget.resource.color_point || 'var(--fw-tone)'"
+              :interactive="!!charCtx.ownerMode"
+              :role="charCtx.ownerMode ? 'button' : 'img'"
+              :tabindex="charCtx.ownerMode ? 0 : undefined"
+              :aria-label="`${widget.resource.title || widget.title}: использование ${pip}, ${pip > widget.resource.value ? 'потрачено' : 'доступно'}`"
+              :aria-pressed="charCtx.ownerMode ? pip <= widget.resource.value : undefined"
+              @click="toggleResource(widget, pip)"
+              @keydown.enter.prevent="toggleResource(widget, pip)"
+              @keydown.space.prevent="toggleResource(widget, pip)"
+            />
+          </div>
+          <ResourceRestIcons v-if="!widget.resource.unlimited" :resource="widget.resource" />
+        </div>
         <button
           v-if="widget.kind === 'toggle'"
           type="button"
@@ -58,6 +75,8 @@ import { computed, inject, watch } from 'vue'
 import { Flame } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
+import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
 import { collectCharacterFeatureWidgets } from '@/features/character-editor/lib/characterFeatureWidgets'
 
@@ -75,6 +94,18 @@ watch(
   () => Promise.all(widgets.value.map(widget => charCtx.characterStatuses?.ensureLinks?.(widget.item))),
   { immediate: true },
 )
+
+function toggleResource(widget, pip) {
+  if (!charCtx.ownerMode || widget.resource?.unlimited || !widget.resource?.key || !charCtx.characterResources?.setAvailable || !charCtx.updateValues) return
+  const next = pip <= Number(widget.resource.value) ? pip - 1 : pip
+  const patch = charCtx.characterResources.setAvailable(widget.resource.key, next)
+  charCtx.updateValues(patch)
+  if (next < Number(widget.resource.value)) charCtx.logSessionEvent?.({
+    type: 'resource_used',
+    action: `Использовано: ${widget.resource.title || widget.title}`,
+    data: { remaining: next, total: Number(widget.resource.total) || 0 },
+  })
+}
 
 function canToggle(widget) {
   if (!charCtx.ownerMode) return false
@@ -135,9 +166,10 @@ function toggle(widget) {
 .fw-details { display: grid; gap: 5px; margin: 11px 0 0; padding: 0; list-style: none; }
 .fw-details li { display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 7px; align-items: start; color: var(--text-2); font-size: 11px; line-height: 1.4; }
 .fw-details li::before { width: 5px; height: 5px; margin-top: .42em; border-radius: 50%; background: var(--fw-tone); content: ''; }
-.fw-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 11px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--fw-tone) 18%, var(--border)); }
-.fw-resource { display: inline-flex; flex-direction: column; color: var(--text-muted); font-size: 10px; }
-.fw-resource b { color: var(--text-1); font-size: 14px; }
+.fw-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 11px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--fw-tone) 18%, var(--border)); }
+.fw-resource { display: flex; flex: 1; align-items: center; gap: 8px; min-width: 0; }
+.fw-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.fw-unlimited { color: var(--text-muted); font-size: 11px; }
 .fw-toggle { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--fw-tone) 45%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--fw-tone) 11%, transparent); color: var(--fw-tone); cursor: pointer; font: inherit; font-size: 11px; font-weight: 750; }
 .fw-toggle--active { background: var(--fw-tone); color: var(--text-on-accent); }
 .fw-toggle:disabled { cursor: default; opacity: .45; }

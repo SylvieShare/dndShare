@@ -102,3 +102,11 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
   }
   return [...groups.values()]
 }
+
+/** Resources with controls inside visible panels do not need a second sheet row. */
+export function featureWidgetResourceKeys(values, itemsById, resources = []) {
+  return new Set(collectCharacterFeatureWidgets(values, itemsById, resources)
+    .map(widget => widget.resource?.key)
+    .filter(Boolean)
+    .map(String))
+}

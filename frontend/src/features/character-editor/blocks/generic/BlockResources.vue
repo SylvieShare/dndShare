@@ -51,6 +51,7 @@ import BlockResourcesEditor from '@/features/character-editor/blocks/generic/com
 import BlockResourcesView from '@/features/character-editor/blocks/generic/components/BlockResourcesView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { featureWidgetResourceKeys } from '@/features/character-editor/lib/characterFeatureWidgets'
 import { featureActionResourceKeys } from '@/features/character-editor/lib/characterFeatureActions'
 
 const props = defineProps(['block', 'value'])
@@ -71,7 +72,12 @@ const actionResourceKeys = computed(() => featureActionResourceKeys(
   charCtx.characterResources?.itemsById?.value || charCtx.characterResources?.itemsById || new Map(),
   allResources.value,
 ))
-const resources = computed(() => allResources.value.filter(resource => !actionResourceKeys.value.has(String(resource.key))))
+const widgetResourceKeys = computed(() => featureWidgetResourceKeys(
+  charCtx.values?.value || charCtx.values || {},
+  charCtx.characterResources?.itemsById?.value || charCtx.characterResources?.itemsById || new Map(),
+  allResources.value,
+))
+const resources = computed(() => allResources.value.filter(resource => !actionResourceKeys.value.has(String(resource.key)) && !widgetResourceKeys.value.has(String(resource.key))))
 const readonlyResources = computed(() => allResources.value.filter((resource) => resource.readonly))
 const ownerMode = computed(() => charCtx.ownerMode)
 
