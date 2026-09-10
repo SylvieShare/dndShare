@@ -19,6 +19,6 @@ const options = computed(() => {
 })
 const fields = computed(() => [
   ...(props.data.target_from_choice && choice.value?.source === 'suggest_union' ? [{ key: 'choice_value_prefix', type: 'select', name: 'Какая часть выбора', options: (choice.value.suggest_sources || []).map(s => ({ value: s.prefix, label: s.label })), hint: 'Например, правило владения навыком использует только навыки из общего выбора.' }] : []),
-  { key: 'choice_values', type: 'enum_array', name: 'При каких ответах', options: options.value, hint: 'Ничего не выбрано — правило действует при любом ответе.' },
+  { key: 'choice_values', type: 'option_array', name: 'При каких ответах', options: options.value, hint: 'Ничего не выбрано — правило действует при любом ответе.' },
 ])
 </script>

@@ -3,7 +3,17 @@
     <component :is="hideLabel ? 'div' : FormField"
       v-bind="hideLabel ? { role: 'group', 'aria-label': field.name, title: hint } : { label: field.name + (field.required ? ' *' : ''), vertical: true, title: hint }"
     >
-      <div v-if="field.type === 'enum_array'" class="ability-multi">
+      <div v-if="field.type === 'option_array'" class="ability-rule-rows">
+        <BaseTile v-for="value in modelValue || []" :key="value" class="ability-selection-row">
+          <span>{{ options.find(option => String(option.value) === String(value))?.label || value }}</span>
+          <RemoveButton icon="trash" :label="`Убрать ${options.find(option => String(option.value) === String(value))?.label || value}`" @click="set(modelValue.filter(v => String(v) !== String(value)))" />
+        </BaseTile>
+        <FormSelect value="" :aria-label="`Добавить: ${field.name}`" @update:value="value => { const option = options.find(o => String(o.value) === String(value)); if (option) set([...(modelValue || []), option.value]) }">
+          <option value="">Добавить…</option>
+          <option v-for="option in options.filter(o => !(modelValue || []).some(v => String(v) === String(o.value)))" :key="option.value" :value="option.value">{{ option.label }}</option>
+        </FormSelect>
+      </div>
+      <div v-else-if="field.type === 'enum_array'" class="ability-multi">
         <FormField v-for="option in options" :key="option.value" :label="option.label">
           <ToggleSwitch :model-value="(modelValue || []).some(v => String(v) === String(option.value))" :aria-label="option.label" @update:model-value="checked => set(checked ? [...(modelValue || []), option.value] : (modelValue || []).filter(v => String(v) !== String(option.value)))" />
         </FormField>
@@ -79,7 +89,7 @@ const pendingRow = ref(null)
 const referenceKind = computed(() => ({ weapon_damage_key: 'weapon_damage', resource_key: 'resource', resource_pool_key: 'resource_pool', status_effect_code: 'status', choice_key: 'choice', status_effect_key: 'effect_link' })[props.field.key])
 const itemReference = computed(() => itemSelectionField(props.field))
 const hint = computed(() => abilityFieldHint(props.field))
-const wide = computed(() => ['description', 'object', 'object_array', 'text_array', 'suggest_array', 'enum_array', 'textarea'].includes(props.field.type))
+const wide = computed(() => ['description', 'object', 'object_array', 'text_array', 'suggest_array', 'enum_array', 'option_array', 'textarea'].includes(props.field.type))
 const options = computed(() => {
   if (props.field.type === 'dice') return SYSTEM_DICE.map(die => ({ value: die.id, label: die.value }))
   if (['suggest', 'suggest_array'].includes(props.field.type)) return editor.getSuggests(editor.getSuggestId(props.field)).map(row => ({ value: row.id, label: row.value }))

@@ -44,7 +44,7 @@ const itemTypes = useItemTypesStore()
 const suggestTypes = ref([]), loadError = ref('')
 const otherKeys = computed(() => (editor.itemData?.choices || []).filter(c => c !== props.data).map(c => c.key))
 const fieldsFor = keys => keys.map(k => props.fields.find(f => f.key === k)).filter(Boolean)
-const unionField = computed(() => ({ key: 'dictionaries', type: 'enum_array', name: 'Словари', options: suggestTypes.value.map(s => ({ value: s.id, label: s.name })), hint: 'Игрок выбирает из общего списка этих словарей.' }))
+const unionField = computed(() => ({ key: 'dictionaries', type: 'option_array', name: 'Словари', options: suggestTypes.value.map(s => ({ value: s.id, label: s.name })), hint: 'Игрок выбирает из общего списка этих словарей.' }))
 const eligibilityFields = [
   { key: 'requires_proficiency', type: 'bool', name: 'Только уже освоенные владения' },
   { key: 'exclude_rank', type: 'select', name: 'Исключить варианты', emptyLabel: 'Ничего не исключать', options: [{ value: 1, label: 'С уже полученным владением' }, { value: 2, label: 'С уже полученной компетентностью' }] },
