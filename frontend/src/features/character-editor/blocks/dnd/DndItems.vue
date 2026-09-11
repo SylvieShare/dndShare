@@ -550,7 +550,7 @@ provide('inventoryRowCtx', reactive({
   deleteOneEntry,
   editEntry,
   deleteEntry,
-  openMagic(entry, close) { magicSelection.value = entry; close() },
+  openMagic(entry, close = () => {}) { magicSelection.value = entry; close() },
 }))
 
 onMounted(async () => {

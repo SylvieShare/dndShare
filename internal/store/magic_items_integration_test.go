@@ -131,4 +131,10 @@ INSERT INTO dndshare.char VALUES (2,'{"values":{"untouched":42,"states":[{"param
 	check(`SELECT data#>>'{values,items,sections,0,name}'='Мешок' AND data#>>'{values,items,sections,0,items,0,item_id}'='49' AND data#>>'{values,items,sections,0,items,0,magic_item_id}'='223' AND data#>>'{values,items,sections,0,items,0,desc}'='keep' AND data#>>'{values,items,sections,0,items,1,item_id}'='223' AND data#>>'{values,items,sections,0,items,2,proficient}'='true' FROM dndshare.char WHERE id=2`)
 	check(`SELECT data::text NOT LIKE '%_weapon_state%' AND data::text NOT LIKE '%weapon_enabled%' AND data::text NOT LIKE '%weapon_base_item_id%' FROM dndshare.char WHERE id=2`)
 
+	exec(`INSERT INTO dndshare.item VALUES (178,'Трезубец управления рыбами',19,NULL,'{"desc":"keep","weapon":{"base_item_id":58},"activation":"equipped","attunement":"required","feature_actions":[{"key":"custom","title":"Keep"}]}');`)
+	exec(schemaTridentFishCommandSQL)
+	check(`SELECT data->>'desc'='keep' AND data->>'max_use'='3' AND data->>'recharge_note' LIKE '%1к3%' AND data#>>'{weapon,base_item_id}'='58' AND data#>>'{feature_actions,0,key}'='custom' AND data#>>'{feature_actions,1,key}'='fish_command' AND data#>>'{feature_actions,1,uses_resource}'='true' AND data#>>'{feature_actions,1,resource_cost}'='1' AND NOT (data ? 'rollback_long_rest') FROM dndshare.item WHERE id=178`)
+	exec(schemaTridentFishCommandSQL)
+	check(`SELECT jsonb_array_length(data->'feature_actions')=2 FROM dndshare.item WHERE id=178`)
+
 }

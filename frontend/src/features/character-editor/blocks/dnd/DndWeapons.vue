@@ -435,7 +435,6 @@ function addWeapon(it, quantity = 1, params = {}) {
   entries.value.push(...added.map(entry => ({ ...entry, _key: entry.uid })))
   addItem(it)
   emitChange()
-  if (added[0].magic_item_id) magicInstance.value = added[0]
   logSessionEntryAdded(charCtx, {
     kind: 'item', category: 'weapon', title: it.name, itemId: it.id, count,
   })

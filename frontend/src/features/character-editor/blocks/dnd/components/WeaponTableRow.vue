@@ -28,6 +28,11 @@
           <span v-if="ctx.magicBonus(entry) > 0" class="w-name-magic">+{{ ctx.magicBonus(entry) }}</span>
         </div>
         <div class="w-name-actions">
+          <RowActionMenu v-if="ctx.charCtx.ownerMode && entry.magic_item_id && hasMagicItemMenuActions(ctx.itemMap[entry.magic_item_id], entry)" :title="`Действия: ${ctx.itemTitle(entry)}`">
+            <template #default="{ close }">
+              <MagicItemMenuActions :item="ctx.itemMap[entry.magic_item_id]" :entry="entry" :values="ctx.charCtx.values" @update:values="patch => ctx.charCtx.updateValues(patch)" @configure="ctx.openMagicInstance(entry)" @close="close" />
+            </template>
+          </RowActionMenu>
           <button
             v-if="ctx.charCtx.ownerMode"
             class="w-note-btn"
@@ -198,6 +203,9 @@
 </template>
 
 <script setup>
+import { hasMagicItemMenuActions } from '@/features/character-editor/lib/magicItemSettings'
+import MagicItemMenuActions from './MagicItemMenuActions.vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import InputDescription from '@/shared/ui/InputDescription'

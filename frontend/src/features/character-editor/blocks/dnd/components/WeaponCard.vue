@@ -61,7 +61,7 @@
         tone="info"
         @click="moveToItems(closeMenu)"
       >Переместить в вещи</RowActionItem>
-      <RowActionItem v-if="ctx.charCtx.ownerMode && entry.magic_item_id" action="edit" @click="closeMenu(); ctx.openMagicInstance(entry)">Магические свойства</RowActionItem>
+      <MagicItemMenuActions v-if="ctx.charCtx.ownerMode && entry.magic_item_id" :item="ctx.itemMap[entry.magic_item_id]" :entry="entry" :values="ctx.charCtx.values" @update:values="patch => ctx.charCtx.updateValues(patch)" @configure="ctx.openMagicInstance(entry)" @close="closeMenu" />
       <RowActionSeparator v-if="ctx.charCtx.ownerMode" />
       <RowActionItem
         v-if="ctx.charCtx.ownerMode"
@@ -74,6 +74,7 @@
 </template>
 
 <script setup>
+import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { ArrowRightLeft } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
