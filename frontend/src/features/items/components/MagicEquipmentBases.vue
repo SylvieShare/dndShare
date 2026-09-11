@@ -20,12 +20,12 @@
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
-import { ref, watch } from 'vue'
+import { onServerPrefetch, ref, watch } from 'vue'
 import { ActionButton, BaseTile, LoadingState } from '@sylvieshare/share-ui'
 import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-import { itemsApi } from '@/shared/api/itemsApi'
-import { baseTypeId, eligibleMagicBase } from '@/features/items/lib/magicEquipmentBases'
+import { baseTypeId } from '@/features/items/lib/magicEquipmentBases'
+import { loadMagicBases } from '@/features/items/lib/loadMagicBases'
 const props = defineProps({ item: Object, kind: String, baseItems: { type: Array, default: () => [] }, singleColumn: Boolean, selectable: Boolean, modelValue: [Number, String], label: { type: String, default: 'Подходящие основы' }, zIndex: { type: Number, default: 4800 } })
 const itemTypes = useItemTypesStore(), suggest = useSuggestStore()
 const emit = defineEmits(['update:modelValue', 'loaded'])
@@ -34,13 +34,10 @@ let sequence = 0
 async function load() {
   const request = ++sequence
   loading.value = true; error.value = ''; bases.value = []; emit('loaded', [])
-  const rule = props.item.data?.[props.kind] || {}
-  const ids = rule.base_item_id ? [rule.base_item_id] : rule.allowed_base_item_ids
   try {
-    const known = ids?.map(id => props.baseItems.find(base => Number(base.id) === Number(id)))
-    const response = known?.length && known.every(Boolean) ? { items: known } : ids?.length ? await itemsApi.byIds(ids) : await itemsApi.listAll(baseTypeId(props.kind))
+    const rows = await loadMagicBases(props.item, props.kind, props.baseItems)
     if (request !== sequence) return
-    bases.value = (response.items || []).filter(base => eligibleMagicBase(props.item, base, props.kind)).sort((a, b) => a.name.localeCompare(b.name, 'ru'))
+    bases.value = rows
     emit('loaded', bases.value)
     const type = itemTypes.getType(baseTypeId(props.kind))
     const suggestIds = [...collectSuggestIds(type?.fields || [])]
@@ -49,7 +46,9 @@ async function load() {
   finally { if (request === sequence) loading.value = false }
 }
 function activate(base) { if (props.selectable) emit('update:modelValue', base.id); else view.value = base }
-watch(() => [props.item.id, props.kind, JSON.stringify(props.item.data?.[props.kind]), props.baseItems], load, { immediate: true })
+let pending
+watch(() => [props.item.id, props.kind, JSON.stringify(props.item.data?.[props.kind]), props.baseItems], () => { pending = load() }, { immediate: true })
+onServerPrefetch(() => pending)
 </script>
 <style scoped>
 .magic-bases-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }

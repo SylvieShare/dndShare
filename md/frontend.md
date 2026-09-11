@@ -727,9 +727,12 @@ Runtime поддерживает только текущий контракт. �
 
 `MagicEquipmentBases` — доменный список допустимых основ магического предмета.
 Он оборачивает стандартный `HandbookListItem` в `BaseTile` с рамкой и использует общий контракт
-`magicEquipmentBases` для просмотра и выбора. `MagicEquipmentInstanceModal`
-с общими `AppModalFrame`/`ActionButton` проверяет выбор до добавления в инвентарь,
-оружие или стартовый магазин. `MagicItemDetailSummary` использует существующие
+`magicEquipmentBases` и загрузчик `loadMagicBases` для просмотра и выбора.
+`MagicEquipmentInstanceModal` проверяет кандидатов до добавления в инвентарь,
+оружие или стартовый магазин. Единственный допустимый кандидат выбирается без
+вопроса; `AppModalFrame`/`ActionButton` открываются только для неоднозначного
+выбора либо ошибки/отсутствия основ. В смешанном предмете фиксированная основа
+не повторяется в вопросе о другой основе. `MagicItemDetailSummary` использует существующие
 `CoverSummaryLayout`, `CoverStatCard` и `CoverSummaryRail`; остаток заполненной
 схемы выводит доменный `MagicRuleFields` со ссылками, словарями и rich content.
 
