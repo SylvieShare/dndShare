@@ -1,12 +1,12 @@
 <template>
   <div class="magic-item-detail">
     <ItemDetailContent :item="item" :show-title="false" :economy-in-header="economyInHeader" />
-    <DetailSection v-for="kind in instance?.magic_item_id ? [] : kinds" :key="kind" :label="kind === 'weapon' ? 'Подходящее оружие' : 'Подходящие доспехи и щиты'">
+    <DetailSection v-for="kind in kinds.filter(kind => !selectedBases.some(base => base.kind === kind))" :key="kind" :label="kind === 'weapon' ? 'Подходящее оружие' : 'Подходящие доспехи и щиты'">
       <p>Основа определяет обычные характеристики. Выберите её при добавлении предмета персонажу.</p>
       <MagicEquipmentBases :item="item" :kind="kind" />
     </DetailSection>
     <MagicEquipmentAdditions v-for="kind in kinds" :key="`${kind}-additions`" :item="item" :kind="kind" />
-    <ItemTreasureSummary :treasure="data.treasure" />
+    <ItemTreasureSummary v-if="!selectedBases.length" :treasure="data.treasure" />
     <p v-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="hydrate">Повторить</ActionButton></p>
     <DetailSection v-for="field in details" :key="field.key" :label="field.name">
       <MagicRuleFields headless :fields="[field]" :data="data" :items="references" :labels="labels" />
@@ -22,12 +22,14 @@ import MagicRuleFields from './MagicRuleFields.vue'
 import MagicEquipmentAdditions from './MagicEquipmentAdditions.vue'
 import ItemTreasureSummary from './ItemTreasureSummary.vue'
 import MagicEquipmentBases from '@/features/items/components/MagicEquipmentBases.vue'
+import { selectedMagicBases } from '@/features/items/lib/magicItemInstanceView'
 import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
 const props = defineProps({ item: Object, type: Object, economyInHeader: Boolean, instance: Object })
 const data = computed(() => props.item.data || {})
+const selectedBases = computed(() => selectedMagicBases(props.item, props.instance))
 const kinds = computed(() => magicEquipmentKinds(props.item))
 // Each remaining schema field is rendered, including newly added mechanics. These
 // fields already have a dedicated presentation in the cover, body or base list.

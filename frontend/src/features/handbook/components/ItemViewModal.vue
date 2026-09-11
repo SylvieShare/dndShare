@@ -20,7 +20,7 @@
       <div class="iv-body">
         <LoadingState v-if="loading" class="iv-loading" label="Загрузка…" compact />
         <div v-else-if="loadError" class="iv-loading" role="alert">{{ loadError }} <button type="button" @click="load">Повторить</button></div>
-        <HandbookItemDetail v-else :item="displayItem" :type="type" :instance="instance" :weapon-item="instance?.magic_item_id ? displayItem : null" :can-edit="canEdit" @edit="editOpen = true" :show-title="true" :actor-name="actorName" />
+        <HandbookItemDetail v-else :item="displayItem" :type="type" :instance="instance" :base-item="baseItem" :nested-view-z-index="zIndex + 100" :can-edit="canEdit" @edit="editOpen = true" :show-title="true" :actor-name="actorName" />
       </div>
 
       <footer v-if="item && $slots.actions" class="iv-footer">
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
+import { itemInstancePresentation } from '@/features/items/lib/magicItemInstanceView'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { useAccountStore } from '@/stores/account'
@@ -81,11 +81,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'saved'])
 
 const item = ref(props.item)
-const displayItem = computed(() => {
-  if (!props.instance || !item.value) return item.value
-  const catalog = { [item.value.id]: item.value, ...(props.baseItem ? { [props.baseItem.id]: props.baseItem } : {}) }
-  return resolveWeaponItem(props.instance, catalog) || item.value
-})
+const displayItem = computed(() => itemInstancePresentation(item.value, props.instance))
 const type = ref(null)
 const loading = ref(false)
 const loadError = ref('')

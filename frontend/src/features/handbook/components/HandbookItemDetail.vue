@@ -22,7 +22,7 @@
           <ToolDetailSummary :item="item" />
         </template>
         <template v-else-if="type?.id === 19" #summary>
-          <MagicItemDetailSummary :item="item" />
+          <MagicItemDetailSummary :item="item" :instance="instance" :base-item="baseItem" :nested-view-z-index="nestedViewZIndex" />
         </template>
         <template v-else-if="isGear" #summary>
           <GearDetailSummary :item="item" :type="type" />
@@ -40,8 +40,6 @@
           >{{ itemSourceLabel }}</span>
         </template>
       </ItemDetailHeader>
-
-      <WeaponInstanceDetail v-if="weaponItem" :item="weaponItem" :instance="instance" />
 
       <!-- Custom renderer (Weapon, Spell, Enemy…) -->
       <component
@@ -116,6 +114,8 @@
         </template>
       </template>
 
+      <ItemInstanceNotes v-if="instance" :item="item" :instance="instance" />
+
       <div v-if="showTitle || canEdit" class="detail-technical-meta">
         <button v-if="canEdit" type="button" class="btn-edit" @click="$emit('edit', item)">
           <Pencil :size="14" aria-hidden="true" />
@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-import WeaponInstanceDetail from '@/features/items/detail-components/WeaponInstanceDetail.vue'
+import ItemInstanceNotes from '@/features/items/detail-components/ItemInstanceNotes.vue'
 import { computed, watch } from 'vue'
 import { Pencil } from '@lucide/vue'
 import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
@@ -192,7 +192,8 @@ const props = defineProps({
   canEdit: { type: Boolean, default: false },
   showTitle: { type: Boolean, default: true },
   instance: { type: Object, default: null },
-  weaponItem: { type: Object, default: null },
+  baseItem: { type: Object, default: null },
+  nestedViewZIndex: { type: Number, default: 4900 },
   actorName: { type: String, default: '' },
 })
 

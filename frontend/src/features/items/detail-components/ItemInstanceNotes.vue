@@ -1,9 +1,6 @@
 <template>
-  <DetailSection :label="`Характеристики оружия · ${item.data?.subtype || 'основа'}`" tone="combat">
-    <WeaponDetailSummary :item="item" />
-  </DetailSection>
   <DetailSection v-if="instance.params?.magic_bonus || instance.add_attacks?.length" label="Дополнительно у этого экземпляра">
-    <p v-if="instance.params?.magic_bonus">Бонус к атаке и урону: +{{ instance.params.magic_bonus }}</p>
+    <p v-if="instance.params?.magic_bonus">{{ item.typeId === 12 || item.data?.armor_base && !item.data?.weapon ? 'Бонус к КД' : 'Бонус к атаке и урону' }}: +{{ instance.params.magic_bonus }}</p>
     <DamageDice v-if="parts.length" :parts="parts" :size="32" />
   </DetailSection>
   <DetailSection v-if="instance.desc" label="Заметки об экземпляре">
@@ -15,7 +12,6 @@ import { computed } from 'vue'
 import DetailSection from '@/shared/ui/DetailSection.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
-import WeaponDetailSummary from './WeaponDetailSummary.vue'
 import { diceById } from '@/shared/lib/systemDice'
 import { useSuggestStore } from '@/stores/suggest'
 const props = defineProps({ item: Object, instance: Object })

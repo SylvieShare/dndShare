@@ -15,10 +15,16 @@
         <CoverSummaryRailItem :icon="Link" label="Настройка">{{ magicAttunementLabel(data.attunement) }}<small v-if="data.attunement_requirement"> · {{ data.attunement_requirement }}</small></CoverSummaryRailItem>
         <CoverSummaryRailItem :icon="data.activation === 'carried' ? Backpack : Hand" label="Свойства действуют">{{ data.activation === 'carried' ? 'В инвентаре' : 'При экипировке' }}<small v-if="data.level > 1"> · с уровня {{ data.level }}</small></CoverSummaryRailItem>
       </CoverSummaryRail>
+      <div v-for="base in selectedBases" :key="base.kind" class="magic-selected-base">
+        <span class="magic-selected-base-label">{{ base.kind === 'weapon' ? 'Основа оружия' : 'Основа доспеха' }}</span>
+        <MagicEquipmentBases :item="base.item" :kind="base.kind" single-column :base-items="baseItem ? [baseItem] : []" :z-index="nestedViewZIndex - 100" />
+      </div>
     </template>
   </CoverSummaryLayout>
 </template>
 <script setup>
+import MagicEquipmentBases from '@/features/items/components/MagicEquipmentBases.vue'
+import { selectedMagicBases } from '@/features/items/lib/magicItemInstanceView'
 import { computed } from 'vue'
 import { Backpack, Circle, Coins, FlaskConical, Gem, Hand, Link, Scroll, ShieldCheck, Sparkles, Swords, WandSparkles, Weight, Zap } from '@lucide/vue'
 import CoverSummaryLayout from '@/features/items/components/cover/CoverSummaryLayout.vue'
@@ -27,10 +33,16 @@ import CoverSummaryRail from '@/features/items/components/cover/CoverSummaryRail
 import CoverSummaryRailItem from '@/features/items/components/cover/CoverSummaryRailItem.vue'
 import { magicItemRarity, magicAttunementLabel } from '@/features/items/lib/magicItemPresentation'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
-const props = defineProps({ item: Object })
+const props = defineProps({ item: Object, instance: Object, baseItem: Object, nestedViewZIndex: { type: Number, default: 4900 } })
+const selectedBases = computed(() => selectedMagicBases(props.item, props.instance))
 const data = computed(() => props.item.data || {})
 const typeIcon = computed(() => ({ оружие: Swords, доспех: ShieldCheck, щит: ShieldCheck, кольцо: Circle, амулет: Gem, зелье: FlaskConical, свиток: Scroll, посох: WandSparkles, 'волшебная палочка': WandSparkles })[data.value.type] || Sparkles)
 const bonus = computed(() => data.value.weapon?.magic_bonus || data.value.armor_base?.magic_bonus)
 const { format } = useCostFormatter()
 const cost = computed(() => format(data.value.cost))
 </script>
+
+<style scoped>
+.magic-selected-base { margin-top: 10px; min-width: 0; }
+.magic-selected-base-label { display: block; margin-bottom: 5px; font-size: 11px; font-weight: 600; color: var(--text-on-accent); }
+</style>
