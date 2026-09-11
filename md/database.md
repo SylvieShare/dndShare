@@ -135,7 +135,11 @@ Class/subclass items use `caster_progression` (`full`, `half`, `halfup`,
 `spellcasting` data may additionally contain `list_class`,
 `start_level`, `selection_mode`, `level_up_choices`, `known_progression`,
 `allowed_schools` and `unrestricted_progression` for class tabs and level-up
-spell pickers. Ability choices may combine dictionaries through
+spell pickers. Migration 104 adds the full PHB/SRD 2014 Bard known progression
+for the seeded class (id 4016): cantrip and spell limits are shared by the
+handbook, sheet and level-up rather than hardcoded in the frontend. Existing
+character spell lists are not rewritten by this data correction.
+Ability choices may combine dictionaries through
 `suggest_sources`, require an owned proficiency and exclude an already reached
 rank. `display_scaling [{level,label}]` is presentation data resolved against
 the owning class level.

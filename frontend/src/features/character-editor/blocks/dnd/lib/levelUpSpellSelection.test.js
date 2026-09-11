@@ -18,8 +18,8 @@ describe('applyLevelUpSpellSelection', () => {
     })
 
     expect(result.tabs[0].spells).toEqual([
-      { key: 'old', id: 2, prepared: true },
-      expect.objectContaining({ id: 5, prepared: true }),
+      { key: 'old', id: 2, prepared: false },
+      expect.objectContaining({ id: 5, prepared: false }),
     ])
     expect(result.tabs[1].spells).toEqual([{ key: 'cleric-spell', id: 2, prepared: false }])
     expect(result.grants).toEqual([{ key: 'grant', id: 4, source: { kind: 'ability', item_id: 9 } }])
@@ -33,4 +33,14 @@ describe('applyLevelUpSpellSelection', () => {
     expect(result.tabs[0]).toMatchObject({ class_item_id: 7, casting_ability: 6, mode: 'prepared' })
     expect(result.tabs[0].spells[0]).toMatchObject({ id: 10, prepared: true })
   })
+  it('preserves preparation of retained book entries and leaves newly learned spells unprepared', () => {
+    const tab = { key: 'wizard', class_item_id: 1, mode: 'spellbook', spells: [
+      { key: 'prepared', id: 2, prepared: true }, { key: 'unprepared', id: 3, prepared: false },
+    ] }
+    const next = applyLevelUpSpellSelection({ tabs: [tab] }, {
+      tab, entries: [{ id: 2, level: 1 }, { id: 3, level: 1 }, { id: 4, level: 1 }],
+    })
+    expect(next.tabs[0].spells.map(entry => [entry.id, entry.prepared])).toEqual([[2, true], [3, false], [4, false]])
+  })
+
 })

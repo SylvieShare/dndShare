@@ -25,7 +25,8 @@ export function applyLevelUpSpellSelection(book, selection) {
     const current = currentById.get(String(chosen.id))
     return spellEntry(chosen.id, {
       key: chosen.key || current?.key,
-      prepared: target.mode !== 'known' && Number(chosen.level) > 0,
+      prepared: target.mode !== 'known' && Number(chosen.level) > 0
+        && (current ? current.prepared : target.mode === 'prepared'),
     })
   })
   return next

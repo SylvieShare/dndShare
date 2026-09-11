@@ -2,7 +2,7 @@
 .lu-muted { font-size: 12px; color: var(--text-muted); margin: 0; }
 .lu-warn { color: var(--warning); }
 
-.lu-sub { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-2); margin-top: 10px; }
+.lu-sub { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-2); margin-top: 0; }
 .lu-back {
   display: grid; place-items: center; width: 24px; height: 24px;
   border: none; border-radius: 7px; background: var(--surface);
@@ -61,34 +61,12 @@
 .lu-note-warn { border-left-color: var(--warning); }
 .lu-note b { color: var(--text-1); }
 
-.lu-sec { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-.lu-sec-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+.lu-sec { margin-top: 0; display: flex; flex-direction: column; gap: 8px; }
+.lu-sec-title { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 21px; font-weight: 600; color: var(--text-1); }
 .lu-req { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--warning); }
 .lu-req.done { color: var(--success); }
 
-.lu-feat { background: var(--surface); border-radius: var(--r-md); padding: 9px 12px; }
-.lu-feat-head { display: flex; align-items: center; gap: 8px; }
-.lu-feat-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--text-1); }
-.lu-feat-view {
-  display: grid; place-items: center; width: 24px; height: 24px;
-  border: none; border-radius: 6px; background: none; color: var(--text-muted); cursor: pointer;
-}
-.lu-feat-view:hover { color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, transparent); }
-.lu-feat-view svg { width: 15px; height: 15px; }
-.lu-feat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.45; margin-top: 3px; }
 .lu-feat-choice-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-2); margin-top: 8px; margin-bottom: 6px; }
-.lu-spell-tag {
-  display: inline-flex; align-items: center;
-  background: color-mix(in srgb, var(--accent) 13%, var(--surface));
-  border-radius: 999px; color: var(--text-1); font-size: 12px; font-weight: 500;
-  padding: 6px 13px;
-}
-
-.lu-hp { display: flex; flex-direction: column; gap: 8px; }
-.lu-hp-val { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.lu-hp-input { max-width: 90px; }
-.lu-hp-n { font-size: 16px; font-weight: 700; color: var(--text-1); }
-.lu-hp-total { font-size: 13px; font-weight: 600; color: var(--success); }
 .lu-roll {
   background: color-mix(in srgb, var(--accent) 16%, transparent);
   border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
@@ -96,9 +74,6 @@
   padding: 7px 14px; cursor: pointer;
 }
 .lu-roll:hover { background: color-mix(in srgb, var(--accent) 28%, transparent); }
-.lu-reroll { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; }
-.lu-reroll:hover { color: var(--accent); }
-
 .lu-chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .lu-chip {
   background: var(--surface); border: none; border-radius: 999px;
@@ -113,14 +88,29 @@
 .lu-skip { align-self: flex-start; background: none; border: none; color: var(--text-muted); font: inherit; font-size: 12px; cursor: pointer; padding: 0; text-decoration: underline dotted; }
 .lu-skip:hover { color: var(--text-2); }
 
-.lu-list { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-2); display: flex; flex-direction: column; gap: 5px; }
-.lu-list b { color: var(--text-1); font-variant-numeric: tabular-nums; }
-.lu-slots-check { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
 
-.lu-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
-.lu-btn {
-  background: var(--accent); color: var(--text-on-accent); border: none; border-radius: 9px;
-  padding: 9px 22px; font: inherit; font-weight: 600; cursor: pointer;
+.lu-workspace { display: grid; grid-template-columns: 284px minmax(0, 1fr); gap: 28px; align-items: start; margin-top: 22px; }
+.lu-workspace-plain { grid-template-columns: 1fr; }
+.lu-sidebar, .lu-main { display: grid; min-width: 0; gap: 24px; }
+.lu-main { gap: 28px; }
+.lu-summary { padding: 20px; display: grid; gap: 14px; }
+.lu-summary h3 { margin: 0 0 2px; color: var(--text-1); font: 600 20px var(--font-display); }
+.lu-summary-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 12px; color: var(--text-muted); }
+.lu-summary-line b { color: var(--text-1); font-size: 14px; font-variant-numeric: tabular-nums; }
+.lu-summary :deep(.level-gains) { margin: 2px 0 0; border-top: 1px solid var(--border); padding-top: 6px; }
+.lu-feature { min-width: 0; }
+.lu-feature + .lu-feature { margin-top: 4px; }
+.lu-item-list { display: grid; gap: 8px; }
+.lu-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+.lu-actions p { margin: 0 auto 0 0; max-width: 380px; font-size: 12px; }
+.lu-back:focus-visible, .lu-opt:focus-visible, .lu-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 800px) {
+  .lu-workspace { grid-template-columns: 1fr; gap: 24px; }
+  .lu-sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 }
-.lu-btn:disabled { opacity: 0.5; cursor: default; }
-.lu-btn.ghost { background: transparent; color: var(--text-muted); box-shadow: inset 0 0 0 1px var(--border-strong); }
+@media (max-width: 560px) {
+  .lu-sidebar { grid-template-columns: 1fr; }
+  .lu-actions { flex-wrap: wrap; }
+  .lu-actions p { flex-basis: 100%; max-width: none; }
+  .lu-actions > :last-child { flex: 1; }
+}

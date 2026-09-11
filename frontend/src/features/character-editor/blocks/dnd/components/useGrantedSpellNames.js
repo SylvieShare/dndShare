@@ -3,6 +3,7 @@ import { itemsApi } from '@/shared/api/itemsApi'
 
 export function useGrantedSpellNames(grantedIds) {
   const spellNames = ref({})
+  const spellItems = ref({})
   const spellLevels = ref({})
   watch(grantedIds, async (ids) => {
     const missing = ids.filter(id => !spellNames.value[id])
@@ -11,6 +12,7 @@ export function useGrantedSpellNames(grantedIds) {
     const nextNames = { ...spellNames.value }
     const nextLevels = { ...spellLevels.value }
     for (const item of response?.items || []) {
+      spellItems.value[item.id] = item
       nextNames[item.id] = item.name
       if (item.data?.lvl != null) nextLevels[item.id] = Number(item.data.lvl) || 0
     }
@@ -19,6 +21,7 @@ export function useGrantedSpellNames(grantedIds) {
   }, { immediate: true })
 
   const grantedSpellList = computed(() => grantedIds.value.map(id => ({
+    ...spellItems.value[id],
     id,
     name: spellNames.value[id] || `#${id}`,
   })))

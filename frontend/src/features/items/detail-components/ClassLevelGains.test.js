@@ -39,4 +39,10 @@ describe('level hit points and spell-slot gains', () => {
     expect(html).toContain('Добавляется 1 яч. 1 круга')
     expect(html).toContain('1 круг')
   })
+  it('shows an explicit positive delta for a single level-up slot', async () => {
+    const html = await render({ level: 2, showSingleCount: true, slotChanges: [{ kind: 'added', level: 1, count: 1 }] })
+    expect(html).toContain('>+1</strong>')
+    expect(html).not.toContain('checkbox')
+  })
+
 })

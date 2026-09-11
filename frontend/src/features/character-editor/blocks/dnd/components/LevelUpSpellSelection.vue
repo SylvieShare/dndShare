@@ -1,170 +1,92 @@
 <template>
   <div class="lus">
-    <div class="lus-head">
-      <div>
-        <strong>Заклинания {{ context.label }}</strong>
-        <p>{{ hint }}</p>
-      </div>
-      <div class="lus-counts">
-        <span v-if="cantripLimit != null">Заговоры {{ cantripCount }} / {{ cantripLimit }}</span>
-        <span v-if="spellLimit != null">Заклинания {{ spellCount }} / {{ spellLimit }}</span>
-      </div>
+    <p class="lus-hint">{{ hint }}</p>
+    <LoadingState v-if="loading" label="Загрузка заклинаний…" compact />
+    <div v-else-if="error" class="lus-error" role="alert">
+      <p>{{ error }}</p><ActionButton variant="secondary" @click="load">Повторить загрузку</ActionButton>
     </div>
-
-    <LoadingState v-if="loading" class="lus-muted" label="Загрузка заклинаний…" compact />
-    <div v-else class="lus-chips">
-      <button
-        v-for="entry in selected"
-        :key="entry.key || entry.id"
-        type="button"
-        class="lus-chip"
-        :title="`Убрать: ${entry.name}`"
-        @click="remove(entry.key || entry.id)"
-      >
-        {{ entry.name }} <small>{{ entry.level === 0 ? 'заговор' : `${entry.level} круг` }}</small> <Trash2 :size="14" aria-hidden="true" />
-      </button>
-      <span v-if="!selected.length" class="lus-muted">Пока ничего не выбрано.</span>
-    </div>
-
-    <button type="button" class="lus-add" @click="pickerOpen = true">+ Добавить заклинание</button>
-
+    <template v-else>
+      <div class="lus-budgets">
+        <BaseTile v-for="group in groups" :key="group.kind" class="lus-budget" :tint="group.remaining !== 0">
+          <div class="lus-budget-heading"><span>{{ group.title }}</span><b>{{ group.limit == null ? group.added : `${group.added} / ${group.limit}` }}</b></div>
+          <p>{{ group.remaining === 0 ? (group.limit ? 'Всё выбрано' : 'На этом уровне новых нет') : group.remaining == null ? 'Число не задано в справочнике' : `Осталось выбрать: ${group.remaining}` }}</p>
+          <ActionButton variant="secondary" :disabled="group.remaining === 0" @click="picker = { kind: group.kind }">
+            <template #icon><Plus :size="15" aria-hidden="true" /></template>{{ group.button }}
+          </ActionButton>
+        </BaseTile>
+      </div>
+      <p v-if="budget.cantripLimit != null || budget.spellLimit != null" class="lus-hint">
+        Всего после повышения:
+        <span v-if="budget.cantripLimit != null">заговоры {{ budget.cantripsTotal }} / {{ budget.cantripLimit }}</span>
+        <span v-if="budget.cantripLimit != null && budget.spellLimit != null"> · </span>
+        <span v-if="budget.spellLimit != null">заклинания {{ budget.spellsTotal }} / {{ budget.spellLimit }}</span>.
+      </p>
+      <div v-if="additions.length" class="lus-list">
+        <h4>Новые заклинания</h4>
+        <LevelUpItemRow v-for="entry in additions" :key="entry.id" :item="entry.item" :type-id="5" highlighted @details="viewId = entry.id">
+          <ActionButton variant="quiet" :aria-label="`Отменить выбор «${entry.name}»`" @click="removeAddition(entry)">Отменить</ActionButton>
+        </LevelUpItemRow>
+      </div>
+      <div v-if="rows.length" class="lus-list">
+        <div class="lus-known-heading">
+          <h4>{{ budget.mode === 'spellbook' ? 'Уже в книге' : budget.mode === 'prepared' ? 'Текущие заклинания' : 'Уже известны' }}</h4>
+          <span v-if="Number.isFinite(budget.replacements) && budget.replacements">Замены {{ replacementCount }} / {{ budget.replacements }} · необязательно</span>
+        </div>
+        <div v-for="row in rows" :key="row.original.key || row.original.id" class="lus-existing">
+          <div v-if="row.replaced" class="lus-replacement-label">Вместо «{{ row.original.name }}»</div>
+          <LevelUpItemRow :item="row.entry.item" :type-id="5" :highlighted="row.replaced" @details="viewId = row.entry.id">
+            <ActionButton v-if="row.replaced" variant="quiet" :aria-label="`Отменить замену «${row.original.name}»`" @click="undoReplacement(row)">Отменить</ActionButton>
+            <ActionButton v-if="row.original.level > 0 && budget.replacements" variant="quiet" :disabled="!canReplace(row)" :aria-label="`Заменить «${row.entry.name}»`" @click="openReplacement(row)">
+              <template #icon><ArrowLeftRight :size="14" aria-hidden="true" /></template>Заменить
+            </ActionButton>
+          </LevelUpItemRow>
+        </div>
+      </div>
+      <p class="lus-hint">Можно завершить повышение и выбрать оставшиеся новые заклинания позже в листе.</p>
+    </template>
     <ItemPickerModal
-      v-if="pickerOpen"
-      :item-type-ids="[5]"
-      :exclude-items="excludedIds"
-      :fixed-filters="pickerFilters"
-      :item-eligibility="pickerEligibility"
-      :title="`Заклинания · ${context.label}`"
-      search-placeholder="Поиск заклинания…"
-      @pick="add"
-      @close="pickerOpen = false"
+      v-if="picker" :item-type-ids="[5]" :exclude-items="excludedIds" :fixed-filters="pickerFilters"
+      :item-eligibility="pickerEligibility" :title="pickerTitle" search-placeholder="Поиск заклинания…"
+      @pick="add" @close="picker = null"
     />
+    <ItemViewModal v-if="viewId != null" :item-type-id="5" :item-id="viewId" @close="viewId = null" />
   </div>
 </template>
 
 <script setup>
-import { LoadingState } from '@sylvieshare/share-ui'
-import { Trash2 } from '@lucide/vue'
-import { computed, onMounted, ref, watch } from 'vue'
-
+import { computed, ref } from 'vue'
+import { ActionButton, BaseTile, LoadingState } from '@sylvieshare/share-ui'
+import { ArrowLeftRight, Plus } from '@lucide/vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { itemsApi } from '@/shared/api/itemsApi'
-
-const props = defineProps({
-  context: { type: Object, required: true },
-  existingSpells: { type: Array, default: () => [] },
-})
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
+import LevelUpItemRow from './LevelUpItemRow.vue'
+import { useLevelUpSpellSelection } from './useLevelUpSpellSelection'
+const props = defineProps({ context: { type: Object, required: true }, existingSpells: { type: Array, default: () => [] } })
 const emit = defineEmits(['change'])
-
-const loading = ref(true)
-const pickerOpen = ref(false)
-const selected = ref([])
-const originalIds = ref(new Set())
-
-const rules = computed(() => props.context.rules || {})
-const cantripCount = computed(() => selected.value.filter((entry) => entry.level === 0).length)
-const spellCount = computed(() => selected.value.filter((entry) => entry.level > 0).length)
-const cantripLimit = computed(() => rules.value.hasKnownProgression ? rules.value.cantripsKnown : null)
-const spellLimit = computed(() => rules.value.hasKnownProgression ? rules.value.spellsKnown : null)
-const selectedIds = computed(() => new Set(selected.value.map((entry) => String(entry.id))))
-const newLeveledCount = computed(() => selected.value
-  .filter((entry) => entry.level > 0 && !originalIds.value.has(String(entry.id))).length)
-const excludedIds = computed(() => [...new Set([
-  ...props.existingSpells.filter((entry) => !isSelectableClassSpell(entry)).map((entry) => entry.id),
-  ...selected.value.map((entry) => entry.id),
-])])
-const pickerFilters = computed(() => ({
-  ...(rules.value.listClassId != null ? { 'classes.id': [rules.value.listClassId] } : {}),
-  lvl: Array.from({ length: Math.max(0, Number(props.context.maxSpellLevel) || 0) + 1 }, (_, index) => index),
-}))
-const hint = computed(() => {
-  if (rules.value.selectionMode === 'prepared') return 'Измени список подготовленных заклинаний для нового уровня.'
-  if (rules.value.selectionMode === 'spellbook') {
-    return rules.value.levelUpChoices
-      ? `Добавь до ${rules.value.levelUpChoices} новых заклинаний в книгу или замени текущий выбор.`
-      : 'Добавь новые заклинания в книгу или измени текущий выбор.'
-  }
-  return 'Изучи новые заклинания или замени уже известные.'
-})
-
-function isSelectableClassSpell(entry) { return entry?.id != null }
-
-function pickerEligibility(item) {
-  const level = Number(item?.data?.lvl)
-  const reasons = []
-  if (rules.value.listClassId != null
-    && !(item?.data?.classes || []).some((entry) => String(entry?.id ?? entry) === String(rules.value.listClassId))) {
-    reasons.push('Не входит в список этого класса')
-  }
-  if (level > Number(props.context.maxSpellLevel)) reasons.push('Круг пока недоступен этому классу')
-  if (selectedIds.value.has(String(item?.id))) reasons.push('Уже выбрано')
-  if (level === 0 && cantripLimit.value != null && cantripCount.value >= cantripLimit.value) {
-    reasons.push('Достигнут лимит известных заговоров')
-  }
-  if (level > 0 && spellLimit.value != null && spellCount.value >= spellLimit.value) {
-    reasons.push('Достигнут лимит известных заклинаний')
-  }
-  if (level > 0 && rules.value.selectionMode === 'spellbook' && rules.value.levelUpChoices
-    && !originalIds.value.has(String(item?.id)) && newLeveledCount.value >= rules.value.levelUpChoices) {
-    reasons.push('Все новые заклинания этого уровня уже выбраны')
-  }
-  return { eligible: reasons.length === 0, reasons }
-}
-
-function notify() {
-  emit('change', {
-    tab: { ...props.context.tab, spells: [] },
-    entries: selected.value.map(({ id, level, key }) => ({ id, level, ...(key ? { key } : {}) })),
-  })
-}
-
-function add(item) {
-  if (!pickerEligibility(item).eligible) return
-  selected.value.push({ id: item.id, name: item.name, level: Number(item.data?.lvl) || 0 })
-  pickerOpen.value = false
-  notify()
-}
-
-function remove(key) {
-  selected.value = selected.value.filter((entry) => String(entry.key || entry.id) !== String(key))
-  notify()
-}
-
-onMounted(async () => {
-  try {
-    const refs = props.existingSpells.filter(isSelectableClassSpell)
-    originalIds.value = new Set(refs.map((entry) => String(entry.id)))
-    const ids = refs.map((entry) => entry.id)
-    const response = ids.length ? await itemsApi.byIds(ids) : { items: [] }
-    const itemMap = Object.fromEntries((response?.items || []).map((item) => [String(item.id), item]))
-    selected.value = refs.map((entry) => {
-      const item = itemMap[String(entry.id)]
-      return {
-        id: entry.id,
-        key: entry.key,
-        name: item?.name || `Заклинание #${entry.id}`,
-        level: Number(item?.data?.lvl) || 0,
-      }
-    })
-  } finally {
-    loading.value = false
-    notify()
-  }
-})
-
-watch(() => props.context.tab?.key, () => { pickerOpen.value = false })
+const viewId = ref(null)
+const { loading, error, load, rows, additions, budget, replacementCount, picker, pickerTitle, hint,
+  excludedIds, pickerFilters, pickerEligibility, canReplace, openReplacement, add, removeAddition, undoReplacement,
+} = useLevelUpSpellSelection(props, emit)
+const groups = computed(() => [
+  { kind: 'cantrip', title: 'Новые заговоры', button: 'Выбрать заговор', limit: budget.value.cantrips, added: budget.value.cantripsAdded, remaining: budget.value.cantripsRemaining },
+  { kind: 'spell', title: budget.value.mode === 'spellbook' ? 'Добавить в книгу' : 'Новые заклинания', button: 'Выбрать заклинание', limit: budget.value.spells, added: budget.value.spellsAdded, remaining: budget.value.spellsRemaining },
+])
 </script>
 
 <style scoped>
-.lus { display: grid; gap: 10px; }
-.lus-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.lus-head strong { color: var(--text-1); font-size: 13px; }
-.lus-head p { margin: 3px 0 0; color: var(--text-muted); font-size: 11px; }
-.lus-counts { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; color: var(--text-2); font-size: 11px; white-space: nowrap; }
-.lus-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.lus-chip, .lus-add { border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text-1); cursor: pointer; font: inherit; font-size: 12px; }
-.lus-chip { padding: 5px 8px; }
-.lus-chip small { color: var(--text-muted); }
-.lus-add { justify-self: start; padding: 6px 10px; border-style: dashed; color: var(--accent-soft); }
-.lus-muted { margin: 0; color: var(--text-muted); font-size: 11px; }
+.lus, .lus-list { display: grid; gap: 10px; min-width: 0; }
+.lus { gap: 18px; }
+.lus-hint, .lus-budget p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.6; }
+.lus-budgets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.lus-budget { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
+.lus-budget-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; font-size: 12px; color: var(--text-1); }
+.lus-budget-heading b { color: var(--accent-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lus-budget p { flex: 1; }
+.lus-budget :deep(.share-action-button) { width: 100%; padding-inline: 8px; }
+.lus-list h4 { margin: 0; color: var(--text-2); font-size: 12px; font-weight: 600; }
+.lus-known-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.lus-known-heading > span { color: var(--text-muted); font-size: 11px; }
+.lus-replacement-label { color: var(--accent-soft); font-size: 11px; padding: 0 8px 6px; }
+.lus-error { color: var(--danger); font-size: 12px; }
+@media (max-width: 440px) { .lus-budgets { grid-template-columns: 1fr; } }
 </style>

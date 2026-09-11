@@ -20,7 +20,7 @@
       <div class="level-gains-slots">
         <div v-for="(slot, index) in slotChanges" :key="index" class="level-gains-slot">
           <div class="level-gains-slot-value" role="img" :aria-label="slot.kind === 'added' ? `Добавляется ${slot.count} яч. ${slot.level} круга` : `${slot.count} яч. усиливаются с ${slot.fromLevel} до ${slot.level} круга`">
-            <strong v-if="slot.kind !== 'added' || slot.count !== 1" class="level-gains-slot-count" aria-hidden="true">{{ slot.kind === 'added' ? '+' : '' }}{{ slot.count }}</strong>
+            <strong v-if="showSingleCount || slot.kind !== 'added' || slot.count !== 1" class="level-gains-slot-count" aria-hidden="true">{{ slot.kind === 'added' ? '+' : '' }}{{ slot.count }}</strong>
             <div class="level-gains-slot-icon" aria-hidden="true">
               <SpellSlotSphere :level="slot.level" :size="28" :interactive="false" />
               <small>{{ slot.kind === 'upgraded' ? `${slot.fromLevel} → ` : '' }}{{ slot.level }} круг</small>
@@ -46,6 +46,7 @@ const props = defineProps({
   hitPoints: { type: String, default: '' },
   hitDie: { type: [String, Number], default: null },
   slotChanges: { type: Array, default: () => [] },
+  showSingleCount: { type: Boolean, default: false },
 })
 const sides = computed(() => dieFaceOf(props.hitDie))
 const fixedGain = computed(() => avgHitDie(sides.value))

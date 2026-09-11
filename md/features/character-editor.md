@@ -387,6 +387,42 @@ dialog changes neither. XP above the required threshold is preserved. At level
 The total level has no direct numeric input;
 manual changes go through the shared class editor and its progression warning.
 
+The level-up dialog is 960 px wide on desktop (twice the standard dialog),
+with HP and automatic gains in a side column and abilities, subclass, ASI and
+spell choices in the main column. Narrow screens stack these sections. The
+footer stays visible with the final apply action. Granted abilities and spells
+use `LevelUpItemRow` with the handbook's list renderer and open their full
+handbook descriptions. HP uses the shared `BaseTile`, `MultiToggle`, number
+field and `SystemDie`: fixed average, an actual roll or a manual final gain
+including Constitution. The selected roll mode requires a completed roll;
+manual mode does not add Constitution a second time. The minimum gain is 1 HP.
+Spell slots apply automatically, without a checkbox. `ClassLevelGains` renders
+the positive gain with `SpellSlotSphere` and an explicit +1 for a single slot;
+pact slots show an upgrade in circle and any additional slots separately.
+
+Class spell selection separates new cantrips, new leveled spells and the
+existing list. Each addition counter shows selected/available and the remaining
+choices. The budget fills the handbook's known-spell limit after accounting for
+existing class spells and external grants marked `counts_as_known`. An already
+overfilled list is preserved and has no new choices. When the handbook lacks a
+progression, the UI explicitly says that the count is unspecified; level-one
+counts are not treated as limits at later levels. The seeded 2014 Bard has the
+complete 1–20 known-spell progression (migration 104), so a complete level-one
+list receives one new leveled spell and no cantrips at level two.
+
+For known-spell classes, one existing leveled spell may optionally be replaced
+when gaining another level in that casting class. Replacement does not consume
+an addition; cantrips do not use this replacement action. The old spell stays
+until a replacement is selected, and the replacement can be changed or undone.
+New choices can be cancelled independently. A spellbook only gains new entries
+according to `level_up_choices` and retains old entries and their preparation;
+new book entries start unprepared. Prepared classes can
+update multiple spells. Pickers keep the class list, circle, school-exception
+and duplicate constraints. Cancelling a picker changes nothing. Loading errors
+block applying the draft and offer retry, preventing a failed catalogue request
+from clearing the existing spell list. New spells may be chosen later in the
+sheet; unfilled addition counters do not block level-up.
+
 Race abilities, class abilities and feats use one `choices` contract when they
 are granted. Adding an item from a handbook picker first opens the mandatory
 choice dialog and writes the result into the new ability entry only after all
