@@ -14,9 +14,7 @@
       @click="$emit('levelup')"
     >↑ Level Up! → {{ level + 1 }}</button>
 
-    <FormField label="Уровень">
-      <FormNumberInput :value="level" :min="1" :max="20" @change="set('level', $event)" />
-    </FormField>
+    <ActionButton variant="secondary" @click="$emit('manual')">Изменить уровни вручную</ActionButton>
     <FormField label="Опыт">
       <FormNumberInput :value="data.exp || 0" :min="0" :max="355000" @change="set('exp', $event)" />
     </FormField>
@@ -26,7 +24,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
-import { EditorPanel } from '@sylvieshare/share-ui'
+import { ActionButton, EditorPanel } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 
@@ -37,7 +35,7 @@ const EXPERIENCE = [
 ]
 
 const props = defineProps({ data: { type: Object, required: true } })
-const emit = defineEmits(['change', 'levelup'])
+const emit = defineEmits(['change', 'levelup', 'manual'])
 const calcAmount = ref('')
 
 const level = computed(() => Math.max(1, Math.min(20, parseInt(props.data.level) || 1)))

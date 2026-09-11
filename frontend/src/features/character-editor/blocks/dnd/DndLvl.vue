@@ -14,7 +14,7 @@
     @close="close"
   >
     <template #view><DndLvlView :data="data" /></template>
-    <template #editor><DndLvlEditor :data="data" @change="onChange" @levelup="openLevelUp" /></template>
+    <template #editor><DndLvlEditor :data="data" @change="onChange" @levelup="openLevelUp" @manual="openManualClasses" /></template>
   </MorphEditorShell>
 
   <DndLevelUpModal
@@ -23,11 +23,18 @@
     @apply="applyLevelUp"
     @close="levelUpOpen = false"
   />
+  <DndClassesEditorModal
+    v-if="manualClassesOpen"
+    :values="{ ...values, lvl: data }"
+    @apply="applyManualClasses"
+    @close="manualClassesOpen = false"
+  />
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
+import DndClassesEditorModal from './components/DndClassesEditorModal.vue'
 import DndLevelUpModal from '@/features/character-editor/blocks/dnd/components/DndLevelUpModal'
 import DndLvlEditor from '@/features/character-editor/blocks/dnd/components/DndLvlEditor'
 import DndLvlView from '@/features/character-editor/blocks/dnd/components/DndLvlView'
@@ -41,6 +48,7 @@ const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 
 const levelUpOpen = ref(false)
+const manualClassesOpen = ref(false)
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 const isMini = computed(() => props.block?.props?.variant === 'mini')
@@ -51,6 +59,17 @@ function onChange(d) { emit('update:value', props.block.id, d) }
 function openLevelUp() {
   close()
   levelUpOpen.value = true
+}
+
+function openManualClasses() {
+  close()
+  manualClassesOpen.value = true
+}
+
+function applyManualClasses(updates) {
+  emit('update:value', 'classes', updates.classes)
+  emit('update:value', props.block.id, updates.lvl)
+  manualClassesOpen.value = false
 }
 
 // Окно повышения возвращает пачку изменений по разным блокам листа

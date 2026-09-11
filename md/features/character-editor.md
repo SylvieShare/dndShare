@@ -288,11 +288,29 @@ block schema or know storage paths independently.
 
 ## Identity and multiclass
 
-`DndCharIdentity.vue` edits name, avatar, race/subrace and class rows in a
-shared modal. Classes use only `values.classes`; each row can carry a subclass
-and level. `classEntriesOf` reads this list, `classesLabel` renders it. For a
-single class, `lvl.level` controls the effective level; for multiclass the
-per-class sum updates `lvl.level`.
+`DndCharIdentity.vue` edits name and race/subrace in the «Персонаж» modal.
+Classes are read-only `ObjectListItem` rows with handbook icons, subclass names
+and each class's effective level. «Редактировать классы» opens the shared
+`DndClassesEditorModal`, also available from the level block through
+«Изменить уровни вручную». The manual editor shows a warning recommending the
+regular level-up flow: manually changing classes does not replay progression
+or adjust previously granted abilities, HP and spells.
+
+The editor keeps a separate draft of classes, subclasses and levels. It allows
+replacing, adding and deleting class rows, clearing a subclass, and changing the
+level of any class, including a single class. Changing a class clears its former
+subclass. At least one selected class is required; duplicates, invalid levels
+and a total above 20 block saving. Catalogue load failures keep the draft and
+offer retry. Stored references outside the current catalogue scope are preserved.
+«Сохранить» applies `classes` and their summed `lvl.level` together through the
+sheet's normal save flow, preserving XP. «Отменить», Escape and closing discard
+this draft. Saving this separate editor from «Персонаж» applies classes immediately;
+the identity form's own save/cancel controls affect only name and race/subrace.
+
+Classes use only `values.classes`; each row carries a subclass and level.
+`classEntriesOf` reads this list, `classesLabel` renders it. For an existing single
+class, `lvl.level` controls the effective level; manual saving synchronizes both
+values, including when multiclass is reduced to one class.
 Списки происхождения больше не выводят варианты из базовых каталогов: расы
 загружаются из типа 8, подрасы — из типа 16 с фильтром `data.race`; классы — из
 типа 9, подклассы — из типа 17 с фильтром `data.class`. Тот же контракт
@@ -360,7 +378,8 @@ rolls remain normal `dice_roll` events; opening or cancelling a rest does not
 write history.
 
 The level-up editor does not render its level-up action until current XP reaches
-the threshold for the next level; direct numeric level editing remains available.
+the threshold for the next level. The total level has no direct numeric input;
+manual changes go through the shared class editor and its progression warning.
 
 Race abilities, class abilities and feats use one `choices` contract when they
 are granted. Adding an item from a handbook picker first opens the mandatory
