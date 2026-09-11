@@ -1,6 +1,6 @@
 <template>
   <template v-if="canAttack">
-    <RowActionSubmenu v-for="scope in ['attack', 'damage']" :key="scope" :label="scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон'" :min-width="280">
+    <RowActionSubmenu v-for="scope in ['attack', 'damage']" :key="scope" :min-width="280">
       <template #trigger="{ open }">
         <RowActionItem :action="scope" submenu :submenu-open="open">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
       </template>
