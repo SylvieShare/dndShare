@@ -35,6 +35,25 @@ describe('Dwarven Thrower conditional damage', () => {
     expect(critical[1]).toMatchObject({ formula: '+2к8', disabled: false, checked: true, damageParts: [{ count: 2, diceSides: 8 }] })
     expect(critical[2]).toMatchObject({ formula: '+3к6', damageParts: [{ count: 3, diceSides: 6 }] })
   })
+  it('shares a mode switch between attack and damage without showing damage dice under attack', () => {
+    const actions = [...rules, { key: 'sneak', label: 'Скрытая атака', dice: 'd6', dice_count: 3 }]
+    let selected = toggleDamageAction(actions, [], 'throw', true)
+    expect(weaponDamageMenuOptions(actions, selected, true, 'attack')).toMatchObject([
+      { key: 'throw', checked: true, damageParts: [], formula: '' },
+    ])
+    expect(weaponDamageMenuOptions(actions, selected)[0]).toMatchObject({ key: 'throw', checked: true, formula: '+1к8' })
+    selected = toggleDamageAction(actions, selected, 'giant', true)
+    selected = toggleDamageAction(actions, selected, 'throw', false)
+    expect(weaponDamageMenuOptions(actions, selected, false, 'attack')[0].checked).toBe(false)
+    expect(weaponDamageMenuOptions(actions, selected)[1]).toMatchObject({ checked: false, disabled: true })
+  })
+  it('includes prerequisite switches when an attack mode depends on another option', () => {
+    const actions = [
+      { key: 'enabled', label: 'Условие', dice: 'd6', dice_count: 1 },
+      { key: 'throw', attack_mode: 'thrown', requires_damage_key: 'enabled', dice: 'd8', dice_count: 1 },
+    ]
+    expect(weaponDamageMenuOptions(actions, [], false, 'attack').map(option => option.key)).toEqual(['enabled', 'throw'])
+  })
   it('namespaces dependencies per owned instance and does not affect another weapon', () => {
     const item = { id: 261, name: 'Дварфийский метатель', typeId: 19,
       data: { weapon: { base_item_id: 53 }, attunement: 'none', activation: 'equipped', weapon_damage: rules } }

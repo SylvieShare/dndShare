@@ -13,20 +13,30 @@ export function weaponDamageActionFormula(action, critical = false) {
 }
 
 /** Convert domain rules into display data; the menu does not interpret schema fields. */
-export function weaponDamageMenuOptions(actions, keys, critical = false) {
+export function weaponDamageMenuOptions(actions, keys, critical = false, scope = 'damage') {
   const selected = new Set(selectedDamageActions(actions, keys).map(action => action.key))
-  return actions.map(action => {
+  const attackKeys = new Set()
+  function includeAttackKey(key) {
+    if (!key || attackKeys.has(key)) return
+    attackKeys.add(key)
+    includeAttackKey(actions.find(action => action.key === key)?.requires_damage_key)
+  }
+  for (const action of actions) if (action.attack_mode === 'thrown') includeAttackKey(action.key)
+  return actions.filter(action => scope !== 'attack' || attackKeys.has(action.key)).map(action => {
     const parent = actions.find(row => row.key === action.requires_damage_key)
     const label = action.label || action.source_label || 'Дополнительный урон'
-    const formula = weaponDamageActionFormula(action, critical)
+    const formula = scope === 'attack' ? '' : weaponDamageActionFormula(action, critical)
+    const condition = scope === 'attack'
+      ? (action.attack_mode === 'thrown' ? 'Дальняя атака с характеристикой оружия.' : 'Условие выбранного способа атаки.')
+      : action.condition || ''
     return {
       key: action.key, label, formula: formula ? `+${formula.replace('d', 'к')}` : '',
-      damageParts: weaponDamageActionParts(action, critical),
-      condition: action.condition || '', checked: selected.has(action.key),
+      damageParts: scope === 'attack' ? [] : weaponDamageActionParts(action, critical),
+      condition, checked: selected.has(action.key),
       nested: !!action.requires_damage_key,
       disabled: !!action.requires_damage_key && !selected.has(action.requires_damage_key),
-      hint: [action.condition, parent && `Сначала включите «${parent.label || parent.source_label}».`,
-        action.once_per_turn && 'Не чаще одного раза за ход. Ход не отслеживается автоматически.'].filter(Boolean).join(' ') || 'Добавить урон к текущему броску.',
+      hint: [condition, parent && `Сначала включите «${parent.label || parent.source_label}».`,
+        scope === 'damage' && action.once_per_turn && 'Не чаще одного раза за ход. Ход не отслеживается автоматически.'].filter(Boolean).join(' ') || 'Добавить урон к текущему броску.',
     }
   })
 }

@@ -40,3 +40,14 @@ it('provides background icons for every populated magic-item cover card and rail
   expect(html.match(/class="[^"]*cover-stat-card-mark/g)).toHaveLength(3)
   expect(html.match(/class="[^"]*cover-summary-rail-mark/g)).toHaveLength(2)
 })
+it('places each option above its own roll and repeats only shared attack modes', async () => {
+  const html = await render(DamageRollOptions, { actions, canAttack: true, versatile: true })
+  const attack = html.match(/<section[^>]*aria-label="Атака"[^>]*>([\s\S]*?)<\/section>/)[1]
+  const damage = html.match(/<section[^>]*aria-label="Урон"[^>]*>([\s\S]*?)<\/section>/)[1]
+  expect(attack).toContain('aria-label="Бросок"')
+  for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', 'Добавит', 'При попадании']) expect(attack).not.toContain(text)
+  for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', 'aria-label="Бросок"', 'Добавит +1к8']) expect(damage).toContain(text)
+  expect(attack.indexOf('aria-label="Бросок"')).toBeLessThan(attack.indexOf('Бросок на атаку'))
+  expect(damage.indexOf('Цель — великан')).toBeLessThan(damage.indexOf('Бросить урон'))
+  expect(html.indexOf('Бросок на атаку')).toBeLessThan(html.indexOf('Критическое попадание'))
+})
