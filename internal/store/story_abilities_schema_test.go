@@ -66,6 +66,20 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 			field["fields"] = append(conditionalFields, field["fields"].([]any)...)
 		}
 	}
+	// Migration 95 adds charge costs and explicit effect targets to the shared schema.
+	additions := strings.Split(schemaWeaponChargesEffectsSQL, "$fields$")
+	for index, key := range []string{"weapon_damage", "status_effects"} {
+		var fields []any
+		if err := json.Unmarshal([]byte(additions[index*2+1]), &fields); err != nil {
+			t.Fatal(err)
+		}
+		for _, raw := range want.([]any) {
+			field := raw.(map[string]any)
+			if field["key"] == key {
+				field["fields"] = append(field["fields"].([]any), fields...)
+			}
+		}
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

@@ -6,6 +6,7 @@
       <MagicEquipmentBases :item="item" :kind="kind" />
     </DetailSection>
     <MagicEquipmentAdditions v-for="kind in kinds" :key="`${kind}-additions`" :item="item" :kind="kind" />
+    <DetailSection v-if="data.status_effects?.length" label="Накладываемые эффекты"><ItemEffectLinks :item="item" :z-index="nestedViewZIndex" /></DetailSection>
     <ItemTreasureSummary v-if="!selectedBases.length" :treasure="data.treasure" />
     <p v-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="hydrate">Повторить</ActionButton></p>
     <DetailSection v-for="field in details" :key="field.key" :label="field.name">
@@ -14,6 +15,7 @@
   </div>
 </template>
 <script setup>
+import ItemEffectLinks from '@/features/items/components/ItemEffectLinks.vue'
 import { computed, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 import DetailSection from '@/shared/ui/DetailSection.vue'
@@ -27,13 +29,13 @@ import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
-const props = defineProps({ item: Object, type: Object, economyInHeader: Boolean, instance: Object })
+const props = defineProps({ item: Object, type: Object, economyInHeader: Boolean, instance: Object, nestedViewZIndex: { type: Number, default: 5100 } })
 const data = computed(() => props.item.data || {})
 const selectedBases = computed(() => selectedMagicBases(props.item, props.instance))
 const kinds = computed(() => magicEquipmentKinds(props.item))
 // Each remaining schema field is rendered, including newly added mechanics. These
 // fields already have a dedicated presentation in the cover, body or base list.
-const dedicated = new Set(['desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color', 'treasure'])
+const dedicated = new Set(['status_effects', 'desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color', 'treasure'])
 const details = computed(() => (props.type?.fields || []).filter(f => !dedicated.has(f.key) && !(f.key === 'weapon_damage' && data.value.weapon) && present(data.value[f.key])))
 function present(v) { return v != null && v !== '' && v !== false && (!Array.isArray(v) || v.length > 0) && (typeof v !== 'object' || Object.keys(v).length > 0) }
 const suggest = useSuggestStore(), references = ref({}), error = ref(''), labels = ref({})
@@ -46,8 +48,8 @@ async function hydrate() {
     for (const field of fields || []) {
       const v = values[field.key]
       if (v == null) continue
-      if (field.type === 'item') ids.add(Number(v))
-      if (field.type === 'item_array') v.forEach(id => ids.add(Number(id)))
+      if (field.type === 'item') ids.add(Number(v?.id ?? v))
+      if (field.type === 'item_array') v.forEach(id => ids.add(Number(id?.id ?? id)))
       if (field.type === 'object') walk(field.fields, v)
       if (field.type === 'object_array') v.forEach(row => { if (row.key && (row.title || row.name || row.label)) names[row.key] = row.title || row.name || row.label; walk(field.fields, row) })
     }

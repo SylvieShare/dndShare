@@ -5,6 +5,10 @@
         <span aria-hidden="true">{{ option.formulaPrefix }}</span>
         <DamageDice :parts="option.damageParts" :size="26" :default-color="option.disabled ? 'var(--text-muted)' : 'var(--accent-soft)'" aria-hidden="true" />
       </span>
+      <span v-if="option.resourceCost" class="damage-option-formula" :title="option.hint" :aria-label="`Расход: ${option.resourceCost.amount}`" role="img">
+        <span aria-hidden="true">−{{ option.resourceCost.amount > 1 ? option.resourceCost.amount : '' }}</span>
+        <SpellSlotSphere :size="22" :color="option.resourceCost.color" :spent="option.resourceCost.unavailable" :interactive="false" aria-hidden="true" />
+      </span>
       <ToggleSwitch :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => $emit('select', option.key, value)" />
     </FormField>
     <small v-if="option.condition" class="damage-option-condition">{{ option.condition }}</small>
@@ -13,6 +17,7 @@
 <script setup>
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import DamageDice from './DamageDice.vue'
+import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 defineProps({ option: { type: Object, required: true } })
 defineEmits(['select'])
 </script>

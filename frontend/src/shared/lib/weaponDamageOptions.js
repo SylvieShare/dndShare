@@ -15,6 +15,10 @@ export function weaponDamageActionFormula(action, critical = false) {
 /** Convert domain rules into display data; the menu does not interpret schema fields. */
 export function weaponDamageMenuOptions(actions, keys, critical = false, scope = 'damage') {
   const selected = new Set(selectedDamageActions(actions, keys).map(action => action.key))
+  const costs = new Map()
+  for (const action of actions) if (selected.has(action.key) && action.resource) {
+    costs.set(action.resource.key, (costs.get(action.resource.key) || 0) + (Number(action.resource_cost) || 0))
+  }
   const attackKeys = new Set()
   function includeAttackKey(key) {
     if (!key || attackKeys.has(key)) return
@@ -30,14 +34,21 @@ export function weaponDamageMenuOptions(actions, keys, critical = false, scope =
     const condition = scope === 'attack'
       ? (action.attack_condition || (action.attack_mode === 'thrown' ? 'Дальняя атака с характеристикой оружия.' : 'Условие выбранного способа атаки.'))
       : action.condition || ''
+    const paid = scope === 'damage' && (action.uses_resource || action.resource_key)
+    const cost = Math.max(1, Number(action.resource_cost) || 1)
+    const resourceError = !paid ? '' : action.resource_error || (!action.resource ? 'Ресурс недоступен.'
+      : Number(action.resource.value) < (selected.has(action.key) ? costs.get(action.resource.key) : cost + (costs.get(action.resource.key) || 0))
+        ? `Недостаточно ресурса «${action.resource.title}».` : '')
     return {
       key: action.key, label, formula: formula ? `${action.preview_replacement ? '' : '+'}${formula.replace('d', 'к')}` : '',
       formulaPrefix: action.preview_replacement ? '→' : '+', formulaVerb: action.preview_replacement ? 'Урон' : 'Добавит',
       damageParts: scope === 'attack' ? [] : weaponDamageActionParts(displayRule, critical),
       condition, checked: selected.has(action.key),
       nested: !!action.requires_damage_key,
-      disabled: !!action.requires_damage_key && !selected.has(action.requires_damage_key),
-      hint: [condition, parent && `Сначала включите «${parent.label || parent.source_label}».`,
+      disabled: (!!action.requires_damage_key && !selected.has(action.requires_damage_key)) || (!!resourceError && !selected.has(action.key)),
+      resourceCost: paid ? { amount: cost, color: action.resource?.color_point, unavailable: !!resourceError } : null,
+      resourceError,
+      hint: [condition, resourceError, paid && `При броске урона расходуется ${cost} ед. ресурса «${action.resource?.title || 'источник недоступен'}».`, parent && `Сначала включите «${parent.label || parent.source_label}».`,
         scope === 'damage' && action.once_per_turn && 'Не чаще одного раза за ход. Ход не отслеживается автоматически.'].filter(Boolean).join(' ') || 'Добавить урон к текущему броску.',
     }
   })

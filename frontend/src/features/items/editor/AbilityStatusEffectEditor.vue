@@ -2,6 +2,14 @@
   <div class="ability-action-fields">
     <AbilityRuleFields :fields="fields.filter(field => field.key === 'effect')" :data="data" @update:data="pickEffect" />
     <RuleKeyField v-model="data.key" :title="effect?.name" :used-keys="otherKeys" />
+    <AbilityRuleFields :fields="fields.filter(field => ['target', 'condition'].includes(field.key))" :data="data" @update:data="value => Object.assign(data, value)" />
+    <FormField v-if="damageRules.length || data.weapon_damage_key" label="Связанный дополнительный урон" title="Указывает, с каким переключателем урона связан эффект. Спасбросок и наложение на цель игрок проверяет отдельно." vertical>
+      <FormSelect :value="data.weapon_damage_key || ''" aria-label="Связанный дополнительный урон" @update:value="value => data.weapon_damage_key = value || undefined">
+        <option value="">Не связан с уроном оружия</option>
+        <option v-for="rule in damageRules" :key="rule.key" :value="rule.key">{{ rule.label || rule.key }} · Дополнительный урон</option>
+        <option v-if="data.weapon_damage_key && !damageRules.some(row => row.key === data.weapon_damage_key)" :value="data.weapon_damage_key">Недоступное правило: {{ data.weapon_damage_key }}</option>
+      </FormSelect>
+    </FormField>
     <LoadingIndicator v-if="loading" label="Загрузка настроек эффекта…" size="xs" inline show-label />
     <button v-if="error" type="button" class="ability-link" @click="loadEffect">Не удалось загрузить эффект. Повторить</button>
     <div v-for="parameter in parameters" :key="parameter.key" class="ability-action-fields">
@@ -34,6 +42,7 @@ const effectId = computed(() => props.data.effect?.id ?? props.data.effect)
 const parameters = computed(() => effectParameterOptions(effect.value, props.data.parameter_bindings))
 const binding = key => props.data.parameter_bindings?.find(row => row.key === key)
 const otherKeys = computed(() => (editor.itemData?.status_effects || []).filter(row => row !== props.data).map(row => row.key))
+const damageRules = computed(() => (editor.itemData?.weapon_damage || []).filter(row => row.key))
 const durationFields = computed(() => (props.fields.find(field => field.key === 'duration')?.fields || [])
   .filter(field => field.key !== 'value' || ['rounds', 'minutes', 'hours'].includes(props.data.duration?.kind)))
 function setDuration(enabled) { if (enabled) props.data.duration = { kind: 'minutes', value: 1 }; else delete props.data.duration }
@@ -55,6 +64,7 @@ async function loadEffect() {
 const validationKey = Symbol('status-link')
 watchEffect(() => {
   let message = !effectId.value ? 'Связанный эффект: выберите эффект из справочника.' : ''
+  if (props.data.weapon_damage_key && !damageRules.value.some(row => row.key === props.data.weapon_damage_key)) message = 'Связанный эффект: выберите существующее правило дополнительного урона.'
   if (props.data.parameter_bindings?.some(row => row.source === 'scaling_value') && !editor.itemData?.scaling?.length) message = 'Связанный эффект: добавьте таблицу развития с уровнем для расчёта параметров.'
   if (['rounds', 'minutes', 'hours'].includes(props.data.duration?.kind) && !(Number(props.data.duration.value) > 0)) message = 'Длительность эффекта должна быть больше нуля.'
   editor.setValidationError?.(validationKey, message)

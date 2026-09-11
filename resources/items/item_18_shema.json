@@ -158,7 +158,11 @@
     {"name": "Удваивать кости при крите", "key": "double_on_critical", "type": "bool", "default": true},
     {"name": "Раз в ход", "key": "once_per_turn", "type": "bool"},
     {"name": "С уровня", "key": "level", "type": "int", "default": 1},
-    {"name": "Ключ", "key": "key", "type": "text", "required": true}
+    {"name": "Ключ", "key": "key", "type": "text", "required": true},
+    {"key": "damage_type", "name": "Тип дополнительного урона", "type": "suggest", "suggest_id": 12, "hint": "Если не выбран, используется тип урона оружия."},
+    {"key": "uses_resource", "name": "Расходует ресурс", "type": "bool", "hint": "Ресурс списывается при запуске броска урона, а не при включении переключателя."},
+    {"key": "resource_key", "name": "Ресурс", "type": "text", "hint": "Пустое значение — основной ресурс этого предмета или способности."},
+    {"key": "resource_cost", "name": "Стоимость удара", "type": "int", "default": 1, "hint": "Число зарядов за один бросок урона. Критический удар не увеличивает стоимость."}
   ]},
   {"name": "Виджеты листа", "key": "sheet_widgets", "type": "object_array", "fields": [
     {"name": "Ключ общей панели", "key": "key", "type": "text"},
@@ -242,7 +246,10 @@
     {"key": "duration", "name": "Длительность", "type": "object", "fields": [
       {"key": "kind", "name": "Вид", "type": "select", "default": "manual", "options": [{"label": "До ручного снятия", "value": "manual"}, {"label": "Раунды", "value": "rounds"}, {"label": "Минуты", "value": "minutes"}, {"label": "Часы", "value": "hours"}, {"label": "До отдыха", "value": "until_rest"}, {"label": "Постоянно", "value": "permanent"}]},
       {"key": "value", "name": "Значение", "type": "int"}
-    ]}
+    ]},
+    {"key": "target", "name": "На кого накладывается", "type": "select", "default": "self", "options": [{"value": "self", "label": "На владельца"}, {"value": "other", "label": "На другое существо"}], "hint": "Эффект на другое существо не включается на листе владельца предмета."},
+    {"key": "condition", "name": "Условие наложения", "type": "text", "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."},
+    {"key": "weapon_damage_key", "name": "Связанный дополнительный урон", "type": "text", "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."}
   ]},
   {"name": "Отображаемая прогрессия", "key": "display_scaling", "type": "object_array", "fields": [
     {"name": "С уровня", "key": "level", "type": "int", "default": 1},

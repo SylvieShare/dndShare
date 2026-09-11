@@ -164,6 +164,7 @@ export function linkedStatusSource(item, link, source = {}) {
 }
 
 export function linkedStatusActive(values, item, link, source = {}) {
+  if (link?.target === 'other') return false
   const wanted = linkedStatusSource(item, link, source)
   return normalizeStatusInstances(values?.[STATUS_VALUE_ID]).some(row => (
     row.effect_id === statusEffectId(link) && sameSource(row.source, wanted)
@@ -171,6 +172,7 @@ export function linkedStatusActive(values, item, link, source = {}) {
 }
 
 export function toggleLinkedStatus(values, effect, sourceItem, link, source = {}) {
+  if (link?.target === 'other') return normalizeStatusInstances(values?.[STATUS_VALUE_ID])
   const wanted = linkedStatusSource(sourceItem, link, source)
   const current = normalizeStatusInstances(values?.[STATUS_VALUE_ID])
   const existing = current.find(row => row.effect_id === statusEffectId(link) && sameSource(row.source, wanted))

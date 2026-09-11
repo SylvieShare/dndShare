@@ -31,6 +31,8 @@
       </div>
     </DetailSection>
 
+    <EffectSources :item-id="item.id" :z-index="nestedViewZIndex" />
+
     <DetailSection v-if="exhaustionLevels.length" label="Уровни истощения" tone="combat">
       <template #icon><BatteryLow /></template>
       <ol class="status-effect-levels">
@@ -47,6 +49,7 @@
 </template>
 
 <script setup>
+import EffectSources from '@/features/items/components/EffectSources.vue'
 import { computed, watch } from 'vue'
 import { BatteryLow, BookOpen, ListChecks, SlidersHorizontal } from '@lucide/vue'
 import { DEFAULT_EXHAUSTION_EFFECTS } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
@@ -61,6 +64,7 @@ import RichContent from '@/shared/ui/DndRichContent.vue'
 const props = defineProps({
   item: { type: Object, required: true },
   actorName: { type: String, default: '' },
+  nestedViewZIndex: { type: Number, default: 5100 },
 })
 
 const DEFENSE_LABELS = {

@@ -168,7 +168,9 @@
       <span v-else>—</span>
     </td>
   </tr>
-
+  <tr v-if="ctx.weaponResources?.(entry)?.length || ctx.item(entry)?.data?.status_effects?.length" class="w-desc-row">
+    <td :colspan="colspan"><WeaponItemMechanics :entry="entry" /></td>
+  </tr>
   <tr
     v-if="ctx.charCtx.ownerMode && (entry.desc || ctx.activeNoteKey === entry._key)"
     class="w-desc-row"
@@ -205,6 +207,7 @@
 <script setup>
 import { hasMagicItemMenuActions } from '@/features/character-editor/lib/magicItemSettings'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
+import WeaponItemMechanics from './WeaponItemMechanics.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'

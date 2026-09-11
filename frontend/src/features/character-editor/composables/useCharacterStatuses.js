@@ -51,7 +51,7 @@ export function useCharacterStatuses(values, characterResources) {
   }
 
   function links(item) {
-    return statusEffectLinks(item).map(link => ({
+    return statusEffectLinks(item).filter(link => link.target !== 'other').map(link => ({
       ...link,
       effect: itemsById.value.get(String(link.effect_id)) || null,
     }))

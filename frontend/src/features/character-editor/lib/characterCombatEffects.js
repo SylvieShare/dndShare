@@ -19,6 +19,7 @@ function abilityRows(values, itemsById, field) {
         requires_damage_key: field === 'weapon_damage' && rule.requires_damage_key
           ? `${valueId}:${entry.uid || entry.id}:${field}:${rule.requires_damage_key}` : null,
         owner_level: ownerLevel,
+        resource_owner: { valueId, entryKey: String(entry.uid || entry.id) },
         weapon_uid: item.data?.weapon && ['weapon_damage', 'critical_damage'].includes(field) ? entry.uid : null,
         source_label: item.name || 'Способность',
       }]

@@ -1,0 +1,35 @@
+<template>
+  <div v-if="resources.length || hasEffects" class="weapon-item-mechanics" @click.stop @pointerdown.stop>
+    <div v-for="resource in resources" :key="resource.key" class="weapon-resource">
+      <span>{{ resource.source?.resourceKey ? resource.title : 'Заряды' }}</span>
+      <div class="weapon-resource-pips" role="group" :aria-label="`${resource.title}: ${resource.value} из ${resource.total}`">
+        <button v-for="pip in resource.total" :key="pip" type="button" :disabled="!ctx.charCtx.ownerMode" :aria-label="`Заряд ${pip}`"
+          :aria-pressed="pip <= resource.value" @click="ctx.toggleWeaponResource(resource, pip)">
+          <SpellSlotSphere :spent="pip > resource.value" :size="28" :color="resource.color_point" :interactive="!!ctx.charCtx.ownerMode" />
+        </button>
+      </div>
+      <small v-if="source?.data?.recharge_note">{{ source.data.recharge_note }}</small>
+    </div>
+    <ItemEffectLinks v-if="hasEffects" :item="source" />
+  </div>
+</template>
+<script setup>
+import { computed, inject } from 'vue'
+import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
+import ItemEffectLinks from '@/features/items/components/ItemEffectLinks.vue'
+const props = defineProps({ entry: { type: Object, required: true } })
+const ctx = inject('weaponsBlockCtx')
+const resources = computed(() => ctx.weaponResources?.(props.entry) || [])
+const source = computed(() => ctx.itemMap?.[props.entry.magic_item_id] || ctx.item(props.entry))
+const hasEffects = computed(() => !!source.value?.data?.status_effects?.length)
+</script>
+<style scoped>
+.weapon-item-mechanics { display: grid; gap: 10px; padding: 0 20px 14px 16px; cursor: default; }
+.weapon-resource { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+.weapon-resource > span { color: var(--text-2); font-size: 11px; font-weight: 650; }
+.weapon-resource > small { flex-basis: 100%; color: var(--text-muted); font-size: 11px; }
+.weapon-resource-pips { display: flex; gap: 4px; flex-wrap: wrap; }
+.weapon-resource-pips > button { display: inline-flex; border: 0; padding: 0; background: none; border-radius: 6px; cursor: pointer; }
+.weapon-resource-pips > button:disabled { cursor: default; }
+.weapon-resource-pips > button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>

@@ -19,6 +19,20 @@
       <span v-for="row in preview" :key="row.level"><small>{{ row.level }} ур.</small><strong>{{ row.value }}</strong></span>
     </div>
     <AbilityRuleFields :fields="fieldsFor(['double_on_critical', 'once_per_turn'])" :data="data" @update:data="update" />
+    <AbilityRuleFields :fields="fieldsFor(['damage_type'])" :data="data" @update:data="update" />
+    <FormField label="Расходует ресурс" title="Заряд списывается при броске урона; переключение галочки его не расходует.">
+      <ToggleSwitch :model-value="!!(data.uses_resource || data.resource_key)" aria-label="Расходует ресурс" @update:model-value="setResource" />
+    </FormField>
+    <template v-if="data.uses_resource || data.resource_key">
+      <FormField label="Ресурс этого предмета или способности" title="Основной ресурс и отдельные ресурсы задаются своими зависимостями." vertical>
+        <FormSelect :value="data.resource_key || ''" aria-label="Ресурс этого предмета или способности" @update:value="value => data.resource_key = value || undefined">
+          <option value="">Основной ресурс / заряды</option>
+          <option v-for="resource in resources" :key="resource.key" :value="resource.key">{{ resource.title || resource.key }} · Отдельный ресурс</option>
+          <option v-if="data.resource_key && !resources.some(row => row.key === data.resource_key)" :value="data.resource_key">Недоступный ресурс: {{ data.resource_key }}</option>
+        </FormSelect>
+      </FormField>
+      <AbilityRuleFields :fields="fieldsFor(['resource_cost'])" :data="data" @update:data="update" />
+    </template>
     <AbilityUnlockField :data="data" />
   </div>
 </template>
@@ -47,6 +61,11 @@ const preview = computed(() => Array.from({ length: 20 }, (_, i) => ({ level: i 
   .filter((row, i, rows) => row.value && (!i || row.value !== rows[i - 1].value)))
 const otherKeys = computed(() => (editor.itemData?.weapon_damage || []).filter(row => row !== props.data).map(row => row.key))
 const otherRules = computed(() => (editor.itemData?.weapon_damage || []).filter(row => row !== props.data && row.key))
+const resources = computed(() => (editor.itemData?.use_resources || []).filter(row => row.key))
+function setResource(enabled) {
+  if (enabled) { props.data.uses_resource = true; props.data.resource_cost = 1 }
+  else { delete props.data.uses_resource; delete props.data.resource_key; delete props.data.resource_cost }
+}
 function setKey(value) { renameWeaponDamageKey(editor.itemData || {}, props.data, value) }
 function update(value) { Object.assign(props.data, value) }
 function setScaled(value) {
@@ -56,7 +75,16 @@ function setScaled(value) {
 const validationKey = Symbol('weapon-damage')
 watchEffect(() => {
   const count = Number(scaled.value ? props.data.dice_count_level_divisor : props.data.dice_count)
-  editor.setValidationError?.(validationKey, !props.data.key || otherKeys.value.includes(props.data.key) || !props.data.dice || !Number.isInteger(count) || count < 1 ? 'Дополнительный урон: задайте уникальный ключ, кость и целое положительное количество или шаг уровней.' : weaponDamageDependencyError(editor.itemData?.weapon_damage || [], props.data))
+  let message = !props.data.key || otherKeys.value.includes(props.data.key) || !props.data.dice || !Number.isInteger(count) || count < 1 ? 'Дополнительный урон: задайте уникальный ключ, кость и целое положительное количество или шаг уровней.' : weaponDamageDependencyError(editor.itemData?.weapon_damage || [], props.data)
+  if (props.data.uses_resource || props.data.resource_key) {
+    const cost = Number(props.data.resource_cost ?? 1)
+    const owner = editor.itemData || {}
+    const exists = props.data.resource_key ? resources.value.some(row => row.key === props.data.resource_key)
+      : !resources.value.length && ['max_use', 'max_use_stat', 'max_use_level_multiplier', 'max_use_scaling', 'manual_size'].some(key => owner[key] != null && owner[key] !== false)
+    if (!exists) message = 'Дополнительный урон: сначала добавьте выбранный ресурс в зависимостях.'
+    else if (!Number.isInteger(cost) || cost < 1) message = 'Стоимость удара должна быть целым положительным числом.'
+  }
+  editor.setValidationError?.(validationKey, message)
 })
 onScopeDispose(() => editor.setValidationError?.(validationKey, ''))
 </script>

@@ -19,6 +19,7 @@
         />
 
         <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
+        <WeaponItemMechanics :entry="entry" />
 
         <MorphEditorShell
           v-if="editorOpen"
@@ -85,6 +86,7 @@ import MorphEditorShell from '@/features/character-editor/components/MorphEditor
 import DamageRollOptions from './DamageRollOptions.vue'
 import WeaponCardView from '@/features/character-editor/blocks/dnd/components/WeaponCardView.vue'
 import WeaponEditor from '@/features/character-editor/blocks/dnd/components/WeaponEditor.vue'
+import WeaponItemMechanics from './WeaponItemMechanics.vue'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 
 const props = defineProps({

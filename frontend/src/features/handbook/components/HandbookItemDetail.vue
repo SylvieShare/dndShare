@@ -211,7 +211,8 @@ const isStatusEffect = computed(() => props.type?.id === 15)
 const isOrigin = computed(() => [8, 9, 16, 17].includes(props.type?.id))
 const customRendererProps = computed(() => {
   if (isOrigin.value) return { summaryInHeader: props.showTitle }
-  if (props.type?.id === 19) return { economyInHeader: true, instance: props.instance }
+  if (props.type?.id === 19) return { economyInHeader: true, instance: props.instance, nestedViewZIndex: props.nestedViewZIndex }
+  if (props.type?.id === 15) return { nestedViewZIndex: props.nestedViewZIndex }
   if ([2, 14].includes(props.type?.id)) return { economyInHeader: true }
   if (props.type?.id === 5) return { summaryInHeader: true }
   return {}

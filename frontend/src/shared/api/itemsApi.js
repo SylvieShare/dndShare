@@ -26,6 +26,9 @@ export const itemsApi = {
 
     return { items }
   },
+  effectSources(id, offset = 0) {
+    return fetchGet(`/items/${id}/effect-sources?limit=40&offset=${offset}`)
+  },
   byIds(ids) {
     return fetchGet('/items/by-ids?ids=' + ids.join(','))
   },

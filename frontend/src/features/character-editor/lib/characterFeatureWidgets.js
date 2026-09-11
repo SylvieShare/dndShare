@@ -56,7 +56,7 @@ export function collectCharacterFeatureWidgets(values, itemsById, resources = []
       const resource = resolvedResource || (definition.kind === 'toggle' && Number(scaling?.uses) === 0
         ? { value: '∞', total: '∞', unlimited: true }
         : null)
-      const statusEffectLink = statusEffectLinks(item)
+      const statusEffectLink = statusEffectLinks(item).filter(link => link.target !== 'other')
         .find(link => String(link.key) === String(definition.status_effect_key || '')) || null
       const statusSource = ownedAbilityStatusSource(valueId, entry, item)
       return [{

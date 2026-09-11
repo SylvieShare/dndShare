@@ -9,14 +9,17 @@
       </FormField>
     </template>
     <WeaponRollOption v-for="option in options" :key="option.key" :option="option" @select="(key, value) => $emit('select', key, value)" />
-    <RowActionItem :action="scope === 'attack' ? 'attack' : 'damage'" @click="$emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
+    <small v-if="blocked" role="alert">{{ blocked.resourceError }}</small>
+    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && $emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
   </div>
 </template>
 <script setup>
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
-defineProps({ scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, versatile: Boolean, thrown: Boolean })
+import { computed } from 'vue'
+const props = defineProps({ scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, versatile: Boolean, thrown: Boolean })
+const blocked = computed(() => props.scope === 'damage' && props.options.find(option => option.checked && option.resourceError))
 defineEmits(['update:critical', 'update:twoHanded', 'select', 'roll'])
 </script>
 <style scoped>

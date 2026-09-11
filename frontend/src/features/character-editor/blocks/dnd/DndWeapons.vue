@@ -1,6 +1,7 @@
 <template>
   <div class="weapons-block">
     <p v-if="loadError" role="alert">{{ loadError }} <ActionButton variant="secondary" @click="reload">Повторить</ActionButton></p>
+    <p v-if="weaponMechanics.error.value" role="alert">{{ weaponMechanics.error.value }}</p>
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
     </div>
@@ -124,6 +125,7 @@ import WeaponCard from '@/features/character-editor/blocks/dnd/components/Weapon
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'
 import PresetAttackCard from '@/features/character-editor/blocks/dnd/components/PresetAttackCard.vue'
 import { useWeaponEntries } from './composables/useWeaponEntries'
+import { useWeaponMechanics } from './composables/useWeaponMechanics'
 import { createWeaponInstance, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
 import MagicItemInstanceModal from './components/MagicItemInstanceModal.vue'
 import { useWeaponCalc } from '@/features/character-editor/blocks/dnd/composables/useWeaponCalc'
@@ -164,6 +166,7 @@ const props = defineProps(['block', 'value', 'values', 'vars'])
 const emit  = defineEmits(['update:value'])
 const charCtx = inject('charCtx', () => ({ ownerMode: true, dictionaries: {}, var: {} }))
 const suggestStore = useSuggestStore()
+const weaponMechanics = useWeaponMechanics(charCtx)
 
 const modalEntry             = ref(null)
 const inferredTagSuggestTypeId = ref(null)
@@ -353,6 +356,7 @@ function rollDamage(entry, { critical = false, twoHanded = false, actionKeys = [
   const primary = damagePartsRaw(entry)[0] || {}
   const expr = selectedWeaponDamageExpression({ baseExpression, actions, actionKeys, critical, damageType: primary.type, damageTypeColor: primary.typeColor })
   if (!expr || expr === '0') return
+  if (!weaponMechanics.spend(actions, actionKeys)) return
   const labels = selectedDamageActions(actions, actionKeys).map(action => action.label || action.source_label)
   dice.roll(`${critical ? 'Критический урон' : 'Урон'}${twoHanded ? ' (2р)' : ''}: ${itemTitle(entry)}${labels.length ? ` — ${labels.join(', ')}` : ''}`, expr)
 }
@@ -373,7 +377,10 @@ function weaponDamageContext(entry) {
 }
 
 function weaponDamageActions(entry) {
-  return withWeaponThrowAction(charCtx.characterCombatEffects?.weaponDamageActions?.(weaponDamageContext(entry)) || [], item(entry), propertyItems(entry))
+  return weaponMechanics.bind(withWeaponThrowAction(charCtx.characterCombatEffects?.weaponDamageActions?.(weaponDamageContext(entry)) || [], item(entry), propertyItems(entry))).map(action => {
+    const type = action.damage_type != null ? suggestStore.items(12).find(row => Number(row.id) === Number(action.damage_type)) : null
+    return action.damage_type != null ? { ...action, damage_type_label: type?.value || `Тип урона #${action.damage_type}`, damage_type_color: type?.color } : action
+  })
 }
 
 function extraCriticalDice(entry) {
@@ -527,6 +534,8 @@ provide('weaponsBlockCtx', reactive({
   twoHandedParts,
   hasWeaponDamage,
   weaponDamageActions,
+  weaponResources: weaponMechanics.weaponResources,
+  toggleWeaponResource: weaponMechanics.toggleResource,
   rollAttack,
   rollDamage,
   showPropertyTooltip,

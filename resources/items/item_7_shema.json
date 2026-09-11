@@ -496,7 +496,11 @@
       { "name": "Удваивать кости при крите", "key": "double_on_critical", "type": "bool", "default": true },
       { "name": "Раз в ход", "key": "once_per_turn", "type": "bool" },
       { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
-    {"name": "Ключ", "key": "key", "type": "text", "required": true}
+    {"name": "Ключ", "key": "key", "type": "text", "required": true},
+    {"key": "damage_type", "name": "Тип дополнительного урона", "type": "suggest", "suggest_id": 12, "hint": "Если не выбран, используется тип урона оружия."},
+    {"key": "uses_resource", "name": "Расходует ресурс", "type": "bool", "hint": "Ресурс списывается при запуске броска урона, а не при включении переключателя."},
+    {"key": "resource_key", "name": "Ресурс", "type": "text", "hint": "Пустое значение — основной ресурс этого предмета или способности."},
+    {"key": "resource_cost", "name": "Стоимость удара", "type": "int", "default": 1, "hint": "Число зарядов за один бросок урона. Критический удар не увеличивает стоимость."}
   ]
   },
   {
