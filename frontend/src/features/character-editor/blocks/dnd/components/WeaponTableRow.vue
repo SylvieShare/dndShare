@@ -168,7 +168,7 @@
       <span v-else>—</span>
     </td>
   </tr>
-  <tr v-if="ctx.weaponResources?.(entry)?.length || ctx.item(entry)?.data?.status_effects?.length" class="w-desc-row">
+  <tr v-if="entry.params?.magic?.last_charge_check || ctx.weaponResources?.(entry)?.length || ctx.item(entry)?.data?.status_effects?.length" class="w-desc-row">
     <td :colspan="colspan"><WeaponItemMechanics :entry="entry" /></td>
   </tr>
   <tr

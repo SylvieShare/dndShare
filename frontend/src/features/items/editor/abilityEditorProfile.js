@@ -10,9 +10,10 @@ export const MAGIC_ITEM_PROPERTY_KEYS = ['armor_base', 'weapon', 'treasure', 'de
 const BASIC_KEYS = ['desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
-  'weapon_damage', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
+  'weapon_damage', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
 
 export const BLOCK_HINTS = {
+  last_charge: 'Проверка при расходовании последнего заряда и последствие для этого экземпляра.',
   granted_spells: 'Заклинания, которые способность добавляет персонажу, и правила их сотворения.',
   resources: 'Количество использований способности и восстановление после отдыха.',
   choices: 'Предложите игроку выбрать заклинание, навык или другой вариант при получении способности.',

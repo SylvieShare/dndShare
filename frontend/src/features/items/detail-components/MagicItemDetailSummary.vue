@@ -3,15 +3,16 @@
     <template #left>
       <CoverStatCard :icon="typeIcon" label="Вид предмета" :value="data.type || 'Магический предмет'" size="compact" />
       <CoverStatCard :icon="Gem" label="Редкость" :value="magicItemRarity(data.rarity)" tone="accent" size="compact" />
-      <CoverStatCard v-if="bonus" :icon="data.weapon ? Swords : ShieldCheck" label="Магический бонус" :value="`${bonus > 0 ? '+' : ''}${bonus}`" :note="data.weapon ? 'к атаке и урону' : 'к КД'" />
+      <CoverStatCard v-if="bonus && !instance?.params?.magic?.lost" :icon="data.weapon ? Swords : ShieldCheck" label="Магический бонус" :value="`${bonus > 0 ? '+' : ''}${bonus}`" :note="data.weapon ? 'к атаке и урону' : 'к КД'" />
     </template>
     <template #right>
       <CoverStatCard v-if="cost" :icon="Coins" label="Стоимость" :value="cost" size="compact" tone="warning" />
       <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="`${data.weight} фунт.`" size="compact" />
-      <CoverStatCard v-if="data.max_use != null" :icon="Zap" label="Зарядов" :value="data.manual_size ? 'Задаёт владелец' : data.max_use" size="compact"><template v-if="data.dawn_recovery" #note><ResourceRestIcons :resource="{ dawn_recovery: data.dawn_recovery }" /></template></CoverStatCard>
+      <CoverStatCard v-if="data.max_use != null && !instance?.params?.magic?.lost" :icon="Zap" label="Зарядов" :value="data.manual_size ? 'Задаёт владелец' : data.max_use" size="compact"><template v-if="data.dawn_recovery" #note><ResourceRestIcons :resource="{ dawn_recovery: data.dawn_recovery }" /></template></CoverStatCard>
     </template>
     <template #bottom>
-      <CoverSummaryRail :columns="2">
+      <CoverSummaryRailItem v-if="instance?.params?.magic?.lost" :icon="WandSparkles" label="Состояние экземпляра">Магические свойства утрачены · действует только основа</CoverSummaryRailItem>
+      <CoverSummaryRail v-else :columns="2">
         <CoverSummaryRailItem :icon="Link" label="Настройка">{{ magicAttunementLabel(data.attunement) }}<small v-if="data.attunement_requirement"> · {{ data.attunement_requirement }}</small></CoverSummaryRailItem>
         <CoverSummaryRailItem :icon="data.activation === 'carried' ? Backpack : Hand" label="Свойства действуют">{{ data.activation === 'carried' ? 'В инвентаре' : 'При экипировке' }}<small v-if="data.level > 1"> · с уровня {{ data.level }}</small></CoverSummaryRailItem>
       </CoverSummaryRail>

@@ -39,7 +39,7 @@ export function spendDamageResources(values, itemsById, actions, keys, canSpend 
   let next = values
   const patch = {}
   for (const { resource, cost } of plan.costs) {
-    const update = setCharacterResourceAvailable(next, itemsById, resource.key, resource.value - cost)
+    const update = setCharacterResourceAvailable(next, itemsById, resource.key, resource.value - cost, undefined, true)
     Object.assign(patch, update)
     next = { ...next, ...update }
   }

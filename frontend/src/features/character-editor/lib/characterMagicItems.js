@@ -19,6 +19,7 @@ export function inventoryItemIds(values) {
 }
 
 export function magicItemActive(item, entry, equipped, values) {
+  if (entry?.params?.magic?.lost) return false
   if (!entry || Number(item?.typeId) !== MAGIC_ITEM_TYPE_ID || Number(entry?.count ?? 1) <= 0) return false
   if (values && abilityOwnerLevel(item.data || {}, values) < Math.max(1, Number(item.data?.level) || 1)) return false
   if (item.data?.activation !== 'carried' && !equipped) return false
@@ -32,7 +33,7 @@ export function featureEntries(values, valueId, itemsById = new Map(), includeIn
   return inventoryEntries(values).flatMap(({ entry, equipped }) => {
     const sourceId = entry.magic_item_id ?? entry.item_id
     const item = itemsById.get(String(sourceId))
-    if (Number(item?.typeId) !== MAGIC_ITEM_TYPE_ID || !entry.uid) return []
+    if (Number(item?.typeId) !== MAGIC_ITEM_TYPE_ID || !entry.uid || entry.params?.magic?.lost) return []
     if (!includeInactive && !magicItemActive(item, entry, equipped, values)) return []
     const state = entry.params?.magic || {}
     return [{ ...state, id: sourceId, uid: entry.uid, count: state.remaining }]

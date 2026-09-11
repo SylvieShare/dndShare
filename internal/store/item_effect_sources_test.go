@@ -67,7 +67,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 		}
 		var beforeDawn []map[string]any
 		for _, field := range fields {
-			if field["key"] == "dawn_recovery" {
+			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" {
 				continue
 			}
 			if field["key"] == "use_resources" {
@@ -101,6 +101,16 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(189,'Посох ударов',19,'{"max_use":10,"weapon_damage":[{"key":"authored","dice":"d8"}]}')`)
 	exec(schemaWeaponDamageUnitsSQL)
 	exec(schemaWeaponDamageUnitsSQL)
+	exec(schemaItemLastChargeSQL)
+	exec(schemaItemLastChargeSQL)
+	var lastCharge []byte
+	if err := pool.QueryRow(ctx, `SELECT data->'last_charge' FROM dndshare.item WHERE id=189`).Scan(&lastCharge); err != nil {
+		t.Fatal(err)
+	}
+	var check map[string]any
+	if err := json.Unmarshal(lastCharge, &check); err != nil || check["dice"] != "d20" || check["failure_max"] != float64(1) || check["consequence"] != "lose_magic" {
+		t.Fatalf("last charge rule: %s, %v", lastCharge, err)
+	}
 	var staffRules []byte
 	if err := pool.QueryRow(ctx, `SELECT data->'weapon_damage' FROM dndshare.item WHERE id=189`).Scan(&staffRules); err != nil {
 		t.Fatal(err)

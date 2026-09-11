@@ -1,5 +1,5 @@
 <template>
-  <div v-if="resources.length || hasEffects" class="weapon-item-mechanics" @click.stop @pointerdown.stop>
+  <div v-if="resources.length || hasEffects || entry.params?.magic?.last_charge_check" class="weapon-item-mechanics" @click.stop @pointerdown.stop>
     <div v-for="resource in resources" :key="resource.key" class="weapon-resource">
       <span>{{ resource.source?.resourceKey ? resource.title : 'Заряды' }}</span>
       <div class="weapon-resource-pips" role="group" :aria-label="`${resource.title}: ${resource.value} из ${resource.total}`">
@@ -10,10 +10,12 @@
       </div>
       <ResourceRestIcons :resource="resource" />
     </div>
+    <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
     <ItemEffectLinks v-if="hasEffects" :item="source" />
   </div>
 </template>
 <script setup>
+import ItemLastChargeCheck from './ItemLastChargeCheck.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import { computed, inject } from 'vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
@@ -22,7 +24,7 @@ const props = defineProps({ entry: { type: Object, required: true } })
 const ctx = inject('weaponsBlockCtx')
 const resources = computed(() => ctx.weaponResources?.(props.entry) || [])
 const source = computed(() => ctx.itemMap?.[props.entry.magic_item_id] || ctx.item(props.entry))
-const hasEffects = computed(() => !!source.value?.data?.status_effects?.length)
+const hasEffects = computed(() => !props.entry.params?.magic?.lost && !!source.value?.data?.status_effects?.length)
 </script>
 <style scoped>
 .weapon-item-mechanics { display: grid; gap: 10px; padding: 0 20px 14px 16px; cursor: default; }

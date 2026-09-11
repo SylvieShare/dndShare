@@ -17,8 +17,8 @@ export function createWeaponInstance(item, entry) {
 export function resolveWeaponItem(entry, itemsById) {
   const base = itemsById[String(entry?.item_id)]
   if (!base) return null
-  const source = entry.magic_item_id != null ? itemsById[String(entry.magic_item_id)] : null
-  if (entry.magic_item_id != null && (!source || Number(base.typeId) !== 1)) return null
+  const source = !entry.params?.magic?.lost && entry.magic_item_id != null ? itemsById[String(entry.magic_item_id)] : null
+  if (entry.magic_item_id != null && ((!source && !entry.params?.magic?.lost) || Number(base.typeId) !== 1)) return null
   let data = { ...base.data }
   if (source) {
     const physical = Object.fromEntries(PHYSICAL_KEYS.map(key => [key, base.data?.[key]]))

@@ -69,6 +69,11 @@ const effects = computed(() => {
     if (rule.ignore_stealth_disadvantage) add('stealth', Eye, 'Скрытность', 'Без помехи от доспеха')
     if (rule.grants_proficiency) add('proficiency', BadgeCheck, 'Владение доспехом', 'Предоставляется владельцу')
   }
+  if (data.last_charge) {
+    const check = data.last_charge
+    add('last-charge', Dices, 'При последнем заряде', `${String(check.dice || '').replace('d', 'к')}: ${Number(check.failure_max) === 1 ? 'на 1' : `на 1–${check.failure_max}`}`,
+      'Предмет теряет магические свойства; остаётся выбранная основа')
+  }
   return rows
 })
 </script>

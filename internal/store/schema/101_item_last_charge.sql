@@ -1,0 +1,6 @@
+-- Resource depletion is an instance event, never a mutation of its handbook source.
+UPDATE dndshare.item_type SET fields=fields || jsonb_build_array($last_charge_field${"key": "last_charge", "name": "При последнем заряде", "type": "object", "fields": [{"key": "resource_key", "name": "Ресурс", "type": "text", "hint": "Пусто — основные заряды предмета."}, {"key": "dice", "name": "Кость проверки", "type": "select", "default": "d20", "options": [{"value": "d4", "label": "к4"}, {"value": "d6", "label": "к6"}, {"value": "d8", "label": "к8"}, {"value": "d10", "label": "к10"}, {"value": "d12", "label": "к12"}, {"value": "d20", "label": "к20"}, {"value": "d100", "label": "к100"}]}, {"key": "failure_max", "name": "Опасный результат: от 1 до", "type": "int", "default": 1}, {"key": "consequence", "name": "Последствие", "type": "select", "default": "lose_magic", "options": [{"value": "lose_magic", "label": "Теряет магические свойства"}]}]}$last_charge_field$::jsonb)
+WHERE id=19 AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements(fields) f WHERE f->>'key'='last_charge');
+
+UPDATE dndshare.item SET data=jsonb_set(data,'{last_charge}',$striking_last_charge${"dice": "d20", "failure_max": 1, "consequence": "lose_magic"}$striking_last_charge$::jsonb)
+WHERE id=189 AND name='Посох ударов' AND type_id=19 AND user_id IS NULL AND NOT data ? 'last_charge';

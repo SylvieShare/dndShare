@@ -10,7 +10,7 @@ export function missingMagicBases(item, entry) {
 }
 export const hasMagicItemMenuActions = (item, entry) => needsAttunement(item) || hasMagicInstanceOptions(item) || missingMagicBases(item, entry).length > 0
 export function setInstanceAttunement(values, item, uid, attuned) {
-  if (!needsAttunement(item)) return {}
+  if (!needsAttunement(item) || inventoryEntries(values).find(row => row.entry.uid === uid)?.entry.params?.magic?.lost) return {}
   return mapOwnedEntries(values, row => row.uid === uid && Number(row.magic_item_id ?? row.item_id) === Number(item.id)
     ? { ...row, params: { ...row.params, magic: { ...row.params?.magic, attuned: !!attuned } } }
     : row)

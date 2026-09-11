@@ -1,5 +1,5 @@
 <template>
-  <RowActionItem v-if="needsAttunement(item)" :icon="attuned ? Unlink : Link" :title="attunementHint" @click="toggleAttunement">
+  <RowActionItem v-if="needsAttunement(item) && !currentEntry.params?.magic?.lost" :icon="attuned ? Unlink : Link" :title="attunementHint" @click="toggleAttunement">
     {{ attuned ? 'Снять настройку' : 'Настроить на персонажа' }}
   </RowActionItem>
   <RowActionItem v-if="missingMagicBases(item, currentEntry).length" action="edit" @click="$emit('configure'); $emit('close')">Выбрать основу</RowActionItem>

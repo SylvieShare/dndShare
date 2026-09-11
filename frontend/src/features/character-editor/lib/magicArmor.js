@@ -6,6 +6,7 @@ export function resolveMagicArmor(item, entry, items, values = {}) {
   const id = armorBaseId(item, entry)
   const base = items instanceof Map ? items.get(String(id)) || items.get(id) : items?.[id]
   if (Number(base?.typeId) !== 12 || !base.data?.armor) return null
+  if (entry?.params?.magic?.lost) return base
   const rule = item.data.armor_base
   const active = magicItemActive(rule.bonus_without_attunement ? { ...item, data: { ...item.data, attunement: 'none' } } : item, entry, true, values)
   const armor = { ...base.data.armor }

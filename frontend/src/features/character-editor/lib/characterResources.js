@@ -1,3 +1,4 @@
+import { queueLastCharge } from './itemLastCharge'
 import { MAGIC_VALUE_ID, featureEntries, inventoryItemIds, patchFeatureEntries } from './characterMagicItems'
 import { abilityOwnerLevel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
@@ -323,11 +324,13 @@ export function collectCharacterResources(values, itemsById, sources = DND_CHARA
   return sources.flatMap((source) => source.collect(values, itemsById))
 }
 
-export function setCharacterResourceAvailable(values, itemsById, resourceKey, available, sources = DND_CHARACTER_RESOURCE_SOURCES) {
+export function setCharacterResourceAvailable(values, itemsById, resourceKey, available, sources = DND_CHARACTER_RESOURCE_SOURCES, spending = false) {
   const resource = collectCharacterResources(values, itemsById, sources).find((row) => row.key === resourceKey)
   if (!resource) return {}
   const source = sources.find((candidate) => candidate.id === resource.source?.sourceId)
-  return source?.setAvailable(values, resource, available, itemsById) || {}
+  const patch = source?.setAvailable(values, resource, available, itemsById) || {}
+  if (!spending || !Object.keys(patch).length) return patch
+  return { ...patch, ...queueLastCharge({ ...values, ...patch }, itemsById.get(String(resource.item_id)), resource, Math.max(0, Number(available))) }
 }
 
 export function restoreCharacterResources(values, itemsById, kind, sources = DND_CHARACTER_RESOURCE_SOURCES) {
