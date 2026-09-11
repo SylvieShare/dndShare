@@ -75,13 +75,15 @@ const layoutStyle = computed(() => ({
 
 @media (max-width: 520px) {
   .cover-summary-layout {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 124px) minmax(16px, 1fr) minmax(0, 124px);
     grid-template-rows: auto auto;
     grid-template-areas:
-      "left right"
-      "bottom bottom";
+      "left center right"
+      "bottom bottom bottom";
+    gap: 8px;
   }
 
-  .cover-summary-safe-zone { display: none; }
+  .cover-summary-side { min-width: 0; gap: 6px; }
+  .cover-summary-safe-zone { min-height: 0; }
 }
 </style>

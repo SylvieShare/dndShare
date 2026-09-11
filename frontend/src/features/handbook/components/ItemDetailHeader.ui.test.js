@@ -245,8 +245,8 @@ describe('handbook item detail cover', () => {
     expect(coverSummaryLayoutSource).toContain('"bottom bottom bottom"')
     expect(coverSummaryLayoutSource).toContain('grid-template-rows: minmax(var(--cover-summary-safe-min-height), 1fr) auto;')
     expect(headerSource).toContain('.item-detail-header-summary .item-detail-summary {\n  flex: 1;')
-    expect(coverSummaryLayoutSource).toContain('"left right"')
-    expect(coverSummaryLayoutSource).toContain('"bottom bottom"')
+    expect(coverSummaryLayoutSource).not.toContain('"left right"')
+    expect(coverSummaryLayoutSource).toContain('minmax(0, 124px) minmax(16px, 1fr) minmax(0, 124px)')
   })
 
   it('standardizes cover tiles and uses larger translucent right-centered icon marks', () => {

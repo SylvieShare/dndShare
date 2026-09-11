@@ -133,12 +133,12 @@ defineProps({
 }
 
 @media (max-width: 520px) {
-  .cover-stat-card { padding: 9px 10px; }
-  .cover-stat-card-body { padding-right: 28px; }
-  .cover-stat-card-mark { right: 9px; width: 23px; height: 23px; }
+  .cover-stat-card { padding: 7px 8px; }
+  .cover-stat-card-body { padding-right: 24px; }
+  .cover-stat-card-mark { right: 8px; width: 20px; height: 20px; }
   .cover-stat-card-large .cover-stat-card-value { font-size: 24px; }
   .cover-stat-card-medium .cover-stat-card-value { font-size: 17px; }
   .cover-stat-card-compact .cover-stat-card-value { font-size: 14px; }
-  .cover-stat-card-label { font-size: 8px; letter-spacing: .06em; }
+  .cover-stat-card-label { font-size: 8px; letter-spacing: .06em; white-space: normal; overflow-wrap: anywhere; }
 }
 </style>
