@@ -26,7 +26,7 @@
               <strong>{{ flatDamage }}</strong>
               <small v-if="flatDamageType">{{ flatDamageType }}</small>
             </span>
-            <DamageDice v-else :parts="damageParts" :modifier="modifier" />
+            <DamageDice v-else :parts="damageParts" :alternative-parts="twoHandedParts" :modifier="modifier" />
           </button>
         </template>
         <template #default="{ close }">
@@ -48,20 +48,7 @@
         <strong>{{ flatDamage }}</strong>
         <small v-if="flatDamageType">{{ flatDamageType }}</small>
       </span>
-      <DamageDice v-else :parts="damageParts" :modifier="modifier" />
-    </component>
-
-    <component
-      :is="rollable ? 'button' : 'span'"
-      v-if="twoHandedParts.length"
-      :type="rollable ? 'button' : undefined"
-      class="ad-dmg ad-2h"
-      :class="{ 'ad-clickable': rollable }"
-      :title="rollable ? 'Урон двумя руками' : undefined"
-      @click="onRoll($event, 'roll-damage-two')"
-    >
-      <span class="ad-2h-label">2р</span>
-      <DamageDice :parts="twoHandedParts" :modifier="modifier" />
+      <DamageDice v-else :parts="damageParts" :alternative-parts="twoHandedParts" :modifier="modifier" />
     </component>
 
     <component
@@ -88,7 +75,7 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 
 // Shared attack/damage display used by both spells and weapons. `rollable` turns the displayed values
 // into controls for spell cards; weapon cards keep them read-only and expose rolls in their action menu.
-// `twoHandedParts` renders an extra "2р" group for versatile weapons (the same flat `modifier` applies).
+// Versatile dice share one formula and modifier, with a slash between grip alternatives.
 const props = defineProps({
   attack: { type: String, default: null },          // e.g. "+7"; null/'' → no attack chip
   damageParts: { type: Array, default: () => [] },
@@ -101,7 +88,7 @@ const props = defineProps({
   rollable: { type: Boolean, default: false },
   damageMenu: { type: Boolean, default: false },
 })
-const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-damage-two', 'roll-critical', 'roll-heal'])
+const emit = defineEmits(['roll-attack', 'roll-damage', 'roll-critical', 'roll-heal'])
 
 function onRoll(event, name) {
   if (!props.rollable) return
@@ -167,20 +154,6 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
 .ad-flat { display: inline-flex; flex-direction: column; align-items: center; gap: 1px; color: var(--warning); }
 .ad-flat strong { font-size: 16px; font-weight: 800; }
 .ad-flat small { font-size: 11px; font-weight: 600; letter-spacing: .02em; opacity: .9; }
-
-.ad-2h { gap: 7px; }
-.ad-2h-label {
-  align-self: center;
-  flex-shrink: 0;
-  padding: 2px 5px;
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 16%, transparent);
-  border-radius: 5px;
-  color: var(--text-muted);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
 
 .ad-heal {
   padding: 5px 10px;
