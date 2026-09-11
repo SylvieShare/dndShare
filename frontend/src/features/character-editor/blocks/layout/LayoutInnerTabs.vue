@@ -23,6 +23,7 @@
 </template>
 
 <script setup>
+import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { SlidingTabs } from '@sylvieshare/share-ui'
@@ -42,6 +43,19 @@ const activeTab = ref(0)
 const visitedTabs = ref([0])
 const contentEl = ref(null)
 let pendingFrom = null
+const tutorialSections = { weapon: 'weapons', spells: 'spells', items: 'inventory', abilities_class: 'abilities', diary: 'journal' }
+function containsBlock(block, id) {
+  return block?.id === id || (block?.blocks || []).some(child => containsBlock(child, id))
+}
+for (const [id, section] of Object.entries(tutorialSections)) {
+  const index = (props.block.tabs || []).findIndex(tab => containsBlock(tab.block, id))
+  if (index < 0) continue
+  useTutorialAction(`character-section:${section}`, ({ onCleanup }) => {
+    const previous = activeTab.value
+    onCleanup(() => { activeTab.value = previous })
+    activeTab.value = index
+  })
+}
 
 const queryKey = computed(() => innerTabQueryKey(props.block))
 

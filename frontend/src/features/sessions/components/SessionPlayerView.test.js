@@ -5,7 +5,7 @@ import SessionPlayerView from './SessionPlayerView.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./SessionPlayerView.vue', import.meta.url)), 'utf8')
 const responsiveStyles = readFileSync(fileURLToPath(new URL('./styles/SessionPlayerViewResponsive.css', import.meta.url)), 'utf8')
-const sessionPage = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue', import.meta.url)), 'utf8')
+const sessionPage = readFileSync(fileURLToPath(new URL('../pages/ViewSession.vue', import.meta.url)), 'utf8') + '\n' + readFileSync(fileURLToPath(new URL('../composables/useSessionPage.js', import.meta.url)), 'utf8')
 const sessionCard = readFileSync(fileURLToPath(new URL('./SessionCard.vue', import.meta.url)), 'utf8')
 
 describe('player session view', () => {

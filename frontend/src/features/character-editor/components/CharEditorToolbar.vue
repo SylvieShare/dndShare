@@ -76,7 +76,8 @@
             <span class="bar"></span>
           </button>
           <transition name="dropdown">
-            <div v-if="menuOpen" class="menu-dropdown">
+            <div v-if="menuOpen" class="menu-dropdown" data-tutorial="character-menu">
+              <TutorialRestart @restart="menuOpen = false" />
               <button v-if="!modal" class="menu-item menu-action menu-navigation-item" type="button" @click="goBack">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M8 7l-5 5 5 5" />
@@ -130,6 +131,8 @@
 </template>
 
 <script setup>
+import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
+import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
@@ -163,6 +166,11 @@ const router = useRouter()
 const toolbarRootEl = ref(null)
 const menuOpen = ref(false)
 const sourcesOpen = ref(false)
+useTutorialAction('character-menu', ({ onCleanup }) => {
+  const previous = menuOpen.value
+  onCleanup(() => { menuOpen.value = previous })
+  menuOpen.value = true
+})
 const sourceDraft = ref(normalizeContentSourceSettings(null))
 
 defineExpose({ rootElement: () => toolbarRootEl.value })

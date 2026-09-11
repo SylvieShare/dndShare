@@ -1,8 +1,8 @@
 <template>
-  <BaseTile v-if="!isCompact" :color="barColor" framed :interactive="canEdit" @click="openEditor">
+  <BaseTile ref="tutorialHp" data-tutorial="character-hp" v-if="!isCompact" :color="barColor" framed :interactive="canEdit" @click="openEditor">
     <DndHpView :hp="hp" @change="onHpChange" />
   </BaseTile>
-  <DndHpView v-else compact :hp="hp" @open="openEditor" @change="onHpChange" />
+  <DndHpView ref="tutorialHp" data-tutorial="character-hp" v-else compact :hp="hp" @open="openEditor" @change="onHpChange" />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -17,13 +17,14 @@
       <DndHpView :hp="hp" @change="onHpChange" />
     </template>
     <template #editor>
-      <DndHpEditor :hp="hp" @change="onHpChange" />
+      <DndHpEditor data-tutorial="character-hp-editor" :hp="hp" @change="onHpChange" />
     </template>
   </MorphEditorShell>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
+import { computed, inject, ref } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHpEditor'
 import DndHpView from '@/features/character-editor/blocks/dnd/components/DndHpView'
@@ -37,6 +38,13 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
 const { editorOpen, originRect, originEl, open: openMorph, close } = useMorphOrigin()
+
+const tutorialHp = ref(null)
+useTutorialAction('character-health', ({ onCleanup }) => {
+  const wasOpen = editorOpen.value
+  onCleanup(() => { if (!wasOpen) close() })
+  if (!wasOpen) openMorph({ currentTarget: tutorialHp.value?.rootElement?.() || tutorialHp.value?.$el })
+})
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 const hp = computed(() => {

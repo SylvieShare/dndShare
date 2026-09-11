@@ -52,6 +52,9 @@ var schemaMagicItemsSQL string
 //go:embed schema/85_session_optional_images.sql
 var schemaSessionOptionalImagesSQL string
 
+//go:embed schema/96_user_tutorials.sql
+var schemaUserTutorialsSQL string
+
 //go:embed schema/01_foundation.sql
 var schemaFoundationSQL string
 
@@ -415,6 +418,7 @@ var schemaParts = []struct {
 	{"trident-fish-command", schemaTridentFishCommandSQL},
 	{"magic-equipment-mechanics", schemaMagicEquipmentMechanicsSQL},
 	{"weapon-charges-effects", schemaWeaponChargesEffectsSQL},
+	{"user-tutorials", schemaUserTutorialsSQL},
 	{"dawn-recovery-theses", schemaDawnRecoveryThesesSQL},
 }
 

@@ -33,7 +33,7 @@ const imagePicker = read('./SessionImagePicker.vue')
 const primaryView = read('../composables/useSessionPrimaryView.js')
 const worldState = read('../composables/useSessionWorld.js')
 const api = read('../../../shared/api/sessionsApi.js')
-const sessionView = read('../pages/ViewSession.vue')
+const sessionView = read('../pages/ViewSession.vue') + '\n' + read('../composables/useSessionPage.js')
 const sessionWorkspace = read('../composables/useSessionWorkspace.js')
 
 describe('session world workspaces', () => {

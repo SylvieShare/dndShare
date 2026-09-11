@@ -1,6 +1,7 @@
 <template>
   <BaseTile
     ref="tileRef"
+    :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
     class="stat-block"
     :class="{ 'stat-block--mobile': isMobileVariant }"
     :color="statColor"

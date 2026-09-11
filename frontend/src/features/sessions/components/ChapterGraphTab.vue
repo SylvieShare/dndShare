@@ -30,7 +30,7 @@
       @update-setting="(...args) => $emit('update-setting', ...args)"
     />
 
-    <div class="chapter-canvas-stage">
+    <div class="chapter-canvas-stage" data-tutorial="session-content">
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
       <LoadingState v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading" label="Загружаем карту кампании…" compact />
       <SessionGraphCanvas

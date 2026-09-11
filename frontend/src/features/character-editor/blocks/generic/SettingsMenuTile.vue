@@ -8,7 +8,8 @@
     </BaseTile>
 
     <transition name="sm-fade">
-      <div v-if="open" class="sm-menu">
+      <div v-if="open" class="sm-menu" data-tutorial="character-menu">
+        <TutorialRestart @restart="open = false" />
         <div v-if="ctx.saveStatus === 'pending' || ctx.saveStatus === 'saving'" class="sm-save" :class="ctx.saveStatus">
           <span class="sm-dot"></span>
           <span class="sm-save-label">{{ saveLabel }}</span>
@@ -48,6 +49,8 @@
 </template>
 
 <script setup>
+import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
+import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { BaseTile } from '@sylvieshare/share-ui'
@@ -60,6 +63,11 @@ const props = defineProps(['block'])
 const ctx = inject('charCtx', { canEdit: false, canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
 const open = ref(false)
 const sourcesOpen = ref(false)
+useTutorialAction('character-menu', ({ onCleanup }) => {
+  const previous = open.value
+  onCleanup(() => { open.value = previous })
+  open.value = true
+})
 const sourceDraft = ref(normalizeContentSourceSettings(null))
 const route = useRoute()
 const router = useRouter()

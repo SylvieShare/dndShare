@@ -11,7 +11,8 @@
   ><Settings :size="17" /></button>
 
   <BasePopover v-model:open="open" :anchor="trigger" :min-width="310" placement="bottom-end" transition-preset="action-menu">
-    <div class="session-settings-menu">
+    <div class="session-settings-menu" data-tutorial="session-settings">
+      <TutorialRestart @restart="open = false" />
       <header>
         <strong>Настройки сессии</strong>
         <small>Сохраняются в этом браузере</small>
@@ -26,6 +27,8 @@
 </template>
 
 <script setup>
+import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
+import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { ref } from 'vue'
 import { Settings } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
@@ -36,6 +39,11 @@ defineProps({
 defineEmits(['update-setting'])
 const trigger = ref(null)
 const open = ref(false)
+useTutorialAction('session-settings', ({ onCleanup }) => {
+  const previous = open.value
+  onCleanup(() => { open.value = previous })
+  open.value = true
+})
 </script>
 
 <style scoped>

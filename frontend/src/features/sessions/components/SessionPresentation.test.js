@@ -17,7 +17,7 @@ const encounter = read('./EncounterTab.vue')
 const libraryShell = read('./SessionLibraryWorkspace.vue')
 const presentationState = read('../composables/useSessionPresentation.js')
 const displayMusic = read('../composables/useDisplayMusic.js')
-const sessionPage = read('../pages/ViewSession.vue')
+const sessionPage = read('../pages/ViewSession.vue') + '\n' + read('../composables/useSessionPage.js')
 const sessionsApi = read('../../../shared/api/sessionsApi.js')
 
 describe('session presentation workspace', () => {

@@ -533,3 +533,12 @@ expose participant or character-sheet data:
 content scope, включая `sourceVersionId` и `contentSourceIds`. Случайный выбор
 и фильтры уровня/редкости выполняет клиент; запрос не выдаёт предметы персонажу.
 Полный контракт: [инструменты мастера](features/master-tools.md).
+
+### Настройки обучения
+
+Авторизованный пользователь: `GET /api/account/tutorials` → `{ tutorials: [] }`.
+Запись результата: `PUT /api/account/tutorials` с `{ flowId, sourceKey, device,
+revision, status }`; сброс одного результата: `POST /api/account/tutorials/reset`
+с `{ flowId, sourceKey, device }`. Обе записи возвращают 204. Пользователь всегда
+определяется из cookie-сессии. Поля, источники и правила версий описаны в
+[обучении](features/tutorials.md).

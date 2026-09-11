@@ -9,11 +9,12 @@
 
     <div class="player-session__content">
       <header class="player-session__intro">
-        <div class="player-session__eyebrow">
+        <div data-tutorial="session-connection" class="player-session__eyebrow">
           <span class="player-session__live-dot" :class="`player-session__live-dot--${liveStatus}`" />
           {{ liveLabel }}
         </div>
         <h1>{{ session.name }}</h1>
+        <SessionTutorialSettings />
         <p v-if="session.description">{{ session.description }}</p>
         <div class="player-session__meta">
           <span v-if="session.systemName">{{ session.systemName }}</span>
@@ -22,7 +23,7 @@
       </header>
 
       <div class="player-session__grid">
-        <BaseTile class="current-chapter" color="var(--accent)" framed>
+        <BaseTile data-tutorial="session-chapter" class="current-chapter" color="var(--accent)" framed>
           <div class="current-chapter__art" :class="{ 'current-chapter__art--empty': !chapterImage }">
             <img
               v-if="chapterImage"
@@ -57,7 +58,7 @@
           </div>
         </BaseTile>
 
-        <BaseTile class="party-card" color="var(--info)" framed>
+        <BaseTile data-tutorial="session-party" class="party-card" color="var(--info)" framed>
           <div class="party-card__header">
             <div>
               <span class="party-card__kicker">Участники сессии</span>
@@ -113,6 +114,7 @@
 </template>
 
 <script setup>
+import SessionTutorialSettings from '@/features/tutorials/components/SessionTutorialSettings.vue'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { BookOpen, ExternalLink, UsersRound } from '@lucide/vue'

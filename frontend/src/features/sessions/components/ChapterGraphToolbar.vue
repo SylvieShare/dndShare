@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <nav class="chapter-primary-nav" aria-label="Раздел сессии">
+    <nav data-tutorial="session-navigation" class="chapter-primary-nav" aria-label="Раздел сессии">
       <button
         type="button"
         class="chapter-primary-tab"
@@ -75,6 +75,7 @@
 
       <button
         type="button"
+        data-tutorial="session-combat"
         class="chapter-primary-tab chapter-primary-tab--combat"
         :class="{
           'chapter-primary-tab--active': combatActive,

@@ -6,7 +6,7 @@ const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)),
 const control = read('./SessionTimerControl.vue')
 const stack = read('./SessionTimerStack.vue')
 const toolbar = read('./ChapterGraphToolbar.vue')
-const page = read('../pages/ViewSession.vue')
+const page = read('../pages/ViewSession.vue') + '\n' + read('../composables/useSessionPage.js')
 const publicScreen = read('../pages/ViewEncounterScreen.vue')
 const composable = read('../composables/useSessionTimers.js')
 const api = read('../../../shared/api/sessionsApi.js')

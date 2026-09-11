@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import DiceRollPopup from '../../../shared/ui/DiceRollPopup.vue'
 import ViewSession from './ViewSession.vue'
 
-const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8')
+const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8') + '\n' + readFileSync(fileURLToPath(new URL('../composables/useSessionPage.js', import.meta.url)), 'utf8')
 const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', import.meta.url)), 'utf8')
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
 const workspaceSource = readFileSync(fileURLToPath(new URL('../composables/useSessionWorkspace.js', import.meta.url)), 'utf8')
@@ -319,7 +319,7 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('participants.value = res?.participants ?? []')
     expect(source).toContain('if (isDm.value) {')
     expect(source).toContain('await encounter.load()')
-    expect(source).toContain('if (!isDm.value) return')
+    expect(source).toContain('if (!isDm.value) { tutorialReady.value = true; return }')
     expect(encounterComposableSource).not.toContain('onMounted(() => {\n    load()')
     expect(encounterComposableSource).toContain('encounter,\n    load,')
     expect(source).toContain(':encounter="encounter"')

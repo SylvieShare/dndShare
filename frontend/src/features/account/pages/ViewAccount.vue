@@ -5,14 +5,14 @@
       <div class="account-identity">
         <span>Аккаунт игрока</span>
         <h1>{{ username }}</h1>
-        <p>Настройки безопасности и загруженные вами материалы.</p>
+        <p>Безопасность, обучение и загруженные материалы.</p>
       </div>
     </header>
 
     <section class="account-surface">
       <SlidingTabs v-model="activeTab" :tabs="tabs" aria-label="Разделы аккаунта">
         <template #icon="{ tab }">
-          <component :is="tab.key === 'password' ? LockKeyhole : HardDrive" :size="15" aria-hidden="true" />
+          <component :is="tab.key === 'password' ? LockKeyhole : tab.key === 'tutorials' ? BookOpen : HardDrive" :size="15" aria-hidden="true" />
         </template>
       </SlidingTabs>
 
@@ -73,6 +73,8 @@
           </button>
         </form>
       </section>
+
+      <AccountTutorials v-else-if="activeTab === 'tutorials'" />
 
       <section
         v-else
@@ -155,6 +157,8 @@
 </template>
 
 <script setup>
+import { BookOpen } from '@lucide/vue'
+import AccountTutorials from '@/features/tutorials/components/AccountTutorials.vue'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
@@ -201,6 +205,7 @@ const passwordSuccess = ref(false)
 const password = reactive({ current: '', next: '', confirm: '' })
 
 const tabs = [
+  { key: 'tutorials', title: 'Обучение', id: 'account-tutorials-tab', panelId: 'account-tutorials-panel' },
   { key: 'password', title: 'Пароль', id: 'account-password-tab', panelId: 'account-password-panel' },
   { key: 'storage', title: 'Использование пространства', id: 'account-storage-tab', panelId: 'account-storage-panel' },
 ]

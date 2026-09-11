@@ -1,5 +1,6 @@
-﻿<template>
-  <div class="view" :style="viewStyle">
+<template>
+  <div ref="tutorialRoot" class="view" :style="viewStyle">
+    <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
     <CharEditorToolbar
       v-if="isMobile"
       ref="charToolbarEl"
@@ -67,6 +68,7 @@
         v-if="mobileTabs.length"
         ref="mobileTabbarEl"
         class="mobile-tabbar"
+        data-tutorial="character-tabs"
         :class="{ dragging: tabDragActive, settling: tabDragSettling }"
         aria-label="Вкладки персонажа"
       >
@@ -96,6 +98,7 @@
     <div
       ref="sheetScrollEl"
       class="sheet-scroll"
+      data-tutorial="character-content"
       @touchstart.passive="e => { if (!isMobile) onTouchStart(e, sheetScrollEl) }"
       @touchmove="e => { if (!isMobile) onTouchMove(e) }"
       @touchend.passive="e => { if (!isMobile) onTouchEnd(e) }"
@@ -165,6 +168,8 @@
 </template>
 
 <script setup>
+import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
+import { useCharacterTutorial } from '@/features/tutorials/composables/useCharacterTutorial'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -197,6 +202,8 @@ let mediaQuery = null
 let onMediaQueryChange = null
 
 // ── Template refs ─────────────────────────────────────────────────────
+const tutorialRoot = ref(null)
+const tutorialReady = ref(false)
 const charToolbarEl = ref(null)
 const sheetScrollEl = ref(null)
 const mobileTabbarEl = ref(null)
@@ -289,6 +296,8 @@ const {
 } = useScrollHide(isMobile, commonMobileScrollHide, { mobileAppHeaderVisible: false })
 
 const { startViewportHeightSync, stopViewportHeightSync } = useCharacterViewport(isMobile)
+
+const characterTutorial = useCharacterTutorial({ root: tutorialRoot, mobile: isMobile, ready: tutorialReady, template, sourceVersionId, activeTab, isOwner })
 
 // ── Watchers ──────────────────────────────────────────────────────────
 
@@ -463,7 +472,7 @@ function stopVersionPolling() {
 }
 
 function pushQueryState() {
-  if (!ready || syncingTabFromRoute) return
+  if (!ready || syncingTabFromRoute || characterTutorial.tour.active) return
   const tabs = getInitialTabs()
   const query = queryForTab(route.query, activeTab.value, defaultTabIndex(tabs))
   router.push({ query })
@@ -503,6 +512,7 @@ async function initializeCharacter() {
   await nextTick()
 
   ready = true
+  tutorialReady.value = true
 
   nextTick(() => {
     observeToolbar(charToolbarEl.value?.rootElement?.())

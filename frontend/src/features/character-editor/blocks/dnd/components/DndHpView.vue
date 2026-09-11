@@ -1,6 +1,7 @@
 <template>
   <!-- Compact variant (toolbar / mobile strip) -->
   <div
+    ref="rootElement"
     v-if="compact"
     class="hp-compact"
     :style="{ '--hp-color': barColor }"
@@ -19,7 +20,7 @@
   </div>
 
   <!-- Main widget -->
-  <div v-else class="hp-widget" :style="{ '--hp-color': barColor }">
+  <div v-else ref="rootElement" class="hp-widget" :style="{ '--hp-color': barColor }">
     <div class="hp-content" :class="{ 'hp-dead': isDead }" @click="$emit('open', $event)">
       <div class="hp-main">
         <img class="hp-heart-icon" :class="heartbeatClass" src="/static/hp-pulse.svg" :style="{ filter: svgColorFilter }" alt="" />
@@ -40,7 +41,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+const rootElement = ref(null)
+defineExpose({ rootElement: () => rootElement.value })
 import StatBar from '@/shared/ui/StatBar.vue'
 import DndDeathSaves from '@/features/character-editor/blocks/dnd/DndDeathSaves'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
