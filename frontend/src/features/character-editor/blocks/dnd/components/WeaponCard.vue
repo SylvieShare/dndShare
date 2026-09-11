@@ -42,12 +42,7 @@
     </template>
 
     <template #default="{ close: closeMenu }">
-      <RowActionItem
-        v-if="ctx.item(entry) && !hasDamage"
-        action="attack"
-        @click="rollAttack(closeMenu)"
-      >Бросок на атаку</RowActionItem>
-      <DamageRollOptions v-if="hasDamage" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
+      <DamageRollOptions v-if="hasDamage || ctx.item(entry)" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
 
       <RowActionSeparator v-if="ctx.item(entry)" />
       <RowActionItem

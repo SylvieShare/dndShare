@@ -45,7 +45,7 @@ describe('ability mechanic composition', () => {
     expect(html).toContain('Двумя руками')
     expect(html).toContain('Скрытая атака')
     expect(html).toContain('aria-label="Добавит +3к6"')
-    expect(html.match(/Бросить урон/g)).toHaveLength(1)
+    expect(html.match(/Бросить на урон/g)).toHaveLength(1)
     expect(html.match(/role="switch"/g)).toHaveLength(3)
   })
 })

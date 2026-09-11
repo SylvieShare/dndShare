@@ -25,13 +25,15 @@ export function weaponDamageMenuOptions(actions, keys, critical = false, scope =
   return actions.filter(action => scope !== 'attack' || attackKeys.has(action.key)).map(action => {
     const parent = actions.find(row => row.key === action.requires_damage_key)
     const label = action.label || action.source_label || 'Дополнительный урон'
-    const formula = scope === 'attack' ? '' : weaponDamageActionFormula(action, critical)
+    const displayRule = action.preview_replacement || action
+    const formula = scope === 'attack' ? '' : weaponDamageActionFormula(displayRule, critical)
     const condition = scope === 'attack'
-      ? (action.attack_mode === 'thrown' ? 'Дальняя атака с характеристикой оружия.' : 'Условие выбранного способа атаки.')
+      ? (action.attack_condition || (action.attack_mode === 'thrown' ? 'Дальняя атака с характеристикой оружия.' : 'Условие выбранного способа атаки.'))
       : action.condition || ''
     return {
-      key: action.key, label, formula: formula ? `+${formula.replace('d', 'к')}` : '',
-      damageParts: scope === 'attack' ? [] : weaponDamageActionParts(action, critical),
+      key: action.key, label, formula: formula ? `${action.preview_replacement ? '' : '+'}${formula.replace('d', 'к')}` : '',
+      formulaPrefix: action.preview_replacement ? '→' : '+', formulaVerb: action.preview_replacement ? 'Урон' : 'Добавит',
+      damageParts: scope === 'attack' ? [] : weaponDamageActionParts(displayRule, critical),
       condition, checked: selected.has(action.key),
       nested: !!action.requires_damage_key,
       disabled: !!action.requires_damage_key && !selected.has(action.requires_damage_key),

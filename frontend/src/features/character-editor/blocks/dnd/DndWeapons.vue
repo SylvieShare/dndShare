@@ -148,7 +148,8 @@ import {
   weaponEntryToOwnedEntry,
 } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 import { selectedWeaponDamageExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
-import { damageAttackMode, selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
+import { selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
+import { prepareWeaponRollEntry, withWeaponThrowAction } from './lib/weaponThrow'
 import {
   improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
   PRESET_ATTACK_ART_ITEM_IDS,
@@ -300,7 +301,7 @@ const improvisedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM
 const dice = useDiceStore()
 
 function rollAttack(entry, { actionKeys = [] } = {}) {
-  entry = { ...entry, _attackMode: damageAttackMode(weaponDamageActions(entry), actionKeys) }
+  entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
   const bonus = attackBonus(entry)
   const context = weaponEffectContext(entry)
   const resolved = charCtx.characterRolls?.resolve?.('auto', context)
@@ -341,8 +342,8 @@ function rollPresetDamage(kind, critical = false) {
 }
 
 function rollDamage(entry, { critical = false, twoHanded = false, actionKeys = [] } = {}) {
+  entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
   const actions = weaponDamageActions(entry)
-  entry = { ...entry, _attackMode: damageAttackMode(actions, actionKeys) }
   if (entry._attackMode === 'thrown') twoHanded = false
   const baseExpression = critical
     ? (twoHanded ? criticalDamageExpressionTwoHanded(entry, extraCriticalDice(entry)) : criticalDamageExpression(entry, extraCriticalDice(entry)))
@@ -363,17 +364,18 @@ function weaponDamageContext(entry) {
   const ranged = !!base?.data?.is_long_range
   return {
     weaponUid: entry.uid,
-    melee: !ranged,
-    ranged,
-    finesse: isFinesseWeapon(base, propertyItems(entry)),
+    melee: !entry._improvisedThrow && !ranged,
+    ranged: !entry._improvisedThrow && ranged,
+    finesse: !entry._improvisedThrow && isFinesseWeapon(base, propertyItems(entry)),
   }
 }
 
 function weaponDamageActions(entry) {
-  return charCtx.characterCombatEffects?.weaponDamageActions?.(weaponDamageContext(entry)) || []
+  return withWeaponThrowAction(charCtx.characterCombatEffects?.weaponDamageActions?.(weaponDamageContext(entry)) || [], item(entry), propertyItems(entry))
 }
 
 function extraCriticalDice(entry) {
+  if (entry._improvisedThrow) return 0
   return charCtx.characterCombatEffects?.extraCriticalWeaponDice?.({
     weaponUid: entry.uid,
     melee: entry._attackMode !== 'thrown' && !item(entry)?.data?.is_long_range,

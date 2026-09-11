@@ -22,11 +22,12 @@ export function useWeaponCalc({
   }
 
   function magicBonus(entry) {
+    if (entry._improvisedThrow) return 0
     return (Number(entry.params?.magic_bonus) || 0) + (Number(magicBonusModifier(entry)) || 0)
   }
 
   function attackBonus(entry) {
-    return statMod(entry) + magicBonus(entry) + (isProficient(entry) ? profBonus.value : 0)
+    return statMod(entry) + magicBonus(entry) + (!entry._improvisedThrow && isProficient(entry) ? profBonus.value : 0)
   }
 
   function damageBonus(entry) {
@@ -90,7 +91,11 @@ export function useWeaponCalc({
   }
 
   function damageExpression(entry) {
-    return buildDamageExpr(itemBaseAttacks(entry), entry)
+    return buildDamageExpr(baseAttacks(entry), entry)
+  }
+
+  function baseAttacks(entry) {
+    return entry._improvisedThrow ? [{ count: 1, dice_id: 'd4', type: itemBaseAttacks(entry)[0]?.type }] : itemBaseAttacks(entry)
   }
 
   function damageExpressionTwoHanded(entry) {
@@ -111,7 +116,7 @@ export function useWeaponCalc({
   }
 
   function criticalDamageExpression(entry, extraWeaponDice = 0) {
-    return buildCriticalDamageExpr(itemBaseAttacks(entry), entry, extraWeaponDice)
+    return buildCriticalDamageExpr(baseAttacks(entry), entry, extraWeaponDice)
   }
 
   function criticalDamageExpressionTwoHanded(entry, extraWeaponDice = 0) {
@@ -134,7 +139,7 @@ export function useWeaponCalc({
   // modifier is passed alongside via `damageBonus`.
   function damagePartsRaw(entry) {
     return [
-      ...itemBaseAttacks(entry).map(attackDisplay),
+      ...baseAttacks(entry).map(attackDisplay),
       ...normalizeAddAttacks(entry.add_attacks).map(customAttackDisplay),
     ].filter(part => part.label || part.diceSides)
   }

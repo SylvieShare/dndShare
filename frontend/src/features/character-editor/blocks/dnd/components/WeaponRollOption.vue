@@ -1,8 +1,8 @@
 <template>
   <div :class="{ 'damage-dependent-option': option.nested }">
     <FormField :label="option.label" :title="option.hint">
-      <span v-if="option.damageParts.length" class="damage-option-formula" :aria-label="`Добавит ${option.formula}`" role="img">
-        <span aria-hidden="true">+</span>
+      <span v-if="option.damageParts.length" class="damage-option-formula" :aria-label="`${option.formulaVerb} ${option.formula}`" role="img">
+        <span aria-hidden="true">{{ option.formulaPrefix }}</span>
         <DamageDice :parts="option.damageParts" :size="26" :default-color="option.disabled ? 'var(--text-muted)' : 'var(--accent-soft)'" aria-hidden="true" />
       </span>
       <ToggleSwitch :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => $emit('select', option.key, value)" />

@@ -7,7 +7,6 @@ const source = readFileSync(fileURLToPath(new URL('./WeaponCard.vue', import.met
 describe('weapon card actions', () => {
   it('opens all weapon operations through the row action menu', () => {
     expect(source).toContain('<RowActionMenu')
-    expect(source).toContain('>Бросок на атаку</RowActionItem>')
     expect(source).toContain('<DamageRollOptions')
     expect(source).toContain(':actions="weaponDamageActions"')
     expect(source).toContain(':versatile="hasTwoHandedDamage"')
@@ -16,7 +15,7 @@ describe('weapon card actions', () => {
     expect(source).toContain('>Редактировать</RowActionItem>')
     expect(source).toContain("entry._inventory ? 'Убрать в рюкзак' : 'Переместить в вещи'")
     expect(source).toContain('>Удалить</RowActionItem>')
-    expect(source).toContain('action="attack"')
+    expect(source).toContain(':can-attack="!!ctx.item(entry)"')
     expect(source).not.toContain('action="damage"')
     expect(source).not.toContain('action="critical"')
     expect(source).not.toContain('action="feature-damage"')
