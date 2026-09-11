@@ -83,7 +83,7 @@ for (const width of [1280, 390]) test(`attack toggles share one row and are mutu
  await menu(page, 'Бросить на атаку')
  const minus = page.getByRole('switch', { name: 'Помеха', exact: true })
  const plus = page.getByRole('switch', { name: 'Преимущество', exact: true })
- const separator = page.getByRole('separator').filter({ visible: true })
+ const separator = page.getByRole('group', { name: 'Режим броска атаки' }).getByRole('separator')
  await expect(minus).not.toBeChecked(); await expect(plus).not.toBeChecked()
  const left = await minus.boundingBox(), right = await plus.boundingBox()
  expect(Math.abs(left.y - right.y)).toBeLessThan(2)
