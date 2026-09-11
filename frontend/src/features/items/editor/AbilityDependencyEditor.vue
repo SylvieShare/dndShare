@@ -13,12 +13,17 @@
       </div>
     </template>
     <AbilityLevelSource v-if="kind === 'hp_bonuses' && enabled['Прибавка за уровень']" :data="editor.itemData || {}" readonly />
+    <FormField v-if="kind === 'roll_triggers' && fields.some(f => f.key === 'use_key')" label="Расход при перебросе" title="Выберите применение этого предмета. Его ресурс и ожидание будут проверены при перебросе." vertical>
+      <FormSelect :value="data.use_key || ''" aria-label="Расход при перебросе" @update:value="value => { if (value) data.use_key = value; else delete data.use_key }"><option value="">Без расхода</option><option v-for="use in editor.itemData?.confirmed_uses || []" :key="use.key" :value="use.key">{{ use.title }}</option></FormSelect>
+    </FormField>
+    <ItemRuleActivation v-if="fields.some(f => f.key === 'activation')" :data="data" />
     <AbilityUnlockField v-if="allowUnlock" :data="data" />
   </div>
 </template>
 <script setup>
 import { computed, inject, onScopeDispose, reactive, watchEffect } from 'vue'
-import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
+import ItemRuleActivation from './ItemRuleActivation.vue'
+import { FormField, FormSelect, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
 import { dependencyManifest, dependencyFields, changeDerivedKind } from './abilityDependencyManifest'
 import { hasFieldValue } from './abilityEditorProfile'
@@ -32,10 +37,11 @@ const editor = inject(itemFieldEditorKey, {})
 const manifest = computed(() => dependencyManifest[props.kind])
 const enabled = reactive(Object.fromEntries(manifest.value.gates.map(g => [g.title, g.keys.some(k => k === 'allow_shield' ? props.data[k] === false : hasFieldValue(props.data[k]))])))
 const gates = computed(() => manifest.value.gates.filter(g => !g.when || g.when(props.data)).map(g => ({ ...g, keys: g.keys.filter(key => !manifest.value.main(props.data).includes(key)) })).filter(g => fieldsFor(g.keys).length))
-const fieldsFor = keys => dependencyFields(props.kind, props.fields, keys, props.data)
+const fieldsFor = keys => dependencyFields(props.kind, props.fields, keys, props.data).filter(field => field.key !== 'event' || field.options?.length > 1)
 const validationKey = Symbol('dependency')
 watchEffect(() => {
   let error = ''
+  if (props.kind === 'roll_triggers' && props.data.use_key && !editor.itemData?.confirmed_uses?.some(use => use.key === props.data.use_key)) error = 'Переброс: выберите существующее применение этого предмета.'
   if (props.kind === 'derived_effects' && !props.data.kind) error = 'Изменение показателя: выберите, что изменить.'
   if (props.kind === 'derived_effects' && enabled['Зависит от выбора игрока'] && !props.data.choice_key) error = 'Изменение показателя: выберите связанный выбор игрока.'
   if (props.kind === 'granted_spells' && !(props.data.spell?.id || props.data.spell)) error = 'Дарованное заклинание: выберите заклинание.'

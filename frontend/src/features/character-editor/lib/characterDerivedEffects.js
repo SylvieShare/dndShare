@@ -1,3 +1,4 @@
+import { itemRuleActive } from './itemRuleActivation'
 import { selectedTargetRollRules } from './selectedTarget'
 import { transferArmorEffects } from './weaponBonusTransfer'
 import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
@@ -65,12 +66,13 @@ function contextMatches(rule, entry, context = {}) {
 }
 
 export function collectCharacterDerivedEffects(values = {}, itemsById = new Map()) {
-  const ownedEffects = VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById).flatMap((entry) => {
+  const ownedEffects = VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById, true).flatMap((entry) => {
     if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []
     const ownerLevel = abilityOwnerLevel(item.data || {}, values)
     return asArray(item.data?.derived_effects).flatMap((rule, index) => {
+      if (!itemRuleActive(values, item, entry, rule)) return []
       if (!rule?.kind || ownerLevel < Math.max(1, number(rule.level, 1))) return []
       return [{
         ...rule,

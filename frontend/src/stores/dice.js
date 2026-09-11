@@ -52,7 +52,7 @@ function applyD20Adjustments(result, adjustments = []) {
 }
 
 export const useDiceStore = defineStore('dice', () => {
-  const stack = ref([])
+  const stack = ref([]), lastD20 = ref(null)
   const timers = new Map()
   let seq = 0
 
@@ -77,10 +77,11 @@ export const useDiceStore = defineStore('dice', () => {
     const duration = entry.duration || AUTO_DISMISS_MS
     const action = entry.action || 'Бросок'
     const actorName = String(entry.actor?.name || '').trim()
+    if (entry.result?.parts?.some(part => part.kind === 'dice' && part.sides === 20)) lastD20.value = null
     if (entry.popup !== false) {
       seq += 1
       const id = seq
-      stack.value.push({
+      const popupEntry = {
         id,
         title: actorName ? `${actorName} — ${action}` : action,
         result: entry.result,
@@ -89,7 +90,9 @@ export const useDiceStore = defineStore('dice', () => {
         duration,
         actions: Array.isArray(entry.actions) ? entry.actions : [],
         rerollSpec: entry.rerollSpec || null,
-      })
+      }
+      stack.value.push(popupEntry)
+      if (entry.result?.parts?.some(part => part.kind === 'dice' && part.sides === 20)) lastD20.value = popupEntry
       while (stack.value.length > MAX_STACK) {
         const removed = stack.value.shift()
         const t = timers.get(removed.id)
@@ -147,13 +150,13 @@ export const useDiceStore = defineStore('dice', () => {
     const appliedAdjustments = applyD20Adjustments(result, Array.isArray(opts.roll_adjustments) ? opts.roll_adjustments : [])
     const detectedOutcome = opts.crit_mode ? detectOutcome(result, opts.critical_threshold) : null
     const outcome = appliedAdjustments.length && detectedOutcome?.kind === 'fumble' ? null : detectedOutcome
-    const triggers = keptNaturalD20(result) === 1
-      ? (Array.isArray(opts.roll_triggers) ? opts.roll_triggers : []).filter((rule) => rule.event === 'natural_one' && rule.action === 'reroll')
-      : []
-    const actions = triggers.length ? [{
-      key: 'reroll',
-      label: triggers[0].label || `Перебросить — ${triggers[0].source_label || 'способность'}`,
-    }] : []
+    const triggers = (Array.isArray(opts.roll_triggers) ? opts.roll_triggers : [])
+      .filter(rule => rule.action === 'reroll' && (rule.event === 'any' || (rule.event === 'natural_one' && keptNaturalD20(result) === 1)))
+    const actions = triggers.map((rule, index) => ({
+      key: index === 0 ? 'reroll' : `reroll:${index}`,
+      label: rule.label || `Перебросить — ${rule.source_label || 'способность'}`,
+      useRef: rule.useRef, consume: rule.consume,
+    }))
     return pushEntry({
       action, actor: opts.actor, result, outcome, color: opts.color,
       popup: opts.popup, log: opts.log, duration: opts.duration,
@@ -163,8 +166,11 @@ export const useDiceStore = defineStore('dice', () => {
   }
 
   function runAction(id, key) {
-    const entry = stack.value.find((row) => row.id === id)
-    if (!entry || key !== 'reroll' || !entry.rerollSpec) return null
+    const entry = stack.value.find((row) => row.id === id) || (lastD20.value?.id === id ? lastD20.value : null)
+    const selected = entry?.actions?.find(action => action.key === key)
+    if (!selected || !entry.rerollSpec) return null
+    if (selected.consume && !selected.consume()) { entry.actions = entry.actions.filter(action => action.key !== key); return null }
+    entry.actions = []
     const spec = entry.rerollSpec
     dismiss(id)
     const result = rollD20(spec.action, spec.bonus, spec.mode, spec.opts)
@@ -175,8 +181,8 @@ export const useDiceStore = defineStore('dice', () => {
   function clear() {
     for (const t of timers.values()) clearTimeout(t)
     timers.clear()
-    stack.value = []
+    stack.value = []; lastD20.value = null
   }
 
-  return { stack, roll, rollD20, pushEntry, runAction, dismiss, clear }
+  return { stack, lastD20, roll, rollD20, pushEntry, runAction, dismiss, clear }
 })

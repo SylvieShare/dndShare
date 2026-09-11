@@ -55,6 +55,9 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 			t.Fatal(err)
 		}
 		for _, field := range fields {
+			if id == 19 {
+				stripLuckBladeSchema(field)
+			}
 			if keys, ok := added[field["key"].(string)]; ok {
 				var keep []any
 				for _, raw := range field["fields"].([]any) {
@@ -119,6 +122,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	if err := pool.QueryRow(ctx, `SELECT data->>'desc'='keep' AND data->'weapon'->>'magic_bonus'='2' AND data->'initial_charges'->>'formula'='1к8+1' AND jsonb_array_length(data->'confirmed_uses')=2 AND data->'confirmed_uses'->0->>'key'='authored' AND data->'confirmed_uses'->1->>'resource_cost'='1' FROM dndshare.item WHERE id=134`).Scan(&initialOK); err != nil || !initialOK {
 		t.Fatalf("Nine Lives Stealer migration: valid=%v err=%v", initialOK, err)
 	}
+	testLuckBladeMigration(t, ctx, pool)
 	var oathOK bool
 	if err := pool.QueryRow(ctx, `SELECT data->>'desc'='keep' AND jsonb_array_length(data->'weapon_damage')=1 AND data->'weapon_damage'->0->>'key'='authored' AND data->'selected_target'->'damage'->>'dice_count'='3' FROM dndshare.item WHERE id=202`).Scan(&oathOK); err != nil || !oathOK {
 		t.Fatalf("Oathbow migration: valid=%v err=%v", oathOK, err)

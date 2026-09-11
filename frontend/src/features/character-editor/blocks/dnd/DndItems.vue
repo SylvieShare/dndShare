@@ -154,6 +154,7 @@ import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
 import { useInventoryEquipmentActions } from './composables/useInventoryEquipmentActions'
+import { initialChargeStocks } from '@/shared/lib/itemInitialCharges'
 import { magicBaseParams, magicEquipmentKinds, magicBaseId } from '@/features/items/lib/magicEquipmentBases'
 import { applicableInstanceFields, defaultInstanceParams, mergeEditedInstanceParams } from '@/features/items/lib/itemInstance'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
@@ -447,7 +448,7 @@ function increment(sectionId, uid, selectedParams = null) {
   if (!entry) return null
   if (entry.magic_item_id || Number(catalog[entry.item_id]?.typeId) === MAGIC_ITEM_TYPE_ID) {
     const item = catalog[entry.magic_item_id ?? entry.item_id], params = selectedParams || { ...entry.params, ...(entry.magic_item_id ? { weapon_base_item_id: entry.item_id } : {}) }
-    if ((!selectedParams && item.data?.initial_charges) || magicEquipmentKinds(item).some(kind => !magicBaseId(item, params, kind))) { pendingCopy.value = { item, sectionId, uid, params: magicBaseParams(item, params) }; return null }
+    if ((!selectedParams && initialChargeStocks(item.data).length) || magicEquipmentKinds(item).some(kind => !magicBaseId(item, params, kind))) { pendingCopy.value = { item, sectionId, uid, params: magicBaseParams(item, params) }; return null }
     list.push(createWeaponInstance(item, { uid: makeEntryUid(), item_id: item.id, count: 1, params: selectedParams ? JSON.parse(JSON.stringify(selectedParams)) : magicBaseParams(item, params), override: entry.override ? { ...entry.override } : null }))
     emitModel(next)
     return 1

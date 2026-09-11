@@ -24,7 +24,13 @@ describe('magic item editor', () => {
     const placed = [...profile.primary, ...profile.blocks.flatMap(b => b.fields)]
     expect(placed.map(f => f.key).sort()).toEqual(schema.map(f => f.key).sort())
     for (const field of abilities.filter(f => !['desc', 'race_ids', 'subrace_ids', 'class_ids', 'subclass_ids'].includes(f.key))) {
-      expect(schema.find(f => f.key === field.key)).toEqual(field)
+      const actual = structuredClone(schema.find(f => f.key === field.key))
+      // Instance activation and named stock initialization are magic-item extensions.
+      if (['use_resources', 'derived_effects', 'roll_triggers'].includes(field.key)) {
+        actual.fields = actual.fields.filter(f => !['activation', 'initial_charges', 'use_key'].includes(f.key))
+        if (field.key === 'roll_triggers') actual.fields.find(f => f.key === 'event').options = actual.fields.find(f => f.key === 'event').options.filter(o => o.value !== 'any')
+      }
+      expect(actual).toEqual(field)
     }
     expect(profile.blocks.some(b => ['armor', 'cost', 'attunement'].includes(b.key))).toBe(false)
   })

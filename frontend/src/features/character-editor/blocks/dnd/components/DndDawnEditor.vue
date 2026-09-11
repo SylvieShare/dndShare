@@ -9,20 +9,22 @@
         <small>{{ resource.dawn_recovery.mode === 'full' ? 'Восстановить полностью' : `Восстановить ${resource.dawn_recovery.formula.replace(/d/g, 'к')}` }}</small>
       </BaseTile>
       <BaseTile v-for="target in targetCandidates" :key="target.uid" class="dawn-resource"><strong>{{ target.item.name }}: {{ target.state.name }}</strong><span>{{ target.state.dawns_left }} → {{ Math.max(0, target.state.dawns_left - 1) }}</span><small>Рассветов до {{ target.state.status === 'defeated' ? 'выбора новой цели' : 'истечения срока' }}</small></BaseTile>
-      <p v-if="!candidates.length && !targetCandidates.length && !done">Нет изменений на рассвете.</p>
+      <BaseTile v-for="row in [...cooldownCandidates, ...cooldownResults]" :key="`${row.uid}:${row.key}`" class="dawn-resource"><strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }}</span><small>{{ row.after ? 'Рассветов до следующего применения' : 'Можно использовать снова; заряды не восполняются' }}</small></BaseTile>
+      <p v-if="!candidates.length && !targetCandidates.length && !cooldownCandidates.length && !done">Нет изменений на рассвете.</p>
       <BaseTile v-for="row in targetResults" :key="row.uid" class="dawn-resource"><strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }}</span><small>{{ row.after ? 'Осталось рассветов' : 'Можно объявить новую цель' }}</small></BaseTile>
       <BaseTile v-for="row in results" :key="row.key" class="dawn-resource">
         <strong>{{ row.title }}</strong><span>{{ row.before }} → {{ row.after }} / {{ row.total }}</span>
         <small v-if="row.formula">{{ row.formula.replace(/d/g, 'к') }}: выпало {{ row.rolled }}</small>
       </BaseTile>
     </div>
-    <ActionButton v-if="!done" :disabled="(!candidates.length && !targetCandidates.length) || applying" @click="apply">Встретить рассвет</ActionButton>
+    <ActionButton v-if="!done" :disabled="(!candidates.length && !targetCandidates.length && !cooldownCandidates.length) || applying" @click="apply">Встретить рассвет</ActionButton>
     <ActionButton v-else @click="$emit('close')">Готово</ActionButton>
   </template>
 </template>
 <script setup>
 import { computed, inject, onScopeDispose, ref, unref } from 'vue'
 import { ActionButton, BaseTile, LoadingState } from '@sylvieshare/share-ui'
+import { itemUseDawnCandidates } from '@/features/character-editor/lib/itemUseCooldowns'
 import { selectedTargetDawnCandidates } from '@/features/character-editor/lib/selectedTarget'
 import { dawnResources, restoreDawnResources } from '@/features/character-editor/lib/dawnResources'
 import { resourceItemIds } from '@/features/character-editor/lib/characterResources'
@@ -31,7 +33,8 @@ const emit = defineEmits(['apply', 'close'])
 const charCtx = inject('charCtx', { ownerMode: false })
 const items = computed(() => unref(charCtx.characterResources?.itemsById) || new Map())
 const loading = ref(true), error = ref(''), done = ref(false), applying = ref(false), results = ref([])
-const targetResults = ref([])
+const targetResults = ref([]), cooldownResults = ref([])
+const cooldownCandidates = computed(() => done.value ? [] : itemUseDawnCandidates(props.values, items.value))
 const targetCandidates = computed(() => done.value ? [] : selectedTargetDawnCandidates(props.values, items.value))
 let alive = true
 const candidates = computed(() => done.value ? [] : dawnResources(props.values, items.value).filter(row => row.value < row.total))
@@ -48,6 +51,7 @@ function apply() {
   applying.value = true
   const result = restoreDawnResources(props.values, items.value)
   if (result.error) { error.value = result.error; applying.value = false; return }
+  cooldownResults.value = result.cooldowns || []
   targetResults.value = result.targets || []; results.value = result.results; done.value = true; applying.value = false
   emit('apply', result)
 }

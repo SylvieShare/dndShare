@@ -35,10 +35,12 @@
       </FormField>
       <FormField v-if="data.dawn_recovery?.mode === 'roll'" label="Формула восстановления" title="Например, 1к3 или 1к6+1. Итог ограничен максимумом ресурса." vertical><FormTextInput v-model:value="data.dawn_recovery.formula" placeholder="1к3" aria-label="Формула восстановления" /></FormField>
     </template>
+    <ItemRuleActivation v-if="independent && fields.some(f => f.key === 'activation')" :data="data" />
     <AbilityUnlockField v-if="independent" :data="data" />
   </div>
 </template>
 <script setup>
+import ItemRuleActivation from './ItemRuleActivation.vue'
 import { initialChargeRuleError } from '@/shared/lib/itemInitialCharges'
 import { validDawnFormula } from '@/features/character-editor/lib/dawnResources'
 import { computed, inject, onScopeDispose, ref, watchEffect } from 'vue'

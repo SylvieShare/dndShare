@@ -42,7 +42,7 @@ export function useCharacterData(uuid, isMobile) {
   const characterDefenses = useCharacterDefenses(characterValues, characterResources.itemsById)
   const characterHitPoints = useCharacterHitPoints(characterValues, characterResources.itemsById)
   const characterPassiveEffects = useCharacterPassiveEffects(characterValues, characterResources.itemsById)
-  const characterCombatEffects = useCharacterCombatEffects(characterValues, characterResources.itemsById)
+  const characterCombatEffects = useCharacterCombatEffects(characterValues, characterResources.itemsById, charCtx)
   const characterDerivedEffects = useCharacterDerivedEffects(characterValues, characterResources.itemsById)
   const characterArmor = useCharacterArmor(characterValues, characterResources, characterDerivedEffects)
   const characterRolls = useCharacterRollEffects(characterArmor, [context => characterDerivedEffects.rollEffects(context)])

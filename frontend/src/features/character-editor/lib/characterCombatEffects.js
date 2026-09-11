@@ -1,3 +1,4 @@
+import { itemRuleActive } from './itemRuleActivation'
 import { selectedTargetDamageRules } from './selectedTarget'
 import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
 import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
@@ -7,12 +8,13 @@ import { featureEntryActive } from './featureEntryState'
 const VALUE_IDS = FEATURE_VALUE_IDS
 
 function abilityRows(values, itemsById, field) {
-  return VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById).flatMap((entry) => {
+  return VALUE_IDS.flatMap((valueId) => featureEntries(values, valueId, itemsById, true).flatMap((entry) => {
     if (!featureEntryActive(valueId, entry)) return []
     const item = itemsById.get(String(entry.id))
     if (!item) return []
     const ownerLevel = abilityOwnerLevel(item.data || {}, values)
     return (Array.isArray(item.data?.[field]) ? item.data[field] : []).flatMap((rule, index) => {
+      if (!itemRuleActive(values, item, entry, rule)) return []
       if (ownerLevel < Math.max(1, Number(rule?.level) || 1)) return []
       return [{
         ...rule,

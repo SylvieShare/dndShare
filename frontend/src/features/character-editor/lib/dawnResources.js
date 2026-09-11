@@ -1,3 +1,4 @@
+import { advanceItemUseCooldowns } from './itemUseCooldowns'
 import { advanceSelectedTargets } from './selectedTarget'
 import { rollDiceExpression } from '@/shared/lib/dice'
 import { FEATURE_VALUE_IDS } from './characterMagicItems'
@@ -41,5 +42,7 @@ export function restoreDawnResources(values, itemsById, roll = rollDiceExpressio
   }
   const targets = advanceSelectedTargets(next, itemsById)
   Object.assign(patch, targets.patch)
-  return { patch, results, targets: targets.results, error: '' }
+  const cooldowns = advanceItemUseCooldowns({ ...next, ...targets.patch }, itemsById)
+  Object.assign(patch, cooldowns.patch)
+  return { patch, results, targets: targets.results, cooldowns: cooldowns.results, error: '' }
 }

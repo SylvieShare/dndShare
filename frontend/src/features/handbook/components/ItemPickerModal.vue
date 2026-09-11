@@ -147,6 +147,7 @@ import { useAccountStore } from '@/stores/account'
 import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
+import { initialChargeStocks } from '@/shared/lib/itemInitialCharges'
 import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
@@ -397,7 +398,7 @@ watch(normalizedFixedFilters, (next, previous) => {
 
 function pick() {
   if (!selectedItem.value || !selectedEligibility.value.eligible) return
-  if (props.configureInstance && (magicEquipmentKinds(selectedItem.value).length || selectedItem.value.data?.initial_charges)) { basePending.value = selectedItem.value; return }
+  if (props.configureInstance && (magicEquipmentKinds(selectedItem.value).length || initialChargeStocks(selectedItem.value.data).length)) { basePending.value = selectedItem.value; return }
   finishPick()
 }
 function finishPick(params = {}) {

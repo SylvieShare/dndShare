@@ -9,10 +9,12 @@
         <option v-for="row in resources" :key="row.key" :value="row.key">{{ row.title }}</option>
       </FormSelect>
     </FormField>
-    <AbilityRuleFields :fields="fieldsFor(['resource_cost'])" :data="data" @update:data="update" />
+    <AbilityRuleFields :fields="fieldsFor(['resource_cost', 'cooldown_dawns', 'show_resource'])" :data="data" @update:data="update" />
+    <ItemRuleActivation v-if="fields.some(f => f.key === 'activation')" :data="data" />
   </div>
 </template>
 <script setup>
+import ItemRuleActivation from './ItemRuleActivation.vue'
 import { computed, inject, onScopeDispose, watch, watchEffect } from 'vue'
 import { FormField, FormSelect } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'

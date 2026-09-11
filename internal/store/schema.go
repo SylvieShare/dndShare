@@ -432,6 +432,7 @@ var schemaParts = []struct {
 	{"bard-spell-progression", schemaBardSpellProgressionSQL},
 	{"selected-target", schemaSelectedTargetSQL},
 	{"initial-item-charges", schemaInitialItemChargesSQL},
+	{"luck-blade-rules", schemaLuckBladeRulesSQL},
 }
 
 const (

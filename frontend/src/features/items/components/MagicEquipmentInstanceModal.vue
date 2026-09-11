@@ -7,7 +7,7 @@
         <MagicEquipmentBases :item="item" :kind="kind" :base-items="options[kind]" selectable :model-value="chosen[baseParamKey(kind)]" :z-index="zIndex"
           @update:model-value="chosen[baseParamKey(kind)] = $event" />
       </DetailSection>
-      <InitialChargeFields v-if="needsCharges" v-model="chargeCount" :rule="item.data.initial_charges" :title="item.name" />
+      <InitialChargeFields v-for="stock in charges.pending.value" :key="stock.key" :model-value="charges.count(stock)" :label="stock.title" :rule="stock.rule" :title="item.name" @update:model-value="charges.counts[stock.key] = $event" />
     </template>
     <template #footer><ActionButton variant="primary" :disabled="!ready || !canConfirm" @click="confirm">{{ confirmLabel }}</ActionButton></template>
   </AppModalFrame>
@@ -15,7 +15,7 @@
 </template>
 <script setup>
 import InitialChargeFields from './InitialChargeFields.vue'
-import { hasInitialChargeStock, initialChargeDefault, initialChargeRuleError, initializeItemCharges, validChargeCount } from '@/shared/lib/itemInitialCharges'
+import { useInitialChargeStocks } from '@/features/items/composables/useInitialChargeStocks'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ActionButton, AppModalFrame, LoadingState } from '@sylvieshare/share-ui'
 import DetailSection from '@/shared/ui/DetailSection.vue'
@@ -28,9 +28,9 @@ const emit = defineEmits(['close', 'confirm'])
 const { kinds, chosen, loaded, complete, result } = useMagicBaseSelection(computed(() => props.item), props.params)
 const options = ref({}), ready = ref(false), error = ref('')
 const choiceKinds = computed(() => kinds.value.filter(kind => options.value[kind]?.length !== 1))
-const needsCharges = computed(() => !!props.item.data?.initial_charges && !hasInitialChargeStock(props.params))
-const chargeCount = ref(initialChargeDefault(props.item.data?.initial_charges))
-const canConfirm = computed(() => complete.value && (!needsCharges.value || (validChargeCount(chargeCount.value) && !initialChargeRuleError(props.item.data.initial_charges))))
+const charges = useInitialChargeStocks(computed(() => props.item), computed(() => props.params))
+const needsCharges = computed(() => charges.pending.value.length > 0)
+const canConfirm = computed(() => complete.value && charges.complete.value)
 let alive = true
 async function prepare() {
   ready.value = false; error.value = ''
@@ -50,7 +50,7 @@ async function prepare() {
 function confirm() {
   if (!canConfirm.value) return
   const params = { ...props.params, ...result() }
-  emit('confirm', needsCharges.value ? initializeItemCharges(params, chargeCount.value) : params)
+  emit('confirm', charges.result(params))
 }
 onMounted(prepare)
 onBeforeUnmount(() => { alive = false })

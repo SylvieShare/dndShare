@@ -22,3 +22,6 @@ var schemaSelectedTargetSQL string
 
 //go:embed schema/106_initial_item_charges.sql
 var schemaInitialItemChargesSQL string
+
+//go:embed schema/107_luck_blade_rules.sql
+var schemaLuckBladeRulesSQL string

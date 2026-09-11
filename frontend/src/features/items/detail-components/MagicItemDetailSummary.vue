@@ -9,6 +9,7 @@
       <CoverStatCard v-if="cost" :icon="Coins" label="Стоимость" :value="cost" size="compact" tone="warning" />
       <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="`${data.weight} фунт.`" size="compact" />
       <CoverStatCard v-if="chargeLabel != null && !instance?.params?.magic?.lost" :icon="Zap" label="Зарядов" :value="chargeLabel" size="compact"><template v-if="data.dawn_recovery" #note><ResourceRestIcons :resource="{ dawn_recovery: data.dawn_recovery }" /></template></CoverStatCard>
+      <CoverStatCard v-for="resource in resourceLabels" :key="resource.key" :icon="Zap" :label="resource.title" :value="resource.value" size="compact"><template v-if="resource.dawn_recovery" #note><ResourceRestIcons :resource="resource" /></template></CoverStatCard>
     </template>
     <template #bottom>
       <CoverSummaryRailItem v-if="instance?.params?.magic?.lost" :icon="WandSparkles" label="Состояние экземпляра">Магические свойства утрачены · действует только основа</CoverSummaryRailItem>
@@ -47,6 +48,17 @@ const chargeLabel = computed(() => {
     return `${state.remaining ?? state.max_use} / ${state.max_use}`
   }
   return data.value.initial_charges.mode === 'roll' ? data.value.initial_charges.formula : data.value.initial_charges.value
+})
+const resourceLabels = computed(() => {
+  if (props.instance?.params?.magic?.lost) return []
+  const state = props.instance?.params?.magic || {}
+  return (data.value.use_resources || []).flatMap(resource => {
+    const initial = resource.initial_charges
+    const total = initial ? state.resource_maxima?.[resource.key] : resource.max_use
+    const label = initial ? (initial.mode === 'roll' ? initial.formula : initial.value) : total
+    if (label == null) return []
+    return [{ ...resource, value: props.instance && total != null ? `${state.resource_counts?.[resource.key] ?? total} / ${total}` : label }]
+  })
 })
 const bonus = computed(() => data.value.weapon?.magic_bonus || data.value.armor_base?.magic_bonus)
 const { format } = useCostFormatter()

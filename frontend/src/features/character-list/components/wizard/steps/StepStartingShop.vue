@@ -118,6 +118,7 @@ import { computed, inject, ref } from 'vue'
 import { Dices, Plus, Search, ShoppingBasket, X } from '@lucide/vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
+import { initialChargeStocks } from '@/shared/lib/itemInitialCharges'
 import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
@@ -142,7 +143,7 @@ const activeType = ref(2)
 const query = ref('')
 const viewItem = ref(null)
 const pendingPurchase = ref(null)
-function buy(item) { if (magicEquipmentKinds(item).length || item.data?.initial_charges) pendingPurchase.value = item; else addShopItem(item) }
+function buy(item) { if (magicEquipmentKinds(item).length || initialChargeStocks(item.data).length) pendingPurchase.value = item; else addShopItem(item) }
 function confirmPurchase(params) { addShopItem({ ...pendingPurchase.value, params }); pendingPurchase.value = null }
 const rerollConfirmOpen = ref(false)
 const categories = computed(() => TYPE_LABELS.map((category) => ({

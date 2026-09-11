@@ -1,3 +1,4 @@
+import { itemRuleActive } from './itemRuleActivation'
 import { queueLastCharge } from './itemLastCharge'
 import { MAGIC_VALUE_ID, featureEntries, inventoryItemIds, patchFeatureEntries } from './characterMagicItems'
 import { abilityOwnerLevel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
@@ -148,12 +149,13 @@ export function createAbilityResourceSource(valueId, color) {
       return entries.map((entry) => entry?.id).filter((id) => id != null)
     },
     collect(values, itemsById, { includeInactive = false } = {}) {
-      const entries = featureEntries(values, valueId, itemsById, includeInactive)
+      const entries = featureEntries(values, valueId, itemsById, true)
       return entries.flatMap((entry) => {
         if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
         if (!item) return []
         return abilityResourceDefinitions(item.data).flatMap((definition) => {
+          if (!includeInactive && !itemRuleActive(values, item, entry, definition.rule)) return []
           const total = abilityUseTotal(definition.rule, values, entry, item.data)
           if (total == null || total <= 0) return []
           const rest = abilityRestRule(definition.rule, item.data, values)

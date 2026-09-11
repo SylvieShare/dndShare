@@ -47,7 +47,7 @@ export const dependencyManifest = {
     fields: { ability: { name: 'Характеристика заклинания' }, counts_as_known: { name: 'Занимает место среди известных заклинаний' }, slotless: { name: 'Можно сотворять без ячейки' } },
     gates: [{ title: 'Сотворять на другом уровне', keys: ['cast_level'] }],
   },
-  roll_triggers: { main: () => ['scopes', 'label'], fields: { scopes: scopeField, label: { name: 'Название предложения перебросить' } }, gates: [], summary: () => 'При натуральной 1 на к20 предложить переброс.' },
+  roll_triggers: { main: () => ['event', 'scopes', 'label'], fields: { scopes: scopeField, label: { name: 'Название предложения перебросить' } }, gates: [], summary: d => d.event === 'any' ? 'После броска можно выбрать переброс. Второй результат обязателен.' : 'При натуральной 1 на к20 предложить переброс.' },
   roll_adjustments: {
     main: () => ['value', 'scope', 'minimum_proficiency_rank'],
     fields: { value: { name: 'Минимум на к20' }, scope: { name: 'Для каких бросков' }, minimum_proficiency_rank: select('Условие владения', [[0, 'Не требуется'], [1, 'Есть владение или компетентность'], [2, 'Есть компетентность']]) },

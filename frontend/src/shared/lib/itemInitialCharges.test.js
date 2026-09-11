@@ -23,7 +23,7 @@ it('never refills on reopening and gives separate instances independent state', 
 })
 it('validates bounded integral stocks and positive additive formulas', () => {
   for (const n of ['', null, undefined, ' ', -1, 1.5, 101, Infinity, 'oops']) expect(validChargeCount(n)).toBe(false)
-  for (const f of ['1к8+1', '2D6 + 3', 'd20', '0', '100']) expect(initialChargeRuleError({ mode: 'roll', formula: f })).toBe('')
-  for (const f of ['0d8', '1d1', '101', '100d100', '1d8-1', 'oops', '']) expect(initialChargeRuleError({ mode: 'roll', formula: f })).not.toBe('')
+  for (const f of ['1к8+1', '2D6 + 3', 'd20', '0', '100', '1к4−1', '1d8-1']) expect(initialChargeRuleError({ mode: 'roll', formula: f })).toBe('')
+  for (const f of ['0d8', '1d1', '101', '100d100', '1d8-2', '1d4-1d8', 'oops', '']) expect(initialChargeRuleError({ mode: 'roll', formula: f })).not.toBe('')
   expect(initialChargeRuleError({ mode: 'fixed', value: 0 })).toBe('')
 })

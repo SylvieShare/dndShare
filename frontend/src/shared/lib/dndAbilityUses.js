@@ -21,7 +21,10 @@ export function abilityUseTotal(ruleData, values = {}, storedEntry = {}, ownerDa
   // is an actual unlock gate (for example the two Drow Magic spells).
   if (rule !== owner && rule.level != null && ownerLevel < nonNegativeInt(rule.level)) return null
 
-  if (rule.initial_charges) return validChargeCount(storedEntry.max_use) ? Number(storedEntry.max_use) : null
+  if (rule.initial_charges) {
+    const maximum = rule !== owner && rule.key ? storedEntry.resource_maxima?.[rule.key] : storedEntry.max_use
+    return validChargeCount(maximum) ? Number(maximum) : null
+  }
 
   const stat = SUGGEST16_TO_STAT[Number(rule.max_use_stat)]
   if (stat) {

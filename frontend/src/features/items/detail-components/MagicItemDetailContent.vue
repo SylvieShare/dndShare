@@ -9,7 +9,7 @@
     <DetailSection v-for="use in data.confirmed_uses || []" :key="use.key" :label="use.title">
       <DndRichContent :html="use.description" />
       <MechanicTheses :lines="use.requirements" />
-      <p>{{ use.confirm_label }} · расход: {{ use.resource_cost }} заряд(ов)</p>
+      <p>{{ use.confirm_label }} · расход: {{ use.resource_cost }} заряд(ов)<span v-if="use.cooldown_dawns"> · ожидание: {{ use.cooldown_dawns }} рассвет(ов)</span><span v-if="use.activation"> · {{ use.activation === 'carried' ? 'предмет при персонаже' : 'предмет экипирован' }}</span></p>
     </DetailSection>
     <SelectedTargetSummary :rule="data.selected_target" />
     <WeaponUseSummary :uses="data.weapon_uses" :data="data" />
