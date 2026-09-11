@@ -278,7 +278,7 @@ function weaponEffectContext(entry) {
     kind: 'attack',
     abilitySuggestId: weaponAbilitySuggestId(entry, base, propertyItems(entry), statsVar.value),
     weaponKind: entry._attackMode === 'thrown' || base?.data?.is_long_range ? 'ranged' : 'melee',
-    targetId: entry.uid,
+    targetId: entry.uid, weaponAttack: true, improvisedWeapon: !!entry._improvisedThrow,
   }
 }
 
@@ -343,7 +343,7 @@ function presetAttackDefinition(kind) {
 
 function rollPresetAttack(kind, { attackRollMode = 'auto' } = {}) {
   const preset = presetAttackDefinition(kind)
-  const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee' }
+  const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: kind !== 'unarmed' }
   const mode = attackMode(context, attackRollMode)
   dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
     crit_mode: true,

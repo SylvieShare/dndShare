@@ -16,3 +16,6 @@ var schemaMagicWeaponRefreshSQL string
 
 //go:embed schema/103_weapon_bonus_transfer.sql
 var schemaWeaponBonusTransferSQL string
+
+//go:embed schema/105_selected_target.sql
+var schemaSelectedTargetSQL string

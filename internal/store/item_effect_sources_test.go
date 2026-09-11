@@ -67,7 +67,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 		}
 		var beforeDawn []map[string]any
 		for _, field := range fields {
-			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" || field["key"] == "weapon_uses" || field["key"] == "weapon_bonus_transfer" {
+			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" || field["key"] == "weapon_uses" || field["key"] == "weapon_bonus_transfer" || field["key"] == "selected_target" {
 				continue
 			}
 			if field["key"] == "use_resources" {
@@ -109,6 +109,13 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(233,'Защитник',19,'{"weapon":{"magic_bonus":3},"desc":"keep"}')`)
 	exec(schemaWeaponBonusTransferSQL)
 	exec(schemaWeaponBonusTransferSQL)
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(202,'Лук клятвы',19,'{"desc":"keep","weapon_damage":[{"key":"sworn_enemy"},{"key":"authored"}]}')`)
+	exec(schemaSelectedTargetSQL)
+	exec(schemaSelectedTargetSQL)
+	var oathOK bool
+	if err := pool.QueryRow(ctx, `SELECT data->>'desc'='keep' AND jsonb_array_length(data->'weapon_damage')=1 AND data->'weapon_damage'->0->>'key'='authored' AND data->'selected_target'->'damage'->>'dice_count'='3' FROM dndshare.item WHERE id=202`).Scan(&oathOK); err != nil || !oathOK {
+		t.Fatalf("Oathbow migration: valid=%v err=%v", oathOK, err)
+	}
 	var defenderOK bool
 	if err := pool.QueryRow(ctx, `SELECT data->>'desc'='keep' AND data->'weapon'->>'magic_bonus'='3' AND data->'weapon_bonus_transfer'->>'title'='Перенести в защиту' FROM dndshare.item WHERE id=233`).Scan(&defenderOK); err != nil || !defenderOK {
 		t.Fatalf("Defender migration: valid=%v err=%v", defenderOK, err)

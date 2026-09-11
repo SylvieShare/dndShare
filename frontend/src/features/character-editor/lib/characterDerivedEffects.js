@@ -1,3 +1,4 @@
+import { selectedTargetRollRules } from './selectedTarget'
 import { transferArmorEffects } from './weaponBonusTransfer'
 import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
@@ -32,6 +33,7 @@ function choiceMatches(rule, entry) {
 
 function targetMatches(rule, entry, context) {
   if (rule.weapon_uid && rule.weapon_uid !== context.targetId) return false
+  if (rule.excluded_weapon_uid && rule.excluded_weapon_uid === context.targetId) return false
   const targetIds = asArray(rule?.target_ids)
   if (targetIds.length) {
     return context.targetId != null && targetIds.some(value => String(value) === String(context.targetId))
@@ -43,6 +45,8 @@ function targetMatches(rule, entry, context) {
 }
 
 function contextMatches(rule, entry, context = {}) {
+  if (rule.weapon_attacks_only && !context.weaponAttack) return false
+  if (rule.forbid_improvised && context.improvisedWeapon) return false
   if (!choiceMatches(rule, entry) || !targetMatches(rule, entry, context)) return false
   const scopes = asArray(rule.scopes)
   if (scopes.length && !scopes.includes(context.kind)) return false
@@ -78,7 +82,7 @@ export function collectCharacterDerivedEffects(values = {}, itemsById = new Map(
       }]
     })
   }))
-  return [...ownedEffects, ...transferArmorEffects(values, itemsById), ...collectStatusDerivedEffects(values, itemsById)]
+  return [...ownedEffects, ...transferArmorEffects(values, itemsById), ...selectedTargetRollRules(values, itemsById), ...collectStatusDerivedEffects(values, itemsById)]
 }
 
 export function matchingDerivedEffects(effects, kind, context = {}) {

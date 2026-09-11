@@ -28,7 +28,7 @@ export function weaponDamageMenuOptions(actions, keys, critical = false, scope =
     attackKeys.add(key)
     includeAttackKey(actions.find(action => action.key === key)?.requires_damage_key)
   }
-  for (const action of actions) if (action.attack_mode === 'thrown') includeAttackKey(action.key)
+  for (const action of actions) if (action.attack_mode === 'thrown' || action.target_choice) includeAttackKey(action.key)
   return actions.filter(action => scope !== 'attack' || attackKeys.has(action.key)).map(action => {
     const raw = original.find(row => row.key === action.key)
     const maxUnits = scope === 'damage' ? damageUnitsMax(raw) : 0

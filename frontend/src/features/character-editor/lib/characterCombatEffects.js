@@ -1,3 +1,4 @@
+import { selectedTargetDamageRules } from './selectedTarget'
 import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
 import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
@@ -32,7 +33,7 @@ export function collectCharacterCombatEffects(values, itemsById) {
     rollTriggers: abilityRows(values, itemsById, 'roll_triggers'),
     rollAdjustments: abilityRows(values, itemsById, 'roll_adjustments'),
     criticalDamage: abilityRows(values, itemsById, 'critical_damage'),
-    weaponDamage: abilityRows(values, itemsById, 'weapon_damage'),
+    weaponDamage: [...abilityRows(values, itemsById, 'weapon_damage'), ...selectedTargetDamageRules(values, itemsById)],
   }
 }
 
@@ -73,5 +74,5 @@ export function matchingWeaponDamageActions(effects, context = {}) {
   return (effects?.weaponDamage || [])
     .filter(rule => (!rule.weapon_uid || rule.weapon_uid === context.weaponUid) && weaponKindMatches(rule, context))
     .map(rule => ({ ...rule, dice_count: weaponDamageDiceCount(rule, rule.owner_level) }))
-    .filter(rule => rule.dice_count > 0 && String(rule.dice || '').trim())
+    .filter(rule => rule.target_choice || (rule.dice_count > 0 && String(rule.dice || '').trim()))
 }

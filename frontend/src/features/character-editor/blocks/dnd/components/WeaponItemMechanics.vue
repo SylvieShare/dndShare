@@ -1,5 +1,5 @@
 <template>
-  <div v-if="entry.params?.magic?.bonus_transfer || entry.params?.magic?.weapon_use?.status === 'active' || resources.length || hasEffects || entry.params?.magic?.last_charge_check" class="weapon-item-mechanics" @click.stop @pointerdown.stop>
+  <div v-if="ctx.item(entry)?.data?.selected_target || entry.params?.magic?.bonus_transfer || entry.params?.magic?.weapon_use?.status === 'active' || resources.length || hasEffects || entry.params?.magic?.last_charge_check" class="weapon-item-mechanics" @click.stop @pointerdown.stop>
     <div v-for="resource in resources" :key="resource.key" class="weapon-resource">
       <span>{{ resource.source?.resourceKey ? resource.title : 'Заряды' }}</span>
       <div class="weapon-resource-pips" role="group" :aria-label="`${resource.title}: ${resource.value} из ${resource.total}`">
@@ -10,6 +10,7 @@
       </div>
       <ResourceRestIcons :resource="resource" />
     </div>
+    <SelectedTargetPanel :uid="entry.uid" />
     <WeaponBonusTransferPanel v-if="entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
     <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
@@ -17,6 +18,7 @@
   </div>
 </template>
 <script setup>
+import SelectedTargetPanel from './SelectedTargetPanel.vue'
 import WeaponBonusTransferPanel from './WeaponBonusTransferPanel.vue'
 import WeaponUsePanel from './WeaponUsePanel.vue'
 import ItemLastChargeCheck from './ItemLastChargeCheck.vue'

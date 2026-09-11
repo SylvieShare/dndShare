@@ -150,7 +150,7 @@ async function applyLong(recovery) {
 
 function applyDawn(result) {
   emitPatch(result.patch)
-  charCtx.logSessionEvent?.({ type: 'rest_completed', action: 'Рассвет', data: { kind: 'dawn', resourcesRecovered: result.results.map(row => row.title), recovery: result.results } })
+  charCtx.logSessionEvent?.({ type: 'rest_completed', action: 'Рассвет', data: { kind: 'dawn', resourcesRecovered: result.results.map(row => row.title), recovery: result.results, selectedTargets: result.targets || [] } })
 }
 
 function recoveredResourceNames(before, after) {

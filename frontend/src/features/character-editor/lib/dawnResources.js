@@ -1,3 +1,4 @@
+import { advanceSelectedTargets } from './selectedTarget'
 import { rollDiceExpression } from '@/shared/lib/dice'
 import { FEATURE_VALUE_IDS } from './characterMagicItems'
 import { createAbilityResourceSource } from './characterResources'
@@ -38,5 +39,7 @@ export function restoreDawnResources(values, itemsById, roll = rollDiceExpressio
     Object.assign(patch, update); next = { ...next, ...update }
     results.push({ key: resource.key, title: resource.title, before: resource.value, after: available, total: resource.total, formula, rolled })
   }
-  return { patch, results, error: '' }
+  const targets = advanceSelectedTargets(next, itemsById)
+  Object.assign(patch, targets.patch)
+  return { patch, results, targets: targets.results, error: '' }
 }

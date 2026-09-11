@@ -47,6 +47,7 @@
         </span>
       </span>
     </div>
+    <SelectedTargetPanel :uid="entry.uid" />
     <WeaponBonusTransferPanel v-if="entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
     <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
@@ -108,6 +109,7 @@
 </template>
 
 <script setup>
+import SelectedTargetPanel from './SelectedTargetPanel.vue'
 import WeaponBonusTransferPanel from './WeaponBonusTransferPanel.vue'
 import WeaponUsePanel from './WeaponUsePanel.vue'
 import ItemLastChargeCheck from './ItemLastChargeCheck.vue'

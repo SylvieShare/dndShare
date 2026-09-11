@@ -28,6 +28,7 @@
           <AbilityProgressionEditor v-else-if="card.key === 'progression'" :data="data" />
           <AbilityWeaponDamageEditor v-else-if="card.key === 'weapon_damage'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <WeaponUseEditor v-else-if="card.key === 'weapon_uses'" :data="data.weapon_uses[card.index]" :fields="card.block.fields[0].fields" />
+          <SelectedTargetEditor v-else-if="card.key === 'selected_target'" :data="data.selected_target" :fields="card.block.fields[0].fields" />
           <WeaponBonusTransferEditor v-else-if="card.key === 'weapon_bonus_transfer'" :data="data.weapon_bonus_transfer" />
           <ItemLastChargeEditor v-else-if="card.key === 'last_charge'" :data="data.last_charge" />
           <AbilityStatusEffectEditor v-else-if="card.key === 'status_effects'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
@@ -52,6 +53,7 @@
 </template>
 
 <script setup>
+import SelectedTargetEditor from './SelectedTargetEditor.vue'
 import WeaponBonusTransferEditor from './WeaponBonusTransferEditor.vue'
 import WeaponUseEditor from './WeaponUseEditor.vue'
 import ItemLastChargeEditor from './ItemLastChargeEditor.vue'
