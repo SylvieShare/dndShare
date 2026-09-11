@@ -33,7 +33,11 @@ export const useTutorialsStore = defineStore('tutorials', {
       const entry = { ...context, status }
       await fetchPut('/account/tutorials', entry)
       if (this.userId !== userId) return
-      this.entries = [...this.entries.filter(row => tutorialKey(row) !== tutorialKey(entry)), entry]
+      const previous = this.entries.find(row => tutorialKey(row) === tutorialKey(entry))
+      // Match the server: an older tab or a skipped replay cannot undo completion.
+      const preserve = previous && (previous.revision > entry.revision
+        || (previous.revision === entry.revision && previous.status === 'completed'))
+      this.entries = [...this.entries.filter(row => tutorialKey(row) !== tutorialKey(entry)), preserve ? previous : entry]
     },
     async reset(context) {
       const userId = this.userId

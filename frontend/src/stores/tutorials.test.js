@@ -31,7 +31,14 @@ describe('tutorial account preferences', () => {
     await expect(store.save(entry, 'completed')).rejects.toThrow('offline')
     expect(store.entries).toEqual([])
   })
-  it('clears progress when a different user signs in', async () => {
+  it('preserves completed progress when a replay is skipped or an old tab finishes', async () => {
+    const store = useTutorialsStore(); await store.ensure()
+    await store.save({ ...entry, revision: 2 }, 'completed')
+    await store.save({ ...entry, revision: 2 }, 'dismissed')
+    await store.save(entry, 'completed')
+    expect(store.entries).toEqual([{ ...entry, revision: 2, status: 'completed' }])
+  })
+  it('clears progress when a different user signs in' , async () => {
     const store = useTutorialsStore(); await store.ensure(); await store.save(entry, 'completed')
     useAccountStore().user.id = 2
     await store.ensure()
