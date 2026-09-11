@@ -126,6 +126,50 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	if fishDescription != "<p>Авторская правка</p>" {
 		t.Fatal("author's prose overwritten")
 	}
+	// The follow-up copy migration restores prose and only moves explicit conditions.
+	var copies []struct {
+		ID           int64    `json:"id"`
+		Key          string   `json:"key"`
+		Before       string   `json:"before"`
+		Description  string   `json:"description"`
+		Requirements []string `json:"requirements"`
+	}
+	if err := json.Unmarshal([]byte(strings.Split(schemaActionDescriptionConditionsSQL, "$action_copy$")[1]), &copies); err != nil {
+		t.Fatal(err)
+	}
+	for _, copy := range copies {
+		if copy.ID == 178 {
+			continue
+		} // Keep the author-edited trident as a preservation check.
+		action, _ := json.Marshal(map[string]any{"key": copy.Key, "description": copy.Before, "requirements": []string{"Авторское условие"}, "resource_cost": 2})
+		exec(`INSERT INTO dndshare.item(id,type_id,data) VALUES($1,19,jsonb_build_object('feature_actions',jsonb_build_array($2::jsonb)))
+		 ON CONFLICT(id) DO UPDATE SET data=jsonb_set(dndshare.item.data,'{feature_actions}',(dndshare.item.data->'feature_actions') || jsonb_build_array($2::jsonb))`, copy.ID, action)
+	}
+	exec(schemaActionDescriptionConditionsSQL)
+	exec(schemaActionDescriptionConditionsSQL)
+	for _, copy := range copies {
+		var action struct {
+			Description  string
+			Requirements []string
+			ResourceCost int `json:"resource_cost"`
+		}
+		var raw []byte
+		if err := pool.QueryRow(ctx, `SELECT a FROM dndshare.item i, jsonb_array_elements(i.data->'feature_actions') a WHERE i.id=$1 AND a->>'key'=$2`, copy.ID, copy.Key).Scan(&raw); err != nil {
+			t.Fatal(err)
+		}
+		if err := json.Unmarshal(raw, &action); err != nil {
+			t.Fatal(err)
+		}
+		if copy.ID == 178 {
+			if action.Description != "<p>Авторская правка</p>" {
+				t.Fatal("authored description overwritten by copy correction")
+			}
+			continue
+		}
+		if action.Description != copy.Description || action.ResourceCost != 2 || !reflect.DeepEqual(action.Requirements, append([]string{"Авторское условие"}, copy.Requirements...)) {
+			t.Fatalf("incorrect prose/conditions for %d/%s: %+v", copy.ID, copy.Key, action)
+		}
+	}
 	var dawnMode, dawnFormula string
 	if err = pool.QueryRow(ctx, `SELECT data#>>'{dawn_recovery,mode}',data#>>'{dawn_recovery,formula}' FROM dndshare.item WHERE id=86`).Scan(&dawnMode, &dawnFormula); err != nil {
 		t.Fatal(err)

@@ -8,8 +8,10 @@ const editorSource = readFileSync(fileURLToPath(new URL('./components/DndActions
 const resourcesSource = readFileSync(fileURLToPath(new URL('../generic/BlockResources.vue', import.meta.url)), 'utf8')
 
 describe('character action block', () => {
-  it('shares readable, deduplicated theses with feature widgets', () => {
-    expect(viewSource).toContain('<MechanicTheses :html="action.description" :lines="action.requirements"')
+  it('keeps the action description as prose and shares only requirement theses with widgets', () => {
+    expect(viewSource).toContain('<DndRichContent v-if="action.description" class="dav-description" :html="action.description"')
+    expect(viewSource).toContain('<MechanicTheses :lines="action.requirements"')
+    expect(viewSource).not.toContain('<MechanicTheses :html="action.description"')
     expect(viewSource).not.toContain('class="dav-requirements"')
     expect(viewSource).toMatch(/\.dav-title-row strong \{[^}]*font-size: 13px/)
   })

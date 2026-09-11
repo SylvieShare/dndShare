@@ -19,11 +19,10 @@ it('does not merge visually similar rich rows with different dice payloads', () 
   expect(mechanicTheses('<p><span data-dice="1d6"></span></p>')).toHaveLength(1)
 })
 
-it('presents edited plain paragraphs as separate theses without rewriting saved content', () => {
+it('keeps a supplied paragraph intact instead of guessing separate rules', () => {
   const html = '<p>Потратьте 1 заряд трезубца, чтобы наложить «Доминирование над зверем» со Сл спасброска 15. Примените остальные условия заклинания.</p>'
   expect(mechanicTheses(html, ['Зверь с врождённой скоростью плавания'])).toEqual([
-    { html: 'Потратьте 1 заряд трезубца, чтобы наложить «Доминирование над зверем» со Сл спасброска 15.' },
-    { html: 'Примените остальные условия заклинания.' },
+    { html: 'Потратьте 1 заряд трезубца, чтобы наложить «Доминирование над зверем» со Сл спасброска 15. Примените остальные условия заклинания.' },
     { text: 'Зверь с врождённой скоростью плавания' },
   ])
 })
