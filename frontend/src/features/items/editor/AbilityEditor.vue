@@ -27,6 +27,7 @@
           <AbilityDependencyEditor v-else-if="dependencyManifest[card.key]" :kind="card.key" :fields="card.block.fields[0].fields" :data="data[card.key][card.index]" />
           <AbilityProgressionEditor v-else-if="card.key === 'progression'" :data="data" />
           <AbilityWeaponDamageEditor v-else-if="card.key === 'weapon_damage'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
+          <WeaponUseEditor v-else-if="card.key === 'weapon_uses'" :data="data.weapon_uses[card.index]" :fields="card.block.fields[0].fields" />
           <ItemLastChargeEditor v-else-if="card.key === 'last_charge'" :data="data.last_charge" />
           <AbilityStatusEffectEditor v-else-if="card.key === 'status_effects'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
           <AbilityMechanicEditor v-else-if="['sheet_widgets', 'usage'].includes(card.key)" :kind="card.key" :data="card.index == null ? data[card.key] : data[card.key][card.index]" :fields="card.block.fields[0].fields" />
@@ -50,6 +51,7 @@
 </template>
 
 <script setup>
+import WeaponUseEditor from './WeaponUseEditor.vue'
 import ItemLastChargeEditor from './ItemLastChargeEditor.vue'
 import MagicItemProperties from './MagicItemProperties.vue'
 import { computed, ref } from 'vue'

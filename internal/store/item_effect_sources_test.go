@@ -67,7 +67,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 		}
 		var beforeDawn []map[string]any
 		for _, field := range fields {
-			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" {
+			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" || field["key"] == "weapon_uses" {
 				continue
 			}
 			if field["key"] == "use_resources" {
@@ -103,6 +103,17 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	exec(schemaWeaponDamageUnitsSQL)
 	exec(schemaItemLastChargeSQL)
 	exec(schemaItemLastChargeSQL)
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(284,'Метательное копьё молнии',19,'{"max_use":1,"weapon_uses":[{"key":"authored"}]}')`)
+	exec(schemaWeaponUsesSQL)
+	exec(schemaWeaponUsesSQL)
+	var javelinUses []byte
+	if err := pool.QueryRow(ctx, `SELECT data->'weapon_uses' FROM dndshare.item WHERE id=284`).Scan(&javelinUses); err != nil {
+		t.Fatal(err)
+	}
+	var uses []map[string]any
+	if err := json.Unmarshal(javelinUses, &uses); err != nil || len(uses) != 2 || uses[0]["key"] != "authored" || uses[1]["resource_cost"] != float64(1) || uses[1]["range_ft"] != float64(120) {
+		t.Fatalf("incorrect javelin use: %s", javelinUses)
+	}
 	var lastCharge []byte
 	if err := pool.QueryRow(ctx, `SELECT data->'last_charge' FROM dndshare.item WHERE id=189`).Scan(&lastCharge); err != nil {
 		t.Fatal(err)

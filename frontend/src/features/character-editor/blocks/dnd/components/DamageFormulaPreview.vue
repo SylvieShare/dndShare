@@ -1,6 +1,6 @@
 <template>
   <BaseTile v-if="expression" class="damage-preview" aria-label="Итоговая формула урона">
-    <small>Итоговый урон</small>
+    <small v-if="label">{{ label }}</small>
     <div class="damage-preview-formula">
       <template v-for="(group, index) in groups" :key="index">
         <span v-if="index" aria-hidden="true">+</span>
@@ -15,7 +15,7 @@ import { computed } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { parseDiceExpression } from '@/shared/lib/dice'
 import DamageDice from './DamageDice.vue'
-const props = defineProps({ expression: { type: String, default: '' } })
+const props = defineProps({ expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
 const groups = computed(() => {
   const result = new Map()
   for (const token of parseDiceExpression(props.expression)) {

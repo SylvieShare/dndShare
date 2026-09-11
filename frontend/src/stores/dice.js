@@ -167,7 +167,9 @@ export const useDiceStore = defineStore('dice', () => {
     if (!entry || key !== 'reroll' || !entry.rerollSpec) return null
     const spec = entry.rerollSpec
     dismiss(id)
-    return rollD20(spec.action, spec.bonus, spec.mode, spec.opts)
+    const result = rollD20(spec.action, spec.bonus, spec.mode, spec.opts)
+    spec.opts.onReroll?.(result)
+    return result
   }
 
   function clear() {

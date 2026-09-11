@@ -47,6 +47,7 @@
         </span>
       </span>
     </div>
+    <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
   </template>
 
@@ -106,6 +107,7 @@
 </template>
 
 <script setup>
+import WeaponUsePanel from './WeaponUsePanel.vue'
 import ItemLastChargeCheck from './ItemLastChargeCheck.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { inject, toRefs } from 'vue'

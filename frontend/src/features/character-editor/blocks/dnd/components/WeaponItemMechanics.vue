@@ -1,5 +1,5 @@
 <template>
-  <div v-if="resources.length || hasEffects || entry.params?.magic?.last_charge_check" class="weapon-item-mechanics" @click.stop @pointerdown.stop>
+  <div v-if="entry.params?.magic?.weapon_use?.status === 'active' || resources.length || hasEffects || entry.params?.magic?.last_charge_check" class="weapon-item-mechanics" @click.stop @pointerdown.stop>
     <div v-for="resource in resources" :key="resource.key" class="weapon-resource">
       <span>{{ resource.source?.resourceKey ? resource.title : 'Заряды' }}</span>
       <div class="weapon-resource-pips" role="group" :aria-label="`${resource.title}: ${resource.value} из ${resource.total}`">
@@ -10,11 +10,13 @@
       </div>
       <ResourceRestIcons :resource="resource" />
     </div>
+    <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
     <ItemEffectLinks v-if="hasEffects" :item="source" />
   </div>
 </template>
 <script setup>
+import WeaponUsePanel from './WeaponUsePanel.vue'
 import ItemLastChargeCheck from './ItemLastChargeCheck.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import { computed, inject } from 'vue'

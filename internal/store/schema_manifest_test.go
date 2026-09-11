@@ -2,6 +2,7 @@ package store
 
 import (
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -21,14 +22,23 @@ func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
 	}
 	sort.Strings(files)
 
-	source, err := os.ReadFile("schema.go")
+	sources, err := filepath.Glob("schema*.go")
 	if err != nil {
 		t.Fatal(err)
 	}
-	matches := regexp.MustCompile(`//go:embed schema/([^\s]+\.sql)`).FindAllStringSubmatch(string(source), -1)
+	pattern := regexp.MustCompile(`//go:embed schema/([^\s]+\.sql)`)
 	var embedded []string
-	for _, match := range matches {
-		embedded = append(embedded, match[1])
+	for _, name := range sources {
+		if strings.HasSuffix(name, "_test.go") {
+			continue
+		}
+		source, err := os.ReadFile(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, match := range pattern.FindAllStringSubmatch(string(source), -1) {
+			embedded = append(embedded, match[1])
+		}
 	}
 	sort.Strings(embedded)
 

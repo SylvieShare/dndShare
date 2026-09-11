@@ -1,6 +1,7 @@
 <template>
   <div class="weapons-block">
     <p v-if="loadError" role="alert">{{ loadError }} <ActionButton variant="secondary" @click="reload">Повторить</ActionButton></p>
+    <p v-if="weaponUses.error.value" role="alert">{{ weaponUses.error.value }}</p>
     <p v-if="weaponMechanics.error.value" role="alert">{{ weaponMechanics.error.value }}</p>
     <div v-if="armorAttackWarning" class="w-armor-warning">
       Атаки Силой и Ловкостью совершаются с помехой: нет владения {{ armorState.nonproficient.map(row => `«${row.name}»`).join(', ') }}.
@@ -151,6 +152,7 @@ import {
   appendInventoryEntry,
   weaponEntryToOwnedEntry,
 } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
+import { useWeaponUses } from './composables/useWeaponUses'
 import { damageAmountActions } from '@/shared/lib/weaponDamageAmounts'
 import { selectedWeaponDamageExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
 import { selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
@@ -306,13 +308,21 @@ const improvisedPresetItem = computed(() => itemMap.value[PRESET_ATTACK_ART_ITEM
 
 const dice = useDiceStore()
 
-function rollAttack(entry, { actionKeys = [] } = {}) {
+const weaponUses = useWeaponUses(charCtx, { title: itemTitle, attack: rollPreparedAttack, prepare(entry, rule) {
+  const prepared = { ...entry, _attackMode: rule.attack_mode, _improvisedThrow: false }
+  return { entry: prepared, expression: damageExpression(prepared), critical_expression: criticalDamageExpression(prepared, extraCriticalDice(prepared)), critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(weaponEffectContext(prepared)) || 20 }
+} })
+function rollAttack(entry, { actionKeys = [], weaponUseKey = '' } = {}) {
+  if (weaponUseKey) return weaponUses.start(entry, weaponUseKey)
   entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
+  return rollPreparedAttack(entry, `Атака: ${itemTitle(entry)}`)
+}
+function rollPreparedAttack(entry, title, log = true, onReroll) {
   const bonus = attackBonus(entry)
   const context = weaponEffectContext(entry)
   const resolved = charCtx.characterRolls?.resolve?.('auto', context)
   const mode = resolved?.mode || (armorAttackWarning.value && ['1', '2'].includes(String(context.abilitySuggestId)) ? 'disadvantage' : 'normal')
-  dice.rollD20(`Атака: ${itemTitle(entry)}`, bonus, mode, {
+  return dice.rollD20(title, bonus, mode, { log, onReroll,
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
@@ -541,6 +551,7 @@ provide('weaponsBlockCtx', reactive({
   twoHandedParts,
   hasWeaponDamage,
   weaponDamageActions,
+  weaponUses: weaponUses.choices,
   weaponResources: weaponMechanics.weaponResources,
   toggleWeaponResource: weaponMechanics.toggleResource,
   rollAttack,

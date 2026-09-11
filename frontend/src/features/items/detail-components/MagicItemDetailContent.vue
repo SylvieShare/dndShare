@@ -6,6 +6,7 @@
       <MagicEquipmentBases :item="item" :kind="kind" />
     </DetailSection>
     <MagicEquipmentAdditions v-for="kind in kinds" :key="`${kind}-additions`" :item="item" :kind="kind" />
+    <WeaponUseSummary :uses="data.weapon_uses" :data="data" />
     <DetailSection v-if="data.status_effects?.length" label="Накладываемые эффекты"><ItemEffectLinks :item="item" :z-index="nestedViewZIndex" /></DetailSection>
     <ItemTreasureSummary v-if="!selectedBases.length" :treasure="data.treasure" />
     <p v-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="hydrate">Повторить</ActionButton></p>
@@ -15,6 +16,7 @@
   </div>
 </template>
 <script setup>
+import WeaponUseSummary from './WeaponUseSummary.vue'
 import ItemEffectLinks from '@/features/items/components/ItemEffectLinks.vue'
 import { computed, ref, watch } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
@@ -35,7 +37,7 @@ const selectedBases = computed(() => selectedMagicBases(props.item, props.instan
 const kinds = computed(() => magicEquipmentKinds(props.item))
 // Each remaining schema field is rendered, including newly added mechanics. These
 // fields already have a dedicated presentation in the cover, body or base list.
-const dedicated = new Set(['dawn_recovery', 'status_effects', 'desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color', 'treasure'])
+const dedicated = new Set(['weapon_uses', 'dawn_recovery', 'status_effects', 'desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color', 'treasure'])
 const details = computed(() => (props.type?.fields || []).filter(f => !dedicated.has(f.key) && !(f.key === 'last_charge' && kinds.value.length) && !(f.key === 'weapon_damage' && data.value.weapon) && present(data.value[f.key])))
 function present(v) { return v != null && v !== '' && v !== false && (!Array.isArray(v) || v.length > 0) && (typeof v !== 'object' || Object.keys(v).length > 0) }
 const suggest = useSuggestStore(), references = ref({}), error = ref(''), labels = ref({})
