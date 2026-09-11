@@ -17,7 +17,7 @@ import {
 import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
 import { choicesForEntry } from '@/features/items/lib/itemChoices'
-import { hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
+import { appendHpHistory, hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { applyLevelUpSpellSelection } from '@/features/character-editor/blocks/dnd/lib/levelUpSpellSelection'
 import { emptySpellbook, mergeComputedSlotPools } from '@/features/character-editor/blocks/dnd/lib/spellbook'
 
@@ -71,7 +71,12 @@ export function buildLevelUpUpdates({
   })
   if (addedAbilities.length) updates.abilities_class = [...currentAbilities, ...addedAbilities]
 
-  const hp = { ...(values.hp || {}) }
+  const leveledClass = entriesAfter.find((entry) => String(entry.id) === String(classItem?.id))
+  const hp = appendHpHistory(values.hp || {}, {
+    kind: 'level', level: newTotal, classId: classItem?.id,
+    className: leveledClass?.name || classItem?.name || 'Класс',
+    classLevel: leveledClass?.level, gain: hpGain,
+  })
   const maximum = normalizeHpMaximum(hp.max)
   hp.max = { ...maximum, base: maximum.base + hpGain }
   hp.current = Math.min(hpMaximum(hp), (Number(hp.current) || 0) + hpGain)

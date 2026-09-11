@@ -19,11 +19,22 @@ export function hpMaximum(value) {
 
 export function withHpBase(hp, base) {
   const maximum = normalizeHpMaximum(hp?.max)
-  return { ...hp, max: { ...maximum, base: Math.max(0, int(base)) } }
+  const next = Math.max(0, int(base))
+  const recorded = next === maximum.base ? hp : appendHpHistory(hp, { kind: 'manual', gain: next - maximum.base })
+  return { ...recorded, max: { ...maximum, base: next } }
+}
+
+/** Preserve only recorded gains; never infer past rolls from today's classes. */
+export function appendHpHistory(hp, entry) {
+  const history = Array.isArray(hp?.history) ? [...hp.history] : []
+  const recorded = history.reduce((sum, row) => sum + int(row.gain), 0)
+  const remainder = normalizeHpMaximum(hp?.max).base - recorded
+  if (remainder) history.push({ kind: 'untracked', gain: remainder })
+  history.push(entry)
+  return { ...hp, history }
 }
 
 export function withHpBonuses(hp, bonuses) {
   const maximum = normalizeHpMaximum(hp?.max)
   return { ...hp, max: { ...maximum, bonuses: Array.isArray(bonuses) ? bonuses : [] } }
 }
-

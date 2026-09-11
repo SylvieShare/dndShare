@@ -2,6 +2,24 @@ import { describe, expect, it } from 'vitest'
 
 import { buildLevelUpUpdates } from './buildLevelUpUpdates'
 
+it('records the gained class level without losing the existing HP history', () => {
+  const history = [{ kind: 'level', level: 1, classId: 1, className: 'Воин', classLevel: 1, gain: 12 }]
+  const updates = buildLevelUpUpdates({
+    values: { hp: { max: { base: 12, bonuses: [{ name: 'Дар', value: 2 }] }, current: 10, history } },
+    newTotal: 2, entriesAfter: [{ id: 1, name: 'Воин', level: 1 }, { id: 2, name: 'Волшебник', level: 1 }],
+    classItem: { id: 2, name: 'Волшебник' }, isMulticlass: true,
+    features: [], itemsById: { 1: { die: 'd10' }, 2: { die: 'd6' } },
+    hitDieLabelOf: (item) => item.die, hitDieLabel: 'd6', hpGain: 6,
+    featureChoiceSelections: {}, grantedNewIds: [],
+  })
+  expect(updates.hp.history).toEqual([...history, {
+    kind: 'level', level: 2, classId: 2, className: 'Волшебник', classLevel: 1, gain: 6,
+  }])
+  expect(updates.hp.max).toEqual({ base: 18, bonuses: [{ name: 'Дар', value: 2 }] })
+  expect(updates.hp.current).toBe(16)
+  expect(history).toHaveLength(1)
+})
+
 describe('buildLevelUpUpdates granted spells', () => {
   it('unlocks a leveled racial spell with its own casting ability', () => {
     const drowMagic = {

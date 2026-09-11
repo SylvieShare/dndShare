@@ -117,8 +117,20 @@ morph from the clicked tile. The editor keeps the source tile width instead of
 falling back to the narrow no-origin panel width. Its desktop face places the
 heart and current/maximum/temporary numbers to the left of the health bar; it
 does not render a textual health category or hit-die availability. Maximum HP is stored as
-`max {base,bonuses}`: the editor separates its base, read-only racial and other
-ability contributions, and editable manual bonuses. Healing, rests, level-up,
+`max {base,bonuses}`. Below the calculator, the editor shows a maximum summary
+with base and bonus totals, compact read-only ability contributions, and hit-die
+pools with their type, remaining count and spend/restore controls. Single-class
+and multiclass characters use the same pool layout; there is no die-type picker.
+Base editing and manual bonuses live under **Настройка хитов**.
+Hovering, focusing or tapping **Максимум хитов** opens a scrollable history with
+class name, class level, total character level and HP gained. Character creation
+records level 1; subsequent level-ups append their actual accepted HP gains.
+Manual base edits append signed corrections. Existing unrecorded base is shown
+as **База без истории**; past rolls and class order are never reconstructed.
+Current ability and manual bonuses are listed separately in the history and
+included in its total. The history uses `share-ui/BasePopover` above the morph
+layer because it must support scrolling and touch, unlike the non-interactive
+`ItemTooltip`. Healing, rests, level-up,
 print and encounter projections use the resolved total; encounter writes never
 overwrite the maximum's source structure.
 The desktop effect summary sits inside the shared icon/name/HP `BaseTile`,
@@ -196,7 +208,10 @@ The current shape under `data.values` is:
 - numeric tile with bonuses: `speed {base,bonuses}` and `initiative
   {base,bonuses,use_dex}`;
 - HP: `{current,max:{base,bonuses},temp,ds_success,ds_failure,
-  hitDice:[{die,total,used}]}`; legacy numeric `max` remains read-compatible;
+  hitDice:[{die,total,used}],history?:[{kind,gain,level?,classId?,className?,classLevel?}]}`;
+  history kinds are `level`, `manual` and `untracked`. History is an audit of base
+  contributions; current bonuses remain in `max.bonuses`. Missing history means
+  no recorded breakdown. Legacy numeric `max` remains read-compatible;
 - spellbook: `{schema_version:2,slots_auto,slot_pools,tabs,grants}`. Each tab is
   `{key,name,class_item_id,casting_ability,mode,save_bonus,attack_bonus,spells}`;
   each editable spell is `{key,id,prepared}`. `class_item_id` is unique among

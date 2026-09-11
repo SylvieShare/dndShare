@@ -93,6 +93,7 @@ describe('buildCharacterData hit dice', () => {
       max: { base: 8, bonuses: [] },
       current: 8,
       hitDice: [{ die: 'd6', total: 1, used: 0 }],
+      history: [{ kind: 'level', level: 1, classId: 2, className: 'Волшебник', classLevel: 1, gain: 8 }],
     })
   })
 })

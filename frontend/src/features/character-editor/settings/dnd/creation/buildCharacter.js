@@ -172,6 +172,10 @@ export function buildCharacterData(input) {
   if (values.hp) {
     const hp = normalizeHpMaximum(values.hp.max).base + mod(finalScore.CON)
     values.hp = { ...values.hp, max: { base: hp, bonuses: [] }, current: hp }
+    if (charClass) values.hp.history = [{
+      kind: 'level', level: 1, classId: charClass.id,
+      className: ref(charClass).name, classLevel: 1, gain: hp,
+    }]
   }
 
   // Skill proficiencies (class skill_choice + race skill choice + background fixed).
