@@ -17,5 +17,7 @@ describe('resolveRollMode', () => {
     expect(resolveRollMode('auto', [{ mode: 'advantage' }]).mode).toBe('advantage')
     expect(resolveRollMode('auto', [{ mode: 'disadvantage' }]).mode).toBe('disadvantage')
     expect(resolveRollMode('normal', [{ mode: 'disadvantage' }]).mode).toBe('normal')
+    expect(resolveRollMode('advantage', [{ mode: 'disadvantage' }]).mode).toBe('advantage')
+    expect(resolveRollMode('disadvantage', [{ mode: 'advantage' }]).mode).toBe('disadvantage')
   })
 })

@@ -33,8 +33,7 @@
     </template>
 
     <template #default="{ close }">
-      <RowActionItem action="attack" @click="run(close, 'attack')">Бросок на атаку</RowActionItem>
-      <DamageRollOptions @roll="options => run(close, options.critical ? 'critical' : 'damage')" />
+      <DamageRollOptions can-attack @attack="options => run(close, 'attack', options)" @roll="options => run(close, options.critical ? 'critical' : 'damage')" />
     </template>
   </RowActionMenu>
 </template>
@@ -42,7 +41,6 @@
 <script setup>
 import { computed } from 'vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
-import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import DamageRollOptions from './DamageRollOptions.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
@@ -61,9 +59,9 @@ const props = defineProps({
 
 const emit = defineEmits(['attack', 'damage', 'critical'])
 
-function run(close, action) {
+function run(close, action, options) {
   close()
-  emit(action)
+  emit(action, options)
 }
 
 function formatBonus(value) {

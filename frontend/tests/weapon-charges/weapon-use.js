@@ -1,6 +1,10 @@
+import '@sylvieshare/share-ui/styles.css'
+import '../../src/app/theme.css'
 import { createApp, h, reactive, computed } from 'vue'
 import { createPinia } from 'pinia'
 import { RowActionMenu } from '@sylvieshare/share-ui'
+import PresetAttackCard from '../../src/features/character-editor/blocks/dnd/components/PresetAttackCard.vue'
+import { resolveRollMode } from '../../src/features/character-editor/blocks/dnd/lib/rollMode'
 import DamageRollOptions from '../../src/features/character-editor/blocks/dnd/components/DamageRollOptions.vue'
 import { useWeaponDamageRolls } from '../../src/features/character-editor/blocks/dnd/composables/useWeaponDamageRolls'
 import { weaponUseDamageActions } from '../../src/features/character-editor/lib/weaponUseDamage'
@@ -15,7 +19,7 @@ const rule = JSON.parse(sql.split('$lightning_throw$')[1]), field = JSON.parse(s
 const pinia = createPinia(), dice = useDiceStore(pinia), suggest = useSuggestStore(pinia)
 suggest.set(12, [{ id: 9, value: 'Молния', color: '#ff0' }]); suggest.set(16, [{ id: 2, value: 'Ловкость' }])
 window.damageRolls = []; window.attacks = 0; window.natural = 10
-window.damage = 15; window.logged = []
+window.damage = 15; window.logged = []; window.attackResults = []; window.attackEffects = []
 dice.roll = (title, expression) => { window.damageRolls.push(expression); return { total: window.damage, parts: [{ kind: 'dice', sides: 6, sign: '+', rolls: [2, 3, 4, 6], color: '#ff0' }] } }
 const item = { id: 284, typeId: 19, name: 'Метательное копьё молнии', data: { attunement: 'none', max_use: 1, weapon_uses: [rule] } }
 const ctx = reactive({ ownerMode: true,
@@ -26,10 +30,20 @@ const ctx = reactive({ ownerMode: true,
 })
 window.ctx = ctx
 const editorData = reactive(structuredClone(item.data)); window.editorData = editorData; window.editorError = ''
+function attack(entry, title, log, onReroll, mode = 'auto') {
+ window.attacks++
+ const random = Math.random, values = [...(window.testRolls || [window.natural, window.natural])]
+ try {
+  Math.random = () => ((values.shift() || window.natural) - 0.5) / 20
+  const result = dice.rollD20(title, 5, resolveRollMode(mode, window.attackEffects).mode, { log: false, onReroll })
+  window.attackResults.push(result)
+  return result
+ } finally { Math.random = random }
+}
 const app = createApp({ setup() {
  const use = useWeaponUses(ctx, { title: () => item.name,
   prepare: entry => ({ entry, expression: '1d6{Колющий}+3{Колющий}', critical_expression: '2d6{Колющий}+3{Колющий}', critical_threshold: 20 }),
-  attack() { window.attacks++; return { total: window.natural + 5, parts: [{ kind: 'dice', sides: 20, rolls: [window.natural] }] } },
+  attack,
  })
  const entry = computed(() => ctx.values.weapon[0])
  const damage = useWeaponDamageRolls(ctx, { item: () => item, itemTitle: () => item.name, propertyItems: () => [],
@@ -37,14 +51,15 @@ const app = createApp({ setup() {
    damageExpression: () => '1d6{Колющий}+3{Колющий}', criticalDamageExpression: () => '2d6{Колющий}+3{Колющий}',
    extraCriticalDice: () => 0, spend: () => true,
  })
- const editorMode = new URLSearchParams(location.search).has('editor')
+ const editorMode = new URLSearchParams(location.search).has('editor'), presetMode = new URLSearchParams(location.search).has('preset')
  return () => h('main', { style: 'max-width:600px;margin:8px' }, editorMode
   ? [h(WeaponUseEditor, { data: editorData.weapon_uses[0], fields: field.fields })]
+  : presetMode ? [h(PresetAttackCard, { title: 'Импровизированное оружие', attackBonus: 5, onAttack: options => attack(null, 'Атака', true, undefined, options.attackRollMode) })]
   : [entry.value && ctx.ownerMode && h(RowActionMenu, { title: item.name }, {
       trigger: () => h('button', 'Оружие'),
       default: ({ close }) => h(DamageRollOptions, { canAttack: true, uses: use.choices(entry.value), actions: weaponUseDamageActions(ctx.values, entry.value.uid),
         preview: options => damage.damagePreview(entry.value, options),
-        onAttack: options => { close(); options.weaponUseKey ? use.start(entry.value, options.weaponUseKey) : window.attacks++ },
+        onAttack: options => { close(); options.weaponUseKey ? use.start(entry.value, options.weaponUseKey, options.attackRollMode) : attack(entry.value, 'Атака', true, undefined, options.attackRollMode) },
         onRoll: options => { close(); damage.rollDamage(entry.value, options) },
       }),
     }), h(WeaponUsePanel, { uid: 'javelin' })])

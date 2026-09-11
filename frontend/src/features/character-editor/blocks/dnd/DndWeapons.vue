@@ -67,7 +67,7 @@
         damage-type="Дробящий"
         :icon-item="unarmedPresetItem"
         proficient
-        @attack="rollPresetAttack('unarmed')"
+        @attack="options => rollPresetAttack('unarmed', options)"
         @damage="rollPresetDamage('unarmed')"
         @critical="rollPresetDamage('unarmed', true)"
       />
@@ -78,7 +78,7 @@
         :damage-parts="improvisedDamageParts"
         :damage-modifier="strengthModifier + presetDamageBonus"
         :icon-item="improvisedPresetItem"
-        @attack="rollPresetAttack('improvised')"
+        @attack="options => rollPresetAttack('improvised', options)"
         @damage="rollPresetDamage('improvised')"
         @critical="rollPresetDamage('improvised', true)"
       />
@@ -156,6 +156,7 @@ import {
 import { useWeaponUses } from './composables/useWeaponUses'
 import { useWeaponDamageRolls } from './composables/useWeaponDamageRolls'
 import { weaponUseDamageActions } from '@/features/character-editor/lib/weaponUseDamage'
+import { resolveRollMode } from './lib/rollMode'
 import { prepareWeaponRollEntry, withWeaponThrowAction } from './lib/weaponThrow'
 import {
   improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
@@ -312,21 +313,25 @@ const weaponUses = useWeaponUses(charCtx, { title: itemTitle, attack: rollPrepar
   const prepared = { ...entry, _attackMode: rule.attack_mode, _improvisedThrow: false }
   return { entry: prepared, expression: damageExpression(prepared), critical_expression: criticalDamageExpression(prepared, extraCriticalDice(prepared)), critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(weaponEffectContext(prepared)) || 20 }
 } })
-function rollAttack(entry, { actionKeys = [], weaponUseKey = '' } = {}) {
-  if (weaponUseKey) return weaponUses.start(entry, weaponUseKey)
+function rollAttack(entry, { actionKeys = [], weaponUseKey = '', attackRollMode = 'auto' } = {}) {
+  if (weaponUseKey) return weaponUses.start(entry, weaponUseKey, attackRollMode)
   entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
-  return rollPreparedAttack(entry, `Атака: ${itemTitle(entry)}`)
+  return rollPreparedAttack(entry, `Атака: ${itemTitle(entry)}`, true, undefined, attackRollMode)
 }
-function rollPreparedAttack(entry, title, log = true, onReroll) {
+function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode = 'auto') {
   const bonus = attackBonus(entry)
   const context = weaponEffectContext(entry)
-  const resolved = charCtx.characterRolls?.resolve?.('auto', context)
-  const mode = resolved?.mode || (armorAttackWarning.value && ['1', '2'].includes(String(context.abilitySuggestId)) ? 'disadvantage' : 'normal')
+  const mode = attackMode(context, attackRollMode)
   return dice.rollD20(title, bonus, mode, { log, onReroll,
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
+}
+
+function attackMode(context, manualMode) {
+  return charCtx.characterRolls?.resolve?.(manualMode, context)?.mode || resolveRollMode(manualMode,
+    armorAttackWarning.value && ['1', '2'].includes(String(context.abilitySuggestId)) ? [{ mode: 'disadvantage' }] : []).mode
 }
 
 function presetAttackDefinition(kind) {
@@ -336,11 +341,10 @@ function presetAttackDefinition(kind) {
   return { title: 'Импровизированное оружие', attackBonus: improvisedAttackBonus.value }
 }
 
-function rollPresetAttack(kind) {
+function rollPresetAttack(kind, { attackRollMode = 'auto' } = {}) {
   const preset = presetAttackDefinition(kind)
   const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee' }
-  const resolved = charCtx.characterRolls?.resolve?.('auto', context)
-  const mode = resolved?.mode || (armorAttackWarning.value ? 'disadvantage' : 'normal')
+  const mode = attackMode(context, attackRollMode)
   dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
