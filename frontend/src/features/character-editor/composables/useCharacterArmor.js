@@ -1,16 +1,17 @@
 import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import { computed, watch } from 'vue'
 import { useSuggestStore } from '@/stores/suggest'
-import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
+import { inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
 import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 
 export function useCharacterArmor(values, characterResources, characterDerivedEffects = null) {
   const suggest = useSuggestStore()
-  const equippedIds = computed(() => normalizeValue(values.value?.items).equipped
-    .map(entry => entry.item_id)
+  const equipped = computed(() => inventoryEntries(values.value).filter(row => row.equipped).map(row => row.entry))
+  const equippedIds = computed(() => equipped.value
+    .map(entry => entry.magic_item_id ?? entry.item_id)
     .filter(id => id != null))
 
-  const baseIds = computed(() => normalizeValue(values.value?.items).equipped.map(entry => armorBaseId(characterResources.itemsById?.value?.get(String(entry.item_id)), entry)).filter(Boolean))
+  const baseIds = computed(() => equipped.value.map(entry => armorBaseId(characterResources.itemsById?.value?.get(String(entry.magic_item_id ?? entry.item_id)), entry)).filter(Boolean))
   watch(() => baseIds.value.join(','), () => characterResources.ensureItems(baseIds.value), { immediate: true })
 
   async function hydrate() {

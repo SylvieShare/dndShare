@@ -5,11 +5,12 @@ import {
 } from './weaponEntry'
 import { cloneModel, EQUIPPED_ID, makeEntryUid, normalizeValue } from './itemSection'
 
-const WEAPON_STATE_KEY = '_weapon_state'
+import { ownedWeaponFields } from './ownedWeaponFields'
 
 export function cloneOwnedEntry(entry) {
   return {
-    uid: entry.uid,
+    ...ownedWeaponFields(entry),
+    uid: entry.uid || makeEntryUid(),
     item_id: entry.item_id ?? null,
     count: Math.max(1, Number(entry.count) || 1),
     params: { ...(entry.params || {}) },
@@ -45,34 +46,16 @@ export function appendOwnedEntry(value, entry) {
 }
 
 export function weaponEntryToOwnedEntry(entry) {
-  return {
-    uid: makeEntryUid(),
-    item_id: entry.item_id ?? null,
-    count: 1,
-    params: {
-      ...(entry.params || {}),
-      [WEAPON_STATE_KEY]: {
-        stat_suggest_id: entry.stat_suggest_id ?? null,
-        proficient: !!entry.proficient,
-        add_attacks: normalizeAddAttacks(entry.add_attacks),
-        desc: entry.desc || '',
-      },
-    },
-    override: null,
-  }
+  return cloneOwnedEntry({ ...entry, count: 1 })
 }
 
 export function ownedEntryToWeapons(entry) {
-  const params = { ...(entry.params || {}) }
-  const savedState = params[WEAPON_STATE_KEY] && typeof params[WEAPON_STATE_KEY] === 'object'
-    ? params[WEAPON_STATE_KEY]
-    : {}
-  delete params[WEAPON_STATE_KEY]
-  return Array.from({ length: Math.max(1, Number(entry.count) || 1) }, () => ({
-    ...defaultWeaponEntry(),
-    ...savedState,
+  return Array.from({ length: Math.max(1, Number(entry.count) || 1) }, (_, index) => ({
+    ...defaultWeaponEntry(), ...ownedWeaponFields(entry),
+    uid: index === 0 && entry.uid ? entry.uid : makeEntryUid(),
     item_id: entry.item_id,
-    params: normalizeWeaponParams({ ...defaultWeaponEntry().params, ...params }),
-    add_attacks: normalizeAddAttacks(savedState.add_attacks),
+    override: entry.override ? { ...entry.override } : null,
+    params: normalizeWeaponParams(entry.params),
+    add_attacks: normalizeAddAttacks(entry.add_attacks),
   }))
 }

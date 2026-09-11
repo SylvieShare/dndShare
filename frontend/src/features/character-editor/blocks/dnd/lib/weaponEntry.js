@@ -21,6 +21,8 @@ export function cleanEntry(entry) {
   return {
     uid: String(entry.uid || makeUid('weapon')),
     item_id: entry.item_id,
+    ...(entry.magic_item_id != null ? { magic_item_id: entry.magic_item_id } : {}),
+    ...(entry.override ? { override: { ...entry.override } } : {}),
     params: normalizeWeaponParams(entry.params),
     stat_suggest_id: entry.stat_suggest_id ?? null,
     proficient: !!entry.proficient,

@@ -69,7 +69,7 @@ import CharacterEntryPickerModal from '@/features/character-editor/components/Ch
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { collectCharacterFeatureActions, featureActionEffectPatch, groupCharacterFeatureActions } from '@/features/character-editor/lib/characterFeatureActions'
-import { equippedMagicWeapons, intrinsicWeaponBonus, weaponBaseId } from '@/features/character-editor/lib/magicWeapons'
+import { resolveWeaponItem, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from '@/features/character-editor/blocks/dnd/lib/itemEntry'
 import { useSuggestStore } from '@/stores/suggest'
 
@@ -99,8 +99,8 @@ const targetEntries = computed(() => {
   const action = targetAction.value
   if (!action || action.target_kind !== 'weapon') return []
   const parameter = action.target_parameter || 'weapon_uid'
-  return [...(Array.isArray(props.values?.weapon) ? props.values.weapon : []), ...equippedMagicWeapons(props.values, Object.fromEntries(itemsById.value))].map((entry, index) => {
-    const item = itemsById.value.get(String(entry.item_id)) || null
+  return (Array.isArray(props.values?.weapon) ? props.values.weapon : []).map((entry, index) => {
+    const item = resolveWeaponItem(entry, Object.fromEntries(itemsById.value))
     const active = !!targetEffect.value && !!charCtx.characterStatuses?.activeByParam?.(
       targetEffect.value,
       parameter,
@@ -194,14 +194,12 @@ async function openTargetPicker(action) {
   targetAction.value = action
   targetLoading.value = true
   const targetItemIds = action.target_kind === 'weapon'
-    ? [...(props.values?.weapon || []), ...(props.values?.items?.equipped || [])].map(entry => entry.item_id).filter(id => id != null)
+    ? (props.values?.weapon || []).flatMap(entry => [entry.item_id, entry.magic_item_id]).filter(id => id != null)
     : []
   await Promise.all([
     charCtx.characterResources?.ensureItems?.(targetItemIds),
     charCtx.characterStatuses?.ensureCatalog?.(),
   ])
-  const bases = (props.values?.items?.equipped || []).map(entry => weaponBaseId(itemsById.value.get(String(entry.item_id)), entry)).filter(Boolean)
-  if (bases.length) await charCtx.characterResources?.ensureItems?.(bases)
   targetLoading.value = false
 }
 
@@ -225,7 +223,7 @@ function activateTargetAction(target) {
     Object.assign(patch, charCtx.characterResources?.setAvailable?.(action.resource.key, remaining) || {})
     if (!Object.keys(patch).length) return
   }
-  const item = itemsById.value.get(String(target.item_id)) || null
+  const item = resolveWeaponItem(target, Object.fromEntries(itemsById.value))
   patch.states = charCtx.characterStatuses.add(effect, {
     source: {
       kind: 'feature_action',

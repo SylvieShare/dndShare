@@ -4,7 +4,7 @@ import { EQUIPPED_ID } from '../lib/itemSection'
 export function useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry }) {
   const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
   function viewEntry(entry, close) {
-    modalSelection.value = { sectionId: findSectionOfEntry(entry.uid), uid: entry.uid, item_id: entry.item_id }
+    modalSelection.value = { ...entry, sectionId: findSectionOfEntry(entry.uid) }
     close()
   }
 
@@ -18,7 +18,7 @@ export function useInventoryRowActions({ model, modalSelection, charCtx, increme
     if (remaining != null) charCtx.logSessionEvent?.({
       type: 'item_added',
       action: `Добавлено: ${entry.display.name}`,
-      data: { itemId: entry.item_id || null, remaining },
+      data: { itemId: entry.magic_item_id ?? entry.item_id ?? null, remaining },
     })
     close()
   }

@@ -128,7 +128,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain("14: {\n    '--cover-min-height': '400px'")
     expect(detailSource).toContain('<GearDetailSummary :item="item" :type="type" />')
     expect(detailSource).toContain('<ToolDetailSummary :item="item" />')
-    expect(detailSource).toContain('if ([2, 14, 19].includes(props.type?.id)) return { economyInHeader: true }')
+    expect(detailSource).toContain('if ([2, 14].includes(props.type?.id)) return { economyInHeader: true }')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-cost"')
     expect(gearSummarySource).toContain('tone="warning"')
     expect(gearSummarySource).toContain('class="gear-economy-card gear-economy-weight"')

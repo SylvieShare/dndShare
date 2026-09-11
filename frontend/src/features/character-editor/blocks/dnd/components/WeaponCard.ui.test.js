@@ -13,7 +13,7 @@ describe('weapon card actions', () => {
     expect(source).toContain('<RowActionSeparator')
     expect(source).toContain('>Открыть описание</RowActionItem>')
     expect(source).toContain('>Редактировать</RowActionItem>')
-    expect(source).toContain("entry._inventory ? 'Убрать в рюкзак' : 'Переместить в вещи'")
+    expect(source).toContain('>Переместить в вещи</RowActionItem>')
     expect(source).toContain('>Удалить</RowActionItem>')
     expect(source).toContain(':can-attack="!!ctx.item(entry)"')
     expect(source).not.toContain('action="damage"')

@@ -55,14 +55,13 @@
         action="edit"
         @click="editWeapon(closeMenu)"
       >Редактировать</RowActionItem>
-      <RowActionItem v-if="ctx.charCtx.ownerMode && entry._inventory" :icon="ArrowRightLeft" tone="info" @click="closeMenu(); ctx.hideInventoryWeapon(entry)">Убрать из оружия</RowActionItem>
       <RowActionItem
         v-if="ctx.canMoveWeaponToItems(entry)"
         :icon="ArrowRightLeft"
         tone="info"
         @click="moveToItems(closeMenu)"
-      >{{ entry._inventory ? 'Убрать в рюкзак' : 'Переместить в вещи' }}</RowActionItem>
-      <RowActionItem v-if="ctx.charCtx.ownerMode && entry._inventory" action="edit" @click="closeMenu(); ctx.openMagicInstance(entry)">Магические свойства</RowActionItem>
+      >Переместить в вещи</RowActionItem>
+      <RowActionItem v-if="ctx.charCtx.ownerMode && entry.magic_item_id" action="edit" @click="closeMenu(); ctx.openMagicInstance(entry)">Магические свойства</RowActionItem>
       <RowActionSeparator v-if="ctx.charCtx.ownerMode" />
       <RowActionItem
         v-if="ctx.charCtx.ownerMode"
@@ -111,7 +110,7 @@ function onNameDown(e) {
 }
 function openDescription(closeMenu) {
   closeMenu()
-  if (ctx.item(props.entry)) ctx.openItemModal(props.entry.item_id)
+  if (ctx.item(props.entry)) ctx.openItemModal(props.entry)
 }
 function editWeapon(closeMenu) {
   closeMenu()

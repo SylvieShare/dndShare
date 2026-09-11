@@ -195,7 +195,7 @@ import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemS
 import { normalizeCounters } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
 import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
-import { equippedMagicWeapons, resolveMagicWeapon, weaponBaseId, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
+import { resolveWeaponItem, weaponBaseId, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { abilityModifiersBySuggest, weaponAbilityModifier } from '@/features/character-editor/blocks/dnd/lib/weaponAbility'
 import { dieLabel } from '@/shared/lib/systemDice'
@@ -323,8 +323,8 @@ function attackParts(entry, item) {
   if (flat && result.length) result[0] += ` ${signed(flat)}`
   return result.join(' + ')
 }
-const attacks = computed(() => [...(Array.isArray(values.value.weapon) ? values.value.weapon : []), ...equippedMagicWeapons(values.value, catalog.value)].slice(0, 8).map((entry, index) => {
-  const raw = itemById(entry.item_id); const item = entry._inventory ? resolveMagicWeapon(raw, entry, catalog.value) : raw; const statMod = weaponStatMod(entry, item)
+const attacks = computed(() => (Array.isArray(values.value.weapon) ? values.value.weapon : []).slice(0, 8).map((entry, index) => {
+  const item = resolveWeaponItem(entry, catalog.value); const statMod = weaponStatMod(entry, item)
   const sourceBonus = derivedNumericBonus(printDerivedEffects.value, 'weapon_attack_bonus', values.value, {
     kind: 'attack',
     weaponKind: item?.data?.is_long_range ? 'ranged' : 'melee',
@@ -343,7 +343,7 @@ const equipmentProficiencyGroups = computed(() => mainCanFitProficiencies.value 
 
 const inventoryModel = computed(() => normalizeValue(values.value.items))
 function ownedItemName(entry, fallback = 'Предмет') {
-  const base = entry.override?.name || itemById(entry.item_id)?.name || (entry.item_id != null ? `${fallback} #${entry.item_id}` : fallback)
+  const base = entry.override?.name || resolveWeaponItem(entry, catalog.value)?.name || (entry.item_id != null ? `${fallback} #${entry.item_id}` : fallback)
   return entry.params?.length_ft != null ? `${base} · ${entry.params.length_ft} фт.` : base
 }
 function inventoryEntry(entry) { return { ...entry, name: ownedItemName(entry) } }
@@ -506,9 +506,9 @@ const personalityNumber = computed(() => spellStart.value + spellPages.value.len
 
 function collectItemIds(data) {
   const ids = new Set(); const add = id => { if (id != null && id !== '') ids.add(id) }
-  for (const entry of data.weapon || []) add(entry.item_id)
-  const inv = normalizeValue(data.items); inv.equipped.forEach(entry => add(entry.item_id)); inv.sections.forEach(section => section.items.forEach(entry => add(entry.item_id)))
-  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => add(entry.item_id)); (Array.isArray(data.tools) ? data.tools : []).forEach(entry => add(entry.item_id)); (data.spells?.tabs || []).forEach(tab => (tab.spells || []).forEach(entry => add(entry.id))); (data.spells?.grants || []).forEach(entry => add(entry.id))
+  for (const entry of data.weapon || []) { add(entry.item_id); add(entry.magic_item_id) }
+  const inv = normalizeValue(data.items); inv.equipped.forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }); inv.sections.forEach(section => section.items.forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }))
+  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }); (Array.isArray(data.tools) ? data.tools : []).forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }); (data.spells?.tabs || []).forEach(tab => (tab.spells || []).forEach(entry => add(entry.id))); (data.spells?.grants || []).forEach(entry => add(entry.id))
   featureItemIds(data).forEach(add)
   return [...ids]
 }
@@ -520,7 +520,7 @@ async function load() {
     const tasks = [3, 7, 12, 14, 15, 17].map(id => suggest.ensure(id).catch(() => null))
     if (itemIds.length) tasks.push(itemsApi.byIds(itemIds).then(result => { catalog.value = Object.fromEntries((result?.items || []).map(item => [String(item.id), item])) }).catch(() => null))
     await Promise.all(tasks);
-    const bases = [...new Set((values.value.items?.equipped || []).flatMap(entry => [weaponBaseId(catalog.value[entry.item_id], entry), armorBaseId(catalog.value[entry.item_id], entry)]).filter(Boolean))]
+    const bases = [...new Set([...(values.value.items?.equipped || []), ...(values.value.weapon || [])].flatMap(entry => [weaponBaseId(catalog.value[entry.magic_item_id ?? entry.item_id], entry), armorBaseId(catalog.value[entry.magic_item_id ?? entry.item_id], entry)]).filter(Boolean))]
     if (bases.length) for (const item of (await itemsApi.byIds(bases)).items || []) catalog.value[item.id] = item
     await suggest.ensure(4)
     document.title = `${characterName.value} — лист для печати`

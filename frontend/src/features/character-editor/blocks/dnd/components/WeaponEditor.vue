@@ -1,5 +1,10 @@
 <template>
   <EditorPanel compact>
+    <EditorSection title="Экземпляр оружия">
+      <FormField label="Название" vertical title="Собственное название этого экземпляра. Пустое поле использует название из справочника.">
+        <FormTextInput :value="entry.override?.name || ''" :placeholder="ctx.itemMap[entry.magic_item_id ?? entry.item_id]?.name" @update:value="value => ctx.setField(index, 'override', { ...entry.override, name: value || undefined })" />
+      </FormField>
+    </EditorSection>
     <EditorSection title="Параметры">
       <div class="wed-top">
         <FormField vertical label="Характеристика" class="wed-f-stat">
@@ -12,7 +17,7 @@
           @update:model-value="ctx.setField(index, 'stat_suggest_id', $event)"
         />
       </FormField>
-      <FormField :label="entry._inventory ? 'Дополнительный бонус' : 'Магия'" vertical>
+      <FormField :label="entry.magic_item_id ? 'Дополнительный бонус' : 'Магия'" vertical>
         <MultiToggle
           :options="ctx.magicOptions"
           :model-value="entry.params?.magic_bonus ?? 0"
@@ -74,7 +79,7 @@ import { inject } from 'vue'
 import { AddButton } from '@sylvieshare/share-ui'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
-import { FormField } from '@sylvieshare/share-ui'
+import { FormField, FormTextInput } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
 import { MultiToggle } from '@sylvieshare/share-ui'
 import { RemoveButton } from '@sylvieshare/share-ui'

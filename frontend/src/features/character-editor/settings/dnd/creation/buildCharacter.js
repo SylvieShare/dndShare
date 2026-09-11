@@ -1,3 +1,4 @@
+import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapons'
 /**
  * D&D create-flow assembler — the pure "brain" of the creation wizard.
  *
@@ -315,7 +316,7 @@ export function buildCharacterData(input) {
     override: entry.item_id == null ? { name: entry.name || 'Предмет' } : null,
   })
   const inventoryEntries = (list, prefix) => list.flatMap((entry, i) => Number(entry.typeId) === 19
-    ? Array.from({ length: Math.max(1, Number(entry.count) || 1) }, (_, copy) => ({ ...ownedEntry(entry, `${i}_${copy}`, prefix), count: 1 }))
+    ? Array.from({ length: Math.max(1, Number(entry.count) || 1) }, (_, copy) => createWeaponInstance({ ...entry, id: entry.item_id }, { ...ownedEntry(entry, `${i}_${copy}`, prefix), count: 1 }))
     : [ownedEntry(entry, i, prefix)])
   if (weapons.length) {
     values.weapon = weapons.flatMap((entry) => Array.from(

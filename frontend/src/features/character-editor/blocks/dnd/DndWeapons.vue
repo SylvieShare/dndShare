@@ -97,11 +97,13 @@
       :item-type-id="block.content.item_type_id"
       :item-id="modalItem.id"
       :item="modalItem"
-      @close="modalItemId = null"
+      :instance="modalEntry"
+      :base-item="itemMap[modalEntry?.item_id]"
+      @close="modalEntry = null"
     />
 
-    <ConfirmDialog v-if="pendingMagicRemoval" title="Удалить предмет?" message="Экземпляр будет удалён из инвентаря вместе с его настройкой и зарядами. Чтобы сохранить его, выберите «Убрать из оружия» или «Убрать в рюкзак»." :z-index="4600" @confirm="removeInventoryWeapon(pendingMagicRemoval, true); pendingMagicRemoval = null" @cancel="pendingMagicRemoval = null" @close="pendingMagicRemoval = null" />
-    <MagicItemInstanceModal v-if="magicInstance" :item="itemMap[magicInstance.item_id]" :uid="magicInstance.uid" :items="values.items" @update:items="items => charCtx.updateValues({ items })" @close="magicInstance = null" />
+    <ConfirmDialog v-if="pendingMagicRemoval" title="Удалить предмет?" message="Экземпляр будет удалён из инвентаря вместе с его настройкой и зарядами. Чтобы сохранить его, выберите «Переместить в вещи»." :z-index="4600" @confirm="discardWeapon(pendingMagicRemoval.uid); pendingMagicRemoval = null" @cancel="pendingMagicRemoval = null" @close="pendingMagicRemoval = null" />
+    <MagicItemInstanceModal v-if="magicInstance && itemMap[magicInstance.magic_item_id]" :item="itemMap[magicInstance.magic_item_id]" :uid="magicInstance.uid" :values="values" @update:values="patch => charCtx.updateValues(patch)" @close="magicInstance = null" />
 
     <ItemTooltip
       v-if="tooltip.visible"
@@ -122,7 +124,7 @@ import WeaponCard from '@/features/character-editor/blocks/dnd/components/Weapon
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'
 import PresetAttackCard from '@/features/character-editor/blocks/dnd/components/PresetAttackCard.vue'
 import { useWeaponEntries } from './composables/useWeaponEntries'
-import { intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
+import { createWeaponInstance, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
 import MagicItemInstanceModal from './components/MagicItemInstanceModal.vue'
 import { useWeaponCalc } from '@/features/character-editor/blocks/dnd/composables/useWeaponCalc'
 import { useWeaponItems } from '@/features/character-editor/blocks/dnd/composables/useWeaponItems'
@@ -163,7 +165,7 @@ const emit  = defineEmits(['update:value'])
 const charCtx = inject('charCtx', () => ({ ownerMode: true, dictionaries: {}, var: {} }))
 const suggestStore = useSuggestStore()
 
-const modalItemId            = ref(null)
+const modalEntry             = ref(null)
 const inferredTagSuggestTypeId = ref(null)
 const activeNoteKey          = ref(null)
 const pickerOpen             = ref(false)
@@ -230,7 +232,7 @@ const {
   addItem,
 } = useWeaponItems({ tagMap, tagDetailsMap })
 
-const { entries, emitChange, hideInventoryWeapon, removeInventoryWeapon, loadError, reload } = useWeaponEntries({
+const { entries, emitChange, loadError, reload } = useWeaponEntries({
   props, emit, charCtx, itemMap,
   loadItems: list => loadItemsRaw([...list, ...Object.values(PRESET_ATTACK_ART_ITEM_IDS).map(item_id => ({ item_id }))]),
 })
@@ -277,7 +279,7 @@ function attackBonus(entry) {
   return baseAttackBonus(entry) + (charCtx.characterDerivedEffects?.bonus?.('weapon_attack_bonus', weaponEffectContext(entry))?.total || 0)
 }
 
-const modalItem   = computed(() => modalItemId.value != null ? itemMap.value[modalItemId.value] || null : null)
+const modalItem = computed(() => modalEntry.value ? itemMap.value[modalEntry.value.magic_item_id ?? modalEntry.value.item_id] : null)
 const variant     = computed(() => props.block.props?.variant || props.block.content?.variant || 'list')
 const canAddItems = computed(() => !!charCtx.ownerMode)
 const armorState = computed(() => charCtx.characterArmor?.state || {})
@@ -427,38 +429,30 @@ function removeAttack(index, attackIndex) {
 
 function addWeapon(it, quantity = 1, params = {}) {
   if (!weaponEligibility(it).eligible) return
-  const entry = { ...defaultEntry(), item_id: it.id }
-  if (Number(it.typeId) === 19) {
-    const owned = { uid: entry.uid, item_id: it.id, count: 1, params: { ...params, weapon_enabled: true }, override: null }
-    const inventory = props.values?.items || { equipped: [], sections: [] }
-    charCtx.updateValues({ items: { ...inventory, equipped: [...(inventory.equipped || []), owned] } })
-    addItem(it)
-    magicInstance.value = owned
-  } else {
-    entries.value.push({ ...entry, _key: entry.uid })
-    addItem(it)
-    emitChange()
-  }
+  const count = Math.max(1, Math.min(999, Math.floor(Number(quantity) || 1)))
+  const added = Array.from({ length: count }, () => createWeaponInstance(it, { ...defaultEntry(), item_id: it.id, params: { ...params } }))
+  if (Number(it.typeId) === 19 && !added[0].magic_item_id) return
+  entries.value.push(...added.map(entry => ({ ...entry, _key: entry.uid })))
+  addItem(it)
+  emitChange()
+  if (added[0].magic_item_id) magicInstance.value = added[0]
   logSessionEntryAdded(charCtx, {
-    kind: 'item', category: 'weapon', title: it.name, itemId: it.id,
+    kind: 'item', category: 'weapon', title: it.name, itemId: it.id, count,
   })
 }
 
 function deleteWeapon(index) {
   const entry = entries.value[index]
-  if (entry?._inventory) { pendingMagicRemoval.value = entry; return }
-  if (activeNoteKey.value === entry?._key) activeNoteKey.value = null
-  entries.value.splice(index, 1)
-  const nextWeapons = entries.value.filter(row => !row._inventory).map(cleanEntry)
-  if (typeof charCtx.updateValues === 'function') {
-    const patch = { [props.block.id]: nextWeapons }
-    if (typeof charCtx.characterStatuses?.removeByParam === 'function') {
-      patch.states = charCtx.characterStatuses.removeByParam('weapon_uid', entry?.uid)
-    }
-    charCtx.updateValues(patch)
-  } else {
-    emit('update:value', props.block.id, nextWeapons)
-  }
+  if (entry?.magic_item_id) { pendingMagicRemoval.value = entry; return }
+  discardWeapon(entry.uid)
+}
+function discardWeapon(uid) {
+  if (activeNoteKey.value === uid) activeNoteKey.value = null
+  entries.value = entries.value.filter(row => row.uid !== uid)
+  const patch = { [props.block.id]: entries.value.map(cleanEntry) }
+  if (charCtx.characterStatuses?.removeByParam) patch.states = charCtx.characterStatuses.removeByParam('weapon_uid', uid)
+  if (charCtx.updateValues) charCtx.updateValues(patch)
+  else emitChange()
 }
 
 function canMoveWeaponToItems(entry) {
@@ -470,14 +464,10 @@ function canMoveWeaponToItems(entry) {
 function moveWeaponToItems(index) {
   const entry = entries.value[index]
   if (!canMoveWeaponToItems(entry)) return
-  if (removeInventoryWeapon(entry)) return
-  const nextWeapons = entries.value.filter((row, entryIndex) => !row._inventory && entryIndex !== index).map(cleanEntry)
+  const nextWeapons = entries.value.filter((row, entryIndex) => entryIndex !== index).map(cleanEntry)
   const patch = {
     weapon: nextWeapons,
     items: appendInventoryEntry(charCtx.values?.items, weaponEntryToOwnedEntry(entry)),
-  }
-  if (typeof charCtx.characterStatuses?.removeByParam === 'function') {
-    patch.states = charCtx.characterStatuses.removeByParam('weapon_uid', entry.uid)
   }
   charCtx.updateValues(patch)
 }
@@ -499,7 +489,7 @@ const sortable = useSortable({
 const displayEntries = computed(() => sortable.displayItems('weapons'))
 
 function onDragStart(e, entry, index) {
-  if (!charCtx.ownerMode || entry._inventory) return
+  if (!charCtx.ownerMode) return
   sortable.startDrag(e, entry, 'weapons', index)
 }
 
@@ -519,7 +509,7 @@ function hidePropertyTooltip() { tooltip.visible = false }
 
 provide('weaponsBlockCtx', reactive({
   charCtx,
-  hideInventoryWeapon,
+  itemMap,
   openMagicInstance: entry => { magicInstance.value = entry },
   sortable,
   item,
@@ -551,7 +541,7 @@ provide('weaponsBlockCtx', reactive({
   canMoveWeaponToItems,
   moveWeaponToItems,
   onDragStart,
-  openItemModal: id => { modalItemId.value = id },
+  openItemModal: entry => { modalEntry.value = entry },
   toggleNote: key => { activeNoteKey.value = activeNoteKey.value === key ? null : key },
   activeNoteKey,
   statOptions,

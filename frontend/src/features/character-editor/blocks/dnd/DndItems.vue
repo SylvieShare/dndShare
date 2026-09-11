@@ -12,6 +12,7 @@
     </SectionLabel>
 
     <template v-if="!contentHidden">
+      <p v-if="catalogError" role="alert">{{ catalogError }} <ActionButton variant="quiet" @click="reloadCatalog">Повторить</ActionButton></p>
       <InventorySkeleton v-if="loading" :sections="allSections" />
 
       <template v-else>
@@ -83,13 +84,15 @@
       </template>
     </ItemTooltip>
 
-    <MagicItemInstanceModal v-if="magicSelection" :item="catalog[magicSelection.item_id]" :uid="magicSelection.uid" :items="model" @update:items="emitModel" @close="magicSelection = null" />
+    <MagicItemInstanceModal v-if="magicSelection" :item="catalog[magicSelection.magic_item_id ?? magicSelection.item_id]" :uid="magicSelection.uid" :values="{ ...charCtx.values, items: model }" @update:values="patch => charCtx.updateValues(patch)" @close="magicSelection = null" />
 
     <ItemViewModal
       v-if="modalItem"
       :item-type-id="modalItem.typeId ?? 2"
       :item-id="modalItem.id"
       :item="modalItem"
+      :instance="modalSelection"
+      :base-item="catalog[modalSelection?.item_id]"
       @close="modalSelection = null"
     />
 
@@ -131,6 +134,9 @@ import { useInventoryRowActions } from './composables/useInventoryRowActions'
 import InventorySkeleton from './components/InventorySkeleton.vue'
 import InventoryItemRow from './components/InventoryItemRow.vue'
 import MagicItemInstanceModal from './components/MagicItemInstanceModal.vue'
+import { ActionButton } from '@sylvieshare/share-ui'
+import { useInventoryCatalog } from './composables/useInventoryCatalog'
+import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapons'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
 import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, provide, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
@@ -147,7 +153,6 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
-import { clearStowedWeaponFlags } from '@/features/character-editor/lib/inventoryWeapons'
 import { useInventoryEquipmentActions } from './composables/useInventoryEquipmentActions'
 import { magicBaseParams, magicEquipmentKinds, magicBaseId } from '@/features/items/lib/magicEquipmentBases'
 import { applicableInstanceFields, defaultInstanceParams, mergeEditedInstanceParams } from '@/features/items/lib/itemInstance'
@@ -161,7 +166,6 @@ import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEnt
 import {
   EQUIPPED_ID,
   EQUIPPED_NAME,
-  allCatalogIds,
   cloneModel,
   entryDisplayData,
   makeEntryUid,
@@ -173,9 +177,7 @@ const props = defineProps({ block: Object, value: { default: null } })
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 
-const catalog = reactive({})
 const pendingCopy = ref(null)
-const loading = ref(true)
 const contentHidden = ref(false)
 const modalSelection = ref(null)
 const magicSelection = ref(null)
@@ -191,6 +193,7 @@ const diceStore = useDiceStore()
 const toolAbilityOptions = STAT_KEYS.map((key, index) => ({ key, suggestId: index + 1, label: STAT_FULL[key] }))
 
 const model = computed(() => normalizeValue(props.value))
+const { catalog, loading, error: catalogError, reload: reloadCatalog } = useInventoryCatalog(() => model.value)
 const { tooltip, showTooltip, hideTooltip, viewEntry, deleteOneEntry, addEntry, editEntry, deleteEntry } = useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry })
 
 const allSections = computed(() => [
@@ -222,7 +225,7 @@ const canAdd = computed(() => !!charCtx.ownerMode)
 const canDrag = computed(() => !!charCtx.ownerMode)
 
 const typeById = computed(() => Object.fromEntries(itemTypesStore.allTypes.map((type) => [type.id, type])))
-const modalItem = computed(() => modalSelection.value?.item_id != null ? catalog[modalSelection.value.item_id] ?? null : null)
+const modalItem = computed(() => modalSelection.value?.item_id != null ? catalog[modalSelection.value.magic_item_id ?? modalSelection.value.item_id] ?? null : null)
 const pickerTypeIds = computed(() => {
   const related = props.block.content?.include_related_types
     ? itemTypesStore.relatedTypeIds(rootTypeId.value)
@@ -322,7 +325,7 @@ function rollTool(entry, ability, closeAbilities, closeMenu) {
   closeMenu()
 }
 
-const { pendingWeapon, confirmWeapon, hideWeapon, isInWeapons, specializedDestination, canMoveToSpecialized, moveToSpecialized } = useInventoryEquipmentActions({
+const { pendingWeapon, confirmWeapon, specializedDestination, canMoveToSpecialized, moveToSpecialized } = useInventoryEquipmentActions({
   model, catalog, specializedDestinations, canManage, charCtx, entryTypeId,
 })
 
@@ -383,7 +386,7 @@ function onRowDown(e, entry, sectionId, idx) {
 }
 
 function emitModel(next) {
-  emit('update:value', props.block.id, clearStowedWeaponFlags(next))
+  emit('update:value', props.block.id, next)
 }
 
 function startRename(id) {
@@ -442,10 +445,10 @@ function increment(sectionId, uid, selectedParams = null) {
   const list = itemsRef(next, sectionId)
   const entry = list?.find(item => item.uid === uid)
   if (!entry) return null
-  if (Number(catalog[entry.item_id]?.typeId) === MAGIC_ITEM_TYPE_ID) {
-    const item = catalog[entry.item_id], params = selectedParams || entry.params
+  if (entry.magic_item_id || Number(catalog[entry.item_id]?.typeId) === MAGIC_ITEM_TYPE_ID) {
+    const item = catalog[entry.magic_item_id ?? entry.item_id], params = selectedParams || { ...entry.params, ...(entry.magic_item_id ? { weapon_base_item_id: entry.item_id } : {}) }
     if (magicEquipmentKinds(item).some(kind => !magicBaseId(item, params, kind))) { pendingCopy.value = { item, sectionId, uid }; return null }
-    list.push({ uid: makeEntryUid(), item_id: entry.item_id, count: 1, params: magicBaseParams(item, params), override: entry.override ? { ...entry.override } : null })
+    list.push(createWeaponInstance(item, { uid: makeEntryUid(), item_id: item.id, count: 1, params: magicBaseParams(item, params), override: entry.override ? { ...entry.override } : null }))
     emitModel(next)
     return 1
   }
@@ -479,13 +482,13 @@ function onPickerPick(item, qty = 1, params = {}) {
   if (!list) return
   const type = typeById.value[item.typeId]
   const copies = item.typeId === MAGIC_ITEM_TYPE_ID ? n : 1
-  for (let index = 0; index < copies; index += 1) list.push({ uid: makeEntryUid(), item_id: item.id, count: copies > 1 ? 1 : n, params: { ...defaultInstanceParams(type, item), ...params }, override: null })
+  for (let index = 0; index < copies; index += 1) list.push(createWeaponInstance(item, { uid: makeEntryUid(), item_id: item.id, count: copies > 1 ? 1 : n, params: { ...defaultInstanceParams(type, item), ...params }, override: null }))
   emitModel(next)
   logSessionEntryAdded(charCtx, { kind: 'item', title: item.name, itemId: item.id, count: n })
 }
 
 function openInlineForm(sectionId, entry) {
-  const baseItem = entry?.item_id != null ? (catalog[entry.item_id] || null) : null
+  const baseItem = entry?.item_id != null ? (catalog[entry.magic_item_id ?? entry.item_id] || null) : null
   const instanceFields = applicableInstanceFields(typeById.value[baseItem?.typeId], baseItem)
   Object.assign(form, { open: true, sectionId, entry, baseItem, instanceFields })
 }
@@ -543,8 +546,6 @@ provide('inventoryRowCtx', reactive({
   canMoveToSpecialized,
   moveToSpecialized,
   specializedDestination,
-  isInWeapons,
-  hideWeapon,
   addEntry,
   deleteOneEntry,
   editEntry,
@@ -558,14 +559,7 @@ onMounted(async () => {
       itemTypesStore.ensureAll().catch(() => []),
       ...[3, 4, 5].map((typeId) => suggestStore.ensure(typeId).catch(() => [])),
     ])
-    const ids = allCatalogIds(model.value)
-    if (ids.length) {
-      const r = await itemsApi.byIds(ids)
-      for (const item of r?.items || []) catalog[item.id] = item
-    }
-  } catch { /* ignore */ } finally {
-    loading.value = false
-  }
+  } catch { /* Dictionary loading can be retried on the next visit. */ }
 })
 </script>
 

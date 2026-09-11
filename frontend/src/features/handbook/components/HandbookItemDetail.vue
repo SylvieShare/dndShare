@@ -41,6 +41,8 @@
         </template>
       </ItemDetailHeader>
 
+      <WeaponInstanceDetail v-if="weaponItem" :item="weaponItem" :instance="instance" />
+
       <!-- Custom renderer (Weapon, Spell, Enemy…) -->
       <component
         v-if="customRenderer"
@@ -117,7 +119,7 @@
       <div v-if="showTitle || canEdit" class="detail-technical-meta">
         <button v-if="canEdit" type="button" class="btn-edit" @click="$emit('edit', item)">
           <Pencil :size="14" aria-hidden="true" />
-          Редактировать
+          {{ instance ? 'Редактировать в справочнике' : 'Редактировать' }}
         </button>
         <span>ID {{ item.id }}</span>
       </div>
@@ -128,6 +130,7 @@
 </template>
 
 <script setup>
+import WeaponInstanceDetail from '@/features/items/detail-components/WeaponInstanceDetail.vue'
 import { computed, watch } from 'vue'
 import { Pencil } from '@lucide/vue'
 import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
@@ -188,6 +191,8 @@ const props = defineProps({
   type: { type: Object, default: null },
   canEdit: { type: Boolean, default: false },
   showTitle: { type: Boolean, default: true },
+  instance: { type: Object, default: null },
+  weaponItem: { type: Object, default: null },
   actorName: { type: String, default: '' },
 })
 
@@ -205,7 +210,8 @@ const isStatusEffect = computed(() => props.type?.id === 15)
 const isOrigin = computed(() => [8, 9, 16, 17].includes(props.type?.id))
 const customRendererProps = computed(() => {
   if (isOrigin.value) return { summaryInHeader: props.showTitle }
-  if ([2, 14, 19].includes(props.type?.id)) return { economyInHeader: true }
+  if (props.type?.id === 19) return { economyInHeader: true, instance: props.instance }
+  if ([2, 14].includes(props.type?.id)) return { economyInHeader: true }
   if (props.type?.id === 5) return { summaryInHeader: true }
   return {}
 })

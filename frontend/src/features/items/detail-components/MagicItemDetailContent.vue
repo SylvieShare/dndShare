@@ -1,7 +1,7 @@
 <template>
   <div class="magic-item-detail">
     <ItemDetailContent :item="item" :show-title="false" :economy-in-header="economyInHeader" />
-    <DetailSection v-for="kind in kinds" :key="kind" :label="kind === 'weapon' ? 'Подходящее оружие' : 'Подходящие доспехи и щиты'">
+    <DetailSection v-for="kind in instance?.magic_item_id ? [] : kinds" :key="kind" :label="kind === 'weapon' ? 'Подходящее оружие' : 'Подходящие доспехи и щиты'">
       <p>Основа определяет обычные характеристики. Выберите её при добавлении предмета персонажу.</p>
       <MagicEquipmentBases :item="item" :kind="kind" />
     </DetailSection>
@@ -26,7 +26,7 @@ import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import { useSuggestStore } from '@/stores/suggest'
-const props = defineProps({ item: Object, type: Object, economyInHeader: Boolean })
+const props = defineProps({ item: Object, type: Object, economyInHeader: Boolean, instance: Object })
 const data = computed(() => props.item.data || {})
 const kinds = computed(() => magicEquipmentKinds(props.item))
 // Each remaining schema field is rendered, including newly added mechanics. These

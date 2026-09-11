@@ -11,7 +11,7 @@
     @mouseleave="hovered = false"
   >
     <td v-if="ctx.charCtx.ownerMode" class="w-order">
-      <span v-if="!entry._inventory" class="drag-handle w-order-handle" @pointerdown="ctx.onDragStart($event, entry, index)">
+      <span class="drag-handle w-order-handle" @pointerdown="ctx.onDragStart($event, entry, index)">
         <svg width="8" height="14" viewBox="0 0 8 14" fill="currentColor">
           <circle cx="2" cy="2" r="1"/><circle cx="6" cy="2" r="1"/>
           <circle cx="2" cy="7" r="1"/><circle cx="6" cy="7" r="1"/>
@@ -47,7 +47,7 @@
             class="w-info-btn"
             type="button"
             title="Подробнее"
-            @click="ctx.openItemModal(entry.item_id)"
+            @click="ctx.openItemModal(entry)"
           >?</button>
         </div>
       </div>

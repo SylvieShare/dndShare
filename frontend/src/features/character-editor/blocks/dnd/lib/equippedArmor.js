@@ -1,6 +1,6 @@
 import { resolveMagicArmor } from '@/features/character-editor/lib/magicArmor'
 import { abilityModifier, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
-import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
+import { inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
@@ -35,15 +35,15 @@ function instanceBonus(entry) {
 }
 
 /**
- * Derives every armor effect from the catalogue items in `items.equipped`.
+ * Derives armor from equipped inventory and weapon instances.
  * One best body armor and one best shield are active; duplicates never stack.
  */
 export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () => [], derivedRules = {}, grantedProficiencies = []) {
   const dexterity = abilityModifier(resolveNumValue(values?.DEX?.value ?? 10))
   const strength = resolveNumValue(values?.STR?.value ?? 10)
-  const equipped = normalizeValue(values?.items).equipped
+  const equipped = inventoryEntries(values).filter(row => row.equipped).map(row => row.entry)
   const candidates = equipped.flatMap((entry, index) => {
-    const item = resolveMagicArmor(itemFrom(items, entry.item_id), entry, items, values)
+    const item = resolveMagicArmor(itemFrom(items, entry.magic_item_id ?? entry.item_id), entry, items, values)
     if (!isArmorItem(item)) return []
     const rule = item.data.armor
     const shield = rule.shield === true || item.data.category === 'shield'

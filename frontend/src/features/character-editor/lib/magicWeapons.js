@@ -1,42 +1,39 @@
 import { magicBaseId } from '@/features/items/lib/magicEquipmentBases'
-import { magicItemActive, mapInventoryEntries } from './characterMagicItems'
+import { magicItemActive } from './characterMagicItems'
 
 const PHYSICAL_KEYS = ['attacks', 'universe_attacks', 'tags', 'is_military', 'is_long_range', 'range_min', 'range_max', 'required_weapon_proficiencies']
-export const weaponBaseId = (item, entry) => magicBaseId(item, entry?.params, 'weapon')
+export const weaponBaseId = (item, entry) => entry?.magic_item_id != null ? entry.item_id : magicBaseId(item, entry?.params, 'weapon')
 
-export function resolveMagicWeapon(item, entry, itemsById) {
-  const base = itemsById[String(weaponBaseId(item, entry))]
-  if (Number(base?.typeId) !== 1) return null
-  const physical = Object.fromEntries(PHYSICAL_KEYS.map(key => [key, base.data?.[key]]))
-  const rule = item.data.weapon
-  if (rule.damage_type != null) for (const key of ['attacks', 'universe_attacks']) physical[key] = (physical[key] || []).map(a => ({ ...a, type: rule.damage_type }))
-  physical.tags = [...new Set([...(physical.tags || []), ...(rule.extra_tags || [])])]
-  physical.required_weapon_proficiencies = [...new Set([...(physical.required_weapon_proficiencies || []), ...(rule.extra_proficiencies || [])])]
-  if (rule.range_min != null) physical.range_min = rule.range_min
-  if (rule.range_max != null) physical.range_max = rule.range_max
-  return { ...item, name: entry?.override?.name ?? item.name, data: { ...item.data, ...physical, desc: entry?.override?.desc ?? item.data.desc, subtype: base.name } }
+/** Materialize only identity and instance state; handbook statistics stay referenced. */
+export function createWeaponInstance(item, entry) {
+  if (Number(item?.typeId) !== 19 || !item.data?.weapon) return entry
+  const baseId = magicBaseId(item, entry.params, 'weapon')
+  if (!baseId) return entry // Unconfigured inventory item remains available for choosing its base.
+  const { weapon_base_item_id, ...params } = entry.params || {}
+  return { ...entry, item_id: baseId, magic_item_id: item.id, params }
 }
 
-export function equippedMagicWeapons(values, itemsById) {
-  return (values?.items?.equipped || []).flatMap(entry => {
-    const item = itemsById[entry.item_id]
-    if (entry.params?.weapon_enabled !== true || !entry.uid || Number(entry.count ?? 1) <= 0 || !resolveMagicWeapon(item, entry, itemsById)) return []
-    return [{ ...entry.params?._weapon_state, uid: entry.uid, item_id: entry.item_id,
-      params: entry.params || {}, override: entry.override, _inventory: true, _key: entry.uid }]
-  })
+/** One resolver for rolls, inventory, print and instance details. Never mutate a source. */
+export function resolveWeaponItem(entry, itemsById) {
+  const base = itemsById[String(entry?.item_id)]
+  if (!base) return null
+  const source = entry.magic_item_id != null ? itemsById[String(entry.magic_item_id)] : null
+  if (entry.magic_item_id != null && (!source || Number(base.typeId) !== 1)) return null
+  let data = { ...base.data }
+  if (source) {
+    const physical = Object.fromEntries(PHYSICAL_KEYS.map(key => [key, base.data?.[key]]))
+    const rule = source.data?.weapon || {}
+    if (rule.damage_type != null) for (const key of ['attacks', 'universe_attacks']) physical[key] = (physical[key] || []).map(a => ({ ...a, type: rule.damage_type }))
+    physical.tags = [...new Set([...(physical.tags || []), ...(rule.extra_tags || [])])]
+    physical.required_weapon_proficiencies = [...new Set([...(physical.required_weapon_proficiencies || []), ...(rule.extra_proficiencies || [])])]
+    if (rule.range_min != null) physical.range_min = rule.range_min
+    if (rule.range_max != null) physical.range_max = rule.range_max
+    data = { ...data, ...source.data, ...physical, subtype: base.name }
+  }
+  const identity = source || base
+  return { ...identity, data: { ...data, ...entry.override }, name: entry.override?.name ?? identity.name }
 }
 
 export function intrinsicWeaponBonus(entry, item, values) {
-  return entry?._inventory && magicItemActive(item?.data?.weapon?.bonus_without_attunement ? { ...item, data: { ...item.data, attunement: 'none' } } : item, entry, true, values) ? Number(item.data?.weapon?.magic_bonus) || 0 : 0
-}
-
-// The weapon row is a view of the inventory instance; never persist a second copy.
-export function saveMagicWeaponRows(items, rows) {
-  const byUid = new Map(rows.filter(e => e._inventory).map(e => [e.uid, e]))
-  return mapInventoryEntries(items, entry => {
-    const row = byUid.get(entry.uid)
-    if (!row) return entry
-    const { stat_suggest_id, proficient, add_attacks, desc } = row
-    return { ...entry, params: { ...entry.params, magic_bonus: row.params?.magic_bonus || 0, _weapon_state: { stat_suggest_id, proficient, add_attacks, desc } } }
-  })
+  return entry?.magic_item_id != null && magicItemActive(item?.data?.weapon?.bonus_without_attunement ? { ...item, data: { ...item.data, attunement: 'none' } } : item, entry, true, values) ? Number(item.data?.weapon?.magic_bonus) || 0 : 0
 }

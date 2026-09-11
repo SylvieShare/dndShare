@@ -1,3 +1,5 @@
+import { ownedWeaponFields } from './ownedWeaponFields'
+import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from './itemEntry'
 import { instanceDisplayName } from '@/features/items/lib/itemInstance'
 
@@ -10,6 +12,7 @@ export function makeEntryUid() { return makeUid('item') }
 
 function normalizeEntry(it) {
   return {
+    ...ownedWeaponFields(it),
     uid: it.uid || makeEntryUid(),
     item_id: it.item_id ?? null,
     count: Math.max(1, Number(it.count) || 1),
@@ -43,7 +46,7 @@ export function normalizeValue(value) {
 
 export function allCatalogIds(model) {
   const ids = new Set()
-  const walk = list => { for (const it of list || []) if (it.item_id != null) ids.add(it.item_id) }
+  const walk = list => { for (const it of list || []) { if (it.item_id != null) ids.add(it.item_id); if (it.magic_item_id != null) ids.add(it.magic_item_id) } }
   walk(model.equipped)
   for (const sec of model.sections || []) walk(sec.items)
   return [...ids]
@@ -51,6 +54,7 @@ export function allCatalogIds(model) {
 
 export function cloneModel(model) {
   const cloneEntry = it => ({
+    ...ownedWeaponFields(it),
     uid: it.uid,
     item_id: it.item_id ?? null,
     count: it.count,
@@ -68,7 +72,7 @@ export function cloneModel(model) {
 }
 
 export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2) {
-  const base = entry.item_id != null ? (catalog[entry.item_id] || null) : null
+  const base = resolveWeaponItem(entry, catalog)
   const ov = entry.override || {}
   const namedBase = base ? { ...base, name: ov.name ?? base.name } : { name: ov.name ?? '—', data: {} }
   const name = instanceDisplayName(namedBase, entry.params, typeById[base?.typeId])
