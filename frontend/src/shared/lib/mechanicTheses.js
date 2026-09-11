@@ -1,12 +1,15 @@
-/** Preserve rich references and dice; split only existing paragraphs and list items. */
+const sentences = new Intl.Segmenter('ru', { granularity: 'sentence' })
+const plainTheses = text => text.includes('<') ? [text] : [...sentences.segment(text)].map(row => row.segment.trim())
+
+/** Preserve rich references and dice; turn plain prose into sentence-sized theses. */
 export function mechanicTheses(html = '', lines = []) {
   const source = String(html || '').trim()
   let fragments = []
   if (source) {
     const blocks = [...source.matchAll(/<(p|ul|ol)\b[^>]*>([\s\S]*?)<\/\1>/gi)]
     const remainder = source.replace(/<(p|ul|ol)\b[^>]*>[\s\S]*?<\/\1>/gi, '').trim()
-    fragments = blocks.length && !remainder ? blocks.flatMap(block => block[1].toLowerCase() === 'p' ? [block[2]]
-      : [...block[2].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)].map(match => match[1])) : [source]
+    fragments = blocks.length && !remainder ? blocks.flatMap(block => block[1].toLowerCase() === 'p' ? plainTheses(block[2])
+      : [...block[2].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)].map(match => match[1])) : plainTheses(source)
   }
   const rows = [...fragments.map(html => ({ html })), ...(lines || []).filter(Boolean).map(text => ({ text: String(text) }))]
   const seen = new Set()
