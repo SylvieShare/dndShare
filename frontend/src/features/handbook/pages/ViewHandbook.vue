@@ -21,31 +21,20 @@
       <HandbookLanding
         v-if="!selectedType"
         class="handbook-landing"
-        :source-version-id="sourceVersionId"
         @select-type="selectType"
-        @update:source-version-id="sourceVersionId = $event"
       />
 
       <template v-else>
 
-        <!-- ── Mobile: collection picker (full-screen type grid) ── -->
-        <div class="handbook-type-grid">
-          <button
-            v-for="type in types.filter(visibleHandbookType)"
-            :key="type.id"
-            class="type-grid-card"
-            :style="type.color ? { '--card-accent': type.color } : {}"
-            @click="selectType(type)"
-          >
-            <img v-if="type.iconImageUrl" class="type-grid-icon" :src="type.iconImageUrl" alt="" aria-hidden="true" />
-            <span v-else class="type-grid-icon-placeholder" aria-hidden="true"></span>
-            <span class="type-grid-name">{{ type.name }}</span>
-            <span v-if="type.count != null" class="type-grid-count">{{ type.count }}</span>
-          </button>
-        </div>
-
         <!-- ── Main content: list + detail ── -->
         <div class="handbook-body">
+
+          <div v-if="selectedItem" class="handbook-detail-back">
+            <ActionButton variant="secondary" @click="goBack">
+              <template #icon><ArrowLeft :size="16" /></template>
+              К списку
+            </ActionButton>
+          </div>
 
           <HandbookItemList
             :type="selectedType"
@@ -106,7 +95,8 @@
 </template>
 
 <script setup>
-import { visibleHandbookType } from "@/shared/lib/abilityTypes"
+import { ActionButton } from '@sylvieshare/share-ui'
+import { ArrowLeft } from '@lucide/vue'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { fetchGet } from '@/shared/api/http'
@@ -114,10 +104,8 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
 import { useAccountStore } from '@/stores/account'
 import { useItemTypesStore } from '@/stores/itemTypes'
-import { useUiStore } from '@/stores/ui'
 import { useSuggestStore } from '@/stores/suggest'
 import { useGameContextStore } from '@/stores/gameContext'
-import { createHeaderChip } from '@/shared/lib/appHeader'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
 import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
@@ -130,13 +118,11 @@ import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 // ── Router ──────────────────────────────────────────────────────────────────
 const route = useRoute()
 const router = useRouter()
-const headerOwner = String(route.name)
 
 // ── Stores ──────────────────────────────────────────────────────────────────
 const accountStore = useAccountStore()
 const itemTypesStore = useItemTypesStore()
 const suggestStore = useSuggestStore()
-const uiStore = useUiStore()
 const gameContextStore = useGameContextStore()
 
 // ── State ────────────────────────────────────────────────────────────────────
@@ -448,25 +434,6 @@ watch(groupBy, () => {
   router.replace({ query: currentQuery() })
 })
 
-watch(
-  [selectedType, () => filteredItems.value.length, hasMore, isFiltered],
-  ([type, resultCount, more, filtered]) => {
-    const total = type?.count
-    let chip = null
-    if (type) {
-      const countLabel = filtered
-        ? `${resultCount}${more ? '+' : ''}${total != null ? ` из ${total}` : ''}`
-        : (total ?? resultCount)
-      chip = createHeaderChip(countLabel)
-    }
-    uiStore.setHeaderContext({
-      title: type?.name || route.meta?.title || 'Справочник',
-      chip,
-    }, headerOwner)
-  },
-  { immediate: true },
-)
-
 watch([selectedType, sourceVersionId], ([type]) => {
   fetchContentSources(type)
 }, { immediate: true })
@@ -541,17 +508,7 @@ init()
 
 onBeforeUnmount(() => {
   clearTimeout(searchTimer)
-  uiStore.clearHeaderContext(headerOwner)
 })
 </script>
 
 <style scoped src="./styles/ViewHandbook.css"></style>
-
-<style scoped>
-@media (max-width: 640px) {
-  .handbook-col-bar :deep(.col-type-name),
-  .handbook-col-bar :deep(.col-type-count) {
-    display: none;
-  }
-}
-</style>

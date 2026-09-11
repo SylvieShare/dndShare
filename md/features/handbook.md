@@ -114,15 +114,14 @@ but all editors and writes use `choices`; there are no admin migration jobs.
 `ViewHandbook` loads item types and collections. Search/filter happens through
 the item API before pagination. The publication filter has its own toolbar
 button for every collection, is passed as `contentSourceIds`, and its selected
-ids persist in browser local storage. The landing and collection workspace use
-an opaque `--bg` canvas so the global page grid does not show through; list
-rows use the opaque `--surface` level with distinct active and selected states.
-При первом открытии landing выбирает систему и редакцию из глобального игрового
-контекста. Переключение на landing локально для справочника: оно сохраняется при
-переходе в коллекцию и обратно, передаётся как `sourceVersionId`, но не изменяет
-профиль игрока и ссылку «Правила».
+ids persist in browser local storage. List rows use the opaque `--surface`
+level with distinct active and selected states.
+Landing использует систему и редакцию из глобального игрового контекста и
+обновляет коллекции при его изменении. Собственного переключателя системы и
+редакции на странице нет. Выбранная редакция передаётся в коллекцию как
+`sourceVersionId`; прямые ссылки сохраняют указанную в URL редакцию.
 Типы 1–14 и 16–17 показывают собственную прозрачную растровую эмблему
-на landing, в мобильной сетке и во вкладках picker. Эмблема абстрактно обобщает
+на landing и во вкладках picker. Эмблема абстрактно обобщает
 визуальный язык item этой коллекции. Если у item нет ни собственной картинки,
 ни SVG, та же эмблема становится последним fallback в строке списка, глобальном
 поиске и picker; detail-шапка независимо использует item- или type-level cover.
@@ -163,12 +162,19 @@ as the full collection page. Grouped picker results also load every server page
 before client-side grouping.
 On phones the picker keeps the result list as its own vertical scroll container,
 so list swipes are handled before the surrounding dismissible sheet gesture.
-On phone layouts the collection search occupies its own full-width toolbar row,
-so grouping and filter controls cannot compress the input. An open item replaces
-the collection/search chrome; the common mobile-header back button and a deliberate
-right swipe both return to the list through the same query-navigation path. The
-handbook has no duplicate back bar inside its content. Vertical scrolling
-and gestures started on interactive controls remain untouched.
+На ширине до 760 px показывается либо список, либо открытая карточка: режима
+со списком сверху и карточкой снизу нет. Рабочая область занимает всю доступную
+ширину, карточка не имеет внешнего отступа, рамки и скругления оболочки.
+Высота рабочей области ограничена доступной высотой viewport; список и карточка
+прокручиваются внутри своих областей, поиск и фильтры закреплены над списком.
+Название коллекции и количество записей показаны рядом с добавлением объекта;
+кнопки «К коллекциям» нет. Счётчики коллекций и словарей не передаются в главную
+шапку приложения ни на одной ширине.
+Открытая карточка скрывает панель коллекции и список. До 640 px возврат выполняется
+общей кнопкой «Назад» в шапке; на ширине 641–760 px, где шапку заменяет sidebar,
+доступна кнопка «К списку». Намеренный свайп вправо также возвращает в список.
+Вертикальная прокрутка и жесты на интерактивных элементах
+остаются доступны.
 The outer handbook and centered page wrappers stay transparent so the shared
 application canvas dot pattern remains visible around the opaque navigation,
 list and detail surfaces. Handbook workspaces fill the available viewport below

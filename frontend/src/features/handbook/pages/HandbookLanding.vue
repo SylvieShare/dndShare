@@ -1,39 +1,7 @@
 <template>
   <div class="hb-landing">
 
-    <!-- ── Left: source sidebar ── -->
-    <aside class="hb-sidebar">
-      <div class="hb-sidebar-header">
-        <span class="hb-sidebar-label">Система</span>
-        <span class="hb-sidebar-divider" aria-hidden="true"></span>
-        <span class="hb-sidebar-label hb-sidebar-label--badge">Source</span>
-      </div>
-      <div class="hb-source-list">
-        <div v-for="src in sources" :key="src.id" class="hb-source-group">
-          <button
-            class="hb-source-item"
-            :class="{ active: src.id === selectedSourceId }"
-            @click="selectSource(src)"
-          >
-            <span class="hb-source-name">{{ src.name }}</span>
-            <span class="hb-source-version">{{ activeVersionLabel(src) }}</span>
-          </button>
-          <div v-if="src.id === selectedSourceId" class="hb-version-list" aria-label="Редакция правил">
-            <button
-              v-for="version in src.versions"
-              :key="version.id"
-              type="button"
-              :class="{ active: version.id === selectedSourceVersionId }"
-              @click="selectVersion(version.id)"
-            >
-              {{ version.version }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- ── Right: content ── -->
+    <!-- Collections for the global game context. -->
     <div class="hb-content">
       <div v-if="selectedSource" class="hb-content-inner">
         <div v-if="catalogError" role="alert">{{ catalogError }} <button type="button" @click="fetchTypesForSource(selectedSourceId)">Повторить</button></div>
@@ -152,12 +120,8 @@ import { useGameContextStore } from '@/stores/gameContext'
 const itemTypesStore = useItemTypesStore()
 const gameContextStore = useGameContextStore()
 
-const props = defineProps({ sourceVersionId: { type: [Number, String], default: null } })
-const emit = defineEmits(['select-type', 'update:source-version-id'])
+const emit = defineEmits(['select-type'])
 
-const sources = ref([])
-const selectedSourceId = ref(null)
-const selectedSourceVersionId = ref(null)
 const itemTypes = ref([])
 const suggestTypes = ref([])
 const sourceLoading = ref(true)
@@ -172,10 +136,10 @@ const loadingDicts = ref(false)
 // item data: race_ids/subrace_ids and class_ids/subclass_ids.
 const featureTypeIds = new Set([3, 4, 7, 18])
 
-const selectedSource = computed(() => sources.value.find(s => s.id === selectedSourceId.value) || null)
-const selectedVersion = computed(() => selectedSource.value?.versions?.find(
-  version => Number(version.id) === Number(selectedSourceVersionId.value),
-) || null)
+const selectedSource = computed(() => gameContextStore.selectedSource)
+const selectedVersion = computed(() => gameContextStore.selectedVersion)
+const selectedSourceId = computed(() => selectedSource.value?.id ?? null)
+const selectedSourceVersionId = computed(() => gameContextStore.sourceVersionId)
 const collectionGroups = computed(() => {
   const types = itemTypes.value.filter(visibleHandbookType)
   const features = types.filter(type => featureTypeIds.has(Number(type.id)))
@@ -227,22 +191,6 @@ const collectionGroups = computed(() => {
   return groups
 })
 
-function activeVersionLabel(source) {
-  if (source.id === selectedSourceId.value && selectedVersion.value) return selectedVersion.value.version
-  return source.versions?.[0]?.version || '—'
-}
-
-function selectSource(source) {
-  selectedSourceId.value = source.id
-  const preferredID = props.sourceVersionId || gameContextStore.sourceVersionId
-  const preferred = source.versions?.find(version => Number(version.id) === Number(preferredID))
-  selectVersion((preferred || source.versions?.[0])?.id || null)
-}
-
-function selectVersion(versionID) {
-  selectedSourceVersionId.value = versionID
-  emit('update:source-version-id', versionID)
-}
 function cardStyle(type) {
   if (!type.color) return {}
   return { '--card-color': type.color }
@@ -262,10 +210,6 @@ async function fetchSources() {
   sourceError.value = ''
   try {
     await gameContextStore.ensure()
-    sources.value = gameContextStore.sources
-    const preferredID = props.sourceVersionId || gameContextStore.sourceVersionId
-    const source = sources.value.find(item => item.versions?.some(version => Number(version.id) === Number(preferredID))) || sources.value[0]
-    if (source) selectSource(source)
   } catch {
     sourceError.value = 'Не удалось загрузить источники.'
   } finally {
@@ -298,7 +242,7 @@ async function fetchTypesForSource(sourceId) {
 
 watch(selectedSourceId, (id) => {
   if (id != null) fetchTypesForSource(id)
-}, { immediate: false })
+}, { immediate: true })
 
 fetchSources()
 </script>

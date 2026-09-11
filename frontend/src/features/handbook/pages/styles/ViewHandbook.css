@@ -2,6 +2,8 @@
 .handbook-outer {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  min-width: 0;
   height: calc(100vh - var(--header-h));
   height: calc(100dvh - var(--header-h));
   overflow: hidden;
@@ -40,8 +42,8 @@
   min-height: 0;
 }
 
-/* ── Mobile collection grid (hidden on desktop) ── */
-.handbook-type-grid {
+/* Only needed between the mobile header and desktop split-view breakpoints. */
+.handbook-detail-back {
   display: none;
 }
 
@@ -56,131 +58,47 @@
   border-top: 1px solid var(--border);
 }
 
-.handbook-list {
-  /* HandbookItemList handles its own width */
-}
-
-.handbook-detail {
-  /* HandbookItemDetail fills remaining space */
-}
-
-/* ── Responsive ── */
+/* One viewport, one active scroll pane on narrow screens. Keep the complete
+   flex height chain; an auto-height wrapper breaks scrolling in some browsers. */
 @media (max-width: 760px) {
-  .handbook-outer {
-    height: auto;
-    min-height: calc(100vh - var(--header-h));
-    min-height: calc(100dvh - var(--header-h));
-    overflow: visible;
-  }
-
   .handbook-page {
-    padding: 0 14px 14px;
+    padding: 0;
   }
 
   .handbook-body {
     flex-direction: column;
-    overflow: visible;
-    border-radius: 8px;
-  }
-}
-
-@media (max-width: 520px) {
-  .handbook-outer {
-    height: auto;
-    overflow: visible;
-  }
-
-  .handbook-page {
-    padding: 0 10px 10px;
-  }
-
-  /* Mobile collection grid */
-  .handbook-type-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding: 12px 0 10px;
-  }
-
-  .type-grid-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 14px 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent);
-    color: var(--text-1);
-    cursor: pointer;
-    font-family: inherit;
-    text-align: left;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .type-grid-card:hover {
-    border-color: var(--card-accent, color-mix(in srgb, var(--accent-soft) 35%, transparent));
-    background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  }
-  .type-grid-icon {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    opacity: 0.85;
-  }
-  .type-grid-icon-placeholder {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--text-on-accent) 10%, transparent);
-  }
-  .type-grid-name {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.2;
-  }
-  .type-grid-count {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  /* Body = hidden by default on mobile, panels shown by class */
-  .handbook-body {
-    display: block;
     border: none;
     border-radius: 0;
-    background: transparent;
   }
 
-  /* panel-types: show grid, hide body */
-  .handbook-outer.panel-types .handbook-type-grid { display: grid; }
-  .handbook-outer.panel-types .handbook-body { display: none; }
-
-  /* panel-list: show list, hide detail */
-  .handbook-outer.panel-list .handbook-type-grid { display: none; }
-  .handbook-outer.panel-list .handbook-body { display: block; }
-  .handbook-outer.panel-list .handbook-detail { display: none; }
-  .handbook-outer.panel-list .handbook-list {
-    display: flex;
+  .handbook-list,
+  .handbook-detail {
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
     border: none;
-    border-radius: 10px;
-    overflow: hidden;
-    max-height: none;
-    min-height: 0;
+    border-radius: 0;
   }
 
-  /* panel-detail: show detail, hide list */
-  .handbook-outer.panel-detail .handbook-type-grid { display: none; }
-  .handbook-outer.panel-detail .handbook-body { display: block; }
-  .handbook-outer.panel-detail .handbook-list { display: none; }
-  .handbook-outer.panel-detail .handbook-detail {
-    display: flex;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    max-height: none;
-    min-height: 0;
-    touch-action: pan-y;
+  .handbook-outer.panel-list .handbook-detail,
+  .handbook-outer.panel-detail .handbook-list,
+  .handbook-outer.panel-detail > .handbook-col-bar {
+    display: none;
   }
 
-  .handbook-outer.panel-detail > .handbook-col-bar { display: none; }
+  .handbook-detail {
+    overflow-y: auto;
+    touch-action: pan-y pinch-zoom;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 760px) {
+  .handbook-detail-back {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin: 8px 16px;
+  }
 }

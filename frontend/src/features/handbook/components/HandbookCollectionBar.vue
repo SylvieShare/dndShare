@@ -2,18 +2,10 @@
   <div class="col-bar" :class="{ 'col-bar--controls-only': !showIdentity }">
   <div class="col-bar-inner">
 
-    <!-- ── Left: back + identity ── -->
+    <!-- ── Left: collection identity ── -->
     <div v-if="showIdentity" class="col-bar-left">
-      <RouterLink class="col-back-btn" to="/handbook">
-        <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
-          <path d="M10 13L5 8L10 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        К коллекциям
-      </RouterLink>
-      <span class="col-sep" aria-hidden="true"></span>
-<span class="col-type-name">{{ type.name }}</span>
-      <span v-if="filtered" class="col-type-count">{{ resultCount }}{{ hasMore ? '+' : '' }} из {{ type.count }}</span>
-      <span v-else-if="type.count != null" class="col-type-count">{{ type.count }}</span>
+      <span class="col-type-name">{{ type.name }}</span>
+      <span class="col-type-count">{{ countLabel }}</span>
       <button v-if="canAdd" class="col-add-btn" @click="$emit('add')">+ Добавить</button>
     </div>
 
@@ -144,7 +136,6 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { RouterLink } from 'vue-router'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { fetchGet } from '@/shared/api/http'
 import { groupContentSources } from '@/shared/lib/contentSourceKinds'
@@ -178,6 +169,13 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['add', 'update:search', 'update:group-by', 'update:filters', 'update:content-source-ids'])
+
+const countLabel = computed(() => {
+  const total = props.type.count ?? props.type.countItems
+  const results = `${props.resultCount}${props.hasMore ? '+' : ''}`
+  if (!props.filtered) return total ?? results
+  return total != null ? `${results} из ${total}` : results
+})
 
 const filterOpen = ref(false)
 const filterBtnRef = ref(null)

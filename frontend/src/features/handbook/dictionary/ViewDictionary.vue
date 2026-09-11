@@ -67,7 +67,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { suggestApi } from '@/shared/api/suggestApi'
 import { useAccountStore } from '@/stores/account'
 import { useUiStore } from '@/stores/ui'
-import { createHeaderChip } from '@/shared/lib/appHeader'
 import DictItemGrid from '@/features/handbook/dictionary/components/DictItemGrid'
 import DictItemView from '@/features/handbook/dictionary/components/DictItemView'
 import DictTopBar from '@/features/handbook/dictionary/components/DictTopBar'
@@ -186,11 +185,10 @@ watch(
 )
 
 watch(
-  [selectedType, () => items.value.length, loading],
-  ([type, count, isLoading]) => {
+  selectedType,
+  (type) => {
     uiStore.setHeaderContext({
       title: type?.name || route.meta?.title || 'Словари',
-      chip: type && !isLoading ? createHeaderChip(count) : null,
     }, headerOwner)
   },
   { immediate: true },

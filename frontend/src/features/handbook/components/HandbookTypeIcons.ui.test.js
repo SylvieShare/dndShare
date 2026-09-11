@@ -7,10 +7,9 @@ const read = relative => readFileSync(fileURLToPath(new URL(relative, import.met
 describe('handbook type raster icons', () => {
   it('uses raster collection emblems across handbook navigation', () => {
     const landing = read('../pages/HandbookLanding.vue')
-    const page = read('../pages/ViewHandbook.vue')
     const picker = read('./ItemPickerModal.vue')
 
-    for (const source of [landing, page, picker]) {
+    for (const source of [landing, picker]) {
       expect(source).toContain('iconImageUrl')
       expect(source).not.toContain('type.svg')
     }

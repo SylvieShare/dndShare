@@ -47,7 +47,7 @@
       </span>
 
       <div class="header-right">
-        <UserBox />
+        <UserBox :expanded="!compactAccount" />
       </div>
     </div>
   </header>
@@ -55,6 +55,7 @@
 
 <script setup>
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { useIsMobile } from '@sylvieshare/share-ui'
 import { useRoute, useRouter } from 'vue-router'
 import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
@@ -76,6 +77,7 @@ const router = useRouter()
 const uiStore = useUiStore()
 const gameContextStore = useGameContextStore()
 const accountStore = useAccountStore()
+const compactAccount = useIsMobile(480)
 
 const menuOpen = ref(false)
 const collapsing = ref(false)

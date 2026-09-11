@@ -212,6 +212,8 @@ function onScroll(e) {
 <style scoped>
 .item-list-panel {
   width: 500px;
+  min-width: 0;
+  min-height: 0;
   flex-shrink: 0;
   border-right: 1px solid var(--border);
   display: flex;
@@ -261,6 +263,7 @@ function onScroll(e) {
 /* ── List body ── */
 .list-body {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 8px 0 14px;
 }
@@ -364,20 +367,7 @@ function onScroll(e) {
   .item-list-panel {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid var(--border);
-    max-height: 46vh;
-    min-height: 240px;
-    overflow: hidden;
-  }
-}
-
-@media (max-width: 520px) {
-  .item-list-panel {
-    max-height: none;
-    min-height: 0;
-    overflow: visible;
     border-bottom: none;
   }
-  .list-body { overflow: visible; }
 }
 </style>

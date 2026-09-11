@@ -6,16 +6,16 @@ const landingSource = readFileSync(fileURLToPath(new URL('./HandbookLanding.vue'
 const handbookSource = readFileSync(fileURLToPath(new URL('./ViewHandbook.vue', import.meta.url)), 'utf8')
 
 describe('handbook game context', () => {
-  it('starts from the global system and edition but keeps a local selector', () => {
+  it('uses the global system and edition without a second page selector', () => {
     expect(landingSource).toContain('await gameContextStore.ensure()')
-    expect(landingSource).toContain('props.sourceVersionId || gameContextStore.sourceVersionId')
-    expect(landingSource).toContain('selectedSourceVersionId')
+    expect(landingSource).toContain('computed(() => gameContextStore.selectedSource)')
+    expect(landingSource).toContain('computed(() => gameContextStore.sourceVersionId)')
     expect(landingSource).toContain("emit('select-type', type, selectedSourceVersionId)")
-    expect(landingSource).toContain("emit('update:source-version-id', versionID)")
+    expect(landingSource).not.toContain('hb-sidebar')
     expect(landingSource).not.toContain('gameContextStore.selectVersion')
   })
 
-  it('carries the locally selected edition into catalogue publication scope', () => {
+  it('carries the selected or linked edition into catalogue publication scope', () => {
     expect(handbookSource).toContain('q.sourceVersionId = sourceVersionId.value')
     expect(handbookSource).toContain('router.push({ query: currentQuery() })')
     expect(handbookSource).toContain("params.set('sourceVersionId', String(sourceVersionId.value))")
