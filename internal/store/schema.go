@@ -428,6 +428,7 @@ var schemaParts = []struct {
 	{"weapon-damage-units", schemaWeaponDamageUnitsSQL},
 	{"item-last-charge", schemaItemLastChargeSQL},
 	{"weapon-uses", schemaWeaponUsesSQL},
+	{"weapon-bonus-transfer", schemaWeaponBonusTransferSQL},
 }
 
 const (

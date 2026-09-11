@@ -1,6 +1,6 @@
 <template>
   <div class="resource-amount" role="group" :aria-label="label">
-    <button v-for="cell in units.max" :key="cell" type="button" :aria-label="`${label}: ${cell} ${cell === 1 ? 'заряд' : 'заряда'}`"
+    <button v-for="cell in units.max" :key="cell" type="button" :aria-label="`${label}: ${cell} ${unit ?? (cell === 1 ? 'заряд' : 'заряда')}`"
       :aria-pressed="cell <= units.value" :disabled="cell > units.value && (disabled || cell > units.available)"
       :title="cell <= units.value ? `Уменьшить до ${cell - 1}` : `Выбрать ${cell}`"
       @click.stop="$emit('change', cell <= units.value ? cell - 1 : cell)">
@@ -10,7 +10,7 @@
 </template>
 <script setup>
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
-defineProps({ units: { type: Object, required: true }, label: String, disabled: Boolean })
+defineProps({ units: { type: Object, required: true }, label: String, unit: String, disabled: Boolean })
 defineEmits(['change'])
 </script>
 <style scoped>

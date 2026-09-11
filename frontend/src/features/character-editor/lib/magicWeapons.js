@@ -1,3 +1,4 @@
+import { weaponBonusTransfer } from './weaponBonusTransfer'
 import { magicBaseId } from '@/features/items/lib/magicEquipmentBases'
 import { magicItemActive } from './characterMagicItems'
 
@@ -35,5 +36,9 @@ export function resolveWeaponItem(entry, itemsById) {
 }
 
 export function intrinsicWeaponBonus(entry, item, values) {
-  return entry?.magic_item_id != null && magicItemActive(item?.data?.weapon?.bonus_without_attunement ? { ...item, data: { ...item.data, attunement: 'none' } } : item, entry, true, values) ? Number(item.data?.weapon?.magic_bonus) || 0 : 0
+  const bonusSource = item?.data?.weapon?.bonus_without_attunement
+    ? { ...item, data: { ...item.data, attunement: 'none' } } : item
+  if (entry?.magic_item_id == null || !magicItemActive(bonusSource, entry, true, values)) return 0
+  const bonus = Number(item.data?.weapon?.magic_bonus) || 0
+  return bonus - (weaponBonusTransfer(entry, item, values)?.value || 0)
 }

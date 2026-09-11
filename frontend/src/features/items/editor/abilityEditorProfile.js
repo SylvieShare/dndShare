@@ -10,9 +10,10 @@ export const MAGIC_ITEM_PROPERTY_KEYS = ['armor_base', 'weapon', 'treasure', 'de
 const BASIC_KEYS = ['desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
-  'weapon_damage', 'weapon_uses', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
+  'weapon_damage', 'weapon_uses', 'weapon_bonus_transfer', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
 
 export const BLOCK_HINTS = {
+  weapon_bonus_transfer: 'Перенос части магического бонуса атаки и урона оружия в КД. Максимум берётся из свойств оружия, сброс — вручную.',
   weapon_uses: 'Особая атака с расходом ресурса при запуске и отдельными шагами после неё.',
   last_charge: 'Проверка при расходовании последнего заряда и последствие для этого экземпляра.',
   granted_spells: 'Заклинания, которые способность добавляет персонажу, и правила их сотворения.',

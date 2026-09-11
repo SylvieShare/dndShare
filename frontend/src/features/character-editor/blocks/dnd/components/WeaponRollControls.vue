@@ -5,6 +5,7 @@
       <span class="weapon-attack-roll-divider" role="separator" aria-orientation="vertical" />
       <ToggleSwitch label="Преимущество" :model-value="attackRollMode === 'advantage'" :disabled="attackRollMode === 'disadvantage'" title="Два к20, берём больший. Ручной выбор режима; выключите, чтобы учитывать эффекты персонажа автоматически." @update:model-value="value => setAttackMode('advantage', value)" />
     </div>
+    <WeaponBonusTransferSelector v-if="scope === 'attack' && weaponUid" :uid="weaponUid" />
     <WeaponRollOption v-for="use in scope === 'attack' ? uses : []" :key="use.key" :option="useOption(use)" @select="(key, value) => $emit('update:useKey', value ? key : '')" />
     <template v-if="scope === 'damage'">
       <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
@@ -23,13 +24,14 @@
   </div>
 </template>
 <script setup>
+import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import DamageFormulaPreview from './DamageFormulaPreview.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
 import { computed } from 'vue'
-const props = defineProps({ attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
+const props = defineProps({ weaponUid: String, attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
 function useOption(use) {
   const checked = props.useKey === use.key
   const condition = use.attack_mode === 'melee' ? 'Рукопашная атака' : `Дистанция до ${use.range_ft} футов`

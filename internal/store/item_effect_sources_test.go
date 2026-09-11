@@ -67,7 +67,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 		}
 		var beforeDawn []map[string]any
 		for _, field := range fields {
-			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" || field["key"] == "weapon_uses" {
+			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" || field["key"] == "weapon_uses" || field["key"] == "weapon_bonus_transfer" {
 				continue
 			}
 			if field["key"] == "use_resources" {
@@ -106,6 +106,13 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(284,'Метательное копьё молнии',19,'{"max_use":1,"weapon_uses":[{"key":"authored"}]}')`)
 	exec(schemaWeaponUsesSQL)
 	exec(schemaWeaponUsesSQL)
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(233,'Защитник',19,'{"weapon":{"magic_bonus":3},"desc":"keep"}')`)
+	exec(schemaWeaponBonusTransferSQL)
+	exec(schemaWeaponBonusTransferSQL)
+	var defenderOK bool
+	if err := pool.QueryRow(ctx, `SELECT data->>'desc'='keep' AND data->'weapon'->>'magic_bonus'='3' AND data->'weapon_bonus_transfer'->>'title'='Перенести в защиту' FROM dndshare.item WHERE id=233`).Scan(&defenderOK); err != nil || !defenderOK {
+		t.Fatalf("Defender migration: valid=%v err=%v", defenderOK, err)
+	}
 	var javelinUses []byte
 	if err := pool.QueryRow(ctx, `SELECT data->'weapon_uses' FROM dndshare.item WHERE id=284`).Scan(&javelinUses); err != nil {
 		t.Fatal(err)

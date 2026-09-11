@@ -13,3 +13,6 @@ var schemaWeaponDamageUnitsSQL string
 
 //go:embed schema/99_magic_weapon_refresh.sql
 var schemaMagicWeaponRefreshSQL string
+
+//go:embed schema/103_weapon_bonus_transfer.sql
+var schemaWeaponBonusTransferSQL string

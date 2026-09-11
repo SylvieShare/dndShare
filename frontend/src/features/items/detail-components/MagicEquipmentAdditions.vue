@@ -43,6 +43,7 @@ const effects = computed(() => {
       `${Number(rule.magic_bonus) > 0 ? '+' : ''}${rule.magic_bonus}`, conditions.join(' · '))
   }
   if (props.kind === 'weapon') {
+    if (data.weapon_bonus_transfer) add('bonus-transfer', ShieldCheck, data.weapon_bonus_transfer.title || 'Перенести в защиту', `0–${Number(rule.magic_bonus) || 0} к КД`, [data.weapon_bonus_transfer.condition, 'Столько же вычитается из бонуса атаки и урона. Сброс вручную под оружием.'].filter(Boolean).join(' '))
     if (rule.damage_type != null) add('damage', Flame, 'Тип основного урона', names(12, [rule.damage_type]), 'Заменяет тип урона основы')
     if (rule.extra_tags?.length) add('tags', Tags, 'Дополнительные свойства', names(14, rule.extra_tags))
     if (rule.extra_proficiencies?.length) add('proficiencies', BadgeCheck, 'Также подходит владение', names(4, rule.extra_proficiencies))

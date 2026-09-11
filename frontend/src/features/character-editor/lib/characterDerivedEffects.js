@@ -1,3 +1,4 @@
+import { transferArmorEffects } from './weaponBonusTransfer'
 import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
@@ -77,7 +78,7 @@ export function collectCharacterDerivedEffects(values = {}, itemsById = new Map(
       }]
     })
   }))
-  return [...ownedEffects, ...collectStatusDerivedEffects(values, itemsById)]
+  return [...ownedEffects, ...transferArmorEffects(values, itemsById), ...collectStatusDerivedEffects(values, itemsById)]
 }
 
 export function matchingDerivedEffects(effects, kind, context = {}) {
