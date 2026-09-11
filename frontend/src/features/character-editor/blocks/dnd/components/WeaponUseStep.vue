@@ -6,8 +6,7 @@
       <DamageFormulaPreview v-if="step.status === 'pending'" :expression="step.expression" label="" unframed />
       <DiceRollResult v-else-if="step.result" :result="step.result" />
     </div>
-    <small v-if="step.half_result != null">При успехе: {{ step.half_result }}</small>
-    <small v-else-if="step.status === 'pending' && !canManage">Ожидает броска владельца</small>
+    <small v-if="step.status === 'pending' && !canManage">Ожидает броска владельца</small>
   </div>
 </template>
 <script setup>

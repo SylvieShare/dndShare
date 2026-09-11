@@ -27,7 +27,7 @@ for (const width of [1280, 390]) test(`line is flat, rolls inline and survives r
  await expect(page.getByLabel('Результат броска: 15')).toBeVisible()
  await expect(page.getByLabel('Результат броска: 15').getByRole('img')).toHaveCount(4)
  await expect(page.getByText('= 15', { exact: true })).toBeVisible()
- await expect(page.getByText('При успехе: 7')).toBeVisible()
+ await expect(page.getByText(/^При успехе:/)).toHaveCount(0)
  expect(await page.evaluate(() => window.damageRolls)).toEqual(['4d6{Молния|#ff0}'])
  await page.reload()
  await expect(page.getByLabel('Результат броска: 15')).toBeVisible()
