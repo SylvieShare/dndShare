@@ -1,3 +1,4 @@
+import { damageAmountActions, damageUnitsMax } from './weaponDamageAmounts'
 import { dieSides } from './systemDice'
 
 /** Structured dice terms feed both the display component and the roll expression. */
@@ -13,7 +14,9 @@ export function weaponDamageActionFormula(action, critical = false) {
 }
 
 /** Convert domain rules into display data; the menu does not interpret schema fields. */
-export function weaponDamageMenuOptions(actions, keys, critical = false, scope = 'damage', twoHanded = false) {
+export function weaponDamageMenuOptions(actions, keys, critical = false, scope = 'damage', twoHanded = false, amounts = {}) {
+  const original = actions
+  actions = damageAmountActions(actions, amounts)
   const selected = new Set(selectedDamageActions(actions, keys).map(action => action.key))
   const costs = new Map()
   for (const action of actions) if (selected.has(action.key) && action.resource) {
@@ -27,6 +30,10 @@ export function weaponDamageMenuOptions(actions, keys, critical = false, scope =
   }
   for (const action of actions) if (action.attack_mode === 'thrown') includeAttackKey(action.key)
   return actions.filter(action => scope !== 'attack' || attackKeys.has(action.key)).map(action => {
+    const raw = original.find(row => row.key === action.key)
+    const maxUnits = scope === 'damage' ? damageUnitsMax(raw) : 0
+    const unitCost = Number(raw.resource_cost ?? 1)
+    const otherCost = (costs.get(action.resource?.key) || 0) - (selected.has(action.key) ? Number(action.resource_cost) || 0 : 0)
     const parent = actions.find(row => row.key === action.requires_damage_key)
     const label = action.label || action.source_label || 'Дополнительный урон'
     const displayRule = action.preview_replacement || action
@@ -41,15 +48,18 @@ export function weaponDamageMenuOptions(actions, keys, critical = false, scope =
       : Number(action.resource.value) < (selected.has(action.key) ? costs.get(action.resource.key) : cost + (costs.get(action.resource.key) || 0))
         ? `Недостаточно ресурса «${action.resource.title}».` : '')
     return {
-      key: action.key, label, formula: formula ? `${action.preview_replacement ? '' : '+'}${formula.replace('d', 'к')}` : '',
+      key: action.key, label, mode: action.attack_mode === 'thrown',
+      units: maxUnits ? { max: maxUnits, value: action.selected_units, color: action.resource?.color_point,
+        available: action.resource_error || !action.resource ? 0 : Math.max(0, Math.floor((Number(action.resource.value) - otherCost) / unitCost)) } : null,
+      formula: formula ? `${action.preview_replacement ? '' : '+'}${formula.replace('d', 'к')}` : '',
       formulaPrefix: action.preview_replacement ? '→' : '+', formulaVerb: action.preview_replacement ? 'Урон' : 'Добавит',
       damageParts: scope === 'attack' ? [] : weaponDamageActionParts(displayRule, critical),
       condition, checked: selected.has(action.key),
       nested: !!action.requires_damage_key,
       disabled: blockedByGrip || (!!action.requires_damage_key && !selected.has(action.requires_damage_key)) || (!!resourceError && !selected.has(action.key)),
-      resourceCost: paid ? { amount: cost, color: action.resource?.color_point, unavailable: !!resourceError } : null,
+      resourceCost: paid && !maxUnits ? { amount: cost, color: action.resource?.color_point, unavailable: !!resourceError } : null,
       resourceError,
-      hint: [blockedByGrip && 'Сначала выключите хват двумя руками.', condition, resourceError, paid && `При броске урона расходуется ${cost} ед. ресурса «${action.resource?.title || 'источник недоступен'}».`, parent && `Сначала включите «${parent.label || parent.source_label}».`,
+      hint: [blockedByGrip && 'Сначала выключите хват двумя руками.', condition, resourceError, paid && (maxUnits ? `Каждая ячейка расходует ${unitCost} ед. ресурса. Выбрано: ${action.selected_units}.` : `При броске урона расходуется ${cost} ед. ресурса «${action.resource?.title || 'источник недоступен'}».`), parent && `Сначала включите «${parent.label || parent.source_label}».`,
         scope === 'damage' && action.once_per_turn && 'Не чаще одного раза за ход. Ход не отслеживается автоматически.'].filter(Boolean).join(' ') || 'Добавить урон к текущему броску.',
     }
   })

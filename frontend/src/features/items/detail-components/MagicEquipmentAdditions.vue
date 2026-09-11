@@ -53,7 +53,7 @@ const effects = computed(() => {
     }
     for (const [index, action] of (data.weapon_damage || []).entries()) {
       const parent = (data.weapon_damage || []).find(row => row.key === action.requires_damage_key)
-      const note = [action.damage_type != null && names(12, [action.damage_type]),
+      const note = [action.resource_units_max && `За одну ячейку; выбор от 0 до ${action.resource_units_max}`, action.damage_type != null && names(12, [action.damage_type]),
         (action.uses_resource || action.resource_key) && `Расход: ${action.resource_cost ?? 1} — ${action.resource_key ? (data.use_resources || []).find(row => row.key === action.resource_key)?.title || action.resource_key : 'заряды предмета'}`, parent && `Вместе с «${parent.label || 'другим переключателем'}»`,
         action.once_per_turn && 'Не чаще раза за ход', action.double_on_critical !== false && 'Кости удваиваются при крите',
         data.attunement !== 'none' && 'После настройки',

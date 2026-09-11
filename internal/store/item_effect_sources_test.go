@@ -44,7 +44,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(178,'Трезубец управления рыбами',19,'{}')`)
 	exec(schemaTridentFishCommandSQL)
-	added := map[string]map[string]bool{"weapon_damage": {"damage_type": true, "uses_resource": true, "resource_key": true, "resource_cost": true}, "status_effects": {"target": true, "condition": true, "weapon_damage_key": true}}
+	added := map[string]map[string]bool{"weapon_damage": {"damage_type": true, "uses_resource": true, "resource_key": true, "resource_cost": true, "resource_units_max": true}, "status_effects": {"target": true, "condition": true, "weapon_damage_key": true}}
 	for _, id := range []int{3, 4, 5, 7, 18, 19} {
 		content, err := os.ReadFile("../../resources/items/item_" + strconv.Itoa(id) + "_shema.json")
 		if err != nil {
@@ -98,6 +98,20 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	}
 	exec(schemaDawnRecoveryThesesSQL)
 	exec(schemaDawnRecoveryThesesSQL)
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(189,'Посох ударов',19,'{"max_use":10,"weapon_damage":[{"key":"authored","dice":"d8"}]}')`)
+	exec(schemaWeaponDamageUnitsSQL)
+	exec(schemaWeaponDamageUnitsSQL)
+	var staffRules []byte
+	if err := pool.QueryRow(ctx, `SELECT data->'weapon_damage' FROM dndshare.item WHERE id=189`).Scan(&staffRules); err != nil {
+		t.Fatal(err)
+	}
+	var rules []map[string]any
+	if err := json.Unmarshal(staffRules, &rules); err != nil {
+		t.Fatal(err)
+	}
+	if len(rules) != 2 || rules[0]["key"] != "authored" || rules[1]["resource_units_max"] != float64(3) || rules[1]["resource_cost"] != float64(1) {
+		t.Fatal("incorrect staff charge selection")
+	}
 	for _, id := range []int{3, 4, 5, 7, 18, 19} {
 		var actualBytes []byte
 		if err = pool.QueryRow(ctx, `SELECT fields FROM dndshare.item_type WHERE id=$1`, id).Scan(&actualBytes); err != nil {

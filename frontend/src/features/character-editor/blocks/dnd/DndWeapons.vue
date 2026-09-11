@@ -151,6 +151,7 @@ import {
   appendInventoryEntry,
   weaponEntryToOwnedEntry,
 } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
+import { damageAmountActions } from '@/shared/lib/weaponDamageAmounts'
 import { selectedWeaponDamageExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
 import { selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
 import { prepareWeaponRollEntry, withWeaponThrowAction } from './lib/weaponThrow'
@@ -346,7 +347,7 @@ function rollPresetDamage(kind, critical = false) {
   dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical))
 }
 
-function rollDamage(entry, { critical = false, twoHanded = false, actionKeys = [] } = {}) {
+function prepareDamageRoll(entry, { critical = false, twoHanded = false, actionKeys = [], actionAmounts = {} } = {}) {
   entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
   const actions = weaponDamageActions(entry)
   if (entry._attackMode === 'thrown') twoHanded = false
@@ -354,11 +355,17 @@ function rollDamage(entry, { critical = false, twoHanded = false, actionKeys = [
     ? (twoHanded ? criticalDamageExpressionTwoHanded(entry, extraCriticalDice(entry)) : criticalDamageExpression(entry, extraCriticalDice(entry)))
     : (twoHanded ? damageExpressionTwoHanded(entry) : damageExpression(entry))
   const primary = damagePartsRaw(entry)[0] || {}
-  const expr = selectedWeaponDamageExpression({ baseExpression, actions, actionKeys, critical, damageType: primary.type, damageTypeColor: primary.typeColor })
-  if (!expr || expr === '0') return
-  if (!weaponMechanics.spend(actions, actionKeys)) return
-  const labels = selectedDamageActions(actions, actionKeys).map(action => action.label || action.source_label)
-  dice.roll(`${critical ? 'Критический урон' : 'Урон'}${twoHanded ? ' (2р)' : ''}: ${itemTitle(entry)}${labels.length ? ` — ${labels.join(', ')}` : ''}`, expr)
+  const selectedActions = damageAmountActions(actions, actionAmounts)
+  const expr = selectedWeaponDamageExpression({ baseExpression, actions: selectedActions, actionKeys, critical, damageType: primary.type, damageTypeColor: primary.typeColor })
+  return { entry, actions, selectedActions, expr, twoHanded }
+}
+function damagePreview(entry, options) { return prepareDamageRoll(entry, options).expr }
+function rollDamage(entry, { critical = false, actionKeys = [], actionAmounts = {}, ...options } = {}) {
+  const roll = prepareDamageRoll(entry, { ...options, critical, actionKeys, actionAmounts })
+  if (!roll.expr || roll.expr === '0') return
+  if (!weaponMechanics.spend(roll.actions, actionKeys, actionAmounts)) return
+  const labels = selectedDamageActions(roll.selectedActions, actionKeys).map(action => action.label || action.source_label)
+  dice.roll(`${critical ? 'Критический урон' : 'Урон'}${roll.twoHanded ? ' (2р)' : ''}: ${itemTitle(roll.entry)}${labels.length ? ` — ${labels.join(', ')}` : ''}`, roll.expr)
 }
 
 function hasWeaponDamage(entry) {
@@ -538,6 +545,7 @@ provide('weaponsBlockCtx', reactive({
   toggleWeaponResource: weaponMechanics.toggleResource,
   rollAttack,
   rollDamage,
+  damagePreview,
   showPropertyTooltip,
   hidePropertyTooltip,
   setField,

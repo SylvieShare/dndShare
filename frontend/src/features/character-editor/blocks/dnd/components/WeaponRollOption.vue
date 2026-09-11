@@ -9,17 +9,19 @@
         <span aria-hidden="true">−{{ option.resourceCost.amount > 1 ? option.resourceCost.amount : '' }}</span>
         <SpellSlotSphere :size="22" :color="option.resourceCost.color" :spent="option.resourceCost.unavailable" :interactive="false" aria-hidden="true" />
       </span>
-      <ToggleSwitch :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => $emit('select', option.key, value)" />
+      <WeaponResourceAmount v-if="option.units" :units="option.units" :label="option.label" :disabled="option.disabled" @change="value => $emit('amount', option.key, value)" />
+      <ToggleSwitch v-else :model-value="option.checked" :disabled="option.disabled" :aria-label="option.label" @update:model-value="value => $emit('select', option.key, value)" />
     </FormField>
     <small v-if="option.condition" class="damage-option-condition">{{ option.condition }}</small>
   </div>
 </template>
 <script setup>
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
+import WeaponResourceAmount from './WeaponResourceAmount.vue'
 import DamageDice from './DamageDice.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 defineProps({ option: { type: Object, required: true } })
-defineEmits(['select'])
+defineEmits(['select', 'amount'])
 </script>
 <style scoped>
 .damage-dependent-option { margin-left: 8px; padding-left: 10px; border-left: 2px solid var(--border); }

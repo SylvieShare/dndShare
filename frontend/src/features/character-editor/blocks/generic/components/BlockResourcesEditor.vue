@@ -63,7 +63,7 @@
             <span class="bre-readonly-source">Источник: {{ row.source_label || 'способности' }}</span>
           </span>
           <span class="bre-readonly-count">{{ row.value }} / {{ row.total }}</span>
-          <span class="bre-lock" title="Редактируется в источнике">Только чтение</span>
+          <ToggleSwitch :model-value="row.visible_here" label="Отображать здесь" :aria-label="`Отображать здесь: ${row.title}`" @update:model-value="value => $emit('set-visible', row.key, value)" />
         </div>
       </div>
     </EditorSection>
@@ -87,7 +87,7 @@ const props = defineProps({
   resources: { type: Array, default: () => [] },
   readonlyResources: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['reorder', 'change-color', 'rename', 'set-total', 'remove', 'add', 'set-rest'])
+const emit = defineEmits(['reorder', 'change-color', 'rename', 'set-total', 'remove', 'add', 'set-rest', 'set-visible'])
 
 // `_id` = the resource's stored index; the array isn't mutated mid-drag, so it's a stable key for that drag.
 const rows = computed(() => props.resources.map((r, i) => ({ ...r, _id: i })))
@@ -205,6 +205,7 @@ function onDragStart(e, row, idx) {
   align-items: center;
   gap: 9px;
   min-height: 40px;
+  flex-wrap: wrap;
   padding: 7px 8px;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
@@ -229,5 +230,5 @@ function onDragStart(e, row, idx) {
 
 .bre-readonly-source { color: var(--text-muted); font-size: 10px; }
 .bre-readonly-count { color: var(--text-2); font-size: 12px; font-variant-numeric: tabular-nums; }
-.bre-lock { color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+
 </style>

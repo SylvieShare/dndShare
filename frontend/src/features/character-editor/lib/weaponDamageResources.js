@@ -1,3 +1,4 @@
+import { damageAmountActions, damageUnitsMax } from '@/shared/lib/weaponDamageAmounts'
 import { selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
 import { collectCharacterResources, setCharacterResourceAvailable } from './characterResources'
 
@@ -19,6 +20,7 @@ export function damageResourceCosts(actions, keys) {
   for (const action of selectedDamageActions(actions, keys)) {
     if (!action.uses_resource && !action.resource_key) continue
     if (action.resource_error || !action.resource) return { error: action.resource_error || 'Ресурс недоступен.', costs: [] }
+    if (damageUnitsMax(action) && (!Number.isInteger(action.selected_units) || action.selected_units < 1)) return { error: 'Выберите число зарядов.', costs: [] }
     const key = action.resource.key
     const row = costs.get(key) || { resource: action.resource, cost: 0 }
     row.cost += Math.max(1, Number(action.resource_cost) || 1)
@@ -30,8 +32,8 @@ export function damageResourceCosts(actions, keys) {
 }
 
 /** Re-read current balances and build one document update, before launching the roll. */
-export function spendDamageResources(values, itemsById, actions, keys, canSpend = true) {
-  const current = bindDamageResources(actions, collectCharacterResources(values, itemsById), canSpend)
+export function spendDamageResources(values, itemsById, actions, keys, canSpend = true, amounts = {}) {
+  const current = damageAmountActions(bindDamageResources(actions, collectCharacterResources(values, itemsById), canSpend), amounts)
   const plan = damageResourceCosts(current, keys)
   if (plan.error) return { error: plan.error, patch: {} }
   let next = values

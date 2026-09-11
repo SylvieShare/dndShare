@@ -16,8 +16,8 @@ export function useWeaponMechanics(charCtx) {
     charCtx.updateValues(patch)
   }
   function bind(actions) { return bindDamageResources(actions, resources.value, !!charCtx.ownerMode) }
-  function spend(actions, keys) {
-    const result = spendDamageResources(charCtx.values || {}, unref(charCtx.characterResources?.itemsById) || new Map(), actions, keys, !!charCtx.ownerMode)
+  function spend(actions, keys, amounts = {}) {
+    const result = spendDamageResources(charCtx.values || {}, unref(charCtx.characterResources?.itemsById) || new Map(), actions, keys, !!charCtx.ownerMode, amounts)
     error.value = result.error
     if (result.error) return false
     if (Object.keys(result.patch).length) charCtx.updateValues(result.patch)

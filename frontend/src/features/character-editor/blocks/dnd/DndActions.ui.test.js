@@ -101,6 +101,6 @@ describe('character action block', () => {
     expect(viewSource).toContain('.ram-custom-trigger:has(.dav-resource:active)')
     expect(blockSource).toContain('@toggle-resource="toggleActionResource"')
     expect(resourcesSource).toContain('featureActionResourceKeys(')
-    expect(resourcesSource).toContain('!actionResourceKeys.value.has(String(resource.key))')
+    expect(resourcesSource).toContain('resourceVisibleHere(resource, values.value, actionResourceKeys.value, widgetResourceKeys.value)')
   })
 })

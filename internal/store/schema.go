@@ -16,6 +16,9 @@ import (
 // The explicit order is part of the database contract: later sections may
 // reference objects and seed data created by earlier ones.
 
+//go:embed schema/100_weapon_damage_units.sql
+var schemaWeaponDamageUnitsSQL string
+
 //go:embed schema/99_magic_weapon_refresh.sql
 var schemaMagicWeaponRefreshSQL string
 
@@ -428,6 +431,7 @@ var schemaParts = []struct {
 	{"dawn-recovery-theses", schemaDawnRecoveryThesesSQL},
 	{"action-description-conditions", schemaActionDescriptionConditionsSQL},
 	{"magic-weapon-refresh", schemaMagicWeaponRefreshSQL},
+	{"weapon-damage-units", schemaWeaponDamageUnitsSQL},
 }
 
 const (

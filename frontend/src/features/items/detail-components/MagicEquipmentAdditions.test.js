@@ -62,3 +62,15 @@ it('keeps options out of the top-level weapon menu until a submenu opens', async
     for (const text of ['Критическое попадание', 'Двумя руками', 'Цель — великан', 'aria-label="Метнуть"']) expect(html).not.toContain(text)
   } finally { vi.unstubAllGlobals() }
 })
+
+it('separates added damage, renders three resource cells instead of a toggle and places preview below', async () => {
+  const options = weaponDamageMenuOptions([{ key: 'striking', label: 'Усилить удар', dice: 'd6', dice_count: 1, uses_resource: true, resource_cost: 1, resource_units_max: 3,
+    resource: { key: 'staff', title: 'Заряды', value: 2, total: 10 } }], [])
+  const html = await render(WeaponRollControls, { options, preview: '1d6{Дробящий}+5{Дробящий}' })
+  expect(html).toContain('Усилить удар: 3 заряда')
+  expect(html).toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Усилить удар: 3 заряда")[^>]*>/)
+  expect(html).not.toContain('aria-label="Усилить удар" role="switch"')
+  expect(html.indexOf('Усилить удар')).toBeLessThan(html.indexOf('Итоговый урон'))
+  expect(html.indexOf('Итоговый урон')).toBeLessThan(html.indexOf('Бросить на урон'))
+  expect(html).toContain('--dd-size:26px')
+})

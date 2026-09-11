@@ -36,6 +36,7 @@
           @rename="rename"
           @set-total="setTotal"
           @set-rest="setRest"
+          @set-visible="setVisible"
           @remove="remove"
           @add="add"
         />
@@ -51,6 +52,7 @@ import BlockResourcesEditor from '@/features/character-editor/blocks/generic/com
 import BlockResourcesView from '@/features/character-editor/blocks/generic/components/BlockResourcesView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
+import { resourceVisibleHere, resourceVisibilityPatch } from '@/features/character-editor/lib/resourceVisibility'
 import { featureWidgetResourceKeys } from '@/features/character-editor/lib/characterFeatureWidgets'
 import { featureActionResourceKeys } from '@/features/character-editor/lib/characterFeatureActions'
 
@@ -77,9 +79,18 @@ const widgetResourceKeys = computed(() => featureWidgetResourceKeys(
   charCtx.characterResources?.itemsById?.value || charCtx.characterResources?.itemsById || new Map(),
   allResources.value,
 ))
-const resources = computed(() => allResources.value.filter(resource => !actionResourceKeys.value.has(String(resource.key)) && !widgetResourceKeys.value.has(String(resource.key))))
-const readonlyResources = computed(() => allResources.value.filter((resource) => resource.readonly))
+const values = computed(() => charCtx.values?.value || charCtx.values || {})
+const visibleHere = resource => resourceVisibleHere(resource, values.value, actionResourceKeys.value, widgetResourceKeys.value)
+const resources = computed(() => allResources.value.filter(visibleHere))
+const readonlyResources = computed(() => allResources.value.filter((resource) => resource.readonly).map(resource => ({ ...resource, visible_here: visibleHere(resource) })))
 const ownerMode = computed(() => charCtx.ownerMode)
+
+function setVisible(key, visible) {
+  if (!ownerMode.value) return
+  const patch = resourceVisibilityPatch(values.value, key, visible)
+  if (charCtx.updateValues) charCtx.updateValues(patch)
+  else for (const [id, value] of Object.entries(patch)) emit('update:value', id, value)
+}
 
 function emitResources(next) {
   emit('update:value', props.block.id, next)

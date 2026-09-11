@@ -31,6 +31,10 @@
           <option v-if="data.resource_key && !resources.some(row => row.key === data.resource_key)" :value="data.resource_key">Недоступный ресурс: {{ data.resource_key }}</option>
         </FormSelect>
       </FormField>
+      <FormField label="Выбирать количество ячеек" title="Вместо галочки игрок выбирает количество от нуля до максимума. Кости и стоимость указаны за одну ячейку.">
+        <ToggleSwitch :model-value="data.resource_units_max != null" aria-label="Выбирать количество ячеек" @update:model-value="value => value ? data.resource_units_max = 3 : delete data.resource_units_max" />
+      </FormField>
+      <AbilityRuleFields v-if="data.resource_units_max != null" :fields="fieldsFor(['resource_units_max'])" :data="data" @update:data="update" />
       <AbilityRuleFields :fields="fieldsFor(['resource_cost'])" :data="data" @update:data="update" />
     </template>
     <AbilityUnlockField :data="data" />
@@ -64,7 +68,7 @@ const otherRules = computed(() => (editor.itemData?.weapon_damage || []).filter(
 const resources = computed(() => (editor.itemData?.use_resources || []).filter(row => row.key))
 function setResource(enabled) {
   if (enabled) { props.data.uses_resource = true; props.data.resource_cost = 1 }
-  else { delete props.data.uses_resource; delete props.data.resource_key; delete props.data.resource_cost }
+  else { delete props.data.uses_resource; delete props.data.resource_key; delete props.data.resource_cost; delete props.data.resource_units_max }
 }
 function setKey(value) { renameWeaponDamageKey(editor.itemData || {}, props.data, value) }
 function update(value) { Object.assign(props.data, value) }
@@ -84,6 +88,8 @@ watchEffect(() => {
     if (!exists) message = 'Дополнительный урон: сначала добавьте выбранный ресурс в зависимостях.'
     else if (!Number.isInteger(cost) || cost < 1) message = 'Стоимость удара должна быть целым положительным числом.'
   }
+  if (props.data.resource_units_max != null && (!Number.isInteger(Number(props.data.resource_units_max)) || Number(props.data.resource_units_max) < 2 || Number(props.data.resource_units_max) > 20)) message = 'Число ячеек расхода должно быть целым от 2 до 20.'
+  if (props.data.resource_units_max != null && !(props.data.uses_resource || props.data.resource_key)) message = 'Выбор ячеек требует включённого расхода ресурса.'
   editor.setValidationError?.(validationKey, message)
 })
 onScopeDispose(() => editor.setValidationError?.(validationKey, ''))
