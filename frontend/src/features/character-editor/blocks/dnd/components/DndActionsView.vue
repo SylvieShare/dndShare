@@ -52,9 +52,7 @@
                 <strong>{{ action.title }}</strong>
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
-              <div v-if="action.description" class="dav-description">
-                <DndRichContent :html="action.description" @click.stop />
-              </div>
+              <MechanicTheses :html="action.description" :lines="action.requirements" color="var(--dav-tone)" />
               <span v-if="linkedActions(action).length" class="dav-linked-actions">
                 <span
                   v-for="linked in linkedActions(action)"
@@ -64,9 +62,7 @@
                   @mouseleave="hideActionTooltip"
                 >{{ linked.value }}</span>
               </span>
-              <span v-if="action.requirements.length" class="dav-requirements">
-                <span v-for="requirement in action.requirements" :key="requirement">{{ requirement }}</span>
-              </span>
+
               <span
                 v-if="resourceTotal(action) > 1"
                 class="dav-resource dav-resource--stacked"
@@ -142,7 +138,7 @@
 </template>
 
 <script setup>
-import DndRichContent from '@/shared/ui/DndRichContent.vue'
+import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { computed, ref } from 'vue'
 import { BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
 import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
@@ -267,13 +263,8 @@ function hideActionTooltip() {
 .dav-copy { min-width: 0; overflow-wrap: anywhere; }
 .dav-title-row { display: flex; min-width: 0; align-items: center; gap: 6px; }
 .dav-title-row strong { min-width: 0; color: var(--text-1); font-size: 13px; line-height: 1.3; }
-.dav-description { margin-top: 4px; color: var(--text-2); font-size: 12px; line-height: 1.45; }
-.dav-description :deep(ul), .dav-description :deep(ol) { clear: both; padding-top: 4px; }
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
-.dav-requirements { display: block; clear: both; padding-top: 4px; color: var(--text-muted); font-size: 10px; line-height: 1.4; }
-.dav-requirements > span { display: block; margin-top: 2px; }
-.dav-requirements > span::before { margin-right: 5px; color: var(--dav-tone); content: '•'; }
 .dav-resource { display: flex; min-width: 0; align-items: center; gap: 6px; }
 .dav-resource--single { align-self: center; }
 .dav-resource--stacked { clear: both; flex-wrap: wrap; padding-top: 4px; }

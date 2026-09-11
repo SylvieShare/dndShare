@@ -563,8 +563,9 @@
         "name": "Длинный отдых",
         "key": "rollback_long_rest",
         "type": "bool"
-      }
-    ]
+      },
+    {"key": "dawn_recovery", "name": "Восстановление на рассвете", "type": "object", "fields": [{"key": "mode", "name": "Способ восстановления", "type": "select", "options": [{"value": "full", "label": "Полностью"}, {"value": "roll", "label": "По формуле"}]}, {"key": "formula", "name": "Сколько восстановить", "type": "text", "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."}]}
+  ]
   },
   {
     "name": "Восстанавливается на коротком отдыхе",
@@ -2037,5 +2038,6 @@
         "type": "bool"
       }
     ]
-  }
+  },
+  {"key": "dawn_recovery", "name": "Восстановление на рассвете", "type": "object", "fields": [{"key": "mode", "name": "Способ восстановления", "type": "select", "options": [{"value": "full", "label": "Полностью"}, {"value": "roll", "label": "По формуле"}]}, {"key": "formula", "name": "Сколько восстановить", "type": "text", "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."}]}
 ]

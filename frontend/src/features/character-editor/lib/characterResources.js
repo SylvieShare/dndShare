@@ -146,8 +146,8 @@ export function createAbilityResourceSource(valueId, color) {
       const entries = featureEntries(values, valueId)
       return entries.map((entry) => entry?.id).filter((id) => id != null)
     },
-    collect(values, itemsById) {
-      const entries = featureEntries(values, valueId, itemsById)
+    collect(values, itemsById, { includeInactive = false } = {}) {
+      const entries = featureEntries(values, valueId, itemsById, includeInactive)
       return entries.flatMap((entry) => {
         if (!featureEntryActive(valueId, entry)) return []
         const item = itemsById.get(String(entry.id))
@@ -164,6 +164,7 @@ export function createAbilityResourceSource(valueId, color) {
             value: Math.min(abilityAvailable(entry, definition, total), total),
             total,
             ...rest,
+            dawn_recovery: definition.rule.dawn_recovery,
             readonly: true,
             source_label: valueId === MAGIC_VALUE_ID ? 'магического предмета' : 'способности',
             source: {

@@ -5,8 +5,8 @@
     </FormField>
     <RuleKeyField v-model="data.key" :title="data.title" :used-keys="otherKeys" />
     <AbilityRuleFields :fields="typeFields" :data="data" @update:data="update" />
-    <FormField label="Описание" vertical title="Что делает действие. Ссылки на стандартные действия и другие правила можно вставить прямо в текст.">
-      <InputDescription editable :block="{ id: 'description', content: { placeholder: 'Что происходит при использовании действия…' } }" :value="data.description || ''" @update:value="(_, value) => data.description = value" />
+    <FormField label="Описание" vertical title="Один тезис — одно правило: цель, результат, ограничение. Используйте маркированный список; не повторяйте название, вид действия и стоимость. Ссылки и кости можно вставлять в текст.">
+      <InputDescription editable :block="{ id: 'description', content: { placeholder: 'Короткие тезисы: цель → результат → ограничения…' } }" :value="data.description || ''" @update:value="(_, value) => data.description = value" />
       <FormSelect :disabled="standardLoading" value="" aria-label="Вставить ссылку на стандартное действие" @update:value="insertStandardAction">
         <option value="">{{ standardLoading ? 'Загрузка стандартных действий…' : 'Вставить стандартное действие…' }}</option>
         <option v-for="entry in standardActions" :key="entry.id" :value="entry.id">{{ entry.value }}</option>

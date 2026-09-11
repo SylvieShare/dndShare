@@ -42,6 +42,8 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
  ALTER SEQUENCE dndshare.item_id_seq RESTART WITH 9000;
  INSERT INTO dndshare.item(id,name,type_id,data) VALUES(86,'Посох иссушения',19,'{"desc":"keep","weapon":{"base_item_id":37},"attunement":"required","feature_actions":[{"key":"keep"}]}');`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(178,'Трезубец управления рыбами',19,'{}')`)
+	exec(schemaTridentFishCommandSQL)
 	added := map[string]map[string]bool{"weapon_damage": {"damage_type": true, "uses_resource": true, "resource_key": true, "resource_cost": true}, "status_effects": {"target": true, "condition": true, "weapon_damage_key": true}}
 	for _, id := range []int{3, 4, 5, 7, 18, 19} {
 		content, err := os.ReadFile("../../resources/items/item_" + strconv.Itoa(id) + "_shema.json")
@@ -63,6 +65,23 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 				field["fields"] = keep
 			}
 		}
+		var beforeDawn []map[string]any
+		for _, field := range fields {
+			if field["key"] == "dawn_recovery" {
+				continue
+			}
+			if field["key"] == "use_resources" {
+				var children []any
+				for _, raw := range field["fields"].([]any) {
+					if raw.(map[string]any)["key"] != "dawn_recovery" {
+						children = append(children, raw)
+					}
+				}
+				field["fields"] = children
+			}
+			beforeDawn = append(beforeDawn, field)
+		}
+		fields = beforeDawn
 		baseline, _ := json.Marshal(fields)
 		exec(`INSERT INTO dndshare.item_type VALUES($1,$2::jsonb)`, id, baseline)
 	}
@@ -77,6 +96,8 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	if once != twice {
 		t.Fatal("migration is not idempotent")
 	}
+	exec(schemaDawnRecoveryThesesSQL)
+	exec(schemaDawnRecoveryThesesSQL)
 	for _, id := range []int{3, 4, 5, 7, 18, 19} {
 		var actualBytes []byte
 		if err = pool.QueryRow(ctx, `SELECT fields FROM dndshare.item_type WHERE id=$1`, id).Scan(&actualBytes); err != nil {
@@ -89,6 +110,28 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 		if !reflect.DeepEqual(actual, expected) {
 			t.Fatalf("schema snapshot %d differs from applied migration", id)
 		}
+	}
+	var fishDescription string
+	if err = pool.QueryRow(ctx, `SELECT data#>>'{feature_actions,0,description}' FROM dndshare.item WHERE id=178`).Scan(&fishDescription); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasPrefix(fishDescription, "<ul><li>") || strings.Contains(fishDescription, "врождённой") {
+		t.Fatal("fish command theses repeat requirements")
+	}
+	exec(`UPDATE dndshare.item SET data=jsonb_set(data,'{feature_actions,0,description}','"<p>Авторская правка</p>"') WHERE id=178`)
+	exec(schemaDawnRecoveryThesesSQL)
+	if err = pool.QueryRow(ctx, `SELECT data#>>'{feature_actions,0,description}' FROM dndshare.item WHERE id=178`).Scan(&fishDescription); err != nil {
+		t.Fatal(err)
+	}
+	if fishDescription != "<p>Авторская правка</p>" {
+		t.Fatal("author's prose overwritten")
+	}
+	var dawnMode, dawnFormula string
+	if err = pool.QueryRow(ctx, `SELECT data#>>'{dawn_recovery,mode}',data#>>'{dawn_recovery,formula}' FROM dndshare.item WHERE id=86`).Scan(&dawnMode, &dawnFormula); err != nil {
+		t.Fatal(err)
+	}
+	if dawnMode != "roll" || dawnFormula != "1d3" {
+		t.Fatal("staff dawn rule is missing")
 	}
 	var staff map[string]any
 	_ = json.Unmarshal([]byte(once), &staff)

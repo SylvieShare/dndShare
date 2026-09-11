@@ -80,6 +80,17 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 			}
 		}
 	}
+	var dawn map[string]any
+	if err := json.Unmarshal([]byte(strings.Split(schemaDawnRecoveryThesesSQL, "$dawn_field$")[1]), &dawn); err != nil {
+		t.Fatal(err)
+	}
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] == "use_resources" {
+			field["fields"] = append(field["fields"].([]any), dawn)
+		}
+	}
+	want = append(want.([]any), dawn)
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

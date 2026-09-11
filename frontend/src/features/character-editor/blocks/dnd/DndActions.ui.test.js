@@ -8,13 +8,10 @@ const editorSource = readFileSync(fileURLToPath(new URL('./components/DndActions
 const resourcesSource = readFileSync(fileURLToPath(new URL('../generic/BlockResources.vue', import.meta.url)), 'utf8')
 
 describe('character action block', () => {
-  it('starts bullet lists below the visual and sets rich-text size on a native wrapper', () => {
-    expect(viewSource).toContain('.dav-requirements { display: block; clear: both;')
-    expect(viewSource).toContain('.dav-description :deep(ol) { clear: both;')
-    expect(viewSource).toContain('<div v-if="action.description" class="dav-description">')
-    expect(viewSource).toContain('<DndRichContent :html="action.description" @click.stop />')
+  it('shares readable, deduplicated theses with feature widgets', () => {
+    expect(viewSource).toContain('<MechanicTheses :html="action.description" :lines="action.requirements"')
+    expect(viewSource).not.toContain('class="dav-requirements"')
     expect(viewSource).toMatch(/\.dav-title-row strong \{[^}]*font-size: 13px/)
-    expect(viewSource).toMatch(/\.dav-description \{[^}]*font-size: 12px/)
   })
   it('floats the icon and single charge together so descriptions regain full width below', () => {
     const media = viewSource.slice(viewSource.indexOf('class="dav-action-media"'), viewSource.indexOf('class="dav-copy"'))
@@ -29,7 +26,7 @@ describe('character action block', () => {
   it('groups action economy, uses source icons and resolves linked action tooltips', () => {
     expect(viewSource).toContain('v-for="group in groups"')
     expect(viewSource).not.toContain('Источник: {{ action.source_label }}')
-    expect(viewSource).toContain('v-for="requirement in action.requirements"')
+    expect(viewSource).toContain(':lines="action.requirements"')
     expect(viewSource).toContain('<ItemIcon v-if="action.item"')
     expect(viewSource).toContain('showActionTooltip($event, linked)')
     expect(viewSource).toContain('<ItemTooltip')

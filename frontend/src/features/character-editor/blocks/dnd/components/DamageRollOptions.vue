@@ -21,8 +21,10 @@ const props = defineProps({ actions: { type: Array, default: () => [] }, versati
 const emit = defineEmits(['roll', 'attack'])
 const critical = ref(false), twoHanded = ref(false), selected = ref([])
 const thrown = computed(() => damageAttackMode(props.actions, selected.value) === 'thrown')
-const menuOptions = scope => weaponDamageMenuOptions(props.actions, selected.value, critical.value, scope)
+const menuOptions = scope => weaponDamageMenuOptions(props.actions, selected.value, critical.value, scope, twoHanded.value)
 const options = computed(() => ({ critical: critical.value, twoHanded: props.versatile && twoHanded.value && !thrown.value,
   actionKeys: selectedDamageActions(props.actions, selected.value).map(action => action.key) }))
-function select(key, value) { selected.value = toggleDamageAction(props.actions, selected.value, key, value) }
+function select(key, value) {
+  if (value && twoHanded.value && props.actions.find(action => action.key === key)?.attack_mode === 'thrown') return
+  selected.value = toggleDamageAction(props.actions, selected.value, key, value) }
 </script>

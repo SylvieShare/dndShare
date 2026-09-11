@@ -143,7 +143,7 @@
                         Осталось: {{ event.data?.remaining ?? '—' }} / {{ event.data?.total ?? '—' }}
                       </div>
                       <div v-else-if="event.type === 'rest_completed'" class="sep-details">
-                        {{ event.data?.kind === 'long' ? 'Длинный отдых' : 'Короткий отдых' }}
+                        {{ event.data?.kind === 'dawn' ? 'Рассвет' : event.data?.kind === 'long' ? 'Длинный отдых' : 'Короткий отдых' }}
                       </div>
                     </div>
                   </article>

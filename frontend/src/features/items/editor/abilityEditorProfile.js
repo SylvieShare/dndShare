@@ -1,7 +1,7 @@
 import { defaultDataForFields } from '@/features/handbook/objects/lib/schemaFields'
 
 export const RESOURCE_KEYS = [
-  'max_use', 'resource_color', 'manual_size', 'max_use_stat', 'max_use_min',
+  'dawn_recovery', 'max_use', 'resource_color', 'manual_size', 'max_use_stat', 'max_use_min',
   'max_use_stat_multiplier', 'max_use_bonus', 'max_use_level_multiplier', 'max_use_scaling',
   'rollback_short_rest', 'rollback_long_rest', 'rollback_short_rest_level',
   'short_rest_recovery', 'short_rest_recovery_level',

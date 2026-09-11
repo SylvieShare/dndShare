@@ -3,13 +3,17 @@
     <LoadingState v-if="loading" label="Загружаем связанные записи…" compact />
     <p v-else-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="load">Повторить</ActionButton></p>
     <template v-else>
-      <div v-for="(row, index) in rows" :key="row.key || `${row.id}:${index}`" class="handbook-reference">
+      <div v-for="(row, index) in rows" :key="row.key || `${row.id}:${index}`" class="handbook-reference" :class="{ 'handbook-reference--split': split }">
+        <aside v-if="split"><slot name="info" :row="row" :item="items[row.id]" /></aside>
+        <div class="handbook-reference-content">
         <BaseTile class="handbook-reference-tile" v-if="items[row.id]" interactive framed role="button" tabindex="0" :aria-label="items[row.id].name"
           @click.stop="view = items[row.id]" @keydown.enter.stop.prevent="view = items[row.id]" @keydown.space.stop.prevent="view = items[row.id]">
           <HandbookListItem :item="items[row.id]" :type="types.getType(items[row.id].typeId)" />
         </BaseTile>
         <span v-else>Запись #{{ row.id }} недоступна</span>
         <small v-if="row.condition">{{ row.condition }}</small>
+        <slot name="description" :row="row" :item="items[row.id]" />
+        </div>
       </div>
     </template>
     <ItemViewModal v-if="view" :item="view" :item-id="view.id" :item-type-id="view.typeId" :z-index="zIndex" @close="view = null" />
@@ -24,7 +28,7 @@ import { useSuggestStore } from '@/stores/suggest'
 import { collectSuggestIds } from '@/features/handbook/objects/lib/schemaFields'
 import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-const props = defineProps({ rows: { type: Array, default: () => [] }, zIndex: { type: Number, default: 5100 } })
+const props = defineProps({ split: Boolean, rows: { type: Array, default: () => [] }, zIndex: { type: Number, default: 5100 } })
 const types = useItemTypesStore(), suggests = useSuggestStore()
 const items = ref({}), loading = ref(false), error = ref(''), view = ref(null)
 let sequence = 0
@@ -46,6 +50,10 @@ onScopeDispose(() => { sequence++ })
 <style scoped>
 .handbook-reference-rows { display: grid; gap: 8px; min-width: 0; }
 .handbook-reference { display: grid; gap: 4px; min-width: 0; }
+.handbook-reference--split { grid-template-columns: minmax(130px, .85fr) minmax(0, 1.25fr); gap: 12px; align-items: start; }
+.handbook-reference-content { display: grid; gap: 8px; min-width: 0; }
+.handbook-reference aside { min-width: 0; }
 .handbook-reference-tile { padding: 8px 10px; }
 .handbook-reference small { color: var(--text-muted); font-size: 11px; line-height: 1.4; }
+@media (max-width: 520px) { .handbook-reference--split { grid-template-columns: minmax(0, 1fr); } }
 </style>

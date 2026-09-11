@@ -8,12 +8,13 @@
           <SpellSlotSphere :spent="pip > resource.value" :size="28" :color="resource.color_point" :interactive="!!ctx.charCtx.ownerMode" />
         </button>
       </div>
-      <small v-if="source?.data?.recharge_note">{{ source.data.recharge_note }}</small>
+      <ResourceRestIcons :resource="resource" />
     </div>
     <ItemEffectLinks v-if="hasEffects" :item="source" />
   </div>
 </template>
 <script setup>
+import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import { computed, inject } from 'vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ItemEffectLinks from '@/features/items/components/ItemEffectLinks.vue'

@@ -8,7 +8,7 @@
     <template #right>
       <CoverStatCard v-if="cost" :icon="Coins" label="Стоимость" :value="cost" size="compact" tone="warning" />
       <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="`${data.weight} фунт.`" size="compact" />
-      <CoverStatCard v-if="data.max_use != null" :icon="Zap" label="Зарядов" :value="data.manual_size ? 'Задаёт владелец' : data.max_use" size="compact" />
+      <CoverStatCard v-if="data.max_use != null" :icon="Zap" label="Зарядов" :value="data.manual_size ? 'Задаёт владелец' : data.max_use" size="compact"><template v-if="data.dawn_recovery" #note><ResourceRestIcons :resource="{ dawn_recovery: data.dawn_recovery }" /></template></CoverStatCard>
     </template>
     <template #bottom>
       <CoverSummaryRail :columns="2">
@@ -23,6 +23,7 @@
   </CoverSummaryLayout>
 </template>
 <script setup>
+import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import MagicEquipmentBases from '@/features/items/components/MagicEquipmentBases.vue'
 import { selectedMagicBases } from '@/features/items/lib/magicItemInstanceView'
 import { computed } from 'vue'

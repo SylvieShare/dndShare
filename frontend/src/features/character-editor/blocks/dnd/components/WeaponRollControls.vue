@@ -4,8 +4,8 @@
       <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
         <ToggleSwitch :model-value="critical" aria-label="Критическое попадание" @update:model-value="$emit('update:critical', $event)" />
       </FormField>
-      <FormField v-if="versatile && !thrown" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
-        <ToggleSwitch :model-value="twoHanded" aria-label="Двумя руками" @update:model-value="$emit('update:twoHanded', $event)" />
+      <FormField v-if="versatile" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
+        <ToggleSwitch :model-value="twoHanded" :disabled="thrown" aria-label="Двумя руками" @update:model-value="!thrown && $emit('update:twoHanded', $event)" />
       </FormField>
     </template>
     <WeaponRollOption v-for="option in options" :key="option.key" :option="option" @select="(key, value) => $emit('select', key, value)" />

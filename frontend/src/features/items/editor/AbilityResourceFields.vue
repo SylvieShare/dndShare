@@ -22,12 +22,19 @@
       <FormField label="Восстановление открывается позже" title="До указанного уровня короткий отдых не восстанавливает этот ресурс."><ToggleSwitch v-model="restLater" aria-label="Восстановление открывается позже" @update:model-value="setRestLater" /></FormField>
       <AbilityRuleFields v-if="restLater" :fields="fieldsFor([restLevelKey])" :data="data" @update:data="update" />
     </template>
+    <template v-if="fields.some(field => field.key === 'dawn_recovery')">
+      <FormField label="На рассвете" title="Отдельное событие в меню отдыха. Не восстанавливает ресурс при коротком или длинном отдыхе." vertical>
+        <FormSelect :value="data.dawn_recovery?.mode || 'none'" aria-label="На рассвете" @update:value="setDawn"><option value="none">Не восстанавливать</option><option value="full">Восстановить полностью</option><option value="roll">Восстановить по формуле</option></FormSelect>
+      </FormField>
+      <FormField v-if="data.dawn_recovery?.mode === 'roll'" label="Формула восстановления" title="Например, 1к3 или 1к6+1. Итог ограничен максимумом ресурса." vertical><FormTextInput v-model:value="data.dawn_recovery.formula" placeholder="1к3" aria-label="Формула восстановления" /></FormField>
+    </template>
     <AbilityUnlockField v-if="independent" :data="data" />
   </div>
 </template>
 <script setup>
+import { validDawnFormula } from '@/features/character-editor/lib/dawnResources'
 import { computed, inject, onScopeDispose, ref, watchEffect } from 'vue'
-import { FormField, FormSelect, ToggleSwitch } from '@sylvieshare/share-ui'
+import { FormField, FormSelect, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
 import AbilityRuleFields from './AbilityRuleFields.vue'
 import AbilityLevelSource from './AbilityLevelSource.vue'
@@ -64,12 +71,17 @@ function setRestLater(value) {
   if (value) props.data[restLevelKey.value] = Math.min(20, (Number(editor.itemData?.level) || 1) + 1)
   else delete props.data[restLevelKey.value]
 }
+function setDawn(mode) {
+  if (mode === 'none') delete props.data.dawn_recovery
+  else props.data.dawn_recovery = mode === 'full' ? { mode } : { mode, formula: '1к3' }
+}
 const validationKey = Symbol('resource')
 watchEffect(() => {
   let error = ''
   if (props.independent && (!props.data.key || otherKeys.value.includes(props.data.key))) error = 'Отдельный ресурс: заполните уникальный ключ.'
   if (mode.value === 'stat' && !props.data.max_use_stat) error = 'Ресурс: выберите характеристику для расчёта.'
   if (mode.value === 'scaling' && !editor.itemData?.scaling?.some(r => r.uses != null)) error = 'Ресурс: добавьте количество использований в развитие с уровнем.'
+  if (props.data.dawn_recovery?.mode === 'roll' && !validDawnFormula(props.data.dawn_recovery.formula)) error = 'Рассвет: укажите число или формулу костей, например 1к3 или 1к6+1.'
   editor.setValidationError?.(validationKey, error)
 })
 onScopeDispose(() => editor.setValidationError?.(validationKey, ''))

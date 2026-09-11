@@ -1,8 +1,10 @@
 <template>
   <div class="rest-block">
     <BaseTile class="rest-tile" :color="SHORT_COLOR">
-      <DndRestView :interactive="ownerMode" @short="onShort" @long="onLong" />
+      <DndRestView :interactive="ownerMode" @short="onShort" @long="onLong" @dawn="ownerMode && (dawnOpen = true)" />
     </BaseTile>
+
+    <AppModalFrame v-if="dawnOpen" title="Рассвет" @close="dawnOpen = false"><DndDawnEditor :values="values" @apply="applyDawn" @close="dawnOpen = false" /></AppModalFrame>
 
     <AppModalFrame v-if="shortOpen" title="Короткий отдых" @close="shortOpen = false">
       <DndShortRestEditor
@@ -25,6 +27,7 @@
 </template>
 
 <script setup>
+import DndDawnEditor from './components/DndDawnEditor.vue'
 import { computed, inject, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
@@ -53,6 +56,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
 const dice = useDiceStore()
 
+const dawnOpen = ref(false)
 const shortOpen = ref(false)
 const longOpen = ref(false)
 const shortStart = ref(null)
@@ -142,6 +146,11 @@ async function applyLong(recovery) {
     },
   })
   longOpen.value = false
+}
+
+function applyDawn(result) {
+  emitPatch(result.patch)
+  charCtx.logSessionEvent?.({ type: 'rest_completed', action: 'Рассвет', data: { kind: 'dawn', resourcesRecovered: result.results.map(row => row.title), recovery: result.results } })
 }
 
 function recoveredResourceNames(before, after) {

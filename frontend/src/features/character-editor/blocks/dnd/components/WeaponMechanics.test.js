@@ -37,8 +37,19 @@ it('displays the instance pool below the weapon with filled and spent accessible
   expect(html.match(/aria-label="Заряд /g)).toHaveLength(3)
   expect(html.match(/aria-pressed="true"/g)).toHaveLength(1)
   expect(html.match(/aria-pressed="false"/g)).toHaveLength(2)
-  expect(html).toContain('На рассвете 1к3')
+  expect(html).not.toContain('На рассвете 1к3')
   ctx.charCtx.ownerMode = false
   const readonly = await render(WeaponItemMechanics, { entry: { uid: 'staff' } }, ctx)
   expect(readonly.match(/<button[^>]*disabled/g)).toHaveLength(3)
+})
+
+it('keeps two-handed grip visible but disabled while throwing, and disables throwing during two-handed grip', async () => {
+  const throwing = await render(WeaponRollControls, { versatile: true, thrown: true, options: [] })
+  expect(throwing).toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Двумя руками")/)
+  const options = weaponDamageMenuOptions([{ key: 'throw', label: 'Метнуть', attack_mode: 'thrown' }], [], false, 'damage', true)
+  expect(options[0].disabled).toBe(true)
+  const grip = await render(WeaponRollControls, { versatile: true, twoHanded: true, options })
+  expect(grip).toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Метнуть")/)
+  expect(grip).not.toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Двумя руками")/)
+  expect(weaponDamageMenuOptions([{ key: 'throw', attack_mode: 'thrown' }], [], false, 'damage', false)[0].disabled).toBe(false)
 })

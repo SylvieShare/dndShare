@@ -22,9 +22,7 @@
         <div v-else-if="widget.value" class="fw-value" :class="{ 'fw-value--compact': widget.value.length > 8 }">{{ widget.value }}</div>
       </div>
 
-      <ul v-if="widget.details.length" class="fw-details" aria-label="Условия способности">
-        <li v-for="detail in widget.details" :key="detail">{{ detail }}</li>
-      </ul>
+      <MechanicTheses :lines="widget.details" color="var(--fw-tone)" aria-label="Условия способности" />
 
       <div v-if="widget.resource || widget.kind === 'toggle'" class="fw-footer">
         <div v-if="widget.resource" class="fw-resource" :aria-label="`${widget.resource.title || widget.title}: ${widget.resource.unlimited ? 'без ограничений' : `${widget.resource.value} из ${widget.resource.total}`}`">
@@ -71,6 +69,7 @@
 </template>
 
 <script setup>
+import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { computed, inject, watch } from 'vue'
 import { featureEntries, patchFeatureEntries } from '@/features/character-editor/lib/characterMagicItems'
 import { Flame } from '@lucide/vue'
@@ -165,9 +164,6 @@ function toggle(widget) {
 .fw-dice { display: inline-flex; align-items: center; justify-content: flex-end; min-width: 58px; }
 .fw-dice :deep(.dd-count) { font-size: 20px; }
 .fw-value--compact { max-width: 92px; font-size: 15px; line-height: 1.1; text-align: right; }
-.fw-details { display: grid; gap: 5px; margin: 11px 0 0; padding: 0; list-style: none; }
-.fw-details li { display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 7px; align-items: start; color: var(--text-2); font-size: 11px; line-height: 1.4; }
-.fw-details li::before { width: 5px; height: 5px; margin-top: .42em; border-radius: 50%; background: var(--fw-tone); content: ''; }
 .fw-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 11px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--fw-tone) 18%, var(--border)); }
 .fw-resource { display: flex; flex: 1; align-items: center; gap: 8px; min-width: 0; }
 .fw-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }

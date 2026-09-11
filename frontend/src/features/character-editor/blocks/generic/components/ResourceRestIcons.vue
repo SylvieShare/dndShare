@@ -15,10 +15,12 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
       </svg>
     </span>
+    <span v-if="resource.dawn_recovery" class="rri-icon" :title="resource.dawn_recovery.mode === 'full' ? 'Полное восстановление на рассвете' : `На рассвете +${resource.dawn_recovery.formula}`"><Sunrise :size="13" aria-hidden="true" /></span>
   </span>
 </template>
 
 <script setup>
+import { Sunrise } from '@lucide/vue'
 import { computed } from 'vue'
 
 const props = defineProps({
@@ -26,7 +28,8 @@ const props = defineProps({
 })
 
 const hasRest = computed(() => !!(
-  props.resource.short_rest
+  props.resource.dawn_recovery
+  || props.resource.short_rest
   || props.resource.short_rest_recovery
   || props.resource.long_rest
 ))

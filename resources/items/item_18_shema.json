@@ -67,7 +67,8 @@
     {"name": "Минимум", "key": "max_use_min", "type": "int", "default": 1},
     {"name": "Множитель уровня класса", "key": "max_use_level_multiplier", "type": "int"},
     {"name": "Короткий отдых", "key": "rollback_short_rest", "type": "bool"},
-    {"name": "Длинный отдых", "key": "rollback_long_rest", "type": "bool"}
+    {"name": "Длинный отдых", "key": "rollback_long_rest", "type": "bool"},
+    {"key": "dawn_recovery", "name": "Восстановление на рассвете", "type": "object", "fields": [{"key": "mode", "name": "Способ восстановления", "type": "select", "options": [{"value": "full", "label": "Полностью"}, {"value": "roll", "label": "По формуле"}]}, {"key": "formula", "name": "Сколько восстановить", "type": "text", "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."}]}
   ]},
   {"name": "Восстанавливается на коротком отдыхе", "key": "rollback_short_rest", "type": "bool"},
   {"name": "Восстанавливается на длинном отдыхе", "key": "rollback_long_rest", "type": "bool"},
@@ -256,5 +257,6 @@
     {"name": "Подпись", "key": "label", "type": "text"}
   ]},
   {"name": "Уровень для расчётов", "key": "level_source", "type": "select", "default": "bound", "options": [{"value": "bound", "label": "По привязке способности"}, {"value": "class", "label": "Определённый класс"}, {"value": "character", "label": "Общий уровень персонажа"}]},
-  {"name": "Класс для расчётов", "key": "level_class_id", "type": "item", "item_type": 9, "show_on": {"key": "level_source", "value": "class"}}
+  {"name": "Класс для расчётов", "key": "level_class_id", "type": "item", "item_type": 9, "show_on": {"key": "level_source", "value": "class"}},
+  {"key": "dawn_recovery", "name": "Восстановление на рассвете", "type": "object", "fields": [{"key": "mode", "name": "Способ восстановления", "type": "select", "options": [{"value": "full", "label": "Полностью"}, {"value": "roll", "label": "По формуле"}]}, {"key": "formula", "name": "Сколько восстановить", "type": "text", "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."}]}
 ]
