@@ -9,7 +9,8 @@ const resourcesSource = readFileSync(fileURLToPath(new URL('../generic/BlockReso
 
 describe('character action block', () => {
   it('keeps the action description as prose and shares only requirement theses with widgets', () => {
-    expect(viewSource).toContain('<DndRichContent v-if="action.description" class="dav-description" :html="action.description"')
+    expect(viewSource).toContain('<div v-if="action.description" class="dav-description">')
+    expect(viewSource).toContain('<DndRichContent :html="action.description"')
     expect(viewSource).toContain('<MechanicTheses :lines="action.requirements"')
     expect(viewSource).not.toContain('<MechanicTheses :html="action.description"')
     expect(viewSource).not.toContain('class="dav-requirements"')

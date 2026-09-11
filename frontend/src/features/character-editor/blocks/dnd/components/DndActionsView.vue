@@ -52,7 +52,9 @@
                 <strong>{{ action.title }}</strong>
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
-              <DndRichContent v-if="action.description" class="dav-description" :html="action.description" @click.stop />
+              <div v-if="action.description" class="dav-description">
+                <DndRichContent :html="action.description" @click.stop />
+              </div>
               <MechanicTheses :lines="action.requirements" color="var(--dav-tone)" aria-label="Условия применения" />
               <span v-if="linkedActions(action).length" class="dav-linked-actions">
                 <span
@@ -265,9 +267,8 @@ function hideActionTooltip() {
 .dav-copy { min-width: 0; overflow-wrap: anywhere; }
 .dav-title-row { display: flex; min-width: 0; align-items: center; gap: 6px; }
 .dav-title-row strong { min-width: 0; color: var(--text-1); font-size: 13px; line-height: 1.3; }
-.dav-description { margin-top: 5px; color: var(--text-2); font-size: 13px; line-height: 1.5; }
-.dav-description :deep(p) { margin: 0 0 5px; }
-.dav-description :deep(p:last-child) { margin-bottom: 0; }
+.dav-description { margin-top: 4px; color: var(--text-2); font-size: 12px; line-height: 1.45; }
+.dav-description :deep(ul), .dav-description :deep(ol) { clear: both; padding-top: 4px; }
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
 .dav-resource { display: flex; min-width: 0; align-items: center; gap: 6px; }
