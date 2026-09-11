@@ -401,8 +401,12 @@ the positive gain with `SpellSlotSphere` and an explicit +1 for a single slot;
 pact slots show an upgrade in circle and any additional slots separately.
 
 Class spell selection separates new cantrips, new leveled spells and the
-existing list. Each addition counter shows selected/available and the remaining
-choices. The budget fills the handbook's known-spell limit after accounting for
+existing list. Each addition group spans the main column and contains its
+selected/available counter, remaining choices, selected handbook rows and add
+action. Groups with no available additions are hidden; completing a group keeps
+its selected rows visible for review and cancellation. Cantrips and leveled
+spells stay in their own groups instead of a separate combined list below.
+The budget fills the handbook's known-spell limit after accounting for
 existing class spells and external grants marked `counts_as_known`. An already
 overfilled list is preserved and has no new choices. When the handbook lacks a
 progression, the UI explicitly says that the count is unspecified; level-one

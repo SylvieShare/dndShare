@@ -6,11 +6,16 @@
       <p>{{ error }}</p><ActionButton variant="secondary" @click="load">Повторить загрузку</ActionButton>
     </div>
     <template v-else>
-      <div class="lus-budgets">
+      <div v-if="groups.length" class="lus-budgets">
         <BaseTile v-for="group in groups" :key="group.kind" class="lus-budget" :tint="group.remaining !== 0">
           <div class="lus-budget-heading"><span>{{ group.title }}</span><b>{{ group.limit == null ? group.added : `${group.added} / ${group.limit}` }}</b></div>
-          <p>{{ group.remaining === 0 ? (group.limit ? 'Всё выбрано' : 'На этом уровне новых нет') : group.remaining == null ? 'Число не задано в справочнике' : `Осталось выбрать: ${group.remaining}` }}</p>
-          <ActionButton variant="secondary" :disabled="group.remaining === 0" @click="picker = { kind: group.kind }">
+          <p>{{ group.remaining === 0 ? 'Всё выбрано' : group.remaining == null ? 'Число не задано в справочнике' : `Осталось выбрать: ${group.remaining}` }}</p>
+          <div v-if="group.entries.length" class="lus-budget-list">
+            <LevelUpItemRow v-for="entry in group.entries" :key="entry.id" :item="entry.item" :type-id="5" highlighted @details="viewId = entry.id">
+              <ActionButton variant="quiet" :aria-label="`Отменить выбор «${entry.name}»`" @click="removeAddition(entry)">Отменить</ActionButton>
+            </LevelUpItemRow>
+          </div>
+          <ActionButton v-if="group.remaining !== 0" class="lus-budget-add" variant="secondary" @click="picker = { kind: group.kind }">
             <template #icon><Plus :size="15" aria-hidden="true" /></template>{{ group.button }}
           </ActionButton>
         </BaseTile>
@@ -21,12 +26,6 @@
         <span v-if="budget.cantripLimit != null && budget.spellLimit != null"> · </span>
         <span v-if="budget.spellLimit != null">заклинания {{ budget.spellsTotal }} / {{ budget.spellLimit }}</span>.
       </p>
-      <div v-if="additions.length" class="lus-list">
-        <h4>Новые заклинания</h4>
-        <LevelUpItemRow v-for="entry in additions" :key="entry.id" :item="entry.item" :type-id="5" highlighted @details="viewId = entry.id">
-          <ActionButton variant="quiet" :aria-label="`Отменить выбор «${entry.name}»`" @click="removeAddition(entry)">Отменить</ActionButton>
-        </LevelUpItemRow>
-      </div>
       <div v-if="rows.length" class="lus-list">
         <div class="lus-known-heading">
           <h4>{{ budget.mode === 'spellbook' ? 'Уже в книге' : budget.mode === 'prepared' ? 'Текущие заклинания' : 'Уже известны' }}</h4>
@@ -42,7 +41,7 @@
           </LevelUpItemRow>
         </div>
       </div>
-      <p class="lus-hint">Можно завершить повышение и выбрать оставшиеся новые заклинания позже в листе.</p>
+      <p v-if="groups.some(group => group.remaining !== 0)" class="lus-hint">Можно завершить повышение и выбрать оставшиеся новые заклинания позже в листе.</p>
     </template>
     <ItemPickerModal
       v-if="picker" :item-type-ids="[5]" :exclude-items="excludedIds" :fixed-filters="pickerFilters"
@@ -70,23 +69,26 @@ const { loading, error, load, rows, additions, budget, replacementCount, picker,
 const groups = computed(() => [
   { kind: 'cantrip', title: 'Новые заговоры', button: 'Выбрать заговор', limit: budget.value.cantrips, added: budget.value.cantripsAdded, remaining: budget.value.cantripsRemaining },
   { kind: 'spell', title: budget.value.mode === 'spellbook' ? 'Добавить в книгу' : 'Новые заклинания', button: 'Выбрать заклинание', limit: budget.value.spells, added: budget.value.spellsAdded, remaining: budget.value.spellsRemaining },
-])
+].filter(group => group.limit !== 0 || group.added > 0).map(group => ({
+  ...group,
+  entries: additions.value.filter(entry => (entry.level === 0) === (group.kind === 'cantrip')),
+})))
 </script>
 
 <style scoped>
 .lus, .lus-list { display: grid; gap: 10px; min-width: 0; }
 .lus { gap: 18px; }
 .lus-hint, .lus-budget p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.6; }
-.lus-budgets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.lus-budget { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px; }
-.lus-budget-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; font-size: 12px; color: var(--text-1); }
+.lus-budgets { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.lus-budget { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 16px; }
+.lus-budget-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-1); }
 .lus-budget-heading b { color: var(--accent-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.lus-budget p { flex: 1; }
-.lus-budget :deep(.share-action-button) { width: 100%; padding-inline: 8px; }
+.lus-budget-list { display: grid; gap: 8px; min-width: 0; }
+.lus-budget-add { align-self: flex-start; }
 .lus-list h4 { margin: 0; color: var(--text-2); font-size: 12px; font-weight: 600; }
 .lus-known-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
 .lus-known-heading > span { color: var(--text-muted); font-size: 11px; }
 .lus-replacement-label { color: var(--accent-soft); font-size: 11px; padding: 0 8px 6px; }
 .lus-error { color: var(--danger); font-size: 12px; }
-@media (max-width: 440px) { .lus-budgets { grid-template-columns: 1fr; } }
+@media (max-width: 440px) { .lus-budget-add { align-self: stretch; } }
 </style>

@@ -82,7 +82,6 @@
           <div v-if="hitDieLabel" class="lu-summary-line"><span>Кости хитов</span><b>+1 {{ hitDieLabel }}</b></div>
           <div v-if="profChanges" class="lu-summary-line"><span>Бонус мастерства</span><b>+{{ profAfter }}</b></div>
           <ClassLevelGains v-if="slotChanges.length" :level="newClassLevel" :slot-changes="slotChanges" show-single-count />
-          <p v-if="slotChanges.length" class="lu-muted">Ячейки начислятся автоматически.</p>
         </BaseTile>
       </aside>
       <div class="lu-main">
