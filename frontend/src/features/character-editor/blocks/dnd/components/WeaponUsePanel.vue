@@ -1,10 +1,11 @@
 <template>
-  <ItemUsePanel v-if="event?.status === 'active'" :title="event.title" :subtitle="`Бросок атаки: ${event.attack_result?.total ?? '—'}${event.resource_cost ? ` · Уже списано: ${event.resource_cost}` : ''}`">
-    <WeaponUseStep v-for="step in event.steps" :key="`${event.id}:${step.key}`" :step="step" :can-manage="!!charCtx.ownerMode" :busy="busy" :initial-critical="!!event.critical"
-      @roll="critical => resolve(step.key, critical)" @miss="resolve(step.key, false, true)" />
-    <template v-if="charCtx.ownerMode" #actions><ActionButton variant="quiet" :disabled="busy" @click="finishOrConfirm">Завершить применение</ActionButton></template>
-    <ConfirmDialog v-if="confirmId" title="Завершить применение?" message="Оставшиеся шаги будут закрыты. Потраченный ресурс не возвращается." confirm-text="Завершить" @confirm="finish(confirmId); confirmId = null" @cancel="confirmId = null" @close="confirmId = null" />
-  </ItemUsePanel>
+  <div v-if="event?.status === 'active'" class="weapon-use-panels" @click.stop @pointerdown.stop>
+    <ItemUsePanel v-for="step in event.steps.filter(row => row.kind === 'damage')" :key="`${event.id}:${step.key}`" :title="step.title">
+      <WeaponUseStep :step="step" :can-manage="!!charCtx.ownerMode" :busy="busy" @roll="resolve(step.key)" />
+    </ItemUsePanel>
+    <ActionButton v-if="charCtx.ownerMode" variant="quiet" :disabled="busy" @click="finishOrConfirm">Завершить применение</ActionButton>
+    <ConfirmDialog v-if="confirmId" title="Завершить применение?" message="Неиспользованный дополнительный урон и оставшиеся броски будут закрыты. Потраченный ресурс не возвращается." confirm-text="Завершить" @confirm="finish(confirmId); confirmId = null" @cancel="confirmId = null" @close="confirmId = null" />
+  </div>
 </template>
 <script setup>
 import { inject, ref, toRef } from 'vue'
@@ -18,3 +19,7 @@ const { event, busy, resolve, finish } = useWeaponUseSteps(charCtx, toRef(props,
 const confirmId = ref(null)
 function finishOrConfirm() { if (event.value.steps.some(step => step.status === 'pending')) confirmId.value = event.value.id; else finish(event.value.id) }
 </script>
+<style scoped>
+.weapon-use-panels { display: grid; gap: 8px; }
+.weapon-use-panels > :deep(button) { justify-self: start; }
+</style>

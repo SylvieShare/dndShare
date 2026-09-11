@@ -1,12 +1,6 @@
 <template>
   <div class="weapon-roll-controls" role="group" :aria-label="scope === 'attack' ? 'Атака' : 'Урон'">
-    <template v-if="scope === 'attack' && uses.length">
-      <FormField label="Режим атаки" title="Особый режим списывает ресурс при броске атаки, даже при промахе." vertical>
-        <FormSelect :value="useKey" aria-label="Режим атаки" @update:value="$emit('update:useKey', $event)"><option value="">Обычная атака</option><option v-for="use in uses" :key="use.key" :value="use.key" :disabled="use.disabled">{{ use.title }}{{ use.disabled ? ' · недоступно' : '' }}</option></FormSelect>
-      </FormField>
-      <small v-if="chosenUse">{{ chosenUse.attack_mode === 'melee' ? 'Рукопашная атака' : `Дистанция до ${chosenUse.range_ft} футов` }}<span v-if="chosenUse.resource_cost" class="weapon-use-cost" :aria-label="`Расход при атаке: ${chosenUse.resource_cost}`"> · −{{ chosenUse.resource_cost > 1 ? chosenUse.resource_cost : '' }}<SpellSlotSphere :size="22" :color="chosenUse.resource?.color_point" :interactive="false" /></span></small>
-      <small v-for="use in uses.filter(row => row.disabled)" :key="use.key">{{ use.title }}: {{ use.error }}</small>
-    </template>
+    <WeaponRollOption v-for="use in scope === 'attack' ? uses : []" :key="use.key" :option="useOption(use)" @select="(key, value) => $emit('update:useKey', value ? key : '')" />
     <template v-if="scope === 'damage'">
       <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
         <ToggleSwitch :model-value="critical" aria-label="Критическое попадание" @update:model-value="$emit('update:critical', $event)" />
@@ -24,14 +18,20 @@
   </div>
 </template>
 <script setup>
-import { FormField, FormSelect, ToggleSwitch } from '@sylvieshare/share-ui'
+import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import DamageFormulaPreview from './DamageFormulaPreview.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
-import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import { computed } from 'vue'
 const props = defineProps({ uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
+function useOption(use) {
+  const checked = props.useKey === use.key
+  const condition = use.attack_mode === 'melee' ? 'Рукопашная атака' : `Дистанция до ${use.range_ft} футов`
+  return { key: use.key, label: use.title, checked, disabled: !checked && (use.disabled || !!props.useKey),
+    damageParts: [], condition, hint: [condition, use.error, use.resource_cost && `Расход при атаке: ${use.resource_cost}, даже при промахе.`].filter(Boolean).join(' · '),
+    resourceCost: use.resource_cost ? { amount: use.resource_cost, color: use.resource?.color_point, unavailable: use.disabled } : null }
+}
 const modes = computed(() => props.options.filter(option => option.mode))
 const extras = computed(() => props.options.filter(option => !option.mode))
 const chosenUse = computed(() => props.uses.find(use => use.key === props.useKey))
@@ -39,6 +39,5 @@ const blocked = computed(() => props.scope === 'attack' && props.useKey ? (chose
 defineEmits(['update:useKey', 'update:critical', 'update:twoHanded', 'select', 'amount', 'roll'])
 </script>
 <style scoped>
-.weapon-use-cost { display: inline-flex; align-items: center; gap: 3px; vertical-align: middle; }
 .weapon-roll-controls { display: flex; flex-direction: column; gap: 10px; padding: 8px; min-width: 240px; }
 </style>

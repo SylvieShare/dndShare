@@ -1,6 +1,7 @@
 <template>
   <div class="weapons-block">
     <p v-if="loadError" role="alert">{{ loadError }} <ActionButton variant="secondary" @click="reload">Повторить</ActionButton></p>
+    <p v-if="damageRolls.error.value" role="alert">{{ damageRolls.error.value }}</p>
     <p v-if="weaponUses.error.value" role="alert">{{ weaponUses.error.value }}</p>
     <p v-if="weaponMechanics.error.value" role="alert">{{ weaponMechanics.error.value }}</p>
     <div v-if="armorAttackWarning" class="w-armor-warning">
@@ -153,9 +154,8 @@ import {
   weaponEntryToOwnedEntry,
 } from '@/features/character-editor/blocks/dnd/lib/itemPlacement'
 import { useWeaponUses } from './composables/useWeaponUses'
-import { damageAmountActions } from '@/shared/lib/weaponDamageAmounts'
-import { selectedWeaponDamageExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
-import { selectedDamageActions } from '@/shared/lib/weaponDamageOptions'
+import { useWeaponDamageRolls } from './composables/useWeaponDamageRolls'
+import { weaponUseDamageActions } from '@/features/character-editor/lib/weaponUseDamage'
 import { prepareWeaponRollEntry, withWeaponThrowAction } from './lib/weaponThrow'
 import {
   improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
@@ -357,26 +357,10 @@ function rollPresetDamage(kind, critical = false) {
   dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical))
 }
 
-function prepareDamageRoll(entry, { critical = false, twoHanded = false, actionKeys = [], actionAmounts = {} } = {}) {
-  entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
-  const actions = weaponDamageActions(entry)
-  if (entry._attackMode === 'thrown') twoHanded = false
-  const baseExpression = critical
-    ? (twoHanded ? criticalDamageExpressionTwoHanded(entry, extraCriticalDice(entry)) : criticalDamageExpression(entry, extraCriticalDice(entry)))
-    : (twoHanded ? damageExpressionTwoHanded(entry) : damageExpression(entry))
-  const primary = damagePartsRaw(entry)[0] || {}
-  const selectedActions = damageAmountActions(actions, actionAmounts)
-  const expr = selectedWeaponDamageExpression({ baseExpression, actions: selectedActions, actionKeys, critical, damageType: primary.type, damageTypeColor: primary.typeColor })
-  return { entry, actions, selectedActions, expr, twoHanded }
-}
-function damagePreview(entry, options) { return prepareDamageRoll(entry, options).expr }
-function rollDamage(entry, { critical = false, actionKeys = [], actionAmounts = {}, ...options } = {}) {
-  const roll = prepareDamageRoll(entry, { ...options, critical, actionKeys, actionAmounts })
-  if (!roll.expr || roll.expr === '0') return
-  if (!weaponMechanics.spend(roll.actions, actionKeys, actionAmounts)) return
-  const labels = selectedDamageActions(roll.selectedActions, actionKeys).map(action => action.label || action.source_label)
-  dice.roll(`${critical ? 'Критический урон' : 'Урон'}${roll.twoHanded ? ' (2р)' : ''}: ${itemTitle(roll.entry)}${labels.length ? ` — ${labels.join(', ')}` : ''}`, roll.expr)
-}
+const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,
+  damageExpression, damageExpressionTwoHanded, criticalDamageExpression, criticalDamageExpressionTwoHanded,
+  extraCriticalDice, itemTitle, spend: weaponMechanics.spend })
+const { damagePreview, rollDamage } = damageRolls
 
 function hasWeaponDamage(entry) {
   return damagePartsRaw(entry).length > 0 || damageBonus(entry) !== 0
@@ -394,7 +378,7 @@ function weaponDamageContext(entry) {
 }
 
 function weaponDamageActions(entry) {
-  return weaponMechanics.bind(withWeaponThrowAction(charCtx.characterCombatEffects?.weaponDamageActions?.(weaponDamageContext(entry)) || [], item(entry), propertyItems(entry))).map(action => {
+  return [...weaponUseDamageActions(charCtx.values, entry.uid), ...weaponMechanics.bind(withWeaponThrowAction(charCtx.characterCombatEffects?.weaponDamageActions?.(weaponDamageContext(entry)) || [], item(entry), propertyItems(entry)))].map(action => {
     const type = action.damage_type != null ? suggestStore.items(12).find(row => Number(row.id) === Number(action.damage_type)) : null
     return action.damage_type != null ? { ...action, damage_type_label: type?.value || `Тип урона #${action.damage_type}`, damage_type_color: type?.color } : action
   })

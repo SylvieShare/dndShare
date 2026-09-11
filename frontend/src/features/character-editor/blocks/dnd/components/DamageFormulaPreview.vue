@@ -1,5 +1,5 @@
 <template>
-  <BaseTile v-if="expression" class="damage-preview" aria-label="Итоговая формула урона">
+  <component :is="unframed ? 'div' : BaseTile" v-if="expression" class="damage-preview" :class="{ 'damage-preview--unframed': unframed }" aria-label="Итоговая формула урона">
     <small v-if="label">{{ label }}</small>
     <div class="damage-preview-formula">
       <template v-for="(group, index) in groups" :key="index">
@@ -8,14 +8,14 @@
       </template>
       <span v-if="!groups.length">0</span>
     </div>
-  </BaseTile>
+  </component>
 </template>
 <script setup>
 import { computed } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { parseDiceExpression } from '@/shared/lib/dice'
 import DamageDice from './DamageDice.vue'
-const props = defineProps({ expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
+const props = defineProps({ unframed: Boolean, expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
 const groups = computed(() => {
   const result = new Map()
   for (const token of parseDiceExpression(props.expression)) {
@@ -30,6 +30,7 @@ const groups = computed(() => {
 </script>
 <style scoped>
 .damage-preview { display: grid; gap: 6px; padding: 10px; }
+.damage-preview--unframed { padding: 0; }
 .damage-preview > small { color: var(--text-muted); font-size: 11px; }
 .damage-preview-formula { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; color: var(--text-2); }
 </style>
