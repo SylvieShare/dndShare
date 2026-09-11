@@ -1,3 +1,4 @@
+import { validChargeCount } from './itemInitialCharges'
 import { abilityLevelContext } from './abilityLevelSource'
 import { automaticAbilityLabel } from './abilityProgression'
 import { abilityModifier, resolveNumValue } from '@/shared/lib/dnd'
@@ -19,6 +20,8 @@ export function abilityUseTotal(ruleData, values = {}, storedEntry = {}, ownerDa
   // Top-level feature `level` is acquisition metadata. A nested resource level
   // is an actual unlock gate (for example the two Drow Magic spells).
   if (rule !== owner && rule.level != null && ownerLevel < nonNegativeInt(rule.level)) return null
+
+  if (rule.initial_charges) return validChargeCount(storedEntry.max_use) ? Number(storedEntry.max_use) : null
 
   const stat = SUGGEST16_TO_STAT[Number(rule.max_use_stat)]
   if (stat) {
@@ -61,7 +64,7 @@ export function abilityUsesAreManual(itemData) {
 export function abilityHasResources(itemData) {
   const data = itemData || {}
   if (Array.isArray(data.use_resources) && data.use_resources.some(Boolean)) return true
-  return data.max_use != null
+  return !!data.initial_charges || data.max_use != null
     || !!SUGGEST16_TO_STAT[Number(data.max_use_stat)]
     || data.max_use_level_multiplier != null
     || !!data.max_use_scaling

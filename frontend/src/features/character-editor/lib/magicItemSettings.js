@@ -1,10 +1,11 @@
+import { initializeItemCharges } from '@/shared/lib/itemInitialCharges'
 import { actionableItemChoices } from '@/features/items/lib/itemChoices'
 import { magicBaseId, magicEquipmentKinds, baseParamKey } from '@/features/items/lib/magicEquipmentBases'
 import { inventoryEntries, mapOwnedEntries } from './characterMagicItems'
 import { createWeaponInstance } from './magicWeapons'
 
 export const needsAttunement = item => Number(item?.typeId) === 19 && item.data?.attunement !== 'none'
-export const hasMagicInstanceOptions = item => !!item?.data?.manual_size || actionableItemChoices(item).length > 0
+export const hasMagicInstanceOptions = item => !!item?.data?.initial_charges || !!item?.data?.manual_size || actionableItemChoices(item).length > 0
 export function missingMagicBases(item, entry) {
   return magicEquipmentKinds(item).filter(kind => !(kind === 'weapon' && entry?.magic_item_id) && !Number(entry?.params?.[baseParamKey(kind)] || item.data?.[kind]?.base_item_id))
 }
@@ -21,7 +22,7 @@ export function fillMissingMagicBases(values, item, uid, selectedParams) {
   if (!entry || Number(entry.magic_item_id ?? entry.item_id) !== Number(item.id)) return {}
   const missing = missingMagicBases(item, entry)
   if (!missing.length || missing.some(kind => !magicBaseId(item, selectedParams, kind))) return {}
-  const params = { ...entry.params }
+  const params = item.data?.initial_charges ? initializeItemCharges(entry.params, selectedParams.magic?.max_use) : { ...entry.params }
   for (const kind of missing) params[baseParamKey(kind)] = magicBaseId(item, selectedParams, kind)
   const next = missing.includes('weapon') ? createWeaponInstance(item, { ...entry, params }) : { ...entry, params }
   return mapOwnedEntries(values, row => row.uid === uid ? next : row)

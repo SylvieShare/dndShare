@@ -6,11 +6,18 @@
     </template>
     <FormField label="Как считать использования" title="Выберите способ расчёта максимума ресурса." vertical>
       <FormSelect :value="mode" aria-label="Как считать использования" @update:value="changeMode">
+        <option v-if="fields.some(f => f.key === 'initial_charges')" value="initial">Начальный запас экземпляра</option>
         <option value="fixed">Фиксированное число</option><option value="stat">От характеристики</option><option value="level">От уровня</option>
         <option v-if="fields.some(f => f.key === 'max_use_scaling')" value="scaling">Из прогрессии уровней</option>
         <option v-if="fields.some(f => f.key === 'manual_size')" value="manual">Вручную на листе</option>
       </FormSelect>
     </FormField>
+    <template v-if="mode === 'initial'">
+      <FormField label="Как определить начальный запас" title="Игрок задаёт запас при добавлении предмета. Результат сохраняется отдельно для каждого экземпляра." vertical>
+        <FormSelect :value="data.initial_charges.mode" aria-label="Как определить начальный запас" @update:value="value => data.initial_charges = value === 'fixed' ? { mode: value, value: 1 } : { mode: value, formula: '1к8+1' }"><option value="fixed">Заданное число</option><option value="roll">Бросок костей</option></FormSelect>
+      </FormField>
+      <AbilityRuleFields :fields="fields.find(f => f.key === 'initial_charges').fields.filter(f => f.key === (data.initial_charges.mode === 'fixed' ? 'value' : 'formula'))" :data="data.initial_charges" @update:data="value => data.initial_charges = value" />
+    </template>
     <AbilityRuleFields :fields="fieldsFor(calculationKeys[mode])" :data="data" @update:data="update" />
     <AbilityLevelSource v-if="['level', 'scaling'].includes(mode)" :data="editor.itemData || data" readonly />
     <AbilityRuleFields :fields="fieldsFor(['resource_color', 'rollback_long_rest'])" :data="data" @update:data="update" />
@@ -32,6 +39,7 @@
   </div>
 </template>
 <script setup>
+import { initialChargeRuleError } from '@/shared/lib/itemInitialCharges'
 import { validDawnFormula } from '@/features/character-editor/lib/dawnResources'
 import { computed, inject, onScopeDispose, ref, watchEffect } from 'vue'
 import { FormField, FormSelect, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
@@ -49,7 +57,7 @@ const restLater = ref(!!(props.data.rollback_short_rest_level || props.data.shor
 const restLevelKey = computed(() => restMode.value === 'full' ? 'rollback_short_rest_level' : 'short_rest_recovery_level')
 const otherKeys = computed(() => (editor.itemData?.use_resources || []).filter(r => r !== props.data).map(r => r.key))
 const calculationKeys = {
-  fixed: ['max_use'], manual: ['max_use'], stat: ['max_use_stat', 'max_use_stat_multiplier', 'max_use_bonus', 'max_use_min'],
+  initial: [], fixed: ['max_use'], manual: ['max_use'], stat: ['max_use_stat', 'max_use_stat_multiplier', 'max_use_bonus', 'max_use_min'],
   level: ['max_use_level_multiplier', 'max_use_bonus', 'max_use_min'], scaling: [],
 }
 const labels = { max_use: 'Максимум использований', max_use_level_multiplier: 'Использований за уровень', short_rest_recovery: 'Сколько восстановить', rollback_long_rest: 'Полностью восстановить после продолжительного отдыха' }
@@ -79,6 +87,7 @@ const validationKey = Symbol('resource')
 watchEffect(() => {
   let error = ''
   if (props.independent && (!props.data.key || otherKeys.value.includes(props.data.key))) error = 'Отдельный ресурс: заполните уникальный ключ.'
+  if (mode.value === 'initial') error = initialChargeRuleError(props.data.initial_charges) || (props.data.use_resources?.length ? 'Начальный запас используется как основной ресурс. Уберите отдельные ресурсы или выберите другой способ расчёта.' : '')
   if (mode.value === 'stat' && !props.data.max_use_stat) error = 'Ресурс: выберите характеристику для расчёта.'
   if (mode.value === 'scaling' && !editor.itemData?.scaling?.some(r => r.uses != null)) error = 'Ресурс: добавьте количество использований в развитие с уровнем.'
   if (props.data.dawn_recovery?.mode === 'roll' && !validDawnFormula(props.data.dawn_recovery.formula)) error = 'Рассвет: укажите число или формулу костей, например 1к3 или 1к6+1.'

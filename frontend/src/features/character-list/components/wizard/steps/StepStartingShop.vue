@@ -142,7 +142,7 @@ const activeType = ref(2)
 const query = ref('')
 const viewItem = ref(null)
 const pendingPurchase = ref(null)
-function buy(item) { if (magicEquipmentKinds(item).length) pendingPurchase.value = item; else addShopItem(item) }
+function buy(item) { if (magicEquipmentKinds(item).length || item.data?.initial_charges) pendingPurchase.value = item; else addShopItem(item) }
 function confirmPurchase(params) { addShopItem({ ...pendingPurchase.value, params }); pendingPurchase.value = null }
 const rerollConfirmOpen = ref(false)
 const categories = computed(() => TYPE_LABELS.map((category) => ({

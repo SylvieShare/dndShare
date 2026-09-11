@@ -431,6 +431,7 @@ var schemaParts = []struct {
 	{"weapon-bonus-transfer", schemaWeaponBonusTransferSQL},
 	{"bard-spell-progression", schemaBardSpellProgressionSQL},
 	{"selected-target", schemaSelectedTargetSQL},
+	{"initial-item-charges", schemaInitialItemChargesSQL},
 }
 
 const (

@@ -8,7 +8,7 @@
     <template #right>
       <CoverStatCard v-if="cost" :icon="Coins" label="Стоимость" :value="cost" size="compact" tone="warning" />
       <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="`${data.weight} фунт.`" size="compact" />
-      <CoverStatCard v-if="data.max_use != null && !instance?.params?.magic?.lost" :icon="Zap" label="Зарядов" :value="data.manual_size ? 'Задаёт владелец' : data.max_use" size="compact"><template v-if="data.dawn_recovery" #note><ResourceRestIcons :resource="{ dawn_recovery: data.dawn_recovery }" /></template></CoverStatCard>
+      <CoverStatCard v-if="chargeLabel != null && !instance?.params?.magic?.lost" :icon="Zap" label="Зарядов" :value="chargeLabel" size="compact"><template v-if="data.dawn_recovery" #note><ResourceRestIcons :resource="{ dawn_recovery: data.dawn_recovery }" /></template></CoverStatCard>
     </template>
     <template #bottom>
       <CoverSummaryRailItem v-if="instance?.params?.magic?.lost" :icon="WandSparkles" label="Состояние экземпляра">Магические свойства утрачены · действует только основа</CoverSummaryRailItem>
@@ -24,6 +24,7 @@
   </CoverSummaryLayout>
 </template>
 <script setup>
+import { hasInitialChargeStock } from '@/shared/lib/itemInitialCharges'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import MagicEquipmentBases from '@/features/items/components/MagicEquipmentBases.vue'
 import { selectedMagicBases } from '@/features/items/lib/magicItemInstanceView'
@@ -39,6 +40,14 @@ const props = defineProps({ item: Object, instance: Object, baseItem: Object, ne
 const selectedBases = computed(() => selectedMagicBases(props.item, props.instance))
 const data = computed(() => props.item.data || {})
 const typeIcon = computed(() => ({ оружие: Swords, доспех: ShieldCheck, щит: ShieldCheck, кольцо: Circle, амулет: Gem, зелье: FlaskConical, свиток: Scroll, посох: WandSparkles, 'волшебная палочка': WandSparkles })[data.value.type] || Sparkles)
+const chargeLabel = computed(() => {
+  if (!data.value.initial_charges) return data.value.manual_size ? 'Задаёт владелец' : data.value.max_use
+  if (hasInitialChargeStock(props.instance?.params)) {
+    const state = props.instance.params.magic
+    return `${state.remaining ?? state.max_use} / ${state.max_use}`
+  }
+  return data.value.initial_charges.mode === 'roll' ? data.value.initial_charges.formula : data.value.initial_charges.value
+})
 const bonus = computed(() => data.value.weapon?.magic_bonus || data.value.armor_base?.magic_bonus)
 const { format } = useCostFormatter()
 const cost = computed(() => format(data.value.cost))

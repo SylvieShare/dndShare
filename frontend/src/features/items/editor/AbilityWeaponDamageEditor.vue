@@ -84,7 +84,7 @@ watchEffect(() => {
     const cost = Number(props.data.resource_cost ?? 1)
     const owner = editor.itemData || {}
     const exists = props.data.resource_key ? resources.value.some(row => row.key === props.data.resource_key)
-      : !resources.value.length && ['max_use', 'max_use_stat', 'max_use_level_multiplier', 'max_use_scaling', 'manual_size'].some(key => owner[key] != null && owner[key] !== false)
+      : !resources.value.length && ['initial_charges', 'max_use', 'max_use_stat', 'max_use_level_multiplier', 'max_use_scaling', 'manual_size'].some(key => owner[key] != null && owner[key] !== false)
     if (!exists) message = 'Дополнительный урон: сначала добавьте выбранный ресурс в зависимостях.'
     else if (!Number.isInteger(cost) || cost < 1) message = 'Стоимость удара должна быть целым положительным числом.'
   }

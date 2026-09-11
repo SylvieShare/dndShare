@@ -316,7 +316,7 @@ export function buildCharacterData(input) {
     uid: `${prefix}_${index}`,
     item_id: entry.item_id ?? null,
     count: Math.max(1, Number(entry.count) || 1),
-    params: { ...(entry.params || {}) },
+    params: JSON.parse(JSON.stringify(entry.params || {})),
     override: entry.item_id == null ? { name: entry.name || 'Предмет' } : null,
   })
   const inventoryEntries = (list, prefix) => list.flatMap((entry, i) => Number(entry.typeId) === 19

@@ -397,7 +397,7 @@ watch(normalizedFixedFilters, (next, previous) => {
 
 function pick() {
   if (!selectedItem.value || !selectedEligibility.value.eligible) return
-  if (props.configureInstance && magicEquipmentKinds(selectedItem.value).length) { basePending.value = selectedItem.value; return }
+  if (props.configureInstance && (magicEquipmentKinds(selectedItem.value).length || selectedItem.value.data?.initial_charges)) { basePending.value = selectedItem.value; return }
   finishPick()
 }
 function finishPick(params = {}) {

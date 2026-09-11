@@ -1,18 +1,21 @@
 <template>
-  <AppModalFrame v-if="ready || error" :title="item.name" subtitle="Выберите основу экземпляра" :z-index="zIndex" @close="$emit('close')">
+  <AppModalFrame v-if="ready || error" :title="item.name" subtitle="Добавление предмета" :z-index="zIndex" @close="$emit('close')">
     <p v-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="prepare">Повторить</ActionButton></p>
     <template v-else>
-      <p>Основа определяет обычные характеристики предмета. Магические свойства добавляются к ним.</p>
+      <p v-if="choiceKinds.length">Основа определяет обычные характеристики предмета. Магические свойства добавляются к ним.</p>
       <DetailSection v-for="kind in choiceKinds" :key="kind" :label="kind === 'weapon' ? 'Оружейная основа' : 'Доспех или щит'">
         <MagicEquipmentBases :item="item" :kind="kind" :base-items="options[kind]" selectable :model-value="chosen[baseParamKey(kind)]" :z-index="zIndex"
           @update:model-value="chosen[baseParamKey(kind)] = $event" />
       </DetailSection>
+      <InitialChargeFields v-if="needsCharges" v-model="chargeCount" :rule="item.data.initial_charges" :title="item.name" />
     </template>
-    <template #footer><ActionButton variant="primary" :disabled="!ready || !complete" @click="confirm">{{ confirmLabel }}</ActionButton></template>
+    <template #footer><ActionButton variant="primary" :disabled="!ready || !canConfirm" @click="confirm">{{ confirmLabel }}</ActionButton></template>
   </AppModalFrame>
-  <LoadingState v-else label="Подготавливаем основу предмета…" compact />
+  <LoadingState v-else label="Подготавливаем предмет…" compact />
 </template>
 <script setup>
+import InitialChargeFields from './InitialChargeFields.vue'
+import { hasInitialChargeStock, initialChargeDefault, initialChargeRuleError, initializeItemCharges, validChargeCount } from '@/shared/lib/itemInitialCharges'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ActionButton, AppModalFrame, LoadingState } from '@sylvieshare/share-ui'
 import DetailSection from '@/shared/ui/DetailSection.vue'
@@ -25,6 +28,9 @@ const emit = defineEmits(['close', 'confirm'])
 const { kinds, chosen, loaded, complete, result } = useMagicBaseSelection(computed(() => props.item), props.params)
 const options = ref({}), ready = ref(false), error = ref('')
 const choiceKinds = computed(() => kinds.value.filter(kind => options.value[kind]?.length !== 1))
+const needsCharges = computed(() => !!props.item.data?.initial_charges && !hasInitialChargeStock(props.params))
+const chargeCount = ref(initialChargeDefault(props.item.data?.initial_charges))
+const canConfirm = computed(() => complete.value && (!needsCharges.value || (validChargeCount(chargeCount.value) && !initialChargeRuleError(props.item.data.initial_charges))))
 let alive = true
 async function prepare() {
   ready.value = false; error.value = ''
@@ -37,11 +43,15 @@ async function prepare() {
       error.value = 'Подходящих основ нет. Уточните варианты у автора предмета и повторите загрузку.'
       return
     }
-    if (complete.value && !choiceKinds.value.length) confirm()
+    if (complete.value && !choiceKinds.value.length && !needsCharges.value) confirm()
     else ready.value = true
   } catch { if (alive) error.value = 'Не удалось загрузить основы предмета.' }
 }
-function confirm() { const params = result(); if (params) emit('confirm', params) }
+function confirm() {
+  if (!canConfirm.value) return
+  const params = { ...props.params, ...result() }
+  emit('confirm', needsCharges.value ? initializeItemCharges(params, chargeCount.value) : params)
+}
 onMounted(prepare)
 onBeforeUnmount(() => { alive = false })
 </script>

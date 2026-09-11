@@ -67,7 +67,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 		}
 		var beforeDawn []map[string]any
 		for _, field := range fields {
-			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" || field["key"] == "weapon_uses" || field["key"] == "weapon_bonus_transfer" || field["key"] == "selected_target" {
+			if field["key"] == "dawn_recovery" || field["key"] == "last_charge" || field["key"] == "weapon_uses" || field["key"] == "weapon_bonus_transfer" || field["key"] == "selected_target" || field["key"] == "initial_charges" || field["key"] == "confirmed_uses" {
 				continue
 			}
 			if field["key"] == "use_resources" {
@@ -112,6 +112,13 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(202,'Лук клятвы',19,'{"desc":"keep","weapon_damage":[{"key":"sworn_enemy"},{"key":"authored"}]}')`)
 	exec(schemaSelectedTargetSQL)
 	exec(schemaSelectedTargetSQL)
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(134,'Похититель девяти жизней',19,'{"desc":"keep","weapon":{"magic_bonus":2},"confirmed_uses":[{"key":"authored"}]}')`)
+	exec(schemaInitialItemChargesSQL)
+	exec(schemaInitialItemChargesSQL)
+	var initialOK bool
+	if err := pool.QueryRow(ctx, `SELECT data->>'desc'='keep' AND data->'weapon'->>'magic_bonus'='2' AND data->'initial_charges'->>'formula'='1к8+1' AND jsonb_array_length(data->'confirmed_uses')=2 AND data->'confirmed_uses'->0->>'key'='authored' AND data->'confirmed_uses'->1->>'resource_cost'='1' FROM dndshare.item WHERE id=134`).Scan(&initialOK); err != nil || !initialOK {
+		t.Fatalf("Nine Lives Stealer migration: valid=%v err=%v", initialOK, err)
+	}
 	var oathOK bool
 	if err := pool.QueryRow(ctx, `SELECT data->>'desc'='keep' AND jsonb_array_length(data->'weapon_damage')=1 AND data->'weapon_damage'->0->>'key'='authored' AND data->'selected_target'->'damage'->>'dice_count'='3' FROM dndshare.item WHERE id=202`).Scan(&oathOK); err != nil || !oathOK {
 		t.Fatalf("Oathbow migration: valid=%v err=%v", oathOK, err)

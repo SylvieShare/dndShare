@@ -19,3 +19,6 @@ var schemaWeaponBonusTransferSQL string
 
 //go:embed schema/105_selected_target.sql
 var schemaSelectedTargetSQL string
+
+//go:embed schema/106_initial_item_charges.sql
+var schemaInitialItemChargesSQL string

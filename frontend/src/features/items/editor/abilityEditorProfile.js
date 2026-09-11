@@ -1,7 +1,7 @@
 import { defaultDataForFields } from '@/features/handbook/objects/lib/schemaFields'
 
 export const RESOURCE_KEYS = [
-  'dawn_recovery', 'max_use', 'resource_color', 'manual_size', 'max_use_stat', 'max_use_min',
+  'initial_charges', 'dawn_recovery', 'max_use', 'resource_color', 'manual_size', 'max_use_stat', 'max_use_min',
   'max_use_stat_multiplier', 'max_use_bonus', 'max_use_level_multiplier', 'max_use_scaling',
   'rollback_short_rest', 'rollback_long_rest', 'rollback_short_rest_level',
   'short_rest_recovery', 'short_rest_recovery_level',
@@ -10,9 +10,10 @@ export const MAGIC_ITEM_PROPERTY_KEYS = ['armor_base', 'weapon', 'treasure', 'de
 const BASIC_KEYS = ['desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
-  'weapon_damage', 'weapon_uses', 'selected_target', 'weapon_bonus_transfer', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
+  'weapon_damage', 'weapon_uses', 'confirmed_uses', 'selected_target', 'weapon_bonus_transfer', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
 
 export const BLOCK_HINTS = {
+  confirmed_uses: 'Эффект с условиями под оружием. Заряды списываются только по кнопке подтверждения результата.',
   selected_target: 'Одна цель этого экземпляра: связанные бонусы атаки и урона, срок и ожидание новой цели после гибели.',
   weapon_bonus_transfer: 'Перенос части магического бонуса атаки и урона оружия в КД. Максимум берётся из свойств оружия, сброс — вручную.',
   weapon_uses: 'Особая атака с расходом ресурса при запуске и отдельными шагами после неё.',
@@ -89,6 +90,7 @@ export function activeAbilityBlocks(blocks, data) {
 
 export function addAbilityBlock(block, data) {
   for (const field of block.fields) {
+    if (block.key === 'resources' && field.key === 'initial_charges') continue
     if (block.key === 'progression') data[field.key] = []
     else if (field.type === 'object_array' && block.fields.length === 1) data[field.key] = [defaultDataForFields(field.fields)]
     else if (field.type === 'object') data[field.key] = defaultDataForFields(field.fields)
@@ -151,6 +153,7 @@ export function abilityFieldHint(field) {
 }
 
 export function abilityResourceMode(data) {
+  if (data.initial_charges) return 'initial'
   if (data.max_use_stat != null) return 'stat'
   if (data.max_use_level_multiplier != null) return 'level'
   if (data.max_use_scaling) return 'scaling'
@@ -159,7 +162,8 @@ export function abilityResourceMode(data) {
 }
 
 export function changeAbilityResourceMode(data, mode) {
-  for (const key of ['max_use_stat', 'max_use_level_multiplier', 'max_use_scaling', 'manual_size']) delete data[key]
+  for (const key of ['initial_charges', 'max_use_stat', 'max_use_level_multiplier', 'max_use_scaling', 'manual_size']) delete data[key]
+  if (mode === 'initial') data.initial_charges = { mode: 'roll', formula: '1к8+1' }
   if (mode === 'stat') data.max_use_stat = null
   if (mode === 'level') data.max_use_level_multiplier = 1
   if (mode === 'scaling') data.max_use_scaling = true

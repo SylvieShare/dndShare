@@ -94,6 +94,10 @@ func TestItemRuleReferences(t *testing.T) {
 	if refs := search(nil, "resource", "renamed", 0, 0, 40, 0); len(refs) != 1 {
 		t.Fatal("missing updated key")
 	}
+	exec(`INSERT INTO dndshare.item VALUES(134,NULL,'Похититель девяти жизней',19,'{"initial_charges":{"mode":"roll","formula":"1к8+1"}}')`)
+	if refs := search(nil, "resource", "", 134, 0, 40, 0); len(refs) != 1 || refs[0].Block != "Заряды предмета" {
+		t.Fatalf("initial charge stock reference: %+v", refs)
+	}
 	exec(`DELETE FROM dndshare.item WHERE id=1`)
 	if refs := search(nil, "action", "strike", 0, 0, 40, 0); len(refs) != 0 {
 		t.Fatal("stale key after delete")

@@ -442,7 +442,7 @@ function removeAttack(index, attackIndex) {
 function addWeapon(it, quantity = 1, params = {}) {
   if (!weaponEligibility(it).eligible) return
   const count = Math.max(1, Math.min(999, Math.floor(Number(quantity) || 1)))
-  const added = Array.from({ length: count }, () => createWeaponInstance(it, { ...defaultEntry(), item_id: it.id, params: { ...params } }))
+  const added = Array.from({ length: count }, () => createWeaponInstance(it, { ...defaultEntry(), item_id: it.id, params: JSON.parse(JSON.stringify(params)) }))
   if (Number(it.typeId) === 19 && !added[0].magic_item_id) return
   entries.value.push(...added.map(entry => ({ ...entry, _key: entry.uid })))
   addItem(it)

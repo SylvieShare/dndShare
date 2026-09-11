@@ -97,7 +97,7 @@
     />
 
     <MagicEquipmentInstanceModal v-if="pendingWeapon" :item="pendingWeapon.item" :params="pendingWeapon.params" confirm-label="Переместить в оружие" @close="pendingWeapon = null" @confirm="confirmWeapon" />
-    <MagicEquipmentInstanceModal v-if="pendingCopy" :item="pendingCopy.item" @close="pendingCopy = null" @confirm="params => { increment(pendingCopy.sectionId, pendingCopy.uid, params); pendingCopy = null }" />
+    <MagicEquipmentInstanceModal v-if="pendingCopy" :item="pendingCopy.item" :params="pendingCopy.params" @close="pendingCopy = null" @confirm="params => { increment(pendingCopy.sectionId, pendingCopy.uid, params); pendingCopy = null }" />
     <ItemPickerModal
       configure-instance
       v-if="pickerOpen && pickerTypeIds.length"
@@ -447,8 +447,8 @@ function increment(sectionId, uid, selectedParams = null) {
   if (!entry) return null
   if (entry.magic_item_id || Number(catalog[entry.item_id]?.typeId) === MAGIC_ITEM_TYPE_ID) {
     const item = catalog[entry.magic_item_id ?? entry.item_id], params = selectedParams || { ...entry.params, ...(entry.magic_item_id ? { weapon_base_item_id: entry.item_id } : {}) }
-    if (magicEquipmentKinds(item).some(kind => !magicBaseId(item, params, kind))) { pendingCopy.value = { item, sectionId, uid }; return null }
-    list.push(createWeaponInstance(item, { uid: makeEntryUid(), item_id: item.id, count: 1, params: magicBaseParams(item, params), override: entry.override ? { ...entry.override } : null }))
+    if ((!selectedParams && item.data?.initial_charges) || magicEquipmentKinds(item).some(kind => !magicBaseId(item, params, kind))) { pendingCopy.value = { item, sectionId, uid, params: magicBaseParams(item, params) }; return null }
+    list.push(createWeaponInstance(item, { uid: makeEntryUid(), item_id: item.id, count: 1, params: selectedParams ? JSON.parse(JSON.stringify(selectedParams)) : magicBaseParams(item, params), override: entry.override ? { ...entry.override } : null }))
     emitModel(next)
     return 1
   }
@@ -482,7 +482,7 @@ function onPickerPick(item, qty = 1, params = {}) {
   if (!list) return
   const type = typeById.value[item.typeId]
   const copies = item.typeId === MAGIC_ITEM_TYPE_ID ? n : 1
-  for (let index = 0; index < copies; index += 1) list.push(createWeaponInstance(item, { uid: makeEntryUid(), item_id: item.id, count: copies > 1 ? 1 : n, params: { ...defaultInstanceParams(type, item), ...params }, override: null }))
+  for (let index = 0; index < copies; index += 1) list.push(createWeaponInstance(item, { uid: makeEntryUid(), item_id: item.id, count: copies > 1 ? 1 : n, params: { ...defaultInstanceParams(type, item), ...JSON.parse(JSON.stringify(params)) }, override: null }))
   emitModel(next)
   logSessionEntryAdded(charCtx, { kind: 'item', title: item.name, itemId: item.id, count: n })
 }
