@@ -7,39 +7,52 @@
     </div>
 
     <button
-      v-if="canLevelUp"
       class="lved-levelup"
       :class="{ 'lved-levelup-ready': canLevelUp }"
+      :disabled="nextLevelExp === null"
       type="button"
-      @click="$emit('levelup')"
-    >↑ Level Up! → {{ level + 1 }}</button>
+      @click="requestLevelUp"
+    >{{ nextLevelExp === null ? 'Максимальный уровень' : `↑ Level Up! → ${level + 1}` }}</button>
 
     <ActionButton variant="secondary" @click="$emit('manual')">Изменить уровни вручную</ActionButton>
     <FormField label="Опыт">
       <FormNumberInput :value="data.exp || 0" :min="0" :max="355000" @change="set('exp', $event)" />
     </FormField>
   </EditorPanel>
+  <ConfirmDialog
+    v-if="confirmLevelUp"
+    :title="`Перейти на ${level + 1}-й уровень?`"
+    :message="confirmationMessage"
+    confirm-label="Продолжить повышение"
+    cancel-label="Отменить"
+    variant="warning"
+    :z-index="3200"
+    @confirm="confirmExperience"
+    @cancel="confirmLevelUp = false"
+  />
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
-import { ActionButton, EditorPanel } from '@sylvieshare/share-ui'
+import { ActionButton, ConfirmDialog, EditorPanel } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 
-const EXPERIENCE = [
-  0, 300, 900, 2700, 6500, 14000, 23000, 34000,
-  48000, 64000, 85000, 100000, 120000, 140000, 165000,
-  195000, 225000, 265000, 305000, 355000,
-]
+import { levelExperience } from '../lib/experience'
 
 const props = defineProps({ data: { type: Object, required: true } })
 const emit = defineEmits(['change', 'levelup', 'manual'])
 const calcAmount = ref('')
+const confirmLevelUp = ref(false)
 
-const level = computed(() => Math.max(1, Math.min(20, parseInt(props.data.level) || 1)))
-const nextLevelExp = computed(() => (level.value < 20 ? EXPERIENCE[level.value] : null))
+const progress = computed(() => levelExperience(props.data))
+const level = computed(() => progress.value.level)
+const nextLevelExp = computed(() => progress.value.nextLevelExp)
+const canLevelUp = computed(() => progress.value.canLevelUp)
+const confirmationMessage = computed(() => `До следующего уровня не хватает ${progress.value.missingExp.toLocaleString('ru-RU')} опыта. `
+  + `Добавим недостающее, чтобы общий опыт достиг ${nextLevelExp.value?.toLocaleString('ru-RU')}, и откроем повышение уровня. `
+  + 'Вы сможете выбрать новые возможности персонажа. Опыт и новый уровень сохранятся после применения повышения; отмена оставит персонажа без изменений.')
 const evalAmount = computed(() => {
   const clean = String(calcAmount.value).replace(/−/g, '-').replace(/[^0-9+\-*/\s.]/g, '')
   if (!clean.trim()) return 0
@@ -48,10 +61,17 @@ const evalAmount = computed(() => {
     return Math.abs(Math.round(new Function('return (' + clean + ')')())) || 0
   } catch { return 0 }
 })
-const canLevelUp = computed(() => {
-  if (level.value >= 20 || nextLevelExp.value === null) return false
-  return (parseInt(props.data.exp) || 0) >= nextLevelExp.value
-})
+
+function requestLevelUp() {
+  if (nextLevelExp.value === null) return
+  if (canLevelUp.value) emit('levelup')
+  else confirmLevelUp.value = true
+}
+
+function confirmExperience() {
+  confirmLevelUp.value = false
+  if (nextLevelExp.value !== null) emit('levelup', nextLevelExp.value)
+}
 
 function applyXp(sign) {
   if (evalAmount.value <= 0) return
@@ -70,8 +90,12 @@ function set(field, value) { emit('change', { ...props.data, [field]: value }) }
 .lved-add:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 32%, transparent); }
 .lved-add:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.lved-levelup { width: 100%; background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 10px; color: var(--accent-soft); font-size: 14px; font-weight: 800; font-family: inherit; padding: 10px 16px; cursor: pointer; transition: background 0.15s; }
-.lved-levelup:hover { background: color-mix(in srgb, var(--accent) 32%, transparent); }
-.lved-levelup-ready { background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: var(--accent); animation: lved-pulse 2s ease-in-out infinite; }
+.lved-levelup { width: 100%; background: var(--surface-raised); border: 1px solid var(--border-strong); border-radius: 10px; color: var(--text-muted); font-size: 14px; font-weight: 800; font-family: inherit; padding: 10px 16px; cursor: pointer; transition: background 0.15s; }
+.lved-levelup:hover:not(:disabled) { background: color-mix(in srgb, var(--text-muted) 12%, var(--surface-raised)); }
+.lved-levelup:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.lved-levelup:disabled { opacity: .55; cursor: default; }
+.lved-levelup-ready { background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: var(--accent); color: var(--accent-soft); animation: lved-pulse 2s ease-in-out infinite; }
+.lved-levelup-ready:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 32%, transparent); }
+@media (prefers-reduced-motion: reduce) { .lved-levelup-ready { animation: none; } }
 @keyframes lved-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent); } 50% { box-shadow: 0 0 12px 2px color-mix(in srgb, var(--accent) 30%, transparent); } }
 </style>

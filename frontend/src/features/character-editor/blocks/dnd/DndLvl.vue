@@ -19,7 +19,7 @@
 
   <DndLevelUpModal
     v-if="levelUpOpen"
-    :values="values"
+    :values="levelUpValues"
     @apply="applyLevelUp"
     @close="levelUpOpen = false"
   />
@@ -41,6 +41,7 @@ import DndLvlView from '@/features/character-editor/blocks/dnd/components/DndLvl
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
+import { levelUpDraftValues } from './lib/experience'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -48,15 +49,18 @@ const charCtx = inject('charCtx', () => ({ ownerMode: false }))
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 
 const levelUpOpen = ref(false)
+const levelUpExpFloor = ref(null)
 const manualClassesOpen = ref(false)
 
 const isCompact = computed(() => props.block?.props?.variant === 'compact')
 const isMini = computed(() => props.block?.props?.variant === 'mini')
 const data = computed(() => ({ level: 1, exp: 0, ...props.value }))
+const levelUpValues = computed(() => levelUpDraftValues(props.values, data.value, levelUpExpFloor.value))
 
 function onChange(d) { emit('update:value', props.block.id, d) }
 
-function openLevelUp() {
+function openLevelUp(expFloor = null) {
+  levelUpExpFloor.value = expFloor
   close()
   levelUpOpen.value = true
 }

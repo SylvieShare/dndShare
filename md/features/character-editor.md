@@ -377,8 +377,14 @@ kind and recovery summary when the sheet has an attached session context. Hit-di
 rolls remain normal `dice_roll` events; opening or cancelling a rest does not
 write history.
 
-The level-up editor does not render its level-up action until current XP reaches
-the threshold for the next level. The total level has no direct numeric input;
+The experience editor always shows its level-up action. With enough XP it is
+accented and opens the normal level-up flow immediately. With insufficient XP it
+is muted but clickable: `ConfirmDialog` shows the exact shortfall and target XP
+and offers to continue. The confirmed XP top-up stays in the level-up draft;
+applying the level-up saves XP and progression together, and cancelling either
+dialog changes neither. XP above the required threshold is preserved. At level
+20 the action remains visible as the disabled «Максимальный уровень» button.
+The total level has no direct numeric input;
 manual changes go through the shared class editor and its progression warning.
 
 Race abilities, class abilities and feats use one `choices` contract when they
