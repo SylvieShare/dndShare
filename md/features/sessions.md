@@ -924,6 +924,14 @@ cover reconnects, server restarts and missed in-memory signals. Returning to a
 visible browser tab also requests a fresh snapshot. In combat the active player
 or NPC occupies a larger `4:3` card on the left with full artwork and a blurred
 lower info layer; neither it nor the queue cards stretch to the screen height.
+The display is fixed to the viewport in every mode, with no page or nested
+scrolling. Combat uses a 3vmin safe margin and divides its usable height (after
+the gap) into 40% for the queue and 60% for the active card and graveyard.
+The active card preserves 4:3 and fits the lower region. On small or short
+windows the entire combat composition scales down to keep both regions inside
+the viewport, including at the master's 125% scale setting. Text and note
+materials shrink their type to fit the complete content and refit after resize;
+very long texts therefore become smaller and should be split for TV readability.
 Above it, the compact cyclic queue spans the full screen width and begins after
 the active turn. Queue tiles are tightly packed squares sized to fit a smaller
 full-fit creature icon and the longest worded health state below it. A compact,
@@ -937,9 +945,9 @@ so a long queue reaches the right edge before overflowing into its final stack.
 Below the cards, a quiet ticked scale with a right-pointing arrow labels the
 direction from the next turn toward later turns.
 The current round and queue count sit together below that direction scale,
-aligned to its right edge. Overflow layers fan diagonally upward and right inside a reserved edge corridor;
-the offset leaves each NPC letter visible and continues past the viewport edge
-without collapsing later layers.
+aligned to its right edge. Overflow layers fan diagonally downward and right inside a reserved edge corridor;
+the fan is bounded to four small offsets to the right and down, with later
+entries sharing the final layer and a count indicating the remaining queue.
 An NPC letter sits just inside the icon's upper-right
 corner in its assigned color, clear of the tile frame. Overflow
 shares the final right-hand slot as a visible stack. On turn change the
@@ -949,7 +957,8 @@ active card and share the same filled badge treatment in both positions; only
 their size differs. A persisted health setting can show either numeric current/max HP
 or the worded bands `Здоров`, `Ранен`, `При смерти`; another flag enables a
 separate graveyard. The graveyard sits at the lower right and grows upward as a
-vertical list. It groups dead NPCs by bestiary type and renders each larger,
+vertical list bounded by the lower region; excess groups are summarized as
+`Ещё N групп`. It groups dead NPCs by bestiary type and renders each larger,
 unframed row as a right-aligned name, unbacked icon and count. Health numbers are omitted from
 the public DTO unless health is enabled in numeric mode. Initiative values are
 not included in the public projection. A failed refresh keeps the last
@@ -984,7 +993,8 @@ its main level. A dedicated settings button opens a nested settings level for
 all persisted toggles: remote music, health and its numeric/worded mode, and the
 graveyard. The same level provides a `75–125%` combat-display scale slider in
 five-percent steps with a one-click reset to `100%`. The scale is stored with the
-session presentation, rescales the complete combat stage around its center and
+session presentation, rescales the complete combat stage around its center
+(subject to the viewport fit limit) and
 feeds the effective logical width back into queue capacity calculation; material
 playback and fixed timer overlays retain their full-screen geometry.
 
@@ -992,7 +1002,10 @@ The public endpoint builds a dedicated projection on the server rather than
 returning raw encounter or character JSON. It may resolve the session owner's
 referenced custom bestiary entries and condition suggestions, but exposes only
 their display fields and condition label/color. Exact current/max HP is projected
-only when the master enables health in numeric mode; character sheets,
+only when the master enables health in numeric mode. Player maximum HP uses
+the current sheet format: nonnegative `hp.max.base` plus signed integer
+`hp.max.bonuses[].value`, clamped at zero. No login on the display is required.
+Character sheets,
 initiative values, AC, notes and challenge
 results remain private.
 

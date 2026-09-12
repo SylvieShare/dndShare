@@ -43,7 +43,7 @@
         <div class="presentation-frame__content" :class="materialFrameClasses">
           <img v-if="presentationImage" :src="presentationImage" :alt="presentationTitle" />
           <video v-else-if="presentationMaterial?.kind === 'video'" :src="presentationMaterial.assetUrl" controls autoplay playsinline />
-          <article v-else-if="presentationMaterial?.kind === 'text' || presentationMaterial?.kind === 'note'">{{ presentationMaterial.content }}</article>
+          <ScreenMaterialText v-else-if="presentationMaterial?.kind === 'text' || presentationMaterial?.kind === 'note'" :content="presentationMaterial.content" />
           <Images v-else :size="72" aria-hidden="true" />
         </div>
       </section>
@@ -164,7 +164,7 @@
         <section v-if="presentation.showGraveyard && graveyard.length" class="encounter-graveyard" aria-label="Кладбище">
           <div class="encounter-graveyard__heading"><Skull :size="18" /><span>Кладбище</span></div>
           <div class="encounter-graveyard__list">
-            <article v-for="group in graveyard" :key="group.key" class="graveyard-card" :style="accentStyle(group)">
+            <article v-for="group in visibleGraveyard" :key="group.key" class="graveyard-card" :style="accentStyle(group)">
               <strong>{{ group.name }}</strong>
               <div class="graveyard-card__portrait">
                 <img v-if="group.avatarUrl || group.coverImageUrl" :src="group.avatarUrl || group.coverImageUrl" alt="" />
@@ -174,6 +174,7 @@
               <b>×{{ group.count }}</b>
             </article>
           </div>
+          <span v-if="graveyard.length > visibleGraveyard.length" class="encounter-graveyard__more">Ещё {{ graveyard.length - visibleGraveyard.length }} групп</span>
         </section>
       </section>
     </template>
@@ -199,6 +200,8 @@ import { getPublicDisplayMusic, getPublicEncounter, getPublicPresentation } from
 import { useDisplayMusic } from '@/features/sessions/composables/useDisplayMusic'
 import { formatTimerDuration, timerProgress, timerRemainingMs } from '@/features/sessions/lib/sessionTimers'
 import SvgIcon from '@/shared/ui/SvgIcon.vue'
+import ScreenMaterialText from '@/features/sessions/components/ScreenMaterialText.vue'
+import { screenCombatLayout } from '@/features/sessions/lib/screenCombatLayout'
 
 const CONTROL_SYNC_INTERVAL_MS = 45_000
 const REQUEST_TIMEOUT_MS = 8_000
@@ -213,7 +216,7 @@ const fatalError = ref(false)
 const pollFailed = ref(false)
 const clock = ref(Date.now())
 const serverOffsetMs = ref(0)
-const viewportWidth = ref(typeof window === 'undefined' ? 1440 : window.innerWidth)
+const viewport = ref({ width: window.innerWidth, height: window.innerHeight })
 const displayMusic = useDisplayMusic()
 let eventSource = null
 let fallbackTimer = null
@@ -239,27 +242,10 @@ const turnQueue = computed(() => {
   ]
 })
 const graveyard = computed(() => snapshot.value?.graveyard || [])
-const presentationScaleRatio = computed(() => Math.min(125, Math.max(75, Number(presentation.value?.displayScale) || 100)) / 100)
-const combatStageStyle = computed(() => {
-  const ratio = presentationScaleRatio.value
-  return {
-    '--broadcast-scale': ratio,
-    width: `${100 / ratio}%`,
-    height: `${100 / ratio}%`,
-  }
-})
-const queueSlotCount = computed(() => {
-  const width = viewportWidth.value
-  const screenPadding = Math.min(64, Math.max(24, width * 0.032))
-  const cardSize = Math.min(128, Math.max(108, width * 0.08))
-  const gap = Math.min(10, Math.max(8, width * 0.006))
-  const contentWidth = (width - screenPadding * 2) / presentationScaleRatio.value
-  const baseAvailableWidth = Math.max(cardSize, contentWidth - 10)
-  const baseSlots = Math.max(1, Math.floor((baseAvailableWidth + gap) / (cardSize + gap)))
-  const stackReserve = turnQueue.value.length > baseSlots ? 82 : 10
-  const availableWidth = Math.max(cardSize, contentWidth - stackReserve)
-  return Math.max(1, Math.floor((availableWidth + gap) / (cardSize + gap)))
-})
+const layout = computed(() => screenCombatLayout(viewport.value, presentation.value?.displayScale, turnQueue.value.length))
+const combatStageStyle = computed(() => layout.value.style)
+const queueSlotCount = computed(() => layout.value.queueSlots)
+const visibleGraveyard = computed(() => graveyard.value.slice(0, layout.value.graveyardSlots))
 const queueStackStart = computed(() => Math.max(0, queueSlotCount.value - 1))
 const queueStackCount = computed(() => Math.max(0, turnQueue.value.length - queueStackStart.value))
 const serverNow = computed(() => clock.value - serverOffsetMs.value)
@@ -300,12 +286,12 @@ function accentStyle(combatant) {
 
 function queueCardStyle(combatant, index) {
   const style = accentStyle(combatant)
-  if (index < queueStackStart.value) return { ...style, '--queue-column': index + 1, '--queue-stack-offset': 0, '--queue-z': 100 - index }
+  if (index < queueStackStart.value) return { ...style, '--queue-column': index + 1, '--queue-stack-offset': 0, '--queue-z': turnQueue.value.length - index }
   return {
     ...style,
     '--queue-column': queueSlotCount.value,
-    '--queue-stack-offset': index - queueStackStart.value,
-    '--queue-z': 100 - index,
+    '--queue-stack-offset': Math.min(index - queueStackStart.value, 4),
+    '--queue-z': turnQueue.value.length - index,
   }
 }
 
@@ -437,7 +423,7 @@ onMounted(() => {
   connectEvents()
   controlTimer = window.setInterval(syncScreen, CONTROL_SYNC_INTERVAL_MS)
   clockTimer = window.setInterval(() => { clock.value = Date.now() }, 250)
-  window.addEventListener('resize', updateViewportWidth)
+  window.addEventListener('resize', updateViewport)
   document.addEventListener('visibilitychange', pollWhenVisible)
 })
 
@@ -449,11 +435,11 @@ onBeforeUnmount(() => {
   requestController?.abort()
   displayMusic.dispose()
   document.removeEventListener('visibilitychange', pollWhenVisible)
-  window.removeEventListener('resize', updateViewportWidth)
+  window.removeEventListener('resize', updateViewport)
 })
 
-function updateViewportWidth() {
-  viewportWidth.value = window.innerWidth
+function updateViewport() {
+  viewport.value = { width: window.innerWidth, height: window.innerHeight }
 }
 </script>
 

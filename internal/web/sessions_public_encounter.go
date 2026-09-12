@@ -351,19 +351,6 @@ func participantPortrait(participant store.SessionParticipantData) *string {
 	return &avatar
 }
 
-func participantHP(participant store.SessionParticipantData) (float64, float64, bool) {
-	if participant.TemplateName != "DND5" {
-		return 0, 0, false
-	}
-	hp := objectValue(objectValue(participant.Data, "values"), "hp")
-	maximum, ok := numberValue(hp, "max")
-	if !ok || maximum <= 0 {
-		return 0, 0, false
-	}
-	current, _ := numberValue(hp, "current")
-	return current, maximum, true
-}
-
 func participantStateIDs(participant store.SessionParticipantData) []int64 {
 	if participant.TemplateName != "DND5" {
 		return nil

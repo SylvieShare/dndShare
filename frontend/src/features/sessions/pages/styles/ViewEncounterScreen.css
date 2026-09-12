@@ -1,14 +1,18 @@
 .encounter-screen {
   --screen-combatant-color: var(--accent);
-  position: relative;
+  position: fixed;
+  inset: 0;
   display: grid;
-  min-height: 100vh;
-  min-height: 100dvh;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
   box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(22px, 3vh, 44px);
   overflow: hidden;
-  padding: clamp(24px, 3.2vw, 64px);
+  padding: 3vmin;
   background-color: var(--app-canvas-bg);
   background-image: var(--app-canvas-pattern);
   background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size);
@@ -35,7 +39,7 @@
 }
 
 .encounter-screen__sound-unlock {
-  position: fixed;
+  position: absolute;
   z-index: 60;
   right: 50%;
   bottom: clamp(20px, 3vw, 42px);
@@ -63,8 +67,7 @@
 
 .presentation-frame {
   width: 100%;
-  height: 100vh;
-  height: 100dvh;
+  height: 100%;
 }
 
 .presentation-frame__content {
@@ -89,8 +92,10 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  padding: clamp(38px, 6vw, 110px);
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  padding: 6vmin;
   color: var(--text-1);
   font-family: var(--font-prose);
   font-size: clamp(24px, 2.4vw, 46px);
@@ -110,7 +115,7 @@
 .presentation-fade-leave-to { opacity: 0; transform: scale(1.01); }
 
 .presentation-effect {
-  position: fixed;
+  position: absolute;
   z-index: 40;
   inset: 0;
   overflow: hidden;
@@ -201,7 +206,7 @@
 }
 
 .encounter-screen__status {
-  position: fixed;
+  position: absolute;
   z-index: 45;
   top: clamp(16px, 2vw, 32px);
   right: clamp(16px, 2vw, 32px);
@@ -241,14 +246,16 @@
 }
 
 .broadcast-timers {
-  position: fixed;
+  position: absolute;
   z-index: 44;
   top: clamp(16px, 2vw, 32px);
   left: 50%;
   width: min(520px, 42vw);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  max-height: 90%;
+  overflow: hidden;
+  gap: min(8px, 1vh);
   margin: 0;
   padding: 0;
   pointer-events: none;
@@ -262,7 +269,9 @@
   align-items: center;
   gap: 10px;
   overflow: hidden;
-  padding: 10px 13px 12px;
+  min-height: 0;
+  flex-shrink: 1;
+  padding: min(10px, 1vh) 13px min(12px, 1.2vh);
   border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
   border-radius: 13px;
   background: color-mix(in srgb, var(--surface-raised) 84%, transparent);
