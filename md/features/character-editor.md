@@ -1,5 +1,11 @@
 # Character editor
 
+Лист с выключенной «Публичной ссылкой» доступен владельцу и мастеру сессии,
+в которой участвует персонаж. Доступ мастера действует для неудалённой сессии
+и не зависит от публичности листа; проверка применяется также к чтению версии.
+Другие игроки могут открывать чужой лист только при включённой публичной ссылке.
+
+
 Character editor lives in `frontend/src/features/character-editor`. It is a
 recursive code-schema renderer shared by supported game systems, not a set of
 DB-defined templates.

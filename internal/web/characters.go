@@ -462,14 +462,19 @@ func (s *Server) loadChar(w http.ResponseWriter, r *http.Request) (store.Charact
 	return char, true
 }
 
-// loadCharReadable — доступ к персонажу на чтение (@UserParamOptional): публичный или свой, иначе 401.
+// loadCharReadable — чтение публичного/своего листа или листа участника своей сессии.
 func (s *Server) loadCharReadable(w http.ResponseWriter, r *http.Request) (store.CharacterItem, bool) {
 	char, ok := s.loadChar(w, r)
 	if !ok {
 		return store.CharacterItem{}, false
 	}
 	uid, authed := optionalUser(r)
-	if !char.PublicVisible && (!authed || char.UserID != uid) {
+	readable, err := canReadCharacter(r.Context(), s.store, char, uid, authed)
+	if err != nil {
+		serverError(w, err)
+		return store.CharacterItem{}, false
+	}
+	if !readable {
 		unauthorized(w)
 		return store.CharacterItem{}, false
 	}

@@ -15,6 +15,10 @@ A session has DM/participant permissions, current chapter, participants,
 encounter and synchronized music state. Owner-only actions are checked on the
 server, not only hidden in UI.
 
+The DM can open every participant’s character sheet even when `publicVisible`
+is disabled. This applies while the character belongs to a non-deleted session
+owned by that DM. Other players still need a public link to open someone else’s sheet.
+
 Opening a session as a participant renders a separate player composition instead
 of the DM canvas and tool rails. The page places the campaign context first, then
 uses the current chapter image, arc and title as the main visual block beside a

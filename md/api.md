@@ -64,6 +64,9 @@ sessions и выдаёт текущему браузеру новый token.
   owner id, technical version и nullable `iconImageId/iconImageUrl`. DB
   template JSON в ответ не включается.
 - `GET /api/char/{uuid}/version`
+  Чтение листа и его версии доступно анонимно для публичного листа;
+  закрытый лист доступен владельцу и мастеру неудалённой сессии, в которой
+  участвует этот персонаж. Для остальных запрос возвращает 401.
 - `GET /api/char/{uuid}/sessions`
 - `GET /api/char/{uuid}/journal` returns the selected accessible journal,
   owner-only source choices and the effective edit/source-selection flags;
