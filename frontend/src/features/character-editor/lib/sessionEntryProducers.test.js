@@ -10,7 +10,7 @@ describe('character entry event producers', () => {
   it.each([
     ['предметы', '../blocks/dnd/DndItems.vue', "kind: 'item'"],
     ['зелья', '../blocks/dnd/DndPotions.vue', "kind: 'potion'"],
-    ['заклинания', '../blocks/dnd/DndSpells.vue', "kind: 'spell'"],
+    ['заклинания', '../blocks/dnd/composables/useSpellbookEntries.js', "kind: 'spell'"],
     ['оружие', '../blocks/dnd/DndWeapons.vue', "category: 'weapon'"],
     ['черты и способности', '../blocks/dnd/DndAbilities.vue', "? 'feature' : 'ability'"],
     ['повышение уровня', '../blocks/dnd/DndLvl.vue', 'for (const addition of additions)'],

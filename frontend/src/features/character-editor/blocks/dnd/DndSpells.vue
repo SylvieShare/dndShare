@@ -197,39 +197,33 @@
 
 <script setup>
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
-import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
 
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 
-import { itemsApi } from '@/shared/api/itemsApi'
 import SpellCard from '@/features/character-editor/blocks/dnd/components/SpellCard.vue'
 import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/SpellSlotsBar.vue'
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import { SectionList } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
+import { useSpellRolls } from './composables/useSpellRolls'
+import { useSpellPicker } from './composables/useSpellPicker'
+import { useSpellbookTabs } from './composables/useSpellbookTabs'
+import { useSpellbookEntries } from './composables/useSpellbookEntries'
 import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
-import { SPELL_LEVELS, countsTowardPreparation, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
+import { countsTowardPreparation, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
 import { availableSpellSlotOptions as availableSlotOptions } from '@/features/character-editor/blocks/dnd/lib/spellUse'
 import { collectCharacterSpellModifiers } from '@/features/character-editor/lib/characterSpellModifiers'
-import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-import { useSortable } from '@sylvieshare/share-ui'
-import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
-import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
-import { computeSpellSlotPools, maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
+import { maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
 import {
-  createSpellbookKey,
   grantedSpell,
   normalizedClassItemId,
   normalizedSpellTabs,
-  spellEntry,
-  spellTab,
-  spellbookItemIds,
 } from '@/features/character-editor/blocks/dnd/lib/spellbook'
 
 const props = defineProps(['block', 'value', 'values'])
@@ -247,8 +241,6 @@ const activeSpellTab = ref('')
 const automaticSlots = ref(true)
 const tabEditorOpen = ref(false)
 const deleteTarget = ref(null)
-
-// ─── Computeds ─────────────────────────────────────
 
 const hasStatConfig = computed(() =>
   !!(props.block.content?.stat_suggest_type_id && props.block.content?.prof_bonus_path)
@@ -395,8 +387,6 @@ const preparedSummary = computed(() => {
 
 watch(blockHidden, v => setBlockHidden(v), { immediate: true })
 
-// ─── Emit ──────────────────────────────────────────
-
 function emitChange() {
   emit('update:value', props.block.id, {
     schema_version: 2,
@@ -435,48 +425,9 @@ const maxSlotLevel = computed(() => Math.max(
   ...activeSlotPools.value.flatMap((pool) => pool.slots.map((slot) => Number(slot.level) || 0)),
   0,
 ))
-const knownEntries = computed(() => [
-  ...activeTabSpells.value,
-  ...grants.value.filter((entry) => entry.counts_as_known && entry.tab_key === activeTab.value?.key),
-]
-  .map((ref) => ({ ref, item: itemMap[ref.id] }))
-  .filter((entry) => entry.item))
-const knownCounts = computed(() => {
-  const rules = knownRules.value
-  const leveled = knownEntries.value.filter((entry) => Number(entry.item.data?.lvl) > 0)
-  const allowed = new Set((rules?.allowedSchoolIds || []).map(String))
-  return {
-    cantrips: knownEntries.value.filter((entry) => Number(entry.item.data?.lvl) === 0).length,
-    spells: leveled.length,
-    unrestricted: allowed.size
-      ? leveled.filter((entry) => !allowed.has(String(entry.item.data?.schoolId))).length
-      : 0,
-  }
+const { knownCounts, spellPickerFilters, spellPickerEligibility } = useSpellPicker({
+  activeTabSpells, grants, activeTab, itemMap, knownRules, selectedSourceMaxSpellLevel,
 })
-const spellPickerFilters = computed(() => {
-  const rules = knownRules.value
-  if (!rules) return {}
-  const levels = Array.from({ length: Math.max(0, selectedSourceMaxSpellLevel.value) + 1 }, (_, index) => index)
-  return {
-    ...(rules.listClassId != null ? { 'classes.id': [rules.listClassId] } : {}),
-    lvl: levels,
-  }
-})
-
-function spellPickerEligibility(item) {
-  const rules = knownRules.value
-  if (!rules) return { eligible: true, reasons: [] }
-  const level = Number(item?.data?.lvl)
-  const reasons = []
-  if (rules.hasKnownProgression && rules.cantripsKnown != null && level === 0 && knownCounts.value.cantrips >= rules.cantripsKnown) reasons.push('Лимит известных заговоров уже заполнен')
-  if (rules.hasKnownProgression && rules.spellsKnown != null && level > 0 && knownCounts.value.spells >= rules.spellsKnown) reasons.push('Лимит известных заклинаний уже заполнен')
-  if (level > 0 && rules.allowedSchoolIds.length
-    && !rules.allowedSchoolIds.some((id) => String(id) === String(item?.data?.schoolId))
-    && knownCounts.value.unrestricted >= rules.unrestrictedSpells) {
-    reasons.push('Все доступные заклинания вне основных школ уже выбраны')
-  }
-  return { eligible: reasons.length === 0, reasons }
-}
 
 const {
   schoolMeta,
@@ -489,192 +440,24 @@ const {
     charCtx.characterResources?.itemsById?.value || charCtx.characterResources?.itemsById || new Map())),
 })
 
-// ─── Methods ───────────────────────────────────────
-
-function updateActiveTab(field, value) {
-  if (!activeTab.value) return
-  activeTab.value[field] = value
-  emitChange()
-}
-
-function createTab() {
-  const tab = spellTab({ key: createSpellbookKey('tab'), name: 'Магия' })
-  tabs.value.push(tab)
-  activeSpellTab.value = tab.key
-  tabEditorOpen.value = true
-  emitChange()
-}
-
-function setActiveTabClass(value) {
-  if (!activeTab.value) return
-  const classItemId = normalizedClassItemId(value)
-  if (classItemId != null && tabs.value.some((tab) => (
-    tab.key !== activeTab.value.key && normalizedClassItemId(tab.class_item_id) === classItemId
-  ))) return
-  activeTab.value.class_item_id = classItemId
-  if (classItemId != null) {
-    const item = classItemMap[classItemId]
-    const classEntry = (props.values?.classes || []).find((entry) => normalizedClassItemId(entry.id) === classItemId)
-    const subclass = classEntry?.subclass?.id != null ? classItemMap[classEntry.subclass.id] : null
-    const rules = spellcastingRulesAt(subclass, Number(classEntry?.level) || 1)
-      || spellcastingRulesAt(item, Number(classEntry?.level) || 1)
-    if (item?.name) activeTab.value.name = item.name
-    if (rules?.ability != null) activeTab.value.casting_ability = rules.ability
-    activeTab.value.mode = rules?.selectionMode || (rules?.prepares ? 'prepared' : 'known')
-  }
-  emitChange()
-}
-
-function deleteTab() {
-  const target = deleteTarget.value
-  if (!target) return
-  tabs.value = tabs.value.filter((tab) => tab.key !== target.key)
-  for (const grant of grants.value) if (grant.tab_key === target.key) delete grant.tab_key
-  deleteTarget.value = null
-  tabEditorOpen.value = false
-  activeSpellTab.value = tabs.value[0]?.key || ''
-  emitChange()
-}
-
-function setAutomaticSlots(value) {
-  automaticSlots.value = !!value
-  if (automaticSlots.value) syncAutomaticSlotPools(true)
-  else emitChange()
-}
-
-function syncAutomaticSlotPools(forceEmit = false) {
-  if (!automaticSlots.value) return
-  const entries = Array.isArray(props.values?.classes) ? props.values.classes : []
-  const requiredIds = entries.flatMap((entry) => [entry?.id, entry?.subclass?.id]).filter((id) => id != null)
-  if (requiredIds.some((id) => !classItemMap[id])) {
-    if (forceEmit) emitChange()
-    return
-  }
-  const pools = computeSpellSlotPools(entries, classItemMap)
-  if (!pools.isCaster) {
-    let cleared = replaceTotals('long_rest', [])
-    cleared = replaceTotals('short_rest', []) || cleared
-    if (cleared || forceEmit) emitChange()
-    return
-  }
-  let changed = replaceTotals('long_rest', pools.totals)
-  const shortTotals = Array(9).fill(0)
-  if (pools.pact) shortTotals[pools.pact.slotLevel - 1] = pools.pact.count
-  changed = replaceTotals('short_rest', shortTotals) || changed
-  if (changed || forceEmit) emitChange()
-}
-
-async function loadDetails() {
-  const ids = spellbookItemIds({ tabs: tabs.value, grants: grants.value }).filter(id => !itemMap[id])
-  if (ids.length) {
-    const res = await itemsApi.byIds(ids)
-    for (const item of res.items || []) itemMap[item.id] = item
-    charCtx.characterResources?.rememberItems?.(res.items || [])
-  }
-  await Promise.all(spellbookItemIds({ tabs: tabs.value, grants: grants.value })
-    .map((id) => charCtx.characterStatuses?.ensureLinks?.(itemMap[id])))
-  normalizePreparationStatuses()
-}
-
-function normalizePreparationStatuses() {
-  let changed = false
-  for (const tab of tabs.value) {
-    for (const spell of tab.spells || []) {
-      const level = Number(itemMap[spell.id]?.data?.lvl)
-      if (level === 0 && spell.prepared) {
-        spell.prepared = false
-        changed = true
-      }
-      if (tab.mode === 'known' && spell.prepared) {
-        spell.prepared = false
-        changed = true
-      }
-    }
-  }
-  if (changed) emitChange()
-}
-
-function activeSpellByKey(key) {
-  return activeTabSpells.value.find((entry) => entry.key === key) || null
-}
-
-function togglePrepared(key) {
-  if (!charCtx.ownerMode) return
-  const entry = activeSpellByKey(key)
-  const level = Number(itemMap[entry?.id]?.data?.lvl)
-  if (entry && level > 0 && preparation.value) {
-    entry.prepared = !entry.prepared
-    emitChange()
-  }
-}
-
-function removeSpell(key) {
-  const index = activeTabSpells.value.findIndex((entry) => entry.key === key)
-  if (index !== -1) {
-    const ref = activeTabSpells.value[index]
-    const entry = { ref, item: itemMap[ref.id] }
-    if (typeof charCtx.updateValues === 'function') {
-      charCtx.updateValues({ states: charCtx.characterStatuses?.removeBySource?.(spellStatusSource(entry)) || [] })
-    }
-    activeTab.value.spells.splice(index, 1)
-    emitChange()
-  }
-}
-
-const spellGroups = Object.fromEntries(SPELL_LEVELS.map(lvl => {
-  return ['level-' + lvl, {
-    items: computed(() => spellsByLevel.value.find(g => g.level === lvl)?.items || []),
-    accepts: (entry) => ((entry?.item?.data?.lvl) ?? -1) === lvl,
-  }]
-}))
-
-const sortable = useSortable({
-  groups: spellGroups,
-  getKey: e => e.ref.key,
-  onDrop: ({ item, toGroup, toIndex }) => {
-    if (!activeTab.value) return
-    const targetLevel = Number(toGroup.replace('level-', ''))
-    const arr = [...activeTabSpells.value]
-    const srcIdx = arr.findIndex(s => s.key === item.ref.key)
-    if (srcIdx === -1) return
-    const [moved] = arr.splice(srcIdx, 1)
-    const targetItems = arr.filter(s => (itemMap[s.id]?.data?.lvl ?? -1) === targetLevel)
-    let insertAt
-    if (toIndex >= targetItems.length) {
-      insertAt = targetItems.length === 0 ? arr.length : arr.indexOf(targetItems[targetItems.length - 1]) + 1
-    } else {
-      insertAt = arr.indexOf(targetItems[toIndex])
-    }
-    arr.splice(insertAt, 0, moved)
-    activeTab.value.spells = arr
-    emitChange()
-  },
+const {
+  updateActiveTab, createTab, setActiveTabClass, deleteTab, setAutomaticSlots, syncAutomaticSlotPools,
+  spellCanPrepare, setSpellcastingSource, spellCastingAbility, statModifierForAbility,
+  spellAttackBonus, spellSaveDC, spellAbilityLabel, loadClassItems,
+} = useSpellbookTabs({
+  props, charCtx, tabs, grants, activeTab, activeSpellTab, tabEditorOpen, classItemMap,
+  deleteTarget, automaticSlots, replaceTotals, emitChange, profBonus, statOptions,
 })
-
-function displayLevel(level) {
-  return sortable.displayItems('level-' + level)
-}
-
-function onSpellDragStart(e, entry, level, idx) {
-  if (!charCtx.ownerMode) return
-  sortable.startDrag(e, entry, 'level-' + level, idx)
-}
-
-function addSpell(item) {
-  if (!activeTab.value) return
-  if (spellPickerEligibility(item).eligible && !activeTabSpells.value.some(s => String(s.id) === String(item.id))) {
-    itemMap[item.id] = item
-    charCtx.characterResources?.rememberItems?.([item])
-    charCtx.characterStatuses?.ensureLinks?.(item)
-    activeTab.value.spells.push(spellEntry(item.id, {
-      prepared: preparation.value && Number(item.data?.lvl) > 0,
-    }))
-    emitChange()
-    logSessionEntryAdded(charCtx, {
-      kind: 'spell', title: item.name, itemId: item.id, level: item.data?.lvl,
-    })
-  }
-}
+const {
+  loadDetails, togglePrepared, removeSpell, sortable, displayLevel, onSpellDragStart,
+  addSpell, abilityIds, syncExternalAbilitySpells,
+} = useSpellbookEntries({
+  props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation,
+  spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource,
+})
+const { spellTitle, spellAttackMode, spellDamagePreview, spellHealPreview, rollSpellAttack, rollSpellDamage, rollSpellHeal } = useSpellRolls({
+  charCtx, spellcastingBlocked, spellAttackBonus, spellCastingAbility, charLevel, damageDiceParts, healDiceParts,
+})
 
 function openSpell(entry) {
   if (entry.item) modalSpell.value = entry.item
@@ -710,56 +493,6 @@ function toggleSpellStatus(entry, link) {
   })
 }
 
-// ─── Rolls ─────────────────────────────────────────
-
-const dice = useDiceStore()
-
-function spellTitle(entry) {
-  return entry?.item?.name || 'Заклинание'
-}
-
-function typeTag(part) {
-  if (!part.type) return ''
-  return part.typeColor ? `{${part.type}|${part.typeColor}}` : `{${part.type}}`
-}
-
-function diceExpr(parts, withType) {
-  return parts
-    .map(p => `${p.count || 1}${p.diceLabel || p.label || ''}${withType ? typeTag(p) : ''}`)
-    .filter(seg => /\d/.test(seg))
-    .join('+')
-}
-
-function rollSpellAttack(entry) {
-  if (spellcastingBlocked.value) return
-  const bonus = spellAttackBonus(entry)
-  dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, 'normal', {
-    crit_mode: true,
-    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
-  })
-}
-
-function exprWithBonus(parts, withType) {
-  let expr = diceExpr(parts, withType)
-  const bonus = parts.reduce((s, p) => s + (p.bonus || 0), 0)
-  if (bonus) expr += (expr && bonus > 0 ? '+' : '') + bonus
-  return expr
-}
-
-function rollSpellDamage(entry, castLevel, critical = false) {
-  if (spellcastingBlocked.value) return
-  const parts = damageDiceParts(entry.item, castLevel, charLevel.value)
-    .map((part) => critical ? { ...part, count: (Number(part.count) || 1) * 2 } : part)
-  const expr = exprWithBonus(parts, true)
-  if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr)
-}
-
-function rollSpellHeal(entry, castLevel) {
-  if (spellcastingBlocked.value) return
-  const expr = exprWithBonus(healDiceParts(entry.item, castLevel, charLevel.value), false)
-  if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr)
-}
-
 function availableSpellSlotOptions(entry) {
   const level = Number(entry?.item?.data?.lvl) || 0
   if (entry?.ref?.slotless) return [{ pool: 'slotless', level: Number(entry?.ref?.cast_level) || level, remaining: null }]
@@ -789,91 +522,6 @@ function useSpell(entry, slotOption) {
   })
 }
 
-function spellTabForEntry(entry) {
-  if (entry?.ref?.source) return tabs.value.find((tab) => tab.key === entry.ref.tab_key) || null
-  return activeTab.value
-}
-
-function spellCanPrepare(entry) {
-  return !entry?.ref?.source && ['prepared', 'spellbook'].includes(spellTabForEntry(entry)?.mode)
-}
-
-function setSpellcastingSource(entry, key) {
-  if (!charCtx.ownerMode) return
-  const from = activeTab.value
-  const target = tabs.value.find((tab) => tab.key === key)
-  if (!from || !target || from.key === target.key) return
-  if (target.spells.some((candidate) => String(candidate.id) === String(entry.ref.id))) return
-  from.spells = from.spells.filter((candidate) => candidate.key !== entry.ref.key)
-  target.spells.push(entry.ref)
-  emitChange()
-}
-
-function spellCastingAbility(entry) {
-  if (entry?.ref?.casting_ability != null) return entry.ref.casting_ability
-  return spellTabForEntry(entry)?.casting_ability ?? ''
-}
-
-function statModifierForAbility(ability) {
-  if (ability == null || ability === '') return 0
-  const stats = props.values?.stats || charCtx.var?.stats || {}
-  return Number(stats[String(ability)] ?? 0)
-}
-
-function spellStatModifier(entry) {
-  return statModifierForAbility(spellCastingAbility(entry))
-}
-
-function spellAttackBonus(entry) {
-  const tab = spellTabForEntry(entry)
-  return profBonus.value + spellStatModifier(entry) + (Number(tab?.attack_bonus) || 0)
-}
-
-function spellSaveDC(entry) {
-  const tab = spellTabForEntry(entry)
-  return 8 + profBonus.value + spellStatModifier(entry) + (Number(tab?.save_bonus) || 0)
-}
-
-function spellAbilityLabel(entry) {
-  const ability = spellCastingAbility(entry)
-  return statOptions.value.find((stat) => String(stat.value) === String(ability))?.label || ''
-}
-
-function abilityIds() { return featureItemIds(props.values) }
-
-let grantSyncSequence = 0
-async function syncExternalAbilitySpells() {
-  const sequence = ++grantSyncSequence
-  const ids = abilityIds()
-  const response = charCtx.characterResources?.ensureItems
-    ? await charCtx.characterResources.ensureItems(ids)
-    : (ids.length ? await itemsApi.byIds(ids) : { items: [] })
-  if (sequence !== grantSyncSequence) return
-  const items = response?.items || []
-  const resolvedIds = new Set(items.map((item) => String(item.id)))
-  if (ids.some((id) => !resolvedIds.has(String(id)))) return
-  const rows = abilitySpellGrantRows(items, props.values)
-  const next = syncAbilityGrantedSpells(grants.value, rows)
-  if (JSON.stringify(next) === JSON.stringify(grants.value)) return
-  grants.value = next
-  emitChange()
-  await loadDetails()
-}
-
-async function loadClassItems(syncSlots = true) {
-  const classIds = [...new Set((Array.isArray(props.values?.classes) ? props.values.classes : [])
-    .flatMap((entry) => [entry?.id, entry?.subclass?.id]).filter((id) => id != null))]
-  const missing = classIds.filter((id) => !classItemMap[id])
-  if (missing.length) {
-    const response = await itemsApi.byIds(missing)
-    for (const item of response?.items || []) classItemMap[item.id] = item
-  }
-  if (!tabs.value.some((tab) => tab.key === activeSpellTab.value)) {
-    activeSpellTab.value = tabs.value[0]?.key || ''
-  }
-  if (syncSlots) syncAutomaticSlotPools()
-}
-
 provide('spellsBlockCtx', reactive({
   charCtx,
   sortable,
@@ -894,6 +542,7 @@ provide('spellsBlockCtx', reactive({
   charLevel,
   maxSlotLevel,
   preparation,
+  spellAttackMode, spellDamagePreview, spellHealPreview,
   rollSpellAttack,
   rollSpellDamage,
   rollSpellHeal,

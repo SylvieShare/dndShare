@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-const source = readFileSync(fileURLToPath(new URL('./DndSpells.vue', import.meta.url)), 'utf8')
+const source = ['./DndSpells.vue', './composables/useSpellPicker.js', './composables/useSpellbookTabs.js'].map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')).join('\n')
 const cardSource = readFileSync(fileURLToPath(new URL('./components/SpellCard.vue', import.meta.url)), 'utf8')
 const settingsSource = readFileSync(fileURLToPath(new URL('./DndSpellbookSettingsModal.vue', import.meta.url)), 'utf8')
 

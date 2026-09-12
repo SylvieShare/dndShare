@@ -74,7 +74,7 @@ import DamageRollOptions from './DamageRollOptions.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 
 // Shared attack/damage display used by both spells and weapons. `rollable` turns the displayed values
-// into controls for spell cards; weapon cards keep them read-only and expose rolls in their action menu.
+// into controls for direct-roll consumers; spell and weapon cards expose rolls in their row menus.
 // Versatile dice share one formula and modifier, with a slash between grip alternatives.
 const props = defineProps({
   attack: { type: String, default: null },          // e.g. "+7"; null/'' → no attack chip

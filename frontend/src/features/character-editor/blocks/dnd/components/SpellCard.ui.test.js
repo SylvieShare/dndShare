@@ -38,9 +38,11 @@ describe('character spell card icon', () => {
     expect(source).not.toContain('isAlwaysPrepared')
   })
 
-  it('uses a dice menu for normal and critical damage without a cast-level stepper', () => {
-    expect(source).toContain('damage-menu')
-    expect(source).toContain('@roll-critical="ctx.rollSpellDamage(entry, castLevel, true)"')
+  it('uses a single row menu with passive attack and dice values', () => {
+    expect(source).toContain('<SpellRollMenu')
+    expect(source).not.toContain(':rollable=')
+    expect(source).not.toContain('@roll-attack')
+    expect(source).not.toContain('damage-menu')
     expect(source).not.toContain('class="sp-step"')
     expect(source).not.toContain('classSourceSummary')
     expect(source).not.toContain('Заклинательная характеристика:')

@@ -62,12 +62,6 @@
         :damage-parts="damageParts"
         :modifier="damageModifier"
         :heal-parts="healParts"
-        :rollable="true"
-        damage-menu
-        @roll-attack="ctx.rollSpellAttack(entry)"
-        @roll-damage="ctx.rollSpellDamage(entry, castLevel)"
-        @roll-critical="ctx.rollSpellDamage(entry, castLevel, true)"
-        @roll-heal="ctx.rollSpellHeal(entry, castLevel)"
       />
     </div>
 
@@ -75,6 +69,8 @@
     </template>
 
     <template #default="{ close }">
+      <SpellRollMenu :entry="entry" :cast-level="castLevel" @close="close" />
+      <RowActionSeparator v-if="hasMetrics" />
       <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && canPrepare"
@@ -182,6 +178,8 @@
 import { Activity, Sprout } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'
 
+import SpellRollMenu from './SpellRollMenu.vue'
+import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import PreparedSpellBrackets from '@/features/character-editor/blocks/dnd/components/PreparedSpellBrackets.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
