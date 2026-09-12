@@ -711,6 +711,12 @@ reduced to 0); bullet points state the instant-death exclusion and no action or
 reaction cost. The charge and rest icon communicate the use limit and recovery
 without a duplicate bullet point. Spending the charge
 does not automatically change HP.
+Infernal Legacy contributes Hellish Rebuke to Reactions from character level 3.
+It binds only the existing `hellish_rebuke` long-rest charge; Darkness remains
+in the resources tile. The summary describes the slotless second-level spell
+(3d10 fire, Dexterity save, Charisma-based DC), with the damage trigger,
+60-foot visibility requirement and spell components below it. Spending the
+charge does not automatically resolve damage or track the round's reaction.
 The spheres remain owner-interactive and write through the shared resource
 source contract without triggering the press
 animation of the surrounding action row; spending from the action menu

@@ -436,6 +436,7 @@ var schemaParts = []struct {
 	{"item-automation", schemaItemAutomationSQL},
 	{"magic-item-automation-audit", schemaMagicItemAutomationAuditSQL},
 	{"effect-source-filter", schemaEffectSourceFilterSQL},
+	{"infernal-legacy-reaction", schemaInfernalLegacyReactionSQL},
 }
 
 const (
