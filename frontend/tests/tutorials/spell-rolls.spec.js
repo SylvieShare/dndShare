@@ -55,6 +55,7 @@ for (const mobile of [false, true]) {
       expect(await page.evaluate(() => window.rolls.at(-1).expression)).toBe('1d8')
       await page.locator('.spell-row').filter({ hasText: 'Свет' }).click()
       await expect(page.getByRole('menuitem', { name: /Бросить/ })).toHaveCount(0)
+      await expect(page.getByRole('menuitem', { name: 'Потратить ячейку', exact: true })).toHaveCount(0)
       await page.keyboard.press('Escape')
       await page.evaluate(() => { window.spellCtx.characterArmor.state.castingBlocked = true })
       await save.click()
@@ -64,9 +65,9 @@ for (const mobile of [false, true]) {
       expect(await page.evaluate(() => window.writes)).toEqual([])
     })
 
-    test('using a leveled spell still spends its slot separately from rolling', async ({ page }) => {
+    test('spending a slot is separate from rolling and absent for cantrips', async ({ page }) => {
       await page.locator('.spell-row').filter({ hasText: 'Лечение' }).click()
-      await page.getByRole('menuitem', { name: 'Использовать', exact: true }).click()
+      await page.getByRole('menuitem', { name: 'Потратить ячейку', exact: true }).click()
       expect(await page.evaluate(() => window.rolls)).toEqual([])
       const writes = await page.evaluate(() => window.writes)
       expect(writes).toHaveLength(1)

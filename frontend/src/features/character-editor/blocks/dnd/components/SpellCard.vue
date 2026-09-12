@@ -101,12 +101,12 @@
         </template>
       </RowActionSubmenu>
       <RowActionSubmenu
-        v-if="ctx.charCtx.ownerMode && canUse && hasHigherLevelChoice"
+        v-if="ctx.charCtx.ownerMode && spendsSlot && canUse && hasHigherLevelChoice"
         label="Выберите ячейку"
       >
         <template #trigger="{ open }">
           <RowActionItem action="use" tone="accent" submenu :submenu-open="open">
-            Использовать
+            Потратить ячейку
           </RowActionItem>
         </template>
         <template #default="{ close: closeSlots }">
@@ -123,7 +123,7 @@
         </template>
       </RowActionSubmenu>
       <RowActionItem
-        v-else-if="ctx.charCtx.ownerMode"
+        v-else-if="ctx.charCtx.ownerMode && spendsSlot"
         action="use"
         tone="accent"
         :disabled="!canUse"
@@ -229,8 +229,9 @@ const saveTag = computed(() => {
 })
 const instances = computed(() => Number(dmg.value.instances) || 1)
 const slotOptions = computed(() => ctx.availableSpellSlotOptions(props.entry))
+const spendsSlot = computed(() => baseLvl.value > 0 && !props.entry.ref.slotless)
 const canUse = computed(() => !ctx.spellcastingBlocked && !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
-const useLabel = computed(() => ctx.spellcastingBlocked ? 'Сотворение недоступно' : (canUse.value ? 'Использовать' : 'Нет доступных ячеек'))
+const useLabel = computed(() => ctx.spellcastingBlocked ? 'Сотворение недоступно' : (canUse.value ? 'Потратить ячейку' : 'Нет доступных ячеек'))
 const hasHigherLevelChoice = computed(() =>
   !props.entry.ref.slotless && (slotOptions.value.length > 1 || slotOptions.value.some(option => option.level > baseLvl.value))
 )
