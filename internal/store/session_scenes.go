@@ -57,6 +57,7 @@ type SessionSceneItemEdge struct {
 
 // SceneSession — минимум из dndshare."session", нужный контроллеру сцен (id + владелец).
 type SceneSession struct {
+	DisplayCode string
 	ID          int64
 	OwnerUserID int64
 }
@@ -71,8 +72,8 @@ type SceneChapter struct {
 func (s *Store) GetSessionByUUIDForScene(ctx context.Context, uuid string) (SceneSession, error) {
 	var ss SceneSession
 	err := s.pool.QueryRow(ctx,
-		`SELECT id, owner_user_id FROM dndshare."session" WHERE "uuid" = $1 AND deleted = false`, uuid,
-	).Scan(&ss.ID, &ss.OwnerUserID)
+		`SELECT id, owner_user_id, display_code FROM dndshare."session" WHERE "uuid" = $1 AND deleted = false`, uuid,
+	).Scan(&ss.ID, &ss.OwnerUserID, &ss.DisplayCode)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return SceneSession{}, ErrNotFound
 	}

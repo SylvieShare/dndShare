@@ -1,13 +1,10 @@
 package web
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"sync"
 	"time"
-
-	"dndshare/internal/store"
 )
 
 const (
@@ -83,18 +80,8 @@ func (s *Server) handleGetPresentationConnections(w http.ResponseWriter, r *http
 }
 
 func (s *Server) handlePublicDisplayEvents(w http.ResponseWriter, r *http.Request) {
-	uuid := r.PathValue("uuid")
-	if !isUUID(uuid) {
-		notFound(w, "")
-		return
-	}
-	session, err := s.store.GetGameSessionByUUID(r.Context(), uuid)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			notFound(w, "")
-		} else {
-			serverError(w, err)
-		}
+	session, ok := s.publicDisplaySession(w, r)
+	if !ok {
 		return
 	}
 	flusher, ok := w.(http.Flusher)

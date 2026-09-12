@@ -579,7 +579,7 @@ HTTP-обслуживания; компоненты не содержат read-t
 
 ## Router
 
-Актуальные страницы: `/`, `/sessions`, `/sessions/:uuid`, `/screen/:uuid`, `/join/:code`,
+Актуальные страницы: `/`, `/sessions`, `/sessions/:uuid`, `/screen/:code`, `/join/:code`,
 `/chars`, `/chars/new`, `/char/:uuid`, `/char/:uuid/print`, `/handbook`,
 `/handbook/dictionary`, `/handbook/objects`, `/rules`, `/rules/:articleSlug`,
 `/admin`, `/screencast-guide`, `/tools`. Неизвестный клиентский
@@ -601,7 +601,7 @@ HTTP-обслуживания; компоненты не содержат read-t
 публичный визуальный компонент `share-ui` обязан появиться на этой доске —
 полноту проверяет тест самой библиотеки.
 
-`/screen/:uuid` uses `meta.standaloneView`: like print mode, it removes the
+`/screen/:code` uses `meta.standaloneView`: like print mode, it removes the
 global sidebar, header and diagnostic overlays, but retains the dark application
 theme for a public read-only encounter display.
 

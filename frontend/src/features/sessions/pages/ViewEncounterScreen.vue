@@ -341,10 +341,10 @@ async function syncScreen() {
   const timeout = window.setTimeout(() => requestController?.abort(), REQUEST_TIMEOUT_MS)
   try {
     const options = { signal: requestController.signal }
-    const nextPresentation = await getPublicPresentation(route.params.uuid, options)
+    const nextPresentation = await getPublicPresentation(route.params.code, options)
     const [nextSnapshot, nextMusic] = await Promise.all([
-      nextPresentation.mode === 'combat' ? getPublicEncounter(route.params.uuid, options) : Promise.resolve(snapshot.value),
-      nextPresentation.broadcastMusic ? getPublicDisplayMusic(route.params.uuid, options) : Promise.resolve(null),
+      nextPresentation.mode === 'combat' ? getPublicEncounter(route.params.code, options) : Promise.resolve(snapshot.value),
+      nextPresentation.broadcastMusic ? getPublicDisplayMusic(route.params.code, options) : Promise.resolve(null),
     ])
     presentation.value = nextPresentation
     const remoteTime = Number(nextPresentation.serverTime)
@@ -395,8 +395,8 @@ function stopFallback() {
 
 function connectEvents() {
   eventSource?.close()
-  const uuid = encodeURIComponent(route.params.uuid)
-  eventSource = new EventSource(`/api/public/sessions/${uuid}/presentation/events`)
+  const code = encodeURIComponent(route.params.code)
+  eventSource = new EventSource(`/api/public/sessions/${code}/presentation/events`)
   eventSource.onopen = () => {
     stopFallback()
     syncScreen()

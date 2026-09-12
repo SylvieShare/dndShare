@@ -135,7 +135,7 @@ const routes = [
         meta: { title: 'Сессия', section: 'sessions', depth: 1, mobileBackTo: { name: 'Sessions' } },
     },
     {
-        path: '/screen/:uuid',
+        path: '/screen/:code',
         name: "EncounterScreen",
         component: ViewEncounterScreen,
         meta: { title: 'Экран показа', section: 'sessions', depth: 2, standaloneView: true },

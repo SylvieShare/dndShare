@@ -14,7 +14,7 @@ import (
 func init() { registerRoutes((*Server).routesPublicEncounter) }
 
 func (s *Server) routesPublicEncounter(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/public/sessions/{uuid}/encounter", s.handleGetPublicEncounter)
+	mux.HandleFunc("GET /api/public/sessions/{code}/encounter", s.handleGetPublicEncounter)
 }
 
 type publicEncounterResponse struct {
@@ -93,18 +93,8 @@ type rawPublicCombatant struct {
 }
 
 func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request) {
-	uuid := r.PathValue("uuid")
-	if !isUUID(uuid) {
-		notFound(w, "")
-		return
-	}
-	session, err := s.store.GetGameSessionByUUID(r.Context(), uuid)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			notFound(w, "")
-		} else {
-			serverError(w, err)
-		}
+	session, ok := s.publicDisplaySession(w, r)
+	if !ok {
 		return
 	}
 

@@ -60,8 +60,8 @@ export function saveEncounter(uuid, data) {
   return fetchPut(`/sessions/${uuid}/encounter`, data)
 }
 
-export function getPublicEncounter(uuid, options) {
-  return fetchGet(`/public/sessions/${uuid}/encounter`, options)
+export function getPublicEncounter(code, options) {
+  return fetchGet(`/public/sessions/${code}/encounter`, options)
 }
 
 export function getSessionMaterials(uuid) {
@@ -112,12 +112,12 @@ export function saveSessionPresentation(uuid, data) {
   return fetchPut(`/sessions/${uuid}/presentation`, data)
 }
 
-export function getPublicPresentation(uuid, options) {
-  return fetchGet(`/public/sessions/${uuid}/presentation`, options)
+export function getPublicPresentation(code, options) {
+  return fetchGet(`/public/sessions/${code}/presentation`, options)
 }
 
-export function getPublicDisplayMusic(uuid, options) {
-  return fetchGet(`/public/sessions/${uuid}/presentation/music`, options)
+export function getPublicDisplayMusic(code, options) {
+  return fetchGet(`/public/sessions/${code}/presentation/music`, options)
 }
 
 export function getChapters(uuid) {

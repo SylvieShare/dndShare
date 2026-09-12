@@ -379,7 +379,7 @@ selected id is deep-linked through `quest` just like locations and NPCs.
 ### Materials and the player screen
 
 The previous fight-only TV page is now the session's anonymous player display
-at `/screen/:uuid`. Its live state is one of `idle`, `material` or `combat` and
+at `/screen/:code`. Its live state is one of `idle`, `material` or `combat` and
 is kept separately from encounter JSON. Starting and finishing
 combat switches this state automatically. A blackout hides current content
 without discarding it, so the header control can reveal it again; `cut` and
@@ -916,8 +916,15 @@ dropped index preserve an extra advantage/disadvantage die; `revision` restarts
 its embedded animation when the kept value does not change. Removing
 `challenge` clears the shared result display.
 
-The session display control links to the standalone public route `/screen/:uuid`
-for a television or projector. It has no application navigation or authenticated
+The session display control links to the standalone public route `/screen/:code`
+for a television or projector. Each session has a permanent unique code in
+`ABC-123` format: six ASCII letters/digits with a hyphen after the third symbol.
+Codes are displayed uppercase and resolve without case sensitivity. The DM's
+display menu shows the code, copies `/screen/ABC-123` and opens that short link.
+Existing sessions receive codes during migration; display routes use only these
+codes. Session UUIDs continue to identify authenticated management routes and
+invite codes continue to identify membership invitations.
+It has no application navigation or authenticated
 controls. Its SSE stream refreshes the presentation and, in combat mode, the
 public encounter projection immediately; fallback polling and a control sync
 cover reconnects, server restarts and missed in-memory signals. Returning to a

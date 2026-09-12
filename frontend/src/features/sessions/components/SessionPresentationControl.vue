@@ -22,10 +22,15 @@
           <nav class="presentation-menu-header-actions">
             <button v-if="settingsOpen" type="button" title="Назад к управлению" aria-label="Назад к управлению" @click="settingsOpen = false"><ArrowLeft :size="15" /></button>
             <button v-else type="button" title="Настройки трансляции" aria-label="Настройки трансляции" @click="settingsOpen = true"><Settings2 :size="15" /></button>
-            <a :href="`/screen/${sessionUuid}`" target="_blank" rel="noopener" title="Открыть экран показа"><ExternalLink :size="15" /></a>
+            <a v-if="displayCode" :href="displayPath" target="_blank" rel="noopener" title="Открыть экран показа"><ExternalLink :size="15" /></a>
           </nav>
         </header>
         <template v-if="!settingsOpen">
+          <div v-if="displayCode" class="presentation-code">
+            <span><small>Код трансляции</small><strong>{{ displayCode }}</strong></span>
+            <button type="button" :title="copyLabel" :aria-label="copyLabel" @click="copyDisplayLink"><Copy :size="17" /></button>
+          </div>
+          <span v-if="copyStatus" class="presentation-code-status" role="status">{{ copyStatus }}</span>
           <div class="presentation-mode" :class="`presentation-mode--${displayMode.key}`" role="status" aria-live="polite">
             <span class="presentation-mode__icon"><component :is="displayMode.icon" :size="20" aria-hidden="true" /></span>
             <span class="presentation-mode__copy"><small>Режим отображения</small><strong>{{ displayMode.label }}</strong></span>
@@ -134,13 +139,25 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { ArrowLeft, Ban, CloudFog, CloudLightning, CloudRain, ExternalLink, Eye, EyeOff, Flame, HeartPulse, Image, Maximize2, MonitorUp, ScrollText, Settings2, Skull, Snowflake, Swords, Video, Volume2, X } from '@lucide/vue'
+import { ArrowLeft, Ban, CloudFog, CloudLightning, CloudRain, Copy, ExternalLink, Eye, EyeOff, Flame, HeartPulse, Image, Maximize2, MonitorUp, ScrollText, Settings2, Skull, Snowflake, Swords, Video, Volume2, X } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   sessionUuid: { type: String, required: true }, isDm: { type: Boolean, default: false },
   presentation: { type: Object, required: true },
 })
+const displayCode = computed(() => props.presentation.state.value.displayCode || '')
+const displayPath = computed(() => `/screen/${displayCode.value}`)
+const copyStatus = ref('')
+const copyLabel = 'Скопировать ссылку трансляции'
+async function copyDisplayLink() {
+  try {
+    await navigator.clipboard.writeText(new URL(displayPath.value, window.location.origin).href)
+    copyStatus.value = 'Ссылка скопирована'
+  } catch {
+    copyStatus.value = 'Не удалось скопировать ссылку'
+  }
+}
 const trigger = ref(null)
 const open = ref(false)
 const settingsOpen = ref(false)
@@ -186,6 +203,11 @@ function resetDisplayScale() { scaleDraft.value = 100; commitDisplayScale() }
 </script>
 
 <style scoped>
+.presentation-code { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.presentation-code > span { display: grid; gap: 4px; }
+.presentation-code small, .presentation-code-status { color: var(--text-muted); font-size: 12px; }
+.presentation-code strong { color: var(--text-1); font-size: 26px; font-variant-numeric: tabular-nums; letter-spacing: .12em; }
+.presentation-code button { display: grid; place-items: center; padding: 8px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface); color: var(--text-2); cursor: pointer; }
 .presentation-control { display: contents; }.chapter-tool-btn--presentation { position: relative; min-width: 34px; min-height: 34px; display: inline-flex; align-items: center; justify-content: center; padding: 7px; border: 1px solid var(--border-strong); border-radius: 7px; background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); color: var(--text-2); cursor: pointer; }.chapter-tool-btn--presentation:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--text-1); }.chapter-tool-btn--presentation.chapter-tool-btn--connected { border-color: color-mix(in srgb, var(--success) 68%, var(--border)); background: color-mix(in srgb, var(--success) 14%, transparent); color: var(--text-1); box-shadow: 0 0 0 1px color-mix(in srgb, var(--success) 10%, transparent), 0 0 16px color-mix(in srgb, var(--success) 13%, transparent); }.presentation-control-dot { position: absolute; top: 5px; right: 5px; width: 5px; height: 5px; border-radius: 50%; background: var(--text-muted); }.presentation-control-dot.connected { background: var(--success); box-shadow: 0 0 7px var(--success); }
 .presentation-menu { display: flex; flex-direction: column; gap: 12px; padding: 4px; }.presentation-menu header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 8px 9px 10px; border-bottom: 1px solid var(--border); }.presentation-menu header > div { min-width: 0; display: flex; flex-direction: column; gap: 2px; }.presentation-menu header span, .presentation-menu h3 { color: var(--text-muted); font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }.presentation-menu header strong { overflow: hidden; color: var(--text-1); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }.presentation-menu-header-actions { display: flex; align-items: center; gap: 4px; }.presentation-menu header a, .presentation-menu header nav button { width: 30px; height: 30px; min-height: 30px; display: grid; flex: none; place-items: center; padding: 0; border: 1px solid var(--border); border-radius: 7px; background: transparent; color: var(--text-2); }
 .presentation-mode { --mode-color: var(--text-muted); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; margin: -3px 3px 0; padding: 9px; border: 1px solid color-mix(in srgb, var(--mode-color) 30%, var(--border)); border-radius: 10px; background: linear-gradient(135deg, color-mix(in srgb, var(--mode-color) 10%, var(--surface-raised)), color-mix(in srgb, var(--surface) 96%, transparent)); }.presentation-mode--combat { --mode-color: var(--danger); }.presentation-mode--image, .presentation-mode--video { --mode-color: var(--info); }.presentation-mode--letter { --mode-color: var(--warning); }.presentation-mode__icon { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, var(--mode-color) 45%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--mode-color) 14%, transparent); color: color-mix(in srgb, var(--mode-color) 82%, var(--text-1)); }.presentation-mode__copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }.presentation-mode__copy small { color: var(--text-muted); font-size: 8px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }.presentation-mode__copy strong { color: var(--text-1); font-size: 13px; }.presentation-mode__actions { display: flex; align-items: center; gap: 5px; }

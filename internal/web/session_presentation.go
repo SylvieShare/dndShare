@@ -17,9 +17,9 @@ func (s *Server) routesSessionPresentation(mux *http.ServeMux) {
 	mux.HandleFunc("PATCH /api/sessions/{uuid}/materials/{materialId}", s.handleUpdateSessionMaterial)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/materials/{materialId}", s.handleDeleteSessionMaterial)
 	mux.HandleFunc("PUT /api/sessions/{uuid}/presentation", s.handleSaveSessionPresentation)
-	mux.HandleFunc("GET /api/public/sessions/{uuid}/presentation", s.handleGetPublicPresentation)
-	mux.HandleFunc("GET /api/public/sessions/{uuid}/presentation/events", s.handlePublicDisplayEvents)
-	mux.HandleFunc("GET /api/public/sessions/{uuid}/presentation/music", s.handleGetPublicDisplayMusic)
+	mux.HandleFunc("GET /api/public/sessions/{code}/presentation", s.handleGetPublicPresentation)
+	mux.HandleFunc("GET /api/public/sessions/{code}/presentation/events", s.handlePublicDisplayEvents)
+	mux.HandleFunc("GET /api/public/sessions/{code}/presentation/music", s.handleGetPublicDisplayMusic)
 }
 
 type sessionMaterialsResponse struct {
@@ -269,7 +269,10 @@ func (s *Server) handleGetSessionPresentation(w http.ResponseWriter, r *http.Req
 		serverError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, state)
+	writeJSON(w, http.StatusOK, struct {
+		store.SessionPresentationState
+		DisplayCode string `json:"displayCode"`
+	}{state, session.DisplayCode})
 }
 
 type sessionPresentationRequest struct {
@@ -355,7 +358,10 @@ func (s *Server) handleSaveSessionPresentation(w http.ResponseWriter, r *http.Re
 		return
 	}
 	s.displayEvents.publish(session.ID)
-	writeJSON(w, http.StatusOK, state)
+	writeJSON(w, http.StatusOK, struct {
+		store.SessionPresentationState
+		DisplayCode string `json:"displayCode"`
+	}{state, session.DisplayCode})
 }
 
 type publicPresentationResponse struct {
@@ -386,18 +392,8 @@ type publicPresentationMaterial struct {
 }
 
 func (s *Server) handleGetPublicPresentation(w http.ResponseWriter, r *http.Request) {
-	uuid := r.PathValue("uuid")
-	if !isUUID(uuid) {
-		notFound(w, "")
-		return
-	}
-	session, err := s.store.GetGameSessionByUUID(r.Context(), uuid)
-	if err != nil {
-		if errors.Is(err, store.ErrNotFound) {
-			notFound(w, "")
-		} else {
-			serverError(w, err)
-		}
+	session, ok := s.publicDisplaySession(w, r)
+	if !ok {
 		return
 	}
 	state, err := s.store.GetSessionPresentation(r.Context(), session.ID)

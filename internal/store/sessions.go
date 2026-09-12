@@ -21,6 +21,7 @@ type GameSession struct {
 	Description      *string   `json:"description,omitempty"`
 	SystemID         *int64    `json:"systemId,omitempty"`
 	SystemName       *string   `json:"systemName,omitempty"`
+	DisplayCode      string    `json:"displayCode"`
 	InviteCode       string    `json:"inviteCode"`
 	CurrentChapterID *int64    `json:"currentChapterId,omitempty"`
 	CreatedAt        time.Time `json:"createdAt"`
@@ -62,7 +63,7 @@ type ChapterBrief struct {
 // sessionSelect — общий SELECT сессии с именем системы (LEFT JOIN source).
 const sessionSelect = `
 	SELECT s.id, s.uuid::text, s.owner_user_id, s.name, s.description, s.system_id,
-	       src.name AS source_name, s.invite_code, s.current_chapter_id,
+	       src.name AS source_name, s.display_code, s.invite_code, s.current_chapter_id,
 	       s.created_at, s.changed_at
 	FROM dndshare."session" s
 	LEFT JOIN dndshare."source" src ON src.id = s.system_id`
@@ -70,7 +71,7 @@ const sessionSelect = `
 func scanGameSession(row pgx.Row) (GameSession, error) {
 	var g GameSession
 	err := row.Scan(&g.ID, &g.UUID, &g.OwnerUserID, &g.Name, &g.Description, &g.SystemID,
-		&g.SystemName, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt)
+		&g.SystemName, &g.DisplayCode, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt)
 	return g, err
 }
 
@@ -288,13 +289,8 @@ func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, nam
 	}
 	defer tx.Rollback(ctx)
 
-	var id int64
-	var uuid string
-	if err := tx.QueryRow(ctx,
-		`INSERT INTO dndshare."session" (owner_user_id, name, description, system_id, invite_code)
-		 VALUES ($1, $2, $3, $4, $5) RETURNING id, uuid::text`,
-		userID, name, description, systemID, generateInviteCode(),
-	).Scan(&id, &uuid); err != nil {
+	id, uuid, err := insertSessionWithDisplayCode(ctx, tx, userID, name, description, systemID)
+	if err != nil {
 		return 0, "", err
 	}
 

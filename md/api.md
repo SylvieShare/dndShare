@@ -321,24 +321,28 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   Modes are `idle`, `material`, `combat`; effects are `none`, `rain`,
   `fog`, `embers`, `snow`, `storm`; transitions are `cut` or `fade`. An explicit
   `idle,visible:true` is the cleared dotted canvas, while `visible:false` is the
-  intentional blackout;
+  intentional blackout.
+  The GET and PUT responses also include the permanent `displayCode` for the
+  standalone display link.
 - `GET /api/sessions/{uuid}/presentation-connections` is an owner-only,
   no-store runtime counter `{connectedScreens}` of active public SSE display
   subscriptions. It is deliberately not persisted in the database;
-- `GET /api/public/sessions/{uuid}/presentation` is the anonymous no-store safe
-  projection used by `/screen/:uuid`; its material projection exposes only
+- `GET /api/public/sessions/{code}/presentation` is the anonymous no-store safe
+  projection used by `/screen/:code`; `code` is the session's unique
+  case-insensitive `ABC-123` display code (ASCII letters/digits). Its material
+  projection exposes only
   `{id,kind,name,caption,content,noteStyle,assetUrl}` required for playback. It
   also returns the combat display settings, `serverTime` and only the timers
   whose individual `broadcast` flag is enabled;
-- `GET /api/public/sessions/{uuid}/presentation/events` is the anonymous SSE
+- `GET /api/public/sessions/{code}/presentation/events` is the anonymous SSE
   invalidation stream. Events contain no session data: each `refresh` tells the
   display to reload its safe projections. Heartbeats prevent proxy buffering
   and idle disconnects;
-- `GET /api/public/sessions/{uuid}/presentation/music` returns the no-store
+- `GET /api/public/sessions/{code}/presentation/music` returns the no-store
   playback projection only while `broadcastMusic` is enabled: play/pause,
   current position, volume, crossfade, loop mode and short-lived signed current
   and queued track IDs/URLs. Personal tracks are checked against the session owner;
-- `GET /api/public/sessions/{uuid}/encounter` is the anonymous, no-store TV
+- `GET /api/public/sessions/{code}/encounter` is the anonymous, no-store TV
   projection of the current fight. It returns only the session name, round,
   current turn and server-ordered combatants with presentation fields,
   resolved conditions with their display `color` and optional `svg` icon, and a

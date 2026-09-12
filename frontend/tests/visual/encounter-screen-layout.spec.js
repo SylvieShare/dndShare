@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const uuid = '11111111-1111-4111-8111-111111111111'
+const code = 'aB1-c2D'
 const combatants = Array.from({ length: 100 }, (_, i) => ({
   uid: `player-${i}`, type: 'player', name: `Очень длинное имя персонажа ${i}`,
   health: { kind: 'wounded', label: 'Ранен', current: 12, maximum: 24 }, states: [],
@@ -21,7 +21,7 @@ async function setup(page, displayScale, mode = 'combat') {
     } })
     return route.fulfill({ json: { auth: false } })
   })
-  await page.goto(`/screen/${uuid}`)
+  await page.goto(`/screen/${code}`)
 }
 
 async function expectInsideViewport(page, selector) {
