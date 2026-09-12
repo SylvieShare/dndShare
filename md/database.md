@@ -32,8 +32,7 @@ PostgreSQL принадлежит Go-бэкенду. Единственный и
 ### Пользователи
 
 `users`, `role`, `users_role`, `users_session`. Актуальные роли:
-`ADMIN`, `HANDBOOK_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`,
-`ERROR_REPORT_REVIEWER`. Роли редактора шаблонов нет, потому что шаблоны
+`ADMIN`, `HANDBOOK_ADMIN`. Роли редактора шаблонов нет, потому что шаблоны
 находятся в коде. `users.source_version_id` — обязательный FK глобально
 выбранной игроком редакции. Система определяется через `source_version → source`
 и не дублируется в `users`. Startup migration и trigger назначают DND5e 2014
@@ -758,12 +757,7 @@ key или DB-backed bytes, для `music_track` — системный приз
 не выдаётся за занятое место, а неизвестный размер показывается отдельным
 счётчиком и не приравнивается к нулю.
 
-### Error reports and jobs
-
-`error_report` хранит lifecycle `OPEN → IN_PROGRESS → RESOLVED → ARCHIVED`,
-lease metadata, screenshots, serious-change approval и resolution.
-`error_report_message` — диалог AI/reviewer;
-`error_report_automation_lock` — singleton lease автоматизации.
+### Jobs
 
 `job_run` хранит историю фоновых операций. В реестре остаются регулярный
 пересчёт counters и импорт бестиария; преобразование форматов данных выполняет

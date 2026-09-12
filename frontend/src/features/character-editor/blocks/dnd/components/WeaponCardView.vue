@@ -21,6 +21,7 @@
         </div>
         <span v-if="ctx.rangeLabel(entry)" class="w-range">{{ ctx.rangeLabel(entry) }}</span>
         <span v-else-if="ctx.itemSubtitle(entry)" class="w-subtitle">{{ ctx.itemSubtitle(entry) }}</span>
+        <WeaponAttunementStatus :entry="entry" :item="ctx.itemMap?.[entry.magic_item_id]" />
         <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency">Владение</span>
       </div>
       <AttackDamage
@@ -44,6 +45,7 @@
 </template>
 
 <script setup>
+import WeaponAttunementStatus from './WeaponAttunementStatus.vue'
 import { computed, inject } from 'vue'
 import AttackDamage from '@/features/character-editor/blocks/dnd/components/AttackDamage.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'

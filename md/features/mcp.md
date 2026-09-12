@@ -86,42 +86,11 @@ operations и точного `expectedCandidateCount` из последнего 
 закреплённые ручными manifest-driven sync-командами, остаются воспроизводимым bootstrap;
 для новых сгенерированных изображений отдельный sync-бинарь не требуется.
 
-## Error-report automation
+## Tool results
 
-JSON-returning tools expose the typed value as
-`structuredContent.result` and keep the serialized value in the text content
-block for backwards compatibility. Automation code should validate the typed
-value instead of parsing the text block when `structuredContent` is available.
-
-Lifecycle tools:
-
-- `error_reports_list`;
-- `error_report_lock_acquire`, `error_report_lock_renew`,
-  `error_report_lock_release`;
-- `error_reports_claim`;
-- `error_report_title_set`;
-- `error_report_question_create`;
-- `error_report_serious_change_request`;
-- `error_report_resolve`;
-- `error_report_screenshot`.
-
-The scheduled run uses `error_reports_list(compact=true)` after acquiring the
-lease. It returns `{ids: number[], reports: [...]}`: `ids` is the authoritative
-claim batch, while `reports` preserves diagnostic evidence and conversation
-without queue fields guaranteed by the actionable-list filter. Full list
-payloads remain available to other MCP clients.
-
-Automation first acquires the singleton lock, then claims rows. Mutating a
-claimed report requires the exact `leaseId` returned by the lock/claim flow.
-`leaseId` is mandatory for resolve, question and serious-change request;
-`token` and optional-lease aliases are not accepted. There is no
-`error_report_delete` tool: successful work is finished through
-`error_report_resolve`, while physical deletion is an ADMIN HTTP action.
-
-Asking a question or requesting serious approval releases the report back to a
-human-gated state. Resolution records summary/commit SHA and moves it to
-`RESOLVED`; reviewer polling later archives it. Expired/released leases return
-unfinished reports to `OPEN`.
+JSON-returning tools expose the typed value as `structuredContent.result`
+and keep the serialized value in the text content block. Clients should
+validate the typed value when `structuredContent` is available.
 
 ## Changing MCP
 

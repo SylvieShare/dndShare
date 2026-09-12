@@ -84,7 +84,7 @@ import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { addRole, getUsers, removeRole, resetPassword } from '../api/adminApi'
 
-const ALL_ROLES = ['ADMIN', 'HANDBOOK_ADMIN', 'ERROR_REPORT_AUTO_APPROVE', 'ERROR_REPORT_REVIEWER']
+const ALL_ROLES = ['ADMIN', 'HANDBOOK_ADMIN']
 
 const users = ref([])
 const loading = ref(true)

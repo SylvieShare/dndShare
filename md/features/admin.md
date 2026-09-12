@@ -1,19 +1,17 @@
 # Admin panel
 
 `/admin` доступен пользователям с подходящими ролями. Frontend находится в
-`frontend/src/features/admin`, Go routes — в `internal/web/admin.go`,
-`internal/web/error_reports.go` и `internal/web/jobs*.go`.
+`frontend/src/features/admin`, Go routes — в `internal/web/admin.go` и
+`internal/web/jobs*.go`.
 
 ## Sections
 
 - статистика;
 - пользователи и роли;
 - server logs;
-- background jobs и история запусков;
-- error reports для ADMIN/reviewer.
+- background jobs и история запусков.
 
-Актуальные роли: `ADMIN`, `HANDBOOK_ADMIN`,
-`ERROR_REPORT_AUTO_APPROVE`, `ERROR_REPORT_REVIEWER`. Роли управления
+Актуальные роли: `ADMIN`, `HANDBOOK_ADMIN`. Роли управления
 шаблонами нет: character settings находятся в frontend code registry.
 
 `ViewAdmin` сохраняет выбранный раздел в query-параметре. На desktop разделы
@@ -51,10 +49,3 @@ classes нет. Такие изменения выполняются идемп�
 2. зарегистрировать его в `init()` через `registerJob`;
 3. не дублировать migration, которую должен выполнять startup schema;
 4. проверить cancellation и отображение result/error в `AdminJobs.vue`.
-
-## Error reports
-
-Admin может одобрить заявку для MCP, ответить на вопрос, подтвердить серьёзное
-изменение, вернуть завершённую заявку в работу или удалить её физически.
-Reviewer видит отдельную очередь и может архивировать результат. Подробный
-state machine — в `md/features/error-reports.md`.

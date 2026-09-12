@@ -28,9 +28,6 @@
           >
             {{ item.title }}
           </router-link>
-          <button type="button" class="brand-menu-item brand-menu-report" @click="openErrorReporter">
-            На странице ошибка
-          </button>
         </div>
       </div>
 
@@ -70,7 +67,6 @@ import {
   resolveMobileHeaderMode,
 } from '@/shared/lib/mobileHeader'
 import { resolveAppNavigation } from '@/shared/lib/appNavigation'
-import { requestErrorReport } from '@/features/error-report/lib/errorReportLauncher'
 
 const route = useRoute()
 const router = useRouter()
@@ -128,11 +124,6 @@ function toggleBrandMenu() {
     return
   }
   menuOpen.value = !menuOpen.value
-}
-
-function openErrorReporter() {
-  menuOpen.value = false
-  requestErrorReport()
 }
 
 </script>
@@ -234,16 +225,6 @@ function openErrorReporter() {
   white-space: nowrap;
 }
 
-.brand-menu-report {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  color: var(--danger);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
 .brand-menu-item:hover,
 .brand-menu-item.active {
   color: var(--text-1);
@@ -253,7 +234,6 @@ function openErrorReporter() {
 .header-chip {
   display: none;
 }
-
 
 .header-right {
   display: flex;

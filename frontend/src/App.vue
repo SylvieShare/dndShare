@@ -23,8 +23,6 @@
     </router-view>
   </div>
   <DiceRollPopup v-if="!isStandaloneRoute"/>
-  <ErrorReporter v-if="!isStandaloneRoute && isAuthenticated"/>
-  <ErrorReportInbox v-if="!isStandaloneRoute"/>
   <ConsoleErrorInbox v-if="!isStandaloneRoute"/>
 </template>
 
@@ -34,13 +32,10 @@ import { useRoute } from 'vue-router'
 import AppHeader from "@/shared/ui/AppHeader";
 import DesktopSidebar from '@/shared/ui/DesktopSidebar.vue'
 import DiceRollPopup from "@/shared/ui/DiceRollPopup.vue";
-import ErrorReporter from '@/features/error-report/components/ErrorReporter.vue'
-import ErrorReportInbox from '@/features/error-report/components/ErrorReportInbox.vue'
 import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
 import { pageTransitionName } from '@/app/router'
 import { mobilePageTransitionActive } from '@/app/mobilePageTransition'
 import { useIsMobile } from '@sylvieshare/share-ui'
-import { useAccountStore } from '@/stores/account'
 import { useTextStore } from '@/stores/text'
 import { useGameContextStore } from '@/stores/gameContext'
 
@@ -49,8 +44,6 @@ const isMobile = useIsMobile()
 const usesMobileChrome = useIsMobile(640)
 const isPrintRoute = computed(() => !!route.meta?.printView)
 const isStandaloneRoute = computed(() => isPrintRoute.value || !!route.meta?.standaloneView)
-const accountStore = useAccountStore()
-const isAuthenticated = computed(() => accountStore.authStatus === 'success')
 const pageTransitionMode = computed(() => (isMobile.value ? undefined : 'out-in'))
 
 onMounted(() => {

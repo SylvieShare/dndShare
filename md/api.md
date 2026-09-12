@@ -496,12 +496,10 @@ Video upload: `POST /api/storage/videos`. SVG read: `GET /api/svg/{id}`.
 Uploads пишут byte-size, исходное имя, MIME и id владельца в соответствующий
 registry; эти же metadata используются `GET /api/account/storage`.
 
-## Admin and error reports
+## Admin
 
 Admin routes находятся под `/api/admin-panel`: users/roles/passwords, logs,
-stats, jobs и error reports. Reviewer routes находятся под
-`/api/error-report-review`. Public authenticated report submission:
-`POST /api/error-reports`.
+stats и jobs.
 
 `GET /api/admin-panel/stats` требует роль `ADMIN` и вместе со счётчиками
 пользователей и справочника возвращает `storage`:
@@ -510,9 +508,6 @@ stats, jobs и error reports. Reviewer routes находятся под
 изображений, видео, системной и пользовательской музыки и SVG. В статистику
 входят активные управляемые объекты S3 и DB-backed файлы; удалённые строки и
 внешние URL без собственного объекта хранилища исключаются.
-
-Physical report deletion — только ADMIN HTTP endpoint. MCP lifecycle использует
-resolve/archive, см. `md/features/mcp.md`.
 
 ## MCP
 

@@ -57,6 +57,7 @@
         </div>
       </div>
       <span v-if="ctx.itemSubtitle(entry)" class="w-subtitle">{{ ctx.itemSubtitle(entry) }}</span>
+      <WeaponAttunementStatus :entry="entry" :item="ctx.itemMap?.[entry.magic_item_id]" />
       <span v-if="ctx.isWeaponProficient(entry)" class="w-proficiency-label">Владение</span>
     </td>
 
@@ -205,6 +206,7 @@
 </template>
 
 <script setup>
+import WeaponAttunementStatus from './WeaponAttunementStatus.vue'
 import { hasMagicItemMenuActions } from '@/features/character-editor/lib/magicItemSettings'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import WeaponItemMechanics from './WeaponItemMechanics.vue'

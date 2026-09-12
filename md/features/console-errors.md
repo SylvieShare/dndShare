@@ -1,7 +1,7 @@
 # Client-side JavaScript diagnostics
 
 `features/console-errors` provides an in-page view of JavaScript errors for users with
-`ERROR_REPORT_REVIEWER` or `ADMIN`. It is mounted globally from `App.vue` outside print routes.
+`ADMIN`. It is mounted globally from `App.vue` outside print routes.
 Ordinary users never see stack traces or the diagnostic control.
 
 `installConsoleErrorCapture()` is called in `main.js` before the Vue application is mounted. During

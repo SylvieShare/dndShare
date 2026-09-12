@@ -19,8 +19,6 @@ frontend, PostgreSQL и S3-compatible object storage.
 - `md/api.md`, `md/database.md`, `md/class-automation-audit.md`, `md/multiclass-spellcasting-audit.md` и `md/deploy.md` описывают контракт API, схему
   БД и процесс деплоя; лимиты размера исходных файлов описаны в
   `md/file-size-rules.md`.
-- `md/error-report-automation.md` — runbook регулярной обработки одобренных
-  заявок «Ошибки на страницах» после успешного захвата очереди через MCP.
 - При любом изменении архитектуры, поведения, UX, API, схемы или формата данных
   нужно проверить связанные страницы `md/` и актуализировать их в том же
   коммите. Изменение не считается завершённым, если wiki описывает прежнее
@@ -108,8 +106,7 @@ scripts             исполняемые project guardrails для автом�
   `sylvieshare-session-uuid` (`uuid`), серверное состояние хранится в
   `users_session`; обе cookie и серверная сессия действуют 30 дней. Смена пароля
   отзывает прежние сессии, login и registration ограничены по частоте.
-- Роли: `ADMIN`, `HANDBOOK_ADMIN`, `ERROR_REPORT_AUTO_APPROVE`,
-  `ERROR_REPORT_REVIEWER`.
+- Роли: `ADMIN`, `HANDBOOK_ADMIN`.
 - Ошибка API имеет тело `{"type": ..., "desc": ...}`. Необработанная паника
   возвращает HTTP 500 и записывается в `logs`.
 - API DTO используют camelCase. Nullable-поля задаются Go-указателями `*T` с

@@ -433,6 +433,7 @@ var schemaParts = []struct {
 	{"infernal-legacy-reaction", schemaInfernalLegacyReactionSQL},
 	{"selected-class-abilities", schemaSelectedClassAbilitiesSQL},
 	{"spell-formula-scaling", schemaSpellFormulaScalingSQL},
+	{"remove-error-reports", schemaRemoveErrorReportsSQL},
 }
 
 const (

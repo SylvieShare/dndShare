@@ -21,8 +21,7 @@ Logout is a state-changing `POST`, not `GET`, and deletes the current server
 session and both cookies. Login is limited per client/login pair; registration is
 limited per client IP.
 
-The global error-report launcher and inbox are mounted only for authenticated
-users. The public character wizard dispatches `dndshare:request-auth` only from
+The public character wizard dispatches `dndshare:request-auth` only from
 its final create action; `UserBoxFormAuth` opens the regular login modal in
 response and explains that login or registration is required to create the
 character. Only the chrome matching the current 640px breakpoint is mounted, so

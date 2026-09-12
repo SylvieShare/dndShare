@@ -680,7 +680,10 @@ independent click targets. Logical groups use the shared action-menu separator.
 Attack, damage, critical damage and feature damage actions use distinct Lucide
 icons instead of the generic ellipsis. The source tile stays highlighted while
 its menu is open; spell, inventory and potion action menus follow the same
-interaction rule. Weapons share one **Оружие** tile with row separators and an
+interaction rule. Magic weapons that require attunement show **Настроено** /
+**Не настроено** below their name, using the state of that instance. The status
+is visible to owners and readers on desktop/mobile; the weapon menu changes it.
+Weapons share one **Оружие** tile with row separators and an
 owner-only **Добавить оружие** footer. A second **Базовые атаки** tile contains
 two always-available rows for Strength-based unarmed and improvised-weapon
 attack, damage and critical rolls, also separated by a line.

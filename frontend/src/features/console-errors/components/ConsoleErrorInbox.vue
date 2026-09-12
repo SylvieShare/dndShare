@@ -3,7 +3,6 @@
     <aside
       class="console-error-inbox"
       :class="{ expanded }"
-      data-error-report-ignore
     >
       <button
         class="console-error-trigger"
@@ -64,7 +63,7 @@
     <template v-if="activeError.count > 1" #header-actions>
       <strong class="console-error-repeat">Повторилась {{ activeError.count }} раз</strong>
     </template>
-    <article class="console-error-detail" data-error-report-ignore>
+    <article class="console-error-detail">
       <dl>
         <div><dt>Страница</dt><dd><code>{{ activeError.pageUrl || '—' }}</code></dd></div>
         <div><dt>Время</dt><dd>{{ formatFullTime(activeError.updatedAt) }}</dd></div>
@@ -94,7 +93,7 @@ let unsubscribe = null
 
 const canInspect = computed(() => {
   const roles = accountStore.user?.roles || []
-  return roles.includes('ERROR_REPORT_REVIEWER') || roles.includes('ADMIN')
+  return roles.includes('ADMIN')
 })
 const triggerLabel = computed(() => totalCount.value > 1
   ? (totalCount.value > 99 ? '99+' : String(totalCount.value))

@@ -50,18 +50,6 @@
       </template>
     </template>
 
-    <template #tools>
-      <SidebarNavItem
-        v-if="isAuthenticated"
-        class="sidebar-error-action"
-        as="button"
-        label="На странице ошибка"
-        title="Сообщить об ошибке на странице (Alt+Shift+E)"
-        :icon="CircleAlert"
-        @click="requestErrorReport"
-      />
-    </template>
-
     <template #account="{ expanded }">
       <UserBox :expanded="expanded" />
     </template>
@@ -71,7 +59,7 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, BookOpenCheck, Dices, CircleAlert, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
+import { BookOpen, BookOpenCheck, Dices, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
@@ -79,7 +67,6 @@ import UserBox from '@/features/auth/components/UserBox'
 import { resolveAppNavigation } from '@/shared/lib/appNavigation'
 import { useAccountStore } from '@/stores/account'
 import { useGameContextStore } from '@/stores/gameContext'
-import { requestErrorReport } from '@/features/error-report/lib/errorReportLauncher'
 
 const route = useRoute()
 const accountStore = useAccountStore()
@@ -103,7 +90,6 @@ const navigationItems = computed(() => resolveAppNavigation({
   path: route.path,
   rulesTo: gameContextStore.rulesPath,
 }))
-const isAuthenticated = computed(() => accountStore.authStatus === 'success')
 
 const GROUP_LABELS = { master: 'Для мастера', player: 'Для игрока', service: 'Служебное' }
 function groupLabel(group) { return GROUP_LABELS[group] || '' }
@@ -204,10 +190,6 @@ async function openSearch(toggle) {
   white-space: nowrap;
   border: 0;
 }
-
-.desktop-sidebar :deep(.share-sidebar-tools .sidebar-error-action) { order: 1; }
-.desktop-sidebar :deep(.share-sidebar-tools .sidebar-toggle) { order: 2; }
-.desktop-sidebar :deep(.sidebar-error-action .sidebar-icon) { color: var(--danger); }
 
 .desktop-sidebar :deep(.share-sidebar-account .user-box) { width: 100%; }
 

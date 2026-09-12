@@ -4,8 +4,6 @@ import { describe, expect, it } from 'vitest'
 
 const sidebarSource = readFileSync(fileURLToPath(new URL('./DesktopSidebar.vue', import.meta.url)), 'utf8')
 const appSource = readFileSync(fileURLToPath(new URL('../../App.vue', import.meta.url)), 'utf8')
-const reporterSource = readFileSync(fileURLToPath(new URL('../../features/error-report/components/ErrorReporter.vue', import.meta.url)), 'utf8')
-const launcherSource = readFileSync(fileURLToPath(new URL('../../features/error-report/lib/errorReportLauncher.js', import.meta.url)), 'utf8')
 
 describe('desktop sidebar icons', () => {
   it('starts expanded until the user saves another preference', () => {
@@ -43,17 +41,12 @@ describe('desktop sidebar icons', () => {
     expect(appSource).toMatch(/\.page-transition-stage \{[\s\S]*transition: margin-left 0\.28s cubic-bezier\(0\.22, 1, 0\.36, 1\);/)
   })
 
-  it('puts search below the brand and error reporting above the collapse toggle', () => {
+  it('puts search below the brand', () => {
     expect(sidebarSource.indexOf('<GameContextSelector :compact="!expanded" />'))
       .toBeLessThan(sidebarSource.indexOf('<HeaderSearch v-else ref="searchRef" class="sidebar-search"'))
     expect(sidebarSource.indexOf('<HeaderSearch v-else ref="searchRef" class="sidebar-search"'))
       .toBeLessThan(sidebarSource.indexOf('v-for="item in navigationItems"'))
-    expect(sidebarSource).toContain('label="На странице ошибка"')
-    expect(sidebarSource).toContain('.share-sidebar-tools .sidebar-error-action) { order: 1; }')
-    expect(sidebarSource).toContain('.share-sidebar-tools .sidebar-toggle) { order: 2; }')
-    expect(reporterSource).not.toContain('class="report-button"')
-    expect(reporterSource).toContain('window.addEventListener(ERROR_REPORT_REQUEST_EVENT, startSelection)')
-    expect(launcherSource).toContain('window.dispatchEvent(new Event(ERROR_REPORT_REQUEST_EVENT))')
+    expect(sidebarSource).not.toContain('На странице ошибка')
   })
 
   it('uses the selected edition for the rules navigation target', () => {

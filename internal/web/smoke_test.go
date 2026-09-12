@@ -1,8 +1,8 @@
 package web
 
 import (
-	"encoding/json"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"dndshare/internal/config"
@@ -26,8 +26,8 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 		{"GET", "/api/user/logout", 405},
 		{"POST", "/api/user/logout", 200},
 		{"POST", "/mcp", 401},
-		{"POST", "/api/error-reports", 400},
-		{"PATCH", "/api/admin-panel/error-reports/1/approval", 401},
+		{"POST", "/api/error-reports", 404},
+		{"PATCH", "/api/admin-panel/error-reports/1/approval", 404},
 		{"PATCH", "/api/sessions/00000000-0000-0000-0000-000000000000/participants-order", 401},
 		{"POST", "/api/char/00000000-0000-0000-0000-000000000000/icon-image", 401},
 		{"DELETE", "/api/char/00000000-0000-0000-0000-000000000000/icon-image", 401},
@@ -47,48 +47,13 @@ func TestHandlerRegistersAllRoutesWithoutConflict(t *testing.T) {
 	}
 }
 
-func TestMCPPublishesErrorReportTools(t *testing.T) {
-	definitions := mcpToolDefs()
-	found := map[string]bool{}
-	for _, definition := range definitions {
-		name, _ := definition["name"].(string)
-		found[name] = true
-	}
-
-	for _, name := range []string{
-		"error_reports_list",
-		"error_report_screenshot",
-		"error_report_lock_acquire",
-		"error_report_lock_renew",
-		"error_report_lock_release",
-		"error_reports_claim",
-		"error_report_title_set",
-	} {
-		if !found[name] {
-			raw, _ := json.Marshal(definitions)
-			t.Fatalf("MCP tool %q is missing from %s", name, raw)
-		}
-	}
-}
-
-func TestMCPErrorReportListSupportsCompactProbe(t *testing.T) {
+func TestMCPDoesNotPublishErrorReportTools(t *testing.T) {
 	for _, definition := range mcpToolDefs() {
-		if definition["name"] != "error_reports_list" {
-			continue
+		name, _ := definition["name"].(string)
+		if strings.HasPrefix(name, "error_report") {
+			t.Fatalf("removed tool still published: %s", name)
 		}
-		input, _ := definition["inputSchema"].(map[string]any)
-		properties, _ := input["properties"].(map[string]any)
-		summaryOnly, _ := properties["summaryOnly"].(map[string]any)
-		if summaryOnly["type"] != "boolean" {
-			t.Fatalf("summaryOnly must be a boolean property: %#v", summaryOnly)
-		}
-		compact, _ := properties["compact"].(map[string]any)
-		if compact["type"] != "boolean" {
-			t.Fatalf("compact must be a boolean property: %#v", compact)
-		}
-		return
 	}
-	t.Fatal("error_reports_list definition not found")
 }
 
 func TestStructuredMCPToolResultKeepsJSONTextAndTypedValue(t *testing.T) {
