@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   DICE_ROLL_ANIMATION_DELAYS,
-  DICE_ROLL_PREFINAL_SETTLE_CHANCE,
   useDiceRollAnimation,
 } from './useDiceRollAnimation'
 
@@ -31,7 +30,7 @@ describe('dice roll presentation animation', () => {
 
     expect(animation.isRolling(entry.id)).toBe(false)
     expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
-    shownFaces.slice(0, -1).forEach((face, index) => {
+    shownFaces.slice(0, -2).forEach((face, index) => {
       expect(face).not.toBe(17)
       if (index > 0) expect(face).not.toBe(shownFaces[index - 1])
     })
@@ -51,7 +50,7 @@ describe('dice roll presentation animation', () => {
     animation.startEntryAnimation(lowEntry)
     const shownFaces = [animation.displayedRoll(lowEntry, 0, 0, 1)]
     let elapsed = 0
-    for (const delay of DICE_ROLL_ANIMATION_DELAYS.slice(0, -1)) {
+    for (const delay of DICE_ROLL_ANIMATION_DELAYS.slice(0, -2)) {
       vi.advanceTimersByTime(delay - elapsed)
       elapsed = delay
       shownFaces.push(animation.displayedRoll(lowEntry, 0, 0, 1))
@@ -97,12 +96,11 @@ describe('dice roll presentation animation', () => {
   })
 
   it('can show the stored face on the pre-final tick without ending the animation', () => {
-    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0 })
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => 0.5 })
 
     animation.startEntryAnimation(entry)
     vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-2))
 
-    expect(DICE_ROLL_PREFINAL_SETTLE_CHANCE).toBeGreaterThan(0)
     expect(animation.isRolling(entry.id)).toBe(true)
     expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
 
@@ -117,11 +115,45 @@ describe('dice roll presentation animation', () => {
     animation.startEntryAnimation(entry)
     vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-2))
 
-    expect(DICE_ROLL_PREFINAL_SETTLE_CHANCE).toBeLessThan(1)
-    expect(animation.displayedRoll(entry, 0, 0, 17)).not.toBe(17)
+    expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(18)
 
     vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1) - DICE_ROLL_ANIMATION_DELAYS.at(-2))
     expect(animation.displayedRoll(entry, 0, 0, 17)).toBe(17)
+  })
+
+  it.each([
+    [20, 17, [16, 17, 18]],
+    [20, 1, [1, 2]],
+    [20, 20, [19, 20]],
+    [4, 2, [1, 2, 3]],
+    [100, 100, [99, 100]],
+    [2, 1, [1, 2]],
+    [1, 1, [1]],
+  ])('uniformly picks only the result and valid neighbours for d%i result %i', (sides, actual, expected) => {
+    const sampleEntry = {
+      id: 9,
+      result: { parts: [{ kind: 'dice', sides, rolls: [actual, actual] }] },
+    }
+    const counts = new Map()
+    let sample = 0
+    const animation = useDiceRollAnimation({ shouldAnimate: () => true, random: () => sample })
+
+    for (let index = 0; index < 60; index += 1) {
+      sample = index / 60
+      animation.startEntryAnimation(sampleEntry)
+      vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-2))
+      const face = animation.displayedRoll(sampleEntry, 0, 0, actual)
+      counts.set(face, (counts.get(face) || 0) + 1)
+      expect(animation.displayedRoll(sampleEntry, 0, 1, actual)).toBe(face)
+      expect(animation.isRolling(sampleEntry.id)).toBe(true)
+
+      vi.advanceTimersByTime(DICE_ROLL_ANIMATION_DELAYS.at(-1) - DICE_ROLL_ANIMATION_DELAYS.at(-2))
+      expect(animation.displayedRoll(sampleEntry, 0, 0, actual)).toBe(actual)
+      expect(sampleEntry.result.parts[0].rolls).toEqual([actual, actual])
+    }
+
+    expect([...counts.keys()]).toEqual(expected)
+    expect([...counts.values()]).toEqual(expected.map(() => 60 / expected.length))
   })
 
   it('skips animation when motion should be reduced', () => {

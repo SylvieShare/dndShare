@@ -2,7 +2,6 @@ import { reactive } from 'vue'
 import { evaluateDiceParts } from '@/shared/lib/dice'
 
 export const DICE_ROLL_ANIMATION_DELAYS = [40, 85, 145, 220, 310, 420, 560]
-export const DICE_ROLL_PREFINAL_SETTLE_CHANCE = 0.5
 
 export function useDiceRollAnimation({
   shouldAnimate,
@@ -40,9 +39,13 @@ export function useDiceRollAnimation({
       part.rolls.forEach((actual, rollIndex) => {
         const key = rollKey(entry.id, partIndex, rollIndex)
         const previous = displayedRolls.get(key)
-        const value = settled || (preFinal && random() < DICE_ROLL_PREFINAL_SETTLE_CHANCE)
+        const minimum = Math.max(1, actual - 1)
+        const maximum = Math.min(part.sides, actual + 1)
+        const value = settled
           ? actual
-          : randomSpinningFace(actual, part.sides, previous)
+          : preFinal
+            ? minimum + Math.floor(random() * (maximum - minimum + 1))
+            : randomSpinningFace(actual, part.sides, previous)
         displayedRolls.set(key, value)
       })
     })
