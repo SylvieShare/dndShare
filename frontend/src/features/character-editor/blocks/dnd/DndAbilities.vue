@@ -21,6 +21,7 @@
         @remove="entry => removeAbility(entry.key)"
         @add="pickerOpen = true"
         @toggle-status="toggleAbilityStatus"
+        @select-abilities="entry => selectionParent = entry.item"
         @show-tooltip="showTooltip"
         @hide-tooltip="hideTooltip"
       />
@@ -30,6 +31,7 @@
       v-if="pickerOpen && block.content.item_id"
       :item-type-ids="[block.content.item_id]"
       :exclude-items="usedIds"
+      :item-eligibility="catalogAbilityEligibility"
       :z-index="3200"
       title="Способности"
       search-placeholder="Поиск способности..."
@@ -60,6 +62,9 @@
       @close="choiceConfigItem = null"
     />
 
+    <AbilitySelectionModal v-if="selectionParent" :parent="selectionParent" :values="values"
+      @close="selectionParent = null" @apply="applySelectedAbilities" />
+
     <ItemViewModal
       v-if="modalEntry && modalItem"
       :item-type-id="block.content.item_id ?? 3"
@@ -71,6 +76,8 @@
 </template>
 
 <script setup>
+import AbilitySelectionModal from '@/features/character-editor/components/AbilitySelectionModal.vue'
+import { abilitySelectionCount, selectedAbilityEntries } from '@/features/character-editor/lib/selectedAbilities'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -87,7 +94,7 @@ import { resolveNumValue } from '@/shared/lib/dnd'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
 import { useSuggestStore } from '@/stores/suggest'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
-import { abilityScalingLabel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
+import { abilityOwnerLevel, abilityScalingLabel, abilityUseTotal } from '@/shared/lib/dndAbilityUses'
 import { useFeatSheetRequirements } from '@/features/character-editor/composables/useFeatSheetRequirements'
 import { characterChoiceOptionEligibility } from '@/features/items/lib/characterChoiceEligibility'
 import { ownedAbilityStatusSource } from '@/features/character-editor/lib/characterStatuses'
@@ -101,6 +108,7 @@ const isFeatBlock = computed(() => Number(props.block.content.item_id) === 7)
 const catalog     = ref([])
 const loading     = ref(true)
 const modalEntry  = ref(null)
+const selectionParent = ref(null)
 const pickerOpen  = ref(false)
 const tooltip     = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
 const choiceConfigItem = ref(null)
@@ -158,7 +166,11 @@ const entries = computed(() =>
         rollback_long_rest:  !!item.data?.rollback_long_rest,
         usable_resource: usableResourceFor(s),
         choices: s.choices || {},
-        choice_summary: itemChoiceSummary(item, s.choices || {}),
+        selection_parent: !!item.data?.ability_selection,
+        selection_managed: !!item.data?.selection_parent_id,
+        choice_summary: item.data?.ability_selection
+          ? `Выбрано ${selectedAbilityEntries(props.values, item, catalog.value).length} из ${abilitySelectionCount(item, abilityOwnerLevel(item.data, props.values))}`
+          : itemChoiceSummary(item, s.choices || {}),
         scaling_label: abilityScalingLabel(item.data, props.values),
         passive_effects: [
           ...(!requirementsMet(item) ? [{
@@ -330,7 +342,19 @@ function logAddedEntry(item) {
   })
 }
 
+function catalogAbilityEligibility(item) {
+  return item.data?.selection_parent_id
+    ? { eligible: false, reasons: ['Выберите эту способность через её набор в классовых способностях'] }
+    : { eligible: true, reasons: [] }
+}
+function applySelectedAbilities(patch) {
+  if (!ownerMode.value) return
+  if (charCtx.updateValues) charCtx.updateValues(patch)
+  else for (const [key, value] of Object.entries(patch)) emit('update:value', key, value)
+  selectionParent.value = null
+}
 function addFromCatalog(item) {
+  if (!catalogAbilityEligibility(item).eligible) return
   if (!catalog.value.find(c => c.id === item.id)) catalog.value.push(item)
   charCtx.characterResources?.rememberItems?.([item])
   charCtx.characterStatuses?.ensureLinks?.(item)
@@ -370,9 +394,11 @@ function removeAbility(key) {
     const item = entry && catalog.value.find(candidate => candidate.id === entry.id)
     if (entry && item) removeFeatStatBonuses(item, entry)
   }
-  emitChange(stored.value.filter(s => (s.uid || String(s.id)) !== key))
+  const childIds = new Set(stored.value.filter(s => String(s.selection_source || '') === String(removedEntry?.id)).map(s => String(s.id)))
+  emitChange(stored.value.filter(s => (s.uid || String(s.id)) !== key && !childIds.has(String(s.id))))
   if (removedEntry?.status_source && typeof charCtx.updateValues === 'function') {
-    charCtx.updateValues({ states: charCtx.characterStatuses?.removeBySource?.(removedEntry.status_source) || [] })
+    const states = charCtx.characterStatuses?.removeBySource?.(removedEntry.status_source) || props.values.states || []
+    charCtx.updateValues({ states: states.filter(state => !(['ability', 'feature_action'].includes(state.source?.kind) && childIds.has(String(state.source?.item_id)))) })
   }
 }
 

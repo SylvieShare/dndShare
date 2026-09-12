@@ -1,0 +1,345 @@
+[
+  {
+    "name": "Восходящий шаг",
+    "nameEn": "Ascendant Step",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Левитация» только на себя. Без ограничения числа применений и без траты ячейки. Материальные компоненты не требуются.</p>",
+      "level": 9,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Ascendant Step",
+          "title": "Левитация",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Левитация» только на себя. Без ограничения числа применений и без траты ячейки. Материальные компоненты не требуются.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ]
+        }
+      ],
+      "granted_spells": [
+        {
+          "spell": {
+            "id": 749
+          },
+          "ability": 6,
+          "slotless": true,
+          "cast_level": 2
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Заклинание добавляется без расхода ячейки; ограничения цели, компонентов и последствия — по описанию."
+  },
+  {
+    "name": "Приспешники хаоса",
+    "nameEn": "Minions of Chaos",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Вызов элементаля». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+      "level": 9,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Minions of Chaos",
+          "title": "Вызов элементаля",
+          "action_type": "special",
+          "description": "<p>Вы можете накладывать «Вызов элементаля». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+          "requirements": [
+            "Время сотворения — 1 минута.",
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ],
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ],
+      "max_use": 1,
+      "rollback_long_rest": true
+    },
+    "automationStatus": "partial",
+    "automationNote": "Действие и заряд до продолжительного отдыха. Ячейку колдуна и последствия заклинания применяйте вручную."
+  },
+  {
+    "name": "Потусторонний прыжок",
+    "nameEn": "Otherworldly Leap",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Прыжок» только на себя. Без ограничения числа применений и без траты ячейки. Материальные компоненты не требуются.</p>",
+      "level": 9,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Otherworldly Leap",
+          "title": "Прыжок",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Прыжок» только на себя. Без ограничения числа применений и без траты ячейки. Материальные компоненты не требуются.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ]
+        }
+      ],
+      "granted_spells": [
+        {
+          "spell": {
+            "id": 657
+          },
+          "ability": 6,
+          "slotless": true,
+          "cast_level": 1
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Заклинание добавляется без расхода ячейки; ограничения цели, компонентов и последствия — по описанию."
+  },
+  {
+    "name": "Шёпот могилы",
+    "nameEn": "Whispers of the Grave",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Разговор с мёртвыми». Без ограничения числа применений и без траты ячейки.</p>",
+      "level": 9,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Whispers of the Grave",
+          "title": "Разговор с мёртвыми",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Разговор с мёртвыми». Без ограничения числа применений и без траты ячейки.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ]
+        }
+      ],
+      "granted_spells": [
+        {
+          "spell": {
+            "id": 966
+          },
+          "ability": 6,
+          "slotless": true,
+          "cast_level": 3
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Заклинание добавляется без расхода ячейки; ограничения цели, компонентов и последствия — по описанию."
+  },
+  {
+    "name": "Мастер бесчисленных обликов",
+    "nameEn": "Master of Myriad Forms",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Смена обличья». Без ограничения числа применений и без траты ячейки.</p>",
+      "level": 15,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Master of Myriad Forms",
+          "title": "Смена обличья",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Смена обличья». Без ограничения числа применений и без траты ячейки.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ]
+        }
+      ],
+      "granted_spells": [
+        {
+          "spell": {
+            "id": 815
+          },
+          "ability": 6,
+          "slotless": true,
+          "cast_level": 2
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Заклинание добавляется без расхода ячейки; ограничения цели, компонентов и последствия — по описанию."
+  },
+  {
+    "name": "Видения далёких миров",
+    "nameEn": "Visions of Distant Realms",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Магический глаз». Без ограничения числа применений и без траты ячейки.</p>",
+      "level": 15,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Visions of Distant Realms",
+          "title": "Магический глаз",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Магический глаз». Без ограничения числа применений и без траты ячейки.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ]
+        }
+      ],
+      "granted_spells": [
+        {
+          "spell": {
+            "id": 1044
+          },
+          "ability": 6,
+          "slotless": true,
+          "cast_level": 4
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Заклинание добавляется без расхода ячейки; ограничения цели, компонентов и последствия — по описанию."
+  },
+  {
+    "name": "Ведьмовской взгляд",
+    "nameEn": "Witch Sight",
+    "data": {
+      "desc": "<p>Вы видите истинный облик перевёртыша или существа, скрытого иллюзией либо магией преобразования, если видите его в пределах 30 футов.</p>",
+      "level": 15,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "passive_effects": [
+        {
+          "title": "Истинный облик",
+          "description": "Видимые существа в пределах 30 футов: перевёртыши, иллюзия или преобразование.",
+          "tone": "info"
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Выбор и требования проверяются. Остальные условия и последствия применяются по описанию."
+  },
+  {
+    "name": "Пьющий жизнь",
+    "nameEn": "Lifedrinker",
+    "data": {
+      "desc": "<p>При попадании оружием пакта цель получает дополнительный урон некротической энергией, равный модификатору Харизмы (минимум 1).</p>",
+      "level": 12,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "selection_requirements": {
+        "choices": [
+          {
+            "item_id": 4070,
+            "key": "choice",
+            "values": [
+              "Клинок пакта"
+            ],
+            "label": "Клинок пакта"
+          }
+        ]
+      },
+      "passive_effects": [
+        {
+          "title": "Урон оружия пакта",
+          "description": "Дополнительно модификатор Харизмы (минимум 1) некротической энергией; добавляется вручную.",
+          "tone": "info"
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Выбор и требования проверяются. Остальные условия и последствия применяются по описанию."
+  },
+  {
+    "name": "Цепи Карцери",
+    "nameEn": "Chains of Carceri",
+    "data": {
+      "desc": "<p>Вы можете без траты ячейки и материальных компонентов накладывать «Удержание чудовища» на небожителя, исчадие или элементаля. Повторно применить это воззвание к тому же существу можно только после продолжительного отдыха.</p>",
+      "level": 15,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "selection_requirements": {
+        "choices": [
+          {
+            "item_id": 4070,
+            "key": "choice",
+            "values": [
+              "Цепь пакта"
+            ],
+            "label": "Цепь пакта"
+          }
+        ]
+      },
+      "granted_spells": [
+        {
+          "spell": {
+            "id": 1206
+          },
+          "ability": 6,
+          "slotless": true,
+          "cast_level": 5
+        }
+      ],
+      "feature_actions": [
+        {
+          "key": "chains",
+          "title": "Цепи Карцери",
+          "action_type": "action",
+          "description": "<p>Наложите «Удержание чудовища» без ячейки и материальных компонентов.</p>",
+          "requirements": [
+            "Только небожитель, исчадие или элементаль.",
+            "Повтор на ту же цель — после продолжительного отдыха."
+          ]
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Выбор и требования проверяются. Остальные условия и последствия применяются по описанию."
+  }
+]

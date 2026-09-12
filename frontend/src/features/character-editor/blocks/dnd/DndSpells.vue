@@ -211,6 +211,7 @@ import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
 import { SPELL_LEVELS, countsTowardPreparation, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
 import { availableSpellSlotOptions as availableSlotOptions } from '@/features/character-editor/blocks/dnd/lib/spellUse'
+import { collectCharacterSpellModifiers } from '@/features/character-editor/lib/characterSpellModifiers'
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/character-editor/blocks/dnd/lib/abilitySpellGrants'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
@@ -483,7 +484,10 @@ const {
   damageDiceParts,
   healDiceParts,
   hasSpellMetrics,
-} = useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTypeColorMap, schoolMap })
+} = useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTypeColorMap, schoolMap,
+  spellModifiers: computed(() => collectCharacterSpellModifiers(props.values,
+    charCtx.characterResources?.itemsById?.value || charCtx.characterResources?.itemsById || new Map())),
+})
 
 // ─── Methods ───────────────────────────────────────
 
@@ -738,7 +742,7 @@ function rollSpellAttack(entry) {
 function exprWithBonus(parts, withType) {
   let expr = diceExpr(parts, withType)
   const bonus = parts.reduce((s, p) => s + (p.bonus || 0), 0)
-  if (bonus) expr += (expr ? '+' : '') + bonus
+  if (bonus) expr += (expr && bonus > 0 ? '+' : '') + bonus
   return expr
 }
 

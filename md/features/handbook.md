@@ -395,3 +395,11 @@ field names. See `md/features/mcp.md`.
 `ItemPickerModal` с `configureInstance` требует выбрать допустимую основу;
 при выборе ссылок внутри редактора этот режим выключен. Полный контракт —
 в [описании магических предметов](magic-items.md#категории-основы-и-карточка).
+
+
+Class abilities may use `selection_parent_id` to mark options obtained only by
+selection. `ability_selection` configures the parent count/replacement progression;
+`selection_requirements` contains spell and other-feature-choice prerequisites.
+The class roadmap lists the parent and its choice gains, never all options as
+automatic features. The ability editor exposes these fields and `spell_modifiers`.
+The 32 base [Warlock invocations](warlock-invocations.md) are authored through MCP.

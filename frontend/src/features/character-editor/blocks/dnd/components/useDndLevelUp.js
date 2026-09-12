@@ -26,6 +26,7 @@ import { buildLevelUpUpdates } from './buildLevelUpUpdates'
 import { useLevelUpFeatSelection } from './useLevelUpFeatSelection'
 import { useLevelUpTarget } from './useLevelUpTarget'
 import { useLevelUpMagic } from './useLevelUpMagic'
+import { useLevelUpAbilitySelections } from './useLevelUpAbilitySelections'
 import { useGrantedSpellNames } from './useGrantedSpellNames'
 import { hitDieLabel as resolveHitDieLabel, multiclassPrerequisiteLabel } from './levelUpPresentation'
 import { levelUpSessionAdditions } from '@/features/character-editor/blocks/dnd/lib/levelUpSessionAdditions'
@@ -217,6 +218,11 @@ export function useDndLevelUp(props, emit) {
     newClassLevel, effectiveSubclassItem, effectiveSubclass,
   })
 
+  const abilitySelections = useLevelUpAbilitySelections({
+    values: () => props.values, classItem, entriesAfter, newTotal, pool: abilityPool,
+    features, featureChoices: featureChoiceSel, spellSelection: classSpellSelection,
+  })
+
   // ─── выбор цели ─────────────────────────────────────────────────────────────
   const scores = computed(() => Object.fromEntries(STATS.map((s) => [s, statScore(s)])))
   function prereq(c) { return multiclassCheck(c, scores.value) }
@@ -281,6 +287,7 @@ export function useDndLevelUp(props, emit) {
     featConfigItem.value = null
     viewFeature.value = null
     classSpellSelection.value = null
+    abilitySelections.reset()
   }
 
   const canAccept = computed(() => {
@@ -289,7 +296,7 @@ export function useDndLevelUp(props, emit) {
     if (!classItem.value || !hpReady.value) return false
     if (needSubclass.value && !subclassPick.value) return false
     if (asiNow.value && !asiSkipped.value && !asiComplete.value) return false
-    if (!featureChoicesComplete.value) return false
+    if (!featureChoicesComplete.value || !abilitySelections.ready.value) return false
     if (levelUpSpellContext.value && (!classSpellSelection.value?.ready || classSpellSelection.value?.tab?.key !== levelUpSpellContext.value.tab.key)) return false
     return true
   })
@@ -306,7 +313,8 @@ export function useDndLevelUp(props, emit) {
         isPlain: isPlain.value,
         entriesAfter: entriesAfter.value,
         features: features.value,
-        itemsById: itemsById.value,
+        itemsById: { ...itemsById.value, ...Object.fromEntries(abilitySelections.catalogue.value.map(item => [item.id, item])) },
+        abilitySelections: abilitySelections.selections.value,
         hitDieLabelOf,
         hitDieLabel: hitDieLabel.value,
         hpGain: hpGain.value,
@@ -359,7 +367,9 @@ export function useDndLevelUp(props, emit) {
       ;(byIds?.items || []).forEach((it) => { map[it.id] = it })
       ;(classes?.items || []).forEach((it) => { if (!map[it.id]) map[it.id] = it })
       itemsById.value = map
-      abilityPool.value = abils?.items || []
+      abilityPool.value = [...new Map([
+        ...(abils?.items || []), ...(byIds?.items || []).filter(item => Number(item.typeId) === CLASS_ABIL_TYPE),
+      ].map(item => [String(item.id), item])).values()]
       baseClasses.value = classes?.items || []
     } finally {
       loading.value = false
@@ -377,6 +387,6 @@ export function useDndLevelUp(props, emit) {
     STAT_SHORT, asiStats, asiChipLocked, toggleAsiStat, statScore, asiDelta, featPick,
     featPickerOpen, profChanges, profBefore, profAfter, slotChanges, viewFeature, featEligibility,
     onFeatPick, featureChoiceItemEligibility, featureChoiceItemFilters, onFeatureChoiceItemPick, featConfigItem, featExcludedChoices, onFeatChoicesConfirm,
-    canAccept, accept,
+    canAccept, accept, abilitySelections,
   }
 }

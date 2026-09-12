@@ -139,6 +139,11 @@
         </div>
       </div>
 
+      <AbilitySelectionPanel v-for="parent in abilitySelections.parents.value" :key="`${classItem?.id}:${newClassLevel}:${parent.id}:${abilitySelections.revision.value}`"
+        class="lu-sec" :parent="parent" :values="abilitySelections.context.value" :original-values="values || {}"
+        :items="abilitySelections.catalogue.value" :replacements="abilitySelections.replacements(parent)"
+        @change="abilitySelections.change" />
+
       <!-- даруемые заклинания (домен/клятва/круг) -->
       <div v-if="grantedSpellList.length" class="lu-sec">
         <div class="lu-sec-title">Заклинания архетипа</div>
@@ -243,6 +248,7 @@
 </template>
 
 <script setup>
+import AbilitySelectionPanel from '@/features/character-editor/components/AbilitySelectionPanel.vue'
 import { ref } from 'vue'
 import { ActionButton, AppModalFrame, BaseTile, LoadingState, MultiToggle } from '@sylvieshare/share-ui'
 import { Trash2 } from '@lucide/vue'
@@ -271,7 +277,7 @@ const {
   STAT_SHORT, asiStats, asiChipLocked, toggleAsiStat, statScore, asiDelta, featPick,
   featPickerOpen, profChanges, profAfter, slotChanges, viewFeature, featEligibility, onFeatPick,
   featureChoiceItemEligibility, featureChoiceItemFilters, onFeatureChoiceItemPick, featConfigItem, featExcludedChoices, onFeatChoicesConfirm, canAccept,
-  accept,
+  accept, abilitySelections,
 } = useDndLevelUp(props, emit)
 </script>
 

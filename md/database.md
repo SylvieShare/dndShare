@@ -905,3 +905,9 @@ UID, ссылки эффектов, личные изменения и сост�
 магических предметов с проверкой ID/названия/типа/владельца, MD5 проверенных
 данных и отсутствия авторской оценки. Игровые данные не меняются.
 [Полный реестр и критерии](magic-item-automation-audit.md).
+
+
+`112_selected_class_abilities.sql` adds `ability_selection`,
+`selection_parent_id`, `selection_requirements` to type 4 and `spell_modifiers`
+to types 3/4/7. It changes item-type fields only. Invocation item records are
+published through MCP; chosen references remain in `values.abilities_class`.

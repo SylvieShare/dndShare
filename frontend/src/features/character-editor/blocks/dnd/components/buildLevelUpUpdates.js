@@ -1,3 +1,4 @@
+import { abilitySelectionState, applyAbilitySelection, selectedAbilityEntries } from '@/features/character-editor/lib/selectedAbilities'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS } from '@/shared/lib/dndStats'
@@ -48,6 +49,7 @@ export function buildLevelUpUpdates({
   subclassItem = null,
   subclassSelectedNow = false,
   classSpellSelection = null,
+  abilitySelections = [],
 }) {
   const updates = {
     lvl: { exp: 0, ...(values.lvl || {}), level: newTotal },
@@ -216,6 +218,17 @@ export function buildLevelUpUpdates({
   }
 
   const applySlotChange = applySlots && slotDiff.length && slotsAfter?.isCaster
+  let selectionValues = { ...values, ...updates, spells: applyLevelUpSpellSelection(values.spells, classSpellSelection) }
+  const selectionItems = [...features, ...Object.values(itemsById || {})]
+  for (const { parent, entries } of abilitySelections) {
+    const original = selectedAbilityEntries(values, parent, selectionItems)
+    const state = abilitySelectionState(parent, selectionValues, selectionItems, entries, original,
+      Math.max(0, Number(parent.data?.ability_selection?.replace_count) || 0))
+    if (!state.ready) throw new Error(state.errors.join('. '))
+    selectionValues = applyAbilitySelection(selectionValues, parent, entries, selectionItems)
+    updates.abilities_class = selectionValues.abilities_class
+    if (selectionValues.states !== values.states) updates.states = selectionValues.states
+  }
   const nextValues = { ...values, ...updates }
   const activeAbilityIds = new Set(ABILITY_VALUE_IDS
     .flatMap((key) => Array.isArray(nextValues[key]) ? nextValues[key] : [])

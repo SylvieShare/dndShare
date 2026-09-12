@@ -8,6 +8,12 @@
 `frontend/`. Старого Vue CLI, webpack, Axios и серверных JSON-шаблонов листа в
 проекте нет.
 
+Выбираемые классовые способности используют один `AbilitySelectionPanel` в
+повышении уровня и в окне добора существующего листа. Панель переиспользует
+`ItemPickerModal`, `FeatChoiceModal`, `LevelUpItemRow` и примитивы share-ui;
+условия выбора и сохранение вынесены в чистые функции и composable.
+Контракт и проверки описаны в [воззваниях колдуна](features/warlock-invocations.md).
+
 ## Запуск и проверка
 
 ```bash

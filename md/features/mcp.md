@@ -28,6 +28,7 @@ Read:
 Write:
 
 - `handbook_item_create`, `handbook_item_update`, `handbook_item_delete`;
+- `handbook_item_set_content_sources`;
 - `handbook_item_set_system_image`;
 - `handbook_item_type_set_system_image`;
 - `handbook_bestiary_migrate_icons_to_covers`;
@@ -35,8 +36,11 @@ Write:
   `handbook_suggest_set_svg`, `handbook_suggest_delete`.
 
 Tool schemas должны совпадать с текущей item/suggest model. При обновлении item
-передаются все поля, которые нужно сохранить; source links задаются через
-актуальные `contentSourceIds`.
+передаются все поля данных, которые нужно сохранить. Источники книг меняются
+отдельно через `handbook_item_set_content_sources(id, contentSourceIds)`: этот
+write-tool транзакционно заменяет только source links, проверяет принадлежность
+источников системе item и возвращает обновлённую запись. Данные item и медиа
+остаются прежними.
 
 ### Установка системных изображений
 

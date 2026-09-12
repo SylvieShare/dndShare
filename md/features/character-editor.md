@@ -1032,3 +1032,13 @@ npm run build
 безоружных ударов/заклинаний. Рассвет обновляет сроки целей вместе с ресурсами
 одним patch, даже если заряды не восстанавливаются. Подробнее — в разделе
 «Выбранная цель оружия» [магических предметов](magic-items.md).
+
+
+Selectable class abilities (including Warlock invocations) are separate type-4
+items with `selection_parent_id`. Their parent owns count progression and
+replacement limits; automatic class grants exclude these options. Level-up
+validates selections against the resulting class level, pact and spell choices.
+The ability row menu can fill missing choices on existing sheets. Selected rows
+are ordinary class abilities with independent mechanics and preserved resource
+state. See [Warlock invocations](warlock-invocations.md) for storage, UI and
+current automation limits.

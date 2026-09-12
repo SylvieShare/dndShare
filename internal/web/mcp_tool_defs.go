@@ -156,6 +156,12 @@ func mcpToolDefs() []map[string]any {
 				"data":                      strP("JSON object string with the full item data"),
 				"parentId":                  intP("Normalized parent item id. Pass -1 to clear only for item types that allow it; type-16 subraces and type-17 subclasses require a base parent. Omit to derive/keep the origin relation from data.race or data.class."),
 			}, "id", "name", "data")),
+		tool("handbook_item_set_content_sources",
+			"Set the handbook book/source links of an item. Replaces only source links, preserves item data.",
+			schema(map[string]any{
+				"id":               intP("Item id"),
+				"contentSourceIds": map[string]any{"type": "array", "items": map[string]any{"type": "integer"}},
+			}, "id", "contentSourceIds")),
 		tool("handbook_item_delete",
 			"Delete an item by id (admin: works for any owner including base items).",
 			schema(map[string]any{"id": intP("Item id")}, "id")),

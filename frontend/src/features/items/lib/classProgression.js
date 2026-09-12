@@ -1,3 +1,4 @@
+import { abilitySelectionCount } from '@/features/character-editor/lib/selectedAbilities'
 import { automaticAbilityLabel } from '@/shared/lib/abilityProgression'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { parseAsiLevels, grantedSpellRows, dieFaceOf, avgHitDie } from '@/features/character-editor/blocks/dnd/lib/levelUp'
@@ -49,6 +50,13 @@ export function classProgression(classItem, subclass, abilities = []) {
     if (Number(data.subclass_level) === level) choices.push({ text: subclass ? `Подкласс: ${subclass.name}` : 'Выбрать подкласс', count: 1 })
     if (asiLevels.includes(level)) choices.push({ text: 'Повышение характеристик или черта (если разрешена мастером)', count: 1 })
     for (const item of active) {
+      if (item.data?.ability_selection) {
+        const count = abilitySelectionCount(item, level)
+        const delta = count - abilitySelectionCount(item, level - 1)
+        if (delta > 0) choices.push({ text: `${item.name}: выбрать новые`, count: delta, item })
+        const replacements = Number(item.data.ability_selection.replace_count) || 0
+        if (replacements && abilitySelectionCount(item, level - 1)) choices.push({ text: `${item.name}: замена по желанию`, count: replacements, item })
+      }
       for (const choice of itemChoices(item)) {
         if (Math.max(atLevel(item.data?.level), atLevel(choice.level)) !== level) continue
         choices.push({

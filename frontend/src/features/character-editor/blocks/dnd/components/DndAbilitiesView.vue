@@ -96,9 +96,10 @@
           >
             Использовать ({{ entry.usable_resource.value }}/{{ entry.usable_resource.total }})
           </RowActionItem>
-          <RowActionSeparator v-if="manage" />
+          <RowActionItem v-if="manage && entry.selection_parent" action="edit" @click="select(entry, close, 'select-abilities')">Выбрать способности</RowActionItem>
+          <RowActionSeparator v-if="manage && !entry.selection_managed" />
           <RowActionItem
-            v-if="manage"
+            v-if="manage && !entry.selection_managed"
             action="delete"
             tone="danger"
             @click="select(entry, close, 'remove')"
@@ -131,7 +132,7 @@ defineProps({
   manage: { type: Boolean, default: false },
   expanded: { type: Boolean, default: false },
 })
-const emit = defineEmits(['view', 'use', 'remove', 'show-tooltip', 'hide-tooltip', 'add', 'toggle-status'])
+const emit = defineEmits(['view', 'use', 'remove', 'show-tooltip', 'hide-tooltip', 'add', 'toggle-status', 'select-abilities'])
 
 function select(entry, close, action) {
   close()

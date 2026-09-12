@@ -71,6 +71,7 @@ export function featuresForBinding(abilityItems, binding, level, opts = {}) {
   const cumulative = opts.cumulative !== false
   const lvl = num(level) ?? 1
   return (abilityItems || []).filter((item) => {
+    if (item?.data?.selection_parent_id) return false
     if (!abilityMatchesBinding(item, binding)) return false
     const at = num(item?.data?.level) ?? 1
     return cumulative ? at <= lvl : at === lvl

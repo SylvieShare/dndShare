@@ -1,0 +1,239 @@
+[
+  {
+    "name": "Трясина разума",
+    "nameEn": "Mire the Mind",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Замедление». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+      "level": 5,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Mire the Mind",
+          "title": "Замедление",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Замедление». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ],
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ],
+      "max_use": 1,
+      "rollback_long_rest": true
+    },
+    "automationStatus": "partial",
+    "automationNote": "Действие и заряд до продолжительного отдыха. Ячейку колдуна и последствия заклинания применяйте вручную."
+  },
+  {
+    "name": "Единство с тенью",
+    "nameEn": "One with Shadows",
+    "data": {
+      "desc": "<p>Находясь в тусклом освещении или темноте, действием станьте невидимым. Невидимость заканчивается, когда вы перемещаетесь, совершаете действие или реакцию.</p>",
+      "level": 5,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "shadows",
+          "title": "Единство с тенью",
+          "action_type": "action",
+          "description": "<p>Станьте невидимым.</p>",
+          "requirements": [
+            "Тусклое освещение или темнота.",
+            "Эффект заканчивается при перемещении, действии или реакции."
+          ]
+        }
+      ],
+      "status_effects": [
+        {
+          "effect": 4595
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Выбор и требования проверяются. Остальные условия и последствия применяются по описанию."
+  },
+  {
+    "name": "Знак дурного предзнаменования",
+    "nameEn": "Sign of Ill Omen",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Проклятие». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+      "level": 5,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Sign of Ill Omen",
+          "title": "Проклятие",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Проклятие». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ],
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ],
+      "max_use": 1,
+      "rollback_long_rest": true
+    },
+    "automationStatus": "partial",
+    "automationNote": "Действие и заряд до продолжительного отдыха. Ячейку колдуна и последствия заклинания применяйте вручную."
+  },
+  {
+    "name": "Завораживающий шёпот",
+    "nameEn": "Bewitching Whispers",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Принуждение». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+      "level": 7,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Bewitching Whispers",
+          "title": "Принуждение",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Принуждение». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ],
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ],
+      "max_use": 1,
+      "rollback_long_rest": true
+    },
+    "automationStatus": "partial",
+    "automationNote": "Действие и заряд до продолжительного отдыха. Ячейку колдуна и последствия заклинания применяйте вручную."
+  },
+  {
+    "name": "Ужасающее слово",
+    "nameEn": "Dreadful Word",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Смятение». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+      "level": 7,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Dreadful Word",
+          "title": "Смятение",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Смятение». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ],
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ],
+      "max_use": 1,
+      "rollback_long_rest": true
+    },
+    "automationStatus": "partial",
+    "automationNote": "Действие и заряд до продолжительного отдыха. Ячейку колдуна и последствия заклинания применяйте вручную."
+  },
+  {
+    "name": "Скульптор плоти",
+    "nameEn": "Sculptor of Flesh",
+    "data": {
+      "desc": "<p>Вы можете накладывать «Превращение». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+      "level": 7,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "feature_actions": [
+        {
+          "key": "Sculptor of Flesh",
+          "title": "Превращение",
+          "action_type": "action",
+          "description": "<p>Вы можете накладывать «Превращение». Один раз до продолжительного отдыха, расходуя ячейку колдуна.</p>",
+          "requirements": [
+            "Соблюдайте время сотворения, концентрацию и остальные условия заклинания."
+          ],
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ],
+      "max_use": 1,
+      "rollback_long_rest": true
+    },
+    "automationStatus": "partial",
+    "automationNote": "Действие и заряд до продолжительного отдыха. Ячейку колдуна и последствия заклинания применяйте вручную."
+  },
+  {
+    "name": "Жаждущий клинок",
+    "nameEn": "Thirsting Blade",
+    "data": {
+      "desc": "<p>Когда вы совершаете действие Атака в свой ход, вы можете атаковать оружием пакта дважды вместо одного раза.</p>",
+      "level": 5,
+      "class_ids": [
+        {
+          "id": 4018
+        }
+      ],
+      "level_source": "class",
+      "level_class_id": 4018,
+      "selection_parent_id": 4069,
+      "selection_requirements": {
+        "choices": [
+          {
+            "item_id": 4070,
+            "key": "choice",
+            "values": [
+              "Клинок пакта"
+            ],
+            "label": "Клинок пакта"
+          }
+        ]
+      },
+      "passive_effects": [
+        {
+          "title": "Две атаки оружием пакта",
+          "description": "Только действием Атака в свой ход. Не складывается с Дополнительной атакой.",
+          "tone": "info"
+        }
+      ]
+    },
+    "automationStatus": "partial",
+    "automationNote": "Выбор и требования проверяются. Остальные условия и последствия применяются по описанию."
+  }
+]

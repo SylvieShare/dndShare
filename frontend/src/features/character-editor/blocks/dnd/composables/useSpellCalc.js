@@ -4,7 +4,7 @@ export function spellDurationLabel(duration) {
   return String(duration || '').trim().replace(/^(?:(?:Концентрация|Ритуал)\s*,\s*)+/i, '')
 }
 
-export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTypeColorMap, schoolMap }) {
+export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTypeColorMap, schoolMap, spellModifiers }) {
   function schoolMeta(item) {
     const id = item?.data?.schoolId
     if (id == null) return null
@@ -28,7 +28,8 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
 
   function spellMetaLine(item) {
     const data = item?.data || {}
-    return [componentsLabel(data.components), data.time, data.range, spellDurationLabel(data.duration)]
+    const range = spellModifiers?.value?.find(rule => rule.spellId === String(item?.id) && rule.range)?.range || data.range
+    return [componentsLabel(data.components), data.time, range, spellDurationLabel(data.duration)]
       .filter(Boolean).map(truncSeg).join(' · ')
   }
 
@@ -78,7 +79,10 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
   function damageDiceParts(item, castLevel, charLevel) {
     const dmg = item?.data?.damage || {}
     const steps = scalingSteps(dmg.scaling, item?.data?.lvl, castLevel, charLevel)
+    const bonus = (spellModifiers?.value || []).filter(rule => rule.spellId === String(item?.id))
+      .reduce((sum, rule) => sum + rule.damageBonus, 0)
     return mergeRows(dmg.dices, dmg.addon, steps).map(dicePart)
+      .map((part, index) => index === 0 ? { ...part, bonus: part.bonus + bonus } : part)
       .filter(part => part.label || part.diceSides || part.type)
   }
 

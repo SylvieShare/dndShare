@@ -13,6 +13,9 @@ const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions'
   'weapon_damage', 'weapon_uses', 'confirmed_uses', 'selected_target', 'weapon_bonus_transfer', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
 
 export const BLOCK_HINTS = {
+  ability_selection: 'Прогрессия числа выбранных способностей и лимит замен при повышении уровня класса.',
+  selection_parent_id: 'Способность не выдаётся автоматически: её выбирают через указанный набор.',
+  selection_requirements: 'Заклинания и выборы других способностей, необходимые для получения.',
   confirmed_uses: 'Эффект с условиями под оружием. Заряды списываются только по кнопке подтверждения результата.',
   selected_target: 'Одна цель этого экземпляра: связанные бонусы атаки и урона, срок и ожидание новой цели после гибели.',
   weapon_bonus_transfer: 'Перенос части магического бонуса атаки и урона оружия в КД. Максимум берётся из свойств оружия, сброс — вручную.',
