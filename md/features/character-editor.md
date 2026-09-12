@@ -710,7 +710,7 @@ the same key to extend that panel.
 `feature_actions` is the matching ability-owned contract for the shared
 **Действия** block. Class abilities, racial abilities and feats may contribute
 an action, bonus action, reaction, free action or special action together with
-its description, read-only requirements, level gate, priority, optional
+its rich HTML description, read-only requirements, level gate, priority, optional
 ability-resource binding and links to standard combat-action codes from suggest
 type 24. Hovering those linked names shows the suggest description. The block
 merges source rows with editable custom actions from `values.actions`;
@@ -721,7 +721,14 @@ is rendered only when it contains actions. The shared block-title pencil opens
 one morph editor for the complete block: custom actions are created, edited and
 deleted there, while actions contributed by abilities are listed separately as
 read-only. Row menus retain direct editing, but group headers have no add
-controls. A row without any available menu action is non-clickable and does not
+controls. Both the dependency editor and custom-action editor use `InputDescription`.
+When collecting actions, `dice` nodes in each description produce `dice_rolls`
+for the row menu; identical formula/label pairs are deduplicated. Plain prose and
+nodes without dice do not create roll commands. Rolls use the shared dice store
+and do not spend a resource. Clicking anywhere on a row with menu commands,
+including its description and inline dice, opens that menu; the charge spheres
+remain separate controls. Enter or Space on the focused row also opens it.
+A row without any available menu action is non-clickable and does not
 show hover or press feedback. The block owns one shared tile; rows inside
 it have no nested card background. A resource bound to a source action is shown
 on that action as the same color-coded charge spheres used by the resources
@@ -743,14 +750,18 @@ without a duplicate bullet point. Spending the charge
 does not automatically change HP.
 Infernal Legacy contributes Hellish Rebuke to Reactions from character level 3.
 It binds only the existing `hellish_rebuke` long-rest charge; Darkness remains
-in the resources tile. The summary describes the slotless second-level spell
-(3d10 fire, Dexterity save, Charisma-based DC), with the damage trigger,
-60-foot visibility requirement and spell components below it. Spending the
+in the resources tile. The action description contains an explicit rich dice
+formula (2d10 fire, per the requested catalogue adjustment) and a Dexterity save.
+The Charisma-based DC is a separate thesis, alongside the damage trigger,
+60-foot visibility requirement and spell components. This action formula is
+authored independently of the granted-spell cast level; the PHB 2014 second-level
+racial casting would deal 3d10. `scripts/update-infernal-legacy-action.py` applies
+the action-text adjustment through MCP without changing the spell grant. Spending the
 charge does not automatically resolve damage or track the round's reaction.
 The spheres remain owner-interactive and write through the shared resource
 source contract without triggering the press
-animation of the surrounding action row; spending from the action menu
-remains available when the action declares a positive cost. Other consequences
+animation or menu of the surrounding action row. Row menus do not offer a
+separate resource-spending command. Other consequences
 declared by the action also stay in its row menu. Cunning Action is one source row linking Dash,
 Disengage and Hide rather than three duplicated rows. The block is available in
 the desktop side column and the mobile abilities tab.

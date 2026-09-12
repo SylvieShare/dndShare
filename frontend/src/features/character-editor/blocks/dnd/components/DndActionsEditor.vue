@@ -29,15 +29,14 @@
               @input="change(action.uid, { title: $event.target.value })"
             />
           </label>
-          <label>
-            <span>Описание</span>
-            <textarea
-              class="dae-textarea"
-              :value="action.description"
-              placeholder="Что происходит"
-              @input="change(action.uid, { description: $event.target.value })"
-            ></textarea>
-          </label>
+          <FormField label="Описание" vertical>
+            <InputDescription
+              editable
+              :block="{ id: 'description', content: { placeholder: 'Что происходит' } }"
+              :value="action.description || ''"
+              @update:value="(_, value) => change(action.uid, { description: value })"
+            />
+          </FormField>
           <label>
             <span>Условия</span>
             <textarea
@@ -70,8 +69,9 @@
 </template>
 
 <script setup>
+import InputDescription from '@/shared/ui/InputDescription.vue'
 import { computed } from 'vue'
-import { AddButton, EditorPanel, EditorSection, FormSelect, RemoveButton } from '@sylvieshare/share-ui'
+import { AddButton, EditorPanel, EditorSection, FormField, FormSelect, RemoveButton } from '@sylvieshare/share-ui'
 import { FEATURE_ACTION_TYPES } from '@/features/character-editor/lib/characterFeatureActions'
 
 const props = defineProps({

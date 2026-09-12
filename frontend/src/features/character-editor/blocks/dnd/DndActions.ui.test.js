@@ -71,12 +71,16 @@ describe('character action block', () => {
     expect(blockSource).toContain('featureActionEffectPatch(props.values || {}, effect)')
   })
 
-  it('spends a resource linked to a source action from the same row menu', () => {
-    expect(viewSource).toContain('v-if="canSpendResource(action)"')
-    expect(viewSource).toContain('Потратить {{ action.resource_cost }}: {{ action.resource.title }}')
-    expect(viewSource).toContain("emit('spend-resource', action)")
-    expect(blockSource).toContain('@spend-resource="spendActionResource"')
-    expect(blockSource).toContain('characterResources?.setAvailable?.(action.resource.key, remaining)')
+  it('rolls description dice and leaves resource changes on the spheres', () => {
+    expect(viewSource).not.toContain('canSpendResource')
+    expect(viewSource).not.toContain('Потратить')
+    expect(blockSource).not.toContain('spendActionResource')
+    expect(viewSource).toContain('v-for="roll in action.dice_rolls || []"')
+    expect(blockSource).toContain('@roll-dice="rollActionDice"')
+    expect(blockSource).toContain('diceStore.roll(`${action.title}: ${roll.label}`, roll.formula)')
+    expect(viewSource).toContain('@click.capture="openActionMenu($event, action)"')
+    expect(viewSource).toContain("event.target.closest?.('.dav-resource')")
+    expect(editorSource).toContain('<InputDescription')
   })
 
   it('opens the generic character-entry picker before applying a targeted action', () => {

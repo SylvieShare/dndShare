@@ -19,6 +19,7 @@
       <RowActionMenu
         v-for="action in group.actions"
         :key="action.key"
+        :ref="menu => setActionMenu(action.key, menu)"
         block
         :title="`Действия: ${action.title}`"
         :disabled="!canOpenActionMenu(action)"
@@ -26,6 +27,11 @@
         <template #trigger="{ open }">
           <article
             class="dav-action action-menu-source"
+            :tabindex="canOpenActionMenu(action) ? 0 : undefined"
+            :aria-haspopup="canOpenActionMenu(action) ? 'menu' : undefined"
+            :aria-expanded="canOpenActionMenu(action) ? open : undefined"
+            @click.capture="openActionMenu($event, action)"
+            @keydown="onActionKeydown($event, action)"
             :class="{
               'dav-action--clickable': canOpenActionMenu(action),
               'action-menu-source--open': open,
@@ -53,7 +59,7 @@
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
               <div v-if="action.description" class="dav-description">
-                <DndRichContent :html="action.description" @click.stop />
+                <DndRichContent :html="action.description" />
               </div>
               <MechanicTheses :lines="action.requirements" color="var(--dav-tone)" aria-label="Условия применения" />
               <span v-if="linkedActions(action).length" class="dav-linked-actions">
@@ -90,14 +96,12 @@
 
         <template #default="{ close }">
           <RowActionItem
-            v-if="canSpendResource(action)"
-            :icon="BatteryLow"
-            tone="warning"
-            :disabled="action.resource.value < action.resource_cost"
-            @click="spendResource(action, close)"
+            v-for="roll in action.dice_rolls || []"
+            :key="roll.key"
+            :icon="Dices"
+            @click="rollDice(action, roll, close)"
           >
-            Потратить {{ action.resource_cost }}: {{ action.resource.title }}
-            <template #suffix>{{ action.resource.value }}/{{ action.resource.total }}</template>
+            Бросить {{ roll.label }}
           </RowActionItem>
           <RowActionItem
             v-if="canActivateTarget(action)"
@@ -120,7 +124,7 @@
             {{ effect.title }}
             <template #suffix>{{ effect.suffix }}</template>
           </RowActionItem>
-          <RowActionSeparator v-if="(canSpendResource(action) || canActivateTarget(action) || action.menu_effects?.length) && !action.readonly" />
+          <RowActionSeparator v-if="(action.dice_rolls?.length || canActivateTarget(action) || action.menu_effects?.length) && !action.readonly" />
           <RowActionItem v-if="!action.readonly" action="edit" @click="edit(action, close)">Редактировать</RowActionItem>
           <RowActionSeparator v-if="!action.readonly" />
           <RowActionItem v-if="!action.readonly" action="delete" tone="danger" @click="remove(action, close)">Удалить</RowActionItem>
@@ -144,7 +148,7 @@
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { computed, ref } from 'vue'
-import { BatteryLow, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
+import { BatteryLow, Dices, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
 import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
@@ -161,7 +165,7 @@ const props = defineProps({
   panel: { type: Boolean, default: false },
   actionSuggestions: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['manage', 'edit', 'remove', 'apply-effect', 'spend-resource', 'activate-target', 'toggle-resource'])
+const emit = defineEmits(['manage', 'edit', 'remove', 'apply-effect', 'roll-dice', 'activate-target', 'toggle-resource'])
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
 const RESOURCE_ORB_SIZE = 30
@@ -195,10 +199,6 @@ function applyEffect(action, effect, close) {
   emit('apply-effect', action, effect)
 }
 
-function canSpendResource(action) {
-  return !action.target_kind && !!action.resource && Number(action.resource_cost) > 0
-}
-
 function canActivateTarget(action) {
   return !!action.target_kind && !!action.status_effect_code
 }
@@ -209,7 +209,7 @@ function targetActivationDisabled(action) {
 }
 
 function canOpenActionMenu(action) {
-  return props.manage && (!action.readonly || canSpendResource(action) || canActivateTarget(action) || !!action.menu_effects?.length)
+  return props.manage && (!action.readonly || !!action.dice_rolls?.length || canActivateTarget(action) || !!action.menu_effects?.length)
 }
 
 function resourceTotal(action) {
@@ -220,9 +220,27 @@ function resourceValue(action) {
   return Math.max(0, Math.floor(Number(action.resource?.value) || 0))
 }
 
-function spendResource(action, close) {
+function rollDice(action, roll, close) {
   close()
-  emit('spend-resource', action)
+  emit('roll-dice', action, roll)
+}
+
+const actionMenus = new Map()
+function setActionMenu(key, menu) {
+  if (menu) actionMenus.set(key, menu)
+  else actionMenus.delete(key)
+}
+
+function openActionMenu(event, action) {
+  if (!canOpenActionMenu(action) || event.target.closest?.('.dav-resource')) return
+  event.preventDefault()
+  event.stopPropagation()
+  actionMenus.get(action.key)?.toggle(event)
+}
+
+function onActionKeydown(event, action) {
+  if (event.target !== event.currentTarget || !['Enter', ' '].includes(event.key)) return
+  openActionMenu(event, action)
 }
 
 function activateTarget(action, close) {

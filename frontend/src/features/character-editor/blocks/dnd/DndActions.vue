@@ -9,7 +9,7 @@
         @edit="editAction"
         @remove="removeAction"
         @apply-effect="applyActionEffect"
-        @spend-resource="spendActionResource"
+        @roll-dice="rollActionDice"
         @activate-target="openTargetPicker"
         @toggle-resource="toggleActionResource"
       />
@@ -31,7 +31,7 @@
           :action-suggestions="actionSuggestions"
           panel
           @apply-effect="applyActionEffect"
-          @spend-resource="spendActionResource"
+          @roll-dice="rollActionDice"
           @activate-target="openTargetPicker"
           @toggle-resource="toggleActionResource"
         />
@@ -71,6 +71,7 @@ import { useMorphOrigin } from '@/features/character-editor/composables/useMorph
 import { collectCharacterFeatureActions, featureActionEffectPatch, groupCharacterFeatureActions } from '@/features/character-editor/lib/characterFeatureActions'
 import { resolveWeaponItem, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from '@/features/character-editor/blocks/dnd/lib/itemEntry'
+import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps(['block', 'value', 'values'])
@@ -78,6 +79,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
 const setBlockHidden = inject('setBlockHidden', () => {})
 const suggestStore = useSuggestStore()
+const diceStore = useDiceStore()
 const root = ref(null)
 const editingUid = ref(null)
 const targetAction = ref(null)
@@ -175,18 +177,9 @@ function applyActionEffect(action, effect) {
   })
 }
 
-function spendActionResource(action) {
-  if (!ownerMode.value || !action.resource || action.resource_cost <= 0) return
-  const remaining = Number(action.resource.value) - action.resource_cost
-  if (remaining < 0) return
-  const patch = charCtx.characterResources?.setAvailable?.(action.resource.key, remaining) || {}
-  for (const [id, value] of Object.entries(patch)) emit('update:value', id, value)
-  if (!Object.keys(patch).length) return
-  charCtx.logSessionEvent?.({
-    type: 'feature_action_resource',
-    action: `${action.title}: потрачен ресурс «${action.resource.title}»`,
-    data: { actionKey: action.key, resourceKey: action.resource.key, cost: action.resource_cost },
-  })
+function rollActionDice(action, roll) {
+  if (!ownerMode.value || !action.dice_rolls?.includes(roll)) return
+  diceStore.roll(`${action.title}: ${roll.label}`, roll.formula)
 }
 
 async function openTargetPicker(action) {

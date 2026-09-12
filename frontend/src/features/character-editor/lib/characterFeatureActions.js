@@ -2,6 +2,7 @@ import { FEATURE_VALUE_IDS, featureEntries } from './characterMagicItems'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 import { featureEntryActive } from './featureEntryState'
 import { collectCharacterStatuses } from './characterStatuses'
+import { richDescriptionRolls } from '@/shared/lib/richDescriptionRolls'
 
 export const FEATURE_ACTION_TYPES = [
   { value: 'action', label: 'Действие', group_label: 'Действия' },
@@ -110,6 +111,7 @@ function contributedActions(values, itemsById, resources) {
         title: String(definition.title || item.name || 'Действие'),
         action_type: actionType(definition.action_type),
         description: String(definition.description || ''),
+        dice_rolls: richDescriptionRolls(definition.description),
         requirements: requirements(definition.requirements),
         suggest_action_codes: requirements(definition.suggest_action_codes),
         priority: Number(definition.priority) || 0,
@@ -136,6 +138,7 @@ function manualActions(values) {
     title: String(entry.title || 'Своё действие'),
     action_type: actionType(entry.action_type),
     description: String(entry.description || ''),
+    dice_rolls: richDescriptionRolls(entry.description),
     requirements: requirements(entry.requirements),
     suggest_action_codes: [],
     priority: Number(entry.priority) || index,

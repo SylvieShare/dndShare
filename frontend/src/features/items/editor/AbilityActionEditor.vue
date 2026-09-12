@@ -5,7 +5,7 @@
     </FormField>
     <RuleKeyField v-model="data.key" :title="data.title" :used-keys="otherKeys" />
     <AbilityRuleFields :fields="typeFields" :data="data" @update:data="update" />
-    <FormField label="Описание" vertical title="Кратко опишите, что делает действие. Условия и ограничения укажите отдельно в «Условиях применения» — они появятся тезисами под описанием. Не повторяйте название, вид действия и стоимость. Ссылки и кости можно вставлять в текст.">
+    <FormField label="Описание" vertical title="Кратко опишите, что делает действие. Условия и ограничения укажите отдельно в «Условиях применения» — они появятся тезисами под описанием. Не повторяйте название, вид действия и стоимость. Ссылки и кости можно вставлять в текст. Формулы кубиков автоматически добавляют броски в меню действия.">
       <InputDescription editable :block="{ id: 'description', content: { placeholder: 'Что происходит при использовании действия…' } }" :value="data.description || ''" @update:value="(_, value) => data.description = value" />
       <FormSelect :disabled="standardLoading" value="" aria-label="Вставить ссылку на стандартное действие" @update:value="insertStandardAction">
         <option value="">{{ standardLoading ? 'Загрузка стандартных действий…' : 'Вставить стандартное действие…' }}</option>
