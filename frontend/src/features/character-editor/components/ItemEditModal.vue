@@ -21,6 +21,8 @@
         />
       </FormField>
 
+      <ItemAutomationEditor :data="automation" />
+
       <ItemMediaEditor :item="persistedItem || item" :media="media" :z-index="zIndex" />
 
       <ItemSourcePicker v-if="showPublicationSources && contentSources.length" v-model="selectedContentSourceIds" :sources="contentSources" :z-index="zIndex + 200" />
@@ -62,6 +64,8 @@ import { AppModalFrame, useMediaQuery } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
+import ItemAutomationEditor from '@/features/items/editor/ItemAutomationEditor.vue'
+import { itemAutomationDraft } from '@/features/items/lib/itemAutomation'
 import ItemMediaEditor from '@/features/items/editor/ItemMediaEditor.vue'
 import { useItemMedia } from '@/features/items/editor/useItemMedia'
 import { fetchPost, fetchPut } from '@/shared/api/http'
@@ -101,6 +105,7 @@ const selectedContentSourceIds = ref([])
 const formName = ref(props.initialName)
 const formNameEn = ref(props.initialNameEn)
 const formData = reactive({})
+const automation = reactive(itemAutomationDraft(props.item))
 const saving = ref(false)
 const missingRequiredFields = computed(() => editableTypeFields.value.filter((field) => {
   if (!field.required) return false
@@ -190,6 +195,7 @@ async function submit() {
     const payload = {
       name: formName.value.trim(),
       data,
+      ...automation,
     }
     if (showPublicationSources.value) payload.contentSourceIds = selectedContentSourceIds.value
     if (props.showNameEn) payload.nameEn = formNameEn.value.trim() || null

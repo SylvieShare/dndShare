@@ -884,3 +884,11 @@ UID, ссылки эффектов, личные изменения и сост�
 Состояние хранится в `params.magic.resource_maxima`, `resource_counts` и
 `use_cooldowns` по ключам ресурсов/применений. Повторная миграция не дублирует
 зависимости; интеграционный тест сверяет итоговую схему с JSON-снимком.
+
+## Оценка поддержки механик предметов
+
+`108_item_automation.sql` добавляет к `item` колонки `automation_status`
+(`text` с CHECK пяти значений, default `unreviewed`), `automation_note`
+(до 1000 символов) и `requires_player_interaction` (default false).
+Это общие метаданные вне JSON `data`; миграция не выставляет оценок по наличию
+зависимостей. [Контракт и критерии](features/item-automation.md).

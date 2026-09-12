@@ -38,7 +38,11 @@ func (s *Server) toolItemCreate(ctx context.Context, args map[string]json.RawMes
 	if err != nil {
 		return nil, err
 	}
-	return s.store.CreateBase(ctx, name, nameEn, data, typeID, parentID)
+	automation, err := mcpItemAutomation(args)
+	if err != nil {
+		return nil, err
+	}
+	return s.store.CreateBase(ctx, name, nameEn, data, typeID, parentID, automation)
 }
 
 func (s *Server) toolItemUpdate(ctx context.Context, args map[string]json.RawMessage) (any, error) {
@@ -69,7 +73,11 @@ func (s *Server) toolItemUpdate(ctx context.Context, args map[string]json.RawMes
 	if err != nil {
 		return nil, err
 	}
-	if err := s.store.Update(ctx, id, mcpAdminUser, true, name, nameEn, data); err != nil {
+	automation, err := mcpItemAutomation(args)
+	if err != nil {
+		return nil, err
+	}
+	if err := s.store.Update(ctx, id, mcpAdminUser, true, name, nameEn, data, automation); err != nil {
 		return nil, err
 	}
 	if parentID != nil {

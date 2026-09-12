@@ -433,6 +433,7 @@ var schemaParts = []struct {
 	{"selected-target", schemaSelectedTargetSQL},
 	{"initial-item-charges", schemaInitialItemChargesSQL},
 	{"luck-blade-rules", schemaLuckBladeRulesSQL},
+	{"item-automation", schemaItemAutomationSQL},
 }
 
 const (

@@ -135,7 +135,10 @@ ability toggles and `status_effect` for adding or removing linked effects.
   публичные и собственные источники; скрытый/несуществующий эффект даёт пустой
   список. Список строится из текущего JSON, изменения и удаления не оставляют
   устаревших ссылок. Невалидный ID возвращает 400.
-- `POST /api/items`, `PUT /api/items/{id}`
+- `POST /api/items`, `PUT /api/items/{id}` — также принимают необязательные
+  `automationStatus`, `automationNote`, `requiresPlayerInteraction` вне `data`.
+  Пропущенные значения сохраняются при обновлении. Эти поля доступны в Item DTO
+  и MCP `handbook_item_create/update`; [значения и ограничения](features/item-automation.md).
 - `POST /api/items/{id}/make-base`
 - `POST /api/items/{id}/icon-image` (multipart PNG/WebP, максимум 5 МБ)
 - `DELETE /api/items/{id}/icon`

@@ -117,6 +117,7 @@
       <ItemInstanceNotes v-if="instance" :item="item" :instance="instance" />
 
       <div v-if="showTitle || canEdit" class="detail-technical-meta">
+        <ItemAutomationBadge :item="item" :z-index="nestedViewZIndex + 100" />
         <button v-if="canEdit" type="button" class="btn-edit" @click="$emit('edit', item)">
           <Pencil :size="14" aria-hidden="true" />
           {{ instance ? 'Редактировать в справочнике' : 'Редактировать' }}
@@ -130,6 +131,7 @@
 </template>
 
 <script setup>
+import ItemAutomationBadge from '@/features/items/components/ItemAutomationBadge.vue'
 import ItemInstanceNotes from '@/features/items/detail-components/ItemInstanceNotes.vue'
 import { computed, watch } from 'vue'
 import { Pencil } from '@lucide/vue'
@@ -334,6 +336,7 @@ function formatSubValue(sub, value) {
 
 .detail-technical-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   justify-content: flex-end;

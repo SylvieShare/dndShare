@@ -13,6 +13,7 @@ import (
 
 // Item — строка dndshare.item. Иконка и обложка проецируются из медиахранилищ.
 type Item struct {
+	ItemAutomation
 	ID               int64              `json:"id"`
 	UserID           *int64             `json:"userId,omitempty"`
 	Name             string             `json:"name"`
@@ -74,14 +75,14 @@ type ItemFilter struct {
 	Values []any
 }
 
-const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id, custom_source_id, icon_svg_id, icon_image_id, cover_image_id"
+const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id, custom_source_id, icon_svg_id, icon_image_id, cover_image_id, automation_status, automation_note, requires_player_interaction"
 
 func scanItemRow(rows pgx.Rows) (Item, error) {
 	var it Item
 	var userID, parentID, customSourceID, iconSVGID, iconImageID, coverImageID *int64
 	var nameEn, svg, iconImageURL, coverImageURL *string
 	var data []byte
-	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID, &iconSVGID, &iconImageID, &coverImageID, &svg, &iconImageURL, &coverImageURL); err != nil {
+	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID, &iconSVGID, &iconImageID, &coverImageID, &it.AutomationStatus, &it.AutomationNote, &it.RequiresPlayerInteraction, &svg, &iconImageURL, &coverImageURL); err != nil {
 		return Item{}, err
 	}
 	it.UserID = userID
