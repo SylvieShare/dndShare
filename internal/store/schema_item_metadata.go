@@ -7,3 +7,6 @@ var schemaItemAutomationSQL string
 
 //go:embed schema/110_effect_source_filter.sql
 var schemaEffectSourceFilterSQL string
+
+//go:embed schema/109_magic_item_automation_audit.sql
+var schemaMagicItemAutomationAuditSQL string
