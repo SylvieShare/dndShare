@@ -99,7 +99,7 @@ describe('handbook item detail cover', () => {
   it('shows status effects as a compact rules dashboard instead of raw schema fields', () => {
     expect(headerSource).toContain("15: {\n    '--cover-min-height': '320px'")
     expect(headerSource).toContain("if (typeId === 15) return '4 / 1'")
-    expect(detailSource).toContain('<StatusEffectDetailSummary :item="item" :type="type" />')
+    expect(detailSource).toContain('<StatusEffectDetailSummary :item="item" :type="type" :has-cover="hasCover" />')
     expect(detailSource).toContain('15: StatusEffectDetailContent')
     expect(statusEffectSummarySource).toContain('<CoverSummaryLayout')
     expect(statusEffectSummarySource).toContain('class="status-effect-emblem"')
@@ -205,7 +205,7 @@ describe('handbook item detail cover', () => {
   it('keeps bestiary data in local translucent blocks without shading the whole cover', () => {
     expect(detailSource).toContain('<EnemyDetailSummary :item="item" :type="type" />')
     expect(detailSource).toContain('<template v-if="isEnemy" #summary>')
-    expect(headerSource).toContain('<slot name="summary" />')
+    expect(headerSource).toContain('<slot name="summary" :has-cover="coverImageAvailable" />')
     expect(headerSource).toContain('<slot name="corner" />')
     expect(detailSource).toContain(':title="itemSourceTitle"')
     expect(detailSource).toContain('source.name || source.code')

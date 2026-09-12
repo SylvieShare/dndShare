@@ -180,6 +180,10 @@ instances with bound parameters; legacy suggest-type-9 state ids and active
 Rage widget flags are migrated to that format. Rage and Shield of Faith are the
 initial automatic consumers, while all former condition suggests are imported
 as negative effect items for manual selection.
+`110_effect_source_filter.sql` adds read-only filter metadata `effect_source`
+for type 15. No category is stored on the effect: basic membership uses standard
+effect codes, while spell and magic-item membership follows current visible
+`status_effects` links, including after source edits or deletion.
 `52_status_effect_levels.sql` adds optional `level` presentation metadata to
 effect catalogue items. The live exhaustion value stays in its rules-owned
 character field, but the sheet presents it through the same level-aware effect

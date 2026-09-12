@@ -96,7 +96,12 @@ entries and selected choices.
   Bestiary schema filters cover creature type, size, environment, legendary
   status, named-NPC status and CR; the finite CR list is stored in schema
   metadata so the filter control is available before any dictionary request.
-  Spell filters include the base class items referenced by `classes[].id`;
+  Spell filters include the base class items referenced by `classes[].id`.
+  Effects offer «Базовые эффекты», «Магические предметы» and «Заклинания»
+  in the source-of-effect filter. Basic effects are the 14 standard conditions,
+  exhaustion and inspiration; the other groups come from visible type-19/type-5
+  `status_effects` links. Groups can overlap and multiple selections are combined
+  with OR. With no selection, all effects remain visible, including ability effects;
 - on screens up to `760px`, the item picker uses a mobile list-to-detail flow:
   selecting a row replaces the list with the full detail, while an explicit
   `К списку` action or a right swipe returns to the results. Type tabs are
@@ -160,7 +165,8 @@ entries and selected choices.
   rather than a small glyph prepended to the label; shared padding reserves its
   space on desktop and mobile;
 - status-effect details use a compact `320px` minimum `4:1` dashboard. The
-  effect icon stays in the reserved centre, while polarity, duration, stacking,
+  effect icon appears in the reserved centre only when no cover is displayed
+  (including a failed image load); item and type covers both hide it. Polarity, duration, stacking,
   concentration and the number of structured rules remain readable around it.
   Content below the cover renders thesis bullets, description, derived bonuses
   and defenses as labelled rule cards instead of exposing schema keys. The

@@ -27,8 +27,8 @@
         <template v-else-if="isGear" #summary>
           <GearDetailSummary :item="item" :type="type" />
         </template>
-        <template v-else-if="isStatusEffect" #summary>
-          <StatusEffectDetailSummary :item="item" :type="type" />
+        <template v-else-if="isStatusEffect" #summary="{ hasCover }">
+          <StatusEffectDetailSummary :item="item" :type="type" :has-cover="hasCover" />
         </template>
         <template v-else-if="isOrigin" #summary>
           <OriginDetailSummary :item="item" :type="type" />

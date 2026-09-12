@@ -231,6 +231,10 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 	where = appendContentScopeSQL(where, &args, scope)
 
 	for _, filter := range filters {
+		if typeID == 15 && filter.Key == "effect_source" {
+			where = append(where, effectSourceFilterSQL(filter.Values, userID, add))
+			continue
+		}
 		path := parseFilterPath(filter.Key)
 		if path == nil {
 			continue

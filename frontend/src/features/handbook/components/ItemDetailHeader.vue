@@ -42,7 +42,7 @@
       </div>
 
       <div v-if="$slots.summary" class="item-detail-summary">
-        <slot name="summary" />
+        <slot name="summary" :has-cover="coverImageAvailable" />
       </div>
     </div>
   </header>

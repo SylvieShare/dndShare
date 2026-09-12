@@ -38,7 +38,7 @@
       </template>
     </CoverSummaryLayout>
 
-    <div class="status-effect-emblem" aria-hidden="true">
+    <div v-if="!hasCover" class="status-effect-emblem" aria-hidden="true">
       <ItemIcon
         v-if="item.iconImageUrl || item.svg || type?.iconImageUrl"
         :item="item"
@@ -67,6 +67,7 @@ import {
 
 const props = defineProps({
   item: { type: Object, required: true },
+  hasCover: { type: Boolean, default: false },
   type: { type: Object, default: null },
 })
 

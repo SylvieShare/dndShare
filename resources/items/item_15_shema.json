@@ -1,5 +1,26 @@
 [
   {
+    "key": "effect_source",
+    "name": "Источник эффекта",
+    "type": "select",
+    "readonly": true,
+    "filter": true,
+    "options": [
+      {
+        "value": "basic",
+        "label": "Базовые эффекты"
+      },
+      {
+        "value": "magic_item",
+        "label": "Магические предметы"
+      },
+      {
+        "value": "spell",
+        "label": "Заклинания"
+      }
+    ]
+  },
+  {
     "key": "desc",
     "name": "Описание",
     "type": "description"

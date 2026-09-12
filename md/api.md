@@ -117,7 +117,10 @@ ability toggles and `status_effect` for adding or removing linked effects.
   при нуле UI скрывает каталог в навигации, сохраняя доступ к его picker;
 - `GET /api/items` (`typeId`, pagination, publication scope and schema
   `filters`; например, подрасы: `typeId=16&filters={"race":123}`,
-  подклассы: `typeId=17&filters={"class":456}`)
+  подклассы: `typeId=17&filters={"class":456}`). Для типа 15 фильтр
+  `effect_source` принимает массив `basic`, `magic_item`, `spell` (объединение
+  по OR): базовые состояния/истощение/вдохновение или эффекты, связанные
+  с доступными читателю магическими предметами и заклинаниями.
 - `GET /api/items/by-ids?ids=`
 - `GET /api/items/children?parentId=` — generic legacy-friendly traversal по
   `item.parent_id`; runtime выбора происхождения использует отдельные типы и
