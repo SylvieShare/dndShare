@@ -13,7 +13,14 @@
         <div
           class="save-chip"
           :class="{ 'save-chip-active': saveUp }"
-          @click.stop="$emit('roll-save')"
+          role="button"
+          tabindex="0"
+          :aria-label="`${title} — спасбросок`"
+          aria-haspopup="menu"
+          :aria-expanded="rollMenu?.kind === 'save'"
+          @click.stop="openRollMenu($event, 'save')"
+          @keydown.enter.prevent="openRollMenu($event, 'save')"
+          @keydown.space.prevent="openRollMenu($event, 'save')"
         >
           <span class="save-label">спас</span>
           <span class="save-chip-val">{{ signed(save) }}</span>
@@ -23,7 +30,17 @@
     </SheetBlockTitle>
 
     <!-- ── Modifier + raw value ── -->
-    <div class="stat-body" @click.stop="$emit('roll-stat')">
+    <div
+      class="stat-body"
+      role="button"
+      tabindex="0"
+      :aria-label="`${title} — проверка`"
+      aria-haspopup="menu"
+      :aria-expanded="rollMenu?.kind === 'stat'"
+      @click.stop="openRollMenu($event, 'stat')"
+      @keydown.enter.prevent="openRollMenu($event, 'stat')"
+      @keydown.space.prevent="openRollMenu($event, 'stat')"
+    >
       <SvgIcon v-if="suggestSvg" class="stat-icon" :svg="suggestSvg" :color="color" />
       <span class="stat-mod">{{ signed(mod) }}</span>
       <span class="stat-raw">({{ raw }})</span>
@@ -57,10 +74,28 @@
         <span
           class="skill-chip"
           :class="{ 'skill-chip-active': skill.up > 0, 'skill-chip-master': skill.up >= 2 }"
-          @click.stop="$emit('roll-skill', skill.id)"
+          role="button"
+          tabindex="0"
+          :aria-label="`${skill.title} — проверка`"
+          aria-haspopup="menu"
+          :aria-expanded="rollMenu?.kind === 'skill' && rollMenu?.id === skill.id"
+          @click.stop="openRollMenu($event, 'skill', skill)"
+          @keydown.enter.prevent="openRollMenu($event, 'skill', skill)"
+          @keydown.space.prevent="openRollMenu($event, 'skill', skill)"
         >{{ signed(skill.bonus) }}</span>
       </div>
     </div>
+
+    <DndStatRollMenu
+      v-if="rollMenu"
+      :key="`${rollMenu.kind}:${rollMenu.id || ''}`"
+      :anchor="rollMenu.anchor"
+      :title="rollMenu.title"
+      :mode="rollMenu.mode"
+      :cancelled="rollMenu.cancelled"
+      @close="rollMenu = null"
+      @roll="confirmRoll"
+    />
 
     <ItemTooltip
       v-if="tooltip.visible"
@@ -90,11 +125,12 @@
 
 <script setup>
 import { SkeletonBlock } from '@sylvieshare/share-ui'
-import { onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, ref, shallowRef } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
 import SvgIcon from '@/shared/ui/SvgIcon'
+import DndStatRollMenu from './DndStatRollMenu.vue'
 import RollModeBadge from '@/features/character-editor/blocks/dnd/components/RollModeBadge.vue'
 
 const props = defineProps({
@@ -121,7 +157,29 @@ const props = defineProps({
   checkModeCancelled: { type: Boolean, default: false },
   saveModeCancelled: { type: Boolean, default: false },
 })
-defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
+const emit = defineEmits(['edit', 'roll-stat', 'roll-save', 'roll-skill'])
+const rollMenu = shallowRef(null)
+
+function openRollMenu(event, kind, skill) {
+  hideTooltip()
+  if (rollMenu.value?.anchor === event.currentTarget) {
+    rollMenu.value = null
+    return
+  }
+  rollMenu.value = {
+    anchor: event.currentTarget, kind, id: skill?.id,
+    title: skill?.title || `${props.title} — ${kind === 'save' ? 'спасбросок' : 'проверка'}`,
+    mode: skill?.rollMode || (kind === 'save' ? props.saveMode : props.checkMode),
+    cancelled: skill?.rollModeCancelled ?? (kind === 'save' ? props.saveModeCancelled : props.checkModeCancelled),
+  }
+}
+
+function confirmRoll(mode) {
+  const selection = rollMenu.value
+  rollMenu.value = null
+  if (selection.kind === 'skill') emit('roll-skill', selection.id, mode)
+  else emit(`roll-${selection.kind}`, mode)
+}
 
 const TOOLTIP_DELAY_MS = 450
 const tooltip = ref({ visible: false, title: '', desc: '', bonuses: [], total: 0, x: 0, top: null, bottom: null })
@@ -129,6 +187,7 @@ let tooltipTimer = null
 
 function showTooltip(event, skill) {
   hideTooltip()
+  if (rollMenu.value) return
   const rect = event.currentTarget.getBoundingClientRect()
   const placeAbove = window.innerHeight - rect.bottom < 180
   tooltipTimer = window.setTimeout(() => {

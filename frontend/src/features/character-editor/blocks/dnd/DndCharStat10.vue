@@ -30,9 +30,9 @@
       :mobile-variant="isMobileVariant"
       :show-edit="canEdit"
       @edit="openEditor"
-      @roll-stat="rollD20Plus(`${displayTitle} — проверка`, checkTotal, checkRollMode, 'ability_check')"
-      @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
-      @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
+      @roll-stat="mode => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check')"
+      @roll-save="mode => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw')"
+      @roll-skill="(id, mode) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
     />
   </BaseTile>
 
@@ -68,9 +68,9 @@
         :skill-skeleton-count="skillSkeletonCount"
         :tooltip-max-desc="skillTooltipMaxDesc"
         :tooltip-width="skillTooltipWidth"
-        @roll-stat="rollD20Plus(`${displayTitle} — проверка`, checkTotal, checkRollMode, 'ability_check')"
-        @roll-save="rollD20Plus(`${displayTitle} — спасбросок`, save, saveRollMode, 'saving_throw')"
-        @roll-skill="id => rollD20Plus(skillTitle(id), skillBonus(id), skillRollMode(id), 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
+        @roll-stat="mode => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check')"
+        @roll-save="mode => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw')"
+        @roll-skill="(id, mode) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
       />
     </template>
 
