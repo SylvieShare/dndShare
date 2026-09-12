@@ -92,6 +92,14 @@ Startup data correction переводит прежние значения в э
 
 ### Справочник
 
+Заклинания типа 5: `damage` и `heal` содержат базовые `dices` и `addon`,
+тип роста `scaling`, шаг `scaling_step`, предел `scaling_max_steps` либо явные
+пороги `scaling_levels[].level`. `bonus` — постоянная часть формулы; `add_mod`
+добавляет заклинательную характеристику один раз. `rolls[]` хранит отдельные
+эффекты (`label`, `kind`: damage/heal/effect) с такими же правилами роста.
+Миграция 113 расширяет схему этих полей; исправления содержимого выполняются
+через MCP. Подробности — [аудит заклинаний](spell-rules-audit.md).
+
 `source` — игровая система, `source_version` — редакция правил.
 `content_source` — книга/публикация, а
 `content_source_compatibility` задаёт её доступность для редакции.

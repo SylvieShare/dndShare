@@ -62,9 +62,12 @@
         :damage-parts="damageParts"
         :modifier="damageModifier"
         :heal-parts="healParts"
+        :heal-modifier="healModifier"
       />
     </div>
 
+      <SpellEffectFormulas :entry="entry" :cast-level="castLevel" />
+      <small v-if="scalingHint" class="sp-scaling-hint">{{ scalingHint }}</small>
       </div>
     </template>
 
@@ -176,6 +179,8 @@
 
 <script setup>
 import { Activity, Sprout } from '@lucide/vue'
+import SpellEffectFormulas from './SpellEffectFormulas.vue'
+import { spellScalingHint, spellInstances } from '../lib/spellScaling'
 import { computed, inject, ref, watch } from 'vue'
 
 import SpellRollMenu from './SpellRollMenu.vue'
@@ -217,8 +222,10 @@ const grantSummary = computed(() => {
 const fixedCastLevel = computed(() => Number(props.entry.ref.cast_level) || null)
 const castLevel = computed(() => fixedCastLevel.value || baseLvl.value)
 
-const damageParts = computed(() => ctx.damageDiceParts(props.entry.item, castLevel.value, ctx.charLevel))
-const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.value, ctx.charLevel))
+const damageParts = computed(() => ctx.damageDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
+const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
+const healModifier = computed(() => healParts.value.reduce((sum, part) => sum + (part.bonus || 0), 0))
+const scalingHint = computed(() => props.entry.ref?.slotless ? '' : spellScalingHint(props.entry.item))
 const damageModifier = computed(() => damageParts.value.reduce((s, p) => s + (p.bonus || 0), 0))
 const hasMetrics = computed(() => ctx.hasSpellMetrics(props.entry.item))
 
@@ -227,7 +234,7 @@ const saveTag = computed(() => {
   if (!a) return ''
   return (SAVE_ABBR[a] || String(a).toUpperCase()) + (dmg.value.save_effect === 'half' ? ' ½' : '')
 })
-const instances = computed(() => Number(dmg.value.instances) || 1)
+const instances = computed(() => spellInstances(props.entry.item, castLevel.value, ctx.charLevel))
 const slotOptions = computed(() => ctx.availableSpellSlotOptions(props.entry))
 const spendsSlot = computed(() => baseLvl.value > 0 && !props.entry.ref.slotless)
 const canUse = computed(() => !ctx.spellcastingBlocked && !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
@@ -296,6 +303,7 @@ function removeSpell(close) {
 
 <style scoped>
 .spell-row {
+  flex-wrap: wrap;
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -412,6 +420,8 @@ function removeSpell(close) {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.sp-scaling-hint { flex-basis: 100%; color: var(--text-muted); font-size: 11px; line-height: 1.35; }
 
 .sp-metrics {
   flex: none;

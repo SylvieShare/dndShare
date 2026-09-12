@@ -1,7 +1,7 @@
 import { resolveRollMode } from '../lib/rollMode'
 import { useDiceStore } from '@/stores/dice'
 
-export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, spellCastingAbility, charLevel, damageDiceParts, healDiceParts }) {
+export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, spellCastingAbility, spellAbilityModifier = () => 0, charLevel, damageDiceParts, healDiceParts }) {
   const dice = useDiceStore()
 
   function spellTitle(entry) {
@@ -15,7 +15,8 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
 
   function diceExpr(parts, withType) {
     return parts
-      .map(p => `${p.count || 1}${p.diceLabel || p.label || ''}${withType ? typeTag(p) : ''}`)
+      .filter(p => p.diceLabel)
+      .map(p => `${p.count || 1}${p.diceLabel}${withType ? typeTag(p) : ''}`)
       .filter(seg => /\d/.test(seg))
       .join('+')
   }
@@ -42,13 +43,13 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   }
 
   function spellDamagePreview(entry, castLevel, critical = false) {
-    const parts = damageDiceParts(entry.item, castLevel, charLevel.value)
+    const parts = damageDiceParts(entry.item, castLevel, charLevel.value, spellAbilityModifier(entry))
       .map((part) => critical ? { ...part, count: (Number(part.count) || 1) * 2 } : part)
     return exprWithBonus(parts, true)
   }
 
   function spellHealPreview(entry, castLevel) {
-    return exprWithBonus(healDiceParts(entry.item, castLevel, charLevel.value), false)
+    return exprWithBonus(healDiceParts(entry.item, castLevel, charLevel.value, spellAbilityModifier(entry)), false)
   }
 
   function rollSpellDamage(entry, castLevel, critical = false) {
@@ -63,5 +64,11 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
     if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr)
   }
 
-  return { spellAttackMode, spellDamagePreview, spellHealPreview, spellTitle, rollSpellAttack, rollSpellDamage, rollSpellHeal }
+  function rollSpellEffect(entry, castLevel) {
+    if (spellcastingBlocked.value) return
+    const expr = spellDamagePreview(entry, castLevel)
+    if (expr) dice.roll(spellTitle(entry), expr)
+  }
+
+  return { rollSpellEffect, spellAttackMode, spellDamagePreview, spellHealPreview, spellTitle, rollSpellAttack, rollSpellDamage, rollSpellHeal }
 }

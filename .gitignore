@@ -16,3 +16,6 @@ dndshare.log
 /docs/*.pdf
 /.claude/settings.local.json
 /.idea/
+
+/output/rules-audit/
+/scripts/spell-rules/__pycache__/

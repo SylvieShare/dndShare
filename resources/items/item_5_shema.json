@@ -4,7 +4,18 @@
     "key": "lvl",
     "type": "int",
     "filter": true,
-    "filter_values": [0,1,2,3,4,5,6,7,8,9],
+    "filter_values": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "filter_labels": {
       "0": "Заговор"
     }
@@ -75,6 +86,11 @@
     "type": "object",
     "fields": [
       {
+        "name": "Плюс модификатор заклинательной характеристики",
+        "key": "add_mod",
+        "type": "bool"
+      },
+      {
         "name": "Дальнобойная атака",
         "key": "range_attack",
         "type": "boolean"
@@ -104,6 +120,18 @@
           "slot": "за круг ячейки",
           "cantrip": "за уровень героя"
         }
+      },
+      {
+        "name": "Кругов между усилениями",
+        "key": "scaling_step",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Максимум усилений",
+        "key": "scaling_max_steps",
+        "type": "int",
+        "hint": "Пусто — без ограничения."
       },
       {
         "name": "Снарядов/лучей",
@@ -173,6 +201,18 @@
             "type": "int"
           }
         ]
+      },
+      {
+        "key": "scaling_levels",
+        "name": "Явные круги усиления (вместо шага)",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "level",
+            "name": "Круг ячейки",
+            "type": "int"
+          }
+        ]
       }
     ]
   },
@@ -203,6 +243,18 @@
         }
       },
       {
+        "name": "Кругов между усилениями",
+        "key": "scaling_step",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Максимум усилений",
+        "key": "scaling_max_steps",
+        "type": "int",
+        "hint": "Пусто — без ограничения."
+      },
+      {
         "name": "Кубики (база)",
         "key": "dices",
         "type": "object_array",
@@ -217,6 +269,11 @@
             "name": "Кубик",
             "key": "dice_id",
             "type": "dice"
+          },
+          {
+            "name": "Постоянное лечение",
+            "key": "bonus",
+            "type": "int"
           }
         ]
       },
@@ -235,6 +292,23 @@
             "name": "Кубик",
             "key": "dice_id",
             "type": "dice"
+          },
+          {
+            "name": "Постоянное лечение",
+            "key": "bonus",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "key": "scaling_levels",
+        "name": "Явные круги усиления (вместо шага)",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "level",
+            "name": "Круг ячейки",
+            "type": "int"
           }
         ]
       }
@@ -245,11 +319,278 @@
     "key": "description",
     "type": "description"
   },
-  {"key":"concentration","name":"Требует концентрации","type":"bool"},
-  {"key":"ritual","name":"Можно сотворить ритуалом","type":"bool"},
-  {"key":"status_effects","name":"Связанные эффекты","type":"object_array","fields":[{"key":"key","name":"Ключ","type":"text"},{"key":"effect","name":"Эффект","type":"item","item_type":15},{"key":"parameter_bindings","name":"Параметры","type":"object_array","fields":[{"key":"key","name":"Параметр","type":"text"},{"key":"source","name":"Источник","type":"select","options":[{"label":"Текущее значение прогрессии","value":"scaling_value"},{"label":"Постоянное значение","value":"fixed"}]},{"key":"value","name":"Значение","type":"int"}]},{"key":"concentration","name":"Концентрация","type":"bool"},{"key":"duration","name":"Длительность","type":"object","fields":[{"key":"kind","name":"Вид","type":"select","default":"manual","options":[{"label":"До ручного снятия","value":"manual"},{"label":"Раунды","value":"rounds"},{"label":"Минуты","value":"minutes"},{"label":"Часы","value":"hours"},{"label":"До отдыха","value":"until_rest"},{"label":"Постоянно","value":"permanent"}]},{"key":"value","name":"Значение","type":"int"}]},
-    {"key": "target", "name": "На кого накладывается", "type": "select", "default": "self", "options": [{"value": "self", "label": "На владельца"}, {"value": "other", "label": "На другое существо"}], "hint": "Эффект на другое существо не включается на листе владельца предмета."},
-    {"key": "condition", "name": "Условие наложения", "type": "text", "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."},
-    {"key": "weapon_damage_key", "name": "Связанный дополнительный урон", "type": "text", "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."}
-  ]}
+  {
+    "key": "concentration",
+    "name": "Требует концентрации",
+    "type": "bool"
+  },
+  {
+    "key": "ritual",
+    "name": "Можно сотворить ритуалом",
+    "type": "bool"
+  },
+  {
+    "key": "status_effects",
+    "name": "Связанные эффекты",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "key",
+        "name": "Ключ",
+        "type": "text"
+      },
+      {
+        "key": "effect",
+        "name": "Эффект",
+        "type": "item",
+        "item_type": 15
+      },
+      {
+        "key": "parameter_bindings",
+        "name": "Параметры",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "key",
+            "name": "Параметр",
+            "type": "text"
+          },
+          {
+            "key": "source",
+            "name": "Источник",
+            "type": "select",
+            "options": [
+              {
+                "label": "Текущее значение прогрессии",
+                "value": "scaling_value"
+              },
+              {
+                "label": "Постоянное значение",
+                "value": "fixed"
+              }
+            ]
+          },
+          {
+            "key": "value",
+            "name": "Значение",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "key": "concentration",
+        "name": "Концентрация",
+        "type": "bool"
+      },
+      {
+        "key": "duration",
+        "name": "Длительность",
+        "type": "object",
+        "fields": [
+          {
+            "key": "kind",
+            "name": "Вид",
+            "type": "select",
+            "default": "manual",
+            "options": [
+              {
+                "label": "До ручного снятия",
+                "value": "manual"
+              },
+              {
+                "label": "Раунды",
+                "value": "rounds"
+              },
+              {
+                "label": "Минуты",
+                "value": "minutes"
+              },
+              {
+                "label": "Часы",
+                "value": "hours"
+              },
+              {
+                "label": "До отдыха",
+                "value": "until_rest"
+              },
+              {
+                "label": "Постоянно",
+                "value": "permanent"
+              }
+            ]
+          },
+          {
+            "key": "value",
+            "name": "Значение",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "key": "target",
+        "name": "На кого накладывается",
+        "type": "select",
+        "default": "self",
+        "options": [
+          {
+            "value": "self",
+            "label": "На владельца"
+          },
+          {
+            "value": "other",
+            "label": "На другое существо"
+          }
+        ],
+        "hint": "Эффект на другое существо не включается на листе владельца предмета."
+      },
+      {
+        "key": "condition",
+        "name": "Условие наложения",
+        "type": "text",
+        "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."
+      },
+      {
+        "key": "weapon_damage_key",
+        "name": "Связанный дополнительный урон",
+        "type": "text",
+        "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+      }
+    ]
+  },
+  {
+    "key": "rolls",
+    "name": "Отдельные броски эффектов",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "label",
+        "name": "Название броска и условие",
+        "type": "text"
+      },
+      {
+        "key": "kind",
+        "name": "Результат",
+        "type": "text",
+        "default": "effect",
+        "filter_values": [
+          "damage",
+          "heal",
+          "effect"
+        ],
+        "filter_labels": {
+          "damage": "Урон",
+          "heal": "Лечение",
+          "effect": "Другой результат"
+        }
+      },
+      {
+        "name": "Плюс модификатор заклинательной характеристики",
+        "key": "add_mod",
+        "type": "bool"
+      },
+      {
+        "name": "Дальнобойная атака",
+        "key": "range_attack",
+        "type": "boolean"
+      },
+      {
+        "name": "Тип роста",
+        "key": "scaling",
+        "type": "text",
+        "default": "none",
+        "filter_values": [
+          "none",
+          "slot",
+          "cantrip"
+        ],
+        "filter_labels": {
+          "none": "нет",
+          "slot": "за круг ячейки",
+          "cantrip": "за уровень героя"
+        }
+      },
+      {
+        "name": "Кругов между усилениями",
+        "key": "scaling_step",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "name": "Максимум усилений",
+        "key": "scaling_max_steps",
+        "type": "int",
+        "hint": "Пусто — без ограничения."
+      },
+      {
+        "name": "Кубики (база)",
+        "key": "dices",
+        "type": "object_array",
+        "fields": [
+          {
+            "name": "Количество кубиков",
+            "key": "count",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "name": "Кубик",
+            "key": "dice_id",
+            "type": "dice"
+          },
+          {
+            "name": "Вид урона",
+            "key": "type",
+            "type": "suggest",
+            "suggest_id": 12
+          },
+          {
+            "name": "Бонус",
+            "key": "bonus",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "name": "Кубики (аддон за уровень)",
+        "key": "addon",
+        "type": "object_array",
+        "fields": [
+          {
+            "name": "Количество кубиков",
+            "key": "count",
+            "type": "int",
+            "default": 1
+          },
+          {
+            "name": "Кубик",
+            "key": "dice_id",
+            "type": "dice"
+          },
+          {
+            "name": "Вид урона",
+            "key": "type",
+            "type": "suggest",
+            "suggest_id": 12
+          },
+          {
+            "name": "Бонус",
+            "key": "bonus",
+            "type": "int"
+          }
+        ]
+      },
+      {
+        "key": "scaling_levels",
+        "name": "Явные круги усиления (вместо шага)",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "level",
+            "name": "Круг ячейки",
+            "type": "int"
+          }
+        ]
+      }
+    ]
+  }
 ]

@@ -2,7 +2,7 @@
 """Update only Infernal Legacy's action prose and theses through the handbook MCP.
 
 Requires MCP_URL and MCP_AUTH_TOKEN. Preview by default; --apply publishes.
-The requested action damage is 2d10; the PHB 2014 racial upcast is 3d10.
+The requested action damage is 3d10; the PHB 2014 racial upcast is 3d10.
 """
 import argparse
 import json
@@ -31,9 +31,9 @@ def update(apply):
     actions = [row for row in data['feature_actions'] if row['key'] == 'hellish_rebuke']
     assert len(actions) == 1
     action = actions[0]
-    payload = urllib.parse.quote(json.dumps({'formula': '2d10{огонь}', 'label': 'Урон огнём'},
+    payload = urllib.parse.quote(json.dumps({'formula': '3d10{огонь}', 'label': 'Урон огнём'},
         ensure_ascii=False, separators=(',', ':')), safe='')
-    dice = f'<span data-rich-node="dice" data-rich-payload="{payload}" contenteditable="false">2к10</span>'
+    dice = f'<span data-rich-node="dice" data-rich-payload="{payload}" contenteditable="false">3к10</span>'
     action['description'] = ('<p>Наложите «Адское возмездие» без траты ячейки. '
         'Цель совершает спасбросок Ловкости: при провале получает '
         f'{dice} урона огнём, при успехе — половину.</p>')

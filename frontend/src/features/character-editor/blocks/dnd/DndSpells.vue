@@ -212,7 +212,7 @@ import { useSpellbookEntries } from './composables/useSpellbookEntries'
 import { useSpellCalc } from '@/features/character-editor/blocks/dnd/composables/useSpellCalc'
 import { useSpellSlots } from '@/features/character-editor/blocks/dnd/composables/useSpellSlots'
 import { countsTowardPreparation, formatBonus, groupTitle, spellSummary } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
-import { availableSpellSlotOptions as availableSlotOptions } from '@/features/character-editor/blocks/dnd/lib/spellUse'
+import { useSpellCasting } from './composables/useSpellCasting'
 import { collectCharacterSpellModifiers } from '@/features/character-editor/lib/characterSpellModifiers'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
@@ -455,9 +455,13 @@ const {
   props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation,
   spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource,
 })
-const { spellTitle, spellAttackMode, spellDamagePreview, spellHealPreview, rollSpellAttack, rollSpellDamage, rollSpellHeal } = useSpellRolls({
-  charCtx, spellcastingBlocked, spellAttackBonus, spellCastingAbility, charLevel, damageDiceParts, healDiceParts,
+const { spellTitle, spellAttackMode, spellDamagePreview, spellHealPreview, rollSpellAttack, rollSpellDamage, rollSpellHeal, rollSpellEffect } = useSpellRolls({
+  charCtx, spellcastingBlocked, spellAttackBonus, spellCastingAbility, spellAbilityModifier, charLevel, damageDiceParts, healDiceParts,
 })
+
+function spellAbilityModifier(entry) {
+  return statModifierForAbility(spellCastingAbility(entry))
+}
 
 function openSpell(entry) {
   if (entry.item) modalSpell.value = entry.item
@@ -493,34 +497,9 @@ function toggleSpellStatus(entry, link) {
   })
 }
 
-function availableSpellSlotOptions(entry) {
-  const level = Number(entry?.item?.data?.lvl) || 0
-  if (entry?.ref?.slotless) return [{ pool: 'slotless', level: Number(entry?.ref?.cast_level) || level, remaining: null }]
-  return availableSlotOptions(slotPools.value, level)
-}
-
-function useSpell(entry, slotOption) {
-  if (!entry?.item || spellcastingBlocked.value) return
-  const spellLevel = Number(entry?.item?.data?.lvl) || 0
-  const option = typeof slotOption === 'object' && slotOption
-    ? slotOption
-    : { pool: 'long_rest', level: Number(slotOption) || 0 }
-  if (spellLevel > 0 && !entry.ref?.slotless) {
-    const available = availableSpellSlotOptions(entry)
-    if (!available.some((candidate) => candidate.pool === option.pool && candidate.level === option.level)) return
-    adjustSlotUsed(option.pool, option.level, 1)
-  }
-  charCtx.logSessionEvent?.({
-    type: 'spell_used',
-    action: `Использовано: ${spellTitle(entry)}`,
-    data: {
-      spellId: entry?.item?.id || entry?.ref?.id || null,
-      spellLevel,
-      slotLevel: spellLevel === 0 ? 0 : option.level,
-      slotPool: spellLevel === 0 ? 'cantrip' : option.pool,
-    },
-  })
-}
+const { availableSpellSlotOptions, useSpell, spellRollLevel, rememberSpellRollLevel } = useSpellCasting({
+  charCtx, spellcastingBlocked, slotPools, adjustSlotUsed, spellTitle,
+})
 
 provide('spellsBlockCtx', reactive({
   charCtx,
@@ -537,6 +516,7 @@ provide('spellsBlockCtx', reactive({
   hasSpellMetrics,
   formatBonus,
   spellAttackBonus,
+  spellAbilityModifier,
   spellSaveDC,
   spellAbilityLabel,
   charLevel,
@@ -545,8 +525,9 @@ provide('spellsBlockCtx', reactive({
   spellAttackMode, spellDamagePreview, spellHealPreview,
   rollSpellAttack,
   rollSpellDamage,
-  rollSpellHeal,
+  rollSpellHeal, rollSpellEffect,
   availableSpellSlotOptions,
+  spellRollLevel, rememberSpellRollLevel,
   useSpell,
   spellcastingSources,
   activeTabKey: activeSpellTab,

@@ -61,7 +61,7 @@
       @click="onRoll($event, 'roll-heal')"
     >
       <span class="ad-heal-mark">♥</span>
-      <DamageDice :parts="healParts" :modifier="0" default-color="var(--success)" />
+      <DamageDice :parts="healParts" :modifier="healModifier" default-color="var(--success)" />
     </component>
   </div>
 </template>
@@ -81,6 +81,7 @@ const props = defineProps({
   damageParts: { type: Array, default: () => [] },
   modifier: { type: Number, default: 0 },            // flat damage bonus (stat+magic), shared by 1h & 2h
   twoHandedParts: { type: Array, default: () => [] }, // versatile two-handed dice
+  healModifier: { type: Number, default: 0 },
   healParts: { type: Array, default: () => [] },
   flatDamage: { type: Number, default: null },
   flatDamageType: { type: String, default: '' },

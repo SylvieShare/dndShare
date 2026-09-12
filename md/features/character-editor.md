@@ -634,9 +634,14 @@ unrelated rolls.
 учитывают эффекты персонажа; изменение относится только к текущему броску.
 В подменю урона есть превью и, у атакующих заклинаний, крит: он удваивает кости,
 но не постоянные прибавки. Урон со спасброском и лечение не предлагают крит.
-Закрытие общего меню сбрасывает временные параметры. Броски не расходуют ячейки:
-расход выполняет отдельное «Потратить ячейку». У заговоров и заклинаний без
-расхода ячеек этот пункт отсутствует. Запрет сотворения блокирует
+Преимущество и крит сбрасываются при закрытии меню. В подменю броска выбирается
+круг ячейки и включается её расход; если доступны оба пула, можно выбрать
+долгий или короткий отдых. Подтверждение проверяет остаток и списывает одну
+ячейку одновременно с броском. После атаки её круг сохраняется для урона,
+а повторный расход по умолчанию выключен. Для повторных эффектов можно
+отключить расход вручную. Отдельный пункт расхода остаётся для сотворения
+без броска. У заговоров выбора ячейки нет; дарованные заклинания без ячеек
+используют фиксированный круг и не предлагают усиление. Запрет сотворения блокирует
 подтверждение всех бросков. Сохраняются выбранная заклинательная характеристика,
 бонус вкладки, фиксированный круг дарованного заклинания и рост за уровень героя.
 
@@ -644,6 +649,15 @@ unrelated rolls.
 `DamageFormulaPreview`; `useSpellRolls` предоставляет одинаковые формулы для
 превью и броска. Вкладки и ячейки, записи книги и ограничения выбора разделены
 между `useSpellbookTabs`, `useSpellbookEntries`, `useSpellPicker`.
+`useSpellCasting` проверяет и расходует ячейки, хранит круг последнего броска.
+`spellScaling` учитывает прибавки костей, постоянных чисел и количества лучей,
+интервал `scaling_step`, предел `scaling_max_steps` и явные `scaling_levels`.
+`damage.add_mod` и `heal.add_mod` добавляют модификатор характеристики один раз.
+В строке заклинания показано правило усиления. `rolls` хранит отдельные
+условные формулы с подписью и видом результата: урон, лечение или иной эффект.
+«Усыпление», временные хиты и два этапа урона не объединяются в одну сумму.
+Формулы не применяют урон, лечение или состояния автоматически к цели.
+Результаты аудита каталога и источники: `md/spell-rules-audit.md`.
 «Леденящее прикосновение» (item 495) использует d8 и в базовом уроне, и в приросте
 за уровни 5/11/17, согласно описанию; запись исправлена через MCP.
 
@@ -758,11 +772,11 @@ does not automatically change HP.
 Infernal Legacy contributes Hellish Rebuke to Reactions from character level 3.
 It binds only the existing `hellish_rebuke` long-rest charge; Darkness remains
 in the resources tile. The action description contains an explicit rich dice
-formula (2d10 fire, per the requested catalogue adjustment) and a Dexterity save.
+formula (3d10 fire, matching the PHB 2014 second-level racial casting) and a Dexterity save.
 The Charisma-based DC is a separate thesis, alongside the damage trigger,
-60-foot visibility requirement and spell components. This action formula is
-authored independently of the granted-spell cast level; the PHB 2014 second-level
-racial casting would deal 3d10. `scripts/update-infernal-legacy-action.py` applies
+60-foot visibility requirement and spell components. The ordinary first-level spell deals 2d10 and gains 1d10 per higher slot;
+the racial grant fixes the casting at second level, yielding the same 3d10
+in its spell card and reaction description. `scripts/update-infernal-legacy-action.py` applies
 the action-text adjustment through MCP without changing the spell grant. Spending the
 charge does not automatically resolve damage or track the round's reaction.
 The spheres remain owner-interactive and write through the shared resource

@@ -16,12 +16,6 @@ import (
 // The explicit order is part of the database contract: later sections may
 // reference objects and seed data created by earlier ones.
 
-//go:embed schema/98_action_description_conditions.sql
-var schemaActionDescriptionConditionsSQL string
-
-//go:embed schema/97_dawn_recovery_theses.sql
-var schemaDawnRecoveryThesesSQL string
-
 //go:embed schema/95_weapon_charges_effects.sql
 var schemaWeaponChargesEffectsSQL string
 
@@ -438,6 +432,7 @@ var schemaParts = []struct {
 	{"effect-source-filter", schemaEffectSourceFilterSQL},
 	{"infernal-legacy-reaction", schemaInfernalLegacyReactionSQL},
 	{"selected-class-abilities", schemaSelectedClassAbilitiesSQL},
+	{"spell-formula-scaling", schemaSpellFormulaScalingSQL},
 }
 
 const (

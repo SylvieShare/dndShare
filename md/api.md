@@ -516,6 +516,11 @@ resolve/archive, см. `md/features/mcp.md`.
 
 ## MCP
 
+`handbook_item_update` передаёт полное `data` записи. Для исправлений заклинаний
+клиент сначала читает актуальную запись, изменяет только проверенные поля и
+сверяет результат повторным чтением. Формат прогрессии и отдельных бросков
+описан в [схеме справочника](database.md#справочник).
+
 Session authoring tools use the bearer-authenticated MCP endpoint and never
 expose participant or character-sheet data:
 

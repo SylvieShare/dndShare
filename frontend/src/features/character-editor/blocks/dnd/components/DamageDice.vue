@@ -59,6 +59,7 @@ const groups = computed(() => {
   const out = []
   for (const [alternative, parts] of [props.parts, props.alternativeParts].entries()) {
     for (const p of parts) {
+      if (!p.diceSides && !p.diceLabel && !p.label) continue
       const key = `${p.type || ''}|${p.typeColor || ''}`
       let g = out.find(x => x.key === key)
       if (!g) {
