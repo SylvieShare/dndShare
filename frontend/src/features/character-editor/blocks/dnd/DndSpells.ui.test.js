@@ -23,6 +23,14 @@ describe('spellcasting restrictions', () => {
 })
 
 describe('multiclass spellcasting UI', () => {
+  it('uses editable class and circle defaults for manual spell selection', () => {
+    expect(source).toContain(':default-filters="spellPickerFilters"')
+    expect(source).not.toContain(':fixed-filters="spellPickerFilters"')
+    expect(source).not.toContain('Не входит в список заклинаний выбранного класса')
+    expect(source).not.toContain('Круг заклинания пока недоступен этому классу')
+    expect(source).toContain('Лимит известных заклинаний уже заполнен')
+  })
+
   it('keeps class tabs and recovery-based slot pools separate', () => {
     expect(source).toContain('computeSpellSlotPools')
     expect(source).toContain(':active-slot-pools="activeSlotPools"')

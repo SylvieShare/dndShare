@@ -36,6 +36,7 @@
             :search="searchQ"
             :filters="filters"
             :locked-filters="normalizedFixedFilters"
+            :default-filters="normalizedDefaultFilters"
             :filter-fields="filterFields"
             :filter-suggests="filterSuggests"
             :content-sources="visibleContentSources"
@@ -154,6 +155,7 @@ import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/
 import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import { useSuggestStore } from '@/stores/suggest'
+import { usePickerFilters } from '@/features/handbook/composables/usePickerFilters'
 
 const PAGE_SIZE = 30
 const GROUPED_PAGE_SIZE = 500
@@ -168,6 +170,7 @@ const props = defineProps({
   createShowNameEn: { type: Boolean, default: false },
   itemEligibility: { type: Function, default: null },
   fixedFilters: { type: Object, default: () => ({}) },
+  defaultFilters: { type: Object, default: () => ({}) },
   zIndex: { type: Number, default: 3000 },
   contentSources: { type: Object, default: null },
   sourceVersionId: { type: [Number, String], default: null },
@@ -195,16 +198,7 @@ const loadingMore = ref(false)
 const hasMore = ref(false)
 const searchQ = ref('')
 const groupBy = ref(null)
-function normalizeFilterValues(source) {
-  return Object.fromEntries(Object.entries(source || {}).flatMap(([key, value]) => {
-    if (value == null || value === '') return []
-    if (typeof value === 'boolean') return [[key, value]]
-    return [[key, Array.isArray(value) ? [...value] : [value]]]
-  }))
-}
-
-const normalizedFixedFilters = computed(() => normalizeFilterValues(props.fixedFilters))
-const filters = ref({ ...normalizedFixedFilters.value })
+const { filters, normalizedFixedFilters, normalizedDefaultFilters, updateFilters, resetFilters } = usePickerFilters(props)
 const availableContentSources = ref([])
 const contentSourceIds = ref([])
 const createOpen = ref(false)
@@ -285,17 +279,13 @@ function setActiveType(id) {
   activeTypeId.value = id
   searchQ.value = ''
   groupBy.value = null
-  filters.value = { ...normalizedFixedFilters.value }
+  resetFilters()
   contentSourceIds.value = []
   selectedItem.value = null
   items.value = []
   ensureSuggestsForType(itemType.value)
   fetchContentSources()
   fetchItems('')
-}
-
-function updateFilters(next) {
-  filters.value = { ...(next || {}), ...normalizedFixedFilters.value }
 }
 
 function selectItem(item) {
@@ -387,13 +377,6 @@ watch([effectiveContentSources, effectiveSourceVersionId], () => {
   contentSourceIds.value = []
   fetchContentSources()
   fetchItems(searchQ.value)
-}, { deep: true })
-
-watch(normalizedFixedFilters, (next, previous) => {
-  const previousKeys = new Set(Object.keys(previous || {}))
-  const editable = Object.fromEntries(Object.entries(filters.value).filter(([key]) => !previousKeys.has(key)))
-  filters.value = { ...editable, ...next }
-  selectedItem.value = null
 }, { deep: true })
 
 function pick() {

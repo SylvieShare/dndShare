@@ -45,6 +45,7 @@
             <span class="col-filter-head-title">Фильтр</span>
             <button v-if="editableFilterCount" class="col-filter-clear" @click="clearSchemaFilters">Сбросить</button>
           </div>
+          <p v-if="Object.keys(defaultFilters).length" class="col-filter-default-hint">Значения из листа отмечены «По умолчанию». Их можно снять или выбрать другие.</p>
           <div v-for="field in visibleFilterFields" :key="field.path" class="col-filter-group">
             <template v-if="isBoolField(field)">
               <div class="col-filter-title">{{ field.name }}</div>
@@ -65,20 +66,28 @@
                   v-for="opt in filterValueOptions(field)"
                   :key="opt.value"
                   class="col-filter-chip"
-                  :class="{ active: isSelected(field.path, opt.value), locked: filterLocked(field.path) }"
+                  :class="{ active: isSelected(field.path, opt.value), locked: filterLocked(field.path), default: isDefault(field.path, opt.value) }"
                   :disabled="filterLocked(field.path)"
+                  :aria-pressed="isSelected(field.path, opt.value)"
                   @click="toggleValue(field.path, opt.value)"
-                >{{ opt.label }}</button>
+                >
+                  {{ opt.label }}
+                  <small v-if="isDefault(field.path, opt.value)" class="col-filter-default-label">По умолчанию</small>
+                </button>
               </div>
               <div v-else-if="field.type === 'suggest' || field.type === 'suggest_array'" class="col-filter-options">
                 <button
                   v-for="opt in suggestOptions(field)"
                   :key="opt.id"
                   class="col-filter-chip"
-                  :class="{ active: isSelected(field.path, opt.id), locked: filterLocked(field.path) }"
+                  :class="{ active: isSelected(field.path, opt.id), locked: filterLocked(field.path), default: isDefault(field.path, opt.id) }"
                   :disabled="filterLocked(field.path)"
+                  :aria-pressed="isSelected(field.path, opt.id)"
                   @click="toggleValue(field.path, opt.id)"
-                >{{ opt.value }}</button>
+                >
+                  {{ opt.value }}
+                  <small v-if="isDefault(field.path, opt.id)" class="col-filter-default-label">По умолчанию</small>
+                </button>
               </div>
               <small v-if="filterLocked(field.path)" class="col-filter-locked">Задано способностью</small>
             </template>
@@ -153,6 +162,7 @@ const props = defineProps({
   search: { type: String, default: '' },
   groupBy: { type: String, default: null },
   filters: { type: Object, default: () => ({}) },
+  defaultFilters: { type: Object, default: () => ({}) },
   lockedFilters: { type: Object, default: () => ({}) },
   filterFields: { type: Array, default: () => [] },
   filterSuggests: { type: Object, default: () => ({}) },
@@ -230,6 +240,7 @@ function filterValueOptions(f) {
 }
 
 function isSelected(key, id) { return (props.filters[key] || []).includes(id) }
+function isDefault(key, id) { return (props.defaultFilters[key] || []).some(value => String(value) === String(id)) }
 function filterLocked(key) { return Object.prototype.hasOwnProperty.call(props.lockedFilters, key) }
 
 function emitFilter(key, value) {

@@ -25,7 +25,7 @@ describe('handbook item picker controls', () => {
   it('applies fixed filters and keeps them locked in the catalogue controls', () => {
     expect(source).toContain('fixedFilters: { type: Object')
     expect(source).toContain(':locked-filters="normalizedFixedFilters"')
-    expect(source).toContain('...normalizedFixedFilters.value')
+    expect(source).toContain('usePickerFilters(props)')
   })
 
   it('uses a mobile list-to-detail flow with explicit and swipe back actions', () => {

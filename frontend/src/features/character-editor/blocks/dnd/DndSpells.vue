@@ -138,7 +138,7 @@
       v-if="pickerOpen && block.content.item_type_id"
       :item-type-ids="[block.content.item_type_id]"
       :exclude-items="activeTabSpells.map(s => s.id)"
-      :fixed-filters="spellPickerFilters"
+      :default-filters="spellPickerFilters"
       :item-eligibility="spellPickerEligibility"
       title="Заклинания"
       search-placeholder="Поиск заклинания..."
@@ -467,10 +467,6 @@ function spellPickerEligibility(item) {
   if (!rules) return { eligible: true, reasons: [] }
   const level = Number(item?.data?.lvl)
   const reasons = []
-  if (rules.listClassId != null && !(item?.data?.classes || []).some((entry) => String(entry?.id) === String(rules.listClassId))) {
-    reasons.push('Не входит в список заклинаний выбранного класса')
-  }
-  if (level > selectedSourceMaxSpellLevel.value) reasons.push('Круг заклинания пока недоступен этому классу')
   if (rules.hasKnownProgression && rules.cantripsKnown != null && level === 0 && knownCounts.value.cantrips >= rules.cantripsKnown) reasons.push('Лимит известных заговоров уже заполнен')
   if (rules.hasKnownProgression && rules.spellsKnown != null && level > 0 && knownCounts.value.spells >= rules.spellsKnown) reasons.push('Лимит известных заклинаний уже заполнен')
   if (level > 0 && rules.allowedSchoolIds.length

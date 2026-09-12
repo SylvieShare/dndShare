@@ -456,9 +456,12 @@ bonus and is labelled «Компетентность» in inventory.
 Known-spell limits may also be declared by the selected class or subclass.
 Arcane Trickster publishes its Wizard list, Intelligence, cantrip/spell table,
 allowed schools and the number of school exceptions at each level. The spell
-tile shows current totals, locks the picker to available circles and the class
-list, and disables additions that exceed either the known count or the current
-school-exception allowance. Mage Hand Legerdemain marks its granted Mage Hand
+tile shows current totals and preselects available circles and the class list
+in the manual spell picker. These filters can be removed, reset or changed;
+original options retain a «По умолчанию» label and highlight even when deselected.
+Reopening the picker restores defaults from the active spellbook tab. Manual
+additions may use another class list or higher circle, but additions that exceed
+the known count or current school-exception allowance remain disabled. Mage Hand Legerdemain marks its granted Mage Hand
 as counting toward the cantrip limit.
 
 Ability items may expose `display_scaling [{level,label}]`. The sheet and print

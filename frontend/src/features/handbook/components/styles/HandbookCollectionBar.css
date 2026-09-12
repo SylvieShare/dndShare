@@ -300,6 +300,10 @@
   background: color-mix(in srgb, var(--accent-soft) 14%, transparent);
   color: var(--accent-soft);
 }
+.col-filter-chip.default { border-color: var(--accent-soft); border-style: dashed; }
+.col-filter-chip.default.active { border-style: solid; }
+.col-filter-default-label { display: block; font-size: 8px; line-height: 1.3; }
+.col-filter-default-hint { margin: 0 0 10px; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
 .col-filter-chip.locked { cursor: default; opacity: .82; }
 .col-filter-chip.locked:hover { border-color: color-mix(in srgb, var(--accent-soft) 35%, transparent); }
 .col-filter-locked { display: block; margin-top: 5px; color: var(--text-muted); font-size: 9px; }
