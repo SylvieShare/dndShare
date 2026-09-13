@@ -1,3 +1,4 @@
+import { instanceEventData } from '@/features/character-editor/lib/sessionEventData'
 import { computed, nextTick, ref, unref } from 'vue'
 import { useDiceStore } from '@/stores/dice'
 import { inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
@@ -18,7 +19,7 @@ export function useLastChargeCheck(charCtx, uid) {
       if (!Object.keys(patch).length) return
       charCtx.updateValues(patch)
       charCtx.logSessionEvent?.({ type: 'dice_roll', action: `Последний заряд · ${current.source_name}: ${result.total <= Number(current.rule.failure_max) ? 'магия утрачена' : 'магия сохранена'}`,
-        data: { checkId: current.id, instanceUid: unref(uid), result } })
+        data: { ...instanceEventData(charCtx, unref(uid)), checkId: current.id, instanceUid: unref(uid), result } })
       await nextTick()
     } finally { busy.value = false }
   }
@@ -27,7 +28,7 @@ export function useLastChargeCheck(charCtx, uid) {
     const patch = undoLastCharge(values(), unref(uid), checkId)
     if (!Object.keys(patch).length) return
     charCtx.updateValues(patch)
-    charCtx.logSessionEvent?.({ type: 'feature_state', action: 'Отменена проверка последнего заряда', data: { checkId, instanceUid: unref(uid) } })
+    charCtx.logSessionEvent?.({ type: 'feature_state', action: 'Отменена проверка последнего заряда', data: { ...instanceEventData(charCtx, unref(uid)), checkId, instanceUid: unref(uid) } })
   }
   return { entry, check, busy, roll, undo }
 }

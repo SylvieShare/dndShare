@@ -9,12 +9,12 @@ import {
 import { useDiceStore } from '@/stores/dice'
 
 export const ENCOUNTER_CHALLENGE_ABILITIES = [
-  { value: 'STR', label: 'Сила', short: 'СИЛ' },
-  { value: 'DEX', label: 'Ловкость', short: 'ЛОВ' },
-  { value: 'CON', label: 'Телосложение', short: 'ТЕЛ' },
-  { value: 'INT', label: 'Интеллект', short: 'ИНТ' },
-  { value: 'WIS', label: 'Мудрость', short: 'МДР' },
-  { value: 'CHA', label: 'Харизма', short: 'ХАР' },
+  { id: 1, value: 'STR', label: 'Сила', short: 'СИЛ' },
+  { id: 2, value: 'DEX', label: 'Ловкость', short: 'ЛОВ' },
+  { id: 3, value: 'CON', label: 'Телосложение', short: 'ТЕЛ' },
+  { id: 4, value: 'INT', label: 'Интеллект', short: 'ИНТ' },
+  { id: 5, value: 'WIS', label: 'Мудрость', short: 'МДР' },
+  { id: 6, value: 'CHA', label: 'Харизма', short: 'ХАР' },
 ]
 
 const ABILITY_KEYS = new Set(ENCOUNTER_CHALLENGE_ABILITIES.map(item => item.value))
@@ -115,6 +115,7 @@ export function useEncounterChallenge({
         `${meta.label}, ${kind}`,
         d20Expr(bonus),
         {
+          eventData: { ability: { id: meta.id, typeId: 16, name: meta.label } },
           crit_mode: true,
           popup: false,
           actor: {
@@ -184,6 +185,7 @@ export function useEncounterChallenge({
 
     useDiceStore().pushEntry({
       action: `${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
+      eventData: { ability: { id: meta.id, typeId: 16, name: meta.label } },
       actor: {
         name: displayName(combatant),
         charUuid: combatant.type === 'player' ? findParticipant(combatant.charId)?.charUuid || null : null,

@@ -1,3 +1,4 @@
+import { instanceEventData } from '@/features/character-editor/lib/sessionEventData'
 import { computed, nextTick, ref, unref } from 'vue'
 import { useDiceStore } from '@/stores/dice'
 import { completeWeaponUseStep, finishWeaponUse, weaponUseState } from '@/features/character-editor/lib/weaponUses'
@@ -15,7 +16,7 @@ export function useWeaponUseSteps(charCtx, uid) {
       const patch = completeWeaponUseStep(values(), unref(uid), current.id, key, result, critical)
       charCtx.updateValues(patch)
       charCtx.logSessionEvent?.({ type: miss ? 'feature_state' : 'dice_roll', action: `${current.title}: ${miss ? 'промах по цели' : step.title}`,
-        data: { result, weaponUseId: current.id, stepKey: key } })
+        data: { ...instanceEventData(charCtx, unref(uid)), result, weaponUseId: current.id, stepKey: key } })
       await nextTick()
     } finally { busy.value = false }
   }
@@ -24,7 +25,7 @@ export function useWeaponUseSteps(charCtx, uid) {
     const patch = finishWeaponUse(values(), unref(uid), id)
     if (!Object.keys(patch).length) return
     charCtx.updateValues(patch)
-    charCtx.logSessionEvent?.({ type: 'feature_state', action: 'Применение оружия завершено', data: { weaponUseId: id } })
+    charCtx.logSessionEvent?.({ type: 'feature_state', action: 'Применение оружия завершено', data: { ...instanceEventData(charCtx, unref(uid)), weaponUseId: id } })
   }
   return { event, busy, resolve, finish }
 }

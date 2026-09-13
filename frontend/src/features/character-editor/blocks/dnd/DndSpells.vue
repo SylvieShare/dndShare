@@ -419,7 +419,7 @@ const {
   setTotal,
   replaceTotals,
   adjustSlotUsed,
-} = useSpellSlots({ canInteract, emitChange })
+} = useSpellSlots({ canInteract, emitChange, logSessionEvent: event => charCtx.logSessionEvent?.(event) })
 
 const maxSlotLevel = computed(() => Math.max(
   ...activeSlotPools.value.flatMap((pool) => pool.slots.map((slot) => Number(slot.level) || 0)),
@@ -494,6 +494,7 @@ function toggleSpellStatus(entry, link) {
   charCtx.logSessionEvent?.({
     type: 'status_effect',
     action: `${active ? 'Снят' : 'Добавлен'} эффект «${link.effect.name || entry.item.name}»`,
+    data: { source: { itemId: entry.item.id, name: entry.item.name } },
   })
 }
 

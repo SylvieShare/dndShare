@@ -69,7 +69,7 @@ async function loadItem(id) {
 }
 
 const props = defineProps({
-  itemTypeId: { type: Number, required: true },
+  itemTypeId: { type: Number, default: null },
   zIndex: { type: Number, default: 3000 },
   itemId: { type: Number, default: null },
   item: { type: Object, default: null },
@@ -98,7 +98,7 @@ async function load() {
   loadError.value = ''
   try {
     const [typeRes, itemRes] = await Promise.all([
-      itemTypesStore.ensureType(props.itemTypeId).catch(() => null),
+      props.itemTypeId ? itemTypesStore.ensureType(props.itemTypeId).catch(() => null) : Promise.resolve(null),
       props.item ? Promise.resolve(props.item) : (props.itemId != null ? loadItem(props.itemId) : Promise.resolve(null)),
     ])
     if (request !== loadVersion) return

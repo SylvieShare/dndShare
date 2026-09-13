@@ -1,7 +1,7 @@
 <template>
   <RichContent class="dnd-rich-content" v-bind="$attrs" :html="html">
     <template #node="{ node }">
-      <DndRichInlineNode :node="node" :actor-name="actorName" />
+      <DndRichInlineNode :node="node" :actor-name="actorName" :source-item="item" />
     </template>
   </RichContent>
 </template>
@@ -14,5 +14,6 @@ defineOptions({ inheritAttrs: false })
 defineProps({
   html: { type: String, default: '' },
   actorName: { type: String, default: '' },
+  item: { type: Object, default: null },
 })
 </script>

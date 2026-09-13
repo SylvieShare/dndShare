@@ -99,3 +99,19 @@ describe('dice roll presentation metadata', () => {
     expect(store.stack[0].outcome).toMatchObject({ kind: 'crit', value: 19 })
   })
 })
+
+describe('chronicle roll sources', () => {
+  it('keeps the source for expression rolls, d20 rolls and their rerolls', () => {
+    setActivePinia(createPinia())
+    vi.useFakeTimers()
+    const store = useDiceStore(), publish = vi.spyOn(useSessionEventsStore(), 'publish').mockResolvedValue(null)
+    const eventData = { source: { itemId: 42, name: 'Посох' } }
+    store.roll('Урон', '2d6', { eventData })
+    store.rollD20('Атака', 3, 'advantage', { eventData, roll_triggers: [{ event: 'any', action: 'reroll' }] })
+    store.runAction(store.stack.at(-1).id, 'reroll')
+    expect(publish).toHaveBeenCalledTimes(3)
+    for (const [event] of publish.mock.calls) expect(event.data.source).toEqual(eventData.source)
+    store.clear()
+    vi.useRealTimers()
+  })
+})

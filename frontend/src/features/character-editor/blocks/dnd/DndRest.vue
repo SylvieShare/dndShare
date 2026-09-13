@@ -27,6 +27,7 @@
 </template>
 
 <script setup>
+import { logSpellSlotRecovery } from '@/features/character-editor/lib/sessionEventData'
 import DndDawnEditor from './components/DndDawnEditor.vue'
 import { computed, inject, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
@@ -105,6 +106,7 @@ async function finishShort() {
   const spells = props.values?.[ids.value.spells]
   if (spells && typeof spells === 'object') {
     const next = shortRestSpells(spells)
+    logSpellSlotRecovery(charCtx, spells, next)
     if (next !== spells) emit('update:value', ids.value.spells, next)
   }
   const currentPools = normalizeHitDice(hp.value)
@@ -131,7 +133,11 @@ async function applyLong(recovery) {
   const resourceRecovery = await restoreAllResources('long')
   emit('update:value', i.hp, longRestHp(hp.value, recovery))
   const spells = props.values?.[i.spells]
-  if (spells && typeof spells === 'object') emit('update:value', i.spells, longRestSpells(spells))
+  if (spells && typeof spells === 'object') {
+    const next = longRestSpells(spells)
+    logSpellSlotRecovery(charCtx, spells, next)
+    emit('update:value', i.spells, next)
+  }
   emitPatch(resourceRecovery.patch)
   const ex = props.values?.[i.exhaustion]
   if (exhaustionLevel(ex) > 0) emit('update:value', i.exhaustion, longRestExhaustion(ex))

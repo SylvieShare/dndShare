@@ -1,3 +1,4 @@
+import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 import { ref } from 'vue'
 import { availableSpellSlotOptions as availableSlotOptions } from '../lib/spellUse'
 
@@ -22,12 +23,15 @@ export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjus
     if (spellLevel > 0 && !entry.ref?.slotless) {
       const available = availableSpellSlotOptions(entry)
       if (!available.some((candidate) => candidate.pool === option.pool && candidate.level === option.level)) return false
-      adjustSlotUsed(option.pool, option.level, 1)
+      adjustSlotUsed(option.pool, option.level, 1, { log: false })
     }
     charCtx.logSessionEvent?.({
       type: 'spell_used',
       action: `Использовано: ${spellTitle(entry)}`,
       data: {
+        ...itemEventData(entry.item),
+        resourceChanges: spellLevel > 0 && !entry.ref?.slotless ? [{ key: `spell:${option.pool}:${option.level}`, name: `Ячейка ${option.level} круга`,
+          level: option.level, pool: option.pool, delta: -1 }] : [],
         spellId: entry?.item?.id || entry?.ref?.id || null,
         spellLevel,
         slotLevel: spellLevel === 0 ? 0 : option.level,

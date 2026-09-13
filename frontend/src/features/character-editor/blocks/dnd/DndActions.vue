@@ -61,6 +61,8 @@
 </template>
 
 <script setup>
+import { logResourceChange, itemEventData, resourceChangeData } from '@/features/character-editor/lib/sessionEventData'
+
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/DndActionsEditor.vue'
@@ -173,13 +175,13 @@ function applyActionEffect(action, effect) {
   charCtx.logSessionEvent?.({
     type: 'feature_action_effect',
     action: `${action.title}: ${effect.title}`,
-    data: { actionKey: action.key, effectKey: effect.key },
+    data: { ...itemEventData(action.item), actionKey: action.key, effectKey: effect.key },
   })
 }
 
 function rollActionDice(action, roll) {
   if (!ownerMode.value || !action.dice_rolls?.includes(roll)) return
-  diceStore.roll(`${action.title}: ${roll.label}`, roll.formula)
+  diceStore.roll(`${action.title}: ${roll.label}`, roll.formula, { eventData: itemEventData(action.item) })
 }
 
 async function openTargetPicker(action) {
@@ -233,6 +235,8 @@ function activateTargetAction(target) {
     type: 'feature_action_effect',
     action: `${action.title}: ${item?.name || 'оружие'}`,
     data: {
+      ...(action.resource && action.resource_cost ? resourceChangeData(action.resource, action.resource.value - action.resource_cost) : {}),
+      ...itemEventData(action.item),
       actionKey: action.key,
       targetKind: action.target_kind,
       targetUid: target.uid,
@@ -250,12 +254,8 @@ function toggleActionResource(action, pip) {
   const next = pip <= current ? pip - 1 : pip
   const patch = charCtx.characterResources?.setAvailable?.(action.resource.key, next) || {}
   for (const [id, value] of Object.entries(patch)) emit('update:value', id, value)
-  if (!Object.keys(patch).length || next >= current) return
-  charCtx.logSessionEvent?.({
-    type: 'resource_used',
-    action: `Использовано: ${action.resource.title || action.title || 'Ресурс'}`,
-    data: { remaining: next, total: Number(action.resource.total) || 0 },
-  })
+  if (!Object.keys(patch).length) return
+  logResourceChange(charCtx, action.resource, next, action.item)
 }
 
 function closeEditor() {

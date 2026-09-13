@@ -247,6 +247,7 @@ export function createClassResourceSource(valueId = 'class_resource_counts', col
           const current = groups.get(key)
           groups.set(key, {
             key: `classes:${key}`,
+            item_id: current?.item_id || item.id,
             pool_key: key,
             title: String(rule.title || current?.title || item.name || 'Ресурс класса'),
             color_point: rule.resource_color || current?.color_point || color,

@@ -12,18 +12,20 @@ import (
 )
 
 var allowedSessionEventTypes = map[string]bool{
-	"dice_roll":          true,
-	"rest_completed":     true,
-	"spell_used":         true,
-	"item_spent":         true,
-	"item_added":         true,
-	"entry_added":        true,
-	"resource_used":      true,
-	"feature_state":      true,
-	"status_effect":      true,
-	"chapter_started":    true,
-	"encounter_started":  true,
-	"encounter_finished": true,
+	"dice_roll":             true,
+	"rest_completed":        true,
+	"spell_slot_changed":    true,
+	"feature_action_effect": true,
+	"spell_used":            true,
+	"item_spent":            true,
+	"item_added":            true,
+	"entry_added":           true,
+	"resource_used":         true,
+	"feature_state":         true,
+	"status_effect":         true,
+	"chapter_started":       true,
+	"encounter_started":     true,
+	"encounter_finished":    true,
 }
 
 type createSessionEventRequest struct {

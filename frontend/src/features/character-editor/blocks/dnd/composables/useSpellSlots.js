@@ -14,7 +14,7 @@ function normalizedSlots(saved) {
   return list
 }
 
-export function useSpellSlots({ canInteract, emitChange }) {
+export function useSpellSlots({ canInteract, emitChange, logSessionEvent }) {
   const slotPools = ref({
     long_rest: defaultSlots(),
     short_rest: defaultSlots(),
@@ -46,9 +46,8 @@ export function useSpellSlots({ canInteract, emitChange }) {
   function toggleSlot(rest, level, index) {
     if (!canInteract.value) return
     const slot = slotAt(rest, level)
-    if (!slot || index > slot.total) return
-    slot.used = index <= slot.used ? index - 1 : index
-    emitChange()
+    if (!slot || !Number.isInteger(index) || index < 1 || index > slot.total) return
+    adjustSlotUsed(rest, level, (index <= slot.used ? index - 1 : index) - slot.used)
   }
 
   function setTotal(rest, level, total) {
@@ -73,11 +72,16 @@ export function useSpellSlots({ canInteract, emitChange }) {
     return changed
   }
 
-  function adjustSlotUsed(rest, level, delta) {
+  function adjustSlotUsed(rest, level, delta, { log = true } = {}) {
     if (!canInteract.value) return
     const slot = slotAt(rest, level)
     if (!slot) return
+    const before = slot.used
     slot.used = Math.max(0, Math.min(slot.total, slot.used + delta))
+    if (before === slot.used) return
+    if (log) logSessionEvent?.({ type: 'spell_slot_changed', action: slot.used > before ? 'Использование ячеек' : 'Восстановление ячеек',
+      data: { slotLevel: Number(level), slotPool: rest, resourceChanges: [{ key: `spell:${rest}:${level}`, name: `Ячейка ${level} круга`,
+        level: Number(level), pool: rest, delta: before - slot.used, remaining: slot.total - slot.used, total: slot.total }] } })
     emitChange()
   }
 

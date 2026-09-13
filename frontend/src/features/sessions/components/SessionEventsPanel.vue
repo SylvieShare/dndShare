@@ -87,70 +87,7 @@
           <button type="button" @click="resetFilters">Показать всю хронику</button>
         </div>
         <div v-else ref="listEl" class="sep-list">
-          <section v-for="timeGroup in timelineGroups" :key="timeGroup.key" class="sep-time-group">
-            <time class="sep-time">{{ timeGroup.time }}</time>
-            <div class="sep-time-content">
-              <section v-for="actorGroup in timeGroup.actors" :key="actorGroup.key" class="sep-actor-group">
-                <div class="sep-actor-head">
-                  <SessionEventActorAvatar :event="actorGroup.actorEvent" :label="actorGroup.label" />
-                  <div class="sep-actor-meta">
-                    <span>{{ actorGroup.label || (actorGroup.kind === 'dm' ? 'Мастер' : 'Системное событие') }}</span>
-                    <small v-if="actorGroup.authorIsSessionOwner">ВЛАДЕЛЕЦ</small>
-                  </div>
-                </div>
-                <div class="sep-actor-events">
-                  <article v-for="event in actorGroup.events" :key="event.id" class="sep-event" :class="`sep-event--${event.type}`">
-                    <div class="sep-marker">{{ eventIcon(event.type) }}</div>
-                    <div class="sep-content">
-                      <div class="sep-event-heading" :class="{ 'sep-event-heading--roll': event.type === 'dice_roll' }">
-                        <div class="sep-event-title">{{ event.action }}</div>
-                        <span v-if="event.type === 'dice_roll'" class="sep-event-divider" aria-hidden="true" />
-                        <strong v-if="event.type === 'dice_roll'" class="sep-total">{{ event.data?.result?.total }}</strong>
-                      </div>
-
-                      <template v-if="event.type === 'dice_roll'">
-                        <div class="sep-roll">
-                          <template v-for="(part, index) in event.data?.result?.parts || []" :key="index">
-                            <span v-if="index || part.sign === '-'" class="sep-sign">{{ part.sign }}</span>
-                            <template v-if="part.kind === 'dice'">
-                              <span
-                                v-for="(value, rollIndex) in part.rolls"
-                                :key="rollIndex"
-                                class="sep-die-value"
-                                :class="{ 'sep-die-value--dropped': part.dropped?.includes(rollIndex) }"
-                              >{{ value }}</span>
-                            </template>
-                            <span v-else class="sep-flat">{{ part.value }}</span>
-                          </template>
-                        </div>
-                        <div
-                          v-for="adjustment in event.data?.result?.adjustments || []"
-                          :key="`${adjustment.kind}:${adjustment.label}`"
-                          class="sep-details sep-adjustment"
-                        >{{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}</div>
-                      </template>
-
-                      <div v-else-if="event.type === 'spell_used'" class="sep-details">
-                        {{ spellDetails(event.data) }}
-                      </div>
-                      <div v-else-if="event.type === 'item_spent' || event.type === 'item_added'" class="sep-details">
-                        Осталось: {{ event.data?.remaining ?? '—' }}
-                      </div>
-                      <div v-else-if="event.type === 'entry_added' && Number(event.data?.count) > 1" class="sep-details">
-                        Количество: {{ event.data.count }}
-                      </div>
-                      <div v-else-if="event.type === 'resource_used'" class="sep-details">
-                        Осталось: {{ event.data?.remaining ?? '—' }} / {{ event.data?.total ?? '—' }}
-                      </div>
-                      <div v-else-if="event.type === 'rest_completed'" class="sep-details">
-                        {{ event.data?.kind === 'dawn' ? 'Рассвет' : event.data?.kind === 'long' ? 'Длинный отдых' : 'Короткий отдых' }}
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              </section>
-            </div>
-          </section>
+          <SessionEventActorGroup v-for="group in timelineGroups" :key="group.key" :group="group" :items="items" />
         </div>
       </div>
     </div>
@@ -163,7 +100,8 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { BasePopover, FormSelect, MultiToggle } from '@sylvieshare/share-ui'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-import SessionEventActorAvatar from '@/features/sessions/components/SessionEventActorAvatar.vue'
+import SessionEventActorGroup from './SessionEventActorGroup.vue'
+import { useSessionEventItems } from '../composables/useSessionEventItems'
 import { groupSessionEvents } from '@/features/sessions/lib/sessionEventView'
 import {
   filterSessionEvents,
@@ -178,6 +116,7 @@ const props = defineProps({
 
 const store = useSessionEventsStore()
 const { events } = storeToRefs(store)
+const { items } = useSessionEventItems(events)
 const listEl = ref(null)
 const filterOpen = ref(false)
 const filterTrigger = ref(null)
@@ -246,29 +185,6 @@ function resetFilters() {
   categoryFilters.value = []
 }
 
-function eventIcon(type) {
-  return {
-    dice_roll: '◇',
-    spell_used: '✦',
-    rest_completed: '☾',
-    item_spent: '−',
-    item_added: '+',
-    entry_added: '+',
-    resource_used: '◌',
-    feature_state: '◈',
-    status_effect: '✦',
-    chapter_started: '→',
-    encounter_started: '⚔',
-    encounter_finished: '✓',
-  }[type] || '·'
-}
-
-function spellDetails(data) {
-  const level = Number(data?.slotLevel)
-  if (!level) return 'Заговор · без ячейки'
-  return `Потрачена ячейка ${level} круга`
-}
-
 watch(() => events.value.length, async () => {
   const list = listEl.value
   const wasAtTop = !list || list.scrollTop < 8
@@ -291,9 +207,6 @@ watch([authorFilter, actorFilter, categoryFilters], async () => {
 .session-events-panel--workspace .sep-title { font-size: 15px; }
 .session-events-panel--workspace .sep-count { font-size: 10px; }
 .session-events-panel--workspace .sep-list { padding-right: 10px; }
-.session-events-panel--workspace .sep-time-group { grid-template-columns: 54px minmax(0, 1fr); gap: 14px; padding-block: 10px 15px; }
-.session-events-panel--workspace .sep-time { font-size: 10px; }
-.session-events-panel--workspace .sep-event-title { font-size: 12px; }
 .sep-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 39px; padding: 0 2px 9px; border-bottom: 1px solid color-mix(in srgb, var(--text-on-accent) 8%, var(--border)); }
 .sep-head-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .sep-heading-line { display: flex; align-items: center; gap: 7px; }
@@ -332,34 +245,4 @@ watch([authorFilter, actorFilter, categoryFilters], async () => {
 .sep-empty { color: var(--text-muted); font-size: 12px; line-height: 1.4; padding: 8px 2px; }
 .sep-empty--filtered { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
 .sep-empty--filtered button { padding: 0; border: 0; background: none; color: var(--accent-soft); font: inherit; font-size: 11px; cursor: pointer; }
-.sep-time-group { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 8px; padding: 6px 0 10px; border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent); }
-.sep-time-group:first-child { padding-top: 2px; border-top: none; }
-.sep-time { padding-top: 1px; color: var(--text-muted); font-size: 9px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
-.sep-time-content { min-width: 0; }
-.sep-actor-group + .sep-actor-group { margin-top: 9px; }
-.sep-actor-head { display: flex; align-items: center; gap: 9px; color: var(--text-2); font-size: 10px; font-weight: 750; line-height: 1.3; overflow-wrap: anywhere; white-space: normal; }
-.sep-actor-meta { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
-.sep-actor-meta > span { min-width: 0; overflow-wrap: anywhere; }
-.sep-actor-head small { flex: none; padding: 1px 4px; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border)); border-radius: 4px; color: var(--accent-soft); font-size: 7px; font-weight: 800; letter-spacing: .05em; }
-.sep-actor-events { min-width: 0; }
-.sep-actor-head + .sep-actor-events { margin-top: 5px; }
-.sep-event { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 7px; min-width: 0; padding: 0 0 8px; }
-.sep-event::after { content: ''; position: absolute; top: 18px; bottom: 0; left: 9px; z-index: 0; width: 1px; background: color-mix(in srgb, var(--accent) 38%, var(--border)); }
-.sep-event:last-child::after { display: none; }
-.sep-marker { position: relative; z-index: 1; width: 18px; height: 18px; display: grid; place-items: center; border: 1px solid color-mix(in srgb, currentColor 55%, transparent); border-radius: 5px; background: transparent; box-sizing: border-box; color: var(--accent-soft); font-size: 10px; font-weight: 800; }
-.sep-event--rest_completed .sep-marker { color: var(--warning); }
-.sep-event--item_spent .sep-marker, .sep-event--resource_used .sep-marker { color: var(--danger); }
-.sep-content { min-width: 0; max-width: 100%; background: transparent; }
-.sep-event-heading { min-width: 0; }
-.sep-event-heading--roll { display: flex; align-items: center; gap: 6px; }
-.sep-event-title { color: var(--text-1); font-size: 11px; font-weight: 650; line-height: 1.35; overflow-wrap: anywhere; }
-.sep-event-heading--roll .sep-event-title { min-width: 0; }
-.sep-event-divider { flex: 1 1 12px; min-width: 12px; height: 1px; background: color-mix(in srgb, var(--text-on-accent) 12%, var(--border)); }
-.sep-total { flex: 0 0 auto; color: var(--accent-soft); font-size: 16px; font-variant-numeric: tabular-nums; }
-.sep-details { margin-top: 2px; color: var(--text-muted); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
-.sep-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; max-width: 100%; margin-top: 5px; min-width: 0; }
-.sep-die-value { min-width: 23px; height: 23px; padding: 0 4px; box-sizing: border-box; display: inline-grid; place-items: center; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 6px; background: var(--surface-raised); color: var(--text-1); font-size: 11px; font-weight: 800; }
-.sep-die-value--dropped { opacity: .42; text-decoration: line-through; }
-.sep-adjustment { color: var(--success); }
-.sep-sign, .sep-flat { color: var(--text-muted); font-size: 10px; }
 </style>

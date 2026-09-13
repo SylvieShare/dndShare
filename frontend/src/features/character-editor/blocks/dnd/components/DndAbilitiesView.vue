@@ -58,7 +58,7 @@
                 />
               </span>
               <span v-if="entry.choice_summary" class="abv-choice">{{ entry.choice_summary }}</span>
-              <DndRichContent v-if="expanded && entry.desc" class="abv-description" :html="entry.desc" />
+              <DndRichContent v-if="expanded && entry.desc" class="abv-description" :html="entry.desc" :item="entry.item" />
               <span
                 v-for="effect in entry.passive_effects || []"
                 :key="effect.key"

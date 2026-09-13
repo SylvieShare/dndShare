@@ -18,7 +18,7 @@ export function useInventoryRowActions({ model, modalSelection, charCtx, increme
     if (remaining != null) charCtx.logSessionEvent?.({
       type: 'item_added',
       action: `Добавлено: ${entry.display.name}`,
-      data: { itemId: entry.magic_item_id ?? entry.item_id ?? null, remaining },
+      data: { source: { itemId: entry.magic_item_id ?? entry.item_id, name: entry.display.name }, itemId: entry.magic_item_id ?? entry.item_id ?? null, remaining },
     })
     close()
   }

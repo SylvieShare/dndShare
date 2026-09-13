@@ -59,7 +59,7 @@
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
               <div v-if="action.description" class="dav-description">
-                <DndRichContent :html="action.description" />
+                <DndRichContent :html="action.description" :item="action.item" />
               </div>
               <MechanicTheses :lines="action.requirements" color="var(--dav-tone)" aria-label="Условия применения" />
               <span v-if="linkedActions(action).length" class="dav-linked-actions">

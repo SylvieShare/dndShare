@@ -1,62 +1,46 @@
 import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import { createSSRApp, h } from 'vue'
+import { renderToString } from 'vue/server-renderer'
+import { createPinia } from 'pinia'
+import SessionEventActorGroup from './SessionEventActorGroup.vue'
+import { groupSessionEvents } from '../lib/sessionEventView'
+vi.mock('@/features/handbook/components/ItemViewModal.vue', () => ({ default: { render: () => null } }))
+const source = readFileSync(new URL('./SessionEventsPanel.vue', import.meta.url), 'utf8')
 
-const source = readFileSync(fileURLToPath(new URL('./SessionEventsPanel.vue', import.meta.url)), 'utf8')
+const rows = [
+  { id: 1, type: 'dice_roll', action: 'Атака: Посох', createdAt: '2026-09-13T10:00:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
+    data: { source: { itemId: 42, name: 'Посох' }, result: { total: 21, parts: [{ kind: 'dice', sides: 20, rolls: [2, 18], keptIndex: 1, dropped: [0] }, { kind: 'flat', sign: '+', value: 3 }] } } },
+  { id: 2, type: 'resource_used', action: 'Восстановление ячеек', createdAt: '2026-09-13T10:01:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
+    data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', color: '#38bdf8', delta: 2 }] } },
+  { id: 3, type: 'resource_used', action: 'Использование ячеек', createdAt: '2026-09-13T10:02:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
+    data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', color: '#38bdf8', delta: -1 }] } },
+]
 
-describe('SessionEventsPanel timeline layout', () => {
-  it('leaves its visibility to the persistent session dock control', () => {
-    expect(source).not.toContain('sep-collapse')
-    expect(source).not.toContain('defineEmits')
-    expect(source).not.toContain('collapsed')
+describe('session chronicle presentation', () => {
+  it('renders one item reference, user name, actual dice and colored spent/recovered slots', async () => {
+    const group = groupSessionEvents(rows)[0]
+    const app = createSSRApp({ render: () => h(SessionEventActorGroup, { group, items: { 42: { id: 42, name: 'Посох', iconImageUrl: '/staff.png' } } }) })
+    app.use(createPinia())
+    const html = await renderToString(app)
+    expect(html).toContain('alice')
+    expect(html).toContain('Лиора')
+    expect(html.match(/event-item-link/g)).toHaveLength(1)
+    expect(html).toContain('/staff.png')
+    expect(html).toContain('= 21')
+    expect(html).toContain('dice-roll-result-dropped')
+    expect(html).toContain('event-resource--spent')
+    expect(html).toContain('event-resource--added')
+    expect(html).toContain('--ss-c:#38bdf8')
+    expect(html).toContain('×2')
+    expect(html).toContain('Потрачено')
+    expect(html).toContain('Добавлено')
   })
-
-  it('wraps content instead of exposing horizontal scrolling', () => {
-    expect(source).toMatch(/\.sep-list\s*\{[^}]*overflow-x:\s*hidden;/s)
-    expect(source).toMatch(/\.sep-roll\s*\{[^}]*flex-wrap:\s*wrap;/s)
-    expect(source).toMatch(/\.sep-actor-head\s*\{[^}]*overflow-wrap:\s*anywhere;[^}]*white-space:\s*normal;/s)
-  })
-
-  it('draws connector segments only between markers', () => {
-    expect(source).toMatch(/\.sep-event::after\s*\{[^}]*top:\s*18px;[^}]*bottom:\s*0;/s)
-    expect(source).toContain('.sep-event:last-child::after { display: none; }')
-    expect(source).not.toContain('.sep-event::before')
-    expect(source).not.toMatch(/\.sep-actor-events\s*\{[^}]*border-left:/s)
-  })
-
-  it('frames transparent event markers and leaves event content unframed', () => {
-    expect(source).toMatch(/\.sep-marker\s*\{[^}]*border:\s*1px solid[^}]*background:\s*transparent;/s)
-    expect(source).toMatch(/\.sep-content\s*\{[^}]*background:\s*transparent;/s)
-    expect(source).not.toMatch(/\.sep-content\s*\{[^}]*border:/s)
-  })
-
-  it('places the dice total in the event heading with a divider', () => {
-    expect(source).toContain("'sep-event-heading--roll': event.type === 'dice_roll'")
-    expect(source).toContain('class="sep-event-divider"')
-    expect(source).toMatch(/<strong v-if="event\.type === 'dice_roll'" class="sep-total">/)
-    expect(source).toMatch(/\.sep-event-divider\s*\{[^}]*flex:\s*1 1 12px;[^}]*height:\s*1px;/s)
-    expect(source).not.toMatch(/<div v-if="event\.type === 'dice_roll'" class="sep-roll">[\s\S]*?<strong class="sep-total">/)
-  })
-
-  it('renders the stored actor and action independently', () => {
-    expect(source).toContain('<SessionEventActorAvatar :event="actorGroup.actorEvent"')
-    expect(source).toContain("actorGroup.kind === 'dm' ? 'Мастер'")
-    expect(source).toContain('{{ event.action }}')
-    expect(source).not.toContain('function eventTitle')
-  })
-
-  it('puts filtering controls and active state in the timeline header', () => {
-    expect(source).toContain('class="sep-filter-trigger"')
+  it('keeps filter controls, empty states and vertical scrolling available', () => {
     expect(source).toContain('<BasePopover v-model:open="filterOpen"')
     expect(source).toContain('<MultiToggle v-model="authorFilter"')
     expect(source).toContain('v-model:value="actorFilter"')
-    expect(source).toContain('v-for="category in eventCategories"')
-    expect(source).toContain('class="sep-active-filters"')
     expect(source).toContain('По выбранным фильтрам событий нет')
-  })
-
-  it('marks actor groups authored by the session owner', () => {
-    expect(source).toContain('v-if="actorGroup.authorIsSessionOwner"')
-    expect(source).toContain('>ВЛАДЕЛЕЦ</small>')
+    expect(source).toMatch(/\.sep-list\s*\{[^}]*overflow-x:\s*hidden;/s)
   })
 })

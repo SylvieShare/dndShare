@@ -76,6 +76,8 @@
 </template>
 
 <script setup>
+import { logResourceChange } from '@/features/character-editor/lib/sessionEventData'
+
 import AbilitySelectionModal from '@/features/character-editor/components/AbilitySelectionModal.vue'
 import { abilitySelectionCount, selectedAbilityEntries } from '@/features/character-editor/lib/selectedAbilities'
 import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
@@ -327,11 +329,7 @@ function useAbility(entry) {
   const updates = Object.entries(patch)
   if (!updates.length) return
   for (const [id, value] of updates) emit('update:value', id, value)
-  charCtx.logSessionEvent?.({
-    type: 'resource_used',
-    action: `Использовано: ${entry.name || 'Способность'}`,
-    data: { remaining, total: Number(resource.total) || 0 },
-  })
+  logResourceChange(charCtx, resource, remaining, entry.item || { id: entry.id, name: entry.name })
 }
 
 function logAddedEntry(item) {

@@ -59,3 +59,13 @@ func TestCharacterNameLimitsSnapshotLength(t *testing.T) {
 		t.Fatalf("characterName rune length = %d, want 160", len(got))
 	}
 }
+
+func TestSessionEventProjectsAuthorName(t *testing.T) {
+	if !strings.Contains(sessionEventSelect, "event_author.login") || !strings.Contains(sessionEventSelect, "event_author.id = e.author_user_id") {
+		t.Fatal("chronicle must project the authenticated author's login")
+	}
+	data, err := json.Marshal(SessionEvent{AuthorName: "alice", AuthorUserID: 42})
+	if err != nil || !strings.Contains(string(data), `"authorName":"alice"`) {
+		t.Fatalf("missing author display name: %s, %v", data, err)
+	}
+}

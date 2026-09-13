@@ -1,46 +1,44 @@
 import { describe, expect, it } from 'vitest'
 import { groupSessionEvents, sessionEventActorKey, sessionEventActorKind, sessionEventActorLabel } from './sessionEventView'
+import { sessionEventAction, sessionEventDetails, sessionEventEntity } from './sessionEventEntity'
 
-describe('session event identity', () => {
-  it('uses the immutable actor name stored with the event', () => {
-    expect(sessionEventActorLabel({ actorName: 'Лиора', authorIsSessionOwner: false })).toBe('Лиора')
-    expect(sessionEventActorLabel({ actorName: 'Кобольд', authorIsSessionOwner: true })).toBe('Кобольд')
+const event = (id, data = {}, actor = {}) => ({ id, createdAt: `2026-09-13T10:${String(id).padStart(2, '0')}:00Z`,
+  actorCharUuid: 'char-1', actorName: 'Лиора', authorUserId: 10, authorName: 'alice', type: 'dice_roll', data, ...actor })
+
+describe('session chronicle grouping', () => {
+  it('combines consecutive actor and user events across minutes and dates without changing their order', () => {
+    const groups = groupSessionEvents([event(1, {}, { createdAt: '2026-09-12T09:00:00Z' }), event(2), event(3)])
+    expect(groups).toHaveLength(1)
+    expect(groups[0].events.map(row => row.id)).toEqual([3, 2, 1])
+    expect(groups[0]).toMatchObject({ label: 'Лиора', authorName: 'alice', kind: 'character' })
   })
-
-  it('leaves session-level events without an actor label', () => {
-    expect(sessionEventActorLabel({ authorIsSessionOwner: true })).toBe('')
-    expect(sessionEventActorKey({ authorIsSessionOwner: true })).toBe('owner:system')
+  it('separates authors controlling the same character and does not merge nonadjacent actors', () => {
+    const groups = groupSessionEvents([event(1), event(2, {}, { authorUserId: 11 }), event(3)])
+    expect(groups.map(group => group.events.map(row => row.id))).toEqual([[3], [2], [1]])
+    expect(sessionEventActorKey(event(1))).not.toBe(sessionEventActorKey(event(2, {}, { authorUserId: 11 })))
   })
-
-  it('prefers character identity and otherwise groups named creatures', () => {
-    expect(sessionEventActorKey({ actorCharUuid: 'char-1', actorName: 'Лиора' }))
-      .toBe('player:character:char-1')
-    expect(sessionEventActorKey({ actorName: 'Кобольд', authorIsSessionOwner: true })).toBe('owner:name:кобольд')
+  it('groups consecutive actions and dependencies by their item, retaining other events between them', () => {
+    const data = { source: { itemId: 42, name: 'Посох' } }
+    const groups = groupSessionEvents([event(1, data), event(2, { ability: { id: 2, name: 'Ловкость' } }), event(3, data), event(4, data)])
+    expect(groups[0].entities.map(group => group.events.map(row => row.id))).toEqual([[4, 3], [2], [1]])
+    expect(groups[0].entities[0].entity).toMatchObject({ itemId: 42, name: 'Посох' })
   })
-
-  it('classifies actor visuals for characters, creatures and DM tools', () => {
-    expect(sessionEventActorKind({ actorCharUuid: 'char-1' })).toBe('character')
-    expect(sessionEventActorKind({ actorItemId: 42, actorName: 'Кобольд' })).toBe('creature')
-    expect(sessionEventActorKind({ actorName: 'Самодельный монстр' })).toBe('creature')
+  it('keeps anonymous rolls separate and separates spell circles and recovery pools', () => {
+    const spell = (id, pool, level) => event(id, { slotPool: pool, slotLevel: level }, { type: 'spell_slot_changed' })
+    const groups = groupSessionEvents([event(1), event(2), spell(3, 'long_rest', 1), spell(4, 'short_rest', 1), spell(5, 'short_rest', 2)])
+    expect(groups[0].entities).toHaveLength(5)
+  })
+  it('uses actor snapshots and distinguishes DM, character and creature artwork', () => {
+    expect(sessionEventActorLabel({ actorName: ' Лиора ' })).toBe('Лиора')
     expect(sessionEventActorKind({ authorIsSessionOwner: true })).toBe('dm')
+    expect(sessionEventActorKind({ actorItemId: 42 })).toBe('creature')
+    expect(sessionEventActorKind({ actorCharUuid: 'char-1' })).toBe('character')
   })
-
-  it('groups newest events by minute and consecutive actor', () => {
-    const events = [
-      { id: 1, createdAt: '2026-08-14T10:40:10Z' },
-      { id: 2, createdAt: '2026-08-14T10:41:10Z', actorCharUuid: 'char-1', actorName: 'Лиора' },
-      { id: 3, createdAt: '2026-08-14T10:41:20Z', actorCharUuid: 'char-1', actorName: 'Лиора' },
-      { id: 4, createdAt: '2026-08-14T10:41:30Z' },
-      { id: 5, createdAt: '2026-08-14T10:41:40Z', actorName: 'Кобольд' },
-    ]
-
-    const groups = groupSessionEvents(events)
-
-    expect(groups).toHaveLength(2)
-    expect(groups[0].actors.map(group => group.label)).toEqual(['Кобольд', '', 'Лиора'])
-    expect(groups[0].actors.map(group => group.events.map(event => event.id))).toEqual([[5], [4], [3, 2]])
-    expect(groups[0].actors.map(group => group.kind)).toEqual(['creature', 'system', 'character'])
-    expect(groups[0].actors[0].actorEvent.id).toBe(5)
-    expect(groups[1].actors[0].events[0].id).toBe(1)
+  it('resolves item references and removes only the repeated entity name from actions', () => {
+    expect(sessionEventEntity(event(1, { spellId: 42 }))).toMatchObject({ itemId: 42 })
+    expect(sessionEventAction({ action: 'Посох: огненный шар' }, 'Посох')).toBe('огненный шар')
+    expect(sessionEventAction({ action: 'Атака: Посох' }, 'Посох')).toBe('Атака')
+    expect(sessionEventAction({ action: 'Посох цели: разрушен' }, 'Посох')).toBe('Посох цели: разрушен')
+    expect(sessionEventDetails({ type: 'spell_used', data: { slotPool: 'slotless', spellLevel: 3 } })).toBe('Без расхода ячейки')
   })
 })

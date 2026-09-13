@@ -1,3 +1,4 @@
+import { logResourceChange } from '@/features/character-editor/lib/sessionEventData'
 import { computed, ref, unref } from 'vue'
 import { MAGIC_VALUE_ID } from '@/features/character-editor/lib/characterMagicItems'
 import { bindDamageResources, spendDamageResources } from '@/features/character-editor/lib/weaponDamageResources'
@@ -12,7 +13,9 @@ export function useWeaponMechanics(charCtx) {
     if (!charCtx.ownerMode) return
     const current = resources.value.find(row => row.key === resource.key)
     if (!current) return
-    const patch = charCtx.characterResources.setAvailable(current.key, pip <= current.value ? pip - 1 : pip)
+    const next = pip <= current.value ? pip - 1 : pip
+    const patch = charCtx.characterResources.setAvailable(current.key, next)
+    logResourceChange(charCtx, current, next)
     charCtx.updateValues(patch)
   }
   function bind(actions) { return bindDamageResources(actions, resources.value, !!charCtx.ownerMode) }
@@ -20,6 +23,7 @@ export function useWeaponMechanics(charCtx) {
     const result = spendDamageResources(charCtx.values || {}, unref(charCtx.characterResources?.itemsById) || new Map(), actions, keys, !!charCtx.ownerMode, amounts)
     error.value = result.error
     if (result.error) return false
+    for (const { resource, cost } of result.costs || []) logResourceChange(charCtx, resource, resource.value - cost)
     if (Object.keys(result.patch).length) charCtx.updateValues(result.patch)
     return true
   }

@@ -12,7 +12,7 @@ describe('session entry events', () => {
     expect(logSessionEvent).toHaveBeenCalledWith({
       type: 'entry_added',
       action: 'Добавлено заклинание: Огненный шар',
-      data: { kind: 'spell', itemId: 42, count: 1, level: 3 },
+      data: { kind: 'spell', itemId: 42, source: { itemId: 42, name: 'Огненный шар' }, count: 1, level: 3 },
     })
   })
 

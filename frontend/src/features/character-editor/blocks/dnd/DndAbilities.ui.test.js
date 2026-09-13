@@ -40,7 +40,7 @@ describe('ability rows', () => {
     expect(viewSource).toContain('action="use"')
     expect(viewSource).toContain('action="delete"')
     expect(blockSource).toContain('usable_resource: usableResourceFor(s)')
-    expect(blockSource).toContain("type: 'resource_used'")
+    expect(blockSource).toContain("logResourceChange(charCtx, resource, remaining")
     expect(blockSource).not.toContain('<MorphEditorShell')
   })
 

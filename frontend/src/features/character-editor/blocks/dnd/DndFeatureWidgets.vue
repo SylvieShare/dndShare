@@ -69,6 +69,8 @@
 </template>
 
 <script setup>
+import { logResourceChange, itemEventData, resourceChangeData } from '@/features/character-editor/lib/sessionEventData'
+
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { computed, inject, watch } from 'vue'
 import { featureEntries, patchFeatureEntries } from '@/features/character-editor/lib/characterMagicItems'
@@ -100,11 +102,7 @@ function toggleResource(widget, pip) {
   const next = pip <= Number(widget.resource.value) ? pip - 1 : pip
   const patch = charCtx.characterResources.setAvailable(widget.resource.key, next)
   charCtx.updateValues(patch)
-  if (next < Number(widget.resource.value)) charCtx.logSessionEvent?.({
-    type: 'resource_used',
-    action: `Использовано: ${widget.resource.title || widget.title}`,
-    data: { remaining: next, total: Number(widget.resource.total) || 0 },
-  })
+  logResourceChange(charCtx, widget.resource, next, widget.item)
 }
 
 function canToggle(widget) {
@@ -143,6 +141,7 @@ function toggle(widget) {
   charCtx.logSessionEvent?.({
     type: 'feature_state',
     action: `${widget.title}: ${activating ? widget.active_label : 'выключено'}`,
+    data: { ...(activating && widget.resource && !widget.resource.unlimited ? resourceChangeData(widget.resource, Number(widget.resource.value) - 1) : {}), ...itemEventData(widget.item) },
   })
 }
 </script>

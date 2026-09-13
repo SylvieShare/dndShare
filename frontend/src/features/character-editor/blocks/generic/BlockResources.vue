@@ -46,6 +46,8 @@
 </template>
 
 <script setup>
+import { logResourceChange } from '@/features/character-editor/lib/sessionEventData'
+
 import { computed, inject, ref } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import BlockResourcesEditor from '@/features/character-editor/blocks/generic/components/BlockResourcesEditor'
@@ -108,13 +110,7 @@ function toggle(ri, p) {
     ? charCtx.characterResources.setAvailable(current.key, nextValue)
     : { [props.block.id]: manualResources.value.map((r, i) => i === ri ? { ...r, value: nextValue } : r) }
   for (const [id, value] of Object.entries(patch || {})) emit('update:value', id, value)
-  if (nextValue < Number(current.value)) {
-    charCtx.logSessionEvent?.({
-      type: 'resource_used',
-      action: `Использовано: ${current.title || 'Ресурс'}`,
-      data: { remaining: nextValue, total: Number(current.total) || 0 },
-    })
-  }
+  logResourceChange(charCtx, current, nextValue)
 }
 
 function setTotal(ri, total) {

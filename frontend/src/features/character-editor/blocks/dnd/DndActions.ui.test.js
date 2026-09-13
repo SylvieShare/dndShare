@@ -77,7 +77,7 @@ describe('character action block', () => {
     expect(blockSource).not.toContain('spendActionResource')
     expect(viewSource).toContain('v-for="roll in action.dice_rolls || []"')
     expect(blockSource).toContain('@roll-dice="rollActionDice"')
-    expect(blockSource).toContain('diceStore.roll(`${action.title}: ${roll.label}`, roll.formula)')
+    expect(blockSource).toContain('diceStore.roll(`${action.title}: ${roll.label}`, roll.formula, { eventData: itemEventData(action.item) })')
     expect(viewSource).toContain('@click.capture="openActionMenu($event, action)"')
     expect(viewSource).toContain("event.target.closest?.('.dav-resource')")
     expect(editorSource).toContain('<InputDescription')

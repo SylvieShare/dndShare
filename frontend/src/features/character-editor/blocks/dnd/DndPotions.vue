@@ -90,7 +90,7 @@ function onUse(uid) {
   charCtx.logSessionEvent?.({
     type: 'item_spent',
     action: `Потрачено: ${display?.name || 'Зелье'}`,
-    data: { itemId: display?.id || null, remaining: Math.max(0, count - 1) },
+    data: { source: { itemId: display?.id, name: display?.name }, itemId: display?.id || null, remaining: Math.max(0, count - 1) },
   })
 }
 
@@ -104,7 +104,7 @@ function onReplenish(uid) {
   charCtx.logSessionEvent?.({
     type: 'item_added',
     action: `Добавлено: ${display?.name || 'Зелье'}`,
-    data: { itemId: display?.id || null, remaining: entry.count },
+    data: { source: { itemId: display?.id, name: display?.name }, itemId: display?.id || null, remaining: entry.count },
   })
 }
 

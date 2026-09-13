@@ -133,7 +133,7 @@
 <script setup>
 import ItemAutomationBadge from '@/features/items/components/ItemAutomationBadge.vue'
 import ItemInstanceNotes from '@/features/items/detail-components/ItemInstanceNotes.vue'
-import { computed, watch } from 'vue'
+import { computed, provide, watch } from 'vue'
 import { Pencil } from '@lucide/vue'
 import ItemDetailHeader from '@/features/handbook/components/ItemDetailHeader.vue'
 import { useSuggestStore } from '@/stores/suggest'
@@ -200,6 +200,8 @@ const props = defineProps({
 })
 
 defineEmits(['edit'])
+
+provide('sessionEventItem', computed(() => props.item))
 
 const customRenderer = computed(() => CUSTOM_RENDERERS[props.type?.id] || null)
 const isEnemy = computed(() => props.type?.id === 6)

@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, inject, ref, unref, watch } from 'vue'
 import { BasePopover, RichContent } from '@sylvieshare/share-ui'
 import { HeartPulse, Shield } from '@lucide/vue'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -105,12 +105,15 @@ import SystemDie from '@/shared/ui/SystemDie.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 
+const inheritedItem = inject('sessionEventItem', null)
 const itemCache = new Map()
 const props = defineProps({
   node: { type: Object, required: true },
   actorName: { type: String, default: '' },
+  sourceItem: { type: Object, default: null },
 })
 
+const sourceItem = computed(() => props.sourceItem || unref(inheritedItem))
 const anchorEl = ref(null)
 const item = ref(null)
 const tooltipOpen = ref(false)
@@ -173,6 +176,7 @@ async function loadReference() {
 function roll() {
   if (!diceParts.value.length) return
   diceStore.roll(props.node.payload?.label || props.node.label || formula.value, formula.value, {
+    eventData: unref(sourceItem)?.id ? { source: { itemId: unref(sourceItem).id, name: unref(sourceItem).name } } : undefined,
     actor: props.actorName ? { name: props.actorName, charUuid: null } : undefined,
   })
 }

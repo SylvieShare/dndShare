@@ -14,6 +14,7 @@ import (
 type SessionEvent struct {
 	ID                   int64           `json:"id"`
 	SessionID            int64           `json:"-"`
+	AuthorName           string          `json:"authorName"`
 	AuthorUserID         int64           `json:"authorUserId"`
 	AuthorIsSessionOwner bool            `json:"authorIsSessionOwner"`
 	ActorCharID          *int64          `json:"actorCharId,omitempty"`
@@ -42,13 +43,14 @@ type CharacterSessionEvent struct {
 }
 
 const sessionEventSelect = `
-	SELECT e.id, e.session_id, e.author_user_id,
+	SELECT e.id, e.session_id, e.author_user_id, event_author.login,
 	       event_session.owner_user_id = e.author_user_id,
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.actor_item_id,
 	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
 	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
 	FROM dndshare.session_event e
+	JOIN dndshare.users event_author ON event_author.id = e.author_user_id
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
 	LEFT JOIN dndshare."char" c ON c.id = e.actor_char_id
 	LEFT JOIN dndshare.storage_image character_icon ON character_icon.id = c.icon_image_id AND character_icon.deleted = false
@@ -63,7 +65,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 	var actorData []byte
 	var data []byte
 	err := row.Scan(
-		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorIsSessionOwner,
+		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorName, &event.AuthorIsSessionOwner,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
 		&event.ActorItemID, &event.ActorImageURL, &event.ActorSVG,
 		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt,

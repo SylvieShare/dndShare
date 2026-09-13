@@ -1,7 +1,7 @@
 <template>
   <ItemUsePanel v-for="use in uses" :key="use.key" :title="use.title">
     <ItemResourcePips v-if="use.show_resource && use.resource" :resource="use.resource" :interactive="!!charCtx.ownerMode" @toggle="toggle(use, $event)" />
-    <DndRichContent v-if="use.description" :html="use.description" />
+    <DndRichContent v-if="use.description" :html="use.description" :item="use.item" />
     <MechanicTheses :lines="use.requirements" />
     <template v-if="charCtx.ownerMode" #actions>
       <ActionButton v-if="reroll(use)" :disabled="busy || !!use.error" @click="dice.runAction(reroll(use).id, reroll(use).key)">Перебросить: {{ reroll(use).title }}</ActionButton>
@@ -11,6 +11,8 @@
   </ItemUsePanel>
 </template>
 <script setup>
+import { itemEventData, resourceChangeData, logResourceChange } from '@/features/character-editor/lib/sessionEventData'
+
 import { computed, inject, nextTick, ref, unref } from 'vue'
 import ItemResourcePips from './ItemResourcePips.vue'
 import { useDiceStore } from '@/stores/dice'
@@ -31,7 +33,9 @@ function reroll(use) {
 }
 function toggle(use, pip) {
   if (!charCtx.ownerMode || !use.resource) return
-  const patch = charCtx.characterResources?.setAvailable?.(use.resource.key, pip <= use.resource.value ? pip - 1 : pip)
+  const next = pip <= use.resource.value ? pip - 1 : pip
+  const patch = charCtx.characterResources?.setAvailable?.(use.resource.key, next)
+  if (patch && Object.keys(patch).length) logResourceChange(charCtx, use.resource, next, use.item)
   if (patch) charCtx.updateValues(patch)
 }
 async function confirm(use) {
@@ -41,7 +45,7 @@ async function confirm(use) {
     const patch = confirmItemUse(values(), items(), props.uid, use.key, !!charCtx.ownerMode)
     if (!Object.keys(patch).length) return
     charCtx.updateValues(patch)
-    charCtx.logSessionEvent?.({ type: 'feature_state', action: `${use.item.name}: ${use.confirm_label}`, data: { instanceUid: props.uid, resourceSpent: use.resource_cost } })
+    charCtx.logSessionEvent?.({ type: 'feature_state', action: `${use.item.name}: ${use.confirm_label}`, data: { ...(use.resource ? resourceChangeData(use.resource, use.resource.value - use.resource_cost) : {}), ...itemEventData(use.item), instanceUid: props.uid, resourceSpent: use.resource_cost } })
     await nextTick()
   } finally { busy.value = false }
 }

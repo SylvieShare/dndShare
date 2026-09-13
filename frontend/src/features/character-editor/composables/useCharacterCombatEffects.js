@@ -1,3 +1,4 @@
+import { itemEventData, resourceChangeData } from '@/features/character-editor/lib/sessionEventData'
 import { confirmedItemUses, confirmItemUse } from '@/features/character-editor/lib/confirmedItemUses'
 import { computed, onScopeDispose } from 'vue'
 import {
@@ -25,7 +26,7 @@ export function useCharacterCombatEffects(values, itemsById, charCtx = {}) {
           const patch = confirmItemUse(values.value, itemsById.value, uid, use.key, true)
           if (!Object.keys(patch).length) return false
           charCtx.updateValues(patch)
-          charCtx.logSessionEvent?.({ type: 'feature_state', action: `${use.item.name}: ${use.title}`, data: { instanceUid: uid, resourceSpent: use.resource_cost } })
+          charCtx.logSessionEvent?.({ type: 'feature_state', action: `${use.item.name}: ${use.title}`, data: { ...(use.resource ? resourceChangeData(use.resource, use.resource.value - use.resource_cost) : {}), ...itemEventData(use.item), instanceUid: uid, resourceSpent: use.resource_cost } })
           return true
         } }]
       })

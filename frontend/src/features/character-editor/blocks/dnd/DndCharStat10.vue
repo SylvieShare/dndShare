@@ -443,6 +443,7 @@ function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check', con
   diceStore.rollD20(title, bonus, mode, {
     crit_mode: true,
     color: statColor.value,
+    eventData: { ability: { id: titleSuggestId.value, name: displayTitle.value, typeId: titleSuggestTypeId.value } },
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.(scope) || [],
     roll_adjustments: charCtx.characterCombatEffects?.rollAdjustments?.(scope, context) || [],
   })

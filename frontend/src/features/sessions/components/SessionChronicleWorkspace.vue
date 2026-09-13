@@ -22,6 +22,9 @@ defineProps({ liveStatus: { type: String, default: 'idle' } })
 }
 .session-chronicle-surface {
   width: 100%;
+  max-width: 980px;
+  margin-inline: auto;
+  box-sizing: border-box;
   height: 100%;
   min-width: 0;
   min-height: 0;

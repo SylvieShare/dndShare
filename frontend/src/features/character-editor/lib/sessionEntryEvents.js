@@ -22,6 +22,7 @@ export function logSessionEntryAdded(charCtx, {
     data: {
       kind,
       itemId,
+      source: itemId ? { itemId, name: normalizedTitle } : undefined,
       count: Math.max(1, Number(count) || 1),
       ...(category ? { category } : {}),
       ...(level != null ? { level: Number(level) || 0 } : {}),

@@ -59,6 +59,7 @@ function setUseDex(v) { emit('update:value', props.block.id, { ...numData.value,
 function rollInit() {
   const resolved = charCtx.characterRolls?.resolve?.('auto', { kind: 'initiative', abilitySuggestId: 2 })
   diceStore.rollD20('Инициатива', displayValue.value, resolved?.mode || 'normal', {
+    eventData: { ability: { id: 2, typeId: 16, name: 'Ловкость' } },
     crit_mode: true,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('initiative') || [],
   })

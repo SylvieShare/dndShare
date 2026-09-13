@@ -1,3 +1,4 @@
+import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 import { resolveRollMode } from '../lib/rollMode'
 import { useDiceStore } from '@/stores/dice'
 
@@ -30,6 +31,7 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
     if (spellcastingBlocked.value) return
     const bonus = spellAttackBonus(entry)
     dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, spellAttackMode(entry, mode).mode, {
+      eventData: itemEventData(entry.item),
       crit_mode: true,
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
     })
@@ -55,19 +57,19 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   function rollSpellDamage(entry, castLevel, critical = false) {
     if (spellcastingBlocked.value) return
     const expr = spellDamagePreview(entry, castLevel, critical)
-    if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr)
+    if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr, { eventData: itemEventData(entry.item) })
   }
 
   function rollSpellHeal(entry, castLevel) {
     if (spellcastingBlocked.value) return
     const expr = spellHealPreview(entry, castLevel)
-    if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr)
+    if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr, { eventData: itemEventData(entry.item) })
   }
 
   function rollSpellEffect(entry, castLevel) {
     if (spellcastingBlocked.value) return
     const expr = spellDamagePreview(entry, castLevel)
-    if (expr) dice.roll(spellTitle(entry), expr)
+    if (expr) dice.roll(spellTitle(entry), expr, { eventData: itemEventData(entry.item) })
   }
 
   return { rollSpellEffect, spellAttackMode, spellDamagePreview, spellHealPreview, spellTitle, rollSpellAttack, rollSpellDamage, rollSpellHeal }

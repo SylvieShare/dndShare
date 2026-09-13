@@ -41,3 +41,16 @@ func TestNormalizeCharacterSessionStateEvents(t *testing.T) {
 		}
 	}
 }
+
+func TestCharacterResourceEventTypes(t *testing.T) {
+	for _, eventType := range []string{"spell_slot_changed", "feature_action_effect"} {
+		event, ok := normalizeCharacterSessionEvent(characterSessionEventRequest{
+			SessionUUID: "00000000-0000-4000-8000-000000000001", Type: eventType,
+			Action: "Восстановление ячеек", ClientActionID: "00000000-0000-4000-8000-000000000002",
+			Data: json.RawMessage(`{"resourceChanges":[{"delta":2,"level":3,"pool":"short_rest"}]}`),
+		})
+		if !ok || event.EventType != eventType {
+			t.Fatalf("character event %s must be accepted by the atomic save: %#v, %v", eventType, event, ok)
+		}
+	}
+}

@@ -120,6 +120,8 @@
 </template>
 
 <script setup>
+import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
+
 import { computed, inject, onMounted, provide, reactive, ref } from 'vue'
 import { ActionButton, ConfirmDialog, SectionList } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
@@ -323,6 +325,7 @@ function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode =
   const context = weaponEffectContext(entry)
   const mode = attackMode(context, attackRollMode)
   return dice.rollD20(title, bonus, mode, { log, onReroll,
+    eventData: itemEventData({ ...item(entry), id: entry.magic_item_id || entry.item_id || item(entry)?.id }, entry.uid),
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
@@ -346,6 +349,7 @@ function rollPresetAttack(kind, { attackRollMode = 'auto' } = {}) {
   const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: kind !== 'unarmed' }
   const mode = attackMode(context, attackRollMode)
   dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
+    eventData: itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value),
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
@@ -358,7 +362,7 @@ function presetDamageExpression(kind, critical) {
 
 function rollPresetDamage(kind, critical = false) {
   const preset = presetAttackDefinition(kind)
-  dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical))
+  dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical), { eventData: itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value) })
 }
 
 const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,

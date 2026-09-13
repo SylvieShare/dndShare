@@ -1,3 +1,5 @@
+import { sessionEventEntity } from './sessionEventEntity'
+
 export function sessionEventActorLabel(event) {
   return String(event?.actorName || '').trim()
 }
@@ -10,8 +12,8 @@ export function sessionEventActorIdentityKey(event) {
 }
 
 export function sessionEventActorKey(event) {
-  const author = event?.authorIsSessionOwner ? 'owner' : 'player'
-  return `${author}:${sessionEventActorIdentityKey(event)}`
+  const author = event?.authorUserId ?? event?.authorName ?? (event?.authorIsSessionOwner ? 'owner' : 'player')
+  return JSON.stringify([author, sessionEventActorIdentityKey(event), sessionEventActorLabel(event)])
 }
 
 export function sessionEventActorKind(event) {
@@ -28,20 +30,8 @@ export function groupSessionEvents(events) {
   })
   const groups = []
   for (const event of sorted) {
-    const date = new Date(event.createdAt)
-    const valid = !Number.isNaN(date.getTime())
-    const minuteKey = valid ? String(Math.floor(date.getTime() / 60000)) : `unknown:${event.id}`
-    let timeGroup = groups.at(-1)
-    if (!timeGroup || timeGroup.key !== minuteKey) {
-      timeGroup = {
-        key: minuteKey,
-        time: valid ? date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '',
-        actors: [],
-      }
-      groups.push(timeGroup)
-    }
     const actorKey = sessionEventActorKey(event)
-    let actorGroup = timeGroup.actors.at(-1)
+    let actorGroup = groups.at(-1)
     if (!actorGroup || actorGroup.actorKey !== actorKey) {
       actorGroup = {
         key: `${actorKey}:${event.id}`,
@@ -51,10 +41,20 @@ export function groupSessionEvents(events) {
         actorEvent: event,
         authorIsSessionOwner: !!event.authorIsSessionOwner,
         events: [],
+        entities: [],
+        authorName: event.authorName || '',
       }
-      timeGroup.actors.push(actorGroup)
+      groups.push(actorGroup)
     }
     actorGroup.events.push(event)
+    const entity = sessionEventEntity(event)
+    const entityKey = entity?.key || `event:${event.id}`
+    let entityGroup = actorGroup.entities.at(-1)
+    if (!entityGroup || entityGroup.entityKey !== entityKey) {
+      entityGroup = { key: `${entityKey}:${event.id}`, entityKey, entity, events: [] }
+      actorGroup.entities.push(entityGroup)
+    }
+    entityGroup.events.push(event)
   }
   return groups
 }

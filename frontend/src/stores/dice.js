@@ -106,6 +106,7 @@ export const useDiceStore = defineStore('dice', () => {
         action,
         actor: entry.actor,
         data: {
+          ...entry.eventData,
           result: entry.result,
           outcome: entry.outcome || null,
           color: entry.color || null,
@@ -121,6 +122,7 @@ export const useDiceStore = defineStore('dice', () => {
     return pushEntry({
       action,
       actor: opts.actor,
+      eventData: opts.eventData,
       result,
       outcome,
       color: opts.color,
@@ -158,7 +160,7 @@ export const useDiceStore = defineStore('dice', () => {
       useRef: rule.useRef, consume: rule.consume,
     }))
     return pushEntry({
-      action, actor: opts.actor, result, outcome, color: opts.color,
+      action, actor: opts.actor, eventData: opts.eventData, result, outcome, color: opts.color,
       popup: opts.popup, log: opts.log, duration: opts.duration,
       actions,
       rerollSpec: actions.length ? { action, bonus, mode: normalizedMode, opts: { ...opts, roll_triggers: [] } } : null,
