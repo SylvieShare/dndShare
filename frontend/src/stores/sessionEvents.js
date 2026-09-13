@@ -41,7 +41,11 @@ export const useSessionEventsStore = defineStore('session-events', () => {
           refreshPending = false
           const uuid = sessionUuid.value
           const response = await sessionEventsApi.getSessionEvents(uuid, { after: latestId(), limit: 100 })
-          if (sessionUuid.value === uuid) merge(response?.events)
+          if (sessionUuid.value === uuid) {
+            const loadedIds = new Set(events.value.map(event => event.id))
+            merge(response?.updates?.filter(update => loadedIds.has(update.id)))
+            merge(response?.events)
+          }
         }
         syncError.value = false
       } catch {

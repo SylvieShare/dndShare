@@ -95,3 +95,16 @@ describe('session event timeline store', () => {
     })
   })
 })
+
+it('updates a transfer status in place without losing the next-event cursor', async () => {
+  setActivePinia(createPinia())
+  api.getSessionEvents.mockReset()
+  api.getSessionEvents.mockResolvedValueOnce({ events: [{ id: 1, type: 'item_transfer', data: { status: 'pending' } }, { id: 4, type: 'dice_roll' }] })
+    .mockResolvedValueOnce({ events: [{ id: 5, type: 'dice_roll' }], updates: [{ id: 1, type: 'item_transfer', data: { status: 'accepted' } }] })
+  const store = useSessionEventsStore()
+  await store.setContext({ uuid: 'game' })
+  await store.refresh()
+  expect(store.events.map(event => event.id)).toEqual([1, 4, 5])
+  expect(store.events[0].data.status).toBe('accepted')
+  expect(api.getSessionEvents).toHaveBeenLastCalledWith('game', { after: 4, limit: 100 })
+})

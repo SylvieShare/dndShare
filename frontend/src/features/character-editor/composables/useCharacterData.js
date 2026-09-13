@@ -265,10 +265,12 @@ export function useCharacterData(uuid, isMobile) {
     } catch { return version.value }
   }
 
-  async function refreshFromServer() {
+  async function refreshFromServer(canApply = () => true) {
+    const snapshot = data.value
     try {
       const res = await fetchGet('/char/' + uuid)
-      if (!res) return false
+      if (!res || data.value !== snapshot || !canApply() || Number(res.version) < version.value) return false
+      if (Number(res.version) === version.value) return true
       data.value = { values: {}, var: {}, ...res.data }
       version.value = Number(res.version) || 0
       iconImageId.value = res.iconImageId ?? null

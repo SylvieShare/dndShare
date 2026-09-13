@@ -97,7 +97,9 @@ to `POST /api/storage/images` with `purpose=character_icon` accepts only PNG/Web
 up to 256×256 and records a staged icon that can be consumed by character create.
 
 Editor определяет schema по `templateName` через frontend setting registry.
-`PUT /api/char/{uuid}/data` accepts `{data,events?}`. Each optional event has
+`PUT /api/char/{uuid}/data` accepts `{data,version,events?}` and returns `{version}`;
+`version` is the loaded technical revision. A stale full save returns HTTP 409
+without modifying the document or appending events. Each optional event has
 `{sessionUuid,type,action,data,visibility,clientActionId}`; the character update
 and authorized timeline inserts commit in one database transaction. For a
 participant the route binds the actor to this owned session character; for a
@@ -569,3 +571,32 @@ revision, status }`; сброс одного результата: `POST /api/ac
 содержит изменение ячейки в собственной записи. `feature_action_effect`
 принимает последствия зависимых действий способностей. События, меняющие
 лист, сохраняются атомарно с его данными через очередь `sessionEvents`.
+
+
+## Передача предметов
+
+- `GET /api/char/{uuid}/item-transfers` → `{transfers: []}`: только незавершённые
+  входящие/исходящие запросы собственного персонажа.
+- `POST /api/char/{uuid}/item-transfers` принимает
+  `{sessionUuid,recipientCharUuid,source,entryUid,version,clientActionId}`.
+  `source` — `items`, `weapon` или `potions`; `entryUid` выбирается из сохранённого
+  серверного инвентаря. Передаётся весь экземпляр с количеством и параметрами.
+  Оба персонажа должны быть в одной активной сессии. Действует только владелец
+  отправителя; повторный `clientActionId` возвращает прежний запрос.
+- `POST /api/char/{uuid}/item-transfers/{id}/resolve` принимает
+  `{decision: "accept"|"reject"}`. Принять может только владелец получателя;
+  отказ доступен также отправителю как отзыв. Повтор того же решения безопасен,
+  противоположное решение завершённой передачи возвращает 409.
+
+Запись передачи содержит `id`, `eventId`, `senderCharUuid`, `recipientCharUuid`,
+имена обоих персонажей, `itemName`, `source`, полный `entry`, `status`, `createdAt`
+и nullable `resolvedAt`. POST возвращают `{transfer}`. Изменения публикуют SSE
+`journal` и `characterIds`. Клиентский POST обычного события не принимает
+серверный тип `item_transfer`.
+
+`GET /api/sessions/{uuid}/events` возвращает `{events,updates}`. `events` сохраняет
+прежнюю пагинацию; при `after>0` `updates` содержит до 200 последних публичных
+передач с ID не новее курсора. Клиент объединяет оба массива по ID: статус
+прежней записи меняется, дополнительная запись в хронике не создаётся.
+Удаление/перемещение участника, удаление персонажа или сессии при незавершённых
+передачах возвращают 409 с объяснением.

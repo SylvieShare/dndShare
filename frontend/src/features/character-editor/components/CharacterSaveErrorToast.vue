@@ -5,7 +5,7 @@
         <AlertTriangle class="save-error-icon" :size="20" :stroke-width="1.8" aria-hidden="true" />
         <span class="save-error-copy">
           <strong>Не удалось сохранить лист</strong>
-          <small>Проверьте соединение и попробуйте снова.</small>
+          <small>{{ message }}</small>
         </span>
         <button class="save-error-retry" type="button" @click="$emit('retry')">Повторить</button>
         <button class="save-error-close" type="button" aria-label="Закрыть" @click="$emit('dismiss')">
@@ -19,7 +19,7 @@
 <script setup>
 import { AlertTriangle, X } from '@lucide/vue'
 
-defineProps({ visible: { type: Boolean, default: false } })
+defineProps({ visible: { type: Boolean, default: false }, message: { type: String, default: 'Проверьте соединение и попробуйте снова.' } })
 defineEmits(['retry', 'dismiss'])
 </script>
 

@@ -1,5 +1,6 @@
 <template>
-  <div ref="tutorialRoot" class="view" :style="viewStyle">
+  <div ref="tutorialRoot" class="view" :style="viewStyle" :inert="transfers.busy">
+    <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
     <CharEditorToolbar
       v-if="isMobile"
@@ -160,7 +161,8 @@
     </div>
 
     <CharacterSaveErrorToast
-      :visible="saveStatus === 'error'"
+      :visible="saveStatus === 'error' && !!saveError"
+      :message="saveError"
       @retry="retrySave"
       @dismiss="dismissSaveError"
     />
@@ -168,6 +170,8 @@
 </template>
 
 <script setup>
+import CharacterTransferDialogs from '@/features/character-editor/components/CharacterTransferDialogs.vue'
+import { useCharacterTransfers } from '@/features/character-editor/composables/useCharacterTransfers'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { useCharacterTutorial } from '@/features/tutorials/composables/useCharacterTutorial'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
@@ -242,10 +246,14 @@ const activeSession = computed(() => {
 loadSync()
 
 const pendingSessionEvents = []
-const { saveStatus, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError } = useSaveDebounce(uuid, data, {
+const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, flushSave } = useSaveDebounce(uuid, data, {
+  version,
   takeEvents: () => pendingSessionEvents.splice(0),
   restoreEvents: events => pendingSessionEvents.unshift(...events),
 })
+
+const transfers = useCharacterTransfers({ uuid, session: activeSession, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions })
+charCtx.itemTransfers = transfers
 
 // Expose menu/session state to in-sheet blocks (SettingsMenuTile, CampaignBadge) on desktop, where the
 // toolbar is gone. charCtx is reactive, so assigned refs auto-unwrap on read.
@@ -449,13 +457,13 @@ async function syncEventSessionContext(requested = route.query.session) {
 
 async function tickVersionPoll() {
   if (versionPollInFlight) return
-  if (saveStatus.value !== 'idle') return
+  if (saveStatus.value !== 'idle' || transfers.busy) return
   if (!hasSessionContext.value) return
   versionPollInFlight = true
   try {
     const remote = await pollVersion()
     if (remote > version.value && saveStatus.value === 'idle') {
-      await refreshFromServer()
+      await refreshFromServer(() => saveStatus.value === 'idle' && !transfers.busy)
     }
   } finally {
     versionPollInFlight = false

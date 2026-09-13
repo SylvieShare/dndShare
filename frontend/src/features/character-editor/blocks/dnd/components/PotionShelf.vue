@@ -21,6 +21,7 @@
           </template>
 
           <template #default="{ close }">
+            <ItemTransferAction source="potions" :entry="p" :name="p.name" @close="close" />
             <RowActionItem v-if="canUse" action="use" tone="accent" @click="usePotion(p, close)">Использовать</RowActionItem>
             <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
             <RowActionItem action="view" tone="info" @click="viewPotion(p, close)">Просмотреть</RowActionItem>
@@ -40,6 +41,7 @@
 </template>
 
 <script setup>
+import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import PotionVial from '@/features/items/components/PotionVial'
 import { ArrowRightLeft } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'

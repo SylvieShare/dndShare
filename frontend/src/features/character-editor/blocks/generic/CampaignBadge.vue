@@ -1,64 +1,30 @@
 <template>
-  <div class="cb-wrap">
-    <component
-      :is="tag"
-      :to="top ? sessionLink(top) : undefined"
-      class="cb"
-      :class="{ 'cb-clickable': !!top }"
-    >
-      <span class="cb-text">
-        <span class="cb-name">{{ top ? top.name : 'Нет сессии' }}</span>
-        <span v-if="top && chapter(top)" class="cb-chapter">{{ chapter(top) }}</span>
-      </span>
-    </component>
-  </div>
+  <BaseTile v-if="top && ctx.itemTransfers" class="campaign-block" data-tutorial="character-session">
+    <RouterLink :to="`/sessions/${top.uuid}`" class="campaign-name">{{ top.name }}</RouterLink>
+    <div class="campaign-actions">
+      <ActionButton variant="quiet" @click="ctx.itemTransfers.open('players')"><Users :size="16" />Игроки</ActionButton>
+      <ActionButton variant="quiet" @click="ctx.itemTransfers.open('events')">
+        <Bell :size="16" />События
+        <span v-if="ctx.itemTransfers.state.transfers.length" class="campaign-count" :aria-label="`Входящих: ${ctx.itemTransfers.incomingCount}`">{{ ctx.itemTransfers.state.transfers.length }}</span>
+      </ActionButton>
+    </div>
+  </BaseTile>
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
-import { useRoute } from 'vue-router'
-import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
-
+import { RouterLink } from 'vue-router'
+import { ActionButton, BaseTile } from '@sylvieshare/share-ui'
+import { Bell, Users } from '@lucide/vue'
 defineProps(['block'])
-const ctx = inject('charCtx', { sessions: [], topSession: null })
-const route = useRoute()
-
-const sessions = computed(() => ctx.sessions || [])
-const top = computed(() => ctx.topSession || sessions.value[0] || null)
-const tag = computed(() => {
-  if (top.value) return 'router-link'
-  return 'div'
-})
-
-function chapter(s) {
-  return currentChapterLabel(s, true)
-}
-function sessionLink(s) {
-  if (s.isGm) return '/sessions/' + s.uuid
-  return { name: 'Character', params: { uuid: route.params.uuid }, query: { ...route.query, session: s.uuid } }
-}
+const ctx = inject('charCtx', {})
+const top = computed(() => ctx.topSession || null)
 </script>
 
 <style scoped>
-.cb-wrap { position: relative; }
-.cb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  background: var(--surface);
-  color: inherit;
-  text-decoration: none;
-  font: inherit;
-  transition: border-color 0.15s, background 0.15s;
-}
-.cb-clickable { cursor: pointer; }
-.cb-clickable:hover { border-color: var(--border-strong); }
-.cb-text { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; line-height: 1.2; flex: 1; }
-.cb-name { font-size: 13px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.cb-chapter { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.campaign-block { display: flex; flex-direction: column; gap: 10px; padding: 14px; }
+.campaign-name { color: var(--text-1); font-size: 17px; font-weight: 650; text-decoration: none; overflow-wrap: anywhere; }
+.campaign-name:hover { color: var(--accent); }
+.campaign-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.campaign-count { min-width: 18px; border-radius: var(--r-pill); background: var(--accent); color: var(--text-on-accent); padding: 0 5px; font-size: 11px; text-align: center; }
 </style>

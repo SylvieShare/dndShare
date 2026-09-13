@@ -89,6 +89,10 @@
         },
         "children": [
           {
+            "ref": "campaign",
+            "kind": "block"
+          },
+          {
             "ref": "counters",
             "kind": "block"
           },

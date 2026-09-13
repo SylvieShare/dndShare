@@ -23,6 +23,11 @@ export function sessionEventAction(event, name) {
 
 export function sessionEventDetails(event) {
   const data = event.data || {}
+  if (event.type === 'item_transfer') {
+    const status = { pending: 'Ожидает', accepted: 'Приняли', rejected: 'Отказали' }[data.status] || 'Ожидает'
+    const count = Number(data.count) > 1 ? ` · ×${data.count}` : ''
+    return `${data.senderName} → ${data.recipientName}${count} · ${status}`
+  }
   if (event.type === 'spell_used' && !data.resourceChanges?.length) {
     return data.slotPool === 'slotless' ? 'Без расхода ячейки' : Number(data.spellLevel) === 0 ? 'Заговор · без ячейки' : ''
   }

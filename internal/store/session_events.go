@@ -10,7 +10,8 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// SessionEvent is an append-only, user-facing event in a game session timeline.
+// SessionEvent is a user-facing event in a game session timeline.
+// Item transfer events update their status in place; other events are append-only.
 type SessionEvent struct {
 	ID                   int64           `json:"id"`
 	SessionID            int64           `json:"-"`
@@ -224,11 +225,15 @@ func (s *Store) UpdateCharacterDataWithEvents(ctx context.Context, userID int64,
 	}
 	defer tx.Rollback(ctx)
 
-	if _, err := tx.Exec(ctx, `
+	result, err := tx.Exec(ctx, `
 		UPDATE dndshare."char"
 		SET data = CAST($2 AS jsonb), changed_at = now(), version = version + 1
-		WHERE id = $1 AND deleted = false AND data IS DISTINCT FROM CAST($2 AS jsonb)`, character.ID, string(data)); err != nil {
+		WHERE id = $1 AND deleted = false AND version = $3`, character.ID, data, character.Version)
+	if err != nil {
 		return err
+	}
+	if result.RowsAffected() == 0 {
+		return ErrCharacterVersion
 	}
 
 	for _, event := range events {

@@ -434,6 +434,7 @@ var schemaParts = []struct {
 	{"selected-class-abilities", schemaSelectedClassAbilitiesSQL},
 	{"spell-formula-scaling", schemaSpellFormulaScalingSQL},
 	{"session-display-codes", schemaSessionDisplayCodesSQL},
+	{"item-transfers", schemaItemTransfersSQL},
 }
 
 const (

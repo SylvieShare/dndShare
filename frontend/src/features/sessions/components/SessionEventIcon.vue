@@ -19,7 +19,7 @@ const art = computed(() => props.item || (ability.value ? suggests.items(ability
 const icon = computed(() => {
   if (props.event.data?.ability) return Shield
   if (props.item || props.event.data?.source?.itemId) return Package
-  return { dice_roll: Dices, spell_used: Sparkles, rest_completed: Moon, item_spent: Package, item_added: Package,
+  return { dice_roll: Dices, spell_used: Sparkles, rest_completed: Moon, item_spent: Package, item_added: Package, item_transfer: Package,
     entry_added: BookOpen, feature_state: Sparkles, status_effect: Sparkles, chapter_started: Flag,
     encounter_started: Swords, encounter_finished: CircleCheck }[props.event.type] || Sparkles
 })

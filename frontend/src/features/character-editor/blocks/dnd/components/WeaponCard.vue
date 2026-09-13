@@ -43,6 +43,7 @@
     </template>
 
     <template #default="{ close: closeMenu }">
+      <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
       <DamageRollOptions :weapon-uid="entry.uid" v-if="hasDamage || ctx.item(entry)" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
 
       <RowActionSeparator v-if="ctx.item(entry)" />
@@ -75,6 +76,7 @@
 </template>
 
 <script setup>
+import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { ArrowRightLeft } from '@lucide/vue'
 import { computed, inject, ref, watch } from 'vue'

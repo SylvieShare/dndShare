@@ -52,7 +52,8 @@
       </div>
 
       <CharacterSaveErrorToast
-        :visible="saveStatus === 'error'"
+        :visible="saveStatus === 'error' && !!saveError"
+        :message="saveError"
         @retry="retrySave"
         @dismiss="dismissSaveError"
       />
@@ -83,14 +84,15 @@ const previewMode = computed(() => Boolean(props.draft))
 const isMobile = ref(false)
 
 const {
-  loading, loadError, template, data, charCtx, isOwner, publicVisible,
+  loading, loadError, template, data, charCtx, isOwner, publicVisible, version,
   toolbarTabs, charName, charSub, toolbarBlocksList,
   load, loadPreview, blocksForTab, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, isMobile)
 
 const pendingSessionEvents = []
-const { saveStatus, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError } = useSaveDebounce(props.uuid, data, {
+const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError } = useSaveDebounce(props.uuid, data, {
+  version,
   takeEvents: () => pendingSessionEvents.splice(0),
   restoreEvents: events => pendingSessionEvents.unshift(...events),
 })

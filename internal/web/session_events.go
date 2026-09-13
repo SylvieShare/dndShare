@@ -53,7 +53,8 @@ type sessionEventResponse struct {
 }
 
 type sessionEventsResponse struct {
-	Events []store.SessionEvent `json:"events"`
+	Updates []store.SessionEvent `json:"updates"`
+	Events  []store.SessionEvent `json:"events"`
 }
 
 func (s *Server) appendSessionEvent(ctx context.Context, sessionID, userID int64, eventType, action string, data any) {
@@ -126,7 +127,12 @@ func (s *Server) handleGetSessionEvents(w http.ResponseWriter, r *http.Request) 
 		serverError(w, err)
 		return
 	}
-	writeJSON(w, http.StatusOK, sessionEventsResponse{Events: nonNil(events)})
+	updates, err := s.store.SessionTransferEventUpdates(r.Context(), session.ID, afterID)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	writeJSON(w, http.StatusOK, sessionEventsResponse{Events: nonNil(events), Updates: updates})
 }
 
 func (s *Server) handleCreateSessionEvent(w http.ResponseWriter, r *http.Request) {

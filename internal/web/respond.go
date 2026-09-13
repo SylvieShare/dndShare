@@ -2,6 +2,8 @@ package web
 
 import (
 	"encoding/json"
+	"errors"
+	"github.com/jackc/pgx/v5/pgconn"
 	"log"
 	"net/http"
 	"strconv"
@@ -45,6 +47,11 @@ func apiError(w http.ResponseWriter, status int, typ, desc string) {
 
 // serverError логирует причину и отдаёт 500 с типом ошибки, но без деталей.
 func serverError(w http.ResponseWriter, err error) {
+	var pgErr *pgconn.PgError
+	if errors.As(err, &pgErr) && pgErr.Code == "PIT01" {
+		conflict(w, "Сначала завершите ожидающие передачи предметов в событиях листа")
+		return
+	}
 	log.Printf("500: %v", err)
 	apiError(w, http.StatusInternalServerError, "ServerException", "Внутренняя ошибка")
 }

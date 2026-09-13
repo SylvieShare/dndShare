@@ -1,0 +1,11 @@
+import { fetchGet, fetchPost } from './http'
+
+export function getItemTransfers(uuid) {
+  return fetchGet(`/char/${uuid}/item-transfers`)
+}
+export function createItemTransfer(uuid, request) {
+  return fetchPost(`/char/${uuid}/item-transfers`, request)
+}
+export function resolveItemTransfer(uuid, id, decision) {
+  return fetchPost(`/char/${uuid}/item-transfers/${id}/resolve`, { decision })
+}

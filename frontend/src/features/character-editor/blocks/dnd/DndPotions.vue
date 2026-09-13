@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, reactive, ref } from 'vue'
+import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
@@ -147,6 +147,7 @@ async function loadCatalog() {
 }
 
 onMounted(loadCatalog)
+watch(() => entries.value.map(entry => entry.item_id).join(','), loadCatalog)
 </script>
 
 <style scoped>

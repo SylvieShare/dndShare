@@ -1,4 +1,4 @@
-import { onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, ref, unref } from 'vue'
 
 const FALLBACK_INITIAL_MS = 2_000
 const FALLBACK_MAX_MS = 30_000
@@ -62,7 +62,7 @@ export function useSessionLive({ sessionUuid, onUpdate, onCatchUp }) {
       return
     }
     status.value = 'connecting'
-    const uuid = encodeURIComponent(sessionUuid)
+    const uuid = encodeURIComponent(unref(sessionUuid))
     source = new EventSource(`/api/sessions/${uuid}/live`)
     source.addEventListener('update', handleUpdate)
     source.onopen = () => {

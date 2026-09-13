@@ -26,8 +26,9 @@ describe('D&D desktop sheet schema', () => {
     expect(statsColumn.props?.style?.padding).toBe('20px')
     expect(utilityColumn.props?.style?.padding).toBe('20px')
     expect(utilityColumn.props?.style?.['margin-right']).toBeUndefined()
+    expect(utilityColumn.children[0].ref).toBe('campaign')
     expect(utilityColumn.props?.width).toBe('360px')
-    expect(utilityColumn.children.slice(1).map(child => child.ref)).toEqual([
+    expect(utilityColumn.children.slice(2).map(child => child.ref)).toEqual([
       'feature_widgets', 'actions', 'resources', 'defenses', 'proficiencies',
     ])
   })

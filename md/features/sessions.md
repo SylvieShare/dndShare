@@ -272,7 +272,7 @@ of the DM workspace.
 State-changing character actions are queued by the sheet and sent in the next
 `PUT /char/{uuid}/data`; backend character data and its events commit in one
 transaction. A cantrip still schedules this semantic save, but the character
-version is not bumped when JSON data is unchanged. Dice rolls use the direct
+version advances with each successful version-checked save, including event-only saves. Dice rolls use the direct
 event endpoint because they do not mutate character state. Pending debounced
 character saves are flushed on page unmount instead of dropping their events.
 Encounter initiative, HP and challenge rolls pass an explicit actor override,
@@ -1088,3 +1088,23 @@ remove the previous keys and any read-time converter.
 «Настройки» в шапке. `useSessionPage` компонует состояние страницы, а сценарии
 и их UI-действия находятся в `features/tutorials`. При правках интерфейса,
 переходов и прав нужно одновременно обновить [обучение](tutorials.md).
+
+
+## Передачи предметов
+
+В собственном листе участника блок сессии открывает игроков (иконки и имена)
+и «События» с незавершёнными передачами. Вещи, оружие и зелья передаются целой
+стопкой через меню предмета. На время ожидания экземпляр хранится сервером;
+получатель принимает или отклоняет его, отправитель может отозвать запрос.
+Хроника получает один `item_transfer` с именами отправителя/получателя и
+количеством: статус этой же записи обновляется `pending` → `accepted`/`rejected`.
+В UI это «Ожидает» / «Приняли» / «Отказали», включая отзыв. Событие относится
+к фильтру «Персонаж», справочный предмет открывается обычной ссылкой хроники.
+Изменение статуса и соответствующего инвентаря публикует SSE journal/characterIds.
+Инкрементальная загрузка хроники возвращает изменяемые передачи отдельным
+массивом `updates`, чтобы сохранить ID, порядок и курсор новых событий.
+
+Незавершённые передачи блокируют удаление/выход участника, перенос персонажа
+в другую сессию и удаление персонажа или кампании с HTTP 409. Сначала получатель
+должен ответить либо отправитель отозвать запрос. Мастер не принимает предметы
+за игрока. Подробности хранения экземпляров — в описании листа персонажа.

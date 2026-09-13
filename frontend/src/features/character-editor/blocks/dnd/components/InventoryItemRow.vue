@@ -54,6 +54,7 @@
   </template>
 
   <template #default="{ close }">
+    <ItemTransferAction source="items" :entry="entry" :name="entry.display.name" @close="close" />
     <MagicItemMenuActions v-if="canManage && entryTypeId(entry) === MAGIC_ITEM_TYPE_ID" :item="entry.display.base" :entry="entry" :values="charCtx.values" @update:values="patch => charCtx.updateValues(patch)" @configure="openMagic(entry)" @close="close" />
     <RowActionItem
       v-if="entry.item_id != null"
@@ -109,6 +110,7 @@
 </template>
 
 <script setup>
+import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import SelectedTargetPanel from './SelectedTargetPanel.vue'
 import WeaponBonusTransferPanel from './WeaponBonusTransferPanel.vue'
 import WeaponUsePanel from './WeaponUsePanel.vue'
