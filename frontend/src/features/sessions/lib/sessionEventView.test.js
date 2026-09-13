@@ -23,10 +23,14 @@ describe('session chronicle grouping', () => {
     expect(groups[0].entities.map(group => group.events.map(row => row.id))).toEqual([[4, 3], [2], [1]])
     expect(groups[0].entities[0].entity).toMatchObject({ itemId: 42, name: 'Посох' })
   })
-  it('keeps anonymous rolls separate and separates spell circles and recovery pools', () => {
+  it('keeps anonymous rolls separate and combines all spell circles and recovery pools', () => {
     const spell = (id, pool, level) => event(id, { slotPool: pool, slotLevel: level }, { type: 'spell_slot_changed' })
     const groups = groupSessionEvents([event(1), event(2), spell(3, 'long_rest', 1), spell(4, 'short_rest', 1), spell(5, 'short_rest', 2)])
-    expect(groups[0].entities).toHaveLength(5)
+    expect(groups[0].entities).toHaveLength(3)
+    expect(groups[0].entities[0].entity.name).toBe('Ячейки заклинаний')
+    expect(groups[0].entities[0].events.map(row => row.id)).toEqual([5, 4, 3])
+    expect(groups[0].entities[0].events.map(row => [row.data.slotPool, row.data.slotLevel]))
+      .toEqual([['short_rest', 2], ['short_rest', 1], ['long_rest', 1]])
   })
   it('uses actor snapshots and distinguishes DM, character and creature artwork', () => {
     expect(sessionEventActorLabel({ actorName: ' Лиора ' })).toBe('Лиора')

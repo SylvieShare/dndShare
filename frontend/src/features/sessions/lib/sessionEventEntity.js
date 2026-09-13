@@ -4,7 +4,7 @@ export function sessionEventEntity(event) {
   const itemId = source?.itemId || data.itemId || data.spellId
   if (itemId) return { key: `item:${itemId}`, itemId, name: source?.name || '', instanceUid: source?.instanceUid }
   if (data.ability) return { key: `ability:${data.ability.id || data.ability.name}`, name: data.ability.name, ability: data.ability }
-  if (event.type === 'spell_slot_changed') return { key: `spell:${data.slotPool}:${data.slotLevel}`, name: `Ячейки заклинаний · ${data.slotLevel} круг`, slot: true }
+  if (event.type === 'spell_slot_changed') return { key: 'spell-slots', name: 'Ячейки заклинаний', slot: true }
   if (data.resourceKey) return { key: `resource:${data.resourceKey}`, name: data.resourceChanges?.[0]?.name || 'Ресурс', resource: true }
   return null
 }
