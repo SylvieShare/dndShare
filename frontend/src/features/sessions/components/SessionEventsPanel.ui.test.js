@@ -18,12 +18,16 @@ const rows = [
 ]
 
 describe('session chronicle presentation', () => {
-  it('renders one item reference, user name, actual dice and colored spent/recovered slots', async () => {
-    const group = groupSessionEvents(rows)[0]
+  it.each([false, true])('renders author, item, dice and slots for owner=%s', async authorIsSessionOwner => {
+    const group = groupSessionEvents(rows.map(row => ({ ...row, authorIsSessionOwner })))[0]
     const app = createSSRApp({ render: () => h(SessionEventActorGroup, { group, items: { 42: { id: 42, name: 'Посох', iconImageUrl: '/staff.png' } } }) })
     app.use(createPinia())
     const html = await renderToString(app)
-    expect(html).toContain('alice')
+    if (authorIsSessionOwner) {
+      expect(html).toMatch(/<span[^>]*>я<\/span>/)
+      expect(html).not.toContain('alice')
+    } else expect(html).toContain('alice')
+    expect(html).not.toContain('ВЛАДЕЛЕЦ')
     expect(html).toContain('Лиора')
     expect(html.match(/event-item-link/g)).toHaveLength(1)
     expect(html).toContain('/staff.png')
