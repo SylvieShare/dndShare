@@ -64,10 +64,10 @@
         :heal-parts="healParts"
         :heal-modifier="healModifier"
       >
-        <template v-if="!entry.ref?.slotless && hasInlineSpellScaling(data.damage)" #damage-suffix>
+        <template v-if="canUpcast && hasInlineSpellScaling(data.damage)" #damage-suffix>
           <SpellScalingFormula :rule="data.damage" :base-level="baseLvl" />
         </template>
-        <template v-if="!entry.ref?.slotless && hasInlineSpellScaling(data.heal)" #heal-suffix>
+        <template v-if="canUpcast && hasInlineSpellScaling(data.heal)" #heal-suffix>
           <SpellScalingFormula :rule="data.heal" :base-level="baseLvl" color="var(--success)" />
         </template>
       </AttackDamage>
@@ -233,11 +233,13 @@ const castLevel = computed(() => fixedCastLevel.value || baseLvl.value)
 const damageParts = computed(() => ctx.damageDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
 const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
 const healModifier = computed(() => healParts.value.reduce((sum, part) => sum + (part.bonus || 0), 0))
+const canUpcast = computed(() => !props.entry.ref?.slotless && ctx.maxSlotLevel > baseLvl.value)
+const needsScalingHint = rule => !hasInlineSpellScaling(rule) && (rule?.scaling !== 'slot' || canUpcast.value)
 const scalingHint = computed(() => props.entry.ref?.slotless ? '' : spellScalingHint({ data: {
   ...data.value,
-  damage: hasInlineSpellScaling(data.value.damage) ? undefined : data.value.damage,
-  heal: hasInlineSpellScaling(data.value.heal) ? undefined : data.value.heal,
-  rolls: (data.value.rolls || []).filter(rule => !hasInlineSpellScaling(rule)),
+  damage: needsScalingHint(data.value.damage) ? data.value.damage : undefined,
+  heal: needsScalingHint(data.value.heal) ? data.value.heal : undefined,
+  rolls: (data.value.rolls || []).filter(needsScalingHint),
 } }))
 const damageModifier = computed(() => damageParts.value.reduce((s, p) => s + (p.bonus || 0), 0))
 const hasMetrics = computed(() => ctx.hasSpellMetrics(props.entry.item))

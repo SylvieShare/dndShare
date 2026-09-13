@@ -32,7 +32,7 @@
           </template>
           <span v-else class="dd-term">{{ g.modifier > 0 ? '+' + g.modifier : '−' + (-g.modifier) }}</span>
         </span>
-        <span v-if="g.type" class="dd-type">{{ g.type }}</span>
+        <span v-if="g.type" class="dd-type" lang="ru">{{ g.type }}</span>
       </span>
     </template>
   </span>
@@ -134,8 +134,13 @@ function dieText(part) {
 .dd-term { color: var(--dc); font-size: var(--dd-font-size); font-weight: 800; }
 
 .dd-type {
+  max-width: max(80px, calc(var(--dd-size) * 2.25));
+  white-space: normal;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  line-height: 1.2;
   color: var(--dc);
-  font-size: 11px;
+  font-size: clamp(9px, calc(var(--dd-size) * .28), 11px);
   font-weight: 600;
   letter-spacing: 0.02em;
   opacity: 0.9;

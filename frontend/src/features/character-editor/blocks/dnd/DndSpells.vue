@@ -540,6 +540,9 @@ provide('spellsBlockCtx', reactive({
   toggleSpellStatus,
 }))
 
+// Rest and remote sheet updates replace persisted pools without remounting this block.
+watch(() => props.value?.slot_pools, pools => loadSlotPools({ slot_pools: pools }), { deep: true })
+
 // ─── Lifecycle ─────────────────────────────────────
 
 onMounted(async () => {
