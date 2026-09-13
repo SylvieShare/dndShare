@@ -85,7 +85,12 @@ for (const mobile of [false, true]) {
     })
     test('healing uses the selected slot and modifier and spends the selected pool once', async ({ page }) => {
       const row = page.locator('.spell-row').filter({ hasText: 'Лечение' })
-      await expect(row).toContainText('+1к4 за каждый круг ячейки выше 1-го')
+      const scaling = row.locator('.ad-heal .spell-scaling-formula')
+      await expect(scaling).toHaveAttribute('aria-label', '+1к4 за каждый круг ячейки выше 1-го')
+      await expect(scaling.locator('.system-die')).toHaveCount(1)
+      await expect(scaling.locator('.ss-ro')).toHaveCount(1)
+      await expect(scaling.locator('.scaling-caption')).toHaveText('за кругсвыше 1-го')
+      await expect(row.locator('.sp-scaling-hint')).toHaveCount(0)
       await clickRow(row)
       await page.getByRole('menuitem', { name: 'Бросить на лечение', exact: true }).click()
       await page.getByRole('combobox', { name: 'Круг ячейки' }).selectOption('3')

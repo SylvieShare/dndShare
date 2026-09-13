@@ -1107,3 +1107,12 @@ The ability row menu can fill missing choices on existing sheets. Selected rows
 are ordinary class abilities with independent mechanics and preserved resource
 state. See [Warlock invocations](warlock-invocations.md) for storage, UI and
 current automation limits.
+
+
+Линейная прибавка кубиков за круг ячейки находится внутри формулы заклинания:
+`текущая формула + [кубики] / [ячейка]`. `SpellScalingFormula` использует
+`DamageDice` и `SpellSlotSphere`; под ячейкой две строки «за круг» / «свыше N-го».
+Обозначение открывает общее меню строки. Оно также используется у отдельных
+эффектов; у врождённых заклинаний с фиксированным кругом его нет. Особые пороги,
+пределы, рост количества лучей и усиление заговоров остаются точным текстовым
+пояснением. `AttackDamage` предоставляет suffix-слоты для этой композиции.

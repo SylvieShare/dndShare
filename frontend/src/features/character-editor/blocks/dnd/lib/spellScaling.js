@@ -38,3 +38,11 @@ export function spellScalingHint(item) {
       : `${growth} за ${step === 1 ? 'каждый круг' : `каждые ${step} круга`} ячейки выше ${Number(data.lvl)}-го${rule.scaling_max_steps == null ? '' : ` (не более ${rule.scaling_max_steps} прибавок)`}`)]
   }).join(' · ')
 }
+
+// The inline die/slot notation describes one identical increment per higher slot.
+export function hasInlineSpellScaling(rule) {
+  return rule?.scaling === 'slot' && (Number(rule.scaling_step) || 1) === 1
+    && rule.scaling_max_steps == null && !rule.scaling_levels?.length
+    && !Number(rule.addon_instances) && !!rule.addon?.length
+    && rule.addon.every(row => row.dice_id && Number(row.count) > 0)
+}

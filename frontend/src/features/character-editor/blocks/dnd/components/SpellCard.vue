@@ -63,7 +63,14 @@
         :modifier="damageModifier"
         :heal-parts="healParts"
         :heal-modifier="healModifier"
-      />
+      >
+        <template v-if="!entry.ref?.slotless && hasInlineSpellScaling(data.damage)" #damage-suffix>
+          <SpellScalingFormula :rule="data.damage" :base-level="baseLvl" />
+        </template>
+        <template v-if="!entry.ref?.slotless && hasInlineSpellScaling(data.heal)" #heal-suffix>
+          <SpellScalingFormula :rule="data.heal" :base-level="baseLvl" color="var(--success)" />
+        </template>
+      </AttackDamage>
     </div>
 
       <SpellEffectFormulas :entry="entry" :cast-level="castLevel" />
@@ -180,7 +187,8 @@
 <script setup>
 import { Activity, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
-import { spellScalingHint, spellInstances } from '../lib/spellScaling'
+import SpellScalingFormula from './SpellScalingFormula.vue'
+import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/spellScaling'
 import { computed, inject, ref, watch } from 'vue'
 
 import SpellRollMenu from './SpellRollMenu.vue'
@@ -225,7 +233,12 @@ const castLevel = computed(() => fixedCastLevel.value || baseLvl.value)
 const damageParts = computed(() => ctx.damageDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
 const healParts = computed(() => ctx.healDiceParts(props.entry.item, castLevel.value, ctx.charLevel, ctx.spellAbilityModifier?.(props.entry) || 0))
 const healModifier = computed(() => healParts.value.reduce((sum, part) => sum + (part.bonus || 0), 0))
-const scalingHint = computed(() => props.entry.ref?.slotless ? '' : spellScalingHint(props.entry.item))
+const scalingHint = computed(() => props.entry.ref?.slotless ? '' : spellScalingHint({ data: {
+  ...data.value,
+  damage: hasInlineSpellScaling(data.value.damage) ? undefined : data.value.damage,
+  heal: hasInlineSpellScaling(data.value.heal) ? undefined : data.value.heal,
+  rolls: (data.value.rolls || []).filter(rule => !hasInlineSpellScaling(rule)),
+} }))
 const damageModifier = computed(() => damageParts.value.reduce((s, p) => s + (p.bonus || 0), 0))
 const hasMetrics = computed(() => ctx.hasSpellMetrics(props.entry.item))
 

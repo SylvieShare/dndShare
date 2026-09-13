@@ -40,7 +40,7 @@
       v-if="hasDamage && (!rollable || !damageMenu)"
       :type="rollable ? 'button' : undefined"
       class="ad-dmg"
-      :class="{ 'ad-clickable': rollable }"
+      :class="{ 'ad-clickable': rollable, 'ad-with-suffix': !!$slots['damage-suffix'] }"
       :title="rollable ? 'Бросок урона' : undefined"
       @click="onRoll($event, 'roll-damage')"
     >
@@ -49,6 +49,7 @@
         <small v-if="flatDamageType">{{ flatDamageType }}</small>
       </span>
       <DamageDice v-else :parts="damageParts" :alternative-parts="twoHandedParts" :modifier="modifier" />
+      <slot name="damage-suffix" />
     </component>
 
     <component
@@ -56,12 +57,13 @@
       v-if="healParts.length"
       :type="rollable ? 'button' : undefined"
       class="ad-heal"
-      :class="{ 'ad-clickable': rollable }"
+      :class="{ 'ad-clickable': rollable, 'ad-with-suffix': !!$slots['heal-suffix'] }"
       :title="rollable ? 'Бросок лечения' : undefined"
       @click="onRoll($event, 'roll-heal')"
     >
       <span class="ad-heal-mark">♥</span>
       <DamageDice :parts="healParts" :modifier="healModifier" default-color="var(--success)" />
+      <slot name="heal-suffix" />
     </component>
   </div>
 </template>
@@ -164,5 +166,7 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
   color: var(--success);
   font-size: 15px;
 }
+.ad-with-suffix { align-items: flex-start; }
+.ad-with-suffix .ad-heal-mark { display: inline-flex; align-items: center; height: 42px; }
 .ad-heal-mark { color: var(--success); font-size: 13px; }
 </style>
