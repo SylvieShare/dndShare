@@ -8,13 +8,13 @@ function normalizedSlots(saved) {
   for (const slot of (Array.isArray(saved) ? saved : [])) {
     const entry = list.find((candidate) => candidate.level === Number(slot?.level))
     if (!entry) continue
-    entry.total = Math.max(0, Math.min(9, Number(slot.total) || 0))
+    entry.total = Math.max(0, Math.trunc(Number(slot.total) || 0))
     entry.used = Math.max(0, Math.min(entry.total, Number(slot.used) || 0))
   }
   return list
 }
 
-export function useSpellSlots({ canInteract, automaticSlots, emitChange, logSessionEvent }) {
+export function useSpellSlots({ canInteract, emitChange, logSessionEvent }) {
   const slotPools = ref({
     long_rest: defaultSlots(),
     short_rest: defaultSlots(),
@@ -53,24 +53,9 @@ export function useSpellSlots({ canInteract, automaticSlots, emitChange, logSess
   function setTotal(rest, level, total) {
     const slot = slotAt(rest, level)
     if (!slot) return
-    slot.total = Math.max(0, Math.min(9, Number(total) || 0))
+    slot.total = Math.max(0, Math.trunc(Number(total) || 0))
     if (slot.used > slot.total) slot.used = slot.total
-    automaticSlots.value = false
     emitChange()
-  }
-
-  function replaceTotals(rest, totals) {
-    const list = slotPools.value[rest]
-    if (!list) return false
-    let changed = false
-    list.forEach((slot, index) => {
-      const total = Math.max(0, Math.min(9, Number(totals?.[index]) || 0))
-      const used = Math.min(slot.used, total)
-      if (slot.total !== total || slot.used !== used) changed = true
-      slot.total = total
-      slot.used = used
-    })
-    return changed
   }
 
   function adjustSlotUsed(rest, level, delta, { log = true } = {}) {
@@ -93,7 +78,6 @@ export function useSpellSlots({ canInteract, automaticSlots, emitChange, logSess
     serializedSlotPools,
     toggleSlot,
     setTotal,
-    replaceTotals,
     adjustSlotUsed,
   }
 }

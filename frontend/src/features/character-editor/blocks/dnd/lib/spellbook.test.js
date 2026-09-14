@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest'
 import {
   emptySpellbook,
   findClassSpellTab,
-  mergeComputedSlotPools,
   normalizedSpellTabs,
   slotPoolsFromComputation,
   spellTab,
@@ -48,8 +47,4 @@ describe('canonical spellbook model', () => {
     })
   })
 
-  it('preserves spent slots while applying new automatic totals', () => {
-    expect(mergeComputedSlotPools({ long_rest: [{ level: 1, total: 2, used: 2 }] }, { totals: [3], pact: null }))
-      .toEqual({ long_rest: [{ level: 1, total: 3, used: 2 }], short_rest: [] })
-  })
 })

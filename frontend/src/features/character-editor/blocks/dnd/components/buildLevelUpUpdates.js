@@ -20,7 +20,8 @@ import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '@/features/char
 import { choicesForEntry } from '@/features/items/lib/itemChoices'
 import { appendHpHistory, hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { applyLevelUpSpellSelection } from '@/features/character-editor/blocks/dnd/lib/levelUpSpellSelection'
-import { emptySpellbook, mergeComputedSlotPools } from '@/features/character-editor/blocks/dnd/lib/spellbook'
+import { emptySpellbook } from '@/features/character-editor/blocks/dnd/lib/spellbook'
+import { addSpellSlots } from '../lib/spellSlotAdditions'
 
 export function buildLevelUpUpdates({
   values,
@@ -40,9 +41,7 @@ export function buildLevelUpUpdates({
   asiStats,
   asiDelta,
   featureChoiceSelections,
-  applySlots,
-  slotDiff,
-  slotsAfter,
+  slotChanges = [],
   grantedNewIds,
   classItem,
   isMulticlass = false,
@@ -217,7 +216,7 @@ export function buildLevelUpUpdates({
     }
   }
 
-  const applySlotChange = applySlots && slotDiff.length && slotsAfter?.isCaster
+  const applySlotChange = slotChanges.length > 0
   let selectionValues = { ...values, ...updates, spells: applyLevelUpSpellSelection(values.spells, classSpellSelection) }
   const selectionItems = [...features, ...Object.values(itemsById || {})]
   for (const { parent, entries } of abilitySelections) {
@@ -245,7 +244,7 @@ export function buildLevelUpUpdates({
     let spells = emptySpellbook(values.spells)
     spells = applyLevelUpSpellSelection(spells, classSpellSelection)
     if (applySlotChange) {
-      spells.slot_pools = mergeComputedSlotPools(spells.slot_pools, slotsAfter)
+      spells.slot_pools = addSpellSlots(spells.slot_pools, slotChanges)
     }
     if (grantedNewIds.length) {
       const sourceItem = subclassItem || classItem

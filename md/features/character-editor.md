@@ -218,15 +218,15 @@ The current shape under `data.values` is:
   history kinds are `level`, `manual` and `untracked`. History is an audit of base
   contributions; current bonuses remain in `max.bonuses`. Missing history means
   no recorded breakdown. Legacy numeric `max` remains read-compatible;
-- spellbook: `{schema_version:2,slots_auto,slot_pools,tabs,grants}`. Each tab is
+- spellbook: `{schema_version:2,slot_pools,tabs,grants}`. Each tab is
   `{key,name,class_item_id,casting_ability,mode,save_bonus,attack_bonus,spells}`;
   each editable spell is `{key,id,prepared}`. `class_item_id` is unique among
   non-custom tabs. External readonly spells are independent `grants` with a
-  structured `source` and optional casting overrides. Manually changing a slot
-  total in either rest pool saves `slots_auto:false` together with the pools,
-  so reloading preserves custom totals and spent slots. Spending or recovering
-  slots does not disable automatic calculation. Re-enabling it in slot settings
-  replaces custom totals with class progression totals;
+  structured `source` and optional casting overrides. Slot totals and usage are
+  persisted as editable resources, including zero totals and stocks above nine.
+  Loading the sheet or changing class data never recalculates them. Level-up adds
+  only positive per-circle differences between class progression before and after
+  the level, preserving manual totals, other circles and spent slots in both pools;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
 - potions: an independent array of the same owned entries; physical tools are
@@ -416,9 +416,12 @@ handbook descriptions. HP uses the shared `MorphTile`, `MultiToggle`, number
 field and `SystemDie`: fixed average, an actual roll or a manual final gain
 including Constitution. The selected roll mode requires a completed roll;
 manual mode does not add Constitution a second time. The minimum gain is 1 HP.
-Spell slots apply automatically, without a checkbox. `ClassLevelGains` renders
-the positive gain with `SpellSlotSphere` and an explicit +1 for a single slot;
-pact slots show an upgrade in circle and any additional slots separately.
+Spell slot gains apply with level-up, without a checkbox. `ClassLevelGains`
+shows positive class progression deltas with `SpellSlotSphere` and an explicit
++1 for a single slot. The same deltas are added to saved totals; they are never
+computed against the character's current stock. When Pact Magic opens a new
+circle, the new slots are added while earlier circles remain unchanged.
+Starting character creation still grants the selected class's initial slots.
 
 Class spell selection separates new cantrips, new leveled spells and the
 existing list. Each addition group spans the main column and contains its

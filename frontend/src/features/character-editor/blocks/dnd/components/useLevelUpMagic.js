@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
 import { computeSpellSlotPools, maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
 import { findClassSpellTab, spellTabFromClass } from '@/features/character-editor/blocks/dnd/lib/spellbook'
-import { progressionSlotChanges } from '@/features/items/lib/progressionSlotChanges'
+import { spellSlotAdditions } from '../lib/spellSlotAdditions'
 
 export function useLevelUpMagic({ props, entries, target, classItem, subclassPick, isNew, isPlain, itemsById, newClassLevel, effectiveSubclassItem, effectiveSubclass }) {
   const entriesAfter = computed(() => {
@@ -52,31 +52,7 @@ export function useLevelUpMagic({ props, entries, target, classItem, subclassPic
       maxSpellLevel: maximumSpellLevelForEntry(entry, slotsCatalog.value),
     }
   })
-  const slotDiff = computed(() => {
-    if (!slotsAfter.value?.isCaster) return []
-    const out = []
-    const required = {
-      long_rest: slotsAfter.value.totals,
-      short_rest: Array.from({ length: 9 }, (_, index) => slotsAfter.value.pact?.slotLevel === index + 1 ? slotsAfter.value.pact.count : 0),
-    }
-    for (const rest of ['long_rest', 'short_rest']) {
-      const current = new Map((props.values?.spells?.slot_pools?.[rest] || []).map((slot) => [Number(slot.level), Number(slot.total) || 0]))
-      required[rest].forEach((to, index) => {
-        const from = current.get(index + 1) || 0
-        if (to !== from) out.push({ rest, level: index + 1, from, to })
-      })
-    }
-    return out
-  })
-
-  const slotChanges = computed(() => {
-    if (!slotsAfter.value) return []
-    const pools = props.values?.spells?.slot_pools || {}
-    const short = (pools.short_rest || []).find(slot => Number(slot.total) > 0)
-    return progressionSlotChanges(slotsAfter.value, {
-      totals: Array.from({ length: 9 }, (_, i) => Number((pools.long_rest || []).find(slot => Number(slot.level) === i + 1)?.total) || 0),
-      pact: short ? { count: Number(short.total), slotLevel: Number(short.level) } : null,
-    })
-  })
-  return { entriesAfter, slotsAfter, levelUpSpellContext, slotDiff, slotChanges }
+  const slotsBefore = computed(() => (isPlain.value ? null : computeSpellSlotPools(entries.value, slotsCatalog.value)))
+  const slotChanges = computed(() => spellSlotAdditions(slotsBefore.value, slotsAfter.value))
+  return { entriesAfter, levelUpSpellContext, slotChanges }
 }

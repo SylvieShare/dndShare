@@ -73,7 +73,6 @@ export function grantedSpell(values = {}) {
 export function emptySpellbook(values = {}) {
   return {
     schema_version: SPELLBOOK_SCHEMA_VERSION,
-    slots_auto: values.slots_auto !== false,
     slot_pools: values.slot_pools || { long_rest: [], short_rest: [] },
     tabs: normalizedSpellTabs(values.tabs),
     grants: (Array.isArray(values.grants) ? values.grants : []).map(grantedSpell),
@@ -126,16 +125,4 @@ export function slotPoolsFromComputation(computation) {
     ? [{ level: computation.pact.slotLevel, total: computation.pact.count, used: 0 }]
     : []
   return { long_rest: longRest, short_rest: shortRest }
-}
-
-export function mergeComputedSlotPools(current, computation) {
-  const required = slotPoolsFromComputation(computation)
-  return Object.fromEntries(['long_rest', 'short_rest'].map((rest) => {
-    const existing = new Map((Array.isArray(current?.[rest]) ? current[rest] : [])
-      .map((slot) => [Number(slot.level), slot]))
-    return [rest, required[rest].map((slot) => ({
-      ...slot,
-      used: Math.min(slot.total, Math.max(0, Number(existing.get(slot.level)?.used) || 0)),
-    }))]
-  }))
 }

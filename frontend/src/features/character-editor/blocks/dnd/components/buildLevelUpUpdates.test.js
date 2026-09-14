@@ -38,7 +38,7 @@ describe('buildLevelUpUpdates granted spells', () => {
         hp: { max: 10, current: 10, hitDice: [{ die: 'd8', total: 2, used: 0 }] },
         abilities_race: [{ id: 4087 }],
         spells: {
-          schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] }, tabs: [],
+          schema_version: 2, slot_pools: { long_rest: [], short_rest: [] }, tabs: [],
           grants: [{ key: 'ability:4087:spell:511', id: 511, casting_ability: 6, source: { kind: 'ability', item_id: 4087, label: 'Дроуская магия' } }],
         },
       },
@@ -58,9 +58,7 @@ describe('buildLevelUpUpdates granted spells', () => {
       asiStats: [],
       asiDelta: 0,
       featureChoiceSelections: {},
-      applySlots: false,
-      slotDiff: [],
-      slotsAfter: null,
+      slotChanges: [],
       grantedNewIds: [],
       classItem: {},
     })
@@ -79,7 +77,7 @@ describe('buildLevelUpUpdates granted spells', () => {
         lvl: { level: 1 },
         hp: { max: 10, current: 10, hitDice: [{ die: 'd8', total: 1, used: 0 }] },
         spells: {
-          schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] },
+          schema_version: 2, slot_pools: { long_rest: [], short_rest: [] },
           tabs: [{ key: 'class:1', name: 'Жрец', class_item_id: 1, casting_ability: 5, mode: 'prepared', save_bonus: 0, attack_bonus: 0, spells: [{ key: 'spell:5', id: 5, prepared: false }] }],
           grants: [],
         },
@@ -100,9 +98,7 @@ describe('buildLevelUpUpdates granted spells', () => {
       asiStats: [],
       asiDelta: 0,
       featureChoiceSelections: {},
-      applySlots: false,
-      slotDiff: [],
-      slotsAfter: null,
+      slotChanges: [],
       grantedNewIds: [5, 6, 7],
       classItem: { id: 1, name: 'Жрец' },
     })
@@ -143,9 +139,7 @@ describe('buildLevelUpUpdates feature choices', () => {
       asiStats: [],
       asiDelta: 0,
       featureChoiceSelections: { '42:style': ['defense'], '42:tool': [7] },
-      applySlots: false,
-      slotDiff: [],
-      slotsAfter: null,
+      slotChanges: [],
       grantedNewIds: [],
       classItem: {},
     })
@@ -164,7 +158,7 @@ describe('buildLevelUpUpdates subclass grants', () => {
       values: {
         lvl: { level: 2 }, hp: { max: 15, current: 15 }, proficiencies: { Инструменты: [] },
         spells: {
-          schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] }, grants: [],
+          schema_version: 2, slot_pools: { long_rest: [], short_rest: [] }, grants: [],
           tabs: [{ key: 'class:1', name: 'Плут', class_item_id: 1, casting_ability: 4, mode: 'known', save_bonus: 1, attack_bonus: 0, spells: [{ key: 'spell:50', id: 50, prepared: false }] }],
         },
       },
@@ -177,8 +171,7 @@ describe('buildLevelUpUpdates subclass grants', () => {
       asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
       suggestItems: (typeId) => typeId === 5 ? [{ id: 24, value: 'Набор для грима' }] : [],
       asiStats: [], asiDelta: 0, featureChoiceSelections: {},
-      applySlots: true, slotDiff: [{ level: 1, from: 0, to: 2 }],
-      slotsAfter: { totals: [2, 0, 0, 0, 0, 0, 0, 0, 0], isCaster: true },
+      slotChanges: [{ kind: 'added', level: 1, count: 2, pact: false }],
       grantedNewIds: [], classItem: { data: {} },
       subclassItem: { data: { tool_prof: [24], spellcasting: { ability: 4 } } },
       subclassSelectedNow: true,
@@ -205,8 +198,7 @@ describe('buildLevelUpUpdates class spell selection', () => {
       hitDieLabelOf: () => 'd10', hitDieLabel: 'd10', hpGain: 6,
       asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
       suggestItems: () => [], asiStats: [], asiDelta: 0, featureChoiceSelections: {},
-      applySlots: true, slotDiff: [{ level: 1, from: 0, to: 2 }],
-      slotsAfter: { totals: [2, 0, 0, 0, 0, 0, 0, 0, 0], isCaster: true },
+      slotChanges: [{ kind: 'added', level: 1, count: 2, pact: false }],
       grantedNewIds: [], classItem: { data: { spellcasting_ability: 6 } },
       classSpellSelection: {
         tab: { key: 'class:2', name: 'Паладин', class_item_id: 2, casting_ability: 6, mode: 'prepared', save_bonus: 0, attack_bonus: 0, spells: [] },
@@ -236,7 +228,7 @@ describe('buildLevelUpUpdates multiclass grants', () => {
       hitDieLabelOf: () => 'd10', hitDieLabel: 'd10', hpGain: 6,
       asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
       suggestItems: () => [], asiStats: [], asiDelta: 0, featureChoiceSelections: {},
-      applySlots: false, slotDiff: [], slotsAfter: null, grantedNewIds: [],
+      slotChanges: [], grantedNewIds: [],
       classItem: { nameEn: 'Paladin', data: {} },
     })
 
@@ -255,7 +247,7 @@ describe('buildLevelUpUpdates multiclass grants', () => {
       hitDieLabelOf: () => 'd10', hitDieLabel: 'd10', hpGain: 6,
       asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
       suggestItems: () => [], asiStats: [], asiDelta: 0, featureChoiceSelections: {},
-      applySlots: false, slotDiff: [], slotsAfter: null, grantedNewIds: [],
+      slotChanges: [], grantedNewIds: [],
       classItem: { nameEn: 'Paladin', data: {} },
     })
 
@@ -272,7 +264,7 @@ describe('buildLevelUpUpdates multiclass grants', () => {
       asiNow: false, asiSkipped: true, asiMode: 'asi', featPick: null,
       suggestItems: (typeId) => typeId === 4 ? [{ id: 30, value: 'Боевые молоты' }] : [],
       asiStats: [], asiDelta: 0, featureChoiceSelections: {},
-      applySlots: false, slotDiff: [], slotsAfter: null, grantedNewIds: [],
+      slotChanges: [], grantedNewIds: [],
       classItem: { nameEn: 'Cleric', data: {} },
       subclassItem: { data: { weapon_prof: [30] } },
       subclassSelectedNow: true,

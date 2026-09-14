@@ -66,7 +66,7 @@ template id, `source_version_id`, JSON документа, public/deleted flags,
 - `initiative` — `{base,bonuses,use_dex}`;
 - `ava` — `{url,upload_id?}`;
 - `hp.hitDice` — `[{die,total,used}]`;
-- `spells` — `{schema_version:2,slots_auto,slot_pools,tabs,grants}`;
+- `spells` — `{schema_version:2,slot_pools,tabs,grants}`;
   `tabs` содержит независимые пользовательские вкладки
   `{key,name,class_item_id,casting_ability,mode,save_bonus,attack_bonus,spells}`.
   Непустой `class_item_id` уникален среди вкладок и связывает повышение уровня
@@ -76,7 +76,11 @@ template id, `source_version_id`, JSON документа, public/deleted flags,
   классов. `grants` — отдельный readonly-список внешних даров с `source` и
   необязательными `tab_key`, `casting_ability`, `cast_level`, `slotless` и
   `counts_as_known`. `slot_pools {long_rest:[...],short_rest:[...]}` хранит
-  общие ячейки по типу восстановления, а не по классу;
+  общие ячейки по типу восстановления, а не по классу. Количество и расход
+  сохраняются без пересчёта при загрузке; повышение уровня прибавляет только
+  положительный классовый прирост к текущим значениям. Миграция
+  `117_spell_slot_additions.sql` удаляет устаревший флаг авторасчёта, сохраняя
+  все пулы и увеличивая версию изменённых листов;
 - `items` — `{equipped,sections}`;
 - `money` — `{order,amounts}`.
 - `abilities_race`, `abilities_class`, `abilities_feats` — item-reference arrays

@@ -274,7 +274,6 @@ export function buildCharacterData(input) {
     grantedEntries = syncAbilityGrantedSpells(grantedEntries, abilityGrantRows)
     values.spells = {
       schema_version: 2,
-      slots_auto: true,
       slot_pools: slotInfo?.isCaster
         ? slotPoolsFromComputation(slotInfo)
         : { long_rest: [], short_rest: [] },

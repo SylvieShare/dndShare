@@ -26,10 +26,8 @@
       :show-stats="false"
       :show-slots="true"
       :show-slot-config="true"
-      :automatic-slots="automaticSlots"
       @set-total="setTotal"
       @toggle-slot="toggleSlot"
-      @set-automatic-slots="setAutomaticSlots"
     />
 
     <section v-if="grantedSpellsByLevel.length" class="sp-standalone">
@@ -81,7 +79,6 @@
       :show-slots="false"
       :show-slot-config="false"
       external-editor
-      :automatic-slots="automaticSlots"
       @edit="tabEditorOpen = true"
     />
 
@@ -162,7 +159,6 @@
       :stat-options="statOptions"
       :save-bonus="activeTab.save_bonus"
       :attack-bonus="activeTab.attack_bonus"
-      :automatic-slots="automaticSlots"
       :tab-name="activeTab.name"
       :class-item-id="activeTab.class_item_id"
       :class-options="classTabOptions"
@@ -238,7 +234,6 @@ const modalSpell = ref(null)
 const pickerOpen = ref(false)
 const classItemMap = reactive({})
 const activeSpellTab = ref('')
-const automaticSlots = ref(true)
 const tabEditorOpen = ref(false)
 const deleteTarget = ref(null)
 
@@ -390,7 +385,6 @@ watch(blockHidden, v => setBlockHidden(v), { immediate: true })
 function emitChange() {
   emit('update:value', props.block.id, {
     schema_version: 2,
-    slots_auto: automaticSlots.value,
     slot_pools: serializedSlotPools(),
     tabs: tabs.value.map((tab) => ({
       key: tab.key,
@@ -417,9 +411,8 @@ const {
   serializedSlotPools,
   toggleSlot,
   setTotal,
-  replaceTotals,
   adjustSlotUsed,
-} = useSpellSlots({ canInteract, automaticSlots, emitChange, logSessionEvent: event => charCtx.logSessionEvent?.(event) })
+} = useSpellSlots({ canInteract, emitChange, logSessionEvent: event => charCtx.logSessionEvent?.(event) })
 
 const maxSlotLevel = computed(() => Math.max(
   ...activeSlotPools.value.flatMap((pool) => pool.slots.map((slot) => Number(slot.level) || 0)),
@@ -441,12 +434,12 @@ const {
 })
 
 const {
-  updateActiveTab, createTab, setActiveTabClass, deleteTab, setAutomaticSlots, syncAutomaticSlotPools,
+  updateActiveTab, createTab, setActiveTabClass, deleteTab,
   spellCanPrepare, setSpellcastingSource, spellCastingAbility, statModifierForAbility,
   spellAttackBonus, spellSaveDC, spellAbilityLabel, loadClassItems,
 } = useSpellbookTabs({
   props, charCtx, tabs, grants, activeTab, activeSpellTab, tabEditorOpen, classItemMap,
-  deleteTarget, automaticSlots, replaceTotals, emitChange, profBonus, statOptions,
+  deleteTarget, emitChange, profBonus, statOptions,
 })
 const {
   loadDetails, togglePrepared, removeSpell, sortable, displayLevel, onSpellDragStart,
@@ -549,10 +542,8 @@ onMounted(async () => {
   const raw = props.value && typeof props.value === 'object' && !Array.isArray(props.value) ? props.value : {}
   tabs.value = normalizedSpellTabs(raw.tabs)
   grants.value = (Array.isArray(raw.grants) ? raw.grants : []).map(grantedSpell)
-  automaticSlots.value = raw.slots_auto !== false
   loadSlotPools(raw)
-  await loadClassItems(false)
-  syncAutomaticSlotPools()
+  await loadClassItems()
   const { school_suggest_id, stat_suggest_type_id } = props.block.content || {}
   const ensures = [school_suggest_id, stat_suggest_type_id, damageTypeSuggestTypeId.value]
     .filter(Boolean)

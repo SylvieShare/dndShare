@@ -32,7 +32,7 @@ describe('multiclass spellcasting UI', () => {
   })
 
   it('keeps class tabs and recovery-based slot pools separate', () => {
-    expect(source).toContain('computeSpellSlotPools')
+    expect(source).not.toContain('computeSpellSlotPools')
     expect(source).toContain(':active-slot-pools="activeSlotPools"')
     expect(source).toContain('tabs: tabs.value.map')
     expect(source).toContain('grants: grants.value.map')

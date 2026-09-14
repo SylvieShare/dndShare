@@ -19,15 +19,6 @@
       </div>
     </EditorSection>
 
-    <EditorSection v-if="showSlotConfig" title="Расчёт ячеек">
-      <ToggleSwitch
-        :model-value="automaticSlots"
-        label="Автоматически по уровням классов"
-        @update:model-value="$emit('set-automatic-slots', $event)"
-      />
-      <p class="ssm-hint">Ручное изменение количества ячеек отключает авторасчёт. Включите его снова, чтобы вернуть количество по уровням классов.</p>
-    </EditorSection>
-
     <EditorSection v-if="showCastingConfig" title="Базовая характеристика">
       <ValueSelect
         :model-value="statPath"
@@ -62,7 +53,7 @@
       <div class="ssm-grid">
         <div v-for="sl in slots" :key="sl.level" class="ssm-cell">
           <span class="ssm-lvl">{{ sl.level }} круг</span>
-          <FormNumberInput :value="sl.total" :min="0" :max="9" @change="$emit('change', editingRest, sl.level, $event)" />
+          <FormNumberInput :value="sl.total" :min="0" @change="$emit('change', editingRest, sl.level, $event)" />
         </div>
       </div>
     </EditorSection>
@@ -74,7 +65,6 @@ import { computed, ref } from 'vue'
 import { EditorSection } from '@sylvieshare/share-ui'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { MultiToggle } from '@sylvieshare/share-ui'
-import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { ValueSelect } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormField, FormTextInput } from '@sylvieshare/share-ui'
@@ -95,7 +85,6 @@ const props = defineProps({
   statOptions: { type: Array, default: () => [] },
   saveBonus:   { type: Number, default: 0 },
   attackBonus: { type: Number, default: 0 },
-  automaticSlots: { type: Boolean, default: true },
   showCastingConfig: { type: Boolean, default: true },
   castingLabel: { type: String, default: '' },
   showSlotConfig: { type: Boolean, default: true },
@@ -107,7 +96,7 @@ const props = defineProps({
   mode: { type: String, default: 'known' },
   allowDelete: { type: Boolean, default: false },
 })
-defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-automatic-slots', 'set-tab-name', 'set-class-item', 'set-mode', 'delete-tab'])
+defineEmits(['close', 'change', 'set-stat-path', 'set-save-bonus', 'set-attack-bonus', 'set-tab-name', 'set-class-item', 'set-mode', 'delete-tab'])
 
 const editingRest = ref('long_rest')
 const slots = computed(() => props.slotPools?.[editingRest.value] || [])
@@ -134,7 +123,6 @@ const availableClassOptions = computed(() => {
   font-size: 13px;
 }
 
-.ssm-hint { margin: 6px 0 0; color: var(--text-muted); font-size: 11px; }
 .ssm-fields { display: grid; gap: 12px; }
 .ssm-delete { width: 100%; border: 1px solid color-mix(in srgb, var(--danger) 45%, var(--border)); border-radius: 9px; background: transparent; color: var(--danger); cursor: pointer; padding: 9px 12px; font: inherit; font-size: 12px; font-weight: 700; }
 

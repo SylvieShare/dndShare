@@ -72,7 +72,6 @@
       :stat-options="statOptions"
       :save-bonus="saveBonusExtra"
       :attack-bonus="attackBonusExtra"
-      :automatic-slots="automaticSlots"
       :show-casting-config="showCastingConfig"
       :casting-label="castingLabel"
       :show-slot-config="showSlotConfig"
@@ -80,7 +79,6 @@
       @set-stat-path="$emit('set-stat-path', $event)"
       @set-save-bonus="$emit('set-save-bonus', $event)"
       @set-attack-bonus="$emit('set-attack-bonus', $event)"
-      @set-automatic-slots="$emit('set-automatic-slots', $event)"
       @close="editOpen = false"
     />
   </div>
@@ -108,7 +106,6 @@ const props = defineProps({
   activeSlotPools: { type: Array, default: () => [] },
   slotPools:       { type: Object, default: () => ({ long_rest: [], short_rest: [] }) },
   castingStats:    { type: Array, default: () => [] },
-  automaticSlots:  { type: Boolean, default: true },
   showCastingConfig: { type: Boolean, default: true },
   castingLabel: { type: String, default: '' },
   showStats: { type: Boolean, default: true },
@@ -116,7 +113,7 @@ const props = defineProps({
   showSlotConfig: { type: Boolean, default: true },
   externalEditor: { type: Boolean, default: false },
 })
-const emit = defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'set-automatic-slots', 'toggle-slot', 'edit'])
+const emit = defineEmits(['set-stat-path', 'set-total', 'set-save-bonus', 'set-attack-bonus', 'toggle-slot', 'edit'])
 
 function openEditor() {
   if (props.externalEditor) emit('edit')

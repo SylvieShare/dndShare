@@ -5,7 +5,7 @@ import { applyLevelUpSpellSelection } from './levelUpSpellSelection'
 describe('applyLevelUpSpellSelection', () => {
   it('replaces only the selected class tab and preserves grants plus duplicate spells in other tabs', () => {
     const book = {
-      schema_version: 2, slots_auto: true, slot_pools: { long_rest: [], short_rest: [] },
+      schema_version: 2, slot_pools: { long_rest: [], short_rest: [] },
       tabs: [
         { key: 'wizard', name: 'Волшебник', class_item_id: 1, casting_ability: 4, mode: 'spellbook', save_bonus: 0, attack_bonus: 0, spells: [{ key: 'old', id: 2 }] },
         { key: 'cleric', name: 'Жрец', class_item_id: 2, casting_ability: 5, mode: 'prepared', save_bonus: 0, attack_bonus: 0, spells: [{ key: 'cleric-spell', id: 2 }] },

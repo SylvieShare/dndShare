@@ -213,7 +213,7 @@ export function useDndLevelUp(props, emit) {
   const profAfter = computed(() => proficiencyBonus(newTotal.value))
   const profChanges = computed(() => profBefore.value !== profAfter.value)
 
-  const { entriesAfter, slotsAfter, levelUpSpellContext, slotDiff, slotChanges } = useLevelUpMagic({
+  const { entriesAfter, levelUpSpellContext, slotChanges } = useLevelUpMagic({
     props, entries, target, classItem, subclassPick, isNew, isPlain, itemsById,
     newClassLevel, effectiveSubclassItem, effectiveSubclass,
   })
@@ -326,9 +326,7 @@ export function useDndLevelUp(props, emit) {
         asiStats: asiStats.value,
         asiDelta: asiDelta.value,
         featureChoiceSelections: featureChoiceSel.value,
-        applySlots: true,
-        slotDiff: slotDiff.value,
-        slotsAfter: slotsAfter.value,
+        slotChanges: slotChanges.value,
         grantedNewIds: grantedNewIds.value,
         classItem: classItem.value,
         isMulticlass: isMulticlass.value,

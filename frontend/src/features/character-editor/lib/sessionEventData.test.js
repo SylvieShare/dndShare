@@ -7,7 +7,7 @@ import { useSpellCasting } from '../blocks/dnd/composables/useSpellCasting'
 describe('chronicle resource events', () => {
   it('logs manual spending and recovery in both spell pools, ignores no-ops and total edits', () => {
     const log = vi.fn(), canInteract = ref(true)
-    const api = useSpellSlots({ canInteract, automaticSlots: ref(true), emitChange: vi.fn(), logSessionEvent: log })
+    const api = useSpellSlots({ canInteract, emitChange: vi.fn(), logSessionEvent: log })
     api.loadSlotPools({ slot_pools: { short_rest: [{ level: 3, total: 3, used: 0 }], long_rest: [{ level: 1, total: 2, used: 0 }] } })
     api.toggleSlot('short_rest', 3, 2)
     api.toggleSlot('short_rest', 3, 1)
@@ -24,7 +24,7 @@ describe('chronicle resource events', () => {
   })
   it('records a paid cast exactly once with its source and slot, and does not charge slotless magic', () => {
     const log = vi.fn(), ctx = { ownerMode: true, logSessionEvent: log }
-    const slots = useSpellSlots({ canInteract: ref(true), automaticSlots: ref(true), emitChange: vi.fn(), logSessionEvent: log })
+    const slots = useSpellSlots({ canInteract: ref(true), emitChange: vi.fn(), logSessionEvent: log })
     slots.loadSlotPools({ slot_pools: { short_rest: [{ level: 3, total: 2, used: 0 }] } })
     const casting = useSpellCasting({ charCtx: ctx, spellcastingBlocked: ref(false), ...slots, spellTitle: entry => entry.item.name })
     const entry = { item: { id: 42, name: 'Огненный шар', data: { lvl: 3 } }, ref: {} }

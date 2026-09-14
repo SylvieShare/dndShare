@@ -40,7 +40,7 @@ const ctx = reactive({ ownerMode: true, var: { stats: { 4: 3 } },
   logSessionEvent: event => window.events.push(event),
 })
 window.spellCtx = ctx
-const value = { schema_version: 2, slots_auto: false,
+const value = { schema_version: 2,
   slot_pools: { long_rest: [{ level: 1, total: 2, used: 0 }, { level: 3, total: 1, used: 0 }], short_rest: [{ level: 3, total: 1, used: 0 }] },
   tabs: [{ key: 'wizard', name: 'Волшебник', casting_ability: 4, mode: 'prepared', attack_bonus: 1,
     spells: items.filter(item => item.id !== 7).map(item => ({ key: String(item.id), id: item.id, prepared: item.data.lvl > 0 })) }], grants: [{ key: 'innate:7', id: 7, slotless: true, cast_level: 2, source: { label: 'Дьявольское наследие' } }],
