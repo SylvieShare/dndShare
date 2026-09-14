@@ -6,8 +6,12 @@ const bard = { id: 4016, name: 'Бард', nameEn: 'Bard', data: {
   hit_die: 'd8', caster_progression: 'full', subclass_level: 3,
   spellcasting: { ability: 6, known_progression: [{ level: 2, cantrips: 2, spells: 5 }] },
 } }
-vi.mock('@/shared/api/itemsApi', () => ({ itemsApi: { byIds: vi.fn(async () => ({ items: [bard] })) } }))
-vi.mock('@/shared/api/http', () => ({ fetchGet: vi.fn(async url => ({ items: url.includes('typeId=9') ? [bard] : [] })) }))
+const warlock = { id: 4020, name: 'Колдун', nameEn: 'Warlock', data: {
+  hit_die: 'd8', caster_progression: 'pact', subclass_level: 1,
+  spellcasting: { ability: 6, known_progression: [{ level: 3, cantrips: 2, spells: 4 }] },
+} }
+vi.mock('@/shared/api/itemsApi', () => ({ itemsApi: { byIds: vi.fn(async () => ({ items: [bard, warlock] })) } }))
+vi.mock('@/shared/api/http', () => ({ fetchGet: vi.fn(async url => ({ items: url.includes('typeId=9') ? [bard, warlock] : [] })) }))
 vi.mock('@/stores/suggest', () => ({ useSuggestStore: () => ({ ensure() {}, items: () => [] }) }))
 vi.mock('@/stores/dice', () => ({ useDiceStore: () => ({ roll: () => ({ total: 3 }) }) }))
 vi.mock('@/shared/lib/systemDice', () => ({ dieLabel: value => value }))
@@ -64,6 +68,21 @@ describe('level-up application', () => {
       short_rest: pools.short_rest,
     })
     expect(pools.long_rest[0].total).toBe(9)
+  })
+  it('previews the pact circle upgrade and applies it with preserved usage', async () => {
+    const pools = { long_rest: [{ level: 1, total: 2, used: 1 }],
+      short_rest: [{ level: 1, total: 2, used: 1 }] }
+    const { state, emit } = await mount({ lvl: { level: 2, exp: 900 },
+      classes: [{ id: warlock.id, name: warlock.name, level: 2 }],
+      spells: { tabs: [], grants: [], slot_pools: pools } })
+    expect(state.slotChanges.value).toEqual([{ kind: 'upgraded', fromLevel: 1, level: 2, count: 2, pact: true }])
+    state.classSpellSelection.value = { ready: true, tab: state.levelUpSpellContext.value.tab, entries: [] }
+    expect(state.canAccept.value).toBe(true)
+    await state.accept()
+    const updates = emit.mock.calls.find(call => call[0] === 'apply')[1]
+    expect(updates.spells.slot_pools).toEqual({ long_rest: pools.long_rest,
+      short_rest: [{ level: 2, total: 2, used: 1 }] })
+    expect(pools.short_rest).toEqual([{ level: 1, total: 2, used: 1 }])
   })
   it('treats manual HP as the final gain and resets draft choices on changing the target', async () => {
     const { state } = await mount()

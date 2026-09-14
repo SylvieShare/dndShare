@@ -226,7 +226,9 @@ The current shape under `data.values` is:
   persisted as editable resources, including zero totals and stocks above nine.
   Loading the sheet or changing class data never recalculates them. Level-up adds
   only positive per-circle differences between class progression before and after
-  the level, preserving manual totals, other circles and spent slots in both pools;
+  the level, preserving manual totals and spent slots in both pools. Pact Magic
+  circle upgrades remove the old class count from the short-rest pool and grant
+  the new circle; slots exceeding that count stay on the old circle;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
 - potions: an independent array of the same owned entries; physical tools are
@@ -419,8 +421,13 @@ manual mode does not add Constitution a second time. The minimum gain is 1 HP.
 Spell slot gains apply with level-up, without a checkbox. `ClassLevelGains`
 shows positive class progression deltas with `SpellSlotSphere` and an explicit
 +1 for a single slot. The same deltas are added to saved totals; they are never
-computed against the character's current stock. When Pact Magic opens a new
-circle, the new slots are added while earlier circles remain unchanged.
+computed against the character's current stock. Pact Magic circle changes show
+an upgrade: remove up to the previous class count from the old short-rest circle,
+then grant that count at the new circle. Spent slots transfer first; excess slots
+and their remaining usage stay on the old circle. Existing slots at the new
+circle and all long-rest slots are preserved. If the old class slots were manually
+reduced or removed, the new circle still receives the class count, with usage
+transferred only from slots that existed. Any count increase is added separately.
 Starting character creation still grants the selected class's initial slots.
 
 Class spell selection separates new cantrips, new leveled spells and the

@@ -21,7 +21,7 @@ import { choicesForEntry } from '@/features/items/lib/itemChoices'
 import { appendHpHistory, hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { applyLevelUpSpellSelection } from '@/features/character-editor/blocks/dnd/lib/levelUpSpellSelection'
 import { emptySpellbook } from '@/features/character-editor/blocks/dnd/lib/spellbook'
-import { addSpellSlots } from '../lib/spellSlotAdditions'
+import { applySpellSlotChanges } from '../lib/applySpellSlotChanges'
 
 export function buildLevelUpUpdates({
   values,
@@ -244,7 +244,7 @@ export function buildLevelUpUpdates({
     let spells = emptySpellbook(values.spells)
     spells = applyLevelUpSpellSelection(spells, classSpellSelection)
     if (applySlotChange) {
-      spells.slot_pools = addSpellSlots(spells.slot_pools, slotChanges)
+      spells.slot_pools = applySpellSlotChanges(spells.slot_pools, slotChanges)
     }
     if (grantedNewIds.length) {
       const sourceItem = subclassItem || classItem

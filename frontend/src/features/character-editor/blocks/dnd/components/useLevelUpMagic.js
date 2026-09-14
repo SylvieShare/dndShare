@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
 import { computeSpellSlotPools, maximumSpellLevelForEntry } from '@/features/character-editor/blocks/dnd/lib/multiclassSpellcasting'
 import { findClassSpellTab, spellTabFromClass } from '@/features/character-editor/blocks/dnd/lib/spellbook'
-import { spellSlotAdditions } from '../lib/spellSlotAdditions'
+import { progressionSlotChanges } from '@/features/items/lib/progressionSlotChanges'
 
 export function useLevelUpMagic({ props, entries, target, classItem, subclassPick, isNew, isPlain, itemsById, newClassLevel, effectiveSubclassItem, effectiveSubclass }) {
   const entriesAfter = computed(() => {
@@ -53,6 +53,6 @@ export function useLevelUpMagic({ props, entries, target, classItem, subclassPic
     }
   })
   const slotsBefore = computed(() => (isPlain.value ? null : computeSpellSlotPools(entries.value, slotsCatalog.value)))
-  const slotChanges = computed(() => spellSlotAdditions(slotsBefore.value, slotsAfter.value))
+  const slotChanges = computed(() => slotsAfter.value ? progressionSlotChanges(slotsAfter.value, slotsBefore.value) : [])
   return { entriesAfter, levelUpSpellContext, slotChanges }
 }
