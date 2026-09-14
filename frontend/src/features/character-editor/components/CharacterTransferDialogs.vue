@@ -1,12 +1,4 @@
 <template>
-  <AppModalFrame v-if="state.view === 'send'" title="Передать другому игроку" :width="520" :z-index="3400" close-label="Закрыть"
-    :dismissible="!state.busy" :show-close="!state.busy" @close="controller.close">
-    <CharacterTransferContent :controller="controller" :character-uuid="characterUuid" @view-item="openItem" />
-    <template #footer>
-      <ActionButton :disabled="state.busy || state.loading || !state.recipient" @click="controller.send">{{ state.busy ? 'Передача…' : 'Передать' }}</ActionButton>
-      <ActionButton variant="quiet" :disabled="state.busy" @click="controller.close">Закрыть</ActionButton>
-    </template>
-  </AppModalFrame>
   <BasePopover :open="popoverOpen" :anchor="controller.anchor" :min-width="0" :z-index="3400" :close-on-scroll="false" :close-on-resize="false"
     role="dialog" :aria-label="title" transition-preset="action-menu" @update:open="!$event && controller.close()">
     <div ref="popoverContent" class="session-popover" tabindex="-1">
@@ -21,7 +13,7 @@
 </template>
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
-import { ActionButton, AppModalFrame, BasePopover, RemoveButton } from '@sylvieshare/share-ui'
+import { BasePopover, RemoveButton } from '@sylvieshare/share-ui'
 import CharacterTransferContent from './CharacterTransferContent.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })

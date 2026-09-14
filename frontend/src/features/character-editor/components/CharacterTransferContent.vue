@@ -10,28 +10,19 @@
         </div>
         <p v-if="!controller.recipients.length" class="transfer-hint">Других игроков пока нет.</p>
       </template>
-      <template v-else-if="state.view === 'send'">
-        <p class="transfer-item">{{ state.selection?.name }}<span v-if="state.selection?.count > 1"> ×{{ state.selection.count }}</span></p>
-        <p class="transfer-hint">Предмет будет убран из вашего инвентаря до ответа игрока. При отказе он вернётся. Передаётся вся стопка.</p>
-        <FormField label="Кому передать">
-          <FormSelect v-model:value="state.recipient" :disabled="state.busy">
-            <option value="" disabled>Выберите персонажа</option>
-            <option v-for="player in controller.recipients" :key="player.charUuid" :value="player.charUuid">{{ pvName(player) || 'Без имени' }}</option>
-          </FormSelect>
-        </FormField>
-        <p v-if="!controller.recipients.length" class="transfer-hint">В сессии пока нет других персонажей.</p>
-      </template>
       <template v-else>
         <p v-if="!state.transfers.length" class="transfer-hint">Незавершённых событий нет.</p>
         <article v-for="transfer in state.transfers" :key="transfer.id" class="transfer-event">
-          <TransferPerson :name="transfer.senderName" :image-url="senderImage(transfer)" />
-          <button type="button" class="transfer-reference" @click="emit('view-item', itemView(transfer))">
-            <ItemIcon v-if="artwork(transfer)?.iconImageUrl || artwork(transfer)?.svg" :item="artwork(transfer)" :size="32" />
-            <Package v-else :size="32" :stroke-width="1.5" aria-hidden="true" />
-            <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
-          </button>
+          <div class="transfer-offer">
+            <TransferPerson :name="transfer.senderName" :image-url="senderImage(transfer)" />
+            <span class="transfer-offer-verb">предлагает</span>
+            <button type="button" class="transfer-reference" @click="emit('view-item', itemView(transfer))">
+              <ItemIcon v-if="artwork(transfer)?.iconImageUrl || artwork(transfer)?.svg" :item="artwork(transfer)" :size="32" />
+              <Package v-else :size="32" :stroke-width="1.5" aria-hidden="true" />
+              <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
+            </button>
+          </div>
           <template v-if="transfer.recipientCharUuid === characterUuid">
-            <span class="transfer-hint">Ожидает вашего решения</span>
             <div class="transfer-actions">
               <ActionButton :disabled="state.busy" @click="controller.resolve(transfer, 'accept')">Принять</ActionButton>
               <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">Отказаться</ActionButton>
@@ -51,7 +42,7 @@ import { Package } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
-import { ActionButton, FormField, FormSelect, LoadingIndicator } from '@sylvieshare/share-ui'
+import { ActionButton, LoadingIndicator } from '@sylvieshare/share-ui'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
 const emit = defineEmits(['view-item'])
@@ -85,8 +76,9 @@ watch(() => [...new Set(state.value.transfers.map(itemId).filter(Boolean))].join
 .transfer-player { display: flex; align-items: center; gap: 12px; overflow-wrap: anywhere; }
 .transfer-avatar, .transfer-initial { width: 44px; height: 44px; flex: 0 0 44px; object-fit: cover; }
 .transfer-initial { display: grid; place-items: center; color: var(--accent); font-size: 24px; }
-.transfer-item { font-size: 18px; font-weight: 650; overflow-wrap: anywhere; }
 .transfer-event { display: flex; flex-direction: column; gap: 10px; overflow-wrap: anywhere; }
+.transfer-offer { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 9px; }
+.transfer-offer-verb { color: var(--text-muted); font-size: 13px; }
 .transfer-event + .transfer-event { border-top: 1px solid var(--border); padding-top: 16px; }
 .transfer-reference { display: flex; align-items: center; gap: 9px; min-width: 0; border: 0; padding: 0; background: none; color: var(--text-1); font: inherit; text-align: left; cursor: pointer; }
 .transfer-reference > svg { flex: 0 0 32px; color: var(--accent-soft); }

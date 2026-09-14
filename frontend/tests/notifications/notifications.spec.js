@@ -126,3 +126,45 @@ test('dice and events share one bounded queue and keep reroll actions', async ({
   await page.evaluate(() => { for (let i = 0; i < 6; i++) window.notificationFixture.dice.roll('Кубик', 'd6', { log: false }) })
   await expect(page.locator('.app-notification')).toHaveCount(5)
 })
+
+test('incoming offer notifies even while the chronicle request fails', async ({ page }) => {
+  const { events, transfers } = await prepare(page, 'player')
+  await open(page, '/char/recipient')
+  await page.route('**/api/sessions/test/events?**', route => route.fulfill({ status: 503, json: { desc: 'Временно недоступно' } }))
+  transfers.push({ id: 10, eventId: 20, authorUserId: 2, recipientUserId: 1, sessionOwnerUserId: 2,
+    senderCharUuid: 'sender', recipientCharUuid: 'recipient', senderName: 'Лиора', recipientName: 'Торин', itemName: 'Посох', entry: { item_id: 42 }, status: 'pending' })
+  await emit(page)
+  const toast = page.locator('.app-notification')
+  await expect(toast).toHaveCount(1)
+  await expect(toast).toContainText('Посох')
+  await page.unroute('**/api/sessions/test/events?**')
+  events.push({ ...structuredClone(initialEvent), id: 20, type: 'item_transfer', recipientUserId: 1, data: { status: 'pending' } })
+  await emit(page)
+  await expect.poll(() => page.evaluate(() => window.notificationFixture.events.events.length)).toBe(2)
+  await expect(toast).toHaveCount(1)
+})
+
+for (const mobile of [false, true]) test(`DM approves an offer from the chronicle on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+  await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
+  const { events } = await prepare(page)
+  await open(page)
+  const offer = { ...structuredClone(initialEvent), id: 2, type: 'item_transfer', action: 'Передача: Посох', recipientUserId: 3,
+    data: { status: 'pending', recipientName: 'Торин', source: { name: 'Посох' } } }
+  events.push(offer)
+  let approvals = 0
+  await page.route('**/api/sessions/test/events/2/approve', async route => {
+    expect(route.request().method()).toBe('POST')
+    approvals++
+    offer.data.status = 'accepted'
+    await route.fulfill({ json: { transfer: { status: 'accepted' } } })
+  })
+  await emit(page)
+  await page.getByRole('button', { name: 'Открыть хронику', exact: true }).click()
+  const row = page.locator('[data-event-id="2"]')
+  await row.getByRole('button', { name: 'Принять передачу', exact: true }).click()
+  await expect(row).toContainText('Приняли')
+  await expect(row.getByRole('button', { name: 'Принять передачу', exact: true })).toHaveCount(0)
+  expect(approvals).toBe(1)
+  await emit(page)
+  await expect(row).toHaveCount(1)
+})

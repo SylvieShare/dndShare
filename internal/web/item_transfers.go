@@ -10,6 +10,7 @@ import (
 
 func init() { registerRoutes((*Server).routesItemTransfers) }
 func (s *Server) routesItemTransfers(mux *http.ServeMux) {
+	mux.HandleFunc("POST /api/sessions/{uuid}/events/{eventId}/approve", s.handleApproveTransferEvent)
 	mux.HandleFunc("GET /api/char/{uuid}/item-transfers", s.handlePendingItemTransfers)
 	mux.HandleFunc("POST /api/char/{uuid}/item-transfers", s.handleCreateItemTransfer)
 	mux.HandleFunc("POST /api/char/{uuid}/item-transfers/{transferId}/resolve", s.handleResolveItemTransfer)
@@ -127,4 +128,31 @@ func itemTransferError(w http.ResponseWriter, err error) {
 	default:
 		serverError(w, err)
 	}
+}
+
+func (s *Server) handleApproveTransferEvent(w http.ResponseWriter, r *http.Request) {
+	uid, ok := mustUser(w, r)
+	if !ok {
+		return
+	}
+	session, err := s.lookupSession(w, r)
+	if err != nil {
+		return
+	}
+	if session.OwnerUserID != uid {
+		forbidden(w)
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("eventId"), 10, 64)
+	if err != nil || id <= 0 {
+		badRequest(w, "Некорректное событие")
+		return
+	}
+	transfer, err := s.store.ApproveSessionTransfer(r.Context(), uid, session.ID, id)
+	if err != nil {
+		itemTransferError(w, err)
+		return
+	}
+	s.publishTransferChange(transfer)
+	writeJSON(w, http.StatusOK, map[string]any{"transfer": transfer})
 }

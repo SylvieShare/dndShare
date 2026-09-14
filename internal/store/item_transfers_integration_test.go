@@ -103,6 +103,9 @@ func TestItemTransfersPostgres(t *testing.T) {
 	}
 	transfer := <-results
 	retry := <-results
+	if transfer.AuthorUserID != 1 || transfer.RecipientUserID != 2 || transfer.SessionOwnerUserID != 3 {
+		t.Fatalf("offer audience: %+v", transfer)
+	}
 	if transfer.SenderImageURL == nil || *transfer.SenderImageURL != "/sender.png" {
 		t.Fatalf("sender icon: %+v", transfer)
 	}
@@ -126,8 +129,15 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if _, err = s.ResolveItemTransfer(ctx, 1, 1, transfer.ID, true); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("sender accepted: %v", err)
 	}
+	for _, attempt := range [][2]int64{{1, 1}, {2, 1}, {3, 999}} {
+		if _, err = s.ApproveSessionTransfer(ctx, attempt[0], attempt[1], transfer.EventID); !errors.Is(err, ErrNotFound) {
+			t.Fatalf("unauthorized session approval: %v", err)
+		}
+	}
 	errs = make(chan error, 2)
-	for i := 0; i < 2; i++ {
+	wg.Add(1)
+	go func() { defer wg.Done(); _, err := s.ApproveSessionTransfer(ctx, 3, 1, transfer.EventID); errs <- err }()
+	for i := 0; i < 1; i++ {
 		wg.Add(1)
 		go func() { defer wg.Done(); _, err := s.ResolveItemTransfer(ctx, 2, 2, transfer.ID, true); errs <- err }()
 	}
@@ -162,6 +172,9 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if err = pool.QueryRow(ctx, `SELECT count(*) FROM dndshare.session_event`).Scan(&eventCount); err != nil || eventCount != 1 {
 		t.Fatalf("chronicle duplicated: %d %v", eventCount, err)
 	}
+	if _, err = s.ApproveSessionTransfer(ctx, 3, 1, transfer.EventID); err != nil {
+		t.Fatalf("repeat approval: %v", err)
+	}
 	if _, err = s.ResolveItemTransfer(ctx, 2, 2, transfer.ID, false); !errors.Is(err, ErrItemTransferConflict) {
 		t.Fatalf("accepted transfer rejected: %v", err)
 	}
@@ -175,6 +188,9 @@ func TestItemTransfersPostgres(t *testing.T) {
 		}
 		if _, err = s.ResolveItemTransfer(ctx, decider, decider, v.ID, false); err != nil {
 			t.Fatal(err)
+		}
+		if _, err = s.ApproveSessionTransfer(ctx, 3, 1, v.EventID); !errors.Is(err, ErrItemTransferConflict) {
+			t.Fatalf("DM approved rejected offer: %v", err)
 		}
 		doc, _ := decodeTransferDocument(current(1).Data)
 		potions := doc.values()["potions"].([]any)
@@ -218,6 +234,21 @@ func TestItemTransfersPostgres(t *testing.T) {
 		if reader == 3 && len(visible) != 4 {
 			t.Fatalf("owner lost history: %+v", visible)
 		}
+	}
+	if _, err = s.ApproveSessionTransfer(ctx, 3, 1, roll.ID); !errors.Is(err, ErrNotFound) {
+		t.Fatalf("ordinary event approved: %v", err)
+	}
+	offer, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, current(1).Version, "potions", "potion", "00000000-0000-4000-8000-000000000010")
+	if err != nil {
+		t.Fatal(err)
+	}
+	approved, err := s.ApproveSessionTransfer(ctx, 3, 1, offer.EventID)
+	if err != nil || approved.Status != "accepted" {
+		t.Fatalf("DM approval: %+v %v", approved, err)
+	}
+	approvedDoc, _ := decodeTransferDocument(current(2).Data)
+	if len(approvedDoc.values()["potions"].([]any)) != 1 {
+		t.Fatal("DM approval did not deliver potion stack")
 	}
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {

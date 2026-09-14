@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import { createPinia } from 'pinia'
+import { useAccountStore } from '@/stores/account'
+import SessionTransferApproval from './SessionTransferApproval.vue'
 import SessionEventActorGroup from './SessionEventActorGroup.vue'
 import { groupSessionEvents } from '../lib/sessionEventView'
 vi.mock('@/features/handbook/components/ItemViewModal.vue', () => ({ default: { render: () => null } }))
@@ -83,4 +85,12 @@ describe('session chronicle presentation', () => {
     expect(source).toContain('По выбранным фильтрам событий нет')
     expect(source).toMatch(/\.sep-list\s*\{[^}]*overflow-x:\s*hidden;/s)
   })
+})
+
+it.each([[1, 'pending', true], [2, 'pending', false], [1, 'accepted', false], [1, 'rejected', false]])('approval availability for user %s status %s', async (userId, status, visible) => {
+  const pinia = createPinia()
+  useAccountStore(pinia).user = { id: userId }
+  const app = createSSRApp({ render: () => h(SessionTransferApproval, { event: { id: 1, sessionOwnerUserId: 1, data: { status } } }) })
+  app.use(pinia)
+  expect((await renderToString(app)).includes('Принять передачу')).toBe(visible)
 })

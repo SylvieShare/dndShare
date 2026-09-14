@@ -17,6 +17,7 @@
           <TransferPerson :name="event.data?.recipientName" :image-url="event.recipientImageUrl" />
           <span v-if="event.data?.count > 1">×{{ event.data.count }}</span>
           <TransferStatus :status="event.data?.status" />
+          <SessionTransferApproval :event="event" />
         </div>
         <div v-else-if="details" class="event-details">{{ details }}</div>
         <div v-if="event.data?.resourceChanges?.length" class="event-resources">
@@ -39,6 +40,7 @@ import TransferStatus from '@/features/item-transfers/components/TransferStatus.
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SessionEventIcon from './SessionEventIcon.vue'
+import SessionTransferApproval from './SessionTransferApproval.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
 const props = defineProps({ event: Object, entityName: String, grouped: Boolean, arriving: Boolean })
 const date = computed(() => new Date(props.event.createdAt))

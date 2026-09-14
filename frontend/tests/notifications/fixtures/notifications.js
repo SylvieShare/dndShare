@@ -7,6 +7,7 @@ import ViewCharacter from '../../../src/features/character-editor/pages/ViewChar
 import AccountTutorials from '../../../src/features/tutorials/components/AccountTutorials.vue'
 import ViewSession from '../../../src/features/sessions/pages/ViewSession.vue'
 import '@sylvieshare/share-ui/styles.css'
+import '../../../src/app/theme.css'
 import AppNotifications from '../../../src/features/notifications/components/AppNotifications.vue'
 import { useSessionEventsStore } from '../../../src/stores/sessionEvents'
 import { useDiceStore } from '../../../src/stores/dice'

@@ -19,6 +19,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   const readers = new Map()
   const signatures = new Map()
   const localActions = new Set()
+  const notifiedOffers = new Set()
   const localRolls = new WeakSet()
   const arrivalTimers = new Map()
   let lastReadId = 0
@@ -33,7 +34,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     readers.set(key, reader)
     return () => readers.delete(key)
   }
-  function reader() { return [...readers.values()].findLast(entry => entry.sessionUuid() === sessionUuid.value) }
+  function reader(uuid = sessionUuid.value) { return [...readers.values()].findLast(entry => entry.sessionUuid() === uuid) }
   function markLocalRoll(result) { if (result && typeof result === 'object') localRolls.add(toRaw(result)) }
   function rememberLocalAction(id) {
     localActions.add(id)
@@ -49,19 +50,47 @@ export const useSessionEventsStore = defineStore('session-events', () => {
       arrivalTimers.delete(id)
     }, 700))
   }
-  function notifyEvent(event, updated) {
+  function notifyEvent(event, updated, uuid = sessionUuid.value) {
     const userId = Number(account.user?.id)
     if (!userId || Number(event.authorUserId) === userId) return
     const isOwner = Number(event.sessionOwnerUserId) === userId
     if (!isOwner && !(event.type === 'item_transfer' && Number(event.recipientUserId) === userId && event.data?.status === 'pending')) return
-    if (localActions.has(event.clientActionId) || reader()?.isReading?.()) return
-    const action = reader()?.actionFor?.(event)
+    if (localActions.has(event.clientActionId) || reader(uuid)?.isReading?.()) return
+    const key = `session:${uuid}:event:${event.id}`
+    const offerKey = `${userId}:${key}`
+    const isOffer = event.type === 'item_transfer' && event.data?.status === 'pending'
+    if (isOffer && notifiedOffers.has(offerKey)) return
+    const action = reader(uuid)?.actionFor?.(event)
     const id = notifications.notify({
-      type: 'session-event', title: event.action, key: `session:${sessionUuid.value}:event:${event.id}`,
-      scope: `session:${sessionUuid.value}`, data: { event, updated }, duration: event.type === 'item_transfer' ? 10000 : 6000,
+      type: 'session-event', title: event.action, key,
+      scope: `session:${uuid}`, data: { event, updated }, duration: event.type === 'item_transfer' ? 10000 : 6000,
       actions: action ? [{ key: 'open', label: action.label }] : [],
       onAction: () => { action?.run(); notifications.dismiss(id) },
     })
+    if (isOffer) {
+      notifiedOffers.add(offerKey)
+      if (notifiedOffers.size > 500) notifiedOffers.delete(notifiedOffers.values().next().value)
+    }
+  }
+  function notifyTransferOffers(uuid, transfers) {
+    const userId = Number(account.user?.id)
+    for (const transfer of transfers || []) {
+      if (!transfer.eventId || !transfer.authorUserId || Number(transfer.recipientUserId) !== userId || transfer.status !== 'pending') continue
+      const entry = transfer.entry || {}
+      notifyEvent({
+        id: transfer.eventId, type: 'item_transfer', authorUserId: transfer.authorUserId,
+        recipientUserId: transfer.recipientUserId, sessionOwnerUserId: transfer.sessionOwnerUserId,
+        actorCharUuid: transfer.senderCharUuid, actorName: transfer.senderName, actorImageUrl: transfer.senderImageUrl,
+        action: `Передача: ${transfer.itemName}`, createdAt: transfer.createdAt,
+        data: { status: transfer.status, senderName: transfer.senderName, recipientName: transfer.recipientName,
+          source: { itemId: entry.magic_item_id || entry.item_id || null, name: transfer.itemName }, count: entry.count },
+      }, false, uuid)
+    }
+  }
+  function notifyInitialOffers(incoming) {
+    for (const event of incoming || []) {
+      if (event.type === 'item_transfer' && event.data?.status === 'pending' && Number(event.recipientUserId) === Number(account.user?.id) && Number(event.sessionOwnerUserId) !== Number(account.user?.id)) notifyEvent(event, false)
+    }
   }
   function merge(incoming, { quiet = false, updates = false, fromRead = false } = {}) {
     if (!Array.isArray(incoming) || !incoming.length) return
@@ -96,6 +125,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
           if (token !== generation) return
           merge(response?.updates, { quiet: !initialized, updates: true })
           merge(response?.events, { quiet: !initialized, fromRead: true })
+          if (!initialized) notifyInitialOffers(response?.events)
           initialized = true
           // Drain bursts larger than one page without waiting for another invalidation.
           if (response?.events?.length === 100) refreshPending = true
@@ -126,6 +156,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
         const response = await sessionEventsApi.getSessionEvents(uuid, { limit: 50 })
         if (token !== generation) return
         merge(response?.events, { quiet: true, fromRead: true })
+        notifyInitialOffers(response?.events)
         initialized = true
         syncError.value = false
       } catch { if (token === generation) syncError.value = true }
@@ -179,5 +210,5 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   }
   onScopeDispose(() => { clearContext(); readers.clear() })
   return { sessionUuid, actorCharUuid, events, loading, syncError, newEventIds, setContext, setActor, clearContext,
-    publish, pendingCharacterEvent, refresh, registerReader, markLocalRoll }
+    publish, pendingCharacterEvent, refresh, registerReader, markLocalRoll, notifyTransferOffers }
 })

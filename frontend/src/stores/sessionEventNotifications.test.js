@@ -131,4 +131,36 @@ describe('session event notifications', () => {
     expect(useNotificationsStore().entries.map(entry => entry.data.event.id)).toEqual([2])
   })
 
+  it('notifies pending offers even if history is unavailable and deduplicates the later journal event', async () => {
+    useAccountStore().user = { id: 3 }
+    const events = useSessionEventsStore()
+    api.getSessionEvents.mockRejectedValueOnce(new Error('history unavailable'))
+    await events.setContext({ uuid: 'game' })
+    const transfer = { eventId: 20, authorUserId: 2, recipientUserId: 3, sessionOwnerUserId: 1,
+      senderName: 'Лиора', recipientName: 'Торин', itemName: 'Верёвка', entry: { item_id: 42 }, status: 'pending' }
+    events.notifyTransferOffers('game', [transfer])
+    expect(useNotificationsStore().entries).toHaveLength(1)
+    api.getSessionEvents.mockResolvedValue({ events: [{ ...event(20), recipientUserId: 3 }] })
+    await events.refresh()
+    events.notifyTransferOffers('game', [transfer])
+    expect(useNotificationsStore().entries).toHaveLength(1)
+    useNotificationsStore().clear()
+    events.notifyTransferOffers('game', [transfer])
+    expect(useNotificationsStore().entries).toEqual([])
+  })
+  it('shows a pending offer to a player on first load, keeping other history quiet', async () => {
+    useAccountStore().user = { id: 3 }
+    api.getSessionEvents.mockResolvedValue({ events: [{ ...event(1), recipientUserId: 3 }, { ...event(2, 'accepted'), recipientUserId: 3 }] })
+    await useSessionEventsStore().setContext({ uuid: 'game' })
+    expect(useNotificationsStore().entries.map(entry => entry.data.event.id)).toEqual([1])
+  })
+  it('ignores own and other recipients offers from the transfer list', () => {
+    const events = useSessionEventsStore()
+    events.notifyTransferOffers('game', [
+      { eventId: 1, authorUserId: 1, recipientUserId: 1, status: 'pending' },
+      { eventId: 2, authorUserId: 2, recipientUserId: 3, status: 'pending' },
+    ])
+    expect(useNotificationsStore().entries).toEqual([])
+  })
+
 })

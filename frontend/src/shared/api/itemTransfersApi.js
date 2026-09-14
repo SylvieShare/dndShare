@@ -9,3 +9,7 @@ export function createItemTransfer(uuid, request) {
 export function resolveItemTransfer(uuid, id, decision) {
   return fetchPost(`/char/${uuid}/item-transfers/${id}/resolve`, { decision })
 }
+
+export function approveSessionTransfer(uuid, eventId) {
+  return fetchPost(`/sessions/${uuid}/events/${eventId}/approve`, {})
+}

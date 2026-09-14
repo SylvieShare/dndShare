@@ -11,36 +11,41 @@ import (
 )
 
 type ItemTransfer struct {
-	SenderImageURL    *string         `json:"senderImageUrl,omitempty"`
-	ID                int64           `json:"id"`
-	SessionID         int64           `json:"-"`
-	EventID           int64           `json:"eventId"`
-	SenderCharID      int64           `json:"-"`
-	RecipientCharID   int64           `json:"-"`
-	SenderCharUUID    string          `json:"senderCharUuid"`
-	RecipientCharUUID string          `json:"recipientCharUuid"`
-	SenderName        string          `json:"senderName"`
-	RecipientName     string          `json:"recipientName"`
-	ItemName          string          `json:"itemName"`
-	Source            string          `json:"source"`
-	Entry             json.RawMessage `json:"entry"`
-	Status            string          `json:"status"`
-	CreatedAt         time.Time       `json:"createdAt"`
-	ResolvedAt        *time.Time      `json:"resolvedAt,omitempty"`
+	AuthorUserID       int64           `json:"authorUserId"`
+	RecipientUserID    int64           `json:"recipientUserId"`
+	SessionOwnerUserID int64           `json:"sessionOwnerUserId"`
+	SenderImageURL     *string         `json:"senderImageUrl,omitempty"`
+	ID                 int64           `json:"id"`
+	SessionID          int64           `json:"-"`
+	EventID            int64           `json:"eventId"`
+	SenderCharID       int64           `json:"-"`
+	RecipientCharID    int64           `json:"-"`
+	SenderCharUUID     string          `json:"senderCharUuid"`
+	RecipientCharUUID  string          `json:"recipientCharUuid"`
+	SenderName         string          `json:"senderName"`
+	RecipientName      string          `json:"recipientName"`
+	ItemName           string          `json:"itemName"`
+	Source             string          `json:"source"`
+	Entry              json.RawMessage `json:"entry"`
+	Status             string          `json:"status"`
+	CreatedAt          time.Time       `json:"createdAt"`
+	ResolvedAt         *time.Time      `json:"resolvedAt,omitempty"`
 }
 
 const itemTransferSelect = `SELECT t.id, t.session_id, t.event_id, t.sender_char_id, t.recipient_char_id,
  sender.uuid::text, recipient.uuid::text, t.sender_name, t.recipient_name,
- t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}')
+ t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}'), transfer_event.author_user_id, recipient.user_id, transfer_session.owner_user_id
  FROM dndshare.item_transfer t JOIN dndshare."char" sender ON sender.id=t.sender_char_id
  JOIN dndshare."char" recipient ON recipient.id=t.recipient_char_id
+ JOIN dndshare.session_event transfer_event ON transfer_event.id=t.event_id
+ JOIN dndshare."session" transfer_session ON transfer_session.id=t.session_id
  LEFT JOIN dndshare.storage_image sender_icon ON sender_icon.id=sender.icon_image_id AND sender_icon.deleted=false`
 
 func scanItemTransfer(row pgx.Row) (ItemTransfer, error) {
 	var t ItemTransfer
 	err := row.Scan(&t.ID, &t.SessionID, &t.EventID, &t.SenderCharID, &t.RecipientCharID,
 		&t.SenderCharUUID, &t.RecipientCharUUID, &t.SenderName, &t.RecipientName, &t.ItemName,
-		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt, &t.SenderImageURL)
+		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt, &t.SenderImageURL, &t.AuthorUserID, &t.RecipientUserID, &t.SessionOwnerUserID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		err = ErrNotFound
 	}
@@ -205,12 +210,25 @@ func (s *Store) CreateItemTransfer(ctx context.Context, userID, sessionID, sende
 }
 
 func (s *Store) ResolveItemTransfer(ctx context.Context, userID, charID, transferID int64, accept bool) (ItemTransfer, error) {
+	return s.resolveItemTransfer(ctx, userID, charID, transferID, 0, accept)
+}
+
+// ApproveSessionTransfer lets the session owner accept an offer by its chronicle event.
+func (s *Store) ApproveSessionTransfer(ctx context.Context, userID, sessionID, eventID int64) (ItemTransfer, error) {
+	return s.resolveItemTransfer(ctx, userID, 0, eventID, sessionID, true)
+}
+
+func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, sessionID int64, accept bool) (ItemTransfer, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return ItemTransfer{}, err
 	}
 	defer tx.Rollback(ctx)
-	t, err := scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+` WHERE t.id=$1 FOR UPDATE OF t`, transferID))
+	where := ` WHERE t.id=$1 FOR UPDATE OF t`
+	if sessionID != 0 {
+		where = ` WHERE t.event_id=$1 FOR UPDATE OF t`
+	}
+	t, err := scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+where, id))
 	if err != nil {
 		return t, err
 	}
@@ -218,12 +236,18 @@ func (s *Store) ResolveItemTransfer(ctx context.Context, userID, charID, transfe
 	if err != nil {
 		return t, err
 	}
-	// Only the recipient decides; the sender can recall a still-pending request.
-	if charID != t.RecipientCharID && (accept || charID != t.SenderCharID) {
-		return t, ErrNotFound
-	}
-	if chars[charID].UserID != userID {
-		return t, ErrNotFound
+	// Session approval is separate from the recipient/sender character operation.
+	if sessionID != 0 {
+		if t.SessionID != sessionID || t.SessionOwnerUserID != userID {
+			return t, ErrNotFound
+		}
+	} else {
+		if charID != t.RecipientCharID && (accept || charID != t.SenderCharID) {
+			return t, ErrNotFound
+		}
+		if chars[charID].UserID != userID {
+			return t, ErrNotFound
+		}
 	}
 	status := "rejected"
 	destination := t.SenderCharID
