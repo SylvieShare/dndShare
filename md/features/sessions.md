@@ -279,8 +279,12 @@ catch-up запрос, поэтому coalescing, разрыв соединен�
 ## Уведомления событий
 
 Страница сессии (мастер и игрок) и собственный лист слушают общий SSE-поток.
-Если хроника сейчас не открыта, новое событие или изменение его игровых данных
-показывается в общей очереди уведомлений внизу справа, вместе с бросками кубиков.
+У мастера вне открытой хроники чужие события и изменения их игровых данных
+показываются в общей очереди уведомлений внизу справа, вместе с бросками кубиков.
+Собственные события никогда не вызывают уведомлений, в том числе из другой
+вкладки или устройства. Игрок получает только предложения предметов адресованным
+ему персонажам (`item_transfer`, статус `pending`); свои предложения, действия
+мастера и других игроков, принятие/отказ не вызывают всплывашек.
 У мастера кнопка «Открыть хронику» переключает раздел; в листе уведомление о
 передаче предлагает «Открыть события». Начальная загрузка проходит без всплывашек.
 Открытая хроника показывает новые строки с анимацией без дублирующей карточки.
@@ -289,7 +293,7 @@ catch-up запрос, поэтому coalescing, разрыв соединен�
 обновления аватара. Новое состояние передачи заменяет уже видимую карточку той
 же записи. Исходный локальный бросок показывается один раз даже при гонке POST
 и SSE: сервер возвращает `clientActionId`, который клиент связывает с показанным
-результатом. События чужих бросков продолжают приходить обычными уведомлениями.
+результатом. Уведомления чужих бросков доступны только мастеру.
 При смене сессии её уведомления и контекст очищаются, запоздалые ответы игнорируются.
 Инкрементальная загрузка дочитывает пачки по 100 записей, сохраняя последние 200.
 
@@ -307,7 +311,9 @@ Each event stores `actorName` and `action` independently. `actorName` is a
 snapshot, so renaming a character does not rewrite history; `actorCharUuid`
 keeps the optional structural link used for permissions and character context.
 The server authenticates every timeline read/write as either the session DM or
-a participant. Players can reference only their own participant and the server
+a participant. Timeline reads and incremental transfer updates return all events
+to the DM; players receive only transfers addressed to characters they own.
+Public visibility does not expose other gameplay actions to players. Players can reference only their own participant and the server
 derives that character's name. The DM can reference any participant or supply a
 standalone creature name when no character UUID exists. Events that describe
 the session itself have neither actor field. Character pages select their event

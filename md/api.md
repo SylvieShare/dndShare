@@ -365,7 +365,10 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   and active-turn card can choose the intended asset independently. Initiative values, character sheets, AC, notes and
   encounter challenge results are never returned;
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
-  The read endpoint accepts `after` and `limit`; the write endpoint accepts
+  The read endpoint accepts `after` and `limit`. Both `events` and `updates`
+  return all records to the session owner; other participants receive only
+  item transfers directed to characters they own, regardless of `visibility`.
+  The write endpoint accepts
   `{type,action,data,actorCharUuid?,actorItemId?,actorName?,visibility?,clientActionId?}`. The server
   derives the author from authentication, validates DM/participant access and
   resolves `actorCharUuid` to the participant whose page produced the action.
@@ -375,7 +378,9 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   Event responses expose separate `actorName`, `action`, the required boolean
   `authorIsSessionOwner`, actor character projection fields and resolved
   `actorImageUrl` / `actorSvg` artwork when available;
-  user login is not part of the timeline response. `clientActionId` makes
+  `authorName` contains the author login. `sessionOwnerUserId` and optional
+  `recipientUserId` are derived from session/transfer relations and support
+  notification filtering; the client never treats payload fields as recipients. `clientActionId` makes
   retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
   `potion`, `spell`, `feature` or `ability`) for additions to a character;
 - `GET|POST /api/sessions/{uuid}/journal` reads the shared campaign journal or

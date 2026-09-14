@@ -2,12 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, disposePinia, setActivePinia } from 'pinia'
 import { useSessionEventsStore } from './sessionEvents'
 import { useNotificationsStore } from './notifications'
+import { useAccountStore } from './account'
 import { useDiceStore } from './dice'
 import * as api from '@/shared/api/sessionEventsApi'
 vi.mock('@/shared/api/sessionEventsApi', () => ({ getSessionEvents: vi.fn(), createSessionEvent: vi.fn() }))
-const event = (id, status = 'pending') => ({ id, type: 'item_transfer', action: 'Передача: Верёвка', data: { status } })
+const event = (id, status = 'pending') => ({ id, authorUserId: 2, sessionOwnerUserId: 1, recipientUserId: 1, type: 'item_transfer', action: 'Передача: Верёвка', data: { status } })
 let pinia
-beforeEach(() => { vi.useFakeTimers(); vi.resetAllMocks(); pinia = createPinia(); setActivePinia(pinia) })
+beforeEach(() => { vi.useFakeTimers(); vi.resetAllMocks(); pinia = createPinia(); setActivePinia(pinia); useAccountStore().user = { id: 1 } })
 afterEach(() => { disposePinia(pinia); vi.useRealTimers() })
 describe('session event notifications', () => {
   it('loads history quietly, then notifies each new or changed event exactly once', async () => {
@@ -94,4 +95,27 @@ describe('session event notifications', () => {
     expect(api.getSessionEvents).toHaveBeenLastCalledWith('game', { after: 101, limit: 100 })
     expect(useNotificationsStore().entries).toHaveLength(5)
   })
+  it('never notifies the author, including events from another device and transfer updates', async () => {
+    const events = useSessionEventsStore()
+    api.getSessionEvents.mockResolvedValueOnce({ events: [] }).mockResolvedValueOnce({ events: [{ ...event(1), authorUserId: 1 }] })
+    await events.setContext({ uuid: 'game' }); await events.refresh()
+    api.getSessionEvents.mockResolvedValue({ updates: [{ ...event(1, 'accepted'), authorUserId: 1 }] })
+    await events.refresh()
+    expect(useNotificationsStore().entries).toEqual([])
+  })
+  it('players receive only pending item offers addressed to them', async () => {
+    useAccountStore().user = { id: 3 }
+    const events = useSessionEventsStore()
+    api.getSessionEvents.mockResolvedValueOnce({ events: [] }).mockResolvedValueOnce({ events: [
+      { ...event(1), type: 'dice_roll', authorUserId: 1 },
+      { ...event(2), type: 'resource_used' },
+      { ...event(3), recipientUserId: 4 },
+      { ...event(4), recipientUserId: 3, authorUserId: 3 },
+      { ...event(5, 'accepted'), recipientUserId: 3 },
+      { ...event(6), recipientUserId: 3 },
+    ] })
+    await events.setContext({ uuid: 'game' }); await events.refresh()
+    expect(useNotificationsStore().entries.map(entry => entry.data.event.id)).toEqual([6])
+  })
+
 })

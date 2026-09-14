@@ -264,12 +264,12 @@ func (s *Store) ResolveItemTransfer(ctx context.Context, userID, charID, transfe
 
 // Existing transfer records change status without changing their timeline ID.
 // Return their projections separately so they do not consume the new-event page.
-func (s *Store) SessionTransferEventUpdates(ctx context.Context, sessionID, afterID int64) ([]SessionEvent, error) {
+func (s *Store) SessionTransferEventUpdates(ctx context.Context, sessionID, userID, afterID int64) ([]SessionEvent, error) {
 	result := []SessionEvent{}
 	if afterID <= 0 {
 		return result, nil
 	}
-	rows, err := s.pool.Query(ctx, sessionEventSelect+` AND e.session_id=$1 AND e.id<=$2 AND e.event_type='item_transfer' AND e.visibility='public' ORDER BY e.id DESC LIMIT 200`, sessionID, afterID)
+	rows, err := s.pool.Query(ctx, sessionEventSelect+sessionEventReadAccess+` AND e.session_id=$1 AND e.id<=$3 AND e.event_type='item_transfer' ORDER BY e.id DESC LIMIT 200`, sessionID, userID, afterID)
 	if err != nil {
 		return nil, err
 	}

@@ -13,6 +13,8 @@ import (
 // SessionEvent is a user-facing event in a game session timeline.
 // Item transfer events update their status in place; other events are append-only.
 type SessionEvent struct {
+	SessionOwnerUserID   int64           `json:"sessionOwnerUserId"`
+	RecipientUserID      *int64          `json:"recipientUserId,omitempty"`
 	ClientActionID       *string         `json:"clientActionId,omitempty"`
 	ID                   int64           `json:"id"`
 	SessionID            int64           `json:"-"`
@@ -50,7 +52,7 @@ const sessionEventSelect = `
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.actor_item_id,
 	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
-	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text
+	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, transfer_recipient.user_id
 	FROM dndshare.session_event e
 	JOIN dndshare.users event_author ON event_author.id = e.author_user_id
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
@@ -60,6 +62,8 @@ const sessionEventSelect = `
 	LEFT JOIN dndshare.storage_image actor_icon ON actor_icon.id = actor_item.icon_image_id AND actor_icon.deleted = false
 	LEFT JOIN dndshare.storage_image actor_cover ON actor_cover.id = actor_item.cover_image_id AND actor_cover.deleted = false
 	LEFT JOIN dndshare.svg_storage actor_svg ON actor_svg.id = actor_item.icon_svg_id
+	LEFT JOIN dndshare.item_transfer event_transfer ON event_transfer.event_id = e.id
+	LEFT JOIN dndshare."char" transfer_recipient ON transfer_recipient.id = event_transfer.recipient_char_id
 	WHERE e.deleted = false`
 
 func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
@@ -70,7 +74,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorName, &event.AuthorIsSessionOwner,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
 		&event.ActorItemID, &event.ActorImageURL, &event.ActorSVG,
-		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt, &event.ClientActionID,
+		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt, &event.ClientActionID, &event.SessionOwnerUserID, &event.RecipientUserID,
 	)
 	if len(actorData) > 0 {
 		event.ActorData = json.RawMessage(actorData)
@@ -176,16 +180,16 @@ func (s *Store) CreateSessionEvent(ctx context.Context, sessionID, userID int64,
 	return scanSessionEvent(s.pool.QueryRow(ctx, sessionEventSelect+` AND e.id = $1`, id))
 }
 
+// Players receive only events directed to their character; public does not grant timeline access.
+const sessionEventReadAccess = ` AND (event_session.owner_user_id = $2 OR
+ (e.event_type = 'item_transfer' AND transfer_recipient.user_id = $2))`
+
 // GetSessionEvents returns the newest page for afterID=0, otherwise events after the cursor.
 func (s *Store) GetSessionEvents(ctx context.Context, sessionID, userID, afterID int64, limit int) ([]SessionEvent, error) {
 	if limit < 1 || limit > 100 {
 		limit = 50
 	}
-	visibility := ` AND (e.visibility = 'public' OR e.author_user_id = $2 OR EXISTS (
-		SELECT 1 FROM dndshare."session" owner_session
-		WHERE owner_session.id = e.session_id AND owner_session.owner_user_id = $2
-	))`
-	query := sessionEventSelect + ` AND e.session_id = $1` + visibility
+	query := sessionEventSelect + ` AND e.session_id = $1` + sessionEventReadAccess
 	args := []any{sessionID, userID}
 	if afterID > 0 {
 		query += ` AND e.id > $3 ORDER BY e.id ASC LIMIT $4`

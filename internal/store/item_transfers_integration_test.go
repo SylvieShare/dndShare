@@ -149,7 +149,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 			t.Fatalf("stale save restored/lost item: %v", err)
 		}
 	}
-	updates, err := s.SessionTransferEventUpdates(ctx, 1, transfer.EventID)
+	updates, err := s.SessionTransferEventUpdates(ctx, 1, 3, transfer.EventID)
 	if err != nil || len(updates) != 1 || !strings.Contains(string(updates[0].Data), `"accepted"`) {
 		t.Fatalf("chronicle status: %+v %v", updates, err)
 	}
@@ -184,9 +184,35 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if err != nil || roll.ClientActionID == nil || *roll.ClientActionID != rollAction {
 		t.Fatalf("created event correlation: %+v %v", roll, err)
 	}
-	page, err := s.GetSessionEvents(ctx, 1, 1, roll.ID-1, 100)
+	page, err := s.GetSessionEvents(ctx, 1, 3, roll.ID-1, 100)
 	if err != nil || len(page) != 1 || page[0].ClientActionID == nil || *page[0].ClientActionID != rollAction {
 		t.Fatalf("read event correlation: %+v %v", page, err)
+	}
+	for _, reader := range []int64{1, 2, 3} {
+		visible, err := s.GetSessionEvents(ctx, 1, reader, 0, 100)
+		if err != nil {
+			t.Fatal(err)
+		}
+		changed, err := s.SessionTransferEventUpdates(ctx, 1, reader, roll.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if reader == 1 && (len(visible) != 0 || len(changed) != 0) {
+			t.Fatalf("sender sees other actors: %+v %+v", visible, changed)
+		}
+		if reader == 2 {
+			if len(visible) != 3 || len(changed) != 3 {
+				t.Fatalf("recipient transfer count: %d %d", len(visible), len(changed))
+			}
+			for _, e := range append(visible, changed...) {
+				if e.EventType != "item_transfer" || e.RecipientUserID == nil || *e.RecipientUserID != reader {
+					t.Fatalf("unaddressed event: %+v", e)
+				}
+			}
+		}
+		if reader == 3 && len(visible) != 4 {
+			t.Fatalf("owner lost history: %+v", visible)
+		}
 	}
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {

@@ -26,7 +26,8 @@ async function prepare(page, role = 'dm') {
     else if (path === '/api/sessions/test') json = { session, participants: [], myRole: role === 'dm' ? 'gm' : 'player' }
     else if (path === '/api/sessions/test/events') {
       const after = Number(url.searchParams.get('after') || 0)
-      json = { events: events.filter(event => event.id > after), updates: events.filter(event => event.id <= after && event.type === 'item_transfer') }
+      const projection = event => ({ ...event, sessionOwnerUserId: session.ownerUserId })
+      json = { events: events.filter(event => event.id > after).map(projection), updates: events.filter(event => event.id <= after && event.type === 'item_transfer').map(projection) }
     } else if (path === '/api/char/recipient') json = character
     else if (path === '/api/char/recipient/sessions') json = { sessions: [session] }
     else if (path === '/api/char/recipient/version') json = { version: 1 }
@@ -72,20 +73,23 @@ for (const mobile of [false, true]) test(`chronicle arrivals and toast navigatio
   await expect(page.locator('[data-event-id="4"]')).toHaveClass(/event-row--arriving/)
   expect(await page.locator('[data-event-id="4"]').evaluate(el => getComputedStyle(el).animationName)).toBe('none')
 })
-test('player session receives live events', async ({ page }) => {
+test('player session ignores other actors and receives only addressed offers', async ({ page }) => {
   const { events } = await prepare(page, 'player')
   await open(page)
   events.push({ ...structuredClone(initialEvent), id: 2, action: 'Игрок использовал посох' })
   await emit(page)
+  await expect.poll(() => page.evaluate(() => window.notificationFixture.events.events.length)).toBe(2)
+  await expect(page.locator('.app-notification')).toHaveCount(0)
+  events.push({ ...structuredClone(initialEvent), id: 3, type: 'item_transfer', recipientUserId: 1, data: { status: 'pending' } })
+  await emit(page)
   await expect(page.locator('.app-notification')).toHaveCount(1)
-  await expect(page.locator('.app-notification')).toContainText('Игрок использовал посох')
 })
 for (const mobile of [false, true]) test(`own sheet receives incoming transfers and updated status on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
   const { events, transfers } = await prepare(page, 'player')
   await open(page, '/char/recipient')
   transfers.push({ id: 1, senderCharUuid: 'sender', recipientCharUuid: 'recipient', senderName: 'Лиора', recipientName: 'Торин', itemName: 'Посох', status: 'pending' })
-  const transfer = { ...structuredClone(initialEvent), id: 2, type: 'item_transfer', action: 'Передача предмета', data: { source: { name: 'Посох' }, senderName: 'Лиора', recipientName: 'Торин', status: 'pending', count: 1 } }
+  const transfer = { ...structuredClone(initialEvent), id: 2, type: 'item_transfer', recipientUserId: 1, action: 'Передача предмета', data: { source: { name: 'Посох' }, senderName: 'Лиора', recipientName: 'Торин', status: 'pending', count: 1 } }
   events.push(transfer)
   await emit(page)
   const toast = page.locator('.app-notification')
@@ -96,11 +100,10 @@ for (const mobile of [false, true]) test(`own sheet receives incoming transfers 
   await page.getByRole('dialog').getByRole('button', { name: 'Закрыть', exact: true }).last().click()
   transfer.data.status = 'accepted'; transfers.length = 0
   await emit(page)
-  await expect(toast).toHaveCount(1)
-  await expect(toast).toContainText('Приняли')
-  await expect(toast).toContainText('Событие обновлено')
+  await expect.poll(() => page.evaluate(() => window.notificationFixture.events.events.find(event => event.id === 2)?.data.status)).toBe('accepted')
+  await expect(toast).toHaveCount(0)
   await emit(page)
-  await expect(toast).toHaveCount(1)
+  await expect(toast).toHaveCount(0)
 })
 
 test('dice and events share one bounded queue and keep reroll actions', async ({ page }) => {

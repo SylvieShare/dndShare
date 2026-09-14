@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { onScopeDispose, ref, toRaw } from 'vue'
 import * as sessionEventsApi from '@/shared/api/sessionEventsApi'
+import { useAccountStore } from '@/stores/account'
 import { useNotificationsStore } from '@/stores/notifications'
 import { sessionEventSignature } from '@/features/notifications/lib/sessionEventChanges'
 
@@ -14,6 +15,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   const syncError = ref(false)
   const newEventIds = ref(new Set())
   const notifications = useNotificationsStore()
+  const account = useAccountStore()
   const readers = new Map()
   const signatures = new Map()
   const localActions = new Set()
@@ -47,6 +49,10 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     }, 700))
   }
   function notifyEvent(event, updated) {
+    const userId = Number(account.user?.id)
+    if (!userId || Number(event.authorUserId) === userId) return
+    const isOwner = Number(event.sessionOwnerUserId) === userId
+    if (!isOwner && !(event.type === 'item_transfer' && Number(event.recipientUserId) === userId && event.data?.status === 'pending')) return
     if (localActions.has(event.clientActionId) || reader()?.isReading?.()) return
     const action = reader()?.actionFor?.(event)
     const id = notifications.notify({

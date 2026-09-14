@@ -127,7 +127,7 @@ func (s *Server) handleGetSessionEvents(w http.ResponseWriter, r *http.Request) 
 		serverError(w, err)
 		return
 	}
-	updates, err := s.store.SessionTransferEventUpdates(r.Context(), session.ID, afterID)
+	updates, err := s.store.SessionTransferEventUpdates(r.Context(), session.ID, userID, afterID)
 	if err != nil {
 		serverError(w, err)
 		return
