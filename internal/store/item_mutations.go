@@ -20,30 +20,32 @@ func (s *Store) UpdateBase(ctx context.Context, nameEn, name string, data json.R
 }
 
 // CreateBase — создать базовый (user_id NULL) предмет.
-func (s *Store) CreateBase(ctx context.Context, name, nameEn string, data json.RawMessage, typeID int64, parentID *int64, automation ItemAutomationPatch) (Item, error) {
+func (s *Store) CreateBase(ctx context.Context, name, nameEn string, data json.RawMessage, typeID int64, parentID *int64, automation ItemMetadataPatch) (Item, error) {
 	if err := automation.Validate(); err != nil {
 		return Item{}, err
 	}
 	meta := automation.Initial()
+	hidden := automation.Hidden != nil && *automation.Hidden
 	data = canonicalItemData(data)
 	var id int64
 	err := s.pool.QueryRow(ctx,
-		"INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, parent_id, automation_status, automation_note, requires_player_interaction) VALUES (NULL, $1, $2, CAST($3 AS jsonb), $4, $5, $6, $7, $8) RETURNING id",
-		name, nameEn, string(data), typeID, parentID, meta.AutomationStatus, meta.AutomationNote, meta.RequiresPlayerInteraction,
+		"INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, parent_id, automation_status, automation_note, requires_player_interaction, hidden) VALUES (NULL, $1, $2, CAST($3 AS jsonb), $4, $5, $6, $7, $8, $9) RETURNING id",
+		name, nameEn, string(data), typeID, parentID, meta.AutomationStatus, meta.AutomationNote, meta.RequiresPlayerInteraction, hidden,
 	).Scan(&id)
 	if err != nil {
 		return Item{}, err
 	}
 	en := nameEn
-	return Item{ItemAutomation: meta, ID: id, Name: name, NameEn: &en, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID}, nil
+	return Item{Hidden: hidden, ItemAutomation: meta, ID: id, Name: name, NameEn: &en, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID}, nil
 }
 
 // Create — создать пользовательский предмет в его default custom source.
-func (s *Store) Create(ctx context.Context, userID int64, name string, data json.RawMessage, typeID int64, parentID *int64, automation ItemAutomationPatch) (Item, error) {
+func (s *Store) Create(ctx context.Context, userID int64, name string, data json.RawMessage, typeID int64, parentID *int64, automation ItemMetadataPatch) (Item, error) {
 	if err := automation.Validate(); err != nil {
 		return Item{}, err
 	}
 	meta := automation.Initial()
+	hidden := automation.Hidden != nil && *automation.Hidden
 	data = canonicalItemData(data)
 	var id, customSourceID int64
 	err := s.pool.QueryRow(ctx,
@@ -54,20 +56,20 @@ func (s *Store) Create(ctx context.Context, userID int64, name string, data json
 		    DO UPDATE SET name = dndshare.custom_item_source.name
 		    RETURNING id
 		)
-		INSERT INTO dndshare.item (user_id, name, data, type_id, parent_id, custom_source_id, automation_status, automation_note, requires_player_interaction)
-		SELECT $1, $2, CAST($3 AS jsonb), $4, $5, id, $6, $7, $8 FROM default_source
+		INSERT INTO dndshare.item (user_id, name, data, type_id, parent_id, custom_source_id, automation_status, automation_note, requires_player_interaction, hidden)
+		SELECT $1, $2, CAST($3 AS jsonb), $4, $5, id, $6, $7, $8, $9 FROM default_source
 		RETURNING id, custom_source_id`,
-		userID, name, string(data), typeID, parentID, meta.AutomationStatus, meta.AutomationNote, meta.RequiresPlayerInteraction,
+		userID, name, string(data), typeID, parentID, meta.AutomationStatus, meta.AutomationNote, meta.RequiresPlayerInteraction, hidden,
 	).Scan(&id, &customSourceID)
 	if err != nil {
 		return Item{}, err
 	}
 	uid := userID
-	return Item{ItemAutomation: meta, ID: id, UserID: &uid, Name: name, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID, CustomSourceID: &customSourceID}, nil
+	return Item{Hidden: hidden, ItemAutomation: meta, ID: id, UserID: &uid, Name: name, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID, CustomSourceID: &customSourceID}, nil
 }
 
 // Update — обновить предмет; isAdmin снимает проверку владельца.
-func (s *Store) Update(ctx context.Context, id, userID int64, isAdmin bool, name string, nameEn *string, data json.RawMessage, automation ItemAutomationPatch) error {
+func (s *Store) Update(ctx context.Context, id, userID int64, isAdmin bool, name string, nameEn *string, data json.RawMessage, automation ItemMetadataPatch) error {
 	if err := automation.Validate(); err != nil {
 		return err
 	}
@@ -76,10 +78,11 @@ func (s *Store) Update(ctx context.Context, id, userID int64, isAdmin bool, name
 		`UPDATE dndshare.item SET name = $1, name_en = $2, data = CAST($3 AS jsonb),
             automation_status = COALESCE($7, automation_status),
             automation_note = COALESCE($8, automation_note),
-            requires_player_interaction = COALESCE($9, requires_player_interaction)
+            requires_player_interaction = COALESCE($9, requires_player_interaction),
+            hidden = COALESCE($10, hidden)
          WHERE id = $4 AND ($6 OR user_id = $5)`,
 		name, nameEn, jsonOrEmpty(data), id, userID, isAdmin,
-		automation.AutomationStatus, automation.AutomationNote, automation.RequiresPlayerInteraction,
+		automation.AutomationStatus, automation.AutomationNote, automation.RequiresPlayerInteraction, automation.Hidden,
 	)
 	if err == nil && result.RowsAffected() == 0 {
 		return ErrNotFound

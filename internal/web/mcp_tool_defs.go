@@ -72,6 +72,7 @@ func mcpToolDefs() []map[string]any {
 			schema(map[string]any{
 				"automationStatus":          map[string]any{"type": "string", "enum": []string{"unreviewed", "full", "partial", "none", "not_applicable"}, "description": "Site mechanics coverage; omitted on update preserves status. Explicit review, never infer from dependency count."},
 				"automationNote":            strP("Optional explanation of coverage or limitations, up to 1000 characters. Empty string clears it."),
+				"hidden":                    map[string]any{"type": "boolean", "description": "Hide from catalogue lists, search and character creation. Direct ID reads remain available. Omitted on update preserves visibility."},
 				"requiresPlayerInteraction": map[string]any{"type": "boolean", "description": "Requires another player's character; independent of coverage status."},
 				"typeId":                    intP("Item type id"),
 				"name":                      strP("Display name (Russian)"),
@@ -84,6 +85,7 @@ func mcpToolDefs() []map[string]any {
 			schema(map[string]any{
 				"automationStatus":          map[string]any{"type": "string", "enum": []string{"unreviewed", "full", "partial", "none", "not_applicable"}, "description": "Site mechanics coverage; omitted on update preserves status. Explicit review, never infer from dependency count."},
 				"automationNote":            strP("Optional explanation of coverage or limitations, up to 1000 characters. Empty string clears it."),
+				"hidden":                    map[string]any{"type": "boolean", "description": "Hide from catalogue lists, search and character creation. Direct ID reads remain available. Omitted on update preserves visibility."},
 				"requiresPlayerInteraction": map[string]any{"type": "boolean", "description": "Requires another player's character; independent of coverage status."},
 				"id":                        intP("Item id"),
 				"name":                      strP("Display name (Russian)"),

@@ -38,7 +38,7 @@ func (s *Server) toolItemCreate(ctx context.Context, args map[string]json.RawMes
 	if err != nil {
 		return nil, err
 	}
-	automation, err := mcpItemAutomation(args)
+	automation, err := mcpItemMetadata(args)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (s *Server) toolItemUpdate(ctx context.Context, args map[string]json.RawMes
 	if err != nil {
 		return nil, err
 	}
-	automation, err := mcpItemAutomation(args)
+	automation, err := mcpItemMetadata(args)
 	if err != nil {
 		return nil, err
 	}

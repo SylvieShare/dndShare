@@ -13,14 +13,15 @@ type ItemAutomation struct {
 	RequiresPlayerInteraction bool   `json:"requiresPlayerInteraction"`
 }
 
-// ItemAutomationPatch preserves omitted values when updating through HTTP or MCP.
-type ItemAutomationPatch struct {
+// ItemMetadataPatch preserves omitted values when updating through HTTP or MCP.
+type ItemMetadataPatch struct {
+	Hidden                    *bool   `json:"hidden"`
 	AutomationStatus          *string `json:"automationStatus"`
 	AutomationNote            *string `json:"automationNote"`
 	RequiresPlayerInteraction *bool   `json:"requiresPlayerInteraction"`
 }
 
-func (p *ItemAutomationPatch) Validate() error {
+func (p *ItemMetadataPatch) Validate() error {
 	if p.AutomationStatus != nil {
 		switch *p.AutomationStatus {
 		case "unreviewed", "full", "partial", "none", "not_applicable":
@@ -38,7 +39,7 @@ func (p *ItemAutomationPatch) Validate() error {
 	return nil
 }
 
-func (p ItemAutomationPatch) Initial() ItemAutomation {
+func (p ItemMetadataPatch) Initial() ItemAutomation {
 	result := ItemAutomation{AutomationStatus: "unreviewed"}
 	if p.AutomationStatus != nil {
 		result.AutomationStatus = *p.AutomationStatus

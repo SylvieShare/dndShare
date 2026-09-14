@@ -177,7 +177,7 @@ func (s *Server) handleCreateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		store.ItemAutomationPatch
+		store.ItemMetadataPatch
 		TypeID           int64           `json:"typeId"`
 		Name             string          `json:"name"`
 		Data             json.RawMessage `json:"data"`
@@ -188,11 +188,11 @@ func (s *Server) handleCreateItem(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "bad body")
 		return
 	}
-	if err := req.ItemAutomationPatch.Validate(); err != nil {
+	if err := req.ItemMetadataPatch.Validate(); err != nil {
 		badRequest(w, err.Error())
 		return
 	}
-	item, err := s.store.Create(r.Context(), uid, req.Name, req.Data, req.TypeID, req.ParentID, req.ItemAutomationPatch)
+	item, err := s.store.Create(r.Context(), uid, req.Name, req.Data, req.TypeID, req.ParentID, req.ItemMetadataPatch)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -220,7 +220,7 @@ func (s *Server) handleUpdateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req struct {
-		store.ItemAutomationPatch
+		store.ItemMetadataPatch
 		Name             string          `json:"name"`
 		NameEn           *string         `json:"nameEn"`
 		Data             json.RawMessage `json:"data"`
@@ -234,11 +234,11 @@ func (s *Server) handleUpdateItem(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if err := req.ItemAutomationPatch.Validate(); err != nil {
+	if err := req.ItemMetadataPatch.Validate(); err != nil {
 		badRequest(w, err.Error())
 		return
 	}
-	if err := s.store.Update(r.Context(), id, uid, isAdmin, req.Name, req.NameEn, req.Data, req.ItemAutomationPatch); err != nil {
+	if err := s.store.Update(r.Context(), id, uid, isAdmin, req.Name, req.NameEn, req.Data, req.ItemMetadataPatch); err != nil {
 		if errors.Is(err, store.ErrNotFound) {
 			unauthorized(w)
 			return

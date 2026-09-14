@@ -431,6 +431,7 @@ var schemaParts = []struct {
 	{"session-interactions", schemaSessionInteractionsSQL},
 	{"potion-use-requests", schemaPotionUseRequestsSQL},
 	{"potion-applications", schemaPotionApplicationsSQL},
+	{"hidden-items", schemaHiddenItemsSQL},
 }
 
 const (

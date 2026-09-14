@@ -6,9 +6,9 @@ import (
 	"testing"
 )
 
-func TestItemAutomationPatch(t *testing.T) {
+func TestItemMetadataPatch(t *testing.T) {
 	for _, status := range []string{"unreviewed", "full", "partial", "none", "not_applicable"} {
-		p := ItemAutomationPatch{AutomationStatus: &status}
+		p := ItemMetadataPatch{AutomationStatus: &status}
 		if err := p.Validate(); err != nil {
 			t.Fatal(err)
 		}
@@ -17,12 +17,12 @@ func TestItemAutomationPatch(t *testing.T) {
 		}
 	}
 	for _, status := range []string{"", "unknown", "FULL", "requires_player_interaction"} {
-		p := ItemAutomationPatch{AutomationStatus: &status}
+		p := ItemMetadataPatch{AutomationStatus: &status}
 		if p.Validate() == nil {
 			t.Fatalf("accepted %q", status)
 		}
 	}
-	p := ItemAutomationPatch{}
+	p := ItemMetadataPatch{}
 	if p.Initial().AutomationStatus != "unreviewed" {
 		t.Fatal("default must not claim coverage")
 	}
@@ -36,7 +36,7 @@ func TestItemAutomationPatch(t *testing.T) {
 	if p.Validate() == nil {
 		t.Fatal("accepted long note")
 	}
-	var payload ItemAutomationPatch
+	var payload ItemMetadataPatch
 	if err := json.Unmarshal([]byte(`{"requiresPlayerInteraction":false,"automationNote":""}`), &payload); err != nil {
 		t.Fatal(err)
 	}

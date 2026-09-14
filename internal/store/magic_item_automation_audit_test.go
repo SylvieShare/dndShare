@@ -50,7 +50,7 @@ func TestMagicItemAutomationAuditManifest(t *testing.T) {
 		if row.Name == "" || strings.TrimSpace(row.Note) == "" || !hash.MatchString(row.DataHash) {
 			t.Fatalf("missing evidence for %d", row.ID)
 		}
-		patch := ItemAutomationPatch{AutomationStatus: &row.Status, AutomationNote: &row.Note}
+		patch := ItemMetadataPatch{AutomationStatus: &row.Status, AutomationNote: &row.Note}
 		if err := patch.Validate(); err != nil {
 			t.Fatalf("item %d: %v", row.ID, err)
 		}

@@ -392,9 +392,9 @@ function openEditModal(item) {
 function onItemSaved(item) {
   const isEditing = !!itemForm.item
   const exists = items.value.some(i => i.id === item.id)
-  items.value = exists
-    ? items.value.map(i => i.id === item.id ? item : i)
-    : [item, ...items.value]
+  items.value = item.hidden
+    ? items.value.filter(i => i.id !== item.id)
+    : exists ? items.value.map(i => i.id === item.id ? item : i) : [item, ...items.value]
   itemForm.open = false
   if (isEditing || !selectedItem.value || selectedItem.value.id === item.id) {
     selectedItem.value = item

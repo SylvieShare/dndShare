@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 )
 
-func mcpItemAutomation(args map[string]json.RawMessage) (store.ItemAutomationPatch, error) {
-	var patch store.ItemAutomationPatch
+func mcpItemMetadata(args map[string]json.RawMessage) (store.ItemMetadataPatch, error) {
+	var patch store.ItemMetadataPatch
 	raw, err := json.Marshal(args)
 	if err != nil {
 		return patch, err

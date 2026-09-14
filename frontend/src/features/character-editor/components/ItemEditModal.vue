@@ -21,6 +21,10 @@
         />
       </FormField>
 
+      <FormField label="Скрытая запись" title="Не показывать в справочнике, поиске и при создании персонажа. Уже добавленные записи сохранятся на листах персонажей.">
+        <ToggleSwitch v-model="hidden" aria-label="Скрытая запись" />
+      </FormField>
+
       <ItemAutomationEditor :data="automation" />
 
       <ItemMediaEditor :item="persistedItem || item" :media="media" :z-index="zIndex" />
@@ -62,7 +66,7 @@ import '@/features/items/editor/abilityEditor.css'
 import { computed, nextTick, onMounted, provide, reactive, ref } from 'vue'
 import { AppModalFrame, useMediaQuery } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import { FormField } from '@sylvieshare/share-ui'
+import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import ItemAutomationEditor from '@/features/items/editor/ItemAutomationEditor.vue'
 import { itemAutomationDraft } from '@/features/items/lib/itemAutomation'
@@ -106,6 +110,7 @@ const formName = ref(props.initialName)
 const formNameEn = ref(props.initialNameEn)
 const formData = reactive({})
 const automation = reactive(itemAutomationDraft(props.item))
+const hidden = ref(!!props.item?.hidden)
 const saving = ref(false)
 const missingRequiredFields = computed(() => editableTypeFields.value.filter((field) => {
   if (!field.required) return false
@@ -196,6 +201,7 @@ async function submit() {
       name: formName.value.trim(),
       data,
       ...automation,
+      hidden: hidden.value,
     }
     if (showPublicationSources.value) payload.contentSourceIds = selectedContentSourceIds.value
     if (props.showNameEn) payload.nameEn = formNameEn.value.trim() || null

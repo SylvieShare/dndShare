@@ -13,6 +13,7 @@ import (
 
 // Item — строка dndshare.item. Иконка и обложка проецируются из медиахранилищ.
 type Item struct {
+	Hidden bool `json:"hidden"`
 	ItemAutomation
 	ID               int64              `json:"id"`
 	UserID           *int64             `json:"userId,omitempty"`
@@ -75,14 +76,14 @@ type ItemFilter struct {
 	Values []any
 }
 
-const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id, custom_source_id, icon_svg_id, icon_image_id, cover_image_id, automation_status, automation_note, requires_player_interaction"
+const itemColumns = "id, user_id, name, name_en, data, type_id, created_at, parent_id, custom_source_id, icon_svg_id, icon_image_id, cover_image_id, automation_status, automation_note, requires_player_interaction, hidden"
 
 func scanItemRow(rows pgx.Rows) (Item, error) {
 	var it Item
 	var userID, parentID, customSourceID, iconSVGID, iconImageID, coverImageID *int64
 	var nameEn, svg, iconImageURL, coverImageURL *string
 	var data []byte
-	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID, &iconSVGID, &iconImageID, &coverImageID, &it.AutomationStatus, &it.AutomationNote, &it.RequiresPlayerInteraction, &svg, &iconImageURL, &coverImageURL); err != nil {
+	if err := rows.Scan(&it.ID, &userID, &it.Name, &nameEn, &data, &it.TypeID, &it.CreatedAt, &parentID, &customSourceID, &iconSVGID, &iconImageID, &coverImageID, &it.AutomationStatus, &it.AutomationNote, &it.RequiresPlayerInteraction, &it.Hidden, &svg, &iconImageURL, &coverImageURL); err != nil {
 		return Item{}, err
 	}
 	it.UserID = userID
@@ -122,7 +123,7 @@ func publicOrOwnedPredicate(alias string, userID *int64, userParam int) string {
 // FindChildren — generic descendants by the normalized parent_id edge.
 func (s *Store) FindChildren(ctx context.Context, parentID int64, userID *int64, scope ContentScope) ([]Item, error) {
 	args := []any{parentID}
-	where := []string{"i.parent_id = $1"}
+	where := []string{"i.parent_id = $1", "NOT i.hidden"}
 	if userID != nil {
 		args = append(args, *userID)
 	}
@@ -216,7 +217,7 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 		args = append(args, v)
 		return fmt.Sprintf("$%d", len(args))
 	}
-	where := []string{"i.type_id = " + add(typeID)}
+	where := []string{"i.type_id = " + add(typeID), "NOT i.hidden"}
 
 	if userID != nil {
 		where = append(where, "(i.user_id = "+add(*userID)+" OR i.user_id IS NULL)")
@@ -399,6 +400,7 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 	}
 	like := add("%" + q + "%")
 	where := []string{
+		"NOT i.hidden",
 		"i.type_id IN (" + strings.Join(ph, ", ") + ")",
 		itemNameSearchPredicate("i", like),
 	}
@@ -455,7 +457,7 @@ func (s *Store) attachVisibleOriginRelations(ctx context.Context, items []Item, 
 		`SELECT child.id, child.parent_id
 		   FROM dndshare.item child
 		  WHERE child.parent_id = ANY($1)
-		    AND child.type_id IN (16, 17)
+		    AND child.type_id IN (16, 17) AND NOT child.hidden
 		    AND `+visibility+`
 		  ORDER BY child.name, child.id`,
 		args...,

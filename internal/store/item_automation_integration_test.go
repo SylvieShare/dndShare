@@ -45,6 +45,10 @@ func TestItemAutomationPersistence(t *testing.T) {
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaItemAutomationSQL)
 	exec(schemaItemAutomationSQL)
+	exec(`INSERT INTO dndshare.item(name,name_en,type_id,data) VALUES ('Магус','Magus',9,'{}'),('Шаман','Shaman',9,'{}');
+ CREATE TABLE dndshare.content_source(id bigint PRIMARY KEY, name text, code text);
+ CREATE TABLE dndshare.item_content_source(item_id bigint,content_source_id bigint,primary_source boolean);`)
+	exec(schemaHiddenItemsSQL)
 	s := &Store{pool: pool}
 	read := func(id int64) Item {
 		t.Helper()
@@ -62,7 +66,7 @@ func TestItemAutomationPersistence(t *testing.T) {
 		t.Fatalf("migration changed existing data: %+v", old)
 	}
 	status, note, interaction := "full", "Цель выбирает игрок", true
-	patch := ItemAutomationPatch{&status, &note, &interaction}
+	patch := ItemMetadataPatch{AutomationStatus: &status, AutomationNote: &note, RequiresPlayerInteraction: &interaction}
 	base, err := s.CreateBase(ctx, "Меч", "Sword", json.RawMessage(`{}`), 19, nil, patch)
 	if err != nil {
 		t.Fatal(err)
@@ -74,22 +78,23 @@ func TestItemAutomationPersistence(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := s.Update(ctx, own.ID, 43, false, "Чужая", nil, json.RawMessage(`{}`), ItemAutomationPatch{}); !errors.Is(err, ErrNotFound) {
+	if err := s.Update(ctx, own.ID, 43, false, "Чужая", nil, json.RawMessage(`{}`), ItemMetadataPatch{}); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("foreign update: %v", err)
 	}
-	if err := s.Update(ctx, own.ID, 42, false, "Новое название", nil, json.RawMessage(`{"desc":"new"}`), ItemAutomationPatch{}); err != nil {
+	if err := s.Update(ctx, own.ID, 42, false, "Новое название", nil, json.RawMessage(`{"desc":"new"}`), ItemMetadataPatch{}); err != nil {
 		t.Fatal(err)
 	}
 	if got := read(own.ID); got.ItemAutomation != patch.Initial() {
 		t.Fatal("omitted fields reset metadata")
 	}
 	partial, clear, off := "partial", "", false
-	if err := s.Update(ctx, base.ID, 43, true, "Меч", nil, json.RawMessage(`{}`), ItemAutomationPatch{&partial, &clear, &off}); err != nil {
+	if err := s.Update(ctx, base.ID, 43, true, "Меч", nil, json.RawMessage(`{}`), ItemMetadataPatch{AutomationStatus: &partial, AutomationNote: &clear, RequiresPlayerInteraction: &off}); err != nil {
 		t.Fatal(err)
 	}
 	if got := read(base.ID); got.AutomationStatus != partial || got.AutomationNote != "" || got.RequiresPlayerInteraction {
 		t.Fatal("explicit clear failed")
 	}
+	testHiddenItemVisibility(t, s)
 	if _, err := pool.Exec(ctx, `UPDATE dndshare.item SET automation_status='invalid' WHERE id=$1`, base.ID); err == nil {
 		t.Fatal("database accepted unknown enum")
 	}
