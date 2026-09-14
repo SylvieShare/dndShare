@@ -1,0 +1,509 @@
+{
+  "kind": "layout",
+  "type": "column",
+  "props": {
+    "grow": "1",
+    "basis": "0",
+    "min-width": "0",
+    "style": {},
+    "gap": "8px"
+  },
+  "children": [
+    {
+      "kind": "layout",
+      "type": "column",
+      "props": {
+        "gap": "8px",
+        "style": {
+          "margin-top": "20px"
+        }
+      },
+      "children": [
+        {
+          "ref": "read_only_notice",
+          "kind": "block"
+        },
+        {
+          "kind": "layout",
+          "type": "column",
+          "props": {
+            "gap": "8px",
+            "grow": "1"
+          },
+          "children": [
+            {
+              "kind": "layout",
+              "type": "column",
+              "props": {
+                "gap": "0",
+                "style": {
+                  "padding": "0",
+                  "overflow": "hidden"
+                },
+                "align-items": "stretch",
+                "tile": true
+              },
+              "children": [
+                {
+                  "kind": "layout",
+                  "type": "row",
+                  "props": {
+                    "gap": "0",
+                    "align-items": "stretch"
+                  },
+                  "children": [
+                    {
+                      "kind": "layout",
+                      "type": "column",
+                      "props": {
+                        "gap": "0",
+                        "style": {
+                          "flex": "0 0 110px"
+                        }
+                      },
+                      "children": [
+                        {
+                          "ref": "character_icon",
+                          "kind": "block"
+                        },
+                        {
+                          "ref": "desktop_status_trigger",
+                          "kind": "block"
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "layout",
+                      "type": "column",
+                      "props": {
+                        "gap": "10px",
+                        "grow": "1",
+                        "style": {
+                          "padding": "15px"
+                        }
+                      },
+                      "children": [
+                        {
+                          "ref": "char_identity",
+                          "kind": "block",
+                          "props": {
+                            "style": {
+                              "min-width": "0"
+                            }
+                          }
+                        },
+                        {
+                          "ref": "hp",
+                          "kind": "block"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ref": "desktop_statuses",
+                  "kind": "block"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "layout",
+      "type": "column",
+      "props": {
+        "gap": "0"
+      },
+      "children": [
+        {
+          "kind": "layout",
+          "type": "column",
+          "props": {
+            "gap": "0",
+            "grow": "1",
+            "basis": "0",
+            "min-width": "0"
+          },
+          "children": [
+            {
+              "kind": "layout",
+              "type": "inner_tabs",
+              "children": [
+                {
+                  "title": "Оружие",
+                  "content": {
+                    "ref": "weapon",
+                    "kind": "block",
+                    "props": {
+                      "variant": "list",
+                      "show_add_in_view": true
+                    }
+                  }
+                },
+                {
+                  "title": "Магия",
+                  "content": {
+                    "ref": "spells",
+                    "kind": "block"
+                  }
+                },
+                {
+                  "title": "Способности",
+                  "content": {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "14px"
+                    },
+                    "children": [
+                      {
+                        "ref": "abilities_class",
+                        "kind": "block",
+                        "content": {
+                          "expanded": true
+                        }
+                      },
+                      {
+                        "ref": "abilities_race",
+                        "kind": "block",
+                        "content": {
+                          "expanded": true
+                        }
+                      },
+                      {
+                        "ref": "abilities_story",
+                        "kind": "block",
+                        "content": {
+                          "expanded": true
+                        }
+                      },
+                      {
+                        "ref": "abilities_feats",
+                        "kind": "block",
+                        "content": {
+                          "expanded": true
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "title": "Снаряжение",
+                  "content": {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "16px"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "10px",
+                          "tile": true,
+                          "style": {
+                            "padding": "18px"
+                          }
+                        },
+                        "children": [
+                          {
+                            "kind": "layout",
+                            "type": "row",
+                            "props": {
+                              "justify-content": "space-between",
+                              "align-items": "center",
+                              "gap": "16px"
+                            },
+                            "children": [
+                              {
+                                "ref": "counters",
+                                "kind": "block"
+                              },
+                              {
+                                "ref": "money",
+                                "kind": "block",
+                                "title": "Кошелек"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "0",
+                          "tile": true,
+                          "style": {
+                            "padding": "18px"
+                          }
+                        },
+                        "children": [
+                          {
+                            "ref": "potions",
+                            "kind": "block"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "0"
+                        },
+                        "children": [
+                          {
+                            "ref": "items",
+                            "kind": "block"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "title": "Личность",
+                  "content": {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "0"
+                    },
+                    "children": [
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "16px"
+                        },
+                        "children": [
+                          {
+                            "kind": "layout",
+                            "type": "column",
+                            "props": {
+                              "gap": "12px",
+                              "tile": true,
+                              "style": {
+                                "padding": "18px"
+                              }
+                            },
+                            "children": [
+                              {
+                                "kind": "layout",
+                                "type": "row",
+                                "props": {
+                                  "gap": "16px"
+                                },
+                                "children": [
+                                  {
+                                    "ref": "person_origin",
+                                    "kind": "block",
+                                    "props": {
+                                      "grow": 1,
+                                      "basis": 0
+                                    }
+                                  },
+                                  {
+                                    "ref": "person_alignment",
+                                    "kind": "block",
+                                    "props": {
+                                      "grow": 1,
+                                      "basis": 0
+                                    }
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "layout",
+                            "type": "column",
+                            "props": {
+                              "gap": "12px",
+                              "tile": true,
+                              "style": {
+                                "padding": "18px"
+                              }
+                            },
+                            "children": [
+                              {
+                                "kind": "layout",
+                                "type": "row",
+                                "props": {
+                                  "gap": "18px",
+                                  "align-items": "stretch"
+                                },
+                                "children": [
+                                  {
+                                    "ref": "ava",
+                                    "kind": "block",
+                                    "props": {
+                                      "width": "200px",
+                                      "height": "260px"
+                                    }
+                                  },
+                                  {
+                                    "kind": "layout",
+                                    "type": "column",
+                                    "props": {
+                                      "gap": "12px",
+                                      "grow": 1,
+                                      "basis": 0
+                                    },
+                                    "children": [
+                                      {
+                                        "ref": "person_appearance",
+                                        "kind": "block"
+                                      },
+                                      {
+                                        "kind": "layout",
+                                        "type": "grid",
+                                        "props": {
+                                          "gap": "10px",
+                                          "columns": 3
+                                        },
+                                        "children": [
+                                          {
+                                            "ref": "person_height",
+                                            "kind": "block"
+                                          },
+                                          {
+                                            "ref": "person_weight",
+                                            "kind": "block"
+                                          },
+                                          {
+                                            "ref": "person_age",
+                                            "kind": "block"
+                                          },
+                                          {
+                                            "ref": "person_eyes",
+                                            "kind": "block"
+                                          },
+                                          {
+                                            "ref": "person_skin",
+                                            "kind": "block"
+                                          },
+                                          {
+                                            "ref": "person_hair",
+                                            "kind": "block"
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "layout",
+                            "type": "column",
+                            "props": {
+                              "gap": "12px",
+                              "tile": true,
+                              "style": {
+                                "padding": "18px"
+                              }
+                            },
+                            "children": [
+                              {
+                                "kind": "layout",
+                                "type": "grid",
+                                "props": {
+                                  "gap": "14px",
+                                  "columns": 2
+                                },
+                                "children": [
+                                  {
+                                    "ref": "person_traits",
+                                    "kind": "block"
+                                  },
+                                  {
+                                    "ref": "person_ideals",
+                                    "kind": "block"
+                                  },
+                                  {
+                                    "ref": "person_bonds",
+                                    "kind": "block"
+                                  },
+                                  {
+                                    "ref": "person_flaws",
+                                    "kind": "block"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "layout",
+                            "type": "column",
+                            "props": {
+                              "gap": "14px",
+                              "tile": true,
+                              "style": {
+                                "padding": "18px"
+                              }
+                            },
+                            "children": [
+                              {
+                                "ref": "person_backstory",
+                                "kind": "block"
+                              },
+                              {
+                                "ref": "person_allies",
+                                "kind": "block"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "title": "Дневник",
+                  "content": {
+                    "kind": "layout",
+                    "type": "column",
+                    "props": {
+                      "gap": "24px"
+                    },
+                    "children": [
+                      {
+                        "ref": "diary",
+                        "kind": "block"
+                      },
+                      {
+                        "kind": "layout",
+                        "type": "column",
+                        "props": {
+                          "gap": "0",
+                          "tile": true,
+                          "style": {
+                            "padding": "18px"
+                          }
+                        },
+                        "children": [
+                          {
+                            "ref": "notes",
+                            "kind": "block",
+                            "props": {
+                              "min-width": "0"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

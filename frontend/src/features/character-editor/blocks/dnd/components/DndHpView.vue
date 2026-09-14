@@ -16,7 +16,7 @@
         <span v-if="hpTemp > 0" class="hp-c-temp">+{{ hpTemp }}</span>
       </div>
     </div>
-    <StatBar size="small" :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
+    <StatBar label="Здоровье" size="small" :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
   </div>
 
   <!-- Main widget -->
@@ -33,7 +33,7 @@
         </template>
       </div>
       <div class="hp-bar">
-        <StatBar size="large" decorated :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
+        <StatBar label="Здоровье" size="large" decorated :percent="barPct" :color="barColor" :temp-percent="tempBarPct" temp-color="var(--info)" />
       </div>
     </div>
     <DndDeathSaves :hp="hp" @click.stop @change="$emit('change', $event)" />
@@ -45,7 +45,7 @@ import { MorphTile } from '@sylvieshare/share-ui'
 import { computed, ref } from 'vue'
 const rootElement = ref(null)
 defineExpose({ rootElement: () => rootElement.value?.$el || rootElement.value })
-import StatBar from '@/shared/ui/StatBar.vue'
+import { StatBar } from '@sylvieshare/share-ui'
 import DndDeathSaves from '@/features/character-editor/blocks/dnd/DndDeathSaves'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 

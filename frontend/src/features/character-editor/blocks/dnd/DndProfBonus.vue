@@ -10,8 +10,8 @@
     @action="rollProf"
   >
     <!-- compact / default (mobile) look: tap the value to roll, the pencil to edit -->
-    <template #tile="{ open, action, canEdit }">
-      <MorphTile compact-header :title="block.title || 'Бонус умения'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="skill-bonus-tile" :class="{ 'skill-bonus-tile-compact': variant === 'compact' }">
+    <template #tile="{ open, action, canEdit, attrs }">
+      <MorphTile v-bind="attrs" compact-header :title="block.title || 'Бонус умения'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="skill-bonus-tile" :class="{ 'skill-bonus-tile-compact': variant === 'compact' }">
         <div class="sb-display" @click="action">
           <span class="sb-plus">+</span>
           <span class="sb-value" :class="{ 'sb-manual': stored.auto === false }">{{ displayValue }}</span>

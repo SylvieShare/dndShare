@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <DetailSection v-if="showTitle && hasDamageInfo" label="Урон" tone="combat">
+    <DetailSection v-if="showTitle && hasDamageInfo" label="Урон" tone="danger">
       <template #icon><Swords /></template>
       <div
         class="wdc-damage-grid"
@@ -110,7 +110,7 @@
 import { computed, ref } from 'vue'
 import { BookOpen, Swords, Tags } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'

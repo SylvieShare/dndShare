@@ -15,20 +15,13 @@ const wrappers = [
 ].map(read)
 
 describe('handbook object list tile', () => {
-  it('owns the common icon, metric, identity and trailing layout', () => {
-    const icon = objectSource.indexOf('class="oli-icon"')
-    const metric = objectSource.indexOf('class="oli-metric"')
-    const identity = objectSource.indexOf('class="oli-main"')
-    const trailing = objectSource.indexOf('class="oli-right"')
-
-    expect(icon).toBeGreaterThan(-1)
-    expect(metric).toBeGreaterThan(icon)
-    expect(identity).toBeGreaterThan(metric)
-    expect(trailing).toBeGreaterThan(identity)
+  it('adapts domain identity and optional slots to the shared row', () => {
+    expect(objectSource).toContain('<ContentRow :title="item.name"')
+    for (const slot of ['metric', 'subtitle', 'name-extras', 'trailing']) expect(objectSource).toContain(`name="${slot}"`)
     expect(objectSource).toContain('props.type?.iconImageUrl')
     expect(objectSource).toContain('? 64 : 22')
     expect(objectSource).toContain('<slot v-else name="icon-fallback" />')
-    expect(objectSource).toContain('min-width: clamp(40px, 4.5vw, 52px)')
+    expect(objectSource).not.toContain('<style')
   })
 
   it('keeps every rich item renderer on the shared abstraction', () => {
@@ -45,11 +38,10 @@ describe('handbook object list tile', () => {
     expect(listSource).not.toContain('hasRichRenderer')
   })
 
-  it('pins the shared 64 px icon well to the left edge of every rich tile', () => {
-    expect(objectSource).toContain('flex: 0 0 64px')
-    expect(listSource).toContain('min-height: 66px')
-    expect(listSource).toContain('padding: 0 12px 0 0')
-    expect(listSource).toContain('overflow: hidden')
+  it('puts selection and activation on the shared row without another tile wrapper', () => {
+    expect(objectSource).toContain(':interactive="interactive" :selected="selected"')
+    expect(listSource).toContain('class="list-row"')
+    expect(listSource).not.toContain('<div class="list-row"')
     expect(listSource).not.toContain('list-row-spell')
   })
 })

@@ -49,7 +49,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("/api/", http.NotFound)
 	mux.HandleFunc("/mcp", http.NotFound)
 	mux.HandleFunc("/mcp/", http.NotFound)
-	mux.Handle("/", spaHandler())
+	mux.Handle("/", spaHandler(s.cfg.FrontendAssetCacheDir))
 
 	var h http.Handler = mux
 	h = s.session(h)   // резолвит userID в контекст (не блокирует)

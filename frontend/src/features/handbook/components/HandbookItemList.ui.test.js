@@ -16,7 +16,7 @@ const originList = readFileSync(fileURLToPath(new URL('../../items/list-componen
 describe('handbook list controls', () => {
   it('owns search and filters above the scrollable rows', () => {
     const controlsAt = source.indexOf('<HandbookCollectionBar')
-    const rowsAt = source.indexOf('<div class="list-body"')
+    const rowsAt = source.indexOf('class="list-body"')
 
     expect(controlsAt).toBeGreaterThan(0)
     expect(rowsAt).toBeGreaterThan(controlsAt)
@@ -52,7 +52,7 @@ describe('handbook list controls', () => {
   })
 
   it('uses informative linked rows for races, classes and their variant collections', () => {
-    expect(source.match(/<HandbookListItem /g)).toHaveLength(2)
+    expect(source.match(/<HandbookListItem\b/g)).toHaveLength(1)
     for (const id of [8, 9, 16, 17]) expect(listItem).toContain(`${id}: OriginListItem`)
     expect(originList).toContain('origin-list-portrait')
     expect(originList).toContain('origin-list-metric')

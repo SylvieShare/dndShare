@@ -10,12 +10,13 @@
 
       <span v-if="typeName" class="bar-type-name">{{ typeName }}</span>
 
-      <button v-if="canAdd && typeName" class="bar-add-btn" @click="$emit('add')">+ Добавить</button>
+      <AddButton v-if="canAdd && typeName" label="Добавить" @click="$emit('add')" />
     </div>
   </div>
 </template>
 
 <script setup>
+import { AddButton } from '@sylvieshare/share-ui'
 defineProps({
   typeName: { type: String, default: '' },
   canAdd: { type: Boolean, default: false },
@@ -63,20 +64,6 @@ defineEmits(['add'])
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.bar-add-btn {
-  flex-shrink: 0;
-  background: none;
-  border: 1px dashed var(--border);
-  color: var(--text-2);
-  border-radius: 7px;
-  padding: 5px 14px;
-  font: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s, background 0.15s;
-}
-.bar-add-btn:hover { color: var(--text-1); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
 
 @media (max-width: 520px) {
   .dict-top-bar-inner { padding: 8px 10px; gap: 10px; }

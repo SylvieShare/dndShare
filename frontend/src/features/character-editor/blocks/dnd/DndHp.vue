@@ -1,5 +1,5 @@
 <template>
-  <DndHpView ref="tutorialHp" data-tutorial="character-hp" :compact="isCompact"
+  <DndHpView v-bind="$attrs" ref="tutorialHp" data-tutorial="character-hp" :compact="isCompact"
     :hp="hp" :interactive="canEdit" @open="openEditor" @change="onHpChange" />
 
   <MorphEditorShell
@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
 import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHpEditor'

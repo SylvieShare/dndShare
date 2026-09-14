@@ -49,7 +49,9 @@ describe('character portrait UI', () => {
   })
 
   it('records browser snapshots after sheet changes without a global undo handler', () => {
-    expect(viewSource).toContain('recordCharacterSnapshot(uuid, data.value)')
+    expect(viewSource).toContain('createCharacterSnapshotRecorder')
+    expect(viewSource).toContain('snapshotRecorder.schedule()')
+    expect(viewSource).toContain('snapshotRecorder.dispose()')
     expect(viewSource).not.toContain('onUndoKeydown')
   })
 })

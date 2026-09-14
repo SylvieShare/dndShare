@@ -39,53 +39,40 @@
           >{{ field.nameShort || field.name }}</button>
         </div>
       </div>
-      <div class="list-body" @scroll="onScroll">
+      <div ref="scrollEl" class="list-body" @scroll="onScroll">
         <LoadingState v-if="loading" class="empty-hint" label="Загрузка..." compact />
         <div v-else-if="loadError && !items.length" class="empty-hint" role="alert">{{ loadError }} <button type="button" @click="$emit('retry')">Повторить</button></div>
         <div v-else-if="items.length === 0" class="empty-hint">Нет объектов</div>
         <div v-else class="items-list">
 
-          <!-- ── Grouped mode ── -->
-          <template v-if="groupBy">
-            <template v-for="group in groupedItems" :key="group.label">
-              <div
-                class="item-group-header"
-                :class="{ collapsed: collapsedGroups.has(group.label) }"
-                @click="toggleGroup(group.label)"
-              >
-                <svg class="item-group-chevron" viewBox="0 0 16 16" fill="none" width="13" height="13">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span class="item-group-name">{{ group.label }}</span>
-                <span class="item-group-count">{{ group.items.length }}</span>
-                <span class="item-group-line" aria-hidden="true"></span>
-              </div>
-              <template v-if="!collapsedGroups.has(group.label)">
-                <div
-                  v-for="item in group.items"
-                  :key="item.id"
-                  class="list-row list-row-rich"
-                  :class="{ selected: selectedItem && selectedItem.id === item.id }"
-                  @click="$emit('select', item)"
-                >
-                  <HandbookListItem :item="item" :type="type" />
-                </div>
-              </template>
-            </template>
-          </template>
-
-          <!-- ── Flat mode ── -->
-          <template v-else>
-            <div
-              v-for="item in items"
-              :key="item.id"
-              class="list-row list-row-rich"
-              :class="{ selected: selectedItem && selectedItem.id === item.id }"
-              @click="$emit('select', item)"
+          <template v-for="row in visibleRows" :key="row.key">
+            <div v-if="row.gap" aria-hidden="true" class="list-spacer" :style="{ height: row.gap + 'px' }" />
+            <button
+              v-if="row.item.kind === 'group'"
+              :ref="el => setRowRef(row.key, el)"
+              type="button"
+              class="item-group-header"
+              :class="{ collapsed: collapsedGroups.has(row.item.group.label) }"
+              :aria-expanded="!collapsedGroups.has(row.item.group.label)"
+              @click="toggleGroup(row.item.group.label)"
             >
-              <HandbookListItem :item="item" :type="type" />
-            </div>
+              <svg class="item-group-chevron" viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              <span class="item-group-name">{{ row.item.group.label }}</span>
+              <span class="item-group-count">{{ row.item.group.items.length }}</span>
+              <span class="item-group-line" aria-hidden="true" />
+            </button>
+            <HandbookListItem
+              v-else
+              :ref="el => setRowRef(row.key, el)"
+              class="list-row"
+              :item="row.item.item"
+              :type="type"
+              interactive
+              :selected="selectedItem?.id === row.item.item.id"
+              @activate="$emit('select', row.item.item)"
+            />
           </template>
+          <div v-if="paddingAfter" aria-hidden="true" class="list-spacer" :style="{ height: paddingAfter + 'px' }" />
 
           <div v-if="loadError" class="list-tail" role="alert">{{ loadError }} <button type="button" @click="$emit('retry')">Повторить</button></div>
           <div v-else-if="loadingMore" class="list-tail list-loading">
@@ -101,7 +88,7 @@
 </template>
 
 <script setup>
-import { LoadingIndicator } from '@sylvieshare/share-ui'
+import { useVirtualList, LoadingIndicator } from '@sylvieshare/share-ui'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { findFieldByPath, getByPath, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
@@ -204,6 +191,18 @@ watch([() => props.groupBy, groupedItems], ([group]) => {
   collapsedGroups.value = group ? new Set(groupedItems.value.map(entry => entry.label)) : new Set()
 }, { immediate: true })
 
+const scrollEl = ref(null)
+const displayRows = computed(() => {
+  if (!props.groupBy) return props.items.map(item => ({ kind: 'item', key: `item:${item.id}`, item }))
+  return groupedItems.value.flatMap(group => [
+    { kind: 'group', key: `group:${group.label}`, group },
+    ...(!collapsedGroups.value.has(group.label) ? group.items.map(item => ({ kind: 'item', key: `item:${item.id}`, item })) : []),
+  ])
+})
+const { visibleItems: visibleRows, paddingAfter, setItemRef: setRowRef } = useVirtualList(displayRows, scrollEl, {
+  key: row => row.key, estimateSize: row => row.kind === 'group' ? 38 : 70,
+})
+
 function onScroll(e) {
   if (!props.hasMore || props.loading || props.loadingMore || props.loadError) return
   const el = e.currentTarget
@@ -274,6 +273,7 @@ function onScroll(e) {
 
 /* ── Group header ── */
 .item-group-header {
+  border: 0; background: transparent; color: inherit; font: inherit; text-align: left; flex: none;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -315,30 +315,9 @@ function onScroll(e) {
   margin-left: 2px;
 }
 
-/* ── Rows ── */
-.list-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  cursor: pointer;
-  background: var(--surface);
-  transition: background 0.12s;
-}
-.list-row:hover { background: var(--surface-active); }
-.list-row.selected { background: color-mix(in srgb, var(--accent) 20%, var(--surface-active)); }
-
-.list-row-rich {
-  margin: 2px 8px;
-  min-height: 66px;
-  padding: 0 12px 0 0;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface);
-  overflow: hidden;
-}
-.list-row-rich:hover { background: var(--surface-active); border-color: var(--border-strong); }
-.list-row-rich.selected { background: color-mix(in srgb, var(--accent) 20%, var(--surface-active)); border-color: var(--accent); }
+/* Row appearance belongs to share-ui/ContentRow; only placement is local. */
+.list-row { margin: 2px 8px; flex: none; }
+.list-spacer { flex: none; pointer-events: none; }
 
 /* ── Load more ── */
 .list-tail {

@@ -1,5 +1,5 @@
 <template>
-  <div ref="toolbarRootEl" class="toolbar">
+  <div v-bind="$attrs" ref="toolbarRootEl" class="toolbar">
     <div class="toolbar-inner" :class="{ 'has-blocks': toolbarBlocksList }">
 
       <!-- Left: back + identity -->
@@ -132,17 +132,18 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 import CloneCharacterAction from '@/features/character-editor/components/CloneCharacterAction.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
-import { computed, defineAsyncComponent, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 
-const TemplateBlockInner = defineAsyncComponent(() => import("./TemplateBlockInner"))
+import TemplateBlockInner from "./TemplateBlockInner.vue"
 
 const props = defineProps({
   publicVisible: Boolean,

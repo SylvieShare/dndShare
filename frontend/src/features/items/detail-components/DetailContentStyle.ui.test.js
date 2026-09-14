@@ -17,7 +17,7 @@ describe('handbook detail visual hierarchy', () => {
     ['StatusEffectDetailContent', ['Кратко', 'Описание', 'Механика']],
   ])('uses illustrated shared sections in %s', (component, labels) => {
     const componentSource = source(component)
-    expect(componentSource).toContain("import DetailSection from '@/shared/ui/DetailSection.vue'")
+    expect(componentSource).toContain("import { DetailSection } from '@sylvieshare/share-ui'")
     for (const label of labels) {
       expect(componentSource).toContain(`label="${label}"`)
     }
@@ -25,9 +25,9 @@ describe('handbook detail visual hierarchy', () => {
   })
 
   it('keeps combat sections semantically distinct', () => {
-    expect(source('WeaponDetailContent')).toContain('label="Урон" tone="combat"')
-    expect(source('EnemyDetailContent')).toContain('label="Действия" tone="combat"')
-    expect(source('StatusEffectDetailContent')).toContain('label="Механика" tone="combat"')
+    expect(source('WeaponDetailContent')).toContain('label="Урон" tone="danger"')
+    expect(source('EnemyDetailContent')).toContain('label="Действия" tone="danger"')
+    expect(source('StatusEffectDetailContent')).toContain('label="Механика" tone="danger"')
   })
 
   it('renders structured equipment-pack contents as item references', () => {

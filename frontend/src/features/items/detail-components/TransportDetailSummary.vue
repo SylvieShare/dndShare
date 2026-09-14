@@ -1,5 +1,4 @@
 <template>
-  <div class="transport-summary">
     <CoverSummaryLayout
       :side-min="145"
       :side-max="215"
@@ -26,7 +25,6 @@
         </CoverSummaryRail>
       </template>
     </CoverSummaryLayout>
-  </div>
 </template>
 
 <script setup>
@@ -89,7 +87,3 @@ function formatMovement(value) {
 function movementModeLabel(mode) { return ({ ground: 'по земле', water: 'по воде', air: 'по воздуху' })[mode] || '' }
 function propulsionLabel(value) { return ({ self: 'Собственный ход', drawn: 'Тяга скакунов', sail: 'Парус', oar: 'Вёсла', sail_or_oar: 'Парус или вёсла' })[value] || '' }
 </script>
-
-<style scoped>
-.transport-summary { flex: 1; width: 100%; display: flex; }
-</style>

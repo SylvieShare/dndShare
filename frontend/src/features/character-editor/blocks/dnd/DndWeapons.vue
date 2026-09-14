@@ -54,7 +54,7 @@
         :index="index"
       />
       <template v-if="canAddItems" #footer>
-        <button class="w-picker-btn" @click="pickerOpen = true">+ Добавить оружие...</button>
+        <AddButton block label="Добавить оружие" @click="pickerOpen = true" />
       </template>
     </SectionList>
 
@@ -123,7 +123,7 @@
 import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, onMounted, provide, reactive, ref } from 'vue'
-import { ActionButton, ConfirmDialog, SectionList } from '@sylvieshare/share-ui'
+import { AddButton, ActionButton, ConfirmDialog, SectionList } from '@sylvieshare/share-ui'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import WeaponCard from '@/features/character-editor/blocks/dnd/components/WeaponCard.vue'
 import WeaponTableRow from '@/features/character-editor/blocks/dnd/components/WeaponTableRow.vue'

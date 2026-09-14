@@ -8,7 +8,7 @@ import {
   Target, Tent, WandSparkles, Wine, Wrench, Zap,
 } from '@lucide/vue'
 
-// Curated Lucide icon set for the counter block's icon picker (`shared/ui/IconPicker`).
+// Curated Lucide icon set for the counter block's icon picker (`share-ui/IconPicker`).
 // `name` is what gets stored in the block value; `kw` are search keywords (ru + en, lowercased).
 // Extend the list with one row — no other code changes are needed; the full Lucide set is available.
 const RAW = [

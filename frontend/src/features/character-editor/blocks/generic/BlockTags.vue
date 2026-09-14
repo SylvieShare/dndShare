@@ -1,5 +1,5 @@
 <template>
-  <BlockTagsView ref="tileRef" class="tags-tile"
+  <BlockTagsView v-bind="$attrs" ref="tileRef" class="tags-tile"
     :sections="displaySections" :label="label"
     :interactive="canInteract" :editable="canInteract"
     @click="canInteract && open($event)" @edit="openFrom(tileRef?.$el)"
@@ -30,6 +30,7 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 import { computed, inject, ref } from 'vue'
 import BlockTagsEditor from '@/features/character-editor/blocks/generic/components/BlockTagsEditor'
 import BlockTagsView from '@/features/character-editor/blocks/generic/components/BlockTagsView'

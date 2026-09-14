@@ -1,5 +1,4 @@
 <template>
-  <div class="origin-summary">
     <CoverSummaryLayout :side-min="145" :side-max="220" :center-min="210" :medium-center-min="76">
       <template #left>
         <CoverStatCard
@@ -25,7 +24,6 @@
         </CoverSummaryRail>
       </template>
     </CoverSummaryLayout>
-  </div>
 </template>
 
 <script setup>
@@ -103,7 +101,3 @@ const specialValue = computed(() => {
 
 watch(parentId, id => id != null && ensureItemNames([id]), { immediate: true })
 </script>
-
-<style scoped>
-.origin-summary { flex: 1; width: 100%; display: flex; }
-</style>

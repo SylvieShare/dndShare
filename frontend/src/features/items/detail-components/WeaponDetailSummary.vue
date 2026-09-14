@@ -1,5 +1,4 @@
 <template>
-  <div class="weapon-summary">
     <CoverSummaryLayout>
       <template #left>
         <CoverStatCard :icon="Swords" label="Урон" :value="mainDamage" :note="mainDamageType" tone="danger" />
@@ -28,7 +27,6 @@
         </CoverSummaryRail>
       </template>
     </CoverSummaryLayout>
-  </div>
 </template>
 
 <script setup>
@@ -92,7 +90,3 @@ function damageFormula(attack) {
   return dice ? `${count}${dice.value}` : String(count)
 }
 </script>
-
-<style scoped>
-.weapon-summary { flex: 1; width: 100%; display: flex; }
-</style>

@@ -345,7 +345,6 @@ onBeforeUnmount(hideTooltip)
 .stat-view--mobile .save-label { font-size: 13px; }
 .stat-view--mobile .stat-mod { font-size: 44px; }
 .stat-view--mobile .stat-raw { font-size: 18px; }
-.stat-view--mobile .stat-name { font-size: 12px; }
 .stat-view--mobile .stat-icon { width: 32px; height: 32px; }
 .stat-view--mobile .skills { gap: 2px; }
 

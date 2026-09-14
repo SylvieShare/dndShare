@@ -1,5 +1,7 @@
+import { useDndCreateSpells } from './useDndCreateSpells'
+import { useDndCreateCatalog } from './useDndCreateCatalog'
+import { usePersistedDraft } from '@/shared/composables/usePersistedDraft'
 import { abilityModifier, proficiencyBonus } from '@/shared/lib/dnd'
-import { chosenOptionLabels, grantedSpellsAt } from '@/features/character-editor/blocks/dnd/lib/levelUp'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { fetchGet } from '@/shared/api/http'
 import { SKILL_BY_STAT } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
@@ -14,23 +16,17 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { dieSides } from '@/shared/lib/systemDice'
 import { randomDndName } from '@/shared/lib/dndNames'
 import {
-  CLASS_ITEM_TYPE,
-  RACE_ITEM_TYPE,
-  SUBCLASS_ITEM_TYPE,
-  SUBRACE_ITEM_TYPE,
   originChildren,
 } from '@/shared/lib/dndItemTypes'
 import {
   activeBackgroundChoices,
   backgroundChoiceProfile,
   backgroundChoicesComplete,
-  backgroundReferenceIds,
   backgroundStartingEquipment,
   backgroundToolProficiencySelections,
   backgroundToolItems as resolveBackgroundToolItems,
 } from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
-import { spellSelectionComplete } from '@/features/character-list/components/wizard/spellSelection'
 import { liveSkillModifier } from '@/features/character-list/components/wizard/previewSkills'
 import { useDndCreateEquipment } from './useDndCreateEquipment'
 import {
@@ -44,11 +40,6 @@ import {
 } from './dndCreateWizardStats'
 
 export { POINT_BUY_BUDGET, pointCost, STANDARD_ARRAY } from './dndCreateWizardStats'
-const RACE_ABIL_TYPE = 3
-const CLASS_ABIL_TYPE = 4
-const SPELL_TYPE = 5
-const FEAT_TYPE = 7
-const BG_TYPE = 11
 const SKILL_SUGGEST = 15
 const LANG_SUGGEST = 6
 // Standard player languages (suggest 6) for the background "extra language" picker —
@@ -61,28 +52,10 @@ export function useDndCreateWizard() {
   const suggestStore = useSuggestStore()
   ;[3, 4, 5, 6, 7, 15, 16].forEach((t) => suggestStore.ensure(t))
 
-  const races = ref([])
-  const allSubraces = ref([])
-  const raceSubracesByParent = ref(new Map())
-  const classes = ref([])
-  const allSubclasses = ref([])
-  const classSubclassesByParent = ref(new Map())
-  const subraces = ref([])
-  const subclasses = ref([])
-  const raceAbilities = ref([])
-  const classAbilities = ref([])
-  const spellPool = ref([])
-  const featPool = ref([])
-  const bgPool = ref([])
-  const loading = ref(false)
-  const sourceVersionId = ref(null)
-
   const state = reactive(createDndWizardState())
   // True while restoring from localStorage — suppresses the reset watchers below.
   let hydrating = false
-  let loadedOnce = false
-  let scopeReloadTimer = null
-
+  const sourceVersionId = ref(null)
   function sourceSuffix() {
     return contentScopeQuery(state.contentSources, sourceVersionId.value)
   }
@@ -93,77 +66,12 @@ export function useDndCreateWizard() {
 
   const equipment = useDndCreateEquipment({ state, sourceSuffix })
 
-  async function load() {
-    loading.value = true
-    try {
-      const [r, sr, c, sc, ra, ca, ft, bg] = await Promise.all([
-        fetchGet(`/items?typeId=${RACE_ITEM_TYPE}&limit=300${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${SUBRACE_ITEM_TYPE}&limit=300${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${CLASS_ITEM_TYPE}&limit=300${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${SUBCLASS_ITEM_TYPE}&limit=300${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${RACE_ABIL_TYPE}&limit=500${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${BG_TYPE}&limit=200${sourceSuffix()}`),
-        equipment.loadEquipmentCatalogue(),
-      ])
-      races.value = r?.items || []
-      allSubraces.value = sr?.items || []
-      const subraceMap = new Map()
-      races.value.forEach((race) => {
-        const names = originChildren(race, allSubraces.value, 'subraces').map(item => item.name).filter(Boolean)
-        if (names.length) subraceMap.set(String(race.id), names)
-      })
-      raceSubracesByParent.value = subraceMap
-      classes.value = c?.items || []
-      allSubclasses.value = sc?.items || []
-      const subclassMap = new Map()
-      classes.value.forEach((charClass) => {
-        const names = originChildren(charClass, allSubclasses.value, 'subclasses').map(item => item.name).filter(Boolean)
-        if (names.length) subclassMap.set(String(charClass.id), names)
-      })
-      classSubclassesByParent.value = subclassMap
-      subraces.value = state.race ? originChildren(state.race, allSubraces.value, 'subraces') : []
-      subclasses.value = state.charClass ? originChildren(state.charClass, allSubclasses.value, 'subclasses') : []
-      raceAbilities.value = ra?.items || []
-      classAbilities.value = ca?.items || []
-      featPool.value = ft?.items || []
-      bgPool.value = bg?.items || []
-      await equipment.ensureEquipmentCatalogueItems(bgPool.value.flatMap(backgroundReferenceIds))
-    } finally {
-      loading.value = false
-      loadedOnce = true
-    }
-  }
+  const {
+    races, allSubraces, classes, allSubclasses, subraces, subclasses,
+    raceAbilities, classAbilities, spellPool, featPool, bgPool, loading,
+    load, loadSpells, raceSubraceNames, classSubclassNames,
+  } = useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equipment, paused: () => hydrating })
 
-  watch(
-    [sourceVersionId, () => JSON.stringify(normalizeContentSourceSettings(state.contentSources))],
-    () => {
-      if (hydrating || !loadedOnce) return
-      clearTimeout(scopeReloadTimer)
-      scopeReloadTimer = setTimeout(() => load(), 120)
-    },
-  )
-
-  watch(() => state.race, (r) => {
-    if (hydrating) return
-    state.subrace = null
-    state.raceVariant = null
-    subraces.value = []
-    if (!r) return
-    subraces.value = originChildren(r, allSubraces.value, 'subraces')
-  })
-  watch(() => state.charClass, (c) => {
-    if (hydrating) return
-    state.subclass = null
-    state.skillIds = []
-    state.classToolProficiencyIds = []
-    state.spellIds = []
-    equipment.resetEquipmentForClass()
-    subclasses.value = []
-    if (!c) return
-    subclasses.value = originChildren(c, allSubclasses.value, 'subclasses')
-  })
   // A different race/subrace/variant means a different set of race offers — clear the picks.
   watch(() => [state.race?.id, state.subrace?.id, state.raceVariant], () => {
     if (hydrating) return
@@ -178,8 +86,7 @@ export function useDndCreateWizard() {
     const it = suggestStore.items(typeId).find((s) => String(s.id) === String(id))
     return it?.value || ''
   }
-  function raceSubraceNames(raceId) { return raceSubracesByParent.value.get(String(raceId)) || [] }
-  function classSubclassNames(classId) { return classSubclassesByParent.value.get(String(classId)) || [] }
+
 
   // Changing background clears choices that belong to the previous background.
   watch(() => state.background?.id, () => {
@@ -406,24 +313,6 @@ export function useDndCreateWizard() {
     else spellPool.value = []
   })
 
-  async function loadSpells() {
-    if (!state.charClass) { spellPool.value = []; return }
-    const classId = state.charClass.id
-    const res = await itemsApi.listAll(SPELL_TYPE, {
-      contentSources: state.contentSources,
-      sourceVersionId: sourceVersionId.value,
-    }, {
-      'classes.id': [classId],
-      lvl: [0, 1],
-    })
-    spellPool.value = (res?.items || []).filter((sp) => {
-      const lvl = Number(sp.data?.lvl ?? 0)
-      if (lvl > 1) return false
-      const byItem = (sp.data?.classes || []).some((c) => Number(c?.id) === classId)
-      return byItem
-    })
-  }
-
   const featureChoiceItemOptions = reactive({})
 
   // Level-1 granted features that carry one or more shared item choices, split
@@ -591,44 +480,10 @@ export function useDndCreateWizard() {
     else if (state.skillIds.length < skillLimit.value) state.skillIds.push(id)
   }
 
-  // ─── Spells: cantrips vs 1st-level, each count-limited ─────────────────────
-  const cantripPool = computed(() => spellPool.value.filter((sp) => Number(sp.data?.lvl ?? 0) === 0))
-  const spell1Pool = computed(() => spellPool.value.filter((sp) => Number(sp.data?.lvl ?? 0) === 1))
-  const cantripLimit = computed(() => grants.value.spellcasting?.cantripsKnown || 0)
-  const spell1Limit = computed(() => grants.value.spellcasting?.spellsKnown || 0)
-  const cantripChosen = computed(() => state.spellIds.filter((id) => cantripPool.value.some((sp) => sp.id === id)).length)
-  const spell1Chosen = computed(() => state.spellIds.filter((id) => spell1Pool.value.some((sp) => sp.id === id)).length)
-  function toggleSpell(id, kind) {
-    const i = state.spellIds.indexOf(id)
-    if (i >= 0) { state.spellIds.splice(i, 1); return }
-    const chosen = kind === 'cantrip' ? cantripChosen.value : spell1Chosen.value
-    const limit = kind === 'cantrip' ? cantripLimit.value : spell1Limit.value
-    if (limit && chosen >= limit) return
-    state.spellIds.push(id)
-  }
-  const spellsComplete = computed(() => (
-    spellSelectionComplete(cantripChosen.value, cantripLimit.value)
-    && spellSelectionComplete(spell1Chosen.value, spell1Limit.value)
-  ))
-
-  // ─── Даруемые заклинания архетипа (домен жреца на 1 уровне) ────────────────
-  const grantedSpellIds = computed(() => [...new Set(grantedSpellsAt(
-    [state.charClass, state.subclass].filter(Boolean),
-    1,
-    { options: chosenOptionLabels(state.choices) },
-  ).map((r) => r.spellId))])
-  const grantedSpellItems = ref({})
-  watch(grantedSpellIds, async (ids) => {
-    const missing = ids.filter((id) => !grantedSpellItems.value[id])
-    if (!missing.length) return
-    const res = await fetchGet('/items/by-ids?ids=' + missing.join(','))
-    const next = { ...grantedSpellItems.value }
-    ;(res?.items || []).forEach((it) => { next[it.id] = it })
-    grantedSpellItems.value = next
-  }, { immediate: true })
-  const grantedSpellList = computed(() => grantedSpellIds.value.map((id) => (
-    grantedSpellItems.value[id] || { id, name: `#${id}`, data: {} }
-  )))
+  const {
+    cantripPool, spell1Pool, cantripLimit, spell1Limit, cantripChosen, spell1Chosen,
+    toggleSpell, spellsComplete, grantedSpellList,
+  } = useDndCreateSpells({ state, spellPool, grants })
 
   // ─── Convenience actions ───────────────────────────────────────────────────
   function randomName() {
@@ -665,13 +520,9 @@ export function useDndCreateWizard() {
   }
 
   // ─── Persistence (localStorage) — survives reload; going back keeps forward picks ─
-  function persist() {
-    if (hydrating) return
-    try { localStorage.setItem(DND_WIZARD_STORAGE_KEY, JSON.stringify(serializeDndWizardState(state))) } catch { /* quota/private mode */ }
-  }
-  function clearPersist() {
-    try { localStorage.removeItem(DND_WIZARD_STORAGE_KEY) } catch { /* ignore */ }
-  }
+  const { clear: clearPersist } = usePersistedDraft(state, {
+    key: DND_WIZARD_STORAGE_KEY, serialize: serializeDndWizardState, paused: () => hydrating,
+  })
   // Start over: wipe every pick back to defaults and drop the saved draft.
   function reset() {
     Object.assign(state, createDndWizardState())
@@ -694,7 +545,6 @@ export function useDndCreateWizard() {
     await nextTick()
     hydrating = false
   }
-  watch(state, persist, { deep: true })
 
   return {
     STATS,

@@ -45,8 +45,14 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 "$GO" build -trimpath \
   -o build/dndshare .
 ls -lh build/dndshare | awk '{print "    бинарь:", $5}'
 
+# Hashed assets are append-only on the VM: already open tabs can load chunks
+# from their original release after the embedded frontend has been replaced.
+echo "==> Архив frontend assets для открытых вкладок"
+tar -czf build/frontend-assets.tar.gz -C "$FRONTEND_DIR/target/dist" static
+
 echo "==> Копирование основного бинаря + unit + run.sh на $VM_HOST"
 # .new + mv на VM — чтобы не ловить 'text file busy' при перезаписи работающего бинаря.
+scp -i "$SSH_KEY" build/frontend-assets.tar.gz "$VM_USER@$VM_HOST:~/dndshare-frontend-assets.new.tar.gz"
 scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:~/dndshare.new"
 scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.service"
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
@@ -65,6 +71,16 @@ ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set -a
   source ~/dndshare.env
   set +a
+  asset_staging="$(mktemp -d /home/sylvieshare/dndshare-frontend-upload.XXXXXX)"
+  trap 'rm -rf "$asset_staging"' EXIT
+  tar -xzf ~/dndshare-frontend-assets.new.tar.gz -C "$asset_staging"
+  mkdir -p ~/dndshare-frontend-assets/static
+  # Hard links publish complete files atomically on the same filesystem.
+  # Existing hashes remain immutable; a failed upload is safe to retry.
+  cp -aln "$asset_staging/static/." ~/dndshare-frontend-assets/static/
+  rm -rf "$asset_staging"
+  trap - EXIT
+  rm ~/dndshare-frontend-assets.new.tar.gz
   sudo systemctl stop dndshare || true
   mv ~/dndshare.new ~/dndshare
   sudo install -m 644 ~/dndshare.service /etc/systemd/system/dndshare.service

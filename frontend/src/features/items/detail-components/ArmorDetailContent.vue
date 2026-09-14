@@ -31,7 +31,7 @@
 <script setup>
 import { computed } from 'vue'
 import { BookOpen, ShieldCheck } from '@lucide/vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSuggestStore } from '@/stores/suggest'
 

@@ -1,5 +1,5 @@
 <template>
-  <DetailSection v-if="uses.length" label="Особое применение оружия" tone="combat">
+  <DetailSection v-if="uses.length" label="Особое применение оружия" tone="danger">
     <ItemUsePanel v-for="use in uses" :key="use.key" :title="use.title" :subtitle="subtitle(use)">
       <BaseTile v-for="step in use.steps" :key="step.key" class="weapon-use-summary-step">
         <strong>{{ step.title }}</strong>
@@ -11,7 +11,7 @@
 </template>
 <script setup>
 import { BaseTile } from '@sylvieshare/share-ui'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import ItemUsePanel from '@/features/character-editor/blocks/dnd/components/ItemUsePanel.vue'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'

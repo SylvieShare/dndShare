@@ -17,7 +17,7 @@ describe('desktop HP view', () => {
     expect(source).not.toContain('SystemDie')
     expect(source).not.toContain('Кости хитов')
     for (const label of ['Здоров', 'Хорошо', 'Ранен', 'Опасно', 'Критически']) {
-      expect(source).not.toContain(label)
+      expect(source.replaceAll('label="Здоровье"', '')).not.toContain(label)
     }
   })
 })

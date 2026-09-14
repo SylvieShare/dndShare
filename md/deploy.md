@@ -168,3 +168,10 @@ go run .
 ```
 
 Frontend dev server запускается отдельно через `cd frontend && npm run dev`.
+
+
+## Статические ресурсы после обновления
+
+Vite создаёт lazy JS/CSS chunks и gzip-sidecar для JS/CSS. `FRONTEND_ASSET_CACHE_DIR` в systemd указывает на `/home/sylvieshare/dndshare-frontend-assets`. Deploy перед перезапуском загружает static archive, распаковывает во временный каталог и атомарно публикует готовые файлы hardlink-ами без замены существующих хэшей.
+
+Go сначала читает embedded текущую сборку, затем сохранённые `/static/*` по хэшу. Старые вкладки продолжают загружать chunks предыдущего релиза. HTML отдаётся с `no-cache`, hashed static с `public, max-age=31536000, immutable`; gzip учитывает Accept-Encoding, включая `gzip;q=0`, и выставляет Vary. Неизвестный static возвращает 404, а не HTML приложения. Автоматической очистки старых хэшей нет; объём каталога контролируется при обслуживании сервера.

@@ -1,5 +1,5 @@
 <template>
-  <BlockMoneyView ref="tileRef" class="money-tile"
+  <BlockMoneyView v-bind="$attrs" ref="tileRef" class="money-tile"
     :title="blockTitle" :loading="loading" :coins="displayCoins"
     :interactive="canInteract" :editable="canInteract"
     @click="canInteract && open($event)" @edit="openFrom(tileRef?.$el)"
@@ -65,6 +65,7 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 import { computed, inject, ref, watch } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView'

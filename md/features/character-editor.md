@@ -20,7 +20,7 @@ DB-defined templates.
 - optional simple create payload.
 
 Registered systems are D&D 5e (`DND5`) and VTM V20 (`VTM20`). D&D schema is
-assembled by `settings/dnd/schema.js` from `blocks.json`, `desktop.json` and
+assembled by `settings/dnd/schema.js` from `blocks.json`, `desktop.js` (композиция `desktop/stats.json`, `main.json`, `sidebar.json`) and
 `mobile.json`; VTM schema is imported as a code resource. Unknown template name
 is rejected. DB template schema, create form and path maps do not exist.
 
@@ -1227,3 +1227,10 @@ SSE-invalidation журнала обновляет и список переда�
 по id или описание собственного предмета без id. Справочные иконки загружаются
 пакетом; отсутствие рисунка заменяется иконкой предмета. `senderImageUrl` берётся
 из текущей иконки персонажа отправителя с fallback на портрет.
+
+
+### Загрузка мобильных панелей и локальных снимков
+
+На мобильном листе сначала монтируется только активная вкладка. Первый переход, swipe или программное открытие в обучении монтирует целевую панель; посещённые панели сохраняются до закрытия листа. Геометрические контейнеры всех семи панелей остаются для циклического swipe.
+
+`createCharacterSnapshotRecorder` объединяет изменения за 300ms, с максимальным ожиданием 1000ms. Последнее состояние сериализуется один раз, хранится не более трёх различных снимков; это локальная страховка, а не undo каждого нажатия. Незавершённая запись выполняется при скрытии страницы, pagehide и unmount. Режим просмотра не создаёт снимков. Ошибка localStorage не мешает редактированию.

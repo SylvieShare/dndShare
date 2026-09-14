@@ -58,31 +58,6 @@
   font-weight: 700;
 }
 
-/* Row removal: collapse height + fade + slide out. No `*-move` rule on purpose — live drag
-   reordering (handled by useSortable) must not trigger FLIP moves that fight the drag ghost. */
-.sp-row-leave-active {
-  overflow: hidden;
-  pointer-events: none;
-  transition:
-    opacity 0.22s ease,
-    transform 0.26s ease,
-    max-height 0.3s ease,
-    padding-top 0.3s ease,
-    padding-bottom 0.3s ease,
-    border-top-color 0.2s ease;
-}
-.sp-row-leave-from { max-height: 120px; }
-.sp-row-leave-to {
-  opacity: 0;
-  transform: translateX(18px);
-  max-height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  border-top-color: transparent !important;
-}
-.sp-row-enter-active { transition: opacity 0.22s ease, transform 0.26s ease; }
-.sp-row-enter-from { opacity: 0; transform: translateX(18px); }
-
 /* ── Search / add ─────────────────────────────── */
 .sp-add-section {
   margin-top: 12px;
@@ -128,8 +103,6 @@
   color: var(--text-1);
 }
 
-.sp-add-hint { margin: 0; color: var(--text-muted); font-size: 12px; text-align: center; }
-
 .sp-picker-btn {
   width: 100%;
   min-height: 34px;
@@ -154,30 +127,10 @@
     gap: 12px;
   }
 
-
-
-  .sp-stat-row {
-    grid-template-columns: 1fr;
-  }
-
-  .sp-slots-row {
-    grid-template-columns: 1fr;
-  }
-
-  .sp-slots-wrap {
-    grid-template-columns: repeat(9, minmax(40px, 1fr));
-    gap: 4px;
-    overflow-x: auto;
-  }
-
   .spell-row {
     grid-template-columns: 18px minmax(0, 1fr) auto;
     gap: 10px;
     align-items: start;
-  }
-
-  .spell-row-edit {
-    grid-template-columns: 18px 18px minmax(0, 1fr) auto;
   }
 
   .sp-metrics {
@@ -185,17 +138,8 @@
     justify-content: flex-start;
   }
 
-  .sp-del {
-    grid-column: 3;
-    grid-row: 1;
-  }
-
   .sp-name {
     font-size: 16px;
-  }
-
-  .sp-summary {
-    white-space: normal;
   }
 }
 
@@ -213,8 +157,6 @@
 }
 .drag-handle:hover { color: var(--text-1); background: color-mix(in srgb, var(--text-on-accent) 8%, transparent); }
 .drag-handle:active { cursor: grabbing; }
-
-.sp-drag { margin-right: 2px; }
 
 .sortable-placeholder {
   background: color-mix(in srgb, var(--accent) 8%, transparent) !important;

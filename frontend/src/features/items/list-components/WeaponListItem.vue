@@ -19,7 +19,7 @@
       </template>
       <ItemTooltip
         v-if="tooltip.visible"
-        :title="tooltip.title"
+        :anchor="tooltip.anchor" :title="tooltip.title"
         :desc="tooltip.desc"
         :x="tooltip.x"
         :top="tooltip.top"
@@ -43,11 +43,7 @@ const props = defineProps({
   type: { type: Object, default: null },
 })
 
-const { suggestItems } = useSchemaSuggests(() => props.type)
-
-const damageTypeMap = computed(() => Object.fromEntries(suggestItems('type').map(s => [s.id, s.value])))
-const tagMap = computed(() => Object.fromEntries(suggestItems('tags').map(s => [s.id, s.value])))
-const tagDetailsMap = computed(() => Object.fromEntries(suggestItems('tags').map(s => [s.id, s])))
+const { suggestIndex } = useSchemaSuggests(() => props.type)
 
 const data = computed(() => props.item.data || {})
 const { format: formatCost } = useCostFormatter()
@@ -55,7 +51,7 @@ const costLabel = computed(() => formatCost(data.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
 
 const damageType = computed(() => firstAttack.value
-  ? (damageTypeMap.value[firstAttack.value.type] || firstAttack.value.type || '')
+  ? (suggestIndex('type').get(String(firstAttack.value.type))?.value || firstAttack.value.type || '')
   : '')
 
 const tagItems = computed(() =>
@@ -68,8 +64,8 @@ const tagItems = computed(() =>
           desc: id.desc || '',
         }
       }
-      const details = tagDetailsMap.value[id] || {}
-      return { id, label: details.value || tagMap.value[id] || String(id), desc: details.desc || '' }
+      const details = suggestIndex('tags').get(String(id)) || {}
+      return { id, label: details.value || String(id), desc: details.desc || '' }
     })
     .filter((tag) => tag.label)
 )
@@ -78,15 +74,11 @@ const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bott
 
 function showTagTooltip(event, tag) {
   if (!tag.desc) return
-  const rect = event.currentTarget.getBoundingClientRect()
-  const placeAbove = window.innerHeight - rect.bottom < 220
   tooltip.value = {
     visible: true,
+    anchor: event.currentTarget,
     title: tag.label,
     desc: tag.desc,
-    x: Math.max(8, Math.min(rect.left, window.innerWidth - 380)),
-    top: placeAbove ? null : rect.bottom + 8,
-    bottom: placeAbove ? window.innerHeight - rect.top + 8 : null,
   }
 }
 

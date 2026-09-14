@@ -104,7 +104,6 @@
         v-for="group in spellsByLevel"
         :key="group.level"
         :title="groupTitle(group.level)"
-        transition-name="sp-row"
         :list-attrs="{ 'data-sortable-container': 'level-' + group.level }"
       >
         <SpellCard

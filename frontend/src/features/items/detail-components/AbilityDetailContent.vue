@@ -28,7 +28,7 @@
 import { computed } from 'vue'
 import { RefreshCcw, Sparkles } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 

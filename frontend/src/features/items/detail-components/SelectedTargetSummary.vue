@@ -1,5 +1,5 @@
 <template>
-  <DetailSection v-if="rule" :label="rule.title || 'Выбранная цель'" tone="combat">
+  <DetailSection v-if="rule" :label="rule.title || 'Выбранная цель'" tone="danger">
     <template #icon><Crosshair /></template>
     <p v-if="rule.condition">{{ rule.condition }}</p>
     <div class="target-summary">
@@ -12,7 +12,7 @@
 import { computed } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { Crosshair } from '@lucide/vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'

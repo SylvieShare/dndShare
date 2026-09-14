@@ -9,7 +9,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
 import { diceById } from '@/shared/lib/systemDice'

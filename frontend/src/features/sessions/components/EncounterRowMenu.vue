@@ -1,6 +1,5 @@
 <template>
-  <div class="enc-row-menu">
-  <RowActionMenu ref="menuRef">
+  <RowActionMenu ref="menuRef" :trigger-attrs="{ style: { flexShrink: 0 } }">
     <template #default="{ close }">
       <RowActionItem
         v-if="canOpenCard"
@@ -36,20 +35,10 @@
         </template>
         <template #default="{ close: closeClone }">
           <div class="ram-clone-form">
-            <input
-              v-model.number="cloneCount"
-              class="ram-clone-input"
-              type="number"
-              min="1"
-              max="20"
-              aria-label="Количество копий"
-              @click.stop
-            />
-            <button
-              type="button"
-              class="ram-clone-btn"
-              @click="cloneNpc(closeClone, close)"
-            >Создать ×{{ cloneCount || 1 }}</button>
+            <FormField label="Количество копий" vertical>
+              <FormNumberInput :value="cloneCount" :min="1" :max="20" @change="cloneCount = $event" />
+            </FormField>
+            <ActionButton @click="cloneNpc(closeClone, close)">Создать ×{{ cloneCount || 1 }}</ActionButton>
           </div>
         </template>
       </RowActionSubmenu>
@@ -66,14 +55,13 @@
       >Удалить</RowActionItem>
     </template>
   </RowActionMenu>
-  </div>
 </template>
 
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { Activity, Archive, BookOpen, Copy, Dices } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import { RowActionMenu } from '@sylvieshare/share-ui'
+import { ActionButton, FormField, FormNumberInput, RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 
 const props = defineProps({
@@ -111,44 +99,11 @@ defineExpose({ toggle })
 </script>
 
 <style scoped>
-.enc-row-menu { flex-shrink: 0; }
 
 .ram-clone-form {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-end;
+  gap: 8px;
   padding: 2px;
-}
-.ram-clone-input {
-  width: 54px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 3px 6px;
-  font-family: inherit;
-  font-size: 12px;
-  color: var(--text-1);
-  outline: none;
-  -moz-appearance: textfield;
-}
-.ram-clone-input::-webkit-outer-spin-button,
-.ram-clone-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.ram-clone-input:focus { border-color: var(--accent); }
-.ram-clone-btn {
-  flex: 1;
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
-  border-radius: 5px;
-  color: var(--accent);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 3px 9px;
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s;
-}
-.ram-clone-btn:hover {
-  background: color-mix(in srgb, var(--accent) 28%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
 }
 </style>

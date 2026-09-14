@@ -472,4 +472,5 @@ function submitSimple() {
 defineExpose({ toggleCombat })
 </script>
 
+<style scoped src="./styles/EncounterToolbar.css"></style>
 <style scoped src="./styles/EncounterTab.css"></style>

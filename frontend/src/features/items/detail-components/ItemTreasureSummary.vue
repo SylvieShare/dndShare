@@ -25,7 +25,7 @@
 import { computed } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { CircleCheck, Gem } from '@lucide/vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 const props = defineProps({ treasure: Object })
 const allLevels = computed(() => Number(props.treasure?.min_level) === 1 && Number(props.treasure?.max_level) === 20)
 const levelRange = computed(() => {

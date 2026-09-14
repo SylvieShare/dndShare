@@ -61,9 +61,7 @@
   <component
     :is="leafComponent"
     v-else-if="leafComponent"
-    v-show="!childHidden"
-    :style="blockStyle"
-    v-bind="leafProps"
+    v-bind="{ ...leafProps, ...((blockStyle.length || childHidden) ? { style: [blockStyle, childHidden ? { display: 'none' } : null] } : {}) }"
     @update:value="emitValue"
     @update:var="emitVar"
   />
@@ -266,7 +264,7 @@ const blockStyle = computed(() => {
     flexBasis:  p.basis,
     alignSelf:  p['align-self'],
   }
-  return [props.colStyle, own, customStyle].filter(Boolean)
+  return [props.colStyle, own, customStyle].filter(style => style && (typeof style === 'string' || Object.values(style).some(value => value != null)))
 })
 
 const visibleHorizontalChildren = computed(() =>

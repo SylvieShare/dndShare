@@ -29,7 +29,7 @@
         <span v-if="nextLevelExp !== null" class="lvl-w-xp-nums">{{ data.exp }} / {{ nextLevelExp }}</span>
         <span v-else class="lvl-w-xp-max">Макс. уровень</span>
       </div>
-      <StatBar size="medium" decorated :percent="barPct" color="var(--accent)" />
+      <StatBar label="Прогресс уровня" size="medium" decorated :percent="barPct" color="var(--accent)" />
     </div>
     <span v-if="canLevelUp" class="lvl-w-up">↑</span>
   </MorphTile>
@@ -38,7 +38,7 @@
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
-import StatBar from '@/shared/ui/StatBar.vue'
+import { StatBar } from '@sylvieshare/share-ui'
 import { EXPERIENCE } from '../lib/experience'
 
 const props = defineProps({

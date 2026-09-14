@@ -1,23 +1,23 @@
 import {ref} from 'vue'
 import {createRouter, createWebHistory} from 'vue-router'
-import PageMain from '@/views/PageMain'
-import ViewAdmin from '@/features/admin/pages/ViewAdmin'
-import ViewHandbook from '@/features/handbook/pages/ViewHandbook'
-import ViewDictionary from '@/features/handbook/dictionary/ViewDictionary'
-import ViewDnd5e2014Rules from '@/features/handbook/rules/pages/ViewDnd5e2014Rules.vue'
-import ViewRulesEditionFallback from '@/features/handbook/rules/pages/ViewRulesEditionFallback.vue'
-import ViewRulesEntry from '@/features/handbook/rules/pages/ViewRulesEntry.vue'
-import ViewVtmV20Rules from '@/features/handbook/rules/pages/ViewVtmV20Rules.vue'
-import ViewCreateCharacter from '@/features/character-list/pages/ViewCreateCharacter'
-import ViewListCharacters from '@/features/character-list/pages/ViewListCharacters'
-import ViewCharacter from '@/features/character-editor/pages/ViewCharacter'
-import ViewCharacterPrint from '@/features/character-editor/pages/ViewCharacterPrint'
-import ViewJoinSession from '@/features/sessions/pages/ViewJoinSession'
-import ViewAccount from '@/features/account/pages/ViewAccount.vue'
-import ViewEncounterScreen from '@/features/sessions/pages/ViewEncounterScreen.vue'
-import ViewSession from '@/features/sessions/pages/ViewSession'
-import ViewMasterTools from '@/features/master-tools/pages/ViewMasterTools.vue'
-import ViewSessions from '@/features/sessions/pages/ViewSessions'
+const PageMain = () => import('@/views/PageMain')
+const ViewAdmin = () => import('@/features/admin/pages/ViewAdmin')
+const ViewHandbook = () => import('@/features/handbook/pages/ViewHandbook')
+const ViewDictionary = () => import('@/features/handbook/dictionary/ViewDictionary')
+const ViewDnd5e2014Rules = () => import('@/features/handbook/rules/pages/ViewDnd5e2014Rules.vue')
+const ViewRulesEditionFallback = () => import('@/features/handbook/rules/pages/ViewRulesEditionFallback.vue')
+const ViewRulesEntry = () => import('@/features/handbook/rules/pages/ViewRulesEntry.vue')
+const ViewVtmV20Rules = () => import('@/features/handbook/rules/pages/ViewVtmV20Rules.vue')
+const ViewCreateCharacter = () => import('@/features/character-list/pages/ViewCreateCharacter')
+const ViewListCharacters = () => import('@/features/character-list/pages/ViewListCharacters')
+const ViewCharacter = () => import('@/features/character-editor/pages/ViewCharacter')
+const ViewCharacterPrint = () => import('@/features/character-editor/pages/ViewCharacterPrint')
+const ViewJoinSession = () => import('@/features/sessions/pages/ViewJoinSession')
+const ViewAccount = () => import('@/features/account/pages/ViewAccount.vue')
+const ViewEncounterScreen = () => import('@/features/sessions/pages/ViewEncounterScreen.vue')
+const ViewSession = () => import('@/features/sessions/pages/ViewSession')
+const ViewMasterTools = () => import('@/features/master-tools/pages/ViewMasterTools.vue')
+const ViewSessions = () => import('@/features/sessions/pages/ViewSessions')
 import { fetchGet } from '@/shared/api/http'
 import { getSessions } from '@/shared/api/sessionsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'

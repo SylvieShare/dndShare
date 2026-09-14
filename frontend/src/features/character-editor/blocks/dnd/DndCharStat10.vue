@@ -1,5 +1,5 @@
 <template>
-  <DndStatView ref="tileRef" class="stat-block" :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
+  <DndStatView v-bind="$attrs" ref="tileRef" class="stat-block" :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
     :title="displayTitle"
     :color="statColor"
     :suggest-svg="titleSuggest?.svg || ''"
@@ -107,6 +107,7 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { abilityModifier, sumBonuses } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'

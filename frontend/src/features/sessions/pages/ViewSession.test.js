@@ -43,7 +43,7 @@ const participantRailSource = readFileSync(fileURLToPath(new URL('../composables
 const sessionSettingsSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSettings.js', import.meta.url)), 'utf8')
 const sessionSettingsControlSource = readFileSync(fileURLToPath(new URL('../components/SessionSettingsControl.vue', import.meta.url)), 'utf8')
 const encounterNpcsSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterNpcs.js', import.meta.url)), 'utf8')
-const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
+const encounterStylesSource = ['EncounterToolbar.css', 'EncounterTab.css'].map(name => readFileSync(fileURLToPath(new URL(`../components/styles/${name}`, import.meta.url)), 'utf8')).join('\n')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../notifications/components/DiceRollNotification.vue', import.meta.url)), 'utf8')
 const sessionHotkeysSource = readFileSync(fileURLToPath(new URL('../composables/useSessionHotkeys.js', import.meta.url)), 'utf8')
 const shortcutHelpSource = readFileSync(fileURLToPath(new URL('../components/SessionShortcutHelp.vue', import.meta.url)), 'utf8')

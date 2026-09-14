@@ -12,6 +12,7 @@ const script = compileScript(descriptor, { id: 'base-choice' })
 Modal.render = new Function('Vue', compile(descriptor.template.content, { mode: 'function', prefixIdentifiers: true, bindingMetadata: script.bindings }).code)(Vue)
 vi.mock('@/shared/api/itemsApi', () => ({ itemsApi: { byIds: vi.fn(), listAll: vi.fn() } }))
 vi.mock('@sylvieshare/share-ui', () => ({
+  DetailSection: { setup: (_, { slots }) => () => h('section', slots.default?.()) },
   AppModalFrame: { setup: (_, { slots }) => () => h('dialog', [slots.default?.(), slots.footer?.()]) },
   ActionButton: { setup: (_, { slots }) => () => h('button', slots.default?.()) },
   LoadingState: { setup: () => () => h('span', 'loading') },

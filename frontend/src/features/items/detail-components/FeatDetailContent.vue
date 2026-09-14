@@ -84,7 +84,7 @@ import { computed } from 'vue'
 import { BookOpen, Gift, ListChecks } from '@lucide/vue'
 
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { featChoices, featDescription, featPrereq } from '@/features/items/lib/featRules'
 import { useSuggestStore } from '@/stores/suggest'

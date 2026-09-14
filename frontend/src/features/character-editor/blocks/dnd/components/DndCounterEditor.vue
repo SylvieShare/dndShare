@@ -19,7 +19,7 @@
     </EditorSection>
 
     <EditorSection title="Иконка">
-      <IconPicker :model-value="counter.icon" @update:model-value="v => $emit('update', { icon: v })" />
+      <IconPicker :options="iconOptions" label="Иконка счётчика" :model-value="counter.icon" @update:model-value="v => $emit('update', { icon: v })" />
     </EditorSection>
 
     <EditorSection title="Цвет">
@@ -80,7 +80,9 @@ import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
-import IconPicker from '@/shared/ui/IconPicker'
+import { IconPicker } from '@sylvieshare/share-ui'
+import { COUNTER_ICONS } from '@/shared/ui/icons/counterIcons'
+const iconOptions = COUNTER_ICONS.map(icon => ({ value: icon.name, label: icon.name, icon: icon.comp }))
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 
 const props = defineProps({

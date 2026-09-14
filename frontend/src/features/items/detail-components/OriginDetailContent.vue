@@ -93,7 +93,7 @@
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { Backpack, BookOpen, ChevronRight, GitBranch, ListChecks, ShieldCheck, Sparkles, WandSparkles } from '@lucide/vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import ClassProgression from './ClassProgression.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'

@@ -1,5 +1,5 @@
 <template>
-  <div ref="root" class="dso-root" :class="`dso-root--${displayMode}`">
+  <div v-bind="$attrs" ref="root" class="dso-root" :class="`dso-root--${displayMode}`">
     <DndStatusOverviewView
       v-if="summaryItems.length || showAddAction"
       :items="summaryItems"
@@ -44,6 +44,7 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 import { computed, inject, ref } from 'vue'
 import DndStatusOverviewView from '@/features/character-editor/blocks/dnd/components/DndStatusOverviewView'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'

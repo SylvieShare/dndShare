@@ -126,6 +126,7 @@
             >
               <div class="container" :style="containerWidthForTab(index)">
                 <component
+                  v-if="visitedTabIndexes.includes(index)"
                   :is="tabRenderComponent(index, TabPane)"
                   :tab-index="index"
                   :blocks="blocksForTab(index)"
@@ -186,7 +187,7 @@ import { useSaveDebounce } from '@/features/character-editor/composables/useSave
 import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe'
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
 import { useCharacterViewport } from '@/features/character-editor/composables/characterViewport'
-import { recordCharacterSnapshot } from '@/features/character-editor/lib/characterSnapshots'
+import { createCharacterSnapshotRecorder } from '@/features/character-editor/lib/characterSnapshots'
 import { useUiStore } from '@/stores/ui'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { initialTabs, layoutNodeToBlock } from '@/features/character-editor/lib/templateSchema'
@@ -244,6 +245,8 @@ const activeSession = computed(() => {
 // content in the same tick the View Transition snapshots it. onMounted then does
 // the full load (which short-circuits when the seed already populated state).
 loadSync()
+const snapshotRecorder = createCharacterSnapshotRecorder(uuid, () => isOwner.value ? data.value : null)
+onBeforeUnmount(() => snapshotRecorder.dispose())
 
 const pendingSessionEvents = []
 const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, flushSave } = useSaveDebounce(uuid, data, {
@@ -370,7 +373,7 @@ function onUpdateContentSources(value) {
 }
 
 function recordSnapshot() {
-  if (isOwner.value) recordCharacterSnapshot(uuid, data.value)
+  if (isOwner.value) snapshotRecorder.schedule()
 }
 
 function onSetActiveTab(index) {

@@ -15,16 +15,24 @@
     <template v-else>
       <input
         ref="input"
+        role="combobox"
+        aria-autocomplete="list"
+        :aria-label="placeholder"
+        :aria-expanded="open"
+        :aria-controls="dropdown?.listId"
+        :aria-activedescendant="dropdown?.activeDescendant"
         class="sp-input"
         :class="{ 'sp-invalid': invalid }"
         :value="query"
         :placeholder="inputPlaceholder"
         spellcheck="false"
         @input="query = $event.target.value"
-        @keydown.enter.prevent="confirmTop"
-        @keydown.escape="close"
+        @keydown="dropdown?.handleKeydown($event)"
       />
       <SuggestDropdown
+        ref="dropdown"
+        :anchor="input"
+        @close="close"
         :items="dropdownItems"
         :query="query"
         :type-id="resolvedTypeId"
@@ -60,6 +68,7 @@ const emit = defineEmits(['update:modelValue', 'pick'])
 const suggestStore = useSuggestStore()
 const root = ref(null)
 const input = ref(null)
+const dropdown = ref(null)
 const open = ref(false)
 const query = ref('')
 let _onDown = null
@@ -83,14 +92,6 @@ const label = computed(() => selectedItem.value?.value || String(props.modelValu
 const inputPlaceholder = computed(() => label.value || props.placeholder)
 const selectedIconUrl = computed(() => selectedItem.value?.iconUrl || '')
 const filteredExclude = computed(() => props.filterPicked ? props.exclude : [])
-const firstFiltered = computed(() => {
-  const q = query.value.trim().toLowerCase()
-  const available = filteredExclude.value.length
-    ? dropdownItems.value.filter(item => !filteredExclude.value.includes(item.value))
-    : dropdownItems.value
-  if (!q) return available[0] || null
-  return available.find(item => item.value.toLowerCase().includes(q)) || null
-})
 
 useSuggestLoading(() => props.suggestTypeId)
 
@@ -120,9 +121,6 @@ function close() {
   query.value = ''
 }
 
-function confirmTop() {
-  if (firstFiltered.value) pickItem(firstFiltered.value)
-}
 
 function pickItem(item) {
   const next = item[props.valueKey] ?? item.value

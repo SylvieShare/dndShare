@@ -5,7 +5,7 @@
     @click="onHpAreaClick"
   >
     <div class="enc-hp-bar-wrap" :class="{ 'enc-hp-bar-wrap--dead': dsVisible }">
-      <StatBar
+      <StatBar label="Здоровье"
         class="enc-hp-statbar"
         size="medium"
         decorated
@@ -63,7 +63,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import StatBar from '@/shared/ui/StatBar.vue'
+import { StatBar } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   combatant: { type: Object, required: true },

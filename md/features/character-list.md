@@ -406,3 +406,6 @@ implement a second card-to-sheet data resolver.
 
 Первая загрузка списка и выбора персонажа при вступлении использует общий LoadingState. Ошибка списка останавливает ожидание и предлагает повтор; она не отображается как пустой список.
 Общий контракт: [состояния загрузки](../loading-states.md).
+
+
+Draft persistence uses `usePersistedDraft`: changes are coalesced for 300ms (maximum 1000ms), with a final flush on pagehide, visibility hidden and scope disposal. Clearing after successful creation cancels the pending write so the deleted draft is not restored. `useDndCreateCatalog` owns catalog loading/source changes; `useDndCreateSpells` owns selected and granted spells. The wizard remains the public coordinator.

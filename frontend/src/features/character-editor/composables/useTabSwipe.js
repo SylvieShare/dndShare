@@ -218,6 +218,7 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
   }
 
   function settleSwipeTo(targetIndex) {
+    markTabVisited(targetIndex)
     const targetSlot = mobileTrackIndexes.value.indexOf(targetIndex)
     const targetOffset = -(targetSlot >= 0 ? targetSlot : mobileActiveSlot.value) * tabDragWidth.value
     const fromOffset = currentMobileTrackOffsetValue.value
@@ -282,6 +283,7 @@ export function useTabSwipe(activeTabs, isMobile, mobileTabbarRef = null) {
       }
       tabDragActive.value = true
       tabDragDirection.value = dx < 0 ? -1 : 1
+      markTabVisited(tabIndexFrom(activeTab.value, dx < 0 ? 1 : -1))
       tabSwipeWrapMode.value = wrapModeForDirection(tabDragDirection.value)
       tabSwipeBaseOffset.value = -mobileActiveSlot.value * tabDragWidth.value
     }

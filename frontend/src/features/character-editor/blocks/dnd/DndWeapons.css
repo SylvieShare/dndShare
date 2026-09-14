@@ -51,26 +51,6 @@
   color: var(--text-muted);
 }
 
-
-.w-picker-btn {
-  width: 100%;
-  min-height: 34px;
-  border: 1px dashed color-mix(in srgb, var(--text-muted) 46%, transparent);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--text-on-accent) 2%, transparent);
-  color: var(--text-muted);
-  cursor: pointer;
-  font: inherit;
-  font-size: 13px;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-}
-
-.w-picker-btn:hover {
-  color: var(--text-1);
-  border-color: color-mix(in srgb, var(--text-2) 58%, transparent);
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-}
-
 .w-empty {
   color: var(--text-muted);
   font-size: 13px;
@@ -79,16 +59,12 @@
 
 @media (max-width: 760px) {
   .weapons-block { gap: 12px; }
-  .w-list-header {
-    display: none;
-  }
 
   .w-card {
     padding: 0 0 0 16px;
   }
 
-  .w-card-view,
-  .w-card-view-edit {
+  .w-card-view {
     grid-template-columns: max-content minmax(0, 1fr);
     grid-template-areas:
       "title title"
@@ -101,17 +77,6 @@
     position: absolute;
     top: 10px;
     right: 10px;
-  }
-
-  .w-card-order {
-    position: absolute;
-    top: 10px;
-    left: 8px;
-  }
-
-  .w-card-editing .w-card-title {
-    padding-left: 20px;
-    padding-right: 58px;
   }
 
   .w-card-title {
@@ -132,34 +97,12 @@
     white-space: normal;
   }
 
-  .w-attack-chip {
-    justify-self: start;
-    min-width: 72px;
-    min-height: 36px;
-  }
-
   .w-damage-view {
     align-self: center;
   }
 
   .w-props-inline {
     padding-top: 2px;
-  }
-
-  .w-card-edit-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .w-card-extra {
-    max-width: none;
-  }
-
-  .w-card-edit-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .w-card-edit-grid .w-stat-select {
-    grid-column: 1 / -1;
   }
 
   .w-extra-row {

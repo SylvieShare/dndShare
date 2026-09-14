@@ -14,14 +14,22 @@
     <template v-else-if="!isMobile">
       <input
         ref="input"
+        role="combobox"
+        aria-autocomplete="list"
+        :aria-label="placeholder"
+        :aria-expanded="open"
+        :aria-controls="dropdown?.listId"
+        :aria-activedescendant="dropdown?.activeDescendant"
         class="sa-input"
         :value="query"
         :placeholder="placeholder"
         @input="query = $event.target.value"
-        @keydown.enter.prevent="confirmTop"
-        @keydown.escape="close"
+        @keydown="dropdown?.handleKeydown($event)"
       />
       <SuggestDropdown
+        ref="dropdown"
+        :anchor="input"
+        @close="close"
         :items="items"
         :query="query"
         :type-id="suggestTypeId"
@@ -110,6 +118,7 @@ const emit = defineEmits(['pick'])
 const root = ref(null)
 const panel = ref(null)
 const input = ref(null)
+const dropdown = ref(null)
 const { onTouchStart, onTouchMove, onTouchEnd } = useSwipeToClose(panel, () => close())
 const open = ref(false)
 const createOpen = ref(false)
@@ -183,16 +192,6 @@ function close() {
   query.value = ''
 }
 
-function confirmTop() {
-  const q = query.value.trim().toLowerCase()
-  const available = props.filterPicked
-    ? items.value.filter(item => !props.exclude.includes(item.value))
-    : items.value
-  const match = q
-    ? available.find(item => item.value.toLowerCase().includes(q))
-    : available[0]
-  if (match) pick(match.value)
-}
 
 function pick(value) {
   emit('pick', value)

@@ -59,7 +59,7 @@
 
               <template v-else>
                 <div class="hp-row">
-                  <StatBar
+                  <StatBar label="Здоровье"
                     class="p-hp-statbar"
                     size="small"
                     :percent="hpPercent"
@@ -131,7 +131,7 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
-import StatBar from '@/shared/ui/StatBar.vue'
+import { StatBar } from '@sylvieshare/share-ui'
 import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
 const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']

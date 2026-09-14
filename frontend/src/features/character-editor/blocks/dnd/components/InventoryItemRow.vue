@@ -154,4 +154,84 @@ const {
 const charCtx = inject('charCtx', {})
 </script>
 
-<style scoped src="../styles/DndItems.css"></style>
+<style scoped>
+.di-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 80px;
+  padding: 14px 4px;
+  transition: background 0.12s;
+}
+.di-row + .di-row {
+  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
+}
+.di-row-draggable { cursor: grab; touch-action: pan-y; }
+.di-row-draggable:active { cursor: grabbing; }
+@media (hover: hover) {
+  .di-row:hover { background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent); }
+}
+
+.di-row-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-1);
+  padding: 2px 4px;
+}
+.di-row-copy {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.di-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 4px;
+  color: var(--text-muted);
+  font-size: 10px;
+  line-height: 1.2;
+}
+.di-item-meta > span + span::before { margin-right: 7px; color: var(--border-strong); content: '·'; }
+.di-item-proficient { color: var(--success); font-weight: 700; }
+.di-item-armor { color: var(--accent); font-weight: 700; }
+.di-item-muted { color: var(--text-muted); }
+.di-item-danger { color: var(--danger); font-weight: 700; }
+.di-row-name:hover .di-row-name-text { color: var(--accent); }
+
+.di-row-name-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.di-count-badge {
+  flex-shrink: 0;
+  min-width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--text-1);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+}
+.di-count-x { font-size: 8px; opacity: 0.75; margin-right: 1px; }
+.sortable-placeholder {
+  background: color-mix(in srgb, var(--accent) 8%, transparent) !important;
+  outline: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+.sortable-placeholder > * { visibility: hidden; }
+</style>

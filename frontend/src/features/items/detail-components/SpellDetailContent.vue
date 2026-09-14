@@ -62,7 +62,7 @@
 import { computed, ref, watch } from 'vue'
 import { ScrollText } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import { itemsApi } from '@/shared/api/itemsApi'

@@ -1,0 +1,40 @@
+{
+  "kind": "layout",
+  "type": "column",
+  "props": {
+    "gap": "10px",
+    "style": {
+      "width": "300px",
+      "padding": "20px",
+      "background": "var(--bg)",
+      "border-right": "1px solid var(--border)"
+    },
+    "shrink": "0"
+  },
+  "children": [
+    {
+      "ref": "STR",
+      "kind": "block"
+    },
+    {
+      "ref": "DEX",
+      "kind": "block"
+    },
+    {
+      "ref": "CON",
+      "kind": "block"
+    },
+    {
+      "ref": "INT",
+      "kind": "block"
+    },
+    {
+      "ref": "WIS",
+      "kind": "block"
+    },
+    {
+      "ref": "CHA",
+      "kind": "block"
+    }
+  ]
+}

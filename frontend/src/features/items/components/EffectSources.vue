@@ -10,7 +10,7 @@
 import { onScopeDispose, ref, watch } from 'vue'
 import { AddButton, LoadingState } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import HandbookReferenceRows from './HandbookReferenceRows.vue'
 const props = defineProps({ itemId: Number, zIndex: { type: Number, default: 5100 } })
 const rows = ref([]), loading = ref(false), error = ref(''), hasMore = ref(false)

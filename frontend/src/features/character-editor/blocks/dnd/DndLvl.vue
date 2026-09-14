@@ -1,7 +1,7 @@
 <template>
-  <DndLvlView v-if="isCompact" compact :data="data" @open="open" />
-  <DndLvlView v-else-if="isMini" mini :data="data" @open="open" />
-  <DndLvlView v-else class="lvl-tile" :data="data" @open="open" />
+  <DndLvlView v-bind="$attrs" v-if="isCompact" compact :data="data" @open="open" />
+  <DndLvlView v-bind="$attrs" v-else-if="isMini" mini :data="data" @open="open" />
+  <DndLvlView v-bind="$attrs" v-else class="lvl-tile" :data="data" @open="open" />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -30,6 +30,7 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 import { computed, inject, ref } from 'vue'
 import DndClassesEditorModal from './components/DndClassesEditorModal.vue'
 import DndLevelUpModal from '@/features/character-editor/blocks/dnd/components/DndLevelUpModal'

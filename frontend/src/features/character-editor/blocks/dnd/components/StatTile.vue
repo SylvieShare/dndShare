@@ -1,6 +1,6 @@
 <template>
   <!-- toolbar mini -->
-  <div v-if="variant === 'mini'" class="cmini" :class="{ 'cmini-toggled': toggled, 'cmini-editable': canEdit }" @click="open">
+  <div v-bind="$attrs" v-if="variant === 'mini'" class="cmini" :class="{ 'cmini-toggled': toggled, 'cmini-editable': canEdit }" @click="open">
     <span class="cmini-label">{{ miniLabel || label }}</span>
     <span class="cmini-value">
       <span v-if="pre" class="cmini-plus">{{ pre }}</span>{{ value }}<span v-if="unit" class="cmini-unit">{{ unit }}</span>
@@ -8,14 +8,14 @@
   </div>
 
   <!-- desktop grid tile -->
-  <StatTileFace v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+  <StatTileFace v-bind="$attrs" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
     <template #decoration><TileAccentStrip v-if="toggled" /></template>
   </StatTileFace>
 
   <!-- any other variant (e.g. mobile default): block may override the look via the `tile` slot.
        `open` opens the morph editor; `action` fires the tile's primary action (roll / shield). -->
-  <slot v-else name="tile" :can-edit="canEdit" :open="open" :action="runAction">
-    <StatTileFace ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+  <slot v-else :attrs="$attrs" name="tile" :can-edit="canEdit" :open="open" :action="runAction">
+    <StatTileFace v-bind="$attrs" ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
       <template #decoration><TileAccentStrip v-if="toggled" /></template>
     </StatTileFace>
   </slot>
@@ -38,6 +38,7 @@
 </template>
 
 <script setup>
+defineOptions({ inheritAttrs: false })
 // Shared shell for the small "label + value" sheet tiles (AC / initiative / speed / prof-bonus).
 // Owns the three variants (mini / tile / default) and the click-to-morph editor. A block supplies its
 // computed display (label/value/pre/unit/color) and an `editor` slot; the morph and chrome are here.

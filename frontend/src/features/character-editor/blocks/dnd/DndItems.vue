@@ -56,17 +56,13 @@
           </div>
 
           <div v-if="canAdd" class="di-add-row">
-            <button class="di-add-catalog" @click="openPicker(section.id)">+ Добавить из справочника</button>
-            <button
-              class="di-add-custom"
-              title="Добавить предмет вручную"
-              @click="openInlineForm(section.id, null)"
-            >+ предмет</button>
+            <AddButton class="di-add-catalog" label="Добавить из справочника" @click="openPicker(section.id)" />
+            <AddButton label="Предмет" title="Добавить предмет вручную" @click="openInlineForm(section.id, null)" />
           </div>
         </BaseTile>
 
         <div v-if="canManage" class="di-add-section-row">
-          <button class="di-add-section" @click="addSection">+ Добавить секцию</button>
+          <AddButton block label="Добавить секцию" @click="addSection" />
         </div>
       </template>
     </template>
@@ -134,7 +130,7 @@ import { useInventoryRowActions } from './composables/useInventoryRowActions'
 import InventorySkeleton from './components/InventorySkeleton.vue'
 import InventoryItemRow from './components/InventoryItemRow.vue'
 import MagicItemInstanceModal from './components/MagicItemInstanceModal.vue'
-import { ActionButton } from '@sylvieshare/share-ui'
+import { AddButton, ActionButton } from '@sylvieshare/share-ui'
 import { useInventoryCatalog } from './composables/useInventoryCatalog'
 import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapons'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'

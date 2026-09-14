@@ -1,0 +1,158 @@
+{
+  "measuredAt": "2026-09-14T16:12:50.584Z",
+  "browser": "153.0.8010.12",
+  "cpuSlowdown": 4,
+  "files": [
+    {
+      "file": "static/index-C0IBT6w6.js",
+      "bytes": 2517395,
+      "gzip": 754214
+    },
+    {
+      "file": "static/style-mhnGC03K.css",
+      "bytes": 1005035,
+      "gzip": 153518
+    }
+  ],
+  "initial": {
+    "bytes": 3522430,
+    "gzip": 907732
+  },
+  "total": {
+    "bytes": 3522430,
+    "gzip": 907732
+  },
+  "list": [
+    {
+      "count": 500,
+      "renderMs": 121.90000003576279,
+      "renderedRows": 500,
+      "elements": 4500
+    },
+    {
+      "count": 500,
+      "renderMs": 109,
+      "renderedRows": 500,
+      "elements": 4500
+    },
+    {
+      "count": 500,
+      "renderMs": 94.60000002384186,
+      "renderedRows": 500,
+      "elements": 4500
+    },
+    {
+      "count": 500,
+      "renderMs": 85.60000002384186,
+      "renderedRows": 500,
+      "elements": 4500
+    },
+    {
+      "count": 500,
+      "renderMs": 91.89999997615814,
+      "renderedRows": 500,
+      "elements": 4500
+    },
+    {
+      "count": 2000,
+      "renderMs": 392.69999998807907,
+      "renderedRows": 2000,
+      "elements": 18000
+    },
+    {
+      "count": 2000,
+      "renderMs": 364.69999998807907,
+      "renderedRows": 2000,
+      "elements": 18000
+    },
+    {
+      "count": 2000,
+      "renderMs": 335,
+      "renderedRows": 2000,
+      "elements": 18000
+    },
+    {
+      "count": 2000,
+      "renderMs": 344.7999999523163,
+      "renderedRows": 2000,
+      "elements": 18000
+    },
+    {
+      "count": 2000,
+      "renderMs": 356.80000001192093,
+      "renderedRows": 2000,
+      "elements": 18000
+    }
+  ],
+  "snapshots": [
+    {
+      "writes": 50,
+      "callMs": 380.10000002384186,
+      "flushMs": 0,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 50,
+      "callMs": 262.00000005960464,
+      "flushMs": 0,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 50,
+      "callMs": 255.29999989271164,
+      "flushMs": 0,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 50,
+      "callMs": 260.5,
+      "flushMs": 0,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 50,
+      "callMs": 273.09999990463257,
+      "flushMs": 0,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    }
+  ],
+  "character": {
+    "sheetElements": 465,
+    "panes": [
+      {
+        "elements": 93,
+        "hasBlocks": true
+      },
+      {
+        "elements": 71,
+        "hasBlocks": true
+      },
+      {
+        "elements": 7,
+        "hasBlocks": true
+      },
+      {
+        "elements": 45,
+        "hasBlocks": true
+      },
+      {
+        "elements": 74,
+        "hasBlocks": true
+      },
+      {
+        "elements": 143,
+        "hasBlocks": true
+      },
+      {
+        "elements": 23,
+        "hasBlocks": true
+      }
+    ]
+  },
+  "errors": []
+}

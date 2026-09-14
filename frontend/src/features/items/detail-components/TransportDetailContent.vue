@@ -37,7 +37,7 @@
 <script setup>
 import { computed, watch } from 'vue'
 import { ensureItemNames, itemName } from '@/features/handbook/objects/lib/itemNames'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 
 const props = defineProps({

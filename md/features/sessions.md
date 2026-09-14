@@ -1172,3 +1172,6 @@ remove the previous keys and any read-time converter.
 Отправка из листа выбирает адресата в подменю с иконками 48 px. Поповер событий
 показывает «{отправитель с иконкой} предлагает {предмет с иконкой}» без подписи
 «Ожидает вашего решения».
+
+
+Логика переходов графа вынесена в `useSessionGraphEdgeActions`; SessionGraphCanvas координирует canvas и редактирование. CSS toolbar боя находится в EncounterToolbar.css, остальная раскладка — EncounterTab.css. Меню строки передаёт расположение через ActionMenu.triggerAttrs, без дополнительного DOM-контейнера.

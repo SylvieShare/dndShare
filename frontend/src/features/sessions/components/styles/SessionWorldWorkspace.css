@@ -58,11 +58,7 @@
 .session-world-section-title { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 9px; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
 .session-world-section-title::after { height: 1px; flex: 1; background: var(--border); content: ''; }
 .session-world-section-title small { order: 2; color: var(--text-muted); font-size: 8px; letter-spacing: normal; }
-.session-world-description p { max-width: 850px; margin: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 12px; line-height: 1.65; white-space: pre-wrap; }
 .session-world-muted { margin: 0; color: var(--text-muted); font-size: 11px; }
-.session-world-inline-empty { align-self: flex-start; padding: 7px 0; border: 0; background: none; color: var(--accent-soft); font: inherit; font-size: 11px; cursor: pointer; }
-.session-world-inline-empty:hover { color: var(--text-1); }
-.session-world-section-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }
 .session-world-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 8px; }
 .session-world-link-card { position: relative; min-width: 0; min-height: 76px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: end; gap: 3px 8px; overflow: hidden; padding: 13px; border: 1px solid var(--border); border-radius: 10px; color: var(--text-on-accent); text-align: left; cursor: pointer; }
 .session-world-link-card--image { background-image: linear-gradient(0deg, color-mix(in srgb, var(--bg) 90%, transparent), color-mix(in srgb, var(--bg) 25%, transparent)), var(--card-image); background-position: center; background-size: cover; }
@@ -71,18 +67,7 @@
 .session-world-link-card strong { grid-column: 1; overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .session-world-link-card svg { grid-column: 2; grid-row: 1 / span 2; align-self: end; }
 .session-world-link-card:hover { border-color: color-mix(in srgb, var(--entity-color) 58%, var(--border)); transform: translateY(-1px); }
-
-.session-world-compact-list { display: flex; flex-direction: column; gap: 5px; }
-.session-world-compact-list > button, .session-world-scene-row { min-width: 0; display: flex; min-height: 60px; align-items: center; gap: 12px; padding: 8px; border: 0; border-radius: 9px; background: transparent; color: var(--text-2); font: inherit; text-align: left; }
-.session-world-compact-list > button { cursor: pointer; }
-.session-world-compact-list > button:hover { background: var(--surface-raised); color: var(--text-1); }
-.session-world-compact-list > button > span:nth-child(2), .session-world-scene-row > span:nth-child(2) { min-width: 0; display: flex; flex: 1; flex-direction: column; gap: 2px; }
-.session-world-compact-list strong, .session-world-compact-list small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.session-world-compact-list strong { color: var(--text-1); font-size: 13px; font-weight: 650; }
-.session-world-compact-list small { color: var(--text-muted); font-size: 11px; }
 .session-world-avatar { width: 32px; height: 32px; display: grid; flex: none; place-items: center; border: 1px solid color-mix(in srgb, var(--entity-color) 48%, var(--border)); border-radius: 9px; background: color-mix(in srgb, var(--entity-color) 14%, transparent); color: color-mix(in srgb, var(--entity-color) 75%, var(--text-1)); font-family: var(--font-display); font-size: 14px; font-weight: 700; object-fit: cover; }
-.session-world-compact-list .session-world-avatar { width: 44px; height: 44px; border-radius: 10px; font-size: 16px; }
-.session-world-scene-image { width: 48px; height: 44px; flex: none; border-radius: 9px; background-position: center; background-size: cover; }
 
 .session-world-detail--empty { align-items: center; justify-content: center; gap: 10px; padding: 32px; color: var(--text-muted); text-align: center; }
 .session-world-detail--empty svg { color: var(--accent-soft); opacity: 0.55; }
@@ -102,7 +87,6 @@
 
 @media (max-width: 840px) {
   .session-world-workspace { grid-template-columns: 270px minmax(0, 1fr); }
-  .session-world-section-columns { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {

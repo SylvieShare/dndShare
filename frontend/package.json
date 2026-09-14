@@ -5,15 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:colors && vite build",
+    "build": "npm run check:colors && vite build && npm run check:bundle",
     "check:colors": "node scripts/check-colors.mjs",
     "preview": "vite preview",
     "test": "vitest run src",
-    "test:visual": "playwright test"
+    "test:visual": "playwright test",
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "benchmark": "node scripts/benchmark-frontend.mjs",
+    "test:performance": "playwright test -c playwright.performance.config.js"
   },
   "dependencies": {
     "@lucide/vue": "^1.46.0",
-    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.22.0.tar.gz",
+    "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.23.0.tar.gz",
     "pinia": "^3.0.4",
     "vue": "^3.5.42",
     "vue-router": "^5.3.1"

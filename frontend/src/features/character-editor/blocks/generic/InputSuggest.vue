@@ -1,5 +1,4 @@
 <template>
-  <div class="suggest-wrap">
     <SuggestPicker
       v-model="query"
       class="input-suggest-picker"
@@ -8,7 +7,6 @@
       :readonly="!charCtx.ownerMode"
       :invalid="!query && charCtx.ownerMode"
     />
-  </div>
 </template>
 
 <script setup>
@@ -29,10 +27,6 @@ watch(query, v => {
 </script>
 
 <style scoped>
-.suggest-wrap {
-  min-width: 50px;
-}
-
 .input-suggest-picker {
   min-width: 90px;
   width: fit-content;

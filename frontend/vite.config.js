@@ -1,9 +1,10 @@
+import { compressedAssets } from './scripts/compressedAssets.mjs'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), compressedAssets()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -25,15 +26,8 @@ export default defineConfig({
     outDir: 'target/dist',
     assetsDir: 'static',
     emptyOutDir: true,
-    // Single JS + single CSS bundle on purpose — no per-route chunks, so an open
-    // tab never 404s on a stale chunk after a deploy. The bundle is deliberately
-    // over the default 500 kB hint, so raise the warning limit instead of chasing it.
-    cssCodeSplit: false,
-    chunkSizeWarningLimit: 2000,
-    rolldownOptions: {
-      output: {
-        codeSplitting: false,
-      },
-    },
+    // Deployment retains hashed assets, including lazy chunks, across releases.
+    manifest: true,
+    cssCodeSplit: true,
   },
 })

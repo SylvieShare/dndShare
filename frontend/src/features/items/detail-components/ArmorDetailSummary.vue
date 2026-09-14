@@ -1,5 +1,4 @@
 <template>
-  <div class="armor-summary">
     <CoverSummaryLayout :safe-min-height="210">
       <template #left>
         <CoverStatCard :icon="ShieldCheck" label="Класс доспеха" :value="armorValue" :note="armorNote" tone="accent" />
@@ -19,7 +18,6 @@
         </CoverSummaryRail>
       </template>
     </CoverSummaryLayout>
-  </div>
 </template>
 
 <script setup>
@@ -65,7 +63,3 @@ const armorNote = computed(() => {
 const strengthLabel = computed(() => data.value.strength_required != null ? `${data.value.strength_required}+` : 'Без требования')
 const stealthLabel = computed(() => data.value.stealth_disadvantage ? 'Помеха' : 'Без помехи')
 </script>
-
-<style scoped>
-.armor-summary { flex: 1; width: 100%; display: flex; }
-</style>

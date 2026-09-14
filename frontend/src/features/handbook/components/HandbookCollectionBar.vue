@@ -6,7 +6,7 @@
     <div v-if="showIdentity" class="col-bar-left">
       <span class="col-type-name">{{ type.name }}</span>
       <span class="col-type-count">{{ countLabel }}</span>
-      <button v-if="canAdd" class="col-add-btn" @click="$emit('add')">+ Добавить</button>
+      <AddButton v-if="canAdd" label="Добавить" @click="$emit('add')" />
     </div>
 
     <!-- ── Right: search + group + filter ── -->
@@ -144,6 +144,7 @@
 </template>
 
 <script setup>
+import { AddButton } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { fetchGet } from '@/shared/api/http'

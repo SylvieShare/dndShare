@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 const read = relative => readFileSync(fileURLToPath(new URL(relative, import.meta.url)), 'utf8')
 const modal = read('./SessionJoinModal.vue')
 const invitePage = read('../pages/ViewJoinSession.vue')
-const sessionsPage = read('../pages/ViewSessions.vue')
+const sessionsPage = read('../pages/ViewSessions.vue') + read('../pages/styles/ViewSessions.css')
 const card = read('./SessionCard.vue')
 const toolbar = read('./ChapterGraphToolbar.vue')
 const api = read('../../../shared/api/sessionsApi.js')

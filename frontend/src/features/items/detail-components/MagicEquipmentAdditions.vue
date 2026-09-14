@@ -1,5 +1,5 @@
 <template>
-  <DetailSection v-if="effects.length" :label="kind === 'weapon' ? 'Что добавляется к оружию' : 'Что меняется у доспеха'" tone="combat">
+  <DetailSection v-if="effects.length" :label="kind === 'weapon' ? 'Что добавляется к оружию' : 'Что меняется у доспеха'" tone="danger">
     <template #icon><Sparkles /></template>
     <div class="equipment-additions">
       <BaseTile v-for="effect in effects" :key="effect.key" class="equipment-addition">
@@ -24,7 +24,7 @@ import { BadgeCheck, Dices, Dumbbell, Eye, Flame, MoveHorizontal, ShieldCheck, S
 import { weaponDamageDiceCount, weaponDamageLabel } from '@/shared/lib/abilityProgression'
 import { weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import { useSuggestStore } from '@/stores/suggest'
 const props = defineProps({ item: { type: Object, required: true }, kind: { type: String, required: true } })
 const suggest = useSuggestStore()

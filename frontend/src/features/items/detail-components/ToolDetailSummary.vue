@@ -1,5 +1,4 @@
 <template>
-  <div class="tool-summary">
     <CoverSummaryLayout>
       <template #left>
         <CoverStatCard
@@ -32,7 +31,6 @@
         </CoverSummaryRail>
       </template>
     </CoverSummaryLayout>
-  </div>
 </template>
 
 <script setup>
@@ -65,11 +63,3 @@ const proficiencyLabel = computed(() => {
   return labels.length ? labels.join(' или ') : 'Не требуется'
 })
 </script>
-
-<style scoped>
-.tool-summary {
-  flex: 1;
-  width: 100%;
-  display: flex;
-}
-</style>

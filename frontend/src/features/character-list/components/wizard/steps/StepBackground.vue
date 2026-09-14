@@ -244,7 +244,6 @@ function selectBackground(background) {
 .shop-replacement { padding: 8px 10px; border-radius: var(--r-sm); background: color-mix(in srgb, var(--accent) 9%, transparent); }
 .fk { display: block; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1px; }
 .background-wallet { padding: 15px 16px; }
-.background-wallet :deep(.money-title) { margin-bottom: 10px; color: var(--warning); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
 .background-wallet :deep(.money-line) { align-items: center; gap: 10px 22px; }
 .background-wallet :deep(.money-amount) { align-items: center; gap: 9px; }
 .background-wallet :deep(.ma-value) { font-size: 28px; font-weight: 800; }

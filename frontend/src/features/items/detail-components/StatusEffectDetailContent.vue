@@ -15,7 +15,7 @@
       <RichContent class="status-effect-description" :html="data.desc" :actor-name="actorName || item.name" />
     </DetailSection>
 
-    <DetailSection v-if="mechanicRules.length || defenses.length" label="Механика" tone="combat">
+    <DetailSection v-if="mechanicRules.length || defenses.length" label="Механика" tone="danger">
       <template #icon><SlidersHorizontal /></template>
       <div class="status-effect-rules">
         <article v-for="(rule, index) in mechanicRules" :key="`rule-${index}`" class="status-effect-rule">
@@ -33,7 +33,7 @@
 
     <EffectSources :item-id="item.id" :z-index="nestedViewZIndex" />
 
-    <DetailSection v-if="exhaustionLevels.length" label="Уровни истощения" tone="combat">
+    <DetailSection v-if="exhaustionLevels.length" label="Уровни истощения" tone="danger">
       <template #icon><BatteryLow /></template>
       <ol class="status-effect-levels">
         <li v-for="entry in exhaustionLevels" :key="entry.level">
@@ -58,7 +58,7 @@ import {
   statusThesisLines,
 } from '@/features/items/lib/statusEffectPresentation'
 import { useSuggestStore } from '@/stores/suggest'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 
 const props = defineProps({

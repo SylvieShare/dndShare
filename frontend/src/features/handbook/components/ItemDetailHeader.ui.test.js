@@ -106,8 +106,8 @@ describe('handbook item detail cover', () => {
     expect(statusEffectSummarySource).toContain('label="Воздействие"')
     expect(statusEffectSummarySource).toContain('label="Длительность"')
     expect(statusEffectContentSource).toContain('label="Кратко"')
-    expect(statusEffectContentSource).toContain('label="Механика" tone="combat"')
-    expect(statusEffectContentSource).toContain('label="Уровни истощения" tone="combat"')
+    expect(statusEffectContentSource).toContain('label="Механика" tone="danger"')
+    expect(statusEffectContentSource).toContain('label="Уровни истощения" tone="danger"')
   })
 
   it('gives transport a 3:2 showcase with operational data around a safe center', () => {

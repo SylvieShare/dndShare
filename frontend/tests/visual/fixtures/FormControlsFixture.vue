@@ -31,12 +31,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import FormNumberInput from '../../../src/shared/ui/form/FormNumberInput.vue'
-import FormTextInput from '../../../src/shared/ui/form/FormTextInput.vue'
-import FormTextarea from '../../../src/shared/ui/form/FormTextarea.vue'
-import MultiToggle from '../../../src/shared/ui/MultiToggle.vue'
-import ToggleSwitch from '../../../src/shared/ui/ToggleSwitch.vue'
-import ValueSelect from '../../../src/shared/ui/ValueSelect.vue'
+import { FormNumberInput } from '@sylvieshare/share-ui'
+import { FormTextInput } from '@sylvieshare/share-ui'
+import { FormTextarea } from '@sylvieshare/share-ui'
+import { MultiToggle } from '@sylvieshare/share-ui'
+import { ToggleSwitch } from '@sylvieshare/share-ui'
+import { ValueSelect } from '@sylvieshare/share-ui'
 
 const enabled = ref(false)
 const selected = ref(null)

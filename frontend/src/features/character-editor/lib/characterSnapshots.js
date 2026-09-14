@@ -1,38 +1,50 @@
+import { createDeferredTask } from '@/shared/lib/deferredTask'
+
 const MAX_CHARACTER_SNAPSHOTS = 3
 
 export function characterSnapshotStorageKey(uuid) {
   return `dndshare.characterSnapshots.v1.${uuid}`
 }
 
-export function recordCharacterSnapshot(uuid, data, storage) {
-  if (!uuid || !data) return false
-  if (!storage) {
+// Immutable JSON strings avoid serializing the previous snapshots on each flush.
+export function createCharacterSnapshotRecorder(uuid, getData, options = {}) {
+  let snapshots = null
+  const key = characterSnapshotStorageKey(uuid)
+  function record() {
+    if (!uuid) return false
     try {
-      storage = globalThis.localStorage
+      const storage = options.storage || globalThis.localStorage
+      const data = getData()
+      if (!storage || !data) return false
+      if (snapshots == null) {
+        try {
+          const saved = JSON.parse(storage.getItem(key) || '[]')
+          snapshots = Array.isArray(saved) ? saved.slice(-MAX_CHARACTER_SNAPSHOTS).map(value => JSON.stringify(value)) : []
+        } catch { snapshots = [] }
+      }
+      const serialized = JSON.stringify(data)
+      if (snapshots.at(-1) === serialized) return true
+      const next = [...snapshots, serialized].slice(-MAX_CHARACTER_SNAPSHOTS)
+      storage.setItem(key, `[${next.join(',')}]`)
+      snapshots = next
+      return true
     } catch {
+      // Quota/private-mode failures must not block editing or the server save.
       return false
     }
   }
-  if (!storage) return false
-
-  let snapshots = []
-  try {
-    const saved = JSON.parse(storage.getItem(characterSnapshotStorageKey(uuid)) || '[]')
-    if (Array.isArray(saved)) snapshots = saved
-  } catch {
-    // A malformed or unreadable previous value must not block character editing.
-  }
-
-  try {
-    const snapshot = JSON.parse(JSON.stringify(data))
-    snapshots.push(snapshot)
-    storage.setItem(
-      characterSnapshotStorageKey(uuid),
-      JSON.stringify(snapshots.slice(-MAX_CHARACTER_SNAPSHOTS)),
-    )
-    return true
-  } catch {
-    // Storage can be unavailable or full; the server save remains authoritative.
-    return false
+  const task = createDeferredTask(record, options)
+  const flush = () => task.flush()
+  const visibilityChanged = () => { if (globalThis.document?.visibilityState === 'hidden') flush() }
+  globalThis.window?.addEventListener('pagehide', flush)
+  globalThis.document?.addEventListener('visibilitychange', visibilityChanged)
+  return {
+    schedule: task.schedule,
+    flush,
+    dispose() {
+      flush()
+      globalThis.window?.removeEventListener('pagehide', flush)
+      globalThis.document?.removeEventListener('visibilitychange', visibilityChanged)
+    },
   }
 }

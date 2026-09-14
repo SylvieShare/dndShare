@@ -1,0 +1,627 @@
+{
+  "measuredAt": "2026-09-14T16:19:39.311Z",
+  "browser": "153.0.8010.12",
+  "cpuSlowdown": 4,
+  "files": [
+    {
+      "file": "static/CharacterCreateModal-BF_pqagT.js",
+      "bytes": 14939,
+      "gzip": 5604
+    },
+    {
+      "file": "static/CharacterCreateModal-BUWE2ayO.css",
+      "bytes": 3956,
+      "gzip": 968
+    },
+    {
+      "file": "static/CharacterSheetModal-BkuD1ihp.css",
+      "bytes": 7387,
+      "gzip": 1742
+    },
+    {
+      "file": "static/CharacterSheetModal-D1g1xKMS.js",
+      "bytes": 46620,
+      "gzip": 16593
+    },
+    {
+      "file": "static/ItemViewModal-CFgEyliI.js",
+      "bytes": 525610,
+      "gzip": 150653
+    },
+    {
+      "file": "static/ItemViewModal-CbtfLgU4.css",
+      "bytes": 134099,
+      "gzip": 21749
+    },
+    {
+      "file": "static/PageMain-BICYscLD.css",
+      "bytes": 13221,
+      "gzip": 2733
+    },
+    {
+      "file": "static/PageMain-o_hAKx4k.js",
+      "bytes": 7484,
+      "gzip": 2897
+    },
+    {
+      "file": "static/PageTutorial-B9VBPIEU.js",
+      "bytes": 3049,
+      "gzip": 1648
+    },
+    {
+      "file": "static/PageTutorial-hAafuNEG.css",
+      "bytes": 475,
+      "gzip": 254
+    },
+    {
+      "file": "static/SessionJoinModal-D9shDS8R.css",
+      "bytes": 1741,
+      "gzip": 687
+    },
+    {
+      "file": "static/SessionJoinModal-Dyrt2rB0.js",
+      "bytes": 3506,
+      "gzip": 1820
+    },
+    {
+      "file": "static/SuggestEditModal-BZH8j7dW.js",
+      "bytes": 4772,
+      "gzip": 2186
+    },
+    {
+      "file": "static/SuggestEditModal-DpnCoch1.css",
+      "bytes": 2689,
+      "gzip": 714
+    },
+    {
+      "file": "static/SvgIcon-CHGUqadj.css",
+      "bytes": 186,
+      "gzip": 149
+    },
+    {
+      "file": "static/SvgIcon-DboK7T8K.js",
+      "bytes": 1301,
+      "gzip": 771
+    },
+    {
+      "file": "static/SystemDie-CUyZH9w1.css",
+      "bytes": 1583,
+      "gzip": 600
+    },
+    {
+      "file": "static/SystemDie-SmuFRiyi.js",
+      "bytes": 8127,
+      "gzip": 3624
+    },
+    {
+      "file": "static/ViewAccount-K16ctlkm.js",
+      "bytes": 13091,
+      "gzip": 5135
+    },
+    {
+      "file": "static/ViewAccount-mcdbNPvo.css",
+      "bytes": 8170,
+      "gzip": 1985
+    },
+    {
+      "file": "static/ViewAdmin-CcE0ArVT.css",
+      "bytes": 14165,
+      "gzip": 2816
+    },
+    {
+      "file": "static/ViewAdmin-DRNCSBbt.js",
+      "bytes": 18426,
+      "gzip": 6494
+    },
+    {
+      "file": "static/ViewCharacter-CAwPN6Pf.js",
+      "bytes": 40153,
+      "gzip": 14618
+    },
+    {
+      "file": "static/ViewCharacter-vnLmL38v.css",
+      "bytes": 6308,
+      "gzip": 1745
+    },
+    {
+      "file": "static/ViewCharacterPrint-BD5_I-1X.css",
+      "bytes": 22487,
+      "gzip": 4583
+    },
+    {
+      "file": "static/ViewCharacterPrint-D9ZJp4CI.js",
+      "bytes": 30002,
+      "gzip": 10071
+    },
+    {
+      "file": "static/ViewCreateCharacter-Ck9EQlo1.css",
+      "bytes": 80486,
+      "gzip": 12277
+    },
+    {
+      "file": "static/ViewCreateCharacter-D7FvpPGH.js",
+      "bytes": 94307,
+      "gzip": 29015
+    },
+    {
+      "file": "static/ViewDictionary-C_CR-0EC.css",
+      "bytes": 10863,
+      "gzip": 2225
+    },
+    {
+      "file": "static/ViewDictionary-Dek6VgMp.js",
+      "bytes": 10129,
+      "gzip": 3858
+    },
+    {
+      "file": "static/ViewDnd5e2014Rules-BjIwyy7R.js",
+      "bytes": 47442,
+      "gzip": 15007
+    },
+    {
+      "file": "static/ViewDnd5e2014Rules-DyNOa_s1.css",
+      "bytes": 42898,
+      "gzip": 6988
+    },
+    {
+      "file": "static/ViewEncounterScreen-CgRz1PfM.js",
+      "bytes": 18719,
+      "gzip": 7127
+    },
+    {
+      "file": "static/ViewEncounterScreen-CyL_kS2G.css",
+      "bytes": 26781,
+      "gzip": 5081
+    },
+    {
+      "file": "static/ViewHandbook-Brz78qx3.js",
+      "bytes": 15086,
+      "gzip": 5700
+    },
+    {
+      "file": "static/ViewHandbook-N_yn6HkR.css",
+      "bytes": 8754,
+      "gzip": 1956
+    },
+    {
+      "file": "static/ViewJoinSession-B2ENL6ZK.css",
+      "bytes": 6158,
+      "gzip": 1586
+    },
+    {
+      "file": "static/ViewJoinSession-Bg6PlkDj.js",
+      "bytes": 6672,
+      "gzip": 2876
+    },
+    {
+      "file": "static/ViewListCharacters-BwiYg1h8.js",
+      "bytes": 7025,
+      "gzip": 3085
+    },
+    {
+      "file": "static/ViewListCharacters-l-s2G3Fw.css",
+      "bytes": 4556,
+      "gzip": 1286
+    },
+    {
+      "file": "static/ViewMasterTools-1N0gZlor.js",
+      "bytes": 27021,
+      "gzip": 9784
+    },
+    {
+      "file": "static/ViewMasterTools-DfiJ5kVP.css",
+      "bytes": 1950,
+      "gzip": 765
+    },
+    {
+      "file": "static/ViewRulesEditionFallback-C05b4Yz5.js",
+      "bytes": 473,
+      "gzip": 321
+    },
+    {
+      "file": "static/ViewRulesEntry-B0kYmVt8.css",
+      "bytes": 116,
+      "gzip": 126
+    },
+    {
+      "file": "static/ViewRulesEntry-BU4sGvb7.js",
+      "bytes": 683,
+      "gzip": 510
+    },
+    {
+      "file": "static/ViewRulesUnavailable-DixCpLCQ.js",
+      "bytes": 1394,
+      "gzip": 800
+    },
+    {
+      "file": "static/ViewRulesUnavailable-DtfckI_L.css",
+      "bytes": 1757,
+      "gzip": 673
+    },
+    {
+      "file": "static/ViewSession-G1wMPRbK.js",
+      "bytes": 479899,
+      "gzip": 137838
+    },
+    {
+      "file": "static/ViewSession-wLHO2Zpb.css",
+      "bytes": 229358,
+      "gzip": 34082
+    },
+    {
+      "file": "static/ViewSessions-Bn9lGxIh.css",
+      "bytes": 13713,
+      "gzip": 2942
+    },
+    {
+      "file": "static/ViewSessions-DRys3XQ-.js",
+      "bytes": 15093,
+      "gzip": 5837
+    },
+    {
+      "file": "static/ViewVtmV20Rules-D_r7wOot.js",
+      "bytes": 265,
+      "gzip": 227
+    },
+    {
+      "file": "static/_plugin-vue_export-helper-BDNMzG2s.js",
+      "bytes": 84,
+      "gzip": 100
+    },
+    {
+      "file": "static/account-UKcVRQug.js",
+      "bytes": 1016,
+      "gzip": 502
+    },
+    {
+      "file": "static/arrow-right-CUqBZzUt.js",
+      "bytes": 185,
+      "gzip": 177
+    },
+    {
+      "file": "static/arrow-up-right-BhL18aDQ.js",
+      "bytes": 187,
+      "gzip": 173
+    },
+    {
+      "file": "static/chapterGraph-D8ED8r2R.js",
+      "bytes": 2165,
+      "gzip": 956
+    },
+    {
+      "file": "static/characterHitPoints-wnkjNe1n.js",
+      "bytes": 31334,
+      "gzip": 11923
+    },
+    {
+      "file": "static/chevron-left-lBUvu4O_.js",
+      "bytes": 150,
+      "gzip": 160
+    },
+    {
+      "file": "static/circle-alert-BsPUsVTH.js",
+      "bytes": 295,
+      "gzip": 212
+    },
+    {
+      "file": "static/copy-BUswVzeC.js",
+      "bytes": 256,
+      "gzip": 221
+    },
+    {
+      "file": "static/createLucideIcon-B_tm6M6F.js",
+      "bytes": 2536,
+      "gzip": 1274
+    },
+    {
+      "file": "static/deferredTask-A787Hs8o.css",
+      "bytes": 208420,
+      "gzip": 33078
+    },
+    {
+      "file": "static/deferredTask-C71_hRUW.js",
+      "bytes": 619097,
+      "gzip": 184195
+    },
+    {
+      "file": "static/dice-CdT0Mq3O.js",
+      "bytes": 13692,
+      "gzip": 5567
+    },
+    {
+      "file": "static/dnd-DJ6u4QbW.js",
+      "bytes": 929,
+      "gzip": 441
+    },
+    {
+      "file": "static/hitDice-BqBAlMWt.js",
+      "bytes": 2239,
+      "gzip": 937
+    },
+    {
+      "file": "static/hp-pulse-DvNODYCa.js",
+      "bytes": 707,
+      "gzip": 408
+    },
+    {
+      "file": "static/http-JWXuDnCH.js",
+      "bytes": 1088,
+      "gzip": 575
+    },
+    {
+      "file": "static/index-C-CxylP-.css",
+      "bytes": 124525,
+      "gzip": 21227
+    },
+    {
+      "file": "static/index-Ds-K-DqS.js",
+      "bytes": 228022,
+      "gzip": 69740
+    },
+    {
+      "file": "static/itemTypes-wIp7dxKd.js",
+      "bytes": 1160,
+      "gzip": 583
+    },
+    {
+      "file": "static/key-round-B8tECV6Z.js",
+      "bytes": 375,
+      "gzip": 271
+    },
+    {
+      "file": "static/music-2-BckCFFbl.js",
+      "bytes": 190,
+      "gzip": 182
+    },
+    {
+      "file": "static/participantView-CjcD7kTS.js",
+      "bytes": 33578,
+      "gzip": 7689
+    },
+    {
+      "file": "static/pinia-DGOtv-VR.js",
+      "bytes": 6143,
+      "gzip": 2890
+    },
+    {
+      "file": "static/runtime-core.esm-bundler-Do8jGOxG.js",
+      "bytes": 68720,
+      "gzip": 26570
+    },
+    {
+      "file": "static/sessionTimers-CIhRqaMF.js",
+      "bytes": 1410,
+      "gzip": 750
+    },
+    {
+      "file": "static/sessionsApi-DkRI9W-l.js",
+      "bytes": 4107,
+      "gzip": 1038
+    },
+    {
+      "file": "static/share-ui-gallery-D61R5XFj.js",
+      "bytes": 23989,
+      "gzip": 7354
+    },
+    {
+      "file": "static/shield-check-BH0Sbnsc.js",
+      "bytes": 517,
+      "gzip": 341
+    },
+    {
+      "file": "static/skull-DBjtlToz.js",
+      "bytes": 367,
+      "gzip": 256
+    },
+    {
+      "file": "static/sourceVersions-Cq8o-99Q.js",
+      "bytes": 230,
+      "gzip": 167
+    },
+    {
+      "file": "static/sparkles-D2dzEXJ1.js",
+      "bytes": 652,
+      "gzip": 347
+    },
+    {
+      "file": "static/storageUsage-CtB1V9kt.js",
+      "bytes": 641,
+      "gzip": 448
+    },
+    {
+      "file": "static/swords-ACJFn26q.js",
+      "bytes": 853,
+      "gzip": 457
+    },
+    {
+      "file": "static/target-BASntszu.js",
+      "bytes": 246,
+      "gzip": 176
+    },
+    {
+      "file": "static/tent-Ck4KbqWs.js",
+      "bytes": 269,
+      "gzip": 197
+    },
+    {
+      "file": "static/tutorials-CUnXpkQB.js",
+      "bytes": 1483,
+      "gzip": 725
+    },
+    {
+      "file": "static/useApi-BPuI6ZR9-4-9u_r2Z.js",
+      "bytes": 864,
+      "gzip": 478
+    },
+    {
+      "file": "static/vue-router-D6crlMca.js",
+      "bytes": 22330,
+      "gzip": 8852
+    },
+    {
+      "file": "static/wand-sparkles-yKzgWgy5.js",
+      "bytes": 552,
+      "gzip": 315
+    },
+    {
+      "file": "static/x-CqirZwyx.js",
+      "bytes": 1126,
+      "gzip": 564
+    }
+  ],
+  "initial": {
+    "bytes": 508177,
+    "gzip": 147684
+  },
+  "total": {
+    "bytes": 3491874,
+    "gzip": 947327
+  },
+  "list": [
+    {
+      "count": 500,
+      "renderMs": 33.5,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 500,
+      "renderMs": 32.89999997615814,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 500,
+      "renderMs": 32.90000003576279,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 500,
+      "renderMs": 33.19999998807907,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 500,
+      "renderMs": 32.39999997615814,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 2000,
+      "renderMs": 33.09999996423721,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 2000,
+      "renderMs": 33.10000002384186,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 2000,
+      "renderMs": 33.30000001192093,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 2000,
+      "renderMs": 31.600000023841858,
+      "renderedRows": 16,
+      "elements": 129
+    },
+    {
+      "count": 2000,
+      "renderMs": 32.5,
+      "renderedRows": 16,
+      "elements": 129
+    }
+  ],
+  "snapshots": [
+    {
+      "writes": 1,
+      "callMs": 0.10000002384185791,
+      "flushMs": 2.600000023841858,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 1,
+      "callMs": 0,
+      "flushMs": 2,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 1,
+      "callMs": 0.19999992847442627,
+      "flushMs": 2.199999988079071,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 1,
+      "callMs": 0.10000002384185791,
+      "flushMs": 1.899999976158142,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    },
+    {
+      "writes": 1,
+      "callMs": 0,
+      "flushMs": 2,
+      "dataBytes": 272344,
+      "finalName": "Персонаж 49"
+    }
+  ],
+  "character": {
+    "sheetElements": 114,
+    "panes": [
+      {
+        "elements": 93,
+        "hasBlocks": true
+      },
+      {
+        "elements": 2,
+        "hasBlocks": false
+      },
+      {
+        "elements": 2,
+        "hasBlocks": false
+      },
+      {
+        "elements": 2,
+        "hasBlocks": false
+      },
+      {
+        "elements": 2,
+        "hasBlocks": false
+      },
+      {
+        "elements": 2,
+        "hasBlocks": false
+      },
+      {
+        "elements": 2,
+        "hasBlocks": false
+      }
+    ]
+  },
+  "errors": [],
+  "routes": {
+    "src/features/character-editor/pages/ViewCharacter.vue": {
+      "bytes": 2107804,
+      "gzip": 581604
+    },
+    "src/features/handbook/pages/ViewHandbook.vue": {
+      "bytes": 1209479,
+      "gzip": 335689
+    },
+    "src/features/sessions/pages/ViewSessions.vue": {
+      "bytes": 545837,
+      "gzip": 160888
+    }
+  }
+}

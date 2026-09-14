@@ -27,7 +27,7 @@
     </DetailSection>
 
     <!-- Actions -->
-    <DetailSection v-if="item.data.actions?.length" label="Действия" tone="combat">
+    <DetailSection v-if="item.data.actions?.length" label="Действия" tone="danger">
       <template #icon><Swords /></template>
       <div class="enemy-blocks">
         <DetailEntryCard v-for="b in item.data.actions" :key="b.name" :title="b.name" tone="combat">
@@ -86,7 +86,7 @@ import { computed, ref, watch } from 'vue'
 import { BookOpen, MapPin, Shield, Sparkles, Swords, Tags } from '@lucide/vue'
 import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import DetailEntryCard from '@/shared/ui/DetailEntryCard.vue'
-import DetailSection from '@/shared/ui/DetailSection.vue'
+import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSuggestStore } from '@/stores/suggest'
 

@@ -10,12 +10,13 @@ import (
 
 // Config — конфигурация приложения из env.
 type Config struct {
-	Environment       string
-	Port              string
-	DSN               string
-	SecureCookie      string // auto | true | false
-	DevOrigin         string // CORS-origin для vite (локальная разработка)
-	TrustProxyHeaders bool
+	FrontendAssetCacheDir string
+	Environment           string
+	Port                  string
+	DSN                   string
+	SecureCookie          string // auto | true | false
+	DevOrigin             string // CORS-origin для vite (локальная разработка)
+	TrustProxyHeaders     bool
 
 	MCPAuthToken    string
 	MCPWriteEnabled bool
@@ -55,12 +56,13 @@ func Load() (Config, error) {
 		return Config{}, err
 	}
 	cfg := Config{
-		Environment:       environment,
-		Port:              env("PORT", "8080"),
-		DSN:               dsn,
-		SecureCookie:      strings.ToLower(env("SESSION_SECURE_COOKIE", "auto")),
-		DevOrigin:         "http://localhost:5173",
-		TrustProxyHeaders: trustProxyHeaders,
+		FrontendAssetCacheDir: env("FRONTEND_ASSET_CACHE_DIR", ""),
+		Environment:           environment,
+		Port:                  env("PORT", "8080"),
+		DSN:                   dsn,
+		SecureCookie:          strings.ToLower(env("SESSION_SECURE_COOKIE", "auto")),
+		DevOrigin:             "http://localhost:5173",
+		TrustProxyHeaders:     trustProxyHeaders,
 
 		MCPAuthToken:    env("MCP_AUTH_TOKEN", "dev-mcp-token-change-me"),
 		MCPWriteEnabled: mcpWriteEnabled,
