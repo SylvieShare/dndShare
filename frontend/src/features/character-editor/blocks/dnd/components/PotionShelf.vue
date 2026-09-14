@@ -22,8 +22,9 @@
           </template>
 
           <template #default="{ close }">
-            <ItemTransferAction source="potions" :entry="p" :name="p.name" @close="close" />
+            <ItemTransferAction source="potions" :disabled="busy.size > 0" :entry="p" :name="p.name" @close="close" />
             <RowActionItem v-if="canUse" action="use" tone="accent" @click="usePotion(p, close)">Использовать на себя</RowActionItem>
+            <ItemTransferAction v-if="canUse" purpose="use" source="potions" :entry="p" :name="p.name" :disabled="busy.size > 0" @close="close" />
             <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
             <RowActionItem action="view" tone="info" @click="viewPotion(p, close)">Просмотреть</RowActionItem>
             <RowActionItem v-if="canMove" :icon="ArrowRightLeft" @click="movePotion(p, close)">Переместить в вещи</RowActionItem>
@@ -42,6 +43,7 @@
 </template>
 
 <script setup>
+import { reactive } from 'vue'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import PotionVial from '@/features/items/components/PotionVial'
 import { ArrowRightLeft } from '@lucide/vue'
@@ -57,7 +59,7 @@ const props = defineProps({
 const emit = defineEmits(['use', 'replenish', 'view', 'move', 'add'])
 
 const vials = new Map()
-const busy = new Set()
+const busy = reactive(new Set())
 function setVial(uid, el) {
   if (el) vials.set(uid, el)
   else vials.delete(uid)

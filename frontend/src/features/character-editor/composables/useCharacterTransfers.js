@@ -78,23 +78,23 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     try {
       if (!await flushSave()) throw new Error('Сначала сохраните лист. Если он изменился на сервере, обновите страницу.')
       await action()
-      if (!await refreshFromServer()) throw new Error('Передача сохранена. Не удалось обновить инвентарь; обновите страницу.')
+      if (!await refreshFromServer()) throw new Error('Запрос сохранён. Не удалось обновить инвентарь; обновите страницу.')
       await refresh()
       await events.refresh()
       return true
     } catch (error) {
-      state.error = error.message || 'Не удалось выполнить передачу'
+      state.error = error.message || 'Не удалось отправить или обработать запрос'
       // The request may have committed even when its response was lost.
       if (saveStatus.value === 'idle') await refreshFromServer()
       await refresh()
       return false
     } finally { state.busy = false }
   }
-  async function send(source, entry, recipientCharUuid) {
+  async function send(source, entry, recipientCharUuid, purpose = 'transfer') {
     if (!isOwner.value || state.busy || !session.value || !recipients.value.some(p => p.charUuid === recipientCharUuid)) return false
-    const key = `${session.value.uuid}:${source}:${entry.uid}:${recipientCharUuid}`
+    const key = `${purpose}:${session.value.uuid}:${source}:${entry.uid}:${recipientCharUuid}`
     if (pendingSend?.key !== key) pendingSend = { key, clientActionId: crypto.randomUUID() }
-    const payload = { source, entryUid: entry.uid, recipientCharUuid, sessionUuid: session.value.uuid, clientActionId: pendingSend.clientActionId }
+    const payload = { purpose, source, entryUid: entry.uid, recipientCharUuid, sessionUuid: session.value.uuid, clientActionId: pendingSend.clientActionId }
     const sent = await mutate(() => api.createItemTransfer(uuid, { ...payload, version: version.value }))
     if (sent) pendingSend = null
     return sent

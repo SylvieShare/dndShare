@@ -6,11 +6,11 @@
 <script setup>
 import { computed } from 'vue'
 import { Clock3, CircleCheck, CircleX } from '@lucide/vue'
-const props = defineProps({ status: { type: String, default: 'pending' } })
+const props = defineProps({ status: { type: String, default: 'pending' }, purpose: { type: String, default: 'transfer' } })
 const presentation = computed(() => ({
   pending: { icon: Clock3, label: 'Ожидает' },
-  accepted: { icon: CircleCheck, label: 'Приняли' },
-  rejected: { icon: CircleX, label: 'Отказали' },
+  accepted: { icon: CircleCheck, label: props.purpose === 'use' ? 'Использовано' : 'Приняли' },
+  rejected: { icon: CircleX, label: props.purpose === 'use' ? 'Доза возвращена' : 'Отказали' },
 })[props.status] || { icon: Clock3, label: 'Ожидает' })
 </script>
 <style scoped>

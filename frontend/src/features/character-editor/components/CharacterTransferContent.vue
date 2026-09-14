@@ -11,22 +11,23 @@
         <article v-for="transfer in state.transfers" :key="transfer.id" class="transfer-event">
           <div class="transfer-offer">
             <TransferPerson :name="transfer.senderName" :image-url="senderImage(transfer)" />
-            <span class="transfer-offer-verb">предлагает</span>
+            <span class="transfer-offer-verb">{{ transfer.purpose === 'use' ? 'предлагает применить' : 'предлагает' }}</span>
             <button type="button" class="transfer-reference" @click="emit('view-item', itemView(transfer))">
               <ItemIcon v-if="artwork(transfer)?.iconImageUrl || artwork(transfer)?.svg" :item="artwork(transfer)" :size="32" />
               <Package v-else :size="32" :stroke-width="1.5" aria-hidden="true" />
               <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
             </button>
           </div>
+          <p v-if="transfer.purpose === 'use'" class="transfer-hint">Одна доза для {{ transfer.recipientName }}. После принятия она будет потрачена; действие зелья отметьте на листе вручную.</p>
           <template v-if="transfer.recipientCharUuid === characterUuid">
             <div class="transfer-actions">
-              <ActionButton :disabled="state.busy" @click="controller.resolve(transfer, 'accept')">Принять</ActionButton>
+              <ActionButton :disabled="state.busy" @click="controller.resolve(transfer, 'accept')">{{ transfer.purpose === 'use' ? 'Принять применение' : 'Принять' }}</ActionButton>
               <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">Отказаться</ActionButton>
             </div>
           </template>
           <template v-else>
             <span class="transfer-hint">Ожидает принятия</span>
-            <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">Отозвать передачу</ActionButton>
+            <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">{{ transfer.purpose === 'use' ? 'Отменить применение' : 'Отозвать передачу' }}</ActionButton>
           </template>
         </article>
       </template>

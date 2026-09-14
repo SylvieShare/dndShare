@@ -16,8 +16,9 @@
           <ArrowRight :size="17" aria-label="Кому" />
           <TransferPerson :name="event.data?.recipientName" :image-url="event.recipientImageUrl" />
           <span v-if="event.data?.count > 1">×{{ event.data.count }}</span>
-          <TransferStatus :status="event.data?.status" />
+          <TransferStatus :purpose="event.data?.purpose" :status="event.data?.status" />
           <SessionTransferApproval :event="event" />
+          <span v-if="event.data?.purpose === 'use' && event.data?.status === 'pending'">Лечение и эффекты отмечаются вручную.</span>
         </div>
         <div v-else-if="details" class="event-details">{{ details }}</div>
         <div v-if="event.data?.resourceChanges?.length" class="event-resources">

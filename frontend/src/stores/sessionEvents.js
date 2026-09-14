@@ -89,8 +89,8 @@ export const useSessionEventsStore = defineStore('session-events', () => {
         id: transfer.eventId, type: 'item_transfer', authorUserId: transfer.authorUserId,
         recipientUserId: transfer.recipientUserId, sessionOwnerUserId: transfer.sessionOwnerUserId,
         actorCharUuid: transfer.senderCharUuid, actorName: transfer.senderName, actorImageUrl: transfer.senderImageUrl,
-        action: `Передача: ${transfer.itemName}`, createdAt: transfer.createdAt,
-        data: { status: transfer.status, senderName: transfer.senderName, recipientName: transfer.recipientName,
+        action: `${transfer.purpose === 'use' ? 'Применение' : 'Передача'}: ${transfer.itemName}`, createdAt: transfer.createdAt,
+        data: { purpose: transfer.purpose, status: transfer.status, senderName: transfer.senderName, recipientName: transfer.recipientName,
           source: { itemId: entry.magic_item_id || entry.item_id || null, name: transfer.itemName }, count: entry.count },
       }, false, uuid)
     }

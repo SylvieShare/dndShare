@@ -46,6 +46,7 @@ func (s *Server) handlePendingItemTransfers(w http.ResponseWriter, r *http.Reque
 }
 
 type itemTransferRequest struct {
+	Purpose           string `json:"purpose"`
 	SessionUUID       string `json:"sessionUuid"`
 	RecipientCharUUID string `json:"recipientCharUuid"`
 	Source            string `json:"source"`
@@ -55,7 +56,7 @@ type itemTransferRequest struct {
 }
 
 func validItemTransferRequest(req itemTransferRequest) bool {
-	return isUUID(req.SessionUUID) && isUUID(req.RecipientCharUUID) && isUUID(req.ClientActionID) &&
+	return (req.Purpose == "" || req.Purpose == "transfer" || (req.Purpose == "use" && req.Source == "potions")) && isUUID(req.SessionUUID) && isUUID(req.RecipientCharUUID) && isUUID(req.ClientActionID) &&
 		req.Version != nil && *req.Version >= 0 && len(req.EntryUID) > 0 && len(req.EntryUID) <= 200 &&
 		(req.Source == "items" || req.Source == "weapon" || req.Source == "potions")
 }
@@ -84,7 +85,12 @@ func (s *Server) handleCreateItemTransfer(w http.ResponseWriter, r *http.Request
 		badRequest(w, "Выберите другого персонажа")
 		return
 	}
-	transfer, err := s.store.CreateItemTransfer(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.Source, req.EntryUID, req.ClientActionID)
+	var transfer store.ItemTransfer
+	if req.Purpose == "use" {
+		transfer, err = s.store.CreatePotionUse(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.EntryUID, req.ClientActionID)
+	} else {
+		transfer, err = s.store.CreateItemTransfer(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.Source, req.EntryUID, req.ClientActionID)
+	}
 	if err != nil {
 		itemTransferError(w, err)
 		return

@@ -11,6 +11,7 @@ import (
 )
 
 type ItemTransfer struct {
+	Purpose            string          `json:"purpose"`
 	AuthorUserID       int64           `json:"authorUserId"`
 	RecipientUserID    int64           `json:"recipientUserId"`
 	SessionOwnerUserID int64           `json:"sessionOwnerUserId"`
@@ -34,7 +35,7 @@ type ItemTransfer struct {
 
 const itemTransferSelect = `SELECT t.id, t.session_id, t.event_id, t.sender_char_id, t.recipient_char_id,
  sender.uuid::text, recipient.uuid::text, t.sender_name, t.recipient_name,
- t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}'), transfer_event.author_user_id, recipient.user_id, transfer_session.owner_user_id
+ t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}'), transfer_event.author_user_id, recipient.user_id, transfer_session.owner_user_id, t.purpose
  FROM dndshare.item_transfer t JOIN dndshare."char" sender ON sender.id=t.sender_char_id
  JOIN dndshare."char" recipient ON recipient.id=t.recipient_char_id
  JOIN dndshare.session_event transfer_event ON transfer_event.id=t.event_id
@@ -45,7 +46,7 @@ func scanItemTransfer(row pgx.Row) (ItemTransfer, error) {
 	var t ItemTransfer
 	err := row.Scan(&t.ID, &t.SessionID, &t.EventID, &t.SenderCharID, &t.RecipientCharID,
 		&t.SenderCharUUID, &t.RecipientCharUUID, &t.SenderName, &t.RecipientName, &t.ItemName,
-		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt, &t.SenderImageURL, &t.AuthorUserID, &t.RecipientUserID, &t.SessionOwnerUserID)
+		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt, &t.SenderImageURL, &t.AuthorUserID, &t.RecipientUserID, &t.SessionOwnerUserID, &t.Purpose)
 	if errors.Is(err, pgx.ErrNoRows) {
 		err = ErrNotFound
 	}
@@ -112,6 +113,15 @@ func saveTransferDocument(ctx context.Context, tx pgx.Tx, charID int64, doc tran
 
 // CreateItemTransfer reserves a whole owned entry (including its stack count).
 func (s *Store) CreateItemTransfer(ctx context.Context, userID, sessionID, senderID, recipientID, version int64, source, uid, actionID string) (ItemTransfer, error) {
+	return s.createItemTransfer(ctx, userID, sessionID, senderID, recipientID, version, source, uid, actionID, "transfer")
+}
+
+// CreatePotionUse reserves one dose until the recipient accepts or rejects its use.
+func (s *Store) CreatePotionUse(ctx context.Context, userID, sessionID, senderID, recipientID, version int64, uid, actionID string) (ItemTransfer, error) {
+	return s.createItemTransfer(ctx, userID, sessionID, senderID, recipientID, version, "potions", uid, actionID, "use")
+}
+
+func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, senderID, recipientID, version int64, source, uid, actionID, purpose string) (ItemTransfer, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return ItemTransfer{}, err
@@ -136,6 +146,10 @@ func (s *Store) CreateItemTransfer(ctx context.Context, userID, sessionID, sende
 	// Retries after a lost HTTP response return the original reservation.
 	existing, err := scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+` WHERE t.sender_char_id=$1 AND t.client_action_id=$2::uuid`, senderID, actionID))
 	if err == nil {
+		var reserved map[string]any
+		if json.Unmarshal(existing.Entry, &reserved) != nil || existing.Purpose != purpose || existing.SessionID != sessionID || existing.RecipientCharID != recipientID || existing.Source != source || reserved["uid"] != uid {
+			return ItemTransfer{}, ErrItemTransferConflict
+		}
 		return existing, tx.Commit(ctx)
 	}
 	if !errors.Is(err, ErrNotFound) {
@@ -164,7 +178,12 @@ func (s *Store) CreateItemTransfer(ctx context.Context, userID, sessionID, sende
 	if err != nil {
 		return ItemTransfer{}, err
 	}
-	entry, err := doc.take(source, uid)
+	var entry map[string]any
+	if purpose == "use" {
+		entry, err = doc.takePotionDose(uid)
+	} else {
+		entry, err = doc.take(source, uid)
+	}
 	if err != nil {
 		return ItemTransfer{}, err
 	}
@@ -186,16 +205,20 @@ func (s *Store) CreateItemTransfer(ctx context.Context, userID, sessionID, sende
 	}
 	name = truncateRunes(name, 160)
 	raw, _ := json.Marshal(entry)
-	eventData, _ := json.Marshal(map[string]any{"status": "pending", "senderName": characterName(sender.Data), "recipientName": characterName(recipient.Data), "source": map[string]any{"itemId": itemID, "name": name}, "count": entry["count"]})
+	eventData, _ := json.Marshal(map[string]any{"purpose": purpose, "status": "pending", "senderName": characterName(sender.Data), "recipientName": characterName(recipient.Data), "source": map[string]any{"itemId": itemID, "name": name}, "count": entry["count"]})
+	action := "Передача: " + name
+	if purpose == "use" {
+		action = "Применение: " + name
+	}
 	var eventID int64
 	err = tx.QueryRow(ctx, `INSERT INTO dndshare.session_event(session_id,author_user_id,actor_char_id,actor_name,event_type,action,data,visibility)
- VALUES($1,$2,$3,$4,'item_transfer',$5,CAST($6 AS jsonb),'public') RETURNING id`, sessionID, userID, senderID, characterName(sender.Data), "Передача: "+name, json.RawMessage(eventData)).Scan(&eventID)
+ VALUES($1,$2,$3,$4,'item_transfer',$5,CAST($6 AS jsonb),'public') RETURNING id`, sessionID, userID, senderID, characterName(sender.Data), action, json.RawMessage(eventData)).Scan(&eventID)
 	if err != nil {
 		return ItemTransfer{}, err
 	}
 	var id int64
-	err = tx.QueryRow(ctx, `INSERT INTO dndshare.item_transfer(session_id,sender_char_id,recipient_char_id,client_action_id,event_id,source,entry,item_name,sender_name,recipient_name)
- VALUES($1,$2,$3,$4::uuid,$5,$6,CAST($7 AS jsonb),$8,$9,$10) RETURNING id`, sessionID, senderID, recipientID, actionID, eventID, source, json.RawMessage(raw), name, characterName(sender.Data), characterName(recipient.Data)).Scan(&id)
+	err = tx.QueryRow(ctx, `INSERT INTO dndshare.item_transfer(session_id,sender_char_id,recipient_char_id,client_action_id,event_id,source,entry,item_name,sender_name,recipient_name,purpose)
+ VALUES($1,$2,$3,$4::uuid,$5,$6,CAST($7 AS jsonb),$8,$9,$10,$11) RETURNING id`, sessionID, senderID, recipientID, actionID, eventID, source, json.RawMessage(raw), name, characterName(sender.Data), characterName(recipient.Data), purpose).Scan(&id)
 	if err != nil {
 		return ItemTransfer{}, err
 	}
@@ -224,15 +247,20 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 		return ItemTransfer{}, err
 	}
 	defer tx.Rollback(ctx)
-	where := ` WHERE t.id=$1 FOR UPDATE OF t`
+	where := ` WHERE t.id=$1`
 	if sessionID != 0 {
-		where = ` WHERE t.event_id=$1 FOR UPDATE OF t`
+		where = ` WHERE t.event_id=$1`
 	}
 	t, err := scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+where, id))
 	if err != nil {
 		return t, err
 	}
 	chars, err := lockTransferCharacters(ctx, tx, t.SenderCharID, t.RecipientCharID)
+	if err != nil {
+		return t, err
+	}
+	// Match creation's character -> request lock order, including concurrent retries.
+	t, err = scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+where+` FOR UPDATE OF t`, id))
 	if err != nil {
 		return t, err
 	}
@@ -269,9 +297,17 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 	if err = json.Unmarshal(t.Entry, &entry); err != nil {
 		return t, err
 	}
-	doc.receive(t.Source, entry, accept, fmt.Sprintf("transfer-%d", t.ID))
-	if err = saveTransferDocument(ctx, tx, destination, doc); err != nil {
-		return t, err
+	if t.Purpose == "use" {
+		if !accept {
+			doc.returnPotionDose(entry, fmt.Sprintf("returned-use-%d", t.ID))
+		}
+	} else {
+		doc.receive(t.Source, entry, accept, fmt.Sprintf("transfer-%d", t.ID))
+	}
+	if t.Purpose != "use" || !accept {
+		if err = saveTransferDocument(ctx, tx, destination, doc); err != nil {
+			return t, err
+		}
 	}
 	_, err = tx.Exec(ctx, `UPDATE dndshare.item_transfer SET status=$2,resolved_at=now() WHERE id=$1`, t.ID, status)
 	if err != nil {

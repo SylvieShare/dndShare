@@ -1,6 +1,6 @@
 <template>
   <span v-if="canApprove" class="transfer-approval">
-    <ActionButton :loading="busy" loading-label="Принимаем передачу" @click="approve"><template #icon><Check :size="15" /></template>{{ busy ? 'Принимаем…' : 'Принять передачу' }}</ActionButton>
+    <ActionButton :loading="busy" loading-label="Принимаем передачу" @click="approve"><template #icon><Check :size="15" /></template>{{ busy ? 'Принимаем…' : event.data?.purpose === 'use' ? 'Принять применение' : 'Принять передачу' }}</ActionButton>
     <span v-if="error" role="alert" class="transfer-approval-error">{{ error }}</span>
   </span>
 </template>

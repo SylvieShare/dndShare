@@ -25,3 +25,12 @@ var schemaInitialItemChargesSQL string
 
 //go:embed schema/107_luck_blade_rules.sql
 var schemaLuckBladeRulesSQL string
+
+//go:embed schema/95_weapon_charges_effects.sql
+var schemaWeaponChargesEffectsSQL string
+
+//go:embed schema/94_magic_equipment_mechanics.sql
+var schemaMagicEquipmentMechanicsSQL string
+
+//go:embed schema/93_trident_fish_command.sql
+var schemaTridentFishCommandSQL string

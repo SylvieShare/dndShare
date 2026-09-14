@@ -16,15 +16,6 @@ import (
 // The explicit order is part of the database contract: later sections may
 // reference objects and seed data created by earlier ones.
 
-//go:embed schema/95_weapon_charges_effects.sql
-var schemaWeaponChargesEffectsSQL string
-
-//go:embed schema/94_magic_equipment_mechanics.sql
-var schemaMagicEquipmentMechanicsSQL string
-
-//go:embed schema/93_trident_fish_command.sql
-var schemaTridentFishCommandSQL string
-
 //go:embed schema/92_weapon_instances.sql
 var schemaWeaponInstancesSQL string
 
@@ -438,6 +429,7 @@ var schemaParts = []struct {
 	{"session-lifecycle", schemaSessionLifecycleSQL},
 	{"spell-slot-additions", schemaSpellSlotAdditionsSQL},
 	{"session-interactions", schemaSessionInteractionsSQL},
+	{"potion-use-requests", schemaPotionUseRequestsSQL},
 }
 
 const (

@@ -1,17 +1,17 @@
 import { test, expect } from '@playwright/test'
 
-for (const mobile of [false, true]) test(`item transfer request, refusal and acceptance on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+for (const mobile of [false, true]) test(`potion use reserves one dose, requests consent and consumes on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
-  const item = { uid: 'rope', item_id: null, count: 3, override: { name: 'Шёлковая верёвка', desc: 'Особая верёвка' }, params: {} }
+  const item = { uid: 'potion', item_id: null, count: 3, override: { name: 'Зелье лечения', desc: 'Восстанавливает хиты' }, params: {} }
   const character = (name, items) => ({ templateName: 'DND5', userId: 1, sourceVersionId: 1, version: 1, data: { values: {
     name, hp: { current: 10, max: { base: 10, bonuses: [] }, hitDice: [] },
-    items: { equipped: [], sections: [{ id: 'bag', name: 'Рюкзак', items }] },
+    potions: items, items: { equipped: [], sections: [{ id: 'bag', name: 'Рюкзак', items: [] }] },
     STR: { value: 10 }, DEX: { value: 10 }, CON: { value: 10 }, INT: { value: 10 }, WIS: { value: 10 }, CHA: { value: 10 },
   }, var: { stats: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } } } })
   const chars = { sender: character('Лиора', [item]), recipient: character('Торин', []) }
   const session = { uuid: 'campaign', name: 'Тайны долины' }
-  let transfers = [], nextId = 1
+  let transfers = [], nextId = 1, connected = true
   const requests = []
   await page.route('**/api/**', async route => {
     const request = route.request(), path = new URL(request.url()).pathname
@@ -23,7 +23,7 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/sessions/campaign') json = { session, participants: Object.entries(chars).map(([charUuid, c]) => ({ charUuid, templateId: 1, data: c.data, iconImageUrl: '/static/tab-stats.svg' })) }
     else if (char && parts.length === 4) json = char
-    else if (char && parts[4] === 'sessions') json = { sessions: [session] }
+    else if (char && parts[4] === 'sessions') json = { sessions: connected ? [session] : [] }
     else if (char && parts[4] === 'version') json = { version: char.version }
     else if (char && parts[4] === 'data') {
       const body = request.postDataJSON()
@@ -36,17 +36,17 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
         const accept = request.postDataJSON().decision === 'accept'
         transfer.status = accept ? 'accepted' : 'rejected'
         const destination = chars[accept ? transfer.recipientCharUuid : transfer.senderCharUuid]
-        destination.data.values.items.sections[0].items.push(transfer.entry)
-        destination.version++
+        if (!accept) { destination.data.values.potions[0].count++; destination.version++ }
         json = { transfer }
       } else {
         const body = request.postDataJSON(); requests.push(body)
         expect(body.version).toBe(char.version)
-        const entries = char.data.values.items.sections[0].items
+        const entries = char.data.values.potions
         const index = entries.findIndex(entry => entry.uid === body.entryUid)
         expect(index).toBeGreaterThanOrEqual(0)
-        const [entry] = entries.splice(index, 1); char.version++
-        const transfer = { id: nextId++, entry, itemName: entry.override.name, senderName: char.data.values.name, recipientName: chars[body.recipientCharUuid].data.values.name,
+        expect(body.purpose).toBe('use')
+        const entry = { ...entries[index], count: 1 }; entries[index].count--; char.version++
+        const transfer = { id: nextId++, entry, purpose: body.purpose, source: body.source, itemName: entry.override.name, senderName: char.data.values.name, recipientName: chars[body.recipientCharUuid].data.values.name,
           senderCharUuid: parts[3], recipientCharUuid: body.recipientCharUuid, status: 'pending' }
         transfers.push(transfer); json = { transfer }
       }
@@ -58,29 +58,15 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     await expect(page.locator('.view')).toBeVisible()
     if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
     else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
-    await expect(page.locator('.campaign-block:visible')).toBeVisible()
+    if (connected) await expect(page.locator('.campaign-block:visible')).toBeVisible()
     if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
     await page.evaluate(async () => {
       const stages = document.querySelectorAll('.inner-tabs-content, .inner-tab-pane, .mobile-swipe-track')
       await Promise.all([...stages].flatMap(el => el.getAnimations().map(animation => animation.finished.catch(() => {}))))
     })
   }
-  await openSheet('sender')
-  await page.getByRole('button', { name: 'Игроки', exact: true }).click()
-  let dialog = page.getByRole('dialog')
-  await expect(dialog).toHaveAccessibleName('Другие игроки')
-  await expect(dialog.getByText('Лиора', { exact: false })).toHaveCount(0)
-  await expect(dialog.getByText('Торин', { exact: true })).toBeVisible()
-  await expect(dialog.getByRole('button', { name: 'Действия: Торин', exact: true }).locator('img')).toHaveCount(1)
-  await expect(dialog).toHaveClass(/base-popover/)
-  const bounds = await dialog.boundingBox()
-  expect(bounds.x).toBeGreaterThanOrEqual(0)
-  expect(bounds.x + bounds.width).toBeLessThanOrEqual(mobile ? 390 : 1440)
-  expect(bounds.y + bounds.height).toBeLessThanOrEqual(mobile ? 844 : 1000)
-  await dialog.getByRole('button', { name: 'Закрыть', exact: true }).last().click()
-  await expect(page.getByRole('dialog')).toHaveCount(0)
-  for (const decision of ['Отказаться', 'Принять']) {
-    const row = page.locator('.di-row:visible').filter({ hasText: 'Шёлковая верёвка' })
+  async function openPotionMenu() {
+  const row = page.locator('.ps-glasswrap:visible')
     await row.scrollIntoViewIfNeeded()
     // Let the scroll event finish before opening the scroll-dismissed action menu.
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
@@ -94,24 +80,30 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
       await Promise.all(el.getAnimations().map(animation => animation.finished.catch(() => {})))
     })
-    await page.getByRole('menuitem', { name: 'Передать другому игроку', exact: true }).click()
+  }
+  await openSheet('sender')
+  for (const decision of ['Отказаться', 'Принять применение']) {
+    await openPotionMenu()
+    await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
+    await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
     const recipient = page.getByRole('menuitem', { name: 'Торин', exact: true })
     await expect(recipient).toBeVisible()
     await expect(page.getByRole('dialog', { name: 'Передать другому игроку', exact: true })).toHaveCount(0)
     await expect(recipient.locator('img')).toHaveCSS('width', '48px')
     await recipient.click()
-    await expect(row).toHaveCount(0)
-    expect(chars.sender.data.values.items.sections[0].items).toHaveLength(0)
+    await expect(page.locator('.ps-badge:visible')).toHaveText('×2')
+    expect(chars.sender.data.values.potions[0].count).toBe(2)
     await openSheet('recipient')
     await page.getByRole('button', { name: /События/ }).click()
     await expect(page.locator('.transfer-event')).not.toHaveClass(/base-tile/)
     await expect(page.locator('.transfer-event .transfer-person')).toContainText('Лиора')
-    await expect(page.locator('.transfer-event')).toContainText('предлагает')
+    await expect(page.locator('.transfer-event')).toContainText('предлагает применить')
+    await expect(page.locator('.transfer-event')).toContainText('Одна доза')
     await expect(page.getByText('Ожидает вашего решения')).toHaveCount(0)
-    await page.getByRole('dialog').getByRole('button', { name: 'Шёлковая верёвка ×3', exact: true }).click()
-    const itemDialog = page.getByRole('dialog', { name: 'Шёлковая верёвка', exact: true })
+    await page.getByRole('dialog').getByRole('button', { name: 'Зелье лечения', exact: true }).click()
+    const itemDialog = page.getByRole('dialog', { name: 'Зелье лечения', exact: true })
     await expect(itemDialog).toBeVisible()
-    await expect(itemDialog).toContainText('Особая верёвка')
+    await expect(itemDialog).toContainText('Восстанавливает хиты')
     await itemDialog.getByRole('button', { name: 'Закрыть', exact: true }).click()
     await page.getByRole('button', { name: 'События', exact: true }).click()
     await page.getByRole('dialog').getByRole('button', { name: decision, exact: true }).click()
@@ -119,10 +111,22 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     await page.getByRole('dialog').getByRole('button', { name: 'Закрыть', exact: true }).last().click()
     await expect(page.getByRole('dialog')).toHaveCount(0)
     if (decision === 'Отказаться') await openSheet('sender')
-    else await expect(page.locator('.di-row:visible')).toContainText('Шёлковая верёвка')
+    else expect(chars.recipient.data.values.potions).toHaveLength(0)
   }
   expect(requests).toHaveLength(2)
-  expect(requests[0]).toMatchObject({ source: 'items', entryUid: 'rope', sessionUuid: 'campaign', recipientCharUuid: 'recipient' })
+  expect(requests[0]).toMatchObject({ purpose: 'use', source: 'potions', entryUid: 'potion', sessionUuid: 'campaign', recipientCharUuid: 'recipient' })
   expect(requests[0].clientActionId).not.toBe(requests[1].clientActionId)
-  expect(chars.recipient.data.values.items.sections[0].items).toHaveLength(1)
+  expect(chars.recipient.data.values.potions).toHaveLength(0)
+  connected = false
+  await openSheet('sender')
+  await openPotionMenu()
+  await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
+  await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
+  connected = true
+  await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/char/sender&guest')
+  if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()
+  else await page.getByRole('tab', { name: 'Снаряжение', exact: true }).click()
+  await openPotionMenu()
+  await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
 })

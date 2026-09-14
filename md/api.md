@@ -593,11 +593,16 @@ revision, status }`; сброс одного результата: `POST /api/ac
 - `GET /api/char/{uuid}/item-transfers` → `{transfers: []}`: только незавершённые
   входящие/исходящие запросы собственного персонажа.
 - `POST /api/char/{uuid}/item-transfers` принимает
-  `{sessionUuid,recipientCharUuid,source,entryUid,version,clientActionId}`.
+  `{sessionUuid,recipientCharUuid,source,entryUid,version,clientActionId,purpose?}`.
   `source` — `items`, `weapon` или `potions`; `entryUid` выбирается из сохранённого
   серверного инвентаря. Передаётся весь экземпляр с количеством и параметрами.
   Оба персонажа должны быть в одной активной сессии. Действует только владелец
   отправителя; повторный `clientActionId` возвращает прежний запрос.
+  `purpose` по умолчанию `transfer`; `use` разрешён только для `source=potions`
+  и резервирует одну дозу. При принятии `use` доза расходуется без передачи
+  в инвентарь получателя; лечение и эффекты автоматически не применяются.
+  Отказ/отзыв возвращает дозу. Повторный ключ с другим назначением, источником,
+  экземпляром, сессией или получателем возвращает 409.
 - `POST /api/char/{uuid}/item-transfers/{id}/resolve` принимает
   `{decision: "accept"|"reject"}`. Принять может только владелец получателя;
   отказ доступен также отправителю как отзыв. Повтор того же решения безопасен,
@@ -611,10 +616,13 @@ revision, status }`; сброс одного результата: `POST /api/ac
 
 Запись передачи содержит `id`, `eventId`, `senderCharUuid`, `recipientCharUuid`,
 серверные `authorUserId`, `recipientUserId`, `sessionOwnerUserId` для фильтрации уведомлений,
-имена обоих персонажей, `itemName`, `source`, полный `entry`, `status`, `createdAt`
+имена обоих персонажей, `itemName`, `source`, `purpose`, зарезервированный `entry`, `status`, `createdAt`
 и nullable `resolvedAt`. POST возвращают `{transfer}`. Изменения публикуют SSE
 `journal` и `characterIds`. Клиентский POST обычного события не принимает
 серверный тип `item_transfer`.
+У применения `entry.count=1`; `data.purpose=use` и действие «Применение: …»
+отличают его в хронике и уведомлениях. Обычный мастерский approve также принимает
+применение на уже указанного персонажа. Выбора другой цели этот endpoint не делает.
 
 `GET /api/sessions/{uuid}/events` возвращает `{events,updates}`. `events` сохраняет
 прежнюю пагинацию; при `after>0` `updates` содержит до 200 последних доступных

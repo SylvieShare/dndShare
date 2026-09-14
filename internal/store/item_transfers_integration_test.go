@@ -60,6 +60,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaItemTransfersSQL)
 	exec(schemaSessionInteractionsSQL)
+	exec(schemaPotionUseRequestsSQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
@@ -239,6 +240,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if _, err = s.ApproveSessionTransfer(ctx, 3, 1, roll.ID); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("ordinary event approved: %v", err)
 	}
+	testPotionUseRequests(t, s, exec, current)
 	offer, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, current(1).Version, "potions", "potion", "00000000-0000-4000-8000-000000000010")
 	if err != nil {
 		t.Fatal(err)
