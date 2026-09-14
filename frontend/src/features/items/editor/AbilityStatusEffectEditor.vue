@@ -44,9 +44,9 @@ const binding = key => props.data.parameter_bindings?.find(row => row.key === ke
 const otherKeys = computed(() => (editor.itemData?.status_effects || []).filter(row => row !== props.data).map(row => row.key))
 const damageRules = computed(() => (editor.itemData?.weapon_damage || []).filter(row => row.key))
 const durationFields = computed(() => (props.fields.find(field => field.key === 'duration')?.fields || [])
-  .filter(field => field.key !== 'value' || ['rounds', 'minutes', 'hours'].includes(props.data.duration?.kind)))
+  .filter(field => field.key !== 'value' || ['rounds', 'minutes', 'hours', 'days'].includes(props.data.duration?.kind)))
 function setDuration(enabled) { if (enabled) props.data.duration = { kind: 'minutes', value: 1 }; else delete props.data.duration }
-function updateDuration(value) { if (!['rounds', 'minutes', 'hours'].includes(value.kind)) delete value.value; props.data.duration = value }
+function updateDuration(value) { if (!['rounds', 'minutes', 'hours', 'days'].includes(value.kind)) delete value.value; props.data.duration = value }
 function pickEffect(value) {
   const id = value.effect?.id ?? value.effect
   if (id !== effectId.value) delete props.data.parameter_bindings
@@ -66,7 +66,7 @@ watchEffect(() => {
   let message = !effectId.value ? 'Связанный эффект: выберите эффект из справочника.' : ''
   if (props.data.weapon_damage_key && !damageRules.value.some(row => row.key === props.data.weapon_damage_key)) message = 'Связанный эффект: выберите существующее правило дополнительного урона.'
   if (props.data.parameter_bindings?.some(row => row.source === 'scaling_value') && !editor.itemData?.scaling?.length) message = 'Связанный эффект: добавьте таблицу развития с уровнем для расчёта параметров.'
-  if (['rounds', 'minutes', 'hours'].includes(props.data.duration?.kind) && !(Number(props.data.duration.value) > 0)) message = 'Длительность эффекта должна быть больше нуля.'
+  if (['rounds', 'minutes', 'hours', 'days'].includes(props.data.duration?.kind) && !props.data.duration.formula && !(Number(props.data.duration.value) > 0)) message = 'Длительность эффекта должна быть больше нуля.'
   editor.setValidationError?.(validationKey, message)
 })
 watch(effectId, loadEffect, { immediate: true })

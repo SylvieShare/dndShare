@@ -430,6 +430,7 @@ var schemaParts = []struct {
 	{"spell-slot-additions", schemaSpellSlotAdditionsSQL},
 	{"session-interactions", schemaSessionInteractionsSQL},
 	{"potion-use-requests", schemaPotionUseRequestsSQL},
+	{"potion-applications", schemaPotionApplicationsSQL},
 }
 
 const (

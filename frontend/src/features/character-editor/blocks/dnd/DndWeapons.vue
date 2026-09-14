@@ -328,7 +328,8 @@ function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode =
     eventData: itemEventData({ ...item(entry), id: entry.magic_item_id || entry.item_id || item(entry)?.id }, entry.uid),
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
-    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
+    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }),
+      roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
 }
 
@@ -352,7 +353,8 @@ function rollPresetAttack(kind, { attackRollMode = 'auto' } = {}) {
     eventData: itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value),
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
-    roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
+    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }),
+      roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
 }
 

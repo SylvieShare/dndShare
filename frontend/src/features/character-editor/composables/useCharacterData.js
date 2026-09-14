@@ -1,3 +1,4 @@
+import { statusValueProjection } from '../lib/statusValueProjection'
 import { ref, reactive, computed, provide } from 'vue'
 import { consumeCharSeed } from '@/shared/lib/charSeed'
 import { fetchGet, fetchPut } from '@/shared/api/http'
@@ -38,13 +39,14 @@ export function useCharacterData(uuid, isMobile) {
   const sessions = ref([])
   const characterValues = computed(() => data.value.values || {})
   const characterResources = useCharacterResources(characterValues)
+  const effectiveValues = computed(() => statusValueProjection(characterValues.value, characterResources.itemsById.value))
   const characterStatuses = useCharacterStatuses(characterValues, characterResources)
   const characterDefenses = useCharacterDefenses(characterValues, characterResources.itemsById)
   const characterHitPoints = useCharacterHitPoints(characterValues, characterResources.itemsById)
   const characterPassiveEffects = useCharacterPassiveEffects(characterValues, characterResources.itemsById)
   const characterCombatEffects = useCharacterCombatEffects(characterValues, characterResources.itemsById, charCtx)
-  const characterDerivedEffects = useCharacterDerivedEffects(characterValues, characterResources.itemsById)
-  const characterArmor = useCharacterArmor(characterValues, characterResources, characterDerivedEffects)
+  const characterDerivedEffects = useCharacterDerivedEffects(effectiveValues, characterResources.itemsById)
+  const characterArmor = useCharacterArmor(effectiveValues, characterResources, characterDerivedEffects)
   const characterRolls = useCharacterRollEffects(characterArmor, [context => characterDerivedEffects.rollEffects(context)])
 
   provide('charCtx', charCtx)
@@ -66,7 +68,7 @@ export function useCharacterData(uuid, isMobile) {
     characterDerivedEffects,
     characterArmor,
     characterRolls,
-    values: characterValues,
+    values: effectiveValues,
   })
 
   function apply(res, { updateDocumentTitle = true } = {}) {

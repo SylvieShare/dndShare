@@ -10,6 +10,7 @@
     <template #editor>
       <NumBonusEditor title="Скорость" :data="numData" :extra="-speedPenalty" unit="фт" @change="onChange">
         <div v-if="speedPenalty" class="speed-armor-rule">−{{ speedPenalty }} фт. · {{ armorState.body.name }} требует Силу {{ armorState.strengthRequired }}</div>
+        <div v-if="derivedSpeed.multiplier > 1" class="speed-source">Множитель скорости от эффектов <strong>×{{ derivedSpeed.multiplier }}</strong></div>
         <div v-for="source in derivedSpeed.sources" :key="source.key" class="speed-source">
           <span>{{ source.source_label }}</span><strong>+{{ source.value }} фт.</strong>
         </div>
@@ -38,7 +39,7 @@ const numData = computed(() => {
 })
 const displayValue = computed(() => {
   const d = numData.value
-  return (d.base || 0) + sumBonuses(d.bonuses) + derivedSpeed.value.total - speedPenalty.value
+  return Math.max(0, (d.base || 0) + sumBonuses(d.bonuses) + derivedSpeed.value.total - speedPenalty.value) * (derivedSpeed.value.multiplier || 1)
 })
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const speedPenalty = computed(() => Number(armorState.value.speedPenalty) || 0)

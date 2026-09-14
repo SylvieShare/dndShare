@@ -11,6 +11,7 @@ export const derivedKinds = {
   weapon_proficiency: ['rank'], armor_proficiency: ['rank'], language_proficiency: ['rank'],
   check_bonus: ['value'], skill_bonus: ['value'], save_bonus: ['value'], weapon_attack_bonus: ['value', 'weapon_kind'],
   weapon_damage_bonus: ['value', 'weapon_kind'], critical_threshold: ['value', 'weapon_kind'],
+  roll_bonus: ['formula', 'scopes'], speed_multiplier: ['value'], ability_minimum: ['value', 'ability_ids'],
   roll_mode: ['mode', 'scopes'], activity_block: ['scopes'],
 }
 const bonusKinds = ['check_bonus', 'skill_bonus', 'save_bonus', 'weapon_attack_bonus', 'weapon_damage_bonus']

@@ -17,6 +17,10 @@
       {
         "value": "spell",
         "label": "Заклинания"
+      },
+      {
+        "value": "potion",
+        "label": "Зелья"
       }
     ]
   },
@@ -162,6 +166,18 @@
           {
             "label": "Запрет действия",
             "value": "activity_block"
+          },
+          {
+            "value": "roll_bonus",
+            "label": "Кости к броску"
+          },
+          {
+            "value": "speed_multiplier",
+            "label": "Множитель скорости"
+          },
+          {
+            "value": "ability_minimum",
+            "label": "Минимальное значение характеристики"
           }
         ]
       },
@@ -240,6 +256,12 @@
         "key": "target_parameter",
         "name": "Параметр цели",
         "type": "text"
+      },
+      {
+        "key": "formula",
+        "name": "Формула прибавки",
+        "type": "text",
+        "hint": "Например 1d4. Для костей к броскам атаки и спасброскам."
       }
     ]
   },

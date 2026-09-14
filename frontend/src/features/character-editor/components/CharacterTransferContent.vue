@@ -18,9 +18,10 @@
               <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
             </button>
           </div>
-          <p v-if="transfer.purpose === 'use'" class="transfer-hint">Одна доза для {{ transfer.recipientName }}. После принятия она будет потрачена; действие зелья отметьте на листе вручную.</p>
+          <p v-if="transfer.purpose === 'use'" class="transfer-hint">Одна доза для {{ transfer.recipientName }}. После принятия доза будет потрачена и применится к листу.</p>
           <template v-if="transfer.recipientCharUuid === characterUuid">
-            <div class="transfer-actions">
+            <ApplicationSummary v-if="transfer.purpose === 'use'" :data="transfer.application || {}" />
+          <div class="transfer-actions">
               <ActionButton :disabled="state.busy" @click="controller.resolve(transfer, 'accept')">{{ transfer.purpose === 'use' ? 'Принять применение' : 'Принять' }}</ActionButton>
               <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">Отказаться</ActionButton>
             </div>
@@ -34,6 +35,7 @@
     </div>
 </template>
 <script setup>
+import ApplicationSummary from './ApplicationSummary.vue'
 import CharacterInteractionPlayers from './CharacterInteractionPlayers.vue'
 import CharacterInteractionInbox from './CharacterInteractionInbox.vue'
 import { computed, ref, watch } from 'vue'

@@ -18,7 +18,7 @@
           <span v-if="event.data?.count > 1">×{{ event.data.count }}</span>
           <TransferStatus :purpose="event.data?.purpose" :status="event.data?.status" />
           <SessionTransferApproval :event="event" />
-          <span v-if="event.data?.purpose === 'use' && event.data?.status === 'pending'">Лечение и эффекты отмечаются вручную.</span>
+          <ApplicationSummary v-if="event.data?.purpose === 'use'" :data="event.data?.status === 'accepted' ? event.data.applicationResult || {} : event.data.application || {}" :result="event.data?.status === 'accepted'" />
         </div>
         <div v-else-if="details" class="event-details">{{ details }}</div>
         <div v-if="event.data?.resourceChanges?.length" class="event-resources">
@@ -34,6 +34,7 @@
   </article>
 </template>
 <script setup>
+import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
 import { computed } from 'vue'
 import { ArrowRight } from '@lucide/vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'

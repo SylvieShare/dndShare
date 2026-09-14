@@ -1,3 +1,4 @@
+import { usePotionApplications } from './usePotionApplications'
 import { computed, onBeforeUnmount, reactive, shallowRef, watch } from 'vue'
 import * as api from '@/shared/api/itemTransfersApi'
 import { getSession } from '@/shared/api/sessionsApi'
@@ -90,17 +91,27 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
       return false
     } finally { state.busy = false }
   }
+  const potions = usePotionApplications({ uuid, version, mutate, state, isOwner })
   async function send(source, entry, recipientCharUuid, purpose = 'transfer') {
     if (!isOwner.value || state.busy || !session.value || !recipients.value.some(p => p.charUuid === recipientCharUuid)) return false
-    const key = `${purpose}:${session.value.uuid}:${source}:${entry.uid}:${recipientCharUuid}`
+    let optionKey = ''
+    if (purpose === 'use') {
+      try { optionKey = await potions.choose(entry) } catch (error) { state.error = error.message; return false }
+      if (optionKey === null) return false
+    }
+    const key = `${optionKey}:${purpose}:${session.value.uuid}:${source}:${entry.uid}:${recipientCharUuid}`
     if (pendingSend?.key !== key) pendingSend = { key, clientActionId: crypto.randomUUID() }
-    const payload = { purpose, source, entryUid: entry.uid, recipientCharUuid, sessionUuid: session.value.uuid, clientActionId: pendingSend.clientActionId }
+    const payload = { optionKey, purpose, source, entryUid: entry.uid, recipientCharUuid, sessionUuid: session.value.uuid, clientActionId: pendingSend.clientActionId }
     const sent = await mutate(() => api.createItemTransfer(uuid, { ...payload, version: version.value }))
     if (sent) pendingSend = null
     return sent
   }
   async function resolve(transfer, decision) {
-    await mutate(() => api.resolveItemTransfer(uuid, transfer.id, decision))
+    let response
+    if (await mutate(async () => { response = await api.resolveItemTransfer(uuid, transfer.id, decision) }) && decision === 'accept' && transfer.purpose === 'use') {
+      potions.application.name = transfer.itemName
+      potions.application.result = response.transfer.applicationResult
+    }
   }
   async function catchUp() {
     await Promise.all([refresh(), loadSessions(), events.refresh()])
@@ -127,5 +138,5 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     else state.view = ''
   }, { immediate: true })
   onBeforeUnmount(live.stop)
-  return reactive({ state, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, resolve, refresh, busy: computed(() => state.busy) })
+  return reactive({ state, potions, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, resolve, refresh, busy: computed(() => state.busy) })
 }

@@ -46,6 +46,7 @@ func (s *Server) handlePendingItemTransfers(w http.ResponseWriter, r *http.Reque
 }
 
 type itemTransferRequest struct {
+	OptionKey         string `json:"optionKey"`
 	Purpose           string `json:"purpose"`
 	SessionUUID       string `json:"sessionUuid"`
 	RecipientCharUUID string `json:"recipientCharUuid"`
@@ -56,7 +57,7 @@ type itemTransferRequest struct {
 }
 
 func validItemTransferRequest(req itemTransferRequest) bool {
-	return (req.Purpose == "" || req.Purpose == "transfer" || (req.Purpose == "use" && req.Source == "potions")) && isUUID(req.SessionUUID) && isUUID(req.RecipientCharUUID) && isUUID(req.ClientActionID) &&
+	return len(req.OptionKey) <= 100 && (req.Purpose == "" || req.Purpose == "transfer" || (req.Purpose == "use" && req.Source == "potions")) && isUUID(req.SessionUUID) && isUUID(req.RecipientCharUUID) && isUUID(req.ClientActionID) &&
 		req.Version != nil && *req.Version >= 0 && len(req.EntryUID) > 0 && len(req.EntryUID) <= 200 &&
 		(req.Source == "items" || req.Source == "weapon" || req.Source == "potions")
 }
@@ -87,7 +88,7 @@ func (s *Server) handleCreateItemTransfer(w http.ResponseWriter, r *http.Request
 	}
 	var transfer store.ItemTransfer
 	if req.Purpose == "use" {
-		transfer, err = s.store.CreatePotionUse(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.EntryUID, req.ClientActionID)
+		transfer, err = s.store.CreatePotionUseOption(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.EntryUID, req.ClientActionID, req.OptionKey)
 	} else {
 		transfer, err = s.store.CreateItemTransfer(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.Source, req.EntryUID, req.ClientActionID)
 	}
@@ -127,6 +128,8 @@ func (s *Server) publishTransferChange(t store.ItemTransfer) {
 
 func itemTransferError(w http.ResponseWriter, err error) {
 	switch {
+	case errors.Is(err, store.ErrApplication):
+		badRequest(w, err.Error())
 	case errors.Is(err, store.ErrNotFound):
 		notFound(w, "Передача или участник сессии не найдены")
 	case errors.Is(err, store.ErrItemTransferConflict), errors.Is(err, store.ErrCharacterVersion):

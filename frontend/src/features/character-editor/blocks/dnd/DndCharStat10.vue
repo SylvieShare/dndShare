@@ -109,7 +109,7 @@
 <script setup>
 defineOptions({ inheritAttrs: false })
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { abilityModifier, sumBonuses } from '@/shared/lib/dnd'
+import { abilityModifier, sumBonuses, resolveNumValue } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
@@ -141,7 +141,7 @@ const numData = computed(() => {
 })
 
 const statDisplayValue = computed(() =>
-  (numData.value.base || 0) + sumBonuses(numData.value.bonuses)
+  Math.max((numData.value.base || 0) + sumBonuses(numData.value.bonuses), resolveNumValue(charCtx.values?.[props.block.id]?.value))
 )
 
 const titleConfig = computed(() => props.block.content.title)
@@ -434,6 +434,7 @@ function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check', con
     crit_mode: true,
     color: statColor.value,
     eventData: { ability: { id: titleSuggestId.value, name: displayTitle.value, typeId: titleSuggestTypeId.value } },
+    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: scope }),
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.(scope) || [],
     roll_adjustments: charCtx.characterCombatEffects?.rollAdjustments?.(scope, context) || [],
   })

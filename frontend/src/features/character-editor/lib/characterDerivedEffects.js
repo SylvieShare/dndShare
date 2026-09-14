@@ -109,6 +109,7 @@ export function derivedSpeedBonuses(effects, context = {}) {
   }
   return {
     total: total + [...grouped.values()].reduce((sum, value) => sum + value, 0),
+    multiplier: matchingDerivedEffects(effects, 'speed_multiplier', context).reduce((v, rule) => Math.max(v, Number(rule.value) || 1), 1),
     sources: active,
   }
 }

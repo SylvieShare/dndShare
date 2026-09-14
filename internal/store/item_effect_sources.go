@@ -16,8 +16,7 @@ func (s *Store) FindItemEffectSources(ctx context.Context, userID *int64, effect
 SELECT i.id, COALESCE(NULLIF(link->>'key',''),ordinal::text),
  COALESCE(link->>'target','self'), COALESCE(link->>'condition','')
 FROM dndshare.item i
-CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(i.data->'status_effects')='array'
- THEN i.data->'status_effects' ELSE '[]'::jsonb END) WITH ORDINALITY AS links(link,ordinal)
+CROSS JOIN LATERAL `+catalogueEffectLinksSQL("i", "$1")+` links
 WHERE (i.user_id IS NULL OR i.user_id=$1)
  AND COALESCE(link#>>'{effect,id}',link->>'effect')=$2::bigint::text
  AND EXISTS(SELECT 1 FROM dndshare.item e WHERE e.id=$2 AND e.type_id=15 AND (e.user_id IS NULL OR e.user_id=$1))

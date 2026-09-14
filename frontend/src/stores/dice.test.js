@@ -10,6 +10,17 @@ describe('dice roll presentation metadata', () => {
   })
   afterEach(() => vi.useRealTimers())
 
+  it('keeps blessing dice when advantage drops one d20', () => {
+    const store = useDiceStore()
+    const result = store.rollD20('Атака', 3, 'advantage', { bonus_formula: '1d4', log: false })
+    const d20 = result.parts.find(part => part.sides === 20)
+    const d4 = result.parts.find(part => part.sides === 4)
+    expect(d20.dropped).toHaveLength(1)
+    expect(d4.rolls).toHaveLength(1)
+    expect(result.total).toBe(Math.max(...d20.rolls) + 3 + d4.rolls[0])
+    store.clear()
+  })
+
   it('keeps a roll-level fallback color on the popup entry', () => {
     const store = useDiceStore()
     store.roll('Ловкость — проверка', 'd20+3', {

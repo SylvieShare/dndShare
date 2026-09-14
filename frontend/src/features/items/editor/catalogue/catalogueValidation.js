@@ -2,6 +2,10 @@ import { catalogueField, catalogueFieldVisible } from './catalogueFields'
 
 export function catalogueValidation(fields, data, typeId) {
   const errors = []
+  const formulaValid = value => {
+    const normalized = String(value || '').toLowerCase().replace(/[кд]/g, 'd').replace(/\s+/g, '')
+    return normalized.length <= 100 && /^(?:\d*d\d+|\d+)(?:\+(?:\d*d\d+|\d+))*$/.test(normalized)
+  }
   function walk(schema, values, prefix = '') {
     for (const raw of schema || []) {
       const path = prefix ? `${prefix}.${raw.key}` : raw.key
@@ -9,6 +13,7 @@ export function catalogueValidation(fields, data, typeId) {
       const field = catalogueField(raw, typeId, path), value = values[raw.key]
       if (field.required && (value == null || value === '' || Array.isArray(value) && !value.length)) errors.push(`Заполните «${field.name}».`)
       if (value == null || value === '') continue
+      if (typeId === 10 && (['consumption.healing', 'consumption.temporary_hp'].includes(path) || path.endsWith('duration.formula')) && !formulaValid(value)) errors.push(`«${field.name}»: используйте число или формулу, например 2d4 + 2.`)
       if (['int', 'float'].includes(field.type)) {
         const n = Number(value)
         if (!Number.isFinite(n) || field.type === 'int' && !Number.isInteger(n)) errors.push(`«${field.name}»: введите ${field.type === 'int' ? 'целое ' : ''}число.`)

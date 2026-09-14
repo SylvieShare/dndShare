@@ -1,0 +1,1352 @@
+{
+  "effects": {
+    "bless": {
+      "name": "Благословение",
+      "data": {
+        "code": "bless",
+        "desc": "Благословение помогает совершать атаки и спасброски.",
+        "thesis": "+1к4 к броскам атаки и спасброскам.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "roll_bonus",
+            "formula": "1d4",
+            "scopes": [
+              "attack",
+              "saving_throw"
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "haste": {
+      "name": "Ускорение",
+      "data": {
+        "code": "haste",
+        "desc": "Цель движется быстрее и получает дополнительное действие в каждый свой ход.",
+        "thesis": "Скорость удваивается.\nКД +2; преимущество спасброскам Ловкости.\nДополнительное действие: одна атака оружием, Рывок, Отход, Засада или Использование предмета.\nПосле окончания до конца следующего хода нельзя двигаться и совершать действия.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "speed_multiplier",
+            "value": 2
+          },
+          {
+            "kind": "armor_bonus",
+            "value": 2
+          },
+          {
+            "kind": "roll_mode",
+            "mode": "advantage",
+            "scopes": [
+              "saving_throw"
+            ],
+            "ability_ids": [
+              2
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "enlarge": {
+      "name": "Увеличение",
+      "data": {
+        "code": "enlarge",
+        "desc": "Размер увеличивается на одну категорию, вес — в восемь раз. Оружие увеличивается вместе с существом.",
+        "thesis": "Преимущество проверкам и спасброскам Силы.\nУвеличенное оружие наносит дополнительно 1к4 урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "roll_mode",
+            "mode": "advantage",
+            "scopes": [
+              "ability_check",
+              "skill_check",
+              "saving_throw"
+            ],
+            "ability_ids": [
+              1
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "reduce": {
+      "name": "Уменьшение",
+      "data": {
+        "code": "reduce",
+        "desc": "Размер уменьшается на одну категорию, вес — в восемь раз. Оружие уменьшается вместе с существом.",
+        "thesis": "Помеха проверкам и спасброскам Силы.\nУрон уменьшенного оружия снижается на 1к4, минимум до 0.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "roll_mode",
+            "mode": "disadvantage",
+            "scopes": [
+              "ability_check",
+              "skill_check",
+              "saving_throw"
+            ],
+            "ability_ids": [
+              1
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "detect_thoughts": {
+      "name": "Обнаружение мыслей",
+      "data": {
+        "code": "detect_thoughts",
+        "desc": "Можно читать поверхностные мысли подходящего существа в пределах 30 футов или действием искать мыслящих существ.",
+        "thesis": "Углубление в мысли требует спасброска Мудрости.\nСущество знает о попытке углубления; результат определяет мастер.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "clairvoyance": {
+      "name": "Подсматривание",
+      "data": {
+        "code": "clairvoyance",
+        "desc": "Магический сенсор позволяет видеть или слышать в выбранной знакомой точке в пределах 1 мили.",
+        "thesis": "При создании выберите зрение или слух.\nПереключение — действие.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "etherealness": {
+      "name": "Эфирность",
+      "data": {
+        "code": "etherealness",
+        "desc": "Вы переходите на Пограничный Эфирный План и можете перемещаться в любом направлении.",
+        "thesis": "Видите и слышите исходный план на 60 футов.\nОбычно не взаимодействуете с существами и предметами исходного плана.\nПри окончании внутри предмета мастер определяет выталкивание и урон.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "gaseous_form": {
+      "name": "Газообразная форма",
+      "data": {
+        "code": "gaseous_form",
+        "desc": "Вы и ваше снаряжение превращаетесь в туман.",
+        "thesis": "Скорость полёта 10 футов; нельзя падать.\nПроходите через узкие отверстия, но не через жидкости.\nНельзя атаковать, сотворять заклинания и взаимодействовать с предметами.\nСопротивление немагическому урону отмечается при получении урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "roll_mode",
+            "mode": "advantage",
+            "scopes": [
+              "saving_throw"
+            ],
+            "ability_ids": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "kind": "activity_block",
+            "scopes": [
+              "spellcasting"
+            ],
+            "label": "Газообразная форма не позволяет сотворять заклинания."
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "freedom_of_movement": {
+      "name": "Свобода перемещения",
+      "data": {
+        "code": "freedom_of_movement",
+        "desc": "Передвижение не ограничивается труднопроходимой местностью и магическими эффектами.",
+        "thesis": "Магия не снижает скорость, не парализует и не опутывает.\n5 футов перемещения освобождают от немагических оков или захвата.\nПод водой нет штрафов к передвижению и атакам.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "potion_flight": {
+      "name": "Полёт от зелья",
+      "data": {
+        "code": "potion_flight",
+        "desc": "Вы получаете скорость полёта, равную скорости ходьбы, и можете парить.",
+        "thesis": "При окончании в воздухе вы падаете, если ничто другое не удерживает вас.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "potion_climbing": {
+      "name": "Лазание от зелья",
+      "data": {
+        "code": "potion_climbing",
+        "desc": "Вы получаете скорость лазания, равную скорости ходьбы.",
+        "thesis": "Проверки Силы (Атлетика), связанные с лазанием, совершаются с преимуществом.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "water_breathing": {
+      "name": "Дыхание под водой",
+      "data": {
+        "code": "water_breathing",
+        "desc": "Вы можете дышать под водой.",
+        "thesis": "Не меняет скорость плавания.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "animal_friendship_access": {
+      "name": "Дружба с животными от зелья",
+      "data": {
+        "code": "animal_friendship_access",
+        "desc": "Вы можете неограниченно накладывать «Дружбу с животными» со Сл спасброска 13.",
+        "thesis": "Действует 1 час; каждое заклинание требует обычного времени сотворения.\nЗверь проходит спасбросок Мудрости; при провале очарован на 24 часа.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "animal_friendship": {
+      "name": "Дружба с животными",
+      "data": {
+        "code": "animal_friendship",
+        "desc": "Зверь очарован сотворившим заклинание существом.",
+        "thesis": "Накладывается только после провала спасброска Мудрости.\nЗверь с Интеллектом 4 или выше не подвержен.\nЗаканчивается, если заклинатель или его спутники причинят цели вред.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "philter_wait": {
+      "name": "Ожидание приворотного зелья",
+      "data": {
+        "code": "philter_wait",
+        "desc": "Первое существо, которое вы увидите в течение 10 минут, очарует вас на 1 час.",
+        "thesis": "После встречи замените этот эффект на очарование и укажите источник.\nЕсли существо привлекательно для вас, вы считаете его истинной любовью.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [],
+        "defenses": []
+      }
+    },
+    "giant_strength_21": {
+      "name": "Сила великана: 21",
+      "data": {
+        "code": "giant_strength_21",
+        "desc": "Сила становится 21, если исходное значение ниже.",
+        "thesis": "Исходная характеристика восстанавливается после снятия эффекта.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "ability_minimum",
+            "value": 21,
+            "ability_ids": [
+              1
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "giant_strength_23": {
+      "name": "Сила великана: 23",
+      "data": {
+        "code": "giant_strength_23",
+        "desc": "Сила становится 23, если исходное значение ниже.",
+        "thesis": "Исходная характеристика восстанавливается после снятия эффекта.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "ability_minimum",
+            "value": 23,
+            "ability_ids": [
+              1
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "giant_strength_25": {
+      "name": "Сила великана: 25",
+      "data": {
+        "code": "giant_strength_25",
+        "desc": "Сила становится 25, если исходное значение ниже.",
+        "thesis": "Исходная характеристика восстанавливается после снятия эффекта.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "ability_minimum",
+            "value": 25,
+            "ability_ids": [
+              1
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "giant_strength_27": {
+      "name": "Сила великана: 27",
+      "data": {
+        "code": "giant_strength_27",
+        "desc": "Сила становится 27, если исходное значение ниже.",
+        "thesis": "Исходная характеристика восстанавливается после снятия эффекта.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "ability_minimum",
+            "value": 27,
+            "ability_ids": [
+              1
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "giant_strength_29": {
+      "name": "Сила великана: 29",
+      "data": {
+        "code": "giant_strength_29",
+        "desc": "Сила становится 29, если исходное значение ниже.",
+        "thesis": "Исходная характеристика восстанавливается после снятия эффекта.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "manual"
+        },
+        "derived_effects": [
+          {
+            "kind": "ability_minimum",
+            "value": 29,
+            "ability_ids": [
+              1
+            ]
+          }
+        ],
+        "defenses": []
+      }
+    },
+    "potion_resistance_8": {
+      "name": "Сопротивление: Кислота",
+      "data": {
+        "code": "potion_resistance_8",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 8
+          }
+        ]
+      }
+    },
+    "potion_resistance_13": {
+      "name": "Сопротивление: Холод",
+      "data": {
+        "code": "potion_resistance_13",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 13
+          }
+        ]
+      }
+    },
+    "potion_resistance_5": {
+      "name": "Сопротивление: Огонь",
+      "data": {
+        "code": "potion_resistance_5",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 5
+          }
+        ]
+      }
+    },
+    "potion_resistance_12": {
+      "name": "Сопротивление: Силовое поле",
+      "data": {
+        "code": "potion_resistance_12",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 12
+          }
+        ]
+      }
+    },
+    "potion_resistance_9": {
+      "name": "Сопротивление: Электричество",
+      "data": {
+        "code": "potion_resistance_9",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 9
+          }
+        ]
+      }
+    },
+    "potion_resistance_10": {
+      "name": "Сопротивление: Некротическая энергия",
+      "data": {
+        "code": "potion_resistance_10",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 10
+          }
+        ]
+      }
+    },
+    "potion_resistance_4": {
+      "name": "Сопротивление: Яд",
+      "data": {
+        "code": "potion_resistance_4",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 4
+          }
+        ]
+      }
+    },
+    "potion_resistance_11": {
+      "name": "Сопротивление: Психическая энергия",
+      "data": {
+        "code": "potion_resistance_11",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 11
+          }
+        ]
+      }
+    },
+    "potion_resistance_7": {
+      "name": "Сопротивление: Излучение",
+      "data": {
+        "code": "potion_resistance_7",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 7
+          }
+        ]
+      }
+    },
+    "potion_resistance_6": {
+      "name": "Сопротивление: Звук",
+      "data": {
+        "code": "potion_resistance_6",
+        "desc": "Вы получаете сопротивление выбранному виду урона.",
+        "polarity": "positive",
+        "stacking": "single",
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 6
+          }
+        ]
+      }
+    }
+  },
+  "potions": [
+    {
+      "id": 84,
+      "consumption": {
+        "concentration": false,
+        "healing": "2d4 + 2"
+      },
+      "status_effects": [],
+      "automationStatus": "full",
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+    },
+    {
+      "id": 99,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [
+        {
+          "key": "giant_strength_29",
+          "effect": {
+            "ref": "giant_strength_29"
+          }
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+    },
+    {
+      "id": 109,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 990
+        },
+        "duration": {
+          "kind": "minutes",
+          "value": 1
+        },
+        "note": "Дополнительное действие и пропуск хода после окончания отмечаются вручную."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 115,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [
+        {
+          "key": "giant_strength_27",
+          "effect": {
+            "ref": "giant_strength_27"
+          }
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+    },
+    {
+      "id": 120,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [
+        {
+          "key": "potion_flight",
+          "effect": {
+            "ref": "potion_flight"
+          }
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 123,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [
+        {
+          "key": "potion_climbing",
+          "effect": {
+            "ref": "potion_climbing"
+          }
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 133,
+      "consumption": {
+        "concentration": false,
+        "healing": "4d4 + 4"
+      },
+      "status_effects": [],
+      "automationStatus": "full",
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+    },
+    {
+      "id": 143,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "choices": [
+          {
+            "key": "8",
+            "name": "Кислота",
+            "status_effects": [
+              {
+                "key": "potion_resistance_8",
+                "effect": {
+                  "ref": "potion_resistance_8"
+                }
+              }
+            ]
+          },
+          {
+            "key": "13",
+            "name": "Холод",
+            "status_effects": [
+              {
+                "key": "potion_resistance_13",
+                "effect": {
+                  "ref": "potion_resistance_13"
+                }
+              }
+            ]
+          },
+          {
+            "key": "5",
+            "name": "Огонь",
+            "status_effects": [
+              {
+                "key": "potion_resistance_5",
+                "effect": {
+                  "ref": "potion_resistance_5"
+                }
+              }
+            ]
+          },
+          {
+            "key": "12",
+            "name": "Силовое поле",
+            "status_effects": [
+              {
+                "key": "potion_resistance_12",
+                "effect": {
+                  "ref": "potion_resistance_12"
+                }
+              }
+            ]
+          },
+          {
+            "key": "9",
+            "name": "Электричество",
+            "status_effects": [
+              {
+                "key": "potion_resistance_9",
+                "effect": {
+                  "ref": "potion_resistance_9"
+                }
+              }
+            ]
+          },
+          {
+            "key": "10",
+            "name": "Некротическая энергия",
+            "status_effects": [
+              {
+                "key": "potion_resistance_10",
+                "effect": {
+                  "ref": "potion_resistance_10"
+                }
+              }
+            ]
+          },
+          {
+            "key": "4",
+            "name": "Яд",
+            "status_effects": [
+              {
+                "key": "potion_resistance_4",
+                "effect": {
+                  "ref": "potion_resistance_4"
+                }
+              }
+            ]
+          },
+          {
+            "key": "11",
+            "name": "Психическая энергия",
+            "status_effects": [
+              {
+                "key": "potion_resistance_11",
+                "effect": {
+                  "ref": "potion_resistance_11"
+                }
+              }
+            ]
+          },
+          {
+            "key": "7",
+            "name": "Излучение",
+            "status_effects": [
+              {
+                "key": "potion_resistance_7",
+                "effect": {
+                  "ref": "potion_resistance_7"
+                }
+              }
+            ]
+          },
+          {
+            "key": "6",
+            "name": "Звук",
+            "status_effects": [
+              {
+                "key": "potion_resistance_6",
+                "effect": {
+                  "ref": "potion_resistance_6"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "status_effects": [],
+      "automationStatus": "full",
+      "automationNote": "Выбранное сопротивление действует на листе до снятия эффекта."
+    },
+    {
+      "id": 163,
+      "consumption": {
+        "concentration": true,
+        "spell": {
+          "id": 774
+        },
+        "duration": {
+          "kind": "minutes",
+          "value": 1
+        },
+        "note": "Место наблюдения, доступность мыслей и спасброски определяет мастер."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 167,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 835
+        },
+        "duration": {
+          "kind": "hours",
+          "formula": "1d4"
+        },
+        "spell_effect_key": "enlarge",
+        "note": "Изменение размера и дополнительные 1к4 урона оружия отмечаются вручную."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 183,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 1335
+        },
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "note": "Нанесение занимает 10 минут. На каждую категорию размера выше Среднего нужен ещё один флакон."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 203,
+      "consumption": {
+        "concentration": false,
+        "healing": "8d4 + 8"
+      },
+      "status_effects": [],
+      "automationStatus": "full",
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+    },
+    {
+      "id": 209,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [
+        {
+          "key": "animal_friendship_access",
+          "effect": {
+            "ref": "animal_friendship_access"
+          }
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 215,
+      "consumption": {
+        "concentration": false,
+        "healing": "10d4 + 20"
+      },
+      "status_effects": [],
+      "automationStatus": "full",
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+    },
+    {
+      "id": 221,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 835
+        },
+        "duration": {
+          "kind": "hours",
+          "formula": "1d4"
+        },
+        "spell_effect_key": "reduce",
+        "note": "Изменение размера и снижение на 1к4 урона оружия отмечаются вручную."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 239,
+      "consumption": {
+        "concentration": false,
+        "note": "Требуются урон ядом 3к6 и спасбросок Телосложения Сл 13; затем возможны отравление и повторный урон по ходам. Отметьте их вручную."
+      },
+      "status_effects": [],
+      "automationStatus": "none",
+      "automationNote": "Расход дозы реализован; урон, спасброски и убывающий яд по ходам пока вручную."
+    },
+    {
+      "id": 248,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 764
+        },
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "note": "Снимите невидимость после атаки или сотворения заклинания."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 285,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 548
+        },
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "temporary_hp": "10",
+        "note": "По окончании часа снимите эффект и оставшиеся временные хиты от зелья."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 294,
+      "consumption": {
+        "concentration": false,
+        "note": "Выберите рубящее или колющее оружие либо до 5 боеприпасов. Нанесение 1 минута; на 1 час +3 к атаке и урону. Бонус нужному оружию отметьте вручную."
+      },
+      "status_effects": [],
+      "automationStatus": "none",
+      "automationNote": "Расход дозы реализован; выбор конкретного оружия/боеприпасов и временный бонус пока вручную."
+    },
+    {
+      "id": 300,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 871
+        },
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        },
+        "note": "Скорость полёта 10 футов и ограничения формы учитываются вручную. Эффект можно завершить бонусным действием."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 302,
+      "consumption": {
+        "concentration": false,
+        "choices": [
+          {
+            "key": "23",
+            "name": "Каменный / морозный великан · Сила 23",
+            "status_effects": [
+              {
+                "key": "giant_strength_23",
+                "effect": {
+                  "ref": "giant_strength_23"
+                }
+              }
+            ]
+          },
+          {
+            "key": "25",
+            "name": "Огненный великан · Сила 25",
+            "status_effects": [
+              {
+                "key": "giant_strength_25",
+                "effect": {
+                  "ref": "giant_strength_25"
+                }
+              }
+            ]
+          }
+        ],
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [],
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+    },
+    {
+      "id": 311,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [
+        {
+          "key": "water_breathing",
+          "effect": {
+            "ref": "water_breathing"
+          }
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Добавляет возможность дышать под водой на час; снятие эффекта вручную."
+    },
+    {
+      "id": 316,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "hours",
+          "value": 1
+        }
+      },
+      "status_effects": [
+        {
+          "key": "giant_strength_21",
+          "effect": {
+            "ref": "giant_strength_21"
+          }
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+    },
+    {
+      "id": 322,
+      "consumption": {
+        "concentration": true,
+        "spell": {
+          "id": 938
+        },
+        "duration": {
+          "kind": "minutes",
+          "value": 10
+        },
+        "note": "Место наблюдения, доступность мыслей и спасброски определяет мастер."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 328,
+      "consumption": {
+        "concentration": false,
+        "spell": {
+          "id": 1079
+        },
+        "duration": {
+          "kind": "hours",
+          "value": 8
+        },
+        "note": "Режим нанесения на существо: 10 минут. Для существа больше Среднего нужны дополнительные флаконы. Выливание на землю — отдельное применение по описанию."
+      },
+      "status_effects": [],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    },
+    {
+      "id": 329,
+      "consumption": {
+        "concentration": false,
+        "duration": {
+          "kind": "minutes",
+          "value": 10
+        }
+      },
+      "status_effects": [
+        {
+          "key": "philter_wait",
+          "effect": {
+            "ref": "philter_wait"
+          }
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+    }
+  ],
+  "spells": [
+    {
+      "id": 548,
+      "status_effects": [
+        {
+          "key": "bless",
+          "effect": {
+            "ref": "bless"
+          },
+          "duration": {
+            "kind": "minutes",
+            "value": 1
+          },
+          "concentration": true
+        }
+      ]
+    },
+    {
+      "id": 990,
+      "status_effects": [
+        {
+          "key": "haste",
+          "effect": {
+            "ref": "haste"
+          },
+          "duration": {
+            "kind": "minutes",
+            "value": 1
+          },
+          "concentration": true
+        }
+      ]
+    },
+    {
+      "id": 835,
+      "status_effects": [
+        {
+          "key": "enlarge",
+          "effect": {
+            "ref": "enlarge"
+          },
+          "duration": {
+            "kind": "minutes",
+            "value": 1
+          },
+          "concentration": true
+        },
+        {
+          "key": "reduce",
+          "effect": {
+            "ref": "reduce"
+          },
+          "duration": {
+            "kind": "minutes",
+            "value": 1
+          },
+          "concentration": true
+        }
+      ]
+    },
+    {
+      "id": 774,
+      "status_effects": [
+        {
+          "key": "detect_thoughts",
+          "effect": {
+            "ref": "detect_thoughts"
+          },
+          "duration": {
+            "kind": "minutes",
+            "value": 1
+          },
+          "concentration": true
+        }
+      ]
+    },
+    {
+      "id": 938,
+      "status_effects": [
+        {
+          "key": "clairvoyance",
+          "effect": {
+            "ref": "clairvoyance"
+          },
+          "duration": {
+            "kind": "minutes",
+            "value": 10
+          },
+          "concentration": true
+        }
+      ]
+    },
+    {
+      "id": 1335,
+      "status_effects": [
+        {
+          "key": "etherealness",
+          "effect": {
+            "ref": "etherealness"
+          },
+          "duration": {
+            "kind": "hours",
+            "value": 8
+          },
+          "concentration": false
+        }
+      ]
+    },
+    {
+      "id": 871,
+      "status_effects": [
+        {
+          "key": "gaseous_form",
+          "effect": {
+            "ref": "gaseous_form"
+          },
+          "duration": {
+            "kind": "hours",
+            "value": 1
+          },
+          "concentration": true
+        }
+      ]
+    },
+    {
+      "id": 580,
+      "status_effects": [
+        {
+          "key": "animal_friendship",
+          "effect": {
+            "ref": "animal_friendship"
+          },
+          "target": "other",
+          "condition": "Провал спасброска Мудрости",
+          "duration": {
+            "kind": "hours",
+            "value": 24
+          },
+          "concentration": false
+        }
+      ]
+    },
+    {
+      "id": 764,
+      "status_effects": [
+        {
+          "key": "invisibility",
+          "effect": {
+            "id": 4595
+          },
+          "duration": {
+            "kind": "hours",
+            "value": 1
+          },
+          "concentration": true
+        }
+      ]
+    },
+    {
+      "id": 1079,
+      "status_effects": [
+        {
+          "key": "freedom_of_movement",
+          "effect": {
+            "ref": "freedom_of_movement"
+          },
+          "duration": {
+            "kind": "hours",
+            "value": 1
+          },
+          "concentration": false
+        }
+      ]
+    }
+  ]
+}

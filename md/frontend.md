@@ -1028,3 +1028,10 @@ SuggestDropdown использует BasePopover/OptionList и получает 
 TemplateBlockInner не передаёт пустые style и неиспользуемые vars каждому блоку. Блоки с несколькими корнями явно передают attrs видимой плитке; скрытие задаётся её display, без неработающего v-show на Fragment. Toolbar также передаёт события свайпа и wheel своему DOM-корню.
 
 У списка заклинаний удалён неработавший TransitionGroup и его пять CSS-правил: корень SpellCard — ActionMenu с Teleport, поэтому Vue не мог применить эти переходы. SectionList сохраняет тот же DOM-контейнер и sortable-атрибуты.
+
+
+Применение зелий использует общие `DamageFormulaPreview`/`DiceRollResult` и
+`HandbookReferenceRows`, а `ApplicationSummary` объединяет формулы, результаты,
+эффекты и длительности для входящего запроса, хроники и результата применения.
+Выбор варианта и результат открываются через `AppModalFrame`; источник
+состояния формы — `usePotionApplications` в контроллере обмена листа.

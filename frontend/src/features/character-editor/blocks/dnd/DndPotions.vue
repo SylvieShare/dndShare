@@ -78,20 +78,10 @@ function clone() {
   return entries.value.map(e => ({ uid: e.uid, item_id: e.item_id ?? null, count: e.count, params: { ...(e.params || {}) }, override: e.override ? { ...e.override } : null }))
 }
 
-function onUse(uid) {
-  const next = clone()
-  const idx = next.findIndex(e => e.uid === uid)
-  if (idx === -1) return
-  const count = Math.max(1, Math.min(999, Math.floor(Number(next[idx].count) || 1)))
-  const display = potionEntries.value.find(potion => potion.uid === uid)
-  if (count > 1) next[idx].count = count - 1
-  else next.splice(idx, 1)
-  emit('update:value', props.block.id, next)
-  charCtx.logSessionEvent?.({
-    type: 'item_spent',
-    action: `Потрачено: ${display?.name || 'Зелье'}`,
-    data: { source: { itemId: display?.id, name: display?.name }, itemId: display?.id || null, remaining: Math.max(0, count - 1) },
-  })
+async function onUse(uid) {
+  const entry = entries.value.find(e => e.uid === uid)
+  if (!entry) return
+  await charCtx.itemTransfers?.potions?.self({ ...entry, name: potionEntries.value.find(p => p.uid === uid)?.name })
 }
 
 function onReplenish(uid) {

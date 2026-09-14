@@ -112,7 +112,7 @@ export const useDiceStore = defineStore('dice', () => {
   function rollD20(action, bonus = 0, mode = 'normal', opts = {}) {
     const normalizedMode = ['advantage', 'disadvantage'].includes(mode) ? mode : 'normal'
     const modifier = Number(bonus) || 0
-    const expression = `${normalizedMode === 'normal' ? 1 : 2}d20${modifier >= 0 ? '+' : ''}${modifier}`
+    const expression = `${normalizedMode === 'normal' ? 1 : 2}d20${modifier >= 0 ? '+' : ''}${modifier}${opts.bonus_formula ? ` + ${opts.bonus_formula}` : ''}`
     const result = rollDiceExpression(expression)
     if (normalizedMode !== 'normal') {
       const part = result.parts.find(row => row.kind === 'dice' && row.sides === 20)

@@ -15,18 +15,21 @@ func effectSourceFilterSQL(values []any, userID *int64, add func(any) string) st
  'restrained','stunned','unconscious','exhaustion','inspiration')`)
 		case "magic_item":
 			typeIDs = append(typeIDs, 19)
+		case "potion":
+			typeIDs = append(typeIDs, 10)
 		case "spell":
 			typeIDs = append(typeIDs, 5)
 		}
 	}
 	if len(typeIDs) > 0 {
 		visibility := "source.user_id IS NULL"
+		viewer := "NULL::bigint"
 		if userID != nil {
-			visibility = "(" + visibility + " OR source.user_id = " + add(*userID) + ")"
+			viewer = add(*userID)
+			visibility = "(" + visibility + " OR source.user_id = " + viewer + ")"
 		}
 		parts = append(parts, `EXISTS (SELECT 1 FROM dndshare.item source
- CROSS JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(source.data->'status_effects')='array'
- THEN source.data->'status_effects' ELSE '[]'::jsonb END) link
+ CROSS JOIN LATERAL `+catalogueEffectLinksSQL("source", viewer)+` links
  WHERE source.type_id = ANY(`+add(typeIDs)+`::bigint[]) AND `+visibility+`
  AND COALESCE(link#>>'{effect,id}',link->>'effect') = i.id::text)`)
 	}
