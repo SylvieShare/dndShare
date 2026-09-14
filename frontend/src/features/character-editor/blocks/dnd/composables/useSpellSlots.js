@@ -14,7 +14,7 @@ function normalizedSlots(saved) {
   return list
 }
 
-export function useSpellSlots({ canInteract, emitChange, logSessionEvent }) {
+export function useSpellSlots({ canInteract, automaticSlots, emitChange, logSessionEvent }) {
   const slotPools = ref({
     long_rest: defaultSlots(),
     short_rest: defaultSlots(),
@@ -55,6 +55,7 @@ export function useSpellSlots({ canInteract, emitChange, logSessionEvent }) {
     if (!slot) return
     slot.total = Math.max(0, Math.min(9, Number(total) || 0))
     if (slot.used > slot.total) slot.used = slot.total
+    automaticSlots.value = false
     emitChange()
   }
 

@@ -419,7 +419,7 @@ const {
   setTotal,
   replaceTotals,
   adjustSlotUsed,
-} = useSpellSlots({ canInteract, emitChange, logSessionEvent: event => charCtx.logSessionEvent?.(event) })
+} = useSpellSlots({ canInteract, automaticSlots, emitChange, logSessionEvent: event => charCtx.logSessionEvent?.(event) })
 
 const maxSlotLevel = computed(() => Math.max(
   ...activeSlotPools.value.flatMap((pool) => pool.slots.map((slot) => Number(slot.level) || 0)),

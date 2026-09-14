@@ -7,7 +7,7 @@ function setup() {
   let changes = 0
   return {
     changes: () => changes,
-    api: useSpellSlots({ canInteract: ref(true), emitChange: () => { changes += 1 } }),
+    api: useSpellSlots({ canInteract: ref(true), automaticSlots: ref(true), emitChange: () => { changes += 1 } }),
   }
 }
 

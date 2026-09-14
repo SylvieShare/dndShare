@@ -25,7 +25,7 @@
         label="Автоматически по уровням классов"
         @update:model-value="$emit('set-automatic-slots', $event)"
       />
-      <p class="ssm-hint">Отключите для домашних правил и ручного пула ячеек.</p>
+      <p class="ssm-hint">Ручное изменение количества ячеек отключает авторасчёт. Включите его снова, чтобы вернуть количество по уровням классов.</p>
     </EditorSection>
 
     <EditorSection v-if="showCastingConfig" title="Базовая характеристика">

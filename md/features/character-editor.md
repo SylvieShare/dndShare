@@ -222,7 +222,11 @@ The current shape under `data.values` is:
   `{key,name,class_item_id,casting_ability,mode,save_bonus,attack_bonus,spells}`;
   each editable spell is `{key,id,prepared}`. `class_item_id` is unique among
   non-custom tabs. External readonly spells are independent `grants` with a
-  structured `source` and optional casting overrides;
+  structured `source` and optional casting overrides. Manually changing a slot
+  total in either rest pool saves `slots_auto:false` together with the pools,
+  so reloading preserves custom totals and spent slots. Spending or recovering
+  slots does not disable automatic calculation. Re-enabling it in slot settings
+  replaces custom totals with class progression totals;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
 - potions: an independent array of the same owned entries; physical tools are
