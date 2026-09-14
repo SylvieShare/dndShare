@@ -21,6 +21,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   const localActions = new Set()
   const localRolls = new WeakSet()
   const arrivalTimers = new Map()
+  let lastReadId = 0
   let initialized = false
   let generation = 0
   let initialPromise = null
@@ -62,10 +63,11 @@ export const useSessionEventsStore = defineStore('session-events', () => {
       onAction: () => { action?.run(); notifications.dismiss(id) },
     })
   }
-  function merge(incoming, { quiet = false, updates = false } = {}) {
+  function merge(incoming, { quiet = false, updates = false, fromRead = false } = {}) {
     if (!Array.isArray(incoming) || !incoming.length) return
     const byId = new Map(events.value.map(event => [event.id, event]))
     for (const event of incoming) {
+      if (fromRead) lastReadId = Math.max(lastReadId, event.id)
       const previous = signatures.get(event.id)
       const signature = sessionEventSignature(event)
       signatures.set(event.id, signature)
@@ -78,7 +80,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     // Keep recent transfer baselines even after their rows leave the visible window.
     while (signatures.size > 600) signatures.delete(signatures.keys().next().value)
   }
-  function latestId() { return events.value.at(-1)?.id || 0 }
+  function latestId() { return lastReadId }
 
   function refresh() {
     if (!sessionUuid.value) return Promise.resolve()
@@ -93,7 +95,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
           const response = await sessionEventsApi.getSessionEvents(sessionUuid.value, { after: latestId(), limit: 100 })
           if (token !== generation) return
           merge(response?.updates, { quiet: !initialized, updates: true })
-          merge(response?.events, { quiet: !initialized })
+          merge(response?.events, { quiet: !initialized, fromRead: true })
           initialized = true
           // Drain bursts larger than one page without waiting for another invalidation.
           if (response?.events?.length === 100) refreshPending = true
@@ -123,7 +125,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
       try {
         const response = await sessionEventsApi.getSessionEvents(uuid, { limit: 50 })
         if (token !== generation) return
-        merge(response?.events, { quiet: true })
+        merge(response?.events, { quiet: true, fromRead: true })
         initialized = true
         syncError.value = false
       } catch { if (token === generation) syncError.value = true }
@@ -139,6 +141,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     if (sessionUuid.value) notifications.clear(`session:${sessionUuid.value}`)
     generation++
     initialized = false
+    lastReadId = 0
     initialPromise = refreshPromise = null
     refreshPending = false
     sessionUuid.value = actorCharUuid.value = null

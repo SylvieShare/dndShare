@@ -118,4 +118,17 @@ describe('session event notifications', () => {
     expect(useNotificationsStore().entries.map(entry => entry.data.event.id)).toEqual([6])
   })
 
+  it('does not skip an incoming offer when a newer own action finishes first', async () => {
+    useAccountStore().user = { id: 3 }
+    const events = useSessionEventsStore()
+    api.getSessionEvents.mockResolvedValueOnce({ events: [event(1)] })
+      .mockResolvedValueOnce({ events: [{ ...event(2), recipientUserId: 3 }] })
+    api.createSessionEvent.mockResolvedValue({ event: { ...event(3), authorUserId: 3, type: 'dice_roll' } })
+    await events.setContext({ uuid: 'game' })
+    await events.publish({ type: 'dice_roll', action: 'Мой бросок' })
+    await events.refresh()
+    expect(api.getSessionEvents).toHaveBeenLastCalledWith('game', { after: 1, limit: 100 })
+    expect(useNotificationsStore().entries.map(entry => entry.data.event.id)).toEqual([2])
+  })
+
 })
