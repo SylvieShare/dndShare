@@ -193,6 +193,12 @@ instances with bound parameters; legacy suggest-type-9 state ids and active
 Rage widget flags are migrated to that format. Rage and Shield of Faith are the
 initial automatic consumers, while all former condition suggests are imported
 as negative effect items for manual selection.
+An instance's `duration` stores `{kind, value?, text?}` independently of the
+catalogue: positive integer `value` for rounds/minutes/hours/days, `text` for
+custom end conditions, or manual/until_rest/permanent without extra fields.
+The source override or catalogue default is copied when the instance is created;
+editing its duration does not modify other instances or catalogue data. This
+additive instance metadata stays in character JSON and requires no SQL migration.
 `110_effect_source_filter.sql` adds read-only filter metadata `effect_source`
 for type 15. No category is stored on the effect: basic membership uses standard
 effect codes, while spell and magic-item membership follows current visible

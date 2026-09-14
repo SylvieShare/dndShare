@@ -10,6 +10,7 @@ import {
   removeStatusInstance,
   removeStatusesBySource,
   setStatusInstanceLevel,
+  setStatusInstanceDuration,
   statusEffectLinks,
   statusInstanceActiveByParam,
   statusItemIds,
@@ -67,6 +68,7 @@ export function useCharacterStatuses(values, characterResources) {
     addManual(effect) { return addStatusInstance(values.value, effect, { source: { kind: 'manual' } }) },
     add(effect, options) { return addStatusInstance(values.value, effect, options) },
     remove(uid) { return removeStatusInstance(values.value, uid) },
+    setDuration(uid, duration) { return setStatusInstanceDuration(values.value, uid, duration) },
     setLevel(uid, level) { return setStatusInstanceLevel(values.value, uid, level) },
     itemByCode(code) {
       return [...itemsById.value.values()].find(item => item?.data?.code === code) || null

@@ -29,7 +29,7 @@ describe('mobile HP and status strip', () => {
   it('shows larger frameless condition icons with description tooltips', () => {
     expect(source).toContain('@mouseenter="showStatusTooltip($event, item)"')
     expect(source).toContain('<ItemTooltip')
-    expect(source).toMatch(/\.dmsm-status \{[^}]*width: 30px;[^}]*height: 30px;[^}]*\}/)
+    expect(source).toMatch(/\.dmsm-status \{[^}]*min-width: 40px;[^}]*min-height: 44px;[^}]*\}/)
     expect(source).toMatch(/\.dmsm-status-icon \{ width: 28px; height: 28px;/)
     expect(source).not.toMatch(/\.dmsm-status \{[^}]*background:/)
   })

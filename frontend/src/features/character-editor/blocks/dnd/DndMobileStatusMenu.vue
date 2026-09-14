@@ -7,7 +7,8 @@
           :key="item.id"
           class="dmsm-status"
           :style="{ '--status-color': item.color || 'var(--text-muted)' }"
-          :aria-label="item.value"
+          :aria-label="`${item.value} · ${item.duration}`"
+          :title="`${item.value} · ${item.duration}`"
           @mouseenter="showStatusTooltip($event, item)"
           @mouseleave="hideStatusTooltip"
         >
@@ -19,6 +20,7 @@
             :size="28"
           />
           <span v-else class="dmsm-status-dot"></span>
+          <small class="dmsm-status-duration">{{ item.compactDuration }}</small>
         </span>
         <button
           v-if="exhaustionLevel > 0"
@@ -59,11 +61,12 @@
       </template>
     </RowActionMenu>
 
-    <AppModalFrame v-if="editorKind === 'states'" title="Статусы" :padded="false" @close="closeEditor">
+    <AppModalFrame v-if="editorKind === 'states' && canInteract" title="Статусы" :padded="false" @close="closeEditor">
       <CharacterStatusEditor
         :statuses="statuses"
         @add="pickerOpen = true"
         @remove="removeStatus"
+        @duration="saveDuration"
       />
     </AppModalFrame>
 
@@ -110,6 +113,7 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
+import { statusDuration } from '@/shared/lib/statusDuration'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -137,6 +141,8 @@ const activeItems = computed(() => statuses.value.map(status => ({
   desc: status.description,
   color: status.color,
   item: status.item,
+  duration: statusDuration(status.duration),
+  compactDuration: statusDuration(status.duration, { compact: true }),
 })))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
 const exhaustionLevel = computed(() => normalizeExhaustion(exhaustionValue.value).level)
@@ -188,6 +194,10 @@ function addStatus(item) {
 function removeStatus(uid) {
   updateValue(ids.value.states, charCtx.characterStatuses?.remove?.(uid) || [])
 }
+function saveDuration(uid, duration) {
+  if (!canInteract.value || !statuses.value.some(status => status.uid === uid)) return
+  updateValue(ids.value.states, charCtx.characterStatuses.setDuration(uid, duration))
+}
 function setExhaustion(value) {
   updateValue(ids.value.exhaustion, value)
 }
@@ -224,12 +234,16 @@ function setInspiration(value) {
 }
 .dmsm-status {
   display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  min-width: 40px;
+  max-width: 88px;
+  min-height: 44px;
   flex: 0 0 auto;
 }
+.dmsm-status-duration { max-width: 100%; color: var(--text-muted); font-size: 9px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dmsm-status-icon { width: 28px; height: 28px; display: inline-flex; }
 .dmsm-status-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--status-color); }
 .dmsm-badge {

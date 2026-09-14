@@ -1,3 +1,4 @@
+import { cleanStatusDuration, copyStatusDuration, statusDurationError } from '@/shared/lib/statusDuration'
 import { abilityOwnerLevel } from '@/shared/lib/dndAbilityUses'
 
 export const STATUS_VALUE_ID = 'states'
@@ -78,7 +79,7 @@ export function createStatusInstance(effect, options = {}) {
   const effectId = Number(effect?.id ?? options.effect_id)
   if (!Number.isFinite(effectId)) return null
   const source = { kind: 'manual', ...(options.source || {}) }
-  const duration = options.duration || effect?.data?.duration || { kind: 'manual' }
+  const duration = copyStatusDuration(options.duration ?? effect?.data?.duration)
   const initialLevel = Math.max(0, Number(effect?.data?.level) || 0)
   return {
     uid: makeUid(effectId),
@@ -113,6 +114,14 @@ export function setStatusInstanceLevel(values, uid, level) {
       ? { ...row, params: { ...row.params, level: nextLevel } }
       : row
   ))
+}
+
+export function setStatusInstanceDuration(values, uid, duration) {
+  const current = normalizeStatusInstances(values?.[STATUS_VALUE_ID])
+  if (statusDurationError(duration)) return current
+  return current.map(row => row.uid === String(uid)
+    ? { ...row, duration: cleanStatusDuration(duration) }
+    : row)
 }
 
 export function statusEffectActive(values, effect) {

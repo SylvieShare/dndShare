@@ -9,11 +9,30 @@ import {
   statusInstanceActiveByParam,
   removeStatusesBySource,
   setStatusInstanceLevel,
+  setStatusInstanceDuration,
   statusEffectLinks,
   toggleLinkedStatus,
 } from './characterStatuses'
 
 describe('character statuses', () => {
+  it('copies source duration into each instance and changes only the requested instance', () => {
+    const effect = { id: 7, data: { stacking: 'multiple', duration: { kind: 'minutes', value: 10 } } }
+    const source = { kind: 'potion', item_id: 20, label: 'Зелье' }
+    let states = addStatusInstance({}, effect, { source, params: { bonus: 2 } })
+    states = addStatusInstance({ states }, effect, { duration: { kind: 'hours', value: 1 } })
+    expect(states[0].duration).not.toBe(effect.data.duration)
+    const changed = setStatusInstanceDuration({ states }, states[0].uid, { kind: 'custom', text: ' До следующего хода ' })
+    expect(changed[0]).toEqual({ ...states[0], duration: { kind: 'custom', text: 'До следующего хода' } })
+    expect(changed[1]).toEqual(states[1])
+    expect(states[0].duration).toEqual({ kind: 'minutes', value: 10 })
+    expect(effect.data.duration).toEqual({ kind: 'minutes', value: 10 })
+    const items = new Map([['7', effect]])
+    const reloaded = collectCharacterStatuses(JSON.parse(JSON.stringify({ states: changed })), items)
+    expect(reloaded.map(status => status.duration)).toEqual(changed.map(status => status.duration))
+    expect(setStatusInstanceDuration({ states }, 'missing', { kind: 'manual' })).toEqual(states)
+    expect(setStatusInstanceDuration({ states }, states[0].uid, { kind: 'rounds', value: 0 })).toEqual(states)
+  })
+
   it('normalizes several effect links declared by one source item', () => {
     const item = { data: { status_effects: [
       { key: 'blessed', effect: { id: 10 } },

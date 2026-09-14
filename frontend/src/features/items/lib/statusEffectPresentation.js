@@ -1,3 +1,4 @@
+export { statusDuration } from '@/shared/lib/statusDuration'
 import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
 const POLARITIES = {
@@ -60,19 +61,6 @@ export function statusPolarity(value) {
 
 export function statusStacking(value) {
   return value === 'multiple' ? 'Несколько экземпляров' : 'Один экземпляр'
-}
-
-export function statusDuration(duration = {}) {
-  const kind = duration?.kind || 'manual'
-  const amount = Number(duration?.value)
-  if (kind === 'manual') return 'До ручного снятия'
-  if (kind === 'until_rest') return 'До отдыха'
-  if (kind === 'permanent') return 'Постоянно'
-  if (!Number.isFinite(amount) || amount <= 0) return 'Не указана'
-  if (kind === 'rounds') return `${amount} ${plural(amount, 'раунд', 'раунда', 'раундов')}`
-  if (kind === 'minutes') return `${amount} ${plural(amount, 'минута', 'минуты', 'минут')}`
-  if (kind === 'hours') return `${amount} ${plural(amount, 'час', 'часа', 'часов')}`
-  return 'Не указана'
 }
 
 export function statusThesisLines(value) {

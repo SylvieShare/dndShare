@@ -602,6 +602,25 @@ Abilities, feats and spells declare zero or more links in `status_effects`;
 several links are presented as independent choices. A link may bind the owning
 ability's current scaling value into a named effect parameter.
 
+Длительность копируется в каждый экземпляр при наложении: переопределение
+источника имеет приоритет перед значением справочника. Последующее изменение
+экземпляра не меняет справочник, источник или другие наложения этого эффекта.
+На компьютере срок показан под названием с иконкой часов; пункт меню
+«Изменить длительность» открывает редактор. На телефоне короткая подпись находится
+под иконкой, а редактирование — в окне «Статусы», по строке длительности.
+В режиме чтения длительность видна, изменение недоступно.
+
+Поле экземпляра `duration` — объект `{ kind, value?, text? }`: `rounds`,
+`minutes`, `hours`, `days` требуют положительного целого `value`; `custom`
+хранит свободное условие окончания в `text` (до 200 символов). `manual`,
+`until_rest` и `permanent` не требуют дополнительных полей. Редактор показывает
+только применимые поля; отмена не сохраняет черновик. Это срок действия,
+а не запущенный таймер: отсчёт и снятие остаются ручными.
+
+В меню зелья самостоятельный пункт «Использовать на себя» списывает одну дозу.
+Списание само по себе пока не применяет лечение или эффекты; передача предмета
+остаётся отдельной операцией с резервированием всей стопки.
+
 Rage is the first parameterized ability effect: activating its sheet widget
 consumes the ability resource, adds the shared Rage status and applies Strength
 check/save advantage, the current Strength-melee damage bonus and physical

@@ -10,10 +10,19 @@
       @remove="removeDisplayItem"
       @increase-level="changeDisplayItemLevel($event, 1)"
       @decrease-level="changeDisplayItemLevel($event, -1)"
+      @edit-duration="durationUid = $event.id"
       @show-tooltip="showStatusTooltip"
       @hide-tooltip="hideStatusTooltip"
     />
   </div>
+
+  <StatusDurationModal
+    v-if="durationStatus && canInteract"
+    :key="durationStatus.uid"
+    :status="durationStatus"
+    @close="durationUid = null"
+    @save="saveDuration"
+  />
 
   <ItemPickerModal
     v-if="pickerOpen"
@@ -52,6 +61,8 @@ import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
+import StatusDurationModal from './components/StatusDurationModal.vue'
+import { statusDuration } from '@/shared/lib/statusDuration'
 
 const props = defineProps({
   block: { type: Object, required: true },
@@ -63,6 +74,7 @@ const charCtx = inject('charCtx', { ownerMode: true })
 const root = ref(null)
 const pickerOpen = ref(false)
 const viewItem = ref(null)
+const durationUid = ref(null)
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 
 const ids = computed(() => ({
@@ -87,7 +99,9 @@ const activeItems = computed(() => statuses.value.map(status => ({
   adjustableLevel: Number(status.item?.data?.level) > 0,
   maxLevel: Math.max(0, Number(status.item?.data?.max_level) || 0),
   polarity: status.polarity,
+  duration: statusDuration(status.duration),
 })))
+const durationStatus = computed(() => statuses.value.find(status => status.uid === durationUid.value))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
 const normalizedExhaustion = computed(() => normalizeExhaustion(exhaustionValue.value))
 const exhaustionLevel = computed(() => normalizedExhaustion.value.level)
@@ -174,6 +188,12 @@ function changeDisplayItemLevel(item, delta) {
   const maxLevel = item.maxLevel || 99
   const level = Math.max(1, Math.min(maxLevel, (Number(item.level) || 1) + delta))
   updateValue(ids.value.states, charCtx.characterStatuses?.setLevel?.(item.id, level) || [])
+}
+
+function saveDuration(duration) {
+  if (!canInteract.value || !durationStatus.value) return
+  updateValue(ids.value.states, charCtx.characterStatuses.setDuration(durationUid.value, duration))
+  durationUid.value = null
 }
 
 function showStatusTooltip(event, item) {

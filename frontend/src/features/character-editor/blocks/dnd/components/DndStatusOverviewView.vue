@@ -34,6 +34,9 @@
                 <span class="dsov-name" :title="item.value">{{ item.value }}</span>
                 <span v-if="item.level" class="dsov-level">Уровень {{ item.level }}</span>
               </span>
+              <span v-if="item.duration" class="dsov-duration" :title="`Длительность: ${item.duration}`">
+                <Clock3 :size="12" aria-hidden="true" />{{ item.duration }}
+              </span>
               <span v-if="item.thesis" class="dsov-thesis">{{ item.thesis }}</span>
             </span>
           </button>
@@ -42,6 +45,9 @@
         <template #default="{ close }">
           <RowActionItem v-if="item.item" action="view" tone="info" @click="select(item, close, 'view')">
             Посмотреть
+          </RowActionItem>
+          <RowActionItem v-if="editable && item.kind === 'states'" :icon="Clock3" @click="select(item, close, 'edit-duration')">
+            Изменить длительность
           </RowActionItem>
           <RowActionItem
             v-if="editable && item.adjustableLevel && (!item.maxLevel || item.level < item.maxLevel)"
@@ -73,7 +79,7 @@
 </template>
 
 <script setup>
-import { BatteryLow, Minus, Plus, Sparkles } from '@lucide/vue'
+import { BatteryLow, Clock3, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -84,7 +90,7 @@ defineProps({
   editable: { type: Boolean, default: false },
   showAddAction: { type: Boolean, default: false },
 })
-const emit = defineEmits(['add', 'view', 'remove', 'increase-level', 'decrease-level', 'show-tooltip', 'hide-tooltip'])
+const emit = defineEmits(['add', 'view', 'remove', 'edit-duration', 'increase-level', 'decrease-level', 'show-tooltip', 'hide-tooltip'])
 
 function select(item, close, action) {
   close()
@@ -141,6 +147,8 @@ function monogram(value) {
   gap: 5px;
 }
 .dsov-heading { display: flex; min-width: 0; align-items: center; gap: 5px; }
+.dsov-duration { display: flex; align-items: center; gap: 4px; color: var(--text-muted); font-size: 10px; line-height: 1.3; overflow-wrap: anywhere; }
+.dsov-duration svg { flex-shrink: 0; }
 .dsov-name { min-width: 0; overflow: hidden; font-size: 11px; font-weight: 750; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
 .dsov-level { flex: 0 0 auto; color: var(--status-color); font-size: 8px; font-weight: 700; line-height: 1; }
 .dsov-thesis {

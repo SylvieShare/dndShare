@@ -14,6 +14,7 @@
               class="ps-glasswrap ps-clickable action-menu-source"
               :class="{ 'action-menu-source--open': menuOpen }"
               :title="`Действия: ${p.name}`"
+              :aria-label="`Действия: ${p.name}`"
             >
               <PotionVial :ref="el => setVial(p.uid, el)" :color="p.color" :rarity="p.rarity" size="md" />
               <span v-if="p.count > 1" class="ps-badge">×{{ p.count }}</span>
@@ -22,7 +23,7 @@
 
           <template #default="{ close }">
             <ItemTransferAction source="potions" :entry="p" :name="p.name" @close="close" />
-            <RowActionItem v-if="canUse" action="use" tone="accent" @click="usePotion(p, close)">Использовать</RowActionItem>
+            <RowActionItem v-if="canUse" action="use" tone="accent" @click="usePotion(p, close)">Использовать на себя</RowActionItem>
             <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
             <RowActionItem action="view" tone="info" @click="viewPotion(p, close)">Просмотреть</RowActionItem>
             <RowActionItem v-if="canMove" :icon="ArrowRightLeft" @click="movePotion(p, close)">Переместить в вещи</RowActionItem>
