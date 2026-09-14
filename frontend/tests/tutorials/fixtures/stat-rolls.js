@@ -1,5 +1,6 @@
 import { createApp, h, reactive } from 'vue'
 import { createPinia } from 'pinia'
+import StatTile from '../../../src/features/character-editor/blocks/dnd/components/StatTile.vue'
 import DndCharStat10 from '../../../src/features/character-editor/blocks/dnd/DndCharStat10.vue'
 import { useDiceStore } from '../../../src/stores/dice'
 import { useSuggestStore } from '../../../src/stores/suggest'
@@ -32,4 +33,9 @@ createApp({ render: () => h('main', { style: 'max-width:320px;margin:20px' }, [h
     props: { variant: window.innerWidth < 640 ? 'mobile' : 'desktop' } },
   value: state.value, values: {}, vars: { stats: { 2: 3 } },
   'onUpdate:value': (...args) => window.writes.push(args),
-})]) }).use(pinia).provide('charCtx', ctx).mount('#app')
+}), h('section', { 'data-testid': 'utility-grid', style: 'display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:64px;gap:8px;width:320px;margin-top:20px' }, [
+  ['КД', 13, '', '', 'shield', false],
+  ['Инициатива', 1, '+', '', 'initiative', true],
+  ['Скорость', 30, '', 'фт', 'speed', false],
+  ['Бонус умения', 2, '+', '', 'proficiency', true],
+].map(([label, value, pre, unit, icon, rollable]) => h(StatTile, { variant: 'tile', label, value, pre, unit, icon: `/static/${icon}.svg`, rollable })))]) }).use(pinia).provide('charCtx', ctx).mount('#app')

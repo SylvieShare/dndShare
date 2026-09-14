@@ -1,5 +1,5 @@
 <template>
-  <MorphTile embedded padding="0" edit-label="Редактировать"
+  <MorphTile compact-header embedded padding="0" edit-label="Редактировать"
       :title="label"
       :show-edit="showEdit"
       :edit-fade="editFade"
@@ -61,18 +61,17 @@ const iconStyle = computed(() => ({
   align-items: stretch;
   justify-content: center;
   gap: 4px;
-  min-height: 76px;
-  padding: 6px 12px;
+  min-height: 64px;
+  height: 100%;
+  padding: 6px 10px;
   user-select: none;
   box-sizing: border-box;
   min-width: 0;
 }
-.stf-head { flex-shrink: 0; min-width: 0; }
-/* compact label so "Бонус умения" + the pencil fit the narrow stat tile on one line (no truncation) */
-.stf-body { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.stf-body { display: flex; align-items: center; gap: 4px; cursor: pointer; }
 .stf-ic {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   opacity: 0.9;
   -webkit-mask-repeat: no-repeat;
@@ -87,8 +86,8 @@ const iconStyle = computed(() => ({
   place-items: center;
   flex-shrink: 0;
   margin-left: auto;
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   padding: 0;
   border: none;
   border-radius: 7px;

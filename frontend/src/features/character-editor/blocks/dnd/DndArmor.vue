@@ -8,7 +8,7 @@
     :toggled="!!armorState.shield"
   >
     <template #tile="{ open, canEdit }">
-      <MorphTile :title="block.title || 'КД'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="armor-tile">
+      <MorphTile compact-header :title="block.title || 'КД'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="armor-tile">
         <button class="armor-btn" :class="{ 'armor-toggled': armorState.shield }" type="button" @click="open">
           <div class="armor-shield-wrap"><div class="armor-shield-icon"></div><span class="armor-num">{{ armorState.total }}</span></div>
         </button>

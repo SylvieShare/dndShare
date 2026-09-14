@@ -17,3 +17,23 @@ for (const mobile of [false, true]) test(`shared morph heading and independent a
   await expect(page.locator('.mes-editor')).toHaveCount(0)
   expect(await page.evaluate(() => window.writes)).toEqual([])
 })
+
+test('compact utility headings and values stay within the 64px grid rows', async ({ page }) => {
+  await page.setViewportSize({ width: 1400, height: 1000 })
+  await page.goto('/tests/tutorials/fixtures/stat-rolls.html')
+  const tiles = page.getByTestId('utility-grid').locator('.util-tile')
+  await expect(tiles).toHaveCount(4)
+  for (const tile of await tiles.all()) {
+    const bounds = await tile.boundingBox()
+    expect(bounds.height).toBe(64)
+    await expect(tile.locator('.morph-tile-header--compact')).toHaveCount(1)
+    for (const part of await tile.locator('.morph-tile-title, .morph-tile-pencil, .stf-body, .stf-val, .stf-roll').all()) {
+      const inner = await part.boundingBox()
+      expect(inner.y).toBeGreaterThanOrEqual(bounds.y)
+      expect(inner.y + inner.height).toBeLessThanOrEqual(bounds.y + bounds.height)
+      expect(inner.x + inner.width).toBeLessThanOrEqual(bounds.x + bounds.width)
+    }
+    expect(await tile.locator('.morph-tile-header').evaluate(el => getComputedStyle(el).marginBottom)).toBe('0px')
+  }
+  expect(await page.locator('.stat-body').evaluate(el => getComputedStyle(el).paddingTop)).toBe('8px')
+})

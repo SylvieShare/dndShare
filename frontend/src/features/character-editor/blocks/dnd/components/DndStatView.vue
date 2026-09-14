@@ -218,9 +218,6 @@ onBeforeUnmount(hideTooltip)
   min-width: 0;
 }
 
-/* ── Head ── */
-.stat-card-head { margin-bottom: 2px; }
-
 .stat-icon { width: 26px; height: 26px; align-self: center; flex-shrink: 0; }
 
 /* ── Save chip ── */
@@ -257,6 +254,7 @@ onBeforeUnmount(hideTooltip)
 
 /* ── Modifier ── */
 .stat-body {
+  padding-top: 8px;
   display: flex;
   align-items: baseline;
   gap: 7px;
