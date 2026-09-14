@@ -15,10 +15,10 @@
         <div v-if="details" class="event-details">{{ details }}</div>
         <div v-if="event.data?.resourceChanges?.length" class="event-resources">
           <span v-for="(change, i) in event.data.resourceChanges" :key="i" class="event-resource" :class="change.delta < 0 ? 'event-resource--spent' : 'event-resource--added'">
+            <b>{{ change.delta < 0 ? '−' : '+' }}</b>
             <SpellSlotSphere :level="change.level || 1" :color="change.color" :size="24" :interactive="false" />
-            <b>×{{ Math.abs(change.delta) }}</b>
-            <span>{{ change.delta < 0 ? 'Потрачено' : 'Добавлено' }}</span>
-            <small>{{ change.name }}<template v-if="change.pool"> · {{ change.pool === 'short_rest' ? 'короткий отдых' : 'долгий отдых' }}</template></small>
+            <b v-if="Math.abs(change.delta) > 1">×{{ Math.abs(change.delta) }}</b>
+            <small>{{ change.name }}</small>
           </span>
         </div>
       </div>

@@ -12,9 +12,9 @@ const rows = [
   { id: 1, type: 'dice_roll', action: 'Атака: Посох', createdAt: '2026-09-13T10:00:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
     data: { source: { itemId: 42, name: 'Посох' }, result: { total: 21, parts: [{ kind: 'dice', sides: 20, rolls: [2, 18], keptIndex: 1, dropped: [0] }, { kind: 'flat', sign: '+', value: 3 }] } } },
   { id: 2, type: 'resource_used', action: 'Восстановление ячеек', createdAt: '2026-09-13T10:01:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
-    data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', color: '#38bdf8', delta: 2 }] } },
+    data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', color: '#38bdf8', delta: 2, pool: 'long_rest' }] } },
   { id: 3, type: 'resource_used', action: 'Использование ячеек', createdAt: '2026-09-13T10:02:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
-    data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', color: '#38bdf8', delta: -1 }] } },
+    data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', color: '#38bdf8', delta: -1, pool: 'short_rest' }] } },
 ]
 
 describe('session chronicle presentation', () => {
@@ -37,8 +37,13 @@ describe('session chronicle presentation', () => {
     expect(html).toContain('event-resource--added')
     expect(html).toContain('--ss-c:#38bdf8')
     expect(html).toContain('×2')
-    expect(html).toContain('Потрачено')
-    expect(html).toContain('Добавлено')
+    expect(html).toMatch(/<b[^>]*>−<\/b>/)
+    expect(html).toMatch(/<b[^>]*>\+<\/b>/)
+    expect(html).not.toContain('×1')
+    expect(html).not.toContain('Потрачено')
+    expect(html).not.toContain('Добавлено')
+    expect(html).not.toContain('долгий отдых')
+    expect(html).not.toContain('короткий отдых')
   })
   it('places a single action beside its entity and keeps the result below', async () => {
     const row = { ...rows[0], type: 'resource_used', action: 'Использование ячеек: Посох',
