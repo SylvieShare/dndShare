@@ -40,6 +40,21 @@ describe('session chronicle presentation', () => {
     expect(html).toContain('Потрачено')
     expect(html).toContain('Добавлено')
   })
+  it('places a single action beside its entity and keeps the result below', async () => {
+    const row = { ...rows[0], type: 'resource_used', action: 'Использование ячеек: Посох',
+      data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', delta: -1, remaining: 2 }] } }
+    const app = createSSRApp({ render: () => h(SessionEventActorGroup, {
+      group: groupSessionEvents([row])[0], items: { 42: { id: 42, name: 'Посох' } },
+    }) })
+    app.use(createPinia())
+    const html = await renderToString(app)
+    const heading = html.slice(html.indexOf('class="event-heading"'), html.indexOf('class="event-body"'))
+    expect(heading).toContain('event-item-link')
+    expect(heading).toContain('Использование ячеек')
+    expect(heading).toContain('(3 → 2)')
+    expect(html).not.toContain('Осталось')
+    expect(html).not.toContain('event-entity-actions--nested')
+  })
   it('keeps filter controls, empty states and vertical scrolling available', () => {
     expect(source).toContain('<BasePopover v-model:open="filterOpen"')
     expect(source).toContain('<MultiToggle v-model="authorFilter"')

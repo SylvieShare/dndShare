@@ -46,6 +46,7 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	INSERT INTO dndshare.session (name) SELECT 'Existing ' || i FROM generate_series(1, 500) i;`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaSessionDisplayCodesSQL)
+	exec(schemaSessionLifecycleSQL)
 	var valid bool
 	err = pool.QueryRow(ctx, `SELECT count(*) = count(DISTINCT display_code)
 	  AND bool_and(display_code ~ '^[A-Z0-9]{3}-[A-Z0-9]{3}$') FROM dndshare.session`).Scan(&valid)

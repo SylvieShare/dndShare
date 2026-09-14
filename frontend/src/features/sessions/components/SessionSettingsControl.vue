@@ -8,7 +8,7 @@
     aria-label="Настройки сессии"
     :aria-expanded="open"
     @click="open = !open"
-  ><Settings :size="17" /></button>
+  ><Settings :size="24" /><span class="session-tool-label">Настройки</span></button>
 
   <BasePopover v-model:open="open" :anchor="trigger" :min-width="310" placement="bottom-end" transition-preset="action-menu">
     <div class="session-settings-menu" data-tutorial="session-settings">
@@ -19,7 +19,7 @@
       </header>
       <label class="session-settings-option">
         <span><strong>Автоматически бросать HP существ</strong><small>При добавлении из справочника бросать формулу отдельно для каждого существа</small></span>
-        <input type="checkbox" :checked="autoRollNpcHp" @change="$emit('update-setting', 'autoRollNpcHp', $event.target.checked)" />
+        <input type="checkbox" :checked="autoRollNpcHp" @change="emit('update-setting', 'autoRollNpcHp', $event.target.checked)" />
         <i aria-hidden="true" />
       </label>
     </div>
@@ -36,7 +36,7 @@ import { BasePopover } from '@sylvieshare/share-ui'
 defineProps({
   autoRollNpcHp: { type: Boolean, default: false },
 })
-defineEmits(['update-setting'])
+const emit = defineEmits(['update-setting'])
 const trigger = ref(null)
 const open = ref(false)
 useTutorialAction('session-settings', ({ onCleanup }) => {
@@ -47,8 +47,9 @@ useTutorialAction('session-settings', ({ onCleanup }) => {
 </script>
 
 <style scoped>
-.session-settings-trigger { width: 31px; height: 31px; display: grid; place-items: center; padding: 0; border: 1px solid var(--border-strong); border-radius: 7px; background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); color: var(--text-2); cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
-.session-settings-trigger:hover, .session-settings-trigger--active { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--text-1); }
+.session-tool-label { font: 700 10px/1.2 var(--font-ui); }
+.session-settings-trigger { position: relative; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 48px; min-height: 54px; padding: 5px 7px; border: 0; background: transparent;  color: var(--text-muted); cursor: pointer; transition: color .15s; }
+.session-settings-trigger:hover, .session-settings-trigger--active {   color: var(--text-1); }
 .session-settings-menu { display: flex; flex-direction: column; gap: 4px; padding: 6px; }
 .session-settings-menu header { display: flex; flex-direction: column; gap: 2px; padding: 5px 7px 9px; border-bottom: 1px solid var(--border); }
 .session-settings-menu header strong { color: var(--text-1); font-size: 13px; }

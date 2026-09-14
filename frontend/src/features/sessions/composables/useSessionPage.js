@@ -21,6 +21,7 @@ import { useAccountStore } from '@/stores/account'
 import { useMusicStore } from '@/stores/music'
 import { useTemplateStore } from '@/stores/template'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
+import { useActiveSessionsStore } from '@/stores/activeSessions'
 import { useUiStore } from '@/stores/ui'
 import { pvName } from '@/features/sessions/lib/participantView'
 import { fetchPost } from '@/shared/api/http'
@@ -233,7 +234,10 @@ export function useSessionPage() {
     await toggleCombatWorkspace({ chapter, scene, level })
   }
 
-  watch(session, (value) => {
+  const activeSessionsStore = useActiveSessionsStore()
+  watch([session, () => accountStore.user?.id], ([value, userId]) => {
+    activeSessionsStore.setUser(userId || null)
+    if (value) activeSessionsStore.remember(value)
     uiStore.setHeaderContext({
       title: value?.name || route.meta?.title || 'Сессия',
       chip: null,

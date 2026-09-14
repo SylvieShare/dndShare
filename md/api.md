@@ -227,6 +227,11 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   projections. Every reconnect performs a catch-up read because the in-process
   stream deliberately keeps no durable event backlog. DM access is permanent;
   participant access is revalidated after membership changes and on heartbeat;
+- Session DTOs in list/detail responses include `status`: `active`, `stopped` or
+  `completed`. New sessions default to `stopped`.
+- `PATCH /api/sessions/{uuid}/status` accepts `{status}` and returns 204;
+  owner-only, unknown values return 400. It updates only lifecycle status and
+  `changed_at`, then publishes session overview invalidation through SSE.
 - `PATCH /api/sessions/{uuid}/participants/{charId}/color` assigns or clears
   (`{"color":null}`) the participant's session-local `#RRGGBB` marker; owner-only;
 - `PATCH /api/sessions/{uuid}/participants-order` accepts the complete ordered

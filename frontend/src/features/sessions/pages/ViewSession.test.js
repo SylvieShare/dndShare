@@ -105,7 +105,7 @@ describe('ViewSession participant rail', () => {
   })
 
   it('limits the left rail hit area to its player content', () => {
-    expect(styles).toMatch(/\.workspace-dock--left\s*\{[^}]*bottom:\s*auto;[^}]*max-height:\s*calc\(100% - 84px\);/s)
+    expect(styles).toMatch(/\.workspace-dock--left\s*\{[^}]*bottom:\s*auto;[^}]*max-height:\s*calc\(100% - var\(--session-toolbar-height, 78px\) - 28px\);/s)
   })
 
   it('moves the player rail through compact, normal and combat states without losing the saved preference', () => {

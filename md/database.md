@@ -513,8 +513,11 @@ class ids, ключи черт и source metadata, затем удаляет и�
 `session`, `session_participant`, главы, сцены, encounters, events и состояние
 музыки находятся в одной схеме. Participant brief читает аватар по
 каноническому D&D пути; полей template path map нет.
-У самой `session` нет lifecycle-статуса: ход кампании выражают статусы глав и
-единственная ссылка `current_chapter_id` («Сейчас здесь»).
+`session.status` хранит `active`, `stopped` или `completed`, с SQL CHECK и
+значением по умолчанию `stopped`. Миграция 116 добавляет поле существующим
+сессиям как `stopped`. Статусы глав и ссылка `current_chapter_id` («Сейчас здесь»)
+независимы от статуса сессии; смена статуса не меняет состав участников,
+encounter, музыку или таймеры.
 `session_participant.color` хранит необязательный `#RRGGBB`-цвет участника в
 рамках конкретной сессии; это UI-маркер и он не записывается в данные персонажа
 или encounter JSON. `session_participant.sort_order` хранит уникальную внутри

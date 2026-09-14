@@ -12,8 +12,18 @@ and matching store files.
 - `/join/:code` — invitation flow.
 
 A session has DM/participant permissions, current chapter, participants,
-encounter and synchronized music state. Owner-only actions are checked on the
+encounter, lifecycle status and synchronized music state. Owner-only actions are checked on the
 server, not only hidden in UI.
+
+The session status is `active` («Активен»), `stopped` («Остановлен») or
+`completed` («Завершён»), initially `stopped`. The DM changes it through the
+icon menu to the left of the session name and arc. Status changes persist on the
+server and refresh through the session live stream; they do not start/stop combat,
+music or timers. Active owned sessions appear as shortcuts with a dashed purple
+border near the top of the global desktop sidebar and on the left of the mobile
+header. The navigation reloads them on sign-in, navigation (with a 30-second cache)
+and window focus, and updates immediately after changes on the session page.
+Shortcuts are cleared when the account changes.
 
 The DM can open every participant’s character sheet even when `publicVisible`
 is disabled. This applies while the character belongs to a non-deleted session
@@ -106,10 +116,15 @@ viewport max-height), so the uncovered canvas below a short player list remains
 available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
-content pages. Its semantic header centers the switch between `Сюжет`, `Бой`,
-`Локации`, `NPC`, `Задания`, `Материалы`, `Музыка`, `Дневник` and `Хроника` independently of the title/arc and tool groups. `Сюжет` and `Бой`
-form the first navigation group and a vertical divider separates them from the
-four world catalogues; a second divider separates the final music-library tab. The
+content pages. Its semantic header groups `Сюжет`, `Бой`, `Локации`, `NPC`,
+`Задания`, `Материалы`, `Дневник` and `Хроника` in the center, followed by the
+presentation, timer, dice and settings controls. All these buttons use unframed
+24px icons with small labels underneath and no backing surface. `Музыка` keeps
+its compact horizontal player at the far right. The session name stays on the
+left with the arc below it in every workspace; the status icon sits beside both
+lines. At workspace widths up to 1100px, navigation and tools move to a second,
+horizontally scrollable row. The measured header height controls the participant
+rail offset so the two never overlap. The
 participant rail remains on the left and the
 right tool rail is removed. In `Сюжет` the chapter canvas fills all available
 width below `AppHeader`; only the participant rail reserves a horizontal safe
@@ -126,7 +141,9 @@ offsets or outer padding; this also applies to loading and error states.
 
 The primary switch remains active at every story depth. `Музыка` opens the
 central session library and also acts as a compact always-visible player when a
-track is selected: its bottom edge shows playback progress, while adjacent
+track is selected: the track name replaces «Музыка» in the same fixed-width
+label. Only overflowing names scroll back and forth; reduced-motion users see an
+ellipsis and the full title remains in the tooltip. Its bottom edge shows playback progress, while adjacent
 pause/resume and next-track controls do not change the selected workspace.
 There is no separate right-rail music tile, fullscreen library modal or local
 open/close state. Combat is represented
@@ -137,8 +154,7 @@ catalogue closes the combat workspace without stopping an active encounter;
 its red live marker therefore remains visible on the inactive `Бой` tab. Each
 catalogue selection stays in its own query key, so
 returning to a catalogue restores the previously selected location, NPC, quest
-or material. The settings control is visually separated from the presentation,
-timer and dice controls by its own vertical divider.
+or material. The four tool controls share one group immediately beside the navigation tabs.
 
 Кнопка кубиков в командной шапке открывает `DicePanel` в `BasePopover`, по той
 же модели, что экран показа и таймеры. Контроллер остаётся смонтированным, поэтому
@@ -212,14 +228,21 @@ Polling приостановлен во время правки и drag.
 а у мастера вместо логина — «я», без отдельной метки роли. Увеличенный аватар 52px выводится
 без рамки, подложки и тени: character icon с fallback на портрет, media бестиария,
 монограмма либо тематический DM fallback. Вертикальная линия справа от колонки
-аватара и имён отделяет её от событий, расположенных правее линии. На верхнем
+аватара и имён отделяет её от событий, расположенных правее линии. Аватар, имя
+и пользователь закрепляются у верхнего края прокрутки на время своей группы;
+в конце линии они уходят вверх вместе с группой. На верхнем
 конце каждой линии стрелка указывает вверх, в сторону новых событий. Между
 соседними группами проходит горизонтальный разделитель. На mobile аватар
 располагается над именами в узкой левой колонке; события остаются справа. Время находится
 у каждого действия, полная дата доступна в подсказке.
 
 Предметная группа показывает иконку и название с кнопкой открытия штатного
-`ItemViewModal`; ниже — действия без повторения имени источника. Зависимые
+`ItemViewModal`. Если действие одно, его название находится справа от имени
+сущности в той же строке; при нескольких действиях они идут ниже, без повторения
+имени источника. Остаток предмета/ресурса показан после названия действия как
+`(было → стало)`, без отдельного «Осталось n/m». Для ресурсов прежнее значение
+вычисляется из сохранённых остатка и signed delta; несколько ресурсов подписаны
+своими именами. События без числовых данных не получают выдуманных остатков. Зависимые
 применения, эффекты, проверки последнего заряда и броски из справочных описаний
 сохраняют ссылку на исходный item. Иконки характеристик берутся из справочника
 характеристик, а не из пользовательского payload. `DiceRollResult` показывает
@@ -478,19 +501,14 @@ promotes that chapter to `in_progress`, and only one chapter in the session can
 carry the pointer.
 
 `ChapterGraphToolbar` is the semantic session header with its own background and
-bottom divider, not a `BaseTile`. It combines the editable session name, the
-four primary workspace choices, story-only arc switcher and ordering,
-accessible icon-only combat launcher, and the dice,
-music and timeline panel toggles. Current-chapter focus and zoom are canvas interactions
-rather than toolbar controls. Creation is contextual and lives on the canvas
-in a top-right vertical action dock, immediately left of the right tools rail;
-there is no chapter/scenario/block creation button in the header. There is no
-second nested switcher or session title bar. `SessionGraphCanvas` keeps one
-physical `NarrativeGraphCanvas` mounted for all narrative levels. The session name is
-the largest text in the command bar. The unframed arc trigger reads
-`АРКА <Roman number> <name>` with the original muted uppercase label and a
-bold UI-font accent-colored Roman number, gains a quiet background only on
-hover/open, and opens the complete arc list with the shared action-menu motion.
+bottom divider, not a `BaseTile`. `SessionToolbarIdentity` owns the editable name,
+status menu and arc switcher; `SessionToolbarMusic` owns the compact player and
+overflow measurement. Current-chapter focus, zoom and contextual creation stay
+on the canvas. There is no second session title bar or nested switcher.
+`SessionGraphCanvas` keeps one physical `NarrativeGraphCanvas` mounted for all
+narrative levels. The session name is the largest text in the command bar. The
+unframed arc trigger below it reads `АРКА <Roman number> <name>` and opens the
+complete arc list with the shared action-menu motion.
 A DM drags any non-interactive
 part of a row to reorder arcs; arrow controls are not used. Each row has a
 pencil but no dedicated drag-handle dots; it opens `ArcEditorModal`, whose edit mode also owns the confirmed

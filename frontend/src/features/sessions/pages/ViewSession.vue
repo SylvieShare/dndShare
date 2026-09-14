@@ -45,6 +45,7 @@
     <div
       v-else-if="session"
       class="campaign-workspace"
+      :style="{ '--session-toolbar-height': `${toolbarHeight}px` }"
       :class="{
         'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat',
         'campaign-workspace--players-collapsed': playersRailMode === 'compact',
@@ -77,6 +78,8 @@
         @send-block-to-combat="sendBlockToCombat"
         @workspace-context-change="updateWorkspaceContext"
         @edit-session="openEdit"
+        @session-updated="applySessionEdit"
+        @toolbar-resize="toolbarHeight = $event"
         @open-chapters="openChapters"
       >
         <template #primary-workspace>
@@ -252,6 +255,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { ListChecks, LogIn, PanelLeftClose, PanelLeftOpen } from '@lucide/vue'
@@ -274,6 +278,8 @@ import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWo
 import JournalWorkspace from '@/features/journals/components/JournalWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useSessionPage } from '../composables/useSessionPage'
+
+const toolbarHeight = ref(78)
 
 const {
   allEncounterPlayersSelected, applySessionEdit, chapterGraph, chapterGraphTab, closeCreate,

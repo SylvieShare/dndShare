@@ -31,8 +31,20 @@ export function sessionEventDetails(event) {
   if (event.type === 'spell_used' && !data.resourceChanges?.length) {
     return data.slotPool === 'slotless' ? 'Без расхода ячейки' : Number(data.spellLevel) === 0 ? 'Заговор · без ячейки' : ''
   }
-  if (['item_spent', 'item_added'].includes(event.type)) return `Осталось: ${data.remaining ?? '—'}`
   if (event.type === 'entry_added' && Number(data.count) > 1) return `Количество: ${data.count}`
-  if (event.type === 'resource_used') return `Осталось: ${data.remaining ?? '—'} / ${data.total ?? '—'}`
+  return ''
+}
+
+export function sessionEventTransition(event) {
+  const data = event.data || {}
+  const changes = (data.resourceChanges || []).filter(change => Number.isFinite(change.remaining) && Number.isFinite(change.delta))
+  if (changes.length) return changes.map(change => {
+    const label = changes.length > 1 ? `${change.name}: ` : ''
+    return `${label}${change.remaining - change.delta} → ${change.remaining}`
+  }).join(', ')
+  if (['item_spent', 'item_added'].includes(event.type) && Number.isFinite(data.remaining)) {
+    const delta = event.type === 'item_spent' ? -1 : 1
+    return `${data.remaining - delta} → ${data.remaining}`
+  }
   return ''
 }

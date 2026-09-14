@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { useSessionMaterials } from '@/features/sessions/composables/useSessionMaterials'
 
 const read = path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')
-const toolbar = read('./ChapterGraphToolbar.vue')
+const toolbar = read('./ChapterGraphToolbar.vue') + read('./SessionToolbarMusic.vue')
 const control = read('./SessionPresentationControl.vue')
 const workspace = read('./SessionMaterialsWorkspace.vue')
 const sceneEditor = read('./SceneEditorModal.vue')

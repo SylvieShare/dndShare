@@ -50,7 +50,7 @@ describe('session world workspaces', () => {
     expect(toolbar).toContain("{ key: 'locations', label: 'Локации'")
     expect(toolbar).toContain("{ key: 'npcs', label: 'NPC'")
     expect(toolbar).toContain("{ key: 'quests', label: 'Задания', icon: ScrollText, shortcut: '4' }")
-    expect(toolbar).toContain("{ key: 'music', label: 'Музыка'")
+    expect(toolbar).toContain("<SessionToolbarMusic")
     expect(toolbar).toContain("{ key: 'events', label: 'Хроника'")
     expect(graphTab).toContain('v-show="primaryView === \'story\'"')
     expect(graphTab).toMatch(/<SessionTabWorkspace v-if="primaryView !== 'story'">\s*<slot name="primary-workspace" \/>\s*<\/SessionTabWorkspace>/)

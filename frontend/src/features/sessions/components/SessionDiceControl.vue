@@ -11,7 +11,7 @@
       :aria-expanded="open"
       @click="toggle"
     >
-      <Dices :size="17" />
+      <Dices :size="24" /><span class="session-tool-label">Кубики</span>
       <kbd v-if="showShortcutHints" class="session-dice-hint" aria-hidden="true">{{ shortcutLabels.panel }}+D</kbd>
       <kbd v-if="showShortcutHints && !open" class="session-dice-hint session-dice-hint--rolls" aria-hidden="true">{{ shortcutLabels.dice }}+1…7 · d4…d100</kbd>
     </button>
@@ -43,23 +43,11 @@ defineExpose({ toggle, rollDie })
 </script>
 
 <style scoped>
+.session-tool-label { font: 700 10px/1.2 var(--font-ui); }
 .session-dice-control { display: contents; }
-.session-dice-trigger {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  display: inline-grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  color: var(--text-2);
-  cursor: pointer;
-  transition: border-color .15s, background .15s, color .15s;
-}
+.session-dice-trigger { position: relative; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 48px; min-height: 54px; padding: 5px 7px; border: 0; background: transparent;  color: var(--text-muted); cursor: pointer; transition: color .15s; }
 .session-dice-trigger:hover,
-.session-dice-trigger--active { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--text-1); }
+.session-dice-trigger--active {   color: var(--text-1); }
 .session-dice-hint {
   position: absolute;
   z-index: 24;

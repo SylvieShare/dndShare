@@ -31,6 +31,7 @@
         </div>
       </div>
 
+      <ActiveSessionShortcuts mobile />
       <GameContextSelector compact />
 
       <span
@@ -51,6 +52,7 @@
 </template>
 
 <script setup>
+import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useIsMobile } from '@sylvieshare/share-ui'
 import { useRoute, useRouter } from 'vue-router'

@@ -2,6 +2,7 @@
   <div class="chapter-graph-tab">
     <ChapterGraphToolbar
       ref="toolbar"
+      @resize="emit('toolbar-resize', $event)"
       :arcs="graph.arcs.value"
       :selected-arc="graph.selectedArc.value"
       :current-arc="graph.currentArc.value"
@@ -25,7 +26,8 @@
       @edit-arc="openArcEdit"
       @reorder-arcs="reorderArcs"
       @select-view="$emit('select-view', $event)"
-      @edit-session="$emit('edit-session')"
+      @edit-session="emit('edit-session')"
+      @session-updated="emit('session-updated', $event)"
       @open-combat="openCombat"
       @update-setting="(...args) => $emit('update-setting', ...args)"
     />
@@ -219,7 +221,7 @@ const props = defineProps({
   showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits([
-  'open-scenes', 'open-combat', 'edit-session', 'open-chapters',
+  'open-scenes', 'open-combat', 'edit-session', 'session-updated', 'toolbar-resize', 'open-chapters',
   'select-view',
   'send-block-to-combat', 'workspace-context-change',
   'update-setting',
@@ -554,7 +556,7 @@ function chapterPayload(chapter, patch = {}) {
 </script>
 
 <style scoped>
-.chapter-graph-tab { position: relative; display: flex; flex: 1; min-height: 0; flex-direction: column; overflow: hidden; }
+.chapter-graph-tab { container-type: inline-size; position: relative; display: flex; flex: 1; min-height: 0; flex-direction: column; overflow: hidden; }
 .chapter-canvas-stage { position: relative; display: flex; flex: 1; min-height: 0; overflow: hidden; }
 .chapter-graph-loading { display: grid; flex: 1; place-items: center; color: var(--text-muted); font-size: 13px; }
 .chapter-action-error { position: absolute; z-index: 30; top: 66px; left: 50%; max-width: 520px; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--danger) 40%, transparent); border-radius: 7px; background: var(--popover-bg); color: var(--danger); font-size: 11px; transform: translateX(-50%); box-shadow: var(--shadow-lg); }

@@ -16,7 +16,7 @@
 .combat-import-error {
   position: absolute;
   z-index: 80;
-  top: 76px;
+  top: calc(var(--session-toolbar-height, 78px) + 20px);
   left: 50%;
   max-width: min(420px, calc(100% - 32px));
   padding: 9px 12px;
@@ -47,7 +47,7 @@
 .workspace-dock {
   position: absolute;
   z-index: 15;
-  top: 70px;
+  top: calc(var(--session-toolbar-height, 78px) + 14px);
   bottom: 14px;
   display: flex;
   flex-direction: column;
@@ -60,7 +60,7 @@
   left: 14px;
   bottom: auto;
   width: 264px;
-  max-height: calc(100% - 84px);
+  max-height: calc(100% - var(--session-toolbar-height, 78px) - 28px);
   transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 

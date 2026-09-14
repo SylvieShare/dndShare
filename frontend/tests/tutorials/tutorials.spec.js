@@ -20,7 +20,7 @@ async function mockApi(page, role = 'player', entries = []) {
     let json = {}
     if (path === '/api/char/test') json = character
     else if (path === '/api/account/tutorials') json = { tutorials: entries }
-    else if (path === '/api/sessions/test') json = { session: { uuid: 'test', name: 'Приключение', ownerUserId: role === 'dm' ? 1 : 2, systemId: 1 }, participants: [], myRole: role === 'dm' ? 'gm' : role }
+    else if (path === '/api/sessions/test') json = { session: { uuid: 'test', name: 'Приключение', status: 'stopped', ownerUserId: role === 'dm' ? 1 : 2, systemId: 1 }, participants: [], myRole: role === 'dm' ? 'gm' : role }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     await route.fulfill({ json })
   })
@@ -62,6 +62,21 @@ for (const mobile of [false, true]) {
     expect(writes.filter(write => write.path !== '/api/account/tutorials')).toEqual([])
   })
 }
+for (const mobile of [false, true]) test(`session status ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+  await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1600, height: 1000 })
+  const writes = await mockApi(page, 'dm')
+  await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/sessions/test')
+  await page.locator('.guided-tour').getByRole('button', { name: 'Пропустить', exact: true }).click()
+  const name = page.getByRole('button', { name: 'Приключение', exact: true })
+  await expect(name).toBeVisible()
+  for (const [status, label] of [['active', 'Активен'], ['completed', 'Завершён'], ['stopped', 'Остановлен']]) {
+    await page.getByRole('button', { name: /^Статус сессии:/ }).click()
+    await page.getByRole('menuitem', { name: label, exact: true }).click()
+    await expect(page.getByRole('button', { name: `Статус сессии: ${label}`, exact: true })).toBeVisible()
+    await expect(name).toHaveText('Приключение')
+    expect(writes.at(-1)).toEqual({ path: '/api/sessions/test/status', body: { status } })
+  }
+})
 test('seen device stays quiet, another device starts; leaving cancels without recording completion', async ({ page }) => {
   const writes = await mockApi(page, 'player', [{ flowId: 'character', sourceKey: 'edition:1', device: 'desktop', revision: 1, status: 'completed' }])
   await page.setViewportSize({ width: 1400, height: 1000 })

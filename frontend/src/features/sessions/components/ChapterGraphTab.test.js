@@ -10,7 +10,7 @@ const sessionCanvas = readFileSync(fileURLToPath(new URL('./SessionGraphCanvas.v
 const selectionBar = readFileSync(fileURLToPath(new URL('../../narrative-graph/components/GraphSelectionBar.vue', import.meta.url)), 'utf8')
 const actionDock = readFileSync(fileURLToPath(new URL('./CanvasActionDock.vue', import.meta.url)), 'utf8')
 const narrativeCanvas = readFileSync(fileURLToPath(new URL('../lib/narrativeCanvas.js', import.meta.url)), 'utf8')
-const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8')
+const toolbar = readFileSync(fileURLToPath(new URL('./ChapterGraphToolbar.vue', import.meta.url)), 'utf8') + '\n' + ['SessionToolbarIdentity.vue', 'SessionToolbarMusic.vue'].map(name => readFileSync(fileURLToPath(new URL(name, import.meta.url)), 'utf8')).join('\n')
 const diceControl = readFileSync(fileURLToPath(new URL('./SessionDiceControl.vue', import.meta.url)), 'utf8')
 const musicStore = readFileSync(fileURLToPath(new URL('../composables/useMusicPlayback.js', import.meta.url)), 'utf8')
 const arcEditor = readFileSync(fileURLToPath(new URL('./ArcEditorModal.vue', import.meta.url)), 'utf8')
@@ -25,7 +25,7 @@ describe('chapter graph workspace', () => {
   })
 
   it('keeps the canvas transparent and gives its semantic header a plain divided surface', () => {
-    expect(toolbar).toContain('<header class="chapter-toolbar">')
+    expect(toolbar).toContain('<header ref="header" class="chapter-toolbar">')
     expect(toolbar).not.toContain('<BaseTile')
     expect(toolbar).toContain('border-bottom: 1px solid var(--border);')
     expect(toolbar).toContain('background: var(--bg);')
@@ -54,10 +54,10 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain('class="chapter-session-title"')
     expect(toolbar).not.toContain('SessionStatusMenu')
     expect(toolbar).not.toContain("$emit('create-chapter')")
-    expect(toolbar).toContain("$emit('open-combat')")
+    expect(toolbar).toContain("emit('open-combat')")
     expect(toolbar).toContain(':aria-label="combatButtonLabel"')
     expect(toolbar).toContain('class="chapter-primary-tab chapter-primary-tab--combat"')
-    expect(toolbar).toContain('<Swords :size="14" />')
+    expect(toolbar).toContain('<Swords :size="24" />')
     expect(tab).toContain('@open-combat="openCombat"')
     expect(tab).toContain("canvas.value?.combatContext?.() ?? {}")
     expect(toolbar).not.toContain('Текущая глава')
@@ -86,7 +86,7 @@ describe('chapter graph workspace', () => {
     expect(toolbar).toContain('v-for="view in visibleLibraryViews"')
     expect(toolbar).toContain('const storyView = primaryViews[0]')
     expect(toolbar).toContain('primaryViews.slice(1)')
-    expect(toolbar).toContain("const musicView = { key: 'music', label: 'Музыка'")
+    expect(toolbar).toContain("<SessionToolbarMusic")
     expect(toolbar).toContain("const chronicleView = { key: 'events', label: 'Хроника'")
     expect(toolbar.match(/class="chapter-primary-divider"/g)).toHaveLength(2)
   })
@@ -124,12 +124,12 @@ describe('chapter graph workspace', () => {
     expect(tab).not.toContain('pendingEdge')
   })
 
-  it('centers the primary workspace switch independently from both toolbar sides', () => {
-    expect(toolbar).toContain('grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);')
+  it('groups navigation and tools centrally, with music at the far right', () => {
+    expect(toolbar).toContain('grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);')
     expect(toolbar).toContain('.chapter-toolbar-left { min-width: 0; display: flex;')
-    expect(toolbar).toContain('.chapter-primary-nav { display: flex; align-items: center; justify-self: center;')
-    expect(toolbar).toContain('.chapter-toolbar-view { justify-self: end; }')
-    expect(toolbar).toContain('class="chapter-toolbar-rule chapter-toolbar-rule--settings"')
+    expect(toolbar).toContain('.chapter-toolbar-center { display: flex; align-items: center; justify-self: center;')
+    expect(toolbar).toContain('.chapter-music-tab { justify-self: end; align-self: center; }')
+    expect(toolbar).toContain('@container (max-width: 1100px)')
     expect(toolbar).not.toContain(':disabled="locked"\n        @click="$emit(\'select-view\', view.key)"')
   })
 

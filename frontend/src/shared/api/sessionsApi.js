@@ -40,6 +40,10 @@ export function updateSession(uuid, data) {
   return fetchPatch(`/sessions/${uuid}`, data)
 }
 
+export function updateSessionStatus(uuid, status) {
+  return fetchPatch(`/sessions/${uuid}/status`, { status })
+}
+
 export function kickParticipant(uuid, charId) {
   return fetchDelete(`/sessions/${uuid}/participants/${charId}`)
 }

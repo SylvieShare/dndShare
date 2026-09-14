@@ -18,6 +18,7 @@ type GameSession struct {
 	UUID             string    `json:"uuid"`
 	OwnerUserID      int64     `json:"ownerUserId"`
 	Name             string    `json:"name"`
+	Status           string    `json:"status"`
 	Description      *string   `json:"description,omitempty"`
 	SystemID         *int64    `json:"systemId,omitempty"`
 	SystemName       *string   `json:"systemName,omitempty"`
@@ -64,14 +65,14 @@ type ChapterBrief struct {
 const sessionSelect = `
 	SELECT s.id, s.uuid::text, s.owner_user_id, s.name, s.description, s.system_id,
 	       src.name AS source_name, s.display_code, s.invite_code, s.current_chapter_id,
-	       s.created_at, s.changed_at
+	       s.created_at, s.changed_at, s.status
 	FROM dndshare."session" s
 	LEFT JOIN dndshare."source" src ON src.id = s.system_id`
 
 func scanGameSession(row pgx.Row) (GameSession, error) {
 	var g GameSession
 	err := row.Scan(&g.ID, &g.UUID, &g.OwnerUserID, &g.Name, &g.Description, &g.SystemID,
-		&g.SystemName, &g.DisplayCode, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt)
+		&g.SystemName, &g.DisplayCode, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt, &g.Status)
 	return g, err
 }
 

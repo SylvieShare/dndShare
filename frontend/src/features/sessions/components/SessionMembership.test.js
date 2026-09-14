@@ -42,11 +42,11 @@ describe('sessions empty state', () => {
   })
 })
 
-describe('sessions without a lifecycle status', () => {
-  it('keeps only ownership filters and removes session status controls', () => {
+describe('session ownership filters', () => {
+  it('keeps list ownership filters independent of lifecycle controls', () => {
     expect(sessionsPage).not.toContain('ACTIVE_STATUSES')
     expect(sessionsPage).not.toContain("key: 'archive'")
     expect(card).not.toContain('status-badge')
-    expect(toolbar).not.toContain('SessionStatusMenu')
+    expect(read('./SessionToolbarIdentity.vue')).toContain('<SessionStatusControl')
   })
 })

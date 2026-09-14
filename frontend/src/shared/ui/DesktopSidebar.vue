@@ -17,6 +17,7 @@
     </template>
 
     <template #default="{ expanded, toggle }">
+      <ActiveSessionShortcuts />
       <GameContextSelector :compact="!expanded" />
       <div class="sidebar-context-separator" />
 
@@ -57,6 +58,7 @@
 </template>
 
 <script setup>
+import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { BookOpen, BookOpenCheck, Dices, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'

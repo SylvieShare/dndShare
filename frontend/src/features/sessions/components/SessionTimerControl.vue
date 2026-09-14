@@ -13,7 +13,7 @@
       :aria-expanded="open"
       @click="open = !open"
     >
-      <Timer :size="17" />
+      <Timer :size="24" /><span class="session-tool-label">Таймеры</span>
       <span v-if="activeCount" class="session-timer-badge">{{ activeCount }}</span>
     </button>
 
@@ -117,25 +117,13 @@ async function submit() {
 </script>
 
 <style scoped>
+.session-tool-label { font: 700 10px/1.2 var(--font-ui); }
 .session-timer-control { display: contents; }
-.session-timer-trigger {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  display: inline-grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--text-on-accent) 4%, transparent);
-  color: var(--text-2);
-  cursor: pointer;
-  transition: border-color .15s, background .15s, color .15s, box-shadow .15s;
-}
+.session-timer-trigger { position: relative; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 48px; min-height: 54px; padding: 5px 7px; border: 0; background: transparent;  color: var(--text-muted); cursor: pointer; transition: color .15s; }
 .session-timer-trigger:hover,
-.session-timer-trigger--active { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: color-mix(in srgb, var(--accent) 13%, transparent); color: var(--text-1); }
-.session-timer-trigger--completed { border-color: color-mix(in srgb, var(--danger) 65%, var(--border)); background: color-mix(in srgb, var(--danger) 14%, transparent); color: var(--danger); box-shadow: 0 0 14px color-mix(in srgb, var(--danger) 14%, transparent); }
-.session-timer-badge { position: absolute; top: -5px; right: -5px; min-width: 16px; height: 16px; display: grid; place-items: center; padding: 0 4px; border: 2px solid var(--bg); border-radius: 9px; background: var(--accent); color: var(--text-on-accent); font-size: 8px; font-weight: 800; line-height: 1; }
+.session-timer-trigger--active {   color: var(--text-1); }
+.session-timer-trigger--completed {   color: var(--danger);  }
+.session-timer-badge { position: absolute; top: 1px; right: 3px; min-width: 16px; height: 16px; display: grid; place-items: center; padding: 0 4px; border: 2px solid var(--bg); border-radius: 9px; background: var(--accent); color: var(--text-on-accent); font-size: 8px; font-weight: 800; line-height: 1; }
 .session-timer-trigger--completed .session-timer-badge { background: var(--danger); }
 .session-timer-menu { width: 342px; display: flex; flex-direction: column; gap: 12px; padding: 7px; }
 .session-timer-menu header { display: flex; align-items: center; gap: 9px; padding: 5px 3px 10px; border-bottom: 1px solid var(--border); }
