@@ -11,6 +11,7 @@ import (
 )
 
 type ItemTransfer struct {
+	SenderImageURL    *string         `json:"senderImageUrl,omitempty"`
 	ID                int64           `json:"id"`
 	SessionID         int64           `json:"-"`
 	EventID           int64           `json:"eventId"`
@@ -30,15 +31,16 @@ type ItemTransfer struct {
 
 const itemTransferSelect = `SELECT t.id, t.session_id, t.event_id, t.sender_char_id, t.recipient_char_id,
  sender.uuid::text, recipient.uuid::text, t.sender_name, t.recipient_name,
- t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at
+ t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}')
  FROM dndshare.item_transfer t JOIN dndshare."char" sender ON sender.id=t.sender_char_id
- JOIN dndshare."char" recipient ON recipient.id=t.recipient_char_id`
+ JOIN dndshare."char" recipient ON recipient.id=t.recipient_char_id
+ LEFT JOIN dndshare.storage_image sender_icon ON sender_icon.id=sender.icon_image_id AND sender_icon.deleted=false`
 
 func scanItemTransfer(row pgx.Row) (ItemTransfer, error) {
 	var t ItemTransfer
 	err := row.Scan(&t.ID, &t.SessionID, &t.EventID, &t.SenderCharID, &t.RecipientCharID,
 		&t.SenderCharUUID, &t.RecipientCharUUID, &t.SenderName, &t.RecipientName, &t.ItemName,
-		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt)
+		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt, &t.SenderImageURL)
 	if errors.Is(err, pgx.ErrNoRows) {
 		err = ErrNotFound
 	}

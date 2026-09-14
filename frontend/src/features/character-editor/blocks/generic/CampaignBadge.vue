@@ -29,7 +29,7 @@ import { Bell, Users } from '@lucide/vue'
 defineProps(['block'])
 const ctx = inject('charCtx', {})
 const top = computed(() => ctx.topSession || null)
-const playerCount = computed(() => ctx.itemTransfers.state.playersLoaded ? ctx.itemTransfers.state.participants.length : null)
+const playerCount = computed(() => ctx.itemTransfers.state.playersLoaded ? ctx.itemTransfers.recipients.length : null)
 const eventCount = computed(() => ctx.itemTransfers.state.transfers.length)
 const anchors = new Map()
 function registerAnchor(view, component) {
@@ -52,7 +52,7 @@ onBeforeUnmount(() => anchors.forEach((element, view) => ctx.itemTransfers.unreg
 .campaign-label { flex-shrink: 0; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .campaign-name { color: var(--text-1); font-size: 18px; line-height: 1.3; font-weight: 650; text-decoration: none; overflow-wrap: anywhere; }
 .campaign-name:hover { color: var(--accent); }
-.campaign-actions { display: flex; justify-content: space-between; gap: 12px; padding: 0 4px 4px 0; }
+.campaign-actions { display: flex; justify-content: flex-start; gap: 12px; padding: 0 4px 4px 0; }
 .campaign-action { position: relative; flex: 0 0 48px; }
 .campaign-symbol { flex: 0 0 24px; width: 24px; height: 24px; }
 .campaign-count { position: absolute; right: -5px; bottom: -5px; min-width: 21px; box-sizing: border-box; border: 2px solid var(--surface); border-radius: var(--r-pill); background: var(--surface-raised); color: var(--text-2); padding: 1px 5px; font-size: 10px; line-height: 15px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; pointer-events: none; }

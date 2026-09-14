@@ -13,6 +13,7 @@ import (
 // SessionEvent is a user-facing event in a game session timeline.
 // Item transfer events update their status in place; other events are append-only.
 type SessionEvent struct {
+	RecipientImageURL    *string         `json:"recipientImageUrl,omitempty"`
 	SessionOwnerUserID   int64           `json:"sessionOwnerUserId"`
 	RecipientUserID      *int64          `json:"recipientUserId,omitempty"`
 	ClientActionID       *string         `json:"clientActionId,omitempty"`
@@ -52,7 +53,7 @@ const sessionEventSelect = `
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.actor_item_id,
 	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
-	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, transfer_recipient.user_id
+	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, transfer_recipient.user_id, COALESCE(recipient_icon.url, transfer_recipient.data #>> '{values,ava,url}')
 	FROM dndshare.session_event e
 	JOIN dndshare.users event_author ON event_author.id = e.author_user_id
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
@@ -64,6 +65,7 @@ const sessionEventSelect = `
 	LEFT JOIN dndshare.svg_storage actor_svg ON actor_svg.id = actor_item.icon_svg_id
 	LEFT JOIN dndshare.item_transfer event_transfer ON event_transfer.event_id = e.id
 	LEFT JOIN dndshare."char" transfer_recipient ON transfer_recipient.id = event_transfer.recipient_char_id
+	LEFT JOIN dndshare.storage_image recipient_icon ON recipient_icon.id = transfer_recipient.icon_image_id AND recipient_icon.deleted = false
 	WHERE e.deleted = false`
 
 func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
@@ -74,7 +76,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorName, &event.AuthorIsSessionOwner,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
 		&event.ActorItemID, &event.ActorImageURL, &event.ActorSVG,
-		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt, &event.ClientActionID, &event.SessionOwnerUserID, &event.RecipientUserID,
+		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt, &event.ClientActionID, &event.SessionOwnerUserID, &event.RecipientUserID, &event.RecipientImageURL,
 	)
 	if len(actorData) > 0 {
 		event.ActorData = json.RawMessage(actorData)

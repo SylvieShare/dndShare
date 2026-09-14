@@ -1,7 +1,7 @@
 <template>
   <AppModalFrame v-if="state.view === 'send'" title="Передать другому игроку" :width="520" :z-index="3400" close-label="Закрыть"
     :dismissible="!state.busy" :show-close="!state.busy" @close="controller.close">
-    <CharacterTransferContent :controller="controller" :character-uuid="characterUuid" />
+    <CharacterTransferContent :controller="controller" :character-uuid="characterUuid" @view-item="openItem" />
     <template #footer>
       <ActionButton :disabled="state.busy || state.loading || !state.recipient" @click="controller.send">{{ state.busy ? 'Передача…' : 'Передать' }}</ActionButton>
       <ActionButton variant="quiet" :disabled="state.busy" @click="controller.close">Закрыть</ActionButton>
@@ -14,17 +14,21 @@
         <strong>{{ title }}</strong>
         <RemoveButton label="Закрыть" :disabled="state.busy" @click="controller.close" />
       </div>
-      <CharacterTransferContent :controller="controller" :character-uuid="characterUuid" />
+      <CharacterTransferContent :controller="controller" :character-uuid="characterUuid" @view-item="openItem" />
     </div>
   </BasePopover>
+  <ItemViewModal v-if="viewedItem" :item-id="viewedItem.id" :item="viewedItem.item" :item-type-id="viewedItem.typeId" :instance="viewedItem.entry" :z-index="3600" @close="viewedItem = null" />
 </template>
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import { ActionButton, AppModalFrame, BasePopover, RemoveButton } from '@sylvieshare/share-ui'
 import CharacterTransferContent from './CharacterTransferContent.vue'
+import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
+const viewedItem = ref(null)
+function openItem(item) { props.controller.close(); viewedItem.value = item }
 const state = computed(() => props.controller.state)
-const title = computed(() => state.value.view === 'players' ? 'Игроки сессии' : 'События')
+const title = computed(() => state.value.view === 'players' ? 'Другие игроки' : 'События')
 const popoverOpen = computed(() => ['players', 'events'].includes(state.value.view))
 const popoverContent = ref(null)
 watch(() => state.value.view, async (view, previous) => {

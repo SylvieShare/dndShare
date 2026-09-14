@@ -59,6 +59,8 @@ func TestItemTransfersPostgres(t *testing.T) {
  INSERT INTO dndshare.session_participant VALUES(1,1,1),(1,2,2),(2,3,3);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaItemTransfersSQL)
+	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
+ UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
 	current := func(id int64) transferCharacter {
 		t.Helper()
@@ -101,6 +103,9 @@ func TestItemTransfersPostgres(t *testing.T) {
 	}
 	transfer := <-results
 	retry := <-results
+	if transfer.SenderImageURL == nil || *transfer.SenderImageURL != "/sender.png" {
+		t.Fatalf("sender icon: %+v", transfer)
+	}
 	if transfer.ID != retry.ID {
 		t.Fatal("retry created another transfer")
 	}
@@ -150,7 +155,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 		}
 	}
 	updates, err := s.SessionTransferEventUpdates(ctx, 1, 3, transfer.EventID)
-	if err != nil || len(updates) != 1 || !strings.Contains(string(updates[0].Data), `"accepted"`) {
+	if err != nil || len(updates) != 1 || updates[0].RecipientImageURL == nil || *updates[0].RecipientImageURL != "/recipient.png" || !strings.Contains(string(updates[0].Data), `"accepted"`) {
 		t.Fatalf("chronicle status: %+v %v", updates, err)
 	}
 	var eventCount int

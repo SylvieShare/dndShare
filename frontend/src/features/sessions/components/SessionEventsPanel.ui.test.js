@@ -63,6 +63,19 @@ describe('session chronicle presentation', () => {
     expect(html).not.toContain('Осталось')
     expect(html).not.toContain('event-entity-actions--nested')
   })
+  it.each(['pending', 'accepted', 'rejected'])('shows the transfer recipient and a colored status for %s', async status => {
+    const row = { ...rows[0], type: 'item_transfer', action: 'Передача: Посох', recipientImageUrl: '/recipient.png',
+      data: { source: { itemId: 42, name: 'Посох' }, senderName: 'Лиора', recipientName: 'Торин', status, count: 2 } }
+    const app = createSSRApp({ render: () => h(SessionEventActorGroup, { group: groupSessionEvents([row])[0], items: {} }) })
+    app.use(createPinia())
+    const html = await renderToString(app)
+    const detail = html.slice(html.indexOf('class="event-transfer"'))
+    expect(detail).toContain('/recipient.png')
+    expect(detail).toContain('Торин')
+    expect(detail).not.toContain('Лиора')
+    expect(detail).toContain(`transfer-status--${status}`)
+    expect(detail).toContain('×2')
+  })
   it('keeps filter controls, empty states and vertical scrolling available', () => {
     expect(source).toContain('<BasePopover v-model:open="filterOpen"')
     expect(source).toContain('<MultiToggle v-model="authorFilter"')

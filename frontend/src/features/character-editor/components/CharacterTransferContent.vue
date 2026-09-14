@@ -3,12 +3,12 @@
       <p v-if="state.error" class="transfer-error" role="alert">{{ state.error }}</p>
       <LoadingIndicator v-if="state.loading" label="Загрузка игроков" />
       <template v-else-if="state.view === 'players'">
-        <div v-for="player in state.participants" :key="player.charUuid" class="transfer-player">
+        <div v-for="player in controller.recipients" :key="player.charUuid" class="transfer-player">
           <img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" class="transfer-avatar" />
           <span v-else class="transfer-initial" aria-hidden="true">{{ (pvName(player) || '?').slice(0, 1) }}</span>
-          <span>{{ pvName(player) || 'Без имени' }}<small v-if="player.charUuid === characterUuid">Ваш персонаж</small></span>
+          <span>{{ pvName(player) || 'Без имени' }}</span>
         </div>
-        <p v-if="!state.participants.length" class="transfer-hint">Участников пока нет.</p>
+        <p v-if="!controller.recipients.length" class="transfer-hint">Других игроков пока нет.</p>
       </template>
       <template v-else-if="state.view === 'send'">
         <p class="transfer-item">{{ state.selection?.name }}<span v-if="state.selection?.count > 1"> ×{{ state.selection.count }}</span></p>
@@ -23,9 +23,13 @@
       </template>
       <template v-else>
         <p v-if="!state.transfers.length" class="transfer-hint">Незавершённых событий нет.</p>
-        <BaseTile v-for="transfer in state.transfers" :key="transfer.id" class="transfer-event">
-          <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
-          <span class="transfer-hint">{{ transfer.senderName }} → {{ transfer.recipientName }}</span>
+        <article v-for="transfer in state.transfers" :key="transfer.id" class="transfer-event">
+          <TransferPerson :name="transfer.senderName" :image-url="senderImage(transfer)" />
+          <button type="button" class="transfer-reference" @click="emit('view-item', itemView(transfer))">
+            <ItemIcon v-if="artwork(transfer)?.iconImageUrl || artwork(transfer)?.svg" :item="artwork(transfer)" :size="32" />
+            <Package v-else :size="32" :stroke-width="1.5" aria-hidden="true" />
+            <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
+          </button>
           <template v-if="transfer.recipientCharUuid === characterUuid">
             <span class="transfer-hint">Ожидает вашего решения</span>
             <div class="transfer-actions">
@@ -37,26 +41,58 @@
             <span class="transfer-hint">Ожидает принятия</span>
             <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">Отозвать передачу</ActionButton>
           </template>
-        </BaseTile>
+        </article>
       </template>
     </div>
 </template>
 <script setup>
-import { computed } from 'vue'
-import { ActionButton, BaseTile, FormField, FormSelect, LoadingIndicator } from '@sylvieshare/share-ui'
+import { computed, ref, watch } from 'vue'
+import { Package } from '@lucide/vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
+import { itemsApi } from '@/shared/api/itemsApi'
+import { ActionButton, FormField, FormSelect, LoadingIndicator } from '@sylvieshare/share-ui'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
+const emit = defineEmits(['view-item'])
 const state = computed(() => props.controller.state)
+const items = ref({})
+const itemId = transfer => Number(transfer.entry?.magic_item_id || transfer.entry?.item_id) || null
+const artwork = transfer => items.value[itemId(transfer)]
+function senderImage(transfer) {
+  return transfer.senderImageUrl || pvAvatar(state.value.participants.find(player => player.charUuid === transfer.senderCharUuid)) || ''
+}
+function itemView(transfer) {
+  const id = itemId(transfer)
+  const typeId = { weapon: 1, items: 2, potions: 10 }[transfer.source] || 2
+  const item = id ? artwork(transfer) || null : { name: transfer.itemName, typeId, data: transfer.entry?.override || {} }
+  return { id, item, typeId: item?.typeId || typeId, entry: transfer.entry }
+}
+watch(() => [...new Set(state.value.transfers.map(itemId).filter(Boolean))].join(','), async (key, _, onCleanup) => {
+  let active = true
+  onCleanup(() => { active = false })
+  const missing = key.split(',').filter(id => id && !items.value[id])
+  if (!missing.length) return
+  try {
+    const response = await itemsApi.byIds(missing)
+    if (active) items.value = { ...items.value, ...Object.fromEntries((response.items || []).map(item => [item.id, item])) }
+  } catch { /* The reference dialog can retry loading; the item keeps a package icon. */ }
+}, { immediate: true })
 </script>
 <style scoped>
 .transfer-content { display: flex; flex-direction: column; gap: 16px; }
 .transfer-content p { margin: 0; }
 .transfer-player { display: flex; align-items: center; gap: 12px; overflow-wrap: anywhere; }
-.transfer-player small { display: block; color: var(--text-muted); font-size: 12px; }
 .transfer-avatar, .transfer-initial { width: 44px; height: 44px; flex: 0 0 44px; object-fit: cover; }
 .transfer-initial { display: grid; place-items: center; color: var(--accent); font-size: 24px; }
 .transfer-item { font-size: 18px; font-weight: 650; overflow-wrap: anywhere; }
-.transfer-event { display: flex; flex-direction: column; gap: 8px; padding: 14px; overflow-wrap: anywhere; }
+.transfer-event { display: flex; flex-direction: column; gap: 10px; overflow-wrap: anywhere; }
+.transfer-event + .transfer-event { border-top: 1px solid var(--border); padding-top: 16px; }
+.transfer-reference { display: flex; align-items: center; gap: 9px; min-width: 0; border: 0; padding: 0; background: none; color: var(--text-1); font: inherit; text-align: left; cursor: pointer; }
+.transfer-reference > svg { flex: 0 0 32px; color: var(--accent-soft); }
+.transfer-reference strong { min-width: 0; overflow-wrap: anywhere; font-size: 14px; text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 4px; }
+.transfer-reference:hover { color: var(--accent-soft); }
+.transfer-reference:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--r-sm); }
 .transfer-hint { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
 .transfer-error { color: var(--danger); }
 .transfer-actions { display: flex; flex-wrap: wrap; gap: 8px; }

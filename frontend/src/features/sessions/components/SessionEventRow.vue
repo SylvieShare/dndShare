@@ -12,7 +12,13 @@
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
         </div>
-        <div v-if="details" class="event-details">{{ details }}</div>
+        <div v-if="event.type === 'item_transfer'" class="event-transfer">
+          <ArrowRight :size="17" aria-label="Кому" />
+          <TransferPerson :name="event.data?.recipientName" :image-url="event.recipientImageUrl" />
+          <span v-if="event.data?.count > 1">×{{ event.data.count }}</span>
+          <TransferStatus :status="event.data?.status" />
+        </div>
+        <div v-else-if="details" class="event-details">{{ details }}</div>
         <div v-if="event.data?.resourceChanges?.length" class="event-resources">
           <span v-for="(change, i) in event.data.resourceChanges" :key="i" class="event-resource" :class="change.delta < 0 ? 'event-resource--spent' : 'event-resource--added'">
             <b>{{ change.delta < 0 ? '−' : '+' }}</b>
@@ -27,6 +33,9 @@
 </template>
 <script setup>
 import { computed } from 'vue'
+import { ArrowRight } from '@lucide/vue'
+import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
+import TransferStatus from '@/features/item-transfers/components/TransferStatus.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SessionEventIcon from './SessionEventIcon.vue'
@@ -49,6 +58,7 @@ const details = computed(() => sessionEventDetails(props.event))
 .event-heading time { flex: none; margin-left: auto; color: var(--text-muted); font-size: 10px; font-variant-numeric: tabular-nums; }
 .event-details, .event-adjustment { color: var(--text-muted); font-size: 11px; overflow-wrap: anywhere; }
 .event-adjustment { color: var(--success); }
+.event-transfer { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: var(--text-muted); font-size: 12px; }
 .event-resources { display: flex; flex-wrap: wrap; gap: 6px; }
 .event-resource { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 4px 8px; border: 1px solid currentColor; border-radius: var(--r-sm); font-size: 11px; }
 .event-resource--spent { color: var(--danger); }
