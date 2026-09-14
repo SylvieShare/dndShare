@@ -76,20 +76,23 @@ type rawPublicEncounter struct {
 }
 
 type rawPublicCombatant struct {
-	UID          string         `json:"uid"`
-	Type         string         `json:"type"`
-	CharID       int64          `json:"charId"`
-	ItemID       *int64         `json:"itemId"`
-	Position     string         `json:"position"`
-	Initiative   *int           `json:"initiative"`
-	TieBreak     int            `json:"tieBreak"`
-	Surprised    bool           `json:"surprised"`
-	Side         string         `json:"side"`
-	IconColor    *string        `json:"iconColor"`
-	MarkerLetter *string        `json:"markerLetter"`
-	HPCurrent    *float64       `json:"hpCurrent"`
-	States       []int64        `json:"states"`
-	Override     map[string]any `json:"override"`
+	UID             string   `json:"uid"`
+	Type            string   `json:"type"`
+	CharID          int64    `json:"charId"`
+	ItemID          *int64   `json:"itemId"`
+	Position        string   `json:"position"`
+	Initiative      *int     `json:"initiative"`
+	TieBreak        int      `json:"tieBreak"`
+	Surprised       bool     `json:"surprised"`
+	Side            string   `json:"side"`
+	IconColor       *string  `json:"iconColor"`
+	MarkerLetter    *string  `json:"markerLetter"`
+	HPCurrent       *float64 `json:"hpCurrent"`
+	EffectInstances []struct {
+		EffectID int64 `json:"effect_id"`
+	} `json:"effectInstances"`
+	States   []int64        `json:"states"`
+	Override map[string]any `json:"override"`
 }
 
 func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request) {
@@ -136,6 +139,9 @@ func (s *Server) handleGetPublicEncounter(w http.ResponseWriter, r *http.Request
 		}
 		if combatant.Position == "combat" {
 			stateIDs = append(stateIDs, combatant.States...)
+			for _, effect := range combatant.EffectInstances {
+				stateIDs = append(stateIDs, effect.EffectID)
+			}
 			if combatant.Type == "player" {
 				stateIDs = append(stateIDs, participantStateIDs(participantsByID[combatant.CharID])...)
 			}
@@ -285,7 +291,10 @@ func buildPublicCombatant(raw rawPublicCombatant, participant store.SessionParti
 		}
 		result.Health = encounterHealth(current, maximum, maximum > 0, showHealth)
 		result.turnEligible = result.turnEligible && current > 0
-		stateIDs = raw.States
+		stateIDs = append([]int64{}, raw.States...)
+		for _, effect := range raw.EffectInstances {
+			stateIDs = append(stateIDs, effect.EffectID)
+		}
 	}
 	if strings.TrimSpace(result.Name) == "" {
 		result.Name = "Без имени"

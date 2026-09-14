@@ -15,7 +15,7 @@ export function weaponDamageActionExpression({
   const base = baseExpression && baseExpression !== '0' ? String(baseExpression) : ''
   const formula = weaponDamageActionFormula(action, critical)
   const extra = formula ? `${formula}${damageTypeLabel(action.damage_type_label || damageType, action.damage_type_color || damageTypeColor)}` : ''
-  return [base, extra].filter(Boolean).join('+')
+  return [base, extra].filter(Boolean).join('+').replace(/\+-/g, '-')
 }
 
 /** Combine independent extras once; the base weapon expression is already critical-aware. */

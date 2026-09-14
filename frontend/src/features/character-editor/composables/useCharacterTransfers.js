@@ -92,10 +92,10 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     } finally { state.busy = false }
   }
   const potions = usePotionApplications({ uuid, version, mutate, state, isOwner })
-  async function send(source, entry, recipientCharUuid, purpose = 'transfer') {
-    if (!isOwner.value || state.busy || !session.value || !recipients.value.some(p => p.charUuid === recipientCharUuid)) return false
-    let optionKey = ''
-    if (purpose === 'use') {
+  async function send(source, entry, recipientCharUuid, purpose = 'transfer', selectedOption = '') {
+    if (!isOwner.value || state.busy || !session.value || !(recipients.value.some(p => p.charUuid === recipientCharUuid) || (purpose === 'use' && recipientCharUuid === 'dm'))) return false
+    let optionKey = selectedOption
+    if (purpose === 'use' && source === 'potions') {
       try { optionKey = await potions.choose(entry) } catch (error) { state.error = error.message; return false }
       if (optionKey === null) return false
     }

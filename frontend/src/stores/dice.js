@@ -95,6 +95,11 @@ export const useDiceStore = defineStore('dice', () => {
 
   function roll(action, expression, opts = {}) {
     const result = rollDiceExpression(expression)
+    if (Number.isFinite(opts.minimumTotal) && result.total < opts.minimumTotal) {
+      result.adjustments = [{ label: 'Минимальный урон', original: result.total, value: opts.minimumTotal }]
+      result.total = opts.minimumTotal
+      result.byType = [{ label: null, color: null, value: result.total }]
+    }
     const outcome = opts.crit_mode ? detectOutcome(result, opts.critical_threshold) : null
     return pushEntry({
       action,

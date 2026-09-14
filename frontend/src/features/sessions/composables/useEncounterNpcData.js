@@ -1,3 +1,7 @@
+import { collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
+import { derivedRollEffects, matchingDerivedEffects } from '@/features/character-editor/lib/characterDerivedEffects'
+import { resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
+import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { ref } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { normalizedEncounterLetter } from '@/features/sessions/lib/encounterHelpers'
@@ -12,11 +16,7 @@ export function useEncounterNpcData() {
   }
 
   async function ensureNpcItems(combatants) {
-    const ids = [...new Set(
-      (combatants || [])
-        .filter(c => c.type === 'npc' && c.itemId != null && !npcItemCache.value[c.itemId])
-        .map(c => c.itemId)
-    )]
+    const ids = [...new Set((combatants || []).filter(c => c.type === 'npc').flatMap(c => [c.itemId, ...(c.effectInstances || []).map(row => row.effect_id)]).filter(id => id != null && !npcItemCache.value[id]))]
     if (!ids.length) return
     const res = await itemsApi.byIds(ids).catch(() => null)
     const items = res?.items || []
@@ -26,6 +26,11 @@ export function useEncounterNpcData() {
     npcItemCache.value = next
   }
 
+  function effects(c) { return collectStatusDerivedEffects({ states: c?.effectInstances || [] }, new Map(Object.entries(npcItemCache.value))) }
+  function npcRollEffects(c, context) {
+    const rules = effects(c)
+    return { mode: resolveRollMode('auto', derivedRollEffects(rules, context)).mode, formula: matchingDerivedEffects(rules, 'roll_bonus', context).map(row => row.formula).join('+') }
+  }
   function npcItem(c) {
     if (!c || c.type !== 'npc' || c.itemId == null) return null
     return npcItemCache.value[c.itemId] || null
@@ -38,7 +43,12 @@ export function useEncounterNpcData() {
       ...(it.combat || {}),
       ...(it.stats || {}),
     }
-    return { ...flat, ...(c?.override || {}) }
+    const result = { ...flat, ...(c?.override || {}) }
+    for (const rule of effects(c)) if (rule.kind === 'ability_minimum') for (const id of rule.ability_ids || []) {
+      const key = SUGGEST16_TO_STAT[id]?.toLowerCase()
+      if (key) result[key] = Math.max(Number(result[key]) || 0, Number(rule.value) || 0)
+    }
+    return result
   }
 
   function npcName(c) {
@@ -55,7 +65,7 @@ export function useEncounterNpcData() {
 
   function npcAc(c) {
     const v = npcData(c).ac
-    return v == null || v === '' ? null : v
+    return v == null || v === '' ? null : Number(v) + effects(c).filter(row => row.kind === 'armor_bonus').reduce((sum, row) => sum + (Number(row.value) || 0), 0)
   }
 
   function npcHpMax(c) {
@@ -91,6 +101,7 @@ export function useEncounterNpcData() {
 
   return {
     npcItemCache,
+    npcRollEffects,
     cacheItem,
     ensureNpcItems,
     npcItem,

@@ -52,7 +52,7 @@ function meta(status) {
   const instanceLevel = Number(status.params?.level ?? status.item?.data?.level) || 0
   const level = instanceLevel > 0 ? ` · уровень ${instanceLevel}` : ''
   const source = status.source?.label ? ` · ${status.source.label}` : status.source?.kind === 'manual' ? ' · добавлен вручную' : ''
-  const concentration = status.concentration ? ' · концентрация' : ''
+  const concentration = status.concentration ? ' · концентрация' : status.requires_concentration ? ' · концентрация отправителя' : ''
   return `${polarity}${level}${source}${concentration}`
 }
 </script>

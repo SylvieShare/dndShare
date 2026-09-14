@@ -1018,3 +1018,5 @@ published through MCP; chosen references remain in `values.abilities_class`.
 Миграция также расширяет схемы зелий (`consumption`, `status_effects`) и эффектов
 (кости к броску, множитель скорости, минимум характеристики). Наполнение
 справочника выполняется отдельно через `scripts/potion-rules/apply.py` и MCP.
+
+Миграция 121 (`application_targets`): у `item_transfer` nullable `recipient_char_id` означает адресацию мастеру только для применения; источник `spells` разрешён для эффектов заклинаний. `resolved_target` хранит выбранного игрока или NPC. Новые поля схемы эффектов описывают урон по ходам, цель-оружие, связанный урон и завершение. В JSON боя `effectInstances` содержат экземпляры NPC, `applicationRevision` защищает серверное применение от устаревшего сохранения.

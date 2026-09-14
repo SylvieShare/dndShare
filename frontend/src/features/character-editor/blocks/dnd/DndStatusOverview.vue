@@ -99,7 +99,7 @@ const activeItems = computed(() => statuses.value.map(status => ({
   adjustableLevel: Number(status.item?.data?.level) > 0,
   maxLevel: Math.max(0, Number(status.item?.data?.max_level) || 0),
   polarity: status.polarity,
-  duration: statusDuration(status.duration),
+  duration: statusDuration(status.duration) + (status.requires_concentration && status.concentration_owner ? ' · концентрация отправителя' : ''),
 })))
 const durationStatus = computed(() => statuses.value.find(status => status.uid === durationUid.value))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })

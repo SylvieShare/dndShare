@@ -37,7 +37,7 @@ export function useWeaponDamageRolls(charCtx, calc) {
     if (!calc.spend(roll.actions, actionKeys, actionAmounts)) return
     const labels = selectedDamageActions(roll.selectedActions, actionKeys).map(action => action.label || action.source_label)
     const title = `${critical ? 'Критический урон' : 'Урон'}${roll.twoHanded ? ' (2р)' : ''}: ${calc.itemTitle(roll.entry)}${labels.length ? ` — ${labels.join(', ')}` : ''}`
-    const result = dice.roll(title, roll.expr, { log: !roll.use, eventData: itemEventData({ ...calc.item(entry), id: entry.magic_item_id || entry.item_id || calc.item(entry)?.id }, entry.uid) })
+    const result = dice.roll(title, roll.expr, { minimumTotal: 0, log: !roll.use, eventData: itemEventData({ ...calc.item(entry), id: entry.magic_item_id || entry.item_id || calc.item(entry)?.id }, entry.uid) })
     if (roll.use) {
       charCtx.updateValues(completeWeaponUseStep(values(), entry.uid, roll.use.eventId, roll.use.stepKey, result, critical))
       charCtx.logSessionEvent?.({ type: 'dice_roll', action: title, data: { ...itemEventData({ ...calc.item(entry), id: entry.magic_item_id || entry.item_id || calc.item(entry)?.id }, entry.uid), result, weaponUseId: roll.use.eventId, stepKey: roll.use.stepKey } })

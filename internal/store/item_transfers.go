@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5"
 )
 
 type ItemTransfer struct {
+	AddressedToDM      bool            `json:"addressedToDm"`
+	ResolvedTarget     json.RawMessage `json:"resolvedTarget"`
 	Application        json.RawMessage `json:"application"`
 	ApplicationResult  json.RawMessage `json:"applicationResult"`
 	Purpose            string          `json:"purpose"`
@@ -35,11 +36,11 @@ type ItemTransfer struct {
 	ResolvedAt         *time.Time      `json:"resolvedAt,omitempty"`
 }
 
-const itemTransferSelect = `SELECT t.id, t.session_id, t.event_id, t.sender_char_id, t.recipient_char_id,
- sender.uuid::text, recipient.uuid::text, t.sender_name, t.recipient_name,
- t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}'), transfer_event.author_user_id, recipient.user_id, transfer_session.owner_user_id, t.purpose, t.application, t.application_result
+const itemTransferSelect = `SELECT t.id, t.session_id, t.event_id, t.sender_char_id, COALESCE(t.recipient_char_id,0),
+ sender.uuid::text, COALESCE(recipient.uuid::text,''), t.sender_name, t.recipient_name,
+ t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}'), transfer_event.author_user_id, COALESCE(recipient.user_id,transfer_session.owner_user_id), transfer_session.owner_user_id, t.purpose, t.application, t.application_result, t.recipient_char_id IS NULL, t.resolved_target
  FROM dndshare.item_transfer t JOIN dndshare."char" sender ON sender.id=t.sender_char_id
- JOIN dndshare."char" recipient ON recipient.id=t.recipient_char_id
+ LEFT JOIN dndshare."char" recipient ON recipient.id=t.recipient_char_id
  JOIN dndshare.session_event transfer_event ON transfer_event.id=t.event_id
  JOIN dndshare."session" transfer_session ON transfer_session.id=t.session_id
  LEFT JOIN dndshare.storage_image sender_icon ON sender_icon.id=sender.icon_image_id AND sender_icon.deleted=false`
@@ -48,7 +49,7 @@ func scanItemTransfer(row pgx.Row) (ItemTransfer, error) {
 	var t ItemTransfer
 	err := row.Scan(&t.ID, &t.SessionID, &t.EventID, &t.SenderCharID, &t.RecipientCharID,
 		&t.SenderCharUUID, &t.RecipientCharUUID, &t.SenderName, &t.RecipientName, &t.ItemName,
-		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt, &t.SenderImageURL, &t.AuthorUserID, &t.RecipientUserID, &t.SessionOwnerUserID, &t.Purpose, &t.Application, &t.ApplicationResult)
+		&t.Source, &t.Entry, &t.Status, &t.CreatedAt, &t.ResolvedAt, &t.SenderImageURL, &t.AuthorUserID, &t.RecipientUserID, &t.SessionOwnerUserID, &t.Purpose, &t.Application, &t.ApplicationResult, &t.AddressedToDM, &t.ResolvedTarget)
 	if errors.Is(err, pgx.ErrNoRows) {
 		err = ErrNotFound
 	}
@@ -98,7 +99,11 @@ func lockTransferCharacters(ctx context.Context, tx pgx.Tx, senderID, recipientI
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	if len(result) != 2 {
+	expected := 2
+	if recipientID == 0 || senderID == recipientID {
+		expected = 1
+	}
+	if len(result) != expected {
 		return nil, ErrNotFound
 	}
 	return result, nil
@@ -182,7 +187,11 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	if err != nil {
 		return ItemTransfer{}, err
 	}
-	if count != 2 {
+	expected := 2
+	if recipientID == 0 {
+		expected = 1
+	}
+	if count != expected {
 		return ItemTransfer{}, ErrNotFound
 	}
 	doc, err := decodeTransferDocument(sender.Data)
@@ -190,7 +199,12 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 		return ItemTransfer{}, err
 	}
 	var entry map[string]any
-	if purpose == "use" {
+	if source == "spells" {
+		if !ownsApplicationSpell(doc.values()["spells"], number(uid)) {
+			return ItemTransfer{}, ErrNotFound
+		}
+		entry = map[string]any{"uid": uid, "item_id": number(uid)}
+	} else if purpose == "use" {
 		entry, err = doc.takePotionDose(uid)
 	} else {
 		entry, err = doc.take(source, uid)
@@ -200,7 +214,11 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	}
 	plan := ApplicationPlan{}
 	if purpose == "use" {
-		plan, err = buildPotionApplication(ctx, tx, entry, option, userID)
+		expectedType := 10
+		if source == "spells" {
+			expectedType = 5
+		}
+		plan, err = buildCatalogueApplication(ctx, tx, entry, option, userID, expectedType)
 		if err != nil {
 			return ItemTransfer{}, err
 		}
@@ -224,7 +242,7 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	}
 	name = truncateRunes(name, 160)
 	raw, _ := json.Marshal(entry)
-	eventData, _ := json.Marshal(map[string]any{"purpose": purpose, "status": "pending", "senderName": characterName(sender.Data), "recipientName": characterName(recipient.Data), "source": map[string]any{"itemId": itemID, "name": name}, "count": entry["count"], "application": plan})
+	eventData, _ := json.Marshal(map[string]any{"purpose": purpose, "status": "pending", "senderName": characterName(sender.Data), "recipientName": applicationRecipientName(recipientID, recipient.Data), "source": map[string]any{"itemId": itemID, "name": name}, "count": entry["count"], "application": plan, "addressedToDm": recipientID == 0})
 	action := "Передача: " + name
 	if purpose == "use" {
 		action = "Применение: " + name
@@ -237,12 +255,14 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	}
 	var id int64
 	err = tx.QueryRow(ctx, `INSERT INTO dndshare.item_transfer(session_id,sender_char_id,recipient_char_id,client_action_id,event_id,source,entry,item_name,sender_name,recipient_name,purpose,application)
- VALUES($1,$2,$3,$4::uuid,$5,$6,CAST($7 AS jsonb),$8,$9,$10,$11,CAST($12 AS jsonb)) RETURNING id`, sessionID, senderID, recipientID, actionID, eventID, source, json.RawMessage(raw), name, characterName(sender.Data), characterName(recipient.Data), purpose, json.RawMessage(application)).Scan(&id)
+ VALUES($1,$2,NULLIF($3,0),$4::uuid,$5,$6,CAST($7 AS jsonb),$8,$9,$10,$11,CAST($12 AS jsonb)) RETURNING id`, sessionID, senderID, recipientID, actionID, eventID, source, json.RawMessage(raw), name, characterName(sender.Data), applicationRecipientName(recipientID, recipient.Data), purpose, json.RawMessage(application)).Scan(&id)
 	if err != nil {
 		return ItemTransfer{}, err
 	}
-	if err = saveTransferDocument(ctx, tx, senderID, doc); err != nil {
-		return ItemTransfer{}, err
+	if source != "spells" {
+		if err = saveTransferDocument(ctx, tx, senderID, doc); err != nil {
+			return ItemTransfer{}, err
+		}
 	}
 	transfer, err := scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+` WHERE t.id=$1`, id))
 	if err != nil {
@@ -252,110 +272,10 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 }
 
 func (s *Store) ResolveItemTransfer(ctx context.Context, userID, charID, transferID int64, accept bool) (ItemTransfer, error) {
-	return s.resolveItemTransfer(ctx, userID, charID, transferID, 0, accept)
+	return s.resolveItemTransfer(ctx, userID, charID, transferID, 0, accept, ApplicationTarget{})
 }
 
 // ApproveSessionTransfer lets the session owner accept an offer by its chronicle event.
 func (s *Store) ApproveSessionTransfer(ctx context.Context, userID, sessionID, eventID int64) (ItemTransfer, error) {
-	return s.resolveItemTransfer(ctx, userID, 0, eventID, sessionID, true)
-}
-
-func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, sessionID int64, accept bool) (ItemTransfer, error) {
-	tx, err := s.pool.Begin(ctx)
-	if err != nil {
-		return ItemTransfer{}, err
-	}
-	defer tx.Rollback(ctx)
-	where := ` WHERE t.id=$1`
-	if sessionID != 0 {
-		where = ` WHERE t.event_id=$1`
-	}
-	t, err := scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+where, id))
-	if err != nil {
-		return t, err
-	}
-	chars, err := lockTransferCharacters(ctx, tx, t.SenderCharID, t.RecipientCharID)
-	if err != nil {
-		return t, err
-	}
-	// Match creation's character -> request lock order, including concurrent retries.
-	t, err = scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+where+` FOR UPDATE OF t`, id))
-	if err != nil {
-		return t, err
-	}
-	// Session approval is separate from the recipient/sender character operation.
-	if sessionID != 0 {
-		if t.SessionID != sessionID || t.SessionOwnerUserID != userID {
-			return t, ErrNotFound
-		}
-	} else {
-		if charID != t.RecipientCharID && (accept || charID != t.SenderCharID) {
-			return t, ErrNotFound
-		}
-		if chars[charID].UserID != userID {
-			return t, ErrNotFound
-		}
-	}
-	status := "rejected"
-	destination := t.SenderCharID
-	if accept {
-		status = "accepted"
-		destination = t.RecipientCharID
-	}
-	if t.Status == status {
-		return t, tx.Commit(ctx)
-	}
-	if t.Status != "pending" {
-		return t, ErrItemTransferConflict
-	}
-	doc, err := decodeTransferDocument(chars[destination].Data)
-	if err != nil {
-		return t, err
-	}
-	var entry map[string]any
-	if err = json.Unmarshal(t.Entry, &entry); err != nil {
-		return t, err
-	}
-	result := ApplicationResult{}
-	if t.Purpose == "use" {
-		if accept {
-			var plan ApplicationPlan
-			if err = json.Unmarshal(t.Application, &plan); err != nil {
-				return t, err
-			}
-			if plan.Name == "" {
-				plan, err = buildPotionApplication(ctx, tx, entry, "", chars[t.SenderCharID].UserID)
-				if err != nil {
-					return t, err
-				}
-			}
-			result, err = applyApplicationTx(ctx, tx, doc, plan, fmt.Sprintf("transfer-%d", t.ID))
-			if err != nil {
-				return t, err
-			}
-		} else {
-			doc.returnPotionDose(entry, fmt.Sprintf("returned-use-%d", t.ID))
-		}
-	} else {
-		doc.receive(t.Source, entry, accept, fmt.Sprintf("transfer-%d", t.ID))
-	}
-	{
-		if err = saveTransferDocument(ctx, tx, destination, doc); err != nil {
-			return t, err
-		}
-	}
-	rawResult, _ := json.Marshal(result)
-	_, err = tx.Exec(ctx, `UPDATE dndshare.item_transfer SET status=$2,resolved_at=now(),application_result=CAST($3 AS jsonb) WHERE id=$1`, t.ID, status, json.RawMessage(rawResult))
-	if err != nil {
-		return t, err
-	}
-	_, err = tx.Exec(ctx, `UPDATE dndshare.session_event SET data=jsonb_set(data,'{status}',to_jsonb($2::text)) || jsonb_build_object('applicationResult',CAST($3 AS jsonb)) WHERE id=$1`, t.EventID, status, json.RawMessage(rawResult))
-	if err != nil {
-		return t, err
-	}
-	t, err = scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+` WHERE t.id=$1`, t.ID))
-	if err != nil {
-		return t, err
-	}
-	return t, tx.Commit(ctx)
+	return s.resolveItemTransfer(ctx, userID, 0, eventID, sessionID, true, ApplicationTarget{})
 }

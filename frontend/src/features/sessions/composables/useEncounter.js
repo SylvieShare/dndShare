@@ -200,6 +200,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     npcName: npcData.npcActorName,
     npcAbilityScore: npcData.npcAbilityScore,
     npcSavingThrow: npcData.npcSavingThrow,
+    npcRollEffects: npcData.npcRollEffects,
   })
 
   const npcs = useEncounterNpcs({
@@ -362,6 +363,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
   return {
     encounter,
     load,
+    async flushApplicationSave() { await persistence.flushSave(); return !persistence.saveError.value && !persistence.loadError.value },
     reviveTarget,
     reviveTargetName,
     reviveTargetMaxHp,

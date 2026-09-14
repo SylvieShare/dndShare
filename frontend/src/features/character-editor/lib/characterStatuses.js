@@ -201,7 +201,7 @@ export function collectCharacterStatuses(values, itemsById) {
     return [{
       ...instance,
       item,
-      title: item.name || 'Эффект',
+      title: `${instance.external_only ? 'Концентрация: ' : ''}${item.name || 'Эффект'}`,
       description: item.data?.desc || item.data?.description || '',
       polarity: item.data?.polarity || 'neutral',
       color: item.data?.color || (item.data?.polarity === 'negative' ? 'var(--danger)' : item.data?.polarity === 'positive' ? 'var(--success)' : 'var(--info)'),
@@ -211,10 +211,11 @@ export function collectCharacterStatuses(values, itemsById) {
 
 export function collectStatusDerivedEffects(values, itemsById) {
   return collectCharacterStatuses(values, itemsById).flatMap(status => (
-    asArray(status.item.data?.derived_effects).flatMap((rule, index) => {
-      if (!rule?.kind) return []
+    (status.item.data?.ongoing_damage && !['turn_damage', 'turn_save'].includes(status.params?.damage_phase) ? [] : asArray(status.item.data?.derived_effects)).flatMap((rule, index) => {
+      if (status.external_only || !rule?.kind) return []
       const parameter = String(rule.value_parameter || '').trim()
       const targetParameter = String(rule.target_parameter || '').trim()
+      if (targetParameter && !status.params?.[targetParameter]) return []
       return [{
         ...rule,
         ...(parameter ? { value: Number(status.params?.[parameter]) || 0 } : {}),
@@ -229,7 +230,7 @@ export function collectStatusDerivedEffects(values, itemsById) {
 }
 
 export function collectStatusDefenses(values, itemsById) {
-  return collectCharacterStatuses(values, itemsById).flatMap(status => (
+  return collectCharacterStatuses(values, itemsById).filter(status => !status.external_only).flatMap(status => (
     asArray(status.item.data?.defenses).flatMap((rule, index) => {
       const damageType = Number(rule?.damage_type)
       if (!Number.isFinite(damageType)) return []
@@ -253,4 +254,16 @@ export function ownedAbilityStatusSource(valueId, entry, item) {
     entry_key: entryKey(entry),
     label: item?.name || '',
   }
+}
+
+export function withStatusEndEffects(before, after, itemsById) {
+  let result = after
+  for (const instance of normalizeStatusInstances(before)) {
+    if (after.some(row => row.uid === instance.uid)) continue
+    const source = itemsById.get(String(instance.effect_id))
+    const endId = source?.data?.on_end_effect?.id
+    const effect = endId && itemsById.get(String(endId))
+    if (effect) result = addStatusInstance({ states: result }, effect, { source: { kind: 'effect', item_id: source.id, label: source.name } })
+  }
+  return result
 }

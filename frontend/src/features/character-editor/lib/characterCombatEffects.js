@@ -1,3 +1,4 @@
+import { collectCharacterStatuses } from './characterStatuses'
 import { itemRuleActive } from './itemRuleActivation'
 import { selectedTargetDamageRules } from './selectedTarget'
 import { weaponDamageDiceCount } from '@/shared/lib/abilityProgression'
@@ -35,7 +36,8 @@ export function collectCharacterCombatEffects(values, itemsById) {
     rollTriggers: abilityRows(values, itemsById, 'roll_triggers'),
     rollAdjustments: abilityRows(values, itemsById, 'roll_adjustments'),
     criticalDamage: abilityRows(values, itemsById, 'critical_damage'),
-    weaponDamage: [...abilityRows(values, itemsById, 'weapon_damage'), ...selectedTargetDamageRules(values, itemsById)],
+    weaponDamage: [...abilityRows(values, itemsById, 'weapon_damage'), ...selectedTargetDamageRules(values, itemsById),
+      ...collectCharacterStatuses(values, itemsById).filter(status => !status.external_only).flatMap(status => (status.item.data?.weapon_damage || []).map((rule, i) => ({ ...rule, key: `status:${status.uid}:damage:${i}`, source_label: status.title, owner_level: 1, weapon_uid: status.params?.weapon_uid })))],
   }
 }
 

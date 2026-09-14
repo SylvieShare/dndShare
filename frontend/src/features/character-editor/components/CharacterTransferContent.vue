@@ -18,7 +18,8 @@
               <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
             </button>
           </div>
-          <p v-if="transfer.purpose === 'use'" class="transfer-hint">Одна доза для {{ transfer.recipientName }}. После принятия доза будет потрачена и применится к листу.</p>
+          <p v-if="transfer.source === 'spells'" class="transfer-hint">Эффект заклинания для {{ transfer.recipientName }}. Применится после принятия; ячейка учитывается отдельно при сотворении.</p>
+          <p v-else-if="transfer.purpose === 'use'" class="transfer-hint">Одна доза для {{ transfer.recipientName }}. После принятия доза будет потрачена и применится к листу.</p>
           <template v-if="transfer.recipientCharUuid === characterUuid">
             <ApplicationSummary v-if="transfer.purpose === 'use'" :data="transfer.application || {}" />
           <div class="transfer-actions">
@@ -56,7 +57,7 @@ function senderImage(transfer) {
 }
 function itemView(transfer) {
   const id = itemId(transfer)
-  const typeId = { weapon: 1, items: 2, potions: 10 }[transfer.source] || 2
+  const typeId = { weapon: 1, items: 2, potions: 10, spells: 5 }[transfer.source] || 2
   const item = id ? artwork(transfer) || null : { name: transfer.itemName, typeId, data: transfer.entry?.override || {} }
   return { id, item, typeId: item?.typeId || typeId, entry: transfer.entry }
 }

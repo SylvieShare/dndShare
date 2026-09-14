@@ -1035,3 +1035,5 @@ TemplateBlockInner не передаёт пустые style и неисполь�
 эффекты и длительности для входящего запроса, хроники и результата применения.
 Выбор варианта и результат открываются через `AppModalFrame`; источник
 состояния формы — `usePotionApplications` в контроллере обмена листа.
+
+Применение зелий и связанных эффектов использует `ItemTransferAction` и `ApplicationSummary`. `SessionTransferApproval` открывает выбор конечной цели мастером и сбрасывает сохранение боя перед запросом. `EncounterAppliedEffects` отображает экземпляры NPC и подключает общий `StatusMechanicsMenu` через адаптер `npcApplicationContext`; отдельного меню правил яда для NPC нет. `StatusMechanicsMenu` также используется в меню состояния листа.

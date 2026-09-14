@@ -2,6 +2,7 @@ import { computed, watch } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import {
   addStatusInstance,
+  withStatusEndEffects,
   collectCharacterStatuses,
   linkedStatusActive,
   normalizeStatusInstances,
@@ -58,12 +59,13 @@ export function useCharacterStatuses(values, characterResources) {
     }))
   }
 
-  return {
+  const api = {
     entries,
     ensureItems,
     ensureCatalog,
     ensureLinks,
     links,
+    endOn(trigger) { return normalizeStatusInstances(values.value?.states).filter(row => !itemsById.value.get(String(row.effect_id))?.data?.end_on?.includes(trigger)) },
     normalized() { return normalizeStatusInstances(values.value?.states) },
     addManual(effect) { return addStatusInstance(values.value, effect, { source: { kind: 'manual' } }) },
     add(effect, options) { return addStatusInstance(values.value, effect, options) },
@@ -80,4 +82,9 @@ export function useCharacterStatuses(values, characterResources) {
     linkedActive(item, link, source) { return linkedStatusActive(values.value, item, link, source) },
     toggleLinked(effect, item, link, source) { return toggleLinkedStatus(values.value, effect, item, link, source) },
   }
+  for (const key of ['endOn', 'addManual', 'add', 'remove', 'removeEffect', 'removeByParam', 'removeBySource', 'toggleLinked']) {
+    const action = api[key]
+    api[key] = (...args) => withStatusEndEffects(values.value?.states, action(...args), itemsById.value)
+  }
+  return api
 }

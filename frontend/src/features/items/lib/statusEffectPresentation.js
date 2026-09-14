@@ -8,6 +8,9 @@ const POLARITIES = {
 }
 
 const EFFECT_TITLES = {
+  roll_bonus: 'Кости к броску',
+  speed_multiplier: 'Множитель скорости',
+  ability_minimum: 'Характеристика не ниже',
   armor_bonus: 'Класс доспеха',
   speed_bonus: 'Скорость',
   check_bonus: 'Проверки характеристик',
@@ -71,6 +74,9 @@ export function statusThesisLines(value) {
 }
 
 function ruleValue(rule) {
+  if (rule.kind === 'roll_bonus') return rule.formula || '—'
+  if (rule.kind === 'speed_multiplier') return `×${rule.value}`
+  if (rule.kind === 'ability_minimum') return String(rule.value)
   if (rule.kind === 'roll_mode') {
     return rule.mode === 'advantage' ? 'Преимущество' : rule.mode === 'disadvantage' ? 'Помеха' : 'Особый режим'
   }

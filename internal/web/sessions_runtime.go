@@ -72,6 +72,10 @@ func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
 		status = "active"
 	}
 	if err := s.store.SaveEncounterData(r.Context(), session.ID, status, meta.Round, string(raw)); err != nil {
+		if errors.Is(err, store.ErrCharacterVersion) {
+			conflict(w, "К участнику боя применён эффект. Обновите состояние боя перед редактированием.")
+			return
+		}
 		serverError(w, err)
 		return
 	}

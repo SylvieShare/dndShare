@@ -38,6 +38,8 @@ export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjus
         slotPool: spellLevel === 0 ? 'cantrip' : option.pool,
       },
     })
+    const states = charCtx.characterStatuses?.endOn?.('spell_cast')
+    if (states) charCtx.updateValues({ states })
     return true
   }
 

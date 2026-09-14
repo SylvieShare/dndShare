@@ -14,7 +14,8 @@
         </div>
         <div v-if="event.type === 'item_transfer'" class="event-transfer">
           <ArrowRight :size="17" aria-label="Кому" />
-          <TransferPerson :name="event.data?.recipientName" :image-url="event.recipientImageUrl" />
+          <TransferPerson :name="event.data?.resolvedTarget?.name || event.data?.recipientName" :image-url="event.recipientImageUrl" />
+          <b v-if="event.data?.resolvedTarget?.letter" :style="{ color: event.data.resolvedTarget.color }">{{ event.data.resolvedTarget.letter }}</b>
           <span v-if="event.data?.count > 1">×{{ event.data.count }}</span>
           <TransferStatus :purpose="event.data?.purpose" :status="event.data?.status" />
           <SessionTransferApproval :event="event" />

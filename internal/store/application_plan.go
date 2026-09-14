@@ -21,6 +21,8 @@ type ApplicationEffect struct {
 }
 type ApplicationPlan struct {
 	maximumHP   *int
+	CasterUUID  string              `json:"casterUuid,omitempty"`
+	SourceKind  string              `json:"sourceKind,omitempty"`
 	Option      string              `json:"option,omitempty"`
 	ItemID      int64               `json:"itemId"`
 	Name        string              `json:"name"`
@@ -77,6 +79,10 @@ func applicationItem(ctx context.Context, tx pgx.Tx, id int64) (string, map[stri
 // Resolve and freeze catalogue mechanics when the dose is reserved. Editing a
 // catalogue while an offer is pending must not change what the recipient accepts.
 func buildPotionApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64) (ApplicationPlan, error) {
+	return buildCatalogueApplication(ctx, tx, entry, option, userID, 10)
+}
+
+func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64, expectedType int) (ApplicationPlan, error) {
 	p := ApplicationPlan{Option: option, ItemID: int64(number(entry["item_id"])), Effects: []ApplicationEffect{}}
 	if p.ItemID == 0 {
 		p.Name = textValue(object(entry["override"])["name"])
@@ -87,10 +93,14 @@ func buildPotionApplication(ctx context.Context, tx pgx.Tx, entry map[string]any
 	if err != nil {
 		return p, err
 	}
-	if kind != 10 {
+	if kind != expectedType {
 		return p, ErrApplication
 	}
 	p.Name = name
+	p.SourceKind = "potion"
+	if expectedType == 5 {
+		p.SourceKind = "spell"
+	}
 	c := object(data["consumption"])
 	if choices := array(c["choices"]); len(choices) > 0 {
 		found := false
@@ -124,6 +134,18 @@ func buildPotionApplication(ctx context.Context, tx pgx.Tx, entry map[string]any
 		}
 	}
 	links := array(data["status_effects"])
+	if expectedType == 5 {
+		selected := []any{}
+		for _, raw := range links {
+			if textValue(object(raw)["key"]) == option {
+				selected = append(selected, raw)
+			}
+		}
+		if len(selected) != 1 {
+			return p, ErrApplication
+		}
+		links = selected
+	}
 	if own, ok := c["status_effects"].([]any); ok {
 		links = own
 	}

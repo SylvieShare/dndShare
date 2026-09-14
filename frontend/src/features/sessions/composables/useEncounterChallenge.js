@@ -62,6 +62,7 @@ export function useEncounterChallenge({
   npcName,
   npcAbilityScore,
   npcSavingThrow,
+  npcRollEffects = () => ({}),
 }) {
   const challenge = computed(() => {
     const value = encounter.value.challenge
@@ -111,10 +112,12 @@ export function useEncounterChallenge({
       const bonus = bonusFor(combatant, key, savingThrow)
       const kind = savingThrow ? 'спасбросок' : 'проверка'
       const participant = combatant.type === 'player' ? findParticipant(combatant.charId) : null
-      const roll = diceStore.roll(
+      const effects = combatant.type === 'npc' ? npcRollEffects(combatant, { kind: savingThrow ? 'saving_throw' : 'ability_check', abilitySuggestId: meta.id }) : {}
+      const roll = diceStore.rollD20(
         `${meta.label}, ${kind}`,
-        d20Expr(bonus),
+        bonus, effects.mode || 'normal',
         {
+          bonus_formula: effects.formula,
           eventData: { ability: { id: meta.id, typeId: 16, name: meta.label } },
           crit_mode: true,
           popup: false,
@@ -127,10 +130,12 @@ export function useEncounterChallenge({
       )
       const natural = roll?.parts
         ?.find(part => part.kind === 'dice' && part.sides === 20)
-        ?.rolls?.[0]
+        ?.sum
       results[combatant.uid] = {
         roll: Number(natural) || 0,
         bonus,
+        extraTotal: (Number(roll?.total) || 0) - (Number(natural) || 0) - bonus,
+        extraParts: (roll?.parts || []).filter(part => !(part.kind === 'dice' && part.sides === 20) && part.kind !== 'flat'),
         total: Number(roll?.total) || 0,
       }
     }
@@ -157,7 +162,7 @@ export function useEncounterChallenge({
     const kept = keepPrevious ? previous : extra
     const droppedIdx = keepPrevious ? 1 : 0
     const bonus = Number(currentResult.bonus) || 0
-    const total = kept + bonus
+    const total = kept + bonus + (Number(currentResult.extraTotal) || 0)
     const meta = abilityMeta(currentChallenge.ability)
     const kind = currentChallenge.savingThrow ? 'Спасбросок' : 'Проверка'
     const modeLabel = keepHigh ? 'с преимуществом' : 'с помехой'
@@ -183,6 +188,7 @@ export function useEncounterChallenge({
       })
     }
 
+    parts.push(...(currentResult.extraParts || []))
     useDiceStore().pushEntry({
       action: `${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
       eventData: { ability: { id: meta.id, typeId: 16, name: meta.label } },
@@ -212,6 +218,7 @@ export function useEncounterChallenge({
         results: {
           ...currentChallenge.results,
           [combatant.uid]: {
+            ...currentResult,
             roll: kept,
             rolls: [previous, extra],
             dropped: [droppedIdx],

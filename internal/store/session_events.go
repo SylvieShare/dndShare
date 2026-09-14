@@ -53,7 +53,7 @@ const sessionEventSelect = `
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.actor_item_id,
 	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
-	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, COALESCE(transfer_recipient.user_id, interaction_recipient.user_id), COALESCE(recipient_icon.url, interaction_recipient_icon.url, interaction_recipient.data #>> '{values,ava,url}', transfer_recipient.data #>> '{values,ava,url}')
+	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, COALESCE(transfer_recipient.user_id, interaction_recipient.user_id, CASE WHEN event_transfer.recipient_char_id IS NULL AND event_transfer.purpose='use' THEN event_session.owner_user_id END), COALESCE(recipient_icon.url, interaction_recipient_icon.url, interaction_recipient.data #>> '{values,ava,url}', transfer_recipient.data #>> '{values,ava,url}')
 	FROM dndshare.session_event e
 	JOIN dndshare.users event_author ON event_author.id = e.author_user_id
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id

@@ -43,6 +43,7 @@
         </template>
 
         <template #default="{ close }">
+          <StatusMechanicsMenu v-if="editable && item.kind === 'states' && item.item" :uid="item.id" :effect="item.item" />
           <RowActionItem v-if="item.item" action="view" tone="info" @click="select(item, close, 'view')">
             Посмотреть
           </RowActionItem>
@@ -79,6 +80,7 @@
 </template>
 
 <script setup>
+import StatusMechanicsMenu from './StatusMechanicsMenu.vue'
 import { BatteryLow, Clock3, Minus, Plus, Sparkles } from '@lucide/vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'

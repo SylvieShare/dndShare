@@ -31,6 +31,19 @@
       </div>
     </DetailSection>
 
+    <DetailSection v-if="data.ongoing_damage || data.weapon_target || data.weapon_damage?.length" label="Действия эффекта">
+      <div class="status-effect-rules">
+        <article v-if="data.ongoing_damage" class="status-effect-rule">
+          <span>Урон при употреблении и в начале хода</span>
+          <DamageFormulaPreview :expression="`${data.ongoing_damage.dice_count}${data.ongoing_damage.dice}`" />
+          <strong>Спасбросок: Сл {{ data.ongoing_damage.save_dc }}</strong>
+          <small>Первый успех снимает эффект. Последующие успехи в конце хода уменьшают урон на {{ data.ongoing_damage.decrease_on_save || 1 }} кость.</small>
+        </article>
+        <article v-if="data.weapon_target" class="status-effect-rule"><span>Цель покрытия</span><strong>Одно выбранное оружие</strong><small>До выбора оружия бонусы не действуют. Выбор фиксируется на экземпляре эффекта.</small></article>
+        <article v-for="rule in data.weapon_damage || []" :key="rule.key" class="status-effect-rule"><span>{{ rule.label || 'Урон оружия' }}</span><DamageFormulaPreview :expression="`${rule.sign === '-' ? '-' : ''}${rule.dice_count}${rule.dice}`" /><small>{{ rule.condition }}</small></article>
+      </div>
+    </DetailSection>
+    <DetailSection v-if="data.on_end_effect?.id" label="После завершения"><HandbookReferenceRows :rows="[{ id: data.on_end_effect.id }]" :z-index="nestedViewZIndex" /></DetailSection>
     <EffectSources :item-id="item.id" :z-index="nestedViewZIndex" />
 
     <DetailSection v-if="exhaustionLevels.length" label="Уровни истощения" tone="danger">
@@ -49,6 +62,8 @@
 </template>
 
 <script setup>
+import DamageFormulaPreview from '@/features/character-editor/blocks/dnd/components/DamageFormulaPreview.vue'
+import HandbookReferenceRows from '@/features/items/components/HandbookReferenceRows.vue'
 import EffectSources from '@/features/items/components/EffectSources.vue'
 import { computed, watch } from 'vue'
 import { BatteryLow, BookOpen, ListChecks, SlidersHorizontal } from '@lucide/vue'

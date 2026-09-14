@@ -7,3 +7,6 @@ var schemaPotionUseRequestsSQL string
 
 //go:embed schema/120_potion_applications.sql
 var schemaPotionApplicationsSQL string
+
+//go:embed schema/121_application_targets.sql
+var schemaApplicationTargetsSQL string

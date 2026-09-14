@@ -85,19 +85,30 @@ func applyApplication(doc transferDocument, p ApplicationPlan, uid string, roll 
 		filtered := []any{}
 		for _, raw := range states {
 			s := object(raw)
-			if e.Concentration && s["concentration"] == true {
+			if e.Concentration && p.CasterUUID == "" && s["concentration"] == true {
 				continue
 			}
 			if e.Data["stacking"] != "multiple" && int64(number(s["effect_id"])) == e.ID {
+				if p.CasterUUID != "" && s["concentration"] == true {
+					s["external_only"] = true
+					filtered = append(filtered, s)
+				}
 				continue
 			}
 			filtered = append(filtered, raw)
 		}
-		states = append(filtered, map[string]any{"uid": fmt.Sprintf("application-%s-%d", uid, index), "effect_id": float64(e.ID), "duration": duration, "concentration": e.Concentration, "params": e.Params, "source": map[string]any{"kind": "potion", "item_id": float64(p.ItemID), "label": p.Name, "entry_key": uid, "link_key": e.Key}})
+		states = append(filtered, map[string]any{"uid": fmt.Sprintf("application-%s-%d", uid, index), "effect_id": float64(e.ID), "duration": duration, "concentration": e.Concentration && p.CasterUUID == "", "concentration_owner": p.CasterUUID, "requires_concentration": e.Concentration, "params": e.Params, "source": map[string]any{"kind": applicationSourceKind(p), "item_id": float64(p.ItemID), "label": p.Name, "entry_key": uid, "link_key": e.Key}})
 		r.Effects = append(r.Effects, e)
 	}
 	if len(p.Effects) > 0 {
 		values["states"] = states
 	}
 	return r, nil
+}
+
+func applicationSourceKind(p ApplicationPlan) string {
+	if p.SourceKind == "spell" {
+		return "spell"
+	}
+	return "potion"
 }

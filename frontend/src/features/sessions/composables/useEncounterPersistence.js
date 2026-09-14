@@ -23,6 +23,8 @@ export function useEncounterPersistence({ source, save, debounceMs }) {
 
   function markReady() {
     ready = true
+    saveError.value = ''
+    dirty = false
     loadError.value = ''
   }
 
@@ -47,7 +49,8 @@ export function useEncounterPersistence({ source, save, debounceMs }) {
         if (savedRevision === revision) dirty = false
         saveError.value = ''
       })
-      .catch(() => {
+      .catch(error => {
+        if (error?.status === 409) { ready = false; dirty = false; clearSaveTimer(); saveError.value = 'Состояние боя изменилось на сервере. Обновите страницу, чтобы загрузить применённые эффекты.'; return }
         if (savedRevision !== revision || stopped || !retryOnFailure) return
         dirty = true
         saveError.value = 'Не удалось сохранить состояние боя. Повторяем попытку…'

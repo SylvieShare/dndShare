@@ -13,3 +13,6 @@ export function resolveItemTransfer(uuid, id, decision) {
 export function approveSessionTransfer(uuid, eventId) {
   return fetchPost(`/sessions/${uuid}/events/${eventId}/approve`, {})
 }
+
+export function getApplicationTargets(uuid) { return fetchGet(`/sessions/${uuid}/application-targets`) }
+export function resolveSessionApplication(uuid, eventId, decision, target = {}) { return fetchPost(`/sessions/${uuid}/events/${eventId}/application`, { decision, target }) }

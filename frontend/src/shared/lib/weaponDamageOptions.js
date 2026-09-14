@@ -10,7 +10,8 @@ export function weaponDamageActionParts(action, critical = false) {
 }
 
 export function weaponDamageActionFormula(action, critical = false) {
-  return weaponDamageActionParts(action, critical).map(part => `${part.count}${part.diceLabel}`).join('+')
+  const formula = weaponDamageActionParts(action, critical).map(part => `${part.count}${part.diceLabel}`).join('+')
+  return formula && action?.sign === '-' ? `-${formula}` : formula
 }
 
 /** Convert domain rules into display data; the menu does not interpret schema fields. */
@@ -51,8 +52,8 @@ export function weaponDamageMenuOptions(actions, keys, critical = false, scope =
       key: action.key, label, mode: action.attack_mode === 'thrown',
       units: maxUnits ? { max: maxUnits, value: action.selected_units, color: action.resource?.color_point,
         available: action.resource_error || !action.resource ? 0 : Math.max(0, Math.floor((Number(action.resource.value) - otherCost) / unitCost)) } : null,
-      formula: formula ? `${action.preview_replacement ? '' : '+'}${formula.replace('d', 'к')}` : '',
-      formulaPrefix: action.preview_replacement ? '→' : '+', formulaVerb: action.preview_replacement ? 'Урон' : 'Добавит',
+      formula: formula ? `${action.preview_replacement || formula.startsWith('-') ? '' : '+'}${formula.replace('d', 'к')}` : '',
+      formulaPrefix: action.preview_replacement ? '→' : action.sign === '-' ? '−' : '+', formulaVerb: action.preview_replacement ? 'Урон' : 'Добавит',
       damageParts: scope === 'attack' ? [] : weaponDamageActionParts(displayRule, critical),
       condition, checked: selected.has(action.key),
       nested: !!action.requires_damage_key,

@@ -36,6 +36,8 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
       bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
     })
+    const states = charCtx.characterStatuses?.endOn?.('attack')
+    if (charCtx.ownerMode && states) charCtx.updateValues({ states })
   }
 
   function exprWithBonus(parts, withType) {

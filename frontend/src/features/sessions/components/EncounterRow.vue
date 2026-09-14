@@ -74,6 +74,7 @@
         </div>
         <span v-if="isNpc && combatant.note" class="enc-note" :title="combatant.note">{{ combatant.note }}</span>
       </div>
+      <EncounterAppliedEffects v-if="isNpc" :combatant="combatant" :instances="combatant.effectInstances || []" :editable="showCheckbox" @remove="combatant.effectInstances = combatant.effectInstances.filter(effect => effect.uid !== $event)" />
       <EncounterHpBar class="enc-info-hp" :combatant="combatant" :section="section" />
       <div v-if="subtitleText" class="enc-sub">{{ subtitleText }}</div>
     </div>
@@ -138,6 +139,7 @@
 </template>
 
 <script setup>
+import EncounterAppliedEffects from './EncounterAppliedEffects.vue'
 import { computed, inject, provide, reactive, ref } from 'vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'

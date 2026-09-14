@@ -255,6 +255,7 @@
 </template>
 
 <script setup>
+import { provide } from 'vue'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
@@ -302,6 +303,7 @@ const {
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
+provide('applicationEncounter', encounter)
 </script>
 
 <style scoped src="./styles/ViewSession.css"></style>

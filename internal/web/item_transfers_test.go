@@ -31,6 +31,18 @@ func TestTransferRequestValidation(t *testing.T) {
 	if !validItemTransferRequest(valid) {
 		t.Fatal("valid potion application rejected")
 	}
+	valid.RecipientCharUUID = "dm"
+	if !validItemTransferRequest(valid) {
+		t.Fatal("DM potion rejected")
+	}
+	valid.Source = "spells"
+	if !validItemTransferRequest(valid) {
+		t.Fatal("DM spell rejected")
+	}
+	valid.Purpose = "transfer"
+	if validItemTransferRequest(valid) {
+		t.Fatal("spell transfer accepted")
+	}
 	if allowedSessionEventTypes["item_transfer"] {
 		t.Fatal("clients must not forge transfer chronicle events")
 	}

@@ -698,3 +698,11 @@ revision, status }`; сброс одного результата: `POST /api/ac
 резервировании) и `applicationResult` (результат после принятия). Те же поля
 попадают в данные события. Принятие с повторным UUID/решением не перебрасывает
 кости и не накладывает эффекты повторно. Отказ не делает бросков.
+
+### Применение через мастера и эффекты заклинаний
+
+`POST /api/char/{uuid}/item-transfers` принимает `recipientCharUuid: "dm"` для `purpose: "use"`. `source: "spells"` означает запрос применения конкретного связанного эффекта: `entryUid` содержит id известного заклинания, `optionKey` — ключ связи; ячейка не расходуется этим запросом.
+
+`GET /api/sessions/{uuid}/application-targets` доступен только владельцу сессии и возвращает `{targets: [...]}`: `kind: "character", charUuid, name` либо `kind: "npc", encounterId, npcUid, name, letter, color`.
+
+`POST /api/sessions/{uuid}/events/{eventId}/application`: `{decision: "accept"|"reject", target?: {...}}`. Для принятия адресованного мастеру применения обязательна цель из текущей сессии. Ответ `{transfer}` содержит `addressedToDm` и `resolvedTarget`. Отказ не требует цели. Повтор принятого решения возвращает сохранённый результат. Сохранение боя со старым `applicationRevision` возвращает 409.
