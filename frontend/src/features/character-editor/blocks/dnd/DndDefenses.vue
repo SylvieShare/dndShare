@@ -1,13 +1,13 @@
 <template>
   <div ref="root" class="dd-block">
-    <BaseTile class="dd-tile">
+    <MorphTile padding="0" class="dd-tile">
       <DndDefensesView
         :defenses="defenses"
         :damage-types="damageTypes"
         :manage="ownerMode"
         @manage="onManage"
       />
-    </BaseTile>
+    </MorphTile>
 
     <MorphEditorShell
       v-if="editorOpen"
@@ -42,7 +42,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { MorphTile } from '@sylvieshare/share-ui'
 import DndDefensesEditor from '@/features/character-editor/blocks/dnd/components/DndDefensesEditor.vue'
 import DndDefensesView from '@/features/character-editor/blocks/dnd/components/DndDefensesView.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell.vue'

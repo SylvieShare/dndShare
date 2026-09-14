@@ -39,7 +39,7 @@ describe('character action block', () => {
 
   it('manages all custom actions from the block morph without row reordering controls', () => {
     expect(viewSource).not.toContain('class="dav-add"')
-    expect(blockSource).toContain('<BaseTile class="da-tile">')
+    expect(blockSource).toContain('<MorphTile padding="0" class="da-tile">')
     expect(blockSource).toContain(':readonly-actions="readonlyActions"')
     expect(viewSource).not.toContain('Переместить выше')
     expect(viewSource).not.toContain('Переместить ниже')

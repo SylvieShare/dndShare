@@ -9,8 +9,9 @@ import ViewSession from '../../../src/features/sessions/pages/ViewSession.vue'
 import '@sylvieshare/share-ui/styles.css'
 const pinia = createPinia()
 const account = useAccountStore(pinia)
-account.status = 'success'
-account.user = { id: 1, roles: [], login: 'Игрок' }
+const guest = new URLSearchParams(location.search).has('guest')
+account.status = guest ? 'none' : 'success'
+account.user = { id: guest ? 0 : 1, roles: [], login: guest ? '' : 'Игрок' }
 const router = createRouter({ history: createMemoryHistory(), routes: [
   { path: '/char/:uuid', name: 'Character', component: ViewCharacter },
   { path: '/sessions/:uuid', name: 'Session', component: ViewSession },
@@ -20,4 +21,4 @@ const router = createRouter({ history: createMemoryHistory(), routes: [
 await router.push(new URLSearchParams(location.search).get('page') || '/char/test')
 await router.isReady()
 window.tutorialNavigateAway = () => router.push('/done')
-createApp({ render: () => h(RouterView) }).use(pinia).use(router).directive('click-outside', clickOutside).mount('#app')
+createApp({ render: () => h(RouterView, null, { default: ({ Component, route }) => h(Component, { key: route.path }) }) }).use(pinia).use(router).directive('click-outside', clickOutside).mount('#app')

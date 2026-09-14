@@ -19,7 +19,8 @@
       </div>
     </BaseTile>
 
-    <BaseTile class="turn-reaction" color="var(--warning)" strip>
+    <BaseTile class="turn-reaction" color="var(--warning)">
+      <TileAccentStrip />
       <span class="turn-reaction-icon"><Zap aria-hidden="true" /></span>
       <span><strong>Реакция</strong><small>Один ответ на подходящий триггер. Восстанавливается в начале твоего следующего хода.</small></span>
       <span class="turn-reaction-cycle"><RotateCcw aria-hidden="true" /> следующий ход</span>
@@ -39,7 +40,7 @@ import {
   Swords,
   Zap,
 } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 </script>
 
 <style scoped>

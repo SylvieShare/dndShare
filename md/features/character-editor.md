@@ -97,7 +97,7 @@ schema-stable `innerTab-*` query keys. Reload and browser history restore both
 the outer character tab and its inner pane; invalid or stale inner indexes fall
 back to the first pane. Every weapon and inventory section uses its own shared
 desktop/mobile `BaseTile`; fixed equipment utilities and personality groups use independent surfaces,
-spell parameters/slots/levels use separate `BaseTile` cards, and diary collections keep
+spell parameters/slots use separate `MorphTile` cards, and diary collections keep
 their own cards while notes have a dedicated surface. The desktop character
 page uses the same subtle 24px dot pattern as the session chapter canvas on its
 global `--bg` backdrop; the central tab remains transparent, and its cards do
@@ -408,7 +408,7 @@ with HP and automatic gains in a side column and abilities, subclass, ASI and
 spell choices in the main column. Narrow screens stack these sections. The
 footer stays visible with the final apply action. Granted abilities and spells
 use `LevelUpItemRow` with the handbook's list renderer and open their full
-handbook descriptions. HP uses the shared `BaseTile`, `MultiToggle`, number
+handbook descriptions. HP uses the shared `MorphTile`, `MultiToggle`, number
 field and `SystemDie`: fixed average, an actual roll or a manual final gain
 including Constitution. The selected roll mode requires a completed roll;
 manual mode does not add Constitution a second time. The minimum gain is 1 HP.
@@ -1130,11 +1130,11 @@ current automation limits.
 ## Передача предметов между игроками
 
 У владельца персонажа в сессии первый блок правой колонки показывает название
-сессии со ссылкой и подписью «Сессия» над ней. Плитка использует акцентную
-рамку и мягкий градиент `BaseTile`. Под названием отдельным рядом расположены
-кнопки без рамок и видимых подписей (`ActionButton` в варианте `quiet`): группа
-открывает «Игроков», колокольчик — «События» (иконки фиксированного размера
-24 px без flex-сжатия, кнопки 48 px).
+сессии со ссылкой справа от подписи «Сессия». Это обычный `BaseTile` без
+акцентной рамки. Под названием по краям отдельного ряда расположены
+кнопки без рамок и видимых подписей (`ActionButton quiet iconOnly`): группа
+открывает «Игроков», колокольчик — «События» (иконки 24 px, кнопки 48 px,
+минимальный внешний отступ 6 px).
 Чипы справа снизу показывают число участников и незавершённых передач, включая
 ноль; до загрузки игроков показано тире. Чип событий с ненулевым количеством
 подсвечен акцентом. Доступные имена кнопок и подсказки сохранены. Число игроков
@@ -1149,7 +1149,10 @@ current automation limits.
 и сразу исчезает из инвентаря отправителя. В «Событиях» видны только ожидающие
 входящие и исходящие передачи, а счётчик на кнопке показывает их общее число.
 Получатель принимает или отклоняет запрос; отправитель может его отозвать.
-Окна используют AppModalFrame, BaseTile и общие form/action-компоненты share-ui.
+Список игроков и события открываются поповером возле кнопки (`BasePopover`),
+включая mobile. Escape, клик снаружи или крестик закрывают поповер. При
+выполнении передачи закрытие блокируется. Форма отправки использует
+`AppModalFrame`; контент и действия переиспользуют общие компоненты share-ui.
 
 При принятии предмет добавляется получателю, при отказе или отзыве возвращается
 отправителю. Вещи приходят в первую секцию инвентаря (при необходимости создаётся
@@ -1164,3 +1167,23 @@ current automation limits.
 персонажа или сессию: сервер возвращает 409 с причиной. Это не позволяет оставить
 зарезервированный предмет без доступного владельца. Повторные отправка и принятие
 не создают копий; резервирование, изменение листа и хроники атомарны.
+
+## Единые плитки и режим просмотра
+
+`BaseTile` — поверхность без встроенной полосы и заголовка. Полосы сохранены
+отдельным `TileAccentStrip`. Морф-плитки и блоки параметров/ячеек магии используют
+`MorphTile`: единый заголовок, опциональный карандаш и слот справа для метрик
+или действий. Нажатия справа не открывают редактор заголовка. В режиме просмотра
+редактирующие карандаши скрыты; броски остаются доступны по существующим правилам.
+
+Над содержимым центральной колонки desktop, а на mobile сверху каждой вкладки,
+показан «Режим просмотра», если нет права редактировать. Для гостя пояснение
+«Вы не авторизованы», для вошедшего пользователя — «Этот персонаж принадлежит
+другому игроку». На собственном листе блок скрыт.
+
+В меню чужого листа на обоих устройствах есть «Клонировать себе». Авторизованный
+пользователь создаёт собственную копию доступного ему листа и сразу переходит
+к ней. Гостю предлагается вход/регистрация, затем действие можно повторить.
+Копия получает имя с «(копия)», собственный UUID и владельца; участие в сессии
+и запросы передачи не копируются. Закрытый лист доступен для клонирования
+только владельцу или мастеру сессии, имеющему право просмотра.

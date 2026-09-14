@@ -7,8 +7,9 @@
         class="condition-tile"
         :class="{ 'condition-tile--selected': selected.code === condition.code }"
         :color="condition.color"
-        :strip="selected.code === condition.code"
+
       >
+      <TileAccentStrip v-if="selected.code === condition.code" />
         <button type="button" :aria-pressed="selected.code === condition.code" @click="selectedCode = condition.code">
           <img v-if="condition.icon" :src="condition.icon" alt="" />
           <BatteryLow v-else aria-hidden="true" />
@@ -36,7 +37,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { BatteryLow } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 
 const path = code => `/static/conditions/${code}.svg`
 const conditions = [

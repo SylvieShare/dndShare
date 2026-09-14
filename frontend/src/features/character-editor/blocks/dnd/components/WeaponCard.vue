@@ -5,7 +5,7 @@
     :disabled="draggedThisGesture || (!ctx.charCtx.ownerMode && !ctx.item(entry))"
   >
     <template #trigger="{ open: menuOpen }">
-      <article
+      <MorphTile embedded padding="0"
         ref="cardEl"
         class="w-card action-menu-source"
         :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry), 'action-menu-source--open': menuOpen }"
@@ -39,7 +39,7 @@
             <WeaponEditor :entry="entry" :index="index" @close="close" />
           </template>
         </MorphEditorShell>
-      </article>
+      </MorphTile>
     </template>
 
     <template #default="{ close: closeMenu }">
@@ -76,6 +76,7 @@
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { ArrowRightLeft } from '@lucide/vue'

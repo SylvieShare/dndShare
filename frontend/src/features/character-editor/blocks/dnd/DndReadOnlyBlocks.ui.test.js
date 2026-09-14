@@ -24,7 +24,7 @@ describe('read-only character sheet blocks', () => {
     expect(hp).toContain('if (canEdit.value) openMorph(event)')
     expect(exhaustion).toContain('if (canEdit.value) openMorph()')
     expect(exhaustion).toContain(':editable="canEdit"')
-    expect(utility).toContain('if (canEdit.value) openMorph()')
+    expect(utility).toContain('if (canEdit.value) openFrom(')
     expect(utility).toContain('if (props.rollable || canEdit.value)')
   })
 })

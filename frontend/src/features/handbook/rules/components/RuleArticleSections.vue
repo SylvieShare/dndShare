@@ -45,7 +45,8 @@
         <p>{{ section.example.text }}</p>
       </BaseTile>
 
-      <BaseTile v-if="section.note" class="rule-note" color="var(--warning)" strip>
+      <BaseTile v-if="section.note" class="rule-note" color="var(--warning)">
+      <TileAccentStrip />
         <span class="rule-callout-label"><Lightbulb aria-hidden="true" /> Запомни</span>
         <p>{{ section.note }}</p>
       </BaseTile>
@@ -55,7 +56,7 @@
 
 <script setup>
 import { Calculator, Lightbulb, MessageCircle } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 import RuleVisualRenderer from '@/features/handbook/rules/visuals/RuleVisualRenderer'
 
 defineProps({

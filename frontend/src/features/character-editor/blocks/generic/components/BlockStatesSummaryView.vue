@@ -1,14 +1,6 @@
 <template>
-  <div class="bss-view" :class="{ 'bss-view--panel': panel }">
-    <div class="bss-head">
-      <span class="sheet-tile-title bss-label">{{ activeItems.length ? label : emptyLabel }}</span>
-      <span v-if="editable" class="bss-pencil" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 20h9" />
-          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-        </svg>
-      </span>
-    </div>
+  <MorphTile embedded padding="0" edit-label="Редактировать" :title="activeItems.length ? label : emptyLabel" :show-edit="editable" @edit="$emit('edit', $event)" class="bss-view" :class="{ 'bss-view--panel': panel }">
+
     <div v-if="activeItems.length" class="bss-list">
       <span
         v-for="item in activeItems"
@@ -23,10 +15,11 @@
         <span class="bss-name">{{ item.value }}</span>
       </span>
     </div>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import SvgIcon from '@/shared/ui/SvgIcon'
 
 defineProps({
@@ -37,7 +30,7 @@ defineProps({
   panel: { type: Boolean, default: false },
 })
 
-defineEmits(['show-tooltip', 'hide-tooltip'])
+defineEmits(['edit', 'show-tooltip', 'hide-tooltip'])
 </script>
 
 <style scoped>
@@ -57,9 +50,6 @@ defineEmits(['show-tooltip', 'hide-tooltip'])
   padding-right: 16px;
 }
 
-.bss-label {
-  flex-shrink: 0;
-}
 
 .bss-list {
   display: flex;
@@ -105,18 +95,4 @@ defineEmits(['show-tooltip', 'hide-tooltip'])
   color: var(--text-1);
 }
 
-.bss-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.bss-pencil {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  color: var(--text-muted);
-  opacity: 0.35;
-  transition: color 0.15s, opacity 0.15s;
-}
-@media (hover: hover) { .bss-view:hover .bss-pencil { color: var(--accent); opacity: 1; } }
 </style>

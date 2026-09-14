@@ -36,38 +36,41 @@
 
   <!-- ── Summary tile variant: one tile + vertical morph picker ── -->
   <div v-else-if="isSummaryTile" class="bs-block" ref="root">
-    <BaseTile
-      class="bs-summary-tile"
+    <MorphTile padding="0"
+      ref="summaryTile" class="bs-summary-tile"
       :color="summaryColor"
-      :strip="!!activeItems.length"
+
       :interactive="canInteract"
       @click="openSummary"
     >
+      <TileAccentStrip v-if="!!activeItems.length" />
       <BlockStatesSummaryView
         :active-items="activeItems"
         label="Статусы"
         :editable="canInteract"
+        @edit="openSummary"
         @show-tooltip="showTooltip"
         @hide-tooltip="hideTooltip"
       />
-    </BaseTile>
+    </MorphTile>
   </div>
 
   <!-- ── Default variant: statuses as tiles (strip + icon + name) ── -->
   <div v-else class="bs-block" ref="root">
     <div class="bs-tiles" :class="{ 'bs-chips-one-line': isOneLine }">
-      <BaseTile
+      <MorphTile padding="0"
         v-for="item in activeItems"
         :key="item.id"
         class="bs-tile"
         :color="item.color || 'var(--text-muted)'"
-        strip
+
         @mouseenter="showTooltip($event, item)"
         @mouseleave="hideTooltip"
       >
+      <TileAccentStrip />
         <SvgIcon v-if="item.svg" class="bs-tile-svg" :svg="item.svg" :color="item.color || '#888888'" filter />
         <span class="bs-tile-name">{{ item.value }}</span>
-      </BaseTile>
+      </MorphTile>
 
       <button v-if="canShowAddButton" class="bs-add-tile" @click="panelOpen = true">
         <span class="bs-plus"><span class="bs-plus-h"></span><span class="bs-plus-v"></span></span>
@@ -130,7 +133,7 @@
 
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import BlockStatesPickerEditor from '@/features/character-editor/blocks/generic/components/BlockStatesPickerEditor'
 import BlockStatesSummaryView from '@/features/character-editor/blocks/generic/components/BlockStatesSummaryView'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
@@ -147,6 +150,7 @@ const charCtx = inject('charCtx', { ownerMode: true, dictionaries: {}, var: {} }
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const panelOpen = ref(false)
 const root = ref(null)
+const summaryTile = ref(null)
 const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
 const suggestStore = computed(() => useSuggestStore())
 const allItems = computed(() => useSuggestStore().items(props.block.content.suggest_id))
@@ -183,7 +187,7 @@ function toggleItem(id) {
 function openSummary(event) {
   if (!canInteract.value) return
   hideTooltip()
-  open(event)
+  open({ currentTarget: summaryTile.value?.$el || event?.currentTarget })
 }
 
 function showTooltip(event, item) {

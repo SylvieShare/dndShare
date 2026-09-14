@@ -14,8 +14,9 @@
           class="sheet-mock-tile"
           :class="[`sheet-mock-tile--${tile.kind}`, { 'sheet-mock-tile--selected': selectedKey === tile.key }]"
           :color="tile.color"
-          :strip="selectedKey === tile.key"
+
         >
+      <TileAccentStrip v-if="selectedKey === tile.key" />
           <button type="button" :aria-pressed="selectedKey === tile.key" @click="selectedKey = tile.key">
             <span v-if="tile.icon" class="sheet-mock-icon"><img :src="tile.icon" alt="" /></span>
             <span v-else-if="tile.symbol" class="sheet-mock-symbol">{{ tile.symbol }}</span>
@@ -40,7 +41,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 
 const tiles = [
   {

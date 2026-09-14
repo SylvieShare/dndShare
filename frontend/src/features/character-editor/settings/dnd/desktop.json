@@ -72,6 +72,10 @@
                 },
                 "children": [
                   {
+                    "ref": "read_only_notice",
+                    "kind": "block"
+                  },
+                  {
                     "kind": "layout",
                     "type": "column",
                     "props": {

@@ -1,8 +1,7 @@
 <template>
   <!-- Shared money face, rendered in the tile and in the morph #view so they never drift.
        Padding is owned by the wrapper (BaseTile / morph face); this is just the content. -->
-  <div class="money-view">
-    <div v-if="title" class="sheet-tile-title money-title">{{ title }}</div>
+  <MorphTile embedded padding="0" edit-label="Редактировать" :title="title" :show-edit="editable" @edit="$emit('edit', $event)" class="money-view">
     <LoadingState v-if="loading" class="money-empty" label="Загрузка..." compact />
     <div v-else class="money-line">
       <template v-if="coins.length">
@@ -15,23 +14,23 @@
       </template>
       <span v-else class="money-empty">Денег нет</span>
     </div>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { LoadingState } from '@sylvieshare/share-ui'
 defineProps({
+  editable: { type: Boolean, default: false },
   title: { type: String, default: '' },
   loading: { type: Boolean, default: false },
   // [{ id, title, iconUrl, color, amount }] — only the non-zero coins, already ordered
   coins: { type: Array, default: () => [] },
 })
+defineEmits(['edit'])
 </script>
 
 <style scoped>
-.money-title {
-  margin-bottom: 8px;
-}
 
 .money-line {
   display: flex;

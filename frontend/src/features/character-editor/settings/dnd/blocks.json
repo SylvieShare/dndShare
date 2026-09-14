@@ -560,5 +560,9 @@
     "id": "campaign",
     "type": "CAMPAIGN_BADGE",
     "content": {}
+  },
+  "read_only_notice": {
+    "id": "read_only_notice",
+    "type": "CHARACTER_READ_ONLY"
   }
 }

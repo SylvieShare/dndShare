@@ -1,7 +1,7 @@
 <template>
-  <BaseTile ref="tutorialHp" data-tutorial="character-hp" v-if="!isCompact" :color="barColor" framed :interactive="canEdit" @click="openEditor">
+  <MorphTile padding="0" ref="tutorialHp" data-tutorial="character-hp" v-if="!isCompact" :color="barColor" framed :interactive="canEdit" @click="openEditor">
     <DndHpView :hp="hp" @change="onHpChange" />
-  </BaseTile>
+  </MorphTile>
   <DndHpView ref="tutorialHp" data-tutorial="character-hp" v-else compact :hp="hp" @open="openEditor" @change="onHpChange" />
 
   <MorphEditorShell
@@ -25,7 +25,7 @@
 <script setup>
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { MorphTile } from '@sylvieshare/share-ui'
 import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHpEditor'
 import DndHpView from '@/features/character-editor/blocks/dnd/components/DndHpView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'

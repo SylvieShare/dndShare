@@ -11,6 +11,10 @@
         },
         "children": [
           {
+            "ref": "read_only_notice",
+            "kind": "block"
+          },
+          {
             "ref": "STR",
             "kind": "block",
             "props": {
@@ -59,23 +63,49 @@
       "svg": "/static/tab-weapons.svg",
       "title": "Оружие",
       "content": {
-        "ref": "weapon",
-        "kind": "block",
+        "kind": "layout",
+        "type": "column",
         "props": {
-          "variant": "list",
-          "show_add_in_view": true
-        }
+          "gap": "12px"
+        },
+        "children": [
+          {
+            "ref": "read_only_notice",
+            "kind": "block"
+          },
+          {
+            "ref": "weapon",
+            "kind": "block",
+            "props": {
+              "variant": "list",
+              "show_add_in_view": true
+            }
+          }
+        ]
       }
     },
     {
       "svg": "/static/tab-magic.svg",
       "title": "Магия",
       "content": {
-        "ref": "spells",
-        "kind": "block",
+        "kind": "layout",
+        "type": "column",
         "props": {
-          "show_add_in_view": true
-        }
+          "gap": "12px"
+        },
+        "children": [
+          {
+            "ref": "read_only_notice",
+            "kind": "block"
+          },
+          {
+            "ref": "spells",
+            "kind": "block",
+            "props": {
+              "show_add_in_view": true
+            }
+          }
+        ]
       }
     },
     {
@@ -88,6 +118,10 @@
           "gap": "12px"
         },
         "children": [
+          {
+            "ref": "read_only_notice",
+            "kind": "block"
+          },
           {
             "ref": "campaign",
             "kind": "block"
@@ -122,6 +156,10 @@
           "gap": "20px"
         },
         "children": [
+          {
+            "ref": "read_only_notice",
+            "kind": "block"
+          },
           {
             "ref": "feature_widgets",
             "kind": "block"
@@ -183,6 +221,10 @@
           "gap": "12px"
         },
         "children": [
+          {
+            "ref": "read_only_notice",
+            "kind": "block"
+          },
           {
             "kind": "layout",
             "type": "column",
@@ -347,6 +389,10 @@
           "gap": "22px"
         },
         "children": [
+          {
+            "ref": "read_only_notice",
+            "kind": "block"
+          },
           {
             "ref": "diary",
             "kind": "block"

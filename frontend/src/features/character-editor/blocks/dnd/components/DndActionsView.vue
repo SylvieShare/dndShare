@@ -1,11 +1,10 @@
 <template>
-  <div class="dav" :class="{ 'dav--panel': panel }">
-    <SheetBlockTitle
+  <MorphTile embedded padding="0" edit-label="Редактировать"
       title="Действия"
       :show-edit="manage"
       :edit-fade="editFade"
       @edit="$emit('manage')"
-    />
+     class="dav" :class="{ 'dav--panel': panel }">
 
     <SectionList v-for="group in groups" embedded :key="group.value" class="dav-group" :class="`dav-group--${group.value}`">
       <template #header>
@@ -141,7 +140,7 @@
       :top="tooltip.top"
       :bottom="tooltip.bottom"
     />
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
@@ -156,7 +155,7 @@ import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
-import SheetBlockTitle from '@/shared/ui/SheetBlockTitle.vue'
+import { MorphTile } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   groups: { type: Array, default: () => [] },

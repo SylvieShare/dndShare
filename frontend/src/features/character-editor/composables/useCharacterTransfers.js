@@ -1,4 +1,4 @@
-import { computed, onBeforeUnmount, reactive, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, shallowRef, watch } from 'vue'
 import * as api from '@/shared/api/itemTransfersApi'
 import { getSession } from '@/shared/api/sessionsApi'
 import { useTemplateStore } from '@/stores/template'
@@ -7,6 +7,13 @@ import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 
 export function useCharacterTransfers({ uuid, session, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions }) {
   const state = reactive({ participants: [], playersLoaded: false, transfers: [], view: '', selection: null, recipient: '', loading: false, busy: false, error: '' })
+  const anchor = shallowRef(null)
+  const anchors = new Map()
+  function registerAnchor(view, element) {
+    if (!anchors.has(view)) anchors.set(view, new Set())
+    anchors.get(view).add(element)
+  }
+  function unregisterAnchor(view, element) { anchors.get(view)?.delete(element) }
   const events = useSessionEventsStore()
   const incomingCount = computed(() => state.transfers.filter(t => t.recipientCharUuid === uuid).length)
   const recipients = computed(() => state.participants.filter(p => p.charUuid !== uuid))
@@ -41,7 +48,9 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     } catch (error) { state.error = error.message || 'Не удалось загрузить игроков' }
     finally { state.loading = false }
   }
-  async function open(view) {
+  async function open(view, element) {
+    if (state.busy) return
+    if (view !== 'send') anchor.value = element || [...(anchors.get(view) || [])].find(el => el.getClientRects().length) || null
     state.error = ''
     state.view = view
     if (view === 'players' || view === 'send') await loadPlayers()
@@ -79,7 +88,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     const sent = await mutate(() => api.createItemTransfer(uuid, {
       ...state.selection, sessionUuid: session.value.uuid, recipientCharUuid: state.recipient, version: version.value,
     }))
-    if (sent) { state.selection = null; state.view = 'events' }
+    if (sent) { state.selection = null; await open('events') }
   }
   async function resolve(transfer, decision) {
     await mutate(() => api.resolveItemTransfer(uuid, transfer.id, decision))
@@ -109,5 +118,5 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     else state.view = ''
   }, { immediate: true })
   onBeforeUnmount(live.stop)
-  return reactive({ state, incomingCount, recipients, open, select, close, send, resolve, refresh, busy: computed(() => state.busy) })
+  return reactive({ state, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, open, select, close, send, resolve, refresh, busy: computed(() => state.busy) })
 }

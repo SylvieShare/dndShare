@@ -1,13 +1,14 @@
 <template>
-  <BaseTile
+  <MorphTile padding="0"
     ref="tileRef"
     :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
     class="stat-block"
     :class="{ 'stat-block--mobile': isMobileVariant }"
     :color="statColor"
-    strip
+
     :style="{ '--sc': statColor }"
   >
+      <TileAccentStrip />
     <DndStatView
       :title="displayTitle"
       :color="statColor"
@@ -34,7 +35,7 @@
       @roll-save="mode => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw')"
       @roll-skill="(id, mode) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
     />
-  </BaseTile>
+  </MorphTile>
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -120,7 +121,7 @@
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { abilityModifier, sumBonuses } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
 import DndStatView from '@/features/character-editor/blocks/dnd/components/DndStatView'

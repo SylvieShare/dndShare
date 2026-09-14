@@ -568,7 +568,7 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('{ ...participant, color: color || null }')
     expect(encounterRowSource).toContain('<EncounterAvatar :combatant="combatant" />')
     expect(encounterRowSource).toContain('enc.participantColor(props.combatant.charId)')
-    expect(encounterRowSource).toContain(':strip="isNpc && !!rowAccentColor"')
+    expect(encounterRowSource).toContain('<TileAccentStrip v-if="isNpc && !!rowAccentColor"')
     expect(encounterRowSource).toContain("'enc-row--player-colored': isPlayer.value && !!playerColor.value")
     expect(encounterRowSource).toContain('box-shadow: inset 0 0 0 2px var(--enc-player-color);')
     expect(encounterRowSource).toContain(":color=\"rowAccentColor || 'var(--section-color)'\"")

@@ -1,14 +1,8 @@
 <template>
   <!-- Shared quest face, rendered in the list card and in the morph #view so they never drift.
        Chrome (border/bg/radius) lives on the wrapper; this owns only padding + content. -->
-  <div class="dqc" :style="{ '--qc': meta.color }">
-    <div class="dqc-head">
-      <span class="dqc-title" :class="{ 'dqc-title--empty': !quest.title }">{{ quest.title || 'Без названия' }}</span>
-      <span class="dqc-chip">
-        <span class="dqc-dot"></span>
-        {{ meta.label }}
-      </span>
-    </div>
+  <MorphTile embedded padding="0" edit-label="Редактировать" :title="quest.title || 'Без названия'" :show-edit="editable" @edit="$emit('edit', $event)" class="dqc" :style="{ '--qc': meta.color }">
+    <template #aside><span class="dqc-chip"><span class="dqc-dot"></span>{{ meta.label }}</span></template>
     <div v-if="quest.desc" class="dqc-desc">{{ quest.desc }}</div>
     <div v-if="quest.reward" class="dqc-reward">
       <span class="dqc-reward-icon" aria-hidden="true">✦</span>
@@ -17,18 +11,21 @@
         <span class="dqc-reward-text">{{ quest.reward }}</span>
       </div>
     </div>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
 import { questStatusMeta } from '@/features/character-editor/blocks/dnd/lib/questEntry'
 
 const props = defineProps({
+  editable: { type: Boolean, default: false },
   quest: { type: Object, required: true },
 })
 
 const meta = computed(() => questStatusMeta(props.quest.status))
+defineEmits(['edit'])
 </script>
 
 <style scoped>
@@ -41,22 +38,7 @@ const meta = computed(() => questStatusMeta(props.quest.status))
   box-sizing: border-box;
 }
 
-.dqc-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  min-width: 0;
-}
 
-.dqc-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-1);
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-.dqc-title--empty { font-style: italic; color: var(--text-muted); font-weight: 500; }
 
 .dqc-chip {
   display: inline-flex;

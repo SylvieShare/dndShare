@@ -1,14 +1,13 @@
 <template>
-  <div class="stat-view" :class="{ 'stat-view--mobile': mobileVariant, 'stat-view--panel': mode === 'panel' }" :style="{ '--sc': color }">
-
-    <!-- ── Head: name + edit pencil + save chip ── -->
-    <SheetBlockTitle
-      class="stat-card-head"
+  <MorphTile embedded padding="0" edit-label="Редактировать"
       :title="title"
       :show-edit="showEdit"
       :edit-fade="editFade"
       @edit="$emit('edit')"
-    >
+     class="stat-view" :class="{ 'stat-view--mobile': mobileVariant, 'stat-view--panel': mode === 'panel' }" :style="{ '--sc': color }">
+
+    <!-- ── Head: name + edit pencil + save chip ── -->
+
       <template #aside>
         <div
           class="save-chip"
@@ -27,7 +26,6 @@
           <RollModeBadge :mode="saveMode" :source="saveModeSource" :cancelled="saveModeCancelled" />
         </div>
       </template>
-    </SheetBlockTitle>
 
     <!-- ── Modifier + raw value ── -->
     <div
@@ -120,7 +118,7 @@
         </div>
       </template>
     </ItemTooltip>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
@@ -128,7 +126,7 @@ import { SkeletonBlock } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, ref, shallowRef } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
-import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
+import { MorphTile } from '@sylvieshare/share-ui'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import DndStatRollMenu from './DndStatRollMenu.vue'
 import RollModeBadge from '@/features/character-editor/blocks/dnd/components/RollModeBadge.vue'

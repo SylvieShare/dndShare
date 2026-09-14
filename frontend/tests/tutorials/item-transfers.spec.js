@@ -71,6 +71,11 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
   await expect(dialog.getByText('Лиора', { exact: false })).toBeVisible()
   await expect(dialog.getByText('Торин', { exact: true })).toBeVisible()
   await expect(dialog.locator('.transfer-avatar')).toHaveCount(2)
+  await expect(dialog).toHaveClass(/base-popover/)
+  const bounds = await dialog.boundingBox()
+  expect(bounds.x).toBeGreaterThanOrEqual(0)
+  expect(bounds.x + bounds.width).toBeLessThanOrEqual(mobile ? 390 : 1440)
+  expect(bounds.y + bounds.height).toBeLessThanOrEqual(mobile ? 844 : 1000)
   await dialog.getByRole('button', { name: 'Закрыть', exact: true }).last().click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   for (const decision of ['Отказаться', 'Принять']) {
@@ -78,7 +83,16 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     await row.scrollIntoViewIfNeeded()
     // Let the scroll event finish before opening the scroll-dismissed action menu.
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
-    await row.click()
+    // Click where a user points, without Playwright scrolling transformed carousel ancestors.
+    const rowBounds = await row.boundingBox()
+    await page.mouse.click(rowBounds.x + rowBounds.width / 2, rowBounds.y + rowBounds.height / 2)
+    const menu = page.getByRole('menu')
+    await expect(menu).toBeVisible()
+    // Wait for placement and the enter transition before Playwright scrolls to an action.
+    await menu.evaluate(async el => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+      await Promise.all(el.getAnimations().map(animation => animation.finished.catch(() => {})))
+    })
     await page.getByRole('menuitem', { name: 'Передать другому игроку', exact: true }).click()
     dialog = page.getByRole('dialog')
     await expect(dialog).toContainText('×3')

@@ -1,11 +1,10 @@
 <template>
-  <div class="ddv" :class="{ 'ddv--panel': panel }">
-    <SheetBlockTitle
+  <MorphTile embedded padding="0" edit-label="Редактировать"
       title="Защиты"
       :show-edit="manage"
       :edit-fade="editFade"
       @edit="$emit('manage')"
-    />
+     class="ddv" :class="{ 'ddv--panel': panel }">
 
     <div v-if="displayRows.length" class="ddv-list">
       <div v-for="row in displayRows" :key="row.key" class="ddv-row" :class="`ddv-row--${row.kind}`">
@@ -14,12 +13,12 @@
       </div>
     </div>
     <span v-else class="ddv-empty">нет</span>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
+import { MorphTile } from '@sylvieshare/share-ui'
 import { DEFENSE_KINDS } from '@/features/character-editor/lib/characterDefenses'
 
 const props = defineProps({

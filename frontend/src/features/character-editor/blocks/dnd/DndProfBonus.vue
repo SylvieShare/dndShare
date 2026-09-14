@@ -10,21 +10,14 @@
     @action="rollProf"
   >
     <!-- compact / default (mobile) look: tap the value to roll, the pencil to edit -->
-    <template #tile="{ open, action }">
-      <div class="skill-bonus-tile" :class="{ 'skill-bonus-tile-compact': variant === 'compact' }">
-        <button class="sb-edit" type="button" title="Редактировать" @click.stop="open">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 20h9" />
-            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-          </svg>
-        </button>
+    <template #tile="{ open, action, canEdit }">
+      <MorphTile :title="block.title || 'Бонус умения'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="skill-bonus-tile" :class="{ 'skill-bonus-tile-compact': variant === 'compact' }">
         <div class="sb-display" @click="action">
           <span class="sb-plus">+</span>
           <span class="sb-value" :class="{ 'sb-manual': stored.auto === false }">{{ displayValue }}</span>
           <img v-if="block.content?.svg" class="sb-svg" :src="block.content.svg" alt="" aria-hidden="true" />
         </div>
-        <div v-if="block.title" class="sb-title">{{ block.title }}</div>
-      </div>
+      </MorphTile>
     </template>
 
     <template #editor>
@@ -49,6 +42,7 @@
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { computed, watch } from 'vue'
 import { d20Expr, proficiencyBonus, sumBonuses } from '@/shared/lib/dnd'
 import BonusList from '@/shared/ui/BonusList'
@@ -121,35 +115,15 @@ function rollProf() {
   justify-content: center;
   gap: 4px;
 }
-.sb-edit {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: none;
-  border-radius: 6px;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  opacity: 0.35;
-  transition: color 0.15s, opacity 0.15s;
-}
-@media (hover: hover) { .sb-edit:hover { color: var(--accent); opacity: 1; } }
-.sb-edit:focus-visible { color: var(--accent); opacity: 1; }
 .sb-display { cursor: pointer; }
 .skill-bonus-tile-compact { width: 76px; min-width: 76px; gap: 2px; }
 .skill-bonus-tile-compact .sb-plus { font-size: 18px; }
 .skill-bonus-tile-compact .sb-value { font-size: 22px; min-width: 16px; }
-.skill-bonus-tile-compact .sb-title { font-size: 10px; line-height: 1.1; padding: 0 4px; }
 .skill-bonus-tile-compact .sb-svg { width: 17px; height: 17px; }
 
 .sb-display { display: flex; align-items: center; gap: 4px; }
 .sb-plus { color: var(--text-2); font-size: 24px; font-weight: bold; line-height: 1; }
 .sb-value { color: var(--text-2); font-size: 28px; font-weight: bold; text-align: center; min-width: 20px; transition: color 0.2s ease; }
 .sb-value.sb-manual { color: var(--text-1); }
-.sb-title { color: var(--text-muted); font-size: 12px; text-align: center; padding: 0 6px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .sb-svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.8; }
 </style>

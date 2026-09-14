@@ -69,7 +69,7 @@
 
       <!-- Right: menu -->
       <div class="tb-right">
-        <div v-if="!modal || canEdit" class="menu-wrap" v-click-outside="closeMenu">
+        <div class="menu-wrap" v-click-outside="closeMenu">
           <button class="menu-btn" :class="{ open: menuOpen }" title="Меню" @click="menuOpen = !menuOpen">
             <span class="bar"></span>
             <span class="bar"></span>
@@ -77,6 +77,7 @@
           </button>
           <transition name="dropdown">
             <div v-if="menuOpen" class="menu-dropdown" data-tutorial="character-menu">
+              <CloneCharacterAction @cloned="menuOpen = false" />
               <TutorialRestart @restart="menuOpen = false" />
               <button v-if="!modal" class="menu-item menu-action menu-navigation-item" type="button" @click="goBack">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -131,6 +132,7 @@
 </template>
 
 <script setup>
+import CloneCharacterAction from '@/features/character-editor/components/CloneCharacterAction.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, defineAsyncComponent, ref } from 'vue'

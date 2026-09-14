@@ -1,11 +1,11 @@
 <template>
-  <BaseTile
-    class="tags-tile"
+  <MorphTile padding="0"
+    ref="tileRef" class="tags-tile"
     :interactive="canInteract"
     @click="canInteract && open($event)"
   >
-    <BlockTagsView :sections="displaySections" :label="label" :editable="canInteract" />
-  </BaseTile>
+    <BlockTagsView :sections="displaySections" :label="label" :editable="canInteract" @edit="openFrom(tileRef?.$el)" />
+  </MorphTile>
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -33,7 +33,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { MorphTile } from '@sylvieshare/share-ui'
 import BlockTagsEditor from '@/features/character-editor/blocks/generic/components/BlockTagsEditor'
 import BlockTagsView from '@/features/character-editor/blocks/generic/components/BlockTagsView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
@@ -44,7 +44,8 @@ const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
 const suggestStore = useSuggestStore()
-const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
+const tileRef = ref(null)
+const { editorOpen, originRect, originEl, open, openFrom, close } = useMorphOrigin()
 
 const label = computed(() => props.block.title || props.block.content?.title || 'Владения')
 const canInteract = computed(() => charCtx.ownerMode)

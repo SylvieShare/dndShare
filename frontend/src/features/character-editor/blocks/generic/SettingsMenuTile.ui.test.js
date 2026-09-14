@@ -8,8 +8,8 @@ const restSource = readFileSync(fileURLToPath(new URL('../dnd/DndRest.vue', impo
 const levelSource = readFileSync(fileURLToPath(new URL('../dnd/DndLvl.vue', import.meta.url)), 'utf8')
 
 describe('desktop utility tiles', () => {
-  it('uses the same compact height for stats, rests, settings and level', () => {
-    expect(statTileSource).toMatch(/\.stf \{[\s\S]*?height: 64px;/)
+  it('allows the shared stat heading to wrap while keeping other utility tiles compact', () => {
+    expect(statTileSource).toMatch(/\.stf \{[\s\S]*?min-height: 76px;/)
     expect(restSource).toMatch(/\.rest-tile \{[\s\S]*?min-height: 64px;/)
     expect(settingsSource).toMatch(/\.sm-tile \{[\s\S]*?min-height: 64px;/)
     expect(levelSource).toMatch(/\.lvl-tile \{ width: 100%; height: 100%; \}/)

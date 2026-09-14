@@ -5,7 +5,7 @@
 //   right = `editor` slot (the form), behind a divider, which fades in/out over the morph.
 // Optional `nav` (useSheetSubpages) enables a `sub` slot (e.g. per-skill editing).
 import { computed } from 'vue'
-import { MorphSheet } from '@sylvieshare/share-ui'
+import { MorphSheet, TileAccentStrip } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   originRect: { type: Object, default: null },
@@ -54,7 +54,7 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
       <div class="mes-split" :class="{ 'mes-vertical': vertical }" :style="{ '--tile-w': leftWidth + 'px', '--tile-h': (originRect?.height || 0) + 'px', '--sc': color }">
         <div class="mes-view" :class="{ 'mes-revealed': revealed }">
           <div class="mes-view-body">
-            <span v-if="strip" class="mes-strip"></span>
+            <TileAccentStrip v-if="strip" :color="color" />
             <slot name="view" :revealed="revealed" />
           </div>
         </div>
@@ -73,17 +73,7 @@ const showBack = computed(() => !!props.nav && props.nav.view.value !== 'detail'
 .mes-view { flex: 0 0 var(--tile-w, 280px); align-self: flex-start; }
 .mes-view-body { position: relative; box-sizing: border-box; }
 .mes-split:not(.mes-vertical) .mes-view-body { min-height: var(--tile-h); }
-.mes-strip {
-  /* Match BaseTile's strip insets (var(--r-lg)) exactly: at the open-start / close-end swap between
-     the static tile's `.base-tile-strip` and this one, a different inset would snap the strip height. */
-  position: absolute;
-  top: var(--r-lg);
-  bottom: var(--r-lg);
-  left: 0;
-  width: 3px;
-  border-radius: 0 2px 2px 0;
-  background: var(--sc, var(--accent));
-}
+
 .mes-rest {
   flex: 1;
   min-width: 0;

@@ -1,6 +1,7 @@
 <template>
   <div class="sm-wrap" v-click-outside="() => (open = false)">
-    <BaseTile class="sm-tile" :color="accent" strip interactive @click="open = !open">
+    <BaseTile class="sm-tile" :color="accent" interactive @click="open = !open">
+      <TileAccentStrip />
       <div class="sm-body">
         <img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" />
         <div class="sm-sub">меню</div>
@@ -9,6 +10,7 @@
 
     <transition name="sm-fade">
       <div v-if="open" class="sm-menu" data-tutorial="character-menu">
+              <CloneCharacterAction @cloned="open = false" />
         <TutorialRestart @restart="open = false" />
         <div v-if="ctx.saveStatus === 'pending' || ctx.saveStatus === 'saving'" class="sm-save" :class="ctx.saveStatus">
           <span class="sm-dot"></span>
@@ -49,11 +51,12 @@
 </template>
 
 <script setup>
+import CloneCharacterAction from '@/features/character-editor/components/CloneCharacterAction.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'

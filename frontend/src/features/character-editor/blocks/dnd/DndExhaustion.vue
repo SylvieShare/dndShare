@@ -3,9 +3,10 @@
     <span class="exh-compact-label">Истощение</span>
     <strong>{{ level }}</strong>
   </button>
-  <BaseTile v-else class="exh-tile" :color="color" :strip="level > 0" :interactive="canEdit" @click="openEditor">
-    <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" :editable="canEdit" />
-  </BaseTile>
+  <MorphTile padding="0" v-else class="exh-tile" :color="color" :interactive="canEdit" @click="openEditor">
+      <TileAccentStrip v-if="level > 0" />
+    <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" :editable="canEdit" @edit="openEditor" />
+  </MorphTile>
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -30,7 +31,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndExhaustionView from '@/features/character-editor/blocks/dnd/components/DndExhaustionView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'

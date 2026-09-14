@@ -1,5 +1,5 @@
 <template>
-  <div
+  <MorphTile padding="0"
     ref="tileEl"
     class="dct"
     :class="{ 'sortable-placeholder': ctx.sortable.isSource(counter), 'dct--draggable': ctx.ownerMode }"
@@ -11,6 +11,7 @@
       :counter="counter"
       :manage="ctx.ownerMode"
       interactive
+      @edit="openEditor"
       @inc="ctx.adjust(counter.id, 1)"
       @dec="ctx.adjust(counter.id, -1)"
     />
@@ -37,10 +38,11 @@
         />
       </template>
     </MorphEditorShell>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { inject, ref } from 'vue'
 import DndCounterEditor from '@/features/character-editor/blocks/dnd/components/DndCounterEditor.vue'
 import DndCounterTileView from '@/features/character-editor/blocks/dnd/components/DndCounterTileView.vue'
@@ -59,7 +61,7 @@ const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 let downX = 0
 let downY = 0
 
-function openEditor() { openFrom(tileEl.value) }
+function openEditor() { openFrom(tileEl.value?.$el) }
 
 function onDown(e) {
   downX = e.clientX
@@ -72,7 +74,7 @@ function onDown(e) {
 function onUp(e) {
   if (e.target.closest('button') || e.target.closest('input')) return
   if (Math.hypot(e.clientX - downX, e.clientY - downY) >= 4) return
-  openEditor()
+  if (ctx.ownerMode) openEditor()
 }
 
 function onRemove() {
@@ -86,7 +88,6 @@ function onRemove() {
   position: relative;
   min-width: 112px;
   border-radius: 10px;
-  background: transparent;
   transition: background 0.12s;
 }
 .dct--draggable { cursor: pointer; touch-action: pan-y; }
@@ -106,11 +107,4 @@ function onRemove() {
    the morph panel is the surface. The view owns its own padding so geometry matches the tile. */
 .dct-morph { min-width: 0; }
 
-@media (max-width: 760px) {
-  .dct {
-    border-radius: var(--r-lg);
-    background: var(--surface);
-    box-shadow: inset 0 0 0 1px var(--border);
-  }
-}
 </style>

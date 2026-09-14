@@ -396,12 +396,8 @@ func (s *Server) handleCloneChar(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	char, ok := s.loadChar(w, r)
+	char, ok := s.loadCharReadable(w, r)
 	if !ok {
-		return
-	}
-	if char.UserID != uid {
-		unauthorized(w)
 		return
 	}
 	var dataCopy map[string]any

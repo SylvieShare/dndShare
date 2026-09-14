@@ -1,11 +1,11 @@
 <template>
-  <BaseTile
-    class="money-tile"
+  <MorphTile padding="0"
+    ref="tileRef" class="money-tile"
     :interactive="canInteract"
     @click="canInteract && open($event)"
   >
-    <BlockMoneyView :title="blockTitle" :loading="loading" :coins="displayCoins" />
-  </BaseTile>
+    <BlockMoneyView :title="blockTitle" :loading="loading" :coins="displayCoins" :editable="canInteract" @edit="openFrom(tileRef?.$el)" />
+  </MorphTile>
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -71,7 +71,7 @@
 <script setup>
 import { computed, inject, ref, watch } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { MorphTile } from '@sylvieshare/share-ui'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView'
 import CalcPad from '@/features/character-editor/components/CalcPad'
 import { EditorPanel } from '@sylvieshare/share-ui'
@@ -82,7 +82,8 @@ import { useSuggestStore } from '@/stores/suggest'
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
-const { editorOpen, originRect, originEl, open, close } = useMorphOrigin()
+const tileRef = ref(null)
+const { editorOpen, originRect, originEl, open, openFrom, close } = useMorphOrigin()
 
 const loading = ref(false)
 const calcExpr = ref('')

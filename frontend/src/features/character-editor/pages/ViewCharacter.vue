@@ -268,6 +268,7 @@ Object.assign(charCtx, {
   contentSources,
   values: computed(() => data.value.values || {}),
   updateValues: patch => {
+    if (!isOwner.value) return
     updateValues(patch)
     recordSnapshot()
     nextTick(() => uiStore.setHeaderTitle(headerTitle.value))
@@ -279,6 +280,7 @@ Object.assign(charCtx, {
   sessions,
   topSession: activeSession,
   logSessionEvent: event => {
+    if (!isOwner.value) return
     const pending = sessionEventsStore.pendingCharacterEvent(event)
     if (pending) {
       pendingSessionEvents.push(pending)
@@ -346,6 +348,7 @@ watch([activeTab, isMobile], () => {
 // ── Event handlers (bridge composable calls + side-effects) ──────────
 
 function onUpdateValue(event) {
+  if (!isOwner.value) return
   updateValue(event)
   recordSnapshot()
   nextTick(() => uiStore.setHeaderTitle(headerTitle.value))
@@ -353,12 +356,14 @@ function onUpdateValue(event) {
 }
 
 function onUpdateVar(patch) {
+  if (!isOwner.value) return
   updateVar(patch)
   recordSnapshot()
   scheduleSave()
 }
 
 function onUpdateContentSources(value) {
+  if (!isOwner.value) return
   updateContentSources(value)
   recordSnapshot()
   scheduleSave()

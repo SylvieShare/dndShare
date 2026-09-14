@@ -1,11 +1,8 @@
 <template>
   <!-- Shared counter face, rendered in the tile and in the morph #view so they never drift.
        Chrome (border/bg/radius) lives on the wrapper; this owns only padding + content. -->
-  <div class="dctv" :style="counter.color ? { '--cc': counter.color } : null">
-    <div class="dctv-head">
-      <component :is="icon" class="dctv-icon" :size="15" :stroke-width="2" :style="counter.color ? { color: counter.color } : null" />
-      <span class="dctv-name" :class="{ 'dctv-name--empty': !counter.name }">{{ counter.name || 'Без названия' }}</span>
-    </div>
+  <MorphTile embedded padding="0" edit-label="Редактировать" :title="counter.name || 'Без названия'" :show-edit="manage" :edit-fade="!interactive" @edit="$emit('edit', $event)" class="dctv" :style="counter.color ? { '--cc': counter.color } : null">
+    <template #aside><component :is="icon" class="dctv-icon" :size="15" :stroke-width="2" :style="counter.color ? { color: counter.color } : null" /></template>
 
     <div class="dctv-body">
       <button v-if="manage" class="dctv-step" type="button" :disabled="!interactive" @click.stop="$emit('dec')">−</button>
@@ -20,10 +17,11 @@
       <span class="dctv-fill" :style="{ width: fillPct + '%' }"></span>
     </div>
     <div v-if="counter.unit" class="dctv-unit">{{ counter.unit }}</div>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
 import { resolveIcon } from '@/shared/ui/icons/counterIcons'
 
@@ -33,7 +31,7 @@ const props = defineProps({
   interactive: { type: Boolean, default: true }, // false in the morph clone → controls inert
 })
 
-defineEmits(['inc', 'dec'])
+defineEmits(['edit', 'inc', 'dec'])
 
 const icon = computed(() => resolveIcon(props.counter.icon))
 const fillPct = computed(() => {
@@ -55,26 +53,7 @@ const fillPct = computed(() => {
   box-sizing: border-box;
 }
 
-.dctv-head {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 100%;
-  min-width: 0;
-  color: var(--text-muted);
-}
 .dctv-icon { flex-shrink: 0; }
-.dctv-name {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  line-height: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.dctv-name--empty { font-style: italic; opacity: 0.7; }
 
 .dctv-body { display: flex; align-items: center; gap: 10px; }
 

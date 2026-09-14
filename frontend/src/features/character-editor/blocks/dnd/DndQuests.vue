@@ -6,20 +6,19 @@
     </div>
 
     <div v-if="activeQuests.length || ownerMode" class="dq-list">
-      <component
-        :is="ownerMode ? 'button' : 'div'"
+      <MorphTile padding="0"
         v-for="q in activeQuests"
         :key="q.id"
         :ref="el => setCardRef(q.id, el)"
         class="dq-card"
         :class="{ 'dq-card--clickable': ownerMode }"
         :style="{ '--qc': questStatusMeta(q.status).color }"
-        :type="ownerMode ? 'button' : undefined"
+        :interactive="ownerMode" :color="questStatusMeta(q.status).color"
         @click="ownerMode && edit(q.id)"
       >
-        <span class="dq-strip"></span>
-        <DndQuestCard :quest="q" />
-      </component>
+        <TileAccentStrip :color="questStatusMeta(q.status).color" />
+        <DndQuestCard :quest="q" :editable="ownerMode" @edit="edit(q.id)" />
+      </MorphTile>
 
       <button v-if="ownerMode" ref="addBtnEl" class="dq-add" type="button" @click="add">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -37,20 +36,19 @@
         Завершённые · {{ finishedQuests.length }}
       </button>
       <div v-if="finishedOpen" class="dq-list dq-list--finished">
-        <component
-          :is="ownerMode ? 'button' : 'div'"
-          v-for="q in finishedQuests"
+        <MorphTile padding="0"
+            v-for="q in finishedQuests"
           :key="q.id"
           :ref="el => setCardRef(q.id, el)"
           class="dq-card"
           :class="{ 'dq-card--clickable': ownerMode }"
           :style="{ '--qc': questStatusMeta(q.status).color }"
-          :type="ownerMode ? 'button' : undefined"
+          :interactive="ownerMode" :color="questStatusMeta(q.status).color"
           @click="ownerMode && edit(q.id)"
         >
-          <span class="dq-strip"></span>
-          <DndQuestCard :quest="q" />
-        </component>
+          <TileAccentStrip :color="questStatusMeta(q.status).color" />
+          <DndQuestCard :quest="q" :editable="ownerMode" @edit="edit(q.id)" />
+        </MorphTile>
       </div>
     </template>
 
@@ -81,6 +79,7 @@
 </template>
 
 <script setup>
+import { MorphTile, TileAccentStrip } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import DndQuestCard from '@/features/character-editor/blocks/dnd/components/DndQuestCard.vue'
 import DndQuestEditor from '@/features/character-editor/blocks/dnd/components/DndQuestEditor.vue'
@@ -114,7 +113,7 @@ const current = computed(() => draft.value || quests.value.find(q => q.id === ed
 const mode = computed(() => (draft.value ? 'create' : 'edit'))
 
 function setCardRef(id, el) {
-  if (el) cardEls[id] = el
+  if (el) cardEls[id] = el.$el || el
   else delete cardEls[id]
 }
 
@@ -192,9 +191,6 @@ function closeEditor() {
   width: 100%;
   padding: 0;
   text-align: left;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
   color: inherit;
   font: inherit;
   box-sizing: border-box;
@@ -205,15 +201,6 @@ function closeEditor() {
   .dq-card--clickable:hover { border-color: color-mix(in srgb, var(--qc) 45%, var(--border)); }
 }
 
-.dq-strip {
-  position: absolute;
-  top: var(--r-lg);
-  bottom: var(--r-lg);
-  left: 0;
-  width: 3px;
-  border-radius: 0 2px 2px 0;
-  background: var(--qc);
-}
 
 .dq-add {
   display: flex;

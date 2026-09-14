@@ -8,16 +8,18 @@
   </div>
 
   <!-- desktop grid tile -->
-  <BaseTile v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :color="color" :strip="toggled">
-    <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
-  </BaseTile>
+  <MorphTile padding="0" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :color="color">
+      <TileAccentStrip v-if="toggled" />
+    <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
+  </MorphTile>
 
   <!-- any other variant (e.g. mobile default): block may override the look via the `tile` slot.
        `open` opens the morph editor; `action` fires the tile's primary action (roll / shield). -->
-  <slot v-else name="tile" :open="open" :action="runAction">
-    <BaseTile ref="tileRef" class="util-tile" :color="color" :strip="toggled">
-      <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
-    </BaseTile>
+  <slot v-else name="tile" :can-edit="canEdit" :open="open" :action="runAction">
+    <MorphTile padding="0" ref="tileRef" class="util-tile" :color="color">
+      <TileAccentStrip v-if="toggled" />
+      <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
+    </MorphTile>
   </slot>
 
   <MorphEditorShell
@@ -44,7 +46,7 @@
 // Owners can open the editor; `rollable` tiles keep their dice action on read-only sheets.
 // The colored strip appears only while `toggled` (AC with its shield up), so resting tiles have no strip.
 import { computed, inject, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import StatTileFace from '@/features/character-editor/blocks/dnd/components/StatTileFace'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
@@ -68,9 +70,9 @@ const emit = defineEmits(['action'])
 const tileRef = ref(null)
 const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
-const { editorOpen, originRect, originEl, open: openMorph, openFrom, close } = useMorphOrigin()
+const { editorOpen, originRect, originEl, openFrom, close } = useMorphOrigin()
 
-function open() { if (canEdit.value) openMorph() }
+function open(event) { if (canEdit.value) openFrom(event?.currentTarget?.closest('.morph-tile') || event?.currentTarget || null) }
 function openTile() { if (canEdit.value) openFrom(tileRef.value?.$el || null) }
 function runAction() { if (props.rollable || canEdit.value) emit('action') }
 </script>

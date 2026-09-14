@@ -1,5 +1,6 @@
 <template>
-  <BaseTile class="stub-tile" :color="accent" strip>
+  <BaseTile class="stub-tile" :color="accent">
+      <TileAccentStrip />
     <div class="stub-tile-title">{{ title }}</div>
     <div class="stub-tile-body">
       <img
@@ -17,7 +18,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
 const props = defineProps(['block'])

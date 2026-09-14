@@ -1,6 +1,6 @@
 <template>
   <div ref="root" class="br-block">
-    <BaseTile class="br-tile">
+    <MorphTile padding="0" class="br-tile">
       <BlockResourcesView
         :resources="resources"
         :manage="ownerMode"
@@ -8,7 +8,7 @@
         @toggle="toggle"
         @manage="onManage"
       />
-    </BaseTile>
+    </MorphTile>
 
     <MorphEditorShell
       v-if="editorOpen"
@@ -49,7 +49,7 @@
 import { logResourceChange } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { MorphTile } from '@sylvieshare/share-ui'
 import BlockResourcesEditor from '@/features/character-editor/blocks/generic/components/BlockResourcesEditor'
 import BlockResourcesView from '@/features/character-editor/blocks/generic/components/BlockResourcesView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'

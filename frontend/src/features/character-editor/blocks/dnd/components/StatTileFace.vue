@@ -1,12 +1,11 @@
 <template>
-  <div class="stf" :style="{ '--sc': color }">
-    <SheetBlockTitle
-      class="stf-head"
+  <MorphTile embedded padding="0" edit-label="Редактировать"
       :title="label"
       :show-edit="showEdit"
       :edit-fade="editFade"
       @edit="$emit('edit')"
-    />
+     class="stf" :style="{ '--sc': color }">
+
     <div class="stf-body" @click.stop="$emit('open')">
       <span v-if="icon" class="stf-ic" :style="iconStyle" aria-hidden="true"></span>
       <div class="stf-val">
@@ -23,12 +22,12 @@
         </svg>
       </button>
     </div>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
+import { MorphTile } from '@sylvieshare/share-ui'
 
 // Uniform face for the desktop utility tiles (AC / initiative / speed / prof-bonus). Rendered both
 // as the tile (inside BaseTile) and as the morph window's left column, so the two look identical.
@@ -62,7 +61,7 @@ const iconStyle = computed(() => ({
   align-items: stretch;
   justify-content: center;
   gap: 4px;
-  height: 64px;
+  min-height: 76px;
   padding: 6px 12px;
   user-select: none;
   box-sizing: border-box;
@@ -70,8 +69,6 @@ const iconStyle = computed(() => ({
 }
 .stf-head { flex-shrink: 0; min-width: 0; }
 /* compact label so "Бонус умения" + the pencil fit the narrow stat tile on one line (no truncation) */
-.stf-head :deep(.sbt-title) { font-size: 9px; letter-spacing: 0.04em; }
-.stf-head :deep(.sbt-edit) { width: 18px; height: 18px; }
 .stf-body { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .stf-ic {
   width: 24px;

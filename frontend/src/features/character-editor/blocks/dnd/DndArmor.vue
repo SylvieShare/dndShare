@@ -7,18 +7,12 @@
     :icon="iconSrc"
     :toggled="!!armorState.shield"
   >
-    <template #tile="{ open }">
-      <div class="armor-tile">
-        <button class="sb-edit" type="button" title="Расчёт класса доспеха" @click.stop="open">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-          </svg>
-        </button>
+    <template #tile="{ open, canEdit }">
+      <MorphTile :title="block.title || 'КД'" :show-edit="canEdit" edit-label="Редактировать" @edit="open" class="armor-tile">
         <button class="armor-btn" :class="{ 'armor-toggled': armorState.shield }" type="button" @click="open">
           <div class="armor-shield-wrap"><div class="armor-shield-icon"></div><span class="armor-num">{{ armorState.total }}</span></div>
-          <div v-if="block.title" class="sheet-tile-title armor-label">{{ block.title }}</div>
         </button>
-      </div>
+      </MorphTile>
     </template>
 
     <template #editor>
@@ -54,6 +48,7 @@
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { computed, inject } from 'vue'
 import BonusList from '@/shared/ui/BonusList'
 import { EditorPanel, EditorSection, EditorTotal } from '@sylvieshare/share-ui'
@@ -86,9 +81,7 @@ function setBonuses(bonuses) { emit('update:value', props.block.id, { bonuses })
 </script>
 
 <style scoped>
-.armor-tile { position: relative; display: flex; align-items: center; justify-content: center; }
-.armor-tile .sb-edit { position: absolute; top: -2px; right: -2px; display: grid; place-items: center; width: 22px; height: 22px; border: none; border-radius: 6px; background: none; color: var(--text-muted); cursor: pointer; opacity: .35; z-index: 1; }
-@media (hover: hover) { .armor-tile .sb-edit:hover { color: var(--accent); opacity: 1; } }
+.armor-tile { display: flex; flex-direction: column; align-items: stretch; }
 .armor-btn { background: none; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; border-radius: 6px; }
 .armor-shield-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
 .armor-shield-icon { width: 68px; height: 74px; background-color: var(--surface-raised); mask: url('/static/shield.svg') center / contain no-repeat; -webkit-mask: url('/static/shield.svg') center / contain no-repeat; transition: background-color .25s, filter .25s; }

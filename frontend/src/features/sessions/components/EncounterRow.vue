@@ -16,11 +16,12 @@
       class="enc-row"
       :class="rowClasses"
       :color="rowAccentColor || 'var(--section-color)'"
-      :strip="isNpc && !!rowAccentColor"
+
       :style="playerColor ? { '--enc-player-color': playerColor } : null"
       @pointerdown="onRowPointerDown"
       @click="onRowClick"
     >
+      <TileAccentStrip v-if="isNpc && !!rowAccentColor" />
     <EncounterCombatControls
       :combatant="combatant"
       :selected="enc.isSelected(combatant)"
@@ -148,7 +149,7 @@ import EncounterOrderMarker from '@/features/sessions/components/EncounterOrderM
 import EncounterRowMenu from '@/features/sessions/components/EncounterRowMenu.vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BasePopover } from '@sylvieshare/share-ui'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
 import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'

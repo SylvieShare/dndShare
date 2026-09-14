@@ -50,6 +50,7 @@ export function useCharacterData(uuid, isMobile) {
   provide('charCtx', charCtx)
   Object.assign(charCtx, {
     characterUuid: uuid,
+    canClone: computed(() => Boolean(uuid) && !loading.value && !isOwner.value),
     sourceVersionId,
     contentSources,
     iconImageId,

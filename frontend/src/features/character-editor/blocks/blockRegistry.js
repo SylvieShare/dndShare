@@ -1,3 +1,4 @@
+import CharacterReadOnlyNotice from './generic/CharacterReadOnlyNotice.vue'
 import AvatarBlock from '@/features/character-editor/blocks/generic/AvatarBlock'
 import BlockMoney from '@/features/character-editor/blocks/generic/BlockMoney'
 import BlockResources from '@/features/character-editor/blocks/generic/BlockResources'
@@ -60,6 +61,7 @@ export const BLOCK_REGISTRY = {
   BLOCK_COUNTERS:   { component: DndCounters },
   BLOCK_STATES:     { component: BlockStates, noValuePreset: true },
   BLOCK_TAGS:       { component: BlockTags },
+  CHARACTER_READ_ONLY: { component: CharacterReadOnlyNotice, noValue: true },
   CAMPAIGN_BADGE:   { component: CampaignBadge, noValue: true },
   BLOCK_LVL:        { component: DndLvl, passValues: true },
   DND_ABILITIES:    { component: DndAbilities, passValuesOnly: true },

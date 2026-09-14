@@ -93,7 +93,9 @@ function closeLogin() {
 function openRequestedAuth(event) {
   authHint.value = event.detail?.reason === 'create-character'
     ? 'Для создания персонажа войдите или зарегистрируйтесь.'
-    : ''
+    : event.detail?.reason === 'clone-character'
+      ? 'Чтобы клонировать персонажа себе, войдите или зарегистрируйтесь. После входа нажмите «Клонировать себе» снова.'
+      : ''
   mobileOpen.value = true
 }
 onMounted(() => window.addEventListener('dndshare:request-auth', openRequestedAuth))

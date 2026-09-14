@@ -1,12 +1,10 @@
 <template>
   <div class="sp-bar">
-    <BaseTile v-if="showStats && hasStatConfig" class="sp-stats-panel">
-      <SheetBlockTitle
-        class="sp-mobile-panel-head"
+    <MorphTile v-if="showStats && hasStatConfig" class="sp-stats-panel" edit-label="Редактировать"
         :title="castingPanelTitle"
         :show-edit="canInteract && showCastingConfig"
         @edit="openEditor"
-      />
+      >
       <div v-if="castingStats.length <= 1" class="sp-stats">
         <div class="sp-tile sp-tile--base">
           <span class="sp-tlabel">Базовая хар-ка</span>
@@ -32,15 +30,13 @@
           <span>Атака {{ row.attackBonus >= 0 ? '+' + row.attackBonus : row.attackBonus }}</span>
         </div>
       </div>
-    </BaseTile>
+    </MorphTile>
 
-    <BaseTile v-if="showSlots && (activeSlotPools.length > 0 || canInteract)" class="sp-slots-panel">
-      <SheetBlockTitle
-        class="sp-slots-head"
+    <MorphTile v-if="showSlots && (activeSlotPools.length > 0 || canInteract)" class="sp-slots-panel" edit-label="Редактировать"
         title="Ячейки заклинаний"
         :show-edit="canInteract"
         @edit="editOpen = true"
-      />
+      >
       <div class="sp-pools">
         <section v-for="pool in activeSlotPools" :key="pool.rest" class="sp-pool">
           <div class="sp-pool-head">
@@ -67,7 +63,7 @@
           </div>
         </section>
       </div>
-    </BaseTile>
+    </MorphTile>
 
     <DndSpellbookSettingsModal
       v-if="editOpen"
@@ -95,8 +91,7 @@ import { computed, ref } from 'vue'
 
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
-import { BaseTile } from '@sylvieshare/share-ui'
-import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
+import { MorphTile } from '@sylvieshare/share-ui'
 
 const editOpen = ref(false)
 
@@ -152,12 +147,6 @@ const castingPanelTitle = computed(() => props.castingStats.length <= 1 && props
   padding: 18px;
 }
 
-.sp-mobile-panel-head {
-  display: flex;
-  margin-bottom: 12px;
-}
-
-.sp-slots-head { margin-bottom: 12px; }
 
 .sp-caster-stats { display: grid; gap: 8px; }
 .sp-caster-row { display: grid; grid-template-columns: minmax(90px, 1fr) repeat(3, auto); align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 12px; }

@@ -1,13 +1,12 @@
 <template>
   <!-- Shared resources face, rendered in the tile and in the morph #view so they never drift.
        Padding is owned by this component; pips stay tickable in play. -->
-  <div class="brv" :class="{ 'brv--panel': panel }">
-    <SheetBlockTitle
+  <MorphTile embedded padding="0" edit-label="Редактировать"
       :title="title"
       :show-edit="manage"
       :edit-fade="editFade"
       @edit="$emit('manage')"
-    />
+     class="brv" :class="{ 'brv--panel': panel }">
 
     <div v-if="resources.length" class="brv-list">
       <div v-for="(res, i) in resources" :key="res.key || i" class="brv-row">
@@ -31,11 +30,11 @@
     </div>
 
     <span v-else class="brv-empty">нет</span>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
-import SheetBlockTitle from '@/shared/ui/SheetBlockTitle'
+import { MorphTile } from '@sylvieshare/share-ui'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 

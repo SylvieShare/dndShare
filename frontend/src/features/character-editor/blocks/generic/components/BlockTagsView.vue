@@ -1,14 +1,6 @@
 <template>
-  <div class="btv" :class="{ 'btv--panel': panel }">
-    <div class="btv-head">
-      <span class="sheet-tile-title btv-label">{{ label }}</span>
-      <span v-if="editable" class="btv-pencil" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 20h9" />
-          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-        </svg>
-      </span>
-    </div>
+  <MorphTile embedded padding="0" edit-label="Редактировать" :title="label" :show-edit="editable" @edit="$emit('edit', $event)" class="btv" :class="{ 'btv--panel': panel }">
+
     <div v-if="visibleSections.length" class="btv-sections">
       <div v-for="sec in visibleSections" :key="sec.title" class="btv-sec">
         <span class="btv-sec-title">{{ sec.title }}:</span>
@@ -16,10 +8,11 @@
       </div>
     </div>
     <span v-else class="btv-empty">нет</span>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
 
 const props = defineProps({
@@ -30,6 +23,7 @@ const props = defineProps({
 })
 
 const visibleSections = computed(() => props.sections.filter(s => (s.tags || []).length))
+defineEmits(['edit'])
 </script>
 
 <style scoped>
@@ -48,25 +42,8 @@ const visibleSections = computed(() => props.sections.filter(s => (s.tags || [])
   padding-right: 16px;
 }
 
-.btv-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
-.btv-label {
-  flex-shrink: 0;
-}
 
-.btv-pencil {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  color: var(--text-muted);
-  opacity: 0.35;
-  transition: color 0.15s, opacity 0.15s;
-}
-@media (hover: hover) { .btv:hover .btv-pencil { color: var(--accent); opacity: 1; } }
 
 .btv-sections {
   display: flex;

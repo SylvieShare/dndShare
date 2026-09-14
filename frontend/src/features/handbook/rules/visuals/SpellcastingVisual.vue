@@ -23,7 +23,8 @@
       </div>
     </div>
 
-    <BaseTile class="spell-warning" color="var(--warning)" strip>
+    <BaseTile class="spell-warning" color="var(--warning)">
+      <TileAccentStrip />
       <TriangleAlert aria-hidden="true" />
       <span><strong>Правило бонусного действия · 2014</strong><small>В этот ход другое заклинание возможно только как заговор со временем «1 действие».</small></span>
     </BaseTile>
@@ -40,7 +41,7 @@ import {
   TimerOff,
   TriangleAlert,
 } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
 
 const checks = [
   { title: 'Есть доступ', text: 'Заклинание известно или подготовлено.' },

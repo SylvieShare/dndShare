@@ -1,6 +1,6 @@
 <template>
   <div ref="root" class="da-block">
-    <BaseTile class="da-tile">
+    <MorphTile padding="0" class="da-tile">
       <DndActionsView
         :groups="groups"
         :manage="ownerMode"
@@ -13,7 +13,7 @@
         @activate-target="openTargetPicker"
         @toggle-resource="toggleActionResource"
       />
-    </BaseTile>
+    </MorphTile>
 
     <MorphEditorShell
       v-if="editorOpen"
@@ -64,7 +64,7 @@
 import { logResourceChange, itemEventData, resourceChangeData } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { MorphTile } from '@sylvieshare/share-ui'
 import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/DndActionsEditor.vue'
 import DndActionsView from '@/features/character-editor/blocks/dnd/components/DndActionsView.vue'
 import CharacterEntryPickerModal from '@/features/character-editor/components/CharacterEntryPickerModal.vue'

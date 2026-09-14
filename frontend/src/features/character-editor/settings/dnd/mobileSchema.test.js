@@ -6,7 +6,7 @@ describe('D&D mobile sheet schema', () => {
     expect(schema.layouts.mobile.tabs.filter(tab => tab.surface)).toEqual([])
 
     const personality = schema.layouts.mobile.tabs.find(tab => tab.title === 'Личность')
-    const groups = personality?.content?.children || []
+    const groups = (personality?.content?.children || []).filter(block => block.ref !== 'read_only_notice')
 
     expect(groups.every(group => group.props?.tile === true)).toBe(true)
     expect(groups.map(group => group.children?.[0]?.title)).toEqual([
@@ -28,12 +28,12 @@ describe('D&D mobile sheet schema', () => {
     const diary = schema.layouts.mobile.tabs.find(tab => tab.title === 'Дневник')
 
     expect(diary?.svg).toBe('/static/edit-note.svg')
-    expect(diary?.content?.children?.map(block => block.ref)).toEqual(['diary', 'notes'])
+    expect(diary?.content?.children?.map(block => block.ref)).toEqual(['read_only_notice', 'diary', 'notes'])
   })
 
   it('shows actions and expanded feature cards on the mobile abilities tab', () => {
     const abilities = schema.layouts.mobile.tabs.find(tab => tab.title === 'Способности')
-    const [featureWidgets, actions, resources, defenses, proficiencies, ...features] = abilities?.content?.children || []
+    const [featureWidgets, actions, resources, defenses, proficiencies, ...features] = (abilities?.content?.children || []).filter(block => block.ref !== 'read_only_notice')
 
     expect(featureWidgets?.ref).toBe('feature_widgets')
     expect(actions?.ref).toBe('actions')
