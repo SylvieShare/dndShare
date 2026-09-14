@@ -6,7 +6,7 @@ import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 
 export function useCharacterTransfers({ uuid, session, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions }) {
-  const state = reactive({ participants: [], transfers: [], view: '', selection: null, recipient: '', loading: false, busy: false, error: '' })
+  const state = reactive({ participants: [], playersLoaded: false, transfers: [], view: '', selection: null, recipient: '', loading: false, busy: false, error: '' })
   const events = useSessionEventsStore()
   const incomingCount = computed(() => state.transfers.filter(t => t.recipientCharUuid === uuid).length)
   const recipients = computed(() => state.participants.filter(p => p.charUuid !== uuid))
@@ -37,7 +37,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     try {
       await useTemplateStore().ensure()
       const response = await getSession(id)
-      if (session.value?.uuid === id) state.participants = response.participants || []
+      if (session.value?.uuid === id) { state.participants = response.participants || []; state.playersLoaded = true }
     } catch (error) { state.error = error.message || 'Не удалось загрузить игроков' }
     finally { state.loading = false }
   }
@@ -86,6 +86,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
   }
   async function catchUp() {
     await Promise.all([refresh(), loadSessions(), events.refresh()])
+    await loadPlayers()
     if (!state.busy && saveStatus.value === 'idle') await refreshFromServer(() => !state.busy && saveStatus.value === 'idle')
   }
   const live = useSessionLive({
@@ -93,7 +94,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     onCatchUp: catchUp,
     onUpdate: async update => {
       if (update.journal) await refresh()
-      if (update.participants || update.session) { await loadSessions(); if (state.view) await loadPlayers() }
+      if (update.participants || update.session) { await loadSessions(); await loadPlayers() }
       if (update.characterIds?.length && !state.busy && saveStatus.value === 'idle') {
         await refreshFromServer(() => !state.busy && saveStatus.value === 'idle')
       }
@@ -102,8 +103,9 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
   watch(() => session.value?.uuid, id => {
     live.stop()
     state.participants = []
+    state.playersLoaded = false
     state.transfers = []
-    if (id && isOwner.value) { void refresh(); live.start() }
+    if (id && isOwner.value) { void refresh(); void loadPlayers(); live.start() }
     else state.view = ''
   }, { immediate: true })
   onBeforeUnmount(live.stop)
