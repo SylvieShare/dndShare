@@ -1,5 +1,6 @@
 <template>
-  <MorphTile embedded padding="0" edit-label="Редактировать" :title="activeItems.length ? label : emptyLabel" :show-edit="editable" @edit="$emit('edit', $event)" class="bss-view" :class="{ 'bss-view--panel': panel }">
+  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="activeItems.length ? label : emptyLabel" :show-edit="editable" @edit="$emit('edit', $event)" class="bss-view" :class="{ 'bss-view--panel': panel }">
+    <template #decoration><slot name="decoration" /></template>
 
     <div v-if="activeItems.length" class="bss-list">
       <span

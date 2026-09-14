@@ -19,7 +19,7 @@
   </div>
 
   <!-- widget -->
-  <div v-else class="lvl-widget" @click="$emit('open', $event)">
+  <MorphTile v-else :embedded="panel" color="var(--accent)" :interactive="!panel" padding="0" class="lvl-widget" @click="$emit('open', $event)">
     <div class="lvl-w-level">
       <div class="lvl-w-sup">УР.</div>
       <span class="lvl-w-num">{{ level }}</span>
@@ -32,15 +32,17 @@
       <StatBar size="medium" decorated :percent="barPct" color="var(--accent)" />
     </div>
     <span v-if="canLevelUp" class="lvl-w-up">↑</span>
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { computed } from 'vue'
 import StatBar from '@/shared/ui/StatBar.vue'
 import { EXPERIENCE } from '../lib/experience'
 
 const props = defineProps({
+  panel: Boolean,
   data: { type: Object, default: () => ({ level: 1, exp: 0 }) },
   compact: { type: Boolean, default: false },
   mini: { type: Boolean, default: false },

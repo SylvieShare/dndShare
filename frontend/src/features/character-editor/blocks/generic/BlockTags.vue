@@ -1,11 +1,9 @@
 <template>
-  <MorphTile padding="0"
-    ref="tileRef" class="tags-tile"
-    :interactive="canInteract"
-    @click="canInteract && open($event)"
-  >
-    <BlockTagsView :sections="displaySections" :label="label" :editable="canInteract" @edit="openFrom(tileRef?.$el)" />
-  </MorphTile>
+  <BlockTagsView ref="tileRef" class="tags-tile"
+    :sections="displaySections" :label="label"
+    :interactive="canInteract" :editable="canInteract"
+    @click="canInteract && open($event)" @edit="openFrom(tileRef?.$el)"
+  />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -33,7 +31,6 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { MorphTile } from '@sylvieshare/share-ui'
 import BlockTagsEditor from '@/features/character-editor/blocks/generic/components/BlockTagsEditor'
 import BlockTagsView from '@/features/character-editor/blocks/generic/components/BlockTagsView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'

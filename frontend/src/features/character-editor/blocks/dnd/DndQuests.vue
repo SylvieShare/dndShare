@@ -6,7 +6,7 @@
     </div>
 
     <div v-if="activeQuests.length || ownerMode" class="dq-list">
-      <MorphTile padding="0"
+      <DndQuestCard
         v-for="q in activeQuests"
         :key="q.id"
         :ref="el => setCardRef(q.id, el)"
@@ -15,10 +15,9 @@
         :style="{ '--qc': questStatusMeta(q.status).color }"
         :interactive="ownerMode" :color="questStatusMeta(q.status).color"
         @click="ownerMode && edit(q.id)"
-      >
-        <TileAccentStrip :color="questStatusMeta(q.status).color" />
-        <DndQuestCard :quest="q" :editable="ownerMode" @edit="edit(q.id)" />
-      </MorphTile>
+        :quest="q" :editable="ownerMode" @edit="edit(q.id)">
+        <template #decoration><TileAccentStrip :color="questStatusMeta(q.status).color" /></template>
+      </DndQuestCard>
 
       <button v-if="ownerMode" ref="addBtnEl" class="dq-add" type="button" @click="add">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -36,8 +35,8 @@
         Завершённые · {{ finishedQuests.length }}
       </button>
       <div v-if="finishedOpen" class="dq-list dq-list--finished">
-        <MorphTile padding="0"
-            v-for="q in finishedQuests"
+        <DndQuestCard
+          v-for="q in finishedQuests"
           :key="q.id"
           :ref="el => setCardRef(q.id, el)"
           class="dq-card"
@@ -45,10 +44,9 @@
           :style="{ '--qc': questStatusMeta(q.status).color }"
           :interactive="ownerMode" :color="questStatusMeta(q.status).color"
           @click="ownerMode && edit(q.id)"
-        >
-          <TileAccentStrip :color="questStatusMeta(q.status).color" />
-          <DndQuestCard :quest="q" :editable="ownerMode" @edit="edit(q.id)" />
-        </MorphTile>
+           :quest="q" :editable="ownerMode" @edit="edit(q.id)">
+          <template #decoration><TileAccentStrip :color="questStatusMeta(q.status).color" /></template>
+        </DndQuestCard>
       </div>
     </template>
 
@@ -62,7 +60,7 @@
       @close="closeEditor"
     >
       <template #view>
-        <DndQuestCard :quest="current" />
+        <DndQuestCard panel :quest="current" />
       </template>
       <template #editor>
         <DndQuestEditor
@@ -79,7 +77,7 @@
 </template>
 
 <script setup>
-import { MorphTile, TileAccentStrip } from '@sylvieshare/share-ui'
+import { TileAccentStrip } from '@sylvieshare/share-ui'
 import { computed, inject, ref } from 'vue'
 import DndQuestCard from '@/features/character-editor/blocks/dnd/components/DndQuestCard.vue'
 import DndQuestEditor from '@/features/character-editor/blocks/dnd/components/DndQuestEditor.vue'
@@ -187,9 +185,7 @@ function closeEditor() {
 
 .dq-card {
   position: relative;
-  display: block;
   width: 100%;
-  padding: 0;
   text-align: left;
   color: inherit;
   font: inherit;

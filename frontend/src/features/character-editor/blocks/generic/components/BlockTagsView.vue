@@ -1,5 +1,5 @@
 <template>
-  <MorphTile embedded padding="0" edit-label="Редактировать" :title="label" :show-edit="editable" @edit="$emit('edit', $event)" class="btv" :class="{ 'btv--panel': panel }">
+  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="label" :show-edit="editable" @edit="$emit('edit', $event)" class="btv" :class="{ 'btv--panel': panel }">
 
     <div v-if="visibleSections.length" class="btv-sections">
       <div v-for="sec in visibleSections" :key="sec.title" class="btv-sec">

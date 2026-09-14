@@ -3,10 +3,11 @@
     <span class="exh-compact-label">Истощение</span>
     <strong>{{ level }}</strong>
   </button>
-  <MorphTile padding="0" v-else class="exh-tile" :color="color" :interactive="canEdit" @click="openEditor">
-      <TileAccentStrip v-if="level > 0" />
-    <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" :editable="canEdit" @edit="openEditor" />
-  </MorphTile>
+  <DndExhaustionView v-else :color="color" :interactive="canEdit"
+    :level="level" :value-text="valueText" :active-effects="activeEffects" :editable="canEdit"
+    @click="openEditor" @edit="openEditor">
+    <template #decoration><TileAccentStrip v-if="level > 0" /></template>
+  </DndExhaustionView>
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -18,9 +19,7 @@
     @close="closeEditor"
   >
     <template #view>
-      <div class="exh-face">
-        <DndExhaustionView :level="level" :value-text="valueText" :active-effects="activeEffects" editable />
-      </div>
+      <DndExhaustionView panel :level="level" :value-text="valueText" :active-effects="activeEffects" editable />
     </template>
 
     <template #editor>
@@ -31,7 +30,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
-import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip } from '@sylvieshare/share-ui'
 import DndExhaustionEditor from '@/features/character-editor/blocks/dnd/components/DndExhaustionEditor'
 import DndExhaustionView from '@/features/character-editor/blocks/dnd/components/DndExhaustionView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
@@ -59,11 +58,6 @@ function emitValue(value) { if (canEdit.value) emit('update:value', props.block.
 </script>
 
 <style scoped>
-.exh-tile {
-  min-height: 42px;
-  padding: 10px 12px 10px 14px;
-}
-
 .exh-compact {
   display: inline-flex;
   flex-direction: column;
@@ -88,6 +82,4 @@ function emitValue(value) { if (canEdit.value) emit('update:value', props.block.
 .exh-compact--on { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .exh-compact--on strong { color: var(--danger); }
 
-/* morph view (left column) — match the tile's top/left padding so it doesn't jump during the morph */
-.exh-face { padding: 10px 14px; }
 </style>

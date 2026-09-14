@@ -1,7 +1,7 @@
 <template>
   <!-- Shared resources face, rendered in the tile and in the morph #view so they never drift.
        Padding is owned by this component; pips stay tickable in play. -->
-  <MorphTile embedded padding="0" edit-label="Редактировать"
+  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать"
       :title="title"
       :show-edit="manage"
       :edit-fade="editFade"

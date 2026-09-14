@@ -34,14 +34,12 @@
           <li v-if="state.buyStartingEquipment" class="shop-replacement"><span class="fk">Снаряжение</span>Заменено закупкой за начальное богатство класса</li>
         </ul>
 
-        <BaseTile
+        <BlockMoneyView
           v-if="!state.buyStartingEquipment && backgroundCoins.length"
           class="background-wallet"
           color="var(--warning)"
-          tint
-        >
-          <BlockMoneyView title="Кошелёк" :loading="currencyLoading" :coins="backgroundCoins" />
-        </BaseTile>
+          tint title="Кошелёк" :loading="currencyLoading" :coins="backgroundCoins"
+        />
 
         <div v-if="activeBackgroundItemChoices.length" class="grant-group background-choices">
           <div class="background-choices-head">
@@ -147,7 +145,6 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { BaseTile } from '@sylvieshare/share-ui'
 import BackgroundSelectCard from '@/features/character-list/components/wizard/BackgroundSelectCard.vue'
 import EquipmentItemSelect from '@/features/character-list/components/wizard/EquipmentItemSelect.vue'
 import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'

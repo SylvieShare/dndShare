@@ -1,54 +1,49 @@
 <template>
-  <MorphTile padding="0"
+  <DndCounterTileView v-bind="$attrs"
     ref="tileEl"
     class="dct"
     :class="{ 'sortable-placeholder': ctx.sortable.isSource(counter), 'dct--draggable': ctx.ownerMode }"
     :data-sortable-key="counter.id"
     @pointerdown="onDown"
     @pointerup="onUp"
-  >
-    <DndCounterTileView
-      :counter="counter"
-      :manage="ctx.ownerMode"
-      interactive
-      @edit="openEditor"
-      @inc="ctx.adjust(counter.id, 1)"
-      @dec="ctx.adjust(counter.id, -1)"
-    />
+    :counter="counter"
+    :manage="ctx.ownerMode"
+    interactive
+    @edit="openEditor"
+    @inc="ctx.adjust(counter.id, 1)"
+    @dec="ctx.adjust(counter.id, -1)"
+  />
 
-    <MorphEditorShell
-      v-if="editorOpen"
-      :origin-rect="originRect"
-      :origin-el="originEl"
-      :strip="false"
-      :min-view-width="320"
-      @close="close"
-    >
-      <template #view>
-        <div class="dct-morph">
-          <DndCounterTileView :counter="counter" :manage="ctx.ownerMode" :interactive="false" />
-        </div>
-      </template>
-      <template #editor>
-        <DndCounterEditor
-          :counter="counter"
-          @update="p => ctx.update(counter.id, p)"
-          @remove="onRemove"
-          @close="close"
-        />
-      </template>
-    </MorphEditorShell>
-  </MorphTile>
+  <MorphEditorShell
+    v-if="editorOpen"
+    :origin-rect="originRect"
+    :origin-el="originEl"
+    :strip="false"
+    :min-view-width="320"
+    @close="close"
+  >
+    <template #view>
+      <DndCounterTileView panel :counter="counter" :manage="ctx.ownerMode" :interactive="false" />
+    </template>
+    <template #editor>
+      <DndCounterEditor
+        :counter="counter"
+        @update="p => ctx.update(counter.id, p)"
+        @remove="onRemove"
+        @close="close"
+      />
+    </template>
+  </MorphEditorShell>
 </template>
 
 <script setup>
-import { MorphTile } from '@sylvieshare/share-ui'
 import { inject, ref } from 'vue'
 import DndCounterEditor from '@/features/character-editor/blocks/dnd/components/DndCounterEditor.vue'
 import DndCounterTileView from '@/features/character-editor/blocks/dnd/components/DndCounterTileView.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 
+defineOptions({ inheritAttrs: false })
 const props = defineProps({
   counter: { type: Object, required: true },
   index: { type: Number, required: true },
@@ -103,8 +98,5 @@ function onRemove() {
 }
 .dct.sortable-placeholder > * { visibility: hidden; }
 
-/* morph window header — wraps the shared view so it morphs cleanly into the window. No border here;
-   the morph panel is the surface. The view owns its own padding so geometry matches the tile. */
-.dct-morph { min-width: 0; }
 
 </style>

@@ -20,7 +20,7 @@
   </div>
 
   <!-- Main widget -->
-  <div v-else ref="rootElement" class="hp-widget" :style="{ '--hp-color': barColor }">
+  <MorphTile v-else ref="rootElement" :embedded="panel" :color="barColor" :framed="!panel" padding="0" class="hp-widget" :style="{ '--hp-color': barColor }">
     <div class="hp-content" :class="{ 'hp-dead': isDead }" @click="$emit('open', $event)">
       <div class="hp-main">
         <img class="hp-heart-icon" :class="heartbeatClass" src="/static/hp-pulse.svg" :style="{ filter: svgColorFilter }" alt="" />
@@ -37,18 +37,20 @@
       </div>
     </div>
     <DndDeathSaves :hp="hp" @click.stop @change="$emit('change', $event)" />
-  </div>
+  </MorphTile>
 </template>
 
 <script setup>
+import { MorphTile } from '@sylvieshare/share-ui'
 import { computed, ref } from 'vue'
 const rootElement = ref(null)
-defineExpose({ rootElement: () => rootElement.value })
+defineExpose({ rootElement: () => rootElement.value?.$el || rootElement.value })
 import StatBar from '@/shared/ui/StatBar.vue'
 import DndDeathSaves from '@/features/character-editor/blocks/dnd/DndDeathSaves'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const props = defineProps({
+  panel: Boolean,
   hp: { type: Object, required: true },
   compact: { type: Boolean, default: false },
 })
@@ -99,7 +101,7 @@ const svgColorFilter = computed(() => {
 .hp-c-max { color: var(--text-2); font-size: 16px; font-weight: 600; line-height: 1; }
 .hp-c-temp { color: var(--info); font-size: 13px; font-weight: 700; margin-left: 4px; line-height: 1; }
 
-/* ── Main widget (frameless — the frame comes from the BaseTile/morph panel wrapper) ── */
+/* Regular face owns the tile surface; the morph preview is embedded. */
 .hp-widget {
   position: relative;
   display: flex;

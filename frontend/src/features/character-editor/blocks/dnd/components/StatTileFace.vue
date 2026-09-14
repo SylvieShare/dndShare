@@ -1,10 +1,11 @@
 <template>
-  <MorphTile compact-header embedded padding="0" edit-label="Редактировать"
+  <MorphTile compact-header :embedded="panel" :color="color" padding="0" edit-label="Редактировать"
       :title="label"
       :show-edit="showEdit"
       :edit-fade="editFade"
       @edit="$emit('edit')"
      class="stf" :style="{ '--sc': color }">
+    <template #decoration><slot name="decoration" /></template>
 
     <div class="stf-body" @click.stop="$emit('open')">
       <span v-if="icon" class="stf-ic" :style="iconStyle" aria-hidden="true"></span>
@@ -30,10 +31,11 @@ import { computed } from 'vue'
 import { MorphTile } from '@sylvieshare/share-ui'
 
 // Uniform face for the desktop utility tiles (AC / initiative / speed / prof-bonus). Rendered both
-// as the tile (inside BaseTile) and as the morph window's left column, so the two look identical.
+// as the surface tile and as the morph window's left column, so the two look identical.
 // The title carries an edit pencil that emits `edit`; clicking the value body emits `open` — both open
 // the morph editor. Tiles flagged `rollable` show a dice button on the right that emits `roll`.
 const props = defineProps({
+  panel: Boolean,
   label: { type: String, default: '' },
   value: { type: [String, Number], default: '' },
   pre: { type: String, default: '' },     // e.g. '+'

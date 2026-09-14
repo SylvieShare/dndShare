@@ -1,7 +1,6 @@
 <template>
-  <!-- Shared quest face, rendered in the list card and in the morph #view so they never drift.
-       Chrome (border/bg/radius) lives on the wrapper; this owns only padding + content. -->
-  <MorphTile embedded padding="0" edit-label="Редактировать" :title="quest.title || 'Без названия'" :show-edit="editable" @edit="$emit('edit', $event)" class="dqc" :style="{ '--qc': meta.color }">
+  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="quest.title || 'Без названия'" :show-edit="editable" @edit="$emit('edit', $event)" class="dqc" :style="{ '--qc': meta.color }">
+    <template #decoration><slot name="decoration" /></template>
     <template #aside><span class="dqc-chip"><span class="dqc-dot"></span>{{ meta.label }}</span></template>
     <div v-if="quest.desc" class="dqc-desc">{{ quest.desc }}</div>
     <div v-if="quest.reward" class="dqc-reward">
@@ -20,6 +19,7 @@ import { computed } from 'vue'
 import { questStatusMeta } from '@/features/character-editor/blocks/dnd/lib/questEntry'
 
 const props = defineProps({
+  panel: Boolean,
   editable: { type: Boolean, default: false },
   quest: { type: Object, required: true },
 })

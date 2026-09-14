@@ -21,7 +21,7 @@ describe('read-only character sheet blocks', () => {
     const utility = source('./components/StatTile.vue')
     expect(hp).toContain('if (!canEdit.value) return')
     expect(hp).toContain('function openEditor(event)')
-    expect(hp).toContain('if (canEdit.value) openMorph(event)')
+    expect(hp).toContain('if (canEdit.value) openMorph({ currentTarget:')
     expect(exhaustion).toContain('if (canEdit.value) openMorph()')
     expect(exhaustion).toContain(':editable="canEdit"')
     expect(utility).toContain('if (canEdit.value) openFrom(')

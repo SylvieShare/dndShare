@@ -1,7 +1,6 @@
 <template>
-  <!-- Shared exhaustion face, rendered in the tile and in the morph #view so they never drift.
-       Padding/strip are owned by the wrapper (BaseTile / morph face); this is just the content. -->
-  <MorphTile embedded padding="0" edit-label="Редактировать" :title="level > 0 ? 'Истощение' : 'Истощения нет'" :show-edit="editable" @edit="$emit('edit', $event)" class="exh-view">
+  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="level > 0 ? 'Истощение' : 'Истощения нет'" :show-edit="editable" @edit="$emit('edit', $event)" class="exh-view" :class="{ 'exh-view--panel': panel }">
+    <template #decoration><slot name="decoration" /></template>
     <template #aside><span v-if="level > 0" class="exh-value exh-value--on">{{ valueText }}</span></template>
     <ul v-if="level > 0" class="exh-lines">
       <li v-for="(eff, i) in activeEffects" :key="i">{{ eff }}</li>
@@ -12,6 +11,7 @@
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
 defineProps({
+  panel: Boolean,
   level: { type: Number, default: 0 },
   valueText: { type: String, default: '' },
   activeEffects: { type: Array, default: () => [] },
@@ -22,10 +22,13 @@ defineEmits(['edit'])
 
 <style scoped>
 .exh-view {
+  min-height: 42px;
+  padding: 10px 12px 10px 14px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+.exh-view--panel { padding-right: 14px; }
 .exh-value {
   font-size: 14px;
   font-weight: 700;

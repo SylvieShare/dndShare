@@ -8,18 +8,16 @@
   </div>
 
   <!-- desktop grid tile -->
-  <MorphTile padding="0" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :color="color">
-      <TileAccentStrip v-if="toggled" />
-    <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
-  </MorphTile>
+  <StatTileFace v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+    <template #decoration><TileAccentStrip v-if="toggled" /></template>
+  </StatTileFace>
 
   <!-- any other variant (e.g. mobile default): block may override the look via the `tile` slot.
        `open` opens the morph editor; `action` fires the tile's primary action (roll / shield). -->
   <slot v-else name="tile" :can-edit="canEdit" :open="open" :action="runAction">
-    <MorphTile padding="0" ref="tileRef" class="util-tile" :color="color">
-      <TileAccentStrip v-if="toggled" />
-      <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction" />
-    </MorphTile>
+    <StatTileFace ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+      <template #decoration><TileAccentStrip v-if="toggled" /></template>
+    </StatTileFace>
   </slot>
 
   <MorphEditorShell
@@ -33,7 +31,7 @@
     @close="close"
   >
     <template #view="{ revealed }">
-      <StatTileFace :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :color="color" :edit-fade="revealed" />
+      <StatTileFace panel :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :color="color" :edit-fade="revealed" />
     </template>
     <template #editor><slot name="editor" /></template>
   </MorphEditorShell>
@@ -46,7 +44,7 @@
 // Owners can open the editor; `rollable` tiles keep their dice action on read-only sheets.
 // The colored strip appears only while `toggled` (AC with its shield up), so resting tiles have no strip.
 import { computed, inject, ref } from 'vue'
-import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import StatTileFace from '@/features/character-editor/blocks/dnd/components/StatTileFace'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'

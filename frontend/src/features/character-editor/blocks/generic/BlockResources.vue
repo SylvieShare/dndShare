@@ -1,55 +1,50 @@
 <template>
-  <div ref="root" class="br-block">
-    <MorphTile padding="0" class="br-tile">
+  <BlockResourcesView ref="root" v-bind="$attrs" class="br-block"
+    :resources="resources"
+    :manage="ownerMode"
+    :can-interact="ownerMode"
+    @toggle="toggle"
+    @manage="onManage"
+  />
+
+  <MorphEditorShell
+    v-if="editorOpen"
+    :origin-rect="originRect"
+    :origin-el="originEl"
+    :strip="false"
+    @close="close"
+  >
+    <template #view="{ revealed }">
       <BlockResourcesView
         :resources="resources"
         :manage="ownerMode"
         :can-interact="ownerMode"
+        :edit-fade="revealed"
+        panel
         @toggle="toggle"
-        @manage="onManage"
       />
-    </MorphTile>
-
-    <MorphEditorShell
-      v-if="editorOpen"
-      :origin-rect="originRect"
-      :origin-el="originEl"
-      :strip="false"
-      @close="close"
-    >
-      <template #view="{ revealed }">
-        <BlockResourcesView
-          :resources="resources"
-          :manage="ownerMode"
-          :can-interact="ownerMode"
-          :edit-fade="revealed"
-          panel
-          @toggle="toggle"
-        />
-      </template>
-      <template #editor>
-        <BlockResourcesEditor
-          :resources="manualResources"
-          :readonly-resources="readonlyResources"
-          @reorder="reorder"
-          @change-color="changeColor"
-          @rename="rename"
-          @set-total="setTotal"
-          @set-rest="setRest"
-          @set-visible="setVisible"
-          @remove="remove"
-          @add="add"
-        />
-      </template>
-    </MorphEditorShell>
-  </div>
+    </template>
+    <template #editor>
+      <BlockResourcesEditor
+        :resources="manualResources"
+        :readonly-resources="readonlyResources"
+        @reorder="reorder"
+        @change-color="changeColor"
+        @rename="rename"
+        @set-total="setTotal"
+        @set-rest="setRest"
+        @set-visible="setVisible"
+        @remove="remove"
+        @add="add"
+      />
+    </template>
+  </MorphEditorShell>
 </template>
 
 <script setup>
 import { logResourceChange } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, ref } from 'vue'
-import { MorphTile } from '@sylvieshare/share-ui'
 import BlockResourcesEditor from '@/features/character-editor/blocks/generic/components/BlockResourcesEditor'
 import BlockResourcesView from '@/features/character-editor/blocks/generic/components/BlockResourcesView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
@@ -58,6 +53,7 @@ import { resourceVisibleHere, resourceVisibilityPatch } from '@/features/charact
 import { featureWidgetResourceKeys } from '@/features/character-editor/lib/characterFeatureWidgets'
 import { featureActionResourceKeys } from '@/features/character-editor/lib/characterFeatureActions'
 
+defineOptions({ inheritAttrs: false })
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: true })
@@ -99,7 +95,7 @@ function emitResources(next) {
 }
 
 function onManage() {
-  openFrom(root.value)
+  openFrom(root.value?.$el)
 }
 
 function toggle(ri, p) {
@@ -144,12 +140,5 @@ function add(title, color_point) {
 </script>
 
 <style scoped>
-.br-block { min-width: 0; }
-
-.br-tile {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-}
+.br-block { width: 100%; min-width: 0; box-sizing: border-box; }
 </style>

@@ -1,41 +1,30 @@
 <template>
-  <MorphTile padding="0"
-    ref="tileRef"
-    :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
-    class="stat-block"
-    :class="{ 'stat-block--mobile': isMobileVariant }"
+  <DndStatView ref="tileRef" class="stat-block" :data-tutorial="block.id === 'STR' ? 'character-stat' : undefined"
+    :title="displayTitle"
     :color="statColor"
-
-    :style="{ '--sc': statColor }"
-  >
-      <TileAccentStrip />
-    <DndStatView
-      :title="displayTitle"
-      :color="statColor"
-      :suggest-svg="titleSuggest?.svg || ''"
-      :mod="mod"
-      :raw="statDisplayValue"
-      :save="save"
-      :save-up="saveUp"
-      :skills="skillsView"
-      :check-mode="checkRollMode"
-      :check-mode-source="checkModeSource"
-      :check-mode-cancelled="checkResolved.cancelled"
-      :save-mode="saveRollMode"
-      :save-mode-source="saveModeSource"
-      :save-mode-cancelled="saveResolved.cancelled"
-      :skills-loading="skillsLoading"
-      :skill-skeleton-count="skillSkeletonCount"
-      :tooltip-max-desc="skillTooltipMaxDesc"
-      :tooltip-width="skillTooltipWidth"
-      :mobile-variant="isMobileVariant"
-      :show-edit="canEdit"
-      @edit="openEditor"
-      @roll-stat="mode => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check')"
-      @roll-save="mode => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw')"
-      @roll-skill="(id, mode) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
-    />
-  </MorphTile>
+    :suggest-svg="titleSuggest?.svg || ''"
+    :mod="mod"
+    :raw="statDisplayValue"
+    :save="save"
+    :save-up="saveUp"
+    :skills="skillsView"
+    :check-mode="checkRollMode"
+    :check-mode-source="checkModeSource"
+    :check-mode-cancelled="checkResolved.cancelled"
+    :save-mode="saveRollMode"
+    :save-mode-source="saveModeSource"
+    :save-mode-cancelled="saveResolved.cancelled"
+    :skills-loading="skillsLoading"
+    :skill-skeleton-count="skillSkeletonCount"
+    :tooltip-max-desc="skillTooltipMaxDesc"
+    :tooltip-width="skillTooltipWidth"
+    :mobile-variant="isMobileVariant"
+    :show-edit="canEdit"
+    @edit="openEditor"
+    @roll-stat="mode => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check')"
+    @roll-save="mode => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw')"
+    @roll-skill="(id, mode) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
+  />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -121,7 +110,6 @@
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { abilityModifier, sumBonuses } from '@/shared/lib/dnd'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
-import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import DndStatEditor from '@/features/character-editor/blocks/dnd/components/DndStatEditor'
 import DndStatSkillEditor from '@/features/character-editor/blocks/dnd/components/DndStatSkillEditor'
 import DndStatView from '@/features/character-editor/blocks/dnd/components/DndStatView'
@@ -462,10 +450,3 @@ onMounted(() => {
   syncStatVar()
 })
 </script>
-
-<style scoped>
-.stat-block {
-  padding: 12px 14px 14px;
-  position: relative;
-}
-</style>

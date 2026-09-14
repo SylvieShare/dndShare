@@ -1,11 +1,9 @@
 <template>
-  <MorphTile padding="0"
-    ref="tileRef" class="money-tile"
-    :interactive="canInteract"
-    @click="canInteract && open($event)"
-  >
-    <BlockMoneyView :title="blockTitle" :loading="loading" :coins="displayCoins" :editable="canInteract" @edit="openFrom(tileRef?.$el)" />
-  </MorphTile>
+  <BlockMoneyView ref="tileRef" class="money-tile"
+    :title="blockTitle" :loading="loading" :coins="displayCoins"
+    :interactive="canInteract" :editable="canInteract"
+    @click="canInteract && open($event)" @edit="openFrom(tileRef?.$el)"
+  />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -17,9 +15,7 @@
     @close="closeEditor"
   >
     <template #view>
-      <div class="money-face">
-        <BlockMoneyView :title="blockTitle" :loading="loading" :coins="displayCoins" />
-      </div>
+      <BlockMoneyView panel :title="blockTitle" :loading="loading" :coins="displayCoins" />
     </template>
 
     <template #editor>
@@ -71,7 +67,6 @@
 <script setup>
 import { computed, inject, ref, watch } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
-import { MorphTile } from '@sylvieshare/share-ui'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView'
 import CalcPad from '@/features/character-editor/components/CalcPad'
 import { EditorPanel } from '@sylvieshare/share-ui'
@@ -214,16 +209,6 @@ function applyCalc(sign) {
 </script>
 
 <style scoped>
-.money-tile {
-  min-width: 0;
-  padding: 12px 14px;
-}
-
-/* morph view (top column) — match the tile's padding so it doesn't jump during the morph */
-.money-face {
-  padding: 12px 14px;
-}
-
 /* editor */
 .mc-coin-trigger {
   display: inline-flex;

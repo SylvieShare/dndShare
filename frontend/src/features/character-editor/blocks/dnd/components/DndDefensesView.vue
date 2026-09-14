@@ -1,5 +1,5 @@
 <template>
-  <MorphTile embedded padding="0" edit-label="Редактировать"
+  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать"
       title="Защиты"
       :show-edit="manage"
       :edit-fade="editFade"

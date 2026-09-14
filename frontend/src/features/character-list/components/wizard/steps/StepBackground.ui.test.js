@@ -79,7 +79,6 @@ describe('background step presentation', () => {
   })
 
   it('renders starting money as a prominent wallet using currency suggest icons', () => {
-    expect(source).toContain('<BaseTile')
     expect(source).toContain('<BlockMoneyView')
     expect(source).toContain('suggestStore.ensure(17)')
     expect(source).toContain('currency?.svg')

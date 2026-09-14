@@ -1,10 +1,11 @@
 <template>
-  <MorphTile embedded padding="0" edit-label="Редактировать"
+  <MorphTile :embedded="mode === 'panel'" :color="color" padding="0" edit-label="Редактировать"
       :title="title"
       :show-edit="showEdit"
       :edit-fade="editFade"
       @edit="$emit('edit')"
      class="stat-view" :class="{ 'stat-view--mobile': mobileVariant, 'stat-view--panel': mode === 'panel' }" :style="{ '--sc': color }">
+    <template #decoration><TileAccentStrip v-if="mode !== 'panel'" /></template>
 
     <!-- ── Head: name + edit pencil + save chip ── -->
 
@@ -126,7 +127,7 @@ import { SkeletonBlock } from '@sylvieshare/share-ui'
 import { onBeforeUnmount, ref, shallowRef } from 'vue'
 import { signedOrZero as signed } from '@/shared/lib/dnd'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
-import { MorphTile } from '@sylvieshare/share-ui'
+import { MorphTile, TileAccentStrip } from '@sylvieshare/share-ui'
 import SvgIcon from '@/shared/ui/SvgIcon'
 import DndStatRollMenu from './DndStatRollMenu.vue'
 import RollModeBadge from '@/features/character-editor/blocks/dnd/components/RollModeBadge.vue'
@@ -212,6 +213,7 @@ onBeforeUnmount(hideTooltip)
 
 <style scoped>
 .stat-view {
+  padding: 12px 14px 14px;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -347,8 +349,4 @@ onBeforeUnmount(hideTooltip)
 .stat-view--mobile .stat-icon { width: 32px; height: 32px; }
 .stat-view--mobile .skills { gap: 2px; }
 
-/* ── Panel (morph left column): identical to the tile so the morph has no content shift.
-   The tile's padding comes from BaseTile (.stat-block); the panel has no BaseTile wrapper,
-   so it reproduces that padding here. ── */
-.stat-view--panel { padding: 12px 14px 14px; }
 </style>

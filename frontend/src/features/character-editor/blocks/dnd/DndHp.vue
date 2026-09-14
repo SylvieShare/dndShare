@@ -1,8 +1,6 @@
 <template>
-  <MorphTile padding="0" ref="tutorialHp" data-tutorial="character-hp" v-if="!isCompact" :color="barColor" framed :interactive="canEdit" @click="openEditor">
-    <DndHpView :hp="hp" @change="onHpChange" />
-  </MorphTile>
-  <DndHpView ref="tutorialHp" data-tutorial="character-hp" v-else compact :hp="hp" @open="openEditor" @change="onHpChange" />
+  <DndHpView ref="tutorialHp" data-tutorial="character-hp" :compact="isCompact"
+    :hp="hp" :interactive="canEdit" @open="openEditor" @change="onHpChange" />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -14,7 +12,7 @@
     @close="close"
   >
     <template #view>
-      <DndHpView :hp="hp" @change="onHpChange" />
+      <DndHpView panel :hp="hp" @change="onHpChange" />
     </template>
     <template #editor>
       <DndHpEditor data-tutorial="character-hp-editor" :hp="hp" @change="onHpChange" />
@@ -25,7 +23,6 @@
 <script setup>
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
-import { MorphTile } from '@sylvieshare/share-ui'
 import DndHpEditor from '@/features/character-editor/blocks/dnd/components/DndHpEditor'
 import DndHpView from '@/features/character-editor/blocks/dnd/components/DndHpView'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
@@ -74,6 +71,6 @@ function onHpChange(h) {
 }
 
 function openEditor(event) {
-  if (canEdit.value) openMorph(event)
+  if (canEdit.value) openMorph({ currentTarget: tutorialHp.value?.rootElement?.() || event?.currentTarget })
 }
 </script>

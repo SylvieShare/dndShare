@@ -21,8 +21,7 @@
   </div>
 
   <!-- ── Only add button variant ── -->
-  <div v-else-if="isOnlyAddButton" class="bs-block bs-block-only-add" ref="root">
-    <div class="bs-only-add">
+  <div v-else-if="isOnlyAddButton" class="bs-block bs-block-only-add bs-only-add" ref="root">
       <SuggestAdd
         v-if="canInteract"
         :title="block.title || 'статус'"
@@ -31,33 +30,18 @@
         filter-picked
         @pick="addByValue"
       />
-    </div>
   </div>
 
   <!-- ── Summary tile variant: one tile + vertical morph picker ── -->
-  <div v-else-if="isSummaryTile" class="bs-block" ref="root">
-    <MorphTile padding="0"
-      ref="summaryTile" class="bs-summary-tile"
-      :color="summaryColor"
-
-      :interactive="canInteract"
-      @click="openSummary"
-    >
-      <TileAccentStrip v-if="!!activeItems.length" />
-      <BlockStatesSummaryView
-        :active-items="activeItems"
-        label="Статусы"
-        :editable="canInteract"
-        @edit="openSummary"
-        @show-tooltip="showTooltip"
-        @hide-tooltip="hideTooltip"
-      />
-    </MorphTile>
-  </div>
+  <BlockStatesSummaryView v-else-if="isSummaryTile" ref="summaryTile"
+    class="bs-block bs-summary-tile" :color="summaryColor" :interactive="canInteract"
+    :active-items="activeItems" label="Статусы" :editable="canInteract"
+    @click="openSummary" @edit="openSummary" @show-tooltip="showTooltip" @hide-tooltip="hideTooltip">
+    <template #decoration><TileAccentStrip v-if="activeItems.length" /></template>
+  </BlockStatesSummaryView>
 
   <!-- ── Default variant: statuses as tiles (strip + icon + name) ── -->
-  <div v-else class="bs-block" ref="root">
-    <div class="bs-tiles" :class="{ 'bs-chips-one-line': isOneLine }">
+  <div v-else class="bs-block bs-tiles" ref="root" :class="{ 'bs-chips-one-line': isOneLine }">
       <MorphTile padding="0"
         v-for="item in activeItems"
         :key="item.id"
@@ -78,7 +62,6 @@
       </button>
 
       <span v-if="!activeItems.length && !canInteract" class="bs-empty">—</span>
-    </div>
   </div>
 
   <!-- ── Shared: panel + tooltip ── -->

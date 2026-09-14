@@ -1,7 +1,5 @@
 <template>
-  <!-- Shared counter face, rendered in the tile and in the morph #view so they never drift.
-       Chrome (border/bg/radius) lives on the wrapper; this owns only padding + content. -->
-  <MorphTile embedded padding="0" edit-label="Редактировать" :title="counter.name || 'Без названия'" :show-edit="manage" :edit-fade="!interactive" @edit="$emit('edit', $event)" class="dctv" :style="counter.color ? { '--cc': counter.color } : null">
+  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="counter.name || 'Без названия'" :show-edit="manage" :edit-fade="!interactive" @edit="$emit('edit', $event)" class="dctv" :style="counter.color ? { '--cc': counter.color } : null">
     <template #aside><component :is="icon" class="dctv-icon" :size="15" :stroke-width="2" :style="counter.color ? { color: counter.color } : null" /></template>
 
     <div class="dctv-body">
@@ -26,6 +24,7 @@ import { computed } from 'vue'
 import { resolveIcon } from '@/shared/ui/icons/counterIcons'
 
 const props = defineProps({
+  panel: Boolean,
   counter: { type: Object, required: true },
   manage: { type: Boolean, default: false },     // owner → show steppers
   interactive: { type: Boolean, default: true }, // false in the morph clone → controls inert

@@ -37,3 +37,19 @@ test('compact utility headings and values stay within the 64px grid rows', async
   }
   expect(await page.locator('.stat-body').evaluate(el => getComputedStyle(el).paddingTop)).toBe('8px')
 })
+
+test('each shared face owns one surface and embeds without a second tile', async ({ page }) => {
+  page.on('pageerror', error => { throw error })
+  await page.goto('/tests/tutorials/fixtures/tile-faces.html')
+  const sources = page.locator('[data-testid$="-source"]')
+  await expect(sources).toHaveCount(13)
+  for (const source of await sources.all()) {
+    await expect(source).toHaveClass(/base-tile/)
+    await expect(source).toHaveClass(/morph-tile/)
+    await expect(source.locator('.morph-tile')).toHaveCount(0)
+    const preview = page.getByTestId((await source.getAttribute('data-testid')).replace('-source', '-preview'))
+    await expect(preview).toHaveClass(/morph-tile/)
+    await expect(preview).not.toHaveClass(/base-tile/)
+    await expect(preview.locator('.morph-tile')).toHaveCount(0)
+  }
+})

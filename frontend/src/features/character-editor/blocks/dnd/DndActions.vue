@@ -1,70 +1,68 @@
 <template>
-  <div ref="root" class="da-block">
-    <MorphTile padding="0" class="da-tile">
+  <DndActionsView
+    ref="root"
+    v-bind="$attrs"
+    class="da-block"
+    :groups="groups"
+    :manage="ownerMode"
+    :action-suggestions="actionSuggestions"
+    @manage="openEditor"
+    @edit="editAction"
+    @remove="removeAction"
+    @apply-effect="applyActionEffect"
+    @roll-dice="rollActionDice"
+    @activate-target="openTargetPicker"
+    @toggle-resource="toggleActionResource"
+  />
+
+  <MorphEditorShell
+    v-if="editorOpen"
+    :origin-rect="originRect"
+    :origin-el="originEl"
+    :strip="false"
+    :min-view-width="320"
+    @close="closeEditor"
+  >
+    <template #view="{ revealed }">
       <DndActionsView
         :groups="groups"
         :manage="ownerMode"
+        :edit-fade="revealed"
         :action-suggestions="actionSuggestions"
-        @manage="openEditor"
-        @edit="editAction"
-        @remove="removeAction"
+        panel
         @apply-effect="applyActionEffect"
         @roll-dice="rollActionDice"
         @activate-target="openTargetPicker"
         @toggle-resource="toggleActionResource"
       />
-    </MorphTile>
+    </template>
+    <template #editor>
+      <DndActionsEditor
+        :actions="manualActions"
+        :readonly-actions="readonlyActions"
+        :selected-uid="editingUid"
+        @add="addAction"
+        @change="changeAction"
+        @remove="removeAction"
+      />
+    </template>
+  </MorphEditorShell>
 
-    <MorphEditorShell
-      v-if="editorOpen"
-      :origin-rect="originRect"
-      :origin-el="originEl"
-      :strip="false"
-      :min-view-width="320"
-      @close="closeEditor"
-    >
-      <template #view="{ revealed }">
-        <DndActionsView
-          :groups="groups"
-          :manage="ownerMode"
-          :edit-fade="revealed"
-          :action-suggestions="actionSuggestions"
-          panel
-          @apply-effect="applyActionEffect"
-          @roll-dice="rollActionDice"
-          @activate-target="openTargetPicker"
-          @toggle-resource="toggleActionResource"
-        />
-      </template>
-      <template #editor>
-        <DndActionsEditor
-          :actions="manualActions"
-          :readonly-actions="readonlyActions"
-          :selected-uid="editingUid"
-          @add="addAction"
-          @change="changeAction"
-          @remove="removeAction"
-        />
-      </template>
-    </MorphEditorShell>
-
-    <CharacterEntryPickerModal
-      v-if="targetAction"
-      :title="targetAction.title"
-      subtitle="Выберите оружие"
-      :entries="targetEntries"
-      empty-text="У персонажа нет оружия."
-      @select="activateTargetAction"
-      @close="closeTargetPicker"
-    />
-  </div>
+  <CharacterEntryPickerModal
+    v-if="targetAction"
+    :title="targetAction.title"
+    subtitle="Выберите оружие"
+    :entries="targetEntries"
+    empty-text="У персонажа нет оружия."
+    @select="activateTargetAction"
+    @close="closeTargetPicker"
+  />
 </template>
 
 <script setup>
 import { logResourceChange, itemEventData, resourceChangeData } from '@/features/character-editor/lib/sessionEventData'
 
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { MorphTile } from '@sylvieshare/share-ui'
 import DndActionsEditor from '@/features/character-editor/blocks/dnd/components/DndActionsEditor.vue'
 import DndActionsView from '@/features/character-editor/blocks/dnd/components/DndActionsView.vue'
 import CharacterEntryPickerModal from '@/features/character-editor/components/CharacterEntryPickerModal.vue'
@@ -76,6 +74,7 @@ import { makeUid } from '@/features/character-editor/blocks/dnd/lib/itemEntry'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 
+defineOptions({ inheritAttrs: false })
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
@@ -135,7 +134,7 @@ function emitOrder(next) {
 
 function openEditor() {
   editingUid.value = null
-  openFrom(root.value)
+  openFrom(root.value?.$el)
 }
 
 function addAction() {
@@ -153,7 +152,7 @@ function addAction() {
 function editAction(action) {
   if (action.readonly) return
   editingUid.value = action.uid
-  openFrom(root.value)
+  openFrom(root.value?.$el)
 }
 
 function changeAction(uid, patch) {
@@ -267,6 +266,5 @@ onMounted(() => suggestStore.ensure(24))
 </script>
 
 <style scoped>
-.da-block, .da-tile { width: 100%; min-width: 0; box-sizing: border-box; }
-.da-tile { display: block; }
+.da-block { width: 100%; min-width: 0; box-sizing: border-box; }
 </style>

@@ -1,9 +1,7 @@
 <template>
   <DndLvlView v-if="isCompact" compact :data="data" @open="open" />
   <DndLvlView v-else-if="isMini" mini :data="data" @open="open" />
-  <MorphTile padding="0" v-else class="lvl-tile" color="var(--accent)" interactive @click="open">
-    <DndLvlView :data="data" />
-  </MorphTile>
+  <DndLvlView v-else class="lvl-tile" :data="data" @open="open" />
 
   <MorphEditorShell
     v-if="editorOpen"
@@ -13,7 +11,7 @@
     orientation="vertical"
     @close="close"
   >
-    <template #view><DndLvlView :data="data" /></template>
+    <template #view><DndLvlView panel :data="data" /></template>
     <template #editor><DndLvlEditor :data="data" @change="onChange" @levelup="openLevelUp" @manual="openManualClasses" /></template>
   </MorphEditorShell>
 
@@ -33,7 +31,6 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { MorphTile } from '@sylvieshare/share-ui'
 import DndClassesEditorModal from './components/DndClassesEditorModal.vue'
 import DndLevelUpModal from '@/features/character-editor/blocks/dnd/components/DndLevelUpModal'
 import DndLvlEditor from '@/features/character-editor/blocks/dnd/components/DndLvlEditor'

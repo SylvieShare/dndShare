@@ -1,6 +1,5 @@
 <template>
-  <div class="dc-block">
-    <div v-if="counters.length || ownerMode" class="dc-row" data-sortable-container="counters">
+  <div v-if="counters.length || ownerMode" v-bind="$attrs" class="dc-block dc-row" data-sortable-container="counters">
       <DndCounterTile
         v-for="(c, i) in displayCounters"
         :key="c.id"
@@ -24,9 +23,7 @@
       @close="closeDraft"
     >
       <template #view>
-        <div class="dct-morph">
-          <DndCounterTileView :counter="draft" :manage="false" :interactive="false" />
-        </div>
+        <DndCounterTileView panel :counter="draft" :manage="false" :interactive="false" />
       </template>
       <template #editor>
         <DndCounterEditor
@@ -38,7 +35,6 @@
         />
       </template>
     </MorphEditorShell>
-  </div>
 </template>
 
 <script setup>
@@ -55,6 +51,7 @@ import {
   patchCounter,
 } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
 
+defineOptions({ inheritAttrs: false })
 const props = defineProps({ block: Object, value: { default: null } })
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', () => ({ ownerMode: false }))
@@ -136,7 +133,6 @@ provide('countersBlockCtx', reactive({
 <style scoped>
 .dc-block { min-width: 0; }
 
-.dct-morph { min-width: 0; }
 
 .dc-row {
   display: flex;
