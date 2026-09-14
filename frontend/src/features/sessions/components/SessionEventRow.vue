@@ -58,6 +58,7 @@ const details = computed(() => sessionEventDetails(props.event))
 .event-row--with-entity .event-body { margin-left: 48px; }
 .event-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; color: var(--text-2); font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
 .event-heading time { flex: none; margin-left: auto; color: var(--text-muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.event-details { white-space: pre-wrap; }
 .event-details, .event-adjustment { color: var(--text-muted); font-size: 11px; overflow-wrap: anywhere; }
 .event-adjustment { color: var(--success); }
 .event-transfer { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: var(--text-muted); font-size: 12px; }

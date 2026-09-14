@@ -163,4 +163,32 @@ describe('session event notifications', () => {
     expect(useNotificationsStore().entries).toEqual([])
   })
 
+  it('notifies directed messages and opponent results without exposing unrelated conversations', async () => {
+    useAccountStore().user = { id: 3 }
+    const events = useSessionEventsStore()
+    const chat = { ...event(20), type: 'chat_message', recipientUserId: 3, data: { message: 'Привет' } }
+    const round = { ...event(21), type: 'rps_challenge', authorUserId: 3, recipientUserId: 2 }
+    api.getSessionEvents.mockResolvedValueOnce({ events: [round] }).mockResolvedValueOnce({ events: [chat, { ...chat, id: 22, recipientUserId: 4 }] })
+    await events.setContext({ uuid: 'game' }); await events.refresh()
+    events.notifyInteractionOffers('game', [chat])
+    expect(useNotificationsStore().entries.map(entry => entry.data.event.id)).toEqual([20])
+    api.getSessionEvents.mockResolvedValue({ events: [], updates: [{ ...round, data: { status: 'completed', resolvedByUserId: 2 } }] })
+    await events.refresh()
+    expect(useNotificationsStore().entries.map(entry => entry.data.event.id)).toContain(21)
+  })
+  it('uses the matching reader action and only suppresses the conversation being read', () => {
+    useAccountStore().user = { id: 3 }
+    const events = useSessionEventsStore()
+    const openChat = vi.fn()
+    events.registerReader({ sessionUuid: () => 'game', actionFor: event => event.type === 'chat_message' ? { label: 'Чат', run: openChat } : null,
+      isReading: event => event.data?.senderCharUuid === 'open-peer' })
+    events.registerReader({ sessionUuid: () => 'game', actionFor: () => null })
+    events.notifyInteractionOffers('game', [
+      { ...event(20), type: 'chat_message', recipientUserId: 3, data: { senderCharUuid: 'open-peer' } },
+      { ...event(21), type: 'chat_message', recipientUserId: 3, data: { senderCharUuid: 'another-peer' } },
+    ])
+    expect(useNotificationsStore().entries).toHaveLength(1)
+    expect(useNotificationsStore().entries[0].actions[0].label).toBe('Чат')
+  })
+
 })

@@ -59,6 +59,7 @@ func TestItemTransfersPostgres(t *testing.T) {
  INSERT INTO dndshare.session_participant VALUES(1,1,1),(1,2,2),(2,3,3);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaItemTransfersSQL)
+	exec(schemaSessionInteractionsSQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
@@ -164,7 +165,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 			t.Fatalf("stale save restored/lost item: %v", err)
 		}
 	}
-	updates, err := s.SessionTransferEventUpdates(ctx, 1, 3, transfer.EventID)
+	updates, err := s.SessionMutableEventUpdates(ctx, 1, 3, transfer.EventID)
 	if err != nil || len(updates) != 1 || updates[0].RecipientImageURL == nil || *updates[0].RecipientImageURL != "/recipient.png" || !strings.Contains(string(updates[0].Data), `"accepted"`) {
 		t.Fatalf("chronicle status: %+v %v", updates, err)
 	}
@@ -214,7 +215,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		changed, err := s.SessionTransferEventUpdates(ctx, 1, reader, roll.ID)
+		changed, err := s.SessionMutableEventUpdates(ctx, 1, reader, roll.ID)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -250,6 +251,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if len(approvedDoc.values()["potions"].([]any)) != 1 {
 		t.Fatal("DM approval did not deliver potion stack")
 	}
+	t.Run("player interactions", func(t *testing.T) { testSessionInteractionsPostgres(t, s) })
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {
 		t.Fatalf("resolved pending list: %+v %v", pending, err)

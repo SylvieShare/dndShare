@@ -281,10 +281,11 @@ catch-up запрос, поэтому coalescing, разрыв соединен�
 Страница сессии (мастер и игрок) и собственный лист слушают общий SSE-поток.
 У мастера вне открытой хроники чужие события и изменения их игровых данных
 показываются в общей очереди уведомлений внизу справа, вместе с бросками кубиков.
-Собственные события никогда не вызывают уведомлений, в том числе из другой
-вкладки или устройства. Игрок получает только предложения предметов адресованным
-ему персонажам (`item_transfer`, статус `pending`); свои предложения, действия
-мастера и других игроков, принятие/отказ не вызывают всплывашек.
+Собственные действия не вызывают уведомлений, в том числе из другой вкладки
+или устройства. Игрок получает предложения предметов своим персонажам
+(`item_transfer`, статус `pending`), адресованные сообщения и вызовы, а также
+ответ соперника на свой вызов. Посторонние игровые действия и решения по передачам
+не вызывают всплывашек. Открытая переписка подавляет уведомления этой пары.
 У мастера кнопка «Открыть хронику» переключает раздел; в листе уведомление о
 передаче предлагает «Открыть события». Начальная история проходит без всплывашек,
 кроме незавершённых предложений текущему игроку. Список передач листа также
@@ -307,7 +308,8 @@ catch-up запрос, поэтому coalescing, разрыв соединен�
 `session_event` stores semantic gameplay actions rather than arbitrary sheet
 JSON changes. The current producers are dice rolls, short/long rests, resource
 use and manual replenishment, spell-slot spending/recovery, potion/inventory spending and replenishment, spell use,
-current chapter, encounter start/finish and `entry_added` for inventory items,
+current chapter, encounter start/finish, player messages and RPS challenges,
+and `entry_added` for inventory items,
 weapons, potions, spells, feats and abilities. Direct picker/manual additions
 and level-up grants use the same event. Regular editing, drag ordering, music
 controls and manual configuration do not create timeline noise.
@@ -317,7 +319,8 @@ snapshot, so renaming a character does not rewrite history; `actorCharUuid`
 keeps the optional structural link used for permissions and character context.
 The server authenticates every timeline read/write as either the session DM or
 a participant. Timeline reads and incremental transfer updates return all events
-to the DM; players receive only transfers addressed to characters they own.
+to the DM; players receive transfers addressed to characters they own and
+messages/challenges involving their own characters.
 Public visibility does not expose other gameplay actions to players. Players can reference only their own participant and the server
 derives that character's name. The DM can reference any participant or supply a
 standalone creature name when no character UUID exists. Events that describe
@@ -1175,3 +1178,35 @@ remove the previous keys and any read-time converter.
 
 
 Логика переходов графа вынесена в `useSessionGraphEdgeActions`; SessionGraphCanvas координирует canvas и редактирование. CSS toolbar боя находится в EncounterToolbar.css, остальная раскладка — EncounterTab.css. Меню строки передаёт расположение через ActionMenu.triggerAttrs, без дополнительного DOM-контейнера.
+
+## Чат и камень / ножницы / бумага
+
+В собственном листе блок «Сессия» → «Другие игроки» открывает меню каждого
+участника с пунктами «Чат» и «Камень / ножницы / бумага». Общение привязано к
+паре персонажей и текущей сессии. Окно использует `AppModalFrame`, переключение
+режима — `MultiToggle`; история загружается страницами по 50 записей. Сообщения
+принимаются как обычный текст до 2000 символов, отображаются с сохранением
+переносов и безопасным экранированием HTML. Ошибка отправки сохраняет черновик;
+повторная отправка того же действия использует прежний `clientActionId`.
+
+Колокольчик в листе объединяет передачи, непрочитанные входящие сообщения и
+незавершённые вызовы обеих сторон. Сообщения одного отправителя сгруппированы
+в одну строку. Чтение открытой вкладки чата сохраняется на сервере только до
+показанного ID; сообщения, пришедшие позднее, остаются непрочитанными. Обновление
+журнала через SSE обновляет переписку, счётчик и вызовы; переподключение дочитывает
+состояние. Непрочитанные сообщения и входящие вызовы могут уведомлять при входе,
+даже если общая хроника недоступна.
+
+Отправитель сразу выбирает ход. Между парой может быть один ожидающий вызов,
+включая обратное направление. Получатель отвечает своим ходом или отклоняет
+вызов; отправитель может отозвать его. Сервер определяет победу или ничью и
+атомарно завершает партию. До ответа ни один API, включая хронику мастера,
+не раскрывает ход отправителя. Отклонение и отзыв также не раскрывают его.
+Новая партия начинается отдельным выбором после завершения предыдущей.
+
+Хроника мастера показывает каждое сообщение (`chat_message`) и один изменяемый
+`rps_challenge` на партию: ожидание, оба хода и победитель/ничья либо отказ/отзыв.
+Фильтр «Общение» выделяет эти записи. Имена обоих персонажей сохраняются снимками.
+Их видят участники пары и мастер; другие игроки и анонимный экран не получают
+переписку. Обычный POST событий не принимает эти типы: доступ, роли сторон и
+результат игры проверяют отдельные серверные endpoints.

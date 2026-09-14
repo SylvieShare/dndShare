@@ -30,7 +30,7 @@ defineProps(['block'])
 const ctx = inject('charCtx', {})
 const top = computed(() => ctx.topSession || null)
 const playerCount = computed(() => ctx.itemTransfers.state.playersLoaded ? ctx.itemTransfers.recipients.length : null)
-const eventCount = computed(() => ctx.itemTransfers.state.transfers.length)
+const eventCount = computed(() => ctx.itemTransfers.state.transfers.length + (ctx.itemTransfers.interactions?.state.pending.length || 0))
 const anchors = new Map()
 function registerAnchor(view, component) {
   const element = component?.$el

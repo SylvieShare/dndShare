@@ -3,15 +3,11 @@
       <p v-if="state.error" class="transfer-error" role="alert">{{ state.error }}</p>
       <LoadingIndicator v-if="state.loading" label="Загрузка игроков" />
       <template v-else-if="state.view === 'players'">
-        <div v-for="player in controller.recipients" :key="player.charUuid" class="transfer-player">
-          <img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" class="transfer-avatar" />
-          <span v-else class="transfer-initial" aria-hidden="true">{{ (pvName(player) || '?').slice(0, 1) }}</span>
-          <span>{{ pvName(player) || 'Без имени' }}</span>
-        </div>
-        <p v-if="!controller.recipients.length" class="transfer-hint">Других игроков пока нет.</p>
+        <CharacterInteractionPlayers :players="controller.recipients" :controller="controller.interactions" />
       </template>
       <template v-else>
-        <p v-if="!state.transfers.length" class="transfer-hint">Незавершённых событий нет.</p>
+        <CharacterInteractionInbox v-if="controller.interactions" :controller="controller.interactions" :character-uuid="characterUuid" />
+        <p v-if="!state.transfers.length && !controller.interactions?.state.pending.length" class="transfer-hint">Незавершённых событий нет.</p>
         <article v-for="transfer in state.transfers" :key="transfer.id" class="transfer-event">
           <div class="transfer-offer">
             <TransferPerson :name="transfer.senderName" :image-url="senderImage(transfer)" />
@@ -37,13 +33,15 @@
     </div>
 </template>
 <script setup>
+import CharacterInteractionPlayers from './CharacterInteractionPlayers.vue'
+import CharacterInteractionInbox from './CharacterInteractionInbox.vue'
 import { computed, ref, watch } from 'vue'
 import { Package } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { ActionButton, LoadingIndicator } from '@sylvieshare/share-ui'
-import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
+import { pvAvatar } from '@/features/sessions/lib/participantView'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
 const emit = defineEmits(['view-item'])
 const state = computed(() => props.controller.state)
@@ -73,9 +71,6 @@ watch(() => [...new Set(state.value.transfers.map(itemId).filter(Boolean))].join
 <style scoped>
 .transfer-content { display: flex; flex-direction: column; gap: 16px; }
 .transfer-content p { margin: 0; }
-.transfer-player { display: flex; align-items: center; gap: 12px; overflow-wrap: anywhere; }
-.transfer-avatar, .transfer-initial { width: 44px; height: 44px; flex: 0 0 44px; object-fit: cover; }
-.transfer-initial { display: grid; place-items: center; color: var(--accent); font-size: 24px; }
 .transfer-event { display: flex; flex-direction: column; gap: 10px; overflow-wrap: anywhere; }
 .transfer-offer { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 9px; }
 .transfer-offer-verb { color: var(--text-muted); font-size: 13px; }

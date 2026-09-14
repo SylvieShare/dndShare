@@ -287,25 +287,3 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 	}
 	return t, tx.Commit(ctx)
 }
-
-// Existing transfer records change status without changing their timeline ID.
-// Return their projections separately so they do not consume the new-event page.
-func (s *Store) SessionTransferEventUpdates(ctx context.Context, sessionID, userID, afterID int64) ([]SessionEvent, error) {
-	result := []SessionEvent{}
-	if afterID <= 0 {
-		return result, nil
-	}
-	rows, err := s.pool.Query(ctx, sessionEventSelect+sessionEventReadAccess+` AND e.session_id=$1 AND e.id<=$3 AND e.event_type='item_transfer' ORDER BY e.id DESC LIMIT 200`, sessionID, userID, afterID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		event, err := scanSessionEvent(rows)
-		if err != nil {
-			return nil, err
-		}
-		result = append(result, event)
-	}
-	return result, rows.Err()
-}

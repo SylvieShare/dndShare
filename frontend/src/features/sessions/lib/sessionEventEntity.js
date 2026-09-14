@@ -1,3 +1,5 @@
+import { isInteraction, interactionDetails } from './sessionInteractions'
+
 export function sessionEventEntity(event) {
   const data = event.data || {}
   const source = data.source
@@ -22,6 +24,7 @@ export function sessionEventAction(event, name) {
 }
 
 export function sessionEventDetails(event) {
+  if (isInteraction(event)) return interactionDetails(event)
   const data = event.data || {}
   if (event.type === 'item_transfer') {
     const status = { pending: 'Ожидает', accepted: 'Приняли', rejected: 'Отказали' }[data.status] || 'Ожидает'

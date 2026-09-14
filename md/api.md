@@ -367,7 +367,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
 - `GET|POST /api/sessions/{uuid}/events` reads and appends the session timeline.
   The read endpoint accepts `after` and `limit`. Both `events` and `updates`
   return all records to the session owner; other participants receive only
-  item transfers directed to characters they own, regardless of `visibility`.
+  item transfers directed to characters they own and their own messages/challenges, regardless of `visibility`.
   The write endpoint accepts
   `{type,action,data,actorCharUuid?,actorItemId?,actorName?,visibility?,clientActionId?}`. The server
   derives the author from authentication, validates DM/participant access and
@@ -379,7 +379,7 @@ Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользо
   `authorIsSessionOwner`, actor character projection fields and resolved
   `actorImageUrl` / `actorSvg` artwork when available;
   `authorName` contains the author login. `sessionOwnerUserId` and optional
-  `recipientUserId` are derived from session/transfer relations and support
+  `recipientUserId` are derived from session/transfer/interaction relations and support
   notification filtering; the client never treats payload fields as recipients. `clientActionId` makes
   retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
   `potion`, `spell`, `feature` or `ability`) for additions to a character;
@@ -617,8 +617,8 @@ revision, status }`; сброс одного результата: `POST /api/ac
 серверный тип `item_transfer`.
 
 `GET /api/sessions/{uuid}/events` возвращает `{events,updates}`. `events` сохраняет
-прежнюю пагинацию; при `after>0` `updates` содержит до 200 последних публичных
-передач с ID не новее курсора. Клиент объединяет оба массива по ID: статус
+прежнюю пагинацию; при `after>0` `updates` содержит до 200 последних доступных
+передач и вызовов `rps_challenge` с ID не новее курсора. Клиент объединяет оба массива по ID: статус
 прежней записи меняется, дополнительная запись в хронике не создаётся.
 Удаление/перемещение участника, удаление персонажа или сессии при незавершённых
 передачах возвращают 409 с объяснением.
@@ -626,3 +626,38 @@ revision, status }`; сброс одного результата: `POST /api/ac
 Проекция события передачи содержит nullable `recipientImageUrl`; DTO передачи
 содержит nullable `senderImageUrl`. Это текущая иконка персонажа (fallback —
 `data.values.ava.url`), а имена по-прежнему берутся из снимков передачи.
+
+### Общение персонажей в сессии
+
+Все маршруты `/api/char/{uuid}/interactions` требуют владельца листа. Мастер
+читает общую хронику, но не может отправлять сообщения или отвечать за чужого
+персонажа. При создании обе стороны должны состоять в указанной сессии.
+
+- `GET /api/char/{uuid}/interactions?sessionUuid=...` возвращает `{events,hasMore}`:
+  все непрочитанные сообщения персонажу и ожидающие вызовы обеих сторон.
+  `peer=<charUuid>` переключает запрос на историю этой пары: 50 записей от новых
+  к старым, `hasMore` сообщает о следующей странице. `before=<eventId>` загружает
+  более старые записи. Персонаж должен оставаться участником указанной сессии.
+- `POST /api/char/{uuid}/interactions` принимает
+  `{sessionUuid,recipientCharUuid,clientActionId,type,message?,choice?}`.
+  `type=chat_message` требует непустой текст до 2000 символов; `type=rps_challenge`
+  требует `choice=rock|scissors|paper`. Возвращает `201 {event}`. Повторный
+  `clientActionId` возвращает прежнее событие; ожидающая партия между этой парой
+  в любом направлении даёт `409`.
+- `POST /api/char/{uuid}/interactions/{eventId}/resolve` принимает `{decision}`:
+  `rock|scissors|paper|decline` у получателя, `cancel` у отправителя.
+  Возвращает `{event}`; повтор того же ответа идемпотентен, другой ответ после
+  завершения даёт `409`. Результат считает сервер.
+- `POST /api/char/{uuid}/interactions/read` принимает
+  `{sessionUuid,peerUuid,throughId}` и возвращает `{ok:true}`. Отмечает прочитанными
+  входящие сообщения этой пары до `throughId` включительно.
+
+События содержат серверные `authorUserId`, `recipientUserId`, имена и UUID обеих
+сторон в `data`. Сообщение содержит `message`. Вызов содержит
+`status=pending|completed|declined|cancelled`; только завершённая ответом партия
+содержит `senderChoice`, `recipientChoice`, при победе — `winnerCharUuid` (без
+него ничья). Решённый вызов также содержит `resolvedByUserId`, чтобы уведомление
+получила другая сторона. До ответа и после отказа выбор не выдаётся никому.
+Создание и решение публикуют SSE `journal`; чтение синхронизирует счётчик тем же
+сигналом. `updates` общей хроники включает изменяемые `rps_challenge` вместе с
+`item_transfer`. Обычные POST событий и сохранение листа эти типы не принимают.

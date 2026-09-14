@@ -3,6 +3,7 @@ import * as api from '@/shared/api/itemTransfersApi'
 import { getSession } from '@/shared/api/sessionsApi'
 import { useTemplateStore } from '@/stores/template'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
+import { useCharacterInteractions } from './useCharacterInteractions'
 import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 
 export function useCharacterTransfers({ uuid, session, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions }) {
@@ -21,7 +22,8 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
       ? { label: 'Открыть события', run: () => open('events') } : null,
   })
   onBeforeUnmount(unregisterEventReader)
-  const incomingCount = computed(() => state.transfers.filter(t => t.recipientCharUuid === uuid).length)
+  const interactions = useCharacterInteractions({ uuid, session, isOwner, closePopover: close })
+  const incomingCount = computed(() => state.transfers.filter(t => t.recipientCharUuid === uuid).length + interactions.incomingCount)
   const recipients = computed(() => state.participants.filter(p => p.charUuid !== uuid))
   let pendingSend = null
   let refreshing = null
@@ -36,7 +38,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
         while (refreshPending && session.value?.uuid) {
           refreshPending = false
           const sessionUuid = session.value.uuid
-          const response = await api.getItemTransfers(uuid)
+          const [response] = await Promise.all([api.getItemTransfers(uuid), interactions.refresh()])
           if (session.value?.uuid === sessionUuid) {
             state.transfers = response.transfers || []
             events.notifyTransferOffers(sessionUuid, state.transfers)
@@ -125,5 +127,5 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     else state.view = ''
   }, { immediate: true })
   onBeforeUnmount(live.stop)
-  return reactive({ state, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, resolve, refresh, busy: computed(() => state.busy) })
+  return reactive({ state, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, resolve, refresh, busy: computed(() => state.busy) })
 }

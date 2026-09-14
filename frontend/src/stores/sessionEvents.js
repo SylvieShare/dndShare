@@ -3,6 +3,7 @@ import { onScopeDispose, ref, toRaw } from 'vue'
 import * as sessionEventsApi from '@/shared/api/sessionEventsApi'
 import { useAccountStore } from '@/stores/account'
 import { useNotificationsStore } from '@/stores/notifications'
+import { isInteraction } from '@/features/sessions/lib/sessionInteractions'
 import { sessionEventSignature } from '@/features/notifications/lib/sessionEventChanges'
 
 function actionId() { return globalThis.crypto.randomUUID() }
@@ -34,7 +35,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     readers.set(key, reader)
     return () => readers.delete(key)
   }
-  function reader(uuid = sessionUuid.value) { return [...readers.values()].findLast(entry => entry.sessionUuid() === uuid) }
+  function activeReaders(uuid) { return [...readers.values()].filter(entry => entry.sessionUuid() === uuid).reverse() }
   function markLocalRoll(result) { if (result && typeof result === 'object') localRolls.add(toRaw(result)) }
   function rememberLocalAction(id) {
     localActions.add(id)
@@ -52,15 +53,17 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   }
   function notifyEvent(event, updated, uuid = sessionUuid.value) {
     const userId = Number(account.user?.id)
-    if (!userId || Number(event.authorUserId) === userId) return
+    const actingUserId = event.type === 'rps_challenge' && event.data?.resolvedByUserId ? event.data.resolvedByUserId : event.authorUserId
+    if (!userId || Number(actingUserId) === userId) return
     const isOwner = Number(event.sessionOwnerUserId) === userId
-    if (!isOwner && !(event.type === 'item_transfer' && Number(event.recipientUserId) === userId && event.data?.status === 'pending')) return
-    if (localActions.has(event.clientActionId) || reader(uuid)?.isReading?.()) return
+    const directedInteraction = isInteraction(event) && [Number(event.recipientUserId), Number(event.authorUserId)].includes(userId)
+    if (!isOwner && !directedInteraction && !(event.type === 'item_transfer' && Number(event.recipientUserId) === userId && event.data?.status === 'pending')) return
+    if (localActions.has(event.clientActionId) || activeReaders(uuid).some(entry => entry.isReading?.(event))) return
     const key = `session:${uuid}:event:${event.id}`
     const offerKey = `${userId}:${key}`
-    const isOffer = event.type === 'item_transfer' && event.data?.status === 'pending'
+    const isOffer = (event.type === 'item_transfer' || isInteraction(event)) && (!event.data?.status || event.data.status === 'pending')
     if (isOffer && notifiedOffers.has(offerKey)) return
-    const action = reader(uuid)?.actionFor?.(event)
+    const action = activeReaders(uuid).map(entry => entry.actionFor?.(event)).find(Boolean)
     const id = notifications.notify({
       type: 'session-event', title: event.action, key,
       scope: `session:${uuid}`, data: { event, updated }, duration: event.type === 'item_transfer' ? 10000 : 6000,
@@ -70,6 +73,11 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     if (isOffer) {
       notifiedOffers.add(offerKey)
       if (notifiedOffers.size > 500) notifiedOffers.delete(notifiedOffers.values().next().value)
+    }
+  }
+  function notifyInteractionOffers(uuid, incoming) {
+    for (const event of incoming || []) {
+      if (Number(event.recipientUserId) === Number(account.user?.id)) notifyEvent(event, false, uuid)
     }
   }
   function notifyTransferOffers(uuid, transfers) {
@@ -210,5 +218,5 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   }
   onScopeDispose(() => { clearContext(); readers.clear() })
   return { sessionUuid, actorCharUuid, events, loading, syncError, newEventIds, setContext, setActor, clearContext,
-    publish, pendingCharacterEvent, refresh, registerReader, markLocalRoll, notifyTransferOffers }
+    publish, pendingCharacterEvent, refresh, registerReader, markLocalRoll, notifyTransferOffers, notifyInteractionOffers }
 })

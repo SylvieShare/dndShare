@@ -9,11 +9,13 @@
       <CharacterTransferContent :controller="controller" :character-uuid="characterUuid" @view-item="openItem" />
     </div>
   </BasePopover>
+  <CharacterInteractionDialog v-if="controller.interactions" :controller="controller.interactions" :character-uuid="characterUuid" />
   <ItemViewModal v-if="viewedItem" :item-id="viewedItem.id" :item="viewedItem.item" :item-type-id="viewedItem.typeId" :instance="viewedItem.entry" :z-index="3600" @close="viewedItem = null" />
 </template>
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import { BasePopover, RemoveButton } from '@sylvieshare/share-ui'
+import CharacterInteractionDialog from './CharacterInteractionDialog.vue'
 import CharacterTransferContent from './CharacterTransferContent.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })

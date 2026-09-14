@@ -437,6 +437,7 @@ var schemaParts = []struct {
 	{"item-transfers", schemaItemTransfersSQL},
 	{"session-lifecycle", schemaSessionLifecycleSQL},
 	{"spell-slot-additions", schemaSpellSlotAdditionsSQL},
+	{"session-interactions", schemaSessionInteractionsSQL},
 }
 
 const (
