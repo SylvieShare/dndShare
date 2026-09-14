@@ -32,7 +32,7 @@ for code, definition in plan['newEffects'].items():
     if item and item['data'] != definition['data']:
         raise RuntimeError('Conflicting existing effect: ' + code)
     if not item and args.apply:
-        item = call('handbook_item_create', {'typeId': 15, 'name': definition['name'], 'data': json.dumps(definition['data'], ensure_ascii=False), 'automationStatus': 'partial', 'automationNote': definition['note']})
+        item = call('handbook_item_create', {'typeId': 15, 'name': definition['name'], 'nameEn': '', 'data': json.dumps(definition['data'], ensure_ascii=False), 'automationStatus': 'partial', 'automationNote': definition['note']})
         if get(item['id'])['data'] != definition['data']:
             raise RuntimeError('Effect readback differs: ' + code)
     effects[code] = item or {'id': -1}
