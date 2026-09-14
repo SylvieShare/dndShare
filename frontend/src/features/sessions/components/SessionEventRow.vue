@@ -18,7 +18,7 @@
             <b>{{ change.delta < 0 ? '−' : '+' }}</b>
             <SpellSlotSphere :level="change.level || 1" :color="change.color" :size="24" :interactive="false" />
             <b v-if="Math.abs(change.delta) > 1">×{{ Math.abs(change.delta) }}</b>
-            <small>{{ change.name }}</small>
+            <span class="event-resource-label" :class="{ 'event-resource-label--level': change.level }">{{ change.level ? `${change.level} круг` : change.name }}</span>
           </span>
         </div>
       </div>
@@ -53,7 +53,8 @@ const details = computed(() => sessionEventDetails(props.event))
 .event-resource { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 4px 8px; border: 1px solid currentColor; border-radius: var(--r-sm); font-size: 11px; }
 .event-resource--spent { color: var(--danger); }
 .event-resource--added { color: var(--success); }
-.event-resource small { color: var(--text-muted); overflow-wrap: anywhere; }
+.event-resource-label { border-left: 1px solid var(--border-strong); margin-left: 2px; padding-left: 8px; color: var(--text-muted); overflow-wrap: anywhere; }
+.event-resource-label--level { color: var(--text-1); font-size: 13px; font-weight: 650; }
 .event-row--arriving { animation: chronicle-entry-in .42s cubic-bezier(.22, 1, .36, 1) both; }
 @keyframes chronicle-entry-in {
   from { opacity: 0; transform: translateY(-10px); }
