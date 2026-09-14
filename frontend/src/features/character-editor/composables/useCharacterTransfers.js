@@ -15,6 +15,12 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
   }
   function unregisterAnchor(view, element) { anchors.get(view)?.delete(element) }
   const events = useSessionEventsStore()
+  const unregisterEventReader = events.registerReader({
+    sessionUuid: () => session.value?.uuid,
+    actionFor: event => event.type === 'item_transfer' && isOwner.value
+      ? { label: 'Открыть события', run: () => open('events') } : null,
+  })
+  onBeforeUnmount(unregisterEventReader)
   const incomingCount = computed(() => state.transfers.filter(t => t.recipientCharUuid === uuid).length)
   const recipients = computed(() => state.participants.filter(p => p.charUuid !== uuid))
   let refreshing = null
@@ -102,7 +108,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     sessionUuid: computed(() => session.value?.uuid),
     onCatchUp: catchUp,
     onUpdate: async update => {
-      if (update.journal) await refresh()
+      if (update.journal) await Promise.all([refresh(), events.refresh()])
       if (update.participants || update.session) { await loadSessions(); await loadPlayers() }
       if (update.characterIds?.length && !state.busy && saveStatus.value === 'idle') {
         await refreshFromServer(() => !state.busy && saveStatus.value === 'idle')

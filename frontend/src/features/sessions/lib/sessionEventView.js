@@ -56,5 +56,10 @@ export function groupSessionEvents(events) {
     }
     entityGroup.events.push(event)
   }
+  // Anchor groups to their oldest event so prepending does not remount old rows.
+  for (const group of groups) {
+    group.key = `${group.actorKey}:${group.events.at(-1).id}`
+    for (const entry of group.entities) entry.key = `${entry.entityKey}:${entry.events.at(-1).id}`
+  }
   return groups
 }

@@ -17,9 +17,9 @@ export function useSwipeDismiss({ onDismiss, setTimer = setTimeout, clearTimer =
   const timers = new Set()
 
   function clearSwipeStyles(target) {
-    target.classList.remove('dice-pop--swiping', 'dice-pop--swipe-dismiss')
-    target.style.removeProperty('--dice-swipe-x')
-    target.style.removeProperty('--dice-swipe-opacity')
+    target.classList.remove('notification--swiping', 'notification--swipe-dismiss')
+    target.style.removeProperty('--notification-swipe-x')
+    target.style.removeProperty('--notification-swipe-opacity')
   }
 
   function schedule(callback, delay) {
@@ -32,13 +32,13 @@ export function useSwipeDismiss({ onDismiss, setTimer = setTimeout, clearTimer =
 
   function reset(pointer, animated = true) {
     const { target } = pointer
-    target.classList.remove('dice-pop--swiping')
+    target.classList.remove('notification--swiping')
     if (!animated) {
       clearSwipeStyles(target)
       return
     }
-    target.style.setProperty('--dice-swipe-x', '0px')
-    target.style.setProperty('--dice-swipe-opacity', '1')
+    target.style.setProperty('--notification-swipe-x', '0px')
+    target.style.setProperty('--notification-swipe-opacity', '1')
     schedule(() => clearSwipeStyles(target), 180)
   }
 
@@ -47,7 +47,7 @@ export function useSwipeDismiss({ onDismiss, setTimer = setTimeout, clearTimer =
     if (event.target.closest('button, a, input, textarea, select, [role="button"]')) return
     const target = event.currentTarget
     target.setPointerCapture?.(event.pointerId)
-    target.classList.add('dice-pop--swiping')
+    target.classList.add('notification--swiping')
     pointers.set(event.pointerId, {
       id,
       target,
@@ -75,8 +75,8 @@ export function useSwipeDismiss({ onDismiss, setTimer = setTimeout, clearTimer =
     event.preventDefault()
     const width = pointer.target.getBoundingClientRect().width || 1
     const opacity = Math.max(0.28, 1 - Math.abs(deltaX) / (width * 1.15))
-    pointer.target.style.setProperty('--dice-swipe-x', `${deltaX}px`)
-    pointer.target.style.setProperty('--dice-swipe-opacity', String(opacity))
+    pointer.target.style.setProperty('--notification-swipe-x', `${deltaX}px`)
+    pointer.target.style.setProperty('--notification-swipe-opacity', String(opacity))
   }
 
   function onPointerUp(event) {
@@ -90,10 +90,10 @@ export function useSwipeDismiss({ onDismiss, setTimer = setTimeout, clearTimer =
       return
     }
     const direction = pointer.deltaX < 0 ? -1 : 1
-    pointer.target.classList.remove('dice-pop--swiping')
-    pointer.target.classList.add('dice-pop--swipe-dismiss')
-    pointer.target.style.setProperty('--dice-swipe-x', `${direction * (width + 48)}px`)
-    pointer.target.style.setProperty('--dice-swipe-opacity', '0')
+    pointer.target.classList.remove('notification--swiping')
+    pointer.target.classList.add('notification--swipe-dismiss')
+    pointer.target.style.setProperty('--notification-swipe-x', `${direction * (width + 48)}px`)
+    pointer.target.style.setProperty('--notification-swipe-opacity', '0')
     schedule(() => onDismiss(pointer.id), 160)
   }
 

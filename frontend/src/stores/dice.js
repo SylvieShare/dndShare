@@ -1,10 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useNotificationsStore } from '@/stores/notifications'
 import { evaluateDiceParts, rollDiceExpression } from '@/shared/lib/dice'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-
-const AUTO_DISMISS_MS = 6000
-const MAX_STACK = 5
 
 function detectOutcome(result, criticalThreshold = null) {
   let fumble = null
@@ -52,37 +50,19 @@ function applyD20Adjustments(result, adjustments = []) {
 }
 
 export const useDiceStore = defineStore('dice', () => {
-  const stack = ref([]), lastD20 = ref(null)
-  const timers = new Map()
-  let seq = 0
-
-  function dismiss(id) {
-    stack.value = stack.value.filter(e => e.id !== id)
-    const t = timers.get(id)
-    if (t) {
-      clearTimeout(t)
-      timers.delete(id)
-    }
-  }
-
-  function scheduleDismiss(id, ms) {
-    const t = setTimeout(() => {
-      stack.value = stack.value.filter(e => e.id !== id)
-      timers.delete(id)
-    }, ms)
-    timers.set(id, t)
-  }
+  const notifications = useNotificationsStore()
+  const stack = computed(() => notifications.entries.filter(entry => entry.type === 'dice').map(entry => ({ ...entry.data, id: entry.id, title: entry.title })))
+  const lastD20 = ref(null)
+  const dismiss = id => notifications.dismiss(id)
 
   function pushEntry(entry) {
-    const duration = entry.duration || AUTO_DISMISS_MS
+    const duration = entry.duration || 6000
+    useSessionEventsStore().markLocalRoll(entry.result)
     const action = entry.action || 'Бросок'
     const actorName = String(entry.actor?.name || '').trim()
     if (entry.result?.parts?.some(part => part.kind === 'dice' && part.sides === 20)) lastD20.value = null
     if (entry.popup !== false) {
-      seq += 1
-      const id = seq
       const popupEntry = {
-        id,
         title: actorName ? `${actorName} — ${action}` : action,
         result: entry.result,
         outcome: entry.outcome || null,
@@ -91,18 +71,15 @@ export const useDiceStore = defineStore('dice', () => {
         actions: Array.isArray(entry.actions) ? entry.actions : [],
         rerollSpec: entry.rerollSpec || null,
       }
-      stack.value.push(popupEntry)
+      const id = notifications.notify({ type: 'dice', title: popupEntry.title, data: popupEntry, duration,
+        scope: 'dice', onAction: key => runAction(id, key) })
+      popupEntry.id = id
       if (entry.result?.parts?.some(part => part.kind === 'dice' && part.sides === 20)) lastD20.value = popupEntry
-      while (stack.value.length > MAX_STACK) {
-        const removed = stack.value.shift()
-        const t = timers.get(removed.id)
-        if (t) { clearTimeout(t); timers.delete(removed.id) }
-      }
-      scheduleDismiss(id, duration)
     }
     if (entry.log !== false) {
       useSessionEventsStore().publish({
         type: 'dice_roll',
+        notify: false,
         action,
         actor: entry.actor,
         data: {
@@ -168,7 +145,7 @@ export const useDiceStore = defineStore('dice', () => {
   }
 
   function runAction(id, key) {
-    const entry = stack.value.find((row) => row.id === id) || (lastD20.value?.id === id ? lastD20.value : null)
+    const entry = notifications.entries.find(row => row.id === id && row.type === 'dice')?.data || (lastD20.value?.id === id ? lastD20.value : null)
     const selected = entry?.actions?.find(action => action.key === key)
     if (!selected || !entry.rerollSpec) return null
     if (selected.consume && !selected.consume()) { entry.actions = entry.actions.filter(action => action.key !== key); return null }
@@ -181,9 +158,8 @@ export const useDiceStore = defineStore('dice', () => {
   }
 
   function clear() {
-    for (const t of timers.values()) clearTimeout(t)
-    timers.clear()
-    stack.value = []; lastD20.value = null
+    notifications.clear('dice')
+    lastD20.value = null
   }
 
   return { stack, lastD20, roll, rollD20, pushEntry, runAction, dismiss, clear }

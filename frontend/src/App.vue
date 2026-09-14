@@ -22,7 +22,7 @@
       </transition>
     </router-view>
   </div>
-  <DiceRollPopup v-if="!isStandaloneRoute"/>
+  <AppNotifications v-if="!isStandaloneRoute"/>
   <ConsoleErrorInbox v-if="!isStandaloneRoute"/>
 </template>
 
@@ -31,7 +31,7 @@ import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from "@/shared/ui/AppHeader";
 import DesktopSidebar from '@/shared/ui/DesktopSidebar.vue'
-import DiceRollPopup from "@/shared/ui/DiceRollPopup.vue";
+import AppNotifications from '@/features/notifications/components/AppNotifications.vue'
 import ConsoleErrorInbox from '@/features/console-errors/components/ConsoleErrorInbox.vue'
 import { pageTransitionName } from '@/app/router'
 import { mobilePageTransitionActive } from '@/app/mobilePageTransition'

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import DiceRollPopup from '../../../shared/ui/DiceRollPopup.vue'
+import DiceRollNotification from '../../notifications/components/DiceRollNotification.vue'
 import ViewSession from './ViewSession.vue'
 
 const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.meta.url)), 'utf8') + '\n' + readFileSync(fileURLToPath(new URL('../composables/useSessionPage.js', import.meta.url)), 'utf8')
@@ -44,7 +44,7 @@ const sessionSettingsSource = readFileSync(fileURLToPath(new URL('../composables
 const sessionSettingsControlSource = readFileSync(fileURLToPath(new URL('../components/SessionSettingsControl.vue', import.meta.url)), 'utf8')
 const encounterNpcsSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterNpcs.js', import.meta.url)), 'utf8')
 const encounterStylesSource = readFileSync(fileURLToPath(new URL('../components/styles/EncounterTab.css', import.meta.url)), 'utf8')
-const dicePopupSource = readFileSync(fileURLToPath(new URL('../../../shared/ui/DiceRollPopup.vue', import.meta.url)), 'utf8')
+const dicePopupSource = readFileSync(fileURLToPath(new URL('../../notifications/components/DiceRollNotification.vue', import.meta.url)), 'utf8')
 const sessionHotkeysSource = readFileSync(fileURLToPath(new URL('../composables/useSessionHotkeys.js', import.meta.url)), 'utf8')
 const shortcutHelpSource = readFileSync(fileURLToPath(new URL('../components/SessionShortcutHelp.vue', import.meta.url)), 'utf8')
 
@@ -234,7 +234,7 @@ describe('ViewSession participant rail', () => {
   })
 
   it('animates displayed rolls on every viewport and cleans up popup timers', () => {
-    expect(DiceRollPopup).toBeTruthy()
+    expect(DiceRollNotification).toBeTruthy()
     expect(dicePopupSource).not.toContain("'(max-width: 640px)'")
     expect(dicePopupSource).toContain("'(prefers-reduced-motion: reduce)'")
     expect(dicePopupSource).toContain('displayedRoll(entry, i, ri, r)')

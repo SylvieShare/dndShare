@@ -11,17 +11,17 @@
     </div>
     <div class="event-actor-entities">
       <section v-for="entry in group.entities" :key="entry.key" class="event-entity">
-        <SessionEventRow v-if="entry.entity && entry.events.length === 1" :event="entry.events[0]" :entity-name="entityName(entry)" grouped>
-          <template #entity><SessionEventEntityLabel :entry="entry" :item="items[entry.entity.itemId]" :name="entityName(entry)" @view="view = $event" /></template>
-        </SessionEventRow>
-        <template v-else>
-          <header v-if="entry.entity" class="event-entity-head">
-            <SessionEventEntityLabel :entry="entry" :item="items[entry.entity.itemId]" :name="entityName(entry)" @view="view = $event" />
-          </header>
-          <div class="event-entity-actions" :class="{ 'event-entity-actions--nested': entry.entity }">
-            <SessionEventRow v-for="event in entry.events" :key="event.id" :event="event" :entity-name="entityName(entry)" :grouped="!!entry.entity" />
-          </div>
-        </template>
+        <header v-if="entry.entity && entry.events.length > 1" class="event-entity-head">
+          <SessionEventEntityLabel :entry="entry" :item="items[entry.entity.itemId]" :name="entityName(entry)" @view="view = $event" />
+        </header>
+        <div class="event-entity-actions" :class="{ 'event-entity-actions--nested': entry.entity && entry.events.length > 1 }">
+          <SessionEventRow v-for="event in entry.events" :key="event.id" :event="event" :entity-name="entityName(entry)"
+            :grouped="!!entry.entity" :arriving="newEventIds.has(event.id)">
+            <template v-if="entry.entity && entry.events.length === 1" #entity>
+              <SessionEventEntityLabel :entry="entry" :item="items[entry.entity.itemId]" :name="entityName(entry)" @view="view = $event" />
+            </template>
+          </SessionEventRow>
+        </div>
       </section>
     </div>
     <ItemViewModal v-if="view" :item-id="Number(view.itemId)" :item="items[view.itemId] || null" :item-type-id="items[view.itemId]?.typeId || null" @close="view = null" />
@@ -33,7 +33,7 @@ import SessionEventActorAvatar from './SessionEventActorAvatar.vue'
 import SessionEventEntityLabel from './SessionEventEntityLabel.vue'
 import SessionEventRow from './SessionEventRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-const props = defineProps({ group: Object, items: Object })
+const props = defineProps({ group: Object, items: Object, newEventIds: { type: Set, default: () => new Set() } })
 const view = ref(null)
 const entityName = entry => entry.entity?.name || props.items[entry.entity?.itemId]?.name || (entry.entity?.itemId ? `Запись #${entry.entity.itemId}` : '')
 </script>

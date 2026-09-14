@@ -178,6 +178,16 @@ func TestItemTransfersPostgres(t *testing.T) {
 			t.Fatalf("lost stack params: %s", raw)
 		}
 	}
+	// Both POST and incremental reads expose the correlation id for notification deduplication.
+	rollAction := "00000000-0000-4000-8000-000000000009"
+	roll, err := s.CreateSessionEvent(ctx, 1, 1, nil, nil, nil, "dice_roll", "Проверка", json.RawMessage(`{}`), "public", &rollAction)
+	if err != nil || roll.ClientActionID == nil || *roll.ClientActionID != rollAction {
+		t.Fatalf("created event correlation: %+v %v", roll, err)
+	}
+	page, err := s.GetSessionEvents(ctx, 1, 1, roll.ID-1, 100)
+	if err != nil || len(page) != 1 || page[0].ClientActionID == nil || *page[0].ClientActionID != rollAction {
+		t.Fatalf("read event correlation: %+v %v", page, err)
+	}
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {
 		t.Fatalf("resolved pending list: %+v %v", pending, err)

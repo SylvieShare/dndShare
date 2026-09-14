@@ -1,5 +1,5 @@
 <template>
-  <article class="event-row" :class="{ 'event-row--standalone': !grouped, 'event-row--with-entity': !!$slots.entity }">
+  <article :data-event-id="event.id" class="event-row" :class="{ 'event-row--arriving': arriving, 'event-row--standalone': !grouped, 'event-row--with-entity': !!$slots.entity }">
     <SessionEventIcon v-if="!grouped" :event="event" />
     <div class="event-content">
       <div class="event-heading">
@@ -31,7 +31,7 @@ import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SessionEventIcon from './SessionEventIcon.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
-const props = defineProps({ event: Object, entityName: String, grouped: Boolean })
+const props = defineProps({ event: Object, entityName: String, grouped: Boolean, arriving: Boolean })
 const date = computed(() => new Date(props.event.createdAt))
 const fullTime = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleString('ru-RU'))
 const time = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }))
@@ -54,4 +54,10 @@ const details = computed(() => sessionEventDetails(props.event))
 .event-resource--spent { color: var(--danger); }
 .event-resource--added { color: var(--success); }
 .event-resource small { color: var(--text-muted); overflow-wrap: anywhere; }
+.event-row--arriving { animation: chronicle-entry-in .42s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes chronicle-entry-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) { .event-row--arriving { animation: none; } }
 </style>

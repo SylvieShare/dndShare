@@ -13,6 +13,7 @@ import (
 // SessionEvent is a user-facing event in a game session timeline.
 // Item transfer events update their status in place; other events are append-only.
 type SessionEvent struct {
+	ClientActionID       *string         `json:"clientActionId,omitempty"`
 	ID                   int64           `json:"id"`
 	SessionID            int64           `json:"-"`
 	AuthorName           string          `json:"authorName"`
@@ -49,7 +50,7 @@ const sessionEventSelect = `
 	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
 	       e.actor_item_id,
 	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
-	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at
+	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text
 	FROM dndshare.session_event e
 	JOIN dndshare.users event_author ON event_author.id = e.author_user_id
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
@@ -69,7 +70,7 @@ func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
 		&event.ID, &event.SessionID, &event.AuthorUserID, &event.AuthorName, &event.AuthorIsSessionOwner,
 		&event.ActorCharID, &event.ActorCharUUID, &event.ActorTemplateID, &actorData,
 		&event.ActorItemID, &event.ActorImageURL, &event.ActorSVG,
-		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt,
+		&event.ActorName, &event.EventType, &event.Action, &data, &event.Visibility, &event.CreatedAt, &event.ClientActionID,
 	)
 	if len(actorData) > 0 {
 		event.ActorData = json.RawMessage(actorData)

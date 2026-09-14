@@ -1,0 +1,51 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, disposePinia, setActivePinia } from 'pinia'
+import { useNotificationsStore } from './notifications'
+let pinia
+beforeEach(() => { vi.useFakeTimers(); pinia = createPinia(); setActivePinia(pinia) })
+afterEach(() => { disposePinia(pinia); vi.useRealTimers() })
+describe('notification lifecycle', () => {
+  it('shares one bounded stack across notification types and clears evicted timers', () => {
+    const store = useNotificationsStore()
+    for (let i = 0; i < 7; i++) store.notify({ type: i % 2 ? 'dice' : 'session-event', title: String(i) })
+    expect(store.entries.map(entry => entry.title)).toEqual(['2', '3', '4', '5', '6'])
+    expect(vi.getTimerCount()).toBe(5)
+    vi.advanceTimersByTime(6000)
+    expect(store.entries).toEqual([])
+  })
+  it('replaces a keyed event update and restarts only its lifetime', () => {
+    const store = useNotificationsStore()
+    store.notify({ type: 'session-event', key: 'transfer:1', title: 'Ожидает' })
+    vi.advanceTimersByTime(5000)
+    store.notify({ type: 'session-event', key: 'transfer:1', title: 'Приняли' })
+    vi.advanceTimersByTime(1000)
+    expect(store.entries.map(entry => entry.title)).toEqual(['Приняли'])
+    expect(vi.getTimerCount()).toBe(1)
+  })
+  it('keeps a hovered or focused notification until both interactions finish', () => {
+    const store = useNotificationsStore(), id = store.notify({ type: 'dice' })
+    vi.advanceTimersByTime(2000)
+    store.pause(id, 'hover'); store.pause(id, 'focus')
+    vi.advanceTimersByTime(10000)
+    store.resume(id, 'hover')
+    vi.advanceTimersByTime(10000)
+    expect(store.entries).toHaveLength(1)
+    store.resume(id, 'focus')
+    vi.advanceTimersByTime(3999)
+    expect(store.entries).toHaveLength(1)
+    vi.advanceTimersByTime(1)
+    expect(store.entries).toEqual([])
+  })
+  it('disposes actions and timers without clearing another scope', () => {
+    const store = useNotificationsStore(), action = vi.fn()
+    const id = store.notify({ type: 'dice', scope: 'dice', onAction: action })
+    store.notify({ type: 'session-event', scope: 'session:1' })
+    store.runAction(id, 'reroll')
+    expect(action).toHaveBeenCalledWith('reroll')
+    store.clear('dice'); store.runAction(id, 'reroll')
+    expect(action).toHaveBeenCalledTimes(1)
+    expect(store.entries).toHaveLength(1)
+    store.$dispose()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+})

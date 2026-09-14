@@ -58,7 +58,7 @@ describe('swipe dismiss', () => {
     swipe.onPointerUp(event({ currentTarget: element, clientX: 90, timeStamp: 140 }))
 
     expect(move.preventDefault).toHaveBeenCalledOnce()
-    expect(element.classList.contains('dice-pop--swipe-dismiss')).toBe(true)
+    expect(element.classList.contains('notification--swipe-dismiss')).toBe(true)
     timers.forEach(callback => callback())
     expect(onDismiss).toHaveBeenCalledWith(119)
   })

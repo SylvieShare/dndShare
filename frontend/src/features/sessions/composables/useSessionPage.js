@@ -95,6 +95,13 @@ export function useSessionPage() {
   const createModalRef = ref(null)
   let pendingCreatedCharacter = null
 
+  const unregisterEventReader = sessionEventsStore.registerReader({
+    sessionUuid: () => sessionUuid,
+    isReading: () => primaryView.value === 'events' && !sheetUuid.value,
+    actionFor: () => isDm.value ? { label: 'Открыть хронику', run: () => { sheetUuid.value = null; selectPrimaryView('events') } } : null,
+  })
+  onBeforeUnmount(unregisterEventReader)
+
   watch(sheetUuid, actorUuid => {
     sessionEventsStore.setActor(actorUuid, sessionUuid)
   })
@@ -399,9 +406,9 @@ export function useSessionPage() {
       return Promise.all(tasks)
     },
     onCatchUp() {
-      const tasks = [requestParticipants()]
+      const tasks = [requestParticipants(), sessionEventsStore.refresh()]
       if (isDm.value) {
-        tasks.push(sessionEventsStore.refresh(), presentation.loadConnections())
+        tasks.push(presentation.loadConnections())
       }
       return Promise.all(tasks)
     },
@@ -526,11 +533,11 @@ export function useSessionPage() {
       sessionRole.value = res?.myRole || ''
       myCharUuid.value = res?.myCharUuid || ''
       syncVersions()
+      await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: isDm.value ? sheetUuid.value : myCharUuid.value })
       if (isDm.value) {
         await encounter.load()
         await chapterGraph.load()
         musicStore.setContext({ uuid: sessionUuid, dm: true })
-        await sessionEventsStore.setContext({ uuid: sessionUuid, actorUuid: sheetUuid.value })
         await musicStore.ensureLibrary().catch(() => {})
         await musicStore.loadSessionState().catch(() => {})
         await Promise.all([

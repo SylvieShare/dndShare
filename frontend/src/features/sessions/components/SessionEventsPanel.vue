@@ -87,7 +87,7 @@
           <button type="button" @click="resetFilters">Показать всю хронику</button>
         </div>
         <div v-else ref="listEl" class="sep-list">
-          <SessionEventActorGroup v-for="group in timelineGroups" :key="group.key" :group="group" :items="items" />
+          <SessionEventActorGroup v-for="group in timelineGroups" :key="group.key" :group="group" :items="items" :new-event-ids="store.newEventIds" />
         </div>
       </div>
     </div>
@@ -185,7 +185,7 @@ function resetFilters() {
   categoryFilters.value = []
 }
 
-watch(() => events.value.length, async () => {
+watch(() => events.value.at(-1)?.id, async () => {
   const list = listEl.value
   const wasAtTop = !list || list.scrollTop < 8
   const previousHeight = list?.scrollHeight || 0

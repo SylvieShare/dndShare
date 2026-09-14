@@ -570,7 +570,9 @@ revision, status }`; сброс одного результата: `POST /api/ac
 ### Контекст событий хроники
 
 События сессии возвращают `authorUserId`, `authorName` (логин) и вычисляемый
-`authorIsSessionOwner`. Семантический JSON `data` может содержать `source`
+`authorIsSessionOwner`. Если при записи указан `clientActionId`, чтение и
+создание события возвращают его: клиент связывает SSE с уже показанным локальным
+броском и не показывает дублирующее уведомление. Семантический JSON `data` может содержать `source`
 (`itemId`, снимок `name`, необязательный `instanceUid`), `ability`
 (`id`, `typeId`, `name`) и `resourceChanges` (массив: `key`, `name`, `delta`,
 `color`, `remaining`, `total`, для магии `level`/`pool`). Отрицательный `delta`
