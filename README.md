@@ -44,7 +44,7 @@ frontend, PostgreSQL и S3-compatible object storage.
 
 ### Backend (`internal/`)
 
-- stdlib `net/http` + `ServeMux` с method/pattern-роутингом (Go 1.22+), без
+- Go 1.27.1+; stdlib `net/http` + `ServeMux` с method/pattern-роутингом, без
   веб-фреймворка;
 - PostgreSQL через pgx (`pgxpool`, simple protocol для пулера YC `:6432`);
 - S3-compatible хранилище через aws-sdk-go-v2 и порт

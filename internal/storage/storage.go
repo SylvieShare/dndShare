@@ -48,6 +48,10 @@ func New(cfg config.StorageConfig) *Service {
 		BaseEndpoint: aws.String(cfg.Endpoint),
 		UsePathStyle: true,
 		Credentials:  credentials.NewStaticCredentialsProvider(cfg.AccessKey, cfg.SecretKey, ""),
+		// Keep the existing S3-compatible wire format instead of opting into
+		// AWS-specific optional checksum headers and streaming trailers.
+		RequestChecksumCalculation: aws.RequestChecksumCalculationWhenRequired,
+		ResponseChecksumValidation: aws.ResponseChecksumValidationWhenRequired,
 	})
 	return &Service{
 		cfg:         cfg,

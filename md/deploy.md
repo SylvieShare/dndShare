@@ -3,6 +3,12 @@
 Production — один статический Go-бинарь с вшитым Vue frontend. Он работает на
 VM под systemd; Docker, JAR и Maven в production path не используются.
 
+Для сборки требуется Go 1.27.1 или новее (`go.mod`). При стандартном
+`GOTOOLCHAIN=auto` Go загрузит подходящий toolchain автоматически.
+S3-клиент сохраняет path-style адресацию и использует checksum-режим
+`WHEN_REQUIRED` для запросов и ответов: обновления AWS SDK не включают
+необязательные checksum-заголовки и streaming trailers для Object Storage.
+
 ## Обязательный workflow
 
 После законченного изменения:
