@@ -8,6 +8,7 @@
         @pointerup="swipe.onPointerUp" @pointercancel="swipe.onPointerCancel">
         <button type="button" class="notification-close" aria-label="Закрыть уведомление" @click="store.dismiss(entry.id)"><X :size="16" /></button>
         <DiceRollNotification v-if="entry.type === 'dice'" :entry="{ ...entry.data, id: entry.id, title: entry.title }" @action="key => store.runAction(entry.id, key)" />
+        <ApplicationNotification v-else-if="entry.type === 'application'" :entry="entry" />
         <SessionEventNotification v-else-if="entry.type === 'session-event'" :entry="entry" />
         <template v-else><strong>{{ entry.title }}</strong><p>{{ entry.data.message }}</p></template>
         <div v-if="entry.actions.length" class="notification-actions">
@@ -25,6 +26,7 @@ import { X } from '@lucide/vue'
 import { useNotificationsStore } from '@/stores/notifications'
 import { useAccountStore } from '@/stores/account'
 import { useSwipeDismiss } from '@/shared/composables/useSwipeDismiss'
+import ApplicationNotification from './ApplicationNotification.vue'
 import DiceRollNotification from './DiceRollNotification.vue'
 import SessionEventNotification from './SessionEventNotification.vue'
 const store = useNotificationsStore()

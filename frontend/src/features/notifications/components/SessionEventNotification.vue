@@ -6,12 +6,14 @@
     </div>
     <p class="session-event-notification-action">{{ event.action }}<template v-if="transition"> ({{ transition }})</template></p>
     <p v-if="details" class="session-event-notification-detail">{{ details }}</p>
-    <DiceRollResult v-if="event.data?.result" :result="event.data.result" :size="30" />
+    <DiceRollResult v-if="event.data?.result" :result="event.data.result" :color="event.data.color" :size="30" />
+    <ApplicationSummary v-if="event.data?.applicationResult" :data="event.data.applicationResult" result />
     <small v-if="entry.data.updated" class="session-event-notification-detail">Событие обновлено</small>
   </div>
 </template>
 <script setup>
 import { computed } from 'vue'
+import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
 import SessionEventActorAvatar from '@/features/sessions/components/SessionEventActorAvatar.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import { sessionEventActorLabel } from '@/features/sessions/lib/sessionEventView'

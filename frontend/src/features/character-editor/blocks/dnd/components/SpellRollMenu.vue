@@ -25,7 +25,7 @@
         <FormField v-if="option.kind === 'damage' && option.rule.range_attack" label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
           <ToggleSwitch v-model="critical" aria-label="Критическое попадание" />
         </FormField>
-        <DamageFormulaPreview :label="option.primary ? option.kind === 'damage' ? 'Итоговый урон' : 'Итоговое лечение' : option.label" :aria-label="option.kind === 'damage' ? 'Итоговая формула урона' : option.kind === 'heal' ? 'Итоговая формула лечения' : 'Итоговая формула эффекта'" :expression="preview(option, cast.castLevel)" />
+        <DamageFormulaPreview :default-color="option.kind === 'heal' ? 'var(--success)' : undefined" :label="option.primary ? option.kind === 'damage' ? 'Итоговый урон' : 'Итоговое лечение' : option.label" :aria-label="option.kind === 'damage' ? 'Итоговая формула урона' : option.kind === 'heal' ? 'Итоговая формула лечения' : 'Итоговая формула эффекта'" :expression="preview(option, cast.castLevel)" />
         <small v-if="option.kind === 'damage' && spellInstances(option.entry.item, cast.castLevel, ctx.charLevel) > 1">Урон одного снаряда/луча. Всего: {{ spellInstances(option.entry.item, cast.castLevel, ctx.charLevel) }}.</small>
         <RowActionItem :action="option.kind === 'damage' ? 'damage' : option.kind === 'heal' ? 'revive' : 'feature-damage'" :disabled="cast.disabled" @click="roll(option, close, cast)">
           {{ cast.spend ? 'Бросить и потратить ячейку' : rollLabel(option) }}

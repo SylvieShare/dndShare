@@ -1,3 +1,4 @@
+import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { usePotionApplications } from './usePotionApplications'
 import { computed, onBeforeUnmount, reactive, shallowRef, watch } from 'vue'
 import * as api from '@/shared/api/itemTransfersApi'
@@ -109,8 +110,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
   async function resolve(transfer, decision) {
     let response
     if (await mutate(async () => { response = await api.resolveItemTransfer(uuid, transfer.id, decision) }) && decision === 'accept' && transfer.purpose === 'use') {
-      potions.application.name = transfer.itemName
-      potions.application.result = response.transfer.applicationResult
+      notifyApplication(transfer.itemName, response.transfer.applicationResult)
     }
   }
   async function catchUp() {

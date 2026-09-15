@@ -4,7 +4,7 @@
     <div class="damage-preview-formula">
       <template v-for="(group, index) in groups" :key="index">
         <span v-if="index" aria-hidden="true">+</span>
-        <DamageDice :parts="group.parts" :modifier="group.modifier" :size="26" :default-color="group.color || 'var(--accent-soft)'" />
+        <DamageDice :parts="group.parts" :modifier="group.modifier" :size="26" :default-color="group.color || defaultColor" />
       </template>
       <span v-if="!groups.length">0</span>
     </div>
@@ -15,7 +15,7 @@ import { computed } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { parseDiceExpression } from '@/shared/lib/dice'
 import DamageDice from './DamageDice.vue'
-const props = defineProps({ unframed: Boolean, expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
+const props = defineProps({ unframed: Boolean, defaultColor: { type: String, default: 'var(--accent-soft)' }, expression: { type: String, default: '' }, label: { type: String, default: 'Итоговый урон' } })
 const groups = computed(() => {
   const result = new Map()
   for (const token of parseDiceExpression(props.expression)) {

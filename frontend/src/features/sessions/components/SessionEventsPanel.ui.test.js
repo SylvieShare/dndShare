@@ -4,6 +4,8 @@ import { createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import { createPinia } from 'pinia'
 import { useAccountStore } from '@/stores/account'
+import SessionEventRow from './SessionEventRow.vue'
+import SessionEventNotification from '@/features/notifications/components/SessionEventNotification.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'
 import SessionEventActorGroup from './SessionEventActorGroup.vue'
 import { groupSessionEvents } from '../lib/sessionEventView'
@@ -93,4 +95,41 @@ it.each([[1, 'pending', true], [2, 'pending', false], [1, 'accepted', false], [1
   const app = createSSRApp({ render: () => h(SessionTransferApproval, { event: { id: 1, sessionOwnerUserId: 1, data: { status } } }) })
   app.use(pinia)
   expect((await renderToString(app)).includes('Принять передачу')).toBe(visible)
+})
+
+
+it.each(['item_spent', 'item_transfer'])('shows stored healing dice and applied effects for %s', async type => {
+  const event = { id: 90, type, action: 'Применено: Зелье', data: {
+    purpose: 'use', status: 'accepted', recipientName: 'Торин',
+    applicationResult: { healing: { formula: '2d4 + 2', dice: [2, 4], total: 8, applied: 5 },
+      effects: [{ id: 100, name: 'Благословение', duration: { kind: 'hours', value: 1 } }] },
+  } }
+  const app = createSSRApp({ render: () => h(SessionEventRow, { event }) }); app.use(createPinia())
+  const html = await renderToString(app)
+  expect(html).toContain('= 8')
+  expect(html).toContain('Восстановлено хитов: 5')
+  expect(html).toContain('--system-die-color:var(--success)')
+  expect(html).toContain('Благословение')
+  expect(html).toContain('1 час')
+  expect(html.match(/class="application-summary"/g)).toHaveLength(1)
+})
+
+it('does not present rejected effects as applied', async () => {
+  const event = { id: 91, type: 'item_transfer', data: { purpose: 'use', status: 'rejected',
+    application: { effects: [{ id: 100, name: 'Благословение' }] } } }
+  const app = createSSRApp({ render: () => h(SessionEventRow, { event }) }); app.use(createPinia())
+  expect(await renderToString(app)).not.toContain('Благословение')
+})
+
+
+it.each([SessionEventRow, SessionEventNotification])('keeps damage colors in chronicle and notification (%#)', async component => {
+  const event = { id: 92, type: 'dice_roll', data: { color: 'var(--success)', result: { total: 9,
+    parts: [{ kind: 'dice', sides: 6, rolls: [4], color: 'var(--danger)' },
+      { kind: 'dice', sides: 4, rolls: [3], color: 'var(--info)' },
+      { kind: 'dice', sides: 4, rolls: [2] }],
+  } } }
+  const props = component === SessionEventRow ? { event } : { entry: { data: { event } } }
+  const app = createSSRApp({ render: () => h(component, props) }); app.use(createPinia())
+  const html = await renderToString(app)
+  for (const color of ['danger', 'info', 'success']) expect(html).toContain(`--system-die-color:var(--${color})`)
 })

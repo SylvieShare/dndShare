@@ -8,30 +8,31 @@
       <template v-else>
         <CharacterInteractionInbox v-if="controller.interactions" :controller="controller.interactions" :character-uuid="characterUuid" />
         <p v-if="!state.transfers.length && !controller.interactions?.state.pending.length" class="transfer-hint">Незавершённых событий нет.</p>
-        <article v-for="transfer in state.transfers" :key="transfer.id" class="transfer-event">
+        <BaseTile v-for="transfer in state.transfers" :key="transfer.id" framed role="article" class="transfer-event">
           <div class="transfer-offer">
             <TransferPerson :name="transfer.senderName" :image-url="senderImage(transfer)" />
             <span class="transfer-offer-verb">{{ transfer.purpose === 'use' ? 'предлагает применить' : 'предлагает' }}</span>
-            <button type="button" class="transfer-reference" @click="emit('view-item', itemView(transfer))">
+          </div>
+          <button type="button" class="transfer-reference" @click="emit('view-item', itemView(transfer))">
               <ItemIcon v-if="artwork(transfer)?.iconImageUrl || artwork(transfer)?.svg" :item="artwork(transfer)" :size="32" />
               <Package v-else :size="32" :stroke-width="1.5" aria-hidden="true" />
               <strong>{{ transfer.itemName }}<span v-if="transfer.entry?.count > 1"> ×{{ transfer.entry.count }}</span></strong>
-            </button>
-          </div>
+          </button>
           <p v-if="transfer.source === 'spells'" class="transfer-hint">Эффект заклинания для {{ transfer.recipientName }}. Применится после принятия; ячейка учитывается отдельно при сотворении.</p>
-          <p v-else-if="transfer.purpose === 'use'" class="transfer-hint">Одна доза для {{ transfer.recipientName }}. После принятия доза будет потрачена и применится к листу.</p>
           <template v-if="transfer.recipientCharUuid === characterUuid">
-            <ApplicationSummary v-if="transfer.purpose === 'use'" :data="transfer.application || {}" />
-          <div class="transfer-actions">
+            <ApplicationSummary class="transfer-application" v-if="transfer.purpose === 'use'" :data="transfer.application || {}" />
+            <div class="transfer-actions">
               <ActionButton :disabled="state.busy" @click="controller.resolve(transfer, 'accept')">{{ transfer.purpose === 'use' ? 'Принять применение' : 'Принять' }}</ActionButton>
               <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">Отказаться</ActionButton>
             </div>
           </template>
           <template v-else>
-            <span class="transfer-hint">Ожидает принятия</span>
-            <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">{{ transfer.purpose === 'use' ? 'Отменить применение' : 'Отозвать передачу' }}</ActionButton>
+            <div class="transfer-actions">
+              <span class="transfer-hint">Для {{ transfer.recipientName }} · Ожидает принятия</span>
+              <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">{{ transfer.purpose === 'use' ? 'Отменить применение' : 'Отозвать передачу' }}</ActionButton>
+            </div>
           </template>
-        </article>
+        </BaseTile>
       </template>
     </div>
 </template>
@@ -44,7 +45,7 @@ import { Package } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
-import { ActionButton, LoadingIndicator } from '@sylvieshare/share-ui'
+import { ActionButton, BaseTile, LoadingIndicator } from '@sylvieshare/share-ui'
 import { pvAvatar } from '@/features/sessions/lib/participantView'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
 const emit = defineEmits(['view-item'])
@@ -75,16 +76,17 @@ watch(() => [...new Set(state.value.transfers.map(itemId).filter(Boolean))].join
 <style scoped>
 .transfer-content { display: flex; flex-direction: column; gap: 16px; }
 .transfer-content p { margin: 0; }
-.transfer-event { display: flex; flex-direction: column; gap: 10px; overflow-wrap: anywhere; }
+.transfer-event { display: flex; flex-direction: column; gap: 12px; padding: 14px; overflow-wrap: anywhere; }
 .transfer-offer { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 9px; }
 .transfer-offer-verb { color: var(--text-muted); font-size: 13px; }
-.transfer-event + .transfer-event { border-top: 1px solid var(--border); padding-top: 16px; }
-.transfer-reference { display: flex; align-items: center; gap: 9px; min-width: 0; border: 0; padding: 0; background: none; color: var(--text-1); font: inherit; text-align: left; cursor: pointer; }
+.transfer-application { padding-block: 2px; }
+.transfer-reference { display: flex; align-items: center; gap: 9px; min-width: 0; border: 0; padding: 4px 0; background: none; color: var(--text-1); font: inherit; text-align: left; cursor: pointer; }
 .transfer-reference > svg { flex: 0 0 32px; color: var(--accent-soft); }
-.transfer-reference strong { min-width: 0; overflow-wrap: anywhere; font-size: 14px; text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 4px; }
+.transfer-reference strong { min-width: 0; overflow-wrap: anywhere; font-size: 15px; text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 4px; }
 .transfer-reference:hover { color: var(--accent-soft); }
 .transfer-reference:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--r-sm); }
 .transfer-hint { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
 .transfer-error { color: var(--danger); }
-.transfer-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.transfer-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border); }
+.transfer-actions > .transfer-hint { flex: 1 1 140px; }
 </style>

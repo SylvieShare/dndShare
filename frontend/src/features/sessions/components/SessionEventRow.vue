@@ -8,7 +8,7 @@
         <time :datetime="event.createdAt" :title="fullTime">{{ time }}</time>
       </div>
       <div v-if="hasBody" class="event-body">
-        <DiceRollResult v-if="event.data?.result" :result="event.data.result" :size="32" />
+        <DiceRollResult v-if="event.data?.result" :result="event.data.result" :color="event.data.color" :size="32" />
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
         </div>
@@ -19,9 +19,10 @@
           <span v-if="event.data?.count > 1">×{{ event.data.count }}</span>
           <TransferStatus :purpose="event.data?.purpose" :status="event.data?.status" />
           <SessionTransferApproval :event="event" />
-          <ApplicationSummary v-if="event.data?.purpose === 'use'" :data="event.data?.status === 'accepted' ? event.data.applicationResult || {} : event.data.application || {}" :result="event.data?.status === 'accepted'" />
         </div>
         <div v-else-if="details" class="event-details">{{ details }}</div>
+        <ApplicationSummary v-if="event.data?.applicationResult" :data="event.data.applicationResult" result />
+        <ApplicationSummary v-else-if="event.data?.purpose === 'use' && event.data?.status === 'pending'" :data="event.data.application || {}" />
         <div v-if="event.data?.resourceChanges?.length" class="event-resources">
           <span v-for="(change, i) in event.data.resourceChanges" :key="i" class="event-resource" :class="change.delta < 0 ? 'event-resource--spent' : 'event-resource--added'">
             <b>{{ change.delta < 0 ? '−' : '+' }}</b>
@@ -50,7 +51,7 @@ const date = computed(() => new Date(props.event.createdAt))
 const fullTime = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleString('ru-RU'))
 const time = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }))
 const transition = computed(() => sessionEventTransition(props.event))
-const hasBody = computed(() => props.event.data?.result || details.value || props.event.data?.resourceChanges?.length)
+const hasBody = computed(() => props.event.type === 'item_transfer' || props.event.data?.applicationResult || props.event.data?.result || details.value || props.event.data?.resourceChanges?.length)
 const details = computed(() => sessionEventDetails(props.event))
 </script>
 <style scoped>

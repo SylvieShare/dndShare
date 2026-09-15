@@ -26,6 +26,7 @@
             <RowActionItem v-if="canUse" action="use" tone="accent" @click="usePotion(p, close)">Использовать на себя</RowActionItem>
             <ItemTransferAction v-if="canUse" purpose="use" source="potions" :entry="p" :name="p.name" :disabled="busy.size > 0" @close="close" />
             <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
+            <RowActionItem v-if="canUse" action="delete" tone="danger" @click="removePotion(p, close)">Удалить (−1)</RowActionItem>
             <RowActionItem action="view" tone="info" @click="viewPotion(p, close)">Просмотреть</RowActionItem>
             <RowActionItem v-if="canMove" :icon="ArrowRightLeft" @click="movePotion(p, close)">Переместить в вещи</RowActionItem>
           </template>
@@ -56,7 +57,7 @@ const props = defineProps({
   canAdd: { type: Boolean, default: false },
   canMove: { type: Boolean, default: false },
 })
-const emit = defineEmits(['use', 'replenish', 'view', 'move', 'add'])
+const emit = defineEmits(['use', 'remove', 'replenish', 'view', 'move', 'add'])
 
 const vials = new Map()
 const busy = reactive(new Set())
@@ -93,6 +94,11 @@ async function usePotion(p, close) {
 function replenishPotion(p, close) {
   close()
   if (props.canAdd) emit('replenish', p.uid)
+}
+
+function removePotion(p, close) {
+  close()
+  if (props.canUse) emit('remove', p.uid)
 }
 
 function viewPotion(p, close) {

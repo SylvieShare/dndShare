@@ -35,6 +35,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
         const transfer = transfers.find(t => t.id === Number(parts[5]))
         const accept = request.postDataJSON().decision === 'accept'
         transfer.status = accept ? 'accepted' : 'rejected'
+        if (accept) transfer.applicationResult = { healing: { formula: '2d4 + 2', dice: [2, 4], total: 8, applied: 0 } }
         const destination = chars[accept ? transfer.recipientCharUuid : transfer.senderCharUuid]
         if (!accept) { destination.data.values.potions[0].count++; destination.version++ }
         json = { transfer }
@@ -95,10 +96,10 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     expect(chars.sender.data.values.potions[0].count).toBe(2)
     await openSheet('recipient')
     await page.getByRole('button', { name: /События/ }).click()
-    await expect(page.locator('.transfer-event')).not.toHaveClass(/base-tile/)
+    await expect(page.locator('.transfer-event')).toHaveClass(/base-tile--framed/)
     await expect(page.locator('.transfer-event .transfer-person')).toContainText('Лиора')
     await expect(page.locator('.transfer-event')).toContainText('предлагает применить')
-    await expect(page.locator('.transfer-event')).toContainText('Одна доза')
+    await expect(page.locator('.transfer-event')).not.toContainText('Одна доза')
     await expect(page.getByText('Ожидает вашего решения')).toHaveCount(0)
     await page.getByRole('dialog').getByRole('button', { name: 'Зелье лечения', exact: true }).click()
     const itemDialog = page.getByRole('dialog', { name: 'Зелье лечения', exact: true })
@@ -108,7 +109,15 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await page.getByRole('button', { name: 'События', exact: true }).click()
     await page.getByRole('dialog').getByRole('button', { name: decision, exact: true }).click()
     await expect(page.getByRole('dialog')).toContainText('Незавершённых событий нет')
-    await page.getByRole('dialog').getByRole('button', { name: 'Закрыть', exact: true }).last().click()
+    const result = page.locator('[data-notification-type="application"]')
+    if (decision === 'Принять применение') {
+      await expect(result).toContainText('Восстановлено хитов: 0')
+      await expect(result.locator('.dice-roll-result')).toContainText('= 8')
+      await result.getByRole('button', { name: 'Закрыть уведомление' }).click()
+    } else {
+      await expect(result).toHaveCount(0)
+      await page.getByRole('dialog').getByRole('button', { name: 'Закрыть', exact: true }).last().click()
+    }
     await expect(page.getByRole('dialog')).toHaveCount(0)
     if (decision === 'Отказаться') await openSheet('sender')
     else expect(chars.recipient.data.values.potions).toHaveLength(0)
@@ -129,4 +138,5 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
   await openPotionMenu()
   await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toHaveCount(0)
   await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('menuitem', { name: 'Удалить (−1)', exact: true })).toHaveCount(0)
 })

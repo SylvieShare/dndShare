@@ -30,6 +30,7 @@ describe('dice roll presentation metadata', () => {
 
     expect(store.stack).toHaveLength(1)
     expect(store.stack[0].color).toBe('#7ab8e8')
+    expect(store.stack[0].result.color).toBe('#7ab8e8')
     expect(store.stack[0].result.expression).toBe('d20+3')
     store.clear()
   })

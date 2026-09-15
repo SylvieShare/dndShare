@@ -7,6 +7,7 @@
       :can-move="charCtx.ownerMode && typeof charCtx.updateValues === 'function'"
       @use="onUse"
       @replenish="onReplenish"
+      @remove="onRemove"
       @view="onView"
       @move="onMove"
       @add="pickerOpen = true"
@@ -95,6 +96,22 @@ function onReplenish(uid) {
     type: 'item_added',
     action: `Добавлено: ${display?.name || 'Зелье'}`,
     data: { source: { itemId: display?.id, name: display?.name }, itemId: display?.id || null, remaining: entry.count },
+  })
+}
+
+function onRemove(uid) {
+  if (!charCtx.ownerMode) return
+  const next = clone()
+  const index = next.findIndex(entry => entry.uid === uid)
+  if (index < 0) return
+  const remaining = Math.max(0, Math.floor(Number(next[index].count) || 1) - 1)
+  if (remaining) next[index].count = remaining
+  else next.splice(index, 1)
+  const display = potionEntries.value.find(potion => potion.uid === uid)
+  emit('update:value', props.block.id, next)
+  charCtx.logSessionEvent?.({
+    type: 'item_spent', action: `Удалено: ${display?.name || 'Зелье'}`,
+    data: { source: { itemId: display?.id, name: display?.name }, itemId: display?.id || null, count: 1, remaining },
   })
 }
 

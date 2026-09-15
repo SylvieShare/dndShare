@@ -56,6 +56,7 @@ export const useDiceStore = defineStore('dice', () => {
   const dismiss = id => notifications.dismiss(id)
 
   function pushEntry(entry) {
+    if (entry.color) entry.result.color = entry.color
     const duration = entry.duration || 6000
     useSessionEventsStore().markLocalRoll(entry.result)
     const action = entry.action || 'Бросок'

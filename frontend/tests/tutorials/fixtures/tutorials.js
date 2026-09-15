@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import { createRouter, createMemoryHistory, RouterView } from 'vue-router'
 import { useAccountStore } from '../../../src/stores/account'
 import { clickOutside } from '../../../src/shared/lib/clickOutside'
+import AppNotifications from '../../../src/features/notifications/components/AppNotifications.vue'
 import ViewCharacter from '../../../src/features/character-editor/pages/ViewCharacter.vue'
 import AccountTutorials from '../../../src/features/tutorials/components/AccountTutorials.vue'
 import ViewSession from '../../../src/features/sessions/pages/ViewSession.vue'
@@ -21,4 +22,4 @@ const router = createRouter({ history: createMemoryHistory(), routes: [
 await router.push(new URLSearchParams(location.search).get('page') || '/char/test')
 await router.isReady()
 window.tutorialNavigateAway = () => router.push('/done')
-createApp({ render: () => h(RouterView, null, { default: ({ Component, route }) => h(Component, { key: route.path }) }) }).use(pinia).use(router).directive('click-outside', clickOutside).mount('#app')
+createApp({ render: () => [h(RouterView, null, { default: ({ Component, route }) => h(Component, { key: route.path }) }), h(AppNotifications)] }).use(pinia).use(router).directive('click-outside', clickOutside).mount('#app')

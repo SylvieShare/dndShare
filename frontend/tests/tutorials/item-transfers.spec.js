@@ -104,7 +104,7 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     expect(chars.sender.data.values.items.sections[0].items).toHaveLength(0)
     await openSheet('recipient')
     await page.getByRole('button', { name: /События/ }).click()
-    await expect(page.locator('.transfer-event')).not.toHaveClass(/base-tile/)
+    await expect(page.locator('.transfer-event')).toHaveClass(/base-tile--framed/)
     await expect(page.locator('.transfer-event .transfer-person')).toContainText('Лиора')
     await expect(page.locator('.transfer-event')).toContainText('предлагает')
     await expect(page.getByText('Ожидает вашего решения')).toHaveCount(0)

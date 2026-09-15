@@ -66,7 +66,7 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   function rollSpellHeal(entry, castLevel) {
     if (spellcastingBlocked.value) return
     const expr = spellHealPreview(entry, castLevel)
-    if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr, { eventData: itemEventData(entry.item) })
+    if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr, { color: 'var(--success)', eventData: itemEventData(entry.item) })
   }
 
   function rollSpellEffect(entry, castLevel) {

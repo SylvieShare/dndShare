@@ -96,7 +96,7 @@ function spendDie(die) {
   const sides = parseInt(String(die).replace(/\D/g, ''), 10) || 8
   const mod = conMod.value
   const expr = `1d${sides}${mod >= 0 ? '+' + mod : mod}`
-  const result = dice.roll(`Кость хитов ${die}`, expr)
+  const result = dice.roll(`Кость хитов ${die}`, expr, { color: 'var(--success)' })
   emit('update:value', ids.value.hp, spendHitDie(hp.value, result?.total ?? 0, die))
 }
 

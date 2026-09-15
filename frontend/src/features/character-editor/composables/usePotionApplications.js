@@ -1,9 +1,10 @@
 import { onScopeDispose, reactive } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { fetchPost } from '@/shared/api/http'
 
 export function usePotionApplications({ uuid, version, mutate, state, isOwner }) {
-  const application = reactive({ choice: null, result: null, name: '', error: '', choosing: false })
+  const application = reactive({ choice: null, error: '', choosing: false })
   let chooseResolve = null
   let pending = null
   async function choose(entry) {
@@ -39,7 +40,7 @@ export function usePotionApplications({ uuid, version, mutate, state, isOwner })
       const sent = await mutate(async () => {
         response = await fetchPost(`/char/${uuid}/potion-use`, { entryUid: entry.uid, optionKey, clientActionId: pending.clientActionId, version: version.value })
       })
-      if (sent) { pending = null; application.name = entry.name || 'Зелье'; application.result = response.result }
+      if (sent) { pending = null; notifyApplication(entry.name, response.result) }
       else application.error = state.error
       return sent
     } catch (error) { application.error = error.message; return false }

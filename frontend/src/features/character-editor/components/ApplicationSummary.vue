@@ -1,8 +1,8 @@
 <template>
   <div class="application-summary">
     <div v-for="row in rolls" :key="row.label" class="application-roll">
-      <DamageFormulaPreview v-if="!result" :label="row.label" :expression="row.formula" :aria-label="row.label" />
-      <template v-else><strong>{{ row.label }}</strong><DiceRollResult :result="diceResult(row.roll)" :size="26" /><small>{{ row.applied }}</small></template>
+      <DamageFormulaPreview v-if="!result" :label="row.label" :expression="row.formula" :default-color="row.color" :aria-label="row.label" />
+      <template v-else><strong>{{ row.label }}</strong><DiceRollResult :result="diceResult(row.roll)" :color="row.color" :size="26" /><small>{{ row.applied }}</small></template>
     </div>
     <div v-for="effect in data.effects || []" :key="effect.id + ':' + effect.key" class="application-effect">
       <strong>{{ effect.name }}</strong>
@@ -20,8 +20,8 @@ import DamageFormulaPreview from '../blocks/dnd/components/DamageFormulaPreview.
 const props = defineProps({ data: { type: Object, default: () => ({}) }, result: Boolean })
 const unit = kind => ({ rounds: 'раунды', minutes: 'минуты', hours: 'часы', days: 'дни' })[kind] || ''
 const rolls = computed(() => [
-  props.data.healing && { label: 'Лечение', formula: props.data.healing, roll: props.data.healing, applied: `Восстановлено хитов: ${props.data.healing.applied}` },
-  props.data.temporaryHp && { label: 'Временные хиты', formula: props.data.temporaryHp, roll: props.data.temporaryHp, applied: `Прибавка временных хитов: ${props.data.temporaryHp.applied}` },
+  props.data.healing && { label: 'Лечение', color: 'var(--success)', formula: props.data.healing, roll: props.data.healing, applied: `Восстановлено хитов: ${props.data.healing.applied}` },
+  props.data.temporaryHp && { label: 'Временные хиты', color: 'var(--info)', formula: props.data.temporaryHp, roll: props.data.temporaryHp, applied: `Прибавка временных хитов: ${props.data.temporaryHp.applied}` },
 ].filter(Boolean))
 function diceResult(roll) {
   let offset = 0

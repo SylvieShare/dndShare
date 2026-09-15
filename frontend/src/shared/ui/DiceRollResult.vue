@@ -6,18 +6,18 @@
         <template v-for="(value, i) in part.rolls" :key="i">
           <span v-if="i">+</span>
           <span :class="{ 'dice-roll-result-dropped': part.dropped?.includes(i) || (part.keptIndex != null && part.keptIndex !== i) }" :title="part.dropped?.includes(i) || (part.keptIndex != null && part.keptIndex !== i) ? 'Не учитывается' : ''">
-          <SystemDie :sides="part.sides" :value="value" :size="size" :animated="false" :color="part.color || 'var(--accent-soft)'" />
+          <SystemDie :sides="part.sides" :value="value" :size="size" :animated="false" :color="part.color || color || result.color || 'var(--accent-soft)'" />
           </span>
         </template>
       </template>
-      <span v-else :style="{ color: part.color }">{{ part.value }}</span>
+      <span v-else :style="{ color: part.color || color || result.color }">{{ part.value }}</span>
     </template>
     <strong>= {{ result.total }}</strong>
   </div>
 </template>
 <script setup>
 import SystemDie from './SystemDie.vue'
-defineProps({ result: { type: Object, required: true }, size: { type: Number, default: 28 } })
+defineProps({ result: { type: Object, required: true }, size: { type: Number, default: 28 }, color: { type: String, default: '' } })
 </script>
 <style scoped>
 .dice-roll-result { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; color: var(--text-2); }

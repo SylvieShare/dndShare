@@ -1,6 +1,6 @@
 <template>
   <template v-if="ctx.ownerMode && instance">
-    <RowActionItem v-if="ongoing" :icon="Dices" @click="runOngoing">
+    <RowActionItem v-if="ongoing" :icon="Dices" :disabled="busy" @click="runOngoing">
       {{ damagePhase ? (phase === 'initial_damage' ? 'При употреблении' : 'Начало хода') + ': ' + count + ongoing.dice : (phase === 'initial_save' ? 'После употребления' : 'Конец хода') + ': спасбросок, Сл ' + ongoing.save_dc }}
     </RowActionItem>
     <RowActionSubmenu v-if="effect.data?.weapon_target" label="Оружие для эффекта">
@@ -22,12 +22,14 @@ import { AppModalFrame, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import { useSuggestStore } from '@/stores/suggest'
 import { useDiceStore } from '@/stores/dice'
 import { ongoingDamageTransition, statusDamageHp, statusSaveBonus } from '@/features/character-editor/lib/statusMechanics'
 const props = defineProps({ context: Object, uid: String, effect: { type: Object, required: true } })
 const injected = inject('charCtx', {})
 const ctx = computed(() => props.context || injected)
-const dice = useDiceStore(), result = ref(null), outcome = ref('')
+const dice = useDiceStore(), result = ref(null), outcome = ref(''), busy = ref(false)
+const suggests = useSuggestStore()
 const instance = computed(() => ctx.value.values?.states?.find(row => row.uid === props.uid))
 const ongoing = computed(() => props.effect.data?.ongoing_damage)
 const phase = computed(() => instance.value?.params?.damage_phase || 'initial_damage')
@@ -40,22 +42,28 @@ const weapons = computed(() => (ctx.value.values?.weapon || []).filter(weapon =>
 }))
 function update(params, patch = {}) { ctx.value.updateValues({ ...patch, states: ctx.value.values.states.flatMap(row => row.uid !== props.uid ? [row] : params == null ? [] : [{ ...row, params }]) }) }
 function chooseWeapon(weapon, close) { if (instance.value?.params?.weapon_uid) return; update({ ...instance.value.params, weapon_uid: weapon.uid }); close() }
-function runOngoing() {
-  if (!instance.value || !ongoing.value || !ctx.value.ownerMode) return
-  const config = ongoing.value, params = instance.value.params || {}
-  if (damagePhase.value) {
-    result.value = dice.roll(props.effect.name, `${count.value}${config.dice}`)
-    const hp = statusDamageHp(ctx.value.values.hp, result.value.total, unref(ctx.value.characterDefenses?.defenses) || [], config.damage_type)
-    update(ongoingDamageTransition(config, params, 'damage'), { hp })
-    outcome.value = 'Урон применён с учётом временных хитов и защит. Следующий шаг — спасбросок.'
-  } else {
-    const context = { kind: 'saving_throw', abilitySuggestId: config.save_ability }
-    const mode = ctx.value.characterRolls?.resolve?.('auto', context)?.mode || 'normal'
-    result.value = dice.rollD20(props.effect.name, statusSaveBonus(ctx.value, config.save_ability), mode, { bonus_formula: ctx.value.characterDerivedEffects?.rollBonus?.(context) })
-    const success = result.value.total >= config.save_dc
-    const next = ongoingDamageTransition(config, params, 'save', success)
-    update(next)
-    outcome.value = !next ? 'Эффект завершён.' : success ? `В следующий ход: ${next.damage_dice}${config.dice}.` : 'Спасбросок не пройден. В следующий ход урон остаётся прежним.'
-  }
+async function runOngoing() {
+  if (busy.value || !instance.value || !ongoing.value || !ctx.value.ownerMode) return
+  busy.value = true
+  try {
+    const config = ongoing.value, params = instance.value.params || {}
+    if (damagePhase.value) {
+      await suggests.ensure(12).catch(() => {})
+      if (!instance.value || !ctx.value.ownerMode) return
+      const type = suggests.items(12).find(row => Number(row.id) === Number(config.damage_type))
+      result.value = dice.roll(props.effect.name, `${count.value}${config.dice}`, { color: type?.color })
+      const hp = statusDamageHp(ctx.value.values.hp, result.value.total, unref(ctx.value.characterDefenses?.defenses) || [], config.damage_type)
+      update(ongoingDamageTransition(config, params, 'damage'), { hp })
+      outcome.value = 'Урон применён с учётом временных хитов и защит. Следующий шаг — спасбросок.'
+    } else {
+      const context = { kind: 'saving_throw', abilitySuggestId: config.save_ability }
+      const mode = ctx.value.characterRolls?.resolve?.('auto', context)?.mode || 'normal'
+      result.value = dice.rollD20(props.effect.name, statusSaveBonus(ctx.value, config.save_ability), mode, { bonus_formula: ctx.value.characterDerivedEffects?.rollBonus?.(context) })
+      const success = result.value.total >= config.save_dc
+      const next = ongoingDamageTransition(config, params, 'save', success)
+      update(next)
+      outcome.value = !next ? 'Эффект завершён.' : success ? `В следующий ход: ${next.damage_dice}${config.dice}.` : 'Спасбросок не пройден. В следующий ход урон остаётся прежним.'
+    }
+  } finally { busy.value = false }
 }
 </script>

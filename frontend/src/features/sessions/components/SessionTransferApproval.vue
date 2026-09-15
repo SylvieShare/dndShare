@@ -18,6 +18,7 @@
   </AppModalFrame>
 </template>
 <script setup>
+import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { computed, inject, ref } from 'vue'
 import { Check, UserRound } from '@lucide/vue'
 import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
@@ -46,7 +47,8 @@ async function resolve(decision, target = {}) {
   busy.value = true; error.value = ''
   try {
     if (encounter && !await encounter.flushApplicationSave()) throw new Error('Сохраните состояние боя перед применением.')
-    await resolveSessionApplication(events.sessionUuid, props.event.id, decision, target)
+    const response = await resolveSessionApplication(events.sessionUuid, props.event.id, decision, target)
+    if (decision === 'accept') notifyApplication(response.transfer.itemName, response.transfer.applicationResult)
     picking.value = false
     if (target.kind === 'npc') await encounter?.load()
     await events.refresh()
@@ -59,7 +61,8 @@ async function approve() {
   busy.value = true
   error.value = ''
   try {
-    await approveSessionTransfer(events.sessionUuid, props.event.id)
+    const response = await approveSessionTransfer(events.sessionUuid, props.event.id)
+    if (props.event.data?.purpose === 'use') notifyApplication(response.transfer.itemName, response.transfer.applicationResult)
     await events.refresh()
   } catch (cause) {
     error.value = cause.message || 'Не удалось принять передачу'
