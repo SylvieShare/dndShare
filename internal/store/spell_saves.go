@@ -2,6 +2,9 @@ package store
 
 func spellSaveEvent(data, values map[string]any, ability int, spellID int64, entryKey string) map[string]any {
 	rule := object(data["damage"])
+	if rule["save_manual"] == true {
+		return nil
+	}
 	id := map[string]int{"str": 1, "dex": 2, "con": 3, "int": 4, "wis": 5, "cha": 6}[textValue(rule["save_ability"])]
 	if id == 0 {
 		return nil

@@ -109,6 +109,9 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 		return result, ErrApplication
 	}
 	targetRule := object(data["application_targets"])
+	if targetRule["self_only"] == true && (r.DMCount > 0 || len(r.Targets) != 1 || r.Targets[0] != "self") {
+		return result, ErrApplication
+	}
 	maxTargets := min(50, max(1, number(targetRule["count"]))+max(0, number(targetRule["per_slot"]))*max(0, r.CastLevel-base))
 	if len(r.Targets)+r.DMCount > maxTargets {
 		return result, fmt.Errorf("%w: выбрано больше целей, чем позволяет заклинание", ErrApplication)
@@ -153,9 +156,11 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	}
 	plan.CastID = r.ClientActionID
 	plan.CastLevel = r.CastLevel
-	if len(array(object(data["heal"])["dices"])) > 0 {
+	if err = prepareSpellEffectBindings(&plan, data, doc.values(), r.CastLevel, ability); err != nil {
+		return result, err
+	}
+	if object(data["heal"])["apply"] != false && len(array(object(data["heal"])["dices"])) > 0 {
 		plan.Healing = spellHealFormula(data, doc.values(), r.CastLevel, ability)
-		plan.Note = ""
 		if _, err = rollApplication(plan.Healing, func(int) (int, error) { return 1, nil }); err != nil {
 			return result, err
 		}

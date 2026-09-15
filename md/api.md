@@ -784,3 +784,7 @@ revision, status }`; сброс одного результата: `POST /api/ac
 записывает спасброски через `POST /api/sessions/{uuid}/events/{eventId}/saves`
 (`{results:[{target,result}]}`). Результаты дополняют исходное событие.
 Контракт: [спасброски заклинаний](features/spell-saving-throws.md).
+
+MCP `handbook_item_reuse_icon(itemId, sourceItemId)` присваивает системной записи
+тот же ID иконки изображения/SVG, что у другой системной записи. Файлы не
+копируются, будущие изменения источника не наследуются; требуется право MCP write.

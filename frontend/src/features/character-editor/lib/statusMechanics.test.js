@@ -24,6 +24,19 @@ describe('effect mechanics', () => {
     values.states[0].params.weapon_uid = 'sword'
     expect(collectStatusDerivedEffects(values, items)[0].target_ids).toEqual(['sword'])
   })
+  it('binds spell damage dice to the chosen weapon and freezes the slot bonus', () => {
+    const values = { states: [{ uid: 'spell', effect_id: 1, params: { bonus: 3 } }] }
+    const items = new Map([['1', { id: 1, data: { weapon_target: {}, weapon_damage: [
+      { dice: 'd4', dice_count_parameter: 'bonus' },
+    ] } }]])
+    expect(collectCharacterCombatEffects(values, items).weaponDamage).toEqual([])
+    values.states[0].params.weapon_uid = 'sword'
+    const effects = collectCharacterCombatEffects(values, items)
+    expect(matchingWeaponDamageActions(effects, { weaponUid: 'sword' })[0].dice_count).toBe(3)
+    expect(matchingWeaponDamageActions(effects, { weaponUid: 'bow' })).toEqual([])
+    values.states[0].external_only = true
+    expect(collectCharacterCombatEffects(values, items).weaponDamage).toEqual([])
+  })
   it('applies resistance once, absorbs temporary HP and does not go below zero', () => {
     expect(statusDamageHp({ current: 10, temp: 2 }, 9, [{ damage_type: 4, kind: 'resistance' }], 4)).toMatchObject({ current: 8, temp: 0 })
     expect(statusDamageHp({ current: 10, temp: 2 }, 99, [{ damage_type: 4, kind: 'immunity' }], 4)).toMatchObject({ current: 10, temp: 2 })

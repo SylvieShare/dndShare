@@ -13,6 +13,11 @@ const items = [
   { id: 548, name: 'Благословение', typeId: 5, data: { lvl: 1, concentration: true, application_targets: { count: 3, per_slot: 1 }, status_effects: [{ key: 'bless', effect: { id: 1 } }] } },
   { id: 601, name: 'Лечащее слово', typeId: 5, data: { lvl: 1, heal: { add_mod: true, scaling: 'slot', dices: [{ count: 1, dice_id: 'd4' }], addon: [{ count: 1, dice_id: 'd4' }] } } },
 ]
+if (location.search.includes('condition')) {
+  items[0].data.application_targets = { self_only: true }
+  items[0].data.status_effects[0].condition = 'Цель провалила спасбросок.'
+}
+if (location.search.includes('formula-only')) items[1].data.heal.apply = false
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.casts = []
 const ctx = reactive({ ownerMode: true, var: { stats: { 4: 3 } }, topSession: location.search.includes('offline') ? null : { uuid: 'session' },

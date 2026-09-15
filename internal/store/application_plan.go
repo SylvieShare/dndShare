@@ -147,7 +147,7 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 				selected = append(selected, raw)
 			}
 		}
-		if len(selected) != 1 && !(option == "" && len(links) == 0 && len(array(object(data["heal"])["dices"])) > 0) {
+		if len(selected) != 1 && !(option == "" && len(links) == 0 && object(data["heal"])["apply"] != false && len(array(object(data["heal"])["dices"])) > 0) {
 			return p, ErrApplication
 		}
 		links = selected
@@ -212,6 +212,12 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 			if binding["source"] == "fixed" {
 				params[textValue(binding["key"])] = binding["value"]
 			}
+		}
+		if condition := textValue(link["condition"]); condition != "" {
+			if p.Note != "" {
+				p.Note += "\n"
+			}
+			p.Note += condition
 		}
 		p.Effects = append(p.Effects, ApplicationEffect{ID: id, Name: name, Key: textValue(link["key"]), Data: effect, Duration: duration, Concentration: concentration, Params: params})
 	}

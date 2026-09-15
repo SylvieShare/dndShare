@@ -102,6 +102,7 @@ func mcpToolDefs() []map[string]any {
 		tool("handbook_item_delete",
 			"Delete an item by id (admin: works for any owner including base items).",
 			schema(map[string]any{"id": intP("Item id")}, "id")),
+		tool("handbook_item_reuse_icon", "Assign the exact same icon image/SVG ID from another system item. Does not copy files or inherit future changes. Both items must be public system entries; source must have an icon.", schema(map[string]any{"itemId": intP("Target system item"), "sourceItemId": intP("System item whose icon to reuse")}, "itemId", "sourceItemId")),
 		tool("handbook_item_set_system_image",
 			"Upload and assign an icon or cover to a base system handbook item. Accepts plain standard base64, stores the image in S3 under a content-addressed key, and replaces the selected slot. By default an unreferenced previous asset is removed; preservePrevious=true keeps its storage row and S3 object for later reuse. Icons allow PNG/WebP up to 5 MB; covers allow JPEG/PNG/WebP up to 10 MB. Requires MCP write operations to be enabled and never changes user-owned items.",
 			schema(map[string]any{

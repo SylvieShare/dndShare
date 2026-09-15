@@ -11,13 +11,13 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
     const ability = ['str', 'dex', 'con', 'int', 'wis', 'cha'].indexOf(rule.save_ability) + 1
     return ability ? { ability, dc: spellSaveDC(entry), onSuccess: rule.save_effect, condition: rule.save_condition || '', results: [] } : null
   }
-  function spellEventData(entry) {
-    const save = savingThrow(entry)
+  function spellEventData(entry, explicit = false) {
+    const save = explicit || entry?.item?.data?.damage?.save_manual !== true ? savingThrow(entry) : null
     return { ...itemEventData(entry.item), ...(save ? { savingThrow: save } : {}) }
   }
   function requestSpellSave(entry) {
     if (spellcastingBlocked.value || !savingThrow(entry)) return
-    return useSessionEventsStore().publish({ type: 'spell_used', action: `Спасбросок: ${spellTitle(entry)}`, data: spellEventData(entry) })
+    return useSessionEventsStore().publish({ type: 'spell_used', action: `Спасбросок: ${spellTitle(entry)}`, data: spellEventData(entry, true) })
   }
 
   function spellTitle(entry) {

@@ -317,6 +317,8 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		return s.toolItemSetContentSources(ctx, args)
 	case "handbook_item_delete":
 		return s.toolItemDelete(ctx, args)
+	case "handbook_item_reuse_icon":
+		return s.toolReuseSystemIcon(ctx, args)
 	case "handbook_item_set_system_image":
 		return s.toolSystemItemSetImage(ctx, args)
 	case "handbook_item_type_set_system_image":

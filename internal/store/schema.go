@@ -431,6 +431,7 @@ var schemaParts = []struct {
 	{"session-auto-accept", schemaSessionAutoAcceptSQL},
 	{"spell-casts", schemaSpellCastsSQL},
 	{"effect-sources", schemaEffectSourcesSQL},
+	{"spell-application-options", schemaSpellApplicationOptionsSQL},
 }
 
 const (

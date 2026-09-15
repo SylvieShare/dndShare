@@ -1,5 +1,5 @@
 <template>
-  <RowActionSubmenu v-if="entry.item?.data?.damage?.save_ability && !options.length" :min-width="280">
+  <RowActionSubmenu v-if="entry.item?.data?.damage?.save_ability && (!options.length || entry.item.data.damage.save_manual)" :min-width="280">
     <template #trigger="{ open }"><RowActionItem action="spell" submenu :submenu-open="open">Спасбросок · Сл {{ ctx.spellSaveDC(entry) }}</RowActionItem></template>
     <template #default="{ close }"><SpellCastControls :entry="entry" :cast-level="castLevel" spend-by-default v-slot="cast">
       <RowActionItem action="spell" :disabled="cast.disabled" @click="requestSave(close, cast)">Объявить спасбросок</RowActionItem>
@@ -57,7 +57,7 @@ const ctx = inject('spellsBlockCtx')
 const critical = ref(false)
 const hasAttack = computed(() => !!props.entry.item?.data?.damage?.range_attack)
 const attackMode = computed(() => ctx.spellAttackMode(props.entry))
-const options = computed(() => spellRollOptions(props.entry).filter(option => !(option.primary && option.kind === 'heal')))
+const options = computed(() => spellRollOptions(props.entry).filter(option => !(option.primary && option.kind === 'heal' && props.entry.item?.data?.heal?.apply !== false)))
 const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Бросить на лечение' : 'Бросить на урон' : `Бросить: ${option.label}`
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)

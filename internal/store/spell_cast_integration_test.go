@@ -30,6 +30,11 @@ func testSpellCast(t *testing.T, s *Store, pool *pgxpool.Pool, npc ApplicationTa
  UPDATE dndshare.item SET data=data-'on_end_effect' WHERE id=801;
  UPDATE dndshare."char" SET data=jsonb_set(data,'{values,spells}','{"tabs":[{"casting_ability":4,"spells":[{"key":"spell","id":802}]}],"slot_pools":{"long_rest":[{"level":1,"total":1,"used":0},{"level":3,"total":2,"used":0}]}}') WHERE id=10;`)
 	req := SpellCastRequest{SpellID: 802, EntryKey: "spell", OptionKey: "test", Version: version(), ClientActionID: id(), SessionUUID: sessionUUID, CastLevel: 1, Pool: "long_rest", SpendSlot: true, Targets: []string{"self", recipientUUID}, DMCount: 1}
+	exec(`UPDATE dndshare.item SET data=jsonb_set(data,'{application_targets,self_only}','true') WHERE id=802`)
+	if _, err := s.CastSpell(ctx, 1, 10, req); err == nil {
+		t.Fatal("self-only spell accepted other targets")
+	}
+	exec(`UPDATE dndshare.item SET data=data #- '{application_targets,self_only}' WHERE id=802`)
 	result, err := s.CastSpell(ctx, 1, 10, req)
 	if err != nil {
 		t.Fatal(err)

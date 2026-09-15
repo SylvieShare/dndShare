@@ -31,13 +31,26 @@ function abilityRows(values, itemsById, field) {
   }))
 }
 
+function statusWeaponDamage(values, itemsById) {
+  return collectCharacterStatuses(values, itemsById)
+    .filter(status => !status.external_only && (!status.item.data?.weapon_target || status.params?.weapon_uid))
+    .flatMap(status => (status.item.data?.weapon_damage || []).map((rule, i) => ({
+      ...rule,
+      ...(rule.dice_count_parameter ? { dice_count: Number(status.params?.[rule.dice_count_parameter]) || 0 } : {}),
+      key: `status:${status.uid}:damage:${i}`,
+      source_label: status.title,
+      owner_level: 1,
+      weapon_uid: status.params?.weapon_uid,
+    })))
+}
+
 export function collectCharacterCombatEffects(values, itemsById) {
   return {
     rollTriggers: abilityRows(values, itemsById, 'roll_triggers'),
     rollAdjustments: abilityRows(values, itemsById, 'roll_adjustments'),
     criticalDamage: abilityRows(values, itemsById, 'critical_damage'),
     weaponDamage: [...abilityRows(values, itemsById, 'weapon_damage'), ...selectedTargetDamageRules(values, itemsById),
-      ...collectCharacterStatuses(values, itemsById).filter(status => !status.external_only).flatMap(status => (status.item.data?.weapon_damage || []).map((rule, i) => ({ ...rule, key: `status:${status.uid}:damage:${i}`, source_label: status.title, owner_level: 1, weapon_uid: status.params?.weapon_uid })))],
+      ...statusWeaponDamage(values, itemsById)],
   }
 }
 

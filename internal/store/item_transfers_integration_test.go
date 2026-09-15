@@ -67,6 +67,15 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(schemaApplicationTargetsSQL)
 	exec(schemaSpellConcentrationSQL)
 	exec(schemaSpellCastsSQL)
+	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(5,'[{"key":"damage","fields":[]},{"key":"heal","fields":[]},{"key":"application_targets","fields":[]},{"key":"status_effects","fields":[{"key":"parameter_bindings","fields":[{"key":"source","options":[]}]}]}]'),(15,'[{"key":"derived_effects","fields":[{"key":"kind","options":[]}]}]')`)
+	exec(schemaSpellApplicationOptionsSQL)
+	var editorFields int
+	if err := pool.QueryRow(ctx, `SELECT jsonb_array_length(fields->0->'fields') FROM dndshare.item_type WHERE id=15`).Scan(&editorFields); err != nil || editorFields != 7 {
+		t.Fatalf("effect editor fields %d %v", editorFields, err)
+	}
+	if err := pool.QueryRow(ctx, `SELECT jsonb_array_length(fields#>'{3,fields,0,fields,0,options}') FROM dndshare.item_type WHERE id=5`).Scan(&editorFields); err != nil || editorFields != 3 {
+		t.Fatalf("spell binding sources %d %v", editorFields, err)
+	}
 	exec(schemaSessionAutoAcceptSQL)
 	exec(schemaSessionInventorySQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');

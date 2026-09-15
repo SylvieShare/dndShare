@@ -9,6 +9,21 @@ import (
 
 func testSessionSaves(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	ctx := context.Background()
+	if _, err := pool.Exec(ctx, `INSERT INTO dndshare.item(id,name,type_id,icon_image_id) VALUES(990001,'Источник',5,1),(990002,'Эффект',15,NULL);`); err != nil {
+		t.Fatal(err)
+	}
+	defer pool.Exec(ctx, `DELETE FROM dndshare.item WHERE id IN (990001,990002)`)
+	if err := s.ReuseSystemItemIcon(ctx, 990002, 990001); err != nil {
+		t.Fatal(err)
+	}
+	var icon int64
+	if err := pool.QueryRow(ctx, `SELECT icon_image_id FROM dndshare.item WHERE id=990002`).Scan(&icon); err != nil || icon != 1 {
+		t.Fatalf("shared icon %d %v", icon, err)
+	}
+	if err := s.ReuseSystemItemIcon(ctx, 990002, 0); err == nil {
+		t.Fatal("missing source accepted")
+	}
+
 	targets, err := s.SessionSaveTargets(ctx, 3, 1)
 	if err != nil || len(targets) < 2 || targets[0].Snapshot == nil {
 		t.Fatalf("snapshots: %+v %v", targets, err)
