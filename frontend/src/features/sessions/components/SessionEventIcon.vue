@@ -1,19 +1,21 @@
 <template>
   <span class="event-icon" aria-hidden="true">
-    <ItemIcon v-if="art?.iconImageUrl || art?.svg" :item="art" :size="36" />
+    <img v-if="isInitiativeEvent(event)" src="/static/initiative.svg" width="36" height="36" alt="" />
+    <ItemIcon v-else-if="art?.iconImageUrl || art?.svg" :item="art" :size="36" />
     <SpellSlotSphere v-else-if="!item && !event.data?.source?.itemId && (event.type === 'spell_slot_changed' || event.data?.resourceChanges?.length)" :size="30" :level="event.data?.slotLevel || 1" :color="event.data?.resourceChanges?.[0]?.color" :interactive="false" />
     <component v-else :is="icon" :size="26" :stroke-width="1.5" />
   </span>
 </template>
 <script setup>
 import { computed, watch } from 'vue'
+import { isInitiativeEvent } from '../lib/sessionEventEntity'
 import { useSuggestStore } from '@/stores/suggest'
 import { MessageCircle, Hand, BookOpen, Dices, Moon, Package, Shield, Sparkles, Swords, Flag, CircleCheck } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 const props = defineProps({ event: Object, item: Object })
 const suggests = useSuggestStore()
-const ability = computed(() => props.event.data?.ability)
+const ability = computed(() => isInitiativeEvent(props.event) ? null : props.event.data?.ability)
 watch(() => ability.value?.typeId, id => { if (id) suggests.ensure(id).catch(() => {}) }, { immediate: true })
 const art = computed(() => props.item || (ability.value ? suggests.items(ability.value.typeId)?.find(row => String(row.id) === String(ability.value.id)) : null))
 const icon = computed(() => {

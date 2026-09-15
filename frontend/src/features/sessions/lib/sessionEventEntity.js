@@ -1,6 +1,11 @@
 import { isInteraction, interactionDetails } from './sessionInteractions'
 
+export function isInitiativeEvent(event) {
+  return event.type === 'dice_roll' && event.action === 'Инициатива'
+}
+
 export function sessionEventEntity(event) {
+  if (isInitiativeEvent(event)) return { key: 'initiative', name: 'Инициатива' }
   const data = event.data || {}
   const source = data.source
   const itemId = source?.itemId || data.itemId || data.spellId
@@ -14,6 +19,7 @@ export function sessionEventEntity(event) {
 export function sessionEventAction(event, name) {
   const action = String(event.action || '')
   if (!name) return action
+  if (isInitiativeEvent(event) && action === name) return ''
   if (action.endsWith(`: ${name}`)) return action.slice(0, -(name.length + 2))
   if (action.startsWith(`${name}: `)) return action.slice(name.length + 2)
   if (action.startsWith(`${name} — `)) return action.slice(name.length + 3)

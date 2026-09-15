@@ -4,7 +4,7 @@
     <div class="event-content">
       <div class="event-heading">
         <slot name="entity" />
-        <span>{{ sessionEventAction(event, entityName) }}<template v-if="transition"> ({{ transition }})</template></span>
+        <span v-if="action || transition">{{ action }}<template v-if="transition"> ({{ transition }})</template></span>
         <time :datetime="event.createdAt" :title="fullTime">{{ time }}</time>
       </div>
       <div v-if="hasBody" class="event-body">
@@ -51,6 +51,7 @@ import SessionEventIcon from './SessionEventIcon.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
 const props = defineProps({ event: Object, entityName: String, grouped: Boolean, arriving: Boolean })
+const action = computed(() => sessionEventAction(props.event, props.entityName))
 const date = computed(() => new Date(props.event.createdAt))
 const fullTime = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleString('ru-RU'))
 const time = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }))
