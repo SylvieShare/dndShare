@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { generateTreasure, treasureCandidates, treasureOptionsError } from './treasureGenerator'
-import { eventCandidates, generateEvent } from './journeyEvents'
 const options = { level: 5, count: 2, maxRarity: 2, goldMin: 10, goldMax: 20, pool: 'all', publicOnly: true }
 const item = (id, data = {}, rest = {}) => ({ id, typeId: 19, data: { rarity: 1, treasure: { weight: 10, min_level: 1, max_level: 20 }, ...data }, ...rest })
 describe('treasure generation', () => {
@@ -24,18 +23,5 @@ describe('treasure generation', () => {
     expect(treasureOptionsError({ ...options, goldMin: 21 })).not.toBe('')
     expect(() => generateTreasure([], { ...options, count: 2.5 })).toThrow()
     expect(treasureOptionsError({ ...options, level: '' })).not.toBe('')
-  })
-})
-describe('journey scenes', () => {
-  it('has content for every offered location and mood and avoids immediate repeats when possible', () => {
-    for (const [mode, places] of [['camp', ['wild', 'inn']], ['travel', ['road', 'wild', 'ruins']]]) {
-      for (const place of places) for (const mood of ['any', 'calm', 'mystery', 'danger']) {
-        const options = { mode, place, mood }, candidates = eventCandidates(options)
-        expect(candidates.length).toBeGreaterThan(0)
-        const scene = generateEvent(options, undefined, () => 0)
-        expect(scene.scene && scene.choice && scene.outcome).toBeTruthy()
-        if (candidates.length > 1) expect(generateEvent(options, scene.id, () => 0).id).not.toBe(scene.id)
-      }
-    }
   })
 })

@@ -90,23 +90,15 @@
           <span>{{ chronicleView.label }}</span>
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ chronicleView.shortcut }}</kbd>
         </button>
+        <button v-if="isDm" type="button" class="chapter-primary-tab"
+          :class="{ 'chapter-primary-tab--active': primaryView === 'settings' }"
+          :aria-current="primaryView === 'settings' ? 'page' : undefined"
+          @click="emit('select-view', 'settings')">
+          <Settings :size="24" /><span>Настройки</span>
+        </button>
       </nav>
 
-      <div class="chapter-toolbar-view">
-        <SessionPresentationControl
-          v-if="isDm && presentation"
-          :session-uuid="sessionUuid"
-          :is-dm="isDm"
-          :presentation="presentation"
-        />
-        <SessionTimerControl v-if="isDm && timers" :timers="timers" />
-        <SessionDiceControl v-if="isDm" ref="diceControl" :show-shortcut-hints="showShortcutHints" />
-        <SessionSettingsControl
-          v-if="isDm"
-          :auto-roll-npc-hp="settings.autoRollNpcHp"
-          @update-setting="(...args) => emit('update-setting', ...args)"
-        />
-      </div>
+
     </div>
     <SessionToolbarMusic v-if="isDm" :primary-view="primaryView" :show-shortcut-hints="showShortcutHints" @select-view="emit('select-view', $event)" />
   </header>
@@ -114,13 +106,9 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
 import SessionToolbarMusic from './SessionToolbarMusic.vue'
-import SessionPresentationControl from '@/features/sessions/components/SessionPresentationControl.vue'
-import SessionDiceControl from '@/features/sessions/components/SessionDiceControl.vue'
-import SessionSettingsControl from '@/features/sessions/components/SessionSettingsControl.vue'
-import SessionTimerControl from '@/features/sessions/components/SessionTimerControl.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 
 const props = defineProps({
@@ -134,20 +122,12 @@ const props = defineProps({
   reorderPending: { type: Boolean, default: false },
   combatActive: { type: Boolean, default: false },
   encounterActive: { type: Boolean, default: false },
-  sessionUuid: { type: String, required: true },
-  presentation: { type: Object, default: null },
-  timers: { type: Object, default: null },
-  materials: { type: Object, default: null },
-  workspaceChapterId: { type: [Number, String], default: null },
-  workspaceScene: { type: Object, default: null },
-  settings: { type: Object, default: () => ({ autoRollNpcHp: false }) },
   showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'select-arc', 'create-arc', 'edit-arc', 'reorder-arcs',
   'select-view', 'resize',
   'edit-session', 'session-updated', 'open-combat',
-  'update-setting',
 ])
 const header = ref(null)
 let headerObserver
@@ -167,14 +147,10 @@ const shortcutLabels = sessionShortcutLabels()
 const storyView = primaryViews[0]
 const journalView = { key: 'journal', label: 'Дневник', icon: NotebookPen, shortcut: '7' }
 const chronicleView = { key: 'events', label: 'Хроника', icon: History, shortcut: '8' }
-const diceControl = ref(null)
 const combatButtonState = computed(() => `${props.combatActive ? 'open' : 'closed'}-${props.encounterActive ? 'running' : 'stopped'}`)
 const combatButtonLabel = computed(() => `${props.combatActive ? 'Бой открыт' : 'Открыть бой'} · бой ${props.encounterActive ? 'идёт' : 'не запущен'}`)
 const visibleLibraryViews = computed(() => props.isDm ? primaryViews.slice(1) : [])
-defineExpose({
-  toggleDice: () => diceControl.value?.toggle(),
-  rollDie: sides => diceControl.value?.rollDie(sides),
-})
+
 </script>
 
 <style scoped>
@@ -192,7 +168,6 @@ defineExpose({
   background: var(--bg);
 }
 .chapter-toolbar-center { display: flex; align-items: center; justify-self: center; min-width: 0; gap: 14px; }
-.chapter-toolbar-view { display: flex; align-items: center; gap: 2px; padding-left: 10px; border-left: 1px solid var(--border-strong); }
 .chapter-primary-nav { display: flex; align-items: center; gap: 2px; }
 .chapter-primary-tab {
   position: relative;

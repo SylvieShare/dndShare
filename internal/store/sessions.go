@@ -14,23 +14,26 @@ import (
 
 // GameSession — строка dndshare.session (порт model/GameSession.kt).
 type GameSession struct {
-	ID               int64     `json:"id"`
-	UUID             string    `json:"uuid"`
-	OwnerUserID      int64     `json:"ownerUserId"`
-	Name             string    `json:"name"`
-	Status           string    `json:"status"`
-	Description      *string   `json:"description,omitempty"`
-	SystemID         *int64    `json:"systemId,omitempty"`
-	SystemName       *string   `json:"systemName,omitempty"`
-	DisplayCode      string    `json:"displayCode"`
-	InviteCode       string    `json:"inviteCode"`
-	CurrentChapterID *int64    `json:"currentChapterId,omitempty"`
-	CreatedAt        time.Time `json:"createdAt"`
-	ChangedAt        time.Time `json:"changedAt"`
+	Settings         SessionSettings `json:"settings"`
+	ID               int64           `json:"id"`
+	UUID             string          `json:"uuid"`
+	OwnerUserID      int64           `json:"ownerUserId"`
+	Name             string          `json:"name"`
+	Status           string          `json:"status"`
+	Description      *string         `json:"description,omitempty"`
+	SystemID         *int64          `json:"systemId,omitempty"`
+	SystemName       *string         `json:"systemName,omitempty"`
+	DisplayCode      string          `json:"displayCode"`
+	InviteCode       string          `json:"inviteCode"`
+	CurrentChapterID *int64          `json:"currentChapterId,omitempty"`
+	CreatedAt        time.Time       `json:"createdAt"`
+	ChangedAt        time.Time       `json:"changedAt"`
 }
 
 // SessionParticipantData — участник сессии с данными персонажа (порт model/SessionParticipantData.kt).
 type SessionParticipantData struct {
+	UserID        int64          `json:"-"`
+	CanOpenSheet  bool           `json:"canOpenSheet"`
 	CharID        int64          `json:"charId"`
 	CharUUID      string         `json:"charUuid"`
 	Version       int64          `json:"version"`
@@ -65,14 +68,16 @@ type ChapterBrief struct {
 const sessionSelect = `
 	SELECT s.id, s.uuid::text, s.owner_user_id, s.name, s.description, s.system_id,
 	       src.name AS source_name, s.display_code, s.invite_code, s.current_chapter_id,
-	       s.created_at, s.changed_at, s.status
+	       s.created_at, s.changed_at, s.status,
+ s.players_see_class, s.players_see_race, s.players_see_hp, s.players_open_sheets
 	FROM dndshare."session" s
 	LEFT JOIN dndshare."source" src ON src.id = s.system_id`
 
 func scanGameSession(row pgx.Row) (GameSession, error) {
 	var g GameSession
 	err := row.Scan(&g.ID, &g.UUID, &g.OwnerUserID, &g.Name, &g.Description, &g.SystemID,
-		&g.SystemName, &g.DisplayCode, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt, &g.Status)
+		&g.SystemName, &g.DisplayCode, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt, &g.Status,
+		&g.Settings.PlayersSeeClass, &g.Settings.PlayersSeeRace, &g.Settings.PlayersSeeHP, &g.Settings.PlayersOpenSheets)
 	return g, err
 }
 
@@ -146,7 +151,7 @@ func (s *Store) GetGameSessionByInviteCode(ctx context.Context, code string) (Ga
 func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]SessionParticipantData, error) {
 	rows, err := s.pool.Query(ctx,
 		`SELECT sp.char_id, sp.role, sp.color, c.uuid::text AS char_uuid, c.version, c.data AS char_data,
-		        c.template_id, ct.name AS template_name, icon.url AS icon_image_url, c.public_visible
+		        c.template_id, ct.name AS template_name, icon.url AS icon_image_url, c.public_visible, c.user_id
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 JOIN dndshare.char_template ct ON ct.id = c.template_id
@@ -163,7 +168,7 @@ func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]
 	for rows.Next() {
 		var p SessionParticipantData
 		var charData []byte
-		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &p.Version, &charData, &p.TemplateID, &p.TemplateName, &p.IconImageURL, &p.PublicVisible); err != nil {
+		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &p.Version, &charData, &p.TemplateID, &p.TemplateName, &p.IconImageURL, &p.PublicVisible, &p.UserID); err != nil {
 			return nil, err
 		}
 		_ = json.Unmarshal(charData, &p.Data)

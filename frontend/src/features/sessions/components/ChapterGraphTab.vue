@@ -1,7 +1,6 @@
 <template>
   <div class="chapter-graph-tab">
     <ChapterGraphToolbar
-      ref="toolbar"
       @resize="emit('toolbar-resize', $event)"
       :arcs="graph.arcs.value"
       :selected-arc="graph.selectedArc.value"
@@ -13,14 +12,7 @@
       :reorder-pending="saving"
       :combat-active="workspaceLayoutMode === 'combat'"
       :encounter-active="encounterActive"
-      :session-uuid="sessionUuid"
-      :presentation="presentation"
-      :timers="timers"
-      :materials="materials"
-      :settings="settings"
       :show-shortcut-hints="showShortcutHints"
-      :workspace-chapter-id="workspaceChapterId || graph.currentChapter.value?.id"
-      :workspace-scene="workspaceScene"
       @select-arc="selectArc"
       @create-arc="openArcCreate"
       @edit-arc="openArcEdit"
@@ -29,10 +21,11 @@
       @edit-session="emit('edit-session')"
       @session-updated="emit('session-updated', $event)"
       @open-combat="openCombat"
-      @update-setting="(...args) => $emit('update-setting', ...args)"
     />
 
     <div class="chapter-canvas-stage" data-tutorial="session-content">
+      <SessionToolsRail v-if="isDm" ref="toolsRail" :session-uuid="sessionUuid"
+        :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" />
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>
       <LoadingState v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading" label="Загружаем карту кампании…" compact />
       <SessionGraphCanvas
@@ -188,6 +181,7 @@
 </template>
 
 <script setup>
+import SessionToolsRail from './SessionToolsRail.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { ArrowLeft, ArrowLeftRight, Check, Circle, CircleDot, FolderInput, GitBranchPlus, ListChecks, Repeat2 } from '@lucide/vue'
@@ -217,18 +211,16 @@ const props = defineProps({
   presentation: { type: Object, default: null },
   timers: { type: Object, default: null },
   materials: { type: Object, default: null },
-  settings: { type: Object, default: () => ({ autoRollNpcHp: false }) },
   showShortcutHints: { type: Boolean, default: false },
 })
 const emit = defineEmits([
   'open-scenes', 'open-combat', 'edit-session', 'session-updated', 'toolbar-resize', 'open-chapters',
   'select-view',
   'send-block-to-combat', 'workspace-context-change',
-  'update-setting',
 ])
 
 const canvas = ref(null)
-const toolbar = ref(null)
+const toolsRail = ref(null)
 const actionError = ref('')
 const saving = ref(false)
 
@@ -459,8 +451,8 @@ function openCombat() {
 
 defineExpose({
   combatContext: () => props.primaryView === 'story' ? canvas.value?.combatContext?.() ?? {} : {},
-  toggleDice: () => toolbar.value?.toggleDice(),
-  rollDie: sides => toolbar.value?.rollDie(sides),
+  toggleDice: () => toolsRail.value?.toggleDice(),
+  rollDie: sides => toolsRail.value?.rollDie(sides),
 })
 
 function returnToChapters() {

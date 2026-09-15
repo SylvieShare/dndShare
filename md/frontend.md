@@ -593,7 +593,7 @@ HTTP-обслуживания; компоненты не содержат read-t
 Актуальные страницы: `/`, `/sessions`, `/sessions/:uuid`, `/screen/:code`, `/join/:code`,
 `/chars`, `/chars/new`, `/char/:uuid`, `/char/:uuid/print`, `/handbook`,
 `/handbook/dictionary`, `/handbook/objects`, `/rules`, `/rules/:articleSlug`,
-`/admin`, `/tools`. Неизвестный клиентский
+`/admin`. Неизвестный клиентский
 маршрут перенаправляется на `/`.
 
 Вкладка `/admin` «Статистика» показывает не только счётчики сущностей, но и
@@ -634,7 +634,7 @@ DOM update и прервать переход по timeout. Все служеб�
 
 ## CSS
 
-`features/master-tools` содержит страницу инструментов мастера: настраиваемые сокровища из справочников и авторские сцены ночлега/пути. Чистые генераторы находятся в `lib`, формы — в `components`. Запуск и копирование используют публичный `share-ui/ActionButton` (0.19.0). Контракт — [инструменты мастера](features/master-tools.md).
+`features/master-tools` содержит генератор сокровищ для правой панели сессии. Отдельная страница инструментов, ночлег и странствие удалены. Чистая генерация находится в `lib`, состояние — в `useTreasureGenerator`, форма — в `components`. `SessionToolsRail` сохраняется на всех вкладках; `SessionTreasureControl` держит состояние вне поповера и модальный просмотр предмета. Настройки сессии — отдельная вкладка на общих `BaseTile`, `FormField` и `ToggleSwitch`. Запуск и копирование используют публичный `share-ui/ActionButton` (0.19.0). Контракт — [инструменты мастера](features/master-tools.md).
 
 Общая палитра и canvas приходят из `@sylvieshare/share-ui/styles.css`, который
 импортируется один раз в `main.js`. `src/app/theme.css` задаёт DnD-акцент,

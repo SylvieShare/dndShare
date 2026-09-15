@@ -23,7 +23,7 @@ const sessionsApi = read('../../../shared/api/sessionsApi.js')
 describe('session presentation workspace', () => {
   it('keeps materials as a primary DM workspace but removes them from the display dropdown', () => {
     expect(toolbar).toContain("{ key: 'materials', label: 'Материалы'")
-    expect(toolbar).toContain('<SessionPresentationControl')
+    expect(read('./SessionToolsRail.vue')).toContain('<SessionPresentationControl')
     expect(control).not.toContain('Материалы сессии')
     expect(control).toContain('Отображается — затемнить экран')
     expect(control).toContain('Режим отображения')

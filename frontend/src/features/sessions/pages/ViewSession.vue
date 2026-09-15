@@ -69,12 +69,10 @@
         :materials="sessionMaterials"
         :presentation="presentation"
         :timers="sessionTimers"
-        :settings="sessionSettings"
         :show-shortcut-hints="showShortcutHints"
         @open-scenes="openChapterScenes"
         @select-view="selectSessionView"
         @open-combat="openCombatTab"
-        @update-setting="updateSessionSetting"
         @send-block-to-combat="sendBlockToCombat"
         @workspace-context-change="updateWorkspaceContext"
         @edit-session="openEdit"
@@ -83,7 +81,9 @@
         @open-chapters="openChapters"
       >
         <template #primary-workspace>
-          <SessionMusicWorkspace v-if="primaryView === 'music'" :is-dm="isDm" />
+          <SessionSettingsWorkspace v-if="primaryView === 'settings'" :settings="sessionSettings"
+            :saving="settingsSaving" :error="settingsError" @update-setting="updateSessionSetting" />
+          <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
           <JournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" />
           <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
           <SessionWorldLayer
@@ -275,6 +275,7 @@ import SessionParticipantCard from '@/features/sessions/components/SessionPartic
 import SessionPlayerView from '@/features/sessions/components/SessionPlayerView.vue'
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionTimerStack from '@/features/sessions/components/SessionTimerStack.vue'
+import SessionSettingsWorkspace from '@/features/sessions/components/SessionSettingsWorkspace.vue'
 import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'
 import JournalWorkspace from '@/features/journals/components/JournalWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
@@ -296,7 +297,7 @@ const {
   presentation, primaryView, requestKickParticipant, selectLocation, selectMaterial,
   selectNpc, selectQuest, selectSessionView, selectedLocationId, selectedMaterialId,
   selectedNpcId, selectedPlayersToCombat, selectedQuestId, sendBlockToCombat, sendSelectedPlayersToCombat,
-  session, sessionMaterials, sessionSettings, sessionTimers, sessionTutorial,
+  session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
   sessionUuid, sessionWorld, setEncounterPlayerInitiative, setEncounterPlayerSelected, setParticipantColor,
   sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,
   syncStatus, toggleAllEncounterPlayers, togglePlayersRail, tutorialMobile, tutorialRoot,

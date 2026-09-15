@@ -239,3 +239,7 @@ export function updateChapterEdge(uuid, edgeId, data) {
 export function deleteChapterEdge(uuid, edgeId) {
   return fetchDelete(`/sessions/${uuid}/chapter-edges/${edgeId}`)
 }
+
+export function updateSessionSetting(uuid, key, value) {
+  return fetchPatch(`/sessions/${uuid}/settings`, { key, value })
+}

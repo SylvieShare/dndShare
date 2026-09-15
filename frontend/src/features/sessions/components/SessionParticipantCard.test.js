@@ -58,8 +58,8 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('-webkit-mask-image: none;\n  mask-image: none;')
   })
 
-  it('offers view to everyone and DM-only color and kick actions', () => {
-    expect(source).toContain('<RowActionItem action="view"')
+  it('offers view when permitted and DM-only color and kick actions', () => {
+    expect(source).toContain('<RowActionItem v-if="isDm || participant.canOpenSheet" action="view"')
     expect(source).toContain('>Открыть лист</RowActionItem>')
     expect(source).not.toContain('>Просмотреть</RowActionItem>')
     expect(source).toContain("{{ colorPending ? 'Сохранение…' : 'Назначить цвет' }}")

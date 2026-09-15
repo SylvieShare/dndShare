@@ -266,6 +266,9 @@ func (s *Server) handleGetSession(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
+	for i, participant := range participants {
+		participants[i] = store.SessionParticipantView(participant, session.Settings, userID, role == "gm")
+	}
 	resp := sessionDetailResponse{
 		Session: session, Participants: nonNil(participants), MyRole: role, MyCharUUID: myCharUUID,
 	}

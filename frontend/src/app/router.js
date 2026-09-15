@@ -16,7 +16,6 @@ const ViewJoinSession = () => import('@/features/sessions/pages/ViewJoinSession'
 const ViewAccount = () => import('@/features/account/pages/ViewAccount.vue')
 const ViewEncounterScreen = () => import('@/features/sessions/pages/ViewEncounterScreen.vue')
 const ViewSession = () => import('@/features/sessions/pages/ViewSession')
-const ViewMasterTools = () => import('@/features/master-tools/pages/ViewMasterTools.vue')
 const ViewSessions = () => import('@/features/sessions/pages/ViewSessions')
 import { fetchGet } from '@/shared/api/http'
 import { getSessions } from '@/shared/api/sessionsApi'
@@ -40,7 +39,6 @@ const sectionOrder = {
     handbook: 0,
     rules: 1,
     sessions: 2,
-    tools: 3,
     characters: 4,
     admin: 5,
 }
@@ -91,7 +89,6 @@ function setPrefetch(fullPath, promise) {
 }
 
 const routes = [
-    { path: '/tools', name: 'MasterTools', component: ViewMasterTools, meta: { title: 'Инструменты', section: 'tools', depth: 0 } },
     {
         path: '/',
         name: "Home",

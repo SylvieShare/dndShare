@@ -17,7 +17,7 @@
       <span v-if="activeCount" class="session-timer-badge">{{ activeCount }}</span>
     </button>
 
-    <BasePopover v-model:open="open" :anchor="trigger" :min-width="350" placement="bottom-end" transition-preset="action-menu">
+    <BasePopover v-model:open="open" :anchor="trigger" min-width="min(350px, calc(100vw - 16px))" placement="right-start" transition-preset="action-menu">
       <form class="session-timer-menu" @submit.prevent="submit">
         <header>
           <span class="session-timer-menu-icon"><TimerReset :size="18" /></span>
@@ -125,7 +125,7 @@ async function submit() {
 .session-timer-trigger--completed {   color: var(--danger);  }
 .session-timer-badge { position: absolute; top: 1px; right: 3px; min-width: 16px; height: 16px; display: grid; place-items: center; padding: 0 4px; border: 2px solid var(--bg); border-radius: 9px; background: var(--accent); color: var(--text-on-accent); font-size: 8px; font-weight: 800; line-height: 1; }
 .session-timer-trigger--completed .session-timer-badge { background: var(--danger); }
-.session-timer-menu { width: 342px; display: flex; flex-direction: column; gap: 12px; padding: 7px; }
+.session-timer-menu { width: min(342px, calc(100vw - 32px)); display: flex; flex-direction: column; gap: 12px; padding: 7px; }
 .session-timer-menu header { display: flex; align-items: center; gap: 9px; padding: 5px 3px 10px; border-bottom: 1px solid var(--border); }
 .session-timer-menu header > span:last-child { display: flex; flex-direction: column; gap: 1px; }
 .session-timer-menu header small, .session-timer-menu legend, .session-timer-description > span { color: var(--text-muted); font-size: 8px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }

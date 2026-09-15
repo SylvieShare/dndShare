@@ -16,14 +16,15 @@
       <kbd v-if="showShortcutHints && !open" class="session-dice-hint session-dice-hint--rolls" aria-hidden="true">{{ shortcutLabels.dice }}+1…7 · d4…d100</kbd>
     </button>
 
-    <BasePopover v-model:open="open" :anchor="trigger" :min-width="328" placement="bottom-end" transition-preset="action-menu">
-      <DicePanel ref="dicePanel" :show-shortcut-hints="showShortcutHints" />
+    <BasePopover v-model:open="open" :anchor="trigger" min-width="min(328px, calc(100vw - 16px))" placement="right-start" transition-preset="action-menu">
+      <DicePanel :controller="controller" :show-shortcut-hints="showShortcutHints" />
     </BasePopover>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { useSessionDice } from '../composables/useSessionDice'
 import { Dices } from '@lucide/vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import DicePanel from '@/features/sessions/components/DicePanel.vue'
@@ -32,12 +33,12 @@ import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 defineProps({ showShortcutHints: { type: Boolean, default: false } })
 
 const trigger = ref(null)
-const dicePanel = ref(null)
+const controller = reactive(useSessionDice())
 const open = ref(false)
 const shortcutLabels = sessionShortcutLabels()
 
 function toggle() { open.value = !open.value }
-function rollDie(sides) { dicePanel.value?.rollDie(sides) }
+function rollDie(sides) { controller.rollDie(sides) }
 
 defineExpose({ toggle, rollDie })
 </script>

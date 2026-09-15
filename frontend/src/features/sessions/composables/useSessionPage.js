@@ -70,7 +70,7 @@ export function useSessionPage() {
   const presentation = useSessionPresentation({ sessionUuid, materials: sessionMaterials })
   const sessionTimers = useSessionTimers({ sessionUuid })
   watch(() => presentation.state.value.broadcastMusic, enabled => musicStore.setRemotePlayback(enabled), { immediate: true })
-  const { settings: sessionSettings, update: updateSessionSetting } = useSessionSettings({ sessionUuid })
+  const { settings: sessionSettings, update: updateSessionSetting, saving: settingsSaving, error: settingsError } = useSessionSettings({ sessionUuid, session })
   provide('sessionMaterials', sessionMaterials)
   provide('sessionWorld', sessionWorld)
   provide('sessionPresentation', presentation)
@@ -352,8 +352,8 @@ export function useSessionPage() {
   async function refreshParticipants() {
     const fresh = await getSession(sessionUuid)
     if (!Array.isArray(fresh?.participants)) return
+    session.value = fresh.session ?? session.value
     if (!isDm.value) {
-      session.value = fresh.session ?? session.value
       currentChapter.value = fresh.currentChapter ?? null
       sessionRole.value = fresh.myRole || 'player'
       myCharUuid.value = fresh.myCharUuid || myCharUuid.value
@@ -394,10 +394,10 @@ export function useSessionPage() {
     sessionUuid,
     onUpdate(update) {
       const tasks = []
-      if (update?.session && !isDm.value) tasks.push(refreshSessionOverview())
+      if (update?.session) tasks.push(refreshSessionOverview())
       if (update?.participants) tasks.push(requestParticipants())
       else if (Array.isArray(update?.characterIds) && update.characterIds.length) {
-        tasks.push(requestCharacters(update.characterIds))
+        tasks.push(isDm.value ? requestCharacters(update.characterIds) : requestParticipants())
       }
       if (update?.journal) tasks.push(sessionEventsStore.refresh())
       if (update?.connectedScreens != null && isDm.value) {
@@ -586,7 +586,7 @@ export function useSessionPage() {
     presentation, primaryView, requestKickParticipant, selectLocation, selectMaterial,
     selectNpc, selectQuest, selectSessionView, selectedLocationId, selectedMaterialId,
     selectedNpcId, selectedPlayersToCombat, selectedQuestId, sendBlockToCombat, sendSelectedPlayersToCombat,
-    session, sessionMaterials, sessionSettings, sessionTimers, sessionTutorial,
+    session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
     sessionUuid, sessionWorld, setEncounterPlayerInitiative, setEncounterPlayerSelected, setParticipantColor,
     sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,
     syncStatus, toggleAllEncounterPlayers, togglePlayersRail, tutorialMobile, tutorialRoot,

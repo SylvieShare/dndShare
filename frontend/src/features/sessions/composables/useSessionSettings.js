@@ -1,4 +1,5 @@
-import { reactive, watch } from 'vue'
+import { reactive, ref, watch } from 'vue'
+import { updateSessionSetting } from '@/shared/api/sessionsApi'
 
 const DEFAULTS = Object.freeze({
   autoRollNpcHp: false,
@@ -19,7 +20,7 @@ function readSettings(sessionUuid) {
   }
 }
 
-export function useSessionSettings({ sessionUuid }) {
+export function useSessionSettings({ sessionUuid, session }) {
   const settings = reactive(readSettings(sessionUuid))
 
   watch(settings, value => {
@@ -30,10 +31,29 @@ export function useSessionSettings({ sessionUuid }) {
     } catch { /* localStorage can be unavailable in private mode */ }
   }, { deep: true })
 
-  function update(key, value) {
+  const saving = ref(false)
+  const error = ref('')
+  const sharedKeys = ['playersSeeClass', 'playersSeeRace', 'playersSeeHp', 'playersOpenSheets']
+  if (session) watch(() => session.value?.settings, value => {
+    if (value) for (const key of sharedKeys) settings[key] = value[key] === true
+  }, { immediate: true })
+
+  async function update(key, value) {
+    if (sharedKeys.includes(key)) {
+      if (saving.value) return
+      saving.value = true
+      error.value = ''
+      try {
+        await updateSessionSetting(sessionUuid, key, value === true)
+        settings[key] = value === true
+        if (session?.value) session.value = { ...session.value, settings: { ...session.value.settings, [key]: value === true } }
+      } catch { error.value = 'Не удалось сохранить настройку. Попробуйте ещё раз.' }
+      finally { saving.value = false }
+      return
+    }
     if (!(key in DEFAULTS)) return
     settings[key] = value === true
   }
 
-  return { settings, update }
+  return { settings, update, saving, error }
 }

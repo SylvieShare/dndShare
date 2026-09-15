@@ -19,8 +19,8 @@ describe('player session view', () => {
     expect(source).toContain('class="current-chapter"')
     expect(source).toContain('Текущая глава')
     expect(source).toContain('class="party-list"')
-    expect(source).toContain('participant.publicVisible === true')
-    expect(source).toContain('isMine(participant) || participant.publicVisible')
+    expect(source).toContain('participant.canOpenSheet === true')
+    expect(source).toContain('isMine(participant) || participant.canOpenSheet')
     expect(responsiveStyles).toContain('@media (max-width: 920px)')
   })
 

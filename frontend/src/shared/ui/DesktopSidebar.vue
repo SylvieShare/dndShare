@@ -61,7 +61,7 @@
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { BookOpen, BookOpenCheck, Dices, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
+import { BookOpen, BookOpenCheck, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'
 import { AppSidebar, SidebarBrand, SidebarNavItem } from '@sylvieshare/share-ui'
 import HeaderSearch from '@/shared/ui/HeaderSearch'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
@@ -79,7 +79,6 @@ const icons = {
   handbook: BookOpen,
   rules: BookOpenCheck,
   sessions: ScrollText,
-  tools: Dices,
   characters: Users,
   'create-character': UserRoundPlus,
   admin: Shield,

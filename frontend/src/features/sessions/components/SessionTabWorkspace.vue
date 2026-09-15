@@ -31,6 +31,6 @@
 }
 
 @media (max-width: 760px) {
-  .session-tab-workspace { padding: 16px; }
+  .session-tab-workspace { padding: 16px calc(var(--chapter-safe-right, 0px) + 12px) 16px 16px; }
 }
 </style>

@@ -201,7 +201,7 @@ func (s *Store) DeleteCharacter(ctx context.Context, uuid string) error {
 
 // PollChars возвращает по каждому запрошенному id, изменился ли data относительно клиентской версии.
 // Отдаёт данные только тех персонажей, которые вызывающий вправе видеть: свои, публичные или
-// делящие с ним сессию (мастер опрашивает игроков, игроки — соигроков). Чужие id молча выпадают
+// участники сессии вызывающего мастера. Игроки получают состав группы через API сессии. Чужие id молча выпадают
 // из выборки — это чинит IDOR-перечисление приватных листов по числовому id.
 func (s *Store) PollChars(ctx context.Context, items []PollItem, userID int64) ([]PollResult, error) {
 	if len(items) == 0 {
@@ -224,13 +224,7 @@ func (s *Store) PollChars(ctx context.Context, items []PollItem, userID int64) (
 		       SELECT 1 FROM dndshare.session_participant sp
 		       JOIN dndshare."session" s ON s.id = sp.session_id AND s.deleted = false
 		       WHERE sp.char_id = c.id
-		         AND (
-		           s.owner_user_id = $2
-		           OR EXISTS (
-		             SELECT 1 FROM dndshare.session_participant sp2
-		             WHERE sp2.session_id = s.id AND sp2.user_id = $2
-		           )
-		         )
+		         AND s.owner_user_id = $2
 		     )
 		   )`, ids, userID)
 	if err != nil {

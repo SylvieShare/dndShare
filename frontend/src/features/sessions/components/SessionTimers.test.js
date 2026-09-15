@@ -12,8 +12,8 @@ const composable = read('../composables/useSessionTimers.js')
 const api = read('../../../shared/api/sessionsApi.js')
 
 describe('session timer workspace', () => {
-  it('places timer creation in the session header and cards only in the DM workspace', () => {
-    expect(toolbar).toContain('<SessionTimerControl')
+  it('places timer creation in the right tool rail and cards only in the DM workspace', () => {
+    expect(read('./SessionToolsRail.vue')).toContain('<SessionTimerControl')
     expect(control).toContain('Запустить таймер')
     expect(control).toContain('Быстрый выбор длительности')
     expect(control).toContain('Показывать в трансляции')

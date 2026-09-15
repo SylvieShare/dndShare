@@ -61,7 +61,7 @@ describe('session world workspaces', () => {
     expect(layer).toContain("activeView === 'locations'")
     expect(layer).toContain("activeView === 'npcs'")
     expect(layer).toContain("activeView === 'quests'")
-    expect(sessionView).toContain('<SessionMusicWorkspace v-if="primaryView === \'music\'"')
+    expect(sessionView).toContain('<SessionMusicWorkspace v-else-if="primaryView === \'music\'"')
     expect(sessionView).toContain('<SessionChronicleWorkspace v-else-if="primaryView === \'events\'"')
   })
 

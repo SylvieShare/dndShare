@@ -8,7 +8,7 @@ const source = readFileSync(fileURLToPath(new URL('./ViewSession.vue', import.me
 const styles = readFileSync(fileURLToPath(new URL('./styles/ViewSession.css', import.meta.url)), 'utf8')
 const selectionSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSelection.js', import.meta.url)), 'utf8')
 const workspaceSource = readFileSync(fileURLToPath(new URL('../composables/useSessionWorkspace.js', import.meta.url)), 'utf8')
-const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8')
+const dicePanelSource = readFileSync(fileURLToPath(new URL('../components/DicePanel.vue', import.meta.url)), 'utf8') + readFileSync(fileURLToPath(new URL('../composables/useSessionDice.js', import.meta.url)), 'utf8')
 const diceControlSource = readFileSync(fileURLToPath(new URL('../components/SessionDiceControl.vue', import.meta.url)), 'utf8')
 const chronicleWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionChronicleWorkspace.vue', import.meta.url)), 'utf8')
 const musicWorkspaceSource = readFileSync(fileURLToPath(new URL('../components/SessionMusicWorkspace.vue', import.meta.url)), 'utf8')
@@ -41,7 +41,7 @@ const participantSyncSource = readFileSync(fileURLToPath(new URL('../composables
 const sessionLiveSource = readFileSync(fileURLToPath(new URL('../composables/useSessionLive.js', import.meta.url)), 'utf8')
 const participantRailSource = readFileSync(fileURLToPath(new URL('../composables/useSessionParticipantRail.js', import.meta.url)), 'utf8')
 const sessionSettingsSource = readFileSync(fileURLToPath(new URL('../composables/useSessionSettings.js', import.meta.url)), 'utf8')
-const sessionSettingsControlSource = readFileSync(fileURLToPath(new URL('../components/SessionSettingsControl.vue', import.meta.url)), 'utf8')
+const sessionSettingsControlSource = readFileSync(fileURLToPath(new URL('../components/SessionSettingsWorkspace.vue', import.meta.url)), 'utf8')
 const encounterNpcsSource = readFileSync(fileURLToPath(new URL('../composables/useEncounterNpcs.js', import.meta.url)), 'utf8')
 const encounterStylesSource = ['EncounterToolbar.css', 'EncounterTab.css'].map(name => readFileSync(fileURLToPath(new URL(`../components/styles/${name}`, import.meta.url)), 'utf8')).join('\n')
 const dicePopupSource = readFileSync(fileURLToPath(new URL('../../notifications/components/DiceRollNotification.vue', import.meta.url)), 'utf8')
@@ -88,7 +88,7 @@ describe('ViewSession participant rail', () => {
     expect(sessionLiveSource).toContain('runCatchUp()')
   })
 
-  it('uses the chapter canvas as the full workspace without a right tool rail', () => {
+  it('uses the chapter canvas as the full workspace with a right tool rail', () => {
     expect(source).toContain('class="campaign-workspace"')
     expect(source).toContain('class="campaign-graph"')
     expect(source).toContain('workspace-dock workspace-dock--left')
@@ -97,7 +97,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('position: absolute;')
     expect(styles).toContain('--chapter-safe-left: 306px;')
     expect(styles).not.toContain('.campaign-workspace--right-dock')
-    expect(styles).toContain('--chapter-safe-right: 0px;')
+    expect(styles).toContain('--chapter-safe-right: 86px;')
     expect(source).not.toContain('campaign-workspace--hotkeys')
     expect(styles).not.toContain('.campaign-workspace--hotkeys .workspace-dock--left')
     expect(source).not.toContain('<SlidingTabs')
@@ -127,24 +127,24 @@ describe('ViewSession participant rail', () => {
     expect(styles).toMatch(/\.campaign-workspace--combat \.workspace-dock--left\s*\{[^}]*width:\s*360px;/s)
   })
 
-  it('keeps session dice purple and opens them from the header popover', () => {
+  it('keeps session dice purple and opens them from the tool rail popover', () => {
     expect(dicePanelSource).toContain('color="var(--accent)"')
     expect(diceControlSource).toContain('<BasePopover')
-    expect(diceControlSource).toContain('<DicePanel ref="dicePanel"')
+    expect(diceControlSource).toContain('<DicePanel :controller="controller"')
     expect(source).not.toContain('SESSION_TOOL_PANELS_STORAGE_KEY')
     expect(source).not.toContain('diceOpen')
     expect(source).not.toContain('eventsOpen')
     expect(dicePanelSource).not.toContain('dice-panel-collapse')
     expect(source).not.toContain('musicOpen')
     expect(source).not.toContain('<MusicPanel')
-    expect(source).toContain('<SessionMusicWorkspace v-if="primaryView === \'music\'"')
+    expect(source).toContain('<SessionMusicWorkspace v-else-if="primaryView === \'music\'"')
     expect(source).not.toContain('MusicLibraryModal')
     expect(source).not.toContain('musicLibraryOpen')
     expect(musicWorkspaceSource).toContain('musicStore.ensureLibrary()')
   })
 
   it('moves hotkey help out of settings and keeps handbook HP rolling as the local preference', () => {
-    expect(source).toContain('useSessionSettings({ sessionUuid })')
+    expect(source).toContain('useSessionSettings({ sessionUuid, session })')
     expect(source).toContain('autoRollNpcHp: computed(() => sessionSettings.autoRollNpcHp)')
     expect(sessionSettingsSource).toContain('dnd-share:session-settings:v1:')
     expect(sessionSettingsControlSource).not.toContain('Спрятать легенду на холсте')
@@ -160,7 +160,7 @@ describe('ViewSession participant rail', () => {
     expect(source).toContain('useSessionHotkeys({')
     expect(source).toContain('rollDie: sides => chapterGraphTab.value?.rollDie(sides)')
     expect(source).toContain("if (panel === 'dice') chapterGraphTab.value?.toggleDice()")
-    expect(diceControlSource).toContain('<DicePanel ref="dicePanel"')
+    expect(diceControlSource).toContain('<DicePanel :controller="controller"')
     expect(dicePanelSource).toContain('defineExpose({ rollDie })')
     expect(dicePanelSource).toContain('class="dice-panel-shortcut"')
     expect(sessionHotkeysSource).toContain("command.type === 'select-view'")
@@ -195,11 +195,11 @@ describe('ViewSession participant rail', () => {
     expect(sessionHotkeysSource).toContain("command.type === 'toggle-encounter' && event.target?.closest?.(NATIVE_ACTIVATION_TARGET)")
   })
 
-  it('lets the canvas use the full right edge after removing the right rail', () => {
+  it('reserves canvas space for the right tool rail', () => {
     expect(source).not.toContain('campaign-workspace--right-dock')
     expect(source).not.toContain('workspace-dock workspace-dock--right')
     expect(styles).not.toContain('.workspace-dock--right')
-    expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*0px;/s)
+    expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*86px;/s)
   })
 
   it('renders the chronicle as a central session workspace', () => {

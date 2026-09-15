@@ -32,11 +32,11 @@ describe('chapter graph workspace', () => {
     expect(canvas).not.toContain('<BaseTile')
   })
 
-  it('opens dice from a header popover and keeps music playback in its tab', () => {
-    expect(toolbar).toContain('<SessionDiceControl')
+  it('opens dice from a tool rail popover and keeps music playback in its tab', () => {
+    expect(readFileSync(fileURLToPath(new URL('./SessionToolsRail.vue', import.meta.url)), 'utf8')).toContain('<SessionDiceControl')
     expect(diceControl).toContain('aria-label="Кубики"')
     expect(diceControl).toContain('<BasePopover')
-    expect(diceControl).toContain('<DicePanel ref="dicePanel"')
+    expect(diceControl).toContain('<DicePanel :controller="controller"')
     expect(diceControl).toContain('defineExpose({ toggle, rollDie })')
     expect(toolbar).not.toContain("$emit('toggle-dice')")
     expect(toolbar).not.toContain("$emit('toggle-events')")

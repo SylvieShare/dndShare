@@ -34,38 +34,17 @@
         <p v-else class="tools-muted">В этой находке только монеты.</p>
       </template>
     </div>
-    <ItemViewModal v-if="selected" :item="selected" :item-id="selected.id" :item-type-id="selected.typeId" @close="selected = null" />
   </div>
 </template>
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { toRefs } from 'vue'
 import { ActionButton, BaseTile, FormField, FormSelect, FormTextInput, LoadingState, SectionList, ToggleSwitch } from '@sylvieshare/share-ui'
 import { Copy, Dices, Gem } from '@lucide/vue'
-import { fetchGet } from '@/shared/api/http'
-import { useGameContextStore } from '@/stores/gameContext'
 import HandbookListItem from '@/features/items/list-components/HandbookListItem.vue'
-import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-import { generateTreasure, RARITIES, treasureCandidates, treasureOptionsError, treasureText } from '../lib/treasureGenerator'
-const game = useGameContextStore()
-const options = ref({ level: 1, count: 3, pool: 'magic', maxRarity: 1, typeId: '', publicOnly: true, goldMin: 10, goldMax: 50 })
-const items = ref([]), loading = ref(false), error = ref(''), result = ref(null), selected = ref(null), copyLabel = ref('Скопировать')
-const types = [{ id: 1, name: 'Оружие' }, { id: 2, name: 'Вещи' }, { id: 10, name: 'Зелья' }, { id: 12, name: 'Доспехи' }, { id: 13, name: 'Транспорт' }, { id: 14, name: 'Инструменты' }, { id: 19, name: 'Магические предметы' }]
-const visibleTypes = computed(() => types.filter(t => options.value.pool === 'all' || (options.value.pool === 'magic') === [10, 19].includes(t.id)))
-const validation = computed(() => treasureOptionsError(options.value))
-const candidates = computed(() => treasureCandidates(items.value, options.value))
-let request = 0
-async function load() {
-  const token = ++request
-  loading.value = true; error.value = ''; result.value = null
-  try {
-    const response = await fetchGet(`/master-tools/treasure-pool?sourceVersionId=${game.sourceVersionId}`)
-    if (token !== request) return
-    if (!Array.isArray(response?.items)) throw new Error('pool')
-    items.value = response.items
-  } catch { if (token === request) error.value = 'Не удалось загрузить каталог сокровищ.' }
-  finally { if (token === request) loading.value = false }
-}
-watch(() => game.sourceVersionId, load, { immediate: true })
-function generate() { result.value = generateTreasure(items.value, options.value); copyLabel.value = 'Скопировать' }
-async function copy() { try { await navigator.clipboard.writeText(treasureText(result.value)); copyLabel.value = 'Скопировано' } catch { copyLabel.value = 'Не удалось скопировать' } }
+import { RARITIES } from '../lib/treasureGenerator'
+const props = defineProps({ controller: { type: Object, required: true } })
+const { options, loading, error, result, selected, copyLabel, visibleTypes, validation, candidates } = toRefs(props.controller)
+const { load, generate, copy } = props.controller
 </script>
+
+<style scoped src="../styles/masterTools.css"></style>

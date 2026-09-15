@@ -27,13 +27,13 @@ Shortcuts are cleared when the account changes.
 
 The DM can open every participant’s character sheet even when `publicVisible`
 is disabled. This applies while the character belongs to a non-deleted session
-owned by that DM. Other players still need a public link to open someone else’s sheet.
+owned by that DM. Other players need both the session’s `playersOpenSheets` permission and a public link to open someone else’s sheet from the roster. This controls session navigation; it does not revoke an independently shared public URL.
 
 Opening a session as a participant renders a separate player composition instead
 of the DM canvas and tool rails. The page places the campaign context first, then
 uses the current chapter image, arc and title as the main visual block beside a
 responsive group roster. Every roster row shows the canonical character icon,
-name and setting subtitle. Public characters have a link to their sheet; the
+name and the permitted class/race subtitle, plus HP when enabled. Characters with `canOpenSheet` have a link to their sheet; the
 current player's own sheet remains accessible even when it is private. The view
 folds into one column on mobile and follows the session live stream so participant,
 campaign and current-chapter changes refresh without opening the DM-only APIs.
@@ -54,6 +54,32 @@ Participant media for the list prefers the character's independent
 When the whole list or the selected ownership filter is empty, the page shows
 a two-column start state: one card opens session creation and the other accepts
 an invitation code inline. On narrow screens the cards stack vertically.
+
+## Настройки видимости игроков
+
+Мастер открывает отдельную вкладку «Настройки». Четыре переключателя сохраняются
+на сервере в `session.settings` и синхронизируются через SSE `session`:
+
+- `playersSeeClass` — класс других игроков (по умолчанию включён).
+- `playersSeeRace` — раса других игроков (по умолчанию включена).
+- `playersSeeHp` — текущие, максимальные и временные HP других игроков (по умолчанию выключены).
+- `playersOpenSheets` — кнопки и пункты меню для перехода на чужие публичные листы (по умолчанию включены).
+
+`PATCH /api/sessions/{uuid}/settings` принимает `{key, value}` и доступен только
+владельцу сессии. Изменение одного флага не перезаписывает остальные.
+`GET /api/sessions/{uuid}` возвращает `canOpenSheet` для каждого участника и
+ограниченный `data.values` для других игроков: имя, аватар и разрешённые поля.
+Ссылки классов/рас содержат только имена; HP не включают описания бонусов.
+Собственные персонажи и участники сессии мастера сохраняют полный доступ.
+Общий `/chars/poll` выдаёт полные данные только владельцу, мастеру или читателю
+публичного листа; приватные данные соигроков через него недоступны. Игрок обновляет
+состав группы через API сессии, включая изменения персонажей в live-потоке.
+В поповере «Другие игроки» на листе те же данные и пункт «Открыть лист» следуют
+серверному разрешению; чат и игры остаются доступны независимо от этого флага.
+
+В этой же вкладке — браузерная настройка автоматического броска HP существ и
+повтор обучения. Настройки видимости не меняют оформление анонимной трансляции:
+у экрана показа свои параметры.
 
 ## Participant display
 
@@ -117,25 +143,25 @@ available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header groups `Сюжет`, `Бой`, `Локации`, `NPC`,
-`Задания`, `Материалы`, `Дневник` and `Хроника` in the center, followed by the
-presentation, timer, dice and settings controls. All these buttons use unframed
+`Задания`, `Материалы`, `Дневник`, `Хроника` and `Настройки` in the center.
+Presentation, timer, dice and treasure controls form a vertical tool rail on the right. All these buttons use unframed
 24px icons with small labels underneath and no backing surface. `Музыка` keeps
 its compact horizontal player at the far right. The session name stays on the
 left with the arc below it in every workspace; the status icon sits beside both
-lines. At workspace widths up to 1100px, navigation and tools move to a second,
+lines. At workspace widths up to 1100px, navigation moves to a second,
 horizontally scrollable row. The measured header height controls the participant
 rail offset so the two never overlap. The
 participant rail remains on the left and the
-right tool rail is removed. In `Сюжет` the chapter canvas fills all available
-width below `AppHeader`; only the participant rail reserves a horizontal safe
-area. CSS safe-area variables keep focus, zoom and newly created nodes in the
+right tool rail stays visible, including on mobile. In `Сюжет` the chapter canvas fills all available
+width below `AppHeader`; the participant and tool rails reserve horizontal safe
+areas. CSS safe-area variables keep focus, zoom and newly created nodes in the
 uncovered part of the canvas. All secondary tabs (world catalogues, music,
 journal and chronicle) share `SessionTabWorkspace`: it owns the canvas background,
 starts content 28px after the visible participant rail, and limits content width
 to 1440px, left-aligned with that rail. Collapsing the rail updates the same safe
 area for every tab. Catalogue columns retain an 8px internal gap. Story and
 combat are outside this wrapper and have no width limit. On mobile (up to 760px)
-the participant rail disappears and the shared wrapper uses 16px outer padding.
+the participant rail disappears and the shared wrapper uses 16px outer padding on the left and reserves the tool rail on the right.
 Individual tab components own their internal layout and scrolling, not rail
 offsets or outer padding; this also applies to loading and error states.
 
@@ -154,12 +180,13 @@ catalogue closes the combat workspace without stopping an active encounter;
 its red live marker therefore remains visible on the inactive `Бой` tab. Each
 catalogue selection stays in its own query key, so
 returning to a catalogue restores the previously selected location, NPC, quest
-or material. The four tool controls share one group immediately beside the navigation tabs.
+or material. The four tool controls stay in the right rail across every tab.
 
-Кнопка кубиков в командной шапке открывает `DicePanel` в `BasePopover`, по той
-же модели, что экран показа и таймеры. Контроллер остаётся смонтированным, поэтому
-горячие клавиши бросков работают и при закрытом popover. Отдельной карточки
-кубиков и состояния видимости правой панели больше нет.
+Кнопка кубиков в правой колонке открывает `DicePanel` в `BasePopover`, по той
+же модели, что экран показа и таймеры. `useSessionDice` живёт в постоянно смонтированном контроллере, поэтому
+горячие клавиши бросков работают и при закрытом popover. Выбранный режим броска сохраняется при закрытии поповера.
+Кнопка сокровищ открывает [генератор](master-tools.md) с фильтрами, броском монет,
+просмотром предметов и копированием результата.
 Отдельная master-only кнопка `Таймеры` открывает компактную форму с описанием,
 минутами/секундами и быстрыми пресетами. Каждый запущенный таймер появляется
 как отдельное плавающее стеклянное окно поверх рабочего пространства. Окно
@@ -806,8 +833,8 @@ combat-only “select all” and “move selected to combat” actions above its
 both operate only on players and preserve any NPC selection. With or without a
 scenario context, the combat header uses the full center width;
 combatants remain independent tiles below it rather than being wrapped in one
-central card. With the right tool rail removed, the combat workspace uses the
-full width between the participant safe area and the viewport edge. The header uses one enlarged,
+central card. The combat workspace uses the
+width between the participant safe area and the right tool rail. The header uses one enlarged,
 labelled primary action, “Начать бой” or “Закончить бой”, while turn navigation
 remains compact and icon-only. The header has one stable composition at every
 width: its scenario image keeps its native aspect ratio, scales to the width of
@@ -1130,8 +1157,8 @@ the source and CC0 metadata; system audio is served through signed S3 URLs.
 ## Data changes
 
 Runtime accepts only current session/encounter JSON. If the encounter model
-changes, add an idempotent correction to
-`internal/store/schema/04_sessions.sql`, update all producers/consumers, then
+changes, add a new ordered migration in
+`internal/store/schema/`, update all producers/consumers, then
 remove the previous keys and any read-time converter.
 
 Первое открытие сессии, приглашения, мира и рабочих разделов использует LoadingState вместо произвольных skeleton-карточек. Общие индикаторы применяются к загрузке изображений и операциям в контролах; реальный прогресс и статусы соединения сохраняются.

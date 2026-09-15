@@ -47,6 +47,7 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaSessionDisplayCodesSQL)
 	exec(schemaSessionLifecycleSQL)
+	exec(schemaSessionPlayerVisibilitySQL)
 	var valid bool
 	err = pool.QueryRow(ctx, `SELECT count(*) = count(DISTINCT display_code)
 	  AND bool_and(display_code ~ '^[A-Z0-9]{3}-[A-Z0-9]{3}$') FROM dndshare.session`).Scan(&valid)
@@ -66,6 +67,8 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	if err != nil || found.ID != id {
 		t.Fatalf("case-insensitive lookup: %#v %v", found, err)
 	}
+
+	testSessionSettingsPostgres(t, s, id)
 
 	// Force a collision on the next insert and prove that allocation retries safely.
 	exec(`UPDATE dndshare.session SET display_code = 'ABC-123' WHERE id = 1;

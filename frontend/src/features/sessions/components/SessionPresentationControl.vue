@@ -12,7 +12,7 @@
     >
       <MonitorUp :size="24" /><span class="session-tool-label">Экран</span><span class="presentation-control-dot" :class="{ connected: hasConnectedScreens }" />
     </button>
-    <BasePopover v-model:open="open" :anchor="trigger" :min-width="360" placement="bottom-end" transition-preset="action-menu">
+    <BasePopover v-model:open="open" :anchor="trigger" min-width="min(360px, calc(100vw - 16px))" placement="right-start" transition-preset="action-menu">
       <div class="presentation-menu">
         <header>
           <div>

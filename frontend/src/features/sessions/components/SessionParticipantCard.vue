@@ -81,7 +81,7 @@
       </template>
 
       <template #default="{ close }">
-        <RowActionItem action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
+        <RowActionItem v-if="isDm || participant.canOpenSheet" action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
         <RowActionSubmenu v-if="isDm" label="Цвет игрока" :disabled="colorPending">
           <template #trigger="{ open }">
             <RowActionItem

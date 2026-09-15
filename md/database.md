@@ -1020,3 +1020,10 @@ published through MCP; chosen references remain in `values.abilities_class`.
 справочника выполняется отдельно через `scripts/potion-rules/apply.py` и MCP.
 
 Миграция 121 (`application_targets`): у `item_transfer` nullable `recipient_char_id` означает адресацию мастеру только для применения; источник `spells` разрешён для эффектов заклинаний. `resolved_target` хранит выбранного игрока или NPC. Новые поля схемы эффектов описывают урон по ходам, цель-оружие, связанный урон и завершение. В JSON боя `effectInstances` содержат экземпляры NPC, `applicationRevision` защищает серверное применение от устаревшего сохранения.
+
+## Видимость игроков сессии
+
+Миграция `123_session_player_visibility.sql` добавляет в `dndshare.session`
+четыре `NOT NULL boolean`: `players_see_class` (true), `players_see_race` (true),
+`players_see_hp` (false), `players_open_sheets` (true). Изменение флага обновляет
+`changed_at`; локальный автоматический бросок HP существ в БД не хранится.

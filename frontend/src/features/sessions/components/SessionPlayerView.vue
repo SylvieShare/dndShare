@@ -84,6 +84,7 @@
                 <strong>{{ participantName(participant) }}</strong>
                 <span v-if="participantSubtitle(participant)">{{ participantSubtitle(participant) }}</span>
                 <span v-else-if="isMine(participant)">Ваш персонаж</span>
+                <span v-if="pvHp(participant)">HP {{ pvHp(participant).current }} / {{ pvHp(participant).max }}<template v-if="pvHp(participant).temp"> +{{ pvHp(participant).temp }}</template></span>
               </div>
 
               <RouterLink
@@ -105,7 +106,7 @@
           </div>
 
           <p class="party-card__note">
-            Публичные листы можно открыть прямо из состава группы.
+            Видимость класса, расы, HP и ссылок на чужие листы настраивает мастер.
           </p>
         </BaseTile>
       </div>
@@ -119,7 +120,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { BookOpen, ExternalLink, UsersRound } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
-import { pvAvatar, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
+import { pvAvatar, pvName, pvSubtitle, pvHp } from '@/features/sessions/lib/participantView'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
 
 const props = defineProps({
@@ -178,7 +179,7 @@ function isMine(participant) {
 }
 
 function canOpen(participant) {
-  return isMine(participant) || participant.publicVisible === true
+  return isMine(participant) || participant.canOpenSheet === true
 }
 
 function participantRoute(participant) {

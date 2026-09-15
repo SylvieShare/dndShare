@@ -124,6 +124,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     onUpdate: async update => {
       if (update.journal) await Promise.all([refresh(), events.refresh()])
       if (update.participants || update.session) { await loadSessions(); await loadPlayers() }
+      if (update.characterIds?.length) await loadPlayers()
       if (update.characterIds?.length && !state.busy && saveStatus.value === 'idle') {
         await refreshFromServer(() => !state.busy && saveStatus.value === 'idle')
       }
