@@ -1,49 +1,69 @@
-import { nextTick } from 'vue'
+import { effectScope, nextTick, ref } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { sessionSettingsKey, useSessionSettings } from './useSessionSettings'
+import { useSessionSettings } from './useSessionSettings'
+import * as api from '@/shared/api/sessionsApi'
 
-afterEach(() => vi.unstubAllGlobals())
+afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals() })
 
-describe('session settings', () => {
-  it('restores and saves browser-local preferences per session', async () => {
-    const values = new Map([[sessionSettingsKey('abc'), JSON.stringify({ hideCanvasLegend: true })]])
-    const storage = {
-      getItem: vi.fn(key => values.get(key) ?? null),
-      setItem: vi.fn((key, value) => values.set(key, value)),
-    }
-    vi.stubGlobal('localStorage', storage)
-
-    const { settings, update } = useSessionSettings({ sessionUuid: 'abc' })
-    expect(settings).toMatchObject({ autoRollNpcHp: false })
-    expect(settings).not.toHaveProperty('hideCanvasLegend')
-    update('autoRollNpcHp', true)
-    await nextTick()
-
-    expect(JSON.parse(values.get(sessionSettingsKey('abc')))).toEqual({
-      autoRollNpcHp: true,
-    })
-  })
-})
-
-it('saves shared permissions on the server, refreshes from live snapshots and keeps failures unchanged', async () => {
-  const { ref, effectScope } = await import('vue')
-  const api = await import('@/shared/api/sessionsApi')
-  const save = vi.spyOn(api, 'updateSessionSetting').mockResolvedValue(undefined)
-  const session = ref({ settings: { playersSeeClass: true, playersSeeRace: true, playersSeeHp: false, playersOpenSheets: true } })
+function setup() {
+  const session = ref({ settings: {
+    players: { seeClass: true, seeRace: true, seeHp: false, openSheets: true },
+    combat: { autoRollNpcHp: false },
+  } })
   const scope = effectScope()
   const state = scope.run(() => useSessionSettings({ sessionUuid: 'shared', session }))
-  expect(state.settings.playersSeeHp).toBe(false)
-  await state.update('playersSeeHp', true)
-  expect(save).toHaveBeenCalledWith('shared', 'playersSeeHp', true)
-  expect(state.settings.playersSeeHp).toBe(true)
-  expect(session.value.settings.playersSeeRace).toBe(true)
-  save.mockRejectedValueOnce(new Error('offline'))
-  await state.update('playersSeeClass', false)
-  expect(state.settings.playersSeeClass).toBe(true)
-  expect(state.error.value).toContain('Не удалось сохранить')
-  session.value = { settings: { ...session.value.settings, playersOpenSheets: false } }
-  await nextTick()
-  expect(state.settings.playersOpenSheets).toBe(false)
-  scope.stop()
-  save.mockRestore()
+  return { session, scope, state }
+}
+
+describe('session settings', () => {
+  it('saves combat settings through the API without reading or writing browser storage', async () => {
+    const storage = { getItem: vi.fn(() => '{"autoRollNpcHp":true}'), setItem: vi.fn() }
+    vi.stubGlobal('localStorage', storage)
+    const save = vi.spyOn(api, 'updateSessionSetting').mockResolvedValue(undefined)
+    const { session, scope, state } = setup()
+    expect(state.settings.combat.autoRollNpcHp).toBe(false)
+    await state.update('combat.autoRollNpcHp', true)
+    expect(save).toHaveBeenCalledWith('shared', 'combat.autoRollNpcHp', true)
+    expect(session.value.settings.combat.autoRollNpcHp).toBe(true)
+    expect(session.value.settings.players.seeRace).toBe(true)
+    expect(storage.getItem).not.toHaveBeenCalled()
+    expect(storage.setItem).not.toHaveBeenCalled()
+    scope.stop()
+  })
+
+  it('preserves values after failed saves and applies live snapshots from another browser', async () => {
+    const save = vi.spyOn(api, 'updateSessionSetting').mockResolvedValue(undefined)
+    const { session, scope, state } = setup()
+    await state.update('players.seeHp', true)
+    expect(state.settings.players.seeHp).toBe(true)
+    save.mockRejectedValueOnce(new Error('offline'))
+    await state.update('players.seeClass', false)
+    expect(state.settings.players.seeClass).toBe(true)
+    expect(state.error.value).toContain('Не удалось сохранить')
+    session.value = { settings: { players: { ...session.value.settings.players, openSheets: false }, combat: { autoRollNpcHp: true } } }
+    await nextTick()
+    expect(state.settings.players.openSheets).toBe(false)
+    expect(state.settings.combat.autoRollNpcHp).toBe(true)
+    scope.stop()
+  })
+
+  it('serializes saves and merges a successful change with the latest live values', async () => {
+    let finish
+    const save = vi.spyOn(api, 'updateSessionSetting').mockImplementation(() => new Promise(resolve => { finish = resolve }))
+    const { session, scope, state } = setup()
+    const pending = state.update('combat.autoRollNpcHp', true)
+    expect(state.saving.value).toBe(true)
+    await state.update('players.seeHp', true)
+    expect(save).toHaveBeenCalledTimes(1)
+    session.value.settings = { ...session.value.settings, players: { ...session.value.settings.players, seeRace: false } }
+    await nextTick()
+    finish()
+    await pending
+    expect(state.saving.value).toBe(false)
+    expect(session.value.settings.players.seeRace).toBe(false)
+    expect(session.value.settings.combat.autoRollNpcHp).toBe(true)
+    await state.update('ownerUserId', true)
+    expect(save).toHaveBeenCalledTimes(1)
+    scope.stop()
+  })
 })

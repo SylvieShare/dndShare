@@ -27,7 +27,7 @@ Shortcuts are cleared when the account changes.
 
 The DM can open every participant’s character sheet even when `publicVisible`
 is disabled. This applies while the character belongs to a non-deleted session
-owned by that DM. Other players need both the session’s `playersOpenSheets` permission and a public link to open someone else’s sheet from the roster. This controls session navigation; it does not revoke an independently shared public URL.
+owned by that DM. Other players need both the session’s `players.openSheets` permission and a public link to open someone else’s sheet from the roster. This controls session navigation; it does not revoke an independently shared public URL.
 
 Opening a session as a participant renders a separate player composition instead
 of the DM canvas and tool rails. The page places the campaign context first, then
@@ -57,16 +57,16 @@ an invitation code inline. On narrow screens the cards stack vertically.
 
 ## Настройки видимости игроков
 
-Мастер открывает отдельную вкладку «Настройки». Четыре переключателя сохраняются
-на сервере в `session.settings` и синхронизируются через SSE `session`:
+Мастер открывает отдельную вкладку «Настройки». Настройки сохраняются
+на сервере в единой колонке `session.settings` (`jsonb`) с разделами `players` и `combat` и синхронизируются через SSE `session`:
 
-- `playersSeeClass` — класс других игроков (по умолчанию включён).
-- `playersSeeRace` — раса других игроков (по умолчанию включена).
-- `playersSeeHp` — текущие, максимальные и временные HP других игроков (по умолчанию выключены).
-- `playersOpenSheets` — кнопки и пункты меню для перехода на чужие публичные листы (по умолчанию включены).
+- `players.seeClass` — класс других игроков (по умолчанию включён).
+- `players.seeRace` — раса других игроков (по умолчанию включена).
+- `players.seeHp` — текущие, максимальные и временные HP других игроков (по умолчанию выключены).
+- `players.openSheets` — кнопки и пункты меню для перехода на чужие публичные листы (по умолчанию включены).
 
 `PATCH /api/sessions/{uuid}/settings` принимает `{key, value}` и доступен только
-владельцу сессии. Изменение одного флага не перезаписывает остальные.
+владельцу сессии. Изменение одного флага использует `jsonb_set` по разрешённому пути и не перезаписывает остальные разделы, включая будущие поля.
 `GET /api/sessions/{uuid}` возвращает `canOpenSheet` для каждого участника и
 ограниченный `data.values` для других игроков: имя, аватар и разрешённые поля.
 Ссылки классов/рас содержат только имена; HP не включают описания бонусов.
@@ -77,8 +77,10 @@ an invitation code inline. On narrow screens the cards stack vertically.
 В поповере «Другие игроки» на листе те же данные и пункт «Открыть лист» следуют
 серверному разрешению; чат и игры остаются доступны независимо от этого флага.
 
-В этой же вкладке — браузерная настройка автоматического броска HP существ и
-повтор обучения. Настройки видимости не меняют оформление анонимной трансляции:
+В этой же вкладке — `combat.autoRollNpcHp`, автоматический бросок HP существ
+(по умолчанию выключен), и повтор обучения. Все пять параметров общие для сессии;
+`localStorage` не используется. Содержимое вкладки центрируется в общей области
+`SessionTabWorkspace`, максимальная ширина — 760px. Настройки видимости не меняют оформление анонимной трансляции:
 у экрана показа свои параметры.
 
 ## Participant display
@@ -924,11 +926,11 @@ left.
 `EncounterTab`, so selection and initiative always address the same encounter
 record.
 
-The DM-only session settings button in the command bar stores browser-local
-preferences under the session UUID. When automatic handbook HP rolling is on,
-adding a bestiary creature rolls its `hp_formula` separately for every created
-copy and stores the result as an encounter override. When it is off, the
-handbook average remains the starting maximum and current HP.
+The DM-only Settings tab persists participant visibility and automatic NPC HP
+rolling in the session's structured `settings` JSONB. `combat.autoRollNpcHp`
+controls independent HP rolls when adding handbook creatures and synchronizes
+across browsers through the session live stream. It starts disabled; no browser
+preference is used.
 
 Each NPC also receives the nearest free Latin marker from `A` through `Z`.
 The marker sits immediately to the left of the NPC name above the HP bar and is

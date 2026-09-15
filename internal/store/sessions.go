@@ -69,7 +69,7 @@ const sessionSelect = `
 	SELECT s.id, s.uuid::text, s.owner_user_id, s.name, s.description, s.system_id,
 	       src.name AS source_name, s.display_code, s.invite_code, s.current_chapter_id,
 	       s.created_at, s.changed_at, s.status,
- s.players_see_class, s.players_see_race, s.players_see_hp, s.players_open_sheets
+ s.settings
 	FROM dndshare."session" s
 	LEFT JOIN dndshare."source" src ON src.id = s.system_id`
 
@@ -77,7 +77,7 @@ func scanGameSession(row pgx.Row) (GameSession, error) {
 	var g GameSession
 	err := row.Scan(&g.ID, &g.UUID, &g.OwnerUserID, &g.Name, &g.Description, &g.SystemID,
 		&g.SystemName, &g.DisplayCode, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt, &g.Status,
-		&g.Settings.PlayersSeeClass, &g.Settings.PlayersSeeRace, &g.Settings.PlayersSeeHP, &g.Settings.PlayersOpenSheets)
+		&g.Settings)
 	return g, err
 }
 

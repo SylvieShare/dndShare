@@ -710,9 +710,10 @@ revision, status }`; сброс одного результата: `POST /api/ac
 ### Настройки видимости в сессии
 
 `PATCH /api/sessions/{uuid}/settings` (только мастер) принимает `{key, value}`.
-Ключи: `playersSeeClass`, `playersSeeRace`, `playersSeeHp`, `playersOpenSheets`;
+Ключи: `players.seeClass`, `players.seeRace`, `players.seeHp`, `players.openSheets`, `combat.autoRollNpcHp`;
 `value` — обязательный boolean. Успех — 204 и SSE `session`. Значения возвращаются
-в `session.settings`. Ответ сессии содержит `participants[].canOpenSheet`; чужие
+в структурированном `session.settings`: разделы `players` и `combat`.
+Обновляется только выбранный путь JSON; остальные поля сохраняются. Ответ сессии содержит `participants[].canOpenSheet`; чужие
 данные игроков ограничены разрешёнными полями состава группы. `/chars/poll`
 не предоставляет доступ к приватному листу на основании участия в одной группе.
 Подробнее: [настройки сессии](features/sessions.md#настройки-видимости-игроков).

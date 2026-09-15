@@ -156,7 +156,7 @@ export function useSessionPage() {
     sessionUuid,
     participants,
     canEditPlayers: isDm,
-    autoRollNpcHp: computed(() => sessionSettings.autoRollNpcHp),
+    autoRollNpcHp: computed(() => sessionSettings.combat.autoRollNpcHp),
   }))
   watch(() => encounter.encounter.active, (active, previous) => {
     if (previous !== undefined && active !== previous && isDm.value) window.setTimeout(() => presentation.load(), 750)

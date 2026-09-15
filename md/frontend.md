@@ -634,7 +634,7 @@ DOM update и прервать переход по timeout. Все служеб�
 
 ## CSS
 
-`features/master-tools` содержит генератор сокровищ для правой панели сессии. Отдельная страница инструментов, ночлег и странствие удалены. Чистая генерация находится в `lib`, состояние — в `useTreasureGenerator`, форма — в `components`. `SessionToolsRail` сохраняется на всех вкладках; `SessionTreasureControl` держит состояние вне поповера и модальный просмотр предмета. Настройки сессии — отдельная вкладка на общих `BaseTile`, `FormField` и `ToggleSwitch`. Запуск и копирование используют публичный `share-ui/ActionButton` (0.19.0). Контракт — [инструменты мастера](features/master-tools.md).
+`features/master-tools` содержит генератор сокровищ для правой панели сессии. Отдельная страница инструментов, ночлег и странствие удалены. Чистая генерация находится в `lib`, состояние — в `useTreasureGenerator`, форма — в `components`. `SessionToolsRail` сохраняется на всех вкладках; `SessionTreasureControl` держит состояние вне поповера и модальный просмотр предмета. Настройки сессии — отдельная вкладка на общих `BaseTile`, `FormField` и `ToggleSwitch`, центрированная внутри `SessionTabWorkspace` с максимальной шириной 760px. `useSessionSettings` читает разделы `players` и `combat` из сессии и сохраняет отдельные пути через API; браузерного хранения настроек нет. Запуск и копирование используют публичный `share-ui/ActionButton` (0.19.0). Контракт — [инструменты мастера](features/master-tools.md).
 
 Общая палитра и canvas приходят из `@sylvieshare/share-ui/styles.css`, который
 импортируется один раз в `main.js`. `src/app/theme.css` задаёт DnD-акцент,

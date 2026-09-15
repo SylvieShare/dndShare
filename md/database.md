@@ -1021,9 +1021,20 @@ published through MCP; chosen references remain in `values.abilities_class`.
 
 Миграция 121 (`application_targets`): у `item_transfer` nullable `recipient_char_id` означает адресацию мастеру только для применения; источник `spells` разрешён для эффектов заклинаний. `resolved_target` хранит выбранного игрока или NPC. Новые поля схемы эффектов описывают урон по ходам, цель-оружие, связанный урон и завершение. В JSON боя `effectInstances` содержат экземпляры NPC, `applicationRevision` защищает серверное применение от устаревшего сохранения.
 
-## Видимость игроков сессии
+## Настройки сессии
 
-Миграция `123_session_player_visibility.sql` добавляет в `dndshare.session`
-четыре `NOT NULL boolean`: `players_see_class` (true), `players_see_race` (true),
-`players_see_hp` (false), `players_open_sheets` (true). Изменение флага обновляет
-`changed_at`; локальный автоматический бросок HP существ в БД не хранится.
+`dndshare.session.settings` — `NOT NULL jsonb`, объект с доменными разделами:
+
+```json
+{
+  "players": {"seeClass": true, "seeRace": true, "seeHp": false, "openSheets": true},
+  "combat": {"autoRollNpcHp": false}
+}
+```
+
+Миграция `124_session_settings_json.sql` переносит сохранённые настройки
+видимости в JSON и удаляет четыре прежние boolean-колонки. Браузерный автобросок
+HP не переносится: единое серверное значение изначально false. Обновление
+разрешённого поля выполняется через `jsonb_set` и меняет `changed_at`, не затирая
+другие поля при параллельных запросах. Новые настройки добавляются в нужный раздел;
+типизированный API и список разрешённых путей задают доступные параметры.

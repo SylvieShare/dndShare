@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"sync"
 	"testing"
 )
 
@@ -13,18 +14,43 @@ func testSessionSettingsPostgres(t *testing.T, s *Store, sessionID int64) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if session.Settings != (SessionSettings{PlayersSeeClass: true, PlayersSeeRace: true, PlayersOpenSheets: true}) {
+	if session.Settings != (SessionSettings{Players: SessionPlayerSettings{SeeClass: true, SeeRace: true, OpenSheets: true}}) {
 		t.Fatalf("defaults: %+v", session.Settings)
 	}
-	if err := s.UpdateSessionSetting(ctx, sessionID, "playersSeeHp", true); err != nil {
+	if err := s.UpdateSessionSetting(ctx, sessionID, "players.seeHp", true); err != nil {
 		t.Fatal(err)
 	}
-	if err := s.UpdateSessionSetting(ctx, sessionID, "playersSeeClass", false); err != nil {
+	if err := s.UpdateSessionSetting(ctx, sessionID, "players.seeClass", false); err != nil {
 		t.Fatal(err)
 	}
 	session, err = s.GetGameSession(ctx, sessionID)
-	if err != nil || session.Settings != (SessionSettings{PlayersSeeRace: true, PlayersSeeHP: true, PlayersOpenSheets: true}) {
+	if err != nil || session.Settings != (SessionSettings{Players: SessionPlayerSettings{SeeRace: true, SeeHP: true, OpenSheets: true}}) {
 		t.Fatalf("persisted flags: %+v %v", session.Settings, err)
+	}
+	// Independent concurrent updates must preserve each other and unknown sections.
+	if _, err := s.pool.Exec(ctx, `UPDATE dndshare.session SET settings = settings || '{"future":{"mode":"test"}}'::jsonb WHERE id = $1`, sessionID); err != nil {
+		t.Fatal(err)
+	}
+	var wg sync.WaitGroup
+	failures := make(chan error, 2)
+	for _, key := range []string{"combat.autoRollNpcHp", "players.seeClass"} {
+		wg.Add(1)
+		go func(key string) { defer wg.Done(); failures <- s.UpdateSessionSetting(ctx, sessionID, key, true) }(key)
+	}
+	wg.Wait()
+	close(failures)
+	for err := range failures {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	session, err = s.GetGameSession(ctx, sessionID)
+	if err != nil || !session.Settings.Combat.AutoRollNpcHP || !session.Settings.Players.SeeClass || !session.Settings.Players.SeeHP {
+		t.Fatalf("parallel updates: %+v %v", session.Settings, err)
+	}
+	var future string
+	if err := s.pool.QueryRow(ctx, `SELECT settings #>> '{future,mode}' FROM dndshare.session WHERE id = $1`, sessionID).Scan(&future); err != nil || future != "test" {
+		t.Fatalf("unknown section lost: %q %v", future, err)
 	}
 	if err := s.UpdateSessionSetting(ctx, sessionID, "owner_user_id", true); err == nil {
 		t.Fatal("invalid key accepted")

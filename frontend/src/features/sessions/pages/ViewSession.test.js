@@ -143,10 +143,10 @@ describe('ViewSession participant rail', () => {
     expect(musicWorkspaceSource).toContain('musicStore.ensureLibrary()')
   })
 
-  it('moves hotkey help out of settings and keeps handbook HP rolling as the local preference', () => {
+  it('moves hotkey help out of settings and keeps handbook HP rolling as a shared session preference', () => {
     expect(source).toContain('useSessionSettings({ sessionUuid, session })')
-    expect(source).toContain('autoRollNpcHp: computed(() => sessionSettings.autoRollNpcHp)')
-    expect(sessionSettingsSource).toContain('dnd-share:session-settings:v1:')
+    expect(source).toContain('autoRollNpcHp: computed(() => sessionSettings.combat.autoRollNpcHp)')
+    expect(sessionSettingsSource).not.toContain('localStorage')
     expect(sessionSettingsControlSource).not.toContain('Спрятать легенду на холсте')
     expect(sessionSettingsControlSource).toContain('Автоматически бросать HP существ')
     expect(source).toContain('<SessionShortcutHelp :active="showShortcutHints"')

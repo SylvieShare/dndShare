@@ -434,6 +434,7 @@ var schemaParts = []struct {
 	{"application-targets", schemaApplicationTargetsSQL},
 	{"hidden-items", schemaHiddenItemsSQL},
 	{"session-player-visibility", schemaSessionPlayerVisibilitySQL},
+	{"session-settings-json", schemaSessionSettingsJSONSQL},
 }
 
 const (

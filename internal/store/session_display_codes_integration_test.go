@@ -48,6 +48,15 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	exec(schemaSessionDisplayCodesSQL)
 	exec(schemaSessionLifecycleSQL)
 	exec(schemaSessionPlayerVisibilitySQL)
+	exec(`UPDATE dndshare.session SET players_see_class = false, players_see_hp = true WHERE id = 1`)
+	exec(schemaSessionSettingsJSONSQL)
+	var migrated SessionSettings
+	if err := pool.QueryRow(ctx, `SELECT settings FROM dndshare.session WHERE id = 1`).Scan(&migrated); err != nil {
+		t.Fatal(err)
+	}
+	if migrated.Players.SeeClass || !migrated.Players.SeeHP || !migrated.Players.SeeRace || !migrated.Players.OpenSheets {
+		t.Fatalf("migration lost visibility settings: %+v", migrated)
+	}
 	var valid bool
 	err = pool.QueryRow(ctx, `SELECT count(*) = count(DISTINCT display_code)
 	  AND bool_and(display_code ~ '^[A-Z0-9]{3}-[A-Z0-9]{3}$') FROM dndshare.session`).Scan(&valid)
