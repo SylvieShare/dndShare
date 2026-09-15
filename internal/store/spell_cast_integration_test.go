@@ -116,7 +116,7 @@ func testSpellCast(t *testing.T, s *Store, pool *pgxpool.Pool, npc ApplicationTa
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.Self.Healing == nil || len(result.Self.Healing.Dice) != 3 {
+	if result.Self.Healing == nil || len(result.Self.Healing.Dice) != 3 || result.Self.Note != "" {
 		t.Fatalf("upcast: %+v", result.Self)
 	}
 	accepted, err := s.ResolveItemTransfer(ctx, 2, 11, result.Transfers[0].ID, true)

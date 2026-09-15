@@ -221,7 +221,7 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 		}
 		p.Effects = append(p.Effects, ApplicationEffect{ID: id, Name: name, Key: textValue(link["key"]), Data: effect, Duration: duration, Concentration: concentration, Params: params})
 	}
-	if p.Healing == "" && p.TemporaryHP == "" && len(p.Effects) == 0 && p.Note == "" {
+	if expectedType != 5 && p.Healing == "" && p.TemporaryHP == "" && len(p.Effects) == 0 && p.Note == "" {
 		p.Note = "Действие этого зелья отмечается вручную."
 	}
 	return p, nil
