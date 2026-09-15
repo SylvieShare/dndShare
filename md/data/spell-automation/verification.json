@@ -1,0 +1,13 @@
+{
+  "spellsVerified": 961,
+  "statuses": {
+    "none": 384,
+    "partial": 558,
+    "full": 19
+  },
+  "effectsVerified": 124,
+  "sameIconIds": 124,
+  "effectSources": 124,
+  "changedSpellData": 287,
+  "unreviewed": 0
+}

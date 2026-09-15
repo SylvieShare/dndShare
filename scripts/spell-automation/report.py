@@ -16,12 +16,12 @@ effects = json.loads((root / 'effects.json').read_text())
 output = Path(args.output)
 output.mkdir(parents=True, exist_ok=True)
 with (output / 'spells.csv').open('w', newline='') as stream:
-    writer = csv.writer(stream)
+    writer = csv.writer(stream, lineterminator="\n")
     writer.writerow(['id', 'name', 'automation_status', 'requires_player_interaction', 'note'])
     for item in plan:
         writer.writerow([item['id'], item['name'], item['automationStatus'], item['requiresPlayerInteraction'], item['automationNote']])
 with (output / 'effects.csv').open('w', newline='') as stream:
-    writer = csv.writer(stream)
+    writer = csv.writer(stream, lineterminator="\n")
     writer.writerow(['spell_id', 'key', 'name', 'effect_id'])
     applied = json.loads((root / 'applied.json').read_text()) if (root / 'applied.json').exists() else {}
     links = {link['key']: link['effect']['id'] for rows in applied.get('effectLinks', {}).values() for link in rows}
