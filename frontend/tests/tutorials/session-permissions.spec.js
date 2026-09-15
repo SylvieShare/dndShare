@@ -1,0 +1,26 @@
+import { test, expect } from '@playwright/test'
+for (const mobile of [false, true]) test(`session permissions reveal separate automatic acceptance on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+  page.on('pageerror', error => { throw error })
+  await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
+  await page.goto('/tests/tutorials/fixtures/session-permissions.html')
+  for (const label of ['Передача предметов', 'Применение зелий', 'Эффекты заклинаний']) {
+    const permission = page.getByRole('switch', { name: label, exact: true })
+    const automatic = page.getByRole('switch', { name: `Автоподтверждение: ${label}`, exact: true })
+    await expect(permission).toBeChecked()
+    await expect(automatic).not.toBeChecked()
+    await permission.click()
+    await expect(automatic).toHaveCount(0)
+    await permission.click()
+    await expect(automatic).not.toBeChecked()
+  }
+  await page.getByRole('switch', { name: 'Передача предметов', exact: true }).click()
+  await page.getByRole('switch', { name: 'Применение зелий', exact: true }).click()
+  const trigger = page.getByRole('button', { name: 'Зелье', exact: true })
+  await trigger.scrollIntoViewIfNeeded()
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+  const bounds = await trigger.boundingBox()
+  await page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2)
+  await expect(page.getByRole('menuitem', { name: 'Передать', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
+})

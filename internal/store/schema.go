@@ -16,15 +16,6 @@ import (
 // The explicit order is part of the database contract: later sections may
 // reference objects and seed data created by earlier ones.
 
-//go:embed schema/92_weapon_instances.sql
-var schemaWeaponInstancesSQL string
-
-//go:embed schema/91_throw_label.sql
-var schemaThrowLabelSQL string
-
-//go:embed schema/90_conditional_weapon_damage.sql
-var schemaConditionalWeaponDamageSQL string
-
 //go:embed schema/89_explicit_inventory_weapons.sql
 var schemaExplicitInventoryWeaponsSQL string
 
@@ -436,6 +427,8 @@ var schemaParts = []struct {
 	{"session-player-visibility", schemaSessionPlayerVisibilitySQL},
 	{"session-settings-json", schemaSessionSettingsJSONSQL},
 	{"session-inventory", schemaSessionInventorySQL},
+	{"spell-concentration", schemaSpellConcentrationSQL},
+	{"session-auto-accept", schemaSessionAutoAcceptSQL},
 }
 
 const (

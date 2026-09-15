@@ -1,5 +1,6 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
+    <SpellConcentrationBlock />
 
     <div v-if="spellcastingBlocked" class="sp-casting-warning" role="status">
       <strong>Сотворение заклинаний недоступно</strong>
@@ -191,6 +192,7 @@
 </template>
 
 <script setup>
+import SpellConcentrationBlock from './components/SpellConcentrationBlock.vue'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 
 import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
@@ -269,7 +271,7 @@ const statLabel    = computed(() =>
 const canInteract  = computed(() => charCtx.ownerMode)
 const canAddItems  = computed(() => !!charCtx.ownerMode)
 const blockHidden  = computed(() =>
-  props.block.hide_on_empty && !charCtx.ownerMode && !canAddItems.value && tabs.value.length === 0 && grants.value.length === 0
+  props.block.hide_on_empty && !charCtx.itemTransfers?.concentration?.state.current && !charCtx.ownerMode && !canAddItems.value && tabs.value.length === 0 && grants.value.length === 0
 )
 const armorState = computed(() => charCtx.characterArmor?.state || {})
 const spellcastingRestrictions = computed(() => {
@@ -460,34 +462,12 @@ function openSpell(entry) {
 }
 
 function spellStatusSource(entry) {
-  return {
-    kind: 'spell',
-    item_id: entry?.item?.id ?? entry?.ref?.id ?? null,
-    value_id: props.block.id,
-    entry_key: String(entry?.ref?.key || ''),
-    label: entry?.item?.name || 'Заклинание',
-  }
+  return { kind: 'spell', item_id: entry?.item?.id ?? entry?.ref?.id ?? null,
+    value_id: props.block.id, entry_key: String(entry?.ref?.key || ''), label: entry?.item?.name || 'Заклинание' }
 }
 
 function statusEffectLinks(entry) {
   return charCtx.characterStatuses?.links?.(entry?.item) || []
-}
-
-function statusEffectActive(entry, link) {
-  return !!charCtx.characterStatuses?.linkedActive?.(entry?.item, link, spellStatusSource(entry))
-}
-
-function toggleSpellStatus(entry, link) {
-  if (!charCtx.ownerMode || !link?.effect || typeof charCtx.updateValues !== 'function') return
-  const active = statusEffectActive(entry, link)
-  if (spellcastingBlocked.value && !active) return
-  const states = charCtx.characterStatuses.toggleLinked(link.effect, entry.item, link, spellStatusSource(entry))
-  charCtx.updateValues({ states })
-  charCtx.logSessionEvent?.({
-    type: 'status_effect',
-    action: `${active ? 'Снят' : 'Добавлен'} эффект «${link.effect.name || entry.item.name}»`,
-    data: { source: { itemId: entry.item.id, name: entry.item.name } },
-  })
 }
 
 const { availableSpellSlotOptions, useSpell, spellRollLevel, rememberSpellRollLevel } = useSpellCasting({
@@ -528,8 +508,6 @@ provide('spellsBlockCtx', reactive({
   setSpellcastingSource,
   spellcastingBlocked,
   statusEffectLinks,
-  statusEffectActive,
-  toggleSpellStatus,
 }))
 
 // Rest and remote sheet updates replace persisted pools without remounting this block.

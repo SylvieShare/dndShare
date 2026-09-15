@@ -90,6 +90,7 @@ func (s *Server) handleCreateItemTransfer(w http.ResponseWriter, r *http.Request
 			return
 		}
 	}
+	notifyConcentration := s.concentrationNotifier(r.Context(), c.ID)
 	var transfer store.ItemTransfer
 	if req.Source == "spells" {
 		transfer, err = s.store.CreateSpellApplication(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.EntryUID, req.ClientActionID, req.OptionKey)
@@ -102,6 +103,7 @@ func (s *Server) handleCreateItemTransfer(w http.ResponseWriter, r *http.Request
 		itemTransferError(w, err)
 		return
 	}
+	notifyConcentration()
 	s.publishTransferChange(transfer)
 	writeJSON(w, http.StatusOK, map[string]any{"transfer": transfer})
 }
@@ -143,7 +145,7 @@ func itemTransferError(w http.ResponseWriter, err error) {
 		badRequest(w, err.Error())
 	case errors.Is(err, store.ErrNotFound):
 		notFound(w, "Передача или участник сессии не найдены")
-	case errors.Is(err, store.ErrItemTransferConflict), errors.Is(err, store.ErrCharacterVersion):
+	case errors.Is(err, store.ErrItemTransferConflict), errors.Is(err, store.ErrCharacterVersion), errors.Is(err, store.ErrConcentrationExpired):
 		conflict(w, err.Error())
 	default:
 		serverError(w, err)

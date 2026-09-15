@@ -14,7 +14,7 @@ func testSessionSettingsPostgres(t *testing.T, s *Store, sessionID int64) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if session.Settings != (SessionSettings{Players: SessionPlayerSettings{SeeClass: true, SeeRace: true, OpenSheets: true}}) {
+	if session.Settings != (SessionSettings{Interactions: SessionInteractionSettings{Items: true, Potions: true, Spells: true}, Players: SessionPlayerSettings{SeeClass: true, SeeRace: true, OpenSheets: true}}) {
 		t.Fatalf("defaults: %+v", session.Settings)
 	}
 	if err := s.UpdateSessionSetting(ctx, sessionID, "players.seeHp", true); err != nil {
@@ -24,7 +24,7 @@ func testSessionSettingsPostgres(t *testing.T, s *Store, sessionID int64) {
 		t.Fatal(err)
 	}
 	session, err = s.GetGameSession(ctx, sessionID)
-	if err != nil || session.Settings != (SessionSettings{Players: SessionPlayerSettings{SeeRace: true, SeeHP: true, OpenSheets: true}}) {
+	if err != nil || session.Settings != (SessionSettings{Interactions: SessionInteractionSettings{Items: true, Potions: true, Spells: true}, Players: SessionPlayerSettings{SeeRace: true, SeeHP: true, OpenSheets: true}}) {
 		t.Fatalf("persisted flags: %+v %v", session.Settings, err)
 	}
 	// Independent concurrent updates must preserve each other and unknown sections.
@@ -79,4 +79,19 @@ func testSessionSettingsPostgres(t *testing.T, s *Store, sessionID int64) {
 			t.Fatalf("poll reader %d: %+v %v", reader.id, rows, err)
 		}
 	}
+	for _, key := range []string{"autoAccept.items", "autoAccept.potions", "autoAccept.spells"} {
+		if err = s.UpdateSessionSetting(ctx, sessionID, key, true); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, key := range []string{"interactions.items", "interactions.potions", "interactions.spells"} {
+		if err = s.UpdateSessionSetting(ctx, sessionID, key, false); err != nil {
+			t.Fatal(err)
+		}
+	}
+	session, err = s.GetGameSession(ctx, sessionID)
+	if err != nil || session.Settings.Interactions != (SessionInteractionSettings{}) || session.Settings.AutoAccept != (SessionAutoAcceptSettings{Items: true, Potions: true, Spells: true}) {
+		t.Fatalf("independent permissions and acceptance: %+v %v", session.Settings, err)
+	}
+
 }

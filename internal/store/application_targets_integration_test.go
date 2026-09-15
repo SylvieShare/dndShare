@@ -108,4 +108,6 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if _, err = s.CreateSpellApplication(ctx, 1, 1, 10, 11, version(), "803", "10000000-0000-4000-8000-000000000004", "test"); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("unowned spell: %v", err)
 	}
+	t.Run("concentration across targets", func(t *testing.T) { testConcentration(t, s, pool, npc) })
+	t.Run("automatic acceptance", func(t *testing.T) { testAutoAccept(t, s, pool) })
 }

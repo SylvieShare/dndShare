@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -22,6 +23,7 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	if !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") || cfg.ConnConfig.Host != "127.0.0.1" {
 		t.Fatal("requires a disposable local test database")
 	}
+	cfg.ConnConfig.DefaultQueryExecMode = pgx.QueryExecModeSimpleProtocol
 	ctx := context.Background()
 	pool, err := pgxpool.NewWithConfig(ctx, cfg)
 	if err != nil {
@@ -50,6 +52,7 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	exec(schemaSessionPlayerVisibilitySQL)
 	exec(`UPDATE dndshare.session SET players_see_class = false, players_see_hp = true WHERE id = 1`)
 	exec(schemaSessionSettingsJSONSQL)
+	exec(schemaSessionAutoAcceptSQL)
 	var migrated SessionSettings
 	if err := pool.QueryRow(ctx, `SELECT settings FROM dndshare.session WHERE id = 1`).Scan(&migrated); err != nil {
 		t.Fatal(err)

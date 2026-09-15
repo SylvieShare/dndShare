@@ -1,3 +1,4 @@
+import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { defineStore } from 'pinia'
 import { onScopeDispose, ref, toRaw } from 'vue'
 import * as sessionEventsApi from '@/shared/api/sessionEventsApi'
@@ -55,6 +56,10 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     const userId = Number(account.user?.id)
     const actingUserId = event.type === 'rps_challenge' && event.data?.resolvedByUserId ? event.data.resolvedByUserId : event.authorUserId
     if (!userId || Number(actingUserId) === userId) return
+    if (event.type === 'item_transfer' && event.data?.autoAccepted && event.data.status === 'accepted' && Number(event.recipientUserId) === userId && event.data.purpose === 'use') {
+      notifyApplication(event.data.source?.name, event.data.applicationResult)
+      return
+    }
     const isOwner = Number(event.sessionOwnerUserId) === userId
     const directedInteraction = isInteraction(event) && [Number(event.recipientUserId), Number(event.authorUserId)].includes(userId)
     if (!isOwner && !directedInteraction && !(event.type === 'item_transfer' && Number(event.recipientUserId) === userId && event.data?.status === 'pending')) return

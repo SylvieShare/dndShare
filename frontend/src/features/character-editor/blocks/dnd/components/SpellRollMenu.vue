@@ -56,14 +56,14 @@ const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Брос�
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)
 
-function rollAttack(mode, close, commit) {
-  if (ctx.spellcastingBlocked || !commit()) return
+async function rollAttack(mode, close, commit) {
+  if (ctx.spellcastingBlocked || !await commit()) return
   ctx.rollSpellAttack(props.entry, mode)
   close()
   emit('close')
 }
-function roll(option, close, cast) {
-  if (ctx.spellcastingBlocked || !cast.commit()) return
+async function roll(option, close, cast) {
+  if (ctx.spellcastingBlocked || !await cast.commit()) return
   if (option.kind === 'damage') ctx.rollSpellDamage(option.entry, cast.castLevel, option.rule.range_attack && critical.value)
   else if (option.kind === 'heal') ctx.rollSpellHeal(option.entry, cast.castLevel)
   else ctx.rollSpellEffect(option.entry, cast.castLevel)

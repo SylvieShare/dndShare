@@ -2,6 +2,12 @@ import { reactive, ref, watch } from 'vue'
 import { updateSessionSetting } from '@/shared/api/sessionsApi'
 
 const settingPaths = {
+  'interactions.items': ['interactions', 'items'],
+  'interactions.potions': ['interactions', 'potions'],
+  'interactions.spells': ['interactions', 'spells'],
+  'autoAccept.items': ['autoAccept', 'items'],
+  'autoAccept.potions': ['autoAccept', 'potions'],
+  'autoAccept.spells': ['autoAccept', 'spells'],
   'players.seeClass': ['players', 'seeClass'],
   'players.seeRace': ['players', 'seeRace'],
   'players.seeHp': ['players', 'seeHp'],
@@ -10,13 +16,15 @@ const settingPaths = {
 }
 
 export function useSessionSettings({ sessionUuid, session }) {
-  const settings = reactive({ players: {}, combat: {} })
+  const settings = reactive({ players: {}, combat: {}, autoAccept: {}, interactions: {} })
   const saving = ref(false)
   const error = ref('')
   watch(() => session.value?.settings, value => {
     if (!value) return
     settings.players = { ...value.players }
     settings.combat = { ...value.combat }
+    settings.autoAccept = { ...value.autoAccept }
+    settings.interactions = { ...value.interactions }
   }, { immediate: true })
 
   async function update(key, value) {

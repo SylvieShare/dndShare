@@ -20,16 +20,18 @@ type ApplicationEffect struct {
 	Params        map[string]any `json:"params"`
 }
 type ApplicationPlan struct {
-	maximumHP   *int
-	CasterUUID  string              `json:"casterUuid,omitempty"`
-	SourceKind  string              `json:"sourceKind,omitempty"`
-	Option      string              `json:"option,omitempty"`
-	ItemID      int64               `json:"itemId"`
-	Name        string              `json:"name"`
-	Healing     string              `json:"healing,omitempty"`
-	TemporaryHP string              `json:"temporaryHp,omitempty"`
-	Effects     []ApplicationEffect `json:"effects"`
-	Note        string              `json:"note,omitempty"`
+	ConcentrationID string `json:"concentrationId,omitempty"`
+	Concentration   bool   `json:"concentration,omitempty"`
+	maximumHP       *int
+	CasterUUID      string              `json:"casterUuid,omitempty"`
+	SourceKind      string              `json:"sourceKind,omitempty"`
+	Option          string              `json:"option,omitempty"`
+	ItemID          int64               `json:"itemId"`
+	Name            string              `json:"name"`
+	Healing         string              `json:"healing,omitempty"`
+	TemporaryHP     string              `json:"temporaryHp,omitempty"`
+	Effects         []ApplicationEffect `json:"effects"`
+	Note            string              `json:"note,omitempty"`
 }
 type ApplicationResult struct {
 	Healing     *ApplicationRoll    `json:"healing,omitempty"`
@@ -100,6 +102,7 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 	p.SourceKind = "potion"
 	if expectedType == 5 {
 		p.SourceKind = "spell"
+		p.Concentration = data["concentration"] == true
 	}
 	c := object(data["consumption"])
 	if choices := array(c["choices"]); len(choices) > 0 {

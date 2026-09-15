@@ -44,7 +44,7 @@ func TestItemTransfersPostgres(t *testing.T) {
  CREATE TABLE dndshare.svg_storage(id bigint PRIMARY KEY,data text);
  CREATE TABLE dndshare.item_type(id bigint PRIMARY KEY,fields jsonb DEFAULT '[]');
  CREATE TABLE dndshare.item(id bigint PRIMARY KEY,name text,user_id bigint,type_id bigint,data jsonb DEFAULT '{}',icon_image_id bigint,cover_image_id bigint,icon_svg_id bigint);
- CREATE TABLE dndshare."session"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),owner_user_id bigint,deleted bool DEFAULT false);
+ CREATE TABLE dndshare."session"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),owner_user_id bigint,settings jsonb DEFAULT '{}',deleted bool DEFAULT false);
  CREATE TABLE dndshare."char"(id bigint PRIMARY KEY,uuid uuid DEFAULT gen_random_uuid(),user_id bigint,template_id bigint,icon_image_id bigint,
  data jsonb DEFAULT '{"values":{}}',version bigint DEFAULT 1,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
  CREATE TABLE dndshare.session_encounter(id bigserial PRIMARY KEY,session_id bigint,data jsonb,status text,round int,changed_at timestamptz DEFAULT now(),deleted bool DEFAULT false);
@@ -65,6 +65,8 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(schemaPotionUseRequestsSQL)
 	exec(schemaPotionApplicationsSQL)
 	exec(schemaApplicationTargetsSQL)
+	exec(schemaSpellConcentrationSQL)
+	exec(schemaSessionAutoAcceptSQL)
 	exec(schemaSessionInventorySQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)

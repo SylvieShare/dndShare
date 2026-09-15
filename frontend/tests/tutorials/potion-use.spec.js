@@ -86,8 +86,10 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
   await openSheet('sender')
   for (const decision of ['Отказать', 'Принять']) {
     await openPotionMenu()
-    await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
+    await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toHaveCount(0)
     await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
+    await expect(page.getByRole('menuitem', { name: 'На себя', exact: true })).toBeVisible()
+    await expect(page.getByText(/^На кого использовать:/)).toHaveCount(0)
     const recipient = page.getByRole('menuitem', { name: 'Торин', exact: true })
     await expect(recipient).toBeVisible()
     await expect(page.getByRole('dialog', { name: 'Передать', exact: true })).toHaveCount(0)

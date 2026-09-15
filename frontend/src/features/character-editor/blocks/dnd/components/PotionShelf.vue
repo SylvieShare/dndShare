@@ -23,8 +23,7 @@
 
           <template #default="{ close }">
             <ItemTransferAction source="potions" :disabled="busy.size > 0" :entry="p" :name="p.name" @close="close" />
-            <RowActionItem v-if="canUse" action="use" tone="accent" @click="usePotion(p, close)">Использовать на себя</RowActionItem>
-            <ItemTransferAction v-if="canUse" purpose="use" source="potions" :entry="p" :name="p.name" :disabled="busy.size > 0" @close="close" />
+            <ItemTransferAction v-if="canUse" purpose="use" source="potions" @self="usePotion(p, close)" :entry="p" :name="p.name" :disabled="busy.size > 0" @close="close" />
             <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
             <RowActionItem v-if="canUse" action="delete" tone="danger" @click="removePotion(p, close)">Удалить (−1)</RowActionItem>
             <RowActionItem action="view" tone="info" @click="viewPotion(p, close)">Просмотреть</RowActionItem>

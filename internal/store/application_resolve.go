@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/jackc/pgx/v5"
 )
 
 func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, sessionID int64, accept bool, target ApplicationTarget) (ItemTransfer, error) {
@@ -12,6 +13,18 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 		return ItemTransfer{}, err
 	}
 	defer tx.Rollback(ctx)
+	if err = lockConcentrationGraph(ctx, tx); err != nil {
+		return ItemTransfer{}, err
+	}
+	result, err := s.resolveItemTransferTx(ctx, tx, userID, charID, id, sessionID, accept, target)
+	if err != nil {
+		return result, err
+	}
+	return result, tx.Commit(ctx)
+}
+
+func (s *Store) resolveItemTransferTx(ctx context.Context, tx pgx.Tx, userID, charID, id, sessionID int64, accept bool, target ApplicationTarget) (ItemTransfer, error) {
+	var err error
 	where := ` WHERE t.id=$1`
 	if sessionID != 0 {
 		where = ` WHERE t.event_id=$1`
@@ -63,7 +76,7 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 		destination = destinationID
 	}
 	if t.Status == status {
-		return t, tx.Commit(ctx)
+		return t, nil
 	}
 	if t.Status != "pending" {
 		return t, ErrItemTransferConflict
@@ -95,6 +108,7 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 		return t, err
 	}
 	result := ApplicationResult{}
+	var appliedPlan ApplicationPlan
 	if t.Purpose == "use" {
 		if accept {
 			var plan ApplicationPlan
@@ -108,8 +122,17 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 				}
 			}
 			if t.Source == "spells" {
-				plan.CasterUUID = t.SenderCharUUID
+				if npc != nil || destination != t.SenderCharID {
+					plan.CasterUUID = t.SenderCharUUID
+				}
+				if plan.ConcentrationID != "" {
+					var current string
+					if e := tx.QueryRow(ctx, `SELECT cast_id::text FROM dndshare.character_concentration WHERE char_id=$1`, t.SenderCharID).Scan(&current); e != nil || current != plan.ConcentrationID {
+						return t, ErrConcentrationExpired
+					}
+				}
 			}
+			appliedPlan = plan
 			if npc != nil {
 				result, err = applyApplication(doc, plan, fmt.Sprintf("transfer-%d", t.ID), secureApplicationDie)
 			} else {
@@ -137,6 +160,15 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 	if accept && t.AddressedToDM && t.Purpose == "use" && target.Kind == "character" {
 		resolved.Name = characterName(chars[destination].Data)
 	}
+	if accept && appliedPlan.ConcentrationID != "" {
+		linkedTarget := resolved
+		if linkedTarget.Kind == "" {
+			linkedTarget = ApplicationTarget{Kind: "character", CharID: destination, CharUUID: t.RecipientCharUUID, Name: t.RecipientName}
+		}
+		if err = linkConcentrationEffects(ctx, tx, doc, appliedPlan, linkedTarget); err != nil {
+			return t, err
+		}
+	}
 	rawTarget, _ := json.Marshal(resolved)
 	rawResult, _ := json.Marshal(result)
 	_, err = tx.Exec(ctx, `UPDATE dndshare.item_transfer SET status=$2,resolved_at=now(),application_result=CAST($3 AS jsonb),resolved_target=CAST($4 AS jsonb) WHERE id=$1`, t.ID, status, json.RawMessage(rawResult), json.RawMessage(rawTarget))
@@ -151,5 +183,5 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 	if err != nil {
 		return t, err
 	}
-	return t, tx.Commit(ctx)
+	return t, nil
 }

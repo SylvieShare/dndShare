@@ -7,8 +7,22 @@ import (
 )
 
 type SessionSettings struct {
-	Players SessionPlayerSettings `json:"players"`
-	Combat  SessionCombatSettings `json:"combat"`
+	Interactions SessionInteractionSettings `json:"interactions"`
+	AutoAccept   SessionAutoAcceptSettings  `json:"autoAccept"`
+	Players      SessionPlayerSettings      `json:"players"`
+	Combat       SessionCombatSettings      `json:"combat"`
+}
+
+type SessionInteractionSettings struct {
+	Items   bool `json:"items"`
+	Potions bool `json:"potions"`
+	Spells  bool `json:"spells"`
+}
+
+type SessionAutoAcceptSettings struct {
+	Items   bool `json:"items"`
+	Potions bool `json:"potions"`
+	Spells  bool `json:"spells"`
 }
 
 type SessionPlayerSettings struct {
@@ -23,6 +37,12 @@ type SessionCombatSettings struct {
 }
 
 var sessionSettingPaths = map[string][]string{
+	"interactions.items":   {"interactions", "items"},
+	"interactions.potions": {"interactions", "potions"},
+	"interactions.spells":  {"interactions", "spells"},
+	"autoAccept.items":     {"autoAccept", "items"},
+	"autoAccept.potions":   {"autoAccept", "potions"},
+	"autoAccept.spells":    {"autoAccept", "spells"},
 	"players.seeClass":     {"players", "seeClass"},
 	"players.seeRace":      {"players", "seeRace"},
 	"players.seeHp":        {"players", "seeHp"},

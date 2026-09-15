@@ -14,7 +14,7 @@ export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjus
     return availableSlotOptions(slotPools.value, level)
   }
 
-  function useSpell(entry, slotOption) {
+  async function useSpell(entry, slotOption) {
     if (!charCtx.ownerMode || !entry?.item || spellcastingBlocked.value) return false
     const spellLevel = Number(entry?.item?.data?.lvl) || 0
     const option = typeof slotOption === 'object' && slotOption
@@ -23,8 +23,10 @@ export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjus
     if (spellLevel > 0 && !entry.ref?.slotless) {
       const available = availableSpellSlotOptions(entry)
       if (!available.some((candidate) => candidate.pool === option.pool && candidate.level === option.level)) return false
-      adjustSlotUsed(option.pool, option.level, 1, { log: false })
+
     }
+    if (entry.item.data?.concentration && !await charCtx.itemTransfers?.concentration.start(entry.item)) return false
+    if (spellLevel > 0 && !entry.ref?.slotless) adjustSlotUsed(option.pool, option.level, 1, { log: false })
     charCtx.logSessionEvent?.({
       type: 'spell_used',
       action: `Использовано: ${spellTitle(entry)}`,

@@ -257,7 +257,7 @@ button.rich-node:active { transform: scale(.97); }
 .rich-node--stat svg { flex: none; }
 .rich-node--stat-ac { --rich-stat-color: var(--info); }
 .rich-node--stat-hp { --rich-stat-color: var(--danger); }
-.rich-suggest-popover { display: flex; flex-direction: column; gap: 6px; max-width: 340px; color: var(--text-2); font-size: 12px; }
-.rich-suggest-popover strong { color: var(--text-1); font-size: 13px; }
+.rich-suggest-popover { display: flex; flex-direction: column; gap: 6px; max-width: 380px; color: var(--text-2); font-size: 14px; line-height: 1.55; }
+.rich-suggest-popover strong { color: var(--text-1); font-size: 15px; }
 .rich-suggest-empty { color: var(--text-muted); }
 </style>

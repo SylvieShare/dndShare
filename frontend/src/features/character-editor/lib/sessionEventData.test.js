@@ -22,20 +22,20 @@ describe('chronicle resource events', () => {
     api.toggleSlot('long_rest', 1, 2)
     expect(log).toHaveBeenCalledTimes(3)
   })
-  it('records a paid cast exactly once with its source and slot, and does not charge slotless magic', () => {
+  it('records a paid cast exactly once with its source and slot, and does not charge slotless magic', async () => {
     const log = vi.fn(), ctx = { ownerMode: true, logSessionEvent: log }
     const slots = useSpellSlots({ canInteract: ref(true), emitChange: vi.fn(), logSessionEvent: log })
     slots.loadSlotPools({ slot_pools: { short_rest: [{ level: 3, total: 2, used: 0 }] } })
     const casting = useSpellCasting({ charCtx: ctx, spellcastingBlocked: ref(false), ...slots, spellTitle: entry => entry.item.name })
     const entry = { item: { id: 42, name: 'Огненный шар', data: { lvl: 3 } }, ref: {} }
-    expect(casting.useSpell(entry, { pool: 'short_rest', level: 3 })).toBe(true)
+    expect(await casting.useSpell(entry, { pool: 'short_rest', level: 3 })).toBe(true)
     expect(log).toHaveBeenCalledTimes(1)
     expect(log.mock.calls[0][0].data).toMatchObject({ source: { itemId: 42 }, resourceChanges: [{ delta: -1, level: 3, pool: 'short_rest' }] })
     expect(slots.serializedSlotPools().short_rest[0].used).toBe(1)
     casting.useSpell({ ...entry, ref: { slotless: true } }, { pool: 'slotless', level: 3 })
     expect(log.mock.calls[1][0].data.resourceChanges).toEqual([])
     expect(slots.serializedSlotPools().short_rest[0].used).toBe(1)
-    expect(casting.useSpell(entry, { pool: 'long_rest', level: 9 })).toBe(false)
+    expect(await casting.useSpell(entry, { pool: 'long_rest', level: 9 })).toBe(false)
     expect(log).toHaveBeenCalledTimes(2)
   })
   it('preserves resource color, item source and actual clamped count in both directions', () => {

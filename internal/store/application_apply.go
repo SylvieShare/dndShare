@@ -66,6 +66,9 @@ func applyApplication(doc transferDocument, p ApplicationPlan, uid string, roll 
 	}
 	states := array(values["states"])
 	for index, e := range p.Effects {
+		if p.ConcentrationID != "" {
+			e.Concentration = true
+		}
 		duration := map[string]any{}
 		for k, v := range e.Duration {
 			duration[k] = v
@@ -85,7 +88,7 @@ func applyApplication(doc transferDocument, p ApplicationPlan, uid string, roll 
 		filtered := []any{}
 		for _, raw := range states {
 			s := object(raw)
-			if e.Concentration && p.CasterUUID == "" && s["concentration"] == true {
+			if e.Concentration && p.CasterUUID == "" && s["concentration"] == true && (p.ConcentrationID == "" || textValue(object(s["source"])["concentration_id"]) != p.ConcentrationID) {
 				continue
 			}
 			if e.Data["stacking"] != "multiple" && int64(number(s["effect_id"])) == e.ID {
@@ -97,7 +100,7 @@ func applyApplication(doc transferDocument, p ApplicationPlan, uid string, roll 
 			}
 			filtered = append(filtered, raw)
 		}
-		states = append(filtered, map[string]any{"uid": fmt.Sprintf("application-%s-%d", uid, index), "effect_id": float64(e.ID), "duration": duration, "concentration": e.Concentration && p.CasterUUID == "", "concentration_owner": p.CasterUUID, "requires_concentration": e.Concentration, "params": e.Params, "source": map[string]any{"kind": applicationSourceKind(p), "item_id": float64(p.ItemID), "label": p.Name, "entry_key": uid, "link_key": e.Key}})
+		states = append(filtered, map[string]any{"uid": fmt.Sprintf("application-%s-%d", uid, index), "effect_id": float64(e.ID), "duration": duration, "concentration": e.Concentration && p.CasterUUID == "", "concentration_owner": p.CasterUUID, "requires_concentration": e.Concentration, "params": e.Params, "source": map[string]any{"kind": applicationSourceKind(p), "item_id": float64(p.ItemID), "label": p.Name, "entry_key": uid, "link_key": e.Key, "concentration_id": p.ConcentrationID}})
 		r.Effects = append(r.Effects, e)
 	}
 	if len(p.Effects) > 0 {

@@ -1,3 +1,4 @@
+import { useSpellConcentration } from './useSpellConcentration'
 import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { usePotionApplications } from './usePotionApplications'
 import { computed, onBeforeUnmount, reactive, shallowRef, watch } from 'vue'
@@ -9,7 +10,7 @@ import { useCharacterInteractions } from './useCharacterInteractions'
 import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 
 export function useCharacterTransfers({ uuid, session, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions }) {
-  const state = reactive({ participants: [], playersLoaded: false, transfers: [], view: '', loading: false, busy: false, error: '' })
+  const state = reactive({ participants: [], settings: {}, playersLoaded: false, transfers: [], view: '', loading: false, busy: false, error: '' })
   const anchor = shallowRef(null)
   const anchors = new Map()
   function registerAnchor(view, element) {
@@ -32,6 +33,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
   let refreshPending = false
 
   async function refresh() {
+    await concentration.refresh()
     if (!isOwner.value || !session.value?.uuid) return
     refreshPending = true
     if (refreshing) return refreshing
@@ -59,7 +61,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     try {
       await useTemplateStore().ensure()
       const response = await getSession(id)
-      if (session.value?.uuid === id) { state.participants = response.participants || []; state.playersLoaded = true }
+      if (session.value?.uuid === id) { state.participants = response.participants || []; state.settings = response.session?.settings || {}; state.playersLoaded = true }
     } catch (error) { state.error = error.message || 'Не удалось загрузить игроков' }
     finally { state.loading = false }
   }
@@ -92,6 +94,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
       return false
     } finally { state.busy = false }
   }
+  const concentration = useSpellConcentration({ uuid, version, isOwner, state, mutate })
   const potions = usePotionApplications({ uuid, version, mutate, state, isOwner })
   async function send(source, entry, recipientCharUuid, purpose = 'transfer', selectedOption = '') {
     if (!isOwner.value || state.busy || !session.value || !(recipients.value.some(p => p.charUuid === recipientCharUuid) || recipientCharUuid === 'dm')) return false
@@ -103,7 +106,9 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     const key = `${optionKey}:${purpose}:${session.value.uuid}:${source}:${entry.uid}:${recipientCharUuid}`
     if (pendingSend?.key !== key) pendingSend = { key, clientActionId: crypto.randomUUID() }
     const payload = { optionKey, purpose, source, entryUid: entry.uid, recipientCharUuid, sessionUuid: session.value.uuid, clientActionId: pendingSend.clientActionId }
-    const sent = await mutate(() => api.createItemTransfer(uuid, { ...payload, version: version.value }))
+    let response
+    const sent = await mutate(async () => { response = await api.createItemTransfer(uuid, { ...payload, version: version.value }) })
+    if (sent && response?.transfer?.status === 'accepted' && purpose === 'use') notifyApplication(response.transfer.itemName, response.transfer.applicationResult)
     if (sent) pendingSend = null
     return sent
   }
@@ -133,11 +138,12 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
   watch(() => session.value?.uuid, id => {
     live.stop()
     state.participants = []
+    state.settings = {}
     state.playersLoaded = false
     state.transfers = []
     if (id && isOwner.value) { void refresh(); void loadPlayers(); live.start() }
     else state.view = ''
   }, { immediate: true })
   onBeforeUnmount(live.stop)
-  return reactive({ state, potions, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, resolve, refresh, busy: computed(() => state.busy) })
+  return reactive({ state, potions, concentration, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, resolve, refresh, busy: computed(() => state.busy) })
 }

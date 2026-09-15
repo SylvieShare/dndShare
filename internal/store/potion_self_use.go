@@ -17,6 +17,9 @@ func (s *Store) UsePotionSelf(ctx context.Context, userID, charID, version int64
 		return result, err
 	}
 	defer tx.Rollback(ctx)
+	if err = lockConcentrationGraph(ctx, tx); err != nil {
+		return result, err
+	}
 	var c transferCharacter
 	err = tx.QueryRow(ctx, `SELECT id,user_id,version,data FROM dndshare."char" WHERE id=$1 AND deleted=false FOR UPDATE`, charID).Scan(&c.ID, &c.UserID, &c.Version, &c.Data)
 	if errors.Is(err, pgx.ErrNoRows) || c.UserID != userID {

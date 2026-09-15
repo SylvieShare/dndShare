@@ -38,11 +38,11 @@ const pool = ref('long_rest')
 const levels = computed(() => Array.from({ length: 10 - baseLevel.value }, (_, index) => baseLevel.value + index))
 const pools = computed(() => available.value.filter(option => option.level === level.value))
 const slot = computed(() => pools.value.find(option => option.pool === pool.value) || pools.value[0])
-const disabled = computed(() => ctx.spellcastingBlocked || (spend.value && (!ctx.charCtx.ownerMode || !slot.value)))
+const disabled = computed(() => ctx.charCtx.itemTransfers?.busy || ctx.spellcastingBlocked || (spend.value && (!ctx.charCtx.ownerMode || !slot.value)))
 
-function commit() {
+async function commit() {
   if (disabled.value) return false
-  if (spend.value && ctx.useSpell(props.entry, slot.value) !== true) return false
+  if (spend.value && await ctx.useSpell(props.entry, slot.value) !== true) return false
   ctx.rememberSpellRollLevel(props.entry, level.value)
   return true
 }

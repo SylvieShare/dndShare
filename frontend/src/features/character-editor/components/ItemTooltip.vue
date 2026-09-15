@@ -102,8 +102,8 @@ const displayDesc = computed(() => {
 
 .itt-desc {
   color: var(--text-muted);
-  font-size: 9px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.55;
   margin: 0;
   text-align: left;
 }

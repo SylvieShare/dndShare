@@ -11,13 +11,12 @@ describe('spellcasting restrictions', () => {
     expect(source).toContain('class="sp-casting-warning"')
     expect(source).toContain("activityBlocks?.('spellcasting')")
     expect(source).toContain('v-for="restriction in spellcastingRestrictions"')
-    expect(source).toContain('if (spellcastingBlocked.value && !active) return')
     expect(source).not.toContain('sp-armor-warning')
   })
 
   it('uses a source-neutral disabled action label', () => {
     expect(cardSource).toContain("ctx.spellcastingBlocked ? 'Сотворение недоступно'")
-    expect(cardSource).toContain('ctx.spellcastingBlocked && !ctx.statusEffectActive(entry, link)')
+    expect(cardSource).toContain(':disabled="ctx.spellcastingBlocked"')
     expect(cardSource).not.toContain('Запрещено доспехом')
   })
 })

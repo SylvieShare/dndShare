@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -138,8 +139,11 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 		return ItemTransfer{}, err
 	}
 	defer tx.Rollback(ctx)
-	var session int64
-	err = tx.QueryRow(ctx, `SELECT id FROM dndshare."session" WHERE id=$1 AND deleted=false FOR SHARE`, sessionID).Scan(&session)
+	if err = lockConcentrationGraph(ctx, tx); err != nil {
+		return ItemTransfer{}, err
+	}
+	var settings SessionSettings
+	err = tx.QueryRow(ctx, `SELECT settings FROM dndshare."session" WHERE id=$1 AND deleted=false FOR SHARE`, sessionID).Scan(&settings)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return ItemTransfer{}, ErrNotFound
 	}
@@ -171,6 +175,16 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	if !errors.Is(err, ErrNotFound) {
 		return ItemTransfer{}, err
 	}
+	allowed := settings.Interactions.Items
+	if purpose == "use" {
+		allowed = settings.Interactions.Potions
+		if source == "spells" {
+			allowed = settings.Interactions.Spells
+		}
+	}
+	if !allowed {
+		return ItemTransfer{}, fmt.Errorf("%w: мастер отключил этот вид взаимодействия в сессии", ErrApplication)
+	}
 	if sender.Version != version {
 		return ItemTransfer{}, ErrCharacterVersion
 	}
@@ -200,7 +214,9 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	}
 	var entry map[string]any
 	if source == "spells" {
-		if !ownsApplicationSpell(doc.values()["spells"], number(uid)) {
+		if allowed, err := canUseApplicationSpell(ctx, tx, doc.values(), number(uid)); err != nil {
+			return ItemTransfer{}, err
+		} else if !allowed {
 			return ItemTransfer{}, ErrNotFound
 		}
 		entry = map[string]any{"uid": uid, "item_id": number(uid)}
@@ -219,6 +235,12 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 			expectedType = 5
 		}
 		plan, err = buildCatalogueApplication(ctx, tx, entry, option, userID, expectedType)
+		if err != nil {
+			return ItemTransfer{}, err
+		}
+	}
+	if applicationNeedsConcentration(plan) {
+		plan.ConcentrationID, err = beginConcentrationTx(ctx, tx, senderID, plan.ItemID, plan.Name, actionID, true)
 		if err != nil {
 			return ItemTransfer{}, err
 		}
@@ -267,6 +289,25 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	transfer, err := scanItemTransfer(tx.QueryRow(ctx, itemTransferSelect+` WHERE t.id=$1`, id))
 	if err != nil {
 		return ItemTransfer{}, err
+	}
+	auto := settings.AutoAccept.Items
+	if purpose == "use" {
+		auto = settings.AutoAccept.Potions
+		if source == "spells" {
+			auto = settings.AutoAccept.Spells
+		}
+		if recipientID == 0 {
+			auto = false
+		} // The DM still has to choose a concrete target.
+	}
+	if auto {
+		transfer, err = s.resolveItemTransferTx(ctx, tx, transfer.SessionOwnerUserID, 0, eventID, sessionID, true, ApplicationTarget{})
+		if err != nil {
+			return transfer, err
+		}
+		if _, err = tx.Exec(ctx, `UPDATE dndshare.session_event SET data=data||'{"autoAccepted":true}'::jsonb WHERE id=$1`, eventID); err != nil {
+			return transfer, err
+		}
 	}
 	return transfer, tx.Commit(ctx)
 }

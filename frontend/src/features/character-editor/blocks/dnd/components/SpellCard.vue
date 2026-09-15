@@ -141,40 +141,8 @@
       >
         {{ useLabel }}
       </RowActionItem>
-      <RowActionItem
-        v-if="ctx.charCtx.ownerMode && statusLinks.length === 1"
-        action="status"
-        :icon="Activity"
-        :tone="ctx.statusEffectActive(entry, statusLinks[0]) ? 'danger' : 'success'"
-        :disabled="!statusLinks[0].effect || (ctx.spellcastingBlocked && !ctx.statusEffectActive(entry, statusLinks[0]))"
-        @click="toggleStatus(statusLinks[0], close)"
-      >
-        {{ statusActionLabel(statusLinks[0]) }}
-      </RowActionItem>
-      <RowActionSubmenu
-        v-else-if="ctx.charCtx.ownerMode && statusLinks.length > 1"
-        label="Эффекты"
-      >
-        <template #trigger="{ open }">
-          <RowActionItem action="status" :icon="Activity" submenu :submenu-open="open">
-            Эффекты
-          </RowActionItem>
-        </template>
-        <template #default="{ close: closeEffects }">
-          <RowActionItem
-            v-for="link in statusLinks"
-            :key="link.key"
-            action="status"
-            :icon="Activity"
-            :tone="ctx.statusEffectActive(entry, link) ? 'danger' : 'success'"
-            :disabled="!link.effect || (ctx.spellcastingBlocked && !ctx.statusEffectActive(entry, link))"
-            @click="toggleStatus(link, closeEffects, close)"
-          >
-            {{ statusActionLabel(link) }}
-          </RowActionItem>
-        </template>
-      </RowActionSubmenu>
-      <ItemTransferAction v-for="link in offerLinks" :key="`offer-${link.key}`" source="spells" purpose="use" :entry="{ uid: String(entry.id || entry.item?.id) }" :name="link.name || 'Эффект заклинания'" :option-key="link.key" :disabled="ctx.spellcastingBlocked" @close="close" />
+      <RowActionItem v-if="ctx.charCtx.ownerMode && entry.item?.data?.concentration" :icon="Focus" :disabled="ctx.spellcastingBlocked || ctx.charCtx.itemTransfers?.busy" @click="startConcentration(close)">Начать концентрацию</RowActionItem>
+      <ItemTransferAction v-for="link in offerLinks" :key="`offer-${link.key}`" source="spells" purpose="use" :entry="{ uid: String(entry.id || entry.item?.id) }" :name="entry.item?.name" :effect-label="offerLinks.length > 1 ? link.name : ''" :option-key="link.key" :disabled="ctx.spellcastingBlocked" @self="applySelf(link, close)" @close="close" />
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && !isReadonlyGrant"
         action="delete"
@@ -188,7 +156,7 @@
 <script setup>
 import { statusEffectLinks } from '@/features/character-editor/lib/characterStatuses'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
-import { Activity, Sprout } from '@lucide/vue'
+import { Focus, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
 import SpellScalingFormula from './SpellScalingFormula.vue'
 import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/spellScaling'
@@ -261,7 +229,6 @@ const hasHigherLevelChoice = computed(() =>
   !props.entry.ref.slotless && (slotOptions.value.length > 1 || slotOptions.value.some(option => option.level > baseLvl.value))
 )
 const offerLinks = computed(() => statusEffectLinks(props.entry.item).map(link => ({ ...link, name: ctx.charCtx.characterResources?.itemsById?.get?.(String(link.effect_id))?.name || props.entry.item?.name })))
-const statusLinks = computed(() => ctx.statusEffectLinks(props.entry))
 
 // Drag the whole row to reorder; the sortable's 4px threshold keeps a plain tap a click. A drag flips
 // `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the spell modal.
@@ -285,14 +252,14 @@ function togglePreparation(close) {
   close()
 }
 
-function useWithoutChoice(close) {
+async function useWithoutChoice(close) {
   if (!canUse.value) return
-  ctx.useSpell(props.entry, slotOptions.value[0])
+  await ctx.useSpell(props.entry, slotOptions.value[0])
   close()
 }
 
-function useAtSlot(option, closeSubmenu, closeMenu) {
-  ctx.useSpell(props.entry, option)
+async function useAtSlot(option, closeSubmenu, closeMenu) {
+  await ctx.useSpell(props.entry, option)
   closeSubmenu()
   closeMenu()
 }
@@ -303,15 +270,13 @@ function setSource(key, closeSubmenu, closeMenu) {
   closeMenu()
 }
 
-function statusActionLabel(link) {
-  const title = link.effect?.name || 'эффект'
-  return `${ctx.statusEffectActive(props.entry, link) ? 'Убрать' : 'Добавить'} эффект «${title}»`
+async function applySelf(link, close) {
+  close()
+  await ctx.charCtx.itemTransfers?.concentration.self(props.entry.item, link.key)
 }
-
-function toggleStatus(link, closeSubmenu, closeMenu) {
-  ctx.toggleSpellStatus(props.entry, link)
-  closeSubmenu?.()
-  closeMenu?.()
+async function startConcentration(close) {
+  close()
+  await ctx.charCtx.itemTransfers?.concentration.start(props.entry.item)
 }
 
 function removeSpell(close) {
