@@ -1,4 +1,10 @@
 <template>
+  <RowActionSubmenu v-if="entry.item?.data?.damage?.save_ability && !options.length" :min-width="280">
+    <template #trigger="{ open }"><RowActionItem action="spell" submenu :submenu-open="open">Спасбросок · Сл {{ ctx.spellSaveDC(entry) }}</RowActionItem></template>
+    <template #default="{ close }"><SpellCastControls :entry="entry" :cast-level="castLevel" spend-by-default v-slot="cast">
+      <RowActionItem action="spell" :disabled="cast.disabled" @click="requestSave(close, cast)">Объявить спасбросок</RowActionItem>
+    </SpellCastControls></template>
+  </RowActionSubmenu>
   <RowActionSubmenu v-if="hasAttack" :min-width="280">
     <template #trigger="{ open }">
       <RowActionItem action="attack" submenu :submenu-open="open">Бросить на атаку</RowActionItem>
@@ -56,6 +62,11 @@ const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Брос�
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)
 
+async function requestSave(close, cast) {
+  if (ctx.spellcastingBlocked || !await cast.commit()) return
+  await ctx.requestSpellSave(props.entry)
+  close(); emit('close')
+}
 async function rollAttack(mode, close, commit, excluded) {
   if (ctx.spellcastingBlocked || !await commit()) return
   ctx.rollSpellAttack(props.entry, mode, excluded)

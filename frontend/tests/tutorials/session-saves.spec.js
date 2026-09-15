@@ -1,0 +1,17 @@
+import { test, expect } from '@playwright/test'
+for (const mobile of [false, true]) test(`group saves and retry ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+  page.on('pageerror', error => { throw error })
+  await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1200, height: 900 })
+  await page.goto('/tests/tutorials/fixtures/session-saves.html')
+  await expect(page.getByText('Ловкость · Сл 15', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Бросить', exact: true }).click()
+  await page.locator('.save-target-option').filter({ hasText: 'Тиф' }).getByRole('checkbox').check()
+  await page.locator('.save-target-option').filter({ hasText: 'Гоблин' }).getByRole('checkbox').check()
+  await page.getByRole('button', { name: 'Бросить · 2', exact: true }).click()
+  await expect(page.getByRole('alert')).toContainText('Ошибка связи')
+  await page.getByRole('button', { name: 'Сохранить результаты', exact: true }).click()
+  await expect(page.locator('.event-save-result')).toHaveCount(2)
+  expect(await page.evaluate(() => window.requests[0])).toEqual(await page.evaluate(() => window.requests[1]))
+  await expect(page.locator('.event-save-result').filter({ hasText: 'Гоблин' })).toContainText('Б')
+  await expect(page.locator('.event-row')).toHaveCount(1)
+})

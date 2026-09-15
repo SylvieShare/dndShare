@@ -8,6 +8,7 @@
         <time :datetime="event.createdAt" :title="fullTime">{{ time }}</time>
       </div>
       <div v-if="hasBody" class="event-body">
+        <SessionSavingThrow v-if="event.data?.savingThrow" :event="event" />
         <DiceRollResult v-if="event.data?.result" :result="event.data.result" :color="event.data.color" :size="32" />
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
@@ -41,7 +42,7 @@
 <script setup>
 import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
 import NpcMarker from './NpcMarker.vue'
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { sessionEventTime } from '../lib/sessionEventTime'
 import { ArrowRight } from '@lucide/vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
@@ -51,13 +52,14 @@ import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SessionEventIcon from './SessionEventIcon.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
+const SessionSavingThrow = defineAsyncComponent(() => import('./SessionSavingThrow.vue'))
 const props = defineProps({ event: Object, entityName: String, grouped: Boolean, arriving: Boolean })
 const action = computed(() => sessionEventAction(props.event, props.entityName))
 const date = computed(() => new Date(props.event.createdAt))
 const fullTime = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleString('ru-RU'))
 const time = computed(() => sessionEventTime(props.event.createdAt))
 const transition = computed(() => sessionEventTransition(props.event))
-const hasBody = computed(() => props.event.type === 'item_transfer' || props.event.data?.applicationResult || props.event.data?.result || details.value || props.event.data?.resourceChanges?.length)
+const hasBody = computed(() => props.event.data?.savingThrow || props.event.type === 'item_transfer' || props.event.data?.applicationResult || props.event.data?.result || details.value || props.event.data?.resourceChanges?.length)
 const details = computed(() => sessionEventDetails(props.event))
 </script>
 <style scoped>

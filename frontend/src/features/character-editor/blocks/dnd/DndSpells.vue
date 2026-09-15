@@ -449,8 +449,8 @@ const {
   props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation,
   spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource,
 })
-const { spellTitle, spellAttackMode, spellDamagePreview, spellHealPreview, rollSpellAttack, rollSpellDamage, rollSpellHeal, rollSpellEffect } = useSpellRolls({
-  charCtx, spellcastingBlocked, spellAttackBonus, spellCastingAbility, spellAbilityModifier, charLevel, damageDiceParts, healDiceParts,
+const { requestSpellSave, spellTitle, spellAttackMode, spellDamagePreview, spellHealPreview, rollSpellAttack, rollSpellDamage, rollSpellHeal, rollSpellEffect } = useSpellRolls({
+  charCtx, spellcastingBlocked, spellAttackBonus, spellSaveDC, spellCastingAbility, spellAbilityModifier, charLevel, damageDiceParts, healDiceParts,
 })
 
 function spellAbilityModifier(entry) {
@@ -491,6 +491,7 @@ provide('spellsBlockCtx', reactive({
   spellAttackBonus,
   spellAbilityModifier,
   spellSaveDC,
+  requestSpellSave,
   spellAbilityLabel,
   charLevel,
   maxSlotLevel,

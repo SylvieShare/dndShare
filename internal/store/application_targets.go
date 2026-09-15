@@ -12,6 +12,7 @@ type ApplicationTargetHP struct {
 }
 
 type ApplicationTarget struct {
+	Snapshot    map[string]any       `json:"snapshot,omitempty"`
 	Kind        string               `json:"kind,omitempty"`
 	CharUUID    string               `json:"charUuid,omitempty"`
 	CharID      int64                `json:"charId,omitempty"`
@@ -65,6 +66,14 @@ func (s *Store) ResolveSessionApplication(ctx context.Context, userID, sessionID
 }
 
 func (s *Store) SessionApplicationTargets(ctx context.Context, userID, sessionID int64) ([]ApplicationTarget, error) {
+	return s.sessionApplicationTargets(ctx, userID, sessionID, false)
+}
+
+func (s *Store) SessionSaveTargets(ctx context.Context, userID, sessionID int64) ([]ApplicationTarget, error) {
+	return s.sessionApplicationTargets(ctx, userID, sessionID, true)
+}
+
+func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID int64, snapshots bool) ([]ApplicationTarget, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return nil, err
@@ -100,6 +109,9 @@ func (s *Store) SessionApplicationTargets(ctx context.Context, userID, sessionID
 		}
 		characterValues = append(characterValues, object(data["values"]))
 		targets = append(targets, ApplicationTarget{Kind: "character", CharUUID: uuid, Name: characterName(raw), ImageURL: imageURL})
+		if snapshots {
+			targets[len(targets)-1].Snapshot = data
+		}
 	}
 	err = rows.Err()
 	rows.Close()
@@ -142,6 +154,9 @@ func (s *Store) SessionApplicationTargets(ctx context.Context, userID, sessionID
 		}
 		target := npcApplicationTarget(id, c, name)
 		target.ImageURL, target.SVG = imageURL, svg
+		if snapshots {
+			target.Snapshot = map[string]any{"combatant": c, "item": itemData}
+		}
 		maximum := object(itemData["combat"])["hp"]
 		if own, ok := object(c["override"])["hp"]; ok {
 			maximum = own

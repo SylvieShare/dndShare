@@ -9,7 +9,7 @@ func (s *Store) SessionMutableEventUpdates(ctx context.Context, sessionID, userI
 	if afterID <= 0 {
 		return result, nil
 	}
-	rows, err := s.pool.Query(ctx, sessionEventSelect+sessionEventReadAccess+` AND e.session_id=$1 AND e.id<=$3 AND e.event_type IN ('item_transfer','rps_challenge') ORDER BY e.id DESC LIMIT 200`, sessionID, userID, afterID)
+	rows, err := s.pool.Query(ctx, sessionEventSelect+sessionEventReadAccess+` AND e.session_id=$1 AND e.id<=$3 AND (e.event_type IN ('item_transfer','rps_challenge') OR e.data ? 'savingThrow') ORDER BY e.id DESC LIMIT 200`, sessionID, userID, afterID)
 	if err != nil {
 		return nil, err
 	}

@@ -1,0 +1,105 @@
+<template>
+  <section class="event-save" aria-label="Спасбросок заклинания">
+    <header><Shield :size="18" /><strong>{{ SAVE_ABILITIES[save.ability - 1] }} · Сл {{ save.dc }}</strong>
+      <ActionButton v-if="isDm" size="sm" variant="quiet" :disabled="busy" @click="choose">Бросить</ActionButton>
+    </header>
+    <small v-if="save.onSuccess === 'half'">При успехе — половина урона</small>
+    <small v-if="save.condition">{{ save.condition }}</small>
+    <div v-for="row in save.results || []" :key="row.key" class="event-save-result">
+      <SaveTargetName :target="row.target" />
+      <DiceRollResult :result="row.result" :size="24" />
+      <span :class="row.success ? 'save-success' : 'save-failure'">{{ row.success ? 'Успех' : 'Провал' }}</span>
+    </div>
+  </section>
+  <AppModalFrame v-if="picking" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :z-index="3700" @close="!busy && (picking = false)">
+    <LoadingIndicator v-if="loading" label="Загрузка участников" />
+    <div class="save-target-list">
+      <label v-for="target in targets" :key="saveTargetKey(target)" class="save-target-option">
+        <input v-model="selected" type="checkbox" :value="saveTargetKey(target)" :disabled="busy || rolled.has(saveTargetKey(target))" />
+        <SaveTargetName :target="target" />
+        <span>{{ rolled.has(saveTargetKey(target)) ? 'Уже брошено' : bonusLabel(target) }}</span>
+      </label>
+    </div>
+    <RollModeControl v-model="mode" label="Режим спасбросков" />
+    <p v-if="error" role="alert" class="save-failure">{{ error }}</p>
+    <template #footer><ActionButton :disabled="busy || loading || !selected.length" @click="rollSelected">{{ pending ? 'Сохранить результаты' : `Бросить · ${selected.length}` }}</ActionButton></template>
+  </AppModalFrame>
+</template>
+<script setup>
+import { computed, inject, ref } from 'vue'
+import { Shield } from '@lucide/vue'
+import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
+import SaveTargetName from './SaveTargetName.vue'
+import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
+import RollModeControl from '@/features/character-editor/blocks/dnd/components/RollModeControl.vue'
+import { useAccountStore } from '@/stores/account'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
+import { useSuggestStore } from '@/stores/suggest'
+import { inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
+import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
+import { useDiceStore } from '@/stores/dice'
+import { itemsApi } from '@/shared/api/itemsApi'
+import { getSaveTargets, appendSessionSaves } from '@/shared/api/sessionEventsApi'
+import { SAVE_ABILITIES, saveTargetKey, saveTargetItemIds, sessionSaveProfile } from '../lib/sessionSaveRoll'
+const props = defineProps({ event: { type: Object, required: true } })
+const account = useAccountStore(), events = useSessionEventsStore(), dice = useDiceStore()
+const suggest = useSuggestStore()
+const encounter = inject('applicationEncounter', null)
+const save = computed(() => props.event.data.savingThrow)
+const isDm = computed(() => Number(account.user?.id) === Number(props.event.sessionOwnerUserId))
+const rolled = computed(() => new Set((save.value.results || []).map(row => row.key)))
+const picking = ref(false), loading = ref(false), busy = ref(false), error = ref(''), mode = ref('auto')
+const targets = ref([]), selected = ref([]), pending = ref(null)
+let items = new Map()
+function bonusLabel(target) {
+  const profile = sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type))
+  return `${profile.bonus >= 0 ? '+' : ''}${profile.bonus}${profile.formula ? ` + ${profile.formula}` : ''}`
+}
+async function choose() {
+  picking.value = true
+  if (pending.value) { selected.value = pending.value.map(row => saveTargetKey(row.target)); return }
+  loading.value = true; error.value = ''; selected.value = []
+  try {
+    if (encounter && !await encounter.flushApplicationSave()) throw new Error('Сохраните состояние боя перед броском.')
+    targets.value = (await getSaveTargets(events.sessionUuid)).targets || []
+    await suggest.ensure(3)
+    const ids = [...new Set(targets.value.flatMap(saveTargetItemIds))]
+    items = new Map()
+    for (let i = 0; i < ids.length; i += 100) {
+      for (const item of (await itemsApi.byIds(ids.slice(i, i + 100))).items || []) items.set(String(item.id), item)
+    }
+    const bases = [...new Set(targets.value.flatMap(target => inventoryEntries(target.snapshot?.values || {}).map(({ entry }) => armorBaseId(items.get(String(entry.magic_item_id ?? entry.item_id)), entry))).filter(id => id && !items.has(String(id))))]
+    if (bases.length) for (const item of (await itemsApi.byIds(bases)).items || []) items.set(String(item.id), item)
+  } catch (cause) { targets.value = []; error.value = cause.message }
+  finally { loading.value = false }
+}
+async function rollSelected() {
+  if (busy.value) return
+  busy.value = true; error.value = ''
+  try {
+    if (!pending.value) pending.value = targets.value.filter(target => selected.value.includes(saveTargetKey(target))).map(target => {
+      const profile = sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type))
+      const result = dice.rollD20('Спасбросок', profile.bonus, profile.mode, { bonus_formula: profile.formula, popup: false, log: false })
+      const { snapshot, hp, ...identity } = target
+      return { target: identity, result }
+    })
+    await appendSessionSaves(events.sessionUuid, props.event.id, pending.value)
+    pending.value = null; picking.value = false
+    await events.refresh()
+  } catch (cause) { error.value = cause.message || 'Не удалось сохранить спасброски. Повтор сохранит те же результаты.' }
+  finally { busy.value = false }
+}
+</script>
+<style scoped>
+.event-save { border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px; display: grid; gap: 8px; }
+.event-save header { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; }
+.event-save header button { margin-left: auto; }
+.event-save small { color: var(--text-muted); }
+.event-save-result { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 8px; font-size: 12px; }
+.event-save-result > :first-child { flex: 1; }
+.save-success { color: var(--success); }.save-failure { color: var(--danger); }
+.save-target-list { display: grid; gap: 8px; margin-bottom: 14px; max-height: 50vh; overflow-y: auto; }
+.save-target-option { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: var(--r-sm); cursor: pointer; }
+.save-target-option > :nth-child(2) { flex: 1; }.save-target-option > span { font-size: 12px; color: var(--text-muted); }
+.save-target-option input { accent-color: var(--accent); }
+</style>

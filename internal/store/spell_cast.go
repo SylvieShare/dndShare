@@ -224,6 +224,9 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 		result.Transfers = append(result.Transfers, offer)
 	}
 	event := map[string]any{"source": map[string]any{"itemId": r.SpellID, "name": name}, "castId": r.ClientActionID, "slotLevel": r.CastLevel, "targetCount": len(r.Targets) + r.DMCount}
+	if save := spellSaveEvent(data, doc.values(), ability, r.SpellID, r.EntryKey); save != nil {
+		event["savingThrow"] = save
+	}
 	if result.Self != nil {
 		event["applicationResult"] = result.Self
 	}

@@ -1,9 +1,24 @@
 import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 import { resolveRollMode } from '../lib/rollMode'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useDiceStore } from '@/stores/dice'
 
-export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, spellCastingAbility, spellAbilityModifier = () => 0, charLevel, damageDiceParts, healDiceParts }) {
+export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, spellSaveDC = () => 10, spellCastingAbility, spellAbilityModifier = () => 0, charLevel, damageDiceParts, healDiceParts }) {
   const dice = useDiceStore()
+
+  function savingThrow(entry) {
+    const rule = entry?.item?.data?.damage || {}
+    const ability = ['str', 'dex', 'con', 'int', 'wis', 'cha'].indexOf(rule.save_ability) + 1
+    return ability ? { ability, dc: spellSaveDC(entry), onSuccess: rule.save_effect, condition: rule.save_condition || '', results: [] } : null
+  }
+  function spellEventData(entry) {
+    const save = savingThrow(entry)
+    return { ...itemEventData(entry.item), ...(save ? { savingThrow: save } : {}) }
+  }
+  function requestSpellSave(entry) {
+    if (spellcastingBlocked.value || !savingThrow(entry)) return
+    return useSessionEventsStore().publish({ type: 'spell_used', action: `Спасбросок: ${spellTitle(entry)}`, data: spellEventData(entry) })
+  }
 
   function spellTitle(entry) {
     return entry?.item?.name || 'Заклинание'
@@ -60,7 +75,7 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   function rollSpellDamage(entry, castLevel, critical = false) {
     if (spellcastingBlocked.value) return
     const expr = spellDamagePreview(entry, castLevel, critical)
-    if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr, { eventData: itemEventData(entry.item) })
+    if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr, { eventData: spellEventData(entry) })
   }
 
   function rollSpellHeal(entry, castLevel) {
@@ -72,8 +87,8 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   function rollSpellEffect(entry, castLevel) {
     if (spellcastingBlocked.value) return
     const expr = spellDamagePreview(entry, castLevel)
-    if (expr) dice.roll(spellTitle(entry), expr, { eventData: itemEventData(entry.item) })
+    if (expr) dice.roll(spellTitle(entry), expr, { eventData: spellEventData(entry) })
   }
 
-  return { rollSpellEffect, spellAttackMode, spellDamagePreview, spellHealPreview, spellTitle, rollSpellAttack, rollSpellDamage, rollSpellHeal }
+  return { requestSpellSave, rollSpellEffect, spellAttackMode, spellDamagePreview, spellHealPreview, spellTitle, rollSpellAttack, rollSpellDamage, rollSpellHeal }
 }
