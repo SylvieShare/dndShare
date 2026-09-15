@@ -9,7 +9,7 @@
     <LoadingIndicator v-if="loadingTargets" label="Загрузка целей" />
     <div class="application-targets">
       <ActionButton v-for="target in targets" :key="target.charUuid || target.npcUid" :disabled="busy" @click="resolve('accept', target)">
-        <template #icon><span v-if="target.kind === 'npc'" :style="{ color: target.color }">{{ target.letter || '—' }}</span><UserRound v-else :size="20" /></template>
+        <template #icon><NpcMarker v-if="target.kind === 'npc'" :letter="target.letter" :color="target.color" /><UserRound v-else :size="20" /></template>
         {{ target.name }}
       </ActionButton>
     </div>
@@ -18,6 +18,7 @@
   </AppModalFrame>
 </template>
 <script setup>
+import NpcMarker from './NpcMarker.vue'
 import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { computed, inject, ref } from 'vue'
 import { Check, UserRound } from '@lucide/vue'

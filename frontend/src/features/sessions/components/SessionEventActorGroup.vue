@@ -4,8 +4,8 @@
       <header class="event-actor-head">
         <SessionEventActorAvatar :event="group.actorEvent" :label="group.label" />
         <div class="event-actor-meta">
-          <strong>{{ group.label || (group.kind === 'dm' ? 'Мастер' : 'Системное событие') }}</strong>
-          <span>{{ group.authorIsSessionOwner ? 'я' : group.authorName }}</span>
+          <strong class="event-actor-name"><NpcMarker v-if="group.kind === 'creature' && group.actorEvent.data?.npcActor?.letter" :letter="group.actorEvent.data.npcActor.letter" :color="group.actorEvent.data.npcActor.color" />{{ group.label || (group.kind === 'dm' ? 'Мастер' : 'Системное событие') }}</strong>
+          <span v-if="group.kind !== 'creature'">{{ group.authorIsSessionOwner ? 'я' : group.authorName }}</span>
         </div>
       </header>
     </div>
@@ -28,6 +28,7 @@
   </section>
 </template>
 <script setup>
+import NpcMarker from './NpcMarker.vue'
 import { ref } from 'vue'
 import SessionEventActorAvatar from './SessionEventActorAvatar.vue'
 import SessionEventEntityLabel from './SessionEventEntityLabel.vue'
@@ -45,6 +46,7 @@ const entityName = entry => entry.entity?.name || props.items[entry.entity?.item
 .event-actor-head { position: sticky; top: 12px; display: flex; align-items: flex-start; gap: 12px; min-width: 0; padding-right: 20px; overflow-wrap: anywhere; white-space: normal; }
 .event-actor-meta { display: grid; gap: 4px; min-width: 0; }
 .event-actor-meta strong { font-family: var(--font-display); font-size: 18px; color: var(--text-1); }
+.event-actor-name { display: flex; align-items: baseline; gap: 6px; }
 .event-actor-meta > span { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; color: var(--text-muted); font-size: 12px; }
 .event-actor-entities { display: grid; align-content: start; gap: 20px; min-width: 0; }
 .event-entity { min-width: 0; }

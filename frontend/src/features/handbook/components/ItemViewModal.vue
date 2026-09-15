@@ -43,7 +43,7 @@
 <script setup>
 import { itemInstancePresentation } from '@/features/items/lib/magicItemInstanceView'
 import { LoadingState } from '@sylvieshare/share-ui'
-import { computed, ref, watch } from 'vue'
+import { computed, provide, ref, watch } from 'vue'
 import { useAccountStore } from '@/stores/account'
 import { canEditHandbookItem } from '@/features/items/lib/itemPermissions'
 import ItemEditModal from '@/features/character-editor/components/ItemEditModal.vue'
@@ -76,7 +76,9 @@ const props = defineProps({
   instance: { type: Object, default: null },
   baseItem: { type: Object, default: null },
   actorName: { type: String, default: '' },
+  npcActor: { type: Object, default: null },
 })
+provide('npcEventActor', computed(() => props.npcActor))
 
 const emit = defineEmits(['close', 'saved'])
 

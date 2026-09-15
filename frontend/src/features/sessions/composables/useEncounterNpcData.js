@@ -4,7 +4,6 @@ import { resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/roll
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { ref } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
-import { normalizedEncounterLetter } from '@/features/sessions/lib/encounterHelpers'
 
 export function useEncounterNpcData() {
   const npcItemCache = ref({})
@@ -57,12 +56,6 @@ export function useEncounterNpcData() {
     return npcItem(c)?.name || 'Существо'
   }
 
-  function npcActorName(c) {
-    const name = String(npcName(c)).trim()
-    const letter = normalizedEncounterLetter(c?.markerLetter)
-    return letter ? `${name} ${letter}` : name
-  }
-
   function npcAc(c) {
     const v = npcData(c).ac
     return v == null || v === '' ? null : Number(v) + effects(c).filter(row => row.kind === 'armor_bonus').reduce((sum, row) => sum + (Number(row.value) || 0), 0)
@@ -107,7 +100,6 @@ export function useEncounterNpcData() {
     npcItem,
     npcData,
     npcName,
-    npcActorName,
     npcAc,
     npcHpMax,
     npcDex,

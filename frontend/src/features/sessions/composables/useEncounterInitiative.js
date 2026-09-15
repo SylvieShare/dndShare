@@ -1,3 +1,4 @@
+import { encounterEventData } from '../lib/encounterEventData'
 import { settingRenderSchema } from '@/features/character-editor/settings'
 import { getByPath } from '@/features/sessions/lib/encounterHelpers'
 import { abilityModByPath, abilityModifier, d20Expr, resolveNumValue } from '@/shared/lib/dnd'
@@ -49,7 +50,7 @@ export function useEncounterInitiative({ findParticipant, playerDisplayName, npc
     const bonus = initiativeBonus(c)
     const expr = d20Expr(bonus)
     const result = useDiceStore().roll('Инициатива', expr, {
-      eventData: { ability: { id: 2, typeId: 16, name: 'Ловкость' } },
+      eventData: { ...encounterEventData(c, name), ability: { id: 2, typeId: 16, name: 'Ловкость' } },
       actor: {
         name,
         charUuid: participant?.charUuid || null,

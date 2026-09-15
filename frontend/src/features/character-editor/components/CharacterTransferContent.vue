@@ -10,8 +10,14 @@
         <p v-if="!state.transfers.length && !controller.interactions?.state.pending.length" class="transfer-hint">Незавершённых событий нет.</p>
         <BaseTile v-for="transfer in state.transfers" :key="transfer.id" framed role="article" class="transfer-event">
           <div class="transfer-offer">
-            <TransferPerson :name="transfer.senderName" :image-url="senderImage(transfer)" />
-            <span class="transfer-offer-verb">{{ transfer.purpose === 'use' ? 'предлагает применить' : 'предлагает' }}</span>
+            <template v-if="transfer.senderCharUuid === characterUuid">
+              <ArrowRight :size="18" aria-label="Кому" />
+              <TransferPerson :name="transfer.recipientName" :image-url="personImage(transfer, 'recipient')" />
+            </template>
+            <template v-else>
+              <TransferPerson :name="transfer.senderName" :image-url="personImage(transfer, 'sender')" />
+              <ArrowRight :size="18" aria-label="От кого" />
+            </template>
           </div>
           <button type="button" class="transfer-reference" @click="emit('view-item', itemView(transfer))">
               <ItemIcon v-if="artwork(transfer)?.iconImageUrl || artwork(transfer)?.svg" :item="artwork(transfer)" :size="32" />
@@ -28,7 +34,7 @@
           </template>
           <template v-else>
             <div class="transfer-actions">
-              <span class="transfer-hint">Для {{ transfer.recipientName }} · Ожидает принятия</span>
+              <span class="transfer-hint">Ожидает принятия</span>
               <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">{{ transfer.purpose === 'use' ? 'Отменить применение' : 'Отозвать передачу' }}</ActionButton>
             </div>
           </template>
@@ -41,7 +47,7 @@ import ApplicationSummary from './ApplicationSummary.vue'
 import CharacterInteractionPlayers from './CharacterInteractionPlayers.vue'
 import CharacterInteractionInbox from './CharacterInteractionInbox.vue'
 import { computed, ref, watch } from 'vue'
-import { Package } from '@lucide/vue'
+import { ArrowRight, Package } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -53,8 +59,8 @@ const state = computed(() => props.controller.state)
 const items = ref({})
 const itemId = transfer => Number(transfer.entry?.magic_item_id || transfer.entry?.item_id) || null
 const artwork = transfer => items.value[itemId(transfer)]
-function senderImage(transfer) {
-  return transfer.senderImageUrl || pvAvatar(state.value.participants.find(player => player.charUuid === transfer.senderCharUuid)) || ''
+function personImage(transfer, role) {
+  return transfer[`${role}ImageUrl`] || pvAvatar(state.value.participants.find(player => player.charUuid === transfer[`${role}CharUuid`])) || ''
 }
 function itemView(transfer) {
   const id = itemId(transfer)
@@ -78,7 +84,7 @@ watch(() => [...new Set(state.value.transfers.map(itemId).filter(Boolean))].join
 .transfer-content p { margin: 0; }
 .transfer-event { display: flex; flex-direction: column; gap: 12px; padding: 14px; overflow-wrap: anywhere; }
 .transfer-offer { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 9px; }
-.transfer-offer-verb { color: var(--text-muted); font-size: 13px; }
+.transfer-offer > svg { flex: none; color: var(--text-muted); }
 .transfer-application { padding-block: 2px; }
 .transfer-reference { display: flex; align-items: center; gap: 9px; min-width: 0; border: 0; padding: 4px 0; background: none; color: var(--text-1); font: inherit; text-align: left; cursor: pointer; }
 .transfer-reference > svg { flex: 0 0 32px; color: var(--accent-soft); }

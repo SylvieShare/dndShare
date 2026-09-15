@@ -106,6 +106,7 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 
 const inheritedItem = inject('sessionEventItem', null)
+const npcActor = inject('npcEventActor', null)
 const itemCache = new Map()
 const props = defineProps({
   node: { type: Object, required: true },
@@ -176,7 +177,10 @@ async function loadReference() {
 function roll() {
   if (!diceParts.value.length) return
   diceStore.roll(props.node.payload?.label || props.node.label || formula.value, formula.value, {
-    eventData: unref(sourceItem)?.id ? { source: { itemId: unref(sourceItem).id, name: unref(sourceItem).name } } : undefined,
+    eventData: {
+      ...(unref(sourceItem)?.id ? { source: { itemId: unref(sourceItem).id, name: unref(sourceItem).name } } : {}),
+      ...(unref(npcActor) ? { npcActor: unref(npcActor) } : {}),
+    },
     actor: props.actorName ? { name: props.actorName, charUuid: null } : undefined,
   })
 }

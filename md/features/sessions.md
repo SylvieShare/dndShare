@@ -229,7 +229,7 @@ Polling приостановлен во время правки и drag.
 выглядит как пустая сессия и предлагает вернуться ко всей хронике. Фильтрация
 применяется локально к загруженным событиям и не меняет серверный журнал.
 Левая колонка группы показывает имя персонажа/существа и логин автора (`authorName`),
-а у мастера вместо логина — «я», без отдельной метки роли. Увеличенный аватар 52px выводится
+а у мастера вместо логина — «я», без отдельной метки роли. У NPC строка автора скрыта; перед именем стоит цветная буква из снимка события. Увеличенный аватар 52px выводится
 без рамки, подложки и тени: character icon с fallback на портрет, media бестиария,
 монограмма либо тематический DM fallback. Вертикальная линия справа от колонки
 аватара и имён отделяет её от событий, расположенных правее линии. Аватар, имя
@@ -336,9 +336,11 @@ version advances with each successful version-checked save, including event-only
 event endpoint because they do not mutate character state. Pending debounced
 character saves are flushed on page unmount instead of dropping their events.
 Encounter initiative, HP and challenge rolls pass an explicit actor override,
-so they are not attributed to an unrelated sheet left open by the DM. NPC actor
-names include their encounter marker (`Кобольд A`), including rolls made from a
-creature card opened from the encounter.
+so they are not attributed to an unrelated sheet left open by the DM. NPC events keep the name separate from a frozen `data.npcActor` snapshot
+(`uid`, `name`, `letter`, `color`), including rolls from the encounter creature
+card and current-turn panel. `NpcMarker` renders the letter before the name
+with the same font and color as combat. Historical events without a marker
+snapshot retain their original text; their original color was not stored.
 
 ## Locations and prepared NPCs
 
@@ -1173,7 +1175,7 @@ remove the previous keys and any read-time converter.
 безопасно, уже отклонённый запрос принять нельзя. Сервер проверяет владельца
 именно этой сессии. Обычные события хроники не требуют одобрения.
 Отправка из листа выбирает адресата в подменю с иконками 48 px. Поповер событий
-показывает «{отправитель с иконкой} предлагает {предмет с иконкой}» без подписи
+показывает сверху «→ получатель с иконкой» у исходящих или «отправитель с иконкой →» у входящих; предмет находится отдельной строкой, без подписи
 «Ожидает вашего решения».
 
 Запрос применения зелья использует то же событие `item_transfer` с

@@ -325,7 +325,8 @@
       :item-type-id="6"
       :item-id="enc.detailNpc.itemId"
       :item="enc.npcItem(enc.detailNpc) ?? null"
-      :actor-name="enc.npcActorName(enc.detailNpc)"
+      :actor-name="enc.npcName(enc.detailNpc)"
+          :npc-actor="enc.npcActor(enc.detailNpc)"
       @close="enc.closeNpcDetail"
     />
 

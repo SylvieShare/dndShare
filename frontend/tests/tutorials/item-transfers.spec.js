@@ -106,7 +106,7 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     await page.getByRole('button', { name: /События/ }).click()
     await expect(page.locator('.transfer-event')).toHaveClass(/base-tile--framed/)
     await expect(page.locator('.transfer-event .transfer-person')).toContainText('Лиора')
-    await expect(page.locator('.transfer-event')).toContainText('предлагает')
+    await expect(page.locator('.transfer-offer > .transfer-person + svg[aria-label="От кого"]')).toBeVisible()
     await expect(page.getByText('Ожидает вашего решения')).toHaveCount(0)
     await page.getByRole('dialog').getByRole('button', { name: 'Шёлковая верёвка ×3', exact: true }).click()
     const itemDialog = page.getByRole('dialog', { name: 'Шёлковая верёвка', exact: true })

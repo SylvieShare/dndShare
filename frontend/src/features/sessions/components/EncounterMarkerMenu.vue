@@ -10,7 +10,7 @@
     title="Изменить букву и цвет"
     @click.stop="toggle"
     @pointerdown.stop
-  >{{ combatant.markerLetter || '—' }}</button>
+  ><NpcMarker :letter="combatant.markerLetter" :color="markerColor" /></button>
 
   <BasePopover v-model:open="open" :anchor="anchorEl" placement="bottom-start" :min-width="246">
     <div class="emm-panel">
@@ -43,6 +43,7 @@
 </template>
 
 <script setup>
+import NpcMarker from './NpcMarker.vue'
 import { computed, inject, ref } from 'vue'
 import { BasePopover } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'

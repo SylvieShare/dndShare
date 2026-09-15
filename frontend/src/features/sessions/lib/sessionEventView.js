@@ -1,19 +1,21 @@
 import { sessionEventEntity } from './sessionEventEntity'
 
 export function sessionEventActorLabel(event) {
-  return String(event?.actorName || '').trim()
+  return String(event?.data?.npcActor?.name || event?.actorName || '').trim()
 }
 
 export function sessionEventActorIdentityKey(event) {
   const character = event?.actorCharUuid || event?.actorCharId
   if (character) return `character:${character}`
+  if (event?.data?.npcActor?.uid) return `npc:${event.data.npcActor.uid}`
   const actorName = sessionEventActorLabel(event)
   return actorName ? `name:${actorName.toLocaleLowerCase('ru-RU')}` : 'system'
 }
 
 export function sessionEventActorKey(event) {
   const author = event?.authorUserId ?? event?.authorName ?? (event?.authorIsSessionOwner ? 'owner' : 'player')
-  return JSON.stringify([author, sessionEventActorIdentityKey(event), sessionEventActorLabel(event)])
+  const marker = event?.data?.npcActor
+  return JSON.stringify([author, sessionEventActorIdentityKey(event), sessionEventActorLabel(event), marker?.letter, marker?.color])
 }
 
 export function sessionEventActorKind(event) {

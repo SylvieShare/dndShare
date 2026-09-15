@@ -13,11 +13,11 @@ vi.mock('@/features/handbook/components/ItemViewModal.vue', () => ({ default: { 
 const source = readFileSync(new URL('./SessionEventsPanel.vue', import.meta.url), 'utf8')
 
 const rows = [
-  { id: 1, type: 'dice_roll', action: 'Атака: Посох', createdAt: '2026-09-13T10:00:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
+  { id: 1, type: 'dice_roll', action: 'Атака: Посох', createdAt: '2026-09-13T10:00:00Z', actorName: 'Лиора', actorCharUuid: 'liora', authorName: 'alice', authorUserId: 1,
     data: { source: { itemId: 42, name: 'Посох' }, result: { total: 21, parts: [{ kind: 'dice', sides: 20, rolls: [2, 18], keptIndex: 1, dropped: [0] }, { kind: 'flat', sign: '+', value: 3 }] } } },
-  { id: 2, type: 'resource_used', action: 'Восстановление ячеек', createdAt: '2026-09-13T10:01:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
+  { id: 2, type: 'resource_used', action: 'Восстановление ячеек', createdAt: '2026-09-13T10:01:00Z', actorName: 'Лиора', actorCharUuid: 'liora', authorName: 'alice', authorUserId: 1,
     data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Ячейка 2 круга', level: 2, color: '#38bdf8', delta: 2, pool: 'long_rest' }] } },
-  { id: 3, type: 'resource_used', action: 'Использование ячеек', createdAt: '2026-09-13T10:02:00Z', actorName: 'Лиора', authorName: 'alice', authorUserId: 1,
+  { id: 3, type: 'resource_used', action: 'Использование ячеек', createdAt: '2026-09-13T10:02:00Z', actorName: 'Лиора', actorCharUuid: 'liora', authorName: 'alice', authorUserId: 1,
     data: { source: { itemId: 42, name: 'Посох' }, resourceChanges: [{ name: 'Заряды', color: '#38bdf8', delta: -1, pool: 'short_rest' }] } },
 ]
 
@@ -132,4 +132,15 @@ it.each([SessionEventRow, SessionEventNotification])('keeps damage colors in chr
   const app = createSSRApp({ render: () => h(component, props) }); app.use(createPinia())
   const html = await renderToString(app)
   for (const color of ['danger', 'info', 'success']) expect(html).toContain(`--system-die-color:var(--${color})`)
+})
+
+
+it('places the NPC marker before its name and omits the redundant author', async () => {
+  const row = { ...rows[0], actorCharUuid: null, actorName: 'Кобольд', actorItemId: 6, authorIsSessionOwner: true,
+    data: { npcActor: { uid: 'kobold-b', name: 'Кобольд', letter: 'B', color: 'var(--success)' } } }
+  const app = createSSRApp({ render: () => h(SessionEventActorGroup, { group: groupSessionEvents([row])[0], items: {} }) }); app.use(createPinia())
+  const html = await renderToString(app)
+  const header = html.slice(html.indexOf('class="event-actor-meta"'), html.indexOf('class="event-actor-entities"'))
+  expect(header).toMatch(/npc-marker[^>]*color:var\(--success\)[^>]*>B<\/span>Кобольд/)
+  expect(header).not.toMatch(/>я<|alice/)
 })

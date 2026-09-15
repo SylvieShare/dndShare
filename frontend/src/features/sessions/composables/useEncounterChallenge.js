@@ -1,3 +1,4 @@
+import { encounterEventData } from '../lib/encounterEventData'
 import { computed } from 'vue'
 import {
   abilityModifier,
@@ -118,7 +119,7 @@ export function useEncounterChallenge({
         bonus, effects.mode || 'normal',
         {
           bonus_formula: effects.formula,
-          eventData: { ability: { id: meta.id, typeId: 16, name: meta.label } },
+          eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
           crit_mode: true,
           popup: false,
           actor: {
@@ -191,7 +192,7 @@ export function useEncounterChallenge({
     parts.push(...(currentResult.extraParts || []))
     useDiceStore().pushEntry({
       action: `${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
-      eventData: { ability: { id: meta.id, typeId: 16, name: meta.label } },
+      eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
       actor: {
         name: displayName(combatant),
         charUuid: combatant.type === 'player' ? findParticipant(combatant.charId)?.charUuid || null : null,

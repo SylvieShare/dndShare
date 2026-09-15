@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, inject, provide, ref, watch } from 'vue'
 import { BookOpen, MapPin, Shield, Sparkles, Swords, Tags } from '@lucide/vue'
 import { findField, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import DetailEntryCard from '@/shared/ui/DetailEntryCard.vue'
@@ -95,7 +95,10 @@ const props = defineProps({
   type: { type: Object, default: null },
   showTitle: { type: Boolean, default: true },
   actorName: { type: String, default: '' },
+  npcActor: { type: Object, default: null },
 })
+const inheritedNpc = inject('npcEventActor', null)
+provide('npcEventActor', computed(() => props.npcActor || inheritedNpc?.value || null))
 
 const suggestStore = useSuggestStore()
 

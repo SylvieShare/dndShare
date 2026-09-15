@@ -22,7 +22,7 @@ export function sessionEventActorOptions(events) {
     if (options.has(key)) continue
     options.set(key, {
       value: key,
-      label: sessionEventActorLabel(event) || 'Системные события',
+      label: [event.data?.npcActor?.letter, sessionEventActorLabel(event)].filter(Boolean).join(' ') || 'Системные события',
       system: key === 'system',
     })
   }

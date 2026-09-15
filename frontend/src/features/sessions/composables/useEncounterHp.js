@@ -1,3 +1,4 @@
+import { encounterEventData } from '../lib/encounterEventData'
 import { computed, ref } from 'vue'
 import { charactersApi } from '@/shared/api/charactersApi'
 import { pvHp, pvHpPath } from '@/features/sessions/lib/participantView'
@@ -285,6 +286,7 @@ export function useEncounterHp({
     if (!raw) return
     const norm = raw.replace(/[()]/g, '')
     const result = useDiceStore().roll('Хиты', norm, {
+      eventData: encounterEventData(c, npcName ? npcName(c) : 'НПС'),
       actor: { name: npcName ? npcName(c) : 'НПС', charUuid: null, itemId: c.itemId || null },
     })
     if (!result || !result.parts.length) return

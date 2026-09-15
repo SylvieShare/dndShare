@@ -46,3 +46,10 @@ describe('session chronicle grouping', () => {
     expect(sessionEventDetails({ type: 'spell_used', data: { slotPool: 'slotless', spellLevel: 3 } })).toBe('Без расхода ячейки')
   })
 })
+
+
+it('distinguishes same-name NPC instances and preserves different marker snapshots', () => {
+  const npc = (id, uid, letter, color) => event(id, { npcActor: { uid, name: 'Кобольд', letter, color } }, { actorCharUuid: null, actorName: 'Кобольд' })
+  expect(groupSessionEvents([npc(1, 'a', 'A', 'red'), npc(2, 'b', 'B', 'blue')])).toHaveLength(2)
+  expect(groupSessionEvents([npc(1, 'a', 'A', 'red'), npc(2, 'a', 'B', 'blue')])).toHaveLength(2)
+})

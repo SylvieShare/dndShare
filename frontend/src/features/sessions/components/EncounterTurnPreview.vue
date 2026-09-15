@@ -16,7 +16,7 @@
         <EncounterAvatar :combatant="combatant" />
         <div class="turn-preview-identity" aria-live="polite">
           <span>{{ kindLabel }}</span>
-          <strong>{{ displayName }}</strong>
+          <strong class="turn-preview-name"><NpcMarker v-if="isNpc" :letter="combatant.markerLetter" :color="enc.avatarStyle(combatant)?.color" />{{ displayName }}</strong>
           <small v-if="subtitle">{{ subtitle }}</small>
         </div>
         <span v-if="isNpc" class="turn-preview-side" :class="enc.badgeClass(combatant)">
@@ -53,7 +53,8 @@
           class="turn-preview-reference"
           :item="npcItem"
           :type="bestiaryType"
-          :actor-name="enc.npcActorName(combatant)"
+          :actor-name="enc.npcName(combatant)"
+          :npc-actor="enc.npcActor(combatant)"
           :show-title="false"
         />
       </template>
@@ -85,6 +86,7 @@
 </template>
 
 <script setup>
+import NpcMarker from './NpcMarker.vue'
 import { computed, inject, onMounted } from 'vue'
 import { Hourglass, UserRoundSearch } from '@lucide/vue'
 import EnemyDetailContent from '@/features/items/detail-components/EnemyDetailContent.vue'
@@ -115,7 +117,7 @@ const displayName = computed(() => {
   if (!props.combatant) return ''
   return isPlayer.value
     ? enc.playerDisplayName(props.combatant)
-    : enc.npcActorName(props.combatant)
+    : enc.npcName(props.combatant)
 })
 const subtitle = computed(() => props.combatant ? enc.subtitle(props.combatant) : '')
 const kindLabel = computed(() => {
@@ -223,6 +225,7 @@ const abilities = computed(() => {
 .turn-preview-hero :deep(.enc-avatar) { width: 78px; height: 78px; flex: 0 0 78px; }
 
 .turn-preview-identity { min-width: 0; display: flex; flex-direction: column; gap: 3px; padding-right: 44px; }
+.turn-preview-name { display: flex; align-items: baseline; gap: 6px; }
 .turn-preview-identity > span { color: var(--text-muted); font-size: 9px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
 .turn-preview-identity strong { overflow: hidden; color: var(--text-1); font-size: 19px; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
 .turn-preview-identity small { overflow: hidden; color: var(--text-2); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }

@@ -1,3 +1,4 @@
+import { encounterEventData } from '../lib/encounterEventData'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useEncounterFlow } from '@/features/sessions/composables/useEncounterFlow'
 import { useEncounterChallenge } from '@/features/sessions/composables/useEncounterChallenge'
@@ -173,7 +174,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     applyLocalPatches,
     getPlayerHp,
     getPlayerAc,
-    npcName:       npcData.npcActorName,
+    npcName:       npcData.npcName,
     npcAc:         npcData.npcAc,
     npcHpMax:      npcData.npcHpMax,
     npcHpFormula:  npcData.npcHpFormula,
@@ -183,7 +184,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     findParticipant,
     playerDisplayName,
     npcDex:  npcData.npcDex,
-    npcName: npcData.npcActorName,
+    npcName: npcData.npcName,
   })
 
   const states = useEncounterStates({
@@ -197,7 +198,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     selectedUids: selection.selectedUids,
     findParticipant,
     playerDisplayName,
-    npcName: npcData.npcActorName,
+    npcName: npcData.npcName,
     npcAbilityScore: npcData.npcAbilityScore,
     npcSavingThrow: npcData.npcSavingThrow,
     npcRollEffects: npcData.npcRollEffects,
@@ -456,7 +457,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     // npc data resolvers
     npcItem:                npcData.npcItem,
     npcName:                npcData.npcName,
-    npcActorName:           npcData.npcActorName,
+    npcActor: c => encounterEventData(c, npcData.npcName(c)).npcActor,
     npcAc:                  npcData.npcAc,
     npcHpMax:               npcData.npcHpMax,
     // npcs

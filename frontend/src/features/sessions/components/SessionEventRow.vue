@@ -14,8 +14,11 @@
         </div>
         <div v-if="event.type === 'item_transfer'" class="event-transfer">
           <ArrowRight :size="17" aria-label="Кому" />
-          <TransferPerson :name="event.data?.resolvedTarget?.name || event.data?.recipientName" :image-url="event.recipientImageUrl" />
-          <b v-if="event.data?.resolvedTarget?.letter" :style="{ color: event.data.resolvedTarget.color }">{{ event.data.resolvedTarget.letter }}</b>
+          <span v-if="event.data?.resolvedTarget?.kind === 'npc'" class="event-target-npc">
+            <NpcMarker :letter="event.data.resolvedTarget.letter" :color="event.data.resolvedTarget.color" />
+            <strong>{{ event.data.resolvedTarget.name }}</strong>
+          </span>
+          <TransferPerson v-else :name="event.data?.resolvedTarget?.name || event.data?.recipientName" :image-url="event.recipientImageUrl" />
           <span v-if="event.data?.count > 1">×{{ event.data.count }}</span>
           <TransferStatus :purpose="event.data?.purpose" :status="event.data?.status" />
           <SessionTransferApproval :event="event" />
@@ -37,6 +40,7 @@
 </template>
 <script setup>
 import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
+import NpcMarker from './NpcMarker.vue'
 import { computed } from 'vue'
 import { ArrowRight } from '@lucide/vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
@@ -65,6 +69,7 @@ const details = computed(() => sessionEventDetails(props.event))
 .event-details { white-space: pre-wrap; }
 .event-details, .event-adjustment { color: var(--text-muted); font-size: 11px; overflow-wrap: anywhere; }
 .event-adjustment { color: var(--success); }
+.event-target-npc { display: inline-flex; align-items: center; gap: 6px; color: var(--text-1); }
 .event-transfer { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: var(--text-muted); font-size: 12px; }
 .event-resources { display: flex; flex-wrap: wrap; gap: 6px; }
 .event-resource { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 4px 8px; border: 1px solid currentColor; border-radius: var(--r-sm); font-size: 11px; }
