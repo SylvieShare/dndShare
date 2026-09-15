@@ -110,4 +110,5 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	}
 	t.Run("concentration across targets", func(t *testing.T) { testConcentration(t, s, pool, npc) })
 	t.Run("automatic acceptance", func(t *testing.T) { testAutoAccept(t, s, pool) })
+	t.Run("spell casting", func(t *testing.T) { testSpellCast(t, s, pool, npc) })
 }

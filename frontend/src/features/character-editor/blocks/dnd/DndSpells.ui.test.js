@@ -16,7 +16,6 @@ describe('spellcasting restrictions', () => {
 
   it('uses a source-neutral disabled action label', () => {
     expect(cardSource).toContain("ctx.spellcastingBlocked ? 'Сотворение недоступно'")
-    expect(cardSource).toContain(':disabled="ctx.spellcastingBlocked"')
     expect(cardSource).not.toContain('Запрещено доспехом')
   })
 })

@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func removeConcentrationStates(ctx context.Context, tx pgx.Tx, states []any, castID string, manual bool) ([]any, bool, error) {
+func removeConcentrationStates(ctx context.Context, tx pgx.Tx, states []any, castID string, manual bool, trigger ...string) ([]any, bool, error) {
 	kept := []any{}
 	removed := []map[string]any{}
 	for _, raw := range states {
@@ -15,6 +15,17 @@ func removeConcentrationStates(ctx context.Context, tx pgx.Tx, states []any, cas
 		matches := textValue(object(e["source"])["concentration_id"]) == castID && castID != ""
 		if manual {
 			matches = e["concentration"] == true
+		}
+		if len(trigger) > 0 {
+			_, data, _, err := applicationItem(ctx, tx, int64(number(e["effect_id"])))
+			if err != nil && err != pgx.ErrNoRows {
+				return nil, false, err
+			}
+			for _, event := range array(data["end_on"]) {
+				if event == trigger[0] {
+					matches = true
+				}
+			}
 		}
 		if matches {
 			removed = append(removed, e)

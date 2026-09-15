@@ -1,0 +1,26 @@
+[
+  {
+    "id": 548,
+    "changes": {
+      "application_targets": {
+        "before": null,
+        "after": {
+          "count": 3,
+          "per_slot": 1
+        }
+      }
+    }
+  },
+  {
+    "id": 916,
+    "changes": {
+      "application_targets": {
+        "before": null,
+        "after": {
+          "count": 6,
+          "per_slot": 0
+        }
+      }
+    }
+  }
+]

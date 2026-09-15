@@ -66,6 +66,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(schemaPotionApplicationsSQL)
 	exec(schemaApplicationTargetsSQL)
 	exec(schemaSpellConcentrationSQL)
+	exec(schemaSpellCastsSQL)
 	exec(schemaSessionAutoAcceptSQL)
 	exec(schemaSessionInventorySQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');

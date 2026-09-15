@@ -27,14 +27,14 @@ for (const mobile of [false, true]) test(`concentration links and self applicati
     else if (path.endsWith('/concentration')) {
       if (req.method() === 'POST') { writes.push(req.postDataJSON()); concentration = null; char.version++ }
       json = { concentration }
-    } else if (path.endsWith('/spell-use')) {
+    } else if (path.endsWith('/spell-cast')) {
       writes.push(req.postDataJSON()); char.version++
       concentration = { id: 'cast-1', spellId: 802, name: 'Ускорение', effects: [
         { uid: 'self', effectId: 801, target: { kind: 'character', name: 'Лиора' } },
         { uid: 'ally', effectId: 801, target: { kind: 'character', name: 'Торин' } },
         { uid: 'npc', effectId: 801, target: { kind: 'npc', name: 'Гоблин', letter: 'B', color: '#ff9900' } },
       ] }
-      json = { result: { effects: [{ id: 801, name: 'Ускоренный' }] } }
+      json = { self: { effects: [{ id: 801, name: 'Ускоренный' }] }, transfers: [] }
     }
     await route.fulfill({ json })
   })
@@ -43,8 +43,7 @@ for (const mobile of [false, true]) test(`concentration links and self applicati
   if (mobile) await page.getByRole('button', { name: 'Магия', exact: true }).click()
   else await page.getByRole('tab', { name: 'Магия', exact: true }).click()
   const block = page.locator('.spell-concentration:visible')
-  await expect(block).toContainText('Вы не поддерживаете концентрацию.')
-  await expect(page.locator('.spells-block:visible > :first-child')).toHaveClass('spell-concentration')
+  await expect(block).toHaveCount(0)
   if (mobile) await expect(page.locator('.mobile-swipe-stage')).not.toHaveClass(/settling/)
   await page.evaluate(async () => {
     await Promise.all([...document.querySelectorAll('.inner-tabs-content, .inner-tab-pane, .mobile-swipe-track')]
@@ -56,11 +55,14 @@ for (const mobile of [false, true]) test(`concentration links and self applicati
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
   const bounds = await row.boundingBox()
   await page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2)
-  await page.getByRole('menuitem', { name: 'Использовать на себя', exact: true }).click()
-  await expect(block).toContainText('Торин')
+  await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'На себя', exact: true }).click()
+  await expect(block.locator('[aria-label="Торин"]')).toBeVisible()
+  await expect(block).toHaveClass(/morph-tile/)
+  await expect(block).toHaveCSS('margin-bottom', '16px')
   await expect(block.locator('.npc-marker')).toHaveCSS('color', 'rgb(255, 153, 0)')
   expect(writes[0]).toMatchObject({ spellId: 802, optionKey: 'haste' })
   await block.getByRole('button', { name: 'Прекратить', exact: true }).click()
-  await expect(block).toContainText('Вы не поддерживаете концентрацию.')
+  await expect(block).toHaveCount(0)
   expect(writes[1]).toMatchObject({ endId: 'cast-1' })
 })

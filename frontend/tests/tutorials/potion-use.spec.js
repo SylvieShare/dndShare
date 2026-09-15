@@ -135,8 +135,8 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
   connected = false
   await openSheet('sender')
   await openPotionMenu()
-  await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
-  await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
+  await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
+  await expect(page.getByRole('menuitem', { name: 'На себя', exact: true })).toBeVisible()
   connected = true
   await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/char/sender&guest')
   if (mobile) await page.getByRole('button', { name: 'Предметы', exact: true }).click()

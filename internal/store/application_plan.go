@@ -20,6 +20,9 @@ type ApplicationEffect struct {
 	Params        map[string]any `json:"params"`
 }
 type ApplicationPlan struct {
+	CastID          string `json:"castId,omitempty"`
+	CastLevel       int    `json:"castLevel,omitempty"`
+	healingRoll     *ApplicationRoll
 	ConcentrationID string `json:"concentrationId,omitempty"`
 	Concentration   bool   `json:"concentration,omitempty"`
 	maximumHP       *int
@@ -144,7 +147,7 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 				selected = append(selected, raw)
 			}
 		}
-		if len(selected) != 1 {
+		if len(selected) != 1 && !(option == "" && len(links) == 0 && len(array(object(data["heal"])["dices"])) > 0) {
 			return p, ErrApplication
 		}
 		links = selected

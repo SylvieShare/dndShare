@@ -2,9 +2,7 @@
   <div class="spell-cast-controls">
     <template v-if="baseLevel > 0 && !entry.ref?.slotless">
       <FormField label="Круг ячейки" vertical>
-        <FormSelect :value="level" aria-label="Круг ячейки" @update:value="value => level = Number(value)">
-          <option v-for="option in levels" :key="option" :value="option">{{ option }} круг</option>
-        </FormSelect>
+        <SpellLevelSlider v-model="level" :allowed="levels" />
       </FormField>
       <ToggleSwitch v-if="ctx.charCtx.ownerMode" v-model="spend" label="Потратить ячейку" />
       <FormField v-if="spend && pools.length > 1" label="Источник ячейки" vertical>
@@ -15,17 +13,18 @@
         </FormSelect>
       </FormField>
       <small v-if="spend && !slot" role="status">Нет доступной ячейки этого круга.</small>
-      <small v-else-if="!spend">Только бросок — ячейка не расходуется.</small>
+      <small v-else-if="!spend">{{ application ? 'Ячейка не расходуется.' : 'Только бросок — ячейка не расходуется.' }}</small>
     </template>
     <small v-else-if="baseLevel > 0">{{ level }} круг · без траты ячейки</small>
-    <slot :cast-level="level" :disabled="disabled" :commit="commit" :spend="spend && !entry.ref?.slotless && baseLevel > 0" />
+    <slot :cast-level="level" :disabled="disabled" :commit="commit" :spend="spend && !entry.ref?.slotless && baseLevel > 0" :pool="slot?.pool || pool" />
   </div>
 </template>
 <script setup>
-import { computed, inject, ref } from 'vue'
+import SpellLevelSlider from './SpellLevelSlider.vue'
+import { computed, inject, ref, watch } from 'vue'
 import { FormField, FormSelect, ToggleSwitch } from '@sylvieshare/share-ui'
 
-const props = defineProps({ entry: { type: Object, required: true }, castLevel: Number, spendByDefault: Boolean })
+const props = defineProps({ entry: { type: Object, required: true }, castLevel: Number, spendByDefault: Boolean, application: Boolean })
 const ctx = inject('spellsBlockCtx')
 const baseLevel = computed(() => Number(props.entry.item?.data?.lvl) || 0)
 const available = computed(() => ctx.availableSpellSlotOptions(props.entry))
@@ -35,7 +34,13 @@ const level = ref(props.entry.ref?.slotless ? props.castLevel : spend.value
   ? available.value.find(option => option.level === rememberedLevel)?.level || available.value[0]?.level || rememberedLevel
   : rememberedLevel)
 const pool = ref('long_rest')
-const levels = computed(() => Array.from({ length: 10 - baseLevel.value }, (_, index) => baseLevel.value + index))
+const levels = computed(() => {
+  if (props.entry.ref?.slotless) return [props.castLevel || baseLevel.value]
+  if (!props.application && !spend.value) return Array.from({ length: 10 - baseLevel.value }, (_, index) => baseLevel.value + index)
+  const usable = [...new Set(available.value.map(option => option.level))]
+  return usable.length ? usable : !spend.value ? [baseLevel.value] : []
+})
+watch(levels, usable => { if (usable.length && !usable.includes(level.value)) level.value = usable[0] }, { immediate: true })
 const pools = computed(() => available.value.filter(option => option.level === level.value))
 const slot = computed(() => pools.value.find(option => option.pool === pool.value) || pools.value[0])
 const disabled = computed(() => ctx.charCtx.itemTransfers?.busy || ctx.spellcastingBlocked || (spend.value && (!ctx.charCtx.ownerMode || !slot.value)))

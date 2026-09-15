@@ -79,6 +79,7 @@
     </template>
 
     <template #default="{ close }">
+      <SpellApplicationMenu :entry="entry" :cast-level="castLevel" @close="close" />
       <SpellRollMenu :entry="entry" :cast-level="castLevel" @close="close" />
       <RowActionSeparator v-if="hasMetrics" />
       <RowActionItem action="view" @click="openDetails(close)">Открыть описание</RowActionItem>
@@ -142,7 +143,6 @@
         {{ useLabel }}
       </RowActionItem>
       <RowActionItem v-if="ctx.charCtx.ownerMode && entry.item?.data?.concentration" :icon="Focus" :disabled="ctx.spellcastingBlocked || ctx.charCtx.itemTransfers?.busy" @click="startConcentration(close)">Начать концентрацию</RowActionItem>
-      <ItemTransferAction v-for="link in offerLinks" :key="`offer-${link.key}`" source="spells" purpose="use" :entry="{ uid: String(entry.id || entry.item?.id) }" :name="entry.item?.name" :effect-label="offerLinks.length > 1 ? link.name : ''" :option-key="link.key" :disabled="ctx.spellcastingBlocked" @self="applySelf(link, close)" @close="close" />
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && !isReadonlyGrant"
         action="delete"
@@ -154,8 +154,7 @@
 </template>
 
 <script setup>
-import { statusEffectLinks } from '@/features/character-editor/lib/characterStatuses'
-import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
+import SpellApplicationMenu from './SpellApplicationMenu.vue'
 import { Focus, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
 import SpellScalingFormula from './SpellScalingFormula.vue'
@@ -228,7 +227,6 @@ const useLabel = computed(() => ctx.spellcastingBlocked ? 'Сотворение 
 const hasHigherLevelChoice = computed(() =>
   !props.entry.ref.slotless && (slotOptions.value.length > 1 || slotOptions.value.some(option => option.level > baseLvl.value))
 )
-const offerLinks = computed(() => statusEffectLinks(props.entry.item).map(link => ({ ...link, name: ctx.charCtx.characterResources?.itemsById?.get?.(String(link.effect_id))?.name || props.entry.item?.name })))
 
 // Drag the whole row to reorder; the sortable's 4px threshold keeps a plain tap a click. A drag flips
 // `sortable.dragging` mid-gesture — we remember it so the trailing click doesn't open the spell modal.
@@ -270,10 +268,6 @@ function setSource(key, closeSubmenu, closeMenu) {
   closeMenu()
 }
 
-async function applySelf(link, close) {
-  close()
-  await ctx.charCtx.itemTransfers?.concentration.self(props.entry.item, link.key)
-}
 async function startConcentration(close) {
   close()
   await ctx.charCtx.itemTransfers?.concentration.start(props.entry.item)

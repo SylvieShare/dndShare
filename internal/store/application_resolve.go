@@ -132,7 +132,13 @@ func (s *Store) resolveItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ch
 					}
 				}
 			}
+			if err = validateSpellCastTarget(ctx, tx, plan, t, resolved, destination); err != nil {
+				return t, err
+			}
 			appliedPlan = plan
+			if err = prepareSpellHealing(ctx, tx, &plan); err != nil {
+				return t, err
+			}
 			if npc != nil {
 				result, err = applyApplication(doc, plan, fmt.Sprintf("transfer-%d", t.ID), secureApplicationDie)
 			} else {

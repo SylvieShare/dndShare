@@ -1,17 +1,16 @@
 <template>
-  <RowActionItem v-if="ctx.ownerMode && purpose === 'use' && (!ctx.topSession || !interactionAllowed) && !entry?.params?.magic?.lost" :icon="Pill" :disabled="disabled || controller?.state.busy" @click="emit('self')">{{ effectLabel || 'Использовать на себя' }}</RowActionItem>
-  <RowActionSubmenu v-else-if="ctx.ownerMode && ctx.topSession && interactionAllowed && ctx.itemTransfers && !entry?.params?.magic?.lost" :min-width="260" :disabled="disabled || controller.state.busy">
+  <RowActionSubmenu v-if="ctx.ownerMode && (purpose === 'use' || (ctx.topSession && interactionAllowed)) && !entry?.params?.magic?.lost" :min-width="260" :disabled="disabled || controller?.state.busy">
     <template #trigger="{ open }">
-      <RowActionItem :icon="purpose === 'use' ? Pill : Send" submenu :submenu-open="open" :disabled="disabled || controller.state.busy" @click="!open && controller.loadPlayers()">{{ purpose === 'use' ? effectLabel || 'Использовать на…' : 'Передать' }}</RowActionItem>
+      <RowActionItem :icon="purpose === 'use' ? Pill : Send" submenu :submenu-open="open" :disabled="disabled || controller?.state.busy" @click="!open && ctx.topSession && controller?.loadPlayers()">{{ purpose === 'use' ? effectLabel || 'Использовать на…' : 'Передать' }}</RowActionItem>
     </template>
     <template #default="{ close }">
-      <RowActionItem v-if="purpose === 'use'" :icon="UserRound" :disabled="disabled || controller.state.busy" @click="emit('self'); close()">На себя</RowActionItem>
-      <LoadingIndicator v-if="controller.state.loading" label="Загрузка игроков" />
-      <p v-if="controller.state.error" class="transfer-menu-message transfer-menu-error" role="alert">{{ controller.state.error }}</p>
-      <template v-if="!controller.state.loading">
-        <RowActionItem :icon="Crown" :disabled="disabled || controller.state.busy" @click="send({ charUuid: 'dm' }, close)">{{ purpose === 'use' ? 'Мастер — выберет цель' : 'Мастер — инвентарь сессии' }}</RowActionItem>
+      <RowActionItem v-if="purpose === 'use'" :icon="UserRound" :disabled="disabled || controller?.state.busy" @click="emit('self'); close()">На себя</RowActionItem>
+      <LoadingIndicator v-if="ctx.topSession && interactionAllowed && controller?.state.loading" label="Загрузка игроков" />
+      <p v-if="controller?.state.error" class="transfer-menu-message transfer-menu-error" role="alert">{{ controller?.state.error }}</p>
+      <template v-if="ctx.topSession && interactionAllowed && !controller?.state.loading">
+        <RowActionItem :icon="Crown" :disabled="disabled || controller?.state.busy" @click="send({ charUuid: 'dm' }, close)">{{ purpose === 'use' ? 'Мастер — выберет цель' : 'Мастер — инвентарь сессии' }}</RowActionItem>
         <p v-if="!controller.recipients.length && purpose !== 'use'" class="transfer-menu-message">В сессии пока нет других игроков.</p>
-        <RowActionItem v-for="player in controller.recipients" :key="player.charUuid" class="transfer-recipient" :disabled="disabled || controller.state.busy" @click="send(player, close)">
+        <RowActionItem v-for="player in controller.recipients" :key="player.charUuid" class="transfer-recipient" :disabled="disabled || controller?.state.busy" @click="send(player, close)">
           <template #icon>
             <img v-if="pvAvatar(player)" :src="pvAvatar(player)" alt="" />
             <span v-else>{{ (pvName(player) || '?').slice(0, 1) }}</span>

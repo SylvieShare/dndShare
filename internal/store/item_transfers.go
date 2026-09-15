@@ -142,6 +142,14 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 	if err = lockConcentrationGraph(ctx, tx); err != nil {
 		return ItemTransfer{}, err
 	}
+	result, err := s.createItemTransferTx(ctx, tx, userID, sessionID, senderID, recipientID, version, source, uid, actionID, purpose, option, nil)
+	if err != nil {
+		return result, err
+	}
+	return result, tx.Commit(ctx)
+}
+func (s *Store) createItemTransferTx(ctx context.Context, tx pgx.Tx, userID, sessionID, senderID, recipientID, version int64, source, uid, actionID, purpose, option string, frozen *ApplicationPlan) (ItemTransfer, error) {
+	var err error
 	var settings SessionSettings
 	err = tx.QueryRow(ctx, `SELECT settings FROM dndshare."session" WHERE id=$1 AND deleted=false FOR SHARE`, sessionID).Scan(&settings)
 	if errors.Is(err, pgx.ErrNoRows) {
@@ -170,7 +178,7 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 		if json.Unmarshal(existing.Entry, &reserved) != nil || existing.Purpose != purpose || existing.SessionID != sessionID || existing.RecipientCharID != recipientID || existing.Source != source || reserved["uid"] != uid {
 			return ItemTransfer{}, ErrItemTransferConflict
 		}
-		return existing, tx.Commit(ctx)
+		return existing, nil
 	}
 	if !errors.Is(err, ErrNotFound) {
 		return ItemTransfer{}, err
@@ -229,7 +237,7 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 		return ItemTransfer{}, err
 	}
 	plan := ApplicationPlan{}
-	if purpose == "use" {
+	if purpose == "use" && frozen == nil {
 		expectedType := 10
 		if source == "spells" {
 			expectedType = 5
@@ -238,6 +246,9 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 		if err != nil {
 			return ItemTransfer{}, err
 		}
+	}
+	if frozen != nil {
+		plan = *frozen
 	}
 	if applicationNeedsConcentration(plan) {
 		plan.ConcentrationID, err = beginConcentrationTx(ctx, tx, senderID, plan.ItemID, plan.Name, actionID, true)
@@ -309,7 +320,7 @@ func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, sende
 			return transfer, err
 		}
 	}
-	return transfer, tx.Commit(ctx)
+	return transfer, nil
 }
 
 func (s *Store) ResolveItemTransfer(ctx context.Context, userID, charID, transferID int64, accept bool) (ItemTransfer, error) {

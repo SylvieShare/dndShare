@@ -58,6 +58,8 @@ const common = {
 const byType = {
   2: { armor: { name: 'Правило защиты' }, unit_cost_copper: { name: 'Цена одного фута, мм', min: 0 }, unit_weight: { name: 'Вес одного фута, фнт.', type: 'float', min: 0 } },
   5: {
+    'application_targets.count': { name: 'Максимум целей', min: 1, max: 50, hint: 'Число разных целей за одно применение. Без настройки — одна цель.' },
+    'application_targets.per_slot': { name: 'Дополнительных целей за круг', min: 0, max: 50, hint: 'Сколько целей добавляет каждый круг ячейки выше базового. 0 — число целей не растёт.' },
     lvl: { name: 'Круг заклинания', min: 0, max: 9, hint: '0 — заговор, 1–9 — круг заклинания.' },
     time: { name: 'Время сотворения', placeholder: '1 действие' }, range: { name: 'Дистанция', placeholder: '60 футов' },
     duration: { hint: 'Например: мгновенная или до 1 минуты. Концентрация задаётся отдельным флажком.' },

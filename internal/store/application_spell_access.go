@@ -8,7 +8,7 @@ import (
 
 // Granted spells are derived from the same owned abilities and active equipment
 // as the sheet; clients cannot grant themselves an arbitrary catalogue spell.
-func canUseApplicationSpell(ctx context.Context, tx pgx.Tx, values map[string]any, spellID int) (bool, error) {
+func canUseApplicationSpell(ctx context.Context, tx pgx.Tx, values map[string]any, spellID int, grantOut ...*map[string]any) (bool, error) {
 	if ownsApplicationSpell(values["spells"], spellID) {
 		return true, nil
 	}
@@ -70,6 +70,9 @@ func canUseApplicationSpell(ctx context.Context, tx pgx.Tx, values map[string]an
 				id = number(object(grant["spell"])["id"])
 			}
 			if id == spellID && level >= max(1, number(grant["level"])) {
+				if len(grantOut) > 0 {
+					*grantOut[0] = grant
+				}
 				return true, nil
 			}
 		}

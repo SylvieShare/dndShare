@@ -28,7 +28,13 @@ func applyApplication(doc transferDocument, p ApplicationPlan, uid string, roll 
 	values := doc.values()
 	hp := object(values["hp"])
 	if p.Healing != "" {
-		v, err := rollApplication(p.Healing, roll)
+		var v ApplicationRoll
+		var err error
+		if p.healingRoll != nil {
+			v = *p.healingRoll
+		} else {
+			v, err = rollApplication(p.Healing, roll)
+		}
 		if err != nil {
 			return r, err
 		}

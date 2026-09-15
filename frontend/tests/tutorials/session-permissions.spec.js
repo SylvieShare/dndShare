@@ -21,6 +21,6 @@ for (const mobile of [false, true]) test(`session permissions reveal separate au
   const bounds = await trigger.boundingBox()
   await page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2)
   await expect(page.getByRole('menuitem', { name: 'Передать', exact: true })).toHaveCount(0)
-  await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
-  await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
+  await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
+  await expect(page.getByRole('menuitem', { name: 'На себя', exact: true })).toBeVisible()
 })
