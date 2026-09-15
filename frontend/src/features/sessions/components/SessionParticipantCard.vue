@@ -58,21 +58,7 @@
               </template>
 
               <template v-else>
-                <div class="hp-row">
-                  <StatBar label="Здоровье"
-                    class="p-hp-statbar"
-                    size="small"
-                    :percent="hpPercent"
-                    :color="hpColor"
-                    :temp-percent="tempPercent"
-                  />
-                  <div class="hp-numbers">
-                    <span class="hp-current" :style="{ color: hpColor }">{{ hp.current }}</span>
-                    <span v-if="hp.temp" class="hp-temp">+{{ hp.temp }}</span>
-                    <span class="hp-sep">/</span>
-                    <span class="hp-max">{{ hp.max }}</span>
-                  </div>
-                </div>
+                <SessionHpBar :hp="hp" />
               </template>
             </template>
           </div>
@@ -131,7 +117,7 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
-import { StatBar } from '@sylvieshare/share-ui'
+import SessionHpBar from './SessionHpBar.vue'
 import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
 
 const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
@@ -208,20 +194,6 @@ const hp = computed(() => {
 
 const showHp = computed(() => hp.value !== null && hp.value.max > 0)
 const isDead = computed(() => showHp.value && hp.value.current <= 0)
-
-const hpPercent = computed(() => {
-  if (!showHp.value) return 0
-  return Math.min(100, Math.max(0, (hp.value.current / hp.value.max) * 100))
-})
-const tempPercent = computed(() => {
-  if (!showHp.value || !hp.value.temp) return 0
-  return Math.min(100 - hpPercent.value, (hp.value.temp / hp.value.max) * 100)
-})
-const hpColor = computed(() => {
-  if (hpPercent.value > 50) return 'var(--success)'
-  if (hpPercent.value > 25) return 'var(--warning)'
-  return 'var(--danger)'
-})
 
 const avatarColor = computed(() => {
   const code = initial.value.charCodeAt(0)
@@ -388,42 +360,6 @@ const participantTileStyle = computed(() => ({
 .p-who {
   font-size: 11px;
   color: var(--text-2);
-}
-
-.hp-row {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 5px;
-}
-
-.p-hp-statbar { flex: 1; }
-
-.hp-numbers {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  font-size: 10px;
-  flex-shrink: 0;
-}
-
-.hp-current {
-  font-weight: 700;
-  font-size: 11px;
-}
-
-.hp-temp {
-  color: var(--info);
-  font-size: 10px;
-}
-
-.hp-sep {
-  color: var(--text-muted);
-  margin: 0 1px;
-}
-
-.hp-max {
-  color: var(--text-muted);
 }
 
 .ds-row {

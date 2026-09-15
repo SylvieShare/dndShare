@@ -14,7 +14,8 @@
         </span></template>
         <span class="application-target-details">
           <span class="application-target-name"><NpcMarker v-if="target.kind === 'npc'" :letter="target.letter" :color="target.color" />{{ target.name }}</span>
-          <span class="application-target-hp"><Heart :size="13" aria-hidden="true" />ХП: {{ target.hp ? `${target.hp.current} / ${target.hp.max}` : '—' }}<span v-if="target.hp?.temp" class="application-target-temp">+{{ target.hp.temp }} врем.</span></span>
+          <SessionHpBar v-if="target.hp" :hp="target.hp" />
+          <span v-else class="application-target-hp-unknown">ХП: —</span>
         </span>
       </ActionButton>
     </div>
@@ -24,11 +25,12 @@
 </template>
 <script setup>
 import NpcMarker from './NpcMarker.vue'
+import SessionHpBar from './SessionHpBar.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import TransferDecisionActions from '@/features/item-transfers/components/TransferDecisionActions.vue'
 import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { computed, inject, ref } from 'vue'
-import { Heart, PawPrint, UserRound } from '@lucide/vue'
+import { PawPrint, UserRound } from '@lucide/vue'
 import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
@@ -80,12 +82,11 @@ async function approve() {
 </script>
 <style scoped>
 .application-targets { display: flex; flex-direction: column; gap: 4px; }
-.application-target { justify-content: flex-start; text-align: left; overflow-wrap: anywhere; }
+.application-targets .application-target { display: grid; grid-template-columns: 48px minmax(0, 1fr); text-align: left; overflow-wrap: anywhere; }
 .application-target-icon { display: grid; place-items: center; width: 48px; height: 48px; flex: 0 0 48px; }
-.application-target-details { display: grid; gap: 4px; }
-.application-target-name, .application-target-hp { display: flex; align-items: center; gap: 6px; }
-.application-target-hp { flex-wrap: wrap; color: var(--text-muted); font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums; }
-.application-target-temp { color: var(--info); }
+.application-target-details { display: grid; gap: 4px; min-width: 0; }
+.application-target-name { display: flex; align-items: center; gap: 6px; }
+.application-target-hp-unknown { color: var(--text-muted); font-size: 12px; }
 .transfer-approval { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .transfer-approval-error { color: var(--danger); font-size: 12px; }
 </style>

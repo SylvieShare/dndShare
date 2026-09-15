@@ -16,10 +16,14 @@ for (const mobile of [false, true]) test(`DM resolves an application to a named 
   await expect(hero.locator('img')).toHaveAttribute('src', '/static/tab-stats.svg')
   const npc = modal.getByRole('button', { name: /B Гоблин/ })
   await expect(npc.locator('img')).toHaveAttribute('src', '/static/tab-stats.svg')
-  await expect(hero.locator('.application-target-hp')).toHaveText('ХП: 0 / 20+3 врем.')
-  await expect(npc.locator('.application-target-hp')).toHaveText('ХП: 5 / 12')
+  await expect(hero.locator('.hp-numbers')).toHaveText(/0\s*\+3\s*\/\s*20/)
+  await expect(npc.locator('.hp-numbers')).toHaveText(/5\s*\/\s*12/)
+  await expect(hero.getByRole('meter', { name: 'Здоровье' })).toHaveAttribute('aria-valuenow', '0')
+  await expect(hero.locator('.stat-bar-temp')).toHaveCSS('width', /px$/)
+  expect(await npc.getByRole('meter').getAttribute('aria-valuenow')).toBe(String(5 / 12 * 100))
   for (const row of [hero, npc]) {
-    const [name, hp] = await row.locator('.application-target-name, .application-target-hp').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().toJSON()))
+    expect((await row.getByRole('meter').boundingBox()).width).toBeGreaterThan(80)
+    const [name, hp] = await row.locator('.application-target-name, .hp-row').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().toJSON()))
     expect(hp.y).toBeGreaterThanOrEqual(name.y + name.height)
   }
   await expect(npc.locator('.npc-marker')).toHaveCSS('color', 'rgb(255, 153, 0)')
