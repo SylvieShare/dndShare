@@ -4,6 +4,8 @@ const optional = { optional: true }
 const bonusFields = [{ key: 'ability', name: 'Характеристика', type: 'suggest', suggest_id: 16 }, { key: 'bonus', name: 'Прибавка', type: 'int', default: 1 }]
 const rollFields = { count: { name: 'Костей', min: 1 }, dice_id: { name: 'Кость', type: 'dice' }, type: { name: 'Тип урона' }, bonus: { name: 'Постоянная прибавка' } }
 const common = {
+  application_sources: { rowName: 'Источник', hint: 'Справочный список поддерживается вручную. Изменение источника не изменяет механики предмета.' },
+  'application_sources.key': { hint: 'Необязательный ключ зависимости в предмете-источнике, для различения нескольких применений.' },
   desc: { hint: 'Правила и описание объекта. Можно вставить бросок костей или ссылку на справочник.' },
   description: { hint: 'Описание, которое увидит игрок. Можно вставить броски и ссылки на другие записи.' },
   short_description: { name: 'Короткое представление', hint: 'Один-два предложения для шапки карточки.' },

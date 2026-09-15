@@ -424,7 +424,11 @@ func (s *Store) SearchByTypesAndName(ctx context.Context, typeIDs []int64, q str
 }
 
 func (s *Store) attachItemReadMetadata(ctx context.Context, items []Item, userID *int64) ([]Item, error) {
-	items, err := s.AttachItemContentSources(ctx, items)
+	items, err := s.attachEffectPresentation(ctx, items, userID)
+	if err != nil {
+		return nil, err
+	}
+	items, err = s.AttachItemContentSources(ctx, items)
 	if err != nil {
 		return nil, err
 	}

@@ -44,7 +44,7 @@
       </div>
     </DetailSection>
     <DetailSection v-if="data.on_end_effect?.id" label="После завершения"><HandbookReferenceRows :rows="[{ id: data.on_end_effect.id }]" :z-index="nestedViewZIndex" /></DetailSection>
-    <EffectSources :item-id="item.id" :z-index="nestedViewZIndex" />
+    <EffectSources :sources="data.application_sources || []" :z-index="nestedViewZIndex" />
 
     <DetailSection v-if="exhaustionLevels.length" label="Уровни истощения" tone="danger">
       <template #icon><BatteryLow /></template>

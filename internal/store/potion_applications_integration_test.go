@@ -14,7 +14,7 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
 	ctx := context.Background()
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES
  (84,'Лечение',10,'{"consumption":{"healing":"2d4 + 2"}}'),
- (100,'Эффект',15,'{"stacking":"single","concentration":true,"duration":{"kind":"minutes","value":1}}'),
+ (100,'Эффект',15,'{"stacking":"single","concentration":true,"application_sources":[{"item":101},{"item":102}],"duration":{"kind":"minutes","value":1}}'),
  (101,'Заклинание',5,'{"status_effects":[{"key":"buff","effect":{"id":100}}]}'),
  (102,'Зелье эффекта',10,'{"consumption":{"spell":{"id":101},"duration":{"kind":"hours","formula":"1d4"},"concentration":false}}');
  UPDATE dndshare."char" SET data='{"values":{"name":"Тест","hp":{"current":0,"max":{"base":10,"bonuses":[]},"ds_failure":2},"potions":[{"uid":"heal","item_id":84,"count":3},{"uid":"effect","item_id":102,"count":2}]}}' WHERE id=1;

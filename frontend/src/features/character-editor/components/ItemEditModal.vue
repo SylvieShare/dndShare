@@ -34,7 +34,7 @@
 
     <ItemPickerModal
       v-if="picker.open"
-      :item-type-ids="picker.typeId === 2 ? itemTypesStore.relatedTypeIds(2) : [picker.typeId]"
+      :item-type-ids="Array.isArray(picker.typeId) ? picker.typeId : picker.typeId === 2 ? itemTypesStore.relatedTypeIds(2) : [picker.typeId]"
       :z-index="zIndex + 400"
       title="Выбрать предмет"
       @pick="onItemPicked"

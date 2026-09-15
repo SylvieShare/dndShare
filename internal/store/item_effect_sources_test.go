@@ -38,7 +38,7 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	}
 	exec(`CREATE SCHEMA dndshare;
  CREATE TABLE dndshare.item_type(id bigint PRIMARY KEY,fields jsonb);
- CREATE TABLE dndshare.item(id bigserial PRIMARY KEY,user_id bigint,name text,name_en text,type_id bigint,data jsonb);
+ CREATE TABLE dndshare.item(id bigserial PRIMARY KEY,user_id bigint,name text,name_en text,type_id bigint,data jsonb,icon_image_id bigint,icon_svg_id bigint);
  ALTER SEQUENCE dndshare.item_id_seq RESTART WITH 9000;
  INSERT INTO dndshare.item(id,name,type_id,data) VALUES(86,'Посох иссушения',19,'{"desc":"keep","weapon":{"base_item_id":37},"attunement":"required","feature_actions":[{"key":"keep"}]}');`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
@@ -248,6 +248,15 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	if damage["dice_count"] != float64(2) || damage["damage_type"] != float64(10) || damage["resource_cost"] != float64(1) || link["target"] != "other" {
 		t.Fatal("wrong staff mechanics")
 	}
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data,icon_image_id) VALUES
+ (9900,'Icon effect',15,'{"on_end_effect":{"id":9901}}',NULL),
+ (9901,'After effect',15,'{}',NULL),
+ (9902,'Icon spell',5,'{"status_effects":[{"effect":{"id":9900}}]}',700)`)
+	exec(schemaEffectSourcesSQL)
+	var copied int
+	if err := pool.QueryRow(ctx, `SELECT count(*) FROM dndshare.item WHERE id IN (9900,9901) AND icon_image_id=700`).Scan(&copied); err != nil || copied != 2 {
+		t.Fatalf("shared icon ids: %d %v", copied, err)
+	}
 	s := &Store{pool: pool}
 	search := func(user *int64, id int64, limit, offset int) []ItemEffectSource {
 		t.Helper()
@@ -263,9 +272,14 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	payload := `{"status_effects":[{"effect":{"id":` + strconv.FormatInt(effectID, 10) + `},"condition":"condition"}]}`
 	exec(`INSERT INTO dndshare.item(id,user_id,name,type_id,data) VALUES(1,7,'A own',4,$1::jsonb),(2,8,'B private',5,$1::jsonb),(3,NULL,'C public',2,$1::jsonb)`, payload)
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(4,'bad array',2,'{"status_effects":{}}'),(5,'bad elements',2,'{"status_effects":[null,17,"str",{"effect":"not-an-id"}]}')`)
+	exec(`UPDATE dndshare.item SET data=jsonb_set(data,'{application_sources}',(data->'application_sources')||'[ {"item":1,"condition":"condition"},{"item":2},{"item":3} ]'::jsonb) WHERE id=$1`, effectID)
 	user := int64(7)
 	if len(search(nil, effectID, 40, 0)) != 2 || len(search(&user, effectID, 40, 0)) != 3 {
 		t.Fatal("source visibility mismatch")
+	}
+	projected, err := s.attachEffectPresentation(ctx, []Item{{TypeID: 15, Data: json.RawMessage(`{"application_sources":[{"item":1,"condition":"own"},{"item":2,"condition":"private"},{"item":3}]}`)}}, &user)
+	if err != nil || strings.Contains(string(projected[0].Data), "private") || !strings.Contains(string(projected[0].Data), "own") {
+		t.Fatalf("private source projection: %v %v", projected, err)
 	}
 	first, second := search(&user, effectID, 1, 0), search(&user, effectID, 1, 1)
 	if len(first) != 1 || len(second) != 1 || first[0].ItemID == second[0].ItemID {
@@ -277,8 +291,8 @@ func TestWeaponChargesMigrationAndEffectSources(t *testing.T) {
 	}
 	exec(`UPDATE dndshare.item SET user_id=NULL WHERE id=$1`, effectID)
 	exec(`UPDATE dndshare.item SET data='{}' WHERE id=3; DELETE FROM dndshare.item WHERE id=1;`)
-	if len(search(&user, effectID, 40, 0)) != 1 {
-		t.Fatal("stale sources after edit and deletion")
+	if len(search(&user, effectID, 40, 0)) != 2 {
+		t.Fatal("explicit sources persist after mechanics edit; deleted items are hidden")
 	}
 	exec(`UPDATE dndshare.item SET user_id=7,data='{"keep":"custom"}' WHERE id=86`)
 	exec(schemaWeaponChargesEffectsSQL)

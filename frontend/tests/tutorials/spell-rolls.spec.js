@@ -100,7 +100,7 @@ for (const mobile of [false, true]) {
     })
     test('healing preview remains and casting prefers short rest slots of the selected level', async ({ page }) => {
       const row = page.locator('.spell-row').filter({ hasText: 'Лечение' })
-      const scaling = row.locator('.ad-heal .spell-scaling-formula')
+      const scaling = row.locator('.ad-heal .spell-scaling')
       await expect(scaling).toHaveAttribute('aria-label', '+1к4 за каждый круг ячейки выше 1-го')
       await expect(scaling.locator('.system-die')).toHaveCount(1)
       await expect(scaling.locator('.ss-ro')).toHaveCount(1)

@@ -80,6 +80,7 @@ func TestEffectSourceFilter(t *testing.T) {
 			t.Fatalf("filter %v: got %v, want %v, err=%v", values, actual, expected, err)
 		}
 	}
+	exec(`UPDATE dndshare.item SET data=data||CASE id WHEN 1 THEN '{"application_sources":[{"item":10},{"item":11}]}'::jsonb WHEN 2 THEN '{"application_sources":[{"item":12}]}'::jsonb WHEN 3 THEN '{"application_sources":[{"item":10}]}'::jsonb WHEN 4 THEN '{"application_sources":[{"item":11}]}'::jsonb WHEN 5 THEN '{"application_sources":[{"item":13}]}'::jsonb ELSE '{}'::jsonb END WHERE type_id=15`)
 	check(nil, []any{"basic"}, []int64{1, 2, 6})
 	check(nil, []any{"spell"}, []int64{1, 3})
 	check(nil, []any{"magic_item"}, []int64{1, 4})
@@ -89,5 +90,5 @@ func TestEffectSourceFilter(t *testing.T) {
 	userID := int64(7)
 	check(&userID, []any{"spell"}, []int64{1, 2, 3})
 	exec(`UPDATE dndshare.item SET data='{}' WHERE id=10; DELETE FROM dndshare.item WHERE id=11`)
-	check(nil, []any{"spell", "magic_item"}, []int64{})
+	check(nil, []any{"spell", "magic_item"}, []int64{1, 3})
 }

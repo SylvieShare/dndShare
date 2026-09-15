@@ -28,10 +28,10 @@ func effectSourceFilterSQL(values []any, userID *int64, add func(any) string) st
 			viewer = add(*userID)
 			visibility = "(" + visibility + " OR source.user_id = " + viewer + ")"
 		}
-		parts = append(parts, `EXISTS (SELECT 1 FROM dndshare.item source
- CROSS JOIN LATERAL `+catalogueEffectLinksSQL("source", viewer)+` links
- WHERE source.type_id = ANY(`+add(typeIDs)+`::bigint[]) AND `+visibility+`
- AND COALESCE(link#>>'{effect,id}',link->>'effect') = i.id::text)`)
+		parts = append(parts, `EXISTS (SELECT 1
+ FROM jsonb_array_elements(CASE WHEN jsonb_typeof(i.data->'application_sources')='array' THEN i.data->'application_sources' ELSE '[]'::jsonb END) ref
+ JOIN dndshare.item source ON source.id=CASE WHEN COALESCE(ref#>>'{item,id}',ref->>'item') ~ '^[0-9]{1,18}$' THEN COALESCE(ref#>>'{item,id}',ref->>'item')::bigint END
+ WHERE source.type_id = ANY(`+add(typeIDs)+`::bigint[]) AND `+visibility+`)`)
 	}
 	if len(parts) == 0 {
 		return "FALSE"

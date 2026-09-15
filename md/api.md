@@ -151,11 +151,11 @@ ability toggles and `status_effect` for adding or removing linked effects.
   `excludeItemId`, `limit`, `offset`. Контракт и типы —
   [поиск связей](features/ability-editor.md#поиск-связей).
 - `GET /api/items/{id}/effect-sources?limit=&offset=` — обратные ссылки на эффект
-  типа 15 из `status_effects` всех справочников. Ответ: `{sources: [{itemId, key,
+  типа 15 из его сохранённого `data.application_sources`. Ответ: `{sources: [{itemId, key,
   target, condition}]}`; limit по умолчанию 40, максимум 100. Видимы только
   публичные и собственные источники; скрытый/несуществующий эффект даёт пустой
-  список. Список строится из текущего JSON, изменения и удаления не оставляют
-  устаревших ссылок. Невалидный ID возвращает 400.
+  список. Поиск читает одну запись эффекта и выбранные ID, без обхода справочников.
+  Список поддерживается вручную; удалённые и недоступные источники не выводятся. Невалидный ID возвращает 400.
 - `POST /api/items`, `PUT /api/items/{id}` — также принимают необязательные
   `automationStatus`, `automationNote`, `requiresPlayerInteraction` вне `data`.
   Пропущенные значения сохраняются при обновлении. Эти поля доступны в Item DTO

@@ -430,6 +430,7 @@ var schemaParts = []struct {
 	{"spell-concentration", schemaSpellConcentrationSQL},
 	{"session-auto-accept", schemaSessionAutoAcceptSQL},
 	{"spell-casts", schemaSpellCastsSQL},
+	{"effect-sources", schemaEffectSourcesSQL},
 }
 
 const (
