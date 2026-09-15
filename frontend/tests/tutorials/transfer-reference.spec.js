@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
 for (const mobile of [false, true]) test(`transfer rows open catalogue references on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
@@ -13,7 +14,7 @@ for (const mobile of [false, true]) test(`transfer rows open catalogue reference
     const path = new URL(route.request().url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}
-    if (path === '/api/account/tutorials') json = { tutorials: [{ flowId: 'character', sourceKey: 'edition:1', device: mobile ? 'mobile' : 'desktop', revision: 1, status: 'completed' }] }
+    if (path === '/api/account/tutorials') json = { tutorials: [{ flowId: 'character', sourceKey: 'edition:1', device: mobile ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION, status: 'completed' }] }
     else if (path === '/api/char/recipient') json = character
     else if (path === '/api/char/recipient/version') json = { version: 1 }
     else if (path === '/api/char/recipient/sessions') json = { sessions: [session] }

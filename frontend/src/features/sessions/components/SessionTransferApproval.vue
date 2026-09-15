@@ -1,7 +1,6 @@
 <template>
   <span v-if="canApprove" class="transfer-approval">
-    <ActionButton :loading="busy" loading-label="Принимаем передачу" @click="event.data?.addressedToDm ? chooseTarget() : approve()"><template #icon><Check :size="15" /></template>{{ busy ? 'Принимаем…' : event.data?.purpose === 'use' ? 'Принять применение' : 'Принять передачу' }}</ActionButton>
-    <ActionButton v-if="event.data?.addressedToDm" :disabled="busy" @click="resolve('reject')">Отказать</ActionButton>
+    <TransferDecisionActions :busy="busy" @accept="event.data?.addressedToDm && event.data?.purpose === 'use' ? chooseTarget() : approve()" @reject="resolve('reject')" />
     <span v-if="error" role="alert" class="transfer-approval-error">{{ error }}</span>
   </span>
   <AppModalFrame v-if="picking" title="К кому применить" :z-index="3700" @close="!busy && (picking = false)">
@@ -19,9 +18,10 @@
 </template>
 <script setup>
 import NpcMarker from './NpcMarker.vue'
+import TransferDecisionActions from '@/features/item-transfers/components/TransferDecisionActions.vue'
 import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { computed, inject, ref } from 'vue'
-import { Check, UserRound } from '@lucide/vue'
+import { UserRound } from '@lucide/vue'
 import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'
 import { useSessionEventsStore } from '@/stores/sessionEvents'

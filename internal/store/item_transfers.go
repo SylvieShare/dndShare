@@ -36,10 +36,10 @@ type ItemTransfer struct {
 	ResolvedAt         *time.Time      `json:"resolvedAt,omitempty"`
 }
 
-const itemTransferSelect = `SELECT t.id, t.session_id, t.event_id, t.sender_char_id, COALESCE(t.recipient_char_id,0),
- sender.uuid::text, COALESCE(recipient.uuid::text,''), t.sender_name, t.recipient_name,
+const itemTransferSelect = `SELECT t.id, t.session_id, t.event_id, COALESCE(t.sender_char_id,0), COALESCE(t.recipient_char_id,0),
+ COALESCE(sender.uuid::text,''), COALESCE(recipient.uuid::text,''), t.sender_name, t.recipient_name,
  t.item_name, t.source, t.entry, t.status, t.created_at, t.resolved_at, COALESCE(sender_icon.url, sender.data #>> '{values,ava,url}'), transfer_event.author_user_id, COALESCE(recipient.user_id,transfer_session.owner_user_id), transfer_session.owner_user_id, t.purpose, t.application, t.application_result, t.recipient_char_id IS NULL, t.resolved_target
- FROM dndshare.item_transfer t JOIN dndshare."char" sender ON sender.id=t.sender_char_id
+ FROM dndshare.item_transfer t LEFT JOIN dndshare."char" sender ON sender.id=t.sender_char_id
  LEFT JOIN dndshare."char" recipient ON recipient.id=t.recipient_char_id
  JOIN dndshare.session_event transfer_event ON transfer_event.id=t.event_id
  JOIN dndshare."session" transfer_session ON transfer_session.id=t.session_id
@@ -100,7 +100,7 @@ func lockTransferCharacters(ctx context.Context, tx pgx.Tx, senderID, recipientI
 		return nil, err
 	}
 	expected := 2
-	if recipientID == 0 || senderID == recipientID {
+	if senderID == 0 || recipientID == 0 || senderID == recipientID {
 		expected = 1
 	}
 	if len(result) != expected {

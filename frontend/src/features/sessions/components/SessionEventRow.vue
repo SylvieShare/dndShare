@@ -42,6 +42,7 @@
 import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
 import NpcMarker from './NpcMarker.vue'
 import { computed } from 'vue'
+import { sessionEventTime } from '../lib/sessionEventTime'
 import { ArrowRight } from '@lucide/vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import TransferStatus from '@/features/item-transfers/components/TransferStatus.vue'
@@ -54,7 +55,7 @@ const props = defineProps({ event: Object, entityName: String, grouped: Boolean,
 const action = computed(() => sessionEventAction(props.event, props.entityName))
 const date = computed(() => new Date(props.event.createdAt))
 const fullTime = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleString('ru-RU'))
-const time = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }))
+const time = computed(() => sessionEventTime(props.event.createdAt))
 const transition = computed(() => sessionEventTransition(props.event))
 const hasBody = computed(() => props.event.type === 'item_transfer' || props.event.data?.applicationResult || props.event.data?.result || details.value || props.event.data?.resourceChanges?.length)
 const details = computed(() => sessionEventDetails(props.event))

@@ -28,8 +28,7 @@
           <template v-if="transfer.recipientCharUuid === characterUuid">
             <ApplicationSummary class="transfer-application" v-if="transfer.purpose === 'use'" :data="transfer.application || {}" />
             <div class="transfer-actions">
-              <ActionButton :disabled="state.busy" @click="controller.resolve(transfer, 'accept')">{{ transfer.purpose === 'use' ? 'Принять применение' : 'Принять' }}</ActionButton>
-              <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(transfer, 'reject')">Отказаться</ActionButton>
+              <TransferDecisionActions :busy="state.busy" @accept="controller.resolve(transfer, 'accept')" @reject="controller.resolve(transfer, 'reject')" />
             </div>
           </template>
           <template v-else>
@@ -44,6 +43,7 @@
 </template>
 <script setup>
 import ApplicationSummary from './ApplicationSummary.vue'
+import TransferDecisionActions from '@/features/item-transfers/components/TransferDecisionActions.vue'
 import CharacterInteractionPlayers from './CharacterInteractionPlayers.vue'
 import CharacterInteractionInbox from './CharacterInteractionInbox.vue'
 import { computed, ref, watch } from 'vue'

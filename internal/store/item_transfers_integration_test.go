@@ -65,6 +65,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(schemaPotionUseRequestsSQL)
 	exec(schemaPotionApplicationsSQL)
 	exec(schemaApplicationTargetsSQL)
+	exec(schemaSessionInventorySQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
@@ -260,6 +261,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	}
 	t.Run("player interactions", func(t *testing.T) { testSessionInteractionsPostgres(t, s) })
 	testPotionApplications(t, s, exec, current)
+	t.Run("session inventory", func(t *testing.T) { testSessionInventory(t, s, pool) })
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {
 		t.Fatalf("resolved pending list: %+v %v", pending, err)

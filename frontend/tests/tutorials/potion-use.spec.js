@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
 for (const mobile of [false, true]) test(`potion use reserves one dose, requests consent and consumes on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
@@ -18,7 +19,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     if (!path.startsWith('/api/')) return route.continue()
     const parts = path.split('/'), char = chars[parts[3]]
     let json = {}
-    if (path === '/api/account/tutorials') json = { tutorials: [false, true].map(m => ({ flowId: 'character', sourceKey: 'edition:1', device: m ? 'mobile' : 'desktop', revision: 1, status: 'completed' })) }
+    if (path === '/api/account/tutorials') json = { tutorials: [false, true].map(m => ({ flowId: 'character', sourceKey: 'edition:1', device: m ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION, status: 'completed' })) }
     else if (path === '/api/templates') json = { templates: [{ id: 1, name: 'DND5' }] }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/sessions/campaign') json = { session, participants: Object.entries(chars).map(([charUuid, c]) => ({ charUuid, templateId: 1, data: c.data, iconImageUrl: '/static/tab-stats.svg' })) }
@@ -83,13 +84,13 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     })
   }
   await openSheet('sender')
-  for (const decision of ['Отказаться', 'Принять применение']) {
+  for (const decision of ['Отказать', 'Принять']) {
     await openPotionMenu()
     await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
     await page.getByRole('menuitem', { name: 'Использовать на…', exact: true }).click()
     const recipient = page.getByRole('menuitem', { name: 'Торин', exact: true })
     await expect(recipient).toBeVisible()
-    await expect(page.getByRole('dialog', { name: 'Передать другому игроку', exact: true })).toHaveCount(0)
+    await expect(page.getByRole('dialog', { name: 'Передать', exact: true })).toHaveCount(0)
     await expect(recipient.locator('img')).toHaveCSS('width', '48px')
     await recipient.click()
     await expect(page.locator('.ps-badge:visible')).toHaveText('×2')
@@ -113,7 +114,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await page.getByRole('dialog').getByRole('button', { name: decision, exact: true }).click()
     await expect(page.getByRole('dialog')).toContainText('Незавершённых событий нет')
     const result = page.locator('[data-notification-type="application"]')
-    if (decision === 'Принять применение') {
+    if (decision === 'Принять') {
       await expect(result).toContainText('Восстановлено хитов: 0')
       await expect(result.locator('.dice-roll-result')).toContainText('= 8')
       await result.getByRole('button', { name: 'Закрыть уведомление' }).click()
@@ -122,7 +123,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
       await page.getByRole('dialog').getByRole('button', { name: 'Закрыть', exact: true }).last().click()
     }
     await expect(page.getByRole('dialog')).toHaveCount(0)
-    if (decision === 'Отказаться') await openSheet('sender')
+    if (decision === 'Отказать') await openSheet('sender')
     else expect(chars.recipient.data.values.potions).toHaveLength(0)
   }
   expect(requests).toHaveLength(2)

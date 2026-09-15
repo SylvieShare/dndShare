@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
 for (const mobile of [false, true]) test(`potion self-use applies healing and effect on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
@@ -15,7 +16,7 @@ for (const mobile of [false, true]) test(`potion self-use applies healing and ef
     const request = route.request(), path = new URL(request.url()).pathname
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}
-    if (path === '/api/account/tutorials') json = { tutorials: [false, true].map(m => ({ flowId: 'character', sourceKey: 'edition:1', device: m ? 'mobile' : 'desktop', revision: 1, status: 'completed' })) }
+    if (path === '/api/account/tutorials') json = { tutorials: [false, true].map(m => ({ flowId: 'character', sourceKey: 'edition:1', device: m ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION, status: 'completed' })) }
     else if (path === '/api/templates') json = { templates: [{ id: 1, name: 'DND5' }] }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/char/hero') json = char

@@ -58,7 +58,7 @@ type itemTransferRequest struct {
 }
 
 func validItemTransferRequest(req itemTransferRequest) bool {
-	return (req.Source != "spells" || req.Purpose == "use") && len(req.OptionKey) <= 100 && (req.Purpose == "" || req.Purpose == "transfer" || (req.Purpose == "use" && (req.Source == "potions" || req.Source == "spells"))) && isUUID(req.SessionUUID) && (isUUID(req.RecipientCharUUID) || (req.RecipientCharUUID == "dm" && req.Purpose == "use")) && isUUID(req.ClientActionID) &&
+	return (req.Source != "spells" || req.Purpose == "use") && len(req.OptionKey) <= 100 && (req.Purpose == "" || req.Purpose == "transfer" || (req.Purpose == "use" && (req.Source == "potions" || req.Source == "spells"))) && isUUID(req.SessionUUID) && (isUUID(req.RecipientCharUUID) || req.RecipientCharUUID == "dm") && isUUID(req.ClientActionID) &&
 		req.Version != nil && *req.Version >= 0 && len(req.EntryUID) > 0 && len(req.EntryUID) <= 200 &&
 		(req.Source == "items" || req.Source == "weapon" || req.Source == "potions" || req.Source == "spells")
 }

@@ -8,7 +8,7 @@ for (const mobile of [false, true]) test(`DM resolves an application to a named 
     await route.fulfill({ json: { targets: [{ kind: 'character', charUuid: 'hero', name: 'Лиора' }, { kind: 'npc', npcUid: 'goblin', encounterId: 3, name: 'Гоблин', letter: 'B', color: '#ff9900' }] } })
   })
   await page.goto('/tests/tutorials/fixtures/application-targets.html')
-  await page.getByRole('button', { name: 'Принять применение', exact: true }).click()
+  await page.getByRole('button', { name: 'Принять', exact: true }).click()
   const modal = page.getByRole('dialog', { name: 'К кому применить' })
   await expect(modal).toBeVisible()
   await expect(modal.getByRole('button', { name: 'Лиора', exact: true })).toBeVisible()

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
 test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => { throw error })
@@ -50,7 +51,7 @@ for (const mobile of [false, true]) {
     await page.goto('/tests/tutorials/fixtures/tutorials.html')
     const titles = await finishTour(page)
     expect(titles).toContain('Управление здоровьем')
-    expect(writes).toEqual([{ path: '/api/account/tutorials', body: { flowId: 'character', sourceKey: 'edition:1', device: mobile ? 'mobile' : 'desktop', revision: 1, status: 'completed' } }])
+    expect(writes).toEqual([{ path: '/api/account/tutorials', body: { flowId: 'character', sourceKey: 'edition:1', device: mobile ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION, status: 'completed' } }])
     await expect(page.locator('[data-tutorial="character-hp-editor"]')).toHaveCount(0)
   })
   for (const role of ['player', 'dm']) test(`session ${role} ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
@@ -58,7 +59,7 @@ for (const mobile of [false, true]) {
     const writes = await mockApi(page, role)
     await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/sessions/test')
     await finishTour(page)
-    expect(writes.filter(write => write.path === '/api/account/tutorials')).toEqual([{ path: '/api/account/tutorials', body: { flowId: `session-${role}`, sourceKey: 'source:1', device: mobile ? 'mobile' : 'desktop', revision: 1, status: 'completed' } }])
+    expect(writes.filter(write => write.path === '/api/account/tutorials')).toEqual([{ path: '/api/account/tutorials', body: { flowId: `session-${role}`, sourceKey: 'source:1', device: mobile ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION, status: 'completed' } }])
     expect(writes.filter(write => write.path !== '/api/account/tutorials')).toEqual([])
   })
 }
@@ -78,7 +79,7 @@ for (const mobile of [false, true]) test(`session status ${mobile ? 'mobile' : '
   }
 })
 test('seen device stays quiet, another device starts; leaving cancels without recording completion', async ({ page }) => {
-  const writes = await mockApi(page, 'player', [{ flowId: 'character', sourceKey: 'edition:1', device: 'desktop', revision: 1, status: 'completed' }])
+  const writes = await mockApi(page, 'player', [{ flowId: 'character', sourceKey: 'edition:1', device: 'desktop', revision: TUTORIAL_REVISION, status: 'completed' }])
   await page.setViewportSize({ width: 1400, height: 1000 })
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   await expect(page.locator('[data-tutorial="character-hp"]')).toBeVisible()
@@ -112,7 +113,7 @@ test('failed save stays retryable and can be closed without trapping the player'
   await expect(page.locator('.guided-tour')).toHaveCount(0)
 })
 test('account reset affects only the selected source and device', async ({ page }) => {
-  const first = { flowId: 'character', sourceKey: 'edition:1', device: 'desktop', revision: 1, status: 'completed' }
+  const first = { flowId: 'character', sourceKey: 'edition:1', device: 'desktop', revision: TUTORIAL_REVISION, status: 'completed' }
   const second = { ...first, device: 'mobile' }
   const writes = await mockApi(page, 'player', [first, second])
   await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/account-tutorials')
@@ -125,7 +126,7 @@ test('account reset affects only the selected source and device', async ({ page 
 
 test('mobile panes mount on first visit and survive cyclic swipes', async ({page}) => {
   await page.setViewportSize({width: 390, height: 844})
-  await mockApi(page, 'player', [{flowId: 'character', sourceKey: 'edition:1', device: 'mobile', revision: 1, status: 'completed'}])
+  await mockApi(page, 'player', [{flowId: 'character', sourceKey: 'edition:1', device: 'mobile', revision: TUTORIAL_REVISION, status: 'completed'}])
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   const populated = () => page.locator('.mobile-swipe-pane .container').evaluateAll(els => els.filter(el => el.children.length).length)
   await expect(page.locator('.mobile-swipe-pane')).toHaveCount(7)

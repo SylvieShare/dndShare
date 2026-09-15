@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 for (const mobile of [false, true]) for (const guest of [false, true]) {
   test(`read only reason and cloning ${mobile ? 'mobile' : 'desktop'} ${guest ? 'guest' : 'player'}`, async ({ page }) => {
     page.on('pageerror', error => { throw error })
@@ -11,7 +12,7 @@ for (const mobile of [false, true]) for (const guest of [false, true]) {
       if (route.request().method() !== 'GET') writes.push(path)
       if (path === '/api/char/other/clone') json = { uuid: 'copy' }
       else if (path === '/api/char/other' || path === '/api/char/copy') json = { templateName: 'DND5', userId: path.endsWith('/copy') ? 1 : 2, sourceVersionId: 1, version: 1, publicVisible: true, data: { values: { name: path.endsWith('/copy') ? 'Торин (копия)' : 'Торин', hp: { current: 10, max: { base: 10, bonuses: [] }, hitDice: [] }, STR: { value: 10 } }, var: { stats: {} } } }
-      else if (path === '/api/account/tutorials') json = { tutorials: [false, true].map(m => ({ flowId: 'character', sourceKey: 'edition:1', device: m ? 'mobile' : 'desktop', revision: 1, status: 'completed' })) }
+      else if (path === '/api/account/tutorials') json = { tutorials: [false, true].map(m => ({ flowId: 'character', sourceKey: 'edition:1', device: m ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION, status: 'completed' })) }
       else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
       await route.fulfill({ json })
     })

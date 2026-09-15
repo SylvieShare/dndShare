@@ -43,6 +43,10 @@ func TestTransferRequestValidation(t *testing.T) {
 	if validItemTransferRequest(valid) {
 		t.Fatal("spell transfer accepted")
 	}
+	valid.Source = "items"
+	if !validItemTransferRequest(valid) {
+		t.Fatal("DM inventory transfer rejected")
+	}
 	if allowedSessionEventTypes["item_transfer"] {
 		t.Fatal("clients must not forge transfer chronicle events")
 	}
@@ -51,7 +55,8 @@ func TestTransferRoutesRequireAuthentication(t *testing.T) {
 	s := &Server{}
 	mux := http.NewServeMux()
 	s.routesItemTransfers(mux)
-	for _, path := range []string{"GET /api/char/test/item-transfers", "POST /api/char/test/item-transfers", "POST /api/char/test/item-transfers/1/resolve"} {
+	s.routesSessionInventory(mux)
+	for _, path := range []string{"GET /api/sessions/test/inventory", "POST /api/sessions/test/inventory", "DELETE /api/sessions/test/inventory/item", "POST /api/sessions/test/inventory/item/transfer", "GET /api/char/test/item-transfers", "POST /api/char/test/item-transfers", "POST /api/char/test/item-transfers/1/resolve"} {
 		parts := strings.SplitN(path, " ", 2)
 		response := httptest.NewRecorder()
 		mux.ServeHTTP(response, httptest.NewRequest(parts[0], parts[1], nil))

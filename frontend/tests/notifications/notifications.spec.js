@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIdentity.js'
 
 const initialEvent = { id: 1, type: 'resource_used', action: 'Расход заряда', actorCharUuid: 'sender', actorName: 'Лиора', authorName: 'Игрок', authorUserId: 2,
   createdAt: '2026-09-14T12:00:00Z', data: { source: { name: 'Посох', instanceUid: 'staff' }, remaining: 2, delta: -1 } }
@@ -22,7 +23,7 @@ async function prepare(page, role = 'dm') {
     const url = new URL(route.request().url()), path = url.pathname
     if (!path.startsWith('/api/')) return route.continue()
     let json = {}
-    if (path === '/api/account/tutorials') json = { tutorials: ['character', 'session-player', 'session-dm'].flatMap(flowId => ['desktop', 'mobile'].map(device => ({ flowId, sourceKey: flowId === 'character' ? 'edition:1' : 'source:1', device, revision: 1, status: 'completed' }))) }
+    if (path === '/api/account/tutorials') json = { tutorials: ['character', 'session-player', 'session-dm'].flatMap(flowId => ['desktop', 'mobile'].map(device => ({ flowId, sourceKey: flowId === 'character' ? 'edition:1' : 'source:1', device, revision: TUTORIAL_REVISION, status: 'completed' }))) }
     else if (path === '/api/sessions/test') json = { session, participants: [], myRole: role === 'dm' ? 'gm' : 'player' }
     else if (path === '/api/sessions/test/events') {
       const after = Number(url.searchParams.get('after') || 0)
@@ -161,10 +162,87 @@ for (const mobile of [false, true]) test(`DM approves an offer from the chronicl
   await emit(page)
   await page.getByRole('button', { name: 'Открыть хронику', exact: true }).click()
   const row = page.locator('[data-event-id="2"]')
-  await row.getByRole('button', { name: 'Принять передачу', exact: true }).click()
+  await row.getByRole('button', { name: 'Принять', exact: true }).click()
   await expect(row).toContainText('Приняли')
-  await expect(row.getByRole('button', { name: 'Принять передачу', exact: true })).toHaveCount(0)
+  await expect(row.getByRole('button', { name: 'Принять', exact: true })).toHaveCount(0)
   expect(approvals).toBe(1)
   await emit(page)
   await expect(row).toHaveCount(1)
+})
+
+for (const mobile of [false, true]) test(`session inventory accepts, stores and sends items on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+  await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
+  await prepare(page)
+  const session = { uuid: 'test', name: 'Сессия', status: 'active', ownerUserId: 1, systemId: 1 }
+  await page.route('**/api/sessions/test', route => route.fulfill({ json: { session, myRole: 'gm', participants: [{ charUuid: 'recipient', templateId: 1, iconImageUrl: '/static/tab-stats.svg', data: { values: { name: 'Торин' } } }] } }))
+  let entries = [], offers = [{ id: 30, eventId: 30, itemName: 'Подарок', senderName: 'Лиора', senderCharUuid: 'sender', recipientCharUuid: '', addressedToDm: true, purpose: 'transfer', source: 'items', entry: { count: 2, override: { name: 'Подарок' } } }]
+  let nextId = 1, failAdd = true
+  const additions = new Set(), addRequests = []
+  await page.route('**/api/sessions/test/inventory', async route => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: { entries, transfers: offers } })
+    const body = route.request().postDataJSON(); addRequests.push(body)
+    if (!additions.has(body.clientActionId)) { additions.add(body.clientActionId); entries.push({ id: `entry-${nextId++}`, name: body.name, source: body.source, entry: body.entry }) }
+    if (failAdd) { failAdd = false; return route.fulfill({ status: 503, json: { desc: 'Ответ потерян' } }) }
+    await route.fulfill({ json: { ok: true } })
+  })
+  await page.route('**/api/sessions/test/events/30/application', async route => {
+    expect(route.request().postDataJSON().decision).toBe('accept')
+    entries.push({ id: 'gift', name: 'Подарок', source: 'items', entry: offers[0].entry }); offers = []
+    await route.fulfill({ json: { transfer: { status: 'accepted' } } })
+  })
+  await page.route('**/api/sessions/test/inventory/*', async route => {
+    expect(route.request().method()).toBe('DELETE')
+    const id = new URL(route.request().url()).pathname.split('/').at(-1)
+    entries = entries.filter(row => row.id !== id)
+    await route.fulfill({ json: { ok: true } })
+  })
+  await page.route('**/api/sessions/test/inventory/*/transfer', async route => {
+    expect(route.request().postDataJSON().recipientCharUuid).toBe('recipient')
+    const id = new URL(route.request().url()).pathname.split('/').at(-2)
+    const row = entries.find(row => row.id === id); entries = entries.filter(row => row.id !== id)
+    offers = [{ id: 31, eventId: 31, itemName: row.name, recipientName: 'Торин', recipientCharUuid: 'recipient', addressedToDm: false, entry: row.entry }]
+    await route.fulfill({ json: { transfer: offers[0] } })
+  })
+  await open(page)
+  await page.getByRole('button', { name: 'Инвентарь', exact: true }).click()
+  const inventory = page.getByRole('dialog', { name: 'Инвентарь сессии', exact: true })
+  await expect(inventory).toBeVisible()
+  await inventory.getByRole('button', { name: 'Принять', exact: true }).click()
+  await expect(inventory.locator('.inventory-row')).toContainText('Подарок')
+  await inventory.getByRole('button', { name: 'Свой предмет', exact: true }).click()
+  await inventory.locator('form input').first().fill('Верёвка')
+  await inventory.getByRole('button', { name: 'Добавить', exact: true }).click()
+  await expect(inventory.getByRole('alert')).toContainText('Ответ потерян')
+  await inventory.getByRole('button', { name: 'Повторить', exact: true }).click()
+  await expect(inventory.locator('.inventory-row')).toHaveCount(2)
+  expect(addRequests).toHaveLength(2)
+  expect(addRequests[0].clientActionId).toBe(addRequests[1].clientActionId)
+  await inventory.getByRole('button', { name: 'Удалить: Верёвка', exact: true }).click()
+  await expect(inventory.locator('.inventory-row')).toHaveCount(1)
+  await inventory.getByRole('button', { name: 'Передать: Подарок', exact: true }).click()
+  const recipient = page.getByRole('menuitem', { name: 'Торин', exact: true })
+  await expect(recipient.locator('img')).toHaveCount(1)
+  await recipient.click()
+  await expect(inventory.locator('.inventory-row')).toHaveCount(0)
+  await expect(inventory).toContainText('Ожидает принятия')
+  await expect(inventory).toContainText('Торин')
+})
+
+test('DM declines a player-to-player offer from the chronicle', async ({ page }) => {
+  const { events } = await prepare(page)
+  await open(page)
+  const offer = { ...structuredClone(initialEvent), id: 2, type: 'item_transfer', action: 'Передача: Посох', recipientUserId: 3,
+    data: { purpose: 'transfer', status: 'pending', recipientName: 'Торин', source: { name: 'Посох' } } }
+  events.push(offer)
+  await page.route('**/api/sessions/test/events/2/application', async route => {
+    expect(route.request().postDataJSON().decision).toBe('reject')
+    offer.data.status = 'rejected'
+    await route.fulfill({ json: { transfer: { status: 'rejected' } } })
+  })
+  await emit(page)
+  await page.getByRole('button', { name: 'Открыть хронику', exact: true }).click()
+  const row = page.locator('[data-event-id="2"]')
+  await row.getByRole('button', { name: 'Отказать', exact: true }).click()
+  await expect(row).toContainText('Отказали')
+  await expect(row.locator('.transfer-decision-actions')).toHaveCount(0)
 })

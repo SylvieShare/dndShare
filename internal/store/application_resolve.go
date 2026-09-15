@@ -21,7 +21,7 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 		return t, err
 	}
 	destinationID := t.RecipientCharID
-	if t.AddressedToDM && accept && t.Status == "pending" {
+	if t.AddressedToDM && t.Purpose == "use" && accept && t.Status == "pending" {
 		if sessionID == 0 || t.SessionID != sessionID || t.SessionOwnerUserID != userID {
 			return t, ErrNotFound
 		}
@@ -69,19 +69,21 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 		return t, ErrItemTransferConflict
 	}
 	resolved := ApplicationTarget{}
-	if accept && t.AddressedToDM {
+	if accept && t.AddressedToDM && t.Purpose == "use" {
 		resolved = target
 		resolved.CharID = destinationID
 	}
 	var doc transferDocument
 	var npc *npcApplicationDocument
-	if accept && t.AddressedToDM && target.Kind == "npc" {
+	if accept && t.AddressedToDM && t.Purpose == "use" && target.Kind == "npc" {
 		npc, err = loadNPCApplication(ctx, tx, t.SessionID, target)
 		if err != nil {
 			return t, err
 		}
 		doc = npc.document
 		resolved = npc.target
+	} else if destination == 0 && t.Purpose == "transfer" {
+		doc = transferDocument{"values": map[string]any{}}
 	} else {
 		doc, err = decodeTransferDocument(chars[destination].Data)
 	}
@@ -124,13 +126,15 @@ func (s *Store) resolveItemTransfer(ctx context.Context, userID, charID, id, ses
 	}
 	if npc != nil {
 		err = npc.save(ctx, tx, doc)
+	} else if destination == 0 && t.Purpose == "transfer" {
+		err = receiveSessionInventory(ctx, tx, t.SessionID, t.Source, t.ItemName, entry)
 	} else if accept || t.Source != "spells" {
 		err = saveTransferDocument(ctx, tx, destination, doc)
 	}
 	if err != nil {
 		return t, err
 	}
-	if accept && t.AddressedToDM && target.Kind == "character" {
+	if accept && t.AddressedToDM && t.Purpose == "use" && target.Kind == "character" {
 		resolved.Name = characterName(chars[destination].Data)
 	}
 	rawTarget, _ := json.Marshal(resolved)

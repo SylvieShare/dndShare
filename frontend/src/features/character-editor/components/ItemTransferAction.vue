@@ -1,13 +1,13 @@
 <template>
   <RowActionSubmenu v-if="ctx.ownerMode && ctx.topSession && ctx.itemTransfers && !entry?.params?.magic?.lost" :label="`${purpose === 'use' ? 'На кого использовать' : 'Кому предложить'}: ${name}`" :min-width="260" :disabled="disabled || controller.state.busy">
     <template #trigger="{ open }">
-      <RowActionItem :icon="purpose === 'use' ? Pill : Send" submenu :submenu-open="open" :disabled="disabled || controller.state.busy" @click="!open && controller.loadPlayers()">{{ purpose === 'use' ? source === 'spells' ? `Эффект «${name}» на…` : 'Использовать на…' : 'Передать другому игроку' }}</RowActionItem>
+      <RowActionItem :icon="purpose === 'use' ? Pill : Send" submenu :submenu-open="open" :disabled="disabled || controller.state.busy" @click="!open && controller.loadPlayers()">{{ purpose === 'use' ? source === 'spells' ? `Эффект «${name}» на…` : 'Использовать на…' : 'Передать' }}</RowActionItem>
     </template>
     <template #default="{ close }">
       <LoadingIndicator v-if="controller.state.loading" label="Загрузка игроков" />
       <p v-if="controller.state.error" class="transfer-menu-message transfer-menu-error" role="alert">{{ controller.state.error }}</p>
       <template v-if="!controller.state.loading">
-        <RowActionItem v-if="purpose === 'use'" :icon="Crown" @click="send({ charUuid: 'dm' }, close)">Мастер — выберет цель</RowActionItem>
+        <RowActionItem :icon="Crown" :disabled="disabled || controller.state.busy" @click="send({ charUuid: 'dm' }, close)">{{ purpose === 'use' ? 'Мастер — выберет цель' : 'Мастер — инвентарь сессии' }}</RowActionItem>
         <p v-if="!controller.recipients.length && purpose !== 'use'" class="transfer-menu-message">В сессии пока нет других игроков.</p>
         <RowActionItem v-for="player in controller.recipients" :key="player.charUuid" class="transfer-recipient" :disabled="disabled || controller.state.busy" @click="send(player, close)">
           <template #icon>
