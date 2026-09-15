@@ -9,7 +9,7 @@ export function useWeaponUses(charCtx, calculation) {
   const values = () => unref(charCtx.values) || {}
   const items = () => unref(charCtx.characterResources?.itemsById) || new Map()
   const choices = entry => availableWeaponUses(values(), items(), entry.uid, !!charCtx.ownerMode)
-  async function start(entry, key, attackRollMode = 'auto') {
+  async function start(entry, key, attackRollMode = 'auto', excludedBonuses = []) {
     if (busy.value || !charCtx.ownerMode) return
     const rule = choices(entry).find(row => row.key === key)
     if (!rule || rule.error) { error.value = rule?.error || 'Применение недоступно.'; return }
@@ -30,7 +30,7 @@ export function useWeaponUses(charCtx, calculation) {
         charCtx.updateValues(patch)
         charCtx.logSessionEvent?.({ type: 'dice_roll', action: `Переброс атаки: ${rule.title}`, data: { ...instanceEventData(charCtx, entry.uid), result, weaponUseId: plan.event.id } })
       }
-      const result = calculation.attack(prepared.entry, `${rule.title}: ${calculation.title(entry)}`, false, onReroll, attackRollMode)
+      const result = calculation.attack(prepared.entry, `${rule.title}: ${calculation.title(entry)}`, false, onReroll, attackRollMode, excludedBonuses)
       plan.event.attack_result = result
       plan.event.critical = isCritical(result)
       charCtx.updateValues(plan.patch)

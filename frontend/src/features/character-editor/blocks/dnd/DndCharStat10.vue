@@ -21,9 +21,9 @@
     :mobile-variant="isMobileVariant"
     :show-edit="canEdit"
     @edit="openEditor"
-    @roll-stat="mode => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check')"
-    @roll-save="mode => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw')"
-    @roll-skill="(id, mode) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
+    @roll-stat="(mode, excluded) => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check', {}, excluded)"
+    @roll-save="(mode, excluded) => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw', {}, excluded)"
+    @roll-skill="(id, mode, excluded) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) }, excluded)"
   />
 
   <MorphEditorShell
@@ -58,9 +58,9 @@
         :skill-skeleton-count="skillSkeletonCount"
         :tooltip-max-desc="skillTooltipMaxDesc"
         :tooltip-width="skillTooltipWidth"
-        @roll-stat="mode => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check')"
-        @roll-save="mode => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw')"
-        @roll-skill="(id, mode) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) })"
+        @roll-stat="(mode, excluded) => rollD20Plus(`${displayTitle} — проверка`, checkTotal, mode, 'ability_check', {}, excluded)"
+        @roll-save="(mode, excluded) => rollD20Plus(`${displayTitle} — спасбросок`, save, mode, 'saving_throw', {}, excluded)"
+        @roll-skill="(id, mode, excluded) => rollD20Plus(skillTitle(id), skillBonus(id), mode, 'ability_check', { proficiencyRank: skillProficiencyRank(id) }, excluded)"
       />
     </template>
 
@@ -429,12 +429,12 @@ function closeEditor() {
 
 // ─── Dice ──────────────────────────────────────────────────────────────────────
 const diceStore = useDiceStore()
-function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check', context = {}) {
+function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check', context = {}, excluded = []) {
   diceStore.rollD20(title, bonus, mode, {
     crit_mode: true,
     color: statColor.value,
     eventData: { ability: { id: titleSuggestId.value, name: displayTitle.value, typeId: titleSuggestTypeId.value } },
-    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: scope }),
+    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: scope }, excluded),
     roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.(scope) || [],
     roll_adjustments: charCtx.characterCombatEffects?.rollAdjustments?.(scope, context) || [],
   })

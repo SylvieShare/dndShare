@@ -470,7 +470,7 @@ function statusEffectLinks(entry) {
   return charCtx.characterStatuses?.links?.(entry?.item) || []
 }
 
-const { availableSpellSlotOptions, useSpell, spellRollLevel, rememberSpellRollLevel } = useSpellCasting({
+const { groupedSpellSlotOptions, availableSpellSlotOptions, useSpell, spellRollLevel, rememberSpellRollLevel } = useSpellCasting({
   charCtx, spellcastingBlocked, slotPools, adjustSlotUsed, spellTitle,
 })
 
@@ -499,7 +499,7 @@ provide('spellsBlockCtx', reactive({
   rollSpellAttack,
   rollSpellDamage,
   rollSpellHeal, rollSpellEffect,
-  availableSpellSlotOptions,
+  groupedSpellSlotOptions, availableSpellSlotOptions,
   spellRollLevel, rememberSpellRollLevel,
   useSpell,
   spellcastingSources,

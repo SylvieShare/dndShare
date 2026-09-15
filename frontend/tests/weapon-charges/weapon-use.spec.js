@@ -121,3 +121,18 @@ test('special use and preset attacks forward the selected d20 mode', async ({ pa
  await page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true }).last().click()
  expect(await page.evaluate(() => window.attackResults.at(-1))).toMatchObject({ rollMode: 'advantage', total: 24 })
 })
+
+for (const width of [1280, 390]) test(`weapon blessing is optional, including special uses (${width})`, async ({ page }) => {
+ await page.setViewportSize({ width, height: 844 }); await page.goto(url + '?bless')
+ await menu(page, 'Бросить на атаку')
+ await expect(page.getByRole('switch', { name: 'Благословение' })).toHaveAttribute('aria-checked', 'true')
+ await page.getByRole('switch', { name: 'Благословение' }).click()
+ await page.getByRole('switch', { name: 'Метнуть молнией', exact: true }).click()
+ await page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true }).last().click()
+ expect(await page.evaluate(() => window.attackResults.at(-1).parts.filter(p => p.sides === 4))).toEqual([])
+ await expect(page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true })).toHaveCount(0)
+ await menu(page, 'Бросить на атаку')
+ await expect(page.getByRole('switch', { name: 'Благословение' })).toHaveAttribute('aria-checked', 'true')
+ await page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true }).last().click()
+ expect(await page.evaluate(() => window.attackResults.at(-1).parts.filter(p => p.sides === 4))).toHaveLength(1)
+})

@@ -1,3 +1,4 @@
+import { blessingEffects } from './blessing'
 import { createApp, h, reactive } from 'vue'
 import { createPinia } from 'pinia'
 import DndRest from '../../../src/features/character-editor/blocks/dnd/DndRest.vue'
@@ -29,9 +30,10 @@ const items = [
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.rolls = []; window.writes = []; window.events = []
 const dice = useDiceStore(pinia)
-dice.rollD20 = (title, bonus, mode) => window.rolls.push({ title, bonus, mode })
+dice.rollD20 = (title, bonus, mode, options) => { window.bonusFormula = options?.bonus_formula; return window.rolls.push({ title, bonus, mode }) }
 dice.roll = (title, expression) => window.rolls.push({ title, expression })
 const ctx = reactive({ ownerMode: true, var: { stats: { 4: 3 } },
+  characterDerivedEffects: blessingEffects(),
   characterArmor: { state: { castingBlocked: false } },
   characterRolls: { resolve: (mode, context) => {
     window.attackContext = context

@@ -104,6 +104,21 @@ describe('dice roll presentation metadata', () => {
     expect(store.stack[0].outcome).toBeNull()
   })
 
+  it.each([
+    ['normal', [.5, 0], null],
+    ['normal', [.5, .99], null],
+    ['normal', [0, .99], 'fumble'],
+    ['normal', [.99, 0], 'crit'],
+    ['advantage', [0, .5, 0], null],
+    ['disadvantage', [0, .99, .99], 'fumble'],
+  ])('determines %s outcome only from the kept primary d20: %j', (mode, values, outcome) => {
+    const random = vi.spyOn(Math, 'random')
+    values.forEach(value => random.mockReturnValueOnce(value))
+    const store = useDiceStore()
+    store.rollD20('Атака с благословением', 0, mode, { crit_mode: true, bonus_formula: '1d4', log: false })
+    expect(store.stack[0].outcome?.kind || null).toBe(outcome)
+  })
+
   it('honors a character-derived weapon critical threshold', () => {
     vi.spyOn(Math, 'random').mockReturnValueOnce(0.91)
     const store = useDiceStore()

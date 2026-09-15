@@ -1,6 +1,6 @@
 import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 import { ref } from 'vue'
-import { availableSpellSlotOptions as availableSlotOptions } from '../lib/spellUse'
+import { groupedSpellSlotOptions as groupedSlotOptions, availableSpellSlotOptions as availableSlotOptions } from '../lib/spellUse'
 
 export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjustSlotUsed, spellTitle }) {
   const rollLevels = ref({})
@@ -13,6 +13,8 @@ export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjus
     if (entry?.ref?.slotless) return [{ pool: 'slotless', level: Number(entry?.ref?.cast_level) || level, remaining: null }]
     return availableSlotOptions(slotPools.value, level)
   }
+
+  const groupedSpellSlotOptions = entry => groupedSlotOptions(slotPools.value, Number(entry?.item?.data?.lvl) || 0)
 
   async function useSpell(entry, slotOption) {
     if (!charCtx.ownerMode || !entry?.item || spellcastingBlocked.value) return false
@@ -45,5 +47,5 @@ export function useSpellCasting({ charCtx, spellcastingBlocked, slotPools, adjus
     return true
   }
 
-  return { availableSpellSlotOptions, useSpell, spellRollLevel, rememberSpellRollLevel }
+  return { groupedSpellSlotOptions, availableSpellSlotOptions, useSpell, spellRollLevel, rememberSpellRollLevel }
 }

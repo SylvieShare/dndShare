@@ -123,13 +123,13 @@
         <template #default="{ close: closeSlots }">
           <RowActionItem
             v-for="option in slotOptions"
-            :key="`${option.pool}:${option.level}`"
+            :key="option.level"
             action="use"
             tone="accent"
             @click="useAtSlot(option, closeSlots, close)"
           >
-            {{ option.pool === 'short_rest' ? 'Короткий отдых' : 'Долгий отдых' }} · {{ option.level }} круг
-            <template #suffix>{{ option.remaining }} доступно</template>
+            {{ option.level }} круг
+            <template #suffix>({{ option.remaining }}/{{ option.total }})</template>
           </RowActionItem>
         </template>
       </RowActionSubmenu>
@@ -220,7 +220,7 @@ const saveTag = computed(() => {
   return (SAVE_ABBR[a] || String(a).toUpperCase()) + (dmg.value.save_effect === 'half' ? ' ½' : '')
 })
 const instances = computed(() => spellInstances(props.entry.item, castLevel.value, ctx.charLevel))
-const slotOptions = computed(() => ctx.availableSpellSlotOptions(props.entry))
+const slotOptions = computed(() => ctx.groupedSpellSlotOptions(props.entry))
 const spendsSlot = computed(() => baseLvl.value > 0 && !props.entry.ref.slotless)
 const canUse = computed(() => !ctx.spellcastingBlocked && !!props.entry.item && (baseLvl.value === 0 || slotOptions.value.length > 0))
 const useLabel = computed(() => ctx.spellcastingBlocked ? 'Сотворение недоступно' : (canUse.value ? 'Потратить ячейку' : 'Нет доступных ячеек'))

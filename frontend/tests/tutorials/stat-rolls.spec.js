@@ -39,6 +39,20 @@ for (const mobile of [false, true]) {
       expect(await page.evaluate(() => window.writes)).toEqual([])
     })
 
+    test('blessing is enabled for saves and can be omitted for one roll', async ({ page }) => {
+      const trigger = page.getByRole('button', { name: 'Ловкость — спасбросок', exact: true })
+      await trigger.click()
+      await expect(page.getByRole('switch', { name: 'Благословение' })).toHaveAttribute('aria-checked', 'true')
+      await page.getByRole('switch', { name: 'Благословение' }).click()
+      await page.getByRole('menuitem', { name: 'Бросить', exact: true }).click()
+      expect(await page.evaluate(() => window.rolls.at(-1).options.bonus_formula)).toBe('')
+      await expect(page.getByRole('menu')).toHaveCount(0)
+      await trigger.click()
+      await expect(page.getByRole('switch', { name: 'Благословение' })).toHaveAttribute('aria-checked', 'true')
+      await page.getByRole('menuitem', { name: 'Бросить', exact: true }).click()
+      expect(await page.evaluate(() => window.rolls.at(-1).options.bonus_formula)).toBe('1d4')
+    })
+
     test('temporary overrides reset on reopen and use fresh sheet defaults', async ({ page }) => {
       const trigger = page.getByRole('button', { name: 'Ловкость — проверка', exact: true })
       const menu = page.getByRole('menu')

@@ -23,3 +23,15 @@ export function availableSpellSlotOptions(slotPools, spellLevel) {
   }
   return options.sort((left, right) => left.level - right.level || (left.pool === 'long_rest' ? -1 : 1))
 }
+
+// Display a single row per level, keeping spent slots in the total.
+export function groupedSpellSlotOptions(slotPools, spellLevel) {
+  const available = availableSpellSlotOptions(slotPools, spellLevel)
+  return [...new Set(available.map(option => option.level))].map(level => {
+    const choices = available.filter(option => option.level === level)
+    const preferred = choices.find(option => option.pool === 'short_rest') || choices[0]
+    const total = ['long_rest', 'short_rest'].flatMap(pool => slotPools?.[pool] || [])
+      .filter(slot => Number(slot.level) === level).reduce((sum, slot) => sum + Math.max(0, Number(slot.total) || 0), 0)
+    return { ...preferred, remaining: choices.reduce((sum, option) => sum + option.remaining, 0), total }
+  })
+}

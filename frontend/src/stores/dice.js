@@ -133,7 +133,10 @@ export const useDiceStore = defineStore('dice', () => {
     }
     result.rollMode = normalizedMode
     const appliedAdjustments = applyD20Adjustments(result, Array.isArray(opts.roll_adjustments) ? opts.roll_adjustments : [])
-    const detectedOutcome = opts.crit_mode ? detectOutcome(result, opts.critical_threshold) : null
+    const natural = keptNaturalD20(result)
+    const detectedOutcome = !opts.crit_mode || natural == null ? null
+      : natural >= Math.max(2, Number(opts.critical_threshold) || 20) ? { kind: 'crit', sides: 20, value: natural }
+        : natural === 1 ? { kind: 'fumble', sides: 20, value: natural } : null
     const outcome = appliedAdjustments.length && detectedOutcome?.kind === 'fumble' ? null : detectedOutcome
     const triggers = (Array.isArray(opts.roll_triggers) ? opts.roll_triggers : [])
       .filter(rule => rule.action === 'reroll' && (rule.event === 'any' || (rule.event === 'natural_one' && keptNaturalD20(result) === 1)))

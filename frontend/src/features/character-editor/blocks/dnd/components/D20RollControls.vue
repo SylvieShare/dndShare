@@ -5,21 +5,25 @@
         <span class="d20-roll-divider" role="separator" aria-orientation="vertical" />
         <ToggleSwitch v-model="advantage" label="Преимущество" />
       </div>
-      <RowActionItem :action="action" :disabled="disabled" @click="!disabled && emit('roll', rollMode)">{{ rollLabel }}</RowActionItem>
+      <RollBonusOptions v-if="scope" :scope="scope" v-model="excludedBonuses" />
+      <RowActionItem :action="action" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</RowActionItem>
     </div>
 </template>
 <script setup>
+import RollBonusOptions from './RollBonusOptions.vue'
 import { computed, ref } from 'vue'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 const props = defineProps({
   mode: { type: String, default: 'normal' },
+  scope: String,
   cancelled: Boolean,
   disabled: Boolean,
   action: { type: String, default: 'feature-damage' },
   rollLabel: { type: String, default: 'Бросить' },
 })
 const emit = defineEmits(['roll'])
+const excludedBonuses = ref([])
 // A fresh menu snapshots the resolved sheet settings for this roll only.
 const advantage = ref(props.cancelled || props.mode === 'advantage')
 const disadvantage = ref(props.cancelled || props.mode === 'disadvantage')

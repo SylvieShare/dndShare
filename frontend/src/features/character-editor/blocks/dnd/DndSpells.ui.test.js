@@ -34,7 +34,7 @@ describe('multiclass spellcasting UI', () => {
     expect(source).toContain(':active-slot-pools="activeSlotPools"')
     expect(source).toContain('tabs: tabs.value.map')
     expect(source).toContain('grants: grants.value.map')
-    expect(cardSource).toContain("option.pool === 'short_rest'")
+    expect(cardSource).toContain("option.remaining }}/{{ option.total")
   })
 
   it('uses the same tabs UI for zero, one and several sources', () => {

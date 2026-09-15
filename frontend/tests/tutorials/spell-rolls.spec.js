@@ -43,6 +43,22 @@ for (const mobile of [false, true]) {
       expect(await page.evaluate(() => window.events)).toEqual([])
     })
 
+    test('attack blessing is optional and slot rows combine rest pools', async ({ page }) => {
+      const row = page.locator('.spell-row').filter({ hasText: 'Луч атаки' })
+      await clickRow(row)
+      await page.getByRole('menuitem', { name: 'Потратить ячейку', exact: true }).click()
+      await expect(page.getByRole('menuitem', { name: /3 круг.*\(2\/2\)/ })).toHaveCount(1)
+      await page.getByRole('menuitem', { name: /3 круг.*\(2\/2\)/ }).click()
+      expect(await page.evaluate(() => window.writes[0].slot_pools.short_rest[0].used)).toBe(1)
+      await expect(page.getByRole('menu')).toHaveCount(0)
+      await clickRow(row)
+      await page.getByRole('menuitem', { name: 'Бросить на атаку', exact: true }).click()
+      await expect(page.getByRole('switch', { name: 'Благословение' })).toHaveAttribute('aria-checked', 'true')
+      await page.getByRole('switch', { name: 'Благословение' }).click()
+      await page.getByRole('menuitem', { name: 'Бросить и потратить ячейку', exact: true }).click()
+      expect(await page.evaluate(() => window.bonusFormula)).toBe('')
+    })
+
     test('save, healing and utility spells offer only relevant rolls; casting restrictions block confirmation', async ({ page }) => {
       const save = page.locator('.spell-row').filter({ hasText: 'Урон со спасброском' })
       await clickRow(save)
@@ -75,7 +91,7 @@ for (const mobile of [false, true]) {
     test('spending a slot is separate from rolling and absent for cantrips', async ({ page }) => {
       await clickRow(page.locator('.spell-row').filter({ hasText: 'Лечение' }))
       await page.getByRole('menuitem', { name: 'Потратить ячейку', exact: true }).click()
-      await page.getByRole('menuitem', { name: /Долгий отдых · 1 круг/ }).click()
+      await page.getByRole('menuitem', { name: /1 круг.*\(2\/2\)/ }).click()
       expect(await page.evaluate(() => window.rolls)).toEqual([])
       const writes = await page.evaluate(() => window.writes)
       expect(writes).toHaveLength(1)

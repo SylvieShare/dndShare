@@ -89,6 +89,7 @@
       v-if="rollMenu"
       :key="`${rollMenu.kind}:${rollMenu.id || ''}`"
       :anchor="rollMenu.anchor"
+      :scope="rollMenu.kind === 'save' ? 'saving_throw' : 'ability_check'"
       :title="rollMenu.title"
       :mode="rollMenu.mode"
       :cancelled="rollMenu.cancelled"
@@ -173,11 +174,11 @@ function openRollMenu(event, kind, skill) {
   }
 }
 
-function confirmRoll(mode) {
+function confirmRoll(mode, excluded) {
   const selection = rollMenu.value
   rollMenu.value = null
-  if (selection.kind === 'skill') emit('roll-skill', selection.id, mode)
-  else emit(`roll-${selection.kind}`, mode)
+  if (selection.kind === 'skill') emit('roll-skill', selection.id, mode, excluded)
+  else emit(`roll-${selection.kind}`, mode, excluded)
 }
 
 const TOOLTIP_DELAY_MS = 450

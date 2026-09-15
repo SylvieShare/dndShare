@@ -1,3 +1,4 @@
+import { blessingEffects } from '../tutorials/fixtures/blessing'
 import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
 import { createApp, h, reactive, computed } from 'vue'
@@ -23,6 +24,7 @@ window.damage = 15; window.logged = []; window.attackResults = []; window.attack
 dice.roll = (title, expression) => { window.damageRolls.push(expression); return { total: window.damage, parts: [{ kind: 'dice', sides: 6, sign: '+', rolls: [2, 3, 4, 6], color: '#ff0' }] } }
 const item = { id: 284, typeId: 19, name: 'Метательное копьё молнии', data: { attunement: 'none', max_use: 1, weapon_uses: [rule] } }
 const ctx = reactive({ ownerMode: true,
+ characterDerivedEffects: new URLSearchParams(location.search).has('bless') ? blessingEffects() : null,
  values: JSON.parse(sessionStorage.getItem('weapon-use-state') || 'null') || { lvl: { level: 5 }, weapon: [{ uid: 'javelin', item_id: 1448, magic_item_id: 284, params: { magic: { remaining: 1 } } }] },
  characterResources: { itemsById: new Map([['284', item]]) },
  updateValues(patch) { this.values = { ...this.values, ...patch }; sessionStorage.setItem('weapon-use-state', JSON.stringify(this.values)) },
@@ -30,12 +32,12 @@ const ctx = reactive({ ownerMode: true,
 })
 window.ctx = ctx
 const editorData = reactive(structuredClone(item.data)); window.editorData = editorData; window.editorError = ''
-function attack(entry, title, log, onReroll, mode = 'auto') {
+function attack(entry, title, log, onReroll, mode = 'auto', excluded = []) {
  window.attacks++
  const random = Math.random, values = [...(window.testRolls || [window.natural, window.natural])]
  try {
   Math.random = () => ((values.shift() || window.natural) - 0.5) / 20
-  const result = dice.rollD20(title, 5, resolveRollMode(mode, window.attackEffects).mode, { log: false, onReroll })
+  const result = dice.rollD20(title, 5, resolveRollMode(mode, window.attackEffects).mode, { log: false, onReroll, bonus_formula: ctx.characterDerivedEffects?.rollBonus({ kind: 'attack' }, excluded) })
   window.attackResults.push(result)
   return result
  } finally { Math.random = random }
@@ -54,12 +56,12 @@ const app = createApp({ setup() {
  const editorMode = new URLSearchParams(location.search).has('editor'), presetMode = new URLSearchParams(location.search).has('preset')
  return () => h('main', { style: 'max-width:600px;margin:8px' }, editorMode
   ? [h(WeaponUseEditor, { data: editorData.weapon_uses[0], fields: field.fields })]
-  : presetMode ? [h(PresetAttackCard, { title: 'Импровизированное оружие', attackBonus: 5, onAttack: options => attack(null, 'Атака', true, undefined, options.attackRollMode) })]
+  : presetMode ? [h(PresetAttackCard, { title: 'Импровизированное оружие', attackBonus: 5, onAttack: options => attack(null, 'Атака', true, undefined, options.attackRollMode, options.excludedBonuses) })]
   : [entry.value && ctx.ownerMode && h(RowActionMenu, { title: item.name }, {
       trigger: () => h('button', 'Оружие'),
       default: ({ close }) => h(DamageRollOptions, { canAttack: true, uses: use.choices(entry.value), actions: weaponUseDamageActions(ctx.values, entry.value.uid),
         preview: options => damage.damagePreview(entry.value, options),
-        onAttack: options => { close(); options.weaponUseKey ? use.start(entry.value, options.weaponUseKey, options.attackRollMode) : attack(entry.value, 'Атака', true, undefined, options.attackRollMode) },
+        onAttack: options => { close(); options.weaponUseKey ? use.start(entry.value, options.weaponUseKey, options.attackRollMode, options.excludedBonuses) : attack(entry.value, 'Атака', true, undefined, options.attackRollMode, options.excludedBonuses) },
         onRoll: options => { close(); damage.rollDamage(entry.value, options) },
       }),
     }), h(WeaponUsePanel, { uid: 'javelin' })])

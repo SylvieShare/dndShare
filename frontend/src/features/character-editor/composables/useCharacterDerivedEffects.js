@@ -17,7 +17,8 @@ export function useCharacterDerivedEffects(values, itemsById) {
   return {
     effects,
     armorRules: computed(() => derivedArmorRules(effects.value)),
-    rollBonus(context) { return matchingDerivedEffects(effects.value, 'roll_bonus', context).map(rule => rule.formula).filter(Boolean).join(' + ') },
+    rollBonusOptions(context) { return matchingDerivedEffects(effects.value, 'roll_bonus', context).filter(rule => rule.formula) },
+    rollBonus(context, excluded = []) { return matchingDerivedEffects(effects.value, 'roll_bonus', context).filter(rule => !excluded.includes(rule.key)).map(rule => rule.formula).filter(Boolean).join(' + ') },
     speed(context) { return derivedSpeedBonuses(effects.value, context) },
     skillProficiency(skillId) { return derivedProficiency(effects.value, 'skill_proficiency', { kind: 'skill_check', skillId }) },
     toolProficiency(toolId) { return derivedProficiency(effects.value, 'tool_proficiency', { kind: 'tool', targetId: toolId }) },

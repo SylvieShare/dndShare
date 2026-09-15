@@ -5,7 +5,7 @@
         <RowActionItem :action="scope" submenu :submenu-open="open">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
       </template>
       <template #default="{ close }">
-        <WeaponRollControls :scope="scope" :weapon-uid="weaponUid" :uses="uses" v-model:attack-roll-mode="attackRollMode" v-model:use-key="useKey" :preview="previewFormula" :options="menuOptions(scope)" v-model:critical="critical" v-model:two-handed="twoHanded" :versatile="versatile" :thrown="thrown" @select="select" @amount="setAmount" @roll="close(); emit(scope === 'attack' ? 'attack' : 'roll', options)" />
+        <WeaponRollControls :scope="scope" :weapon-uid="weaponUid" :uses="uses" v-model:attack-roll-mode="attackRollMode" v-model:use-key="useKey" :preview="previewFormula" :options="menuOptions(scope)" v-model:critical="critical" v-model:two-handed="twoHanded" :versatile="versatile" :thrown="thrown" @select="select" @amount="setAmount" @roll="excludedBonuses => { close(); emit(scope === 'attack' ? 'attack' : 'roll', { ...options, excludedBonuses }) }" />
       </template>
     </RowActionSubmenu>
   </template>

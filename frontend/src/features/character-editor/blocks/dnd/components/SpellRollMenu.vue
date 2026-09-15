@@ -5,10 +5,10 @@
     </template>
     <template #default="{ close }">
       <SpellCastControls :entry="entry" :cast-level="castLevel" spend-by-default v-slot="cast">
-      <D20RollControls
+      <D20RollControls scope="attack"
         :mode="attackMode.mode" :cancelled="attackMode.cancelled"
         :disabled="cast.disabled" action="attack" :roll-label="cast.spend ? 'Бросить и потратить ячейку' : 'Бросить на атаку'"
-        @roll="mode => rollAttack(mode, close, cast.commit)"
+        @roll="(mode, excluded) => rollAttack(mode, close, cast.commit, excluded)"
       />
       </SpellCastControls>
     </template>
@@ -56,9 +56,9 @@ const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Брос�
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)
 
-async function rollAttack(mode, close, commit) {
+async function rollAttack(mode, close, commit, excluded) {
   if (ctx.spellcastingBlocked || !await commit()) return
-  ctx.rollSpellAttack(props.entry, mode)
+  ctx.rollSpellAttack(props.entry, mode, excluded)
   close()
   emit('close')
 }

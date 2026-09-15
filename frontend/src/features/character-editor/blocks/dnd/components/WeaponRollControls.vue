@@ -18,21 +18,24 @@
     <WeaponBonusTransferSelector v-if="scope === 'attack' && transfer?.active" :transfer="transfer" :disabled="!charCtx.ownerMode" @change="setAmount" />
     <WeaponRollOption v-for="use in scope === 'attack' ? uses : []" :key="use.key" :option="useOption(use)" @select="(key, value) => $emit('update:useKey', value ? key : '')" />
     <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : extras)" :key="option.key" :option="option" @select="(key, value) => $emit('select', key, value)" @amount="(key, value) => $emit('amount', key, value)" />
+    <RollBonusOptions v-if="scope === 'attack'" scope="attack" v-model="excludedBonuses" />
     <DamageFormulaPreview v-if="scope === 'damage'" :expression="preview" />
     <small v-if="blocked" role="alert">{{ blocked.resourceError }}</small>
-    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && $emit('roll')">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
+    <RowActionItem :disabled="!!blocked" :action="scope === 'attack' ? 'attack' : 'damage'" @click="!blocked && $emit('roll', excludedBonuses)">{{ scope === 'attack' ? 'Бросить на атаку' : 'Бросить на урон' }}</RowActionItem>
   </div>
 </template>
 <script setup>
+import RollBonusOptions from './RollBonusOptions.vue'
 import WeaponBonusTransferSelector from './WeaponBonusTransferSelector.vue'
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import DamageFormulaPreview from './DamageFormulaPreview.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
-import { computed, inject, toRef } from 'vue'
+import { computed, inject, toRef, ref } from 'vue'
 import { useWeaponBonusTransfer } from '../composables/useWeaponBonusTransfer'
 const props = defineProps({ weaponUid: String, attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
+const excludedBonuses = ref([])
 const charCtx = inject('charCtx', {})
 const { transfer, setAmount } = useWeaponBonusTransfer(charCtx, toRef(props, 'weaponUid'))
 const hasCustomOptions = computed(() => props.scope === 'attack'

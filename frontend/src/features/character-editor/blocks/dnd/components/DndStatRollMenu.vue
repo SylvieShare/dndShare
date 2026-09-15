@@ -8,7 +8,7 @@
     :aria-label="title"
     @update:open="!$event && emit('close')"
   >
-    <D20RollControls :mode="mode" :cancelled="cancelled" @roll="emit('roll', $event)" />
+    <D20RollControls :scope="scope" :mode="mode" :cancelled="cancelled" @roll="(mode, excluded) => emit('roll', mode, excluded)" />
   </BasePopover>
 </template>
 <script setup>
@@ -18,6 +18,7 @@ defineProps({
   anchor: { type: Object, required: true },
   title: { type: String, required: true },
   mode: { type: String, default: 'normal' },
+  scope: String,
   cancelled: Boolean,
 })
 const emit = defineEmits(['close', 'roll'])

@@ -315,12 +315,12 @@ const weaponUses = useWeaponUses(charCtx, { title: itemTitle, attack: rollPrepar
   const prepared = { ...entry, _attackMode: rule.attack_mode, _improvisedThrow: false }
   return { entry: prepared, expression: damageExpression(prepared), critical_expression: criticalDamageExpression(prepared, extraCriticalDice(prepared)), critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(weaponEffectContext(prepared)) || 20 }
 } })
-function rollAttack(entry, { actionKeys = [], weaponUseKey = '', attackRollMode = 'auto' } = {}) {
-  if (weaponUseKey) return weaponUses.start(entry, weaponUseKey, attackRollMode)
+function rollAttack(entry, { actionKeys = [], weaponUseKey = '', attackRollMode = 'auto', excludedBonuses = [] } = {}) {
+  if (weaponUseKey) return weaponUses.start(entry, weaponUseKey, attackRollMode, excludedBonuses)
   entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
-  return rollPreparedAttack(entry, `Атака: ${itemTitle(entry)}`, true, undefined, attackRollMode)
+  return rollPreparedAttack(entry, `Атака: ${itemTitle(entry)}`, true, undefined, attackRollMode, excludedBonuses)
 }
-function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode = 'auto') {
+function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode = 'auto', excludedBonuses = []) {
   const bonus = attackBonus(entry)
   const context = weaponEffectContext(entry)
   const mode = attackMode(context, attackRollMode)
@@ -328,7 +328,7 @@ function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode =
     eventData: itemEventData({ ...item(entry), id: entry.magic_item_id || entry.item_id || item(entry)?.id }, entry.uid),
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
-    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }),
+    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excludedBonuses),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
   const states = charCtx.characterStatuses?.endOn?.('attack')
@@ -348,7 +348,7 @@ function presetAttackDefinition(kind) {
   return { title: 'Импровизированное оружие', attackBonus: improvisedAttackBonus.value }
 }
 
-function rollPresetAttack(kind, { attackRollMode = 'auto' } = {}) {
+function rollPresetAttack(kind, { attackRollMode = 'auto', excludedBonuses = [] } = {}) {
   const preset = presetAttackDefinition(kind)
   const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: kind !== 'unarmed' }
   const mode = attackMode(context, attackRollMode)
@@ -356,7 +356,7 @@ function rollPresetAttack(kind, { attackRollMode = 'auto' } = {}) {
     eventData: itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value),
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
-    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }),
+    bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excludedBonuses),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
   const states = charCtx.characterStatuses?.endOn?.('attack')

@@ -1,3 +1,4 @@
+import { blessingEffects } from './blessing'
 import { createApp, h, reactive } from 'vue'
 import { createPinia } from 'pinia'
 import StatTile from '../../../src/features/character-editor/blocks/dnd/components/StatTile.vue'
@@ -23,6 +24,7 @@ const ctx = {
   characterRolls: { effects: ({ kind }) => kind === 'skill_check'
     ? [{ mode: 'advantage', source: 'Способность' }, { mode: 'disadvantage', source: 'Доспех' }]
     : kind === 'saving_throw' ? [{ mode: 'advantage', source: 'Эффект спасброска' }] : state.checkEffects },
+  characterDerivedEffects: blessingEffects(),
   characterCombatEffects: {
     rollTriggers: scope => [{ scope }],
     rollAdjustments: (scope, context) => [{ scope, ...context }],

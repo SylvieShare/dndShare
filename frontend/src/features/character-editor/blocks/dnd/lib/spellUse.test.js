@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { availableSpellSlotLevels, availableSpellSlotOptions } from './spellUse'
+import { groupedSpellSlotOptions, availableSpellSlotLevels, availableSpellSlotOptions } from './spellUse'
 
 describe('spell use slot selection', () => {
   const slots = [
@@ -41,4 +41,11 @@ describe('separate Pact Magic slots', () => {
     }, 2))
       .toHaveLength(2)
   })
+})
+
+it('sums slots of one level and prefers short rest until exhausted', () => {
+  const pools = { long_rest: [{ level: 3, total: 2, used: 1 }], short_rest: [{ level: 3, total: 1, used: 0 }] }
+  expect(groupedSpellSlotOptions(pools, 1)).toEqual([{ level: 3, remaining: 2, total: 3, pool: 'short_rest' }])
+  pools.short_rest[0].used = 1
+  expect(groupedSpellSlotOptions(pools, 1)).toEqual([{ level: 3, remaining: 1, total: 3, pool: 'long_rest' }])
 })

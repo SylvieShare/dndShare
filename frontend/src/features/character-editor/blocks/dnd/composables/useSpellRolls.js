@@ -27,13 +27,13 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
     return charCtx.characterRolls?.resolve?.(manualMode, context) || resolveRollMode(manualMode)
   }
 
-  function rollSpellAttack(entry, mode = 'auto') {
+  function rollSpellAttack(entry, mode = 'auto', excluded = []) {
     if (spellcastingBlocked.value) return
     const bonus = spellAttackBonus(entry)
     dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, spellAttackMode(entry, mode).mode, {
       eventData: itemEventData(entry.item),
       crit_mode: true,
-      bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }),
+      bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excluded),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
     })
     const states = charCtx.characterStatuses?.endOn?.('attack')
