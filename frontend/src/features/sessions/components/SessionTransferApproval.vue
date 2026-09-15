@@ -8,8 +8,14 @@
     <LoadingIndicator v-if="loadingTargets" label="Загрузка целей" />
     <div class="application-targets">
       <ActionButton v-for="target in targets" :key="target.charUuid || target.npcUid" variant="quiet" class="application-target" :disabled="busy" @click="resolve('accept', target)">
-        <template #icon><span class="application-target-icon"><NpcMarker v-if="target.kind === 'npc'" :letter="target.letter" :color="target.color" /><img v-else-if="target.imageUrl" :src="target.imageUrl" alt="" /><UserRound v-else :size="32" /></span></template>
-        {{ target.name }}
+        <template #icon><span class="application-target-icon">
+          <ItemIcon v-if="target.imageUrl || target.svg" :item="{ iconImageUrl: target.imageUrl, svg: target.svg }" :size="48" />
+          <PawPrint v-else-if="target.kind === 'npc'" :size="32" /><UserRound v-else :size="32" />
+        </span></template>
+        <span class="application-target-details">
+          <span class="application-target-name"><NpcMarker v-if="target.kind === 'npc'" :letter="target.letter" :color="target.color" />{{ target.name }}</span>
+          <span class="application-target-hp"><Heart :size="13" aria-hidden="true" />ХП: {{ target.hp ? `${target.hp.current} / ${target.hp.max}` : '—' }}<span v-if="target.hp?.temp" class="application-target-temp">+{{ target.hp.temp }} врем.</span></span>
+        </span>
       </ActionButton>
     </div>
     <p v-if="!loadingTargets && !targets.length">Нет доступных целей. Добавьте персонажа в сессию или NPC в бой.</p>
@@ -18,10 +24,11 @@
 </template>
 <script setup>
 import NpcMarker from './NpcMarker.vue'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import TransferDecisionActions from '@/features/item-transfers/components/TransferDecisionActions.vue'
 import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
 import { computed, inject, ref } from 'vue'
-import { UserRound } from '@lucide/vue'
+import { Heart, PawPrint, UserRound } from '@lucide/vue'
 import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
 import { useAccountStore } from '@/stores/account'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
@@ -75,7 +82,10 @@ async function approve() {
 .application-targets { display: flex; flex-direction: column; gap: 4px; }
 .application-target { justify-content: flex-start; text-align: left; overflow-wrap: anywhere; }
 .application-target-icon { display: grid; place-items: center; width: 48px; height: 48px; flex: 0 0 48px; }
-.application-target-icon img { width: 100%; height: 100%; object-fit: contain; }
+.application-target-details { display: grid; gap: 4px; }
+.application-target-name, .application-target-hp { display: flex; align-items: center; gap: 6px; }
+.application-target-hp { flex-wrap: wrap; color: var(--text-muted); font-size: 12px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.application-target-temp { color: var(--info); }
 .transfer-approval { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .transfer-approval-error { color: var(--danger); font-size: 12px; }
 </style>

@@ -17,10 +17,11 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		}
 	}
 	exec(`INSERT INTO dndshare.item(id,type_id,name,data) VALUES(800,10,'Лечение','{"consumption":{"healing":"4"}}'),(801,15,'Эффект','{"stacking":"single"}'),(802,5,'Заклинание','{"status_effects":[{"key":"test","effect":{"id":801},"duration":{"kind":"minutes","value":1},"concentration":true}]}');
- INSERT INTO dndshare."char"(id,user_id,data) VALUES(10,1,'{"values":{"name":"Отправитель","potions":[{"uid":"dose","item_id":800,"count":3}],"spells":{"tabs":[{"spells":[{"id":802}]}]}}}'),(11,2,'{"values":{"name":"Цель","ava":{"url":"/target-avatar.png"},"hp":{"current":1,"max":10},"states":[{"effect_id":801,"concentration":true}]}}');
+ INSERT INTO dndshare."char"(id,user_id,data) VALUES(10,1,'{"values":{"name":"Отправитель","potions":[{"uid":"dose","item_id":800,"count":3}],"spells":{"tabs":[{"spells":[{"id":802}]}]}}}'),(11,2,'{"values":{"name":"Цель","ava":{"url":"/target-avatar.png"},"hp":{"current":0,"max":{"base":8,"bonuses":[{"value":2}]},"temp":3},"states":[{"effect_id":801,"concentration":true}]}}');
  INSERT INTO dndshare.session_participant VALUES(1,10,1),(1,11,2);
- INSERT INTO dndshare.session_encounter(session_id,data) VALUES(1,'{"combatants":[{"uid":"npc-a","type":"npc","markerLetter":"A","iconColor":"#abcdef","override":{"name":"Гоблин","hp":10},"hpCurrent":1}]}');`)
-	defer exec(`DELETE FROM dndshare.item_transfer WHERE sender_char_id=10; DELETE FROM dndshare.session_event WHERE actor_char_id=10;DELETE FROM dndshare.session_participant WHERE char_id IN (10,11);DELETE FROM dndshare."char" WHERE id IN(10,11);DELETE FROM dndshare.item WHERE id IN(800,801,802);DELETE FROM dndshare.session_encounter;`)
+ INSERT INTO dndshare.item(id,type_id,name,data,icon_image_id) VALUES(803,6,'Гоблин','{"combat":{"hp":14}}',1);
+ INSERT INTO dndshare.session_encounter(session_id,data) VALUES(1,'{"combatants":[{"uid":"npc-a","type":"npc","itemId":803,"markerLetter":"A","iconColor":"#abcdef","override":{"name":"Гоблин","hp":10},"hpCurrent":1,"hpTemp":2}]}');`)
+	defer exec(`DELETE FROM dndshare.item_transfer WHERE sender_char_id=10; DELETE FROM dndshare.session_event WHERE actor_char_id=10;DELETE FROM dndshare.session_participant WHERE char_id IN (10,11);DELETE FROM dndshare."char" WHERE id IN(10,11);DELETE FROM dndshare.item WHERE id IN(800,801,802,803);DELETE FROM dndshare.session_encounter;`)
 	version := func() int64 {
 		var v int64
 		_ = pool.QueryRow(ctx, `SELECT version FROM dndshare."char" WHERE id=10`).Scan(&v)
@@ -41,12 +42,18 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	images := map[string]string{}
 	for _, target := range targets {
 		images[target.Name] = target.ImageURL
+		if target.Name == "Цель" && (target.HP == nil || *target.HP != (ApplicationTargetHP{Current: 0, Max: 10, Temp: 3})) {
+			t.Fatalf("character HP: %+v", target.HP)
+		}
 		if target.Kind == "npc" {
 			npc = target
 		}
 	}
 	if images["Лиора"] != "/sender.png" || images["Цель"] != "/target-avatar.png" || images["Отправитель"] != "" {
 		t.Fatalf("target portraits: %#v", images)
+	}
+	if npc.ImageURL != "/sender.png" || npc.HP == nil || *npc.HP != (ApplicationTargetHP{Current: 1, Max: 10, Temp: 2}) {
+		t.Fatalf("NPC presentation: %+v", npc)
 	}
 	if npc.Letter != "A" || npc.Color != "#abcdef" || npc.Name != "Гоблин" {
 		t.Fatal(npc)

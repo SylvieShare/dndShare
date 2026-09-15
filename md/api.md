@@ -703,7 +703,7 @@ revision, status }`; сброс одного результата: `POST /api/ac
 
 `POST /api/char/{uuid}/item-transfers` принимает `recipientCharUuid: "dm"` для `purpose: "use"` и `purpose: "transfer"`. Передача мастеру принимается в инвентарь сессии. `source: "spells"` означает запрос применения конкретного связанного эффекта: `entryUid` содержит id известного заклинания, `optionKey` — ключ связи; ячейка не расходуется этим запросом.
 
-`GET /api/sessions/{uuid}/application-targets` доступен только владельцу сессии и возвращает `{targets: [...]}`: `kind: "character", charUuid, name, imageUrl?` (портрет из иконки персонажа либо его аватара) либо `kind: "npc", encounterId, npcUid, name, letter, color`.
+`GET /api/sessions/{uuid}/application-targets` доступен только владельцу сессии и возвращает `{targets: [...]}`: `kind: "character", charUuid, name, imageUrl?` (портрет из иконки персонажа либо его аватара) либо `kind: "npc", encounterId, npcUid, name, letter, color, imageUrl?, svg?`. У обеих групп `hp?: {current,max,temp}` содержит хиты; максимум персонажа учитывает бонусы, максимум NPC — override экземпляра или справочник.
 
 `POST /api/sessions/{uuid}/events/{eventId}/application`: `{decision: "accept"|"reject", target?: {...}}`. Для принятия адресованного мастеру применения обязательна цель из текущей сессии. Ответ `{transfer}` содержит `addressedToDm` и `resolvedTarget`. Отказ не требует цели. Повтор принятого решения возвращает сохранённый результат. Сохранение боя со старым `applicationRevision` возвращает 409.
 

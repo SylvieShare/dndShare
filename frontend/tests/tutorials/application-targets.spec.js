@@ -5,16 +5,23 @@ for (const mobile of [false, true]) test(`DM resolves an application to a named 
   const requests = []
   await page.route('**/api/sessions/campaign/**', async route => {
     if (route.request().method() === 'POST') { requests.push(route.request().postDataJSON()); return route.fulfill({ json: { transfer: {} } }) }
-    await route.fulfill({ json: { targets: [{ kind: 'character', charUuid: 'hero', name: 'Лиора', imageUrl: '/static/tab-stats.svg' }, { kind: 'npc', npcUid: 'goblin', encounterId: 3, name: 'Гоблин', letter: 'B', color: '#ff9900' }] } })
+    await route.fulfill({ json: { targets: [{ kind: 'character', charUuid: 'hero', name: 'Лиора', imageUrl: '/static/tab-stats.svg', hp: { current: 0, max: 20, temp: 3 } }, { kind: 'npc', npcUid: 'goblin', encounterId: 3, name: 'Гоблин', letter: 'B', color: '#ff9900', imageUrl: '/static/tab-stats.svg', hp: { current: 5, max: 12, temp: 0 } }] } })
   })
   await page.goto('/tests/tutorials/fixtures/application-targets.html')
   await page.getByRole('button', { name: 'Принять', exact: true }).click()
   const modal = page.getByRole('dialog', { name: 'К кому применить' })
   await expect(modal).toBeVisible()
-  const hero = modal.getByRole('button', { name: 'Лиора', exact: true })
+  const hero = modal.getByRole('button', { name: /Лиора/ })
   await expect(hero).toBeVisible()
   await expect(hero.locator('img')).toHaveAttribute('src', '/static/tab-stats.svg')
-  const npc = modal.getByRole('button', { name: 'B Гоблин' })
+  const npc = modal.getByRole('button', { name: /B Гоблин/ })
+  await expect(npc.locator('img')).toHaveAttribute('src', '/static/tab-stats.svg')
+  await expect(hero.locator('.application-target-hp')).toHaveText('ХП: 0 / 20+3 врем.')
+  await expect(npc.locator('.application-target-hp')).toHaveText('ХП: 5 / 12')
+  for (const row of [hero, npc]) {
+    const [name, hp] = await row.locator('.application-target-name, .application-target-hp').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().toJSON()))
+    expect(hp.y).toBeGreaterThanOrEqual(name.y + name.height)
+  }
   await expect(npc.locator('.npc-marker')).toHaveCSS('color', 'rgb(255, 153, 0)')
   const [heroBox, npcBox] = await modal.locator('.application-target').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().toJSON()))
   expect(npcBox.y).toBeGreaterThanOrEqual(heroBox.y + heroBox.height)
