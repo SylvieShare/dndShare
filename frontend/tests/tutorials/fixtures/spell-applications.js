@@ -17,10 +17,14 @@ itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).inc
 window.casts = []
 const ctx = reactive({ ownerMode: true, var: { stats: { 4: 3 } }, topSession: location.search.includes('offline') ? null : { uuid: 'session' },
   itemTransfers: { busy: false, state: { settings: {}, loading: false }, recipients: [{ charUuid: 'ally', templateId: 1, name: 'Торин', data: { values: { name: 'Торин' } } }], loadPlayers() {},
-    async castSpell(entry, options) { window.casts.push({ id: entry.item.id, ...options }); return true },
+    async castSpell(entry, options) {
+      window.casts.push({ id: entry.item.id, ...options })
+      if (options.spendSlot) sheet.spells.slot_pools[options.pool].find(slot => slot.level === options.castLevel).used++
+      return true
+    },
   },
 })
-const sheet = reactive({ spells: { schema_version: 2, tabs: [{ key: 'wizard', name: 'Волшебник', casting_ability: 4, spells: items.map(item => ({ id: item.id, key: String(item.id), prepared: true })) }], slot_pools: { long_rest: [{ level: 1, total: 2, used: 0 }, { level: 2, total: 1, used: 1 }, { level: 3, total: 1, used: 0 }] } } })
+const sheet = reactive({ spells: { schema_version: 2, tabs: [{ key: 'wizard', name: 'Волшебник', casting_ability: 4, spells: items.map(item => ({ id: item.id, key: String(item.id), prepared: true })) }], slot_pools: { long_rest: [{ level: 1, total: 2, used: 0 }, { level: 2, total: 1, used: 1 }, { level: 3, total: 1, used: 0 }], short_rest: [{ level: 3, total: 1, used: 0 }] } } })
 createApp({ render: () => h('main', { style: 'padding:16px;max-width:800px' }, [h(DndSpells, {
   block: { id: 'spells', content: { stat_suggest_type_id: 16, prof_bonus_path: 'prof_bonus.v', school_suggest_id: 7 } },
   values: sheet, value: sheet.spells, 'onUpdate:value': (_, next) => { sheet.spells = next },

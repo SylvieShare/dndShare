@@ -51,7 +51,7 @@ const ctx = inject('spellsBlockCtx')
 const critical = ref(false)
 const hasAttack = computed(() => !!props.entry.item?.data?.damage?.range_attack)
 const attackMode = computed(() => ctx.spellAttackMode(props.entry))
-const options = computed(() => spellRollOptions(props.entry))
+const options = computed(() => spellRollOptions(props.entry).filter(option => !(option.primary && option.kind === 'heal')))
 const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Бросить на лечение' : 'Бросить на урон' : `Бросить: ${option.label}`
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)
