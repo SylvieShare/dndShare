@@ -7,8 +7,8 @@
     <p>Выберите персонажа или конкретное существо. Применение произойдёт сразу после выбора.</p>
     <LoadingIndicator v-if="loadingTargets" label="Загрузка целей" />
     <div class="application-targets">
-      <ActionButton v-for="target in targets" :key="target.charUuid || target.npcUid" :disabled="busy" @click="resolve('accept', target)">
-        <template #icon><NpcMarker v-if="target.kind === 'npc'" :letter="target.letter" :color="target.color" /><UserRound v-else :size="20" /></template>
+      <ActionButton v-for="target in targets" :key="target.charUuid || target.npcUid" variant="quiet" class="application-target" :disabled="busy" @click="resolve('accept', target)">
+        <template #icon><span class="application-target-icon"><NpcMarker v-if="target.kind === 'npc'" :letter="target.letter" :color="target.color" /><img v-else-if="target.imageUrl" :src="target.imageUrl" alt="" /><UserRound v-else :size="32" /></span></template>
         {{ target.name }}
       </ActionButton>
     </div>
@@ -72,7 +72,10 @@ async function approve() {
 }
 </script>
 <style scoped>
-.application-targets { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.application-targets { display: flex; flex-direction: column; gap: 4px; }
+.application-target { justify-content: flex-start; text-align: left; overflow-wrap: anywhere; }
+.application-target-icon { display: grid; place-items: center; width: 48px; height: 48px; flex: 0 0 48px; }
+.application-target-icon img { width: 100%; height: 100%; object-fit: contain; }
 .transfer-approval { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .transfer-approval-error { color: var(--danger); font-size: 12px; }
 </style>

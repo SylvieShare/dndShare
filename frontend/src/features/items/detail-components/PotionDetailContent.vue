@@ -7,8 +7,8 @@
     </div>
 
     <DetailSection v-if="data.consumption" label="При применении">
-      <DamageFormulaPreview v-if="data.consumption.healing" label="Восстановление хитов" :expression="data.consumption.healing" />
-      <DamageFormulaPreview v-if="data.consumption.temporary_hp" label="Временные хиты" :expression="data.consumption.temporary_hp" />
+      <DamageFormulaPreview v-if="data.consumption.healing" label="Восстановление хитов" aria-label="Восстановление хитов" default-color="var(--success)" :expression="data.consumption.healing" />
+      <DamageFormulaPreview v-if="data.consumption.temporary_hp" label="Временные хиты" aria-label="Временные хиты" default-color="var(--info)" :expression="data.consumption.temporary_hp" />
       <HandbookReferenceRows v-if="data.consumption.spell?.id" :rows="[{ id: data.consumption.spell.id }]" />
       <p v-if="data.consumption.duration">{{ data.consumption.duration.formula ? `${data.consumption.duration.formula} · ${data.consumption.duration.kind === 'hours' ? 'часы' : 'длительность'}` : statusDuration(data.consumption.duration) }}<template v-if="data.consumption.concentration"> · Концентрация</template></p>
       <p v-if="data.consumption.note">{{ data.consumption.note }}</p>
@@ -22,7 +22,7 @@
       </div>
       <div class="pdc-copy">
         <div v-if="showTitle" class="pdc-name">{{ item.name }}</div>
-        <RichContent v-if="data.desc" class="pdc-desc" :html="data.desc" />
+        <RichContent v-if="data.desc" class="pdc-desc" :html="data.desc" :item="item" />
         <div v-else class="pdc-no-desc">Описание отсутствует</div>
       </div>
     </div>

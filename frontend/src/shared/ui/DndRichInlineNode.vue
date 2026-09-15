@@ -3,13 +3,14 @@
     v-if="node.kind === 'dice'"
     type="button"
     class="rich-node rich-node--dice"
+    :style="diceColor ? { '--rich-node-color': diceColor } : null"
     :title="average == null ? `Бросить ${formula}` : `Бросить ${formula} · среднее ${average}`"
     @click="roll"
   >
     <template v-for="(part, index) in diceParts" :key="index">
       <span v-if="index" class="rich-node-sign">{{ part.sign }}</span>
       <span v-if="part.kind === 'dice'" class="rich-node-die">
-        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="25" />
+        <span v-if="part.n > 1">{{ part.n }}×</span><SystemDie :sides="part.sides" :size="25" :color="part.color || diceColor" />
       </span>
       <span v-else>{{ part.value }}</span>
     </template>
@@ -99,6 +100,7 @@ import { BasePopover, RichContent } from '@sylvieshare/share-ui'
 import { HeartPulse, Shield } from '@lucide/vue'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { parseDiceExpression } from '@/shared/lib/dice'
+import { richDiceColor } from '@/shared/lib/richDiceColor'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import SystemDie from '@/shared/ui/SystemDie.vue'
@@ -125,6 +127,7 @@ const suggestStore = useSuggestStore()
 const diceStore = useDiceStore()
 
 const formula = computed(() => String(props.node.payload?.formula || ''))
+const diceColor = computed(() => richDiceColor(formula.value, sourceItem.value))
 const statKind = computed(() => props.node.payload?.stat === 'ac' ? 'ac' : 'hp')
 const average = computed(() => {
   const raw = props.node.payload?.average
@@ -177,6 +180,7 @@ async function loadReference() {
 function roll() {
   if (!diceParts.value.length) return
   diceStore.roll(props.node.payload?.label || props.node.label || formula.value, formula.value, {
+    color: diceColor.value,
     eventData: {
       ...(unref(sourceItem)?.id ? { source: { itemId: unref(sourceItem).id, name: unref(sourceItem).name } } : {}),
       ...(unref(npcActor) ? { npcActor: unref(npcActor) } : {}),
@@ -225,8 +229,8 @@ button.rich-node:active { transform: scale(.97); }
   margin-inline: .28em;
   padding: 0 5px;
   border-radius: 6px;
-  background: color-mix(in srgb, var(--accent) 9%, var(--surface-raised));
-  color: var(--accent-soft);
+  background: color-mix(in srgb, var(--rich-node-color, var(--accent)) 9%, var(--surface-raised));
+  color: var(--rich-node-color, var(--accent-soft));
   font-size: .98em;
   font-weight: 700;
   line-height: 1;
@@ -240,16 +244,16 @@ button.rich-node:active { transform: scale(.97); }
 .rich-node--stat {
   gap: 4px;
   margin-inline: .16em;
-  padding: 1px 5px;
+  padding: 0 5px;
   background: color-mix(in srgb, var(--rich-stat-color) 10%, var(--surface-raised));
   color: color-mix(in srgb, var(--rich-stat-color) 72%, var(--text-1));
   font-family: var(--font-ui);
   font-size: .88em;
   font-weight: 750;
   line-height: 1.25;
-  vertical-align: .05em;
   white-space: nowrap;
 }
+.rich-node--dice, .rich-node--stat { height: 25px; box-sizing: border-box; vertical-align: middle; }
 .rich-node--stat svg { flex: none; }
 .rich-node--stat-ac { --rich-stat-color: var(--info); }
 .rich-node--stat-hp { --rich-stat-color: var(--danger); }

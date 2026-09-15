@@ -4,7 +4,7 @@
     <div class="event-content">
       <div class="event-heading">
         <slot name="entity" />
-        <span v-if="action || transition">{{ action }}<template v-if="transition"> ({{ transition }})</template></span>
+        <span v-if="action || transition" class="event-action"><span class="event-action-dot" aria-hidden="true">•</span><span>{{ action }}<template v-if="transition"> ({{ transition }})</template></span></span>
         <time :datetime="event.createdAt" :title="fullTime">{{ time }}</time>
       </div>
       <div v-if="hasBody" class="event-body">
@@ -67,6 +67,8 @@ const details = computed(() => sessionEventDetails(props.event))
 .event-body { display: grid; gap: 6px; min-width: 0; }
 .event-row--with-entity .event-body { margin-left: 48px; }
 .event-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; color: var(--text-2); font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.event-action { display: inline-flex; align-items: baseline; gap: 8px; min-width: 0; color: var(--text-1); font-size: 14px; font-weight: 650; }
+.event-action-dot { flex: none; color: var(--accent); font-weight: 800; }
 .event-heading time { flex: none; margin-left: auto; color: var(--text-muted); font-size: 10px; font-variant-numeric: tabular-nums; }
 .event-details { white-space: pre-wrap; }
 .event-details, .event-adjustment { color: var(--text-muted); font-size: 11px; overflow-wrap: anywhere; }

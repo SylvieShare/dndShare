@@ -12,6 +12,7 @@ type ApplicationTarget struct {
 	NPCUID      string `json:"npcUid,omitempty"`
 	EncounterID int64  `json:"encounterId,omitempty"`
 	Name        string `json:"name,omitempty"`
+	ImageURL    string `json:"imageUrl,omitempty"`
 	Letter      string `json:"letter,omitempty"`
 	Color       string `json:"color,omitempty"`
 }
@@ -64,18 +65,21 @@ func (s *Store) SessionApplicationTargets(ctx context.Context, userID, sessionID
 		return nil, ErrNotFound
 	}
 	targets := []ApplicationTarget{}
-	rows, err := s.pool.Query(ctx, `SELECT c.uuid::text,c.data FROM dndshare.session_participant p JOIN dndshare."char" c ON c.id=p.char_id WHERE p.session_id=$1 AND c.deleted=false ORDER BY c.id`, sessionID)
+	rows, err := s.pool.Query(ctx, `SELECT c.uuid::text,c.data,COALESCE(icon.url,c.data #>> '{values,ava,url}','')
+ FROM dndshare.session_participant p JOIN dndshare."char" c ON c.id=p.char_id
+ LEFT JOIN dndshare.storage_image icon ON icon.id=c.icon_image_id AND icon.deleted=false
+ WHERE p.session_id=$1 AND c.deleted=false ORDER BY c.id`, sessionID)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
-		var uuid string
+		var uuid, imageURL string
 		var raw json.RawMessage
-		if err = rows.Scan(&uuid, &raw); err != nil {
+		if err = rows.Scan(&uuid, &raw, &imageURL); err != nil {
 			rows.Close()
 			return nil, err
 		}
-		targets = append(targets, ApplicationTarget{Kind: "character", CharUUID: uuid, Name: characterName(raw)})
+		targets = append(targets, ApplicationTarget{Kind: "character", CharUUID: uuid, Name: characterName(raw), ImageURL: imageURL})
 	}
 	err = rows.Err()
 	rows.Close()

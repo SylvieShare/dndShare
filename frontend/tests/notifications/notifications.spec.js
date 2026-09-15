@@ -175,7 +175,7 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   await prepare(page)
   const session = { uuid: 'test', name: 'Сессия', status: 'active', ownerUserId: 1, systemId: 1 }
   await page.route('**/api/sessions/test', route => route.fulfill({ json: { session, myRole: 'gm', participants: [{ charUuid: 'recipient', templateId: 1, iconImageUrl: '/static/tab-stats.svg', data: { values: { name: 'Торин' } } }] } }))
-  let entries = [], offers = [{ id: 30, eventId: 30, itemName: 'Подарок', senderName: 'Лиора', senderCharUuid: 'sender', recipientCharUuid: '', addressedToDm: true, purpose: 'transfer', source: 'items', entry: { count: 2, override: { name: 'Подарок' } } }]
+  let entries = [], offers = [{ id: 30, eventId: 30, itemName: 'Охотничий капкан', senderName: 'Лиора', senderCharUuid: 'sender', recipientCharUuid: '', addressedToDm: true, purpose: 'transfer', source: 'items', entry: { count: 2, override: { name: 'Охотничий капкан' } } }]
   let nextId = 1, failAdd = true
   const additions = new Set(), addRequests = []
   await page.route('**/api/sessions/test/inventory', async route => {
@@ -187,7 +187,7 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   })
   await page.route('**/api/sessions/test/events/30/application', async route => {
     expect(route.request().postDataJSON().decision).toBe('accept')
-    entries.push({ id: 'gift', name: 'Подарок', source: 'items', entry: offers[0].entry }); offers = []
+    entries.push({ id: 'gift', name: 'Охотничий капкан', source: 'items', entry: offers[0].entry }); offers = []
     await route.fulfill({ json: { transfer: { status: 'accepted' } } })
   })
   await page.route('**/api/sessions/test/inventory/*', async route => {
@@ -208,7 +208,15 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   const inventory = page.getByRole('dialog', { name: 'Инвентарь сессии', exact: true })
   await expect(inventory).toBeVisible()
   await inventory.getByRole('button', { name: 'Принять', exact: true }).click()
-  await expect(inventory.locator('.inventory-row')).toContainText('Подарок')
+  await expect(inventory.locator('.inventory-row')).toContainText('Охотничий капкан')
+  const bounds = await inventory.locator('.inventory-row').evaluate(row => ({
+    height: row.getBoundingClientRect().height,
+    nameWidth: row.querySelector('.oli-name').getBoundingClientRect().width,
+    overflow: row.scrollWidth > row.clientWidth,
+  }))
+  expect(bounds.height).toBeLessThan(96)
+  expect(bounds.nameWidth).toBeGreaterThan(90)
+  expect(bounds.overflow).toBe(false)
   await inventory.getByRole('button', { name: 'Свой предмет', exact: true }).click()
   await inventory.locator('form input').first().fill('Верёвка')
   await inventory.getByRole('button', { name: 'Добавить', exact: true }).click()
@@ -219,7 +227,7 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   expect(addRequests[0].clientActionId).toBe(addRequests[1].clientActionId)
   await inventory.getByRole('button', { name: 'Удалить: Верёвка', exact: true }).click()
   await expect(inventory.locator('.inventory-row')).toHaveCount(1)
-  await inventory.getByRole('button', { name: 'Передать: Подарок', exact: true }).click()
+  await inventory.getByRole('button', { name: 'Передать: Охотничий капкан', exact: true }).click()
   const recipient = page.getByRole('menuitem', { name: 'Торин', exact: true })
   await expect(recipient.locator('img')).toHaveCount(1)
   await recipient.click()
