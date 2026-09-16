@@ -1,9 +1,8 @@
 <template>
-  <AppModalFrame title="Применить результат" :z-index="3800" @close="!busy && $emit('close')">
-    <div class="impact-form">
+  <SessionTargetPicker title="Применить результат" v-model="selected" :targets="targets" :loading="loading" :busy="busy" :locked="locked" :fixed="!!target" :disabled-keys="appliedKeys" :error="error" @close="$emit('close')">
+    <template #before>
       <DiceRollResult v-if="event.data?.result" :result="event.data.result" :color="event.data.color" :size="28" />
       <p v-if="outcome" class="impact-hint">{{ outcome === 'failure' ? 'Провал: полный урон и выбранный эффект.' : event.data?.savingThrow?.onSuccess === 'half' ? 'Успех: половина урона, без эффекта.' : 'Успех: без урона и эффекта.' }}</p>
-      <LoadingIndicator v-if="loading" label="Загрузка целей" />
       <div v-if="effects.length && outcome !== 'success'" class="impact-effects">
         <strong>Наложить эффект</strong>
         <label v-if="event.data?.damageRoll"><input v-model="effectKey" type="radio" value="" :disabled="locked" /> Только урон</label>
@@ -11,37 +10,31 @@
         <label v-if="condition" class="impact-condition"><input v-model="conditionConfirmed" type="checkbox" :disabled="locked" /> {{ condition }}</label>
       </div>
       <p v-if="!loading && !event.data?.damageRoll && !effects.length && outcome !== 'success'" class="impact-hint">У этого источника пока не настроено применение эффекта.</p>
-      <div class="impact-targets">
-        <label v-for="candidate in targets" :key="impactTargetKey(candidate)" class="impact-target">
-          <input v-if="!target" v-model="selected" type="checkbox" :value="impactTargetKey(candidate)" :disabled="locked || !!impactForTarget(event, candidate)" />
-          <div class="impact-target-content">
-            <SaveTargetName :target="candidate" :icon-size="56" show-hp />
-            <small v-if="impactForTarget(event, candidate)">Уже применено</small>
-            <small v-else-if="!outcome && impactOutcome(event, candidate)">{{ impactOutcome(event, candidate) === 'success' ? 'Успех' : 'Провал' }}</small>
-          </div>
-        </label>
-      </div>
-      <p class="impact-hint">Урон сначала поглощают временные хиты. Защиты учитываются, если они настроены в механиках.</p>
-      <p v-if="error" class="impact-error" role="alert">{{ error }}</p>
-    </div>
+    </template>
+    <template #target-note="{ target: candidate }">
+      <span v-if="impactForTarget(event, candidate)">Уже применено</span>
+      <span v-else-if="!outcome && impactOutcome(event, candidate)">{{ impactOutcome(event, candidate) === 'success' ? 'Успех' : 'Провал' }}</span>
+    </template>
+    <p class="impact-hint">Урон сначала поглощают временные хиты. Защиты учитываются, если они настроены в механиках.</p>
     <template #footer><ActionButton :disabled="busy || loading || !selected.length || (!event.data?.damageRoll && !effectKey && outcome !== 'success') || (!!condition && !conditionConfirmed)" @click="apply">{{ pending ? 'Повторить применение' : `Применить · ${selected.length}` }}</ActionButton></template>
-  </AppModalFrame>
+  </SessionTargetPicker>
 </template>
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
-import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
+import { ActionButton } from '@sylvieshare/share-ui'
 import { getApplicationTargets } from '@/shared/api/itemTransfersApi'
 import { applySessionImpact } from '@/shared/api/sessionEventsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
-import SaveTargetName from './SaveTargetName.vue'
+import SessionTargetPicker from './SessionTargetPicker.vue'
 import { impactTargetKey, impactOutcome, impactForTarget, targetIdentity } from '../lib/sessionImpact'
 const props = defineProps({ event: Object, target: Object, outcome: String })
 const emit = defineEmits(['close'])
 const events = useSessionEventsStore(), encounter = inject('applicationEncounter', null)
 const loading = ref(true), busy = ref(false), error = ref(''), pending = ref(null)
 const targets = ref([]), selected = ref([]), effects = ref([]), effectKey = ref(''), conditionConfirmed = ref(false)
+const appliedKeys = computed(() => (props.event.data?.impacts || []).map(row => row.key))
 const locked = computed(() => busy.value || !!pending.value)
 const condition = computed(() => props.outcome !== 'success' && effects.value.find(row => row.key === effectKey.value)?.condition || '')
 onMounted(async () => {
@@ -81,13 +74,9 @@ async function apply() {
 }
 </script>
 <style scoped>
-.impact-form, .impact-effects, .impact-targets { display: grid; gap: 10px; }
-.impact-targets { max-height: 45vh; overflow: auto; }
-.impact-target { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: var(--r-sm); cursor: pointer; }
-.impact-target-content { flex: 1; min-width: 0; }
-.impact-target-content > .save-target-name { width: 100%; }
-.impact-target-content > small { display: block; padding-left: 64px; margin-top: 4px; }
-.impact-effects label { display: flex; align-items: center; gap: 8px; }.impact-condition { color: var(--warning); }
-.impact-hint, .impact-target small { margin: 0; font-size: 12px; color: var(--text-muted); }.impact-error { color: var(--danger); }
+.impact-effects { display: grid; gap: 10px; }
+.impact-effects label { display: flex; align-items: center; gap: 8px; }
+.impact-condition { color: var(--warning); }
+.impact-hint { margin: 0; font-size: 12px; color: var(--text-muted); }
 input { accent-color: var(--accent); }
 </style>

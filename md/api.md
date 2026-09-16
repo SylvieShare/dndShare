@@ -792,3 +792,12 @@ MCP `handbook_item_reuse_icon(itemId, sourceItemId)` присваивает си
 ### Применение результата хроники
 
 `POST /api/sessions/{uuid}/impacts` — применение сохранённого урона/эффекта к нескольким целям либо прямого урона из боя. Только мастер; `clientActionId` обеспечивает повтор без двойного списания. [Контракт и исходы спасбросков](features/session-damage.md).
+
+### Цели атаки в хронике
+
+`PUT /api/sessions/{uuid}/events/{eventId}/attack-targets` — только мастер;
+`{targets:[{kind:"character",charUuid}]}` или NPC `{kind:"npc",encounterId,npcUid}`.
+Максимум 50; `[]` очищает выбор. Возвращает `{event}` с `data.attackTargets`.
+Принимаются только атаки с `data.attackRoll=true` и d20; сервер проверяет цели,
+сохраняет их публичные идентичности без снимков листа и HP. Бросок не меняется.
+Изменённые атаки входят в `updates` хроники. Подробнее: [применение урона](features/session-damage.md).

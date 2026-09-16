@@ -15,10 +15,19 @@ const targets = [
   { kind: 'character', charUuid: 'hero', name: 'Тиф', hp: { current: 18, max: 24, temp: 3 }, snapshot: { values: { DEX: { value: 16, save_up: true }, lvl: { level: 5 } } } },
   { kind: 'npc', encounterId: 1, npcUid: 'goblin', name: 'Гоблин', hp: { current: 20, max: 20, temp: 2 }, letter: 'Б', color: '#77bb33', snapshot: { item: { stats: { dex: 14 } }, combatant: {} } },
 ]
-window.requests = []; window.impactRequests = []
+const attack = reactive({ id: 11, type: 'dice_roll', action: 'Атака: Посох', sessionOwnerUserId: 1, createdAt: new Date().toISOString(), data: { attackRoll: true, result: { total: 18, parts: [{ kind: 'dice', sides: 20, rolls: [15], sum: 15 }, { kind: 'flat', value: 3 }] } } })
+const attackMode = new URLSearchParams(location.search).has('attack')
+window.attackEvent = attack
+window.requests = []; window.impactRequests = []; window.attackRequests = []
 window.fetch = async (url, options = {}) => {
   if (String(url).endsWith('/application-targets')) return Response.json({ targets })
   if (String(url).endsWith('/save-targets')) return Response.json({ targets })
+  if (String(url).endsWith('/attack-targets')) {
+    const body = JSON.parse(options.body); window.attackRequests.push(body)
+    if (window.attackRequests.length === 1) return Response.json({ desc: 'Ошибка сохранения целей' }, { status: 503 })
+    attack.data.attackTargets = body.targets
+    return Response.json({ event: attack })
+  }
   if (String(url).endsWith('/impacts')) {
     const body = JSON.parse(options.body); window.impactRequests.push(body)
     if (window.impactRequests.length === 1) return Response.json({ desc: 'Повторите запрос' }, { status: 503 })
@@ -39,4 +48,4 @@ window.fetch = async (url, options = {}) => {
 }
 const events = useSessionEventsStore(pinia)
 events.sessionUuid = 'session'; events.refresh = async () => {}
-createApp({ render: () => h('main', { style: 'max-width:700px;margin:20px' }, h(SessionEventRow, { event })) }).use(pinia).mount('#app')
+createApp({ render: () => h('main', { style: 'max-width:700px;margin:20px' }, h(SessionEventRow, { event: attackMode ? attack : event })) }).use(pinia).mount('#app')

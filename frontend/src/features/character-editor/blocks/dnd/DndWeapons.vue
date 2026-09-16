@@ -325,7 +325,7 @@ function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode =
   const context = weaponEffectContext(entry)
   const mode = attackMode(context, attackRollMode)
   const result = dice.rollD20(title, bonus, mode, { log, onReroll,
-    eventData: itemEventData({ ...item(entry), id: entry.magic_item_id || entry.item_id || item(entry)?.id }, entry.uid),
+    eventData: { ...itemEventData({ ...item(entry), id: entry.magic_item_id || entry.item_id || item(entry)?.id }, entry.uid), attackRoll: true },
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excludedBonuses),
@@ -353,7 +353,7 @@ function rollPresetAttack(kind, { attackRollMode = 'auto', excludedBonuses = [] 
   const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: kind !== 'unarmed' }
   const mode = attackMode(context, attackRollMode)
   dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
-    eventData: itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value),
+    eventData: { ...itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value), attackRoll: true },
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excludedBonuses),

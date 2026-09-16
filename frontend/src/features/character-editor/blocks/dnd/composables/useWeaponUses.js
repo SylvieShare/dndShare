@@ -28,14 +28,14 @@ export function useWeaponUses(charCtx, calculation) {
         const patch = updateWeaponUse(values(), entry.uid, plan.event.id, event => ({ ...event, attack_result: result, critical: isCritical(result) }))
         if (!Object.keys(patch).length) return
         charCtx.updateValues(patch)
-        charCtx.logSessionEvent?.({ type: 'dice_roll', action: `Переброс атаки: ${rule.title}`, data: { ...instanceEventData(charCtx, entry.uid), result, weaponUseId: plan.event.id } })
+        charCtx.logSessionEvent?.({ type: 'dice_roll', action: `Переброс атаки: ${rule.title}`, data: { ...instanceEventData(charCtx, entry.uid), result, attackRoll: true, weaponUseId: plan.event.id } })
       }
       const result = calculation.attack(prepared.entry, `${rule.title}: ${calculation.title(entry)}`, false, onReroll, attackRollMode, excludedBonuses)
       plan.event.attack_result = result
       plan.event.critical = isCritical(result)
       charCtx.updateValues(plan.patch)
       charCtx.logSessionEvent?.({ type: 'dice_roll', action: `${rule.title}: ${calculation.title(entry)}`,
-        data: { ...(rule.resource && plan.event.resource_cost ? resourceChangeData(rule.resource, rule.resource.value - plan.event.resource_cost) : {}), ...instanceEventData(charCtx, entry.uid), result, weaponUseId: plan.event.id, resourceSpent: plan.event.resource_cost } })
+        data: { ...(rule.resource && plan.event.resource_cost ? resourceChangeData(rule.resource, rule.resource.value - plan.event.resource_cost) : {}), ...instanceEventData(charCtx, entry.uid), result, attackRoll: true, weaponUseId: plan.event.id, resourceSpent: plan.event.resource_cost } })
       await nextTick()
     } finally { busy.value = false }
   }

@@ -83,6 +83,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	s := &Store{pool: pool}
 	t.Run("session impacts", func(t *testing.T) { testSessionImpacts(t, s, pool) })
 	t.Run("session saves", func(t *testing.T) { testSessionSaves(t, s, pool) })
+	t.Run("session attack targets", func(t *testing.T) { testSessionAttackTargets(t, s, pool) })
 	t.Run("application targets", func(t *testing.T) { testApplicationTargets(t, s, pool) })
 	current := func(id int64) transferCharacter {
 		t.Helper()

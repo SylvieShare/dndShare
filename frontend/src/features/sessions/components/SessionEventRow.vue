@@ -15,6 +15,7 @@
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
         </div>
+        <SessionAttackTargets v-if="event.data?.attackRoll" :event="event" :is-dm="isDm" />
         <SessionSavingThrow v-if="event.data?.savingThrow" :event="event" />
         <DamageImpact v-for="impact in standaloneImpacts" :key="impact.key" :impact="impact" />
         <div v-if="event.type === 'item_transfer'" class="event-transfer">
@@ -60,6 +61,7 @@ import SessionEventIcon from './SessionEventIcon.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
 const SessionSavingThrow = defineAsyncComponent(() => import('./SessionSavingThrow.vue'))
+const SessionAttackTargets = defineAsyncComponent(() => import('./SessionAttackTargets.vue'))
 const DamageImpact = defineAsyncComponent(() => import('./DamageImpact.vue'))
 const SessionImpactModal = defineAsyncComponent(() => import('./SessionImpactModal.vue'))
 const props = defineProps({ event: Object, entityName: String, grouped: Boolean, arriving: Boolean })

@@ -47,7 +47,7 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
     if (spellcastingBlocked.value) return
     const bonus = spellAttackBonus(entry)
     dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, spellAttackMode(entry, mode).mode, {
-      eventData: itemEventData(entry.item),
+      eventData: { ...itemEventData(entry.item), attackRoll: true },
       crit_mode: true,
       bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excluded),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],

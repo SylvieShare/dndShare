@@ -17,25 +17,18 @@
     </div>
   </section>
   <SessionImpactModal v-if="applying" :event="event" v-bind="applying" @close="applying = null" />
-  <AppModalFrame v-if="picking" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :z-index="3700" @close="!busy && (picking = false)">
-    <LoadingIndicator v-if="loading" label="Загрузка участников" />
-    <div class="save-target-list">
-      <label v-for="target in targets" :key="saveTargetKey(target)" class="save-target-option">
-        <input v-model="selected" type="checkbox" :value="saveTargetKey(target)" :disabled="busy || rolled.has(saveTargetKey(target))" />
-        <SaveTargetName :target="target" />
-        <span>{{ rolled.has(saveTargetKey(target)) ? 'Уже брошено' : bonusLabel(target) }}</span>
-      </label>
-    </div>
-    <RollModeControl v-model="mode" label="Режим спасбросков" />
-    <p v-if="error" role="alert" class="save-failure">{{ error }}</p>
+  <SessionTargetPicker v-if="picking" v-model="selected" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :disabled-keys="[...rolled]" :error="error" :z-index="3700" @close="picking = false">
+    <template #target-note="{ target }">{{ rolled.has(saveTargetKey(target)) ? 'Уже брошено' : `Бонус спасброска: ${bonusLabel(target)}` }}</template>
+    <RollModeControl v-if="!pending" v-model="mode" label="Режим спасбросков" />
     <template #footer><ActionButton :disabled="busy || loading || !selected.length" @click="rollSelected">{{ pending ? 'Сохранить результаты' : `Бросить · ${selected.length}` }}</ActionButton></template>
-  </AppModalFrame>
+  </SessionTargetPicker>
 </template>
 <script setup>
 import { computed, defineAsyncComponent, inject, ref } from 'vue'
 import { Shield } from '@lucide/vue'
-import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
+import { ActionButton } from '@sylvieshare/share-ui'
 import SaveTargetName from './SaveTargetName.vue'
+import SessionTargetPicker from './SessionTargetPicker.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import RollModeControl from '@/features/character-editor/blocks/dnd/components/RollModeControl.vue'
 import { useAccountStore } from '@/stores/account'
@@ -109,8 +102,4 @@ async function rollSelected() {
 .event-save-result { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 8px; font-size: 12px; }
 .event-save-result > :first-child { flex: 1; }
 .save-success { color: var(--success); }.save-failure { color: var(--danger); }
-.save-target-list { display: grid; gap: 8px; margin-bottom: 14px; max-height: 50vh; overflow-y: auto; }
-.save-target-option { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid var(--border); border-radius: var(--r-sm); cursor: pointer; }
-.save-target-option > :nth-child(2) { flex: 1; }.save-target-option > span { font-size: 12px; color: var(--text-muted); }
-.save-target-option input { accent-color: var(--accent); }
 </style>
