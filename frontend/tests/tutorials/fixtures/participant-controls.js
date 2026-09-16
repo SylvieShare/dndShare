@@ -6,10 +6,11 @@ import { useTemplateStore } from '../../../src/stores/template'
 import { useSuggestStore } from '../../../src/stores/suggest'
 import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
+import '../../../src/features/sessions/pages/styles/ViewSession.css'
 const pinia = createPinia()
 useTemplateStore(pinia).templates = [{ id: 1, name: 'DND5' }]
 useSuggestStore(pinia).set(3, [])
-const state = reactive({ selected: false, npcSelected: false, active: false, drags: 0 })
+const state = reactive({ combat: true, selected: false, npcSelected: false, active: false, drags: 0 })
 const player = reactive({ uid: 'player', type: 'player', charId: 1, initiative: null, position: 'reserve' })
 const npc = reactive({ uid: 'npc', type: 'npc', name: 'Гоблин', initiative: null, position: 'reserve', letter: 'Б' })
 const participant = reactive({ charId: 1, templateId: 1, data: { values: { name: 'Тиф', race: { name: 'Эльф' }, classes: [{ name: 'Плут' }], hp: { current: 18, max: 24 }, lvl: { level: 5 }, WIS: { value: 16, skills: { 10: { up: 1 } } }, INT: { value: 14, skills: { 9: { up: 2 } } }, DEX: { value: 14 }, armor: {} } } })
@@ -27,6 +28,6 @@ const encounter = reactive({
 window.fetch = async () => Response.json({ items: [] })
 window.controls = { state, encounter, player }
 createApp({ render: () => h('main', { style: 'padding:20px;max-width:850px' }, [
-  h('div', { style: 'width:340px;max-width:100%' }, h(SessionParticipantCard, { participant, isDm: true, combatMode: true, combatEditable: true, combatant: player, combatSelected: state.selected, reorderEnabled: true, 'onUpdate:combat-selected': value => { state.selected = value }, 'onDrag-start': () => { state.drags++ } })),
+  h('div', { class: ['campaign-workspace', state.combat && 'campaign-workspace--combat'], style: 'height:80px;overflow:visible' }, h('div', { class: 'workspace-dock workspace-dock--left', style: 'position:relative;top:0;left:0;display:flex;max-height:none;overflow:visible' }, h(SessionParticipantCard, { participant, isDm: true, combatMode: state.combat, combatEditable: true, combatant: player, combatSelected: state.selected, reorderEnabled: true, 'onUpdate:combat-selected': value => { state.selected = value }, 'onDrag-start': () => { state.drags++ } }))),
   h('div', { style: 'margin-top:24px' }, h(EncounterRow, { combatant: npc, section: 'reserve-npc' })),
 ]) }).use(pinia).provide('applicationEncounter', encounter).provide('encounter', encounter).mount('#app')

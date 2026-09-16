@@ -6,6 +6,10 @@
 }
 
 .campaign-workspace {
+  --participant-rail-width: 264px;
+  --participant-selection-width: 32px;
+  --participant-card-gap: 9px;
+  --participant-selection-extra: calc(var(--participant-selection-width) + var(--participant-card-gap));
   position: relative;
   flex: 1;
   min-height: 0;
@@ -30,7 +34,7 @@
 }
 
 .campaign-graph {
-  --chapter-safe-left: 306px;
+  --chapter-safe-left: calc(var(--participant-rail-width) + 42px);
   --chapter-safe-right: 86px;
   width: 100%;
   height: 100%;
@@ -41,7 +45,7 @@
 }
 
 .campaign-workspace--combat .campaign-graph {
-  --chapter-safe-left: 402px;
+  --chapter-safe-left: calc(var(--participant-rail-width) + var(--participant-selection-extra) + 42px);
 }
 
 .workspace-dock {
@@ -59,7 +63,7 @@
 .workspace-dock--left {
   left: 14px;
   bottom: auto;
-  width: 264px;
+  width: var(--participant-rail-width);
   max-height: calc(100% - var(--session-toolbar-height, 78px) - 28px);
   transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -69,7 +73,7 @@
 }
 
 .campaign-workspace--combat .workspace-dock--left {
-  width: 360px;
+  width: calc(var(--participant-rail-width) + var(--participant-selection-extra));
 }
 
 .col-section-title {

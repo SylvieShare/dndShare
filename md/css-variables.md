@@ -121,3 +121,11 @@ Declared in `App.vue`:
 | `.sheet-tag-chip` / `.sheet-tag-remove` | Shared sheet tag chip. |
 | `.sheet-tile-title` | Small uppercase title at the top of a tile. |
 | `.app-dropdown` | Anchored dropdown chrome using `--popover-bg`, border, radius and shadow tokens. |
+
+### Колонка игроков сессии
+
+В `.campaign-workspace` ширина задаётся `--participant-rail-width: 264px`.
+`--participant-selection-width: 32px` и `--participant-card-gap: 9px` общие для
+карточки и колонки. Их сумма `--participant-selection-extra` прибавляется в бою
+к ширине колонки и безопасной области карты истории. Карточка использует ту же
+сумму для скрытия полосы галочки вне боя; ширина имени/HP сохраняется.

@@ -1154,3 +1154,11 @@ is shared with creature rows and shown before combat starts.
 `handleCtrlSelection` is the shared capture handler for the participant rail,
 `EncounterRow` and `SessionTargetPicker`; macOS Ctrl-contextmenu also toggles once.
 Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep their behavior.
+
+Participant menu indicators are a single row of number/icon pairs with vertical
+dividers. Hover and keyboard focus open the shared `ItemTooltip` for the name,
+meaning and passive calculation. The player rail uses `--participant-rail-width`
+(264px), `--participant-selection-width` (32px) and `--participant-card-gap` (9px).
+Combat adds exactly the selection width plus gap; graph safe-area offsets use the
+same sum. The checkbox strip has 10px left / 2px right padding, so the original
+name/HP area retains its width as the rail expands.

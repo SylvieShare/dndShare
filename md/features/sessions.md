@@ -908,12 +908,14 @@ header action is highlighted while results exist and clears them on the next
 click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
-widens the existing left participant rail from 264px to 360px; every player tile gains the
+widens the existing left participant rail from 264px by the checkbox strip plus the card gap (32px + 9px, total 305px); every player tile gains the
 encounter checkbox with additional horizontal spacing; the current turn is
 highlighted there. The tile shows only the name and HP, with 14px right padding;
 race/class, armor class and initiative are absent from the tile. At the top of
 the DM menu, D&D participants show equipped AC and passive Perception/Investigation.
-Before combat starts, the combat-tab menu exposes an initiative submenu with
+The three indicators form one row: number followed by icon, with vertical
+dividers. Hover or keyboard focus opens the shared `ItemTooltip` with the
+indicator name, meaning and passive calculation. Before combat starts, the combat-tab menu exposes an initiative submenu with
 a numeric input and a roll action. These controls remain mounted inside a fixed-height
 tile and slide in from behind its left edge together with the widening rail;
 closing combat sends them back left instead of mounting or unmounting them.

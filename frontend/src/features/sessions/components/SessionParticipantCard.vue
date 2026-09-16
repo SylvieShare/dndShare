@@ -215,7 +215,7 @@ const participantTileStyle = computed(() => ({
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--participant-card-gap, 9px);
   height: 72px;
   padding: 4px 14px 4px 4px;
   overflow: hidden;
@@ -228,7 +228,7 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
-.p-card--compact .p-combat-controls { margin-left: -40px; }
+.p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 32px)); }
 
 .p-card.p-card--reorderable { cursor: grab; touch-action: none; }
 .p-card.p-card--reorderable:active { cursor: grabbing; }
@@ -238,13 +238,13 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-combat-controls {
-  width: 40px;
-  flex: 0 0 40px;
+  width: var(--participant-selection-width, 32px);
+  flex: 0 0 var(--participant-selection-width, 32px);
   box-sizing: border-box;
-  padding-inline: 10px;
+  padding: 0 2px 0 10px;
   display: flex;
   justify-content: center;
-  margin-left: -49px;
+  margin-left: calc(-1 * (var(--participant-selection-width, 32px) + var(--participant-card-gap, 9px)));
   clip-path: inset(0 0 0 100%);
   pointer-events: none;
   animation: none;
