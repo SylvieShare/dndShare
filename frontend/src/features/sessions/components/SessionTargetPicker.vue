@@ -4,7 +4,7 @@
       <slot name="before" />
       <LoadingIndicator v-if="loading" label="Загрузка целей" />
       <div v-else class="session-target-list">
-        <label v-for="target in targets" :key="impactTargetKey(target)" class="session-target-option" :class="{ 'session-target-option--selected': modelValue.includes(impactTargetKey(target)) }">
+        <label v-for="target in targets" :key="impactTargetKey(target)" class="session-target-option" @click.capture="selectWithCtrl($event, target)" @contextmenu.capture="selectWithCtrl($event, target)" :class="{ 'session-target-option--selected': modelValue.includes(impactTargetKey(target)) }">
           <input v-if="!fixed" type="checkbox" :checked="modelValue.includes(impactTargetKey(target))" :disabled="busy || locked || disabledKeys.includes(impactTargetKey(target))" @change="toggle(target, $event.target.checked)" />
           <div class="session-target-content">
             <SaveTargetName :target="target" :icon-size="56" show-hp />
@@ -21,6 +21,7 @@
 </template>
 <script setup>
 import { AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
+import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import SaveTargetName from './SaveTargetName.vue'
 import { impactTargetKey } from '../lib/sessionImpact'
 const props = defineProps({
@@ -32,6 +33,10 @@ const props = defineProps({
   error: String, zIndex: { type: Number, default: 3800 },
 })
 const emit = defineEmits(['close', 'update:modelValue'])
+function selectWithCtrl(event, target) {
+  const key = impactTargetKey(target)
+  handleCtrlSelection(event, !props.fixed && !props.busy && !props.locked && !props.disabledKeys.includes(key), () => toggle(target, !props.modelValue.includes(key)))
+}
 function toggle(target, checked) {
   const key = impactTargetKey(target)
   if (props.locked || props.busy || props.disabledKeys.includes(key)) return
@@ -43,7 +48,7 @@ function toggle(target, checked) {
 .session-target-list { display: grid; gap: 10px; max-height: 45vh; overflow-y: auto; }
 .session-target-option { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: var(--r-sm); cursor: pointer; }
 .session-target-option--selected { border-color: var(--accent); }
-.session-target-option input { accent-color: var(--accent); flex-shrink: 0; }
+.session-target-option input { accent-color: var(--accent); flex-shrink: 0; margin-inline: 7px; }
 .session-target-content { flex: 1; min-width: 0; }
 .session-target-content > .save-target-name { width: 100%; }
 .session-target-note { margin: 4px 0 0 64px; color: var(--text-muted); font-size: 12px; }

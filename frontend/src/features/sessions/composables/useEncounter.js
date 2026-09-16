@@ -478,6 +478,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     removeAllDeadNpcs:      npcs.removeAllDeadNpcs,
     // flow
     setInitiative:          flow.setInitiative,
+    rollCombatantInitiative: flow.rollCombatantInitiative,
     toggleSurprised:        flow.toggleSurprised,
     toggleSide:             flow.toggleSide,
     setSide:                flow.setSide,

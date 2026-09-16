@@ -216,7 +216,6 @@
             @revive="encounter.requestRevive(encounterPlayer(p.charId))"
             @drag-start="startParticipantDrag($event, p, participantIndex)"
             @update:combat-selected="setEncounterPlayerSelected(p.charId, $event)"
-            @update:initiative="setEncounterPlayerInitiative(p.charId, $event)"
           />
         </div>
         <div v-else class="no-participants">Участников пока нет</div>
@@ -298,7 +297,7 @@ const {
   selectNpc, selectQuest, selectSessionView, selectedLocationId, selectedMaterialId,
   selectedNpcId, selectedPlayersToCombat, selectedQuestId, sendBlockToCombat, sendSelectedPlayersToCombat,
   session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
-  sessionUuid, sessionWorld, setEncounterPlayerInitiative, setEncounterPlayerSelected, setParticipantColor,
+  sessionUuid, sessionWorld, setEncounterPlayerSelected, setParticipantColor,
   sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,
   syncStatus, toggleAllEncounterPlayers, togglePlayersRail, tutorialMobile, tutorialRoot,
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,

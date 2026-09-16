@@ -1,6 +1,8 @@
 <template>
   <div class="enc-combat-controls" @click.stop @pointerdown.stop>
     <EncCheckbox
+      class="ecc-checkbox"
+      label="Выбрать существо"
       v-if="showCheckbox"
       :model-value="selected"
       :disabled="!editable || !combatant"
@@ -49,6 +51,8 @@ defineEmits(['update:selected', 'update:initiative'])
   gap: 5px;
   animation: ecc-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+.ecc-checkbox { margin-inline: 7px; }
 
 .ecc-initiative,
 .ecc-ac {

@@ -24,6 +24,11 @@ export function useEncounterFlow({
     })
   }
 
+  function rollCombatantInitiative(c) {
+    if (encounter.value.active || !c || c.position === 'dead') return
+    setInitiative(c, rollInitiativeFor(c))
+  }
+
   function toggleSide(c) {
     mutate(() => {
       const t = getCombatant(c.uid)
@@ -251,6 +256,7 @@ export function useEncounterFlow({
 
   return {
     setInitiative,
+    rollCombatantInitiative,
     toggleSurprised,
     toggleSide,
     setSide,

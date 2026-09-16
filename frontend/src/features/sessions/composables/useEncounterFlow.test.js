@@ -23,6 +23,19 @@ function createFlow() {
 }
 
 describe('encounter group movement', () => {
+  it('rolls one participant before combat and keeps that initiative when combat starts', () => {
+    const { encounter, flow } = createFlow()
+    encounter.value.active = false
+    const player = encounter.value.combatants[0]
+    flow.rollCombatantInitiative(player)
+    expect(player.initiative).toBe(12)
+    expect(encounter.value.combatants[1].initiative).toBeNull()
+    flow.setInitiative(player, 18)
+    flow.toggleCombat()
+    expect(player.initiative).toBe(18)
+    flow.rollCombatantInitiative(player)
+    expect(player.initiative).toBe(18)
+  })
   it('moves an explicit player subset without also moving selected NPCs', () => {
     const { encounter, flow } = createFlow()
     flow.sendCombatantsTo([encounter.value.combatants[0]], 'combat')

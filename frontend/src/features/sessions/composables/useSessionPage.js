@@ -206,10 +206,6 @@ export function useSessionPage() {
     encounter.toggleSelected(combatant)
   }
 
-  function setEncounterPlayerInitiative(charId, value) {
-    const combatant = encounterPlayer(charId)
-    if (combatant) encounter.setInitiative(combatant, value)
-  }
 
   async function importCombatBlock(block) {
     combatImportError.value = ''
@@ -587,7 +583,7 @@ export function useSessionPage() {
     selectNpc, selectQuest, selectSessionView, selectedLocationId, selectedMaterialId,
     selectedNpcId, selectedPlayersToCombat, selectedQuestId, sendBlockToCombat, sendSelectedPlayersToCombat,
     session, sessionMaterials, sessionSettings, settingsSaving, settingsError, sessionTimers, sessionTutorial,
-    sessionUuid, sessionWorld, setEncounterPlayerInitiative, setEncounterPlayerSelected, setParticipantColor,
+    sessionUuid, sessionWorld, setEncounterPlayerSelected, setParticipantColor,
     sheetUuid, shortcutLabels, showShortcutHints, startParticipantDrag, syncRunning,
     syncStatus, toggleAllEncounterPlayers, togglePlayersRail, tutorialMobile, tutorialRoot,
     updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,

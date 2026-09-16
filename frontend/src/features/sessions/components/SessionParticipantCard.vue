@@ -4,6 +4,7 @@
     :class="{ 'p-card-menu--placeholder': reorderPlaceholder }"
     @pointerdown="startReorder"
     @click.capture="suppressReorderClick"
+    @contextmenu.capture="suppressReorderClick"
   >
     <RowActionMenu>
       <template #trigger>
@@ -19,18 +20,9 @@
           :style="participantTileStyle"
           interactive
         >
-          <EncounterCombatControls
-            class="p-combat-controls"
-            :combatant="combatant"
-            :selected="combatSelected"
-            :editable="combatEditable"
-            :armor-class="armorClass"
-            :current="combatCurrent"
-            :aria-hidden="!combatMode"
-            :inert="!combatMode"
-            @update:selected="$emit('update:combat-selected', $event)"
-            @update:initiative="$emit('update:initiative', $event)"
-          />
+          <div class="p-combat-controls" :aria-hidden="!combatMode" :inert="!combatMode" @click.stop @pointerdown.stop>
+            <CompactCheckbox :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
+          </div>
 
           <div class="p-avatar" :class="{ 'p-avatar--icon': isIcon }" :style="participantAvatarStyle">
             <img v-if="avaUrl" :src="avaUrl" class="ava-img" alt="" />
@@ -39,7 +31,6 @@
 
           <div class="p-info">
             <div class="p-name">{{ displayName }}</div>
-            <div v-if="who && !isDead" class="p-who">{{ who }}</div>
 
             <template v-if="showHp">
               <template v-if="isDead">
@@ -67,6 +58,8 @@
       </template>
 
       <template #default="{ close }">
+        <ParticipantMenuStats v-if="isDm && isDnd" :participant="participant" />
+        <EncounterInitiativeMenu v-if="isDm && combatMode && combatant && encounter && !encounter.encounter.active && combatant.position !== 'dead'" :combatant="combatant" :encounter="encounter" />
         <RowActionItem v-if="isDm || participant.canOpenSheet" action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
         <RowActionSubmenu v-if="isDm" label="Цвет игрока" :disabled="colorPending">
           <template #trigger="{ open }">
@@ -108,17 +101,25 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, defineAsyncComponent, inject } from 'vue'
+import { useTemplateStore } from '@/stores/template'
+import { settingAccessors } from '@/features/character-editor/settings'
+import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 import { HeartPulse, Palette } from '@lucide/vue'
-import { BaseTile } from '@sylvieshare/share-ui'
+import { BaseTile, CompactCheckbox } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
-import EncounterCombatControls from '@/features/sessions/components/EncounterCombatControls.vue'
+import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionHpBar from './SessionHpBar.vue'
-import { pvAc, pvAvatar, pvHp, pvName, pvSubtitle } from '@/features/sessions/lib/participantView'
+import { pvAvatar, pvHp, pvName } from '@/features/sessions/lib/participantView'
+
+const ParticipantMenuStats = defineAsyncComponent(() => import('./ParticipantMenuStats.vue'))
+const encounter = inject('applicationEncounter', null)
+const templates = useTemplateStore()
+const isDnd = computed(() => settingAccessors(templates.byId(props.participant.templateId))?.system === 'dnd5e')
 
 const AVATAR_COLORS = ['var(--accent)', 'var(--accent)', 'var(--info)', 'var(--danger)', 'var(--success)', 'var(--warning)', 'var(--danger)']
 
@@ -137,18 +138,19 @@ const props = defineProps({
   combatCurrent: { type: Boolean, default: false },
   combatEditable: { type: Boolean, default: false },
 })
-const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'update:initiative'])
+const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected'])
 
 const REORDER_IGNORE = 'button, input, textarea, select, a, [contenteditable="true"], .p-combat-controls'
 
 function startReorder(event) {
-  if (!props.reorderEnabled) return
+  if (!props.reorderEnabled || event.ctrlKey) return
   if (event.button !== undefined && event.button !== 0) return
   if (event.target.closest(REORDER_IGNORE)) return
   emit('drag-start', event)
 }
 
 function suppressReorderClick(event) {
+  if (handleCtrlSelection(event, props.combatMode && props.combatEditable && !!props.combatant, () => emit('update:combat-selected', !props.combatSelected))) return
   if (!props.shouldSuppressReorderClick?.()) return
   event.preventDefault()
   event.stopPropagation()
@@ -177,8 +179,6 @@ const initial = computed(() => displayName.value.charAt(0).toUpperCase())
 const avaUrl = computed(() => pvAvatar(props.participant))
 const isIcon = computed(() => Boolean(props.participant.iconImageUrl))
 
-const who = computed(() => pvSubtitle(props.participant))
-const armorClass = computed(() => pvAc(props.participant))
 
 const hp = computed(() => {
   const v = pvHp(props.participant)
@@ -217,7 +217,7 @@ const participantTileStyle = computed(() => ({
   align-items: center;
   gap: 9px;
   height: 72px;
-  padding: 4px;
+  padding: 4px 14px 4px 4px;
   overflow: hidden;
   user-select: none;
   transition: height 0.42s cubic-bezier(0.22, 1, 0.36, 1), gap 0.42s cubic-bezier(0.22, 1, 0.36, 1), padding 0.42s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s, border-color 0.18s, box-shadow 0.18s;
@@ -228,7 +228,7 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
-.p-card--compact .p-combat-controls { margin-left: -112px; }
+.p-card--compact .p-combat-controls { margin-left: -40px; }
 
 .p-card.p-card--reorderable { cursor: grab; touch-action: none; }
 .p-card.p-card--reorderable:active { cursor: grabbing; }
@@ -238,9 +238,13 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-combat-controls {
-  width: 112px;
-  flex: 0 0 112px;
-  margin-left: -121px;
+  width: 40px;
+  flex: 0 0 40px;
+  box-sizing: border-box;
+  padding-inline: 10px;
+  display: flex;
+  justify-content: center;
+  margin-left: -49px;
   clip-path: inset(0 0 0 100%);
   pointer-events: none;
   animation: none;
@@ -355,11 +359,6 @@ const participantTileStyle = computed(() => ({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.p-who {
-  font-size: 11px;
-  color: var(--text-2);
 }
 
 .ds-row {

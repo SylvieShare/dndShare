@@ -909,14 +909,17 @@ click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail from 264px to 360px; every player tile gains the
-encounter checkbox, initiative input and armor-class indicator, and the current
-turn is highlighted there. These controls remain mounted inside a fixed-height
+encounter checkbox with additional horizontal spacing; the current turn is
+highlighted there. The tile shows only the name and HP, with 14px right padding;
+race/class, armor class and initiative are absent from the tile. At the top of
+the DM menu, D&D participants show equipped AC and passive Perception/Investigation.
+Before combat starts, the combat-tab menu exposes an initiative submenu with
+a numeric input and a roll action. These controls remain mounted inside a fixed-height
 tile and slide in from behind its left edge together with the widening rail;
 closing combat sends them back left instead of mounting or unmounting them.
 Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
-left rail. The common scene rows reuse the same compact initiative and
-armor-class controls as the player rail. The left-rail tile and portrait keep
+left rail. The common scene rows keep their compact initiative and armor-class controls. The left-rail tile and portrait keep
 the same height and circular geometry in and out of combat; the larger combat-scene
 portrait is circular too. Player photos use a soft alpha fade around their edges. An
 assigned session color appears as the 2px frame of both the left-rail player tile
@@ -1295,3 +1298,27 @@ remove the previous keys and any read-time converter.
 максимальные хиты: та же полоска `SessionHpBar`, что в блоке игроков, с числами
 справа. Временные хиты — отдельный сегмент и число при наличии; неизвестные хиты — «—».
 Нажатие на строку сразу применяет эффект к выбранной цели.
+
+### Participant menu and multi-selection
+
+`ParticipantMenuStats` loads the participant's abilities, equipment, armor bases
+and effects on opening the menu. `participantDefenses` uses the shared equipped
+armor and derived-effect calculators. Passive Perception (Wisdom, skill 10) and
+Investigation (Intelligence, skill 9) are 10 plus the skill modifier, proficiency
+or expertise, manual bonuses and configured derived skill bonuses. The stored
+skill mode and active roll-mode effects add 5 for advantage or subtract 5 for
+disadvantage; opposing automatic modes cancel. Conditional scene modifiers are
+set manually. Text-only handbook bonuses and optional extra dice are not inferred
+as permanent numeric bonuses. The value's tooltip shows its calculation.
+Source: [2014 passive checks](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/using-ability-scores#PassiveChecks).
+
+`EncounterInitiativeMenu` is shared by the participant menu and creature-row
+menu before combat. `rollCombatantInitiative` changes only that creature; combat
+start preserves an already assigned initiative. Existing mass initiative actions
+remain available.
+
+Ctrl + click toggles selection in the participant rail when combat controls are
+available, in encounter rows and in `SessionTargetPicker`. The shared
+`handleCtrlSelection` consumes the gesture before menus, native checkbox
+activation and drag start, including macOS's Ctrl-contextmenu event. Locked or
+read-only selection stays unchanged. Ordinary clicks keep their existing behavior.

@@ -1144,3 +1144,13 @@ hp и ac в `DndRichInlineNode` имеют одинаковую высоту 25 
 спасброска и сохранение конкретного действия остаются в соответствующей фиче.
 `SessionAttackTargets` сохраняет выбор в событии через API; цели видны в хронике мастера,
 права доступа к событиям не расширяются. Сравнения атаки с КД в этом компоненте нет.
+
+`SessionParticipantCard` shows only portrait, name and HP, with 14px right padding.
+Its combat strip contains a checkbox with wider side spacing; AC and initiative
+are not rendered in that strip. DM menus use lazy `ParticipantMenuStats` for D&D
+characters, backed by `participantDefenses`, the shared equipment/derived-effect
+calculators, and item hydration including magic armor bases. `EncounterInitiativeMenu`
+is shared with creature rows and shown before combat starts.
+`handleCtrlSelection` is the shared capture handler for the participant rail,
+`EncounterRow` and `SessionTargetPicker`; macOS Ctrl-contextmenu also toggles once.
+Drag starts ignore Ctrl. Disabled selection and ordinary clicks keep their behavior.

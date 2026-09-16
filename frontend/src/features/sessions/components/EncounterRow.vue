@@ -20,6 +20,8 @@
       :style="playerColor ? { '--enc-player-color': playerColor } : null"
       @pointerdown="onRowPointerDown"
       @click="onRowClick"
+      @click.capture="onSelectionClick"
+      @contextmenu.capture="onSelectionClick"
     >
       <TileAccentStrip v-if="isNpc && !!rowAccentColor" />
     <EncounterCombatControls
@@ -140,6 +142,7 @@
 
 <script setup>
 import EncounterAppliedEffects from './EncounterAppliedEffects.vue'
+import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { computed, inject, provide, reactive, ref } from 'vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import EncounterAvatar from '@/features/sessions/components/EncounterAvatar.vue'
@@ -198,6 +201,7 @@ const rowClasses = computed(() => ({
 // interactive control so clicks/typing still work there.
 const DRAG_IGNORE = 'input, textarea, button, a, [role="button"], .enc-combat-controls, .enc-hp-area, .enc-badge, .enc-surprised-toggle, .enc-states, .enc-name--clickable'
 function onRowPointerDown(e) {
+  if (e.ctrlKey) return
   if (e.button !== undefined && e.button !== 0) return
   if (e.target.closest(DRAG_IGNORE)) return
   enc.sortable.startDrag(e, props.combatant, props.section, props.idx)
@@ -230,6 +234,10 @@ const stateItems = computed(() => statesValue.value.map(stateItemById).filter(Bo
 const canEdit = computed(() => !!enc.canEditPlayerHp())
 const rowMenuVisible = computed(() => canEdit.value)
 const rowMenuRef = ref(null)
+
+function onSelectionClick(event) {
+  handleCtrlSelection(event, showCheckbox.value, () => enc.toggleSelected(props.combatant))
+}
 
 function onRowClick(event) {
   if (!rowMenuVisible.value || enc.sortable.shouldSuppressClick()) return

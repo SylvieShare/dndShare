@@ -37,7 +37,7 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain(':title="compact ? displayName : undefined"')
     expect(source).toContain('compact: { type: Boolean, default: false }')
     expect(source).toContain('.p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }')
-    expect(source).toContain('.p-card--compact .p-combat-controls { margin-left: -112px; }')
+    expect(source).toContain('.p-card--compact .p-combat-controls { margin-left: -40px; }')
     expect(source).toContain('.p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0;')
     expect(source).toContain('.p-card--compact .p-avatar { width: 36px; height: 36px; }')
   })
@@ -45,7 +45,7 @@ describe('SessionParticipantCard actions', () => {
   it('uses a larger avatar in the expanded player rail', () => {
     expect(source).toContain('.p-avatar {')
     expect(source).toContain('width: 64px;\n  height: 64px;')
-    expect(source).toContain('height: 72px;\n  padding: 4px;')
+    expect(source).toContain('height: 72px;\n  padding: 4px 14px 4px 4px;')
     expect(source).toContain('.ava-initial {\n  font-size: 16px;')
   })
 
@@ -67,7 +67,7 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('<ColorPresetPicker')
     expect(source).toContain('@update:model-value="color => assignColor(color, closeColor)"')
     expect(source).toMatch(/v-if="isDm"[\s\S]*?action="kick"[\s\S]*?>\{\{ kickPending \? 'Исключение…' : 'Выгнать' \}\}<\/RowActionItem>/)
-    expect(source).toContain("defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected', 'update:initiative'])")
+    expect(source).toContain("defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'update:combat-selected'])")
   })
 
   it('shows a compact near-death summary and a DM revive action', () => {
@@ -92,17 +92,19 @@ describe('SessionParticipantCard actions', () => {
   })
 
   it('slides persistent battle controls into the expanded player tile without changing its height', () => {
-    expect(source).toContain('<EncounterCombatControls\n            class="p-combat-controls"')
+    expect(source).toContain('<CompactCheckbox :model-value="combatSelected"')
     expect(source).not.toContain('v-if="combatMode"')
     expect(source).toContain(':inert="!combatMode"')
     expect(source).toContain('height: 72px;')
     expect(source).not.toContain('.p-card--combat .p-avatar')
-    expect(source).toContain('margin-left: -121px;')
+    expect(source).toContain('margin-left: -49px;')
     expect(source).toContain('.p-card--combat .p-combat-controls')
     expect(source).toContain('clip-path: inset(-12px);')
     expect(combatControlsSource).toContain('<EncCheckbox')
     expect(combatControlsSource).toContain('aria-label="Инициатива"')
-    expect(source).toContain("const armorClass = computed(() => pvAc(props.participant))")
+    expect(source).toContain('<ParticipantMenuStats v-if="isDm && isDnd"')
+    expect(source).not.toContain('class="p-who"')
+    expect(source).not.toContain(':armor-class=')
     expect(source).toContain("'p-card--current': combatMode && combatCurrent")
   })
 })

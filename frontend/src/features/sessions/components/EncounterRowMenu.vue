@@ -1,6 +1,7 @@
 <template>
   <RowActionMenu ref="menuRef" :trigger-attrs="{ style: { flexShrink: 0 } }">
     <template #default="{ close }">
+      <EncounterInitiativeMenu v-if="!enc.encounter.active && section !== 'dead'" :combatant="combatant" :encounter="enc" />
       <RowActionItem
         v-if="canOpenCard"
         :icon="BookOpen"
@@ -62,6 +63,7 @@
 <script setup>
 import { computed, defineAsyncComponent, inject, ref } from 'vue'
 import { Activity, Archive, BookOpen, Copy, Dices, History } from '@lucide/vue'
+import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ActionButton, FormField, FormNumberInput, RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
