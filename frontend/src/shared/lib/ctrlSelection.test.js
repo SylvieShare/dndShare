@@ -16,6 +16,12 @@ describe('Ctrl selection gesture', () => {
       expect(toggle).not.toHaveBeenCalled()
     }
   })
+  it('supports Cmd on macOS', () => {
+    const event = { metaKey: true, button: 0, preventDefault: vi.fn(), stopPropagation: vi.fn() }
+    const toggle = vi.fn()
+    expect(handleCtrlSelection(event, true, toggle)).toBe(true)
+    expect(toggle).toHaveBeenCalledOnce()
+  })
   it('supports the macOS Ctrl-contextmenu gesture', () => {
     const event = { type: 'contextmenu', ctrlKey: true, button: 2, preventDefault: vi.fn(), stopPropagation: vi.fn() }
     const toggle = vi.fn()

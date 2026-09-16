@@ -201,7 +201,7 @@ const rowClasses = computed(() => ({
 // interactive control so clicks/typing still work there.
 const DRAG_IGNORE = 'input, textarea, button, a, [role="button"], .enc-combat-controls, .enc-hp-area, .enc-badge, .enc-surprised-toggle, .enc-states, .enc-name--clickable'
 function onRowPointerDown(e) {
-  if (e.ctrlKey) return
+  if (e.ctrlKey || e.metaKey) return
   if (e.button !== undefined && e.button !== 0) return
   if (e.target.closest(DRAG_IGNORE)) return
   enc.sortable.startDrag(e, props.combatant, props.section, props.idx)

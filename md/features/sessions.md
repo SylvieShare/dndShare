@@ -1317,8 +1317,8 @@ menu before combat. `rollCombatantInitiative` changes only that creature; combat
 start preserves an already assigned initiative. Existing mass initiative actions
 remain available.
 
-Ctrl + click toggles selection in the participant rail when combat controls are
+Ctrl + click (Cmd + click on macOS) toggles selection in the participant rail when combat controls are
 available, in encounter rows and in `SessionTargetPicker`. The shared
 `handleCtrlSelection` consumes the gesture before menus, native checkbox
-activation and drag start, including macOS's Ctrl-contextmenu event. Locked or
+activation and drag start, including macOS's Cmd-click and Ctrl-contextmenu events. Locked or
 read-only selection stays unchanged. Ordinary clicks keep their existing behavior.

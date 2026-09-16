@@ -143,7 +143,7 @@ const emit = defineEmits(['view', 'kick', 'color', 'revive', 'drag-start', 'upda
 const REORDER_IGNORE = 'button, input, textarea, select, a, [contenteditable="true"], .p-combat-controls'
 
 function startReorder(event) {
-  if (!props.reorderEnabled || event.ctrlKey) return
+  if (!props.reorderEnabled || event.ctrlKey || event.metaKey) return
   if (event.button !== undefined && event.button !== 0) return
   if (event.target.closest(REORDER_IGNORE)) return
   emit('drag-start', event)

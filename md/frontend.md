@@ -1153,4 +1153,4 @@ calculators, and item hydration including magic armor bases. `EncounterInitiativ
 is shared with creature rows and shown before combat starts.
 `handleCtrlSelection` is the shared capture handler for the participant rail,
 `EncounterRow` and `SessionTargetPicker`; macOS Ctrl-contextmenu also toggles once.
-Drag starts ignore Ctrl. Disabled selection and ordinary clicks keep their behavior.
+Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep their behavior.

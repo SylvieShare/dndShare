@@ -45,7 +45,7 @@ for (const mobile of [false, true]) test(`attack targets persist and can be chan
   await expect(hero.locator('.hp-row')).toBeVisible()
   await expect(goblin.locator('.hp-row')).toBeVisible()
   await expect(hero.locator('.save-target-placeholder')).toHaveCSS('width', '56px')
-  await hero.click({ modifiers: ['Control'] })
+  await hero.click({ modifiers: ['Meta'] })
   await expect(hero.getByRole('checkbox')).toBeChecked()
   await hero.click({ modifiers: ['Control'] })
   await expect(hero.getByRole('checkbox')).not.toBeChecked()
