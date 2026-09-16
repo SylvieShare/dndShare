@@ -1158,7 +1158,9 @@ Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep the
 Participant menu indicators are a single row of number/icon pairs with vertical
 dividers. Hover and keyboard focus open the shared `ItemTooltip` for the name,
 meaning and passive calculation. The player rail uses `--participant-rail-width`
-(264px), `--participant-selection-width` (32px) and `--participant-card-gap` (9px).
+(264px), `--participant-selection-width` (36px) and `--participant-card-gap` (9px).
 Combat adds exactly the selection width plus gap; graph safe-area offsets use the
 same sum. The checkbox strip has 10px left / 2px right padding, so the original
 name/HP area retains its width as the rail expands.
+
+`CompactCheckbox` from share-ui 0.24.0 exposes `size` (default 18px); encounter and participant rows pass 24px. Base geometry stays in the library. `ItemTooltip` forwards an optional `zIndex` to FloatingTooltip, retaining 4000 by default; participant menu descriptions use 9500 above the menu and submenus.

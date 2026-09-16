@@ -56,7 +56,6 @@ export function npcChallengeBonus(score, explicitSave, savingThrow = false) {
 
 export function useEncounterChallenge({
   encounter,
-  inCombat,
   selectedUids,
   findParticipant,
   playerDisplayName,
@@ -74,7 +73,7 @@ export function useEncounterChallenge({
 
   const challengeActive = computed(() => !!challenge.value)
   const selectedChallengeCombatants = computed(() =>
-    inCombat.value.filter(combatant => selectedUids.value.has(combatant.uid))
+    encounter.value.combatants.filter(combatant => combatant.position !== 'dead' && selectedUids.value.has(combatant.uid))
   )
   const selectedChallengeCount = computed(() => selectedChallengeCombatants.value.length)
 

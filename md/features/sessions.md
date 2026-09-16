@@ -849,13 +849,12 @@ to the left. It never hides the primary-action text or group labels. When a
 scenario is selected, `Бои сценария` lazily loads its combat blocks in a popover;
 choosing one imports the complete configured creature counts through the same
 encounter importer without leaving the combat workspace. Secondary actions are
-grouped as `Броски` and `Выбранные`.
+grouped as `Выбранные` (challenges and damage) and `Состав сцены` (scenario import, reserve, death, NPC deletion and graveyard). Initiative rerolls sit beside start/finish and turn navigation.
 The combat header has no separate close control; starting and ending combat stays
 with the labelled primary action. During active combat the initiative column and
 the current-turn reference panel each scroll inside the same bounded workspace
 height, so scrolling one column never shifts the other.
-`Выбранные` contains shared damage, return-to-reserve, graveyard, delete-NPC and
-graveyard-list actions. Shared damage consumes temporary HP first, updates NPC
+`Выбранные` contains challenges and shared damage; roster management stays in `Состав сцены`. Shared damage consumes temporary HP first, updates NPC
 encounter state and persists each player character through the character API.
 Nested action components use the same icon-button geometry and interaction
 states as direct toolbar buttons.
@@ -884,15 +883,14 @@ enable critical presentation for d20 only: a kept natural 20 shows the shared
 critical-success visual, while a kept natural 1 shows the shared critical-failure
 visual, including advantage and disadvantage rolls.
 
-While combat is active, the DM header has a group-challenge action. It opens a
+Before and during combat, the DM header has a group-challenge action. It opens a
 compact setup popover with one of the six D&D abilities and a saving-throw
-toggle, then rolls a d20 only for selected combatants currently on the combat
-scene. The action is disabled until at least one scene combatant is selected. A
+toggle, then rolls a d20 for selected creatures on the scene or in reserve, excluding the graveyard. The action is disabled until at least one eligible creature is selected. A
 normal check uses that creature's ability modifier. A saving throw also uses a
 player's save proficiency and extra save bonuses, or the explicit bestiary save
 bonus for an NPC; an NPC without one falls back to its ability modifier. Each
 result is a fixed-size column after the creature's complete identity/HP block;
-combat rows reserve its height before any roll, so results never resize tiles.
+scene and reserve rows show results beside their identity/HP block; in narrow rows the result wraps below without overflowing.
 It reuses `SystemDie` and the shared roll-settle animation to show the d20 face,
 numeric modifier and total without a textual formula. The result block has no
 backing surface or enclosing frame; only its left and right borders separate it
@@ -908,7 +906,7 @@ header action is highlighted while results exist and clears them on the next
 click.
 
 Players have no separate encounter reserve section. Opening combat smoothly
-widens the existing left participant rail from 264px by the checkbox strip plus the card gap (32px + 9px, total 305px); every player tile gains the
+widens the existing left participant rail from 264px by the checkbox strip plus the card gap (36px + 9px, total 309px); every player tile gains the
 encounter checkbox with additional horizontal spacing; the current turn is
 highlighted there. The tile shows only the name and HP, with 14px right padding;
 race/class, armor class and initiative are absent from the tile. At the top of
@@ -921,7 +919,7 @@ tile and slide in from behind its left edge together with the widening rail;
 closing combat sends them back left instead of mounting or unmounting them.
 Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
-left rail. The common scene rows keep their compact initiative and armor-class controls. The left-rail tile and portrait keep
+left rail. Common scene rows keep initiative on the left. AC follows the portrait as a prominent number then shield, without a frame or background. Tiles have a 74px minimum height around 62–64px portraits and no trailing ellipsis; clicking the tile or pressing Enter/Space while focused opens its menu. Selection squares are 24px in both rows and the player rail. The left-rail tile and portrait keep
 the same height and circular geometry in and out of combat; the larger combat-scene
 portrait is circular too. Player photos use a soft alpha fade around their edges. An
 assigned session color appears as the 2px frame of both the left-rail player tile
@@ -1324,3 +1322,5 @@ available, in encounter rows and in `SessionTargetPicker`. The shared
 `handleCtrlSelection` consumes the gesture before menus, native checkbox
 activation and drag start, including macOS's Cmd-click and Ctrl-contextmenu events. Locked or
 read-only selection stays unchanged. Ordinary clicks keep their existing behavior.
+
+Player menu statistic tooltips use the shared FloatingTooltip above the action menu (9500 vs 9300), including keyboard focus.

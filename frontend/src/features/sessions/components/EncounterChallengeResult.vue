@@ -183,8 +183,8 @@ onBeforeUnmount(dispose)
 <style scoped>
 .ecr-result {
   display: flex;
-  height: 72px;
-  min-height: 72px;
+  height: 64px;
+  min-height: 64px;
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;

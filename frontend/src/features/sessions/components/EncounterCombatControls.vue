@@ -2,6 +2,7 @@
   <div class="enc-combat-controls" @click.stop @pointerdown.stop>
     <EncCheckbox
       class="ecc-checkbox"
+      :size="24"
       label="Выбрать существо"
       v-if="showCheckbox"
       :model-value="selected"
@@ -21,22 +22,16 @@
         @click.stop
       />
     </label>
-    <div class="ecc-ac" title="Класс брони">
-      <Shield :size="14" :stroke-width="1.8" />
-      <span>{{ armorClass ?? '—' }}</span>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { Shield } from '@lucide/vue'
 import { CompactCheckbox as EncCheckbox } from '@sylvieshare/share-ui'
 
 defineProps({
   combatant: { type: Object, default: null },
   selected: { type: Boolean, default: false },
   editable: { type: Boolean, default: false },
-  armorClass: { type: [Number, String], default: null },
   showCheckbox: { type: Boolean, default: true },
   current: { type: Boolean, default: false },
 })
@@ -54,8 +49,7 @@ defineEmits(['update:selected', 'update:initiative'])
 
 .ecc-checkbox { margin-inline: 7px; }
 
-.ecc-initiative,
-.ecc-ac {
+.ecc-initiative {
   display: flex;
   width: 42px;
   min-height: 42px;
@@ -110,14 +104,6 @@ defineEmits(['update:selected', 'update:initiative'])
 .ecc-initiative input::-webkit-inner-spin-button { margin: 0; -webkit-appearance: none; }
 .ecc-initiative:focus-within { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
 .ecc-initiative input:disabled { cursor: default; opacity: 0.7; }
-
-.ecc-ac {
-  gap: 2px;
-  color: var(--text-2);
-  font-size: 13px;
-  font-weight: 750;
-}
-.ecc-ac svg { color: var(--info); }
 
 @keyframes ecc-in {
   from { opacity: 0; transform: translateX(-8px); }

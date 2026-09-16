@@ -21,7 +21,7 @@
           interactive
         >
           <div class="p-combat-controls" :aria-hidden="!combatMode" :inert="!combatMode" @click.stop @pointerdown.stop>
-            <CompactCheckbox :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
+            <CompactCheckbox :size="24" :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
           </div>
 
           <div class="p-avatar" :class="{ 'p-avatar--icon': isIcon }" :style="participantAvatarStyle">
@@ -228,7 +228,7 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }
-.p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 32px)); }
+.p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 36px)); }
 
 .p-card.p-card--reorderable { cursor: grab; touch-action: none; }
 .p-card.p-card--reorderable:active { cursor: grabbing; }
@@ -238,13 +238,13 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-combat-controls {
-  width: var(--participant-selection-width, 32px);
-  flex: 0 0 var(--participant-selection-width, 32px);
+  width: var(--participant-selection-width, 36px);
+  flex: 0 0 var(--participant-selection-width, 36px);
   box-sizing: border-box;
   padding: 0 2px 0 10px;
   display: flex;
   justify-content: center;
-  margin-left: calc(-1 * (var(--participant-selection-width, 32px) + var(--participant-card-gap, 9px)));
+  margin-left: calc(-1 * (var(--participant-selection-width, 36px) + var(--participant-card-gap, 9px)));
   clip-path: inset(0 0 0 100%);
   pointer-events: none;
   animation: none;

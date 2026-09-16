@@ -197,7 +197,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
 
   const challenge = useEncounterChallenge({
     encounter,
-    inCombat,
     selectedUids: selection.selectedUids,
     findParticipant,
     playerDisplayName,

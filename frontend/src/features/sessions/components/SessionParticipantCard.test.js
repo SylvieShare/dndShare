@@ -37,7 +37,7 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain(':title="compact ? displayName : undefined"')
     expect(source).toContain('compact: { type: Boolean, default: false }')
     expect(source).toContain('.p-card--compact { height: 48px; gap: 0; padding: 6px; justify-content: center; }')
-    expect(source).toContain('.p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 32px)); }')
+    expect(source).toContain('.p-card--compact .p-combat-controls { margin-left: calc(-1 * var(--participant-selection-width, 36px)); }')
     expect(source).toContain('.p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0;')
     expect(source).toContain('.p-card--compact .p-avatar { width: 36px; height: 36px; }')
   })
@@ -92,12 +92,12 @@ describe('SessionParticipantCard actions', () => {
   })
 
   it('slides persistent battle controls into the expanded player tile without changing its height', () => {
-    expect(source).toContain('<CompactCheckbox :model-value="combatSelected"')
+    expect(source).toContain('<CompactCheckbox :size="24" :model-value="combatSelected"')
     expect(source).not.toContain('v-if="combatMode"')
     expect(source).toContain(':inert="!combatMode"')
     expect(source).toContain('height: 72px;')
     expect(source).not.toContain('.p-card--combat .p-avatar')
-    expect(source).toContain('margin-left: calc(-1 * (var(--participant-selection-width, 32px) + var(--participant-card-gap, 9px)));')
+    expect(source).toContain('margin-left: calc(-1 * (var(--participant-selection-width, 36px) + var(--participant-card-gap, 9px)));')
     expect(source).toContain('.p-card--combat .p-combat-controls')
     expect(source).toContain('clip-path: inset(-12px);')
     expect(combatControlsSource).toContain('<EncCheckbox')

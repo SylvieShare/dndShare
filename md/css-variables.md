@@ -125,7 +125,7 @@ Declared in `App.vue`:
 ### Колонка игроков сессии
 
 В `.campaign-workspace` ширина задаётся `--participant-rail-width: 264px`.
-`--participant-selection-width: 32px` и `--participant-card-gap: 9px` общие для
+`--participant-selection-width: 36px` и `--participant-card-gap: 9px` общие для
 карточки и колонки. Их сумма `--participant-selection-extra` прибавляется в бою
 к ширине колонки и безопасной области карты истории. Карточка использует ту же
 сумму для скрытия полосы галочки вне боя; ширина имени/HP сохраняется.

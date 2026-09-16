@@ -19,6 +19,10 @@
 
       :style="playerColor ? { '--enc-player-color': playerColor } : null"
       @pointerdown="onRowPointerDown"
+      :tabindex="rowMenuVisible ? 0 : undefined"
+      aria-haspopup="menu"
+      @keydown.enter.self="onRowClick"
+      @keydown.space.self.prevent="onRowClick"
       @click="onRowClick"
       @click.capture="onSelectionClick"
       @contextmenu.capture="onSelectionClick"
@@ -29,13 +33,15 @@
       :selected="enc.isSelected(combatant)"
       :editable="showCheckbox"
       :show-checkbox="showCheckbox"
-      :armor-class="enc.displayAc(combatant)"
       :current="isCurrent"
       @update:selected="enc.toggleSelected(combatant)"
       @update:initiative="enc.setInitiative(combatant, $event)"
     />
 
     <EncounterAvatar :combatant="combatant" />
+    <span class="enc-ac" :aria-label="`Класс доспеха: ${enc.displayAc(combatant) ?? '—'}`" title="Класс доспеха">
+      <strong>{{ enc.displayAc(combatant) ?? '—' }}</strong><Shield :size="18" aria-hidden="true" />
+    </span>
 
     <div class="enc-info">
       <div class="enc-name-row">
@@ -141,6 +147,7 @@
 </template>
 
 <script setup>
+import { Shield } from '@lucide/vue'
 import EncounterAppliedEffects from './EncounterAppliedEffects.vue'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { computed, inject, provide, reactive, ref } from 'vue'
@@ -182,7 +189,7 @@ const hasItem = computed(() => isNpc.value && props.combatant.itemId != null)
 
 const subtitleText = computed(() => enc.subtitle(props.combatant))
 const challengeResult = computed(() =>
-  props.section === 'combat' ? enc.challengeResult(props.combatant) : null
+  props.section !== 'dead' ? enc.challengeResult(props.combatant) : null
 )
 const challengeAbility = computed(() => enc.challengeAbilityMeta(enc.challenge?.ability))
 
@@ -192,6 +199,7 @@ const skippedInTurn = computed(() =>
 
 const rowClasses = computed(() => ({
   'enc-row--current': props.isCurrent,
+  'enc-row--challenge': !!challengeResult.value,
   'enc-row--player-colored': isPlayer.value && !!playerColor.value,
   'enc-row--placeholder': enc.sortable.isSource(props.combatant),
   'enc-row--skipped': skippedInTurn.value,
@@ -242,7 +250,8 @@ function onSelectionClick(event) {
 function onRowClick(event) {
   if (!rowMenuVisible.value || enc.sortable.shouldSuppressClick()) return
   if (event.target?.closest?.(DRAG_IGNORE)) return
-  rowMenuRef.value?.toggle(event)
+  const rect = event.currentTarget.getBoundingClientRect()
+  rowMenuRef.value?.toggle(event.detail > 0 ? event : { detail: 1, clientX: rect.left + rect.width / 2, clientY: rect.bottom })
 }
 
 const statesEditorOpen = ref(false)
@@ -296,17 +305,24 @@ function commitNoteEdit() {
 .enc-row {
   display: flex;
   flex: 1;
-  height: 92px;
+  min-height: 74px;
   min-width: 0;
   box-sizing: border-box;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
+  padding: 4px 10px;
   transition: background 0.12s, opacity 0.12s;
   position: relative;
   cursor: grab;
   touch-action: none;
 }
+
+.enc-ac { display: inline-flex; flex: none; align-items: center; gap: 4px; color: var(--text-2); }
+.enc-ac strong { font-size: 22px; font-weight: 800; line-height: 1; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.enc-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.enc-row--challenge { flex-wrap: wrap; }
+.enc-row--challenge .enc-info { min-width: 70px; }
 
 .enc-row:active { cursor: grabbing; }
 .enc-row:hover { background: color-mix(in srgb, var(--tile-color) 6%, var(--surface)); }
@@ -332,7 +348,7 @@ function commitNoteEdit() {
 
 .enc-info {
   flex: 1;
-  max-height: 72px;
+  max-height: 64px;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -348,8 +364,10 @@ function commitNoteEdit() {
 
 .enc-row-challenge {
   width: 248px;
-  height: 72px;
-  min-height: 72px;
+  max-width: 100%;
+  margin-left: auto;
+  height: 64px;
+  min-height: 64px;
   flex: 0 0 248px;
   align-self: center;
 }

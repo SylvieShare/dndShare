@@ -1,5 +1,5 @@
 <template>
-  <FloatingTooltip v-if="!blocked" :anchor="anchor" :x="x" :top="top" :bottom="bottom" :width="width" tooltip-class="itt-box">
+  <FloatingTooltip v-if="!blocked" :anchor="anchor" :x="x" :top="top" :bottom="bottom" :width="width" :z-index="zIndex" tooltip-class="itt-box">
         <div class="itt-title" :class="{ 'itt-title--separated': displayDesc || $slots.details }">{{ title }}</div>
         <RichContent v-if="displayDesc" class="itt-desc dnd-rich-content" :html="displayDesc" />
         <template v-if="$slots.details">
@@ -66,6 +66,7 @@ onUnmounted(() => {
 })
 
 const props = defineProps({
+  zIndex: { type: Number, default: 4000 },
   anchor: { type: Object, default: null },
   title: { type: String, required: true },
   desc: { type: String, default: '' },

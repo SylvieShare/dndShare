@@ -40,15 +40,16 @@ describe('encounter challenge bonuses', () => {
     expect(npcChallengeBonus(14, null, true)).toBe(2)
   })
 
-  it('rolls only selected combatants that are currently on the scene', () => {
+  it.each([false, true])('rolls selected scene and reserve creatures, excluding the graveyard (active=%s)', active => {
     setActivePinia(createPinia())
     const sceneNpc = { uid: 'scene-npc', type: 'npc' }
     const otherSceneNpc = { uid: 'other-scene-npc', type: 'npc' }
-    const encounter = ref({ active: true, combatants: [sceneNpc, otherSceneNpc] })
+    const reserveNpc = { uid: 'reserve-npc', type: 'npc', position: 'reserve' }
+    const deadNpc = { uid: 'dead-npc', type: 'npc', position: 'dead' }
+    const encounter = ref({ active, combatants: [sceneNpc, otherSceneNpc, reserveNpc, deadNpc] })
     const challenge = useEncounterChallenge({
       encounter,
-      inCombat: ref([sceneNpc, otherSceneNpc]),
-      selectedUids: ref(new Set(['scene-npc', 'reserve-npc'])),
+      selectedUids: ref(new Set(['scene-npc', 'reserve-npc', 'dead-npc', 'deleted-npc'])),
       findParticipant: () => null,
       playerDisplayName: () => 'Игрок',
       npcName: combatant => combatant.uid,
@@ -56,9 +57,9 @@ describe('encounter challenge bonuses', () => {
       npcSavingThrow: () => null,
     })
 
-    expect(challenge.selectedChallengeCount.value).toBe(1)
+    expect(challenge.selectedChallengeCount.value).toBe(2)
     challenge.runChallenge({ ability: 'DEX', savingThrow: false })
-    expect(Object.keys(encounter.value.challenge.results)).toEqual(['scene-npc'])
+    expect(Object.keys(encounter.value.challenge.results)).toEqual(['scene-npc', 'reserve-npc'])
   })
 
   it('rolls one extra die and keeps it by advantage or disadvantage', () => {
@@ -75,7 +76,6 @@ describe('encounter challenge bonuses', () => {
     })
     const challenge = useEncounterChallenge({
       encounter,
-      inCombat: ref([sceneNpc]),
       selectedUids: ref(new Set(['scene-npc'])),
       findParticipant: () => null,
       playerDisplayName: () => 'Игрок',

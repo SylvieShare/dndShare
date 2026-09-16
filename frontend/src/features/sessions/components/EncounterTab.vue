@@ -40,6 +40,21 @@
               <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+Enter</kbd>
             </button>
 
+            <button
+              v-if="props.isDm"
+              type="button"
+              class="enc-icon-btn"
+              :disabled="enc.selectedRerollCount === 0"
+              title="Перебросить инициативу выбранным"
+              aria-label="Перебросить инициативу выбранным"
+              aria-keyshortcuts="Shift+R"
+              @click="enc.rerollSelectedInitiative"
+            >
+              <Dices :size="18" />
+              <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
+              <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
+            </button>
+
             <template v-if="enc.encounter.active">
               <div class="enc-round-wrap" title="Текущий раунд">
                 <span class="enc-round-label">Раунд</span>
@@ -61,35 +76,22 @@
         </div>
 
         <div class="enc-toolbar-actions">
-          <EncounterScenarioCombatMenu
-            v-if="props.isDm && scene"
-            :session-uuid="sessionUuid"
-            :scene="scene"
-            @pick="$emit('import-combat-block', $event)"
-          />
-          <div v-if="props.isDm" class="enc-action-group" aria-label="Броски">
-            <span class="enc-action-group-label">Броски</span>
-            <div class="enc-action-group-controls">
-              <EncounterChallengeMenu />
-              <button
-                type="button"
-                class="enc-icon-btn"
-                :disabled="enc.selectedRerollCount === 0"
-                title="Перебросить инициативу выбранным"
-                aria-label="Перебросить инициативу выбранным"
-                aria-keyshortcuts="Shift+R"
-                @click="enc.rerollSelectedInitiative"
-              >
-                <Dices :size="18" />
-                <span v-if="enc.selectedRerollCount" class="enc-icon-count">{{ enc.selectedRerollCount }}</span>
-                <kbd v-if="showShortcutHints" class="enc-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+R</kbd>
-              </button>
-            </div>
-          </div>
           <div v-if="props.isDm" class="enc-action-group" aria-label="Действия с выбранными участниками">
             <span class="enc-action-group-label">Выбранные</span>
             <div class="enc-action-group-controls">
+              <EncounterChallengeMenu />
               <EncounterBulkDamageMenu />
+            </div>
+          </div>
+          <div v-if="props.isDm" class="enc-action-group" aria-label="Состав сцены">
+            <span class="enc-action-group-label">Состав сцены</span>
+            <div class="enc-action-group-controls">
+              <EncounterScenarioCombatMenu
+                v-if="props.isDm && scene"
+                :session-uuid="sessionUuid"
+                :scene="scene"
+                @pick="$emit('import-combat-block', $event)"
+              />
               <button
                 type="button"
                 class="enc-icon-btn"

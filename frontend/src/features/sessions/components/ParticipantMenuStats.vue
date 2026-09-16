@@ -9,7 +9,7 @@
       </span>
     </template>
   </div>
-  <ItemTooltip v-if="tooltip" :anchor="tooltip.anchor" :title="tooltip.label" :desc="tooltip.description" :width="280" />
+  <ItemTooltip v-if="tooltip" :anchor="tooltip.anchor" :title="tooltip.label" :desc="tooltip.description" :width="280" :z-index="9500" />
 </template>
 <script setup>
 import { computed, ref, shallowRef, watch } from 'vue'

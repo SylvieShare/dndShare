@@ -1,5 +1,5 @@
 <template>
-  <RowActionMenu ref="menuRef" :trigger-attrs="{ style: { flexShrink: 0 } }">
+  <RowActionMenu ref="menuRef" :trigger-attrs="{ style: { display: 'none' } }">
     <template #default="{ close }">
       <EncounterInitiativeMenu v-if="!enc.encounter.active && section !== 'dead'" :combatant="combatant" :encounter="enc" />
       <RowActionItem

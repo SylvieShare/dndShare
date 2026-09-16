@@ -7,7 +7,7 @@
 
 .campaign-workspace {
   --participant-rail-width: 264px;
-  --participant-selection-width: 32px;
+  --participant-selection-width: 36px;
   --participant-card-gap: 9px;
   --participant-selection-extra: calc(var(--participant-selection-width) + var(--participant-card-gap));
   position: relative;
