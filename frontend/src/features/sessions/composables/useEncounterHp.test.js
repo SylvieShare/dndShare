@@ -13,15 +13,15 @@ import { useEncounterHp } from './useEncounterHp'
 describe('encounter bulk damage', () => {
   beforeEach(() => patchData.mockReset().mockResolvedValue(undefined))
 
-  it('applies one amount to selected NPC and player HP, consuming temporary HP first', async () => {
+  it('submits selected NPC and player damage together without changing HP optimistically', async () => {
     const participant = { charId: 7, charUuid: 'char-7', hp: { current: 10, max: 12, temp: 3 } }
     const encounter = ref({ combatants: [
       { uid: 'npc', type: 'npc', position: 'combat', hpCurrent: 8, hpTemp: 2 },
       { uid: 'player', type: 'player', charId: 7, position: 'combat' },
     ] })
-    const applyLocalPatches = vi.fn()
+    const applyLocalPatches = vi.fn(), applyCombatDamage = vi.fn()
     const hp = useEncounterHp({
-      encounter,
+      encounter, applyCombatDamage,
       selectedUids: ref(new Set(['npc', 'player'])),
       getCombatant: uid => encounter.value.combatants.find(item => item.uid === uid),
       mutate: callback => callback(),
@@ -38,14 +38,11 @@ describe('encounter bulk damage', () => {
 
     expect(hp.selectedDamageCount.value).toBe(2)
     await hp.applyDamageToSelected(5)
-    expect(encounter.value.combatants[0]).toMatchObject({ hpCurrent: 5, hpTemp: 0 })
-    expect(patchData).toHaveBeenCalledWith('char-7', [
-      { path: 'hp.current', value: 8 },
-      { path: 'hp.temp', value: 0 },
-    ])
-    expect(applyLocalPatches).toHaveBeenCalledWith(7, [
-      { path: 'hp.current', value: 8 },
-      { path: 'hp.temp', value: 0 },
-    ])
+    expect(applyCombatDamage).toHaveBeenCalledWith(encounter.value.combatants, 5)
+    expect(encounter.value.combatants[0]).toMatchObject({ hpCurrent: 8, hpTemp: 2 })
+    expect(patchData).not.toHaveBeenCalled()
+    expect(applyLocalPatches).not.toHaveBeenCalled()
+    applyCombatDamage.mockRejectedValueOnce(new Error('Offline'))
+    await expect(hp.applyDamageToSelected(5)).rejects.toThrow('Offline')
   })
 })

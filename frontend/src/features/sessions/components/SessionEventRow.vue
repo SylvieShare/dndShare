@@ -8,11 +8,15 @@
         <time :datetime="event.createdAt" :title="fullTime">{{ time }}</time>
       </div>
       <div v-if="hasBody" class="event-body">
-        <SessionSavingThrow v-if="event.data?.savingThrow" :event="event" />
-        <DiceRollResult v-if="event.data?.result" :result="event.data.result" :color="event.data.color" :size="32" />
+        <div v-if="event.data?.result" class="event-roll">
+          <DiceRollResult :result="event.data.result" :color="event.data.color" :size="32" />
+          <ActionButton v-if="isDm && event.data?.damageRoll" size="sm" variant="quiet" @click="applying = true">Применить к целям</ActionButton>
+        </div>
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
         </div>
+        <SessionSavingThrow v-if="event.data?.savingThrow" :event="event" />
+        <DamageImpact v-for="impact in standaloneImpacts" :key="impact.key" :impact="impact" />
         <div v-if="event.type === 'item_transfer'" class="event-transfer">
           <ArrowRight :size="17" aria-label="Кому" />
           <span v-if="event.data?.resolvedTarget?.kind === 'npc'" class="event-target-npc">
@@ -38,11 +42,14 @@
       </div>
     </div>
   </article>
+  <SessionImpactModal v-if="applying" :event="event" @close="applying = false" />
 </template>
 <script setup>
+import { ActionButton } from '@sylvieshare/share-ui'
+import { useAccountStore } from '@/stores/account'
 import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
 import NpcMarker from './NpcMarker.vue'
-import { computed, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 import { sessionEventTime } from '../lib/sessionEventTime'
 import { ArrowRight } from '@lucide/vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
@@ -53,16 +60,22 @@ import SessionEventIcon from './SessionEventIcon.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
 const SessionSavingThrow = defineAsyncComponent(() => import('./SessionSavingThrow.vue'))
+const DamageImpact = defineAsyncComponent(() => import('./DamageImpact.vue'))
+const SessionImpactModal = defineAsyncComponent(() => import('./SessionImpactModal.vue'))
 const props = defineProps({ event: Object, entityName: String, grouped: Boolean, arriving: Boolean })
+const account = useAccountStore(), applying = ref(false)
+const isDm = computed(() => Number(account.user?.id) === Number(props.event.sessionOwnerUserId))
+const standaloneImpacts = computed(() => (props.event.data?.impacts || []).filter(impact => !props.event.data?.savingThrow?.results?.some(row => row.key === impact.key)))
 const action = computed(() => sessionEventAction(props.event, props.entityName))
 const date = computed(() => new Date(props.event.createdAt))
 const fullTime = computed(() => Number.isNaN(date.value.getTime()) ? '' : date.value.toLocaleString('ru-RU'))
 const time = computed(() => sessionEventTime(props.event.createdAt))
 const transition = computed(() => sessionEventTransition(props.event))
-const hasBody = computed(() => props.event.data?.savingThrow || props.event.type === 'item_transfer' || props.event.data?.applicationResult || props.event.data?.result || details.value || props.event.data?.resourceChanges?.length)
+const hasBody = computed(() => props.event.data?.impacts?.length || props.event.data?.savingThrow || props.event.type === 'item_transfer' || props.event.data?.applicationResult || props.event.data?.result || details.value || props.event.data?.resourceChanges?.length)
 const details = computed(() => sessionEventDetails(props.event))
 </script>
 <style scoped>
+.event-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }.event-roll > button { margin-left: auto; }
 .event-row { min-width: 0; }
 .event-row--standalone { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
 .event-content { display: grid; gap: 6px; min-width: 0; }

@@ -10,7 +10,7 @@
 import { computed, watch } from 'vue'
 import { isInitiativeEvent } from '../lib/sessionEventEntity'
 import { useSuggestStore } from '@/stores/suggest'
-import { MessageCircle, Hand, BookOpen, Dices, Moon, Package, Shield, Sparkles, Swords, Flag, CircleCheck } from '@lucide/vue'
+import { MessageCircle, Hand, BookOpen, Dices, Moon, Package, Shield, Sparkles, Swords, Flag, CircleCheck, HeartPulse } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 const props = defineProps({ event: Object, item: Object })
@@ -21,9 +21,9 @@ const art = computed(() => props.item || (ability.value ? suggests.items(ability
 const icon = computed(() => {
   if (props.event.data?.ability) return Shield
   if (props.item || props.event.data?.source?.itemId) return Package
-  return { chat_message: MessageCircle, rps_challenge: Hand, dice_roll: Dices, spell_used: Sparkles, rest_completed: Moon, item_spent: Package, item_added: Package, item_transfer: Package,
+  return { damage_applied: HeartPulse, chat_message: MessageCircle, rps_challenge: Hand, dice_roll: Dices, spell_used: Sparkles, rest_completed: Moon, item_spent: Package, item_added: Package, item_transfer: Package,
     entry_added: BookOpen, feature_state: Sparkles, status_effect: Sparkles, chapter_started: Flag,
-    encounter_started: Swords, encounter_finished: CircleCheck }[props.event.type] || Sparkles
+    encounter_started: Swords, encounter_finished: CircleCheck, HeartPulse }[props.event.type] || Sparkles
 })
 </script>
 <style scoped>

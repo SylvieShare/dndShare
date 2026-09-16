@@ -11,6 +11,7 @@
         :icon="Activity"
         @click="$emit('edit-states'); close()"
       >Состояния</RowActionItem>
+      <RowActionItem v-if="isNpc" :icon="History" @click="historyOpen = true; close()">История урона и эффектов</RowActionItem>
       <RowActionItem
         v-if="canReserve"
         :icon="Archive"
@@ -55,15 +56,18 @@
       >Удалить</RowActionItem>
     </template>
   </RowActionMenu>
+  <NpcImpactHistory v-if="historyOpen" :uid="combatant.uid" @close="historyOpen = false" />
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
-import { Activity, Archive, BookOpen, Copy, Dices } from '@lucide/vue'
+import { computed, defineAsyncComponent, inject, ref } from 'vue'
+import { Activity, Archive, BookOpen, Copy, Dices, History } from '@lucide/vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ActionButton, FormField, FormNumberInput, RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 
+const NpcImpactHistory = defineAsyncComponent(() => import('./NpcImpactHistory.vue'))
+const historyOpen = ref(false)
 const props = defineProps({
   combatant:   { type: Object, required: true },
   section:     { type: String, required: true },

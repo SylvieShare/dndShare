@@ -4,10 +4,10 @@ import { charactersApi } from '@/shared/api/charactersApi'
 import { pvHp, pvHpPath } from '@/features/sessions/lib/participantView'
 import { useDiceStore } from '@/stores/dice'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
-import { hpAfterDamage } from '@/features/sessions/lib/encounterHelpers'
 
 export function useEncounterHp({
   encounter,
+  applyCombatDamage,
   selectedUids,
   getCombatant,
   mutate,
@@ -202,51 +202,13 @@ export function useEncounterHp({
 
   async function applyDamageToSelected(rawAmount) {
     const amount = Math.max(0, Math.floor(Number(rawAmount) || 0))
-    if (!amount) return
-    const targets = [...selectedDamageTargets.value]
-    const npcTargets = targets.filter(combatant => combatant.type === 'npc')
-    const playerPlans = targets
-      .filter(combatant => combatant.type === 'player')
-      .map(combatant => {
-        const participant = findParticipant(combatant.charId)
-        const hpPath = participant ? pvHpPath(participant) : null
-        if (!participant || !hpPath) return null
-        const next = hpAfterDamage(pvHp(participant) || {}, amount)
-        return {
-          combatant,
-          participant,
-          updates: [
-            { path: `${hpPath}.current`, value: next.current },
-            { path: `${hpPath}.temp`, value: next.temp },
-          ],
-        }
-      })
-      .filter(Boolean)
+    if (amount && selectedDamageTargets.value.length) await applyCombatDamage([...selectedDamageTargets.value], amount)
+  }
 
-    if (npcTargets.length) {
-      mutate(() => {
-        for (const combatant of npcTargets) {
-          const target = getCombatant(combatant.uid)
-          if (!target) continue
-          const next = hpAfterDamage(hpParts(target), amount)
-          target.hpCurrent = next.current
-          target.hpTemp = next.temp
-        }
-      })
-    }
-
-    const results = await Promise.allSettled(playerPlans.map(plan =>
-      charactersApi.patchData(plan.participant.charUuid, plan.updates)
-    ))
-    let failed = 0
-    results.forEach((result, index) => {
-      if (result.status === 'rejected') {
-        failed += 1
-        return
-      }
-      applyLocalPatches(playerPlans[index].combatant.charId, playerPlans[index].updates)
-    })
-    if (failed) throw new Error(`Не удалось применить урон к игрокам: ${failed}`)
+  async function applyDamageToCombatant(combatant, amount) {
+    await applyCombatDamage([combatant], amount)
+    if (hpCalcNpc.value) hpCalcNpc.value = getCombatant(hpCalcNpc.value.uid)
+    if (hpCalcPlayer.value) hpCalcPlayer.value = getCombatant(hpCalcPlayer.value.uid)
   }
 
   async function onPlayerDsChange(c, hp) {
@@ -308,6 +270,7 @@ export function useEncounterHp({
     hpCalcPlayer,
     selectedDamageCount,
     applyDamageToSelected,
+    applyDamageToCombatant,
     displayAc,
     hpParts,
     hpPercent,

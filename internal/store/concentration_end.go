@@ -161,7 +161,18 @@ func endConcentrationTx(ctx context.Context, tx pgx.Tx, charID int64, castID str
 				return e
 			}
 			if did {
+				before := map[string]any{}
+				for k, v := range npc {
+					before[k] = v
+				}
 				npc["effectInstances"] = states
+				record, err := npcImpactDifference(ctx, tx, before, npc, npcApplicationTarget(t.id, npc, "Существо"), "Окончание концентрации", 0)
+				if err != nil {
+					return err
+				}
+				if record != nil {
+					appendNPCHistory(npc, record)
+				}
 				changed = true
 			}
 		}

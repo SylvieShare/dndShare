@@ -154,6 +154,8 @@ func (s *Store) resolveItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ch
 		doc.receive(t.Source, entry, accept, fmt.Sprintf("transfer-%d", t.ID))
 	}
 	if npc != nil {
+		npc.historyAction = t.ItemName
+		npc.historyEventID = t.EventID
 		err = npc.save(ctx, tx, doc)
 	} else if destination == 0 && t.Purpose == "transfer" {
 		err = receiveSessionInventory(ctx, tx, t.SessionID, t.Source, t.ItemName, entry)

@@ -13,7 +13,8 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   }
   function spellEventData(entry, explicit = false) {
     const save = explicit || entry?.item?.data?.damage?.save_manual !== true ? savingThrow(entry) : null
-    return { ...itemEventData(entry.item), ...(save ? { savingThrow: save } : {}) }
+    const concentration = charCtx.itemTransfers?.concentration?.state?.current
+    return { ...itemEventData(entry.item), entryKey: entry.ref?.key, ...(Number(concentration?.spellId) === Number(entry.item.id) ? { castId: concentration.id } : {}), ...(save ? { savingThrow: save } : {}) }
   }
   function requestSpellSave(entry) {
     if (spellcastingBlocked.value || !savingThrow(entry)) return
@@ -75,7 +76,7 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   function rollSpellDamage(entry, castLevel, critical = false) {
     if (spellcastingBlocked.value) return
     const expr = spellDamagePreview(entry, castLevel, critical)
-    if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr, { eventData: spellEventData(entry) })
+    if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr, { eventData: { ...spellEventData(entry), damageRoll: true, castLevel } })
   }
 
   function rollSpellHeal(entry, castLevel) {

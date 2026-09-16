@@ -549,7 +549,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterBulkDamageSource).toContain('enc.applyDamageToSelected(value)')
     expect(encounterBulkDamageSource).toContain('Количество урона')
     expect(encounterHpSource).toContain('const selectedDamageTargets = computed(')
-    expect(encounterHpSource).toContain('charactersApi.patchData(plan.participant.charUuid, plan.updates)')
+    expect(encounterHpSource).toContain('applyCombatDamage([...selectedDamageTargets.value], amount)')
     expect(encounterComposableSource).toContain('selectedDamageCount:    hp.selectedDamageCount')
   })
 

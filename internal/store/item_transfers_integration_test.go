@@ -81,6 +81,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
+	t.Run("session impacts", func(t *testing.T) { testSessionImpacts(t, s, pool) })
 	t.Run("session saves", func(t *testing.T) { testSessionSaves(t, s, pool) })
 	t.Run("application targets", func(t *testing.T) { testApplicationTargets(t, s, pool) })
 	current := func(id int64) transferCharacter {

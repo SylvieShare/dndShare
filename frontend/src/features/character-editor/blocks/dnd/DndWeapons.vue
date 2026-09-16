@@ -369,7 +369,7 @@ function presetDamageExpression(kind, critical) {
 
 function rollPresetDamage(kind, critical = false) {
   const preset = presetAttackDefinition(kind)
-  dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical), { eventData: itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value) })
+  dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${preset.title}`, presetDamageExpression(kind, critical), { eventData: { damageRoll: true, ...itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value) } })
 }
 
 const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,

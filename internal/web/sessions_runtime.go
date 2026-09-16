@@ -93,6 +93,7 @@ func (s *Server) handleSaveEncounter(w http.ResponseWriter, r *http.Request) {
 		s.appendSessionEvent(r.Context(), session.ID, userID, eventType, title, map[string]any{"round": meta.Round})
 	}
 	s.displayEvents.publish(session.ID)
+	s.publishSessionJournal(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 
@@ -156,6 +157,7 @@ func (s *Server) handleSaveMusicState(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.displayEvents.publish(session.ID)
+	s.publishSessionJournal(session.ID)
 	writeJSON(w, http.StatusNoContent, nil)
 }
 

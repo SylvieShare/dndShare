@@ -7,6 +7,9 @@ import (
 )
 
 type npcApplicationDocument struct {
+	historyHandled       bool
+	historyAction        string
+	historyEventID       int64
 	id                   int64
 	encounter, combatant map[string]any
 	document             transferDocument
@@ -55,18 +58,38 @@ func loadNPCApplication(ctx context.Context, tx pgx.Tx, sessionID int64, target 
 		if value, ok := object(c["override"])["hp"]; ok {
 			hp = number(value)
 		}
+		if c["hpCurrent"] == nil {
+			c["hpCurrent"] = hp
+		}
 		doc := transferDocument{"values": map[string]any{"hp": map[string]any{"current": c["hpCurrent"], "temp": c["hpTemp"], "max": hp, "ds_success": c["hpDsSuccess"], "ds_failure": c["hpDsFailure"]}, "states": c["effectInstances"]}}
 		return &npcApplicationDocument{id: id, encounter: enc, combatant: c, document: doc, target: npcApplicationTarget(id, c, name)}, nil
 	}
 	return nil, ErrNotFound
 }
 func (n *npcApplicationDocument) save(ctx context.Context, tx pgx.Tx, doc transferDocument) error {
+	before := map[string]any{}
+	for k, v := range n.combatant {
+		before[k] = v
+	}
 	hp := object(doc.values()["hp"])
 	n.combatant["hpCurrent"] = hp["current"]
 	n.combatant["hpTemp"] = hp["temp"]
 	n.combatant["hpDsSuccess"] = hp["ds_success"]
 	n.combatant["hpDsFailure"] = hp["ds_failure"]
 	n.combatant["effectInstances"] = doc.values()["states"]
+	if !n.historyHandled {
+		action := n.historyAction
+		if action == "" {
+			action = "Изменение эффекта"
+		}
+		record, err := npcImpactDifference(ctx, tx, before, n.combatant, n.target, action, n.historyEventID)
+		if err != nil {
+			return err
+		}
+		if record != nil {
+			appendNPCHistory(n.combatant, record)
+		}
+	}
 	n.encounter["applicationRevision"] = number(n.encounter["applicationRevision"]) + 1
 	raw, err := json.Marshal(n.encounter)
 	if err != nil {

@@ -308,6 +308,7 @@
     <DndHpCalcModal
       v-if="enc.hpCalcNpc"
       :hp="enc.npcHpObj(enc.hpCalcNpc)"
+      :damage-handler="amount => enc.applyDamageToCombatant(enc.hpCalcNpc, amount)"
       is-npc
       @close="enc.closeHpCalc"
       @change="enc.onNpcHpChange"
@@ -316,6 +317,7 @@
     <DndHpCalcModal
       v-if="enc.hpCalcPlayer"
       :hp="enc.playerHpObj(enc.hpCalcPlayer)"
+      :damage-handler="amount => enc.applyDamageToCombatant(enc.hpCalcPlayer, amount)"
       @close="enc.closeHpCalcPlayer"
       @change="enc.onPlayerHpChange"
     />

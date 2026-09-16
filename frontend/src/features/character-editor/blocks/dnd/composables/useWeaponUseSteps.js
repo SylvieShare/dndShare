@@ -16,7 +16,7 @@ export function useWeaponUseSteps(charCtx, uid) {
       const patch = completeWeaponUseStep(values(), unref(uid), current.id, key, result, critical)
       charCtx.updateValues(patch)
       charCtx.logSessionEvent?.({ type: miss ? 'feature_state' : 'dice_roll', action: `${current.title}: ${miss ? 'промах по цели' : step.title}`,
-        data: { ...instanceEventData(charCtx, unref(uid)), result, weaponUseId: current.id, stepKey: key } })
+        data: { ...instanceEventData(charCtx, unref(uid)), result, damageRoll: !miss && ['damage', 'weapon_damage'].includes(step.kind), ...(step.save ? { savingThrow: { ability: step.save.ability, dc: step.save.dc, onSuccess: step.save.half ? 'half' : 'none', results: [] } } : {}), weaponUseId: current.id, stepKey: key } })
       await nextTick()
     } finally { busy.value = false }
   }

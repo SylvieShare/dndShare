@@ -107,6 +107,7 @@ export function useEncounterNpcs({ encounter, unselect, pruneToExisting, selecte
     for (let i = 0; i < n; i++) {
       const copy = {
         ...JSON.parse(JSON.stringify(c)),
+        impactHistory: [],
         uid: makeUid(),
         position: 'reserve',
         initiative: null,

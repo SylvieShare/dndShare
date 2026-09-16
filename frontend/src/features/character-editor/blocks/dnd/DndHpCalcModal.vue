@@ -1,5 +1,5 @@
 <template>
-  <AppModalFrame title="Хиты" @close="$emit('close')">
+  <AppModalFrame title="Хиты" @close="!busy && $emit('close')">
 
     <!-- HP summary -->
     <div class="hc-summary" :class="{ 'hc-summary-dead': isDead }" :style="summaryStyle">
@@ -26,10 +26,11 @@
 
     <CalcPad v-model="calcAmount" />
 
+    <p v-if="error" role="alert" class="hc-error">{{ error }}</p>
     <div class="hc-actions">
-      <button class="hc-btn hc-dmg"  @click="applyCalc('damage')">Урон</button>
-      <button class="hc-btn hc-heal" @click="applyCalc('heal')">Лечение</button>
-      <button class="hc-btn hc-temp" @click="applyCalc('temp')">+Врем</button>
+      <button class="hc-btn hc-dmg"  :disabled="busy" @click="applyCalc('damage')">Урон</button>
+      <button class="hc-btn hc-heal" :disabled="busy" @click="applyCalc('heal')">Лечение</button>
+      <button class="hc-btn hc-temp" :disabled="busy" @click="applyCalc('temp')">+Врем</button>
     </div>
 
     <!-- Hit dice -->
@@ -61,10 +62,11 @@ import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
 
 const props = defineProps({
   hp:          { type: Object, required: true },
+  damageHandler: Function,
   isNpc:       { type: Boolean, default: false },
 })
 const emit = defineEmits(['close', 'change', 'graveyard'])
-const calcAmount = ref('')
+const calcAmount = ref(''), busy = ref(false), error = ref('')
 const hpCurrent = computed(() => parseInt(props.hp.current) || 0)
 const isDead = computed(() => hpCurrent.value <= 0)
 const hpMax = computed(() => hpMaximum(props.hp))
@@ -111,9 +113,18 @@ function evalExpr(expr) {
   } catch { return 0 }
 }
 
-function applyCalc(type) {
+async function applyCalc(type) {
+  if (busy.value) return
+  error.value = ''
   const amount = evalExpr(calcAmount.value)
   if (!amount) return
+  if (type === 'damage' && props.damageHandler) {
+    busy.value = true
+    try { await props.damageHandler(amount); calcAmount.value = '' }
+    catch (cause) { error.value = cause.message || 'Не удалось применить урон.' }
+    finally { busy.value = false }
+    return
+  }
   const hp = { ...props.hp }
   if (type === 'damage') {
     const temp = parseInt(hp.temp) || 0
@@ -135,6 +146,7 @@ function adjustDice(pool, delta) {
 </script>
 
 <style scoped>
+.hc-error { color: var(--danger); }
 .hc-summary {
   position: relative;
   border: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);

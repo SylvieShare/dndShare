@@ -43,7 +43,6 @@
     </template>
 
     <template #default="{ close: closeMenu }">
-      <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
       <DamageRollOptions :weapon-uid="entry.uid" v-if="hasDamage || ctx.item(entry)" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
 
       <RowActionSeparator v-if="ctx.item(entry)" />
@@ -57,6 +56,7 @@
         action="edit"
         @click="editWeapon(closeMenu)"
       >Редактировать</RowActionItem>
+      <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
       <RowActionItem
         v-if="ctx.canMoveWeaponToItems(entry)"
         :icon="ArrowRightLeft"

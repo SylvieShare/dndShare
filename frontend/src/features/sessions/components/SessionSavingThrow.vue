@@ -8,9 +8,15 @@
     <div v-for="row in save.results || []" :key="row.key" class="event-save-result">
       <SaveTargetName :target="row.target" />
       <DiceRollResult :result="row.result" :size="24" />
-      <span :class="row.success ? 'save-success' : 'save-failure'">{{ row.success ? 'Успех' : 'Провал' }}</span>
+      <DamageImpact v-if="impactForTarget(event, row.target)" class="save-impact" :impact="impactForTarget(event, row.target)" :show-target="false" />
+      <div v-else-if="isDm" class="save-apply">
+        <ActionButton size="sm" :variant="row.success ? 'primary' : 'quiet'" @click="applying = { target: row.target, outcome: 'success' }">Применить успех</ActionButton>
+        <ActionButton size="sm" :variant="!row.success ? 'primary' : 'quiet'" @click="applying = { target: row.target, outcome: 'failure' }">Применить провал</ActionButton>
+      </div>
+      <span v-else :class="row.success ? 'save-success' : 'save-failure'">{{ row.success ? 'Успех' : 'Провал' }}</span>
     </div>
   </section>
+  <SessionImpactModal v-if="applying" :event="event" v-bind="applying" @close="applying = null" />
   <AppModalFrame v-if="picking" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :z-index="3700" @close="!busy && (picking = false)">
     <LoadingIndicator v-if="loading" label="Загрузка участников" />
     <div class="save-target-list">
@@ -26,7 +32,7 @@
   </AppModalFrame>
 </template>
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, defineAsyncComponent, inject, ref } from 'vue'
 import { Shield } from '@lucide/vue'
 import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
 import SaveTargetName from './SaveTargetName.vue'
@@ -40,7 +46,11 @@ import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import { useDiceStore } from '@/stores/dice'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { getSaveTargets, appendSessionSaves } from '@/shared/api/sessionEventsApi'
+import { impactForTarget } from '../lib/sessionImpact'
 import { SAVE_ABILITIES, saveTargetKey, saveTargetItemIds, sessionSaveProfile } from '../lib/sessionSaveRoll'
+const SessionImpactModal = defineAsyncComponent(() => import('./SessionImpactModal.vue'))
+const DamageImpact = defineAsyncComponent(() => import('./DamageImpact.vue'))
+const applying = ref(null)
 const props = defineProps({ event: { type: Object, required: true } })
 const account = useAccountStore(), events = useSessionEventsStore(), dice = useDiceStore()
 const suggest = useSuggestStore()
@@ -91,6 +101,7 @@ async function rollSelected() {
 }
 </script>
 <style scoped>
+.save-apply { display: flex; flex-wrap: wrap; gap: 6px; }.save-impact { width: 100%; }
 .event-save { border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px; display: grid; gap: 8px; }
 .event-save header { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; }
 .event-save header button { margin-left: auto; }

@@ -2,6 +2,7 @@ import { encounterEventData } from '../lib/encounterEventData'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useEncounterFlow } from '@/features/sessions/composables/useEncounterFlow'
 import { useEncounterChallenge } from '@/features/sessions/composables/useEncounterChallenge'
+import { useEncounterImpacts } from './useEncounterImpacts'
 import { useEncounterHp } from '@/features/sessions/composables/useEncounterHp'
 import { useEncounterInitiative } from '@/features/sessions/composables/useEncounterInitiative'
 import { useEncounterNpcData } from '@/features/sessions/composables/useEncounterNpcData'
@@ -164,7 +165,9 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
 
   const selection = useEncounterSelection({ encounter, listForGroup })
 
+  const impacts = useEncounterImpacts({ sessionUuid, persistence, load, findParticipant, applyLocalPatches })
   const hp = useEncounterHp({
+    applyCombatDamage: impacts.applyCombatDamage,
     encounter,
     selectedUids: selection.selectedUids,
     getCombatant,
@@ -413,6 +416,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     hpCalcPlayer:           hp.hpCalcPlayer,
     selectedDamageCount:    hp.selectedDamageCount,
     applyDamageToSelected:  hp.applyDamageToSelected,
+    applyDamageToCombatant: hp.applyDamageToCombatant,
     displayAc:              hp.displayAc,
     hpPercent:              hp.hpPercent,
     hpTempPercent:          hp.hpTempPercent,

@@ -43,6 +43,18 @@ func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status s
 		return err
 	}
 	if errors.Is(err, pgx.ErrNoRows) {
+		var doc map[string]any
+		if json.Unmarshal([]byte(data), &doc) != nil {
+			return ErrApplication
+		}
+		for _, v := range array(doc["combatants"]) {
+			delete(object(v), "impactHistory")
+		}
+		encoded, err := json.Marshal(doc)
+		if err != nil {
+			return err
+		}
+		data = string(encoded)
 		if _, err = tx.Exec(ctx,
 			`INSERT INTO dndshare.session_encounter (session_id, status, round, data)
 			 VALUES ($1, $2, $3, CAST($4 AS jsonb))`,
@@ -58,6 +70,14 @@ func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status s
 		if number(oldDoc["applicationRevision"]) != number(newDoc["applicationRevision"]) {
 			return ErrCharacterVersion
 		}
+		if err = recordEncounterChanges(ctx, tx, sessionID, existing, oldDoc, newDoc); err != nil {
+			return err
+		}
+		encoded, err := json.Marshal(newDoc)
+		if err != nil {
+			return err
+		}
+		data = string(encoded)
 		if _, err = tx.Exec(ctx,
 			`UPDATE dndshare.session_encounter SET status = $2, round = $3, data = CAST($4 AS jsonb), changed_at = now()
 			 WHERE id = $1`,
