@@ -12,11 +12,12 @@ useAccountStore(pinia).user = { id: 1 }
 useSuggestStore(pinia).set(3, [])
 const event = reactive({ id: 10, type: 'spell_used', action: 'Огненный шар', sessionOwnerUserId: 1, createdAt: new Date().toISOString(), data: { damageRoll: true, result: { total: 15, parts: [{ kind: 'dice', sides: 6, rolls: [5, 5, 5], n: 3, sum: 15 }], byType: [{ label: 'Огонь', value: 15 }] }, savingThrow: { ability: 2, dc: 15, onSuccess: 'half', results: [] } } })
 const targets = [
-  { kind: 'character', charUuid: 'hero', name: 'Тиф', snapshot: { values: { DEX: { value: 16, save_up: true }, lvl: { level: 5 } } } },
-  { kind: 'npc', encounterId: 1, npcUid: 'goblin', name: 'Гоблин', letter: 'Б', color: '#77bb33', snapshot: { item: { stats: { dex: 14 } }, combatant: {} } },
+  { kind: 'character', charUuid: 'hero', name: 'Тиф', hp: { current: 18, max: 24, temp: 3 }, snapshot: { values: { DEX: { value: 16, save_up: true }, lvl: { level: 5 } } } },
+  { kind: 'npc', encounterId: 1, npcUid: 'goblin', name: 'Гоблин', hp: { current: 20, max: 20, temp: 2 }, letter: 'Б', color: '#77bb33', snapshot: { item: { stats: { dex: 14 } }, combatant: {} } },
 ]
 window.requests = []; window.impactRequests = []
 window.fetch = async (url, options = {}) => {
+  if (String(url).endsWith('/application-targets')) return Response.json({ targets })
   if (String(url).endsWith('/save-targets')) return Response.json({ targets })
   if (String(url).endsWith('/impacts')) {
     const body = JSON.parse(options.body); window.impactRequests.push(body)

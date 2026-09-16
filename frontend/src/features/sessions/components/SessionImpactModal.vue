@@ -14,9 +14,11 @@
       <div class="impact-targets">
         <label v-for="candidate in targets" :key="impactTargetKey(candidate)" class="impact-target">
           <input v-if="!target" v-model="selected" type="checkbox" :value="impactTargetKey(candidate)" :disabled="locked || !!impactForTarget(event, candidate)" />
-          <SaveTargetName :target="candidate" />
-          <small v-if="impactForTarget(event, candidate)">Уже применено</small>
-          <small v-else-if="!outcome && impactOutcome(event, candidate)">{{ impactOutcome(event, candidate) === 'success' ? 'Успех' : 'Провал' }}</small>
+          <div class="impact-target-content">
+            <SaveTargetName :target="candidate" :icon-size="56" show-hp />
+            <small v-if="impactForTarget(event, candidate)">Уже применено</small>
+            <small v-else-if="!outcome && impactOutcome(event, candidate)">{{ impactOutcome(event, candidate) === 'success' ? 'Успех' : 'Провал' }}</small>
+          </div>
         </label>
       </div>
       <p class="impact-hint">Урон сначала поглощают временные хиты. Защиты учитываются, если они настроены в механиках.</p>
@@ -28,7 +30,8 @@
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
 import { ActionButton, AppModalFrame, LoadingIndicator } from '@sylvieshare/share-ui'
-import { getSaveTargets, applySessionImpact } from '@/shared/api/sessionEventsApi'
+import { getApplicationTargets } from '@/shared/api/itemTransfersApi'
+import { applySessionImpact } from '@/shared/api/sessionEventsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
@@ -44,8 +47,12 @@ const condition = computed(() => props.outcome !== 'success' && effects.value.fi
 onMounted(async () => {
   try {
     if (encounter && !await encounter.flushApplicationSave()) throw new Error('Сохраните состояние боя перед применением.')
-    targets.value = props.target ? [props.target] : (await getSaveTargets(events.sessionUuid)).targets || []
-    if (props.target) selected.value = [impactTargetKey(props.target)]
+    const available = (await getApplicationTargets(events.sessionUuid)).targets || []
+    targets.value = props.target ? available.filter(target => impactTargetKey(target) === impactTargetKey(props.target)) : available
+    if (props.target) {
+      if (!targets.value.length) throw new Error('Цель больше не доступна в сессии.')
+      selected.value = [impactTargetKey(props.target)]
+    }
     const sourceId = props.event.data?.source?.itemId
     if (sourceId) {
       const source = (await itemsApi.byIds([sourceId])).items?.[0]
@@ -76,7 +83,10 @@ async function apply() {
 <style scoped>
 .impact-form, .impact-effects, .impact-targets { display: grid; gap: 10px; }
 .impact-targets { max-height: 45vh; overflow: auto; }
-.impact-target { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: var(--r-sm); cursor: pointer; }.impact-target > :nth-child(2) { flex: 1; }
+.impact-target { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: var(--r-sm); cursor: pointer; }
+.impact-target-content { flex: 1; min-width: 0; }
+.impact-target-content > .save-target-name { width: 100%; }
+.impact-target-content > small { display: block; padding-left: 64px; margin-top: 4px; }
 .impact-effects label { display: flex; align-items: center; gap: 8px; }.impact-condition { color: var(--warning); }
 .impact-hint, .impact-target small { margin: 0; font-size: 12px; color: var(--text-muted); }.impact-error { color: var(--danger); }
 input { accent-color: var(--accent); }
