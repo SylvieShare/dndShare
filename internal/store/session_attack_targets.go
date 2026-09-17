@@ -11,7 +11,7 @@ func (s *Store) SetSessionAttackTargets(ctx context.Context, userID, sessionID, 
 	if len(requested) > 50 {
 		return SessionEvent{}, ErrApplication
 	}
-	available, err := s.SessionApplicationTargets(ctx, userID, sessionID)
+	available, err := s.sessionChronicleTargets(ctx, userID, sessionID)
 	if err != nil {
 		return SessionEvent{}, err
 	}

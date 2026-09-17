@@ -1,23 +1,23 @@
 <template>
   <div class="attack-targets">
     <div v-if="event.data.attackTargets?.length" class="attack-target-names" aria-label="Цели атаки">
+      <Swords class="attack-target-marker" :size="20" aria-hidden="true" />
       <SaveTargetName v-for="target in event.data.attackTargets" :key="impactTargetKey(target)" :target="target" />
     </div>
     <ActionButton v-if="isDm" size="sm" variant="dashed" @click="choose">{{ event.data.attackTargets?.length ? 'Изменить цели' : 'Выбрать цели' }}</ActionButton>
   </div>
-  <SessionTargetPicker v-if="picking" v-model="selected" title="Цели атаки" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :error="error" @close="picking = false">
-    <template #before><DiceRollResult :result="event.data.result" :color="event.data.color" :size="28" /></template>
+  <SessionTargetPicker :event="event" v-if="picking" v-model="selected" title="Цели атаки" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :error="error" @close="picking = false">
     <template #footer><ActionButton :disabled="busy || loading || loadFailed" @click="save">{{ pending ? 'Повторить сохранение' : `Сохранить · ${selected.length}` }}</ActionButton></template>
   </SessionTargetPicker>
 </template>
 <script setup>
+import { Swords } from '@lucide/vue'
 import { inject, ref } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 import { loadSessionTargets } from '../lib/loadSessionTargets'
 import { useSuggestStore } from '@/stores/suggest'
 import { setSessionAttackTargets } from '@/shared/api/sessionEventsApi'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import SaveTargetName from './SaveTargetName.vue'
 import SessionTargetPicker from './SessionTargetPicker.vue'
 import { impactTargetKey, targetIdentity } from '../lib/sessionImpact'
@@ -52,5 +52,6 @@ async function save() {
 <style scoped>
 .attack-targets { display: contents; }
 .attack-targets > button { margin-left: auto; }
-.attack-target-names { order: 2; flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; }
+.attack-target-names { position: relative; order: 2; flex-basis: 100%; display: flex; flex-direction: column; gap: 10px; margin-left: 30px; padding: 4px 0 4px 12px; border-left: 2px solid var(--danger); font-size: 13px; }
+.attack-target-marker { position: absolute; left: -30px; top: 8px; color: var(--danger); }
 </style>

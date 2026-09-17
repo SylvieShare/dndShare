@@ -10,16 +10,26 @@ import '../../../src/app/theme.css'
 const pinia = createPinia()
 useAccountStore(pinia).user = { id: 1 }
 useSuggestStore(pinia).set(3, [])
-const event = reactive({ id: 10, type: 'spell_used', action: 'Огненный шар', sessionOwnerUserId: 1, createdAt: new Date().toISOString(), data: { damageRoll: true, result: { total: 15, parts: [{ kind: 'dice', sides: 6, rolls: [5, 5, 5], n: 3, sum: 15 }], byType: [{ label: 'Огонь', value: 15 }] }, savingThrow: { ability: 2, dc: 15, onSuccess: 'half', results: [] } } })
+const event = reactive({ id: 10, type: 'spell_used', action: 'Урон: Огненный шар', sessionOwnerUserId: 1, createdAt: new Date().toISOString(), data: { source: { itemId: 101, name: 'Огненный шар' }, damageRoll: true, result: { total: 15, parts: [{ kind: 'dice', sides: 6, rolls: [5, 5, 5], n: 3, sum: 15 }], byType: [{ label: 'Огонь', value: 15 }] }, savingThrow: { ability: 2, dc: 15, onSuccess: 'half', results: [] } } })
 const targets = [
   { kind: 'character', charUuid: 'hero', name: 'Тиф', hp: { current: 18, max: 24, temp: 3 }, snapshot: { values: { DEX: { value: 16, save_up: true }, lvl: { level: 5 } } } },
   { kind: 'npc', encounterId: 1, npcUid: 'goblin', name: 'Гоблин', hp: { current: 20, max: 20, temp: 2 }, letter: 'Б', color: '#77bb33', snapshot: { item: { stats: { dex: 14 } }, combatant: {} } },
 ]
-const attack = reactive({ id: 11, type: 'dice_roll', action: 'Атака: Посох', sessionOwnerUserId: 1, createdAt: new Date().toISOString(), data: { attackRoll: true, result: { total: 18, parts: [{ kind: 'dice', sides: 20, rolls: [15], sum: 15 }, { kind: 'flat', value: 3 }] } } })
+const attack = reactive({ id: 11, type: 'dice_roll', action: 'Атака: Посох', sessionOwnerUserId: 1, createdAt: new Date().toISOString(), data: { source: { itemId: 102, name: 'Посох' }, attackRoll: true, result: { total: 18, parts: [{ kind: 'dice', sides: 20, rolls: [15], sum: 15 }, { kind: 'flat', value: 3 }] } } })
+if (new URLSearchParams(location.search).has('npc')) {
+  delete attack.data.source
+  attack.actorName = 'Гоблин'
+  attack.actorSvg = '<svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" /></svg>'
+  attack.data.npcActor = { uid: 'goblin-b', name: 'Гоблин', letter: 'Б', color: '#77bb33' }
+}
 const attackMode = new URLSearchParams(location.search).has('attack')
 window.attackEvent = attack
 window.requests = []; window.impactRequests = []; window.attackRequests = []
 window.fetch = async (url, options = {}) => {
+  if (String(url).includes('/items/by-ids')) return Response.json({ items: [
+    { id: 101, name: 'Огненный шар', svg: '<svg viewBox="0 0 20 20"><path d="M10 0L20 20H0Z" /></svg>' },
+    { id: 102, name: 'Посох', svg: '<svg viewBox="0 0 20 20"><path d="M10 0V20" /></svg>' },
+  ] })
   if (String(url).endsWith('/application-targets')) return Response.json({ targets })
   if (String(url).endsWith('/save-targets')) return Response.json({ targets })
   if (String(url).endsWith('/attack-targets')) {

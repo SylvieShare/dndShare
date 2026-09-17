@@ -17,7 +17,7 @@
     </div>
   </section>
   <SessionImpactModal v-if="applying" :event="event" v-bind="applying" @close="applying = null" />
-  <SessionTargetPicker v-if="picking" v-model="selected" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :disabled-keys="[...rolled]" :error="error" :z-index="3700" @close="picking = false">
+  <SessionTargetPicker :event="event" v-if="picking" v-model="selected" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :disabled-keys="[...rolled]" :error="error" :z-index="3700" @close="picking = false">
     <template #target-note="{ target }"><span v-if="rolled.has(saveTargetKey(target))">Уже брошено</span><SaveFormulaPreview v-else :profile="profile(target)" /></template>
     <RollModeControl v-if="!pending" v-model="mode" label="Режим спасбросков" />
     <template #footer><ActionButton :disabled="busy || loading || !selected.length" @click="rollSelected">{{ pending ? 'Сохранить результаты' : `Бросить · ${selected.length}` }}</ActionButton></template>

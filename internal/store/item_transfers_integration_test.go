@@ -282,4 +282,5 @@ func TestItemTransfersPostgres(t *testing.T) {
 		t.Fatalf("resolved pending list: %+v %v", pending, err)
 	}
 	t.Run("prepared initiative", func(t *testing.T) { testPreparedInitiative(t, s, pool) })
+	t.Run("chronicle targets", func(t *testing.T) { testChronicleTargets(t, s, pool) })
 }

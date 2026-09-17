@@ -804,3 +804,9 @@ MCP `handbook_item_reuse_icon(itemId, sourceItemId)` присваивает си
 
 
 Sheet initiative dice events include `data.sheetInitiative: true` with `data.result.total`. GET encounter projects new marked events for current session participants into reserve initiatives (creating a reserve row if needed). PUT encounter acknowledges these events and merges pending rolls against the previous roster. Active/dead participants keep their current initiative. `sheetInitiativeCursor` is the last acknowledged event id; an older cursor than persisted returns a conflict. Other dice events do not change preparation. The DM target pickers share `/save-targets` snapshots to derive AC and save formulas; their submitted identities omit `snapshot`, `hp` and display-only `armorClass`.
+
+
+Chronicle `/save-targets` excludes players and NPCs with `position: "dead"` in
+the latest non-deleted encounter. Zero HP alone does not exclude a creature.
+Attack-target, saving-throw and impact mutations validate new selections against
+the same filtered roster; general `/application-targets` remains unchanged.

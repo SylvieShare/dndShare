@@ -30,14 +30,6 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
     return part.typeColor ? `{${part.type}|${part.typeColor}}` : `{${part.type}}`
   }
 
-  function diceExpr(parts, withType) {
-    return parts
-      .filter(p => p.diceLabel)
-      .map(p => `${p.count || 1}${p.diceLabel}${withType ? typeTag(p) : ''}`)
-      .filter(seg => /\d/.test(seg))
-      .join('+')
-  }
-
   function spellAttackMode(entry, manualMode = 'auto') {
     const context = { kind: 'attack', abilitySuggestId: spellCastingAbility(entry), weaponAttack: false }
     return charCtx.characterRolls?.resolve?.(manualMode, context) || resolveRollMode(manualMode)
@@ -57,10 +49,10 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   }
 
   function exprWithBonus(parts, withType) {
-    let expr = diceExpr(parts, withType)
-    const bonus = parts.reduce((s, p) => s + (p.bonus || 0), 0)
-    if (bonus) expr += (expr && bonus > 0 ? '+' : '') + bonus
-    return expr
+    return parts.flatMap(part => {
+      const tag = withType ? typeTag(part) : ''
+      return [part.diceLabel ? `${part.count || 1}${part.diceLabel}${tag}` : '', part.bonus ? `${part.bonus}${tag}` : ''].filter(Boolean)
+    }).join('+').replace(/\+-/g, '-')
   }
 
   function spellDamagePreview(entry, castLevel, critical = false) {

@@ -1,13 +1,13 @@
 <template>
   <div class="damage-impact">
-    <SaveTargetName v-if="showTarget" :target="impact.target" />
+    <SaveTargetName v-if="showTarget" :target="impact.target" :icon-size="36" />
     <div class="impact-summary">
       <HeartPulse :size="19" />
       <strong :class="impact.total < 0 ? 'impact-healing' : 'impact-damage'">{{ amountLabel }}</strong>
       <span class="impact-hp">{{ impact.before.current }} <ArrowRight :size="14" /> <b>{{ impact.after.current }}</b><span v-if="impact.after.max"> / {{ impact.after.max }}</span></span>
       <span v-if="impact.absorbed" class="impact-temp"><Shield :size="14" /> Поглощено {{ impact.absorbed }}</span>
     </div>
-    <div v-if="impact.after.max" class="impact-bar"><span :style="{ width: `${Math.min(100, 100 * impact.after.current / impact.after.max)}%` }" /></div>
+    <DamageImpactBar :impact="impact" />
     <div v-if="impact.damage?.length" class="impact-parts">
       <span v-for="(part, i) in impact.damage" :key="i" :style="{ color: part.color || 'var(--text-2)' }">{{ part.label || 'Урон' }}: <b>{{ part.applied }}</b><small v-if="part.defense"> · {{ defenseLabels[part.defense] }}</small></span>
     </div>
@@ -18,6 +18,7 @@
 <script setup>
 import { computed } from 'vue'
 import { ArrowRight, HeartPulse, Shield } from '@lucide/vue'
+import DamageImpactBar from './DamageImpactBar.vue'
 import SaveTargetName from './SaveTargetName.vue'
 import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
 import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
@@ -32,6 +33,5 @@ const defenseLabels = { immunity: 'иммунитет', resistance: 'сопро�
 .impact-summary > svg, .impact-damage { color: var(--danger); }.impact-healing { color: var(--success); }
 .impact-hp { margin-left: auto; font-variant-numeric: tabular-nums; }.impact-hp b { font-size: 18px; }
 .impact-temp { color: var(--info); font-size: 12px; }
-.impact-bar { height: 4px; overflow: hidden; background: var(--border); border-radius: 4px; }.impact-bar span { display: block; height: 100%; background: var(--success); }
 .impact-parts { gap: 6px 12px; font-size: 12px; }.impact-parts small, .impact-removed { color: var(--text-muted); }
 </style>

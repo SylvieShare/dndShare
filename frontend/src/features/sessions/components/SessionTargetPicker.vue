@@ -1,6 +1,7 @@
 <template>
   <AppModalFrame :title="title" :width="680" :z-index="zIndex" @close="!busy && $emit('close')">
     <div class="target-picker">
+      <SessionTargetContext v-if="event" :event="event" />
       <slot name="before" />
       <LoadingIndicator v-if="loading" label="Загрузка целей" />
       <div v-else class="session-target-list">
@@ -22,9 +23,11 @@
 <script setup>
 import { AppModalFrame, CompactCheckbox, LoadingIndicator } from '@sylvieshare/share-ui'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
+import SessionTargetContext from './SessionTargetContext.vue'
 import SaveTargetName from './SaveTargetName.vue'
 import { impactTargetKey } from '../lib/sessionImpact'
 const props = defineProps({
+  event: Object,
   title: { type: String, required: true },
   targets: { type: Array, default: () => [] },
   modelValue: { type: Array, default: () => [] },

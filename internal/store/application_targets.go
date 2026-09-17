@@ -66,14 +66,18 @@ func (s *Store) ResolveSessionApplication(ctx context.Context, userID, sessionID
 }
 
 func (s *Store) SessionApplicationTargets(ctx context.Context, userID, sessionID int64) ([]ApplicationTarget, error) {
-	return s.sessionApplicationTargets(ctx, userID, sessionID, false)
+	return s.sessionApplicationTargets(ctx, userID, sessionID, false, false)
 }
 
 func (s *Store) SessionSaveTargets(ctx context.Context, userID, sessionID int64) ([]ApplicationTarget, error) {
-	return s.sessionApplicationTargets(ctx, userID, sessionID, true)
+	return s.sessionApplicationTargets(ctx, userID, sessionID, true, true)
 }
 
-func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID int64, snapshots bool) ([]ApplicationTarget, error) {
+func (s *Store) sessionChronicleTargets(ctx context.Context, userID, sessionID int64) ([]ApplicationTarget, error) {
+	return s.sessionApplicationTargets(ctx, userID, sessionID, false, true)
+}
+
+func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID int64, snapshots, excludeDead bool) ([]ApplicationTarget, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return nil, err
@@ -91,7 +95,12 @@ func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID
 	rows, err := tx.Query(ctx, `SELECT c.uuid::text,c.data,COALESCE(icon.url,c.data #>> '{values,ava,url}','')
  FROM dndshare.session_participant p JOIN dndshare."char" c ON c.id=p.char_id
  LEFT JOIN dndshare.storage_image icon ON icon.id=c.icon_image_id AND icon.deleted=false
- WHERE p.session_id=$1 AND c.deleted=false ORDER BY c.id`, sessionID)
+ WHERE p.session_id=$1 AND c.deleted=false AND (NOT $2 OR NOT EXISTS (
+ SELECT 1 FROM (SELECT data FROM dndshare.session_encounter WHERE session_id=$1 AND deleted=false ORDER BY id DESC LIMIT 1) e
+ CROSS JOIN LATERAL jsonb_array_elements(COALESCE(e.data->'combatants','[]'::jsonb)) member(value)
+ WHERE member.value->>'type'='player' AND member.value->>'position'='dead'
+ AND (member.value->>'charId'=c.id::text OR member.value->>'charUuid'=c.uuid::text)
+ )) ORDER BY c.id`, sessionID, excludeDead)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +143,7 @@ func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID
  LEFT JOIN dndshare.storage_image icon ON icon.id=i.icon_image_id AND icon.deleted=false
  LEFT JOIN dndshare.storage_image cover ON cover.id=i.cover_image_id AND cover.deleted=false
  LEFT JOIN dndshare.svg_storage svg ON svg.id=i.icon_svg_id
- WHERE c.value->>'type'='npc'`, sessionID)
+ WHERE c.value->>'type'='npc' AND (NOT $2 OR COALESCE(c.value->>'position','reserve') <> 'dead')`, sessionID, excludeDead)
 	if err != nil {
 		return nil, err
 	}

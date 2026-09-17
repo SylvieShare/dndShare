@@ -37,7 +37,7 @@ func (s *Store) ApplySessionImpact(ctx context.Context, userID, sessionID int64,
 	if len(req.Targets) < 1 || len(req.Targets) > 50 || req.EventID < 0 || len(req.EffectKey) > 200 {
 		return out, ErrApplication
 	}
-	targets, err := s.SessionApplicationTargets(ctx, userID, sessionID)
+	targets, err := s.sessionChronicleTargets(ctx, userID, sessionID)
 	if err != nil {
 		return out, err
 	}

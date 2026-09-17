@@ -27,7 +27,7 @@ func (s *Store) AppendSessionSaves(ctx context.Context, userID, sessionID, event
 	if len(results) == 0 || len(results) > 50 {
 		return SessionEvent{}, ErrApplication
 	}
-	targets, err := s.SessionApplicationTargets(ctx, userID, sessionID)
+	targets, err := s.sessionChronicleTargets(ctx, userID, sessionID)
 	if err != nil {
 		return SessionEvent{}, err
 	}

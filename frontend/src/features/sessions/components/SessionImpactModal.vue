@@ -1,7 +1,6 @@
 <template>
-  <SessionTargetPicker title="Применить результат" v-model="selected" :targets="targets" :loading="loading" :busy="busy" :locked="locked" :fixed="!!target" :disabled-keys="appliedKeys" :error="error" @close="$emit('close')">
+  <SessionTargetPicker :event="event" title="Применить результат" v-model="selected" :targets="targets" :loading="loading" :busy="busy" :locked="locked" :fixed="!!target" :disabled-keys="appliedKeys" :error="error" @close="$emit('close')">
     <template #before>
-      <DiceRollResult v-if="event.data?.result" :result="event.data.result" :color="event.data.color" :size="28" />
       <p v-if="outcome" class="impact-hint">{{ outcome === 'failure' ? 'Провал: полный урон и выбранный эффект.' : event.data?.savingThrow?.onSuccess === 'half' ? 'Успех: половина урона, без эффекта.' : 'Успех: без урона и эффекта.' }}</p>
       <div v-if="effects.length && outcome !== 'success'" class="impact-effects">
         <strong>Наложить эффект</strong>
@@ -27,7 +26,6 @@ import { useSuggestStore } from '@/stores/suggest'
 import { applySessionImpact } from '@/shared/api/sessionEventsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import SessionTargetPicker from './SessionTargetPicker.vue'
 import { impactTargetKey, impactOutcome, impactForTarget, targetIdentity } from '../lib/sessionImpact'
 const props = defineProps({ event: Object, target: Object, outcome: String })

@@ -1329,3 +1329,28 @@ Player menu statistic tooltips use the shared FloatingTooltip above the action m
 During active combat, a reserve player's rail menu offers «Отправить в бой» with an initiative field and «В бой». It reuses a prepared or manually entered value (including zero), or rolls when the field is empty. A sheet initiative roll carries `sheetInitiative: true`. Encounter reads project unacknowledged rolls into reserve player initiatives; saves acknowledge `sheetInitiativeCursor`. Rolls made for an active or dead combatant are acknowledged without replacing their initiative. Save projection checks the old roster before a pending move. Master-generated rolls do not carry this marker. Live journal updates flush local edits, then refresh the encounter.
 
 Chronicle attack target controls share the roll's row on the right, with chosen targets below. Choose targets, apply to targets and roll-save buttons use the shared dashed ActionButton variant. The 680px target dialog keeps responsive viewport limits; all three flows use `loadSessionTargets`, the DM-only snapshot endpoint, hydrated equipment/effects, a common AC chip and medium HP bar. SaveFormulaPreview renders the same profile used for rolling, including extra dice and whether the higher/lower of two d20 is kept. Presentation AC and snapshots are excluded from submitted target identities.
+
+
+### Контекст и результаты выбора целей в хронике
+
+Все три окна (атака, спасбросок, применение урона/эффекта) используют
+`SessionTargetContext`: иконка и название исходного предмета/способности либо
+автор события, название действия, затем кубики исходного броска. Для события
+без кубиков показывается характеристика и Сл спасброска, если они есть.
+Выбранные цели атаки расположены построчно под ней, вдоль красной вертикальной
+линии; слева от линии — мечи.
+
+`/save-targets` исключает игроков и NPC с `position: dead` из последней
+неудалённой сцены. Сохранение целей атаки, спасбросков и новое применение также
+проверяют этот список. Нулевые хиты сами по себе не исключают цель. Общий список
+`/application-targets` для принятия зелий/заклинаний сохраняет прежнее поведение.
+
+`DamageImpactBar` использует средний `StatBar`: оставшиеся хиты и красный участок
+потерянных хитов на общей шкале максимума, над участком — «Урон −N». Размер
+участка вычисляется из хитов до/после: временные хиты и избыточный урон не
+увеличивают его. Поглощение временными хитами отображается отдельно.
+
+Формула урона заклинания сохраняет тип и цвет каждого слагаемого, включая
+модификатор характеристики и числовые бонусы. Они входят в тот же `byType`, что
+кубики соответствующего типа, поэтому сопротивление/уязвимость учитывают весь
+урон. Крит удваивает только кубики. Уже записанные броски не пересчитываются.
