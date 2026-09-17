@@ -13,7 +13,7 @@ export function useEncounterFlow({
   function setInitiative(c, val) {
     mutate(() => {
       const t = getCombatant(c.uid)
-      if (t) t.initiative = val === '' ? null : Number(val)
+      if (t) t.initiative = val == null || String(val).trim() === '' || !Number.isFinite(Number(val)) ? null : Number(val)
     })
   }
 

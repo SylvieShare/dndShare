@@ -158,6 +158,13 @@ export function useSessionPage() {
     canEditPlayers: isDm,
     autoRollNpcHp: computed(() => sessionSettings.combat.autoRollNpcHp),
   }))
+  let initiativeSync = Promise.resolve()
+  watch(() => Math.max(0, ...sessionEventsStore.events.filter(event => event.data?.sheetInitiative).map(event => event.id)), (id, previous) => {
+    if (loading.value || !isDm.value || !id || id === previous) return
+    initiativeSync = initiativeSync.catch(() => {}).then(async () => {
+      if (await encounter.flushApplicationSave()) await encounter.load()
+    })
+  })
   watch(() => encounter.encounter.active, (active, previous) => {
     if (previous !== undefined && active !== previous && isDm.value) window.setTimeout(() => presentation.load(), 750)
   })

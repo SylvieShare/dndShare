@@ -2,7 +2,7 @@
   <div class="enc-combat-controls" @click.stop @pointerdown.stop>
     <EncCheckbox
       class="ecc-checkbox"
-      :size="24"
+      :size="20"
       label="Выбрать существо"
       v-if="showCheckbox"
       :model-value="selected"

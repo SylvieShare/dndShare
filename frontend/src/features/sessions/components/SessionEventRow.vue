@@ -10,12 +10,12 @@
       <div v-if="hasBody" class="event-body">
         <div v-if="event.data?.result" class="event-roll">
           <DiceRollResult :result="event.data.result" :color="event.data.color" :size="32" />
-          <ActionButton v-if="isDm && event.data?.damageRoll" size="sm" variant="quiet" @click="applying = true">Применить к целям</ActionButton>
+          <SessionAttackTargets v-if="event.data?.attackRoll" :event="event" :is-dm="isDm" />
+          <ActionButton v-if="isDm && event.data?.damageRoll" size="sm" variant="dashed" @click="applying = true">Применить к целям</ActionButton>
         </div>
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
         </div>
-        <SessionAttackTargets v-if="event.data?.attackRoll" :event="event" :is-dm="isDm" />
         <SessionSavingThrow v-if="event.data?.savingThrow" :event="event" />
         <DamageImpact v-for="impact in standaloneImpacts" :key="impact.key" :impact="impact" />
         <div v-if="event.type === 'item_transfer'" class="event-transfer">
@@ -77,7 +77,7 @@ const hasBody = computed(() => props.event.data?.impacts?.length || props.event.
 const details = computed(() => sessionEventDetails(props.event))
 </script>
 <style scoped>
-.event-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }.event-roll > button { margin-left: auto; }
+.event-roll { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }.event-roll > button, .event-roll > .attack-targets { margin-left: auto; }
 .event-row { min-width: 0; }
 .event-row--standalone { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
 .event-content { display: grid; gap: 6px; min-width: 0; }

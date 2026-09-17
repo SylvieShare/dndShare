@@ -371,7 +371,7 @@ describe('ViewSession participant rail', () => {
     expect(encounterRowSource).toContain('v-if="isNpc"\n          ref="badgeEl"')
     expect(encounterRowSource).not.toContain('.badge--pc')
     expect(encounterControlsSource).toContain('aria-label="Инициатива"')
-    expect(encounterRowSource).toContain('<Shield')
+    expect(encounterRowSource).toContain('<ArmorClassChip')
     expect(encounterAvatarSource).toContain("width: 62px;")
     expect(encounterAvatarSource).toContain("width: 64px;")
     expect(encounterAvatarSource).toContain("height: 64px;")

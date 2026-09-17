@@ -18,6 +18,7 @@ const encounter = reactive({
   encounter: { active: false },
   sortable: { isSource: () => false, shouldSuppressClick: () => false, startDrag: () => { state.drags++ } },
   isSelected: () => state.npcSelected, toggleSelected: () => { state.npcSelected = !state.npcSelected },
+  sendCombatantsTo: rows => rows.forEach(c => { c.position = 'combat'; c.initiative ??= 12 }),
   setInitiative: (c, value) => { c.initiative = value }, rollCombatantInitiative: c => { c.initiative = 17 },
   canEditPlayerHp: () => true, participantColor: () => null, tileColor: () => null,
   npcName: () => 'Гоблин', subtitle: () => '', challenge: { ability: 'DEX', savingThrow: true }, challengeResult: () => state.challenge ? { roll: 12, bonus: 2, total: 14 } : null, challengeAbilityMeta: () => ({ value: 'DEX', label: 'Ловкость' }),

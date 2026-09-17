@@ -1,7 +1,7 @@
 <template>
   <section class="event-save" aria-label="Спасбросок заклинания">
     <header><Shield :size="18" /><strong>{{ SAVE_ABILITIES[save.ability - 1] }} · Сл {{ save.dc }}</strong>
-      <ActionButton v-if="isDm" size="sm" variant="quiet" :disabled="busy" @click="choose">Бросить</ActionButton>
+      <ActionButton v-if="isDm" size="sm" variant="dashed" :disabled="busy" @click="choose">Бросить</ActionButton>
     </header>
     <small v-if="save.onSuccess === 'half'">При успехе — половина урона</small>
     <small v-if="save.condition">{{ save.condition }}</small>
@@ -18,7 +18,7 @@
   </section>
   <SessionImpactModal v-if="applying" :event="event" v-bind="applying" @close="applying = null" />
   <SessionTargetPicker v-if="picking" v-model="selected" :title="`${SAVE_ABILITIES[save.ability - 1]} · Сл ${save.dc}`" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :disabled-keys="[...rolled]" :error="error" :z-index="3700" @close="picking = false">
-    <template #target-note="{ target }">{{ rolled.has(saveTargetKey(target)) ? 'Уже брошено' : `Бонус спасброска: ${bonusLabel(target)}` }}</template>
+    <template #target-note="{ target }"><span v-if="rolled.has(saveTargetKey(target))">Уже брошено</span><SaveFormulaPreview v-else :profile="profile(target)" /></template>
     <RollModeControl v-if="!pending" v-model="mode" label="Режим спасбросков" />
     <template #footer><ActionButton :disabled="busy || loading || !selected.length" @click="rollSelected">{{ pending ? 'Сохранить результаты' : `Бросить · ${selected.length}` }}</ActionButton></template>
   </SessionTargetPicker>
@@ -30,17 +30,16 @@ import { ActionButton } from '@sylvieshare/share-ui'
 import SaveTargetName from './SaveTargetName.vue'
 import SessionTargetPicker from './SessionTargetPicker.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
+import { loadSessionTargets } from '../lib/loadSessionTargets'
+import SaveFormulaPreview from './SaveFormulaPreview.vue'
 import RollModeControl from '@/features/character-editor/blocks/dnd/components/RollModeControl.vue'
 import { useAccountStore } from '@/stores/account'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useSuggestStore } from '@/stores/suggest'
-import { inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
-import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import { useDiceStore } from '@/stores/dice'
-import { itemsApi } from '@/shared/api/itemsApi'
-import { getSaveTargets, appendSessionSaves } from '@/shared/api/sessionEventsApi'
+import { appendSessionSaves } from '@/shared/api/sessionEventsApi'
 import { impactForTarget } from '../lib/sessionImpact'
-import { SAVE_ABILITIES, saveTargetKey, saveTargetItemIds, sessionSaveProfile } from '../lib/sessionSaveRoll'
+import { SAVE_ABILITIES, saveTargetKey, sessionSaveProfile } from '../lib/sessionSaveRoll'
 const SessionImpactModal = defineAsyncComponent(() => import('./SessionImpactModal.vue'))
 const DamageImpact = defineAsyncComponent(() => import('./DamageImpact.vue'))
 const applying = ref(null)
@@ -54,25 +53,15 @@ const rolled = computed(() => new Set((save.value.results || []).map(row => row.
 const picking = ref(false), loading = ref(false), busy = ref(false), error = ref(''), mode = ref('auto')
 const targets = ref([]), selected = ref([]), pending = ref(null)
 let items = new Map()
-function bonusLabel(target) {
-  const profile = sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type))
-  return `${profile.bonus >= 0 ? '+' : ''}${profile.bonus}${profile.formula ? ` + ${profile.formula}` : ''}`
-}
+function profile(target) { return sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type)) }
 async function choose() {
   picking.value = true
   if (pending.value) { selected.value = pending.value.map(row => saveTargetKey(row.target)); return }
   loading.value = true; error.value = ''; selected.value = []
   try {
     if (encounter && !await encounter.flushApplicationSave()) throw new Error('Сохраните состояние боя перед броском.')
-    targets.value = (await getSaveTargets(events.sessionUuid)).targets || []
-    await suggest.ensure(3)
-    const ids = [...new Set(targets.value.flatMap(saveTargetItemIds))]
-    items = new Map()
-    for (let i = 0; i < ids.length; i += 100) {
-      for (const item of (await itemsApi.byIds(ids.slice(i, i + 100))).items || []) items.set(String(item.id), item)
-    }
-    const bases = [...new Set(targets.value.flatMap(target => inventoryEntries(target.snapshot?.values || {}).map(({ entry }) => armorBaseId(items.get(String(entry.magic_item_id ?? entry.item_id)), entry))).filter(id => id && !items.has(String(id))))]
-    if (bases.length) for (const item of (await itemsApi.byIds(bases)).items || []) items.set(String(item.id), item)
+    const loaded = await loadSessionTargets(events.sessionUuid, suggest)
+    items = loaded.items; targets.value = loaded.targets
   } catch (cause) { targets.value = []; error.value = cause.message }
   finally { loading.value = false }
 }
@@ -83,7 +72,7 @@ async function rollSelected() {
     if (!pending.value) pending.value = targets.value.filter(target => selected.value.includes(saveTargetKey(target))).map(target => {
       const profile = sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type))
       const result = dice.rollD20('Спасбросок', profile.bonus, profile.mode, { bonus_formula: profile.formula, popup: false, log: false })
-      const { snapshot, hp, ...identity } = target
+      const { snapshot, hp, armorClass, ...identity } = target
       return { target: identity, result }
     })
     await appendSessionSaves(events.sessionUuid, props.event.id, pending.value)

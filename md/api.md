@@ -801,3 +801,6 @@ MCP `handbook_item_reuse_icon(itemId, sourceItemId)` присваивает си
 Принимаются только атаки с `data.attackRoll=true` и d20; сервер проверяет цели,
 сохраняет их публичные идентичности без снимков листа и HP. Бросок не меняется.
 Изменённые атаки входят в `updates` хроники. Подробнее: [применение урона](features/session-damage.md).
+
+
+Sheet initiative dice events include `data.sheetInitiative: true` with `data.result.total`. GET encounter projects new marked events for current session participants into reserve initiatives (creating a reserve row if needed). PUT encounter acknowledges these events and merges pending rolls against the previous roster. Active/dead participants keep their current initiative. `sheetInitiativeCursor` is the last acknowledged event id; an older cursor than persisted returns a conflict. Other dice events do not change preparation. The DM target pickers share `/save-targets` snapshots to derive AC and save formulas; their submitted identities omit `snapshot`, `hp` and display-only `armorClass`.

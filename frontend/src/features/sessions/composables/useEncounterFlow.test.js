@@ -43,6 +43,18 @@ describe('encounter group movement', () => {
     expect(encounter.value.combatants[1]).toMatchObject({ position: 'reserve', initiative: null })
   })
 
+  it('keeps an explicit zero initiative and rolls only when the field is cleared', () => {
+    const { encounter, flow } = createFlow()
+    const player = encounter.value.combatants[0]
+    flow.setInitiative(player, 0)
+    flow.sendCombatantsTo([player], 'combat')
+    expect(player.initiative).toBe(0)
+    flow.sendCombatantsTo([player], 'reserve')
+    flow.setInitiative(player, null)
+    flow.sendCombatantsTo([player], 'combat')
+    expect(player.initiative).toBe(12)
+  })
+
   it('clears transient combat state when returning participants to reserve', () => {
     const { encounter, flow } = createFlow()
     encounter.value.combatants[0].position = 'combat'

@@ -3,7 +3,7 @@
     <div v-if="event.data.attackTargets?.length" class="attack-target-names" aria-label="Цели атаки">
       <SaveTargetName v-for="target in event.data.attackTargets" :key="impactTargetKey(target)" :target="target" />
     </div>
-    <ActionButton v-if="isDm" size="sm" variant="quiet" @click="choose">{{ event.data.attackTargets?.length ? 'Изменить цели' : 'Выбрать цели' }}</ActionButton>
+    <ActionButton v-if="isDm" size="sm" variant="dashed" @click="choose">{{ event.data.attackTargets?.length ? 'Изменить цели' : 'Выбрать цели' }}</ActionButton>
   </div>
   <SessionTargetPicker v-if="picking" v-model="selected" title="Цели атаки" :targets="targets" :loading="loading" :busy="busy" :locked="busy || !!pending" :error="error" @close="picking = false">
     <template #before><DiceRollResult :result="event.data.result" :color="event.data.color" :size="28" /></template>
@@ -13,7 +13,8 @@
 <script setup>
 import { inject, ref } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
-import { getApplicationTargets } from '@/shared/api/itemTransfersApi'
+import { loadSessionTargets } from '../lib/loadSessionTargets'
+import { useSuggestStore } from '@/stores/suggest'
 import { setSessionAttackTargets } from '@/shared/api/sessionEventsApi'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
@@ -30,7 +31,7 @@ async function choose() {
   loading.value = true; error.value = ''; loadFailed.value = false
   try {
     if (encounter && !await encounter.flushApplicationSave()) throw new Error('Сохраните состояние боя перед выбором целей.')
-    targets.value = (await getApplicationTargets(events.sessionUuid)).targets || []
+    targets.value = (await loadSessionTargets(events.sessionUuid, useSuggestStore())).targets
     const previous = new Set((props.event.data.attackTargets || []).map(impactTargetKey))
     selected.value = targets.value.map(impactTargetKey).filter(key => previous.has(key))
   } catch (cause) { loadFailed.value = true; error.value = cause.message }
@@ -49,7 +50,7 @@ async function save() {
 }
 </script>
 <style scoped>
-.attack-targets { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.attack-targets { display: contents; }
 .attack-targets > button { margin-left: auto; }
-.attack-target-names { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; }
+.attack-target-names { order: 2; flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; }
 </style>

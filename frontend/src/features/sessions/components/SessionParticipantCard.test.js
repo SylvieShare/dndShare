@@ -92,7 +92,7 @@ describe('SessionParticipantCard actions', () => {
   })
 
   it('slides persistent battle controls into the expanded player tile without changing its height', () => {
-    expect(source).toContain('<CompactCheckbox :size="24" :model-value="combatSelected"')
+    expect(source).toContain('<CompactCheckbox :size="20" :model-value="combatSelected"')
     expect(source).not.toContain('v-if="combatMode"')
     expect(source).toContain(':inert="!combatMode"')
     expect(source).toContain('height: 72px;')

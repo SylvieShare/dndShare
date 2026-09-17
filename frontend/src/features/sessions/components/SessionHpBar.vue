@@ -1,6 +1,6 @@
 <template>
   <div class="hp-row">
-    <StatBar label="Здоровье" class="p-hp-statbar" size="small"
+    <StatBar label="Здоровье" class="p-hp-statbar" :size="size" :decorated="size === 'medium'"
       :percent="hpPercent" :color="hpColor" :temp-percent="tempPercent" />
     <div class="hp-numbers">
       <span class="hp-current" :style="{ color: hpColor }">{{ hp.current }}</span>
@@ -13,7 +13,7 @@
 <script setup>
 import { computed } from 'vue'
 import { StatBar } from '@sylvieshare/share-ui'
-const props = defineProps({ hp: { type: Object, required: true } })
+const props = defineProps({ size: { type: String, default: 'small' }, hp: { type: Object, required: true } })
 const hpPercent = computed(() => {
   if (!props.hp.max) return 0
   return Math.min(100, Math.max(0, (props.hp.current / props.hp.max) * 100))

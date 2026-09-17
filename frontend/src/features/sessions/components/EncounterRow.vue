@@ -39,9 +39,7 @@
     />
 
     <EncounterAvatar :combatant="combatant" />
-    <span class="enc-ac" :aria-label="`Класс доспеха: ${enc.displayAc(combatant) ?? '—'}`" title="Класс доспеха">
-      <strong>{{ enc.displayAc(combatant) ?? '—' }}</strong><Shield :size="18" aria-hidden="true" />
-    </span>
+    <ArmorClassChip class="enc-ac" :value="enc.displayAc(combatant)" />
 
     <div class="enc-info">
       <div class="enc-name-row">
@@ -147,7 +145,7 @@
 </template>
 
 <script setup>
-import { Shield } from '@lucide/vue'
+import ArmorClassChip from './ArmorClassChip.vue'
 import EncounterAppliedEffects from './EncounterAppliedEffects.vue'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { computed, inject, provide, reactive, ref } from 'vue'
@@ -317,8 +315,6 @@ function commitNoteEdit() {
   touch-action: none;
 }
 
-.enc-ac { display: inline-flex; flex: none; align-items: center; gap: 4px; color: var(--text-2); }
-.enc-ac strong { font-size: 22px; font-weight: 800; line-height: 1; color: var(--text-1); font-variant-numeric: tabular-nums; }
 .enc-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .enc-row--challenge { flex-wrap: wrap; }

@@ -909,7 +909,7 @@ Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail from 264px by the checkbox strip plus the card gap (36px + 9px, total 309px); every player tile gains the
 encounter checkbox with additional horizontal spacing; the current turn is
 highlighted there. The tile shows only the name and HP, with 14px right padding;
-race/class, armor class and initiative are absent from the tile. At the top of
+race/class and armor class are absent from the tile; a prepared initiative is shown as a chip beside the name while the player remains in reserve. At the top of
 the DM menu, D&D participants show equipped AC and passive Perception/Investigation.
 The three indicators form one row: number followed by icon, with vertical
 dividers. Hover or keyboard focus opens the shared `ItemTooltip` with the
@@ -919,7 +919,7 @@ tile and slide in from behind its left edge together with the widening rail;
 closing combat sends them back left instead of mounting or unmounting them.
 Players that enter combat also appear in the common
 initiative-ordered combat scene alongside NPCs while remaining visible in the
-left rail. Common scene rows keep initiative on the left. AC follows the portrait as a prominent number then shield, without a frame or background. Tiles have a 74px minimum height around 62–64px portraits and no trailing ellipsis; clicking the tile or pressing Enter/Space while focused opens its menu. Selection squares are 24px in both rows and the player rail. The left-rail tile and portrait keep
+left rail. Common scene rows keep initiative on the left. AC follows the portrait in a chip: a prominent number followed by a blue shield. Tiles have a 74px minimum height around 62–64px portraits and no trailing ellipsis; clicking the tile or pressing Enter/Space while focused opens its menu. Selection squares are 20px in rows, the player rail and chronicle target selection. The left-rail tile and portrait keep
 the same height and circular geometry in and out of combat; the larger combat-scene
 portrait is circular too. Player photos use a soft alpha fade around their edges. An
 assigned session color appears as the 2px frame of both the left-rail player tile
@@ -1324,3 +1324,8 @@ activation and drag start, including macOS's Cmd-click and Ctrl-contextmenu even
 read-only selection stays unchanged. Ordinary clicks keep their existing behavior.
 
 Player menu statistic tooltips use the shared FloatingTooltip above the action menu (9500 vs 9300), including keyboard focus.
+
+
+During active combat, a reserve player's rail menu offers «Отправить в бой» with an initiative field and «В бой». It reuses a prepared or manually entered value (including zero), or rolls when the field is empty. A sheet initiative roll carries `sheetInitiative: true`. Encounter reads project unacknowledged rolls into reserve player initiatives; saves acknowledge `sheetInitiativeCursor`. Rolls made for an active or dead combatant are acknowledged without replacing their initiative. Save projection checks the old roster before a pending move. Master-generated rolls do not carry this marker. Live journal updates flush local edits, then refresh the encounter.
+
+Chronicle attack target controls share the roll's row on the right, with chosen targets below. Choose targets, apply to targets and roll-save buttons use the shared dashed ActionButton variant. The 680px target dialog keeps responsive viewport limits; all three flows use `loadSessionTargets`, the DM-only snapshot endpoint, hydrated equipment/effects, a common AC chip and medium HP bar. SaveFormulaPreview renders the same profile used for rolling, including extra dice and whether the higher/lower of two d20 is kept. Presentation AC and snapshots are excluded from submitted target identities.

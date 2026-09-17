@@ -21,7 +21,7 @@
           interactive
         >
           <div class="p-combat-controls" :aria-hidden="!combatMode" :inert="!combatMode" @click.stop @pointerdown.stop>
-            <CompactCheckbox :size="24" :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
+            <CompactCheckbox :size="20" :model-value="combatSelected" :label="`Выбрать: ${displayName}`" :disabled="!combatEditable || !combatant" @update:model-value="$emit('update:combat-selected', $event)" />
           </div>
 
           <div class="p-avatar" :class="{ 'p-avatar--icon': isIcon }" :style="participantAvatarStyle">
@@ -30,7 +30,7 @@
           </div>
 
           <div class="p-info">
-            <div class="p-name">{{ displayName }}</div>
+            <div class="p-name-row"><div class="p-name">{{ displayName }}</div><span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></div>
 
             <template v-if="showHp">
               <template v-if="isDead">
@@ -59,6 +59,7 @@
 
       <template #default="{ close }">
         <ParticipantMenuStats v-if="isDm && isDnd" :participant="participant" />
+        <EncounterInitiativeMenu v-if="isDm && combatant?.position === 'reserve' && encounter?.encounter.active" enter-combat :combatant="combatant" :encounter="encounter" @joined="close" />
         <EncounterInitiativeMenu v-if="isDm && combatMode && combatant && encounter && !encounter.encounter.active && combatant.position !== 'dead'" :combatant="combatant" :encounter="encounter" />
         <RowActionItem v-if="isDm || participant.canOpenSheet" action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
         <RowActionSubmenu v-if="isDm" label="Цвет игрока" :disabled="colorPending">
@@ -352,6 +353,8 @@ const participantTileStyle = computed(() => ({
   .p-info { transition: none; }
 }
 
+.p-name-row { display: flex; align-items: center; gap: 6px; }
+.p-initiative-chip { display: inline-flex; flex: none; align-items: center; gap: 4px; padding: 2px 5px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-1); font-size: 12px; font-weight: 750; }
 .p-name {
   font-size: 13px;
   font-weight: 600;

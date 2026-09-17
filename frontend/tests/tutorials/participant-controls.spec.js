@@ -50,7 +50,7 @@ for (const mobile of [false, true]) test(`participant menu and Ctrl selection ${
   expect(acBox.x).toBeGreaterThanOrEqual(avatarBox.x + avatarBox.width)
   for (const row of [card, npc]) {
     const size = await row.getByRole('checkbox').evaluate(node => getComputedStyle(node, '::before').width)
-    expect(size).toBe('24px')
+    expect(size).toBe('20px')
   }
   await npc.focus()
   await page.keyboard.press('Enter')
@@ -70,4 +70,10 @@ for (const mobile of [false, true]) test(`participant menu and Ctrl selection ${
   await page.evaluate(() => { window.controls.encounter.encounter.active = true })
   await card.locator('.p-name').click()
   await expect(page.getByText('Инициатива', { exact: true })).not.toBeVisible()
+  await expect(card.getByLabel('Подготовленная инициатива: 17')).toBeVisible()
+  await page.getByText('Отправить в бой', { exact: true }).click()
+  await page.getByText('В бой', { exact: true }).click()
+  expect(await page.evaluate(() => window.controls.player.position)).toBe('combat')
+  expect(await page.evaluate(() => window.controls.player.initiative)).toBe(17)
+  await expect(card.getByLabel('Подготовленная инициатива: 17')).toHaveCount(0)
 })

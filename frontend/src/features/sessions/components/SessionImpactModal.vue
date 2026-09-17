@@ -22,7 +22,8 @@
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
-import { getApplicationTargets } from '@/shared/api/itemTransfersApi'
+import { loadSessionTargets } from '../lib/loadSessionTargets'
+import { useSuggestStore } from '@/stores/suggest'
 import { applySessionImpact } from '@/shared/api/sessionEventsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
@@ -40,7 +41,7 @@ const condition = computed(() => props.outcome !== 'success' && effects.value.fi
 onMounted(async () => {
   try {
     if (encounter && !await encounter.flushApplicationSave()) throw new Error('Сохраните состояние боя перед применением.')
-    const available = (await getApplicationTargets(events.sessionUuid)).targets || []
+    const available = (await loadSessionTargets(events.sessionUuid, useSuggestStore())).targets
     targets.value = props.target ? available.filter(target => impactTargetKey(target) === impactTargetKey(props.target)) : available
     if (props.target) {
       if (!targets.value.length) throw new Error('Цель больше не доступна в сессии.')

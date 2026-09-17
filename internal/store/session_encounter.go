@@ -16,10 +16,27 @@ func (s *Store) GetEncounterData(ctx context.Context, sessionID int64) (*string,
 		 WHERE session_id = $1 AND deleted = false ORDER BY id DESC LIMIT 1`,
 		sessionID,
 	).Scan(&data)
-	if errors.Is(err, pgx.ErrNoRows) {
+	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
+		return nil, err
+	}
+	doc := map[string]any{"active": false, "round": 0, "turnIndex": 0, "combatants": []any{}}
+	if data != nil {
+		if err := json.Unmarshal([]byte(*data), &doc); err != nil {
+			return nil, err
+		}
+	}
+	if err := projectSheetInitiatives(ctx, s.pool, sessionID, doc, doc); err != nil {
+		return nil, err
+	}
+	if data == nil && len(array(doc["combatants"])) == 0 {
 		return nil, nil
 	}
-	return data, err
+	encoded, err := json.Marshal(doc)
+	if err != nil {
+		return nil, err
+	}
+	result := string(encoded)
+	return &result, nil
 }
 
 // SaveEncounterData обновляет последний активный энкаунтер или создаёт новый (порт saveEncounterData).
@@ -50,6 +67,9 @@ func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status s
 		for _, v := range array(doc["combatants"]) {
 			delete(object(v), "impactHistory")
 		}
+		if err := projectSheetInitiatives(ctx, tx, sessionID, doc, doc); err != nil {
+			return err
+		}
 		encoded, err := json.Marshal(doc)
 		if err != nil {
 			return err
@@ -69,6 +89,12 @@ func (s *Store) SaveEncounterData(ctx context.Context, sessionID int64, status s
 		}
 		if number(oldDoc["applicationRevision"]) != number(newDoc["applicationRevision"]) {
 			return ErrCharacterVersion
+		}
+		if number(oldDoc["sheetInitiativeCursor"]) > number(newDoc["sheetInitiativeCursor"]) {
+			return ErrCharacterVersion
+		}
+		if err := projectSheetInitiatives(ctx, tx, sessionID, newDoc, oldDoc); err != nil {
+			return err
 		}
 		if err = recordEncounterChanges(ctx, tx, sessionID, existing, oldDoc, newDoc); err != nil {
 			return err

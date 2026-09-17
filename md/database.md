@@ -1117,3 +1117,6 @@ receipt. Запись обеспечивает идемпотентность и
 Выбор мастера хранится в `session_event.data.attackTargets`: массив публичных
 идентичностей персонажей/NPC без HP и снимков листов. Обновление под блокировкой
 события заменяет только этот массив. Дополнительной таблицы не требуется.
+
+
+`session_encounter.data.sheetInitiativeCursor` stores the acknowledged event id for sheet initiative preparation. It starts at zero for encounters without marked rolls. `combatants[].initiative` is also the prepared value while position is reserve; no separate stat or duplicated column is needed. Projection is driven by session_event JSON `sheetInitiative: true` and participant membership; event payload and cursor survive closing the DM page.
