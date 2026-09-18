@@ -1,7 +1,7 @@
 export const RPS_CHOICES = [
-  { value: 'rock', label: 'Камень', symbol: '✊' },
-  { value: 'scissors', label: 'Ножницы', symbol: '✌️' },
-  { value: 'paper', label: 'Бумага', symbol: '✋' },
+  { value: 'rock', label: 'Камень' },
+  { value: 'scissors', label: 'Ножницы' },
+  { value: 'paper', label: 'Бумага' },
 ]
 export const isInteraction = event => ['chat_message', 'rps_challenge'].includes(event?.type)
 export const interactionPeer = (event, uuid) => event.data?.senderCharUuid === uuid ? event.data?.recipientCharUuid : event.data?.senderCharUuid

@@ -91,7 +91,8 @@ export function useCharacterInteractions({ uuid, session, isOwner, closePopover 
     state.loading = false
   }
   function openEvent(event) {
-    return open({ charUuid: interactionPeer(event, uuid), name: interactionPeerName(event, uuid) }, event.type === 'chat_message' ? 'chat' : 'rps')
+    return open({ charUuid: interactionPeer(event, uuid), name: interactionPeerName(event, uuid),
+      imageUrl: event.data.senderCharUuid === uuid ? event.recipientImageUrl : event.actorImageUrl }, event.type === 'chat_message' ? 'chat' : 'rps')
   }
   function close() {
     if (state.busy) return

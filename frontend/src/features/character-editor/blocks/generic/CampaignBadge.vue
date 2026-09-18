@@ -12,7 +12,7 @@
         <span class="campaign-count" aria-hidden="true">{{ playerCount ?? '—' }}</span>
       </div>
       <div class="campaign-action">
-        <ActionButton variant="quiet" icon-only class="campaign-icon" aria-label="События" :title="`События: ${eventCount}. Входящих: ${ctx.itemTransfers.incomingCount}`" :ref="el => registerAnchor('events', el)" aria-haspopup="dialog" :aria-expanded="ctx.itemTransfers.state.view === 'events'" @click="toggle('events', $event)">
+        <ActionButton variant="quiet" icon-only class="campaign-icon" :class="{ 'campaign-icon--notify': ctx.itemTransfers.incomingCount > 0 }" aria-label="События" :title="`События: ${eventCount}. Входящих: ${ctx.itemTransfers.incomingCount}`" :ref="el => registerAnchor('events', el)" aria-haspopup="dialog" :aria-expanded="ctx.itemTransfers.state.view === 'events'" @click="toggle('events', $event)">
           <template #icon><Bell class="campaign-symbol" :size="24" aria-hidden="true" /></template>
         </ActionButton>
         <span class="campaign-count" :class="{ 'campaign-count--pending': eventCount > 0 }" aria-hidden="true">{{ eventCount }}</span>
@@ -57,4 +57,14 @@ onBeforeUnmount(() => anchors.forEach((element, view) => ctx.itemTransfers.unreg
 .campaign-symbol { flex: 0 0 24px; width: 24px; height: 24px; }
 .campaign-count { position: absolute; right: -5px; bottom: -5px; min-width: 21px; box-sizing: border-box; border: 2px solid var(--surface); border-radius: var(--r-pill); background: var(--surface-raised); color: var(--text-2); padding: 1px 5px; font-size: 10px; line-height: 15px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; pointer-events: none; }
 .campaign-count--pending { background: var(--accent); color: var(--text-on-accent); }
+.campaign-icon--notify .campaign-symbol { color: var(--warning); animation: campaign-notification-pulse 1.5s ease-in-out infinite; transform-origin: 50% 15%; }
+@keyframes campaign-notification-pulse {
+  0%, 100% { transform: scale(1) rotate(0); filter: drop-shadow(0 0 2px color-mix(in srgb, var(--warning) 30%, transparent)); }
+  35% { transform: scale(1.22) rotate(-12deg); filter: drop-shadow(0 0 8px var(--warning)); }
+  55% { transform: scale(1.22) rotate(12deg); filter: drop-shadow(0 0 8px var(--warning)); }
+  75% { transform: scale(1.08) rotate(-5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .campaign-icon--notify .campaign-symbol { animation: none; filter: drop-shadow(0 0 5px var(--warning)); }
+}
 </style>
