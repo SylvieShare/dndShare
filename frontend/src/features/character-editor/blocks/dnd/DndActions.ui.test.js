@@ -16,11 +16,15 @@ describe('character action block', () => {
     expect(viewSource).not.toContain('class="dav-requirements"')
     expect(viewSource).toMatch(/\.dav-title-row strong \{[^}]*font-size: 13px/)
   })
-  it('floats the icon and single charge together so descriptions regain full width below', () => {
+  it('keeps the single charge beside the description and outside requirement theses', () => {
     const media = viewSource.slice(viewSource.indexOf('class="dav-action-media"'), viewSource.indexOf('class="dav-copy"'))
     expect(media).toContain('class="dav-action-icon"')
-    expect(media).toContain('v-if="resourceTotal(action) === 1"')
-    expect(media).toContain("$emit('toggle-resource', action, 1)")
+    expect(media).not.toContain('dav-resource')
+    const description = viewSource.slice(viewSource.indexOf('class="dav-description-row"'), viewSource.indexOf('<MechanicTheses'))
+    expect(description).toContain('class="dav-description"')
+    expect(description).toContain('v-if="resourceTotal(action) === 1"')
+    expect(description).toContain("$emit('toggle-resource', action, 1)")
+    expect(viewSource).toContain('.dav-description-row--single { display: grid; grid-template-columns: minmax(0, 1fr) auto;')
     expect(viewSource).toContain('.dav-action { display: flow-root;')
     expect(viewSource).toContain('.dav-action-media { float: left;')
     expect(viewSource).not.toContain('.dav-copy { display: flex;')

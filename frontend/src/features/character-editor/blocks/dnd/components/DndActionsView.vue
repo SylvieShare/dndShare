@@ -41,24 +41,26 @@
                 <ItemIcon v-if="action.item" :item="action.item" :size="34" :fallback-to-type="false" />
                 <component v-else :is="groupIcon(action.action_type)" :size="19" :stroke-width="2" />
               </span>
-              <span v-if="resourceTotal(action) === 1" class="dav-resource dav-resource--single" :title="action.resource.title">
-                <SpellSlotSphere
-                  :spent="resourceValue(action) < 1"
-                  :size="RESOURCE_ORB_SIZE"
-                  :color="action.resource.color_point || undefined"
-                  :interactive="manage"
-                  @pointerdown.stop
-                  @click.stop="manage && $emit('toggle-resource', action, 1)"
-                />
-              </span>
             </span>
             <div class="dav-copy">
               <span class="dav-title-row">
                 <strong>{{ action.title }}</strong>
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
-              <div v-if="action.description" class="dav-description">
-                <DndRichContent :html="action.description" :item="action.item" />
+              <div class="dav-description-row" :class="{ 'dav-description-row--single': resourceTotal(action) === 1 }">
+                <div v-if="action.description" class="dav-description">
+                  <DndRichContent :html="action.description" :item="action.item" />
+                </div>
+                <span v-if="resourceTotal(action) === 1" class="dav-resource dav-resource--single" :title="action.resource.title">
+                  <SpellSlotSphere
+                    :spent="resourceValue(action) < 1"
+                    :size="RESOURCE_ORB_SIZE"
+                    :color="action.resource.color_point || undefined"
+                    :interactive="manage"
+                    @pointerdown.stop
+                    @click.stop="manage && $emit('toggle-resource', action, 1)"
+                  />
+                </span>
               </div>
               <MechanicTheses :lines="action.requirements" color="var(--dav-tone)" aria-label="Условия применения" />
               <span v-if="linkedActions(action).length" class="dav-linked-actions">
@@ -289,7 +291,9 @@ function hideActionTooltip() {
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
 .dav-resource { display: flex; min-width: 0; align-items: center; gap: 6px; }
-.dav-resource--single { align-self: center; }
+.dav-description-row--single { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 9px; margin-top: 4px; }
+.dav-description-row--single .dav-description { min-width: 0; margin-top: 0; }
+.dav-resource--single { grid-column: 2; }
 .dav-resource--stacked { clear: both; flex-wrap: wrap; padding-top: 4px; }
 .dav-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .dav-group :deep(.ram-custom-trigger:has(.dav-resource:active)) { transform: none; }
