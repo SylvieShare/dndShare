@@ -1,7 +1,7 @@
 <template>
   <BaseTile v-if="top && ctx.itemTransfers" class="campaign-block" data-tutorial="character-session">
     <div class="campaign-heading">
-      <span class="campaign-label">Сессия</span>
+      <span class="campaign-label" role="img" aria-label="Сессия" title="Сессия"><ScrollText :size="24" aria-hidden="true" /></span>
       <RouterLink :to="`/sessions/${top.uuid}`" class="campaign-name">{{ top.name }}</RouterLink>
     </div>
     <div class="campaign-actions">
@@ -25,7 +25,7 @@
 import { computed, inject, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ActionButton, BaseTile } from '@sylvieshare/share-ui'
-import { Bell, Users } from '@lucide/vue'
+import { Bell, ScrollText, Users } from '@lucide/vue'
 defineProps(['block'])
 const ctx = inject('charCtx', {})
 const top = computed(() => ctx.topSession || null)
@@ -48,8 +48,8 @@ onBeforeUnmount(() => anchors.forEach((element, view) => ctx.itemTransfers.unreg
 
 <style scoped>
 .campaign-block { display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 6px; }
-.campaign-heading { display: flex; align-items: baseline; gap: 10px; min-width: 0; padding: 8px 8px 0; }
-.campaign-label { flex-shrink: 0; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.campaign-heading { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 8px 0; }
+.campaign-label { display: flex; flex-shrink: 0; color: var(--text-muted); }
 .campaign-name { color: var(--text-1); font-size: 18px; line-height: 1.3; font-weight: 650; text-decoration: none; overflow-wrap: anywhere; }
 .campaign-name:hover { color: var(--accent); }
 .campaign-actions { display: flex; justify-content: flex-start; gap: 12px; padding: 0 4px 4px 0; }
