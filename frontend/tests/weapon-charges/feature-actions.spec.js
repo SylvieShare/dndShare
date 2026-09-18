@@ -4,6 +4,41 @@ test.beforeEach(async ({ page }) => { page.on('pageerror', error => { throw erro
 
 const url = '/tests/weapon-charges/feature-actions.html'
 for (const width of [390, 1280]) {
+  test(`single charge preserves icon wrapping and full-width theses (${width}px)`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.route('http://127.0.0.1:5176/api/**', route => route.fulfill({ json: { items: [] } }))
+    await page.goto(url)
+    await page.waitForFunction(() => !!window.fixture)
+    const description = 'Длинное описание действия продолжает обтекать иконку. '.repeat(12)
+    await page.evaluate(text => {
+      window.fixture.ctx.characterResources.itemsById.get('1443').data.feature_actions[0].description = `<p>${text}</p>`
+    }, description)
+    const row = page.locator('.dav-action').filter({ hasText: 'Адское возмездие' })
+    await expect(row.locator('.dav-description')).toHaveText(description.trim())
+    await page.evaluate(() => document.fonts.ready)
+    const layout = await row.evaluate(element => {
+      const rect = selector => {
+        const { left, right, top, bottom } = element.querySelector(selector).getBoundingClientRect()
+        return { left, right, top, bottom }
+      }
+      const range = document.createRange()
+      range.selectNodeContents(element.querySelector('.dav-description p'))
+      return {
+        icon: rect('.dav-action-icon'), charge: rect('.dav-resource--single'),
+        description: rect('.dav-description-row'), theses: rect('.mechanic-theses'),
+        lines: [...range.getClientRects()].map(({ left, right, top }) => ({ left, right, top })),
+      }
+    })
+    expect(layout.lines[0].left).toBeGreaterThan(layout.icon.right)
+    const lowerLines = layout.lines.filter(line => line.top > layout.icon.bottom)
+    expect(lowerLines.length).toBeGreaterThan(0)
+    expect(lowerLines[0].left).toBeCloseTo(layout.icon.left, 0)
+    expect(layout.lines.every(line => line.right < layout.charge.left)).toBe(true)
+    expect(layout.theses.left).toBeCloseTo(layout.icon.left, 0)
+    expect(layout.theses.right).toBeCloseTo(layout.charge.right, 0)
+    expect(layout.theses.top).toBeGreaterThanOrEqual(layout.description.bottom)
+  })
+
   test(`action menu covers the row, excludes charges and rolls once (${width}px)`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     await page.route('http://127.0.0.1:5176/api/**', route => route.fulfill({ json: { items: [] } }))

@@ -291,9 +291,9 @@ function hideActionTooltip() {
 .dav-linked-actions { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 1px; }
 .dav-linked-action { color: var(--dav-tone); font-size: 10px; font-weight: 750; text-decoration: underline dotted; text-underline-offset: 3px; }
 .dav-resource { display: flex; min-width: 0; align-items: center; gap: 6px; }
-.dav-description-row--single { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 9px; margin-top: 4px; }
+.dav-description-row--single { position: relative; min-height: 30px; padding-right: 39px; margin-top: 4px; }
 .dav-description-row--single .dav-description { min-width: 0; margin-top: 0; }
-.dav-resource--single { grid-column: 2; }
+.dav-resource--single { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
 .dav-resource--stacked { clear: both; flex-wrap: wrap; padding-top: 4px; }
 .dav-resource-pips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .dav-group :deep(.ram-custom-trigger:has(.dav-resource:active)) { transform: none; }

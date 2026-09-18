@@ -24,7 +24,7 @@ describe('character action block', () => {
     expect(description).toContain('class="dav-description"')
     expect(description).toContain('v-if="resourceTotal(action) === 1"')
     expect(description).toContain("$emit('toggle-resource', action, 1)")
-    expect(viewSource).toContain('.dav-description-row--single { display: grid; grid-template-columns: minmax(0, 1fr) auto;')
+    expect(viewSource).not.toContain('.dav-description-row--single { display: grid;')
     expect(viewSource).toContain('.dav-action { display: flow-root;')
     expect(viewSource).toContain('.dav-action-media { float: left;')
     expect(viewSource).not.toContain('.dav-copy { display: flex;')
