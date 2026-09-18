@@ -39,12 +39,13 @@ const newRound = ref(false)
 watch(() => [state.value.peer?.charUuid, round.value?.id, lastRound.value?.id, lastRound.value?.data.status], () => { newRound.value = false })
 </script>
 <style scoped>
-.rps-heading, .rps-game { display: grid; gap: 16px; min-width: 0; }
+.rps-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-width: 0; }
+.rps-game { display: grid; gap: 12px; min-width: 0; }
 .rps-heading > span { color: var(--text-muted); font-size: 12px; }
 .rps-game p { margin: 0; }
 .rps-hint { color: var(--text-2); font-size: 14px; line-height: 1.5; }
 .rps-note { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
 .rps-error { color: var(--danger); }
-.rps-finished { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; }
+.rps-finished { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
 .rps-finished > button { margin-left: auto; }
 </style>
