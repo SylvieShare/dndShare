@@ -101,6 +101,23 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 		}
 	}
 	want = append(want.([]any), dawn)
+	var timing map[string]any
+	if err := json.Unmarshal([]byte(strings.Split(schemaSpellPresentationSQL, "$time$")[3]), &timing); err != nil {
+		t.Fatal(err)
+	}
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] != "feature_actions" {
+			continue
+		}
+		for _, child := range field["fields"].([]any) {
+			f := child.(map[string]any)
+			if f["key"] == "action_type" {
+				f["options"] = append(f["options"].([]any), map[string]any{"value": "timed", "label": "Требует времени"})
+			}
+		}
+		field["fields"] = append(field["fields"].([]any), timing)
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { spellInstances, spellScalingHint, spellScalingSteps } from './spellScaling'
+import { spellInstances, spellScalingHint, spellScalingSteps, spellScalingCaption, hasInlineSpellScaling } from './spellScaling'
 import { spellRollOptions } from './spellRollOptions'
 import { useSpellCalc } from '../composables/useSpellCalc'
 const calc = useSpellCalc({ diceMap: { value: { d4: 'd4', d6: 'd6', d8: 'd8', d10: 'd10' } }, diceDetailsMap: { value: {} }, damageTypeMap: { value: {} }, schoolMap: { value: {} } })
@@ -15,6 +15,8 @@ describe('spell progression', () => {
     const item = { data: { lvl: 2, damage: { scaling: 'slot', scaling_step: 2, add_mod: true, dices: [{ count: 1, dice_id: 'd8' }], addon: [{ count: 1, dice_id: 'd8' }] } } }
     expect([2, 3, 4, 5, 6].map(level => calc.damageDiceParts(item, level, 20, 3)[0].count)).toEqual([1, 1, 2, 2, 3])
     expect(calc.damageDiceParts(item, 4, 20, 3)[0].bonus).toBe(3)
+    expect(hasInlineSpellScaling(item.data.damage)).toBe(true)
+    expect(spellScalingCaption(item.data.damage, 2)).toBe('за каждые 2 круга свыше 2-го')
   })
   it('grows flat amounts and addon bonuses without manufacturing a die', () => {
     const item = { data: { lvl: 6, heal: { scaling: 'slot', dices: [{ bonus: 70 }], addon: [{ bonus: 10 }] } } }

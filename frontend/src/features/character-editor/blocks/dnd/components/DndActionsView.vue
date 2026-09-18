@@ -9,8 +9,7 @@
     <SectionList v-for="group in groups" embedded :key="group.value" class="dav-group" :class="`dav-group--${group.value}`">
       <template #header>
         <div class="dav-group-head">
-          <component :is="groupIcon(group.value)" :size="15" :stroke-width="2" />
-          <span>{{ group.label }}</span>
+          <ActionTiming :time="{ kind: group.value }" :label="group.label" />
           <i></i>
         </div>
       </template>
@@ -45,6 +44,7 @@
             <div class="dav-copy">
               <span class="dav-title-row">
                 <strong>{{ action.title }}</strong>
+                <ActionTiming v-if="action.action_type === 'timed'" :time="action.time" />
                 <ResourceRestIcons v-if="action.resource" :resource="action.resource" />
               </span>
               <div class="dav-description-row" :class="{ 'dav-description-row--single': resourceTotal(action) === 1 }">
@@ -146,10 +146,12 @@
 </template>
 
 <script setup>
+import ActionTiming from '@/shared/ui/ActionTiming.vue'
+import { actionIcon as groupIcon } from '@/shared/ui/actionTimingIcons'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { computed, ref } from 'vue'
-import { BatteryLow, Dices, RotateCcw, Sparkles, Swords, Wind, Zap } from '@lucide/vue'
+import { BatteryLow, Dices } from '@lucide/vue'
 import { RowActionMenu, SectionList } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
@@ -170,16 +172,6 @@ const emit = defineEmits(['manage', 'edit', 'remove', 'apply-effect', 'roll-dice
 const tooltip = ref({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 const suggestionsByCode = computed(() => new Map(props.actionSuggestions.map(item => [String(item.code || ''), item])))
 const RESOURCE_ORB_SIZE = 30
-
-function groupIcon(type) {
-  return ({
-    action: Swords,
-    bonus_action: Zap,
-    reaction: RotateCcw,
-    free: Wind,
-    special: Sparkles,
-  })[type] || Sparkles
-}
 
 function linkedActions(action) {
   return (action.suggest_action_codes || []).map(code => suggestionsByCode.value.get(String(code))).filter(Boolean)
@@ -274,8 +266,9 @@ function hideActionTooltip() {
 .dav-group { --dav-tone: var(--accent); }
 .dav-group--bonus_action { --dav-tone: var(--info); }
 .dav-group--reaction { --dav-tone: var(--warning); }
+.dav-group--timed { --dav-tone: var(--text-2); }
 .dav-group--free { --dav-tone: var(--success); }
-.dav-group-head { width: 100%; display: grid; grid-template-columns: auto auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
+.dav-group-head { width: 100%; display: grid; grid-template-columns: auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
 .dav-action { display: flow-root; padding: 10px 2px; cursor: default; transition: background-color .12s; }
 .dav-action-media { float: left; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 36px; margin: 0 9px 2px 0; }

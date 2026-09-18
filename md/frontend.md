@@ -1119,7 +1119,8 @@ hp и ac в `DndRichInlineNode` имеют одинаковую высоту 25 
 `item_type` может содержать список типов для общего выбора записи.
 Иконка эффекта хранится обычным ID изображения/символа, общим с исходным заклинанием.
 `SpellScalingFormula` показывает плюс снаружи пунктирной рамки, а внутри — кости,
-знак × и ячейку с пояснением числа кругов выше базового.
+а подпись «за круг свыше N-го» расположена под рамкой. При регулярном шаге больше
+одного используется «за каждые K круга свыше N-го».
 
 `SessionSavingThrow` отображает характеристику, Сл и результаты в событии хроники.
 `SaveTargetName` объединяет иконку, имя и цветную букву NPC; `sessionSaveRoll`
@@ -1167,3 +1168,8 @@ name/HP area retains its width as the rail expands.
 `CompactCheckbox` from share-ui 0.24.0 exposes `size` (default 18px); encounter, participant and target-selection rows pass 20px. Base geometry stays in the library. `ItemTooltip` forwards an optional `zIndex` to FloatingTooltip, retaining 4000 by default; participant menu descriptions use 9500 above the menu and submenus.
 
 `ArmorClassChip` is the shared session AC presentation (number then blue shield). `SessionHpBar.size` defaults to small; target pickers pass medium with decoration. `loadSessionTargets` hydrates the same character/NPC snapshots for attack, impact and saving-throw pickers and calculates AC with shared armor/effect rules. `SaveFormulaPreview` renders d20 mode, fixed bonus and extra dice from `sessionSaveProfile`; no second bonus calculation is maintained. The picker uses CompactCheckbox at 20px, including Ctrl/Cmd row selection. `ActionButton` dashed styling belongs to share-ui 0.25.0.
+
+`SpellMetadata` и `ActionTiming` — предметные компоненты отображения параметров
+заклинаний/действий. Редакторы используют общий `ActionTimeEditor` на FormField,
+FormSelect и FormTextInput; произвольные значения времени сохраняются явно как
+custom. Форматирование времени и дистанции находится в `shared/lib/spellPresentation`.

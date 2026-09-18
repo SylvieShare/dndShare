@@ -39,10 +39,16 @@ export function spellScalingHint(item) {
   }).join(' · ')
 }
 
-// The inline die/slot notation describes one identical increment per higher slot.
+// The inline formula describes identical increments at a regular slot interval.
 export function hasInlineSpellScaling(rule) {
-  return rule?.scaling === 'slot' && (Number(rule.scaling_step) || 1) === 1
+  return rule?.scaling === 'slot'
     && rule.scaling_max_steps == null && !rule.scaling_levels?.length
     && !Number(rule.addon_instances) && !!rule.addon?.length
     && rule.addon.every(row => row.dice_id && Number(row.count) > 0)
+}
+
+export function spellScalingCaption(rule, baseLevel) {
+  const step = Math.max(1, Number(rule?.scaling_step) || 1)
+  const unit = step % 10 >= 2 && step % 10 <= 4 && !(step % 100 >= 12 && step % 100 <= 14) ? 'круга' : 'кругов'
+  return `${step === 1 ? 'за круг' : `за каждые ${step} ${unit}`} свыше ${baseLevel}-го`
 }

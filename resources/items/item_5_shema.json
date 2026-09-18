@@ -21,14 +21,204 @@
     }
   },
   {
-    "name": "Время выполнения",
     "key": "time",
-    "type": "text"
+    "name": "Время сотворения",
+    "type": "object",
+    "fields": [
+      {
+        "key": "kind",
+        "name": "Вид времени",
+        "type": "select",
+        "options": [
+          {
+            "value": "action",
+            "label": "Действие"
+          },
+          {
+            "value": "bonus_action",
+            "label": "Бонусное действие"
+          },
+          {
+            "value": "reaction",
+            "label": "Реакция"
+          },
+          {
+            "value": "free",
+            "label": "Свободное действие"
+          },
+          {
+            "value": "special",
+            "label": "Особое действие"
+          },
+          {
+            "value": "rounds",
+            "label": "Раунды"
+          },
+          {
+            "value": "minutes",
+            "label": "Минуты"
+          },
+          {
+            "value": "hours",
+            "label": "Часы"
+          },
+          {
+            "value": "days",
+            "label": "Дни"
+          },
+          {
+            "value": "custom",
+            "label": "Своё значение"
+          }
+        ]
+      },
+      {
+        "key": "value",
+        "name": "Количество",
+        "type": "int",
+        "min": 1
+      },
+      {
+        "key": "condition",
+        "name": "Условие реакции",
+        "type": "text"
+      },
+      {
+        "key": "text",
+        "name": "Своё время",
+        "type": "text"
+      }
+    ]
   },
   {
-    "name": "Расстояние",
     "key": "range",
-    "type": "text"
+    "name": "Дистанция и область",
+    "type": "object",
+    "fields": [
+      {
+        "key": "kind",
+        "name": "Дистанция",
+        "type": "select",
+        "options": [
+          {
+            "value": "touch",
+            "label": "Ближнее: касание"
+          },
+          {
+            "value": "ranged",
+            "label": "Дальнее"
+          },
+          {
+            "value": "self",
+            "label": "От себя / на себя"
+          },
+          {
+            "value": "sight",
+            "label": "В пределах видимости"
+          },
+          {
+            "value": "unlimited",
+            "label": "Без ограничений"
+          },
+          {
+            "value": "custom",
+            "label": "Своё значение"
+          }
+        ]
+      },
+      {
+        "key": "distance",
+        "name": "Дальность",
+        "type": "int",
+        "min": 1
+      },
+      {
+        "key": "unit",
+        "name": "Единица дальности",
+        "type": "select",
+        "default": "feet",
+        "options": [
+          {
+            "value": "feet",
+            "label": "Футы"
+          },
+          {
+            "value": "miles",
+            "label": "Мили"
+          }
+        ]
+      },
+      {
+        "key": "can_self",
+        "name": "Можно выбирать себя",
+        "type": "bool",
+        "hint": "Отметьте, если заклинание допускает заклинателя как цель. Не отменяет ограничения в описании. Отдельно от исходящей от себя области; это справочная метка, а не автоматическая проверка целей."
+      },
+      {
+        "key": "shape",
+        "name": "Форма области",
+        "type": "select",
+        "emptyLabel": "Нет области",
+        "options": [
+          {
+            "value": "sphere",
+            "label": "Сфера"
+          },
+          {
+            "value": "radius",
+            "label": "Радиус"
+          },
+          {
+            "value": "cone",
+            "label": "Конус"
+          },
+          {
+            "value": "line",
+            "label": "Линия"
+          },
+          {
+            "value": "cube",
+            "label": "Куб"
+          },
+          {
+            "value": "cylinder",
+            "label": "Цилиндр"
+          },
+          {
+            "value": "hemisphere",
+            "label": "Полусфера"
+          }
+        ]
+      },
+      {
+        "key": "size",
+        "name": "Размер области",
+        "type": "int",
+        "min": 1,
+        "hint": "Радиус сферы/цилиндра, длина конуса/линии или ребро куба. Ширину линии и высоту цилиндра укажите в описании."
+      },
+      {
+        "key": "area_unit",
+        "name": "Единица области",
+        "type": "select",
+        "default": "feet",
+        "options": [
+          {
+            "value": "feet",
+            "label": "Футы"
+          },
+          {
+            "value": "miles",
+            "label": "Мили"
+          }
+        ]
+      },
+      {
+        "key": "text",
+        "name": "Своя дистанция",
+        "type": "text"
+      }
+    ]
   },
   {
     "name": "Классы",

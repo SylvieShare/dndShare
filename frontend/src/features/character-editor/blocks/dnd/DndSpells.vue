@@ -425,7 +425,7 @@ const { knownCounts, spellPickerFilters, spellPickerEligibility } = useSpellPick
 
 const {
   schoolMeta,
-  spellMetaLine,
+  spellRangeOverride,
   damageDiceParts,
   healDiceParts,
   hasSpellMetrics,
@@ -482,7 +482,7 @@ provide('spellsBlockCtx', reactive({
   removeSpell,
   openSpell,
   schoolMeta,
-  spellMetaLine,
+  spellRangeOverride,
   spellSummary,
   damageDiceParts,
   healDiceParts,

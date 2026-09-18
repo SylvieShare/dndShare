@@ -5,6 +5,7 @@
     </FormField>
     <RuleKeyField v-model="data.key" :title="data.title" :used-keys="otherKeys" />
     <AbilityRuleFields :fields="typeFields" :data="data" @update:data="update" />
+    <ActionTimeEditor v-if="data.action_type === 'timed'" v-model="data.time" label="Время выполнения" timed-only />
     <FormField label="Описание" vertical title="Кратко опишите, что делает действие. Условия и ограничения укажите отдельно в «Условиях применения» — они появятся тезисами под описанием. Не повторяйте название, вид действия и стоимость. Ссылки и кости можно вставлять в текст. Формулы кубиков автоматически добавляют броски в меню действия.">
       <InputDescription editable :block="{ id: 'description', content: { placeholder: 'Что происходит при использовании действия…' } }" :value="data.description || ''" @update:value="(_, value) => data.description = value" />
       <FormSelect :disabled="standardLoading" value="" aria-label="Вставить ссылку на стандартное действие" @update:value="insertStandardAction">
@@ -62,6 +63,8 @@
   </div>
 </template>
 <script setup>
+import ActionTimeEditor from '@/shared/ui/ActionTimeEditor.vue'
+import { timeError } from '@/shared/lib/spellPresentation'
 import { LoadingIndicator } from '@sylvieshare/share-ui'
 import { computed, inject, onMounted, onScopeDispose, ref, watchEffect } from 'vue'
 import { FormField, FormSelect, FormTextInput, FormTextarea, ToggleSwitch, createRichNodeHtml } from '@sylvieshare/share-ui'
@@ -82,14 +85,14 @@ const standardActions = computed(() => suggestStore.items(24).filter(entry => en
 const otherKeys = computed(() => (editor.itemData?.feature_actions || []).filter(row => row !== props.data).map(row => row.key))
 const resourceMode = ref(normalizeActionResource(props.data))
 const validationKey = Symbol('action')
-watchEffect(() => editor.setValidationError?.(validationKey, actionEditorError(props.data, resourceMode.value, editor.itemData || {}, otherKeys.value)))
+watchEffect(() => editor.setValidationError?.(validationKey, (props.data.action_type === 'timed' ? timeError(props.data.time) || (!props.data.time?.kind ? 'Укажите время выполнения.' : '') : '') || actionEditorError(props.data, resourceMode.value, editor.itemData || {}, otherKeys.value)))
 onScopeDispose(() => editor.setValidationError?.(validationKey, ''))
 const later = ref(Number(props.data.level) > Math.max(1, Number(editor.itemData?.level) || 1))
 const hasConditions = computed(() => props.data.required_status_codes?.length || props.data.requirements?.length || later.value)
 const typeFields = computed(() => props.fields.filter(field => field.key === 'action_type'))
 const costFields = [{ key: 'resource_cost', type: 'int', name: 'Использований за одно действие', hint: 'Сколько использований выбранного ресурса списать. 0 — не списывать автоматически.' }]
 const levelFields = [{ key: 'level', type: 'int', name: 'Доступно с уровня', hint: 'Минимальный уровень персонажа или связанного класса для этого действия.' }]
-const handled = new Set(['key','title','action_type','description','suggest_action_codes','requirements','required_status_codes','uses_resource','resource_item_id','resource_pool_key','resource_key','resource_cost','level','target_kind','status_effect_code','menu_effects'])
+const handled = new Set(['time','key','title','action_type','description','suggest_action_codes','requirements','required_status_codes','uses_resource','resource_item_id','resource_pool_key','resource_key','resource_cost','level','target_kind','status_effect_code','menu_effects'])
 const extraFields = computed(() => props.fields.filter(field => (!handled.has(field.key) || (field.key === 'suggest_action_codes' && props.data.suggest_action_codes?.length)) && (field.key !== 'target_parameter' || props.data.target_kind)))
 function update(value) { Object.assign(props.data, value) }
 function setResourceMode(mode) { resourceMode.value = mode; changeActionResource(props.data, mode) }

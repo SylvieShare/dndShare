@@ -1,3 +1,4 @@
+import { timeError } from '@/shared/lib/spellPresentation'
 import { catalogueField, catalogueFieldVisible } from './catalogueFields'
 
 export function catalogueValidation(fields, data, typeId) {
@@ -34,6 +35,12 @@ export function catalogueValidation(fields, data, typeId) {
     }
   }
   walk(fields, data)
+  if (typeId === 5) {
+    if (timeError(data.time)) errors.push(timeError(data.time))
+    if (data.range?.kind === 'ranged' && !(Number(data.range.distance) > 0)) errors.push('Укажите дальность больше нуля.')
+    if (data.range?.shape && data.range.kind !== 'custom' && !(Number(data.range.size) > 0)) errors.push('Укажите размер области больше нуля.')
+    if (data.range?.kind === 'custom' && !data.range.text?.trim()) errors.push('Укажите свою дистанцию.')
+  }
   if (typeId === 19 && data.type === 'оружие' && !data.weapon) errors.push('Оружие: включите оружейную основу и задайте подходящие варианты.')
   if (typeId === 19 && ['броня', 'щит'].includes(data.type) && !data.armor_base) errors.push('Доспех или щит: включите основу и задайте подходящие варианты.')
   if (data.treasure && Number(data.treasure.min_level) > Number(data.treasure.max_level)) errors.push('Сокровища: нижняя граница уровня не может превышать верхнюю.')

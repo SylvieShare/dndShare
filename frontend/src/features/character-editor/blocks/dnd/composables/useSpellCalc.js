@@ -1,9 +1,6 @@
 import { spellScalingSteps } from '../lib/spellScaling'
-import { componentsLabel } from '@/features/character-editor/blocks/dnd/lib/spellEntry'
+export { spellDurationLabel } from '@/shared/lib/spellPresentation'
 
-export function spellDurationLabel(duration) {
-  return String(duration || '').trim().replace(/^(?:(?:Концентрация|Ритуал)\s*,\s*)+/i, '')
-}
 
 export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTypeColorMap, schoolMap, spellModifiers }) {
   function schoolMeta(item) {
@@ -12,27 +9,7 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
     return schoolMap.value[id] || schoolMap.value[String(id)] || null
   }
 
-  function schoolName(id) {
-    const s = schoolMap.value[id] || schoolMap.value[String(id)]
-    return s?.value || ''
-  }
-
-  function schoolBadge(item) {
-    return schoolName(item?.data?.schoolId)
-  }
-
-  const META_SEG_MAX = 16
-  function truncSeg(s) {
-    const str = String(s).trim()
-    return str.length > META_SEG_MAX ? str.slice(0, META_SEG_MAX - 1).trimEnd() + '…' : str
-  }
-
-  function spellMetaLine(item) {
-    const data = item?.data || {}
-    const range = spellModifiers?.value?.find(rule => rule.spellId === String(item?.id) && rule.range)?.range || data.range
-    return [componentsLabel(data.components), data.time, range, spellDurationLabel(data.duration)]
-      .filter(Boolean).map(truncSeg).join(' · ')
-  }
+  const spellRangeOverride = item => spellModifiers?.value?.find(rule => rule.spellId === String(item?.id) && rule.range)?.range || ''
 
   function dicePart(row) {
     const count = Number(row?.count) || 1
@@ -90,9 +67,7 @@ export function useSpellCalc({ diceMap, diceDetailsMap, damageTypeMap, damageTyp
 
   return {
     schoolMeta,
-    schoolName,
-    schoolBadge,
-    spellMetaLine,
+    spellRangeOverride,
     dicePart,
     damageDiceParts,
     healDiceParts,

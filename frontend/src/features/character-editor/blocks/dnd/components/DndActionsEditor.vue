@@ -13,13 +13,14 @@
               class="dae-select"
               :value="action.action_type || 'action'"
               aria-label="Тип действия"
-              @update:value="change(action.uid, { action_type: $event })"
+              @update:value="change(action.uid, { action_type: $event, time: $event === 'timed' ? action.time || { kind: 'minutes', value: 1 } : undefined })"
             >
               <option v-for="type in FEATURE_ACTION_TYPES" :key="type.value" :value="type.value">{{ type.label }}</option>
             </FormSelect>
             <RemoveButton icon="trash" label="Удалить действие" @click="$emit('remove', action)" />
           </div>
 
+          <ActionTimeEditor v-if="action.action_type === 'timed'" :model-value="action.time" label="Время выполнения" timed-only @update:model-value="time => change(action.uid, { time })" />
           <label>
             <span>Название</span>
             <input
@@ -69,6 +70,7 @@
 </template>
 
 <script setup>
+import ActionTimeEditor from '@/shared/ui/ActionTimeEditor.vue'
 import InputDescription from '@/shared/ui/InputDescription.vue'
 import { computed } from 'vue'
 import { AddButton, EditorPanel, EditorSection, FormField, FormSelect, RemoveButton } from '@sylvieshare/share-ui'

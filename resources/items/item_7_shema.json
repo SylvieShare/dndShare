@@ -11,7 +11,7 @@
     "fields": [
       { "name": "Ключ", "key": "key", "type": "text" },
       { "name": "Название", "key": "title", "type": "text" },
-      { "name": "Вид действия", "key": "action_type", "type": "select", "default": "action", "options": [{ "value": "action", "label": "Действие" }, { "value": "bonus_action", "label": "Бонусное действие" }, { "value": "reaction", "label": "Реакция" }, { "value": "free", "label": "Свободное действие" }, { "value": "special", "label": "Особое действие" }] },
+      {"name": "Вид действия", "key": "action_type", "type": "select", "default": "action", "options": [{"value": "action", "label": "Действие"}, {"value": "bonus_action", "label": "Бонусное действие"}, {"value": "reaction", "label": "Реакция"}, {"value": "free", "label": "Свободное действие"}, {"value": "special", "label": "Особое действие"}, {"value": "timed", "label": "Требует времени"}]},
       { "name": "Описание", "key": "description", "type": "description" },
       { "name": "Стандартные действия", "key": "suggest_action_codes", "type": "text_array" },
       { "name": "Условия", "key": "requirements", "type": "text_array" },
@@ -26,8 +26,9 @@
       { "name": "Параметр цели эффекта", "key": "target_parameter", "type": "text" },
       { "name": "Пункты меню", "key": "menu_effects", "type": "object_array", "fields": [{ "name": "Ключ", "key": "key", "type": "text" }, { "name": "Название", "key": "title", "type": "text" }, { "name": "Действие", "key": "kind", "type": "text" }, { "name": "Поле персонажа", "key": "value_id", "type": "text" }, { "name": "Ключ счётчика", "key": "counter_key", "type": "text" }, { "name": "Изменение", "key": "delta", "type": "int" }, { "name": "Минимум", "key": "min", "type": "int" }, { "name": "Максимум", "key": "max", "type": "int" }, { "name": "Тон", "key": "tone", "type": "text" }] },
       { "name": "Порядок", "key": "priority", "type": "int" },
-      { "name": "С уровня", "key": "level", "type": "int", "default": 1 }
-    ]
+      { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
+    {"key": "time", "name": "Время выполнения", "type": "object", "fields": [{"key": "kind", "name": "Вид времени", "type": "select", "options": [{"value": "action", "label": "Действие"}, {"value": "bonus_action", "label": "Бонусное действие"}, {"value": "reaction", "label": "Реакция"}, {"value": "free", "label": "Свободное действие"}, {"value": "special", "label": "Особое действие"}, {"value": "rounds", "label": "Раунды"}, {"value": "minutes", "label": "Минуты"}, {"value": "hours", "label": "Часы"}, {"value": "days", "label": "Дни"}, {"value": "custom", "label": "Своё значение"}]}, {"key": "value", "name": "Количество", "type": "int", "min": 1}, {"key": "condition", "name": "Условие реакции", "type": "text"}, {"key": "text", "name": "Своё время", "type": "text"}]}
+  ]
   },
   {
     "name": "Требования",

@@ -4,14 +4,8 @@ import { featureEntryActive } from './featureEntryState'
 import { collectCharacterStatuses } from './characterStatuses'
 import { richDescriptionRolls } from '@/shared/lib/richDescriptionRolls'
 
-export const FEATURE_ACTION_TYPES = [
-  { value: 'action', label: 'Действие', group_label: 'Действия' },
-  { value: 'bonus_action', label: 'Бонусное действие', group_label: 'Бонусные действия' },
-  { value: 'reaction', label: 'Реакция', group_label: 'Реакции' },
-  { value: 'free', label: 'Свободное действие', group_label: 'Свободные действия' },
-  { value: 'special', label: 'Особое действие', group_label: 'Особые действия' },
-]
-
+import { ACTION_TYPES } from '@/shared/lib/spellPresentation'
+export const FEATURE_ACTION_TYPES = ACTION_TYPES
 const TYPE_ORDER = new Map(FEATURE_ACTION_TYPES.map((entry, index) => [entry.value, index]))
 
 function entryKey(entry) {
@@ -110,6 +104,7 @@ function contributedActions(values, itemsById, resources) {
         key: `feature:${valueId}:${entryKey(ownedEntry)}:${definition.key || index}`,
         title: String(definition.title || item.name || 'Действие'),
         action_type: actionType(definition.action_type),
+        time: definition.time,
         description: String(definition.description || ''),
         dice_rolls: richDescriptionRolls(definition.description),
         requirements: requirements(definition.requirements),

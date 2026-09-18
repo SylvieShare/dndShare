@@ -33,6 +33,7 @@
 </template>
 
 <script setup>
+import { timeLabel, rangeLabel } from '@/shared/lib/spellPresentation'
 import { computed } from 'vue'
 import { Check, CircleHelp, Sparkles } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -49,7 +50,7 @@ defineEmits(['select', 'details'])
 const data = computed(() => props.spell.data || {})
 const circle = computed(() => Number(data.value.lvl) === 0 ? 'Заговор' : `${data.value.lvl} круг`)
 const meta = computed(() => [circle.value, props.school].filter(Boolean).join(' · '))
-const details = computed(() => [data.value.time, data.value.range].filter(Boolean).join(' · '))
+const details = computed(() => [timeLabel(data.value.time), rangeLabel(data.value.range)].filter(Boolean).join(' · '))
 </script>
 
 <style scoped>

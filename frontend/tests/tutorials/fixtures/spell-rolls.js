@@ -20,13 +20,16 @@ const items = [
   { id: 2, name: 'Урон со спасброском', data: { lvl: 1, damage: { save_ability: 'dex', dices: [{ count: 2, dice_id: 'd6' }] } } },
   { id: 3, name: 'Лечение', data: { lvl: 1, heal: { add_mod: true, scaling: 'slot', dices: [{ count: 1, dice_id: 'd4' }], addon: [{ count: 1, dice_id: 'd4' }] } } },
   { id: 5, name: 'Луч атаки', data: { lvl: 1, damage: { range_attack: true, scaling: 'slot', dices: [{ count: 2, dice_id: 'd6' }], addon: [{ count: 1, dice_id: 'd6' }] } } },
-  { id: 4, name: 'Свет', data: { lvl: 0 } },
+  { id: 4, name: 'Свет', data: { lvl: 0, time: { kind: 'action' }, range: { kind: 'touch' }, duration: '1 час', components: { v: true, m: 'Светлячок' } } },
   { id: 6, name: 'Ледяной кинжал', data: { lvl: 1, damage: { range_attack: true }, rolls: [
     { kind: 'damage', label: 'Попадание кинжалом', range_attack: true, dices: [{ count: 1, dice_id: 'd10' }] },
     { kind: 'damage', label: 'Взрыв', scaling: 'slot', dices: [{ count: 2, dice_id: 'd6' }], addon: [{ count: 1, dice_id: 'd6' }] },
   ] } },
   { id: 7, name: 'Расовое возмездие', data: { lvl: 1, damage: { scaling: 'slot', dices: [{ count: 2, dice_id: 'd10' }], addon: [{ count: 1, dice_id: 'd10' }] } } },
 ]
+if (new URLSearchParams(location.search).has('presentation')) {
+  items.push({ id: 8, name: 'Божественное оружие', data: { lvl: 2, time: { kind: 'bonus_action' }, range: { kind: 'ranged', distance: 60 }, duration: '1 минута', components: { v: true, s: true }, damage: { range_attack: true, add_mod: true, scaling: 'slot', scaling_step: 2, dices: [{ count: 1, dice_id: 'd8' }], addon: [{ count: 1, dice_id: 'd8' }] } } })
+}
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.rolls = []; window.writes = []; window.events = []
 const dice = useDiceStore(pinia)

@@ -1120,3 +1120,11 @@ receipt. Запись обеспечивает идемпотентность и
 
 
 `session_encounter.data.sheetInitiativeCursor` stores the acknowledged event id for sheet initiative preparation. It starts at zero for encounters without marked rolls. `combatants[].initiative` is also the prepared value while position is reserve; no separate stat or duplicated column is needed. Projection is driven by session_event JSON `sheetInitiative: true` and participant membership; event payload and cursor survive closing the DM page.
+
+
+Миграция 132 (`spell-presentation`) заменяет текстовые `item.data.time/range`
+у заклинаний типа 5 структурированными объектами и обновляет `item_type.fields`.
+Условия реакций выделяются в `time.condition`, неоднозначные/альтернативные
+значения сохраняются целиком как `kind: custom, text`. Дальность и размер области
+сохраняют единицы (feet/miles). Старые строки runtime больше не читает. Схемы
+feature_actions получают тип timed и объект time; существующие действия не меняются.

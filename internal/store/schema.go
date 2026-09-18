@@ -433,6 +433,7 @@ var schemaParts = []struct {
 	{"effect-sources", schemaEffectSourcesSQL},
 	{"spell-application-options", schemaSpellApplicationOptionsSQL},
 	{"session-attack-targets", schemaSessionAttackTargetsSQL},
+	{"spell-presentation", schemaSpellPresentationSQL},
 }
 
 const (

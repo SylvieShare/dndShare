@@ -2,6 +2,13 @@ import { describe, expect, it } from 'vitest'
 import { collectCharacterFeatureActions, featureActionEffectPatch, featureActionResourceKeys, groupCharacterFeatureActions } from './characterFeatureActions'
 
 describe('character feature actions', () => {
+  it('preserves timed action parameters from both the sheet and a feature', () => {
+    const values = { lvl: { level: 1 }, actions: [{ uid: 'manual', title: 'Подготовка', action_type: 'timed', time: { kind: 'minutes', value: 10 } }], abilities_class: [{ id: 10 }] }
+    const items = new Map([['10', { id: 10, name: 'Способность', data: { feature_actions: [{ key: 'ritual', action_type: 'timed', time: { kind: 'hours', value: 1 } }] } }]])
+    const actions = collectCharacterFeatureActions(values, items)
+    expect(actions.map(row => row.time)).toEqual(expect.arrayContaining([{ kind: 'minutes', value: 10 }, { kind: 'hours', value: 1 }]))
+    expect(groupCharacterFeatureActions(actions)[0].value).toBe('timed')
+  })
   it('merges manual and level-gated source actions with readonly provenance', () => {
     const items = new Map([['10', {
       id: 10,
@@ -123,7 +130,7 @@ describe('character feature actions', () => {
     const actions = collectCharacterFeatureActions(values, new Map())
 
     expect(actions.map(action => action.title)).toEqual(['Второе', 'Первое'])
-    expect(groupCharacterFeatureActions(actions, true)).toHaveLength(5)
+    expect(groupCharacterFeatureActions(actions, true)).toHaveLength(6)
   })
 
   it('publishes status-gated action consequences and adjusts an exhaustion counter', () => {

@@ -27,8 +27,8 @@
         </template>
       </CoverStatCard>
       <div class="spell-summary-grid">
-        <CoverStatCard v-if="data.time" :icon="Clock3" label="Время" :value="data.time" size="compact" />
-        <CoverStatCard v-if="data.range" :icon="LocateFixed" label="Дистанция" :value="data.range" size="compact" />
+        <CoverStatCard v-if="data.time" :icon="Clock3" label="Время" :value="timeLabel(data.time)" size="compact" />
+        <CoverStatCard v-if="data.range" :icon="LocateFixed" label="Дистанция" :value="rangeLabel(data.range)" size="compact" />
         <CoverStatCard v-if="data.duration" :icon="Hourglass" label="Длительность" :value="spellDurationLabel(data.duration)" size="compact" />
       </div>
     </div>
@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import { timeLabel, rangeLabel } from '@/shared/lib/spellPresentation'
 import { computed } from 'vue'
 import { Clock3, Hourglass, LocateFixed, Shapes } from '@lucide/vue'
 import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
@@ -49,8 +50,7 @@ const props = defineProps({
 
 const { suggestItems } = useSchemaSuggests(() => props.type)
 const data = computed(() => props.item.data || {})
-const schoolMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(item => [item.id, item.value])))
-const school = computed(() => schoolMap.value[data.value.schoolId] || '')
+const school = computed(() => suggestItems('schoolId').find(row => String(row.id) === String(data.value.schoolId))?.value || '')
 const levelLabel = computed(() => {
   const level = data.value.lvl
   if (level === 0) return 'Заговор'

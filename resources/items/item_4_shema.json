@@ -16,7 +16,7 @@
   {"name": "Действия на листе", "key": "feature_actions", "type": "object_array", "fields": [
     {"name": "Ключ", "key": "key", "type": "text"},
     {"name": "Название", "key": "title", "type": "text"},
-    {"name": "Вид действия", "key": "action_type", "type": "select", "default": "action", "options": [{"label": "Действие", "value": "action"}, {"label": "Бонусное действие", "value": "bonus_action"}, {"label": "Реакция", "value": "reaction"}, {"label": "Свободное действие", "value": "free"}, {"label": "Особое действие", "value": "special"}]},
+    {"name": "Вид действия", "key": "action_type", "type": "select", "default": "action", "options": [{"label": "Действие", "value": "action"}, {"label": "Бонусное действие", "value": "bonus_action"}, {"label": "Реакция", "value": "reaction"}, {"label": "Свободное действие", "value": "free"}, {"label": "Особое действие", "value": "special"}, {"value": "timed", "label": "Требует времени"}]},
     {"name": "Описание", "key": "description", "type": "description"},
     {"name": "Стандартные действия", "key": "suggest_action_codes", "type": "text_array"},
     {"name": "Условия", "key": "requirements", "type": "text_array"},
@@ -41,7 +41,8 @@
       {"name": "Тон", "key": "tone", "type": "text"}
     ]},
     {"name": "Порядок", "key": "priority", "type": "int"},
-    {"name": "С уровня", "key": "level", "type": "int", "default": 1}
+    {"name": "С уровня", "key": "level", "type": "int", "default": 1},
+    {"key": "time", "name": "Время выполнения", "type": "object", "fields": [{"key": "kind", "name": "Вид времени", "type": "select", "options": [{"value": "action", "label": "Действие"}, {"value": "bonus_action", "label": "Бонусное действие"}, {"value": "reaction", "label": "Реакция"}, {"value": "free", "label": "Свободное действие"}, {"value": "special", "label": "Особое действие"}, {"value": "rounds", "label": "Раунды"}, {"value": "minutes", "label": "Минуты"}, {"value": "hours", "label": "Часы"}, {"value": "days", "label": "Дни"}, {"value": "custom", "label": "Своё значение"}]}, {"key": "value", "name": "Количество", "type": "int", "min": 1}, {"key": "condition", "name": "Условие реакции", "type": "text"}, {"key": "text", "name": "Своё время", "type": "text"}]}
   ]},
   {"name": "Макс. использований", "key": "max_use", "type": "int"},
   {"name": "Цвет ресурса", "key": "resource_color", "type": "color"},

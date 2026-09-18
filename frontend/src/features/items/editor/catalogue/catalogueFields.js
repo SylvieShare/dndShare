@@ -63,7 +63,7 @@ const byType = {
     'application_targets.count': { name: 'Максимум целей', min: 1, max: 50, hint: 'Число разных целей за одно применение. Без настройки — одна цель.' },
     'application_targets.per_slot': { name: 'Дополнительных целей за круг', min: 0, max: 50, hint: 'Сколько целей добавляет каждый круг ячейки выше базового. 0 — число целей не растёт.' },
     lvl: { name: 'Круг заклинания', min: 0, max: 9, hint: '0 — заговор, 1–9 — круг заклинания.' },
-    time: { name: 'Время сотворения', placeholder: '1 действие' }, range: { name: 'Дистанция', placeholder: '60 футов' },
+    time: { name: 'Время сотворения' }, range: { name: 'Дистанция и область' },
     duration: { hint: 'Например: мгновенная или до 1 минуты. Концентрация задаётся отдельным флажком.' },
     components: { name: 'Компоненты' }, 'components.v': { name: 'Вербальный (В)' }, 'components.s': { name: 'Соматический (С)' },
     'components.m': { name: 'Материальный компонент (М)', type: 'textarea', optional: true, hint: 'Укажите материалы, стоимость и расходование, если они требуются.' },
@@ -116,6 +116,12 @@ export function catalogueField(field, typeId, path) {
 }
 
 export function catalogueFieldVisible(field, data, typeId, path, root = data) {
+  if (typeId === 5 && path.startsWith('range.')) {
+    if (['range.distance', 'range.unit'].includes(path)) return data.kind === 'ranged'
+    if (['range.size', 'range.area_unit'].includes(path)) return !!data.shape && data.kind !== 'custom'
+    if (path === 'range.text') return data.kind === 'custom'
+    if (path === 'range.shape') return !!data.kind && data.kind !== 'custom'
+  }
   if (typeId === 10 && path === 'consumption.spell_effect_key') return !!data.spell
   if (path.endsWith('duration.value')) return ['rounds', 'minutes', 'hours', 'days'].includes(data.kind) && !data.formula
   if (path.endsWith('duration.formula')) return ['rounds', 'minutes', 'hours', 'days'].includes(data.kind)
@@ -148,6 +154,12 @@ export function catalogueFieldVisible(field, data, typeId, path, root = data) {
 
 export function updateCatalogueValue(data, field, value, path, typeId) {
   const next = { ...data, [field.key]: value }
+  if (typeId === 5 && path === 'range.kind') {
+    if (value !== 'ranged') { delete next.distance; delete next.unit }
+    if (value !== 'custom') delete next.text
+    else { delete next.shape; delete next.size; delete next.area_unit }
+  }
+  if (typeId === 5 && path === 'range.shape' && !value) { delete next.size; delete next.area_unit }
   if (path === 'attunement' && value !== 'required') delete next.attunement_requirement
   if (path === 'armor.shield') for (const key of value ? ['ac', 'use_dex', 'dex_cap'] : ['shield_bonus']) delete next[key]
   if (path === 'armor.use_dex' && !value) delete next.dex_cap

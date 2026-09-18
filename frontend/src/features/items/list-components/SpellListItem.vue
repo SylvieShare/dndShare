@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+import { timeLabel, rangeLabel } from '@/shared/lib/spellPresentation'
 import { computed } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
@@ -28,14 +29,13 @@ const props = defineProps({
 
 const { suggestItems } = useSchemaSuggests(() => props.type)
 
-const schoolMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s.value])))
 
 const data = computed(() => props.item.data || {})
 
-const school = computed(() => schoolMap.value[data.value.schoolId] || '')
+const school = computed(() => suggestItems('schoolId').find(row => String(row.id) === String(data.value.schoolId))?.value || '')
 
 const subtitle = computed(() => {
-  const parts = [school.value, data.value.time, data.value.range].filter(Boolean)
+  const parts = [school.value, timeLabel(data.value.time), rangeLabel(data.value.range)].filter(Boolean)
   return parts.join(' · ')
 })
 </script>

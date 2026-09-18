@@ -34,9 +34,7 @@
         :title="school.value"
       >
         <span v-if="school.svg" class="sp-school-svg" v-html="school.svg" />
-        <svg v-else viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
-          <path d="M12 2l1.7 6.1 6.3 1.9-6.3 1.9L12 18l-1.7-6.1L4 10l6.3-1.9z" />
-        </svg>
+        <Sparkles v-else :size="17" aria-hidden="true" />
       </span>
     </div>
 
@@ -47,7 +45,7 @@
         <span v-if="data.concentration" class="sp-tag sp-tag-conc" title="Концентрация">К</span>
         <span v-if="data.ritual" class="sp-tag sp-tag-ritual" title="Ритуал">Р</span>
       </div>
-      <span v-if="entry.item?.data" class="sp-meta">{{ ctx.spellMetaLine(entry.item) }}</span>
+      <SpellMetadata v-if="entry.item?.data" :data="data" :stacked="hasMetrics" :range-override="ctx.spellRangeOverride?.(entry.item)" />
       <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
     </div>
 
@@ -154,8 +152,9 @@
 </template>
 
 <script setup>
+import SpellMetadata from '@/features/items/components/SpellMetadata.vue'
 import SpellApplicationMenu from './SpellApplicationMenu.vue'
-import { Focus, Sprout } from '@lucide/vue'
+import { Focus, Sparkles, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
 import SpellScalingFormula from './SpellScalingFormula.vue'
 import { hasInlineSpellScaling, spellScalingHint, spellInstances } from '../lib/spellScaling'
@@ -378,16 +377,6 @@ function removeSpell(close) {
   white-space: nowrap;
 }
 
-.sp-meta {
-  min-width: 0;
-  color: var(--text-2);
-  font-size: 13px;
-  line-height: 1.25;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .sp-grant {
   min-width: 0;
   color: var(--accent-soft);
@@ -428,22 +417,6 @@ function removeSpell(close) {
   font-size: 13px;
   font-weight: 800;
 }
-
-.sp-del {
-  width: 30px;
-  height: 30px;
-  flex: none;
-  display: grid;
-  place-items: center;
-  border: none;
-  border-radius: 7px;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.12s, background 0.12s;
-}
-.sp-del:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 
 .sortable-placeholder {
   background: color-mix(in srgb, var(--accent) 8%, transparent) !important;

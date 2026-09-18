@@ -15,35 +15,8 @@
       <span v-if="data.ritual" class="sdc-pill sdc-pill-ritual">Ритуал</span>
     </div>
 
-    <div v-if="!summaryInHeader && (data.time || data.range || data.duration)" class="sdc-meta-row">
-      <div v-if="data.time" class="sdc-meta-cell">
-        <img class="sdc-meta-icon" :src="iconUrls.time" alt="" aria-hidden="true" />
-        <span class="sdc-meta-val">{{ data.time }}</span>
-        <span class="sdc-meta-lbl">Время</span>
-      </div>
-      <div v-if="data.range" class="sdc-meta-cell">
-        <img class="sdc-meta-icon" :src="iconUrls.range" alt="" aria-hidden="true" />
-        <span class="sdc-meta-val">{{ data.range }}</span>
-        <span class="sdc-meta-lbl">Дистанция</span>
-      </div>
-      <div v-if="data.duration" class="sdc-meta-cell">
-        <img class="sdc-meta-icon" :src="iconUrls.duration" alt="" aria-hidden="true" />
-        <span class="sdc-meta-val">{{ data.duration }}</span>
-        <span class="sdc-meta-lbl">Длительность</span>
-      </div>
-    </div>
-
-    <div v-if="showComponentsInContent" class="sdc-comp-row">
-      <span class="sdc-comp-lbl">{{ summaryInHeader ? 'Материальный компонент:' : 'Компоненты:' }}</span>
-      <template v-if="!summaryInHeader">
-        <span v-if="data.components?.v" class="sdc-comp" tabindex="0" title="Вербальный компонент: заклинатель произносит магические слова">В</span>
-        <span v-if="data.components?.s" class="sdc-comp" tabindex="0" title="Соматический компонент: заклинатель выполняет жесты свободной рукой">С</span>
-        <span v-if="data.components?.m" class="sdc-comp" tabindex="0" title="Материальный компонент: нужен указанный предмет или магическая фокусировка">М</span>
-      </template>
-      <span v-if="materialComponent" class="sdc-comp-m">
-        {{ summaryInHeader ? materialComponent : `(${materialComponent})` }}
-      </span>
-    </div>
+    <SpellMetadata v-if="!summaryInHeader" :data="data" />
+    <div v-if="materialComponent" class="sdc-comp-m"><strong>Материальный компонент:</strong> {{ materialComponent }}</div>
 
     <div v-if="classes.length" class="sdc-refs">
       <span class="sdc-ref-label">Доступно классам</span>
@@ -59,6 +32,7 @@
 </template>
 
 <script setup>
+import SpellMetadata from '@/features/items/components/SpellMetadata.vue'
 import { computed, ref, watch } from 'vue'
 import { ScrollText } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -76,8 +50,6 @@ const props = defineProps({
 
 const { suggestItems } = useSchemaSuggests(() => props.type)
 
-const schoolDetailsMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s])))
-const schoolMap = computed(() => Object.fromEntries(suggestItems('schoolId').map(s => [s.id, s.value])))
 const data = computed(() => props.item.data || {})
 const classNames = ref({})
 const classIds = computed(() => (Array.isArray(data.value.classes) ? data.value.classes : []).map(ref => Number(ref?.id)).filter(Boolean))
@@ -88,15 +60,6 @@ watch(classIds, async ids => {
   classNames.value = Object.fromEntries((response?.items || []).map(item => [item.id, item.name]))
 }, { immediate: true })
 
-const iconUrls = computed(() => {
-  const base = import.meta.env.BASE_URL || '/'
-  return {
-    time: `${base}static/spell-time.svg`,
-    range: `${base}static/spell-range.svg`,
-    duration: `${base}static/spell-duration.svg`,
-  }
-})
-
 const lvlLabel = computed(() => {
   const lvl = data.value.lvl
   if (lvl === 0) return 'Заговор'
@@ -104,47 +67,17 @@ const lvlLabel = computed(() => {
   return lvl + ' уровень'
 })
 
-const school = computed(() => schoolMap.value[data.value.schoolId] || '')
-const schoolDetails = computed(() => schoolDetailsMap.value[data.value.schoolId] || {})
-const schoolColor = computed(() => normalizeColor(schoolDetails.value.color))
-const schoolStyle = computed(() => {
-  if (!schoolColor.value) return {}
-  return {
-    borderColor: colorAlpha(schoolColor.value, 0.42),
-    backgroundColor: colorAlpha(schoolColor.value, 0.13),
-    color: schoolColor.value,
-  }
-})
+const schoolDetails = computed(() => suggestItems('schoolId').find(row => String(row.id) === String(data.value.schoolId)) || {})
+const school = computed(() => schoolDetails.value.value || '')
+const schoolStyle = computed(() => ({ '--school-color': schoolDetails.value.color || 'var(--text-2)' }))
 const classes = computed(() => classIds.value.map(id => classNames.value[id]).filter(Boolean))
-const hasComponents = computed(() => {
-  const c = data.value.components
-  return c && (c.v || c.s || c.m)
-})
 const materialComponent = computed(() => typeof data.value.components?.m === 'string' ? data.value.components.m : '')
-const showComponentsInContent = computed(() => hasComponents.value && (!props.summaryInHeader || materialComponent.value))
 const nameEnFormatted = computed(() =>
   (props.item.nameEn || '')
     .replace(/_/g, ' ')
     .replace(/\b[a-z]/g, ch => ch.toUpperCase())
 )
 
-function normalizeColor(color) {
-  const value = String(color || '').trim()
-  if (/^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(value)) return value
-  if (/^rgb(a)?\(/i.test(value)) return value
-  return ''
-}
-
-function colorAlpha(color, alpha) {
-  if (!color || color.startsWith('rgb')) return color
-  const hex = color.length === 4
-    ? color.replace(/^#(.)(.)(.)$/, '#$1$1$2$2$3$3')
-    : color
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r},${g},${b},${alpha})`
-}
 </script>
 
 <style scoped>
@@ -166,7 +99,7 @@ function colorAlpha(color, alpha) {
 }
 
 .sdc-pill-lvl    { background: color-mix(in srgb, var(--accent-soft) 15%, transparent); color: var(--accent-soft); }
-.sdc-pill-school { background: color-mix(in srgb, var(--text-on-accent) 6%, transparent); border: 1px solid transparent; color: var(--text-2); }
+.sdc-pill-school { background: color-mix(in srgb, var(--school-color) 13%, transparent); border: 1px solid color-mix(in srgb, var(--school-color) 42%, transparent); color: var(--school-color); }
 .sdc-pill-conc   { background: color-mix(in srgb, var(--success) 15%, transparent);  color: var(--success); }
 .sdc-pill-ritual { background: color-mix(in srgb, var(--warning) 13%, transparent);  color: var(--warning); }
 
@@ -188,44 +121,7 @@ function colorAlpha(color, alpha) {
 }
 .sdc-name-en { font-size: 13px; color: var(--text-muted); }
 
-.sdc-meta-row {
-  display: flex;
-  border-radius: 10px;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--text-on-accent) 3%, transparent);
-  border: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
-}
-.sdc-meta-cell {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 10px 8px;
-  border-right: 1px solid color-mix(in srgb, var(--text-on-accent) 6%, transparent);
-}
-.sdc-meta-cell:last-child { border-right: none; }
-.sdc-meta-icon {
-  width: 18px;
-  height: 18px;
-  display: block;
-  flex-shrink: 0;
-}
-.sdc-meta-val  { font-size: 12px; font-weight: 600; color: var(--text-1); text-align: center; }
-.sdc-meta-lbl  { font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
-
-.sdc-comp-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-.sdc-comp-lbl { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
-.sdc-comp {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-2);
-  background: color-mix(in srgb, var(--text-on-accent) 6%, transparent);
-  border-radius: 4px;
-  padding: 2px 7px;
-}
-.sdc-comp:hover, .sdc-comp:focus-visible { color: var(--text-1); background: color-mix(in srgb, var(--accent) 18%, transparent); }
-.sdc-comp-m { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.sdc-comp-m { font-size: 12px; color: var(--text-muted); }
 
 .sdc-refs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .sdc-ref-label { flex: 0 0 auto; color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }

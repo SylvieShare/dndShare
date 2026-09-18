@@ -1,5 +1,6 @@
 <template>
-  <div v-if="spec.optional" class="ability-rule-field ability-rule-field--wide catalogue-object">
+  <ActionTimeEditor v-if="typeId === 5 && path === 'time'" class="ability-rule-field ability-rule-field--wide" :model-value="value" @update:model-value="set" />
+  <div v-else-if="spec.optional" class="ability-rule-field ability-rule-field--wide catalogue-object">
     <FormField :label="spec.name" :title="spec.hint"><ToggleSwitch :model-value="enabled" :aria-label="spec.name" @update:model-value="toggle" /></FormField>
     <CatalogueField v-if="enabled" :field="{ ...spec, optional: false }" :data="data" :path="path" :type-id="typeId" :root-data="rootData" hide-label :resolved="true" @update:model-value="set" />
     <ConfirmDialog v-if="confirmOff" title="Убрать настройку?" :message="`Значение «${spec.name}» будет удалено после сохранения объекта.`" :z-index="zIndex" @confirm="disable" @close="confirmOff = false" @cancel="confirmOff = false" />
@@ -37,6 +38,7 @@
   <AbilityRuleField v-else :field="spec" :context-data="data" :model-value="value" :hide-label="hideLabel" @update:model-value="set" />
 </template>
 <script setup>
+import ActionTimeEditor from '@/shared/ui/ActionTimeEditor.vue'
 import { computed, inject, ref } from 'vue'
 import { AddButton, BaseTile, ConfirmDialog, FormField, FormSelect, FormTextInput, RemoveButton, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'

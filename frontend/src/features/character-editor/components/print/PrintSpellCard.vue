@@ -18,8 +18,8 @@
     <div v-if="spell.grantLine" class="spell-grant">{{ spell.grantLine }}</div>
 
     <dl class="spell-meta">
-      <div><dt>Время</dt><dd>{{ spell.data.time || '—' }}</dd></div>
-      <div><dt>Дистанция</dt><dd>{{ spell.data.range || '—' }}</dd></div>
+      <div><dt>Время</dt><dd>{{ timeLabel(spell.data.time) || '—' }}</dd></div>
+      <div><dt>Дистанция</dt><dd>{{ rangeLabel(spell.data.range) || '—' }}</dd></div>
       <div><dt>Длительность</dt><dd>{{ spell.data.duration || '—' }}</dd></div>
       <div><dt>Компоненты</dt><dd>{{ components }}</dd></div>
     </dl>
@@ -39,6 +39,7 @@
 </template>
 
 <script setup>
+import { timeLabel, rangeLabel } from '@/shared/lib/spellPresentation'
 import { computed } from 'vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 
