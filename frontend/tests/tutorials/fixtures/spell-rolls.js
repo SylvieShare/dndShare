@@ -30,6 +30,7 @@ const items = [
 if (new URLSearchParams(location.search).has('presentation')) {
   items.push({ id: 8, name: 'Божественное оружие', data: { lvl: 2, time: { kind: 'bonus_action' }, range: { kind: 'ranged', distance: 60 }, duration: '1 минута', components: { v: true, s: true }, damage: { range_attack: true, add_mod: true, scaling: 'slot', scaling_step: 2, dices: [{ count: 1, dice_id: 'd8' }], addon: [{ count: 1, dice_id: 'd8' }] } } })
 }
+if (new URLSearchParams(location.search).has('long-name')) items.find(item => item.id === 8).name += ' — заклинание с очень длинным названием, которое должно полностью переноситься на следующие строки'
 itemsApi.byIds = async ids => ({ items: items.filter(item => ids.map(Number).includes(item.id)) })
 window.rolls = []; window.writes = []; window.events = []
 const dice = useDiceStore(pinia)

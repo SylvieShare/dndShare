@@ -45,7 +45,7 @@
         <span v-if="data.concentration" class="sp-tag sp-tag-conc" title="Концентрация">К</span>
         <span v-if="data.ritual" class="sp-tag sp-tag-ritual" title="Ритуал">Р</span>
       </div>
-      <SpellMetadata v-if="entry.item?.data" :data="data" :stacked="hasMetrics" :range-override="ctx.spellRangeOverride?.(entry.item)" />
+      <SpellMetadata v-if="entry.item?.data" :data="data" :range-override="ctx.spellRangeOverride?.(entry.item)" />
       <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
     </div>
 
@@ -331,15 +331,16 @@ function removeSpell(close) {
 .sp-school-svg :deep(svg) { width: 20px; height: 20px; }
 
 .sp-info {
-  flex: 1;
+  flex: 1 1 220px;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 10px;
 }
 
 .sp-name-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 7px;
   min-width: 0;
@@ -362,19 +363,16 @@ function removeSpell(close) {
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
-  line-height: 1.15;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .sp-name-en {
   min-width: 0;
   color: var(--text-muted);
   font-size: 11px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .sp-grant {

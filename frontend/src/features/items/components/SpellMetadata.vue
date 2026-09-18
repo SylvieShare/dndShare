@@ -1,11 +1,13 @@
 <template>
-  <div class="spell-metadata" :class="{ 'spell-metadata--stacked': stacked }">
-    <span v-if="components.length" class="spell-meta-part spell-components">
-      <span v-for="part in components" :key="part.key" tabindex="0" :aria-label="part.label" @mouseenter="show($event, part.label)" @mouseleave="tooltip = null" @focus="show($event, part.label)" @blur="tooltip = null"><component :is="part.icon" :size="16" aria-hidden="true" /></span>
-    </span>
-    <span v-if="data.time?.kind" class="spell-meta-part"><ActionTiming :time="data.time" /></span>
-    <span v-if="rangeText" class="spell-meta-part" :title="rangeHint"><component :is="rangeIcon" :size="16" aria-hidden="true" />{{ rangeText }}<UserRound v-if="data.range?.can_self && data.range.kind !== 'self'" :size="14" aria-label="Можно на себя" /></span>
-    <span v-if="data.duration" class="spell-meta-part" :title="data.duration"><Hourglass :size="15" aria-hidden="true" />{{ spellDurationLabel(data.duration) }}</span>
+  <div class="spell-metadata">
+    <div v-if="components.length || rangeText || data.duration" class="spell-meta-table">
+      <span v-if="components.length" class="spell-meta-part spell-components">
+        <span v-for="part in components" :key="part.key" tabindex="0" :aria-label="part.label" @mouseenter="show($event, part.label)" @mouseleave="tooltip = null" @focus="show($event, part.label)" @blur="tooltip = null"><component :is="part.icon" :size="16" aria-hidden="true" /></span>
+      </span>
+      <span v-if="rangeText" class="spell-meta-part" :title="rangeHint"><component :is="rangeIcon" :size="16" aria-hidden="true" />{{ rangeText }}<UserRound v-if="data.range?.can_self && data.range.kind !== 'self'" :size="14" aria-label="Можно на себя" /></span>
+      <span v-if="data.duration" class="spell-meta-part" :title="data.duration"><Hourglass :size="15" aria-hidden="true" />{{ spellDurationLabel(data.duration) }}</span>
+    </div>
+    <ActionTiming v-if="data.time?.kind" :time="data.time" />
   </div>
   <FloatingTooltip v-if="tooltip" :anchor="tooltip.anchor" :width="260" :z-index="9500">{{ tooltip.text }}</FloatingTooltip>
 </template>
@@ -15,7 +17,7 @@ import { AudioLines, Hand, Gem, Crosshair, UserRound, Eye, Infinity, Circle, Con
 import { FloatingTooltip } from '@sylvieshare/share-ui'
 import ActionTiming from '@/shared/ui/ActionTiming.vue'
 import { rangeLabel, spellDurationLabel } from '@/shared/lib/spellPresentation'
-const props = defineProps({ data: { type: Object, required: true }, stacked: Boolean, rangeOverride: String })
+const props = defineProps({ data: { type: Object, required: true }, rangeOverride: String })
 const components = computed(() => [
   { key: 'v', icon: AudioLines, label: 'Вербальный компонент: магические слова' },
   { key: 's', icon: Hand, label: 'Соматический компонент: жесты свободной рукой' },
@@ -28,11 +30,10 @@ const tooltip = shallowRef(null)
 const show = (event, text) => { tooltip.value = { anchor: event.currentTarget, text } }
 </script>
 <style scoped>
-.spell-metadata { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 0; color: var(--text-2); font-size: 12px; line-height: 1.35; }
-.spell-meta-part { display: inline-flex; align-items: center; gap: 6px; min-width: 0; overflow-wrap: anywhere; }
-.spell-meta-part > svg { flex-shrink: 0; }
-.spell-meta-part + .spell-meta-part { margin-left: 9px; padding-left: 9px; border-left: 1px solid var(--border-strong); }
+.spell-metadata { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; color: var(--text-2); font-size: 12px; line-height: 1.5; }
+.spell-meta-table { display: flex; max-width: 100%; border: 1px solid var(--border); border-radius: 6px; background: color-mix(in srgb, var(--text-2) 3%, transparent); }
+.spell-meta-part { display: flex; align-items: center; gap: 6px; min-width: 0; padding: 5px 8px; overflow-wrap: anywhere; }
+.spell-meta-part > svg, .spell-components { flex-shrink: 0; }
+.spell-meta-part + .spell-meta-part { border-left: 1px solid var(--border); }
 .spell-components > span { display: inline-flex; }
-.spell-metadata--stacked { flex-direction: column; align-items: flex-start; gap: 5px; }
-.spell-metadata--stacked .spell-meta-part + .spell-meta-part { margin-left: 0; padding-left: 0; border: 0; }
 </style>
