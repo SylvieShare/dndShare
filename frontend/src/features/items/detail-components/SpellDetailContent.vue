@@ -11,8 +11,8 @@
     <div v-if="!summaryInHeader || data.concentration || data.ritual" class="sdc-pills">
       <span v-if="!summaryInHeader && lvlLabel" class="sdc-pill sdc-pill-lvl">{{ lvlLabel }}</span>
       <span v-if="!summaryInHeader && school" class="sdc-pill sdc-pill-school" :style="schoolStyle">{{ school }}</span>
-      <span v-if="data.concentration" class="sdc-pill sdc-pill-conc">Концентрация</span>
-      <span v-if="data.ritual" class="sdc-pill sdc-pill-ritual">Ритуал</span>
+      <span v-if="summaryInHeader && data.concentration" class="sdc-pill sdc-pill-conc">Концентрация</span>
+      <span v-if="summaryInHeader && data.ritual" class="sdc-pill sdc-pill-ritual">Ритуал</span>
     </div>
 
     <SpellMetadata v-if="!summaryInHeader" :data="data" />

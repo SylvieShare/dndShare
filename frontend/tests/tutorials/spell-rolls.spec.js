@@ -217,10 +217,15 @@ for (const mobile of [false, true]) test(`spell presentation ${mobile ? 'mobile'
   for (const row of [weapon, light]) {
     const table = await row.locator('.spell-meta-table').boundingBox()
     const timing = await row.locator('.action-timing').boundingBox()
-    expect(timing.y - table.y - table.height).toBeGreaterThanOrEqual(9)
+    expect(table.y - timing.y - timing.height).toBeGreaterThanOrEqual(9)
     const cells = await row.locator('.spell-meta-part').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().top))
     expect(new Set(cells).size).toBe(1)
   }
+  await expect(light.locator('.spell-meta-part').nth(0)).toHaveText('К')
+  await expect(light.locator('.spell-meta-part').nth(1)).toHaveText('Р')
+  await expect(light.locator('.spell-meta-table .lucide-fingerprint-pattern')).toBeVisible()
+  await light.getByLabel('Концентрация', { exact: true }).hover()
+  await expect(page.getByText('Концентрация', { exact: true })).toBeVisible()
   await light.getByLabel('Материальный компонент: Светлячок', { exact: true }).hover()
   await expect(page.getByText('Материальный компонент: Светлячок', { exact: true })).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)

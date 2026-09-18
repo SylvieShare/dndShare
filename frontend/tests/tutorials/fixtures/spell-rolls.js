@@ -28,6 +28,7 @@ const items = [
   { id: 7, name: 'Расовое возмездие', data: { lvl: 1, damage: { scaling: 'slot', dices: [{ count: 2, dice_id: 'd10' }], addon: [{ count: 1, dice_id: 'd10' }] } } },
 ]
 if (new URLSearchParams(location.search).has('presentation')) {
+  Object.assign(items.find(item => item.id === 4).data, { concentration: true, ritual: true })
   items.push({ id: 8, name: 'Божественное оружие', data: { lvl: 2, time: { kind: 'bonus_action' }, range: { kind: 'ranged', distance: 60 }, duration: '1 минута', components: { v: true, s: true }, damage: { range_attack: true, add_mod: true, scaling: 'slot', scaling_step: 2, dices: [{ count: 1, dice_id: 'd8' }], addon: [{ count: 1, dice_id: 'd8' }] } } })
 }
 if (new URLSearchParams(location.search).has('long-name')) items.find(item => item.id === 8).name += ' — заклинание с очень длинным названием, которое должно полностью переноситься на следующие строки'

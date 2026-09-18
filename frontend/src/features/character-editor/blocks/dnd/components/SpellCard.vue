@@ -42,8 +42,6 @@
       <div class="sp-name-row">
         <span class="sp-name">{{ entry.item ? entry.item.name : '...' }}</span>
         <span v-if="nameEn" class="sp-name-en">{{ nameEn }}</span>
-        <span v-if="data.concentration" class="sp-tag sp-tag-conc" title="Концентрация">К</span>
-        <span v-if="data.ritual" class="sp-tag sp-tag-ritual" title="Ритуал">Р</span>
       </div>
       <SpellMetadata v-if="entry.item?.data" :data="data" :range-override="ctx.spellRangeOverride?.(entry.item)" />
       <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
@@ -345,17 +343,6 @@ function removeSpell(close) {
   gap: 7px;
   min-width: 0;
 }
-
-.sp-tag {
-  flex: none;
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1.2;
-  padding: 2px 5px;
-  border-radius: 4px;
-}
-.sp-tag-conc { background: color-mix(in srgb, var(--accent-soft) 15%, transparent); color: var(--accent-soft); }
-.sp-tag-ritual { background: color-mix(in srgb, var(--success) 13%, transparent); color: var(--success); }
 
 .sp-name {
   min-width: 0;
