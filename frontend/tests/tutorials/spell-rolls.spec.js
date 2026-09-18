@@ -206,6 +206,13 @@ for (const mobile of [false, true]) test(`spell presentation ${mobile ? 'mobile'
   await page.goto('/tests/tutorials/fixtures/spell-rolls.html?presentation')
   const weapon = page.locator('.spell-row').filter({ hasText: 'Божественное оружие' })
   await expect(weapon.locator('.spell-meta-table')).toBeVisible()
+  const english = weapon.locator('.sp-name-en')
+  await expect(english).toHaveAttribute('title', /Spiritual Weapon/)
+  const nameLayout = await english.evaluate(node => ({ nowrap: getComputedStyle(node).whiteSpace, ellipsis: getComputedStyle(node).textOverflow, rowWrap: getComputedStyle(node.parentElement).flexWrap, height: node.clientHeight, line: parseFloat(getComputedStyle(node).lineHeight) }))
+  expect(nameLayout.nowrap).toBe('nowrap')
+  expect(nameLayout.ellipsis).toBe('ellipsis')
+  expect(nameLayout.rowWrap).toBe('nowrap')
+  expect(nameLayout.height).toBeLessThanOrEqual(Math.ceil(nameLayout.line))
   await expect(weapon.locator('.action-timing')).toContainText('Бонусное действие')
   await expect(weapon.locator('.spell-metadata')).toContainText('60 фт.')
   await expect(weapon.locator('.scaling-caption')).toHaveText('за каждые 2 круга свыше 2-го')
@@ -217,7 +224,7 @@ for (const mobile of [false, true]) test(`spell presentation ${mobile ? 'mobile'
   for (const row of [weapon, light]) {
     const table = await row.locator('.spell-meta-table').boundingBox()
     const timing = await row.locator('.action-timing').boundingBox()
-    expect(table.y - timing.y - timing.height).toBeGreaterThanOrEqual(9)
+    expect(timing.y - table.y - table.height).toBeGreaterThanOrEqual(9)
     const cells = await row.locator('.spell-meta-part').evaluateAll(nodes => nodes.map(node => node.getBoundingClientRect().top))
     expect(new Set(cells).size).toBe(1)
   }

@@ -41,7 +41,7 @@
     <div class="sp-info">
       <div class="sp-name-row">
         <span class="sp-name">{{ entry.item ? entry.item.name : '...' }}</span>
-        <span v-if="nameEn" class="sp-name-en">{{ nameEn }}</span>
+        <span v-if="nameEn" class="sp-name-en" :title="nameEn">{{ nameEn }}</span>
       </div>
       <SpellMetadata v-if="entry.item?.data" :data="data" :range-override="ctx.spellRangeOverride?.(entry.item)" />
       <span v-if="grantSummary" class="sp-grant">{{ grantSummary }}</span>
@@ -338,13 +338,14 @@ function removeSpell(close) {
 
 .sp-name-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   gap: 7px;
   min-width: 0;
 }
 
 .sp-name {
+  flex-shrink: 0;
+  max-width: 100%;
   min-width: 0;
   color: var(--text-1);
   font-family: var(--font-display);
@@ -359,7 +360,9 @@ function removeSpell(close) {
   color: var(--text-muted);
   font-size: 11px;
   line-height: 1.4;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sp-grant {

@@ -1,6 +1,5 @@
 <template>
   <div class="spell-metadata">
-    <ActionTiming v-if="data.time?.kind" :time="data.time" />
     <div v-if="flags.length || components.length || rangeText || data.duration" class="spell-meta-table">
       <span v-for="flag in flags" :key="flag.key" class="spell-meta-part spell-meta-flag" :class="`spell-meta-${flag.key}`" tabindex="0" :aria-label="flag.label" @mouseenter="show($event, flag.label)" @mouseleave="tooltip = null" @focus="show($event, flag.label)" @blur="tooltip = null">{{ flag.letter }}</span>
       <span v-if="components.length" class="spell-meta-part spell-components">
@@ -9,6 +8,7 @@
       <span v-if="rangeText" class="spell-meta-part" :title="rangeHint"><component :is="rangeIcon" :size="16" aria-hidden="true" />{{ rangeText }}<UserRound v-if="data.range?.can_self && data.range.kind !== 'self'" :size="14" aria-label="Можно на себя" /></span>
       <span v-if="data.duration" class="spell-meta-part" :title="data.duration"><Hourglass :size="15" aria-hidden="true" />{{ spellDurationLabel(data.duration) }}</span>
     </div>
+    <ActionTiming v-if="data.time?.kind" :time="data.time" />
   </div>
   <FloatingTooltip v-if="tooltip" :anchor="tooltip.anchor" :width="260" :z-index="9500">{{ tooltip.text }}</FloatingTooltip>
 </template>
