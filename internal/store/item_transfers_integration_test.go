@@ -284,4 +284,5 @@ func TestItemTransfersPostgres(t *testing.T) {
 	t.Run("prepared initiative", func(t *testing.T) { testPreparedInitiative(t, s, pool) })
 	t.Run("chronicle targets", func(t *testing.T) { testChronicleTargets(t, s, pool) })
 	t.Run("spell presentation", func(t *testing.T) { testSpellPresentation(t, pool) })
+	t.Run("spell roll saves", func(t *testing.T) { testSpellRollSaves(t, pool) })
 }

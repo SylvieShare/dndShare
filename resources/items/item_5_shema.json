@@ -780,6 +780,21 @@
             "type": "int"
           }
         ]
+      },
+      {
+        "name": "Спасбросок (хар-ка)",
+        "key": "save_ability",
+        "type": "text"
+      },
+      {
+        "name": "Спасбросок (эффект)",
+        "key": "save_effect",
+        "type": "text"
+      },
+      {
+        "key": "save_condition",
+        "name": "Когда требуется спасбросок",
+        "type": "text"
       }
     ]
   }

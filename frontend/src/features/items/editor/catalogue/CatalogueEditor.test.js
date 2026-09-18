@@ -5,7 +5,7 @@ import { createPinia } from 'pinia'
 import CatalogueEditor from './CatalogueEditor.vue'
 import AbilityEditor from '../AbilityEditor.vue'
 import { catalogueProfile, catalogueProfiles } from './catalogueProfiles'
-import { catalogueFieldVisible, updateCatalogueValue } from './catalogueFields'
+import { catalogueField, catalogueFieldVisible, updateCatalogueValue } from './catalogueFields'
 import { catalogueValidation } from './catalogueValidation'
 import { normalizeDataForSave } from '@/features/handbook/objects/lib/schemaFields'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
@@ -28,6 +28,13 @@ async function form(typeId, data = {}) {
   return html
 }
 describe('catalogue authoring', () => {
+  it('offers a stage save with the runtime outcome and hides dependent fields without it', () => {
+    const field = catalogueField({ key: 'save_effect', type: 'text' }, 5, 'rolls.save_effect')
+    expect(field.options).toContainEqual({ value: 'negate', label: 'Без урона' })
+    expect(catalogueFieldVisible(field, {}, 5, 'rolls.save_effect')).toBe(false)
+    expect(catalogueFieldVisible(field, { save_ability: 'dex' }, 5, 'rolls.save_effect')).toBe(true)
+    expect(updateCatalogueValue({ save_ability: 'dex', save_effect: 'half', save_condition: 'Взрыв' }, { key: 'save_ability' }, '', 'rolls.save_ability', 5)).toEqual({ save_ability: '' })
+  })
   it.each(Object.keys(catalogueProfiles).map(Number))('places all fields of type %i exactly once and renders a blank form', async id => {
     const fields = schema(id), profile = catalogueProfile(id, fields)
     const keys = [...profile.primary, ...profile.groups.flatMap(g => g.fields)].map(f => f.key)
