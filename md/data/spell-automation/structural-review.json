@@ -1,0 +1,464 @@
+[
+  {
+    "id": 1286,
+    "name": "Адский кованный",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 699,
+    "name": "Бешеный снаряд",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1340,
+    "name": "Власть над погодой",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 560,
+    "name": "Волшебное оружие",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1114,
+    "name": "Вызов Врока",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 869,
+    "name": "Вызов заграждения",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1115,
+    "name": "Вызов залпа",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1016,
+    "name": "Вызов ноу-бота",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 472,
+    "name": "Громовой клинок",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 473,
+    "name": "Громовой клинок",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 571,
+    "name": "Дар готовности",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 477,
+    "name": "Дубинка",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 880,
+    "name": "Духовные стражи",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 726,
+    "name": "Дыхание дракона",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1127,
+    "name": "Дыхание могучего дракона",
+    "flags": [
+      "roll:2:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 478,
+    "name": "Железный кулак",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1221,
+    "name": "Запрет",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1348,
+    "name": "Землетрясение",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1302,
+    "name": "Знак",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1349,
+    "name": "Иллюзорный дракон",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1135,
+    "name": "Инфернальный зов",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1390,
+    "name": "Исполнение желаний",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 489,
+    "name": "Клинок зелёного пламени",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 490,
+    "name": "Клинок зелёного пламени",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1396,
+    "name": "Кольцо разрушения",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 743,
+    "name": "Копыта ярости",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 609,
+    "name": "Метка охотника",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 616,
+    "name": "Направляющая рука",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1055,
+    "name": "Огненный щит",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1244,
+    "name": "Одеяние из осколков",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1166,
+    "name": "Оживление вещей",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 628,
+    "name": "Оживление конструкта",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 928,
+    "name": "Охранные руны",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1248,
+    "name": "Пир героев",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 639,
+    "name": "Пламя под языком",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 642,
+    "name": "Поглощение стихий",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 940,
+    "name": "Покров духа",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 644,
+    "name": "Ползущая рука",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 649,
+    "name": "Почётный гость",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1069,
+    "name": "Призыв высшего демона",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1260,
+    "name": "Прогулка по извилистой тропе",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 960,
+    "name": "Проклятие",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1077,
+    "name": "Проклятье стихий",
+    "flags": [
+      "roll:2:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 516,
+    "name": "Пронзающий шип",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1410,
+    "name": "Радужная стена",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1319,
+    "name": "Радужные брызги",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1183,
+    "name": "Радужный луч",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1184,
+    "name": "Разрушительная волна",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 811,
+    "name": "Рога стихий",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 815,
+    "name": "Смена обличья",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 675,
+    "name": "Снаряд хаоса",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1272,
+    "name": "Сотворение гомункула",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 984,
+    "name": "Стихийное оружие",
+    "flags": [
+      "roll:2:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 1088,
+    "name": "Страж природы",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1328,
+    "name": "Телепортация",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1417,
+    "name": "Теогенез",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1279,
+    "name": "Трансформация Тензера",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1330,
+    "name": "Триумф льда",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 835,
+    "name": "Увеличение/уменьшение",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 836,
+    "name": "Увлекательная прогулка",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 843,
+    "name": "Узы Повелителей драконов",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 844,
+    "name": "Улучшение характеристики",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 1210,
+    "name": "Хватка Тьюпилака",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  },
+  {
+    "id": 848,
+    "name": "Цветной клинок",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 688,
+    "name": "Цветной шарик",
+    "flags": [
+      "roll:0:untyped-damage-needs-review"
+    ]
+  },
+  {
+    "id": 696,
+    "name": "Ярость кобольдов",
+    "flags": [
+      "candidate:dice-in-description-without-roll"
+    ]
+  }
+]

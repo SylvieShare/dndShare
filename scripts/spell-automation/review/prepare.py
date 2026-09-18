@@ -6,6 +6,7 @@ from pathlib import Path
 from definitions import EFFECTS, FULL_DAMAGE
 from patches import patch
 from stages import patch_stages
+from conditional import patch_conditional
 META = ['automationStatus', 'automationNote', 'requiresPlayerInteraction']
 def duration(data):
     for token, kind in [('раунд', 'rounds'), ('минут', 'minutes'), ('час', 'hours')]:
@@ -20,6 +21,8 @@ def prepare(spells):
         change_note = patch(id, data)
         stage_note = patch_stages(id, data)
         if stage_note: change_note = stage_note
+        conditional_note = patch_conditional(id, data)
+        if conditional_note: change_note = conditional_note
         if change_note: status, note = 'partial', change_note
         specs = [s for s in EFFECTS if s['id'] == id]
         if specs:

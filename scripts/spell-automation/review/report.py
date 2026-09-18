@@ -52,14 +52,14 @@ def report(root, output):
         actual=byid[old['id']]
         if old['name']!=actual['name'] or old['data'].get('description')!=actual['data'].get('description'): failures.append(f"Changed prose {old['id']}")
     issues=inventory(spells,effects)
-    summary={'date':'2026-09-19','spellsStructurallyAudited':len(spells),'spellsChanged':len(plan),'mechanicalFieldsChanged':sum(bool(x['changes']) for x in plan),'statuses':dict(Counter(x['automationStatus'] for x in spells)), 'effectsCreatedAndVerified':len(specs),'sameIconIds':len(specs),'effectSources':len(specs),'readbackFailures':failures,'structuralFlags':dict(Counter(f for x in issues for f in x['flags']))}
+    summary={'date':'2026-09-19','spellsStructurallyAudited':len(spells),'spellsChanged':len(plan),'mechanicalFieldsChanged':sum(bool(x['changes']) for x in plan),'mechanicallyChangedSpells':len({x['id'] for x in plan if x['changes']}|{x['spellId'] for x in specs}),'statuses':dict(Counter(x['automationStatus'] for x in spells)), 'effectsCreatedAndVerified':len(specs),'sameIconIds':len(specs),'effectSources':len(specs),'readbackFailures':failures,'structuralFlags':dict(Counter(f for x in issues for f in x['flags']))}
     if failures: raise RuntimeError(failures)
     output.mkdir(parents=True,exist_ok=True)
     with (output/'spells.csv').open('w') as f:
-        w=csv.writer(f);w.writerow(['id','name','automation_status','requires_player_interaction','note'])
+        w=csv.writer(f,lineterminator="\n");w.writerow(['id','name','automation_status','requires_player_interaction','note'])
         w.writerows([x['id'],x['name'],x['automationStatus'],x.get('requiresPlayerInteraction',False),x.get('automationNote','')] for x in spells)
     with (output/'review-effects.csv').open('w') as f:
-        w=csv.writer(f);w.writerow(['spell_id','key','name','effect_id']);w.writerows(verified_effects)
+        w=csv.writer(f,lineterminator="\n");w.writerow(['spell_id','key','name','effect_id']);w.writerows(verified_effects)
     for name,data in [('review-verification.json',summary),('structural-review.json',issues)]: (output/name).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps(summary,ensure_ascii=False,indent=2))
 if __name__=='__main__':

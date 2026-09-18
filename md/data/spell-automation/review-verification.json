@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-19",
+  "spellsStructurallyAudited": 961,
+  "spellsChanged": 135,
+  "mechanicalFieldsChanged": 83,
+  "mechanicallyChangedSpells": 96,
+  "statuses": {
+    "none": 363,
+    "partial": 537,
+    "full": 61
+  },
+  "effectsCreatedAndVerified": 25,
+  "sameIconIds": 25,
+  "effectSources": 25,
+  "readbackFailures": [],
+  "structuralFlags": {
+    "candidate:dice-in-description-without-roll": 45,
+    "roll:0:untyped-damage-needs-review": 18,
+    "roll:2:untyped-damage-needs-review": 3
+  }
+}
