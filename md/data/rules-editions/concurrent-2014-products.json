@@ -1,0 +1,26 @@
+{
+  "verified": true,
+  "decisions": [
+    {
+      "id": 4839,
+      "sourceVersionId": 1,
+      "status": "native"
+    },
+    {
+      "id": 4840,
+      "sourceVersionId": 1,
+      "status": "native"
+    },
+    {
+      "id": 4841,
+      "sourceVersionId": 1,
+      "status": "native"
+    },
+    {
+      "id": 4842,
+      "sourceVersionId": 1,
+      "status": "native"
+    }
+  ],
+  "definitionsUnchanged": 4
+}

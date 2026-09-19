@@ -70,7 +70,9 @@ def main():
  if not backup.exists():backup.write_text(json.dumps({'spells':list(spells.values()),'items':gear},ensure_ascii=False,indent=2)+'\n')
  for key,spec in specs.items():
   if key not in existing:
-   result=call('handbook_item_create',{'typeId':2,'name':spec['name'],'nameEn':'','data':json.dumps(spec['data'],ensure_ascii=False),'automationStatus':'full','automationNote':'Создаётся заклинанием; расход и заданное применение поддержаны. Игровой срок отмечается владельцем.','requiresPlayerInteraction':False})
+   compatibility=[{'sourceVersionId':c['sourceVersionId'],'status':'native'} for c in spells[spec['spell']].get('compatibility',[]) if c['status']=='native']
+   if not compatibility:raise RuntimeError('Source spell has no reviewed native edition: '+str(spec['spell']))
+   result=call('handbook_item_create',{'typeId':2,'name':spec['name'],'nameEn':'','data':json.dumps(spec['data'],ensure_ascii=False),'automationStatus':'full','automationNote':'Создаётся заклинанием; расход и заданное применение поддержаны. Игровой срок отмечается владельцем.','requiresPlayerInteraction':False,'compatibility':compatibility})
    item=get(result['id'] if isinstance(result,dict) else result)
    if item['data']!=spec['data']:raise RuntimeError('Created item readback mismatch')
    resolved[key]=item['id'];existing[key]=item

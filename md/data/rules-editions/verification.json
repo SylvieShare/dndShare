@@ -1,0 +1,30 @@
+{
+  "verified": true,
+  "records": 1223,
+  "shared": 13,
+  "originalDefinitionsUnchanged": 668,
+  "originalDigest": "18681e207141396f915a8e811110917942b67296b33796d26b630a369d7fafff",
+  "requestDigest": "d4e9e7a5652a378bcf22a7b1bf56ee807380c7cd77e1e49570f6f87bf1037bc1",
+  "byType": {
+    "5": 391,
+    "1": 38,
+    "14": 39,
+    "2": 94,
+    "10": 1,
+    "9": 12,
+    "17": 48,
+    "4": 473,
+    "7": 75,
+    "11": 16,
+    "8": 10,
+    "3": 10,
+    "15": 16
+  },
+  "automation": {
+    "none": 1096,
+    "partial": 124,
+    "full": 3
+  },
+  "sourceVersionId": 1799,
+  "contentSourceId": 23506
+}
