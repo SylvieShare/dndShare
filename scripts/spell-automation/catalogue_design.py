@@ -52,6 +52,12 @@ def index(spells,effects):
    start=max(0,low.rfind('.',0,match.start())+1);end=low.find('.',match.end());end=len(text) if end<0 else end+1
    candidates.append({'key':key,'name':title,'evidence':text[start:min(end,start+500)].strip(),'proposal':proposal})
   if not candidates:candidates=[{'key':'narrative','name':'Решение по описанию','evidence':text[:300],'proposal':'Декларация сотворения, ресурс, выбранные цели и результат мастера в хронике. Не преобразовывать свободный текст в изменение листа без явного правила.'}]
+  for field in ['time','range','duration','components','schoolId','lvl']:
+   if field not in d:problems.append({'spell':item['id'],'kind':'missing_field','field':field})
+  for rule in [damage,heal,*d.get('rolls',[])]:
+   if rule.get('save_ability') and rule['save_ability'] not in ['str','dex','con','int','wis','cha']:problems.append({'spell':item['id'],'kind':'invalid_save'})
+   for die in [*rule.get('dices',[]),*rule.get('addon',[])]:
+    if die.get('type') and not 1 <= int(die['type']) <= 13:problems.append({'spell':item['id'],'kind':'invalid_damage_type'})
   if not text:problems.append({'spell':item['id'],'kind':'missing_description'})
   if item.get('automationStatus') not in ['full','partial','none','unreviewed']:problems.append({'spell':item['id'],'kind':'invalid_status'})
   out.append({'id':item['id'],'name':item['name'],'edition':', '.join(str(c.get('version') or c['sourceVersionId']) for c in item.get('compatibility',[]) if c['status']=='native'),
