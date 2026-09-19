@@ -202,6 +202,7 @@ import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/Spe
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
 import { SectionList } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
+import { useSpellDamageTypes } from './composables/useSpellDamageTypes'
 import { useSpellRolls } from './composables/useSpellRolls'
 import { useSpellPicker } from './composables/useSpellPicker'
 import { useSpellbookTabs } from './composables/useSpellbookTabs'
@@ -449,8 +450,9 @@ const {
   props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation,
   spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource,
 })
+const spellDamageTypes = useSpellDamageTypes(damageTypeSuggests)
 const { requestSpellSave, spellTitle, spellAttackMode, spellDamagePreview, spellHealPreview, rollSpellAttack, rollSpellDamage, rollSpellHeal, rollSpellEffect } = useSpellRolls({
-  charCtx, spellcastingBlocked, spellAttackBonus, spellSaveDC, spellCastingAbility, spellAbilityModifier, charLevel, damageDiceParts, healDiceParts,
+  charCtx, spellDamageTypes, spellcastingBlocked, spellAttackBonus, spellSaveDC, spellCastingAbility, spellAbilityModifier, charLevel, damageDiceParts, healDiceParts,
 })
 
 function spellAbilityModifier(entry) {
@@ -496,7 +498,7 @@ provide('spellsBlockCtx', reactive({
   charLevel,
   maxSlotLevel,
   preparation,
-  spellAttackMode, spellDamagePreview, spellHealPreview,
+  spellDamageTypes, spellAttackMode, spellDamagePreview, spellHealPreview,
   rollSpellAttack,
   rollSpellDamage,
   rollSpellHeal, rollSpellEffect,

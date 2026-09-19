@@ -11,9 +11,10 @@
     </template>
     <template #default="{ close }">
       <SpellCastControls :entry="entry" :cast-level="castLevel" spend-by-default v-slot="cast">
+      <SpellDamageTypeChoice :entry="entry" :disabled="ctx.spellcastingBlocked" />
       <D20RollControls scope="attack"
         :mode="attackMode.mode" :cancelled="attackMode.cancelled"
-        :disabled="cast.disabled" action="attack" :roll-label="cast.spend ? 'Бросить и потратить ячейку' : 'Бросить на атаку'"
+        :disabled="cast.disabled || !typeReady(entry)" action="attack" :roll-label="cast.spend ? 'Бросить и потратить ячейку' : 'Бросить на атаку'"
         @roll="(mode, excluded) => rollAttack(mode, close, cast.commit, excluded)"
       />
       </SpellCastControls>
@@ -28,12 +29,13 @@
     <template #default="{ close }">
       <SpellCastControls :entry="entry" :cast-level="castLevel" :spend-by-default="!hasAttack && !option.rule.range_attack" v-slot="cast">
       <div class="spell-roll-controls">
+        <SpellDamageTypeChoice v-if="option.kind === 'damage'" :entry="option.entry" :disabled="ctx.spellcastingBlocked" />
         <FormField v-if="option.kind === 'damage' && option.rule.range_attack" label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
           <ToggleSwitch v-model="critical" aria-label="Критическое попадание" />
         </FormField>
         <DamageFormulaPreview :default-color="option.kind === 'heal' ? 'var(--success)' : undefined" :label="option.primary ? option.kind === 'damage' ? 'Итоговый урон' : 'Итоговое лечение' : option.label" :aria-label="option.kind === 'damage' ? 'Итоговая формула урона' : option.kind === 'heal' ? 'Итоговая формула лечения' : 'Итоговая формула эффекта'" :expression="preview(option, cast.castLevel)" />
         <small v-if="option.kind === 'damage' && spellInstances(option.entry.item, cast.castLevel, ctx.charLevel) > 1">Урон одного снаряда/луча. Всего: {{ spellInstances(option.entry.item, cast.castLevel, ctx.charLevel) }}.</small>
-        <RowActionItem :action="option.kind === 'damage' ? 'damage' : option.kind === 'heal' ? 'revive' : 'feature-damage'" :disabled="cast.disabled" @click="roll(option, close, cast)">
+        <RowActionItem :action="option.kind === 'damage' ? 'damage' : option.kind === 'heal' ? 'revive' : 'feature-damage'" :disabled="cast.disabled || !optionReady(option)" @click="roll(option, close, cast)">
           {{ cast.spend ? 'Бросить и потратить ячейку' : rollLabel(option) }}
         </RowActionItem>
       </div>
@@ -42,6 +44,7 @@
   </RowActionSubmenu>
 </template>
 <script setup>
+import SpellDamageTypeChoice from './SpellDamageTypeChoice.vue'
 import { spellRollOptions } from '../lib/spellRollOptions'
 import { spellInstances } from '../lib/spellScaling'
 import SpellCastControls from './SpellCastControls.vue'
@@ -55,6 +58,8 @@ const props = defineProps({ entry: { type: Object, required: true }, castLevel: 
 const emit = defineEmits(['close'])
 const ctx = inject('spellsBlockCtx')
 const critical = ref(false)
+const typeReady = entry => ctx.spellDamageTypes?.ready(entry) !== false
+const optionReady = option => option.kind !== 'damage' || typeReady(option.entry)
 const hasAttack = computed(() => !!props.entry.item?.data?.damage?.range_attack)
 const attackMode = computed(() => ctx.spellAttackMode(props.entry))
 const options = computed(() => spellRollOptions(props.entry).filter(option => !(option.primary && option.kind === 'heal' && props.entry.item?.data?.heal?.apply !== false)))
@@ -68,13 +73,13 @@ async function requestSave(close, cast) {
   close(); emit('close')
 }
 async function rollAttack(mode, close, commit, excluded) {
-  if (ctx.spellcastingBlocked || !await commit()) return
+  if (ctx.spellcastingBlocked || !typeReady(props.entry) || !await commit()) return
   ctx.rollSpellAttack(props.entry, mode, excluded)
   close()
   emit('close')
 }
 async function roll(option, close, cast) {
-  if (ctx.spellcastingBlocked || !await cast.commit()) return
+  if (ctx.spellcastingBlocked || !optionReady(option) || !await cast.commit()) return
   if (option.kind === 'damage') ctx.rollSpellDamage(option.entry, cast.castLevel, option.rule.range_attack && critical.value)
   else if (option.kind === 'heal') ctx.rollSpellHeal(option.entry, cast.castLevel)
   else ctx.rollSpellEffect(option.entry, cast.castLevel)

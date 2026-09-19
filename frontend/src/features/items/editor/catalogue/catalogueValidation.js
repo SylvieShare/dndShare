@@ -36,6 +36,10 @@ export function catalogueValidation(fields, data, typeId) {
   }
   walk(fields, data)
   if (typeId === 5) {
+    for (const rule of [data.damage, ...(data.rolls || [])].filter(Boolean)) {
+      const rows = [...(rule.dices || []), ...(rule.addon || [])]
+      if (rule.type_choices?.length && rows.length && rows.every(row => row.type)) errors.push('Типы урона на выбор: оставьте тип пустым хотя бы у одной зависящей от выбора составляющей формулы.')
+    }
     if (timeError(data.time)) errors.push(timeError(data.time))
     if (data.range?.kind === 'ranged' && !(Number(data.range.distance) > 0)) errors.push('Укажите дальность больше нуля.')
     if (data.range?.shape && data.range.kind !== 'custom' && !(Number(data.range.size) > 0)) errors.push('Укажите размер области больше нуля.')

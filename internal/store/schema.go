@@ -435,6 +435,7 @@ var schemaParts = []struct {
 	{"session-attack-targets", schemaSessionAttackTargetsSQL},
 	{"spell-presentation", schemaSpellPresentationSQL},
 	{"spell-roll-saves", schemaSpellRollSavesSQL},
+	{"spell-damage-type-choices", schemaSpellDamageTypeChoicesSQL},
 }
 
 const (

@@ -3,8 +3,10 @@ import { resolveRollMode } from '../lib/rollMode'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useDiceStore } from '@/stores/dice'
 
-export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, spellSaveDC = () => 10, spellCastingAbility, spellAbilityModifier = () => 0, charLevel, damageDiceParts, healDiceParts }) {
+export function useSpellRolls({ charCtx, spellDamageTypes, spellcastingBlocked, spellAttackBonus, spellSaveDC = () => 10, spellCastingAbility, spellAbilityModifier = () => 0, charLevel, damageDiceParts, healDiceParts }) {
   const dice = useDiceStore()
+  const damageEntry = entry => spellDamageTypes ? spellDamageTypes.resolve(entry) : entry
+  const typeEvent = entry => entry.damageType ? { damageType: entry.damageType } : {}
 
   function savingThrow(entry) {
     const rule = entry?.item?.data?.damage || {}
@@ -14,7 +16,7 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   function spellEventData(entry, explicit = false) {
     const save = explicit || entry?.item?.data?.damage?.save_manual !== true ? savingThrow(entry) : null
     const concentration = charCtx.itemTransfers?.concentration?.state?.current
-    return { ...itemEventData(entry.item), entryKey: entry.ref?.key, ...(Number(concentration?.spellId) === Number(entry.item.id) ? { castId: concentration.id } : {}), ...(save ? { savingThrow: save } : {}) }
+    return { ...itemEventData(entry.item), ...typeEvent(entry), entryKey: entry.ref?.key, ...(Number(concentration?.spellId) === Number(entry.item.id) ? { castId: concentration.id } : {}), ...(save ? { savingThrow: save } : {}) }
   }
   function requestSpellSave(entry) {
     if (spellcastingBlocked.value || !savingThrow(entry)) return
@@ -36,10 +38,11 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   }
 
   function rollSpellAttack(entry, mode = 'auto', excluded = []) {
-    if (spellcastingBlocked.value) return
+    entry = damageEntry(entry)
+    if (!entry || spellcastingBlocked.value) return
     const bonus = spellAttackBonus(entry)
     dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, spellAttackMode(entry, mode).mode, {
-      eventData: { ...itemEventData(entry.item), attackRoll: true },
+      eventData: { ...itemEventData(entry.item), ...typeEvent(entry), attackRoll: true },
       crit_mode: true,
       bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excluded),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
@@ -56,6 +59,8 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   }
 
   function spellDamagePreview(entry, castLevel, critical = false) {
+    entry = damageEntry(entry)
+    if (!entry) return ''
     const parts = damageDiceParts(entry.item, castLevel, charLevel.value, spellAbilityModifier(entry))
       .map((part) => critical ? { ...part, count: (Number(part.count) || 1) * 2 } : part)
     return exprWithBonus(parts, true)
@@ -66,7 +71,8 @@ export function useSpellRolls({ charCtx, spellcastingBlocked, spellAttackBonus, 
   }
 
   function rollSpellDamage(entry, castLevel, critical = false) {
-    if (spellcastingBlocked.value) return
+    entry = damageEntry(entry)
+    if (!entry || spellcastingBlocked.value) return
     const expr = spellDamagePreview(entry, castLevel, critical)
     if (expr) dice.roll(`${critical ? 'Критический урон' : 'Урон'}: ${spellTitle(entry)}`, expr, { eventData: { ...spellEventData(entry), damageRoll: true, castLevel } })
   }

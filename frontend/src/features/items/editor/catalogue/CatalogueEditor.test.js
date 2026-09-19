@@ -28,6 +28,14 @@ async function form(typeId, data = {}) {
   return html
 }
 describe('catalogue authoring', () => {
+  it('preserves damage choices through saving and rejects a choice with only fixed parts', () => {
+    const data = { damage: { type_choices: [7, 10], dices: [{ count: 5, dice_id: 'd6', type: 6 }, { count: 5, dice_id: 'd6' }] } }
+    const saved = normalizeDataForSave(data, schema(5))
+    expect(saved.damage.type_choices).toEqual([7, 10])
+    expect(catalogueValidation(schema(5), data, 5)).toEqual([])
+    data.damage.dices[1].type = 7
+    expect(catalogueValidation(schema(5), data, 5).some(error => error.includes('оставьте тип пустым'))).toBe(true)
+  })
   it('offers a stage save with the runtime outcome and hides dependent fields without it', () => {
     const field = catalogueField({ key: 'save_effect', type: 'text' }, 5, 'rolls.save_effect')
     expect(field.options).toContainEqual({ value: 'negate', label: 'Без урона' })

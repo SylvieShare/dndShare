@@ -5,6 +5,7 @@ export function spellRollOptions(entry) {
     .map(kind => ({ key: kind, kind, label: kind === 'damage' ? 'Урон' : 'Лечение', rule: data[kind], entry, primary: true }))
   const effects = (data.rolls || []).map((rule, index) => {
     const kind = rule.kind || 'effect'
+    if (kind === 'damage' && rule.type_choices == null && data.damage?.type_choices?.length && [...(rule.dices || []), ...(rule.addon || [])].some(row => !row.type)) rule = { ...rule, type_choices: data.damage.type_choices }
     const field = kind === 'heal' ? 'heal' : 'damage'
     return { key: `effect:${index}`, kind, label: rule.label || 'Эффект', rule, primary: false,
       entry: { ...entry, item: { ...entry.item, name: `${entry.item.name} — ${rule.label || 'Эффект'}`,
