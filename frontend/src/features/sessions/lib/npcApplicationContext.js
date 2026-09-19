@@ -1,6 +1,8 @@
 import { collectStatusDefenses, collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
 import { derivedRollEffects, matchingDerivedEffects } from '@/features/character-editor/lib/characterDerivedEffects'
 import { resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
+import { encounterEventData } from './encounterEventData'
+import { sessionSaveProfile } from './sessionSaveRoll'
 
 export function npcApplicationContext(combatant, npc, items, editable) {
   const data = { ...(npc?.data?.combat || {}), ...(npc?.data?.stats || {}), ...(combatant.override || {}) }
@@ -13,9 +15,15 @@ export function npcApplicationContext(combatant, npc, items, editable) {
   }
   const effects = collectStatusDerivedEffects(values, items)
   return { ownerMode: editable, values,
+    savingThrowBonus: ability => sessionSaveProfile({ kind: 'npc', snapshot: { combatant, item: npc?.data || {} } }, Number(ability), items).bonus,
+    actor: { name: data.name || npc?.name || 'НПС', charUuid: null, itemId: combatant.itemId || null },
+    eventData: encounterEventData(combatant, data.name || npc?.name || 'НПС'),
     characterDefenses: { defenses: [...collectStatusDefenses(values, items), ...(npc?.data?.damage_resistances || []).map(id => ({ damage_type: Number(id), kind: 'resistance' })), ...(npc?.data?.damage_immunities || []).map(id => ({ damage_type: Number(id), kind: 'immunity' }))] },
     characterRolls: { resolve: (mode, context) => resolveRollMode(mode, derivedRollEffects(effects, context)) },
-    characterDerivedEffects: { rollBonus: context => matchingDerivedEffects(effects, 'roll_bonus', context).map(row => row.formula).join('+') },
+    characterDerivedEffects: {
+      rollBonusOptions: context => matchingDerivedEffects(effects, 'roll_bonus', context).filter(row => row.formula),
+      rollBonus: (context, excluded = []) => matchingDerivedEffects(effects, 'roll_bonus', context).filter(row => !excluded.includes(row.key)).map(row => row.formula).join('+'),
+    },
     updateValues(patch) { if (patch.states) combatant.effectInstances = patch.states; if (patch.hp) { combatant.hpCurrent = patch.hp.current; combatant.hpTemp = patch.hp.temp } },
   }
 }

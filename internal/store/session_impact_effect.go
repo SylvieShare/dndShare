@@ -56,7 +56,7 @@ func impactEffectPlan(ctx context.Context, tx pgx.Tx, userID, actorID int64, dat
 			return plan, ErrApplication
 		}
 		_, ability := spellCastingReference(doc.values(), id, textValue(data["entryKey"]))
-		if err = prepareSpellEffectBindings(&plan, source, doc.values(), level, ability); err != nil {
+		if err = prepareSpellEffectBindings(&plan, source, doc.values(), level, ability, textValue(data["entryKey"])); err != nil {
 			return plan, err
 		}
 		if applyEffects && applicationNeedsConcentration(plan) {

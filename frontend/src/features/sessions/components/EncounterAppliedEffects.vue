@@ -3,7 +3,7 @@
     <div v-for="effect in instances" :key="effect.uid" class="npc-effect">
       <ItemIcon v-if="itemById(effect.effect_id)" :item="itemById(effect.effect_id)" :size="24" />
       <span><strong>{{ itemById(effect.effect_id)?.name || 'Эффект' }}</strong><small>{{ statusDuration(effect.duration) }}<template v-if="effect.requires_concentration"> · концентрация источника</template></small></span>
-      <RowActionMenu v-if="editable && itemById(effect.effect_id)?.data?.ongoing_damage" :title="`Действия: ${itemById(effect.effect_id).name}`">
+      <RowActionMenu v-if="editable && (itemById(effect.effect_id)?.data?.ongoing_damage || itemById(effect.effect_id)?.data?.repeat_save)" :title="`Действия: ${itemById(effect.effect_id).name}`">
         <template #trigger><ActionButton>Действия</ActionButton></template>
         <template #default><StatusMechanicsMenu :uid="effect.uid" :effect="itemById(effect.effect_id)" :context="context" /></template>
       </RowActionMenu>

@@ -204,6 +204,9 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 		if kind != 15 {
 			return p, ErrApplication
 		}
+		if repeat := object(effect["repeat_save"]); len(repeat) > 0 && (number(repeat["ability"]) < 1 || number(repeat["ability"]) > 6) {
+			return p, fmt.Errorf("%w: у повторного спасброска не указана характеристика", ErrApplication)
+		}
 		duration := object(effect["duration"])
 		if d, ok := link["duration"].(map[string]any); ok {
 			duration = d

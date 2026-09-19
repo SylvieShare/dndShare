@@ -246,6 +246,10 @@ func (s *Store) createItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ses
 		if err != nil {
 			return ItemTransfer{}, err
 		}
+		if expectedType == 5 {
+			_, ability := spellCastingReference(doc.values(), plan.ItemID, "")
+			freezeRepeatSaveDC(&plan, doc.values(), ability, "")
+		}
 	}
 	if frozen != nil {
 		plan = *frozen

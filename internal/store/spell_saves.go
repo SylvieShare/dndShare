@@ -9,6 +9,14 @@ func spellSaveEvent(data, values map[string]any, ability int, spellID int64, ent
 	if id == 0 {
 		return nil
 	}
+	dc := calculatedSpellSaveDC(values, ability, spellID, entryKey)
+	if fixed := number(rule["save_dc"]); fixed > 0 && fixed <= 100 {
+		dc = fixed
+	}
+	return map[string]any{"ability": id, "dc": dc, "onSuccess": rule["save_effect"], "condition": rule["save_condition"], "results": []any{}}
+}
+
+func calculatedSpellSaveDC(values map[string]any, ability int, spellID int64, entryKey string) int {
 	profData := object(values["prof_bonus"])
 	prof := 2 + max(0, number(object(values["lvl"])["level"])-1)/4
 	if profData["auto"] == false {
@@ -27,9 +35,5 @@ func spellSaveEvent(data, values map[string]any, ability int, spellID int64, ent
 			}
 		}
 	}
-	dc := 8 + prof + spellAbilityModifier(values, ability) + extra
-	if fixed := number(rule["save_dc"]); fixed > 0 && fixed <= 100 {
-		dc = fixed
-	}
-	return map[string]any{"ability": id, "dc": dc, "onSuccess": rule["save_effect"], "condition": rule["save_condition"], "results": []any{}}
+	return 8 + prof + spellAbilityModifier(values, ability) + extra
 }

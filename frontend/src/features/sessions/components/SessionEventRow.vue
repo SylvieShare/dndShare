@@ -16,6 +16,7 @@
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
         </div>
+        <RollOutcomeNote :note="event.data?.result?.note" />
         <SessionRollSequence v-if="event.data?.sequence" :event="event" :is-dm="isDm" />
         <SessionSavingThrow v-if="event.data?.savingThrow" :event="event" />
         <DamageImpact v-for="impact in standaloneImpacts" :key="impact.key" :impact="impact" />
@@ -57,6 +58,7 @@ import { ArrowRight } from '@lucide/vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import TransferStatus from '@/features/item-transfers/components/TransferStatus.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
+import RollOutcomeNote from '@/shared/ui/RollOutcomeNote.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SessionEventIcon from './SessionEventIcon.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'

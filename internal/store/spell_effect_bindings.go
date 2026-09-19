@@ -4,7 +4,8 @@ import "math"
 
 // Freeze caster- and slot-dependent parameters on the accepted effect instance.
 // Recipients never derive these values from their own level or ability score.
-func prepareSpellEffectBindings(plan *ApplicationPlan, data, values map[string]any, level, ability int) error {
+func prepareSpellEffectBindings(plan *ApplicationPlan, data, values map[string]any, level, ability int, entryKey string) error {
+	freezeRepeatSaveDC(plan, values, ability, entryKey)
 	for i := range plan.Effects {
 		effect := &plan.Effects[i]
 		for _, raw := range array(data["status_effects"]) {
@@ -57,4 +58,16 @@ func prepareSpellEffectBindings(plan *ApplicationPlan, data, values map[string]a
 		}
 	}
 	return nil
+}
+
+func freezeRepeatSaveDC(plan *ApplicationPlan, values map[string]any, ability int, entryKey string) {
+	for i := range plan.Effects {
+		effect := &plan.Effects[i]
+		if repeat := object(effect.Data["repeat_save"]); len(repeat) > 0 && number(repeat["dc"]) == 0 {
+			if effect.Params == nil {
+				effect.Params = map[string]any{}
+			}
+			effect.Params["save_dc"] = calculatedSpellSaveDC(values, ability, plan.ItemID, entryKey)
+		}
+	}
 }

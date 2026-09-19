@@ -58,6 +58,8 @@ func (s *Store) UseSpellSelf(ctx context.Context, userID, charID, version, spell
 	if err != nil {
 		return result, err
 	}
+	_, ability := spellCastingReference(doc.values(), spellID, "")
+	freezeRepeatSaveDC(&plan, doc.values(), ability, "")
 	if applicationNeedsConcentration(plan) {
 		plan.ConcentrationID, err = beginConcentrationTx(ctx, tx, charID, spellID, plan.Name, actionID, true)
 		if err != nil {

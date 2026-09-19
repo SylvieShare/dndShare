@@ -73,6 +73,7 @@
     </div>
 
     <div class="dice-pop-raw">{{ rawExpression(entry) }}</div>
+    <RollOutcomeNote v-if="!isRolling(entry.id)" :note="entry.result.note" />
 
     <div v-if="entry.result.adjustments?.length && !isRolling(entry.id)" class="dice-pop-adjustments">
       <div v-for="adjustment in entry.result.adjustments" :key="`${adjustment.kind}:${adjustment.label}`">
@@ -92,6 +93,7 @@
 import { onBeforeUnmount, watch } from 'vue'
 import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
 import SystemDie from '@/shared/ui/SystemDie.vue'
+import RollOutcomeNote from '@/shared/ui/RollOutcomeNote.vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 const props = defineProps({ entry: { type: Object, required: true } })
 const emit = defineEmits(['action'])

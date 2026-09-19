@@ -1,5 +1,6 @@
 <template>
   <template v-if="ctx.ownerMode && instance">
+    <StatusRepeatSaveMenu v-if="effect.data?.repeat_save && !instance.external_only" :context="ctx" :instance="instance" :effect="effect" />
     <RowActionItem v-if="ongoing" :icon="Dices" :disabled="busy" @click="runOngoing">
       {{ damagePhase ? (phase === 'initial_damage' ? 'При употреблении' : 'Начало хода') + ': ' + count + ongoing.dice : (phase === 'initial_save' ? 'После употребления' : 'Конец хода') + ': спасбросок, Сл ' + ongoing.save_dc }}
     </RowActionItem>
@@ -22,6 +23,7 @@ import { AppModalFrame, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import StatusRepeatSaveMenu from './StatusRepeatSaveMenu.vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { useDiceStore } from '@/stores/dice'
 import { ongoingDamageTransition, statusDamageHp, statusSaveBonus } from '@/features/character-editor/lib/statusMechanics'

@@ -31,8 +31,13 @@
       </div>
     </DetailSection>
 
-    <DetailSection v-if="data.ongoing_damage || data.weapon_target || data.weapon_damage?.length" label="Действия эффекта">
+    <DetailSection v-if="data.repeat_save || data.ongoing_damage || data.weapon_target || data.weapon_damage?.length" label="Действия эффекта">
       <div class="status-effect-rules">
+        <article v-if="data.repeat_save" class="status-effect-rule">
+          <span>Повторный спасбросок · {{ REPEAT_SAVE_TIMING[data.repeat_save.timing] || 'В конце хода' }}</span>
+          <strong>{{ STAT_FULL[SUGGEST16_TO_STAT[data.repeat_save.ability]] }} · {{ data.repeat_save.dc ? `Сл ${data.repeat_save.dc}` : 'Сл источника при наложении' }}</strong>
+          <small>Успех снимает этот эффект. {{ data.repeat_save.condition }}</small>
+        </article>
         <article v-if="data.ongoing_damage" class="status-effect-rule">
           <span>Урон при употреблении и в начале хода</span>
           <DamageFormulaPreview :expression="`${data.ongoing_damage.dice_count}${data.ongoing_damage.dice}`" />
@@ -63,6 +68,8 @@
 
 <script setup>
 import DamageFormulaPreview from '@/features/character-editor/blocks/dnd/components/DamageFormulaPreview.vue'
+import { REPEAT_SAVE_TIMING } from '@/features/character-editor/lib/statusRepeatSave'
+import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import HandbookReferenceRows from '@/features/items/components/HandbookReferenceRows.vue'
 import EffectSources from '@/features/items/components/EffectSources.vue'
 import { computed, watch } from 'vue'

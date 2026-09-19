@@ -153,4 +153,5 @@ var schemaParts = []struct {
 	{"armor-minimum", schemaArmorMinimumSQL},
 	{"effect-application-context", schemaEffectApplicationContextSQL},
 	{"spell-fixed-save-dc", schemaSpellFixedSaveDCSQL},
+	{"status-repeat-save", schemaStatusRepeatSaveSQL},
 }

@@ -2,6 +2,7 @@ import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
 export function statusSaveBonus(ctx, abilityId) {
+  if (ctx.savingThrowBonus) return ctx.savingThrowBonus(abilityId)
   const values = ctx.values || {}, stat = values[SUGGEST16_TO_STAT[abilityId]] || {}
   const context = { kind: 'saving_throw', abilitySuggestId: abilityId }
   const prof = values.prof_bonus?.auto === false ? Number(values.prof_bonus.v) || 0 : proficiencyBonus(values.lvl?.level)

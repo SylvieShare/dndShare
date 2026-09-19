@@ -13,10 +13,10 @@ import { computed, inject } from 'vue'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
 import DamageFormulaPreview from './DamageFormulaPreview.vue'
-const props = defineProps({ scope: String, modelValue: { type: Array, default: () => [] } })
+const props = defineProps({ scope: String, characterContext: Object, rollContext: Object, modelValue: { type: Array, default: () => [] } })
 const emit = defineEmits(['update:modelValue'])
 const ctx = inject('charCtx', {})
-const rules = computed(() => ctx.characterDerivedEffects?.rollBonusOptions?.({ kind: props.scope }) || [])
+const rules = computed(() => (props.characterContext || ctx).characterDerivedEffects?.rollBonusOptions?.({ kind: props.scope, ...props.rollContext }) || [])
 function toggle(key, enabled) {
   emit('update:modelValue', enabled ? props.modelValue.filter(value => value !== key) : [...props.modelValue, key])
 }

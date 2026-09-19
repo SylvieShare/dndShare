@@ -173,7 +173,7 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	}
 	plan.CastID = r.ClientActionID
 	plan.CastLevel = r.CastLevel
-	if err = prepareSpellEffectBindings(&plan, data, doc.values(), r.CastLevel, ability); err != nil {
+	if err = prepareSpellEffectBindings(&plan, data, doc.values(), r.CastLevel, ability, r.EntryKey); err != nil {
 		return result, err
 	}
 	if !creating && object(data["heal"])["apply"] != false && len(array(object(data["heal"])["dices"])) > 0 {

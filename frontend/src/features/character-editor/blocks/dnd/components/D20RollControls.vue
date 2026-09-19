@@ -5,7 +5,7 @@
         <span class="d20-roll-divider" role="separator" aria-orientation="vertical" />
         <ToggleSwitch v-model="advantage" label="Преимущество" />
       </div>
-      <RollBonusOptions v-if="scope" :scope="scope" v-model="excludedBonuses" />
+      <RollBonusOptions v-if="scope" :scope="scope" :character-context="characterContext" :roll-context="rollContext" v-model="excludedBonuses" />
       <RowActionItem :action="action" :disabled="disabled" @click="!disabled && emit('roll', rollMode, excludedBonuses)">{{ rollLabel }}</RowActionItem>
     </div>
 </template>
@@ -17,6 +17,8 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 const props = defineProps({
   mode: { type: String, default: 'normal' },
   scope: String,
+  characterContext: Object,
+  rollContext: Object,
   cancelled: Boolean,
   disabled: Boolean,
   action: { type: String, default: 'feature-damage' },
