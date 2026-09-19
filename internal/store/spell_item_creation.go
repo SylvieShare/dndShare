@@ -79,6 +79,12 @@ func createSpellItems(ctx context.Context, tx pgx.Tx, doc transferDocument, user
 		}
 		uid := castTargetAction(r.ClientActionID, i)
 		creation := map[string]any{"cast_id": r.ClientActionID, "spell_id": r.SpellID, "duration": duration, "expired": false}
+		if ending := textValue(output["on_expire"]); ending != "" {
+			if ending != "inert" && ending != "vanish" {
+				return nil, ErrApplication
+			}
+			creation["on_expire"] = ending
+		}
 		entry := map[string]any{"uid": uid, "item_id": id, "count": count, "params": map[string]any{"creation": creation}}
 		doc.receive("items", entry, false, uid)
 		created = append(created, CreatedApplicationItem{ItemID: id, Name: name, UID: uid, Count: count, Duration: duration})

@@ -5,7 +5,7 @@
       <strong v-if="item.data.item_creation.length > 1">{{ option.title }}</strong>
       <HandbookReferenceRows :rows="(option.outputs || []).map(row => ({ ...row, id: row.item }))">
         <template #leading="{ row }"><strong>×{{ row.count ?? 1 }}</strong></template>
-        <template #description="{ row }"><small><template v-if="option.choose_count">Можно создать меньше. </template><template v-if="row.per_slot">+{{ row.per_slot }} за каждые {{ row.scaling_step || 1 }} круга свыше базового. </template>{{ row.duration ? statusDuration(row.duration) : '' }}</small></template>
+        <template #description="{ row }"><small><template v-if="option.choose_count">Можно создать меньше. </template><template v-if="row.per_slot">+{{ row.per_slot }} за каждые {{ row.scaling_step || 1 }} круга свыше базового. </template>{{ row.duration ? statusDuration(row.duration) : '' }}<template v-if="row.on_expire === 'vanish'"> · затем исчезает</template></small></template>
       </HandbookReferenceRows>
       <p v-if="option.condition">{{ option.condition }}</p>
     </div>

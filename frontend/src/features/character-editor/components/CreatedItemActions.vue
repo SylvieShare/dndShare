@@ -1,17 +1,22 @@
 <template>
-  <RowActionItem v-if="ctx.ownerMode && entry.params?.creation" :icon="Clock" @click="toggle">{{ entry.params.creation.expired ? 'Вернуть срок действия' : 'Отметить окончание срока' }}</RowActionItem>
+  <RowActionItem v-if="ctx.ownerMode && creation && creation.duration?.kind !== 'permanent'" :icon="Clock" @click="creation.on_expire === 'vanish' ? confirming = true : toggle()">{{ creation.expired ? 'Вернуть срок действия' : 'Отметить окончание срока' }}</RowActionItem>
+  <ConfirmDialog v-if="confirming" title="Срок действия закончился?" :message="`Остаток этой стопки (${entry.count ?? 1} шт.) исчезнет из инвентаря. Отмечайте это по игровому времени.`" confirm-text="Предметы исчезли" :z-index="4600" @confirm="toggle" @cancel="confirming = false" @close="confirming = false" />
 </template>
 <script setup>
-import { inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { Clock } from '@lucide/vue'
-import { mapOwnedEntries } from '@/features/character-editor/lib/characterMagicItems'
+import { ConfirmDialog } from '@sylvieshare/share-ui'
+import { expireCreatedItem } from '@/features/character-editor/lib/createdItemExpiry'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 const props = defineProps({ entry: { type: Object, required: true } })
 const emit = defineEmits(['close'])
 const ctx = inject('charCtx', {})
+const creation = computed(() => props.entry.params?.creation)
+const confirming = ref(false)
 function toggle() {
-  const transform = entry => entry.uid !== props.entry.uid ? entry : ({ ...entry, params: { ...entry.params, creation: { ...entry.params.creation, expired: !props.entry.params.creation.expired } } })
-  ctx.updateValues({ ...mapOwnedEntries(ctx.values, transform), ...(Array.isArray(ctx.values.potions) ? { potions: ctx.values.potions.map(transform) } : {}) })
+  if (!ctx.ownerMode) return
+  ctx.updateValues(expireCreatedItem(ctx.values, props.entry.uid))
+  confirming.value = false
   emit('close')
 }
 </script>

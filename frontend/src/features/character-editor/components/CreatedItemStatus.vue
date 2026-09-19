@@ -1,4 +1,4 @@
-<template><span v-if="creation" class="created-item-status" :class="{ expired: creation.expired }"><Clock :size="13" />{{ creation.expired ? 'Магия закончилась' : `Создано магией · ${statusDuration(creation.duration)}` }}</span></template>
+<template><span v-if="creation" class="created-item-status" :class="{ expired: creation.expired }"><Clock :size="13" />{{ creation.expired ? 'Магия закончилась' : `Создано магией · ${statusDuration(creation.duration)}` }}<template v-if="!creation.expired && creation.on_expire === 'vanish'"> · затем исчезает</template></span></template>
 <script setup>
 import { computed } from 'vue'
 import { Clock } from '@lucide/vue'

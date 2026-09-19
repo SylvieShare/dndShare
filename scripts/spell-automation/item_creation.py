@@ -46,7 +46,8 @@ def main():
   (root/'plan.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2)+'\n');(root/'items.json').write_text(json.dumps(ITEMS,ensure_ascii=False,indent=2)+'\n');print('Prepared',len(plan),'spells');return
  plan=json.loads((root/'plan.json').read_text());specs=json.loads((root/'items.json').read_text());spells={x['id']:x for x in catalogue(5)};gear=catalogue(2);resolved={};existing={}
  for key,spec in specs.items():
-  matches=[x for x in gear if x['name']==spec['name'] and not x.get('userId')]
+  native={c['sourceVersionId'] for c in spells[spec['spell']].get('compatibility',[]) if c['status']=='native'}
+  matches=[x for x in gear if x['name']==spec['name'] and not x.get('userId') and any(c['status']=='native' and c['sourceVersionId'] in native for c in x.get('compatibility',[]))]
   if len(matches)>1:raise RuntimeError('Duplicate created item: '+key)
   if matches:
    item=matches[0]

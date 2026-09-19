@@ -155,4 +155,5 @@ var schemaParts = []struct {
 	{"spell-fixed-save-dc", schemaSpellFixedSaveDCSQL},
 	{"status-repeat-save", schemaStatusRepeatSaveSQL},
 	{"spell-chain-limits", schemaSpellChainLimitsSQL},
+	{"created-item-expiry", schemaCreatedItemExpirySQL},
 }
