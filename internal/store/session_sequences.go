@@ -78,6 +78,9 @@ func (s *Store) AdvanceSessionSequence(ctx context.Context, userID, sessionID, e
 		}
 	}
 	hit["canContinue"] = sequenceCanContinue(seq, hit)
+	if limit := sequenceJumpLimit(seq); limit > 0 {
+		seq["jumpLimit"] = limit
+	}
 	receipts[cmd.ClientActionID], seq["requests"], seq["revision"] = string(signature), receipts, cmd.Revision+1
 	raw, err = json.Marshal(data)
 	if err != nil {

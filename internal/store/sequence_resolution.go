@@ -94,7 +94,20 @@ func sequenceCanContinue(seq, hit map[string]any) bool {
 	if hit["status"] != "ready" {
 		return false
 	}
+	if limit := sequenceJumpLimit(seq); limit > 0 {
+		used := 0
+		for _, raw := range array(seq["hits"]) {
+			if object(raw)["jump"] == true {
+				used++
+			}
+		}
+		if used >= limit {
+			return false
+		}
+	}
 	switch object(seq["chain"])["trigger"] {
+	case "matching_dice":
+		return sequenceMatchingDice(object(seq["chain"]), object(hit["result"]))
 	case "matching_damage":
 		values := array(hit["tableValues"])
 		if len(values) < 2 {

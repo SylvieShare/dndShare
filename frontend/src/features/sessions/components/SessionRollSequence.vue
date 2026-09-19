@@ -1,5 +1,6 @@
 <template>
   <div class="roll-sequence">
+    <span v-if="sequence.jumpLimit" class="sequence-note">Перескоки: {{ sequence.hits.filter(hit => hit.jump).length }}/{{ sequence.jumpLimit }}</span>
     <div v-for="(hit, index) in sequence.hits" :key="index" class="sequence-hit">
       <SaveTargetName v-if="hit.target" :target="hit.target" />
       <DiceRollResult v-if="index && hit.attack" :result="hit.attack" :size="28" />

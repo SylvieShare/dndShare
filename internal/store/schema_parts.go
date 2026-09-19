@@ -154,4 +154,5 @@ var schemaParts = []struct {
 	{"effect-application-context", schemaEffectApplicationContextSQL},
 	{"spell-fixed-save-dc", schemaSpellFixedSaveDCSQL},
 	{"status-repeat-save", schemaStatusRepeatSaveSQL},
+	{"spell-chain-limits", schemaSpellChainLimitsSQL},
 }
