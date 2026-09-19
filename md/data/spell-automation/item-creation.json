@@ -1,0 +1,21 @@
+{
+  "verified": true,
+  "catalogueSpells": 961,
+  "counts": {
+    "none": 360,
+    "partial": 536,
+    "full": 65
+  },
+  "items": {
+    "berry": 4839,
+    "elixir": 4840,
+    "food": 4841,
+    "water": 4842
+  },
+  "spells": [
+    691,
+    602,
+    980,
+    677
+  ]
+}

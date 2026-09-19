@@ -113,6 +113,9 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 		p.Concentration = data["concentration"] == true
 	}
 	c := object(data["usable"])
+	if expectedType != 0 {
+		c = map[string]any{}
+	}
 	if choices := array(c["choices"]); len(choices) > 0 {
 		found := false
 		for _, raw := range choices {
@@ -145,7 +148,7 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 		}
 	}
 	links := []any{}
-	if expectedType == 5 {
+	if expectedType != 0 {
 		links = array(data["status_effects"])
 	}
 	if expectedType == 5 {

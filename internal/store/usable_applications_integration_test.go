@@ -58,4 +58,20 @@ func testUsableApplications(t *testing.T, s *Store, exec func(string), current f
 	if number(object(doc.values()["hp"])["current"]) != 2 {
 		t.Fatal("pending use followed changed catalogue", doc)
 	}
+	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES
+ (90031,'Эффект попадания',15,'{}'),(90032,'Эффект применения',15,'{}'),
+ (90030,'Магическое оружие',19,'{"status_effects":[{"key":"hit","effect":{"id":90031}}],"usable":{"healing":"2","status_effects":[{"key":"consume","effect":{"id":90032}}]}}');`)
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Rollback(ctx)
+	hit, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": 90030}, "hit", 1, 19)
+	if err != nil || len(hit.Effects) != 1 || hit.Effects[0].ID != 90031 || hit.Healing != "" {
+		t.Fatal("weapon hit mixed with consumable application", hit, err)
+	}
+	use, err := buildUsableApplication(ctx, tx, map[string]any{"item_id": 90030}, "", 1)
+	if err != nil || len(use.Effects) != 1 || use.Effects[0].ID != 90032 || use.Healing != "2" {
+		t.Fatal("usable application mixed with weapon hit", use, err)
+	}
 }
