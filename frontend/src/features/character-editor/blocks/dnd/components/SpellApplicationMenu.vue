@@ -11,7 +11,7 @@
           </div>
           <p v-if="selectedCondition" class="spell-condition">{{ selectedCondition }}</p>
           <ToggleSwitch v-if="selectedCondition" v-model="conditionsMet" label="Условия выполнены" />
-          <DamageFormulaPreview v-if="entry.item.data?.heal?.dices?.length" :expression="ctx.spellHealPreview(entry, cast.castLevel)" label="Лечение" default-color="var(--success)" />
+          <DamageFormulaPreview v-if="entry.item.data?.heal?.dices?.length" :expression="ctx.spellHealPreview(entry, cast.castLevel)" :label="entry.item.data.heal?.kind === 'temporary_hp' ? 'Временные хиты' : 'Лечение'" :default-color="entry.item.data.heal?.kind === 'temporary_hp' ? 'var(--info)' : 'var(--success)'" />
           <RowActionSeparator />
           <div v-if="maximum(cast) > 1" class="spell-target-caption">Выберите до {{ maximum(cast) }} целей · выбрано {{ selected.length + dmCount }}</div>
           <label v-if="maximum(cast) > 1" class="spell-target-option">

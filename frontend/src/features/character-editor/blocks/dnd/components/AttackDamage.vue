@@ -57,12 +57,13 @@
       v-if="healParts.length"
       :type="rollable ? 'button' : undefined"
       class="ad-heal"
+      :style="{ '--ad-health-color': healthColor }"
       :class="{ 'ad-clickable': rollable, 'ad-with-suffix': !!$slots['heal-suffix'] }"
-      :title="rollable ? 'Бросок лечения' : undefined"
+      :title="healKind === 'temporary_hp' ? 'Временные хиты' : rollable ? 'Бросок лечения' : undefined"
       @click="onRoll($event, 'roll-heal')"
     >
-      <span class="ad-heal-mark">♥</span>
-      <DamageDice :parts="healParts" :modifier="healModifier" default-color="var(--success)" />
+      <span class="ad-heal-mark"><Shield v-if="healKind === 'temporary_hp'" :size="16" /><template v-else>♥</template></span>
+      <DamageDice :parts="healParts" :modifier="healModifier" :default-color="healthColor" />
       <slot name="heal-suffix" />
     </component>
   </div>
@@ -70,6 +71,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { Shield } from '@lucide/vue'
 
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
 import DamageRollOptions from './DamageRollOptions.vue'
@@ -85,6 +87,7 @@ const props = defineProps({
   twoHandedParts: { type: Array, default: () => [] }, // versatile two-handed dice
   healModifier: { type: Number, default: 0 },
   healParts: { type: Array, default: () => [] },
+  healKind: { type: String, default: 'healing' },
   flatDamage: { type: Number, default: null },
   flatDamageType: { type: String, default: '' },
   flatDamageTitle: { type: String, default: '' },
@@ -105,6 +108,7 @@ function rollDamage(close, critical) {
 }
 
 const hasAttack = computed(() => props.attack != null && props.attack !== '')
+const healthColor = computed(() => props.healKind === 'temporary_hp' ? 'var(--info)' : 'var(--success)')
 const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.length > 0 || props.modifier !== 0)
 </script>
 
@@ -161,9 +165,9 @@ const hasDamage = computed(() => props.flatDamage !== null || props.damageParts.
 .ad-heal {
   padding: 5px 10px;
   border-radius: 8px;
-  border: 1px solid color-mix(in srgb, var(--success) 50%, transparent);
-  background: color-mix(in srgb, var(--success) 16%, transparent);
-  color: var(--success);
+  border: 1px solid color-mix(in srgb, var(--ad-health-color, var(--success)) 50%, transparent);
+  background: color-mix(in srgb, var(--ad-health-color, var(--success)) 16%, transparent);
+  color: var(--ad-health-color, var(--success));
   font-size: 15px;
 }
 .ad-with-suffix { align-items: flex-start; }

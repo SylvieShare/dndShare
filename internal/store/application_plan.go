@@ -22,7 +22,7 @@ type ApplicationEffect struct {
 type ApplicationPlan struct {
 	CastID          string `json:"castId,omitempty"`
 	CastLevel       int    `json:"castLevel,omitempty"`
-	healingRoll     *ApplicationRoll
+	healthRoll      *ApplicationRoll
 	ConcentrationID string `json:"concentrationId,omitempty"`
 	Concentration   bool   `json:"concentration,omitempty"`
 	maximumHP       *int

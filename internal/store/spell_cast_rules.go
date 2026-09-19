@@ -119,14 +119,18 @@ func spendSpellSlot(doc transferDocument, pool string, level int) error {
 	return fmt.Errorf("%w: нет доступной ячейки выбранного круга", ErrApplication)
 }
 
-// All targets of one healing spell share a roll. Generate it on the first
+// All targets of one health-granting spell share a roll. Generate it on the first
 // acceptance, under the graph lock, and reuse it for subsequent recipients.
-func prepareSpellHealing(ctx context.Context, tx pgx.Tx, p *ApplicationPlan) error {
-	if p.CastID == "" || p.Healing == "" {
+func prepareSpellHealth(ctx context.Context, tx pgx.Tx, p *ApplicationPlan) error {
+	formula := p.Healing
+	if formula == "" {
+		formula = p.TemporaryHP
+	}
+	if p.CastID == "" || formula == "" {
 		return nil
 	}
 	var raw json.RawMessage
-	if err := tx.QueryRow(ctx, `SELECT healing_roll FROM dndshare.spell_cast_receipt WHERE cast_id=$1::uuid`, p.CastID).Scan(&raw); err != nil {
+	if err := tx.QueryRow(ctx, `SELECT health_roll FROM dndshare.spell_cast_receipt WHERE cast_id=$1::uuid`, p.CastID).Scan(&raw); err != nil {
 		return err
 	}
 	var roll ApplicationRoll
@@ -136,15 +140,15 @@ func prepareSpellHealing(ctx context.Context, tx pgx.Tx, p *ApplicationPlan) err
 		}
 	} else {
 		var err error
-		roll, err = rollApplication(p.Healing, secureApplicationDie)
+		roll, err = rollApplication(formula, secureApplicationDie)
 		if err != nil {
 			return err
 		}
 		raw, _ = json.Marshal(roll)
-		if _, err = tx.Exec(ctx, `UPDATE dndshare.spell_cast_receipt SET healing_roll=CAST($2 AS jsonb) WHERE cast_id=$1::uuid`, p.CastID, raw); err != nil {
+		if _, err = tx.Exec(ctx, `UPDATE dndshare.spell_cast_receipt SET health_roll=CAST($2 AS jsonb) WHERE cast_id=$1::uuid`, p.CastID, raw); err != nil {
 			return err
 		}
 	}
-	p.healingRoll = &roll
+	p.healthRoll = &roll
 	return nil
 }

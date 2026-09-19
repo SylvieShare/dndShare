@@ -157,4 +157,5 @@ var schemaParts = []struct {
 	{"spell-chain-limits", schemaSpellChainLimitsSQL},
 	{"created-item-expiry", schemaCreatedItemExpirySQL},
 	{"spell-projectile-targets", schemaSpellProjectileTargetsSQL},
+	{"spell-temporary-hp", schemaSpellTemporaryHPSQL},
 }

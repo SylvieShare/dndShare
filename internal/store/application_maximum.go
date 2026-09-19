@@ -81,7 +81,7 @@ func applicationHPMaximum(ctx context.Context, tx pgx.Tx, values map[string]any)
 }
 
 func applyApplicationTx(ctx context.Context, tx pgx.Tx, doc transferDocument, p ApplicationPlan, uid string) (ApplicationResult, error) {
-	if err := prepareSpellHealing(ctx, tx, &p); err != nil {
+	if err := prepareSpellHealth(ctx, tx, &p); err != nil {
 		return ApplicationResult{}, err
 	}
 	if p.Healing != "" {

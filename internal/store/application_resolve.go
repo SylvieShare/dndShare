@@ -136,7 +136,7 @@ func (s *Store) resolveItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ch
 				return t, err
 			}
 			appliedPlan = plan
-			if err = prepareSpellHealing(ctx, tx, &plan); err != nil {
+			if err = prepareSpellHealth(ctx, tx, &plan); err != nil {
 				return t, err
 			}
 			if npc != nil {

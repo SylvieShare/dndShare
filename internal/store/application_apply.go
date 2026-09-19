@@ -30,8 +30,8 @@ func applyApplication(doc transferDocument, p ApplicationPlan, uid string, roll 
 	if p.Healing != "" {
 		var v ApplicationRoll
 		var err error
-		if p.healingRoll != nil {
-			v = *p.healingRoll
+		if p.healthRoll != nil {
+			v = *p.healthRoll
 		} else {
 			v, err = rollApplication(p.Healing, roll)
 		}
@@ -58,7 +58,13 @@ func applyApplication(doc transferDocument, p ApplicationPlan, uid string, roll 
 		r.Healing = &v
 	}
 	if p.TemporaryHP != "" {
-		v, err := rollApplication(p.TemporaryHP, roll)
+		var v ApplicationRoll
+		var err error
+		if p.healthRoll != nil {
+			v = *p.healthRoll
+		} else {
+			v, err = rollApplication(p.TemporaryHP, roll)
+		}
 		if err != nil {
 			return r, err
 		}

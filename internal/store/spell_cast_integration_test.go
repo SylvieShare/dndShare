@@ -131,4 +131,30 @@ func testSpellCast(t *testing.T, s *Store, pool *pgxpool.Pool, npc ApplicationTa
 	if application.Healing.Total < 6 || application.Healing.Total > 15 {
 		t.Fatalf("ability modifier missing: %+v", application.Healing)
 	}
+
+	exec(`UPDATE dndshare.item SET data='{"lvl":1,"application_targets":{"count":2},"heal":{"kind":"temporary_hp","dices":[{"count":2,"dice_id":"d4","bonus":4}],"addon":[{"bonus":5}],"scaling":"slot"}}' WHERE id=802;
+ UPDATE dndshare."char" SET data=jsonb_set(data,'{values,hp}','{"current":0,"max":100,"temp":50,"ds_failure":2}') WHERE id=10;
+ UPDATE dndshare."char" SET data=jsonb_set(data,'{values,hp}','{"current":1,"max":100,"temp":0}') WHERE id=11;`)
+	temporary := heal
+	temporary.ClientActionID, temporary.Version, temporary.SpendSlot = id(), version(), false
+	result, err = s.CastSpell(ctx, 1, 10, temporary)
+	if err != nil || result.Self.Healing != nil || result.Self.TemporaryHP == nil || result.Self.TemporaryHP.Applied != 0 {
+		t.Fatal("temporary HP healed or stacked", result, err)
+	}
+	var hp json.RawMessage
+	_ = pool.QueryRow(ctx, `SELECT data#>'{values,hp}' FROM dndshare."char" WHERE id=10`).Scan(&hp)
+	var values map[string]any
+	_ = json.Unmarshal(hp, &values)
+	if number(values["current"]) != 0 || number(values["temp"]) != 50 || number(values["ds_failure"]) != 2 {
+		t.Fatal("temporary HP revived character", values)
+	}
+	accepted, err = s.ResolveItemTransfer(ctx, 2, 11, result.Transfers[0].ID, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	application = ApplicationResult{}
+	_ = json.Unmarshal(accepted.ApplicationResult, &application)
+	if application.Healing != nil || application.TemporaryHP == nil || application.TemporaryHP.Total != result.Self.TemporaryHP.Total || application.TemporaryHP.Total < 16 || application.TemporaryHP.Total > 22 {
+		t.Fatal("shared temporary HP roll/upcast", application)
+	}
 }

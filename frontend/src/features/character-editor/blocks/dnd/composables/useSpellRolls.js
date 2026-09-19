@@ -86,7 +86,8 @@ export function useSpellRolls({ charCtx, spellDamageTypes, spellcastingBlocked, 
   function rollSpellHeal(entry, castLevel) {
     if (spellcastingBlocked.value) return
     const expr = spellHealPreview(entry, castLevel)
-    if (expr) dice.roll(`Лечение: ${spellTitle(entry)}`, expr, { color: 'var(--success)', eventData: itemEventData(entry.item) })
+    const temporary = entry.item.data?.heal?.kind === 'temporary_hp'
+    if (expr) dice.roll(`${temporary ? 'Временные хиты' : 'Лечение'}: ${spellTitle(entry)}`, expr, { color: temporary ? 'var(--info)' : 'var(--success)', eventData: itemEventData(entry.item) })
   }
 
   function rollSpellEffect(entry, castLevel) {

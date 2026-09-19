@@ -58,13 +58,14 @@
         :damage-parts="damageParts"
         :modifier="damageModifier"
         :heal-parts="healParts"
+        :heal-kind="data.heal?.kind"
         :heal-modifier="healModifier"
       >
         <template v-if="canUpcast && hasInlineSpellScaling(data.damage)" #damage-suffix>
           <SpellScalingFormula :rule="data.damage" :base-level="baseLvl" />
         </template>
         <template v-if="canUpcast && hasInlineSpellScaling(data.heal)" #heal-suffix>
-          <SpellScalingFormula :rule="data.heal" :base-level="baseLvl" color="var(--success)" />
+          <SpellScalingFormula :rule="data.heal" :base-level="baseLvl" :color="data.heal?.kind === 'temporary_hp' ? 'var(--info)' : 'var(--success)'" />
         </template>
       </AttackDamage>
     </div>

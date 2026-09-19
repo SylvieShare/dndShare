@@ -181,6 +181,13 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 		if _, err = rollApplication(plan.Healing, func(int) (int, error) { return 1, nil }); err != nil {
 			return result, err
 		}
+		switch textValue(object(data["heal"])["kind"]) {
+		case "temporary_hp":
+			plan.TemporaryHP, plan.Healing = plan.Healing, ""
+		case "", "healing":
+		default:
+			return result, ErrApplication
+		}
 	}
 	states, changed, err := removeConcentrationStates(ctx, tx, array(doc.values()["states"]), "", false, "spell_cast")
 	if err != nil {
