@@ -19,7 +19,8 @@
         />
 
         <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
-        <WeaponItemMechanics :entry="entry" />
+        <CreatedItemStatus :entry="entry" />
+        <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
 
         <MorphEditorShell
           v-if="editorOpen"
@@ -44,7 +45,7 @@
 
     <template #default="{ close: closeMenu }">
       <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
-      <DamageRollOptions :weapon-uid="entry.uid" v-if="hasDamage || ctx.item(entry)" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
+      <DamageRollOptions :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
 
       <RowActionSeparator v-if="ctx.item(entry)" />
       <RowActionItem
@@ -57,6 +58,7 @@
         action="edit"
         @click="editWeapon(closeMenu)"
       >Редактировать</RowActionItem>
+      <CreatedItemActions :entry="entry" @close="closeMenu" />
       <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
       <RowActionItem
         v-if="ctx.canMoveWeaponToItems(entry)"
@@ -78,6 +80,8 @@
 
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
+import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
+import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
 import UsableItemAction from '@/features/character-editor/components/UsableItemAction.vue'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'

@@ -37,10 +37,11 @@ type ApplicationPlan struct {
 	Note            string              `json:"note,omitempty"`
 }
 type ApplicationResult struct {
-	Healing     *ApplicationRoll    `json:"healing,omitempty"`
-	TemporaryHP *ApplicationRoll    `json:"temporaryHp,omitempty"`
-	Effects     []ApplicationEffect `json:"effects"`
-	Note        string              `json:"note,omitempty"`
+	CreatedItems []CreatedApplicationItem `json:"createdItems,omitempty"`
+	Healing      *ApplicationRoll         `json:"healing,omitempty"`
+	TemporaryHP  *ApplicationRoll         `json:"temporaryHp,omitempty"`
+	Effects      []ApplicationEffect      `json:"effects"`
+	Note         string                   `json:"note,omitempty"`
 }
 
 func object(v any) map[string]any {

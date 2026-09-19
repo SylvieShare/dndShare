@@ -239,7 +239,7 @@
   ]},
   {"key": "status_effects", "name": "Связанные эффекты", "type": "object_array", "fields": [
     {"key": "key", "name": "Ключ", "type": "text"},
-    {"key": "effect", "name": "Эффект", "type": "item", "item_type": 15},
+    {"key": "effect", "name": "Эффект", "type": "item", "item_type": 15, "reference_shape": "object"},
     {"key": "parameter_bindings", "name": "Параметры", "type": "object_array", "fields": [
       {"key": "key", "name": "Параметр", "type": "text"},
       {"key": "source", "name": "Источник", "type": "select", "options": [{"label": "Текущее значение прогрессии", "value": "scaling_value"}, {"label": "Постоянное значение", "value": "fixed"}]},

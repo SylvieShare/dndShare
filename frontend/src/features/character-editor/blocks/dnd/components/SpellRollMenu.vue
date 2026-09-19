@@ -66,7 +66,7 @@ const typeReady = entry => ctx.spellDamageTypes?.ready(entry) !== false
 const optionReady = option => option.kind !== 'damage' || typeReady(option.entry)
 const hasAttack = computed(() => !!props.entry.item?.data?.damage?.range_attack)
 const attackMode = computed(() => ctx.spellAttackMode(props.entry))
-const options = computed(() => spellRollOptions(props.entry).filter(option => !(hasSequence.value && option.primary && option.kind === 'damage') && !(option.primary && option.kind === 'heal' && props.entry.item?.data?.heal?.apply !== false)))
+const options = computed(() => spellRollOptions(props.entry).filter(option => !(hasSequence.value && option.primary && option.kind === 'damage') && !(option.primary && option.kind === 'heal' && (props.entry.item?.data?.heal?.apply !== false || props.entry.item?.data?.item_creation?.length))))
 const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Бросить на лечение' : 'Бросить на урон' : `Бросить: ${option.label}`
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)

@@ -28,6 +28,22 @@ async function form(typeId, data = {}) {
   return html
 }
 describe('catalogue authoring', () => {
+  it('preserves the server shape of effects and linked spells through editing', () => {
+    const data = { usable: { spell: 548, status_effects: [{ key: 'buff', effect: 4688 }] } }
+    const saved = normalizeDataForSave(data, schema(10))
+    expect(saved.usable.spell).toEqual({ id: 548 })
+    expect(saved.usable.status_effects[0].effect).toEqual({ id: 4688 })
+    expect(normalizeDataForSave({ on_end_effect: 4690 }, schema(15)).on_end_effect).toEqual({ id: 4690 })
+  })
+  it('preserves creation recipes, validates choices, and does not duplicate profile groups', () => {
+    const data = { item_creation: [{ key: 'berries', title: 'Ягоды', choose_count: true, outputs: [{ item: 90001, count: 10, duration: { kind: 'hours', value: 24 } }] }] }
+    expect(normalizeDataForSave(data, schema(5)).item_creation).toEqual(data.item_creation)
+    expect(catalogueValidation(schema(5), data, 5)).toEqual([])
+    const groups = catalogueProfile(10, schema(10)).groups
+    expect(catalogueProfile(10, schema(10)).groups).toEqual(groups)
+    data.item_creation[0].outputs.push({ item: 90002, count: 1 })
+    expect(catalogueValidation(schema(5), data, 5).some(error => error.includes('одного вида'))).toBe(true)
+  })
   it('preserves damage choices through saving and rejects a choice with only fixed parts', () => {
     const data = { damage: { type_choices: [7, 10], dices: [{ count: 5, dice_id: 'd6', type: 6 }, { count: 5, dice_id: 'd6' }] } }
     const saved = normalizeDataForSave(data, schema(5))

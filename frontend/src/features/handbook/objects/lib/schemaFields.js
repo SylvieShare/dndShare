@@ -50,7 +50,8 @@ export function normalizeDataForSave(data, fields) {
     } else if (field.type === 'item_array') {
       next[field.key] = (Array.isArray(next[field.key]) ? next[field.key] : []).map(value => numberOrNull(value?.id ?? value)).filter(value => value > 0)
     } else if (field.type === 'item') {
-      next[field.key] = numberOrNull(next[field.key]?.id ?? next[field.key])
+      const id = numberOrNull(next[field.key]?.id ?? next[field.key])
+      next[field.key] = field.reference_shape === 'object' && id != null ? { id } : id
     } else if (field.type === 'dice') {
       next[field.key] = next[field.key] || null
     }

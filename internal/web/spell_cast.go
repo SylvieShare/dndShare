@@ -15,7 +15,7 @@ func (s *Server) handleSpellCast(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req store.SpellCastRequest
-	if decodeJSON(r, &req) != nil || req.Version < 0 || !isUUID(req.ClientActionID) || req.SpellID <= 0 || len(req.EntryKey) > 200 || len(req.OptionKey) > 100 || len(req.Targets) > 50 || req.DMCount > 50 || req.SessionUUID != "" && !isUUID(req.SessionUUID) {
+	if decodeJSON(r, &req) != nil || req.Version < 0 || !isUUID(req.ClientActionID) || req.SpellID <= 0 || len(req.EntryKey) > 200 || len(req.OptionKey) > 100 || len(req.CreationKey) > 100 || req.CreatedCount < 0 || req.CreatedCount > 999 || len(req.Targets) > 50 || req.DMCount > 50 || req.SessionUUID != "" && !isUUID(req.SessionUUID) {
 		badRequest(w, "Некорректное применение заклинания")
 		return
 	}

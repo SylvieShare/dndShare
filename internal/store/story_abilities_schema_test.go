@@ -118,6 +118,18 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 		}
 		field["fields"] = append(field["fields"].([]any), timing)
 	}
+	// Migration 138 explicitly preserves the application reference object.
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] == "status_effects" {
+			for _, child := range field["fields"].([]any) {
+				f := child.(map[string]any)
+				if f["key"] == "effect" {
+					f["reference_shape"] = "object"
+				}
+			}
+		}
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

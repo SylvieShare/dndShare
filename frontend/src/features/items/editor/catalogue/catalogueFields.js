@@ -124,6 +124,7 @@ export function catalogueFieldVisible(field, data, typeId, path, root = data) {
     if (path === 'range.text') return data.kind === 'custom'
     if (path === 'range.shape') return !!data.kind && data.kind !== 'custom'
   }
+  if (path === 'item_creation.outputs.scaling_step') return Number(data.per_slot) > 0
   if (path === 'usable.spell_effect_key') return !!data.spell
   if (path.endsWith('duration.value')) return ['rounds', 'minutes', 'hours', 'days'].includes(data.kind) && !data.formula
   if (path.endsWith('duration.formula')) return ['rounds', 'minutes', 'hours', 'days'].includes(data.kind)

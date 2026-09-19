@@ -115,6 +115,7 @@
       </template>
 
       <UsableDetail v-if="item.data?.usable" :item="item" />
+      <ItemCreationDetail v-if="item.data?.item_creation?.length || item.data?.creation_sources?.length" :item="item" />
 
       <ItemInstanceNotes v-if="instance" :item="item" :instance="instance" />
 
@@ -134,6 +135,7 @@
 
 <script setup>
 import UsableDetail from '@/features/items/detail-components/UsableDetail.vue'
+import ItemCreationDetail from '@/features/items/detail-components/ItemCreationDetail.vue'
 import ItemAutomationBadge from '@/features/items/components/ItemAutomationBadge.vue'
 import ItemInstanceNotes from '@/features/items/detail-components/ItemInstanceNotes.vue'
 import { computed, provide, watch } from 'vue'

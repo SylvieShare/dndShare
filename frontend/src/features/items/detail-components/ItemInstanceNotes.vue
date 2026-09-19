@@ -1,4 +1,8 @@
 <template>
+  <DetailSection v-if="instance.params?.creation" label="Создано заклинанием">
+    <HandbookReferenceRows :rows="[{ id: instance.params.creation.spell_id }]" />
+    <CreatedItemStatus :entry="instance" />
+  </DetailSection>
   <DetailSection v-if="instance.params?.magic_bonus || instance.add_attacks?.length" label="Дополнительно у этого экземпляра">
     <p v-if="instance.params?.magic_bonus">{{ item.typeId === 12 || item.data?.armor_base && !item.data?.weapon ? 'Бонус к КД' : 'Бонус к атаке и урону' }}: +{{ instance.params.magic_bonus }}</p>
     <DamageDice v-if="parts.length" :parts="parts" :size="32" />
@@ -9,6 +13,8 @@
 </template>
 <script setup>
 import { computed } from 'vue'
+import HandbookReferenceRows from '@/features/items/components/HandbookReferenceRows.vue'
+import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'

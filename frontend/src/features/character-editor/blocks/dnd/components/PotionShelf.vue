@@ -22,7 +22,8 @@
           </template>
 
           <template #default="{ close }">
-            <ItemTransferAction v-if="canUse" purpose="use" source="potions" @self="usePotion(p, close)" :entry="p" :name="p.name" :disabled="busy.size > 0" @close="close" />
+            <ItemTransferAction v-if="canUse && !p.params?.creation?.expired" purpose="use" source="potions" @self="usePotion(p, close)" :entry="p" :name="p.name" :disabled="busy.size > 0" @close="close" />
+            <CreatedItemActions :entry="p" @close="close" />
             <ItemTransferAction source="potions" :disabled="busy.size > 0" :entry="p" :name="p.name" @close="close" />
             <RowActionItem v-if="canAdd" action="replenish" tone="success" @click="replenishPotion(p, close)">Пополнить (+1)</RowActionItem>
             <RowActionItem v-if="canUse" action="delete" tone="danger" @click="removePotion(p, close)">Удалить (−1)</RowActionItem>
@@ -32,6 +33,7 @@
         </RowActionMenu>
 
         <span class="ps-name" :title="p.name">{{ p.name }}</span>
+        <CreatedItemStatus :entry="p" />
       </div>
 
       <button v-if="canAdd" class="ps-add" title="Добавить зелье" @click="$emit('add')">
@@ -43,6 +45,8 @@
 </template>
 
 <script setup>
+import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
+import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
 import { reactive } from 'vue'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import PotionVial from '@/features/items/components/PotionVial'

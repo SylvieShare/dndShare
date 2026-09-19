@@ -45,6 +45,7 @@
             <span v-if="armorMeta(entry).stealthDisadvantage" class="di-item-danger">Помеха Скрытности</span>
           </template>
         </span>
+        <CreatedItemStatus :entry="entry" />
       </span>
     </div>
     <SelectedTargetPanel :uid="entry.uid" />
@@ -55,6 +56,7 @@
 
   <template #default="{ close }">
     <UsableItemAction source="items" :item="entry.display.base" :entry="entry" :name="entry.display.name" @close="close" />
+    <CreatedItemActions :entry="entry" @close="close" />
     <ItemTransferAction source="items" :entry="entry" :name="entry.display.name" @close="close" />
     <MagicItemMenuActions v-if="canManage && entryTypeId(entry) === MAGIC_ITEM_TYPE_ID" :item="entry.display.base" :entry="entry" :values="charCtx.values" @update:values="patch => charCtx.updateValues(patch)" @configure="openMagic(entry)" @close="close" />
     <RowActionItem
@@ -111,6 +113,8 @@
 </template>
 
 <script setup>
+import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
+import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
 import UsableItemAction from '@/features/character-editor/components/UsableItemAction.vue'
 import ItemTransferAction from '@/features/character-editor/components/ItemTransferAction.vue'
 import SelectedTargetPanel from './SelectedTargetPanel.vue'

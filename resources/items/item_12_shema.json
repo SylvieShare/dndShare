@@ -153,7 +153,8 @@
         "key": "spell",
         "name": "Эффект заклинания",
         "type": "item",
-        "item_type": 5
+        "item_type": 5,
+        "reference_shape": "object"
       },
       {
         "key": "spell_effect_key",
@@ -251,7 +252,8 @@
                 "key": "effect",
                 "name": "Эффект",
                 "type": "item",
-                "item_type": 15
+                "item_type": 15,
+                "reference_shape": "object"
               },
               {
                 "key": "parameter_bindings",
@@ -387,7 +389,8 @@
             "key": "effect",
             "name": "Эффект",
             "type": "item",
-            "item_type": 15
+            "item_type": 15,
+            "reference_shape": "object"
           },
           {
             "key": "parameter_bindings",
@@ -506,6 +509,20 @@
             "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
           }
         ]
+      }
+    ]
+  },
+  {
+    "key": "creation_sources",
+    "name": "Создаётся магией",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "item",
+        "name": "Заклинание-источник",
+        "type": "item",
+        "item_type": 5,
+        "required": true
       }
     ]
   }

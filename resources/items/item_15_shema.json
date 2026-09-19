@@ -317,5 +317,12 @@
     "key": "max_level",
     "name": "Максимальная ступень",
     "type": "int"
+  },
+  {
+    "key": "on_end_effect",
+    "name": "Эффект после завершения",
+    "type": "item",
+    "item_type": 15,
+    "reference_shape": "object"
   }
 ]

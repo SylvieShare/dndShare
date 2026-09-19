@@ -9,10 +9,15 @@
       <span>{{ effect.duration?.formula ? `${effect.duration.formula} · ${unit(effect.duration.kind)}` : statusDuration(effect.duration) }}<template v-if="effect.concentration"> · Концентрация</template></span>
     </div>
     <p v-if="data.note" class="application-note">{{ data.note }}</p>
+    <HandbookReferenceRows v-if="data.createdItems?.length" :rows="data.createdItems.map(item => ({ ...item, id: item.itemId }))">
+      <template #leading="{ row }"><strong>×{{ row.count }}</strong></template>
+      <template #description="{ row }"><small>Создано в рюкзаке<template v-if="row.duration"> · {{ statusDuration(row.duration) }}</template></small></template>
+    </HandbookReferenceRows>
   </div>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
+const HandbookReferenceRows = defineAsyncComponent(() => import('@/features/items/components/HandbookReferenceRows.vue'))
 import { parseDiceExpression } from '@/shared/lib/dice'
 import { statusDuration } from '@/shared/lib/statusDuration'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'

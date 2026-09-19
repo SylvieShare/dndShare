@@ -10,6 +10,8 @@ import (
 )
 
 type SpellCastRequest struct {
+	CreationKey    string   `json:"creationKey,omitempty"`
+	CreatedCount   int      `json:"createdCount,omitempty"`
 	SpellID        int64    `json:"spellId"`
 	Version        int64    `json:"version"`
 	ClientActionID string   `json:"clientActionId"`
@@ -109,6 +111,18 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 		return result, ErrApplication
 	}
 	targetRule := object(data["application_targets"])
+	creating := r.CreationKey != ""
+	if creating {
+		if _, err = spellCreationOption(data, r.CreationKey); err != nil {
+			return result, err
+		}
+		if r.OptionKey != "" || data["concentration"] == true {
+			return result, ErrApplication
+		}
+		targetRule = map[string]any{"self_only": true}
+	} else if r.CreatedCount != 0 {
+		return result, ErrApplication
+	}
 	if targetRule["self_only"] == true && (r.DMCount > 0 || len(r.Targets) != 1 || r.Targets[0] != "self") {
 		return result, ErrApplication
 	}
@@ -150,16 +164,19 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	for i := 0; i < r.DMCount; i++ {
 		destinations = append(destinations, 0)
 	}
-	plan, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": int(r.SpellID)}, r.OptionKey, userID, 5)
-	if err != nil {
-		return result, err
+	plan := ApplicationPlan{ItemID: r.SpellID, Name: name, SourceKind: "spell", Effects: []ApplicationEffect{}}
+	if !creating {
+		plan, err = buildCatalogueApplication(ctx, tx, map[string]any{"item_id": int(r.SpellID)}, r.OptionKey, userID, 5)
+		if err != nil {
+			return result, err
+		}
 	}
 	plan.CastID = r.ClientActionID
 	plan.CastLevel = r.CastLevel
 	if err = prepareSpellEffectBindings(&plan, data, doc.values(), r.CastLevel, ability); err != nil {
 		return result, err
 	}
-	if object(data["heal"])["apply"] != false && len(array(object(data["heal"])["dices"])) > 0 {
+	if !creating && object(data["heal"])["apply"] != false && len(array(object(data["heal"])["dices"])) > 0 {
 		plan.Healing = spellHealFormula(data, doc.values(), r.CastLevel, ability)
 		if _, err = rollApplication(plan.Healing, func(int) (int, error) { return 1, nil }); err != nil {
 			return result, err
@@ -205,7 +222,13 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 		if err != nil {
 			return result, err
 		}
-		applied, e := applyApplicationTx(ctx, tx, doc, plan, r.ClientActionID)
+		applied := ApplicationResult{Effects: []ApplicationEffect{}}
+		var e error
+		if creating {
+			applied.CreatedItems, e = createSpellItems(ctx, tx, doc, userID, data, r)
+		} else {
+			applied, e = applyApplicationTx(ctx, tx, doc, plan, r.ClientActionID)
+		}
 		if e != nil {
 			return result, e
 		}

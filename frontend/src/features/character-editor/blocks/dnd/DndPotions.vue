@@ -18,6 +18,7 @@
       :item-type-id="modalItem.typeId ?? POTION_TYPE"
       :item-id="modalItem.id"
       :item="modalItem"
+      :instance="entries.find(entry => entry.uid === modalEntryUid)"
       @close="modalEntryUid = null"
     />
 
@@ -61,6 +62,7 @@ const entries = computed(() => (Array.isArray(props.value) ? props.value : []))
 const potionEntries = computed(() => entries.value.map(e => {
   const base = catalog[e.item_id] || {}
   return {
+    ...e,
     uid: e.uid,
     id: e.item_id,
     count: e.count,

@@ -43,7 +43,7 @@ describe('shared ability editor', () => {
     removeAbilityBlock(grant, data)
     const saved = normalizeDataForSave(data, story)
     expect(saved.granted_spells).toEqual([])
-    expect(saved.status_effects).toMatchObject([{ effect: 42, duration: { kind: 'rounds', value: 2 } }])
+    expect(saved.status_effects).toMatchObject([{ effect: { id: 42 }, duration: { kind: 'rounds', value: 2 } }])
     expect(saved.custom_metadata).toEqual({ preserve: true })
   })
 

@@ -75,6 +75,7 @@
     </template>
 
     <template #default="{ close }">
+      <SpellCreationMenu :entry="entry" :cast-level="castLevel" @close="close" />
       <SpellApplicationMenu :entry="entry" :cast-level="castLevel" @close="close" />
       <SpellRollMenu :entry="entry" :cast-level="castLevel" @close="close" />
       <RowActionSeparator v-if="hasMetrics" />
@@ -152,6 +153,7 @@
 <script setup>
 import SpellMetadata from '@/features/items/components/SpellMetadata.vue'
 import SpellApplicationMenu from './SpellApplicationMenu.vue'
+import SpellCreationMenu from './SpellCreationMenu.vue'
 import { Focus, Sparkles, Sprout } from '@lucide/vue'
 import SpellEffectFormulas from './SpellEffectFormulas.vue'
 import SpellScalingFormula from './SpellScalingFormula.vue'

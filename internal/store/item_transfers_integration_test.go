@@ -79,6 +79,12 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(schemaSpellCastsSQL)
 	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(5,'[{"key":"damage","fields":[]},{"key":"heal","fields":[]},{"key":"application_targets","fields":[]},{"key":"status_effects","fields":[{"key":"parameter_bindings","fields":[{"key":"source","options":[]}]}]}]'),(15,'[{"key":"derived_effects","fields":[{"key":"kind","options":[]}]}]')`)
 	exec(schemaSpellApplicationOptionsSQL)
+	exec(schemaSpellItemCreationSQL)
+	exec(`UPDATE dndshare.item SET data=jsonb_set(data,'{usable,status_effects,0,effect}','30') WHERE id=90010`)
+	exec(schemaApplicationReferenceShapesSQL)
+	if err := pool.QueryRow(ctx, `SELECT data#>>'{usable,status_effects,0,effect,id}'='30' FROM dndshare.item WHERE id=90010`).Scan(&migrated); err != nil || !migrated {
+		t.Fatalf("application reference shape: %v %v", migrated, err)
+	}
 	var editorFields int
 	if err := pool.QueryRow(ctx, `SELECT jsonb_array_length(fields->0->'fields') FROM dndshare.item_type WHERE id=15`).Scan(&editorFields); err != nil || editorFields != 7 {
 		t.Fatalf("effect editor fields %d %v", editorFields, err)
@@ -287,6 +293,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	t.Run("player interactions", func(t *testing.T) { testSessionInteractionsPostgres(t, s) })
 	testPotionApplications(t, s, exec, current)
 	testUsableApplications(t, s, exec, current)
+	testSpellItemCreation(t, s, exec, current)
 	t.Run("session inventory", func(t *testing.T) { testSessionInventory(t, s, pool) })
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {

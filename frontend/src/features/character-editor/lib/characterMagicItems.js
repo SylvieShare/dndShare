@@ -19,7 +19,7 @@ export function inventoryItemIds(values) {
 }
 
 export function magicItemActive(item, entry, equipped, values) {
-  if (entry?.params?.magic?.lost) return false
+  if (entry?.params?.magic?.lost || entry?.params?.creation?.expired) return false
   if (!entry || Number(item?.typeId) !== MAGIC_ITEM_TYPE_ID || Number(entry?.count ?? 1) <= 0) return false
   if (values && abilityOwnerLevel(item.data || {}, values) < Math.max(1, Number(item.data?.level) || 1)) return false
   if (item.data?.activation !== 'carried' && !equipped) return false

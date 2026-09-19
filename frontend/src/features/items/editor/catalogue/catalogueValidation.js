@@ -24,7 +24,7 @@ export function catalogueValidation(fields, data, typeId) {
       if (field.type === 'object' && typeof value === 'object') walk(field.fields, value, path)
       if (field.type === 'object_array' && Array.isArray(value)) {
         for (const row of value) walk(field.fields, row, path)
-        if (['class_resources', 'item_choices', 'variants'].includes(path)) {
+        if (['class_resources', 'item_choices', 'variants', 'item_creation'].includes(path)) {
           const key = path === 'variants' ? 'value' : 'key'
           if (value.some(row => !row[key]) || new Set(value.map(row => row[key])).size !== value.length) errors.push(`«${field.name}»: у каждой записи должен быть свой непустой ключ.`)
         }
@@ -47,6 +47,8 @@ export function catalogueValidation(fields, data, typeId) {
       if (!(table.sides >= 2 && table.sides <= 100 && table.count >= 1 && table.count <= 10) || faces.size !== Number(table.sides) || (table.rows || []).some(row => !row.damage_type || !(row.value >= 1 && row.value <= table.sides))) errors.push('Таблица типа урона: укажите тип для каждой грани кости и число костей.')
     }
     if (chain?.trigger === 'matching_damage' && (!table || table.source === 'separate' || !(table.count >= 2))) errors.push('Совпадение костей требует таблицу по минимум двум костям урона.')
+    if (data.item_creation?.length && data.concentration) errors.push('Создание переносимых предметов с концентрацией пока не поддерживается.')
+    if ((data.item_creation || []).some(option => option.choose_count && option.outputs?.length !== 1)) errors.push('Выбор количества доступен для одного вида создаваемых предметов.')
     if (timeError(data.time)) errors.push(timeError(data.time))
     if (data.range?.kind === 'ranged' && !(Number(data.range.distance) > 0)) errors.push('Укажите дальность больше нуля.')
     if (data.range?.shape && data.range.kind !== 'custom' && !(Number(data.range.size) > 0)) errors.push('Укажите размер области больше нуля.')
