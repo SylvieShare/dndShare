@@ -83,31 +83,35 @@ func applicationItem(ctx context.Context, tx pgx.Tx, id int64) (string, map[stri
 
 // Resolve and freeze catalogue mechanics when the dose is reserved. Editing a
 // catalogue while an offer is pending must not change what the recipient accepts.
-func buildPotionApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64) (ApplicationPlan, error) {
-	return buildCatalogueApplication(ctx, tx, entry, option, userID, 10)
+func buildUsableApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64) (ApplicationPlan, error) {
+	return buildCatalogueApplication(ctx, tx, entry, option, userID, 0)
 }
 
 func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64, expectedType int) (ApplicationPlan, error) {
 	p := ApplicationPlan{Option: option, ItemID: int64(number(entry["item_id"])), Effects: []ApplicationEffect{}}
+	if expectedType == 0 && number(entry["magic_item_id"]) > 0 {
+		p.ItemID = int64(number(entry["magic_item_id"]))
+	}
 	if p.ItemID == 0 {
 		p.Name = textValue(object(entry["override"])["name"])
-		p.Note = "Действие авторского зелья отмечается вручную."
+		p.Note = "Действие авторского предмета отмечается вручную."
 		return p, nil
 	}
 	name, data, kind, err := visibleApplicationItem(ctx, tx, p.ItemID, userID)
 	if err != nil {
 		return p, err
 	}
-	if kind != expectedType {
+	_, usable := data["usable"].(map[string]any)
+	if expectedType != 0 && kind != expectedType || expectedType == 0 && !usable {
 		return p, ErrApplication
 	}
 	p.Name = name
-	p.SourceKind = "potion"
+	p.SourceKind = "item"
 	if expectedType == 5 {
 		p.SourceKind = "spell"
 		p.Concentration = data["concentration"] == true
 	}
-	c := object(data["consumption"])
+	c := object(data["usable"])
 	if choices := array(c["choices"]); len(choices) > 0 {
 		found := false
 		for _, raw := range choices {
@@ -126,7 +130,7 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 			}
 		}
 		if !found {
-			return p, fmt.Errorf("%w: выберите вариант зелья", ErrApplication)
+			return p, fmt.Errorf("%w: выберите вариант применения", ErrApplication)
 		}
 	}
 	p.Healing = textValue(c["healing"])
@@ -139,7 +143,10 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 			}
 		}
 	}
-	links := array(data["status_effects"])
+	links := []any{}
+	if expectedType == 5 {
+		links = array(data["status_effects"])
+	}
 	if expectedType == 5 {
 		selected := []any{}
 		for _, raw := range links {
@@ -222,7 +229,7 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 		p.Effects = append(p.Effects, ApplicationEffect{ID: id, Name: name, Key: textValue(link["key"]), Data: effect, Duration: duration, Concentration: concentration, Params: params})
 	}
 	if expectedType != 5 && p.Healing == "" && p.TemporaryHP == "" && len(p.Effects) == 0 && p.Note == "" {
-		p.Note = "Действие этого зелья отмечается вручную."
+		p.Note = "Действие этого предмета отмечается вручную."
 	}
 	return p, nil
 }

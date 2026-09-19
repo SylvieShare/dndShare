@@ -16,7 +16,7 @@ func TestTransferRequestValidation(t *testing.T) {
 		t.Fatal("valid request rejected")
 	}
 	for _, change := range []func(*itemTransferRequest){
-		func(r *itemTransferRequest) { r.Purpose = "other" }, func(r *itemTransferRequest) { r.Purpose = "use" },
+		func(r *itemTransferRequest) { r.Purpose = "other" },
 		func(r *itemTransferRequest) { r.Source = "abilities" }, func(r *itemTransferRequest) { r.EntryUID = "" },
 		func(r *itemTransferRequest) { r.Version = nil }, func(r *itemTransferRequest) { r.ClientActionID = "bad" },
 		func(r *itemTransferRequest) { r.RecipientCharUUID = "bad" }, func(r *itemTransferRequest) { r.SessionUUID = "bad" },
@@ -27,9 +27,12 @@ func TestTransferRequestValidation(t *testing.T) {
 			t.Fatalf("accepted invalid request %+v", r)
 		}
 	}
-	valid.Source, valid.Purpose = "potions", "use"
-	if !validItemTransferRequest(valid) {
-		t.Fatal("valid potion application rejected")
+	valid.Purpose = "use"
+	for _, source := range []string{"potions", "weapon", "items"} {
+		valid.Source = source
+		if !validItemTransferRequest(valid) {
+			t.Fatalf("valid %s application rejected", source)
+		}
 	}
 	valid.RecipientCharUUID = "dm"
 	if !validItemTransferRequest(valid) {

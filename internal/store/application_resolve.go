@@ -116,7 +116,7 @@ func (s *Store) resolveItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ch
 				return t, err
 			}
 			if plan.Name == "" {
-				plan, err = buildPotionApplication(ctx, tx, entry, "", chars[t.SenderCharID].UserID)
+				plan, err = buildUsableApplication(ctx, tx, entry, "", chars[t.SenderCharID].UserID)
 				if err != nil {
 					return t, err
 				}
@@ -148,7 +148,7 @@ func (s *Store) resolveItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ch
 				return t, err
 			}
 		} else if t.Source != "spells" {
-			doc.returnPotionDose(entry, fmt.Sprintf("returned-use-%d", t.ID))
+			doc.returnUsableUnit(t.Source, entry, fmt.Sprintf("returned-use-%d", t.ID))
 		}
 	} else {
 		doc.receive(t.Source, entry, accept, fmt.Sprintf("transfer-%d", t.ID))

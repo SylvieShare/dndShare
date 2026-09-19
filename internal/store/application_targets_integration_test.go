@@ -16,7 +16,7 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 			t.Fatal(err)
 		}
 	}
-	exec(`INSERT INTO dndshare.item(id,type_id,name,data) VALUES(800,10,'Лечение','{"consumption":{"healing":"4"}}'),(801,15,'Эффект','{"stacking":"single"}'),(802,5,'Заклинание','{"status_effects":[{"key":"test","effect":{"id":801},"duration":{"kind":"minutes","value":1},"concentration":true}]}');
+	exec(`INSERT INTO dndshare.item(id,type_id,name,data) VALUES(800,10,'Лечение','{"usable":{"healing":"4"}}'),(801,15,'Эффект','{"stacking":"single"}'),(802,5,'Заклинание','{"status_effects":[{"key":"test","effect":{"id":801},"duration":{"kind":"minutes","value":1},"concentration":true}]}');
  INSERT INTO dndshare."char"(id,user_id,data) VALUES(10,1,'{"values":{"name":"Отправитель","potions":[{"uid":"dose","item_id":800,"count":3}],"spells":{"tabs":[{"spells":[{"id":802}]}]}}}'),(11,2,'{"values":{"name":"Цель","ava":{"url":"/target-avatar.png"},"hp":{"current":0,"max":{"base":8,"bonuses":[{"value":2}]},"temp":3},"states":[{"effect_id":801,"concentration":true}]}}');
  INSERT INTO dndshare.session_participant VALUES(1,10,1),(1,11,2);
  INSERT INTO dndshare.item(id,type_id,name,data,icon_image_id) VALUES(803,6,'Гоблин','{"combat":{"hp":14}}',1);

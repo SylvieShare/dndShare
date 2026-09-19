@@ -10,10 +10,22 @@
     "type": "select",
     "filter": true,
     "options": [
-      { "value": "artisan", "label": "Ремесленные инструменты" },
-      { "value": "gaming", "label": "Игровые наборы" },
-      { "value": "musical", "label": "Музыкальные инструменты" },
-      { "value": "kit", "label": "Прочие наборы" }
+      {
+        "value": "artisan",
+        "label": "Ремесленные инструменты"
+      },
+      {
+        "value": "gaming",
+        "label": "Игровые наборы"
+      },
+      {
+        "value": "musical",
+        "label": "Музыкальные инструменты"
+      },
+      {
+        "value": "kit",
+        "label": "Прочие наборы"
+      }
     ]
   },
   {
@@ -41,44 +53,436 @@
     "type": "boolean",
     "filter": true
   },
-  {"key":"rarity","name":"Редкость","type":"suggest","suggest_id":23,"filter":true},
-  {"key":"is_container","name":"Контейнер","type":"bool"},
-  {"key":"type","name":"Подтип инструмента","type":"text"},
-{
-  "key": "treasure",
-  "name": "Участвует в генераторе сокровищ",
-  "type": "object",
-  "optional": true,
-  "hint": "Включайте только предметы, которые мастер может получить случайным подбором. Не влияет на стартовый магазин.",
-  "fields": [
-    {
-      "key": "weight",
-      "name": "Вес выпадения",
-      "type": "int",
-      "min": 1,
-      "max": 1000,
-      "default": 10,
-      "required": true,
-      "hint": "Относительный вес среди подходящих предметов: 20 выпадает вдвое чаще 10. Это не процент."
-    },
-    {
-      "key": "min_level",
-      "name": "С уровня группы",
-      "type": "int",
-      "min": 1,
-      "max": 20,
-      "default": 1,
-      "required": true
-    },
-    {
-      "key": "max_level",
-      "name": "До уровня группы",
-      "type": "int",
-      "min": 1,
-      "max": 20,
-      "default": 20,
-      "required": true
-    }
-  ]
-}
+  {
+    "key": "rarity",
+    "name": "Редкость",
+    "type": "suggest",
+    "suggest_id": 23,
+    "filter": true
+  },
+  {
+    "key": "is_container",
+    "name": "Контейнер",
+    "type": "bool"
+  },
+  {
+    "key": "type",
+    "name": "Подтип инструмента",
+    "type": "text"
+  },
+  {
+    "key": "treasure",
+    "name": "Участвует в генераторе сокровищ",
+    "type": "object",
+    "optional": true,
+    "hint": "Включайте только предметы, которые мастер может получить случайным подбором. Не влияет на стартовый магазин.",
+    "fields": [
+      {
+        "key": "weight",
+        "name": "Вес выпадения",
+        "type": "int",
+        "min": 1,
+        "max": 1000,
+        "default": 10,
+        "required": true,
+        "hint": "Относительный вес среди подходящих предметов: 20 выпадает вдвое чаще 10. Это не процент."
+      },
+      {
+        "key": "min_level",
+        "name": "С уровня группы",
+        "type": "int",
+        "min": 1,
+        "max": 20,
+        "default": 1,
+        "required": true
+      },
+      {
+        "key": "max_level",
+        "name": "До уровня группы",
+        "type": "int",
+        "min": 1,
+        "max": 20,
+        "default": 20,
+        "required": true
+      }
+    ]
+  },
+  {
+    "key": "usable",
+    "name": "Применение предмета",
+    "type": "object",
+    "optional": true,
+    "fields": [
+      {
+        "key": "healing",
+        "name": "Восстановление хитов",
+        "type": "text",
+        "hint": "Формула, например 2d4 + 2. Хиты восстанавливаются до максимума."
+      },
+      {
+        "key": "temporary_hp",
+        "name": "Временные хиты",
+        "type": "text",
+        "hint": "Формула или число. Сохраняется большее значение, временные хиты не складываются."
+      },
+      {
+        "key": "spell",
+        "name": "Эффект заклинания",
+        "type": "item",
+        "item_type": 5
+      },
+      {
+        "key": "spell_effect_key",
+        "name": "Вариант эффекта заклинания",
+        "type": "text",
+        "hint": "Ключ связанного эффекта. Пусто — применить все эффекты заклинания."
+      },
+      {
+        "key": "duration",
+        "name": "Длительность",
+        "type": "object",
+        "fields": [
+          {
+            "key": "kind",
+            "name": "Вид",
+            "type": "select",
+            "default": "manual",
+            "options": [
+              {
+                "label": "До ручного снятия",
+                "value": "manual"
+              },
+              {
+                "label": "Раунды",
+                "value": "rounds"
+              },
+              {
+                "label": "Минуты",
+                "value": "minutes"
+              },
+              {
+                "label": "Часы",
+                "value": "hours"
+              },
+              {
+                "label": "До отдыха",
+                "value": "until_rest"
+              },
+              {
+                "label": "Постоянно",
+                "value": "permanent"
+              }
+            ]
+          },
+          {
+            "key": "value",
+            "name": "Значение",
+            "type": "int"
+          },
+          {
+            "key": "formula",
+            "name": "Случайная длительность",
+            "type": "text",
+            "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+          }
+        ],
+        "optional": true
+      },
+      {
+        "key": "concentration",
+        "name": "Требует концентрации",
+        "type": "bool"
+      },
+      {
+        "key": "note",
+        "name": "Что нужно учесть вручную",
+        "type": "text"
+      },
+      {
+        "key": "choices",
+        "name": "Варианты применения",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "key",
+            "name": "Ключ варианта",
+            "type": "text"
+          },
+          {
+            "key": "name",
+            "name": "Название варианта",
+            "type": "text"
+          },
+          {
+            "key": "status_effects",
+            "name": "Связанные эффекты",
+            "type": "object_array",
+            "fields": [
+              {
+                "key": "key",
+                "name": "Ключ",
+                "type": "text"
+              },
+              {
+                "key": "effect",
+                "name": "Эффект",
+                "type": "item",
+                "item_type": 15
+              },
+              {
+                "key": "parameter_bindings",
+                "name": "Параметры",
+                "type": "object_array",
+                "fields": [
+                  {
+                    "key": "key",
+                    "name": "Параметр",
+                    "type": "text"
+                  },
+                  {
+                    "key": "source",
+                    "name": "Источник",
+                    "type": "select",
+                    "options": [
+                      {
+                        "label": "Текущее значение прогрессии",
+                        "value": "scaling_value"
+                      },
+                      {
+                        "label": "Постоянное значение",
+                        "value": "fixed"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "value",
+                    "name": "Значение",
+                    "type": "int"
+                  }
+                ]
+              },
+              {
+                "key": "concentration",
+                "name": "Концентрация",
+                "type": "bool"
+              },
+              {
+                "key": "duration",
+                "name": "Длительность",
+                "type": "object",
+                "fields": [
+                  {
+                    "key": "kind",
+                    "name": "Вид",
+                    "type": "select",
+                    "default": "manual",
+                    "options": [
+                      {
+                        "label": "До ручного снятия",
+                        "value": "manual"
+                      },
+                      {
+                        "label": "Раунды",
+                        "value": "rounds"
+                      },
+                      {
+                        "label": "Минуты",
+                        "value": "minutes"
+                      },
+                      {
+                        "label": "Часы",
+                        "value": "hours"
+                      },
+                      {
+                        "label": "До отдыха",
+                        "value": "until_rest"
+                      },
+                      {
+                        "label": "Постоянно",
+                        "value": "permanent"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "value",
+                    "name": "Значение",
+                    "type": "int"
+                  },
+                  {
+                    "key": "formula",
+                    "name": "Случайная длительность",
+                    "type": "text",
+                    "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+                  }
+                ]
+              },
+              {
+                "key": "target",
+                "name": "На кого накладывается",
+                "type": "select",
+                "default": "self",
+                "options": [
+                  {
+                    "value": "self",
+                    "label": "На владельца"
+                  },
+                  {
+                    "value": "other",
+                    "label": "На другое существо"
+                  }
+                ],
+                "hint": "Эффект на другое существо не включается на листе владельца предмета."
+              },
+              {
+                "key": "condition",
+                "name": "Условие наложения",
+                "type": "text",
+                "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."
+              },
+              {
+                "key": "weapon_damage_key",
+                "name": "Связанный дополнительный урон",
+                "type": "text",
+                "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "status_effects",
+        "name": "Связанные эффекты",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "key",
+            "name": "Ключ",
+            "type": "text"
+          },
+          {
+            "key": "effect",
+            "name": "Эффект",
+            "type": "item",
+            "item_type": 15
+          },
+          {
+            "key": "parameter_bindings",
+            "name": "Параметры",
+            "type": "object_array",
+            "fields": [
+              {
+                "key": "key",
+                "name": "Параметр",
+                "type": "text"
+              },
+              {
+                "key": "source",
+                "name": "Источник",
+                "type": "select",
+                "options": [
+                  {
+                    "label": "Текущее значение прогрессии",
+                    "value": "scaling_value"
+                  },
+                  {
+                    "label": "Постоянное значение",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              {
+                "key": "value",
+                "name": "Значение",
+                "type": "int"
+              }
+            ]
+          },
+          {
+            "key": "concentration",
+            "name": "Концентрация",
+            "type": "bool"
+          },
+          {
+            "key": "duration",
+            "name": "Длительность",
+            "type": "object",
+            "fields": [
+              {
+                "key": "kind",
+                "name": "Вид",
+                "type": "select",
+                "default": "manual",
+                "options": [
+                  {
+                    "label": "До ручного снятия",
+                    "value": "manual"
+                  },
+                  {
+                    "label": "Раунды",
+                    "value": "rounds"
+                  },
+                  {
+                    "label": "Минуты",
+                    "value": "minutes"
+                  },
+                  {
+                    "label": "Часы",
+                    "value": "hours"
+                  },
+                  {
+                    "label": "До отдыха",
+                    "value": "until_rest"
+                  },
+                  {
+                    "label": "Постоянно",
+                    "value": "permanent"
+                  }
+                ]
+              },
+              {
+                "key": "value",
+                "name": "Значение",
+                "type": "int"
+              },
+              {
+                "key": "formula",
+                "name": "Случайная длительность",
+                "type": "text",
+                "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+              }
+            ]
+          },
+          {
+            "key": "target",
+            "name": "На кого накладывается",
+            "type": "select",
+            "default": "self",
+            "options": [
+              {
+                "value": "self",
+                "label": "На владельца"
+              },
+              {
+                "value": "other",
+                "label": "На другое существо"
+              }
+            ],
+            "hint": "Эффект на другое существо не включается на листе владельца предмета."
+          },
+          {
+            "key": "condition",
+            "name": "Условие наложения",
+            "type": "text",
+            "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."
+          },
+          {
+            "key": "weapon_damage_key",
+            "name": "Связанный дополнительный урон",
+            "type": "text",
+            "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+          }
+        ]
+      }
+    ]
+  }
 ]

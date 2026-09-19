@@ -82,7 +82,7 @@ function clone() {
 async function onUse(uid) {
   const entry = entries.value.find(e => e.uid === uid)
   if (!entry) return
-  await charCtx.itemTransfers?.potions?.self({ ...entry, name: potionEntries.value.find(p => p.uid === uid)?.name })
+  await charCtx.itemTransfers?.usable?.self({ ...entry, name: potionEntries.value.find(p => p.uid === uid)?.name }, 'potions')
 }
 
 function onReplenish(uid) {

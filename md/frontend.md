@@ -1067,7 +1067,7 @@ TemplateBlockInner не передаёт пустые style и неисполь�
 
 В `PotionDetailContent` формула лечения зелёная, временных хитов — синяя.
 Описание передаёт предмет в `DndRichContent`: `richDiceColor` сопоставляет
-вставную формулу с `consumption.healing`/`temporary_hp`, и тот же цвет получают
+вставную формулу с `usable.healing`/`temporary_hp`, и тот же цвет получают
 кубики и уведомление броска. Другие формулы сохраняют свои цвета. Вставки dice,
 hp и ac в `DndRichInlineNode` имеют одинаковую высоту 25 px и выравнивание
 по середине строки.

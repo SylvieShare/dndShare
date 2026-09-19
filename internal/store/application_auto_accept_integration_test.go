@@ -86,7 +86,7 @@ func testAutoAccept(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if err = pool.QueryRow(ctx, `SELECT data#>>'{values,potions,0,uid}' FROM dndshare."char" WHERE id=10`).Scan(&returnedUID); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = s.UsePotionSelf(ctx, 1, 10, version(), returnedUID, next(), ""); err != nil {
+	if _, err = s.UseItemSelf(ctx, 1, 10, version(), returnedUID, next(), "", "potions"); err != nil {
 		t.Fatalf("self-use remains allowed: %v", err)
 	}
 

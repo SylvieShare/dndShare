@@ -1,104 +1,659 @@
 [
-  { "key": "desc", "name": "Описание", "type": "description" },
   {
-    "key": "category", "name": "Категория транспорта", "type": "select", "filter": true,
+    "key": "desc",
+    "name": "Описание",
+    "type": "description"
+  },
+  {
+    "key": "category",
+    "name": "Категория транспорта",
+    "type": "select",
+    "filter": true,
     "options": [
-      { "value": "mount", "label": "Скакун" },
-      { "value": "tack", "label": "Сёдла и упряжь" },
-      { "value": "land_vehicle", "label": "Наземный транспорт" },
-      { "value": "water_vehicle", "label": "Водный транспорт" }
+      {
+        "value": "mount",
+        "label": "Скакун"
+      },
+      {
+        "value": "tack",
+        "label": "Сёдла и упряжь"
+      },
+      {
+        "value": "land_vehicle",
+        "label": "Наземный транспорт"
+      },
+      {
+        "value": "water_vehicle",
+        "label": "Водный транспорт"
+      }
     ]
   },
   {
-    "key": "tack_kind", "name": "Назначение снаряжения", "type": "select", "filter": true,
-    "show_on": { "key": "category", "value": "tack" },
-    "options": [
-      { "value": "feed", "label": "Корм" },
-      { "value": "storage", "label": "Перевозка груза" },
-      { "value": "military_saddle", "label": "Боевое седло" },
-      { "value": "pack_saddle", "label": "Грузовое седло" },
-      { "value": "riding_saddle", "label": "Ездовое седло" },
-      { "value": "exotic_saddle", "label": "Экзотическое седло" },
-      { "value": "control", "label": "Управление скакуном" }
-    ]
-  },
-  { "key": "creature_item_id", "name": "Существо в бестиарии", "type": "item", "item_type": 6, "show_on": { "key": "category", "value": "mount" } },
-  {
-    "key": "movement", "name": "Передвижение", "type": "object",
-    "fields": [
-      { "key": "value", "name": "Скорость", "type": "int" },
-      { "key": "unit", "name": "Единица", "type": "select", "options": [{ "value": "feet", "label": "Футы" }, { "value": "miles_per_hour", "label": "Мили в час" }] },
-      { "key": "mode", "name": "Режим", "type": "select", "options": [{ "value": "ground", "label": "По земле" }, { "value": "water", "label": "По воде" }, { "value": "air", "label": "По воздуху" }] }
-    ]
-  },
-  {
-    "key": "propulsion", "name": "Способ движения", "type": "select", "filter": true,
-    "options": [
-      { "value": "self", "label": "Собственный ход" },
-      { "value": "drawn", "label": "Тяга скакунов" },
-      { "value": "sail", "label": "Парус" },
-      { "value": "oar", "label": "Вёсла" },
-      { "value": "sail_or_oar", "label": "Парус или вёсла" }
-    ]
-  },
-  {
-    "key": "capacity", "name": "Вместимость", "type": "object",
-    "fields": [
-      { "key": "carrying_lb", "name": "Грузоподъёмность, фнт.", "type": "int" },
-      { "key": "crew", "name": "Экипаж", "type": "int" },
-      { "key": "passengers", "name": "Пассажиры", "type": "int" },
-      { "key": "cargo_lb", "name": "Груз, фнт.", "type": "int" },
-      { "key": "cargo_tons", "name": "Груз, тонн", "type": "int" }
-    ]
-  },
-  {
-    "key": "vehicle_stats", "name": "Характеристики объекта", "type": "object",
-    "fields": [
-      { "key": "ac", "name": "Класс доспеха", "type": "int" },
-      { "key": "hp", "name": "Хиты", "type": "int" },
-      { "key": "damage_threshold", "name": "Порог урона", "type": "int" }
-    ]
-  },
-  { "key": "rider_stability_advantage", "name": "Преимущество для удержания в седле", "type": "boolean", "show_on": { "key": "tack_kind", "value": "military_saddle" } },
-  { "key": "for_exotic_mount", "name": "Для экзотического скакуна", "type": "boolean", "show_on": { "key": "tack_kind", "value": "exotic_saddle" } },
-  { "key": "cost", "name": "Стоимость", "type": "int_by_suggest", "suggest_type_id": 17 },
-  {"key":"weight","name":"Вес, фнт.","type":"float"},
-  { "key": "available_in_starting_shop", "name": "Доступно в магазине при создании", "type": "boolean", "filter": true },
-{
-  "key": "treasure",
-  "name": "Участвует в генераторе сокровищ",
-  "type": "object",
-  "optional": true,
-  "hint": "Включайте только предметы, которые мастер может получить случайным подбором. Не влияет на стартовый магазин.",
-  "fields": [
-    {
-      "key": "weight",
-      "name": "Вес выпадения",
-      "type": "int",
-      "min": 1,
-      "max": 1000,
-      "default": 10,
-      "required": true,
-      "hint": "Относительный вес среди подходящих предметов: 20 выпадает вдвое чаще 10. Это не процент."
+    "key": "tack_kind",
+    "name": "Назначение снаряжения",
+    "type": "select",
+    "filter": true,
+    "show_on": {
+      "key": "category",
+      "value": "tack"
     },
-    {
-      "key": "min_level",
-      "name": "С уровня группы",
-      "type": "int",
-      "min": 1,
-      "max": 20,
-      "default": 1,
-      "required": true
-    },
-    {
-      "key": "max_level",
-      "name": "До уровня группы",
-      "type": "int",
-      "min": 1,
-      "max": 20,
-      "default": 20,
-      "required": true
+    "options": [
+      {
+        "value": "feed",
+        "label": "Корм"
+      },
+      {
+        "value": "storage",
+        "label": "Перевозка груза"
+      },
+      {
+        "value": "military_saddle",
+        "label": "Боевое седло"
+      },
+      {
+        "value": "pack_saddle",
+        "label": "Грузовое седло"
+      },
+      {
+        "value": "riding_saddle",
+        "label": "Ездовое седло"
+      },
+      {
+        "value": "exotic_saddle",
+        "label": "Экзотическое седло"
+      },
+      {
+        "value": "control",
+        "label": "Управление скакуном"
+      }
+    ]
+  },
+  {
+    "key": "creature_item_id",
+    "name": "Существо в бестиарии",
+    "type": "item",
+    "item_type": 6,
+    "show_on": {
+      "key": "category",
+      "value": "mount"
     }
-  ]
-}
+  },
+  {
+    "key": "movement",
+    "name": "Передвижение",
+    "type": "object",
+    "fields": [
+      {
+        "key": "value",
+        "name": "Скорость",
+        "type": "int"
+      },
+      {
+        "key": "unit",
+        "name": "Единица",
+        "type": "select",
+        "options": [
+          {
+            "value": "feet",
+            "label": "Футы"
+          },
+          {
+            "value": "miles_per_hour",
+            "label": "Мили в час"
+          }
+        ]
+      },
+      {
+        "key": "mode",
+        "name": "Режим",
+        "type": "select",
+        "options": [
+          {
+            "value": "ground",
+            "label": "По земле"
+          },
+          {
+            "value": "water",
+            "label": "По воде"
+          },
+          {
+            "value": "air",
+            "label": "По воздуху"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "propulsion",
+    "name": "Способ движения",
+    "type": "select",
+    "filter": true,
+    "options": [
+      {
+        "value": "self",
+        "label": "Собственный ход"
+      },
+      {
+        "value": "drawn",
+        "label": "Тяга скакунов"
+      },
+      {
+        "value": "sail",
+        "label": "Парус"
+      },
+      {
+        "value": "oar",
+        "label": "Вёсла"
+      },
+      {
+        "value": "sail_or_oar",
+        "label": "Парус или вёсла"
+      }
+    ]
+  },
+  {
+    "key": "capacity",
+    "name": "Вместимость",
+    "type": "object",
+    "fields": [
+      {
+        "key": "carrying_lb",
+        "name": "Грузоподъёмность, фнт.",
+        "type": "int"
+      },
+      {
+        "key": "crew",
+        "name": "Экипаж",
+        "type": "int"
+      },
+      {
+        "key": "passengers",
+        "name": "Пассажиры",
+        "type": "int"
+      },
+      {
+        "key": "cargo_lb",
+        "name": "Груз, фнт.",
+        "type": "int"
+      },
+      {
+        "key": "cargo_tons",
+        "name": "Груз, тонн",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "key": "vehicle_stats",
+    "name": "Характеристики объекта",
+    "type": "object",
+    "fields": [
+      {
+        "key": "ac",
+        "name": "Класс доспеха",
+        "type": "int"
+      },
+      {
+        "key": "hp",
+        "name": "Хиты",
+        "type": "int"
+      },
+      {
+        "key": "damage_threshold",
+        "name": "Порог урона",
+        "type": "int"
+      }
+    ]
+  },
+  {
+    "key": "rider_stability_advantage",
+    "name": "Преимущество для удержания в седле",
+    "type": "boolean",
+    "show_on": {
+      "key": "tack_kind",
+      "value": "military_saddle"
+    }
+  },
+  {
+    "key": "for_exotic_mount",
+    "name": "Для экзотического скакуна",
+    "type": "boolean",
+    "show_on": {
+      "key": "tack_kind",
+      "value": "exotic_saddle"
+    }
+  },
+  {
+    "key": "cost",
+    "name": "Стоимость",
+    "type": "int_by_suggest",
+    "suggest_type_id": 17
+  },
+  {
+    "key": "weight",
+    "name": "Вес, фнт.",
+    "type": "float"
+  },
+  {
+    "key": "available_in_starting_shop",
+    "name": "Доступно в магазине при создании",
+    "type": "boolean",
+    "filter": true
+  },
+  {
+    "key": "treasure",
+    "name": "Участвует в генераторе сокровищ",
+    "type": "object",
+    "optional": true,
+    "hint": "Включайте только предметы, которые мастер может получить случайным подбором. Не влияет на стартовый магазин.",
+    "fields": [
+      {
+        "key": "weight",
+        "name": "Вес выпадения",
+        "type": "int",
+        "min": 1,
+        "max": 1000,
+        "default": 10,
+        "required": true,
+        "hint": "Относительный вес среди подходящих предметов: 20 выпадает вдвое чаще 10. Это не процент."
+      },
+      {
+        "key": "min_level",
+        "name": "С уровня группы",
+        "type": "int",
+        "min": 1,
+        "max": 20,
+        "default": 1,
+        "required": true
+      },
+      {
+        "key": "max_level",
+        "name": "До уровня группы",
+        "type": "int",
+        "min": 1,
+        "max": 20,
+        "default": 20,
+        "required": true
+      }
+    ]
+  },
+  {
+    "key": "usable",
+    "name": "Применение предмета",
+    "type": "object",
+    "optional": true,
+    "fields": [
+      {
+        "key": "healing",
+        "name": "Восстановление хитов",
+        "type": "text",
+        "hint": "Формула, например 2d4 + 2. Хиты восстанавливаются до максимума."
+      },
+      {
+        "key": "temporary_hp",
+        "name": "Временные хиты",
+        "type": "text",
+        "hint": "Формула или число. Сохраняется большее значение, временные хиты не складываются."
+      },
+      {
+        "key": "spell",
+        "name": "Эффект заклинания",
+        "type": "item",
+        "item_type": 5
+      },
+      {
+        "key": "spell_effect_key",
+        "name": "Вариант эффекта заклинания",
+        "type": "text",
+        "hint": "Ключ связанного эффекта. Пусто — применить все эффекты заклинания."
+      },
+      {
+        "key": "duration",
+        "name": "Длительность",
+        "type": "object",
+        "fields": [
+          {
+            "key": "kind",
+            "name": "Вид",
+            "type": "select",
+            "default": "manual",
+            "options": [
+              {
+                "label": "До ручного снятия",
+                "value": "manual"
+              },
+              {
+                "label": "Раунды",
+                "value": "rounds"
+              },
+              {
+                "label": "Минуты",
+                "value": "minutes"
+              },
+              {
+                "label": "Часы",
+                "value": "hours"
+              },
+              {
+                "label": "До отдыха",
+                "value": "until_rest"
+              },
+              {
+                "label": "Постоянно",
+                "value": "permanent"
+              }
+            ]
+          },
+          {
+            "key": "value",
+            "name": "Значение",
+            "type": "int"
+          },
+          {
+            "key": "formula",
+            "name": "Случайная длительность",
+            "type": "text",
+            "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+          }
+        ],
+        "optional": true
+      },
+      {
+        "key": "concentration",
+        "name": "Требует концентрации",
+        "type": "bool"
+      },
+      {
+        "key": "note",
+        "name": "Что нужно учесть вручную",
+        "type": "text"
+      },
+      {
+        "key": "choices",
+        "name": "Варианты применения",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "key",
+            "name": "Ключ варианта",
+            "type": "text"
+          },
+          {
+            "key": "name",
+            "name": "Название варианта",
+            "type": "text"
+          },
+          {
+            "key": "status_effects",
+            "name": "Связанные эффекты",
+            "type": "object_array",
+            "fields": [
+              {
+                "key": "key",
+                "name": "Ключ",
+                "type": "text"
+              },
+              {
+                "key": "effect",
+                "name": "Эффект",
+                "type": "item",
+                "item_type": 15
+              },
+              {
+                "key": "parameter_bindings",
+                "name": "Параметры",
+                "type": "object_array",
+                "fields": [
+                  {
+                    "key": "key",
+                    "name": "Параметр",
+                    "type": "text"
+                  },
+                  {
+                    "key": "source",
+                    "name": "Источник",
+                    "type": "select",
+                    "options": [
+                      {
+                        "label": "Текущее значение прогрессии",
+                        "value": "scaling_value"
+                      },
+                      {
+                        "label": "Постоянное значение",
+                        "value": "fixed"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "value",
+                    "name": "Значение",
+                    "type": "int"
+                  }
+                ]
+              },
+              {
+                "key": "concentration",
+                "name": "Концентрация",
+                "type": "bool"
+              },
+              {
+                "key": "duration",
+                "name": "Длительность",
+                "type": "object",
+                "fields": [
+                  {
+                    "key": "kind",
+                    "name": "Вид",
+                    "type": "select",
+                    "default": "manual",
+                    "options": [
+                      {
+                        "label": "До ручного снятия",
+                        "value": "manual"
+                      },
+                      {
+                        "label": "Раунды",
+                        "value": "rounds"
+                      },
+                      {
+                        "label": "Минуты",
+                        "value": "minutes"
+                      },
+                      {
+                        "label": "Часы",
+                        "value": "hours"
+                      },
+                      {
+                        "label": "До отдыха",
+                        "value": "until_rest"
+                      },
+                      {
+                        "label": "Постоянно",
+                        "value": "permanent"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "value",
+                    "name": "Значение",
+                    "type": "int"
+                  },
+                  {
+                    "key": "formula",
+                    "name": "Случайная длительность",
+                    "type": "text",
+                    "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+                  }
+                ]
+              },
+              {
+                "key": "target",
+                "name": "На кого накладывается",
+                "type": "select",
+                "default": "self",
+                "options": [
+                  {
+                    "value": "self",
+                    "label": "На владельца"
+                  },
+                  {
+                    "value": "other",
+                    "label": "На другое существо"
+                  }
+                ],
+                "hint": "Эффект на другое существо не включается на листе владельца предмета."
+              },
+              {
+                "key": "condition",
+                "name": "Условие наложения",
+                "type": "text",
+                "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."
+              },
+              {
+                "key": "weapon_damage_key",
+                "name": "Связанный дополнительный урон",
+                "type": "text",
+                "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "status_effects",
+        "name": "Связанные эффекты",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "key",
+            "name": "Ключ",
+            "type": "text"
+          },
+          {
+            "key": "effect",
+            "name": "Эффект",
+            "type": "item",
+            "item_type": 15
+          },
+          {
+            "key": "parameter_bindings",
+            "name": "Параметры",
+            "type": "object_array",
+            "fields": [
+              {
+                "key": "key",
+                "name": "Параметр",
+                "type": "text"
+              },
+              {
+                "key": "source",
+                "name": "Источник",
+                "type": "select",
+                "options": [
+                  {
+                    "label": "Текущее значение прогрессии",
+                    "value": "scaling_value"
+                  },
+                  {
+                    "label": "Постоянное значение",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              {
+                "key": "value",
+                "name": "Значение",
+                "type": "int"
+              }
+            ]
+          },
+          {
+            "key": "concentration",
+            "name": "Концентрация",
+            "type": "bool"
+          },
+          {
+            "key": "duration",
+            "name": "Длительность",
+            "type": "object",
+            "fields": [
+              {
+                "key": "kind",
+                "name": "Вид",
+                "type": "select",
+                "default": "manual",
+                "options": [
+                  {
+                    "label": "До ручного снятия",
+                    "value": "manual"
+                  },
+                  {
+                    "label": "Раунды",
+                    "value": "rounds"
+                  },
+                  {
+                    "label": "Минуты",
+                    "value": "minutes"
+                  },
+                  {
+                    "label": "Часы",
+                    "value": "hours"
+                  },
+                  {
+                    "label": "До отдыха",
+                    "value": "until_rest"
+                  },
+                  {
+                    "label": "Постоянно",
+                    "value": "permanent"
+                  }
+                ]
+              },
+              {
+                "key": "value",
+                "name": "Значение",
+                "type": "int"
+              },
+              {
+                "key": "formula",
+                "name": "Случайная длительность",
+                "type": "text",
+                "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+              }
+            ]
+          },
+          {
+            "key": "target",
+            "name": "На кого накладывается",
+            "type": "select",
+            "default": "self",
+            "options": [
+              {
+                "value": "self",
+                "label": "На владельца"
+              },
+              {
+                "value": "other",
+                "label": "На другое существо"
+              }
+            ],
+            "hint": "Эффект на другое существо не включается на листе владельца предмета."
+          },
+          {
+            "key": "condition",
+            "name": "Условие наложения",
+            "type": "text",
+            "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."
+          },
+          {
+            "key": "weapon_damage_key",
+            "name": "Связанный дополнительный урон",
+            "type": "text",
+            "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+          }
+        ]
+      }
+    ]
+  }
 ]

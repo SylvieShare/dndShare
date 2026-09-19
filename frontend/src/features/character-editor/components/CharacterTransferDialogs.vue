@@ -1,5 +1,5 @@
 <template>
-  <PotionApplicationDialogs v-if="controller.potions" :controller="controller.potions" />
+  <UsableApplicationDialogs v-if="controller.usable" :controller="controller.usable" />
   <BasePopover :open="popoverOpen" :anchor="controller.anchor" :min-width="0" :z-index="3400" :close-on-scroll="false" :close-on-resize="false"
     role="dialog" :aria-label="title" transition-preset="action-menu" @update:open="!$event && controller.close()">
     <div ref="popoverContent" class="session-popover" tabindex="-1">
@@ -14,7 +14,7 @@
   <ItemViewModal v-if="viewedItem" :item-id="viewedItem.id" :item="viewedItem.item" :item-type-id="viewedItem.typeId" :instance="viewedItem.entry" :z-index="3600" @close="viewedItem = null" />
 </template>
 <script setup>
-import PotionApplicationDialogs from './PotionApplicationDialogs.vue'
+import UsableApplicationDialogs from './UsableApplicationDialogs.vue'
 import { computed, nextTick, ref, watch } from 'vue'
 import { BasePopover, RemoveButton } from '@sylvieshare/share-ui'
 import CharacterInteractionDialog from './CharacterInteractionDialog.vue'

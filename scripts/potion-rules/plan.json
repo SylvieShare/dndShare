@@ -608,37 +608,39 @@
   "potions": [
     {
       "id": 84,
-      "consumption": {
-        "concentration": false,
-        "healing": "2d4 + 2"
-      },
-      "status_effects": [],
       "automationStatus": "full",
-      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы.",
+      "usable": {
+        "concentration": false,
+        "healing": "2d4 + 2",
+        "status_effects": []
+      }
     },
     {
       "id": 99,
-      "consumption": {
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [
-        {
-          "key": "giant_strength_29",
-          "effect": {
-            "ref": "giant_strength_29"
+        },
+        "status_effects": [
+          {
+            "key": "giant_strength_29",
+            "effect": {
+              "ref": "giant_strength_29"
+            }
           }
-        }
-      ],
-      "automationStatus": "full",
-      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+        ]
+      }
     },
     {
       "id": 109,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 990
@@ -647,85 +649,85 @@
           "kind": "minutes",
           "value": 1
         },
-        "note": "Дополнительное действие и пропуск хода после окончания отмечаются вручную."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Дополнительное действие и пропуск хода после окончания отмечаются вручную.",
+        "status_effects": []
+      }
     },
     {
       "id": 115,
-      "consumption": {
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [
-        {
-          "key": "giant_strength_27",
-          "effect": {
-            "ref": "giant_strength_27"
+        },
+        "status_effects": [
+          {
+            "key": "giant_strength_27",
+            "effect": {
+              "ref": "giant_strength_27"
+            }
           }
-        }
-      ],
-      "automationStatus": "full",
-      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+        ]
+      }
     },
     {
       "id": 120,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [
-        {
-          "key": "potion_flight",
-          "effect": {
-            "ref": "potion_flight"
+        },
+        "status_effects": [
+          {
+            "key": "potion_flight",
+            "effect": {
+              "ref": "potion_flight"
+            }
           }
-        }
-      ],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        ]
+      }
     },
     {
       "id": 123,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [
-        {
-          "key": "potion_climbing",
-          "effect": {
-            "ref": "potion_climbing"
+        },
+        "status_effects": [
+          {
+            "key": "potion_climbing",
+            "effect": {
+              "ref": "potion_climbing"
+            }
           }
-        }
-      ],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        ]
+      }
     },
     {
       "id": 133,
-      "consumption": {
-        "concentration": false,
-        "healing": "4d4 + 4"
-      },
-      "status_effects": [],
       "automationStatus": "full",
-      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы.",
+      "usable": {
+        "concentration": false,
+        "healing": "4d4 + 4",
+        "status_effects": []
+      }
     },
     {
       "id": 143,
-      "consumption": {
+      "automationStatus": "full",
+      "automationNote": "Выбранное сопротивление действует на листе до снятия эффекта.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
@@ -852,15 +854,15 @@
               }
             ]
           }
-        ]
-      },
-      "status_effects": [],
-      "automationStatus": "full",
-      "automationNote": "Выбранное сопротивление действует на листе до снятия эффекта."
+        ],
+        "status_effects": []
+      }
     },
     {
       "id": 163,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": true,
         "spell": {
           "id": 774
@@ -869,15 +871,15 @@
           "kind": "minutes",
           "value": 1
         },
-        "note": "Место наблюдения, доступность мыслей и спасброски определяет мастер."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Место наблюдения, доступность мыслей и спасброски определяет мастер.",
+        "status_effects": []
+      }
     },
     {
       "id": 167,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 835
@@ -887,15 +889,15 @@
           "formula": "1d4"
         },
         "spell_effect_key": "enlarge",
-        "note": "Изменение размера и дополнительные 1к4 урона оружия отмечаются вручную."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Изменение размера и дополнительные 1к4 урона оружия отмечаются вручную.",
+        "status_effects": []
+      }
     },
     {
       "id": 183,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 1335
@@ -904,55 +906,55 @@
           "kind": "hours",
           "value": 1
         },
-        "note": "Нанесение занимает 10 минут. На каждую категорию размера выше Среднего нужен ещё один флакон."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Нанесение занимает 10 минут. На каждую категорию размера выше Среднего нужен ещё один флакон.",
+        "status_effects": []
+      }
     },
     {
       "id": 203,
-      "consumption": {
-        "concentration": false,
-        "healing": "8d4 + 8"
-      },
-      "status_effects": [],
       "automationStatus": "full",
-      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы.",
+      "usable": {
+        "concentration": false,
+        "healing": "8d4 + 8",
+        "status_effects": []
+      }
     },
     {
       "id": 209,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [
-        {
-          "key": "animal_friendship_access",
-          "effect": {
-            "ref": "animal_friendship_access"
+        },
+        "status_effects": [
+          {
+            "key": "animal_friendship_access",
+            "effect": {
+              "ref": "animal_friendship_access"
+            }
           }
-        }
-      ],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        ]
+      }
     },
     {
       "id": 215,
-      "consumption": {
-        "concentration": false,
-        "healing": "10d4 + 20"
-      },
-      "status_effects": [],
       "automationStatus": "full",
-      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы."
+      "automationNote": "Бросок лечения, предел максимальных хитов и расход одной дозы.",
+      "usable": {
+        "concentration": false,
+        "healing": "10d4 + 20",
+        "status_effects": []
+      }
     },
     {
       "id": 221,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 835
@@ -962,25 +964,25 @@
           "formula": "1d4"
         },
         "spell_effect_key": "reduce",
-        "note": "Изменение размера и снижение на 1к4 урона оружия отмечаются вручную."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Изменение размера и снижение на 1к4 урона оружия отмечаются вручную.",
+        "status_effects": []
+      }
     },
     {
       "id": 239,
-      "consumption": {
-        "concentration": false,
-        "note": "Требуются урон ядом 3к6 и спасбросок Телосложения Сл 13; затем возможны отравление и повторный урон по ходам. Отметьте их вручную."
-      },
-      "status_effects": [],
       "automationStatus": "none",
-      "automationNote": "Расход дозы реализован; урон, спасброски и убывающий яд по ходам пока вручную."
+      "automationNote": "Расход дозы реализован; урон, спасброски и убывающий яд по ходам пока вручную.",
+      "usable": {
+        "concentration": false,
+        "note": "Требуются урон ядом 3к6 и спасбросок Телосложения Сл 13; затем возможны отравление и повторный урон по ходам. Отметьте их вручную.",
+        "status_effects": []
+      }
     },
     {
       "id": 248,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 764
@@ -989,15 +991,15 @@
           "kind": "hours",
           "value": 1
         },
-        "note": "Снимите невидимость после атаки или сотворения заклинания."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Снимите невидимость после атаки или сотворения заклинания.",
+        "status_effects": []
+      }
     },
     {
       "id": 285,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 548
@@ -1007,25 +1009,25 @@
           "value": 1
         },
         "temporary_hp": "10",
-        "note": "По окончании часа снимите эффект и оставшиеся временные хиты от зелья."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "По окончании часа снимите эффект и оставшиеся временные хиты от зелья.",
+        "status_effects": []
+      }
     },
     {
       "id": 294,
-      "consumption": {
-        "concentration": false,
-        "note": "Выберите рубящее или колющее оружие либо до 5 боеприпасов. Нанесение 1 минута; на 1 час +3 к атаке и урону. Бонус нужному оружию отметьте вручную."
-      },
-      "status_effects": [],
       "automationStatus": "none",
-      "automationNote": "Расход дозы реализован; выбор конкретного оружия/боеприпасов и временный бонус пока вручную."
+      "automationNote": "Расход дозы реализован; выбор конкретного оружия/боеприпасов и временный бонус пока вручную.",
+      "usable": {
+        "concentration": false,
+        "note": "Выберите рубящее или колющее оружие либо до 5 боеприпасов. Нанесение 1 минута; на 1 час +3 к атаке и урону. Бонус нужному оружию отметьте вручную.",
+        "status_effects": []
+      }
     },
     {
       "id": 300,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 871
@@ -1034,15 +1036,15 @@
           "kind": "hours",
           "value": 1
         },
-        "note": "Скорость полёта 10 футов и ограничения формы учитываются вручную. Эффект можно завершить бонусным действием."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Скорость полёта 10 футов и ограничения формы учитываются вручную. Эффект можно завершить бонусным действием.",
+        "status_effects": []
+      }
     },
     {
       "id": 302,
-      "consumption": {
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную.",
+      "usable": {
         "concentration": false,
         "choices": [
           {
@@ -1073,55 +1075,55 @@
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [],
-      "automationStatus": "full",
-      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+        },
+        "status_effects": []
+      }
     },
     {
       "id": 311,
-      "consumption": {
+      "automationStatus": "full",
+      "automationNote": "Добавляет возможность дышать под водой на час; снятие эффекта вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [
-        {
-          "key": "water_breathing",
-          "effect": {
-            "ref": "water_breathing"
+        },
+        "status_effects": [
+          {
+            "key": "water_breathing",
+            "effect": {
+              "ref": "water_breathing"
+            }
           }
-        }
-      ],
-      "automationStatus": "full",
-      "automationNote": "Добавляет возможность дышать под водой на час; снятие эффекта вручную."
+        ]
+      }
     },
     {
       "id": 316,
-      "consumption": {
+      "automationStatus": "full",
+      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "hours",
           "value": 1
-        }
-      },
-      "status_effects": [
-        {
-          "key": "giant_strength_21",
-          "effect": {
-            "ref": "giant_strength_21"
+        },
+        "status_effects": [
+          {
+            "key": "giant_strength_21",
+            "effect": {
+              "ref": "giant_strength_21"
+            }
           }
-        }
-      ],
-      "automationStatus": "full",
-      "automationNote": "Сила повышается до значения зелья; исходная характеристика сохраняется. Снятие эффекта вручную."
+        ]
+      }
     },
     {
       "id": 322,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": true,
         "spell": {
           "id": 938
@@ -1130,15 +1132,15 @@
           "kind": "minutes",
           "value": 10
         },
-        "note": "Место наблюдения, доступность мыслей и спасброски определяет мастер."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Место наблюдения, доступность мыслей и спасброски определяет мастер.",
+        "status_effects": []
+      }
     },
     {
       "id": 328,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "spell": {
           "id": 1079
@@ -1147,31 +1149,29 @@
           "kind": "hours",
           "value": 8
         },
-        "note": "Режим нанесения на существо: 10 минут. Для существа больше Среднего нужны дополнительные флаконы. Выливание на землю — отдельное применение по описанию."
-      },
-      "status_effects": [],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        "note": "Режим нанесения на существо: 10 минут. Для существа больше Среднего нужны дополнительные флаконы. Выливание на землю — отдельное применение по описанию.",
+        "status_effects": []
+      }
     },
     {
       "id": 329,
-      "consumption": {
+      "automationStatus": "partial",
+      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную.",
+      "usable": {
         "concentration": false,
         "duration": {
           "kind": "minutes",
           "value": 10
-        }
-      },
-      "status_effects": [
-        {
-          "key": "philter_wait",
-          "effect": {
-            "ref": "philter_wait"
+        },
+        "status_effects": [
+          {
+            "key": "philter_wait",
+            "effect": {
+              "ref": "philter_wait"
+            }
           }
-        }
-      ],
-      "automationStatus": "partial",
-      "automationNote": "Эффект и длительность добавляются на лист. Условия и окончание отмечаются вручную."
+        ]
+      }
     }
   ],
   "spells": [

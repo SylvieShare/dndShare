@@ -10,7 +10,7 @@ import (
 
 // The receipt and character mutation commit together. A repeated action UUID
 // returns its original dice even if the last dose has already disappeared.
-func (s *Store) UsePotionSelf(ctx context.Context, userID, charID, version int64, entryUID, actionID, option string) (ApplicationResult, error) {
+func (s *Store) UseItemSelf(ctx context.Context, userID, charID, version int64, entryUID, actionID, option, source string) (ApplicationResult, error) {
 	result := ApplicationResult{}
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
@@ -29,10 +29,10 @@ func (s *Store) UsePotionSelf(ctx context.Context, userID, charID, version int64
 		return result, err
 	}
 	var raw json.RawMessage
-	var previousUID, previousOption string
-	err = tx.QueryRow(ctx, `SELECT entry_uid,option_key,result FROM dndshare.item_application WHERE char_id=$1 AND client_action_id=$2::uuid`, charID, actionID).Scan(&previousUID, &previousOption, &raw)
+	var previousUID, previousOption, previousSource string
+	err = tx.QueryRow(ctx, `SELECT entry_uid,option_key,source,result FROM dndshare.item_application WHERE char_id=$1 AND client_action_id=$2::uuid`, charID, actionID).Scan(&previousUID, &previousOption, &previousSource, &raw)
 	if err == nil {
-		if previousUID != entryUID || previousOption != option {
+		if previousUID != entryUID || previousOption != option || previousSource != source {
 			return result, ErrItemTransferConflict
 		}
 		if err = json.Unmarshal(raw, &result); err != nil {
@@ -50,11 +50,11 @@ func (s *Store) UsePotionSelf(ctx context.Context, userID, charID, version int64
 	if err != nil {
 		return result, err
 	}
-	entry, err := doc.takePotionDose(entryUID)
+	entry, err := doc.takeUsableUnit(source, entryUID)
 	if err != nil {
 		return result, err
 	}
-	plan, err := buildPotionApplication(ctx, tx, entry, option, userID)
+	plan, err := buildUsableApplication(ctx, tx, entry, option, userID)
 	if err != nil {
 		return result, err
 	}
@@ -69,7 +69,7 @@ func (s *Store) UsePotionSelf(ctx context.Context, userID, charID, version int64
 	if err != nil {
 		return result, err
 	}
-	_, err = tx.Exec(ctx, `INSERT INTO dndshare.item_application(char_id,client_action_id,entry_uid,option_key,result) VALUES($1,$2::uuid,$3,$4,CAST($5 AS jsonb))`, charID, actionID, entryUID, option, json.RawMessage(raw))
+	_, err = tx.Exec(ctx, `INSERT INTO dndshare.item_application(char_id,client_action_id,entry_uid,option_key,result,source) VALUES($1,$2::uuid,$3,$4,CAST($5 AS jsonb),$6)`, charID, actionID, entryUID, option, json.RawMessage(raw), source)
 	if err != nil {
 		return result, err
 	}

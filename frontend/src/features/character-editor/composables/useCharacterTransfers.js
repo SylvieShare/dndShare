@@ -1,7 +1,7 @@
 import { useSpellConcentration } from './useSpellConcentration'
 import { fetchPost } from '@/shared/api/http'
 import { notifyApplication } from '@/features/notifications/lib/notifyApplication'
-import { usePotionApplications } from './usePotionApplications'
+import { useUsableApplications } from './useUsableApplications'
 import { computed, onBeforeUnmount, reactive, shallowRef, watch } from 'vue'
 import * as api from '@/shared/api/itemTransfersApi'
 import { getSession } from '@/shared/api/sessionsApi'
@@ -96,12 +96,12 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     } finally { state.busy = false }
   }
   const concentration = useSpellConcentration({ uuid, version, isOwner, state, mutate })
-  const potions = usePotionApplications({ uuid, version, mutate, state, isOwner })
+  const usable = useUsableApplications({ uuid, version, mutate, state, isOwner })
   async function send(source, entry, recipientCharUuid, purpose = 'transfer', selectedOption = '') {
     if (!isOwner.value || state.busy || !session.value || !(recipients.value.some(p => p.charUuid === recipientCharUuid) || recipientCharUuid === 'dm')) return false
     let optionKey = selectedOption
-    if (purpose === 'use' && source === 'potions') {
-      try { optionKey = await potions.choose(entry) } catch (error) { state.error = error.message; return false }
+    if (purpose === 'use' && source !== 'spells') {
+      try { optionKey = await usable.choose(entry) } catch (error) { state.error = error.message; return false }
       if (optionKey === null) return false
     }
     const key = `${optionKey}:${purpose}:${session.value.uuid}:${source}:${entry.uid}:${recipientCharUuid}`
@@ -161,5 +161,5 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     else state.view = ''
   }, { immediate: true })
   onBeforeUnmount(live.stop)
-  return reactive({ state, potions, concentration, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, castSpell, resolve, refresh, busy: computed(() => state.busy) })
+  return reactive({ state, usable, concentration, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, castSpell, resolve, refresh, busy: computed(() => state.busy) })
 }

@@ -114,6 +114,8 @@
         </template>
       </template>
 
+      <UsableDetail v-if="item.data?.usable" :item="item" />
+
       <ItemInstanceNotes v-if="instance" :item="item" :instance="instance" />
 
       <div v-if="showTitle || canEdit" class="detail-technical-meta">
@@ -131,6 +133,7 @@
 </template>
 
 <script setup>
+import UsableDetail from '@/features/items/detail-components/UsableDetail.vue'
 import ItemAutomationBadge from '@/features/items/components/ItemAutomationBadge.vue'
 import ItemInstanceNotes from '@/features/items/detail-components/ItemInstanceNotes.vue'
 import { computed, provide, watch } from 'vue'

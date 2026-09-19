@@ -9,7 +9,7 @@
 
     <DetailSection label="Описание">
       <template #icon><BookOpen /></template>
-      <RichContent v-if="data.desc" class="idc-desc" :html="data.desc" />
+      <RichContent v-if="data.desc" class="idc-desc" :html="data.desc" :item="item" />
       <div v-else class="idc-no-desc">Описание отсутствует</div>
     </DetailSection>
 

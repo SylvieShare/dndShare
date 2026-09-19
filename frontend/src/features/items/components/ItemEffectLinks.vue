@@ -2,7 +2,7 @@
   <HandbookReferenceRows v-if="rows.length" split :rows="rows" :z-index="zIndex">
     <template #info="{ row }">
       <div class="effect-application">
-        <span class="effect-application-target"><Crosshair :size="14" />{{ row.link.target === 'other' ? 'На цель' : 'На владельца' }}</span>
+        <span class="effect-application-target"><Crosshair :size="14" />{{ targetLabel || (row.link.target === 'other' ? 'На цель' : 'На владельца') }}</span>
         <div v-if="row.damage" class="effect-application-rule">
           <small>Применение</small><strong>{{ row.damage.label || 'Дополнительный урон' }}</strong>
           <span v-if="row.damage.uses_resource || row.damage.resource_key" class="effect-application-cost">−{{ row.damage.resource_cost ?? 1 }} <SpellSlotSphere :size="20" :interactive="false" />{{ resourceTitle(row.damage) }}</span>
@@ -20,7 +20,7 @@ import HandbookReferenceRows from './HandbookReferenceRows.vue'
 import SpellSlotSphere from './SpellSlotSphere.vue'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { statusEffectLinks } from '@/features/character-editor/lib/characterStatuses'
-const props = defineProps({ item: Object, zIndex: { type: Number, default: 5100 } })
+const props = defineProps({ item: Object, targetLabel: String, zIndex: { type: Number, default: 5100 } })
 const rows = computed(() => statusEffectLinks(props.item).map(link => ({ id: link.effect_id, key: link.key, link,
   damage: (props.item?.data?.weapon_damage || []).find(rule => rule.key === link.weapon_damage_key),
 })))

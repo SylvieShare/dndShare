@@ -271,7 +271,38 @@
         "key": "title",
         "type": "text"
       },
-      {"name": "Вид действия", "key": "action_type", "type": "select", "default": "action", "options": [{"label": "Действие", "value": "action"}, {"label": "Бонусное действие", "value": "bonus_action"}, {"label": "Реакция", "value": "reaction"}, {"label": "Свободное действие", "value": "free"}, {"label": "Особое действие", "value": "special"}, {"value": "timed", "label": "Требует времени"}]},
+      {
+        "name": "Вид действия",
+        "key": "action_type",
+        "type": "select",
+        "default": "action",
+        "options": [
+          {
+            "label": "Действие",
+            "value": "action"
+          },
+          {
+            "label": "Бонусное действие",
+            "value": "bonus_action"
+          },
+          {
+            "label": "Реакция",
+            "value": "reaction"
+          },
+          {
+            "label": "Свободное действие",
+            "value": "free"
+          },
+          {
+            "label": "Особое действие",
+            "value": "special"
+          },
+          {
+            "value": "timed",
+            "label": "Требует времени"
+          }
+        ]
+      },
       {
         "name": "Описание",
         "key": "description",
@@ -402,7 +433,76 @@
         "type": "int",
         "default": 1
       },
-      {"key": "time", "name": "Время выполнения", "type": "object", "fields": [{"key": "kind", "name": "Вид времени", "type": "select", "options": [{"value": "action", "label": "Действие"}, {"value": "bonus_action", "label": "Бонусное действие"}, {"value": "reaction", "label": "Реакция"}, {"value": "free", "label": "Свободное действие"}, {"value": "special", "label": "Особое действие"}, {"value": "rounds", "label": "Раунды"}, {"value": "minutes", "label": "Минуты"}, {"value": "hours", "label": "Часы"}, {"value": "days", "label": "Дни"}, {"value": "custom", "label": "Своё значение"}]}, {"key": "value", "name": "Количество", "type": "int", "min": 1}, {"key": "condition", "name": "Условие реакции", "type": "text"}, {"key": "text", "name": "Своё время", "type": "text"}]}
+      {
+        "key": "time",
+        "name": "Время выполнения",
+        "type": "object",
+        "fields": [
+          {
+            "key": "kind",
+            "name": "Вид времени",
+            "type": "select",
+            "options": [
+              {
+                "value": "action",
+                "label": "Действие"
+              },
+              {
+                "value": "bonus_action",
+                "label": "Бонусное действие"
+              },
+              {
+                "value": "reaction",
+                "label": "Реакция"
+              },
+              {
+                "value": "free",
+                "label": "Свободное действие"
+              },
+              {
+                "value": "special",
+                "label": "Особое действие"
+              },
+              {
+                "value": "rounds",
+                "label": "Раунды"
+              },
+              {
+                "value": "minutes",
+                "label": "Минуты"
+              },
+              {
+                "value": "hours",
+                "label": "Часы"
+              },
+              {
+                "value": "days",
+                "label": "Дни"
+              },
+              {
+                "value": "custom",
+                "label": "Своё значение"
+              }
+            ]
+          },
+          {
+            "key": "value",
+            "name": "Количество",
+            "type": "int",
+            "min": 1
+          },
+          {
+            "key": "condition",
+            "name": "Условие реакции",
+            "type": "text"
+          },
+          {
+            "key": "text",
+            "name": "Своё время",
+            "type": "text"
+          }
+        ]
+      }
     ]
   },
   {
@@ -1248,7 +1348,12 @@
         "default": 1,
         "hint": "Число зарядов за один бросок урона. Критический удар не увеличивает стоимость."
       },
-      {"key": "resource_units_max", "name": "Максимум ячеек расхода", "type": "int", "hint": "Выбор от 0 до этого количества вместо галочки. Каждая ячейка добавляет указанные кости и расходует указанную стоимость ресурса."}
+      {
+        "key": "resource_units_max",
+        "name": "Максимум ячеек расхода",
+        "type": "int",
+        "hint": "Выбор от 0 до этого количества вместо галочки. Каждая ячейка добавляет указанные кости и расходует указанную стоимость ресурса."
+      }
     ]
   },
   {
@@ -2137,12 +2242,488 @@
       }
     ]
   },
-  {"key": "dawn_recovery", "name": "Восстановление на рассвете", "type": "object", "fields": [{"key": "mode", "name": "Способ восстановления", "type": "select", "options": [{"value": "full", "label": "Полностью"}, {"value": "roll", "label": "По формуле"}]}, {"key": "formula", "name": "Сколько восстановить", "type": "text", "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."}]},
-  {"key": "last_charge", "name": "При последнем заряде", "type": "object", "fields": [{"key": "resource_key", "name": "Ресурс", "type": "text", "hint": "Пусто — основные заряды предмета."}, {"key": "dice", "name": "Кость проверки", "type": "select", "default": "d20", "options": [{"value": "d4", "label": "к4"}, {"value": "d6", "label": "к6"}, {"value": "d8", "label": "к8"}, {"value": "d10", "label": "к10"}, {"value": "d12", "label": "к12"}, {"value": "d20", "label": "к20"}, {"value": "d100", "label": "к100"}]}, {"key": "failure_max", "name": "Опасный результат: от 1 до", "type": "int", "default": 1}, {"key": "consequence", "name": "Последствие", "type": "select", "default": "lose_magic", "options": [{"value": "lose_magic", "label": "Теряет магические свойства"}]}]},
-  {"key": "weapon_uses", "name": "Особое применение оружия", "type": "object_array", "fields": [{"key": "title", "name": "Название режима", "type": "text", "hint": "Название режима в меню атаки и в блоке применения под оружием."}, {"key": "key", "name": "Ключ", "type": "text"}, {"key": "attack_mode", "name": "Способ атаки", "type": "select", "default": "thrown", "options": [{"value": "thrown", "label": "Метание с характеристикой оружия"}, {"value": "melee", "label": "Рукопашная атака"}, {"value": "ranged", "label": "Дальняя атака"}], "hint": "Метание использует выбранную характеристику оружия. Бонусы и владение рассчитываются как при обычной атаке."}, {"key": "range_ft", "name": "Дистанция, футы", "type": "int", "default": 60, "hint": "Максимальная дистанция особой атаки в футах; для области-линии также задаёт её длину.", "min": 1, "max": 10000}, {"key": "resource_cost", "name": "Расход при атаке", "type": "int", "default": 1, "hint": "Сколько единиц ресурса потратить при броске атаки, даже если он промахнулся. Шаги не оплачиваются повторно.", "min": 0, "max": 100}, {"key": "resource_key", "name": "Ресурс", "type": "text"}, {"key": "steps", "name": "Шаги после атаки", "type": "object_array", "fields": [{"key": "title", "name": "Название шага", "type": "text", "hint": "Название отдельного шага после атаки: например, урон по линии или по конечной цели."}, {"key": "key", "name": "Ключ", "type": "text"}, {"key": "kind", "name": "Что бросаем", "type": "select", "default": "damage", "options": [{"value": "damage", "label": "Отдельный урон"}, {"value": "weapon_damage", "label": "Урон оружия при попадании + добавка"}], "hint": "Отдельный урон бросается независимо от попадания. Урон оружия включает основу и эту добавку только при попадании."}, {"key": "dice", "name": "Кость", "type": "select", "default": "d6", "options": [{"value": "d4", "label": "к4"}, {"value": "d6", "label": "к6"}, {"value": "d8", "label": "к8"}, {"value": "d10", "label": "к10"}, {"value": "d12", "label": "к12"}, {"value": "d20", "label": "к20"}, {"value": "d100", "label": "к100"}]}, {"key": "dice_count", "name": "Количество костей", "type": "int", "default": 1, "min": 1, "max": 100, "hint": "Число костей отдельного урона или добавки к урону оружия. Крит для попадания удвоит их автоматически."}, {"key": "damage_type", "name": "Тип урона", "type": "suggest", "suggest_id": 12}, {"key": "requirements", "name": "Условия", "type": "text_array"}, {"key": "save", "name": "Спасбросок", "type": "object", "fields": [{"key": "ability", "name": "Характеристика", "type": "suggest", "suggest_id": 16}, {"key": "dc", "name": "Сложность", "type": "int", "min": 1, "max": 99, "hint": "Сложность спасброска, который совершает каждая затронутая цель."}, {"key": "half", "name": "Половина урона при успехе", "type": "bool", "hint": "Показывать половину выпавшего урона, округлённую вниз, для успешного спасброска."}]}, {"key": "area", "name": "Область", "type": "object", "fields": [{"key": "shape", "name": "Форма", "type": "select", "options": [{"value": "line", "label": "Линия"}]}, {"key": "width_ft", "name": "Ширина, футы", "type": "int", "min": 1, "max": 1000, "hint": "Ширина линии в футах. Её длина берётся из дистанции режима."}]}]}]},
-  {"key": "weapon_bonus_transfer", "name": "Перенос бонуса оружия в защиту", "type": "object", "fields": [{"key": "title", "name": "Название в меню атаки", "type": "text", "default": "Перенести в защиту", "hint": "Пункт в меню атаки с ячейками выбора количества. Это выбор бонуса, а не расход зарядов."}, {"key": "condition", "name": "Когда можно переносить", "type": "text", "hint": "Условие выбора для игрока. Начало и конец хода не отслеживаются: игрок сбрасывает перенос кнопкой под оружием."}]},
-  {"key": "selected_target", "name": "Выбранная цель", "type": "object", "fields": [{"key": "title", "name": "Название блока", "type": "text", "default": "Выбранная цель", "hint": "Заголовок панели под оружием. Имя противника игрок вводит на листе."}, {"key": "condition", "name": "Когда объявляют цель", "type": "text", "hint": "Условие проверяет игрок, например при дальней атаке этим оружием."}, {"key": "duration_dawns", "name": "Длительность, рассветов", "type": "int", "default": 7, "min": 1, "max": 100, "hint": "Срок уменьшается через пункт «Рассвет», независимо от отдыха и реального времени."}, {"key": "cooldown_dawns", "name": "После гибели ждать рассветов", "type": "int", "default": 1, "min": 0, "max": 100, "hint": "Ноль — новую цель можно выбрать сразу. Пока цель жива, заменить её нельзя."}, {"key": "ranged_only", "name": "Только дальние атаки", "type": "bool", "default": true, "hint": "Ограничивает бонусы по цели дальними атаками этого оружия."}, {"key": "attack_advantage", "name": "Преимущество против цели", "type": "bool", "hint": "Применяется при включённой галочке атаки по выбранной цели. Помеха от других эффектов учитывается."}, {"key": "other_weapons_disadvantage", "name": "Помеха другому оружию", "type": "bool", "hint": "Пока цель жива. Продолжает действовать, если источник убрали в сумку; безоружные удары и заклинания не затрагиваются."}, {"key": "ignore_partial_cover", "name": "Игнорирует неполное укрытие", "type": "bool", "hint": "Памятка игроку. Полное укрытие продолжает действовать; карта и КД цели не рассчитываются."}, {"key": "ignore_long_range", "name": "Без помехи от дальней дистанции", "type": "bool", "hint": "Памятка игроку: приложение не определяет расстояние до цели автоматически."}, {"key": "damage", "name": "Дополнительный урон по цели", "type": "object", "fields": [{"key": "dice", "name": "Кость", "type": "select", "default": "d6", "options": [{"value": "d4", "label": "к4"}, {"value": "d6", "label": "к6"}, {"value": "d8", "label": "к8"}, {"value": "d10", "label": "к10"}, {"value": "d12", "label": "к12"}, {"value": "d20", "label": "к20"}, {"value": "d100", "label": "к100"}]}, {"key": "dice_count", "name": "Количество костей", "type": "int", "default": 1, "min": 1, "max": 100}, {"key": "damage_type", "name": "Тип урона", "type": "suggest", "suggest_id": 12}]}]},
-  {"key": "initial_charges", "name": "Начальный запас зарядов", "type": "object", "fields": [{"key": "mode", "name": "Как определить запас", "type": "select", "options": [{"value": "fixed", "label": "Заданное число"}, {"value": "roll", "label": "Бросок костей"}]}, {"key": "value", "name": "Начальное число зарядов", "type": "int", "min": 0, "max": 100}, {"key": "formula", "name": "Формула начального запаса", "type": "text", "hint": "Бросок выполняется один раз при добавлении экземпляра, например 1к8+1."}]},
+  {
+    "key": "dawn_recovery",
+    "name": "Восстановление на рассвете",
+    "type": "object",
+    "fields": [
+      {
+        "key": "mode",
+        "name": "Способ восстановления",
+        "type": "select",
+        "options": [
+          {
+            "value": "full",
+            "label": "Полностью"
+          },
+          {
+            "value": "roll",
+            "label": "По формуле"
+          }
+        ]
+      },
+      {
+        "key": "formula",
+        "name": "Сколько восстановить",
+        "type": "text",
+        "hint": "Например, 1к3 или 1к6+1. Итог не превышает максимум ресурса."
+      }
+    ]
+  },
+  {
+    "key": "last_charge",
+    "name": "При последнем заряде",
+    "type": "object",
+    "fields": [
+      {
+        "key": "resource_key",
+        "name": "Ресурс",
+        "type": "text",
+        "hint": "Пусто — основные заряды предмета."
+      },
+      {
+        "key": "dice",
+        "name": "Кость проверки",
+        "type": "select",
+        "default": "d20",
+        "options": [
+          {
+            "value": "d4",
+            "label": "к4"
+          },
+          {
+            "value": "d6",
+            "label": "к6"
+          },
+          {
+            "value": "d8",
+            "label": "к8"
+          },
+          {
+            "value": "d10",
+            "label": "к10"
+          },
+          {
+            "value": "d12",
+            "label": "к12"
+          },
+          {
+            "value": "d20",
+            "label": "к20"
+          },
+          {
+            "value": "d100",
+            "label": "к100"
+          }
+        ]
+      },
+      {
+        "key": "failure_max",
+        "name": "Опасный результат: от 1 до",
+        "type": "int",
+        "default": 1
+      },
+      {
+        "key": "consequence",
+        "name": "Последствие",
+        "type": "select",
+        "default": "lose_magic",
+        "options": [
+          {
+            "value": "lose_magic",
+            "label": "Теряет магические свойства"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "weapon_uses",
+    "name": "Особое применение оружия",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "title",
+        "name": "Название режима",
+        "type": "text",
+        "hint": "Название режима в меню атаки и в блоке применения под оружием."
+      },
+      {
+        "key": "key",
+        "name": "Ключ",
+        "type": "text"
+      },
+      {
+        "key": "attack_mode",
+        "name": "Способ атаки",
+        "type": "select",
+        "default": "thrown",
+        "options": [
+          {
+            "value": "thrown",
+            "label": "Метание с характеристикой оружия"
+          },
+          {
+            "value": "melee",
+            "label": "Рукопашная атака"
+          },
+          {
+            "value": "ranged",
+            "label": "Дальняя атака"
+          }
+        ],
+        "hint": "Метание использует выбранную характеристику оружия. Бонусы и владение рассчитываются как при обычной атаке."
+      },
+      {
+        "key": "range_ft",
+        "name": "Дистанция, футы",
+        "type": "int",
+        "default": 60,
+        "hint": "Максимальная дистанция особой атаки в футах; для области-линии также задаёт её длину.",
+        "min": 1,
+        "max": 10000
+      },
+      {
+        "key": "resource_cost",
+        "name": "Расход при атаке",
+        "type": "int",
+        "default": 1,
+        "hint": "Сколько единиц ресурса потратить при броске атаки, даже если он промахнулся. Шаги не оплачиваются повторно.",
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "resource_key",
+        "name": "Ресурс",
+        "type": "text"
+      },
+      {
+        "key": "steps",
+        "name": "Шаги после атаки",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "title",
+            "name": "Название шага",
+            "type": "text",
+            "hint": "Название отдельного шага после атаки: например, урон по линии или по конечной цели."
+          },
+          {
+            "key": "key",
+            "name": "Ключ",
+            "type": "text"
+          },
+          {
+            "key": "kind",
+            "name": "Что бросаем",
+            "type": "select",
+            "default": "damage",
+            "options": [
+              {
+                "value": "damage",
+                "label": "Отдельный урон"
+              },
+              {
+                "value": "weapon_damage",
+                "label": "Урон оружия при попадании + добавка"
+              }
+            ],
+            "hint": "Отдельный урон бросается независимо от попадания. Урон оружия включает основу и эту добавку только при попадании."
+          },
+          {
+            "key": "dice",
+            "name": "Кость",
+            "type": "select",
+            "default": "d6",
+            "options": [
+              {
+                "value": "d4",
+                "label": "к4"
+              },
+              {
+                "value": "d6",
+                "label": "к6"
+              },
+              {
+                "value": "d8",
+                "label": "к8"
+              },
+              {
+                "value": "d10",
+                "label": "к10"
+              },
+              {
+                "value": "d12",
+                "label": "к12"
+              },
+              {
+                "value": "d20",
+                "label": "к20"
+              },
+              {
+                "value": "d100",
+                "label": "к100"
+              }
+            ]
+          },
+          {
+            "key": "dice_count",
+            "name": "Количество костей",
+            "type": "int",
+            "default": 1,
+            "min": 1,
+            "max": 100,
+            "hint": "Число костей отдельного урона или добавки к урону оружия. Крит для попадания удвоит их автоматически."
+          },
+          {
+            "key": "damage_type",
+            "name": "Тип урона",
+            "type": "suggest",
+            "suggest_id": 12
+          },
+          {
+            "key": "requirements",
+            "name": "Условия",
+            "type": "text_array"
+          },
+          {
+            "key": "save",
+            "name": "Спасбросок",
+            "type": "object",
+            "fields": [
+              {
+                "key": "ability",
+                "name": "Характеристика",
+                "type": "suggest",
+                "suggest_id": 16
+              },
+              {
+                "key": "dc",
+                "name": "Сложность",
+                "type": "int",
+                "min": 1,
+                "max": 99,
+                "hint": "Сложность спасброска, который совершает каждая затронутая цель."
+              },
+              {
+                "key": "half",
+                "name": "Половина урона при успехе",
+                "type": "bool",
+                "hint": "Показывать половину выпавшего урона, округлённую вниз, для успешного спасброска."
+              }
+            ]
+          },
+          {
+            "key": "area",
+            "name": "Область",
+            "type": "object",
+            "fields": [
+              {
+                "key": "shape",
+                "name": "Форма",
+                "type": "select",
+                "options": [
+                  {
+                    "value": "line",
+                    "label": "Линия"
+                  }
+                ]
+              },
+              {
+                "key": "width_ft",
+                "name": "Ширина, футы",
+                "type": "int",
+                "min": 1,
+                "max": 1000,
+                "hint": "Ширина линии в футах. Её длина берётся из дистанции режима."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "weapon_bonus_transfer",
+    "name": "Перенос бонуса оружия в защиту",
+    "type": "object",
+    "fields": [
+      {
+        "key": "title",
+        "name": "Название в меню атаки",
+        "type": "text",
+        "default": "Перенести в защиту",
+        "hint": "Пункт в меню атаки с ячейками выбора количества. Это выбор бонуса, а не расход зарядов."
+      },
+      {
+        "key": "condition",
+        "name": "Когда можно переносить",
+        "type": "text",
+        "hint": "Условие выбора для игрока. Начало и конец хода не отслеживаются: игрок сбрасывает перенос кнопкой под оружием."
+      }
+    ]
+  },
+  {
+    "key": "selected_target",
+    "name": "Выбранная цель",
+    "type": "object",
+    "fields": [
+      {
+        "key": "title",
+        "name": "Название блока",
+        "type": "text",
+        "default": "Выбранная цель",
+        "hint": "Заголовок панели под оружием. Имя противника игрок вводит на листе."
+      },
+      {
+        "key": "condition",
+        "name": "Когда объявляют цель",
+        "type": "text",
+        "hint": "Условие проверяет игрок, например при дальней атаке этим оружием."
+      },
+      {
+        "key": "duration_dawns",
+        "name": "Длительность, рассветов",
+        "type": "int",
+        "default": 7,
+        "min": 1,
+        "max": 100,
+        "hint": "Срок уменьшается через пункт «Рассвет», независимо от отдыха и реального времени."
+      },
+      {
+        "key": "cooldown_dawns",
+        "name": "После гибели ждать рассветов",
+        "type": "int",
+        "default": 1,
+        "min": 0,
+        "max": 100,
+        "hint": "Ноль — новую цель можно выбрать сразу. Пока цель жива, заменить её нельзя."
+      },
+      {
+        "key": "ranged_only",
+        "name": "Только дальние атаки",
+        "type": "bool",
+        "default": true,
+        "hint": "Ограничивает бонусы по цели дальними атаками этого оружия."
+      },
+      {
+        "key": "attack_advantage",
+        "name": "Преимущество против цели",
+        "type": "bool",
+        "hint": "Применяется при включённой галочке атаки по выбранной цели. Помеха от других эффектов учитывается."
+      },
+      {
+        "key": "other_weapons_disadvantage",
+        "name": "Помеха другому оружию",
+        "type": "bool",
+        "hint": "Пока цель жива. Продолжает действовать, если источник убрали в сумку; безоружные удары и заклинания не затрагиваются."
+      },
+      {
+        "key": "ignore_partial_cover",
+        "name": "Игнорирует неполное укрытие",
+        "type": "bool",
+        "hint": "Памятка игроку. Полное укрытие продолжает действовать; карта и КД цели не рассчитываются."
+      },
+      {
+        "key": "ignore_long_range",
+        "name": "Без помехи от дальней дистанции",
+        "type": "bool",
+        "hint": "Памятка игроку: приложение не определяет расстояние до цели автоматически."
+      },
+      {
+        "key": "damage",
+        "name": "Дополнительный урон по цели",
+        "type": "object",
+        "fields": [
+          {
+            "key": "dice",
+            "name": "Кость",
+            "type": "select",
+            "default": "d6",
+            "options": [
+              {
+                "value": "d4",
+                "label": "к4"
+              },
+              {
+                "value": "d6",
+                "label": "к6"
+              },
+              {
+                "value": "d8",
+                "label": "к8"
+              },
+              {
+                "value": "d10",
+                "label": "к10"
+              },
+              {
+                "value": "d12",
+                "label": "к12"
+              },
+              {
+                "value": "d20",
+                "label": "к20"
+              },
+              {
+                "value": "d100",
+                "label": "к100"
+              }
+            ]
+          },
+          {
+            "key": "dice_count",
+            "name": "Количество костей",
+            "type": "int",
+            "default": 1,
+            "min": 1,
+            "max": 100
+          },
+          {
+            "key": "damage_type",
+            "name": "Тип урона",
+            "type": "suggest",
+            "suggest_id": 12
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "initial_charges",
+    "name": "Начальный запас зарядов",
+    "type": "object",
+    "fields": [
+      {
+        "key": "mode",
+        "name": "Как определить запас",
+        "type": "select",
+        "options": [
+          {
+            "value": "fixed",
+            "label": "Заданное число"
+          },
+          {
+            "value": "roll",
+            "label": "Бросок костей"
+          }
+        ]
+      },
+      {
+        "key": "value",
+        "name": "Начальное число зарядов",
+        "type": "int",
+        "min": 0,
+        "max": 100
+      },
+      {
+        "key": "formula",
+        "name": "Формула начального запаса",
+        "type": "text",
+        "hint": "Бросок выполняется один раз при добавлении экземпляра, например 1к8+1."
+      }
+    ]
+  },
   {
     "key": "confirmed_uses",
     "name": "Применение по условию",
@@ -2219,6 +2800,384 @@
         "name": "Показывать заряды внутри панели",
         "type": "bool",
         "hint": "Те же ячейки ресурса появятся в панели свойства вместо отдельной строки над ней."
+      }
+    ]
+  },
+  {
+    "key": "usable",
+    "name": "Применение предмета",
+    "type": "object",
+    "optional": true,
+    "fields": [
+      {
+        "key": "healing",
+        "name": "Восстановление хитов",
+        "type": "text",
+        "hint": "Формула, например 2d4 + 2. Хиты восстанавливаются до максимума."
+      },
+      {
+        "key": "temporary_hp",
+        "name": "Временные хиты",
+        "type": "text",
+        "hint": "Формула или число. Сохраняется большее значение, временные хиты не складываются."
+      },
+      {
+        "key": "spell",
+        "name": "Эффект заклинания",
+        "type": "item",
+        "item_type": 5
+      },
+      {
+        "key": "spell_effect_key",
+        "name": "Вариант эффекта заклинания",
+        "type": "text",
+        "hint": "Ключ связанного эффекта. Пусто — применить все эффекты заклинания."
+      },
+      {
+        "key": "duration",
+        "name": "Длительность",
+        "type": "object",
+        "fields": [
+          {
+            "key": "kind",
+            "name": "Вид",
+            "type": "select",
+            "default": "manual",
+            "options": [
+              {
+                "label": "До ручного снятия",
+                "value": "manual"
+              },
+              {
+                "label": "Раунды",
+                "value": "rounds"
+              },
+              {
+                "label": "Минуты",
+                "value": "minutes"
+              },
+              {
+                "label": "Часы",
+                "value": "hours"
+              },
+              {
+                "label": "До отдыха",
+                "value": "until_rest"
+              },
+              {
+                "label": "Постоянно",
+                "value": "permanent"
+              }
+            ]
+          },
+          {
+            "key": "value",
+            "name": "Значение",
+            "type": "int"
+          },
+          {
+            "key": "formula",
+            "name": "Случайная длительность",
+            "type": "text",
+            "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+          }
+        ],
+        "optional": true
+      },
+      {
+        "key": "concentration",
+        "name": "Требует концентрации",
+        "type": "bool"
+      },
+      {
+        "key": "note",
+        "name": "Что нужно учесть вручную",
+        "type": "text"
+      },
+      {
+        "key": "choices",
+        "name": "Варианты применения",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "key",
+            "name": "Ключ варианта",
+            "type": "text"
+          },
+          {
+            "key": "name",
+            "name": "Название варианта",
+            "type": "text"
+          },
+          {
+            "key": "status_effects",
+            "name": "Связанные эффекты",
+            "type": "object_array",
+            "fields": [
+              {
+                "key": "key",
+                "name": "Ключ",
+                "type": "text"
+              },
+              {
+                "key": "effect",
+                "name": "Эффект",
+                "type": "item",
+                "item_type": 15
+              },
+              {
+                "key": "parameter_bindings",
+                "name": "Параметры",
+                "type": "object_array",
+                "fields": [
+                  {
+                    "key": "key",
+                    "name": "Параметр",
+                    "type": "text"
+                  },
+                  {
+                    "key": "source",
+                    "name": "Источник",
+                    "type": "select",
+                    "options": [
+                      {
+                        "label": "Текущее значение прогрессии",
+                        "value": "scaling_value"
+                      },
+                      {
+                        "label": "Постоянное значение",
+                        "value": "fixed"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "value",
+                    "name": "Значение",
+                    "type": "int"
+                  }
+                ]
+              },
+              {
+                "key": "concentration",
+                "name": "Концентрация",
+                "type": "bool"
+              },
+              {
+                "key": "duration",
+                "name": "Длительность",
+                "type": "object",
+                "fields": [
+                  {
+                    "key": "kind",
+                    "name": "Вид",
+                    "type": "select",
+                    "default": "manual",
+                    "options": [
+                      {
+                        "label": "До ручного снятия",
+                        "value": "manual"
+                      },
+                      {
+                        "label": "Раунды",
+                        "value": "rounds"
+                      },
+                      {
+                        "label": "Минуты",
+                        "value": "minutes"
+                      },
+                      {
+                        "label": "Часы",
+                        "value": "hours"
+                      },
+                      {
+                        "label": "До отдыха",
+                        "value": "until_rest"
+                      },
+                      {
+                        "label": "Постоянно",
+                        "value": "permanent"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "value",
+                    "name": "Значение",
+                    "type": "int"
+                  },
+                  {
+                    "key": "formula",
+                    "name": "Случайная длительность",
+                    "type": "text",
+                    "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+                  }
+                ]
+              },
+              {
+                "key": "target",
+                "name": "На кого накладывается",
+                "type": "select",
+                "default": "self",
+                "options": [
+                  {
+                    "value": "self",
+                    "label": "На владельца"
+                  },
+                  {
+                    "value": "other",
+                    "label": "На другое существо"
+                  }
+                ],
+                "hint": "Эффект на другое существо не включается на листе владельца предмета."
+              },
+              {
+                "key": "condition",
+                "name": "Условие наложения",
+                "type": "text",
+                "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."
+              },
+              {
+                "key": "weapon_damage_key",
+                "name": "Связанный дополнительный урон",
+                "type": "text",
+                "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "status_effects",
+        "name": "Связанные эффекты",
+        "type": "object_array",
+        "fields": [
+          {
+            "key": "key",
+            "name": "Ключ",
+            "type": "text"
+          },
+          {
+            "key": "effect",
+            "name": "Эффект",
+            "type": "item",
+            "item_type": 15
+          },
+          {
+            "key": "parameter_bindings",
+            "name": "Параметры",
+            "type": "object_array",
+            "fields": [
+              {
+                "key": "key",
+                "name": "Параметр",
+                "type": "text"
+              },
+              {
+                "key": "source",
+                "name": "Источник",
+                "type": "select",
+                "options": [
+                  {
+                    "label": "Текущее значение прогрессии",
+                    "value": "scaling_value"
+                  },
+                  {
+                    "label": "Постоянное значение",
+                    "value": "fixed"
+                  }
+                ]
+              },
+              {
+                "key": "value",
+                "name": "Значение",
+                "type": "int"
+              }
+            ]
+          },
+          {
+            "key": "concentration",
+            "name": "Концентрация",
+            "type": "bool"
+          },
+          {
+            "key": "duration",
+            "name": "Длительность",
+            "type": "object",
+            "fields": [
+              {
+                "key": "kind",
+                "name": "Вид",
+                "type": "select",
+                "default": "manual",
+                "options": [
+                  {
+                    "label": "До ручного снятия",
+                    "value": "manual"
+                  },
+                  {
+                    "label": "Раунды",
+                    "value": "rounds"
+                  },
+                  {
+                    "label": "Минуты",
+                    "value": "minutes"
+                  },
+                  {
+                    "label": "Часы",
+                    "value": "hours"
+                  },
+                  {
+                    "label": "До отдыха",
+                    "value": "until_rest"
+                  },
+                  {
+                    "label": "Постоянно",
+                    "value": "permanent"
+                  }
+                ]
+              },
+              {
+                "key": "value",
+                "name": "Значение",
+                "type": "int"
+              },
+              {
+                "key": "formula",
+                "name": "Случайная длительность",
+                "type": "text",
+                "hint": "Например 1d4. Бросается при применении вместо постоянного значения."
+              }
+            ]
+          },
+          {
+            "key": "target",
+            "name": "На кого накладывается",
+            "type": "select",
+            "default": "self",
+            "options": [
+              {
+                "value": "self",
+                "label": "На владельца"
+              },
+              {
+                "value": "other",
+                "label": "На другое существо"
+              }
+            ],
+            "hint": "Эффект на другое существо не включается на листе владельца предмета."
+          },
+          {
+            "key": "condition",
+            "name": "Условие наложения",
+            "type": "text",
+            "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок."
+          },
+          {
+            "key": "weapon_damage_key",
+            "name": "Связанный дополнительный урон",
+            "type": "text",
+            "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+          }
+        ]
       }
     ]
   }

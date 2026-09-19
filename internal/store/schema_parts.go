@@ -143,4 +143,5 @@ var schemaParts = []struct {
 	{"spell-roll-saves", schemaSpellRollSavesSQL},
 	{"spell-damage-type-choices", schemaSpellDamageTypeChoicesSQL},
 	{"spell-roll-sequences", schemaSpellRollSequencesSQL},
+	{"usable-items", schemaUsableItemsSQL},
 }

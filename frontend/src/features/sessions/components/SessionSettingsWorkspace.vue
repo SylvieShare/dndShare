@@ -29,7 +29,7 @@
               @update:model-value="emit('update-setting', `autoAccept.${option.key}`, $event)" />
           </FormField>
         </div>
-        <p>Разрешения действуют на новые запросы другим участникам. Применение на себя доступно всегда. При автоподтверждении новые запросы сразу применяются к выбранному персонажу. Для зелий и заклинаний, отправленных мастеру, он по-прежнему выбирает цель. Ожидающие запросы нужно подтвердить вручную.</p>
+        <p>Разрешения действуют на новые запросы другим участникам. Применение на себя доступно всегда. При автоподтверждении новые запросы сразу применяются к выбранному персонажу. Для предметов и заклинаний, отправленных мастеру, он по-прежнему выбирает цель. Ожидающие запросы нужно подтвердить вручную.</p>
       </BaseTile>
       <p v-if="error" class="session-settings-error" role="alert">{{ error }}</p>
       <span v-else-if="saving" role="status">Сохраняем…</span>
@@ -43,7 +43,7 @@ defineProps({ settings: { type: Object, required: true }, saving: Boolean, error
 const emit = defineEmits(['update-setting'])
 const acceptanceOptions = [
   { key: 'items', label: 'Передача предметов' },
-  { key: 'potions', label: 'Применение зелий' },
+  { key: 'potions', label: 'Применение расходуемых предметов' },
   { key: 'spells', label: 'Эффекты заклинаний' },
 ]
 const playerOptions = [

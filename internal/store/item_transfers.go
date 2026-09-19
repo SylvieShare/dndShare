@@ -229,7 +229,7 @@ func (s *Store) createItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ses
 		}
 		entry = map[string]any{"uid": uid, "item_id": number(uid)}
 	} else if purpose == "use" {
-		entry, err = doc.takePotionDose(uid)
+		entry, err = doc.takeUsableUnit(source, uid)
 	} else {
 		entry, err = doc.take(source, uid)
 	}
@@ -238,7 +238,7 @@ func (s *Store) createItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ses
 	}
 	plan := ApplicationPlan{}
 	if purpose == "use" && frozen == nil {
-		expectedType := 10
+		expectedType := 0
 		if source == "spells" {
 			expectedType = 5
 		}

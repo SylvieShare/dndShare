@@ -123,43 +123,43 @@
     {
       "id": 239,
       "data": {
-        "consumption": {
-          "note": "В меню наложенного эффекта выполните урон при употреблении и спасбросок; далее следуйте шагам начала и конца хода."
-        },
-        "status_effects": [
-          {
-            "key": "poison",
-            "effect": {
-              "ref": "potion_poison_progressive"
-            },
-            "concentration": false,
-            "duration": {
-              "kind": "manual"
+        "usable": {
+          "note": "В меню наложенного эффекта выполните урон при употреблении и спасбросок; далее следуйте шагам начала и конца хода.",
+          "status_effects": [
+            {
+              "key": "poison",
+              "effect": {
+                "ref": "potion_poison_progressive"
+              },
+              "concentration": false,
+              "duration": {
+                "kind": "manual"
+              }
             }
-          }
-        ]
+          ]
+        }
       },
       "note": "Доза и эффект применяются автоматически; урон и спасброски выполняются последовательно из меню эффекта. Число костей уменьшается, эффект снимается при успехах."
     },
     {
       "id": 294,
       "data": {
-        "consumption": {
-          "note": "После минутного нанесения выберите оружие в меню эффекта. Покрытие до 5 боеприпасов пока учитывается вручную."
-        },
-        "status_effects": [
-          {
-            "key": "sharpness",
-            "effect": {
-              "ref": "oil_of_sharpness"
-            },
-            "duration": {
-              "kind": "hours",
-              "value": 1
-            },
-            "concentration": false
-          }
-        ]
+        "usable": {
+          "note": "После минутного нанесения выберите оружие в меню эффекта. Покрытие до 5 боеприпасов пока учитывается вручную.",
+          "status_effects": [
+            {
+              "key": "sharpness",
+              "effect": {
+                "ref": "oil_of_sharpness"
+              },
+              "duration": {
+                "kind": "hours",
+                "value": 1
+              },
+              "concentration": false
+            }
+          ]
+        }
       },
       "note": "Выбор конкретного оружия и +3 к атаке/урону на время эффекта. Боеприпасы и минутное нанесение учитываются вручную."
     },

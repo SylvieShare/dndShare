@@ -65,6 +65,16 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(schemaPotionUseRequestsSQL)
 	exec(schemaPotionApplicationsSQL)
 	exec(schemaApplicationTargetsSQL)
+	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(10,'[{"key":"consumption"},{"key":"status_effects"}]'),(2,'[{"key":"desc"}]');
+ INSERT INTO dndshare.item(id,name,type_id,data) VALUES(90010,'Миграция зелья',10,'{"consumption":{"healing":"2d4+2","choices":[{"key":"first"}]},"status_effects":[{"key":"effect","effect":{"id":30}}]}');`)
+	exec(schemaUsableItemsSQL)
+	var migrated bool
+	if err := pool.QueryRow(ctx, `SELECT data#>>'{usable,healing}'='2d4+2' AND data#>>'{usable,status_effects,0,key}'='effect' AND NOT data ? 'consumption' AND NOT data ? 'status_effects' FROM dndshare.item WHERE id=90010`).Scan(&migrated); err != nil || !migrated {
+		t.Fatalf("usable migration lost application fields: %v %v", migrated, err)
+	}
+	if err := pool.QueryRow(ctx, `SELECT count(*)=2 FROM dndshare.item_type WHERE id IN (2,10) AND fields @> '[{"key":"usable"}]'`).Scan(&migrated); err != nil || !migrated {
+		t.Fatalf("usable editor schemas: %v %v", migrated, err)
+	}
 	exec(schemaSpellConcentrationSQL)
 	exec(schemaSpellCastsSQL)
 	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(5,'[{"key":"damage","fields":[]},{"key":"heal","fields":[]},{"key":"application_targets","fields":[]},{"key":"status_effects","fields":[{"key":"parameter_bindings","fields":[{"key":"source","options":[]}]}]}]'),(15,'[{"key":"derived_effects","fields":[{"key":"kind","options":[]}]}]')`)
@@ -276,6 +286,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	}
 	t.Run("player interactions", func(t *testing.T) { testSessionInteractionsPostgres(t, s) })
 	testPotionApplications(t, s, exec, current)
+	testUsableApplications(t, s, exec, current)
 	t.Run("session inventory", func(t *testing.T) { testSessionInventory(t, s, pool) })
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {

@@ -6,15 +6,6 @@
       <span v-if="costLabel" class="pdc-badge pdc-cost">{{ costLabel }}</span>
     </div>
 
-    <DetailSection v-if="data.consumption" label="При применении">
-      <DamageFormulaPreview v-if="data.consumption.healing" label="Восстановление хитов" aria-label="Восстановление хитов" default-color="var(--success)" :expression="data.consumption.healing" />
-      <DamageFormulaPreview v-if="data.consumption.temporary_hp" label="Временные хиты" aria-label="Временные хиты" default-color="var(--info)" :expression="data.consumption.temporary_hp" />
-      <HandbookReferenceRows v-if="data.consumption.spell?.id" :rows="[{ id: data.consumption.spell.id }]" />
-      <p v-if="data.consumption.duration">{{ data.consumption.duration.formula ? `${data.consumption.duration.formula} · ${data.consumption.duration.kind === 'hours' ? 'часы' : 'длительность'}` : statusDuration(data.consumption.duration) }}<template v-if="data.consumption.concentration"> · Концентрация</template></p>
-      <p v-if="data.consumption.note">{{ data.consumption.note }}</p>
-      <div v-for="choice in data.consumption.choices || []" :key="choice.key"><strong>{{ choice.name }}</strong><ItemEffectLinks :item="{ data: { status_effects: choice.status_effects } }" /></div>
-    </DetailSection>
-    <DetailSection v-if="data.status_effects?.length" label="Накладываемые эффекты"><ItemEffectLinks :item="item" /></DetailSection>
     <div class="pdc-hero">
       <div class="pdc-visual">
         <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :fallback-to-type="false" :size="76" />
@@ -30,11 +21,6 @@
 </template>
 
 <script setup>
-import { DetailSection } from '@sylvieshare/share-ui'
-import { statusDuration } from '@/shared/lib/statusDuration'
-import DamageFormulaPreview from '@/features/character-editor/blocks/dnd/components/DamageFormulaPreview.vue'
-import HandbookReferenceRows from '../components/HandbookReferenceRows.vue'
-import ItemEffectLinks from '../components/ItemEffectLinks.vue'
 import { computed } from 'vue'
 
 import ItemIcon from '@/features/items/components/ItemIcon.vue'

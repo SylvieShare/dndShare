@@ -58,7 +58,7 @@ def resolve(value):
 for group in ['spells', 'potions']:
     for patch in plan[group]:
         item = get(patch['id'])
-        changed = resolve({k: v for k, v in patch.items() if k in ['consumption', 'status_effects']})
+        changed = resolve({k: v for k, v in patch.items() if k in ['usable', 'status_effects']})
         for key, value in changed.items():
             if item['data'].get(key) not in (None, [], value):
                 raise RuntimeError(f"Concurrent catalogue change: {item['id']} {key}")
