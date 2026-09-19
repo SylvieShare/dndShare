@@ -179,7 +179,7 @@
             "value": "ability_minimum",
             "label": "Минимальное значение характеристики"
           }
-        ]
+        , {"value":"armor_minimum","label":"Минимальный итоговый КД"}]
       },
       {
         "key": "value",

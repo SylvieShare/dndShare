@@ -4,6 +4,7 @@ import { resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/roll
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { ref } from 'vue'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { npcArmorClass } from '../lib/npcArmorClass'
 
 export function useEncounterNpcData() {
   const npcItemCache = ref({})
@@ -58,7 +59,7 @@ export function useEncounterNpcData() {
 
   function npcAc(c) {
     const v = npcData(c).ac
-    return v == null || v === '' ? null : Number(v) + effects(c).filter(row => row.kind === 'armor_bonus').reduce((sum, row) => sum + (Number(row.value) || 0), 0)
+    return npcArmorClass(v, effects(c))
   }
 
   function npcHpMax(c) {

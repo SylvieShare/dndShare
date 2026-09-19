@@ -52,12 +52,15 @@ def main():
     links={}; created=[]; changed=[]
     for effect in effects:
         existing=bycode.get(effect['key']); spec=byspell[effect['spellId']]
+        source=get(effect['spellId'])
         meta={k:spec[k] for k in META}; meta['requiresPlayerInteraction']=False
         if not existing:
-            result=call('handbook_item_create', {'typeId':15,'name':effect['name'],'nameEn':effect['nameEn'] or '', 'data':json.dumps(effect['data'],ensure_ascii=False),**meta})
+            compatibility=[{'sourceVersionId':c['sourceVersionId'],'status':c['status'],'note':c.get('note','')} for c in source.get('compatibility',[]) if c['status'] in ['native','compatible']]
+            result=call('handbook_item_create', {'typeId':15,'name':effect['name'],'nameEn':effect['nameEn'] or '', 'data':json.dumps(effect['data'],ensure_ascii=False),
+                'compatibility':compatibility,**meta})
             id=result['id'] if isinstance(result,dict) else result
             existing=get(id); verify(existing,effect['data'],meta); created.append(id)
-        source=get(effect['spellId'])
+        call('handbook_item_set_content_sources', {'id':existing['id'],'contentSourceIds':source.get('contentSourceIds',[])})
         if source.get('iconImageId') or source.get('iconSvgId'):
             call('handbook_item_reuse_icon',{'itemId':existing['id'],'sourceItemId':source['id']})
             actual=get(existing['id'])

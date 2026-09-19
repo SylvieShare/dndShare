@@ -549,7 +549,7 @@
         { "value": "weapon_attack_bonus", "label": "Бонус атаки оружием" },
         { "value": "critical_threshold", "label": "Порог критического попадания" },
         { "value": "roll_mode", "label": "Режим броска" }
-      ] },
+      , {"value":"armor_minimum","label":"Минимальный итоговый КД"}] },
       { "name": "С уровня", "key": "level", "type": "int", "default": 1 },
       { "name": "Значение", "key": "value", "type": "int" },
       { "name": "База", "key": "base", "type": "int" },

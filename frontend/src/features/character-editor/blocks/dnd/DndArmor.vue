@@ -41,6 +41,10 @@
         <EditorSection title="Дополнительные бонусы">
           <BonusList :bonuses="armorData.bonuses || []" @update:bonuses="setBonuses" />
         </EditorSection>
+        <div v-if="armorState.minimum" class="armor-source">
+          <span><b>{{ armorState.minimum.source_label }}</b><small>Минимум итогового КД с учётом всех бонусов</small></span>
+          <strong>Не ниже {{ armorState.minimum.value }}</strong>
+        </div>
         <EditorTotal>КД: <strong>{{ armorState.total }}</strong></EditorTotal>
       </EditorPanel>
     </template>

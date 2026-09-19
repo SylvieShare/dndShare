@@ -57,10 +57,12 @@ function contextMatches(rule, entry, context = {}) {
   if (skills.length && !skills.some(value => String(value) === String(context.skillId))) return false
   if (rule.weapon_kind === 'ranged' && context.weaponKind !== 'ranged') return false
   if (rule.weapon_kind === 'melee' && context.weaponKind !== 'melee') return false
-  if (rule.requires_armor && !context.bodyArmor) return false
-  if (rule.requires_no_armor && context.bodyArmor) return false
-  if (rule.forbid_heavy_armor && context.heavyArmor) return false
-  if (rule.allow_shield === false && context.shield) return false
+  if (!context.deferEquipment) {
+    if (rule.requires_armor && !context.bodyArmor) return false
+    if (rule.requires_no_armor && context.bodyArmor) return false
+    if (rule.forbid_heavy_armor && context.heavyArmor) return false
+    if (rule.allow_shield === false && context.shield) return false
+  }
   if (rule.only_without_proficiency && context.proficient) return false
   return true
 }
@@ -92,9 +94,12 @@ export function matchingDerivedEffects(effects, kind, context = {}) {
 }
 
 export function derivedArmorRules(effects) {
+  // Equipment is resolved by deriveEquippedArmor after collecting these rules.
+  const context = { deferEquipment: true }
   return {
-    formulas: matchingDerivedEffects(effects, 'armor_formula'),
-    bonuses: matchingDerivedEffects(effects, 'armor_bonus'),
+    formulas: matchingDerivedEffects(effects, 'armor_formula', context),
+    bonuses: matchingDerivedEffects(effects, 'armor_bonus', context),
+    minimums: matchingDerivedEffects(effects, 'armor_minimum', context),
   }
 }
 

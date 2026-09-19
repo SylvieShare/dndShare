@@ -3,6 +3,7 @@ import { abilityModifier, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
 import { hasItemProficiency } from '@/features/character-editor/lib/itemProficiency'
 import { SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
+import { applyArmorMinimum } from '@/shared/lib/armorMinimum'
 
 function number(value, fallback = 0) {
   const parsed = Number(value)
@@ -90,13 +91,14 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
   })
   const abilityFormula = best(formulas)
   const bodyValue = body?.value ?? abilityFormula?.value ?? 10 + dexterity
-  const abilityBonuses = (Array.isArray(derivedRules?.bonuses) ? derivedRules.bonuses : []).filter((rule) => {
+  const matchesEquipment = (rule) => {
     if (rule.allow_shield === false && shield) return false
     if (rule.requires_armor && !body) return false
     if (rule.requires_no_armor && body) return false
     if (rule.forbid_heavy_armor && body?.item?.data?.category === 'heavy') return false
     return true
-  }).map(rule => ({
+  }
+  const abilityBonuses = (Array.isArray(derivedRules?.bonuses) ? derivedRules.bonuses : []).filter(matchesEquipment).map(rule => ({
     ...rule,
     name: rule.label || rule.source_label || 'Способность',
     title: rule.label || rule.source_label || 'Способность',
@@ -106,6 +108,7 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
   const manualBonuses = manualArmorBonuses(values)
   const manualBonus = sumBonuses(manualBonuses) + sumBonuses(abilityBonuses)
   const shieldValue = shield?.value ?? 0
+  const armorMinimum = applyArmorMinimum(bodyValue + shieldValue + manualBonus, (derivedRules.minimums || []).filter(matchesEquipment))
   const active = [body, shield].filter(Boolean)
   const nonproficient = active.filter(row => !row.proficient)
   const armorPenalty = nonproficient.some(row => rulesVersion !== '2024' || !row.shield)
@@ -123,7 +126,7 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
   }]))
 
   return {
-    total: bodyValue + shieldValue + manualBonus,
+    ...armorMinimum,
     dexterity,
     strength,
     body,

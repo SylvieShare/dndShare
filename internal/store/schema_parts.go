@@ -150,4 +150,5 @@ var schemaParts = []struct {
 	{"character-edition-validation", schemaCharacterEditionValidationSQL},
 	{"session-rules-edition", schemaSessionRulesEditionSQL},
 	{"origin-rules-fields", schemaOriginRulesFieldsSQL},
+	{"armor-minimum", schemaArmorMinimumSQL},
 }

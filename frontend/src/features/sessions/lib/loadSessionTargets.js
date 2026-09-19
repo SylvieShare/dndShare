@@ -5,6 +5,7 @@ import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import { collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
 import { participantDefenses } from './participantDefenses'
 import { saveTargetItemIds } from './sessionSaveRoll'
+import { npcArmorClass } from './npcArmorClass'
 export async function loadSessionTargets(uuid, suggest) {
   const targets = (await getSaveTargets(uuid)).targets || []
   await suggest.ensure(3)
@@ -21,6 +22,5 @@ export function targetArmorClass(target, items, suggestItems) {
   if (!target.snapshot) return null
   if (target.kind !== 'npc') return participantDefenses(target.snapshot.values || {}, items, suggestItems, target.snapshot.rulesVersion || '2014').armorClass
   const c = target.snapshot.combatant || {}, base = c.override?.ac ?? target.snapshot.item?.combat?.ac
-  if (base == null || base === '') return null
-  return Number(base) + collectStatusDerivedEffects({ states: c.effectInstances || [] }, items).filter(rule => rule.kind === 'armor_bonus').reduce((sum, rule) => sum + (Number(rule.value) || 0), 0)
+  return npcArmorClass(base, collectStatusDerivedEffects({ states: c.effectInstances || [] }, items))
 }

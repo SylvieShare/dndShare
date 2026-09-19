@@ -1624,7 +1624,7 @@
             "value": "language_proficiency",
             "label": "Знание языка"
           }
-        ]
+        , {"value":"armor_minimum","label":"Минимальный итоговый КД"}]
       },
       {
         "name": "С уровня",

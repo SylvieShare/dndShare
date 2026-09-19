@@ -130,6 +130,17 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 			}
 		}
 	}
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] == "derived_effects" {
+			for _, child := range field["fields"].([]any) {
+				f := child.(map[string]any)
+				if f["key"] == "kind" {
+					f["options"] = append(f["options"].([]any), map[string]any{"value": "armor_minimum", "label": "Минимальный итоговый КД"})
+				}
+			}
+		}
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

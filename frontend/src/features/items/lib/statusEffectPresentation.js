@@ -12,6 +12,7 @@ const EFFECT_TITLES = {
   speed_multiplier: 'Множитель скорости',
   ability_minimum: 'Характеристика не ниже',
   armor_bonus: 'Класс доспеха',
+  armor_minimum: 'КД не ниже',
   speed_bonus: 'Скорость',
   check_bonus: 'Проверки характеристик',
   skill_bonus: 'Проверки навыков',
@@ -76,7 +77,7 @@ export function statusThesisLines(value) {
 function ruleValue(rule) {
   if (rule.kind === 'roll_bonus') return rule.formula || '—'
   if (rule.kind === 'speed_multiplier') return `×${rule.value}`
-  if (rule.kind === 'ability_minimum') return String(rule.value)
+  if (['ability_minimum', 'armor_minimum'].includes(rule.kind)) return String(rule.value)
   if (rule.kind === 'roll_mode') {
     return rule.mode === 'advantage' ? 'Преимущество' : rule.mode === 'disadvantage' ? 'Помеха' : 'Особый режим'
   }

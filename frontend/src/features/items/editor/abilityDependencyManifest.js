@@ -4,9 +4,9 @@ export const rollScopes = [['ability_check', 'Проверки характер�
 const rank = select('Владение', [[1, 'Владение'], [2, 'Компетентность — двойной бонус']], 'Какой бонус мастерства применять.')
 rank.default = 1
 const scopeField = { type: 'enum_array', name: 'Какие броски', options: rollScopes.map(([value, label]) => ({ value, label })), hint: 'Пустой список означает все броски.' }
-const armorKinds = ['armor_formula', 'armor_bonus', 'speed_bonus', 'weapon_attack_bonus', 'weapon_damage_bonus', 'roll_mode']
+const armorKinds = ['armor_formula', 'armor_bonus', 'armor_minimum', 'speed_bonus', 'weapon_attack_bonus', 'weapon_damage_bonus', 'roll_mode']
 export const derivedKinds = {
-  armor_formula: ['base', 'ability_ids', 'allow_shield'], armor_bonus: ['value'], speed_bonus: ['value'],
+  armor_formula: ['base', 'ability_ids', 'allow_shield'], armor_bonus: ['value'], armor_minimum: ['value'], speed_bonus: ['value'],
   skill_proficiency: ['rank'], save_proficiency: ['rank'], tool_proficiency: ['rank'],
   weapon_proficiency: ['rank'], armor_proficiency: ['rank'], language_proficiency: ['rank'],
   check_bonus: ['value'], skill_bonus: ['value'], save_bonus: ['value'], weapon_attack_bonus: ['value', 'weapon_kind'],
@@ -63,6 +63,10 @@ export function dependencyFields(kind, fields, keys, data = {}) {
   const overrides = dependencyManifest[kind]?.fields || {}
   return keys.map(key => {
     const field = { ...fields.find(f => f.key === key), ...overrides[key], key }
+    if (kind === 'derived_effects' && data.kind === 'armor_minimum' && key === 'value') {
+      field.name = 'Минимальный итоговый КД'
+      field.hint = 'Сначала учитываются доспех, щит и бонусы. Если итог ниже указанного, применяется этот минимум.'
+    }
     if (key === 'scopes' && kind === 'derived_effects') {
       const scopes = data.kind === 'activity_block' ? [['spellcasting', 'Сотворение заклинаний'], ['concentration', 'Концентрация']] : [...rollScopes, ['skill_check', 'Проверки навыков'], ['tool', 'Проверки инструментов']]
       field.options = scopes.map(([value, label]) => ({ value, label }))
