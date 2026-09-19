@@ -30,6 +30,7 @@ export function useCharacterData(uuid, isMobile) {
   const data = ref({ values: {}, var: {} })
   const charCtx = reactive({ ownerMode: false, dictionaries: {}, var: {} })
   const sourceVersionId = ref(null)
+  const rulesVersion = ref('2014')
   const contentSources = computed(() => normalizeContentSourceSettings(data.value.settings?.contentSources))
   const isOwner = ref(false)
   const publicVisible = ref(false)
@@ -40,13 +41,13 @@ export function useCharacterData(uuid, isMobile) {
   const characterValues = computed(() => data.value.values || {})
   const characterResources = useCharacterResources(characterValues)
   const effectiveValues = computed(() => statusValueProjection(characterValues.value, characterResources.itemsById.value))
-  const characterStatuses = useCharacterStatuses(characterValues, characterResources)
+  const characterStatuses = useCharacterStatuses(characterValues, characterResources, sourceVersionId)
   const characterDefenses = useCharacterDefenses(characterValues, characterResources.itemsById)
   const characterHitPoints = useCharacterHitPoints(characterValues, characterResources.itemsById)
   const characterPassiveEffects = useCharacterPassiveEffects(characterValues, characterResources.itemsById)
   const characterCombatEffects = useCharacterCombatEffects(characterValues, characterResources.itemsById, charCtx)
-  const characterDerivedEffects = useCharacterDerivedEffects(effectiveValues, characterResources.itemsById)
-  const characterArmor = useCharacterArmor(effectiveValues, characterResources, characterDerivedEffects)
+  const characterDerivedEffects = useCharacterDerivedEffects(effectiveValues, characterResources.itemsById, () => rulesVersion.value)
+  const characterArmor = useCharacterArmor(effectiveValues, characterResources, characterDerivedEffects, () => rulesVersion.value)
   const characterRolls = useCharacterRollEffects(characterArmor, [context => characterDerivedEffects.rollEffects(context)])
 
   provide('charCtx', charCtx)
@@ -54,6 +55,7 @@ export function useCharacterData(uuid, isMobile) {
     characterUuid: uuid,
     canClone: computed(() => Boolean(uuid) && !loading.value && !isOwner.value),
     sourceVersionId,
+    rulesVersion,
     contentSources,
     iconImageId,
     iconImageUrl,
@@ -85,6 +87,7 @@ export function useCharacterData(uuid, isMobile) {
     iconImageId.value = res.iconImageId ?? null
     iconImageUrl.value = res.iconImageUrl ?? null
     sourceVersionId.value = res.sourceVersionId ?? null
+    rulesVersion.value = (res.templateName === 'DND5' || res.sourceName?.toLowerCase() === 'dnd5e') ? (res.sourceVersion || '2014') : '2014'
     charCtx.dictionaries = template.value.dictionaries || {}
     charCtx.var = data.value.var || {}
 
@@ -111,6 +114,8 @@ export function useCharacterData(uuid, isMobile) {
       userId: seed.userId,
       version: seed.version,
       sourceVersionId: seed.sourceVersionId,
+      sourceVersion: seed.sourceVersion,
+      sourceName: seed.sourceName,
       iconImageId: seed.iconImageId,
       iconImageUrl: seed.iconImageUrl,
     }

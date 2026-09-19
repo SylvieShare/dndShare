@@ -188,6 +188,8 @@ func (s *Server) mcpRequireWrite() error {
 func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json.RawMessage) (any, error) {
 	ctx := r.Context()
 	switch name {
+	case "handbook_publication_compatibility_review":
+		return s.toolCompatibilityBatch(r, args)
 	case "sessions_list":
 		ownerLogin, err := argString(args, "ownerLogin")
 		if err != nil {
@@ -245,7 +247,16 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.ItemTypeGetAll(ctx, sourceID)
+		scope, err := mcpContentScope(args)
+		if err != nil {
+			return nil, err
+		}
+		types, err := s.store.ItemTypeGetAll(ctx, sourceID)
+		if err != nil {
+			return nil, err
+		}
+		err = s.store.AttachScopedTypeCounts(ctx, types, nil, scope)
+		return types, err
 
 	case "handbook_items":
 		typeID, err := argInt64(args, "typeId")
@@ -260,7 +271,11 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.GetByTypeAndUser(ctx, typeID, nil, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0), nil, store.ContentScope{})
+		scope, err := mcpContentScope(args)
+		if err != nil {
+			return nil, err
+		}
+		return s.store.GetByTypeAndUser(ctx, typeID, nil, coerceIn(limit, 1, 500), coerceAtLeast(offset, 0), nil, scope)
 
 	case "handbook_items_search":
 		typeID, err := argInt64(args, "typeId")
@@ -275,7 +290,11 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		if err != nil {
 			return nil, err
 		}
-		return s.store.SearchByTypeAndName(ctx, typeID, q, nil, coerceIn(limit, 1, 500), 0, nil, store.ContentScope{})
+		scope, err := mcpContentScope(args)
+		if err != nil {
+			return nil, err
+		}
+		return s.store.SearchByTypeAndName(ctx, typeID, q, nil, coerceIn(limit, 1, 500), 0, nil, scope)
 
 	case "handbook_items_get":
 		ids, err := argInt64Slice(args, "ids")
@@ -309,6 +328,8 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		}
 		return s.store.SearchSuggestsByName(ctx, q, nil, coerceIn(limit, 1, 100), nil)
 
+	case "handbook_edition_import":
+		return s.toolEditionImport(r, args)
 	case "handbook_item_create":
 		return s.toolItemCreate(ctx, args)
 	case "handbook_item_update":

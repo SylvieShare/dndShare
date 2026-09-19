@@ -79,7 +79,7 @@ function mergeIds(target, ids) {
  * are merged on top of their base.
  */
 export function extractGrants({
-  race, subrace, charClass, subclass, raceVariant, background,
+  race, subrace, charClass, subclass, raceVariant, background, rulesVersion = '2014',
   classToolProficiencyIds = [],
   backgroundToolProficiencies = [],
 } = {}) {
@@ -138,6 +138,8 @@ export function extractGrants({
   if (grants.raceVariants && raceVariant) {
     const opt = grants.raceVariants.find((o) => o.value === raceVariant)
     if (opt) {
+      if (num(opt.speed) != null) grants.speed = num(opt.speed)
+      if (opt.size) grants.size = opt.size
       for (const row of asList(opt.asi)) {
         const stat = statKey(row?.ability)
         const bonus = num(row?.bonus)
@@ -216,6 +218,7 @@ export function extractGrants({
     }
   }
 
+  if (rulesVersion === '2024') { grants.asi = []; grants.asiChoice = null }
   return grants
 }
 

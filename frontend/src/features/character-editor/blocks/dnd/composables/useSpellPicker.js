@@ -35,7 +35,7 @@ export function useSpellPicker({ activeTabSpells, grants, activeTab, itemMap, kn
     const level = Number(item?.data?.lvl)
     const reasons = []
     if (rules.hasKnownProgression && rules.cantripsKnown != null && level === 0 && knownCounts.value.cantrips >= rules.cantripsKnown) reasons.push('Лимит известных заговоров уже заполнен')
-    if (rules.hasKnownProgression && rules.spellsKnown != null && level > 0 && knownCounts.value.spells >= rules.spellsKnown) reasons.push('Лимит известных заклинаний уже заполнен')
+    if ((rules.selectionMode || 'known') === 'known' && rules.hasKnownProgression && rules.spellsKnown != null && level > 0 && knownCounts.value.spells >= rules.spellsKnown) reasons.push('Лимит известных заклинаний уже заполнен')
     if (level > 0 && rules.allowedSchoolIds.length
       && !rules.allowedSchoolIds.some((id) => String(id) === String(item?.data?.schoolId))
       && knownCounts.value.unrestricted >= rules.unrestrictedSpells) {

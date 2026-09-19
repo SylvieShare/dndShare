@@ -14,6 +14,12 @@ export function abilitySelectionCount(parent, level) {
   return Math.max(0, Number(rule?.count) || 0)
 }
 
+export function abilityReplacementCount(parent, values) {
+  const rules = parent?.data?.ability_selection || {}
+  if (Array.isArray(rules.replace_levels) && !rules.replace_levels.map(Number).includes(abilityOwnerLevel(parent.data, values))) return 0
+  return Math.max(0, Number(rules.replace_count) || 0)
+}
+
 export function selectedAbilityEntries(values, parent, items) {
   const map = new Map(items.map(item => [id(item.id), item]))
   return rows(values?.abilities_class).filter(entry => (
@@ -27,6 +33,10 @@ export function selectedAbilityEligibility(item, parent, values) {
   if (selectionParentId(item) !== id(parent.id)) reasons.push('Другой набор способностей')
   const level = abilityOwnerLevel(parent.data, values)
   if (level < Number(item?.data?.level || 1)) reasons.push(`Уровень класса: ${item.data.level}`)
+  const knownAbilities = new Set(rows(values?.abilities_class).map(entry => id(entry.id)))
+  for (const ability of rows(item?.data?.selection_requirements?.abilities)) {
+    if (!knownAbilities.has(id(ability))) reasons.push(`Требуется способность: ${ability.name || `#${id(ability)}`}`)
+  }
   const knownSpells = new Set([
     ...rows(values?.spells?.tabs).flatMap(tab => rows(tab.spells)),
     ...rows(values?.spells?.grants),
@@ -49,6 +59,7 @@ export function abilitySelectionState(parent, values, items, selections, origina
   const selectedIds = new Set(selected.map(entry => id(entry.id)))
   const removed = rows(original).filter(entry => !selectedIds.has(id(entry.id))).length
   const map = new Map(items.map(item => [id(item.id), item]))
+  const evaluationValues = { ...values, abilities_class: [...rows(values?.abilities_class).filter(entry => id(entry.selection_source) !== id(parent.id) && selectionParentId(map.get(id(entry.id))) !== id(parent.id)), ...selected] }
   const errors = []
   if (selected.length !== count) errors.push(`Выбрано ${selected.length} из ${count}`)
   if (selectedIds.size !== selected.length) errors.push('Одинаковые способности нельзя выбирать дважды')
@@ -56,7 +67,7 @@ export function abilitySelectionState(parent, values, items, selections, origina
   for (const entry of selected) {
     const item = map.get(id(entry.id))
     if (!item) { errors.push('Не удалось загрузить выбранную способность'); continue }
-    errors.push(...selectedAbilityEligibility(item, parent, values).reasons.map(reason => `${item.name}: ${reason}`))
+    errors.push(...selectedAbilityEligibility(item, parent, evaluationValues).reasons.map(reason => `${item.name}: ${reason}`))
     if (!choiceSelectionsComplete(item, entry.choices || {})) errors.push(`${item.name}: завершите выбор`)
   }
   return { count, removed, ready: !errors.length, errors }

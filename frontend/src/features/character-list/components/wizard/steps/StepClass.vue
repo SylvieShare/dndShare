@@ -56,6 +56,7 @@
           <StepSkills v-if="skillOptions.length" class="choice-block" />
           <StepToolProficiencies v-if="classToolProficiencyOptions.length" class="choice-block" />
           <StepChoices v-if="classFeatureChoices.length" scope="class" class="choice-block" />
+          <StepAbilitySelections class="choice-block" />
           <section v-if="isCaster" class="choice-block">
             <div class="sheet-section-title">Заклинания</div>
             <StepSpells />
@@ -73,6 +74,7 @@ import ClassSelectCard from '@/features/character-list/components/wizard/ClassSe
 import IllustratedChoiceStage from '@/features/character-list/components/wizard/IllustratedChoiceStage.vue'
 import { classCardSummary, subclassCardSummary } from '@/features/character-list/components/wizard/classCardSummary'
 import SubclassSelectTile from '@/features/character-list/components/wizard/SubclassSelectTile.vue'
+import StepAbilitySelections from './StepAbilitySelections.vue'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepClassEquipment from '@/features/character-list/components/wizard/steps/StepClassEquipment.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'

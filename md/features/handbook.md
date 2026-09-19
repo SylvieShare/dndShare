@@ -91,9 +91,9 @@ selected `contentSourceIds` and `allowLegacy`. The word Legacy here describes a
 rules-edition content status; it is unrelated to old application data/API.
 
 `GET /api/sources` exposes only `versions[]`; `GET /api/content-sources`
-evaluates native/compatible/legacy/blocked status for a target edition.
+evaluates publication availability from explicit item decisions for a target edition.
 Глобальный multi-type поиск также передаёт `sourceVersionId`, поэтому исключает
-публикации, заблокированные для выбранной редакции.
+записи без разрешающего решения для выбранной редакции.
 
 ## Current field contracts
 
@@ -413,3 +413,11 @@ selection. `ability_selection` configures the parent count/replacement progressi
 The class roadmap lists the parent and its choice gains, never all options as
 automatic features. The ability editor exposes these fields and `spell_modifiers`.
 The 32 base [Warlock invocations](warlock-invocations.md) are authored through MCP.
+
+## Версии 2014 и 2024
+
+Совместимость задаётся на конкретной записи независимо от публикаций. Карточка
+показывает статус, пояснение, замену и исходник. Редактор управляет решениями по
+редакциям и создаёт отдельный вариант для адаптации. Поиск и счётчики применяют
+единый SQL scope до пагинации. Прежние версии можно показать для чтения, но
+добавление в лист требует native/compatible. [Модель и покрытие](rules-editions.md).

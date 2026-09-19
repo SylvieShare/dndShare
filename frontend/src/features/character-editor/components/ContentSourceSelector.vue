@@ -15,7 +15,7 @@
       @select-all="update({ mode: $event ? 'all' : 'selected', ids: [] })"
     >
       <div v-if="hasLegacy" class="source-legacy">
-        <ToggleSwitch label="Показывать Legacy-контент" :model-value="settings.allowLegacy" @update:model-value="update({ allowLegacy: $event })" />
+        <ToggleSwitch label="Показывать прежние версии" :model-value="settings.allowLegacy" @update:model-value="update({ allowLegacy: $event })" />
         <small>Старые версии опций, для которых существуют обновлённые правила.</small>
       </div>
     </ItemSourcePicker>
@@ -38,7 +38,7 @@ const emit = defineEmits(['update:modelValue', 'loaded'])
 const sources = ref([])
 const loading = ref(false)
 const settings = computed(() => normalizeContentSourceSettings(props.modelValue))
-const hasLegacy = computed(() => sources.value.some(source => source.compatibilityStatus === 'legacy'))
+const hasLegacy = computed(() => props.sourceVersionId != null)
 function update(patch) {
   emit('update:modelValue', { ...settings.value, ...patch })
 }

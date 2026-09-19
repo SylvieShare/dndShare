@@ -1,3 +1,4 @@
+import { dndRules } from '@/shared/lib/dndRules'
 import { computed } from 'vue'
 import {
   collectCharacterDerivedEffects,
@@ -12,8 +13,8 @@ import {
   derivedSpeedBonuses,
 } from '@/features/character-editor/lib/characterDerivedEffects'
 
-export function useCharacterDerivedEffects(values, itemsById) {
-  const effects = computed(() => collectCharacterDerivedEffects(values.value, itemsById.value))
+export function useCharacterDerivedEffects(values, itemsById, rulesVersion = () => '2014') {
+  const effects = computed(() => [...collectCharacterDerivedEffects(values.value, itemsById.value), ...dndRules(rulesVersion()).exhaustionEffects(values.value?.exhaustion?.level)])
   return {
     effects,
     armorRules: computed(() => derivedArmorRules(effects.value)),

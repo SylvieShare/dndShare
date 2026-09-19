@@ -99,7 +99,7 @@ func (s *Server) handleCreateChar(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Версия системы обязательна")
 		return
 	}
-	exists, err := s.store.SourceVersionExists(r.Context(), *req.SourceVersionID)
+	exists, err := s.store.CharacterEditionMatchesTemplate(r.Context(), req.TemplateID, *req.SourceVersionID)
 	if err != nil {
 		serverError(w, err)
 		return
@@ -421,7 +421,12 @@ func (s *Server) handleCloneChar(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	newUUID, err := s.store.CreateCharacter(r.Context(), uid, char.TemplateID, char.SourceVersionID, nil, data)
+	var newUUID string
+	if char.UserID == uid {
+		newUUID, err = s.store.CloneOwnCharacter(r.Context(), uid, char.ID, data)
+	} else {
+		newUUID, err = s.store.CreateCharacter(r.Context(), uid, char.TemplateID, char.SourceVersionID, nil, data)
+	}
 	if err != nil {
 		serverError(w, err)
 		return

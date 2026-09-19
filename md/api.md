@@ -832,3 +832,24 @@ the same filtered roster; general `/application-targets` remains unchanged.
 `itemId,name,uid,count,duration?`; тот же результат хранится в хронике.
 При таком вызове лечение самого заклинания не применяется. Если предмет требует
 концентрации, этот контракт пока отклоняет создание вместо несвязанного экземпляра.
+
+## Явная совместимость D&D
+
+Item DTO содержит `compatibility[]` (`sourceVersionId`, `version`, `status`,
+`replacedByItemId`, `note`) и `derivedFromItemId`/`derivationKind`. Новые ссылки
+в персонаже допускают только `native`/`compatible`; чтение сохранённых ID не
+подменяет версию. `allowLegacy=true` добавляет просмотр `legacy` и
+`requires_adaptation`, но не разрешает их выбор.
+
+- `PUT /api/items/{id}/compatibility`: `{compatibility:[...]}`, автор или admin.
+- `POST /api/items/{id}/variant`: `{sourceVersionId,kind}`, создаёт личный
+  черновик revision/adaptation, возвращает Item DTO.
+- `POST /api/content-sources/compatibility-review`: admin preview/apply с
+  `contentSourceId`, `sourceVersionId`, `status`, `apply`, `previewToken`.
+- Обычные item create/update принимают совместимость атомарно с данными;
+  отсутствие поля на update сохраняет решения, пустой массив очищает их.
+- Session create/read содержит `sourceVersionId`; ответы участников — редакцию
+  конкретного персонажа. Разные редакции не меняют сохранённые листы.
+
+Нарушения правил возвращают HTTP 400 с объяснением. Подробный контракт и границы
+автоматизации: [редакции D&D](features/rules-editions.md).

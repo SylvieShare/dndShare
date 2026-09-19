@@ -38,7 +38,7 @@ function instanceBonus(entry) {
  * Derives armor from equipped inventory and weapon instances.
  * One best body armor and one best shield are active; duplicates never stack.
  */
-export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () => [], derivedRules = {}, grantedProficiencies = []) {
+export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () => [], derivedRules = {}, grantedProficiencies = [], rulesVersion = '2014') {
   const dexterity = abilityModifier(resolveNumValue(values?.DEX?.value ?? 10))
   const strength = resolveNumValue(values?.STR?.value ?? 10)
   const equipped = inventoryEntries(values).filter(row => row.equipped).map(row => row.entry)
@@ -51,7 +51,8 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
       ? 0
       : (rule.dex_cap == null ? dexterity : Math.min(dexterity, number(rule.dex_cap)))
     const magicBonus = instanceBonus(entry)
-    const value = shield
+    const proficient = armorProficient(item, values, suggestItems, grantedProficiencies)
+    const value = shield && rulesVersion === '2024' && !proficient ? 0 : shield
       ? number(rule.shield_bonus, 2) + magicBonus
       : number(rule.ac, 10) + dex + magicBonus
     return [{
@@ -63,7 +64,7 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
       dex,
       magicBonus,
       value,
-      proficient: armorProficient(item, values, suggestItems, grantedProficiencies),
+      proficient,
       stealthDisadvantage: !shield && item.data.stealth_disadvantage === true,
     }]
   })
@@ -107,9 +108,10 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
   const shieldValue = shield?.value ?? 0
   const active = [body, shield].filter(Boolean)
   const nonproficient = active.filter(row => !row.proficient)
+  const armorPenalty = nonproficient.some(row => rulesVersion !== '2024' || !row.shield)
   const strengthRequired = number(body?.item?.data?.strength_required)
   const ancestry = `${values?.race?.name || ''} ${values?.subrace?.name || ''}`.toLocaleLowerCase('ru')
-  const ignoresArmorStrength = ancestry.includes('дварф') || ancestry.includes('dwarf')
+  const ignoresArmorStrength = rulesVersion !== '2024' && (ancestry.includes('дварф') || ancestry.includes('dwarf'))
   const speedPenalty = body && strengthRequired > strength && !ignoresArmorStrength ? 10 : 0
   const activeUids = new Set(active.map(row => row.uid))
   const byUid = Object.fromEntries(candidates.map(row => [row.uid, {
@@ -137,8 +139,8 @@ export function deriveEquippedArmor(values = {}, items = {}, suggestItems = () =
     shieldConflict: shields.length > 1,
     stealthDisadvantage: !!body?.stealthDisadvantage,
     nonproficient,
-    strengthDexDisadvantage: nonproficient.length > 0,
-    castingBlocked: nonproficient.length > 0,
+    strengthDexDisadvantage: armorPenalty,
+    castingBlocked: armorPenalty,
     strengthRequired,
     speedPenalty,
   }

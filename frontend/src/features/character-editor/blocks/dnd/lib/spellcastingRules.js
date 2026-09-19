@@ -18,6 +18,7 @@ export function spellcastingRulesAt(item, level) {
   const startLevel = Math.max(1, number(spellcasting.start_level) || 1)
   if (classLevel < startLevel) return null
   const row = progressionAt(spellcasting.known_progression, classLevel)
+  const prepared = progressionAt(spellcasting.prepared_progression, classLevel)
   const unrestricted = progressionAt(spellcasting.unrestricted_progression, classLevel)
   const cantripsKnown = number(row?.cantrips ?? spellcasting.cantrips_known)
   const spellsKnown = number(row?.spells ?? spellcasting.spells_known)
@@ -28,6 +29,7 @@ export function spellcastingRulesAt(item, level) {
   return {
     ability,
     prepares,
+    preparedLimit: prepared?.count != null ? Math.max(0, number(prepared.count) || 0) : (prepares && spellcasting.selection_mode === 'prepared' && row?.spells != null ? Math.max(0, number(row.spells) || 0) : null),
     startLevel,
     selectionMode: String(spellcasting.selection_mode || (prepares ? 'prepared' : 'known')),
     levelUpChoices: Math.max(0, number(spellcasting.level_up_choices) || 0),

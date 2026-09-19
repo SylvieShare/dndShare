@@ -7,7 +7,7 @@ import { featureItemIds } from '@/features/character-editor/lib/characterMagicIt
 import { abilitySpellGrantRows, syncAbilityGrantedSpells } from '../lib/abilitySpellGrants'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 
-export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation, spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource }) {
+export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation, preparationLimit = null, spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource }) {
   async function loadDetails() {
     const ids = spellbookItemIds({ tabs: tabs.value, grants: grants.value }).filter(id => !itemMap[id])
     if (ids.length) {
@@ -42,11 +42,15 @@ export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, act
     return activeTabSpells.value.find((entry) => entry.key === key) || null
   }
 
+  function hasPreparationRoom() {
+    return preparationLimit?.value == null || activeTabSpells.value.filter(entry => entry.prepared && Number(itemMap[entry.id]?.data?.lvl) > 0).length < preparationLimit.value
+  }
   function togglePrepared(key) {
     if (!charCtx.ownerMode) return
     const entry = activeSpellByKey(key)
     const level = Number(itemMap[entry?.id]?.data?.lvl)
     if (entry && level > 0 && preparation.value) {
+      if (!entry.prepared && !hasPreparationRoom()) return
       entry.prepared = !entry.prepared
       emitChange()
     }
@@ -111,7 +115,7 @@ export function useSpellbookEntries({ props, charCtx, tabs, grants, itemMap, act
       charCtx.characterResources?.rememberItems?.([item])
       charCtx.characterStatuses?.ensureLinks?.(item)
       activeTab.value.spells.push(spellEntry(item.id, {
-        prepared: preparation.value && Number(item.data?.lvl) > 0,
+        prepared: preparation.value && Number(item.data?.lvl) > 0 && hasPreparationRoom(),
       }))
       emitChange()
       logSessionEntryAdded(charCtx, {

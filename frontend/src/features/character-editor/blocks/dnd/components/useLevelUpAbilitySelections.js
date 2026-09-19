@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import { choicesForEntry } from '@/features/items/lib/itemChoices'
 import { applyLevelUpSpellSelection } from '../lib/levelUpSpellSelection'
-import { abilitySelectionState, selectedAbilityEntries } from '@/features/character-editor/lib/selectedAbilities'
+import { abilityReplacementCount, abilitySelectionState, selectedAbilityEntries } from '@/features/character-editor/lib/selectedAbilities'
 
 export function useLevelUpAbilitySelections({ values, classItem, entriesAfter, newTotal, pool, features, featureChoices, spellSelection }) {
   const plans = ref({})
@@ -26,7 +26,7 @@ export function useLevelUpAbilitySelections({ values, classItem, entriesAfter, n
     }
   })
   const catalogue = computed(() => [...new Map([...pool.value, ...Object.values(plans.value).flatMap(plan => plan.items || [])].map(item => [String(item.id), item])).values()])
-  function replacements(parent) { return Math.max(0, Number(parent.data?.ability_selection?.replace_count) || 0) }
+  function replacements(parent) { return abilityReplacementCount(parent, context.value) }
   const ready = computed(() => parents.value.every(parent => {
     const plan = plans.value[parent.id]
     return plan && abilitySelectionState(parent, context.value, catalogue.value, plan.entries,

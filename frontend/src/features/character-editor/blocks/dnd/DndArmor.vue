@@ -35,7 +35,7 @@
             Одновременно учитывается только {{ armorState.bodyConflict ? 'доспех с наибольшим КД' : '' }}{{ armorState.bodyConflict && armorState.shieldConflict ? ' и ' : '' }}{{ armorState.shieldConflict ? 'щит с наибольшим бонусом' : '' }}.
           </div>
           <div v-if="armorState.nonproficient.length" class="armor-warning armor-warning--danger">
-            Нет владения: {{ armorState.nonproficient.map(row => row.name).join(', ') }}. Помеха на проверки, спасброски и атаки Силой или Ловкостью; сотворение заклинаний недоступно.
+            Нет владения: {{ armorState.nonproficient.map(row => row.name).join(', ') }}. <template v-if="armorState.castingBlocked">Помеха на проверки, спасброски и атаки Силой или Ловкостью; сотворение заклинаний недоступно.</template><template v-else>Щит без владения не увеличивает КД.</template>
           </div>
         </EditorSection>
         <EditorSection title="Дополнительные бонусы">

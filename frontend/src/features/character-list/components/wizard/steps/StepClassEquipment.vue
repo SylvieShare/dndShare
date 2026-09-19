@@ -17,10 +17,11 @@
 
     <div v-if="state.buyStartingEquipment" class="shop-notice">
       <ShoppingBag :size="20" aria-hidden="true" />
-      <span>Комплект класса и снаряжение предыстории не начисляются. После характеристик появится шаг магазина со стартовым золотом вашего класса.</span>
+      <span>{{ state.version === '2024' ? 'Комплект класса заменён фиксированным золотом. Выбор снаряжения предыстории независим.' : 'Комплект класса и снаряжение предыстории не начисляются.' }} После характеристик появится шаг магазина со стартовым золотом вашего класса.</span>
     </div>
 
     <template v-else>
+      <p v-if="profile.gold" class="hint">В комплект также входит {{ profile.gold }} зм.</p>
       <div v-for="(group, groupIndex) in profile.groups" :key="group.id" class="choice-group">
         <div class="choice-title">{{ group.label || `Выбор ${groupIndex + 1}` }}</div>
 

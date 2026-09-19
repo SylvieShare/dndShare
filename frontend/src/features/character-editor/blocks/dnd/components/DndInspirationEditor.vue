@@ -1,5 +1,5 @@
 <template>
-  <EditorPanel :title="embedded ? '' : 'Вдохновение'">
+  <EditorPanel :title="embedded ? '' : rules.inspirationName">
     <button
       class="die-toggle"
       :class="{ 'die-toggle--active': active }"
@@ -13,12 +13,13 @@
         <span>{{ active ? 'Нажмите, чтобы потратить' : 'Нажмите, чтобы выдать' }}</span>
       </span>
     </button>
-    <p class="die-note">Героическое вдохновение выдаёт мастер игры; его можно потратить, чтобы перебросить кубик.</p>
+    <p class="die-note">{{ rules.inspirationDescription }}</p>
   </EditorPanel>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+import { dndRules } from '@/shared/lib/dndRules'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
 
@@ -29,6 +30,8 @@ const props = defineProps({
 
 defineEmits(['change'])
 
+const charCtx = inject('charCtx', null)
+const rules = computed(() => dndRules(charCtx?.rulesVersion))
 const active = computed(() => isInspirationActive(props.value))
 </script>
 

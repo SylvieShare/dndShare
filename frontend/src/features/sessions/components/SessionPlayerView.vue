@@ -17,7 +17,7 @@
         <SessionTutorialSettings />
         <p v-if="session.description">{{ session.description }}</p>
         <div class="player-session__meta">
-          <span v-if="session.systemName">{{ session.systemName }}</span>
+          <span v-if="session.systemName">{{ session.systemName }} {{ session.rulesVersion }}</span>
           <span>{{ participantCountLabel }}</span>
         </div>
       </header>

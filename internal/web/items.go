@@ -77,17 +77,9 @@ func (s *Server) handleGetItemTypes(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	for i := range types {
-		if types[i].ID != 18 {
-			continue
-		}
-		count, err := s.store.VisibleItemTypeCount(r.Context(), types[i].ID, optionalUserPtr(r))
-		if err != nil {
-			serverError(w, err)
-			return
-		}
-		types[i].CountItems = count
-		types[i].Count = count
+	if err := s.store.AttachScopedTypeCounts(r.Context(), types, optionalUserPtr(r), parseContentScope(r.URL.Query())); err != nil {
+		serverError(w, err)
+		return
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"types": nonNil(types)})
 }

@@ -1,11 +1,13 @@
 import { computed, ref } from 'vue'
 import { defaultInstanceParams, instanceParamsKey } from '@/features/items/lib/itemInstance'
 import { fetchGet } from '@/shared/api/http'
+import { itemEditionEligibility } from '@/shared/lib/itemCompatibility'
 import { armorRuleByName } from '@/features/character-editor/settings/dnd/creation/armorRules'
 import {
   mergeEquipment,
   resolveStartingEquipmentProfile,
   selectedStartingEquipment,
+  selectedStartingGold,
   startingEquipmentComplete,
   startingEquipmentProfile,
 } from '@/features/character-editor/settings/dnd/creation/startingEquipment'
@@ -48,36 +50,46 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
   const shopLoading = ref(false)
   const typeById = (id) => equipmentTypes.value.find((type) => Number(type.id) === Number(id)) || null
 
+  let request = 0
   async function loadEquipmentCatalogue() {
+    const current = ++request
     shopLoading.value = true
     try {
       const [responses, typesResponse] = await Promise.all([
         Promise.all(CATALOGUE_TYPE_IDS.map((typeId) => fetchGet(`/items?typeId=${typeId}&limit=500${sourceSuffix()}`))),
         fetchGet('/item-types'),
       ])
+      if (current !== request) return
       equipmentCatalogue.value = responses.flatMap((response) => response?.items || [])
       equipmentTypes.value = typesResponse?.types || []
     } finally {
-      shopLoading.value = false
+      if (current === request) shopLoading.value = false
     }
   }
 
   async function ensureEquipmentCatalogueItems(ids) {
+    const scope = sourceSuffix()
     const known = new Set(equipmentCatalogue.value.map((item) => String(item.id)))
     const missing = [...new Set((ids || []).map(Number).filter((id) => id > 0 && !known.has(String(id))))]
     if (!missing.length) return
     const response = await fetchGet(`/items/by-ids?ids=${missing.join(',')}`)
+    if (scope !== sourceSuffix()) return
+    const edition = new URLSearchParams(scope.replace(/^&/, '')).get('sourceVersionId')
+    const selectedBooks = state.contentSources?.mode === 'selected' ? new Set((state.contentSources.ids || []).map(Number)) : null
     const next = [...equipmentCatalogue.value]
     for (const item of (response?.items || [])) {
+      if (!itemEditionEligibility(item, edition).eligible || item.hidden) continue
+      if (selectedBooks && item.userId == null && item.contentSources?.length
+        && !item.contentSources.some(book => selectedBooks.has(Number(book.id)))) continue
       if (!next.some((saved) => String(saved.id) === String(item.id))) next.push(item)
     }
     equipmentCatalogue.value = next
   }
 
-  const baseClassEquipmentProfile = computed(() => startingEquipmentProfile(state.charClass))
+  const baseClassEquipmentProfile = computed(() => startingEquipmentProfile(state.charClass, state.version))
   const classEquipmentProfile = computed(() => resolveStartingEquipmentProfile(
     baseClassEquipmentProfile.value,
-    equipmentCatalogue.value.filter((item) => [1, 2, 12, 14].includes(Number(item.typeId)) && item.userId == null),
+    equipmentCatalogue.value.filter((item) => [1, 2, 12, 13, 14, 19].includes(Number(item.typeId)) && item.userId == null),
   ))
   const classEquipmentComplete = computed(() => state.buyStartingEquipment
     || startingEquipmentComplete(classEquipmentProfile.value, state.classEquipmentChoices))
@@ -93,13 +105,15 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
     .map((item) => ({ ...item, params: defaultInstanceParams(typeById(item.typeId), item) }))
     .filter((item) => itemCostCopper(item) != null)
     .sort((a, b) => a.name.localeCompare(b.name, 'ru')))
-  const startingWealthFormulaLabel = computed(() => startingWealthFormula(baseClassEquipmentProfile.value?.key))
+  const fixedStartingGold = computed(() => state.version === '2024' ? Number(state.charClass?.data?.starting_gold) || 0 : null)
+  const startingWealthFormulaLabel = computed(() => fixedStartingGold.value == null ? startingWealthFormula(baseClassEquipmentProfile.value?.key) : `${fixedStartingGold.value} зм`)
+  const newWealth = () => fixedStartingGold.value == null ? rollStartingWealth(baseClassEquipmentProfile.value?.key) : { gold: fixedStartingGold.value, rolls: [], multiplier: 1 }
   const startingWealthCopper = computed(() => Math.max(0, Number(state.startingWealthRoll?.gold) || 0) * 100)
   const shopSpentCopper = computed(() => cartCostCopper(state.startingShopCart))
   const shopRemainingCopper = computed(() => Math.max(0, startingWealthCopper.value - shopSpentCopper.value))
   const shopSpentLabel = computed(() => formatCopper(shopSpentCopper.value))
   const shopRemainingLabel = computed(() => formatCopper(shopRemainingCopper.value))
-  const shopWallet = computed(() => copperToWallet(shopRemainingCopper.value))
+  const shopWallet = computed(() => state.buyStartingEquipment ? copperToWallet(shopRemainingCopper.value) : { 3: selectedStartingGold(baseClassEquipmentProfile.value, state.classEquipmentChoices) })
 
   function selectEquipmentOption(groupId, optionId) {
     state.classEquipmentChoices = { ...state.classEquipmentChoices, [groupId]: { optionId, picks: {} } }
@@ -133,21 +147,21 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
   }
 
   function rerollStartingWealth() {
-    state.startingWealthRoll = rollStartingWealth(baseClassEquipmentProfile.value?.key)
+    state.startingWealthRoll = newWealth()
     state.startingShopCart = []
   }
   function setBuyStartingEquipment(enabled) {
     state.buyStartingEquipment = !!enabled
     state.equipment = []
     state.startingShopCart = []
-    state.startingWealthRoll = enabled ? rollStartingWealth(baseClassEquipmentProfile.value?.key) : null
+    state.startingWealthRoll = enabled ? newWealth() : null
   }
   function resetEquipmentForClass() {
     state.classEquipmentChoices = {}
     state.equipment = []
     state.startingShopCart = []
     state.startingWealthRoll = state.buyStartingEquipment
-      ? rollStartingWealth(baseClassEquipmentProfile.value?.key)
+      ? newWealth()
       : null
   }
 
@@ -182,7 +196,7 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
     selectEquipmentOption, setEquipmentPick,
     addEquipment, removeEquipment, bumpEquipment,
     setBuyStartingEquipment, resetEquipmentForClass, rerollStartingWealth,
-    startingShopItems, startingWealthFormulaLabel, startingWealthCopper,
+    startingShopItems, startingWealthFormulaLabel, startingWealthCopper, fixedStartingGold,
     shopSpentCopper, shopRemainingCopper, shopSpentLabel, shopRemainingLabel, shopWallet,
     addShopItem, removeShopItem, bumpShopItem, canBuyShopItem,
   }

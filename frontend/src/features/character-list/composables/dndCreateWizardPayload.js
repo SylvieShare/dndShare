@@ -1,3 +1,4 @@
+import { applyAbilitySelection } from '@/features/character-editor/lib/selectedAbilities'
 import { buildCharacterData } from '@/features/character-editor/settings/dnd/creation/buildCharacter'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
 
@@ -24,6 +25,10 @@ export function buildDndCharacterPayload({
   isExpertiseChoice,
 }) {
   const payload = buildCharacterData({
+    rulesVersion: state.version,
+    backgroundAsi: state.backgroundAsi,
+    originFeatChoices: state.originFeatChoices,
+    originFeat: featPool.find(feat => Number(feat.id) === Number(state.background?.data?.origin_feat_id || state.originFeatId)),
     name: state.name.trim(),
     race: selectedItem(state.race),
     subrace: selectedItem(state.subrace),
@@ -72,6 +77,10 @@ export function buildDndCharacterPayload({
     suggestValue,
     contentSources: normalizeContentSourceSettings(state.contentSources),
   })
+  for (const [parentId, plan] of Object.entries(state.abilitySelections || {})) {
+    const parent = classAbilities.find(item => String(item.id) === parentId)
+    if (parent) payload.data.values = applyAbilitySelection(payload.data.values, parent, plan.entries || [], classAbilities)
+  }
   const iconUploadId = Number(state.persona?.icon?.upload_id)
   return {
     ...payload,

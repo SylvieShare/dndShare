@@ -14,14 +14,14 @@
     <FormField label="Система" vertical>
       <div class="source-list">
         <button
-          v-for="src in sources"
+          v-for="src in editionOptions"
           :key="src.id"
           class="source-item"
           :class="{ active: selectedSourceId === src.id }"
           @click="selectedSourceId = selectedSourceId === src.id ? null : src.id"
         >
           <span class="source-name">{{ src.name }}</span>
-          <span v-if="sourceVersionLabel(src)" class="source-version">{{ sourceVersionLabel(src) }}</span>
+          <span v-if="src.version" class="source-version">{{ src.version }}</span>
         </button>
         <LoadingState v-if="loadingSources" class="source-loading" label="Загрузка…" compact />
       </div>
@@ -51,14 +51,14 @@
 
 <script setup>
 import { LoadingState } from '@sylvieshare/share-ui'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
 import { fetchGet } from '@/shared/api/http'
-import { sourceVersionLabel } from '@/shared/lib/sourceVersions'
+
 
 const emit = defineEmits(['close', 'create'])
 
@@ -68,13 +68,14 @@ const creating = ref(false)
 const sources = ref([])
 const loadingSources = ref(false)
 const selectedSourceId = ref(null)
+const editionOptions = computed(() => sources.value.flatMap(source => (source.versions || []).map(version => ({ id: version.id, sourceId: source.id, name: source.name, version: version.version }))))
 
 onMounted(async () => {
   loadingSources.value = true
   try {
     const res = await fetchGet('/sources')
     sources.value = res?.sources || []
-    if (sources.value.length) selectedSourceId.value = sources.value[0].id
+    if (sources.value.length) selectedSourceId.value = editionOptions.value[0]?.id
   } finally {
     loadingSources.value = false
   }
@@ -86,7 +87,8 @@ function submit() {
   emit('create', {
     name: name.value.trim(),
     description: description.value.trim() || null,
-    systemId: selectedSourceId.value,
+    systemId: editionOptions.value.find(option => option.id === selectedSourceId.value)?.sourceId ?? null,
+    sourceVersionId: selectedSourceId.value,
   })
 }
 </script>

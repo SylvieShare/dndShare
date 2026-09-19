@@ -59,12 +59,15 @@ func (s *Store) GetContentSources(ctx context.Context, sourceID, sourceVersionID
 	joinTarget := ""
 	if sourceVersionID != nil {
 		args = append(args, *sourceVersionID)
-		joinTarget = `JOIN dndshare.source_version target ON target.id = $1 AND target.source_id = cs.source_id
-		LEFT JOIN dndshare.content_source_compatibility csc
-		  ON csc.content_source_id = cs.id AND csc.source_version_id = target.id`
-		statusExpr = `COALESCE(csc.status,
-		  CASE WHEN cs.native_source_version_id = target.id THEN 'native' ELSE 'blocked' END)`
-		where = append(where, statusExpr+" <> 'blocked'")
+		joinTarget = `JOIN dndshare.source_version target ON target.id = $1 AND target.source_id = cs.source_id`
+		where = append(where, `(cs.native_source_version_id = $1 OR EXISTS (
+ SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.item i ON i.id=l.item_id
+ JOIN dndshare.item_version_compatibility ic ON ic.item_id=i.id AND ic.source_version_id=$1
+ WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden
+ AND ic.status IN ('native','compatible','legacy','requires_adaptation')))`)
+		statusExpr = `CASE WHEN cs.native_source_version_id=$1 THEN 'native'
+ WHEN EXISTS(SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.item i ON i.id=l.item_id JOIN dndshare.item_version_compatibility c ON c.item_id=i.id AND c.source_version_id=$1 WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden AND c.status IN ('native','compatible')) THEN 'compatible'
+ WHEN EXISTS(SELECT 1 FROM dndshare.item_content_source l JOIN dndshare.item i ON i.id=l.item_id JOIN dndshare.item_version_compatibility c ON c.item_id=i.id AND c.source_version_id=$1 WHERE l.content_source_id=cs.id AND i.user_id IS NULL AND NOT i.hidden AND c.status='requires_adaptation') THEN 'requires_adaptation' ELSE 'legacy' END`
 	} else if sourceID != nil {
 		args = append(args, *sourceID)
 		where = append(where, fmt.Sprintf("cs.source_id = $%d", len(args)))

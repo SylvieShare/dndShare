@@ -1,5 +1,6 @@
 <template>
   <div class="step">
+    <p v-if="state.version === '2024' && grants.spellcasting?.selectionMode === 'spellbook'" class="hint">Выберите заклинания для книги. После создания отметьте подготовленные заклинания в листе; их лимит указан рядом со списком.</p>
     <p v-if="grants.spellcasting?.note" class="hint" v-html="grants.spellcasting.note" />
 
     <div v-if="grantedSpellList.length" class="sec">

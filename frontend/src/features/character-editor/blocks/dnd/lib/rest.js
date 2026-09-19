@@ -1,3 +1,4 @@
+import { dndRules } from '@/shared/lib/dndRules'
 // Pure rest transforms for DND_REST. No Pinia / no Vue — the block injects raw block values
 // and writes the returned objects back via update:value(<id>, ...).
 
@@ -17,13 +18,13 @@ export function statMod(statVal) {
 }
 
 // Hit dice regained on a long rest: half the total (round down), minimum 1.
-export function recoveredHitDice(diceCount) {
-  return Math.max(1, Math.floor((Number(diceCount) || 1) / 2))
+export function recoveredHitDice(diceCount, version = '2014') {
+  return dndRules(version).hitDiceRecovery(Number(diceCount) || 1)
 }
 
-export function longRestRecoveryCount(hp) {
+export function longRestRecoveryCount(hp, version = '2014') {
   const pools = normalizeHitDice(hp)
-  return Math.min(hitDiceUsed(pools), recoveredHitDice(hitDiceTotal(pools)))
+  return Math.min(hitDiceUsed(pools), recoveredHitDice(hitDiceTotal(pools), version))
 }
 
 function recoveryFor(recovery, die) {
@@ -34,11 +35,11 @@ function recoveryFor(recovery, die) {
 }
 
 // Long rest: full HP, drop temp + death saves, regain half the spent hit dice.
-export function longRestHp(hp, recovery = null) {
+export function longRestHp(hp, recovery = null, version = '2014') {
   let h = { ...(hp || {}) }
   const max = hpMaximum(h)
   const pools = normalizeHitDice(h).map((row) => ({ ...row }))
-  let left = longRestRecoveryCount(h)
+  let left = longRestRecoveryCount(h, version)
   for (const row of pools) {
     const requested = recovery == null ? left : Math.max(0, Math.floor(recoveryFor(recovery, row.die)))
     const restored = Math.min(row.used, left, requested)

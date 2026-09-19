@@ -13,7 +13,7 @@
             {{ selectedSource.name }}
             <template v-if="selectedVersion">· {{ selectedVersion.version }}</template>
             · {{ itemTypes.length }} коллекций
-            · {{ selectedSource.countItems.toLocaleString('ru') }} записей
+            · {{ itemTypes.reduce((sum, type) => sum + type.countItems, 0).toLocaleString('ru') }} записей
           </p>
         </div>
 
@@ -224,7 +224,7 @@ async function fetchTypesForSource(sourceId) {
   loadingDicts.value = true
   try {
     const [types, dictsRes] = await Promise.all([
-      itemTypesStore.ensureBySource(sourceId),
+      fetchGet(`/item-types?sourceId=${sourceId}&sourceVersionId=${selectedSourceVersionId.value}`).then(res => res?.types || []),
       fetchGet(`/suggest/types?sourceId=${sourceId}`),
     ])
     if (request !== catalogRequest) return
@@ -240,7 +240,7 @@ async function fetchTypesForSource(sourceId) {
   }
 }
 
-watch(selectedSourceId, (id) => {
+watch([selectedSourceId, selectedSourceVersionId], ([id]) => {
   if (id != null) fetchTypesForSource(id)
 }, { immediate: true })
 

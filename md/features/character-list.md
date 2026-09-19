@@ -416,3 +416,14 @@ implement a second card-to-sheet data resolver.
 
 
 Draft persistence uses `usePersistedDraft`: changes are coalesced for 300ms (maximum 1000ms), with a final flush on pagehide, visibility hidden and scope disposal. Clearing after successful creation cancels the pending write so the deleted draft is not restored. `useDndCreateCatalog` owns catalog loading/source changes; `useDndCreateSpells` owns selected and granted spells. The wizard remains the public coordinator.
+
+## Создание D&D 2024
+
+В мастере доступны 2014 и 2024. Профиль 2024 получает ASI и Origin feat из
+предыстории; вид не добавляет прежние расовые ASI. Поддерживаются варианты видов,
+дополнительная Origin feat человека, выборы черт и стартовые воззвания колдуна.
+Предыстория предлагает свой комплект или 50 зм независимо от класса. Класс
+предлагает конкретный комплект или фиксированную сумму; старые случайные деньги
+и объединённый режим магазина относятся к 2014. Волшебник выбирает начальную
+книгу, затем отмечает подготовленные заклинания в листе. Книги и редакция
+ограничивают все новые выборы. [Точный объём поддержки](rules-editions.md).

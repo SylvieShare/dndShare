@@ -9,13 +9,13 @@ func TestAppendContentScopeSQLSelectedSources(t *testing.T) {
 	version := int64(12)
 	args := []any{"existing"}
 	where := appendContentScopeSQL(nil, &args, ContentScope{IDs: []int64{4, 7}, RestrictToIDs: true, SourceVersionID: &version})
-	if len(where) != 1 {
+	if len(where) != 2 {
 		t.Fatalf("expected one scope clause, got %d", len(where))
 	}
-	if !strings.Contains(where[0], "ics.content_source_id = ANY($2)") {
+	if !strings.Contains(where[1], "ics.content_source_id = ANY($3)") {
 		t.Fatalf("source allowlist missing from SQL: %s", where[0])
 	}
-	if !strings.Contains(where[0], "ivc.source_version_id = $3") || !strings.Contains(where[0], "<> 'legacy'") {
+	if !strings.Contains(where[0], "ivc.source_version_id=$2") || !strings.Contains(where[0], "('native','compatible')") {
 		t.Fatalf("edition compatibility missing from SQL: %s", where[0])
 	}
 }

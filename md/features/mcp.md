@@ -104,3 +104,15 @@ When adding or changing a tool, update together:
 
 Do not leave deprecated tool names or argument aliases after the caller/data
 migration is complete.
+
+## Импорт и совместимость редакций
+
+`handbook_item_create/update` принимают `compatibility`, `derivedFromItemId` и
+`derivationKind`. Все каталожные list/search/children и type counts принимают
+тот же edition/publication scope, что HTTP. Личная адаптация создаётся через HTTP `/api/items/{id}/variant`; `handbook_publication_compatibility_review` предоставляет
+preview/apply для ещё не размеченных записей книги.
+
+`handbook_edition_import` атомарно публикует конкретные версии со стабильными
+ключами и символическими ссылками. Preview проверяет реальный путь записи с
+rollback; apply требует точный token и включённые MCP writes. Повтор не
+перезаписывает ручные изменения. Формат и процесс: [редакции D&D](rules-editions.md).

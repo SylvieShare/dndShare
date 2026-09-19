@@ -87,10 +87,19 @@ Unit-тесты проверяют отсутствие массовой выд�
 ## Источник правил
 
 Использованы базовые воззвания из SRD 5.1 (2014), изложенные по-русски.
-Дополнения других книг и правила 2024 года в этот каталог не входят.
+Этот исходный набор относится к 2014; отдельный каталог 2024 описан ниже.
 
 This work includes material taken from the System Reference Document 5.1
 (“SRD 5.1”) by Wizards of the Coast LLC and available at
 https://dnd.wizards.com/resources/systems-reference-document. The SRD 5.1 is
 licensed under the Creative Commons Attribution 4.0 International License
 available at https://creativecommons.org/licenses/by/4.0/legalcode.
+
+## Отдельный каталог 2024
+
+PHB 2024 содержит 28 отдельных записей воззваний, получаемых из новой версии
+исходной способности с 1-го уровня. Общий селектор проверяет уровень и
+`selection_requirements.abilities`, включая зависимости от выбранного договора.
+При создании требуется законченный выбор; при повышении — доступное количество
+и замены. Метамагия и приёмы используют тот же механизм. Повтор одной записи
+воззвания с разными выборами не автоматизирован. Каталог 2014 сохраняется.

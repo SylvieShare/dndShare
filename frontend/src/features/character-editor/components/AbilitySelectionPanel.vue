@@ -39,10 +39,11 @@ const props = defineProps({
   parent: { type: Object, required: true }, values: { type: Object, required: true },
   originalValues: { type: Object, required: true }, items: { type: Array, required: true },
   replacements: { type: Number, default: 0 },
+  initialEntries: { type: Array, default: null },
 })
 const emit = defineEmits(['change'])
 const original = computed(() => selectedAbilityEntries(props.originalValues, props.parent, props.items))
-const selected = ref(original.value.map(entry => ({ ...entry })))
+const selected = ref((props.initialEntries || original.value).map(entry => ({ ...entry })))
 const pickedItems = ref([])
 const picker = ref(null)
 const pending = ref(null)
@@ -53,7 +54,7 @@ const itemFor = id => catalogue.value.find(item => String(item.id) === String(id
 const state = computed(() => abilitySelectionState(props.parent, props.values, catalogue.value, selected.value, original.value, props.replacements))
 const changed = computed(() => JSON.stringify(selected.value) !== JSON.stringify(original.value))
 const hint = computed(() => props.replacements ? 'Выберите новые способности и при желании замените одну ранее изученную.' : 'Заполните недостающие способности. Замена ранее изученных доступна при повышении уровня класса.')
-const eligibility = item => selectedAbilityEligibility(item, props.parent, props.values)
+const eligibility = item => selectedAbilityEligibility(item, props.parent, { ...props.values, abilities_class: [...(props.values.abilities_class || []).filter(entry => !original.value.some(old => String(old.id) === String(entry.id))), ...selected.value] })
 const isOriginal = entry => original.value.some(old => String(old.id) === String(entry.id))
 function reset() { selected.value = original.value.map(entry => ({ ...entry })); picker.value = null }
 function remove(id) { selected.value = selected.value.filter(entry => entry.id !== id) }

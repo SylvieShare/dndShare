@@ -22,10 +22,12 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
   const bgPool = ref([])
   const loading = ref(false)
 
+  let loadRequest = 0, spellRequest = 0
   let loadedOnce = false
   let scopeReloadTimer = null
 
   async function load() {
+    const current = ++loadRequest
     loading.value = true
     try {
       const [r, sr, c, sc, ra, ca, ft, bg] = await Promise.all([
@@ -34,11 +36,12 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
         fetchGet(`/items?typeId=${CLASS_ITEM_TYPE}&limit=300${sourceSuffix()}`),
         fetchGet(`/items?typeId=${SUBCLASS_ITEM_TYPE}&limit=300${sourceSuffix()}`),
         fetchGet(`/items?typeId=${RACE_ABIL_TYPE}&limit=500${sourceSuffix()}`),
-        fetchGet(`/items?typeId=${CLASS_ABIL_TYPE}&limit=500${sourceSuffix()}`),
+        itemsApi.listAll(CLASS_ABIL_TYPE, { sourceVersionId: sourceVersionId.value, contentSources: { ...state.contentSources, allowLegacy: false } }),
         fetchGet(`/items?typeId=${FEAT_TYPE}&limit=500${sourceSuffix()}`),
         fetchGet(`/items?typeId=${BG_TYPE}&limit=200${sourceSuffix()}`),
         equipment.loadEquipmentCatalogue(),
       ])
+      if (current !== loadRequest) return
       races.value = r?.items || []
       allSubraces.value = sr?.items || []
       const subraceMap = new Map()
@@ -63,7 +66,7 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
       bgPool.value = bg?.items || []
       await equipment.ensureEquipmentCatalogueItems(bgPool.value.flatMap(backgroundReferenceIds))
     } finally {
-      loading.value = false
+      if (current === loadRequest) loading.value = false
       loadedOnce = true
     }
   }
@@ -97,15 +100,17 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
     subclasses.value = originChildren(c, allSubclasses.value, 'subclasses')
   })
   async function loadSpells() {
+    const current = ++spellRequest
     if (!state.charClass) { spellPool.value = []; return }
     const classId = state.charClass.id
     const res = await itemsApi.listAll(SPELL_TYPE, {
-      contentSources: state.contentSources,
+      contentSources: { ...state.contentSources, allowLegacy: false },
       sourceVersionId: sourceVersionId.value,
     }, {
       'classes.id': [classId],
       lvl: [0, 1],
     })
+    if (current !== spellRequest || classId !== state.charClass?.id) return
     spellPool.value = (res?.items || []).filter((sp) => {
       const lvl = Number(sp.data?.lvl ?? 0)
       if (lvl > 1) return false

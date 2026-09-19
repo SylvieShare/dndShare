@@ -270,7 +270,7 @@ const hp = computed(() => {
   const effective = { ...raw, max: { ...maximum, bonuses: [...maximum.bonuses, ...contributed] } }
   return { ...effective, max: hpMaximum(effective) }
 })
-const printArmor = computed(() => deriveEquippedArmor(values.value, catalog.value, typeId => suggest.items(typeId), derivedArmorRules(printDerivedEffects.value)))
+const printArmor = computed(() => deriveEquippedArmor(values.value, catalog.value, typeId => suggest.items(typeId), derivedArmorRules(printDerivedEffects.value), [], response.value?.sourceVersion || '2014'))
 const armorClass = computed(() => printArmor.value.total)
 const initiative = computed(() => {
   const data = values.value.initiative || {}

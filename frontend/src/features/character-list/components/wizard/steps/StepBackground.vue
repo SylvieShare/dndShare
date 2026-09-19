@@ -27,15 +27,16 @@
 
     <template #details>
       <section class="background-details">
+        <OriginChoices />
         <div class="sheet-section-title">Что даёт предыстория</div>
         <ul class="facts">
           <li v-if="backgroundSkillNames.length"><span class="fk">Навыки</span>{{ backgroundSkillNames.join(', ') }}</li>
           <li v-if="feature.title"><span class="fk">Умение</span><b>{{ feature.title }}</b>{{ feature.desc ? ' — ' + feature.desc : '' }}</li>
-          <li v-if="state.buyStartingEquipment" class="shop-replacement"><span class="fk">Снаряжение</span>Заменено закупкой за начальное богатство класса</li>
+          <li v-if="state.buyStartingEquipment && state.version !== '2024'" class="shop-replacement"><span class="fk">Снаряжение</span>Заменено закупкой за начальное богатство класса</li>
         </ul>
 
         <BlockMoneyView
-          v-if="!state.buyStartingEquipment && backgroundCoins.length"
+          v-if="(!state.buyStartingEquipment || state.version === '2024') && backgroundCoins.length"
           class="background-wallet"
           color="var(--warning)"
           tint title="Кошелёк" :loading="currencyLoading" :coins="backgroundCoins"
@@ -81,7 +82,7 @@
           </div>
         </div>
 
-        <div v-if="!state.buyStartingEquipment && displayedBackgroundEquipment.length" class="grant-group">
+        <div v-if="(!state.buyStartingEquipment || state.version === '2024') && displayedBackgroundEquipment.length" class="grant-group">
           <span class="fk">Снаряжение</span>
           <div v-if="backgroundWeaponItems.length" class="grant-subgroup">
             <span class="grant-subtitle">Оружие</span>
@@ -144,6 +145,7 @@
 </template>
 
 <script setup>
+import OriginChoices from './OriginChoices.vue'
 import { computed, inject, ref } from 'vue'
 import BackgroundSelectCard from '@/features/character-list/components/wizard/BackgroundSelectCard.vue'
 import EquipmentItemSelect from '@/features/character-list/components/wizard/EquipmentItemSelect.vue'

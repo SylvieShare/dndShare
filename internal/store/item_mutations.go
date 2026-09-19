@@ -9,16 +9,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-// UpdateBase — обновить базовый предмет по nameEn+type.
-func (s *Store) UpdateBase(ctx context.Context, nameEn, name string, data json.RawMessage, typeID int64) error {
-	data = canonicalItemData(data)
-	_, err := s.pool.Exec(ctx,
-		"UPDATE dndshare.item SET name = $1, data = CAST($2 AS jsonb) WHERE lower(name_en) = lower($3) AND type_id = $4 AND user_id IS NULL",
-		name, jsonOrEmpty(data), nameEn, typeID,
-	)
-	return err
-}
-
 // CreateBase — создать базовый (user_id NULL) предмет.
 func (s *Store) CreateBase(ctx context.Context, name, nameEn string, data json.RawMessage, typeID int64, parentID *int64, automation ItemMetadataPatch) (Item, error) {
 	if err := automation.Validate(); err != nil {
@@ -26,17 +16,39 @@ func (s *Store) CreateBase(ctx context.Context, name, nameEn string, data json.R
 	}
 	meta := automation.Initial()
 	hidden := automation.Hidden != nil && *automation.Hidden
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return Item{}, err
+	}
+	defer tx.Rollback(ctx)
+	if automation.Compatibility != nil || automation.DerivedFromItemID != nil || automation.ParentID != nil || automation.Hidden != nil {
+		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(1145980229)`); err != nil {
+			return Item{}, err
+		}
+	}
 	data = canonicalItemData(data)
 	var id int64
-	err := s.pool.QueryRow(ctx,
+	err = tx.QueryRow(ctx,
 		"INSERT INTO dndshare.item (user_id, name, name_en, data, type_id, parent_id, automation_status, automation_note, requires_player_interaction, hidden) VALUES (NULL, $1, $2, CAST($3 AS jsonb), $4, $5, $6, $7, $8, $9) RETURNING id",
 		name, nameEn, string(data), typeID, parentID, meta.AutomationStatus, meta.AutomationNote, meta.RequiresPlayerInteraction, hidden,
 	).Scan(&id)
 	if err != nil {
 		return Item{}, err
 	}
+	if err = setItemDerivation(ctx, tx, id, automation); err != nil {
+		return Item{}, err
+	}
+	if automation.Compatibility != nil {
+		if err = setItemCompatibility(ctx, tx, id, *automation.Compatibility); err != nil {
+			return Item{}, err
+		}
+	}
+	if err = tx.Commit(ctx); err != nil {
+		return Item{}, err
+	}
+
 	en := nameEn
-	return Item{Hidden: hidden, ItemAutomation: meta, ID: id, Name: name, NameEn: &en, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID}, nil
+	return Item{Compatibility: initialCompatibility(automation), Hidden: hidden, ItemAutomation: meta, ID: id, Name: name, NameEn: &en, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID}, nil
 }
 
 // Create — создать пользовательский предмет в его default custom source.
@@ -46,9 +58,19 @@ func (s *Store) Create(ctx context.Context, userID int64, name string, data json
 	}
 	meta := automation.Initial()
 	hidden := automation.Hidden != nil && *automation.Hidden
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return Item{}, err
+	}
+	defer tx.Rollback(ctx)
+	if automation.Compatibility != nil || automation.DerivedFromItemID != nil || automation.ParentID != nil || automation.Hidden != nil {
+		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(1145980229)`); err != nil {
+			return Item{}, err
+		}
+	}
 	data = canonicalItemData(data)
 	var id, customSourceID int64
-	err := s.pool.QueryRow(ctx,
+	err = tx.QueryRow(ctx,
 		`WITH default_source AS (
 		    INSERT INTO dndshare.custom_item_source (user_id, name, is_default)
 		    VALUES ($1, 'Мои материалы', true)
@@ -64,8 +86,20 @@ func (s *Store) Create(ctx context.Context, userID int64, name string, data json
 	if err != nil {
 		return Item{}, err
 	}
+	if err = setItemDerivation(ctx, tx, id, automation); err != nil {
+		return Item{}, err
+	}
+	if automation.Compatibility != nil {
+		if err = setItemCompatibility(ctx, tx, id, *automation.Compatibility); err != nil {
+			return Item{}, err
+		}
+	}
+	if err = tx.Commit(ctx); err != nil {
+		return Item{}, err
+	}
+
 	uid := userID
-	return Item{Hidden: hidden, ItemAutomation: meta, ID: id, UserID: &uid, Name: name, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID, CustomSourceID: &customSourceID}, nil
+	return Item{Compatibility: initialCompatibility(automation), Hidden: hidden, ItemAutomation: meta, ID: id, UserID: &uid, Name: name, Data: data, TypeID: typeID, CreatedAt: time.Now(), ParentID: parentID, CustomSourceID: &customSourceID}, nil
 }
 
 // Update — обновить предмет; isAdmin снимает проверку владельца.
@@ -73,8 +107,18 @@ func (s *Store) Update(ctx context.Context, id, userID int64, isAdmin bool, name
 	if err := automation.Validate(); err != nil {
 		return err
 	}
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	if automation.Compatibility != nil || automation.DerivedFromItemID != nil || automation.ParentID != nil || automation.Hidden != nil {
+		if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(1145980229)`); err != nil {
+			return err
+		}
+	}
 	data = canonicalItemData(data)
-	result, err := s.pool.Exec(ctx,
+	result, err := tx.Exec(ctx,
 		`UPDATE dndshare.item SET name = $1, name_en = $2, data = CAST($3 AS jsonb),
             automation_status = COALESCE($7, automation_status),
             automation_note = COALESCE($8, automation_note),
@@ -87,13 +131,57 @@ func (s *Store) Update(ctx context.Context, id, userID int64, isAdmin bool, name
 	if err == nil && result.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	if automation.ParentID != nil {
+		parent := automation.ParentID
+		if *parent < 0 {
+			parent = nil
+		}
+		if err = setItemParent(ctx, tx, id, parent); err != nil {
+			return err
+		}
+	}
+	if err = setItemDerivation(ctx, tx, id, automation); err != nil {
+		return err
+	}
+	if automation.Compatibility != nil {
+		if err = setItemCompatibility(ctx, tx, id, *automation.Compatibility); err != nil {
+			return err
+		}
+	}
+	if err = validateItemEditionGraph(ctx, tx, id); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
 }
 
-// SetParent — переустановить parent_id.
-func (s *Store) SetParent(ctx context.Context, id int64, parentID *int64) error {
-	_, err := s.pool.Exec(ctx, "UPDATE dndshare.item SET parent_id = $1 WHERE id = $2", parentID, id)
-	return err
+func setItemParent(ctx context.Context, tx pgx.Tx, id int64, parentID *int64) error {
+	var err error
+	if parentID != nil {
+		var valid, cycle bool
+		if err = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM dndshare.item i JOIN dndshare.item p ON p.id=$2 JOIN dndshare.item_type it ON it.id=i.type_id JOIN dndshare.item_type pt ON pt.id=p.type_id WHERE i.id=$1 AND it.source_id=pt.source_id AND (p.user_id IS NULL OR p.user_id=i.user_id) AND NOT p.hidden)`, id, *parentID).Scan(&valid); err != nil {
+			return err
+		}
+		if !valid {
+			return &RulesValidationError{Message: "Родитель недоступен или принадлежит другой системе"}
+		}
+		if err = tx.QueryRow(ctx, `WITH RECURSIVE chain(id,path) AS (SELECT $2::bigint,ARRAY[$2::bigint] UNION ALL SELECT i.parent_id,chain.path||i.parent_id FROM chain JOIN dndshare.item i ON i.id=chain.id WHERE i.parent_id IS NOT NULL AND NOT i.parent_id=ANY(chain.path)) SELECT EXISTS(SELECT 1 FROM chain WHERE id=$1)`, id, *parentID).Scan(&cycle); err != nil {
+			return err
+		}
+		if cycle {
+			return &RulesValidationError{Message: "Родительские связи образуют цикл"}
+		}
+	}
+	result, err := tx.Exec(ctx, "UPDATE dndshare.item SET parent_id = $1 WHERE id = $2", parentID, id)
+	if err != nil {
+		return err
+	}
+	if result.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
 
 // MakeBase — сделать предмет базовым (user_id = NULL).
@@ -103,6 +191,9 @@ func (s *Store) MakeBase(ctx context.Context, id int64) error {
 		return err
 	}
 	defer tx.Rollback(ctx)
+	if _, err = tx.Exec(ctx, `SELECT pg_advisory_xact_lock(1145980229)`); err != nil {
+		return err
+	}
 	var imageID, coverImageID *int64
 	err = tx.QueryRow(ctx,
 		`UPDATE dndshare.item
@@ -115,6 +206,9 @@ func (s *Store) MakeBase(ctx context.Context, id int64) error {
 		return ErrNotFound
 	}
 	if err != nil {
+		return err
+	}
+	if err = validateItemEditionGraph(ctx, tx, id); err != nil {
 		return err
 	}
 	if imageID != nil {

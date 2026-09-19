@@ -60,6 +60,7 @@ function abilityRequirementLabel(row) {
 export function evaluateFeatEligibility(item, context = {}) {
   const prereq = featPrereq(item)
   const reasons = []
+  if (context.category && item?.data?.category !== context.category) reasons.push('Требуется черта категории: ' + context.category)
   const minStats = asArray(prereq.min_stats).filter((row) => number(row?.ability) != null && number(row?.value) != null)
   if (minStats.length) {
     const checks = minStats.map((row) => scoreFor(context, row.ability) >= number(row.value))
@@ -70,7 +71,8 @@ export function evaluateFeatEligibility(item, context = {}) {
 
   if (prereq.spellcasting && !context.spellcasting) reasons.push('Способность накладывать заклинания')
 
-  const minLevel = number(prereq.min_level)
+  const categoryLevel = { general: 4, epic_boon: 19 }[item?.data?.category] || null
+  const minLevel = categoryLevel == null ? number(prereq.min_level) : Math.max(categoryLevel, number(prereq.min_level) || 0)
   if (minLevel != null && (number(context.level) || 0) < minLevel) reasons.push(`${minLevel} уровень`)
 
   const armorRequired = asArray(prereq.armor_prof).map(number).filter((id) => id != null)

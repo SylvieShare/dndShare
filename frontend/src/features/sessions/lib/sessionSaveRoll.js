@@ -1,3 +1,4 @@
+import { dndRules } from '@/shared/lib/dndRules'
 import { featureItemIds } from '@/features/character-editor/lib/characterMagicItems'
 import { collectStatusDerivedEffects } from '@/features/character-editor/lib/characterStatuses'
 import { collectCharacterDerivedEffects, derivedNumericBonus, derivedProficiency, derivedGrantedProficiencies, derivedRollEffects, matchingDerivedEffects } from '@/features/character-editor/lib/characterDerivedEffects'
@@ -18,6 +19,7 @@ export function sessionSaveProfile(target, ability, items, manualMode = 'auto', 
   const snapshot = target.snapshot || {}, values = snapshot.values || {}
   const npc = target.kind === 'npc', combatant = snapshot.combatant || {}, data = snapshot.item || {}
   const rules = npc ? collectStatusDerivedEffects({ states: combatant.effectInstances || [] }, items) : collectCharacterDerivedEffects(values, items)
+  if (!npc && snapshot.rulesVersion === '2024') rules.push(...dndRules('2024').exhaustionEffects(values.exhaustion?.level))
   const stat = values[key] || {}
   const npcData = { ...data.stats, ...combatant.override }
   let score = npc ? Number(npcData[key?.toLowerCase()] ?? 10) : resolveNumValue(stat.value ?? 10)
@@ -33,7 +35,7 @@ export function sessionSaveProfile(target, ability, items, manualMode = 'auto', 
     bonus += sumBonuses(stat.save_bonuses)
   }
   bonus += derivedNumericBonus(rules, 'save_bonus', values, context).total
-  const armorModes = npc ? [] : armorAbilityRollEffects(deriveEquippedArmor(values, items, suggestItems, {}, derivedGrantedProficiencies(rules, 'armor_proficiency')), ability)
+  const armorModes = npc ? [] : armorAbilityRollEffects(deriveEquippedArmor(values, items, suggestItems, {}, derivedGrantedProficiencies(rules, 'armor_proficiency'), snapshot.rulesVersion || '2014'), ability)
   const mode = resolveRollMode(manualMode === 'auto' ? stat.save_roll_mode || 'auto' : manualMode, [...derivedRollEffects(rules, context), ...armorModes])
   return { bonus, ...mode, formula: matchingDerivedEffects(rules, 'roll_bonus', context).map(rule => rule.formula).filter(Boolean).join(' + ') }
 }

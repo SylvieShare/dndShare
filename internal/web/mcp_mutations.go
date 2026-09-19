@@ -77,17 +77,9 @@ func (s *Server) toolItemUpdate(ctx context.Context, args map[string]json.RawMes
 	if err != nil {
 		return nil, err
 	}
+	automation.ParentID = parentID
 	if err := s.store.Update(ctx, id, mcpAdminUser, true, name, nameEn, data, automation); err != nil {
 		return nil, err
-	}
-	if parentID != nil {
-		var p *int64
-		if *parentID >= 0 {
-			p = parentID
-		}
-		if err := s.store.SetParent(ctx, id, p); err != nil {
-			return nil, err
-		}
 	}
 	items, err := s.store.GetByIds(ctx, []int64{id}, nil)
 	if err != nil {

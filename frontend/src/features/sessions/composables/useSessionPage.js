@@ -71,6 +71,7 @@ export function useSessionPage() {
   const sessionTimers = useSessionTimers({ sessionUuid })
   watch(() => presentation.state.value.broadcastMusic, enabled => musicStore.setRemotePlayback(enabled), { immediate: true })
   const { settings: sessionSettings, update: updateSessionSetting, saving: settingsSaving, error: settingsError } = useSessionSettings({ sessionUuid, session })
+  provide('itemEditionId', computed(() => session.value?.sourceVersionId))
   provide('sessionMaterials', sessionMaterials)
   provide('sessionWorld', sessionWorld)
   provide('sessionPresentation', presentation)

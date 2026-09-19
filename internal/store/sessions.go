@@ -21,6 +21,8 @@ type GameSession struct {
 	Name             string          `json:"name"`
 	Status           string          `json:"status"`
 	Description      *string         `json:"description,omitempty"`
+	SourceVersionID  *int64          `json:"sourceVersionId,omitempty"`
+	RulesVersion     *string         `json:"rulesVersion,omitempty"`
 	SystemID         *int64          `json:"systemId,omitempty"`
 	SystemName       *string         `json:"systemName,omitempty"`
 	DisplayCode      string          `json:"displayCode"`
@@ -32,18 +34,20 @@ type GameSession struct {
 
 // SessionParticipantData — участник сессии с данными персонажа (порт model/SessionParticipantData.kt).
 type SessionParticipantData struct {
-	UserID        int64          `json:"-"`
-	CanOpenSheet  bool           `json:"canOpenSheet"`
-	CharID        int64          `json:"charId"`
-	CharUUID      string         `json:"charUuid"`
-	Version       int64          `json:"version"`
-	TemplateID    int64          `json:"templateId"`
-	TemplateName  string         `json:"templateName"`
-	IconImageURL  *string        `json:"iconImageUrl,omitempty"`
-	Data          map[string]any `json:"data"`
-	Role          string         `json:"role"`
-	Color         *string        `json:"color,omitempty"`
-	PublicVisible bool           `json:"publicVisible"`
+	SourceVersionID *int64         `json:"sourceVersionId,omitempty"`
+	SourceVersion   *string        `json:"sourceVersion,omitempty"`
+	UserID          int64          `json:"-"`
+	CanOpenSheet    bool           `json:"canOpenSheet"`
+	CharID          int64          `json:"charId"`
+	CharUUID        string         `json:"charUuid"`
+	Version         int64          `json:"version"`
+	TemplateID      int64          `json:"templateId"`
+	TemplateName    string         `json:"templateName"`
+	IconImageURL    *string        `json:"iconImageUrl,omitempty"`
+	Data            map[string]any `json:"data"`
+	Role            string         `json:"role"`
+	Color           *string        `json:"color,omitempty"`
+	PublicVisible   bool           `json:"publicVisible"`
 }
 
 // ParticipantBrief — краткая инфа об участнике для списка сессий.
@@ -69,15 +73,16 @@ const sessionSelect = `
 	SELECT s.id, s.uuid::text, s.owner_user_id, s.name, s.description, s.system_id,
 	       src.name AS source_name, s.display_code, s.invite_code, s.current_chapter_id,
 	       s.created_at, s.changed_at, s.status,
- s.settings
+ s.settings, s.source_version_id, sv.version
 	FROM dndshare."session" s
-	LEFT JOIN dndshare."source" src ON src.id = s.system_id`
+	LEFT JOIN dndshare."source" src ON src.id = s.system_id
+ LEFT JOIN dndshare.source_version sv ON sv.id=s.source_version_id`
 
 func scanGameSession(row pgx.Row) (GameSession, error) {
 	var g GameSession
 	err := row.Scan(&g.ID, &g.UUID, &g.OwnerUserID, &g.Name, &g.Description, &g.SystemID,
 		&g.SystemName, &g.DisplayCode, &g.InviteCode, &g.CurrentChapterID, &g.CreatedAt, &g.ChangedAt, &g.Status,
-		&g.Settings)
+		&g.Settings, &g.SourceVersionID, &g.RulesVersion)
 	return g, err
 }
 
@@ -151,10 +156,11 @@ func (s *Store) GetGameSessionByInviteCode(ctx context.Context, code string) (Ga
 func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]SessionParticipantData, error) {
 	rows, err := s.pool.Query(ctx,
 		`SELECT sp.char_id, sp.role, sp.color, c.uuid::text AS char_uuid, c.version, c.data AS char_data,
-		        c.template_id, ct.name AS template_name, icon.url AS icon_image_url, c.public_visible, c.user_id
+		        c.template_id, ct.name AS template_name, icon.url AS icon_image_url, c.public_visible, c.user_id, c.source_version_id, sv.version
 		 FROM dndshare.session_participant sp
 		 JOIN dndshare."char" c ON c.id = sp.char_id AND c.deleted = false
 		 JOIN dndshare.char_template ct ON ct.id = c.template_id
+ LEFT JOIN dndshare.source_version sv ON sv.id=c.source_version_id
 		 LEFT JOIN dndshare.storage_image icon ON icon.id = c.icon_image_id AND icon.deleted = false
 		 WHERE sp.session_id = $1
 		 ORDER BY sp.sort_order, sp.id`,
@@ -168,7 +174,7 @@ func (s *Store) GetSessionParticipants(ctx context.Context, sessionID int64) ([]
 	for rows.Next() {
 		var p SessionParticipantData
 		var charData []byte
-		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &p.Version, &charData, &p.TemplateID, &p.TemplateName, &p.IconImageURL, &p.PublicVisible, &p.UserID); err != nil {
+		if err := rows.Scan(&p.CharID, &p.Role, &p.Color, &p.CharUUID, &p.Version, &charData, &p.TemplateID, &p.TemplateName, &p.IconImageURL, &p.PublicVisible, &p.UserID, &p.SourceVersionID, &p.SourceVersion); err != nil {
 			return nil, err
 		}
 		_ = json.Unmarshal(charData, &p.Data)
@@ -288,7 +294,7 @@ func (s *Store) GetCurrentChapters(ctx context.Context, sessionIDs []int64) (map
 }
 
 // CreateSessionWithFirstArc создаёт сессию и её пустую первую арку одной транзакцией.
-func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, name string, description *string, systemID *int64) (int64, string, error) {
+func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, name string, description *string, systemID *int64, editionID ...*int64) (int64, string, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return 0, "", err
@@ -298,6 +304,12 @@ func (s *Store) CreateSessionWithFirstArc(ctx context.Context, userID int64, nam
 	id, uuid, err := insertSessionWithDisplayCode(ctx, tx, userID, name, description, systemID)
 	if err != nil {
 		return 0, "", err
+	}
+
+	if len(editionID) > 0 && editionID[0] != nil {
+		if _, err = tx.Exec(ctx, `UPDATE dndshare."session" SET source_version_id=$2 WHERE id=$1`, id, editionID[0]); err != nil {
+			return 0, "", err
+		}
 	}
 
 	if _, err := tx.Exec(ctx,

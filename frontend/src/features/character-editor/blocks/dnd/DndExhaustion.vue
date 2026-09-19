@@ -43,7 +43,7 @@ const charCtx = inject('charCtx', { ownerMode: true })
 const canEdit = computed(() => !!charCtx.ownerMode)
 const { editorOpen, originRect, originEl, open: openMorph, close } = useMorphOrigin()
 
-const normalized = computed(() => normalizeExhaustion(props.value))
+const normalized = computed(() => normalizeExhaustion(props.value, charCtx.rulesVersion))
 const data = computed(() => normalized.value.data)
 const effects = computed(() => normalized.value.effects)
 const level = computed(() => normalized.value.level)

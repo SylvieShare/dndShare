@@ -5,6 +5,7 @@ const ViewAdmin = () => import('@/features/admin/pages/ViewAdmin')
 const ViewHandbook = () => import('@/features/handbook/pages/ViewHandbook')
 const ViewDictionary = () => import('@/features/handbook/dictionary/ViewDictionary')
 const ViewDnd5e2014Rules = () => import('@/features/handbook/rules/pages/ViewDnd5e2014Rules.vue')
+const ViewDnd5e2024Rules = () => import('@/features/handbook/rules/pages/ViewDnd5e2024Rules.vue')
 const ViewRulesEditionFallback = () => import('@/features/handbook/rules/pages/ViewRulesEditionFallback.vue')
 const ViewRulesEntry = () => import('@/features/handbook/rules/pages/ViewRulesEntry.vue')
 const ViewVtmV20Rules = () => import('@/features/handbook/rules/pages/ViewVtmV20Rules.vue')
@@ -222,6 +223,12 @@ const routes = [
         name: 'PlayerRuleArticle',
         component: ViewDnd5e2014Rules,
         meta: { title: 'Правила', section: 'rules', depth: 1, mobileBackTo: { name: 'PlayerRules' } },
+    },
+    {
+        path: '/rules/dnd5e/2024',
+        name: 'PlayerRules2024',
+        component: ViewDnd5e2024Rules,
+        meta: { title: 'Правила D&D 5e 2024', section: 'rules', depth: 0 },
     },
     {
         path: '/rules/vampire-tm/v20',

@@ -58,7 +58,7 @@ const DEPENDENCY_NAMES = {
 }
 
 export function abilityEditorProfile(fields, typeId) {
-  const basicKeys = Number(typeId) === 19 ? [...BASIC_KEYS, ...MAGIC_ITEM_PROPERTY_KEYS] : Number(typeId) === 7 ? [...BASIC_KEYS, 'description', 'repeatable', 'unique_choice_key'] : BASIC_KEYS
+  const basicKeys = Number(typeId) === 19 ? [...BASIC_KEYS, ...MAGIC_ITEM_PROPERTY_KEYS] : Number(typeId) === 7 ? [...BASIC_KEYS, 'description', 'category', 'repeatable', 'unique_choice_key'] : BASIC_KEYS
   const bindings = Number(typeId) === 3 ? BINDING_KEYS.slice(0, 2)
     : Number(typeId) === 4 ? BINDING_KEYS.slice(2) : []
   const primary = fields.filter(field => basicKeys.includes(field.key) || bindings.includes(field.key))

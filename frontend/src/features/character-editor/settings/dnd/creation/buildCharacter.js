@@ -1,3 +1,4 @@
+import { backgroundAbilities, originAbilityBonuses } from '@/shared/lib/dndRules'
 import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapons'
 /**
  * D&D create-flow assembler — the pure "brain" of the creation wizard.
@@ -106,7 +107,7 @@ function attachAbilityChoices(entries, choices) {
 export function buildCharacterData(input) {
   const {
     name = '', race, subrace = null, charClass, subclass = null, raceVariant = null,
-    background = null,
+    background = null, rulesVersion = '2014', backgroundAsi = {}, originFeat = null, originFeatChoices = {},
     scores = {}, asiChoice = [], skillIds = [], spellIds = [], spellLevels = {}, grantedSpellIds = [], choices = [],
     classToolProficiencyIds = [],
     raceSkillIds = [], raceLangIds = [], featIds = [], feats = [], bgLangIds = [],
@@ -117,6 +118,7 @@ export function buildCharacterData(input) {
   } = input || {}
 
   const grants = extractGrants({
+    rulesVersion,
     race: race?.item, subrace: subrace?.item,
     charClass: charClass?.item, subclass: subclass?.item,
     classToolProficiencyIds,
@@ -124,7 +126,9 @@ export function buildCharacterData(input) {
     backgroundToolProficiencies,
   })
   const backgroundStart = backgroundEquipment || { items: [], coins: {} }
-  const featEntries = feats.map(({ item, choices }) => featEntry(item, choices || {}))
+  const selectedFeats = rulesVersion === '2024' && originFeat && (originFeat.data?.repeatable || !feats.some(row => row.item.id === originFeat.id)) ? [...feats, { item: originFeat, choices: originFeatChoices }] : feats
+  const originBonuses = originAbilityBonuses(rulesVersion, backgroundAbilities(background?.item), backgroundAsi) || []
+  const featEntries = selectedFeats.map(({ item, choices }) => featEntry(item, choices || {}))
 
   const raceBinding = { raceId: race?.id, subraceId: subrace?.id }
   const classBinding = { classId: charClass?.id, subclassId: subclass?.id }
@@ -143,15 +147,15 @@ export function buildCharacterData(input) {
     const base = Number(scores[stat] ?? 10)
     const fixed = (grants.asi || []).filter((a) => a.stat === stat).reduce((s, a) => s + a.bonus, 0)
     const floating = asiChoice.includes(stat) ? floatBonus : 0
-    const racial = fixed + floating
-    const bonuses = racial ? [{ name: ref(race)?.name || 'Раса', title: ref(race)?.name || 'Раса', value: racial, readonly: true }] : []
+    const racial = rulesVersion === '2024' ? (originBonuses.find(row => row.stat === stat)?.bonus || 0) : fixed + floating
+    const bonuses = racial ? [{ name: (rulesVersion === '2024' ? ref(background)?.name : ref(race)?.name) || 'Происхождение', title: (rulesVersion === '2024' ? ref(background)?.name : ref(race)?.name) || 'Происхождение', value: racial, readonly: true }] : []
     values[stat] = { ...(values[stat] || {}), value: { base, bonuses } }
     finalScore[stat] = base + racial
   }
 
   // Feat ability bonuses are part of the starting score and therefore affect
   // derived level-1 values such as HP. Each bonus row remains named and auditable.
-  for (const [featIndex, { item, choices: featChoices = {} }] of feats.entries()) {
+  for (const [featIndex, { item, choices: featChoices = {} }] of selectedFeats.entries()) {
     const sourceFeatKey = `feat:${featEntries[featIndex]?.uid || item.id}`
     for (const bonus of featAbilityBonuses(item, featChoices)) {
       const block = { ...(values[bonus.stat] || {}) }
@@ -164,7 +168,7 @@ export function buildCharacterData(input) {
     }
   }
 
-  for (const [featIndex, { item }] of feats.entries()) {
+  for (const [featIndex, { item }] of selectedFeats.entries()) {
     featEntries[featIndex].count = abilityUseTotal(item.data, values, featEntries[featIndex]) || 0
   }
 
@@ -190,9 +194,9 @@ export function buildCharacterData(input) {
 
   // Chosen feats (handbook type 7) → the sheet's Черты block (`abilities_feats`)
   // plus simple static proficiencies that can be applied without a combat rules engine.
-  if (feats.length) {
+  if (selectedFeats.length) {
     values.abilities_feats = featEntries
-    for (const { item, choices: featChoices = {} } of feats) {
+    for (const { item, choices: featChoices = {} } of selectedFeats) {
       const featGrant = featGrants(item, featChoices)
       addProficiencies(values, 'Доспехи', (featGrant.armor_prof || []).map((id) => suggestValue?.(3, id)).filter(Boolean))
       addProficiencies(values, 'Оружие', (featGrant.weapon_prof || []).map((id) => suggestValue?.(4, id)).filter(Boolean))
@@ -207,7 +211,7 @@ export function buildCharacterData(input) {
   }
   else if (featIds.length) values.abilities_feats = featIds.map((id) => ({ id }))
 
-  const featSpellIds = feats.flatMap(({ item, choices: featChoices = {} }) => featGrantedSpellIds(item, featChoices))
+  const featSpellIds = selectedFeats.flatMap(({ item, choices: featChoices = {} }) => featGrantedSpellIds(item, featChoices))
 
   // Feature choices: skill/language picks are applied mechanically. The shared
   // selection contract lives on the ability entry; `feature_choices` remains a
@@ -232,7 +236,7 @@ export function buildCharacterData(input) {
     ...classAbilityIds,
     ...(values.abilities_feats || []).map((entry) => entry.id),
   ].map(String))
-  const abilityGrantItems = [...raceAbilityItems, ...classAbilityItems, ...feats.map((entry) => entry.item)]
+  const abilityGrantItems = [...raceAbilityItems, ...classAbilityItems, ...selectedFeats.map((entry) => entry.item)]
     .filter((item, index, all) => item?.id != null
       && activeAbilityIds.has(String(item.id))
       && all.findIndex((candidate) => String(candidate?.id) === String(item.id)) === index)
@@ -254,7 +258,7 @@ export function buildCharacterData(input) {
     const classTab = charClass && (grants.spellcasting || spellIds.length || grantedSpellIds.length)
       ? spellTabFromClass(charClass.item || charClass, classRules, {
           spells: [...new Set(spellIds)].map((id) => spellEntry(id, {
-            prepared: classRules.selectionMode !== 'known' && Number(spellLevels[String(id)]) > 0,
+            prepared: classRules.selectionMode !== 'known' && !(rulesVersion === '2024' && classRules.selectionMode === 'spellbook') && Number(spellLevels[String(id)]) > 0,
           })),
         })
       : null
@@ -265,7 +269,7 @@ export function buildCharacterData(input) {
       source: { kind: 'class', item_id: classGrantSource?.id, label: classGrantSource?.name || 'Класс' },
       ...(classTab ? { tab_key: classTab.key } : {}),
     }))
-    grantedEntries.push(...feats.flatMap(({ item, choices: featChoices = {} }) =>
+    grantedEntries.push(...selectedFeats.flatMap(({ item, choices: featChoices = {} }) =>
       featGrantedSpellIds(item, featChoices).map((id) => ({
         key: `feat:${item.id}:spell:${id}`,
         id,
@@ -293,10 +297,10 @@ export function buildCharacterData(input) {
     if (featTitle || featDesc) {
       values.notes = `Умение предыстории — ${featTitle}${featTitle && featDesc ? ': ' : ''}${featDesc}`
     }
-    if (!buyStartingEquipment) values.money = addStartingCoins(values.money, backgroundStart.coins)
+    if (!buyStartingEquipment || rulesVersion === '2024') values.money = addStartingCoins(values.money, backgroundStart.coins)
   }
 
-  if (buyStartingEquipment) values.money = addStartingCoins(values.money, startingWallet)
+  if (buyStartingEquipment || rulesVersion === '2024') values.money = addStartingCoins(values.money, startingWallet)
 
   // Catalogue weapons added on the equipment step belong to the dedicated
   // weapon block. That block has no quantity field, so multiple copies become
@@ -304,7 +308,7 @@ export function buildCharacterData(input) {
   // references as class equipment, including functional weapons and armor.
   // Buying with class wealth replaces both the class kit and the background's
   // possessions. Only purchases enter inventory; unspent change enters money.
-  const startingEquipment = mergeEquipment(equipment, buyStartingEquipment ? [] : backgroundStart.items)
+  const startingEquipment = mergeEquipment(equipment, buyStartingEquipment && rulesVersion !== '2024' ? [] : backgroundStart.items)
   const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.item_id != null
   const isCataloguePotion = (entry) => Number(entry.typeId) === 10 && entry.item_id != null
   const weapons = startingEquipment.filter(isCatalogueWeapon)

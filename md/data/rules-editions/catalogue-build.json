@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-19",
+  "source": "Local PHB 2024 PDF; explicit 2014 matching and table audit",
+  "records": 1223,
+  "shared": 13,
+  "byType": {
+    "5": 391,
+    "1": 38,
+    "14": 39,
+    "2": 94,
+    "10": 1,
+    "9": 12,
+    "17": 48,
+    "4": 473,
+    "7": 75,
+    "11": 16,
+    "8": 10,
+    "3": 10,
+    "15": 16
+  },
+  "automation": {
+    "none": 1096,
+    "partial": 124,
+    "full": 3
+  },
+  "originalDefinitionsReferenced": 655,
+  "notAudited": [
+    "DMG 2024",
+    "Monster Manual 2024",
+    "All unreprinted TCE/XGE options"
+  ]
+}

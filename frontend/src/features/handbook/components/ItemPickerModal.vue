@@ -138,7 +138,9 @@
 </template>
 
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { itemEditionEligibility } from '@/shared/lib/itemCompatibility'
+import { useGameContextStore } from '@/stores/gameContext'
+import { provide, computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ArrowLeft } from '@lucide/vue'
 import { fetchGet } from '@/shared/api/http'
 import { contentScopeQuery, contentSourcesApi, normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
@@ -179,12 +181,15 @@ const props = defineProps({
 const emit = defineEmits(['close', 'pick'])
 const quantity = ref(1)
 const basePending = ref(null)
+const gameContext = useGameContextStore()
 const charCtx = inject('charCtx', null)
+const inheritedEdition = inject('itemEditionId', null)
 const createWizard = inject('createWizard', null)
 const effectiveContentSources = computed(() =>
   props.contentSources || createWizard?.state?.contentSources || charCtx?.contentSources || null)
 const effectiveSourceVersionId = computed(() =>
-  props.sourceVersionId ?? createWizard?.sourceVersionId?.value ?? createWizard?.sourceVersionId ?? charCtx?.sourceVersionId ?? null)
+  props.sourceVersionId ?? createWizard?.sourceVersionId?.value ?? createWizard?.sourceVersionId ?? charCtx?.sourceVersionId ?? inheritedEdition?.value ?? inheritedEdition ?? gameContext.sourceVersionId ?? null)
+provide('itemEditionId', effectiveSourceVersionId)
 
 const allTypes = ref([])
 const activeTypeId = ref(props.itemTypeIds[0] ?? null)
@@ -247,6 +252,8 @@ const filteredItems = computed(() =>
 )
 
 const selectedEligibility = computed(() => {
+  const edition = itemEditionEligibility(selectedItem.value, effectiveSourceVersionId.value)
+  if (selectedItem.value && !edition.eligible) return edition
   if (!selectedItem.value || !props.itemEligibility) return { eligible: true, reasons: [], text: '' }
   return props.itemEligibility(selectedItem.value) || { eligible: true, reasons: [], text: '' }
 })

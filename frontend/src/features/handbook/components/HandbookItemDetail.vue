@@ -41,6 +41,8 @@
         </template>
       </ItemDetailHeader>
 
+      <ItemEditionNotice :item="item" :z-index="nestedViewZIndex" />
+
       <!-- Custom renderer (Weapon, Spell, Enemy…) -->
       <component
         v-if="customRenderer"
@@ -136,6 +138,7 @@
 <script setup>
 import UsableDetail from '@/features/items/detail-components/UsableDetail.vue'
 import ItemCreationDetail from '@/features/items/detail-components/ItemCreationDetail.vue'
+import ItemEditionNotice from '@/features/items/components/ItemEditionNotice.vue'
 import ItemAutomationBadge from '@/features/items/components/ItemAutomationBadge.vue'
 import ItemInstanceNotes from '@/features/items/detail-components/ItemInstanceNotes.vue'
 import { computed, provide, watch } from 'vue'

@@ -49,7 +49,7 @@ const summary = computed(() => {
 })
 const filteredSources = computed(() => props.sources.filter(source => `${source.name} ${source.code || ''}`.toLocaleLowerCase('ru').includes(search.value.toLocaleLowerCase('ru'))))
 function sourceLabel(source) {
-  const status = { legacy: 'Legacy', compatible: 'Совместим' }[source.compatibilityStatus]
+  const status = { legacy: 'Прежние версии', compatible: 'Есть совместимые записи', requires_adaptation: 'Нужна адаптация' }[source.compatibilityStatus]
   return [source.name, source.code, status].filter(Boolean).join(' · ')
 }
 function toggle(id) {

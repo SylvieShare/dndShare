@@ -33,7 +33,7 @@
               <span class="chip-roman">Глава {{ session.chapterNumber }}</span>
               <span v-if="session.chapterName">{{ session.chapterName }}</span>
             </span>
-            <span v-if="session.systemName" class="hero-chip">{{ session.systemName }}</span>
+            <span v-if="session.systemName" class="hero-chip">{{ session.systemName }} {{ session.rulesVersion }}</span>
           </div>
           <p v-if="session.description" class="hero-desc">{{ session.description }}</p>
         </div>
@@ -66,6 +66,7 @@
             <div class="tile-info">
               <div class="tile-name">{{ displayName(char) }}</div>
               <div v-if="who(char)" class="tile-who">{{ who(char) }}</div>
+              <p v-if="session.sourceVersionId && char.sourceVersionId && Number(session.sourceVersionId) !== Number(char.sourceVersionId)" class="tile-who">Персонаж: {{ char.sourceVersion }}. Сессия: {{ session.rulesVersion }}. Правила листа сохранятся; различия согласуйте с мастером.</p>
               <div class="tile-meta">
                 <span v-if="lvl(char)" class="meta-lvl">Ур.&nbsp;{{ lvl(char) }}</span>
                 <span v-if="templateName(char.templateId)" class="meta-tpl">{{ templateName(char.templateId) }}</span>

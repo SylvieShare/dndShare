@@ -177,9 +177,10 @@ func buildListItem(g store.GameSession, parts []store.ParticipantBrief, role str
 }
 
 type createSessionRequest struct {
-	Name        string  `json:"name"`
-	Description *string `json:"description"`
-	SystemID    *int64  `json:"systemId"`
+	SourceVersionID *int64  `json:"sourceVersionId"`
+	Name            string  `json:"name"`
+	Description     *string `json:"description"`
+	SystemID        *int64  `json:"systemId"`
 }
 
 type sessionCreatedResponse struct {
@@ -197,7 +198,7 @@ func (s *Server) handleCreateSession(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный запрос")
 		return
 	}
-	id, uuid, err := s.store.CreateSessionWithFirstArc(r.Context(), userID, req.Name, req.Description, req.SystemID)
+	id, uuid, err := s.store.CreateSessionWithFirstArc(r.Context(), userID, req.Name, req.Description, req.SystemID, req.SourceVersionID)
 	if err != nil {
 		serverError(w, err)
 		return

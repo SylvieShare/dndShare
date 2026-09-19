@@ -62,6 +62,7 @@ import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 import { isInspirationActive } from '@/features/character-editor/blocks/dnd/lib/mobileStatus'
 import StatusDurationModal from './components/StatusDurationModal.vue'
+import { dndRules } from '@/shared/lib/dndRules'
 import { statusDuration } from '@/shared/lib/statusDuration'
 
 const props = defineProps({
@@ -103,7 +104,7 @@ const activeItems = computed(() => statuses.value.map(status => ({
 })))
 const durationStatus = computed(() => statuses.value.find(status => status.uid === durationUid.value))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
-const normalizedExhaustion = computed(() => normalizeExhaustion(exhaustionValue.value))
+const normalizedExhaustion = computed(() => normalizeExhaustion(exhaustionValue.value, charCtx.rulesVersion))
 const exhaustionLevel = computed(() => normalizedExhaustion.value.level)
 const exhaustionEffects = computed(() => normalizedExhaustion.value.effects.slice(0, exhaustionLevel.value))
 const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
@@ -127,9 +128,9 @@ const displayItems = computed(() => [
   ...(inspirationActive.value ? [{
     id: 'inspiration',
     kind: 'inspiration',
-    value: inspirationItem.value?.name || 'Вдохновение',
+    value: inspirationItem.value?.name || dndRules(charCtx.rulesVersion).inspirationName,
     desc: inspirationItem.value?.data?.desc || '',
-    thesis: inspirationItem.value?.data?.thesis || '- Преимущество на один бросок атаки, проверки или спасброска',
+    thesis: inspirationItem.value?.data?.thesis || dndRules(charCtx.rulesVersion).inspirationDescription,
     color: inspirationItem.value?.data?.color || 'var(--accent)',
     item: inspirationItem.value,
   }] : []),

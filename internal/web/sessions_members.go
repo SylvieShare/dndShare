@@ -11,14 +11,16 @@ import (
 )
 
 type sessionByCodeResponse struct {
-	UUID          string  `json:"uuid"`
-	Name          string  `json:"name"`
-	Description   *string `json:"description,omitempty"`
-	SystemName    *string `json:"systemName,omitempty"`
-	ChapterNumber *string `json:"chapterNumber,omitempty"`
-	ChapterName   *string `json:"chapterName,omitempty"`
-	ArcOrder      *int    `json:"arcOrder,omitempty"`
-	ArcName       *string `json:"arcName,omitempty"`
+	SourceVersionID *int64  `json:"sourceVersionId,omitempty"`
+	RulesVersion    *string `json:"rulesVersion,omitempty"`
+	UUID            string  `json:"uuid"`
+	Name            string  `json:"name"`
+	Description     *string `json:"description,omitempty"`
+	SystemName      *string `json:"systemName,omitempty"`
+	ChapterNumber   *string `json:"chapterNumber,omitempty"`
+	ChapterName     *string `json:"chapterName,omitempty"`
+	ArcOrder        *int    `json:"arcOrder,omitempty"`
+	ArcName         *string `json:"arcName,omitempty"`
 }
 
 func (s *Server) handleGetSessionByCode(w http.ResponseWriter, r *http.Request) {
@@ -36,10 +38,11 @@ func (s *Server) handleGetSessionByCode(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	resp := sessionByCodeResponse{
-		UUID:        session.UUID,
-		Name:        session.Name,
-		Description: session.Description,
-		SystemName:  session.SystemName,
+		UUID:            session.UUID,
+		Name:            session.Name,
+		Description:     session.Description,
+		SystemName:      session.SystemName,
+		SourceVersionID: session.SourceVersionID, RulesVersion: session.RulesVersion,
 	}
 	if session.CurrentChapterID != nil {
 		chapter, err := s.store.GetChapterByID(r.Context(), *session.CurrentChapterID)

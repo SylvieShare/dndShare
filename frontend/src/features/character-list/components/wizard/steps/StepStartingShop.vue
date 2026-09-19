@@ -9,7 +9,7 @@
           <small>× {{ state.startingWealthRoll.multiplier }}</small>
         </div>
       </div>
-      <button type="button" class="reroll" @click="requestReroll">
+      <button v-if="fixedStartingGold == null" type="button" class="reroll" @click="requestReroll">
         <Dices :size="17" aria-hidden="true" />
         Перебросить
       </button>
@@ -125,7 +125,7 @@ import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { formatCopper, itemCostCopper } from '@/features/character-editor/settings/dnd/creation/startingShop'
 
 const {
-  state, shopLoading, startingShopItems, startingWealthFormulaLabel,
+  state, shopLoading, startingShopItems, startingWealthFormulaLabel, fixedStartingGold,
   shopSpentLabel, shopRemainingLabel,
   addShopItem, removeShopItem, bumpShopItem, canBuyShopItem, rerollStartingWealth,
 } = inject('createWizard')

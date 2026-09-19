@@ -233,7 +233,7 @@ export function resolveStartingEquipmentProfile(profile, catalogue = []) {
       byName.set(key, entry)
     }
   }
-  const resolveItem = (entry) => ({ ...entry, item: byName.get(catalogueKey(entry.name)) || null })
+  const resolveItem = (entry) => ({ ...entry, item: entry.item_id ? catalogue.find(item => Number(item.id) === Number(entry.item_id)) || null : byName.get(catalogueKey(entry.name)) || null })
   return {
     ...profile,
     groups: profile.groups.map((groupDef) => ({
@@ -257,7 +257,13 @@ export function resolveStartingEquipmentProfile(profile, catalogue = []) {
   }
 }
 
-export function startingEquipmentProfile(charClass) {
+export function startingEquipmentProfile(charClass, version = '2014') {
+  if (String(version) === '2024') {
+    const profile = charClass?.data?.starting_kit
+    return profile && typeof profile === 'object' && !Array.isArray(profile)
+      ? { key: `2024:${charClass.id}`, groups: [], fixed: [], fixedPicks: [], ...profile }
+      : null
+  }
   const names = [charClass?.name, charClass?.nameEn]
   const normalizedNames = names.map(normalized).filter(Boolean)
   for (const [key, aliases] of Object.entries(ALIASES)) {
@@ -274,11 +280,18 @@ function selectedOption(groupDef, choices) {
   return groupDef.options.length === 1 ? groupDef.options[0] : null
 }
 
+export function selectedStartingGold(profile, choices = {}) {
+  return Number(profile?.gold || 0) + (profile?.groups || []).reduce((sum, groupDef) => sum + Number(selectedOption(groupDef, choices)?.gold || 0), 0)
+}
+
 export function startingEquipmentComplete(profile, choices = {}) {
   if (!profile) return true
+  const concrete = String(profile.key).startsWith('2024:')
+  if (concrete && (profile.fixed || []).some(entry => !entry.item)) return false
   const groupsComplete = profile.groups.every((groupDef) => {
     const selected = selectedOption(groupDef, choices)
     if (!selected) return false
+    if (concrete && (selected.items || []).some(entry => !entry.item)) return false
     return (selected.picks || []).every((pickDef) => {
       const values = choices?.[groupDef.id]?.picks?.[pickDef.id] || []
       return Array.from({ length: pickDef.count }, (_, index) => {

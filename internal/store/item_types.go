@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"encoding/json"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -147,4 +148,28 @@ func (s *Store) VisibleItemTypeCount(ctx context.Context, typeID int64, userID *
 	err := s.pool.QueryRow(ctx, `SELECT COUNT(*) FROM dndshare.item
 		WHERE type_id = $1 AND NOT hidden AND (user_id IS NULL OR user_id = $2)`, typeID, userID).Scan(&count)
 	return count, err
+}
+
+// AttachScopedTypeCounts uses the same visibility predicate as item selection.
+func (s *Store) AttachScopedTypeCounts(ctx context.Context, types []ItemType, userID *int64, scope ContentScope) error {
+	args := []any{userID}
+	where := appendContentScopeSQL([]string{"NOT i.hidden", "(i.user_id IS NULL OR i.user_id=$1)"}, &args, scope)
+	rows, err := s.pool.Query(ctx, "SELECT i.type_id,COUNT(*) FROM dndshare.item i WHERE "+strings.Join(where, " AND ")+" GROUP BY i.type_id", args...)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	counts := map[int64]int64{}
+	for rows.Next() {
+		var id, count int64
+		if err = rows.Scan(&id, &count); err != nil {
+			return err
+		}
+		counts[id] = count
+	}
+	for i := range types {
+		types[i].CountItems = counts[types[i].ID]
+		types[i].Count = types[i].CountItems
+	}
+	return rows.Err()
 }

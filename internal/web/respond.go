@@ -1,6 +1,7 @@
 package web
 
 import (
+	"dndshare/internal/store"
 	"encoding/json"
 	"errors"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -47,7 +48,16 @@ func apiError(w http.ResponseWriter, status int, typ, desc string) {
 
 // serverError логирует причину и отдаёт 500 с типом ошибки, но без деталей.
 func serverError(w http.ResponseWriter, err error) {
+	var rulesErr *store.RulesValidationError
+	if errors.As(err, &rulesErr) {
+		badRequest(w, rulesErr.Error())
+		return
+	}
 	var pgErr *pgconn.PgError
+	if errors.As(err, &pgErr) && pgErr.Code == "PRED1" {
+		badRequest(w, pgErr.Message)
+		return
+	}
 	if errors.As(err, &pgErr) && pgErr.Code == "PIT01" {
 		conflict(w, "Сначала завершите ожидающие передачи предметов в событиях листа")
 		return

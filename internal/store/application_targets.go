@@ -92,8 +92,9 @@ func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID
 	}
 	targets := []ApplicationTarget{}
 	characterValues := []map[string]any{}
-	rows, err := tx.Query(ctx, `SELECT c.uuid::text,c.data,COALESCE(icon.url,c.data #>> '{values,ava,url}','')
+	rows, err := tx.Query(ctx, `SELECT c.uuid::text,c.data,COALESCE(icon.url,c.data #>> '{values,ava,url}',''),COALESCE(v.version,'2014')
  FROM dndshare.session_participant p JOIN dndshare."char" c ON c.id=p.char_id
+ LEFT JOIN dndshare.source_version v ON v.id=c.source_version_id
  LEFT JOIN dndshare.storage_image icon ON icon.id=c.icon_image_id AND icon.deleted=false
  WHERE p.session_id=$1 AND c.deleted=false AND (NOT $2 OR NOT EXISTS (
  SELECT 1 FROM (SELECT data FROM dndshare.session_encounter WHERE session_id=$1 AND deleted=false ORDER BY id DESC LIMIT 1) e
@@ -105,9 +106,9 @@ func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID
 		return nil, err
 	}
 	for rows.Next() {
-		var uuid, imageURL string
+		var uuid, imageURL, rulesVersion string
 		var raw json.RawMessage
-		if err = rows.Scan(&uuid, &raw, &imageURL); err != nil {
+		if err = rows.Scan(&uuid, &raw, &imageURL, &rulesVersion); err != nil {
 			rows.Close()
 			return nil, err
 		}
@@ -119,6 +120,7 @@ func (s *Store) sessionApplicationTargets(ctx context.Context, userID, sessionID
 		characterValues = append(characterValues, object(data["values"]))
 		targets = append(targets, ApplicationTarget{Kind: "character", CharUUID: uuid, Name: characterName(raw), ImageURL: imageURL})
 		if snapshots {
+			data["rulesVersion"] = rulesVersion
 			targets[len(targets)-1].Snapshot = data
 		}
 	}

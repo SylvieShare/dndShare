@@ -24,7 +24,7 @@ import { participantDefenses } from '../lib/participantDefenses'
 const props = defineProps({ participant: { type: Object, required: true } })
 const items = shallowRef(new Map()), loading = ref(true), error = ref(''), suggest = useSuggestStore()
 const values = computed(() => props.participant.data?.values || {})
-const stats = computed(() => participantDefenses(values.value, items.value, type => suggest.items(type)))
+const stats = computed(() => participantDefenses(values.value, items.value, type => suggest.items(type), props.participant.sourceVersion || '2014'))
 const indicators = computed(() => [
   { key: 'ac', label: 'Класс доспеха', value: stats.value.armorClass, icon: Shield, description: 'Защита от попадания атакой. Учитывает экипированные доспехи, щит и настроенные бонусы.' },
   ...stats.value.passives.map(skill => ({ ...skill, key: skill.id, icon: skill.id === '10' ? Eye : Search,

@@ -83,6 +83,8 @@
       <RowActionItem
         v-if="ctx.charCtx.ownerMode && canPrepare"
         action="prepare"
+        :disabled="ctx.canPrepareEntry && !ctx.canPrepareEntry(entry)"
+        :title="ctx.canPrepareEntry && !ctx.canPrepareEntry(entry) ? 'Лимит подготовки: сначала снимите подготовку другого заклинания' : ''"
         :icon="Sprout"
         tone="accent"
         @click="togglePreparation(close)"

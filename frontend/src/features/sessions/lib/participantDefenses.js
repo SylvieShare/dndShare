@@ -9,12 +9,12 @@ export const PASSIVE_SKILLS = [
   { id: '9', stat: 'INT', ability: 4, label: 'Пассивное расследование' },
 ]
 
-export function participantDefenses(values, items = new Map(), suggestItems = () => []) {
+export function participantDefenses(values, items = new Map(), suggestItems = () => [], rulesVersion = '2014') {
   values = statusValueProjection(values, items)
   const effects = collectCharacterDerivedEffects(values, items)
   const mastery = values.prof_bonus || {}
   const proficiency = (mastery.auto === false ? Number(mastery.v) || 0 : proficiencyBonus(values.lvl?.level || 1)) + sumBonuses(mastery.bonuses)
-  const armor = deriveEquippedArmor(values, items, suggestItems, derivedArmorRules(effects), derivedGrantedProficiencies(effects, 'armor_proficiency'))
+  const armor = deriveEquippedArmor(values, items, suggestItems, derivedArmorRules(effects), derivedGrantedProficiencies(effects, 'armor_proficiency'), rulesVersion)
   const passives = PASSIVE_SKILLS.map(skill => {
     const saved = values[skill.stat]?.skills?.[skill.id] || {}
     const context = { kind: 'skill_check', skillId: skill.id, abilitySuggestId: skill.ability }

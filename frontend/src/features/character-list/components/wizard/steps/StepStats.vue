@@ -76,7 +76,7 @@
 
         <div class="stat-breakdown">
           <span>База <strong :class="{ 'base-placeholder': !assigned(s) }">{{ assigned(s) ? state.scores[s] : '?' }}</strong></span>
-          <span v-if="asiFor(s)" class="stat-asi">Раса <strong>+{{ asiFor(s) }}</strong></span>
+          <span v-if="asiFor(s)" class="stat-asi">{{ state.version === '2024' ? 'Предыстория' : 'Раса' }} <strong>+{{ asiFor(s) }}</strong></span>
           <span v-else class="stat-no-asi">Без бонуса расы</span>
         </div>
 
@@ -126,7 +126,7 @@ import { STAT_FULL, SUGGEST16_TO_STAT, formatMod } from '@/features/character-li
 import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
 import { useSuggestStore } from '@/stores/suggest'
 
-const { STATS, state, grants, finalScores, mods, pointsLeft, primaryAbilities, setMethod, rollStats, quickBuild } = inject('createWizard')
+const { STATS, state, grants, racialBonus, finalScores, mods, pointsLeft, primaryAbilities, setMethod, rollStats, quickBuild } = inject('createWizard')
 
 const BUDGET = POINT_BUY_BUDGET
 const methodOptions = [
@@ -153,7 +153,7 @@ const statSuggestByKey = computed(() => Object.fromEntries(
 
 function assigned(s) { return state.scores[s] != null }
 function suggestFor(s) { return statSuggestByKey.value[s] || null }
-function asiFor(s) { return (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0) }
+function asiFor(s) { return racialBonus(s) }
 function modClass(m) { return m > 0 ? 'pos' : m < 0 ? 'neg' : '' }
 
 function availablePool(stat) {

@@ -145,7 +145,7 @@ const activeItems = computed(() => statuses.value.map(status => ({
   compactDuration: statusDuration(status.duration, { compact: true }),
 })))
 const exhaustionValue = computed(() => props.values?.[ids.value.exhaustion] || { level: 0 })
-const exhaustionLevel = computed(() => normalizeExhaustion(exhaustionValue.value).level)
+const exhaustionLevel = computed(() => normalizeExhaustion(exhaustionValue.value, charCtx.rulesVersion).level)
 const inspirationValue = computed(() => props.values?.[ids.value.inspiration] ?? false)
 const inspirationActive = computed(() => isInspirationActive(inspirationValue.value))
 const hasActiveSummary = computed(() => activeItems.value.length > 0 || exhaustionLevel.value > 0 || inspirationActive.value)
@@ -182,7 +182,7 @@ function addStatus(item) {
   pickerOpen.value = false
   charCtx.characterResources?.rememberItems?.([item])
   if (item?.data?.code === 'exhaustion') {
-    setExhaustion({ ...normalizeExhaustion(exhaustionValue.value), level: Math.max(1, exhaustionLevel.value) })
+    setExhaustion({ ...normalizeExhaustion(exhaustionValue.value, charCtx.rulesVersion), level: Math.max(1, exhaustionLevel.value) })
     return
   }
   if (item?.data?.code === 'inspiration') {

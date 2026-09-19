@@ -13,7 +13,10 @@ import (
 
 // Item — строка dndshare.item. Иконка и обложка проецируются из медиахранилищ.
 type Item struct {
-	Hidden bool `json:"hidden"`
+	Hidden            bool                `json:"hidden"`
+	DerivedFromItemID *int64              `json:"derivedFromItemId,omitempty"`
+	DerivationKind    *string             `json:"derivationKind,omitempty"`
+	Compatibility     []ItemCompatibility `json:"compatibility"`
 	ItemAutomation
 	ID               int64              `json:"id"`
 	UserID           *int64             `json:"userId,omitempty"`
@@ -302,62 +305,6 @@ func (s *Store) searchItems(ctx context.Context, typeID int64, q *string, userID
 	return s.attachItemReadMetadata(ctx, items, userID)
 }
 
-func appendContentScopeSQL(where []string, args *[]any, scope ContentScope) []string {
-	if !scope.RestrictToIDs && scope.SourceVersionID == nil {
-		return where
-	}
-	add := func(v any) string {
-		*args = append(*args, v)
-		return fmt.Sprintf("$%d", len(*args))
-	}
-	selectedCondition := "TRUE"
-	if len(scope.IDs) > 0 {
-		selectedCondition = "ics.content_source_id = ANY(" + add(scope.IDs) + ")"
-	} else if scope.RestrictToIDs {
-		selectedCondition = "FALSE"
-	}
-	compatibility := "TRUE"
-	if scope.SourceVersionID != nil {
-		target := add(*scope.SourceVersionID)
-		effective := `COALESCE(ivc.status,
-		  CASE WHEN cs.native_source_version_id = ` + target + ` THEN 'native' ELSE csc.status END,
-		  'blocked')`
-		compatibility = effective + " <> 'blocked'"
-		if !scope.AllowLegacy {
-			compatibility += " AND " + effective + " <> 'legacy'"
-		}
-		compatibility = `(` + compatibility + `)
-		  AND (ivc.item_id IS NOT NULL OR cs.native_source_version_id = ` + target + ` OR csc.content_source_id IS NOT NULL)`
-	}
-	where = append(where, `(
-	  i.user_id IS NOT NULL
-	  OR NOT EXISTS (SELECT 1 FROM dndshare.item_content_source unassigned WHERE unassigned.item_id = i.id)
-	  OR EXISTS (
-	    SELECT 1
-	      FROM dndshare.item_content_source ics
-	      JOIN dndshare.content_source cs ON cs.id = ics.content_source_id
-	      LEFT JOIN dndshare.item_version_compatibility ivc
-	        ON ivc.item_id = i.id`+func() string {
-		if scope.SourceVersionID == nil {
-			return " AND false"
-		}
-		return " AND ivc.source_version_id = " + fmt.Sprintf("$%d", len(*args))
-	}()+`
-	      LEFT JOIN dndshare.content_source_compatibility csc
-	        ON csc.content_source_id = cs.id`+func() string {
-		if scope.SourceVersionID == nil {
-			return " AND false"
-		}
-		return " AND csc.source_version_id = " + fmt.Sprintf("$%d", len(*args))
-	}()+`
-	     WHERE ics.item_id = i.id
-		       AND `+selectedCondition+`
-	       AND `+compatibility+`
-	  )
-	)`)
-	return where
-}
-
 // GetByIds — предметы по списку id.
 func (s *Store) GetByIds(ctx context.Context, ids []int64, userID *int64) ([]Item, error) {
 	if len(ids) == 0 {
@@ -429,6 +376,10 @@ func (s *Store) attachItemReadMetadata(ctx context.Context, items []Item, userID
 		return nil, err
 	}
 	items, err = s.AttachItemContentSources(ctx, items)
+	if err != nil {
+		return nil, err
+	}
+	items, err = s.AttachItemCompatibility(ctx, items, userID)
 	if err != nil {
 		return nil, err
 	}

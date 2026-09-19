@@ -18,7 +18,7 @@ import {
   toggleLinkedStatus,
 } from '@/features/character-editor/lib/characterStatuses'
 
-export function useCharacterStatuses(values, characterResources) {
+export function useCharacterStatuses(values, characterResources, sourceVersionId) {
   const itemsById = characterResources.itemsById
   let catalogPromise = null
 
@@ -28,12 +28,12 @@ export function useCharacterStatuses(values, characterResources) {
 
   async function ensureCatalog() {
     if (catalogPromise) return catalogPromise
-    catalogPromise = itemsApi.listAll(15)
+    catalogPromise = itemsApi.listAll(15, { sourceVersionId: sourceVersionId?.value })
       .then(response => {
         characterResources.rememberItems(response?.items || [])
         return response?.items || []
       })
-      .catch(() => [])
+      .catch(() => { catalogPromise = null; return [] })
     return catalogPromise
   }
 
@@ -42,7 +42,10 @@ export function useCharacterStatuses(values, characterResources) {
     () => { ensureItems() },
     { immediate: true },
   )
-  ensureCatalog()
+  watch(() => sourceVersionId?.value, (id) => {
+    catalogPromise = null
+    if (id != null) ensureCatalog()
+  }, { immediate: true })
 
   const entries = computed(() => collectCharacterStatuses(values.value, itemsById.value))
 
@@ -73,7 +76,7 @@ export function useCharacterStatuses(values, characterResources) {
     setDuration(uid, duration) { return setStatusInstanceDuration(values.value, uid, duration) },
     setLevel(uid, level) { return setStatusInstanceLevel(values.value, uid, level) },
     itemByCode(code) {
-      return [...itemsById.value.values()].find(item => item?.data?.code === code) || null
+      return [...itemsById.value.values()].find(item => item?.data?.code === code && item.compatibility?.some(row => Number(row.sourceVersionId) === Number(sourceVersionId?.value) && ['native', 'compatible'].includes(row.status))) || null
     },
     removeEffect(effect) { return removeStatusInstancesByEffect(values.value, effect) },
     removeByParam(key, value) { return removeStatusInstancesByParam(values.value, key, value) },

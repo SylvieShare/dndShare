@@ -25,6 +25,7 @@
         <ToggleSwitch v-model="hidden" aria-label="Скрытая запись" />
       </FormField>
 
+      <ItemCompatibilityEditor v-model="compatibility" :versions="versions" :type-id="typeId" :item-id="item?.id" :z-index="zIndex" @variant="variantItem = $event" />
       <ItemAutomationEditor :data="automation" />
 
       <ItemMediaEditor :item="persistedItem || item" :media="media" :z-index="zIndex" />
@@ -40,6 +41,7 @@
       @pick="onItemPicked"
       @close="picker.open = false"
     />
+    <ItemEditModal v-if="variantItem" :item="variantItem" :type-id="variantItem.typeId" :z-index="zIndex + 600" @close="variantItem = null" @saved="emit('saved', $event); variantItem = null" />
     <template #footer>
       <p v-for="(issue, index) in [...editorValidation.values()]" :key="index" role="alert" class="iem-required-hint">{{ issue }}</p>
       <p v-if="saveError" role="alert" class="iem-required-hint">{{ saveError }}</p>
@@ -63,11 +65,13 @@ import CatalogueEditor from '@/features/items/editor/catalogue/CatalogueEditor.v
 import ItemSourcePicker from '@/features/items/editor/ItemSourcePicker.vue'
 import { ABILITY_TYPE_IDS } from '@/shared/lib/abilityTypes'
 import '@/features/items/editor/abilityEditor.css'
-import { computed, nextTick, onMounted, provide, reactive, ref } from 'vue'
+import { computed, inject, nextTick, onMounted, provide, reactive, ref } from 'vue'
 import { AppModalFrame, useMediaQuery } from '@sylvieshare/share-ui'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
+import ItemCompatibilityEditor from '@/features/items/editor/ItemCompatibilityEditor.vue'
+import { useGameContextStore } from '@/stores/gameContext'
 import ItemAutomationEditor from '@/features/items/editor/ItemAutomationEditor.vue'
 import { itemAutomationDraft } from '@/features/items/lib/itemAutomation'
 import ItemMediaEditor from '@/features/items/editor/ItemMediaEditor.vue'
@@ -94,6 +98,12 @@ const props = defineProps({
 })
 const emit = defineEmits(['close', 'saved'])
 
+const game = useGameContextStore()
+const charCtx = inject('charCtx', null)
+const createWizard = inject('createWizard', null)
+const compatibility = ref([])
+const versions = ref([])
+const variantItem = ref(null)
 const suggestStore = useSuggestStore()
 const itemTypesStore = useItemTypesStore()
 const nameInput = ref(null)
@@ -146,6 +156,10 @@ async function loadForm() {
     const type = await itemTypesStore.ensureType(props.typeId)
     if (!type) throw new Error('Справочник не найден')
     typeFields.value = type.fields || []
+    await game.ensure()
+    versions.value = game.sources.find(source => source.id === type.sourceId)?.versions || []
+    const selectedId = charCtx?.sourceVersionId ?? createWizard?.sourceVersionId?.value ?? game.sourceVersionId
+    compatibility.value = props.item ? JSON.parse(JSON.stringify(props.item.compatibility || [])) : versions.value.filter(version => Number(version.id) === Number(selectedId)).map(version => ({ sourceVersionId: version.id, version: version.version, status: 'native', note: '' }))
     if (showPublicationSources.value && type?.sourceId != null) {
       const sourceRes = await contentSourcesApi.listForSystem(type.sourceId)
       contentSources.value = sourceRes?.sources || []
@@ -164,7 +178,7 @@ async function loadForm() {
       Object.assign(formData, defaultDataForFields((isAbility.value || props.typeId === 19) ? typeFields.value.filter(field => ['level', ...(props.typeId === 19 ? ['attunement', 'activation'] : [])].includes(field.key)) : typeFields.value))
       formName.value = props.initialName
       formNameEn.value = props.initialNameEn
-      selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault).map((source) => source.id)
+      selectedContentSourceIds.value = contentSources.value.filter((source) => source.isDefault && Number(source.nativeSourceVersionId) === Number(selectedId)).map((source) => source.id)
     }
     fieldEditor.initSections(typeFields.value)
     fieldEditor.ensureItemNames(fieldEditor.collectItemRefIds(typeFields.value, formData))
@@ -202,6 +216,7 @@ async function submit() {
       data,
       ...automation,
       hidden: hidden.value,
+      compatibility: compatibility.value,
     }
     if (showPublicationSources.value) payload.contentSourceIds = selectedContentSourceIds.value
     if (props.showNameEn) payload.nameEn = formNameEn.value.trim() || null

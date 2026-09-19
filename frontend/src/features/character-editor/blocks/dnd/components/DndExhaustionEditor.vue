@@ -42,12 +42,13 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { inject, computed, ref } from 'vue'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import { FormNumberInput } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import { normalizeExhaustion } from '@/features/character-editor/blocks/dnd/lib/exhaustion'
 
+const charCtx = inject('charCtx', {})
 const props = defineProps({
   value: { type: Object, default: () => ({ level: 0 }) },
   embedded: { type: Boolean, default: false },
@@ -55,7 +56,7 @@ const props = defineProps({
 const emit = defineEmits(['change'])
 const configMode = ref(false)
 
-const normalized = computed(() => normalizeExhaustion(props.value))
+const normalized = computed(() => normalizeExhaustion(props.value, charCtx.rulesVersion))
 const data = computed(() => normalized.value.data)
 const max = computed(() => normalized.value.max)
 const effects = computed(() => normalized.value.effects)

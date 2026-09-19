@@ -1,3 +1,5 @@
+import { useDndCreateAbilitySelections } from './useDndCreateAbilitySelections'
+import { useDndOrigin } from './useDndOrigin'
 import { useDndCreateSpells } from './useDndCreateSpells'
 import { useDndCreateCatalog } from './useDndCreateCatalog'
 import { usePersistedDraft } from '@/shared/composables/usePersistedDraft'
@@ -18,14 +20,7 @@ import { randomDndName } from '@/shared/lib/dndNames'
 import {
   originChildren,
 } from '@/shared/lib/dndItemTypes'
-import {
-  activeBackgroundChoices,
-  backgroundChoiceProfile,
-  backgroundChoicesComplete,
-  backgroundStartingEquipment,
-  backgroundToolProficiencySelections,
-  backgroundToolItems as resolveBackgroundToolItems,
-} from '@/features/character-editor/settings/dnd/creation/backgroundEquipment'
+import { useDndCreateBackground } from './useDndCreateBackground'
 import { buildDndCharacterPayload } from './dndCreateWizardPayload'
 import { liveSkillModifier } from '@/features/character-list/components/wizard/previewSkills'
 import { useDndCreateEquipment } from './useDndCreateEquipment'
@@ -57,7 +52,7 @@ export function useDndCreateWizard() {
   let hydrating = false
   const sourceVersionId = ref(null)
   function sourceSuffix() {
-    return contentScopeQuery(state.contentSources, sourceVersionId.value)
+    return contentScopeQuery({ ...state.contentSources, allowLegacy: false }, sourceVersionId.value)
   }
 
   function setSourceVersionId(id) {
@@ -71,6 +66,10 @@ export function useDndCreateWizard() {
     raceAbilities, classAbilities, spellPool, featPool, bgPool, loading,
     load, loadSpells, raceSubraceNames, classSubclassNames,
   } = useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equipment, paused: () => hydrating })
+
+  const abilitySelections = useDndCreateAbilitySelections(state, classAbilities, () => hydrating)
+  const origin = useDndOrigin(state, featPool)
+  watch(() => state.version, () => { if (!hydrating) { state.race = null; state.subrace = null; state.charClass = null; state.subclass = null; state.background = null; state.backgroundAsi = {}; state.originFeatId = null; state.originFeatChoices = {}; state.backgroundTakeGold = false } })
 
   // A different race/subrace/variant means a different set of race offers — clear the picks.
   watch(() => [state.race?.id, state.subrace?.id, state.raceVariant], () => {
@@ -87,36 +86,13 @@ export function useDndCreateWizard() {
     return it?.value || ''
   }
 
-
-  // Changing background clears choices that belong to the previous background.
-  watch(() => state.background?.id, () => {
-    if (hydrating) return
-    state.bgLangIds = []
-    state.backgroundItemChoices = {}
-  })
-
-  const backgroundItemChoiceProfile = computed(() => backgroundChoiceProfile(
-    state.background,
-    equipment.equipmentCatalogue.value,
-  ))
-  const activeBackgroundItemChoices = computed(() => activeBackgroundChoices(
-    backgroundItemChoiceProfile.value,
-    !state.buyStartingEquipment,
-  ))
-  const backgroundItemChoicesComplete = computed(() => backgroundChoicesComplete(
-    backgroundItemChoiceProfile.value,
-    state.backgroundItemChoices,
-    { includeEquipment: !state.buyStartingEquipment },
-  ))
-  const selectedBackgroundToolProficiencies = computed(() => backgroundToolProficiencySelections(
-    backgroundItemChoiceProfile.value,
-    state.backgroundItemChoices,
-  ))
-  function setBackgroundItemChoice(key, itemId) {
-    state.backgroundItemChoices = { ...state.backgroundItemChoices, [key]: itemId }
-  }
+  const {
+    backgroundItemChoiceProfile, activeBackgroundItemChoices, backgroundItemChoicesComplete,
+    selectedBackgroundToolProficiencies, setBackgroundItemChoice, backgroundStart, backgroundToolItems,
+  } = useDndCreateBackground(state, equipment, () => hydrating)
 
   const grants = computed(() => extractGrants({
+    rulesVersion: state.version,
     race: state.race,
     subrace: state.subrace,
     charClass: state.charClass,
@@ -156,6 +132,7 @@ export function useDndCreateWizard() {
   }
 
   function racialBonus(s) {
+    if (origin.originRules.value.backgroundAbilityScores) return (origin.originBonuses.value || []).find(row => row.stat === s)?.bonus || 0
     const fixed = (grants.value.asi || []).filter((a) => a.stat === s).reduce((sum, a) => sum + a.bonus, 0)
     const floating = state.asiChoice.includes(s) ? (grants.value.asiChoice?.bonus || 0) : 0
     return fixed + floating
@@ -255,12 +232,13 @@ export function useDndCreateWizard() {
   }
   function featEligibility(item) {
     const result = evaluateFeatEligibility(item, {
+      category: state.version === '2024' ? 'origin' : null,
       stats: finalScores.value,
       level: 1,
       spellcasting: !!grants.value.spellcasting,
       armorProfIds: grants.value.proficiencies?.armor || [],
     })
-    const alreadyTaken = state.featIds.some((id) => String(id) === String(item?.id))
+    const alreadyTaken = state.featIds.some((id) => String(id) === String(item?.id)) || (state.version === '2024' && Number(origin.originFeat.value?.id) === Number(item?.id))
     if (alreadyTaken && !item?.data?.repeatable) {
       return { ...result, eligible: false, reasons: [...result.reasons, 'Черта уже выбрана'] }
     }
@@ -270,16 +248,6 @@ export function useDndCreateWizard() {
 
   // ─── Background (type 11): fixed skills/tools/languages + a chosen language ──
   const backgroundSkillNames = computed(() => (grants.value.backgroundSkills || []).map((id) => suggestValue(SKILL_SUGGEST, id)).filter(Boolean))
-  const backgroundStart = computed(() => backgroundStartingEquipment(
-    state.background,
-    equipment.equipmentCatalogue.value,
-    state.backgroundItemChoices,
-  ))
-  const backgroundToolItems = computed(() => resolveBackgroundToolItems(
-    state.background,
-    equipment.equipmentCatalogue.value,
-    state.backgroundItemChoices,
-  ))
   const bgLangOptions = computed(() => {
     if (!grants.value.bgLangChoice) return []
     return [...new Set([...STANDARD_LANG_IDS, ...state.bgLangIds])]
@@ -326,7 +294,7 @@ export function useDndCreateWizard() {
   const featureChoices = computed(() => [...raceFeatureChoices.value, ...classFeatureChoices.value])
   const isChoiceComplete = (fc) => (state.choices[fc.id] || []).length === (Number(fc.choice.count) || 1)
   const raceChoicesComplete = computed(() => raceFeatureChoices.value.every(isChoiceComplete))
-  const classChoicesComplete = computed(() => classFeatureChoices.value.every(isChoiceComplete))
+  const classChoicesComplete = computed(() => abilitySelections.abilitySelectionsComplete.value && classFeatureChoices.value.every(isChoiceComplete))
 
   watch(featureChoices, (list) => {
     list.forEach(async (fc) => {
@@ -547,7 +515,7 @@ export function useDndCreateWizard() {
   }
 
   return {
-    STATS,
+    STATS, ...origin, ...abilitySelections,
     state, sourceVersionId, setSourceVersionId,
     races, classes, subraces, subclasses, spellPool, featPool, bgPool, loading,
     raceSubraceNames,

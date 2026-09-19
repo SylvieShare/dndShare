@@ -1,5 +1,6 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
+    <p class="sp-rule-note">{{ rules.spellcastingRule }}</p>
     <SpellConcentrationBlock />
 
     <div v-if="spellcastingBlocked" class="sp-casting-warning" role="status">
@@ -94,7 +95,7 @@
           <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
             <path d="M6.5 3.5h11a.5.5 0 0 1 .5.5v16l-6-3.6L6 20V4a.5.5 0 0 1 .5-.5z" />
           </svg>
-          Подготовлено: {{ preparedSummary.total }}
+          Подготовлено: {{ preparedSummary.total }}<template v-if="knownRules?.preparedLimit != null"> / {{ knownRules.preparedLimit }}</template>
         </span>
         <span v-for="row in preparedSummary.perLevel" :key="row.level" class="sp-prep-chip">
           {{ row.level }} круг · {{ row.count }}
@@ -123,7 +124,7 @@
         <span>{{ knownRules.label }}</span>
         <template v-if="knownRules.hasKnownProgression">
           <span v-if="knownRules.cantripsKnown != null">Заговоры <b>{{ knownCounts.cantrips }} / {{ knownRules.cantripsKnown }}</b></span>
-          <span v-if="knownRules.spellsKnown != null">Заклинания <b>{{ knownCounts.spells }} / {{ knownRules.spellsKnown }}</b></span>
+          <span v-if="knownRules.spellsKnown != null && knownRules.selectionMode === 'known'">Заклинания <b>{{ knownCounts.spells }} / {{ knownRules.spellsKnown }}</b></span>
           <span v-if="knownRules.allowedSchoolIds.length">Вне основных школ <b>{{ knownCounts.unrestricted }} / {{ knownRules.unrestrictedSpells }}</b></span>
         </template>
         <span>Доступно до {{ selectedSourceMaxSpellLevel }} круга</span>
@@ -192,6 +193,7 @@
 </template>
 
 <script setup>
+import { dndRules } from '@/shared/lib/dndRules'
 import SpellConcentrationBlock from './components/SpellConcentrationBlock.vue'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 
@@ -227,6 +229,7 @@ import {
 const props = defineProps(['block', 'value', 'values'])
 const emit  = defineEmits(['update:value'])
 const charCtx       = inject('charCtx',       () => ({ ownerMode: true, dictionaries: {} }))
+const rules = computed(() => dndRules(charCtx?.rulesVersion))
 const setBlockHidden = inject('setBlockHidden', () => () => {})
 
 const tabs       = ref([])
@@ -301,6 +304,8 @@ const statPath = computed(() => activeTab.value?.casting_ability ?? '')
 const saveBonusExtra = computed(() => Number(activeTab.value?.save_bonus) || 0)
 const attackBonusExtra = computed(() => Number(activeTab.value?.attack_bonus) || 0)
 const preparation = computed(() => ['prepared', 'spellbook'].includes(activeTab.value?.mode))
+const preparationLimit = computed(() => knownRules.value?.preparedLimit ?? null)
+const canPrepareEntry = entry => !!entry.ref?.prepared || preparationLimit.value == null || preparedSummary.value.total < preparationLimit.value
 const activeCastingLabel = computed(() => activeTab.value?.name || '')
 const classEntryForActiveTab = computed(() => (Array.isArray(props.values?.classes) ? props.values.classes : [])
   .find((entry) => normalizedClassItemId(entry?.id) === normalizedClassItemId(activeTab.value?.class_item_id)) || null)
@@ -447,7 +452,7 @@ const {
   loadDetails, togglePrepared, removeSpell, sortable, displayLevel, onSpellDragStart,
   addSpell, abilityIds, syncExternalAbilitySpells,
 } = useSpellbookEntries({
-  props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation,
+  props, charCtx, tabs, grants, itemMap, activeTabSpells, activeTab, preparation, preparationLimit,
   spellsByLevel, emitChange, spellPickerEligibility, spellStatusSource,
 })
 const spellDamageTypes = useSpellDamageTypes(damageTypeSuggests)
@@ -507,7 +512,7 @@ provide('spellsBlockCtx', reactive({
   useSpell,
   spellcastingSources,
   activeTabKey: activeSpellTab,
-  spellCanPrepare,
+  spellCanPrepare, canPrepareEntry,
   setSpellcastingSource,
   spellcastingBlocked,
   statusEffectLinks,

@@ -33,3 +33,9 @@ describe('spellcasting handbook rules', () => {
     })
   })
 })
+
+it('uses a fixed 2024 preparation progression independently of the wizard spellbook size', () => {
+  const item = { data: { spellcasting: { ability: 4, prepares: true, selection_mode: 'spellbook', spells_known: 6, level_up_choices: 2, prepared_progression: [{ level: 1, count: 4 }, { level: 3, count: 6 }] } } }
+  expect(spellcastingRulesAt(item, 2)).toMatchObject({ spellsKnown: 6, preparedLimit: 4, levelUpChoices: 2 })
+  expect(spellcastingRulesAt(item, 3).preparedLimit).toBe(6)
+})

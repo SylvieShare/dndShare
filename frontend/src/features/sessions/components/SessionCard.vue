@@ -35,7 +35,7 @@
           <span v-if="session.myRole === 'player' && session.ownerLogin" class="card-dm">
             Ведёт {{ session.ownerLogin }}
           </span>
-          <span v-if="session.systemName" class="card-system">{{ session.systemName }}</span>
+          <span v-if="session.systemName" class="card-system">{{ session.systemName }} {{ session.rulesVersion }}</span>
           <span v-if="relativeDate" class="card-date">{{ relativeDate }}</span>
         </div>
 

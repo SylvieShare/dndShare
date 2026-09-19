@@ -4,7 +4,7 @@ import { useSuggestStore } from '@/stores/suggest'
 import { inventoryEntries } from '@/features/character-editor/lib/characterMagicItems'
 import { deriveEquippedArmor } from '@/features/character-editor/blocks/dnd/lib/equippedArmor'
 
-export function useCharacterArmor(values, characterResources, characterDerivedEffects = null) {
+export function useCharacterArmor(values, characterResources, characterDerivedEffects = null, rulesVersion = () => '2014') {
   const suggest = useSuggestStore()
   const equipped = computed(() => inventoryEntries(values.value).filter(row => row.equipped).map(row => row.entry))
   const equippedIds = computed(() => equipped.value
@@ -29,6 +29,7 @@ export function useCharacterArmor(values, characterResources, characterDerivedEf
     typeId => suggest.items(typeId),
     characterDerivedEffects?.armorRules?.value || { formulas: [], bonuses: [] },
     characterDerivedEffects?.grantedProficiencies?.('armor_proficiency') || [],
+    rulesVersion(),
   ))
 
   return { state, hydrate }

@@ -15,13 +15,25 @@ type ItemAutomation struct {
 
 // ItemMetadataPatch preserves omitted values when updating through HTTP or MCP.
 type ItemMetadataPatch struct {
-	Hidden                    *bool   `json:"hidden"`
-	AutomationStatus          *string `json:"automationStatus"`
-	AutomationNote            *string `json:"automationNote"`
-	RequiresPlayerInteraction *bool   `json:"requiresPlayerInteraction"`
+	ParentID                  *int64               `json:"-"` // MCP: negative removes parent, nil preserves it.
+	DerivedFromItemID         *int64               `json:"derivedFromItemId"`
+	DerivationKind            *string              `json:"derivationKind"`
+	Compatibility             *[]ItemCompatibility `json:"compatibility"`
+	Hidden                    *bool                `json:"hidden"`
+	AutomationStatus          *string              `json:"automationStatus"`
+	AutomationNote            *string              `json:"automationNote"`
+	RequiresPlayerInteraction *bool                `json:"requiresPlayerInteraction"`
 }
 
 func (p *ItemMetadataPatch) Validate() error {
+	if (p.DerivedFromItemID == nil) != (p.DerivationKind == nil) {
+		return errors.New("Исходная запись и тип варианта указываются вместе")
+	}
+	if p.Compatibility != nil {
+		if err := ValidateItemCompatibility(*p.Compatibility); err != nil {
+			return err
+		}
+	}
 	if p.AutomationStatus != nil {
 		switch *p.AutomationStatus {
 		case "unreviewed", "full", "partial", "none", "not_applicable":

@@ -132,7 +132,7 @@ const mainRef = ref(null)
 const invalidPulse = ref(false)
 function doReset() { resetOpen.value = false; reset() }
 const isComplete = computed(() =>
-  state.version === '2014' && !!state.race && !!state.charClass
+  !!sourceVersionId.value && !!state.race && !!state.charClass
   && classToolProficienciesComplete.value && classEquipmentComplete.value
   && (!state.buyStartingEquipment || !!state.startingWealthRoll)
   && !!state.background && backgroundItemChoicesComplete.value
@@ -180,7 +180,7 @@ watch(() => steps.value.length, (len) => { if (state.step > len - 1) state.step 
 function validateStep(key) {
   switch (key) {
     case 'version':
-      return state.version === '2014' ? { ok: true } : { ok: false, reason: '2024 в разработке — выбери 2014' }
+      return sourceVersionId.value ? { ok: true } : { ok: false, reason: 'Выбери доступную редакцию' }
     case 'race':
       if (!state.race) return { ok: false, reason: 'Выбери расу' }
       if (requiresSubrace.value && !state.subrace) return { ok: false, reason: 'Выбери происхождение' }
@@ -208,6 +208,7 @@ function validateStep(key) {
       return { ok: true }
     case 'background':
       if (!state.background) return { ok: false, reason: 'Выбери предысторию' }
+      if (!wz.originComplete.value) return { ok: false, reason: 'Выбери черту происхождения и бонусы характеристик' }
       if (!backgroundItemChoicesComplete.value) return { ok: false, reason: 'Заверши выборы предыстории' }
       if (!bgLangsComplete.value) return { ok: false, reason: 'Выбери языки предыстории' }
       return { ok: true }
@@ -309,6 +310,8 @@ function openPreview() {
     userId: null,
     version: 0,
     sourceVersionId: sourceVersionId.value,
+    sourceVersion: state.version,
+    sourceName: 'DND5e',
     iconImageId: null,
     iconImageUrl: state.persona?.icon?.url || null,
   }
@@ -320,6 +323,8 @@ async function submit() {
   const payload = {
     templateId: dndTemplateId.value,
     sourceVersionId: sourceVersionId.value,
+    sourceVersion: state.version,
+    sourceName: 'DND5e',
     ...buildPayload(),
   }
   if (props.embedded) {
@@ -338,6 +343,8 @@ async function submit() {
         publicVisible: false,
         templateId: dndTemplateId.value,
         sourceVersionId: sourceVersionId.value,
+    sourceVersion: state.version,
+    sourceName: 'DND5e',
       })
       clearPersist()
       router.push('/char/' + res.uuid)

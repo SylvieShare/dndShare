@@ -57,3 +57,12 @@ describe('selected class abilities', () => {
     expect(syncAbilityGrantedSpells(beforeGrants, abilitySpellGrantRows([influence, thief], after))).toEqual([])
   })
 })
+
+it('requires a prerequisite invocation when selecting a dependent option', () => {
+  const parent = { id: 10, data: { class_ids: [{ id: 1 }], level: 1 } }
+  const item = { id: 12, data: { selection_parent_id: 10, level: 5, selection_requirements: { abilities: [{ id: 11, name: 'Договор клинка' }] } } }
+  const values = { classes: [{ id: 1, level: 5 }], abilities_class: [] }
+  expect(selectedAbilityEligibility(item, parent, values).eligible).toBe(false)
+  values.abilities_class = [{ id: 11 }]
+  expect(selectedAbilityEligibility(item, parent, values).eligible).toBe(true)
+})

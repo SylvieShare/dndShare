@@ -18,7 +18,7 @@
     <AppModalFrame v-if="longOpen" title="Длинный отдых" @close="longOpen = false">
       <DndLongRestEditor
         :hp="hp"
-        :recovery-count="longRestRecoveryCount(hp)"
+        :recovery-count="longRestRecoveryCount(hp, charCtx.rulesVersion)"
         @confirm="applyLong"
         @cancel="longOpen = false"
       />
@@ -129,9 +129,9 @@ async function finishShort() {
 
 async function applyLong(recovery) {
   const i = ids.value
-  const recoveredCount = longRestRecoveryCount(hp.value)
+  const recoveredCount = longRestRecoveryCount(hp.value, charCtx.rulesVersion)
   const resourceRecovery = await restoreAllResources('long')
-  emit('update:value', i.hp, longRestHp(hp.value, recovery))
+  emit('update:value', i.hp, longRestHp(hp.value, recovery, charCtx.rulesVersion))
   const spells = props.values?.[i.spells]
   if (spells && typeof spells === 'object') {
     const next = longRestSpells(spells)

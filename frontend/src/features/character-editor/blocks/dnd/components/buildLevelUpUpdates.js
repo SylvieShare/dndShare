@@ -1,4 +1,4 @@
-import { abilitySelectionState, applyAbilitySelection, selectedAbilityEntries } from '@/features/character-editor/lib/selectedAbilities'
+import { abilityReplacementCount, abilitySelectionState, applyAbilitySelection, selectedAbilityEntries } from '@/features/character-editor/lib/selectedAbilities'
 import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 import { resolveNumValue } from '@/shared/lib/dnd'
 import { STAT_KEYS } from '@/shared/lib/dndStats'
@@ -222,7 +222,7 @@ export function buildLevelUpUpdates({
   for (const { parent, entries } of abilitySelections) {
     const original = selectedAbilityEntries(values, parent, selectionItems)
     const state = abilitySelectionState(parent, selectionValues, selectionItems, entries, original,
-      Math.max(0, Number(parent.data?.ability_selection?.replace_count) || 0))
+      abilityReplacementCount(parent, selectionValues))
     if (!state.ready) throw new Error(state.errors.join('. '))
     selectionValues = applyAbilitySelection(selectionValues, parent, entries, selectionItems)
     updates.abilities_class = selectionValues.abilities_class

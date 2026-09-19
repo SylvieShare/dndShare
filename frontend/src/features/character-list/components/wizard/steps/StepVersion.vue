@@ -11,11 +11,10 @@
         <svg v-if="state.version === '2014'" class="ver-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg>
       </button>
 
-      <button class="ver soon" disabled>
-        <span class="soon-tag">Скоро</span>
+      <button class="ver" :class="{ on: state.version === '2024' }" @click="state.version = '2024'">
         <div class="ver-badge">2024</div>
         <div class="ver-title">Обновлённые правила</div>
-        <div class="ver-desc">Редакция 2024 года — в разработке.</div>
+        <div class="ver-desc">Предыстории с характеристиками, черты происхождения и обновлённые классы.</div>
       </button>
     </div>
 

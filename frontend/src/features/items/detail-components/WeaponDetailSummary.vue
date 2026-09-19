@@ -13,6 +13,7 @@
       </template>
 
       <template #right>
+        <CoverStatCard v-if="data.mastery" :icon="Swords" label="Искусность" :value="data.mastery" size="compact" />
         <CoverStatCard v-if="rangeLabel" :icon="Crosshair" label="Дистанция" :value="rangeLabel" size="compact" />
         <CoverStatCard v-if="costLabel" :icon="Coins" label="Стоимость" :value="costLabel" size="compact" />
         <CoverStatCard v-if="data.weight != null" :icon="Weight" label="Вес" :value="data.weight" note="фунт." />

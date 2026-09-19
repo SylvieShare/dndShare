@@ -71,3 +71,12 @@ describe('deriveEquippedArmor', () => {
     expect(deriveEquippedArmor({ STR: { value: 10 }, race: { name: 'Горный дварф' }, items: equipped(1) }, items).speedPenalty).toBe(0)
   })
 })
+
+it('2024 removes an untrained shield bonus without blocking spellcasting and removes the dwarf armor exception', () => {
+  const items = { 1: armor(1, 'Щит', { category: 'shield', required_armor_proficiency: 14, armor: { shield: true, shield_bonus: 2 } }), 2: armor(2, 'Латы', { category: 'heavy', strength_required: 15, armor: { ac: 18, use_dex: false } }) }
+  const values = { DEX: { value: 14 }, STR: { value: 10 }, race: { name: 'Дварф' }, items: equipped(1), proficiencies: { Доспехи: [] } }
+  const dictionary = () => [{ id: 14, value: 'Щиты' }]
+  expect(deriveEquippedArmor(values, items, dictionary)).toMatchObject({ total: 14, castingBlocked: true })
+  expect(deriveEquippedArmor(values, items, dictionary, {}, [], '2024')).toMatchObject({ total: 12, castingBlocked: false, strengthDexDisadvantage: false })
+  expect(deriveEquippedArmor({ ...values, items: equipped(2) }, items, dictionary, {}, [], '2024').speedPenalty).toBe(10)
+})
