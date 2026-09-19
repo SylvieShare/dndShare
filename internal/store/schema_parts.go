@@ -156,4 +156,5 @@ var schemaParts = []struct {
 	{"status-repeat-save", schemaStatusRepeatSaveSQL},
 	{"spell-chain-limits", schemaSpellChainLimitsSQL},
 	{"created-item-expiry", schemaCreatedItemExpirySQL},
+	{"spell-projectile-targets", schemaSpellProjectileTargetsSQL},
 }

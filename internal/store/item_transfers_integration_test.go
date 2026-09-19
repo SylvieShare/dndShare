@@ -90,6 +90,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(schemaStatusRepeatSaveSQL)
 	exec(schemaSpellChainLimitsSQL)
 	exec(schemaCreatedItemExpirySQL)
+	exec(schemaSpellProjectileTargetsSQL)
 	if err := pool.QueryRow(ctx, `SELECT data#>>'{usable,status_effects,0,effect,id}'='30' FROM dndshare.item WHERE id=90010`).Scan(&migrated); err != nil || !migrated {
 		t.Fatalf("application reference shape: %v %v", migrated, err)
 	}

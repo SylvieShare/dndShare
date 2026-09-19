@@ -70,7 +70,7 @@ const canChoose = computed(() => props.isDm || Number(props.event.authorUserId) 
 const busy = ref(false), error = ref(''), pending = ref(null), picking = ref(false), loading = ref(false), targets = ref([]), selected = ref([]), mode = ref('normal'), critical = ref(false), impactIndex = ref(null)
 const locked = computed(() => busy.value || !!pending.value)
 watch(() => current.value.attack, attack => { const part = attack?.parts?.find(p => p.sides === 20); critical.value = part?.rolls?.[part.keptIndex ?? 0] === 20 }, { immediate: true })
-const usedKeys = computed(() => sequence.value.hits.slice(0, -1).filter(hit => sequence.value.chain?.unique !== 'hit' || hit.status === 'ready').map(hit => hit.target?.key).filter(Boolean))
+const usedKeys = computed(() => sequence.value.chain?.unique === 'none' ? [] : sequence.value.hits.slice(0, -1).filter(hit => sequence.value.chain?.unique !== 'hit' || hit.status === 'ready').map(hit => hit.target?.key).filter(Boolean))
 const impactEvent = computed(() => ({ ...props.event, data: { ...props.event.data, ...sequence.value.hits[impactIndex.value], sequenceIndex: impactIndex.value, attackRoll: false, sequence: undefined } }))
 async function send(action, fields = {}) {
   if (locked.value) return

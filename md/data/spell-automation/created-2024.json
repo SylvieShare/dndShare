@@ -1,0 +1,19 @@
+{
+  "verified": true,
+  "spells": [
+    6134,
+    6403,
+    6401
+  ],
+  "items": {
+    "berry2024": 7301,
+    "food2024": 7302,
+    "water2024": 7303
+  },
+  "catalogueCount": 1352,
+  "statuses": {
+    "none": 716,
+    "partial": 537,
+    "full": 99
+  }
+}

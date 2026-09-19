@@ -142,7 +142,8 @@ func advanceSequence(seq map[string]any, cmd SequenceCommand, roll func(int) (in
 		for _, raw := range hits[:len(hits)-1] {
 			prior := object(raw)
 			target := object(prior["target"])
-			if target["key"] == saveTargetKey(cmd.Target) && (object(seq["chain"])["unique"] != "hit" || prior["status"] == "ready") {
+			unique := object(seq["chain"])["unique"]
+			if unique != "none" && target["key"] == saveTargetKey(cmd.Target) && (unique != "hit" || prior["status"] == "ready") {
 				return fmt.Errorf("%w: эта цель уже использована", ErrApplication)
 			}
 		}

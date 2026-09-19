@@ -63,3 +63,29 @@ func TestSequenceMatchingIgnoresOtherDiceAndRequiresHit(t *testing.T) {
 		t.Fatal("miss continued")
 	}
 }
+
+func TestSequenceIndependentProjectilesMayRepeatTargetWithinBudget(t *testing.T) {
+	seq := sequenceFixture(t, "damage", "none")
+	delete(seq, "table")
+	object(seq["chain"])["unique"] = "none"
+	seq["instances"] = 2
+	target := ApplicationTarget{Kind: "character", CharUUID: "same"}
+	for i := 0; i < 2; i++ {
+		if err := advanceSequence(seq, SequenceCommand{Action: "target", Target: target}, sequenceRolls(t, 12)); err != nil {
+			t.Fatal(err)
+		}
+		if err := advanceSequence(seq, SequenceCommand{Action: "miss"}, nil); err != nil {
+			t.Fatal(err)
+		}
+		if err := advanceSequence(seq, SequenceCommand{Action: "next"}, nil); err == nil {
+			t.Fatal("independent projectile jumped")
+		}
+		err := advanceSequence(seq, SequenceCommand{Action: "projectile"}, nil)
+		if i == 0 && err != nil {
+			t.Fatal(err)
+		}
+		if i == 1 && err == nil {
+			t.Fatal("extra projectile accepted")
+		}
+	}
+}
