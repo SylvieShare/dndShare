@@ -10,12 +10,13 @@
       <div v-if="hasBody" class="event-body">
         <div v-if="event.data?.result" class="event-roll">
           <DiceRollResult :result="event.data.result" :color="event.data.color" :size="32" />
-          <SessionAttackTargets v-if="event.data?.attackRoll" :event="event" :is-dm="isDm" />
+          <SessionAttackTargets v-if="event.data?.attackRoll && !event.data?.sequence" :event="event" :is-dm="isDm" />
           <ActionButton v-if="isDm && event.data?.damageRoll" size="sm" variant="dashed" @click="applying = true">Применить к целям</ActionButton>
         </div>
         <div v-for="(adjustment, i) in event.data?.result?.adjustments || []" :key="i" class="event-adjustment">
           {{ adjustment.label }}: {{ adjustment.original }} → {{ adjustment.value }}
         </div>
+        <SessionRollSequence v-if="event.data?.sequence" :event="event" :is-dm="isDm" />
         <SessionSavingThrow v-if="event.data?.savingThrow" :event="event" />
         <DamageImpact v-for="impact in standaloneImpacts" :key="impact.key" :impact="impact" />
         <div v-if="event.type === 'item_transfer'" class="event-transfer">
@@ -60,6 +61,7 @@ import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SessionEventIcon from './SessionEventIcon.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
+const SessionRollSequence = defineAsyncComponent(() => import('./SessionRollSequence.vue'))
 const SessionSavingThrow = defineAsyncComponent(() => import('./SessionSavingThrow.vue'))
 const SessionAttackTargets = defineAsyncComponent(() => import('./SessionAttackTargets.vue'))
 const DamageImpact = defineAsyncComponent(() => import('./DamageImpact.vue'))

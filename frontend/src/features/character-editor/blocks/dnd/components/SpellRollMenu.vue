@@ -11,11 +11,12 @@
     </template>
     <template #default="{ close }">
       <SpellCastControls :entry="entry" :cast-level="castLevel" spend-by-default v-slot="cast">
+      <small v-if="hasSequence">После атаки выберите цель и продолжайте броски в хронике сессии.</small>
       <SpellDamageTypeChoice :entry="entry" :disabled="ctx.spellcastingBlocked" />
       <D20RollControls scope="attack"
         :mode="attackMode.mode" :cancelled="attackMode.cancelled"
         :disabled="cast.disabled || !typeReady(entry)" action="attack" :roll-label="cast.spend ? 'Бросить и потратить ячейку' : 'Бросить на атаку'"
-        @roll="(mode, excluded) => rollAttack(mode, close, cast.commit, excluded)"
+        @roll="(mode, excluded) => rollAttack(mode, close, cast, excluded)"
       />
       </SpellCastControls>
     </template>
@@ -44,6 +45,7 @@
   </RowActionSubmenu>
 </template>
 <script setup>
+import { useSessionEventsStore } from '@/stores/sessionEvents'
 import SpellDamageTypeChoice from './SpellDamageTypeChoice.vue'
 import { spellRollOptions } from '../lib/spellRollOptions'
 import { spellInstances } from '../lib/spellScaling'
@@ -58,11 +60,13 @@ const props = defineProps({ entry: { type: Object, required: true }, castLevel: 
 const emit = defineEmits(['close'])
 const ctx = inject('spellsBlockCtx')
 const critical = ref(false)
+const events = useSessionEventsStore()
+const hasSequence = computed(() => !!events.sessionUuid && !!(props.entry.item?.data?.damage?.roll_table || props.entry.item?.data?.damage?.attack_chain))
 const typeReady = entry => ctx.spellDamageTypes?.ready(entry) !== false
 const optionReady = option => option.kind !== 'damage' || typeReady(option.entry)
 const hasAttack = computed(() => !!props.entry.item?.data?.damage?.range_attack)
 const attackMode = computed(() => ctx.spellAttackMode(props.entry))
-const options = computed(() => spellRollOptions(props.entry).filter(option => !(option.primary && option.kind === 'heal' && props.entry.item?.data?.heal?.apply !== false)))
+const options = computed(() => spellRollOptions(props.entry).filter(option => !(hasSequence.value && option.primary && option.kind === 'damage') && !(option.primary && option.kind === 'heal' && props.entry.item?.data?.heal?.apply !== false)))
 const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Бросить на лечение' : 'Бросить на урон' : `Бросить: ${option.label}`
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)
@@ -72,9 +76,9 @@ async function requestSave(close, cast) {
   await ctx.requestSpellSave(props.entry)
   close(); emit('close')
 }
-async function rollAttack(mode, close, commit, excluded) {
-  if (ctx.spellcastingBlocked || !typeReady(props.entry) || !await commit()) return
-  ctx.rollSpellAttack(props.entry, mode, excluded)
+async function rollAttack(mode, close, cast, excluded) {
+  if (ctx.spellcastingBlocked || !typeReady(props.entry) || !await cast.commit()) return
+  ctx.rollSpellAttack(props.entry, mode, excluded, cast.castLevel)
   close()
   emit('close')
 }

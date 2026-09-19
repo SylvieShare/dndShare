@@ -1,3 +1,4 @@
+import { spellSequence } from '../lib/spellSequence'
 import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 import { resolveRollMode } from '../lib/rollMode'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
@@ -37,12 +38,16 @@ export function useSpellRolls({ charCtx, spellDamageTypes, spellcastingBlocked, 
     return charCtx.characterRolls?.resolve?.(manualMode, context) || resolveRollMode(manualMode)
   }
 
-  function rollSpellAttack(entry, mode = 'auto', excluded = []) {
+  function rollSpellAttack(entry, mode = 'auto', excluded = [], castLevel) {
     entry = damageEntry(entry)
     if (!entry || spellcastingBlocked.value) return
     const bonus = spellAttackBonus(entry)
     dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, spellAttackMode(entry, mode).mode, {
-      eventData: { ...itemEventData(entry.item), ...typeEvent(entry), attackRoll: true },
+      eventData: { ...itemEventData(entry.item), ...typeEvent(entry), attackRoll: true, castLevel },
+      resultData: attack => spellSequence(entry.item, attack, {
+        attackBonus: bonus, attackBonusFormula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excluded) || '',
+        damageExpression: spellDamagePreview(entry, castLevel), criticalExpression: spellDamagePreview(entry, castLevel, true), castLevel, charLevel: charLevel.value,
+      }),
       crit_mode: true,
       bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excluded),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],

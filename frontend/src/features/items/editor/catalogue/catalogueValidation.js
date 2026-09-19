@@ -40,6 +40,13 @@ export function catalogueValidation(fields, data, typeId) {
       const rows = [...(rule.dices || []), ...(rule.addon || [])]
       if (rule.type_choices?.length && rows.length && rows.every(row => row.type)) errors.push('Типы урона на выбор: оставьте тип пустым хотя бы у одной зависящей от выбора составляющей формулы.')
     }
+    const table = data.damage?.roll_table, chain = data.damage?.attack_chain
+    if (table) {
+      if (data.damage.type_choices?.length) errors.push('Выберите один способ определения типа урона: свободный выбор или таблицу броска.')
+      const faces = new Set((table.rows || []).map(row => Number(row.value)))
+      if (!(table.sides >= 2 && table.sides <= 100 && table.count >= 1 && table.count <= 10) || faces.size !== Number(table.sides) || (table.rows || []).some(row => !row.damage_type || !(row.value >= 1 && row.value <= table.sides))) errors.push('Таблица типа урона: укажите тип для каждой грани кости и число костей.')
+    }
+    if (chain?.trigger === 'matching_damage' && (!table || table.source === 'separate' || !(table.count >= 2))) errors.push('Совпадение костей требует таблицу по минимум двум костям урона.')
     if (timeError(data.time)) errors.push(timeError(data.time))
     if (data.range?.kind === 'ranged' && !(Number(data.range.distance) > 0)) errors.push('Укажите дальность больше нуля.')
     if (data.range?.shape && data.range.kind !== 'custom' && !(Number(data.range.size) > 0)) errors.push('Укажите размер области больше нуля.')

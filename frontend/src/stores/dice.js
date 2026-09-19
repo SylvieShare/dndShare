@@ -146,7 +146,7 @@ export const useDiceStore = defineStore('dice', () => {
       useRef: rule.useRef, consume: rule.consume,
     }))
     return pushEntry({
-      action, actor: opts.actor, eventData: opts.eventData, result, outcome, color: opts.color,
+      action, actor: opts.actor, eventData: { ...opts.eventData, ...opts.resultData?.(result) }, result, outcome, color: opts.color,
       popup: opts.popup, log: opts.log, duration: opts.duration,
       actions,
       rerollSpec: actions.length ? { action, bonus, mode: normalizedMode, opts: { ...opts, roll_triggers: [] } } : null,

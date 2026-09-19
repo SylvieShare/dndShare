@@ -17,6 +17,7 @@ type SessionImpactTarget struct {
 }
 type SessionImpactRequest struct {
 	EventID        int64                 `json:"eventId"`
+	SequenceIndex  *int                  `json:"sequenceIndex,omitempty"`
 	ClientActionID string                `json:"clientActionId"`
 	Amount         int                   `json:"amount"`
 	EffectKey      string                `json:"effectKey"`
@@ -100,6 +101,21 @@ func (s *Store) ApplySessionImpact(ctx context.Context, userID, sessionID int64,
 		}
 		receipts[req.ClientActionID] = fingerprint
 		data["impactRequests"] = receipts
+	}
+	rootData := data
+	if req.SequenceIndex != nil {
+		index := *req.SequenceIndex
+		hits := array(object(data["sequence"])["hits"])
+		if index < 0 || index >= len(hits) || req.EventID == 0 || req.EffectKey != "" {
+			return out, ErrApplication
+		}
+		data = object(hits[index])
+		if data["status"] != "ready" || data["damageRoll"] != true {
+			return out, ErrApplication
+		}
+		if len(req.Targets) != 1 || saveTargetKey(req.Targets[0].Target) != object(data["target"])["key"] {
+			return out, ErrApplication
+		}
 	}
 	var damageData map[string]any
 	if req.EventID > 0 {
@@ -221,7 +237,7 @@ func (s *Store) ApplySessionImpact(ctx context.Context, userID, sessionID int64,
 		}
 		data["impacts"] = append(array(data["impacts"]), record)
 	}
-	raw, err = json.Marshal(data)
+	raw, err = json.Marshal(rootData)
 	if err != nil {
 		return out, err
 	}

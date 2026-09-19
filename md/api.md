@@ -810,3 +810,14 @@ Chronicle `/save-targets` excludes players and NPCs with `position: "dead"` in
 the latest non-deleted encounter. Zero HP alone does not exclude a creature.
 Attack-target, saving-throw and impact mutations validate new selections against
 the same filtered roster; general `/application-targets` remains unchanged.
+
+### Шаги атаки заклинанием
+
+`POST /api/sessions/{uuid}/events/{eventId}/sequence` принимает `action`,
+`revision`, `clientActionId` и параметры действия: `target`/`mode`,
+`critical` или `typeId`. Действия: `target`, `hit`, `miss`, `type`, `next`,
+`projectile`, `finish`. Выбор типа доступен автору и мастеру, остальные —
+мастеру. Ответ `{event}` содержит обновлённую цепочку. Одинаковый UUID с
+другим содержимым и устаревшая ревизия отклоняются. Запрос применения урона
+`POST .../impacts` принимает необязательный `sequenceIndex`; тогда источник
+урона — готовое попадание, применить его можно только к записанной цели.

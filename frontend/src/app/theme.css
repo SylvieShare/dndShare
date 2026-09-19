@@ -50,7 +50,7 @@ body .rc.dnd-rich-content {
 body .rc.dnd-rich-content table {
   display: block;
   width: max-content;
-  min-width: min(100%, 440px);
+  min-width: 0;
   max-width: 100%;
   margin: 14px 0;
   overflow-x: auto;

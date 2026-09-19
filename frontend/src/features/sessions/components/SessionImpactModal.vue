@@ -62,7 +62,7 @@ async function apply() {
   if (busy.value) return
   busy.value = true; error.value = ''
   try {
-    pending.value ||= { eventId: props.event.id, clientActionId: crypto.randomUUID(), effectKey: effectKey.value, targets: targets.value.filter(row => selected.value.includes(impactTargetKey(row))).map(target => ({ target: targetIdentity(target), outcome: props.outcome || impactOutcome(props.event, target) })) }
+    pending.value ||= { eventId: props.event.id, sequenceIndex: props.event.data?.sequenceIndex, clientActionId: crypto.randomUUID(), effectKey: effectKey.value, targets: targets.value.filter(row => selected.value.includes(impactTargetKey(row))).map(target => ({ target: targetIdentity(target), outcome: props.outcome || impactOutcome(props.event, target) })) }
     await applySessionImpact(events.sessionUuid, pending.value)
     // A committed request remains retryable if refreshing the view fails.
     await events.refresh()

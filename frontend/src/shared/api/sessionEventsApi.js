@@ -17,3 +17,5 @@ export function appendSessionSaves(uuid, eventId, results) { return fetchPost(`/
 export function applySessionImpact(uuid, request) { return fetchPost(`/sessions/${uuid}/impacts`, request) }
 
 export function setSessionAttackTargets(uuid, eventId, targets) { return fetchPut(`/sessions/${uuid}/events/${eventId}/attack-targets`, { targets }) }
+
+export function advanceSessionSequence(uuid, eventId, command) { return fetchPost(`/sessions/${uuid}/events/${eventId}/sequence`, command) }
