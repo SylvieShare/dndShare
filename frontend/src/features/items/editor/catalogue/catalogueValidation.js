@@ -36,7 +36,7 @@ export function catalogueValidation(fields, data, typeId) {
   }
   walk(fields, data)
   if (typeId === 5) {
-    for (const rule of [data.damage, ...(data.rolls || [])].filter(Boolean)) {
+    for (const rule of [data.damage, ...(data.rolls || []).filter(rule => rule.kind === 'damage')].filter(Boolean)) {
       const rows = [...(rule.dices || []), ...(rule.addon || [])]
       if (rule.type_choices?.length && rows.length && rows.every(row => row.type)) errors.push('Типы урона на выбор: оставьте тип пустым хотя бы у одной зависящей от выбора составляющей формулы.')
     }

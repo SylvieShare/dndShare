@@ -117,6 +117,7 @@ export function catalogueField(field, typeId, path) {
 }
 
 export function catalogueFieldVisible(field, data, typeId, path, root = data) {
+  if (typeId === 5 && path === 'rolls.type_choices') return data.kind === 'damage'
   if (typeId === 5 && path.startsWith('range.')) {
     if (['range.distance', 'range.unit'].includes(path)) return data.kind === 'ranged'
     if (['range.size', 'range.area_unit'].includes(path)) return !!data.shape && data.kind !== 'custom'
