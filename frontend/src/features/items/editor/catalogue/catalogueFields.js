@@ -140,7 +140,7 @@ export function catalogueFieldVisible(field, data, typeId, path, root = data) {
   if (path === 'armor.shield_bonus') return !!data.shield
   if (path === 'armor.dex_cap') return !data.shield && !!data.use_dex
   if (path === 'duration.value') return ['rounds', 'minutes', 'hours'].includes(data.kind)
-  if (typeId === 5 && /^(damage|rolls)\.save_(effect|condition)$/.test(path)) return !!data.save_ability
+  if (typeId === 5 && /^(damage|rolls)\.save_(effect|condition|dc)$/.test(path)) return !!data.save_ability
   if (typeId === 5 && /^(damage|heal)\.(addon|addon_instances)$/.test(path)) return ['slot', 'cantrip'].includes(data.scaling)
   if (typeId === 13) {
     if (['movement', 'capacity', 'propulsion'].includes(path)) return root.category !== 'tack'
@@ -167,7 +167,7 @@ export function updateCatalogueValue(data, field, value, path, typeId) {
   if (path === 'armor.shield') for (const key of value ? ['ac', 'use_dex', 'dex_cap'] : ['shield_bonus']) delete next[key]
   if (path === 'armor.use_dex' && !value) delete next.dex_cap
   if (path === 'duration.kind' && !['rounds', 'minutes', 'hours'].includes(value)) delete next.value
-  if (/^(damage|rolls)\.save_ability$/.test(path) && !value) { delete next.save_effect; delete next.save_condition }
+  if (/^(damage|rolls)\.save_ability$/.test(path) && !value) { delete next.save_effect; delete next.save_condition; delete next.save_dc }
   if (['damage.scaling', 'heal.scaling'].includes(path) && !['slot', 'cantrip'].includes(value)) { delete next.addon; delete next.addon_instances }
   if (path === 'spellcasting.selection_mode') { next.prepares = value !== 'known'; if (value !== 'spellbook') delete next.level_up_choices }
   if (path === 'caster_progression' && next.spellcasting) { next.spellcasting = { ...next.spellcasting }; delete next.spellcasting.progression }

@@ -151,4 +151,6 @@ var schemaParts = []struct {
 	{"session-rules-edition", schemaSessionRulesEditionSQL},
 	{"origin-rules-fields", schemaOriginRulesFieldsSQL},
 	{"armor-minimum", schemaArmorMinimumSQL},
+	{"effect-application-context", schemaEffectApplicationContextSQL},
+	{"spell-fixed-save-dc", schemaSpellFixedSaveDCSQL},
 }

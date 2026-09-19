@@ -25,6 +25,7 @@ import { loadSessionTargets } from '../lib/loadSessionTargets'
 import { useSuggestStore } from '@/stores/suggest'
 import { applySessionImpact } from '@/shared/api/sessionEventsApi'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { effectAppliesIn } from '@/shared/lib/effectApplicationContext'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import SessionTargetPicker from './SessionTargetPicker.vue'
 import { impactTargetKey, impactOutcome, impactForTarget, targetIdentity } from '../lib/sessionImpact'
@@ -48,7 +49,7 @@ onMounted(async () => {
     const sourceId = props.event.data?.source?.itemId
     if (sourceId) {
       const source = (await itemsApi.byIds([sourceId])).items?.[0]
-      effects.value = (source?.data?.status_effects || []).filter(row => row.key && row.effect?.id).map(row => ({ ...row, title: row.title || row.effect.name || `Эффект #${row.effect.id}` }))
+      effects.value = (source?.data?.status_effects || []).filter(row => row.key && row.effect?.id && effectAppliesIn(row, 'impact')).map(row => ({ ...row, title: row.title || row.effect.name || `Эффект #${row.effect.id}` }))
       if (effects.value.length) {
         const names = new Map(((await itemsApi.byIds(effects.value.map(row => row.effect.id))).items || []).map(item => [String(item.id), item.name]))
         effects.value = effects.value.map(row => ({ ...row, title: names.get(String(row.effect.id)) || row.title }))

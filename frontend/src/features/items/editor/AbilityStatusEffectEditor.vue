@@ -2,7 +2,7 @@
   <div class="ability-action-fields">
     <AbilityRuleFields :fields="fields.filter(field => field.key === 'effect')" :data="data" @update:data="pickEffect" />
     <RuleKeyField v-model="data.key" :title="effect?.name" :used-keys="otherKeys" />
-    <AbilityRuleFields :fields="fields.filter(field => ['target', 'condition'].includes(field.key))" :data="data" @update:data="value => Object.assign(data, value)" />
+    <AbilityRuleFields :fields="fields.filter(field => ['target', 'apply_on', 'condition'].includes(field.key))" :data="data" @update:data="value => Object.assign(data, value)" />
     <FormField v-if="damageRules.length || data.weapon_damage_key" label="Связанный дополнительный урон" title="Указывает, с каким переключателем урона связан эффект. Спасбросок и наложение на цель игрок проверяет отдельно." vertical>
       <FormSelect :value="data.weapon_damage_key || ''" aria-label="Связанный дополнительный урон" @update:value="value => data.weapon_damage_key = value || undefined">
         <option value="">Не связан с уроном оружия</option>

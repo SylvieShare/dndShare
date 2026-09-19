@@ -85,10 +85,10 @@ func applicationItem(ctx context.Context, tx pgx.Tx, id int64) (string, map[stri
 // Resolve and freeze catalogue mechanics when the dose is reserved. Editing a
 // catalogue while an offer is pending must not change what the recipient accepts.
 func buildUsableApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64) (ApplicationPlan, error) {
-	return buildCatalogueApplication(ctx, tx, entry, option, userID, 0)
+	return buildCatalogueApplication(ctx, tx, entry, option, userID, 0, "use")
 }
 
-func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64, expectedType int) (ApplicationPlan, error) {
+func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]any, option string, userID int64, expectedType int, applicationContext string) (ApplicationPlan, error) {
 	p := ApplicationPlan{Option: option, ItemID: int64(number(entry["item_id"])), Effects: []ApplicationEffect{}}
 	if expectedType == 0 && number(entry["magic_item_id"]) > 0 {
 		p.ItemID = int64(number(entry["magic_item_id"]))
@@ -149,7 +149,11 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 	}
 	links := []any{}
 	if expectedType != 0 {
-		links = array(data["status_effects"])
+		for _, raw := range array(data["status_effects"]) {
+			if effectAppliesIn(object(raw), applicationContext) {
+				links = append(links, raw)
+			}
+		}
 	}
 	if expectedType == 5 {
 		selected := []any{}
@@ -236,6 +240,11 @@ func buildCatalogueApplication(ctx context.Context, tx pgx.Tx, entry map[string]
 		p.Note = "Действие этого предмета отмечается вручную."
 	}
 	return p, nil
+}
+
+func effectAppliesIn(link map[string]any, applicationContext string) bool {
+	mode := textValue(link["apply_on"])
+	return mode == "" || mode == "any" || mode == applicationContext
 }
 
 func visibleApplicationItem(ctx context.Context, tx pgx.Tx, id, userID int64) (string, map[string]any, int, error) {

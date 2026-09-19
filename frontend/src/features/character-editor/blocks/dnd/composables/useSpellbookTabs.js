@@ -1,3 +1,4 @@
+import { resolveSpellSaveDC } from '@/shared/lib/spellSaveDC'
 import { createSpellbookKey, spellTab, normalizedClassItemId } from '../lib/spellbook'
 import { spellcastingRulesAt } from '../lib/spellcastingRules'
 import { itemsApi } from '@/shared/api/itemsApi'
@@ -90,7 +91,7 @@ export function useSpellbookTabs({ props, charCtx, tabs, grants, activeTab, acti
 
   function spellSaveDC(entry) {
     const tab = spellTabForEntry(entry)
-    return 8 + profBonus.value + spellStatModifier(entry) + (Number(tab?.save_bonus) || 0)
+    return resolveSpellSaveDC(entry.item?.data?.damage, 8 + profBonus.value + spellStatModifier(entry) + (Number(tab?.save_bonus) || 0))
   }
 
   function spellAbilityLabel(entry) {

@@ -242,7 +242,7 @@ func (s *Store) createItemTransferTx(ctx context.Context, tx pgx.Tx, userID, ses
 		if source == "spells" {
 			expectedType = 5
 		}
-		plan, err = buildCatalogueApplication(ctx, tx, entry, option, userID, expectedType)
+		plan, err = buildCatalogueApplication(ctx, tx, entry, option, userID, expectedType, "cast")
 		if err != nil {
 			return ItemTransfer{}, err
 		}

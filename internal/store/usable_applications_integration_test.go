@@ -66,12 +66,29 @@ func testUsableApplications(t *testing.T, s *Store, exec func(string), current f
 		t.Fatal(err)
 	}
 	defer tx.Rollback(ctx)
-	hit, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": 90030}, "hit", 1, 19)
+	hit, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": 90030}, "hit", 1, 19, "impact")
 	if err != nil || len(hit.Effects) != 1 || hit.Effects[0].ID != 90031 || hit.Healing != "" {
 		t.Fatal("weapon hit mixed with consumable application", hit, err)
 	}
 	use, err := buildUsableApplication(ctx, tx, map[string]any{"item_id": 90030}, "", 1)
 	if err != nil || len(use.Effects) != 1 || use.Effects[0].ID != 90032 || use.Healing != "2" {
 		t.Fatal("usable application mixed with weapon hit", use, err)
+	}
+	if _, err = tx.Exec(ctx, `INSERT INTO dndshare.item(id,name,type_id,data) VALUES
+ (90033,'Усиление с аурой',5,'{"status_effects":[{"key":"ward","effect":{"id":90032},"apply_on":"cast"},{"key":"fear","effect":{"id":90031},"apply_on":"impact"}]}')`); err != nil {
+		t.Fatal(err)
+	}
+	for _, mode := range []string{"cast", "impact"} {
+		wanted, forbidden := "ward", "fear"
+		if mode == "impact" {
+			wanted, forbidden = forbidden, wanted
+		}
+		plan, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": 90033}, wanted, 1, 5, mode)
+		if err != nil || len(plan.Effects) != 1 || plan.Effects[0].Key != wanted {
+			t.Fatal("missing effect at its stage", mode, plan, err)
+		}
+		if _, err = buildCatalogueApplication(ctx, tx, map[string]any{"item_id": 90033}, forbidden, 1, 5, mode); !errors.Is(err, ErrApplication) {
+			t.Fatal("applied a different stage's effect", mode, err)
+		}
 	}
 }

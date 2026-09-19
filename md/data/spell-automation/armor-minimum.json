@@ -1,0 +1,16 @@
+{
+  "verified": true,
+  "spells": {
+    "724": {
+      "effect": 7289,
+      "minimum": 16,
+      "edition": "2014"
+    },
+    "6142": {
+      "effect": 7290,
+      "minimum": 17,
+      "edition": "2024"
+    }
+  },
+  "catalogueCount": 1352
+}

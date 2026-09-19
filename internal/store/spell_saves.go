@@ -27,5 +27,9 @@ func spellSaveEvent(data, values map[string]any, ability int, spellID int64, ent
 			}
 		}
 	}
-	return map[string]any{"ability": id, "dc": 8 + prof + spellAbilityModifier(values, ability) + extra, "onSuccess": rule["save_effect"], "condition": rule["save_condition"], "results": []any{}}
+	dc := 8 + prof + spellAbilityModifier(values, ability) + extra
+	if fixed := number(rule["save_dc"]); fixed > 0 && fixed <= 100 {
+		dc = fixed
+	}
+	return map[string]any{"ability": id, "dc": dc, "onSuccess": rule["save_effect"], "condition": rule["save_condition"], "results": []any{}}
 }

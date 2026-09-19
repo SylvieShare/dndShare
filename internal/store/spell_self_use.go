@@ -54,7 +54,7 @@ func (s *Store) UseSpellSelf(ctx context.Context, userID, charID, version, spell
 	} else if !allowed {
 		return result, ErrNotFound
 	}
-	plan, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": int(spellID)}, option, userID, 5)
+	plan, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": int(spellID)}, option, userID, 5, "cast")
 	if err != nil {
 		return result, err
 	}

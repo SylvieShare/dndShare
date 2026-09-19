@@ -5,6 +5,7 @@ import { useSpellRolls } from './useSpellRolls'
 import { rollDiceExpression } from '@/shared/lib/dice'
 import { useDiceStore } from '@/stores/dice'
 import { spellRollOptions } from '../lib/spellRollOptions'
+import { useSessionEventsStore } from '@/stores/sessionEvents'
 
 beforeEach(() => setActivePinia(createPinia()))
 function rolls(parts) {
@@ -12,6 +13,15 @@ function rolls(parts) {
 }
 const entry = { item: { id: 1, name: 'Божественное оружие', data: {} } }
 describe('spell damage types', () => {
+  it('announces the separate save with its fixed DC without rolling damage', async () => {
+    const spell = rolls([])
+    const [option] = spellRollOptions({ item: { name: 'Малый лабиринт', data: { rolls: [{ kind: 'save', label: 'Выход', save_ability: 'int', save_dc: 12 }] } } })
+    const publish = vi.spyOn(useSessionEventsStore(), 'publish').mockResolvedValue({})
+    await spell.requestSpellSave(option.entry)
+    expect(publish.mock.calls[0][0].data.savingThrow).toMatchObject({ ability: 4, dc: 12 })
+    expect(publish.mock.calls[0][0].data.damageRoll).toBeUndefined()
+    vi.restoreAllMocks()
+  })
   it('attaches an explosion save only to that stage, never to the attack hit', () => {
     const entry = { item: { id: 599, name: 'Ледяной кинжал', data: {
       damage: { range_attack: true, save_ability: 'dex', save_manual: true },

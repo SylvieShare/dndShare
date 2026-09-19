@@ -1200,3 +1200,8 @@ feature_actions получают тип timed и объект time; сущест
 Миграция `armor-minimum` (141) добавляет `armor_minimum` во все существующие
 схемы `derived_effects`. Это нижняя граница итогового КД, а не базовая формула
 и не прибавка. Данные заклинаний и эффектов заполняются отдельно через MCP.
+
+`effect-application-context` (142) добавляет `status_effects[].apply_on`:
+`cast`, `impact`, `any`. `spell-fixed-save-dc` (143) добавляет необязательную
+`save_dc` (1–100) в `damage` и `rolls`, а также `rolls[].kind=save` для
+самостоятельного объявления спасброска без урона.

@@ -19,7 +19,7 @@ func impactEffectPlan(ctx context.Context, tx pgx.Tx, userID, actorID int64, dat
 	if kind != 5 && kind != 19 {
 		return ApplicationPlan{}, ErrApplication
 	}
-	plan, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": float64(id)}, key, userID, kind)
+	plan, err := buildCatalogueApplication(ctx, tx, map[string]any{"item_id": float64(id)}, key, userID, kind, "impact")
 	if err != nil {
 		return plan, err
 	}

@@ -87,4 +87,8 @@ func TestSpellSaveEvent(t *testing.T) {
 	if spellSaveEvent(map[string]any{}, values, 4, 924, "") != nil {
 		t.Fatal("non-save spell")
 	}
+	save = spellSaveEvent(map[string]any{"damage": map[string]any{"save_ability": "int", "save_dc": 12}}, values, 4, 924, "fireball")
+	if save["ability"] != 4 || save["dc"] != 12 {
+		t.Fatalf("fixed save used caster modifiers: %+v", save)
+	}
 }

@@ -3,6 +3,8 @@
     <template #info="{ row }">
       <div class="effect-application">
         <span class="effect-application-target"><Crosshair :size="14" />{{ targetLabel || (row.link.target === 'other' ? 'На цель' : 'На владельца') }}</span>
+        <small v-if="row.link.apply_on === 'cast'">При использовании</small>
+        <small v-else-if="row.link.apply_on === 'impact'">После броска — из хроники</small>
         <div v-if="row.damage" class="effect-application-rule">
           <small>Применение</small><strong>{{ row.damage.label || 'Дополнительный урон' }}</strong>
           <span v-if="row.damage.uses_resource || row.damage.resource_key" class="effect-application-cost">−{{ row.damage.resource_cost ?? 1 }} <SpellSlotSphere :size="20" :interactive="false" />{{ resourceTitle(row.damage) }}</span>

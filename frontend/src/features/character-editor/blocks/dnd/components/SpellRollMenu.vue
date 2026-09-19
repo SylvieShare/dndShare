@@ -1,5 +1,5 @@
 <template>
-  <RowActionSubmenu v-if="entry.item?.data?.damage?.save_ability && (!options.length || entry.item.data.damage.save_manual)" :min-width="280">
+  <RowActionSubmenu v-if="entry.item?.data?.damage?.save_ability && (!options.some(option => option.primary && option.kind === 'damage') || entry.item.data.damage.save_manual)" :min-width="280">
     <template #trigger="{ open }"><RowActionItem action="spell" submenu :submenu-open="open">Спасбросок · Сл {{ ctx.spellSaveDC(entry) }}</RowActionItem></template>
     <template #default="{ close }"><SpellCastControls :entry="entry" :cast-level="castLevel" spend-by-default v-slot="cast">
       <RowActionItem action="spell" :disabled="cast.disabled" @click="requestSave(close, cast)">Объявить спасбросок</RowActionItem>
@@ -28,13 +28,17 @@
       </RowActionItem>
     </template>
     <template #default="{ close }">
-      <SpellCastControls :entry="entry" :cast-level="castLevel" :spend-by-default="!hasAttack && !option.rule.range_attack" v-slot="cast">
+      <SpellCastControls :entry="entry" :cast-level="castLevel" :spend-by-default="option.kind !== 'save' && !hasAttack && !option.rule.range_attack" v-slot="cast">
       <div class="spell-roll-controls">
+        <template v-if="option.kind === 'save'">
+          <strong>Спасбросок · Сл {{ ctx.spellSaveDC(option.entry) }}</strong>
+          <small v-if="option.rule.save_condition">{{ option.rule.save_condition }}</small>
+        </template>
         <SpellDamageTypeChoice v-if="option.kind === 'damage'" :entry="option.entry" :disabled="ctx.spellcastingBlocked" />
         <FormField v-if="option.kind === 'damage' && option.rule.range_attack" label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
           <ToggleSwitch v-model="critical" aria-label="Критическое попадание" />
         </FormField>
-        <DamageFormulaPreview :default-color="option.kind === 'heal' ? 'var(--success)' : undefined" :label="option.primary ? option.kind === 'damage' ? 'Итоговый урон' : 'Итоговое лечение' : option.label" :aria-label="option.kind === 'damage' ? 'Итоговая формула урона' : option.kind === 'heal' ? 'Итоговая формула лечения' : 'Итоговая формула эффекта'" :expression="preview(option, cast.castLevel)" />
+        <DamageFormulaPreview v-if="option.kind !== 'save'" :default-color="option.kind === 'heal' ? 'var(--success)' : undefined" :label="option.primary ? option.kind === 'damage' ? 'Итоговый урон' : 'Итоговое лечение' : option.label" :aria-label="option.kind === 'damage' ? 'Итоговая формула урона' : option.kind === 'heal' ? 'Итоговая формула лечения' : 'Итоговая формула эффекта'" :expression="preview(option, cast.castLevel)" />
         <small v-if="option.kind === 'damage' && spellInstances(option.entry.item, cast.castLevel, ctx.charLevel) > 1">Урон одного снаряда/луча. Всего: {{ spellInstances(option.entry.item, cast.castLevel, ctx.charLevel) }}.</small>
         <RowActionItem :action="option.kind === 'damage' ? 'damage' : option.kind === 'heal' ? 'revive' : 'feature-damage'" :disabled="cast.disabled || !optionReady(option)" @click="roll(option, close, cast)">
           {{ cast.spend ? 'Бросить и потратить ячейку' : rollLabel(option) }}
@@ -67,7 +71,7 @@ const optionReady = option => option.kind !== 'damage' || typeReady(option.entry
 const hasAttack = computed(() => !!props.entry.item?.data?.damage?.range_attack)
 const attackMode = computed(() => ctx.spellAttackMode(props.entry))
 const options = computed(() => spellRollOptions(props.entry).filter(option => !(hasSequence.value && option.primary && option.kind === 'damage') && !(option.primary && option.kind === 'heal' && (props.entry.item?.data?.heal?.apply !== false || props.entry.item?.data?.item_creation?.length))))
-const rollLabel = option => option.primary ? option.kind === 'heal' ? 'Бросить на лечение' : 'Бросить на урон' : `Бросить: ${option.label}`
+const rollLabel = option => option.kind === 'save' ? `Спасбросок: ${option.label}` : option.primary ? option.kind === 'heal' ? 'Бросить на лечение' : 'Бросить на урон' : `Бросить: ${option.label}`
 const preview = (option, level) => option.kind === 'heal' ? ctx.spellHealPreview(option.entry, level)
   : ctx.spellDamagePreview(option.entry, level, option.kind === 'damage' && option.rule.range_attack && critical.value)
 
@@ -86,6 +90,7 @@ async function roll(option, close, cast) {
   if (ctx.spellcastingBlocked || !optionReady(option) || !await cast.commit()) return
   if (option.kind === 'damage') ctx.rollSpellDamage(option.entry, cast.castLevel, option.rule.range_attack && critical.value)
   else if (option.kind === 'heal') ctx.rollSpellHeal(option.entry, cast.castLevel)
+  else if (option.kind === 'save') await ctx.requestSpellSave(option.entry)
   else ctx.rollSpellEffect(option.entry, cast.castLevel)
   close()
   emit('close')

@@ -27,7 +27,9 @@ def preflight(item, spec, keys):
     for key in META:
         if item.get(key) not in [spec['metadataBefore'][key], spec[key]]: raise RuntimeError(f"Metadata conflict: {item['id']} {key}")
     other_links = [x for x in item['data'].get('status_effects', []) if x.get('key') not in keys]
-    if other_links != spec['effectsBefore']: raise RuntimeError(f"Effect links changed: {item['id']}")
+    after_links = spec['changes'].get('status_effects', {}).get('after', spec['effectsBefore'])
+    after_links = [x for x in after_links if x.get('key') not in keys]
+    if other_links not in [spec['effectsBefore'], after_links]: raise RuntimeError(f"Effect links changed: {item['id']}")
 
 def verify(item, data, meta):
     if item['data'] != data or any(item.get(k) != v for k,v in meta.items()): raise RuntimeError(f"Readback differs: {item['id']}")
@@ -66,6 +68,7 @@ def main():
             actual=get(existing['id'])
             if any(actual.get(k)!=source.get(k) for k in ['iconImageId','iconSvgId']): raise RuntimeError('Icon mismatch')
         link={'key':effect['key'],'effect':{'id':existing['id']},'duration':effect['duration'],'concentration':effect['data']['concentration']}
+        if effect.get('apply_on'): link['apply_on']=effect['apply_on']
         if effect['condition']: link['condition']=effect['condition']
         if effect.get('duration_levels'): link['duration_levels']=effect['duration_levels']
         links.setdefault(source['id'],[]).append(link)

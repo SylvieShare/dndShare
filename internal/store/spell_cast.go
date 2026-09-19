@@ -166,7 +166,7 @@ func (s *Store) CastSpell(ctx context.Context, userID, charID int64, r SpellCast
 	}
 	plan := ApplicationPlan{ItemID: r.SpellID, Name: name, SourceKind: "spell", Effects: []ApplicationEffect{}}
 	if !creating {
-		plan, err = buildCatalogueApplication(ctx, tx, map[string]any{"item_id": int(r.SpellID)}, r.OptionKey, userID, 5)
+		plan, err = buildCatalogueApplication(ctx, tx, map[string]any{"item_id": int(r.SpellID)}, r.OptionKey, userID, 5, "cast")
 		if err != nil {
 			return result, err
 		}

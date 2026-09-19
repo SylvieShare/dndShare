@@ -141,6 +141,16 @@ func TestAbilityCataloguesShareMigrationSchema(t *testing.T) {
 			}
 		}
 	}
+	var applicationContextFields []any
+	if err := json.Unmarshal([]byte(strings.Split(schemaEffectApplicationContextSQL, "$field$")[1]), &applicationContextFields); err != nil {
+		t.Fatal(err)
+	}
+	for _, raw := range want.([]any) {
+		field := raw.(map[string]any)
+		if field["key"] == "status_effects" {
+			field["fields"] = append(field["fields"].([]any), applicationContextFields...)
+		}
+	}
 	for _, name := range []string{"3", "4", "18"} {
 		data, err := os.ReadFile("../../resources/items/item_" + name + "_shema.json")
 		if err != nil {

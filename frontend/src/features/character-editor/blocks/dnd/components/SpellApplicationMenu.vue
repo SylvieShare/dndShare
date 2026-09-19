@@ -46,6 +46,7 @@ import { computed, inject, ref, watch } from 'vue'
 import { Crown, UserRound, WandSparkles } from '@lucide/vue'
 import { ActionButton, FormNumberInput, LoadingIndicator, RowActionSubmenu, ToggleSwitch } from '@sylvieshare/share-ui'
 import { statusEffectLinks } from '@/features/character-editor/lib/characterStatuses'
+import { effectAppliesIn } from '@/shared/lib/effectApplicationContext'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
@@ -55,7 +56,7 @@ const props = defineProps({ entry: Object, castLevel: Number })
 const emit = defineEmits(['close'])
 const ctx = inject('spellsBlockCtx')
 const controller = computed(() => ctx.charCtx.itemTransfers)
-const links = computed(() => statusEffectLinks(props.entry.item).map(link => ({ ...link, name: ctx.charCtx.characterResources?.itemsById?.get?.(String(link.effect_id))?.name || link.key })))
+const links = computed(() => statusEffectLinks(props.entry.item).filter(link => effectAppliesIn(link, 'cast')).map(link => ({ ...link, name: ctx.charCtx.characterResources?.itemsById?.get?.(String(link.effect_id))?.name || link.key })))
 const applicable = computed(() => links.value.length || (props.entry.item?.data?.heal?.apply !== false && props.entry.item?.data?.heal?.dices?.length))
 const optionKey = ref(links.value[0]?.key || '')
 watch(() => links.value.map(link => link.effect_id).join(','), () => ctx.charCtx.characterResources?.ensureItems?.(links.value.map(link => link.effect_id)), { immediate: true })

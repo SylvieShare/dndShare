@@ -3,6 +3,7 @@ import { itemEventData } from '@/features/character-editor/lib/sessionEventData'
 import { resolveRollMode } from '../lib/rollMode'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useDiceStore } from '@/stores/dice'
+import { resolveSpellSaveDC } from '@/shared/lib/spellSaveDC'
 
 export function useSpellRolls({ charCtx, spellDamageTypes, spellcastingBlocked, spellAttackBonus, spellSaveDC = () => 10, spellCastingAbility, spellAbilityModifier = () => 0, charLevel, damageDiceParts, healDiceParts }) {
   const dice = useDiceStore()
@@ -12,7 +13,7 @@ export function useSpellRolls({ charCtx, spellDamageTypes, spellcastingBlocked, 
   function savingThrow(entry) {
     const rule = entry?.item?.data?.damage || {}
     const ability = ['str', 'dex', 'con', 'int', 'wis', 'cha'].indexOf(rule.save_ability) + 1
-    return ability ? { ability, dc: spellSaveDC(entry), onSuccess: rule.save_effect, condition: rule.save_condition || '', results: [] } : null
+    return ability ? { ability, dc: resolveSpellSaveDC(rule, spellSaveDC(entry)), onSuccess: rule.save_effect, condition: rule.save_condition || '', results: [] } : null
   }
   function spellEventData(entry, explicit = false) {
     const save = explicit || entry?.item?.data?.damage?.save_manual !== true ? savingThrow(entry) : null

@@ -85,6 +85,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(`UPDATE dndshare.item SET data=jsonb_set(data,'{usable,status_effects,0,effect}','30') WHERE id=90010`)
 	exec(schemaApplicationReferenceShapesSQL)
 	exec(schemaArmorMinimumSQL)
+	exec(schemaEffectApplicationContextSQL)
 	if err := pool.QueryRow(ctx, `SELECT data#>>'{usable,status_effects,0,effect,id}'='30' FROM dndshare.item WHERE id=90010`).Scan(&migrated); err != nil || !migrated {
 		t.Fatalf("application reference shape: %v %v", migrated, err)
 	}
