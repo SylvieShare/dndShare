@@ -27,33 +27,35 @@ async function renderSelection(sourceVersionId, compact = false) {
 describe('game context selector', () => {
   it('offers every system and edition as a complete choice, preserving its API identity', () => {
     expect(gameContextOptions([...sources, { id: 3, name: 'Empty' }])).toEqual([
-      { id: 11, name: 'D&D 5e', detail: 'Редакция 2014', emblem: 'dnd-classic' },
-      { id: 12, name: 'D&D 5e', detail: 'Редакция 2024', emblem: 'dnd-revised' },
-      { id: 22, name: 'Vampire', detail: 'The Masquerade · V20', emblem: 'vampire' },
+      { id: 11, name: 'D&D 5e', edition: '2014', emblem: 'dnd' },
+      { id: 12, name: 'D&D 5e', edition: '2024', emblem: 'dnd' },
+      { id: 22, name: 'Vampire', edition: 'V20', emblem: 'vampire' },
     ])
   })
 
   it('keeps unfamiliar systems and editions selectable under their actual names', () => {
     const options = gameContextOptions([{ id: 9, name: 'Another system', versions: [{ id: 91, version: 'Second' }] }])
-    expect(options[0]).toMatchObject({ id: 91, name: 'Another system', detail: 'Редакция Second' })
+    expect(options[0]).toMatchObject({ id: 91, name: 'Another system', edition: 'Second' })
   })
 
   it('shows the selected edition in the sidebar with an accessible menu trigger', async () => {
     const html = await renderSelection(12)
-    expect(html).toContain('aria-label="Игровая система: D&amp;D 5e · Редакция 2024"')
+    expect(html).toContain('aria-label="Игровая система: D&amp;D 5e · 2024"')
     expect(html).toContain('aria-haspopup="menu"')
     expect(html).toContain('aria-expanded="false"')
-    expect(html).toContain('game-context-emblem--dnd-revised')
+    expect(html).toContain('game-context-emblem--dnd')
   })
 
-  it('distinguishes editions even when the sidebar only shows icons', async () => {
+  it('keeps the edition accessible when the sidebar shows the shared system logo', async () => {
     const classic = await renderSelection(11, true)
     const revised = await renderSelection(12, true)
     const vampire = await renderSelection(22, true)
-    expect(classic).toContain('game-context-emblem--dnd-classic')
-    expect(revised).toContain('game-context-emblem--dnd-revised')
+    expect(classic).toContain('game-context-emblem--dnd')
+    expect(revised).toContain('game-context-emblem--dnd')
+    expect(classic).toContain('aria-label="Игровая система: D&amp;D 5e · 2014"')
+    expect(revised).toContain('aria-label="Игровая система: D&amp;D 5e · 2024"')
     expect(vampire).toContain('game-context-emblem--vampire')
-    expect(vampire).toContain('aria-label="Игровая система: Vampire · The Masquerade · V20"')
+    expect(vampire).toContain('aria-label="Игровая система: Vampire · V20"')
     expect(classic).not.toContain('class="game-context-trigger-current"')
   })
 })

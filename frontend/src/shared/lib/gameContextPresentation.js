@@ -6,18 +6,18 @@ export function gameContextPresentation(source, version) {
   if (system === 'dnd5e') {
     return {
       name: 'D&D 5e',
-      detail: edition ? `Редакция ${edition}` : 'Dungeons & Dragons',
-      emblem: edition === '2024' ? 'dnd-revised' : 'dnd-classic',
+      edition,
+      emblem: 'dnd',
     }
   }
   if (system === 'vampire: tm') {
     return {
       name: 'Vampire',
-      detail: ['The Masquerade', edition].filter(Boolean).join(' · '),
+      edition,
       emblem: 'vampire',
     }
   }
-  return { name, detail: edition ? `Редакция ${edition}` : 'Выберите систему и редакцию', emblem: 'generic' }
+  return { name, edition, emblem: 'generic' }
 }
 
 export function gameContextOptions(sources) {

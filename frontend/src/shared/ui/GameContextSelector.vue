@@ -16,7 +16,7 @@
       <GameContextEmblem :kind="current.emblem" />
       <span v-if="!compact" class="game-context-trigger-current">
         <span class="game-context-trigger-system">{{ current.name }}</span>
-        <span class="game-context-trigger-edition">{{ current.detail }}</span>
+        <span v-if="current.edition" class="game-context-trigger-edition">· {{ current.edition }}</span>
       </span>
       <ChevronDown v-if="!compact" :size="14" class="game-context-trigger-chevron" aria-hidden="true" />
     </button>
@@ -34,7 +34,7 @@
     >
       <div ref="menu" class="game-context-menu" :aria-busy="store.loading || store.saving" @keydown="onMenuKeydown">
         <div class="game-context-heading">
-          <span>Система и редакция</span>
+          <span>Игровая система</span>
           <LoadingIndicator v-if="store.loading || store.saving" :label="store.saving ? 'Сохранение' : 'Загрузка'" :size="16" />
         </div>
 
@@ -49,8 +49,10 @@
             @click="selectVersion(option.id)"
           >
             <template #icon><GameContextEmblem :kind="option.emblem" /></template>
-            <span class="game-context-option-name">{{ option.name }}</span>
-            <span class="game-context-option-detail">{{ option.detail }}</span>
+            <span class="game-context-option-label">
+              <span class="game-context-option-name">{{ option.name }}</span>
+              <span v-if="option.edition" class="game-context-option-edition">· {{ option.edition }}</span>
+            </span>
             <template #suffix>
               <Check v-if="isSelected(option.id)" :size="17" class="game-context-check" aria-hidden="true" />
             </template>
@@ -85,7 +87,7 @@ const trigger = ref(null)
 const menu = ref(null)
 const menuId = useId()
 const current = computed(() => gameContextPresentation(store.selectedSource, store.selectedVersion))
-const contextLabel = computed(() => `${current.value.name} · ${current.value.detail}`)
+const contextLabel = computed(() => [current.value.name, current.value.edition].filter(Boolean).join(' · '))
 const options = computed(() => gameContextOptions(store.sources))
 const isSelected = id => Number(id) === Number(store.sourceVersionId)
 
@@ -157,8 +159,8 @@ onMounted(load)
   align-items: center;
   gap: 9px;
   width: 100%;
-  min-height: 52px;
-  padding: 5px 6px;
+  min-height: 44px;
+  padding: 3px 6px;
   border: 1px solid transparent;
   border-radius: 11px;
   background: transparent;
@@ -180,7 +182,7 @@ onMounted(load)
   outline-offset: -2px;
 }
 
-.game-context-trigger-current { display: grid; gap: 3px; min-width: 0; flex: 1; }
+.game-context-trigger-current { display: flex; align-items: baseline; gap: 5px; min-width: 0; flex: 1; }
 .game-context-trigger-system {
   overflow: hidden;
   color: var(--text-1);
@@ -190,11 +192,10 @@ onMounted(load)
   white-space: nowrap;
 }
 .game-context-trigger-edition {
-  overflow: hidden;
+  flex-shrink: 0;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.3;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 .game-context-trigger-chevron { flex-shrink: 0; color: var(--text-muted); }
@@ -221,14 +222,15 @@ onMounted(load)
 }
 
 .game-context-options { display: grid; gap: 4px; }
-.game-context-option { min-height: 62px; gap: 12px; padding: 10px; }
+.game-context-option { min-height: 52px; gap: 12px; padding: 8px 10px; }
 .game-context-option :deep(.ram-item__icon) { width: 36px; height: 36px; flex-basis: 36px; }
 .game-context-option[aria-checked='true'] {
   border-color: color-mix(in srgb, var(--accent) 32%, transparent);
   background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
-.game-context-option-name { display: block; font-size: 14px; font-weight: 650; }
-.game-context-option-detail { display: block; margin-top: 4px; color: var(--text-muted); font-size: 11px; font-weight: 450; }
+.game-context-option-label { display: flex; align-items: baseline; gap: 6px; }
+.game-context-option-name { font-size: 14px; font-weight: 650; }
+.game-context-option-edition { flex-shrink: 0; color: var(--text-muted); font-size: 12px; font-weight: 450; }
 .game-context-check { color: var(--accent-soft); }
 .game-context-message, .game-context-error { margin: 8px 10px; font-size: 12px; line-height: 1.5; }
 .game-context-message { color: var(--text-muted); }
