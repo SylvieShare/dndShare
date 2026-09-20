@@ -54,7 +54,7 @@ describe('session world workspaces', () => {
     expect(toolbar).toContain("{ key: 'events', label: 'Хроника'")
     expect(graphTab).toContain('v-show="primaryView === \'story\'"')
     expect(graphTab).toMatch(/<SessionTabWorkspace v-show="primaryView !== 'story'">\s*<slot name="primary-workspace" \/>\s*<\/SessionTabWorkspace>/)
-    expect(sessionView).toContain('v-if="mapVisited" v-show="primaryView === \'maps\'"')
+    expect(sessionView).toContain('v-if="mapVisited && mapsAvailable" v-show="primaryView === \'maps\'"')
     expect(sessionView).toContain('<SessionCenterWorkspace')
     expect(sessionView).toContain('v-show="primaryView === \'story\'"')
     expect(sessionView).toContain("'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat'")

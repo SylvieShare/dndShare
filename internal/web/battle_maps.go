@@ -11,16 +11,16 @@ import (
 
 func init() { registerRoutes((*Server).routesBattleMaps) }
 func (s *Server) routesBattleMaps(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/maps", s.handleListMaps)
-	mux.HandleFunc("POST /api/maps", s.handleSaveMap)
-	mux.HandleFunc("PUT /api/maps/{mapId}", s.handleSaveMap)
-	mux.HandleFunc("DELETE /api/maps/{mapId}", s.handleDeleteMap)
-	mux.HandleFunc("GET /api/sessions/{uuid}/maps", s.handleListSessionMaps)
-	mux.HandleFunc("POST /api/sessions/{uuid}/maps", s.handleAddSessionMap)
-	mux.HandleFunc("PUT /api/sessions/{uuid}/maps/{mapId}", s.handleSaveSessionMap)
-	mux.HandleFunc("DELETE /api/sessions/{uuid}/maps/{mapId}", s.handleDeleteSessionMap)
-	mux.HandleFunc("PUT /api/sessions/{uuid}/map-display", s.handleSaveMapDisplay)
-	mux.HandleFunc("GET /api/sessions/{uuid}/map-events", s.handlePrivateMapEvents)
+	mux.HandleFunc("GET /api/maps", s.mapAdminOnly(s.handleListMaps))
+	mux.HandleFunc("POST /api/maps", s.mapAdminOnly(s.handleSaveMap))
+	mux.HandleFunc("PUT /api/maps/{mapId}", s.mapAdminOnly(s.handleSaveMap))
+	mux.HandleFunc("DELETE /api/maps/{mapId}", s.mapAdminOnly(s.handleDeleteMap))
+	mux.HandleFunc("GET /api/sessions/{uuid}/maps", s.mapAdminOnly(s.handleListSessionMaps))
+	mux.HandleFunc("POST /api/sessions/{uuid}/maps", s.mapAdminOnly(s.handleAddSessionMap))
+	mux.HandleFunc("PUT /api/sessions/{uuid}/maps/{mapId}", s.mapAdminOnly(s.handleSaveSessionMap))
+	mux.HandleFunc("DELETE /api/sessions/{uuid}/maps/{mapId}", s.mapAdminOnly(s.handleDeleteSessionMap))
+	mux.HandleFunc("PUT /api/sessions/{uuid}/map-display", s.mapAdminOnly(s.handleSaveMapDisplay))
+	mux.HandleFunc("GET /api/sessions/{uuid}/map-events", s.mapAdminOnly(s.handlePrivateMapEvents))
 	mux.HandleFunc("GET /api/public/sessions/{code}/map", s.handlePublicMap)
 	mux.HandleFunc("GET /api/public/sessions/{code}/map-events", s.handlePublicMapEvents)
 }

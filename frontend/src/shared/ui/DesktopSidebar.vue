@@ -41,13 +41,17 @@
         >
           <span>{{ groupLabel(item.group) }}</span>
         </div>
+        <MapAvailabilityGate :disabled="item.disabled">
         <SidebarNavItem
-          :as="RouterLink"
-          :to="item.to"
+          :as="item.disabled ? 'button' : RouterLink"
+          :to="item.disabled ? undefined : item.to"
+          :aria-disabled="item.disabled || undefined"
           :label="item.title"
+          :title="item.disabled ? 'Скоро будет' : item.title"
           :active="item.active"
           :icon="icons[item.key]"
         />
+        </MapAvailabilityGate>
       </template>
     </template>
 
@@ -59,6 +63,7 @@
 
 <script setup>
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
+import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
 import { computed, nextTick, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { BookOpen, BookOpenCheck, Map, ScrollText, Search, Shield, UserRoundPlus, Users } from '@lucide/vue'

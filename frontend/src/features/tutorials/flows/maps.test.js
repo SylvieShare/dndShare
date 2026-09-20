@@ -6,7 +6,7 @@ for (const mobile of [false, true]) {
     const target = vi.fn(),
       action = vi.fn(),
       showView = vi.fn();
-    const options = { mobile, target, action, showView };
+    const options = { mobile, target, action, showView, mapsAvailable: true };
     const step = sessionSteps({ ...options, dm: true }).find((s) => s.id === 'map');
     expect(showView).not.toHaveBeenCalled();
     const context = { onCleanup: vi.fn() };
@@ -16,5 +16,6 @@ for (const mobile of [false, true]) {
     expect(target).toHaveBeenCalledWith('session-content');
     expect(action).not.toHaveBeenCalled();
     expect(sessionSteps({ ...options, dm: false }).some((s) => s.id === 'map')).toBe(false);
+    expect(sessionSteps({ ...options, dm: true, mapsAvailable: false }).some((s) => s.id === 'map')).toBe(false);
   });
 }

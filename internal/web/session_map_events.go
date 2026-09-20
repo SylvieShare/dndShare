@@ -14,7 +14,7 @@ func (s *Server) handlePrivateMapEvents(w http.ResponseWriter, r *http.Request) 
 	s.streamMapEvents(w, r, sid)
 }
 func (s *Server) handlePublicMapEvents(w http.ResponseWriter, r *http.Request) {
-	session, ok := s.publicDisplaySession(w, r)
+	session, ok := s.publicMapSession(w, r)
 	if !ok {
 		return
 	}

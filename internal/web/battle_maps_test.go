@@ -31,7 +31,8 @@ func TestPrivateMapRoutesRequireAuthentication(t *testing.T) {
 func TestSystemMapCannotBeOverwrittenOrDeleted(t *testing.T) {
 	s := &Server{}
 	mux := http.NewServeMux()
-	s.routesBattleMaps(mux)
+	mux.HandleFunc("PUT /api/maps/{mapId}", s.handleSaveMap)
+	mux.HandleFunc("DELETE /api/maps/{mapId}", s.handleDeleteMap)
 	for _, method := range []string{"PUT", "DELETE"} {
 		r := httptest.NewRequest(method, "/api/maps/system-dungeon", strings.NewReader(`{"name":"replacement"}`))
 		r = r.WithContext(context.WithValue(r.Context(), userIDKey, int64(1)))

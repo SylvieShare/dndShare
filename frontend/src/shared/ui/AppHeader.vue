@@ -18,16 +18,18 @@
           <span class="brand-arrow">▾</span>
         </button>
         <div v-if="menuOpen" class="brand-menu">
-          <router-link
-            v-for="item in visibleItems"
-            :key="item.to"
+          <MapAvailabilityGate v-for="item in visibleItems" :key="item.key" :disabled="item.disabled">
+          <component
+            :is="item.disabled ? 'button' : RouterLink"
             class="brand-menu-item"
             :class="{ active: item.active }"
-            :to="item.to"
-            @click="menuOpen = false"
+            :to="item.disabled ? undefined : item.to"
+            :aria-disabled="item.disabled || undefined"
+            @click="!item.disabled && (menuOpen = false)"
           >
             {{ item.title }}
-          </router-link>
+          </component>
+          </MapAvailabilityGate>
         </div>
       </div>
 
@@ -53,9 +55,10 @@
 
 <script setup>
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
+import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useIsMobile } from '@sylvieshare/share-ui'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import MobileHeaderBack from '@/shared/ui/MobileHeaderBack.vue'
 import GameContextSelector from '@/shared/ui/GameContextSelector.vue'
 import { resolveMobileBackTarget } from '@/shared/lib/mobileBack'
@@ -219,6 +222,10 @@ function toggleBrandMenu() {
 }
 
 .brand-menu-item {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
   border-radius: 7px;
   color: var(--text-2);
   font-size: 13px;

@@ -81,7 +81,8 @@
         @open-chapters="openChapters"
       >
         <template #primary-workspace>
-          <SessionMapWorkspace v-if="mapVisited" v-show="primaryView === 'maps'" ref="mapWorkspace" :session-uuid="sessionUuid" :session="session" :participants="participants" :encounter="encounter" />
+          <SessionMapWorkspace v-if="mapVisited && mapsAvailable" v-show="primaryView === 'maps'" ref="mapWorkspace" :session-uuid="sessionUuid" :session="session" :participants="participants" :encounter="encounter" />
+          <p v-if="primaryView === 'maps' && !mapsAvailable" role="status">Скоро будет</p>
           <SessionSettingsWorkspace v-if="primaryView === 'settings'" :settings="sessionSettings"
             :saving="settingsSaving" :error="settingsError" @update-setting="updateSessionSetting" />
           <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
@@ -255,7 +256,8 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, provide, watch } from 'vue'
+import { computed, defineAsyncComponent, provide, watch } from 'vue'
+import { useAccountStore } from '@/stores/account'
 import { onBeforeRouteLeave } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
@@ -308,6 +310,8 @@ const {
 } = useSessionPage()
 provide('applicationEncounter', encounter)
 const mapVisited = ref(false), mapWorkspace = ref(null)
+const account = useAccountStore()
+const mapsAvailable = computed(() => account.hasRole('ADMIN'))
 watch(primaryView, (view) => { if (view === 'maps') mapVisited.value = true }, { immediate: true })
 onBeforeRouteLeave(() => mapWorkspace.value?.prepareLeave() ?? true)
 </script>

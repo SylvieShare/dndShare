@@ -41,6 +41,7 @@ const { connected } = useMapSync(
       snapshot.value = await getPublicMap(code);
       error.value = '';
     } catch (cause) {
+      if ([401, 403, 404].includes(cause.status)) snapshot.value = null;
       error.value =
         cause.status === 404
           ? 'Карта сессии недоступна. Проверьте ссылку.'

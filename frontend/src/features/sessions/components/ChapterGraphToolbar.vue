@@ -60,10 +60,13 @@
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ view.shortcut }}</kbd>
         </button>
 
-        <button v-if="isDm" type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': primaryView === 'maps' }"
-          :aria-current="primaryView === 'maps' ? 'page' : undefined" @click="emit('select-view', 'maps')">
+        <MapAvailabilityGate v-if="isDm" :disabled="!mapsAvailable">
+        <button type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': mapsAvailable && primaryView === 'maps' }"
+          :aria-disabled="!mapsAvailable || undefined"
+          :aria-current="mapsAvailable && primaryView === 'maps' ? 'page' : undefined" @click="mapsAvailable && emit('select-view', 'maps')">
           <Map :size="24" /><span>Карта</span>
         </button>
+        </MapAvailabilityGate>
         <span v-if="isDm" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 
 
@@ -112,6 +115,8 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
+import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
+import { useAccountStore } from '@/stores/account'
 import SessionToolbarMusic from './SessionToolbarMusic.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 
@@ -134,6 +139,8 @@ const emit = defineEmits([
   'edit-session', 'session-updated', 'open-combat',
 ])
 const header = ref(null)
+const account = useAccountStore()
+const mapsAvailable = computed(() => account.hasRole('ADMIN'))
 let headerObserver
 onMounted(() => {
   headerObserver = new ResizeObserver(() => emit('resize', header.value.getBoundingClientRect().height))

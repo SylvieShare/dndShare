@@ -9,7 +9,7 @@ export function resolveAppNavigation({ authenticated = false, hasCharacters = fa
       ? { key: 'characters', group: 'player', title: 'Персонажи', to: '/chars', active: path === '/chars' || path.startsWith('/chars/') || path.startsWith('/char/') }
       : { key: 'create-character', group: 'player', title: 'Создать персонажа', to: '/chars/new', active: path === '/chars/new' })
     items.push({ key: 'sessions', group: 'master', title: 'Сессии', to: '/sessions', active: path.startsWith('/session') })
-    items.push({ key: 'maps', group: 'master', title: 'Карты', to: '/maps', active: path.startsWith('/maps') })
+    items.push({ key: 'maps', group: 'master', title: 'Карты', to: '/maps', disabled: !admin, active: admin && path.startsWith('/maps') })
   } else {
     items.push({ key: 'create-character', group: 'player', title: 'Создать персонажа', to: '/chars/new', active: path === '/chars/new' })
   }
