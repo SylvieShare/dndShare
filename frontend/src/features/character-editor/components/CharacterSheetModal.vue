@@ -1,6 +1,7 @@
 <template>
   <AppModal fullscreen :z-index="zIndex" @close="emit('close')">
-    <div class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
+    <CharacterEditionDialog :controller="edition" />
+    <div :inert="edition.busy" class="csm share-app-canvas" :class="{ 'csm--preview': previewMode }">
       <CharEditorToolbar
         modal
         :publicVisible="publicVisible"
@@ -69,6 +70,8 @@ import CharEditorToolbar from '@/features/character-editor/components/CharEditor
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
 import TemplateBlockInner from '@/features/character-editor/components/TemplateBlockInner'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
+import CharacterEditionDialog from './CharacterEditionDialog.vue'
+import { useCharacterEdition } from '@/features/character-editor/composables/useCharacterEdition'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 
@@ -84,18 +87,21 @@ const previewMode = computed(() => Boolean(props.draft))
 const isMobile = ref(false)
 
 const {
-  loading, loadError, template, data, charCtx, isOwner, publicVisible, version,
+  loading, loadError, template, data, charCtx, isOwner, publicVisible, version, sourceVersionId, applyCharacter,
   toolbarTabs, charName, charSub, toolbarBlocksList,
   load, loadPreview, blocksForTab, containerWidthForTab, getInitialTabs,
   updateValue, updateValues, updateVar, onPublicToggle: updatePublicVisible,
 } = useCharacterData(props.uuid, isMobile)
 
 const pendingSessionEvents = []
-const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError } = useSaveDebounce(props.uuid, data, {
+const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dismissSaveError, flushSave } = useSaveDebounce(props.uuid, data, {
   version,
   takeEvents: () => pendingSessionEvents.splice(0),
   restoreEvents: events => pendingSessionEvents.unshift(...events),
 })
+
+const edition = useCharacterEdition({ uuid: props.uuid, isOwner: computed(() => isOwner.value && !previewMode.value), sourceVersionId, version, flushSave, applyCharacter })
+charCtx.edition = edition
 
 const canEdit = computed(() => !previewMode.value && (isOwner.value || props.isDm))
 

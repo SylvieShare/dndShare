@@ -279,13 +279,7 @@ export function useCharacterData(uuid, isMobile) {
       const res = await fetchGet('/char/' + uuid)
       if (!res || data.value !== snapshot || !canApply() || Number(res.version) < version.value) return false
       if (Number(res.version) === version.value) return true
-      data.value = { values: {}, var: {}, ...res.data }
-      version.value = Number(res.version) || 0
-      iconImageId.value = res.iconImageId ?? null
-      iconImageUrl.value = res.iconImageUrl ?? null
-      sourceVersionId.value = res.sourceVersionId ?? sourceVersionId.value
-      charCtx.var = data.value.var || {}
-      document.title = data.value.values?.name || 'Персонаж'
+      apply(res)
       return true
     } catch { return false }
   }
@@ -337,6 +331,7 @@ export function useCharacterData(uuid, isMobile) {
     loadSessions,
     pollVersion,
     refreshFromServer,
+    applyCharacter: apply,
     activeTabs,
     toolbarTabs,
     mobileTabs,

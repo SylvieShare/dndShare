@@ -161,6 +161,10 @@ func (s *Server) handleGetChar(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	s.writeCharacterResponse(w, r, char)
+}
+
+func (s *Server) writeCharacterResponse(w http.ResponseWriter, r *http.Request, char store.CharacterItem) {
 	template, err := s.store.GetTemplate(r.Context(), char.TemplateID)
 	if err != nil {
 		if errors.Is(err, store.ErrNotFound) {

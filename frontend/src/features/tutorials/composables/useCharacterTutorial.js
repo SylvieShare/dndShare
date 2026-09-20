@@ -22,6 +22,6 @@ export function useCharacterTutorial({ root, mobile, ready, template, sourceVers
     sourceKey: computed(() => sourceVersionId.value ? `edition:${sourceVersionId.value}` : null),
     mobile, ready: computed(() => ready.value && isOwner.value),
     createSteps: () => characterSteps({ mobile: mobile.value, dnd: template.value?.system === 'dnd5e',
-      target: name => visibleTarget(name === 'character-hp-editor' ? document : root.value, name), action }),
+      target: name => visibleTarget(['character-hp-editor', 'character-menu'].includes(name) ? document : root.value, name), action }),
   })
 }

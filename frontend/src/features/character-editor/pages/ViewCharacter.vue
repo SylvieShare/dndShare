@@ -1,5 +1,6 @@
 <template>
-  <div ref="tutorialRoot" class="view" :style="viewStyle" :inert="transfers.busy">
+  <div ref="tutorialRoot" class="view" :style="viewStyle" :inert="transfers.busy || edition.busy">
+    <CharacterEditionDialog :controller="edition" />
     <CharacterTransferDialogs :controller="transfers" :character-uuid="uuid" />
     <PageTutorial :tutorial="characterTutorial" :mobile="isMobile" />
     <CharEditorToolbar
@@ -183,6 +184,8 @@ import CharacterTabPane from '@/features/character-editor/components/CharacterTa
 import CharEditorToolbar from '@/features/character-editor/components/CharEditorToolbar'
 import CharacterSaveErrorToast from '@/features/character-editor/components/CharacterSaveErrorToast.vue'
 import { useCharacterData } from '@/features/character-editor/composables/useCharacterData'
+import CharacterEditionDialog from '@/features/character-editor/components/CharacterEditionDialog.vue'
+import { useCharacterEdition } from '@/features/character-editor/composables/useCharacterEdition'
 import { useSaveDebounce } from '@/features/character-editor/composables/useSaveDebounce'
 import { useTabSwipe } from '@/features/character-editor/composables/useTabSwipe'
 import { useScrollHide } from '@/features/character-editor/composables/useScrollHide'
@@ -223,7 +226,7 @@ const TabPane = CharacterTabPane
 const {
   loading, loadError, template, data, charCtx, isOwner, publicVisible,
   version, sourceVersionId, contentSources, sessions, topSession, hasSessionContext,
-  loadSessions, pollVersion, refreshFromServer,
+  loadSessions, pollVersion, refreshFromServer, applyCharacter,
   activeTabs, toolbarTabs, mobileTabs,
   headerTitle, charName, charSub, toolbarBlocksList, commonMobileBlockNode, commonMobileScrollHide,
   load, loadSync, blocksForTab, containerWidthForTab, getInitialTabs,
@@ -257,6 +260,8 @@ const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dism
 
 const transfers = useCharacterTransfers({ uuid, session: activeSession, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions })
 charCtx.itemTransfers = transfers
+const edition = useCharacterEdition({ uuid, isOwner, sourceVersionId, version, flushSave, applyCharacter, canStart: () => !transfers.busy })
+charCtx.edition = edition
 
 // Expose menu/session state to in-sheet blocks (SettingsMenuTile, CampaignBadge) on desktop, where the
 // toolbar is gone. charCtx is reactive, so assigned refs auto-unwrap on read.
@@ -465,13 +470,13 @@ async function syncEventSessionContext(requested = route.query.session) {
 
 async function tickVersionPoll() {
   if (versionPollInFlight) return
-  if (saveStatus.value !== 'idle' || transfers.busy) return
+  if (saveStatus.value !== 'idle' || transfers.busy || edition.busy) return
   if (!hasSessionContext.value) return
   versionPollInFlight = true
   try {
     const remote = await pollVersion()
     if (remote > version.value && saveStatus.value === 'idle') {
-      await refreshFromServer(() => saveStatus.value === 'idle' && !transfers.busy)
+      await refreshFromServer(() => saveStatus.value === 'idle' && !transfers.busy && !edition.busy)
     }
   } finally {
     versionPollInFlight = false

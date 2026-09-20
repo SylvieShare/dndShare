@@ -1,6 +1,6 @@
 <template>
-  <div class="sm-wrap" v-click-outside="() => (open = false)">
-    <BaseTile class="sm-tile" :color="accent" interactive @click="open = !open">
+  <div ref="menuAnchor" class="sm-wrap">
+    <BaseTile class="sm-tile" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="open = !open" @keydown.enter.prevent="open = !open" @keydown.space.prevent="open = !open">
       <TileAccentStrip />
       <div class="sm-body">
         <img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" />
@@ -8,10 +8,11 @@
       </div>
     </BaseTile>
 
-    <transition name="sm-fade">
-      <div v-if="open" class="sm-menu" data-tutorial="character-menu">
+    <CharacterMenuPopover v-model:open="open" :anchor="menuAnchor">
+      <div class="sm-menu" data-tutorial="character-menu">
               <CloneCharacterAction @cloned="open = false" />
         <TutorialRestart @restart="open = false" />
+        <CharacterEditionAction @opened="open = false" />
         <div v-if="ctx.saveStatus === 'pending' || ctx.saveStatus === 'saving'" class="sm-save" :class="ctx.saveStatus">
           <span class="sm-dot"></span>
           <span class="sm-save-label">{{ saveLabel }}</span>
@@ -38,7 +39,7 @@
           <span>Получить PDF</span>
         </button>
       </div>
-    </transition>
+    </CharacterMenuPopover>
 
     <ContentSourcesModal
       v-if="sourcesOpen"
@@ -51,6 +52,8 @@
 </template>
 
 <script setup>
+import CharacterMenuPopover from '@/features/character-editor/components/CharacterMenuPopover.vue'
+import CharacterEditionAction from '@/features/character-editor/components/CharacterEditionAction.vue'
 import CloneCharacterAction from '@/features/character-editor/components/CloneCharacterAction.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
@@ -64,6 +67,7 @@ import { svgColorFilter } from '@/shared/lib/svgColorFilter'
 
 const props = defineProps(['block'])
 const ctx = inject('charCtx', { canEdit: false, canTogglePublic: false, publicVisible: false, saveStatus: 'idle', pendingSecondsLeft: 0 })
+const menuAnchor = ref(null)
 const open = ref(false)
 const sourcesOpen = ref(false)
 useTutorialAction('character-menu', ({ onCleanup }) => {
@@ -127,21 +131,7 @@ function updateSources(value) {
 .sm-sub { font-size: 13px; font-weight: 600; color: var(--text-2); }
 
 /* ── Dropdown ── */
-.sm-menu {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  z-index: 60;
-  min-width: 220px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px;
-  background: var(--popover-bg);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-lg);
-}
+.sm-menu { display: flex; flex-direction: column; gap: 4px; }
 .sm-item { padding: 6px 8px; border-radius: 7px; }
 .sm-item:hover { background: color-mix(in srgb, var(--text-on-accent) 4%, transparent); }
 
@@ -174,6 +164,4 @@ function updateSources(value) {
 .sm-save.saving .sm-dot { background: var(--info); animation: sm-pulse 0.9s ease-in-out infinite; } .sm-save.saving .sm-save-label { color: var(--info); }
 @keyframes sm-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-.sm-fade-enter-active, .sm-fade-leave-active { transition: opacity 0.12s ease, transform 0.12s ease; }
-.sm-fade-enter-from, .sm-fade-leave-to { opacity: 0; transform: translateY(-4px); }
 </style>

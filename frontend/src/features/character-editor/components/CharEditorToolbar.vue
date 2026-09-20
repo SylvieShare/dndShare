@@ -69,16 +69,17 @@
 
       <!-- Right: menu -->
       <div class="tb-right">
-        <div class="menu-wrap" v-click-outside="closeMenu">
-          <button class="menu-btn" :class="{ open: menuOpen }" title="Меню" @click="menuOpen = !menuOpen">
+        <div class="menu-wrap">
+          <button ref="menuAnchor" :aria-expanded="menuOpen" class="menu-btn" :class="{ open: menuOpen }" title="Меню" @click="menuOpen = !menuOpen">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
           </button>
-          <transition name="dropdown">
-            <div v-if="menuOpen" class="menu-dropdown" data-tutorial="character-menu">
+          <CharacterMenuPopover v-model:open="menuOpen" :anchor="menuAnchor">
+            <div class="menu-dropdown" data-tutorial="character-menu">
               <CloneCharacterAction @cloned="menuOpen = false" />
               <TutorialRestart @restart="menuOpen = false" />
+              <CharacterEditionAction @opened="menuOpen = false" />
               <button v-if="!modal" class="menu-item menu-action menu-navigation-item" type="button" @click="goBack">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M8 7l-5 5 5 5" />
@@ -115,7 +116,7 @@
                 <span>Получить PDF</span>
               </button>
             </div>
-          </transition>
+          </CharacterMenuPopover>
         </div>
       </div>
 
@@ -133,6 +134,8 @@
 
 <script setup>
 defineOptions({ inheritAttrs: false })
+import CharacterMenuPopover from './CharacterMenuPopover.vue'
+import CharacterEditionAction from './CharacterEditionAction.vue'
 import CloneCharacterAction from '@/features/character-editor/components/CloneCharacterAction.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
@@ -167,6 +170,7 @@ const emit = defineEmits(['update:publicVisible', 'update:activeTab', 'update:va
 
 const router = useRouter()
 const toolbarRootEl = ref(null)
+const menuAnchor = ref(null)
 const menuOpen = ref(false)
 const sourcesOpen = ref(false)
 useTutorialAction('character-menu', ({ onCleanup }) => {
@@ -204,7 +208,6 @@ const sourceSummary = computed(() => {
   return `${settings.ids.length} выбрано`
 })
 
-function closeMenu() { menuOpen.value = false }
 function openSources() {
   sourceDraft.value = normalizeContentSourceSettings(props.contentSources)
   sourcesOpen.value = true

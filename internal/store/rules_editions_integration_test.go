@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -146,6 +147,58 @@ func TestRulesEditionsMigration(t *testing.T) {
 	}
 	if _, err = pool.Exec(ctx, `UPDATE dndshare."char" SET source_version_id=$2 WHERE id=$1`, charID, v14); err == nil {
 		t.Fatal("silent conversion accepted")
+	}
+	exec(schemaCharacterEditionChangeSQL)
+	var uuid string
+	if err = pool.QueryRow(ctx, `SELECT uuid::text FROM dndshare."char" WHERE id=$1`, charID).Scan(&uuid); err != nil {
+		t.Fatal(err)
+	}
+	before, err := s.GetCharacter(ctx, uuid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, attempt := range []struct {
+		owner, revision, target int64
+		want                    error
+	}{
+		{102, before.Version, v14, ErrNotFound},
+		{101, before.Version + 1, v14, ErrCharacterVersion},
+		{101, before.Version, -1, ErrCharacterEdition},
+	} {
+		if _, err := s.ChangeCharacterEdition(ctx, attempt.owner, uuid, attempt.revision, attempt.target); !errors.Is(err, attempt.want) {
+			t.Fatalf("change guard: %v, want %v", err, attempt.want)
+		}
+	}
+	var foreignVersion int64
+	if err = pool.QueryRow(ctx, `SELECT id FROM dndshare.source_version WHERE source_id<>$1 LIMIT 1`, *before.SourceID).Scan(&foreignVersion); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = s.ChangeCharacterEdition(ctx, 101, uuid, before.Version, foreignVersion); !errors.Is(err, ErrCharacterEdition) {
+		t.Fatal("cross-system edition accepted", err)
+	}
+	if _, err = pool.Exec(ctx, `UPDATE dndshare."char" SET source_version_id=$2 WHERE id=$1`, charID, foreignVersion); err == nil {
+		t.Fatal("DB cross-system guard bypassed")
+	}
+	changed, err := s.ChangeCharacterEdition(ctx, 101, uuid, before.Version, v14)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if *changed.SourceVersionID != v14 || changed.Version != before.Version+1 || string(changed.Data) != string(before.Data) {
+		t.Fatalf("document or revision changed incorrectly: %+v", changed)
+	}
+	same, err := s.ChangeCharacterEdition(ctx, 101, uuid, changed.Version, v14)
+	if err != nil || same.Version != changed.Version {
+		t.Fatal("same edition must be idempotent", err)
+	}
+	if _, err = s.ChangeCharacterEdition(ctx, 101, uuid, before.Version, v24); !errors.Is(err, ErrCharacterVersion) {
+		t.Fatal("stale switch accepted", err)
+	}
+	returned, err := s.ChangeCharacterEdition(ctx, 101, uuid, changed.Version, v24)
+	if err != nil || string(returned.Data) != string(before.Data) {
+		t.Fatal("round trip lost existing blocked reference", err)
+	}
+	if _, err = pool.Exec(ctx, `UPDATE dndshare."char" SET data=jsonb_set(data,'{values,race}','{"id":9002}') WHERE id=$1`, charID); err == nil {
+		t.Fatal("new legacy reference accepted after edition switch")
 	}
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES(9005,'To review',999,'{}')`)
 	exec(`INSERT INTO dndshare.item_content_source(item_id,content_source_id) VALUES(9005,$1)`, book)
