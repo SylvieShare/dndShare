@@ -7,7 +7,7 @@ export function raceSpellReferences(abilities = []) {
       if (!Number.isInteger(id) || id <= 0) continue
       const level = Number(grant.level ?? ability.data?.level) || 1
       if (!spells.has(id) || spells.get(id).level > level) {
-        spells.set(id, { id, level, condition: `С ${level}-го уровня персонажа` })
+        spells.set(id, { id, level })
       }
     }
   }

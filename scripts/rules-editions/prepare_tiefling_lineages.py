@@ -39,7 +39,7 @@ def build_tiefling_lineages(race, lineage, presence_id, spell_id=lambda name: re
                 'без ячейки один раз за Долгий отдых или с тратой ячейки подходящего уровня. '
                 'Заклинательная характеристика — та же, что выбрана для Потустороннего присутствия.')
         records.append({'key': key('subspecies-feature', name+':магия'), 'name': 'Магия: '+name.lower(), 'typeId': 3,
-                        'data': {**common, 'desc': paragraphs(desc), 'granted_spells': grants},
+                        'data': {**common, 'desc': paragraphs(desc), 'granted_spells': grants, 'choice_only': True},
                         'automationStatus': 'partial', 'automationNote': 'Заклинания выдаются на уровнях 1, 3, 5 с выбранной характеристикой; бесплатные применения учитываются игроком.'})
     data = copy.deepcopy(race['data'])
     data['description'] = parts[0].replace(' Три варианта наследия описаны ниже.', '')

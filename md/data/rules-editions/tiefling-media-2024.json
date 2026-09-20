@@ -1,0 +1,95 @@
+{
+  "date": "2026-09-20",
+  "generationMode": "built-in image_gen",
+  "reference": "Screenshot 2026-09-20 at 21.38.11.png (user-provided morphology and palette), goliath.jpg (existing cover style)",
+  "baseRaceId": 7209,
+  "baseMediaPreserved": {
+    "iconImageId": 16657,
+    "coverImageId": 17755
+  },
+  "wizardHiddenMagicAbilityIds": [
+    7539,
+    7542,
+    7545
+  ],
+  "assets": [
+    {
+      "slug": "abyssal",
+      "itemId": 7537,
+      "slot": "icon",
+      "prompt": "Use case: stylized-concept. Asset type: DnD Share tiefling abyssal heritage icon. Generate new original art. Image 1 is anatomy/palette reference: use ONLY the RIGHT tiefling heritage. Image 2 is established game-art style reference, NOT a subject to copy. Subject: brick-red skin, shaggy charcoal hair, rugged black crooked horns sweeping outward and upward, angular rugged face, red-orange eyes, deep forest-green travelling clothes. Style: polished flat cartoon fantasy game art, thick deep-plum outlines, broad readable shapes, restrained two-step cel shading, no photoreal texture. One adult head-and-shoulders heraldic bust, three-quarter view, strong compact silhouette readable at 64px. Square canvas 1024x1024 with genuine transparent alpha background. Entire horns and shoulders inside canvas with a small clear margin. No background, disc, frame, glow, particles, weapons. No letters, labels, symbols, watermark or text. Preserve distinct horn morphology and skin palette; do not mix the three heritages.",
+      "fileName": "abyssal-icon.webp",
+      "sha256": "bf6a3ff639c59d15db7e3f6b30ab8adc8ac7f23ee40bfaf283eb69845afce551",
+      "bytes": 16282,
+      "publication": {
+        "imageId": 49297,
+        "imageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7537/icon/bf6a3ff639c59d15db7e3f6b30ab8adc8ac7f23ee40bfaf283eb69845afce551.webp"
+      }
+    },
+    {
+      "slug": "abyssal",
+      "itemId": 7537,
+      "slot": "cover",
+      "prompt": "Use case: stylized-concept. Asset type: DnD Share tiefling abyssal heritage cover. Generate new original art. Image 1 is anatomy/palette reference: use ONLY the RIGHT tiefling heritage. Image 2 is established game-art style reference, NOT a subject to copy. Subject: brick-red skin, shaggy charcoal hair, rugged black crooked horns sweeping outward and upward, angular rugged face, red-orange eyes, deep forest-green travelling clothes. Style: polished flat cartoon fantasy game art, thick deep-plum outlines, broad readable shapes, restrained two-step cel shading, no photoreal texture. Landscape 1536x1024 standalone race cover featuring two adult representatives, one masculine and one feminine, same heritage with individual faces and different hairstyles. Waist-up central group occupying central 60% width, horns fully visible and generous air at sides and top. Quiet dark plum/navy backdrop with subtle tonal atmosphere and calm lower edge for UI overlay. Distinct composition from an icon, no vignette frame. No letters, labels, symbols, watermark or text. Preserve distinct horn morphology and skin palette; do not mix the three heritages.",
+      "fileName": "abyssal-cover.jpg",
+      "sha256": "46f702f52996c227e45c8e4342cb24f617acd03cc4a73a8d3a2f379ac9aac221",
+      "bytes": 156565,
+      "publication": {
+        "imageId": 49298,
+        "imageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7537/cover/46f702f52996c227e45c8e4342cb24f617acd03cc4a73a8d3a2f379ac9aac221.jpg"
+      }
+    },
+    {
+      "slug": "chthonic",
+      "itemId": 7540,
+      "slot": "icon",
+      "prompt": "Use case: stylized-concept. Asset type: DnD Share tiefling chthonic heritage icon. Generate new original art. Image 1 is anatomy/palette reference: use ONLY the CENTER tiefling heritage. Image 2 is established game-art style reference, NOT a subject to copy. Subject: pale lavender skin, long dark green-black hair, large pale gray branching crown-like horns, gaunt elegant face, reddish eyes, muted jade and silver robes. Style: polished flat cartoon fantasy game art, thick deep-plum outlines, broad readable shapes, restrained two-step cel shading, no photoreal texture. One adult head-and-shoulders heraldic bust, three-quarter view, strong compact silhouette readable at 64px. Square canvas 1024x1024 with genuine transparent alpha background. Entire horns and shoulders inside canvas with a small clear margin. No background, disc, frame, glow, particles, weapons. No letters, labels, symbols, watermark or text. Preserve distinct horn morphology and skin palette; do not mix the three heritages.",
+      "fileName": "chthonic-icon.webp",
+      "sha256": "ee4b9c796121fa1a312ed8620e33719dfbe0a48c18fce746b47a56c6a31193d6",
+      "bytes": 16448,
+      "publication": {
+        "imageId": 49299,
+        "imageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7540/icon/ee4b9c796121fa1a312ed8620e33719dfbe0a48c18fce746b47a56c6a31193d6.webp"
+      }
+    },
+    {
+      "slug": "chthonic",
+      "itemId": 7540,
+      "slot": "cover",
+      "prompt": "Use case: stylized-concept. Asset type: DnD Share tiefling chthonic heritage cover. Generate new original art. Image 1 is anatomy/palette reference: use ONLY the CENTER tiefling heritage. Image 2 is established game-art style reference, NOT a subject to copy. Subject: pale lavender skin, long dark green-black hair, large pale gray branching crown-like horns, gaunt elegant face, reddish eyes, muted jade and silver robes. Style: polished flat cartoon fantasy game art, thick deep-plum outlines, broad readable shapes, restrained two-step cel shading, no photoreal texture. Landscape 1536x1024 standalone race cover featuring two adult representatives, one masculine and one feminine, same heritage with individual faces and different hairstyles. Waist-up central group occupying central 60% width, horns fully visible and generous air at sides and top. Quiet dark plum/navy backdrop with subtle tonal atmosphere and calm lower edge for UI overlay. Distinct composition from an icon, no vignette frame. No letters, labels, symbols, watermark or text. Preserve distinct horn morphology and skin palette; do not mix the three heritages.",
+      "fileName": "chthonic-cover.jpg",
+      "sha256": "81f2cd30473ecd39a1eb02385ef73867ee2eb1b38c0a99e68a14fa77dfa2484e",
+      "bytes": 190261,
+      "publication": {
+        "imageId": 49300,
+        "imageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7540/cover/81f2cd30473ecd39a1eb02385ef73867ee2eb1b38c0a99e68a14fa77dfa2484e.jpg"
+      }
+    },
+    {
+      "slug": "infernal",
+      "itemId": 7543,
+      "slot": "icon",
+      "prompt": "Use case: stylized-concept. Asset type: DnD Share tiefling infernal heritage icon. Generate new original art. Image 1 is anatomy/palette reference: use ONLY the LEFT tiefling heritage. Image 2 is established game-art style reference, NOT a subject to copy. Subject: copper-ochre orange skin, short swept black hair, sleek upright orange horns, gold eyes, pointed ears, wine-red clothes with restrained gold trim. Style: polished flat cartoon fantasy game art, thick deep-plum outlines, broad readable shapes, restrained two-step cel shading, no photoreal texture. One adult head-and-shoulders heraldic bust, three-quarter view, strong compact silhouette readable at 64px. Square canvas 1024x1024 with genuine transparent alpha background. Entire horns and shoulders inside canvas with a small clear margin. No background, disc, frame, glow, particles, weapons. No letters, labels, symbols, watermark or text. Preserve distinct horn morphology and skin palette; do not mix the three heritages.",
+      "fileName": "infernal-icon.webp",
+      "sha256": "d0f4b2a39fb7c81b9b7bd93dd7782f36ebc795609d480b24d91a15d06dfcef9f",
+      "bytes": 15214,
+      "publication": {
+        "imageId": 49301,
+        "imageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7543/icon/d0f4b2a39fb7c81b9b7bd93dd7782f36ebc795609d480b24d91a15d06dfcef9f.webp"
+      }
+    },
+    {
+      "slug": "infernal",
+      "itemId": 7543,
+      "slot": "cover",
+      "prompt": "Use case: stylized-concept. Asset type: DnD Share tiefling infernal heritage cover. Generate new original art. Image 1 is anatomy/palette reference: use ONLY the LEFT tiefling heritage. Image 2 is established game-art style reference, NOT a subject to copy. Subject: copper-ochre orange skin, short swept black hair, sleek upright orange horns, gold eyes, pointed ears, wine-red clothes with restrained gold trim. Style: polished flat cartoon fantasy game art, thick deep-plum outlines, broad readable shapes, restrained two-step cel shading, no photoreal texture. Landscape 1536x1024 standalone race cover featuring two adult representatives, one masculine and one feminine, same heritage with individual faces and different hairstyles. Waist-up central group occupying central 60% width, horns fully visible and generous air at sides and top. Quiet dark plum/navy backdrop with subtle tonal atmosphere and calm lower edge for UI overlay. Distinct composition from an icon, no vignette frame. No letters, labels, symbols, watermark or text. Preserve distinct horn morphology and skin palette; do not mix the three heritages.",
+      "fileName": "infernal-cover.jpg",
+      "sha256": "a5bac6098afb60e546c345ba7a53474282ce053020e01f07ccde97fd8dcc5491",
+      "bytes": 179035,
+      "publication": {
+        "imageId": 49302,
+        "imageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7543/cover/a5bac6098afb60e546c345ba7a53474282ce053020e01f07ccde97fd8dcc5491.jpg"
+      }
+    }
+  ]
+}

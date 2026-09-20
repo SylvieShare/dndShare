@@ -1999,7 +1999,8 @@
             "ability_choice_source": 7414,
             "slotless": true
           }
-        ]
+        ],
+        "choice_only": true
       },
       "automationStatus": "partial",
       "automationNote": "Заклинания выдаются на уровнях 1, 3, 5 с выбранной характеристикой; бесплатные применения учитываются игроком."
@@ -2074,7 +2075,8 @@
             "ability_choice_source": 7414,
             "slotless": true
           }
-        ]
+        ],
+        "choice_only": true
       },
       "automationStatus": "partial",
       "automationNote": "Заклинания выдаются на уровнях 1, 3, 5 с выбранной характеристикой; бесплатные применения учитываются игроком."
@@ -2149,7 +2151,8 @@
             "ability_choice_source": 7414,
             "slotless": true
           }
-        ]
+        ],
+        "choice_only": true
       },
       "automationStatus": "partial",
       "automationNote": "Заклинания выдаются на уровнях 1, 3, 5 с выбранной характеристикой; бесплатные применения учитываются игроком."

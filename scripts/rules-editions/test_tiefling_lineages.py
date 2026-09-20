@@ -15,6 +15,7 @@ class TieflingTests(unittest.TestCase):
         magic = [r for r in records if r['data'].get('granted_spells')]
         self.assertEqual(len(magic), 3)
         for row, (_, _, spells) in zip(magic, LINEAGES.values()):
+            self.assertTrue(row['data']['choice_only'])
             self.assertEqual([r['spell'] for r in row['data']['granted_spells']], spells)
             self.assertEqual([r['level'] for r in row['data']['granted_spells']], [1,3,5])
             self.assertTrue(all(r['ability_choice_source'] == 8 for r in row['data']['granted_spells']))

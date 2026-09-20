@@ -4,6 +4,23 @@ import { buildCharacterData } from './buildCharacter'
 const selection = (id, name, data = {}) => ({ id, name, item: { id, name, data } })
 
 describe('buildCharacterData skill choices', () => {
+  it('retains hidden wizard magic features and grants only the selected heritage cantrip', () => {
+    const features = [2, 3, 4].map((subrace, index) => ({
+      id: 10 + index, name: 'Магия наследия', data: {
+        race_ids: [{ id: 1 }], subrace_ids: [{ id: subrace }], level: 1, choice_only: true,
+        granted_spells: [1, 3, 5].map((level, n) => ({ spell: 100 + index * 10 + n, level, ability: 6 })),
+      },
+    }))
+    for (let index = 0; index < 3; index++) {
+      const result = buildCharacterData({
+        race: selection(1, 'Тифлинг'), subrace: selection(2 + index, 'Наследие'), raceAbilityItems: features,
+      })
+      expect(result.data.values.abilities_race).toEqual([{ id: 10 + index }])
+      expect(result.data.values.spells.grants).toMatchObject([{ id: 100 + index * 10, casting_ability: 6 }])
+      expect(result.data.values.spells.grants).toHaveLength(1)
+    }
+  })
+
   it('grants only the selected origin defense directly to the character sheet', () => {
     const variants = [8, 9, 5, 4, 13].map(id => ({ value: String(id), defenses: [{ kind: 'resistance', damage_type: id }] }))
     for (const variant of variants) {

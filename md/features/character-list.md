@@ -475,6 +475,11 @@ options. Each child owns its lore, resistance and spells. `RaceSpellList` shows
 real spell tiles with character acquisition levels and opens the handbook modal.
 The links come from `granted_spells`, the same records used to grant spells on
 creation and level-up. The shared casting choice belongs to Otherworldly Presence.
+Acquisition levels appear in the left column («С n-го уровня») on desktop and
+mobile. The base-race spell list is omitted; those links remain in the ability
+reference modal. The three tiefling magic features have `choice_only`: the wizard
+shows their expanded spell list once, while creation still grants the feature
+and its level-appropriate spells to the character sheet.
 
 `choice_only` abilities retain their rule/selection source and saved character
 references, but creation and level-up do not repeat their feature tile beside

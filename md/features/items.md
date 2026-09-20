@@ -650,8 +650,14 @@ on each child. `choice_only` controls acquisition presentation and does not dele
 a rule, saved selection, or granted spell. Dragonborn variant cards keep their
 specific benefits, without repeating the common height and rules text.
 
-The three tiefling heritage cards share the existing base tiefling icon and cover
-IDs. Rule and spell data remain specific to each heritage.
+The three tiefling heritage cards have independent transparent 128×128 WebP icons
+and 1536×1024 JPEG covers. Abyssal uses red skin and rugged dark horns, Chthonic
+lavender skin and pale crown horns, Infernal copper skin and smooth orange horns.
+The base tiefling retains its own media. Prompts and publication hashes are in
+`md/data/rules-editions/tiefling-media-2024.json`.
+The three heritage magic abilities retain their grants but carry `choice_only`
+to avoid duplicating the expanded spell list in the wizard. Spell acquisition
+levels appear to the left of the tiles, including on mobile.
 
 Dragonborn ancestry stores a suggest-12 `damage_type` and a `defenses` list.
 The same damage ID drives the existing colored SVG icon and the creation grant.

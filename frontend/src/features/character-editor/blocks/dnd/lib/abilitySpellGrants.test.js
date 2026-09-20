@@ -14,7 +14,7 @@ const ability = {
 describe('ability spell grants', () => {
   it('shares a racial casting choice with lineage spells and unlocks them at total levels 3 and 5', () => {
     const presence = { id: 1, typeId: 3, data: { granted_spells: [{ spell: 40, ability_choice_key: 'casting' }] } }
-    const lineage = { id: 2, typeId: 3, data: { granted_spells: [1, 3, 5].map((level, index) => ({
+    const lineage = { id: 2, typeId: 3, data: { choice_only: true, granted_spells: [1, 3, 5].map((level, index) => ({
       spell: 41 + index, level, ability_choice_key: 'casting', ability_choice_source: { id: 1 }, slotless: level > 1,
     })) } }
     const values = { lvl: { level: 1 }, abilities_race: [{ id: 1, choices: { casting: [5] } }, { id: 2 }] }

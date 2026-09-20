@@ -51,7 +51,7 @@ onScopeDispose(() => { sequence++ })
 .handbook-reference-rows { display: grid; gap: 8px; min-width: 0; }
 .handbook-reference { display: grid; gap: 4px; min-width: 0; }
 .handbook-reference--split { grid-template-columns: minmax(130px, .85fr) minmax(0, 1.25fr); gap: 12px; align-items: start; }
-.handbook-reference--leading { grid-template-columns: 40px minmax(0, 1fr); align-items: center; gap: 10px; }
+.handbook-reference--leading { grid-template-columns: var(--handbook-reference-leading-width, 40px) minmax(0, 1fr); align-items: center; gap: 10px; }
 .handbook-reference-content { display: grid; gap: 8px; min-width: 0; }
 .handbook-reference aside { min-width: 0; }
 .handbook-reference-tile { padding: 8px 10px; }

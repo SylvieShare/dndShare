@@ -30,7 +30,6 @@
       <template #details>
         <div ref="detailsRef" class="race-details">
           <RaceAbilityList :abilities="selectedAbilities" hide-choice-only />
-          <RaceSpellList :abilities="selectedAbilities" />
           <p v-if="sizeDescription && !grants.raceVariants" class="choice-description">{{ sizeDescription }}</p>
           <section v-if="raceDesc" class="race-lore">
             <div class="sheet-section-title">О расе</div>
@@ -119,7 +118,6 @@
 
 <script setup>
 import { computed, inject, nextTick, ref } from 'vue'
-import RaceSpellList from '@/features/items/components/RaceSpellList.vue'
 import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
 import RaceVariantPicker from '../RaceVariantPicker.vue'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
