@@ -246,7 +246,8 @@ handbook list and detail header.
   equipment. Do not turn any of them into a miniature character scene.
 - Related records may share one identical icon only when they express the same
   mechanic and the same symbol remains unambiguous. Every record still receives
-  its own cover. A shared topic or palette alone is not enough to reuse an icon.
+  its own cover when that cover is in scope. A shared topic or palette alone is
+  not enough to reuse an icon.
 - Store the cover as an opaque lossy `1600×640` WebP (`5:2`, quality 88). Show a
   concrete moment in which the ability matters rather than enlarging the icon
   or drawing a generic portrait. The detail header contains only the item name
@@ -254,10 +255,12 @@ handbook list and detail header.
   do not reserve a blank title zone or an empty lower band. Keep the action
   balanced across the panorama and all defining faces, anatomy, tools and
   effects comfortably inside the outer crop.
-- Match the race/class flat-cartoon family: thick deep-plum contours, broad
-  readable silhouettes, expressive stylized faces when characters are needed,
-  restrained two-step shading and a controlled item-specific palette. Avoid
-  photorealistic skin, painterly noise, dense scenery and micro-detail.
+- Covers follow the mature detailed fantasy illustration contract in
+  [Handbook art style](../handbook-art-style.md): natural adult proportions,
+  fine deep-plum linework, controlled cel-painted volumes and restrained
+  material texture. The compact flat-cartoon treatment above applies to icons,
+  not to cover characters. Inspect existing covers in the same category before
+  generating; identify style references separately from identity references.
 - The icon and cover share the same mechanic and palette but remain independent
   compositions. Do not include text, readable runes, letters, numbers, frames,
   badges, baked-in UI, logos, watermarks or gore.
