@@ -17,3 +17,16 @@ func (s *Store) ReuseSystemItemIcon(ctx context.Context, itemID, sourceID int64)
 	}
 	return err
 }
+
+// ReuseSystemItemCover assigns a shared storage row without copying or deleting media.
+func (s *Store) ReuseSystemItemCover(ctx context.Context, itemID, sourceID int64) error {
+	result, err := s.pool.Exec(ctx, `UPDATE dndshare.item target
+ SET cover_image_id=source.cover_image_id
+ FROM dndshare.item source
+ WHERE target.id=$1 AND source.id=$2 AND target.user_id IS NULL AND source.user_id IS NULL
+ AND source.cover_image_id IS NOT NULL`, itemID, sourceID)
+	if err == nil && result.RowsAffected() == 0 {
+		return ErrNotFound
+	}
+	return err
+}

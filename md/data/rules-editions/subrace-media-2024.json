@@ -1,0 +1,182 @@
+{
+  "generator": "built-in imagegen",
+  "assets": [
+    {
+      "key": "cloud-cover",
+      "slot": "cover",
+      "itemId": 7507,
+      "imageId": 49285,
+      "sha256": "1b2d741a0960b53651a07b4f4dbae5c3e60eb46439a477660a44b1f4361a691d",
+      "bytes": 245840,
+      "width": 1536,
+      "height": 1024,
+      "fileName": "cloud-cover.jpg",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7507/cover/1b2d741a0960b53651a07b4f4dbae5c3e60eb46439a477660a44b1f4361a691d.jpg"
+    },
+    {
+      "key": "cloud-icon",
+      "slot": "icon",
+      "itemId": 7507,
+      "imageId": 49286,
+      "sha256": "fba44a6d82f48290ce54123f556c5ee651c5cae9423f97db87e1bec02f664916",
+      "bytes": 18738,
+      "width": 128,
+      "height": 128,
+      "fileName": "cloud-icon.webp",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7507/icon/fba44a6d82f48290ce54123f556c5ee651c5cae9423f97db87e1bec02f664916.webp"
+    },
+    {
+      "key": "fire-cover",
+      "slot": "cover",
+      "itemId": 7509,
+      "imageId": 49287,
+      "sha256": "7a4ab57f8f2ff107d112e0ff03e484875327cc44f299d77d6c56e0c99103d6ae",
+      "bytes": 201557,
+      "width": 1536,
+      "height": 1024,
+      "fileName": "fire-cover.jpg",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7509/cover/7a4ab57f8f2ff107d112e0ff03e484875327cc44f299d77d6c56e0c99103d6ae.jpg"
+    },
+    {
+      "key": "fire-icon",
+      "slot": "icon",
+      "itemId": 7509,
+      "imageId": 49288,
+      "sha256": "c606b1d4d001c3ff1cc4fe10dcf7d1dfa979c90235394421bfc70c6202ac7c70",
+      "bytes": 18064,
+      "width": 128,
+      "height": 128,
+      "fileName": "fire-icon.webp",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7509/icon/c606b1d4d001c3ff1cc4fe10dcf7d1dfa979c90235394421bfc70c6202ac7c70.webp"
+    },
+    {
+      "key": "frost-cover",
+      "slot": "cover",
+      "itemId": 7511,
+      "imageId": 49289,
+      "sha256": "030035e3d8fa6912f402848651cb3a93bb072d681bb2ed5965dc9b03c3dfcdbc",
+      "bytes": 231553,
+      "width": 1536,
+      "height": 1024,
+      "fileName": "frost-cover.jpg",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7511/cover/030035e3d8fa6912f402848651cb3a93bb072d681bb2ed5965dc9b03c3dfcdbc.jpg"
+    },
+    {
+      "key": "frost-icon",
+      "slot": "icon",
+      "itemId": 7511,
+      "imageId": 49290,
+      "sha256": "47464d62ef1c17eeff794eb890d53e0418f0647af3062a41a2549368ab3d628c",
+      "bytes": 19798,
+      "width": 128,
+      "height": 128,
+      "fileName": "frost-icon.webp",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7511/icon/47464d62ef1c17eeff794eb890d53e0418f0647af3062a41a2549368ab3d628c.webp"
+    },
+    {
+      "key": "hill-cover",
+      "slot": "cover",
+      "itemId": 7513,
+      "imageId": 49291,
+      "sha256": "de73413f9d0ba7039b887d06c2e89e1ec9d98fe1834384d29ed3e1411c5682ec",
+      "bytes": 209357,
+      "width": 1536,
+      "height": 1024,
+      "fileName": "hill-cover.jpg",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7513/cover/de73413f9d0ba7039b887d06c2e89e1ec9d98fe1834384d29ed3e1411c5682ec.jpg"
+    },
+    {
+      "key": "hill-icon",
+      "slot": "icon",
+      "itemId": 7513,
+      "imageId": 49292,
+      "sha256": "5a71c8323187a624a9a96a86892b9d4b532211c9d972a585dea7caf84de1248b",
+      "bytes": 16486,
+      "width": 128,
+      "height": 128,
+      "fileName": "hill-icon.webp",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7513/icon/5a71c8323187a624a9a96a86892b9d4b532211c9d972a585dea7caf84de1248b.webp"
+    },
+    {
+      "key": "stone-cover",
+      "slot": "cover",
+      "itemId": 7515,
+      "imageId": 49293,
+      "sha256": "6974f7e8a20b5b3a05ff501a6cc6aa53cead85a8fe47327cc34debdca638562f",
+      "bytes": 208153,
+      "width": 1536,
+      "height": 1024,
+      "fileName": "stone-cover.jpg",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7515/cover/6974f7e8a20b5b3a05ff501a6cc6aa53cead85a8fe47327cc34debdca638562f.jpg"
+    },
+    {
+      "key": "stone-icon",
+      "slot": "icon",
+      "itemId": 7515,
+      "imageId": 49294,
+      "sha256": "36f370bb99f8a2fc03bb8737f26ebf70c6d2cbbb0f0cce4e07b6241923f9e6c5",
+      "bytes": 15402,
+      "width": 128,
+      "height": 128,
+      "fileName": "stone-icon.webp",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7515/icon/36f370bb99f8a2fc03bb8737f26ebf70c6d2cbbb0f0cce4e07b6241923f9e6c5.webp"
+    },
+    {
+      "key": "storm-cover",
+      "slot": "cover",
+      "itemId": 7517,
+      "imageId": 49295,
+      "sha256": "04d1e2893bee091d9e9eb46a0e220d5320cfdc88d7ba345411bfc863803f447e",
+      "bytes": 207247,
+      "width": 1536,
+      "height": 1024,
+      "fileName": "storm-cover.jpg",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7517/cover/04d1e2893bee091d9e9eb46a0e220d5320cfdc88d7ba345411bfc863803f447e.jpg"
+    },
+    {
+      "key": "storm-icon",
+      "slot": "icon",
+      "itemId": 7517,
+      "imageId": 49296,
+      "sha256": "0440ee84035ccce5729c69a685d6cbf0cf04d58accc63a9c10058900394b52fa",
+      "bytes": 18254,
+      "width": 128,
+      "height": 128,
+      "fileName": "storm-icon.webp",
+      "url": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/7517/icon/0440ee84035ccce5729c69a685d6cbf0cf04d58accc63a9c10058900394b52fa.webp"
+    }
+  ],
+  "sharedMedia": [
+    {
+      "itemId": 7451,
+      "sourceItemId": 4076,
+      "iconImageId": 16660,
+      "coverImageId": 17741
+    },
+    {
+      "itemId": 7456,
+      "sourceItemId": 4074,
+      "iconImageId": 16658,
+      "coverImageId": 17748
+    },
+    {
+      "itemId": 7460,
+      "sourceItemId": 4075,
+      "iconImageId": 16659,
+      "coverImageId": 17756
+    },
+    {
+      "itemId": 7501,
+      "sourceItemId": 4082,
+      "iconImageId": 16663,
+      "coverImageId": 17743
+    },
+    {
+      "itemId": 7504,
+      "sourceItemId": 4081,
+      "iconImageId": 16664,
+      "coverImageId": 17753
+    }
+  ],
+  "verification": "12 public objects downloaded and SHA-256 verified; six transparent icons inspected at 64/128 px on light/dark backgrounds. Cover assignment to shared IDs uses handbook_item_reuse_cover."
+}

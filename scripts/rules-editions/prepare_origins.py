@@ -3,6 +3,7 @@ import copy,html,re
 from content_common import flat,key,norm,ref,rich,sections,unwrap
 from aliases import FEATS
 from prepare_elf_lineages import build_elf_lineages
+from prepare_gnome_goliath_lineages import build_lineages
 from species_details import split_species, enrich_species, feature_data
 ABILITIES={'Сил':1,'Ловк':2,'Телослож':3,'Интеллект':4,'Мудрост':5,'Харизм':6}
 ABILITY_LABELS={1:'Сила',2:'Ловкость',3:'Телосложение',4:'Интеллект',5:'Мудрость',6:'Харизма'}
@@ -144,9 +145,11 @@ def species(pages,catalogue):
             if data.get('choices') or data.get('hp_bonuses'):
                 ability['automationStatus'] = 'partial'
                 ability['automationNote'] = 'Сохранены выбор заклинательной характеристики или прибавка хитов; остальные эффекты выполняются по описанию.'
-        if name == 'Эльф':
-            lineage = next(row for row in catalogue.records if row['key'] == key('species-feature', name+':Эльфийская родословная'))
-            children, r['data'] = build_elf_lineages({'id': ref(r['key']), 'data': r['data']}, lineage)
+        if name in ['Эльф', 'Гном', 'Голиаф']:
+            feature = {'Эльф': 'Эльфийская родословная', 'Гном': 'Гномья родословная', 'Голиаф': 'Великание происхождение'}[name]
+            lineage = next(row for row in catalogue.records if row['key'] == key('species-feature', name+':'+feature))
+            build = build_elf_lineages if name == 'Эльф' else build_lineages
+            children, r['data'] = build({'id': ref(r['key']), 'name': name, 'data': r['data']}, lineage)
             catalogue.records.remove(lineage)
             for child in children:
                 if child['typeId'] == 16:

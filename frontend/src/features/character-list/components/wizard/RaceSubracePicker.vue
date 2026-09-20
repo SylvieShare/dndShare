@@ -9,8 +9,8 @@
     </div>
     <div v-if="modelValue" class="subrace-details" aria-live="polite">
       <h3>{{ modelValue.name }}</h3>
-      <RichContent v-if="modelValue.data?.description" :html="modelValue.data.description" />
-      <RaceAbilityList :abilities="selectedAbilities" label="Способности подрасы" show-descriptions />
+      <RichContent v-if="showFullDescription" :html="modelValue.data.description" />
+      <RaceAbilityList :abilities="selectedAbilities" label="Способности подрасы" />
     </div>
   </section>
 </template>
@@ -24,6 +24,10 @@ import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 const props = defineProps({ options: { type: Array, default: () => [] }, modelValue: { type: Object, default: null }, raceId: { type: Number, default: null }, abilities: { type: Array, default: () => [] } })
 defineEmits(['update:modelValue'])
+const showFullDescription = computed(() => {
+  const full = shortRaceDescription({ data: { description: props.modelValue?.data?.description } }, Infinity)
+  return full && full !== shortRaceDescription(props.modelValue)
+})
 const selectedAbilities = computed(() => featuresForBinding(props.abilities, { raceId: props.raceId, subraceId: props.modelValue?.id }, 20)
   .filter(ability => ability.data?.subrace_ids?.length))
 </script>

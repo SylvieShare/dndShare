@@ -1,0 +1,65 @@
+{
+  "sourceVersionId": 1799,
+  "contentSourceId": 23506,
+  "raceIds": [
+    7197,
+    7199
+  ],
+  "retiredLineageAbilityIds": [
+    7392,
+    7393
+  ],
+  "ids": {
+    "phb2024:subspecies-feature:каменный голиаф:крепость камня": 7516,
+    "phb2024:subspecies-feature:ледяной голиаф:дрожь от холода": 7512,
+    "phb2024:subspecies-feature:лесной гном:малая иллюзия лесного гнома": 7502,
+    "phb2024:subspecies-feature:лесной гном:разговор с животными лесного гнома": 7503,
+    "phb2024:subspecies-feature:облачный голиаф:прогулка на облаках": 7508,
+    "phb2024:subspecies-feature:огненный голиаф:ожог от огня": 7510,
+    "phb2024:subspecies-feature:скальный гном:заводное устройство": 7506,
+    "phb2024:subspecies-feature:скальный гном:магия скального гнома": 7505,
+    "phb2024:subspecies-feature:холмовой голиаф:падение с холма": 7514,
+    "phb2024:subspecies-feature:штормовой голиаф:грохот бури": 7518,
+    "phb2024:subspecies:каменный голиаф": 7515,
+    "phb2024:subspecies:ледяной голиаф": 7511,
+    "phb2024:subspecies:лесной гном": 7501,
+    "phb2024:subspecies:облачный голиаф": 7507,
+    "phb2024:subspecies:огненный голиаф": 7509,
+    "phb2024:subspecies:скальный гном": 7504,
+    "phb2024:subspecies:холмовой голиаф": 7513,
+    "phb2024:subspecies:штормовой голиаф": 7517
+  },
+  "sharedMedia": [
+    {
+      "itemId": 7451,
+      "sourceItemId": 4076,
+      "iconImageId": 16660,
+      "coverImageId": 17741
+    },
+    {
+      "itemId": 7456,
+      "sourceItemId": 4074,
+      "iconImageId": 16658,
+      "coverImageId": 17748
+    },
+    {
+      "itemId": 7460,
+      "sourceItemId": 4075,
+      "iconImageId": 16659,
+      "coverImageId": 17756
+    },
+    {
+      "itemId": 7501,
+      "sourceItemId": 4082,
+      "iconImageId": 16663,
+      "coverImageId": 17743
+    },
+    {
+      "itemId": 7504,
+      "sourceItemId": 4081,
+      "iconImageId": 16664,
+      "coverImageId": 17753
+    }
+  ],
+  "verification": "MCP readback: 31 records, native edition/book links, synchronized parent links, preserved existing character references and source records."
+}

@@ -155,7 +155,9 @@ cards use a 3:2 media treatment in an exact two-column desktop grid, collapsing 
 one column on phones. `RaceSubracePicker` sits inside “Выборы расы”. Each card
 contains a concise description below its name and ability bonus. Selecting one
 keeps all cards visible and shows only that subrace’s full lore and individual
-abilities below the grid, with inline descriptions and the standard handbook modal.
+abilities below the grid. A lore description identical to the visible card text
+is omitted; ability rules open in the standard handbook modal, without inline
+paragraphs beneath the tiles.
 Base-race abilities remain above the race lore and do not duplicate subrace abilities.
 
 PHB 2024 Drow, High Elf and Wood Elf are separate type-16 records with their own
@@ -177,8 +179,9 @@ locked states.
 `RaceVariantPicker` presents lineage/size options using shared tiles and selectable
 content rows. Each option shows its benefits and height note; a separate
 “Подробные правила” disclosure expands the rules without selecting that option.
-Forest and Rock Gnomes expose their own cantrips and additional benefits. The same
-component presents tiefling, goliath and dragonborn variants and size choices;
+Forest and Rock Gnomes (2024) and six Goliath ancestries use separate type-16
+records in `RaceSubracePicker`, with their own abilities. `RaceVariantPicker`
+presents tiefling and dragonborn variants and independent size choices;
 selection continues to store the existing variant key.
 
 On phones, choosing a race scrolls the newly revealed lore and dependent choices
@@ -460,3 +463,9 @@ Draft persistence uses `usePersistedDraft`: changes are coalesced for 300ms (max
 названием, категорией и требованиями. Нажатие или Enter открывает `ItemViewModal`;
 настройка выборов остаётся отдельным действием. Если предыстория разрешает выбор
 черты, используется стандартный picker с закреплённым фильтром `category=origin`.
+
+The technical type “subrace” also represents 2024 lineages/ancestries. The UI
+uses “Происхождение”; Goliath choices describe a goliath of Cloud, Fire, Frost,
+Hill, Stone or Storm giant ancestry, not a playable giant. Each has its own
+benefit and preserves the proficiency-bonus/long-rest usage rule. Gnome
+spellcasting choices belong to the selected Forest/Rock lineage only.
