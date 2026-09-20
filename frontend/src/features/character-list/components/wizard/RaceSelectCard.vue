@@ -1,4 +1,5 @@
 <template>
+  <div class="race-card-shell">
   <button
     type="button"
     class="race-card"
@@ -66,6 +67,7 @@
     :top="tooltip.top"
     :bottom="tooltip.bottom"
   />
+  </div>
 </template>
 
 <script setup>
@@ -103,6 +105,7 @@ function hideAbilityTooltip() { tooltip.visible = false }
 </script>
 
 <style scoped>
+.race-card-shell { min-width: 0; }
 .race-card {
   min-width: 0;
   padding: 0;

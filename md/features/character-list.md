@@ -122,12 +122,16 @@ mechanics-free portrait from `item.data.short_description`, every base-race gran
 and the choices that will follow (for
 example a language or feat) without applying any subrace grants. Available subraces
 are shown by name in a separate compact chip row instead of the generic
-“После выбора: подраса” label. Race abilities are individually hoverable and use
+“После выбора: подраса” label. Before selection, race abilities are individually hoverable and use
 the shared item tooltip for their handbook descriptions. After selection,
 the chosen keyed row uses a FLIP layout transition to move from its list position
-into the full-width hero above the
-expanded `item.data.description`: an original three-paragraph lore article without
-repeating ability bonuses, followed by subrace choices, while the
+into the full-width hero above individual ability tiles and the
+expanded `item.data.description`. The selected hero does not repeat the ability
+list. `RaceAbilityList` opens each ability in the handbook modal, including future
+abilities marked with their required level; only eligible features are granted
+to the created character. Lore omits duplicated creature type, size and speed.
+Creature type appears in the header; size and height notes accompany the choices.
+Subrace choices follow, while the
 remaining rows disappear. A dedicated “Назад / К выбору расы” action reverses the
 morph and returns to the full list without changing the current content scroll.
 Skill choices carried by the race record (for example the Half-Elf's two skill
@@ -135,9 +139,9 @@ choices) use the same shared skill picker as the class
 “Владение навыками” section: checkbox cards show the governing ability and the
 live modifier (including proficiency or expertise as soon as it is selected),
 enforce the pick limit and expose skill descriptions on hover.
-The action floats over the selected illustration and does not occupy a layout row,
-so its disappearance cannot displace the returning card even when the scroll is at
-the top. The reverse render also restores the captured `.cc-main` scroll position
+The back action sits to the right of the step title, above the illustration,
+on race, class and background steps at desktop and mobile widths.
+The reverse render restores the captured `.cc-main` scroll position
 on Vue's next layout frame, preventing a transient content-height change from
 resetting a partially scrolled step. The other rows fade away while the detailed
 content rises in after the move; reduced-motion disables the sequence. Race and
@@ -160,6 +164,13 @@ ability scores, language, feat and feature choices do not visually merge. Floati
 ability-score choices use a stronger six-tile desktop grid (three/two columns at
 narrower breakpoints), a prominent completion counter and distinct selected and
 locked states.
+`RaceVariantPicker` presents lineage/size options using shared tiles and selectable
+content rows. Each option shows its benefits and height note; a separate
+“Подробные правила” disclosure expands the rules without selecting that option.
+Forest and Rock Gnomes expose their own cantrips and additional benefits. The same
+component presents elf, tiefling, goliath and dragonborn variants and size choices;
+selection continues to store the existing variant key.
+
 On phones, choosing a race scrolls the newly revealed lore and dependent choices
 into view with a smooth transition instead of leaving them below the viewport.
 

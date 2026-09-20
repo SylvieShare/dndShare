@@ -56,4 +56,18 @@ describe('race card summary', () => {
       entries: [{ name: 'Тёмное зрение', description: '<p>Видит в темноте.</p>' }],
     }))
   })
+  it('moves abilities out of the selected preview and shows the actual variant size and speed', () => {
+    const race = { id: 4, data: { creature_type: 'Гуманоид', size: 'Средний', speed: 30,
+      variants: [{ value: 'small', size: 'Маленький' }, { value: 'wood', size: 'Средний', speed: 35 }] } }
+    const raceAbilities = [{ id: 10, name: 'Зрение', data: { race_ids: [{ id: 4 }], level: 1 } }]
+    const selected = raceCardSummary({ race, raceAbilities, selected: true, raceVariant: 'wood' })
+    expect(selected.facts.some(f => f.label === 'Способности')).toBe(false)
+    expect(selected.facts).toEqual(expect.arrayContaining([
+      expect.objectContaining({ label: 'Тип существа', value: 'Гуманоид' }),
+      expect.objectContaining({ label: 'Скорость', value: '35 фт' }),
+      expect.objectContaining({ label: 'Размер', value: 'Средний' }),
+    ]))
+    expect(raceCardSummary({ race }).facts).toContainEqual(expect.objectContaining({ label: 'Размер', value: 'Маленький / Средний' }))
+  })
+
 })

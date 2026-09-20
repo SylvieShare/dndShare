@@ -5,10 +5,12 @@ import { describe, expect, it } from 'vitest'
 const source = readFileSync(fileURLToPath(new URL('./IllustratedChoiceStage.vue', import.meta.url)), 'utf8')
 
 describe('illustrated choice stage', () => {
-  it('keeps the back action over the selected card media area', () => {
+  it('keeps the back action next to the step heading and outside the cover', () => {
     expect(source).toContain('class="illustrated-choice-stage"')
     expect(source).toContain('class="illustrated-choice-back"')
-    expect(source).toContain('top: 10px; left: 10px')
+    expect(source).toContain('class="illustrated-choice-heading"')
+    expect(source.indexOf('class="illustrated-choice-back"')).toBeLessThan(source.indexOf('class="illustrated-choice-stage"'))
+    expect(source).not.toContain('top: 10px; left: 10px')
   })
 
   it('owns shared selection motion and scroll restoration', () => {

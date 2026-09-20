@@ -161,4 +161,5 @@ var schemaParts = []struct {
 	{"feat-category-filter", schemaFeatCategoryFilterSQL},
 	{"battle-maps", schemaBattleMapsSQL},
 	{"character-edition-change", schemaCharacterEditionChangeSQL},
+	{"species-presentation", schemaSpeciesPresentationSQL},
 }

@@ -2,6 +2,7 @@
 import copy,html,re
 from content_common import flat,key,norm,ref,rich,sections,unwrap
 from aliases import FEATS
+from species_details import split_species, enrich_species, feature_data
 ABILITIES={'Сил':1,'Ловк':2,'Телослож':3,'Интеллект':4,'Мудрост':5,'Харизм':6}
 ABILITY_LABELS={1:'Сила',2:'Ловкость',3:'Телосложение',4:'Интеллект',5:'Мудрость',6:'Харизма'}
 SKILLS={'Атлетика':1,'Акробатика':2,'Скрытность':3,'Ловкость рук':4,'Тайная магия':5,'История':6,'Природа':7,'Религия':8,'Расследование':9,'Восприятие':10,'Медицина':11,'Выживание':12,'Уход за животными':13,'Проницательность':14,'Обман':15,'Убеждение':16,'Выступление':17,'Запугивание':18}
@@ -128,10 +129,17 @@ def species(pages,catalogue):
         if name=='Человек':d.update(skill_choice={'count':1,'from':[]},feat_choice={'count':1})
         if name=='Эльф':d['skill_choice']={'count':1,'from':[10,14,12]}
         if name=='Дварф':d['speed']=30
-        ability=catalogue.add('species-feature',name,3,{'desc':d['description'],'race_ids':[{'id':ref(r['key'])}],'level':1,'level_source':'bound'},s['page'])
-        ability['name']='Особенности вида: '+name
+        aggregate={'race_ids':[{'id':ref(r['key'])}]}
         if name in ['Эльф','Гном','Тифлинг']:
-            ability['data']['choices']=[{'key':'casting_ability','text':'Заклинательная характеристика вида','source':'inline','count':1,'options':[{'value':i,'label':ABILITY_LABELS[i]}for i in [4,5,6]]}]
-        if name=='Дварф':
-            ability['data']['hp_bonuses']=[{'title':'Дварфская стойкость','per_level':1}]
-            ability['automationStatus']='partial';ability['automationNote']='Дварфская стойкость добавляет 1 хит за уровень. Остальные особенности — по описанию.'
+            aggregate['choices']=[{'key':'casting_ability','text':'Заклинательная характеристика вида','source':'inline','count':1,'options':[{'value':i,'label':ABILITY_LABELS[i]}for i in [4,5,6]]}]
+        if name=='Дварф':aggregate['hp_bonuses']=[{'title':'Дварфийская крепость','per_level':1}]
+        lore, features = split_species(name, d['description'])
+        r['data'] = enrich_species(name, {**d, 'description': lore}, features)
+        r['automationNote'] = 'Скорость, размер, языки и выбор происхождения. Каждая особенность вида — отдельная запись.'
+        for feature in features:
+            data = feature_data(name, feature, aggregate)
+            ability = catalogue.add('species-feature', name+':'+feature['name'], 3, data, s['page'])
+            ability['name'] = feature['name']
+            if data.get('choices') or data.get('hp_bonuses'):
+                ability['automationStatus'] = 'partial'
+                ability['automationNote'] = 'Сохранены выбор заклинательной характеристики или прибавка хитов; остальные эффекты выполняются по описанию.'

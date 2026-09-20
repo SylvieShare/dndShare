@@ -1,18 +1,20 @@
 <template>
   <div class="illustrated-choice">
-    <h1 class="illustrated-choice-title">{{ title }}</h1>
+    <div class="illustrated-choice-heading">
+      <h1 class="illustrated-choice-title">{{ title }}</h1>
+      <Transition name="illustrated-back">
+        <button v-if="selected" type="button" class="illustrated-choice-back" @click="clearSelection">
+          <span class="illustrated-choice-back-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
+          </span>
+          <span><span class="illustrated-choice-back-label">Назад</span><span class="illustrated-choice-back-note">{{ backText }}</span></span>
+        </button>
+      </Transition>
+    </div>
     <LoadingState v-if="loading" :label="loadingText" />
     <p v-else-if="empty" class="illustrated-choice-muted">{{ emptyText }}</p>
     <template v-else>
       <div ref="stage" class="illustrated-choice-stage">
-        <Transition name="illustrated-back">
-          <button v-if="selected" type="button" class="illustrated-choice-back" @click="clearSelection">
-            <span class="illustrated-choice-back-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6" /></svg>
-            </span>
-            <span><span class="illustrated-choice-back-label">Назад</span><span class="illustrated-choice-back-note">{{ backText }}</span></span>
-          </button>
-        </Transition>
         <TransitionGroup
           name="illustrated-list"
           tag="div"
@@ -76,6 +78,7 @@ function clearSelection() {
 
 <style scoped>
 .illustrated-choice { display: flex; flex-direction: column; gap: 12px; }
+.illustrated-choice-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .illustrated-choice-title { position: relative; width: fit-content; margin: 0 0 6px; padding-bottom: 9px; color: var(--text-1); font-family: var(--font-display); font-size: clamp(28px, 3.2vw, 36px); font-weight: 700; letter-spacing: .01em; line-height: 1; }
 .illustrated-choice-title::after { content: ''; position: absolute; left: 1px; bottom: 0; width: 46px; height: 3px; border-radius: 999px; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 18%, transparent)); }
 .illustrated-choice-muted { margin: 0; color: var(--text-muted); font-size: 13px; }
@@ -83,7 +86,7 @@ function clearSelection() {
 .illustrated-choice-list { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
 .illustrated-choice-list--two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .illustrated-choice-details { display: flex; flex-direction: column; gap: 12px; overflow-anchor: none; }
-.illustrated-choice-back { position: absolute; z-index: 5; top: 10px; left: 10px; display: inline-flex; align-items: center; gap: 9px; padding: 6px 10px 6px 6px; color: var(--text-2); background: color-mix(in srgb, var(--bg) 78%, transparent); border: 1px solid color-mix(in srgb, var(--border) 78%, transparent); box-shadow: var(--shadow-sm); backdrop-filter: blur(12px); border-radius: var(--r-md); font: inherit; text-align: left; cursor: pointer; transition: color .15s, background .15s, border-color .15s, transform .18s cubic-bezier(.22,1,.36,1); }
+.illustrated-choice-back { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 9px; padding: 6px 10px 6px 6px; color: var(--text-2); background: color-mix(in srgb, var(--bg) 78%, transparent); border: 1px solid color-mix(in srgb, var(--border) 78%, transparent); box-shadow: var(--shadow-sm); border-radius: var(--r-md); font: inherit; text-align: left; cursor: pointer; transition: color .15s, background .15s, border-color .15s, transform .18s cubic-bezier(.22,1,.36,1); }
 .illustrated-choice-back:hover { color: var(--text-1); background: color-mix(in srgb, var(--accent) 12%, var(--bg)); border-color: color-mix(in srgb, var(--accent) 24%, var(--border)); transform: translateX(-2px); }
 .illustrated-choice-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .illustrated-choice-back-icon { width: 31px; height: 31px; flex-shrink: 0; display: grid; place-items: center; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); border-radius: 10px; }

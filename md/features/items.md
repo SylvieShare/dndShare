@@ -618,3 +618,19 @@ space. Bestiary covers are the explicit 4:3 exception defined above.
   title and summary use local translucent blocks. Detail content remains
   reachable in the vertically scrollable panel. Decorative covers use empty
   alt text because the item name already labels the header.
+
+### Species presentation
+
+Race/subrace records expose `creature_type` and `size_description` as editable
+text fields. Creature type appears in the cover summary; size/height notes appear
+in the detail content and beside creation choices. Species `variants` also
+support `benefits: [{text}]`, `size_description` and rich `description`.
+These fields explain options without inventing additional automation.
+
+PHB 2024 species have 38 separate type-3 ability records, bound through
+`race_ids`, with explicit acquisition levels. The shared `RaceAbilityList` is
+used below the selected creation cover and in race/subrace handbook details.
+Each tile opens the normal handbook modal. Previous aggregate abilities are
+hidden from new selection but retain their IDs and mechanics for existing
+character references. Species lore no longer duplicates the ability rules or
+the creature type, size and speed metadata.

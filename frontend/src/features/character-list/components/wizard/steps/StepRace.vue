@@ -29,6 +29,8 @@
 
       <template #details>
         <div ref="detailsRef" class="race-details">
+          <RaceAbilityList :abilities="selectedAbilities" />
+          <p v-if="sizeDescription && !grants.raceVariants" class="choice-description">{{ sizeDescription }}</p>
           <section v-if="raceDesc" class="race-lore">
             <div class="sheet-section-title">О расе</div>
             <RichContent class="step-desc" :html="raceDesc" />
@@ -55,24 +57,7 @@
           <div class="choices-title">Выборы расы</div>
           <div class="choice-stack">
 
-            <section v-if="grants.raceVariants" class="choice-block">
-              <div class="choice-label">Вариант расы</div>
-              <div class="opts">
-                <div
-                  v-for="v in grants.raceVariants"
-                  :key="v.value"
-                  class="opt"
-                  :class="{ on: state.raceVariant === v.value }"
-                  @click="state.raceVariant = v.value"
-                >
-                  <span class="box radio"><svg v-if="state.raceVariant === v.value" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6" /></svg></span>
-                  <div class="opt-body">
-                    <div class="opt-label">{{ v.label }}</div>
-                    <div v-if="v.desc" class="opt-desc">{{ v.desc }}</div>
-                  </div>
-                </div>
-              </div>
-            </section>
+            <RaceVariantPicker v-if="grants.raceVariants" v-model="state.raceVariant" :options="grants.raceVariants" :size-description="sizeDescription" />
 
             <AbilityBonusPicker
               v-if="grants.asiChoice"
@@ -148,6 +133,9 @@
 
 <script setup>
 import { computed, inject, nextTick, ref } from 'vue'
+import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
+import RaceVariantPicker from '../RaceVariantPicker.vue'
+import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import AbilityBonusPicker from '@/shared/ui/AbilityBonusPicker.vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
@@ -170,6 +158,8 @@ const {
   featPool, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete, raceFeatureChoices,
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
+const selectedAbilities = computed(() => featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 20))
+const sizeDescription = computed(() => state.subrace?.data?.size_description || state.race?.data?.size_description || '')
 const visibleRaces = computed(() => state.race ? [state.race] : races.value)
 const raceAsiSelection = computed(() => Object.fromEntries(state.asiChoice.map(stat => [stat, grants.value.asiChoice?.bonus || 0])))
 const hasRaceChoices = computed(() => {
@@ -184,6 +174,8 @@ const detailsRef = ref(null)
 function summaryFor(race) {
   return raceCardSummary({
     race,
+    selected: state.race?.id === race.id,
+    raceVariant: state.race?.id === race.id ? state.raceVariant : null,
     raceAbilities: raceAbilities.value,
     suggestValue,
     subraces: raceSubraceNames(race.id),
@@ -211,7 +203,7 @@ function onFeatChoicesConfirm(choices) {
 
 <style scoped>
 .step { position: relative; display: flex; flex-direction: column; gap: 12px; }
-.race-details { display: flex; flex-direction: column; scroll-margin-top: 12px; }
+.race-details { display: flex; flex-direction: column; scroll-margin-top: 12px; gap: 16px; }
 .race-lore { display: flex; flex-direction: column; gap: 7px; }
 .step-gap { margin-top: 8px; }
 .step-desc {
@@ -273,22 +265,6 @@ function onFeatChoicesConfirm(choices) {
   background: color-mix(in srgb, var(--success) 12%, var(--surface));
   color: var(--success);
 }
-.opts { display: flex; flex-wrap: wrap; gap: 8px; }
-.opt {
-  display: flex; align-items: flex-start; gap: 11px; flex: 1 1 220px;
-  background: var(--surface); border-radius: var(--r-md); padding: 11px 13px; cursor: pointer; transition: background 0.15s;
-}
-.opt:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
-.opt.on { background: color-mix(in srgb, var(--accent) 16%, var(--surface)); }
-.opt.off { opacity: 0.45; }
-.box { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: var(--surface-raised); display: flex; align-items: center; justify-content: center; }
-.opt.on .box { background: var(--accent); }
-.box svg { width: 12px; height: 12px; color: var(--text-on-accent); }
-.opt-body { min-width: 0; }
-.opt-label { font-size: 14px; color: var(--text-1); font-weight: 500; }
-.opt-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-
 .feat-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .feat-tag {
   display: inline-flex; align-items: center; gap: 8px;

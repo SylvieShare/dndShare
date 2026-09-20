@@ -30,15 +30,17 @@ export function shortRaceDescription(race, limit = 220) {
   return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`
 }
 
-export function raceCardSummary({ race, raceAbilities = [], suggestValue = () => '', subraces = [] }) {
-  const grants = extractGrants({ race })
+export function raceCardSummary({ race, raceAbilities = [], suggestValue = () => '', subraces = [], selected = false, raceVariant = null }) {
+  const grants = extractGrants({ race, raceVariant })
   const facts = []
   const asi = grants.asi.map((entry) => `${STAT_SHORT[entry.stat]} +${entry.bonus}`)
   if (grants.asiChoice) asi.push(`+${grants.asiChoice.bonus} к ${grants.asiChoice.count} на выбор`)
   if (!asi.length && grants.raceVariants?.length) asi.push('Зависит от варианта')
   pushFact(facts, 'Характеристики', asi.join(', '))
+  pushFact(facts, 'Тип существа', race?.data?.creature_type || '')
   pushFact(facts, 'Скорость', grants.speed != null ? `${grants.speed} фт` : '')
-  pushFact(facts, 'Размер', grants.size || '')
+  const sizes = [...new Set((race?.data?.variants || []).map(v => v.size).filter(Boolean))]
+  pushFact(facts, 'Размер', !raceVariant && sizes.length > 1 ? sizes.join(' / ') : grants.size || '')
   pushFact(facts, 'Языки', resolved(grants.languages, 6, suggestValue).join(', '), true)
 
   const proficiencies = [
@@ -53,7 +55,7 @@ export function raceCardSummary({ race, raceAbilities = [], suggestValue = () =>
   const abilities = raceFeatures
     .filter((ability) => ability.name)
     .map((ability) => ({ name: ability.name, description: ability.data?.desc || ability.data?.description || '' }))
-  pushFact(facts, 'Способности', abilities.map((ability) => ability.name).join(', '), true, abilities)
+  if (!selected) pushFact(facts, 'Способности', abilities.map((ability) => ability.name).join(', '), true, abilities)
 
   const choices = []
   if (grants.raceVariants?.length) choices.push('вариант расы')

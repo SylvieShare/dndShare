@@ -1,6 +1,7 @@
 <template>
     <CoverSummaryLayout :side-min="145" :side-max="220" :center-min="210" :medium-center-min="76">
       <template #left>
+        <CoverStatCard v-if="kind.includes('race') && data.creature_type && primaryLabel !== 'Тип существа'" :icon="Users" label="Тип существа" :value="data.creature_type" size="compact" />
         <CoverStatCard
           :icon="primaryIcon"
           :label="primaryLabel"
@@ -60,19 +61,22 @@ const suggestLabels = (typeId, ids) => (Array.isArray(ids) ? ids : [])
   .map(id => suggestStore.items(typeId).find(item => String(item.id) === String(id))?.value)
   .filter(Boolean)
 
+const showCreatureType = computed(() => kind.value === 'race' && data.value.creature_type && !asiLabel(data.value))
 const primaryLabel = computed(() => {
+  if (showCreatureType.value) return 'Тип существа'
   if (kind.value === 'class') return 'Кость хитов'
   if (kind.value === 'subclass') return 'Базовый класс'
   if (kind.value === 'subrace') return 'Базовая раса'
   return 'Бонусы характеристик'
 })
 const primaryValue = computed(() => {
+  if (showCreatureType.value) return data.value.creature_type
   if (kind.value === 'class') return hitDieLabel(data.value)
   if (kind.value === 'subclass' || kind.value === 'subrace') return parentName.value || 'Не указан'
   return asiLabel(data.value) || 'На выбор'
 })
 const primaryNote = computed(() => kind.value === 'class' ? 'на каждом уровне' : '')
-const primaryIcon = computed(() => kind.value === 'class' ? Dices : (kind.value === 'race' ? Sparkles : Link2))
+const primaryIcon = computed(() => showCreatureType.value ? Users : kind.value === 'class' ? Dices : (kind.value === 'race' ? Sparkles : Link2))
 const secondaryLabel = computed(() => kind.value.includes('class') ? 'Ключевые характеристики' : 'Размер')
 const secondaryValue = computed(() => kind.value.includes('class')
   ? abilityNames(data.value.primary_abilities, { short: true }).join(', ')

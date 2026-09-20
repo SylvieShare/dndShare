@@ -1252,3 +1252,8 @@ feature_actions получают тип timed и объект time; сущест
 `feat-category-filter` (149) включает фильтрацию `item_type(7).fields.category`
 и общие подписи четырёх категорий черт. Значения `item.data.category` и механики
 записей не изменяются; категория старых черт автоматически не назначается.
+
+`species-presentation` (152) добавляет типам расы/подрасы (8/16) редактируемые
+`creature_type` и `size_description`. В `variants` расы добавлены
+`size_description`, `benefits: [{text}]` и rich `description`. Миграция меняет
+только схему редактора; конкретные записи PHB 2024 обновляются через MCP.

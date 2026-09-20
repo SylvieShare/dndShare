@@ -5,6 +5,9 @@
       <RichContent class="origin-description" :html="description" />
     </DetailSection>
 
+    <RaceAbilityList v-if="kind.includes('race')" :abilities="raceAbilities" />
+    <p v-if="kind.includes('race') && data.size_description" class="origin-size-note">{{ data.size_description }}</p>
+
     <ClassProgression
       v-if="progressionClass"
       :class-item="progressionClass"
@@ -94,6 +97,8 @@ import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { Backpack, BookOpen, ChevronRight, GitBranch, ListChecks, ShieldCheck, Sparkles, WandSparkles } from '@lucide/vue'
 import { DetailSection } from '@sylvieshare/share-ui'
+import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
+import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import ClassProgression from './ClassProgression.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
@@ -106,6 +111,7 @@ import {
   asiLabel,
   hitDieLabel,
   originKind,
+  originParentId,
   originRelationIds,
   plainOriginDescription,
   spellcastingLabel,
@@ -125,6 +131,7 @@ const kind = computed(() => originKind(props.type?.id || props.item.typeId))
 const description = computed(() => data.value.description || data.value.short_description || '')
 const relationIds = computed(() => originRelationIds(props.item))
 const loadedItems = ref([])
+const raceAbilities = ref([])
 const relationLoading = ref(false)
 const viewItem = ref(null)
 let requestId = 0
@@ -153,6 +160,7 @@ const mechanics = computed(() => {
   const add = (label, value, wide = false) => value && result.push({ label, value, wide })
   if (kind.value.includes('race')) {
     add('Бонусы характеристик', asiLabel(data.value, { short: false }), true)
+    add('Тип существа', data.value.creature_type)
     add('Размер', data.value.size)
     add('Скорость', data.value.speed != null ? `${data.value.speed} фт.` : '')
     add('Языки', suggestLabels(6, data.value.languages).join(', '), true)
@@ -202,15 +210,21 @@ watch(
       : currentKind === 'class'
         ? itemsApi.listAll(SUBCLASS_ITEM_TYPE, {}, { class: [item.id] })
         : relationIds.length ? itemsApi.byIds(relationIds) : Promise.resolve({ items: [] })
+    const abilityRequest = currentKind.includes('race')
+      ? itemsApi.listAll(3, {}, { [currentKind === 'subrace' ? 'subrace_ids' : 'race_ids']: [item.id] })
+      : Promise.resolve({ items: [] })
+    raceAbilities.value = []
     const spellRequest = spellIds.length ? itemsApi.byIds([...new Set(spellIds)]) : Promise.resolve({ items: [] })
-    if (!relationIds.length && !spellIds.length && currentKind !== 'race' && currentKind !== 'class') {
+    if (!relationIds.length && !spellIds.length && !currentKind.includes('race') && currentKind !== 'class') {
       loadedItems.value = []
       return
     }
     relationLoading.value = true
     try {
-      const [relations, spells] = await Promise.all([relationRequest, spellRequest])
+      const [relations, spells, abilities] = await Promise.all([relationRequest, spellRequest, abilityRequest])
       if (current === requestId) {
+        const raceId = currentKind === 'subrace' ? originParentId(item) : item.id
+        raceAbilities.value = featuresForBinding(abilities?.items || [], { raceId, subraceId: currentKind === 'subrace' ? item.id : null }, 20)
         loadedItems.value = [...new Map([...(relations?.items || []), ...(spells?.items || [])]
           .map(loaded => [String(loaded.id), loaded])).values()]
       }
@@ -227,6 +241,7 @@ function monogram(name) { return String(name || '?').trim().slice(0, 1).toLocale
 </script>
 
 <style scoped>
+.origin-size-note { color: var(--text-muted); font-size: 13px; line-height: 1.5; margin: 0; }
 .origin-detail { display: flex; flex-direction: column; padding-bottom: 14px; }
 .origin-description { padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--r-md); background: color-mix(in srgb, var(--surface) 82%, transparent); color: var(--text-2); font-size: 13px; line-height: 1.7; }
 .origin-loading { padding: 18px; color: var(--text-muted); font-size: 12px; }
