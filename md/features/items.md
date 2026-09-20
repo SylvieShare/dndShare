@@ -256,9 +256,9 @@ handbook list and detail header.
   balanced across the panorama and all defining faces, anatomy, tools and
   effects comfortably inside the outer crop.
 - Covers follow the mature detailed fantasy illustration contract in
-  [Handbook art style](../handbook-art-style.md): natural adult proportions,
-  fine deep-plum linework, controlled cel-painted volumes and restrained
-  material texture. The compact flat-cartoon treatment above applies to icons,
+  [Handbook art style](../handbook-art-style.md), anchored to Mounted Combatant:
+  natural adult proportions, visible deep-plum linework, broad cel-painted
+  planes, minimal material texture and a softer simplified background. The compact flat-cartoon treatment above applies to icons,
   not to cover characters. Inspect existing covers in the same category before
   generating; identify style references separately from identity references.
 - The icon and cover share the same mechanic and palette but remain independent
