@@ -6,6 +6,7 @@
     </DetailSection>
 
     <RaceAbilityList v-if="kind.includes('race')" :abilities="raceAbilities" />
+    <RaceSpellList v-if="kind.includes('race')" :abilities="raceAbilities" />
     <p v-if="kind.includes('race') && data.size_description" class="origin-size-note">{{ data.size_description }}</p>
 
     <ClassProgression
@@ -97,6 +98,7 @@ import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, ref, watch } from 'vue'
 import { Backpack, BookOpen, ChevronRight, GitBranch, ListChecks, ShieldCheck, Sparkles, WandSparkles } from '@lucide/vue'
 import { DetailSection } from '@sylvieshare/share-ui'
+import RaceSpellList from '@/features/items/components/RaceSpellList.vue'
 import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 import ClassProgression from './ClassProgression.vue'

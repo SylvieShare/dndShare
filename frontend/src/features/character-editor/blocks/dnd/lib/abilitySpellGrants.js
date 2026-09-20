@@ -30,6 +30,17 @@ function choiceCastingAbility(item, ownedEntry, choice) {
   return number(choiceOption(item, sourceKey, selected)?.casting_ability)
 }
 
+function grantedCastingAbility(rule, item, ownedEntry, values) {
+  const fixed = number(rule.ability)
+  if (fixed != null || !rule.ability_choice_key) return fixed
+  const sourceId = number(rule.ability_choice_source?.id ?? rule.ability_choice_source) ?? number(item.id)
+  const source = sourceId === number(item.id) ? ownedEntry : ABILITY_VALUE_IDS
+    .flatMap(key => Array.isArray(values[key]) ? values[key] : [])
+    .find(entry => number(entry.id) === sourceId)
+  const selected = number(source?.choices?.[rule.ability_choice_key]?.[0])
+  return [1, 2, 3, 4, 5, 6].includes(selected) ? selected : null
+}
+
 export function abilitySpellGrantRows(items, values = {}) {
   const rows = []
   for (const item of items || []) {
@@ -49,7 +60,7 @@ export function abilitySpellGrantRows(items, values = {}) {
         const spellId = number(rule?.spell?.id ?? rule?.spell)
         const unlockLevel = number(rule?.level) ?? number(data.level) ?? 1
         if (spellId == null || ownerLevel < unlockLevel) continue
-        const castingAbility = number(rule?.ability)
+        const castingAbility = grantedCastingAbility(rule, item, ownedEntry, values)
         const castLevel = number(rule?.cast_level)
         rows.push({
           spellId,

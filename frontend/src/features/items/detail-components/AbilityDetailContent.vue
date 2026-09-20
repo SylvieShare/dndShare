@@ -13,6 +13,8 @@
       <div v-else class="adc-no-desc">Описание отсутствует</div>
     </DetailSection>
 
+    <RaceSpellList :abilities="[item]" label="Дарованные заклинания" :z-index="nestedViewZIndex" />
+
     <DetailSection v-if="useRuleLabel || data.rollback_short_rest || data.rollback_long_rest" label="Использование">
       <template #icon><RefreshCcw /></template>
       <div class="adc-meta">
@@ -27,6 +29,7 @@
 <script setup>
 import { computed } from 'vue'
 import { RefreshCcw, Sparkles } from '@lucide/vue'
+import RaceSpellList from '@/features/items/components/RaceSpellList.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
@@ -34,6 +37,7 @@ import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
 const props = defineProps({
   item: { type: Object, required: true },
+  nestedViewZIndex: { type: Number, default: 5100 },
   showTitle: { type: Boolean, default: true },
 })
 

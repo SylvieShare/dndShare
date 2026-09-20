@@ -53,7 +53,7 @@ export function raceCardSummary({ race, raceAbilities = [], suggestValue = () =>
 
   const raceFeatures = featuresForBinding(raceAbilities, { raceId: race?.id }, 1)
   const abilities = raceFeatures
-    .filter((ability) => ability.name)
+    .filter((ability) => ability.name && !ability.data?.choice_only)
     .map((ability) => ({ name: ability.name, description: ability.data?.desc || ability.data?.description || '' }))
   if (!selected) pushFact(facts, 'Способности', abilities.map((ability) => ability.name).join(', '), true, abilities)
 

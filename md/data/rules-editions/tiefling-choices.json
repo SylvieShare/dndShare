@@ -1,0 +1,27 @@
+{
+  "sourceVersionId": 1799,
+  "contentSourceId": 23506,
+  "ids": {
+    "phb2024:subspecies-feature:инфернальное наследие:магия": 7545,
+    "phb2024:subspecies-feature:инфернальное наследие:сопротивление": 7544,
+    "phb2024:subspecies-feature:наследие бездны:магия": 7539,
+    "phb2024:subspecies-feature:наследие бездны:сопротивление": 7538,
+    "phb2024:subspecies-feature:хтоническое наследие:магия": 7542,
+    "phb2024:subspecies-feature:хтоническое наследие:сопротивление": 7541,
+    "phb2024:subspecies:инфернальное наследие": 7543,
+    "phb2024:subspecies:наследие бездны": 7537,
+    "phb2024:subspecies:хтоническое наследие": 7540
+  },
+  "retiredAbilityId": 7413,
+  "choiceOnlyAbilityIds": [
+    7416,
+    7417,
+    7421,
+    7400,
+    4084
+  ],
+  "sharedCastingChoiceAbilityId": 7414,
+  "mediaSourceItemId": 7209,
+  "verifiedItemCount": 31,
+  "verification": "MCP readback of rules, spell references, parent links, native edition/book compatibility, unchanged existing artwork and untouched source records."
+}

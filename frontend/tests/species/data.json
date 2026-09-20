@@ -47,7 +47,7 @@
         }
       ],
       "automationStatus": "partial",
-      "automationNote": "Скорость, размер, языки и выбор происхождения. Особенности вида оформлены отдельными способностями.",
+      "automationNote": "Общие особенности эльфа и выбор отдельной подрасы. Скорость подрасы и выбор характеристики колдовства учитываются; заклинания добавляются игроком.",
       "requiresPlayerInteraction": false,
       "id": 7213,
       "name": "Эльф",
@@ -87,13 +87,13 @@
         "speed": 30,
         "subraces": [
           {
-            "id": 95000
+            "id": 7456
           },
           {
-            "id": 95005
+            "id": 7451
           },
           {
-            "id": 95009
+            "id": 7460
           }
         ]
       },
@@ -326,6 +326,359 @@
           "code": "PHB"
         }
       ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 4031,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Скорость, размер, языки и выбор происхождения. Особенности вида оформлены отдельными способностями.",
+      "requiresPlayerInteraction": false,
+      "id": 7203,
+      "name": "Драконорождённый",
+      "data": {
+        "creature_type": "Гуманоид",
+        "description": "<p>Предки драконорождённых вылупились из яиц хроматических и металлических драконов. Одна легенда гласит, что эти яйца благословили драконьи божества Бахамут и Тиамат, желавшие заселить мультивселенную по своему образу и подобию. Другая утверждает, что драконы создали первого драконорождённого без благословения богов. Кто бы ни создал их, вскоре этот вид расселился по всему Материальному плану. Драконорождённые выглядят как бескрылые двуногие драконы — чешуйчатые, ясноглазые, ширококостные, с рожками на головах — а их окраска и другие особенности напоминают об их драконьих предках.</p>",
+        "edition_key": "phb2024:species:драконорожденный",
+        "import_fingerprint": "86fa04770b805d56c09afe1531c6b66b90015b990122368f39f51e9f0ed22de2",
+        "lang_choice": {
+          "count": 2,
+          "from": [
+            19,
+            20,
+            25,
+            26,
+            39,
+            40,
+            52,
+            55,
+            329
+          ]
+        },
+        "languages": [
+          22
+        ],
+        "rules_source": "PHB 2024, стр. 190",
+        "size": "Средний",
+        "size_description": "Средний: Рост в пределах 5–7 футов.",
+        "speed": 30,
+        "subraces": [],
+        "variants": [
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон кислотой."
+              },
+              {
+                "text": "Сопротивление урону кислотой."
+              }
+            ],
+            "label": "Чёрный",
+            "size": "Средний",
+            "value": "Чёрный"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон электричеством."
+              },
+              {
+                "text": "Сопротивление урону электричеством."
+              }
+            ],
+            "label": "Синий",
+            "size": "Средний",
+            "value": "Синий"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон огнём."
+              },
+              {
+                "text": "Сопротивление урону огнём."
+              }
+            ],
+            "label": "Латунный",
+            "size": "Средний",
+            "value": "Латунный"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон электричеством."
+              },
+              {
+                "text": "Сопротивление урону электричеством."
+              }
+            ],
+            "label": "Бронзовый",
+            "size": "Средний",
+            "value": "Бронзовый"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон кислотой."
+              },
+              {
+                "text": "Сопротивление урону кислотой."
+              }
+            ],
+            "label": "Медный",
+            "size": "Средний",
+            "value": "Медный"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон огнём."
+              },
+              {
+                "text": "Сопротивление урону огнём."
+              }
+            ],
+            "label": "Золотой",
+            "size": "Средний",
+            "value": "Золотой"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон ядом."
+              },
+              {
+                "text": "Сопротивление урону ядом."
+              }
+            ],
+            "label": "Зелёный",
+            "size": "Средний",
+            "value": "Зелёный"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон огнём."
+              },
+              {
+                "text": "Сопротивление урону огнём."
+              }
+            ],
+            "label": "Красный",
+            "size": "Средний",
+            "value": "Красный"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон холодом."
+              },
+              {
+                "text": "Сопротивление урону холодом."
+              }
+            ],
+            "label": "Серебряный",
+            "size": "Средний",
+            "value": "Серебряный"
+          },
+          {
+            "benefits": [
+              {
+                "text": "Оружие дыхания наносит урон холодом."
+              },
+              {
+                "text": "Сопротивление урону холодом."
+              }
+            ],
+            "label": "Белый",
+            "size": "Средний",
+            "value": "Белый"
+          }
+        ]
+      },
+      "typeId": 8,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 16656,
+      "coverImageId": 17740,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-race-icons/v1/dragonborn.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/4031/cover/a4fe60b1abc66d07d900541222f0ac64599505dd23dca35dd4b85ca9aa1da236.jpg",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 4322,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Скорость, размер, языки и выбор происхождения. Особенности вида оформлены отдельными способностями.",
+      "requiresPlayerInteraction": false,
+      "id": 7209,
+      "name": "Тифлинг",
+      "data": {
+        "creature_type": "Гуманоид",
+        "description": "<p>Тифлинги либо рождаются на Нижних планах, либо ведут своё происхождение от живущих там исчадий. Каждый тифлинг связан кровными узами с дьяволом, демоном или каким-либо другим Исчадием. Эта связь с Нижними планами — часть наследия тифлинга, которое сулит могущество, но не оказывает влияния на его моральный компас. Выбор каждого тифлинга — принять свою сущность или оплакивать своё наследие.</p>",
+        "edition_key": "phb2024:species:тифлинг",
+        "import_fingerprint": "9dae3627f8f2751b6795c5bd5353e67a54c6c2c4718418ad03c0744e3144721c",
+        "lang_choice": {
+          "count": 2,
+          "from": [
+            19,
+            20,
+            25,
+            26,
+            39,
+            40,
+            52,
+            55,
+            329
+          ]
+        },
+        "languages": [
+          22
+        ],
+        "rules_source": "PHB 2024, стр. 193",
+        "size": "Средний",
+        "size_description": "Маленький: Рост около 3–4 футов. Средний: Рост около 4–7 футов.",
+        "speed": 30,
+        "subraces": [],
+        "variants": [
+          {
+            "value": "Маленький",
+            "label": "Маленький",
+            "size": "Маленький",
+            "size_description": "Рост около 3–4 футов."
+          },
+          {
+            "value": "Средний",
+            "label": "Средний",
+            "size": "Средний",
+            "size_description": "Рост около 4–7 футов."
+          }
+        ]
+      },
+      "typeId": 8,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 16657,
+      "coverImageId": 17755,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-race-icons/v1/tiefling.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/4322/cover/c25cd03a326c7cd1904f1a6f3bb1e28ddb476ad52c083fa604100b662903c238.jpg",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 4026,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Скорость, размер, языки и выбор происхождения. Особенности вида оформлены отдельными способностями.",
+      "requiresPlayerInteraction": false,
+      "id": 7211,
+      "name": "Человек",
+      "data": {
+        "creature_type": "Гуманоид",
+        "description": "<p>Люди встречаются по всей мультивселенной и столь же разнообразны, сколь и многочисленны. Они стремятся достичь как можно большего за отведенные им годы жизни. Их честолюбие и находчивость вызывают зависть, уважение и ужас во многих мирах. Внешний вид людей настолько же разнообразен, как и жителей Земли, и у них множество богов. Ученые до сих пор спорят о происхождении человечества, но известны первые упоминания о людях в Сигиле. Этот город на внутренней стороне тороида в центре мультивселенной — место, где зародился Общий язык. Возможно, именно оттуда люди распространились по всей мультивселенной вместе с космополитизмом Города Дверей.</p>",
+        "edition_key": "phb2024:species:человек",
+        "feat_choice": {
+          "count": 1
+        },
+        "import_fingerprint": "733faa2c0bade14e5367152d907bfcaab77729592aef00f600188226ed5b4bce",
+        "lang_choice": {
+          "count": 2,
+          "from": [
+            19,
+            20,
+            25,
+            26,
+            39,
+            40,
+            52,
+            55,
+            329
+          ]
+        },
+        "languages": [
+          22
+        ],
+        "rules_source": "PHB 2024, стр. 195",
+        "size": "Средний",
+        "size_description": "Маленький: Рост в пределах 2–4 футов. Средний: Рост в пределах 4–7 футов.",
+        "skill_choice": {
+          "count": 1,
+          "from": []
+        },
+        "speed": 30,
+        "subraces": [],
+        "variants": [
+          {
+            "label": "Маленький",
+            "size": "Маленький",
+            "size_description": "Рост в пределах 2–4 футов.",
+            "value": ":Маленький"
+          },
+          {
+            "label": "Средний",
+            "size": "Средний",
+            "size_description": "Рост в пределах 4–7 футов.",
+            "value": ":Средний"
+          }
+        ]
+      },
+      "typeId": 8,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 16649,
+      "coverImageId": 17750,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-race-icons/v1/human.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/4026/cover/43a5e029bf1dcd9114873cac6a07ba50485a89f3359a479fd08d5071370b37ad.jpg",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
     }
   ],
   "abilities": [
@@ -552,7 +905,8 @@
         "edition_key": "phb2024:species-feature:эльф:обостренные чувства",
         "level_source": "bound",
         "rules_source": "PHB 2024, стр. 196",
-        "import_fingerprint": "474465fc0696f1a7d68a592cbf0f7b54f9b75acb1ce66a1cf1df6e3d4bee25d1"
+        "import_fingerprint": "474465fc0696f1a7d68a592cbf0f7b54f9b75acb1ce66a1cf1df6e3d4bee25d1",
+        "choice_only": true
       },
       "typeId": 3,
       "createdAt": "2026-09-20T16:47:24.167995Z",
@@ -1243,6 +1597,582 @@
           "code": "PHB"
         }
       ]
+    },
+    {
+      "hidden": false,
+      "compatibility": [
+        {
+          "sourceVersionId": 1,
+          "version": "2014",
+          "status": "native",
+          "note": ""
+        }
+      ],
+      "automationStatus": "unreviewed",
+      "automationNote": "",
+      "requiresPlayerInteraction": false,
+      "id": 4084,
+      "name": "Заговор волшебника",
+      "nameEn": "Cantrip (High Elf)",
+      "data": {
+        "desc": "<p>Вы знаете один заговор из списка волшебника. Базовая характеристика для него — Интеллект.</p>",
+        "level": 1,
+        "choices": [
+          {
+            "key": "wizard_cantrip",
+            "text": "Выберите один заговор волшебника",
+            "count": 1,
+            "source": "item",
+            "item_filter": "{\"lvl\":0,\"classes.id\":4014}",
+            "grant_spells": true,
+            "casting_ability": 4,
+            "from_item_type_id": 5
+          }
+        ],
+        "race_ids": [
+          {
+            "id": 4027
+          }
+        ],
+        "subrace_ids": [
+          {
+            "id": 4074
+          }
+        ],
+        "level_source": "bound",
+        "choice_only": true
+      },
+      "typeId": 3,
+      "createdAt": "2026-06-16T06:25:11.980669Z",
+      "iconImageId": 40925,
+      "coverImageId": 40926,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/4084/icon/9595ac5495fabc8296de1eef9056192bf0876640cd7159caf6e5bd245cb15aa3.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/4084/cover/9fc1dcd85eda31610163e02becf38c7584f32f81a7328c4ff2d5c02abec8a539.webp",
+      "contentSourceIds": [
+        1
+      ],
+      "contentSources": [
+        {
+          "id": 1,
+          "name": "Книга игрока",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024; применение по описанию.",
+      "requiresPlayerInteraction": false,
+      "id": 7400,
+      "name": "Драконье происхождение",
+      "nameEn": "",
+      "data": {
+        "desc": "<p>Вы ведёте свою родословную от дракона-прародителя. Выберите вид дракона из таблицы «Драконьи предки». Этот выбор влияет на ваш внешний вид и на особенности Оружие дыхания и Сопротивление урону.</p><p>Чёрный и Медный — Кислота; Синий и Бронзовый — Электричество; Латунный, Золотой и Красный — Огонь; Зелёный — Яд; Серебряный и Белый — Холод.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7203
+          }
+        ],
+        "edition_key": "phb2024:species-feature:драконорожденный:драконье происхождение",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 190",
+        "import_fingerprint": "7894ae72de140082a41040520d7901628566a4884dcd6d8e88cc6493083759b3",
+        "choice_only": true
+      },
+      "typeId": 3,
+      "createdAt": "2026-09-20T16:47:24.167995Z",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024; применение по описанию.",
+      "requiresPlayerInteraction": false,
+      "id": 7414,
+      "name": "Потустороннее присутствие",
+      "nameEn": "",
+      "data": {
+        "desc": "<p>Вы знаете заговор Чудотворство. Когда вы сотворяете его с помощью этой особенности, заклинание использует ту же заклинательную характеристику, которую вы используете для особенности Наследие Исчадия.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7209
+          }
+        ],
+        "edition_key": "phb2024:species-feature:тифлинг:потустороннее присутствие",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 193",
+        "import_fingerprint": "9d90f8c8d8ca89eab72a9ddaf5ed7ad173043449a95baf23f6c75e8824030052",
+        "choices": [
+          {
+            "key": "casting_ability",
+            "text": "Заклинательная характеристика вида",
+            "count": 1,
+            "source": "inline",
+            "options": [
+              {
+                "label": "Интеллект",
+                "value": 4
+              },
+              {
+                "label": "Мудрость",
+                "value": 5
+              },
+              {
+                "label": "Харизма",
+                "value": 6
+              }
+            ]
+          }
+        ],
+        "granted_spells": [
+          {
+            "spell": 6450,
+            "level": 1,
+            "ability_choice_key": "casting_ability"
+          }
+        ]
+      },
+      "typeId": 3,
+      "createdAt": "2026-09-20T16:47:24.167995Z",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024; применение по описанию.",
+      "requiresPlayerInteraction": false,
+      "id": 7416,
+      "name": "Умелый",
+      "nameEn": "",
+      "data": {
+        "desc": "<p>Вы получаете владение одним навыком по вашему выбору.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7211
+          }
+        ],
+        "edition_key": "phb2024:species-feature:человек:умелый",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 195",
+        "import_fingerprint": "dcc63e1340f2b7e715a94a35cdb53aa0bbd807e347ac26d1b95ae35691dd2493",
+        "choice_only": true
+      },
+      "typeId": 3,
+      "createdAt": "2026-09-20T16:47:24.167995Z",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024; применение по описанию.",
+      "requiresPlayerInteraction": false,
+      "id": 7417,
+      "name": "Универсальность",
+      "nameEn": "",
+      "data": {
+        "desc": "<p>Вы получаете Черту происхождения по вашему выбору (см. главу 5). Рекомендуется взять черту Одарённый.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7211
+          }
+        ],
+        "edition_key": "phb2024:species-feature:человек:универсальность",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 195",
+        "import_fingerprint": "33c81896e6f022bc84283d3ad34ff12c7b4695f2d587b8cd329c0f8b70112056",
+        "choice_only": true
+      },
+      "typeId": 3,
+      "createdAt": "2026-09-20T16:47:24.167995Z",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "id": 97001,
+      "key": "phb2024:subspecies-feature:наследие бездны:сопротивление",
+      "name": "Сопротивление: яд",
+      "typeId": 3,
+      "data": {
+        "race_ids": [
+          {
+            "id": 7209
+          }
+        ],
+        "subrace_ids": [
+          {
+            "id": 97000
+          }
+        ],
+        "level": 1,
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 193",
+        "desc": "<p>Вы получаете сопротивление урону: яд.</p>",
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 4
+          }
+        ]
+      },
+      "automationStatus": "full"
+    },
+    {
+      "id": 97002,
+      "key": "phb2024:subspecies-feature:наследие бездны:магия",
+      "name": "Магия: наследие бездны",
+      "typeId": 3,
+      "data": {
+        "race_ids": [
+          {
+            "id": 7209
+          }
+        ],
+        "subrace_ids": [
+          {
+            "id": 97000
+          }
+        ],
+        "level": 1,
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 193",
+        "desc": "<p>На 1-м уровне вы знаете заговор «Ядовитые брызги». На 3-м уровне всегда подготовлено «Луч болезни», на 5-м — «Удержание личности». Каждое из этих заклинаний 3-го и 5-го уровней персонажа можно сотворить без ячейки один раз за Долгий отдых или с тратой ячейки подходящего уровня. Заклинательная характеристика — та же, что выбрана для Потустороннего присутствия.</p>",
+        "granted_spells": [
+          {
+            "spell": 6455,
+            "level": 1,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414
+          },
+          {
+            "spell": 6203,
+            "level": 3,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414,
+            "slotless": true
+          },
+          {
+            "spell": 6428,
+            "level": 5,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414,
+            "slotless": true
+          }
+        ]
+      },
+      "automationStatus": "partial",
+      "automationNote": "Заклинания выдаются на уровнях 1, 3, 5 с выбранной характеристикой; бесплатные применения учитываются игроком."
+    },
+    {
+      "id": 97004,
+      "key": "phb2024:subspecies-feature:хтоническое наследие:сопротивление",
+      "name": "Сопротивление: некротическая энергия",
+      "typeId": 3,
+      "data": {
+        "race_ids": [
+          {
+            "id": 7209
+          }
+        ],
+        "subrace_ids": [
+          {
+            "id": 97003
+          }
+        ],
+        "level": 1,
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 193",
+        "desc": "<p>Вы получаете сопротивление урону: некротическая энергия.</p>",
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 10
+          }
+        ]
+      },
+      "automationStatus": "full"
+    },
+    {
+      "id": 97005,
+      "key": "phb2024:subspecies-feature:хтоническое наследие:магия",
+      "name": "Магия: хтоническое наследие",
+      "typeId": 3,
+      "data": {
+        "race_ids": [
+          {
+            "id": 7209
+          }
+        ],
+        "subrace_ids": [
+          {
+            "id": 97003
+          }
+        ],
+        "level": 1,
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 193",
+        "desc": "<p>На 1-м уровне вы знаете заговор «Леденящее прикосновение». На 3-м уровне всегда подготовлено «Псевдожизнь», на 5-м — «Луч слабости». Каждое из этих заклинаний 3-го и 5-го уровней персонажа можно сотворить без ячейки один раз за Долгий отдых или с тратой ячейки подходящего уровня. Заклинательная характеристика — та же, что выбрана для Потустороннего присутствия.</p>",
+        "granted_spells": [
+          {
+            "spell": 6196,
+            "level": 1,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414
+          },
+          {
+            "spell": 6347,
+            "level": 3,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414,
+            "slotless": true
+          },
+          {
+            "spell": 6204,
+            "level": 5,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414,
+            "slotless": true
+          }
+        ]
+      },
+      "automationStatus": "partial",
+      "automationNote": "Заклинания выдаются на уровнях 1, 3, 5 с выбранной характеристикой; бесплатные применения учитываются игроком."
+    },
+    {
+      "id": 97007,
+      "key": "phb2024:subspecies-feature:инфернальное наследие:сопротивление",
+      "name": "Сопротивление: огонь",
+      "typeId": 3,
+      "data": {
+        "race_ids": [
+          {
+            "id": 7209
+          }
+        ],
+        "subrace_ids": [
+          {
+            "id": 97006
+          }
+        ],
+        "level": 1,
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 193",
+        "desc": "<p>Вы получаете сопротивление урону: огонь.</p>",
+        "defenses": [
+          {
+            "kind": "resistance",
+            "damage_type": 5
+          }
+        ]
+      },
+      "automationStatus": "full"
+    },
+    {
+      "id": 97008,
+      "key": "phb2024:subspecies-feature:инфернальное наследие:магия",
+      "name": "Магия: инфернальное наследие",
+      "typeId": 3,
+      "data": {
+        "race_ids": [
+          {
+            "id": 7209
+          }
+        ],
+        "subrace_ids": [
+          {
+            "id": 97006
+          }
+        ],
+        "level": 1,
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 193",
+        "desc": "<p>На 1-м уровне вы знаете заговор «Огненный снаряд». На 3-м уровне всегда подготовлено «Адское возмездие», на 5-м — «Тьма». Каждое из этих заклинаний 3-го и 5-го уровней персонажа можно сотворить без ячейки один раз за Долгий отдых или с тратой ячейки подходящего уровня. Заклинательная характеристика — та же, что выбрана для Потустороннего присутствия.</p>",
+        "granted_spells": [
+          {
+            "spell": 6261,
+            "level": 1,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414
+          },
+          {
+            "spell": 6066,
+            "level": 3,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414,
+            "slotless": true
+          },
+          {
+            "spell": 6424,
+            "level": 5,
+            "ability_choice_key": "casting_ability",
+            "ability_choice_source": 7414,
+            "slotless": true
+          }
+        ]
+      },
+      "automationStatus": "partial",
+      "automationNote": "Заклинания выдаются на уровнях 1, 3, 5 с выбранной характеристикой; бесплатные применения учитываются игроком."
+    },
+    {
+      "id": 7401,
+      "name": "Оружие дыхания",
+      "data": {
+        "desc": "<p>Когда вы в свой ход совершаете действие Атака, то можете заменить одну из ваших атак выдохом магической энергии 15‑футовым Конусом или 30‑футовой Линией шириной 5 футов (по вашему выбору при каждом применении). Каждое существо в этой области должно совершить спасбросок Ловкости (Сл 8 + ваш модификатор Телосложения + ваш Бонус владения). При провале существо получает 1к10 урона, а его тип определяется вашей особенностью Драконье происхождение. При успехе существо получает половину этого урона. Этот урон увеличивается на 1к10, когда вы достигаете 5‑го (2к10), 11‑го (3к10) и 17‑го (4к10) уровней персонажа. Вы можете использовать Оружие дыхания количество раз, равное вашему Бонусу владения, и восстанавливаете все потраченные использования после окончания Долгого отдыха.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7203
+          }
+        ],
+        "edition_key": "phb2024:species-feature:драконорожденный:оружие дыхания",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 190",
+        "import_fingerprint": "494f2c64d506ca50c761b8fd1694cb56861d125d9f9233e8deb4c121cd3e8ce6"
+      },
+      "typeId": 3
+    },
+    {
+      "id": 7402,
+      "name": "Сопротивление урону",
+      "data": {
+        "desc": "<p>Вы имеете Сопротивление типу урона, определяемому вашей особенностью Драконье происхождение.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7203
+          }
+        ],
+        "edition_key": "phb2024:species-feature:драконорожденный:сопротивление урону",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 190",
+        "import_fingerprint": "3149ef294e3cf4205037acc4aebd855d87b0ded92ee70af64b838311d0d306af"
+      },
+      "typeId": 3
+    },
+    {
+      "id": 7403,
+      "name": "Тёмное зрение",
+      "data": {
+        "desc": "<p>У вас есть Тёмное зрение в пределах 60 футов.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7203
+          }
+        ],
+        "edition_key": "phb2024:species-feature:драконорожденный:темное зрение",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 190",
+        "import_fingerprint": "86172e035f2c9b27b6321637c63a2c171deae4fca79a7b396d44fb83369e7791"
+      },
+      "typeId": 3
+    },
+    {
+      "id": 7404,
+      "name": "Драконий полёт",
+      "data": {
+        "desc": "<p>Когда вы достигаете 5‑го уровня персонажа, то можете использовать драконью магию, чтобы на время получить способность летать. Бонусным действием вы выпускаете из спины призрачные крылья, которые существуют в течение 10 минут, пока вы не уберёте их (действие не требуется) или не станете Недееспособным. В течение этого времени вы имеете Cкорость полёта, равную вашей Скорости. Ваши крылья сделаны из той же энергии, что питает Оружие дыхания. Вы не можете использовать эту особенность повторно, пока не закончите Долгий отдых.</p>",
+        "level": 5,
+        "race_ids": [
+          {
+            "id": 7203
+          }
+        ],
+        "edition_key": "phb2024:species-feature:драконорожденный:драконий полет",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 190",
+        "import_fingerprint": "37338b30623bb7e5ca531e0bc10ea48d97d54a08e6fa06e20846baac2a28349e"
+      },
+      "typeId": 3
+    },
+    {
+      "id": 7415,
+      "name": "Находчивый",
+      "data": {
+        "desc": "<p>Каждый раз, когда вы заканчиваете Долгий отдых, вы получаете Героическое вдохновение.</p>",
+        "level": 1,
+        "race_ids": [
+          {
+            "id": 7211
+          }
+        ],
+        "edition_key": "phb2024:species-feature:человек:находчивый",
+        "level_source": "bound",
+        "rules_source": "PHB 2024, стр. 195",
+        "import_fingerprint": "7f09f09296aac6276e705b8fdac1a110e1ab4e75ae4d16d3576524f7bccac28e"
+      },
+      "typeId": 3
     }
   ],
   "subraces": [
@@ -1501,6 +2431,906 @@
         "creature_type": "Гуманоид",
         "rules_source": "PHB 2024, стр. 188"
       }
+    },
+    {
+      "hidden": false,
+      "compatibility": [
+        {
+          "sourceVersionId": 1,
+          "version": "2014",
+          "status": "native",
+          "note": ""
+        }
+      ],
+      "automationStatus": "unreviewed",
+      "automationNote": "",
+      "requiresPlayerInteraction": false,
+      "id": 4074,
+      "name": "Высший эльф",
+      "nameEn": "High Elf",
+      "data": {
+        "asi": [
+          {
+            "bonus": 1,
+            "ability": 4
+          }
+        ],
+        "race": 4027,
+        "description": "<p>Высшие эльфы остры умом и сведущи хотя бы в азах тайной магии.</p>",
+        "lang_choice": {
+          "from": [],
+          "count": 1
+        },
+        "weapon_prof": [
+          16,
+          17,
+          28,
+          29
+        ]
+      },
+      "typeId": 16,
+      "createdAt": "2026-06-16T06:24:05.289882Z",
+      "parentId": 4027,
+      "iconImageId": 16658,
+      "coverImageId": 17748,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-race-icons/v1/subraces/high-elf.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/4074/cover/a135a3a7c04beddf46f248dcdd452438dd51004a87e206dc6bbe43b13875814f.jpg",
+      "contentSourceIds": [
+        1
+      ],
+      "contentSources": [
+        {
+          "id": 1,
+          "name": "Книга игрока",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "id": 97000,
+      "key": "phb2024:subspecies:наследие бездны",
+      "name": "Наследие Бездны",
+      "typeId": 16,
+      "data": {
+        "race": 7209,
+        "description": "<p>Энтропия Бездны, хаос Пандемониума и отчаяние Карцери отзываются в тифлингах с наследием Бездны. Типичные физические черты тифлингов, в жилах которых течёт кровь демонов, — рога, мех, клыки и специфический запах.</p>",
+        "speed": 30,
+        "creature_type": "Гуманоид",
+        "rules_source": "PHB 2024, стр. 193",
+        "short_description": "Сопротивление: яд. Ядовитые брызги; с 3-го уровня — Луч болезни; с 5-го — Удержание личности."
+      },
+      "automationStatus": "partial",
+      "automationNote": "Сопротивление и дарованные заклинания; размер выбирается отдельно."
+    },
+    {
+      "id": 97003,
+      "key": "phb2024:subspecies:хтоническое наследие",
+      "name": "Хтоническое наследие",
+      "typeId": 16,
+      "data": {
+        "race": 7209,
+        "description": "<p>Тифлинги с хтоническим наследием ощущают не только притяжение Карцери, но и жадность Геенны и мрак Аида. Некоторые из этих тифлингов страшны, как трупы. Другие обладают неземной красотой суккуба, а третьи похожи на ночных карг, юголотов или иных Нейтрально-злых предков-исчадий.</p>",
+        "speed": 30,
+        "creature_type": "Гуманоид",
+        "rules_source": "PHB 2024, стр. 193",
+        "short_description": "Сопротивление: некротическая энергия. Леденящее прикосновение; с 3-го уровня — Псевдожизнь; с 5-го — Луч слабости."
+      },
+      "automationStatus": "partial",
+      "automationNote": "Сопротивление и дарованные заклинания; размер выбирается отдельно."
+    },
+    {
+      "id": 97006,
+      "key": "phb2024:subspecies:инфернальное наследие",
+      "name": "Инфернальное наследие",
+      "typeId": 16,
+      "data": {
+        "race": 7209,
+        "description": "<p>Дьявольское наследие связывает тифлингов с Геенной, Девятью Преисподними и бушующими полями сражений Ахерона. Типичные физические черты тифлингов, ведущих свой род от дьяволов, — рога, шипы, хвосты, золотистые глаза и слабый запах серы или дыма.</p>",
+        "speed": 30,
+        "creature_type": "Гуманоид",
+        "rules_source": "PHB 2024, стр. 193",
+        "short_description": "Сопротивление: огонь. Огненный снаряд; с 3-го уровня — Адское возмездие; с 5-го — Тьма."
+      },
+      "automationStatus": "partial",
+      "automationNote": "Сопротивление и дарованные заклинания; размер выбирается отдельно."
+    }
+  ],
+  "spells": [
+    {
+      "hidden": false,
+      "derivedFromItemId": 542,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Правила 2024: типизированный урон, усиление, спасбросок и применение полного/половинного урона либо избегание через хронику. Геометрию, перемещения и воздействие на декорации определяет мастер.",
+      "requiresPlayerInteraction": false,
+      "id": 6066,
+      "name": "Адское возмездие",
+      "nameEn": "hellish_rebuke",
+      "data": {
+        "lvl": 1,
+        "time": {
+          "kind": "reaction",
+          "condition": "совершаемая вами в ответ на получение урона от существа, находящегося в пределах 60 футов от вас и видимого вами"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 60
+        },
+        "damage": {
+          "addon": [
+            {
+              "type": 5,
+              "count": 1,
+              "dice_id": "d10"
+            }
+          ],
+          "dices": [
+            {
+              "type": 5,
+              "count": 2,
+              "dice_id": "d10"
+            }
+          ],
+          "scaling": "slot",
+          "save_effect": "half",
+          "save_ability": "dex"
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6857
+          }
+        ],
+        "duration": "Мгновенная",
+        "schoolId": 1,
+        "components": {
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Существо, причинившее вам урон, мгновенно окружается зелёным пламенем. Оно совершает спасбросок Ловкости, получая 2к10 урона Огнём при провале, или половину этого урона при успехе. Использование ячейки большего уровня. Урон увеличивается на 1к10 за каждый уровень ячейки выше первого.</p>",
+        "edition_key": "phb2024:spell:адское возмездие",
+        "rules_source": "PHB 2024, стр. 239",
+        "concentration": false,
+        "import_fingerprint": "1bb0ed7f24433f88eb4c9b7cb4295755cbaef89fdc56727d932ecef998cd1b6f"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 47966,
+      "coverImageId": 49150,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/542/icon/5c6f77c4c7005b0dd8669b8b5c40db09a872dddde0d0a0e1e718dde6b6425fc5.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/6066/cover/b5f1d3e31249d30be9df725b9b6e225cd2bdaa888ce3515aa095cc72d37a6ea0.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 495,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Правила 2024: атака или спасбросок, усиление, тип урона и применение результата. Попадание; до конца следующего хода заклинателя цель не восстанавливает ХП. Дополнительное ограничение пока соблюдается участниками.",
+      "requiresPlayerInteraction": false,
+      "id": 6196,
+      "name": "Леденящее прикосновение",
+      "nameEn": "chill_touch",
+      "data": {
+        "lvl": 0,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "touch"
+        },
+        "damage": {
+          "addon": [
+            {
+              "type": 10,
+              "count": 1,
+              "dice_id": "d10"
+            }
+          ],
+          "dices": [
+            {
+              "type": 10,
+              "count": 1,
+              "dice_id": "d10"
+            }
+          ],
+          "scaling": "cantrip",
+          "range_attack": true
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6748
+          },
+          {
+            "id": 6857
+          },
+          {
+            "id": 7068
+          }
+        ],
+        "duration": "Мгновенная",
+        "schoolId": 8,
+        "components": {
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Проводя могильный холод через себя, совершите рукопашную атаку заклинанием по цели в пределах досягаемости. При попадании цель получает 1к10 урона Некротической энергией и не может восстанавливать Хиты до конца вашего следующего хода. Усиление заговора. Урон увеличивается на 1к10, когда вы достигаете 5‑го уровня (2к10), 11‑го уровня (3к10) и 17‑го уровня (4к10).</p>",
+        "edition_key": "phb2024:spell:леденящее прикосновение",
+        "rules_source": "PHB 2024, стр. 282",
+        "concentration": false,
+        "import_fingerprint": "e790ee342306206246c97dbeaffe8e5b62acbb98e94b5712e59622b597b88fcb"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 28657,
+      "coverImageId": 27548,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/495/icon/5dee6747638d91449543a27b6d3e21561ec2fc3ea3bc4045d5f7d52e1fc1e8d1.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/495/cover/5f226ea498ad17758091211f806864ee14d5527d51cde0eaa2de9a6843258b28.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 604,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "partial",
+      "automationNote": "Правила 2024: атака или спасбросок, усиление, тип урона и применение результата. Попадание; цель отравлена до конца следующего хода заклинателя. Связанный эффект применяется из хроники.",
+      "requiresPlayerInteraction": false,
+      "id": 6203,
+      "name": "Луч болезни",
+      "nameEn": "ray_of_sickness",
+      "data": {
+        "lvl": 1,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 60
+        },
+        "damage": {
+          "addon": [
+            {
+              "type": 4,
+              "count": 1,
+              "dice_id": "d8"
+            }
+          ],
+          "dices": [
+            {
+              "type": 4,
+              "count": 2,
+              "dice_id": "d8"
+            }
+          ],
+          "scaling": "slot",
+          "range_attack": true
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6748
+          },
+          {
+            "id": 7068
+          }
+        ],
+        "duration": "Мгновенная",
+        "schoolId": 8,
+        "components": {
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Луч зеленоватой энергии устремляется к существу, находящемуся в пределах дистанции. Совершите Дальнобойную атаку заклинанием по цели. При попадании цель получает 2к8 урона Ядом и становится Отравленной до конца вашего следующего хода. Использование ячейки большего уровня. Урон увеличивается на 1к8 за каждый уровень ячейки выше первого.</p>",
+        "edition_key": "phb2024:spell:луч болезни",
+        "rules_source": "PHB 2024, стр. 283",
+        "concentration": false,
+        "status_effects": [
+          {
+            "key": "spell_6203_impact_4599",
+            "effect": {
+              "id": 7306
+            },
+            "apply_on": "impact",
+            "duration": {
+              "kind": "custom",
+              "text": "До конца следующего хода заклинателя"
+            },
+            "condition": "После попадания; до конца следующего хода заклинателя.",
+            "concentration": false
+          }
+        ],
+        "import_fingerprint": "eb6f5799e6a1d4e223bea5086bd4ab6426fc97cee90b97818f58e88150f20e30"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 47987,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/604/icon/712a095063e682cb2626055bfb625c2acb2304f036bf83b8ccc6329d209b473b.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 751,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024. Применение особенностей по описанию; автоматизация этой версии не настроена.",
+      "requiresPlayerInteraction": false,
+      "id": 6204,
+      "name": "Луч слабости",
+      "nameEn": "ray_of_enfeeblement",
+      "data": {
+        "lvl": 2,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 60
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6748
+          },
+          {
+            "id": 6857
+          }
+        ],
+        "duration": "Концентрация, вплоть до 1 минуты",
+        "schoolId": 8,
+        "components": {
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Луч ослабляющей энергии устремляется к существу, находящемуся в пределах дистанции. Цель должна совершить спасбросок Телосложения. При успехе цель совершает с Помехой следующий бросок атаки до начала вашего следующего хода. При провале цель совершает с Помехой все Тесты к20, основанные на Силе, пока заклинание активно. В течение этого времени она также вычитает 1к8 из всех своих бросков урона. Цель повторяет этот спасбросок в конце каждого своего хода, заканчивая на себе этот эффект при успехе.</p>",
+        "edition_key": "phb2024:spell:луч слабости",
+        "rules_source": "PHB 2024, стр. 283",
+        "concentration": true,
+        "import_fingerprint": "2de968d00c294e3b6f843e8c5f8fe2505e8ce24db85f6292aa1646439bc2ce06"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 48097,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/751/icon/27982da5d14efd3d5a451b9d75472d88a82f090f552b8eefd209106525d8833f.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 504,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Правила 2024: атака заклинанием, усиление заговора, крит и типизированный урон с применением к цели. Перемещение и воздействие на декорации определяет мастер. Опечатка усиления к6 исправлена на к10 по официальным Basic Rules 2024.",
+      "requiresPlayerInteraction": false,
+      "id": 6261,
+      "name": "Огненный снаряд",
+      "nameEn": "fire_bolt",
+      "data": {
+        "lvl": 0,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 120
+        },
+        "damage": {
+          "addon": [
+            {
+              "type": 5,
+              "count": 1,
+              "dice_id": "d10"
+            }
+          ],
+          "dices": [
+            {
+              "type": 5,
+              "count": 1,
+              "dice_id": "d10"
+            }
+          ],
+          "scaling": "cantrip",
+          "range_attack": true
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6748
+          },
+          {
+            "id": 7068
+          }
+        ],
+        "duration": "Мгновенная",
+        "schoolId": 1,
+        "components": {
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Вы кидаете сгусток огня в существо или объект в пределах дистанции. Совершите Дальнобойную атаку заклинанием по цели. При попадании цель получает 1к10 урона Огнём. Горючие объекты, по которым попало это заклинание, воспламеняются, если их никто не несёт и не носит.</p><p>Усиление заговора. Урон увеличивается на 1к10, когда вы достигаете 5‑го уровня (2к10), 11‑го уровня (3к10) и 17‑го уровня (4к10).</p>",
+        "edition_key": "phb2024:spell:огненный снаряд",
+        "rules_source": "PHB 2024, стр. 297",
+        "concentration": false,
+        "import_fingerprint": "640fa1c34898c187a710473ff4668d04999bb932973cba2fc66113f671fa37d6"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 28738,
+      "coverImageId": 27721,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/504/icon/369bc1ea1c2258c107857124ff9588c06a376866b944da4ae3fdbe035465db21.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/504/cover/d55d789246357b680d19eec5d0d6536f40460696fad2e4f441f18d25468afc1e.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 658,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Правила 2024: 2к4 + 4 временных ХП, +5 за круг выше; применение к себе, расход ячейки, результат в уведомлении/хронике. Временные ХП не складываются и не заменяют лечение.",
+      "requiresPlayerInteraction": false,
+      "id": 6347,
+      "name": "Псевдожизнь",
+      "nameEn": "false_life",
+      "data": {
+        "lvl": 1,
+        "heal": {
+          "kind": "temporary_hp",
+          "addon": [
+            {
+              "bonus": 5
+            }
+          ],
+          "dices": [
+            {
+              "bonus": 4,
+              "count": 2,
+              "dice_id": "d4"
+            }
+          ],
+          "scaling": "slot"
+        },
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "self"
+        },
+        "rolls": [],
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6748
+          },
+          {
+            "id": 7068
+          }
+        ],
+        "duration": "Мгновенная",
+        "schoolId": 8,
+        "components": {
+          "m": "капля спирта",
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Вы получаете 2к4 + 4 Временных хитов. Использование ячейки большего уровня. Вы получаете 5 дополнительных Временных хитов за каждый уровень ячейки выше первого.</p>",
+        "edition_key": "phb2024:spell:псевдожизнь",
+        "rules_source": "PHB 2024, стр. 319",
+        "concentration": false,
+        "import_fingerprint": "c42ecabe57020a7ea2ed012e42bc649aed3d8419aa70a1e2c1da1a0e580dd0a6",
+        "application_targets": {
+          "self_only": true
+        }
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 48014,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/658/icon/154faa35e623231e66075331563bb8abb1d90a60d91288519f9e00472de4cef4.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 833,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024. Применение особенностей по описанию; автоматизация этой версии не настроена.",
+      "requiresPlayerInteraction": false,
+      "id": 6424,
+      "name": "Тьма",
+      "nameEn": "darkness",
+      "data": {
+        "lvl": 2,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 60
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6748
+          },
+          {
+            "id": 6857
+          },
+          {
+            "id": 7068
+          }
+        ],
+        "duration": "Концентрация, вплоть до 10 минут",
+        "schoolId": 1,
+        "components": {
+          "m": "мех летучей мыши и кусочек угля",
+          "s": false,
+          "v": true
+        },
+        "description": "<p>Пока заклинание активно, из точки в пределах дистанции распространяется магическая Тьма Сферой с радиусом 15 футов. Тёмное зрение не видит сквозь эту Тьму, а немагический свет не может её осветить. В качестве альтернативы вы можете сотворить заклинание на объект, который никто не несёт и не носит, заставляя Тьму заполнить 15‑футовую Эманацию, исходящую от этого объекта. Накрытие этого объекта чем-то непрозрачным, например чашей или шлемом, блокирует Тьму. Если часть области этого заклинания пересекается с областью Яркого света или Тусклого света, созданной заклинанием второго уровня и ниже, то другое заклинание рассеивается.</p>",
+        "edition_key": "phb2024:spell:тьма",
+        "rules_source": "PHB 2024, стр. 338",
+        "concentration": true,
+        "import_fingerprint": "3f204b36a22ba1ea49ff7f863ec4168e2f3a9ca09086d1eb6d81464533f2d8a5"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 48134,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/833/icon/8f8610a6d991eb66cec3ba8e363c9921815101b75821c24e84f8d98fba19fbb8.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 841,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024. Применение особенностей по описанию; автоматизация этой версии не настроена.",
+      "requiresPlayerInteraction": false,
+      "id": 6428,
+      "name": "Удержание личности",
+      "nameEn": "hold_person",
+      "data": {
+        "lvl": 2,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 60
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6629
+          },
+          {
+            "id": 6748
+          },
+          {
+            "id": 6783
+          },
+          {
+            "id": 6821
+          },
+          {
+            "id": 6857
+          },
+          {
+            "id": 7068
+          }
+        ],
+        "duration": "Концентрация, вплоть до 1 минуты",
+        "schoolId": 2,
+        "components": {
+          "m": "прямой кусочек железа",
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Выберите Гуманоида, которого можете видеть в пределах дистанции. Цель должна преуспеть в спасброске Мудрости, иначе станет Парализованной на время действия заклинания. Цель повторяет спасбросок в конце каждого своего хода, заканчивая на себе действие заклинания при успехе. Использование ячейки большего уровня. Вы можете сделать целью одного дополнительного Гуманоида за каждый уровень ячейки выше второго.</p>",
+        "edition_key": "phb2024:spell:удержание личности",
+        "rules_source": "PHB 2024, стр. 338",
+        "concentration": true,
+        "import_fingerprint": "a77854117c7256027a18c10a56c4159f3ad281fe68a519859a502a8269dc0660"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 47344,
+      "coverImageId": 47345,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/841/icon/999ab8d858afd69534547f10d8c0ea6a001f55369221a6e867ebb08275b05111.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/841/cover/a29af333fc5b8a1a337790740174f7a59084361f21c73eadd589c7d28b002911.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 537,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "none",
+      "automationNote": "Правила PHB 2024. Применение особенностей по описанию; автоматизация этой версии не настроена.",
+      "requiresPlayerInteraction": false,
+      "id": 6450,
+      "name": "Чудотворство",
+      "nameEn": "thaumaturgy",
+      "data": {
+        "lvl": 0,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 30
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6821
+          }
+        ],
+        "duration": "Вплоть до 1 минуты",
+        "schoolId": 5,
+        "components": {
+          "s": false,
+          "v": true
+        },
+        "description": "<p>Вы проявляете небольшое чудо в пределах дистанции. Вы создаёте один из приведённых ниже эффектов в пределах дистанции. При сотворении этого заклинания несколько раз вы можете иметь</p><p>не более трёх активных эффектов с длительностью в 1 минуту одновременно. Изменённые глаза. Вы изменяете внешний вид своих глаз на 1 минуту. Раскатистый голос. Ваш голос звучит не более, чем в три раза громче обычного в течение 1 минуты. Пока заклинание активно, вы совершаете с Преимуществом проверки Харизмы (Запугивание). Игра с огнём. Вы заставляете пламя мерцать, светить ярче, тусклее или изменять цвет в течение 1 минуты. Невидимая рука. Вы мгновенно заставляете незапертое окно или дверь распахнуться или захлопнуться. Фантомный звук. Вы создаёте мгновенный звук, исходящий из выбранной вами точки в пределах дистанции, такой как раскат грома, крик ворона или зловещий шёпот. Дрожь. Вы вызываете безвредную дрожь в земле в течение 1 минуты.</p>",
+        "edition_key": "phb2024:spell:чудотворство",
+        "rules_source": "PHB 2024, стр. 344",
+        "concentration": false,
+        "import_fingerprint": "b2cc1f5be650a907da4d7ed2c283962249fdef2cc27f1803af3db7b56cb8201c"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 28480,
+      "coverImageId": 27849,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/537/icon/52d1ef0c35e0f6b0d7273e45a76933b7ddf2c4c2e5976541d64ea3c5a524e7f0.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/537/cover/3b2654e20104876f24013a241a53cb2629304e1db171a9334b46f05ad749ecb7.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
+    },
+    {
+      "hidden": false,
+      "derivedFromItemId": 541,
+      "derivationKind": "revision",
+      "compatibility": [
+        {
+          "sourceVersionId": 1799,
+          "version": "2024",
+          "status": "native",
+          "note": "Отдельная версия из публикации"
+        }
+      ],
+      "automationStatus": "full",
+      "automationNote": "Правила 2024: атака заклинанием, усиление заговора, крит и типизированный урон с применением к цели. Перемещение и воздействие на декорации определяет мастер.",
+      "requiresPlayerInteraction": false,
+      "id": 6455,
+      "name": "Ядовитые брызги",
+      "nameEn": "poison_spray",
+      "data": {
+        "lvl": 0,
+        "time": {
+          "kind": "action"
+        },
+        "range": {
+          "kind": "ranged",
+          "unit": "feet",
+          "distance": 30
+        },
+        "damage": {
+          "addon": [
+            {
+              "type": 4,
+              "count": 1,
+              "dice_id": "d12"
+            }
+          ],
+          "dices": [
+            {
+              "type": 4,
+              "count": 1,
+              "dice_id": "d12"
+            }
+          ],
+          "scaling": "cantrip",
+          "range_attack": true
+        },
+        "ritual": false,
+        "classes": [
+          {
+            "id": 6748
+          },
+          {
+            "id": 6783
+          },
+          {
+            "id": 6857
+          },
+          {
+            "id": 7068
+          }
+        ],
+        "duration": "Мгновенная",
+        "schoolId": 8,
+        "components": {
+          "s": true,
+          "v": true
+        },
+        "description": "<p>Вы распыляете токсичный туман на существо в пределах дистанции. Совершите Дальнобойную атаку заклинанием по цели. При попадании цель получает 1к12 урона Ядом. Усиление заговора. Урон увеличивается на 1к12, когда вы достигаете 5‑го уровня (2к12), 11‑го уровня (3к12) и 17‑го уровня (4к12).</p>",
+        "edition_key": "phb2024:spell:ядовитые брызги",
+        "rules_source": "PHB 2024, стр. 345",
+        "concentration": false,
+        "import_fingerprint": "f1f32ccbb20e0f3402cc70804c05f938ac2416f7619f08148d9ee96bc9b5006b"
+      },
+      "typeId": 5,
+      "createdAt": "2026-09-19T14:56:58.812552Z",
+      "iconImageId": 28316,
+      "coverImageId": 27945,
+      "iconImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/541/icon/548c688d0e69f7af1d5dcc9d4379e8ec9073b25c5992e509383f4e4831b54d27.webp",
+      "coverImageUrl": "https://storage.yandexcloud.net/dndshare/system-item-media/v1/items/541/cover/1cec82c472bb81ead547771f1c514b5a2453c70d82e7a4a99706a897c8bd7b7f.webp",
+      "contentSourceIds": [
+        23506
+      ],
+      "contentSources": [
+        {
+          "id": 23506,
+          "name": "Книга игрока 2024",
+          "code": "PHB"
+        }
+      ]
     }
   ]
 }

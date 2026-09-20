@@ -2,6 +2,7 @@
 import copy,html,re
 from content_common import flat,key,norm,ref,rich,sections,unwrap
 from aliases import FEATS
+from prepare_tiefling_lineages import build_tiefling_lineages, CHOICE_ONLY
 from prepare_elf_lineages import build_elf_lineages
 from prepare_gnome_goliath_lineages import build_lineages
 from species_details import split_species, enrich_species, feature_data
@@ -142,6 +143,7 @@ def species(pages,catalogue):
             data = feature_data(name, feature, aggregate)
             ability = catalogue.add('species-feature', name+':'+feature['name'], 3, data, s['page'])
             ability['name'] = feature['name']
+            if (name, feature['name']) in CHOICE_ONLY: data['choice_only'] = True
             if data.get('choices') or data.get('hp_bonuses'):
                 ability['automationStatus'] = 'partial'
                 ability['automationNote'] = 'Сохранены выбор заклинательной характеристики или прибавка хитов; остальные эффекты выполняются по описанию.'
@@ -155,3 +157,17 @@ def species(pages,catalogue):
                 if child['typeId'] == 16:
                     child['parentKey'] = r['key']
             catalogue.records.extend(children)
+
+        if name == 'Тифлинг':
+            lineage = next(row for row in catalogue.records if row['key'] == key('species-feature', name+':Наследие Исчадия'))
+            presence = next(row for row in catalogue.records if row['key'] == key('species-feature', name+':Потустороннее присутствие'))
+            children, r['data'], presence_data = build_tiefling_lineages({'id': ref(r['key']), 'data': r['data']}, lineage, ref(presence['key']))
+            presence['data'].update(presence_data)
+            catalogue.records.remove(lineage)
+            for child in children:
+                if child['typeId'] == 16: child['parentKey'] = r['key']
+            catalogue.records.extend(children)
+        if name == 'Драконорождённый':
+            for variant in r['data']['variants']:
+                variant.pop('description', None)
+                variant.pop('size_description', None)

@@ -228,7 +228,7 @@ async function fetchTypesForSource(sourceId) {
       fetchGet(`/suggest/types?sourceId=${sourceId}`),
     ])
     if (request !== catalogRequest) return
-    itemTypes.value = types
+    itemTypes.value = types.filter(visibleHandbookType)
     suggestTypes.value = dictsRes?.items || []
   } catch {
     if (request === catalogRequest) catalogError.value = 'Не удалось загрузить разделы справочника.'

@@ -1,8 +1,8 @@
 <template>
-  <section v-if="abilities.length" class="race-abilities" :aria-label="label">
+  <section v-if="visibleAbilities.length" class="race-abilities" :aria-label="label">
     <div class="sheet-section-title">{{ label }}</div>
     <div class="race-ability-grid">
-      <BaseTile v-for="ability in abilities" :key="ability.id" class="race-ability-card">
+      <BaseTile v-for="ability in visibleAbilities" :key="ability.id" class="race-ability-card">
         <ObjectListItem :item="ability" :type="type" :subtitle="Number(ability.data?.level) > 1 ? `С ${ability.data.level}-го уровня` : 'С 1-го уровня'"
           :name-en="ability.nameEn || ''" interactive @activate="viewItem = ability">
           <template #icon-fallback><Sparkles :size="24" aria-hidden="true" /></template>
@@ -13,12 +13,13 @@
   </section>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { Sparkles } from '@lucide/vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
-defineProps({ label: { type: String, default: 'Способности расы' }, abilities: { type: Array, default: () => [] }, type: { type: Object, default: null } })
+const props = defineProps({ hideChoiceOnly: Boolean, label: { type: String, default: 'Способности расы' }, abilities: { type: Array, default: () => [] }, type: { type: Object, default: null } })
+const visibleAbilities = computed(() => props.abilities.filter(ability => !props.hideChoiceOnly || !ability.data?.choice_only))
 const viewItem = ref(null)
 </script>
 <style scoped>

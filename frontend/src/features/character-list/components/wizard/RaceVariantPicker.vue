@@ -19,7 +19,7 @@
         </details>
       </BaseTile>
     </div>
-    <p v-if="sizeDescription && !options.some(option => option.size_description)" class="variant-note">{{ sizeDescription }}</p>
+    <p v-if="sizeOnly && sizeDescription && !options.some(option => option.size_description)" class="variant-note">{{ sizeDescription }}</p>
   </section>
 </template>
 <script setup>

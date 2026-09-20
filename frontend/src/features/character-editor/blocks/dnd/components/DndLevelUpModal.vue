@@ -106,7 +106,7 @@
         <div class="lu-sec-title">Новые умения</div>
         <p v-if="!features.length" class="lu-muted">На этом уровне класс не даёт новых умений{{ needSubclass && !subclassPick ? ' (выбери архетип — возможно, добавятся)' : '' }}.</p>
         <div v-for="f in features" :key="f.id" class="lu-feature">
-          <LevelUpItemRow :item="f" :type-id="4" @details="viewFeature = f.id" />
+          <LevelUpItemRow v-if="!f.data?.choice_only" :item="f" :type-id="4" @details="viewFeature = f.id" />
           <template v-for="choice in featChoices(f)" :key="choice.key">
             <div class="lu-feat-choice-title">
               {{ choice.text || 'Сделай выбор' }}

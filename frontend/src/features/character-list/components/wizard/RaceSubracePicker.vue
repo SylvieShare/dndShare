@@ -10,7 +10,8 @@
     <div v-if="modelValue" class="subrace-details" aria-live="polite">
       <h3>{{ modelValue.name }}</h3>
       <RichContent v-if="showFullDescription" :html="modelValue.data.description" />
-      <RaceAbilityList :abilities="selectedAbilities" label="Способности подрасы" />
+      <RaceAbilityList :abilities="selectedAbilities" label="Способности подрасы" hide-choice-only />
+      <RaceSpellList :abilities="selectedAbilities" />
     </div>
   </section>
 </template>
@@ -20,6 +21,7 @@ import SubraceSelectCard from './SubraceSelectCard.vue'
 import { asiSummary, monogramOf } from './labels'
 import { shortRaceDescription } from './raceCardSummary'
 import RichContent from '@/shared/ui/DndRichContent.vue'
+import RaceSpellList from '@/features/items/components/RaceSpellList.vue'
 import RaceAbilityList from '@/features/items/components/RaceAbilityList.vue'
 import { featuresForBinding } from '@/features/character-editor/settings/dnd/creation/progression'
 const props = defineProps({ options: { type: Array, default: () => [] }, modelValue: { type: Object, default: null }, raceId: { type: Number, default: null }, abilities: { type: Array, default: () => [] } })

@@ -46,7 +46,8 @@ export const dependencyManifest = {
   granted_spells: {
     main: () => ['spell', 'ability', 'slotless', 'counts_as_known'],
     fields: { ability: { name: 'Характеристика заклинания' }, counts_as_known: { name: 'Занимает место среди известных заклинаний' }, slotless: { name: 'Можно сотворять без ячейки' } },
-    gates: [{ title: 'Сотворять на другом уровне', keys: ['cast_level'] }],
+    gates: [{ title: 'Сотворять на другом уровне', keys: ['cast_level'] },
+      { title: 'Характеристика из выбора способности', keys: ['ability_choice_key', 'ability_choice_source'] }],
   },
   roll_triggers: { main: () => ['event', 'scopes', 'label'], fields: { scopes: scopeField, label: { name: 'Название предложения перебросить' } }, gates: [], summary: d => d.event === 'any' ? 'После броска можно выбрать переброс. Второй результат обязателен.' : 'При натуральной 1 на к20 предложить переброс.' },
   roll_adjustments: {

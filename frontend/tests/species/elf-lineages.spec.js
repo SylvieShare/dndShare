@@ -8,7 +8,7 @@ for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 1000 })
     await page.goto('/tests/species/fixture.html?elf')
     const base = page.getByRole('region', { name: 'Способности расы', exact: true })
-    await expect(base.locator('.race-ability-card')).toHaveCount(4)
+    await expect(base.locator('.race-ability-card')).toHaveCount(3)
     await expect(base).not.toContainText('Эльфийская родословная')
     await expect(page.locator('.race-lore')).not.toContainText('Зендрик')
     await expect(page.locator('.race-lore')).not.toContainText('Сильванести')

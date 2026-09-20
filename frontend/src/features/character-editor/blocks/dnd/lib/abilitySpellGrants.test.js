@@ -12,6 +12,20 @@ const ability = {
 }
 
 describe('ability spell grants', () => {
+  it('shares a racial casting choice with lineage spells and unlocks them at total levels 3 and 5', () => {
+    const presence = { id: 1, typeId: 3, data: { granted_spells: [{ spell: 40, ability_choice_key: 'casting' }] } }
+    const lineage = { id: 2, typeId: 3, data: { granted_spells: [1, 3, 5].map((level, index) => ({
+      spell: 41 + index, level, ability_choice_key: 'casting', ability_choice_source: { id: 1 }, slotless: level > 1,
+    })) } }
+    const values = { lvl: { level: 1 }, abilities_race: [{ id: 1, choices: { casting: [5] } }, { id: 2 }] }
+    expect(abilitySpellGrantRows([presence, lineage], values).map(row => [row.spellId, row.castingAbility])).toEqual([[40, 5], [41, 5]])
+    values.lvl.level = 3
+    expect(abilitySpellGrantRows([presence, lineage], values).map(row => row.spellId)).toEqual([40, 41, 42])
+    values.lvl.level = 5
+    values.abilities_race[0].choices.casting = [6]
+    expect(abilitySpellGrantRows([presence, lineage], values).map(row => row.castingAbility)).toEqual([6, 6, 6, 6])
+  })
+
   it('creates an independent readonly grant with its source and casting ability', () => {
     const grants = abilitySpellGrantRows([ability], { lvl: { level: 1 } })
     expect(syncAbilityGrantedSpells([], grants)).toEqual([{

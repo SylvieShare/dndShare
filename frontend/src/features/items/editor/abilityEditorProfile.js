@@ -7,7 +7,7 @@ export const RESOURCE_KEYS = [
   'short_rest_recovery', 'short_rest_recovery_level',
 ]
 export const MAGIC_ITEM_PROPERTY_KEYS = ['armor_base', 'weapon', 'treasure', 'desc', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'recharge_note', 'cost', 'weight', 'consumable', 'is_container', 'equipment_category', 'measurement', 'unit_cost_copper', 'unit_weight', 'contents', 'available_in_starting_shop']
-const BASIC_KEYS = ['desc', 'level', 'level_source', 'level_class_id']
+const BASIC_KEYS = ['choice_only', 'desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
   'weapon_damage', 'weapon_uses', 'confirmed_uses', 'selected_target', 'weapon_bonus_transfer', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']

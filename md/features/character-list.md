@@ -181,7 +181,7 @@ content rows. Each option shows its benefits and height note; a separate
 “Подробные правила” disclosure expands the rules without selecting that option.
 Forest and Rock Gnomes (2024) and six Goliath ancestries use separate type-16
 records in `RaceSubracePicker`, with their own abilities. `RaceVariantPicker`
-presents tiefling and dragonborn variants and independent size choices;
+presents dragonborn variants and independent size choices (including tieflings);
 selection continues to store the existing variant key.
 
 On phones, choosing a race scrolls the newly revealed lore and dependent choices
@@ -469,3 +469,19 @@ uses “Происхождение”; Goliath choices describe a goliath of Clo
 Hill, Stone or Storm giant ancestry, not a playable giant. Each has its own
 benefit and preserves the proficiency-bonus/long-rest usage rule. Gnome
 spellcasting choices belong to the selected Forest/Rock lineage only.
+
+Tiefling heritage uses three type-16 children, independently of the two size
+options. Each child owns its lore, resistance and spells. `RaceSpellList` shows
+real spell tiles with character acquisition levels and opens the handbook modal.
+The links come from `granted_spells`, the same records used to grant spells on
+creation and level-up. The shared casting choice belongs to Otherworldly Presence.
+
+`choice_only` abilities retain their rule/selection source and saved character
+references, but creation and level-up do not repeat their feature tile beside
+selection controls. Audited cases: Human 2024 Skillful/Versatile, Elf 2024 Keen
+Senses, Dragonborn 2024 ancestry, and High Elf 2014 wizard cantrip. Their existing
+skill/feat/ancestry/spell choices remain required. The human 2024 feat picker
+starts with removable `category: ["origin"]`; eligibility still rejects other
+categories even after that default filter is cleared. Human 2014 has no category
+filter. No permanent racial choices at later levels were found in this audit;
+Aasimar celestial forms are chosen on use, and level-gated spells use grants.
