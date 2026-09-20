@@ -5,7 +5,7 @@ from aliases import FEATS
 from prepare_tiefling_lineages import build_tiefling_lineages, CHOICE_ONLY
 from prepare_elf_lineages import build_elf_lineages
 from prepare_gnome_goliath_lineages import build_lineages
-from species_details import split_species, enrich_species, feature_data
+from species_details import split_species, enrich_species, feature_data, DRAGON_DAMAGE_IDS
 ABILITIES={'Сил':1,'Ловк':2,'Телослож':3,'Интеллект':4,'Мудрост':5,'Харизм':6}
 ABILITY_LABELS={1:'Сила',2:'Ловкость',3:'Телосложение',4:'Интеллект',5:'Мудрость',6:'Харизма'}
 SKILLS={'Атлетика':1,'Акробатика':2,'Скрытность':3,'Ловкость рук':4,'Тайная магия':5,'История':6,'Природа':7,'Религия':8,'Расследование':9,'Восприятие':10,'Медицина':11,'Выживание':12,'Уход за животными':13,'Проницательность':14,'Обман':15,'Убеждение':16,'Выступление':17,'Запугивание':18}
@@ -140,6 +140,7 @@ def species(pages,catalogue):
         r['data'] = enrich_species(name, {**d, 'description': lore}, features)
         r['automationNote'] = 'Скорость, размер, языки и выбор происхождения. Каждая особенность вида — отдельная запись.'
         for feature in features:
+            if name == 'Драконорождённый' and feature['name'] == 'Сопротивление урону': continue
             data = feature_data(name, feature, aggregate)
             ability = catalogue.add('species-feature', name+':'+feature['name'], 3, data, s['page'])
             ability['name'] = feature['name']
@@ -171,3 +172,5 @@ def species(pages,catalogue):
             for variant in r['data']['variants']:
                 variant.pop('description', None)
                 variant.pop('size_description', None)
+                variant['damage_type'] = DRAGON_DAMAGE_IDS[variant['value']]
+                variant['defenses'] = [{'kind': 'resistance', 'damage_type': variant['damage_type']}]

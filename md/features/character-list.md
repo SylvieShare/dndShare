@@ -485,3 +485,10 @@ starts with removable `category: ["origin"]`; eligibility still rejects other
 categories even after that default filter is cleared. Human 2014 has no category
 filter. No permanent racial choices at later levels were found in this audit;
 Aasimar celestial forms are chosen on use, and level-gated spells use grants.
+
+Dragonborn 2024 ancestry cards use the existing suggest-12 damage glyph and
+color, including while selected. A variant carries `damage_type` for presentation
+and `defenses` for the creation grant. Only the selected variant contributes to
+`values.defenses`; it is visible/editable in the sheet defense block immediately.
+The separate resistance ability is retired from new choices; its ID remains
+resolvable for existing characters. No resistance is added before ancestry selection.

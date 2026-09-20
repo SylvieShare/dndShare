@@ -4,6 +4,18 @@ import { buildCharacterData } from './buildCharacter'
 const selection = (id, name, data = {}) => ({ id, name, item: { id, name, data } })
 
 describe('buildCharacterData skill choices', () => {
+  it('grants only the selected origin defense directly to the character sheet', () => {
+    const variants = [8, 9, 5, 4, 13].map(id => ({ value: String(id), defenses: [{ kind: 'resistance', damage_type: id }] }))
+    for (const variant of variants) {
+      const result = buildCharacterData({ race: selection(7203, 'Драконорождённый', { variants }), raceVariant: variant.value })
+      expect(result.data.values.defenses).toEqual(variant.defenses)
+      expect(result.data.values.race_variant).toBe(variant.value)
+      expect(result.data.values.abilities_race).toEqual([])
+    }
+    const unselected = buildCharacterData({ race: selection(7203, 'Драконорождённый', { variants }) })
+    expect(unselected.data.values.defenses || []).toEqual([])
+  })
+
   it('records expertise as double proficiency without losing the skill entry', () => {
     const result = buildCharacterData({
       race: selection(1, 'Человек'),

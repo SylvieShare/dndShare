@@ -627,7 +627,7 @@ in the detail content and beside creation choices. Species `variants` also
 support `benefits: [{text}]`, `size_description` and rich `description`.
 These fields explain options without inventing additional automation.
 
-PHB 2024 species/subspecies have 61 separate type-3 ability records, bound through
+PHB 2024 species/subspecies have 60 separate type-3 ability records, bound through
 `race_ids` and, for lineage-specific grants, `subrace_ids`, with explicit acquisition levels. The shared `RaceAbilityList` is
 used below the selected creation cover and in race/subrace handbook details.
 Each tile opens the normal handbook modal. Previous aggregate abilities are
@@ -652,3 +652,7 @@ specific benefits, without repeating the common height and rules text.
 
 The three tiefling heritage cards share the existing base tiefling icon and cover
 IDs. Rule and spell data remain specific to each heritage.
+
+Dragonborn ancestry stores a suggest-12 `damage_type` and a `defenses` list.
+The same damage ID drives the existing colored SVG icon and the creation grant.
+The old 2024 Resistance ability is hidden from new catalogue choices.

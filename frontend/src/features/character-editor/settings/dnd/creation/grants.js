@@ -92,6 +92,7 @@ export function extractGrants({
     raceSkillChoice: null,
     langChoice: null,
     featChoice: null,
+    defenses: [],
     skillProficiencies: [],
     backgroundSkills: [],
     bgLangChoice: null,
@@ -138,6 +139,9 @@ export function extractGrants({
   if (grants.raceVariants && raceVariant) {
     const opt = grants.raceVariants.find((o) => o.value === raceVariant)
     if (opt) {
+      grants.defenses = asList(opt.defenses).filter(row =>
+        ['resistance', 'immunity', 'vulnerability'].includes(row?.kind) && num(row.damage_type) > 0,
+      ).map(row => ({ kind: row.kind, damage_type: num(row.damage_type) }))
       if (num(opt.speed) != null) grants.speed = num(opt.speed)
       if (opt.size) grants.size = opt.size
       for (const row of asList(opt.asi)) {
@@ -280,6 +284,15 @@ export function applyGrants(values, grants, opts = {}) {
 
   out.abilities_race = asList(raceAbilityIds).map((id) => ({ id }))
   out.abilities_class = asList(classAbilityIds).map((id) => ({ id }))
+
+  if (grants.defenses?.length) {
+    out.defenses = [...asList(out.defenses)]
+    for (const defense of grants.defenses) {
+      if (!out.defenses.some(row => row.kind === defense.kind && num(row.damage_type) === defense.damage_type)) {
+        out.defenses.push({ ...defense })
+      }
+    }
+  }
 
   return { values: out, asi: grants.asi || [] }
 }

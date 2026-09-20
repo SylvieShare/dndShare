@@ -1,0 +1,1321 @@
+{
+  "id": 5,
+  "name": "Заклинания",
+  "fields": [
+    {
+      "key": "lvl",
+      "name": "Уровень заклинания",
+      "type": "int",
+      "filter": true,
+      "filter_labels": {
+        "0": "Заговор"
+      },
+      "filter_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "key": "time",
+      "name": "Время сотворения",
+      "type": "object",
+      "fields": [
+        {
+          "key": "kind",
+          "name": "Вид времени",
+          "type": "select",
+          "options": [
+            {
+              "label": "Действие",
+              "value": "action"
+            },
+            {
+              "label": "Бонусное действие",
+              "value": "bonus_action"
+            },
+            {
+              "label": "Реакция",
+              "value": "reaction"
+            },
+            {
+              "label": "Свободное действие",
+              "value": "free"
+            },
+            {
+              "label": "Особое действие",
+              "value": "special"
+            },
+            {
+              "label": "Раунды",
+              "value": "rounds"
+            },
+            {
+              "label": "Минуты",
+              "value": "minutes"
+            },
+            {
+              "label": "Часы",
+              "value": "hours"
+            },
+            {
+              "label": "Дни",
+              "value": "days"
+            },
+            {
+              "label": "Своё значение",
+              "value": "custom"
+            }
+          ]
+        },
+        {
+          "key": "value",
+          "min": 1,
+          "name": "Количество",
+          "type": "int"
+        },
+        {
+          "key": "condition",
+          "name": "Условие реакции",
+          "type": "text"
+        },
+        {
+          "key": "text",
+          "name": "Своё время",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "key": "range",
+      "name": "Дистанция и область",
+      "type": "object",
+      "fields": [
+        {
+          "key": "kind",
+          "name": "Дистанция",
+          "type": "select",
+          "options": [
+            {
+              "label": "Ближнее: касание",
+              "value": "touch"
+            },
+            {
+              "label": "Дальнее",
+              "value": "ranged"
+            },
+            {
+              "label": "От себя / на себя",
+              "value": "self"
+            },
+            {
+              "label": "В пределах видимости",
+              "value": "sight"
+            },
+            {
+              "label": "Без ограничений",
+              "value": "unlimited"
+            },
+            {
+              "label": "Своё значение",
+              "value": "custom"
+            }
+          ]
+        },
+        {
+          "key": "distance",
+          "min": 1,
+          "name": "Дальность",
+          "type": "int"
+        },
+        {
+          "key": "unit",
+          "name": "Единица дальности",
+          "type": "select",
+          "default": "feet",
+          "options": [
+            {
+              "label": "Футы",
+              "value": "feet"
+            },
+            {
+              "label": "Мили",
+              "value": "miles"
+            }
+          ]
+        },
+        {
+          "key": "can_self",
+          "hint": "Отметьте, если заклинание допускает заклинателя как цель. Не отменяет ограничения в описании. Отдельно от исходящей от себя области; это справочная метка, а не автоматическая проверка целей.",
+          "name": "Можно выбирать себя",
+          "type": "bool"
+        },
+        {
+          "key": "shape",
+          "name": "Форма области",
+          "type": "select",
+          "options": [
+            {
+              "label": "Сфера",
+              "value": "sphere"
+            },
+            {
+              "label": "Радиус",
+              "value": "radius"
+            },
+            {
+              "label": "Конус",
+              "value": "cone"
+            },
+            {
+              "label": "Линия",
+              "value": "line"
+            },
+            {
+              "label": "Куб",
+              "value": "cube"
+            },
+            {
+              "label": "Цилиндр",
+              "value": "cylinder"
+            },
+            {
+              "label": "Полусфера",
+              "value": "hemisphere"
+            }
+          ],
+          "emptyLabel": "Нет области"
+        },
+        {
+          "key": "size",
+          "min": 1,
+          "hint": "Радиус сферы/цилиндра, длина конуса/линии или ребро куба. Ширину линии и высоту цилиндра укажите в описании.",
+          "name": "Размер области",
+          "type": "int"
+        },
+        {
+          "key": "area_unit",
+          "name": "Единица области",
+          "type": "select",
+          "default": "feet",
+          "options": [
+            {
+              "label": "Футы",
+              "value": "feet"
+            },
+            {
+              "label": "Мили",
+              "value": "miles"
+            }
+          ]
+        },
+        {
+          "key": "text",
+          "name": "Своя дистанция",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "key": "duration",
+      "name": "Длительность",
+      "type": "text"
+    },
+    {
+      "key": "schoolId",
+      "name": "Школа",
+      "type": "suggest",
+      "filter": true,
+      "suggest_id": 7
+    },
+    {
+      "key": "components",
+      "name": "Компоненты",
+      "type": "object",
+      "fields": [
+        {
+          "key": "m",
+          "name": "Материалы",
+          "type": "text"
+        },
+        {
+          "key": "s",
+          "name": "Соматический",
+          "type": "bool"
+        },
+        {
+          "key": "v",
+          "name": "Вербальный",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "key": "damage",
+      "name": "Урон",
+      "type": "object",
+      "fields": [
+        {
+          "key": "type_choices",
+          "hint": "Выберите допустимые типы для меню броска. У зависящих от выбора составляющих формулы оставьте тип пустым; фиксированные типы не меняются.",
+          "name": "Типы урона на выбор",
+          "type": "suggest_array",
+          "suggest_id": 12
+        },
+        {
+          "key": "range_attack",
+          "name": "Дальнобойная атака",
+          "type": "boolean"
+        },
+        {
+          "key": "save_ability",
+          "name": "Спасбросок (хар-ка)",
+          "type": "text"
+        },
+        {
+          "key": "save_effect",
+          "name": "Спасбросок (эффект)",
+          "type": "text"
+        },
+        {
+          "key": "scaling",
+          "name": "Тип роста",
+          "type": "text",
+          "default": "none",
+          "filter_labels": {
+            "none": "нет",
+            "slot": "за круг ячейки",
+            "cantrip": "за уровень героя"
+          },
+          "filter_values": [
+            "none",
+            "slot",
+            "cantrip"
+          ]
+        },
+        {
+          "key": "instances",
+          "name": "Снарядов/лучей",
+          "type": "int",
+          "default": 1
+        },
+        {
+          "key": "addon_instances",
+          "name": "Снарядов за круг выше",
+          "type": "int"
+        },
+        {
+          "key": "dices",
+          "name": "Кубики (база)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "count",
+              "name": "Количество кубиков",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "dice_id",
+              "name": "Кубик",
+              "type": "dice"
+            },
+            {
+              "key": "type",
+              "name": "Вид урона",
+              "type": "suggest",
+              "suggest_id": 12
+            },
+            {
+              "key": "bonus",
+              "name": "Бонус",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "addon",
+          "name": "Кубики (аддон за уровень)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "count",
+              "name": "Количество кубиков",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "dice_id",
+              "name": "Кубик",
+              "type": "dice"
+            },
+            {
+              "key": "type",
+              "name": "Вид урона",
+              "type": "suggest",
+              "suggest_id": 12
+            },
+            {
+              "key": "bonus",
+              "name": "Бонус",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "add_mod",
+          "name": "Плюс модификатор заклинательной характеристики",
+          "type": "bool"
+        },
+        {
+          "key": "scaling_step",
+          "name": "Кругов между усилениями",
+          "type": "int",
+          "default": 1
+        },
+        {
+          "key": "scaling_max_steps",
+          "hint": "Пусто — без ограничения.",
+          "name": "Максимум усилений",
+          "type": "int"
+        },
+        {
+          "key": "scaling_levels",
+          "name": "Явные круги усиления (вместо шага)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "level",
+              "name": "Круг ячейки",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "save_condition",
+          "name": "Когда требуется спасбросок",
+          "type": "text"
+        },
+        {
+          "key": "save_manual",
+          "hint": "Для повторных или условных этапов: не объявлять при каждом броске основного урона или применении эффекта.",
+          "name": "Объявлять спасбросок отдельно",
+          "type": "bool"
+        },
+        {
+          "key": "roll_table",
+          "hint": "Тип определяется после броска. Кости, определяющие тип, задаются отдельно от дополнительных костей критического урона.",
+          "name": "Тип урона по броску",
+          "type": "object",
+          "fields": [
+            {
+              "key": "source",
+              "name": "Откуда взять результат",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Из костей урона",
+                  "value": "damage"
+                },
+                {
+                  "label": "Отдельный бросок по таблице",
+                  "value": "separate"
+                }
+              ]
+            },
+            {
+              "key": "sides",
+              "max": 100,
+              "min": 2,
+              "name": "Граней у кости",
+              "type": "int"
+            },
+            {
+              "key": "count",
+              "max": 10,
+              "min": 1,
+              "name": "Костей для определения типа",
+              "type": "int"
+            },
+            {
+              "key": "rows",
+              "name": "Результаты",
+              "type": "object_array",
+              "fields": [
+                {
+                  "key": "value",
+                  "max": 100,
+                  "min": 1,
+                  "name": "Выпало",
+                  "type": "int"
+                },
+                {
+                  "key": "damage_type",
+                  "name": "Тип урона",
+                  "type": "suggest",
+                  "suggest_id": 12
+                }
+              ],
+              "rowName": "Результат"
+            }
+          ],
+          "optional": true
+        },
+        {
+          "key": "attack_chain",
+          "name": "Продолжение атаки",
+          "type": "object",
+          "fields": [
+            {
+              "key": "trigger",
+              "name": "Когда можно продолжить",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Совпали кости определения типа",
+                  "value": "matching_damage"
+                },
+                {
+                  "label": "Нечётный результат основного к20 при попадании",
+                  "value": "odd_attack"
+                },
+                {
+                  "label": "После каждого попадания",
+                  "value": "always"
+                },
+                {
+                  "label": "Совпало несколько костей урона",
+                  "value": "matching_dice"
+                },
+                {
+                  "label": "Без перескоков — отдельные снаряды",
+                  "value": "none"
+                }
+              ]
+            },
+            {
+              "key": "distance",
+              "min": 1,
+              "hint": "Расстояние проверяет мастер: сайт не хранит координаты.",
+              "name": "Дистанция следующей цели, фт.",
+              "type": "int"
+            },
+            {
+              "key": "origin",
+              "name": "Откуда считать дистанцию",
+              "type": "select",
+              "options": [
+                {
+                  "label": "От предыдущей цели",
+                  "value": "previous"
+                },
+                {
+                  "label": "От заклинателя",
+                  "value": "caster"
+                }
+              ]
+            },
+            {
+              "key": "unique",
+              "name": "Не выбирать повторно",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Все ранее выбранные цели",
+                  "value": "target"
+                },
+                {
+                  "label": "Только уже поражённые цели",
+                  "value": "hit"
+                },
+                {
+                  "label": "Можно направить несколько снарядов в одну цель",
+                  "value": "none"
+                }
+              ]
+            },
+            {
+              "key": "sides",
+              "max": 100,
+              "min": 2,
+              "name": "Граней у проверяемой кости",
+              "type": "int",
+              "show_on": {
+                "key": "trigger",
+                "value": "matching_dice"
+              }
+            },
+            {
+              "key": "matches",
+              "max": 100,
+              "min": 2,
+              "hint": "Проверяются все кости выбранного размера, включая дополнительные кости критического попадания.",
+              "name": "Сколько одинаковых результатов нужно",
+              "type": "int",
+              "default": 2,
+              "show_on": {
+                "key": "trigger",
+                "value": "matching_dice"
+              }
+            },
+            {
+              "key": "max_jumps",
+              "max": 99,
+              "min": 1,
+              "hint": "Пусто — без ограничения числа перескоков. Каждая следующая атака считается, даже при промахе.",
+              "name": "Перескоков за сотворение",
+              "type": "int",
+              "optional": true
+            },
+            {
+              "key": "jumps_per_slot",
+              "max": 99,
+              "min": 0,
+              "hint": "Прибавляется к заданному лимиту за каждый круг выше уровня заклинания.",
+              "name": "Дополнительных перескоков за круг выше",
+              "type": "int",
+              "optional": true
+            }
+          ],
+          "optional": true
+        },
+        {
+          "key": "save_dc",
+          "max": 100,
+          "min": 1,
+          "hint": "Оставьте пустым для Сл заклинателя. Заполняйте только когда описание прямо задаёт число для этого спасброска.",
+          "name": "Фиксированная сложность",
+          "type": "int",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "key": "heal",
+      "name": "Лечение и временные хиты",
+      "type": "object",
+      "fields": [
+        {
+          "key": "kind",
+          "hint": "Временные хиты не восстанавливают обычные и не складываются с уже имеющимися.",
+          "name": "Результат применения",
+          "type": "select",
+          "default": "healing",
+          "options": [
+            {
+              "label": "Восстановить хиты",
+              "value": "healing"
+            },
+            {
+              "label": "Выдать временные хиты",
+              "value": "temporary_hp"
+            }
+          ]
+        },
+        {
+          "key": "add_mod",
+          "name": "Плюс модификатор хар-ки",
+          "type": "bool"
+        },
+        {
+          "key": "scaling",
+          "name": "Тип роста",
+          "type": "text",
+          "default": "none",
+          "filter_labels": {
+            "none": "нет",
+            "slot": "за круг ячейки",
+            "cantrip": "за уровень героя"
+          },
+          "filter_values": [
+            "none",
+            "slot",
+            "cantrip"
+          ]
+        },
+        {
+          "key": "dices",
+          "name": "Кубики (база)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "count",
+              "name": "Количество кубиков",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "dice_id",
+              "name": "Кубик",
+              "type": "dice"
+            },
+            {
+              "key": "bonus",
+              "name": "Постоянное лечение",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "addon",
+          "name": "Кубики (аддон за уровень)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "count",
+              "name": "Количество кубиков",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "dice_id",
+              "name": "Кубик",
+              "type": "dice"
+            },
+            {
+              "key": "bonus",
+              "name": "Постоянное лечение",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "scaling_step",
+          "name": "Кругов между усилениями",
+          "type": "int",
+          "default": 1
+        },
+        {
+          "key": "scaling_max_steps",
+          "hint": "Пусто — без ограничения.",
+          "name": "Максимум усилений",
+          "type": "int"
+        },
+        {
+          "key": "scaling_levels",
+          "name": "Явные круги усиления (вместо шага)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "level",
+              "name": "Круг ячейки",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "apply",
+          "hint": "Выключите для создания эликсира, повторяющегося лечения и формул, которые нельзя применить сразу при сотворении.",
+          "name": "Применять лечение к цели",
+          "type": "bool",
+          "default": true
+        }
+      ]
+    },
+    {
+      "key": "description",
+      "name": "Описание",
+      "type": "description"
+    },
+    {
+      "key": "classes",
+      "name": "Классы",
+      "type": "object_array",
+      "fields": [
+        {
+          "key": "id",
+          "name": "Класс",
+          "type": "item",
+          "item_type": 9
+        }
+      ],
+      "filter": true,
+      "filter_path": "classes.id",
+      "filter_item_type": 9
+    },
+    {
+      "key": "status_effects",
+      "name": "Связанные эффекты",
+      "type": "object_array",
+      "fields": [
+        {
+          "key": "key",
+          "name": "Ключ",
+          "type": "text"
+        },
+        {
+          "key": "effect",
+          "name": "Эффект",
+          "type": "item",
+          "item_type": 15,
+          "reference_shape": "object"
+        },
+        {
+          "key": "parameter_bindings",
+          "name": "Параметры",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "key",
+              "name": "Параметр",
+              "type": "text"
+            },
+            {
+              "key": "source",
+              "name": "Источник",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Текущее значение прогрессии",
+                  "value": "scaling_value"
+                },
+                {
+                  "label": "Постоянное значение",
+                  "value": "fixed"
+                },
+                {
+                  "label": "Кругов выше базового",
+                  "value": "slot_increase"
+                },
+                {
+                  "label": "Круг ячейки",
+                  "value": "cast_level"
+                },
+                {
+                  "label": "Модификатор заклинателя",
+                  "value": "casting_modifier"
+                }
+              ]
+            },
+            {
+              "key": "value",
+              "name": "Значение",
+              "type": "int"
+            },
+            {
+              "key": "step",
+              "name": "Шаг изменения",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "multiplier",
+              "name": "За каждый шаг",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "minimum",
+              "name": "Не меньше",
+              "type": "int"
+            },
+            {
+              "key": "maximum",
+              "name": "Не больше",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "concentration",
+          "name": "Концентрация",
+          "type": "bool"
+        },
+        {
+          "key": "duration",
+          "name": "Длительность",
+          "type": "object",
+          "fields": [
+            {
+              "key": "kind",
+              "name": "Вид",
+              "type": "select",
+              "default": "manual",
+              "options": [
+                {
+                  "label": "До ручного снятия",
+                  "value": "manual"
+                },
+                {
+                  "label": "Раунды",
+                  "value": "rounds"
+                },
+                {
+                  "label": "Минуты",
+                  "value": "minutes"
+                },
+                {
+                  "label": "Часы",
+                  "value": "hours"
+                },
+                {
+                  "label": "До отдыха",
+                  "value": "until_rest"
+                },
+                {
+                  "label": "Постоянно",
+                  "value": "permanent"
+                }
+              ]
+            },
+            {
+              "key": "value",
+              "name": "Значение",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "target",
+          "hint": "Эффект на другое существо не включается на листе владельца предмета.",
+          "name": "На кого накладывается",
+          "type": "select",
+          "default": "self",
+          "options": [
+            {
+              "label": "На владельца",
+              "value": "self"
+            },
+            {
+              "label": "На другое существо",
+              "value": "other"
+            }
+          ]
+        },
+        {
+          "key": "condition",
+          "hint": "Укажите попадание, спасбросок и другие условия, которые проверяет игрок.",
+          "name": "Условие наложения",
+          "type": "text"
+        },
+        {
+          "key": "weapon_damage_key",
+          "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически.",
+          "name": "Связанный дополнительный урон",
+          "type": "text"
+        },
+        {
+          "key": "duration_levels",
+          "name": "Длительность по кругу ячейки",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "level",
+              "name": "Начиная с круга",
+              "type": "int"
+            },
+            {
+              "key": "duration",
+              "name": "Длительность",
+              "type": "object",
+              "fields": [
+                {
+                  "key": "kind",
+                  "name": "Единицы",
+                  "type": "select",
+                  "options": [
+                    {
+                      "label": "Раунды",
+                      "value": "rounds"
+                    },
+                    {
+                      "label": "Минуты",
+                      "value": "minutes"
+                    },
+                    {
+                      "label": "Часы",
+                      "value": "hours"
+                    }
+                  ]
+                },
+                {
+                  "key": "value",
+                  "name": "Количество",
+                  "type": "int"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "apply_on",
+          "hint": "Личное усиление при сотворении не должно попадать на жертву атаки. Выберите отдельно этап для каждого эффекта.",
+          "name": "Когда применять",
+          "type": "select",
+          "default": "any",
+          "options": [
+            {
+              "label": "При использовании или из хроники",
+              "value": "any"
+            },
+            {
+              "label": "Только при использовании",
+              "value": "cast"
+            },
+            {
+              "label": "После броска — из хроники",
+              "value": "impact"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "concentration",
+      "name": "Требует концентрации",
+      "type": "bool"
+    },
+    {
+      "key": "ritual",
+      "name": "Можно сотворить ритуалом",
+      "type": "bool"
+    },
+    {
+      "key": "rolls",
+      "name": "Отдельные броски эффектов",
+      "type": "object_array",
+      "fields": [
+        {
+          "key": "type_choices",
+          "hint": "Выберите допустимые типы для меню броска. У зависящих от выбора составляющих формулы оставьте тип пустым; фиксированные типы не меняются.",
+          "name": "Типы урона на выбор",
+          "type": "suggest_array",
+          "suggest_id": 12
+        },
+        {
+          "key": "label",
+          "name": "Название броска и условие",
+          "type": "text"
+        },
+        {
+          "key": "kind",
+          "name": "Результат",
+          "type": "select",
+          "default": "effect",
+          "options": [
+            {
+              "value": "damage",
+              "label": "Урон"
+            },
+            {
+              "value": "heal",
+              "label": "Лечение"
+            },
+            {
+              "value": "effect",
+              "label": "Другой результат"
+            },
+            {
+              "value": "save",
+              "label": "Объявить спасбросок без урона"
+            }
+          ]
+        },
+        {
+          "key": "add_mod",
+          "name": "Плюс модификатор заклинательной характеристики",
+          "type": "bool"
+        },
+        {
+          "key": "range_attack",
+          "name": "Дальнобойная атака",
+          "type": "boolean"
+        },
+        {
+          "key": "scaling",
+          "name": "Тип роста",
+          "type": "text",
+          "default": "none",
+          "filter_labels": {
+            "none": "нет",
+            "slot": "за круг ячейки",
+            "cantrip": "за уровень героя"
+          },
+          "filter_values": [
+            "none",
+            "slot",
+            "cantrip"
+          ]
+        },
+        {
+          "key": "scaling_step",
+          "name": "Кругов между усилениями",
+          "type": "int",
+          "default": 1
+        },
+        {
+          "key": "scaling_max_steps",
+          "hint": "Пусто — без ограничения.",
+          "name": "Максимум усилений",
+          "type": "int"
+        },
+        {
+          "key": "dices",
+          "name": "Кубики (база)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "count",
+              "name": "Количество кубиков",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "dice_id",
+              "name": "Кубик",
+              "type": "dice"
+            },
+            {
+              "key": "type",
+              "name": "Вид урона",
+              "type": "suggest",
+              "suggest_id": 12
+            },
+            {
+              "key": "bonus",
+              "name": "Бонус",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "addon",
+          "name": "Кубики (аддон за уровень)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "count",
+              "name": "Количество кубиков",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "dice_id",
+              "name": "Кубик",
+              "type": "dice"
+            },
+            {
+              "key": "type",
+              "name": "Вид урона",
+              "type": "suggest",
+              "suggest_id": 12
+            },
+            {
+              "key": "bonus",
+              "name": "Бонус",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "scaling_levels",
+          "name": "Явные круги усиления (вместо шага)",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "level",
+              "name": "Круг ячейки",
+              "type": "int"
+            }
+          ]
+        },
+        {
+          "key": "save_ability",
+          "name": "Спасбросок (хар-ка)",
+          "type": "text"
+        },
+        {
+          "key": "save_effect",
+          "name": "Спасбросок (эффект)",
+          "type": "text"
+        },
+        {
+          "key": "save_condition",
+          "name": "Когда требуется спасбросок",
+          "type": "text"
+        },
+        {
+          "key": "save_dc",
+          "max": 100,
+          "min": 1,
+          "hint": "Оставьте пустым для Сл заклинателя. Заполняйте только когда описание прямо задаёт число для этого спасброска.",
+          "name": "Фиксированная сложность",
+          "type": "int",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "key": "application_targets",
+      "name": "Цели применения",
+      "type": "object",
+      "fields": [
+        {
+          "key": "count",
+          "name": "Максимум целей",
+          "type": "int",
+          "default": 1
+        },
+        {
+          "key": "per_slot",
+          "name": "Дополнительных целей за круг выше базового",
+          "type": "int",
+          "default": 0
+        },
+        {
+          "key": "self_only",
+          "hint": "Для личных усилений. Не включайте для ауры, которая действует также на союзников.",
+          "name": "Только на себя",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "key": "item_creation",
+      "name": "Создание предметов",
+      "type": "object_array",
+      "fields": [
+        {
+          "key": "key",
+          "name": "Ключ варианта",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "title",
+          "name": "Название варианта",
+          "type": "text",
+          "required": true
+        },
+        {
+          "key": "choose_count",
+          "hint": "При одном виде предметов игрок выбирает количество, не больше рассчитанного.",
+          "name": "Можно создать меньше",
+          "type": "bool"
+        },
+        {
+          "key": "condition",
+          "name": "Условие создания",
+          "type": "text"
+        },
+        {
+          "key": "outputs",
+          "name": "Что создаётся",
+          "type": "object_array",
+          "fields": [
+            {
+              "key": "item",
+              "name": "Предмет из справочника",
+              "type": "item",
+              "required": true
+            },
+            {
+              "key": "count",
+              "max": 999,
+              "min": 1,
+              "name": "Количество",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "per_slot",
+              "max": 999,
+              "min": 0,
+              "name": "Дополнительно за круг выше",
+              "type": "int"
+            },
+            {
+              "key": "scaling_step",
+              "max": 9,
+              "min": 1,
+              "name": "За каждые круги",
+              "type": "int",
+              "default": 1
+            },
+            {
+              "key": "duration",
+              "name": "Срок действия предмета",
+              "type": "object",
+              "fields": [
+                {
+                  "key": "kind",
+                  "name": "Когда заканчивается",
+                  "type": "select",
+                  "default": "manual",
+                  "options": [
+                    {
+                      "label": "Отмечается вручную",
+                      "value": "manual"
+                    },
+                    {
+                      "label": "Раунды",
+                      "value": "rounds"
+                    },
+                    {
+                      "label": "Минуты",
+                      "value": "minutes"
+                    },
+                    {
+                      "label": "Часы",
+                      "value": "hours"
+                    },
+                    {
+                      "label": "Дни",
+                      "value": "days"
+                    },
+                    {
+                      "label": "Условие текстом",
+                      "value": "custom"
+                    },
+                    {
+                      "label": "Постоянно",
+                      "value": "permanent"
+                    }
+                  ]
+                },
+                {
+                  "key": "value",
+                  "max": 10000,
+                  "min": 1,
+                  "name": "Количество",
+                  "type": "int"
+                },
+                {
+                  "key": "text",
+                  "name": "Условие окончания",
+                  "type": "text"
+                }
+              ],
+              "optional": true
+            },
+            {
+              "key": "on_expire",
+              "hint": "Окончание игрового срока отмечает владелец. Исчезновение удаляет оставшееся количество выбранной стопки после подтверждения.",
+              "name": "После окончания срока",
+              "type": "select",
+              "options": [
+                {
+                  "label": "Остаётся, теряет свойства",
+                  "value": "inert"
+                },
+                {
+                  "label": "Исчезает",
+                  "value": "vanish"
+                }
+              ],
+              "optional": true
+            }
+          ],
+          "required": true
+        }
+      ]
+    }
+  ]
+}

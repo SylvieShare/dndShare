@@ -1,0 +1,107 @@
+{
+  "raceId": 7203,
+  "retiredAbilityId": 7402,
+  "variants": [
+    {
+      "value": "Чёрный",
+      "damageTypeId": 8,
+      "defenses": [
+        {
+          "damage_type": 8,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Синий",
+      "damageTypeId": 9,
+      "defenses": [
+        {
+          "damage_type": 9,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Латунный",
+      "damageTypeId": 5,
+      "defenses": [
+        {
+          "damage_type": 5,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Бронзовый",
+      "damageTypeId": 9,
+      "defenses": [
+        {
+          "damage_type": 9,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Медный",
+      "damageTypeId": 8,
+      "defenses": [
+        {
+          "damage_type": 8,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Золотой",
+      "damageTypeId": 5,
+      "defenses": [
+        {
+          "damage_type": 5,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Зелёный",
+      "damageTypeId": 4,
+      "defenses": [
+        {
+          "damage_type": 4,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Красный",
+      "damageTypeId": 5,
+      "defenses": [
+        {
+          "damage_type": 5,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Серебряный",
+      "damageTypeId": 13,
+      "defenses": [
+        {
+          "damage_type": 13,
+          "kind": "resistance"
+        }
+      ]
+    },
+    {
+      "value": "Белый",
+      "damageTypeId": 13,
+      "defenses": [
+        {
+          "damage_type": 13,
+          "kind": "resistance"
+        }
+      ]
+    }
+  ],
+  "verification": "MCP readback: ten variant grants, unchanged media and publication links, retained old ability data."
+}

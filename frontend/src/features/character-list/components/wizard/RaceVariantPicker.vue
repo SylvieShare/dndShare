@@ -5,7 +5,12 @@
       <BaseTile v-for="option in options" :key="option.value" class="variant-card" :framed="modelValue === option.value">
         <ContentRow :title="option.label" :selected="modelValue === option.value" interactive :show-chevron="false"
           :aria-pressed="modelValue === option.value" @activate="$emit('update:modelValue', option.value)">
-          <template #icon><Check v-if="modelValue === option.value" :size="24" /><component :is="sizeOnly ? Ruler : GitBranch" v-else :size="24" /></template>
+          <template #icon>
+            <span v-if="damageType(option)?.svg" class="variant-damage-icon" role="img" :aria-label="`Тип урона: ${damageType(option).value}`" :title="damageType(option).value">
+              <SvgIcon :svg="damageType(option).svg" :color="damageType(option).color" :size="24" />
+            </span>
+            <Check v-else-if="modelValue === option.value" :size="24" /><component :is="sizeOnly ? Ruler : GitBranch" v-else :size="24" />
+          </template>
           <template #subtitle><span class="variant-prompt">{{ modelValue === option.value ? 'Выбрано' : 'Выбрать' }}</span></template>
         </ContentRow>
         <ul v-if="option.benefits?.length" class="variant-benefits">
@@ -23,13 +28,21 @@
   </section>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { BaseTile, ContentRow } from '@sylvieshare/share-ui'
 import { Check, GitBranch, Ruler } from '@lucide/vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
+import SvgIcon from '@/shared/ui/SvgIcon.vue'
+import { useSuggestStore } from '@/stores/suggest'
 const props = defineProps({ options: { type: Array, default: () => [] }, modelValue: { type: String, default: null }, sizeDescription: { type: String, default: '' } })
 defineEmits(['update:modelValue'])
 const sizeOnly = computed(() => props.options.length && props.options.every(option => option.label === option.size))
+const suggests = useSuggestStore()
+const damageTypes = computed(() => new Map(suggests.items(12).map(type => [Number(type.id), type])))
+function damageType(option) { return damageTypes.value.get(Number(option.damage_type)) }
+watch(() => props.options.some(option => option.damage_type), needed => {
+  if (needed) suggests.ensure(12)
+}, { immediate: true })
 </script>
 <style scoped>
 .race-variant-picker { display: flex; flex-direction: column; gap: 12px; }
