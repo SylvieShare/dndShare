@@ -18,6 +18,7 @@
     "@lucide/vue": "^1.46.0",
     "@sylvieshare/share-ui": "https://github.com/SylvieShare/share-ui/archive/refs/tags/v0.25.0.tar.gz",
     "pinia": "^3.0.4",
+    "pixi.js": "^8.21.0",
     "vue": "^3.5.42",
     "vue-router": "^5.3.1"
   },

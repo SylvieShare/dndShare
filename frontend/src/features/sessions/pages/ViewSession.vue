@@ -81,13 +81,14 @@
         @open-chapters="openChapters"
       >
         <template #primary-workspace>
+          <SessionMapWorkspace v-if="mapVisited" v-show="primaryView === 'maps'" ref="mapWorkspace" :session-uuid="sessionUuid" :session="session" :participants="participants" :encounter="encounter" />
           <SessionSettingsWorkspace v-if="primaryView === 'settings'" :settings="sessionSettings"
             :saving="settingsSaving" :error="settingsError" @update-setting="updateSessionSetting" />
           <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
           <JournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" />
           <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
           <SessionWorldLayer
-            v-else
+            v-else-if="primaryView !== 'maps' && primaryView !== 'story'"
             ref="worldLayer"
             :session-uuid="sessionUuid"
             :active-view="primaryView"
@@ -254,7 +255,8 @@
 </template>
 
 <script setup>
-import { provide } from 'vue'
+import { defineAsyncComponent, provide, watch } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
 import { LoadingState } from '@sylvieshare/share-ui'
@@ -279,6 +281,7 @@ import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWo
 import JournalWorkspace from '@/features/journals/components/JournalWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useSessionPage } from '../composables/useSessionPage'
+const SessionMapWorkspace = defineAsyncComponent(() => import('@/features/maps/components/SessionMapWorkspace.vue'))
 
 const toolbarHeight = ref(78)
 
@@ -304,6 +307,9 @@ const {
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
 provide('applicationEncounter', encounter)
+const mapVisited = ref(false), mapWorkspace = ref(null)
+watch(primaryView, (view) => { if (view === 'maps') mapVisited.value = true }, { immediate: true })
+onBeforeRouteLeave(() => mapWorkspace.value?.prepareLeave() ?? true)
 </script>
 
 <style scoped src="./styles/ViewSession.css"></style>

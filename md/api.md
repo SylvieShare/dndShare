@@ -25,7 +25,34 @@ API реализован Go `net/http` в `internal/web`. Feature-файл ре�
 - Старые route aliases и DTO fields не поддерживаются.
 - Health: `GET /api/health` возвращает status, DB state и build `commitSha`.
 
-## Auth
+## Игровые карты
+
+| Endpoint | Контракт |
+| --- | --- |
+| `GET /api/maps` | Свои и системные карты авторизованного пользователя |
+| `POST /api/maps` | Создать `{name,document}` |
+| `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
+| `DELETE /api/maps/{mapId}` | Удалить свою карту; копии сессий сохраняются |
+| `GET /api/sessions/{uuid}/maps` | Владелец: `{maps,display}` |
+| `POST /api/sessions/{uuid}/maps` | Владелец: добавить независимую копию `{mapId}` |
+| `PUT /api/sessions/{uuid}/maps/{mapId}` | Владелец: сохранить `{revision,state}` |
+| `DELETE /api/sessions/{uuid}/maps/{mapId}` | Владелец: удалить копию и погасить её экран |
+| `PUT /api/sessions/{uuid}/map-display` | Владелец: `{mapId,visible,camera,revision}` |
+| `GET /api/sessions/{uuid}/map-events` | Владелец: SSE invalidations |
+| `GET /api/public/sessions/{code}/map` | Публичный `{display,map}`; map=null при выключенном экране |
+| `GET /api/public/sessions/{code}/map-events` | Публичный SSE отдельного экрана карты |
+
+Карта содержит `id,name,document,revision,changedAt,system`. Сессионная копия
+добавляет `state`. Форматы документа `tiles`, `image-grid`, `image` описаны
+в [картах](features/maps.md). Состояние содержит туман, видимость зон,
+состояния объектов и жетоны; камера — `x,y,cellPixels,rotation,fit`.
+URL фона с `assetId` разрешается через storage владельца. Конфликт revision
+возвращает `409` и не меняет сохранённые данные; публичные маршруты не пишут.
+Публичный snapshot удаляет скрытые/физические жетоны и жетоны в тумане,
+ссылки на персонажей/существ и названия зон. Геометрия и фон остаются полными.
+Это отдельный API от основной трансляции сессии.
+
+## Авторизация
 
 - `POST /api/user/auth`
 - `GET /api/user/checkAuth`

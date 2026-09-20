@@ -29,5 +29,18 @@ export default defineConfig({
     // Deployment retains hashed assets, including lazy chunks, across releases.
     manifest: true,
     cssCodeSplit: true,
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            { name: 'app-loader', test: /vite\/(?:preload-helper|modulepreload-polyfill)/, priority: 40 },
+            // Runtime helpers are used by eager HTTP modules too. Keep them out
+            // of the lazy map engine to avoid pulling WebGL into every page.
+            { name: 'bundler-runtime', test: /rolldown\/runtime/, priority: 30 },
+            { name: 'map-engine', test: /node_modules\/(?:pixi\.js|@pixi|earcut|eventemitter3)\//, priority: 20 },
+          ],
+        },
+      },
+    },
   },
 })

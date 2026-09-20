@@ -16,6 +16,7 @@ type Server struct {
 	s3            *storage.Service
 	jobs          *jobRunner
 	displayEvents *displayEventHub
+	mapEvents     *displayEventHub
 	sessionLive   *sessionLiveHub
 	authLimiter   *authRateLimiter
 }
@@ -32,6 +33,7 @@ func New(cfg config.Config, st *store.Store, s3 *storage.Service) *Server {
 	s := &Server{
 		cfg: cfg, store: st, s3: s3,
 		displayEvents: newDisplayEventHub(),
+		mapEvents:     newDisplayEventHub(),
 		sessionLive:   newSessionLiveHub(),
 		authLimiter:   newAuthRateLimiter(),
 	}

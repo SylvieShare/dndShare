@@ -63,7 +63,7 @@
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
         @workspace-context-change="$emit('workspace-context-change', $event)"
       />
-      <SessionTabWorkspace v-if="primaryView !== 'story'">
+      <SessionTabWorkspace v-show="primaryView !== 'story'">
         <slot name="primary-workspace" />
       </SessionTabWorkspace>
       <slot />

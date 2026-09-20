@@ -11,6 +11,18 @@ and matching store files.
   depending on the current user's role.
 - `/join/:code` — invitation flow.
 
+## Игровой стол
+
+Вкладка мастера «Карта» добавляет карты из библиотеки `/maps`, расставляет
+жетоны игроков и существ encounter, управляет зонами тумана и интерактивными
+объектами. Копия карты, двери, расстановка и видимость сохраняются в сессии.
+После первого открытия вкладка сохраняется при переходах к сюжету и бою.
+Трансляция `/map-screen/:code` имеет отдельную камеру и калибровку под
+физические миниатюры; основной экран сессии не переключается.
+Подробности: [игровые карты](maps.md). Материалы типа map остаются раздаточными
+изображениями; они не заменяют библиотеку игровых карт и не преобразуются
+в неё автоматически.
+
 A session has DM/participant permissions, current chapter, participants,
 encounter, lifecycle status and synchronized music state. Owner-only actions are checked on the
 server, not only hidden in UI.

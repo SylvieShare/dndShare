@@ -1,4 +1,4 @@
-export const TUTORIAL_REVISION = 2
+export const TUTORIAL_REVISION = 3
 export const TUTORIAL_NAMES = { character: 'Лист персонажа', 'session-player': 'Сессия игрока', 'session-dm': 'Сессия мастера' }
 export function tutorialKey(entry) {
   return JSON.stringify([entry.flowId, entry.sourceKey, entry.device])

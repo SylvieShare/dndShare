@@ -24,6 +24,8 @@
   --side-enemy: #e85c8a;
   --side-neutral: #8888aa;
   --side-minion: #a06ce8;
+  /* A dark tabletop remains dark regardless of the application theme. */
+  --map-screen-void: #0d1119;
 
   /* Player handout surfaces are content palettes, not application chrome. */
   --material-note-parchment-bg: #d8c394;

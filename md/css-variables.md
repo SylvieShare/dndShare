@@ -13,6 +13,11 @@ and HavenShare may set it at runtime on `document.documentElement`.
 
 ## Surface model
 
+`--map-screen-void` — тёмный фон выключенного экрана игрового стола,
+независимый от темы приложения. Задан в product theme. Цвета материалов,
+стен и тумана внутри WebGL renderer — палитра содержимого карты;
+панели редактора используют обычные share-ui tokens.
+
 The dark UI uses one application canvas plus a compact surface scale. Do not create component-specific grey colors.
 
 | Token | Value | Purpose |

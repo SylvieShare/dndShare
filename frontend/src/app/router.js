@@ -109,6 +109,18 @@ const routes = [
         meta: { title: 'Админка', section: 'admin', depth: 0 },
     },
     {
+        path: '/maps',
+        name: 'Maps',
+        component: () => import('@/features/maps/pages/ViewMaps.vue'),
+        meta: { title: 'Карты', section: 'maps', depth: 0 },
+    },
+    {
+        path: '/map-screen/:code',
+        name: 'MapScreen',
+        component: () => import('@/features/maps/pages/ViewMapScreen.vue'),
+        meta: { title: 'Карта на столе', section: 'maps', depth: 1, standaloneView: true },
+    },
+    {
         path: '/sessions',
         name: "Sessions",
         component: ViewSessions,

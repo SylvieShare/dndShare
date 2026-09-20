@@ -159,4 +159,5 @@ var schemaParts = []struct {
 	{"spell-projectile-targets", schemaSpellProjectileTargetsSQL},
 	{"spell-temporary-hp", schemaSpellTemporaryHPSQL},
 	{"feat-category-filter", schemaFeatCategoryFilterSQL},
+	{"battle-maps", schemaBattleMapsSQL},
 }

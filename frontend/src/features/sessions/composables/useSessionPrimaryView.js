@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 
-export const SESSION_PRIMARY_VIEWS = new Set(['story', 'locations', 'npcs', 'materials', 'quests', 'music', 'journal', 'events', 'settings'])
+export const SESSION_PRIMARY_VIEWS = new Set(['story', 'locations', 'npcs', 'materials', 'maps', 'quests', 'music', 'journal', 'events', 'settings'])
 
 export function sessionPrimaryViewKey(sessionUuid) {
   return `dnd-share:session-primary-view:v1:${sessionUuid}`

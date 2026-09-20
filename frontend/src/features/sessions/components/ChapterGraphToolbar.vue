@@ -60,6 +60,10 @@
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ view.shortcut }}</kbd>
         </button>
 
+        <button v-if="isDm" type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': primaryView === 'maps' }"
+          :aria-current="primaryView === 'maps' ? 'page' : undefined" @click="emit('select-view', 'maps')">
+          <Map :size="24" /><span>Карта</span>
+        </button>
         <span v-if="isDm" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 
 
