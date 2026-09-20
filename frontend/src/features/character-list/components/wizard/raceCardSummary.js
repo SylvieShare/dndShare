@@ -30,8 +30,8 @@ export function shortRaceDescription(race, limit = 220) {
   return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`
 }
 
-export function raceCardSummary({ race, raceAbilities = [], suggestValue = () => '', subraces = [], selected = false, raceVariant = null }) {
-  const grants = extractGrants({ race, raceVariant })
+export function raceCardSummary({ race, raceAbilities = [], suggestValue = () => '', subraces = [], selected = false, raceVariant = null, subrace = null }) {
+  const grants = extractGrants({ race, subrace, raceVariant })
   const facts = []
   const asi = grants.asi.map((entry) => `${STAT_SHORT[entry.stat]} +${entry.bonus}`)
   if (grants.asiChoice) asi.push(`+${grants.asiChoice.bonus} к ${grants.asiChoice.count} на выбор`)

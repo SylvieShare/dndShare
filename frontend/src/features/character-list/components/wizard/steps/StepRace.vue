@@ -36,26 +36,10 @@
             <RichContent class="step-desc" :html="raceDesc" />
           </section>
 
-        <template v-if="subraces.length">
-          <div class="sheet-section-title step-gap">Происхождение</div>
-          <div class="subrace-grid">
-            <SubraceSelectCard
-              v-for="s in subraces"
-              :key="s.id"
-              :title="s.name"
-              :subtitle="asiSummary(s)"
-              :description="s.data?.description || ''"
-              :monogram="monogramOf(s.name)"
-              :image-url="s.coverImageUrl || ''"
-              :selected="state.subrace?.id === s.id"
-              @select="state.subrace = s"
-            />
-          </div>
-        </template>
-
         <section v-if="hasRaceChoices" class="race-choices">
           <div class="choices-title">Выборы расы</div>
           <div class="choice-stack">
+            <RaceSubracePicker v-if="subraces.length" v-model="state.subrace" :options="subraces" :race-id="state.race?.id" :abilities="raceAbilities" />
 
             <RaceVariantPicker v-if="grants.raceVariants" v-model="state.raceVariant" :options="grants.raceVariants" :size-description="sizeDescription" />
 
@@ -145,7 +129,7 @@ import IllustratedChoiceStage from '@/features/character-list/components/wizard/
 import RaceSelectCard from '@/features/character-list/components/wizard/RaceSelectCard.vue'
 import { raceCardSummary } from '@/features/character-list/components/wizard/raceCardSummary'
 import RichContent from '@/shared/ui/DndRichContent.vue'
-import SubraceSelectCard from '@/features/character-list/components/wizard/SubraceSelectCard.vue'
+import RaceSubracePicker from '../RaceSubracePicker.vue'
 import { raceCoverFor } from '@/features/character-list/components/wizard/raceVisuals'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
@@ -158,13 +142,13 @@ const {
   featPool, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete, raceFeatureChoices,
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
-const selectedAbilities = computed(() => featuresForBinding(raceAbilities.value, { raceId: state.race?.id, subraceId: state.subrace?.id }, 20))
+const selectedAbilities = computed(() => featuresForBinding(raceAbilities.value, { raceId: state.race?.id }, 20))
 const sizeDescription = computed(() => state.subrace?.data?.size_description || state.race?.data?.size_description || '')
 const visibleRaces = computed(() => state.race ? [state.race] : races.value)
 const raceAsiSelection = computed(() => Object.fromEntries(state.asiChoice.map(stat => [stat, grants.value.asiChoice?.bonus || 0])))
 const hasRaceChoices = computed(() => {
   const g = grants.value
-  return g.raceVariants || g.asiChoice || g.raceSkillChoice || g.langChoice || g.featChoice || raceFeatureChoices.value.length
+  return subraces.value.length || g.raceVariants || g.asiChoice || g.raceSkillChoice || g.langChoice || g.featChoice || raceFeatureChoices.value.length
 })
 
 const pickerOpen = ref(false)
@@ -176,6 +160,7 @@ function summaryFor(race) {
     race,
     selected: state.race?.id === race.id,
     raceVariant: state.race?.id === race.id ? state.raceVariant : null,
+    subrace: state.race?.id === race.id ? state.subrace : null,
     raceAbilities: raceAbilities.value,
     suggestValue,
     subraces: raceSubraceNames(race.id),
@@ -215,7 +200,6 @@ function onFeatChoicesConfirm(choices) {
 .hint { font-size: 12px; color: var(--text-muted); margin: 0; display: flex; align-items: center; gap: 8px; }
 .count { font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .count.done { color: var(--success); }
-.subrace-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
 .race-choices { display: flex; flex-direction: column; gap: 11px; margin-top: 8px; }
 .choices-title {
@@ -291,7 +275,6 @@ function onFeatChoicesConfirm(choices) {
 
 @media (max-width: 430px) {
   .choice-block { padding: 14px; }
-  .subrace-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 </style>

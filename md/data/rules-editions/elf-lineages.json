@@ -1,0 +1,28 @@
+{
+  "sourceVersionId": 1799,
+  "contentSourceId": 23506,
+  "raceId": 7213,
+  "retiredLineageAbilityId": 7419,
+  "subraceIds": [
+    7451,
+    7456,
+    7460
+  ],
+  "ids": {
+    "phb2024:subspecies-feature:высший эльф:магия: обнаружение магии": 7458,
+    "phb2024:subspecies-feature:высший эльф:магия: туманный шаг": 7459,
+    "phb2024:subspecies-feature:высший эльф:магия: фокусы": 7457,
+    "phb2024:subspecies-feature:дроу:магия: огонь фей": 7454,
+    "phb2024:subspecies-feature:дроу:магия: пляшущие огоньки": 7453,
+    "phb2024:subspecies-feature:дроу:магия: тьма": 7455,
+    "phb2024:subspecies-feature:дроу:темное зрение дроу": 7452,
+    "phb2024:subspecies-feature:лесной эльф:магия: бесследное передвижение": 7464,
+    "phb2024:subspecies-feature:лесной эльф:магия: искусство друидов": 7462,
+    "phb2024:subspecies-feature:лесной эльф:магия: скороход": 7463,
+    "phb2024:subspecies-feature:лесной эльф:скорость лесного эльфа": 7461,
+    "phb2024:subspecies:высший эльф": 7456,
+    "phb2024:subspecies:дроу": 7451,
+    "phb2024:subspecies:лесной эльф": 7460
+  },
+  "verification": "MCP readback: 72 records; three synchronized native subraces, 11 bound abilities, isolated lore, original race media and existing character references preserved; other species unchanged."
+}

@@ -22,12 +22,10 @@ describe('race step hierarchy', () => {
     expect(source).toContain('class="choice-count"')
   })
 
-  it('shows illustrated subraces in a two-column grid', () => {
-    expect(source).toContain('<SubraceSelectCard')
-    expect(source).toContain(':image-url="s.coverImageUrl || \'\'"')
-    expect(source).toContain(':description="s.data?.description || \'\'"')
-    expect(source).not.toContain('<RichContent v-if="subraceDesc"')
-    expect(source).toContain('.subrace-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))')
+  it('places the shared subrace picker inside race choices', () => {
+    expect(source).toContain('<RaceSubracePicker')
+    expect(source.indexOf('<RaceSubracePicker')).toBeGreaterThan(source.indexOf('class="choice-stack"'))
+    expect(source).toContain('v-model="state.subrace"')
   })
 
   it('uses covers rather than icons for race artwork', () => {

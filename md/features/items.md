@@ -627,10 +627,16 @@ in the detail content and beside creation choices. Species `variants` also
 support `benefits: [{text}]`, `size_description` and rich `description`.
 These fields explain options without inventing additional automation.
 
-PHB 2024 species have 38 separate type-3 ability records, bound through
-`race_ids`, with explicit acquisition levels. The shared `RaceAbilityList` is
+PHB 2024 species/subspecies have 48 separate type-3 ability records, bound through
+`race_ids` and, for lineage-specific grants, `subrace_ids`, with explicit acquisition levels. The shared `RaceAbilityList` is
 used below the selected creation cover and in race/subrace handbook details.
 Each tile opens the normal handbook modal. Previous aggregate abilities are
 hidden from new selection but retain their IDs and mechanics for existing
 character references. Species lore no longer duplicates the ability rules or
 the creature type, size and speed metadata.
+
+Drow, High Elf and Wood Elf (2024) are separate type-16 handbook records. Their
+icons and covers use the ordinary item media fields independently of the base
+race and the 2014 records. Each description contains its own lore; ability
+descriptions contain only the selected lineage’s benefits. New artwork remains
+a separate publishing step.

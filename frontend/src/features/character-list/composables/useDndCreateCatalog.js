@@ -58,6 +58,13 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
         if (names.length) subclassMap.set(String(charClass.id), names)
       })
       classSubclassesByParent.value = subclassMap
+      // Drafts store snapshots; use current catalogue descriptions and grants.
+      if (state.race) {
+        state.race = races.value.find(race => race.id === state.race.id) || null
+        const children = state.race ? originChildren(state.race, allSubraces.value, 'subraces') : []
+        state.subrace = children.find(child => child.id === state.subrace?.id) || null
+        if (!state.race?.data?.variants?.some(option => option.value === state.raceVariant)) state.raceVariant = null
+      }
       subraces.value = state.race ? originChildren(state.race, allSubraces.value, 'subraces') : []
       subclasses.value = state.charClass ? originChildren(state.charClass, allSubclasses.value, 'subclasses') : []
       raceAbilities.value = ra?.items || []
@@ -80,8 +87,8 @@ export function useDndCreateCatalog({ state, sourceVersionId, sourceSuffix, equi
     },
   )
 
-  watch(() => state.race, (r) => {
-    if (paused()) return
+  watch(() => state.race, (r, previous) => {
+    if (paused() || r?.id === previous?.id) return
     state.subrace = null
     state.raceVariant = null
     subraces.value = []

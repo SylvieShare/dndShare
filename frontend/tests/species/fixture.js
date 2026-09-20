@@ -10,10 +10,11 @@ import { useItemTypesStore } from '../../src/stores/itemTypes'
 import fixture from './data.json'
 const params = new URLSearchParams(location.search)
 const app = createApp({ setup() {
-  const state = reactive({ race: params.has('unselected') ? null : fixture.races.find(r => r.name === (params.has('aasimar') ? 'Аасимар' : 'Гном')), subrace: null, raceVariant: null, asiChoice: [], featIds: [], raceLangIds: [] })
-  const grants = computed(() => extractGrants({ race: state.race, raceVariant: state.raceVariant, rulesVersion: '2024' }))
+  const state = reactive({ race: params.has('unselected') ? null : fixture.races.find(r => r.name === (params.has('elf') ? 'Эльф' : params.has('aasimar') ? 'Аасимар' : 'Гном')), subrace: null, raceVariant: null, asiChoice: [], raceSkillIds: [], featIds: [], raceLangIds: [] })
+  const grants = computed(() => extractGrants({ race: state.race, subrace: state.subrace, raceVariant: state.raceVariant, rulesVersion: '2024' }))
   window.state = state
-  provide('createWizard', { state, grants, races: ref(fixture.races), subraces: ref([]), loading: ref(false), raceAbilities: ref(fixture.abilities),
+  provide('createWizard', { state, grants, races: ref(fixture.races), subraces: computed(() => (fixture.subraces || []).filter(s => s.data.race === state.race?.id)), loading: ref(false), raceAbilities: ref(fixture.abilities),
+    raceSkillOptions: ref([]), raceSkillLimit: ref(1), toggleRaceSkill: () => {},
     raceSubraceNames: () => [], suggestValue: () => '', raceLangOptions: ref([]), raceLangLimit: ref(0), toggleRaceLang: () => {}, raceLangsComplete: ref(true),
     featPool: ref([]), featLimit: ref(0), toggleFeat: () => {}, setFeatSelection: () => {}, featEligibility: () => true, featComplete: ref(true), raceFeatureChoices: ref([]),
   })

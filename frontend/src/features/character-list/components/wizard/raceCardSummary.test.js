@@ -70,4 +70,9 @@ describe('race card summary', () => {
     expect(raceCardSummary({ race }).facts).toContainEqual(expect.objectContaining({ label: 'Размер', value: 'Маленький / Средний' }))
   })
 
+  it('uses selected subrace speed in the race header', () => {
+    const summary = raceCardSummary({ race: { id: 1, data: { speed: 30 } }, subrace: { id: 2, data: { speed: 35 } }, selected: true })
+    expect(summary.facts).toContainEqual(expect.objectContaining({ label: 'Скорость', value: '35 фт' }))
+  })
+
 })

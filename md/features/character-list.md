@@ -150,12 +150,22 @@ stretched into their illustration slot, and an item without a cover falls back
 to a monogram. Built-in illustrations are not frontend static assets: they live
 in system `storage_image` rows assigned through `item.cover_image_id` and arrive
 with the ordinary handbook item response.
-The nine built-in subraces have matching original paired portraits. Their choice
+The nine 2014 subraces have matching original paired portraits. Subrace choice
 cards use a 3:2 media treatment in an exact two-column desktop grid, collapsing to
-one column on narrow phones. Each card contains its own description below the name
-and ability bonus; there is no detached selected-subrace description under the
-grid. Selecting one keeps all cards visible and highlights the chosen origin
-without expanding it to full width.
+one column on phones. `RaceSubracePicker` sits inside “Выборы расы”. Each card
+contains a concise description below its name and ability bonus. Selecting one
+keeps all cards visible and shows only that subrace’s full lore and individual
+abilities below the grid, with inline descriptions and the standard handbook modal.
+Base-race abilities remain above the race lore and do not duplicate subrace abilities.
+
+PHB 2024 Drow, High Elf and Wood Elf are separate type-16 records with their own
+icon/cover slots. The base elf no longer lists all lineage lore or grants an
+aggregate Elf Lineage ability. Eleven abilities belong to specific subraces;
+level-three/five spells remain visible with level labels, but are not granted
+to a level-one character. Only the chosen subrace supplies the casting-ability
+choice. The selected race header includes the subrace speed (35 ft for Wood Elf).
+Catalogue reloads refresh race/subrace snapshots from saved drafts while retaining
+valid selections; obsolete variants are cleared and require a new subrace choice.
 Selection retains the regular card surface; only its border, status and shadow
 signal selection, so nested fact and subrace chips keep sufficient contrast.
 The concise “Раса” label is presented as a display-font page heading with a short
@@ -168,7 +178,7 @@ locked states.
 content rows. Each option shows its benefits and height note; a separate
 “Подробные правила” disclosure expands the rules without selecting that option.
 Forest and Rock Gnomes expose their own cantrips and additional benefits. The same
-component presents elf, tiefling, goliath and dragonborn variants and size choices;
+component presents tiefling, goliath and dragonborn variants and size choices;
 selection continues to store the existing variant key.
 
 On phones, choosing a race scrolls the newly revealed lore and dependent choices
