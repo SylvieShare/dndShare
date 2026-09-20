@@ -2,6 +2,7 @@ import { resolveNumValue } from '@/shared/lib/dnd'
 import { SUGGEST16_TO_STAT, STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
 import { abilityHasResources, abilityUseTotal, abilityUsesAreManual } from '@/shared/lib/dndAbilityUses'
 import { choiceSelectionsComplete, itemChoices } from '@/features/items/lib/itemChoices'
+import { FEAT_CATEGORIES } from './featCategory'
 
 const ABILITY_ID_BY_STAT = Object.fromEntries(
   Object.entries(SUGGEST16_TO_STAT).map(([id, stat]) => [stat, Number(id)]),
@@ -60,7 +61,7 @@ function abilityRequirementLabel(row) {
 export function evaluateFeatEligibility(item, context = {}) {
   const prereq = featPrereq(item)
   const reasons = []
-  if (context.category && item?.data?.category !== context.category) reasons.push('Требуется черта категории: ' + context.category)
+  if (context.category && item?.data?.category !== context.category) reasons.push('Требуется: ' + (FEAT_CATEGORIES[context.category] || context.category))
   const minStats = asArray(prereq.min_stats).filter((row) => number(row?.ability) != null && number(row?.value) != null)
   if (minStats.length) {
     const checks = minStats.map((row) => scoreFor(context, row.ability) >= number(row.value))

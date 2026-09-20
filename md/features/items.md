@@ -71,6 +71,14 @@ with handbook attack rows; it is not a historical-format fallback.
 It reads only current keys. Unit tests cover requirement groups, repeatable
 entries and selected choices.
 
+Feats use explicit `data.category`: `origin` («Черта происхождения»),
+`general` («Универсальная черта»), `epic_boon` («Эпический дар») and
+`fighting_style` («Боевой стиль»). `lib/featCategory.js` supplies the shared
+labels for list rows, reference rows, details and eligibility messages. The
+category is editable and available as a handbook filter. An uncategorized 2014
+or custom feat receives no inferred category. Origin feats in the creation
+wizard reuse `FeatListItem` and open the standard reference modal.
+
 ## Visual conventions
 
 - descriptions render through `RichContent`; embedded `dice` nodes may store an

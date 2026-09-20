@@ -25,6 +25,16 @@ describe('2024 origins', () => {
     expect(origin.originComplete.value).toBe(false)
     expect(evaluateFeatEligibility({ data: { category: 'epic_boon' } }, { level: 18 }).eligible).toBe(false)
   })
+  it('remembers a newly created origin feat returned by the handbook picker', () => {
+    const state = reactive({ version: '2024', background: { data: {} }, backgroundAsi: { STR: 2, CON: 1 }, originFeatChoices: { old: [1] } })
+    const pool = ref([])
+    const origin = useDndOrigin(state, pool)
+    expect(origin.selectOriginFeat({ id: 8, data: { category: 'general' } })).toBe(false)
+    expect(origin.selectOriginFeat(feat)).toBe(true)
+    expect(origin.originFeat.value).toEqual(feat)
+    expect(state.originFeatChoices).toEqual({})
+    expect(origin.originComplete.value).toBe(true)
+  })
 })
 
 it('keeps background Magic Initiate class fixed and preserves two different repeatable grants', () => {

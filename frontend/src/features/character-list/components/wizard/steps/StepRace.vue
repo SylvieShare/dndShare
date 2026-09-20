@@ -74,27 +74,13 @@
               </div>
             </section>
 
-            <section v-if="grants.asiChoice" class="choice-block choice-block--asi">
-              <div class="choice-heading">
-                <div>
-                  <div class="choice-label">Характеристики</div>
-                  <p class="choice-description">Прибавь +{{ grants.asiChoice.bonus }} к {{ grants.asiChoice.count }} характеристикам на выбор</p>
-                </div>
-                <span class="choice-count" :class="{ done: state.asiChoice.length === grants.asiChoice.count }">{{ state.asiChoice.length }} / {{ grants.asiChoice.count }}</span>
-              </div>
-              <div class="asi-chips">
-                <button
-                  v-for="s in STATS"
-                  :key="s"
-                  class="asi-chip"
-                  :class="{ on: state.asiChoice.includes(s), off: !state.asiChoice.includes(s) && atAsiLimit }"
-                  @click="toggleAsiChoice(s)"
-                >
-                  <span>{{ STAT_SHORT[s] }}</span>
-                  <b>+{{ grants.asiChoice.bonus }}</b>
-                </button>
-              </div>
-            </section>
+            <AbilityBonusPicker
+              v-if="grants.asiChoice"
+              :model-value="raceAsiSelection"
+              :patterns="[Array(grants.asiChoice.count).fill(grants.asiChoice.bonus)]"
+              title="Характеристики"
+              @update:model-value="state.asiChoice = Object.keys($event)"
+            />
 
             <StepSkills v-if="grants.raceSkillChoice" source="race" class="choice-block" />
 
@@ -162,6 +148,7 @@
 
 <script setup>
 import { computed, inject, nextTick, ref } from 'vue'
+import AbilityBonusPicker from '@/shared/ui/AbilityBonusPicker.vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import { actionableItemChoices } from '@/features/items/lib/itemChoices'
@@ -174,17 +161,17 @@ import SubraceSelectCard from '@/features/character-list/components/wizard/Subra
 import { raceCoverFor } from '@/features/character-list/components/wizard/raceVisuals'
 import StepChoices from '@/features/character-list/components/wizard/steps/StepChoices.vue'
 import StepSkills from '@/features/character-list/components/wizard/steps/StepSkills.vue'
-import { STAT_SHORT, asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
+import { asiSummary, monogramOf } from '@/features/character-list/components/wizard/labels'
 
 const {
-  races, subraces, state, loading, grants, STATS, toggleAsiChoice,
+  races, subraces, state, loading, grants,
   raceAbilities, raceSubraceNames, suggestValue,
   raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,
   featPool, featLimit, toggleFeat, setFeatSelection, featEligibility, featComplete, raceFeatureChoices,
 } = inject('createWizard')
 const raceDesc = computed(() => state.race?.data?.description || '')
 const visibleRaces = computed(() => state.race ? [state.race] : races.value)
-const atAsiLimit = computed(() => grants.value.asiChoice && state.asiChoice.length >= grants.value.asiChoice.count)
+const raceAsiSelection = computed(() => Object.fromEntries(state.asiChoice.map(stat => [stat, grants.value.asiChoice?.bonus || 0])))
 const hasRaceChoices = computed(() => {
   const g = grants.value
   return g.raceVariants || g.asiChoice || g.raceSkillChoice || g.langChoice || g.featChoice || raceFeatureChoices.value.length
@@ -257,13 +244,7 @@ function onFeatChoicesConfirm(choices) {
   background: color-mix(in srgb, var(--surface) 54%, transparent);
   box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 22%, transparent);
 }
-.choice-block--asi {
-  border-color: color-mix(in srgb, var(--accent) 20%, var(--border));
-  background:
-    radial-gradient(circle at 100% 0, color-mix(in srgb, var(--accent) 10%, transparent), transparent 42%),
-    color-mix(in srgb, var(--surface) 68%, transparent);
-  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 58%, transparent);
-}
+
 .choice-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .choice-label {
   color: var(--text-1);
@@ -307,36 +288,6 @@ function onFeatChoicesConfirm(choices) {
 .opt-label { font-size: 14px; color: var(--text-1); font-weight: 500; }
 .opt-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
-.asi-chips { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
-.asi-chip {
-  min-height: 56px;
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
-  border-radius: 12px;
-  background: var(--surface-raised);
-  color: var(--text-1);
-  font: inherit;
-  cursor: pointer;
-  transition: transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease, opacity .16s ease;
-}
-.asi-chip span { font-family: var(--font-ui); font-size: 15px; font-weight: 700; letter-spacing: .035em; }
-.asi-chip b { color: var(--accent); font-size: 14px; font-variant-numeric: tabular-nums; }
-.asi-chip:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
-  background: color-mix(in srgb, var(--accent) 10%, var(--surface-raised));
-  box-shadow: 0 7px 18px color-mix(in srgb, var(--accent) 10%, transparent);
-}
-.asi-chip.on {
-  border-color: color-mix(in srgb, var(--accent) 76%, transparent);
-  background: var(--accent);
-  color: var(--text-on-accent);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 22%, transparent);
-}
-.asi-chip.on b { color: var(--text-on-accent); }
-.asi-chip.off { opacity: 0.4; cursor: default; }
-.asi-chip.off:hover { transform: none; border-color: color-mix(in srgb, var(--border) 88%, transparent); background: var(--surface-raised); box-shadow: none; }
 
 .feat-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .feat-tag {
@@ -362,13 +313,8 @@ function onFeatChoicesConfirm(choices) {
 .feat-add:hover { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); }
 .feat-add svg { width: 16px; height: 16px; }
 
-@media (max-width: 760px) {
-  .asi-chips { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
 @media (max-width: 430px) {
   .choice-block { padding: 14px; }
-  .asi-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .subrace-grid { grid-template-columns: minmax(0, 1fr); }
 }
 

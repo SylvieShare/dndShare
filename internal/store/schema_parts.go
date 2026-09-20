@@ -158,4 +158,5 @@ var schemaParts = []struct {
 	{"created-item-expiry", schemaCreatedItemExpirySQL},
 	{"spell-projectile-targets", schemaSpellProjectileTargetsSQL},
 	{"spell-temporary-hp", schemaSpellTemporaryHPSQL},
+	{"feat-category-filter", schemaFeatCategoryFilterSQL},
 }

@@ -1,4 +1,5 @@
 [
+  {"name": "Категория черты", "key": "category", "type": "select", "filter": true, "options": [{"value": "origin", "label": "Черта происхождения"}, {"value": "general", "label": "Универсальная черта"}, {"value": "epic_boon", "label": "Эпический дар"}, {"value": "fighting_style", "label": "Боевой стиль"}]},
   {
     "name": "Описание",
     "key": "description",

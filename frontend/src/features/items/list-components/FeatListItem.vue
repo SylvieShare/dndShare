@@ -1,11 +1,12 @@
 <template>
-  <ObjectListItem :item="item" :type="type" :name-en="item.nameEn || ''" :custom="item.userId != null">
+  <ObjectListItem :item="item" :type="type" :name-en="item.nameEn || ''" :custom="item.userId != null" :interactive="interactive" :selected="selected" @activate="$emit('activate', item)">
     <template #icon-fallback>
       <span class="fli-sigil" aria-hidden="true">
         ✦
       </span>
     </template>
     <template #subtitle>
+      <span v-if="category" class="fli-category">{{ category }}<span aria-hidden="true"> · </span></span>
       <span v-if="subtitle" class="fli-subtitle">{{ subtitle }}</span>
       <span v-else class="fli-subtitle fli-subtitle-muted">Без требований</span>
     </template>
@@ -18,6 +19,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { featCategoryLabel } from '@/features/items/lib/featCategory'
 
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { featChoices, featPrereq } from '@/features/items/lib/featRules'
@@ -25,8 +27,12 @@ import { STAT_FULL, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 
 const props = defineProps({
   item: { type: Object, required: true },
+  interactive: { type: Boolean, default: false },
+  selected: { type: Boolean, default: false },
   type: { type: Object, default: null },
 })
+defineEmits(['activate'])
+const category = computed(() => featCategoryLabel(props.item))
 const data = computed(() => props.item.data || {})
 const prereq = computed(() => featPrereq(props.item))
 const choiceCount = computed(() => featChoices(props.item).reduce((sum, choice) => sum + choice.count, 0))
@@ -47,6 +53,7 @@ const subtitle = computed(() => {
 
 <style scoped>
 .fli-sigil { display: grid; place-items: center; width: 23px; height: 23px; flex-shrink: 0; border: 1px solid color-mix(in srgb, var(--warning) 42%, transparent); border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--warning) 17%, transparent), transparent); color: var(--warning); font-size: 12px; }
+.fli-category { color: var(--warning); }
 .fli-subtitle { color: var(--text-2); }
 .fli-subtitle-muted { color: var(--text-muted); }
 .fli-choice { color: var(--warning); font-size: 10px; font-weight: 800; }

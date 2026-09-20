@@ -15,6 +15,7 @@
           <span v-if="item.nameEn" class="fdc-name-en">{{ nameEn }}</span>
         </div>
         <div class="fdc-badges">
+          <span v-if="category" class="fdc-badge fdc-badge-repeat">{{ category }}</span>
           <span v-if="data.repeatable" class="fdc-badge fdc-badge-repeat">Можно брать повторно</span>
           <span v-if="choices.length" class="fdc-badge">{{ choicesCountLabel }}</span>
           <span v-if="useRuleLabel" class="fdc-badge">{{ useRuleLabel }}</span>
@@ -81,6 +82,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { featCategoryLabel } from '@/features/items/lib/featCategory'
 import { BookOpen, Gift, ListChecks } from '@lucide/vue'
 
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -98,6 +100,7 @@ const props = defineProps({
 
 const suggestStore = useSuggestStore()
 ;[3, 4, 5, 6, 15, 16].forEach((typeId) => suggestStore.ensure(typeId))
+const category = computed(() => featCategoryLabel(props.item))
 const data = computed(() => props.item.data || {})
 const description = computed(() => featDescription(props.item))
 const prereq = computed(() => featPrereq(props.item))

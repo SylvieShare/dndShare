@@ -18,9 +18,8 @@ describe('race step hierarchy', () => {
 
   it('separates race choices and emphasizes ability-score selection', () => {
     expect(source).toContain('class="choice-stack"')
-    expect(source).toContain('class="choice-block choice-block--asi"')
+    expect(source).toContain('<AbilityBonusPicker')
     expect(source).toContain('class="choice-count"')
-    expect(source).toContain('grid-template-columns: repeat(6, minmax(0, 1fr))')
   })
 
   it('shows illustrated subraces in a two-column grid', () => {

@@ -2,7 +2,7 @@ import { ABILITY_VALUE_IDS } from '@/shared/lib/abilityTypes'
 
 import { computed, inject, onMounted, reactive, ref } from 'vue'
 import { proficiencyBonus, resolveNumValue } from '@/shared/lib/dnd'
-import { STAT_KEYS, STAT_SHORT } from '@/shared/lib/dndStats'
+import { STAT_KEYS } from '@/shared/lib/dndStats'
 import {
   chosenOptionLabels, classEntriesOf,
   dieFaceOf, grantedSpellsAt, multiclassCheck,
@@ -176,17 +176,6 @@ export function useDndLevelUp(props, emit) {
   const asiDelta = computed(() => (asiMode.value === '+2' ? 2 : 1))
   const asiLimit = computed(() => (asiMode.value === '+2' ? 1 : 2))
   function setAsiMode(m) { asiMode.value = m; asiStats.value = []; featPick.value = null; featConfigItem.value = null }
-  function asiChipLocked(s) {
-    if (asiStats.value.includes(s)) return false
-    if (asiStats.value.length >= asiLimit.value) return true
-    return statScore(s) + asiDelta.value > 20
-  }
-  function toggleAsiStat(s) {
-    const i = asiStats.value.indexOf(s)
-    if (i >= 0) { asiStats.value.splice(i, 1); return }
-    if (asiChipLocked(s)) return
-    asiStats.value.push(s)
-  }
   const asiComplete = computed(() => {
     if (!asiNow.value) return true
     if (asiMode.value === 'feat') return !!featPick.value
@@ -382,7 +371,7 @@ export function useDndLevelUp(props, emit) {
     choiceCompleteFor, choiceSel, choiceCount, featureChoiceItemNames, toggleFeatureChoice, featureItemChoice, choiceOptions,
     choiceLocked, grantedSpellList, levelUpSpellContext, classSpellSelection, hp: reactive(hp), hitDieLabel, hitDieFace,
     asiNow, asiComplete, asiSkipped, asiModes, asiMode, setAsiMode, STATS,
-    STAT_SHORT, asiStats, asiChipLocked, toggleAsiStat, statScore, asiDelta, featPick,
+    asiStats, statScore, asiDelta, featPick,
     featPickerOpen, profChanges, profBefore, profAfter, slotChanges, viewFeature, featEligibility,
     onFeatPick, featureChoiceItemEligibility, featureChoiceItemFilters, onFeatureChoiceItemPick, featConfigItem, featExcludedChoices, onFeatChoicesConfirm,
     canAccept, accept, abilitySelections,

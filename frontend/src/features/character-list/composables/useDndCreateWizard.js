@@ -152,14 +152,6 @@ export function useDndCreateWizard() {
     STATS.map((s) => [s, Number(state.scores[s] ?? 0) + racialBonus(s) + featBonuses.value[s]]),
   ))
 
-  // Floating racial ASI ("choose N abilities, +V each" — Variant Human, Half-Elf).
-  function toggleAsiChoice(stat) {
-    const i = state.asiChoice.indexOf(stat)
-    if (i >= 0) { state.asiChoice.splice(i, 1); return }
-    const limit = grants.value.asiChoice?.count || 0
-    if (limit && state.asiChoice.length >= limit) return
-    state.asiChoice.push(stat)
-  }
   const asiChoiceComplete = computed(() => {
     const c = grants.value.asiChoice
     return !c || state.asiChoice.length === c.count
@@ -533,7 +525,7 @@ export function useDndCreateWizard() {
     // sub-selection gating
     subclassAtCreation, requiresSubrace, requiresSubclass,
     // floating racial ASI + named variants
-    toggleAsiChoice, asiChoiceComplete, raceVariantsComplete,
+    asiChoiceComplete, raceVariantsComplete,
     // race extra picks: skills / language / feat
     raceSkillOptions, raceSkillLimit, toggleRaceSkill, raceSkillsComplete,
     raceLangOptions, raceLangLimit, toggleRaceLang, raceLangsComplete,

@@ -171,17 +171,13 @@
         </div>
         <template v-if="!asiSkipped">
           <MultiToggle :options="asiModes" :model-value="asiMode" @update:model-value="setAsiMode" />
-          <div v-if="asiMode !== 'feat'" class="lu-chips">
-            <button
-              v-for="s in STATS"
-              :key="s"
-              class="lu-chip"
-              :class="{ on: asiStats.includes(s), off: asiChipLocked(s) }"
-              @click="toggleAsiStat(s)"
-            >
-              {{ STAT_SHORT[s] }} {{ statScore(s) }}<template v-if="asiStats.includes(s)"> → {{ statScore(s) + asiDelta }}</template>
-            </button>
-          </div>
+          <AbilityBonusPicker
+            v-if="asiMode !== 'feat'"
+            :model-value="asiSelection"
+            :patterns="[asiMode === '+2' ? [2] : [1, 1]]"
+            :scores="asiScores"
+            @update:model-value="asiStats = Object.keys($event)"
+          />
           <template v-else>
             <button v-if="!featPick" class="lu-roll" @click="featPickerOpen = true">Выбрать черту…</button>
             <LevelUpItemRow v-else :item="featPick" :type-id="7" @details="featPickerOpen = true">
@@ -249,7 +245,8 @@
 
 <script setup>
 import AbilitySelectionPanel from '@/features/character-editor/components/AbilitySelectionPanel.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import AbilityBonusPicker from '@/shared/ui/AbilityBonusPicker.vue'
 import { ActionButton, AppModalFrame, BaseTile, LoadingState, MultiToggle } from '@sylvieshare/share-ui'
 import { Trash2 } from '@lucide/vue'
 import FeatChoiceModal from '@/features/character-editor/components/FeatChoiceModal.vue'
@@ -274,11 +271,13 @@ const {
   choiceCompleteFor, choiceSel, choiceCount, featureChoiceItemNames, toggleFeatureChoice, featureItemChoice, choiceOptions,
   choiceLocked, grantedSpellList, levelUpSpellContext, classSpellSelection, hp, hitDieLabel, hitDieFace,
   asiNow, asiComplete, asiSkipped, asiModes, asiMode, setAsiMode, STATS,
-  STAT_SHORT, asiStats, asiChipLocked, toggleAsiStat, statScore, asiDelta, featPick,
+  asiStats, statScore, asiDelta, featPick,
   featPickerOpen, profChanges, profAfter, slotChanges, viewFeature, featEligibility, onFeatPick,
   featureChoiceItemEligibility, featureChoiceItemFilters, onFeatureChoiceItemPick, featConfigItem, featExcludedChoices, onFeatChoicesConfirm, canAccept,
   accept, abilitySelections,
 } = useDndLevelUp(props, emit)
+const asiSelection = computed(() => Object.fromEntries(asiStats.value.map(stat => [stat, asiDelta.value])))
+const asiScores = computed(() => Object.fromEntries(STATS.map(stat => [stat, statScore(stat)])))
 </script>
 
 <style scoped src="./styles/DndLevelUpModal.css"></style>

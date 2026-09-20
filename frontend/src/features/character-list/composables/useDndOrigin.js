@@ -21,6 +21,15 @@ export function useDndOrigin(state, featPool) {
     return !feat.data?.choices?.some(choice => choice.key === 'magic_class') || (other != null && own != null && String(other) !== String(own))
   })
   const originFeatOptions = computed(() => featPool.value.filter(item => item.data?.category === 'origin'))
+  function selectOriginFeat(item) {
+    if (!item?.id || item.data?.category !== 'origin') return false
+    const existing = featPool.value.findIndex(feat => Number(feat.id) === Number(item.id))
+    if (existing < 0) featPool.value = [...featPool.value, item]
+    else featPool.value = featPool.value.map((feat, index) => index === existing ? item : feat)
+    state.originFeatId = Number(item.id)
+    state.originFeatChoices = {}
+    return true
+  }
   const originComplete = computed(() => !originRules.value.originFeatRequired || (!!originBonuses.value && originUnique.value && !!originFeat.value && originFeat.value.data?.category === 'origin' && choiceSelectionsComplete(originFeat.value, state.originFeatChoices)))
-  return { originRules, originAbilities, originBonuses, originFeat, originFeatOptions, originComplete }
+  return { originRules, originAbilities, originBonuses, originFeat, originFeatOptions, originComplete, selectOriginFeat }
 }

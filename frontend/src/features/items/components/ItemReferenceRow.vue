@@ -94,6 +94,7 @@
 
 <script setup>
 import { computed, reactive } from 'vue'
+import { featCategoryLabel } from '@/features/items/lib/featCategory'
 import { ChevronRight, CircleHelp } from '@lucide/vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -162,6 +163,7 @@ const weaponPropertyItems = computed(() => {
 const weaponPropertiesLabel = computed(() => weaponPropertyItems.value.map((entry) => entry.label).join(', '))
 const metaLabel = computed(() => [
   data.value.equipment_category === 'pack' ? 'Набор' : '',
+  Number(props.item.typeId) === 7 ? featCategoryLabel(props.item) : '',
 ].filter(Boolean).join(' · '))
 const propertiesTooltip = reactive({ visible: false, title: '', desc: '', x: 0, top: null, bottom: null })
 
