@@ -12,7 +12,7 @@ vi.mock('@/shared/api/http', () => ({
 }))
 
 const sources = [
-  { id: 1, name: 'DND5e', versions: [{ id: 11, sourceId: 1, version: '2014' }] },
+  { id: 1, name: 'DND5e', versions: [{ id: 11, sourceId: 1, version: '2014' }, { id: 12, sourceId: 1, version: '2024' }] },
   { id: 2, name: 'Vampire: TM', versions: [{ id: 22, sourceId: 2, version: 'V20' }] },
 ]
 
@@ -64,5 +64,36 @@ describe('player game context store', () => {
 
     expect(fetchPut).toHaveBeenCalledWith('/account/game-context', { sourceVersionId: 11 })
     expect(account.user.gameContext.sourceVersionId).toBe(11)
+  })
+
+  it('switches directly to an edition of another system with a single save', async () => {
+    const account = useAccountStore()
+    account.status = 'success'
+    account.user = { id: 7, roles: [], gameContext: { sourceVersionId: 22 } }
+    fetchPut.mockResolvedValue({ gameContext: { sourceVersionId: 12 } })
+    const store = useGameContextStore()
+    await store.ensure()
+
+    await store.selectVersion(12)
+
+    expect(fetchPut).toHaveBeenCalledTimes(1)
+    expect(fetchPut).toHaveBeenCalledWith('/account/game-context', { sourceVersionId: 12 })
+    expect(store.rulesPath).toBe('/rules/dnd5e/2024')
+  })
+
+  it('restores the complete previous choice if saving the new edition fails', async () => {
+    const account = useAccountStore()
+    account.status = 'success'
+    account.user = { id: 7, roles: [], gameContext: { sourceVersionId: 22 } }
+    fetchPut.mockRejectedValue(new Error('offline'))
+    const store = useGameContextStore()
+    await store.ensure()
+
+    await expect(store.selectVersion(12)).rejects.toThrow('offline')
+
+    expect(store.rulesPath).toBe('/rules/vampire-tm/v20')
+    expect(store.sourceVersionId).toBe(22)
+    expect(store.error).toBe('Не удалось сохранить выбор')
+    expect(store.saving).toBe(false)
   })
 })

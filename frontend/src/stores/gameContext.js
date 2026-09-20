@@ -122,10 +122,5 @@ export const useGameContextStore = defineStore('gameContext', {
         this.saving = false
       }
     },
-    selectSource(sourceID) {
-      const source = this.sources.find(item => Number(item.id) === Number(sourceID))
-      const version = source?.versions?.[0]
-      return version ? this.selectVersion(version.id) : Promise.resolve(this.context)
-    },
   },
 })

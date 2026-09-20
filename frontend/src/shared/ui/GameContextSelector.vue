@@ -1,217 +1,187 @@
 <template>
-  <div class="game-context" :class="{ 'game-context--compact': compact }" v-click-outside="close">
+  <div class="game-context" :class="{ 'game-context--compact': compact }">
     <button
+      ref="trigger"
       class="game-context-trigger"
-      :class="{ 'game-context-trigger--compact': compact }"
       type="button"
       :title="contextLabel"
       :aria-label="`Игровая система: ${contextLabel}`"
       :aria-expanded="open"
+      :aria-controls="menuId"
+      aria-haspopup="menu"
       @click="open = !open"
+      @keydown.down.prevent="open = true"
+      @keydown.up.prevent="open = true"
     >
-      <BookMarked aria-hidden="true" />
-      <span v-if="compact" class="game-context-trigger-version">{{ selectedVersion?.version || '—' }}</span>
-      <span v-else class="game-context-trigger-current">
-        <span class="game-context-trigger-system">{{ selectedSource?.name || 'Игровой контекст' }}</span>
-        <span class="game-context-trigger-edition">{{ selectedVersion?.version || '—' }}</span>
+      <GameContextEmblem :kind="current.emblem" />
+      <span v-if="!compact" class="game-context-trigger-current">
+        <span class="game-context-trigger-system">{{ current.name }}</span>
+        <span class="game-context-trigger-edition">{{ current.detail }}</span>
       </span>
-      <ChevronDown v-if="!compact" class="game-context-trigger-chevron" aria-hidden="true" />
+      <ChevronDown v-if="!compact" :size="14" class="game-context-trigger-chevron" aria-hidden="true" />
     </button>
 
-    <Transition name="game-context-popover">
-      <div v-if="open" class="game-context-panel game-context-panel--popover" aria-label="Выбор игрового контекста">
+    <BasePopover
+      :id="menuId"
+      v-model:open="open"
+      :anchor="trigger"
+      placement="bottom-start"
+      :min-width="0"
+      :offset="8"
+      transition-preset="action-menu"
+      role="menu"
+      aria-label="Система и редакция"
+    >
+      <div ref="menu" class="game-context-menu" :aria-busy="store.loading || store.saving" @keydown="onMenuKeydown">
         <div class="game-context-heading">
-          <span>Игровой контекст</span>
+          <span>Система и редакция</span>
           <LoadingIndicator v-if="store.loading || store.saving" :label="store.saving ? 'Сохранение' : 'Загрузка'" :size="16" />
-          <Check v-else-if="store.ready" class="game-context-saved" aria-label="Выбор сохранён" />
         </div>
 
-        <label class="game-context-field">
-          <span>Система</span>
-          <ValueSelect
-            :model-value="selectedSource?.id"
-            :options="sourceOptions"
-            placeholder="Выберите систему"
-            aria-label="Игровая система"
+        <div class="game-context-options" role="group" aria-label="Доступные системы и редакции">
+          <ActionMenuItem
+            v-for="option in options"
+            :key="option.id"
+            class="game-context-option"
+            role="menuitemradio"
+            :aria-checked="isSelected(option.id)"
             :disabled="store.loading || store.saving"
-            @update:model-value="selectSource"
-          />
-        </label>
+            @click="selectVersion(option.id)"
+          >
+            <template #icon><GameContextEmblem :kind="option.emblem" /></template>
+            <span class="game-context-option-name">{{ option.name }}</span>
+            <span class="game-context-option-detail">{{ option.detail }}</span>
+            <template #suffix>
+              <Check v-if="isSelected(option.id)" :size="17" class="game-context-check" aria-hidden="true" />
+            </template>
+          </ActionMenuItem>
+        </div>
 
-        <label class="game-context-field game-context-field--edition">
-          <span>Редакция</span>
-          <ValueSelect
-            :model-value="selectedVersion?.id"
-            :options="versionOptions"
-            placeholder="Выберите редакцию"
-            aria-label="Редакция правил"
-            :disabled="!selectedSource || store.loading || store.saving"
-            @update:model-value="selectVersion"
-          />
-        </label>
-
-        <p v-if="store.error" class="game-context-error" role="status">{{ store.error }}</p>
+        <p v-if="store.loading && !options.length" class="game-context-message" role="status">Загружаем игровые системы…</p>
+        <p v-else-if="store.ready && !options.length" class="game-context-message">Пока нет доступных редакций</p>
+        <p v-if="store.error" class="game-context-error" role="alert">{{ store.error }}</p>
+        <ActionMenuItem v-if="store.error && !store.ready" :icon="RotateCcw" :disabled="store.loading" @click="load">
+          Попробовать снова
+        </ActionMenuItem>
+        <p v-if="options.length" class="game-context-hint">Правила, справочник и поиск</p>
       </div>
-    </Transition>
+    </BasePopover>
   </div>
 </template>
 
 <script setup>
-import { LoadingIndicator } from '@sylvieshare/share-ui'
-import { computed, onMounted, ref } from 'vue'
-import { BookMarked, Check, ChevronDown } from '@lucide/vue'
-import { ValueSelect } from '@sylvieshare/share-ui'
+import { ActionMenuItem, BasePopover, LoadingIndicator } from '@sylvieshare/share-ui'
+import { computed, nextTick, onMounted, ref, useId, watch } from 'vue'
+import { Check, ChevronDown, RotateCcw } from '@lucide/vue'
 import { useGameContextStore } from '@/stores/gameContext'
+import { gameContextOptions, gameContextPresentation } from '@/shared/lib/gameContextPresentation'
+import GameContextEmblem from './GameContextEmblem.vue'
 
 defineProps({ compact: { type: Boolean, default: false } })
 
 const store = useGameContextStore()
 const open = ref(false)
-const selectedSource = computed(() => store.selectedSource)
-const selectedVersion = computed(() => store.selectedVersion)
-const contextLabel = computed(() => selectedSource.value && selectedVersion.value
-  ? `${selectedSource.value.name} · ${selectedVersion.value.version}`
-  : 'загрузка')
-const sourceOptions = computed(() => store.sources.map(source => ({
-  value: source.id,
-  label: source.name,
-})))
-const versionOptions = computed(() => (selectedSource.value?.versions || []).map(version => ({
-  value: version.id,
-  label: version.version,
-})))
+const trigger = ref(null)
+const menu = ref(null)
+const menuId = useId()
+const current = computed(() => gameContextPresentation(store.selectedSource, store.selectedVersion))
+const contextLabel = computed(() => `${current.value.name} · ${current.value.detail}`)
+const options = computed(() => gameContextOptions(store.sources))
+const isSelected = id => Number(id) === Number(store.sourceVersionId)
 
-function close() {
-  open.value = false
+function focusSelected() {
+  const selected = menu.value?.querySelector('[aria-checked="true"]:not(:disabled)')
+  const first = menu.value?.querySelector('button:not(:disabled)')
+  const target = selected || first
+  target?.focus()
 }
 
-function selectSource(sourceID) {
-  store.selectSource(sourceID).catch(() => null)
+watch(open, async value => {
+  if (value) {
+    await nextTick()
+    focusSelected()
+  } else if (menu.value?.contains(document.activeElement)) {
+    trigger.value?.focus()
+  }
+})
+
+watch(() => store.loading, async loading => {
+  if (!loading && open.value) {
+    await nextTick()
+    focusSelected()
+  }
+})
+
+function onMenuKeydown(event) {
+  if (event.key === 'Tab') {
+    trigger.value?.focus()
+    open.value = false
+    return
+  }
+  if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return
+  event.preventDefault()
+  const buttons = [...menu.value.querySelectorAll('button:not(:disabled)')]
+  if (!buttons.length) return
+  const index = buttons.indexOf(document.activeElement)
+  const next = event.key === 'Home' ? 0
+    : event.key === 'End' ? buttons.length - 1
+      : (index + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length
+  buttons[next].focus()
 }
 
-function selectVersion(sourceVersionID) {
-  store.selectVersion(sourceVersionID).catch(() => null)
+async function selectVersion(sourceVersionID) {
+  if (store.loading || store.saving) return
+  try {
+    await store.selectVersion(sourceVersionID)
+    open.value = false
+    trigger.value?.focus()
+  } catch {
+    // The store restores the previous selection and exposes the error in this menu.
+    await nextTick()
+    focusSelected()
+  }
 }
 
-onMounted(() => store.ensure().catch(() => null))
+function load() {
+  return store.ensure().catch(() => null)
+}
+
+onMounted(load)
 </script>
 
 <style scoped>
-.game-context {
-  position: relative;
-  width: 100%;
-}
-
-.game-context-panel {
-  display: grid;
-  gap: 8px;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--surface-raised) 82%, transparent);
-}
-
-.game-context-panel--popover {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  z-index: 180;
-  width: 100%;
-  border-color: var(--border-strong);
-  background: var(--popover-bg);
-  box-shadow: var(--shadow-lg);
-}
-
-.game-context--compact .game-context-panel--popover {
-  top: 0;
-  left: calc(100% + 10px);
-  width: 230px;
-}
-
-.game-context-heading {
-  display: flex;
-  align-items: center;
-  min-height: 16px;
-  color: var(--text-muted);
-  font-size: 9px;
-  font-weight: 750;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-}
-
-.game-context-heading svg {
-  width: 13px;
-  height: 13px;
-  margin-left: auto;
-}
-
-
-.game-context-saved { color: var(--success); }
-
-.game-context-field {
-  display: grid;
-  grid-template-columns: 54px minmax(0, 1fr);
-  align-items: center;
-  gap: 7px;
-  color: var(--text-2);
-  font-size: 10px;
-}
-
-.game-context-field--edition > span { color: var(--text-muted); }
-
-.game-context-field :deep(.vs-button) {
-  min-height: 31px;
-  padding: 5px 8px;
-  font-size: 12px;
-}
-
-.game-context-field :deep(.vs-drop) {
-  z-index: 190;
-  min-width: 100%;
-}
+.game-context { width: 100%; }
 
 .game-context-trigger {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   width: 100%;
-  height: 42px;
-  padding: 0 8px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 9px;
+  min-height: 52px;
+  padding: 5px 6px;
+  border: 1px solid transparent;
+  border-radius: 11px;
   background: transparent;
   color: var(--text-2);
+  text-align: left;
   cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
 }
 
 .game-context-trigger:hover,
 .game-context-trigger[aria-expanded='true'] {
+  border-color: var(--border);
   background: var(--surface-raised);
-  color: var(--accent);
 }
 
-.game-context-trigger svg { width: 20px; height: 20px; }
-
-.game-context-trigger--compact {
-  display: grid;
-  width: 42px;
-  padding: 0;
-  place-items: center;
+.game-context-trigger:focus-visible,
+.game-context-option:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: -2px;
 }
 
-.game-context-trigger-current {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  min-width: 0;
-  flex: 1;
-  text-align: left;
-}
-
+.game-context-trigger-current { display: grid; gap: 3px; min-width: 0; flex: 1; }
 .game-context-trigger-system {
-  min-width: 0;
   overflow: hidden;
   color: var(--text-1);
   font-size: 13px;
@@ -219,75 +189,60 @@ onMounted(() => store.ensure().catch(() => null))
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .game-context-trigger-edition {
-  color: var(--text-muted);
-  font-size: 10px;
-  font-weight: 550;
-  flex-shrink: 0;
-}
-
-.game-context-trigger-chevron {
-  width: 14px !important;
-  height: 14px !important;
-  color: var(--text-muted);
-  flex-shrink: 0;
-  transition: transform .16s ease;
-}
-
-.game-context-trigger[aria-expanded='true'] .game-context-trigger-chevron { transform: rotate(180deg); }
-
-.game-context-trigger-version {
-  position: absolute;
-  right: 1px;
-  bottom: 2px;
-  max-width: 28px;
-  padding: 1px 3px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--surface) 68%, transparent);
   color: var(--text-muted);
-  font-size: 7px;
-  font-weight: 650;
-  line-height: 1;
-  text-overflow: ellipsis;
-}
-
-.game-context-error {
-  margin: 0;
-  color: var(--danger);
   font-size: 10px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.game-context-trigger-chevron { flex-shrink: 0; color: var(--text-muted); }
+.game-context--compact .game-context-trigger { justify-content: center; padding: 5px 0; }
+
+.game-context-menu {
+  width: min(288px, calc(100vw - 30px));
+  max-height: min(440px, calc(100dvh - 32px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-.game-context-popover-enter-active,
-.game-context-popover-leave-active {
-  transition: opacity .14s ease, transform .16s ease;
-  transform-origin: top left;
+.game-context-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 20px;
+  padding: 8px 10px 10px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .06em;
+  text-transform: uppercase;
 }
 
-.game-context-popover-enter-from,
-.game-context-popover-leave-to {
-  opacity: 0;
-  transform: translateY(-4px) scale(.985);
+.game-context-options { display: grid; gap: 4px; }
+.game-context-option { min-height: 62px; gap: 12px; padding: 10px; }
+.game-context-option :deep(.ram-item__icon) { width: 36px; height: 36px; flex-basis: 36px; }
+.game-context-option[aria-checked='true'] {
+  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
-
+.game-context-option-name { display: block; font-size: 14px; font-weight: 650; }
+.game-context-option-detail { display: block; margin-top: 4px; color: var(--text-muted); font-size: 11px; font-weight: 450; }
+.game-context-check { color: var(--accent-soft); }
+.game-context-message, .game-context-error { margin: 8px 10px; font-size: 12px; line-height: 1.5; }
+.game-context-message { color: var(--text-muted); }
+.game-context-error { color: var(--danger); }
+.game-context-hint { margin: 8px 10px 2px; padding: 10px 0 4px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 10px; }
 
 @media (max-width: 640px) {
-  .game-context--compact { width: 34px; flex-shrink: 0; }
-  .game-context-trigger--compact { width: 34px; height: 34px; }
-  .game-context-trigger svg { width: 18px; height: 18px; }
-  .game-context-panel--popover {
-    top: calc(100% + 8px);
-    left: -60px;
-    width: min(230px, calc(100vw - 16px));
-  }
+  .game-context--compact { width: 36px; flex-shrink: 0; }
+  .game-context--compact .game-context-trigger { min-height: 36px; padding: 0; }
+  .game-context-trigger :deep(.game-context-emblem) { width: 32px; height: 32px; flex-basis: 32px; }
+  .game-context-trigger :deep(.game-context-glyph) { width: 24px; height: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
-  .game-context-trigger-chevron,
-  .game-context-popover-enter-active,
-  .game-context-popover-leave-active { transition: none; }
+  .game-context-trigger { transition: none; }
 }
 </style>

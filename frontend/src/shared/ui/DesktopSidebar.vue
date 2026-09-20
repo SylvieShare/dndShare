@@ -148,10 +148,6 @@ async function openSearch(toggle) {
   background: var(--border);
 }
 
-.desktop-sidebar :deep(.share-sidebar-nav:has(.game-context-panel--popover)) {
-  overflow: visible;
-}
-
 .sidebar-group-marker {
   position: relative;
   display: flex;
