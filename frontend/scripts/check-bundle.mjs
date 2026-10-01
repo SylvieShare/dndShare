@@ -23,8 +23,22 @@ const measured = {
   totalGzip: sizes.reduce((sum, row) => sum + row.gzip, 0),
 }
 let failed = false
+for (const extension of ['js', 'css']) {
+  const count = files.filter(file => file.endsWith(`.${extension}`)).length
+  if (count !== 1) {
+    console.error(`Expected one ${extension.toUpperCase()} bundle, found ${count}. Code splitting must stay disabled.`)
+    failed = true
+  }
+}
+// Vite can retain self-references in dynamicImports after inlining them.
+if (Object.values(manifest).some(chunk => [...(chunk.imports || []), ...(chunk.dynamicImports || [])]
+    .some(key => manifest[key]?.file !== chunk.file))
+    || measured.initialGzip !== measured.totalGzip) {
+  console.error('All JS and CSS must load with the entry page, without additional runtime chunks.')
+  failed = true
+}
 for (const [key, bytes] of Object.entries(measured)) {
   console.log(`${key}: ${bytes} / ${budgets[key]} bytes`)
   if (bytes > budgets[key]) failed = true
 }
-if (failed) { console.error('Bundle budget exceeded. Inspect the import graph before changing the budget.'); process.exitCode = 1 }
+if (failed) { console.error('Bundle check failed. Inspect the output and import graph before changing the budget.'); process.exitCode = 1 }
