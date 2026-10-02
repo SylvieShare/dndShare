@@ -241,8 +241,9 @@ its root collection and linked child types. Simplified entries save only
 An independent type-2 preset with `purpose=empty_cell` shows an open empty pouch
 in all empty backpack cells, including read-only sheets and session inventory.
 It never appears among item choices. Both image families use genuine alpha,
-lossless 128×128 WebP, a compact silhouette, thick deep-plum contours and broad
-flat-cartoon shading. The empty pouch is deliberately desaturated and displayed
+lossless 128×128 WebP, a compact silhouette and broad flat-cartoon shading.
+Selectable icons keep thick deep-plum contours. The empty pouch uses a uniform
+neutral-gray palette, charcoal-gray contours and minimal fold shading, displayed
 with reduced opacity. Prompts and final hashes: `md/data/inventory-icon-presets.json`.
 
 Publish through MCP `inventory_icon_preset_set_image`. Images are stored under

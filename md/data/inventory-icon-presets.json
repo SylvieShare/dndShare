@@ -96,10 +96,10 @@
       "name": "Пустая ячейка",
       "typeId": 2,
       "purpose": "empty_cell",
-      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One OPEN EMPTY small leather drawstring bag viewed slightly from above. Clearly visible empty dark opening and two wide folded leather lips, hollow inside, no contents. Muted desaturated taupe leather with a deep-plum outline. Compact rounded silhouette. This is a quiet empty inventory slot placeholder, so use simpler shapes and lower saturation than a real inventory object.",
-      "fileName": "empty-cell.webp",
+      "prompt": "Use case: precise-object-edit\nAsset type: empty backpack cell placeholder icon in DnD Share.\nInput image 1: edit target, the existing open empty leather pouch.\nPrimary request: change ONLY its color palette and simplify its shading. Make the pouch much more uniform and neutral gray, with a medium-gray exterior, slightly darker gray inner opening, and a charcoal-gray outline and cords. Use only three broad neutral gray tones plus the outline. Remove beige, brown, gold and purple color casts, all warm highlights, glossy highlights, gradients and most small fold shading. Keep a quiet matte flat-cartoon appearance readable at 64x64.\nInvariants: preserve the exact recognizable silhouette, proportions, opening, drawstrings, camera angle, pose, centered composition and padding. Keep the bag clearly OPEN and EMPTY. Do not add, remove or rearrange any structural part. Keep the transparent alpha background. No backdrop, tile, shadow, text, frame or new object.",
+      "fileName": "empty-cell-gray.webp",
       "mimeType": "image/webp",
-      "sha256": "813e0d07dcbeec96d47380270684752418959f03daff5c4b3cd4f9229e6e5d0c"
+      "sha256": "0cce4eb1c2587be4bda36e0c8b16ca50923280d01335310281ede1407a1bde63"
     }
   ]
 }
