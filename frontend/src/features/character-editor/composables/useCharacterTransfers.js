@@ -8,9 +8,10 @@ import { getSession } from '@/shared/api/sessionsApi'
 import { useTemplateStore } from '@/stores/template'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { useCharacterInteractions } from './useCharacterInteractions'
+import { useCharacterMoneyTransfer } from './useCharacterMoneyTransfer'
 import { useSessionLive } from '@/features/sessions/composables/useSessionLive'
 
-export function useCharacterTransfers({ uuid, session, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions }) {
+export function useCharacterTransfers({ uuid, data, session, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions }) {
   const state = reactive({ participants: [], settings: {}, playersLoaded: false, transfers: [], view: '', loading: false, busy: false, error: '' })
   const anchor = shallowRef(null)
   const anchors = new Map()
@@ -97,6 +98,7 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
   }
   const concentration = useSpellConcentration({ uuid, version, isOwner, state, mutate })
   const usable = useUsableApplications({ uuid, version, mutate, state, isOwner })
+  const money = useCharacterMoneyTransfer({ uuid, data, session, isOwner, version, recipients, mutate, transferState: state, closePopover: close })
   async function send(source, entry, recipientCharUuid, purpose = 'transfer', selectedOption = '') {
     if (!isOwner.value || state.busy || !session.value || !(recipients.value.some(p => p.charUuid === recipientCharUuid) || recipientCharUuid === 'dm')) return false
     let optionKey = selectedOption
@@ -161,5 +163,5 @@ export function useCharacterTransfers({ uuid, session, isOwner, version, flushSa
     else state.view = ''
   }, { immediate: true })
   onBeforeUnmount(live.stop)
-  return reactive({ state, usable, concentration, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, castSpell, resolve, refresh, busy: computed(() => state.busy) })
+  return reactive({ state, money, usable, concentration, interactions, anchor, registerAnchor, unregisterAnchor, incomingCount, recipients, loadPlayers, open, close, send, castSpell, resolve, refresh, busy: computed(() => state.busy) })
 }

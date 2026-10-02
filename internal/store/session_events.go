@@ -50,10 +50,12 @@ type CharacterSessionEvent struct {
 const sessionEventSelect = `
 	SELECT e.id, e.session_id, e.author_user_id, event_author.login,
 	       event_session.owner_user_id = e.author_user_id,
-	       e.actor_char_id, c.uuid::text, c.template_id, c.data,
+	       e.actor_char_id, c.uuid::text, c.template_id,
+	       CASE WHEN e.event_type='money_transfer' THEN jsonb_build_object('values',
+	         jsonb_build_object('name',c.data#>'{values,name}','char_name',c.data#>'{values,char_name}','ava',c.data#>'{values,ava}')) ELSE c.data END,
 	       e.actor_item_id,
 	       COALESCE(character_icon.url, actor_icon.url, actor_cover.url), actor_svg.data,
-	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, COALESCE(transfer_recipient.user_id, interaction_recipient.user_id, CASE WHEN event_transfer.id IS NOT NULL AND event_transfer.recipient_char_id IS NULL THEN event_session.owner_user_id END), COALESCE(recipient_icon.url, interaction_recipient_icon.url, interaction_recipient.data #>> '{values,ava,url}', transfer_recipient.data #>> '{values,ava,url}')
+	       e.actor_name, e.event_type, e.action, COALESCE(e.data, '{}'::jsonb), e.visibility, e.created_at, e.client_action_id::text, event_session.owner_user_id, COALESCE(transfer_recipient.user_id, interaction_recipient.user_id, money_recipient.user_id, CASE WHEN event_transfer.id IS NOT NULL AND event_transfer.recipient_char_id IS NULL THEN event_session.owner_user_id END), COALESCE(recipient_icon.url, interaction_recipient_icon.url, interaction_recipient.data #>> '{values,ava,url}', transfer_recipient.data #>> '{values,ava,url}', money_recipient_icon.url, money_recipient.data #>> '{values,ava,url}')
 	FROM dndshare.session_event e
 	JOIN dndshare.users event_author ON event_author.id = e.author_user_id
 	JOIN dndshare."session" event_session ON event_session.id = e.session_id
@@ -69,6 +71,8 @@ const sessionEventSelect = `
 	LEFT JOIN dndshare.session_interaction interaction ON interaction.event_id = e.id
 	LEFT JOIN dndshare."char" interaction_recipient ON interaction_recipient.id = interaction.recipient_char_id
 	LEFT JOIN dndshare.storage_image interaction_recipient_icon ON interaction_recipient_icon.id = interaction_recipient.icon_image_id AND interaction_recipient_icon.deleted = false
+	LEFT JOIN dndshare."char" money_recipient ON money_recipient.uuid=CASE WHEN e.event_type='money_transfer' THEN (e.data->>'recipientCharUuid')::uuid END
+	LEFT JOIN dndshare.storage_image money_recipient_icon ON money_recipient_icon.id=money_recipient.icon_image_id AND money_recipient_icon.deleted=false
 	WHERE e.deleted = false`
 
 func scanSessionEvent(row pgx.Row) (SessionEvent, error) {
@@ -185,9 +189,10 @@ func (s *Store) CreateSessionEvent(ctx context.Context, sessionID, userID int64,
 	return scanSessionEvent(s.pool.QueryRow(ctx, sessionEventSelect+` AND e.id = $1`, id))
 }
 
-// Players receive transfers directed to them and their own conversations/challenges.
+// Players receive item offers, their money transfers and their conversations/challenges.
 const sessionEventReadAccess = ` AND (event_session.owner_user_id = $2 OR
  (e.event_type = 'item_transfer' AND transfer_recipient.user_id = $2) OR
+ (e.event_type = 'money_transfer' AND (c.user_id = $2 OR money_recipient.user_id = $2)) OR
  (interaction.event_id IS NOT NULL AND (c.user_id = $2 OR interaction_recipient.user_id = $2)))`
 
 // GetSessionEvents returns the newest page for afterID=0, otherwise events after the cursor.

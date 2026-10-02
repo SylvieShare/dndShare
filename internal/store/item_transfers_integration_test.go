@@ -301,6 +301,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	if len(approvedDoc.values()["potions"].([]any)) != 1 {
 		t.Fatal("DM approval did not deliver potion stack")
 	}
+	t.Run("money transfers", func(t *testing.T) { testMoneyTransfersPostgres(t, s) })
 	t.Run("player interactions", func(t *testing.T) { testSessionInteractionsPostgres(t, s) })
 	testPotionApplications(t, s, exec, current)
 	testUsableApplications(t, s, exec, current)

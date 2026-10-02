@@ -11,6 +11,7 @@
     </div>
   </BasePopover>
   <CharacterInteractionDialog v-if="controller.interactions" :controller="controller.interactions" :character-uuid="characterUuid" />
+  <CharacterMoneyDialog v-if="controller.money?.state.peer" :controller="controller.money" />
   <ItemViewModal v-if="viewedItem" :item-id="viewedItem.id" :item="viewedItem.item" :item-type-id="viewedItem.typeId" :instance="viewedItem.entry" :z-index="3600" @close="viewedItem = null" />
 </template>
 <script setup>
@@ -18,6 +19,7 @@ import UsableApplicationDialogs from './UsableApplicationDialogs.vue'
 import { computed, nextTick, ref, watch } from 'vue'
 import { BasePopover, RemoveButton } from '@sylvieshare/share-ui'
 import CharacterInteractionDialog from './CharacterInteractionDialog.vue'
+import CharacterMoneyDialog from './CharacterMoneyDialog.vue'
 import CharacterTransferContent from './CharacterTransferContent.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })

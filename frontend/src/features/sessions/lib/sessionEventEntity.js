@@ -32,6 +32,7 @@ export function sessionEventAction(event, name) {
 export function sessionEventDetails(event) {
   if (isInteraction(event)) return interactionDetails(event)
   const data = event.data || {}
+  if (event.type === 'money_transfer') return `${data.senderName} → ${data.recipientName} · ${data.amount} ${data.currencyName}`
   if (event.type === 'item_transfer') {
     const status = { pending: 'Ожидает', accepted: data.purpose === 'use' ? 'Использовано' : 'Приняли', rejected: data.purpose === 'use' ? 'Доза возвращена' : 'Отказали' }[data.status] || 'Ожидает'
     const count = Number(data.count) > 1 ? ` · ×${data.count}` : ''

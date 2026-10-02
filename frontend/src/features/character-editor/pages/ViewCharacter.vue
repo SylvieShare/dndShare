@@ -258,7 +258,7 @@ const { saveStatus, saveError, pendingSecondsLeft, scheduleSave, retrySave, dism
   restoreEvents: events => pendingSessionEvents.unshift(...events),
 })
 
-const transfers = useCharacterTransfers({ uuid, session: activeSession, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions })
+const transfers = useCharacterTransfers({ uuid, data, session: activeSession, isOwner, version, flushSave, refreshFromServer, saveStatus, loadSessions })
 charCtx.itemTransfers = transfers
 const edition = useCharacterEdition({ uuid, isOwner, sourceVersionId, version, flushSave, applyCharacter, canStart: () => !transfers.busy })
 charCtx.edition = edition

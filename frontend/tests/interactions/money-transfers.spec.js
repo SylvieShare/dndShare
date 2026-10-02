@@ -1,0 +1,63 @@
+import { test, expect } from '@playwright/test'
+
+for (const mobile of [false, true]) {
+  test(`player row and give money (${mobile ? 'mobile' : 'desktop'})`, async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: mobile ? 390 : 1280, height: 850 } })
+    const requests = []
+    let fail = true
+    await context.route(url => url.pathname.startsWith('/api/'), async route => {
+      const req = route.request(), url = new URL(req.url())
+      if (url.pathname === '/api/suggest/batch') return route.fulfill({ json: { items: { 17: [{ id: 1, value: 'Золотые' }, { id: 2, value: 'Серебряные' }] } } })
+      if (url.pathname.endsWith('/money-transfers')) {
+        const body = req.postDataJSON()
+        requests.push(body)
+        if (fail) { fail = false; return route.fulfill({ status: 503, json: { desc: 'Ответ потерян' } }) }
+        return route.fulfill({ json: { event: { id: 1, type: 'money_transfer', data: { amount: body.amount } } } })
+      }
+      return route.fulfill({ json: { events: [], items: [] } })
+    })
+    const page = await context.newPage()
+    page.on('pageerror', error => { throw error })
+    await page.goto('/tests/interactions/fixture.html?own=a')
+    await page.getByRole('button', { name: 'Игроки', exact: true }).click()
+    const row = page.getByRole('button', { name: 'Действия: Торин' })
+    await expect(row).not.toContainText('Дварф')
+    await expect(row).not.toContainText('Воин')
+    await expect(row.locator('img')).toHaveCSS('width', '48px')
+    await expect(row.locator('.lucide-ellipsis')).toHaveCount(0)
+    await expect(row.getByRole('meter')).toBeVisible()
+    await expect(row.getByRole('meter')).toHaveAttribute('aria-valuenow', '60')
+    await row.click()
+    await page.getByRole('menuitem', { name: 'Дать денег', exact: true }).click()
+    const dialog = page.getByRole('dialog', { name: 'Дать денег', exact: true })
+    await expect(dialog).toBeVisible()
+    await expect(dialog).toContainText('В кошельке: 20')
+    const amount = dialog.getByRole('spinbutton', { name: 'Сумма' })
+    const send = dialog.getByRole('button', { name: 'Дать денег', exact: true })
+    await amount.fill('21')
+    await expect(send).toBeDisabled()
+    await amount.fill('1.5')
+    await expect(send).toBeDisabled()
+    await dialog.getByRole('combobox', { name: 'Валюта' }).selectOption('2')
+    await expect(dialog).toContainText('В кошельке: 0')
+    await expect(send).toBeDisabled()
+    await dialog.getByRole('combobox', { name: 'Валюта' }).selectOption('1')
+    await amount.fill('7')
+    await expect(send).toBeEnabled()
+    await send.click()
+    await expect(dialog.getByRole('alert')).toHaveText('Ответ потерян')
+    await expect(amount).toHaveValue('7')
+    await send.click()
+    await expect(dialog).toBeHidden()
+    expect(requests).toHaveLength(2)
+    expect(requests[0]).toMatchObject({ amount: 7, currencyId: 1, version: 4, recipientCharUuid: 'b' })
+    expect(requests[1].clientActionId).toBe(requests[0].clientActionId)
+    await page.getByRole('button', { name: 'Игроки', exact: true }).click()
+    await row.click()
+    await page.getByRole('menuitem', { name: 'Дать денег', exact: true }).click()
+    await expect(dialog).toContainText('В кошельке: 13')
+    await dialog.getByRole('button', { name: 'Отмена', exact: true }).click()
+    expect(requests).toHaveLength(2)
+    await context.close()
+  })
+}

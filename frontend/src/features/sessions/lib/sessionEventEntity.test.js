@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { sessionEventDetails, sessionEventTransition } from './sessionEventEntity'
 describe('chronicle quantity changes', () => {
+  it('shows the money transfer participants, currency and amount', () => {
+    expect(sessionEventDetails({ type: 'money_transfer', data: {
+      senderName: 'Лиора', recipientName: 'Торин', currencyName: 'Золотые', amount: 7,
+    } })).toBe('Лиора → Торин · 7 Золотые')
+  })
   it.each([
     ['item_spent', 0, '1 → 0'],
     ['item_added', 4, '3 → 4'],

@@ -3,7 +3,7 @@
       <p v-if="state.error" class="transfer-error" role="alert">{{ state.error }}</p>
       <LoadingIndicator v-if="state.loading" label="Загрузка игроков" />
       <template v-else-if="state.view === 'players'">
-        <CharacterInteractionPlayers :players="controller.recipients" :controller="controller.interactions" />
+        <CharacterInteractionPlayers :players="controller.recipients" :controller="controller.interactions" :money="controller.money" />
       </template>
       <template v-else>
         <CharacterInteractionInbox v-if="controller.interactions" :controller="controller.interactions" :character-uuid="characterUuid" />
