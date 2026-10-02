@@ -74,7 +74,7 @@ one tab pane; swipe/drag logic is extracted into composables. On mobile, each
 tab owns its nested scroll position and keeps `--bg` as its canvas. Content is
 split into semantic `--surface` blocks instead of painting a whole tab: every
 weapon is a card; spell parameters, slots and each spell level are separate
-cards; inventory sections and utility widgets are separate; the personality
+cards; inventory spaces share one tile while utility widgets are separate; the personality
 profile declares the `Основное`, `Облик`, `Характер` and `История` tile groups
 in `mobile.json`. The character route hides the global app header at the mobile
 breakpoint and gives the full viewport to its own toolbar; that toolbar menu has
@@ -95,24 +95,30 @@ to the character list.
 Desktop `LayoutInnerTabs` groups also keep their selected pane in independent,
 schema-stable `innerTab-*` query keys. Reload and browser history restore both
 the outer character tab and its inner pane; invalid or stale inner indexes fall
-back to the first pane. Every weapon and inventory section uses its own shared
-desktop/mobile `BaseTile`. «Экипировано» всегда отображается списком; у остальных
-секций `MultiToggle` переключает «Рюкзак»/«Список», по умолчанию — рюкзак.
-Выбор вида сохраняется в браузере для каждой секции. Число колонок рюкзака
-зависит от доступной ширины секции: квадратная ячейка не меньше 72 px, зазор
-8 px, фиксированного ограничения в четыре колонки нет. В ячейке — иконка
-предмета и количество в углу; в пустой — сумка. При наведении или фокусе
-пустая ячейка показывает плюс; нажатие открывает «Добавить из справочника» и
-«Добавить своё». Отдельные кнопки добавления остаются в списке и «Экипировано».
-Новые предметы занимают первую свободную ячейку секции. Наведение и фокус
-на предмет показывают общую подсказку с описанием, стоимостью и весом. После заполнения последнего ряда добавляется следующий.
-Перетаскивание владельцем в свободную ячейку оставляет прежнюю пустой;
-в занятую — меняет два экземпляра местами, в том числе между секциями.
-Сетка использует `slots` секции с индексами от нуля по UID; новые предметы
-заполняют первую свободную ячейку. Переключение вида сохраняет раскладку,
-сортировка в списке задаёт последовательные позиции. Перенос в «Экипировано»
-работает как вставка в список. Viewer может выбирать вид, но не переносить вещи.
-Escape/отмена жеста/отпускание вне ячеек отменяют перенос.
+back to the first pane. Every weapon uses its own shared desktop/mobile `BaseTile`.
+Все пространства предметов собраны в одном `BaseTile`: разделённые заголовками
+и тихими линиями рюкзаки без режима списка и отдельной области «Экипировано».
+Число колонок зависит от ширины пространства (ячейка от 72 px, зазор 8 px).
+В пустой ячейке сумка плавно сменяется плюсом при наведении/фокусе; меню предлагает
+справочник и собственный предмет. `prefers-reduced-motion` отключает переход.
+Наведение на предмет показывает описание, стоимость и вес; нажатие открывает
+меню с названием, отделённым стандартным разделителем. Скругление источника
+остаётся прежним при открытом меню.
+Пункт «Экипировать» доступен владельцу у оружия, доспехов и магических предметов,
+которым нужна экипировка (включая отдельные зависимости `activation=equipped`).
+У уже надетого экземпляра доступен «Снять». Обычные вещи и зелья этого пункта
+не имеют. Надетая вещь остаётся в своей ячейке с фиолетовой рамкой 2 px;
+экипировка меняет состояние экземпляра целиком, сохраняя UID, количество,
+параметры и заряды. Настройка на персонажа остаётся отдельным действием.
+`items.equipped` остаётся источником механик КД и магии. `sections[].slots`
+хранит позиции всех вещей пространства, включая UID из `equipped`; исходные
+надетые вещи без позиции показываются в первом пространстве. Перенос между
+сетками меняет физическое место, сохраняя статус экипировки. Сетка допускает
+пустоты и обмен занятых ячеек; новый ряд появляется после заполнения последнего.
+Изменение ширины меняет только число колонок, а не сохранённые индексы.
+Удаление пространства удаляет все его вещи, включая надетые. Viewer видит
+раскладку и статус, но не может переносить, добавлять или менять экипировку.
+Escape, отмена жеста и отпускание вне ячеек отменяют перенос.
 Fixed equipment utilities and personality groups use independent surfaces,
 spell parameters/slots use separate `MorphTile` cards, and diary collections keep
 their own cards while notes have a dedicated surface. The desktop character
@@ -755,14 +761,14 @@ unrelated rolls.
 
 `DndItems` uses `lib/itemSection.js` and the handbook item picker. Its «Вещи»
 picker follows `item_type.parent_type_id` and therefore searches the root type 2
-plus all linked child catalogues. Equipped items are a top-level array; user
-sections never double as equipped. Entry override
+plus all linked child catalogues. Equipped items are a top-level array;
+equipment state is selected through the item menu and does not create a separate visible space. Entry override
 is for a custom name/description/count metadata, while referenced item content
 comes from handbook. A referenced row prefers `iconImageUrl`, then `svg`, then
 the collection image. Weapon, armor and ordinary item rows retain type-specific
-content composition; simplified custom inventory rows use the root collection's
-icon as a placeholder (the mystery cube for «Вещи»). Inventory glyphs are neutral gray, frameless
-and use a 64×64 px slot. Weapon cards use the same 64×64 slot and prefer the
+content composition; simplified custom inventory cells use the root collection's
+icon as a placeholder (the mystery cube for «Вещи»). Inventory icons scale inside
+the square bag cells; equipment state is marked by the purple cell frame. Weapon cards use the same 64×64 slot and prefer the
 handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
 weapon-specific attack, damage and property composition remains unchanged. A
 click on a weapon tile opens its action menu instead of navigating directly
@@ -930,7 +936,7 @@ armor. Weapon tiles use the same resolver for
 `required_weapon_proficiencies`; an automatic match also supplies the attack
 proficiency bonus. The expanded weapon editor does not expose a separate
 proficiency switch: it is determined from the character's proficiencies and
-the weapon handbook links. Inventory rows use 64×64 handbook images while
+the weapon handbook links. Inventory cells use handbook images scaled within their square slots while
 retaining type-specific inner content.
 
 Starting armor is placed directly in the equipped array. Its handbook

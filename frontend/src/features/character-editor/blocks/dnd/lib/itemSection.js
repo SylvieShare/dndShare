@@ -1,11 +1,10 @@
-import { resolveBagSlots } from '@/features/inventory/lib/bagSlots'
+import { normalizeInventorySpaces } from './inventorySpaces'
 import { ownedWeaponFields } from './ownedWeaponFields'
 import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from './itemEntry'
 import { instanceDisplayName } from '@/features/items/lib/itemInstance'
 
 export const EQUIPPED_ID = 'equipped'
-export const EQUIPPED_NAME = 'Экипировано'
 export const DEFAULT_SECTION_NAME = 'Рюкзак'
 
 export function makeSectionId() { return makeUid('sec') }
@@ -26,7 +25,7 @@ function normalizeEntry(it) {
  * Model:
  *   {
  *     equipped: [Entry],     // hardcoded section, separate top-level field
- *     sections: [{ id, name, items: [Entry] }]   // user sections (без Рюкзак-дефолта если миграция уже была)
+ *     sections: [{ id, name, items: [Entry], slots: { uid: index } }] // physical spaces, including equipped UIDs
  *   }
  */
 export function normalizeValue(value) {
@@ -40,10 +39,10 @@ export function normalizeValue(value) {
         items: Array.isArray(s.items) ? s.items.map(normalizeEntry) : [],
       }))
     : []
-  return {
+  return normalizeInventorySpaces({
     equipped,
-    sections: sections.length ? sections.map(section => ({ ...section, slots: resolveBagSlots(section.items, section.slots) })) : [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: [] }],
-  }
+    sections: sections.length ? sections : [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: [], slots: {} }],
+  })
 }
 
 export function allCatalogIds(model) {

@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest'
 
 const source = ['./DndItems.vue', './components/InventoryItemRow.vue', './composables/useInventoryRowActions.js', './composables/useInventoryEquipmentActions.js']
   .map(path => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8')).join('\n')
-const iconSource = readFileSync(fileURLToPath(new URL('../../components/InventoryItemIcon.vue', import.meta.url)), 'utf8')
 const blocks = JSON.parse(readFileSync(fileURLToPath(new URL('../../settings/dnd/blocks.json', import.meta.url)), 'utf8'))
 
 describe('inventory item actions', () => {
@@ -35,7 +34,6 @@ describe('inventory item actions', () => {
   })
 
   it('shows tools as inventory items without mutating character proficiencies', () => {
-    expect(source).toContain("'di-row-tool': isToolEntry(entry)")
     expect(source).toContain('{{ toolCategoryLabel(entry) }}')
     expect(source).toContain('entryHasProficiency(entry)')
     expect(source).toContain('class="di-item-proficient">Владение</span>')
@@ -50,11 +48,11 @@ describe('inventory item actions', () => {
     expect(source).toContain("characterDerivedEffects?.bonus?.('check_bonus'")
   })
 
-  it('uses 64px handbook icons for inventory rows', () => {
-    expect(source).toContain(':image-url="entry.display.iconImageUrl"')
-    expect(source).toContain(':type-image-url="entry.display.typeImageUrl"')
-    expect(iconSource).toContain('width: 64px')
-    expect(iconSource).toContain('height: 64px')
-    expect(iconSource).toContain('flex: 0 0 64px')
+  it('renders inventory only as a bag grid with item menus', () => {
+    expect(source).toContain('InventoryBagGrid')
+    expect(source).not.toContain('MultiToggle')
+    expect(source).not.toContain('InventoryItemIcon')
+    expect(source).toContain('InventoryItemMenuHeader')
+    expect(source).toContain('toggleEquipment(entry, close)')
   })
 })

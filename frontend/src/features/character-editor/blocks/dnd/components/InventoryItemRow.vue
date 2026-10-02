@@ -4,68 +4,37 @@
   :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
 >
   <template #trigger="{ open: menuOpen }">
-    <InventoryBagItem v-if="bag" :item-key="entry.uid" :item="{ iconImageUrl: entry.display.iconImageUrl || entry.display.typeImageUrl, svg: entry.display.svg }" :name="entry.display.name" :count="entry.count" :source="sortable.isSource(entry)" :draggable="canDrag" :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
-      :status="entry.params?.magic?.attuned ? 'Настроен' : ''" :class="{ 'action-menu-source--open': menuOpen }"
-      @pointerdown="hideTooltip(); onRowDown($event, entry, sectionId, index)" @mouseenter="!sortable.dragging && showTooltip($event, entry)" @mouseleave="hideTooltip" @focus="showTooltip($event, entry)" @blur="hideTooltip" @click="hideTooltip" />
-    <div v-else
-      class="di-row action-menu-source"
-      :class="{
-        'sortable-placeholder': sortable.isSource(entry),
-        'di-row-draggable': canDrag,
-        'di-row-tool': isToolEntry(entry),
-        'action-menu-source--open': menuOpen,
-      }"
-      :data-sortable-key="entry.uid"
-      @pointerdown="onRowDown($event, entry, sectionId, index)"
-      @mouseenter="e => showTooltip(e, entry)"
-      @mouseleave="hideTooltip"
-    >
-      <InventoryItemIcon
-        :svg="entry.display.svg"
-        :image-url="entry.display.iconImageUrl"
-        :type-image-url="entry.display.typeImageUrl"
-      />
-
-      <span class="di-row-copy">
-        <span class="di-row-name" :title="entry.display.name">
-          <span class="di-row-name-text">{{ entry.display.name }}</span>
-          <span v-if="entry.count > 1" class="di-count-badge">
-            <span class="di-count-x">x</span>{{ entry.count }}
-          </span>
-        </span>
-        <span v-if="!entry.params?.magic?.lost && entryTypeId(entry) === MAGIC_ITEM_TYPE_ID && entry.display.base?.data?.attunement !== 'none'" class="di-item-meta">{{ entry.params?.magic?.attuned ? 'Настроен' : 'Требует настройки' }}</span>
-        <span v-if="entry.display.base?.data?.armor_base && !entry.display.base.data.armor_base.base_item_id && !entry.params?.armor_base_item_id" class="di-item-meta">Выберите основу доспеха в меню предмета</span>
-        <span v-if="entry.display.base?.data?.weapon && !entry.display.base.data.weapon.base_item_id && !entry.params?.weapon_base_item_id && !entry.magic_item_id" class="di-item-meta">Выберите оружейную основу в меню предмета</span>
-        <span v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
-          <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
-          <span v-if="toolProficiencyRank(entry) >= 2" class="di-item-proficient">Компетентность</span>
-          <span v-else-if="toolProficiencyRank(entry) >= 1" class="di-item-proficient">Владение</span>
-          <template v-if="armorMeta(entry)">
-            <span :class="armorMeta(entry).active ? 'di-item-armor' : 'di-item-muted'">
-              {{ armorMeta(entry).active ? (armorMeta(entry).shield ? `Щит +${armorMeta(entry).value} КД` : `КД ${armorMeta(entry).value}`) : 'Не учитывается в КД' }}
-            </span>
-            <span v-if="!armorMeta(entry).proficient" class="di-item-danger">Нет владения</span>
-            <span v-if="armorMeta(entry).stealthDisadvantage" class="di-item-danger">Помеха Скрытности</span>
-          </template>
-        </span>
-        <CreatedItemStatus :entry="entry" />
-      </span>
-    </div>
-    <SelectedTargetPanel :uid="entry.uid" v-if="!bag" />
-    <WeaponBonusTransferPanel v-if="!bag && entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
-    <WeaponUsePanel v-if="!bag && entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
-    <ItemLastChargeCheck v-if="!bag && entry.params?.magic?.last_charge_check" :uid="entry.uid" />
+    <InventoryBagItem :item-key="entry.uid" :item="{ iconImageUrl: entry.display.iconImageUrl || entry.display.typeImageUrl, svg: entry.display.svg }"
+      :name="entry.display.name" :count="entry.count" :source="sortable.isSource(entry)" :draggable="canDrag"
+      :disabled="draggedThisGesture || (!canManage && entry.item_id == null)" :status="entry.params?.magic?.attuned ? 'Настроен' : ''"
+      :equipped="isEquipped(entry)" :class="{ 'action-menu-source--open': menuOpen }"
+      @pointerdown="hideTooltip(); onRowDown($event, entry, spaceId, index)" @mouseenter="!sortable.dragging && showTooltip($event, entry)"
+      @mouseleave="hideTooltip" @focus="showTooltip($event, entry)" @blur="hideTooltip" @click="hideTooltip" />
   </template>
 
   <template #default="{ close }">
-    <template v-if="bag">
-      <p class="di-menu-name">{{ entry.display.name }}</p>
-      <CreatedItemStatus :entry="entry" />
+    <InventoryItemMenuHeader :name="entry.display.name" />
+    <div v-if="isToolEntry(entry) || entryHasProficiency(entry) || armorMeta(entry)" class="di-item-meta">
+      <span v-if="isToolEntry(entry)">{{ toolCategoryLabel(entry) }}</span>
+      <span v-if="toolProficiencyRank(entry) >= 2" class="di-item-proficient">Компетентность</span>
+      <span v-else-if="toolProficiencyRank(entry) >= 1 || entryHasProficiency(entry)" class="di-item-proficient">Владение</span>
+      <template v-if="armorMeta(entry)">
+        <span>{{ armorMeta(entry).active ? (armorMeta(entry).shield ? `Щит +${armorMeta(entry).value} КД` : `КД ${armorMeta(entry).value}`) : 'Не учитывается в КД' }}</span>
+        <span v-if="!armorMeta(entry).proficient" class="di-item-danger">Нет владения</span>
+        <span v-if="armorMeta(entry).stealthDisadvantage" class="di-item-danger">Помеха Скрытности</span>
+      </template>
+    </div>
+    <p v-if="!entry.params?.magic?.lost && entryTypeId(entry) === MAGIC_ITEM_TYPE_ID && entry.display.base?.data?.attunement !== 'none'" class="di-item-meta">{{ entry.params?.magic?.attuned ? 'Настроен' : 'Требует настройки' }}</p>
+    <p v-if="entry.display.base?.data?.armor_base && !entry.display.base.data.armor_base.base_item_id && !entry.params?.armor_base_item_id" class="di-item-meta">Выберите основу доспеха в меню предмета</p>
+    <p v-if="entry.display.base?.data?.weapon && !entry.display.base.data.weapon.base_item_id && !entry.params?.weapon_base_item_id && !entry.magic_item_id" class="di-item-meta">Выберите оружейную основу в меню предмета</p>
+    <CreatedItemStatus :entry="entry" />
     <SelectedTargetPanel :uid="entry.uid" />
     <WeaponBonusTransferPanel v-if="entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
     <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
-    </template>
+    <RowActionItem v-if="canEquip(entry)" :icon="isEquipped(entry) ? Shirt : ShieldCheck" tone="accent" @click="toggleEquipment(entry, close)">
+      {{ isEquipped(entry) ? 'Снять' : 'Экипировать' }}
+    </RowActionItem>
     <UsableItemAction source="items" :item="entry.display.base" :entry="entry" :name="entry.display.name" @close="close" />
     <CreatedItemActions :entry="entry" @close="close" />
     <ItemTransferAction source="items" :entry="entry" :name="entry.display.name" @close="close" />
@@ -124,6 +93,7 @@
 </template>
 
 <script setup>
+import InventoryItemMenuHeader from '@/features/inventory/components/InventoryItemMenuHeader.vue'
 import InventoryBagItem from '@/features/inventory/components/InventoryBagItem.vue'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
@@ -137,13 +107,15 @@ import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { inject, toRefs } from 'vue'
 import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
-import { ArrowRightLeft, Dices } from '@lucide/vue'
-import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
+import { ArrowRightLeft, Dices, ShieldCheck, Shirt } from '@lucide/vue'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
-defineProps({ entry: Object, sectionId: String, index: Number, bag: Boolean })
+defineProps({ entry: Object, sectionId: String, index: Number, spaceId: String })
 const {
   draggedThisGesture,
   canManage,
+  isEquipped,
+  canEquip,
+  toggleEquipment,
   sortable,
   canDrag,
   onRowDown,
@@ -173,84 +145,7 @@ const charCtx = inject('charCtx', {})
 </script>
 
 <style scoped>
-.di-menu-name { margin: 6px 8px; font-weight: 700; color: var(--text-1); overflow-wrap: anywhere; }
-.di-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 80px;
-  padding: 14px 4px;
-  transition: background 0.12s;
-}
-.di-row + .di-row {
-  border-top: 1px solid color-mix(in srgb, var(--text-on-accent) 7%, transparent);
-}
-.di-row-draggable { cursor: grab; touch-action: pan-y; }
-.di-row-draggable:active { cursor: grabbing; }
-@media (hover: hover) {
-  .di-row:hover { background: color-mix(in srgb, var(--text-on-accent) 2.5%, transparent); }
-}
-
-.di-row-name {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--text-1);
-  padding: 2px 4px;
-}
-.di-row-copy {
-  min-width: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.di-item-meta {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 4px;
-  color: var(--text-muted);
-  font-size: 10px;
-  line-height: 1.2;
-}
-.di-item-meta > span + span::before { margin-right: 7px; color: var(--border-strong); content: '·'; }
+.di-item-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin: 4px 8px; color: var(--text-muted); font-size: 11px; line-height: 1.3; }
 .di-item-proficient { color: var(--success); font-weight: 700; }
-.di-item-armor { color: var(--accent); font-weight: 700; }
-.di-item-muted { color: var(--text-muted); }
 .di-item-danger { color: var(--danger); font-weight: 700; }
-.di-row-name:hover .di-row-name-text { color: var(--accent); }
-
-.di-row-name-text {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  white-space: normal;
-}
-
-.di-count-badge {
-  flex-shrink: 0;
-  min-width: 16px;
-  height: 16px;
-  box-sizing: border-box;
-  padding: 1px 6px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
-  color: var(--text-1);
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 14px;
-  text-align: center;
-}
-.di-count-x { font-size: 8px; opacity: 0.75; margin-right: 1px; }
-.sortable-placeholder {
-  background: color-mix(in srgb, var(--accent) 8%, transparent) !important;
-  outline: 2px dashed color-mix(in srgb, var(--accent) 50%, transparent);
-  outline-offset: -2px;
-  border-radius: 8px;
-}
-.sortable-placeholder > * { visibility: hidden; }
 </style>

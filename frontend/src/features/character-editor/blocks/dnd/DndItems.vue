@@ -15,60 +15,27 @@
       <p v-if="catalogError" role="alert">{{ catalogError }} <ActionButton variant="quiet" @click="reloadCatalog">Повторить</ActionButton></p>
       <InventorySkeleton v-if="loading" :sections="allSections" />
 
-      <template v-else>
-        <BaseTile
-          v-for="section in allSections"
-          :key="section.id"
-          class="di-section"
-          :class="{ 'di-section-locked': section.locked }"
-        >
+      <BaseTile v-else class="di-inventory">
+        <section v-for="section in allSections" :key="section.id" class="di-space">
           <div class="di-section-head">
-            <input
-              v-if="canManage && !section.locked && renamingId === section.id"
-              ref="renameInputs"
-              class="di-section-rename"
-              :value="section.name"
-              @blur="finishRename(section.id, $event.target.value)"
-              @keydown.enter.prevent="finishRename(section.id, $event.target.value)"
-              @keydown.escape.prevent="renamingId = null"
-            />
-            <button
-              v-else
-              class="di-section-name"
-              :class="{ 'di-section-name-editable': canManage && !section.locked }"
-              :disabled="!canManage || section.locked"
-              :title="canManage && !section.locked ? 'Переименовать' : ''"
-              @click="canManage && !section.locked && startRename(section.id)"
-            >{{ section.name }}</button>
-            <span v-if="visibleItems(section).length" class="di-section-count">{{ visibleItems(section).length }}</span>
+            <input v-if="canManage && renamingId === section.id" ref="renameInputs" class="di-section-rename" :value="section.name"
+              @blur="finishRename(section.id, $event.target.value)" @keydown.enter.prevent="finishRename(section.id, $event.target.value)" @keydown.escape.prevent="renamingId = null" />
+            <button v-else class="di-section-name" :class="{ 'di-section-name-editable': canManage }" :disabled="!canManage"
+              :title="canManage ? 'Переименовать' : ''" @click="canManage && startRename(section.id)">{{ section.name }}</button>
+            <span v-if="section.items.length" class="di-section-count">{{ section.items.length }}</span>
             <span class="di-section-line" aria-hidden="true"></span>
-            <MultiToggle v-if="!section.locked" :model-value="sectionMode(section.id)" :options="viewOptions" :aria-label="`Вид секции ${section.name}`" :disabled="sortable.dragging" @update:model-value="setSectionMode(section.id, $event)" />
-            <RemoveButton icon="trash" label="Удалить секцию" v-if="canManage && !section.locked && model.sections.length > 1"
-              @click="askDeleteSection(section)" />
+            <RemoveButton v-if="canManage && model.sections.length > 1" icon="trash" label="Удалить секцию" @click="askDeleteSection(section)" />
           </div>
-
-          <InventoryBagGrid v-if="sectionMode(section.id) === 'bag'" adaptive :can-add="canAdd" @add-catalog="openPicker(section.id)" @add-custom="openInlineForm(section.id, null)" :entries="section.items.map(entryWithDisplay)" :positions="section.slots" :group="sectionGroup(section.id)" :label="section.name" :sortable="sortable">
-            <template #default="{ entry, index }"><InventoryItemRow bag :entry="entry" :section-id="section.id" :index="index" /></template>
+          <InventoryBagGrid adaptive :can-add="canAdd" :entries="section.items.map(entryWithDisplay)" :positions="section.slots"
+            :group="sectionGroup(section.id)" :label="section.name" :sortable="sortable" :is-equipped="entry => isEquipped(entry)"
+            @add-catalog="openPicker(section.id)" @add-custom="openInlineForm(section.id, null)">
+            <template #default="{ entry, index }">
+              <InventoryItemRow :entry="entry" :section-id="isEquipped(entry) ? EQUIPPED_ID : section.id" :space-id="section.id" :index="index" />
+            </template>
           </InventoryBagGrid>
-          <div v-else
-            class="di-rows"
-            :data-sortable-container="sectionGroup(section.id)"
-          >
-            <InventoryItemRow v-for="(entry, idx) in displaySectionItems(section.id)" :key="entry.uid" :entry="entry" :section-id="section.id" :index="idx" />
-
-            <div v-if="!visibleItems(section).length" class="di-empty">пусто</div>
-          </div>
-
-          <div v-if="canAdd && sectionMode(section.id) === 'list'" class="di-add-row">
-            <AddButton class="di-add-catalog" label="Добавить из справочника" @click="openPicker(section.id)" />
-            <AddButton label="Предмет" title="Добавить предмет вручную" @click="openInlineForm(section.id, null)" />
-          </div>
-        </BaseTile>
-
-        <div v-if="canManage" class="di-add-section-row">
-          <AddButton block label="Добавить секцию" @click="addSection" />
-        </div>
-      </template>
+        </section>
+        <div v-if="canManage" class="di-add-section-row"><AddButton block label="Добавить секцию" @click="addSection" /></div>
+      </BaseTile>
     </template>
 
     <InventoryItemTooltip :tooltip="tooltip" />
@@ -150,14 +117,12 @@ import { abilityModifier, formatBonus as signed, proficiencyBonus, resolveNumVal
 import { STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import { useDiceStore } from '@/stores/dice'
-import { MultiToggle } from '@sylvieshare/share-ui'
 import InventoryBagGrid from '@/features/inventory/components/InventoryBagGrid.vue'
-import { resolveBagSlots } from '@/features/inventory/lib/bagSlots'
+import { canEquipInventoryItem, inventorySpaceEntries, isInventoryEquipped, normalizeInventorySpaces, toggleInventoryEquipment } from './lib/inventorySpaces'
 import { useInventoryLayout, inventoryItems as itemsRef, setInventoryItems as setItems } from './composables/useInventoryLayout'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
   EQUIPPED_ID,
-  EQUIPPED_NAME,
   cloneModel,
   entryDisplayData,
   makeEntryUid,
@@ -188,13 +153,17 @@ const model = computed(() => normalizeValue(props.value))
 const { catalog, loading, error: catalogError, reload: reloadCatalog } = useInventoryCatalog(() => model.value)
 const { tooltip, showTooltip, hideTooltip, viewEntry, deleteOneEntry, addEntry, editEntry, deleteEntry } = useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry })
 
-const allSections = computed(() => [
-  { id: EQUIPPED_ID, name: EQUIPPED_NAME, items: model.value.equipped, locked: true },
-  ...model.value.sections.map(s => ({ ...s, locked: false })),
-])
-
-function visibleItems(section) {
-  return section.items || []
+const allSections = computed(() => model.value.sections.map(section => ({
+  ...section, items: inventorySpaceEntries(model.value, section.id),
+})))
+const isEquipped = entry => isInventoryEquipped(model.value, entry.uid)
+function canEquip(entry) { return canManage.value && (isEquipped(entry) || canEquipInventoryItem(entry.display?.base)) }
+function toggleEquipment(entry, close) {
+  if (!canEquip(entry)) return
+  const next = cloneModel(model.value)
+  if (toggleInventoryEquipment(next, entry.uid)) emitModel(next)
+  hideTooltip()
+  close()
 }
 
 const rootTypeId = computed(() => Number(props.block.content?.item_type_id || props.block.content?.item_ids?.[0] || 2))
@@ -214,7 +183,6 @@ const pickerTypeIds = computed(() => {
 const specializedDestinations = computed(() => props.block.content?.specialized_destinations || [])
 const toolTypeId = computed(() => Number(props.block.content?.tool_type_id) || 14)
 
-const viewOptions = [{ value: 'bag', label: 'Рюкзак' }, { value: 'list', label: 'Список' }]
 
 function entryWithDisplay(entry) {
   return { ...entry, display: entryDisplayData(entry, catalog, typeById.value, rootTypeId.value) }
@@ -308,13 +276,13 @@ const { pendingWeapon, confirmWeapon, specializedDestination, canMoveToSpecializ
   model, catalog, specializedDestinations, canManage, charCtx, entryTypeId,
 })
 
-const { sortable, sectionGroup, sectionMode, setSectionMode, onRowDown, displaySectionItems } = useInventoryLayout({
+const { sortable, sectionGroup, onRowDown } = useInventoryLayout({
   model, canDrag, entryWithDisplay, emitModel, hideTooltip,
 })
 const draggedThisGesture = computed(() => sortable.suppressNextClick)
 
 function emitModel(next) {
-  for (const section of next.sections) section.slots = resolveBagSlots(section.items, section.slots)
+  normalizeInventorySpaces(next)
   emit('update:value', props.block.id, next)
 }
 
@@ -349,6 +317,8 @@ function askDeleteSection(section) {
 
 function doDeleteSection() {
   const next = cloneModel(model.value)
+  const removed = new Set(inventorySpaceEntries(next, confirmDel.id).map(entry => entry.uid))
+  next.equipped = next.equipped.filter(entry => !removed.has(entry.uid))
   next.sections = next.sections.filter(s => s.id !== confirmDel.id)
   if (next.sections.length === 0) {
     next.sections.push({ id: makeSectionId(), name: 'Рюкзак', items: [] })
@@ -456,6 +426,9 @@ function onInlineFormSave(fields) {
 provide('inventoryRowCtx', reactive({
   draggedThisGesture,
   canManage,
+  isEquipped,
+  canEquip,
+  toggleEquipment,
   sortable,
   canDrag,
   onRowDown,
