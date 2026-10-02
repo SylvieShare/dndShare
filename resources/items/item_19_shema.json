@@ -8,7 +8,9 @@
     "key": "cost",
     "name": "Стоимость",
     "type": "int_by_suggest",
-    "suggest_type_id": 17
+    "suggest_type_id": 17,
+    "allow_range": true,
+    "hint": "Точная цена value и диапазон min/max независимы; можно заполнить один или оба. Валюта suggest_id общая. При покупке используется только value."
   },
   {
     "key": "weight",
@@ -1623,8 +1625,12 @@
           {
             "value": "language_proficiency",
             "label": "Знание языка"
+          },
+          {
+            "value": "armor_minimum",
+            "label": "Минимальный итоговый КД"
           }
-        , {"value":"armor_minimum","label":"Минимальный итоговый КД"}]
+        ]
       },
       {
         "name": "С уровня",
@@ -2029,8 +2035,29 @@
         "name": "Связанный дополнительный урон",
         "type": "text",
         "hint": "Переключатель урона этого предмета. Связь поясняет условие, но не накладывает эффект автоматически."
+      },
+      {
+        "key": "apply_on",
+        "name": "Когда применять",
+        "type": "select",
+        "default": "any",
+        "options": [
+          {
+            "value": "any",
+            "label": "При использовании или из хроники"
+          },
+          {
+            "value": "cast",
+            "label": "Только при использовании"
+          },
+          {
+            "value": "impact",
+            "label": "После броска — из хроники"
+          }
+        ],
+        "hint": "Личное усиление при сотворении не должно попадать на жертву атаки. Выберите отдельно этап для каждого эффекта."
       }
-    ,{"key":"apply_on","name":"Когда применять","type":"select","default":"any","options":[{"value":"any","label":"При использовании или из хроники"},{"value":"cast","label":"Только при использовании"},{"value":"impact","label":"После броска — из хроники"}],"hint":"Личное усиление при сотворении не должно попадать на жертву атаки. Выберите отдельно этап для каждого эффекта."}]
+    ]
   },
   {
     "name": "Отображаемая прогрессия",
@@ -3196,6 +3223,75 @@
         "type": "item",
         "item_type": 5,
         "required": true
+      }
+    ]
+  },
+  {
+    "key": "weapon_notes",
+    "name": "Памятки под оружием",
+    "hint": "Отдельные правила и проклятия этого экземпляра. Памятка показывает описание; спасброски и принуждение выполняются игроком.",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "key",
+        "name": "Ключ",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "title",
+        "name": "Название",
+        "type": "text",
+        "required": true
+      },
+      {
+        "key": "kind",
+        "name": "Тип карточки",
+        "type": "select",
+        "default": "rule",
+        "required": true,
+        "options": [
+          {
+            "value": "rule",
+            "label": "Свойство или правило"
+          },
+          {
+            "value": "curse",
+            "label": "Проклятие"
+          }
+        ]
+      },
+      {
+        "key": "when",
+        "name": "Когда показывать",
+        "type": "select",
+        "default": "active",
+        "required": true,
+        "options": [
+          {
+            "value": "active",
+            "label": "Когда свойства предмета активны"
+          },
+          {
+            "value": "attuned",
+            "label": "После настройки, в том числе в рюкзаке"
+          },
+          {
+            "value": "always",
+            "label": "Пока предмет у персонажа"
+          }
+        ]
+      },
+      {
+        "key": "description",
+        "name": "Описание правила",
+        "type": "description",
+        "required": true
+      },
+      {
+        "key": "requirements",
+        "name": "Короткие условия",
+        "type": "text_array"
       }
     ]
   }

@@ -18,6 +18,7 @@ import { computed } from 'vue'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useSuggestStore } from '@/stores/suggest'
 import { isFieldVisible, getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
+import { formatItemCost } from '@/features/items/lib/itemCost'
 const props = defineProps({ fields: Array, data: Object, items: Object, labels: Object, headless: Boolean })
 const suggest = useSuggestStore()
 const technical = new Set(['key', 'resource_color', 'icon', 'color'])
@@ -30,7 +31,10 @@ function display(field, value) {
   if (field.type === 'suggest') return suggest.items(getSuggestId(field)).find(v => String(v.id) === String(value))?.value || `Значение №${value}`
   if (field.type === 'select') return field.options?.find(o => String(o.value) === String(value))?.label || value
   if (field.type === 'dice') return String(value).startsWith('d') ? value : `d${value}`
-  if (field.type === 'int_by_suggest') return `${value.value} ${suggest.items(getSuggestId(field)).find(v => Number(v.id) === Number(value.suggest_id))?.value || ''}`
+  if (field.type === 'int_by_suggest') {
+    const coin = suggest.items(getSuggestId(field)).find(v => Number(v.id) === Number(value.suggest_id))
+    return formatItemCost(value, coin?.code || coin?.value || '')
+  }
   if (field.key.endsWith('_key') || field.key.endsWith('_keys')) return props.labels?.[value] || value
   return typeof value === 'object' ? Object.values(value).join(' · ') : value
 }

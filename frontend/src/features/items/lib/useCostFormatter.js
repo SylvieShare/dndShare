@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { useSuggestStore } from '@/stores/suggest'
+import { formatItemCost } from './itemCost'
 
 const COIN_SUGGEST_TYPE_ID = 17
 
@@ -22,12 +23,7 @@ export function useCostFormatter(suggestTypeId = COIN_SUGGEST_TYPE_ID) {
   function format(cost) {
     if (cost == null || cost === '') return ''
     if (typeof cost === 'object') {
-      const value = cost.value
-      const label = coinLabel(cost.suggest_id)
-      if (value == null && !label) return ''
-      if (value == null) return label
-      if (!label) return String(value)
-      return `${value} ${label}`
+      return formatItemCost(cost, coinLabel(cost.suggest_id))
     }
     return ''
   }

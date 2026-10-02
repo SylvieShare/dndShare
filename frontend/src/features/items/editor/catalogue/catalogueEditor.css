@@ -3,6 +3,5 @@
 .catalogue-row-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .catalogue-row-head > span { display: flex; align-items: center; gap: 6px; }
 .catalogue-key { grid-column: 1 / -1; }
-.catalogue-cost { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
 .catalogue-rule-preview { margin: 0; color: var(--text-2); font-size: 13px; line-height: 1.5; }
 .catalogue-inline-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

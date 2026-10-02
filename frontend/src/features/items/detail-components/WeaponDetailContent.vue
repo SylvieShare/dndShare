@@ -94,6 +94,7 @@
       <template #icon><BookOpen /></template>
       <RichContent class="wdc-notes" :html="data.notes" />
     </DetailSection>
+    <WeaponNotePanels :notes="data.weapon_notes || []" :item="item" />
 
     <ItemTooltip
       v-if="tooltip.visible"
@@ -113,6 +114,7 @@ import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
+import WeaponNotePanels from '@/features/items/components/WeaponNotePanels.vue'
 import { useSchemaSuggests } from '@/features/handbook/objects/lib/useSchemaSuggests'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SystemDie from '@/shared/ui/SystemDie.vue'

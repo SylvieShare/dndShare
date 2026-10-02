@@ -28,6 +28,7 @@
     <p v-if="entry.display.base?.data?.armor_base && !entry.display.base.data.armor_base.base_item_id && !entry.params?.armor_base_item_id" class="di-item-meta">Выберите основу доспеха в меню предмета</p>
     <p v-if="entry.display.base?.data?.weapon && !entry.display.base.data.weapon.base_item_id && !entry.params?.weapon_base_item_id && !entry.magic_item_id" class="di-item-meta">Выберите оружейную основу в меню предмета</p>
     <CreatedItemStatus :entry="entry" />
+    <WeaponNotePanels :notes="notes" :item="entry.display.base" />
     <SelectedTargetPanel :uid="entry.uid" />
     <WeaponBonusTransferPanel v-if="entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
     <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
@@ -104,12 +105,14 @@ import WeaponBonusTransferPanel from './WeaponBonusTransferPanel.vue'
 import WeaponUsePanel from './WeaponUsePanel.vue'
 import ItemLastChargeCheck from './ItemLastChargeCheck.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
-import { inject, toRefs } from 'vue'
+import { computed, inject, toRefs, unref } from 'vue'
+import WeaponNotePanels from '@/features/items/components/WeaponNotePanels.vue'
+import { visibleWeaponNotes } from '@/features/character-editor/lib/weaponNotes'
 import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ArrowRightLeft, Dices, ShieldCheck, Shirt } from '@lucide/vue'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
-defineProps({ entry: Object, sectionId: String, index: Number, spaceId: String })
+const props = defineProps({ entry: Object, sectionId: String, index: Number, spaceId: String })
 const {
   draggedThisGesture,
   canManage,
@@ -142,6 +145,7 @@ const {
   openMagic
 } = toRefs(inject('inventoryRowCtx'))
 const charCtx = inject('charCtx', {})
+const notes = computed(() => visibleWeaponNotes(props.entry.display.base, props.entry, isEquipped.value(props.entry), unref(charCtx.values)))
 </script>
 
 <style scoped>

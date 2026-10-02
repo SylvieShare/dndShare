@@ -65,6 +65,22 @@ Character-added weapon attack rows use `{count,dice_id,type_suggest_id}`. The
 weapon calculation composable adapts those rows explicitly when combining them
 with handbook attack rows; it is not a historical-format fallback.
 
+## Общая стоимость
+
+Все записи со стоимостью используют один `data.cost`: необязательная точная цена
+`value`, необязательный диапазон `min`/`max` и общая валюта `suggest_id` из словаря
+17. Точную цену и диапазон можно задавать независимо или одновременно. Например,
+`{value:250,min:101,max:500,suggest_id:3}` отображается как «250 зм · диапазон
+101–500 зм». У «Меча мести» задан только диапазон 101–500 зм; цена и источник
+не дублируются текстом в описании.
+
+`ItemCostEditor` — общее поле каталожного и общего редактора. Переключатель
+диапазона добавляет/удаляет только границы, сохраняя точную цену и валюту.
+Отрицательные числа, неполный или перевёрнутый диапазон и отсутствие валюты
+блокируют сохранение. `useCostFormatter` использует общий `formatItemCost` во
+всех строках, подсказках и карточках. Стартовый магазин использует только точную
+цену: диапазон не становится бесплатной покупкой или ценой по нижней границе.
+
 ## Pure rules
 
 `lib/featRules.js` evaluates structured feat prerequisites, grants and choices.

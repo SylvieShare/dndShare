@@ -28,6 +28,20 @@ async function form(typeId, data = {}) {
   return html
 }
 describe('catalogue authoring', () => {
+  it.each([1, 2, 10, 12, 13, 14, 19])('edits an exact price and a range together for type %i', async typeId => {
+    const cost = { value: 250, min: 101, max: 500, suggest_id: 3 }
+    const html = await form(typeId, { cost })
+    expect(html).toContain('Диапазон цен')
+    expect(html).toContain('value="250"')
+    expect(html).toContain('value="101"')
+    expect(html).toContain('value="500"')
+  })
+  it('edits reusable weapon notes by kind and visibility with a stable key', async () => {
+    const html = await form(19, { type: 'оружие', weapon: { magic_bonus: 1 }, weapon_notes: [{ key: 'vengeance', title: 'Мстительный дух', kind: 'curse', when: 'attuned', description: '<p>Мудрость, Сл 15.</p>' }] })
+    expect(html).toContain('Тип карточки')
+    expect(html).toContain('Когда показывать')
+    expect(html).toContain('Мстительный дух')
+  })
   it('preserves the server shape of effects and linked spells through editing', () => {
     const data = { usable: { spell: 548, status_effects: [{ key: 'buff', effect: 4688 }] } }
     const saved = normalizeDataForSave(data, schema(10))

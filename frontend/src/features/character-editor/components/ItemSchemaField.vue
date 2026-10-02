@@ -17,7 +17,7 @@
       </svg>
     </button>
 
-    <label v-else-if="!editor.isBoolField(field)" class="iem-label">{{ field.name }}<span v-if="field.required" aria-hidden="true"> *</span></label>
+    <label v-else-if="!editor.isBoolField(field) && field.type !== 'int_by_suggest'" class="iem-label">{{ field.name }}<span v-if="field.required" aria-hidden="true"> *</span></label>
 
     <InputDescription
       v-if="field.type === 'description'"
@@ -85,26 +85,7 @@
       >×</button>
     </div>
 
-    <div v-else-if="field.type === 'int_by_suggest'" class="iem-int-by-suggest">
-      <input
-        type="number"
-        class="iem-input iem-int-by-suggest-input"
-        :value="editor.intBySuggestValue(field.key).value ?? ''"
-        @input="editor.setIntBySuggestField(field.key, 'value', editor.numberOrNull($event.target.value))"
-      />
-      <select
-        class="iem-select"
-        :value="editor.intBySuggestValue(field.key).suggest_id ?? ''"
-        @change="editor.setIntBySuggestField(field.key, 'suggest_id', editor.numberOrNull($event.target.value))"
-      >
-        <option value="">—</option>
-        <option
-          v-for="suggest in editor.getSuggests(field.suggest_type_id)"
-          :key="suggest.id"
-          :value="suggest.id"
-        >{{ suggest.value }}</option>
-      </select>
-    </div>
+    <ItemCostEditor v-else-if="field.type === 'int_by_suggest'" :field="{ ...field, allow_range: field.allow_range || field.key === 'cost' }" :model-value="editor.formData[field.key]" :coins="editor.getSuggests(editor.getSuggestId(field))" @update:model-value="value => editor.formData[field.key] = value" />
 
     <select
       v-else-if="field.type === 'dice'"
@@ -164,6 +145,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import ItemCostEditor from '@/features/items/editor/catalogue/ItemCostEditor.vue'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import ItemMultiSelect from '@/features/handbook/components/ItemMultiSelect.vue'
 import { itemSelectionField, itemSelectionRows } from '@/features/handbook/objects/lib/itemSelection'

@@ -6,12 +6,7 @@
     <ConfirmDialog v-if="confirmOff" title="Убрать настройку?" :message="`Значение «${spec.name}» будет удалено после сохранения объекта.`" :z-index="zIndex" @confirm="disable" @close="confirmOff = false" @cancel="confirmOff = false" />
   </div>
   <div v-else-if="spec.createKey" class="catalogue-key"><RuleKeyField :model-value="value" :title="data.title || data.label || data.name || editor.itemName" :used-keys="usedKeys" @update:model-value="set" /></div>
-  <div v-else-if="spec.type === 'int_by_suggest'" class="ability-rule-field ability-rule-field--wide">
-    <FormField :label="spec.name" vertical :title="spec.hint"><div class="catalogue-cost">
-      <FormTextInput type="number" step="any" min="0" :aria-label="`${spec.name}: сумма`" :value="value?.value ?? ''" placeholder="Сумма" @update:value="v => set({ ...value, value: numberOrNull(v) })" />
-      <FormSelect :aria-label="`${spec.name}: валюта`" :value="value?.suggest_id ?? ''" @update:value="v => set({ ...value, suggest_id: numberOrNull(v) })"><option value="">Валюта</option><option v-for="s in editor.getSuggests(editor.getSuggestId(spec))" :key="s.id" :value="s.id">{{ s.value }}</option></FormSelect>
-    </div></FormField>
-  </div>
+  <ItemCostEditor v-else-if="spec.type === 'int_by_suggest'" class="ability-rule-field ability-rule-field--wide" :field="spec" :model-value="value" :coins="editor.getSuggests(editor.getSuggestId(spec))" @update:model-value="set" />
   <div v-else-if="spec.type === 'item_array'" class="ability-rule-field ability-rule-field--wide">
     <FormField :label="spec.name" vertical :title="spec.hint"><ItemMultiSelect :model-value="value || []" :item-type-id="spec.item_type" :include-child-types="spec.item_type === 2" :label="spec.name" :z-index="zIndex" @update:model-value="set" /></FormField>
   </div>
@@ -39,10 +34,11 @@
 </template>
 <script setup>
 import ActionTimeEditor from '@/shared/ui/ActionTimeEditor.vue'
+import ItemCostEditor from './ItemCostEditor.vue'
 import { computed, inject, ref } from 'vue'
-import { AddButton, BaseTile, ConfirmDialog, FormField, FormSelect, FormTextInput, RemoveButton, ToggleSwitch } from '@sylvieshare/share-ui'
+import { AddButton, BaseTile, ConfirmDialog, FormField, RemoveButton, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'
-import { defaultDataForFields, numberOrNull } from '@/features/handbook/objects/lib/schemaFields'
+import { defaultDataForFields } from '@/features/handbook/objects/lib/schemaFields'
 import { itemSelectionField } from '@/features/handbook/objects/lib/itemSelection'
 import ItemMultiSelect from '@/features/handbook/components/ItemMultiSelect.vue'
 import AbilityRuleField from '../AbilityRuleField.vue'

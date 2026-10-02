@@ -902,7 +902,7 @@ Runtime поддерживает только текущий контракт. �
 
 
 `ItemLastChargeCheck` — общий предметный блок для оружия и инвентаря, на основе
-`ItemUsePanel`, `SystemDie`, `ActionButton` и `ConfirmDialog`. `useLastChargeCheck`
+`ItemMechanicPanel`, `SystemDie`, `ActionButton` и `ConfirmDialog`. `useLastChargeCheck`
 читает актуальный экземпляр по UID, блокирует повторное нажатие и записывает
 событие в сохраняемый журнал персонажа через его context. Чистый `itemLastCharge`
 отвечает за создание, разрешение и отмену события; `setCharacterResourceAvailable`
@@ -912,9 +912,10 @@ Runtime поддерживает только текущий контракт. �
 Браузерный сценарий проверки: `npx playwright test --config playwright.weapon-charges.config.js`.
 
 
-`ItemUsePanel` задаёт единую оболочку применения предмета: иконка, заголовок,
-краткое состояние, содержимое и ряд действий поверх `BaseTile`. Её используют
-`ItemLastChargeCheck`, `WeaponUsePanel` и справочный `WeaponUseSummary`.
+`ItemMechanicPanel` задаёт единую оболочку механик предмета: тип с иконкой и цветом,
+заголовок, краткое состояние, содержимое и ряд действий поверх `BaseTile`. Её используют
+ресурсы, памятки/проклятия, выбранная цель, подтверждаемые применения, перенос
+бонуса, `ItemLastChargeCheck`, `WeaponUsePanel` и справочный `WeaponUseSummary`.
 `WeaponUseStep` показывает условия через `MechanicTheses`, кнопку слева от
 `DamageFormulaPreview` в режиме `unframed` и результат через `DiceRollResult`.
 Каждый отдельный урон имеет одну внешнюю рамку. `DiceRollResult` — композиция
@@ -1308,3 +1309,13 @@ from color presets because it selects a catalogue ID and shows raster artwork.
 empty cells and transfer views, deduplicating concurrent requests and offering
 retry after failure. Entry presentation resolves `icon_preset_id` only for custom
 entries; handbook media retains priority.
+
+
+`features/items/components/ItemMechanicPanel` задаёт общий визуал всех предметных
+панелей под оружием, справочных применений и проклятий: тип/иконка/цвет из
+`itemMechanicPresentation`, название, краткое состояние, rich-content/тезисы и
+нижний ряд действий. Это доменная композиция `BaseTile`, не новый UI-примитив.
+`WeaponNotePanels` используется и в справочнике, и на листе; чистый `weaponNotes`
+проверяет условие отдельно для каждого экземпляра. `ItemCostEditor` используется
+каталожным и общим редактором; `itemCost` и `useCostFormatter` форматируют точную
+цену и диапазон одинаково для всех типов со стоимостью.

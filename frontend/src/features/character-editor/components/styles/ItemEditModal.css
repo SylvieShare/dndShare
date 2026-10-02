@@ -212,13 +212,6 @@
   transform: translateX(16px);
 }
 
-.iem-int-by-suggest {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-.iem-int-by-suggest-input { width: 120px; }
-
 .iem-item-ref {
   display: flex;
   align-items: center;

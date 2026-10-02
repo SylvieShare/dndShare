@@ -10,9 +10,10 @@ export const MAGIC_ITEM_PROPERTY_KEYS = ['armor_base', 'weapon', 'treasure', 'de
 const BASIC_KEYS = ['choice_only', 'desc', 'level', 'level_source', 'level_class_id']
 const BINDING_KEYS = ['race_ids', 'subrace_ids', 'class_ids', 'subclass_ids']
 const BLOCK_ORDER = ['granted_spells', 'resources', 'choices', 'feature_actions', 'status_effects',
-  'weapon_damage', 'weapon_uses', 'confirmed_uses', 'selected_target', 'weapon_bonus_transfer', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
+  'weapon_notes', 'weapon_damage', 'weapon_uses', 'confirmed_uses', 'selected_target', 'weapon_bonus_transfer', 'last_charge', 'progression', 'sheet_widgets', 'defenses', 'derived_effects', 'prereq', 'usage']
 
 export const BLOCK_HINTS = {
+  weapon_notes: 'Свойства и проклятия этого экземпляра под оружием. Условия показа задаются отдельно; текст не выполняет спасброски или принуждение.',
   ability_selection: 'Прогрессия числа выбранных способностей и лимит замен при повышении уровня класса.',
   selection_parent_id: 'Способность не выдаётся автоматически: её выбирают через указанный набор.',
   selection_requirements: 'Заклинания и выборы других способностей, необходимые для получения.',
@@ -49,6 +50,7 @@ export function hasFieldValue(value) {
 }
 
 const DEPENDENCY_NAMES = {
+  weapon_notes: 'Памятка под оружием',
   feature_actions: 'Действие на листе', granted_spells: 'Дарованное заклинание',
   use_resources: 'Отдельный ресурс', choices: 'Выбор', status_effects: 'Связанный эффект',
   defenses: 'Защита', derived_effects: 'Изменение показателя', scaling: 'Шаг прогрессии',

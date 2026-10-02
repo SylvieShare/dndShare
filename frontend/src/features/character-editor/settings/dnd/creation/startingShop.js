@@ -40,6 +40,7 @@ export function itemCostCopper(item) {
     return Math.round(measured * unitCost)
   }
   const cost = item?.data?.cost
+  if (cost?.value == null) return null
   const value = Number(cost?.value)
   const multiplier = COPPER_PER_COIN[Number(cost?.suggest_id)]
   if (!Number.isFinite(value) || value < 0 || !multiplier) return null

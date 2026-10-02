@@ -554,7 +554,16 @@ suggest остаются валидны; составной primary key обес
   `subrace_ids`, `class_ids`, `subclass_ids` и общий массив `choices`;
 - заклинания используют `classes: [{id: classItemId}]`;
 - черты используют `description`, `prerequisite_groups` и тот же `choices`;
-- стоимость `int_by_suggest` хранится как `{value,suggest_id}`.
+- стоимость `int_by_suggest` хранится в общем `data.cost`: точная цена `value`
+  и диапазон `min`/`max` независимы, валюта `suggest_id` общая. Допустимы только
+  точная цена, только диапазон или оба. Например,
+  `{value:250,min:101,max:500,suggest_id:3}`. Обе границы задаются вместе,
+  числа неотрицательные, `min <= max`; покупка использует только `value`.
+  Миграция 157 добавляет `allow_range` в схемы всех записей со стоимостью.
+- `weapon_notes` у типов 1/19 хранит отдельные памятки экземпляра:
+  `{key,title,kind,when,description,requirements?}`. `kind` — `rule` или `curse`,
+  `when` — `active`, `attuned` или `always`. Это представление правил;
+  спасброски и принуждение текст не исполняет.
 
 При старте `schema/02_handbook.sql` переносит старые одинарные bindings, spell
 class ids, ключи черт и source metadata, затем удаляет исходные поля. Отдельных

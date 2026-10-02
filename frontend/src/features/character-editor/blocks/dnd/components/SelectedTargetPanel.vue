@@ -1,5 +1,5 @@
 <template>
-  <ItemUsePanel v-if="source && (source.active || source.state)" :title="source.rule.title" :subtitle="subtitle">
+  <ItemMechanicPanel kind="target" v-if="source && (source.active || source.state)" :title="source.rule.title" :subtitle="subtitle">
     <template #icon><Crosshair :size="24" /></template>
     <p v-if="source.state?.status === 'active'" class="target-facts">
       <span v-if="source.rule.other_weapons_disadvantage && source.penaltyActive">Другим оружием — с помехой</span>
@@ -19,13 +19,13 @@
     <ConfirmDialog v-if="confirm" :title="confirm.operation === 'defeat' ? 'Враг погиб?' : 'Сбросить ошибочный выбор?'"
       :message="confirm.operation === 'defeat' ? `Эффекты цели прекратятся. Ожидание новой цели: ${source.rule.cooldown_dawns} рассветов.` : 'Это исправление ошибки снимет эффекты и ожидание. Для обычного завершения используйте «Враг погиб» или дождитесь истечения срока.'"
       confirm-text="Подтвердить" @confirm="change(confirm.operation, { id: confirm.id }); confirm = null" @close="confirm = null" @cancel="confirm = null" />
-  </ItemUsePanel>
+  </ItemMechanicPanel>
 </template>
 <script setup>
 import { computed, inject, ref, toRef } from 'vue'
 import { ActionButton, ConfirmDialog, FormField, FormTextInput } from '@sylvieshare/share-ui'
 import { Crosshair } from '@lucide/vue'
-import ItemUsePanel from './ItemUsePanel.vue'
+import ItemMechanicPanel from '@/features/items/components/ItemMechanicPanel.vue'
 import { useSelectedTarget } from '../composables/useSelectedTarget'
 const props = defineProps({ uid: { type: String, required: true } })
 const charCtx = inject('charCtx', {})

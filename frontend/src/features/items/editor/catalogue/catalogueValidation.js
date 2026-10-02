@@ -1,5 +1,6 @@
 import { timeError } from '@/shared/lib/spellPresentation'
 import { catalogueField, catalogueFieldVisible } from './catalogueFields'
+import { costError, isCostRange } from '@/features/items/lib/itemCost'
 
 export function catalogueValidation(fields, data, typeId) {
   const errors = []
@@ -20,7 +21,7 @@ export function catalogueValidation(fields, data, typeId) {
         if (!Number.isFinite(n) || field.type === 'int' && !Number.isInteger(n)) errors.push(`«${field.name}»: введите ${field.type === 'int' ? 'целое ' : ''}число.`)
         else if (field.min != null && n < field.min || field.max != null && n > field.max) errors.push(`«${field.name}»: допустимо ${field.min ?? '…'}–${field.max ?? '∞'}.`)
       }
-      if (field.type === 'int_by_suggest' && value.value != null && (Number(value.value) < 0 || !value.suggest_id)) errors.push(`«${field.name}»: укажите неотрицательную сумму и валюту.`)
+      if (field.type === 'int_by_suggest' && costError(value)) errors.push(`«${field.name}»: ${costError(value)}`)
       if (field.type === 'object' && typeof value === 'object') walk(field.fields, value, path)
       if (field.type === 'object_array' && Array.isArray(value)) {
         for (const row of value) walk(field.fields, row, path)
@@ -57,6 +58,13 @@ export function catalogueValidation(fields, data, typeId) {
   if (typeId === 19 && data.type === 'оружие' && !data.weapon) errors.push('Оружие: включите оружейную основу и задайте подходящие варианты.')
   if (typeId === 19 && ['броня', 'щит'].includes(data.type) && !data.armor_base) errors.push('Доспех или щит: включите основу и задайте подходящие варианты.')
   if (data.treasure && Number(data.treasure.min_level) > Number(data.treasure.max_level)) errors.push('Сокровища: нижняя граница уровня не может превышать верхнюю.')
+  if (data.available_in_starting_shop && isCostRange(data.cost) && data.cost.value == null) errors.push('Для продажи при создании персонажа укажите точную цену.')
+  if (data.weapon_notes?.length) {
+    const keys = data.weapon_notes.map(row => row.key)
+    if (keys.some(key => !key) || new Set(keys).size !== keys.length) errors.push('Памятки оружия: задайте разные непустые ключи.')
+    if (data.weapon_notes.some(row => !row.title?.trim() || !String(row.description || '').replace(/<[^>]*>/g, '').trim()
+      || !['rule', 'curse'].includes(row.kind) || !['active', 'attuned', 'always'].includes(row.when))) errors.push('Памятки оружия: заполните название, описание, тип и условие показа.')
+  }
   if (data.weapon?.range_min != null && data.weapon?.range_max != null && Number(data.weapon.range_min) > Number(data.weapon.range_max)) errors.push('Оружие: предельная дистанция не может быть меньше обычной.')
   if (typeId === 1 && data.range_max != null && data.range_min != null && Number(data.range_max) < Number(data.range_min)) errors.push('Предельная дистанция не может быть меньше обычной.')
   if (typeId === 15 && ['rounds', 'minutes', 'hours'].includes(data.duration?.kind) && !(Number(data.duration.value) > 0)) errors.push('Укажите длительность эффекта больше нуля.')

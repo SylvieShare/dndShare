@@ -21,7 +21,9 @@
     "key": "cost",
     "name": "Стоимость",
     "type": "int_by_suggest",
-    "suggest_type_id": 17
+    "suggest_type_id": 17,
+    "allow_range": true,
+    "hint": "Точная цена value и диапазон min/max независимы; можно заполнить один или оба. Валюта suggest_id общая. При покупке используется только value."
   },
   {
     "key": "weight",

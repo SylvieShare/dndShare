@@ -6,6 +6,7 @@
       <MagicEquipmentBases :item="item" :kind="kind" />
     </DetailSection>
     <MagicEquipmentAdditions v-for="kind in kinds" :key="`${kind}-additions`" :item="item" :kind="kind" />
+    <WeaponNotePanels :notes="data.weapon_notes || []" :item="item" />
     <DetailSection v-for="use in data.confirmed_uses || []" :key="use.key" :label="use.title">
       <DndRichContent :html="use.description" />
       <MechanicTheses :lines="use.requirements" />
@@ -23,6 +24,7 @@
 </template>
 <script setup>
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
+import WeaponNotePanels from '@/features/items/components/WeaponNotePanels.vue'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import SelectedTargetSummary from './SelectedTargetSummary.vue'
 import WeaponUseSummary from './WeaponUseSummary.vue'
@@ -46,7 +48,7 @@ const selectedBases = computed(() => selectedMagicBases(props.item, props.instan
 const kinds = computed(() => magicEquipmentKinds(props.item))
 // Each remaining schema field is rendered, including newly added mechanics. These
 // fields already have a dedicated presentation in the cover, body or base list.
-const dedicated = new Set(['initial_charges', 'confirmed_uses', 'selected_target', 'weapon_bonus_transfer', 'weapon_uses', 'dawn_recovery', 'status_effects', 'desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color', 'treasure'])
+const dedicated = new Set(['weapon_notes', 'initial_charges', 'confirmed_uses', 'selected_target', 'weapon_bonus_transfer', 'weapon_uses', 'dawn_recovery', 'status_effects', 'desc', 'cost', 'weight', 'contents', 'is_container', 'consumable', 'type', 'rarity', 'attunement', 'attunement_requirement', 'activation', 'weapon', 'armor_base', 'resource_color', 'treasure'])
 const details = computed(() => (props.type?.fields || []).filter(f => !dedicated.has(f.key) && !(f.key === 'last_charge' && kinds.value.length) && !(f.key === 'weapon_damage' && data.value.weapon) && present(data.value[f.key])))
 function present(v) { return v != null && v !== '' && v !== false && (!Array.isArray(v) || v.length > 0) && (typeof v !== 'object' || Object.keys(v).length > 0) }
 const suggest = useSuggestStore(), references = ref({}), error = ref(''), labels = ref({})

@@ -38,9 +38,26 @@ it('displays the instance pool below the weapon with filled and spent accessible
   expect(html.match(/aria-pressed="true"/g)).toHaveLength(1)
   expect(html.match(/aria-pressed="false"/g)).toHaveLength(2)
   expect(html).not.toContain('На рассвете 1к3')
+  expect(html).toContain('Ресурс')
   ctx.charCtx.ownerMode = false
   const readonly = await render(WeaponItemMechanics, { entry: { uid: 'staff' } }, ctx)
   expect(readonly.match(/<button[^>]*disabled/g)).toHaveLength(3)
+})
+
+it('renders the structured curse below only the attuned weapon in owner and read modes', async () => {
+  const item = { id: 99, typeId: 19, data: { weapon_notes: [{ key: 'vengeance', kind: 'curse', when: 'attuned', title: 'Мстительный дух', description: '<p>Мудрость, Сл 15.</p>' }] } }
+  const ctx = { charCtx: { ownerMode: true }, weaponResources: () => [], itemMap: { 99: item }, item: () => item }
+  const entry = { uid: 'sword', magic_item_id: 99, params: { magic: { attuned: true } } }
+  for (const ownerMode of [true, false]) {
+    ctx.charCtx.ownerMode = ownerMode
+    const html = await render(WeaponItemMechanics, { entry }, ctx)
+    expect(html).toContain('Проклятие')
+    expect(html).toContain('Мстительный дух')
+    expect(html).toContain('Мудрость, Сл 15.')
+  }
+  const inactive = await render(WeaponItemMechanics, { entry: { ...entry, params: { magic: { attuned: false } } } }, ctx)
+  expect(inactive).not.toContain('Мстительный дух')
+  expect(inactive).not.toContain('weapon-item-mechanics')
 })
 
 it('keeps two-handed grip visible but disabled while throwing, and disables throwing during two-handed grip', async () => {

@@ -1,19 +1,19 @@
 <template>
   <DetailSection v-if="uses.length" label="Особое применение оружия" tone="danger">
-    <ItemUsePanel v-for="use in uses" :key="use.key" :title="use.title" :subtitle="subtitle(use)">
+    <ItemMechanicPanel kind="weapon_use" v-for="use in uses" :key="use.key" :title="use.title" :subtitle="subtitle(use)">
       <BaseTile v-for="step in use.steps" :key="step.key" class="weapon-use-summary-step">
         <strong>{{ step.title }}</strong>
         <div class="weapon-use-summary-dice"><span v-if="step.kind === 'weapon_damage'">Урон оружия +</span><DamageDice :parts="parts(step)" :size="28" /></div>
         <MechanicTheses :lines="weaponUseRequirements(step, use.range_ft)" />
       </BaseTile>
-    </ItemUsePanel>
+    </ItemMechanicPanel>
   </DetailSection>
 </template>
 <script setup>
 import { BaseTile } from '@sylvieshare/share-ui'
 import { DetailSection } from '@sylvieshare/share-ui'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
-import ItemUsePanel from '@/features/character-editor/blocks/dnd/components/ItemUsePanel.vue'
+import ItemMechanicPanel from '@/features/items/components/ItemMechanicPanel.vue'
 import DamageDice from '@/features/character-editor/blocks/dnd/components/DamageDice.vue'
 import { weaponDamageActionParts } from '@/shared/lib/weaponDamageOptions'
 import { weaponUseRequirements } from '@/shared/lib/weaponUsePresentation'

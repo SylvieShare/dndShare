@@ -1,5 +1,5 @@
 <template>
-  <ItemUsePanel v-for="use in uses" :key="use.key" :title="use.title">
+  <ItemMechanicPanel kind="confirmed_use" v-for="use in uses" :key="use.key" :title="use.title">
     <ItemResourcePips v-if="use.show_resource && use.resource" :resource="use.resource" :interactive="!!charCtx.ownerMode" @toggle="toggle(use, $event)" />
     <DndRichContent v-if="use.description" :html="use.description" :item="use.item" />
     <MechanicTheses :lines="use.requirements" />
@@ -8,7 +8,7 @@
       <ActionButton :disabled="busy || !!use.error" :title="use.error || undefined" @click="confirm(use)">{{ use.confirm_label }} · −{{ use.resource_cost }} заряд</ActionButton>
       <small v-if="use.error">{{ use.error }}</small>
     </template>
-  </ItemUsePanel>
+  </ItemMechanicPanel>
 </template>
 <script setup>
 import { itemEventData, resourceChangeData, logResourceChange } from '@/features/character-editor/lib/sessionEventData'
@@ -17,7 +17,7 @@ import { computed, inject, nextTick, ref, unref } from 'vue'
 import ItemResourcePips from './ItemResourcePips.vue'
 import { useDiceStore } from '@/stores/dice'
 import { ActionButton } from '@sylvieshare/share-ui'
-import ItemUsePanel from './ItemUsePanel.vue'
+import ItemMechanicPanel from '@/features/items/components/ItemMechanicPanel.vue'
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { confirmedItemUses, confirmItemUse } from '@/features/character-editor/lib/confirmedItemUses'
