@@ -210,7 +210,8 @@ wizard reuse `FeatListItem` and open the standard reference modal.
   content-addressed objects under `system-item-media/v1/` in S3.
 - Fifteen system item types own a production fallback cover. Types 1, 6 and 12
   use opaque `1536×1152` JPEG (`4:3`); types 2, 8, 9, 11, 13, 16 and 17 use opaque
-  `1536×1024` JPEG (`3:2`); types 3, 4, 5, 7 and 10 use opaque `1600×640`
+  `1536×1024` JPEG (`3:2`); magic items (type 19) also use `3:2` item covers,
+  as in the existing sword catalogue. Types 3, 4, 5, 7 and 10 use opaque `1600×640`
   lossy WebP (`5:2`). Item-level artwork always has priority without changing
   the detail layout.
 - Define the image from the item name, structured data, description and
@@ -598,6 +599,12 @@ General item and spell covers are atmospheric wide illustrations for the shared
 detail header, not enlarged icons. The icon remains the compact identity mark;
 a cover adds setting, energy and color while preserving readable UI overlay
 space. Bestiary covers are the explicit 4:3 exception defined above.
+
+Collection-specific profiles above take priority over the panoramic export
+below. Magic items (type 19) use opaque `1536×1024` JPEG covers (`3:2`, quality
+88), matching the sword catalogue; keep the same central safe zone and quiet
+lower area. «Меч мести» is recorded in
+`md/data/magic-items/sword-of-vengeance-media.json` with prompts and media hashes.
 
 - Store an opaque lossy WebP at exactly `1600×640` (5:2), normally no more
   than 350 KB. Do not use alpha for a full-bleed scene.

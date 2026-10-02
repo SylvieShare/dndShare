@@ -1,0 +1,49 @@
+{
+  "itemId": 7546,
+  "name": "Меч мести",
+  "generatedAt": "2026-10-03",
+  "generator": "built-in image_gen",
+  "visualAudit": {
+    "existingItemMedia": "No item-specific icon or cover existed before generation.",
+    "sourceArtwork": "https://5e14.dnd.su/gallery/items/144_1_1539688424_s.jpg",
+    "preservedTraits": [
+      "Straight cool-steel blade with elongated diamond point",
+      "Upturned claw-shaped guard with mask relief",
+      "Burgundy leather grip",
+      "Small magenta gem"
+    ],
+    "styleReferenceItemIds": [
+      198,
+      212,
+      293
+    ]
+  },
+  "media": {
+    "icon": {
+      "imageId": 49549,
+      "fileName": "sword-of-vengeance-icon.webp",
+      "width": 128,
+      "height": 128,
+      "mimeType": "image/webp",
+      "alpha": true,
+      "bytes": 6058,
+      "sha256": "d2599c95f9215c31712b8b744c88de70352ad5ce35f492c045209a6cea03b098"
+    },
+    "cover": {
+      "imageId": 49550,
+      "fileName": "sword-of-vengeance-cover.jpg",
+      "width": 1536,
+      "height": 1024,
+      "mimeType": "image/jpeg",
+      "alpha": false,
+      "quality": 88,
+      "bytes": 268089,
+      "sha256": "a0d6304ce36c3052ab60fdade56c64a19e336691f10731b8acc73bb105fca133"
+    }
+  },
+  "prompts": {
+    "generator": "built-in image_gen",
+    "icon": "Use case: stylized-concept. Asset: transparent fantasy inventory icon for D&D Sword of Vengeance. Create a new original square icon, one complete sword isolated on genuine transparent alpha. Image 1 is the source item artwork: use only factual identity traits, not its rendering or composition. Image 2 is an existing catalogue sword icon: use only compact readability, contour weight and restrained shading, do not copy its sword design. Subject: an elegant ominous straight steel sword, long cool silver-blue/gunmetal blade with a narrow dark central fuller, a distinctive elongated diamond-shaped pointed tip, a small magenta gem at the base of the blade; dark gunmetal claw-shaped crossguard with both claw ends curving upward toward the blade and a small stern mask-like central relief; dark burgundy leather grip and a faceted black pommel. Simplify ornament into a few bold shapes. Keep believable sword construction. Polished flat-cartoon fantasy game art, thick continuous deep-plum outline, broad clean color planes, restrained two-step shading, crisp pale-steel edge highlights. Compact centered diagonal silhouette, pommel at lower left and blade tip at upper right, occupy roughly 84% of the square with even safe padding, everything fully visible. The dark curse accent is only a small magenta gem, no flame or broad glow. Readable when reduced to 64 pixels. No scene, floor, cast shadow, hand, character, second sword, skull motif, particles, circular sigil, badge, frame, checkerboard, text, letters, readable runes, numbers, logo or watermark. Genuine clean transparent background.",
+    "cover": "Use case: stylized-concept. Asset: independent D&D Sword of Vengeance handbook cover, opaque 1536 x 1024 landscape 3:2 illustration. Image 1 is the generated icon and is the strict sword identity reference. Preserve exactly its blade construction, proportions, elongated diamond spear tip, cool silver-blue steel edge with dark fuller, magenta diamond gem at blade base, dark gunmetal guard with two upward curved claw ends and central mask-like relief, burgundy leather grip, metal collars, faceted charcoal pommel. Image 2 is another catalogue cover, setting/rendering reference only; do not copy its sword or its arrangement. Create a distinct full environment: a forgotten stone vault with softly suggested old arches in deep plum and navy shadow, a cracked low stone plinth at the center. The complete Sword of Vengeance rests leaning against the central plinth at a steep diagonal, pommel below-left, tip above-right, visibly weight-bearing and physically plausible. The whole sword silhouette must be large and fully legible, contained within the central 55% of the canvas, tip about 12% from the top and pommel about 80% down; ample breathing room, outer sides expendable for mobile cropping. Add a subtle restrained thread of dark-magenta spectral mist curling behind the guard and around the plinth to suggest its bound vindictive spirit; no visible humanoid or face in the mist, no flames. A cold shaft of moonlight defines the steel, quiet magenta reflected light beside the guard. Keep a calmer dark lower 20% band for the UI title; let real dark stone scenery continue to bottom edge without fake panels. Polished stylized fantasy key art with visible confident dark-plum contours, broad painterly color planes, clean resolved sword geometry and controlled two-step metal highlights. Richer environment than the icon while retaining its graphic language, softly simplified low-detail background, minimal fine surface texture, no photorealism. No people, hands, second weapon, blood, gore, readable runes, text, letters, numbers, borders, badges, logo, watermark or UI. Opaque full-bleed landscape, no alpha."
+  }
+}

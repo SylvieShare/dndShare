@@ -4,7 +4,7 @@
     <template v-else>
       <p v-if="choiceKinds.length">Основа определяет обычные характеристики предмета. Магические свойства добавляются к ним.</p>
       <DetailSection v-for="kind in choiceKinds" :key="kind" :label="kind === 'weapon' ? 'Оружейная основа' : 'Доспех или щит'">
-        <MagicEquipmentBases :item="item" :kind="kind" :base-items="options[kind]" selectable :model-value="chosen[baseParamKey(kind)]" :z-index="zIndex"
+        <MagicEquipmentBases :item="item" :kind="kind" :base-items="options[kind]" single-column selectable :model-value="chosen[baseParamKey(kind)]" :z-index="zIndex"
           @update:model-value="chosen[baseParamKey(kind)] = $event" />
       </DetailSection>
       <InitialChargeFields v-for="stock in charges.pending.value" :key="stock.key" :model-value="charges.count(stock)" :label="stock.title" :rule="stock.rule" :title="item.name" @update:model-value="charges.counts[stock.key] = $event" />
