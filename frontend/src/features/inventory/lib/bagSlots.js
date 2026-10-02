@@ -21,13 +21,17 @@ export function resolveBagSlots(entries, positions = {}, getKey = entry => entry
   return result
 }
 
-export function bagCells(entries, positions = {}, getKey = entry => entry.uid) {
+export function bagColumnCount(width) {
+  return Math.max(1, Math.floor((Math.max(0, Number(width) || 0) + 8) / 80))
+}
+
+export function bagCells(entries, positions = {}, getKey = entry => entry.uid, columns = BAG_COLUMNS) {
   const resolved = resolveBagSlots(entries, positions, getKey)
   const last = Math.max(-1, ...Object.values(resolved))
-  const size = Math.max(BAG_COLUMNS, Math.ceil((last + 1) / BAG_COLUMNS) * BAG_COLUMNS)
+  const size = Math.max(columns, Math.ceil((last + 1) / columns) * columns)
   const cells = Array(size).fill(null)
   for (const entry of entries) cells[resolved[getKey(entry)]] = entry
-  if (cells.slice(-BAG_COLUMNS).every(Boolean)) cells.push(...Array(BAG_COLUMNS).fill(null))
+  if (cells.slice(-columns).every(Boolean)) cells.push(...Array(columns).fill(null))
   return cells
 }
 

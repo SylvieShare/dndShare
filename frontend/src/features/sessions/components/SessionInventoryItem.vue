@@ -2,7 +2,8 @@
   <RowActionMenu related block :disabled="busy || sortable.suppressNextClick" :title="row.name">
     <template #trigger="{ open }">
       <InventoryBagItem :item-key="row.id" :item="item" :name="row.name" :count="row.entry?.count" :source="sortable.isSource(row)" :draggable="!busy" :disabled="busy || sortable.suppressNextClick"
-        :class="{ 'action-menu-source--open': open }" @pointerdown="!busy && sortable.startDrag($event, row, 'session-inventory', index)" />
+        :class="{ 'action-menu-source--open': open }" @pointerdown="hideTooltip(); !busy && sortable.startDrag($event, row, 'session-inventory', index)"
+        @mouseenter="!sortable.dragging && showTooltip($event, display)" @mouseleave="hideTooltip" @focus="showTooltip($event, display)" @blur="hideTooltip" @click="hideTooltip" />
     </template>
     <template #default="{ close }">
       <p class="inventory-item-name">{{ row.name }}</p>
@@ -20,15 +21,29 @@
       <RowActionItem action="delete" tone="danger" :disabled="busy" @click="$emit('remove', row); close()">Удалить</RowActionItem>
     </template>
   </RowActionMenu>
+  <InventoryItemTooltip :tooltip="tooltip" />
 </template>
 <script setup>
+import { computed, watch } from 'vue'
 import { Send, UserRound } from '@lucide/vue'
 import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
+import InventoryItemTooltip from '@/features/inventory/components/InventoryItemTooltip.vue'
+import { useInventoryTooltip } from '@/features/inventory/composables/useInventoryTooltip'
 import InventoryBagItem from '@/features/inventory/components/InventoryBagItem.vue'
 import { pvAvatar, pvName } from '../lib/participantView'
 const props = defineProps({ row: Object, item: Object, players: Array, busy: Boolean, controller: Object, sortable: Object, index: Number })
 defineEmits(['view', 'remove'])
+const { tooltip, showTooltip, hideTooltip } = useInventoryTooltip()
+const display = computed(() => {
+  const override = props.row.entry?.override || {}, data = props.item?.data || {}
+  return { name: props.row.name, base: props.item,
+    desc: override.desc ?? props.row.entry?.desc ?? data.desc ?? '',
+    cost: override.cost ?? data.cost, weight: override.weight ?? data.weight,
+    consumable: override.consumable ?? data.consumable,
+  }
+})
+watch(display, value => { if (tooltip.visible) showTooltip({ currentTarget: tooltip.anchor }, value) })
 async function send(player, closeRecipients, close) { if (await props.controller.send(props.row, player)) { closeRecipients(); close() } }
 </script>
 <style scoped>

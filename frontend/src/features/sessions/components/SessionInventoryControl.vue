@@ -6,15 +6,14 @@
     <section class="session-inventory" :aria-busy="state.busy">
       <header><strong>Инвентарь сессии</strong><RemoveButton label="Закрыть инвентарь" :disabled="state.busy" @click="open = false" /></header>
       <p v-if="state.error" role="alert" class="inventory-error">{{ state.error }} <ActionButton v-if="state.retry" variant="quiet" :disabled="state.busy" @click="state.retry()">Повторить</ActionButton></p>
-      <div class="inventory-add"><ActionButton :disabled="state.busy" @click="open = false; picker = true">Добавить предмет</ActionButton><ActionButton variant="quiet" :disabled="state.busy" @click="custom = !custom">Свой предмет</ActionButton></div>
       <form v-if="custom" class="inventory-custom" @submit.prevent="addCustom">
-        <FormField label="Название"><FormTextInput v-model:value="name" required maxlength="160" /></FormField>
-        <FormField label="Количество"><FormNumberInput v-model:value="count" :min="1" :max="999" /></FormField>
-        <FormField label="Описание"><FormTextarea v-model:value="description" /></FormField>
+        <FormField label="Название"><FormTextInput v-model:value="name" aria-label="Название" required maxlength="160" /></FormField>
+        <FormField label="Количество"><FormNumberInput v-model:value="count" aria-label="Количество" :min="1" :max="999" /></FormField>
+        <FormField label="Описание"><FormTextarea v-model:value="description" aria-label="Описание" /></FormField>
         <ActionButton type="submit" :disabled="state.busy || !name.trim()">Добавить</ActionButton>
       </form>
       <LoadingState v-if="state.loading && !state.entries.length && !state.transfers.length" label="Загружаем инвентарь…" compact />
-      <InventoryBagGrid v-else :entries="state.entries" :positions="positions" :get-key="row => row.id" group="session-inventory" label="Рюкзак сессии" :sortable="sortable">
+      <InventoryBagGrid v-else can-add :disabled="state.busy" @add-catalog="open = false; picker = true" @add-custom="custom = true" :entries="state.entries" :positions="positions" :get-key="row => row.id" group="session-inventory" label="Рюкзак сессии" :sortable="sortable">
         <template #default="{ entry, index }"><SessionInventoryItem :row="entry" :index="index" :item="art(entry)" :players="state.players" :busy="state.busy" :controller="controller" :sortable="sortable" @view="viewItem" @remove="controller.remove" /></template>
       </InventoryBagGrid>
       <template v-if="state.transfers.length">
@@ -71,11 +70,11 @@ function viewItem(row) {
 .inventory-trigger span { font: 700 10px/1.2 var(--font-ui); }
 .inventory-trigger:hover, .inventory-trigger.active { color: var(--text-1); }
 .session-inventory { width: min(400px, calc(100vw - 32px)); max-height: calc(100dvh - 80px); overflow-y: auto; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
-.session-inventory header, .inventory-add, .inventory-outgoing { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.session-inventory header, .inventory-outgoing { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 .session-inventory header strong { color: var(--text-1); font-size: 18px; }
 .inventory-custom { display: grid; gap: 10px; }
 .inventory-error { color: var(--danger); font-size: 13px; margin: 0; }
-.inventory-hint, .inventory-outgoing span { color: var(--text-muted); font-size: 13px; }
+.inventory-outgoing span { color: var(--text-muted); font-size: 13px; }
 .session-inventory h3 { color: var(--text-1); margin: 8px 0 0; font-size: 14px; }
 .inventory-offer { display: grid; gap: 12px; padding-block: 12px; border-top: 1px solid var(--border); }
 .inventory-offer-item { display: flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; color: var(--text-1); text-align: left; font: inherit; cursor: pointer; }

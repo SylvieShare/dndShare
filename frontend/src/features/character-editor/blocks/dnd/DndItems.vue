@@ -47,7 +47,7 @@
               @click="askDeleteSection(section)" />
           </div>
 
-          <InventoryBagGrid v-if="sectionMode(section.id) === 'bag'" :entries="section.items.map(entryWithDisplay)" :positions="section.slots" :group="sectionGroup(section.id)" :label="section.name" :sortable="sortable">
+          <InventoryBagGrid v-if="sectionMode(section.id) === 'bag'" adaptive :can-add="canAdd" @add-catalog="openPicker(section.id)" @add-custom="openInlineForm(section.id, null)" :entries="section.items.map(entryWithDisplay)" :positions="section.slots" :group="sectionGroup(section.id)" :label="section.name" :sortable="sortable">
             <template #default="{ entry, index }"><InventoryItemRow bag :entry="entry" :section-id="section.id" :index="index" /></template>
           </InventoryBagGrid>
           <div v-else
@@ -59,7 +59,7 @@
             <div v-if="!visibleItems(section).length" class="di-empty">пусто</div>
           </div>
 
-          <div v-if="canAdd" class="di-add-row">
+          <div v-if="canAdd && sectionMode(section.id) === 'list'" class="di-add-row">
             <AddButton class="di-add-catalog" label="Добавить из справочника" @click="openPicker(section.id)" />
             <AddButton label="Предмет" title="Добавить предмет вручную" @click="openInlineForm(section.id, null)" />
           </div>
@@ -71,18 +71,7 @@
       </template>
     </template>
 
-    <ItemTooltip
-      v-if="tooltip.visible"
-      :title="tooltip.name"
-      :desc="tooltip.desc"
-      :x="tooltip.x"
-      :top="tooltip.top"
-      :bottom="tooltip.bottom"
-    >
-      <template v-if="tooltip.item && (tooltip.item.data?.cost || tooltip.item.data?.weight != null)" #details>
-        <ItemTooltipDetails :item="tooltip.item" />
-      </template>
-    </ItemTooltip>
+    <InventoryItemTooltip :tooltip="tooltip" />
 
     <MagicItemInstanceModal v-if="magicSelection" :item="catalog[magicSelection.magic_item_id ?? magicSelection.item_id]" :uid="magicSelection.uid" :values="{ ...charCtx.values, items: model }" @update:values="patch => charCtx.updateValues(patch)" @close="magicSelection = null" />
 
@@ -144,8 +133,7 @@ import { computed, provide, inject, nextTick, onMounted, reactive, ref } from 'v
 import { BaseTile } from '@sylvieshare/share-ui'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
-import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
-import ItemTooltipDetails from '@/features/items/detail-components/ItemTooltipDetails'
+import InventoryItemTooltip from '@/features/inventory/components/InventoryItemTooltip.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { SectionLabel } from '@sylvieshare/share-ui'

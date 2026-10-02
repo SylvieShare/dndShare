@@ -175,7 +175,7 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   await prepare(page)
   const session = { uuid: 'test', name: 'Сессия', status: 'active', ownerUserId: 1, systemId: 1 }
   await page.route('**/api/sessions/test', route => route.fulfill({ json: { session, myRole: 'gm', participants: [{ charUuid: 'recipient', templateId: 1, iconImageUrl: '/static/tab-stats.svg', data: { values: { name: 'Торин' } } }] } }))
-  let entries = [], offers = [{ id: 30, eventId: 30, itemName: 'Охотничий капкан', senderName: 'Лиора', senderCharUuid: 'sender', recipientCharUuid: '', addressedToDm: true, purpose: 'transfer', source: 'items', entry: { count: 2, override: { name: 'Охотничий капкан' } } }]
+  let entries = [], offers = [{ id: 30, eventId: 30, itemName: 'Охотничий капкан', senderName: 'Лиора', senderCharUuid: 'sender', recipientCharUuid: '', addressedToDm: true, purpose: 'transfer', source: 'items', entry: { count: 2, override: { name: 'Охотничий капкан', desc: 'Ловушка для зверя' } } }]
   let nextId = 1, failAdd = true
   const additions = new Set(), addRequests = [], moveRequests = []
   const freeSlot = () => { let slot = 0; while (entries.some(row => row.slot === slot)) slot++; return slot }
@@ -234,7 +234,20 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   expect(bounds.columns).toBe(4)
   expect(bounds.cells.every(cell => Math.abs(cell.width - cell.height) < 1)).toBe(true)
   expect(bounds.overflow).toBe(false)
-  await inventory.getByRole('button', { name: 'Свой предмет', exact: true }).click()
+  await expect(inventory.locator('.inventory-add')).toHaveCount(0)
+  await inventory.getByRole('button', { name: 'Охотничий капкан', exact: true }).hover()
+  await expect(page.getByRole('tooltip')).toContainText('Ловушка для зверя')
+  const empty = inventory.getByRole('button', { name: 'Добавить предмет в ячейку 2', exact: true })
+  await empty.hover()
+  await expect(empty.locator('.inventory-bag-add__plus')).toHaveCSS('opacity', '1')
+  await empty.click()
+  await page.getByRole('menuitem', { name: 'Добавить из справочника', exact: true }).click()
+  const picker = page.getByRole('dialog', { name: 'Добавить в инвентарь сессии', exact: true })
+  await expect(picker).toBeVisible()
+  await picker.getByRole('button', { name: 'Close', exact: true }).click()
+  await expect(inventory).toBeVisible()
+  await empty.click()
+  await page.getByRole('menuitem', { name: 'Добавить своё', exact: true }).click()
   await inventory.locator('form input').first().fill('Верёвка')
   await inventory.getByRole('button', { name: 'Добавить', exact: true }).click()
   await expect(inventory.getByRole('alert')).toContainText('Ответ потерян')

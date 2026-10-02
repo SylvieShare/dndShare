@@ -1,7 +1,7 @@
 <template>
   <div class="inventory-bag-item" :class="{ 'inventory-bag-item--source': source, 'inventory-bag-item--draggable': draggable }"
     role="button" :tabindex="disabled ? -1 : 0" :aria-disabled="disabled" @keydown.enter.prevent="!disabled && $event.currentTarget.click()" @keydown.space.prevent="!disabled && $event.currentTarget.click()"
-    :data-sortable-key="itemKey" :aria-label="name" :title="count > 1 ? `${name} ×${count}` : name">
+    :data-sortable-key="itemKey" :aria-label="name">
     <ItemIcon v-if="item?.iconImageUrl || item?.svg" :item="item" size="100%" :fallback-to-type="false" />
     <Package v-else :size="32" aria-hidden="true" />
     <span v-if="count > 1" class="inventory-bag-item__count">{{ count }}</span>

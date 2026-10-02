@@ -6,7 +6,7 @@
   <template #trigger="{ open: menuOpen }">
     <InventoryBagItem v-if="bag" :item-key="entry.uid" :item="{ iconImageUrl: entry.display.iconImageUrl || entry.display.typeImageUrl, svg: entry.display.svg }" :name="entry.display.name" :count="entry.count" :source="sortable.isSource(entry)" :draggable="canDrag" :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
       :status="entry.params?.magic?.attuned ? 'Настроен' : ''" :class="{ 'action-menu-source--open': menuOpen }"
-      @pointerdown="onRowDown($event, entry, sectionId, index)" @mouseenter="e => showTooltip(e, entry)" @mouseleave="hideTooltip" />
+      @pointerdown="hideTooltip(); onRowDown($event, entry, sectionId, index)" @mouseenter="!sortable.dragging && showTooltip($event, entry)" @mouseleave="hideTooltip" @focus="showTooltip($event, entry)" @blur="hideTooltip" @click="hideTooltip" />
     <div v-else
       class="di-row action-menu-source"
       :class="{

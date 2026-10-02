@@ -1,8 +1,8 @@
-import { reactive } from 'vue'
+import { useInventoryTooltip } from '@/features/inventory/composables/useInventoryTooltip'
 import { EQUIPPED_ID } from '../lib/itemSection'
 
 export function useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry }) {
-  const tooltip = reactive({ visible: false, name: '', desc: '', item: null, x: 0, top: null, bottom: null })
+  const { tooltip, showTooltip: showDisplayTooltip, hideTooltip } = useInventoryTooltip()
   function viewEntry(entry, close) {
     modalSelection.value = { ...entry, sectionId: findSectionOfEntry(entry.uid) }
     close()
@@ -41,23 +41,7 @@ export function useInventoryRowActions({ model, modalSelection, charCtx, increme
     return model.value.sections[0]?.id || null
   }
 
-  function showTooltip(e, entry) {
-    const d = entry.display
-    if (!d.desc && !d.cost && d.weight == null) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    const above = window.innerHeight - rect.bottom < 150
-    const detailItem = d.base
-      ? { ...d.base, data: { ...(d.base.data || {}), cost: d.cost || null, weight: d.weight } }
-      : (d.isCustom ? { name: d.name, data: { desc: d.desc, consumable: d.consumable } } : null)
-    Object.assign(tooltip, {
-      visible: true, name: d.name, desc: d.desc,
-      item: detailItem,
-      x: Math.min(rect.left, window.innerWidth - 320),
-      top: above ? null : rect.bottom + 6,
-      bottom: above ? window.innerHeight - rect.top + 6 : null,
-    })
-  }
-  function hideTooltip() { tooltip.visible = false }
+  function showTooltip(event, entry) { showDisplayTooltip(event, entry.display) }
 
   return { tooltip, showTooltip, hideTooltip, viewEntry, deleteOneEntry, addEntry, editEntry, deleteEntry }
 }

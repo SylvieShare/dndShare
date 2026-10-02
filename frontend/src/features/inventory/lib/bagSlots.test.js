@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { bagCells, moveBagEntry, resolveBagSlots } from './bagSlots'
+import { bagCells, bagColumnCount, moveBagEntry, resolveBagSlots } from './bagSlots'
 import { cloneModel, normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
 
 const entry = uid => ({ uid, count: 2, item_id: 12, params: { magic: { remaining: 3 } } })
@@ -9,6 +9,16 @@ const model = () => ({ equipped: [entry('worn')], sections: [
 ] })
 
 describe('bag cells', () => {
+  it('fits cells to the available width and grows rows for the current column count', () => {
+    expect(bagColumnCount(664)).toBe(8)
+    expect(bagColumnCount(330)).toBe(4)
+    expect(bagColumnCount(230)).toBe(2)
+    expect(bagColumnCount(0)).toBe(1)
+    expect(bagCells(['a', 'b', 'c', 'd'].map(entry), {}, undefined, 6)).toHaveLength(6)
+    expect(bagCells(['a', 'b'].map(entry), {}, undefined, 2)).toHaveLength(4)
+    expect(bagCells([entry('a')], { a: 7 }, undefined, 3)).toHaveLength(9)
+  })
+
   it('starts with four empty cells and adds a row when the last row is filled', () => {
     expect(bagCells([])).toEqual([null, null, null, null])
     expect(bagCells(['a', 'b', 'c'].map(entry))).toHaveLength(4)

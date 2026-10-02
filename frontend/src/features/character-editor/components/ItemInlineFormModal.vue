@@ -2,11 +2,11 @@
   <AppModalFrame :title="entry ? 'Редактировать предмет' : 'Новый предмет'" :z-index="4500" @close="$emit('close')">
 
     <FormField label="Название" vertical>
-      <FormTextInput v-model:value="name" placeholder="Название..." autofocus @enter="submit" />
+      <FormTextInput v-model:value="name" aria-label="Название" placeholder="Название..." autofocus @enter="submit" />
     </FormField>
 
     <FormField label="Описание" vertical>
-      <FormTextarea v-model:value="desc" placeholder="Описание..." :rows="4" />
+      <FormTextarea v-model:value="desc" aria-label="Описание" placeholder="Описание..." :rows="4" />
     </FormField>
 
     <ItemInstanceParamsFields
