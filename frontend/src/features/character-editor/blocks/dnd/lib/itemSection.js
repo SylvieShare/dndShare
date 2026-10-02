@@ -1,3 +1,4 @@
+import { resolveBagSlots } from '@/features/inventory/lib/bagSlots'
 import { ownedWeaponFields } from './ownedWeaponFields'
 import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from './itemEntry'
@@ -34,13 +35,14 @@ export function normalizeValue(value) {
   const sections = Array.isArray(source.sections)
     ? source.sections.filter(s => s && typeof s === 'object').map(s => ({
         id: s.id || makeSectionId(),
+        slots: s.slots && typeof s.slots === 'object' && !Array.isArray(s.slots) ? { ...s.slots } : {},
         name: typeof s.name === 'string' && s.name.trim() ? s.name : DEFAULT_SECTION_NAME,
         items: Array.isArray(s.items) ? s.items.map(normalizeEntry) : [],
       }))
     : []
   return {
     equipped,
-    sections: sections.length ? sections : [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: [] }],
+    sections: sections.length ? sections.map(section => ({ ...section, slots: resolveBagSlots(section.items, section.slots) })) : [{ id: makeSectionId(), name: DEFAULT_SECTION_NAME, items: [] }],
   }
 }
 
@@ -66,6 +68,7 @@ export function cloneModel(model) {
     sections: (model.sections || []).map(s => ({
       id: s.id,
       name: s.name,
+      slots: { ...(s.slots || {}) },
       items: (s.items || []).map(cloneEntry),
     })),
   }

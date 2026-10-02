@@ -4,7 +4,10 @@
   :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
 >
   <template #trigger="{ open: menuOpen }">
-    <div
+    <InventoryBagItem v-if="bag" :item-key="entry.uid" :item="{ iconImageUrl: entry.display.iconImageUrl || entry.display.typeImageUrl, svg: entry.display.svg }" :name="entry.display.name" :count="entry.count" :source="sortable.isSource(entry)" :draggable="canDrag" :disabled="draggedThisGesture || (!canManage && entry.item_id == null)"
+      :status="entry.params?.magic?.attuned ? 'Настроен' : ''" :class="{ 'action-menu-source--open': menuOpen }"
+      @pointerdown="onRowDown($event, entry, sectionId, index)" @mouseenter="e => showTooltip(e, entry)" @mouseleave="hideTooltip" />
+    <div v-else
       class="di-row action-menu-source"
       :class="{
         'sortable-placeholder': sortable.isSource(entry),
@@ -48,13 +51,21 @@
         <CreatedItemStatus :entry="entry" />
       </span>
     </div>
+    <SelectedTargetPanel :uid="entry.uid" v-if="!bag" />
+    <WeaponBonusTransferPanel v-if="!bag && entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
+    <WeaponUsePanel v-if="!bag && entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
+    <ItemLastChargeCheck v-if="!bag && entry.params?.magic?.last_charge_check" :uid="entry.uid" />
+  </template>
+
+  <template #default="{ close }">
+    <template v-if="bag">
+      <p class="di-menu-name">{{ entry.display.name }}</p>
+      <CreatedItemStatus :entry="entry" />
     <SelectedTargetPanel :uid="entry.uid" />
     <WeaponBonusTransferPanel v-if="entry.params?.magic?.bonus_transfer" :uid="entry.uid" />
     <WeaponUsePanel v-if="entry.params?.magic?.weapon_use?.status === 'active'" :uid="entry.uid" />
     <ItemLastChargeCheck v-if="entry.params?.magic?.last_charge_check" :uid="entry.uid" />
-  </template>
-
-  <template #default="{ close }">
+    </template>
     <UsableItemAction source="items" :item="entry.display.base" :entry="entry" :name="entry.display.name" @close="close" />
     <CreatedItemActions :entry="entry" @close="close" />
     <ItemTransferAction source="items" :entry="entry" :name="entry.display.name" @close="close" />
@@ -113,6 +124,7 @@
 </template>
 
 <script setup>
+import InventoryBagItem from '@/features/inventory/components/InventoryBagItem.vue'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
 import CreatedItemActions from '@/features/character-editor/components/CreatedItemActions.vue'
 import UsableItemAction from '@/features/character-editor/components/UsableItemAction.vue'
@@ -128,7 +140,7 @@ import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { ArrowRightLeft, Dices } from '@lucide/vue'
 import InventoryItemIcon from '@/features/character-editor/components/InventoryItemIcon.vue'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
-defineProps({ entry: Object, sectionId: String, index: Number })
+defineProps({ entry: Object, sectionId: String, index: Number, bag: Boolean })
 const {
   draggedThisGesture,
   canManage,
@@ -161,6 +173,7 @@ const charCtx = inject('charCtx', {})
 </script>
 
 <style scoped>
+.di-menu-name { margin: 6px 8px; font-weight: 700; color: var(--text-1); overflow-wrap: anywhere; }
 .di-row {
   position: relative;
   display: flex;

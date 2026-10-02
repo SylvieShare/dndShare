@@ -766,7 +766,7 @@ revision, status }`; сброс одного результата: `POST /api/ac
 
 Все маршруты доступны только владельцу указанной сессии; игрокам возвращается 403.
 - `GET /api/sessions/{uuid}/inventory` → `{entries,transfers}`. Строка содержит
-  `{id,source,name,entry}`; `transfers` — ожидающие передачи из/в инвентарь.
+  `{id,source,name,entry,slot}`; `slot` — индекс ячейки от нуля, `transfers` — ожидающие передачи из/в инвентарь.
 - `POST /api/sessions/{uuid}/inventory` принимает
   `{source,name,entry,clientActionId}`; `count` внутри entry от 1 до 999, для
   оружия — 1. Справочная запись должна быть доступна мастеру и соответствовать
@@ -774,6 +774,13 @@ revision, status }`; сброс одного результата: `POST /api/ac
   Повтор clientActionId не создаёт копий. Ответ `{ok:true}`.
 - `DELETE /api/sessions/{uuid}/inventory/{entryId}` удаляет доступный экземпляр,
   повтор безопасен. Ответ `{ok:true}`.
+- `POST /api/sessions/{uuid}/inventory/{entryId}/move` принимает
+  `{fromSlot,slot,targetEntryId}` (`targetEntryId: null` для свободной ячейки).
+  Переносит экземпляр в точную ячейку или меняет его местами с указанным
+  экземпляром. Цель должна находиться в видимой сетке по четыре ячейки в ряду;
+  неверная позиция даёт 400, изменённая исходная/целевая ячейка — 409.
+  Повтор уже выполненного переноса безопасен. Ответ `{ok:true}`, SSE обновляет
+  инвентарь без новой записи хроники.
 - `POST /api/sessions/{uuid}/inventory/{entryId}/transfer` принимает
   `{recipientCharUuid,clientActionId}`. Получатель должен участвовать именно в
   этой сессии; целый экземпляр резервируется. Ответ `{transfer}`.

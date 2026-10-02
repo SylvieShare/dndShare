@@ -81,7 +81,7 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
   await dialog.getByRole('button', { name: 'Закрыть', exact: true }).last().click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   for (const decision of ['Отказать', 'Принять']) {
-    const row = page.locator('.di-row:visible').filter({ hasText: 'Шёлковая верёвка' })
+    const row = page.locator('.inventory-bag-item:visible').filter({ hasText: 'Шёлковая верёвка' })
     await row.scrollIntoViewIfNeeded()
     // Let the scroll event finish before opening the scroll-dismissed action menu.
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
@@ -121,7 +121,7 @@ for (const mobile of [false, true]) test(`item transfer request, refusal and acc
     await page.getByRole('dialog').getByRole('button', { name: 'Закрыть', exact: true }).last().click()
     await expect(page.getByRole('dialog')).toHaveCount(0)
     if (decision === 'Отказать') await openSheet('sender')
-    else await expect(page.locator('.di-row:visible')).toContainText('Шёлковая верёвка')
+    else await expect(page.locator('.inventory-bag-item:visible')).toContainText('Шёлковая верёвка')
   }
   expect(requests).toHaveLength(2)
   expect(requests[0]).toMatchObject({ source: 'items', entryUid: 'rope', sessionUuid: 'campaign', recipientCharUuid: 'recipient' })

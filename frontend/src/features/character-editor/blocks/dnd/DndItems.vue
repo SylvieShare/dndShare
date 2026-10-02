@@ -42,11 +42,15 @@
             >{{ section.name }}</button>
             <span v-if="visibleItems(section).length" class="di-section-count">{{ visibleItems(section).length }}</span>
             <span class="di-section-line" aria-hidden="true"></span>
+            <MultiToggle v-if="!section.locked" :model-value="sectionMode(section.id)" :options="viewOptions" :aria-label="`Вид секции ${section.name}`" :disabled="sortable.dragging" @update:model-value="setSectionMode(section.id, $event)" />
             <RemoveButton icon="trash" label="Удалить секцию" v-if="canManage && !section.locked && model.sections.length > 1"
               @click="askDeleteSection(section)" />
           </div>
 
-          <div
+          <InventoryBagGrid v-if="sectionMode(section.id) === 'bag'" :entries="section.items.map(entryWithDisplay)" :positions="section.slots" :group="sectionGroup(section.id)" :label="section.name" :sortable="sortable">
+            <template #default="{ entry, index }"><InventoryItemRow bag :entry="entry" :section-id="section.id" :index="index" /></template>
+          </InventoryBagGrid>
+          <div v-else
             class="di-rows"
             :data-sortable-container="sectionGroup(section.id)"
           >
@@ -135,7 +139,7 @@ import { useInventoryCatalog } from './composables/useInventoryCatalog'
 import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapons'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
 import { RemoveButton } from '@sylvieshare/share-ui'
-import { computed, provide, inject, nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { computed, provide, inject, nextTick, onMounted, reactive, ref } from 'vue'
 
 import { BaseTile } from '@sylvieshare/share-ui'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
@@ -158,7 +162,10 @@ import { abilityModifier, formatBonus as signed, proficiencyBonus, resolveNumVal
 import { STAT_FULL, STAT_KEYS } from '@/shared/lib/dndStats'
 import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-editor/blocks/dnd/lib/rollMode'
 import { useDiceStore } from '@/stores/dice'
-import { useSortable } from '@sylvieshare/share-ui'
+import { MultiToggle } from '@sylvieshare/share-ui'
+import InventoryBagGrid from '@/features/inventory/components/InventoryBagGrid.vue'
+import { resolveBagSlots } from '@/features/inventory/lib/bagSlots'
+import { useInventoryLayout, inventoryItems as itemsRef, setInventoryItems as setItems } from './composables/useInventoryLayout'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
   EQUIPPED_ID,
@@ -202,19 +209,6 @@ function visibleItems(section) {
   return section.items || []
 }
 
-// Returns mutable reference to items array (equipped or sections[i].items) on a cloned model
-function itemsRef(next, sectionId) {
-  if (sectionId === EQUIPPED_ID) return next.equipped
-  const sec = next.sections.find(s => s.id === sectionId)
-  return sec ? sec.items : null
-}
-
-function setItems(next, sectionId, items) {
-  if (sectionId === EQUIPPED_ID) { next.equipped = items; return }
-  const sec = next.sections.find(s => s.id === sectionId)
-  if (sec) sec.items = items
-}
-
 const rootTypeId = computed(() => Number(props.block.content?.item_type_id || props.block.content?.item_ids?.[0] || 2))
 // Single mode: owners get every control (add / manage / drag); viewers see a read-only list.
 const canManage = computed(() => !!charCtx.ownerMode)
@@ -232,7 +226,7 @@ const pickerTypeIds = computed(() => {
 const specializedDestinations = computed(() => props.block.content?.specialized_destinations || [])
 const toolTypeId = computed(() => Number(props.block.content?.tool_type_id) || 14)
 
-function sectionGroup(id) { return 'sec_' + id }
+const viewOptions = [{ value: 'bag', label: 'Рюкзак' }, { value: 'list', label: 'Список' }]
 
 function entryWithDisplay(entry) {
   return { ...entry, display: entryDisplayData(entry, catalog, typeById.value, rootTypeId.value) }
@@ -326,63 +320,13 @@ const { pendingWeapon, confirmWeapon, specializedDestination, canMoveToSpecializ
   model, catalog, specializedDestinations, canManage, charCtx, entryTypeId,
 })
 
-function sectionItems(sectionId) {
-  if (sectionId === EQUIPPED_ID) return model.value.equipped.map(entryWithDisplay)
-  const sec = model.value.sections.find(s => s.id === sectionId)
-  return sec ? sec.items.map(entryWithDisplay) : []
-}
-
-const sortable = useSortable({
-  groups: new Proxy({}, {
-    get(_, groupName) {
-      return {
-        items: { get value() { return sectionItems(parseGroup(groupName)) } },
-      }
-    },
-    has() { return true },
-    ownKeys() {
-      return [sectionGroup(EQUIPPED_ID), ...model.value.sections.map(s => sectionGroup(s.id))]
-    },
-    getOwnPropertyDescriptor() { return { enumerable: true, configurable: true } },
-  }),
-  getKey: e => e.uid,
-  onDrop: ({ item, fromGroup, toGroup, toIndex }) => {
-    const fromSecId = parseGroup(fromGroup)
-    const toSecId = parseGroup(toGroup)
-    const next = cloneModel(model.value)
-    const fromList = itemsRef(next, fromSecId)
-    const toList = itemsRef(next, toSecId)
-    if (!fromList || !toList) return
-    const idx = fromList.findIndex(i => i.uid === item.uid)
-    if (idx === -1) return
-    const [moved] = fromList.splice(idx, 1)
-    const adjustedIdx = (fromSecId === toSecId && idx < toIndex) ? toIndex - 1 : toIndex
-    toList.splice(Math.min(adjustedIdx, toList.length), 0, moved)
-    emitModel(next)
-  },
+const { sortable, sectionGroup, sectionMode, setSectionMode, onRowDown, displaySectionItems } = useInventoryLayout({
+  model, canDrag, entryWithDisplay, emitModel, hideTooltip,
 })
-
-function parseGroup(g) { return String(g).slice(4) }
-
-function displaySectionItems(sectionId) {
-  return sortable.displayItems(sectionGroup(sectionId))
-    .map(entryWithDisplay)
-}
-
-// Whole-row drag (like spells/weapons). The sortable's 4px threshold keeps a plain tap a click; a
-// drag flips `sortable.dragging` mid-gesture, which we remember so the trailing click does not
-// open the row action menu.
-const draggedThisGesture = ref(false)
-watch(() => sortable.dragging, v => { if (v) draggedThisGesture.value = true })
-
-function onRowDown(e, entry, sectionId, idx) {
-  if (e.target.closest('button') || e.target.closest('input')) return
-  draggedThisGesture.value = false
-  if (!canDrag.value) return
-  sortable.startDrag(e, entry, sectionGroup(sectionId), idx)
-}
+const draggedThisGesture = computed(() => sortable.suppressNextClick)
 
 function emitModel(next) {
+  for (const section of next.sections) section.slots = resolveBagSlots(section.items, section.slots)
   emit('update:value', props.block.id, next)
 }
 

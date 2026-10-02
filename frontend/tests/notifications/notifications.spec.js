@@ -177,17 +177,18 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   await page.route('**/api/sessions/test', route => route.fulfill({ json: { session, myRole: 'gm', participants: [{ charUuid: 'recipient', templateId: 1, iconImageUrl: '/static/tab-stats.svg', data: { values: { name: 'Торин' } } }] } }))
   let entries = [], offers = [{ id: 30, eventId: 30, itemName: 'Охотничий капкан', senderName: 'Лиора', senderCharUuid: 'sender', recipientCharUuid: '', addressedToDm: true, purpose: 'transfer', source: 'items', entry: { count: 2, override: { name: 'Охотничий капкан' } } }]
   let nextId = 1, failAdd = true
-  const additions = new Set(), addRequests = []
+  const additions = new Set(), addRequests = [], moveRequests = []
+  const freeSlot = () => { let slot = 0; while (entries.some(row => row.slot === slot)) slot++; return slot }
   await page.route('**/api/sessions/test/inventory', async route => {
     if (route.request().method() === 'GET') return route.fulfill({ json: { entries, transfers: offers } })
     const body = route.request().postDataJSON(); addRequests.push(body)
-    if (!additions.has(body.clientActionId)) { additions.add(body.clientActionId); entries.push({ id: `entry-${nextId++}`, name: body.name, source: body.source, entry: body.entry }) }
+    if (!additions.has(body.clientActionId)) { additions.add(body.clientActionId); entries.push({ slot: freeSlot(), id: `entry-${nextId++}`, name: body.name, source: body.source, entry: body.entry }) }
     if (failAdd) { failAdd = false; return route.fulfill({ status: 503, json: { desc: 'Ответ потерян' } }) }
     await route.fulfill({ json: { ok: true } })
   })
   await page.route('**/api/sessions/test/events/30/application', async route => {
     expect(route.request().postDataJSON().decision).toBe('accept')
-    entries.push({ id: 'gift', name: 'Охотничий капкан', source: 'items', entry: offers[0].entry }); offers = []
+    entries.push({ slot: freeSlot(), id: 'gift', name: 'Охотничий капкан', source: 'items', entry: offers[0].entry }); offers = []
     await route.fulfill({ json: { transfer: { status: 'accepted' } } })
   })
   await page.route('**/api/sessions/test/inventory/*', async route => {
@@ -203,35 +204,86 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
     offers = [{ id: 31, eventId: 31, itemName: row.name, recipientName: 'Торин', recipientCharUuid: 'recipient', addressedToDm: false, entry: row.entry }]
     await route.fulfill({ json: { transfer: offers[0] } })
   })
+  let failMove = true
+  await page.route('**/api/sessions/test/inventory/*/move', async route => {
+    const request = route.request().postDataJSON(); moveRequests.push(request)
+    const id = new URL(route.request().url()).pathname.split('/').at(-2)
+    const source = entries.find(row => row.id === id)
+    if (source.slot !== request.slot) {
+      expect(source.slot).toBe(request.fromSlot)
+      const target = entries.find(row => row.slot === request.slot)
+      expect(target?.id || null).toBe(request.targetEntryId)
+      if (target) target.slot = source.slot
+      source.slot = request.slot
+    }
+    if (failMove) { failMove = false; return route.fulfill({ status: 503, json: { desc: 'Перенос выполнен, ответ потерян' } }) }
+    await route.fulfill({ json: { ok: true } })
+  })
   await open(page)
   await page.getByRole('button', { name: 'Инвентарь', exact: true }).click()
   const inventory = page.getByRole('dialog', { name: 'Инвентарь сессии', exact: true })
   await expect(inventory).toBeVisible()
   await inventory.getByRole('button', { name: 'Принять', exact: true }).click()
-  await expect(inventory.locator('.inventory-row')).toContainText('Охотничий капкан')
-  const bounds = await inventory.locator('.inventory-row').evaluate(row => ({
-    height: row.getBoundingClientRect().height,
-    nameWidth: row.querySelector('.oli-name').getBoundingClientRect().width,
-    overflow: row.scrollWidth > row.clientWidth,
+  await expect(inventory.locator('.inventory-bag-item')).toContainText('Охотничий капкан')
+  await expect(inventory.locator('.inventory-bag-cell')).toHaveCount(4)
+  const bounds = await inventory.locator('.inventory-bag-grid').evaluate(grid => ({
+    columns: getComputedStyle(grid).gridTemplateColumns.split(' ').length,
+    cells: [...grid.children].map(cell => ({ width: cell.getBoundingClientRect().width, height: cell.getBoundingClientRect().height })),
+    overflow: grid.scrollWidth > grid.clientWidth,
   }))
-  expect(bounds.height).toBeLessThan(96)
-  expect(bounds.nameWidth).toBeGreaterThan(90)
+  expect(bounds.columns).toBe(4)
+  expect(bounds.cells.every(cell => Math.abs(cell.width - cell.height) < 1)).toBe(true)
   expect(bounds.overflow).toBe(false)
   await inventory.getByRole('button', { name: 'Свой предмет', exact: true }).click()
   await inventory.locator('form input').first().fill('Верёвка')
   await inventory.getByRole('button', { name: 'Добавить', exact: true }).click()
   await expect(inventory.getByRole('alert')).toContainText('Ответ потерян')
   await inventory.getByRole('button', { name: 'Повторить', exact: true }).click()
-  await expect(inventory.locator('.inventory-row')).toHaveCount(2)
+  await expect(inventory.locator('.inventory-bag-item')).toHaveCount(2)
   expect(addRequests).toHaveLength(2)
   expect(addRequests[0].clientActionId).toBe(addRequests[1].clientActionId)
-  await inventory.getByRole('button', { name: 'Удалить: Верёвка', exact: true }).click()
-  await expect(inventory.locator('.inventory-row')).toHaveCount(1)
-  await inventory.getByRole('button', { name: 'Передать: Охотничий капкан', exact: true }).click()
+  const cell = index => inventory.locator(`[data-sortable-slot="${index}"]`)
+  async function drag(from, to) {
+    await expect(inventory.locator('.session-inventory')).toHaveAttribute('aria-busy', 'false')
+    await cell(from).hover()
+    const source = await cell(from).boundingBox(), target = await cell(to).boundingBox()
+    await page.mouse.move(source.x + source.width / 2, source.y + source.height / 2)
+    await page.mouse.down()
+    await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2, { steps: 6 })
+    await page.mouse.up()
+  }
+  await drag(0, 1)
+  await expect(inventory.getByRole('alert')).toContainText('Перенос выполнен')
+  await expect(cell(0).getByRole('button', { name: 'Верёвка', exact: true })).toBeVisible()
+  await expect(cell(1).getByRole('button', { name: 'Охотничий капкан', exact: true })).toBeVisible()
+  await inventory.getByRole('button', { name: 'Повторить', exact: true }).click()
+  expect(moveRequests[0]).toEqual(moveRequests[1])
+  await expect(page.getByRole('menu', { name: 'Охотничий капкан', exact: true })).toHaveCount(0)
+  await drag(1, 3)
+  await expect(cell(1).locator('.inventory-bag-item')).toHaveCount(0)
+  await expect(cell(3).getByRole('button', { name: 'Охотничий капкан', exact: true })).toBeVisible()
+  await expect(inventory.locator('.inventory-bag-cell')).toHaveCount(4)
+  // Escape cancels a drag without submitting another mutation.
+  const source = await cell(3).boundingBox(), target = await cell(2).boundingBox()
+  await page.mouse.move(source.x + 20, source.y + 20)
+  await page.mouse.down()
+  await page.mouse.move(target.x + 20, target.y + 20, { steps: 6 })
+  await page.keyboard.press('Escape')
+  await page.mouse.up()
+  expect(moveRequests).toHaveLength(3)
+  await inventory.getByRole('button', { name: 'Закрыть инвентарь', exact: true }).click()
+  await page.getByRole('button', { name: 'Инвентарь', exact: true }).click()
+  await expect(cell(3).getByRole('button', { name: 'Охотничий капкан', exact: true })).toBeVisible()
+  await expect(inventory.getByRole('button', { name: 'Верёвка', exact: true })).toHaveAttribute('aria-disabled', 'false')
+  await inventory.getByRole('button', { name: 'Верёвка', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Удалить', exact: true }).click()
+  await expect(inventory.locator('.inventory-bag-item')).toHaveCount(1)
+  await inventory.getByRole('button', { name: 'Охотничий капкан', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Передать', exact: true }).click()
   const recipient = page.getByRole('menuitem', { name: 'Торин', exact: true })
   await expect(recipient.locator('img')).toHaveCount(1)
   await recipient.click()
-  await expect(inventory.locator('.inventory-row')).toHaveCount(0)
+  await expect(inventory.locator('.inventory-bag-item')).toHaveCount(0)
   await expect(inventory).toContainText('Ожидает принятия')
   await expect(inventory).toContainText('Торин')
 })

@@ -10,6 +10,7 @@ import (
 )
 
 type SessionInventoryEntry struct {
+	Slot   int             `json:"slot"`
 	ID     string          `json:"id"`
 	Source string          `json:"source"`
 	Name   string          `json:"name"`
@@ -34,14 +35,14 @@ func (s *Store) SessionInventory(ctx context.Context, sessionID, userID int64) (
 	if err = inventoryOwner(ctx, tx, sessionID, userID); err != nil {
 		return nil, nil, err
 	}
-	rows, err := tx.Query(ctx, `SELECT id::text,source,item_name,entry FROM dndshare.session_inventory WHERE session_id=$1 AND available ORDER BY created_at,id`, sessionID)
+	rows, err := tx.Query(ctx, `SELECT id::text,source,item_name,entry,slot FROM dndshare.session_inventory WHERE session_id=$1 AND available ORDER BY slot`, sessionID)
 	if err != nil {
 		return nil, nil, err
 	}
 	entries := []SessionInventoryEntry{}
 	for rows.Next() {
 		var entry SessionInventoryEntry
-		if err = rows.Scan(&entry.ID, &entry.Source, &entry.Name, &entry.Entry); err != nil {
+		if err = rows.Scan(&entry.ID, &entry.Source, &entry.Name, &entry.Entry, &entry.Slot); err != nil {
 			rows.Close()
 			return nil, nil, err
 		}
@@ -78,7 +79,11 @@ func receiveSessionInventory(ctx context.Context, tx pgx.Tx, sessionID int64, so
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(ctx, `INSERT INTO dndshare.session_inventory(session_id,source,item_name,entry) VALUES($1,$2,$3,CAST($4 AS jsonb))`, sessionID, source, name, json.RawMessage(raw))
+	slot, err := freeInventorySlot(ctx, tx, sessionID)
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(ctx, `INSERT INTO dndshare.session_inventory(session_id,source,item_name,entry,slot) VALUES($1,$2,$3,CAST($4 AS jsonb),$5)`, sessionID, source, name, json.RawMessage(raw), slot)
 	return err
 }
 
@@ -144,7 +149,11 @@ func (s *Store) AddSessionInventory(ctx context.Context, sessionID, userID int64
 	if err != nil {
 		return err
 	}
-	tag, err := tx.Exec(ctx, `INSERT INTO dndshare.session_inventory(session_id,source,item_name,entry,client_action_id) VALUES($1,$2,$3,CAST($4 AS jsonb),$5::uuid) ON CONFLICT(session_id,client_action_id) DO NOTHING`, sessionID, source, name, raw, actionID)
+	slot, err := freeInventorySlot(ctx, tx, sessionID)
+	if err != nil {
+		return err
+	}
+	tag, err := tx.Exec(ctx, `INSERT INTO dndshare.session_inventory(session_id,source,item_name,entry,client_action_id,slot) VALUES($1,$2,$3,CAST($4 AS jsonb),$5::uuid,$6) ON CONFLICT(session_id,client_action_id) DO NOTHING`, sessionID, source, name, raw, actionID, slot)
 	if err != nil {
 		return err
 	}

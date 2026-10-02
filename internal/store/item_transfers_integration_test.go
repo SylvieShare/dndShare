@@ -104,6 +104,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	}
 	exec(schemaSessionAutoAcceptSQL)
 	exec(schemaSessionInventorySQL)
+	exec(schemaInventoryGridSQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
@@ -305,6 +306,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	testUsableApplications(t, s, exec, current)
 	testSpellItemCreation(t, s, exec, current)
 	t.Run("session inventory", func(t *testing.T) { testSessionInventory(t, s, pool) })
+	t.Run("inventory grid", func(t *testing.T) { testSessionInventoryGrid(t, s) })
 	exec(`DELETE FROM dndshare.session_participant WHERE char_id=1`)
 	if pending, err := s.PendingItemTransfers(ctx, 2); err != nil || len(pending) != 0 {
 		t.Fatalf("resolved pending list: %+v %v", pending, err)

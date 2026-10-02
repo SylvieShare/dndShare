@@ -12,6 +12,7 @@ func (s *Server) routesSessionInventory(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/sessions/{uuid}/inventory", s.handleSessionInventory)
 	mux.HandleFunc("POST /api/sessions/{uuid}/inventory", s.handleAddSessionInventory)
 	mux.HandleFunc("DELETE /api/sessions/{uuid}/inventory/{entryId}", s.handleDeleteSessionInventory)
+	mux.HandleFunc("POST /api/sessions/{uuid}/inventory/{entryId}/move", s.handleMoveSessionInventory)
 	mux.HandleFunc("POST /api/sessions/{uuid}/inventory/{entryId}/transfer", s.handleSendSessionInventory)
 }
 func (s *Server) inventorySession(w http.ResponseWriter, r *http.Request) (int64, store.GameSession, bool) {
@@ -106,4 +107,27 @@ func (s *Server) handleSendSessionInventory(w http.ResponseWriter, r *http.Reque
 	}
 	s.publishTransferChange(offer)
 	writeJSON(w, http.StatusOK, map[string]any{"transfer": offer})
+}
+
+func (s *Server) handleMoveSessionInventory(w http.ResponseWriter, r *http.Request) {
+	uid, session, ok := s.inventorySession(w, r)
+	if !ok {
+		return
+	}
+	var req struct {
+		FromSlot      *int   `json:"fromSlot"`
+		Slot          *int   `json:"slot"`
+		TargetEntryID string `json:"targetEntryId"`
+	}
+	id := r.PathValue("entryId")
+	if decodeJSON(r, &req) != nil || !isUUID(id) || req.FromSlot == nil || req.Slot == nil || *req.FromSlot < 0 || *req.Slot < 0 || (req.TargetEntryID != "" && !isUUID(req.TargetEntryID)) {
+		badRequest(w, "Некорректная ячейка инвентаря")
+		return
+	}
+	if err := s.store.MoveSessionInventory(r.Context(), session.ID, uid, id, *req.FromSlot, *req.Slot, req.TargetEntryID); err != nil {
+		itemTransferError(w, err)
+		return
+	}
+	s.publishSessionJournal(session.ID)
+	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }

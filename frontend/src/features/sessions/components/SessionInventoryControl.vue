@@ -14,8 +14,9 @@
         <ActionButton type="submit" :disabled="state.busy || !name.trim()">Добавить</ActionButton>
       </form>
       <LoadingState v-if="state.loading && !state.entries.length && !state.transfers.length" label="Загружаем инвентарь…" compact />
-      <p v-else-if="!state.entries.length" class="inventory-hint">Инвентарь пуст</p>
-      <SessionInventoryRow v-for="row in state.entries" :key="row.id" :row="row" :item="art(row)" :players="state.players" :busy="state.busy" :controller="controller" @view="viewItem" @remove="controller.remove" />
+      <InventoryBagGrid v-else :entries="state.entries" :positions="positions" :get-key="row => row.id" group="session-inventory" label="Рюкзак сессии" :sortable="sortable">
+        <template #default="{ entry, index }"><SessionInventoryItem :row="entry" :index="index" :item="art(entry)" :players="state.players" :busy="state.busy" :controller="controller" :sortable="sortable" @view="viewItem" @remove="controller.remove" /></template>
+      </InventoryBagGrid>
       <template v-if="state.transfers.length">
         <h3>Передачи</h3>
         <article v-for="offer in state.transfers" :key="offer.id" class="inventory-offer">
@@ -31,11 +32,12 @@
   <ItemViewModal v-if="view" :item-id="view.id" :item="view.item" :item-type-id="view.typeId" @close="view = null; open = true" />
 </template>
 <script setup>
-import { ref, toRef, watch } from 'vue'
+import { computed, reactive, ref, toRef, watch } from 'vue'
 import { Backpack, Package } from '@lucide/vue'
-import { ActionButton, BasePopover, FormField, FormNumberInput, FormTextInput, FormTextarea, LoadingState, RemoveButton } from '@sylvieshare/share-ui'
+import { ActionButton, BasePopover, FormField, FormNumberInput, FormTextInput, FormTextarea, LoadingState, RemoveButton, useSortable } from '@sylvieshare/share-ui'
 import { useSessionInventory } from '../composables/useSessionInventory'
-import SessionInventoryRow from './SessionInventoryRow.vue'
+import SessionInventoryItem from './SessionInventoryItem.vue'
+import InventoryBagGrid from '@/features/inventory/components/InventoryBagGrid.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
@@ -44,6 +46,12 @@ import TransferDecisionActions from '@/features/item-transfers/components/Transf
 const props = defineProps({ sessionUuid: { type: String, required: true } })
 const controller = useSessionInventory(toRef(props, 'sessionUuid'))
 const state = controller.state
+const positions = computed(() => Object.fromEntries(state.entries.map(row => [row.id, row.slot])))
+const sortable = reactive(useSortable({
+  groups: { 'session-inventory': { items: computed(() => state.entries), layout: 'grid', accepts: () => !state.busy } },
+  getKey: row => row.id,
+  onDrop: ({ item, toIndex }) => controller.move(item, toIndex),
+}))
 const trigger = ref(null), open = ref(false), picker = ref(false), custom = ref(false), view = ref(null)
 const name = ref(''), count = ref(1), description = ref('')
 const itemId = row => Number(row.entry?.magic_item_id || row.entry?.item_id) || null
@@ -62,7 +70,7 @@ function viewItem(row) {
 .inventory-trigger { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-height: 54px; padding: 5px 0; border: 0; background: transparent; color: var(--text-muted); cursor: pointer; }
 .inventory-trigger span { font: 700 10px/1.2 var(--font-ui); }
 .inventory-trigger:hover, .inventory-trigger.active { color: var(--text-1); }
-.session-inventory { width: min(540px, calc(100vw - 32px)); max-height: calc(100dvh - 80px); overflow-y: auto; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+.session-inventory { width: min(400px, calc(100vw - 32px)); max-height: calc(100dvh - 80px); overflow-y: auto; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
 .session-inventory header, .inventory-add, .inventory-outgoing { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 .session-inventory header strong { color: var(--text-1); font-size: 18px; }
 .inventory-custom { display: grid; gap: 10px; }

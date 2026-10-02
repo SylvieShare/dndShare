@@ -78,6 +78,13 @@ export function useSessionInventory(sessionUuid) {
     return mutate(() => api.addSessionInventory(uuid, request))
   }
   function remove(row) { const uuid = unref(sessionUuid); return mutate(() => api.deleteSessionInventory(uuid, row.id)) }
+  function move(row, slot) {
+    if (state.busy || row.slot === slot) return false
+    const uuid = unref(sessionUuid)
+    const target = state.entries.find(entry => entry.slot === slot)
+    const request = { fromSlot: row.slot, slot, targetEntryId: target?.id || null }
+    return mutate(() => api.moveSessionInventory(uuid, row.id, request))
+  }
   function send(row, player) {
     const uuid = unref(sessionUuid)
     const request = { recipientCharUuid: player.charUuid, clientActionId: crypto.randomUUID() }
@@ -90,5 +97,5 @@ export function useSessionInventory(sessionUuid) {
   const live = useSessionLive({ sessionUuid, onCatchUp: refresh, onUpdate: update => { if (update.journal || update.participants) return refresh() } })
   watch(sessionUuid, () => { generation++; live.stop(); loaded = false; refreshing = null; refreshPending = false; Object.assign(state, { entries: [], transfers: [], players: [], items: {}, busy: false, loading: false, error: '', retry: null }) })
   onBeforeUnmount(() => { generation++; live.stop() })
-  return { state, open, refresh, add, addCustom, remove, send, resolve }
+  return { state, open, refresh, add, addCustom, remove, move, send, resolve }
 }

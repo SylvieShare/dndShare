@@ -96,7 +96,19 @@ Desktop `LayoutInnerTabs` groups also keep their selected pane in independent,
 schema-stable `innerTab-*` query keys. Reload and browser history restore both
 the outer character tab and its inner pane; invalid or stale inner indexes fall
 back to the first pane. Every weapon and inventory section uses its own shared
-desktop/mobile `BaseTile`; fixed equipment utilities and personality groups use independent surfaces,
+desktop/mobile `BaseTile`. «Экипировано» всегда отображается списком; у остальных
+секций `MultiToggle` переключает «Рюкзак»/«Список», по умолчанию — рюкзак.
+Выбор вида сохраняется в браузере для каждой секции. Рюкзак показывает четыре
+квадратные ячейки в ряду, иконку предмета, количество в углу и заглушку сумки
+в пустых ячейках. После заполнения последнего ряда добавляется следующий.
+Перетаскивание владельцем в свободную ячейку оставляет прежнюю пустой;
+в занятую — меняет два экземпляра местами, в том числе между секциями.
+Сетка использует `slots` секции с индексами от нуля по UID; новые предметы
+заполняют первую свободную ячейку. Переключение вида сохраняет раскладку,
+сортировка в списке задаёт последовательные позиции. Перенос в «Экипировано»
+работает как вставка в список. Viewer может выбирать вид, но не переносить вещи.
+Escape/отмена жеста/отпускание вне ячеек отменяют перенос.
+Fixed equipment utilities and personality groups use independent surfaces,
 spell parameters/slots use separate `MorphTile` cards, and diary collections keep
 their own cards while notes have a dedicated surface. The desktop character
 page uses the same subtle 24px dot pattern as the session chapter canvas on its
@@ -229,7 +241,7 @@ The current shape under `data.values` is:
   the level, preserving manual totals and spent slots in both pools. Pact Magic
   circle upgrades remove the old class count from the short-rest pool and grant
   the new circle; slots exceeding that count stay on the old circle;
-- inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry]}]}`, where an
+- inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry],slots?:{[uid]:index}}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
 - potions: an independent array of the same owned entries; physical tools are
   type-14 entries in inventory, while tool proficiency remains in
