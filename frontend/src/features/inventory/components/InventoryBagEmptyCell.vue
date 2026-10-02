@@ -3,7 +3,7 @@
     <template #trigger="{ open }">
       <button type="button" class="inventory-bag-add" :class="{ 'inventory-bag-add--open': open }" :disabled="disabled"
         :aria-label="`Добавить предмет в ячейку ${index + 1}`" :aria-expanded="open" aria-haspopup="menu">
-        <Backpack class="inventory-bag-add__bag" :size="28" aria-hidden="true" />
+        <InventoryEmptyArtwork class="inventory-bag-add__bag" />
         <Plus class="inventory-bag-add__plus" :size="28" aria-hidden="true" />
       </button>
     </template>
@@ -14,7 +14,8 @@
   </RowActionMenu>
 </template>
 <script setup>
-import { Backpack, BookOpen, Plus } from '@lucide/vue'
+import { BookOpen, Plus } from '@lucide/vue'
+import InventoryEmptyArtwork from './InventoryEmptyArtwork.vue'
 import { RowActionMenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 defineProps({ index: Number, disabled: Boolean })

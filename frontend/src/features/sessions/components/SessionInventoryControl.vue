@@ -35,6 +35,8 @@ import { computed, reactive, ref, toRef, watch } from 'vue'
 import { Backpack, Package } from '@lucide/vue'
 import { ActionButton, BasePopover, FormField, FormNumberInput, FormTextInput, FormTextarea, LoadingState, RemoveButton, useSortable } from '@sylvieshare/share-ui'
 import { useSessionInventory } from '../composables/useSessionInventory'
+import { useInventoryIconPresetsStore } from '@/stores/inventoryIconPresets'
+import { customInventoryIcon } from '@/features/inventory/lib/iconPresets'
 import SessionInventoryItem from './SessionInventoryItem.vue'
 import InventoryBagGrid from '@/features/inventory/components/InventoryBagGrid.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
@@ -45,6 +47,8 @@ import TransferDecisionActions from '@/features/item-transfers/components/Transf
 const props = defineProps({ sessionUuid: { type: String, required: true } })
 const controller = useSessionInventory(toRef(props, 'sessionUuid'))
 const state = controller.state
+const iconPresetsStore = useInventoryIconPresetsStore()
+void iconPresetsStore.ensureLoaded()
 const positions = computed(() => Object.fromEntries(state.entries.map(row => [row.id, row.slot])))
 const sortable = reactive(useSortable({
   groups: { 'session-inventory': { items: computed(() => state.entries), layout: 'grid', accepts: () => !state.busy } },
@@ -54,7 +58,7 @@ const sortable = reactive(useSortable({
 const trigger = ref(null), open = ref(false), picker = ref(false), custom = ref(false), view = ref(null)
 const name = ref(''), count = ref(1), description = ref('')
 const itemId = row => Number(row.entry?.magic_item_id || row.entry?.item_id) || null
-const art = row => state.items[itemId(row)]
+const art = row => state.items[itemId(row)] || (customInventoryIcon(row.entry, iconPresetsStore.byId) ? { iconImageUrl: customInventoryIcon(row.entry, iconPresetsStore.byId) } : null)
 watch(open, value => { if (value) void controller.open() })
 watch(() => props.sessionUuid, () => { open.value = picker.value = custom.value = false; view.value = null })
 async function add(...args) { picker.value = false; open.value = true; await controller.add(...args) }

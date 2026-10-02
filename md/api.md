@@ -204,6 +204,7 @@ ability toggles and `status_effect` for adding or removing linked effects.
   `automationStatus`, `automationNote`, `requiresPlayerInteraction` вне `data`.
   Пропущенные значения сохраняются при обновлении. Эти поля доступны в Item DTO
   и MCP `handbook_item_create/update`; [значения и ограничения](features/item-automation.md).
+- `GET /api/inventory/icon-presets` — public `{presets: [{id, itemTypeId, code, name, purpose, sortOrder, imageId, imageUrl}]}`. Only active images are returned. `purpose=item` is selectable for simplified entries; `empty_cell` is reserved for empty bag cells.
 - `POST /api/items/{id}/make-base`
 - `POST /api/items/{id}/icon-image` (multipart PNG/WebP, максимум 5 МБ)
 - `DELETE /api/items/{id}/icon`

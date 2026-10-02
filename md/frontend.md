@@ -1299,3 +1299,11 @@ custom. Форматирование времени и дистанции нах
 (тип 12) и использует `SvgIcon`. Выбранное происхождение сохраняет иконку урона;
 состояние выбора видно по рамке и подписи. Сопротивления выбранного варианта
 копируются движком выдачи в `values.defenses` с устранением одинаковых записей.
+
+`InventoryIconPresetPicker` uses shared `FormField` and `ActionButton` for
+named image choices in the simplified item form. Its domain grid is separate
+from color presets because it selects a catalogue ID and shows raster artwork.
+`inventoryIconPresets` loads one public catalogue shared by the form, inventory,
+empty cells and transfer views, deduplicating concurrent requests and offering
+retry after failure. Entry presentation resolves `icon_preset_id` only for custom
+entries; handbook media retains priority.

@@ -6,14 +6,14 @@
       <slot v-if="entry" :entry="entry" :index="index" />
       <InventoryBagEmptyCell v-else-if="canAdd" :index="index" :disabled="disabled || sortable?.dragging || sortable?.suppressNextClick"
         @add-catalog="$emit('add-catalog', index)" @add-custom="$emit('add-custom', index)" />
-      <Backpack v-else class="inventory-bag-empty" :size="28" aria-hidden="true" />
+      <InventoryEmptyArtwork v-else class="inventory-bag-empty" />
     </BaseTile>
   </div>
 </template>
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { BaseTile } from '@sylvieshare/share-ui'
-import { Backpack } from '@lucide/vue'
+import InventoryEmptyArtwork from './InventoryEmptyArtwork.vue'
 import { bagCells, bagColumnCount, BAG_COLUMNS } from '../lib/bagSlots'
 import InventoryBagEmptyCell from './InventoryBagEmptyCell.vue'
 const props = defineProps({

@@ -197,8 +197,8 @@ wizard reuse `FeatListItem` and open the standard reference modal.
 
 - Types 2 («Вещи») and 19 («Магические предметы») share a transparent
   `128×128` lossless WebP mystery-cube icon with a question mark, matching their
-  common fallback cover. It also appears on simplified character inventory
-  entries; item-level raster icons and SVG retain priority.
+  common fallback cover. It is the default for simplified character inventory entries without a selected
+  preset; item-level raster icons and SVG retain priority.
 
 - Install new system raster media only through MCP
   `handbook_item_set_system_image` or `handbook_item_type_set_system_image`,
@@ -227,6 +227,26 @@ wizard reuse `FeatListItem` and open the standard reference modal.
 - Do not commit generated image binaries to the application repository or add
   them to a startup sync command. Existing sync commands and embedded manifests
   are legacy bootstraps only.
+
+### Simplified inventory icon presets
+
+`item_icon_preset` associates a named raster preset with `item_type_id` and a
+`storage_image` row. Nine initial selectable images cover a pouch, scroll, key,
+gem, blade, shield, vial, hammer and amulet. The Items block offers presets for
+its root collection and linked child types. Simplified entries save only
+`icon_preset_id`; selection is available on creation and editing, with an explicit
+«По умолчанию» choice. Handbook entries retain their own media.
+
+An independent type-2 preset with `purpose=empty_cell` shows an open empty pouch
+in all empty backpack cells, including read-only sheets and session inventory.
+It never appears among item choices. Both image families use genuine alpha,
+lossless 128×128 WebP, a compact silhouette, thick deep-plum contours and broad
+flat-cartoon shading. The empty pouch is deliberately desaturated and displayed
+with reduced opacity. Prompts and final hashes: `md/data/inventory-icon-presets.json`.
+
+Publish through MCP `inventory_icon_preset_set_image`. Images are stored under
+`system-item-media/v1/inventory-presets/{typeId}/{code}/icon/{sha256}.webp`;
+there are no image binaries or startup media uploads in the repository.
 
 ### Character-feature media art direction
 

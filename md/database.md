@@ -362,6 +362,14 @@ Startup section `24_handbook_type_icons.sql` идемпотентно назна
 `cover_image_id → storage_image/S3` и поэтому может сосуществовать с любым
 форматом иконки. Ограничение `item_single_icon_check` обложку намеренно не
 включает; FK использует `ON DELETE SET NULL`.
+`item_icon_preset` (migration 156) stores `item_type_id → item_type`, stable
+`code`, `name`, `purpose` (`item`/`empty_cell`), `sort_order` and
+`image_id → storage_image`. `(item_type_id, code)` is unique; each type has at
+most one empty-cell preset. Images are system assets and remain protected from
+storage cleanup while referenced by a preset. Simplified inventory entries store
+nullable `icon_preset_id` beside `item_id`, outside `params` and `override`.
+The reference is preserved in transfers and resolved by the public preset API.
+
 Фильтры справочника задаются metadata `filter` в `item_type.fields`. Для
 бестиария startup schema поддерживает фильтры по типу, размеру, среде,
 легендарности, именованному NPC и CR; точные варианты CR лежат в

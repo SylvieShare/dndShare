@@ -1,0 +1,105 @@
+{
+  "generator": "Built-in image_gen",
+  "assets": [
+    {
+      "slug": "pouch",
+      "name": "Мешочек",
+      "typeId": 2,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One closed rounded brown leather drawstring pouch with a single thick gold cord tied at the top; sturdy, full, compact silhouette.",
+      "fileName": "pouch.webp",
+      "mimeType": "image/webp",
+      "sha256": "ca4a523f4b74e5991e3867463bdc7d8640b84bb623c656c20ba433b4ea31b342",
+      "purpose": "item"
+    },
+    {
+      "slug": "scroll",
+      "name": "Свиток",
+      "typeId": 2,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One rolled ivory parchment scroll tied with one wide burgundy ribbon, diagonal compact silhouette; no writing.",
+      "fileName": "scroll.webp",
+      "mimeType": "image/webp",
+      "sha256": "0a42971f9ae22913629854ba89d89f2d043119d87758532375693fd09cf2cd97",
+      "purpose": "item"
+    },
+    {
+      "slug": "key",
+      "name": "Ключ",
+      "typeId": 2,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One old brass key with a large round bow and two chunky teeth; diagonal compact silhouette; no tiny filigree.",
+      "fileName": "key.webp",
+      "mimeType": "image/webp",
+      "sha256": "8fc2e8515210a3765ef2ca036f2673ffbabd3aab7d3b97774ea3631bc5c556b9",
+      "purpose": "item"
+    },
+    {
+      "slug": "gem",
+      "name": "Самоцвет",
+      "typeId": 2,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One large faceted teal gemstone; broad five or six facets, compact angular silhouette, restrained warm highlight.",
+      "fileName": "gem.webp",
+      "mimeType": "image/webp",
+      "sha256": "3e8a60fa18678cfc8e13427a5c9737da1e1cb9aedbf35483ad28e07a48ea2f2c",
+      "purpose": "item"
+    },
+    {
+      "slug": "sword",
+      "name": "Клинок",
+      "typeId": 1,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One short straight silver sword with chunky brass crossguard and burgundy wrapped grip, diagonally pointing upper right, complete blade and pommel visible.",
+      "fileName": "sword.webp",
+      "mimeType": "image/webp",
+      "sha256": "639b2f10135c72e2e1b407600193bbf61f09a4050eb2529f3475b684f432c8f3",
+      "purpose": "item"
+    },
+    {
+      "slug": "shield",
+      "name": "Щит",
+      "typeId": 12,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One compact blue steel heater shield with a thick brass rim, three-quarter view, one broad central plane, no emblems or markings.",
+      "fileName": "shield.webp",
+      "mimeType": "image/webp",
+      "sha256": "bbfc28ef50db919ef48c10db5505cf8b28a2004313e45560cb63d3d67a0adaa5",
+      "purpose": "item"
+    },
+    {
+      "slug": "potion",
+      "name": "Флакон",
+      "typeId": 10,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One small round glass potion bottle filled with saturated ruby-red liquid and a chunky cork stopper, broad clean glass reflections, compact silhouette.",
+      "fileName": "potion.webp",
+      "mimeType": "image/webp",
+      "sha256": "26ef73a7c72eaaa7e1948da2b4371b578a9cc4321fded22a4d9f41898f11db76",
+      "purpose": "item"
+    },
+    {
+      "slug": "tools",
+      "name": "Инструмент",
+      "typeId": 14,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One stout smith's hammer with a broad silver head and short brown wooden handle, diagonal compact silhouette.",
+      "fileName": "tools.webp",
+      "mimeType": "image/webp",
+      "sha256": "0f4679bba5b30a91717b62617d48903fce813213c547e8c4797a9956ce529c62",
+      "purpose": "item"
+    },
+    {
+      "slug": "amulet",
+      "name": "Амулет",
+      "typeId": 19,
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One magical gold pendant enclosing a broad faceted purple stone, a short thick loop at the top, compact silhouette; no chain, no glow, no particles.",
+      "fileName": "amulet.webp",
+      "mimeType": "image/webp",
+      "sha256": "04785ab45648b054fa198a2dc274a9f4c0791b1358afd478227ca56a9018e5ca",
+      "purpose": "item"
+    },
+    {
+      "slug": "empty-cell",
+      "name": "Пустая ячейка",
+      "typeId": 2,
+      "purpose": "empty_cell",
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy inventory icon for DnD Share, displayed at 64x64 pixels.\nStyle/medium: polished flat-cartoon game art, thick continuous deep-plum contour, broad clean shapes, saturated jewel-tone material accents, restrained two-step shading and a small warm highlight.\nComposition/framing: ONE isolated object centered on a square canvas, occupying about 80% of the canvas, with even padding. Strong silhouette readable at 64x64. At most seven major shapes.\nConstraints: genuine transparent alpha background. No tile, frame, disc, floor, hands, characters, scene, cast shadow, realistic texture, micro-detail, text, letters, numbers, logo or watermark.\nSubject: One OPEN EMPTY small leather drawstring bag viewed slightly from above. Clearly visible empty dark opening and two wide folded leather lips, hollow inside, no contents. Muted desaturated taupe leather with a deep-plum outline. Compact rounded silhouette. This is a quiet empty inventory slot placeholder, so use simpler shapes and lower saturation than a real inventory object.",
+      "fileName": "empty-cell.webp",
+      "mimeType": "image/webp",
+      "sha256": "813e0d07dcbeec96d47380270684752418959f03daff5c4b3cd4f9229e6e5d0c"
+    }
+  ]
+}

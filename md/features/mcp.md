@@ -31,6 +31,7 @@ Write:
 - `handbook_item_set_content_sources`;
 - `handbook_item_set_system_image`;
 - `handbook_item_type_set_system_image`;
+- `inventory_icon_preset_set_image`;
 - `handbook_bestiary_migrate_icons_to_covers`;
 - `handbook_suggest_create`, `handbook_suggest_update`,
   `handbook_suggest_set_svg`, `handbook_suggest_delete`.
@@ -71,6 +72,14 @@ write-tool транзакционно заменяет только source links
 обновлённый `itemType`. Его content-addressed namespace —
 `system-item-media/v1/item-types/{typeId}/{slot}/{sha256}.{ext}`. Типовая
 обложка является fallback: собственная обложка item всегда имеет приоритет.
+
+`inventory_icon_preset_set_image` publishes a named inventory preset using
+`typeId`, stable lowercase `code`, `name`, `purpose` (`item`/`empty_cell`), optional
+`sortOrder` (0–10000) and the standard icon `fileName`, `mimeType`, `dataBase64`,
+`preservePrevious` contract. It requires MCP writes, accepts PNG/WebP up to 5 MB,
+and atomically upserts the preset plus system storage row. Repeating `(typeId,code)`
+retains the preset ID; repeating bytes reuses the image. It returns `{preset,
+objectKey,fileSize}`. Empty-cell art is separate from selectable icons.
 
 `handbook_bestiary_migrate_icons_to_covers` переносит уже существующие
 растровые изображения базовых существ из `icon_image_id` в `cover_image_id`,
