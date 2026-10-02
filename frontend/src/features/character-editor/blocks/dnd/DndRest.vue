@@ -180,7 +180,7 @@ function emitPatch(patch) {
 </script>
 
 <style scoped>
-.rest-block { min-width: 0; }
+.rest-block { min-width: 0; height: 100%; }
 
 .rest-tile {
   position: relative;

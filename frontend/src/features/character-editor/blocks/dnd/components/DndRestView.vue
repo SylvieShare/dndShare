@@ -1,5 +1,5 @@
 <template>
-  <RowActionMenu block title="Отдых и рассвет" :disabled="!interactive">
+  <RowActionMenu block :trigger-attrs="{ style: { height: '100%' } }" title="Отдых и рассвет" :disabled="!interactive">
     <template #trigger>
       <ActionButton class="rest-trigger" variant="quiet" :disabled="!interactive" aria-label="Отдых и рассвет">
         <template #icon><Moon :size="25" /></template>
@@ -20,5 +20,5 @@ defineProps({ interactive: { type: Boolean, default: false } })
 defineEmits(['short', 'long', 'dawn'])
 </script>
 <style scoped>
-.rest-trigger { width: 100%; height: 100%; min-height: 64px; gap: 5px; padding: 6px; }
+.rest-trigger { display: flex; width: 100%; height: 100%; min-height: 64px; gap: 5px; padding: 6px; }
 </style>
