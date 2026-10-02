@@ -766,8 +766,12 @@ equipment state is selected through the item menu and does not create a separate
 is for a custom name/description/count metadata, while referenced item content
 comes from handbook. A referenced row prefers `iconImageUrl`, then `svg`, then
 the collection image. Weapon, armor and ordinary item rows retain type-specific
-content composition; simplified custom inventory cells use the root collection's
-icon as a placeholder (the mystery cube for «Вещи»). Inventory icons scale inside
+content composition; simplified custom inventory cells use the selected `icon_preset_id`, or the root
+collection icon by default (the mystery cube for «Вещи»). Creation and editing
+allow choosing a named preset from the root collection and its linked types.
+Selection survives moving, stacking and transfers; URLs are resolved from the
+shared preset catalogue rather than stored in the character. Empty backpack
+cells use the separate S3 artwork of an open empty pouch. Inventory icons scale inside
 the square bag cells; equipment state is marked by the purple cell frame. Weapon cards use the same 64×64 slot and prefer the
 handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
 weapon-specific attack, damage and property composition remains unchanged. A

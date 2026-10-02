@@ -70,6 +70,8 @@
       :entry="form.entry"
       :base-item="form.baseItem"
       :instance-fields="form.instanceFields"
+      :icon-type-ids="pickerTypeIds"
+      :default-icon-url="typeById[rootTypeId]?.iconImageUrl"
       @close="form.open = false"
       @save="onInlineFormSave"
     />
@@ -106,6 +108,7 @@ import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { SectionLabel } from '@sylvieshare/share-ui'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { useItemTypesStore } from '@/stores/itemTypes'
+import { useInventoryIconPresetsStore } from '@/stores/inventoryIconPresets'
 import { useSuggestStore } from '@/stores/suggest'
 import MagicEquipmentInstanceModal from '@/features/items/components/MagicEquipmentInstanceModal.vue'
 import { useInventoryEquipmentActions } from './composables/useInventoryEquipmentActions'
@@ -145,6 +148,8 @@ const confirmDel = reactive({ open: false, id: null, name: '' })
 const renamingId = ref(null)
 const renameInputs = ref([])
 const itemTypesStore = useItemTypesStore()
+const iconPresetsStore = useInventoryIconPresetsStore()
+void iconPresetsStore.ensureLoaded()
 const suggestStore = useSuggestStore()
 const diceStore = useDiceStore()
 const toolAbilityOptions = STAT_KEYS.map((key, index) => ({ key, suggestId: index + 1, label: STAT_FULL[key] }))
@@ -185,7 +190,7 @@ const toolTypeId = computed(() => Number(props.block.content?.tool_type_id) || 1
 
 
 function entryWithDisplay(entry) {
-  return { ...entry, display: entryDisplayData(entry, catalog, typeById.value, rootTypeId.value) }
+  return { ...entry, display: entryDisplayData(entry, catalog, typeById.value, rootTypeId.value, iconPresetsStore.byId) }
 }
 
 function entryTypeId(entry) {
@@ -407,12 +412,14 @@ function onInlineFormSave(fields) {
       if (fields.desc !== (baseData.desc || '')) ov.desc = fields.desc
       if (fields.consumable !== !!baseData.consumable) ov.consumable = fields.consumable
       item.override = Object.keys(ov).length ? ov : null
+      if (item.item_id == null) item.icon_preset_id = fields.iconPresetId
       item.params = mergeEditedInstanceParams(item.params, fields.params, form.instanceFields)
     }
   } else {
     list.push({
       uid: makeEntryUid(),
       item_id: null,
+      icon_preset_id: fields.iconPresetId,
       count: 1,
       params: {},
       override: { name: fields.name, desc: fields.desc, consumable: fields.consumable },

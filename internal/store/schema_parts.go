@@ -165,4 +165,5 @@ var schemaParts = []struct {
 	{"race-choice-presentation", schemaRaceChoicePresentationSQL},
 	{"dragonborn-defenses-spell-fields", schemaDragonbornDefensesSQL},
 	{"inventory-grid", schemaInventoryGridSQL},
+	{"inventory-icon-presets", schemaInventoryIconPresetsSQL},
 }

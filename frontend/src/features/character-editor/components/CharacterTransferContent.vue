@@ -51,14 +51,18 @@ import { ArrowRight, Package } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { useInventoryIconPresetsStore } from '@/stores/inventoryIconPresets'
+import { customInventoryIcon } from '@/features/inventory/lib/iconPresets'
 import { ActionButton, BaseTile, LoadingIndicator } from '@sylvieshare/share-ui'
 import { pvAvatar } from '@/features/sessions/lib/participantView'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
 const emit = defineEmits(['view-item'])
 const state = computed(() => props.controller.state)
 const items = ref({})
+const iconPresetsStore = useInventoryIconPresetsStore()
+void iconPresetsStore.ensureLoaded()
 const itemId = transfer => Number(transfer.entry?.magic_item_id || transfer.entry?.item_id) || null
-const artwork = transfer => items.value[itemId(transfer)]
+const artwork = transfer => items.value[itemId(transfer)] || (customInventoryIcon(transfer.entry, iconPresetsStore.byId) ? { iconImageUrl: customInventoryIcon(transfer.entry, iconPresetsStore.byId) } : null)
 function personImage(transfer, role) {
   return transfer[`${role}ImageUrl`] || pvAvatar(state.value.participants.find(player => player.charUuid === transfer[`${role}CharUuid`])) || ''
 }

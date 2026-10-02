@@ -3,6 +3,7 @@ import { ownedWeaponFields } from './ownedWeaponFields'
 import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from './itemEntry'
 import { instanceDisplayName } from '@/features/items/lib/itemInstance'
+import { customInventoryIcon, presetId } from '@/features/inventory/lib/iconPresets'
 
 export const EQUIPPED_ID = 'equipped'
 export const DEFAULT_SECTION_NAME = 'Рюкзак'
@@ -15,6 +16,7 @@ function normalizeEntry(it) {
     ...ownedWeaponFields(it),
     uid: it.uid || makeEntryUid(),
     item_id: it.item_id ?? null,
+    icon_preset_id: it.item_id == null ? presetId(it.icon_preset_id) : null,
     count: Math.max(1, Number(it.count) || 1),
     params: it.params && typeof it.params === 'object' && !Array.isArray(it.params) ? { ...it.params } : {},
     override: it.override && typeof it.override === 'object' ? { ...it.override } : null,
@@ -58,6 +60,7 @@ export function cloneModel(model) {
     ...ownedWeaponFields(it),
     uid: it.uid,
     item_id: it.item_id ?? null,
+    icon_preset_id: it.item_id == null ? presetId(it.icon_preset_id) : null,
     count: it.count,
     params: { ...(it.params || {}) },
     override: it.override ? { ...it.override } : null,
@@ -73,7 +76,7 @@ export function cloneModel(model) {
   }
 }
 
-export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2) {
+export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2, presetsById = {}) {
   const base = resolveWeaponItem(entry, catalog)
   const ov = entry.override || {}
   const namedBase = base ? { ...base, name: ov.name ?? base.name } : { name: ov.name ?? '—', data: {} }
@@ -91,7 +94,7 @@ export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2) 
   const weight = ov.weight ?? measuredWeight ?? base?.data?.weight ?? null
   const isCustom = entry.item_id == null
   const svg = base?.svg ?? ''
-  const iconImageUrl = base?.iconImageUrl || ''
+  const iconImageUrl = base?.iconImageUrl || customInventoryIcon(entry, presetsById)
   const typeImageUrl = !iconImageUrl && !svg ? (typeById[base?.typeId ?? (isCustom ? rootTypeId : null)]?.iconImageUrl || '') : ''
   return { name, desc, consumable, cost, weight, isCustom, svg, iconImageUrl, typeImageUrl, base }
 }

@@ -29,7 +29,7 @@ func TestTransferWeaponPreservesInstanceAndOtherValues(t *testing.T) {
 	}
 }
 func TestTransferCustomBagEntryAndInvalidSource(t *testing.T) {
-	doc, _ := decodeTransferDocument(json.RawMessage(`{"values":{"items":{"equipped":[],"sections":[{"id":"first","items":[]},{"id":"second","items":[{"uid":"custom","count":4,"override":{"name":"Самоцвет"},"params":{"weight":2}}]}]}}}`))
+	doc, _ := decodeTransferDocument(json.RawMessage(`{"values":{"items":{"equipped":[],"sections":[{"id":"first","items":[]},{"id":"second","items":[{"uid":"custom","count":4,"icon_preset_id":17,"override":{"name":"Самоцвет"},"params":{"weight":2}}]}]}}}`))
 	if _, err := doc.take("abilities", "custom"); err != ErrItemTransferConflict {
 		t.Fatal("invalid source accepted")
 	}
@@ -42,5 +42,8 @@ func TestTransferCustomBagEntryAndInvalidSource(t *testing.T) {
 	first := sections[0].(map[string]any)["items"].([]any)
 	if len(first) != 1 || len(sections[1].(map[string]any)["items"].([]any)) != 0 || first[0].(map[string]any)["count"] != float64(4) {
 		t.Fatalf("wrong return: %+v", sections)
+	}
+	if first[0].(map[string]any)["icon_preset_id"] != float64(17) {
+		t.Fatalf("lost preset identity during transfer: %+v", first)
 	}
 }

@@ -346,6 +346,8 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		return s.toolSystemItemSetImage(ctx, args)
 	case "handbook_item_type_set_system_image":
 		return s.toolSystemItemTypeSetImage(ctx, args)
+	case "inventory_icon_preset_set_image":
+		return s.toolInventoryIconPresetSetImage(ctx, args)
 	case "handbook_bestiary_migrate_icons_to_covers":
 		return s.toolSystemBestiaryMigrateIconsToCovers(ctx, args)
 	case "handbook_suggest_create":

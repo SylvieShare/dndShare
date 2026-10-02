@@ -5,6 +5,8 @@
       <FormTextInput v-model:value="name" aria-label="Название" placeholder="Название..." autofocus @enter="submit" />
     </FormField>
 
+    <InventoryIconPresetPicker v-if="!baseItem" v-model="iconPresetId" :type-ids="iconTypeIds" :default-image-url="defaultIconUrl" />
+
     <FormField label="Описание" vertical>
       <FormTextarea v-model:value="desc" aria-label="Описание" placeholder="Описание..." :rows="4" />
     </FormField>
@@ -47,11 +49,15 @@ import { FormTextInput } from '@sylvieshare/share-ui'
 import { FormTextarea } from '@sylvieshare/share-ui'
 import ItemInstanceParamsFields from '@/features/items/components/ItemInstanceParamsFields.vue'
 import { normalizeInstanceParams } from '@/features/items/lib/itemInstance'
+import InventoryIconPresetPicker from '@/features/inventory/components/InventoryIconPresetPicker.vue'
+import { presetId } from '@/features/inventory/lib/iconPresets'
 
 const props = defineProps({
   entry: { type: Object, default: null },
   baseItem: { type: Object, default: null },
   instanceFields: { type: Array, default: () => [] },
+  iconTypeIds: { type: Array, default: () => [2] },
+  defaultIconUrl: String,
 })
 const emit = defineEmits(['close', 'save'])
 
@@ -60,6 +66,7 @@ const fallback = props.baseItem?.data || {}
 const name = ref(ov.name ?? props.baseItem?.name ?? '')
 const desc = ref(ov.desc ?? fallback.desc ?? '')
 const consumable = ref(!!(ov.consumable ?? fallback.consumable ?? false))
+const iconPresetId = ref(presetId(props.entry?.icon_preset_id))
 const params = ref(normalizeInstanceParams(props.entry?.params, props.instanceFields, { defaults: true }))
 
 function submit() {
@@ -70,6 +77,7 @@ function submit() {
     desc: desc.value,
     consumable: consumable.value,
     params: params.value,
+    iconPresetId: iconPresetId.value,
   })
 }
 </script>
