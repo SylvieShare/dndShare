@@ -13,10 +13,10 @@ func testPotionUseRequests(t *testing.T, s *Store, exec func(string), current fu
 	t.Helper()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	exec(`UPDATE dndshare."char" SET data=jsonb_set(data,'{values,potions}',(data #> '{values,potions}') || '[{"uid":"use-potion","count":2,"override":{"name":"Зелье применения"},"params":{"custom":7}}]'::jsonb) WHERE id=1`)
+	exec(`UPDATE dndshare."char" SET data=jsonb_set(data,'{values,items,sections,0,items}',(data #> '{values,items,sections,0,items}') || '[{"uid":"use-potion","count":2,"override":{"name":"Зелье применения"},"params":{"custom":7}}]'::jsonb) WHERE id=1`)
 	count := func() float64 {
 		doc, _ := decodeTransferDocument(current(1).Data)
-		for _, raw := range doc.values()["potions"].([]any) {
+		for _, raw := range potionTestEntries(doc) {
 			entry := raw.(map[string]any)
 			if entry["uid"] == "use-potion" {
 				return entry["count"].(float64)
@@ -28,24 +28,24 @@ func testPotionUseRequests(t *testing.T, s *Store, exec func(string), current fu
 		before := count()
 		sender, recipient := current(1), current(2)
 		action := fmt.Sprintf("00000000-0000-4000-8000-%012d", 100+n)
-		if _, err := s.CreatePotionUse(ctx, 3, 1, 1, 2, sender.Version, "use-potion", action); !errors.Is(err, ErrNotFound) {
+		if _, err := s.CreateItemUse(ctx, 3, 1, 1, 2, sender.Version, "use-potion", action, "", "items"); !errors.Is(err, ErrNotFound) {
 			t.Fatalf("non-owner: %v", err)
 		}
-		if _, err := s.CreatePotionUse(ctx, 1, 1, 1, 3, sender.Version, "use-potion", action); !errors.Is(err, ErrNotFound) {
+		if _, err := s.CreateItemUse(ctx, 1, 1, 1, 3, sender.Version, "use-potion", action, "", "items"); !errors.Is(err, ErrNotFound) {
 			t.Fatalf("outsider target: %v", err)
 		}
-		if _, err := s.CreatePotionUse(ctx, 1, 1, 1, 2, sender.Version-1, "use-potion", action); !errors.Is(err, ErrCharacterVersion) {
+		if _, err := s.CreateItemUse(ctx, 1, 1, 1, 2, sender.Version-1, "use-potion", action, "", "items"); !errors.Is(err, ErrCharacterVersion) {
 			t.Fatalf("stale version: %v", err)
 		}
-		offer, err := s.CreatePotionUse(ctx, 1, 1, 1, 2, sender.Version, "use-potion", action)
+		offer, err := s.CreateItemUse(ctx, 1, 1, 1, 2, sender.Version, "use-potion", action, "", "items")
 		if err != nil || offer.Purpose != "use" || count() != before-1 {
 			t.Fatalf("reservation: %+v %v count=%v", offer, err, count())
 		}
-		retry, err := s.CreatePotionUse(ctx, 1, 1, 1, 2, sender.Version, "use-potion", action)
+		retry, err := s.CreateItemUse(ctx, 1, 1, 1, 2, sender.Version, "use-potion", action, "", "items")
 		if err != nil || retry.ID != offer.ID || count() != before-1 {
 			t.Fatalf("retry spent again: %+v %v", retry, err)
 		}
-		if _, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, sender.Version, "potions", "use-potion", action); !errors.Is(err, ErrItemTransferConflict) {
+		if _, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, sender.Version, "items", "use-potion", action); !errors.Is(err, ErrItemTransferConflict) {
 			t.Fatalf("purpose mismatch: %v", err)
 		}
 		if _, err := s.ResolveItemTransfer(ctx, 1, 1, offer.ID, true); !errors.Is(err, ErrNotFound) {
@@ -59,7 +59,7 @@ func testPotionUseRequests(t *testing.T, s *Store, exec func(string), current fu
 				defer wg.Done()
 				var err error
 				if i == 0 {
-					_, err = s.CreatePotionUse(ctx, 1, 1, 1, 2, sender.Version, "use-potion", action)
+					_, err = s.CreateItemUse(ctx, 1, 1, 1, 2, sender.Version, "use-potion", action, "", "items")
 				} else if i == 1 && n == 2 {
 					_, err = s.ApproveSessionTransfer(ctx, 3, 1, offer.EventID)
 				} else if i == 2 && !accept {
@@ -91,7 +91,7 @@ func testPotionUseRequests(t *testing.T, s *Store, exec func(string), current fu
 			t.Fatalf("resolved request changed: %v", err)
 		}
 	}
-	if _, err := s.CreatePotionUse(ctx, 1, 1, 1, 2, current(1).Version, "use-potion", "00000000-0000-4000-8000-000000000199"); !errors.Is(err, ErrItemTransferConflict) {
+	if _, err := s.CreateItemUse(ctx, 1, 1, 1, 2, current(1).Version, "use-potion", "00000000-0000-4000-8000-000000000199", "", "items"); !errors.Is(err, ErrItemTransferConflict) {
 		t.Fatalf("spent potion reused: %v", err)
 	}
 }

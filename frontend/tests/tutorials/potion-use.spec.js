@@ -4,10 +4,10 @@ import { TUTORIAL_REVISION } from '../../src/features/tutorials/lib/tutorialIden
 for (const mobile of [false, true]) test(`potion use reserves one dose, requests consent and consumes on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   page.on('pageerror', error => { throw error })
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
-  const item = { uid: 'potion', item_id: null, count: 3, override: { name: 'Зелье лечения', desc: 'Восстанавливает хиты' }, params: {} }
+  const item = { uid: 'potion', item_id: 84, count: 3, override: { name: 'Зелье лечения', desc: 'Восстанавливает хиты' }, params: {} }
   const character = (name, items) => ({ templateName: 'DND5', userId: 1, sourceVersionId: 1, version: 1, data: { values: {
     name, hp: { current: 10, max: { base: 10, bonuses: [] }, hitDice: [] },
-    potions: items, items: { equipped: [], sections: [{ id: 'bag', name: 'Рюкзак', items: [] }] },
+    items: { equipped: [], sections: [{ id: 'bag', name: 'Рюкзак', items }] },
     STR: { value: 10 }, DEX: { value: 10 }, CON: { value: 10 }, INT: { value: 10 }, WIS: { value: 10 }, CHA: { value: 10 },
   }, var: { stats: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 } } } })
   const chars = { sender: character('Лиора', [item]), recipient: character('Торин', []) }
@@ -20,6 +20,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     const parts = path.split('/'), char = chars[parts[3]]
     let json = {}
     if (path === '/api/account/tutorials') json = { tutorials: [false, true].map(m => ({ flowId: 'character', sourceKey: 'edition:1', device: m ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION, status: 'completed' })) }
+    else if (path.startsWith('/api/items')) json = { items: [{ id: 84, name: 'Зелье лечения', typeId: 10, data: { desc: 'Восстанавливает хиты', usable: { healing: '2d4 + 2' } } }] }
     else if (path === '/api/templates') json = { templates: [{ id: 1, name: 'DND5' }] }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     else if (path === '/api/sessions/campaign') json = { session, participants: Object.entries(chars).map(([charUuid, c]) => ({ charUuid, templateId: 1, data: c.data, iconImageUrl: '/static/tab-stats.svg' })) }
@@ -38,12 +39,12 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
         transfer.status = accept ? 'accepted' : 'rejected'
         if (accept) transfer.applicationResult = { healing: { formula: '2d4 + 2', dice: [2, 4], total: 8, applied: 0 } }
         const destination = chars[accept ? transfer.recipientCharUuid : transfer.senderCharUuid]
-        if (!accept) { destination.data.values.potions[0].count++; destination.version++ }
+        if (!accept) { destination.data.values.items.sections[0].items[0].count++; destination.version++ }
         json = { transfer }
       } else {
         const body = request.postDataJSON(); requests.push(body)
         expect(body.version).toBe(char.version)
-        const entries = char.data.values.potions
+        const entries = char.data.values.items.sections[0].items
         const index = entries.findIndex(entry => entry.uid === body.entryUid)
         expect(index).toBeGreaterThanOrEqual(0)
         expect(body.purpose).toBe('use')
@@ -68,7 +69,7 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     })
   }
   async function openPotionMenu() {
-  const row = page.locator('.ps-glasswrap:visible')
+  const row = page.locator('.inventory-bag-item:visible')
     await row.scrollIntoViewIfNeeded()
     // Let the scroll event finish before opening the scroll-dismissed action menu.
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
@@ -95,8 +96,8 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     await expect(page.getByRole('dialog', { name: 'Передать', exact: true })).toHaveCount(0)
     await expect(recipient.locator('img')).toHaveCSS('width', '48px')
     await recipient.click()
-    await expect(page.locator('.ps-badge:visible')).toHaveText('×2')
-    expect(chars.sender.data.values.potions[0].count).toBe(2)
+    await expect(page.locator('.inventory-bag-item__count:visible')).toHaveText('2')
+    expect(chars.sender.data.values.items.sections[0].items[0].count).toBe(2)
     await page.getByRole('button', { name: 'События', exact: true }).click()
     await expect(page.locator('.transfer-offer > svg[aria-label="Кому"] + .transfer-person')).toContainText('Торин')
     await expect(page.locator('.transfer-offer')).not.toContainText('Лиора')
@@ -126,12 +127,12 @@ for (const mobile of [false, true]) test(`potion use reserves one dose, requests
     }
     await expect(page.getByRole('dialog')).toHaveCount(0)
     if (decision === 'Отказать') await openSheet('sender')
-    else expect(chars.recipient.data.values.potions).toHaveLength(0)
+    else expect(chars.recipient.data.values.items.sections[0].items).toHaveLength(0)
   }
   expect(requests).toHaveLength(2)
-  expect(requests[0]).toMatchObject({ purpose: 'use', source: 'potions', entryUid: 'potion', sessionUuid: 'campaign', recipientCharUuid: 'recipient' })
+  expect(requests[0]).toMatchObject({ purpose: 'use', source: 'items', entryUid: 'potion', sessionUuid: 'campaign', recipientCharUuid: 'recipient' })
   expect(requests[0].clientActionId).not.toBe(requests[1].clientActionId)
-  expect(chars.recipient.data.values.potions).toHaveLength(0)
+  expect(chars.recipient.data.values.items.sections[0].items).toHaveLength(0)
   connected = false
   await openSheet('sender')
   await openPotionMenu()

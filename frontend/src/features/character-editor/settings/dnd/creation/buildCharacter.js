@@ -310,11 +310,9 @@ export function buildCharacterData(input) {
   // possessions. Only purchases enter inventory; unspent change enters money.
   const startingEquipment = mergeEquipment(equipment, buyStartingEquipment && rulesVersion !== '2024' ? [] : backgroundStart.items)
   const isCatalogueWeapon = (entry) => Number(entry.typeId) === 1 && entry.item_id != null
-  const isCataloguePotion = (entry) => Number(entry.typeId) === 10 && entry.item_id != null
   const weapons = startingEquipment.filter(isCatalogueWeapon)
-  const potions = startingEquipment.filter(isCataloguePotion)
-  const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && isArmorEquipment(entry))
-  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isCataloguePotion(entry) && !isArmorEquipment(entry))
+  const equippedArmor = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && isArmorEquipment(entry))
+  const inventory = startingEquipment.filter((entry) => !isCatalogueWeapon(entry) && !isArmorEquipment(entry))
   const ownedEntry = (entry, index, prefix) => ({
     uid: `${prefix}_${index}`,
     item_id: entry.item_id ?? null,
@@ -331,7 +329,6 @@ export function buildCharacterData(input) {
       () => ({ ...defaultWeaponEntry(), item_id: entry.item_id, params: { ...defaultWeaponEntry().params, ...(entry.params || {}) } }),
     ))
   }
-  if (potions.length) values.potions = potions.map((entry, index) => ownedEntry(entry, index, 'potion'))
   if (inventory.length || equippedArmor.length) {
     values.items = {
       equipped: inventoryEntries(equippedArmor, 'worn'),

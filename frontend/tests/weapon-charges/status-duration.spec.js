@@ -56,14 +56,14 @@ test('readers see durations and cannot edit or use potions', async ({ page }) =>
   await page.locator('.dsov-effect').first().click()
   await expect(page.getByRole('menuitem', { name: 'Изменить длительность', exact: true })).toHaveCount(0)
   await page.keyboard.press('Escape')
-  await page.getByRole('button', { name: 'Действия: Зелье скорости' }).click()
-  await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Зелье скорости' }).click()
+  await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toHaveCount(0)
 })
 
 test('self use is a separate action and a removed effect is not restored by its editor', async ({ page }) => {
   await page.goto('/tests/weapon-charges/status-duration.html')
-  await page.getByRole('button', { name: 'Действия: Зелье скорости' }).click()
-  await expect(page.getByRole('menuitem', { name: 'Использовать на себя', exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Зелье скорости' }).click()
+  await expect(page.getByRole('menuitem', { name: 'Использовать на…', exact: true })).toBeVisible()
   await page.keyboard.press('Escape')
   await editDuration(page, false)
   await page.evaluate(() => window.fixture.values.states.splice(0, 1))

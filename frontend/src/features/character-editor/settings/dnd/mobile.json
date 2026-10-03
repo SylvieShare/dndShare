@@ -136,10 +136,6 @@
             "title": "Кошелек"
           },
           {
-            "ref": "potions",
-            "kind": "block"
-          },
-          {
             "ref": "items",
             "kind": "block"
           }

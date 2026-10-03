@@ -17,7 +17,7 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
  (100,'Эффект',15,'{"stacking":"single","concentration":true,"application_sources":[{"item":101},{"item":102}],"duration":{"kind":"minutes","value":1}}'),
  (101,'Заклинание',5,'{"status_effects":[{"key":"buff","effect":{"id":100}}]}'),
  (102,'Зелье эффекта',10,'{"usable":{"spell":{"id":101},"duration":{"kind":"hours","formula":"1d4"},"concentration":false}}');
- UPDATE dndshare."char" SET data='{"values":{"name":"Тест","hp":{"current":0,"max":{"base":10,"bonuses":[]},"ds_failure":2},"potions":[{"uid":"heal","item_id":84,"count":3},{"uid":"effect","item_id":102,"count":2}]}}' WHERE id=1;
+ UPDATE dndshare."char" SET data='{"values":{"name":"Тест","hp":{"current":0,"max":{"base":10,"bonuses":[]},"ds_failure":2},"items":{"equipped":[],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"heal","item_id":84,"count":3},{"uid":"effect","item_id":102,"count":2}]}]}}}' WHERE id=1;
  UPDATE dndshare."char" SET data='{"values":{"hp":{"current":1,"max":{"base":2,"bonuses":[]}},"states":[{"uid":"existing-concentration","effect_id":999,"concentration":true}]}}' WHERE id=2;`)
 	version := current(1).Version
 	id := "00000000-0000-4000-8000-000000009000"
@@ -25,7 +25,7 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
 	results := make(chan ApplicationResult, 2)
 	errs := make(chan error, 2)
 	for range 2 {
-		wg.Go(func() { r, e := s.UseItemSelf(ctx, 1, 1, version, "heal", id, "", "potions"); results <- r; errs <- e })
+		wg.Go(func() { r, e := s.UseItemSelf(ctx, 1, 1, version, "heal", id, "", "items"); results <- r; errs <- e })
 	}
 	wg.Wait()
 	close(results)
@@ -43,13 +43,13 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
 	if current(1).Version != version+1 {
 		t.Fatal("self use duplicated")
 	}
-	if _, err := s.UseItemSelf(ctx, 2, 1, version, "heal", id, "", "potions"); !errors.Is(err, ErrNotFound) {
+	if _, err := s.UseItemSelf(ctx, 2, 1, version, "heal", id, "", "items"); !errors.Is(err, ErrNotFound) {
 		t.Fatal(err)
 	}
-	if _, err := s.UseItemSelf(ctx, 1, 1, version, "effect", id, "", "potions"); !errors.Is(err, ErrItemTransferConflict) {
+	if _, err := s.UseItemSelf(ctx, 1, 1, version, "effect", id, "", "items"); !errors.Is(err, ErrItemTransferConflict) {
 		t.Fatal(err)
 	}
-	offer, err := s.CreatePotionUse(ctx, 1, 1, 1, 2, current(1).Version, "effect", "00000000-0000-4000-8000-000000009001")
+	offer, err := s.CreateItemUse(ctx, 1, 1, 1, 2, current(1).Version, "effect", "00000000-0000-4000-8000-000000009001", "", "items")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -77,7 +77,7 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
 	if len(array(doc.values()["states"])) != 2 {
 		t.Fatal("potion replaced unrelated concentration", doc)
 	}
-	healOffer, err := s.CreatePotionUse(ctx, 1, 1, 1, 2, current(1).Version, "heal", "00000000-0000-4000-8000-000000009002")
+	healOffer, err := s.CreateItemUse(ctx, 1, 1, 1, 2, current(1).Version, "heal", "00000000-0000-4000-8000-000000009002", "", "items")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,25 +92,25 @@ func testPotionApplications(t *testing.T, s *Store, exec func(string), current f
 	exec(`INSERT INTO dndshare.item(id,name,type_id,data) VALUES
  (103,'Выбор',10,'{"usable":{"choices":[{"key":"healing","healing":"10"}]}}'),
  (104,'Бонус хитов',7,'{"hp_bonuses":[{"base":3,"per_level":1}]}');
- UPDATE dndshare."char" SET data=jsonb_set(data,'{values,potions}',(data#>'{values,potions}') || '[{"uid":"choice","item_id":103,"count":2}]') WHERE id=1;`)
+ UPDATE dndshare."char" SET data=jsonb_set(data,'{values,items,sections,0,items}',(data#>'{values,items,sections,0,items}') || '[{"uid":"choice","item_id":103,"count":2}]') WHERE id=1;`)
 	version = current(1).Version
-	if _, err := s.UseItemSelf(ctx, 1, 1, version, "choice", "00000000-0000-4000-8000-000000009003", "", "potions"); !errors.Is(err, ErrApplication) {
+	if _, err := s.UseItemSelf(ctx, 1, 1, version, "choice", "00000000-0000-4000-8000-000000009003", "", "items"); !errors.Is(err, ErrApplication) {
 		t.Fatal("missing choice accepted", err)
 	}
 	if current(1).Version != version {
 		t.Fatal("invalid choice consumed a dose")
 	}
-	exec(`UPDATE dndshare."char" SET data=data || '{"values":{"name":"Бонус","lvl":{"level":5},"hp":{"current":9,"max":{"base":10,"bonuses":[]}},"abilities_feats":[{"id":104}],"potions":[{"uid":"choice","item_id":103,"count":1}]}}'::jsonb WHERE id=1;`)
-	r, err := s.UseItemSelf(ctx, 1, 1, version, "choice", "00000000-0000-4000-8000-000000009003", "healing", "potions")
+	exec(`UPDATE dndshare."char" SET data=data || '{"values":{"name":"Бонус","lvl":{"level":5},"hp":{"current":9,"max":{"base":10,"bonuses":[]}},"abilities_feats":[{"id":104}],"items":{"equipped":[],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"choice","item_id":103,"count":1}]}]}}}'::jsonb WHERE id=1;`)
+	r, err := s.UseItemSelf(ctx, 1, 1, version, "choice", "00000000-0000-4000-8000-000000009003", "healing", "items")
 	if err != nil || r.Healing.Applied != 9 {
 		t.Fatal("derived maximum", r, err)
 	}
 	exec(`UPDATE dndshare.item SET user_id=3 WHERE id=84;
- UPDATE dndshare."char" SET data=jsonb_set(data,'{values,potions}','[{"uid":"private","item_id":84,"count":1}]') WHERE id=1;`)
-	if _, err := s.UseItemSelf(ctx, 1, 1, current(1).Version, "private", "00000000-0000-4000-8000-000000009005", "", "potions"); !errors.Is(err, ErrNotFound) {
+ UPDATE dndshare."char" SET data=jsonb_set(data,'{values,items,sections,0,items}','[{"uid":"private","item_id":84,"count":1}]') WHERE id=1;`)
+	if _, err := s.UseItemSelf(ctx, 1, 1, current(1).Version, "private", "00000000-0000-4000-8000-000000009005", "", "items"); !errors.Is(err, ErrNotFound) {
 		t.Fatal("private catalogue exposed", err)
 	}
-	if _, err := s.UseItemSelf(ctx, 1, 2, current(2).Version, "choice", "00000000-0000-4000-8000-000000009004", "", "potions"); !errors.Is(err, ErrNotFound) {
+	if _, err := s.UseItemSelf(ctx, 1, 2, current(2).Version, "choice", "00000000-0000-4000-8000-000000009004", "", "items"); !errors.Is(err, ErrNotFound) {
 		t.Fatal("non-owner", err)
 	}
 

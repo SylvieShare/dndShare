@@ -97,7 +97,7 @@ schema-stable `innerTab-*` query keys. Reload and browser history restore both
 the outer character tab and its inner pane; invalid or stale inner indexes fall
 back to the first pane. Every weapon uses its own shared desktop/mobile `BaseTile`.
 Все пространства предметов собраны в одном `BaseTile`: разделённые заголовками
-и тихими линиями рюкзаки без режима списка и отдельной области «Экипировано».
+и линиями с названием рюкзаки без режима списка и отдельной области «Экипировано».
 Число колонок зависит от ширины пространства (ячейка от 72 px, зазор 8 px).
 В пустой ячейке сумка плавно сменяется плюсом при наведении/фокусе; меню предлагает
 справочник и собственный предмет. `prefers-reduced-motion` отключает переход.
@@ -254,8 +254,8 @@ The current shape under `data.values` is:
   the new circle; slots exceeding that count stay on the old circle;
 - inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry],slots?:{[uid]:index}}]}`, where an
   owned item entry is `{uid,item_id,count,params,override}`;
-- potions: an independent array of the same owned entries; physical tools are
-  type-14 entries in inventory, while tool proficiency remains in
+- potions: type-10 owned entries inside inventory spaces, without a separate
+  value or block; physical tools are type-14 entries in inventory, while tool proficiency remains in
   `proficiencies['Инструменты']` and is not inferred from ownership;
 - wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
 - race/class/feat abilities: arrays of item references/current counters
@@ -908,8 +908,8 @@ separate removal of one copy and deletion of the whole entry. Only simplified
 rows created without a handbook `item_id` offer metadata editing; inventory
 removal is not recorded as item use. Adding a copy publishes `item_added` in an
 attached session. A referenced child-type item also offers a move to its specialized
-weapon or potion block. Potions and linked weapons can move back to the ordinary
-inventory. A weapon keeps its magic bonus and weapon-only instance settings in
+weapon block. Linked weapons can move back to the ordinary inventory; potions
+remain in inventory and use the same cell menu. A weapon keeps its magic bonus and weapon-only instance settings in
 namespaced instance parameters so moving it to inventory and back is lossless.
 Creating a new inventory item or weapon publishes `entry_added`; the
 same event covers newly picked potions and spells, feats and class/racial
@@ -1044,8 +1044,8 @@ technical revision is unrelated to character level or rules edition.
 The dedicated D&D wizard and compact session creation both call the pure engine
 under `settings/dnd/creation`. `blankValues`, grants, progression, equipment and
 `buildCharacterData` are the only producers of new D&D documents. Catalogue
-weapons added during creation are emitted into `values.weapon`, potions into
-`values.potions`; tools remain type-14 entries in inventory together with the
+weapons added during creation are emitted into `values.weapon`; potions and
+physical tools remain type-10/type-14 entries in inventory together with the
 other catalogue additions and text-only starting-equipment rows. Background tool
 proficiency is assembled independently into `values.proficiencies`. See
 `md/features/character-list.md` for the UI flow.
@@ -1268,7 +1268,7 @@ current automation limits.
 
 При принятии предмет добавляется получателю, при отказе или отзыве возвращается
 отправителю. Вещи приходят в первую секцию инвентаря (при необходимости создаётся
-«Рюкзак»), оружие и зелья — в свои списки. Передача сохраняет описания, количество,
+«Рюкзак»), зелья — в тот же рюкзак, оружие — в свой список. Передача сохраняет описания, количество,
 заряды и кулдауны. У нового владельца снимаются настройка, личная характеристика
 и ручное владение оружием, выбранная цель, перенос бонуса и активное применение
 оружия. Потерянный магический предмет передать нельзя. Запросы и лист обновляются
@@ -1552,3 +1552,14 @@ cylinder/hemisphere) и `size`, `area_unit` описывают область о
 мести» появляется только после настройки и остаётся доступным в меню рюкзака.
 Одинаковые правила работают в карточках, таблице и режиме чтения. Текстовые
 последствия проклятия учитываются вручную. Контракт — в `magic-items.md`.
+
+Миграция 158 переносит `values.potions` всех персонажей (включая удалённых) в первое
+пространство `values.items.sections`, создавая рюкзак при необходимости. UID,
+количество, параметры, иконка и личное описание сохраняются; стопки не сливаются.
+Пустые ячейки заполняются до расширения сетки, прежние позиции и надетые вещи
+сохраняются. Корневое поле удалено и запрещено ограничением БД; версия изменённого
+листа увеличивается. Ожидающие передачи/дозы и сохранённые результаты применения
+переведены на `source=items`; возврат дозы продолжает исходную стопку.
+Отдельного блока зелий нет на desktop/mobile и в печати. Вещи типа 10 доступны
+через справочник рюкзака; применение, передача, пополнение и удаление — в меню
+обычной ячейки. Между пространствами остаётся только разделитель с названием.

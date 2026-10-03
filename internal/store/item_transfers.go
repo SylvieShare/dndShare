@@ -124,13 +124,9 @@ func (s *Store) CreateItemTransfer(ctx context.Context, userID, sessionID, sende
 	return s.createItemTransfer(ctx, userID, sessionID, senderID, recipientID, version, source, uid, actionID, "transfer", "")
 }
 
-// CreatePotionUse reserves one dose until the recipient accepts or rejects its use.
-func (s *Store) CreatePotionUse(ctx context.Context, userID, sessionID, senderID, recipientID, version int64, uid, actionID string) (ItemTransfer, error) {
-	return s.createItemTransfer(ctx, userID, sessionID, senderID, recipientID, version, "potions", uid, actionID, "use", "")
-}
-
-func (s *Store) CreatePotionUseOption(ctx context.Context, userID, sessionID, senderID, recipientID, version int64, uid, actionID, option string) (ItemTransfer, error) {
-	return s.createItemTransfer(ctx, userID, sessionID, senderID, recipientID, version, "potions", uid, actionID, "use", option)
+// CreateItemUse reserves one unit from its actual inventory source until a decision.
+func (s *Store) CreateItemUse(ctx context.Context, userID, sessionID, senderID, recipientID, version int64, uid, actionID, option, source string) (ItemTransfer, error) {
+	return s.createItemTransfer(ctx, userID, sessionID, senderID, recipientID, version, source, uid, actionID, "use", option)
 }
 
 func (s *Store) createItemTransfer(ctx context.Context, userID, sessionID, senderID, recipientID, version int64, source, uid, actionID, purpose, option string) (ItemTransfer, error) {

@@ -23,7 +23,7 @@ func testUsableApplications(t *testing.T, s *Store, exec func(string), current f
 	if _, err = s.UseItemSelf(ctx, 1, 1, version, "berry", action, "", "items"); err != nil || current(1).Version != version+1 {
 		t.Fatal("retry spent another berry", err)
 	}
-	if _, err = s.UseItemSelf(ctx, 1, 1, version, "berry", action, "", "potions"); !errors.Is(err, ErrItemTransferConflict) {
+	if _, err = s.UseItemSelf(ctx, 1, 1, version, "berry", action, "", "weapon"); !errors.Is(err, ErrItemTransferConflict) {
 		t.Fatal("receipt accepted another inventory source", err)
 	}
 	version = current(1).Version

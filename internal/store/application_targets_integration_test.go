@@ -17,7 +17,7 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		}
 	}
 	exec(`INSERT INTO dndshare.item(id,type_id,name,data) VALUES(800,10,'Лечение','{"usable":{"healing":"4"}}'),(801,15,'Эффект','{"stacking":"single"}'),(802,5,'Заклинание','{"status_effects":[{"key":"test","effect":{"id":801},"duration":{"kind":"minutes","value":1},"concentration":true}]}');
- INSERT INTO dndshare."char"(id,user_id,data) VALUES(10,1,'{"values":{"name":"Отправитель","potions":[{"uid":"dose","item_id":800,"count":3}],"spells":{"tabs":[{"spells":[{"id":802}]}]}}}'),(11,2,'{"values":{"name":"Цель","ava":{"url":"/target-avatar.png"},"hp":{"current":0,"max":{"base":8,"bonuses":[{"value":2}]},"temp":3},"states":[{"effect_id":801,"concentration":true}]}}');
+ INSERT INTO dndshare."char"(id,user_id,data) VALUES(10,1,'{"values":{"name":"Отправитель","spells":{"tabs":[{"spells":[{"id":802}]}]},"items":{"equipped":[],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"dose","item_id":800,"count":3}]}]}}}'),(11,2,'{"values":{"name":"Цель","ava":{"url":"/target-avatar.png"},"hp":{"current":0,"max":{"base":8,"bonuses":[{"value":2}]},"temp":3},"states":[{"effect_id":801,"concentration":true}]}}');
  INSERT INTO dndshare.session_participant VALUES(1,10,1),(1,11,2);
  INSERT INTO dndshare.item(id,type_id,name,data,icon_image_id) VALUES(803,6,'Гоблин','{"combat":{"hp":14}}',1);
  INSERT INTO dndshare.session_encounter(session_id,data) VALUES(1,'{"combatants":[{"uid":"npc-a","type":"npc","itemId":803,"markerLetter":"A","iconColor":"#abcdef","override":{"name":"Гоблин","hp":10},"hpCurrent":1,"hpTemp":2}]}');`)
@@ -27,7 +27,7 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		_ = pool.QueryRow(ctx, `SELECT version FROM dndshare."char" WHERE id=10`).Scan(&v)
 		return v
 	}
-	offer, err := s.CreatePotionUse(ctx, 1, 1, 10, 0, version(), "dose", "10000000-0000-4000-8000-000000000001")
+	offer, err := s.CreateItemUse(ctx, 1, 1, 10, 0, version(), "dose", "10000000-0000-4000-8000-000000000001", "", "items")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +79,7 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if err = s.SaveEncounterData(ctx, 1, "pending", 0, `{"combatants":[]}`); !errors.Is(err, ErrCharacterVersion) {
 		t.Fatalf("stale save: %v", err)
 	}
-	rejected, err := s.CreatePotionUse(ctx, 1, 1, 10, 0, version(), "dose", "10000000-0000-4000-8000-000000000002")
+	rejected, err := s.CreateItemUse(ctx, 1, 1, 10, 0, version(), "dose", "10000000-0000-4000-8000-000000000002", "", "items")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,7 +89,7 @@ func testApplicationTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	var raw json.RawMessage
 	_ = pool.QueryRow(ctx, `SELECT data FROM dndshare."char" WHERE id=10`).Scan(&raw)
 	doc, _ := decodeTransferDocument(raw)
-	if number(object(array(doc.values()["potions"])[0])["count"]) != 2 {
+	if number(object(potionTestEntries(doc)[0])["count"]) != 2 {
 		t.Fatal(string(raw))
 	}
 	spell, err := s.CreateSpellApplication(ctx, 1, 1, 10, 11, version(), "802", "10000000-0000-4000-8000-000000000003", "test")

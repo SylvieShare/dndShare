@@ -29,7 +29,7 @@ describe('inventory item actions', () => {
     expect(source).toContain('moveToSpecialized')
     expect(source).toContain('ownedEntryToWeapons')
     expect(source).toContain('charCtx.updateValues({ items: taken.inventory, [targetId]: target })')
-    expect(blocks.items.content.specialized_destinations.map((destination) => destination.value_id)).toEqual(['weapon', 'potions'])
+    expect(blocks.items.content.specialized_destinations.map((destination) => destination.value_id)).toEqual(['weapon'])
     expect(blocks.tools).toBeUndefined()
   })
 

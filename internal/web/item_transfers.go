@@ -58,9 +58,9 @@ type itemTransferRequest struct {
 }
 
 func validItemTransferRequest(req itemTransferRequest) bool {
-	return (req.Source != "spells" || req.Purpose == "use") && len(req.OptionKey) <= 100 && (req.Purpose == "" || req.Purpose == "transfer" || (req.Purpose == "use" && (req.Source == "potions" || req.Source == "spells" || req.Source == "items" || req.Source == "weapon"))) && isUUID(req.SessionUUID) && (isUUID(req.RecipientCharUUID) || req.RecipientCharUUID == "dm") && isUUID(req.ClientActionID) &&
+	return (req.Source != "spells" || req.Purpose == "use") && len(req.OptionKey) <= 100 && (req.Purpose == "" || req.Purpose == "transfer" || (req.Purpose == "use" && (req.Source == "spells" || req.Source == "items" || req.Source == "weapon"))) && isUUID(req.SessionUUID) && (isUUID(req.RecipientCharUUID) || req.RecipientCharUUID == "dm") && isUUID(req.ClientActionID) &&
 		req.Version != nil && *req.Version >= 0 && len(req.EntryUID) > 0 && len(req.EntryUID) <= 200 &&
-		(req.Source == "items" || req.Source == "weapon" || req.Source == "potions" || req.Source == "spells")
+		(req.Source == "items" || req.Source == "weapon" || req.Source == "spells")
 }
 
 func (s *Server) handleCreateItemTransfer(w http.ResponseWriter, r *http.Request) {
@@ -95,7 +95,7 @@ func (s *Server) handleCreateItemTransfer(w http.ResponseWriter, r *http.Request
 	if req.Source == "spells" {
 		transfer, err = s.store.CreateSpellApplication(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.EntryUID, req.ClientActionID, req.OptionKey)
 	} else if req.Purpose == "use" {
-		transfer, err = s.store.CreatePotionUseOption(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.EntryUID, req.ClientActionID, req.OptionKey)
+		transfer, err = s.store.CreateItemUse(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.EntryUID, req.ClientActionID, req.OptionKey, req.Source)
 	} else {
 		transfer, err = s.store.CreateItemTransfer(r.Context(), uid, session.ID, c.ID, recipient.ID, *req.Version, req.Source, req.EntryUID, req.ClientActionID)
 	}
