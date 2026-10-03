@@ -92,6 +92,16 @@
       "purpose": "item"
     },
     {
+      "slug": "clothing",
+      "name": "Одежда",
+      "typeId": 2,
+      "purpose": "item",
+      "prompt": "Use case: stylized-concept\nAsset type: compact fantasy clothing inventory preset for DnD Share, displayed at 64x64 pixels.\nPrimary request: ONE isolated medieval travel tunic, front view, with short wide sleeves, a simple cream V-neck collar and a single broad dark-brown belt at the waist. Rich muted teal cloth, warm simple collar highlights. A strong recognizable clothing silhouette without a wearer.\nStyle/medium: polished flat-cartoon game icon with a thick continuous deep-plum contour, broad clean shapes, restrained two-step shading. At most seven major shapes.\nComposition: centered in a square canvas, occupying about 80% with even transparent padding. Entire garment visible.\nConstraints: genuine transparent alpha. No mannequin, person, body, hands, hanger, trousers, shoes, scene, tile, frame, disc, floor, cast shadow, texture, micro-detail, text, numbers, logo or watermark.",
+      "fileName": "clothing.webp",
+      "mimeType": "image/webp",
+      "sha256": "e8ecccfe46912af6fde4717e7f124c11b61d111dbcd2bf54869cf86b34d76a99"
+    },
+    {
       "slug": "empty-cell",
       "name": "Пустая ячейка",
       "typeId": 2,

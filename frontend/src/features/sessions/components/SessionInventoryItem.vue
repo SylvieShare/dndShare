@@ -1,7 +1,7 @@
 <template>
   <RowActionMenu related block :disabled="busy || sortable.suppressNextClick" :title="row.name">
     <template #trigger="{ open }">
-      <InventoryBagItem :item-key="row.id" :item="item" :name="row.name" :count="row.entry?.count" :source="sortable.isSource(row)" :draggable="!busy" :disabled="busy || sortable.suppressNextClick"
+      <InventoryBagItem :item-key="row.id" :item="item" :name="row.name" :count="row.entry?.count" v-bind="traits" :source="sortable.isSource(row)" :draggable="!busy" :disabled="busy || sortable.suppressNextClick"
         :class="{ 'action-menu-source--open': open }" @pointerdown="hideTooltip(); !busy && sortable.startDrag($event, row, 'session-inventory', index)"
         @mouseenter="!sortable.dragging && showTooltip($event, display)" @mouseleave="hideTooltip" @focus="showTooltip($event, display)" @blur="hideTooltip" @click="hideTooltip" />
     </template>
@@ -32,10 +32,12 @@ import InventoryItemMenuHeader from '@/features/inventory/components/InventoryIt
 import InventoryItemTooltip from '@/features/inventory/components/InventoryItemTooltip.vue'
 import { useInventoryTooltip } from '@/features/inventory/composables/useInventoryTooltip'
 import InventoryBagItem from '@/features/inventory/components/InventoryBagItem.vue'
+import { inventoryCellTraits } from '@/features/inventory/lib/cellTraits'
 import { pvAvatar, pvName } from '../lib/participantView'
 const props = defineProps({ row: Object, item: Object, players: Array, busy: Boolean, controller: Object, sortable: Object, index: Number })
 defineEmits(['view', 'remove'])
 const { tooltip, showTooltip, hideTooltip } = useInventoryTooltip()
+const traits = computed(() => inventoryCellTraits(props.item, props.row.entry))
 const display = computed(() => {
   const override = props.row.entry?.override || {}, data = props.item?.data || {}
   return { name: props.row.name, base: props.item,

@@ -7,7 +7,7 @@
     <InventoryBagItem :item-key="entry.uid" :item="{ iconImageUrl: entry.display.iconImageUrl || entry.display.typeImageUrl, svg: entry.display.svg }"
       :name="entry.display.name" :count="entry.count" :source="sortable.isSource(entry)" :draggable="canDrag"
       :disabled="draggedThisGesture || (!canManage && entry.item_id == null)" :status="entry.params?.magic?.attuned ? 'Настроен' : ''"
-      :equipped="isEquipped(entry)" :class="{ 'action-menu-source--open': menuOpen }"
+      :equipped="isEquipped(entry)" v-bind="traits" :class="{ 'action-menu-source--open': menuOpen }"
       @pointerdown="hideTooltip(); onRowDown($event, entry, spaceId, index)" @mouseenter="!sortable.dragging && showTooltip($event, entry)"
       @mouseleave="hideTooltip" @focus="showTooltip($event, entry)" @blur="hideTooltip" @click="hideTooltip" />
   </template>
@@ -106,6 +106,7 @@ import WeaponUsePanel from './WeaponUsePanel.vue'
 import ItemLastChargeCheck from './ItemLastChargeCheck.vue'
 import MagicItemMenuActions from './MagicItemMenuActions.vue'
 import { computed, inject, toRefs, unref } from 'vue'
+import { inventoryCellTraits } from '@/features/inventory/lib/cellTraits'
 import WeaponNotePanels from '@/features/items/components/WeaponNotePanels.vue'
 import { visibleWeaponNotes } from '@/features/character-editor/lib/weaponNotes'
 import { RowActionMenu, RowActionSubmenu } from '@sylvieshare/share-ui'
@@ -145,6 +146,7 @@ const {
   openMagic
 } = toRefs(inject('inventoryRowCtx'))
 const charCtx = inject('charCtx', {})
+const traits = computed(() => inventoryCellTraits(props.entry.display.base, props.entry, isEquipped.value(props.entry)))
 const notes = computed(() => visibleWeaponNotes(props.entry.display.base, props.entry, isEquipped.value(props.entry), unref(charCtx.values)))
 </script>
 

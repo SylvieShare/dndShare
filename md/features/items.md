@@ -248,8 +248,8 @@ wizard reuse `FeatListItem` and open the standard reference modal.
 ### Simplified inventory icon presets
 
 `item_icon_preset` associates a named raster preset with `item_type_id` and a
-`storage_image` row. Nine initial selectable images cover a pouch, scroll, key,
-gem, blade, shield, vial, hammer and amulet. The Items block offers presets for
+`storage_image` row. Ten selectable images cover a pouch, scroll, key, gem, clothing,
+blade, shield, vial, hammer and amulet. The Items block offers presets for
 its root collection and linked child types. Simplified entries save only
 `icon_preset_id`; selection is available on creation and editing, with an explicit
 «По умолчанию» choice. Handbook entries retain their own media.
