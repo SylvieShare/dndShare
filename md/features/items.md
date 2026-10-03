@@ -95,7 +95,7 @@ with handbook attack rows; it is not a historical-format fallback.
 `iconImageUrl` через JOIN, без отдельного URL в саджесте. `ItemIcon` отдаёт
 приоритет картинке перед SVG и не перекрашивает её. Словарь, общие picker,
 поиск и денежный блок используют один контракт; кошелёк показывает иконку
-20 px, его выбор валюты — 24 px.
+24 px, его выбор валюты — 24 px.
 
 Установка системной иконки идёт через MCP
 `handbook_suggest_set_system_image(typeId,id,fileName,mimeType,dataBase64,

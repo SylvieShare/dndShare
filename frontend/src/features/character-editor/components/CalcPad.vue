@@ -2,10 +2,10 @@
   <div class="cp-wrap">
     <div class="cp-display-row">
       <div class="cp-display">
+        <div v-if="$slots['display-leading']" class="cp-display-leading"><slot name="display-leading" /></div>
         <span class="cp-expr">{{ modelValue || '0' }}</span>
       </div>
-      <button class="cp-bksp" @click="backspace" touch-action="manipulation">⌫</button>
-      <slot name="append" />
+      <button type="button" class="cp-bksp" aria-label="Удалить последнюю цифру" @click="backspace" touch-action="manipulation">⌫</button>
     </div>
     <div class="cp-pad">
       <button v-for="k in ['7','8','9','4','5','6','1','2','3']" :key="k" class="cp-key" @click="append(k)">{{ k }}</button>
@@ -53,6 +53,7 @@ function backspace() {
 
 .cp-display {
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   background: var(--surface-raised);
@@ -62,8 +63,20 @@ function backspace() {
   min-height: 40px;
 }
 
+.cp-display-leading {
+  display: flex;
+  flex: none;
+  align-items: center;
+  align-self: stretch;
+  margin-left: -6px;
+  margin-right: 12px;
+  padding-right: 8px;
+  border-right: 1px solid var(--border);
+}
+
 .cp-expr {
   flex: 1;
+  min-width: 0;
   font-size: 20px;
   font-weight: bold;
   color: var(--text-1);
