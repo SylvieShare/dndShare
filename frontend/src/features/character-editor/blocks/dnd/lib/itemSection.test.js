@@ -3,6 +3,11 @@ import { describe, expect, it } from 'vitest'
 import { entryDisplayData } from './itemSection'
 
 describe('inventory item presentation', () => {
+  it('presents the exact economy of 13 owned arrows rather than 13 packages', () => {
+    expect(entryDisplayData({ item_id: 347, count: 13 }, {
+      347: { name: 'Стрела', data: { purchase_quantity: 20, weight: 1, cost: { value: 1, suggest_id: 3 } } },
+    })).toMatchObject({ weight: 0.65, cost: { value: 0.65, suggest_id: 3 } })
+  })
   it('exposes the handbook SVG for a referenced item', () => {
     const svg = '<svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>'
     const result = entryDisplayData(

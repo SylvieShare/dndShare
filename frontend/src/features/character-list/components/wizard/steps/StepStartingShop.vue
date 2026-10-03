@@ -43,6 +43,7 @@
           <div v-for="item in visibleItems" :key="item.id" class="shop-item">
             <ItemReferenceRow
               :item="item"
+              :count="purchaseQuantity(item)"
               :params="item.params"
               roomy-weapon
               @activate="viewItem = item"
@@ -75,7 +76,7 @@
         <div v-else class="cart-items">
           <div v-for="entry in state.startingShopCart" :key="`${entry.item_id}:${JSON.stringify(entry.params)}`" class="cart-item">
             <button class="cart-name" type="button" @click="viewItem = entry">{{ instanceName(entry) }}</button>
-            <span class="cart-price">{{ priceLabel(entry) }}</span>
+            <span class="cart-price">{{ priceLabel(entry) }}{{ packagingNote(entry) ? ` / ${purchaseQuantity(entry)} шт.` : '' }}</span>
             <div class="cart-quantity">
               <button type="button" aria-label="Уменьшить" @click="bumpShopItem(entry, -1)">−</button>
               <strong>{{ entry.count }}</strong>
@@ -123,6 +124,7 @@ import { magicEquipmentKinds } from '@/features/items/lib/magicEquipmentBases'
 import ItemReferenceRow from '@/features/items/components/ItemReferenceRow.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 import { formatCopper, itemCostCopper } from '@/features/character-editor/settings/dnd/creation/startingShop'
+import { packagingNote, purchaseQuantity } from '@/features/items/lib/itemPackaging'
 
 const {
   state, shopLoading, startingShopItems, startingWealthFormulaLabel, fixedStartingGold,

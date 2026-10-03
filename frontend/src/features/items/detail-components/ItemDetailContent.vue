@@ -37,6 +37,7 @@
       <div class="idc-meta">
         <span v-if="!economyInHeader && data.weight != null" class="idc-badge">{{ data.weight }} фунт.</span>
         <span v-if="!economyInHeader && costLabel" class="idc-badge idc-cost">{{ costLabel }}</span>
+        <span v-if="!economyInHeader && packagingNote(item)" class="idc-badge">{{ packagingNote(item) }}</span>
         <span v-if="data.is_container" class="idc-badge idc-container">Контейнер</span>
         <span v-if="data.consumable" class="idc-badge idc-consumable">Расходуемое</span>
       </div>
@@ -62,6 +63,7 @@ import { DetailSection } from '@sylvieshare/share-ui'
 import RichContent from '@/shared/ui/DndRichContent.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 import { itemsApi } from '@/shared/api/itemsApi'
+import { packagingNote } from '@/features/items/lib/itemPackaging'
 
 const props = defineProps({
   item: { type: Object, required: true },

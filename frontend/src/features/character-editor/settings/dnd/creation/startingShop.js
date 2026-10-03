@@ -1,3 +1,5 @@
+import { purchaseQuantity } from '@/features/items/lib/itemPackaging'
+
 const COPPER_PER_COIN = { 1: 1, 2: 10, 3: 100, 4: 50, 5: 1000 }
 
 const STARTING_WEALTH = {
@@ -50,7 +52,7 @@ export function itemCostCopper(item) {
 export function cartCostCopper(cart = []) {
   return cart.reduce((sum, entry) => {
     const unit = itemCostCopper(entry)
-    return sum + (unit == null ? 0 : unit * Math.max(1, Number(entry.count) || 1))
+    return sum + (unit == null ? 0 : Math.round(unit * Math.max(1, Number(entry.count) || 1) / purchaseQuantity(entry)))
   }, 0)
 }
 

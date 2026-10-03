@@ -3,6 +3,7 @@ import { ownedWeaponFields } from './ownedWeaponFields'
 import { resolveWeaponItem } from '@/features/character-editor/lib/magicWeapons'
 import { makeUid } from './itemEntry'
 import { instanceDisplayName } from '@/features/items/lib/itemInstance'
+import { inventoryItemEconomy } from '@/features/items/lib/itemPackaging'
 import { customInventoryIcon, presetId } from '@/features/inventory/lib/iconPresets'
 
 export const EQUIPPED_ID = 'equipped'
@@ -83,15 +84,7 @@ export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2, 
   const name = instanceDisplayName(namedBase, entry.params, typeById[base?.typeId])
   const desc = ov.desc ?? base?.data?.desc ?? ''
   const consumable = ov.consumable ?? base?.data?.consumable ?? false
-  const measuredLength = Number(entry.params?.length_ft)
-  const measuredCost = Number.isFinite(measuredLength) && base?.data?.unit_cost_copper != null
-    ? { value: measuredLength * Number(base.data.unit_cost_copper), suggest_id: 1 }
-    : null
-  const measuredWeight = Number.isFinite(measuredLength) && base?.data?.unit_weight != null
-    ? measuredLength * Number(base.data.unit_weight)
-    : null
-  const cost = ov.cost ?? measuredCost ?? base?.data?.cost ?? ''
-  const weight = ov.weight ?? measuredWeight ?? base?.data?.weight ?? null
+  const { cost, weight } = inventoryItemEconomy(base, entry)
   const isCustom = entry.item_id == null
   const svg = base?.svg ?? ''
   const iconImageUrl = base?.iconImageUrl || customInventoryIcon(entry, presetsById)
