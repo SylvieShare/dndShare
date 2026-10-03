@@ -893,7 +893,9 @@ including its description and inline dice, opens that menu; the charge spheres
 remain separate controls. Enter or Space on the focused row also opens it.
 A row without any available menu action is non-clickable and does not
 show hover or press feedback. The block owns one shared tile; rows inside
-it have no nested card background. A resource bound to a source action is shown
+it have no nested card background. Each row has a left `TileAccentStrip`, using
+the same strip as ability-score tiles and the row's action-group color, on both
+desktop and mobile and in the morph preview. A resource bound to a source action is shown
 on that action as the same color-coded charge spheres used by the resources
 tile: one charge sits 5px under the icon in a floated left column with a 9px
 right and 2px bottom margin, while several
