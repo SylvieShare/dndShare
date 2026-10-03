@@ -1,6 +1,6 @@
 // Composition belongs to the fixed catalogue types; schemas remain the storage contract.
 const group = (key, name, keys, optional = false) => ({ key, name, keys: keys.split(' '), optional })
-const economy = group('economy', 'Цена и учёт', 'cost weight available_in_starting_shop treasure')
+const economy = group('economy', 'Цена и учёт', 'cost weight purchase_quantity available_in_starting_shop treasure')
 const proficiencies = group('proficiencies', 'Владения и языки', 'skill_prof languages armor_prof weapon_prof tool_prof', true)
 const raceGroups = [
   group('body', 'Размер и передвижение', 'size speed'),

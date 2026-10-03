@@ -10,6 +10,8 @@ describe.each([false, true])('money transfer tutorials (mobile=%s)', mobile => {
     expect(step.body).toContain('без класса, расы и троеточия')
     expect(step.body).toContain('полоской под именем')
     expect(step.body).toContain('сразу списываются')
+    expect(step.body).toContain('справа от числа внутри дисплея')
+    expect(step.body).toContain('зелёным или красным в превью')
     expect(action).not.toHaveBeenCalled()
   })
   it.each([false, true])('covers the session role dm=%s', dm => {

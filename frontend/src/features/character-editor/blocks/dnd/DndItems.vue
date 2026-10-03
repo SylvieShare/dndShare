@@ -24,7 +24,15 @@
               :title="canManage ? 'Переименовать' : ''" @click="canManage && startRename(section.id)">{{ section.name }}</button>
             <span v-if="section.items.length" class="di-section-count">{{ section.items.length }}</span>
             <span class="di-section-line" aria-hidden="true"></span>
-            <RemoveButton v-if="canManage && model.sections.length > 1" icon="trash" label="Удалить секцию" @click="askDeleteSection(section)" />
+            <div class="di-section-actions">
+              <span class="di-section-weight" role="img" :aria-label="`Суммарный вес: ${weightFormatter.format(section.weight)} фунт.`">
+                <Weight :size="14" aria-hidden="true" />{{ weightFormatter.format(section.weight) }} фунт.
+              </span>
+              <template v-if="canManage && model.sections.length > 1">
+                <span class="di-section-divider" aria-hidden="true"></span>
+                <RemoveButton icon="trash" label="Удалить секцию" @click="askDeleteSection(section)" />
+              </template>
+            </div>
           </div>
           <InventoryBagGrid adaptive :can-add="canAdd" :entries="section.items.map(entryWithDisplay)" :positions="section.slots"
             :group="sectionGroup(section.id)" :label="section.name" :sortable="sortable" :is-equipped="entry => isEquipped(entry)"
@@ -98,6 +106,7 @@ import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapo
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
 import { RemoveButton } from '@sylvieshare/share-ui'
 import { computed, provide, inject, nextTick, onMounted, reactive, ref } from 'vue'
+import { Weight } from '@lucide/vue'
 
 import { BaseTile } from '@sylvieshare/share-ui'
 import ItemInlineFormModal from '@/features/character-editor/components/ItemInlineFormModal'
@@ -128,6 +137,7 @@ import {
   EQUIPPED_ID,
   cloneModel,
   entryDisplayData,
+  inventoryEntriesWeight,
   makeEntryUid,
   makeSectionId,
   normalizeValue,
@@ -158,9 +168,11 @@ const model = computed(() => normalizeValue(props.value))
 const { catalog, loading, error: catalogError, reload: reloadCatalog } = useInventoryCatalog(() => model.value)
 const { tooltip, showTooltip, hideTooltip, viewEntry, deleteOneEntry, addEntry, editEntry, deleteEntry } = useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry })
 
-const allSections = computed(() => model.value.sections.map(section => ({
-  ...section, items: inventorySpaceEntries(model.value, section.id),
-})))
+const weightFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 8 })
+const allSections = computed(() => model.value.sections.map(section => {
+  const items = inventorySpaceEntries(model.value, section.id)
+  return { ...section, items, weight: inventoryEntriesWeight(items, catalog) }
+}))
 const isEquipped = entry => isInventoryEquipped(model.value, entry.uid)
 function canEquip(entry) { return canManage.value && (isEquipped(entry) || canEquipInventoryItem(entry.display?.base)) }
 function toggleEquipment(entry, close) {

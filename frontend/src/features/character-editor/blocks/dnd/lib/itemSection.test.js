@@ -1,8 +1,57 @@
 import { describe, expect, it } from 'vitest'
 
-import { entryDisplayData } from './itemSection'
+import { entryDisplayData, inventoryEntriesWeight, normalizeValue } from './itemSection'
+import { inventorySpaceEntries, moveInventoryCell, toggleInventoryEquipment } from './inventorySpaces'
+
+describe('inventory space weight', () => {
+  const catalog = {
+    1: { data: { purchase_quantity: 20, weight: 1 } },
+    2: { data: { unit_weight: 0.2 } },
+    3: { typeId: 1, data: { weight: 3 } },
+    4: { typeId: 19, data: { weight: 4, weapon: {} } },
+  }
+
+  it('sums partial packages, measured items, custom weights and magic weapons once per stack', () => {
+    expect(inventoryEntriesWeight([
+      { item_id: 1, count: 13 },
+      { item_id: 2, count: 2, params: { length_ft: 30 } },
+      { item_id: null, count: 3, override: { weight: 0.1 } },
+      { item_id: 3, magic_item_id: 4, count: 1 },
+    ], catalog)).toBe(16.95)
+  })
+
+  it('counts equipped items in their physical space and updates both totals after moving them', () => {
+    const model = normalizeValue({ equipped: [], sections: [
+      { id: 'bag', items: [{ uid: 'weapon', item_id: 3 }, { uid: 'arrows', item_id: 1, count: 13 }] },
+      { id: 'chest', items: [] },
+    ] })
+    const weight = id => inventoryEntriesWeight(inventorySpaceEntries(model, id), catalog)
+    toggleInventoryEquipment(model, 'weapon')
+    expect(weight('bag')).toBe(3.65)
+    expect(weight('chest')).toBe(0)
+    moveInventoryCell(model, { uid: 'weapon', fromId: 'bag', toId: 'chest', toSlot: 0 })
+    expect(weight('bag')).toBe(0.65)
+    expect(weight('chest')).toBe(3)
+  })
+
+  it('keeps empty spaces at zero and ignores unspecified or invalid weights', () => {
+    expect(inventoryEntriesWeight([], catalog)).toBe(0)
+    expect(inventoryEntriesWeight([
+      { item_id: null }, { item_id: 999 },
+      { item_id: null, override: { weight: 'invalid' } },
+      { item_id: null, override: { weight: Infinity } },
+      { item_id: null, override: { weight: 0.1 } },
+      { item_id: null, override: { weight: 0.2 } },
+    ], catalog)).toBe(0.3)
+  })
+})
 
 describe('inventory item presentation', () => {
+  it('presents the exact economy of 13 owned arrows rather than 13 packages', () => {
+    expect(entryDisplayData({ item_id: 347, count: 13 }, {
+      347: { name: 'Стрела', data: { purchase_quantity: 20, weight: 1, cost: { value: 1, suggest_id: 3 } } },
+    })).toMatchObject({ weight: 0.65, cost: { value: 0.65, suggest_id: 3 } })
+  })
   it('exposes the handbook SVG for a referenced item', () => {
     const svg = '<svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>'
     const result = entryDisplayData(

@@ -9,7 +9,6 @@ import BlockTagsView from '../../../src/features/character-editor/blocks/generic
 import BlockMoneyView from '../../../src/features/character-editor/blocks/generic/components/BlockMoneyView.vue'
 import BlockStatesSummaryView from '../../../src/features/character-editor/blocks/generic/components/BlockStatesSummaryView.vue'
 import DndExhaustionView from '../../../src/features/character-editor/blocks/dnd/components/DndExhaustionView.vue'
-import DndCounterTileView from '../../../src/features/character-editor/blocks/dnd/components/DndCounterTileView.vue'
 import DndQuestCard from '../../../src/features/character-editor/blocks/dnd/components/DndQuestCard.vue'
 import DndStatView from '../../../src/features/character-editor/blocks/dnd/components/DndStatView.vue'
 import StatTileFace from '../../../src/features/character-editor/blocks/dnd/components/StatTileFace.vue'
@@ -23,7 +22,6 @@ const faces = [
   { name: 'BlockMoneyView', component: BlockMoneyView, props: {"coins": [{"id": 1, "amount": 10, "title": "Золото"}]} },
   { name: 'BlockStatesSummaryView', component: BlockStatesSummaryView, props: {} },
   { name: 'DndExhaustionView', component: DndExhaustionView, props: {"level": 1} },
-  { name: 'DndCounterTileView', component: DndCounterTileView, props: {"counter": {"name": "Счётчик", "value": 1, "max": 3}} },
   { name: 'DndQuestCard', component: DndQuestCard, props: {"quest": {"title": "Задание", "status": "active"}} },
   { name: 'DndStatView', component: DndStatView, props: {"title": "Сила", "mod": 2, "raw": 14} },
   { name: 'StatTileFace', component: StatTileFace, props: {"label": "Инициатива", "value": 1} },

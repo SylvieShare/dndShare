@@ -231,7 +231,21 @@ picker может рекурсивно включить дочерние тип�
 Словарь, поиск, общие одиночные/множественные picker и денежный блок
 принимают обе формы; `resolveSuggestIcon` отделяет URL локальной опции
 от SVG-разметки, чтобы не передавать разметку в `img.src`.
-В кошельке иконки имеют размер 20 px, в выборе валюты — 24 px.
+В кошельке иконки имеют размер 24 px, как и в выборе валюты. Балансы собраны
+в компактные группы «монета · сумма · валюта» с разрядами и tabular nums.
+`useMoneyFeedback` наблюдает реальные изменения сумм: положительная дельта
+даёт один плавный зелёный импульс, отрицательная — красный; рядом временно видна дельта.
+Повторное изменение перезапускает отклик, списание до нуля удерживает группу
+на 1,1 секунды перед скрытием. Первая загрузка не анимируется; reduced motion
+оставляет временную цветную подсветку без пульсации и масштабирования.
+
+`CalcPad` предоставляет `display-trailing` внутри общего дисплея справа от
+выражения. Денежный редактор вставляет туда `MoneyCurrencyPicker`; backspace
+остаётся справа от дисплея. Picker собирается из `ActionButton quiet`,
+`BasePopover` и `OptionList`, с общими hover/focus и управлением стрелками,
+Enter/Escape. Локальная композиция нужна для растровых/SVG-иконок в trigger
+и вариантах, которых нет у текстового `ValueSelect`. Остальные калькуляторы
+не передают слот и сохраняют обычный дисплей.
 
 Полоса
 группировки списка отделена левой и нижней границами без правой рамки.
@@ -789,7 +803,10 @@ Runtime поддерживает только текущий контракт. �
 общий `ActionButton quiet` для hover, focus, disabled и клавиатурного нажатия.
 Заголовки параметров используют `MorphTileHeader` без карандаша. Инициатива
 и бонус умения открывают `RowActionMenu` с изменением и броском; меню и отдых
-используют ту же кнопку. Открытый trigger сохраняет подсветку через
+используют ту же кнопку. Режим `inline` у `UtilityCell` выравнивает
+«Меню» / «Отдых» по центру ячеек по вертикали с отступами сверху и снизу 12 px: иконки
+20×20 px в фиксированной области, зазор перед подписью 4 px. Открытый trigger
+сохраняет подсветку через
 `action-menu-source--open`, но не сдвигается и не получает отдельную рамку
 внутри общей сетки.
 
@@ -1140,7 +1157,13 @@ fade/scale-переход (180/220 ms), без анимации при reduced m
 `RowActionSubmenu` использует `mobileBreakpoint=0` для floating-списка получателей.
 `DndItems` собирает все пространства в одном `BaseTile`, включая skeleton.
 Между пространствами используется только линия с названием без второго border;
-режима списка и отдельной видимой области экипировки нет. `useInventoryLayout`
+режима списка и отдельной видимой области экипировки нет. Справа в заголовке —
+Lucide `Weight`, сумма в фунтах и условный вертикальный
+разделитель перед `RemoveButton`. `inventoryEntriesWeight` из `itemSection`
+суммирует экономику стопок через `resolveWeaponItem`/`inventoryItemEconomy`,
+а состав пространства берётся из `inventorySpaceEntries`, включая надетые вещи.
+Пустые пространства показывают ноль; неизвестный вес не входит в сумму.
+`useInventoryLayout`
 управляет только сетками. `inventorySpaces` размещает надетые экземпляры в
 пространствах по `slots`, меняет их состояние через меню и сохраняет статус при
 переносе/обмене. `items.equipped` остаётся источником механик; `slots` пространства
@@ -1369,8 +1392,12 @@ entries; handbook media retains priority.
 
 `InventoryBagItem` owns the inventory-only corner chips: quantity docked to the
 bottom right with rounded top-left/bottom-right corners, capabilities docked
-bottom left, and a quiet pencil in the top right for simplified entries. These
+bottom left. `InventoryBagGrid` gives every cell a 2px frame in the shared border
+color; simplified entries change only its style to dashed. Equipped entries use
+the accent color while preserving the solid/dashed style. These
 overlays share the cell radius and do not create another action target.
+The usable capability chip uses Lucide `Hand`, matching the `use` action in
+`RowActionItem` and the item-use submenu in `ItemTransferAction`.
 `inventoryCellTraits` uses the existing equipment eligibility and usable-item
 contract independently of owner permissions, so character and session inventory
 show the same item properties. Keyboard descriptions expose every visible tag

@@ -3,9 +3,9 @@
     <div class="cp-display-row">
       <div class="cp-display">
         <span class="cp-expr">{{ modelValue || '0' }}</span>
+        <div v-if="$slots['display-trailing']" class="cp-display-trailing"><slot name="display-trailing" /></div>
       </div>
-      <button class="cp-bksp" @click="backspace" touch-action="manipulation">⌫</button>
-      <slot name="append" />
+      <button type="button" class="cp-bksp" aria-label="Удалить последнюю цифру" @click="backspace" touch-action="manipulation">⌫</button>
     </div>
     <div class="cp-pad">
       <button v-for="k in ['7','8','9','4','5','6','1','2','3']" :key="k" class="cp-key" @click="append(k)">{{ k }}</button>
@@ -53,6 +53,7 @@ function backspace() {
 
 .cp-display {
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   background: var(--surface-raised);
@@ -62,8 +63,20 @@ function backspace() {
   min-height: 40px;
 }
 
+.cp-display-trailing {
+  display: flex;
+  flex: none;
+  align-items: center;
+  align-self: stretch;
+  margin-left: 12px;
+  margin-right: -6px;
+  padding-left: 8px;
+  border-left: 1px solid var(--border);
+}
+
 .cp-expr {
   flex: 1;
+  min-width: 0;
   font-size: 20px;
   font-weight: bold;
   color: var(--text-1);

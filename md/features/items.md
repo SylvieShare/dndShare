@@ -95,7 +95,7 @@ with handbook attack rows; it is not a historical-format fallback.
 `iconImageUrl` через JOIN, без отдельного URL в саджесте. `ItemIcon` отдаёт
 приоритет картинке перед SVG и не перекрашивает её. Словарь, общие picker,
 поиск и денежный блок используют один контракт; кошелёк показывает иконку
-20 px, его выбор валюты — 24 px.
+24 px, его выбор валюты — 24 px.
 
 Установка системной иконки идёт через MCP
 `handbook_suggest_set_system_image(typeId,id,fileName,mimeType,dataBase64,
@@ -105,6 +105,17 @@ preservePrevious)`, с `preservePrevious=true` при замене. PNG/WebP д�
 не коммитятся и не загружаются при старте приложения.
 
 ## Pure rules
+
+Обычные предметы (тип 2) имеют необязательное поле `purchase_quantity`
+«Количество в упаковке»: положительное целое число, по умолчанию 1.
+`cost` и `weight` относятся к этому количеству, а количество экземпляра в
+рюкзаке — к отдельным штукам. Например, упаковка из 20 стрел стоит 1 зм и
+весит 1 фунт; стопка из 13 стрел имеет стоимость 0,65 зм и вес 0,65 фунта.
+Справочные карточки, списки и подсказки подписывают цену/вес «за 20 шт.»;
+подсказки инвентаря персонажа и сессии показывают значения всей стопки.
+`lib/itemPackaging.js` задаёт общий расчёт; явные `override.cost/weight`
+относятся к одной штуке. Учёт длины через `length_ft` и удельные значения
+сохраняет свой отдельный расчёт.
 
 `lib/featRules.js` evaluates structured feat prerequisites, grants and choices.
 It reads only current keys. Unit tests cover requirement groups, repeatable
