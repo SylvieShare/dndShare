@@ -2,9 +2,11 @@
   <div class="meeting-navigation">
     <nav class="meeting-navigation__list" aria-label="Сессии дневника">
       <section v-for="group in groups" :key="group.key" class="meeting-navigation__group" :aria-label="group.label">
-        <h3>{{ group.label }}<span>{{ group.items.length }}</span></h3>
+        <SectionLabel class="meeting-navigation__heading" role="heading" aria-level="3" :title="group.label" line>
+          <template #actions><span class="meeting-navigation__group-count">{{ group.items.length }}</span></template>
+        </SectionLabel>
         <button v-for="row in group.items" :key="row.id" type="button" class="meeting-navigation__row"
-          :class="{ 'meeting-navigation__row--selected': row.id === selectedId, 'meeting-navigation__row--next': group.key === 'next' }"
+          :class="{ 'meeting-navigation__row--selected': row.id === selectedId, 'meeting-navigation__row--next': group.key === 'next', 'meeting-navigation__row--past': group.key === 'past' }"
           :aria-current="row.id === selectedId ? 'true' : undefined" :aria-label="`Сессия #${row.number}: ${row.name}`" :disabled="disabled"
           @click="$emit('select', row.id)">
           <span class="meeting-navigation__number">{{ String(row.number).padStart(2, '0') }}</span>
@@ -21,7 +23,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { ValueSelect } from '@sylvieshare/share-ui'
+import { SectionLabel, ValueSelect } from '@sylvieshare/share-ui'
 import { occurrenceDate } from '../lib/sessionOccurrences'
 const props = defineProps({ groups: { type: Array, default: () => [] }, selectedId: Number, disabled: Boolean })
 defineEmits(['select'])
@@ -31,8 +33,8 @@ const options = computed(() => props.groups.flatMap(group => group.items.map(row
 .meeting-navigation { min-width: 0; min-height: 0; }
 .meeting-navigation__list { height: 100%; overflow-y: auto; padding-right: 12px; scrollbar-width: thin; }
 .meeting-navigation__group { margin-bottom: 18px; }
-.meeting-navigation__group h3 { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 8px 7px; color: var(--text-muted); font: 650 10px var(--font-ui); letter-spacing: .05em; text-transform: uppercase; }
-.meeting-navigation__group h3 span { font-weight: 400; letter-spacing: 0; }
+.meeting-navigation__heading { margin: 0 8px 7px; }
+.meeting-navigation__group-count { font-weight: 400; letter-spacing: 0; }
 .meeting-navigation__row { position: relative; display: flex; align-items: flex-start; gap: 9px; width: 100%; min-height: 56px; padding: 11px 8px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--text-muted); text-align: left; font: inherit; cursor: pointer; }
 .meeting-navigation__row:hover:not(:disabled) { background: var(--surface-raised); }
 .meeting-navigation__row--selected { border-color: color-mix(in srgb, var(--accent) 30%, var(--border)); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
@@ -42,6 +44,9 @@ const options = computed(() => props.groups.flatMap(group => group.items.map(row
 .meeting-navigation__copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 5px; }
 .meeting-navigation__copy strong { display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: var(--text-2); font-size: 12px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
 .meeting-navigation__row--selected strong { color: var(--text-1); }
+.meeting-navigation__row--past .meeting-navigation__copy strong { color: var(--text-muted); font-weight: 500; }
+.meeting-navigation__row--past .meeting-navigation__number { color: var(--text-muted); }
+.meeting-navigation__row--past.meeting-navigation__row--selected .meeting-navigation__copy strong { color: var(--text-2); font-weight: 600; }
 .meeting-navigation__copy > span { font-size: 10px; }
 .meeting-navigation__count { padding-top: 2px; font-size: 10px; font-variant-numeric: tabular-nums; }
 .meeting-navigation__row:disabled { cursor: default; opacity: .6; }

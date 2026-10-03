@@ -8,7 +8,7 @@ export function groupOccurrences(occurrences, today = localDate()) {
   return {
     next: upcoming[0] || null,
     future: upcoming.slice(1),
-    past: sorted.filter(row => row.date && row.date < today).reverse(),
+    past: sorted.filter(row => row.date && row.date < today),
     undated: sorted.filter(row => !row.date),
   }
 }
@@ -20,7 +20,7 @@ export function occurrenceDate(value, options = { day: 'numeric', month: 'long',
 
 export function preferredOccurrence(occurrences, today = localDate()) {
   const groups = groupOccurrences(occurrences, today)
-  return groups.next?.date === today ? groups.next : groups.past[0] || groups.next || groups.undated.at(-1) || null
+  return groups.next?.date === today ? groups.next : groups.past.at(-1) || groups.next || groups.undated.at(-1) || null
 }
 
 export function nextOccurrenceNumber(occurrences) { return Math.max(0, ...occurrences.map(row => row.number)) + 1 }

@@ -1,7 +1,7 @@
 # Дневники
 
 Дневник отображается вертикальной лентой: новые события сверху, высота каждой
-карточки определяется полным содержимым. Холста, фиксированного preview,
+записи определяется полным содержимым. Холста, фиксированного preview,
 масштаба, авторасстановки и боковой панели подробностей нет.
 
 ## Открытие и композиция
@@ -35,9 +35,14 @@ desktop/mobile-схем. Пользовательские схемы испол�
 раздела и управление порядком. При фильтрации перестановка отключена, чтобы
 невидимые записи не меняли порядок. Создание возвращает полный список.
 
-Компактные карточки соединяет тихая центральная линия. У каждой карточки цветная
-рамка по типу и отдельная шапка. Иконка стоит только слева от названия;
-водяных знаков на фоне нет.
+Дневник и автоматическая хроника используют общий `share-ui/TimelineGroup`.
+У записи слева — небольшая иконка типа, вертикальный цветной соединитель и
+маркер; справа — компактный заголовок и полное содержимое. Записи разделены
+горизонтально, отдельных цветных рамок и центральной линии нет. Заголовок
+использует UI-шрифт; заголовки-разделители и новый день остаются крупнее.
+Редактор находится в слоте на всю ширину, включая пространство под иконкой.
+На узкой записи кнопки действий переносятся под название, не сжимая текст.
+Иконки и акцент сохраняют цвет типа, источники и аудит остаются под информацией.
 В шапке рядом находятся карандаш, информация и корзина. Карандаш открывает
 единый черновик всей записи: название, описание, реплики, участники и задание.
 `Сохранить` отправляет все изменения одной операцией, `Отмена` ничего не меняет.
@@ -131,16 +136,16 @@ Each character has at most one personal journal.
 Campaign sections are owned by game meetings and use their number, name and date.
 The campaign page combines a compact meeting list and the selected timeline.
 The list becomes a searchable picker in narrow containers. Only the DM manages meetings through the diary; players may edit entries when
-allowed. Personal sections remain independent. Horizontal section tabs show one section at a time. Full event cards grow with
-their contents, newest first, with a connecting line through their centers.
+allowed. Personal sections remain independent. Horizontal section tabs show one section at a time. Full entries grow with
+their contents, newest first, with a small icon and colored rail on the left.
 Creation and section/order controls sit at the top right of the event area.
 There is no zoom, layout action, or detail side panel. Filters sit above the list.
 
 Creation asks only for a type, then opens a whole-entry draft. One header pencil
 edits all fields, dialogue lines, combatants and quest objectives. Save is atomic,
 cancel leaves the original untouched, and existing types are immutable.
-The header-only entry type is available for titled separators. Every card uses
-a type-colored frame and an icon beside the title, without a background watermark.
+The header-only entry type is available for titled separators. Each entry uses the shared `TimelineGroup` with an icon, a colored rail and
+a thin horizontal separator instead of a framed card. The editor spans the full width.
 Dialogue voices retain scenario colors and stack speaker above text on mobile.
 Battle rows use handbook artwork with a single batched lookup per section.
 Source and audit are hidden behind an information icon beside edit/delete in the header.

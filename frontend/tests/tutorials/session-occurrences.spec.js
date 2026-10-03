@@ -93,6 +93,7 @@ for (const mobile of [false, true]) {
   test(`player switches sessions without leaving the diary (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {
     await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1600, height: 1000 })
     const writes = await mockMeetings(page, 'player', [
+      { id: 4, number: 4, name: 'Пролог', date: '1999-01-01' },
       { id: 1, number: 1, name: 'Первая игра', date: '2000-01-01', entries: [{ id: 501, type: 'event', title: 'Старая запись', desc: '', payload: {} }] },
       { id: 3, number: 3, name: 'Позже', date: '2090-02-01', entries: [{ id: 503, type: 'event', title: 'Запись на будущее', desc: '', payload: {} }] },
       { id: 2, number: 2, name: 'Ближайшая', date: '2090-01-01', entries: [{ id: 502, type: 'event', title: 'Заметка к встрече', desc: '', payload: {} }] },
@@ -104,6 +105,12 @@ for (const mobile of [false, true]) {
       await expect(page.getByRole('region', { name: 'Следующая', exact: true })).toContainText('Ближайшая')
       await expect(page.getByRole('region', { name: 'Будущие', exact: true })).toContainText('Позже')
       await expect(page.getByRole('region', { name: 'Прошедшие', exact: true })).toContainText('Первая игра')
+      const navigation = page.getByRole('navigation', { name: 'Сессии дневника', exact: true })
+      const order = await navigation.getByRole('button').evaluateAll(rows => rows.map(row => row.getAttribute('aria-label')))
+      expect(order).toEqual(['Сессия #4: Пролог', 'Сессия #1: Первая игра', 'Сессия #2: Ближайшая', 'Сессия #3: Позже'])
+      const pastColor = await navigation.getByRole('button', { name: 'Сессия #4: Пролог', exact: true }).locator('strong').evaluate(el => getComputedStyle(el).color)
+      const futureColor = await navigation.getByRole('button', { name: 'Сессия #3: Позже', exact: true }).locator('strong').evaluate(el => getComputedStyle(el).color)
+      expect(pastColor).not.toBe(futureColor)
     }
     await chooseMeeting(page, mobile, 2, 'Ближайшая')
     await expect(page.getByRole('heading', { name: 'Ближайшая', exact: true })).toBeVisible()

@@ -72,7 +72,7 @@ describe('journal reading and inline editing', () => {
     const metadata = read('./components/DndDiaryEventMetadata.vue')
     expect(metadata).toContain('<ItemTooltip')
     expect(metadata).toContain('@focus=')
-    expect(row).toContain('<BaseTile')
+    expect(row).toContain('<TimelineGroup')
   })
   it('shows task checklists and hides author/time behind the header info icon', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {
@@ -94,11 +94,12 @@ describe('journal reading and inline editing', () => {
     expect(html).not.toContain('link-chip')
     expect(html).not.toContain('Редактировать пункт')
   })
-  it('frames every entry with an icon only in its header, without watermarks', async () => {
+  it('uses the shared chronicle rail for heading-only entries without card frames', async () => {
     const html = await renderToString(createSSRApp(DndDiaryEventRow, {
       event: { id: 'h', type: 'header', title: 'Перед рассветом', desc: 'Не показывается' }, saveEvent: async () => {},
     }))
-    expect(html).toContain('base-tile--framed')
+    expect(html).toContain('share-timeline-group__rail')
+    expect(html).not.toContain('base-tile--framed')
     expect(html).not.toContain('diary-event-watermark')
     expect(html).toContain('diary-event-icon')
     expect(html).toContain('Перед рассветом')

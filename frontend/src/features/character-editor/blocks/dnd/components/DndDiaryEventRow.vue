@@ -1,9 +1,9 @@
 <template>
-  <BaseTile class="diary-event" :class="['diary-event--' + event.type, { 'diary-event--compact': compact }]" :color="meta.color" framed>
+  <TimelineGroup class="diary-event" :class="['diary-event--' + event.type, { 'diary-event--compact': compact }]" :color="meta.color">
+    <template #identity><span class="diary-event-icon" :title="meta.label" :style="{ color: meta.color }"><component :is="meta.icon" :size="23" /></span></template>
     <header class="diary-event-header" :class="{ 'diary-event-header--draggable': draggable }"
       :tabindex="draggable ? 0 : undefined" :aria-label="draggable ? 'Переместить событие: перетащите заголовок или используйте стрелки вверх и вниз' : undefined"
       @pointerdown="drag" @keydown="move">
-      <span class="diary-event-icon" :title="meta.label"><component :is="meta.icon" :size="23" /></span>
       <h3>{{ event.title || 'Без названия' }}</h3>
       <div class="diary-event-actions" @pointerdown.stop>
         <JournalEditButton v-if="editable" :disabled="controlsDisabled" label="Редактировать запись" @click="startEditing" />
@@ -11,20 +11,22 @@
         <RemoveButton v-if="editable" icon="trash" label="Удалить событие" :disabled="controlsDisabled" @click="$emit('remove', event)" />
       </div>
     </header>
-    <JournalInlineForm v-if="editor" class="diary-event-editor" label="Редактирование записи" :busy="busy || saving" :error="error" @save="save" @cancel="cancel">
-      <JournalEventFields :value="editor.value" :items-by-id="itemsById" @update:value="editor.value = $event" />
-    </JournalInlineForm>
-    <div v-else-if="!headingOnly" class="diary-event-content">
+    <div v-if="!editor && !headingOnly" class="diary-event-content">
       <DndDiaryDialogue v-if="event.type === 'dialog'" :lines="event.dialogue" />
       <DndDiaryCombatants v-if="event.type === 'battle'" :combatants="event.combatants" :items-by-id="itemsById" />
       <RichContent v-if="hasDesc" class="diary-event-prose" :html="descHtml" />
       <JournalQuest v-if="event.type === 'quest'" :value="event.quest" />
     </div>
-  </BaseTile>
+    <template v-if="editor" #footer>
+      <JournalInlineForm class="diary-event-editor" label="Редактирование записи" :busy="busy || saving" :error="error" @save="save" @cancel="cancel">
+        <JournalEventFields :value="editor.value" :items-by-id="itemsById" @update:value="editor.value = $event" />
+      </JournalInlineForm>
+    </template>
+  </TimelineGroup>
 </template>
 <script setup>
 import { computed, watch } from 'vue'
-import { BaseTile, RemoveButton } from '@sylvieshare/share-ui'
+import { TimelineGroup, RemoveButton } from '@sylvieshare/share-ui'
 import JournalEditButton from '@/features/journals/components/JournalEditButton.vue'
 import JournalInlineForm from '@/features/journals/components/JournalInlineForm.vue'
 import JournalEventFields from '@/features/journals/components/JournalEventFields.vue'
@@ -70,30 +72,26 @@ const descHtml = computed(() => /<[a-z][\s\S]*>/i.test(props.event.desc || '') ?
 const hasDesc = computed(() => descHtml.value.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() !== '')
 </script>
 <style scoped>
-.diary-event { min-width: 0; --r-lg: 14px; isolation: isolate; container: diary-event / inline-size; }
-.diary-event-header { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; padding: 16px 20px; min-width: 0; border-radius: 14px 14px 0 0; border-bottom: 1px solid color-mix(in srgb, var(--tile-color) 14%, var(--border)); background: color-mix(in srgb, var(--tile-color) 3%, transparent); }
+.diary-event { min-width: 0; container: diary-event / inline-size; }
+.diary-event-header { display: flex; align-items: center; gap: 10px; min-width: 0; margin-bottom: 8px; }
 .diary-event-header--draggable { cursor: grab; touch-action: none; }
 .diary-event-header--draggable:active { cursor: grabbing; }
-.diary-event-header--draggable:hover { background: color-mix(in srgb, var(--tile-color) 5%, transparent); }
-.diary-event-icon { display: grid; place-items: center; flex: none; width: 26px; height: 32px; color: var(--tile-color); }
-.diary-event-header h3 { flex: 1; min-width: 0; margin: 0; color: var(--text-1); font: 700 clamp(23px, 2vw, 27px)/1.15 var(--font-display); overflow-wrap: anywhere; }
+.diary-event-header--draggable:hover h3 { color: var(--accent-soft); }
+.diary-event-icon { display: flex; align-items: center; width: 24px; height: 28px; }
+.diary-event-header h3 { flex: 1; min-width: 0; margin: 0; color: var(--text-1); font: 650 17px/1.45 var(--font-ui); overflow-wrap: anywhere; }
 .diary-event-actions { display: flex; flex: none; align-items: center; gap: 3px; }
 .diary-event-actions :deep(.diary-pencil) { margin: 0; }
-.diary-event-content { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px 22px 20px; }
-.diary-event-prose { min-width: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 14px; line-height: 1.8; overflow-wrap: anywhere; }
-.diary-event-editor { position: relative; z-index: 1; padding: 20px 22px; }
-.diary-event--header .diary-event-header, .diary-event--newday .diary-event-header { border-bottom: 0; border-radius: 14px; }
-.diary-event--header h3 { font-size: 30px; }
-.diary-event--compact .diary-event-header { padding: 14px 16px; }
-.diary-event--compact .diary-event-header h3 { font-size: 22px; }
+.diary-event-content { display: flex; flex-direction: column; gap: 10px; }
+.diary-event-prose { min-width: 0; color: var(--text-2); font-family: var(--font-prose); font-size: 13px; line-height: 1.75; overflow-wrap: anywhere; }
+.diary-event-editor { padding: 16px; border-radius: var(--r-md); background: var(--bg); }
+.diary-event--header .diary-event-header, .diary-event--newday .diary-event-header { margin-bottom: 0; }
+.diary-event--header h3, .diary-event--newday h3 { font: 650 21px/1.3 var(--font-display); }
 .diary-event :deep(.diary-empty-copy) { color: var(--text-muted); font: italic 13px/1.7 var(--font-prose); }
-@container diary-event (max-width: 600px) {
-  .diary-event-header { padding: 14px 12px; gap: 7px; }
-  .diary-event-header h3 { font-size: 23px; }
-  .diary-event-actions { margin-left: auto; }
-  .diary-event-icon { width: 24px; }
-  .diary-event-content, .diary-event-editor { padding: 14px 16px 18px; }
-  .diary-event-prose { font-size: 13px; }
+@container diary-event (max-width: 420px) {
+  .diary-event-header { flex-wrap: wrap; gap: 6px; }
+  .diary-event-header h3 { flex-basis: 100%; font-size: 16px; }
+  .diary-event-actions { width: 100%; justify-content: flex-end; }
+  .diary-event-editor { padding: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .diary-event { transition: none; } }
 </style>

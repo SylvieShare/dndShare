@@ -1,6 +1,6 @@
 <template>
-  <section class="event-actor-group">
-    <div class="event-actor-rail">
+  <TimelineGroup class="event-actor-group" rail-width="minmax(170px, 24%)" compact-rail-width="96px" :gap="20" :compact-gap="12" :padding-block="20" sticky>
+    <template #identity>
       <header class="event-actor-head">
         <SessionEventActorAvatar :event="group.actorEvent" :label="group.label" />
         <div class="event-actor-meta">
@@ -8,7 +8,7 @@
           <span v-if="group.kind !== 'creature'">{{ group.authorIsSessionOwner ? 'я' : group.authorName }}</span>
         </div>
       </header>
-    </div>
+    </template>
     <div class="event-actor-entities">
       <section v-for="entry in group.entities" :key="entry.key" class="event-entity">
         <header v-if="entry.entity && entry.events.length > 1" class="event-entity-head">
@@ -24,12 +24,13 @@
         </div>
       </section>
     </div>
-    <ItemViewModal v-if="view" :item-id="Number(view.itemId)" :item="items[view.itemId] || null" :item-type-id="items[view.itemId]?.typeId || null" @close="view = null" />
-  </section>
+  </TimelineGroup>
+  <ItemViewModal v-if="view" :item-id="Number(view.itemId)" :item="items[view.itemId] || null" :item-type-id="items[view.itemId]?.typeId || null" @close="view = null" />
 </template>
 <script setup>
 import NpcMarker from './NpcMarker.vue'
 import { ref } from 'vue'
+import { TimelineGroup } from '@sylvieshare/share-ui'
 import SessionEventActorAvatar from './SessionEventActorAvatar.vue'
 import SessionEventEntityLabel from './SessionEventEntityLabel.vue'
 import SessionEventRow from './SessionEventRow.vue'
@@ -39,11 +40,7 @@ const view = ref(null)
 const entityName = entry => entry.entity?.name || props.items[entry.entity?.itemId]?.name || (entry.entity?.itemId ? `Запись #${entry.entity.itemId}` : '')
 </script>
 <style scoped>
-.event-actor-group { display: grid; grid-template-columns: minmax(170px, 24%) minmax(0, 1fr); gap: 20px; min-width: 0; padding-block: 20px; }
-.event-actor-group + .event-actor-group { border-top: 1px solid var(--border); }
-.event-actor-rail { --event-connector-color: color-mix(in srgb, var(--accent) 38%, var(--border)); position: relative; min-width: 0; border-right: 2px solid var(--event-connector-color); }
-.event-actor-rail::after { content: ''; position: absolute; top: 0; right: -5px; width: 8px; height: 8px; box-sizing: border-box; border-top: 2px solid var(--event-connector-color); border-left: 2px solid var(--event-connector-color); transform: rotate(45deg); }
-.event-actor-head { position: sticky; top: 12px; display: flex; align-items: flex-start; gap: 12px; min-width: 0; padding-right: 20px; overflow-wrap: anywhere; white-space: normal; }
+.event-actor-head { display: flex; align-items: flex-start; gap: 12px; min-width: 0; overflow-wrap: anywhere; white-space: normal; }
 .event-actor-meta { display: grid; gap: 4px; min-width: 0; }
 .event-actor-meta strong { font-family: var(--font-display); font-size: 18px; color: var(--text-1); }
 .event-actor-name { display: flex; align-items: baseline; gap: 6px; }
@@ -54,8 +51,7 @@ const entityName = entry => entry.entity?.name || props.items[entry.entity?.item
 .event-entity-actions { display: grid; gap: 12px; min-width: 0; }
 .event-entity-actions--nested { margin: 10px 0 0 48px; }
 @media (max-width: 600px) {
-  .event-actor-group { grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
-  .event-actor-head { flex-direction: column; gap: 8px; padding-right: 12px; }
+  .event-actor-head { flex-direction: column; gap: 8px; }
   .event-actor-meta strong { font-size: 14px; }
   .event-entity-actions--nested { margin-left: 12px; }
 }

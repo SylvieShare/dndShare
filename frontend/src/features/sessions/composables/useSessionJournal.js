@@ -25,9 +25,9 @@ export function useSessionJournal(sessionUuid, requestedId) {
     const source = schedule.groups.value
     const withCount = row => ({ ...row, entryCount: sections.value.get(row.id)?.events.length ?? row.entryCount })
     return [
+      { key: 'past', label: 'Прошедшие', items: source.past.map(withCount) },
       { key: 'next', label: 'Следующая', items: source.next ? [withCount(source.next)] : [] },
       { key: 'future', label: 'Будущие', items: source.future.map(withCount) },
-      { key: 'past', label: 'Прошедшие', items: source.past.map(withCount) },
       { key: 'undated', label: 'Без даты', items: source.undated.map(withCount) },
     ].filter(group => group.items.length)
   })

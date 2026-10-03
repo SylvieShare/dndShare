@@ -10,11 +10,11 @@ describe('campaign schedule', () => {
     { id: 2, number: 2, date: '2026-10-01' },
     { id: 5, number: 5, date: '2026-10-03' },
   ]
-  it('selects today first, separates later meetings, and reverses the past', () => {
+  it('selects today first and keeps past and future meetings chronological', () => {
     const grouped = groupOccurrences(rows, '2026-10-03')
     expect(grouped.next.id).toBe(3)
     expect(grouped.future.map(row => row.id)).toEqual([5, 4])
-    expect(grouped.past.map(row => row.id)).toEqual([2, 1])
+    expect(grouped.past.map(row => row.id)).toEqual([1, 2])
     expect(grouped.undated.map(row => row.id)).toEqual([6])
     expect(rows[0].id).toBe(6)
   })

@@ -15,7 +15,7 @@
           <button type="button" :disabled="blocked || displayedEvents[0]?.id === event.id" :aria-label="`Поднять событие: ${event.title || 'Без названия'}`" @click="moveEvent(event, -1)"><ArrowUp :size="18" /></button>
           <button type="button" :disabled="blocked || displayedEvents.at(-1)?.id === event.id" :aria-label="`Опустить событие: ${event.title || 'Без названия'}`" @click="moveEvent(event, 1)"><ArrowDown :size="18" /></button>
         </div>
-        <DndDiaryEventRow :event="event" :allow-drag="!touchPointer && filter === 'all'" :editable="ownerMode" :busy="busy" :locked="Boolean(editingId) && editingId !== event.id"
+        <DndDiaryEventRow :event="event" :compact="compact" :allow-drag="!touchPointer && filter === 'all'" :editable="ownerMode" :busy="busy" :locked="Boolean(editingId) && editingId !== event.id"
           :focus-title="focusEventId === event.id" :save-event="saveEvent" :items-by-id="itemsById"
           @drag="startDrag(event, $event)" @move="moveEvent(event, $event)" @remove="$emit('remove-event', $event)" @editing="value => $emit('editing', event.id, value)" />
       </article>
@@ -89,17 +89,14 @@ onBeforeUnmount(() => emit('dragging', false))
 .diary-order-toggle[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 .diary-order-actions { display: flex; justify-content: flex-end; gap: 6px; padding-bottom: 8px; }
 .diary-order-actions button:disabled, .diary-order-toggle:disabled { opacity: .35; cursor: default; }
-.diary-timeline { position: relative; display: flex; flex-direction: column; gap: 14px; padding: 8px 0 24px; }
-.diary-timeline::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--border-strong); }
+.diary-timeline { position: relative; display: flex; flex-direction: column; padding: 0 0 20px; }
 .diary-timeline-event { position: relative; min-width: 0; }
-.diary-timeline-event--day { width: calc(100% - 64px); align-self: center; }
-.diary-timeline-event--placeholder { border: 1px dashed var(--accent); border-radius: 18px; }
+.diary-timeline-event--placeholder { outline: 1px dashed var(--accent); border-radius: var(--r-sm); }
 .diary-timeline-event--placeholder > * { visibility: hidden; }
 .diary-timeline-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 240px; color: var(--text-muted); text-align: center; }
 .diary-timeline-empty svg { color: var(--accent); opacity: .6; } .diary-timeline-empty strong { color: var(--text-2); font: 22px var(--font-display); } .diary-timeline-empty span { font-size: 13px; }
-@media (max-width: 720px) { .diary-timeline { gap: 14px; } .diary-timeline-event--day { width: 100%; } }
 .diary-section--compact .diary-section-toolbar { margin-bottom: 14px; }
-.diary-section--compact .diary-timeline { gap: 12px; padding-bottom: 10px; }
+.diary-section--compact .diary-timeline { padding-bottom: 10px; }
 .diary-section--compact .diary-timeline-empty { min-height: 160px; gap: 10px; }
 .diary-section--compact .diary-timeline-empty strong { font-size: 19px; }
 .diary-section--compact .diary-timeline-empty span { font-size: 12px; line-height: 1.6; }
