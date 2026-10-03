@@ -298,7 +298,8 @@ router.beforeResolve((to, from) => {
     return startMobilePageTransition(pageTransitionName.value)
 })
 
-router.afterEach((to) => {
+router.afterEach((to, from, failure) => {
     completeMobilePageTransitionNavigation()
-    if (to.meta?.title) document.title = to.meta.title
+    // Query/hash changes keep the page mounted and must preserve its loaded title.
+    if (!failure && (!from.name || to.path !== from.path) && to.meta?.title) document.title = to.meta.title
 })
