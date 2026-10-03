@@ -77,6 +77,14 @@ export function cloneModel(model) {
   }
 }
 
+export function inventoryEntriesWeight(entries, catalog) {
+  const total = entries.reduce((sum, entry) => {
+    const { weight } = inventoryItemEconomy(resolveWeaponItem(entry, catalog), entry)
+    return sum + (Number.isFinite(weight) ? weight : 0)
+  }, 0)
+  return Math.round(total * 1e8) / 1e8
+}
+
 export function entryDisplayData(entry, catalog, typeById = {}, rootTypeId = 2, presetsById = {}) {
   const base = resolveWeaponItem(entry, catalog)
   const ov = entry.override || {}
