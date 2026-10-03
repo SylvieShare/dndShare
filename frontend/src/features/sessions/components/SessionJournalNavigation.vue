@@ -47,5 +47,5 @@ const options = computed(() => props.groups.flatMap(group => group.items.map(row
 .meeting-navigation__row:disabled { cursor: default; opacity: .6; }
 .meeting-navigation__row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .meeting-navigation__picker { display: none; }
-@container session-journal (max-width: 780px) { .meeting-navigation__list { display: none; } .meeting-navigation__picker { display: block; } }
+@container session-journal (max-width: 620px) { .meeting-navigation__list { display: none; } .meeting-navigation__picker { display: block; } }
 </style>

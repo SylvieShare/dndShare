@@ -1,37 +1,34 @@
 <template>
   <section class="session-journal" :class="{ 'session-journal--embedded': embedded }" data-tutorial="session-journal" aria-label="Сессии и дневник">
-    <header class="session-journal__heading">
-      <h2><NotebookPen :size="21" /> Дневник</h2>
-      <div class="session-journal__heading-actions">
-        <BasePopover v-if="isDm && canManage && journal" v-model:open="settingsOpen" :anchor="settingsTrigger" :min-width="260">
-          <ToggleSwitch :model-value="journal.playersCanEdit" :disabled="locked" label="Игроки могут редактировать дневник" @update:model-value="setPlayerEditing($event).catch(() => {})" />
-        </BasePopover>
-        <button v-if="isDm && canManage && journal" ref="settingsTrigger" type="button" class="session-journal__icon" aria-label="Доступ к дневнику" :aria-expanded="settingsOpen" @click="settingsOpen = !settingsOpen"><Settings2 :size="17" /></button>
-        <AddButton v-if="isDm" label="Новая сессия" :disabled="loading || locked" @click="editOccurrence()" />
-      </div>
-    </header>
     <LoadingState v-if="loading" label="Открываем дневник…" fill />
-    <div v-else-if="!groups.length" class="session-journal__empty">
-      <Feather :size="28" /><strong>История ещё впереди</strong>
-      <p>{{ isDm ? 'Создайте первую сессию, чтобы запланировать встречу и вести её дневник.' : 'Мастер пока не добавил сессии.' }}</p>
-      <p v-if="error" role="alert" class="session-journal__error">{{ error }}</p>
-      <ActionButton v-if="error" variant="quiet" @click="reload">Повторить загрузку</ActionButton>
-    </div>
     <div v-else class="session-journal__body">
-      <SessionJournalNavigation :groups="groups" :selected-id="selectedId" :disabled="locked" @select="select" />
-      <div class="session-journal__content">
+      <BaseTile class="session-journal__sessions">
+        <header class="session-journal__sessions-heading">
+          <h2>Сессии</h2>
+          <AddButton v-if="isDm" label="Новая сессия" variant="icon" :disabled="locked" @click="editOccurrence()" />
+        </header>
+        <SessionJournalNavigation v-if="groups.length" :groups="groups" :selected-id="selectedId" :disabled="locked" @select="select" />
+        <p v-else class="session-journal__hint">{{ isDm ? 'Запланируйте первую встречу.' : 'Сессий пока нет.' }}</p>
+      </BaseTile>
+      <BaseTile class="session-journal__content">
         <header v-if="selectedOccurrence" class="session-journal__meeting">
           <div class="session-journal__meeting-copy">
             <div class="session-journal__meta"><span>Сессия #{{ selectedOccurrence.number }}</span><span class="session-journal__status" :class="{ 'session-journal__status--next': ['Следующая', 'Сегодня'].includes(selectedStatus) }">{{ selectedStatus }}</span><time v-if="selectedOccurrence.date" :datetime="selectedOccurrence.date">{{ occurrenceDate(selectedOccurrence.date) }}</time></div>
             <h3>{{ selectedOccurrence.name }}</h3>
           </div>
-          <RowActionMenu v-if="isDm" :disabled="locked">
-            <template #trigger><button type="button" class="session-journal__icon" :disabled="locked" :aria-label="`Действия с сессией #${selectedOccurrence.number}`"><Ellipsis :size="20" /></button></template>
-            <template #default="{ close }">
-              <RowActionItem action="edit" @click="editOccurrence(selectedOccurrence); close()">Редактировать сессию</RowActionItem>
-              <RowActionItem action="delete" @click="removingOccurrence = selectedOccurrence; close()">Удалить сессию</RowActionItem>
-            </template>
-          </RowActionMenu>
+          <div class="session-journal__meeting-actions">
+            <BasePopover v-if="isDm && canManage && journal" v-model:open="settingsOpen" :anchor="settingsTrigger" :min-width="260">
+              <ToggleSwitch :model-value="journal.playersCanEdit" :disabled="locked" label="Игроки могут редактировать дневник" @update:model-value="setPlayerEditing($event).catch(() => {})" />
+            </BasePopover>
+            <button v-if="isDm && canManage && journal" ref="settingsTrigger" type="button" class="session-journal__icon" aria-label="Доступ к дневнику" :aria-expanded="settingsOpen" @click="settingsOpen = !settingsOpen"><Settings2 :size="17" /></button>
+            <RowActionMenu v-if="isDm" :disabled="locked">
+              <template #trigger><button type="button" class="session-journal__icon" :disabled="locked" :aria-label="`Действия с сессией #${selectedOccurrence.number}`"><Ellipsis :size="20" /></button></template>
+              <template #default="{ close }">
+                <RowActionItem action="edit" @click="editOccurrence(selectedOccurrence); close()">Редактировать сессию</RowActionItem>
+                <RowActionItem action="delete" @click="removingOccurrence = selectedOccurrence; close()">Удалить сессию</RowActionItem>
+              </template>
+            </RowActionMenu>
+          </div>
         </header>
         <p v-if="editingId" class="session-journal__hint">Сохраните запись или отмените правку, чтобы переключить сессию.</p>
         <p v-else-if="journal && !canEdit" class="session-journal__hint">Только чтение · записи добавляет мастер</p>
@@ -42,7 +39,11 @@
           @reorder-events="reorderEntries(selectedSection.id, $event).catch(() => {})" />
         <LoadingState v-else-if="busy" label="Открываем записи…" />
         <p v-else-if="selectedOccurrence" class="session-journal__hint">Записи этой сессии пока недоступны. Повторите загрузку.</p>
-      </div>
+        <div v-else class="session-journal__empty">
+          <Feather :size="28" /><strong>История ещё впереди</strong>
+          <p>{{ isDm ? 'Создайте первую сессию, чтобы запланировать встречу и вести её дневник.' : 'Мастер пока не добавил сессии.' }}</p>
+        </div>
+      </BaseTile>
     </div>
     <SessionOccurrenceModal v-if="occurrenceDraft && isDm" :occurrence="occurrenceDraft" :busy="busy" :error="occurrenceError" @save="saveOccurrence" @close="occurrenceDraft = null; occurrenceError = ''" />
     <ConfirmDialog v-if="removingOccurrence && isDm" title="Удалить сессию?" :loading="busy" confirm-label="Удалить"
@@ -54,8 +55,8 @@
 </template>
 <script setup>
 import { ref, toRef } from 'vue'
-import { Ellipsis, Feather, NotebookPen, Settings2 } from '@lucide/vue'
-import { ActionButton, AddButton, BasePopover, ConfirmDialog, LoadingState, RowActionMenu, ToggleSwitch } from '@sylvieshare/share-ui'
+import { Ellipsis, Feather, Settings2 } from '@lucide/vue'
+import { AddButton, BasePopover, BaseTile, ConfirmDialog, LoadingState, RowActionMenu, ToggleSwitch } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import JournalTimeline from '@/features/journals/components/JournalTimeline.vue'
 import SessionOccurrenceModal from './SessionOccurrenceModal.vue'
