@@ -1,10 +1,11 @@
 import { createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import { createPinia } from 'pinia'
-import { expect, it } from 'vitest'
+import { expect, it, vi } from 'vitest'
 import WeaponRollControls from './WeaponRollControls.vue'
 import WeaponItemMechanics from './WeaponItemMechanics.vue'
 import { weaponDamageMenuOptions } from '@/shared/lib/weaponDamageOptions'
+vi.mock('@/features/items/components/ItemEffectLinks.vue', () => ({ default: { render: () => h('div', 'Связанный эффект') } }))
 const action = { key: 'wither', label: 'Иссушающий удар', dice: 'd10', dice_count: 2, uses_resource: true, resource_cost: 1,
   resource: { key: 'staff', title: 'Посох', value: 1, total: 3, color_point: 'var(--accent)' } }
 async function render(component, props, ctx) {
@@ -32,16 +33,16 @@ it('blocks the damage roll when a selected cost is no longer affordable', async 
 })
 it('displays the instance pool below the weapon with filled and spent accessible cells', async () => {
   const resource = { ...action.resource, source: {} }
-  const ctx = { charCtx: { ownerMode: true }, weaponResources: () => [resource], item: () => ({ data: { recharge_note: 'На рассвете 1к3' } }) }
+  const ctx = { charCtx: { ownerMode: true, values: { lvl: { level: 5 } } }, weaponResources: () => [resource], item: () => ({ id: 273, typeId: 19, data: { attunement: 'none', max_use: 3, status_effects: [{ key: 'terror', effect: { id: 4615 } }] } }) }
   const html = await render(WeaponItemMechanics, { entry: { uid: 'staff' } }, ctx)
   expect(html.match(/aria-label="Заряд /g)).toHaveLength(3)
   expect(html.match(/aria-pressed="true"/g)).toHaveLength(1)
   expect(html.match(/aria-pressed="false"/g)).toHaveLength(2)
   expect(html).not.toContain('На рассвете 1к3')
   expect(html).not.toContain('>Ресурс<')
-  expect(html).toContain('item-mechanic-panel--resource')
-  expect(html).toContain('>Заряды<')
-  expect(html).toMatch(/<summary[^>]*>[\s\S]*?Заряды[\s\S]*?Заряд 1[\s\S]*?<\/summary>/)
+  expect(html).not.toContain('item-mechanic-panel--resource')
+  expect(html).toContain('>Эффекты оружия<')
+  expect(html).toMatch(/<summary[^>]*>[\s\S]*?Эффекты оружия[\s\S]*?Заряд 1[\s\S]*?<\/summary>/)
   expect(html).toMatch(/<details(?![^>]*\bopen\b)/)
   ctx.charCtx.ownerMode = false
   const readonly = await render(WeaponItemMechanics, { entry: { uid: 'staff' } }, ctx)

@@ -1398,10 +1398,12 @@ entries; handbook media retains priority.
 `ItemMechanicPanel` принимает `collapsible` и использует native `details/summary`
 внутри `BaseTile`. `WeaponItemMechanics` задаёт контекст `weaponMechanicCollapse`
 для своих потомков: начальное состояние закрыто, справочник сохраняет раскрытое
-представление. `ItemResourcePanel` использует отдельную композицию с зарядами в
-summary-слоте; его кнопки не раскрывают карточку. `WeaponCataloguePanels` читает
-текст и параметры выбранной основы/магического источника, поэтому новые и старые
-оружия получают одинаковые блоки без дублирования данных инвентаря.
+представление. `WeaponLinkedCharges` помещает счётчики в summary-слот конкретных
+свойств; его кнопки не раскрывают карточку. `weaponBlockResources` назначает пул
+одному связанному блоку. `WeaponUsePanel` сохраняет одну карточку до и после атаки.
+`WeaponCard` оставляет внешний `MorphTile` неподвижным, а `RowActionMenu` и press-
+анимация принадлежат только основной строке `WeaponCardView`; свойства и разделитель
+находятся снаружи trigger.
 
 `InventoryBagItem` owns the inventory-only corner chips: quantity docked to the
 bottom right with rounded top-left/bottom-right corners, capabilities docked
