@@ -30,6 +30,7 @@ import { computed } from 'vue'
 import { Coins, Weight } from '@lucide/vue'
 import CoverStatCard from '@/features/items/components/cover/CoverStatCard.vue'
 import { measuredItemEconomy } from '@/features/items/lib/itemInstance'
+import { packagingNote } from '@/features/items/lib/itemPackaging'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({
@@ -43,10 +44,10 @@ const costLabel = computed(() => formatCost(data.value.cost || measuredEconomy.v
 const weight = computed(() => data.value.weight ?? measuredEconomy.value?.weight)
 const measuredNote = computed(() => measuredEconomy.value
   ? `за ${measuredEconomy.value.quantity} ${measuredEconomy.value.unit}`
-  : '')
+  : packagingNote(props.item))
 const weightNote = computed(() => measuredEconomy.value
   ? `фунт. за ${measuredEconomy.value.quantity} ${measuredEconomy.value.unit}`
-  : 'фунт.')
+  : ['фунт.', packagingNote(props.item)].filter(Boolean).join(' '))
 </script>
 
 <style scoped>

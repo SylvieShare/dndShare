@@ -2,12 +2,14 @@
   <template v-if="hasDetails">
     <span v-if="data.weight != null" class="itd-weight">{{ data.weight }} фунт.</span>
     <span v-if="costLabel" class="itd-cost">{{ costLabel }}</span>
+    <span v-if="packagingNote(item)">{{ packagingNote(item) }}</span>
   </template>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
+import { packagingNote } from '@/features/items/lib/itemPackaging'
 
 const props = defineProps({
   item: { type: Object, required: true },

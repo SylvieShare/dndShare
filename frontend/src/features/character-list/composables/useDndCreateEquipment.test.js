@@ -14,6 +14,27 @@ function wizardState() {
 }
 
 describe('class equipment branch switching', () => {
+  it('buys and removes complete packages while persisting piece counts and charging once', () => {
+    const state = wizardState()
+    state.buyStartingEquipment = true
+    state.startingWealthRoll = { gold: 2 }
+    const equipment = useDndCreateEquipment({ state, sourceSuffix: () => '' })
+    const arrows = { id: 347, typeId: 2, name: 'Стрела', data: { purchase_quantity: 20, cost: { value: 1, suggest_id: 3 } } }
+    equipment.addShopItem(arrows)
+    expect(state.startingShopCart[0].count).toBe(20)
+    expect(equipment.shopSpentCopper.value).toBe(100)
+    expect(equipment.allEquipment.value[0].count).toBe(20)
+    equipment.bumpShopItem(state.startingShopCart[0], 1)
+    expect(state.startingShopCart[0].count).toBe(40)
+    expect(equipment.shopRemainingCopper.value).toBe(0)
+    equipment.addShopItem(arrows)
+    expect(state.startingShopCart[0].count).toBe(40)
+    equipment.bumpShopItem(state.startingShopCart[0], -1)
+    expect(state.startingShopCart[0].count).toBe(20)
+    expect(equipment.shopSpentCopper.value).toBe(100)
+    equipment.bumpShopItem(state.startingShopCart[0], -1)
+    expect(state.startingShopCart).toEqual([])
+  })
   it('drops concrete picks when another column is selected', () => {
     const state = wizardState()
     state.classEquipmentChoices.weapon = {
