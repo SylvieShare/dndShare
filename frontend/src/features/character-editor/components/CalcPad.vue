@@ -2,8 +2,8 @@
   <div class="cp-wrap">
     <div class="cp-display-row">
       <div class="cp-display">
-        <div v-if="$slots['display-leading']" class="cp-display-leading"><slot name="display-leading" /></div>
         <span class="cp-expr">{{ modelValue || '0' }}</span>
+        <div v-if="$slots['display-trailing']" class="cp-display-trailing"><slot name="display-trailing" /></div>
       </div>
       <button type="button" class="cp-bksp" aria-label="Удалить последнюю цифру" @click="backspace" touch-action="manipulation">⌫</button>
     </div>
@@ -63,15 +63,15 @@ function backspace() {
   min-height: 40px;
 }
 
-.cp-display-leading {
+.cp-display-trailing {
   display: flex;
   flex: none;
   align-items: center;
   align-self: stretch;
-  margin-left: -6px;
-  margin-right: 12px;
-  padding-right: 8px;
-  border-right: 1px solid var(--border);
+  margin-left: 12px;
+  margin-right: -6px;
+  padding-left: 8px;
+  border-left: 1px solid var(--border);
 }
 
 .cp-expr {

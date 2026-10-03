@@ -9,7 +9,7 @@
     </template>
     <span class="money-currency__identity"><span class="money-currency__name">{{ selected?.title || '—' }}</span><ChevronDown :size="12" aria-hidden="true" /></span>
   </ActionButton>
-  <BasePopover :open="open" :anchor="trigger?.$el" placement="bottom-start" :min-width="170" :z-index="3200" @update:open="open = $event">
+  <BasePopover :open="open" :anchor="trigger?.$el" placement="bottom-end" :min-width="170" :z-index="3200" @update:open="open = $event">
     <OptionList :id="listId" :options="options" :active-index="activeIndex" label="Монеты" @active="activeIndex = $event" @select="pick">
       <template #option="{ option }">
         <ItemIcon v-if="option.item.iconImageUrl || option.item.svg" :item="option.item" :size="24" :fallback-to-type="false" />

@@ -16,7 +16,8 @@ for (const mobile of [false, true]) {
       selector.boundingBox(), display.boundingBox(), editor.locator('.cp-expr').boundingBox(), editor.getByRole('button', { name: 'Удалить последнюю цифру' }).boundingBox(),
     ])
     expect(selectorBox.x).toBeGreaterThanOrEqual(displayBox.x)
-    expect(selectorBox.x + selectorBox.width).toBeLessThan(expressionBox.x)
+    expect(expressionBox.x + expressionBox.width).toBeLessThan(selectorBox.x)
+    expect(selectorBox.x + selectorBox.width).toBeLessThan(displayBox.x + displayBox.width)
     expect(displayBox.x + displayBox.width).toBeLessThan(backspaceBox.x)
 
     await selector.click()
@@ -68,7 +69,7 @@ for (const mobile of [false, true]) {
     await expect(page.locator('.money-tile [data-money-id="2"] .ma-value')).toHaveText('3')
 
     const plain = page.getByTestId('plain-calculator')
-    await expect(plain.locator('.cp-display-leading')).toHaveCount(0)
+    await expect(plain.locator('.cp-display-trailing')).toHaveCount(0)
     await plain.getByRole('button', { name: '7', exact: true }).click()
     await plain.getByRole('button', { name: 'Удалить последнюю цифру' }).click()
     await expect(plain.locator('.cp-expr')).toHaveText('0')

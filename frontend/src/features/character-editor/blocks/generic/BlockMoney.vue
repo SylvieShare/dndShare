@@ -21,7 +21,7 @@
     <template #editor>
       <EditorPanel compact class="mc-ed" :class="{ 'mc-error': calcError }">
         <CalcPad v-model="calcExpr">
-          <template #display-leading>
+          <template #display-trailing>
             <MoneyCurrencyPicker v-model="calcCoinId" :coins="coins" />
           </template>
         </CalcPad>

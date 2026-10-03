@@ -109,12 +109,12 @@ const formatDelta = delta => `${delta > 0 ? '+' : '−'}${formatter.format(Math.
 }
 
 @keyframes money-balance-pulse {
-  0%, 48% { border-color: color-mix(in srgb, var(--money-change-color) 70%, var(--border)); background: color-mix(in srgb, var(--money-change-color) 18%, var(--surface-raised)); box-shadow: 0 0 14px color-mix(in srgb, var(--money-change-color) 22%, transparent); transform: scale(1.035); }
-  26%, 100% { border-color: var(--border); background: color-mix(in srgb, var(--surface-raised) 60%, transparent); box-shadow: none; transform: scale(1); }
+  0%, 100% { border-color: var(--border); background: color-mix(in srgb, var(--surface-raised) 60%, transparent); box-shadow: none; transform: scale(1); }
+  22% { border-color: color-mix(in srgb, var(--money-change-color) 70%, var(--border)); background: color-mix(in srgb, var(--money-change-color) 18%, var(--surface-raised)); box-shadow: 0 0 14px color-mix(in srgb, var(--money-change-color) 22%, transparent); transform: scale(1.035); }
 }
 @keyframes money-value-flash {
-  0%, 48% { color: var(--money-change-color); }
-  26%, 100% { color: var(--text-1); }
+  0%, 100% { color: var(--text-1); }
+  22% { color: var(--money-change-color); }
 }
 @media (prefers-reduced-motion: reduce) {
   .money-amount--gain, .money-amount--spend { animation: none; border-color: var(--money-change-color); background: color-mix(in srgb, var(--money-change-color) 12%, var(--surface-raised)); }
