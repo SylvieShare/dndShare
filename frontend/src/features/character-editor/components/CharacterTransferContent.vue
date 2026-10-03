@@ -68,7 +68,7 @@ function personImage(transfer, role) {
 }
 function itemView(transfer) {
   const id = itemId(transfer)
-  const typeId = { weapon: 1, items: 2, potions: 10, spells: 5 }[transfer.source] || 2
+  const typeId = { weapon: 1, items: 2, spells: 5 }[transfer.source] || 2
   const item = id ? artwork(transfer) || null : { name: transfer.itemName, typeId, data: transfer.entry?.override || {} }
   return { id, item, typeId: item?.typeId || typeId, entry: transfer.entry }
 }

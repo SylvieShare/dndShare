@@ -220,8 +220,11 @@
       "item_type_id": 2,
       "include_related_types": true,
       "specialized_destinations": [
-        { "type_id": 1, "value_id": "weapon", "label": "Оружие" },
-        { "type_id": 10, "value_id": "potions", "label": "Зелья" }
+        {
+          "type_id": 1,
+          "value_id": "weapon",
+          "label": "Оружие"
+        }
       ],
       "tool_type_id": 14
     }
@@ -238,11 +241,6 @@
     "content": {
       "suggest_type_id": 17
     }
-  },
-  "potions": {
-    "id": "potions",
-    "type": "DND_POTIONS",
-    "content": {}
   },
   "notes": {
     "id": "notes",
@@ -517,7 +515,10 @@
     "id": "abilities_story",
     "type": "DND_ABILITIES",
     "title": "Сюжетные",
-    "content": { "item_id": 18, "hide_empty": true }
+    "content": {
+      "item_id": 18,
+      "hide_empty": true
+    }
   },
   "abilities_feats": {
     "id": "abilities_feats",

@@ -26,7 +26,7 @@ func testSessionInventory(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		}
 		return entries
 	}
-	for _, source := range []string{"items", "weapon", "potions"} {
+	for _, source := range []string{"items", "weapon"} {
 		t.Run(source, func(t *testing.T) {
 			count := 3
 			if source == "weapon" {

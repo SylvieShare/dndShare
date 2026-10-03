@@ -67,8 +67,8 @@ export function useSessionInventory(sessionUuid) {
   }
   function add(item, quantity = 1, params = {}) {
     const uuid = unref(sessionUuid)
-    const source = Number(item.typeId) === 10 ? 'potions' : Number(item.typeId) === 1 || (Number(item.typeId) === 19 && item.data?.weapon) ? 'weapon' : 'items'
-    const entry = { item_id: item.id, count: quantity, params, ...(source === 'potions' ? { name: item.name } : {}) }
+    const source = Number(item.typeId) === 1 || (Number(item.typeId) === 19 && item.data?.weapon) ? 'weapon' : 'items'
+    const entry = { item_id: item.id, count: quantity, params }
     const request = { source, name: item.name, entry: source === 'weapon' ? createWeaponInstance(item, entry) : entry, clientActionId: crypto.randomUUID() }
     return mutate(() => api.addSessionInventory(uuid, request))
   }

@@ -43,7 +43,7 @@ func (doc transferDocument) take(source, uid string) (map[string]any, error) {
 	}
 	var entry map[string]any
 	switch source {
-	case "weapon", "potions":
+	case "weapon":
 		entry = take(values, source)
 	case "items":
 		items, _ := values["items"].(map[string]any)
@@ -73,7 +73,7 @@ func (doc transferDocument) take(source, uid string) (map[string]any, error) {
 }
 
 // Returns always go into the backpack, so a declined item does not silently
-// reactivate equipment effects. Weapons and potions keep their dedicated lists.
+// reactivate equipment effects. Weapons keep their dedicated list.
 func (doc transferDocument) receive(source string, entry map[string]any, accepted bool, uid string) {
 	if accepted {
 		entry["uid"] = uid
@@ -86,9 +86,12 @@ func (doc transferDocument) receive(source string, entry map[string]any, accepte
 		}
 	}
 	values := doc.values()
-	if source != "items" {
+	if source == "weapon" {
 		entries, _ := values[source].([]any)
 		values[source] = append(entries, entry)
+		return
+	}
+	if source != "items" {
 		return
 	}
 	items, _ := values["items"].(map[string]any)

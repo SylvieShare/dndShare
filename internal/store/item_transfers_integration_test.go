@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"sync"
@@ -58,7 +59,7 @@ func TestItemTransfersPostgres(t *testing.T) {
  INSERT INTO dndshare.item(id,name) VALUES(30,'Посох');
  INSERT INTO dndshare."session"(id,owner_user_id) VALUES(1,3),(2,3);
  INSERT INTO dndshare."char"(id,user_id,data) VALUES
- (1,1,'{"values":{"name":"Лиора","items":{"equipped":[{"uid":"staff","item_id":30,"count":1,"params":{"magic":{"attuned":true,"remaining":2,"bonus_transfer":2,"use_cooldowns":{"wish":3}}}}]},"potions":[{"uid":"potion","item_id":null,"count":3,"override":{"name":"Зелье","desc":"Особое"},"params":{"custom":7}}]}}'),
+ (1,1,'{"values":{"name":"Лиора","items":{"equipped":[{"uid":"staff","item_id":30,"count":1,"params":{"magic":{"attuned":true,"remaining":2,"bonus_transfer":2,"use_cooldowns":{"wish":3}}}}],"sections":[{"id":"bag","name":"Рюкзак","items":[{"uid":"potion","item_id":null,"count":3,"override":{"name":"Зелье","desc":"Особое"},"params":{"custom":7}}]}]}}}'),
  (2,2,'{"values":{"name":"Торин","hp":{"current":10}}}'),(3,3,'{"values":{"name":"Чужой"}}');
  INSERT INTO dndshare.session_participant VALUES(1,1,1),(1,2,2),(2,3,3);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
@@ -108,6 +109,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
+	t.Run("potions inventory migration", func(t *testing.T) { testPotionsInventoryMigration(t, s, pool, exec) })
 	t.Run("session impacts", func(t *testing.T) { testSessionImpacts(t, s, pool) })
 	t.Run("session saves", func(t *testing.T) { testSessionSaves(t, s, pool) })
 	t.Run("session attack targets", func(t *testing.T) { testSessionAttackTargets(t, s, pool) })
@@ -232,7 +234,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	for _, decider := range []int64{2, 1} {
 		c := current(1)
 		action = "00000000-0000-4000-8000-00000000000" + string(rune('2'+decider))
-		v, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, c.Version, "potions", "potion", action)
+		v, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, c.Version, "items", "potion", action)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -243,7 +245,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 			t.Fatalf("DM approved rejected offer: %v", err)
 		}
 		doc, _ := decodeTransferDocument(current(1).Data)
-		potions := doc.values()["potions"].([]any)
+		potions := potionTestEntries(doc)
 		raw, _ := json.Marshal(potions)
 		if len(potions) != 1 || !strings.Contains(string(raw), `"count":3`) || !strings.Contains(string(raw), `"custom":7`) {
 			t.Fatalf("lost stack params: %s", raw)
@@ -289,7 +291,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 		t.Fatalf("ordinary event approved: %v", err)
 	}
 	testPotionUseRequests(t, s, exec, current)
-	offer, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, current(1).Version, "potions", "potion", "00000000-0000-4000-8000-000000000010")
+	offer, err := s.CreateItemTransfer(ctx, 1, 1, 1, 2, current(1).Version, "items", "potion", "00000000-0000-4000-8000-000000000010")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -298,7 +300,13 @@ func TestItemTransfersPostgres(t *testing.T) {
 		t.Fatalf("DM approval: %+v %v", approved, err)
 	}
 	approvedDoc, _ := decodeTransferDocument(current(2).Data)
-	if len(approvedDoc.values()["potions"].([]any)) != 1 {
+	delivered := false
+	for _, entry := range potionTestEntries(approvedDoc) {
+		if object(entry)["uid"] == fmt.Sprintf("transfer-%d", approved.ID) && number(object(entry)["count"]) == 3 {
+			delivered = true
+		}
+	}
+	if !delivered {
 		t.Fatal("DM approval did not deliver potion stack")
 	}
 	t.Run("money transfers", func(t *testing.T) { testMoneyTransfersPostgres(t, s) })

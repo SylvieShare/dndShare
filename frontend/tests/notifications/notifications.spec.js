@@ -292,7 +292,7 @@ for (const mobile of [false, true]) test(`session inventory accepts, stores and 
   await page.getByRole('menuitem', { name: 'Удалить', exact: true }).click()
   await expect(inventory.locator('.inventory-bag-item')).toHaveCount(1)
   await inventory.getByRole('button', { name: 'Охотничий капкан', exact: true }).click()
-  await page.getByRole('menuitem', { name: 'Передать', exact: true }).click()
+  await page.getByRole('menu', { name: 'Охотничий капкан', exact: true }).getByRole('menuitem', { name: 'Передать', exact: true }).click()
   const recipient = page.getByRole('menuitem', { name: 'Торин', exact: true })
   await expect(recipient.locator('img')).toHaveCount(1)
   await recipient.click()

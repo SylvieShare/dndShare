@@ -18,7 +18,7 @@ func (s *Server) handleUsableSelfUse(w http.ResponseWriter, r *http.Request) {
 		OptionKey      string `json:"optionKey"`
 		Version        *int64 `json:"version"`
 	}
-	if decodeJSON(r, &req) != nil || (req.Source != "potions" && req.Source != "items" && req.Source != "weapon") || !isUUID(req.ClientActionID) || req.EntryUID == "" || len(req.EntryUID) > 200 || len(req.OptionKey) > 100 || req.Version == nil || *req.Version < 0 {
+	if decodeJSON(r, &req) != nil || (req.Source != "items" && req.Source != "weapon") || !isUUID(req.ClientActionID) || req.EntryUID == "" || len(req.EntryUID) > 200 || len(req.OptionKey) > 100 || req.Version == nil || *req.Version < 0 {
 		badRequest(w, "Некорректное применение предмета")
 		return
 	}

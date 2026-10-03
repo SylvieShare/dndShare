@@ -9,7 +9,6 @@ function source(path) {
 describe('character entry event producers', () => {
   it.each([
     ['предметы', '../blocks/dnd/DndItems.vue', "kind: 'item'"],
-    ['зелья', '../blocks/dnd/DndPotions.vue', "kind: 'potion'"],
     ['заклинания', '../blocks/dnd/composables/useSpellbookEntries.js', "kind: 'spell'"],
     ['оружие', '../blocks/dnd/DndWeapons.vue', "category: 'weapon'"],
     ['черты и способности', '../blocks/dnd/DndAbilities.vue', "? 'feature' : 'ability'"],

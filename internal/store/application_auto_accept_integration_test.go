@@ -26,11 +26,11 @@ func testAutoAccept(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	defer exec(`UPDATE dndshare."session" SET settings=settings||'{"autoAccept":{"items":false,"potions":false,"spells":false}}'::jsonb WHERE id=1`)
 	a := next()
 	v := version()
-	potion, err := s.CreatePotionUse(ctx, 1, 1, 10, 11, v, "dose", a)
+	potion, err := s.CreateItemUse(ctx, 1, 1, 10, 11, v, "dose", a, "", "items")
 	if err != nil || potion.Status != "accepted" {
 		t.Fatalf("automatic potion: %+v %v", potion, err)
 	}
-	retry, err := s.CreatePotionUse(ctx, 1, 1, 10, 11, v, "dose", a)
+	retry, err := s.CreateItemUse(ctx, 1, 1, 10, 11, v, "dose", a, "", "items")
 	if err != nil || retry.ID != potion.ID || string(retry.ApplicationResult) != string(potion.ApplicationResult) {
 		t.Fatalf("automatic retry: %+v %v", retry, err)
 	}
@@ -41,7 +41,7 @@ func testAutoAccept(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if _, err = s.ResolveItemTransfer(ctx, 2, 11, spell.ID, false); err != nil {
 		t.Fatal(err)
 	}
-	dm, err := s.CreatePotionUse(ctx, 1, 1, 10, 0, version(), "dose", next())
+	dm, err := s.CreateItemUse(ctx, 1, 1, 10, 0, version(), "dose", next(), "", "items")
 	if err != nil || dm.Status != "pending" {
 		t.Fatalf("DM must select target: %+v %v", dm, err)
 	}
@@ -53,7 +53,7 @@ func testAutoAccept(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if err != nil || spell.Status != "accepted" {
 		t.Fatalf("automatic spell: %+v %v", spell, err)
 	}
-	exec(`UPDATE dndshare."char" SET data=jsonb_set(data,'{values,items}','{"equipped":[{"uid":"gift","item_id":800,"count":2}]}') WHERE id=10`)
+	exec(`UPDATE dndshare."char" SET data=jsonb_set(data,'{values,items,equipped}','[{"uid":"gift","item_id":800,"count":2}]') WHERE id=10`)
 	gift, err := s.CreateItemTransfer(ctx, 1, 1, 10, 11, version(), "items", "gift", next())
 	if err != nil || gift.Status != "pending" {
 		t.Fatalf("independent item setting: %+v %v", gift, err)
@@ -73,7 +73,7 @@ func testAutoAccept(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	}
 	exec(`UPDATE dndshare."session" SET settings=jsonb_set(settings,'{interactions}','{"items":false,"potions":false,"spells":false}') WHERE id=1`)
 	defer exec(`UPDATE dndshare."session" SET settings=jsonb_set(settings,'{interactions}','{"items":true,"potions":true,"spells":true}') WHERE id=1`)
-	if _, err = s.CreatePotionUse(ctx, 1, 1, 10, 11, version(), "dose", next()); err == nil {
+	if _, err = s.CreateItemUse(ctx, 1, 1, 10, 11, version(), "dose", next(), "", "items"); err == nil {
 		t.Fatal("disabled potion allowed")
 	}
 	if _, err = s.CreateSpellApplication(ctx, 1, 1, 10, 11, version(), "802", next(), "test"); err == nil {
@@ -83,10 +83,10 @@ func testAutoAccept(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		t.Fatal("disabled transfer allowed")
 	}
 	var returnedUID string
-	if err = pool.QueryRow(ctx, `SELECT data#>>'{values,potions,0,uid}' FROM dndshare."char" WHERE id=10`).Scan(&returnedUID); err != nil {
+	if err = pool.QueryRow(ctx, `SELECT data#>>'{values,items,sections,0,items,0,uid}' FROM dndshare."char" WHERE id=10`).Scan(&returnedUID); err != nil {
 		t.Fatal(err)
 	}
-	if _, err = s.UseItemSelf(ctx, 1, 10, version(), returnedUID, next(), "", "potions"); err != nil {
+	if _, err = s.UseItemSelf(ctx, 1, 10, version(), returnedUID, next(), "", "items"); err != nil {
 		t.Fatalf("self-use remains allowed: %v", err)
 	}
 

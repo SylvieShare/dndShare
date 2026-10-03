@@ -4,7 +4,8 @@ import { createApp, h, reactive } from 'vue'
 import { createPinia } from 'pinia'
 import DndStatusOverview from '../../src/features/character-editor/blocks/dnd/DndStatusOverview.vue'
 import DndMobileStatusMenu from '../../src/features/character-editor/blocks/dnd/DndMobileStatusMenu.vue'
-import PotionShelf from '../../src/features/character-editor/blocks/dnd/components/PotionShelf.vue'
+import { RowActionMenu } from '@sylvieshare/share-ui'
+import UsableItemAction from '../../src/features/character-editor/components/UsableItemAction.vue'
 import { addStatusInstance, collectCharacterStatuses, setStatusInstanceDuration } from '../../src/features/character-editor/lib/characterStatuses'
 
 const query = new URLSearchParams(location.search)
@@ -24,7 +25,7 @@ const app = createApp({ setup() {
       block: { id: 'statuses' }, values,
       'onUpdate:value': (key, value) => { values[key] = value; updates.push(key) },
     }),
-    h(PotionShelf, { potions: [{ uid: 'potion', name: 'Зелье скорости', count: 2 }], canUse: ctx.ownerMode }),
+    h(RowActionMenu, { title: 'Зелье скорости' }, { default: () => h(UsableItemAction, { source: 'items', entry: { uid: 'potion', item_id: 100, count: 2 }, item: { id: 100, name: 'Зелье скорости', typeId: 10, data: { usable: {} } } }) }),
   ])
 } })
 app.use(createPinia())

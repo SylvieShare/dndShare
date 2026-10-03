@@ -64,7 +64,7 @@ watch(() => props.sessionUuid, () => { open.value = picker.value = custom.value 
 async function add(...args) { picker.value = false; open.value = true; await controller.add(...args) }
 async function addCustom() { if (await controller.addCustom(name.value.trim(), Number(count.value), description.value)) { custom.value = false; name.value = ''; count.value = 1; description.value = '' } }
 function viewItem(row) {
-  const id = itemId(row), typeId = { items: 2, weapon: 1, potions: 10 }[row.source]
+  const id = itemId(row), typeId = { items: 2, weapon: 1 }[row.source]
   view.value = { id, typeId, item: id ? art(row) || null : { name: row.name, typeId, data: row.entry?.override || {} } }
   open.value = false
 }
