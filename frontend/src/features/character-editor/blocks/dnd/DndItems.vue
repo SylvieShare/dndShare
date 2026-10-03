@@ -22,7 +22,6 @@
               @blur="finishRename(section.id, $event.target.value)" @keydown.enter.prevent="finishRename(section.id, $event.target.value)" @keydown.escape.prevent="renamingId = null" />
             <button v-else class="di-section-name" :class="{ 'di-section-name-editable': canManage }" :disabled="!canManage"
               :title="canManage ? 'Переименовать' : ''" @click="canManage && startRename(section.id)">{{ section.name }}</button>
-            <span v-if="section.items.length" class="di-section-count">{{ section.items.length }}</span>
             <span class="di-section-line" aria-hidden="true"></span>
             <div class="di-section-actions">
               <span class="di-section-weight" role="img" :aria-label="`Суммарный вес: ${weightFormatter.format(section.weight)} фунт.`">
@@ -422,6 +421,7 @@ function onInlineFormSave(fields) {
       const ov = {}
       if (fields.name !== baseName) ov.name = fields.name
       if (fields.desc !== (baseData.desc || '')) ov.desc = fields.desc
+      if (fields.weight !== (baseData.weight ?? null)) ov.weight = fields.weight
       if (fields.consumable !== !!baseData.consumable) ov.consumable = fields.consumable
       item.override = Object.keys(ov).length ? ov : null
       if (item.item_id == null) item.icon_preset_id = fields.iconPresetId
@@ -434,7 +434,7 @@ function onInlineFormSave(fields) {
       icon_preset_id: fields.iconPresetId,
       count: 1,
       params: {},
-      override: { name: fields.name, desc: fields.desc, consumable: fields.consumable },
+      override: { name: fields.name, desc: fields.desc, weight: fields.weight, consumable: fields.consumable },
     })
   }
   form.open = false
