@@ -105,6 +105,11 @@ Desktop `LayoutInnerTabs` groups also keep their selected pane in independent,
 schema-stable `innerTab-*` query keys. Reload and browser history restore both
 the outer character tab and its inner pane; invalid or stale inner indexes fall
 back to the first pane. Every weapon uses its own shared desktop/mobile `BaseTile`.
+Кошелёк расположен сверху справа внутри общей карточки предметов на desktop
+и mobile: иконка кошелька и суммы монет без отдельного заголовка и подложки.
+Иконка владельца открывает калькулятор мышью и с клавиатуры; режим просмотра
+показывает статичную иконку. Кошелёк доступен и во время загрузки инвентаря.
+Его изменения сохраняются через `charCtx.updateValues` в прежний `values.money`.
 В разделе снаряжения доступны кошелёк и рюкзаки. Запасы учитываются количеством
 предметов в ячейках; отдельные пользовательские плитки и их редактор удалены,
 включая представление для печати.

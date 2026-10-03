@@ -1,6 +1,6 @@
 <template>
   <BlockMoneyView v-bind="$attrs" ref="tileRef" class="money-tile"
-    :title="blockTitle" :loading="loading" :coins="displayCoins"
+    :inline="inline" :title="blockTitle" :loading="loading" :coins="displayCoins"
     :interactive="canInteract" :editable="canInteract"
     @click="canInteract && open($event)" @edit="openFrom(tileRef?.$el)"
   />
@@ -15,7 +15,7 @@
     @close="closeEditor"
   >
     <template #view>
-      <BlockMoneyView panel :title="blockTitle" :loading="loading" :coins="displayCoins" />
+      <BlockMoneyView panel :inline="inline" :title="blockTitle" :loading="loading" :coins="displayCoins" />
     </template>
 
     <template #editor>
@@ -46,7 +46,7 @@ import { useMorphOrigin } from '@/features/character-editor/composables/useMorph
 import { useSuggestStore } from '@/stores/suggest'
 import MoneyCurrencyPicker from './components/MoneyCurrencyPicker.vue'
 
-const props = defineProps(['block', 'value'])
+const props = defineProps({ block: Object, value: { default: null }, inline: Boolean })
 const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
 const tileRef = ref(null)

@@ -202,35 +202,6 @@
                         "kind": "layout",
                         "type": "column",
                         "props": {
-                          "gap": "10px",
-                          "tile": true,
-                          "style": {
-                            "padding": "18px"
-                          }
-                        },
-                        "children": [
-                          {
-                            "kind": "layout",
-                            "type": "row",
-                            "props": {
-                              "justify-content": "space-between",
-                              "align-items": "center",
-                              "gap": "16px"
-                            },
-                            "children": [
-                              {
-                                "ref": "money",
-                                "kind": "block",
-                                "title": "Кошелек"
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "kind": "layout",
-                        "type": "column",
-                        "props": {
                           "gap": "0"
                         },
                         "children": [

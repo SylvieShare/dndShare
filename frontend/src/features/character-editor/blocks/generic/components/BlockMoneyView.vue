@@ -1,32 +1,42 @@
 <template>
-  <MorphTile :embedded="panel" padding="0" edit-label="Редактировать" :title="title" :show-edit="editable" @edit="$emit('edit', $event)" class="money-view">
-    <LoadingState v-if="loading" class="money-empty" label="Загрузка..." compact />
-    <div v-else class="money-line">
-      <template v-if="rows.length">
-        <span v-for="(coin, index) in rows" :key="coin.id" class="money-entry">
-          <span :key="changes.get(String(coin.id))?.version || 0" class="money-amount"
-            :class="{ 'money-amount--gain': changes.get(String(coin.id))?.delta > 0, 'money-amount--spend': changes.get(String(coin.id))?.delta < 0 }"
-            :data-money-id="coin.id" :title="coin.title" role="group" :aria-label="`${formatAmount(coin.amount)} ${coin.title}`">
-            <span class="ma-value">{{ formatAmount(coin.amount) }}</span>
-            <ItemIcon v-if="coin.iconImageUrl || coin.svg" class="ma-img" :item="coin" :size="24" :fallback-to-type="false" />
-            <span v-else class="ma-dot" :style="{ background: coin.color }"></span>
-            <span v-if="changes.has(String(coin.id))" class="ma-change" aria-hidden="true">{{ formatDelta(changes.get(String(coin.id)).delta) }}</span>
-          </span>
-          <span v-if="index < rows.length - 1" class="money-separator" aria-hidden="true">,</span>
-        </span>
+  <MorphTile :embedded="panel || inline" padding="0" edit-label="Редактировать" :title="inline ? '' : title" :show-edit="editable && !inline" @edit="$emit('edit', $event)" class="money-view" :class="{ 'money-view--inline': inline }">
+    <div class="money-content">
+      <template v-if="inline">
+        <ActionButton v-if="editable" icon-only variant="quiet" aria-label="Изменить кошелёк" title="Изменить кошелёк" @click.stop="$emit('edit', $event)">
+          <template #icon><Wallet :size="22" aria-hidden="true" /></template>
+        </ActionButton>
+        <Wallet v-else class="money-wallet-icon" :size="22" role="img" :aria-hidden="false" aria-label="Кошелёк" />
       </template>
-      <span v-else class="money-empty">Денег нет</span>
+      <LoadingState v-if="loading" class="money-empty" label="Загрузка..." compact />
+      <div v-else class="money-line">
+        <template v-if="rows.length">
+          <span v-for="(coin, index) in rows" :key="coin.id" class="money-entry">
+            <span :key="changes.get(String(coin.id))?.version || 0" class="money-amount"
+              :class="{ 'money-amount--gain': changes.get(String(coin.id))?.delta > 0, 'money-amount--spend': changes.get(String(coin.id))?.delta < 0 }"
+              :data-money-id="coin.id" :title="coin.title" role="group" :aria-label="`${formatAmount(coin.amount)} ${coin.title}`">
+              <span class="ma-value">{{ formatAmount(coin.amount) }}</span>
+              <ItemIcon v-if="coin.iconImageUrl || coin.svg" class="ma-img" :item="coin" :size="24" :fallback-to-type="false" />
+              <span v-else class="ma-dot" :style="{ background: coin.color }"></span>
+              <span v-if="changes.has(String(coin.id))" class="ma-change" aria-hidden="true">{{ formatDelta(changes.get(String(coin.id)).delta) }}</span>
+            </span>
+            <span v-if="index < rows.length - 1" class="money-separator" aria-hidden="true">,</span>
+          </span>
+        </template>
+        <span v-else class="money-empty">Денег нет</span>
+      </div>
     </div>
   </MorphTile>
 </template>
 
 <script setup>
-import { MorphTile } from '@sylvieshare/share-ui'
+import { ActionButton, MorphTile } from '@sylvieshare/share-ui'
+import { Wallet } from '@lucide/vue'
 import { LoadingState } from '@sylvieshare/share-ui'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { useMoneyFeedback } from '@/features/character-editor/composables/useMoneyFeedback'
 const props = defineProps({
   panel: Boolean,
+  inline: Boolean,
   editable: { type: Boolean, default: false },
   title: { type: String, default: '' },
   loading: { type: Boolean, default: false },
@@ -42,6 +52,10 @@ const formatDelta = delta => `${delta > 0 ? '+' : '−'}${formatter.format(Math.
 
 <style scoped>
 .money-view { min-width: 0; padding: 12px 14px; }
+.money-view--inline { padding: 0; }
+.money-view--inline .money-content { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+.money-view--inline .money-line { justify-content: flex-end; min-width: 0; }
+.money-wallet-icon { flex-shrink: 0; color: var(--text-muted); }
 
 .money-line {
   display: flex;
