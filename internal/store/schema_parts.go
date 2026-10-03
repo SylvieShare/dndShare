@@ -171,4 +171,5 @@ var schemaParts = []struct {
 	{"suggest-images", schemaSuggestImagesSQL},
 	{"item-purchase-quantity", schemaItemPurchaseQuantitySQL},
 	{"inventory-counter-migration", schemaInventoryCounterMigrationSQL},
+	{"resolved-inventory-counters", schemaResolvedInventoryCountersSQL},
 }
