@@ -20,7 +20,7 @@
         <JournalSectionTabs v-if="journal" :sections="sections" :selected-id="selectedId" :editable="canEdit && !campaignUuid" :disabled="locked"
           @select="selectedId = $event" @create="openSection()" />
       </BaseTile>
-      <template v-if="journal">
+      <BaseTile v-if="journal" class="journal-log">
         <p v-if="editingId" class="journal-edit-hint">Сохраните правку или отмените её, чтобы переключить раздел.</p>
         <p v-else-if="!canEdit && journal.kind === 'session'" class="journal-edit-hint">Только чтение · записи добавляет мастер</p>
         <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
@@ -30,7 +30,7 @@
           @remove-event="removingEvent = $event" @editing="setEditing" @dragging="setInteracting"
           @reorder-events="ids => reorderEntries(selectedSection.id, ids).catch(() => {})" />
         <div v-else class="journal-blank"><Feather :size="26" /><strong>Первая глава ещё впереди</strong><span>{{ campaignUuid ? 'Разделы дневника появляются вместе с сессиями кампании.' : canEdit ? 'Нажмите «Новый раздел», чтобы начать летопись.' : 'Мастер пока не добавил разделы.' }}</span></div>
-      </template>
+      </BaseTile>
       <template v-else>
         <p v-if="sessionUuid" class="journal-edit-hint">Дневник появится автоматически, когда мастер создаст сессию в календаре кампании.</p>
         <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
