@@ -1,6 +1,6 @@
 <template>
   <div ref="menuAnchor" class="sm-wrap">
-    <UtilityCell v-if="block?.props?.embedded" value-row label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
+    <UtilityCell v-if="block?.props?.embedded" inline label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
       <template #icon><img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" /></template>
       <span class="sm-sub">Меню</span>
     </UtilityCell>
