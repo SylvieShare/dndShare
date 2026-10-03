@@ -1,6 +1,6 @@
 <template>
   <div v-show="!blockHidden" class="spells-block">
-    <p class="sp-rule-note">{{ rules.spellcastingRule }}</p>
+    <BaseTile class="sp-rule-note" role="note">{{ rules.spellcastingRule }}</BaseTile>
     <SpellConcentrationBlock />
 
     <div v-if="spellcastingBlocked" class="sp-casting-warning" role="status">
@@ -202,7 +202,7 @@ import { computed, inject, onMounted, provide, reactive, ref, watch } from 'vue'
 import SpellCard from '@/features/character-editor/blocks/dnd/components/SpellCard.vue'
 import SpellSlotsBar from '@/features/character-editor/blocks/dnd/components/SpellSlotsBar.vue'
 import DndSpellbookSettingsModal from '@/features/character-editor/blocks/dnd/DndSpellbookSettingsModal.vue'
-import { SectionList } from '@sylvieshare/share-ui'
+import { BaseTile, SectionList } from '@sylvieshare/share-ui'
 import { ConfirmDialog } from '@sylvieshare/share-ui'
 import { useSpellDamageTypes } from './composables/useSpellDamageTypes'
 import { useSpellRolls } from './composables/useSpellRolls'
