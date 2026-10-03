@@ -1,6 +1,6 @@
 <template>
   <ItemMechanicPanel kind="confirmed_use" v-for="use in uses" :key="use.key" :title="use.title">
-    <template v-if="use.show_resource && use.resource" #summary><ItemResourcePips :resource="use.resource" :interactive="!!charCtx.ownerMode" hide-recovery @toggle="toggle(use, $event)" /></template>
+    <template v-if="linked(use)" #summary><ItemResourcePips :resource="linked(use)" :interactive="!!charCtx.ownerMode" hide-recovery @toggle="toggle(use, $event)" /></template>
     <DndRichContent v-if="use.description" :html="use.description" :item="use.item" />
     <MechanicTheses :lines="use.requirements" />
     <template v-if="charCtx.ownerMode" #actions>
@@ -21,11 +21,12 @@ import ItemMechanicPanel from '@/features/items/components/ItemMechanicPanel.vue
 import DndRichContent from '@/shared/ui/DndRichContent.vue'
 import MechanicTheses from '@/shared/ui/MechanicTheses.vue'
 import { confirmedItemUses, confirmItemUse } from '@/features/character-editor/lib/confirmedItemUses'
-const props = defineProps({ uid: String })
+const props = defineProps({ uid: String, resources: { type: Object, default: null } })
 const charCtx = inject('charCtx', {}), busy = ref(false), dice = useDiceStore()
 const values = () => unref(charCtx.values) || {}
 const items = () => unref(charCtx.characterResources?.itemsById) || new Map()
 const uses = computed(() => confirmedItemUses(values(), items(), props.uid))
+function linked(use) { return props.resources ? props.resources[use.key]?.[0] : use.show_resource && use.resource }
 function reroll(use) {
   const row = dice.lastD20
   const action = row?.actions?.find(action => action.useRef?.uid === props.uid && action.useRef?.key === use.key)

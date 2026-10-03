@@ -22,6 +22,7 @@
         <details open>
           <summary>{{ rowTitle(row, index) }}</summary>
           <AbilityStatusEffectEditor v-if="path === 'status_effects'" :data="row" :fields="spec.fields" :allow-scaling="typeId !== 5" />
+          <WeaponNoteEditor v-else-if="path === 'weapon_notes'" :data="row" :fields="spec.fields" />
           <AbilityDependencyEditor v-else-if="['derived_effects', 'defenses'].includes(path)" :kind="path" :data="row" :fields="spec.fields" :allow-unlock="spec.fields.some(f => f.key === 'level')" />
           <CatalogueFields v-else :fields="rowFields" :data="row" :type-id="typeId" :root-data="rootData" :path="path" @update:data="v => updateRow(index, v)" />
         </details>
@@ -35,6 +36,7 @@
 <script setup>
 import ActionTimeEditor from '@/shared/ui/ActionTimeEditor.vue'
 import ItemCostEditor from './ItemCostEditor.vue'
+import WeaponNoteEditor from '../WeaponNoteEditor.vue'
 import { computed, inject, ref } from 'vue'
 import { AddButton, BaseTile, ConfirmDialog, FormField, RemoveButton, ToggleSwitch } from '@sylvieshare/share-ui'
 import { itemFieldEditorKey } from '@/features/character-editor/components/useItemFieldEditor'

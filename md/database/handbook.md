@@ -465,7 +465,7 @@ URL или байты картинки: сервер получает URL из �
   числа неотрицательные, `min <= max`; покупка использует только `value`.
   Миграция 157 добавляет `allow_range` в схемы всех записей со стоимостью.
 - `weapon_notes` у типов 1/19 хранит отдельные памятки экземпляра:
-  `{key,title,kind,when,description,requirements?}`. `kind` — `rule` или `curse`,
+  `{key,title,kind,when,description,requirements?,resource_key?}`. `kind` — `rule` или `curse`,
   `when` — `active`, `attuned` или `always`. Это представление правил;
   спасброски и принуждение текст не исполняет.
 

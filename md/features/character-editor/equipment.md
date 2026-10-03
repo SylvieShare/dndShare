@@ -15,6 +15,7 @@
 - [Выбор расхода и предпросмотр урона](#выбор-расхода-и-предпросмотр-урона)
 - [Сетка инвентаря и меню экземпляра](#сетка-инвентаря-и-меню-экземпляра)
 - [Иконки и предметные панели](#иконки-и-предметные-панели)
+- [Карточки свойств и зарядов](#карточки-свойств-и-зарядов)
 
 ## Использование расходников
 
@@ -435,10 +436,12 @@ entries; handbook media retains priority.
 `ItemMechanicPanel` принимает `collapsible` и использует native `details/summary`
 внутри `BaseTile`. `WeaponItemMechanics` задаёт контекст `weaponMechanicCollapse`
 для своих потомков: начальное состояние закрыто, справочник сохраняет раскрытое
-представление. `ItemResourcePanel` использует отдельную композицию с зарядами в
-summary-слоте; его кнопки не раскрывают карточку. `WeaponCataloguePanels` читает
-текст и параметры выбранной основы/магического источника, поэтому новые и старые
-оружия получают одинаковые блоки без дублирования данных инвентаря.
+представление. `WeaponLinkedCharges` помещает счётчики в summary-слот конкретных
+свойств; его кнопки не раскрывают карточку. `weaponBlockResources` назначает пул
+одному связанному блоку. `WeaponUsePanel` сохраняет одну карточку до и после атаки.
+`WeaponCard` оставляет внешний `MorphTile` неподвижным, а `RowActionMenu` и press-
+анимация принадлежат только основной строке `WeaponCardView`; свойства и разделитель
+находятся снаружи trigger.
 
 `InventoryBagItem` owns the inventory-only corner chips: quantity docked to the
 bottom right with rounded top-left/bottom-right corners, capabilities docked
@@ -452,6 +455,15 @@ The usable capability chip uses Lucide `Hand`, matching the `use` action in
 contract independently of owner permissions, so character and session inventory
 show the same item properties. Keyboard descriptions expose every visible tag
 and the full quantity, including when the chip truncates a long number.
+
+## Карточки свойств и зарядов
+
+Карточки под оружием закрыты при первом показе, в том числе в табличном режиме.
+Нажатие на заголовок и Enter/Space раскрывают правила и действия. Заряды находятся
+справа в заголовке связанного свойства, эффекта либо особого применения; ими можно
+управлять при закрытой карточке. Общие описания и отдельная карточка зарядов не
+добавляются. Нажатие основной строки анимирует только её: свойства и разделитель
+остаются неподвижны.
 
 ## Связанные страницы
 

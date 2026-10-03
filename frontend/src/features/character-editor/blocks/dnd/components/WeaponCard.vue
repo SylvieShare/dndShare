@@ -1,83 +1,73 @@
 <template>
-  <RowActionMenu
-    block
-    :title="`Действия: ${ctx.itemTitle(entry)}`"
-    :disabled="draggedThisGesture || (!ctx.charCtx.ownerMode && !ctx.item(entry))"
-  >
-    <template #trigger="{ open: menuOpen }">
-      <MorphTile embedded padding="0"
-        ref="cardEl"
-        class="w-card action-menu-source"
-        :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry), 'action-menu-source--open': menuOpen }"
-        :data-sortable-key="entry._key"
-        @pointerdown="draggedThisGesture = false"
-      >
-        <WeaponCardView
-          :entry="entry"
-          interactive
-          @name-down="onNameDown"
-        />
+  <MorphTile embedded padding="0" class="w-card" :class="{ 'sortable-placeholder': ctx.sortable.isSource(entry) }" :data-sortable-key="entry._key">
+    <RowActionMenu
+      block
+      :title="`Действия: ${ctx.itemTitle(entry)}`"
+      :disabled="draggedThisGesture || (!ctx.charCtx.ownerMode && !ctx.item(entry))"
+    >
+      <template #trigger="{ open: menuOpen }">
+        <WeaponCardView ref="cardEl" class="action-menu-source" :class="{ 'action-menu-source--open': menuOpen }"
+          :entry="entry" interactive @pointerdown="draggedThisGesture = false" @name-down="onNameDown" />
+      </template>
 
-        <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
-        <CreatedItemStatus :entry="entry" />
-        <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
+      <template #default="{ close: closeMenu }">
+        <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
+        <DamageRollOptions :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
 
-        <MorphEditorShell
-          v-if="editorOpen"
-          :origin-rect="originRect"
-          :origin-el="originEl"
-          :strip="false"
-          orientation="vertical"
-          :min-view-width="440"
-          @close="close"
-        >
-          <template #view>
-            <div class="w-morph-row">
-              <WeaponCardView :entry="entry" />
-            </div>
-          </template>
-          <template #editor>
-            <WeaponEditor :entry="entry" :index="index" @close="close" />
-          </template>
-        </MorphEditorShell>
-      </MorphTile>
-    </template>
+        <RowActionSeparator v-if="ctx.item(entry)" />
+        <RowActionItem
+          v-if="ctx.item(entry)"
+          action="view"
+          @click="openDescription(closeMenu)"
+        >Открыть описание</RowActionItem>
+        <RowActionItem
+          v-if="ctx.charCtx.ownerMode"
+          action="edit"
+          @click="editWeapon(closeMenu)"
+        >Редактировать</RowActionItem>
+        <CreatedItemActions :entry="entry" @close="closeMenu" />
+        <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
+        <RowActionItem
+          v-if="ctx.canMoveWeaponToItems(entry)"
+          :icon="ArrowRightLeft"
+          tone="info"
+          @click="moveToItems(closeMenu)"
+        >Переместить в вещи</RowActionItem>
+        <MagicItemMenuActions v-if="ctx.charCtx.ownerMode && entry.magic_item_id" :item="ctx.itemMap[entry.magic_item_id]" :entry="entry" :values="ctx.charCtx.values" @update:values="patch => ctx.charCtx.updateValues(patch)" @configure="ctx.openMagicInstance(entry)" @close="closeMenu" />
+        <RowActionSeparator v-if="ctx.charCtx.ownerMode" />
+        <RowActionItem
+          v-if="ctx.charCtx.ownerMode"
+          action="delete"
+          tone="danger"
+          @click="deleteWeapon(closeMenu)"
+        >Удалить</RowActionItem>
+      </template>
+    </RowActionMenu>
 
-    <template #default="{ close: closeMenu }">
-      <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
-      <DamageRollOptions :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
+    <RichContent v-if="entry.desc" class="w-desc-text" :html="entry.desc" />
+    <CreatedItemStatus :entry="entry" />
+    <WeaponItemMechanics v-if="!entry.params?.creation?.expired" :entry="entry" />
 
-      <RowActionSeparator v-if="ctx.item(entry)" />
-      <RowActionItem
-        v-if="ctx.item(entry)"
-        action="view"
-        @click="openDescription(closeMenu)"
-      >Открыть описание</RowActionItem>
-      <RowActionItem
-        v-if="ctx.charCtx.ownerMode"
-        action="edit"
-        @click="editWeapon(closeMenu)"
-      >Редактировать</RowActionItem>
-      <CreatedItemActions :entry="entry" @close="closeMenu" />
-      <ItemTransferAction source="weapon" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
-      <RowActionItem
-        v-if="ctx.canMoveWeaponToItems(entry)"
-        :icon="ArrowRightLeft"
-        tone="info"
-        @click="moveToItems(closeMenu)"
-      >Переместить в вещи</RowActionItem>
-      <MagicItemMenuActions v-if="ctx.charCtx.ownerMode && entry.magic_item_id" :item="ctx.itemMap[entry.magic_item_id]" :entry="entry" :values="ctx.charCtx.values" @update:values="patch => ctx.charCtx.updateValues(patch)" @configure="ctx.openMagicInstance(entry)" @close="closeMenu" />
-      <RowActionSeparator v-if="ctx.charCtx.ownerMode" />
-      <RowActionItem
-        v-if="ctx.charCtx.ownerMode"
-        action="delete"
-        tone="danger"
-        @click="deleteWeapon(closeMenu)"
-      >Удалить</RowActionItem>
-    </template>
-  </RowActionMenu>
+    <MorphEditorShell
+      v-if="editorOpen"
+      :origin-rect="originRect"
+      :origin-el="originEl"
+      :strip="false"
+      orientation="vertical"
+      :min-view-width="440"
+      @close="close"
+    >
+      <template #view>
+        <div class="w-morph-row">
+          <WeaponCardView :entry="entry" />
+        </div>
+      </template>
+      <template #editor>
+        <WeaponEditor :entry="entry" :index="index" @close="close" />
+      </template>
+    </MorphEditorShell>
+  </MorphTile>
 </template>
-
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
 import CreatedItemStatus from '@/features/character-editor/components/CreatedItemStatus.vue'
@@ -151,7 +141,7 @@ function deleteWeapon(closeMenu) {
 .w-card {
   position: relative;
   overflow: clip;
-  cursor: pointer;
+  cursor: default;
   transition: background 0.12s;
 }
 

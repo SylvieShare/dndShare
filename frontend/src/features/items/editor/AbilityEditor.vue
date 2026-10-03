@@ -27,6 +27,7 @@
           <AbilityDependencyEditor v-else-if="dependencyManifest[card.key]" :kind="card.key" :fields="card.block.fields[0].fields" :data="data[card.key][card.index]" />
           <AbilityProgressionEditor v-else-if="card.key === 'progression'" :data="data" />
           <AbilityWeaponDamageEditor v-else-if="card.key === 'weapon_damage'" :data="data[card.key][card.index]" :fields="card.block.fields[0].fields" />
+          <WeaponNoteEditor v-else-if="card.key === 'weapon_notes'" :data="data.weapon_notes[card.index]" :fields="card.block.fields[0].fields" />
           <WeaponUseEditor v-else-if="card.key === 'weapon_uses'" :data="data.weapon_uses[card.index]" :fields="card.block.fields[0].fields" />
           <ConfirmedItemUseEditor v-else-if="card.key === 'confirmed_uses'" :data="data.confirmed_uses[card.index]" :fields="card.block.fields[0].fields" />
           <SelectedTargetEditor v-else-if="card.key === 'selected_target'" :data="data.selected_target" :fields="card.block.fields[0].fields" />
@@ -55,6 +56,7 @@
 
 <script setup>
 import ConfirmedItemUseEditor from './ConfirmedItemUseEditor.vue'
+import WeaponNoteEditor from './WeaponNoteEditor.vue'
 import SelectedTargetEditor from './SelectedTargetEditor.vue'
 import WeaponBonusTransferEditor from './WeaponBonusTransferEditor.vue'
 import WeaponUseEditor from './WeaponUseEditor.vue'

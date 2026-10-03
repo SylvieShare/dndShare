@@ -1,0 +1,41 @@
+{
+  "reviewedAt": "2026-10-03",
+  "staffNotes": [
+    {
+      "id": 108,
+      "title": "Заклинания посоха",
+      "resourceKey": ""
+    },
+    {
+      "id": 131,
+      "title": "Заклинания посоха",
+      "resourceKey": ""
+    },
+    {
+      "id": 132,
+      "title": "Заклинания и отражение чар",
+      "resourceKey": ""
+    },
+    {
+      "id": 168,
+      "title": "Заклинания и форма дерева",
+      "resourceKey": ""
+    },
+    {
+      "id": 176,
+      "title": "Заклинания и облако насекомых",
+      "resourceKey": ""
+    },
+    {
+      "id": 249,
+      "title": "Заклинания и поглощение магии",
+      "resourceKey": ""
+    },
+    {
+      "id": 297,
+      "title": "Заклинания посоха",
+      "resourceKey": ""
+    }
+  ],
+  "rule": "One counter per resource pool, hosted by a concrete effect, use, charged strike, action or authored property."
+}
