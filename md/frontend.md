@@ -1370,7 +1370,8 @@ summary-слоте; его кнопки не раскрывают карточк
 
 `InventoryBagItem` owns the inventory-only corner chips: quantity docked to the
 bottom right with rounded top-left/bottom-right corners, capabilities docked
-bottom left, and a quiet pencil in the top right for simplified entries. These
+bottom left. `InventoryBagGrid` marks simplified entries with a dashed frame;
+an equipped simplified entry keeps the dash pattern in the accent color. These
 overlays share the cell radius and do not create another action target.
 `inventoryCellTraits` uses the existing equipment eligibility and usable-item
 contract independently of owner permissions, so character and session inventory

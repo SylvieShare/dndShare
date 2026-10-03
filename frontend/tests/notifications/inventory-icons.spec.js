@@ -53,7 +53,7 @@ for (const mobile of [false, true]) for (const viewer of [false, true]) test(`in
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1280, height: 1000 })
   const item = { id: 135, typeId: 19, name: 'Лечащий плащ', data: { activation: 'equipped', attunement: 'none', usable: { choices: [] } }, iconImageUrl: png }
   await page.addInitScript(model => localStorage.setItem('test-inventory', JSON.stringify(model)), {
-    equipped: [], sections: [{ id: 'bag', name: 'Рюкзак', items: [
+    equipped: [{ uid: 'custom-worn', item_id: null, count: 1, override: { name: 'Самодельный пояс' } }], sections: [{ id: 'bag', name: 'Рюкзак', items: [
       { uid: 'cloak', item_id: 135, count: 9999, params: {} },
       { uid: 'custom', item_id: null, count: 2, icon_preset_id: 24, override: { name: 'Дорожная одежда' } },
       { uid: 'expired', item_id: 135, count: 1, params: { creation: { expired: true } }, override: { name: 'Просроченный плащ' } },
@@ -69,14 +69,24 @@ for (const mobile of [false, true]) for (const viewer of [false, true]) test(`in
   const bag = page.locator('[data-sortable-container="sec_bag"]')
   await expect(bag).toBeVisible()
   await bag.evaluate(element => { element.style.width = '312px' })
-  await expect(bag.locator('.inventory-bag-cell')).toHaveCount(4)
+  await expect(bag).toHaveCSS('grid-template-columns', '72px 72px 72px 72px')
   const cloak = bag.getByRole('button', { name: 'Лечащий плащ', exact: true })
   await expect(cloak.getByTitle('Можно надеть', { exact: true })).toBeVisible()
   await expect(cloak.getByTitle('Можно использовать', { exact: true })).toBeVisible()
   await expect(cloak).toHaveAttribute('aria-description', 'Можно надеть. Можно использовать. Количество: 9999')
   await expect(cloak.getByTitle('Упрощённый предмет')).toHaveCount(0)
   const custom = bag.getByRole('button', { name: 'Дорожная одежда', exact: true })
-  await expect(custom.getByTitle('Упрощённый предмет')).toBeVisible()
+  await expect(custom.getByTitle('Упрощённый предмет')).toHaveCount(0)
+  const customCell = bag.locator('.inventory-bag-cell').filter({ has: page.getByRole('button', { name: 'Дорожная одежда', exact: true }) })
+  await expect(customCell).toHaveClass(/inventory-bag-cell--simplified/)
+  expect(await customCell.evaluate(element => getComputedStyle(element, '::after').borderTopStyle)).toBe('dashed')
+  await expect(custom).toHaveAttribute('aria-description', 'Упрощённый предмет. Количество: 2')
+  const customWorn = bag.getByRole('button', { name: 'Самодельный пояс', exact: true })
+  await expect(customWorn).toHaveAttribute('aria-description', 'Упрощённый предмет. Экипировано')
+  const wornCell = bag.locator('.inventory-bag-cell').filter({ has: page.getByRole('button', { name: 'Самодельный пояс', exact: true }) })
+  await expect(wornCell).toHaveClass(/inventory-bag-cell--equipped/)
+  expect(await wornCell.evaluate(element => getComputedStyle(element, '::after').borderTopStyle)).toBe('dashed')
+  expect(await wornCell.evaluate(element => getComputedStyle(element, '::after').borderTopWidth)).toBe('2px')
   await expect(custom.locator('.inventory-bag-item__tags')).toHaveCount(0)
   await expect(bag.getByRole('button', { name: 'Просроченный плащ', exact: true }).getByTitle('Можно использовать')).toHaveCount(0)
   const geometry = await cloak.evaluate(element => {

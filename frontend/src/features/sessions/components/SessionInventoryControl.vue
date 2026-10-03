@@ -13,7 +13,7 @@
         <ActionButton type="submit" :disabled="state.busy || !name.trim()">Добавить</ActionButton>
       </form>
       <LoadingState v-if="state.loading && !state.entries.length && !state.transfers.length" label="Загружаем инвентарь…" compact />
-      <InventoryBagGrid v-else can-add :disabled="state.busy" @add-catalog="open = false; picker = true" @add-custom="custom = true" :entries="state.entries" :positions="positions" :get-key="row => row.id" group="session-inventory" label="Рюкзак сессии" :sortable="sortable">
+      <InventoryBagGrid v-else can-add :disabled="state.busy" @add-catalog="open = false; picker = true" @add-custom="custom = true" :entries="state.entries" :positions="positions" :get-key="row => row.id" :is-simplified="row => row.entry?.item_id == null" group="session-inventory" label="Рюкзак сессии" :sortable="sortable">
         <template #default="{ entry, index }"><SessionInventoryItem :row="entry" :index="index" :item="art(entry)" :players="state.players" :busy="state.busy" :controller="controller" :sortable="sortable" @view="viewItem" @remove="controller.remove" /></template>
       </InventoryBagGrid>
       <template v-if="state.transfers.length">
