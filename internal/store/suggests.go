@@ -12,15 +12,17 @@ import (
 // Suggest — строка dndshare.suggest (порт model/Suggest). Jackson NON_NULL: nullable-поля —
 // указатели с omitempty, non-null примитивы — plain. svg приезжает из JOIN svg_storage.
 type Suggest struct {
-	ID     int64   `json:"id"`
-	TypeID int64   `json:"typeId"`
-	UserID *int64  `json:"userId,omitempty"`
-	Value  string  `json:"value"`
-	Code   *string `json:"code,omitempty"`
-	Color  *string `json:"color,omitempty"`
-	Desc   *string `json:"desc,omitempty"`
-	SvgID  *int64  `json:"svgId,omitempty"`
-	Svg    *string `json:"svg,omitempty"`
+	ID           int64   `json:"id"`
+	TypeID       int64   `json:"typeId"`
+	UserID       *int64  `json:"userId,omitempty"`
+	Value        string  `json:"value"`
+	Code         *string `json:"code,omitempty"`
+	Color        *string `json:"color,omitempty"`
+	Desc         *string `json:"desc,omitempty"`
+	SvgID        *int64  `json:"svgId,omitempty"`
+	Svg          *string `json:"svg,omitempty"`
+	IconImageID  *int64  `json:"iconImageId,omitempty"`
+	IconImageURL *string `json:"iconImageUrl,omitempty"`
 }
 
 // SuggestType — строка dndshare.suggest_type (порт model/SuggestType) с source_name и svg из JOIN.
@@ -34,13 +36,15 @@ type SuggestType struct {
 	CountItems int64   `json:"countItems"`
 }
 
-const suggestSelect = `SELECT s.id, s.type_id, s.user_id, s.value, s.code, s.color, s."desc", s.svg_id, ss.data AS svg
+const suggestSelect = `SELECT s.id, s.type_id, s.user_id, s.value, s.code, s.color, s."desc", s.svg_id, ss.data AS svg,
+s.icon_image_id, image.url AS icon_image_url
 FROM dndshare.suggest s
-LEFT JOIN dndshare.svg_storage ss ON ss.id = s.svg_id`
+LEFT JOIN dndshare.svg_storage ss ON ss.id = s.svg_id
+LEFT JOIN dndshare.storage_image image ON image.id = s.icon_image_id AND NOT image.deleted`
 
 func scanSuggest(row pgx.Row) (Suggest, error) {
 	var s Suggest
-	err := row.Scan(&s.ID, &s.TypeID, &s.UserID, &s.Value, &s.Code, &s.Color, &s.Desc, &s.SvgID, &s.Svg)
+	err := row.Scan(&s.ID, &s.TypeID, &s.UserID, &s.Value, &s.Code, &s.Color, &s.Desc, &s.SvgID, &s.Svg, &s.IconImageID, &s.IconImageURL)
 	return s, err
 }
 

@@ -7,7 +7,7 @@
     aria-hidden="true"
   >
     <img v-if="iconImageUrl" class="item-icon__image" :src="iconImageUrl" alt="" />
-    <SvgIcon v-else-if="iconSvg" class="item-icon__svg" :svg="iconSvg" />
+    <SvgIcon v-else-if="iconSvg" class="item-icon__svg" :svg="iconSvg" :color="color" :filter="filter" />
   </span>
 </template>
 
@@ -21,6 +21,8 @@ const props = defineProps({
   size: { type: [Number, String], default: 22 },
   fallbackToType: { type: Boolean, default: true },
   placeholder: { type: Boolean, default: false },
+  color: { type: String, default: null },
+  filter: { type: Boolean, default: false },
 })
 
 const usesTypeIcon = computed(() => !props.item?.iconImageUrl && !props.item?.svg && props.fallbackToType && !!props.type?.iconImageUrl)

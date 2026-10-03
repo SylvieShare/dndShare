@@ -356,6 +356,8 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		return s.toolSuggestUpdate(ctx, args)
 	case "handbook_suggest_set_svg":
 		return s.toolSuggestSetSvg(ctx, args)
+	case "handbook_suggest_set_system_image":
+		return s.toolSuggestSetSystemImage(ctx, args)
 	case "handbook_suggest_delete":
 		return s.toolSuggestDelete(ctx, args)
 	}

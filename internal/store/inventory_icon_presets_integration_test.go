@@ -55,6 +55,7 @@ func TestInventoryIconPresetsPostgres(t *testing.T) {
 		t.Fatalf("projection: %+v %v", presets, err)
 	}
 	exec(`ALTER TABLE dndshare.item_type ADD COLUMN icon_image_id bigint, ADD COLUMN cover_image_id bigint;
+		CREATE TABLE dndshare.suggest(icon_image_id bigint);
         CREATE TABLE dndshare.item(icon_image_id bigint,cover_image_id bigint);
         CREATE TABLE dndshare."char"(icon_image_id bigint);`)
 	for _, table := range []string{"session_image_catalog", "session_chapter", "session_scene", "session_location", "session_npc"} {

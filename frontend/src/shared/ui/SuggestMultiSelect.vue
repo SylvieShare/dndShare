@@ -22,7 +22,7 @@
           @click="emit('toggle', item.id)"
         >
           <div class="sms-icon">
-            <SvgIcon v-if="item.svg" class="sms-svg-img" :svg="item.svg" :color="item.color || '#888888'" filter />
+            <ItemIcon v-if="item.iconImageUrl || item.svg" class="sms-svg-img" :item="item" :size="20" :fallback-to-type="false" :color="item.color || '#888888'" filter />
             <span v-else class="sms-dot"></span>
           </div>
           <span class="sms-name">{{ item.value }}</span>
@@ -61,7 +61,7 @@ import { useSuggestLoading } from '@/shared/composables/useSuggestLoading'
 import { onMounted, ref } from 'vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SuggestEditModal from '@/shared/ui/SuggestEditModal'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { useSwipeToClose } from '@/shared/lib/useSwipeToClose'
 
 const props = defineProps({

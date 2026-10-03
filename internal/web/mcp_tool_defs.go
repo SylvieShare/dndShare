@@ -144,6 +144,7 @@ func mcpToolDefs() []map[string]any {
 				"color":  mcpStringProperty("Optional hex color"),
 				"desc":   mcpStringProperty("Optional description/tooltip"),
 			}, "typeId", "id", "value")),
+		suggestImageDefinition(),
 		mcpDefinition("handbook_suggest_set_svg",
 			"Set or replace the svg icon of a suggest by id+typeId (admin: works for any owner including base). Pass raw <svg> markup; an empty string clears the icon. Stores the markup in svg_storage, repoints the suggest, and removes the previous svg row.",
 			mcpObjectSchema(map[string]any{

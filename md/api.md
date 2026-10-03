@@ -262,6 +262,15 @@ Suggest API:
 - create/update/delete, make-base и SVG upload routes под
   `/api/suggest/{typeId}/...`.
 
+Suggest DTO дополнительно проецирует `iconImageId` и `iconImageUrl` из общего
+`storage_image`; URL отсутствует у удалённой картинки. В записи саджеста
+хранится только внешний ключ `icon_image_id`. PNG/WebP для базовых саджестов
+устанавливает MCP `handbook_suggest_set_system_image`: `typeId`, `id`,
+`fileName`, `mimeType`, обычный `dataBase64` (до 5 MB) и необязательный
+`preservePrevious`. Ответ содержит обновлённый `suggest`, `imageId`,
+`objectKey`, `fileSize`, `preservedPrevious`. Обычное редактирование текста
+сохраняет обе иконки; растровая имеет приоритет над SVG.
+
 Suggest identity в HTTP — пара `(typeId,id)`. Новые id (пользовательские и
 базовые) выдаются общей DB sequence конкурентно-безопасно, поэтому новые
 пользовательские ids не пересекаются между владельцами; существующие базовые

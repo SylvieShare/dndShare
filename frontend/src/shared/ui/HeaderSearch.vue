@@ -204,7 +204,8 @@ async function doSearch() {
         typeId: sug.typeId,
         typeLabel: type?.name || 'Подсказки',
         label: sug.value,
-        icon: type?.svg || sug.svg || null,
+        iconImageUrl: sug.iconImageUrl || null,
+        icon: sug.svg || type?.svg || null,
         source: type?.sourceName || type?.name || null,
         url: { path: '/handbook/dictionary', query: { type: sug.typeId, item: sug.id } },
       }

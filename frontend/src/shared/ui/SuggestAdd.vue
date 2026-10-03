@@ -70,7 +70,8 @@
           :style="item.color ? { '--c': item.color } : {}"
           @click="pick(item.value)"
         >
-          <span v-if="item.color" class="sa-panel-dot"></span>
+          <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :size="24" :fallback-to-type="false" />
+          <span v-else-if="item.color" class="sa-panel-dot"></span>
           <span class="sa-panel-item-text">{{ item.value }}</span>
           <span v-if="item.userId != null" class="sa-panel-custom-mark" title="Ваш вариант">✦</span>
           <button
@@ -104,6 +105,7 @@ import SuggestEditModal from '@/shared/ui/SuggestEditModal'
 import { fetchDelete } from '@/shared/api/http'
 import { useSwipeToClose } from '@/shared/lib/useSwipeToClose'
 import { useSuggestStore } from '@/stores/suggest'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
   suggestTypeId: { type: [Number, String], required: true },

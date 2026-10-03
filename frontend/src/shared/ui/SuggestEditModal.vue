@@ -7,7 +7,7 @@
         class="preview-icon"
         :style="form.color ? { background: form.color + '22', borderColor: form.color + '55', color: form.color } : {}"
       >
-        <span v-if="svgPreviewText || form.svg" class="preview-icon-svg" v-html="svgPreviewText || form.svg"></span>
+        <ItemIcon v-if="item?.iconImageUrl || svgPreviewText || form.svg" :item="{ iconImageUrl: item?.iconImageUrl, svg: svgPreviewText || form.svg }" :size="32" :fallback-to-type="false" />
         <span v-else class="preview-icon-placeholder">{{ (form.value || '?')[0]?.toUpperCase() }}</span>
       </div>
       <div class="preview-body">
@@ -87,6 +87,7 @@ import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
 import { FormTextInput } from '@sylvieshare/share-ui'
 import InputDescription from '@/shared/ui/InputDescription'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { fetchPost, fetchPut } from '@/shared/api/http'
 
 const props = defineProps({
@@ -206,15 +207,6 @@ async function save() {
   justify-content: center;
   overflow: hidden;
 }
-.preview-icon-svg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  color: currentColor;
-}
-.preview-icon-svg :deep(svg) { width: 28px; height: 28px; }
 .preview-icon-placeholder { font-size: 18px; font-weight: 700; color: currentColor; }
 
 .preview-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }

@@ -11,7 +11,7 @@
         @mouseenter="$emit('show-tooltip', $event, item)"
         @mouseleave="$emit('hide-tooltip')"
       >
-        <SvgIcon v-if="item.svg" class="bss-icon" :svg="item.svg" :color="item.color || '#888888'" filter />
+        <ItemIcon v-if="item.iconImageUrl || item.svg" class="bss-icon" :item="item" :size="17" :fallback-to-type="false" :color="item.color || '#888888'" filter />
         <span v-else class="bss-dot"></span>
         <span class="bss-name">{{ item.value }}</span>
       </span>
@@ -21,7 +21,7 @@
 
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 defineProps({
   activeItems: { type: Array, default: () => [] },

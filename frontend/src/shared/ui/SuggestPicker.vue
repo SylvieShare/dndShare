@@ -8,7 +8,7 @@
       :disabled="readonly"
       @click="openPicker"
     >
-      <img v-if="selectedIconUrl" class="sp-icon" :src="selectedIconUrl" alt="" aria-hidden="true" />
+      <ItemIcon v-if="selectedItem?.iconImageUrl || selectedItem?.svg" class="sp-icon" :item="selectedItem" :size="20" :fallback-to-type="false" />
       <span class="sp-label">{{ label || placeholder }}</span>
     </button>
 
@@ -51,6 +51,8 @@ import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useSuggestLoading } from '@/shared/composables/useSuggestLoading'
 import SuggestDropdown from '@/shared/ui/SuggestDropdown'
 import { useSuggestStore } from '@/stores/suggest'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import { resolveSuggestIcon } from '@/shared/lib/suggestIcon'
 
 const props = defineProps({
   modelValue: { type: [String, Number], default: '' },
@@ -82,7 +84,7 @@ const dropdownItems = computed(() => sourceItems.value.map(item => ({
   ...item,
   id: item.id ?? item[props.valueKey] ?? item.value,
   value: item.value ?? item.title ?? String(item[props.valueKey] ?? ''),
-  iconUrl: item.iconUrl || item.icon_url || item.svg || item.icon || '',
+  ...resolveSuggestIcon(item),
 })))
 const selectedItem = computed(() => {
   const current = String(props.modelValue ?? '')
@@ -90,7 +92,6 @@ const selectedItem = computed(() => {
 })
 const label = computed(() => selectedItem.value?.value || String(props.modelValue || ''))
 const inputPlaceholder = computed(() => label.value || props.placeholder)
-const selectedIconUrl = computed(() => selectedItem.value?.iconUrl || '')
 const filteredExclude = computed(() => props.filterPicked ? props.exclude : [])
 
 useSuggestLoading(() => props.suggestTypeId)

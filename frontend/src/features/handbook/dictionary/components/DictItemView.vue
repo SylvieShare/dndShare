@@ -11,7 +11,7 @@
           class="view-icon"
           :style="item.color ? { background: item.color + '22', borderColor: item.color + '55', color: item.color } : {}"
         >
-          <SvgIcon v-if="item.svg" class="view-icon-svg" :svg="item.svg" />
+          <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :size="32" :fallback-to-type="false" />
           <span v-else class="view-icon-placeholder">{{ (item.value || '?')[0]?.toUpperCase() }}</span>
         </div>
 
@@ -58,7 +58,7 @@
 import { ref } from 'vue'
 import { fetchPost } from '@/shared/api/http'
 import RichContent from '@/shared/ui/DndRichContent.vue'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps({
   item: { type: Object, default: null },
@@ -145,14 +145,7 @@ async function deleteItem() {
   justify-content: center;
   overflow: hidden;
 }
-.view-icon-svg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: currentColor;
-}
+
 .view-icon-placeholder {
   font-size: 17px;
   font-weight: 700;

@@ -5,7 +5,7 @@
       <template v-if="coins.length">
         <span v-for="coin in coins" :key="coin.id" class="money-amount" :title="coin.title">
           <span class="ma-value">{{ coin.amount }}</span>
-          <span v-if="coin.iconUrl" class="ma-img" v-html="coin.iconUrl" aria-hidden="true" />
+          <ItemIcon v-if="coin.iconImageUrl || coin.svg" class="ma-img" :item="coin" :size="20" :fallback-to-type="false" />
           <span v-else class="ma-dot" :style="{ background: coin.color }"></span>
           <span class="ma-label">{{ coin.title }}</span>
         </span>
@@ -18,12 +18,13 @@
 <script setup>
 import { MorphTile } from '@sylvieshare/share-ui'
 import { LoadingState } from '@sylvieshare/share-ui'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 defineProps({
   panel: Boolean,
   editable: { type: Boolean, default: false },
   title: { type: String, default: '' },
   loading: { type: Boolean, default: false },
-  // [{ id, title, iconUrl, color, amount }] — only the non-zero coins, already ordered
+  // Non-zero coins with their shared image/SVG projection, already ordered.
   coins: { type: Array, default: () => [] },
 })
 defineEmits(['edit'])
@@ -63,16 +64,6 @@ defineEmits(['edit'])
 
 .ma-img {
   align-self: center;
-  width: 14px;
-  height: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.ma-img :deep(svg) {
-  width: 14px;
-  height: 14px;
 }
 
 .ma-label {

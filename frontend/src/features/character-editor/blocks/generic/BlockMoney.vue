@@ -23,7 +23,7 @@
         <CalcPad v-model="calcExpr">
           <template #append>
             <button ref="coinTriggerEl" type="button" class="mc-coin-trigger" @click="coinPickerOpen = !coinPickerOpen">
-              <span v-if="selectedCoin?.iconUrl" class="mc-coin-icon" v-html="selectedCoin.iconUrl" aria-hidden="true" />
+              <ItemIcon v-if="selectedCoin?.iconImageUrl || selectedCoin?.svg" class="mc-coin-icon" :item="selectedCoin" :size="24" :fallback-to-type="false" />
               <span v-else-if="selectedCoin" class="mc-coin-dot" :style="{ background: selectedCoin.color }" />
               <span class="mc-coin-name">{{ selectedCoin?.title || '—' }}</span>
               <svg class="mc-coin-chevron" viewBox="0 0 10 6" fill="none" width="10" height="6">
@@ -56,7 +56,7 @@
         :class="{ active: String(coin.id) === calcCoinId }"
         @click="calcCoinId = String(coin.id); closePicker()"
       >
-        <span v-if="coin.iconUrl" class="mc-coin-icon" v-html="coin.iconUrl" aria-hidden="true" />
+        <ItemIcon v-if="coin.iconImageUrl || coin.svg" class="mc-coin-icon" :item="coin" :size="24" :fallback-to-type="false" />
         <span v-else class="mc-coin-dot" :style="{ background: coin.color }" />
         <span>{{ coin.title }}</span>
       </button>
@@ -74,6 +74,7 @@ import { EditorPanel } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { useSuggestStore } from '@/stores/suggest'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 const props = defineProps(['block', 'value'])
 const emit = defineEmits(['update:value'])
@@ -129,7 +130,8 @@ const nonZero = computed(() => coins.value.filter(coin => amount(coin.id) > 0))
 const displayCoins = computed(() => [...nonZero.value].reverse().map(coin => ({
   id: coin.id,
   title: coin.title,
-  iconUrl: coin.iconUrl,
+  iconImageUrl: coin.iconImageUrl,
+  svg: coin.svg,
   color: coin.color,
   amount: amount(coin.id),
 })))
@@ -165,8 +167,9 @@ function normalizeCoin(item) {
     id: item.id,
     title: item.value || '',
     shortTitle: item.value || '',
-    color: item.color || '#cccccc',
-    iconUrl: item.svg || '',
+    color: item.color || 'var(--text-muted)',
+    iconImageUrl: item.iconImageUrl || '',
+    svg: item.svg || '',
     defaultOrder: Number(item.id) || 0,
   }
 }
@@ -237,16 +240,6 @@ function applyCalc(sign) {
   border-color: var(--accent);
   outline: none;
 }
-
-.mc-coin-icon {
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.mc-coin-icon :deep(svg) { width: 16px; height: 16px; }
 
 .mc-coin-dot {
   width: 12px;

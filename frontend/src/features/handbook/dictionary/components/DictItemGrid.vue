@@ -27,7 +27,7 @@
             class="card-icon"
             :style="item.color ? { background: item.color + '22', borderColor: item.color + '55', color: item.color } : {}"
           >
-            <SvgIcon v-if="item.svg" class="card-icon-svg" :svg="item.svg" />
+            <ItemIcon v-if="item.iconImageUrl || item.svg" :item="item" :size="32" :fallback-to-type="false" />
             <span v-else class="card-icon-placeholder">{{ (item.value || '?')[0] }}</span>
           </div>
 
@@ -47,7 +47,7 @@
 
 <script setup>
 import { LoadingState } from '@sylvieshare/share-ui'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 defineProps({
   type: { type: Object, default: null },
@@ -126,14 +126,7 @@ function stripTags(html) {
   overflow: hidden;
 }
 
-.card-icon-svg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  color: currentColor;
-}
+
 
 .card-icon-placeholder {
   font-size: 18px;

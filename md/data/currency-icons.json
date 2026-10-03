@@ -1,0 +1,54 @@
+{
+  "generator": "Built-in image_gen",
+  "dimensions": "128x128",
+  "format": "lossless WebP with genuine alpha",
+  "typeId": 17,
+  "assets": [
+    {
+      "slug": "copper",
+      "id": 1,
+      "name": "Медная монета",
+      "prompt": "Use case: stylized-concept\nAsset type: compact DnD Share fantasy currency icon, later downsampled to a transparent 128x128 WebP and displayed at 20–64 pixels.\nStyle/medium: polished flat-cartoon game inventory art, thick continuous deep-plum contours, broad clean shapes, restrained two-step cel shading, a clear broad upper-left highlight. Crisp professional game asset. One large stamped geometric emblem readable at 20 pixels.\nComposition/framing: ONE isolated coin centered on a square canvas, occupying 84% of the canvas with even padding. Almost frontal view with just a narrow visible lower-right thickness/beveled edge. Complete silhouette. No surrounding objects. No separate sparkles. Strong contrast between metal face and stamped emblem.\nConstraints: genuine transparent alpha background. No backdrop, tile, decorative frame outside the coin, floor, cast shadow, scene, hands, character, lettering, numerals, words, logo, watermark, photorealism, grain, tiny filigree or micro-detail. Keep the symbol bold and simple, not a tiny engraving.\nSubject: One round warm copper coin, burnt orange and russet metal, a thick raised rim and one large square punched center hole. The hole is visibly dark; thick highlighted inner lip. Broad copper face around the hole. Rounded, substantial silhouette.",
+      "fileName": "copper.webp",
+      "mimeType": "image/webp",
+      "sha256": "c0eae6551c9f9fba7dd675f0c62876802594ce71080553bcfebefd6463538af6"
+    },
+    {
+      "slug": "silver",
+      "id": 2,
+      "name": "Серебряная монета",
+      "prompt": "Use case: stylized-concept\nAsset type: compact DnD Share fantasy currency icon, later downsampled to a transparent 128x128 WebP and displayed at 20–64 pixels.\nStyle/medium: polished flat-cartoon game inventory art, thick continuous deep-plum contours, broad clean shapes, restrained two-step cel shading, a clear broad upper-left highlight. Crisp professional game asset. One large stamped geometric emblem readable at 20 pixels.\nComposition/framing: ONE isolated coin centered on a square canvas, occupying 84% of the canvas with even padding. Almost frontal view with just a narrow visible lower-right thickness/beveled edge. Complete silhouette. No surrounding objects. No separate sparkles. Strong contrast between metal face and stamped emblem.\nConstraints: genuine transparent alpha background. No backdrop, tile, decorative frame outside the coin, floor, cast shadow, scene, hands, character, lettering, numerals, words, logo, watermark, photorealism, grain, tiny filigree or micro-detail. Keep the symbol bold and simple, not a tiny engraving.\nSubject: One round cool silver coin, steel-gray midtones and bright pale silver highlights, thick raised rim and one large raised crescent moon emblem filling the center. The crescent is clearly legible as a broad moon shape. Keep the silver neutral gray, not cyan.",
+      "fileName": "silver.webp",
+      "mimeType": "image/webp",
+      "sha256": "159b5c299585112c935394515b11f717d0b269a0f54bb4504385173e5f2103d6"
+    },
+    {
+      "slug": "gold",
+      "id": 3,
+      "name": "Золотая монета",
+      "prompt": "Use case: stylized-concept\nAsset type: compact DnD Share fantasy currency icon, later downsampled to a transparent 128x128 WebP and displayed at 20–64 pixels.\nStyle/medium: polished flat-cartoon game inventory art, thick continuous deep-plum contours, broad clean shapes, restrained two-step cel shading, a clear broad upper-left highlight. Crisp professional game asset. One large stamped geometric emblem readable at 20 pixels.\nComposition/framing: ONE isolated coin centered on a square canvas, occupying 84% of the canvas with even padding. Almost frontal view with just a narrow visible lower-right thickness/beveled edge. Complete silhouette. No surrounding objects. No separate sparkles. Strong contrast between metal face and stamped emblem.\nConstraints: genuine transparent alpha background. No backdrop, tile, decorative frame outside the coin, floor, cast shadow, scene, hands, character, lettering, numerals, words, logo, watermark, photorealism, grain, tiny filigree or micro-detail. Keep the symbol bold and simple, not a tiny engraving.\nSubject: One round rich gold coin, warm honey-yellow face, amber edge shading, thick raised rim and one large stamped sun emblem with a round center and eight broad short triangular rays. Bold sun, no tiny decorative dots.",
+      "fileName": "gold.webp",
+      "mimeType": "image/webp",
+      "sha256": "52c68009885d77afed5775b0bb909cb3290a10cb62aba192bf2fdec309f2ba0d"
+    },
+    {
+      "slug": "electrum",
+      "id": 4,
+      "name": "Электрумовая монета",
+      "prompt": "Use case: stylized-concept\nAsset type: compact DnD Share fantasy currency icon, later downsampled to a transparent 128x128 WebP and displayed at 20–64 pixels.\nStyle/medium: polished flat-cartoon game inventory art, thick continuous deep-plum contours, broad clean shapes, restrained two-step cel shading, a clear broad upper-left highlight. Crisp professional game asset. One large stamped geometric emblem readable at 20 pixels.\nComposition/framing: ONE isolated coin centered on a square canvas, occupying 84% of the canvas with even padding. Almost frontal view with just a narrow visible lower-right thickness/beveled edge. Complete silhouette. No surrounding objects. No separate sparkles. Strong contrast between metal face and stamped emblem.\nConstraints: genuine transparent alpha background. No backdrop, tile, decorative frame outside the coin, floor, cast shadow, scene, hands, character, lettering, numerals, words, logo, watermark, photorealism, grain, tiny filigree or micro-detail. Keep the symbol bold and simple, not a tiny engraving.\nSubject: One octagonal electrum coin, pale champagne-gold alloy face, soft silver-gold beveled rim and restrained olive-gold shadow. One large raised four-point star emblem at the center, four broad points, no surrounding symbols. Clearly octagonal silhouette, pale alloy distinct from saturated yellow gold.",
+      "fileName": "electrum.webp",
+      "mimeType": "image/webp",
+      "sha256": "c9c4ae18251a4a1fe70848829e8f0b22d929cef3bc187ed8461bc12537e47812"
+    },
+    {
+      "slug": "platinum",
+      "id": 5,
+      "name": "Платиновая монета",
+      "prompt": "Use case: stylized-concept\nAsset type: compact DnD Share fantasy currency icon, later downsampled to a transparent 128x128 WebP and displayed at 20–64 pixels.\nStyle/medium: polished flat-cartoon game inventory art, thick continuous deep-plum contours, broad clean shapes, restrained two-step cel shading, a clear broad upper-left highlight. Crisp professional game asset. One large stamped geometric emblem readable at 20 pixels.\nComposition/framing: ONE isolated coin centered on a square canvas, occupying 84% of the canvas with even padding. Almost frontal view with just a narrow visible lower-right thickness/beveled edge. Complete silhouette. No surrounding objects. No separate sparkles. Strong contrast between metal face and stamped emblem.\nConstraints: genuine transparent alpha background. No backdrop, tile, decorative frame outside the coin, floor, cast shadow, scene, hands, character, lettering, numerals, words, logo, watermark, photorealism, grain, tiny filigree or micro-detail. Keep the symbol bold and simple, not a tiny engraving.\nSubject: One hexagonal platinum coin, brilliant ice-white metal face, pale blue edge shading and highlights, thick beveled rim. One large embossed diamond-shaped gemstone sign in the center, with just three broad facets, rendered in the same platinum metal. Strong hexagonal silhouette, brighter and colder than gray silver.",
+      "fileName": "platinum.webp",
+      "mimeType": "image/webp",
+      "sha256": "6001ba693969acd6f4959254c498853d6b34c3433cbb083f3e68b6a190928286"
+    }
+  ],
+  "sourceAudit": "Existing currency SVGs reviewed visually: outlined circles with letters; no previous raster artwork."
+}

@@ -17,7 +17,7 @@
         @click="$emit('toggle', item.id)"
       >
         <span class="bsp-icon">
-          <SvgIcon v-if="item.svg" class="bsp-svg" :svg="item.svg" :color="item.color || '#888888'" filter />
+          <ItemIcon v-if="item.iconImageUrl || item.svg" class="bsp-svg" :item="item" :size="20" :fallback-to-type="false" :color="item.color || '#888888'" filter />
           <span v-else class="bsp-dot"></span>
         </span>
         <span class="bsp-name">{{ item.value }}</span>
@@ -57,7 +57,7 @@ import { EditorPanel } from '@sylvieshare/share-ui'
 import { EditorSection } from '@sylvieshare/share-ui'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import SuggestEditModal from '@/shared/ui/SuggestEditModal'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 
 defineProps({
   suggestTypeId: { type: [Number, String], required: true },

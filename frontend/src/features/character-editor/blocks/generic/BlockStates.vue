@@ -10,7 +10,7 @@
         @mouseenter="showTooltip($event, item)"
         @mouseleave="hideTooltip"
       >
-        <SvgIcon v-if="item.svg" class="bs-compact-svg-img" :svg="item.svg" :color="item.color || '#888888'" filter />
+        <ItemIcon v-if="item.iconImageUrl || item.svg" class="bs-compact-svg-img" :item="item" :size="24" :fallback-to-type="false" :color="item.color || '#888888'" filter />
         <span v-else class="bs-compact-dot"></span>
       </div>
     </div>
@@ -52,7 +52,7 @@
         @mouseleave="hideTooltip"
       >
       <TileAccentStrip />
-        <SvgIcon v-if="item.svg" class="bs-tile-svg" :svg="item.svg" :color="item.color || '#888888'" filter />
+        <ItemIcon v-if="item.iconImageUrl || item.svg" class="bs-tile-svg" :item="item" :size="18" :fallback-to-type="false" :color="item.color || '#888888'" filter />
         <span class="bs-tile-name">{{ item.value }}</span>
       </MorphTile>
 
@@ -123,7 +123,7 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import SuggestAdd from '@/shared/ui/SuggestAdd'
 import SuggestMultiSelect from '@/shared/ui/SuggestMultiSelect'
-import SvgIcon from '@/shared/ui/SvgIcon'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { useSuggestStore } from '@/stores/suggest'
 

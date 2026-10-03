@@ -4,7 +4,7 @@
     <div v-else-if="error" role="alert">{{ error }} <ActionButton variant="quiet" @click="reload">Повторить</ActionButton></div>
     <OptionList v-else :id="listId" :options="options" :active-index="activeIndex" empty-label="Ничего не найдено" label="Варианты" @active="activeIndex = $event" @select="pickItem($event.item)" @hover="showTooltip($event.event, $event.option.item)" @leave="hideTooltip">
       <template #option="{ option: { item } }">
-        <img v-if="iconUrl(item)" class="sd-icon" :src="iconUrl(item)" alt="" aria-hidden="true" />
+        <ItemIcon v-if="hasIcon(item)" class="sd-icon" :item="resolveSuggestIcon(item)" :size="20" :fallback-to-type="false" />
         <span v-else-if="item.color" class="sd-dot" :style="{ background: item.color }" />
         <span class="sd-item-value">{{ item.value }}</span>
         <button v-if="item.userId != null" class="sd-delete-btn" type="button" aria-label="Удалить вариант" @mousedown.prevent.stop @click.stop="deleteItem(item)">×</button>
@@ -22,6 +22,8 @@ import { useSuggestLoading } from '@/shared/composables/useSuggestLoading'
 import { ref, computed, watch, useId, nextTick } from 'vue'
 import { fetchPost, fetchDelete } from "@/shared/api/http"
 import ItemTooltip from "@/features/character-editor/components/ItemTooltip"
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import { resolveSuggestIcon } from '@/shared/lib/suggestIcon'
 
 const props = defineProps({
   anchor: { type: Object, default: null },
@@ -73,8 +75,9 @@ function handleKeydown(event) {
 const activeDescendant = computed(() => activeIndex.value >= 0 ? `${listId}-${activeIndex.value}` : undefined)
 defineExpose({ handleKeydown, listId, activeDescendant })
 
-function iconUrl(item) {
-  return item.iconUrl || item.icon_url || item.svg || item.icon || ''
+function hasIcon(item) {
+  const icon = resolveSuggestIcon(item)
+  return icon.iconImageUrl || icon.svg
 }
 
 function pickItem(item) {
