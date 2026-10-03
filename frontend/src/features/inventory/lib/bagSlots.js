@@ -31,6 +31,6 @@ export function bagCells(entries, positions = {}, getKey = entry => entry.uid, c
   const size = Math.max(columns, Math.ceil((last + 1) / columns) * columns)
   const cells = Array(size).fill(null)
   for (const entry of entries) cells[resolved[getKey(entry)]] = entry
-  if (cells.slice(-columns).every(Boolean)) cells.push(...Array(columns).fill(null))
+  if (cells.slice(-columns).some(Boolean)) cells.push(...Array(columns).fill(null))
   return cells
 }

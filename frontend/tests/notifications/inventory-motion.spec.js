@@ -58,7 +58,7 @@ for (const mobile of [false, true]) test(`inventory add and remove animations on
 test('last item disappears without leaving a draggable ghost or retained row', async ({ page }) => {
   await openInventory(page, { sparse: true, mobile: true })
   const bag = page.locator('[data-sortable-container="sec_bag"]')
-  await expect(bag.locator('.inventory-bag-cell')).toHaveCount(12)
+  await expect(bag.locator('.inventory-bag-cell')).toHaveCount(16)
   await action(page, 'Мел', 'Удалить')
   await expect.poll(() => motions(page)).toContain('inventory-remove-item')
   await expect(bag.locator('.inventory-bag-effects [data-sortable-key]')).toHaveCount(0)
@@ -113,7 +113,7 @@ test('a fading last row stays usable until an active drag ends', async ({ page }
   await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2, { steps: 8 })
   await page.evaluate(() => document.getAnimations().filter(animation => animation.id === 'inventory-remove-item').forEach(animation => animation.finish()))
   await expect(bag.locator('.inventory-bag-effects > *')).toHaveCount(0)
-  await expect(bag.locator('.inventory-bag-cell')).toHaveCount(12)
+  await expect(bag.locator('.inventory-bag-cell')).toHaveCount(16)
   await page.mouse.up()
   expect((await page.evaluate(() => window.readInventory())).sections[0].slots.rope).toBe(8)
   expect((await motions(page)).filter(id => id === 'inventory-add-item')).toEqual([])

@@ -14,16 +14,17 @@ describe('bag cells', () => {
     expect(bagColumnCount(330)).toBe(4)
     expect(bagColumnCount(230)).toBe(2)
     expect(bagColumnCount(0)).toBe(1)
-    expect(bagCells(['a', 'b', 'c', 'd'].map(entry), {}, undefined, 6)).toHaveLength(6)
+    expect(bagCells(['a', 'b', 'c', 'd'].map(entry), {}, undefined, 6)).toHaveLength(12)
     expect(bagCells(['a', 'b'].map(entry), {}, undefined, 2)).toHaveLength(4)
-    expect(bagCells([entry('a')], { a: 7 }, undefined, 3)).toHaveLength(9)
+    expect(bagCells([entry('a')], { a: 7 }, undefined, 3)).toHaveLength(12)
   })
 
-  it('starts with four empty cells and adds a row when the last row is filled', () => {
+  it('starts with one empty row and keeps an empty row after the last occupied row', () => {
     expect(bagCells([])).toEqual([null, null, null, null])
-    expect(bagCells(['a', 'b', 'c'].map(entry))).toHaveLength(4)
+    expect(bagCells([entry('a')])).toEqual([entry('a'), null, null, null, null, null, null, null])
+    expect(bagCells(['a', 'b', 'c'].map(entry))).toHaveLength(8)
     expect(bagCells(['a', 'b', 'c', 'd'].map(entry))).toHaveLength(8)
-    expect(bagCells(['a', 'b', 'c', 'd', 'e'].map(entry))).toHaveLength(8)
+    expect(bagCells(['a', 'b', 'c', 'd', 'e'].map(entry))).toHaveLength(12)
   })
   it('keeps holes, fills the first free cell, and ignores removed/invalid/duplicate positions', () => {
     const entries = ['a', 'b', 'c', 'd'].map(entry)
@@ -32,9 +33,11 @@ describe('bag cells', () => {
     expect(bagCells(entries, positions)[3]).toBeNull()
     expect(positions).toEqual({ a: 5, b: 5, c: -1, removed: 99 })
   })
-  it('keeps a partly filled last row without adding another row for its last cell', () => {
-    expect(bagCells([entry('a')], { a: 3 })).toHaveLength(4)
-    expect(bagCells([entry('a')], { a: 7 })).toHaveLength(8)
+  it('adds exactly one empty row after a sparse occupied row', () => {
+    const cells = bagCells([entry('a')], { a: 7 })
+    expect(cells).toHaveLength(12)
+    expect(cells[7]).toEqual(entry('a'))
+    expect(cells.slice(8)).toEqual([null, null, null, null])
   })
   it('preserves layout through normalization and cloning', () => {
     const value = model()
