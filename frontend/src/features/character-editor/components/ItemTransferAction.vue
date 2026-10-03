@@ -1,7 +1,7 @@
 <template>
   <RowActionSubmenu v-if="ctx.ownerMode && (purpose === 'use' || (ctx.topSession && interactionAllowed)) && !entry?.params?.magic?.lost" :min-width="260" :disabled="disabled || controller?.state.busy">
     <template #trigger="{ open }">
-      <RowActionItem :icon="purpose === 'use' ? Pill : Send" submenu :submenu-open="open" :disabled="disabled || controller?.state.busy" @click="!open && ctx.topSession && controller?.loadPlayers()">{{ purpose === 'use' ? effectLabel || 'Использовать на…' : 'Передать' }}</RowActionItem>
+      <RowActionItem :icon="purpose === 'use' ? Hand : Send" submenu :submenu-open="open" :disabled="disabled || controller?.state.busy" @click="!open && ctx.topSession && controller?.loadPlayers()">{{ purpose === 'use' ? effectLabel || 'Использовать на…' : 'Передать' }}</RowActionItem>
     </template>
     <template #default="{ close }">
       <RowActionItem v-if="purpose === 'use'" :icon="UserRound" :disabled="disabled || controller?.state.busy" @click="emit('self'); close()">На себя</RowActionItem>
@@ -23,7 +23,7 @@
 </template>
 <script setup>
 import { computed, inject } from 'vue'
-import { Crown, Pill, Send, UserRound } from '@lucide/vue'
+import { Crown, Hand, Send, UserRound } from '@lucide/vue'
 import { LoadingIndicator, RowActionSubmenu } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import { pvAvatar, pvName } from '@/features/sessions/lib/participantView'

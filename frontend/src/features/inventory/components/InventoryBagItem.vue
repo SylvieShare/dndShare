@@ -7,7 +7,7 @@
     <div v-if="wearable || usable || count > 1" class="inventory-bag-item__footer">
       <span v-if="wearable || usable" class="inventory-bag-item__tags" aria-hidden="true">
         <span v-if="wearable" :title="equipped ? 'Надето' : 'Можно надеть'" :class="{ 'inventory-bag-item__tag--equipped': equipped }"><Shirt :size="12" /></span>
-        <span v-if="usable" title="Можно использовать"><Pill :size="12" /></span>
+        <span v-if="usable" title="Можно использовать"><Hand :size="12" /></span>
       </span>
       <span v-if="count > 1" class="inventory-bag-item__count" :title="`Количество: ${count}`" aria-hidden="true">{{ count }}</span>
     </div>
@@ -17,7 +17,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { Package, Pill, Shirt } from '@lucide/vue'
+import { Hand, Package, Shirt } from '@lucide/vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 const props = defineProps({ itemKey: String, item: Object, name: String, count: Number, source: Boolean, draggable: Boolean, status: String, disabled: Boolean, equipped: Boolean, simplified: Boolean, wearable: Boolean, usable: Boolean })
 const description = computed(() => [

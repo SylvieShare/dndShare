@@ -21,11 +21,11 @@ import {
   Ellipsis,
   Eye,
   FilePenLine,
+  Hand,
   HeartPulse,
   Link,
   PackagePlus,
   Pencil,
-  Pill,
   Plus,
   RotateCcw,
   Sparkles,
@@ -53,7 +53,7 @@ const ACTION_ICONS = {
   remove: Trash2,
   kick: UserRoundX,
   join: UserRoundPlus,
-  use: Pill,
+  use: Hand,
   view: Eye,
 }
 
