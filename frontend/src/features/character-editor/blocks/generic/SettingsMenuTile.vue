@@ -1,7 +1,11 @@
 <template>
   <div ref="menuAnchor" class="sm-wrap">
-    <MorphTile class="sm-tile" :embedded="block?.props?.embedded" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="open = !open" @keydown.enter.prevent="open = !open" @keydown.space.prevent="open = !open">
-      <TileAccentStrip v-if="!block?.props?.embedded" />
+    <UtilityCell v-if="block?.props?.embedded" label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
+      <template #icon><img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" /></template>
+      <span class="sm-sub">меню</span>
+    </UtilityCell>
+    <MorphTile v-else class="sm-tile" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="open = !open" @keydown.enter.prevent="open = !open" @keydown.space.prevent="open = !open">
+      <TileAccentStrip />
       <div class="sm-body">
         <img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" />
         <div class="sm-sub">меню</div>
@@ -53,6 +57,7 @@
 
 <script setup>
 import CharacterMenuPopover from '@/features/character-editor/components/CharacterMenuPopover.vue'
+import UtilityCell from '@/features/character-editor/components/UtilityCell.vue'
 import CharacterEditionAction from '@/features/character-editor/components/CharacterEditionAction.vue'
 import CloneCharacterAction from '@/features/character-editor/components/CloneCharacterAction.vue'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'

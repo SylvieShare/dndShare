@@ -63,11 +63,15 @@ defenses and proficiencies in the right column. Both side columns use the same
 20 px inner padding, so their content has matching spacing from the centre; the
 right utility content remains 320 px wide. AC, initiative, menu, speed,
 proficiency bonus and rest share one `BaseTile` in a gapless 3×2 grid with
-1 px internal dividers. Stat faces use `MorphTile embedded`; menu and rest
-also omit their individual surfaces. Their editors, dice actions and menus
-remain independent. The former whole-tile morph editor is not used. The level
-tile sits separately below this group and spans its full width; both metric
-rows and the level tile are 64 px high.
+1 px internal dividers. All six cells use `UtilityCell` over the shared
+`ActionButton quiet`: the whole cell has the same hover, focus and keyboard
+activation. Metric headings use `MorphTileHeader` without pencils; inline dice
+buttons are hidden. Clicking initiative or proficiency bonus opens a
+`RowActionMenu` with owner-only «Изменить» and «Бросить кубик», which remains
+available on read-only sheets. AC and speed open their editors directly; menu
+and rest keep their own menus. Cells have 12 px bottom padding and 70 px row
+height; the separate full-width level tile below remains 64 px high. The former
+whole-tile morph editor is not used.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state

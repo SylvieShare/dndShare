@@ -42,7 +42,7 @@ describe('D&D desktop sheet schema', () => {
     const utilityColumn = base.content.children[2]
 
     expect(metricGrid.props?.width).toBe('320px')
-    expect(metricGrid.props?.style?.['grid-auto-rows']).toBe('64px')
+    expect(metricGrid.props?.style?.['grid-auto-rows']).toBe('70px')
     expect(metricGrid.props).toMatchObject({ tile: true, dividers: true, gap: '0' })
     expect(metricGrid.children.every(child => child.props?.embedded === true)).toBe(true)
     expect(metricGrid.children.map(child => child.ref)).toEqual([

@@ -1,7 +1,11 @@
 <template>
-  <RowActionMenu block :trigger-attrs="{ style: { height: '100%' } }" title="Отдых и рассвет" :disabled="!interactive">
-    <template #trigger>
-      <ActionButton class="rest-trigger" variant="quiet" :disabled="!interactive" aria-label="Отдых и рассвет">
+  <RowActionMenu block :trigger-attrs="{ style: { height: '100%', transform: embedded ? 'none' : undefined } }" title="Отдых и рассвет" :disabled="!interactive">
+    <template #trigger="{ open }">
+      <UtilityCell v-if="embedded" label="Отдых и рассвет" :disabled="!interactive" :active="open" aria-haspopup="menu" :aria-expanded="open">
+        <template #icon><Moon :size="25" /></template>
+        Отдых
+      </UtilityCell>
+      <ActionButton v-else class="rest-trigger" variant="quiet" :disabled="!interactive" aria-label="Отдых и рассвет">
         <template #icon><Moon :size="25" /></template>
         Отдых
       </ActionButton>
@@ -16,7 +20,8 @@
 <script setup>
 import { ActionButton, ActionMenuItem, RowActionMenu } from '@sylvieshare/share-ui'
 import { Coffee, Moon, Sunrise } from '@lucide/vue'
-defineProps({ interactive: { type: Boolean, default: false } })
+import UtilityCell from '@/features/character-editor/components/UtilityCell.vue'
+defineProps({ interactive: { type: Boolean, default: false }, embedded: Boolean })
 defineEmits(['short', 'long', 'dawn'])
 </script>
 <style scoped>

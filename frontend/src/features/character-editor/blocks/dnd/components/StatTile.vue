@@ -8,7 +8,19 @@
   </div>
 
   <!-- desktop grid tile -->
-  <StatTileFace v-bind="$attrs" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :embedded="embedded" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+  <RowActionMenu v-else-if="variant === 'tile' && embedded && rollable" block :title="label"
+    :trigger-attrs="{ ...$attrs, style: [$attrs.style, { height: '100%', transform: 'none' }] }">
+    <template #trigger="{ open: menuOpen }">
+      <StatTileFace ref="tileRef" class="util-tile" embedded :active="menuOpen" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :color="color" aria-haspopup="menu" :aria-expanded="menuOpen">
+        <template #decoration><TileAccentStrip v-if="toggled" /></template>
+      </StatTileFace>
+    </template>
+    <template #default="{ close: closeMenu }">
+      <RowActionItem v-if="canEdit" action="edit" @click="closeMenu(); openTile()">Изменить</RowActionItem>
+      <RowActionItem :icon="Dices" @click="closeMenu(); runAction()">Бросить кубик</RowActionItem>
+    </template>
+  </RowActionMenu>
+  <StatTileFace v-bind="$attrs" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :embedded="embedded" :interactive="canEdit" :active="editorOpen" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
     <template #decoration><TileAccentStrip v-if="toggled" /></template>
   </StatTileFace>
 
@@ -45,7 +57,9 @@ defineOptions({ inheritAttrs: false })
 // Owners can open the editor; `rollable` tiles keep their dice action on read-only sheets.
 // The colored strip appears only while `toggled` (AC with its shield up), so resting tiles have no strip.
 import { computed, inject, ref } from 'vue'
-import { TileAccentStrip } from '@sylvieshare/share-ui'
+import { RowActionMenu, TileAccentStrip } from '@sylvieshare/share-ui'
+import { Dices } from '@lucide/vue'
+import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
 import StatTileFace from '@/features/character-editor/blocks/dnd/components/StatTileFace'
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'

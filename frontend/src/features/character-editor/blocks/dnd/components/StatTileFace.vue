@@ -1,20 +1,16 @@
 <template>
-  <MorphTile compact-header :embedded="panel || embedded" :color="color" padding="0" edit-label="Редактировать"
-      :title="label"
-      :show-edit="showEdit"
-      :edit-fade="editFade"
-      @edit="$emit('edit')"
-     class="stf" :style="{ '--sc': color }">
+  <component :is="cell ? UtilityCell : MorphTile" v-bind="faceProps" :style="{ '--sc': color }" @edit="emit('edit')" @click="onFaceClick">
     <template #decoration><slot name="decoration" /></template>
 
-    <div class="stf-body" @click.stop="$emit('open')">
+    <MorphTileHeader v-if="cell" class="stf-cell-heading" compact-header :title="label" />
+    <span class="stf-body" @click="onBodyClick">
       <span v-if="icon" class="stf-ic" :style="iconStyle" aria-hidden="true"></span>
-      <div class="stf-val">
+      <span class="stf-val">
         <span v-if="pre" class="stf-pre">{{ pre }}</span>
         <span class="stf-num">{{ value }}</span>
         <span v-if="unit" class="stf-unit">{{ unit }}</span>
-      </div>
-      <button v-if="rollable" class="stf-roll" type="button" title="Бросить кубик" @click.stop="$emit('roll')">
+      </span>
+      <button v-if="rollable && !cell" class="stf-roll" type="button" title="Бросить кубик" @click.stop="emit('roll')">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M8 1.2l5.6 3.2v7.2L8 14.8 2.4 11.6V4.4L8 1.2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
           <circle cx="8" cy="8" r="1.1" fill="currentColor" />
@@ -22,21 +18,22 @@
           <circle cx="10.6" cy="9.8" r="0.8" fill="currentColor" />
         </svg>
       </button>
-    </div>
-  </MorphTile>
+    </span>
+  </component>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { MorphTile } from '@sylvieshare/share-ui'
+import { MorphTile, MorphTileHeader } from '@sylvieshare/share-ui'
+import UtilityCell from '@/features/character-editor/components/UtilityCell.vue'
 
-// Uniform face for the desktop utility tiles (AC / initiative / speed / prof-bonus). Rendered both
-// as the surface tile and as the morph window's left column, so the two look identical.
-// The title carries an edit pencil that emits `edit`; clicking the value body emits `open` — both open
-// the morph editor. Tiles flagged `rollable` show a dice button on the right that emits `roll`.
+// Grouped desktop metrics use a single button for their whole cell; standalone tiles and
+// morph previews retain the shared heading and value face.
 const props = defineProps({
   panel: Boolean,
   embedded: Boolean,
+  interactive: { type: Boolean, default: true },
+  active: Boolean,
   label: { type: String, default: '' },
   value: { type: [String, Number], default: '' },
   pre: { type: String, default: '' },     // e.g. '+'
@@ -47,7 +44,19 @@ const props = defineProps({
   showEdit: { type: Boolean, default: false },  // stat tiles open the editor by tapping anywhere — no pencil
   editFade: { type: Boolean, default: false },  // fade the pencil out as the morph opens (driven by `revealed`)
 })
-defineEmits(['edit', 'open', 'roll'])
+const emit = defineEmits(['edit', 'open', 'roll'])
+const cell = computed(() => props.embedded && !props.panel)
+const faceProps = computed(() => cell.value
+  ? { label: props.label, stacked: true, disabled: !props.interactive, active: props.active }
+  : { class: 'stf', compactHeader: true, embedded: props.panel, color: props.color, padding: '0',
+      editLabel: 'Редактировать', title: props.label, showEdit: props.showEdit, editFade: props.editFade })
+
+function onFaceClick(event) { if (cell.value) emit('open', event) }
+function onBodyClick(event) {
+  if (cell.value) return
+  event.stopPropagation()
+  emit('open', event)
+}
 // Recolor the (static-URL) svg via mask + background-color — the icon takes the title's muted colour
 // by default (not the accent), so resting tiles stay neutral.
 const iconStyle = computed(() => ({
@@ -58,6 +67,7 @@ const iconStyle = computed(() => ({
 </script>
 
 <style scoped>
+.stf-cell-heading { pointer-events: none; }
 .stf {
   display: flex;
   flex-direction: column;

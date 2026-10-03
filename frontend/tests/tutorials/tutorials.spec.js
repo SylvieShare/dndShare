@@ -98,7 +98,7 @@ test('settings restart a dismissed tour and Escape records only dismissal', asyn
   await page.keyboard.press('Escape')
   await expect(page.locator('.guided-tour')).toHaveCount(0)
   expect(writes[0].body.status).toBe('dismissed')
-  await page.locator('.sm-tile').click()
+  await page.getByRole('button', { name: 'Меню персонажа', exact: true }).click()
   await page.getByRole('button', { name: 'Пройти обучение снова' }).click()
   await expect(page.locator('.guided-tour__card h2')).toHaveText('Ваш лист персонажа')
 })
