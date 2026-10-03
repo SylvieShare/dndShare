@@ -115,6 +115,7 @@ import { useSuggestStore } from '@/stores/suggest'
 import { useGameContextStore } from '@/stores/gameContext'
 import { collectSuggestIds, getSuggestId, walkFieldsWithPath } from '@/features/handbook/objects/lib/schemaFields'
 import { useHandbookSwipeBack } from '@/features/handbook/composables/useHandbookSwipeBack'
+import { useHandbookTitle } from '@/features/handbook/composables/useHandbookTitle'
 import HandbookLanding from '@/features/handbook/pages/HandbookLanding'
 import HandbookCollectionBar from '@/features/handbook/components/HandbookCollectionBar'
 import HandbookItemList from '@/features/handbook/components/HandbookItemList'
@@ -125,7 +126,6 @@ import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 // ── Router ──────────────────────────────────────────────────────────────────
 const route = useRoute()
 const router = useRouter()
-const pageRouteName = route.name
 
 // ── Stores ──────────────────────────────────────────────────────────────────
 const accountStore = useAccountStore()
@@ -159,6 +159,8 @@ const skipFiltersWatch = ref(false)
 const skipGroupWatch = ref(false)
 let searchTimer = null
 const itemForm = reactive({ open: false, item: null, initialName: '', initialNameEn: '' })
+
+useHandbookTitle({ route, selectedType, selectedItem, sourceVersionId, gameContext: gameContextStore })
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
 const isAuth = computed(() => accountStore.authStatus === 'success')
@@ -412,10 +414,6 @@ function onItemSaved(item) {
 
 
 // ── Watchers ─────────────────────────────────────────────────────────────────
-watch(() => selectedItem.value?.name, name => {
-  if (route.name === pageRouteName) document.title = name || route.meta.title || 'Справочник'
-}, { immediate: true })
-
 watch(searchQ, (val) => {
   if (skipSearchWatch.value) { skipSearchWatch.value = false; return }
   clearTimeout(searchTimer)

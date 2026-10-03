@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const sources = [{ id: 1, name: 'dnd5e', countItems: 45, versions: [{ id: 1, version: '2014' }] }]
+const sources = [{ id: 1, name: 'dnd5e', countItems: 45, versions: [{ id: 1, version: '2014' }, { id: 2, version: '2024' }] }]
 const type = { id: 6, sourceId: 1, name: 'Бестиарий', iconImageUrl: '/static/handbook-types/6-bestiary.png', count: 45, countItems: 45, fields: [] }
 const items = Array.from({ length: 45 }, (_, index) => ({
   id: index + 1,
@@ -33,7 +33,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
     const list = page.locator('.handbook-list')
     const detail = page.locator('.handbook-detail')
     await expect(list.locator('.list-row')).toHaveCount(30, { timeout: 20000 })
-    await expect(page).toHaveTitle('Справочник')
+    await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2014')
     await expect(page.locator('.handbook-col-bar .col-type-name')).toHaveText('Бестиарий')
     await expect(page.locator('.handbook-col-bar .col-type-count')).toHaveText('45')
     const icon = page.locator('.handbook-col-bar .col-type-icon img')
@@ -59,7 +59,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
     await list.locator('.list-row').first().scrollIntoViewIfNeeded()
     await list.locator('.list-row').first().click()
     await expect(detail.locator('h1')).toHaveText('Существо 01')
-    await expect(page).toHaveTitle('Существо 01')
+    await expect(page).toHaveTitle('Существо 01 · D&D 5e · 2014')
     await detail.getByRole('button', { name: 'Описание', exact: true }).click()
 
     if (width <= 760) {
@@ -87,32 +87,57 @@ for (const width of [320, 390, 560, 700, 1280]) {
 
     await page.goBack()
     await expect(page).not.toHaveURL(/item=/)
-    await expect(page).toHaveTitle('Справочник')
+    await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2014')
     await page.goForward()
     await expect(page).toHaveURL(/item=1/)
-    await expect(page).toHaveTitle('Существо 01')
+    await expect(page).toHaveTitle('Существо 01 · D&D 5e · 2014')
 
     if (width <= 760) {
       await page.getByRole('button', { name: width <= 640 ? 'Назад' : 'К списку', exact: true }).click()
       await expect(list).toBeVisible()
       await expect(detail).toBeHidden()
       await expect(page).not.toHaveURL(/item=/)
-      await expect(page).toHaveTitle('Справочник')
+      await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2014')
     } else {
       await homeLink.click()
       await expect(page).toHaveURL(/\/handbook$/)
       await expect(page.locator('.hb-landing')).toBeVisible()
-      await expect(page).toHaveTitle('Справочник')
+      await expect(page).toHaveTitle('Справочник · D&D 5e · 2014')
     }
   })
 }
 
 test('landing uses the global game context without a page system selector', async ({ page }) => {
   await page.goto('/handbook')
+  await expect(page).toHaveTitle('Справочник · D&D 5e · 2014')
   await expect(page.locator('.hb-collection-card')).toHaveCount(1)
   await expect(page.locator('.hb-sidebar')).toHaveCount(0)
   await page.locator('.hb-collection-card').click()
   await expect(page).toHaveURL(/sourceVersionId=1/)
+  await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2014')
+})
+
+test('linked collection and item titles keep their edition independently of the global selection', async ({ page }) => {
+  await page.goto('/handbook?type=6&sourceVersionId=2')
+  await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2024')
+  await expect(page.getByRole('button', { name: 'Игровая система: D&D 5e · 2014', exact: true })).toBeVisible()
+  await page.locator('.handbook-list .list-row').first().click()
+  await expect(page).toHaveTitle('Существо 01 · D&D 5e · 2024')
+  await page.goBack()
+  await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2024')
+  await page.locator('.handbook-col-bar').getByRole('link', { name: 'Справочник', exact: true }).click()
+  await expect(page).toHaveTitle('Справочник · D&D 5e · 2014')
+})
+
+test('landing title follows changes to the global edition', async ({ page }) => {
+  await page.goto('/handbook')
+  await expect(page).toHaveTitle('Справочник · D&D 5e · 2014')
+  await page.getByRole('button', { name: 'Игровая система: D&D 5e · 2014', exact: true }).click()
+  await page.getByRole('menuitemradio', { name: 'D&D 5e · 2024', exact: true }).click()
+  await expect(page).toHaveTitle('Справочник · D&D 5e · 2024')
+  await page.locator('.hb-collection-card').click()
+  await expect(page).toHaveURL(/sourceVersionId=2/)
+  await expect(page).toHaveTitle('Бестиарий · D&D 5e · 2024')
 })
 
 test.describe('touch scrolling', () => {
@@ -121,7 +146,7 @@ test.describe('touch scrolling', () => {
   test('vertical touch moves the detail without navigating back', async ({ page }) => {
     await page.goto('/handbook?type=6&item=1')
     const detail = page.locator('.handbook-detail')
-    await expect(page).toHaveTitle('Существо 01')
+    await expect(page).toHaveTitle('Существо 01 · D&D 5e · 2014')
     await detail.getByRole('button', { name: 'Описание', exact: true }).click()
     const cdp = await page.context().newCDPSession(page)
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 180, y: 650 }] })
