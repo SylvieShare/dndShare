@@ -202,7 +202,7 @@ carry the pointer.
 `ChapterGraphToolbar` is the semantic session header with a `--surface` background,
 `--border-strong` bottom divider and a short downward shadow, not a `BaseTile`.
 The desktop application sidebar uses the same surface and a short rightward
-shadow on the session route, in both expanded and collapsed states. Together
+shadow throughout the application, in both expanded and collapsed states. Together
 they separate navigation from the darker dotted workspace without extra margins.
 `SessionToolbarIdentity` owns the editable name,
 status menu and arc switcher; `SessionToolbarMusic` owns the compact player and

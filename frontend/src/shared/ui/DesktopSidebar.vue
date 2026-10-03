@@ -3,7 +3,7 @@
     class="desktop-sidebar"
     storage-key="dndshare-desktop-sidebar-expanded"
     :default-expanded="true"
-    :elevated="route.name === 'Session'"
+    elevated
     :mobile-breakpoint="640"
     aria-label="Основная навигация"
     expand-label="Раскрыть панель"
