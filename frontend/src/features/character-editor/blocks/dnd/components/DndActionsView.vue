@@ -35,6 +35,7 @@
               'action-menu-source--open': open,
             }"
           >
+            <TileAccentStrip color="var(--dav-tone)" />
             <span class="dav-action-media">
               <span class="dav-action-icon" aria-hidden="true">
                 <ItemIcon v-if="action.item" :item="action.item" :size="34" :fallback-to-type="false" />
@@ -159,7 +160,7 @@ import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
 import RowActionSeparator from '@/shared/ui/RowActionSeparator.vue'
-import { MorphTile } from '@sylvieshare/share-ui'
+import { MorphTile, TileAccentStrip } from '@sylvieshare/share-ui'
 
 const props = defineProps({
   groups: { type: Array, default: () => [] },
@@ -270,7 +271,7 @@ function hideActionTooltip() {
 .dav-group--free { --dav-tone: var(--success); }
 .dav-group-head { width: 100%; display: grid; grid-template-columns: auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
-.dav-action { display: flow-root; padding: 10px 2px; cursor: default; transition: background-color .12s; }
+.dav-action { display: flow-root; position: relative; padding: 10px 2px 10px 12px; cursor: default; transition: background-color .12s; }
 .dav-action-media { float: left; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 36px; margin: 0 9px 2px 0; }
 .dav-action--clickable { cursor: pointer; }
 .dav-action--clickable:hover, .dav-action.action-menu-source--open { background: color-mix(in srgb, var(--dav-tone) 5%, transparent); }

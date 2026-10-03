@@ -147,6 +147,12 @@
 .picker-add-btn:hover:not(:disabled) { opacity: 0.85; }
 .picker-add-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
+.picker-add-btn--quantity {
+  width: 160px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 .picker-create-btn {
   background: none;
   border: 1px solid color-mix(in srgb, var(--text-on-accent) 12%, transparent);

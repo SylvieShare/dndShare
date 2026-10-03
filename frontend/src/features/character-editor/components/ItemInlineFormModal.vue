@@ -11,6 +11,11 @@
       <FormTextarea v-model:value="desc" aria-label="Описание" placeholder="Описание..." :rows="4" />
     </FormField>
 
+    <FormField v-if="!baseItem" label="Вес, фунт." hint="За один предмет" vertical>
+      <FormTextInput v-model:value="weight" type="number" min="0" step="any" aria-label="Вес, фунт."
+        placeholder="Не указан" :invalid="!weightValid" :aria-invalid="!weightValid" @enter="submit" />
+    </FormField>
+
     <ItemInstanceParamsFields
       :fields="instanceFields"
       :model-value="params"
@@ -32,7 +37,7 @@
     <template #footer>
       <FormActionButtons
         :submit-text="entry ? 'Сохранить' : 'Создать'"
-        :can-submit="!!name.trim()"
+        :can-submit="!!name.trim() && weightValid"
         @submit="submit"
         @cancel="$emit('close')"
       />
@@ -41,7 +46,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { FormActionButtons } from '@sylvieshare/share-ui'
 import { FormField } from '@sylvieshare/share-ui'
@@ -65,16 +70,20 @@ const ov = props.entry?.override || {}
 const fallback = props.baseItem?.data || {}
 const name = ref(ov.name ?? props.baseItem?.name ?? '')
 const desc = ref(ov.desc ?? fallback.desc ?? '')
+const weight = ref(ov.weight ?? fallback.weight ?? '')
+const parsedWeight = computed(() => weight.value === '' ? null : Number(weight.value))
+const weightValid = computed(() => parsedWeight.value == null || Number.isFinite(parsedWeight.value) && parsedWeight.value >= 0)
 const consumable = ref(!!(ov.consumable ?? fallback.consumable ?? false))
 const iconPresetId = ref(presetId(props.entry?.icon_preset_id))
 const params = ref(normalizeInstanceParams(props.entry?.params, props.instanceFields, { defaults: true }))
 
 function submit() {
   const trimmed = name.value.trim()
-  if (!trimmed) return
+  if (!trimmed || !weightValid.value) return
   emit('save', {
     name: trimmed,
     desc: desc.value,
+    weight: parsedWeight.value,
     consumable: consumable.value,
     params: params.value,
     iconPresetId: iconPresetId.value,

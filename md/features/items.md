@@ -175,6 +175,9 @@ wizard reuse `FeatListItem` and open the standard reference modal.
   selecting a row replaces the list with the full detail, while an explicit
   `К списку` action or a right swipe returns to the results. Type tabs are
   hidden in detail view, and the quantity/confirmation footer remains fixed;
+- when quantity selection is enabled, the picker confirmation button reserves
+  a fixed width for `+ Добавить ×999` on desktop and mobile. Changing the count
+  does not resize the button or shift the adjacent quantity controls;
 - details open through the handbook `ItemViewModal`/modal stack; `ItemViewModal`
   uses the lower-level `AppModal` because the shared item header is its only
   header, and forwards an optional action slot into a fixed footer, so

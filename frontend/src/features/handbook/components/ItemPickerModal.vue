@@ -105,6 +105,7 @@
           </div>
           <button
             class="picker-add-btn"
+            :class="{ 'picker-add-btn--quantity': allowQuantity }"
             :disabled="!selectedItem || !selectedEligibility.eligible"
             @click="pick"
           >

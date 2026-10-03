@@ -6,7 +6,7 @@ export function useInventoryTooltip() {
     if (!display) return
     const item = display.base
       ? { ...display.base, data: { ...display.base.data, cost: display.cost || null, weight: display.weight, purchase_quantity: 1 } }
-      : { name: display.name, data: { desc: display.desc, consumable: display.consumable } }
+      : { name: display.name, data: { desc: display.desc, consumable: display.consumable, weight: display.weight } }
     Object.assign(tooltip, { visible: true, anchor: event.currentTarget, name: display.name, desc: display.desc || '', item })
   }
   function hideTooltip() { tooltip.visible = false; tooltip.anchor = null }

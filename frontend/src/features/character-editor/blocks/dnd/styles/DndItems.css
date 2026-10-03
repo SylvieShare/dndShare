@@ -9,7 +9,6 @@
 .di-section-name-editable { cursor: text; }
 .di-section-name-editable:hover { color: var(--text-1); }
 .di-section-rename { background: var(--surface-raised); border: 1px solid var(--accent); border-radius: 6px; color: var(--text-1); font: inherit; font-size: 14px; font-weight: 700; padding: 3px 8px; outline: none; min-width: 0; max-width: 220px; }
-.di-section-count { color: var(--text-muted); font-size: 12px; font-weight: 700; }
 .di-section-line { flex: 1; min-width: 20px; height: 1px; background: color-mix(in srgb, var(--text-muted) 42%, transparent); }
 .di-section-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
 .di-section-weight { display: inline-flex; align-items: center; gap: 5px; color: var(--text-muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
