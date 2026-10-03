@@ -20,8 +20,10 @@ describe('D&D desktop sheet schema', () => {
     for (const profile of Object.values(schema.layouts)) {
       for (const tab of profile.tabs) expect(findNode(tab.content, node => node.ref === 'counters')).toBeNull()
       expect(profile.tabs.some(tab => findNode(tab.content, node => node.ref === 'items'))).toBe(true)
-      expect(profile.tabs.some(tab => findNode(tab.content, node => node.ref === 'money'))).toBe(true)
+      expect(profile.tabs.some(tab => findNode(tab.content, node => node.ref === 'money'))).toBe(false)
     }
+    expect(schema.blocks.money).toBeUndefined()
+    expect(schema.blocks.items.content.wallet).toEqual({ value_id: 'money', suggest_type_id: 17 })
   })
 
   it('uses one desktop row with stats, main content and utility columns', () => {

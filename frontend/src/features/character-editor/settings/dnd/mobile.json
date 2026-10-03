@@ -127,11 +127,6 @@
             "kind": "block"
           },
           {
-            "ref": "money",
-            "kind": "block",
-            "title": "Кошелек"
-          },
-          {
             "ref": "items",
             "kind": "block"
           }

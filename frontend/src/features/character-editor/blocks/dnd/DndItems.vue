@@ -13,23 +13,24 @@
 
     <template v-if="!contentHidden">
       <p v-if="catalogError" role="alert">{{ catalogError }} <ActionButton variant="quiet" @click="reloadCatalog">Повторить</ActionButton></p>
-      <InventorySkeleton v-if="loading" :sections="allSections" />
-
-      <BaseTile v-else class="di-inventory">
-        <section v-for="section in allSections" :key="section.id" class="di-space">
-          <div class="di-section-head">
-            <input v-if="canManage && renamingId === section.id" ref="renameInputs" class="di-section-rename" :value="section.name"
-              @blur="finishRename(section.id, $event.target.value)" @keydown.enter.prevent="finishRename(section.id, $event.target.value)" @keydown.escape.prevent="renamingId = null" />
-            <button v-else class="di-section-name" :class="{ 'di-section-name-editable': canManage }" :disabled="!canManage"
-              :title="canManage ? 'Переименовать' : ''" @click="canManage && startRename(section.id)">{{ section.name }}</button>
-            <span class="di-section-line" aria-hidden="true"></span>
-            <div class="di-section-actions">
-              <span class="di-section-weight" role="img" :aria-label="`Суммарный вес: ${weightFormatter.format(section.weight)} фунт.`">
-                <Weight :size="14" aria-hidden="true" />{{ weightFormatter.format(section.weight) }} фунт.
-              </span>
-              <template v-if="canManage && model.sections.length > 1">
-                <span class="di-section-divider" aria-hidden="true"></span>
-                <RemoveButton icon="trash" label="Удалить секцию" @click="askDeleteSection(section)" />
+      <BaseTile class="di-inventory">
+        <InventoryWallet v-if="block.content?.wallet" :wallet="block.content.wallet" />
+        <InventorySkeleton v-if="loading" :sections="allSections" />
+        <template v-else>
+          <section v-for="section in allSections" :key="section.id" class="di-space">
+            <div class="di-section-head">
+              <input v-if="canManage && renamingId === section.id" ref="renameInputs" class="di-section-rename" :value="section.name"
+                @blur="finishRename(section.id, $event.target.value)" @keydown.enter.prevent="finishRename(section.id, $event.target.value)" @keydown.escape.prevent="renamingId = null" />
+              <button v-else class="di-section-name" :class="{ 'di-section-name-editable': canManage }" :disabled="!canManage"
+                :title="canManage ? 'Переименовать' : ''" @click="canManage && startRename(section.id)">{{ section.name }}</button>
+              <span class="di-section-line" aria-hidden="true"></span>
+              <div class="di-section-actions">
+                <span class="di-section-weight" role="img" :aria-label="`Суммарный вес: ${weightFormatter.format(section.weight)} фунт.`">
+                  <Weight :size="14" aria-hidden="true" />{{ weightFormatter.format(section.weight) }} фунт.
+                </span>
+                <template v-if="canManage && model.sections.length > 1">
+                  <span class="di-section-divider" aria-hidden="true"></span>
+                  <RemoveButton icon="trash" label="Удалить секцию" @click="askDeleteSection(section)" />
               </template>
             </div>
           </div>
@@ -42,6 +43,7 @@
           </InventoryBagGrid>
         </section>
         <div v-if="canManage" class="di-add-section-row"><AddButton block label="Добавить секцию" @click="addSection" /></div>
+        </template>
       </BaseTile>
     </template>
 
@@ -97,6 +99,7 @@
 <script setup>
 import { useInventoryRowActions } from './composables/useInventoryRowActions'
 import InventorySkeleton from './components/InventorySkeleton.vue'
+import InventoryWallet from './components/InventoryWallet.vue'
 import InventoryItemRow from './components/InventoryItemRow.vue'
 import MagicItemInstanceModal from './components/MagicItemInstanceModal.vue'
 import { AddButton, ActionButton } from '@sylvieshare/share-ui'

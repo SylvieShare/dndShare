@@ -226,15 +226,8 @@
           "label": "Оружие"
         }
       ],
-      "tool_type_id": 14
-    }
-  },
-  "money": {
-    "id": "money",
-    "type": "BLOCK_MONEY",
-    "title": "Кошелек",
-    "content": {
-      "suggest_type_id": 17
+      "tool_type_id": 14,
+      "wallet": { "value_id": "money", "suggest_type_id": 17 }
     }
   },
   "notes": {
