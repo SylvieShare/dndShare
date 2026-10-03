@@ -79,7 +79,7 @@ for (const mobile of [false, true]) test(`session status ${mobile ? 'mobile' : '
   }
 })
 test('seen device stays quiet, another device starts; leaving cancels without recording completion', async ({ page }) => {
-  const writes = await mockApi(page, 'player', [{ flowId: 'character', sourceKey: 'edition:1', device: 'desktop', revision: TUTORIAL_REVISION, status: 'completed' }])
+  const writes = await mockApi(page, 'player', [{ flowId: 'character', sourceKey: 'edition:1', device: 'desktop', revision: TUTORIAL_REVISION - 1, status: 'completed' }])
   await page.setViewportSize({ width: 1400, height: 1000 })
   await page.goto('/tests/tutorials/fixtures/tutorials.html')
   await expect(page.locator('[data-tutorial="character-hp"]')).toBeVisible()
@@ -90,6 +90,34 @@ test('seen device stays quiet, another device starts; leaving cancels without re
   await expect(page.locator('.guided-tour')).toHaveCount(0)
   expect(writes).toEqual([])
 })
+
+for (const mobile of [false, true]) {
+  for (const flowId of ['character', 'session-player', 'session-dm']) {
+    for (const status of ['completed', 'dismissed']) {
+      test(`${flowId} ${mobile ? 'mobile' : 'desktop'} preserves older ${status} progress and allows manual replay`, async ({ page }) => {
+        await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1400, height: 1000 })
+        const isCharacter = flowId === 'character'
+        const role = flowId === 'session-dm' ? 'dm' : 'player'
+        const writes = await mockApi(page, role, [{ flowId, sourceKey: isCharacter ? 'edition:1' : 'source:1',
+          device: mobile ? 'mobile' : 'desktop', revision: TUTORIAL_REVISION - 1, status }])
+        await page.goto(`/tests/tutorials/fixtures/tutorials.html${isCharacter ? '' : '?page=/sessions/test'}`)
+        const menuName = isCharacter ? (mobile ? 'Меню' : 'Меню персонажа') : 'Настройки'
+        const menu = page.getByRole('button', { name: menuName, exact: true })
+        await expect(menu).toBeVisible()
+        await menu.click()
+        await expect(page.locator('.guided-tour')).toHaveCount(0)
+        expect(writes).toEqual([])
+        await page.getByRole('button', { name: 'Пройти обучение снова', exact: true }).click()
+        await expect(page.locator('.guided-tour__card')).toBeVisible()
+        await page.locator('.guided-tour').getByRole('button', { name: 'Пропустить', exact: true }).click()
+        await expect(page.locator('.guided-tour')).toHaveCount(0)
+        expect(writes).toEqual([{ path: '/api/account/tutorials', body: { flowId,
+          sourceKey: isCharacter ? 'edition:1' : 'source:1', device: mobile ? 'mobile' : 'desktop',
+          revision: TUTORIAL_REVISION, status: 'dismissed' } }])
+      })
+    }
+  }
+}
 
 test('settings restart a dismissed tour and Escape records only dismissal', async ({ page }) => {
   const writes = await mockApi(page)

@@ -4,5 +4,5 @@ export function tutorialKey(entry) {
   return JSON.stringify([entry.flowId, entry.sourceKey, entry.device])
 }
 export function hasSeenTutorial(entries, context) {
-  return entries.some(entry => tutorialKey(entry) === tutorialKey(context) && entry.revision >= context.revision)
+  return entries.some(entry => tutorialKey(entry) === tutorialKey(context))
 }
