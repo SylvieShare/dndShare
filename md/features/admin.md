@@ -25,7 +25,7 @@
 пароля, просмотра/удаления logs и статистики. Опасные операции подтверждаются
 через общий `ConfirmDialog`; browser confirm/alert не используется.
 
-## Jobs
+## Админ-джобы
 
 Реестр `internal/web/jobs.go` получает jobs через `registerJob(code, name,
 description, handler)`. Реализации разделены по `jobs_handlers.go` и
@@ -49,3 +49,7 @@ classes нет. Такие изменения выполняются идемп�
 2. зарегистрировать его в `init()` через `registerJob`;
 3. не дублировать migration, которую должен выполнять startup schema;
 4. проверить cancellation и отображение result/error в `AdminJobs.vue`.
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

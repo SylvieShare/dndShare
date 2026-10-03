@@ -103,3 +103,47 @@ DM редактирует всегда; игрок — при включённо
 
 Контракты: [API](../api.md), [БД](../database.md),
 [общая frontend-архитектура](../frontend.md).
+
+## Дневник внутри листа персонажа
+
+The `Дневник` sheet tab contains the shared `JournalWorkspace` (including quest
+entries) and notes. The separate quests block is no longer in the default layouts;
+its existing values are preserved for custom schemas.
+Both desktop and mobile use the same vertical `JournalTimeline`; there is no
+separate journal window or canvas. Custom diary blocks render this workspace too.
+Entries remain in journal tables rather than character JSON.
+
+The source switch (`Личный` / `Сессии`) appears in the header only when a session
+journal is available. Without one there is no source selector or campaign hint.
+The owner's first visit initializes a missing personal journal automatically,
+without asking for a name; an existing selected journal is left untouched.
+Each character has at most one personal journal.
+Horizontal section tabs show one section at a time. Full event cards grow with
+their contents, newest first, with a connecting line through their centers.
+Creation and section/order controls sit at the top right of the event area.
+There is no zoom, layout action, or detail side panel. Filters sit above the list.
+
+Creation asks only for a type, then opens a whole-entry draft. One header pencil
+edits all fields, dialogue lines, combatants and quest objectives. Save is atomic,
+cancel leaves the original untouched, and existing types are immutable.
+The header-only entry type is available for titled separators. Every card uses
+a type-colored frame and an icon beside the title, without a background watermark.
+Dialogue voices retain scenario colors and stack speaker above text on mobile.
+Battle rows use handbook artwork with a single batched lookup per section.
+Source and audit are hidden behind an information icon beside edit/delete in the header.
+
+Desktop events can be dragged by their header or moved with keyboard arrows.
+On touch-capable devices headers permit native vertical scrolling; the order
+control reveals explicit up/down buttons instead. Reordering sends both the
+expected and desired ID order, and stale/concurrent moves return 409.
+It does not rewrite content, authorship, or the graph stored by the former canvas.
+That graph is preserved in the database but is not drawn or edited by the UI.
+
+Inline drafts keep save/cancel controls and remain on failure; content saves
+require `expectedChangedAt`. Polling and source/section navigation pause during
+editing and dragging. The DM always edits; players require `playersCanEdit`.
+Only the DM's session-page header shows that setting. See [Journals](journals.md).
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

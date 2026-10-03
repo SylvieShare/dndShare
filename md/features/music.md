@@ -114,3 +114,7 @@ appended as current product behavior, not treated as an old data format.
 
 Загрузка библиотеки отделена от буферизации трека: до ответа виден LoadingState, при ошибке доступен повтор. MusicLoadingIndicator — тонкий адаптер общего LoadingIndicator с музыкальной подписью и размером кнопки.
 Общий контракт: [состояния загрузки](../loading-states.md).
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

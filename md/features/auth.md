@@ -26,3 +26,7 @@ its final create action; `UserBoxFormAuth` opens the regular login modal in
 response and explains that login or registration is required to create the
 character. Only the chrome matching the current 640px breakpoint is mounted, so
 the mobile header and desktop sidebar cannot open duplicate auth modals.
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md) · [API: авторизация и аккаунт](../api/account.md) · [БД: аккаунты, карты и инфраструктура](../database/platform.md)

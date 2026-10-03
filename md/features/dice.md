@@ -66,3 +66,7 @@ stretch full-width. It renders an accent-colored pill that animates `transform`
 and `width` to match the active button. Measurement uses each button's
 `offsetLeft/offsetWidth` and re-runs on `modelValue` change and through a
 `ResizeObserver` on the root.
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

@@ -1,5 +1,16 @@
 # Handbook
 
+## Содержание
+
+- [Скрытие материалов](#скрытие-материалов)
+- [Model](#model)
+- [Publication scope](#publication-scope)
+- [Current field contracts](#current-field-contracts)
+- [UI](#ui)
+- [Schemas](#schemas)
+- [MCP](#mcp)
+- [Версии 2014 и 2024](#версии-2014-и-2024)
+
 ## Скрытие материалов
 
 Списки и поиск исключают items с `hidden=true` для всех читателей, включая
@@ -8,7 +19,6 @@
 Карточка по прямой ссылке остаётся доступна для чтения и редактирования с обычными
 правами. После сохранения скрытая запись сразу исчезает из текущего списка.
 Магус и Шаман временно скрыты до наполнения правил и фиксации источников.
-
 
 Композиция форм всех коллекций и результаты их проверки описаны в
 [редакторе справочников](catalogue-editor.md). Черты используют общий редактор
@@ -299,7 +309,7 @@ The public task-oriented player guide is a separate top-level section at
 `/rules`, not a handbook child. The two features share only deliberate domain
 data: short reusable combat actions live in suggest type 24, and the rules view
 filters that dictionary to system-owned canonical codes. See
-`md/features/player-rules.md` for the content, search, routing, licensing and
+[player-rules](player-rules.md) for the content, search, routing, licensing and
 visual contracts.
 
 ### Редактор способностей
@@ -386,22 +396,22 @@ proficiency: PHB permits owning equipment the character cannot use effectively.
 Type 2 is ordinary adventuring gear,
 equipment packs and tools; magical armor remains a magic item rather than being
 moved by name. The specialized presentation and image contract is documented
-in `md/features/armor.md`.
+in [armor](armor.md).
 Weapon type 1 stores its acceptable proficiency alternatives in
 `required_weapon_proficiencies`, a suggest-type-4 array with `match:any` OR
 semantics. The specialized presentation, image contract and unarmed-strike
-exception are documented in `md/features/weapons.md`.
+exception are documented in [weapons](weapons.md).
 Transport type 13 stores structured movement, propulsion, capacity and optional
 vehicle combat data. Mount rows link to their type-6 bestiary creatures rather
 than copying stat blocks. The schema, specialized presentation and image rules
-are documented in `md/features/transport.md`; the PHB 2014 starting-shop audit
-is documented in `md/features/starting-shop.md`.
+are documented in [transport](transport.md); the PHB 2014 starting-shop audit
+is documented in [starting-shop](starting-shop.md).
 
 ## MCP
 
 Handbook MCP read/write tools mirror the current HTTP/store model. Create/update
 must use current field names and item ids. There are no aliases for historical
-field names. See `md/features/mcp.md`.
+field names. See [mcp](mcp.md).
 
 Иконка и обложка редактируются в `ItemEditModal` для всех типов объектов.
 Файлы выбираются с локальным предпросмотром, сохраняются через item media API;
@@ -420,7 +430,6 @@ field names. See `md/features/mcp.md`.
 при выборе ссылок внутри редактора этот режим выключен. Полный контракт —
 в [описании магических предметов](magic-items.md#категории-основы-и-карточка).
 
-
 Class abilities may use `selection_parent_id` to mark options obtained only by
 selection. `ability_selection` configures the parent count/replacement progression;
 `selection_requirements` contains spell and other-feature-choice prerequisites.
@@ -435,3 +444,7 @@ The 32 base [Warlock invocations](warlock-invocations.md) are authored through M
 редакциям и создаёт отдельный вариант для адаптации. Поиск и счётчики применяют
 единый SQL scope до пагинации. Прежние версии можно показать для чтения, но
 добавление в лист требует native/compatible. [Модель и покрытие](rules-editions.md).
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md) · [API: справочник и MCP](../api/handbook.md) · [БД: справочник](../database/handbook.md) · [Компоненты справочника и создания](../frontend/catalogue-components.md)

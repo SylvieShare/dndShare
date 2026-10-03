@@ -20,3 +20,7 @@ For Go, keep transport/dispatch in the feature entry file and move domain
 handlers, validation, payload construction and data access into focused sibling
 files. A split must preserve one public feature boundary rather than creating
 parallel implementations or compatibility fallbacks.
+
+## Связанные страницы
+
+[Оглавление wiki](README.md)

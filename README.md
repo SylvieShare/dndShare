@@ -13,12 +13,15 @@ frontend, PostgreSQL и S3-compatible object storage.
 
 ## Документация и wiki
 
-- `md/` — актуальная wiki проекта: общая frontend-архитектура находится в
-  `md/frontend.md`, CSS-токены — в `md/css-variables.md`, документация фич — в
-  `md/features/*`.
-- `md/api.md`, `md/database.md`, `md/class-automation-audit.md`, `md/spell-automation-audit.md`, `md/multiclass-spellcasting-audit.md` и `md/deploy.md` описывают контракт API, схему
-  БД и процесс деплоя; лимиты размера исходных файлов описаны в
-  `md/file-size-rules.md`.
+- [Оглавление wiki](md/README.md) — точка входа по задачам и предметным областям.
+  [Архитектура](md/architecture.md), [frontend](md/frontend.md),
+  [HTTP API](md/api.md), [БД](md/database.md) и страницы фич в `md/features/`
+  описывают реализованное состояние; крупные темы имеют собственные подразделы.
+- [Деплой](md/deploy.md) описывает выпуск и окружение,
+  [лимиты файлов](md/file-size-rules.md) — границы реализации,
+  [сопровождение wiki](md/documentation.md) — структуру, ссылки и проверку
+  `python3 scripts/check-wiki.py`. Датированные аудиты и измерения отделены от
+  текущих контрактов; предложения находятся в `plans/`.
 - При любом изменении архитектуры, поведения, UX, API, схемы или формата данных
   нужно проверить связанные страницы `md/` и актуализировать их в том же
   коммите. Изменение не считается завершённым, если wiki описывает прежнее
@@ -29,16 +32,16 @@ frontend, PostgreSQL и S3-compatible object storage.
   примеры.
 - При изменениях листа персонажа и сессии проверять и обновлять соответствующие
   сценарии обучения для desktop/mobile и ролей в том же изменении. Стабильные
-  цели, UI-действия, версия и проверки описаны в `md/features/tutorials.md`.
+  цели, UI-действия, версия и проверки описаны в [обучении](md/features/tutorials.md).
 - Общие frontend-компоненты и правила выбора между ними документируются в
-  `md/frontend.md`. Новый локальный аналог общего компонента допустим только
+  [каталоге UI-компонентов](md/frontend/components.md). Новый локальный аналог общего компонента допустим только
   при отдельной UX-причине, которая отражена в документации.
 - Задача в DnD Share разрешает без отдельного согласования редактировать,
   проверять, выпускать и обновлять соседний `../share-ui`, если общее изменение
   необходимо для её завершения. Не копировать примитив и не обходить нехватку
   API локальным базовым CSS. Полный процесс и границы разрешения — в
   [maintainer-runbook share-ui](https://github.com/SylvieShare/share-ui/blob/main/MAINTAINING.md),
-  consumer-правила — в `md/frontend.md`.
+  consumer-правила — в [сопровождении share-ui](md/frontend/share-ui.md).
 
 ## Стек
 
@@ -169,6 +172,7 @@ Vite работает на `:5173` и проксирует `/api` и `/mcp` на
 ## Проверки
 
 ```bash
+python3 scripts/check-wiki.py
 GOCACHE=/private/tmp/dndshare-go-cache go test ./...
 GOCACHE=/private/tmp/dndshare-go-cache go build ./...
 GOCACHE=/private/tmp/dndshare-go-cache go vet ./...
@@ -184,7 +188,8 @@ push или deploy не нужно.
 
 1. Проверить backend и затронутые frontend-тесты; для frontend также выполнить
    production build.
-2. Проверить и при необходимости обновить связанную wiki в `md/`.
+2. Проверить и при необходимости обновить связанную wiki в `md/`;
+   выполнить `python3 scripts/check-wiki.py`.
 3. Выполнить `git add -A`, создать содержательный commit с сообщением на
    русском и отправить `git push origin main`. SSH-ключ уже задан в
    `core.sshCommand`.

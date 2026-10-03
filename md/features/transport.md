@@ -59,3 +59,7 @@ Every system transport row owns a unique icon and cover pair.
 Generate at a larger size, trim and center transparent icon bounds with a common
 safe margin, then downsample. Install system images only through MCP
 `handbook_item_set_system_image`; generated binaries never enter the repository.
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

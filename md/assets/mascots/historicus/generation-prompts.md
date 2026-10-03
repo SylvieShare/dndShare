@@ -33,7 +33,6 @@ Essential in EVERY emotion: weathered tan face, brown eyes under heavy lids, dis
 Full figure including all hair, boots, hands and props with comfortable margins, portrait canvas, single character, plain uniform warm ivory opaque background. No lettering, musical notes, UI, frame, checkerboard, watermark or other characters. Build this pose independently from canonical references, not from another variant.
 SCENE: Seated casually on a simple low wooden stool, elbows loosely resting on thighs, one hand open in a small conversational gesture, the other relaxed on his knee. No instrument or bow in this scene. His back and shoulders soften with exhaustion; a small genuine warm smile lifts his cheeks and deepens crow's feet, tired eyes gently narrowed but looking toward a companion off-frame. Joy and relief coexist with unmistakable weariness, not a flashy laugh or toothy grin, not depression. Keep heavy eye bags and wrinkled weathered face. Both boots planted visibly, relaxed full-body pose, cloak draped around stool.
 
-
 ## Промпт канонического референса
 
 # Историкус — иконка v3
@@ -49,7 +48,6 @@ The current icon makes him look too young, handsome, immaculately groomed and ai
 Retain the first image's head-and-collar composition, three-quarter turn towards the viewer's right, human rounded ears, recognizable facial structure, gray streak placement, plum garment and ivory shirt. No accessories, lute or hands in this head icon. Match the THIRD image's controlled 2D illustrated mascot rendering: decisive deep plum outer contour, readable compact silhouette, limited flat painted shading planes, selective fine interior marks. Convey age through STRUCTURE and a few purposeful creases, not by covering the image in hatching, scratches, grain or photorealistic pores. Less geometric beauty-face perfection. The result must work as a 64 px avatar while preserving character at full size.
 
 Single centered head icon, square canvas, comfortable small margins around all hair, plain uniform warm ivory opaque background. No circle, badge, frame, lettering, watermark, decorative objects, checkerboard or grid.
-
 
 ## Промпт канонического референса
 
@@ -69,3 +67,6 @@ Instrument: a clearly recognizable wooden Renaissance bowed VIOL (viola da gamba
 
 Detailed controlled 2D fantasy render, clean deep plum contours, selective facial creases and stubble detail, matte painted shading planes, visual density consistent with Lissara. No photorealism, scribble overlay, excessive tiny textures or chibi proportions. Full body from hair to soles, instrument and bow all inside frame with comfortable margins, portrait 2:3 composition. Single character only on a plain uniform warm ivory opaque background, no scene, lettering, badges, frames, watermarks, checkerboard or grid.
 
+## Связанные страницы
+
+[Оглавление wiki](../../../README.md) · [Маскоты DnD Share](../../../mascot.md)

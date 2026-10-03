@@ -1,11 +1,20 @@
 # Character list and creation
 
+## Содержание
+
+- [Скрытые материалы в создании персонажа](#скрытые-материалы-в-создании-персонажа)
+- [Files](#files)
+- [List contract](#list-contract)
+- [Creation entry points](#creation-entry-points)
+- [Full D&D wizard](#full-dd-wizard)
+- [Navigation and destructive actions](#navigation-and-destructive-actions)
+- [Создание D&D 2024](#создание-dd-2024)
+
 ## Скрытые материалы в создании персонажа
 
 Каталоги визарда используют общие выборки API, которые исключают `item.hidden=true`.
 Магус и Шаман временно недоступны для выбора. Это не удаляет класс из ранее
 созданных персонажей: получение записей по ID продолжает работать.
-
 
 ## Files
 
@@ -438,7 +447,6 @@ implement a second card-to-sheet data resolver.
 Первая загрузка списка и выбора персонажа при вступлении использует общий LoadingState. Ошибка списка останавливает ожидание и предлагает повтор; она не отображается как пустой список.
 Общий контракт: [состояния загрузки](../loading-states.md).
 
-
 Draft persistence uses `usePersistedDraft`: changes are coalesced for 300ms (maximum 1000ms), with a final flush on pagehide, visibility hidden and scope disposal. Clearing after successful creation cancels the pending write so the deleted draft is not restored. `useDndCreateCatalog` owns catalog loading/source changes; `useDndCreateSpells` owns selected and granted spells. The wizard remains the public coordinator.
 
 ## Создание D&D 2024
@@ -497,3 +505,7 @@ and `defenses` for the creation grant. Only the selected variant contributes to
 `values.defenses`; it is visible/editable in the sheet defense block immediately.
 The separate resistance ability is retired from new choices; its ID remains
 resolvable for existing characters. No resistance is added before ancestry selection.
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

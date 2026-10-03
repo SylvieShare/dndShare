@@ -31,3 +31,7 @@ Options API and temporary component-instance proxies are not part of the
 current architecture. If one is discovered, remove it in the same change and
 extract focused composables/children where size justifies it. Do not preserve a
 second implementation path for compatibility.
+
+## Связанные страницы
+
+[Оглавление wiki](README.md)

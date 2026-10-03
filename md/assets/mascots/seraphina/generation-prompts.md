@@ -70,3 +70,7 @@ SCENE: A relaxed open joyful greeting: she stands with her weight on one leg, tu
 ```text
 SCENE: A sudden startled recoil, clearly different from an intentional defensive advance. Weight shifts backward, one foot draws back, torso recoils slightly and shoulders tense. Reflexively raise the shield toward an unseen threat while keeping her entire face above the edge, hold the mace low at her other side with a tight credible grip. Her eyes widen naturally, eyebrows lift and pull together, lips part in a small involuntary breath: readable fear and surprise with adult natural proportions, not comical screaming or oversized cartoon eyes. Hair and cloak lag gently behind the retreat. No monster, no impact, no injury or magic.
 ```
+
+## Связанные страницы
+
+[Оглавление wiki](../../../README.md) · [Маскоты DnD Share](../../../mascot.md)

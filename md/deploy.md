@@ -13,12 +13,13 @@ S3-клиент сохраняет path-style адресацию и исполь
 
 После законченного изменения:
 
-1. `GOCACHE=/private/tmp/dndshare-go-cache go test ./...`
-2. `GOCACHE=/private/tmp/dndshare-go-cache go build ./...`
-3. `GOCACHE=/private/tmp/dndshare-go-cache go vet ./...`
-4. `cd frontend && npm test -- --run && npm run build`
-5. commit в `main` с сообщением по-русски и `git push origin main`.
-6. `./deploy/deploy.sh`.
+1. `python3 scripts/check-wiki.py`.
+2. `GOCACHE=/private/tmp/dndshare-go-cache go test ./...`
+3. `GOCACHE=/private/tmp/dndshare-go-cache go build ./...`
+4. `GOCACHE=/private/tmp/dndshare-go-cache go vet ./...`
+5. `cd frontend && npm test -- --run && npm run build`
+6. commit в `main` с сообщением по-русски и `git push origin main`.
+7. `./deploy/deploy.sh`.
 
 Не оставлять завершённое изменение только локально, если пользователь явно не
 попросил не пушить/не выкатывать.
@@ -169,7 +170,6 @@ go run .
 
 Frontend dev server запускается отдельно через `cd frontend && npm run dev`.
 
-
 ## Статические ресурсы после обновления
 
 Vite создаёт один JS и один CSS с хэшами содержимого и gzip-sidecar для каждого.
@@ -182,3 +182,7 @@ Go сначала читает embedded текущую сборку, затем 
 на единый bundle. Уже открытые вкладки со старой сборкой нужно один раз
 перезагрузить, чтобы перейти на единый JS/CSS; новый deploy не меняет код в памяти
 такой вкладки. HTML отдаётся с `no-cache`, hashed static с `public, max-age=31536000, immutable`; gzip учитывает Accept-Encoding, включая `gzip;q=0`, и выставляет Vary. Неизвестный static возвращает 404, а не HTML приложения. Автоматической очистки старых хэшей нет; объём каталога контролируется при обслуживании сервера.
+
+## Связанные страницы
+
+[Оглавление wiki](README.md)

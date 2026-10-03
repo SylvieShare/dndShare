@@ -23,3 +23,7 @@ When at least one error exists, a circular indicator appears at the bottom-right
 dice notifications. A single occurrence is shown as `!`; multiple occurrences show their count
 (capped visually at `99+`). The circle expands into a scrollable list. Clicking a row opens the
 shared `AppModalFrame` with the complete bounded error text, page URL and timestamp.
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

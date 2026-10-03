@@ -110,7 +110,7 @@ not merely scanned.
 
 Raw values are allowed only where color is data rather than application chrome:
 
-- `shared/ui/colorPresets.js` and stored user/entity colors;
+- Presets owned by share-ui and stored user/entity colors;
 - rarity/album/dice palettes that must emit or persist concrete hex values;
 - the `PotionVial`, `SpellSlotSphere` and `SystemDie` CSS/SVG illustrations;
 - SVG masks and generated screenshot/canvas color parsing where a concrete value is technically required.
@@ -125,7 +125,6 @@ Declared in `App.vue`:
 | --- | --- |
 | `.sheet-tag-chip` / `.sheet-tag-remove` | Shared sheet tag chip. |
 | `.sheet-tile-title` | Small uppercase title at the top of a tile. |
-| `.app-dropdown` | Anchored dropdown chrome using `--popover-bg`, border, radius and shadow tokens. |
 
 ### Колонка игроков сессии
 
@@ -134,3 +133,7 @@ Declared in `App.vue`:
 карточки и колонки. Их сумма `--participant-selection-extra` прибавляется в бою
 к ширине колонки и безопасной области карты истории. Карточка использует ту же
 сумму для скрытия полосы галочки вне боя; ширина имени/HP сохраняется.
+
+## Связанные страницы
+
+[Оглавление wiki](README.md)

@@ -101,3 +101,7 @@ HP через `/application-targets`, включая применение к о�
 `weaponUseId` и d20; произвольные проверки не классифицируются по одной кости.
 Проверки: `TestCanonicalAttackTargets`, `TestSessionAttackMarker`,
 `TestItemTransfersPostgres/session_attack_targets` и `session-saves.spec.js`.
+
+## Связанные страницы
+
+[Оглавление wiki](../README.md)

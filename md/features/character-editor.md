@@ -1,16 +1,41 @@
-# Character editor
+# Лист персонажа: устройство и интерфейс
+
+Точка входа для работы с листом: доступ, реестр шаблонов, раскладка и режимы просмотра. Формат документа, игровые механики и взаимодействие игроков вынесены в тематические страницы.
+
+## Содержание
+
+- [Реестр настроек](#реестр-настроек)
+- [Отрисовка листа](#отрисовка-листа)
+- [Общие UI-требования](#общие-ui-требования)
+- [Форматированные описания](#форматированные-описания)
+- [Проверки](#проверки)
+- [Загрузка листа](#загрузка-листа)
+- [Первое знакомство с листом](#первое-знакомство-с-листом)
+- [Единые плитки и режим просмотра](#единые-плитки-и-режим-просмотра)
+- [Загрузка мобильных панелей и локальных снимков](#загрузка-мобильных-панелей-и-локальных-снимков)
+- [Группы строк на листе персонажа](#группы-строк-на-листе-персонажа)
+
+## Разделы
+
+| Страница | Содержание |
+| --- | --- |
+| [Документ персонажа и сохранение](character-editor/data.md) | Канонический D&D JSON, semantic accessors и синхронизация. Здесь находится основной frontend-контракт документа. |
+| [Создание, уровень и отдых](character-editor/progression.md) | Идентичность, мультиклассирование, создание документа, повышение уровня и восстановление ресурсов. |
+| [Способности, ресурсы и эффекты](character-editor/abilities.md) | Источники способностей, выборы, защитные и производные эффекты, виджеты и действия листа. |
+| [Инвентарь и оружие на листе](character-editor/equipment.md) | Экземпляры вещей, экипировка, вес, оружейные броски и композиция предметных меню. |
+| [Магия и редакция персонажа](character-editor/magic.md) | Меню заклинаний, параметры бросков, цепочки атак и профиль правил редакции. |
+| [Взаимодействие игроков из листа](character-editor/interactions.md) | Передача вещей и денег, чат, вызовы и права участников текущей сессии. |
 
 Лист с выключенной «Публичной ссылкой» доступен владельцу и мастеру сессии,
 в которой участвует персонаж. Доступ мастера действует для неудалённой сессии
 и не зависит от публичности листа; проверка применяется также к чтению версии.
 Другие игроки могут открывать чужой лист только при включённой публичной ссылке.
 
-
 Character editor lives in `frontend/src/features/character-editor`. It is a
 recursive code-schema renderer shared by supported game systems, not a set of
 DB-defined templates.
 
-## Settings registry
+## Реестр настроек
 
 `settings/index.js` maps `char_template.name` to:
 
@@ -24,7 +49,7 @@ assembled by `settings/dnd/schema.js` from `blocks.json`, `desktop.js` (комп
 `mobile.json`; VTM schema is imported as a code resource. Unknown template name
 is rejected. DB template schema, create form and path maps do not exist.
 
-## Rendering
+## Отрисовка листа
 
 `ViewCharacter.vue` owns page orchestration. `useCharacterData` loads the
 character, resolves setting schema/accessors, exposes `charCtx`, sessions,
@@ -223,7 +248,7 @@ editor directly for an owner. The larger condition icons are frameless
 and show the condition description on hover. Empty and zero values render no placeholder.
 Heroic inspiration is stored as the boolean `values.inspiration`.
 
-## Shared UI requirements
+## Общие UI-требования
 
 General-purpose labels, text, number, textarea and action rows use
 the form primitives exported by `@sylvieshare/share-ui`; rule-specific
@@ -234,7 +259,7 @@ close button and mobile handle remain fixed while the body scrolls. Direct
 `ConfirmDialog` and `TextPromptDialog`. Item detail uses
 `ItemViewModal`, formatted descriptions use `InputDescription`/`RichContent`,
 sortable collections use `useSortable`. Full selection rules are documented in
-`md/frontend.md`.
+[frontend](../frontend.md).
 
 Spellbook settings use `DndSpellbookSettingsModal`; both character settings
 entry points reuse `ContentSourcesModal`. The wizard and character settings use
@@ -247,821 +272,12 @@ independent `features/handbook` components. Character-specific item actions are
 supplied through the detail modal footer instead of being implemented by the
 handbook renderer.
 
-## Canonical D&D document
-
-The current shape under `data.values` is:
-
-- identity: `name`, `race/subrace {id,name}`, `classes
-  [{id,name,level,subclass}]`, `ava {url,upload_id?}`;
-- level: `lvl {level,exp}`;
-- ability: `STR..CHA {value:{base,bonuses},save_up,save_bonuses,
-  check_roll_mode?,save_roll_mode?,skills}`; навык может хранить `roll_mode`.
-  Отсутствующий режим или `auto` использует эффекты экипировки, остальные
-  значения (`normal`, `advantage`, `disadvantage`) являются явным
-  переопределением. В заголовке карточки спасбросок отмечен текстом «спас»
-  display-шрифтом. Наведение на любую часть строки навыка через 450 мс открывает
-  общую подсказку с описанием, раскладкой бонуса (характеристика,
-  владение/мастерство, ручные и автоматические источники) и итогом. Подсказка
-  плавно проявляется, заголовок отделён от содержимого, а подписи бонусов и их
-  значения выровнены справа по стабильной числовой колонке;
-- armor: `{bonuses}` хранит только дополнительные ручные бонусы. Базовый КД,
-  Ловкость, щит, помеха Скрытности и владение вычисляются из каталожных
-  доспехов в `items.equipped` и не копируются в персонажа;
-- numeric tile with bonuses: `speed {base,bonuses}` and `initiative
-  {base,bonuses,use_dex}`;
-- HP: `{current,max:{base,bonuses},temp,ds_success,ds_failure,
-  hitDice:[{die,total,used}],history?:[{kind,gain,level?,classId?,className?,classLevel?}]}`;
-  history kinds are `level`, `manual` and `untracked`. History is an audit of base
-  contributions; current bonuses remain in `max.bonuses`. Missing history means
-  no recorded breakdown. Legacy numeric `max` remains read-compatible;
-- spellbook: `{schema_version:2,slot_pools,tabs,grants}`. Each tab is
-  `{key,name,class_item_id,casting_ability,mode,save_bonus,attack_bonus,spells}`;
-  each editable spell is `{key,id,prepared}`. `class_item_id` is unique among
-  non-custom tabs. External readonly spells are independent `grants` with a
-  structured `source` and optional casting overrides. Slot totals and usage are
-  persisted as editable resources, including zero totals and stocks above nine.
-  Loading the sheet or changing class data never recalculates them. Level-up adds
-  only positive per-circle differences between class progression before and after
-  the level, preserving manual totals and spent slots in both pools. Pact Magic
-  circle upgrades remove the old class count from the short-rest pool and grant
-  the new circle; slots exceeding that count stay on the old circle;
-- inventory: `{equipped:[Entry],sections:[{id,name,items:[Entry],slots?:{[uid]:index}}]}`, where an
-  owned item entry is `{uid,item_id,count,params,override}`;
-- potions: type-10 owned entries inside inventory spaces, without a separate
-  value or block; physical tools are type-14 entries in inventory, while tool proficiency remains in
-  `proficiencies['Инструменты']` and is not inferred from ownership;
-- wallet: `{order:[suggestId],amounts:{[suggestId]:number}}`;
-- race/class/feat abilities: arrays of item references/current counters
-  `{id,uid?,count,max_use?,resource_counts?,resource_version?,choices?}`.
-  `choices` maps each stable handbook choice key to the selected values, for
-  example `{style:['defense'],language:[6]}`; selections belong to this owned
-  entry rather than to a hidden class/race rule;
-  `count` stores the available charges of a single resource; `resource_counts`
-  maps stable keys when one ability owns several independent resources.
-  `resource_version` marks counters already migrated to the unified contract.
-  Fixed and derived maxima remain handbook rules rather than copied character
-  data (only `manual_size` stores `max_use` on the entry).
-- shared class resources: `class_resource_counts` maps a stable pool key to its
-  available charges. The class catalogue owns unlock levels, maxima and rest
-  rules. Contributions with the same key form one pool and use the highest
-  class-provided maximum rather than adding together; this implements the
-  shared `channel_divinity` counter for cleric/paladin multiclass characters.
-
-There are no `class/subclass` mirrors, scalar level/stat/hit-dice forms, array
-spellbook, flat inventory or array wallet.
-
-Автоматические источники преимущества и помехи собираются независимо. Если
-хотя бы один источник даёт преимущество и хотя бы один — помеху, они взаимно
-отменяются и итоговый режим становится обычным, независимо от количества
-источников. Явный режим в редакторе остаётся пользовательским переопределением.
-`useCharacterRollEffects` предоставляет единый `register/effects/resolve`
-контракт: доспехи являются встроенным источником, а способности, состояния и
-предметы могут регистрировать дополнительные эффекты без изменения компонентов
-характеристик и инструментов.
-Нажатие на число навыка, спасброска или модификатора характеристики открывает
-меню броска как на карточке, так и в редакторе, на desktop и mobile. Переключатели
-«Помеха» и «Преимущество» расположены в одной строке, как у оружия; ниже —
-«Бросить». При каждом открытии меню они заново получают текущий режим с учётом
-автоматических эффектов и сохранённого переопределения. Если автоматические
-источники взаимно отменяются, отмечены оба переключателя. Оба включённых или
-оба выключенных дают обычный бросок. Выбор действует только на подтверждаемый
-бросок, не сохраняется в листе и сбрасывается после закрытия меню. Бросок
-сохраняет бонусы, цвет, триггеры и корректировки персонажа.
-
-Для инструмента в меню снаряжения доступен бросок с выбором одной из шести
-характеристик; владение инструментом автоматически добавляет бонус мастерства,
-а режим броска использует те же автоматические эффекты характеристики.
-
-Spell preparation applies only to editable spells of level 1 and higher in a
-tab whose mode is `prepared` or `spellbook`. Cantrips never offer preparation
-actions, and stale flags on cantrips or `known` tabs are cleared after handbook
-details load. The row menu toggles preparation; prepared spells receive compact
-accent brackets. Permanently granted archetype/domain spells are not modelled
-as a second preparation flag: they live in the readonly grants list.
-
-An ability, class feature or feat may contribute spells through its handbook
-`granted_spells` contract. Each source creates its own entry in `spells.grants`,
-shown under the slot pools and outside editable tabs. It cannot be reordered,
-prepared or deleted. `source` records the feature displayed to the player;
-`casting_ability` overrides the linked tab ability for this grant, `slotless`
-avoids spending a slot, and `cast_level` fixes a rules-defined cast level.
-Removing an automatic source removes only its grant; an independently learned
-copy in a tab remains. Creation, level-up, live sheet and print use this model.
-
-`internal/store/schema/61_spellbook_tabs.sql` migrates existing rows before HTTP
-start and removes the shared-list/source-settings shape. Components neither
-recognize nor write previous spellbook fields.
-
-## Semantic accessors
-
-`settings/dnd/accessors.js` and the VTM accessors define:
-
-- `displayName`, `avatar`, `subtitle`, `level`;
-- `hp`, `ac`, `initiativeBonus`, states;
-- D&D ability radar;
-- `headerTitle`, `listFields`, HP write path.
-
-Consumers pass `{templateId,data}` and resolve the setting. They must not scan
-block schema or know storage paths independently.
-
-## Identity and multiclass
-
-`DndCharIdentity.vue` edits name and race/subrace in the «Персонаж» modal.
-Classes are read-only `ObjectListItem` rows with handbook icons, subclass names
-and each class's effective level. «Редактировать классы» opens the shared
-`DndClassesEditorModal`, also available from the level block through
-«Изменить уровни вручную». The manual editor shows a warning recommending the
-regular level-up flow: manually changing classes does not replay progression
-or adjust previously granted abilities, HP and spells.
-
-Regular level-up uses the shared `AbilityBonusPicker`, also used by racial
-bonuses in 2014 creation and background bonuses in 2024. Its ability buttons
-show the current and selected resulting scores, disable bonuses exceeding 20
-before selection, and prevent choosing more abilities than the ASI mode permits.
-The existing choice between +2, +1/+1 and a feat remains unchanged.
-
-The editor keeps a separate draft of classes, subclasses and levels. It allows
-replacing, adding and deleting class rows, clearing a subclass, and changing the
-level of any class, including a single class. Changing a class clears its former
-subclass. At least one selected class is required; duplicates, invalid levels
-and a total above 20 block saving. Catalogue load failures keep the draft and
-offer retry. Stored references outside the current catalogue scope are preserved.
-«Сохранить» applies `classes` and their summed `lvl.level` together through the
-sheet's normal save flow, preserving XP. «Отменить», Escape and closing discard
-this draft. Saving this separate editor from «Персонаж» applies classes immediately;
-the identity form's own save/cancel controls affect only name and race/subrace.
-
-Classes use only `values.classes`; each row carries a subclass and level.
-`classEntriesOf` reads this list, `classesLabel` renders it. For an existing single
-class, `lvl.level` controls the effective level; manual saving synchronizes both
-values, including when multiclass is reduced to one class.
-Списки происхождения больше не выводят варианты из базовых каталогов: расы
-загружаются из типа 8, подрасы — из типа 16 с фильтром `data.race`; классы — из
-типа 9, подклассы — из типа 17 с фильтром `data.class`. Тот же контракт
-используют generic-блоки `InputItem` и окно повышения уровня.
-
-Clicking the editable portrait opens actions for upload, crop, clear and a
-separate character-icon upload. An icon is uploaded directly without the crop
-workspace; PNG/WebP dimensions must not exceed 256×256. It is stored outside
-character JSON, while the portrait keeps its existing crop flow and sheet aspect.
-The desktop summary prefers that icon and falls back to the portrait; the full
-portrait block is rendered in the **Личность** tab.
-Character cards and session participants prefer the icon and fall back to the
-portrait when it is absent. Drag-and-drop for the portrait enters the same crop
-flow instead of bypassing it. Portrait action popovers use a layer above the
-fullscreen session sheet. After every owner edit, the browser keeps the
-three latest character-data snapshots in per-character local storage. Storage
-failures do not interrupt editing or the normal debounced server save. The
-sheet does not install a global `Ctrl+Z`/`Cmd+Z` handler; focused text editors
-retain browser-native undo.
-
-## Level up and rests
-
-`DndLevelUpModal` computes the target class, gained features, subclass choice,
-HP gain, ASI/feat, proficiency changes and spell-slot differences. It emits one
-map of canonical block updates. `hp.hitDice` pools equal die types and is the
-only hit-dice representation.
-
-Static proficiencies declared by a newly selected subclass are applied by the
-same data contract as class proficiencies. An archetype such as Assassin
-therefore grants its tool proficiencies during level-up without an
-archetype-specific branch.
-Fixed armor, weapon and tool proficiencies from the multiclass proficiency
-table are also merged into the character automatically, without duplicating
-proficiencies already present. Grants that require a player choice, such as a
-bard's skill or musical instrument, remain an explicit manual reminder.
-
-`lib/levelUp.js`, `lib/hitDice.js`, `lib/rest.js` and
-`lib/characterResources.js` are pure and unit-tested.
-Spellcasting ability and slot contribution are explicit handbook data
-(`spellcasting.ability` and `caster_progression`). Full, half, third and pact
-casters are never inferred from a localized name or catalogue id. A subclass
-spellcasting ability takes precedence over the base class when the spell block
-is created. `characterResources.js` defines the resource-source
-contract (`itemIds`, `collect`, `setAvailable`, `restore`). Manual resources and
-race/class/feat ability counters implement the same contract; another domain,
-such as charged magic items, can join the aggregate by registering another
-source adapter without changing the resources or rest blocks. Contributed rows
-are visible and usable in the shared resources tile, but read-only in its
-editor because their title, maximum and rest rules belong to the source item.
-Every read-only editor row uses the stable label `Источник: способности`;
-the resource title already carries the exact handbook item name.
-Ability rules can derive the maximum from a live ability modifier, a class-level
-multiplier or `scaling[].uses`; `use_resources` contributes several independent
-rows. Level-gated short-rest recovery and partial recovery use the same source
-contract, so the rest action has no class- or feature-specific branches.
-Each ability resource owns `resource_color`; nested counters may override it.
-Unconfigured custom abilities receive a stable color derived from their item id,
-so resources from one domain do not collapse into a single class/race/feat color.
-Short/long rest uses this same aggregate contract to update current spell slots,
-all matching resources, ability counters and hit-dice pools without scalar
-mirrors. Long rest also restores resources marked for short-rest recovery.
-Completing either rest publishes one `rest_completed` session event with its
-kind and recovery summary when the sheet has an attached session context. Hit-die
-rolls remain normal `dice_roll` events; opening or cancelling a rest does not
-write history.
-
-The experience editor always shows its level-up action. With enough XP it is
-accented and opens the normal level-up flow immediately. With insufficient XP it
-is muted but clickable: `ConfirmDialog` shows the exact shortfall and target XP
-and offers to continue. The confirmed XP top-up stays in the level-up draft;
-applying the level-up saves XP and progression together, and cancelling either
-dialog changes neither. XP above the required threshold is preserved. At level
-20 the action remains visible as the disabled «Максимальный уровень» button.
-The total level has no direct numeric input;
-manual changes go through the shared class editor and its progression warning.
-
-The level-up dialog is 960 px wide on desktop (twice the standard dialog),
-with HP and automatic gains in a side column and abilities, subclass, ASI and
-spell choices in the main column. Narrow screens stack these sections. The
-footer stays visible with the final apply action. Granted abilities and spells
-use `LevelUpItemRow` with the handbook's list renderer and open their full
-handbook descriptions. HP uses the shared `MorphTile`, `MultiToggle`, number
-field and `SystemDie`: fixed average, an actual roll or a manual final gain
-including Constitution. The selected roll mode requires a completed roll;
-manual mode does not add Constitution a second time. The minimum gain is 1 HP.
-Spell slot gains apply with level-up, without a checkbox. `ClassLevelGains`
-shows positive class progression deltas with `SpellSlotSphere` and an explicit
-+1 for a single slot. The same deltas are added to saved totals; they are never
-computed against the character's current stock. Pact Magic circle changes show
-an upgrade: remove up to the previous class count from the old short-rest circle,
-then grant that count at the new circle. Spent slots transfer first; excess slots
-and their remaining usage stay on the old circle. Existing slots at the new
-circle and all long-rest slots are preserved. If the old class slots were manually
-reduced or removed, the new circle still receives the class count, with usage
-transferred only from slots that existed. Any count increase is added separately.
-Starting character creation still grants the selected class's initial slots.
-
-Class spell selection separates new cantrips, new leveled spells and the
-existing list. Each addition group spans the main column and contains its
-selected/available counter, remaining choices, selected handbook rows and add
-action. Groups with no available additions are hidden; completing a group keeps
-its selected rows visible for review and cancellation. Cantrips and leveled
-spells stay in their own groups instead of a separate combined list below.
-The budget fills the handbook's known-spell limit after accounting for
-existing class spells and external grants marked `counts_as_known`. An already
-overfilled list is preserved and has no new choices. When the handbook lacks a
-progression, the UI explicitly says that the count is unspecified; level-one
-counts are not treated as limits at later levels. The seeded 2014 Bard has the
-complete 1–20 known-spell progression (migration 104), so a complete level-one
-list receives one new leveled spell and no cantrips at level two.
-
-For known-spell classes, one existing leveled spell may optionally be replaced
-when gaining another level in that casting class. Replacement does not consume
-an addition; cantrips do not use this replacement action. The old spell stays
-until a replacement is selected, and the replacement can be changed or undone.
-New choices can be cancelled independently. A spellbook only gains new entries
-according to `level_up_choices` and retains old entries and their preparation;
-new book entries start unprepared. Prepared classes can
-update multiple spells. Pickers keep the class list, circle, school-exception
-and duplicate constraints. Cancelling a picker changes nothing. Loading errors
-block applying the draft and offer retry, preventing a failed catalogue request
-from clearing the existing spell list. New spells may be chosen later in the
-sheet; unfilled addition counters do not block level-up.
-
-Race abilities, class abilities and feats use one `choices` contract when they
-are granted. Adding an item from a handbook picker first opens the mandatory
-choice dialog and writes the result into the new ability entry only after all
-sections are complete. Inline variants, suggest dictionaries and references to
-another handbook item type are supported. Character creation and level-up use
-the same keys and persistence shape; an item with several choice sections keeps
-them independently addressable.
-Several dictionaries may be combined into one counted choice with namespaced
-values (for example Skilled's skills and tools). A choice may depend on an
-earlier choice and derive an immutable item filter from it. Magic Initiate,
-Spell Sniper and Ritual Caster therefore ask for a class first and then open a
-spell catalogue locked to that class, spell level and spell kind; the selected
-class also supplies the granted spell's casting ability.
-An item choice may set `grant_spells` and `casting_ability`; selected handbook
-spell ids then become read-only external spells with the ability card recorded
-as their source. Item filters traverse object arrays (for example
-`{"lvl":0,"classes.id":4014}` for a Wizard cantrip). The choice picker sends
-these rules as fixed server-side catalogue filters immediately, displays them
-as ability-owned filters and does not allow the player to change or reset them.
-
-A character-bound choice may require an existing proficiency and exclude a
-target that has already reached a configured rank. Rogue Expertise uses this
-contract for proficient skills and thieves' tools. Tool checks resolve the
-same proficiency rank as skills, so rank 2 contributes twice the proficiency
-bonus and is labelled «Компетентность» in inventory.
-
-Known-spell limits may also be declared by the selected class or subclass.
-Arcane Trickster publishes its Wizard list, Intelligence, cantrip/spell table,
-allowed schools and the number of school exceptions at each level. The spell
-tile shows current totals and preselects available circles and the class list
-in the manual spell picker. These filters can be removed, reset or changed;
-original options retain a «По умолчанию» label and highlight even when deselected.
-Reopening the picker restores defaults from the active spellbook tab. Manual
-additions may use another class list or higher circle, but additions that exceed
-the known count or current school-exception allowance remain disabled. Mage Hand Legerdemain marks its granted Mage Hand
-as counting toward the cantrip limit.
-
-Ability items may expose `display_scaling [{level,label}]`. The sheet and print
-views resolve the latest row against the owning class level. Without an explicit
-label they derive current weapon-damage dice or the scaling value. Sneak Attack
-uses its damage formula for the label, widget and class roadmap; it does not
-store duplicate level tables.
-
-Race abilities, class abilities and feats remain separate canonical arrays and
-use their corresponding handbook item types and independent editors. Desktop
-and mobile present the three domains as sections of one visual tile with shared
-outer chrome and internal dividers. Their sheet rows render the assigned
-`item.svg` in a fixed neutral-gray slot; a missing SVG leaves that slot empty
-instead of falling back to the former circle-with-dot marker. Entry names use
-the primary text color so they remain visually stronger than muted section
-headings.
-Character creation and level-up reject a feat whose structured prerequisite is
-not met. Manual sheet editing deliberately allows it: the owned entry is marked
-«Требования не выполнены», and its bonuses, resources, defenses, passive rules,
-derived effects and granted spells are suppressed.
-
-Handbook item types 3, 4, 7 and 18 use `max_use` for a fixed maximum. They also
-support formulas based on an ability modifier or owning class level, explicit
-`uses` progression, and several independently named counters. An explicit
-formula wins over a stale simultaneous `manual_size` flag. Charge pips are
-rendered only in the shared resources tile, so spending from there writes the
-available value back to the owning ability entry and later stat or level changes
-immediately update the displayed maximum.
-Sorcery points are not a manual sheet resource: the level-2 «Источник магии»
-class feature contributes them with a maximum equal to the Sorcerer class level.
-Long rest restores the pool, while Sorcerous Restoration adds four points on a
-short rest at Sorcerer level 20.
-
-Damage defenses use the same source-adapter pattern. `values.defenses` stores
-manual `{damage_type,kind}` rows, where `kind` is `resistance`, `immunity` or
-`vulnerability`; ability items may contribute level-gated rows through
-`data.defenses`. The sheet and print view merge both sources. Manual rows stay
-editable, while contributed rows show their exact ability source and cannot be
-changed from the character. Equal rows are collapsed for display, but opposite
-effects are intentionally preserved instead of inventing a conflict rule.
-Choice-dependent defenses use `choice_defenses`: a rule points to another owned
-ability entry and maps its stable choice value to a damage type. Dragonborn
-ancestry therefore drives resistance from the single Breath Weapon choice.
-
-`passive_effects` are rendered directly below the race/class/story ability or feat
-that owns them. An entry without contextual text remains a compact name-only
-row; an entry such as Brave, Fey Ancestry or Sunlight Sensitivity expands only
-enough to show its contextual permission, advantage, immunity or limitation.
-There is no separate special-properties block and the source name is not
-repeated below the same ability.
-
-Ability `roll_triggers` and `critical_damage` are separate shared contracts. A
-natural-one reroll appears on the settled dice popup and produces one replacement
-result. Weapons expose a critical-damage roll that doubles all attack damage
-dice, keeps the flat modifier once and then applies matching ability modifiers
-such as Savage Attacks' extra melee weapon die.
-
-Ability `roll_adjustments` is the corresponding contract for automatic,
-source-labelled changes to a settled d20. A rule declares its roll scope,
-minimum proficiency rank, level gate and adjustment kind. Reliable Talent uses
-`minimum_natural` for proficient ability checks: the popup and session log keep
-the rolled face visible, show `original → 10` with the feature source and
-calculate the total from 10. Plain ability checks, saving throws and checks with
-no full proficiency remain unchanged; expertise and proficient tool checks are
-eligible.
-
-`weapon_damage` is the shared contract for an ability-owned optional damage
-action. It declares the die, a fixed or owner-level-scaled count, eligible weapon
-kinds, a stable local key, a toggle label and whether the contributed dice double
-on a critical hit. Widgets select a rule by `weapon_damage_key`; reordering
-never changes the link. Missing links are reported instead of selecting the first rule.
-Ability `level_source` selects character level, a specific `level_class_id`, or
-the declared class/subclass bindings. A missing specified class produces level 0
-and an unavailable panel; character level is not substituted.
-The weapon menu combines selected extras, the critical toggle and the versatile
-grip into one damage roll; it does not enumerate combinations as menu actions.
-Sneak Attack uses this contract with `ceil(rogue level / 2)d6` and appears only
-for finesse or ranged weapons; runtime code does not check its name or item id.
-The `once_per_turn` flag is preserved for encounter-aware usage tracking, but a
-standalone sheet roll does not silently consume or block it without turn state.
-
-Class, race and feat items may also contribute `derived_effects`. This is the
-single source contract for calculated AC formulas and bonuses, speed bonuses,
-skill/save proficiencies, visible armor/weapon/tool/language proficiencies,
-check/save/weapon-attack bonuses, roll modes and critical thresholds. Every row
-keeps its handbook feature as the visible source,
-is level-gated by the owning class, may depend on a stored feature choice and is
-removed automatically with that feature. The sheet does not copy these values
-into hidden character flags. Scaling rows that share a `group` use the highest
-currently unlocked value rather than stacking every historical tier.
-
-Unarmored Defense, Draconic Resilience, Fast and Unarmored Movement, Expertise,
-Jack of All Trades, Diamond Soul, Slippery Mind, Aura of Protection, the Defense
-and Archery fighting styles, Danger Sense, and Champion critical thresholds use
-this contract. The same calculations are used by the interactive and print
-sheets. Danger Sense therefore marks Dexterity saving throws with its visible
-condition, while an activated rule is never applied merely because its feature
-is owned.
-
-Active effects use item type 15 (`Эффекты`) as a structured catalogue. Each
-catalogue row owns polarity (`positive`, `negative` or `neutral`), colour,
-description, optional presentation level, stacking policy, default duration, concentration and optional
-`derived_effects`/`defenses`. `values.states` stores only runtime instances:
-`uid`, `effect_id`, source identity, bound `params`, duration and concentration.
-This keeps a temporary spell or ability effect removable with its source and
-allows the same catalogue effect to be added manually from the status block.
-Abilities, feats and spells declare zero or more links in `status_effects`;
-several links are presented as independent choices. A link may bind the owning
-ability's current scaling value into a named effect parameter.
-
-Длительность копируется в каждый экземпляр при наложении: переопределение
-источника имеет приоритет перед значением справочника. Последующее изменение
-экземпляра не меняет справочник, источник или другие наложения этого эффекта.
-На компьютере срок показан под названием с иконкой часов; пункт меню
-«Изменить длительность» открывает редактор. На телефоне короткая подпись находится
-под иконкой, а редактирование — в окне «Статусы», по строке длительности.
-В режиме чтения длительность видна, изменение недоступно.
-
-Поле экземпляра `duration` — объект `{ kind, value?, text? }`: `rounds`,
-`minutes`, `hours`, `days` требуют положительного целого `value`; `custom`
-хранит свободное условие окончания в `text` (до 200 символов). `manual`,
-`until_rest` и `permanent` не требуют дополнительных полей. Редактор показывает
-только применимые поля; отмена не сохраняет черновик. Это срок действия,
-а не запущенный таймер: отсчёт и снятие остаются ручными.
-
-В меню зелья первым стоит подменю «Использовать на…». Его пункт «На себя» применяет лечение,
-временные хиты и связанные эффекты вместе с расходом одной дозы. Результат
-показывается с кубиками и фактической прибавкой хитов. Передача предмета
-остаётся отдельной операцией с резервированием всей стопки.
-При подключённой сессии это же подменю также показывает мастера и
-остальных персонажей с именами и аватарами. Выбор отправляет запрос применения,
-сервер резервирует ровно одну дозу. Получатель видит её в «Событиях» и может
-«Принять» или отказаться; отправитель — «Отменить применение».
-Принятие применяет механику к листу получателя и окончательно расходует дозу,
-не добавляя её в инвентарь. До принятия видны формулы, эффекты, длительность и
-ручные условия; кости бросаются только при принятии. Вариант зелья выбирает
-отправитель до резервирования, если в справочнике задан `usable.choices`.
-При отказе доза возвращается в неизменённую исходную стопку; если та перемещена,
-изменена, потрачена, заполнена до 999 или сама передаётся, создаётся отдельная
-строка с уникальным UID. Потерянный ответ и повторное решение не списывают
-или не возвращают дозу дважды. Без сессии подменю содержит только «На себя», в режиме чтения скрыто.
-
-Rage is the first parameterized ability effect: activating its sheet widget
-consumes the ability resource, adds the shared Rage status and applies Strength
-check/save advantage, the current Strength-melee damage bonus and physical
-damage resistances. The sheet follows the 2014 Rage rule, so ranged attacks made
-with Strength do not receive that damage bonus. Rage also publishes a generic
-`activity_block` for `spellcasting`; the spells block combines it with equipment
-proficiency restrictions in one notice and disables spell use without checking
-the Rage name. Its `concentration` scope also removes an active concentration
-status when Rage begins. Shield of Faith exposes its linked status in the spell
-action menu, adds +2 AC and replaces another concentration status. Removing a source
-ability/spell removes statuses created by that source; manually added instances
-remain independent. Round countdown and encounter propagation are deliberately
-future consumers of the stored duration/source contract, not separate state
-formats.
-
-Fixed class-feature spell selections use the existing ability-choice grant
-contract. Druid cantrip, Magical Secrets, Spell Mastery and Signature Spells are
-therefore selected when the feature is gained and appear as externally granted
-read-only spells with their casting ability and source. Item filters traverse
-object arrays in the shared add-from-handbook dialog as well as during creation
-and level-up.
-
-Feat ability-score bonuses are represented as readonly named bonus rows. The
-creation assembler, level-up flow and manual feat editor use the same rule: add
-the row when the feat is gained and remove its source-keyed row when that feat
-entry is deleted.
-The PHB feat catalogue additionally uses this automation for Tough hit points,
-Alert initiative, Mobile speed, Resilient saving throws, armor/weapon/language
-proficiencies, Lucky/Martial Adept/Magic Initiate resources and all feat choices.
-Source-owned armor, weapon and tool proficiencies participate in equipment
-proficiency checks as well as the visible proficiency list; they are not copied
-into manual tags and stop applying when their source feat is removed or disabled.
-Rules that require a target, turn state, reaction or optional attack mode remain
-readonly contextual effects on the owning feat instead of being applied to
-unrelated rolls.
-
-## Items, weapons and spells
-
-В начале вкладки «Магия» правило сотворения для редакции персонажа показано
-отдельным ненавязчивым блоком `BaseTile`: серый текст `--text-muted`, 12 px,
-обычная поверхность и тихая рамка, без цветового акцента.
-
-Карточка заклинания открывает единое меню по нажатию на любую часть строки,
-включая показатели атаки, урона и лечения. Отдельных кликабельных зон у чисел
-и кубиков нет. «Бросить на атаку» появляется при `damage.range_attack`;
-«Бросить на урон» и «Бросить на лечение» — при наличии соответствующей формулы.
-В подменю атаки преимущество и помеха стоят в одной строке и при открытии
-учитывают эффекты персонажа; изменение относится только к текущему броску.
-В подменю урона есть превью и, у атакующих заклинаний, крит: он удваивает кости,
-но не постоянные прибавки. Урон со спасброском и лечение не предлагают крит.
-Преимущество и крит сбрасываются при закрытии меню. В подменю броска выбирается
-круг ячейки и включается её расход; если доступны оба пула, можно выбрать
-долгий или короткий отдых. Подтверждение проверяет остаток и списывает одну
-ячейку одновременно с броском. После атаки её круг сохраняется для урона,
-а повторный расход по умолчанию выключен. Для повторных эффектов можно
-отключить расход вручную. Отдельный пункт расхода остаётся для сотворения
-без броска. У заговоров выбора ячейки нет; дарованные заклинания без ячеек
-используют фиксированный круг и не предлагают усиление. Запрет сотворения блокирует
-подтверждение всех бросков. Сохраняются выбранная заклинательная характеристика,
-бонус вкладки, фиксированный круг дарованного заклинания и рост за уровень героя.
-
-`damage.type_choices` и `rolls[].type_choices` задают допустимые типы урона
-из словаря 12. В меню атаки и урона появляется обязательный выбор с иконками
-и названиями. `useSpellDamageTypes` хранит выбор для записи книги и набора
-типов до размонтирования блока: закрытие меню атаки не сбрасывает его перед
-уроном. Без выбора нельзя бросить или потратить ячейку через этот бросок.
-Выбранный тип заполняет только составляющие `dices`/`addon` без собственного
-`type`; фиксированные типы сохраняются. Кости усиления и модификатор получают
-тип через общий расчёт. Превью, цвет костей и применение защит используют
-одну формулу; событие атаки/урона также хранит `damageType` (ID, название, цвет).
-Исходная запись справочника не меняется. Дополнительный этап урона с пустыми
-типами наследует выбор основного урона, если не задал свой `type_choices`;
-явный пустой список отключает наследование. Лечение и прочие эффекты его
-не наследуют. `SpellDamageTypeChoice` — композиция `FormField`, `ActionButton`
-и `SvgIcon`: кнопки нужны для иконки и названия каждой стихии, которых нет
-в API `MultiToggle`; отдельный базовый переключатель не создаётся.
-
-У отдельного броска `rolls[]` можно задать собственные `save_ability`,
-`save_effect` и `save_condition`. Редактор показывает результат и условие
-только после выбора характеристики. Хроника использует спасбросок именно
-этого этапа: попадание «Ледяного кинжала» не отменяется спасброском от взрыва.
-Основное `damage.save_manual` оставляет отдельное объявление спасброска
-для состояний после попадания и повторных проверок.
-
-`SpellRollMenu` собирает подменю на share-ui и общих `D20RollControls`/
-`DamageFormulaPreview`; `useSpellRolls` предоставляет одинаковые формулы для
-превью и броска. Вкладки и ячейки, записи книги и ограничения выбора разделены
-между `useSpellbookTabs`, `useSpellbookEntries`, `useSpellPicker`.
-`useSpellCasting` проверяет и расходует ячейки, хранит круг последнего броска.
-`spellScaling` учитывает прибавки костей, постоянных чисел и количества лучей,
-интервал `scaling_step`, предел `scaling_max_steps` и явные `scaling_levels`.
-`damage.add_mod` и `heal.add_mod` добавляют модификатор характеристики один раз.
-В строке заклинания показано правило усиления. `rolls` хранит отдельные
-условные формулы с подписью и видом результата: урон, лечение или иной эффект.
-«Усыпление», временные хиты и два этапа урона не объединяются в одну сумму.
-Формулы не применяют урон, лечение или состояния автоматически к цели.
-Результаты аудита каталога и источники: `md/spell-rules-audit.md`.
-«Леденящее прикосновение» (item 495) использует d8 и в базовом уроне, и в приросте
-за уровни 5/11/17, согласно описанию; запись исправлена через MCP.
-
-`DndItems` uses `lib/itemSection.js` and the handbook item picker. Its «Вещи»
-picker follows `item_type.parent_type_id` and therefore searches the root type 2
-plus all linked child catalogues. Equipped items are a top-level array;
-equipment state is selected through the item menu and does not create a separate visible space. Entry override
-is for a custom name/description/count metadata, while referenced item content
-comes from handbook. A referenced row prefers `iconImageUrl`, then `svg`, then
-the collection image. Weapon, armor and ordinary item rows retain type-specific
-content composition; simplified custom inventory cells use the selected `icon_preset_id`, or the root
-collection icon by default (the mystery cube for «Вещи»). Creation and editing
-allow choosing a named preset from the root collection and its linked types.
-Selection survives moving, stacking and transfers; URLs are resolved from the
-shared preset catalogue rather than stored in the character. Empty backpack
-cells use the separate S3 artwork of an open empty pouch. Inventory icons scale inside
-the square bag cells; equipment state is marked by the purple cell frame. Weapon cards use the same 64×64 slot and prefer the
-handbook `iconImageUrl`, falling back to the weapon SVG; the rest of the
-weapon-specific attack, damage and property composition remains unchanged. A
-click on a weapon tile opens its action menu instead of navigating directly
-from the name. Attack, damage, critical damage and ability-contributed damage
-rolls live only in that menu; the displayed attack and damage values are not
-independent click targets. Logical groups use the shared action-menu separator.
-Attack, damage, critical damage and feature damage actions use distinct Lucide
-icons instead of the generic ellipsis. The source tile stays highlighted while
-its menu is open; spell, inventory and potion action menus follow the same
-interaction rule. Magic weapons that require attunement show **Настроено** /
-**Не настроено** below their name, using the state of that instance. The status
-is visible to owners and readers on desktop/mobile; the weapon menu changes it.
-Weapons share one **Оружие** tile with row separators and an
-owner-only **Добавить оружие** footer. A second **Базовые атаки** tile contains
-two always-available rows for Strength-based unarmed and improvised-weapon
-attack, damage and critical rolls, also separated by a line.
-`share-ui/SectionList` owns the common surface, heading and separators for
-weapons, basic attacks and spell levels (including granted spells). Ability
-categories and action types use its embedded list inside their existing tiles.
-Separators divide menu-trigger roots, so expanded and compact ability rows both
-show them correctly. Spell row transitions and weapon/spell sortable containers
-are passed through the same component. The weapon table variant remains a table
-inside the weapon group.
-Unarmed attacks include proficiency and deal `max(0, 1 + Strength modifier)`;
-the generic improvised weapon is not proficient and deals `1d4 + Strength`.
-The rows reuse the weapon tile geometry and `AttackDamage`: attack is a numeric
-bonus without a decorative d20 and damage has no enclosing formula frame. The
-unarmed total keeps `1 + Strength modifier = total` in its hover explanation;
-zero is valid and the total never becomes negative. Their 64 px illustrations
-reuse system artwork from the Unarmed Strike and Club handbook items, so the
-sheet does not ship duplicate raster assets or diverge from the weapon art set.
-Prominent feature metrics such as Sneak Attack still render their actual system
-dice before the flat modifier.
-The remaining menu contains handbook description, edit, move-to-inventory and
-delete actions according to the viewer's permissions and linked item state.
-Every owned inventory item, potion and tool uses `item_id`, an explicit `count` and a
-typed `params` object. `params` contains values of the concrete instance and is
-not an alternative handbook-data or free-form override store. Item-type
-`instanceFields` declares the available parameters. Measured gear such as hemp
-and silk rope stores `length_ft` on each reference; its handbook row stores only
-measurement kind plus unit cost/weight. Displayed cost and weight scale with the
-stored length, and stacks merge only when both `item_id` and canonical `params`
-match.
-
-Для упаковок `item.data.purchase_quantity` задаёт количество штук, к которому
-относятся каталожные цена и вес. `entry.count` хранит штуки; подсказка рюкзака
-показывает цену и вес всей стопки, включая неполную упаковку. Передача предмета
-сохраняет это поштучное количество.
-
-`sheet_widgets` is an ability-owned contract for prominent class-mechanic cards
-in the sheet side column and abilities tabs. A widget may display a fixed or
-progression-derived metric, own a persisted toggle, bind to the ability resource,
-or add a note to another ability's panel through a shared key. Compact condition
-theses are also owned by the widget data rather than its UI component. The
-runtime does not check class, feature name or item id. Sneak Attack publishes
-its live dice together with eligible-weapon, advantage-or-nearby-enemy,
-no-disadvantage and once-per-turn reminders; Rage publishes its current damage
-progression and an active toggle. Toggle widgets may reference a linked
-`status_effect_key`; their active state then comes from any matching effect in
-`values.states` rather than a parallel widget flag or a matching source.
-Entering Rage consumes one available use, while leaving it active removes the
-matching effect without refunding the use.
-Subclass features can contribute `note` widgets with
-the same key to extend that panel.
-
-`feature_actions` is the matching ability-owned contract for the shared
-**Действия** block. Class abilities, racial abilities and feats may contribute
-an action, bonus action, reaction, free action or special action together with
-its rich HTML description, read-only requirements, level gate, priority, optional
-ability-resource binding and links to standard combat-action codes from suggest
-type 24. Hovering those linked names shows the suggest description. The block
-merges source rows with editable custom actions from `values.actions`;
-source-provided rows use the ability icon, omit a duplicate textual source label
-and cannot be edited on the character. Existing stable row-key order from
-`values.action_order` is respected, but row menus do not offer manual reordering. Each group header
-is rendered only when it contains actions. The shared block-title pencil opens
-one morph editor for the complete block: custom actions are created, edited and
-deleted there, while actions contributed by abilities are listed separately as
-read-only. Row menus retain direct editing, but group headers have no add
-controls. Both the dependency editor and custom-action editor use `InputDescription`.
-When collecting actions, `dice` nodes in each description produce `dice_rolls`
-for the row menu; identical formula/label pairs are deduplicated. Plain prose and
-nodes without dice do not create roll commands. Rolls use the shared dice store
-and do not spend a resource. Clicking anywhere on a row with menu commands,
-including its description and inline dice, opens that menu; the charge spheres
-remain separate controls. Enter or Space on the focused row also opens it.
-A row without any available menu action is non-clickable and does not
-show hover or press feedback. The block owns one shared tile; rows inside
-it have no nested card background. Each row has a left `TileAccentStrip`, using
-the same strip as ability-score tiles and the row's action-group color. The strip
-touches the left edge of the shared block; headings, icons and text retain their
-content inset on desktop, mobile and in the morph preview. A resource bound to a source action is shown
-on that action as the same color-coded charge spheres used by the resources
-tile: one charge sits 5px under the icon in a floated left column with a 9px
-right and 2px bottom margin, while several
-charges wrap below the action text. The description flows around the icon and
-single charge, returning to the full row width below them. Requirements and
-rich-text bullet/numbered lists always start below the icon and charge, from the
-left side of the row. Action names use bold 13px text above 12px prose;
-the prose size is set on a native wrapper so RichContent's inherited font does
-not reset it to the surrounding sheet size. Short- and long-rest recovery icons sit immediately to the right
-of the action name, and the bound resource is omitted from the shared resources
-tile to avoid a duplicate control.
-Relentless Endurance contributes a special action bound to its existing single
-long-rest charge. Its summary states the optional effect (stay at 1 HP when
-reduced to 0); bullet points state the instant-death exclusion and no action or
-reaction cost. The charge and rest icon communicate the use limit and recovery
-without a duplicate bullet point. Spending the charge
-does not automatically change HP.
-Infernal Legacy contributes Hellish Rebuke to Reactions from character level 3.
-It binds only the existing `hellish_rebuke` long-rest charge; Darkness remains
-in the resources tile. The action description contains an explicit rich dice
-formula (3d10 fire, matching the PHB 2014 second-level racial casting) and a Dexterity save.
-The Charisma-based DC is a separate thesis, alongside the damage trigger,
-60-foot visibility requirement and spell components. The ordinary first-level spell deals 2d10 and gains 1d10 per higher slot;
-the racial grant fixes the casting at second level, yielding the same 3d10
-in its spell card and reaction description. `scripts/update-infernal-legacy-action.py` applies
-the action-text adjustment through MCP without changing the spell grant. Spending the
-charge does not automatically resolve damage or track the round's reaction.
-The spheres remain owner-interactive and write through the shared resource
-source contract without triggering the press
-animation or menu of the surrounding action row. Row menus do not offer a
-separate resource-spending command. Other consequences
-declared by the action also stay in its row menu. Cunning Action is one source row linking Dash,
-Disengage and Hide rather than three duplicated rows. The block is available in
-the desktop side column and the mobile abilities tab.
-Targeted source actions open the domain-neutral character-entry picker before
-they spend a resource or create an effect. The picker receives already prepared
-rows and can therefore select owned weapons, spells or another character domain
-without knowing its storage format. Sacred Weapon uses it to bind a one-minute
-status to one weapon `uid`; only that weapon gains the Charisma attack bonus
-(minimum +1). Deleting the weapon or moving it to inventory removes the bound
-status. The light and magical-weapon clauses remain descriptive because they do
-not participate in a sheet calculation.
-The same picker is used for feats and abilities and opens above the active morph
-editor, so its filters and item selection are never hidden behind the morph.
-The list shows count as a badge and has no inline increment/decrement controls.
-Clicking an inventory row opens the shared `RowActionMenu`: referenced items can
-open their description and add one copy. A stack with more than one copy offers
-separate removal of one copy and deletion of the whole entry. Only simplified
-rows created without a handbook `item_id` offer metadata editing; inventory
-removal is not recorded as item use. Adding a copy publishes `item_added` in an
-attached session. A referenced child-type item also offers a move to its specialized
-weapon block. Linked weapons can move back to the ordinary inventory; potions
-remain in inventory and use the same cell menu. A weapon keeps its magic bonus and weapon-only instance settings in
-namespaced instance parameters so moving it to inventory and back is lossless.
-Creating a new inventory item or weapon publishes `entry_added`; the
-same event covers newly picked potions and spells, feats and class/racial
-abilities, including additions granted by level-up. A multi-quantity picker
-creates one entry with that count. Potion tiles open the shared `RowActionMenu` with
-icon-labelled, accent-colored use, success-colored replenish-by-one and
-info-colored view actions; use/replenish publish the same semantic item events,
-and use removes the entry at zero. Mobile status actions pass their domain icons for statuses, exhaustion
-and inspiration into the shared `RowActionItem`. A custom
-inventory entry is edited through the row action menu. Clicking a spell row
-opens actions for description, use and delete; deletion no longer occupies the
-compact row. Using a cantrip records a slotless `spell_used` event. A leveled
-spell spends an available slot at or above the spell level; when an upcast is
-possible, `RowActionSubmenu` shows the available slot levels beside the action
-menu on desktop or inside its bounded mobile section and records the chosen
-level. A spell row renders its transparent raster
-`item.iconImageUrl` when assigned; otherwise it retains the school SVG symbol.
-
-Type-14 tool entries stay in the ordinary inventory and have a compact category
-line under the name. Their row action menu never changes character proficiency:
-ownership and `proficiencies['Инструменты']` are independent, so a character may
-know a tool without carrying it and carry one without being proficient. The
-handbook detail resolves `required_tool_proficiencies` through suggest type 5
-and displays the acceptable concrete/category proficiencies under the cover;
-multiple links use OR semantics. Inventory tiles resolve those links against the
-character proficiency buckets and show `Владение` only on matching tools and
-armor. Weapon tiles use the same resolver for
-`required_weapon_proficiencies`; an automatic match also supplies the attack
-proficiency bonus. The expanded weapon editor does not expose a separate
-proficiency switch: it is determined from the character's proficiencies and
-the weapon handbook links. Inventory cells use handbook images scaled within their square slots while
-retaining type-specific inner content.
-
-Starting armor is placed directly in the equipped array. Its handbook
-`data.armor` rule initializes AC as readonly equipment-derived bonuses; light
-and medium armor include Dexterity and medium armor applies `dex_cap`. The
-semantic accessor, visible tile and printable sheet all use the same formula.
-Long rest restores half the total hit-dice pool automatically and does not ask
-the player to allocate recovery manually. Spell save DC and spell attack tiles
-expose their formulas as hover titles. Hovering an interactive resource or
-spell-slot sphere previews the continuous range affected by a click: a charged
-sphere and the charged spheres to its right, or a spent sphere and the spent
-spheres to its left. Read-only spheres do not show this interaction preview.
-
-The `Дневник` sheet tab contains the shared `JournalWorkspace` (including quest
-entries) and notes. The separate quests block is no longer in the default layouts;
-its existing values are preserved for custom schemas.
-Both desktop and mobile use the same vertical `JournalTimeline`; there is no
-separate journal window or canvas. Custom diary blocks render this workspace too.
-Entries remain in journal tables rather than character JSON.
-
-The source switch (`Личный` / `Сессии`) appears in the header only when a session
-journal is available. Without one there is no source selector or campaign hint.
-The owner's first visit initializes a missing personal journal automatically,
-without asking for a name; an existing selected journal is left untouched.
-Each character has at most one personal journal.
-Horizontal section tabs show one section at a time. Full event cards grow with
-their contents, newest first, with a connecting line through their centers.
-Creation and section/order controls sit at the top right of the event area.
-There is no zoom, layout action, or detail side panel. Filters sit above the list.
-
-Creation asks only for a type, then opens a whole-entry draft. One header pencil
-edits all fields, dialogue lines, combatants and quest objectives. Save is atomic,
-cancel leaves the original untouched, and existing types are immutable.
-The header-only entry type is available for titled separators. Every card uses
-a type-colored frame and an icon beside the title, without a background watermark.
-Dialogue voices retain scenario colors and stack speaker above text on mobile.
-Battle rows use handbook artwork with a single batched lookup per section.
-Source and audit are hidden behind an information icon beside edit/delete in the header.
-
-Desktop events can be dragged by their header or moved with keyboard arrows.
-On touch-capable devices headers permit native vertical scrolling; the order
-control reveals explicit up/down buttons instead. Reordering sends both the
-expected and desired ID order, and stale/concurrent moves return 409.
-It does not rewrite content, authorship, or the graph stored by the former canvas.
-That graph is preserved in the database but is not drawn or edited by the UI.
-
-Inline drafts keep save/cancel controls and remain on failure; content saves
-require `expectedChangedAt`. Polling and source/section navigation pause during
-editing and dragging. The DM always edits; players require `playersCanEdit`.
-Only the DM's session-page header shows that setting. See [Journals](./journals.md).
-
 Окна предметов восстанавливают фокус без прокрутки исходного листа. Общий
 `RowActionMenu` раскрывается короткой анимацией из точки trigger с учётом
 `prefers-reduced-motion`. Блок зелий отделён нижним отступом, а секция ячеек
 заклинаний имеет явный заголовок и на desktop, и на mobile.
 
-Weapon handbook attacks use canonical `{dice_id,type,count}`. Character-added
-attack rows use `{count,dice_id,type_suggest_id}` and are explicitly adapted at
-the calculation boundary; this is not a fallback between stored formats.
-An empty weapon `stat_suggest_id` is the explicit **Auto** mode: melee weapons
-use Strength, ranged weapons use Dexterity, and finesse weapons use the larger
-of the current Strength and Dexterity modifiers. The calculation is live, so a
-later ability-score change updates attack and damage without rewriting the
-weapon entry. A manually selected ability overrides Auto.
-Weapon enhancement follows the same owned-instance contract: the explicit
-`params.magic_bonus` value supplies the bonus to both attack and damage.
-`magic_up` is not read or written.
-All `dice_id` values are fixed system strings (`"d4"`…`"d100"`); die visuals
-use `SystemDie` and never load suggest type 11. Spell
-handbook dice use only `dice_id/type`. Spell class ownership uses item-id
-references under `classes`. Compact spell rows show the English name after the
-Russian one and start their metadata with verbal/somatic/material components;
-concentration and ritual remain title badges instead of being repeated in the
-duration text.
-
-## Rich text
+## Форматированные описания
 
 Character notes/personality fields that are descriptions store the HTML emitted
 by `InputDescription` and render through the DnD adapter over `RichContent`.
@@ -1077,30 +293,7 @@ Print CSS uses semantic `--font-print-ui`, `--font-print-display` and
 `--font-print-prose` stacks. Their current Arial/Georgia values deliberately
 preserve pagination; replacing them requires a rendered page-by-page review.
 
-## Saving and synchronization
-
-Character documents have technical `char.version`. Full updates and data
-patches are owner-authorized. Poll/version endpoints detect remote changes;
-pending local changes are saved by the editor's serialized save orchestration. Full saves require the loaded technical version and return the next one; stale writes receive HTTP 409. A conflicting draft stays local and shows a message asking the player to copy needed edits before reloading. Dismissing the message does not let polling replace that draft. Transfers flush local changes before mutating inventory and refresh the server document afterward. The
-technical revision is unrelated to character level or rules edition.
-
-## Creation
-
-The dedicated D&D wizard and compact session creation both call the pure engine
-under `settings/dnd/creation`. `blankValues`, grants, progression, equipment and
-`buildCharacterData` are the only producers of new D&D documents. Catalogue
-weapons added during creation are emitted into `values.weapon`; potions and
-physical tools remain type-10/type-14 entries in inventory together with the
-other catalogue additions and text-only starting-equipment rows. Background tool
-proficiency is assembled independently into `values.proficiencies`. See
-`md/features/character-list.md` for the UI flow.
-Class data may declare `tool_prof_choice {count,from}` with suggest type 5 IDs.
-The PHB 2014 bard uses this contract to require three distinct concrete musical
-instrument choices on the Class step; it no longer grants the broad
-`Музыкальные инструменты` category. The selected suggest labels are written to
-`values.proficiencies['Инструменты']` and survive wizard draft persistence.
-
-## Tests
+## Проверки
 
 Pure mechanics have Vitest coverage next to their modules. Required checks:
 
@@ -1110,24 +303,7 @@ npm test -- --run
 npm run build
 ```
 
-### Сюжетные способности
-
-На вкладке способностей desktop и mobile рядом с классовыми и расовыми находится
-раздел «Сюжетные», связанный с каталогом 18. `values.abilities_story` хранит тот же
-массив экземпляров `{id, uid?, choices?, count?, ...}`, что остальные способности.
-Пустой раздел скрыт; в режиме редактирования остаётся компактное действие
-«Добавить сюжетную способность», открывающее стандартный picker с созданием.
-Наличие записей определяется сохранённым массивом, поэтому ошибка загрузки
-каталога не удаляет данные. Редактор и меню записей общие с остальными способностями.
-
-`shared/lib/abilityTypes` задаёт общий список источников способностей. Сюжетные
-участвуют в ресурсах и отдыхе, дарованных заклинаниях и выборах, защитах, максимуме
-хитов, пассивных и производных эффектах, действиях, корректировках броска и виджетах.
-Печатный лист включает их отдельной группой. Без привязки к классу прогрессия
-использует общий уровень персонажа; автоматическое получение при повышении уровня
-по-прежнему относится только к связанным классовым способностям.
-
-### Загрузка листа
+## Загрузка листа
 
 Страница и полноэкранный CharacterSheetModal до получения character response
 показывают общий `LoadingIndicator` по центру доступной области. После определения
@@ -1148,182 +324,6 @@ npm run build
 аккаунта. Сценарий открывает UI без изменения игровых данных; при изменении
 блоков и навигации его необходимо актуализировать одновременно.
 Контракт и проверки: [обучение](tutorials.md).
-
-## Меню отдыха и рассвета
-
-Блок магии наблюдает за сохранёнными `slot_pools`: после отдыха он сразу
-синхронизирует отображение и остатки для следующего броска без перезагрузки листа.
-Короткий отдых восстанавливает пул `short_rest`, длинный — оба пула.
-
-Одна кнопка «Отдых» открывает короткий отдых, длинный отдых и рассвет.
-Иконка луны и подпись стоят в одной строке с выравниванием по вертикальному
-центру, без стрелки раскрытия.
-Первые два пункта сохраняют прежнее поведение. Рассвет показывает израсходованные
-ресурсы с настроенным `dawn_recovery`, включая магические предметы в рюкзаке и
-без настройки. Подтверждение восстанавливает каждый экземпляр отдельно, бросает
-нужную формулу, ограничивает результат максимумом и сохраняет один patch.
-В окне остаются результаты (до → после и выпавшее число); повторное нажатие
-в этом окне не бросает кости заново. Отмена до подтверждения ничего не меняет.
-Хиты, кости хитов, ячейки заклинаний и ресурсы отдыха рассветом не затрагиваются.
-
-### Описание и условия действий
-
-Карточка действия сначала показывает обычное описание результата, затем —
-тезисы условий применения (`requirements`). Описание не делится на предложения
-и не превращается в пункты списка. Для действий без условий, например «Хитрого
-действия», остаётся только текст с доступными ссылками. Стиль тезисов общий
-с панелями способностей. Описание сохраняет прежнюю типографику: Literata,
-12 px, цвет `--text-2`, интервал 1.45. Размер и цвет задаются внешней обёртке
-`dav-description`, чтобы `RichContent` наследовал их без конфликта стилей.
-Единственная ячейка ресурса расположена справа от описания, отдельно от иконки.
-Текст обтекает иконку слева и возвращается к левому краю ниже неё; место
-под ячейку резервируется только справа от описания.
-Тезисы условий ниже сохраняют полную ширину; несколько ячеек остаются под ними.
-Навигация и цели desktop/mobile-обучения не меняются.
-
-### Ресурсы в общем блоке и меню урона
-
-Ресурс магического оружия по умолчанию показывается на оружии, без дублирования
-в общем блоке. Так же исключаются ресурсы, представленные в действиях или
-виджетах. Если другого отображения нет, ресурс остаётся в общем блоке.
-Все полученные из листа ресурсы доступны в редакторе: флажок «Отображать здесь»
-переопределяет правило для конкретного персонажа. Настройки сохраняются в
-`values.resource_visibility` как `{ [resourceKey]: boolean }`; отсутствие ключа
-означает автоматический выбор. Переезд предмета в рюкзак пересчитывает только
-автоматическое значение. Собственные ресурсы блока остаются видимыми.
-
-В подменю урона дополнительные свойства отделены от крита, хвата и метания
-разделителем. Под ними `DamageFormulaPreview` показывает итог теми же кубиками
-`DamageDice` (26 px) внутри компактной рамки. Подменю атаки и урона не содержат
-дублирующего заголовка; кнопка броска остаётся внизу. Превью и бросок используют `useWeaponDamageRolls`, включая
-тип урона, хват, крит, импровизированное метание и дополнительные кости.
-Посох ударов (189) предлагает три ячейки вместо галочки, изначально выбрано 0.
-Нажатие выбранной ячейки уменьшает количество до предыдущей; недоступные
-заблокированы. Выбор не тратит ресурс. При броске урона количество и текущий
-остаток проверяются заново, затем выполняется единое списание конкретного
-экземпляра. Крит увеличивает только кости. Цели и действия обучения не меняются.
-
-
-При последнем заряде предмета с `last_charge` под оружием появляется временный
-блок проверки. Он работает также в табличном виде и после переноса в инвентарь.
-Бросок доступен владельцу; читатель видит ожидание. При утрате магии блок показывает
-результат и подтверждаемую отмену ошибки. У Посоха ударов это к20 и утрата магии
-на 1. Состояние хранится на экземпляре; детали — в `magic-items.md`.
-Навигация, цели и действия обучения desktop/mobile не изменены; сценарии проверены.
-
-
-Именованные `weapon_uses` включаются галочкой в подменю атаки оружия. Галочка
-показывает дистанцию/расход и не тратит заряд; бросок сохраняет оплату и отдельные
-шаги применения на UID. Под оружием и в инвентаре остаются только блоки отдельного
-урона, без вложенных рамок и сводки атаки: условия, кнопка слева от формулы,
-после броска — выпавшие кубики и «= итог», без отдельной строки «При успехе».
-
-Урон по конечной цели включается галочкой в подменю урона, использует общий
-флажок крита и исчезает после броска. Повторной оплаты нет. Крит относится только
-к попаданию, а линия доступна и при промахе. Незавершённые шаги переживают
-перезагрузку и перемещение предмета. Обычные атаки остаются доступны.
-Владелец управляет шагами; читатель наблюдает. Метательное копьё молнии (284)
-использует этот интерфейс. Цели обучения не перемещены; desktop/mobile и роли
-покрыты прежними сценариями.
-
-
-В подменю «Бросить на атаку» всех оружий показаны два переключателя в одной
-строке: «Помеха» и «Преимущество», разделённые вертикальной чертой. Включение
-одного блокирует второй до выключения; при повторном открытии меню оба выключены.
-Явный выбор переопределяет режим броска через существующий `resolveRollMode`:
-два к20 с меньшим/большим результатом. Когда оба выключены, действует `auto` —
-режим определяется эффектами персонажа и владением доспехом. На урон эти галочки
-не влияют. Они работают также с метанием, особыми применениями и перебросом
-атаки от способности. Рукопашный удар и импровизированное оружие используют
-то же подменю. Цели обучения desktop/mobile и ролей не изменились.
-
-Перенос бонуса оружия в защиту (`weapon_bonus_transfer`) выбирается ячейками
-в подменю атаки. Это сохранённый выбор количества без ресурса: +N к КД сразу
-вычитает N из магического бонуса атаки и урона данного экземпляра. При ненулевом
-выборе `WeaponBonusTransferPanel` под оружием показывает КД, оставшийся бонус
-и ручной сброс; в режиме чтения кнопки нет. Панель доступна также в инвентаре.
-В сумке и при неактивной магии КД не увеличивается. Ячейки переиспользуют
-`WeaponResourceAmount` с отдельной подписью единиц бонуса вместо зарядов.
-Ход и удержание в руке контролирует игрок, автоматического истечения нет.
-
-Для оружия с `selected_target` общий `SelectedTargetPanel` показывает объявленного
-противника, срок в рассветах, состояние гибели/ожидания и владельческие действия.
-Выбор относится к одному UID источника. `selectedTargetDamageRules` добавляет
-связанный пункт в оба подменю; его выбор хранится на экземпляре. Правила режима
-броска подключены к `characterDerivedEffects`; контекст явно отличает оружие от
-безоружных ударов/заклинаний. Рассвет обновляет сроки целей вместе с ресурсами
-одним patch, даже если заряды не восстанавливаются. Подробнее — в разделе
-«Выбранная цель оружия» [магических предметов](magic-items.md).
-
-
-Selectable class abilities (including Warlock invocations) are separate type-4
-items with `selection_parent_id`. Their parent owns count progression and
-replacement limits; automatic class grants exclude these options. Level-up
-validates selections against the resulting class level, pact and spell choices.
-The ability row menu can fill missing choices on existing sheets. Selected rows
-are ordinary class abilities with independent mechanics and preserved resource
-state. See [Warlock invocations](warlock-invocations.md) for storage, UI and
-current automation limits.
-
-
-Линейная прибавка кубиков за круг ячейки находится внутри формулы заклинания:
-`текущая формула + [кубики]`. `SpellScalingFormula` использует `DamageDice`;
-под пунктирной рамкой — «за круг свыше N-го», при `scaling_step > 1` —
-«за каждые K круга свыше N-го». Знака умножения и ячейки в рамке нет.
-Бонусная часть уменьшена до 70% размера основных кубиков и заключена в пунктирную
-рамку. Она видна, только если в одном из пулов отдыха есть ячейки более высокого
-круга (`total > 0`; расход не скрывает обозначение). Особые пояснения усиления за
-ячейку подчиняются тому же условию. Названия видов урона под кубиками переносятся
-на несколько строк в ограниченной ширине.
-Обозначение открывает общее меню строки. Оно также используется у отдельных
-эффектов; у врождённых заклинаний с фиксированным кругом его нет. Особые пороги,
-пределы, рост количества лучей и усиление заговоров остаются точным текстовым
-пояснением. `AttackDamage` предоставляет suffix-слоты для этой композиции.
-
-
-## Передача предметов между игроками
-
-У владельца персонажа в сессии первый блок правой колонки показывает название
-сессии со ссылкой справа от иконки свитка (`ScrollText`), как в левом меню.
-Иконка имеет подсказку и доступное имя «Сессия». Это обычный `BaseTile` без
-акцентной рамки. Под названием рядом слева расположены
-кнопки без рамок и видимых подписей (`ActionButton quiet iconOnly`): группа
-открывает «Другие игроки», колокольчик — «События» (иконки 24 px, кнопки 48 px,
-минимальный внешний отступ 6 px).
-Чипы справа снизу показывают число других участников и событий (передач, непрочитанных сообщений, незавершённых вызовов), включая
-ноль; до загрузки игроков показано тире. Чип событий с ненулевым количеством
-подсвечен акцентом. Доступные имена кнопок и подсказки сохранены. Число игроков
-загружается при открытии листа и обновляется по SSE и при переподключении.
-На mobile тот же блок стоит
-первым во вкладке «Предметы». Вне сессии и в чужом листе он скрыт. Окно игроков
-показывает канонические иконки и имена других участников; собственный персонаж скрыт.
-
-Пункт «Передать» доступен в меню вещей, оружия и зелий.
-Подменю `RowActionSubmenu` показывает других персонажей той же сессии с иконками
-48 px. Выбор игрока сразу отправляет весь выбранный экземпляр/стопку; отдельного
-окна подтверждения нет. Ошибка остаётся в подменю для повторной попытки. Предмет резервируется на сервере
-и сразу исчезает из инвентаря отправителя. В «Событиях» видны только ожидающие
-входящие и исходящие передачи, а счётчик на кнопке показывает их общее число.
-Получатель принимает или отклоняет запрос; отправитель может его отозвать.
-Мастер может принять ожидающую передачу из хроники сессии.
-Список игроков и события открываются поповером возле кнопки (`BasePopover`),
-включая mobile. Escape, клик снаружи или крестик закрывают поповер. При
-выполнении передачи закрытие блокируется. Подменю отправки переиспользует
-`RowActionSubmenu` и `RowActionItem` из share-ui.
-
-При принятии предмет добавляется получателю, при отказе или отзыве возвращается
-отправителю. Вещи приходят в первую секцию инвентаря (при необходимости создаётся
-«Рюкзак»), зелья — в тот же рюкзак, оружие — в свой список. Передача сохраняет описания, количество,
-заряды и кулдауны. У нового владельца снимаются настройка, личная характеристика
-и ручное владение оружием, выбранная цель, перенос бонуса и активное применение
-оружия. Потерянный магический предмет передать нельзя. Запросы и лист обновляются
-через SSE сессии и повторную загрузку после восстановления соединения.
-
-В хронике сохраняется одна запись со статусом «Ожидает», «Приняли» или «Отказали».
-До завершения запросов нельзя выйти из сессии, сменить её, удалить участника,
-персонажа или сессию: сервер возвращает 409 с причиной. Это не позволяет оставить
-зарезервированный предмет без доступного владельца. Повторные отправка и принятие
-не создают копий; резервирование, изменение листа и хроники атомарны.
 
 ## Единые плитки и режим просмотра
 
@@ -1370,261 +370,75 @@ SSE-invalidation журнала обновляет и список переда�
 пакетом; отсутствие рисунка заменяется иконкой предмета. `senderImageUrl` берётся
 из текущей иконки персонажа отправителя с fallback на портрет.
 
-
-### Загрузка мобильных панелей и локальных снимков
+## Загрузка мобильных панелей и локальных снимков
 
 На мобильном листе сначала монтируется только активная вкладка. Первый переход, swipe или программное открытие в обучении монтирует целевую панель; посещённые панели сохраняются до закрытия листа. Геометрические контейнеры всех семи панелей остаются для циклического swipe.
 
 `createCharacterSnapshotRecorder` объединяет изменения за 300ms, с максимальным ожиданием 1000ms. Последнее состояние сериализуется один раз, хранится не более трёх различных снимков; это локальная страховка, а не undo каждого нажатия. Незавершённая запись выполняется при скрытии страницы, pagehide и unmount. Режим просмотра не создаёт снимков. Ошибка localStorage не мешает редактированию.
 
-## Общение с игроком
+## Группы строк на листе персонажа
 
-В поповере «Другие игроки» нажатие на строку открывает меню «Дать денег», «Чат» и «Камень /
-ножницы / бумага». Пункты открывают отдельные окна без переключателя режимов.
-В шапке чата — аватар и имя собеседника; у сообщений слева от разделителя только
-аватар отправителя, без видимого имени. Чат хранит переписку в сессии, позволяет отправлять
-текст до 2000 символов и загружать предыдущие сообщения. Ошибка не стирает черновик.
-Колокольчик показывает непрочитанные сообщения и незавершённые вызовы вместе с
-передачами. При входящих уведомлениях колокольчик ярко пульсирует и светится;
-после прочтения сообщений или решения по вызову/передаче пульсация прекращается.
-Свои ожидающие вызовы её не включают. При reduced motion остаётся статичная подсветка.
-Из входящего события можно сразу перейти к переписке или ответу.
+Сетка layout-schema поддерживает `tile` для общей поверхности `BaseTile` и
+`dividers` для внутренних линий по числу колонок. Desktop-группа КД, инициативы,
+меню, скорости, бонуса умения и отдыха использует сетку 3×2 без зазоров;
+её дочерние блоки получают `embedded` и не создают отдельные поверхности.
+Локальный `UtilityCell` задаёт только геометрию ячейки: весь trigger использует
+общий `ActionButton quiet` для hover, focus, disabled и клавиатурного нажатия.
+Заголовки параметров используют `MorphTileHeader` без карандаша. Инициатива
+и бонус умения открывают `RowActionMenu` с изменением и броском; меню и отдых
+используют ту же кнопку. Режим `inline` у `UtilityCell` выравнивает
+«Меню» / «Отдых» по центру ячеек по вертикали с отступами сверху и снизу 12 px: иконки
+20×20 px в фиксированной области, зазор перед подписью 4 px. Открытый trigger
+сохраняет подсветку через
+`action-menu-source--open`, но не сдвигается и не получает отдельную рамку
+внутри общей сетки.
 
-В игре отправитель выбирает ход при вызове; получатель отвечает, не видя его.
-Выбор показан крупными SVG-иконками камня, ножниц и листа бумаги. После ответа
-окно показывает аватары, имена и ходы участников через VS; победитель выделен
-зелёной рамкой и лёгким фоном. Результат — горизонтальная строка: аватары
-снаружи, имя с подписью хода рядом, иконки ходов направлены к VS в центре.
-В чате аватары и ходы по 24 px; в игре — 32 и 36 px, на узком экране — 24 px.
-Длинные имена сокращаются с многоточием, полное имя доступно в подсказке.
-При ничьей подсветки победителя нет. «Ещё раз»
-возвращает выбор хода. Чат сохраняет тот же результат в компактном масштабе,
-хроника — текстовый результат. Вызов
-можно отклонить или отозвать. История доступна обоим участникам и мастеру,
-о чём прямо написано в окне. Desktop и mobile используют те же компоненты,
-меню доступно с клавиатуры. Подробности синхронизации и прав —
-[в описании сессий](sessions.md#чат-и-камень--ножницы--бумага).
+`share-ui/SectionList` задаёт общую плитку, заголовок и разделители между строками
+оружия, базовых атак и кругов заклинаний. `embedded` используется для категорий
+способностей и типов действий внутри существующих плиток. Разделители работают
+на корнях слотов, включая обёртки `RowActionMenu`, а не на вложенных карточках.
+`footer` содержит добавление оружия до отдельной группы базовых атак;
+`listAttrs` передаёт атрибуты сортировки, `transitionName` сохраняет анимацию
+строк заклинаний. Табличный вариант оружия передаётся через `body`.
+Предметное содержимое строк, меню, права и броски остаются в DnD-компонентах.
 
-Запрос применения можно адресовать мастеру; он выбирает персонажа или NPC в хронике. Меню связанного эффекта заклинания поддерживает тот же запрос. Ячейка расходуется действием сотворения отдельно. Концентрация внешнего отправителя не заменяет концентрацию получателя. Меню состояний поддерживает последовательный урон/спасброски яда и выбор оружия для покрытия маслом. Полный контракт и границы — [применение зелий](potion-automation.md).
+Заголовок `MorphTile` не задаёт нижний отступ. Расстояние у характеристик
+сохраняется через верхний padding блока значения. Малые плитки КД, инициативы,
+скорости и бонуса умения включают `compactHeader`; их содержимое помещается
+в строку сетки высотой 64px.
 
-Карточки передачи в поповере используют `BaseTile framed`, строку направления («→ получатель» / «отправитель →») и отдельную строку предмета, превью применения и отделённые кнопки ответа. В меню зелий под пополнением доступно «Удалить (−1)» без применения механики. Подробности — [применение зелий](potion-automation.md).
+Плитки редактирования листа используют `MorphTile`; общие faces для статов,
+ресурсов, защит, действий, владений, денег, статусов, истощения, счётчиков и
+заданий используют его `embedded`-представление с тем же заголовком. HP, уровень
+и предметная строка оружия могут оставаться без заголовка. Параметры магии и
+ячейки используют заголовок `MorphTile` напрямую. `TileAccentStrip` заменяет
+бывший prop `BaseTile.strip` в листе, morph-превью, правилах и NPC боя.
 
-В «Других игроках» строка показывает иконку 48 px и имя, без класса, расы и
-троеточия. Разрешённые мастером HP отображаются под именем через `SessionHpBar`,
-включая временные хиты; при отсутствии HP полоска скрыта.
-«Дать денег» открывает окно валюты и целой положительной суммы с текущим балансом.
-Перевод сразу списывает деньги у отправителя и зачисляет получателю без принятия.
-Оба кошелька и запись `money_transfer` сохраняются атомарно; нехватка денег и
-устаревшая версия листа отклоняют запрос. Повтор после потерянного ответа
-использует прежний `clientActionId` и не списывает деньги дважды. Хронику перевода
-видят оба владельца и мастер; SSE обновляет оба листа. Валюта должна быть
-доступна обоим владельцам, автоматической конвертации нет.
-Кошелёк и его калькулятор берут иконки валют из словаря 17: картинка
-`iconImageUrl` имеет приоритет перед SVG и отображается через общий `ItemIcon`
-без перекрашивания. Балансы перечислены через запятую без рамок, подложек
-и видимых сокращений валют: число с разделителями разрядов и иконка 24 px
-справа. Вид валюты доступен в tooltip и имени для экранного диктора.
-Пульсация подсвечивает число и монету, не рисуя рамку вокруг записи.
-Селектор монеты встроен справа от числа в дисплей калькулятора, backspace находится
-справа от дисплея. Выбор доступен мышью, касанием и с клавиатуры.
-Превью и сам кошелёк дают один плавный зелёный импульс при росте баланса и красный при
-списании, показывая дельту в течение 1,1 секунды. Списание до нуля сначала
-показывает красный нулевой остаток, затем скрывает валюту. Пустой ввод и
-отклонённое списание не создают вспышку; первая загрузка также спокойная.
-При reduced motion остаётся только временная цветная подсветка.
-Пункт «Открыть лист» доступен по серверному `canOpenSheet`: мастер видит участников,
-владелец — свой лист, другой игрок — публичный лист при разрешении сессии.
-Флаги и состав обновляются через SSE с повторным чтением сессии.
+Общие представления сами владеют единственной поверхностью `MorphTile`: это
+действия, характеристики, малые статы, защиты, ресурсы, владения, деньги, сводка
+статусов, истощение, счётчики, задания, HP и уровень. Контроллеры не оборачивают
+их второй плиткой; morph-origin берётся с корневого `$el` представления.
+В раскрытом редакторе `panel` (у характеристик `mode="panel"`) переключает
+представление в `embedded`. Полоса вставляется через слот `decoration`.
+Контейнеры коллекций и самостоятельные компактные варианты сохраняются.
 
-В подменю «Передать» у вещей, оружия и зелий есть также «Мастер — инвентарь
-сессии». Принятие мастером помещает экземпляр в хранилище сессии; отказ возвращает
-его игроку. Из хранилища мастер может направить предмет игроку — такое предложение
-приходит в обычные события листа и уведомления адресата. Общие кнопки решения в
-событиях и хронике подписаны «Принять» и «Отказать»; у применения нет дополнительного
-слова в кнопке. Пункт «Мастер — выберет цель» сохраняется для применения эффекта.
+`CampaignBadge` остаётся обычным `BaseTile`: иконка `ScrollText`, как в боковом меню,
+и название сессии в одной строке с выравниванием по центру,
+две `ActionButton iconOnly quiet` рядом слева следующего ряда. `CharacterTransferDialogs`
+открывает игроков/события в `BasePopover`; отправка выбирает получателя
+в `RowActionSubmenu` через `ItemTransferAction` с иконками 48 px;
+общая начинка находится в `CharacterTransferContent`.
 
+`CharacterReadOnlyNotice` объясняет права просмотра наверху центральной колонки
+и мобильных вкладок. `CloneCharacterAction` переиспользуется обоими меню;
+права и исходный UUID берутся из `charCtx`, действие выполняется через API.
 
-### Структурированные параметры заклинаний и время действий
+Меню листа персонажа использует `CharacterMenuPopover` поверх общего
+`BasePopover`: локальная часть ограничивает размер содержимого и управляет
+фокусом, общая библиотека отвечает за портал, позиционирование и закрытие.
+Выбор редакции использует `ActionMenuItem`, `AppModalFrame`, `ConfirmDialog`
+и общие эмблемы систем, без отдельного набора базовых контролов.
 
-Тип 5 хранит `time` и `range` объектами. `time.kind` выбирает действие, бонусное
-действие, реакцию, свободное/особое действие, rounds/minutes/hours/days или custom.
-Для времени задаётся положительное целое `value`; для custom — `text`, для реакции —
-`condition`. `ActionTimeEditor` показывает только применимые поля.
+## Связанные страницы
 
-`range.kind`: touch, ranged, self, sight, unlimited, custom. У ranged — `distance`
-и `unit` (feet/miles), у custom — `text`. `shape` (sphere/radius/cone/line/cube/
-cylinder/hemisphere) и `size`, `area_unit` описывают область отдельно от дистанции.
-Размер — радиус, длина либо ребро; прочие размеры остаются в описании.
-`can_self` — справочный флажок допустимости себя как цели. Исходящая от себя
-область не включает его автоматически; он не меняет список целей применения.
-При миграции флажок включается для явно личных заклинаний; прочие случаи
-уточняются в редакторе по условиям заклинания. `application_targets.self_only`
-по-прежнему управляет ограничением применения только на себя.
-
-`SpellMetadata` общий для карточки листа и справочного описания: В/С/М заменены
-иконками с доступными с клавиатуры подсказками, время использует `ActionTiming`,
-дистанция — значок вида/формы области, длительность — песочные часы. Компоненты, дистанция и длительность всегда собраны в одну строку лёгкой таблицы;
-тип действия расположен отдельной строкой под таблицей. В начале таблицы
-концентрация и ритуал обозначены буквами К и Р в окрашенных ячейках с подсказками.
-Касание использует отпечаток пальца, соматический компонент — ладонь.
-Между названием, таблицей и типом действия — отступы 10 px. Длинные русские названия переносятся
-целиком; английские остаются рядом в одну строку, сокращаются многоточием
-при нехватке места и доступны полностью при наведении; формулы при нехватке ширины переходят ниже параметров.
-Изменение дистанции способностью (`spell_modifiers.range`) остаётся текстовым
-переопределением и имеет приоритет в листе. Печать и мастер создания используют
-те же функции форматирования новых полей.
-
-Свои действия и зависимости `feature_actions` поддерживают `action_type: timed`
-и `time` с тем же форматом длительности. Они попадают в группу «Действия с временем»,
-время показывается рядом с названием. Это описание затрат времени, без таймера
-и автоматического отсчёта раундов.
-
-### Сценарий атаки с таблицей результата
-
-`damage.roll_table` задаёт источник результата (`damage` — первые `count`
-костей с указанным `sides`, `separate` — отдельный бросок), число костей и
-строки `{value, damage_type}`. Дополнительные критические кости не расширяют
-заданный набор определяющих костей. `damage.attack_chain` задаёт условие
-продолжения: совпадение определяющих костей, нечётный основной к20 при
-попадании или каждое попадание. Дистанция и точка отсчёта — подсказка мастеру;
-координат нет. Уникальность ограничивается всеми целями либо попаданиями.
-
-Условие `matching_dice` проверяет совпадение `matches` результатов среди всех
-костей урона с `sides` гранями, включая критические. Оно не зависит от таблицы
-типа и не учитывает кости других размеров. `max_jumps` ограничивает перескоки
-за всё сотворение; `jumps_per_slot` добавляет лимит за круг выше базового.
-Промах после перескока тоже расходует перескок. Без `max_jumps` лимита нет.
-Хроника показывает использованные перескоки и лимит, сервер проверяет его
-при каждом продолжении. Выбранный до атаки тип урона сохраняется для цепочки.
-
-При атаке в сессии хроника получает `sequence` со снимком правил, формул,
-бонуса атаки, круга и числа снарядов. Мастер выбирает цель общим окном,
-подтверждает попадание/промах и крит. Урон бросается после подтверждения;
-автор или мастер выбирает тип из выпавших вариантов. Единственный вариант
-выбирается автоматически. До выбора типизированный урон недоступен для
-применения. Каждое попадание хранит свои результат, цель и применения;
-общая цепочка — использованные цели и текущий снаряд. Следующие атаки
-не расходуют ячейку. Урон применяется к сохранённой цели через обычные
-защиты и историю НПС. Перезагрузка не сбрасывает сценарий.
-
-`POST .../events/{eventId}/sequence` проверяет автора/мастера, ревизию и
-идемпотентный `clientActionId`, блокирует событие на запись. Только мастер
-выбирает цели и подтверждает попадания; автор может выбрать тип. Повтор
-команды возвращает сохранённые броски. Обычные броски без сессии пока остаются
-самостоятельными: связанный сценарий требует хроники сессии.
-
-Применение доступно и обычным вещам с `data.usable`: пункт «Использовать на…»
-стоит в начале меню. Без сессии внутри доступно «На себя», в сессии — также
-другие игроки и мастер. Использование из рюкзака, экипировки, оружия и зелий
-проходит через один контроллер и серверный план. Раздел «При применении»
-в справочном отображении общий для этих типов. Разрешение и автоподтверждение
-расходуемых предметов объединены настройкой сессии `potions`.
-
-У заклинаний с `item_creation` первым в меню стоит «Создать предметы».
-В нём видны выходные вещи листами справочника, количество и срок, а также
-обычные настройки ячейки. «Можно создать меньше» открывает счётчик количества.
-Созданные экземпляры показывают метку срока; его окончание отмечается в меню
-вещи, оружия или зелья. Лечение эликсира применяется из инвентаря после создания,
-поэтому отдельный бросок лечения в меню создающего заклинания скрыт.
-
-## Профиль правил персонажа
-
-Редакция берётся из `sourceVersionId` листа и не зависит от глобального выбора.
-Отдых, истощение, вдохновение, щит и требование Силы тяжёлого доспеха учитывают
-2014/2024. Заклинания показывают редакционное правило расхода ячейки за ход;
-табличная подготовка ограничивается отдельно от количества заклинаний в книге.
-Новые выборы допускают только native/compatible, прежние сохранённые ссылки
-остаются. Изменение редакции существующего листа сервер отвергает.
-[Контракт и границы автоматизации](rules-editions.md).
-
-Этапы эффектов заклинания разделяются полем связи `apply_on`: `cast` доступен
-в «Использовать на…», `impact` — после броска в хронике, пустое значение/`any`
-разрешает оба способа. Сервер проверяет этап независимо от меню. Личное
-усиление с `cast` не предлагается как последствие спасброска врага.
-
-`rolls[].kind=save` объявляет отдельный спасбросок без броска урона. Такой
-повторный/завершающий этап по умолчанию не расходует ячейку. `save_dc` у
-основного или отдельного этапа задаёт явную Сл; пустое поле использует
-характеристику, мастерство и бонус вкладки заклинателя.
-
-`repeat_save` у эффекта добавляет в его меню повторный спасбросок на листе
-и у НПС. Пустая `dc` сохраняет Сл заклинателя в `instance.params.save_dc` во
-время наложения; изменение характеристик заклинателя позже её не меняет.
-Фиксированная `dc` имеет приоритет. Вручную добавленный эффект без Сл
-предлагает заполнить её перед броском. Учитываются обычные модификаторы,
-преимущество/помеха и дополнительные кости; натуральные 1/20 сами по себе
-не определяют успех спасброска.
-
-Нажатие вручную отмечает подходящий момент (`turn_start`, `turn_end`, `action`
-или `custom`). Дополнительное условие нужно подтвердить. Успех снимает
-именно этот экземпляр, провал оставляет его. Автоматического перехода хода,
-счётчиков нескольких успехов/провалов и переходов на другую стадию здесь нет.
-Результат и снятие отображаются общей подписью под костями в уведомлении и
-хронике. У НПС сохраняются имя, буква и цвет актёра.
-
-Создаваемый предмет может задавать `item_creation[].outputs[].on_expire`: `inert`
-(по умолчанию — теряет свойства) или `vanish` (исчезает). Режим замораживается
-в `params.creation.on_expire` экземпляра. Владелец отмечает окончание игрового
-срока из меню; исчезновение удаляет остаток выбранной стопки после подтверждения.
-Другие стопки, в том числе переданные другим персонажам, отмечаются отдельно.
-Постоянные предметы не предлагают окончание срока. Автоматического календаря нет.
-
-У независимых снарядов `attack_chain.trigger=none`: перескоков нет, доступна
-следующая отдельная атака, пока не исчерпан `damage.instances` с усилением.
-`unique=none` разрешает повторно выбирать ту же цель («Палящий луч»);
-`unique=target` сохраняет запрет («Удар стального ветра»). Бюджет снарядов
-и цели проверяет тот же серверный сценарий. Событие атаки хранит `entryKey`,
-чтобы эффекты попадания использовали выбранный источник заклинаний.
-
-`heal.kind=temporary_hp` использует ту же формулу, усиление и применение, что
-лечение, но выдаёт временные ХП. Обычные ХП и спасброски от смерти не меняются,
-сохраняется большее из старого и нового значения. В списке/меню — синий щит
-и подпись «Временные хиты», в результате применяется общий блок `temporaryHp`.
-Все цели сотворения получают один сохранённый бросок. Связь временных ХП
-с окончанием конкретного эффекта пока не поддержана.
-
-### Меню и смена редакции
-
-Настольная плитка настроек и мобильное меню используют `CharacterMenuPopover`
-на базе `share-ui/BasePopover`: портал в body, выравнивание `bottom-end`,
-ограниченная ширина/высота содержимого и внутренняя прокрутка. При прокрутке
-страницы и изменении окна позиция пересчитывается; Escape и нажатие снаружи
-закрывают меню. Цель обучения `character-menu` ищется в document из-за портала.
-
-Общий `CharacterEditionAction` доступен только владельцу при нескольких редакциях
-системы персонажа. `CharacterEditionDialog` показывает строки с эмблемой и текущей
-редакцией; другая строка открывает предупреждение и отдельное подтверждение.
-`useCharacterEdition` завершает автосохранение, блокирует повторные запросы и
-редактирование до ответа, отправляет актуальную версию листа и применяет полный
-ответ. Ошибка сохраняет прежний выбор и остаётся в окне. Сохранённое содержимое
-не конвертируется: меняются профиль правил и доступность новых вариантов.
-Этот же сценарий доступен владельцу при открытии листа в модальном окне;
-режим предпросмотра и мастер чужого персонажа не дают права смены редакции.
-Проверки UI: `playwright.character-menu.config.js` (desktop/mobile, края окна,
-низкая высота, отмена, подтверждение, ошибка сохранения и скрытые действия).
-
-
-Панели под оружием используют общий `ItemMechanicPanel`: ресурс, свойство,
-проклятие, выбранная цель, применения, перенос в КД, последний заряд и эффекты.
-`weapon_notes` показываются по условию конкретного экземпляра; проклятие «Меча
-мести» появляется только после настройки и остаётся доступным в меню рюкзака.
-Одинаковые правила работают в карточках, таблице и режиме чтения. Текстовые
-последствия проклятия учитываются вручную. Контракт — в `magic-items.md`.
-
-Миграция 158 переносит `values.potions` всех персонажей (включая удалённых) в первое
-пространство `values.items.sections`, создавая рюкзак при необходимости. UID,
-количество, параметры, иконка и личное описание сохраняются; стопки не сливаются.
-Пустые ячейки заполняются до расширения сетки, прежние позиции и надетые вещи
-сохраняются. Корневое поле удалено и запрещено ограничением БД; версия изменённого
-листа увеличивается. Ожидающие передачи/дозы и сохранённые результаты применения
-переведены на `source=items`; возврат дозы продолжает исходную стопку.
-Отдельного блока зелий нет на desktop/mobile и в печати. Вещи типа 10 доступны
-через справочник рюкзака; применение, передача, пополнение и удаление — в меню
-обычной ячейки. Между пространствами остаётся только разделитель с названием.
-
-
-Карточки под оружием закрыты при первом показе, в том числе в табличном режиме.
-Нажатие на заголовок и Enter/Space раскрывают правила и действия. Заряды имеют
-компактную строку: название слева, счётчик справа, без общей подписи/иконки
-«Ресурс»; счётчик работает и при закрытой карточке. Данные справочника всех
-оружий проецируются под их экземплярами, с учётом основы, редакции и настройки.
+[Оглавление wiki](../README.md) · [API: персонажи](../api/characters.md) · [БД: персонажи и инвентарь](../database/characters.md) · [Обучение листу персонажа и сессии](tutorials.md)
