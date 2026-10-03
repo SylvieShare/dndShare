@@ -248,8 +248,8 @@ existing canvas action. The contextual help is hidden on touch and mobile
 layouts.
 
 Session-wide shortcuts use physical key codes and therefore do not depend on
-the current keyboard language. `Alt`/`Option` + `1…9` opens Story, Locations,
-NPCs, Quests, Materials, Music, Journal, Chronicle and the meeting schedule; `Shift` + `D` toggles the dice
+the current keyboard language. `Alt`/`Option` + `1…8` opens Story, Locations,
+NPCs, Quests, Materials, Music, Journal (meetings and entries) and Chronicle; `Shift` + `D` toggles the dice
 popover without conflicting with browser address-bar shortcuts.
 `Alt`/`Option` + `Shift` + `1…7` rolls d4, d6, d8,
 d10, d12, d20 or d100 using the currently selected normal/advantage/disadvantage

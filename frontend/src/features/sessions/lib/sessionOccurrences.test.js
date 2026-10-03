@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { groupOccurrences, localDate, nextOccurrenceNumber, occurrenceDate } from './sessionOccurrences'
+import { groupOccurrences, preferredOccurrence, localDate, nextOccurrenceNumber, occurrenceDate } from './sessionOccurrences'
 
 describe('campaign schedule', () => {
   const rows = [
@@ -17,6 +17,12 @@ describe('campaign schedule', () => {
     expect(grouped.past.map(row => row.id)).toEqual([2, 1])
     expect(grouped.undated.map(row => row.id)).toEqual([6])
     expect(rows[0].id).toBe(6)
+  })
+  it('opens today or the latest played meeting before future plans', () => {
+    expect(preferredOccurrence(rows, '2026-10-03').id).toBe(3)
+    expect(preferredOccurrence(rows, '2026-10-02').id).toBe(2)
+    expect(preferredOccurrence(rows, '2026-08-01').id).toBe(1)
+    expect(preferredOccurrence([], '2026-10-03')).toBeNull()
   })
   it('has no next meeting if only past or undated meetings remain', () => {
     expect(groupOccurrences(rows, '2026-11-01').next).toBeNull()

@@ -1,0 +1,33 @@
+.session-journal { container: session-journal / inline-size; display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1360px; height: 100%; min-width: 0; min-height: 0; margin-inline: auto; color: var(--text-1); }
+.session-journal--embedded { height: min(660px, 78dvh); min-height: 380px; }
+.session-journal__heading { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 12px; }
+.session-journal__heading h2 { display: flex; align-items: center; gap: 10px; margin: 0; font: 24px/1.2 var(--font-display); }
+.session-journal__heading h2 svg { color: var(--accent); }
+.session-journal__heading-actions { display: flex; align-items: center; gap: 8px; }
+.session-journal__body { display: grid; grid-template-columns: 230px minmax(0, 1fr); flex: 1; min-width: 0; min-height: 0; gap: 24px; }
+.session-journal__content { min-width: 0; min-height: 0; overflow-y: auto; padding: 0 8px 20px 24px; border-left: 1px solid var(--border); scrollbar-width: thin; }
+.session-journal__meeting { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
+.session-journal__meeting-copy { min-width: 0; }
+.session-journal__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+.session-journal__meta time::before { margin-right: 8px; color: var(--border-strong); content: '·'; }
+.session-journal__status { padding: 2px 6px; border-radius: 4px; background: var(--surface-raised); font-size: 10px; }
+.session-journal__status--next { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.session-journal__meeting h3 { margin: 7px 0 0; color: var(--text-1); font: 25px/1.25 var(--font-display); overflow-wrap: anywhere; }
+.session-journal__icon { display: grid; flex: none; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--text-muted); cursor: pointer; }
+.session-journal__icon:hover:not(:disabled) { background: var(--surface-raised); color: var(--text-1); }
+.session-journal__icon:disabled { opacity: .4; cursor: default; }
+.session-journal__hint { margin: 0 0 14px; color: var(--text-muted); font-size: 12px; line-height: 1.6; }
+.session-journal__error { color: var(--danger); font-size: 12px; line-height: 1.6; }
+.session-journal__error button { padding: 0; border: 0; background: transparent; color: var(--accent); font: inherit; cursor: pointer; }
+.session-journal__error button:disabled { opacity: .5; cursor: default; }
+.session-journal__empty { display: flex; flex: 1; min-height: 0; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px 16px; text-align: center; color: var(--text-muted); }
+.session-journal__empty svg { color: var(--accent); }
+.session-journal__empty strong { color: var(--text-2); font: 23px/1.3 var(--font-display); }
+.session-journal__empty p { max-width: 340px; margin: 0; font-size: 13px; line-height: 1.6; }
+@container session-journal (max-width: 780px) {
+  .session-journal__body { display: flex; flex-direction: column; gap: 18px; }
+  .session-journal__body > .meeting-navigation { flex: none; position: relative; z-index: 10; }
+  .session-journal__content { flex: 1; padding: 0 2px 20px; border-left: 0; }
+  .session-journal__meeting h3 { font-size: 22px; }
+  .session-journal__heading h2 { font-size: 21px; }
+}

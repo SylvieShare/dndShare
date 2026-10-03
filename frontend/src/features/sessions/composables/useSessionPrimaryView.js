@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 
-export const SESSION_PRIMARY_VIEWS = new Set(['schedule', 'story', 'locations', 'npcs', 'materials', 'maps', 'quests', 'music', 'journal', 'events', 'settings'])
+export const SESSION_PRIMARY_VIEWS = new Set(['story', 'locations', 'npcs', 'materials', 'maps', 'quests', 'music', 'journal', 'events', 'settings'])
 
 export function sessionPrimaryViewKey(sessionUuid) {
   return `dnd-share:session-primary-view:v1:${sessionUuid}`
@@ -9,14 +9,14 @@ export function sessionPrimaryViewKey(sessionUuid) {
 function savedPrimaryView(sessionUuid) {
   try {
     const saved = localStorage.getItem(sessionPrimaryViewKey(sessionUuid))
-    return SESSION_PRIMARY_VIEWS.has(saved) ? saved : null
+    return saved === 'schedule' ? 'journal' : SESSION_PRIMARY_VIEWS.has(saved) ? saved : null
   } catch {
     return null
   }
 }
 
 export function useSessionPrimaryView({ sessionUuid, route, router }) {
-  const fromQuery = String(route.query.view || '')
+  const fromQuery = route.query.view === 'schedule' ? 'journal' : String(route.query.view || '')
   const activeView = ref(
     SESSION_PRIMARY_VIEWS.has(fromQuery)
       ? fromQuery
@@ -84,10 +84,11 @@ export function useSessionPrimaryView({ sessionUuid, route, router }) {
   }
 
   watch(() => route.query.view, value => {
-    const view = String(value || '')
+    const view = value === 'schedule' ? 'journal' : String(value || '')
     activeView.value = SESSION_PRIMARY_VIEWS.has(view) ? view : savedPrimaryView(sessionUuid) || 'story'
     if (SESSION_PRIMARY_VIEWS.has(view)) persistView(view)
-  })
+    if (value === 'schedule') replaceQuery({ view: 'journal' })
+  }, { immediate: true })
 
 	return { activeView, selectedLocationId, selectedNpcId, selectedQuestId, selectedMaterialId, selectView, selectLocation, selectNpc, selectQuest, selectMaterial }
 }

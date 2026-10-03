@@ -1,11 +1,11 @@
 <template>
-  <section class="diary-section" :class="{ 'diary-section--readonly': !ownerMode }" role="tabpanel" :aria-label="session.title || 'Раздел дневника'">
+  <section class="diary-section" :class="{ 'diary-section--readonly': !ownerMode, 'diary-section--compact': compact }" :role="compact ? 'region' : 'tabpanel'" :aria-label="session.title || 'Раздел дневника'">
     <div class="diary-section-toolbar">
       <MultiToggle v-model="filter" :options="filters" :disabled="blocked || sortable.dragging.value || reordering" aria-label="Показать записи" />
       <div v-if="ownerMode" class="diary-section-actions">
       <button v-if="ownerMode && session.events.length > 1" class="diary-order-toggle" type="button" :disabled="blocked || filter !== 'all'" :aria-pressed="reordering" title="Изменить порядок событий" aria-label="Изменить порядок событий" @click="reordering = !reordering"><ArrowUpDown :size="18" /></button>
       <JournalEditButton v-if="ownerMode && editableSection" :disabled="blocked" label="Редактировать раздел" @click="$emit('edit-session')" />
-      <JournalEventTypePicker v-if="ownerMode" :disabled="blocked" @create="$emit('create-event', $event)" />
+      <JournalEventTypePicker v-if="ownerMode" :disabled="blocked" :quiet="compact" :label="compact ? 'Добавить запись' : 'Добавить событие'" @create="$emit('create-event', $event)" />
       </div>
     </div>
     <div v-if="visibleEvents.length" class="diary-timeline" :data-sortable-container="group">
@@ -32,7 +32,7 @@ import JournalEventTypePicker from '@/features/journals/components/JournalEventT
 import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/DndDiaryEventRow.vue'
 import { diaryEventsNewestFirst } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
-const props = defineProps({ session: { type: Object, required: true }, editableSection: { type: Boolean, default: true }, ownerMode: Boolean, busy: Boolean, editingId: String, focusEventId: String, saveEvent: { type: Function, required: true } })
+const props = defineProps({ session: { type: Object, required: true }, editableSection: { type: Boolean, default: true }, compact: Boolean, ownerMode: Boolean, busy: Boolean, editingId: String, focusEventId: String, saveEvent: { type: Function, required: true } })
 const emit = defineEmits(['edit-session', 'create-event', 'remove-event', 'reorder-events', 'dragging', 'editing'])
 const group = 'diary-' + useId()
 const reordering = ref(false)
@@ -98,4 +98,9 @@ onBeforeUnmount(() => emit('dragging', false))
 .diary-timeline-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 240px; color: var(--text-muted); text-align: center; }
 .diary-timeline-empty svg { color: var(--accent); opacity: .6; } .diary-timeline-empty strong { color: var(--text-2); font: 22px var(--font-display); } .diary-timeline-empty span { font-size: 13px; }
 @media (max-width: 720px) { .diary-timeline { gap: 14px; } .diary-timeline-event--day { width: 100%; } }
+.diary-section--compact .diary-section-toolbar { margin-bottom: 14px; }
+.diary-section--compact .diary-timeline { gap: 12px; padding-bottom: 10px; }
+.diary-section--compact .diary-timeline-empty { min-height: 160px; gap: 10px; }
+.diary-section--compact .diary-timeline-empty strong { font-size: 19px; }
+.diary-section--compact .diary-timeline-empty span { font-size: 12px; line-height: 1.6; }
 </style>

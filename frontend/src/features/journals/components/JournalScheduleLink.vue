@@ -1,7 +1,7 @@
 <template>
   <div class="journal-schedule-link">
     <span v-if="section?.number">Сессия #{{ section.number }} · {{ occurrenceDate(section.date) }}</span>
-    <RouterLink :to="{ name: 'Session', params: { uuid: sessionUuid }, query: { view: 'schedule' } }" @click="$emit('schedule')"><CalendarDays :size="15" /> Сессии кампании</RouterLink>
+    <RouterLink :to="{ name: 'Session', params: { uuid: sessionUuid }, query: { view: 'journal', ...(section?.occurrenceId ? { occurrence: section.occurrenceId } : {}) } }" @click="$emit('schedule')"><CalendarDays :size="15" /> Открыть дневник кампании</RouterLink>
   </div>
 </template>
 <script setup>

@@ -18,4 +18,9 @@ export function occurrenceDate(value, options = { day: 'numeric', month: 'long',
   return new Intl.DateTimeFormat('ru-RU', options).format(new Date(`${value}T12:00:00`))
 }
 
+export function preferredOccurrence(occurrences, today = localDate()) {
+  const groups = groupOccurrences(occurrences, today)
+  return groups.next?.date === today ? groups.next : groups.past[0] || groups.next || groups.undated.at(-1) || null
+}
+
 export function nextOccurrenceNumber(occurrences) { return Math.max(0, ...occurrences.map(row => row.number)) + 1 }

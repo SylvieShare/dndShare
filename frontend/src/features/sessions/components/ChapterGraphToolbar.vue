@@ -9,10 +9,6 @@
     />
     <div class="chapter-toolbar-center">
       <nav data-tutorial="session-navigation" class="chapter-primary-nav" aria-label="Раздел сессии">
-        <button v-if="isDm" type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': primaryView === 'schedule' }"
-          :aria-current="primaryView === 'schedule' ? 'page' : undefined" aria-keyshortcuts="Alt+9" @click="emit('select-view', 'schedule')">
-          <CalendarDays :size="24" /><span>Сессии</span><kbd v-if="showShortcutHints" class="chapter-shortcut-hint">{{ shortcutLabels.alt }}+9</kbd>
-        </button>
         <button
           type="button"
           class="chapter-primary-tab"
@@ -117,7 +113,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { BookOpenText, CalendarDays, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
 import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
 import { useAccountStore } from '@/stores/account'

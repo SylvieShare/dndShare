@@ -50,23 +50,25 @@
 </template>
 <script setup>
 import { LoadingState } from '@sylvieshare/share-ui'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { BookMarked, Feather } from '@lucide/vue'
 import { BaseTile, ConfirmDialog, ToggleSwitch } from '@sylvieshare/share-ui'
 import JournalTimeline from './JournalTimeline.vue'
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
-import { defaultEvent, defaultSession, normalizeSession, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
+import { defaultSession, normalizeSession, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 import { useJournalWorkspace } from '../composables/useJournalWorkspace'
 import { useJournalSectionSelection } from '../composables/useJournalSectionSelection'
 import JournalSourceSwitch from './JournalSourceSwitch.vue'
 import JournalSectionTabs from './JournalSectionTabs.vue'
 import JournalScheduleLink from './JournalScheduleLink.vue'
+import { useJournalEntries } from '../composables/useJournalEntries'
 const props = defineProps({ characterUuid: { type: String, default: '' }, sessionUuid: { type: String, default: '' }, occurrenceId: { type: Number, default: null } })
 defineEmits(['schedule'])
+const workspace = useJournalWorkspace({ characterUuid: props.characterUuid, sessionUuid: props.sessionUuid })
 const { journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
   load, createRoot, selectSource, createSection, updateSection, removeSection: deleteSection,
-  createEntry, updateEntry, removeEntry, setPlayerEditing, reorderEntries, setDragging, setInlineEditing,
-} = useJournalWorkspace({ characterUuid: props.characterUuid, sessionUuid: props.sessionUuid })
+  updateEntry, setPlayerEditing, reorderEntries,
+} = workspace
 const sections = computed(() => journal.value?.sections || [])
 const campaignUuid = computed(() => journal.value?.sessionUuid || props.sessionUuid)
 const showSourceSwitch = computed(() => canSelectSource.value && sources.value.some(source => source.kind === 'session'))
@@ -74,18 +76,7 @@ const { selectedId, selectedSection } = useJournalSectionSelection(journal)
 const sectionDraft = ref(null)
 const creatingSection = ref(false)
 const removingSection = ref(null)
-const removingEvent = ref(null)
-const editingId = ref('')
-const focusEventId = ref('')
-const interacting = ref(false)
-const locked = computed(() => busy.value || interacting.value || Boolean(editingId.value))
-function setInteracting(value) { interacting.value = value; setDragging(value) }
-function setEditing(id, editing) {
-  if (editing) editingId.value = id
-  else if (editingId.value === id) editingId.value = ''
-  setInlineEditing(Boolean(editingId.value))
-  if (focusEventId.value === id) focusEventId.value = ''
-}
+const { editingId, focusEventId, removingEvent, locked, setEditing, setDragging: setInteracting, createEvent, removeEvent } = useJournalEntries(workspace, selectedSection)
 async function createJournal() { await createRoot('').catch(() => {}) }
 function openSection(section) {
   if (locked.value || !canEdit.value || campaignUuid.value) return
@@ -104,24 +95,11 @@ async function saveSection() {
 async function removeSection() {
   await deleteSection(removingSection.value.id).then(() => { removingSection.value = null; sectionDraft.value = null }).catch(() => {})
 }
-async function createEvent(type) {
-  if (locked.value || !canEdit.value || !selectedSection.value) return
-  const sectionId = selectedSection.value.id
-  const before = new Set(selectedSection.value.events.map(event => event.id))
-  try {
-    await createEntry(sectionId, { ...defaultEvent(), type })
-    focusEventId.value = selectedSection.value?.events.find(event => !before.has(event.id))?.id || ''
-  } catch { /* Keep the selected section and API error. */ }
-}
-async function removeEvent() { await removeEntry(removingEvent.value.id).then(() => { removingEvent.value = null }).catch(() => {}) }
-watch(() => journal.value?.uuid, () => { sectionDraft.value = null; removingSection.value = null; removingEvent.value = null; editingId.value = ''; focusEventId.value = ''; setInlineEditing(false) })
+watch(() => journal.value?.uuid, () => { sectionDraft.value = null; removingSection.value = null })
 watch([() => props.occurrenceId, () => journal.value?.uuid], () => {
   const section = sections.value.find(section => section.occurrenceId === props.occurrenceId)
   if (section) selectedId.value = section.id
 }, { flush: 'post' })
-watch(canEdit, allowed => { if (!allowed) { sectionDraft.value = null; removingSection.value = null; removingEvent.value = null } })
-function beforeUnload(event) { if (editingId.value) { event.preventDefault(); event.returnValue = '' } }
-onMounted(() => window.addEventListener('beforeunload', beforeUnload))
-onBeforeUnmount(() => window.removeEventListener('beforeunload', beforeUnload))
+watch(canEdit, allowed => { if (!allowed) { sectionDraft.value = null; removingSection.value = null } })
 </script>
 <style scoped src="./JournalWorkspace.css"></style>

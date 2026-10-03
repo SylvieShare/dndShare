@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 import { useSessionOccurrences } from './useSessionOccurrences'
 import * as api from '@/shared/api/sessionOccurrencesApi'
 const hooks = vi.hoisted(() => ({ mounted: null, unmount: null }))
@@ -28,6 +29,18 @@ describe('meeting editor lifecycle', () => {
     expect(state.draft.value).toBeNull()
     expect(state.error.value).toBe('')
     expect(api.updateSessionOccurrence).toHaveBeenLastCalledWith('campaign', 9, { number: 3, name: 'После правки', date: '2026-10-03', expectedChangedAt: 'revision' })
+  })
+  it('pauses polling while a diary entry is being edited', async () => {
+    api.getSessionOccurrences.mockResolvedValue({ occurrences: [{ id: 1, number: 1 }] })
+    const locked = ref(false)
+    useSessionOccurrences('campaign', { locked })
+    hooks.mounted(); await flush()
+    locked.value = true
+    await vi.advanceTimersByTimeAsync(24000)
+    expect(api.getSessionOccurrences).toHaveBeenCalledTimes(1)
+    locked.value = false
+    await vi.advanceTimersByTimeAsync(12000)
+    expect(api.getSessionOccurrences).toHaveBeenCalledTimes(2)
   })
   it('discards a late refresh started before opening the editor', async () => {
     const state = useSessionOccurrences('campaign')
