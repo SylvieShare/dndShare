@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { appendOwnedEntry, ownedEntryToWeapons, takeInventoryEntry } from '../lib/itemPlacement'
+import { ownedEntryToWeapons, takeInventoryEntry } from '../lib/itemPlacement'
 import { createWeaponInstance, weaponBaseId } from '@/features/character-editor/lib/magicWeapons'
 
 export function useInventoryEquipmentActions({ model, catalog, specializedDestinations, canManage, charCtx, entryTypeId }) {
@@ -19,9 +19,7 @@ export function useInventoryEquipmentActions({ model, catalog, specializedDestin
     if (!destination || !taken) return
     const currentValues = charCtx.values || {}, targetId = destination.value_id
     const owned = taken.entry.magic_item_id ? taken.entry : createWeaponInstance(item(entry), { ...taken.entry, params: { ...taken.entry.params, ...params } })
-    const target = targetId === 'weapon'
-      ? [...(Array.isArray(currentValues.weapon) ? currentValues.weapon : []), ...ownedEntryToWeapons(owned)]
-      : appendOwnedEntry(currentValues[targetId], owned)
+    const target = [...(Array.isArray(currentValues.weapon) ? currentValues.weapon : []), ...ownedEntryToWeapons(owned)]
     charCtx.updateValues({ items: taken.inventory, [targetId]: target })
   }
   function confirmWeapon(params) {

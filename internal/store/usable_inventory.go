@@ -13,7 +13,7 @@ type usableContainer struct {
 
 func (doc transferDocument) usableContainers(source string) []usableContainer {
 	values := doc.values()
-	if source == "potions" || source == "weapon" {
+	if source == "weapon" {
 		return []usableContainer{{values, source, source}}
 	}
 	if source != "items" {

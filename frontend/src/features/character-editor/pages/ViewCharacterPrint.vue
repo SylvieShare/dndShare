@@ -130,7 +130,6 @@
           <div v-if="index === 0 && hasEquipmentSide" class="equipment-side">
             <section v-if="coins.length" class="box coins-box"><BoxTitle>Монеты</BoxTitle><div v-for="coin in coins" :key="coin.id"><strong>{{ coin.amount }}</strong><span>{{ coin.name }}</span></div></section>
             <section v-if="counters.length" class="box list-box"><BoxTitle>Ресурсы</BoxTitle><div v-for="counter in counters" :key="counter.id"><span>{{ counter.name || 'Ресурс' }}</span><strong>{{ counter.value }}<template v-if="counter.max != null"> / {{ counter.max }}</template> {{ counter.unit }}</strong></div></section>
-            <section v-if="potions.length" class="box list-box"><BoxTitle>Зелья</BoxTitle><div v-for="potion in potions" :key="potion.uid"><span>{{ potion.name }}</span><strong>× {{ potion.count }}</strong></div></section>
             <section v-if="equipmentProficiencyGroups.length" class="box prose-box"><BoxTitle>Владения и языки</BoxTitle><div v-for="group in equipmentProficiencyGroups" :key="group.name" class="prose-group"><h3>{{ group.name }}</h3><p>{{ group.value }}</p></div></section>
           </div>
         </div>
@@ -353,8 +352,7 @@ const inventorySections = computed(() => [
 ].filter(section => section.items.length))
 const counters = computed(() => normalizeCounters(values.value.counters))
 const coins = computed(() => Object.entries(values.value.money?.amounts || {}).filter(([, amount]) => Number(amount)).map(([id, amount]) => ({ id, amount: Number(amount), name: suggest.items(17).find(item => String(item.id) === id)?.value || `мон. ${id}` })))
-const potions = computed(() => (Array.isArray(values.value.potions) ? values.value.potions : []).map(entry => ({ ...entry, count: Number(entry.count) || 1, name: ownedItemName(entry, 'Зелье') })))
-const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || potions.value.length || equipmentProficiencyGroups.value.length)
+const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || equipmentProficiencyGroups.value.length)
 const hasEquipment = computed(() => inventorySections.value.length || hasEquipmentSide.value)
 const equipmentPages = computed(() => {
   if (!hasEquipment.value) return []
@@ -508,7 +506,7 @@ function collectItemIds(data) {
   const ids = new Set(); const add = id => { if (id != null && id !== '') ids.add(id) }
   for (const entry of data.weapon || []) { add(entry.item_id); add(entry.magic_item_id) }
   const inv = normalizeValue(data.items); inv.equipped.forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }); inv.sections.forEach(section => section.items.forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }))
-  ;(Array.isArray(data.potions) ? data.potions : []).forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }); (Array.isArray(data.tools) ? data.tools : []).forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }); (data.spells?.tabs || []).forEach(tab => (tab.spells || []).forEach(entry => add(entry.id))); (data.spells?.grants || []).forEach(entry => add(entry.id))
+  ;(Array.isArray(data.tools) ? data.tools : []).forEach(entry => { add(entry.item_id); add(entry.magic_item_id) }); (data.spells?.tabs || []).forEach(tab => (tab.spells || []).forEach(entry => add(entry.id))); (data.spells?.grants || []).forEach(entry => add(entry.id))
   featureItemIds(data).forEach(add)
   return [...ids]
 }

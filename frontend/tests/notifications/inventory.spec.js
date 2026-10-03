@@ -10,6 +10,8 @@ for (const mobile of [false, true]) test(`character bag layouts and moves on ${m
   const bag = page.locator('[data-sortable-container="sec_bag"]')
   const chest = page.locator('[data-sortable-container="sec_chest"]')
   await expect(page.locator('.di-inventory.base-tile')).toHaveCount(1)
+  await expect(page.locator('.di-space + .di-space')).toHaveCSS('border-top-style', 'none')
+  await expect(page.locator('.di-section-line').first()).toBeVisible()
   await expect(page.locator('[data-sortable-container="sec_equipped"]')).toHaveCount(0)
   await expect(page.getByRole('radiogroup')).toHaveCount(0)
   await expect(bag.locator('[data-sortable-slot="2"]')).toHaveClass(/inventory-bag-cell--equipped/)

@@ -99,7 +99,7 @@ func inventoryEvent(ctx context.Context, tx pgx.Tx, sessionID, userID int64, eve
 
 // AddSessionInventory keeps a durable action id even after removal or reservation.
 func (s *Store) AddSessionInventory(ctx context.Context, sessionID, userID int64, source, name, actionID string, raw json.RawMessage) error {
-	if source != "items" && source != "weapon" && source != "potions" {
+	if source != "items" && source != "weapon" {
 		return ErrApplication
 	}
 	var entry map[string]any
@@ -128,7 +128,7 @@ func (s *Store) AddSessionInventory(ctx context.Context, sessionID, userID int64
 		if err != nil {
 			return err
 		}
-		if (source == "potions" && kind != 10) || (source == "weapon" && kind != 1 && kind != 19) || (source == "items" && kind != 2 && kind != 19) {
+		if (source == "weapon" && kind != 1 && kind != 19) || (source == "items" && kind != 2 && kind != 10 && kind != 19) {
 			return ErrApplication
 		}
 	} else {

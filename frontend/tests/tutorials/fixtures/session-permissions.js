@@ -10,7 +10,7 @@ const ctx = reactive({ ownerMode: true, topSession: { uuid: 'session' }, itemTra
 createApp({ render: () => h('main', { style: 'padding:16px;max-width:700px' }, [
   h(SessionSettingsWorkspace, { settings, 'onUpdate-setting': (key, value) => { const [section, field] = key.split('.'); settings[section][field] = value } }),
   h(RowActionMenu, null, { trigger: () => h('button', 'Зелье'), default: () => [
-    h(ItemTransferAction, { purpose: 'transfer', source: 'potions', entry: { uid: 'dose' } }),
-    h(ItemTransferAction, { purpose: 'use', source: 'potions', entry: { uid: 'dose' } }),
+    h(ItemTransferAction, { purpose: 'transfer', source: 'items', entry: { uid: 'dose' } }),
+    h(ItemTransferAction, { purpose: 'use', source: 'items', entry: { uid: 'dose' } }),
   ] }),
 ]) }).use(createPinia()).provide('charCtx', ctx).mount('#app')

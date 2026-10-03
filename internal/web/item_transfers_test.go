@@ -28,7 +28,7 @@ func TestTransferRequestValidation(t *testing.T) {
 		}
 	}
 	valid.Purpose = "use"
-	for _, source := range []string{"potions", "weapon", "items"} {
+	for _, source := range []string{"weapon", "items"} {
 		valid.Source = source
 		if !validItemTransferRequest(valid) {
 			t.Fatalf("valid %s application rejected", source)
