@@ -1,14 +1,14 @@
 <template>
   <div ref="menuAnchor" class="sm-wrap">
-    <UtilityCell v-if="block?.props?.embedded" label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
+    <UtilityCell v-if="block?.props?.embedded" value-row label="Меню персонажа" :active="open" aria-haspopup="menu" :aria-expanded="open" @click="open = !open">
       <template #icon><img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" /></template>
-      <span class="sm-sub">меню</span>
+      <span class="sm-sub">Меню</span>
     </UtilityCell>
     <MorphTile v-else class="sm-tile" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="open = !open" @keydown.enter.prevent="open = !open" @keydown.space.prevent="open = !open">
       <TileAccentStrip />
       <div class="sm-body">
         <img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" />
-        <div class="sm-sub">меню</div>
+        <div class="sm-sub">Меню</div>
       </div>
     </MorphTile>
 

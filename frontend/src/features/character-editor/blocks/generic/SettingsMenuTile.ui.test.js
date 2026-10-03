@@ -19,7 +19,7 @@ describe('desktop utility tiles', () => {
     expect(settingsSource).not.toContain('class="sm-title"')
     expect(settingsSource).toMatch(/\.sm-tile \{[\s\S]*?align-items: center;[\s\S]*?justify-content: center;/)
     expect(settingsSource).toContain('class="sm-ic"')
-    expect(settingsSource).toContain('<div class="sm-sub">меню</div>')
+    expect(settingsSource).toContain('<div class="sm-sub">Меню</div>')
   })
 
   it('hides the save row when there is no active save', () => {

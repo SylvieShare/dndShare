@@ -2,21 +2,25 @@
   <ActionButton
     variant="quiet"
     class="utility-cell action-menu-source"
-    :class="{ 'utility-cell--stacked': stacked, 'action-menu-source--open': active }"
+    :class="{ 'utility-cell--stacked': stacked, 'utility-cell--value-row': valueRow, 'action-menu-source--open': active }"
     :aria-label="label"
     :disabled="disabled"
     @click="emit('click', $event)"
   >
-    <template v-if="$slots.icon" #icon><slot name="icon" /></template>
+    <template v-if="$slots.icon && !valueRow" #icon><slot name="icon" /></template>
     <slot name="decoration" />
-    <slot />
+    <span v-if="valueRow" class="utility-cell-value-row">
+      <span v-if="$slots.icon" class="utility-cell-icon"><slot name="icon" /></span>
+      <slot />
+    </span>
+    <slot v-else />
   </ActionButton>
 </template>
 
 <script setup>
 import { ActionButton } from '@sylvieshare/share-ui'
 
-defineProps({ label: String, disabled: Boolean, active: Boolean, stacked: Boolean })
+defineProps({ label: String, disabled: Boolean, active: Boolean, stacked: Boolean, valueRow: Boolean })
 const emit = defineEmits(['click'])
 </script>
 
@@ -35,5 +39,9 @@ const emit = defineEmits(['click'])
 }
 .utility-cell--stacked { text-align: left; }
 .utility-cell--stacked :deep(> span) { display: flex; flex-direction: column; gap: 4px; width: 100%; min-width: 0; }
+.utility-cell--value-row :deep(> span) { display: grid; grid-template-rows: 18px 22px; gap: 4px; width: 100%; min-width: 0; text-align: left; }
+.utility-cell-value-row { grid-row: 2; display: flex; align-items: center; gap: 4px; }
+.utility-cell-icon { display: flex; align-items: center; justify-content: center; flex: 0 0 20px; width: 20px; height: 20px; color: var(--text-muted); }
+.utility-cell-icon :deep(img), .utility-cell-icon :deep(svg) { width: 20px; height: 20px; }
 .utility-cell.action-menu-source--open { box-shadow: none; transform: none; }
 </style>

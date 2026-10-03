@@ -1,8 +1,8 @@
 <template>
   <RowActionMenu block :trigger-attrs="{ style: { height: '100%', transform: embedded ? 'none' : undefined } }" title="Отдых и рассвет" :disabled="!interactive">
     <template #trigger="{ open }">
-      <UtilityCell v-if="embedded" label="Отдых и рассвет" :disabled="!interactive" :active="open" aria-haspopup="menu" :aria-expanded="open">
-        <template #icon><Moon :size="25" /></template>
+      <UtilityCell v-if="embedded" value-row label="Отдых и рассвет" :disabled="!interactive" :active="open" aria-haspopup="menu" :aria-expanded="open">
+        <template #icon><Moon :size="20" /></template>
         Отдых
       </UtilityCell>
       <ActionButton v-else class="rest-trigger" variant="quiet" :disabled="!interactive" aria-label="Отдых и рассвет">

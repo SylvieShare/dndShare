@@ -69,7 +69,10 @@ activation. Metric headings use `MorphTileHeader` without pencils; inline dice
 buttons are hidden. Clicking initiative or proficiency bonus opens a
 `RowActionMenu` with owner-only «Изменить» and «Бросить кубик», which remains
 available on read-only sheets. AC and speed open their editors directly; menu
-and rest keep their own menus. Cells have 12 px bottom padding and 70 px row
+and rest keep their own menus. «Меню» and «Отдых» reserve the heading row and
+place their icon and label alongside the numeric value row. All six icons use
+a fixed 20×20 px area and the same 4 px gap before the value or label. Cells
+have 12 px bottom padding and 70 px row
 height; the separate full-width level tile below remains 64 px high. The former
 whole-tile morph editor is not used.
 The renamed mobile **Способности** tab uses the expanded cards as well and
