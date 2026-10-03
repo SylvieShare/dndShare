@@ -35,6 +35,7 @@
             </div>
           </div>
           <InventoryBagGrid adaptive :can-add="canAdd" :entries="section.items.map(entryWithDisplay)" :positions="section.slots"
+            :all-item-keys="inventoryMotionKeys"
             :group="sectionGroup(section.id)" :label="section.name" :sortable="sortable" :is-equipped="entry => isEquipped(entry)"
             @add-catalog="openPicker(section.id)" @add-custom="openInlineForm(section.id, null)">
             <template #default="{ entry, index }">
@@ -107,7 +108,7 @@ import { useInventoryCatalog } from './composables/useInventoryCatalog'
 import { createWeaponInstance } from '@/features/character-editor/lib/magicWeapons'
 import { MAGIC_ITEM_TYPE_ID } from '@/features/character-editor/lib/characterMagicItems'
 import { RemoveButton } from '@sylvieshare/share-ui'
-import { computed, provide, inject, nextTick, onMounted, reactive, ref } from 'vue'
+import { computed, provide, inject, nextTick, onMounted, reactive, ref, unref } from 'vue'
 import { Weight } from '@lucide/vue'
 
 import { BaseTile } from '@sylvieshare/share-ui'
@@ -176,6 +177,11 @@ const allSections = computed(() => model.value.sections.map(section => {
   return { ...section, items, weight: inventoryEntriesWeight(items, catalog) }
 }))
 const isEquipped = entry => isInventoryEquipped(model.value, entry.uid)
+const inventoryMotionKeys = computed(() => [
+  ...model.value.equipped.map(entry => entry.uid),
+  ...model.value.sections.flatMap(section => section.items.map(entry => entry.uid)),
+  ...(unref(charCtx.values)?.weapon || []).map(entry => entry.uid),
+])
 function canEquip(entry) { return canManage.value && (isEquipped(entry) || canEquipInventoryItem(entry.display?.base)) }
 function toggleEquipment(entry, close) {
   if (!canEquip(entry)) return

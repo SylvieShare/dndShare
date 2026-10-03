@@ -8,6 +8,7 @@
         @add-catalog="$emit('add-catalog', index)" @add-custom="$emit('add-custom', index)" />
       <InventoryEmptyArtwork v-else class="inventory-bag-empty" />
     </BaseTile>
+    <div ref="effects" class="inventory-bag-effects" aria-hidden="true" inert></div>
   </div>
 </template>
 <script setup>
@@ -16,10 +17,12 @@ import { BaseTile } from '@sylvieshare/share-ui'
 import InventoryEmptyArtwork from './InventoryEmptyArtwork.vue'
 import { bagCells, bagColumnCount, BAG_COLUMNS } from '../lib/bagSlots'
 import InventoryBagEmptyCell from './InventoryBagEmptyCell.vue'
+import { useInventoryGridMotion } from '../composables/useInventoryGridMotion'
 const props = defineProps({
   entries: { type: Array, default: () => [] },
   positions: { type: Object, default: () => ({}) },
   getKey: { type: Function, default: entry => entry.uid },
+  allItemKeys: { type: Array, default: null },
   group: { type: String, required: true },
   label: { type: String, default: 'Рюкзак' },
   isEquipped: { type: Function, default: () => false },
@@ -30,12 +33,19 @@ const props = defineProps({
   sortable: { type: Object, default: null },
 })
 defineEmits(['add-catalog', 'add-custom'])
-const grid = ref(null), measuredWidth = ref(0), columns = ref(BAG_COLUMNS)
+const grid = ref(null), effects = ref(null), measuredWidth = ref(0), columns = ref(BAG_COLUMNS)
+const { heldCellCount, stop: stopMotion } = useInventoryGridMotion(grid, effects, props)
 function updateColumns() {
   if (props.sortable?.dragging) return
-  columns.value = props.adaptive ? bagColumnCount(measuredWidth.value) : BAG_COLUMNS
+  const next = props.adaptive ? bagColumnCount(measuredWidth.value) : BAG_COLUMNS
+  if (next !== columns.value) stopMotion()
+  columns.value = next
 }
-const cells = computed(() => bagCells(props.entries, props.positions, props.getKey, columns.value))
+const cells = computed(() => {
+  const result = bagCells(props.entries, props.positions, props.getKey, columns.value)
+  while (result.length < heldCellCount.value) result.push(null)
+  return result
+})
 let observer, frame
 onMounted(() => {
   measuredWidth.value = grid.value?.clientWidth || 0
@@ -56,7 +66,7 @@ onBeforeUnmount(() => {
 watch(() => [props.adaptive, props.sortable?.dragging], updateColumns)
 </script>
 <style scoped>
-.inventory-bag-grid { display: grid; gap: 8px; width: 100%; max-width: 360px; align-self: center; }
+.inventory-bag-grid { position: relative; display: grid; gap: 8px; width: 100%; max-width: 360px; align-self: center; }
 .inventory-bag-grid--adaptive { max-width: none; align-self: stretch; }
 .inventory-bag-cell { aspect-ratio: 1; min-width: 0; display: flex; align-items: center; justify-content: center; box-shadow: none; }
 .inventory-bag-cell::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--border); border-radius: inherit; pointer-events: none; z-index: 1; }
@@ -65,4 +75,5 @@ watch(() => [props.adaptive, props.sortable?.dragging], updateColumns)
 .inventory-bag-cell--target { outline: 2px solid var(--accent); outline-offset: 2px; }
 .inventory-bag-empty { color: var(--text-muted); opacity: .25; pointer-events: none; }
 .inventory-bag-cell :deep(.ram-custom-trigger) { width: 100%; height: 100%; border-radius: inherit; }
+.inventory-bag-effects { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 </style>
