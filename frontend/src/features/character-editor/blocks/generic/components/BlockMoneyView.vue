@@ -6,6 +6,7 @@
     :aria-description="morphPreview ? balanceDescription : undefined">
     <component :is="buttonLayout ? ActionButton : 'div'" class="money-content"
       :variant="buttonLayout ? 'quiet' : undefined" :disabled="morphPreview || undefined"
+      :style="morphPreview ? { opacity: 1 } : undefined"
       :aria-hidden="morphPreview || undefined"
       :aria-label="canEditWallet ? 'Изменить кошелёк' : undefined"
       :aria-description="canEditWallet ? balanceDescription : undefined"
@@ -52,7 +53,7 @@ function onWalletClick(event) {
 .money-view--inline:not(.money-view--panel) { padding: 0; }
 .money-view--inline.money-view--panel { padding: 16px 18px; }
 .money-view--morph-preview.money-view--inline { padding: 0; }
-.money-view--morph-preview .money-content { opacity: 1; pointer-events: none; }
+.money-view--morph-preview .money-content { pointer-events: none; }
 .money-view--inline .money-content { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; max-width: 100%; }
 .money-view--inline :deep(.money-line) { justify-content: flex-end; min-width: 0; }
 .money-wallet-icon { flex-shrink: 0; color: var(--text-muted); }
