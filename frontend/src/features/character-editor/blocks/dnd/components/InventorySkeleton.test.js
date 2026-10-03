@@ -18,7 +18,7 @@ describe('inventory loading structure', () => {
     expect(html).toContain('Рюкзак')
     expect(html.match(/inventory-loading-cell/g)).toHaveLength(2)
     expect(html.match(/di-section-head/g)).toHaveLength(2)
-    expect(html.match(/base-tile /g)).toHaveLength(1)
+    expect(html).not.toContain('base-tile')
     expect(html).not.toContain('<button')
   })
 

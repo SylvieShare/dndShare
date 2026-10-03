@@ -9,6 +9,16 @@ const render = coin => renderToString(createSSRApp({ render: () => h(BlockMoneyV
 }) }))
 
 describe('money artwork', () => {
+  it('embeds a keyboard-accessible wallet icon and balances without a second surface or heading', async () => {
+    const html = await renderToString(createSSRApp({ render: () => h(BlockMoneyView, {
+      inline: true, editable: true, title: 'Кошелёк', coins: [{ id: 3, title: 'зм', amount: 42 }],
+    }) }))
+    expect(html).toContain('aria-label="Изменить кошелёк"')
+    expect(html).toContain('lucide-wallet')
+    expect(html).toContain('42')
+    expect(html).not.toContain('morph-tile-header')
+    expect(html).not.toContain('base-tile')
+  })
   it('shows the shared WebP in preference to SVG without recoloring it', async () => {
     const html = await render({ iconImageUrl: '/gold.webp', svg })
     expect(html).toContain('src="/gold.webp"')
