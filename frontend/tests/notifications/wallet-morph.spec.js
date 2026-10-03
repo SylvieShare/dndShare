@@ -30,6 +30,7 @@ for (const mobile of [false, true]) {
           const style = getComputedStyle(sheet)
           window.walletMorphFrames.push({
             phase: window.walletMorphPhase,
+            opacity: Number(getComputedStyle(copy.querySelector('.money-content')).opacity),
             screenX: coin.left, screenY: coin.top,
             x: coin.left - panel.left - transform.m41 - Number.parseFloat(style.borderLeftWidth),
             y: coin.top - panel.top - transform.m42 - Number.parseFloat(style.borderTopWidth),
@@ -54,6 +55,7 @@ for (const mobile of [false, true]) {
     await page.keyboard.press('Escape')
     await expect.poll(() => page.evaluate(() => window.walletMorphFinished)).toBe(true)
     const result = await page.evaluate(() => ({ offset: window.walletSourceOffset, frames: window.walletMorphFrames }))
+    expect(result.frames.every(frame => frame.opacity === 1)).toBe(true)
     for (const phase of ['open', 'close']) {
       const frames = result.frames.filter(frame => frame.phase === phase)
       expect(frames.length).toBeGreaterThan(3)
