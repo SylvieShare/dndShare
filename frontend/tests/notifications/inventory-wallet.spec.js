@@ -28,13 +28,16 @@ for (const mobile of [false, true]) {
     await page.mouse.move(0, 0)
     await coins.click()
     await expect(page.locator('.mes-editor')).toBeVisible()
-    const preview = page.locator('.mes-view .money-view')
+    const preview = page.locator('.mes-view .money-morph-preview')
     await expect(preview.getByRole('button')).toHaveCount(0)
-    const padding = await preview.evaluate(el => {
-      const style = getComputedStyle(el)
-      return [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].map(Number.parseFloat)
-    })
-    expect(padding).toEqual([16, 18, 16, 18])
+    await expect.poll(() => preview.evaluate(el => {
+      const line = el.querySelector('.money-line').getBoundingClientRect()
+      const glyph = el.querySelector('.money-wallet-icon').getBoundingClientRect()
+      const canvas = el.getBoundingClientRect()
+      return Math.max(Math.abs(Math.min(line.top, glyph.top) - canvas.top - 16),
+        Math.abs(canvas.right - Math.max(line.right, glyph.right) - 18),
+        Math.abs(canvas.bottom - Math.max(line.bottom, glyph.bottom) - 16))
+    })).toBeLessThan(1)
     await page.keyboard.press('Escape')
     await expect(page.locator('.mes-editor')).toHaveCount(0)
     const [cardBox, walletBox, bagBox] = await Promise.all([card.boundingBox(), wallet.boundingBox(), card.locator('.di-space').first().boundingBox()])

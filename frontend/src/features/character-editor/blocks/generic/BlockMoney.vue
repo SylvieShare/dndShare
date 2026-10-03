@@ -11,11 +11,13 @@
     :origin-el="originEl"
     orientation="vertical"
     :strip="false"
-    :view-width="300"
+    :view-width="moneyViewWidth"
     @close="closeEditor"
   >
-    <template #view>
-      <BlockMoneyView panel :inline="inline" :title="blockTitle" :loading="loading" :coins="displayCoins" />
+    <template #view="{ revealed }">
+      <MoneyMorphPreview v-if="inline" :origin-el="originEl" :origin-rect="originRect" :revealed="revealed"
+        :view-width="moneyViewWidth" :loading="loading" :coins="displayCoins" />
+      <BlockMoneyView v-else panel :title="blockTitle" :loading="loading" :coins="displayCoins" />
     </template>
 
     <template #editor>
@@ -39,6 +41,7 @@
 defineOptions({ inheritAttrs: false })
 import { computed, inject, ref, watch } from 'vue'
 import BlockMoneyView from '@/features/character-editor/blocks/generic/components/BlockMoneyView'
+import MoneyMorphPreview from './components/MoneyMorphPreview.vue'
 import CalcPad from '@/features/character-editor/components/CalcPad'
 import { EditorPanel } from '@sylvieshare/share-ui'
 import MorphEditorShell from '@/features/character-editor/components/MorphEditorShell'
@@ -51,6 +54,7 @@ const emit = defineEmits(['update:value'])
 const charCtx = inject('charCtx', { ownerMode: false })
 const tileRef = ref(null)
 const { editorOpen, originRect, originEl, open, openFrom, close } = useMorphOrigin()
+const moneyViewWidth = computed(() => props.inline ? Math.max(300, (originRect.value?.width || 0) + 2) : 300)
 
 const loading = ref(false)
 const calcExpr = ref('')
