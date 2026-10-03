@@ -105,6 +105,10 @@ Desktop `LayoutInnerTabs` groups also keep their selected pane in independent,
 schema-stable `innerTab-*` query keys. Reload and browser history restore both
 the outer character tab and its inner pane; invalid or stale inner indexes fall
 back to the first pane. Every weapon uses its own shared desktop/mobile `BaseTile`.
+В разделе снаряжения доступны кошелёк и рюкзаки. Запасы учитываются количеством
+предметов в ячейках; отдельные пользовательские плитки и их редактор удалены,
+включая представление для печати.
+
 Все пространства предметов собраны в одном `BaseTile`: разделённые заголовками
 и линиями с названием рюкзаки без режима списка и отдельной области «Экипировано».
 Справа в заголовке каждого пространства показаны иконка гири, суммарный вес

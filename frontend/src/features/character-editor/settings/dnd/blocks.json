@@ -229,11 +229,6 @@
       "tool_type_id": 14
     }
   },
-  "counters": {
-    "id": "counters",
-    "type": "BLOCK_COUNTERS",
-    "content": {}
-  },
   "money": {
     "id": "money",
     "type": "BLOCK_MONEY",

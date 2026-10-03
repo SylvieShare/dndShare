@@ -54,6 +54,10 @@ func serverError(w http.ResponseWriter, err error) {
 		return
 	}
 	var pgErr *pgconn.PgError
+	if errors.As(err, &pgErr) && pgErr.Code == "23514" && pgErr.ConstraintName == "character_without_inventory_counters" {
+		badRequest(w, "Обновите страницу: плитки больше не поддерживаются")
+		return
+	}
 	if errors.As(err, &pgErr) && pgErr.Code == "PRED1" {
 		badRequest(w, pgErr.Message)
 		return
