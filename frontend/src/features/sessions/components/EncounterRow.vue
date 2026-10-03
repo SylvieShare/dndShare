@@ -248,8 +248,7 @@ function onSelectionClick(event) {
 function onRowClick(event) {
   if (!rowMenuVisible.value || enc.sortable.shouldSuppressClick()) return
   if (event.target?.closest?.(DRAG_IGNORE)) return
-  const rect = event.currentTarget.getBoundingClientRect()
-  rowMenuRef.value?.toggle(event.detail > 0 ? event : { detail: 1, clientX: rect.left + rect.width / 2, clientY: rect.bottom })
+  rowMenuRef.value?.toggle(event.currentTarget)
 }
 
 const statesEditorOpen = ref(false)

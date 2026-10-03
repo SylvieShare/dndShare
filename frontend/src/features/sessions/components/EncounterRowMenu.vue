@@ -1,5 +1,10 @@
 <template>
-  <RowActionMenu ref="menuRef" :trigger-attrs="{ style: { display: 'none' } }">
+  <RowActionMenu
+    ref="menuRef"
+    :anchor="menuAnchor"
+    title="Действия существа"
+    :trigger-attrs="{ style: { display: 'none' } }"
+  >
     <template #default="{ close }">
       <EncounterInitiativeMenu v-if="!enc.encounter.active && section !== 'dead'" :combatant="combatant" :encounter="enc" />
       <RowActionItem
@@ -61,7 +66,7 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent, inject, ref } from 'vue'
+import { computed, defineAsyncComponent, inject, nextTick, ref, shallowRef } from 'vue'
 import { Activity, Archive, BookOpen, Copy, Dices, History } from '@lucide/vue'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -89,6 +94,7 @@ const canDelete = computed(() => isNpc.value)
 const canRevive = computed(() => props.section === 'dead' && enc.canEditPlayerHp())
 
 const cloneCount = ref(1)
+const menuAnchor = shallowRef(null)
 const menuRef = ref(null)
 
 function cloneNpc(closeSubmenu, closeMenu) {
@@ -97,8 +103,10 @@ function cloneNpc(closeSubmenu, closeMenu) {
   closeMenu()
 }
 
-function toggle(event) {
-  menuRef.value?.toggle(event)
+async function toggle(anchor) {
+  menuAnchor.value = anchor
+  await nextTick()
+  menuRef.value?.toggle()
 }
 
 defineExpose({ toggle })

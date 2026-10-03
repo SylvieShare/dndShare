@@ -105,8 +105,11 @@ anchored surfaces select the library-owned `action-menu` transition preset, so
 they share enter/leave motion with other row-action menus without depending on
 another component's CSS.
 
-Clicking a non-interactive area of a combat or reserve row opens its action
-menu; initiative, HP, selection, marker and other dedicated controls keep their
+Clicking a non-interactive area of a combat or reserve row, or pressing
+Enter/Space on the focused tile, opens its action menu below that tile,
+aligned with its right edge. The shared `RowActionMenu` anchors to the actual
+tile and moves the menu above it when the viewport has insufficient space
+below; initiative, HP, selection, marker and other dedicated controls keep their
 own click behavior. The shared menu can edit states for both players and NPCs,
 send a combatant to reserve, reroll formula-based NPC HP while it remains in
 reserve, and delete NPCs. Bestiary NPCs also expose `Открыть карточку`, which
