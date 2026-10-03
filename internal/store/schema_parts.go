@@ -174,4 +174,5 @@ var schemaParts = []struct {
 	{"resolved-inventory-counters", schemaResolvedInventoryCountersSQL},
 	{"removed-inventory-counters", schemaRemovedInventoryCountersSQL},
 	{"weapon-note-resources", schemaWeaponNoteResourcesSQL},
+	{"session-occurrences", schemaSessionOccurrencesSQL},
 }

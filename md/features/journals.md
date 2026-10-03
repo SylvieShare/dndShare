@@ -20,7 +20,14 @@ desktop/mobile-схем. Пользовательские схемы испол�
 ничего не создаёт; уже выбранный источник сохраняется. Ошибку загрузки/создания
 можно повторить. Переключатель источника показывается только при наличии
 доступного дневника сессии: без него нет ни выбора, ни подсказки о сессии.
-Видим один раздел, выбираемый горизонтальной строкой с `Новый раздел` в начале.
+Видим один раздел, выбираемый горизонтальной строкой. `Новый раздел` доступен
+в личном дневнике. В дневнике кампании раздел соответствует встрече из
+[календаря сессий](sessions.md#календарь-сессий): номер, название и дата едины
+с расписанием. Его создание, переименование и удаление выполняются мастером
+в календаре; отдельного создания дневника кампании в UI нет. Кнопка «Дневник»
+в расписании сразу выбирает раздел встречи. При обычном открытии выбирается
+сегодняшняя, последняя прошедшая или ближайшая будущая встреча; затем выбранный
+раздел сохраняется при обновлениях. Связь доступна также в листе персонажа.
 Над лентой — фильтр `Всё / Задания / Диалоги`; справа — добавление, правка
 раздела и управление порядком. При фильтрации перестановка отключена, чтобы
 невидимые записи не меняли порядок. Создание возвращает полный список.
@@ -95,7 +102,7 @@ Polling и переключение источника/раздела приос
 где пункт — `{id, text, done}`. Сервер принимает до 100 пунктов, текст пункта
 до 500 символов и награду до 2000 символов; пустые тексты и повторные ID запрещены.
 
-Удаление события/раздела требует подтверждения и удаляет только выбранное
+Удаление записи/личного раздела требует подтверждения и удаляет только выбранное
 содержимое с его узлами и связями; соседние события не удаляются.
 `expectedChangedAt` защищает inline-правки содержимого от параллельной перезаписи.
 DM редактирует всегда; игрок — при включённом `playersCanEdit`. Этот флажок
@@ -118,7 +125,9 @@ journal is available. Without one there is no source selector or campaign hint.
 The owner's first visit initializes a missing personal journal automatically,
 without asking for a name; an existing selected journal is left untouched.
 Each character has at most one personal journal.
-Horizontal section tabs show one section at a time. Full event cards grow with
+Campaign sections are owned by game meetings and use their number, name and date.
+Only the DM manages meetings through the schedule; players may edit entries when
+allowed. Personal sections remain independent. Horizontal section tabs show one section at a time. Full event cards grow with
 their contents, newest first, with a connecting line through their centers.
 Creation and section/order controls sit at the top right of the event area.
 There is no zoom, layout action, or detail side panel. Filters sit above the list.

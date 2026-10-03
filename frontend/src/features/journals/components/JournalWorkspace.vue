@@ -16,7 +16,8 @@
               label="Игроки могут редактировать дневник" @update:model-value="value => setPlayerEditing(value).catch(() => {})" />
           </div>
         </header>
-        <JournalSectionTabs v-if="journal" :sections="sections" :selected-id="selectedId" :editable="canEdit" :disabled="locked"
+        <JournalScheduleLink v-if="campaignUuid" :session-uuid="campaignUuid" :section="selectedSection" @schedule="$emit('schedule')" />
+        <JournalSectionTabs v-if="journal" :sections="sections" :selected-id="selectedId" :editable="canEdit && !campaignUuid" :disabled="locked"
           @select="selectedId = $event" @create="openSection()" />
       </BaseTile>
       <template v-if="journal">
@@ -24,18 +25,14 @@
         <p v-else-if="!canEdit && journal.kind === 'session'" class="journal-edit-hint">Только чтение · записи добавляет мастер</p>
         <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
         <JournalTimeline v-if="selectedSection" :key="`${journal.uuid}:${selectedSection.id}`"
-          :session="selectedSection" :owner-mode="canEdit" :busy="busy" :editing-id="editingId" :focus-event-id="focusEventId"
+          :session="selectedSection" :owner-mode="canEdit" :editable-section="!campaignUuid" :busy="busy" :editing-id="editingId" :focus-event-id="focusEventId"
           :save-event="updateEntry" @edit-session="openSection(selectedSection)" @create-event="createEvent"
           @remove-event="removingEvent = $event" @editing="setEditing" @dragging="setInteracting"
           @reorder-events="ids => reorderEntries(selectedSection.id, ids).catch(() => {})" />
-        <div v-else class="journal-blank"><Feather :size="26" /><strong>Первая глава ещё впереди</strong><span>{{ canEdit ? 'Нажмите «Новый раздел», чтобы начать летопись.' : 'Мастер пока не добавил разделы.' }}</span></div>
+        <div v-else class="journal-blank"><Feather :size="26" /><strong>Первая глава ещё впереди</strong><span>{{ campaignUuid ? 'Разделы дневника появляются вместе с сессиями кампании.' : canEdit ? 'Нажмите «Новый раздел», чтобы начать летопись.' : 'Мастер пока не добавил разделы.' }}</span></div>
       </template>
       <template v-else>
-        <FormTextInput v-if="sessionUuid" v-model:value="newJournalName" class="journal-name-input" :disabled="busy"
-          aria-label="Название дневника" placeholder="Название дневника (необязательно)" :maxlength="160" />
-        <button v-if="sessionUuid" class="journal-start" type="button" :disabled="busy" @click="createJournal">
-          <Plus :size="16" />Создать дневник кампании
-        </button>
+        <p v-if="sessionUuid" class="journal-edit-hint">Дневник появится автоматически, когда мастер создаст сессию в календаре кампании.</p>
         <p v-if="error" class="journal-error" role="alert">{{ error }}</p>
         <button v-if="characterUuid && error" class="journal-start" type="button" :disabled="busy" @click="load()">Повторить загрузку</button>
       </template>
@@ -54,8 +51,8 @@
 <script setup>
 import { LoadingState } from '@sylvieshare/share-ui'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { BookMarked, Feather, Plus } from '@lucide/vue'
-import { BaseTile, ConfirmDialog, FormTextInput, ToggleSwitch } from '@sylvieshare/share-ui'
+import { BookMarked, Feather } from '@lucide/vue'
+import { BaseTile, ConfirmDialog, ToggleSwitch } from '@sylvieshare/share-ui'
 import JournalTimeline from './JournalTimeline.vue'
 import DndDiarySessionModal from '@/features/character-editor/blocks/dnd/components/DndDiarySessionModal.vue'
 import { defaultEvent, defaultSession, normalizeSession, patchSession } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
@@ -63,16 +60,18 @@ import { useJournalWorkspace } from '../composables/useJournalWorkspace'
 import { useJournalSectionSelection } from '../composables/useJournalSectionSelection'
 import JournalSourceSwitch from './JournalSourceSwitch.vue'
 import JournalSectionTabs from './JournalSectionTabs.vue'
-const props = defineProps({ characterUuid: { type: String, default: '' }, sessionUuid: { type: String, default: '' } })
+import JournalScheduleLink from './JournalScheduleLink.vue'
+const props = defineProps({ characterUuid: { type: String, default: '' }, sessionUuid: { type: String, default: '' }, occurrenceId: { type: Number, default: null } })
+defineEmits(['schedule'])
 const { journal, sources, canEdit, canManage, canSelectSource, loading, busy, error,
   load, createRoot, selectSource, createSection, updateSection, removeSection: deleteSection,
   createEntry, updateEntry, removeEntry, setPlayerEditing, reorderEntries, setDragging, setInlineEditing,
 } = useJournalWorkspace({ characterUuid: props.characterUuid, sessionUuid: props.sessionUuid })
 const sections = computed(() => journal.value?.sections || [])
+const campaignUuid = computed(() => journal.value?.sessionUuid || props.sessionUuid)
 const showSourceSwitch = computed(() => canSelectSource.value && sources.value.some(source => source.kind === 'session'))
 const { selectedId, selectedSection } = useJournalSectionSelection(journal)
 const sectionDraft = ref(null)
-const newJournalName = ref('')
 const creatingSection = ref(false)
 const removingSection = ref(null)
 const removingEvent = ref(null)
@@ -87,9 +86,9 @@ function setEditing(id, editing) {
   setInlineEditing(Boolean(editingId.value))
   if (focusEventId.value === id) focusEventId.value = ''
 }
-async function createJournal() { await createRoot(newJournalName.value).then(() => { newJournalName.value = '' }).catch(() => {}) }
+async function createJournal() { await createRoot('').catch(() => {}) }
 function openSection(section) {
-  if (locked.value || !canEdit.value) return
+  if (locked.value || !canEdit.value || campaignUuid.value) return
   creatingSection.value = !section
   sectionDraft.value = section ? normalizeSession(section) : defaultSession()
 }
@@ -116,6 +115,10 @@ async function createEvent(type) {
 }
 async function removeEvent() { await removeEntry(removingEvent.value.id).then(() => { removingEvent.value = null }).catch(() => {}) }
 watch(() => journal.value?.uuid, () => { sectionDraft.value = null; removingSection.value = null; removingEvent.value = null; editingId.value = ''; focusEventId.value = ''; setInlineEditing(false) })
+watch([() => props.occurrenceId, () => journal.value?.uuid], () => {
+  const section = sections.value.find(section => section.occurrenceId === props.occurrenceId)
+  if (section) selectedId.value = section.id
+}, { flush: 'post' })
 watch(canEdit, allowed => { if (!allowed) { sectionDraft.value = null; removingSection.value = null; removingEvent.value = null } })
 function beforeUnload(event) { if (editingId.value) { event.preventDefault(); event.returnValue = '' } }
 onMounted(() => window.addEventListener('beforeunload', beforeUnload))

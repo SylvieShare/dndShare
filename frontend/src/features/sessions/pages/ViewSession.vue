@@ -81,15 +81,16 @@
         @open-chapters="openChapters"
       >
         <template #primary-workspace>
+          <SessionScheduleWorkspace v-if="primaryView === 'schedule'" :session-uuid="sessionUuid" :editable="isDm" @journal="openOccurrenceJournal" />
           <SessionMapWorkspace v-if="mapVisited && mapsAvailable" v-show="primaryView === 'maps'" ref="mapWorkspace" :session-uuid="sessionUuid" :session="session" :participants="participants" :encounter="encounter" />
           <p v-if="primaryView === 'maps' && !mapsAvailable" role="status">Скоро будет</p>
           <SessionSettingsWorkspace v-if="primaryView === 'settings'" :settings="sessionSettings"
             :saving="settingsSaving" :error="settingsError" @update-setting="updateSessionSetting" />
           <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
-          <JournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" />
+          <JournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" :occurrence-id="journalOccurrenceId" />
           <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
           <SessionWorldLayer
-            v-else-if="primaryView !== 'maps' && primaryView !== 'story'"
+            v-else-if="primaryView !== 'maps' && primaryView !== 'story' && primaryView !== 'schedule'"
             ref="worldLayer"
             :session-uuid="sessionUuid"
             :active-view="primaryView"
@@ -269,6 +270,7 @@ import CharacterSheetModal from '@/features/character-editor/components/Characte
 import ChapterGraphTab from '@/features/sessions/components/ChapterGraphTab.vue'
 import EncounterReviveModal from '@/features/sessions/components/EncounterReviveModal.vue'
 import SessionChronicleWorkspace from '@/features/sessions/components/SessionChronicleWorkspace.vue'
+import SessionScheduleWorkspace from '@/features/sessions/components/SessionScheduleWorkspace.vue'
 import SessionEditModal from '@/features/sessions/components/SessionEditModal.vue'
 import SessionJoinModal from '@/features/sessions/components/SessionJoinModal.vue'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -308,6 +310,11 @@ const {
   updateSessionSetting, updateWorkspaceContext, workspaceChapter, workspaceClosing, workspaceLevel,
   workspaceMode, workspaceMotionMode, workspaceScene, worldLayer,
 } = useSessionPage()
+const journalOccurrenceId = ref(null)
+function openOccurrenceJournal(occurrence) {
+  journalOccurrenceId.value = occurrence.id
+  selectSessionView('journal')
+}
 provide('applicationEncounter', encounter)
 const mapVisited = ref(false), mapWorkspace = ref(null)
 const account = useAccountStore()

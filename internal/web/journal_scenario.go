@@ -107,6 +107,13 @@ func (s *Server) handleAppendScenarioJournalItem(w http.ResponseWriter, r *http.
 	if !ok {
 		return
 	}
+	var req struct {
+		OccurrenceID int64 `json:"occurrenceId"`
+	}
+	if decodeJSON(r, &req) != nil {
+		badRequest(w, "Некорректный запрос")
+		return
+	}
 	item, err := s.store.GetSceneItem(r.Context(), itemID)
 	if err != nil {
 		writeJournalError(w, err)
@@ -116,20 +123,25 @@ func (s *Server) handleAppendScenarioJournalItem(w http.ResponseWriter, r *http.
 	if !ok {
 		return
 	}
-	journal, err := s.store.CreateSessionJournal(r.Context(), session.ID, journalTruncate("Дневник · "+session.Name, 160))
+	journal, err := s.store.GetSessionJournal(r.Context(), session.ID)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
+	if journal == nil {
+		badRequest(w, "Сначала создайте сессию в календаре кампании")
+		return
+	}
 	sectionID := int64(0)
-	if len(journal.Sections) > 0 {
-		sectionID = journal.Sections[len(journal.Sections)-1].ID
-	} else {
-		sectionID, err = s.store.CreateJournalSection(r.Context(), journal.ID, scene.Name, "")
-		if err != nil {
-			serverError(w, err)
-			return
+	for _, section := range journal.Sections {
+		if section.OccurrenceID != nil && *section.OccurrenceID == req.OccurrenceID {
+			sectionID = section.ID
+			break
 		}
+	}
+	if sectionID == 0 {
+		badRequest(w, "Выберите сессию для записи в дневник")
+		return
 	}
 	mutation := scenarioJournalMutation(item, scene)
 	if mutation.Title == "" {

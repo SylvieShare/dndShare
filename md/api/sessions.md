@@ -181,15 +181,30 @@
   notification filtering; the client never treats payload fields as recipients. `clientActionId` makes
   retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
   `potion`, `spell`, `feature` or `ability`) for additions to a character;
+- `GET /api/sessions/{uuid}/occurrences` returns `{occurrences:[]}` for the DM
+  and current participants. A meeting contains `{id,number,name,date?,sectionId,
+  entryCount,changedAt}`. Dates are calendar-only `YYYY-MM-DD`; undated meetings
+  originate from migrated free-text diary dates. `POST /occurrences` and
+  `PATCH|DELETE /occurrences/{occurrenceId}` are DM-only. Creation requires
+  `{number,name,date}` (number 1…1000000, nonblank name up to 160 Unicode characters,
+  valid date). PATCH also requires `expectedChangedAt`; stale changes and duplicate
+  numbers return 409. Creation atomically creates the campaign diary if needed
+  and a linked section; deletion cascades only to that meeting's section and entries.
+  Mutation responses return the complete `{occurrences:[]}` list.
 - `GET|POST /api/sessions/{uuid}/journal` reads the shared campaign journal or
   creates it (creation is DM-only). `POST
   /api/sessions/{uuid}/journal/scenario-items/{itemId}` is also DM-only and
-  appends a typed entry with an immutable block/scene snapshot;
+  requires `{occurrenceId}` and appends a typed entry to that meeting's section
+  with an immutable block/scene snapshot. A missing or foreign meeting returns 400;
 - `GET /api/journals/{journalUuid}` and the nested `POST|PATCH|DELETE` routes
   under `/sections`, `/sections/{sectionId}/entries` and `/entries/{entryId}`
   provide the common journal CRUD contract. A personal journal is writable by
   its owner; a session journal is writable by the DM and, when `playersCanEdit`
   is enabled, current participants. Responses include `canEdit` and `canManage`.
+  Section creation, PATCH and DELETE are personal-only; campaign sections are
+  managed through meetings (direct section mutations return 409).
+  Campaign sections include `occurrenceId` and `number`; `title`, `date` and
+  section `changedAt` come from the meeting, rather than duplicate metadata.
   Existing entry types cannot be changed (HTTP 400). Entry PATCH requires
   `expectedChangedAt` from the loaded entry. A stale timestamp returns HTTP 409
   without modifying the entry, its authorship or content; omission returns 400;

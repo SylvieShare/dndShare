@@ -13,10 +13,7 @@ func testJournalQuest(t *testing.T, s *Store) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sectionID, err := s.CreateJournalSection(ctx, journal.ID, "Задания", "")
-	if err != nil {
-		t.Fatal(err)
-	}
+	sectionID := createCampaignSectionTest(t, s, 1, "Задания")
 	if _, err := s.CreateJournalEntry(ctx, journal.ID, sectionID, 1, JournalEntryMutation{Type: "header", Title: "Перед рассветом"}); err != nil {
 		t.Fatalf("header entry: %v", err)
 	}

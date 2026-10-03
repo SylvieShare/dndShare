@@ -18,6 +18,10 @@ func (s *Server) handleCreateJournalSection(w http.ResponseWriter, r *http.Reque
 	if !ok {
 		return
 	}
+	if journal.Kind == "session" {
+		conflict(w, "Создавайте сессии в расписании кампании")
+		return
+	}
 	var req journalSectionRequest
 	if err := decodeJSON(r, &req); err != nil {
 		badRequest(w, "Некорректный запрос")
@@ -37,6 +41,10 @@ func (s *Server) handleCreateJournalSection(w http.ResponseWriter, r *http.Reque
 func (s *Server) handleUpdateJournalSection(w http.ResponseWriter, r *http.Request) {
 	_, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
+		return
+	}
+	if journal.Kind == "session" {
+		conflict(w, "Дата и название меняются в расписании кампании")
 		return
 	}
 	sectionID, ok := journalPathID(w, r, "sectionId")
@@ -62,6 +70,10 @@ func (s *Server) handleUpdateJournalSection(w http.ResponseWriter, r *http.Reque
 func (s *Server) handleDeleteJournalSection(w http.ResponseWriter, r *http.Request) {
 	_, journal, ok := s.requireJournalWrite(w, r)
 	if !ok {
+		return
+	}
+	if journal.Kind == "session" {
+		conflict(w, "Удаляйте сессию в расписании кампании")
 		return
 	}
 	sectionID, ok := journalPathID(w, r, "sectionId")

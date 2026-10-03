@@ -5,8 +5,8 @@
       <button v-for="(section, index) in sections" :key="section.id" type="button" role="tab" :data-section-id="section.id"
         :aria-selected="section.id === selectedId" :tabindex="section.id === selectedId ? 0 : -1" :disabled="disabled" :title="section.title || `Раздел ${index + 1}`"
         :class="{ active: section.id === selectedId }" @click="$emit('select', section.id)" @keydown="navigate($event, index)">
-        <span class="journal-chapter-number">{{ String(index + 1).padStart(2, '0') }}</span>
-        <span>{{ section.title || `Раздел ${index + 1}` }}</span><small v-if="section.date">{{ section.date }}</small>
+        <span class="journal-chapter-number">{{ section.number ? `#${section.number}` : String(index + 1).padStart(2, '0') }}</span>
+        <span>{{ section.title || `Раздел ${index + 1}` }}</span><small v-if="section.date">{{ section.occurrenceId ? occurrenceDate(section.date) : section.date }}</small>
       </button>
     </div>
   </nav>
@@ -14,6 +14,7 @@
 <script setup>
 import { nextTick, ref, watch } from 'vue'
 import { Plus } from '@lucide/vue'
+import { occurrenceDate } from '@/features/sessions/lib/sessionOccurrences'
 const props = defineProps({ sections: { type: Array, default: () => [] }, selectedId: String, editable: Boolean, disabled: Boolean })
 const emit = defineEmits(['select', 'create'])
 const strip = ref(null)

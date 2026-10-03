@@ -22,6 +22,13 @@
         </div>
       </header>
 
+      <div class="player-session__schedule">
+        <template v-if="journalOccurrence">
+          <button type="button" class="player-session__schedule-back" @click="journalOccurrence = null"><ArrowLeft :size="16" /> К списку сессий</button>
+          <JournalWorkspace :session-uuid="session.uuid" :occurrence-id="journalOccurrence.id" @schedule="journalOccurrence = null" />
+        </template>
+        <SessionScheduleWorkspace v-else :session-uuid="session.uuid" @journal="journalOccurrence = $event" />
+      </div>
       <div class="player-session__grid">
         <BaseTile data-tutorial="session-chapter" class="current-chapter" color="var(--accent)" framed>
           <div class="current-chapter__art" :class="{ 'current-chapter__art--empty': !chapterImage }">
@@ -116,12 +123,21 @@
 
 <script setup>
 import SessionTutorialSettings from '@/features/tutorials/components/SessionTutorialSettings.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { BookOpen, ExternalLink, UsersRound } from '@lucide/vue'
+import { ArrowLeft, BookOpen, ExternalLink, UsersRound } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { pvAvatar, pvName, pvSubtitle, pvHp } from '@/features/sessions/lib/participantView'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
+import SessionScheduleWorkspace from './SessionScheduleWorkspace.vue'
+import JournalWorkspace from '@/features/journals/components/JournalWorkspace.vue'
+import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
+const journalOccurrence = ref(null)
+useTutorialAction('session-schedule', ({ onCleanup }) => {
+  const previous = journalOccurrence.value
+  onCleanup(() => { journalOccurrence.value = previous })
+  journalOccurrence.value = null
+})
 
 const props = defineProps({
   session: { type: Object, required: true },
@@ -197,6 +213,12 @@ function participantStyle(participant) {
   return { '--party-color': AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length] }
 }
 </script>
+
+<style scoped>
+.player-session__schedule { margin-block: 28px; }
+.player-session__schedule :deep(.session-schedule), .player-session__schedule :deep(.journal-workspace--session) { height: auto; overflow: visible; }
+.player-session__schedule-back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 8px 0; border: 0; background: transparent; color: var(--accent); font: inherit; font-size: 13px; cursor: pointer; }
+</style>
 
 <style scoped src="./styles/SessionPlayerView.css"></style>
 <style scoped src="./styles/SessionPlayerViewResponsive.css"></style>

@@ -23,12 +23,14 @@ type Journal struct {
 }
 
 type JournalSection struct {
-	ID        int64          `json:"id"`
-	Position  int            `json:"position"`
-	Title     string         `json:"title"`
-	Date      string         `json:"date"`
-	Entries   []JournalEntry `json:"events"`
-	ChangedAt time.Time      `json:"changedAt"`
+	OccurrenceID *int64         `json:"occurrenceId,omitempty"`
+	Number       *int           `json:"number,omitempty"`
+	ID           int64          `json:"id"`
+	Position     int            `json:"position"`
+	Title        string         `json:"title"`
+	Date         string         `json:"date"`
+	Entries      []JournalEntry `json:"events"`
+	ChangedAt    time.Time      `json:"changedAt"`
 }
 
 type JournalEntry struct {
@@ -204,11 +206,14 @@ func (s *Store) CreateJournalSection(ctx context.Context, journalID int64, title
 		return 0, err
 	}
 	defer tx.Rollback(ctx)
-	var lockedID int64
-	if err := tx.QueryRow(ctx, `SELECT id FROM dndshare.journal WHERE id = $1 FOR UPDATE`, journalID).Scan(&lockedID); errors.Is(err, pgx.ErrNoRows) {
+	var sessionID *int64
+	if err := tx.QueryRow(ctx, `SELECT session_id FROM dndshare.journal WHERE id = $1 FOR UPDATE`, journalID).Scan(&sessionID); errors.Is(err, pgx.ErrNoRows) {
 		return 0, ErrNotFound
 	} else if err != nil {
 		return 0, err
+	}
+	if sessionID != nil {
+		return 0, ErrJournalSectionManaged
 	}
 	var id int64
 	err = tx.QueryRow(ctx, `
@@ -236,7 +241,7 @@ func (s *Store) UpdateJournalSection(ctx context.Context, journalID, sectionID i
 	command, err := tx.Exec(ctx, `
 		WITH changed AS (
 			UPDATE dndshare.journal_section SET title = $3, event_date = $4, changed_at = now()
-			WHERE id = $2 AND journal_id = $1 RETURNING journal_id
+			WHERE id = $2 AND journal_id = $1 AND occurrence_id IS NULL RETURNING journal_id
 		)
 		UPDATE dndshare.journal SET changed_at = now()
 		FROM changed WHERE dndshare.journal.id = changed.journal_id`, journalID, sectionID, title, date)
@@ -260,7 +265,7 @@ func (s *Store) DeleteJournalSection(ctx context.Context, journalID, sectionID i
 	}
 	command, err := tx.Exec(ctx, `
 		WITH changed AS (
-			DELETE FROM dndshare.journal_section WHERE id = $2 AND journal_id = $1 RETURNING journal_id
+			DELETE FROM dndshare.journal_section WHERE id = $2 AND journal_id = $1 AND occurrence_id IS NULL RETURNING journal_id
 		)
 		UPDATE dndshare.journal SET changed_at = now()
 		FROM changed WHERE dndshare.journal.id = changed.journal_id`, journalID, sectionID)

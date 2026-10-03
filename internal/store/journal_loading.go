@@ -18,8 +18,11 @@ func (s *Store) loadJournalSections(ctx context.Context, journal Journal) (Journ
 		return Journal{}, err
 	}
 	rows, err := tx.Query(ctx, `
-		SELECT id, position, title, event_date, changed_at
-		FROM dndshare.journal_section WHERE journal_id = $1 ORDER BY position, id`, journal.ID)
+		SELECT js.id, js.position, CASE WHEN o.id IS NULL THEN js.title ELSE o.name END,
+		       CASE WHEN o.id IS NULL THEN js.event_date ELSE COALESCE(to_char(o.scheduled_on, 'YYYY-MM-DD'), '') END,
+		       COALESCE(o.changed_at, js.changed_at), o.id, o.number
+		FROM dndshare.journal_section js LEFT JOIN dndshare.session_occurrence o ON o.id=js.occurrence_id
+		WHERE js.journal_id = $1 ORDER BY COALESCE(o.number, js.position), js.id`, journal.ID)
 	if err != nil {
 		return Journal{}, err
 	}
@@ -28,7 +31,7 @@ func (s *Store) loadJournalSections(ctx context.Context, journal Journal) (Journ
 	sectionByID := map[int64]int{}
 	for rows.Next() {
 		var section JournalSection
-		if err := rows.Scan(&section.ID, &section.Position, &section.Title, &section.Date, &section.ChangedAt); err != nil {
+		if err := rows.Scan(&section.ID, &section.Position, &section.Title, &section.Date, &section.ChangedAt, &section.OccurrenceID, &section.Number); err != nil {
 			return Journal{}, err
 		}
 		section.Entries = []JournalEntry{}

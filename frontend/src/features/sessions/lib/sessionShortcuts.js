@@ -7,6 +7,7 @@ export const SESSION_VIEW_SHORTCUTS = Object.freeze({
   music: 'Digit6',
   journal: 'Digit7',
   events: 'Digit8',
+  schedule: 'Digit9',
 })
 
 export const SESSION_PANEL_SHORTCUTS = Object.freeze({

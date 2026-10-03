@@ -169,6 +169,7 @@
       @close="closeBlockEditor"
       @save="saveBlock"
     />
+    <ScenarioJournalModal v-if="journalBlock" :session-uuid="sessionUuid" :block="journalBlock" @close="journalBlock = null" />
     <UniversalRelationPickerModal
       v-if="referencePickerOpen"
       :items="referencePickerItems"
@@ -225,6 +226,7 @@ import SceneReferenceCreateModal from '@/features/sessions/components/SceneRefer
 import UniversalRelationPickerModal from '@/features/sessions/components/UniversalRelationPickerModal.vue'
 import { useNestedEdgeEditor } from '@/features/sessions/composables/useNestedEdgeEditor'
 import { scenarioUsageBlockTypes, useSessionGraphBlockEditor } from '@/features/sessions/composables/useSessionGraphBlockEditor'
+import ScenarioJournalModal from './ScenarioJournalModal.vue'
 import { useSessionGraphNavigation } from '@/features/sessions/composables/useSessionGraphNavigation'
 import { CHAPTER_STATUSES, SCENE_STATUSES } from '@/features/sessions/lib/chapterGraph'
 import { narrativeCanvasActions, narrativeCanvasEmptyCopy, narrativeCanvasLoadingLabel } from '@/features/sessions/lib/narrativeCanvas'
@@ -318,6 +320,7 @@ const emptyCopy = computed(() => narrativeCanvasEmptyCopy(displayLevel.value))
 const loadingLabel = computed(() => narrativeCanvasLoadingLabel(displayLevel.value))
 const {
   blockEditorOpen,
+  journalBlock,
   editingBlock,
   creatingBlockType,
   referencePickerOpen,

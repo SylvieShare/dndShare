@@ -287,6 +287,10 @@ func cleanJournalEntry(w http.ResponseWriter, req journalEntryRequest) (store.Jo
 }
 
 func writeJournalError(w http.ResponseWriter, err error) {
+	if errors.Is(err, store.ErrJournalSectionManaged) {
+		conflict(w, "Раздел дневника привязан к сессии. Измените её в расписании кампании.")
+		return
+	}
 	if errors.Is(err, store.ErrJournalOrderConflict) {
 		conflict(w, "Порядок событий изменился. Дневник обновлён; повторите перемещение.")
 		return

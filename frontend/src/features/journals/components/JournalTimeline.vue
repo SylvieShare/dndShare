@@ -4,7 +4,7 @@
       <MultiToggle v-model="filter" :options="filters" :disabled="blocked || sortable.dragging.value || reordering" aria-label="Показать записи" />
       <div v-if="ownerMode" class="diary-section-actions">
       <button v-if="ownerMode && session.events.length > 1" class="diary-order-toggle" type="button" :disabled="blocked || filter !== 'all'" :aria-pressed="reordering" title="Изменить порядок событий" aria-label="Изменить порядок событий" @click="reordering = !reordering"><ArrowUpDown :size="18" /></button>
-      <JournalEditButton v-if="ownerMode" :disabled="blocked" label="Редактировать раздел" @click="$emit('edit-session')" />
+      <JournalEditButton v-if="ownerMode && editableSection" :disabled="blocked" label="Редактировать раздел" @click="$emit('edit-session')" />
       <JournalEventTypePicker v-if="ownerMode" :disabled="blocked" @create="$emit('create-event', $event)" />
       </div>
     </div>
@@ -32,7 +32,7 @@ import JournalEventTypePicker from '@/features/journals/components/JournalEventT
 import DndDiaryEventRow from '@/features/character-editor/blocks/dnd/components/DndDiaryEventRow.vue'
 import { diaryEventsNewestFirst } from '@/features/character-editor/blocks/dnd/lib/diaryEntry'
 import { useItemReferenceMap } from '@/features/items/composables/useItemReferenceMap'
-const props = defineProps({ session: { type: Object, required: true }, ownerMode: Boolean, busy: Boolean, editingId: String, focusEventId: String, saveEvent: { type: Function, required: true } })
+const props = defineProps({ session: { type: Object, required: true }, editableSection: { type: Boolean, default: true }, ownerMode: Boolean, busy: Boolean, editingId: String, focusEventId: String, saveEvent: { type: Function, required: true } })
 const emit = defineEmits(['edit-session', 'create-event', 'remove-event', 'reorder-events', 'dragging', 'editing'])
 const group = 'diary-' + useId()
 const reordering = ref(false)

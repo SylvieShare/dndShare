@@ -6,8 +6,8 @@ export const setCharacterJournal = (charUuid, journalUuid) => fetchPut(`/char/${
 
 export const getSessionJournal = sessionUuid => fetchGet(`/sessions/${sessionUuid}/journal`, { cache: 'no-store' })
 export const createSessionJournal = (sessionUuid, name) => fetchPost(`/sessions/${sessionUuid}/journal`, { name })
-export const appendScenarioJournalItem = (sessionUuid, itemId) => (
-  fetchPost(`/sessions/${sessionUuid}/journal/scenario-items/${itemId}`, {})
+export const appendScenarioJournalItem = (sessionUuid, itemId, occurrenceId) => (
+  fetchPost(`/sessions/${sessionUuid}/journal/scenario-items/${itemId}`, { occurrenceId })
 )
 
 export const getJournal = journalUuid => fetchGet(`/journals/${journalUuid}`, { cache: 'no-store' })

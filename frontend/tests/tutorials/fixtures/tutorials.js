@@ -8,6 +8,7 @@ import ViewCharacter from '../../../src/features/character-editor/pages/ViewChar
 import AccountTutorials from '../../../src/features/tutorials/components/AccountTutorials.vue'
 import ViewSession from '../../../src/features/sessions/pages/ViewSession.vue'
 import '@sylvieshare/share-ui/styles.css'
+import '../../../src/app/theme.css'
 const pinia = createPinia()
 const account = useAccountStore(pinia)
 const guest = new URLSearchParams(location.search).has('guest')

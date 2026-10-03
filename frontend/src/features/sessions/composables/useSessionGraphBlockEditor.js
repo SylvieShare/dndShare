@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 import { sceneBlockDefaultWidth } from '@/features/sessions/lib/sceneBlockTypes'
-import { appendScenarioJournalItem } from '@/shared/api/journalsApi'
 
 const referenceBlockTypes = new Set(['location', 'npc', 'quest', 'material'])
 export const scenarioUsageBlockTypes = new Set(['location', 'npc', 'quest', 'material', 'image'])
@@ -27,6 +26,7 @@ export function useSessionGraphBlockEditor({
   const blockCreatePosition = ref({ x: 48, y: 210 })
   const referencePickerOpen = ref(false)
   const referenceCreateOpen = ref(false)
+  const journalBlock = ref(null)
 
   async function refreshScenarioUsages() {
     await Promise.allSettled([
@@ -117,14 +117,9 @@ export function useSessionGraphBlockEditor({
     })
   }
 
-  async function addBlockToJournal(block) {
+  function addBlockToJournal(block) {
     blockMenus.value?.close()
-    actionError.value = ''
-    try {
-      await appendScenarioJournalItem(props.sessionUuid, block.id)
-    } catch {
-      actionError.value = 'Не удалось добавить элемент в дневник'
-    }
+    journalBlock.value = block
   }
 
   function closeBlockEditor() {
@@ -149,6 +144,7 @@ export function useSessionGraphBlockEditor({
 
   return {
     blockEditorOpen,
+    journalBlock,
     editingBlock,
     creatingBlockType,
     referencePickerOpen,

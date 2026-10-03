@@ -81,7 +81,17 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 	if contentHash() != beforeGraph {
 		t.Fatal("graph migration must preserve all entry content and audit")
 	}
+	exec(`INSERT INTO dndshare.journal_section(journal_id,position,title,event_date) VALUES
+		(4,1,'Начало','2026-09-01'),(4,3,'Хаммер','3-й день Хаммера'),(4,4,'Финал','03.10.2026'),(4,5,'Неточная дата','2025-02-29');
+		INSERT INTO dndshare.journal_entry(section_id,position,entry_type,title)
+		SELECT id,1,'event','Сохрани меня' FROM dndshare.journal_section WHERE journal_id=4`)
+	beforeOccurrences := contentHash()
+	exec(schemaSessionOccurrencesSQL)
+	if contentHash() != beforeOccurrences {
+		t.Fatal("occurrence migration changed diary entries")
+	}
 	s := &Store{pool: pool}
+	t.Run("meeting migration and lifecycle", func(t *testing.T) { testSessionOccurrences(t, s) })
 	original, err := s.GetCharacterJournal(ctx, 1)
 	if err != nil || original == nil || original.ID != 1 || len(original.Sections) != 2 || len(original.Sections[1].Entries) != 3 {
 		t.Fatalf("complete journal was not restored: %+v, %v", original, err)

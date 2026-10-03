@@ -8,10 +8,7 @@ import (
 
 func testJournalEntryAudit(t *testing.T, s *Store) {
 	ctx := context.Background()
-	sectionID, err := s.CreateJournalSection(ctx, 4, "Audit", "")
-	if err != nil {
-		t.Fatal(err)
-	}
+	sectionID := createCampaignSectionTest(t, s, 1, "Audit")
 	id, err := s.CreateJournalEntry(ctx, 4, sectionID, 1, JournalEntryMutation{Type: "event", Title: "First"})
 	if err != nil {
 		t.Fatal(err)
@@ -22,7 +19,15 @@ func testJournalEntryAudit(t *testing.T, s *Store) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		return j.Sections[0].Entries[0]
+		for _, section := range j.Sections {
+			for _, entry := range section.Entries {
+				if entry.ID == id {
+					return entry
+				}
+			}
+		}
+		t.Fatal("audit entry missing")
+		return JournalEntry{}
 	}
 	created := read()
 	if created.CreatedAt.IsZero() || !created.CreatedAt.Equal(created.ChangedAt) ||
@@ -57,11 +62,7 @@ func testJournalEntryAudit(t *testing.T, s *Store) {
 	if err := s.UpdateJournalGraph(ctx, 4, 2, JournalGraphMutation{ExpectedRevision: graphBefore.Graph.Revision, Positions: []JournalNode{{ID: otherID, PositionX: 100}, {ID: id, PositionY: 200}}}); err != nil {
 		t.Fatal(err)
 	}
-	j, err := s.GetSessionJournal(ctx, 1)
-	if err != nil {
-		t.Fatal(err)
-	}
-	reordered := j.Sections[0].Entries[0]
+	reordered := read()
 	if reordered.ID != id || !reordered.ChangedAt.Equal(edited.ChangedAt) || *reordered.ChangedByUserID != 2 {
 		t.Fatalf("reordering must not rewrite content edit history: %+v", reordered)
 	}

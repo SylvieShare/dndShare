@@ -16,7 +16,8 @@ describe('journal reading and inline editing', () => {
     expect(cover).toContain('v-if="showSourceSwitch"')
     expect(workspace).toContain("sources.value.some(source => source.kind === 'session')")
     expect(workspace).not.toContain('Создать личный дневник')
-    expect(workspace).toContain('<FormTextInput v-if="sessionUuid"')
+    expect(workspace).toContain('<JournalScheduleLink v-if="campaignUuid"')
+    expect(workspace).not.toContain('Создать дневник кампании')
     expect(cover).toContain("sessionUuid && canManage && journal.kind === 'session'")
     expect(workspace).toContain('<JournalSectionTabs')
     const header = workspace.match(/<BaseTile class="journal-header">[\s\S]*?<\/BaseTile>/)[0]
