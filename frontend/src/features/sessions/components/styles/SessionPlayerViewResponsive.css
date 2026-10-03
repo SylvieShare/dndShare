@@ -1,4 +1,4 @@
-@media (max-width: 920px) {
+@media (max-width: 1000px) {
   .player-session__grid { grid-template-columns: 1fr; }
   .current-chapter__art { min-height: 390px; }
   .party-card { min-height: auto; }
@@ -6,7 +6,7 @@
 
 @media (max-width: 600px) {
   .player-session__content {
-    width: min(100% - 24px, 1180px);
+    width: min(100% - 24px, 1360px);
     padding: 28px 0 34px;
   }
 

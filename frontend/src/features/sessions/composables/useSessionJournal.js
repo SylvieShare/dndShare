@@ -2,7 +2,7 @@ import { computed, ref, toValue, watch } from 'vue'
 import { useJournalWorkspace } from '@/features/journals/composables/useJournalWorkspace'
 import { useJournalEntries } from '@/features/journals/composables/useJournalEntries'
 import { useSessionOccurrences } from './useSessionOccurrences'
-import { localDate, preferredOccurrence } from '../lib/sessionOccurrences'
+import { localDate, occurrenceGroups, preferredOccurrence } from '../lib/sessionOccurrences'
 
 function rememberedOccurrence(uuid) {
   try { return Number(localStorage.getItem(`dnd-share:session-journal:v1:${uuid}`)) || null }
@@ -24,12 +24,7 @@ export function useSessionJournal(sessionUuid, requestedId) {
   const groups = computed(() => {
     const source = schedule.groups.value
     const withCount = row => ({ ...row, entryCount: sections.value.get(row.id)?.events.length ?? row.entryCount })
-    return [
-      { key: 'past', label: 'Прошедшие', items: source.past.map(withCount) },
-      { key: 'next', label: 'Следующая', items: source.next ? [withCount(source.next)] : [] },
-      { key: 'future', label: 'Будущие', items: source.future.map(withCount) },
-      { key: 'undated', label: 'Без даты', items: source.undated.map(withCount) },
-    ].filter(group => group.items.length)
+    return occurrenceGroups(source, withCount)
   })
   const selectedStatus = computed(() => {
     const row = selectedOccurrence.value

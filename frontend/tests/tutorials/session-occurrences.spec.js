@@ -90,41 +90,43 @@ for (const mobile of [false, true]) {
     await expect(page.getByRole('tab')).toHaveCount(0)
     await expect(page.getByRole('button', { name: /^Дневник сессии/ })).toHaveCount(0)
   })
-  test(`player switches sessions without leaving the diary (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {
+  test(`player sees only the meeting list beside chapter and party (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {
     await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1600, height: 1000 })
     const writes = await mockMeetings(page, 'player', [
       { id: 4, number: 4, name: 'Пролог', date: '1999-01-01' },
       { id: 1, number: 1, name: 'Первая игра', date: '2000-01-01', entries: [{ id: 501, type: 'event', title: 'Старая запись', desc: '', payload: {} }] },
-      { id: 3, number: 3, name: 'Позже', date: '2090-02-01', entries: [{ id: 503, type: 'event', title: 'Запись на будущее', desc: '', payload: {} }] },
-      { id: 2, number: 2, name: 'Ближайшая', date: '2090-01-01', entries: [{ id: 502, type: 'event', title: 'Заметка к встрече', desc: '', payload: {} }] },
+      { id: 3, number: 3, name: 'Позже', date: '2090-02-01' },
+      { id: 2, number: 2, name: 'Ближайшая', date: '2090-01-01' },
     ])
+    const diaryRequests = []
+    page.on('request', request => { if (new URL(request.url()).pathname === '/api/sessions/test/journal') diaryRequests.push(request.url()) })
     await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/sessions/test')
-    await expect(page.getByText('Старая запись', { exact: true })).toBeVisible()
-    if (mobile) await expect(page.getByRole('combobox', { name: 'Выбрать сессию', exact: true })).toBeVisible()
-    else {
-      await expect(page.getByRole('region', { name: 'Следующая', exact: true })).toContainText('Ближайшая')
-      await expect(page.getByRole('region', { name: 'Будущие', exact: true })).toContainText('Позже')
-      await expect(page.getByRole('region', { name: 'Прошедшие', exact: true })).toContainText('Первая игра')
-      const navigation = page.getByRole('navigation', { name: 'Сессии дневника', exact: true })
-      const order = await navigation.getByRole('button').evaluateAll(rows => rows.map(row => row.getAttribute('aria-label')))
-      expect(order).toEqual(['Сессия #4: Пролог', 'Сессия #1: Первая игра', 'Сессия #2: Ближайшая', 'Сессия #3: Позже'])
-      const pastColor = await navigation.getByRole('button', { name: 'Сессия #4: Пролог', exact: true }).locator('strong').evaluate(el => getComputedStyle(el).color)
-      const futureColor = await navigation.getByRole('button', { name: 'Сессия #3: Позже', exact: true }).locator('strong').evaluate(el => getComputedStyle(el).color)
-      expect(pastColor).not.toBe(futureColor)
-    }
-    await chooseMeeting(page, mobile, 2, 'Ближайшая')
-    await expect(page.getByRole('heading', { name: 'Ближайшая', exact: true })).toBeVisible()
-    await expect(page.getByText('Заметка к встрече', { exact: true })).toBeVisible()
+    const list = page.getByRole('list', { name: 'Сессии кампании', exact: true })
+    await expect(list.getByRole('listitem')).toHaveCount(4)
+    expect(await list.getByRole('listitem').locator('strong').allTextContents()).toEqual(['Пролог', 'Первая игра', 'Ближайшая', 'Позже'])
+    await expect(page.getByRole('region', { name: 'Следующая', exact: true })).toContainText('Ближайшая')
+    await expect(page.getByRole('region', { name: 'Будущие', exact: true })).toContainText('Позже')
+    await expect(page.getByRole('region', { name: 'Прошедшие', exact: true })).toContainText('Первая игра')
+    await expect(list.getByRole('button')).toHaveCount(0)
+    await expect(page.getByRole('combobox', { name: 'Выбрать сессию', exact: true })).toHaveCount(0)
+    await expect(page.locator('.session-journal, .diary-section')).toHaveCount(0)
     await expect(page.getByText('Старая запись', { exact: true })).toHaveCount(0)
     await expect(page.getByRole('button', { name: 'Новая сессия', exact: true })).toHaveCount(0)
-    await expect(page.getByRole('button', { name: 'Добавить запись', exact: true })).toHaveCount(0)
-    await expect(page.getByText('Только чтение · записи добавляет мастер')).toBeVisible()
-    const bounds = await page.locator('.session-journal').evaluate(el => ({ width: el.scrollWidth, visible: el.clientWidth, height: el.getBoundingClientRect().height }))
-    expect(bounds.width).toBeLessThanOrEqual(bounds.visible + 1)
-    expect(bounds.height).toBeLessThanOrEqual(660)
-    await page.reload()
-    await expect(page.getByRole('heading', { name: 'Ближайшая', exact: true })).toBeVisible()
-    await expect(page.getByText('Заметка к встрече', { exact: true })).toBeVisible()
+    const layout = await page.locator('.player-session__grid').evaluate(el => [...el.children].map(child => {
+      const rect = child.getBoundingClientRect()
+      return { x: rect.x, y: rect.y, width: rect.width }
+    }))
+    expect(layout).toHaveLength(3)
+    if (mobile) {
+      expect(layout[1].y).toBeGreaterThan(layout[0].y)
+      expect(layout[2].y).toBeGreaterThan(layout[1].y)
+    } else {
+      expect(layout[1].y).toBeCloseTo(layout[0].y, 0)
+      expect(layout[2].y).toBeCloseTo(layout[0].y, 0)
+      expect(layout[0].x).toBeLessThan(layout[1].x)
+      expect(layout[1].x).toBeLessThan(layout[2].x)
+    }
+    expect(diaryRequests).toEqual([])
     expect(writes).toEqual([])
   })
   test(`master edits and deletes the selected session (${mobile ? 'mobile' : 'desktop'})`, async ({ page }) => {

@@ -29,7 +29,7 @@
 }
 
 .player-session__content {
-  width: min(1180px, calc(100% - 48px));
+  width: min(1360px, calc(100% - 48px));
   margin: 0 auto;
   padding: clamp(36px, 7vh, 76px) 0 48px;
 }
@@ -106,13 +106,14 @@
 
 .player-session__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.72fr) minmax(310px, 0.92fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 1fr) minmax(240px, .9fr);
   gap: 18px;
   align-items: stretch;
 }
 
 .current-chapter,
 .party-card {
+  min-width: 0;
   padding: 0;
   overflow: hidden;
   background: color-mix(in srgb, var(--surface) 94%, transparent);
@@ -122,6 +123,7 @@
 .current-chapter__art {
   position: relative;
   min-height: 440px;
+  height: 100%;
   overflow: hidden;
   background: color-mix(in srgb, var(--accent) 9%, var(--surface));
 }

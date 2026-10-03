@@ -21,7 +21,7 @@ describe('player session view', () => {
     expect(source).toContain('class="party-list"')
     expect(source).toContain('participant.canOpenSheet === true')
     expect(source).toContain('isMine(participant) || participant.canOpenSheet')
-    expect(responsiveStyles).toContain('@media (max-width: 920px)')
+    expect(responsiveStyles).toContain('@media (max-width: 1000px)')
   })
 
   it('opens the role-aware session page from every session card', () => {

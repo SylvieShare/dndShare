@@ -1,5 +1,5 @@
 <template>
-  <section class="session-journal" :class="{ 'session-journal--embedded': embedded }" data-tutorial="session-journal" aria-label="Сессии и дневник">
+  <section class="session-journal" data-tutorial="session-journal" aria-label="Сессии и дневник">
     <LoadingState v-if="loading" label="Открываем дневник…" fill />
     <div v-else class="session-journal__body">
       <BaseTile class="session-journal__sessions">
@@ -63,7 +63,7 @@ import SessionOccurrenceModal from './SessionOccurrenceModal.vue'
 import SessionJournalNavigation from './SessionJournalNavigation.vue'
 import { occurrenceDate } from '../lib/sessionOccurrences'
 import { useSessionJournal } from '../composables/useSessionJournal'
-const props = defineProps({ sessionUuid: { type: String, required: true }, isDm: Boolean, embedded: Boolean, occurrenceId: { type: Number, default: null } })
+const props = defineProps({ sessionUuid: { type: String, required: true }, isDm: Boolean, occurrenceId: { type: Number, default: null } })
 const { journal, canEdit, canManage, loading, busy, locked, error, groups, selectedId, selectedSection, selectedOccurrence, selectedStatus,
   editingId, focusEventId, removingEvent, occurrenceDraft, removingOccurrence, occurrenceError,
   select, reload, editOccurrence, saveOccurrence, removeOccurrence, updateEntry, reorderEntries, setPlayerEditing,

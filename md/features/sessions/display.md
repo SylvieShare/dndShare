@@ -47,8 +47,10 @@ owned by that DM. Other players need both the session’s `players.openSheets` p
 
 Opening a session as a participant renders a separate player composition instead
 of the DM canvas and tool rails. The page places the campaign context first, then
-uses the current chapter image, arc and title as the main visual block beside a
-responsive group roster. Every roster row shows the canonical character icon,
+uses three adjacent columns: the current chapter image/arc/title, the group
+roster and a read-only meeting list. The list shows chronological past, next and
+future meetings with their number, name and date. It does not display or load
+diary entries and its rows do not open them. Every roster row shows the canonical character icon,
 name and the permitted class/race subtitle, plus HP when enabled. Characters with `canOpenSheet` have a link to their sheet; the
 current player's own sheet remains accessible even when it is private. The view
 folds into one column on mobile and follows the session live stream so participant,

@@ -1,5 +1,4 @@
 .session-journal { container: session-journal / inline-size; display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1360px; height: 100%; min-width: 0; min-height: 0; margin-inline: auto; color: var(--text-1); }
-.session-journal--embedded { height: min(660px, 78dvh); min-height: 380px; }
 .session-journal__body { display: grid; grid-template-columns: 260px minmax(0, 1fr); flex: 1; min-width: 0; min-height: 0; gap: 16px; }
 .session-journal__sessions { display: flex; flex-direction: column; gap: 18px; min-width: 0; min-height: 0; padding: 16px; }
 .session-journal__sessions-heading { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 8px; }

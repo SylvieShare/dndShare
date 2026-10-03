@@ -22,9 +22,6 @@
         </div>
       </header>
 
-      <div class="player-session__journal">
-        <SessionJournalWorkspace :session-uuid="session.uuid" embedded />
-      </div>
       <div class="player-session__grid">
         <BaseTile data-tutorial="session-chapter" class="current-chapter" color="var(--accent)" framed>
           <div class="current-chapter__art" :class="{ 'current-chapter__art--empty': !chapterImage }">
@@ -112,6 +109,7 @@
             Видимость класса, расы, HP и ссылок на чужие листы настраивает мастер.
           </p>
         </BaseTile>
+        <SessionMeetingsCard :session-uuid="session.uuid" />
       </div>
     </div>
   </main>
@@ -125,7 +123,7 @@ import { BookOpen, ExternalLink, UsersRound } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
 import { pvAvatar, pvName, pvSubtitle, pvHp } from '@/features/sessions/lib/participantView'
 import { romanNumeral } from '@/features/sessions/lib/chapterGraph'
-import SessionJournalWorkspace from './SessionJournalWorkspace.vue'
+import SessionMeetingsCard from './SessionMeetingsCard.vue'
 
 const props = defineProps({
   session: { type: Object, required: true },
@@ -201,10 +199,6 @@ function participantStyle(participant) {
   return { '--party-color': AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length] }
 }
 </script>
-
-<style scoped>
-.player-session__journal { margin-block: 26px; }
-</style>
 
 <style scoped src="./styles/SessionPlayerView.css"></style>
 <style scoped src="./styles/SessionPlayerViewResponsive.css"></style>
