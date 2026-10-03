@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 const sources = [{ id: 1, name: 'dnd5e', countItems: 45, versions: [{ id: 1, version: '2014' }] }]
-const type = { id: 6, sourceId: 1, name: 'Бестиарий', count: 45, countItems: 45, fields: [] }
+const type = { id: 6, sourceId: 1, name: 'Бестиарий', iconImageUrl: '/static/handbook-types/6-bestiary.png', count: 45, countItems: 45, fields: [] }
 const items = Array.from({ length: 45 }, (_, index) => ({
   id: index + 1,
   typeId: 6,
@@ -33,8 +33,17 @@ for (const width of [320, 390, 560, 700, 1280]) {
     const list = page.locator('.handbook-list')
     const detail = page.locator('.handbook-detail')
     await expect(list.locator('.list-row')).toHaveCount(30, { timeout: 20000 })
+    await expect(page).toHaveTitle('Справочник')
     await expect(page.locator('.handbook-col-bar .col-type-name')).toHaveText('Бестиарий')
     await expect(page.locator('.handbook-col-bar .col-type-count')).toHaveText('45')
+    const icon = page.locator('.handbook-col-bar .col-type-icon img')
+    await expect(icon).toHaveAttribute('src', type.iconImageUrl)
+    await expect.poll(() => icon.evaluate(img => img.naturalWidth)).toBeGreaterThan(0)
+    const homeLink = page.locator('.handbook-col-bar').getByRole('link', { name: 'Справочник', exact: true })
+    if (width > 760) {
+      await expect(homeLink).toBeVisible()
+      await expect(homeLink).toHaveAttribute('href', '/handbook')
+    } else await expect(homeLink).toBeHidden()
     await expect(page.getByText('К коллекциям', { exact: true })).toHaveCount(0)
     await expect(page.locator('.header-chip')).toHaveCount(0)
 
@@ -50,6 +59,7 @@ for (const width of [320, 390, 560, 700, 1280]) {
     await list.locator('.list-row').first().scrollIntoViewIfNeeded()
     await list.locator('.list-row').first().click()
     await expect(detail.locator('h1')).toHaveText('Существо 01')
+    await expect(page).toHaveTitle('Существо 01')
     await detail.getByRole('button', { name: 'Описание', exact: true }).click()
 
     if (width <= 760) {
@@ -75,11 +85,24 @@ for (const width of [320, 390, 560, 700, 1280]) {
     await expect(detail.locator('.detail-technical-meta')).toBeInViewport()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
 
+    await page.goBack()
+    await expect(page).not.toHaveURL(/item=/)
+    await expect(page).toHaveTitle('Справочник')
+    await page.goForward()
+    await expect(page).toHaveURL(/item=1/)
+    await expect(page).toHaveTitle('Существо 01')
+
     if (width <= 760) {
       await page.getByRole('button', { name: width <= 640 ? 'Назад' : 'К списку', exact: true }).click()
       await expect(list).toBeVisible()
       await expect(detail).toBeHidden()
       await expect(page).not.toHaveURL(/item=/)
+      await expect(page).toHaveTitle('Справочник')
+    } else {
+      await homeLink.click()
+      await expect(page).toHaveURL(/\/handbook$/)
+      await expect(page.locator('.hb-landing')).toBeVisible()
+      await expect(page).toHaveTitle('Справочник')
     }
   })
 }
@@ -98,6 +121,7 @@ test.describe('touch scrolling', () => {
   test('vertical touch moves the detail without navigating back', async ({ page }) => {
     await page.goto('/handbook?type=6&item=1')
     const detail = page.locator('.handbook-detail')
+    await expect(page).toHaveTitle('Существо 01')
     await detail.getByRole('button', { name: 'Описание', exact: true }).click()
     const cdp = await page.context().newCDPSession(page)
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 180, y: 650 }] })

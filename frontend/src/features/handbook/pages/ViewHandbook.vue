@@ -12,7 +12,14 @@
       :show-controls="false"
       class="handbook-col-bar"
       @add="openAddModal"
-    />
+    >
+      <template #before-identity>
+        <span class="handbook-collection-home">
+          <RouterLink to="/handbook">Справочник</RouterLink>
+          <span aria-hidden="true">·</span>
+        </span>
+      </template>
+    </HandbookCollectionBar>
 
     <!-- ── Inner: max-width centered ── -->
     <div class="handbook-page">
@@ -98,7 +105,7 @@
 import { ActionButton } from '@sylvieshare/share-ui'
 import { ArrowLeft } from '@lucide/vue'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { fetchGet } from '@/shared/api/http'
 import { itemsApi } from '@/shared/api/itemsApi'
 import { contentSourcesApi } from '@/shared/api/contentSourcesApi'
@@ -118,6 +125,7 @@ import ItemEditModal from '@/features/character-editor/components/ItemEditModal'
 // ── Router ──────────────────────────────────────────────────────────────────
 const route = useRoute()
 const router = useRouter()
+const pageRouteName = route.name
 
 // ── Stores ──────────────────────────────────────────────────────────────────
 const accountStore = useAccountStore()
@@ -404,6 +412,10 @@ function onItemSaved(item) {
 
 
 // ── Watchers ─────────────────────────────────────────────────────────────────
+watch(() => selectedItem.value?.name, name => {
+  if (route.name === pageRouteName) document.title = name || route.meta.title || 'Справочник'
+}, { immediate: true })
+
 watch(searchQ, (val) => {
   if (skipSearchWatch.value) { skipSearchWatch.value = false; return }
   clearTimeout(searchTimer)

@@ -4,6 +4,8 @@
 
     <!-- ── Left: collection identity ── -->
     <div v-if="showIdentity" class="col-bar-left">
+      <slot name="before-identity" />
+      <ItemIcon :type="type" :size="28" class="col-type-icon" />
       <span class="col-type-name">{{ type.name }}</span>
       <span class="col-type-count">{{ countLabel }}</span>
       <AddButton v-if="canAdd" label="Добавить" @click="$emit('add')" />
@@ -145,6 +147,7 @@
 
 <script setup>
 import { AddButton } from '@sylvieshare/share-ui'
+import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import { computed, ref, watch } from 'vue'
 import { getSuggestId } from '@/features/handbook/objects/lib/schemaFields'
 import { fetchGet } from '@/shared/api/http'
