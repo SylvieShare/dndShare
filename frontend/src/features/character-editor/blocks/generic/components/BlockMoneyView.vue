@@ -1,38 +1,24 @@
 <template>
-  <MorphTile :embedded="panel || inline" padding="0" edit-label="Редактировать" :title="inline ? '' : title" :show-edit="editable && !inline" @edit="$emit('edit', $event)" class="money-view" :class="{ 'money-view--inline': inline }">
-    <div class="money-content">
-      <template v-if="inline">
-        <ActionButton v-if="editable" icon-only variant="quiet" aria-label="Изменить кошелёк" title="Изменить кошелёк" @click.stop="$emit('edit', $event)">
-          <template #icon><Wallet :size="22" aria-hidden="true" /></template>
-        </ActionButton>
-        <Wallet v-else class="money-wallet-icon" :size="22" role="img" :aria-hidden="false" aria-label="Кошелёк" />
-      </template>
-      <LoadingState v-if="loading" class="money-empty" label="Загрузка..." compact />
-      <div v-else class="money-line">
-        <template v-if="rows.length">
-          <span v-for="(coin, index) in rows" :key="coin.id" class="money-entry">
-            <span :key="changes.get(String(coin.id))?.version || 0" class="money-amount"
-              :class="{ 'money-amount--gain': changes.get(String(coin.id))?.delta > 0, 'money-amount--spend': changes.get(String(coin.id))?.delta < 0 }"
-              :data-money-id="coin.id" :title="coin.title" role="group" :aria-label="`${formatAmount(coin.amount)} ${coin.title}`">
-              <span class="ma-value">{{ formatAmount(coin.amount) }}</span>
-              <ItemIcon v-if="coin.iconImageUrl || coin.svg" class="ma-img" :item="coin" :size="24" :fallback-to-type="false" />
-              <span v-else class="ma-dot" :style="{ background: coin.color }"></span>
-              <span v-if="changes.has(String(coin.id))" class="ma-change" aria-hidden="true">{{ formatDelta(changes.get(String(coin.id)).delta) }}</span>
-            </span>
-            <span v-if="index < rows.length - 1" class="money-separator" aria-hidden="true">,</span>
-          </span>
-        </template>
-        <span v-else class="money-empty">Денег нет</span>
-      </div>
-    </div>
+  <MorphTile :embedded="panel || inline" padding="0" edit-label="Редактировать" :title="inline ? '' : title"
+    :show-edit="editable && !inline" @edit="$emit('edit', $event)" class="money-view"
+    :class="{ 'money-view--inline': inline, 'money-view--panel': panel }">
+    <component :is="canEditWallet ? ActionButton : 'div'" class="money-content"
+      :variant="canEditWallet ? 'quiet' : undefined"
+      :aria-label="canEditWallet ? 'Изменить кошелёк' : undefined"
+      :aria-description="canEditWallet ? balanceDescription : undefined"
+      :title="canEditWallet ? 'Изменить кошелёк' : undefined" @click="onWalletClick">
+      <template v-if="canEditWallet" #icon><Wallet class="money-wallet-icon" :size="22" aria-hidden="true" /></template>
+      <Wallet v-if="inline && !canEditWallet" class="money-wallet-icon" :size="22" role="img" :aria-hidden="false" aria-label="Кошелёк" />
+      <MoneyBalanceLine :loading="loading" :rows="rows" :changes="changes" />
+    </component>
   </MorphTile>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { ActionButton, MorphTile } from '@sylvieshare/share-ui'
 import { Wallet } from '@lucide/vue'
-import { LoadingState } from '@sylvieshare/share-ui'
-import ItemIcon from '@/features/items/components/ItemIcon.vue'
+import MoneyBalanceLine from './MoneyBalanceLine.vue'
 import { useMoneyFeedback } from '@/features/character-editor/composables/useMoneyFeedback'
 const props = defineProps({
   panel: Boolean,
@@ -40,95 +26,27 @@ const props = defineProps({
   editable: { type: Boolean, default: false },
   title: { type: String, default: '' },
   loading: { type: Boolean, default: false },
-  // Non-zero coins with their shared image/SVG projection, already ordered.
   coins: { type: Array, default: () => [] },
 })
-defineEmits(['edit'])
+const emit = defineEmits(['edit'])
 const { rows, changes } = useMoneyFeedback(() => props.coins, () => props.loading)
+const canEditWallet = computed(() => props.inline && props.editable && !props.panel)
 const formatter = new Intl.NumberFormat('ru-RU')
-const formatAmount = amount => formatter.format(amount)
-const formatDelta = delta => `${delta > 0 ? '+' : '−'}${formatter.format(Math.abs(delta))}`
+const balanceDescription = computed(() => rows.value.length
+  ? rows.value.map(coin => `${formatter.format(coin.amount)} ${coin.title}`).join(', ')
+  : 'Денег нет')
+function onWalletClick(event) {
+  if (!canEditWallet.value) return
+  event.stopPropagation()
+  emit('edit', event)
+}
 </script>
 
 <style scoped>
 .money-view { min-width: 0; padding: 12px 14px; }
-.money-view--inline { padding: 0; }
-.money-view--inline .money-content { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
-.money-view--inline .money-line { justify-content: flex-end; min-width: 0; }
+.money-view--inline:not(.money-view--panel) { padding: 0; }
+.money-view--inline.money-view--panel { padding: 16px 18px; }
+.money-view--inline .money-content { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; max-width: 100%; }
+.money-view--inline :deep(.money-line) { justify-content: flex-end; min-width: 0; }
 .money-wallet-icon { flex-shrink: 0; color: var(--text-muted); }
-
-.money-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.money-entry { display: inline-flex; align-items: baseline; gap: 2px; }
-.money-separator { color: var(--text-2); font-size: 20px; line-height: 1; }
-
-.money-amount {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transform-origin: center;
-}
-
-.ma-value {
-  font-size: 20px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-1);
-  line-height: 1;
-}
-
-.ma-dot {
-  align-self: center;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: inset 0 1px 1px color-mix(in srgb, var(--text-on-accent) 26%, transparent), 0 0 0 1px color-mix(in srgb, var(--scrim) 26%, transparent);
-}
-
-.ma-img {
-  align-self: center;
-}
-
-.money-amount--gain { --money-change-color: var(--success); }
-.money-amount--spend { --money-change-color: var(--danger); }
-.money-amount--gain, .money-amount--spend { animation: money-balance-pulse 1.1s ease-out both; }
-.money-amount--gain .ma-value, .money-amount--spend .ma-value { animation: money-value-flash 1.1s ease-out both; }
-.ma-change {
-  position: absolute;
-  top: -12px;
-  right: 0;
-  color: var(--money-change-color);
-  font-size: 10px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.15;
-  pointer-events: none;
-}
-
-@keyframes money-balance-pulse {
-  0%, 100% { filter: none; transform: scale(1); }
-  22% { filter: drop-shadow(0 0 7px color-mix(in srgb, var(--money-change-color) 35%, transparent)); transform: scale(1.035); }
-}
-@keyframes money-value-flash {
-  0%, 100% { color: var(--text-1); }
-  22% { color: var(--money-change-color); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .money-amount--gain, .money-amount--spend { animation: none; filter: drop-shadow(0 0 5px color-mix(in srgb, var(--money-change-color) 25%, transparent)); }
-  .money-amount--gain .ma-value, .money-amount--spend .ma-value { animation: none; color: var(--money-change-color); }
-}
-
-.money-empty {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
 </style>
