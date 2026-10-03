@@ -262,16 +262,16 @@ function hideActionTooltip() {
 </script>
 
 <style scoped>
-.dav { display: flex; min-width: 0; flex-direction: column; gap: 13px; padding: 11px 12px 12px; box-sizing: border-box; }
+.dav { --dav-inset: 12px; display: flex; min-width: 0; flex-direction: column; gap: 13px; padding: 11px var(--dav-inset) 12px; box-sizing: border-box; }
 .dav--panel { padding-right: 14px; }
-.dav-group { --dav-tone: var(--accent); }
+.dav-group { --dav-tone: var(--accent); margin-left: calc(-1 * var(--dav-inset)); }
 .dav-group--bonus_action { --dav-tone: var(--info); }
 .dav-group--reaction { --dav-tone: var(--warning); }
 .dav-group--timed { --dav-tone: var(--text-2); }
 .dav-group--free { --dav-tone: var(--success); }
-.dav-group-head { width: 100%; display: grid; grid-template-columns: auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
+.dav-group-head { width: 100%; box-sizing: border-box; padding-left: var(--dav-inset); display: grid; grid-template-columns: auto minmax(12px, 1fr); gap: 6px; align-items: center; color: var(--dav-tone); font-size: 9px; font-weight: 800; letter-spacing: .065em; text-transform: uppercase; }
 .dav-group-head i { height: 1px; background: color-mix(in srgb, var(--dav-tone) 24%, transparent); }
-.dav-action { display: flow-root; position: relative; padding: 10px 2px 10px 12px; cursor: default; transition: background-color .12s; }
+.dav-action { display: flow-root; position: relative; padding: 10px 2px 10px calc(var(--dav-inset) + 12px); cursor: default; transition: background-color .12s; }
 .dav-action-media { float: left; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 36px; margin: 0 9px 2px 0; }
 .dav-action--clickable { cursor: pointer; }
 .dav-action--clickable:hover, .dav-action.action-menu-source--open { background: color-mix(in srgb, var(--dav-tone) 5%, transparent); }
