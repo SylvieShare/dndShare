@@ -100,6 +100,7 @@ import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import ItemIcon from '@/features/items/components/ItemIcon.vue'
 import WeaponDamageMetric from '@/features/items/components/WeaponDamageMetric.vue'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
+import { inventoryItemEconomy } from '@/features/items/lib/itemPackaging'
 import { useSuggestStore } from '@/stores/suggest'
 
 const props = defineProps({
@@ -127,10 +128,8 @@ const displayName = computed(() => {
 const suggestStore = useSuggestStore()
 suggestStore.ensure(14)
 const { format: formatCost } = useCostFormatter()
-const measuredCost = computed(() => props.params?.length_ft != null && data.value.unit_cost_copper != null
-  ? { value: Number(props.params.length_ft) * Number(data.value.unit_cost_copper), suggest_id: 1 }
-  : null)
-const costLabel = computed(() => formatCost(measuredCost.value || data.value.cost))
+const economy = computed(() => inventoryItemEconomy(props.item, { count: props.count, params: props.params }))
+const costLabel = computed(() => formatCost(economy.value.cost))
 const firstAttack = computed(() => Array.isArray(data.value.attacks) ? data.value.attacks[0] : null)
 const armor = computed(() => data.value.armor || {})
 const isRoomyWeapon = computed(() => !!firstAttack.value && (props.roomyWeapon || Number(props.item.typeId) === 1))
@@ -138,9 +137,7 @@ const isRoomyArmor = computed(() => (props.roomyArmor || Number(props.item.typeI
   Number(props.item.typeId) === 12 || Object.keys(armor.value).length > 0
 ))
 const isRoomy = true
-const weight = computed(() => props.params?.length_ft != null && data.value.unit_weight != null
-  ? Number(props.params.length_ft) * Number(data.value.unit_weight)
-  : data.value.weight)
+const weight = computed(() => economy.value.weight)
 const weightLabel = computed(() => weight.value != null ? `${String(weight.value).replace('.', ',')} фнт.` : '')
 const armorCategoryLabel = computed(() => ({
   light: 'Лёгкий',

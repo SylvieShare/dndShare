@@ -9,6 +9,7 @@ import { magicItemRarity, magicAttunementLabel } from '@/features/items/lib/magi
 import { computed } from 'vue'
 import ObjectListItem from '@/features/items/list-components/ObjectListItem'
 import { measuredItemEconomy } from '@/features/items/lib/itemInstance'
+import { packagingNote } from '@/features/items/lib/itemPackaging'
 import { useCostFormatter } from '@/features/items/lib/useCostFormatter'
 
 const props = defineProps({
@@ -21,7 +22,8 @@ const measuredEconomy = computed(() => measuredItemEconomy(props.type, props.ite
 const { format: formatCost } = useCostFormatter()
 const costLabel = computed(() => {
   const label = formatCost(data.value.cost || measuredEconomy.value?.cost)
-  if (!label || !measuredEconomy.value) return label
+  if (!label) return label
+  if (!measuredEconomy.value) return [label, packagingNote(props.item)].filter(Boolean).join(' · ')
   return `${label} / ${measuredEconomy.value.quantity} ${measuredEconomy.value.unit}`
 })
 
@@ -29,7 +31,7 @@ const subtitle = computed(() => {
   const measuredWeight = measuredEconomy.value?.weight
   const weight = data.value.weight ?? measuredWeight
   const weightLabel = weight != null
-    ? `${String(weight).replace('.', ',')} фн.${measuredEconomy.value ? ` / ${measuredEconomy.value.quantity} ${measuredEconomy.value.unit}` : ''}`
+    ? `${String(weight).replace('.', ',')} фн.${measuredEconomy.value ? ` / ${measuredEconomy.value.quantity} ${measuredEconomy.value.unit}` : packagingNote(props.item) ? ` · ${packagingNote(props.item)}` : ''}`
     : null
   const parts = [
     data.value.type || data.value.subtype,
