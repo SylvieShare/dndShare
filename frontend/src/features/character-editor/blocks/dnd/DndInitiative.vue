@@ -1,6 +1,7 @@
 <template>
   <StatTile
     :variant="variant"
+    :embedded="block.props?.embedded"
     label="Инициатива"
     mini-label="Иниц."
     :value="displayValue"

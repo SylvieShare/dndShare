@@ -1,12 +1,12 @@
 <template>
   <div ref="menuAnchor" class="sm-wrap">
-    <BaseTile class="sm-tile" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="open = !open" @keydown.enter.prevent="open = !open" @keydown.space.prevent="open = !open">
-      <TileAccentStrip />
+    <MorphTile class="sm-tile" :embedded="block?.props?.embedded" :color="accent" interactive role="button" tabindex="0" :aria-expanded="open" aria-label="Меню персонажа" @click="open = !open" @keydown.enter.prevent="open = !open" @keydown.space.prevent="open = !open">
+      <TileAccentStrip v-if="!block?.props?.embedded" />
       <div class="sm-body">
         <img v-if="iconSrc" class="sm-ic" :src="iconSrc" :style="iconStyle" alt="" aria-hidden="true" />
         <div class="sm-sub">меню</div>
       </div>
-    </BaseTile>
+    </MorphTile>
 
     <CharacterMenuPopover v-model:open="open" :anchor="menuAnchor">
       <div class="sm-menu" data-tutorial="character-menu">
@@ -59,7 +59,7 @@ import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue
 import { useTutorialAction } from '@/features/tutorials/composables/useTutorialAction'
 import { computed, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { TileAccentStrip, BaseTile } from '@sylvieshare/share-ui'
+import { TileAccentStrip, MorphTile } from '@sylvieshare/share-ui'
 import { ToggleSwitch } from '@sylvieshare/share-ui'
 import ContentSourcesModal from '@/features/character-editor/components/ContentSourcesModal.vue'
 import { normalizeContentSourceSettings } from '@/shared/api/contentSourcesApi'
@@ -125,6 +125,7 @@ function updateSources(value) {
   justify-content: center;
   padding: 10px 12px;
   user-select: none;
+  cursor: pointer;
 }
 .sm-body { display: flex; align-items: center; gap: 8px; }
 .sm-ic { width: 24px; height: 24px; flex-shrink: 0; opacity: 0.9; }

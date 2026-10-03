@@ -1,6 +1,7 @@
 <template>
   <StatTile
     :variant="variant"
+    :embedded="block.props?.embedded"
     label="КД"
     :mini-label="`КД${armorState.shield ? ' +Щ' : ''}`"
     :value="armorState.total"

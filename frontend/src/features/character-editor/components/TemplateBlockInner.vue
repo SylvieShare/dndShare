@@ -46,17 +46,18 @@
     />
   </div>
 
-  <div v-else-if="block.type === 'TABLE'" v-show="!childHidden" class="layout-table" :style="[blockStyle, { gap: block.content?.gap, gridTemplateColumns: `repeat(${block.content?.columns ?? 2}, minmax(0, 1fr))` }]">
+  <component :is="block.content?.tile ? BaseTile : 'div'" v-else-if="block.type === 'TABLE'" v-show="!childHidden" class="layout-table" :style="[blockStyle, { gap: block.content?.gap, gridTemplateColumns: `repeat(${block.content?.columns ?? 2}, minmax(0, 1fr))` }]">
     <TemplateBlockInner
       v-for="(child, i) in block.blocks"
       :key="i"
       :block="child"
+      :col-style="tableCellStyle(i)"
       :values="values"
       :vars="vars"
       @update:value="emitValue"
       @update:var="emitVar"
     />
-  </div>
+  </component>
 
   <component
     :is="leafComponent"
@@ -243,6 +244,15 @@ function columnStyle(column) {
     flexShrink: column?.shrink,
     flexBasis:  column?.basis ?? (columnsFill && !width ? 0 : undefined),
     alignSelf:  column?.['align-self'],
+  }
+}
+function tableCellStyle(index) {
+  if (!props.block.content?.dividers) return null
+  const columns = Number(props.block.content?.columns ?? 2)
+  return {
+    borderTop: index >= columns ? '1px solid var(--border)' : undefined,
+    borderLeft: index % columns ? '1px solid var(--border)' : undefined,
+    boxSizing: 'border-box',
   }
 }
 function leftBarTop(i)  { return `${sideBarBaseTop.value + (leftBarStartIndex.value  + i) * 108}px` }

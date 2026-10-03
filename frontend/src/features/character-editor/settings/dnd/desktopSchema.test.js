@@ -28,31 +28,29 @@ describe('D&D desktop sheet schema', () => {
     expect(utilityColumn.props?.style?.['margin-right']).toBeUndefined()
     expect(utilityColumn.children[0].ref).toBe('campaign')
     expect(utilityColumn.props?.width).toBe('360px')
-    expect(utilityColumn.children.slice(2).map(child => child.ref)).toEqual([
+    expect(utilityColumn.children.slice(3).map(child => child.ref)).toEqual([
       'feature_widgets', 'actions', 'resources', 'defenses', 'proficiencies',
     ])
   })
 
-  it('places level below speed, proficiency bonus and rests across all three metric columns', () => {
+  it('groups the six utility controls in one divided tile with a separate level row below', () => {
     const metricGrid = findNode(
       base?.content,
       node => node.type === 'grid' && node.children?.some(child => child.ref === 'rest'),
     )
     const level = findNode(base?.content, node => node.ref === 'lvl')
-    const levelRow = metricGrid.children.at(-1)
+    const utilityColumn = base.content.children[2]
 
     expect(metricGrid.props?.width).toBe('320px')
     expect(metricGrid.props?.style?.['grid-auto-rows']).toBe('64px')
-    expect(metricGrid.children.slice(0, -1).map(child => child.ref)).toEqual([
+    expect(metricGrid.props).toMatchObject({ tile: true, dividers: true, gap: '0' })
+    expect(metricGrid.children.every(child => child.props?.embedded === true)).toBe(true)
+    expect(metricGrid.children.map(child => child.ref)).toEqual([
       'armor', 'initiative', 'settings',
       'speed', 'prof_bonus', 'rest',
     ])
-    expect(levelRow).toMatchObject({
-      kind: 'layout',
-      type: 'row',
-      props: { style: { 'grid-column': '1 / -1', height: '64px' } },
-    })
-    expect(levelRow.children).toContain(level)
+    expect(utilityColumn.children.indexOf(level)).toBe(utilityColumn.children.indexOf(metricGrid) + 1)
+    expect(level.props?.height).toBe('64px')
   })
 
   it('lets weapon entries and inventory sections own their surfaces', () => {

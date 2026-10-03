@@ -18,11 +18,14 @@
       "kind": "layout",
       "type": "grid",
       "props": {
-        "gap": "8px",
+        "gap": "0",
         "width": "320px",
         "columns": "3",
+        "tile": true,
+        "dividers": true,
         "style": {
-          "grid-auto-rows": "64px"
+          "grid-auto-rows": "64px",
+          "overflow": "hidden"
         }
       },
       "children": [
@@ -30,55 +33,56 @@
           "ref": "armor",
           "kind": "block",
           "props": {
-            "variant": "tile"
+            "variant": "tile",
+            "embedded": true
           }
         },
         {
           "ref": "initiative",
           "kind": "block",
           "props": {
-            "variant": "tile"
+            "variant": "tile",
+            "embedded": true
           }
         },
         {
           "ref": "settings",
-          "kind": "block"
+          "kind": "block",
+          "props": {
+            "embedded": true
+          }
         },
         {
           "ref": "speed",
           "kind": "block",
           "props": {
-            "variant": "tile"
+            "variant": "tile",
+            "embedded": true
           }
         },
         {
           "ref": "prof_bonus",
           "kind": "block",
           "props": {
-            "variant": "tile"
+            "variant": "tile",
+            "embedded": true
           }
         },
         {
           "ref": "rest",
-          "kind": "block"
-        },
-        {
-          "kind": "layout",
-          "type": "row",
+          "kind": "block",
           "props": {
-            "style": {
-              "grid-column": "1 / -1",
-              "height": "64px"
-            }
-          },
-          "children": [
-            {
-              "ref": "lvl",
-              "kind": "block"
-            }
-          ]
+            "embedded": true
+          }
         }
       ]
+    },
+    {
+      "ref": "lvl",
+      "kind": "block",
+      "props": {
+        "height": "64px"
+      }
     },
     {
       "ref": "feature_widgets",

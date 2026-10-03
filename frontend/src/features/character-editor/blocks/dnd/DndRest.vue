@@ -1,8 +1,8 @@
 <template>
   <div class="rest-block">
-    <BaseTile class="rest-tile" :color="SHORT_COLOR">
+    <component :is="block.props?.embedded ? 'div' : BaseTile" class="rest-tile" :color="block.props?.embedded ? undefined : SHORT_COLOR">
       <DndRestView :interactive="ownerMode" @short="onShort" @long="onLong" @dawn="ownerMode && (dawnOpen = true)" />
-    </BaseTile>
+    </component>
 
     <AppModalFrame v-if="dawnOpen" title="Рассвет" @close="dawnOpen = false"><DndDawnEditor :values="values" @apply="applyDawn" @close="dawnOpen = false" /></AppModalFrame>
 

@@ -61,11 +61,13 @@ three-column row: characteristics on the left, identity/HP/statuses/inner tabs
 in the flexible centre, and utilities plus feature widgets, actions, resources,
 defenses and proficiencies in the right column. Both side columns use the same
 20 px inner padding, so their content has matching spacing from the centre; the
-right utility content remains 320 px wide. The former whole-tile
-morph editor is not used. The level tile sits below the desktop
-speed, proficiency-bonus and rest row and spans the full width of those three
-metric columns; the metric grid is 320 px wide and both its utility tiles and
-the level row are 64 px high.
+right utility content remains 320 px wide. AC, initiative, menu, speed,
+proficiency bonus and rest share one `BaseTile` in a gapless 3×2 grid with
+1 px internal dividers. Stat faces use `MorphTile embedded`; menu and rest
+also omit their individual surfaces. Their editors, dice actions and menus
+remain independent. The former whole-tile morph editor is not used. The level
+tile sits separately below this group and spans its full width; both metric
+rows and the level tile are 64 px high.
 The renamed mobile **Способности** tab uses the expanded cards as well and
 starts with prominent feature widgets, actions, resources, defenses and
 proficiencies. The mobile D&D stats tab uses a 12px top-level column gap. Tab state

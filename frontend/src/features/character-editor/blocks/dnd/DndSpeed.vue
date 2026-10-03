@@ -1,6 +1,7 @@
 <template>
   <StatTile
     :variant="variant"
+    :embedded="block.props?.embedded"
     label="Скорость"
     mini-label="Скор."
     :value="displayValue"

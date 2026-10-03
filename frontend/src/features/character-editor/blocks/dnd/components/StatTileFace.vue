@@ -1,5 +1,5 @@
 <template>
-  <MorphTile compact-header :embedded="panel" :color="color" padding="0" edit-label="Редактировать"
+  <MorphTile compact-header :embedded="panel || embedded" :color="color" padding="0" edit-label="Редактировать"
       :title="label"
       :show-edit="showEdit"
       :edit-fade="editFade"
@@ -36,6 +36,7 @@ import { MorphTile } from '@sylvieshare/share-ui'
 // the morph editor. Tiles flagged `rollable` show a dice button on the right that emits `roll`.
 const props = defineProps({
   panel: Boolean,
+  embedded: Boolean,
   label: { type: String, default: '' },
   value: { type: [String, Number], default: '' },
   pre: { type: String, default: '' },     // e.g. '+'

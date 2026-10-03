@@ -8,7 +8,7 @@
   </div>
 
   <!-- desktop grid tile -->
-  <StatTileFace v-bind="$attrs" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
+  <StatTileFace v-bind="$attrs" v-else-if="variant === 'tile'" ref="tileRef" class="util-tile" :embedded="embedded" :label="label" :value="value" :pre="pre" :unit="unit" :icon="icon" :rollable="rollable" :show-edit="canEdit" :color="color" @edit="openTile" @open="openTile" @roll="runAction">
     <template #decoration><TileAccentStrip v-if="toggled" /></template>
   </StatTileFace>
 
@@ -52,6 +52,7 @@ import { useMorphOrigin } from '@/features/character-editor/composables/useMorph
 
 const props = defineProps({
   variant: { type: String, default: '' },
+  embedded: Boolean,
   label: { type: String, default: '' },
   miniLabel: { type: String, default: '' },
   value: { type: [String, Number], default: '' },

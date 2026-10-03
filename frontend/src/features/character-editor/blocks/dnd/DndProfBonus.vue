@@ -1,6 +1,7 @@
 <template>
   <StatTile
     :variant="variant"
+    :embedded="block.props?.embedded"
     label="Бонус умения"
     :mini-label="block.title || 'Бонус'"
     :value="displayValue"
