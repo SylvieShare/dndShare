@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue'
 import { defaultInstanceParams, instanceParamsKey } from '@/features/items/lib/itemInstance'
+import { purchaseQuantity } from '@/features/items/lib/itemPackaging'
 import { fetchGet } from '@/shared/api/http'
 import { itemEditionEligibility } from '@/shared/lib/itemCompatibility'
 import { armorRuleByName } from '@/features/character-editor/settings/dnd/creation/armorRules'
@@ -168,10 +169,10 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
   function addShopItem(item) {
     const price = itemCostCopper(item)
     if (price == null || price > shopRemainingCopper.value) return
-    const next = inventoryEntry(item, 1, typeById(item.typeId))
+    const next = inventoryEntry(item, purchaseQuantity(item), typeById(item.typeId))
     const existing = state.startingShopCart.find((entry) => String(entry.item_id) === String(item.id)
       && instanceParamsKey(entry.params) === instanceParamsKey(next.params))
-    if (existing) existing.count += 1
+    if (existing) existing.count += next.count
     else state.startingShopCart.push(next)
   }
   function removeShopItem(reference) {
@@ -182,8 +183,9 @@ export function useDndCreateEquipment({ state, sourceSuffix }) {
     const entry = state.startingShopCart.find((item) => sameInstance(item, reference))
     if (!entry) return
     if (delta > 0 && itemCostCopper(entry) > shopRemainingCopper.value) return
-    if (delta < 0 && entry.count <= 1) { removeShopItem(reference); return }
-    entry.count = Math.max(1, entry.count + delta)
+    const quantity = purchaseQuantity(entry)
+    if (delta < 0 && entry.count <= quantity) { removeShopItem(reference); return }
+    entry.count = Math.max(quantity, entry.count + delta * quantity)
   }
   function canBuyShopItem(item) {
     const price = itemCostCopper(item)

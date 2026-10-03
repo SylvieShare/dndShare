@@ -106,6 +106,17 @@ preservePrevious)`, с `preservePrevious=true` при замене. PNG/WebP д�
 
 ## Pure rules
 
+Обычные предметы (тип 2) имеют необязательное поле `purchase_quantity`
+«Количество в упаковке»: положительное целое число, по умолчанию 1.
+`cost` и `weight` относятся к этому количеству, а количество экземпляра в
+рюкзаке — к отдельным штукам. Например, упаковка из 20 стрел стоит 1 зм и
+весит 1 фунт; стопка из 13 стрел имеет стоимость 0,65 зм и вес 0,65 фунта.
+Справочные карточки, списки и подсказки подписывают цену/вес «за 20 шт.»;
+подсказки инвентаря персонажа и сессии показывают значения всей стопки.
+`lib/itemPackaging.js` задаёт общий расчёт; явные `override.cost/weight`
+относятся к одной штуке. Учёт длины через `length_ft` и удельные значения
+сохраняет свой отдельный расчёт.
+
 `lib/featRules.js` evaluates structured feat prerequisites, grants and choices.
 It reads only current keys. Unit tests cover requirement groups, repeatable
 entries and selected choices.

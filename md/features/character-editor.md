@@ -838,6 +838,11 @@ measurement kind plus unit cost/weight. Displayed cost and weight scale with the
 stored length, and stacks merge only when both `item_id` and canonical `params`
 match.
 
+Для упаковок `item.data.purchase_quantity` задаёт количество штук, к которому
+относятся каталожные цена и вес. `entry.count` хранит штуки; подсказка рюкзака
+показывает цену и вес всей стопки, включая неполную упаковку. Передача предмета
+сохраняет это поштучное количество.
+
 `sheet_widgets` is an ability-owned contract for prominent class-mechanic cards
 in the sheet side column and abilities tabs. A widget may display a fixed or
 progression-derived metric, own a persisted toggle, bind to the ability resource,

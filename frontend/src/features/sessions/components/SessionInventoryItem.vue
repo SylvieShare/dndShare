@@ -33,6 +33,7 @@ import InventoryItemTooltip from '@/features/inventory/components/InventoryItemT
 import { useInventoryTooltip } from '@/features/inventory/composables/useInventoryTooltip'
 import InventoryBagItem from '@/features/inventory/components/InventoryBagItem.vue'
 import { inventoryCellTraits } from '@/features/inventory/lib/cellTraits'
+import { inventoryItemEconomy } from '@/features/items/lib/itemPackaging'
 import { pvAvatar, pvName } from '../lib/participantView'
 const props = defineProps({ row: Object, item: Object, players: Array, busy: Boolean, controller: Object, sortable: Object, index: Number })
 defineEmits(['view', 'remove'])
@@ -42,7 +43,7 @@ const display = computed(() => {
   const override = props.row.entry?.override || {}, data = props.item?.data || {}
   return { name: props.row.name, base: props.item,
     desc: override.desc ?? props.row.entry?.desc ?? data.desc ?? '',
-    cost: override.cost ?? data.cost, weight: override.weight ?? data.weight,
+    ...inventoryItemEconomy(props.item, props.row.entry),
     consumable: override.consumable ?? data.consumable,
   }
 })
