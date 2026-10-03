@@ -1,9 +1,9 @@
 <template>
-  <BaseTile class="item-mechanic-panel" :class="{ 'item-mechanic-panel--resource': kind === 'resource' }" framed :color="presentation.color" :style="{ '--mechanic-tone': presentation.color }" @click.stop @pointerdown.stop>
+  <BaseTile class="item-mechanic-panel" framed :color="presentation.color" :style="{ '--mechanic-tone': presentation.color }" @click.stop @pointerdown.stop>
     <component :is="collapse ? 'details' : 'div'" class="item-mechanic-disclosure">
       <component :is="collapse ? 'summary' : 'div'" class="item-mechanic-heading">
-        <div v-if="kind !== 'resource'" class="item-mechanic-icon"><slot name="icon"><component :is="presentation.icon" :size="24" /></slot></div>
-        <div class="item-mechanic-title"><span v-if="kind !== 'resource'">{{ presentation.label }}</span><strong>{{ title }}</strong></div>
+        <div class="item-mechanic-icon"><slot name="icon"><component :is="presentation.icon" :size="24" /></slot></div>
+        <div class="item-mechanic-title"><span>{{ presentation.label }}</span><strong>{{ title }}</strong></div>
         <div v-if="$slots.summary" class="item-mechanic-summary" @click.stop @pointerdown.stop @keydown.enter.stop @keydown.space.stop><slot name="summary" /></div>
         <ChevronDown v-if="collapse" class="item-mechanic-chevron" :size="16" aria-hidden="true" />
       </component>
@@ -41,7 +41,6 @@ summary.item-mechanic-heading:focus-visible { outline: 2px solid var(--accent); 
 .item-mechanic-disclosure[open] > .item-mechanic-heading > .item-mechanic-chevron { transform: rotate(180deg); }
 .item-mechanic-expanded { display: grid; gap: 10px; padding-top: 10px; }
 .item-mechanic-subtitle { margin: 0; font-size: 12px; line-height: 1.4; color: var(--text-2); }
-.item-mechanic-panel--resource .item-mechanic-title strong { font-size: 14px; }
 .item-mechanic-body { display: grid; gap: 8px; min-width: 0; }
 .item-mechanic-body :deep(.mechanic-theses) { margin: 0; }
 .item-mechanic-actions { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 8px; border-top: 1px solid var(--border); }

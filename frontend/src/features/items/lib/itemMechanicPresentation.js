@@ -1,7 +1,6 @@
-import { CircleDot, Sparkles, Skull, Crosshair, CircleCheck, Swords, ShieldCheck, Dices, WandSparkles } from '@lucide/vue'
+import { Sparkles, Skull, Crosshair, CircleCheck, Swords, ShieldCheck, Dices, WandSparkles } from '@lucide/vue'
 
 export const itemMechanicKinds = {
-  resource: { label: 'Ресурс', icon: CircleDot, color: 'var(--accent)' },
   rule: { label: 'Свойство', icon: Sparkles, color: 'var(--info)' },
   curse: { label: 'Проклятие', icon: Skull, color: 'var(--danger)' },
   target: { label: 'Выбранная цель', icon: Crosshair, color: 'var(--accent)' },

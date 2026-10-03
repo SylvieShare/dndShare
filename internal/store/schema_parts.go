@@ -169,4 +169,5 @@ var schemaParts = []struct {
 	{"item-cost-and-weapon-notes", schemaItemCostAndWeaponNotesSQL},
 	{"potions-inventory", schemaPotionsInventorySQL},
 	{"suggest-images", schemaSuggestImagesSQL},
+	{"weapon-note-resources", schemaWeaponNoteResourcesSQL},
 }

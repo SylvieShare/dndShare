@@ -5,7 +5,7 @@
     "magic": 42,
     "total": 118
   },
-  "projection": "WeaponCataloguePanels projects the existing edition-specific description and base; descriptions are not copied into inventory instances.",
+  "projection": "Concrete mechanics only; generic descriptions and standalone resource panels are omitted.",
   "limitations": "This audit adds rule visibility. Existing automation and manual resolution boundaries are preserved.",
   "catalogueSha256": "7b53117d0ed27edd819959a22dc7bdc247cad67c5d77e8a5306db24a9b017e42",
   "catalogueChanges": [
@@ -14,6 +14,11 @@
       "change": "Berserker curse moved into weapon_notes, visible after attunement; other mechanics and media preserved."
     }
   ],
+  "resourceAudit": {
+    "chargedWeapons": 18,
+    "unassignedPools": 0,
+    "plan": "md/data/weapon-charge-bindings.json"
+  },
   "entries": [
     {"id":35,"name":"Дубинка","typeId":1,"versions":["2014"],"ruleSource":"notes","hasCharges":false,"hasSpecialAttack":false,"automationStatus":"unreviewed"},
     {"id":36,"name":"Кинжал","typeId":1,"versions":["2014"],"ruleSource":"notes","hasCharges":false,"hasSpecialAttack":false,"automationStatus":"unreviewed"},
