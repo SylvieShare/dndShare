@@ -21,7 +21,6 @@ import DndArmor from '@/features/character-editor/blocks/dnd/DndArmor'
 import DndCharIdentity from '@/features/character-editor/blocks/dnd/DndCharIdentity'
 import DndCharacterIcon from '@/features/character-editor/blocks/dnd/DndCharacterIcon.vue'
 import DndCharStat10 from '@/features/character-editor/blocks/dnd/DndCharStat10'
-import DndCounters from '@/features/character-editor/blocks/dnd/DndCounters'
 import DndDefenses from '@/features/character-editor/blocks/dnd/DndDefenses'
 import DndDiary from '@/features/character-editor/blocks/dnd/DndDiary'
 import DndExhaustion from '@/features/character-editor/blocks/dnd/DndExhaustion'
@@ -57,7 +56,6 @@ export const BLOCK_REGISTRY = {
   BLOCK_ITEMS:      { component: DndItems },
   BLOCK_MONEY:      { component: BlockMoney },
   BLOCK_RESOURCES:  { component: BlockResources },
-  BLOCK_COUNTERS:   { component: DndCounters },
   BLOCK_STATES:     { component: BlockStates, noValuePreset: true },
   BLOCK_TAGS:       { component: BlockTags },
   CHARACTER_READ_ONLY: { component: CharacterReadOnlyNotice, noValue: true },

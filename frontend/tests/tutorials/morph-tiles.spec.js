@@ -42,7 +42,7 @@ test('each shared face owns one surface and embeds without a second tile', async
   page.on('pageerror', error => { throw error })
   await page.goto('/tests/tutorials/fixtures/tile-faces.html')
   const sources = page.locator('[data-testid$="-source"]')
-  await expect(sources).toHaveCount(13)
+  await expect(sources).toHaveCount(12)
   for (const source of await sources.all()) {
     await expect(source).toHaveClass(/base-tile/)
     await expect(source).toHaveClass(/morph-tile/)

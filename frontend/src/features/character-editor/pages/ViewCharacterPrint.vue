@@ -129,7 +129,6 @@
           </section>
           <div v-if="index === 0 && hasEquipmentSide" class="equipment-side">
             <section v-if="coins.length" class="box coins-box"><BoxTitle>Монеты</BoxTitle><div v-for="coin in coins" :key="coin.id"><strong>{{ coin.amount }}</strong><span>{{ coin.name }}</span></div></section>
-            <section v-if="counters.length" class="box list-box"><BoxTitle>Ресурсы</BoxTitle><div v-for="counter in counters" :key="counter.id"><span>{{ counter.name || 'Ресурс' }}</span><strong>{{ counter.value }}<template v-if="counter.max != null"> / {{ counter.max }}</template> {{ counter.unit }}</strong></div></section>
             <section v-if="equipmentProficiencyGroups.length" class="box prose-box"><BoxTitle>Владения и языки</BoxTitle><div v-for="group in equipmentProficiencyGroups" :key="group.name" class="prose-group"><h3>{{ group.name }}</h3><p>{{ group.value }}</p></div></section>
           </div>
         </div>
@@ -191,7 +190,6 @@ import { itemsApi } from '@/shared/api/itemsApi'
 import { abilityModifier, proficiencyBonus, resolveNumValue, sumBonuses } from '@/shared/lib/dnd'
 import { SAVE_ABBR, STAT_FULL, STAT_KEYS, STAT_SHORT, SUGGEST16_TO_STAT } from '@/shared/lib/dndStats'
 import { normalizeValue } from '@/features/character-editor/blocks/dnd/lib/itemSection'
-import { normalizeCounters } from '@/features/character-editor/blocks/dnd/lib/counterEntry'
 import { formatHitDice, normalizeHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { armorBaseId } from '@/features/character-editor/lib/magicArmor'
 import { resolveWeaponItem, weaponBaseId, intrinsicWeaponBonus } from '@/features/character-editor/lib/magicWeapons'
@@ -350,9 +348,8 @@ const inventorySections = computed(() => [
   { id: 'equipped', name: 'Экипировано', items: inventoryModel.value.equipped.map(inventoryEntry) },
   ...inventoryModel.value.sections.map(section => ({ ...section, items: section.items.map(inventoryEntry) })),
 ].filter(section => section.items.length))
-const counters = computed(() => normalizeCounters(values.value.counters))
 const coins = computed(() => Object.entries(values.value.money?.amounts || {}).filter(([, amount]) => Number(amount)).map(([id, amount]) => ({ id, amount: Number(amount), name: suggest.items(17).find(item => String(item.id) === id)?.value || `мон. ${id}` })))
-const hasEquipmentSide = computed(() => counters.value.length || coins.value.length || equipmentProficiencyGroups.value.length)
+const hasEquipmentSide = computed(() => coins.value.length || equipmentProficiencyGroups.value.length)
 const hasEquipment = computed(() => inventorySections.value.length || hasEquipmentSide.value)
 const equipmentPages = computed(() => {
   if (!hasEquipment.value) return []

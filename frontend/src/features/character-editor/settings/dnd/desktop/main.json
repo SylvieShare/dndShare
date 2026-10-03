@@ -219,10 +219,6 @@
                             },
                             "children": [
                               {
-                                "ref": "counters",
-                                "kind": "block"
-                              },
-                              {
                                 "ref": "money",
                                 "kind": "block",
                                 "title": "Кошелек"

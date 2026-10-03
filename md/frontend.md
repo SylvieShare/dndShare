@@ -1404,8 +1404,9 @@ summary-слоте; его кнопки не раскрывают карточк
 
 `InventoryBagItem` owns the inventory-only corner chips: quantity docked to the
 bottom right with rounded top-left/bottom-right corners, capabilities docked
-bottom left. `InventoryBagGrid` marks simplified entries with a dashed frame;
-an equipped simplified entry keeps the dash pattern in the accent color. These
+bottom left. `InventoryBagGrid` gives every cell a 2px frame in the shared border
+color; simplified entries change only its style to dashed. Equipped entries use
+the accent color while preserving the solid/dashed style. These
 overlays share the cell radius and do not create another action target.
 The usable capability chip uses Lucide `Hand`, matching the `use` action in
 `RowActionItem` and the item-use submenu in `ItemTransferAction`.

@@ -58,11 +58,10 @@ watch(() => [props.adaptive, props.sortable?.dragging], updateColumns)
 <style scoped>
 .inventory-bag-grid { display: grid; gap: 8px; width: 100%; max-width: 360px; align-self: center; }
 .inventory-bag-grid--adaptive { max-width: none; align-self: stretch; }
-.inventory-bag-cell { aspect-ratio: 1; min-width: 0; display: flex; align-items: center; justify-content: center; }
-.inventory-bag-cell--simplified { box-shadow: none; }
-.inventory-bag-cell--simplified::after { content: ''; position: absolute; inset: 0; border: 1px dashed var(--text-muted); border-radius: inherit; pointer-events: none; z-index: 1; }
-.inventory-bag-cell--equipped::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--accent); border-radius: inherit; pointer-events: none; z-index: 1; }
-.inventory-bag-cell--simplified.inventory-bag-cell--equipped::after { border-style: dashed; }
+.inventory-bag-cell { aspect-ratio: 1; min-width: 0; display: flex; align-items: center; justify-content: center; box-shadow: none; }
+.inventory-bag-cell::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--border); border-radius: inherit; pointer-events: none; z-index: 1; }
+.inventory-bag-cell--simplified::after { border-style: dashed; }
+.inventory-bag-cell--equipped::after { border-color: var(--accent); }
 .inventory-bag-cell--target { outline: 2px solid var(--accent); outline-offset: 2px; }
 .inventory-bag-empty { color: var(--text-muted); opacity: .25; pointer-events: none; }
 .inventory-bag-cell :deep(.ram-custom-trigger) { width: 100%; height: 100%; border-radius: inherit; }

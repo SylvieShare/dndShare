@@ -80,6 +80,15 @@ for (const mobile of [false, true]) for (const viewer of [false, true]) test(`in
   const customCell = bag.locator('.inventory-bag-cell').filter({ has: page.getByRole('button', { name: 'Дорожная одежда', exact: true }) })
   await expect(customCell).toHaveClass(/inventory-bag-cell--simplified/)
   expect(await customCell.evaluate(element => getComputedStyle(element, '::after').borderTopStyle)).toBe('dashed')
+  const regularCell = bag.locator('.inventory-bag-cell').filter({ has: page.getByRole('button', { name: 'Лечащий плащ', exact: true }) })
+  const border = cell => cell.evaluate(element => {
+    const css = getComputedStyle(element, '::after')
+    return { width: css.borderTopWidth, color: css.borderTopColor }
+  })
+  const regularBorder = await border(regularCell)
+  expect(regularBorder.width).toBe('2px')
+  expect(await border(customCell)).toEqual(regularBorder)
+  expect(await border(bag.locator('.inventory-bag-cell').last())).toEqual(regularBorder)
   await expect(custom).toHaveAttribute('aria-description', 'Упрощённый предмет. Количество: 2')
   const customWorn = bag.getByRole('button', { name: 'Самодельный пояс', exact: true })
   await expect(customWorn).toHaveAttribute('aria-description', 'Упрощённый предмет. Экипировано')

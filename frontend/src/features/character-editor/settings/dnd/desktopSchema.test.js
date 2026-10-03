@@ -8,12 +8,21 @@ function findNode(node, predicate) {
     const match = findNode(child, predicate)
     if (match) return match
   }
-  return null
+  return findNode(node.content, predicate)
 }
 
 describe('D&D desktop sheet schema', () => {
   const base = schema.layouts.desktop.tabs.find(tab => tab.title === 'База')
   const innerTabs = findNode(base?.content, node => node.type === 'inner_tabs')
+
+  it('keeps inventory and wallet available in both profiles after counter tiles are retired', () => {
+    expect(schema.blocks.counters).toBeUndefined()
+    for (const profile of Object.values(schema.layouts)) {
+      for (const tab of profile.tabs) expect(findNode(tab.content, node => node.ref === 'counters')).toBeNull()
+      expect(profile.tabs.some(tab => findNode(tab.content, node => node.ref === 'items'))).toBe(true)
+      expect(profile.tabs.some(tab => findNode(tab.content, node => node.ref === 'money'))).toBe(true)
+    }
+  })
 
   it('uses one desktop row with stats, main content and utility columns', () => {
     const [statsColumn, mainColumn, utilityColumn] = base.content.children
