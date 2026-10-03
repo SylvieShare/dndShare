@@ -1,6 +1,6 @@
 <template>
   <ItemMechanicPanel kind="confirmed_use" v-for="use in uses" :key="use.key" :title="use.title">
-    <ItemResourcePips v-if="use.show_resource && use.resource" :resource="use.resource" :interactive="!!charCtx.ownerMode" @toggle="toggle(use, $event)" />
+    <template v-if="use.show_resource && use.resource" #summary><ItemResourcePips :resource="use.resource" :interactive="!!charCtx.ownerMode" hide-recovery @toggle="toggle(use, $event)" /></template>
     <DndRichContent v-if="use.description" :html="use.description" :item="use.item" />
     <MechanicTheses :lines="use.requirements" />
     <template v-if="charCtx.ownerMode" #actions>

@@ -79,6 +79,7 @@ const props = defineProps({
   npcActor: { type: Object, default: null },
 })
 provide('npcEventActor', computed(() => props.npcActor))
+provide('weaponMechanicCollapse', false)
 
 const emit = defineEmits(['close', 'saved'])
 

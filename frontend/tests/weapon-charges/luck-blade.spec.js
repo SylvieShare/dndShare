@@ -1,4 +1,7 @@
 import { test, expect } from '@playwright/test'
+async function openPanel(page, title) {
+ await page.locator('summary').filter({ has: page.getByText(title, { exact: true }) }).click()
+}
 async function add(page, count = '2') {
  await page.goto('/tests/weapon-charges/luck-blade.html')
  await page.getByRole('button', { name: 'Добавить', exact: true }).click()
@@ -13,7 +16,10 @@ for (const width of [1280, 390]) test(`luck and wishes use separate inline resou
  await page.setViewportSize({ width, height: 844 }); await add(page)
  await expect(page.getByRole('group', { name: 'Удача: 1 из 1' })).toBeVisible()
  await expect(page.getByRole('group', { name: 'Желания: 2 из 2' })).toBeVisible()
- await expect(page.getByRole('group')).toHaveCount(2)
+ await expect(page.getByRole('group', { name: /из/ })).toHaveCount(2)
+ await expect(page.locator('details[open]')).toHaveCount(0)
+ await openPanel(page, 'Удача')
+ await openPanel(page, 'Желание')
  await page.getByRole('button', { name: 'Проверка', exact: true }).click()
  await page.getByRole('button', { name: 'Перебросить: Проверка силы' }).click()
  await expect(page.getByRole('group', { name: 'Удача: 0 из 1' })).toBeVisible()
@@ -22,6 +28,8 @@ for (const width of [1280, 390]) test(`luck and wishes use separate inline resou
  await expect(page.getByRole('group', { name: 'Желания: 1 из 2' })).toBeVisible()
  await expect(page.getByRole('button', { name: 'Сотворить желание · −1 заряд' })).toBeDisabled()
  await page.reload()
+ await expect(page.locator('details[open]')).toHaveCount(0)
+ await openPanel(page, 'Желание')
  await expect(page.getByRole('button', { name: 'Сотворить желание · −1 заряд' })).toBeDisabled()
  await page.getByRole('button', { name: 'Рассвет', exact: true }).click()
  await page.getByRole('button', { name: 'Встретить рассвет' }).click()
@@ -35,6 +43,7 @@ for (const width of [1280, 390]) test(`luck and wishes use separate inline resou
 })
 test('zero wishes remain empty; stored blade still grants saves and rerolls', async ({ page }) => {
  await add(page, '0')
+ await openPanel(page, 'Желание')
  await expect(page.getByRole('button', { name: 'Сотворить желание · −1 заряд' })).toBeDisabled()
  await page.evaluate(() => { window.ctx.updateValues({ items: { sections: [{ items: window.ctx.values.weapon }] }, weapon: [] }) })
  expect(await page.evaluate(() => window.bonus())).toBe(1)

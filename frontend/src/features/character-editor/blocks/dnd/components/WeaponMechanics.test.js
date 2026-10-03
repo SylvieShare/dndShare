@@ -38,7 +38,11 @@ it('displays the instance pool below the weapon with filled and spent accessible
   expect(html.match(/aria-pressed="true"/g)).toHaveLength(1)
   expect(html.match(/aria-pressed="false"/g)).toHaveLength(2)
   expect(html).not.toContain('На рассвете 1к3')
-  expect(html).toContain('Ресурс')
+  expect(html).not.toContain('>Ресурс<')
+  expect(html).toContain('item-mechanic-panel--resource')
+  expect(html).toContain('>Заряды<')
+  expect(html).toMatch(/<summary[^>]*>[\s\S]*?Заряды[\s\S]*?Заряд 1[\s\S]*?<\/summary>/)
+  expect(html).toMatch(/<details(?![^>]*\bopen\b)/)
   ctx.charCtx.ownerMode = false
   const readonly = await render(WeaponItemMechanics, { entry: { uid: 'staff' } }, ctx)
   expect(readonly.match(/<button[^>]*disabled/g)).toHaveLength(3)
@@ -54,6 +58,7 @@ it('renders the structured curse below only the attuned weapon in owner and read
     expect(html).toContain('Проклятие')
     expect(html).toContain('Мстительный дух')
     expect(html).toContain('Мудрость, Сл 15.')
+    expect(html).toMatch(/<details(?![^>]*\bopen\b)/)
   }
   const inactive = await render(WeaponItemMechanics, { entry: { ...entry, params: { magic: { attuned: false } } } }, ctx)
   expect(inactive).not.toContain('Мстительный дух')

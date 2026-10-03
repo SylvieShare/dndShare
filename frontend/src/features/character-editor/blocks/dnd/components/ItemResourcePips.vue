@@ -6,13 +6,13 @@
         <SpellSlotSphere :spent="pip > resource.value" :size="28" :color="resource.color_point" :interactive="interactive" />
       </button>
     </div>
-    <ResourceRestIcons :resource="resource" />
+    <ResourceRestIcons v-if="!hideRecovery" :resource="resource" />
   </div>
 </template>
 <script setup>
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import ResourceRestIcons from '@/features/character-editor/blocks/generic/components/ResourceRestIcons.vue'
-defineProps({ resource: Object, interactive: Boolean, label: String })
+defineProps({ resource: Object, interactive: Boolean, label: String, hideRecovery: Boolean })
 defineEmits(['toggle'])
 </script>
 <style scoped>
