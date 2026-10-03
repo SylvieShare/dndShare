@@ -41,8 +41,10 @@ the handbook use opaque `--bg`, while handbook list rows use `--surface`. The
 pannable session chapter grid may reposition and scale the pattern, but must use
 the same background and dot-color tokens. The global header and regular forms,
 editors and modal bodies use `--bg`; toolbar chrome inside a `--bg` editor uses
-`--surface`. A standard modal header uses `--surface`,
-while its body and footer use `--bg`, matching the contrast model of
+`--surface`. The session command bar and desktop sidebar use the same surface with a
+`--border-strong` divider and a short shadow. The sidebar opts into
+`AppSidebar.elevated` only on the session route. A standard modal header uses
+`--surface`, while its body and footer use `--bg`, matching the contrast model of
 character-sheet morph editors. Fields are `var(--surface-raised)`, field borders
 are `var(--border-strong)`, and focus is `var(--accent)`. `AppModal`/`AppModalFrame`
 already supply this modal canvas; do not wrap their content in an additional grey panel.

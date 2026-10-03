@@ -175,8 +175,9 @@ const visibleLibraryViews = computed(() => props.isDm ? primaryViews.slice(1) : 
   flex: none;
   min-height: 78px;
   padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
+  border-bottom: 1px solid var(--border-strong);
+  background: var(--surface);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--scrim) 45%, transparent);
 }
 .chapter-toolbar-center { display: flex; align-items: center; justify-self: center; min-width: 0; gap: 14px; }
 .chapter-primary-nav { display: flex; align-items: center; gap: 2px; }

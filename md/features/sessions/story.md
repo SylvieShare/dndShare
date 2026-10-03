@@ -199,8 +199,12 @@ is shown to users as `Сейчас здесь`: assigning it to a preparatory ch
 promotes that chapter to `in_progress`, and only one chapter in the session can
 carry the pointer.
 
-`ChapterGraphToolbar` is the semantic session header with its own background and
-bottom divider, not a `BaseTile`. `SessionToolbarIdentity` owns the editable name,
+`ChapterGraphToolbar` is the semantic session header with a `--surface` background,
+`--border-strong` bottom divider and a short downward shadow, not a `BaseTile`.
+The desktop application sidebar uses the same surface and a short rightward
+shadow on the session route, in both expanded and collapsed states. Together
+they separate navigation from the darker dotted workspace without extra margins.
+`SessionToolbarIdentity` owns the editable name,
 status menu and arc switcher; `SessionToolbarMusic` owns the compact player and
 overflow measurement. Current-chapter focus, zoom and contextual creation stay
 on the canvas. There is no second session title bar or nested switcher.

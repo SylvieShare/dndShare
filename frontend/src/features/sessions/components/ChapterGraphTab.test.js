@@ -24,11 +24,11 @@ describe('chapter graph workspace', () => {
     expect(ChapterGraphTab).toBeTruthy()
   })
 
-  it('keeps the canvas transparent and gives its semantic header a plain divided surface', () => {
+  it('keeps the canvas transparent and separates its semantic header with a panel surface', () => {
     expect(toolbar).toContain('<header ref="header" class="chapter-toolbar">')
     expect(toolbar).not.toContain('<BaseTile')
-    expect(toolbar).toContain('border-bottom: 1px solid var(--border);')
-    expect(toolbar).toContain('background: var(--bg);')
+    expect(toolbar).toContain('border-bottom: 1px solid var(--border-strong);')
+    expect(toolbar).toContain('background: var(--surface);')
     expect(canvas).not.toContain('<BaseTile')
   })
 
