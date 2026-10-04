@@ -23,15 +23,15 @@ func TestRPSOutcomesAndSecrecy(t *testing.T) {
 }
 func TestValidInteraction(t *testing.T) {
 	for _, c := range []struct {
-		kind, message, choice string
-		valid                 bool
+		kind, message string
+		valid         bool
 	}{
-		{"chat_message", "hello", "", true}, {"chat_message", strings.Repeat("я", 2000), "", true},
-		{"chat_message", strings.Repeat("я", 2001), "", false}, {"chat_message", " \n ", "", false},
-		{"chat_message", "hello", "rock", false}, {"rps_challenge", "", "rock", true},
-		{"rps_challenge", "hello", "rock", false}, {"rps_challenge", "", "lizard", false}, {"dice_roll", "", "rock", false},
+		{"chat_message", "hello", true}, {"chat_message", strings.Repeat("я", 2000), true},
+		{"chat_message", strings.Repeat("я", 2001), false}, {"chat_message", " \n ", false},
+		{"rps_challenge", "", true},
+		{"rps_challenge", "hello", false}, {"dice_roll", "", false},
 	} {
-		if ValidInteraction(c.kind, c.message, c.choice) != c.valid {
+		if ValidInteraction(c.kind, c.message) != c.valid {
 			t.Fatalf("validation: %+v", c)
 		}
 	}

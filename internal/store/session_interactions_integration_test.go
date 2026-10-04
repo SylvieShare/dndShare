@@ -27,13 +27,11 @@ func testSessionInteractionsPostgres(t *testing.T, s *Store) {
 	create := func(kind, value string) SessionEvent {
 		t.Helper()
 		key++
-		message, choice := "", ""
+		message := ""
 		if kind == "chat_message" {
 			message = value
-		} else {
-			choice = value
 		}
-		e, err := s.CreateCharacterInteraction(ctx, 1, 1, 1, 2, kind, message, choice, fmt.Sprintf("00000000-0000-4000-8000-%012d", key))
+		e, err := s.CreateCharacterInteraction(ctx, 1, 1, 1, 2, kind, message, fmt.Sprintf("00000000-0000-4000-8000-%012d", key))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -52,7 +50,7 @@ func testSessionInteractionsPostgres(t *testing.T, s *Store) {
 		t.Fatal("message changed")
 	}
 	for _, args := range [][3]int64{{3, 1, 2}, {1, 1, 3}, {1, 1, 1}, {4, 1, 2}} {
-		_, err := s.CreateCharacterInteraction(ctx, args[0], 1, args[1], args[2], "chat_message", "forged", "", "00000000-0000-4000-8000-000000001000")
+		_, err := s.CreateCharacterInteraction(ctx, args[0], 1, args[1], args[2], "chat_message", "forged", "00000000-0000-4000-8000-000000001000")
 		if !errors.Is(err, ErrNotFound) {
 			t.Fatalf("unauthorized create %+v: %v", args, err)
 		}
@@ -102,22 +100,47 @@ func testSessionInteractionsPostgres(t *testing.T, s *Store) {
 			}
 		}
 	}
-	_, err = s.CreateCharacterInteraction(ctx, 2, 1, 2, 1, "rps_challenge", "", "paper", "00000000-0000-4000-8000-000000001001")
+	_, err = s.CreateCharacterInteraction(ctx, 2, 1, 2, 1, "rps_challenge", "", "00000000-0000-4000-8000-000000001001")
 	if !errors.Is(err, ErrInteractionConflict) {
 		t.Fatalf("reverse duplicate: %v", err)
 	}
-	retry, err := s.CreateCharacterInteraction(ctx, 1, 1, 1, 2, "rps_challenge", "", "rock", *round.ClientActionID)
+	retry, err := s.CreateCharacterInteraction(ctx, 1, 1, 1, 2, "rps_challenge", "", *round.ClientActionID)
 	if err != nil || retry.ID != round.ID {
 		t.Fatalf("idempotent create: %+v %v", retry, err)
 	}
 	for _, args := range []struct {
 		user, char int64
 		decision   string
-	}{{1, 1, "paper"}, {3, 2, "paper"}, {4, 4, "paper"}, {2, 2, "cancel"}} {
+	}{{1, 1, "accept"}, {3, 2, "paper"}, {4, 4, "paper"}, {2, 2, "cancel"}} {
 		_, err := s.ResolveCharacterInteraction(ctx, args.user, args.char, round.ID, args.decision)
 		if !errors.Is(err, ErrNotFound) {
 			t.Fatalf("unauthorized resolve %+v: %v", args, err)
 		}
+	}
+	if _, err = s.ResolveCharacterInteraction(ctx, 1, 1, round.ID, "rock"); !errors.Is(err, ErrInteractionConflict) {
+		t.Fatalf("choice before acceptance: %v", err)
+	}
+	accepted, err := s.ResolveCharacterInteraction(ctx, 2, 2, round.ID, "accept")
+	if err != nil || decode(accepted).Status != "choosing" {
+		t.Fatalf("accept invitation: %+v %v", accepted, err)
+	}
+	selected, err := s.ResolveCharacterInteraction(ctx, 1, 1, round.ID, "rock")
+	if err != nil || !decode(selected).SenderReady || decode(selected).RecipientReady || strings.Contains(string(selected.Data), "rock") {
+		t.Fatalf("first choice must publish readiness only: %+v %v", selected, err)
+	}
+	for _, reader := range []int64{1, 2, 3} {
+		page, err := s.GetSessionEvents(ctx, 1, reader, round.ID-1, 100)
+		if err != nil || len(page) != 1 || decode(page[0]).SenderChoice != "" || !decode(page[0]).SenderReady {
+			t.Fatalf("first choice leaked to reader %d: %+v %v", reader, page, err)
+		}
+	}
+	pending, err = s.CharacterInteractions(ctx, 2, 2, sessionUUID, "", 0)
+	if err != nil || pending[0].ID != round.ID {
+		t.Fatalf("accepted round absent from active inbox: %+v %v", pending, err)
+	}
+	_, err = s.CreateCharacterInteraction(ctx, 2, 1, 2, 1, "rps_challenge", "", "00000000-0000-4000-8000-000000001002")
+	if !errors.Is(err, ErrInteractionConflict) {
+		t.Fatalf("duplicate accepted round: %v", err)
 	}
 	var wg sync.WaitGroup
 	results := make(chan error, 2)
@@ -179,6 +202,31 @@ func testSessionInteractionsPostgres(t *testing.T, s *Store) {
 		if err != nil || strings.Contains(string(event.Data), "Choice") {
 			t.Fatalf("dismiss reveals choice: %+v %v", event, err)
 		}
+	}
+	// Either side may choose first; simultaneous choices both succeed once.
+	round = create("rps_challenge", "")
+	if _, err = s.ResolveCharacterInteraction(ctx, 2, 2, round.ID, "accept"); err != nil {
+		t.Fatal(err)
+	}
+	concurrent := make(chan error, 2)
+	for user := int64(1); user <= 2; user++ {
+		wg.Add(1)
+		go func(user int64) {
+			defer wg.Done()
+			_, err := s.ResolveCharacterInteraction(ctx, user, user, round.ID, "scissors")
+			concurrent <- err
+		}(user)
+	}
+	wg.Wait()
+	close(concurrent)
+	for err := range concurrent {
+		if err != nil {
+			t.Fatalf("independent simultaneous choices: %v", err)
+		}
+	}
+	final, err := s.ResolveCharacterInteraction(ctx, 1, 1, round.ID, "scissors")
+	if err != nil || decode(final).Status != "completed" || decode(final).WinnerCharUUID != "" {
+		t.Fatalf("simultaneous draw: %+v %v", final, err)
 	}
 	// Pagination remains stable; pending unread messages are not limited to one page.
 	for i := 0; i < 55; i++ {

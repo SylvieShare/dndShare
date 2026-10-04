@@ -8,6 +8,7 @@ import { useCharacterMoneyTransfer } from '../../src/features/character-editor/c
 import { useCharacterInteractions } from '../../src/features/character-editor/composables/useCharacterInteractions'
 import CharacterTransferDialogs from '../../src/features/character-editor/components/CharacterTransferDialogs.vue'
 import { useSessionEventsStore } from '../../src/stores/sessionEvents'
+import SessionEventRow from '../../src/features/sessions/components/SessionEventRow.vue'
 
 import CampaignBadge from '../../src/features/character-editor/blocks/generic/CampaignBadge.vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
@@ -44,11 +45,13 @@ const app = createApp({ setup() {
   controller.incomingCount = computed(() => controller.interactions.incomingCount)
   provide('charCtx', { topSession: { uuid: 'game', name: 'Приключение' }, itemTransfers: controller })
   window.fixture = { controller, session, data, refresh: () => controller.interactions.refresh() }
-  useSessionEventsStore().setContext({ uuid: 'game' })
+  const events = useSessionEventsStore()
+  events.setContext({ uuid: 'game' })
   controller.interactions.refresh()
   return () => h('main', { style: 'padding:30px' }, [
     h(CampaignBadge),
     h(CharacterTransferDialogs, { controller, characterUuid: own }),
+    h('section', { 'data-testid': 'chronicle' }, events.events.map(event => h(SessionEventRow, { key: event.id, event }))),
   ])
 } })
 app.use(createPinia())

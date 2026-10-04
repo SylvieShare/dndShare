@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, toRaw } from 'vue'
 import { useNotificationsStore } from '@/stores/notifications'
 import { evaluateDiceParts, rollDiceExpression } from '@/shared/lib/dice'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
 import { rollSessionD20 } from '@/shared/api/sessionDiceApi'
+import { rememberDiceOutcome } from '@/shared/lib/diceOutcome'
 
 function detectOutcome(result, criticalThreshold = null) {
   let fumble = null
@@ -57,6 +58,7 @@ export const useDiceStore = defineStore('dice', () => {
   const dismiss = id => notifications.dismiss(id)
 
   function pushEntry(entry) {
+    rememberDiceOutcome(toRaw(entry.result), entry.outcome)
     if (entry.color) entry.result.color = entry.color
     const duration = entry.duration || 6000
     useSessionEventsStore().markLocalRoll(entry.result)

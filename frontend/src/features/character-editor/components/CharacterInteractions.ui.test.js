@@ -26,4 +26,14 @@ describe('interaction event rendering', () => {
     expect(html).toContain('Открыть вызов')
     expect(html.match(/interaction-incoming"/g)).toHaveLength(2)
   })
+  it('renders the shared result in the chronicle and highlights both players on a draw', async () => {
+    const html = await render(SessionEventRow, { event: { id: 3, type: 'rps_challenge', action: 'Камень / ножницы / бумага',
+      createdAt: '2026-10-04T12:00:00Z', data: { ...data, status: 'completed', senderChoice: 'rock', recipientChoice: 'rock' } } })
+    expect(html).toContain('rps-result')
+    expect(html).toContain('VS')
+    expect(html).toContain('Ничья')
+    expect(html.match(/rps-contestant--draw/g)).toHaveLength(2)
+    expect(html).toContain('var(--warning)')
+    expect(html).not.toContain('rps-contestant--winner')
+  })
 })

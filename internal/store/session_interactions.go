@@ -22,6 +22,8 @@ type InteractionData struct {
 	RecipientName     string `json:"recipientName"`
 	Message           string `json:"message,omitempty"`
 	Status            string `json:"status,omitempty"`
+	SenderReady       bool   `json:"senderReady,omitempty"`
+	RecipientReady    bool   `json:"recipientReady,omitempty"`
 	SenderChoice      string `json:"senderChoice,omitempty"`
 	RecipientChoice   string `json:"recipientChoice,omitempty"`
 	WinnerCharUUID    string `json:"winnerCharUuid,omitempty"`
@@ -31,12 +33,12 @@ func ValidRPSChoice(choice string) bool {
 	return choice == "rock" || choice == "scissors" || choice == "paper"
 }
 
-func ValidInteraction(kind, message, choice string) bool {
+func ValidInteraction(kind, message string) bool {
 	switch kind {
 	case "chat_message":
-		return strings.TrimSpace(message) != "" && len([]rune(message)) <= 2000 && choice == ""
+		return strings.TrimSpace(message) != "" && len([]rune(message)) <= 2000
 	case "rps_challenge":
-		return message == "" && ValidRPSChoice(choice)
+		return message == ""
 	}
 	return false
 }
@@ -84,9 +86,9 @@ func lockInteractionPair(ctx context.Context, tx pgx.Tx, userID, sessionID, send
 	return chars, nil
 }
 
-func (s *Store) CreateCharacterInteraction(ctx context.Context, userID, sessionID, senderID, recipientID int64, kind, message, choice, clientActionID string) (SessionEvent, error) {
+func (s *Store) CreateCharacterInteraction(ctx context.Context, userID, sessionID, senderID, recipientID int64, kind, message, clientActionID string) (SessionEvent, error) {
 	message = strings.TrimSpace(message)
-	if !ValidInteraction(kind, message, choice) {
+	if !ValidInteraction(kind, message) {
 		return SessionEvent{}, ErrInvalidInteraction
 	}
 	tx, err := s.pool.Begin(ctx)
@@ -128,8 +130,8 @@ func (s *Store) CreateCharacterInteraction(ctx context.Context, userID, sessionI
 		return SessionEvent{}, interactionSQLError(err)
 	}
 	_, err = tx.Exec(ctx, `INSERT INTO dndshare.session_interaction
- (event_id,session_id,sender_char_id,recipient_char_id,kind,sender_choice)
- VALUES($1,$2,$3,$4,$5,NULLIF($6,''))`, eventID, sessionID, senderID, recipientID, kind, choice)
+ (event_id,session_id,sender_char_id,recipient_char_id,kind)
+ VALUES($1,$2,$3,$4,$5)`, eventID, sessionID, senderID, recipientID, kind)
 	if err != nil {
 		return SessionEvent{}, interactionSQLError(err)
 	}

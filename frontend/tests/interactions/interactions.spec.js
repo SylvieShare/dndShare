@@ -4,14 +4,19 @@ for (const mobile of [false, true]) {
   test(`two players chat and resolve a hidden-choice round (${mobile ? 'mobile' : 'desktop'})`, async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width: mobile ? 390 : 1280, height: 850 } })
     const events = [], read = new Set(), requests = []
-    let choice, failNext = false
+    const choices = new Map()
+    let failNext = false
     await context.route(url => url.pathname.startsWith('/api/'), async route => {
       const req = route.request(), url = new URL(req.url()), body = req.postDataJSON(), match = url.pathname.match(/\/char\/([ab])\/interactions/)
+      if (url.pathname === '/api/sessions/game/events') {
+        const after = Number(url.searchParams.get('after') || 0)
+        return route.fulfill({ json: { events: events.filter(event => event.id > after), updates: events.filter(event => event.id <= after) } })
+      }
       if (!match) return route.fulfill({ json: { events: [], items: [] } })
       const own = match[1]
       if (req.method() === 'GET') {
         const peer = url.searchParams.get('peer')
-        const visible = peer ? events : events.filter(event => event.type === 'rps_challenge' ? event.data.status === 'pending' : event.data.recipientCharUuid === own && !read.has(event.id))
+        const visible = peer ? events : events.filter(event => event.type === 'rps_challenge' ? ['pending', 'choosing'].includes(event.data.status) : event.data.recipientCharUuid === own && !read.has(event.id))
         return route.fulfill({ json: { events: [...visible].reverse(), hasMore: false } })
       }
       if (url.pathname.endsWith('/read')) {
@@ -21,7 +26,15 @@ for (const mobile of [false, true]) {
       if (url.pathname.endsWith('/resolve')) {
         const event = events.find(event => event.id === Number(url.pathname.split('/').at(-2)))
         if (body.decision === 'cancel' || body.decision === 'decline') event.data.status = body.decision === 'cancel' ? 'cancelled' : 'declined'
-        else Object.assign(event.data, { status: 'completed', senderChoice: choice, recipientChoice: body.decision, winnerCharUuid: choice === body.decision ? null : 'b', resolvedByUserId: 2 })
+        else if (body.decision === 'accept') event.data.status = 'choosing'
+        else {
+          const round = choices.get(event.id)
+          round[own === event.data.senderCharUuid ? 'sender' : 'recipient'] = body.decision
+          event.data.senderReady = !!round.sender
+          event.data.recipientReady = !!round.recipient
+          if (round.sender && round.recipient) Object.assign(event.data, { status: 'completed', senderChoice: round.sender, recipientChoice: round.recipient, winnerCharUuid: round.sender === round.recipient ? null : 'b' })
+        }
+        event.data.resolvedByUserId = own === 'a' ? 1 : 2
         return route.fulfill({ json: { event } })
       }
       requests.push(body)
@@ -33,7 +46,7 @@ for (const mobile of [false, true]) {
         actorCharUuid: own, actorImageUrl: '/brand-mark.webp', recipientImageUrl: '/brand-mark.webp', type: body.type, clientActionId: body.clientActionId, action: body.type === 'chat_message' ? 'Сообщение' : 'Камень / ножницы / бумага', createdAt: new Date().toISOString(),
         data: { senderCharUuid: own, recipientCharUuid: peer, senderName: own === 'a' ? 'Лиора' : 'Торин', recipientName: own === 'a' ? 'Торин' : 'Лиора' } }
       if (body.type === 'chat_message') event.data.message = body.message
-      else { choice = body.choice; event.data.status = 'pending' }
+      else { expect(body.choice).toBeUndefined(); choices.set(event.id, {}); event.data.status = 'pending' }
       events.push(event)
       return route.fulfill({ json: { event } })
     })
@@ -83,9 +96,9 @@ for (const mobile of [false, true]) {
     const gameA = a.getByRole('dialog', { name: 'Камень / ножницы / бумага — Торин', exact: true })
     await expect(gameA.getByRole('radio')).toHaveCount(0)
     await expect(gameA.getByRole('textbox')).toHaveCount(0)
-    await expect(gameA.getByRole('button', { name: 'Камень', exact: true }).locator('svg')).toBeVisible()
-    await a.getByRole('button', { name: 'Камень', exact: true }).click()
-    await expect(gameA).toContainText('Ваш выбор сохранён')
+    await expect(gameA.getByRole('button', { name: 'Камень', exact: true })).toHaveCount(0)
+    await a.getByRole('button', { name: 'Отправить вызов', exact: true }).click()
+    await expect(gameA).toContainText('Ждём, пока соперник примет его')
     await expect(a.locator('.campaign-icon--notify')).toHaveCount(0)
     await b.evaluate(() => window.fixture.refresh())
     await expect(b.locator('.campaign-icon--notify')).toHaveCount(1)
@@ -95,12 +108,24 @@ for (const mobile of [false, true]) {
     const pending = await b.evaluate(() => window.fixture.controller.interactions.currentRound)
     expect(pending.data.senderChoice).toBeUndefined()
     await expect(gameB.locator('.rps-result')).toHaveCount(0)
+    await expect(gameB.getByRole('button', { name: 'Камень', exact: true })).toHaveCount(0)
+    await b.getByRole('button', { name: 'Принять вызов', exact: true }).click()
+    await a.evaluate(() => window.fixture.refresh())
+    for (const game of [gameA, gameB]) await expect(game.getByRole('button', { name: 'Камень', exact: true }).locator('svg')).toBeVisible()
     await b.getByRole('button', { name: 'Бумага', exact: true }).click()
+    await expect(gameB).toContainText('Ваш ход выбран')
+    await expect(gameB.getByRole('button', { name: 'Камень', exact: true })).toHaveCount(0)
+    await a.evaluate(() => window.fixture.refresh())
+    await expect(gameA).toContainText('Соперник уже выбрал')
+    expect(events.at(-1).data.recipientChoice).toBeUndefined()
+    await a.getByRole('button', { name: 'Камень', exact: true }).click()
+    await b.evaluate(() => window.fixture.refresh())
     await expect(gameB.locator('.rps-contestant--winner')).toContainText('Торин')
     await expect(b.locator('.campaign-icon--notify')).toHaveCount(0)
     await a.evaluate(() => window.fixture.refresh())
     await expect(gameA.locator('.rps-result')).toHaveAttribute('aria-label', 'Лиора: Камень · Торин: Бумага · Победитель: Торин')
     await expect(gameA.locator('.rps-versus')).toHaveText('VS')
+    await expect(a.getByTestId('chronicle').locator('.rps-contestant--winner')).toContainText('Торин')
     await expect(gameA.getByRole('button', { name: 'Ещё раз', exact: true })).toBeVisible()
     await openPeer(a, 'Торин', 'Чат')
     await expect(a.getByRole('log').locator('.rps-result--compact')).toHaveCount(1)
@@ -109,18 +134,24 @@ for (const mobile of [false, true]) {
     await openPeer(a, 'Торин', 'Камень / ножницы / бумага')
     await expect(gameA.locator('.rps-contestant--winner')).toContainText('Торин')
     await a.getByRole('button', { name: 'Ещё раз', exact: true }).click()
+    await a.getByRole('button', { name: 'Отправить вызов', exact: true }).click()
+    await b.evaluate(() => window.fixture.refresh())
+    await b.getByRole('button', { name: 'Принять вызов', exact: true }).click()
+    await a.evaluate(() => window.fixture.refresh())
     await a.getByRole('button', { name: 'Ножницы', exact: true }).click()
     await b.evaluate(() => window.fixture.refresh())
+    await expect(gameB).toContainText('Соперник уже выбрал')
     await b.getByRole('button', { name: 'Ножницы', exact: true }).click()
     await expect(gameB).toContainText('Ничья')
     await expect(gameB.locator('.rps-contestant--winner')).toHaveCount(0)
+    await expect(gameB.locator('.rps-contestant--draw')).toHaveCount(2)
     await a.evaluate(() => window.fixture.refresh())
     await a.getByRole('button', { name: 'Ещё раз', exact: true }).click()
-    await a.getByRole('button', { name: 'Камень', exact: true }).click()
+    await a.getByRole('button', { name: 'Отправить вызов', exact: true }).click()
     await a.getByRole('button', { name: 'Отозвать вызов', exact: true }).click()
     await expect(gameA).toContainText('Вызов отозван')
     await a.getByRole('button', { name: 'Ещё раз', exact: true }).click()
-    await a.getByRole('button', { name: 'Бумага', exact: true }).click()
+    await a.getByRole('button', { name: 'Отправить вызов', exact: true }).click()
     await b.evaluate(() => window.fixture.refresh())
     await b.getByRole('button', { name: 'Отклонить вызов', exact: true }).click()
     await expect(gameB).toContainText('Вызов отклонён')

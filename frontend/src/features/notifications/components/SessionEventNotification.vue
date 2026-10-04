@@ -5,8 +5,9 @@
       <div><strong class="session-event-notification-name"><NpcMarker v-if="event.data?.npcActor?.letter" :letter="event.data.npcActor.letter" :color="event.data.npcActor.color" />{{ actorLabel }}</strong><small v-if="sessionEventActorKind(event) !== 'creature'">{{ event.authorName }}</small></div>
     </div>
     <p class="session-event-notification-action">{{ event.action }}<template v-if="transition"> ({{ transition }})</template></p>
-    <p v-if="details" class="session-event-notification-detail">{{ details }}</p>
-    <DiceRollResult v-if="event.data?.result" :result="event.data.result" :color="event.data.color" :size="30" />
+    <RpsResult v-if="event.type === 'rps_challenge' && event.data.status === 'completed'" :event="event" compact />
+    <p v-else-if="details" class="session-event-notification-detail">{{ details }}</p>
+    <DiceRollResult v-if="event.data?.result" :result="event.data.result" :outcome="event.data.outcome" :color="event.data.color" :size="30" />
     <ApplicationSummary v-if="event.data?.applicationResult" :data="event.data.applicationResult" result />
     <small v-if="entry.data.updated" class="session-event-notification-detail">Событие обновлено</small>
   </div>
@@ -16,6 +17,7 @@ import { computed } from 'vue'
 import ApplicationSummary from '@/features/character-editor/components/ApplicationSummary.vue'
 import SessionEventActorAvatar from '@/features/sessions/components/SessionEventActorAvatar.vue'
 import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
+import RpsResult from '@/features/sessions/components/RpsResult.vue'
 import NpcMarker from '@/features/sessions/components/NpcMarker.vue'
 import { sessionEventActorKind, sessionEventActorLabel } from '@/features/sessions/lib/sessionEventView'
 import { sessionEventDetails, sessionEventTransition } from '@/features/sessions/lib/sessionEventEntity'

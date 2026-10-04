@@ -9,7 +9,7 @@
       </div>
       <div v-if="hasBody" class="event-body">
         <div v-if="event.data?.result" class="event-roll">
-          <DiceRollResult :result="event.data.result" :color="event.data.color" :size="32" />
+          <DiceRollResult :result="event.data.result" :outcome="event.data.outcome" :color="event.data.color" :size="32" />
           <SessionAttackTargets v-if="event.data?.attackRoll && !event.data?.sequence" :event="event" :is-dm="isDm" />
           <ActionButton v-if="isDm && event.data?.damageRoll" size="sm" variant="dashed" @click="applying = true">Применить к целям</ActionButton>
         </div>
@@ -31,6 +31,7 @@
           <TransferStatus :purpose="event.data?.purpose" :status="event.data?.status" />
           <SessionTransferApproval :event="event" />
         </div>
+        <RpsResult v-else-if="event.type === 'rps_challenge' && event.data.status === 'completed'" :event="event" />
         <div v-else-if="details" class="event-details">{{ details }}</div>
         <ApplicationSummary v-if="event.data?.applicationResult" :data="event.data.applicationResult" result />
         <ApplicationSummary v-else-if="event.data?.purpose === 'use' && event.data?.status === 'pending'" :data="event.data.application || {}" />
@@ -61,6 +62,7 @@ import DiceRollResult from '@/shared/ui/DiceRollResult.vue'
 import RollOutcomeNote from '@/shared/ui/RollOutcomeNote.vue'
 import SpellSlotSphere from '@/features/items/components/SpellSlotSphere.vue'
 import SessionEventIcon from './SessionEventIcon.vue'
+import RpsResult from './RpsResult.vue'
 import SessionTransferApproval from './SessionTransferApproval.vue'
 import { sessionEventAction, sessionEventDetails, sessionEventTransition } from '../lib/sessionEventEntity'
 const SessionRollSequence = defineAsyncComponent(() => import('./SessionRollSequence.vue'))

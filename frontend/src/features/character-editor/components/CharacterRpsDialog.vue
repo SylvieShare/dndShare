@@ -6,9 +6,10 @@
       <ActionButton v-if="state.error" variant="quiet" :disabled="state.busy || state.loading" @click="controller.refresh">Обновить</ActionButton>
       <LoadingIndicator v-if="state.loading" label="Загрузка партии" />
       <template v-else-if="round">
-        <p class="rps-hint">{{ incoming ? 'Вас вызывают в камень / ножницы / бумага. Сделайте выбор — затем откроются оба хода.' : 'Ваш выбор сохранён. Ждём ответа соперника.' }}</p>
-        <RpsChoices v-if="incoming" :disabled="state.busy" @choose="controller.resolve(round, $event)" />
-        <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(round, incoming ? 'decline' : 'cancel')">{{ incoming ? 'Отклонить вызов' : 'Отозвать вызов' }}</ActionButton>
+        <p class="rps-hint">{{ rpsRoundPrompt(round, characterUuid) }}</p>
+        <ActionButton v-if="round.data.status === 'pending' && incoming" :disabled="state.busy" @click="controller.resolve(round, 'accept')">Принять вызов</ActionButton>
+        <RpsChoices v-if="round.data.status === 'choosing' && !rpsPlayerReady(round, characterUuid)" :disabled="state.busy" @choose="controller.resolve(round, $event)" />
+        <ActionButton variant="quiet" :disabled="state.busy" @click="controller.resolve(round, incoming ? 'decline' : 'cancel')">{{ incoming ? round.data.status === 'pending' ? 'Отклонить вызов' : 'Отказаться от партии' : 'Отозвать вызов' }}</ActionButton>
       </template>
       <div v-else-if="lastRound && !newRound" class="rps-finished">
         <RpsResult v-if="lastRound.data.status === 'completed'" :event="lastRound" />
@@ -16,8 +17,8 @@
         <ActionButton :disabled="state.busy" @click="newRound = true"><template #icon><RotateCcw :size="18" /></template>Ещё раз</ActionButton>
       </div>
       <template v-else>
-        <p class="rps-hint">Выберите ход, чтобы вызвать игрока. Соперник не увидит его до своего ответа.</p>
-        <RpsChoices :disabled="state.busy" @choose="controller.send('rps_challenge', $event)" />
+        <p class="rps-hint">Отправьте вызов. Когда соперник примет его, вы оба сможете выбрать ход. Ходы откроются после выбора обоих игроков.</p>
+        <ActionButton :disabled="state.busy" @click="controller.send('rps_challenge')">Отправить вызов</ActionButton>
       </template>
       <p class="rps-note">Партии сохраняются в переписке и хронике. Их видите вы, соперник и мастер.</p>
     </div>
@@ -30,11 +31,12 @@ import { RotateCcw } from '@lucide/vue'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import RpsResult from '@/features/sessions/components/RpsResult.vue'
 import RpsChoices from './RpsChoices.vue'
+import { rpsPlayerReady, rpsRoundPrompt } from '@/features/sessions/lib/sessionInteractions'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
 const state = computed(() => props.controller.state)
 const round = computed(() => props.controller.currentRound)
 const incoming = computed(() => round.value?.data.recipientCharUuid === props.characterUuid)
-const lastRound = computed(() => state.value.history.findLast(event => event.type === 'rps_challenge' && event.data.status !== 'pending'))
+const lastRound = computed(() => state.value.history.findLast(event => event.type === 'rps_challenge' && ['completed', 'declined', 'cancelled'].includes(event.data.status)))
 const newRound = ref(false)
 watch(() => [state.value.peer?.charUuid, round.value?.id, lastRound.value?.id, lastRound.value?.data.status], () => { newRound.value = false })
 </script>

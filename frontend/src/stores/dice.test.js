@@ -128,6 +128,17 @@ describe('dice roll presentation metadata', () => {
 })
 
 describe('chronicle roll sources', () => {
+  it.each([[0.999, true, 'crit'], [0, true, 'fumble'], [0.999, false, null]])('preserves outcome for atomic sheet rolls: random=%s critMode=%s', (random, critMode, kind) => {
+    setActivePinia(createPinia())
+    const rng = vi.spyOn(Math, 'random').mockReturnValue(random)
+    const store = useDiceStore(), events = useSessionEventsStore()
+    events.sessionUuid = 'session-uuid'
+    const result = store.rollD20('Атака', 3, 'normal', { crit_mode: critMode, log: false, popup: false })
+    const event = events.pendingCharacterEvent({ type: 'dice_roll', action: 'Атака', data: { result } })
+    expect(event.data.outcome?.kind || null).toBe(kind)
+    expect(result).not.toHaveProperty('outcome')
+    rng.mockRestore()
+  })
   it('keeps the source for expression rolls, d20 rolls and their rerolls', () => {
     setActivePinia(createPinia())
     vi.useFakeTimers()

@@ -1,12 +1,12 @@
 import { computed, onBeforeUnmount, reactive, watch } from 'vue'
 import * as api from '@/shared/api/sessionInteractionsApi'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
-import { interactionPeer, interactionPeerName, isInteraction } from '@/features/sessions/lib/sessionInteractions'
+import { interactionPeer, interactionPeerName, interactionNeedsResponse, isInteraction } from '@/features/sessions/lib/sessionInteractions'
 
 export function useCharacterInteractions({ uuid, session, isOwner, closePopover }) {
   const events = useSessionEventsStore()
   const state = reactive({ pending: [], history: [], peer: null, mode: 'chat', loading: false, busy: false, error: '', hasMore: false })
-  const incomingCount = computed(() => state.pending.filter(event => event.data.recipientCharUuid === uuid).length)
+  const incomingCount = computed(() => state.pending.filter(event => interactionNeedsResponse(event, uuid)).length)
   const currentRound = computed(() => state.pending.find(event => event.type === 'rps_challenge' && interactionPeer(event, uuid) === state.peer?.charUuid))
   let generation = 0
   let refreshing = null
@@ -118,7 +118,7 @@ export function useCharacterInteractions({ uuid, session, isOwner, closePopover 
   }
   async function send(type, value) {
     const request = { sessionUuid: session.value?.uuid, recipientCharUuid: state.peer?.charUuid, type,
-      ...(type === 'chat_message' ? { message: value.trim() } : { choice: value }) }
+      ...(type === 'chat_message' ? { message: value.trim() } : {}) }
     const key = JSON.stringify(request)
     if (pendingSend?.key !== key) pendingSend = { key, clientActionId: crypto.randomUUID() }
     const sent = await mutate(() => api.createInteraction(uuid, { ...request, clientActionId: pendingSend.clientActionId }))

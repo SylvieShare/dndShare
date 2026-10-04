@@ -4,8 +4,9 @@ import { onScopeDispose, ref, toRaw } from 'vue'
 import * as sessionEventsApi from '@/shared/api/sessionEventsApi'
 import { useAccountStore } from '@/stores/account'
 import { useNotificationsStore } from '@/stores/notifications'
-import { isInteraction } from '@/features/sessions/lib/sessionInteractions'
+import { isActiveRpsRound, isInteraction } from '@/features/sessions/lib/sessionInteractions'
 import { sessionEventSignature } from '@/features/notifications/lib/sessionEventChanges'
+import { diceOutcome } from '@/shared/lib/diceOutcome'
 
 function actionId() { return globalThis.crypto.randomUUID() }
 
@@ -65,8 +66,9 @@ export const useSessionEventsStore = defineStore('session-events', () => {
     if (!isOwner && !directedInteraction && !(event.type === 'item_transfer' && Number(event.recipientUserId) === userId && event.data?.status === 'pending')) return
     if (localActions.has(event.clientActionId) || activeReaders(uuid).some(entry => entry.isReading?.(event))) return
     const key = `session:${uuid}:event:${event.id}`
-    const offerKey = `${userId}:${key}`
-    const isOffer = (event.type === 'item_transfer' || isInteraction(event)) && (!event.data?.status || event.data.status === 'pending')
+    const roundPhase = event.type === 'rps_challenge' ? `:${event.data.status}:${!!event.data.senderReady}:${!!event.data.recipientReady}` : ''
+    const offerKey = `${userId}:${key}${roundPhase}`
+    const isOffer = (event.type === 'item_transfer' || isInteraction(event)) && (!event.data?.status || event.data.status === 'pending' || isActiveRpsRound(event))
     if (isOffer && notifiedOffers.has(offerKey)) return
     const action = activeReaders(uuid).map(entry => entry.actionFor?.(event)).find(Boolean)
     const id = notifications.notify({
@@ -82,7 +84,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   }
   function notifyInteractionOffers(uuid, incoming) {
     for (const event of incoming || []) {
-      if (Number(event.recipientUserId) === Number(account.user?.id)) notifyEvent(event, false, uuid)
+      if (Number(event.recipientUserId) === Number(account.user?.id) || event.type === 'rps_challenge' && event.data.status === 'choosing') notifyEvent(event, false, uuid)
     }
   }
   function notifyTransferOffers(uuid, transfers) {
@@ -217,6 +219,7 @@ export const useSessionEventsStore = defineStore('session-events', () => {
   }
   function pendingCharacterEvent({ type, action, data = {}, visibility = 'public' }) {
     if (!sessionUuid.value) return null
+    if (data.result && !Object.hasOwn(data, 'outcome')) data = { ...data, outcome: diceOutcome(toRaw(data.result)) }
     const clientActionId = actionId()
     if (data.result && localRolls.has(toRaw(data.result))) rememberLocalAction(clientActionId)
     return { sessionUuid: sessionUuid.value, type, action, data, visibility, clientActionId }

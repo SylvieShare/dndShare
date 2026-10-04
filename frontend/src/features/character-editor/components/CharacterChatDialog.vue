@@ -17,7 +17,7 @@
             <RpsResult v-else-if="event.data.status === 'completed'" :event="event" compact />
             <template v-else>
               <p class="interaction-hint">{{ roundStatus(event) }}</p>
-              <ActionButton v-if="event.data.status === 'pending'" variant="quiet" :disabled="state.busy" @click="controller.openEvent(event)">Открыть вызов</ActionButton>
+              <ActionButton v-if="isActiveRpsRound(event)" variant="quiet" :disabled="state.busy" @click="controller.openEvent(event)">Открыть вызов</ActionButton>
             </template>
           </div>
         </article>
@@ -38,11 +38,12 @@ import { ActionButton, AppModalFrame, FormTextarea, LoadingIndicator } from '@sy
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
 import SessionEventActorAvatar from '@/features/sessions/components/SessionEventActorAvatar.vue'
 import RpsResult from '@/features/sessions/components/RpsResult.vue'
+import { isActiveRpsRound, rpsRoundPrompt } from '@/features/sessions/lib/sessionInteractions'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
 const state = computed(() => props.controller.state)
 const draft = ref('')
 const historyEnd = ref(null)
-const roundStatus = event => ({ pending: 'Камень / ножницы / бумага — ожидает ответа', declined: 'Вызов отклонён', cancelled: 'Вызов отозван' })[event.data.status] || ''
+const roundStatus = event => isActiveRpsRound(event) ? rpsRoundPrompt(event, props.characterUuid) : ({ declined: 'Вызов отклонён', cancelled: 'Вызов отозван' })[event.data.status] || ''
 watch(() => state.value.peer?.charUuid, () => { draft.value = '' })
 watch(() => [state.value.peer?.charUuid, state.value.history.at(-1)?.id, state.value.history.at(-1)?.data.status], async () => {
   await nextTick()

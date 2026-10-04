@@ -3,9 +3,9 @@
     <div class="rps-contestants">
       <template v-for="(player, index) in players" :key="player.uuid">
         <span v-if="index" class="rps-versus" aria-hidden="true">VS</span>
-        <BaseTile class="rps-contestant" :class="{ 'rps-contestant--winner': player.winner }" :tint="player.winner" :framed="player.winner" color="var(--success)">
+        <BaseTile class="rps-contestant" :class="{ 'rps-contestant--winner': player.winner, 'rps-contestant--draw': draw }" :tint="player.winner || draw" :framed="player.winner || draw" :color="draw ? 'var(--warning)' : 'var(--success)'">
           <SessionEventActorAvatar class="rps-avatar" :event="player.event" :label="player.name" />
-          <span class="rps-player-copy" :title="`${player.name}${player.winner ? ' — победитель' : ''}`">
+          <span class="rps-player-copy" :title="`${player.name}${draw ? ' — ничья' : player.winner ? ' — победитель' : ''}`">
             <strong class="rps-name">{{ player.name }}</strong>
             <span class="rps-choice-label">{{ choiceLabel(player.choice) }}</span>
           </span>
@@ -13,7 +13,7 @@
         </BaseTile>
       </template>
     </div>
-    <p v-if="!event.data.winnerCharUuid" class="rps-draw">Ничья</p>
+    <p v-if="draw" class="rps-draw">Ничья</p>
   </div>
 </template>
 <script setup>
@@ -25,6 +25,7 @@ import { interactionDetails, RPS_CHOICES } from '../lib/sessionInteractions'
 const props = defineProps({ event: { type: Object, required: true }, compact: Boolean })
 const choiceLabel = value => RPS_CHOICES.find(choice => choice.value === value)?.label || ''
 const summary = computed(() => interactionDetails(props.event))
+const draw = computed(() => !props.event.data.winnerCharUuid)
 const players = computed(() => {
   const data = props.event.data
   return [
@@ -43,10 +44,11 @@ const players = computed(() => {
 .rps-player-copy { grid-area: copy; display: grid; gap: 2px; min-width: 0; }
 .rps-choice-icon { grid-area: choice; }
 .rps-contestant--winner { color: var(--success); }
+.rps-contestant--draw { color: var(--warning); }
 .rps-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
 .rps-choice-label { color: var(--text-muted); font-size: 11px; }
 .rps-versus { align-self: center; color: var(--text-muted); font-size: 11px; font-weight: 800; }
-.rps-draw { margin: 6px 0 0; text-align: center; color: var(--text-2); font-size: 12px; }
+.rps-draw { margin: 6px 0 0; text-align: center; color: var(--warning); font-size: 12px; }
 .rps-result--compact .rps-contestants { gap: 4px; }
 .rps-result--compact .rps-contestant { grid-template-columns: 24px minmax(0, 1fr) 24px; padding: 6px; gap: 4px; }
 .rps-result--compact .rps-avatar { width: 24px; height: 24px; flex-basis: 24px; }

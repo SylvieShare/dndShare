@@ -10,7 +10,8 @@ describe('interaction tutorial coverage', () => {
       const text = steps.map(step => step.body).join(' ')
       expect(text).toContain('«Чат»')
       expect(text).toContain('мастеру в хронике')
-      expect(text).toContain('не видя его')
+      expect(text).toContain('После принятия оба игрока выбирают ход')
+      expect(text).toContain('при ничьей оба выделены жёлтым')
     }
     const player = sessionSteps({ mobile, dm: false, target, action, showView })
     expect(player.map(step => step.body).join(' ')).toContain('«Чат»')

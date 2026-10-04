@@ -65,6 +65,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaItemTransfersSQL)
 	exec(schemaSessionInteractionsSQL)
+	t.Run("rps invitation migration", func(t *testing.T) { testRPSInvitationMigration(t, pool) })
 	exec(schemaPotionUseRequestsSQL)
 	exec(schemaPotionApplicationsSQL)
 	exec(schemaApplicationTargetsSQL)

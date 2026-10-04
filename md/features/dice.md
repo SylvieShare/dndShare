@@ -18,6 +18,16 @@ Shared dice-rolling module available from anywhere in the app.
   - `opts.popup: false` skips the global popup while preserving the parsed result and full timeline event. It is used when the caller owns an embedded result surface.
 - `features/notifications/components/DiceRollNotification.vue` — dice content inside the shared `AppNotifications` host mounted globally in `App.vue`. `stores/notifications` owns the fixed bottom-right stack, shared with session-event notifications. Each dice popup auto-dismisses after ~6s (paused on hover or keyboard focus) with a progress bar that drains over the same duration. New rolls push from the bottom; older ones float upward. Stack is capped at 5; the oldest is evicted on overflow. On touch/pen devices a deliberate horizontal swipe or fast flick dismisses one popup; vertical motion remains available to the page and the close button still works. Gesture state lives in `shared/composables/useSwipeDismiss.js`. The stack is **`Teleport`ed to `<body>`** (not left inside `#app`) so it stays sharp when `MorphSheet` blurs the application root. Its `z-index: 9000` is above the normal `AppModal`/prompt/confirm layers; explicitly high-priority session editors may be higher. On every viewport a new popup cycles display-only die faces and visibly tumbles the die for about 560 ms. Every temporary tick before the pre-final tick chooses a face different from both the stored result and the previous displayed face, so low results and low-sided dice such as d4 do not stall; the increasing intervals between ticks provide the slowdown. The muted right-hand total is recalculated from the currently displayed kept dice and starts its final blink/settle transition on the 310 ms phase, so the exact total becomes readable just before the dice finish. On the pre-final dice tick each die independently chooses uniformly from its stored result and the valid neighbouring values (result − 1 and result + 1 within 1…sides). Each of three candidates has probability 1/3; at the minimum or maximum face each of the two candidates has probability 1/2. This choice may repeat the previous displayed face. The final tick always shows the stored result, so it does not always visibly change the roll. A crit/fumble outcome and its colored result frame continue to wait for that final dice tick, then appear with a settle animation. Stored rolls and total are never mutated, and reduced-motion mode skips the cycling, tumble and reveal animations. The timer/state workflow lives in `shared/composables/useDiceRollAnimation.js`.
 
+Хроника сессии и уведомления её событий передают сохранённый `data.outcome`
+в общий `DiceRollResult`. `crit` получает жёлтую рамку, лёгкий фон и подпись
+«Критический успех»; `fumble` — красную рамку и «Критический провал». Кубики,
+цвета типов урона и итог с бонусами остаются видны. Оформление использует
+готовый исход броска: сохранённый d20 при преимуществе/помехе, порог крита и
+корректировки учитываются в `stores/dice`, обычные проверки без `crit_mode`
+не получают метку только из-за выпавшей 1 или 20. Для бросков, сохраняемых
+атомарно с листом, `pendingCharacterEvent` переносит тот же исход из метаданных
+результата; признак не пересчитывается по формуле и не зависит от жизни уведомления.
+
 ## Кармические кубы сессии
 
 Во вкладке настроек мастер включает `karmicDice.enabled` (по умолчанию false)

@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Store) ResolveCharacterInteraction(ctx context.Context, userID, charID, eventID int64, decision string) (SessionEvent, error) {
-	if decision != "decline" && decision != "cancel" && !ValidRPSChoice(decision) {
+	if !validRPSDecision(decision) {
 		return SessionEvent{}, ErrInvalidInteraction
 	}
 	tx, err := s.pool.Begin(ctx)
@@ -25,7 +25,7 @@ func (s *Store) ResolveCharacterInteraction(ctx context.Context, userID, charID,
 	if err != nil {
 		return SessionEvent{}, err
 	}
-	if (decision == "cancel" && charID != senderID) || (decision != "cancel" && charID != recipientID) {
+	if charID != senderID && charID != recipientID {
 		return SessionEvent{}, ErrNotFound
 	}
 	// Lock the pair in the same order as creation. Only the acting character needs
@@ -51,38 +51,31 @@ func (s *Store) ResolveCharacterInteraction(ctx context.Context, userID, charID,
 	if !allowed {
 		return SessionEvent{}, ErrNotFound
 	}
-	var status, senderChoice string
-	var recipientChoice *string
+	var round rpsRound
 	var encoded json.RawMessage
-	err = tx.QueryRow(ctx, `SELECT i.status,i.sender_choice,i.recipient_choice,e.data
+	err = tx.QueryRow(ctx, `SELECT i.status,COALESCE(i.sender_choice,''),COALESCE(i.recipient_choice,''),e.data
  FROM dndshare.session_interaction i JOIN dndshare.session_event e ON e.id=i.event_id
- WHERE i.event_id=$1 FOR UPDATE OF i`, eventID).Scan(&status, &senderChoice, &recipientChoice, &encoded)
+ WHERE i.event_id=$1 FOR UPDATE OF i`, eventID).Scan(&round.Status, &round.SenderChoice, &round.RecipientChoice, &encoded)
 	if err != nil {
 		return SessionEvent{}, err
 	}
-	wanted := "completed"
-	if decision == "decline" {
-		wanted = "declined"
+	next, err := advanceRPSRound(round, charID == senderID, decision)
+	if err != nil {
+		return SessionEvent{}, err
 	}
-	if decision == "cancel" {
-		wanted = "cancelled"
-	}
-	if status != "pending" {
-		if status == wanted && (wanted != "completed" || (recipientChoice != nil && *recipientChoice == decision)) {
-			return interactionEventCommit(ctx, tx, eventID)
-		}
-		return SessionEvent{}, ErrInteractionConflict
+	if next == round {
+		return interactionEventCommit(ctx, tx, eventID)
 	}
 	var data InteractionData
 	if err = json.Unmarshal(encoded, &data); err != nil {
 		return SessionEvent{}, err
 	}
-	data.Status = wanted
+	data.Status = next.Status
 	data.ResolvedByUserID = userID
-	if wanted == "completed" {
-		data.SenderChoice, data.RecipientChoice = senderChoice, decision
-		recipientChoice = &decision
-		switch rpsWinner(senderChoice, decision) {
+	data.SenderReady, data.RecipientReady = next.SenderChoice != "", next.RecipientChoice != ""
+	if next.Status == "completed" {
+		data.SenderChoice, data.RecipientChoice = next.SenderChoice, next.RecipientChoice
+		switch rpsWinner(next.SenderChoice, next.RecipientChoice) {
 		case 1:
 			data.WinnerCharUUID = data.SenderCharUUID
 		case 2:
@@ -90,7 +83,7 @@ func (s *Store) ResolveCharacterInteraction(ctx context.Context, userID, charID,
 		}
 	}
 	encoded, _ = json.Marshal(data)
-	_, err = tx.Exec(ctx, `UPDATE dndshare.session_interaction SET status=$2,recipient_choice=$3 WHERE event_id=$1`, eventID, wanted, recipientChoice)
+	_, err = tx.Exec(ctx, `UPDATE dndshare.session_interaction SET status=$2,sender_choice=NULLIF($3,''),recipient_choice=NULLIF($4,'') WHERE event_id=$1`, eventID, next.Status, next.SenderChoice, next.RecipientChoice)
 	if err != nil {
 		return SessionEvent{}, err
 	}

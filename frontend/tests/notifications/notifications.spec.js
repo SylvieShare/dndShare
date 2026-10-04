@@ -45,6 +45,25 @@ async function open(page, path = '/sessions/test') {
   await expect(page.locator('.app-notification')).toHaveCount(0)
 }
 const emit = page => page.evaluate(() => window.emitSessionUpdate())
+for (const mobile of [false, true]) for (const [kind, value, label] of [['crit', 20, 'Критический успех'], ['fumble', 1, 'Критический провал']]) {
+  test(`critical ${kind} in session chronicle on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+    await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
+    const { events } = await prepare(page)
+    await open(page)
+    events.push({ ...structuredClone(initialEvent), id: 2, type: 'dice_roll', action: 'Атака',
+      data: { outcome: { kind, sides: 20, value }, result: { total: value + 3,
+        parts: [{ kind: 'dice', sides: 20, rolls: [value] }, { kind: 'flat', sign: '+', value: 3 }] } } })
+    await emit(page)
+    const toast = page.locator('[data-notification-type="session-event"]')
+    await expect(toast).toContainText(label)
+    await expect(toast.locator(`.dice-roll-result--${kind}`)).toContainText(`= ${value + 3}`)
+    await toast.getByRole('button', { name: 'Открыть хронику' }).click()
+    const row = page.locator('[data-event-id="2"]')
+    await expect(row).toContainText(label)
+    await expect(row.locator(`.dice-roll-result--${kind}`)).toHaveCSS('border-top-width', '1px')
+    await expect(row).toContainText(`= ${value + 3}`)
+  })
+}
 for (const mobile of [false, true]) test(`chronicle arrivals and toast navigation on ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })
   const { events } = await prepare(page)

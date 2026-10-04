@@ -16,7 +16,7 @@ func (s *Store) CharacterInteractions(ctx context.Context, userID, charID int64,
 	args := []any{charID, userID, sessionUUID}
 	if peerUUID == "" {
 		query += ` AND ((interaction.kind='chat_message' AND interaction.recipient_char_id=$1 AND interaction.read_at IS NULL)
-   OR (interaction.kind='rps_challenge' AND interaction.status='pending')) ORDER BY e.id DESC`
+   OR (interaction.kind='rps_challenge' AND interaction.status IN ('pending','choosing'))) ORDER BY e.id DESC`
 	} else {
 		query += ` AND ((c.uuid=$4::uuid AND interaction.recipient_char_id=$1)
    OR (interaction_recipient.uuid=$4::uuid AND interaction.sender_char_id=$1))

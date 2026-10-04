@@ -23,11 +23,10 @@ type createInteractionRequest struct {
 	ClientActionID    string `json:"clientActionId"`
 	Type              string `json:"type"`
 	Message           string `json:"message"`
-	Choice            string `json:"choice"`
 }
 
 func validInteractionRequest(req createInteractionRequest) bool {
-	return isUUID(req.SessionUUID) && isUUID(req.RecipientCharUUID) && isUUID(req.ClientActionID) && store.ValidInteraction(req.Type, req.Message, req.Choice)
+	return isUUID(req.SessionUUID) && isUUID(req.RecipientCharUUID) && isUUID(req.ClientActionID) && store.ValidInteraction(req.Type, req.Message)
 }
 
 func (s *Server) handleCharacterInteractions(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +64,7 @@ func (s *Server) handleCreateCharacterInteraction(w http.ResponseWriter, r *http
 	}
 	req.Message = strings.TrimSpace(req.Message)
 	if !validInteractionRequest(req) {
-		badRequest(w, "Введите сообщение до 2000 символов или выберите камень, ножницы, бумагу")
+		badRequest(w, "Введите сообщение до 2000 символов или отправьте приглашение в игру")
 		return
 	}
 	session, err := s.store.GetGameSessionByUUID(r.Context(), req.SessionUUID)
@@ -78,7 +77,7 @@ func (s *Server) handleCreateCharacterInteraction(w http.ResponseWriter, r *http
 		interactionError(w, err)
 		return
 	}
-	event, err := s.store.CreateCharacterInteraction(r.Context(), userID, session.ID, c.ID, recipient.ID, req.Type, req.Message, req.Choice, req.ClientActionID)
+	event, err := s.store.CreateCharacterInteraction(r.Context(), userID, session.ID, c.ID, recipient.ID, req.Type, req.Message, req.ClientActionID)
 	if err != nil {
 		interactionError(w, err)
 		return

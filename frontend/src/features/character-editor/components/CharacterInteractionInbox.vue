@@ -12,7 +12,7 @@
 import { computed } from 'vue'
 import { ActionButton } from '@sylvieshare/share-ui'
 import TransferPerson from '@/features/item-transfers/components/TransferPerson.vue'
-import { interactionPeer, interactionPeerName } from '@/features/sessions/lib/sessionInteractions'
+import { interactionPeer, interactionPeerName, rpsRoundPrompt } from '@/features/sessions/lib/sessionInteractions'
 const props = defineProps({ controller: { type: Object, required: true }, characterUuid: { type: String, required: true } })
 const entries = computed(() => {
   const grouped = new Map()
@@ -21,7 +21,7 @@ const entries = computed(() => {
     const incoming = event.data.recipientCharUuid === props.characterUuid
     const entry = grouped.get(key) || { key, event, count: 0, name: interactionPeerName(event, props.characterUuid), imageUrl: incoming ? event.actorImageUrl : event.recipientImageUrl }
     entry.count++
-    entry.label = event.type === 'chat_message' ? `Непрочитанных сообщений: ${entry.count}` : incoming ? 'Вызывает в камень / ножницы / бумага' : 'Ожидает ответа на ваш вызов'
+    entry.label = event.type === 'chat_message' ? `Непрочитанных сообщений: ${entry.count}` : rpsRoundPrompt(event, props.characterUuid)
     grouped.set(key, entry)
   }
   return [...grouped.values()]
