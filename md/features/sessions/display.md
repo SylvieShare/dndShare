@@ -150,8 +150,15 @@ membership before creating the new one. A database unique constraint on
 
 The session participant rail has no shared backing surface: each participant is
 an individual interactive `BaseTile`. Clicking it opens `RowActionMenu` with an
-icon-labelled `Открыть лист` action plus DM-only color and confirmed kick
-actions; bulk participant selection is not part of the rail. A DM reorders
+icon-labelled `Открыть лист` action plus DM-only `Калькулятор ХП`, color and
+confirmed kick actions. The calculator is available for characters with an
+editable HP block in both normal and combat layouts, including compact mode.
+It uses the same `DndHpCalcModal` and HP handlers as combat: damage is applied
+through session impacts, while healing, temporary HP, hit dice and death saves
+update the character sheet. The player calculator is mounted by `ViewSession`,
+so opening it does not require entering the combat workspace and does not render
+a second calculator when combat is open. Bulk participant selection is not part
+of the rail. A DM reorders
 players by holding and dragging any non-interactive area of the participant
 tile; buttons and combat controls remain regular click targets. The shared
 `useSortable` interaction suppresses the menu click after an actual drag and

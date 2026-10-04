@@ -316,14 +316,6 @@
       @change="enc.onNpcHpChange"
       @graveyard="onNpcGraveyard"
     />
-    <DndHpCalcModal
-      v-if="enc.hpCalcPlayer"
-      :hp="enc.playerHpObj(enc.hpCalcPlayer)"
-      :damage-handler="amount => enc.applyDamageToCombatant(enc.hpCalcPlayer, amount)"
-      @close="enc.closeHpCalcPlayer"
-      @change="enc.onPlayerHpChange"
-    />
-
     <ItemViewModal
       v-if="enc.detailNpc && enc.detailNpc.itemId != null"
       :item-type-id="6"

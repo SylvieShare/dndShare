@@ -62,6 +62,7 @@
         <EncounterInitiativeMenu v-if="isDm && combatant?.position === 'reserve' && encounter?.encounter.active" enter-combat :combatant="combatant" :encounter="encounter" @joined="close" />
         <EncounterInitiativeMenu v-if="isDm && combatMode && combatant && encounter && !encounter.encounter.active && combatant.position !== 'dead'" :combatant="combatant" :encounter="encounter" />
         <RowActionItem v-if="isDm || participant.canOpenSheet" action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
+        <RowActionItem v-if="canCalculateHp" :icon="Calculator" @click="encounter.openHpCalc(combatant); close()">Калькулятор ХП</RowActionItem>
         <RowActionSubmenu v-if="isDm" label="Цвет игрока" :disabled="colorPending">
           <template #trigger="{ open }">
             <RowActionItem
@@ -107,7 +108,7 @@ import { useTemplateStore } from '@/stores/template'
 import { settingAccessors } from '@/features/character-editor/settings'
 import { handleCtrlSelection } from '@/shared/lib/ctrlSelection'
 import { hpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
-import { HeartPulse, Palette } from '@lucide/vue'
+import { Calculator, HeartPulse, Palette } from '@lucide/vue'
 import { BaseTile, CompactCheckbox } from '@sylvieshare/share-ui'
 import { ColorPresetPicker } from '@sylvieshare/share-ui'
 import RowActionItem from '@/shared/ui/RowActionItem.vue'
@@ -115,7 +116,7 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 import { RowActionSubmenu } from '@sylvieshare/share-ui'
 import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionHpBar from './SessionHpBar.vue'
-import { pvAvatar, pvHp, pvName } from '@/features/sessions/lib/participantView'
+import { pvAvatar, pvHp, pvHpPath, pvName } from '@/features/sessions/lib/participantView'
 
 const ParticipantStats = defineAsyncComponent(() => import('./ParticipantStats.vue'))
 const encounter = inject('applicationEncounter', null)
@@ -194,6 +195,7 @@ const hp = computed(() => {
 })
 
 const showHp = computed(() => hp.value !== null && hp.value.max > 0)
+const canCalculateHp = computed(() => props.isDm && !!encounter && !!props.combatant && !!hp.value && !!pvHpPath(props.participant))
 const isDead = computed(() => showHp.value && hp.value.current <= 0)
 
 const avatarColor = computed(() => {

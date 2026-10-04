@@ -226,6 +226,15 @@
         </div>
       </aside>
 
+      <DndHpCalcModal
+        v-if="encounter.hpCalcPlayer"
+        :key="encounter.hpCalcPlayer.uid"
+        :hp="encounter.playerHpObj(encounter.hpCalcPlayer)"
+        :damage-handler="amount => encounter.applyDamageToCombatant(encounter.hpCalcPlayer, amount)"
+        @close="encounter.closeHpCalcPlayer"
+        @change="encounter.onPlayerHpChange"
+      />
+
       <CharacterSheetModal
         v-if="sheetUuid"
         :uuid="sheetUuid"
@@ -284,6 +293,7 @@ import SessionJournalWorkspace from '@/features/sessions/components/SessionJourn
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useSessionPage } from '../composables/useSessionPage'
 const SessionMapWorkspace = defineAsyncComponent(() => import('@/features/maps/components/SessionMapWorkspace.vue'))
+const DndHpCalcModal = defineAsyncComponent(() => import('@/features/character-editor/blocks/dnd/DndHpCalcModal.vue'))
 
 const toolbarHeight = ref(78)
 
