@@ -33,7 +33,7 @@ export function availableWeaponUses(values, items, uid, owner = true) {
     const error = weaponUseError(rule) || (!owner ? 'Применять оружие может владелец персонажа.' : '')
       || (owned.entry.params?.magic?.weapon_use?.status === 'active' ? 'Завершите текущее применение этого предмета.' : '')
       || (Number(rule.resource_cost) > 0 && (!resource || resource.value < Number(rule.resource_cost)) ? 'Недостаточно ресурса для применения.' : '')
-    return { ...rule, resource, error, disabled: !!error }
+    return { ...rule, resource, error, disabled: !!error, active: owned.entry.params?.magic?.weapon_use?.status === 'active' && owned.entry.params.magic.weapon_use.key === rule.key }
   })
 }
 

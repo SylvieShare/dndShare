@@ -27,7 +27,7 @@ function parts(step) {
 function subtitle(use) {
   const resource = use.resource_key ? (props.data.use_resources || []).find(row => row.key === use.resource_key)?.title : 'заряды предмета'
   return [use.attack_mode === 'melee' ? 'Рукопашная атака' : `Дистанция до ${use.range_ft} футов`,
-    Number(use.resource_cost) > 0 && `Расход при атаке: ${use.resource_cost} (${resource || 'ресурс предмета'}), даже при промахе`,
+    Number(use.resource_cost) > 0 && `Расход при первом броске применения: ${use.resource_cost} (${resource || 'ресурс предмета'})`,
   ].filter(Boolean).join(' · ')
 }
 </script>

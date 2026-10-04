@@ -1,5 +1,5 @@
 <template>
-  <p class="weapon-use-summary">{{ rule.attack_mode === 'melee' ? 'Рукопашная атака' : 'Дистанция до ' + rule.range_ft + ' футов' }}<span v-if="rule.resource_cost > 0"> · расход при атаке: {{ rule.resource_cost }}, даже при промахе</span></p>
+  <p class="weapon-use-summary">{{ rule.attack_mode === 'melee' ? 'Рукопашная атака' : 'Дистанция до ' + rule.range_ft + ' футов' }}<span v-if="rule.resource_cost > 0"> · расход при первом броске применения: {{ rule.resource_cost }}</span></p>
   <div v-for="step in rule.steps || []" :key="step.key" class="weapon-use-preview-step">
     <strong>{{ step.title }}</strong>
     <div class="weapon-use-preview-dice"><span v-if="step.kind === 'weapon_damage'">Урон оружия +</span><DamageDice :parts="parts(step)" :size="28" /></div>

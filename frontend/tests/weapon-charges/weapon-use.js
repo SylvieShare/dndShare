@@ -51,7 +51,7 @@ const app = createApp({ setup() {
  const damage = useWeaponDamageRolls(ctx, { item: () => item, itemTitle: () => item.name, propertyItems: () => [],
    weaponDamageActions: row => weaponUseDamageActions(ctx.values, row.uid), damagePartsRaw: () => [],
    damageExpression: () => '1d6{Колющий}+3{Колющий}', criticalDamageExpression: () => '2d6{Колющий}+3{Колющий}',
-   extraCriticalDice: () => 0, spend: () => true,
+   extraCriticalDice: () => 0, spend: () => true, planWeaponUse: use.plan,
  })
  const editorMode = new URLSearchParams(location.search).has('editor'), presetMode = new URLSearchParams(location.search).has('preset')
  return () => h('main', { style: 'max-width:600px;margin:8px' }, editorMode
@@ -59,10 +59,11 @@ const app = createApp({ setup() {
   : presetMode ? [h(PresetAttackCard, { title: 'Импровизированное оружие', attackBonus: 5, onAttack: options => attack(null, 'Атака', true, undefined, options.attackRollMode, options.excludedBonuses) })]
   : [entry.value && ctx.ownerMode && h(RowActionMenu, { title: item.name }, {
       trigger: () => h('button', 'Оружие'),
-      default: ({ close }) => h(DamageRollOptions, { canAttack: true, uses: use.choices(entry.value), actions: weaponUseDamageActions(ctx.values, entry.value.uid),
+      default: ({ close }) => h(DamageRollOptions, { canAttack: true, weaponUid: entry.value.uid, uses: use.choices(entry.value), actions: weaponUseDamageActions(ctx.values, entry.value.uid),
         preview: options => damage.damagePreview(entry.value, options),
         onAttack: options => { close(); options.weaponUseKey ? use.start(entry.value, options.weaponUseKey, options.attackRollMode, options.excludedBonuses) : attack(entry.value, 'Атака', true, undefined, options.attackRollMode, options.excludedBonuses) },
         onRoll: options => { close(); damage.rollDamage(entry.value, options) },
+        onRollStep: options => { close(); use.rollStep(entry.value, options.weaponUseKey, options.stepKey) },
       }),
     }), h(WeaponUsePanel, { uid: 'javelin' })])
 } })

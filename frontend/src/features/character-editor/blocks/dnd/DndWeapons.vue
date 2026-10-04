@@ -380,7 +380,7 @@ function rollPresetDamage(kind, critical = false) {
 
 const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,
   damageExpression, damageExpressionTwoHanded, criticalDamageExpression, criticalDamageExpressionTwoHanded,
-  bonusActionDamageOption, extraCriticalDice, itemTitle, spend: weaponMechanics.spend })
+  bonusActionDamageOption, extraCriticalDice, itemTitle, spend: weaponMechanics.spend, planWeaponUse: weaponUses.plan })
 const { damagePreview, rollDamage } = damageRolls
 
 function hasWeaponDamage(entry) {
@@ -561,6 +561,7 @@ provide('weaponsBlockCtx', reactive({
   toggleWeaponResource: weaponMechanics.toggleResource,
   rollAttack,
   rollDamage,
+  rollWeaponUseStep: weaponUses.rollStep,
   damagePreview,
   bonusActionDamageOption,
   showPropertyTooltip,

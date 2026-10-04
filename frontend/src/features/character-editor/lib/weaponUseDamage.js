@@ -6,7 +6,7 @@ export function weaponUseDamageActions(values, uid) {
   const event = weaponUseState(values, uid)
   if (event?.status !== 'active') return []
   return event.steps.filter(step => step.kind === 'weapon_damage' && step.status === 'pending').map(step => ({
-    key: `${prefix}${event.id}:${step.key}`, label: step.title,
+    key: `${prefix}${event.id}:${step.key}`, label: event.steps.filter(row => row.kind === 'weapon_damage').length === 1 ? event.title : `${event.title}: ${step.title}`,
     dice: step.dice, dice_count: step.dice_count, damage_type: step.damage_type,
     double_on_critical: true,
     condition: [event.title, ...(step.requirements || [])].join(' · '),

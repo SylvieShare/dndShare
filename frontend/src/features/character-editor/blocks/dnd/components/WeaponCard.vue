@@ -12,7 +12,7 @@
 
       <template #default="{ close: closeMenu }">
         <UsableItemAction source="weapon" :item="ctx.item(entry)" :entry="entry" :name="ctx.itemTitle(entry)" @close="closeMenu" />
-        <DamageRollOptions :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" />
+        <DamageRollOptions :weapon-uid="entry.uid" v-if="!entry.params?.creation?.expired && (hasDamage || ctx.item(entry))" :can-attack="!!ctx.item(entry)" :actions="weaponDamageActions" :uses="ctx.weaponUses(entry)" :preview="options => ctx.damagePreview(entry, options)" :bonus-action-option="options => ctx.bonusActionDamageOption(entry, options)" :versatile="hasTwoHandedDamage" @attack="options => rollAttack(closeMenu, options)" @roll="options => rollDamage(closeMenu, options)" @roll-step="options => { closeMenu(); ctx.rollWeaponUseStep(entry, options.weaponUseKey, options.stepKey) }" />
 
         <RowActionSeparator v-if="ctx.item(entry)" />
         <RowActionItem

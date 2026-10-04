@@ -30,7 +30,7 @@ const weapons = reactive({ charCtx: ctx, itemMap: Object.fromEntries(items), sor
  item: entry => items.get(String(entry.magic_item_id ?? entry.item_id)), itemTitle: entry => weapons.item(entry).name,
  itemSubtitle: () => '', magicBonus: () => 0, rangeLabel: () => '30/120 футов', propertyItems: () => [], isWeaponProficient: () => false,
  formatBonus: value => '+' + value, attackBonus: () => 5, damageBonus: () => 3, damagePartsRaw: () => [], twoHandedParts: () => [],
- hasWeaponDamage: () => true, weaponDamageActions: () => [], damagePreview: () => '', canMoveWeaponToItems: () => false,
+ hasWeaponDamage: () => true, weaponDamageActions: () => [], damagePreview: () => '', bonusActionDamageOption: () => null, canMoveWeaponToItems: () => false,
  weaponUses: entry => availableWeaponUses(ctx.values, items, entry.uid, ctx.ownerMode),
  weaponResources: entry => collectCharacterResources(ctx.values, items).filter(resource => resource.source.entryKey === entry.uid),
  toggleWeaponResource(resource, pip) { ctx.updateValues(setCharacterResourceAvailable(ctx.values, items, resource.key, pip <= resource.value ? pip - 1 : pip)) },

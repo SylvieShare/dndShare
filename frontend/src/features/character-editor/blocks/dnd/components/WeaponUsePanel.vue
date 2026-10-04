@@ -8,9 +8,8 @@
         </div>
       </template>
       <WeaponUseRulePreview v-else :rule="rule" />
-      <template v-if="charCtx.ownerMode" #actions>
+      <template v-if="charCtx.ownerMode && isLive(rule)" #actions>
         <ActionButton v-if="isLive(rule)" variant="quiet" :disabled="busy" @click="finishOrConfirm">Завершить применение</ActionButton>
-        <ActionButton v-else-if="weapons?.rollAttack" :disabled="busy || !choice(rule) || !!choice(rule).disabled" :title="choice(rule)?.error || undefined" @click="weapons.rollAttack(owned?.entry, { weaponUseKey: rule.key })">Бросить на атаку</ActionButton>
       </template>
       <ConfirmDialog v-if="isLive(rule) && confirmId" title="Завершить применение?" message="Неиспользованный дополнительный урон и оставшиеся броски будут закрыты. Потраченный ресурс не возвращается." confirm-text="Завершить" @confirm="finish(confirmId); confirmId = null" @cancel="confirmId = null" @close="confirmId = null" />
     </ItemMechanicPanel>
@@ -30,7 +29,7 @@ import { logResourceChange } from '@/features/character-editor/lib/sessionEventD
 import { availableWeaponUses } from '@/features/character-editor/lib/weaponUses'
 const props = defineProps({ uid: { type: String, required: true }, item: Object, resources: { type: Object, default: null } })
 const emit = defineEmits(['toggle'])
-const charCtx = inject('charCtx', {}), weapons = inject('weaponsBlockCtx', null)
+const charCtx = inject('charCtx', {})
 const { event, busy, resolve, finish } = useWeaponUseSteps(charCtx, toRef(props, 'uid'))
 const values = computed(() => unref(charCtx.values) || {})
 const items = computed(() => unref(charCtx.characterResources?.itemsById) || new Map())
