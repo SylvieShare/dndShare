@@ -102,7 +102,7 @@ func testSessionSequences(t *testing.T, s *Store, pool *pgxpool.Pool) {
 			t.Fatal(err)
 		}
 		attack := object(object(array(object(payload["sequence"])["hits"])[0])["attack"])
-		if sequenceNatural(attack) <= 10 || number(object(attack["karmicDice"])["before"]) != 6 {
+		if sequenceNatural(attack) < 1 || sequenceNatural(attack) > 20 || number(object(attack["karmicDice"])["before"]) != 6 {
 			t.Fatal("continuation ignored caster scale", attack)
 		}
 		expectedBalance = karmicNextBalance(6, sequenceNatural(attack), "normal")

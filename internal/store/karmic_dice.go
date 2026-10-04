@@ -21,14 +21,10 @@ func karmicMedian(mode string) int {
 	}
 }
 
-func karmicWeights(balance float64, mode string) [20]float64 {
+func karmicWeights(balance float64) [20]float64 {
 	var weights [20]float64
 	for i := range weights {
-		face := i + 1
 		weights[i] = 1 + 0.85*balance/karmicLimit*(2*float64(i)/19-1)
-		if (balance == karmicLimit && face <= karmicMedian(mode)) || (balance == -karmicLimit && face > karmicMedian(mode)) {
-			weights[i] = 0
-		}
 	}
 	return weights
 }

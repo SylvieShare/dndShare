@@ -23,7 +23,7 @@ func rollSessionD20Tx(ctx context.Context, tx pgx.Tx, sessionID int64, settings 
 			return result, err
 		}
 	}
-	weights := karmicWeights(result.BalanceBefore, mode)
+	weights := karmicWeights(result.BalanceBefore)
 	count := 1
 	if mode != "normal" && previous == nil {
 		count = 2
