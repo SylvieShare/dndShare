@@ -301,6 +301,21 @@ The toolbar inserts ordinary links plus atomic dice/item/suggest references;
 selecting an existing reference offers change/delete actions. A field has one
 schema key; components do not try `desc` and then `description`.
 
+Открытое из меню заклинания справочное описание получает живой контекст именно
+этой записи: характеристику её класса или врождённого источника, бонус
+мастерства, уровень персонажа, базовый либо закреплённый круг, Сл и атаку.
+Встроенные блоки `calculation` после расчётных фраз показывают формулу и её
+результат, обновляясь при изменении характеристик. Без выбранной характеристики
+результат, зависящий от неё, не подставляется. Само превью не делает бросок и
+не расходует ячейку. В отдельном справочнике без персонажа остаётся формула.
+Расчёты хранятся как часть расширенного описания; их можно вставить или изменить
+в редакторе через «Расчёт». Каталог содержит 25 таких вставок в 24 заклинаниях,
+включая «Героизм» 2014/2024, число исцелений «Исцеляющего духа», КД копии
+«Отражений» и расстояние толчка «Длани Бигби».
+`scripts/spell-description-calculations.py` готовит проверяемый план по точным
+фразам, сохраняя HTML-разметку; публикация через `scripts/spell-rules/apply.py`
+проверяет исходное описание на конфликт и читает каждую запись после изменения.
+
 `person_alignment` is a fixed nine-value D&D enum rendered by the shared 3×3
 alignment popover in both the character sheet and the creation wizard. The
 print view renders larger, always-open spell-slot circles and gives inline rich

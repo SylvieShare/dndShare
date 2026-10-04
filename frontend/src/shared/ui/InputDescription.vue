@@ -50,6 +50,15 @@
             <button
               type="button"
               class="rich-tool-btn"
+              title="Вставить расчёт"
+              aria-label="Вставить расчёт"
+              @mousedown.prevent="openCreate('calculation')"
+            >
+              <Calculator :size="16" :stroke-width="1.8" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              class="rich-tool-btn"
               title="Вставить ссылку на предмет"
               aria-label="Вставить ссылку на предмет"
               @mousedown.prevent="openCreate('item')"
@@ -105,6 +114,10 @@
           <PackageSearch :size="17" aria-hidden="true" />
           <span>Ссылка на предмет</span>
         </button>
+        <button type="button" role="menuitem" @mousedown.prevent="openCreateFromMenu('calculation')">
+          <Calculator :size="17" aria-hidden="true" />
+          <span>Расчёт</span>
+        </button>
         <button type="button" role="menuitem" @mousedown.prevent="openCreateFromMenu('suggest')">
           <BookOpenCheck :size="17" aria-hidden="true" />
           <span>Термин справочника</span>
@@ -125,14 +138,16 @@
       :anchor="selectedNode?.element"
       :min-width="210"
       :z-index="4550"
+      :close-on-scroll="false"
+      :close-on-resize="false"
       @update:open="value => { if (!value) selectedNode = null }"
     >
       <div v-if="selectedNode" class="rich-node-menu">
         <span class="rich-node-menu-label">{{ nodeTypeLabel(selectedNode.node.kind) }}</span>
         <strong>{{ selectedNode.node.label }}</strong>
         <div class="rich-node-menu-actions">
-          <button v-if="selectedNode.node.kind !== 'stat'" type="button" @click="editSelectedNode">{{ selectedNode.node.kind === 'item' ? 'Заменить' : 'Изменить' }}</button>
-          <button type="button" class="danger" @click="removeSelectedNode">Удалить</button>
+          <button v-if="selectedNode.node.kind !== 'stat'" type="button" @mousedown.prevent @click="editSelectedNode">{{ selectedNode.node.kind === 'item' ? 'Заменить' : 'Изменить' }}</button>
+          <button type="button" class="danger" @mousedown.prevent @click="removeSelectedNode">Удалить</button>
         </div>
       </div>
     </BasePopover>
@@ -146,6 +161,13 @@
     />
     <RichSuggestNodeModal
       v-if="activeEditor === 'suggest'"
+      :node="editingTarget?.node || null"
+      @close="closeNodeEditor"
+      @save="saveNode"
+      @remove="removeEditingNode"
+    />
+    <RichCalculationNodeModal
+      v-if="activeEditor === 'calculation'"
       :node="editingTarget?.node || null"
       @close="closeNodeEditor"
       @save="saveNode"
@@ -166,11 +188,12 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { BasePopover, RichTextEditor } from '@sylvieshare/share-ui'
-import { BookOpenCheck, Dices, Ellipsis, HeartPulse, Link2, PackageSearch, Shield } from '@lucide/vue'
+import { BookOpenCheck, Calculator, Dices, Ellipsis, HeartPulse, Link2, PackageSearch, Shield } from '@lucide/vue'
 import { useItemTypesStore } from '@/stores/itemTypes'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import RichDiceNodeModal from '@/shared/ui/RichDiceNodeModal.vue'
 import RichSuggestNodeModal from '@/shared/ui/RichSuggestNodeModal.vue'
+import RichCalculationNodeModal from '@/shared/ui/RichCalculationNodeModal.vue'
 import DndRichInlineNode from '@/shared/ui/DndRichInlineNode.vue'
 
 const RUSSIAN_LABELS = {
@@ -218,7 +241,7 @@ const insertMenuTrigger = ref(null)
 const insertMenuOpen = ref(false)
 
 function nodeTypeLabel(kind) {
-  return ({ dice: 'Формула броска', item: 'Ссылка на предмет', suggest: 'Термин справочника', stat: 'Игровой показатель' })[kind] || 'Встроенный элемент'
+  return ({ dice: 'Формула броска', calculation: 'Расчёт', item: 'Ссылка на предмет', suggest: 'Термин справочника', stat: 'Игровой показатель' })[kind] || 'Встроенный элемент'
 }
 
 function selectNode(selection) {

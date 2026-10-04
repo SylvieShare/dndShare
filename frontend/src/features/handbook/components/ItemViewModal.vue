@@ -20,7 +20,7 @@
       <div class="iv-body">
         <LoadingState v-if="loading" class="iv-loading" label="Загрузка…" compact />
         <div v-else-if="loadError" class="iv-loading" role="alert">{{ loadError }} <button type="button" @click="load">Повторить</button></div>
-        <HandbookItemDetail v-else :item="displayItem" :type="type" :instance="instance" :base-item="baseItem" :nested-view-z-index="zIndex + 100" :can-edit="canEdit" @edit="editOpen = true" :show-title="true" :actor-name="actorName" />
+        <HandbookItemDetail v-else :item="displayItem" :type="type" :instance="instance" :base-item="baseItem" :nested-view-z-index="zIndex + 100" :can-edit="canEdit" @edit="editOpen = true" :show-title="true" :actor-name="actorName" :calculation-context="calculationContext" />
       </div>
 
       <footer v-if="item && $slots.actions" class="iv-footer">
@@ -76,6 +76,7 @@ const props = defineProps({
   instance: { type: Object, default: null },
   baseItem: { type: Object, default: null },
   actorName: { type: String, default: '' },
+  calculationContext: { type: Object, default: null },
   npcActor: { type: Object, default: null },
 })
 provide('npcEventActor', computed(() => props.npcActor))

@@ -66,7 +66,7 @@ describe('handbook item detail cover', () => {
     expect(headerSource).toContain("5: {\n    '--cover-min-height': '300px'")
     expect(headerSource).toContain("if ([3, 4, 5, 7, 10, 18].includes(typeId)) return '5 / 2'")
     expect(detailSource).toContain('<SpellDetailSummary :item="item" :type="type" />')
-    expect(detailSource).toContain('if (props.type?.id === 5) return { summaryInHeader: true }')
+    expect(detailSource).toContain('if (props.type?.id === 5) return { summaryInHeader: true, calculationContext: props.calculationContext }')
     expect(headerSource).toContain("props.item.coverImageUrl || props.type?.coverImageUrl || ''")
     expect(spellSummarySource).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
     expect(spellSummarySource).toContain('class="spell-summary-kind"')

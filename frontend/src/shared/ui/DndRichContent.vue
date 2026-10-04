@@ -1,7 +1,7 @@
 <template>
   <RichContent class="dnd-rich-content" v-bind="$attrs" :html="html">
     <template #node="{ node }">
-      <DndRichInlineNode :node="node" :actor-name="actorName" :source-item="item" />
+      <DndRichInlineNode :node="node" :actor-name="actorName" :source-item="item" :calculation-context="calculationContext" />
     </template>
   </RichContent>
 </template>
@@ -15,5 +15,6 @@ defineProps({
   html: { type: String, default: '' },
   actorName: { type: String, default: '' },
   item: { type: Object, default: null },
+  calculationContext: { type: Object, default: null },
 })
 </script>

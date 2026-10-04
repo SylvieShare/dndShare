@@ -146,10 +146,11 @@
 
     <!-- Модалка с описанием заклинания -->
     <ItemViewModal
-      v-if="modalSpell"
+      v-if="modalSpellEntry"
       :item-type-id="block.content.item_type_id ?? 5"
-      :item-id="modalSpell.id"
-      :item="modalSpell"
+      :item-id="modalSpellEntry.item.id"
+      :item="modalSpellEntry.item"
+      :calculation-context="descriptionContext"
       @close="modalSpell = null"
     />
 
@@ -216,6 +217,7 @@ import { useSpellCasting } from './composables/useSpellCasting'
 import { collectCharacterSpellModifiers } from '@/features/character-editor/lib/characterSpellModifiers'
 import ItemPickerModal from '@/features/handbook/components/ItemPickerModal.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
+import { spellDescriptionContext } from './lib/spellDescriptionContext'
 import { useSuggestStore } from '@/stores/suggest'
 import { SYSTEM_DICE } from '@/shared/lib/systemDice'
 import { spellcastingRulesAt } from '@/features/character-editor/blocks/dnd/lib/spellcastingRules'
@@ -465,8 +467,25 @@ function spellAbilityModifier(entry) {
 }
 
 function openSpell(entry) {
-  if (entry.item) modalSpell.value = entry.item
+  if (entry.item) modalSpell.value = entry
 }
+
+const modalSpellEntry = computed(() => {
+  const key = modalSpell.value?.ref?.key
+  if (!key) return null
+  const ref = [...grants.value, ...tabs.value.flatMap(tab => tab.spells || [])].find(ref => ref.key === key)
+  return ref && itemMap[ref.id] ? { ref, item: itemMap[ref.id] } : null
+})
+const descriptionContext = computed(() => modalSpellEntry.value ? spellDescriptionContext({
+  entry: modalSpellEntry.value,
+  values: props.values,
+  stats: props.values?.stats || charCtx.var?.stats,
+  castingAbility: spellCastingAbility(modalSpellEntry.value),
+  abilityLabel: spellAbilityLabel(modalSpellEntry.value),
+  profBonus: profBonus.value,
+  saveDC: spellSaveDC(modalSpellEntry.value),
+  attackBonus: spellAttackBonus(modalSpellEntry.value),
+}) : null)
 
 function spellStatusSource(entry) {
   return { kind: 'spell', item_id: entry?.item?.id ?? entry?.ref?.id ?? null,

@@ -57,6 +57,7 @@
     <span>{{ node.label }}</span>
   </span>
 
+  <RichCalculationNode v-else-if="node.kind === 'calculation'" :node="node" :context="calculationContext" />
   <span v-else class="rich-node rich-node--unknown">{{ node.label }}</span>
 
   <ItemTooltip
@@ -104,6 +105,7 @@ import { richDiceColor } from '@/shared/lib/richDiceColor'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 import SystemDie from '@/shared/ui/SystemDie.vue'
+import RichCalculationNode from '@/shared/ui/RichCalculationNode.vue'
 import ItemTooltip from '@/features/character-editor/components/ItemTooltip.vue'
 import ItemViewModal from '@/features/handbook/components/ItemViewModal.vue'
 
@@ -114,6 +116,7 @@ const props = defineProps({
   node: { type: Object, required: true },
   actorName: { type: String, default: '' },
   sourceItem: { type: Object, default: null },
+  calculationContext: { type: Object, default: null },
 })
 
 const sourceItem = computed(() => props.sourceItem || unref(inheritedItem))

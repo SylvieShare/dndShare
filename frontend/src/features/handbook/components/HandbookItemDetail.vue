@@ -205,6 +205,7 @@ const props = defineProps({
   baseItem: { type: Object, default: null },
   nestedViewZIndex: { type: Number, default: 4900 },
   actorName: { type: String, default: '' },
+  calculationContext: { type: Object, default: null },
 })
 
 defineEmits(['edit'])
@@ -226,7 +227,7 @@ const customRendererProps = computed(() => {
   if (props.type?.id === 19) return { economyInHeader: true, instance: props.instance, nestedViewZIndex: props.nestedViewZIndex }
   if ([3, 4, 15, 18].includes(props.type?.id)) return { nestedViewZIndex: props.nestedViewZIndex }
   if ([2, 14].includes(props.type?.id)) return { economyInHeader: true }
-  if (props.type?.id === 5) return { summaryInHeader: true }
+  if (props.type?.id === 5) return { summaryInHeader: true, calculationContext: props.calculationContext }
   return {}
 })
 const itemSourceLabel = computed(() => {

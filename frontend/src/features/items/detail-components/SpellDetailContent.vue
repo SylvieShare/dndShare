@@ -25,7 +25,7 @@
 
     <DetailSection label="Описание заклинания">
       <template #icon><ScrollText /></template>
-      <RichContent v-if="data.description" class="sdc-desc" :html="data.description" />
+      <RichContent v-if="data.description" class="sdc-desc" :html="data.description" :item="item" :calculation-context="calculationContext" />
       <div v-else class="sdc-no-desc">Описание отсутствует</div>
     </DetailSection>
   </div>
@@ -46,6 +46,7 @@ const props = defineProps({
   type: { type: Object, default: null },
   showTitle: { type: Boolean, default: true },
   summaryInHeader: { type: Boolean, default: false },
+  calculationContext: { type: Object, default: null },
 })
 
 const { suggestItems } = useSchemaSuggests(() => props.type)
