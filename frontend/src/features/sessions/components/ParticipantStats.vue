@@ -1,11 +1,11 @@
 <template>
-  <div class="participant-menu-stats" aria-label="Защита и пассивные навыки">
-    <LoadingIndicator v-if="loading" label="Расчёт показателей" />
-    <p v-else-if="error" role="alert">{{ error }}</p>
+  <div class="participant-stats" aria-label="Защита и пассивные навыки">
+    <LoadingIndicator v-if="loading" inline size="xs" label="Расчёт показателей" />
+    <p v-else-if="error" role="alert" :title="error">{{ error }}</p>
     <template v-else>
-      <span v-for="indicator in indicators" :key="indicator.key" class="participant-menu-stat" tabindex="0" :aria-label="`${indicator.label}: ${indicator.value}`"
+      <span v-for="indicator in indicators" :key="indicator.key" class="participant-stat" tabindex="0" :aria-label="`${indicator.label}: ${indicator.value}`"
         @mouseenter="showTooltip($event, indicator)" @mouseleave="tooltip = null" @focus="showTooltip($event, indicator)" @blur="tooltip = null">
-        <strong>{{ indicator.value }}</strong><component :is="indicator.icon" :size="18" aria-hidden="true" />
+        <strong>{{ indicator.value }}</strong><component :is="indicator.icon" :size="14" aria-hidden="true" />
       </span>
     </template>
   </div>
@@ -56,11 +56,11 @@ watch(() => props.participant.data, async (_, __, onCleanup) => {
 }, { immediate: true })
 </script>
 <style scoped>
-.participant-menu-stats { display: flex; align-items: center; padding: 8px 0 12px; margin-bottom: 6px; border-bottom: 1px solid var(--border); }
-.participant-menu-stat { display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: 6px; padding: 2px 12px; color: var(--text-2); cursor: help; }
-.participant-menu-stat + .participant-menu-stat { border-left: 1px solid var(--border); }
-.participant-menu-stat:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--r-sm); }
-.participant-menu-stat svg { flex-shrink: 0; color: var(--info); }
-.participant-menu-stat strong { color: var(--text-1); font-size: 16px; font-variant-numeric: tabular-nums; }
-.participant-menu-stats p { margin: 0; color: var(--danger); font-size: 12px; }
+.participant-stats { display: flex; align-items: center; min-height: 18px; line-height: 18px; }
+.participant-stat { display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: 4px; padding: 0 6px; color: var(--text-2); cursor: help; }
+.participant-stat + .participant-stat { border-left: 1px solid var(--border); }
+.participant-stat:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--r-sm); }
+.participant-stat svg { flex-shrink: 0; color: var(--info); }
+.participant-stat strong { color: var(--text-1); font-size: 13px; font-variant-numeric: tabular-nums; }
+.participant-stats p { margin: 0; overflow: hidden; color: var(--danger); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 </style>

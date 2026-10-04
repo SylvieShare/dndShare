@@ -7,7 +7,7 @@
 ## Содержание
 
 - [Бой](#бой)
-- [Participant menu and multi-selection](#participant-menu-and-multi-selection)
+- [Participant indicators and multi-selection](#participant-indicators-and-multi-selection)
 - [Компоненты применения урона и выбора целей](#компоненты-применения-урона-и-выбора-целей)
 
 ## Бой
@@ -59,9 +59,8 @@ click.
 Players have no separate encounter reserve section. Opening combat smoothly
 widens the existing left participant rail from 264px by the checkbox strip plus the card gap (36px + 9px, total 309px); every player tile gains the
 encounter checkbox with additional horizontal spacing; the current turn is
-highlighted there. The tile shows only the name and HP, with 14px right padding;
-race/class and armor class are absent from the tile; a prepared initiative is shown as a chip beside the name while the player remains in reserve. At the top of
-the DM menu, D&D participants show equipped AC and passive Perception/Investigation.
+highlighted there. The tile shows the name and HP, with 14px right padding;
+race/class are absent from the tile; a prepared initiative is shown as a chip beside the name while the player remains in reserve. For the DM, D&D participants show equipped AC and passive Perception/Investigation directly below HP, to the right of the portrait.
 The three indicators form one row: number followed by icon, with vertical
 dividers. Hover or keyboard focus opens the shared `ItemTooltip` with the
 indicator name, meaning and passive calculation. Before combat starts, the combat-tab menu exposes an initiative submenu with
@@ -297,10 +296,11 @@ stored in encounter state.
 The player color marker is read from `session_participant`, not copied into the
 encounter combatant, so changing it is reflected across every encounter section.
 
-## Participant menu and multi-selection
+## Participant indicators and multi-selection
 
-`ParticipantMenuStats` loads the participant's abilities, equipment, armor bases
-and effects on opening the menu. `participantDefenses` uses the shared equipped
+`ParticipantStats` loads the participant's abilities, equipment, armor bases
+and effects when the tile mounts and refreshes them when participant data changes.
+`participantDefenses` uses the shared equipped
 armor and derived-effect calculators. Passive Perception (Wisdom, skill 10) and
 Investigation (Intelligence, skill 9) are 10 plus the skill modifier, proficiency
 or expertise, manual bonuses and configured derived skill bonuses. The stored
@@ -342,25 +342,28 @@ Chronicle attack target controls share the roll's row on the right, with chosen 
 `SessionAttackTargets` сохраняет выбор в событии через API; цели видны в хронике мастера,
 права доступа к событиям не расширяются. Сравнения атаки с КД в этом компоненте нет.
 
-`SessionParticipantCard` shows only portrait, name and HP, with 14px right padding.
+`SessionParticipantCard` shows portrait, name and HP, with 14px right padding.
+For the DM, D&D tiles also show AC and passive skills below HP in the same
+information column; the action menu contains only actions.
 Its combat strip contains a checkbox with wider side spacing; AC and initiative
-are not rendered in that strip. DM menus use lazy `ParticipantMenuStats` for D&D
-characters, backed by `participantDefenses`, the shared equipment/derived-effect
+are not rendered in that strip. The tile uses lazy `ParticipantStats` for D&D
+characters viewed by the DM, backed by `participantDefenses`, the shared equipment/derived-effect
 calculators, and item hydration including magic armor bases. `EncounterInitiativeMenu`
 is shared with creature rows and shown before combat starts.
 `handleCtrlSelection` is the shared capture handler for the participant rail,
 `EncounterRow` and `SessionTargetPicker`; macOS Ctrl-contextmenu also toggles once.
 Drag starts ignore Ctrl and Cmd. Disabled selection and ordinary clicks keep their behavior.
 
-Participant menu indicators are a single row of number/icon pairs with vertical
-dividers. Hover and keyboard focus open the shared `ItemTooltip` for the name,
+Participant tile indicators are a single row of 13px numbers and 14px icons with
+vertical dividers. The compact rail hides the information column and makes it
+inert, including the indicators. Hover and keyboard focus open the shared `ItemTooltip` for the name,
 meaning and passive calculation. The player rail uses `--participant-rail-width`
 (264px), `--participant-selection-width` (36px) and `--participant-card-gap` (9px).
 Combat adds exactly the selection width plus gap; graph safe-area offsets use the
 same sum. The checkbox strip has 10px left / 2px right padding, so the original
 name/HP area retains its width as the rail expands.
 
-`CompactCheckbox` from share-ui 0.24.0 exposes `size` (default 18px); encounter, participant and target-selection rows pass 20px. Base geometry stays in the library. `ItemTooltip` forwards an optional `zIndex` to FloatingTooltip, retaining 4000 by default; participant menu descriptions use 9500 above the menu and submenus.
+`CompactCheckbox` from share-ui 0.24.0 exposes `size` (default 18px); encounter, participant and target-selection rows pass 20px. Base geometry stays in the library. `ItemTooltip` forwards an optional `zIndex` to FloatingTooltip, retaining 4000 by default; participant indicator descriptions use 9500 above menus and submenus.
 
 `ArmorClassChip` is the shared session AC presentation (number then blue shield). `SessionHpBar.size` defaults to small; target pickers pass medium with decoration. `loadSessionTargets` hydrates the same character/NPC snapshots for attack, impact and saving-throw pickers and calculates AC with shared armor/effect rules. `SaveFormulaPreview` renders d20 mode, fixed bonus and extra dice from `sessionSaveProfile`; no second bonus calculation is maintained. The picker uses CompactCheckbox at 20px, including Ctrl/Cmd row selection. `ActionButton` dashed styling belongs to share-ui 0.25.0.
 

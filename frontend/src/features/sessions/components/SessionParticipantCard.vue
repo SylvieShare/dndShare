@@ -29,7 +29,7 @@
             <span v-else class="ava-initial">{{ initial }}</span>
           </div>
 
-          <div class="p-info">
+          <div class="p-info" :inert="compact" :aria-hidden="compact">
             <div class="p-name-row"><div class="p-name">{{ displayName }}</div><span v-if="combatant?.position === 'reserve' && combatant.initiative != null" class="p-initiative-chip" title="Подготовленная инициатива" :aria-label="`Подготовленная инициатива: ${combatant.initiative}`"><img src="/static/initiative.svg" width="14" height="14" alt="" />{{ combatant.initiative }}</span></div>
 
             <template v-if="showHp">
@@ -52,13 +52,13 @@
                 <SessionHpBar :hp="hp" />
               </template>
             </template>
+            <ParticipantStats v-if="isDm && isDnd" :participant="participant" />
           </div>
 
         </BaseTile>
       </template>
 
       <template #default="{ close }">
-        <ParticipantMenuStats v-if="isDm && isDnd" :participant="participant" />
         <EncounterInitiativeMenu v-if="isDm && combatant?.position === 'reserve' && encounter?.encounter.active" enter-combat :combatant="combatant" :encounter="encounter" @joined="close" />
         <EncounterInitiativeMenu v-if="isDm && combatMode && combatant && encounter && !encounter.encounter.active && combatant.position !== 'dead'" :combatant="combatant" :encounter="encounter" />
         <RowActionItem v-if="isDm || participant.canOpenSheet" action="view" @click="viewParticipant(close)">Открыть лист</RowActionItem>
@@ -117,7 +117,7 @@ import EncounterInitiativeMenu from './EncounterInitiativeMenu.vue'
 import SessionHpBar from './SessionHpBar.vue'
 import { pvAvatar, pvHp, pvName } from '@/features/sessions/lib/participantView'
 
-const ParticipantMenuStats = defineAsyncComponent(() => import('./ParticipantMenuStats.vue'))
+const ParticipantStats = defineAsyncComponent(() => import('./ParticipantStats.vue'))
 const encounter = inject('applicationEncounter', null)
 const templates = useTemplateStore()
 const isDnd = computed(() => settingAccessors(templates.byId(props.participant.templateId))?.system === 'dnd5e')
@@ -344,6 +344,7 @@ const participantTileStyle = computed(() => ({
 }
 
 .p-card--compact .p-info { flex: 0 0 0; overflow: hidden; opacity: 0; transform: translateX(-7px); }
+.p-info :deep(.hp-row) { margin-top: 0; }
 .p-card--compact .p-avatar { width: 36px; height: 36px; }
 .p-card--compact .ava-initial { font-size: 14px; }
 
@@ -357,6 +358,7 @@ const participantTileStyle = computed(() => ({
 .p-initiative-chip { display: inline-flex; flex: none; align-items: center; gap: 4px; padding: 2px 5px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--surface-raised); color: var(--text-1); font-size: 12px; font-weight: 750; }
 .p-name {
   font-size: 13px;
+  line-height: 16px;
   font-weight: 600;
   color: var(--text-1);
   white-space: nowrap;
@@ -368,7 +370,6 @@ const participantTileStyle = computed(() => ({
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 5px;
 }
 
 .ds-label {

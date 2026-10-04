@@ -102,7 +102,7 @@ describe('SessionParticipantCard actions', () => {
     expect(source).toContain('clip-path: inset(-12px);')
     expect(combatControlsSource).toContain('<EncCheckbox')
     expect(combatControlsSource).toContain('aria-label="Инициатива"')
-    expect(source).toContain('<ParticipantMenuStats v-if="isDm && isDnd"')
+    expect(source).toContain('<ParticipantStats v-if="isDm && isDnd"')
     expect(source).not.toContain('class="p-who"')
     expect(source).not.toContain(':armor-class=')
     expect(source).toContain("'p-card--current': combatMode && combatCurrent")
