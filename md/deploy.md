@@ -175,10 +175,12 @@ VM и не запускает. Новые и замещающие изображ
 3. Создать PNG-превью локальным Blender, затем выполнить
    `python3 scripts/maps/build-catalogue.py`: WebP-превью, контуры препятствий,
    метаданные и content-addressed upload folder в models/prepared/upload.
-4. Собрать `cmd/map-model-upload` и запустить в окружении с OBJECT_STORAGE_*
-   credentials с аргументом `-assets` на upload folder. Загрузчик сверяет
-   локальные SHA-256/размеры и S3 HEAD; PostgreSQL он не меняет.
-5. Выпустить основной бинарь. Startup migration создаёт каталог и по явному
+4. Выпустить основной бинарь с MCP-инструментами плиток.
+5. Локально запустить `go run ./cmd/map-model-upload -assets models/prepared/upload`
+   с MCP_AUTH_TOKEN. Клиент получает подписанные PUT URL, отправляет файлы прямо
+   в S3, подтверждает SHA-256/формат и регистрирует неизменяемые версии.
+   Файлы моделей и вспомогательный исполняемый файл по SSH не передаются.
+   PostgreSQL обновляет map_tile_model_register через MCP. Startup migration создаёт каталог и по явному
    запросу пользователя удаляет карты старого формата. Сохранённые модели
    отдаются через API приложения: CORS bucket не требуется.
 

@@ -132,6 +132,35 @@ rollback; apply требует точный token и включённые MCP wr
 использует native-редакцию конкретного заклинания, не его legacy/compatible
 связи с другими редакциями.
 
+## Плитки 3D-редактора
+
+Каталог и передача файлов поддерживаются отдельными tools:
+
+- `map_tile_models_list`: метаданные и assets, опциональный фильтр collection.
+- `map_tile_model_get`: одна версия по UUID.
+- `map_tile_asset_prepare_upload`: kind, fileName, SHA-256 и size; возвращает
+  временный S3 uploadKey, подписанный PUT URL на 15 минут и необходимые headers.
+- `map_tile_asset_complete_upload`: тот же descriptor и uploadKey. Сервер читает
+  S3-объект, проверяет размер, SHA-256 и формат, копирует его в постоянный
+  content-addressed key и удаляет временный объект. Прежние версии не заменяются.
+- `map_tile_model_register`: полный model object с именами, sourceCode, версией,
+  типом, местностью, схемой стен, геометрией и четырьмя assets. Проверяет наличие
+  и SHA-256 всех файлов; идентичный повтор идемпотентен. Изменение требует нового
+  UUID и номера версии.
+
+Файлы отправляются клиентом напрямую в Object Storage; JSON-RPC переносит
+только метаданные и подписанные ссылки. SSH и base64-передача моделей на VM
+не нужны. Все три write-tools требуют MCP_WRITE_ENABLED. Допустимые файлы:
+render/lod GLB до 32 МиБ, preview WebP до 4 МиБ, source binary STL или GLB
+до 256 МиБ. GLB должен содержать геометрию и встроенные ресурсы без внешних URI.
+Подписанные URL и MCP-токен не следует выводить в лог. Незавершённые временные
+объекты можно очищать lifecycle-правилом S3 для map-model-uploads/.
+
+Готовый клиент `cmd/map-model-upload` проверяет локальные hashes, запрашивает
+URL через MCP, выполняет PUT прямо в S3 и регистрирует модели. Нужен
+MCP_AUTH_TOKEN, `-assets` указывает папку content-addressed файлов с
+catalogue.json; endpoint по умолчанию https://dndshare.ru/mcp.
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md)
