@@ -24,7 +24,7 @@ function fixture() {
 it('previews and rolls paid hit damage once with other additions, while leaving the line pending', () => {
  const { ctx, damage, dice } = fixture(), entry = ctx.values.weapon[0]
  const key = weaponUseDamageActions(ctx.values, 'a')[0].key
- const options = { actionKeys: [key, 'extra'], critical: true }
+ const options = { actionKeys: [key, 'extra'], critical: true, bonusAction: true }
  expect(damage.damagePreview(entry, options)).toBe('2d6+3+8d6+2d4')
  const roll = vi.spyOn(dice, 'roll').mockReturnValue({ total: 35, parts: [] })
  damage.rollDamage(entry, options); damage.rollDamage(entry, options)

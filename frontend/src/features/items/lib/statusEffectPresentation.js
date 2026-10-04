@@ -19,6 +19,8 @@ const EFFECT_TITLES = {
   save_bonus: 'Спасброски',
   weapon_attack_bonus: 'Атаки оружием',
   weapon_damage_bonus: 'Урон оружием',
+  two_weapon_damage_modifier: 'Модификатор урона второго оружия',
+  two_weapon_non_light: 'Парное оружие без свойства «лёгкое»',
   roll_mode: 'Режим броска',
   activity_block: 'Ограничение действий',
 }
@@ -75,6 +77,8 @@ export function statusThesisLines(value) {
 }
 
 function ruleValue(rule) {
+  if (rule.kind === 'two_weapon_damage_modifier') return 'Добавляется к урону'
+  if (rule.kind === 'two_weapon_non_light') return 'Разрешено одноручное рукопашное оружие'
   if (rule.kind === 'roll_bonus') return rule.formula || '—'
   if (rule.kind === 'speed_multiplier') return `×${rule.value}`
   if (['ability_minimum', 'armor_minimum'].includes(rule.kind)) return String(rule.value)

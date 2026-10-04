@@ -16,6 +16,7 @@ export function useWeaponCalc({
   isProficient = (entry) => !!entry.proficient,
   damageBonusModifier = () => 0,
   magicBonusModifier = () => 0,
+  bonusActionDamageOption = () => null,
 }) {
   function statMod(entry) {
     return weaponAbilityModifier(entry, item(entry), propertyItems(entry), statsVar.value)
@@ -31,7 +32,10 @@ export function useWeaponCalc({
   }
 
   function damageBonus(entry) {
-    return statMod(entry) + magicBonus(entry) + (Number(damageBonusModifier(entry)) || 0)
+    const stat = statMod(entry)
+    const option = entry._bonusActionDamage && bonusActionDamageOption(entry)
+    const damageStat = option && !option.addAbilityModifier ? Math.min(0, stat) : stat
+    return damageStat + magicBonus(entry) + (Number(damageBonusModifier(entry)) || 0)
   }
 
   function attackDisplay(attack) {

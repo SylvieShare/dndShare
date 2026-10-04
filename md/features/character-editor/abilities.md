@@ -141,8 +141,16 @@ standalone sheet roll does not silently consume or block it without turn state.
 
 ## Производные и активные эффекты
 
-Class, race and feat items may also contribute `derived_effects`. This is the
-single source contract for calculated AC formulas and bonuses, speed bonuses,
+Class, race and feat items may also contribute `derived_effects`. The rules
+`two_weapon_damage_modifier` and `two_weapon_non_light` describe two-weapon
+fighting exceptions. The former
+retains the ability modifier for the extra attack, and the latter
+allows one-handed melee weapons without the Light property. Choice and level
+gates and inactive feat requirements apply to both rules; the runtime does not
+match handbook names. See [weapon rolls](equipment.md#подготовка-бросков-оружия).
+
+`derived_effects` is the single source contract for calculated AC formulas and
+bonuses, speed bonuses,
 skill/save proficiencies, visible armor/weapon/tool/language proficiencies,
 check/save/weapon-attack bonuses, roll modes and critical thresholds. Every row
 keeps its handbook feature as the visible source,

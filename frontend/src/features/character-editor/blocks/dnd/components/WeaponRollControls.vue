@@ -9,8 +9,11 @@
       <FormField label="Критическое попадание" title="Удваивает кости урона, но не постоянные прибавки.">
         <ToggleSwitch :model-value="critical" aria-label="Критическое попадание" @update:model-value="$emit('update:critical', $event)" />
       </FormField>
+      <FormField v-if="bonusActionOption" label="Урон бонусным действием" :title="bonusActionOption.hint">
+        <ToggleSwitch :model-value="bonusAction" :disabled="twoHanded" aria-label="Урон бонусным действием" @update:model-value="!twoHanded && $emit('update:bonusAction', $event)" />
+      </FormField>
       <FormField v-if="versatile" label="Двумя руками" title="Использует кость урона для хвата двумя руками.">
-        <ToggleSwitch :model-value="twoHanded" :disabled="thrown" aria-label="Двумя руками" @update:model-value="!thrown && $emit('update:twoHanded', $event)" />
+        <ToggleSwitch :model-value="twoHanded" :disabled="thrown || bonusAction" aria-label="Двумя руками" @update:model-value="!thrown && !bonusAction && $emit('update:twoHanded', $event)" />
       </FormField>
     </template>
     <WeaponRollOption v-for="option in (scope === 'attack' && useKey ? [] : modes)" :key="option.key" :option="option" @select="(key, value) => $emit('select', key, value)" @amount="(key, value) => $emit('amount', key, value)" />
@@ -34,7 +37,7 @@ import DamageFormulaPreview from './DamageFormulaPreview.vue'
 import WeaponRollOption from './WeaponRollOption.vue'
 import { computed, inject, toRef, ref } from 'vue'
 import { useWeaponBonusTransfer } from '../composables/useWeaponBonusTransfer'
-const props = defineProps({ weaponUid: String, attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
+const props = defineProps({ weaponUid: String, attackRollMode: { type: String, default: 'auto' }, uses: { type: Array, default: () => [] }, useKey: { type: String, default: '' }, scope: { type: String, default: 'damage' }, options: { type: Array, default: () => [] }, critical: Boolean, twoHanded: Boolean, bonusAction: Boolean, bonusActionOption: Object, versatile: Boolean, thrown: Boolean, preview: { type: String, default: '' } })
 const excludedBonuses = ref([])
 const charCtx = inject('charCtx', {})
 const { transfer, setAmount } = useWeaponBonusTransfer(charCtx, toRef(props, 'weaponUid'))
@@ -52,7 +55,7 @@ const modes = computed(() => props.options.filter(option => option.mode))
 const extras = computed(() => props.options.filter(option => !option.mode))
 const chosenUse = computed(() => props.uses.find(use => use.key === props.useKey))
 const blocked = computed(() => props.scope === 'attack' && props.useKey ? (chosenUse.value && !chosenUse.value.error ? null : { resourceError: chosenUse.value?.error || 'Режим недоступен.' }) : props.scope === 'damage' && props.options.find(option => option.checked && option.resourceError))
-const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:critical', 'update:twoHanded', 'select', 'amount', 'roll'])
+const emit = defineEmits(['update:attackRollMode', 'update:useKey', 'update:critical', 'update:twoHanded', 'update:bonusAction', 'select', 'amount', 'roll'])
 function setAttackMode(mode, checked) {
   if (checked && props.attackRollMode !== 'auto' && props.attackRollMode !== mode) return
   emit('update:attackRollMode', checked ? mode : 'auto')

@@ -160,6 +160,7 @@ import { useWeaponDamageRolls } from './composables/useWeaponDamageRolls'
 import { weaponUseDamageActions } from '@/features/character-editor/lib/weaponUseDamage'
 import { resolveRollMode } from './lib/rollMode'
 import { prepareWeaponRollEntry, withWeaponThrowAction } from './lib/weaponThrow'
+import { useTwoWeaponFighting } from './composables/useTwoWeaponFighting'
 import {
   improvisedWeaponAttackBonus as resolveImprovisedWeaponAttackBonus,
   PRESET_ATTACK_ART_ITEM_IDS,
@@ -246,6 +247,7 @@ const { entries, emitChange, loadError, reload } = useWeaponEntries({
   loadItems: list => loadItemsRaw([...list, ...Object.values(PRESET_ATTACK_ART_ITEM_IDS).map(item_id => ({ item_id }))]),
 })
 
+const bonusActionDamageOption = useTwoWeaponFighting(charCtx, { item, propertyItems, actions: weaponDamageActions })
 const {
   magicBonus,
   attackBonus: baseAttackBonus,
@@ -272,6 +274,7 @@ const {
   isProficient: isWeaponProficient,
   magicBonusModifier: entry => intrinsicWeaponBonus(entry, item(entry), props.values),
   damageBonusModifier: entry => charCtx.characterDerivedEffects?.bonus?.('weapon_damage_bonus', weaponEffectContext(entry))?.total || 0,
+  bonusActionDamageOption,
 })
 
 function weaponEffectContext(entry) {
@@ -377,7 +380,7 @@ function rollPresetDamage(kind, critical = false) {
 
 const damageRolls = useWeaponDamageRolls(charCtx, { item, propertyItems, weaponDamageActions, damagePartsRaw,
   damageExpression, damageExpressionTwoHanded, criticalDamageExpression, criticalDamageExpressionTwoHanded,
-  extraCriticalDice, itemTitle, spend: weaponMechanics.spend })
+  bonusActionDamageOption, extraCriticalDice, itemTitle, spend: weaponMechanics.spend })
 const { damagePreview, rollDamage } = damageRolls
 
 function hasWeaponDamage(entry) {
@@ -559,6 +562,7 @@ provide('weaponsBlockCtx', reactive({
   rollAttack,
   rollDamage,
   damagePreview,
+  bonusActionDamageOption,
   showPropertyTooltip,
   hidePropertyTooltip,
   setField,

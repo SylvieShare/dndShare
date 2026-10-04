@@ -179,4 +179,5 @@ var schemaParts = []struct {
 	{"session-karmic-dice", schemaSessionKarmicDiceSQL},
 	{"fractional-karmic-dice", schemaFractionalKarmicDiceSQL},
 	{"rps-invitations", schemaRPSInvitationsSQL},
+	{"two-weapon-fighting", schemaTwoWeaponFightingSQL},
 }

@@ -76,3 +76,16 @@ it('keeps two-handed grip visible but disabled while throwing, and disables thro
   expect(grip).not.toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Двумя руками")/)
   expect(weaponDamageMenuOptions([{ key: 'throw', attack_mode: 'thrown' }], [], false, 'damage', false)[0].disabled).toBe(false)
 })
+
+it('offers bonus action damage only on eligible damage menus and excludes two-handed grip', async () => {
+  const bonusActionOption = { hint: 'Положительный модификатор характеристики не добавляется.' }
+  const damage = await render(WeaponRollControls, { bonusActionOption, bonusAction: true, versatile: true })
+  expect(damage).toContain('Урон бонусным действием')
+  expect(damage).toContain(bonusActionOption.hint)
+  expect(damage).toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Двумя руками")/)
+  const twoHanded = await render(WeaponRollControls, { bonusActionOption, twoHanded: true, versatile: true })
+  expect(twoHanded).toMatch(/<button(?=[^>]*disabled)(?=[^>]*aria-label="Урон бонусным действием")/)
+  for (const props of [{}, { scope: 'attack', bonusActionOption }]) {
+    expect(await render(WeaponRollControls, props)).not.toContain('Урон бонусным действием')
+  }
+})
