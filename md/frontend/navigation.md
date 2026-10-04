@@ -209,9 +209,10 @@ HTTP-обслуживания; компоненты не содержат read-t
 публичный визуальный компонент `share-ui` обязан появиться на этой доске —
 полноту проверяет тест самой библиотеки.
 
-`/screen/:code` uses `meta.standaloneView`: like print mode, it removes the
-global sidebar, header and diagnostic overlays, but retains the dark application
-theme for a public read-only encounter display.
+`/screen/:code`, `/map-screen/:code` и `/maps/editor` используют
+`meta.standaloneView`: приложение убирает глобальные sidebar, header и
+диагностические панели, сохраняя тему. Экраны трансляции доступны по публичному
+коду; полноэкранный редактор доступен администратору и имеет возврат в библиотеку.
 
 Router prefetch хранится 30 секунд и используется страницами списков. Направление
 перехода определяется `meta.section/depth/pageOrder`; навигационные компоненты

@@ -127,14 +127,6 @@ export async function createMapRenderer(host, onError) {
       disposeObjects(background);
       background = new Group();
       scene.add(background);
-      const voidMaterial = new MeshBasicMaterial({ color: 0x101318 });
-      const plane = new Mesh(
-        new PlaneGeometry(d.width, d.height),
-        voidMaterial,
-      );
-      plane.rotation.x = -Math.PI / 2;
-      plane.position.set(d.width / 2, FLOOR - 0.03, d.height / 2);
-      background.add(plane);
       if (d.kind !== "tiles" && d.background.url) {
         const key = backgroundKey;
         const url = d.background.assetId

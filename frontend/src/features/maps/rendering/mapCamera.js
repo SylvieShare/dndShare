@@ -1,6 +1,9 @@
 import { Plane, Raycaster, Vector2, Vector3 } from "three";
 import { FLOOR } from "./annotations";
 
+export const ISOMETRIC_TILT = (Math.atan(1 / Math.sqrt(2)) * 180) / Math.PI;
+export const ISOMETRIC_AZIMUTH = 45;
+
 export function mapCamera(camera, gpu, host, render) {
   let document,
     view = {
@@ -9,8 +12,8 @@ export function mapCamera(camera, gpu, host, render) {
       cellPixels: 48,
       rotation: 0,
       fit: true,
-      tilt: 55,
-      azimuth: 0,
+      tilt: ISOMETRIC_TILT,
+      azimuth: ISOMETRIC_AZIMUTH,
     },
     readonly = false;
   const ray = new Raycaster(),

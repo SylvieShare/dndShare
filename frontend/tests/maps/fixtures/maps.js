@@ -2,8 +2,10 @@ import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
 import { createApp, h } from "vue";
 import { createPinia } from "pinia";
-import { createRouter, createMemoryHistory } from "vue-router";
-import MapEditor from "../../../src/features/maps/components/MapEditor.vue";
+import { createRouter, createMemoryHistory, RouterView } from "vue-router";
+import { useAccountStore } from "../../../src/stores/account";
+import MapLibrary from "../../../src/features/maps/components/MapLibrary.vue";
+import ViewMapEditor from "../../../src/features/maps/pages/ViewMapEditor.vue";
 import SessionMapWorkspace from "../../../src/features/maps/components/SessionMapWorkspace.vue";
 import ViewMapScreen from "../../../src/features/maps/pages/ViewMapScreen.vue";
 import {
@@ -168,7 +170,16 @@ window.fetch = async (url, options = {}) => {
     );
   }
   let result;
-  if (url === "/api/maps") result = [source];
+  if (url === "/api/maps") {
+    if (data) {
+      result = { ...data, id: "test-copy", revision: 1 };
+      window.lastSaved = result;
+    } else result = [source, ...(window.lastSaved?.id === "test-copy" ? [window.lastSaved] : [])];
+  }
+  else if (url === "/api/maps/test-copy") {
+    result = { ...data, revision: data.revision + 1 };
+    window.lastSaved = result;
+  }
   else if (url === "/api/maps/test-map") {
     if (data.revision !== templateRevision)
       return new Response("{}", { status: 409 });
@@ -196,13 +207,21 @@ window.fetch = async (url, options = {}) => {
 const mode = params.get("mode");
 const router = createRouter({
   history: createMemoryHistory(),
-  routes: [{ path: "/map-screen/:code", component: ViewMapScreen }],
+  routes: [
+    { path: "/map-screen/:code", component: ViewMapScreen },
+    { path: "/maps", name: "Maps", component: MapLibrary },
+    { path: "/maps/editor", name: "MapEditor", component: ViewMapEditor },
+  ],
 });
-await router.push("/map-screen/ABC-123");
+const pinia = createPinia(), account = useAccountStore(pinia);
+account.status = "success";
+account.user = { id: 1, login: "tester", roles: ["ADMIN"] };
+await router.push(mode === "library" ? "/maps" : mode === "editor" ? "/maps/editor?id=test-map" : "/map-screen/ABC-123");
+window.mapRoute = () => router.currentRoute.value.fullPath;
 createApp({
   render: () =>
-    mode === "editor"
-      ? h(MapEditor, { map: source })
+    mode === "editor" || mode === "library"
+      ? h(RouterView)
       : mode === "screen"
         ? h(ViewMapScreen)
         : h(
@@ -218,6 +237,6 @@ createApp({
             ],
           ),
 })
-  .use(createPinia())
+  .use(pinia)
   .use(router)
   .mount("#app");

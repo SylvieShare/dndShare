@@ -47,10 +47,10 @@
       <ActionButton
         v-if="document.kind === 'tiles'"
         variant="secondary"
-        :title="topView ? 'Объёмный вид' : 'Вид сверху'"
+        :title="topView ? 'Изометрический вид' : 'Вид сверху'"
         @click="toggleView"
       >
-        <Box :size="16" />{{ topView ? "3D" : "Сверху" }}
+        <Box :size="16" />{{ topView ? "Изометрия" : "Сверху" }}
       </ActionButton>
       <ActionButton
         variant="secondary"
@@ -78,6 +78,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
 import { Box, Minus, Plus, RotateCw, Scan } from "@lucide/vue";
 import { createMapRenderer } from "../rendering/mapRenderer";
+import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
 const props = defineProps({
   document: { type: Object, required: true },
   state: Object,
@@ -140,6 +141,7 @@ watch(
 );
 function setView(view) {
   renderer?.camera(view);
+  topView.value = renderer?.getView().tilt === 90;
   emit("view", renderer?.getView());
 }
 function fit() {
@@ -157,8 +159,12 @@ async function retry() {
 function toggleView() {
   const view = renderer?.getView();
   if (view) {
-    topView.value = !topView.value;
-    setView({ ...view, tilt: topView.value ? 90 : 55 });
+    const top = !topView.value;
+    setView({
+      ...view,
+      tilt: top ? 90 : ISOMETRIC_TILT,
+      azimuth: view.rotation + (top ? 0 : ISOMETRIC_AZIMUTH),
+    });
   }
 }
 function rotateView() {

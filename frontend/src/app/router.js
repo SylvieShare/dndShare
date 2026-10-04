@@ -115,6 +115,12 @@ const routes = [
         meta: { title: 'Карты', section: 'maps', depth: 0 },
     },
     {
+        path: '/maps/editor',
+        name: 'MapEditor',
+        component: () => import('@/features/maps/pages/ViewMapEditor.vue'),
+        meta: { title: 'Редактор карты', section: 'maps', depth: 1, standaloneView: true },
+    },
+    {
         path: '/map-screen/:code',
         name: 'MapScreen',
         component: () => import('@/features/maps/pages/ViewMapScreen.vue'),

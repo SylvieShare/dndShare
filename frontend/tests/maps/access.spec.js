@@ -36,3 +36,10 @@ test('direct maps page does not read private data without ADMIN', async ({ page 
   await expect(page.getByRole('button', { name: 'Создать карту', exact: true })).toBeVisible()
   await expect.poll(() => page.evaluate(() => window.mapReads)).toBe(1)
 })
+
+test('direct editor page does not read private maps without ADMIN', async ({ page }) => {
+  await page.goto('/tests/maps/fixtures/access.html?editor')
+  await expect(page.getByRole('status')).toHaveText('Скоро будет')
+  expect(await page.evaluate(() => window.mapReads)).toBe(0)
+  await expect(page.locator('.map-editor-workspace')).toHaveCount(0)
+})

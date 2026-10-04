@@ -88,10 +88,7 @@
           v-for="(label, kind) in KINDS"
           :key="kind"
           variant="secondary"
-          @click="
-            editor = newMap(kind);
-            creating = false;
-          "
+          @click="create(kind)"
           >{{ label }}</ActionButton
         >
       </div>
@@ -116,13 +113,6 @@
       >
       <MapCanvas :document="preview.document" master />
     </AppModalFrame>
-    <MapEditor
-      v-if="editor"
-      ref="editorView"
-      :map="editor"
-      @close="editor = null"
-      @saved="updated"
-    />
     <ConfirmDialog
       v-if="pendingDelete"
       title="Удалить карту?"
@@ -137,7 +127,7 @@
 <script setup>
 import "../styles/maps.css";
 import { computed, defineAsyncComponent, onMounted, ref } from "vue";
-import { onBeforeRouteLeave } from "vue-router";
+import { useRouter } from "vue-router";
 import {
   ActionButton,
   AppModalFrame,
@@ -149,10 +139,9 @@ import {
 } from "@sylvieshare/share-ui";
 import { Copy, Map, Plus, Trash2 } from "@lucide/vue";
 import { deleteMap, getMaps } from "@/shared/api/mapsApi";
-import { clone, KINDS, newMap } from "../lib/mapModel";
+import { KINDS } from "../lib/mapModel";
 import MapThumbnail from "./MapThumbnail.vue";
-const MapEditor = defineAsyncComponent(() => import("./MapEditor.vue")),
-  MapCanvas = defineAsyncComponent(() => import("./MapCanvas.vue"));
+const MapCanvas = defineAsyncComponent(() => import("./MapCanvas.vue"));
 const props = defineProps({ picker: Boolean }),
   emit = defineEmits(["select"]);
 const maps = ref([]),
@@ -161,12 +150,10 @@ const maps = ref([]),
   query = ref(""),
   filter = ref("all"),
   creating = ref(false),
-  editor = ref(null),
   preview = ref(null),
   pendingDelete = ref(null),
   deleting = ref(false);
-const editorView = ref(null);
-onBeforeRouteLeave(() => editorView.value?.prepareLeave() ?? true);
+const router = useRouter();
 const filtered = computed(() =>
   maps.value.filter(
     (m) =>
@@ -191,20 +178,14 @@ async function load() {
 function open(map) {
   if (props.picker) emit("select", map);
   else if (map.system) preview.value = map;
-  else editor.value = map;
+  else router.push({ name: "MapEditor", query: { id: map.id } });
 }
 function duplicate(map) {
-  const copy = clone(map);
-  delete copy.id;
-  copy.system = false;
-  copy.revision = 0;
-  copy.name += " · копия";
-  editor.value = copy;
+  router.push({ name: "MapEditor", query: { copy: map.id } });
 }
-function updated(map) {
-  const index = maps.value.findIndex((m) => m.id === map.id);
-  if (index >= 0) maps.value[index] = map;
-  else maps.value.unshift(map);
+function create(kind) {
+  creating.value = false;
+  router.push({ name: "MapEditor", query: { kind } });
 }
 async function remove() {
   deleting.value = true;

@@ -7,6 +7,7 @@ import DesktopSidebar from '../../../src/shared/ui/DesktopSidebar.vue'
 import AppHeader from '../../../src/shared/ui/AppHeader.vue'
 import ChapterGraphToolbar from '../../../src/features/sessions/components/ChapterGraphToolbar.vue'
 import ViewMaps from '../../../src/features/maps/pages/ViewMaps.vue'
+import ViewMapEditor from '../../../src/features/maps/pages/ViewMapEditor.vue'
 import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
 
@@ -24,10 +25,11 @@ window.fetch = async (url) => {
 const router = createRouter({ history: createMemoryHistory(), routes: [
   { path: '/', component: { render: () => null } },
   { path: '/maps', component: ViewMaps },
+  { path: '/maps/editor', name: 'MapEditor', component: ViewMapEditor },
   { path: '/:pathMatch(.*)*', component: { render: () => null } },
 ] })
-await router.push(params.has('direct') ? '/maps' : '/')
-createApp({ render: () => params.has('direct') ? h(RouterView) : h('div', [
+await router.push(params.has('editor') ? '/maps/editor?id=private-map' : params.has('direct') ? '/maps' : '/')
+createApp({ render: () => params.has('direct') || params.has('editor') ? h(RouterView) : h('div', [
   params.has('mobile') ? h(AppHeader) : h(DesktopSidebar),
   h('main', { style: 'margin:100px 10px 0 245px' }, [h(ChapterGraphToolbar, {
     isDm: true, onSelectView: view => { window.selectedView = view },

@@ -1,14 +1,17 @@
 <template>
-  <AppModalFrame
-    title="Редактор карты"
-    :subtitle="KINDS[e.draft.document.kind]"
-    fullscreen
-    :padded="false"
-    :body-scroll="false"
-    close-label="Закрыть редактор"
-    @close="close"
-  >
-    <template #header-actions>
+  <main class="map-editor-workspace" @keydown="hotkey">
+    <header class="map-editor-header">
+      <ActionButton
+        variant="quiet"
+        aria-label="Закрыть редактор"
+        @click="emit('close')"
+      >
+        <ArrowLeft :size="18" />Карты
+      </ActionButton>
+      <div class="map-editor-heading">
+        <h1>Редактор карты</h1>
+        <span>{{ KINDS[e.draft.document.kind] }}</span>
+      </div>
       <span class="map-save-status" role="status">{{
         e.saving ? "Сохраняем…" : e.dirty ? "Есть изменения" : "Сохранено"
       }}</span>
@@ -18,8 +21,8 @@
         @click="e.save"
         ><Save :size="16" />Сохранить</ActionButton
       >
-    </template>
-    <div class="map-editor" @keydown="hotkey">
+    </header>
+    <div class="map-editor">
       <MapEditorInspector :editor="e" />
       <div class="map-editor-main">
         <div class="map-toolbar">
@@ -60,7 +63,9 @@
             @click="exportMap"
             ><Download :size="16"
           /></ActionButton>
-          <span class="map-toolbar-note">{{ toolHint }}</span>
+          <span class="map-toolbar-note">
+            {{ toolHint }} · ПКМ / Shift — вращение
+          </span>
         </div>
         <div v-if="e.error" class="map-error" role="alert">
           {{ e.error }}
@@ -93,17 +98,14 @@
       @confirm="finishLeave(true)"
       @cancel="finishLeave(false)"
     />
-  </AppModalFrame>
+  </main>
 </template>
 <script setup>
 import "../styles/maps.css";
 import { computed, reactive, ref } from "vue";
+import { ActionButton, ConfirmDialog } from "@sylvieshare/share-ui";
 import {
-  ActionButton,
-  AppModalFrame,
-  ConfirmDialog,
-} from "@sylvieshare/share-ui";
-import {
+  ArrowLeft,
   Copy,
   Download,
   Hand,
@@ -148,9 +150,6 @@ async function prepareLeave() {
 function finishLeave(leave) {
   confirmClose.value = false;
   resolveLeave?.(leave);
-}
-async function close() {
-  if (await prepareLeave()) emit("close");
 }
 defineExpose({ prepareLeave });
 function hotkey(event) {
