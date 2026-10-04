@@ -431,6 +431,7 @@ function closeEditor() {
 const diceStore = useDiceStore()
 function rollD20Plus(title, bonus, mode = 'normal', scope = 'ability_check', context = {}, excluded = []) {
   diceStore.rollD20(title, bonus, mode, {
+    roll_kind: scope,
     crit_mode: true,
     color: statColor.value,
     eventData: { ability: { id: titleSuggestId.value, name: displayTitle.value, typeId: titleSuggestTypeId.value } },

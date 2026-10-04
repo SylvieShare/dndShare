@@ -56,7 +56,7 @@ func testSessionSettingsPostgres(t *testing.T, s *Store, sessionID int64) {
 		t.Fatal("invalid key accepted")
 	}
 	_, err = s.pool.Exec(ctx, `
- CREATE TABLE dndshare."char" (id bigint, uuid uuid DEFAULT gen_random_uuid(), user_id bigint, data jsonb, version bigint DEFAULT 1, deleted bool DEFAULT false, public_visible bool DEFAULT false, template_id bigint, icon_image_id bigint);
+ CREATE TABLE dndshare."char" (id bigint, uuid uuid DEFAULT gen_random_uuid(), user_id bigint, data jsonb, version bigint DEFAULT 1, deleted bool DEFAULT false, public_visible bool DEFAULT false, template_id bigint, icon_image_id bigint, source_version_id bigint);
  CREATE TABLE dndshare.char_template (id bigint, name text);
  CREATE TABLE dndshare.storage_image (id bigint, url text, deleted bool);
  CREATE TABLE dndshare.session_participant (id bigserial, session_id bigint, char_id bigint, user_id bigint, role text DEFAULT 'player', color text, sort_order int DEFAULT 0);

@@ -289,6 +289,7 @@ function rollTool(entry, ability, closeAbilities, closeMenu) {
     resolved.mode,
     {
       crit_mode: true,
+      roll_kind: 'ability_check',
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('ability_check') || [],
       roll_adjustments: charCtx.characterCombatEffects?.rollAdjustments?.('ability_check', {
         proficiencyRank: toolProficiencyRank(entry),

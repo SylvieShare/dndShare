@@ -17,6 +17,8 @@
         </FormField>
         <p>При добавлении из справочника формула бросается отдельно для каждого существа. Настройка сохраняется для всей сессии.</p>
       </BaseTile>
+      <SessionKarmicDiceSettings :session-uuid="sessionUuid" :settings="settings.karmicDice" :saving="saving"
+        @update-setting="(key, value) => emit('update-setting', key, value)" />
       <BaseTile class="session-settings-section">
         <h2>Взаимодействия</h2>
         <div v-for="option in acceptanceOptions" :key="option.key" class="session-interaction-setting">
@@ -39,7 +41,8 @@
 <script setup>
 import { BaseTile, FormField, ToggleSwitch } from '@sylvieshare/share-ui'
 import TutorialRestart from '@/features/tutorials/components/TutorialRestart.vue'
-defineProps({ settings: { type: Object, required: true }, saving: Boolean, error: String })
+import SessionKarmicDiceSettings from './SessionKarmicDiceSettings.vue'
+defineProps({ sessionUuid: { type: String, required: true }, settings: { type: Object, required: true }, saving: Boolean, error: String })
 const emit = defineEmits(['update-setting'])
 const acceptanceOptions = [
   { key: 'items', label: 'Передача предметов' },

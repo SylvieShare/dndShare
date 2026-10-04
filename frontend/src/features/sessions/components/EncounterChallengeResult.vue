@@ -14,6 +14,7 @@
         <button
           class="ecr-reroll-btn ecr-reroll-btn--advantage"
           type="button"
+          :disabled="busy"
           title="Докинуть с преимуществом"
           aria-label="Докинуть с преимуществом"
           @click.stop="$emit('reroll', 'advantage')"
@@ -23,6 +24,7 @@
         <button
           class="ecr-reroll-btn ecr-reroll-btn--disadvantage"
           type="button"
+          :disabled="busy"
           title="Докинуть с помехой"
           aria-label="Докинуть с помехой"
           @click.stop="$emit('reroll', 'disadvantage')"
@@ -68,6 +70,7 @@ import { useDiceRollAnimation } from '@/shared/composables/useDiceRollAnimation'
 import SystemDie from '@/shared/ui/SystemDie.vue'
 
 const props = defineProps({
+  busy: Boolean,
   challenge: { type: Object, required: true },
   ability: { type: Object, required: true },
   result: { type: Object, required: true },

@@ -60,7 +60,8 @@ async function runOngoing() {
     } else {
       const context = { kind: 'saving_throw', abilitySuggestId: config.save_ability }
       const mode = ctx.value.characterRolls?.resolve?.('auto', context)?.mode || 'normal'
-      result.value = dice.rollD20(props.effect.name, statusSaveBonus(ctx.value, config.save_ability), mode, { bonus_formula: ctx.value.characterDerivedEffects?.rollBonus?.(context) })
+      result.value = await dice.rollD20(props.effect.name, statusSaveBonus(ctx.value, config.save_ability), mode, { roll_kind: 'saving_throw', bonus_formula: ctx.value.characterDerivedEffects?.rollBonus?.(context) })
+      if (!result.value) return
       const success = result.value.total >= config.save_dc
       const next = ongoingDamageTransition(config, params, 'save', success)
       update(next)

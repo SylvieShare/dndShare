@@ -262,6 +262,10 @@ Heroic inspiration is stored as the boolean `values.inspiration`.
 
 ## Общие UI-требования
 
+Длинные текстовые значения, в том числе имя персонажа, переносятся внутри
+доступной ширины. Карандаш редактирования в `InputText` переходит на следующую
+строку при нехватке места; непрерывное длинное имя не вызывает overflow.
+
 General-purpose labels, text, number, textarea and action rows use
 the form primitives exported by `@sylvieshare/share-ui`; rule-specific
 calculators, stat controls and file inputs may

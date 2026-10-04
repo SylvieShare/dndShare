@@ -83,7 +83,7 @@
         <template #primary-workspace>
           <SessionMapWorkspace v-if="mapVisited && mapsAvailable" v-show="primaryView === 'maps'" ref="mapWorkspace" :session-uuid="sessionUuid" :session="session" :participants="participants" :encounter="encounter" />
           <p v-if="primaryView === 'maps' && !mapsAvailable" role="status">Скоро будет</p>
-          <SessionSettingsWorkspace v-if="primaryView === 'settings'" :settings="sessionSettings"
+          <SessionSettingsWorkspace v-if="primaryView === 'settings'" :session-uuid="sessionUuid" :settings="sessionSettings"
             :saving="settingsSaving" :error="settingsError" @update-setting="updateSessionSetting" />
           <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
           <SessionJournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" :is-dm="isDm" :occurrence-id="requestedOccurrenceId" />

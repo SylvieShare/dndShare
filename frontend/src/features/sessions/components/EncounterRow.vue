@@ -89,6 +89,7 @@
       v-if="challengeResult"
       class="enc-row-challenge"
       :challenge="enc.challenge"
+      :busy="enc.challengeBusy"
       :ability="challengeAbility"
       :result="challengeResult"
       @reroll="enc.rerollChallenge(combatant, $event)"

@@ -52,11 +52,12 @@ const isDm = computed(() => Number(account.user?.id) === Number(props.event.sess
 const rolled = computed(() => new Set((save.value.results || []).map(row => row.key)))
 const picking = ref(false), loading = ref(false), busy = ref(false), error = ref(''), mode = ref('auto')
 const targets = ref([]), selected = ref([]), pending = ref(null)
+const pendingKeys = ref([])
 let items = new Map()
 function profile(target) { return sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type)) }
 async function choose() {
   picking.value = true
-  if (pending.value) { selected.value = pending.value.map(row => saveTargetKey(row.target)); return }
+  if (pending.value) { selected.value = [...pendingKeys.value]; return }
   loading.value = true; error.value = ''; selected.value = []
   try {
     if (encounter && !await encounter.flushApplicationSave()) throw new Error('Сохраните состояние боя перед броском.')
@@ -69,14 +70,20 @@ async function rollSelected() {
   if (busy.value) return
   busy.value = true; error.value = ''
   try {
-    if (!pending.value) pending.value = targets.value.filter(target => selected.value.includes(saveTargetKey(target))).map(target => {
+    if (!pending.value) { pending.value = []; pendingKeys.value = [...selected.value] }
+    const completed = new Set(pending.value.map(row => saveTargetKey(row.target)))
+    for (const target of targets.value.filter(target => pendingKeys.value.includes(saveTargetKey(target)) && !completed.has(saveTargetKey(target)))) {
       const profile = sessionSaveProfile(target, save.value.ability, items, mode.value, type => suggest.items(type))
-      const result = dice.rollD20('Спасбросок', profile.bonus, profile.mode, { bonus_formula: profile.formula, popup: false, log: false })
+      const result = await dice.rollD20('Спасбросок', profile.bonus, profile.mode, {
+        roll_kind: 'saving_throw', actor: { charUuid: target.charUuid }, eventData: target.kind === 'npc' ? { npcActor: { uid: target.npcUid } } : {},
+        bonus_formula: profile.formula, popup: false, log: false,
+      })
+      if (!result) throw new Error('Не удалось бросить спасбросок. Уже полученные результаты сохранены в окне.')
       const { snapshot, hp, armorClass, ...identity } = target
-      return { target: identity, result }
-    })
+      pending.value.push({ target: identity, result })
+    }
     await appendSessionSaves(events.sessionUuid, props.event.id, pending.value)
-    pending.value = null; picking.value = false
+    pending.value = null; pendingKeys.value = []; picking.value = false
     await events.refresh()
   } catch (cause) { error.value = cause.message || 'Не удалось сохранить спасброски. Повтор сохранит те же результаты.' }
   finally { busy.value = false }

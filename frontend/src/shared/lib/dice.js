@@ -75,11 +75,11 @@ function rollDie(sides) {
   return Math.floor(Math.random() * sides) + 1
 }
 
-export function rollDiceExpression(expr) {
+export function rollDiceExpression(expr, roller = rollDie) {
   const tokens = parseDiceExpression(expr)
   const parts = tokens.map(t => {
     if (t.kind === 'dice') {
-      const rolls = Array.from({ length: t.n }, () => rollDie(t.sides))
+      const rolls = Array.from({ length: t.n }, () => roller(t.sides))
       const sum = rolls.reduce((a, b) => a + b, 0)
       return { ...t, rolls, sum }
     }

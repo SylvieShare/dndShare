@@ -320,7 +320,10 @@ startup migration и не обрабатываются во frontend.
 ```json
 {
   "players": {"seeClass": true, "seeRace": true, "seeHp": false, "openSheets": true},
-  "combat": {"autoRollNpcHp": false}
+  "combat": {"autoRollNpcHp": false},
+  "interactions": {"items": true, "potions": true, "spells": true},
+  "autoAccept": {"items": false, "potions": false, "spells": false},
+  "karmicDice": {"enabled": false, "separate": false}
 }
 ```
 
@@ -330,6 +333,17 @@ HP не переносится: единое серверное значение
 разрешённого поля выполняется через `jsonb_set` и меняет `changed_at`, не затирая
 другие поля при параллельных запросах. Новые настройки добавляются в нужный раздел;
 типизированный API и список разрешённых путей задают доступные параметры.
+
+Миграция `167_session_karmic_dice.sql` добавляет выключенные кармические кубы
+существующим и новым сессиям. `session_karmic_scale` хранит `(session_id,actor_key)`
+как первичный ключ, снимок имени и баланс от −6 до +6 с CHECK. Общая шкала
+использует `shared`, отдельные — UUID персонажа, UID NPC или ID мастера.
+`session_d20_roll` хранит UUID запроса, автора, параметры и ответ для повторов
+после потери соединения; `(session_id,request_id)` уникален. Обе таблицы
+удаляются вместе с сессией через FK ON DELETE CASCADE. Бросок и смена настройки
+блокируют строку сессии: чтение весов, выбор d20, запись баланса и receipt
+проходят одной транзакцией. Переключение режима/включения удаляет шкалы,
+сохраняя receipts; перезагрузка страницы ничего не сбрасывает.
 
 ## Инвентарь сессии (125)
 

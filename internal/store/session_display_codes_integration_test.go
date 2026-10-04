@@ -38,9 +38,10 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	}
 	exec(`CREATE SCHEMA dndshare;
 	CREATE TABLE dndshare.source (id bigint, name text);
+	CREATE TABLE dndshare.source_version (id bigint, version text);
 	CREATE TABLE dndshare.session (
 	  id bigserial PRIMARY KEY, uuid uuid NOT NULL DEFAULT gen_random_uuid(), owner_user_id bigint,
-	  name text, description text, system_id bigint, invite_code text, current_chapter_id bigint,
+	  name text, description text, system_id bigint, source_version_id bigint, invite_code text, current_chapter_id bigint,
 	  created_at timestamptz DEFAULT now(), changed_at timestamptz DEFAULT now(), deleted bool DEFAULT false
 	);
 	CREATE TABLE dndshare.session_arc (session_id bigint, "order" int, name text);
@@ -53,6 +54,7 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	exec(`UPDATE dndshare.session SET players_see_class = false, players_see_hp = true WHERE id = 1`)
 	exec(schemaSessionSettingsJSONSQL)
 	exec(schemaSessionAutoAcceptSQL)
+	exec(schemaSessionKarmicDiceSQL)
 	var migrated SessionSettings
 	if err := pool.QueryRow(ctx, `SELECT settings FROM dndshare.session WHERE id = 1`).Scan(&migrated); err != nil {
 		t.Fatal(err)
@@ -81,6 +83,7 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	}
 
 	testSessionSettingsPostgres(t, s, id)
+	testSessionKarmicDicePostgres(t, s, id)
 
 	// Force a collision on the next insert and prove that allocation retries safely.
 	exec(`UPDATE dndshare.session SET display_code = 'ABC-123' WHERE id = 1;

@@ -87,6 +87,8 @@ function stopEdit() {
 <style scoped>
 .input-text-row {
   display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
   align-items: center;
   gap: 8px;
   border-bottom: 1px solid var(--border);
@@ -110,6 +112,8 @@ function stopEdit() {
 
 .input-text-wrap {
   display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
   align-items: center;
   gap: 8px;
 }
@@ -122,6 +126,8 @@ function stopEdit() {
   font-family: inherit;
   color: var(--text-1);
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 4px 0;
   border-radius: 6px;
   transition: box-shadow 0.15s ease, padding-left 0.15s ease;
@@ -132,11 +138,15 @@ function stopEdit() {
 }
 
 .input-text-view {
+  width: auto;
+  max-width: 100%;
+  flex: 0 1 auto;
   min-height: 28px;
   display: inline-flex;
   align-items: center;
   white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .input-text-view--owner { cursor: text; }
 .input-text-empty { color: var(--text-muted); }

@@ -71,4 +71,46 @@ func testSessionSequences(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if root["sequence"] == nil || len(array(object(array(object(root["sequence"])["hits"])[0])["impacts"])) != 1 {
 		t.Fatal(string(raw))
 	}
+	// A fresh continuation uses the original caster's scale and commits it with
+	// the event. The acting DM's scale and damage rolls must not enter that history.
+	seq = sequenceFixture(t, "damage", "matching_damage")
+	delete(object(array(seq["hits"])[0]), "attack")
+	delete(seq, "table")
+	var casterUUID string
+	if err = pool.QueryRow(ctx, `SELECT uuid::text FROM dndshare."char" WHERE id=9941`).Scan(&casterUUID); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = pool.Exec(ctx, `UPDATE dndshare."session" SET settings=jsonb_set(settings,'{karmicDice}','{"enabled":true,"separate":true}') WHERE id=994;
+ INSERT INTO dndshare.session_karmic_scale VALUES(994,$1,'Заклинатель',6)`, "char:"+casterUUID); err != nil {
+		t.Fatal(err)
+	}
+	data, _ = json.Marshal(map[string]any{"sequence": seq})
+	actorID := int64(9941)
+	event, err = s.CreateSessionEvent(ctx, 994, 1, &actorID, nil, nil, "dice_roll", "Продолжение", data, "public", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cmd = SequenceCommand{Action: "target", Target: targets[0], Mode: "normal", ClientActionID: "99400000-0000-4000-8000-000000000004"}
+	for range 2 {
+		advanced, err := s.AdvanceSessionSequence(ctx, 3, 994, event.ID, cmd)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var payload map[string]any
+		if err = json.Unmarshal(advanced.Data, &payload); err != nil {
+			t.Fatal(err)
+		}
+		attack := object(object(array(object(payload["sequence"])["hits"])[0])["attack"])
+		if sequenceNatural(attack) <= 10 || number(object(attack["karmicDice"])["before"]) != 6 {
+			t.Fatal("continuation ignored caster scale", attack)
+		}
+	}
+	cmd = SequenceCommand{Action: "hit", Revision: 1, ClientActionID: "99400000-0000-4000-8000-000000000005"}
+	if _, err = s.AdvanceSessionSequence(ctx, 3, 994, event.ID, cmd); err != nil {
+		t.Fatal(err)
+	}
+	var balance int
+	if err = pool.QueryRow(ctx, `SELECT balance FROM dndshare.session_karmic_scale WHERE session_id=994 AND actor_key=$1`, "char:"+casterUUID).Scan(&balance); err != nil || balance != 5 {
+		t.Fatal("retry or damage changed the scale", balance, err)
+	}
 }

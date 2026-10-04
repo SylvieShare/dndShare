@@ -3,7 +3,10 @@ package store
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+
+	"github.com/jackc/pgx/v5"
 )
 
 type SessionSettings struct {
@@ -11,6 +14,12 @@ type SessionSettings struct {
 	AutoAccept   SessionAutoAcceptSettings  `json:"autoAccept"`
 	Players      SessionPlayerSettings      `json:"players"`
 	Combat       SessionCombatSettings      `json:"combat"`
+	KarmicDice   SessionKarmicDiceSettings  `json:"karmicDice"`
+}
+
+type SessionKarmicDiceSettings struct {
+	Enabled  bool `json:"enabled"`
+	Separate bool `json:"separate"`
 }
 
 type SessionInteractionSettings struct {
@@ -48,6 +57,8 @@ var sessionSettingPaths = map[string][]string{
 	"players.seeHp":        {"players", "seeHp"},
 	"players.openSheets":   {"players", "openSheets"},
 	"combat.autoRollNpcHp": {"combat", "autoRollNpcHp"},
+	"karmicDice.enabled":   {"karmicDice", "enabled"},
+	"karmicDice.separate":  {"karmicDice", "separate"},
 }
 
 func ValidSessionSetting(key string) bool { _, ok := sessionSettingPaths[key]; return ok }
@@ -62,13 +73,33 @@ func (s *Store) UpdateSessionSetting(ctx context.Context, sessionID int64, key s
 	if err != nil {
 		return err
 	}
-	tag, err := s.pool.Exec(ctx, `UPDATE dndshare."session"
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+	var current SessionSettings
+	if err = tx.QueryRow(ctx, `SELECT settings FROM dndshare."session" WHERE id=$1 AND NOT deleted FOR UPDATE`, sessionID).Scan(&current); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ErrNotFound
+		}
+		return err
+	}
+	tag, err := tx.Exec(ctx, `UPDATE dndshare."session"
  SET settings = jsonb_set(settings, $2::text[], CAST($3 AS jsonb)), changed_at = now()
  WHERE id = $1 AND deleted = false`, sessionID, path, json.RawMessage(encoded))
 	if err == nil && tag.RowsAffected() == 0 {
 		return ErrNotFound
 	}
-	return err
+	if err != nil {
+		return err
+	}
+	if (key == "karmicDice.enabled" && current.KarmicDice.Enabled != value) || (key == "karmicDice.separate" && current.KarmicDice.Separate != value) {
+		if _, err = tx.Exec(ctx, `DELETE FROM dndshare.session_karmic_scale WHERE session_id=$1`, sessionID); err != nil {
+			return err
+		}
+	}
+	return tx.Commit(ctx)
 }
 
 // SessionParticipantView exposes only roster fields to other players. Nested

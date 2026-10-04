@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useNotificationsStore } from '@/stores/notifications'
 import { evaluateDiceParts, rollDiceExpression } from '@/shared/lib/dice'
 import { useSessionEventsStore } from '@/stores/sessionEvents'
+import { rollSessionD20 } from '@/shared/api/sessionDiceApi'
 
 function detectOutcome(result, criticalThreshold = null) {
   let fumble = null
@@ -116,10 +117,46 @@ export const useDiceStore = defineStore('dice', () => {
   }
 
   function rollD20(action, bonus = 0, mode = 'normal', opts = {}) {
+    const events = useSessionEventsStore()
+    if (opts.roll_kind && events.sessionUuid) {
+      return requestD20(mode, opts).then(serverRoll => serverRoll ? finishD20(action, bonus, mode, opts, serverRoll) : null)
+    }
+    return finishD20(action, bonus, mode, opts)
+  }
+
+  async function requestD20(mode, opts, previous) {
+    const events = useSessionEventsStore(), uuid = events.sessionUuid
+    const actor = opts.actor === undefined ? { charUuid: events.actorCharUuid } : opts.actor
+    try {
+      const result = await rollSessionD20(uuid, {
+        requestId: crypto.randomUUID(), kind: opts.roll_kind,
+        mode: ['advantage', 'disadvantage'].includes(mode) ? mode : 'normal',
+        charUuid: actor?.charUuid || undefined,
+        npcUid: opts.eventData?.npcActor?.uid || undefined,
+        previous,
+      })
+      if (events.sessionUuid !== uuid || (opts.actor === undefined && events.actorCharUuid !== actor.charUuid)) return null
+      return result
+    } catch {
+      notifications.notify({ type: 'error', title: 'Не удалось бросить d20',
+        data: { message: 'Проверьте соединение и повторите бросок.' } })
+      return null
+    }
+  }
+
+  function rollExtraD20(mode, previous, opts) {
+    if (useSessionEventsStore().sessionUuid) return requestD20(mode, opts, previous)
+    return { rolls: [Math.floor(Math.random() * 20) + 1], karmic: false }
+  }
+
+  function finishD20(action, bonus, mode, opts, serverRoll = null) {
     const normalizedMode = ['advantage', 'disadvantage'].includes(mode) ? mode : 'normal'
     const modifier = Number(bonus) || 0
     const expression = `${normalizedMode === 'normal' ? 1 : 2}d20${modifier >= 0 ? '+' : ''}${modifier}${opts.bonus_formula ? ` + ${opts.bonus_formula}` : ''}`
-    const result = rollDiceExpression(expression)
+    let index = 0
+    const result = rollDiceExpression(expression, sides => sides === 20 && index < (serverRoll?.rolls.length || 0)
+      ? serverRoll.rolls[index++] : Math.floor(Math.random() * sides) + 1)
+    if (serverRoll?.karmic) result.karmicDice = { before: serverRoll.balanceBefore, after: serverRoll.balanceAfter }
     if (normalizedMode !== 'normal') {
       const part = result.parts.find(row => row.kind === 'dice' && row.sides === 20)
       if (part?.rolls?.length >= 2) {
@@ -162,7 +199,8 @@ export const useDiceStore = defineStore('dice', () => {
     const spec = entry.rerollSpec
     dismiss(id)
     const result = rollD20(spec.action, spec.bonus, spec.mode, spec.opts)
-    spec.opts.onReroll?.(result)
+    if (result?.then) result.then(value => { if (value) spec.opts.onReroll?.(value) })
+    else if (result) spec.opts.onReroll?.(result)
     return result
   }
 
@@ -171,5 +209,5 @@ export const useDiceStore = defineStore('dice', () => {
     lastD20.value = null
   }
 
-  return { stack, lastD20, roll, rollD20, pushEntry, runAction, dismiss, clear }
+  return { stack, lastD20, roll, rollD20, rollExtraD20, pushEntry, runAction, dismiss, clear }
 })

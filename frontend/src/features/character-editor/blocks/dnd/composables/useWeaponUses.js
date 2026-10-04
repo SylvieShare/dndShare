@@ -30,7 +30,8 @@ export function useWeaponUses(charCtx, calculation) {
         charCtx.updateValues(patch)
         charCtx.logSessionEvent?.({ type: 'dice_roll', action: `Переброс атаки: ${rule.title}`, data: { ...instanceEventData(charCtx, entry.uid), result, attackRoll: true, weaponUseId: plan.event.id } })
       }
-      const result = calculation.attack(prepared.entry, `${rule.title}: ${calculation.title(entry)}`, false, onReroll, attackRollMode, excludedBonuses)
+      const result = await calculation.attack(prepared.entry, `${rule.title}: ${calculation.title(entry)}`, false, onReroll, attackRollMode, excludedBonuses)
+      if (!result) return
       plan.event.attack_result = result
       plan.event.critical = isCritical(result)
       charCtx.updateValues(plan.patch)

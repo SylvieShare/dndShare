@@ -13,10 +13,12 @@ const settingPaths = {
   'players.seeHp': ['players', 'seeHp'],
   'players.openSheets': ['players', 'openSheets'],
   'combat.autoRollNpcHp': ['combat', 'autoRollNpcHp'],
+  'karmicDice.enabled': ['karmicDice', 'enabled'],
+  'karmicDice.separate': ['karmicDice', 'separate'],
 }
 
 export function useSessionSettings({ sessionUuid, session }) {
-  const settings = reactive({ players: {}, combat: {}, autoAccept: {}, interactions: {} })
+  const settings = reactive({ players: {}, combat: {}, autoAccept: {}, interactions: {}, karmicDice: {} })
   const saving = ref(false)
   const error = ref('')
   watch(() => session.value?.settings, value => {
@@ -25,6 +27,7 @@ export function useSessionSettings({ sessionUuid, session }) {
     settings.combat = { ...value.combat }
     settings.autoAccept = { ...value.autoAccept }
     settings.interactions = { ...value.interactions }
+    settings.karmicDice = { ...value.karmicDice }
   }, { immediate: true })
 
   async function update(key, value) {

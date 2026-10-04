@@ -104,6 +104,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 		t.Fatalf("spell binding sources %d %v", editorFields, err)
 	}
 	exec(schemaSessionAutoAcceptSQL)
+	exec(schemaSessionKarmicDiceSQL)
 	exec(schemaSessionInventorySQL)
 	exec(schemaInventoryGridSQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');

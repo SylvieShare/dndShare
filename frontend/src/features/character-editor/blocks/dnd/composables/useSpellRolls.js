@@ -39,11 +39,12 @@ export function useSpellRolls({ charCtx, spellDamageTypes, spellcastingBlocked, 
     return charCtx.characterRolls?.resolve?.(manualMode, context) || resolveRollMode(manualMode)
   }
 
-  function rollSpellAttack(entry, mode = 'auto', excluded = [], castLevel) {
+  async function rollSpellAttack(entry, mode = 'auto', excluded = [], castLevel) {
     entry = damageEntry(entry)
     if (!entry || spellcastingBlocked.value) return
     const bonus = spellAttackBonus(entry)
-    dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, spellAttackMode(entry, mode).mode, {
+    const result = await dice.rollD20(`Атака: ${spellTitle(entry)}`, bonus, spellAttackMode(entry, mode).mode, {
+      roll_kind: 'attack',
       eventData: { ...itemEventData(entry.item), ...typeEvent(entry), attackRoll: true, castLevel, entryKey: entry.ref?.key },
       resultData: attack => spellSequence(entry.item, attack, {
         attackBonus: bonus, attackBonusFormula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excluded) || '',
@@ -53,6 +54,7 @@ export function useSpellRolls({ charCtx, spellDamageTypes, spellcastingBlocked, 
       bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excluded),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
     })
+    if (!result) return
     const states = charCtx.characterStatuses?.endOn?.('attack')
     if (charCtx.ownerMode && states) charCtx.updateValues({ states })
   }

@@ -320,17 +320,18 @@ function rollAttack(entry, { actionKeys = [], weaponUseKey = '', attackRollMode 
   entry = prepareWeaponRollEntry(entry, item(entry), propertyItems(entry), weaponDamageActions(entry), actionKeys)
   return rollPreparedAttack(entry, `Атака: ${itemTitle(entry)}`, true, undefined, attackRollMode, excludedBonuses)
 }
-function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode = 'auto', excludedBonuses = []) {
+async function rollPreparedAttack(entry, title, log = true, onReroll, attackRollMode = 'auto', excludedBonuses = []) {
   const bonus = attackBonus(entry)
   const context = weaponEffectContext(entry)
   const mode = attackMode(context, attackRollMode)
-  const result = dice.rollD20(title, bonus, mode, { log, onReroll,
+  const result = await dice.rollD20(title, bonus, mode, { log, onReroll, roll_kind: 'attack',
     eventData: { ...itemEventData({ ...item(entry), id: entry.magic_item_id || entry.item_id || item(entry)?.id }, entry.uid), attackRoll: true },
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excludedBonuses),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
+  if (!result) return null
   const states = charCtx.characterStatuses?.endOn?.('attack')
   if (charCtx.ownerMode && states) charCtx.updateValues({ states })
   return result
@@ -348,17 +349,19 @@ function presetAttackDefinition(kind) {
   return { title: 'Импровизированное оружие', attackBonus: improvisedAttackBonus.value }
 }
 
-function rollPresetAttack(kind, { attackRollMode = 'auto', excludedBonuses = [] } = {}) {
+async function rollPresetAttack(kind, { attackRollMode = 'auto', excludedBonuses = [] } = {}) {
   const preset = presetAttackDefinition(kind)
   const context = { kind: 'attack', abilitySuggestId: 1, weaponKind: 'melee', weaponAttack: kind !== 'unarmed' }
   const mode = attackMode(context, attackRollMode)
-  dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
+  const result = await dice.rollD20(`Атака: ${preset.title}`, preset.attackBonus, mode, {
+    roll_kind: 'attack',
     eventData: { ...itemEventData(kind === 'unarmed' ? unarmedPresetItem.value : improvisedPresetItem.value), attackRoll: true },
     crit_mode: true,
     critical_threshold: charCtx.characterDerivedEffects?.criticalThreshold?.(context) || 20,
     bonus_formula: charCtx.characterDerivedEffects?.rollBonus?.({ kind: 'attack' }, excludedBonuses),
       roll_triggers: charCtx.characterCombatEffects?.rollTriggers?.('attack') || [],
   })
+  if (!result) return
   const states = charCtx.characterStatuses?.endOn?.('attack')
   if (charCtx.ownerMode && states) charCtx.updateValues({ states })
 }

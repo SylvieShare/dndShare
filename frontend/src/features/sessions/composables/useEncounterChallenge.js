@@ -1,5 +1,5 @@
 import { encounterEventData } from '../lib/encounterEventData'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import {
   abilityModifier,
   d20Expr,
@@ -63,7 +63,9 @@ export function useEncounterChallenge({
   npcAbilityScore,
   npcSavingThrow,
   npcRollEffects = () => ({}),
+  flushSave = async () => true,
 }) {
+  const challengeBusy = ref(false)
   const challenge = computed(() => {
     const value = encounter.value.challenge
     if (!value || typeof value !== 'object' || Array.isArray(value)) return null
@@ -100,138 +102,157 @@ export function useEncounterChallenge({
       : npcName(combatant)
   }
 
-  function runChallenge({ ability, savingThrow = false }) {
+  async function runChallenge({ ability, savingThrow = false }) {
+    if (challengeBusy.value) return
     const combatants = selectedChallengeCombatants.value
     if (!combatants.length) return
-    const key = normalizedAbility(ability)
-    const meta = abilityMeta(key)
-    const results = {}
-    const diceStore = useDiceStore()
+    challengeBusy.value = true
+    try {
+      if (!await flushSave()) return
+      const key = normalizedAbility(ability)
+      const meta = abilityMeta(key)
+      const results = {}
+      const diceStore = useDiceStore()
 
-    for (const combatant of combatants) {
-      const bonus = bonusFor(combatant, key, savingThrow)
-      const kind = savingThrow ? 'спасбросок' : 'проверка'
-      const participant = combatant.type === 'player' ? findParticipant(combatant.charId) : null
-      const effects = combatant.type === 'npc' ? npcRollEffects(combatant, { kind: savingThrow ? 'saving_throw' : 'ability_check', abilitySuggestId: meta.id }) : {}
-      const roll = diceStore.rollD20(
-        `${meta.label}, ${kind}`,
-        bonus, effects.mode || 'normal',
-        {
-          bonus_formula: effects.formula,
-          eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
-          crit_mode: true,
-          popup: false,
-          actor: {
-            name: displayName(combatant),
-            charUuid: participant?.charUuid || null,
-            itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
+      for (const combatant of combatants) {
+        const bonus = bonusFor(combatant, key, savingThrow)
+        const kind = savingThrow ? 'спасбросок' : 'проверка'
+        const participant = combatant.type === 'player' ? findParticipant(combatant.charId) : null
+        const effects = combatant.type === 'npc' ? npcRollEffects(combatant, { kind: savingThrow ? 'saving_throw' : 'ability_check', abilitySuggestId: meta.id }) : {}
+        const roll = await diceStore.rollD20(
+          `${meta.label}, ${kind}`,
+          bonus, effects.mode || 'normal',
+          {
+            roll_kind: savingThrow ? 'saving_throw' : 'ability_check',
+            bonus_formula: effects.formula,
+            eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
+            crit_mode: true,
+            popup: false,
+            actor: {
+              name: displayName(combatant),
+              charUuid: participant?.charUuid || null,
+              itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
+            },
           },
-        },
-      )
-      const natural = roll?.parts
-        ?.find(part => part.kind === 'dice' && part.sides === 20)
-        ?.sum
-      results[combatant.uid] = {
-        roll: Number(natural) || 0,
-        bonus,
-        extraTotal: (Number(roll?.total) || 0) - (Number(natural) || 0) - bonus,
-        extraParts: (roll?.parts || []).filter(part => !(part.kind === 'dice' && part.sides === 20) && part.kind !== 'flat'),
-        total: Number(roll?.total) || 0,
+        )
+        if (!roll) break
+        const natural = roll?.parts
+          ?.find(part => part.kind === 'dice' && part.sides === 20)
+          ?.sum
+        results[combatant.uid] = {
+          roll: Number(natural) || 0,
+          bonus,
+          extraTotal: (Number(roll?.total) || 0) - (Number(natural) || 0) - bonus,
+          extraParts: (roll?.parts || []).filter(part => !(part.kind === 'dice' && part.sides === 20) && part.kind !== 'flat'),
+          total: Number(roll?.total) || 0,
+        }
+        // Preserve completed dice when a later participant's request fails.
+        encounter.value = { ...encounter.value, challenge: { ability: key, savingThrow: !!savingThrow, results: { ...results } } }
       }
-    }
 
-    encounter.value = {
-      ...encounter.value,
-      challenge: {
-        ability: key,
-        savingThrow: !!savingThrow,
-        results,
-      },
-    }
+    } finally { challengeBusy.value = false }
   }
 
-  function rerollChallenge(combatant, mode) {
+  async function rerollChallenge(combatant, mode) {
+    if (challengeBusy.value) return
     const currentChallenge = challenge.value
     const currentResult = currentChallenge?.results?.[combatant.uid]
     if (!currentResult || !['advantage', 'disadvantage'].includes(mode)) return
 
-    const keepHigh = mode === 'advantage'
-    const previous = Number(currentResult.roll) || 0
-    const extra = Math.floor(Math.random() * 20) + 1
-    const keepPrevious = keepHigh ? previous >= extra : previous <= extra
-    const kept = keepPrevious ? previous : extra
-    const droppedIdx = keepPrevious ? 1 : 0
-    const bonus = Number(currentResult.bonus) || 0
-    const total = kept + bonus + (Number(currentResult.extraTotal) || 0)
-    const meta = abilityMeta(currentChallenge.ability)
-    const kind = currentChallenge.savingThrow ? 'Спасбросок' : 'Проверка'
-    const modeLabel = keepHigh ? 'с преимуществом' : 'с помехой'
-    const parts = [{
-      sign: '+',
-      kind: 'dice',
-      n: 2,
-      sides: 20,
-      rolls: [previous, extra],
-      sum: kept,
-      dropped: [droppedIdx],
-      label: null,
-      color: null,
-    }]
-    if (bonus) {
-      parts.push({
-        sign: bonus < 0 ? '-' : '+',
-        kind: 'flat',
-        value: Math.abs(bonus),
-        sum: Math.abs(bonus),
-        label: null,
-        color: null,
-      })
-    }
+    challengeBusy.value = true
+    try {
+      if (!await flushSave()) return
 
-    parts.push(...(currentResult.extraParts || []))
-    useDiceStore().pushEntry({
-      action: `${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
-      eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
-      actor: {
+      const keepHigh = mode === 'advantage'
+      const previous = Number(currentResult.roll) || 0
+      const actor = {
         name: displayName(combatant),
         charUuid: combatant.type === 'player' ? findParticipant(combatant.charId)?.charUuid || null : null,
         itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
-      },
-      popup: false,
-      outcome: kept === 20
-        ? { kind: 'crit', sides: 20, value: kept }
-        : kept === 1
-          ? { kind: 'fumble', sides: 20, value: kept }
-          : null,
-      result: {
-        parts,
-        total,
-        byType: [{ label: null, color: null, value: total }],
-        expression: `2d20${keepHigh ? 'kh' : 'kl'}${bonus ? d20Expr(bonus).slice(3) : ''}`,
-      },
-    })
+      }
+      const extraRoll = await useDiceStore().rollExtraD20(mode, previous, {
+        roll_kind: currentChallenge.savingThrow ? 'saving_throw' : 'ability_check', actor,
+        eventData: encounterEventData(combatant, displayName(combatant)),
+      })
+      if (!extraRoll) return
+      const extra = extraRoll.rolls[0]
+      const keepPrevious = keepHigh ? previous >= extra : previous <= extra
+      const kept = keepPrevious ? previous : extra
+      const droppedIdx = keepPrevious ? 1 : 0
+      const bonus = Number(currentResult.bonus) || 0
+      const total = kept + bonus + (Number(currentResult.extraTotal) || 0)
+      const meta = abilityMeta(currentChallenge.ability)
+      const kind = currentChallenge.savingThrow ? 'Спасбросок' : 'Проверка'
+      const modeLabel = keepHigh ? 'с преимуществом' : 'с помехой'
+      const parts = [{
+        sign: '+',
+        kind: 'dice',
+        n: 2,
+        sides: 20,
+        rolls: [previous, extra],
+        sum: kept,
+        dropped: [droppedIdx],
+        label: null,
+        color: null,
+      }]
+      if (bonus) {
+        parts.push({
+          sign: bonus < 0 ? '-' : '+',
+          kind: 'flat',
+          value: Math.abs(bonus),
+          sum: Math.abs(bonus),
+          label: null,
+          color: null,
+        })
+      }
 
-    encounter.value = {
-      ...encounter.value,
-      challenge: {
-        ...currentChallenge,
-        results: {
-          ...currentChallenge.results,
-          [combatant.uid]: {
-            ...currentResult,
-            roll: kept,
-            rolls: [previous, extra],
-            dropped: [droppedIdx],
-            bonus,
-            total,
-            revision: (Number(currentResult.revision) || 0) + 1,
+      parts.push(...(currentResult.extraParts || []))
+      useDiceStore().pushEntry({
+        action: `${kind} ${meta.label.toLowerCase()} ${modeLabel}`,
+        eventData: { ...encounterEventData(combatant, displayName(combatant)), ability: { id: meta.id, typeId: 16, name: meta.label } },
+        actor: {
+          name: displayName(combatant),
+          charUuid: combatant.type === 'player' ? findParticipant(combatant.charId)?.charUuid || null : null,
+          itemId: combatant.type === 'npc' ? combatant.itemId || null : null,
+        },
+        popup: false,
+        outcome: kept === 20
+          ? { kind: 'crit', sides: 20, value: kept }
+          : kept === 1
+            ? { kind: 'fumble', sides: 20, value: kept }
+            : null,
+        result: {
+          ...(extraRoll.karmic ? { karmicDice: { before: extraRoll.balanceBefore, after: extraRoll.balanceAfter } } : {}),
+          parts,
+          total,
+          byType: [{ label: null, color: null, value: total }],
+          expression: `2d20${keepHigh ? 'kh' : 'kl'}${bonus ? d20Expr(bonus).slice(3) : ''}`,
+        },
+      })
+
+      encounter.value = {
+        ...encounter.value,
+        challenge: {
+          ...currentChallenge,
+          results: {
+            ...currentChallenge.results,
+            [combatant.uid]: {
+              ...currentResult,
+              roll: kept,
+              rolls: [previous, extra],
+              dropped: [droppedIdx],
+              bonus,
+              total,
+              revision: (Number(currentResult.revision) || 0) + 1,
+            },
           },
         },
-      },
-    }
+      }
+    } finally { challengeBusy.value = false }
   }
 
   function resetChallenge() {
+    if (challengeBusy.value) return
     const { challenge: _challenge, ...rest } = encounter.value
     encounter.value = rest
   }
@@ -242,6 +263,7 @@ export function useEncounterChallenge({
 
   return {
     challenge,
+    challengeBusy,
     challengeActive,
     selectedChallengeCount,
     challengeAbilities: ENCOUNTER_CHALLENGE_ABILITIES,

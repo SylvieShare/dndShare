@@ -41,6 +41,7 @@ function roll(mode, excluded, close) {
   const ctx = props.context, instance = ctx.values.states?.find(row => row.uid === props.instance.uid)
   if (!ctx.ownerMode || !instance || !ability.value || !statusRepeatSaveDC(rule.value, instance) || (rule.value.condition && !confirmed.value)) return
   dice.rollD20(`Повторный спасбросок: ${props.effect.name}`, statusSaveBonus(ctx, rule.value.ability), mode, {
+    roll_kind: 'saving_throw',
     actor: ctx.actor, eventData: { ...ctx.eventData, ...itemEventData(props.effect, instance.uid) },
     bonus_formula: ctx.characterDerivedEffects?.rollBonus?.(rollContext.value, excluded),
     resultData(result) {

@@ -40,7 +40,7 @@ describe('encounter challenge bonuses', () => {
     expect(npcChallengeBonus(14, null, true)).toBe(2)
   })
 
-  it.each([false, true])('rolls selected scene and reserve creatures, excluding the graveyard (active=%s)', active => {
+  it.each([false, true])('rolls selected scene and reserve creatures, excluding the graveyard (active=%s)', async active => {
     setActivePinia(createPinia())
     const sceneNpc = { uid: 'scene-npc', type: 'npc' }
     const otherSceneNpc = { uid: 'other-scene-npc', type: 'npc' }
@@ -58,11 +58,11 @@ describe('encounter challenge bonuses', () => {
     })
 
     expect(challenge.selectedChallengeCount.value).toBe(2)
-    challenge.runChallenge({ ability: 'DEX', savingThrow: false })
+    await challenge.runChallenge({ ability: 'DEX', savingThrow: false })
     expect(Object.keys(encounter.value.challenge.results)).toEqual(['scene-npc', 'reserve-npc'])
   })
 
-  it('rolls one extra die and keeps it by advantage or disadvantage', () => {
+  it('rolls one extra die and keeps it by advantage or disadvantage', async () => {
     setActivePinia(createPinia())
     const sceneNpc = { uid: 'scene-npc', type: 'npc' }
     const encounter = ref({
@@ -86,7 +86,7 @@ describe('encounter challenge bonuses', () => {
     const random = vi.spyOn(Math, 'random')
 
     random.mockReturnValueOnce(0.99)
-    challenge.rerollChallenge(sceneNpc, 'advantage')
+    await challenge.rerollChallenge(sceneNpc, 'advantage')
     expect(encounter.value.challenge.results['scene-npc']).toEqual({
       roll: 20,
       rolls: [10, 20],
@@ -97,7 +97,7 @@ describe('encounter challenge bonuses', () => {
     })
 
     random.mockReturnValueOnce(0)
-    challenge.rerollChallenge(sceneNpc, 'disadvantage')
+    await challenge.rerollChallenge(sceneNpc, 'disadvantage')
     expect(encounter.value.challenge.results['scene-npc']).toEqual({
       roll: 1,
       rolls: [20, 1],

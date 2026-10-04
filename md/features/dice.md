@@ -18,6 +18,46 @@ Shared dice-rolling module available from anywhere in the app.
   - `opts.popup: false` skips the global popup while preserving the parsed result and full timeline event. It is used when the caller owns an embedded result surface.
 - `features/notifications/components/DiceRollNotification.vue` — dice content inside the shared `AppNotifications` host mounted globally in `App.vue`. `stores/notifications` owns the fixed bottom-right stack, shared with session-event notifications. Each dice popup auto-dismisses after ~6s (paused on hover or keyboard focus) with a progress bar that drains over the same duration. New rolls push from the bottom; older ones float upward. Stack is capped at 5; the oldest is evicted on overflow. On touch/pen devices a deliberate horizontal swipe or fast flick dismisses one popup; vertical motion remains available to the page and the close button still works. Gesture state lives in `shared/composables/useSwipeDismiss.js`. The stack is **`Teleport`ed to `<body>`** (not left inside `#app`) so it stays sharp when `MorphSheet` blurs the application root. Its `z-index: 9000` is above the normal `AppModal`/prompt/confirm layers; explicitly high-priority session editors may be higher. On every viewport a new popup cycles display-only die faces and visibly tumbles the die for about 560 ms. Every temporary tick before the pre-final tick chooses a face different from both the stored result and the previous displayed face, so low results and low-sided dice such as d4 do not stall; the increasing intervals between ticks provide the slowdown. The muted right-hand total is recalculated from the currently displayed kept dice and starts its final blink/settle transition on the 310 ms phase, so the exact total becomes readable just before the dice finish. On the pre-final dice tick each die independently chooses uniformly from its stored result and the valid neighbouring values (result − 1 and result + 1 within 1…sides). Each of three candidates has probability 1/3; at the minimum or maximum face each of the two candidates has probability 1/2. This choice may repeat the previous displayed face. The final tick always shows the stored result, so it does not always visibly change the roll. A crit/fumble outcome and its colored result frame continue to wait for that final dice tick, then appear with a settle animation. Stored rolls and total are never mutated, and reduced-motion mode skips the cycling, tumble and reveal animations. The timer/state workflow lives in `shared/composables/useDiceRollAnimation.js`.
 
+## Кармические кубы сессии
+
+Во вкладке настроек мастер включает `karmicDice.enabled` (по умолчанию false)
+и выбирает общую шкалу или `karmicDice.separate` — отдельную для каждого
+персонажа и каждого NPC. Экземпляры одного существа различаются по UID.
+Переключение любого из этих флагов сбрасывает шкалы в центр; перезагрузка
+браузера сохраняет историю. Настройки показывают направление и величину
+сдвига от −6 до +6; данные обновляются каждые три секунды, пока вкладка открыта.
+
+`rollD20` с `opts.roll_kind: attack|ability_check|saving_throw` в контексте
+сессии получает основные d20 с сервера и возвращает Promise результата
+(null при ошибке или смене контекста). Без сессии, а также для инициативы,
+урона, свободного d20 и прочих формул сохраняется локальный синхронный бросок.
+Бонусы, дополнительные кости, критические пороги и минимумы способностей
+применяются после выбора основных d20 и не изменяют шкалу. Отдельный докид
+в испытании использует `rollExtraD20` с прежним значением.
+
+В центре каждый face равновероятен. Вес face `f` при балансе `b` равен
+`1 + 0.85 × b/6 × (2 × (f−1)/19 − 1)`. После низкого сохранённого d20 баланс
+увеличивается на один, после высокого уменьшается; диапазон ограничен ±6.
+Порог низкого значения: 10 для обычного броска, 14 для преимущества, 6 для
+помехи — медианы соответствующего равномерного режима. При +6 низкие значения
+исключаются из следующего выбора, при −6 исключаются высокие. Для преимущества
+и помехи бросаются два d20 с текущими весами, сохраняется max/min и шкала
+меняется один раз по сохранённому natural; докид учитывает сохранённый прежний
+d20. Эта механика сглаживает выпавшие числа, а не успех по КД/Сл: сложность и
+модификаторы не учитываются, гарантии успешной проверки нет.
+
+Атаки продолжений заклинаний в хронике используют тот же серверный roller и
+шкалу исходного заклинателя; урон и выбор типа остаются обычными. Изменение
+шкалы и результата продолжения коммитятся вместе с событием. Повтор команды
+продолжения сохраняет прежний бросок по receipt внутри sequence.
+
+Сервер сериализует броски блокировкой строки сессии. UUID запроса сохраняется
+вместе с d20; повтор после потерянного ответа возвращает те же кости без второго
+изменения шкалы. При ошибке клиент показывает уведомление и не придумывает
+локальный результат. Уже полученные результаты групповых спасбросков остаются
+в окне для повторной записи. В результате кармического броска присутствует
+`karmicDice: {before, after}`; это сдвиг шкалы, а не прибавка к числу кубика.
+
 ## Expression syntax
 
 ```

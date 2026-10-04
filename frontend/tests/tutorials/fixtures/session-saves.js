@@ -26,6 +26,10 @@ const attackMode = new URLSearchParams(location.search).has('attack')
 window.attackEvent = attack
 window.requests = []; window.impactRequests = []; window.attackRequests = []
 window.fetch = async (url, options = {}) => {
+  if (String(url).endsWith('/d20')) {
+    const body = JSON.parse(options.body)
+    return Response.json({ rolls: body.mode === 'normal' ? [15] : [3, 15], karmic: false, balanceBefore: 0, balanceAfter: 0 })
+  }
   if (String(url).includes('/items/by-ids')) return Response.json({ items: [
     { id: 101, name: 'Огненный шар', svg: '<svg viewBox="0 0 20 20"><path d="M10 0L20 20H0Z" /></svg>' },
     { id: 102, name: 'Посох', svg: '<svg viewBox="0 0 20 20"><path d="M10 0V20" /></svg>' },

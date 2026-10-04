@@ -29,10 +29,17 @@ func (s *Store) AdvanceSessionSequence(ctx context.Context, userID, sessionID, e
 		return SessionEvent{}, err
 	}
 	defer tx.Rollback(ctx)
+	var settings SessionSettings
+	var ownerID int64
+	err = tx.QueryRow(ctx, `SELECT settings,owner_user_id FROM dndshare."session" WHERE id=$1 AND NOT deleted FOR UPDATE`, sessionID).Scan(&settings, &ownerID)
+	if err != nil {
+		return SessionEvent{}, err
+	}
 	var raw json.RawMessage
-	var authorID, ownerID int64
-	err = tx.QueryRow(ctx, `SELECT e.data,e.author_user_id,s.owner_user_id FROM dndshare.session_event e JOIN dndshare."session" s ON s.id=e.session_id
- WHERE e.id=$1 AND e.session_id=$2 AND NOT e.deleted AND NOT s.deleted FOR UPDATE OF e`, eventID, sessionID).Scan(&raw, &authorID, &ownerID)
+	var authorID int64
+	var actorUUID, actorName string
+	err = tx.QueryRow(ctx, `SELECT e.data,e.author_user_id,COALESCE(c.uuid::text,''),COALESCE(e.actor_name,'Мастер') FROM dndshare.session_event e LEFT JOIN dndshare."char" c ON c.id=e.actor_char_id
+ WHERE e.id=$1 AND e.session_id=$2 AND NOT e.deleted FOR UPDATE OF e`, eventID, sessionID).Scan(&raw, &authorID, &actorUUID, &actorName)
 	if err != nil {
 		return SessionEvent{}, err
 	}
@@ -58,6 +65,20 @@ func (s *Store) AdvanceSessionSequence(ctx context.Context, userID, sessionID, e
 	hits := array(seq["hits"])
 	if len(hits) < 1 {
 		return SessionEvent{}, ErrApplication
+	}
+	if cmd.Action == "target" && object(hits[len(hits)-1])["attack"] == nil {
+		key := fmt.Sprintf("dm:%d", authorID)
+		if actorUUID != "" {
+			key = "char:" + actorUUID
+		}
+		if uid := textValue(object(data["npcActor"])["uid"]); uid != "" {
+			key = "npc:" + uid
+		}
+		attack, err := karmicSequenceAttack(ctx, tx, sessionID, settings.KarmicDice, key, actorName, seq, cmd.Mode)
+		if err != nil {
+			return SessionEvent{}, err
+		}
+		object(hits[len(hits)-1])["attack"] = attack
 	}
 	if cmd.Action == "type" {
 		hit := object(hits[len(hits)-1])

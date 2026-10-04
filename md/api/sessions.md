@@ -343,13 +343,37 @@ combatant и содержат `{roll,bonus,total,rolls?,dropped?,revision?}`. О
 ## Настройки видимости в сессии
 
 `PATCH /api/sessions/{uuid}/settings` (только мастер) принимает `{key, value}`.
-Ключи: `players.seeClass`, `players.seeRace`, `players.seeHp`, `players.openSheets`, `combat.autoRollNpcHp`;
+Ключи: `players.seeClass`, `players.seeRace`, `players.seeHp`, `players.openSheets`, `combat.autoRollNpcHp`,
+`interactions.items|potions|spells`, `autoAccept.items|potions|spells`,
+`karmicDice.enabled`, `karmicDice.separate`;
 `value` — обязательный boolean. Успех — 204 и SSE `session`. Значения возвращаются
-в структурированном `session.settings`: разделы `players` и `combat`.
+в структурированном `session.settings`: разделы `players`, `combat`, `interactions`, `autoAccept`, `karmicDice`.
 Обновляется только выбранный путь JSON; остальные поля сохраняются. Ответ сессии содержит `participants[].canOpenSheet`; чужие
 данные игроков ограничены разрешёнными полями состава группы. `/chars/poll`
 не предоставляет доступ к приватному листу на основании участия в одной группе.
 Подробнее: [настройки сессии](../features/sessions/display.md#настройки-видимости-игроков).
+
+## Основные d20 и кармические шкалы
+
+`POST /api/sessions/{uuid}/d20` доступен участникам и мастеру. Тело:
+`{requestId,kind,mode,charUuid?,npcUid?,previous?}`. `requestId` — UUID;
+`kind`: `attack|ability_check|saving_throw`, `mode`: `normal|advantage|disadvantage`.
+Игрок указывает UUID собственного участника; мастер может выбрать любого
+участника, UID существующего NPC текущего encounter или бросить от себя.
+`charUuid` и `npcUid` взаимоисключающие. `previous` от 1 до 20 разрешён только
+для докида с преимуществом/помехой: сервер возвращает один новый d20.
+Иначе `rolls` содержит один или два d20 согласно режиму.
+
+Ответ: `{rolls,karmic,balanceBefore,balanceAfter}`. Даже при выключенном режиме
+d20 выбирается на сервере равномерно. Повтор того же UUID с тем же автором и
+параметрами возвращает прежний ответ; изменение параметров отклоняется.
+Бонусы, итог и публикация в хронику остаются отдельными действиями клиента.
+
+`GET /api/sessions/{uuid}/karmic-dice` доступен только мастеру и возвращает
+`{scales:[{key,name,balance}]}`. Ключи: `shared`, `char:<uuid>`, `npc:<uid>` и
+`dm:<userId>`; баланс от −6 (в пользу низких значений) до +6 (в пользу высоких).
+Отсутствующая шкала означает нейтральный баланс 0. Изменение включения или
+раздельного учёта сбрасывает шкалы атомарно с настройкой.
 
 ## Связанные страницы
 

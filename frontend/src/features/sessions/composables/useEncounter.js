@@ -204,6 +204,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     npcAbilityScore: npcData.npcAbilityScore,
     npcSavingThrow: npcData.npcSavingThrow,
     npcRollEffects: npcData.npcRollEffects,
+    async flushSave() { await persistence.flushSave(); return loaded.value && !persistence.saveError.value && !persistence.loadError.value },
   })
 
   const npcs = useEncounterNpcs({
@@ -444,6 +445,7 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     initiativeBonus,
     // challenge
     challenge:               challenge.challenge,
+    challengeBusy:           challenge.challengeBusy,
     challengeActive:         challenge.challengeActive,
     selectedChallengeCount:  challenge.selectedChallengeCount,
     challengeAbilities:      challenge.challengeAbilities,

@@ -4,7 +4,7 @@
     type="button"
     class="enc-icon-btn"
     :class="{ 'enc-icon-btn--challenge-active': enc.challengeActive }"
-    :disabled="!enc.challengeActive && enc.selectedChallengeCount === 0"
+    :disabled="enc.challengeBusy || (!enc.challengeActive && enc.selectedChallengeCount === 0)"
     :title="enc.challengeActive ? 'Сбросить результаты испытания' : 'Провести испытание'"
     :aria-label="enc.challengeActive ? 'Сбросить результаты испытания' : 'Провести испытание'"
     :aria-expanded="open"
@@ -37,7 +37,7 @@
 
       <ToggleSwitch v-model="draft.savingThrow" label="Спасбросок" />
 
-      <button class="ecm-roll" type="submit">
+      <button class="ecm-roll" type="submit" :disabled="enc.challengeBusy">
         <Dices :size="17" />
         Бросить выбранным
       </button>
