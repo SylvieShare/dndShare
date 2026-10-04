@@ -73,7 +73,7 @@ watch(() => [props.adaptive, props.sortable?.dragging], updateColumns)
 .inventory-bag-cell--simplified::after { border-style: dashed; }
 .inventory-bag-cell--equipped::after { border-color: var(--accent); }
 .inventory-bag-cell--target { outline: 2px solid var(--accent); outline-offset: 2px; }
-.inventory-bag-empty { color: var(--text-muted); opacity: .25; pointer-events: none; }
+.inventory-bag-empty { color: var(--text-muted); opacity: 0.08; pointer-events: none; }
 .inventory-bag-cell :deep(.ram-custom-trigger) { width: 100%; height: 100%; border-radius: inherit; }
 .inventory-bag-effects { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 </style>

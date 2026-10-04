@@ -25,7 +25,7 @@ function choose(action, close) { close(); emit(action) }
 <style scoped>
 .inventory-bag-add { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 0; border: 0; border-radius: inherit; background: none; color: var(--text-muted); cursor: pointer; }
 .inventory-bag-add__bag, .inventory-bag-add__plus { transition: opacity 180ms ease, transform 220ms cubic-bezier(.2, .8, .2, 1); }
-.inventory-bag-add__bag { opacity: .25; transform: scale(1); }
+.inventory-bag-add__bag { opacity: 0.08; transform: scale(1); }
 .inventory-bag-add__plus { position: absolute; opacity: 0; color: var(--accent); transform: scale(.72) rotate(-20deg); }
 .inventory-bag-add:hover:not(:disabled) .inventory-bag-add__bag,
 .inventory-bag-add:focus-visible .inventory-bag-add__bag,
