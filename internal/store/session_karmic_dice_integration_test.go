@@ -40,11 +40,11 @@ func testSessionKarmicDicePostgres(t *testing.T, s *Store, sessionID int64) {
 		t.Fatal(err)
 	}
 	low, err := s.RollSessionD20(ctx, sessionID, 10, request(hero))
-	if err != nil || !low.Karmic || low.BalanceBefore != 6 || low.BalanceAfter != karmicNextBalance(6, low.Rolls[0], "normal") || low.Rolls[0] <= 10 {
+	if err != nil || !low.Karmic || low.BalanceBefore != 6 || low.BalanceAfter != karmicNextBalance(6, low.Rolls[0], "normal") || low.Rolls[0] < 1 || low.Rolls[0] > 20 {
 		t.Fatalf("hero scale: %+v %v", low, err)
 	}
 	high, err := s.RollSessionD20(ctx, sessionID, 20, request(other))
-	if err != nil || high.BalanceBefore != -6 || high.Rolls[0] > 10 {
+	if err != nil || high.BalanceBefore != -6 || high.Rolls[0] < 1 || high.Rolls[0] > 20 {
 		t.Fatalf("separate scale: %+v %v", high, err)
 	}
 	if _, err = s.pool.Exec(ctx, `CREATE TABLE dndshare.session_encounter (id bigserial PRIMARY KEY, session_id bigint, data jsonb, deleted bool DEFAULT false);

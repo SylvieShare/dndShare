@@ -2,6 +2,8 @@ package store
 
 import (
 	"context"
+	"errors"
+
 	"github.com/jackc/pgx/v5"
 )
 
@@ -51,6 +53,10 @@ func applicationRuleSources(ctx context.Context, tx pgx.Tx, values map[string]an
 			continue
 		}
 		_, data, kind, err := applicationItem(ctx, tx, c.id)
+		if errors.Is(err, pgx.ErrNoRows) {
+			// A removed catalogue entry cannot contribute rules to the sheet.
+			continue
+		}
 		if err != nil {
 			return nil, err
 		}

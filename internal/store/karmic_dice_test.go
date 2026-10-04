@@ -5,25 +5,29 @@ import (
 	"testing"
 )
 
-func TestKarmicDistributionAndSeries(t *testing.T) {
-	for _, mode := range []string{"normal", "advantage", "disadvantage"} {
-		for _, balance := range []float64{-6, -5.9, -3.2, -0.1, 0, 0.1, 3.2, 5.9, 6} {
-			weights := karmicWeights(balance, mode)
-			for i := 0; i < 10000; i++ {
-				face := karmicFace(weights, float64(i)/10000)
-				if face < 1 || face > 20 {
-					t.Fatal("invalid face", face)
-				}
-				if balance == 6 && face <= karmicMedian(mode) {
-					t.Fatal("low series continued at limit", mode, face)
-				}
-				if balance == -6 && face > karmicMedian(mode) {
-					t.Fatal("high series continued at limit", mode, face)
-				}
+func TestKarmicDistribution(t *testing.T) {
+	for _, balance := range []float64{-6, -5.9, -3.2, -0.1, 0, 0.1, 3.2, 5.9, 6} {
+		weights := karmicWeights(balance)
+		for face, weight := range weights {
+			if weight <= 0 {
+				t.Fatalf("balance %v removes face %d", balance, face+1)
+			}
+		}
+		counts := [20]int{}
+		for i := 0; i < 10000; i++ {
+			face := karmicFace(weights, float64(i)/10000)
+			if face < 1 || face > 20 {
+				t.Fatal("invalid face", face)
+			}
+			counts[face-1]++
+		}
+		for face, count := range counts {
+			if count == 0 {
+				t.Fatalf("balance %v cannot roll face %d", balance, face+1)
 			}
 		}
 	}
-	neutral := karmicWeights(0, "normal")
+	neutral := karmicWeights(0)
 	for face, weight := range neutral {
 		if weight != 1 {
 			t.Fatalf("face %d is not uniform", face+1)
@@ -32,21 +36,30 @@ func TestKarmicDistributionAndSeries(t *testing.T) {
 	for _, balance := range []float64{-5, 0, 5} {
 		mean := 0.0
 		for i := 0; i < 10000; i++ {
-			mean += float64(karmicFace(karmicWeights(balance, "normal"), float64(i)/10000)) / 10000
+			mean += float64(karmicFace(karmicWeights(balance), float64(i)/10000)) / 10000
 		}
 		if (balance < 0 && mean >= 10.5) || (balance > 0 && mean <= 10.5) || (balance == 0 && math.Abs(mean-10.5) > 0.01) {
 			t.Fatal("wrong shift", balance, mean)
 		}
 	}
-	for _, mode := range []string{"normal", "advantage", "disadvantage"} {
-		balance := 0.0
-		for range 6 {
-			balance = karmicNextBalance(balance, 1, mode)
+	// At maximum tilt the opposite extreme still has 0.75%, rather than zero.
+	for _, balance := range []float64{-6, 6} {
+		weights, sum := karmicWeights(balance), 0.0
+		for _, weight := range weights {
+			sum += weight
 		}
-		face := karmicFace(karmicWeights(balance, mode), 0)
-		if karmicNextBalance(balance, face, mode) != 5.9 {
-			t.Fatal("series does not turn toward center", mode)
+		for _, face := range []int{1, 20} {
+			expected := 0.0075
+			if (balance > 0 && face == 20) || (balance < 0 && face == 1) {
+				expected = 0.0925
+			}
+			if math.Abs(weights[face-1]/sum-expected) > 1e-12 {
+				t.Fatal("wrong endpoint probability", balance, face)
+			}
 		}
+	}
+	if karmicFace(karmicWeights(6), 0) != 1 || karmicFace(karmicWeights(-6), math.Nextafter(1, 0)) != 20 {
+		t.Fatal("extreme karma guarantees the opposite result")
 	}
 }
 
