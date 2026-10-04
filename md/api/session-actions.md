@@ -70,6 +70,8 @@ Sheet initiative dice events include `data.sheetInitiative: true` with `data.res
 
 Chronicle `/save-targets` excludes players and NPCs with `position: "dead"` in
 the latest non-deleted encounter. Zero HP alone does not exclude a creature.
+Missing catalogue references in abilities or equipment do not contribute HP
+bonuses and do not prevent the target roster from loading.
 Attack-target, saving-throw and impact mutations validate new selections against
 the same filtered roster; general `/application-targets` remains unchanged.
 

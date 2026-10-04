@@ -11,10 +11,17 @@ import (
 
 func testChronicleTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	ctx := context.Background()
-	_, err := pool.Exec(ctx, `INSERT INTO dndshare."session"(id,owner_user_id) VALUES(996,1);
+	_, err := pool.Exec(ctx, `INSERT INTO dndshare.item(id,name,type_id,data) VALUES
+ (99601,'Бонус хитов',4,'{"level_source":"character","hp_bonuses":[{"base":5,"per_level":1}]}'),
+ (99602,'Амулет хитов',19,'{"activation":"carried","attunement":"none","hp_bonuses":[{"base":4}]}');
+ INSERT INTO dndshare."session"(id,owner_user_id) VALUES(996,1);
  INSERT INTO dndshare."char"(id,user_id,data) VALUES
  (9961,1,'{"values":{"name":"На кладбище","hp":{"current":10,"max":{"base":10}}}}'),
- (9962,1,'{"values":{"name":"Без сознания","hp":{"current":0,"max":{"base":10}}}}');
+ (9962,1,'{"values":{"name":"Без сознания","lvl":{"level":3},
+ "hp":{"current":0,"max":{"base":10,"bonuses":[{"value":2}]}},
+ "abilities_class":[{"id":1444},{"id":99601}],"abilities_feats":[{"id":99603}],
+ "weapon":[{"item_id":99604}],"items":{"equipped":[{"magic_item_id":99605},{"item_id":99602}],
+ "sections":[{"items":[{"item_id":99606}]}]}}}');
  INSERT INTO dndshare.session_participant VALUES(996,9961,1),(996,9962,1);
  INSERT INTO dndshare.session_encounter(session_id,data) VALUES(996,'{"combatants":[
  {"type":"player","charId":9961,"position":"dead"},
@@ -24,10 +31,6 @@ func testChronicleTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	all, err := s.SessionApplicationTargets(ctx, 1, 996)
-	if err != nil || len(all) != 4 {
-		t.Fatalf("general application targets: %v %v", all, err)
-	}
 	available, err := s.SessionSaveTargets(ctx, 1, 996)
 	if err != nil || len(available) != 2 {
 		t.Fatalf("chronicle targets: %v %v", available, err)
@@ -36,12 +39,19 @@ func testChronicleTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		if target.Name == "На кладбище" || target.NPCUID == "dead-npc" || target.Snapshot == nil || target.HP.Current != 0 {
 			t.Fatalf("unexpected target: %+v", target)
 		}
+		if target.Kind == "character" && target.HP.Max != 24 {
+			t.Fatalf("missing catalogue references changed valid HP bonuses: %+v", target.HP)
+		}
 	}
 	canonical, err := s.sessionChronicleTargets(ctx, 1, 996)
 	if err != nil || len(canonical) != 2 || canonical[0].Snapshot != nil {
 		t.Fatalf("canonical targets: %v %v", canonical, err)
 	}
-	event, err := s.CreateSessionEvent(ctx, 996, 1, nil, nil, nil, "dice_roll", "Атака", json.RawMessage(`{"attackRoll":true,"damageRoll":false,"result":{"total":15,"parts":[{"kind":"dice","sides":20,"rolls":[15],"sum":15}]},"savingThrow":{"ability":2,"dc":15,"results":[]}}`), "public", nil)
+	all, err := s.SessionApplicationTargets(ctx, 1, 996)
+	if err != nil || len(all) != 4 {
+		t.Fatalf("general application targets: %v %v", all, err)
+	}
+	event, err := s.CreateSessionEvent(ctx, 996, 1, nil, nil, nil, "dice_roll", "Атака: Импровизированное оружие", json.RawMessage(`{"attackRoll":true,"damageRoll":false,"result":{"total":15,"parts":[{"kind":"dice","sides":20,"rolls":[15],"sum":15}]},"savingThrow":{"ability":2,"dc":15,"results":[]}}`), "public", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
