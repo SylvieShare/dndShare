@@ -105,6 +105,7 @@ func TestItemTransfersPostgres(t *testing.T) {
 	}
 	exec(schemaSessionAutoAcceptSQL)
 	exec(schemaSessionKarmicDiceSQL)
+	exec(schemaFractionalKarmicDiceSQL)
 	exec(schemaSessionInventorySQL)
 	exec(schemaInventoryGridSQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');

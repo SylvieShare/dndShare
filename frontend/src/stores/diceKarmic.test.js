@@ -19,14 +19,14 @@ function session() {
 describe('session d20 rolls', () => {
   it('uses the server faces, keeps advantage and rolls blessing normally', async () => {
     session()
-    const server = vi.spyOn(api, 'rollSessionD20').mockResolvedValue({ rolls: [3, 18], karmic: true, balanceBefore: 3, balanceAfter: 2 })
+    const server = vi.spyOn(api, 'rollSessionD20').mockResolvedValue({ rolls: [3, 18], karmic: true, balanceBefore: 3, balanceAfter: 2.4 })
     vi.spyOn(Math, 'random').mockReturnValue(0)
     const dice = useDiceStore()
     const result = await dice.rollD20('Атака', 4, 'advantage', { roll_kind: 'attack', bonus_formula: '1d4', crit_mode: true })
     expect(server).toHaveBeenCalledWith('game', expect.objectContaining({ charUuid: 'hero', kind: 'attack', mode: 'advantage' }))
     expect(result.parts[0]).toMatchObject({ rolls: [3, 18], sum: 18, keptIndex: 1, dropped: [0] })
     expect(result.total).toBe(23)
-    expect(result.karmicDice).toEqual({ before: 3, after: 2 })
+    expect(result.karmicDice).toEqual({ before: 3, after: 2.4 })
     dice.clear()
   })
 

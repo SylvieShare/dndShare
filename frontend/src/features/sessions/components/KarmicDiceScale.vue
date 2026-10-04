@@ -12,8 +12,9 @@
 <script setup>
 import { computed } from 'vue'
 const props = defineProps({ name: String, balance: { type: Number, default: 0 } })
+const format = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 })
 const description = computed(() => props.balance === 0 ? 'Без сдвига'
-  : `${props.balance > 0 ? 'К высоким' : 'К низким'} · ${Math.abs(props.balance)} из 6`)
+  : `${props.balance > 0 ? 'К высоким' : 'К низким'} · ${format.format(Math.abs(props.balance))} из 6`)
 </script>
 <style scoped>
 .karmic-scale { display: grid; gap: 8px; min-width: 0; }

@@ -19,16 +19,16 @@ type SessionD20Request struct {
 }
 
 type SessionD20Result struct {
-	Rolls         []int `json:"rolls"`
-	Karmic        bool  `json:"karmic"`
-	BalanceBefore int   `json:"balanceBefore"`
-	BalanceAfter  int   `json:"balanceAfter"`
+	Rolls         []int   `json:"rolls"`
+	Karmic        bool    `json:"karmic"`
+	BalanceBefore float64 `json:"balanceBefore"`
+	BalanceAfter  float64 `json:"balanceAfter"`
 }
 
 type SessionKarmicScale struct {
-	Key     string `json:"key"`
-	Name    string `json:"name"`
-	Balance int    `json:"balance"`
+	Key     string  `json:"key"`
+	Name    string  `json:"name"`
+	Balance float64 `json:"balance"`
 }
 
 func ValidSessionD20Request(req SessionD20Request) bool {

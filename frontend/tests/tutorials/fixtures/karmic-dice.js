@@ -22,8 +22,8 @@ window.fetch = async (url, options = {}) => {
     const separate = session.value.settings.karmicDice.separate
     const key = separate ? 'char:hero' : 'shared'
     const before = window.scales.find(row => row.key === key)?.balance || 0
-    window.scales = [{ key, name: separate ? 'Герой' : 'Общая шкала', balance: before + 1 }]
-    return Response.json({ rolls: [4], karmic: true, balanceBefore: before, balanceAfter: before + 1 })
+    window.scales = [{ key, name: separate ? 'Герой' : 'Общая шкала', balance: before + 0.7 }]
+    return Response.json({ rolls: [4], karmic: true, balanceBefore: before, balanceAfter: before + 0.7 })
   }
   return Response.json({})
 }

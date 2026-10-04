@@ -40,7 +40,7 @@ func testSessionKarmicDicePostgres(t *testing.T, s *Store, sessionID int64) {
 		t.Fatal(err)
 	}
 	low, err := s.RollSessionD20(ctx, sessionID, 10, request(hero))
-	if err != nil || !low.Karmic || low.BalanceBefore != 6 || low.BalanceAfter != 5 || low.Rolls[0] <= 10 {
+	if err != nil || !low.Karmic || low.BalanceBefore != 6 || low.BalanceAfter != karmicNextBalance(6, low.Rolls[0], "normal") || low.Rolls[0] <= 10 {
 		t.Fatalf("hero scale: %+v %v", low, err)
 	}
 	high, err := s.RollSessionD20(ctx, sessionID, 20, request(other))
@@ -75,6 +75,9 @@ func testSessionKarmicDicePostgres(t *testing.T, s *Store, sessionID int64) {
 		t.Fatal("player rolled NPC")
 	}
 	// Concurrent retries of the same request commit precisely one roll.
+	if _, err = s.pool.Exec(ctx, `UPDATE dndshare.session_karmic_scale SET balance=0.2 WHERE session_id=$1 AND actor_key=$2`, sessionID, "char:"+hero); err != nil {
+		t.Fatal(err)
+	}
 	req = request(hero)
 	var wg sync.WaitGroup
 	results := make(chan SessionD20Result, 8)
@@ -92,13 +95,17 @@ func testSessionKarmicDicePostgres(t *testing.T, s *Store, sessionID int64) {
 	}
 	var first *SessionD20Result
 	for result := range results {
+		if result.BalanceBefore != 0.2 {
+			t.Fatal("fractional balance was lost", result.BalanceBefore)
+		}
 		if first == nil {
 			first = &result
 		} else if !reflect.DeepEqual(*first, result) {
 			t.Fatal("retry generated new dice")
 		}
 	}
-	var balance, count int
+	var balance float64
+	var count int
 	if err = s.pool.QueryRow(ctx, `SELECT balance FROM dndshare.session_karmic_scale WHERE session_id=$1 AND actor_key=$2`, sessionID, "char:"+hero).Scan(&balance); err != nil || balance != first.BalanceAfter {
 		t.Fatal("retry advanced balance again", err)
 	}

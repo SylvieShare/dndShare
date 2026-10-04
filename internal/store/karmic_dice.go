@@ -2,6 +2,7 @@ package store
 
 import (
 	"crypto/rand"
+	"math"
 	"math/big"
 )
 
@@ -20,11 +21,11 @@ func karmicMedian(mode string) int {
 	}
 }
 
-func karmicWeights(balance int, mode string) [20]float64 {
+func karmicWeights(balance float64, mode string) [20]float64 {
 	var weights [20]float64
 	for i := range weights {
 		face := i + 1
-		weights[i] = 1 + 0.85*float64(balance)/karmicLimit*(2*float64(i)/19-1)
+		weights[i] = 1 + 0.85*balance/karmicLimit*(2*float64(i)/19-1)
 		if (balance == karmicLimit && face <= karmicMedian(mode)) || (balance == -karmicLimit && face > karmicMedian(mode)) {
 			weights[i] = 0
 		}
@@ -52,11 +53,31 @@ func karmicFace(weights [20]float64, unit float64) int {
 	return 20
 }
 
-func karmicNextBalance(balance, natural int, mode string) int {
-	if natural <= karmicMedian(mode) {
-		return min(karmicLimit, balance+1)
+// Rank a kept face against its mode's neutral distribution. This makes a
+// typical advantage/disadvantage result a small correction, while extreme
+// tails matter more. Normal rolls give exactly +1...+0.1,-0.1...-1.
+func karmicDelta(natural int, mode string) float64 {
+	cdf := func(face int) float64 {
+		p := float64(face) / 20
+		switch mode {
+		case "advantage":
+			return p * p
+		case "disadvantage":
+			return 1 - (1-p)*(1-p)
+		default:
+			return p
+		}
 	}
-	return max(-karmicLimit, balance-1)
+	centeredRank := 1 - cdf(natural) - cdf(natural-1)
+	delta := max(0.1, math.Round(min(1, math.Abs(centeredRank)+0.05)*10)/10)
+	if natural > karmicMedian(mode) {
+		delta = -delta
+	}
+	return delta
+}
+
+func karmicNextBalance(balance float64, natural int, mode string) float64 {
+	return math.Round(max(-karmicLimit, min(karmicLimit, balance+karmicDelta(natural, mode)))*10) / 10
 }
 
 func randomUnit() (float64, error) {

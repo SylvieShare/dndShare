@@ -55,6 +55,12 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	exec(schemaSessionSettingsJSONSQL)
 	exec(schemaSessionAutoAcceptSQL)
 	exec(schemaSessionKarmicDiceSQL)
+	exec(`INSERT INTO dndshare.session_karmic_scale VALUES(1,'shared','Общая шкала',3)`)
+	exec(schemaFractionalKarmicDiceSQL)
+	var preservedBalance float64
+	if err := pool.QueryRow(ctx, `SELECT balance FROM dndshare.session_karmic_scale WHERE session_id=1`).Scan(&preservedBalance); err != nil || preservedBalance != 3 {
+		t.Fatalf("fractional migration lost balance: %v %v", preservedBalance, err)
+	}
 	var migrated SessionSettings
 	if err := pool.QueryRow(ctx, `SELECT settings FROM dndshare.session WHERE id = 1`).Scan(&migrated); err != nil {
 		t.Fatal(err)

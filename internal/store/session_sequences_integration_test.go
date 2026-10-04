@@ -91,6 +91,7 @@ func testSessionSequences(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		t.Fatal(err)
 	}
 	cmd = SequenceCommand{Action: "target", Target: targets[0], Mode: "normal", ClientActionID: "99400000-0000-4000-8000-000000000004"}
+	expectedBalance := 0.0
 	for range 2 {
 		advanced, err := s.AdvanceSessionSequence(ctx, 3, 994, event.ID, cmd)
 		if err != nil {
@@ -104,13 +105,14 @@ func testSessionSequences(t *testing.T, s *Store, pool *pgxpool.Pool) {
 		if sequenceNatural(attack) <= 10 || number(object(attack["karmicDice"])["before"]) != 6 {
 			t.Fatal("continuation ignored caster scale", attack)
 		}
+		expectedBalance = karmicNextBalance(6, sequenceNatural(attack), "normal")
 	}
 	cmd = SequenceCommand{Action: "hit", Revision: 1, ClientActionID: "99400000-0000-4000-8000-000000000005"}
 	if _, err = s.AdvanceSessionSequence(ctx, 3, 994, event.ID, cmd); err != nil {
 		t.Fatal(err)
 	}
-	var balance int
-	if err = pool.QueryRow(ctx, `SELECT balance FROM dndshare.session_karmic_scale WHERE session_id=994 AND actor_key=$1`, "char:"+casterUUID).Scan(&balance); err != nil || balance != 5 {
+	var balance float64
+	if err = pool.QueryRow(ctx, `SELECT balance FROM dndshare.session_karmic_scale WHERE session_id=994 AND actor_key=$1`, "char:"+casterUUID).Scan(&balance); err != nil || balance != expectedBalance {
 		t.Fatal("retry or damage changed the scale", balance, err)
 	}
 }
