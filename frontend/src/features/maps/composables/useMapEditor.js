@@ -1,41 +1,49 @@
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
-import { saveMap } from '@/shared/api/mapsApi';
 import {
-  clone,
-  flood,
-  inside,
-  lineCells,
-  newMap,
-  paint,
-  rectangle,
-  resized,
-  snap,
-  uid,
-} from '../lib/mapModel';
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  shallowRef,
+  watch,
+} from "vue";
+import { getMapModels, resetMapModels, saveMap } from "@/shared/api/mapsApi";
+import { clone, newMap, resized, uid } from "../lib/mapModel";
+import { editorGestures } from "./editorGestures";
 
 export function useMapEditor(source, onSaved) {
   const draft = ref(clone(source || newMap())),
-    tool = ref(source?.document.kind && source.document.kind !== 'tiles' ? 'select' : 'brush'),
-    terrain = ref('wall-stone'),
-    objectKind = ref('barrel'),
-    brushSize = ref(1);
-  const selectedZone = ref(''),
-    selectedObject = ref(''),
+    tool = ref(
+      source?.document.kind && source.document.kind !== "tiles"
+        ? "select"
+        : "brush",
+    ),
+    selectedModel = ref(""),
+    placementRotation = ref(0),
+    level = ref(0),
+    selectedTile = ref(""),
+    previewTile = ref(null),
+    catalogue = shallowRef([]),
+    loadingModels = ref(true),
+    modelError = ref(""),
+    objectKind = ref("barrel");
+  const selectedZone = ref(""),
+    selectedObject = ref(""),
     selection = ref(null),
     saving = ref(false),
-    error = ref(''),
+    error = ref(""),
     conflict = ref(false);
   const history = ref([]),
     future = ref([]),
-    saved = ref(source?.id && !source.system ? JSON.stringify(draft.value) : '');
+    saved = ref(
+      source?.id && !source.system ? JSON.stringify(draft.value) : "",
+    );
   let timer,
-    gesture,
-    clipboard,
+    inGesture = false,
     stopped = false;
   if (draft.value.system) {
     delete draft.value.id;
     draft.value.system = false;
-    draft.value.name += ' · копия';
+    draft.value.name += " · копия";
     draft.value.revision = 0;
   }
   const dirty = computed(() => JSON.stringify(draft.value) !== saved.value);
@@ -52,7 +60,7 @@ export function useMapEditor(source, onSaved) {
     if (!history.value.length) return;
     future.value.push(clone(draft.value));
     draft.value = history.value.pop();
-    gesture = null;
+    gestures.resetGesture();
     selection.value = null;
   }
   function redo() {
@@ -70,11 +78,12 @@ export function useMapEditor(source, onSaved) {
       conflict.value ||
       !dirty.value ||
       !draft.value.name.trim() ||
-      (draft.value.document.kind !== 'tiles' && !draft.value.document.background.url)
+      (draft.value.document.kind !== "tiles" &&
+        !draft.value.document.background.url)
     )
       return;
     saving.value = true;
-    error.value = '';
+    error.value = "";
     const snapshot = { ...clone(draft.value), ...record },
       key = JSON.stringify(snapshot);
     try {
@@ -94,14 +103,15 @@ export function useMapEditor(source, onSaved) {
       conflict.value = cause.status === 409;
     } finally {
       saving.value = false;
-      if (dirty.value && !error.value && !stopped) timer = setTimeout(save, 800);
+      if (dirty.value && !error.value && !stopped)
+        timer = setTimeout(save, 800);
     }
   }
   watch(
     draft,
     () => {
       clearTimeout(timer);
-      if (!gesture && !conflict.value) timer = setTimeout(save, 1200);
+      if (!inGesture && !conflict.value) timer = setTimeout(save, 1200);
     },
     { deep: true },
   );
@@ -119,146 +129,76 @@ export function useMapEditor(source, onSaved) {
     };
     change((m) => m.document.zones.push(z));
     selectedZone.value = z.id;
-    tool.value = 'zone';
+    tool.value = "zone";
   }
-  function draw(point, previous = point) {
-    const d = draft.value.document;
-    if (d.kind === 'tiles' && (tool.value === 'brush' || tool.value === 'erase'))
-      paint(
-        d,
-        lineCells(previous, point),
-        tool.value === 'erase' ? d.base : terrain.value,
-        brushSize.value,
-      );
-    if (tool.value === 'zone-brush') {
-      const zone = d.zones.find((z) => z.id === selectedZone.value);
-      if (!zone) return;
-      const cells = new Set(zone.cells);
-      const from = { x: previous.x - d.grid.offsetX, y: previous.y - d.grid.offsetY };
-      const to = { x: point.x - d.grid.offsetX, y: point.y - d.grid.offsetY };
-      for (const p of lineCells(from, to))
-        if (inside(d, p.x, p.y)) cells.add(p.y * Math.ceil(d.width) + p.x);
-      zone.cells = [...cells];
+  function pauseSave(value) {
+    inGesture = value;
+    clearTimeout(timer);
+    if (!value && !conflict.value) timer = setTimeout(save, 1200);
+  }
+  const gestures = editorGestures({
+    draft,
+    tool,
+    selectedModel,
+    placementRotation,
+    level,
+    selectedTile,
+    previewTile,
+    selectedObject,
+    selectedZone,
+    selection,
+    history,
+    error,
+    checkpoint,
+    change,
+    pauseSave,
+  });
+  async function loadModels() {
+    loadingModels.value = true;
+    modelError.value = "";
+    try {
+      catalogue.value = await getMapModels();
+      if (!selectedModel.value)
+        selectedModel.value =
+          catalogue.value.find((m) => m.sourceCode === "LC-007")?.id ||
+          catalogue.value[0]?.id ||
+          "";
+    } catch (cause) {
+      modelError.value = cause.message;
+    } finally {
+      loadingModels.value = false;
     }
   }
-  function handle({ phase, point, event }) {
-    const d = draft.value.document;
-    if (phase === 'hover') return;
-    if (phase === 'cancel') {
-      if (gesture) {
-        draft.value = gesture.before;
-        history.value.pop();
-      }
-      gesture = null;
-      selection.value = null;
-      return;
-    }
-    if (phase === 'start') {
-      if (!inside(d, point.x, point.y)) return;
-      clearTimeout(timer);
-      gesture = { start: point, last: point, before: clone(draft.value) };
-      checkpoint();
-      if (tool.value === 'select') {
-        const hit = [...d.objects]
-          .reverse()
-          .find((o) => Math.hypot(o.x - point.x, o.y - point.y) < o.scale * 0.7);
-        selectedObject.value = hit?.id || '';
-        gesture.object = hit?.id;
-      } else if (tool.value === 'object') {
-        const o = {
-          id: uid(),
-          kind: objectKind.value,
-          ...snap(d, point),
-          rotation: 0,
-          scale: 1,
-          open: false,
-        };
-        d.objects.push(o);
-        selectedObject.value = o.id;
-      } else if (tool.value === 'fill') flood(d, point, terrain.value);
-      else if (tool.value === 'paste' && clipboard) {
-        const ox = Math.floor(point.x),
-          oy = Math.floor(point.y);
-        for (const c of clipboard.cells) paint(d, [{ x: ox + c.x, y: oy + c.y }], c.terrain);
-        for (const o of clipboard.objects) {
-          const next = { ...o, id: uid(), x: ox + o.x, y: oy + o.y };
-          if (inside(d, next.x, next.y)) d.objects.push(next);
-        }
-      } else draw(point);
-    } else if (gesture && phase === 'move') {
-      if (gesture.object) {
-        const o = d.objects.find((o) => o.id === gesture.object);
-        Object.assign(o, snap(d, point));
-      } else if (['rect', 'zone', 'select'].includes(tool.value))
-        selection.value = rectangle(d, gesture.start, point, d.kind !== 'image');
-      else draw(point, gesture.last);
-      gesture.last = point;
-    } else if (gesture && phase === 'end') {
-      const r = rectangle(d, gesture.start, point, d.kind !== 'image');
-      if (tool.value === 'rect') {
-        const cells = [];
-        for (let y = r.y; y < r.y + r.height; y++)
-          for (let x = r.x; x < r.x + r.width; x++) cells.push({ x, y });
-        paint(d, cells, terrain.value);
-      }
-      if (tool.value === 'zone') {
-        let zone = d.zones.find((z) => z.id === selectedZone.value);
-        if (!zone) {
-          zone = { id: uid(), name: `Зона ${d.zones.length + 1}`, cells: [], rects: [] };
-          d.zones.push(zone);
-          selectedZone.value = zone.id;
-        }
-        zone.rects.push(r);
-      }
-      if (tool.value !== 'select') selection.value = null;
-      gesture = null;
-      clearTimeout(timer);
-      timer = setTimeout(save, 1200);
-    }
+  function retryModels() {
+    resetMapModels();
+    loadModels();
   }
-  function copy() {
-    const r = selection.value,
-      d = draft.value.document;
-    if (!r) return;
-    const cells = [];
-    for (let y = r.y; y < r.y + r.height; y++)
-      for (let x = r.x; x < r.x + r.width; x++)
-        cells.push({ x: x - r.x, y: y - r.y, terrain: d.cells[`${x},${y}`] || d.base });
-    clipboard = {
-      cells,
-      objects: d.objects
-        .filter((o) => o.x >= r.x && o.x < r.x + r.width && o.y >= r.y && o.y < r.y + r.height)
-        .map((o) => ({ ...o, x: o.x - r.x, y: o.y - r.y })),
-    };
-    tool.value = 'paste';
-  }
-  function removeSelected() {
-    change((m) => {
-      if (selectedObject.value)
-        m.document.objects = m.document.objects.filter((o) => o.id !== selectedObject.value);
-      else if (selectedZone.value)
-        m.document.zones = m.document.zones.filter((z) => z.id !== selectedZone.value);
-    });
-    selectedObject.value = '';
-  }
+  onMounted(loadModels);
   function beforeUnload(e) {
     if (dirty.value) {
       e.preventDefault();
-      e.returnValue = '';
+      e.returnValue = "";
     }
   }
-  window.addEventListener('beforeunload', beforeUnload);
+  window.addEventListener("beforeunload", beforeUnload);
   onBeforeUnmount(() => {
     stopped = true;
     clearTimeout(timer);
-    window.removeEventListener('beforeunload', beforeUnload);
+    window.removeEventListener("beforeunload", beforeUnload);
   });
   return {
     draft,
     tool,
-    terrain,
+    selectedModel,
+    placementRotation,
+    level,
+    selectedTile,
+    previewTile,
+    catalogue,
+    loadingModels,
+    modelError,
+    retryModels,
     objectKind,
-    brushSize,
     selectedZone,
     selectedObject,
     selection,
@@ -274,8 +214,6 @@ export function useMapEditor(source, onSaved) {
     redo,
     resize,
     addZone,
-    handle,
-    copy,
-    removeSelected,
+    ...gestures,
   };
 }

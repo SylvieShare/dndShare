@@ -158,6 +158,34 @@ VM и не запускает. Новые и замещающие изображ
 ничего не перезаливает. Недоступные upstream-файлы теряют мёртвую ссылку и
 переходят на иконку типа. Новый импорт бестиария сразу использует тот же путь.
 
+## Модели 3D-карт
+
+Модели не хранятся в Git и не входят в Go-бинарь. Исходники и подготовленные
+версии находятся локально в игнорируемой папке models. Встроенный
+`internal/battlemap/catalogue.json` содержит только метаданные и SHA-256 файлов;
+начальные строки каталога создаёт миграция 166. Перед выпуском эти объекты
+должны быть загружены в S3.
+
+Подготовка браузерных моделей:
+
+1. Установить во временную папку инструменты glTF Transform и meshoptimizer:
+   `npm install --prefix /private/tmp/dndshare-model-tools @gltf-transform/core @gltf-transform/extensions @gltf-transform/functions meshoptimizer`.
+2. Выполнить `node scripts/maps/prepare-assets.mjs`: Meshopt-сжатие и облегчение
+   геометрии с сохранением текстур. Артефакты остаются в models/prepared/runtime.
+3. Создать PNG-превью локальным Blender, затем выполнить
+   `python3 scripts/maps/build-catalogue.py`: WebP-превью, контуры препятствий,
+   метаданные и content-addressed upload folder в models/prepared/upload.
+4. Собрать `cmd/map-model-upload` и запустить в окружении с OBJECT_STORAGE_*
+   credentials с аргументом `-assets` на upload folder. Загрузчик сверяет
+   локальные SHA-256/размеры и S3 HEAD; PostgreSQL он не меняет.
+5. Выпустить основной бинарь. Startup migration создаёт каталог и по явному
+   запросу пользователя удаляет карты старого формата. Сохранённые модели
+   отдаются через API приложения: CORS bucket не требуется.
+
+Скрипты подготовки выполняются при изменении моделей, а не при каждом deploy.
+Схему новой фичи регистрируют как обычную неизменяемую миграцию. Контракт
+каталога и документа — [игровые карты](features/maps.md).
+
 ## Local run
 
 ```bash

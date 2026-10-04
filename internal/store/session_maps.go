@@ -64,7 +64,19 @@ func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap)
 		return SessionMap{}, err
 	}
 	state, _ := json.Marshal(battlemap.InitialState())
-	return scanSessionMap(s.pool.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state,asset_id) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb),$5) RETURNING id::text,name,document,state,revision,changed_at`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state), m.Document.Background.AssetID))
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return SessionMap{}, err
+	}
+	defer tx.Rollback(ctx)
+	result, err := scanSessionMap(tx.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state,asset_id) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb),$5) RETURNING id::text,name,document,state,revision,changed_at`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state), m.Document.Background.AssetID))
+	if err != nil {
+		return result, err
+	}
+	if err = syncMapModels(ctx, tx, "session_map_model", "map_id", result.ID, m.Document); err != nil {
+		return result, err
+	}
+	return result, tx.Commit(ctx)
 }
 
 func (s *Store) SaveSessionMapState(ctx context.Context, sessionID int64, id string, revision int64, state battlemap.State) (SessionMap, error) {

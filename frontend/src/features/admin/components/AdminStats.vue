@@ -98,6 +98,7 @@ const STORAGE_COLORS = Object.freeze({
   systemMusic: 'var(--success)',
   userMusic: 'var(--danger)',
   svg: 'var(--accent-soft)',
+  systemModels: 'var(--text-muted)',
 })
 
 const stats = ref(null)

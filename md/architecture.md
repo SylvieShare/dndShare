@@ -2,7 +2,7 @@
 
 Приложение состоит из Vue frontend и Go backend. В production frontend
 встраивается в один статический Go-бинарь; PostgreSQL хранит состояние,
-S3-compatible storage — изображения и аудио. Стек и обязательные правила
+S3-compatible storage — изображения, аудио и файлы 3D-моделей карт. Стек и обязательные правила
 изменений задаёт [README репозитория](../README.md).
 
 ## Runtime и зависимости

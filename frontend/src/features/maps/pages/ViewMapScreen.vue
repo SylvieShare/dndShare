@@ -7,10 +7,18 @@
       :state="snapshot.map.state"
       :camera="snapshot.display.camera"
       readonly
+      tabletop
+      :public-code="code"
     />
-    <div v-else-if="error && !snapshot" class="map-screen-error" role="alert">{{ error }}</div>
-    <div v-if="(!connected || error) && snapshot" class="map-screen-status" role="status">
-      {{ error || 'Восстанавливаем связь…' }}
+    <div v-else-if="error && !snapshot" class="map-screen-error" role="alert">
+      {{ error }}
+    </div>
+    <div
+      v-if="(!connected || error) && snapshot"
+      class="map-screen-status"
+      role="status"
+    >
+      {{ error || "Восстанавливаем связь…" }}
     </div>
     <ActionButton
       v-if="controls"
@@ -22,16 +30,16 @@
   </main>
 </template>
 <script setup>
-import { onBeforeUnmount, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { ActionButton } from '@sylvieshare/share-ui';
-import { Maximize } from '@lucide/vue';
-import MapCanvas from '../components/MapCanvas.vue';
-import { useMapSync } from '../composables/useMapSync';
-import { getPublicMap } from '@/shared/api/mapsApi';
+import { onBeforeUnmount, ref } from "vue";
+import { useRoute } from "vue-router";
+import { ActionButton } from "@sylvieshare/share-ui";
+import { Maximize } from "@lucide/vue";
+import MapCanvas from "../components/MapCanvas.vue";
+import { useMapSync } from "../composables/useMapSync";
+import { getPublicMap } from "@/shared/api/mapsApi";
 const code = String(useRoute().params.code),
   snapshot = ref(null),
-  error = ref(''),
+  error = ref(""),
   controls = ref(false);
 let timer;
 const { connected } = useMapSync(
@@ -39,13 +47,13 @@ const { connected } = useMapSync(
   async () => {
     try {
       snapshot.value = await getPublicMap(code);
-      error.value = '';
+      error.value = "";
     } catch (cause) {
       if ([401, 403, 404].includes(cause.status)) snapshot.value = null;
       error.value =
         cause.status === 404
-          ? 'Карта сессии недоступна. Проверьте ссылку.'
-          : 'Не удалось подключиться к карте';
+          ? "Карта сессии недоступна. Проверьте ссылку."
+          : "Не удалось подключиться к карте";
       throw cause;
     }
   },
@@ -62,7 +70,7 @@ async function fullscreen() {
     if (document.fullscreenElement) await document.exitFullscreen();
     else await document.documentElement.requestFullscreen();
   } catch {
-    error.value = 'Включите полноэкранный режим в меню браузера';
+    error.value = "Включите полноэкранный режим в меню браузера";
   }
 }
 onBeforeUnmount(() => clearTimeout(timer));

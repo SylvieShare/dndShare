@@ -15,8 +15,8 @@ func TestPresetsAreValidIndependentDocuments(t *testing.T) {
 		})
 	}
 	a, b := Presets(), Presets()
-	a[0].Document.Cells["0,0"] = "lava"
-	if b[0].Document.Cells["0,0"] == "lava" {
+	a[0].Document.Tiles[0].Rotation = 90
+	if b[0].Document.Tiles[0].Rotation == 90 {
 		t.Fatal("presets share mutable state")
 	}
 }
@@ -51,10 +51,11 @@ func TestVisibilityAndPublicProjection(t *testing.T) {
 
 func TestInvalidDocumentsAndState(t *testing.T) {
 	for _, change := range []func(*Document){
-		func(d *Document) { d.Width = 100000 }, func(d *Document) { d.Cells["-1,0"] = "stone" },
-		func(d *Document) { d.Cells["1,1"] = "unknown" }, func(d *Document) { d.Kind = "image"; d.Background.URL = "javascript:bad" },
+		func(d *Document) { d.Width = 100000 }, func(d *Document) { d.Tiles[0].X = -1 },
+		func(d *Document) { d.Tiles[0].ModelID = "unknown" }, func(d *Document) { d.Kind = "image"; d.Background.URL = "javascript:bad" },
 		func(d *Document) { d.Zones = []Zone{{ID: "room", Rects: []Rect{{29, 21, 5, 5}}}} },
-		func(d *Document) { d.Objects = append(d.Objects, d.Objects[0]) },
+		func(d *Document) { d.Tiles = append(d.Tiles, d.Tiles[0]) },
+		func(d *Document) { d.Version = 1 },
 	} {
 		d := Presets()[0].Document
 		change(&d)

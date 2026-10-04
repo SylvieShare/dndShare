@@ -1,58 +1,42 @@
-export const TERRAINS = [
-  ['stone', 'Каменные плиты', '#7d8076'],
-  ['slate', 'Тёмный камень', '#48515b'],
-  ['wood', 'Доски', '#926947'],
-  ['earth', 'Земля', '#79684e'],
-  ['grass', 'Трава', '#566b44'],
-  ['sand', 'Песок', '#b7a078'],
-  ['water', 'Вода', '#356c7a'],
-  ['lava', 'Лава', '#a83e27'],
-  ['chasm', 'Разлом', '#171923'],
-  ['wall-stone', 'Каменная стена', '#aaa99c'],
-  ['wall-brick', 'Кирпичная стена', '#8e7162'],
-  ['wall-wood', 'Деревянная стена', '#73563f'],
-  ['wall-rock', 'Скала', '#777b72'],
-].map(([id, name, color]) => ({ id, name, color }));
 export const OBJECTS = [
-  ['door', 'Дверь'],
-  ['double-door', 'Двойная дверь'],
-  ['portcullis', 'Решётка'],
-  ['barrel', 'Бочка'],
-  ['crate', 'Ящик'],
-  ['table', 'Стол'],
-  ['chest', 'Сундук'],
-  ['torch', 'Факел'],
-  ['stairs', 'Лестница'],
-  ['column', 'Колонна'],
-  ['rubble', 'Камни'],
-  ['bridge', 'Мостик'],
+  ["door", "Дверь"],
+  ["double-door", "Двойная дверь"],
+  ["portcullis", "Решётка"],
+  ["barrel", "Бочка"],
+  ["crate", "Ящик"],
+  ["table", "Стол"],
+  ["chest", "Сундук"],
+  ["torch", "Факел"],
+  ["stairs", "Лестница"],
+  ["column", "Колонна"],
+  ["rubble", "Камни"],
+  ["bridge", "Мостик"],
 ].map(([id, name]) => ({ id, name }));
 export const KINDS = {
-  tiles: 'Конструктор',
-  'image-grid': 'Изображение с сеткой',
-  image: 'Изображение без сетки',
+  tiles: "3D-конструктор",
+  "image-grid": "Изображение с сеткой",
+  image: "Изображение без сетки",
 };
 export const VISIBILITY = [
-  { value: 'hidden', label: 'Скрыта' },
-  { value: 'explored', label: 'Исследована' },
-  { value: 'visible', label: 'Открыта' },
+  { value: "hidden", label: "Скрыта" },
+  { value: "explored", label: "Исследована" },
+  { value: "visible", label: "Открыта" },
 ];
 export const clone = (value) => JSON.parse(JSON.stringify(value));
 export const uid = () => crypto.randomUUID();
 export const interactive = (kind) =>
-  ['door', 'double-door', 'portcullis', 'chest', 'torch'].includes(kind);
-export function newMap(kind = 'tiles') {
+  ["door", "double-door", "portcullis", "chest", "torch"].includes(kind);
+export function newMap(kind = "tiles") {
   return {
-    name: 'Новая карта',
+    name: "Новая карта",
     document: {
-      version: 1,
+      version: 2,
       kind,
       width: 30,
       height: 22,
-      grid: { visible: kind !== 'image', offsetX: 0, offsetY: 0 },
+      grid: { visible: kind !== "image", offsetX: 0, offsetY: 0 },
       background: {},
-      base: 'stone',
-      cells: {},
+      tiles: [],
       objects: [],
       zones: [],
     },
@@ -60,26 +44,35 @@ export function newMap(kind = 'tiles') {
   };
 }
 export function initialState() {
-  return { fog: true, defaultVisibility: 'hidden', zones: {}, objects: {}, tokens: [] };
-}
-export function terrainAt(d, x, y) {
-  return d.cells[`${x},${y}`] || d.base;
+  return {
+    fog: true,
+    defaultVisibility: "hidden",
+    zones: {},
+    objects: {},
+    tokens: [],
+  };
 }
 export function inside(d, x, y) {
   return x >= 0 && y >= 0 && x < d.width && y < d.height;
 }
 export function snap(d, p, size = 1) {
   const x =
-    d.kind === 'image'
+    d.kind === "image"
       ? p.x
       : Math.round(p.x - size / 2 - d.grid.offsetX) + size / 2 + d.grid.offsetX;
   const y =
-    d.kind === 'image'
+    d.kind === "image"
       ? p.y
       : Math.round(p.y - size / 2 - d.grid.offsetY) + size / 2 + d.grid.offsetY;
   return {
-    x: size > d.width ? d.width / 2 : Math.max(size / 2, Math.min(d.width - size / 2, x)),
-    y: size > d.height ? d.height / 2 : Math.max(size / 2, Math.min(d.height - size / 2, y)),
+    x:
+      size > d.width
+        ? d.width / 2
+        : Math.max(size / 2, Math.min(d.width - size / 2, x)),
+    y:
+      size > d.height
+        ? d.height / 2
+        : Math.max(size / 2, Math.min(d.height - size / 2, y)),
   };
 }
 export function zoneContains(d, z, x, y) {
@@ -92,15 +85,21 @@ export function zoneContains(d, z, x, y) {
       cx < Math.ceil(d.width) &&
       cy < Math.ceil(d.height) &&
       z.cells?.includes(cell)) ||
-    z.rects?.some((r) => x >= r.x && y >= r.y && x < r.x + r.width && y < r.y + r.height)
+    z.rects?.some(
+      (r) => x >= r.x && y >= r.y && x < r.x + r.width && y < r.y + r.height,
+    )
   );
 }
 export function visibilityAt(d, state, x, y) {
-  if (!state?.fog) return 'visible';
-  const levels = ['hidden', 'explored', 'visible'];
+  if (!state?.fog) return "visible";
+  const levels = ["hidden", "explored", "visible"];
   const zones = d.zones.filter((z) => zoneContains(d, z, x, y));
   return zones.length
-    ? levels[Math.max(...zones.map((z) => Math.max(0, levels.indexOf(state.zones[z.id]))))]
+    ? levels[
+        Math.max(
+          ...zones.map((z) => Math.max(0, levels.indexOf(state.zones[z.id]))),
+        )
+      ]
     : state.defaultVisibility;
 }
 export function rectangle(d, a, b, snapToGrid = true) {
@@ -109,14 +108,19 @@ export function rectangle(d, a, b, snapToGrid = true) {
   let right = Math.min(d.width, Math.max(a.x, b.x)),
     bottom = Math.min(d.height, Math.max(a.y, b.y));
   if (snapToGrid) {
-    const ox = d.kind === 'image-grid' ? d.grid.offsetX : 0,
-      oy = d.kind === 'image-grid' ? d.grid.offsetY : 0;
+    const ox = d.kind === "image-grid" ? d.grid.offsetX : 0,
+      oy = d.kind === "image-grid" ? d.grid.offsetY : 0;
     x = Math.max(0, Math.floor(x - ox) + ox);
     y = Math.max(0, Math.floor(y - oy) + oy);
     right = Math.min(d.width, Math.floor(right - ox) + 1 + ox);
     bottom = Math.min(d.height, Math.floor(bottom - oy) + 1 + oy);
   }
-  return { x, y, width: Math.max(0.05, right - x), height: Math.max(0.05, bottom - y) };
+  return {
+    x,
+    y,
+    width: Math.max(0.05, right - x),
+    height: Math.max(0.05, bottom - y),
+  };
 }
 export function lineCells(a, b) {
   let x = Math.floor(a.x),
@@ -144,28 +148,58 @@ export function lineCells(a, b) {
   }
   return result;
 }
-export function paint(d, points, terrain, radius = 1) {
-  for (const p of points)
-    for (let y = p.y; y < p.y + radius; y++)
+export const MAX_TILES = 4096;
+export function tileAt(d, x, y, level = 0) {
+  return d.tiles.find(
+    (t) => t.x === Math.floor(x) && t.y === Math.floor(y) && t.level === level,
+  );
+}
+export function paint(d, points, modelId, radius = 1, rotation = 0, level = 0) {
+  const byCell = new Map(d.tiles.map((t) => [`${t.x},${t.y},${t.level}`, t]));
+  for (const p of points) {
+    for (let y = p.y; y < p.y + radius; y++) {
       for (let x = p.x; x < p.x + radius; x++) {
         if (!inside(d, x, y)) continue;
-        if (terrain === d.base) delete d.cells[`${x},${y}`];
-        else d.cells[`${x},${y}`] = terrain;
+        const key = `${x},${y},${level}`;
+        if (!modelId) byCell.delete(key);
+        else {
+          const old = byCell.get(key);
+          if (!old && byCell.size >= MAX_TILES)
+            throw new Error("На карте может быть до 4096 плиток");
+          byCell.set(key, {
+            id: old?.id || uid(),
+            modelId,
+            x,
+            y,
+            rotation,
+            level,
+          });
+        }
       }
+    }
+  }
+  d.tiles = [...byCell.values()];
 }
-export function flood(d, point, terrain) {
+export function flood(d, point, modelId, rotation = 0, level = 0) {
   const x = Math.floor(point.x),
-    y = Math.floor(point.y),
-    original = terrainAt(d, x, y);
-  if (!inside(d, x, y) || original === terrain) return;
+    y = Math.floor(point.y);
+  if (!inside(d, x, y)) return;
+  const original = tileAt(d, x, y, level)?.modelId || "";
+  if (original === modelId) return;
   const queue = [{ x, y }],
-    visited = new Set();
+    visited = new Set(),
+    points = [];
   while (queue.length) {
     const p = queue.pop(),
       key = `${p.x},${p.y}`;
-    if (visited.has(key) || !inside(d, p.x, p.y) || terrainAt(d, p.x, p.y) !== original) continue;
+    if (
+      visited.has(key) ||
+      !inside(d, p.x, p.y) ||
+      (tileAt(d, p.x, p.y, level)?.modelId || "") !== original
+    )
+      continue;
     visited.add(key);
-    paint(d, [p], terrain);
+    points.push(p);
     queue.push(
       { x: p.x - 1, y: p.y },
       { x: p.x + 1, y: p.y },
@@ -173,18 +207,14 @@ export function flood(d, point, terrain) {
       { x: p.x, y: p.y + 1 },
     );
   }
+  paint(d, points, modelId, 1, rotation, level);
 }
 export function resized(d, width, height) {
   const next = clone(d),
     oldWidth = Math.ceil(d.width);
   next.width = width;
   next.height = height;
-  next.cells = Object.fromEntries(
-    Object.entries(d.cells).filter(([key]) => {
-      const [x, y] = key.split(',').map(Number);
-      return inside(next, x, y);
-    }),
-  );
+  next.tiles = d.tiles.filter((t) => inside(next, t.x, t.y));
   next.objects = d.objects.filter((o) => inside(next, o.x, o.y));
   next.zones = d.zones.map((z) => ({
     ...z,

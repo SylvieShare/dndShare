@@ -42,18 +42,26 @@ type Object struct {
 	Open     bool    `json:"open"`
 }
 
+type Tile struct {
+	ID       string `json:"id"`
+	ModelID  string `json:"modelId"`
+	X        int    `json:"x"`
+	Y        int    `json:"y"`
+	Rotation int    `json:"rotation"`
+	Level    int    `json:"level"`
+}
+
 type Document struct {
-	Version    int               `json:"version"`
-	Kind       string            `json:"kind"`
-	Width      float64           `json:"width"`
-	Height     float64           `json:"height"`
-	Grid       Grid              `json:"grid"`
-	Background Background        `json:"background"`
-	Base       string            `json:"base"`
-	Cells      map[string]string `json:"cells"`
-	Objects    []Object          `json:"objects"`
-	Zones      []Zone            `json:"zones"`
-	Credit     *Credit           `json:"credit,omitempty"`
+	Version    int        `json:"version"`
+	Kind       string     `json:"kind"`
+	Width      float64    `json:"width"`
+	Height     float64    `json:"height"`
+	Grid       Grid       `json:"grid"`
+	Background Background `json:"background"`
+	Tiles      []Tile     `json:"tiles"`
+	Objects    []Object   `json:"objects"`
+	Zones      []Zone     `json:"zones"`
+	Credit     *Credit    `json:"credit,omitempty"`
 }
 
 type Token struct {
@@ -90,11 +98,6 @@ func InitialState() State {
 	return State{Fog: true, DefaultVisibility: "hidden", Zones: map[string]string{}, Objects: map[string]bool{}, Tokens: []Token{}}
 }
 
-var Terrains = map[string]bool{
-	"stone": true, "slate": true, "wood": true, "earth": true, "grass": true,
-	"sand": true, "water": true, "lava": true, "chasm": true,
-	"wall-stone": true, "wall-brick": true, "wall-wood": true, "wall-rock": true,
-}
 var ObjectKinds = map[string]bool{
 	"door": true, "double-door": true, "portcullis": true, "barrel": true,
 	"crate": true, "table": true, "chest": true, "torch": true,

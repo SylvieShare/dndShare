@@ -60,14 +60,27 @@ func (s *Store) SaveBattleMap(ctx context.Context, userID int64, m BattleMap) (B
 	if err != nil {
 		return m, err
 	}
-	if m.ID == "" {
-		return scanBattleMap(s.pool.QueryRow(ctx, `INSERT INTO dndshare.battle_map(owner_user_id,name,document,asset_id) VALUES($1,$2,CAST($3 AS jsonb),$4) RETURNING id::text,name,document,revision,changed_at`, userID, m.Name, json.RawMessage(raw), m.Document.Background.AssetID))
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return m, err
 	}
-	result, err := scanBattleMap(s.pool.QueryRow(ctx, `UPDATE dndshare.battle_map SET name=$3,document=CAST($4 AS jsonb),asset_id=$5,revision=revision+1,changed_at=now() WHERE owner_user_id=$1 AND id=$2::uuid AND revision=$6 RETURNING id::text,name,document,revision,changed_at`, userID, m.ID, m.Name, json.RawMessage(raw), m.Document.Background.AssetID, m.Revision))
+	defer tx.Rollback(ctx)
+	var result BattleMap
+	if m.ID == "" {
+		result, err = scanBattleMap(tx.QueryRow(ctx, `INSERT INTO dndshare.battle_map(owner_user_id,name,document,asset_id) VALUES($1,$2,CAST($3 AS jsonb),$4) RETURNING id::text,name,document,revision,changed_at`, userID, m.Name, json.RawMessage(raw), m.Document.Background.AssetID))
+	} else {
+		result, err = scanBattleMap(tx.QueryRow(ctx, `UPDATE dndshare.battle_map SET name=$3,document=CAST($4 AS jsonb),asset_id=$5,revision=revision+1,changed_at=now() WHERE owner_user_id=$1 AND id=$2::uuid AND revision=$6 RETURNING id::text,name,document,revision,changed_at`, userID, m.ID, m.Name, json.RawMessage(raw), m.Document.Background.AssetID, m.Revision))
+	}
 	if errors.Is(err, ErrNotFound) {
 		return result, ErrMapConflict
 	}
-	return result, err
+	if err != nil {
+		return result, err
+	}
+	if err = syncMapModels(ctx, tx, "battle_map_model", "map_id", result.ID, m.Document); err != nil {
+		return result, err
+	}
+	return result, tx.Commit(ctx)
 }
 
 func (s *Store) DeleteBattleMap(ctx context.Context, userID int64, id string) error {

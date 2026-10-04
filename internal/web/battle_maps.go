@@ -91,6 +91,14 @@ func (s *Server) handleSaveMap(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, err.Error())
 		return
 	}
+	if _, err := s.store.MapModelsForDocument(r.Context(), m.Document); err != nil {
+		if errors.Is(err, store.ErrInvalidMapModels) {
+			badRequest(w, strings.TrimPrefix(err.Error(), store.ErrInvalidMapModels.Error()+": "))
+		} else {
+			serverError(w, err)
+		}
+		return
+	}
 	if m.Document.Background.AssetID != nil {
 		image, err := s.store.GetActiveUserStorageImage(r.Context(), *m.Document.Background.AssetID, uid)
 		if err != nil {

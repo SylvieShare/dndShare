@@ -8,24 +8,56 @@
       ref="host"
       class="map-canvas-surface"
       tabindex="0"
-      aria-label="Поле карты. Колесо — масштаб, средняя кнопка или Alt — перемещение."
+      aria-label="Поле карты. Колесо — масштаб, Alt — перемещение, правая кнопка или Shift — вращение обзора."
       @pointerdown="down"
       @pointermove="move"
       @pointerup="up"
       @pointercancel="cancel"
       @wheel.prevent="wheel"
     />
-    <LoadingState v-if="loading" class="map-canvas-message" label="Подготавливаем карту…" />
-    <div v-if="error" class="map-canvas-message" role="alert">{{ error }}</div>
+    <LoadingState
+      v-if="loading"
+      class="map-canvas-message"
+      label="Подготавливаем карту…"
+    />
+    <div v-if="error" class="map-canvas-message" role="alert">
+      {{ error
+      }}<ActionButton variant="secondary" @click="retry"
+        >Повторить загрузку</ActionButton
+      >
+    </div>
     <div v-if="!readonly" class="map-canvas-controls">
-      <ActionButton variant="secondary" title="Уменьшить" aria-label="Уменьшить" @click="zoom(0.8)"
+      <ActionButton
+        variant="secondary"
+        title="Уменьшить"
+        aria-label="Уменьшить"
+        @click="zoom(0.8)"
         ><Minus :size="16"
       /></ActionButton>
       <ActionButton variant="secondary" title="Показать всю карту" @click="fit"
         ><Scan :size="16" /> Вписать</ActionButton
       >
-      <ActionButton variant="secondary" title="Увеличить" aria-label="Увеличить" @click="zoom(1.25)"
+      <ActionButton
+        variant="secondary"
+        title="Увеличить"
+        aria-label="Увеличить"
+        @click="zoom(1.25)"
         ><Plus :size="16"
+      /></ActionButton>
+      <ActionButton
+        v-if="document.kind === 'tiles'"
+        variant="secondary"
+        :title="topView ? 'Объёмный вид' : 'Вид сверху'"
+        @click="toggleView"
+      >
+        <Box :size="16" />{{ topView ? "3D" : "Сверху" }}
+      </ActionButton>
+      <ActionButton
+        variant="secondary"
+        title="Повернуть обзор на 90°"
+        aria-label="Повернуть обзор на 90°"
+        @click="rotateView"
+        ><RotateCw :size="16"
       /></ActionButton>
     </div>
     <div v-if="document.credit" class="map-credit">
@@ -36,32 +68,39 @@
         rel="noopener noreferrer"
         >{{ document.credit.author }}</a
       >
-      <span v-else>{{ document.credit.author }}</span> · {{ document.credit.license }}
+      <span v-else>{{ document.credit.author }}</span> ·
+      {{ document.credit.license }}
     </div>
   </div>
 </template>
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { ActionButton, LoadingState } from '@sylvieshare/share-ui';
-import { Minus, Plus, Scan } from '@lucide/vue';
-import { createMapRenderer } from '../rendering/mapRenderer';
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
+import { Box, Minus, Plus, RotateCw, Scan } from "@lucide/vue";
+import { createMapRenderer } from "../rendering/mapRenderer";
 const props = defineProps({
   document: { type: Object, required: true },
   state: Object,
   master: Boolean,
   readonly: Boolean,
-  tool: { type: String, default: 'pan' },
+  tool: { type: String, default: "pan" },
   camera: Object,
   selectedZone: String,
   showZones: Boolean,
   selection: Object,
   selectedObject: String,
   selectedToken: String,
+  selectedTile: String,
+  previewTile: Object,
+  catalogue: Array,
+  publicCode: String,
+  tabletop: Boolean,
 });
-const emit = defineEmits(['gesture', 'view']);
+const emit = defineEmits(["gesture", "view"]);
 const host = ref(null),
   loading = ref(true),
-  error = ref('');
+  error = ref(""),
+  topView = ref(false);
 let renderer,
   dead = false,
   frame = 0,
@@ -85,6 +124,9 @@ watch(
     props.selectedObject,
     props.selectedToken,
     props.master,
+    props.selectedTile,
+    props.previewTile,
+    props.catalogue,
   ],
   redraw,
   { deep: true },
@@ -98,11 +140,35 @@ watch(
 );
 function setView(view) {
   renderer?.camera(view);
-  emit('view', renderer?.getView());
+  emit("view", renderer?.getView());
 }
 function fit() {
   const view = renderer?.getView();
   if (view) setView({ ...view, fit: true });
+}
+async function retry() {
+  error.value = "";
+  try {
+    await renderer?.update(props.document, props.state, props);
+  } catch (cause) {
+    error.value = cause.message;
+  }
+}
+function toggleView() {
+  const view = renderer?.getView();
+  if (view) {
+    topView.value = !topView.value;
+    setView({ ...view, tilt: topView.value ? 90 : 55 });
+  }
+}
+function rotateView() {
+  const view = renderer?.getView();
+  if (view)
+    setView({
+      ...view,
+      rotation: (view.rotation + 90) % 360,
+      azimuth: (view.azimuth + 90) % 360,
+    });
 }
 function zoom(factor) {
   const view = renderer?.getView();
@@ -119,7 +185,11 @@ function wheel(event) {
   zoom(Math.exp(-event.deltaY * 0.001));
   const after = renderer.world(event),
     view = renderer.getView();
-  setView({ ...view, x: view.x + before.x - after.x, y: view.y + before.y - after.y });
+  setView({
+    ...view,
+    x: view.x + before.x - after.x,
+    y: view.y + before.y - after.y,
+  });
 }
 function down(event) {
   if (props.readonly || !renderer || drag) return;
@@ -127,33 +197,60 @@ function down(event) {
   host.value.setPointerCapture(event.pointerId);
   drag = {
     id: event.pointerId,
-    pan: event.button !== 0 || event.altKey || props.tool === 'pan',
+    orbit: event.button === 2 || event.shiftKey,
+    pan: event.button === 1 || event.altKey || props.tool === "pan",
+    screen: { x: event.clientX, y: event.clientY },
     point: renderer.world(event),
     view: renderer.getView(),
   };
-  if (!drag.pan) emit('gesture', { phase: 'start', point: drag.point, event });
+  if (!drag.pan && !drag.orbit)
+    emit("gesture", {
+      phase: "start",
+      point: drag.point,
+      hit: renderer.pick(event),
+      event,
+    });
 }
 function move(event) {
   if (!renderer || props.readonly) return;
   const point = renderer.world(event);
   if (!drag) {
-    emit('gesture', { phase: 'hover', point, event });
+    emit("gesture", { phase: "hover", point, event });
     return;
   }
   if (event.pointerId !== drag.id) return;
-  if (drag.pan) {
+  if (drag.orbit) {
+    topView.value = false;
+    setView({
+      ...drag.view,
+      fit: false,
+      azimuth:
+        (drag.view.azimuth + (event.clientX - drag.screen.x) * 0.4) % 360,
+      tilt: Math.max(
+        20,
+        Math.min(90, drag.view.tilt + (event.clientY - drag.screen.y) * 0.25),
+      ),
+    });
+  } else if (drag.pan) {
     const v = renderer.getView();
-    setView({ ...v, fit: false, x: v.x + drag.point.x - point.x, y: v.y + drag.point.y - point.y });
-  } else emit('gesture', { phase: 'move', point, event });
+    setView({
+      ...v,
+      fit: false,
+      x: v.x + drag.point.x - point.x,
+      y: v.y + drag.point.y - point.y,
+    });
+  } else emit("gesture", { phase: "move", point, event });
 }
 function up(event) {
   if (!drag || event.pointerId !== drag.id) return;
-  if (!drag.pan) emit('gesture', { phase: 'end', point: renderer.world(event), event });
+  if (!drag.pan && !drag.orbit)
+    emit("gesture", { phase: "end", point: renderer.world(event), event });
   drag = null;
   host.value.releasePointerCapture(event.pointerId);
 }
 function cancel(event) {
-  if (drag && !drag.pan) emit('gesture', { phase: 'cancel', event });
+  if (drag && !drag.pan && !drag.orbit)
+    emit("gesture", { phase: "cancel", event });
   drag = null;
 }
 onMounted(async () => {

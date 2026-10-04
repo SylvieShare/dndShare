@@ -33,6 +33,8 @@
 
 | Endpoint | Контракт |
 | --- | --- |
+| `GET /api/maps/models` | Каталог метаданных моделей и renderUrl/lodUrl/previewUrl |
+| `GET /api/maps/models/{modelId}/{variant}` | ADMIN: source/render/lod/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |
 | `POST /api/maps` | Создать `{name,document}` |
 | `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
@@ -45,6 +47,14 @@
 | `GET /api/sessions/{uuid}/map-events` | Владелец: SSE invalidations |
 | `GET /api/public/sessions/{code}/map` | Публичный `{display,map}`; map=null при выключенном экране |
 | `GET /api/public/sessions/{code}/map-events` | Публичный SSE отдельного экрана карты |
+| `GET /api/public/sessions/{code}/map-models` | Только модели включённой карты трансляции |
+| `GET /api/public/sessions/{code}/map-models/{modelId}/{variant}` | render/lod/preview текущей карты; исходник STL недоступен |
+| `GET /api/public/sessions/{code}/map-background` | Фон текущей карты через origin приложения |
+
+Документ имеет version=2. Плитка: `{id,modelId,x,y,rotation,level}`;
+координаты целые, rotation=0/90/180/270, level=0. `modelId` ссылается
+на неизменяемую версию каталога; произвольные URL моделей не принимаются.
+До 4096 плиток; сервер проверяет существование, размеры и перекрытия.
 
 Карта содержит `id,name,document,revision,changedAt,system`. Сессионная копия
 добавляет `state`. Форматы документа `tiles`, `image-grid`, `image` описаны
@@ -78,7 +88,7 @@ stats и jobs.
 пользователей и справочника возвращает `storage`:
 `{usedBytes,fileCount,unknownFileCount,breakdown}`. Элементы breakdown содержат
 `key,label,bytes,fileCount,unknownFileCount` для системных и пользовательских
-изображений, видео, системной и пользовательской музыки и SVG. В статистику
+изображений, видео, системной и пользовательской музыки и SVG, а также моделей карт и превью (`systemModels`). В статистику
 входят активные управляемые объекты S3 и DB-backed файлы; удалённые строки и
 внешние URL без собственного объекта хранилища исключаются.
 

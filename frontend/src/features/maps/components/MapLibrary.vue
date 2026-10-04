@@ -1,7 +1,11 @@
 <template>
   <div class="map-library">
     <div class="map-library-toolbar">
-      <FormTextInput v-model:value="query" placeholder="Найти карту…" aria-label="Поиск карт" />
+      <FormTextInput
+        v-model:value="query"
+        placeholder="Найти карту…"
+        aria-label="Поиск карт"
+      />
       <MultiToggle
         v-model="filter"
         :options="[
@@ -16,7 +20,8 @@
       >
     </div>
     <div v-if="error" class="map-error" role="alert">
-      {{ error }} <ActionButton variant="quiet" @click="load">Повторить</ActionButton>
+      {{ error }}
+      <ActionButton variant="quiet" @click="load">Повторить</ActionButton>
     </div>
     <LoadingState v-if="loading" label="Загружаем карты…" />
     <div v-else-if="!filtered.length" class="map-empty">
@@ -24,23 +29,31 @@
       ><span>Создайте карту или выберите системную.</span>
     </div>
     <div v-else class="map-library-grid">
-      <BaseTile v-for="map in filtered" :key="map.id" padding="12px" class="map-library-card">
+      <BaseTile
+        v-for="map in filtered"
+        :key="map.id"
+        padding="12px"
+        class="map-library-card"
+      >
         <button
           class="map-library-preview"
           type="button"
           :aria-label="`${picker ? 'Выбрать' : 'Открыть'} карту ${map.name}`"
           @click="open(map)"
         >
-          <MapThumbnail :document="map.document" /><span class="map-library-name">{{
-            map.name
-          }}</span>
+          <MapThumbnail :document="map.document" /><span
+            class="map-library-name"
+            >{{ map.name }}</span
+          >
         </button>
         <span class="map-library-meta"
-          >{{ KINDS[map.document.kind] }} · {{ map.document.width }} × {{ map.document.height }} ·
-          {{ map.document.zones.length }} зон</span
+          >{{ KINDS[map.document.kind] }} · {{ map.document.width }} ×
+          {{ map.document.height }} · {{ map.document.zones.length }} зон</span
         >
         <div class="map-library-actions">
-          <span class="map-library-badge">{{ map.system ? 'Системная' : 'Моя карта' }}</span>
+          <span class="map-library-badge">{{
+            map.system ? "Системная" : "Моя карта"
+          }}</span>
           <ActionButton
             v-if="!picker"
             variant="quiet"
@@ -55,7 +68,10 @@
             @click="pendingDelete = map"
             ><Trash2 :size="15"
           /></ActionButton>
-          <ActionButton v-if="picker" variant="secondary" @click="emit('select', map)"
+          <ActionButton
+            v-if="picker"
+            variant="secondary"
+            @click="emit('select', map)"
             >Выбрать</ActionButton
           >
         </div>
@@ -119,9 +135,9 @@
   </div>
 </template>
 <script setup>
-import '../styles/maps.css';
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
-import { onBeforeRouteLeave } from 'vue-router';
+import "../styles/maps.css";
+import { computed, defineAsyncComponent, onMounted, ref } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import {
   ActionButton,
   AppModalFrame,
@@ -130,20 +146,20 @@ import {
   FormTextInput,
   LoadingState,
   MultiToggle,
-} from '@sylvieshare/share-ui';
-import { Copy, Map, Plus, Trash2 } from '@lucide/vue';
-import { deleteMap, getMaps } from '@/shared/api/mapsApi';
-import { clone, KINDS, newMap } from '../lib/mapModel';
-import MapThumbnail from './MapThumbnail.vue';
-const MapEditor = defineAsyncComponent(() => import('./MapEditor.vue')),
-  MapCanvas = defineAsyncComponent(() => import('./MapCanvas.vue'));
+} from "@sylvieshare/share-ui";
+import { Copy, Map, Plus, Trash2 } from "@lucide/vue";
+import { deleteMap, getMaps } from "@/shared/api/mapsApi";
+import { clone, KINDS, newMap } from "../lib/mapModel";
+import MapThumbnail from "./MapThumbnail.vue";
+const MapEditor = defineAsyncComponent(() => import("./MapEditor.vue")),
+  MapCanvas = defineAsyncComponent(() => import("./MapCanvas.vue"));
 const props = defineProps({ picker: Boolean }),
-  emit = defineEmits(['select']);
+  emit = defineEmits(["select"]);
 const maps = ref([]),
   loading = ref(true),
-  error = ref(''),
-  query = ref(''),
-  filter = ref('all'),
+  error = ref(""),
+  query = ref(""),
+  filter = ref("all"),
   creating = ref(false),
   editor = ref(null),
   preview = ref(null),
@@ -154,24 +170,26 @@ onBeforeRouteLeave(() => editorView.value?.prepareLeave() ?? true);
 const filtered = computed(() =>
   maps.value.filter(
     (m) =>
-      (filter.value === 'all' || m.system === (filter.value === 'system')) &&
+      (filter.value === "all" || m.system === (filter.value === "system")) &&
       m.name.toLocaleLowerCase().includes(query.value.toLocaleLowerCase()),
   ),
 );
 async function load() {
   loading.value = true;
-  error.value = '';
+  error.value = "";
   try {
     maps.value = await getMaps();
   } catch (cause) {
     error.value =
-      cause.status === 401 ? 'Войдите в аккаунт, чтобы работать с картами' : cause.message;
+      cause.status === 401
+        ? "Войдите в аккаунт, чтобы работать с картами"
+        : cause.message;
   } finally {
     loading.value = false;
   }
 }
 function open(map) {
-  if (props.picker) emit('select', map);
+  if (props.picker) emit("select", map);
   else if (map.system) preview.value = map;
   else editor.value = map;
 }
@@ -180,7 +198,7 @@ function duplicate(map) {
   delete copy.id;
   copy.system = false;
   copy.revision = 0;
-  copy.name += ' · копия';
+  copy.name += " · копия";
   editor.value = copy;
 }
 function updated(map) {

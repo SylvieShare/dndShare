@@ -41,6 +41,7 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(`CREATE SCHEMA dndshare; CREATE TABLE dndshare.users(id bigint PRIMARY KEY); CREATE TABLE dndshare.session(id bigint PRIMARY KEY); CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY); INSERT INTO dndshare.users VALUES(1),(2); INSERT INTO dndshare.session VALUES(10),(20);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaBattleMapsSQL)
+	exec(schema3DMapsSQL)
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
 	m, err := s.SaveBattleMap(ctx, 1, BattleMap{Name: preset.Name, Document: preset.Document})
@@ -58,18 +59,18 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	m.Document.Cells["0,0"] = "lava"
+	m.Document.Tiles[0].Rotation = 90
 	if _, err := s.SaveBattleMap(ctx, 1, m); err != nil {
 		t.Fatal(err)
 	}
 	after, err := s.GetSessionMap(ctx, 10, a.ID)
-	if err != nil || after.Document.Cells["0,0"] == "lava" {
+	if err != nil || after.Document.Tiles[0].Rotation == 90 {
 		t.Fatal("template edit changed session copy", err)
 	}
 	if _, err := s.GetSessionMap(ctx, 20, a.ID); !errors.Is(err, ErrNotFound) {
 		t.Fatal("session isolation", err)
 	}
-	a.State.Zones["zone-0"] = "visible"
+	a.State.Zones["west"] = "visible"
 	var wg sync.WaitGroup
 	out := make(chan error, 4)
 	for i := 0; i < 4; i++ {

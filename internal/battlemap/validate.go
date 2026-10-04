@@ -5,7 +5,6 @@ import (
 	"math"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -18,7 +17,7 @@ func bounded(n, lo, hi float64) bool {
 func visibility(s string) bool { return s == "hidden" || s == "explored" || s == "visible" }
 
 func ValidateDocument(d *Document) error {
-	if d.Version != 1 || (d.Kind != "tiles" && d.Kind != "image-grid" && d.Kind != "image") {
+	if d.Version != DocumentVersion || (d.Kind != "tiles" && d.Kind != "image-grid" && d.Kind != "image") {
 		return fmt.Errorf("Неизвестный формат карты")
 	}
 	if !bounded(d.Width, 2, 160) || !bounded(d.Height, 2, 160) || d.Width*d.Height > 16000 {
@@ -27,28 +26,26 @@ func ValidateDocument(d *Document) error {
 	if d.Kind == "tiles" && (math.Trunc(d.Width) != d.Width || math.Trunc(d.Height) != d.Height) {
 		return fmt.Errorf("Размер клеточной карты должен быть целым")
 	}
-	if !bounded(d.Grid.OffsetX, -1, 1) || !bounded(d.Grid.OffsetY, -1, 1) || !Terrains[d.Base] {
-		return fmt.Errorf("Некорректная сетка или покрытие")
+	if !bounded(d.Grid.OffsetX, -1, 1) || !bounded(d.Grid.OffsetY, -1, 1) {
+		return fmt.Errorf("Некорректная сетка")
 	}
-	if len(d.Cells) > 16000 || len(d.Objects) > 1000 || len(d.Zones) > 200 {
+	if len(d.Tiles) > MaxTiles || len(d.Objects) > 1000 || len(d.Zones) > 200 {
 		return fmt.Errorf("Слишком много элементов карты")
 	}
-	if d.Kind != "tiles" && (len(d.Cells) > 0 || (d.Background.AssetID == nil && !BuiltinBackground(d.Background.URL))) {
+	if d.Kind != "tiles" && (len(d.Tiles) > 0 || (d.Background.AssetID == nil && !BuiltinBackground(d.Background.URL))) {
 		return fmt.Errorf("Для карты требуется изображение; изменение её клеток недоступно")
 	}
 	if d.Kind == "tiles" {
 		d.Background = Background{}
 	}
-	for key, terrain := range d.Cells {
-		parts := strings.Split(key, ",")
-		if len(parts) != 2 {
-			return fmt.Errorf("Некорректная клетка")
+	tileIDs := map[string]bool{}
+	for _, tile := range d.Tiles {
+		if !identifier.MatchString(tile.ID) || tileIDs[tile.ID] || !modelIdentifier.MatchString(tile.ModelID) ||
+			tile.X < 0 || tile.Y < 0 || float64(tile.X) >= d.Width || float64(tile.Y) >= d.Height ||
+			tile.Level != 0 || (tile.Rotation != 0 && tile.Rotation != 90 && tile.Rotation != 180 && tile.Rotation != 270) {
+			return fmt.Errorf("Некорректная плитка карты")
 		}
-		x, ex := strconv.Atoi(parts[0])
-		y, ey := strconv.Atoi(parts[1])
-		if ex != nil || ey != nil || key != fmt.Sprintf("%d,%d", x, y) || x < 0 || y < 0 || float64(x) >= d.Width || float64(y) >= d.Height || !Terrains[terrain] {
-			return fmt.Errorf("Клетка вне карты или неизвестное покрытие")
-		}
+		tileIDs[tile.ID] = true
 	}
 	ids := map[string]bool{}
 	for _, object := range d.Objects {
@@ -79,8 +76,8 @@ func ValidateDocument(d *Document) error {
 	if d.Credit != nil && (len(d.Credit.Author) > 200 || len(d.Credit.License) > 300 || !SafeURL(d.Credit.Source)) {
 		return fmt.Errorf("Некорректный источник карты")
 	}
-	if d.Cells == nil {
-		d.Cells = map[string]string{}
+	if d.Tiles == nil {
+		d.Tiles = []Tile{}
 	}
 	if d.Objects == nil {
 		d.Objects = []Object{}

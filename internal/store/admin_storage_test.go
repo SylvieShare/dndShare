@@ -13,6 +13,8 @@ func TestAdminStorageStatsQueryCoversManagedFileKinds(t *testing.T) {
 		"'systemMusic'",
 		"'userMusic'",
 		"'svg'",
+		"'systemModels'",
+		"FROM dndshare.map_model model",
 		"FROM dndshare.storage_image image",
 		"FROM dndshare.svg_storage svg",
 		"FROM dndshare.music_track track",

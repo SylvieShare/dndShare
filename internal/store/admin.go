@@ -68,13 +68,21 @@ const adminStorageStatsQuery = `
 		SELECT CASE WHEN track.is_system THEN 'systemMusic' ELSE 'userMusic' END,
 			track.file_size
 		FROM dndshare.music_track track
+		UNION ALL
+		SELECT 'systemModels', assets.file_size
+		FROM (
+			SELECT asset.value->>'key' AS object_key, MAX((asset.value->>'size')::bigint) AS file_size
+			FROM dndshare.map_model model, LATERAL jsonb_each(model.assets) asset
+			GROUP BY asset.value->>'key'
+		) assets
 	), categories(category, label, sort_order) AS (VALUES
 		('systemImages', 'Системные изображения', 1),
 		('userImages', 'Пользовательские изображения', 2),
 		('video', 'Видео', 3),
 		('systemMusic', 'Системная музыка', 4),
 		('userMusic', 'Пользовательская музыка', 5),
-		('svg', 'SVG-иконки', 6)
+		('svg', 'SVG-иконки', 6),
+		('systemModels', 'Модели карт и превью', 7)
 	)
 	SELECT categories.category,
 	       categories.label,

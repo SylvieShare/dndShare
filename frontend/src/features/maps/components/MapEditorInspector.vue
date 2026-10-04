@@ -1,45 +1,18 @@
 <template>
   <aside class="map-inspector">
-    <MultiToggle v-model="tab" :options="tabs" block aria-label="Инструменты карты" />
+    <MultiToggle
+      v-model="tab"
+      :options="tabs"
+      block
+      aria-label="Инструменты карты"
+    />
     <template v-if="tab === 'paint'">
-      <p class="map-hint">
-        Выберите покрытие и нарисуйте его на карте. Стены соединяются автоматически.
-      </p>
-      <div class="map-tool-grid">
-        <ActionButton
-          v-for="t in paintTools"
-          :key="t.id"
-          :variant="editor.tool === t.id ? 'primary' : 'secondary'"
-          @click="editor.tool = t.id"
-          ><component :is="t.icon" :size="16" />{{ t.name }}</ActionButton
-        >
-      </div>
-      <FormField label="Размер кисти"
-        ><FormNumberInput
-          :value="editor.brushSize"
-          :min="1"
-          :max="8"
-          @change="editor.brushSize = $event"
-      /></FormField>
-      <div class="map-palette">
-        <ActionButton
-          v-for="t in TERRAINS"
-          :key="t.id"
-          :variant="editor.terrain === t.id ? 'primary' : 'quiet'"
-          @click="
-            editor.terrain = t.id;
-            editor.tool = 'brush';
-          "
-        >
-          <template #icon><span class="map-swatch" :style="{ background: t.color }" /></template
-          >{{ t.name }}
-        </ActionButton>
-      </div>
+      <MapTilePalette :editor="editor" />
     </template>
     <template v-else-if="tab === 'objects'">
       <p class="map-hint">
-        Объекты располагаются поверх покрытия. Выбранный объект можно перемещать, поворачивать и
-        открывать.
+        Объекты располагаются поверх покрытия. Выбранный объект можно
+        перемещать, поворачивать и открывать.
       </p>
       <FormSelect
         :value="editor.objectKind"
@@ -48,7 +21,9 @@
           editor.objectKind = $event;
           editor.tool = 'object';
         "
-        ><option v-for="o in OBJECTS" :key="o.id" :value="o.id">{{ o.name }}</option></FormSelect
+        ><option v-for="o in OBJECTS" :key="o.id" :value="o.id">
+          {{ o.name }}
+        </option></FormSelect
       >
       <ActionButton
         :variant="editor.tool === 'object' ? 'primary' : 'secondary'"
@@ -97,7 +72,8 @@
     </template>
     <template v-else-if="tab === 'zones'">
       <p class="map-hint">
-        Зона может состоять из нескольких областей. В сессии её можно открыть целиком.
+        Зона может состоять из нескольких областей. В сессии её можно открыть
+        целиком.
       </p>
       <ActionButton variant="secondary" @click="editor.addZone"
         ><Plus :size="16" />Новая зона</ActionButton
@@ -107,7 +83,9 @@
         aria-label="Выбранная зона"
         @change="editor.selectedZone = $event"
         ><option value="">Выберите зону</option>
-        <option v-for="z in d.zones" :key="z.id" :value="z.id">{{ z.name }}</option></FormSelect
+        <option v-for="z in d.zones" :key="z.id" :value="z.id">
+          {{ z.name }}
+        </option></FormSelect
       >
       <template v-if="zone">
         <FormTextInput
@@ -145,7 +123,9 @@
           variant="secondary"
           @click="
             editor.change((m) => {
-              m.document.zones = m.document.zones.filter((z) => z.id !== zone.id);
+              m.document.zones = m.document.zones.filter(
+                (z) => z.id !== zone.id,
+              );
             });
             editor.selectedZone = '';
           "
@@ -164,14 +144,18 @@
             })
           "
       /></FormField>
-      <FormField label="Ширина" :hint="d.kind === 'image' ? 'условные единицы' : 'клеток'"
+      <FormField
+        label="Ширина"
+        :hint="d.kind === 'image' ? 'условные единицы' : 'клеток'"
         ><FormNumberInput
           :value="d.width"
           :min="2"
           :max="Math.min(160, Math.floor(16000 / d.height))"
           @change="resize($event, d.height)"
       /></FormField>
-      <FormField label="Высота" :hint="d.kind === 'image' ? 'условные единицы' : 'клеток'"
+      <FormField
+        label="Высота"
+        :hint="d.kind === 'image' ? 'условные единицы' : 'клеток'"
         ><FormNumberInput
           :value="d.height"
           :min="2"
@@ -190,8 +174,8 @@
       />
       <template v-if="d.kind === 'image-grid'">
         <p class="map-hint">
-          Совместите сетку с изображением: сначала задайте число клеток, затем смещение в процентах
-          клетки.
+          Совместите сетку с изображением: сначала задайте число клеток, затем
+          смещение в процентах клетки.
         </p>
         <FormField label="Смещение X, %"
           ><FormNumberInput
@@ -217,7 +201,10 @@
         /></FormField>
       </template>
       <template v-if="d.kind !== 'tiles'">
-        <ActionButton variant="secondary" :loading="uploading" @click="fileInput.click()"
+        <ActionButton
+          variant="secondary"
+          :loading="uploading"
+          @click="fileInput.click()"
           ><Upload :size="16" />Загрузить фон</ActionButton
         >
         <input
@@ -228,9 +215,12 @@
           @change="upload"
         />
         <p class="map-hint">
-          PNG, JPEG или WebP до 15 МБ. Загруженная картинка сохраняется вместе с картой.
+          PNG, JPEG или WebP до 15 МБ. Загруженная картинка сохраняется вместе с
+          картой.
         </p>
-        <p v-if="uploadError" class="map-error" role="alert">{{ uploadError }}</p>
+        <p v-if="uploadError" class="map-error" role="alert">
+          {{ uploadError }}
+        </p>
       </template>
     </template>
     <ConfirmDialog
@@ -248,7 +238,7 @@
   </aside>
 </template>
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from "vue";
 import {
   ActionButton,
   ConfirmDialog,
@@ -258,41 +248,39 @@ import {
   FormTextInput,
   MultiToggle,
   ToggleSwitch,
-} from '@sylvieshare/share-ui';
+} from "@sylvieshare/share-ui";
 import {
-  Eraser,
   Paintbrush,
-  PaintBucket,
   Plus,
   RotateCw,
   Square,
   Trash2,
   Upload,
-} from '@lucide/vue';
-import { interactive, OBJECTS, TERRAINS } from '../lib/mapModel';
+} from "@lucide/vue";
+import { interactive, OBJECTS } from "../lib/mapModel";
+import MapTilePalette from "./MapTilePalette.vue";
 const props = defineProps({ editor: { type: Object, required: true } });
 const d = computed(() => props.editor.draft.document),
-  tab = ref(d.value.kind === 'tiles' ? 'paint' : 'settings'),
+  tab = ref(d.value.kind === "tiles" ? "paint" : "settings"),
   fileInput = ref(null),
   uploading = ref(false),
-  uploadError = ref(''),
+  uploadError = ref(""),
   pendingSize = ref(null);
 const tabs = computed(() => [
-  ...(d.value.kind === 'tiles' ? [{ value: 'paint', label: 'Кисть' }] : []),
-  { value: 'objects', label: 'Объекты' },
-  { value: 'zones', label: 'Зоны' },
-  { value: 'settings', label: 'Карта' },
+  ...(d.value.kind === "tiles" ? [{ value: "paint", label: "Плитки" }] : []),
+  { value: "objects", label: "Объекты" },
+  { value: "zones", label: "Зоны" },
+  { value: "settings", label: "Карта" },
 ]);
-const paintTools = [
-  { id: 'brush', name: 'Кисть', icon: Paintbrush },
-  { id: 'fill', name: 'Заливка', icon: PaintBucket },
-  { id: 'rect', name: 'Область', icon: Square },
-  { id: 'erase', name: 'Ластик', icon: Eraser },
-];
-const object = computed(() => d.value.objects.find((o) => o.id === props.editor.selectedObject)),
-  zone = computed(() => d.value.zones.find((z) => z.id === props.editor.selectedZone));
+const object = computed(() =>
+    d.value.objects.find((o) => o.id === props.editor.selectedObject),
+  ),
+  zone = computed(() =>
+    d.value.zones.find((z) => z.id === props.editor.selectedZone),
+  );
 watch(tab, (v) => {
-  props.editor.tool = v === 'paint' ? 'brush' : v === 'zones' ? 'zone' : 'select';
+  props.editor.tool =
+    v === "paint" ? "brush" : v === "zones" ? "zone" : "select";
 });
 function resize(w, h) {
   if (w < d.value.width || h < d.value.height) pendingSize.value = [w, h];
@@ -300,29 +288,34 @@ function resize(w, h) {
 }
 async function upload(event) {
   const file = event.target.files?.[0];
-  event.target.value = '';
+  event.target.value = "";
   if (!file) return;
   if (
     file.size > 15 * 1024 * 1024 ||
-    !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)
+    !["image/png", "image/jpeg", "image/webp"].includes(file.type)
   ) {
-    uploadError.value = 'Выберите PNG, JPEG или WebP до 15 МБ';
+    uploadError.value = "Выберите PNG, JPEG или WebP до 15 МБ";
     return;
   }
   uploading.value = true;
-  uploadError.value = '';
+  uploadError.value = "";
   try {
     const form = new FormData();
-    form.append('file', file);
-    const response = await fetch('/api/storage/images', { method: 'POST', body: form });
-    if (!response.ok) throw new Error('Не удалось загрузить изображение');
+    form.append("file", file);
+    const response = await fetch("/api/storage/images", {
+      method: "POST",
+      body: form,
+    });
+    if (!response.ok) throw new Error("Не удалось загрузить изображение");
     const asset = await response.json();
     const bitmap = await createImageBitmap(file);
     const width = Math.min(60, (60 * bitmap.width) / bitmap.height),
       height = (width * bitmap.height) / bitmap.width;
     bitmap.close();
     if (width < 2 || height < 2)
-      throw new Error('Изображение слишком вытянуто: используйте соотношение сторон до 30:1');
+      throw new Error(
+        "Изображение слишком вытянуто: используйте соотношение сторон до 30:1",
+      );
     props.editor.change((m) => {
       m.document.background = { assetId: asset.upload_id, url: asset.url };
       if (!m.document.zones.length && !m.document.objects.length) {

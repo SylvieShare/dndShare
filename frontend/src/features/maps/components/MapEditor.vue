@@ -10,9 +10,12 @@
   >
     <template #header-actions>
       <span class="map-save-status" role="status">{{
-        e.saving ? 'Сохраняем…' : e.dirty ? 'Есть изменения' : 'Сохранено'
+        e.saving ? "Сохраняем…" : e.dirty ? "Есть изменения" : "Сохранено"
       }}</span>
-      <ActionButton :disabled="!e.dirty || e.conflict" :loading="e.saving" @click="e.save"
+      <ActionButton
+        :disabled="!e.dirty || e.conflict"
+        :loading="e.saving"
+        @click="e.save"
         ><Save :size="16" />Сохранить</ActionButton
       >
     </template>
@@ -51,7 +54,10 @@
             @click="e.copy"
             ><Copy :size="16" />Копировать участок</ActionButton
           >
-          <ActionButton variant="quiet" title="Скачать карту как JSON" @click="exportMap"
+          <ActionButton
+            variant="quiet"
+            title="Скачать карту как JSON"
+            @click="exportMap"
             ><Download :size="16"
           /></ActionButton>
           <span class="map-toolbar-note">{{ toolHint }}</span>
@@ -70,6 +76,9 @@
           :show-zones="e.tool.startsWith('zone')"
           :selection="e.selection"
           :selected-object="e.selectedObject"
+          :selected-tile="e.selectedTile"
+          :preview-tile="e.previewTile"
+          :catalogue="e.catalogue"
           @gesture="e.handle"
         />
       </div>
@@ -87,31 +96,43 @@
   </AppModalFrame>
 </template>
 <script setup>
-import '../styles/maps.css';
-import { computed, reactive, ref } from 'vue';
-import { ActionButton, AppModalFrame, ConfirmDialog } from '@sylvieshare/share-ui';
-import { Copy, Download, Hand, MousePointer2, Redo2, Save, Undo2 } from '@lucide/vue';
-import MapCanvas from './MapCanvas.vue';
-import MapEditorInspector from './MapEditorInspector.vue';
-import { useMapEditor } from '../composables/useMapEditor';
-import { KINDS } from '../lib/mapModel';
+import "../styles/maps.css";
+import { computed, reactive, ref } from "vue";
+import {
+  ActionButton,
+  AppModalFrame,
+  ConfirmDialog,
+} from "@sylvieshare/share-ui";
+import {
+  Copy,
+  Download,
+  Hand,
+  MousePointer2,
+  Redo2,
+  Save,
+  Undo2,
+} from "@lucide/vue";
+import MapCanvas from "./MapCanvas.vue";
+import MapEditorInspector from "./MapEditorInspector.vue";
+import { useMapEditor } from "../composables/useMapEditor";
+import { KINDS } from "../lib/mapModel";
 const props = defineProps({ map: Object }),
-  emit = defineEmits(['close', 'saved']),
+  emit = defineEmits(["close", "saved"]),
   confirmClose = ref(false);
-const e = reactive(useMapEditor(props.map, (map) => emit('saved', map)));
+const e = reactive(useMapEditor(props.map, (map) => emit("saved", map)));
 const toolHint = computed(
   () =>
     ({
-      brush: 'Проведите кистью по клеткам',
-      fill: 'Нажмите на замкнутую область',
-      rect: 'Протяните прямоугольник',
-      erase: 'Возвращает базовое покрытие',
-      select: 'Перемещайте объекты или выделите участок',
-      pan: 'Перетаскивайте поле',
-      object: 'Нажмите, чтобы поставить объект',
-      zone: 'Протяните область зоны',
-      'zone-brush': 'Закрасьте клетки зоны',
-      paste: 'Нажмите, чтобы вставить участок',
+      brush: "Расставляйте плитки · R — поворот",
+      fill: "Нажмите на замкнутую область",
+      rect: "Протяните прямоугольник",
+      erase: "Удаляет плитки выбранного уровня",
+      select: "Перемещайте плитки и объекты или выделите участок",
+      pan: "Перетаскивайте поле",
+      object: "Нажмите, чтобы поставить объект",
+      zone: "Протяните область зоны",
+      "zone-brush": "Закрасьте клетки зоны",
+      paste: "Нажмите, чтобы вставить участок",
     })[e.tool],
 );
 let resolveLeave;
@@ -129,37 +150,41 @@ function finishLeave(leave) {
   resolveLeave?.(leave);
 }
 async function close() {
-  if (await prepareLeave()) emit('close');
+  if (await prepareLeave()) emit("close");
 }
 defineExpose({ prepareLeave });
 function hotkey(event) {
-  if (event.target.closest('input,textarea,select,[contenteditable]')) return;
-  if ((event.metaKey || event.ctrlKey) && event.code === 'KeyZ') {
+  if (event.target.closest("input,textarea,select,[contenteditable]")) return;
+  if ((event.metaKey || event.ctrlKey) && event.code === "KeyZ") {
     event.preventDefault();
     event.shiftKey ? e.redo() : e.undo();
   }
-  if ((event.metaKey || event.ctrlKey) && event.code === 'KeyS') {
+  if ((event.metaKey || event.ctrlKey) && event.code === "KeyS") {
     event.preventDefault();
     e.save();
   }
   if (
     (event.metaKey || event.ctrlKey) &&
-    event.code === 'KeyC' &&
-    e.draft.document.kind === 'tiles'
+    event.code === "KeyC" &&
+    e.draft.document.kind === "tiles"
   ) {
     event.preventDefault();
     e.copy();
   }
-  if (event.key === 'Delete' || event.key === 'Backspace') {
+  if (event.code === "KeyR") {
+    event.preventDefault();
+    e.rotate();
+  }
+  if (event.key === "Delete" || event.key === "Backspace") {
     event.preventDefault();
     e.removeSelected();
   }
 }
 function exportMap() {
   const url = URL.createObjectURL(
-    new Blob([JSON.stringify(e.draft, null, 2)], { type: 'application/json' }),
+    new Blob([JSON.stringify(e.draft, null, 2)], { type: "application/json" }),
   );
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = `${e.draft.name}.json`;
   a.click();

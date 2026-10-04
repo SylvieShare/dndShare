@@ -1,0 +1,186 @@
+package web
+
+import (
+	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"strconv"
+
+	"dndshare/internal/battlemap"
+)
+
+func init() { registerRoutes((*Server).routesMapModels) }
+func (s *Server) routesMapModels(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/maps/models", s.mapAdminOnly(s.handleMapModels))
+	mux.HandleFunc("GET /api/maps/models/{modelId}/{variant}", s.mapAdminOnly(s.handleMapModelAsset))
+	mux.HandleFunc("GET /api/public/sessions/{code}/map-models", s.handlePublicMapModels)
+	mux.HandleFunc("GET /api/public/sessions/{code}/map-models/{modelId}/{variant}", s.handlePublicMapModelAsset)
+	mux.HandleFunc("GET /api/public/sessions/{code}/map-background", s.handlePublicMapBackground)
+}
+
+type mapModelView struct {
+	battlemap.ModelMetadata
+	RenderURL  string `json:"renderUrl"`
+	LODURL     string `json:"lodUrl"`
+	PreviewURL string `json:"previewUrl"`
+}
+
+func modelView(model battlemap.Model, base string) mapModelView {
+	path := base + "/" + model.ID
+	return mapModelView{model.ModelMetadata, path + "/render", path + "/lod", path + "/preview"}
+}
+
+func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
+	models, err := s.store.ListMapModels(r.Context())
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	result := []mapModelView{}
+	for _, m := range models {
+		result = append(result, modelView(m, "/api/maps/models"))
+	}
+	w.Header().Set("Cache-Control", "no-store")
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[string]bool, bool) {
+	session, ok := s.publicMapSession(w, r)
+	if !ok {
+		return nil, false
+	}
+	display, err := s.store.GetMapDisplay(r.Context(), session.ID)
+	if err != nil {
+		mapError(w, err)
+		return nil, false
+	}
+	ids := map[string]bool{}
+	if display.Visible && display.MapID != nil {
+		m, err := s.store.GetSessionMap(r.Context(), session.ID, *display.MapID)
+		if err != nil {
+			mapError(w, err)
+			return nil, false
+		}
+		for _, t := range m.Document.Tiles {
+			ids[t.ModelID] = true
+		}
+	}
+	return ids, true
+}
+
+func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
+	ids, ok := s.publicModelIDs(w, r)
+	if !ok {
+		return
+	}
+	models, err := s.store.ListMapModels(r.Context())
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	result := []mapModelView{}
+	for _, m := range models {
+		if ids[m.ID] {
+			result = append(result, modelView(m, "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models"))
+		}
+	}
+	w.Header().Set("Cache-Control", "no-store")
+	writeJSON(w, http.StatusOK, result)
+}
+
+func (s *Server) handlePublicMapBackground(w http.ResponseWriter, r *http.Request) {
+	session, ok := s.publicMapSession(w, r)
+	if !ok {
+		return
+	}
+	display, err := s.store.GetMapDisplay(r.Context(), session.ID)
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	if !display.Visible || display.MapID == nil {
+		notFound(w, "")
+		return
+	}
+	m, err := s.store.GetSessionMap(r.Context(), session.ID, *display.MapID)
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	if m.Document.Background.AssetID == nil {
+		notFound(w, "")
+		return
+	}
+	image, err := s.store.GetActiveUserStorageImage(r.Context(), *m.Document.Background.AssetID, session.OwnerUserID)
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	if image.Key == nil {
+		notFound(w, "")
+		return
+	}
+	body, err := s.s3.GetObject(r.Context(), *image.Key)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	defer body.Body.Close()
+	w.Header().Set("Content-Type", body.ContentType)
+	w.Header().Set("Content-Length", strconv.FormatInt(body.ContentLength, 10))
+	w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
+	if _, err = io.Copy(w, body.Body); err != nil {
+		log.Printf("stream map background: %v", err)
+	}
+}
+
+func (s *Server) handleMapModelAsset(w http.ResponseWriter, r *http.Request) { s.streamMapModel(w, r) }
+func (s *Server) handlePublicMapModelAsset(w http.ResponseWriter, r *http.Request) {
+	ids, ok := s.publicModelIDs(w, r)
+	if !ok {
+		return
+	}
+	if !ids[r.PathValue("modelId")] || r.PathValue("variant") == "source" {
+		notFound(w, "")
+		return
+	}
+	s.streamMapModel(w, r)
+}
+
+func (s *Server) streamMapModel(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("modelId")
+	if !isUUID(id) {
+		notFound(w, "")
+		return
+	}
+	m, err := s.store.GetMapModel(r.Context(), id)
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	asset, ok := m.Assets[r.PathValue("variant")]
+	if !ok {
+		notFound(w, "")
+		return
+	}
+	etag := `"` + asset.SHA256 + `"`
+	w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
+	w.Header().Set("ETag", etag)
+	if r.Header.Get("If-None-Match") == etag {
+		w.WriteHeader(http.StatusNotModified)
+		return
+	}
+	body, err := s.s3.GetObject(r.Context(), asset.Key)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	defer body.Body.Close()
+	w.Header().Set("Content-Type", asset.MimeType)
+	w.Header().Set("Content-Length", strconv.FormatInt(body.ContentLength, 10))
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	if _, err := io.Copy(w, body.Body); err != nil {
+		log.Printf("stream map model %s: %v", id, err)
+	}
+}

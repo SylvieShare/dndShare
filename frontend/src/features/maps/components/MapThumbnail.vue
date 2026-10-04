@@ -9,38 +9,55 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { TERRAINS, terrainAt } from '../lib/mapModel';
+import { onMounted, ref, watch } from "vue";
+import { getMapModels } from "@/shared/api/mapsApi";
 const props = defineProps({ document: { type: Object, required: true } }),
   canvas = ref(null);
+let models = new Map();
 function draw() {
   if (!canvas.value) return;
-  const c = canvas.value.getContext('2d'),
+  const c = canvas.value.getContext("2d"),
     d = props.document,
     s = Math.min(420 / d.width, 280 / d.height),
     ox = (420 - d.width * s) / 2,
     oy = (280 - d.height * s) / 2;
-  c.fillStyle = '#161b23';
+  c.fillStyle = "#161b23";
   c.fillRect(0, 0, 420, 280);
-  const colors = Object.fromEntries(TERRAINS.map((t) => [t.id, t.color]));
-  for (let y = 0; y < d.height; y++)
-    for (let x = 0; x < d.width; x++) {
-      const kind = terrainAt(d, x, y);
-      c.fillStyle = colors[kind];
-      c.fillRect(ox + x * s, oy + y * s, s + 0.3, s + 0.3);
-      if (kind.startsWith('wall-')) {
-        c.fillStyle = '#ffffff18';
-        c.fillRect(ox + x * s, oy + y * s, s, 1);
-      }
+  for (const tile of d.tiles) {
+    const model = models.get(tile.modelId);
+    c.fillStyle = model?.tileType === "wall" ? "#5b412e" : "#99774f";
+    c.fillRect(ox + tile.x * s, oy + tile.y * s, s, s);
+    if (model?.tileType === "wall") {
+      c.strokeStyle = "#d0aa7c";
+      c.lineWidth = Math.max(1, s * 0.16);
+      c.save();
+      c.translate(ox + (tile.x + 0.5) * s, oy + (tile.y + 0.5) * s);
+      c.rotate((tile.rotation * Math.PI) / 180);
+      c.beginPath();
+      c.moveTo(-s * 0.4, -s * 0.35);
+      c.lineTo(s * 0.4, -s * 0.35);
+      c.stroke();
+      c.restore();
     }
+  }
   for (const o of d.objects) {
-    c.fillStyle = ['door', 'double-door'].includes(o.kind) ? '#d2a571' : '#b99f74';
+    c.fillStyle = ["door", "double-door"].includes(o.kind)
+      ? "#d2a571"
+      : "#b99f74";
     c.beginPath();
     c.arc(ox + o.x * s, oy + o.y * s, s * 0.3, 0, Math.PI * 2);
     c.fill();
   }
 }
-onMounted(draw);
+onMounted(async () => {
+  draw();
+  try {
+    models = new Map((await getMapModels()).map((m) => [m.id, m]));
+    draw();
+  } catch {
+    /* The full editor reports catalogue errors. */
+  }
+});
 watch(() => props.document, draw, { deep: true });
 </script>
 <style scoped>
