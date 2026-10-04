@@ -108,7 +108,7 @@ function applyCalc(type) {
   } else if (type === 'temp') {
     hp.temp = (parseInt(hp.temp) || 0) + amount
   }
-  emit('change', hp)
+  emit('change', hp, { kind: type, amount })
   calcAmount.value = ''
 }
 

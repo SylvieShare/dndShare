@@ -32,6 +32,10 @@ export function sessionEventAction(event, name) {
 export function sessionEventDetails(event) {
   if (isInteraction(event)) return interactionDetails(event)
   const data = event.data || {}
+  if (event.type === 'item_removed' && data.removedEntries?.length) {
+    return data.removedEntries.map(entry => `${entry.source?.name || 'Предмет'} (${entry.count} → ${entry.remaining})`).join(' · ')
+  }
+  if (event.type === 'hp_changed' && data.absorbed > 0) return `Поглощено временными хитами: ${data.absorbed}`
   if (event.type === 'money_transfer') return `${data.senderName} → ${data.recipientName} · ${data.amount} ${data.currencyName}`
   if (event.type === 'item_transfer') {
     const status = { pending: 'Ожидает', accepted: data.purpose === 'use' ? 'Использовано' : 'Приняли', rejected: data.purpose === 'use' ? 'Доза возвращена' : 'Отказали' }[data.status] || 'Ожидает'
@@ -47,11 +51,19 @@ export function sessionEventDetails(event) {
 
 export function sessionEventTransition(event) {
   const data = event.data || {}
+  if (event.type === 'hp_changed' && data.before && data.after) {
+    return [['current', 'Хиты'], ['temp', 'Временные хиты']]
+      .filter(([key]) => Number.isFinite(data.before[key]) && Number.isFinite(data.after[key]) && data.before[key] !== data.after[key])
+      .map(([key, name]) => `${name}: ${data.before[key]} → ${data.after[key]}`).join(', ')
+  }
   const changes = (data.resourceChanges || []).filter(change => Number.isFinite(change.remaining) && Number.isFinite(change.delta))
   if (changes.length) return changes.map(change => {
     const label = changes.length > 1 ? `${change.name}: ` : ''
     return `${label}${change.remaining - change.delta} → ${change.remaining}`
   }).join(', ')
+  if (event.type === 'item_removed' && Number.isFinite(data.remaining) && Number.isFinite(data.count)) {
+    return `${data.remaining + data.count} → ${data.remaining}`
+  }
   if (['item_spent', 'item_added'].includes(event.type) && Number.isFinite(data.remaining)) {
     const delta = event.type === 'item_spent' ? -1 : 1
     return `${data.remaining - delta} → ${data.remaining}`

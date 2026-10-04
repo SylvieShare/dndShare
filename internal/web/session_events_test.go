@@ -26,7 +26,7 @@ func TestNormalizeCharacterSessionEntryAdded(t *testing.T) {
 }
 
 func TestNormalizeCharacterSessionStateEvents(t *testing.T) {
-	for _, eventType := range []string{"feature_state", "status_effect"} {
+	for _, eventType := range []string{"feature_state", "status_effect", "hp_changed"} {
 		event, ok := normalizeCharacterSessionEvent(characterSessionEventRequest{
 			SessionUUID:    "11111111-1111-4111-8111-111111111111",
 			Type:           eventType,
@@ -52,5 +52,20 @@ func TestCharacterResourceEventTypes(t *testing.T) {
 		if !ok || event.EventType != eventType {
 			t.Fatalf("character event %s must be accepted by the atomic save: %#v, %v", eventType, event, ok)
 		}
+	}
+}
+
+func TestNormalizeCharacterSessionItemRemoved(t *testing.T) {
+	data := json.RawMessage(`{"source":{"itemId":42,"name":"Факел","instanceUid":"torch"},"count":3,"remaining":0}`)
+	event, ok := normalizeCharacterSessionEvent(characterSessionEventRequest{
+		SessionUUID: "11111111-1111-4111-8111-111111111111", Type: "item_removed",
+		Action: "Удалено: Факел", Data: data,
+		ClientActionID: "22222222-2222-4222-8222-222222222222",
+	})
+	if !ok || event.EventType != "item_removed" || event.Visibility != "public" {
+		t.Fatalf("item removal must be accepted by the atomic character save: %#v, %v", event, ok)
+	}
+	if event.Action != "Удалено: Факел" || string(event.Data) != string(data) {
+		t.Fatalf("item removal must preserve the item and quantity snapshot: %#v", event)
 	}
 }

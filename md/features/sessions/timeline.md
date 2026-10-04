@@ -46,7 +46,7 @@
 
 `session_event` stores semantic gameplay actions rather than arbitrary sheet
 JSON changes. The current producers are dice rolls, short/long rests, resource
-use and manual replenishment, spell-slot spending/recovery, potion/inventory spending and replenishment, spell use,
+use and manual replenishment, spell-slot spending/recovery, potion/inventory spending and replenishment, manual inventory removal, HP-calculator damage/healing, spell use,
 current chapter, encounter start/finish, player messages and RPS challenges,
 and `entry_added` for inventory items,
 weapons, potions, spells, feats and abilities. Direct picker/manual additions

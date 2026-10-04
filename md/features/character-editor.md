@@ -215,6 +215,12 @@ with base and bonus totals, compact read-only ability contributions, and hit-die
 pools with their type, remaining count and spend/restore controls. Single-class
 and multiclass characters use the same pool layout; there is no die-type picker.
 Base editing and manual bonuses live under **Настройка хитов**.
+The calculator’s **Урон** and **Лечение** buttons queue `hp_changed` in the
+active session chronicle, atomically with the sheet save. The event records
+the requested amount, actual HP change, temporary-HP absorption and before/after
+current, temporary and maximum HP. Damage uses temporary HP first and stops at
+zero; healing stops at the resolved maximum. An action that changes no HP does
+not create an event; hit-die and maximum settings remain manual configuration.
 Hovering, focusing or tapping **Максимум хитов** opens a scrollable history with
 class name, class level, total character level and HP gained. Character creation
 records level 1; subsequent level-ups append their actual accepted HP gains.

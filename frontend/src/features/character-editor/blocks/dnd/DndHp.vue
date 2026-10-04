@@ -30,6 +30,7 @@ import MorphEditorShell from '@/features/character-editor/components/MorphEditor
 import { useMorphOrigin } from '@/features/character-editor/composables/useMorphOrigin'
 import { normalizeHitDice, withHitDice } from '@/features/character-editor/blocks/dnd/lib/hitDice'
 import { hpMaximum, normalizeHpMaximum } from '@/features/character-editor/blocks/dnd/lib/hp'
+import { hpCalculatorEvent } from '@/features/character-editor/lib/hpCalculatorEvents'
 
 const props = defineProps(['block', 'value', 'values'])
 const emit = defineEmits(['update:value'])
@@ -64,11 +65,13 @@ const barColor = computed(() => {
   return 'var(--danger)'
 })
 
-function onHpChange(h) {
+function onHpChange(h, operation) {
   if (!canEdit.value) return
+  const event = hpCalculatorEvent(hp.value, h, operation)
   const maximum = normalizeHpMaximum(h.max)
   const stored = { ...h, max: { ...maximum, bonuses: maximum.bonuses.filter((row) => !row?.source?.sourceId) } }
   emit('update:value', props.block.id, withHitDice(stored, normalizeHitDice(stored)))
+  if (event) charCtx.logSessionEvent?.(event)
 }
 
 function openEditor(event) {

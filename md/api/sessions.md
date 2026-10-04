@@ -180,7 +180,17 @@
   `recipientUserId` are derived from session/transfer/interaction relations and support
   notification filtering; the client never treats payload fields as recipients. `clientActionId` makes
   retries idempotent. `entry_added` carries a typed `data.kind` (`item`,
-  `potion`, `spell`, `feature` or `ability`) for additions to a character;
+  `potion`, `spell`, `feature` or `ability`) for additions to a character.
+  `item_removed` records manual removal of one item or an entire stack;
+  `data` stores `source` (item ID when
+  available, name and instance UID), `itemId`, removed `count` and `remaining`.
+  Deleting a nonempty section creates one event with `data.sectionName` and
+  `data.removedEntries`, an array of those item snapshots including equipped items.
+  These events commit atomically with the character data and do not apply item effects.
+  `hp_changed` records damage/healing from the character HP calculator: `data`
+  contains `kind` (`damage` or `heal`), requested `amount`, actual `applied`,
+  temporary-HP `absorbed`, and `before`/`after` snapshots with `current`, `temp`
+  and resolved `max`. It also commits atomically with the sheet save;
 - `GET /api/sessions/{uuid}/occurrences` returns `{occurrences:[]}` for the DM
   and current participants. A meeting contains `{id,number,name,date?,sectionId,
   entryCount,changedAt}`. Dates are calendar-only `YYYY-MM-DD`; undated meetings

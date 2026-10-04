@@ -3,7 +3,7 @@ import { sessionEventActorIdentityKey, sessionEventActorLabel } from './sessionE
 export const SESSION_EVENT_CATEGORIES = [
   { value: 'interaction', label: 'Общение', icon: '↔', types: ['chat_message', 'rps_challenge'] },
   { value: 'dice', label: 'Броски', icon: '◇', types: ['dice_roll'] },
-  { value: 'character', label: 'Персонаж', icon: '✦', types: ['rest_completed', 'spell_used', 'spell_slot_changed', 'feature_action_effect', 'item_spent', 'item_added', 'item_transfer', 'money_transfer', 'entry_added', 'resource_used', 'feature_state', 'status_effect'] },
+  { value: 'character', label: 'Персонаж', icon: '✦', types: ['rest_completed', 'spell_used', 'spell_slot_changed', 'feature_action_effect', 'item_spent', 'item_added', 'item_removed', 'hp_changed', 'item_transfer', 'money_transfer', 'entry_added', 'resource_used', 'feature_state', 'status_effect'] },
   { value: 'combat', label: 'Бой', icon: '⚔', types: ['encounter_started', 'encounter_finished', 'damage_applied'] },
   { value: 'story', label: 'Сюжет', icon: '→', types: ['chapter_started'] },
 ]

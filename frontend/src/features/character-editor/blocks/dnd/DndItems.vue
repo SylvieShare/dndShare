@@ -99,6 +99,7 @@
 
 <script setup>
 import { useInventoryRowActions } from './composables/useInventoryRowActions'
+import { useInventoryRemoval } from './composables/useInventoryRemoval'
 import InventorySkeleton from './components/InventorySkeleton.vue'
 import InventoryWallet from './components/InventoryWallet.vue'
 import InventoryItemRow from './components/InventoryItemRow.vue'
@@ -134,7 +135,7 @@ import { armorAbilityRollEffects, resolveRollMode } from '@/features/character-e
 import { useDiceStore } from '@/stores/dice'
 import InventoryBagGrid from '@/features/inventory/components/InventoryBagGrid.vue'
 import { canEquipInventoryItem, inventorySpaceEntries, isInventoryEquipped, normalizeInventorySpaces, toggleInventoryEquipment } from './lib/inventorySpaces'
-import { useInventoryLayout, inventoryItems as itemsRef, setInventoryItems as setItems } from './composables/useInventoryLayout'
+import { useInventoryLayout, inventoryItems as itemsRef } from './composables/useInventoryLayout'
 import { logSessionEntryAdded } from '@/features/character-editor/lib/sessionEntryEvents'
 import {
   EQUIPPED_ID,
@@ -169,6 +170,7 @@ const toolAbilityOptions = STAT_KEYS.map((key, index) => ({ key, suggestId: inde
 
 const model = computed(() => normalizeValue(props.value))
 const { catalog, loading, error: catalogError, reload: reloadCatalog } = useInventoryCatalog(() => model.value)
+const { decrement, removeEntry, removeSection } = useInventoryRemoval({ model, emitModel, charCtx, entryWithDisplay })
 const { tooltip, showTooltip, hideTooltip, viewEntry, deleteOneEntry, addEntry, editEntry, deleteEntry } = useInventoryRowActions({ model, modalSelection, charCtx, increment, decrement, openInlineForm, removeEntry })
 
 const weightFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 8 })
@@ -341,27 +343,8 @@ function askDeleteSection(section) {
 }
 
 function doDeleteSection() {
-  const next = cloneModel(model.value)
-  const removed = new Set(inventorySpaceEntries(next, confirmDel.id).map(entry => entry.uid))
-  next.equipped = next.equipped.filter(entry => !removed.has(entry.uid))
-  next.sections = next.sections.filter(s => s.id !== confirmDel.id)
-  if (next.sections.length === 0) {
-    next.sections.push({ id: makeSectionId(), name: 'Рюкзак', items: [] })
-  }
+  removeSection(confirmDel.id)
   confirmDel.open = false
-  emitModel(next)
-}
-
-function decrement(sectionId, uid) {
-  const next = cloneModel(model.value)
-  const list = itemsRef(next, sectionId)
-  if (!list) return
-  const idx = list.findIndex(i => i.uid === uid)
-  if (idx === -1) return
-  const item = list[idx]
-  if ((item.count || 1) > 1) item.count -= 1
-  else list.splice(idx, 1)
-  emitModel(next)
 }
 
 function increment(sectionId, uid, selectedParams = null) {
@@ -379,14 +362,6 @@ function increment(sectionId, uid, selectedParams = null) {
   entry.count = Math.min(999, Math.max(1, Number(entry.count) || 1) + 1)
   emitModel(next)
   return entry.count
-}
-
-function removeEntry(sectionId, uid) {
-  const next = cloneModel(model.value)
-  const list = itemsRef(next, sectionId)
-  if (!list) return
-  setItems(next, sectionId, list.filter(i => i.uid !== uid))
-  emitModel(next)
 }
 
 function openPicker(sectionId) {
