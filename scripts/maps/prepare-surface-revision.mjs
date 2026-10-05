@@ -35,7 +35,11 @@ export async function prepareSurfaceRevision({
   const directory = path.join(base, folder, code + "__" + model.version);
   await fs.mkdir(directory, { recursive: true });
   await fs.rm(path.join(directory, "preview.png"), { force: true });
-  const report = { model, recipe, tiers: {} };
+  const report = {
+    model: { ...model, textureDetail: "detailed" },
+    recipe,
+    tiers: {},
+  };
   const colorReference =
     colorReferenceVersion === undefined
       ? model

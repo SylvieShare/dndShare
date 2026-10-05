@@ -4,6 +4,7 @@ it("copies editable metadata deeply, preserves identity and excludes URLs and as
   const source = {
     id: "one",
     version: 2,
+    textureDetail: "detailed",
     tileType: "wall",
     wallLayout: "straight",
     width: 1,
@@ -17,6 +18,7 @@ it("copies editable metadata deeply, preserves identity and excludes URLs and as
   expect(draft.wallMask).toBe(17);
   expect(draft.id).toBe("one");
   expect(draft.version).toBe(2);
+  expect(draft.textureDetail).toBe("detailed");
   expect(draft.assets).toBeUndefined();
   expect(draft.renderUrl).toBeUndefined();
   draft.supportSlots[0].x = 2;

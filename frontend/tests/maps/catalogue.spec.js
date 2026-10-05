@@ -61,6 +61,12 @@ test("admin tile reference saves a fresh version and leaves existing map tiles u
     .getByLabel("Название тайла", { exact: true })
     .fill("Исправленный пол");
   await page.getByLabel("Ширина тайла в клетках", { exact: true }).fill("2");
+  await expect(
+    page.getByLabel("Проработка текстур", { exact: true }),
+  ).toHaveValue("basic");
+  await page
+    .getByLabel("Проработка текстур", { exact: true })
+    .selectOption("detailed");
   await page
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
@@ -73,6 +79,7 @@ test("admin tile reference saves a fresh version and leaves existing map tiles u
     name: "Исправленный пол",
     width: 2,
     version: 2,
+    textureDetail: "detailed",
   });
   expect(saved.id).not.toBe("22222222-2222-4222-8222-222222222222");
   expect(

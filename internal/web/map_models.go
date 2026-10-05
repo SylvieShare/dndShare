@@ -32,7 +32,9 @@ func modelView(model, visual battlemap.Model, base string) mapModelView {
 	if visual.ID != model.ID {
 		query = "?revision=" + url.QueryEscape(visual.ID)
 	}
-	return mapModelView{model.ModelMetadata, path + "/render" + query, path + "/lod" + query, path + "/preview" + query}
+	metadata := model.ModelMetadata
+	metadata.TextureDetail = visual.TextureDetail
+	return mapModelView{metadata, path + "/render" + query, path + "/lod" + query, path + "/preview" + query}
 }
 
 func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {

@@ -75,6 +75,17 @@ func TestRegisteredModelMetadataValidation(t *testing.T) {
 	}
 }
 
+func TestRegisteredModelTextureDetailValidation(t *testing.T) {
+	for _, level := range []string{"basic", "detailed", "", "high", "Detailed"} {
+		model := battlemap.InitialCatalogue()[0]
+		model.TextureDetail = level
+		err := validateMapModel(model)
+		if (err == nil) != (level == "basic" || level == "detailed") {
+			t.Fatalf("textureDetail %q: %v", level, err)
+		}
+	}
+}
+
 func TestRegisteredModelMountDepthValidation(t *testing.T) {
 	for _, depth := range []float64{-1, 5, math.NaN(), math.Inf(1)} {
 		m := battlemap.InitialCatalogue()[0]

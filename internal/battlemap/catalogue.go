@@ -17,6 +17,7 @@ type ModelMetadata struct {
 	SourceName      string         `json:"sourceName"`
 	Name            string         `json:"name"`
 	Version         int            `json:"version"`
+	TextureDetail   string         `json:"textureDetail"`
 	TileType        string         `json:"tileType"`
 	TerrainType     string         `json:"terrainType"`
 	WallLayout      string         `json:"wallLayout"`

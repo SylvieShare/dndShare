@@ -11,6 +11,10 @@ export const WALL_MODES = [
   { value: "center", label: "Центральные стены: точки" },
   { value: "edge", label: "Боковые стены: стороны" },
 ];
+export const TEXTURE_DETAILS = [
+  { value: "basic", label: "Поверхностная" },
+  { value: "detailed", label: "Детальная" },
+];
 export const METADATA_KEYS = [
   "id",
   "collection",
@@ -19,6 +23,7 @@ export const METADATA_KEYS = [
   "sourceName",
   "name",
   "version",
+  "textureDetail",
   "tileType",
   "terrainType",
   "wallLayout",

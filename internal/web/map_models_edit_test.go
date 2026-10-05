@@ -13,6 +13,7 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 	input := original.ModelMetadata
 	input.Name = "  Исправленная стена  "
 	input.Width = 2
+	input.TextureDetail = "detailed"
 	input.PlacementOffset = [2]float64{-.25, .1}
 	edited, err := editedMapModel(original, input)
 	if err != nil {
@@ -20,6 +21,9 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 	}
 	if edited.Name != "Исправленная стена" || edited.Width != 2 || edited.PlacementOffset != input.PlacementOffset {
 		t.Fatalf("edit not applied: %+v", edited.ModelMetadata)
+	}
+	if edited.TextureDetail != "detailed" || original.TextureDetail != "basic" {
+		t.Fatal("texture detail edit was not isolated to the new metadata")
 	}
 	if !reflect.DeepEqual(edited.Assets, original.Assets) || edited.ID != original.ID || edited.Version != original.Version {
 		t.Fatal("metadata edit changed assets or immutable identity")

@@ -12,6 +12,8 @@ func VisualRevision(original, revision Model) bool {
 	a, b := original.ModelMetadata, revision.ModelMetadata
 	a.ID, b.ID = "", ""
 	a.Version, b.Version = 0, 0
+	// Texture workmanship describes the visual asset, not its placement contract.
+	a.TextureDetail, b.TextureDetail = "", ""
 	return reflect.DeepEqual(a, b)
 }
 

@@ -7,6 +7,7 @@ func TestVisualRevisionRequiresIdenticalPlacementAndSource(t *testing.T) {
 	revision := old
 	revision.ID = "new"
 	revision.Version++
+	revision.TextureDetail = "detailed"
 	if !VisualRevision(old, revision) {
 		t.Fatal("identical placement contract rejected")
 	}

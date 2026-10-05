@@ -14,6 +14,20 @@
         </option></FormSelect
       ></FormField
     >
+    <FormField label="Проработка текстур" vertical>
+      <FormSelect
+        v-model:value="model.textureDetail"
+        aria-label="Проработка текстур"
+      >
+        <option
+          v-for="level in TEXTURE_DETAILS"
+          :key="level.value"
+          :value="level.value"
+        >
+          {{ level.label }}
+        </option>
+      </FormSelect>
+    </FormField>
     <FormField label="Тип местности" vertical
       ><FormTextInput
         v-model:value="model.terrainType"
@@ -103,7 +117,7 @@ import {
   FormTextInput,
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
-import { TILE_TYPES, WALL_MODES } from "../lib/modelMetadata";
+import { TILE_TYPES, WALL_MODES, TEXTURE_DETAILS } from "../lib/modelMetadata";
 import { CONNECTIONS } from "../lib/tileConnections";
 const props = defineProps({ model: Object });
 const dimensions = [

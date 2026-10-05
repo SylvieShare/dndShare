@@ -33,7 +33,7 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | ADMIN: каталог метаданных моделей и renderUrl/lodUrl/previewUrl |
+| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, textureDetail (basic/detailed) используемой визуальной версии и renderUrl/lodUrl/previewUrl |
 | `PUT /api/maps/models/{modelId}` | ADMIN: полная ModelMetadata текущей версии → новая версия с новым UUID; файлы и старые версии неизменны, устаревшая правка получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | ADMIN: source/render/lod/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |

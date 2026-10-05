@@ -82,7 +82,15 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   const key = `${report.model.collection}:${report.model.sourceCode}`,
     version = versions.get(key) + 1;
   versions.set(key, version);
-  models.push({ ...report.model, id, version, assets });
+  const detailedRecipe = [
+    "ud006-measured-timber-v1",
+    "ud009-layered-stone-v1",
+    "ud010-measured-door-v1",
+  ].includes(recipe);
+  const textureDetail = detailedRecipe
+    ? "detailed"
+    : report.model.textureDetail || "basic";
+  models.push({ ...report.model, textureDetail, id, version, assets });
 }
 await fs.writeFile(
   path.join(out, "catalogue.json"),

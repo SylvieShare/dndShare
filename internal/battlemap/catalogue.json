@@ -230,7 +230,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "7023f957-aa38-5f46-9e2f-51850f95c4d0",
@@ -475,7 +476,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "b760fea6-d927-5365-b41d-b0328fd045d9",
@@ -704,7 +706,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "6c569452-b750-5d00-91cb-934728e0c2a4",
@@ -1013,7 +1016,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "70ce5dd7-4abc-5d47-a79a-52ac73451e19",
@@ -1366,7 +1370,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "41883fd8-4a48-563d-a9c3-7a688900a17f",
@@ -1539,7 +1544,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "6dda1209-023e-54b3-8d10-13c09b1be4f0",
@@ -1597,7 +1603,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "a5ea55e3-1a8b-53d8-8bf8-4e1f57b1aae1",
@@ -1655,7 +1662,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "3ca1a93f-29c5-5925-8cb0-2ce1ccd301ab",
@@ -1713,7 +1721,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "945b1830-1690-5a27-9f67-2c3a69b6f1c4",
@@ -1961,7 +1970,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "ac971598-ad9a-5e0e-9519-23a5dcefafa4",
@@ -2111,7 +2121,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "81c86366-3066-5afa-a68c-0811f456b4ee",
@@ -2405,7 +2416,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "de5c1210-fb91-5ad7-a2b8-58954650ca6c",
@@ -2711,7 +2723,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "5c3f8aec-74be-5d18-b4bb-b358d37ea212",
@@ -3011,7 +3024,8 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   },
   {
     "id": "c10ec89c-02ec-556d-a29d-762dce9e9013",
@@ -3307,6 +3321,7 @@
     "placementOffset": [
       0,
       0
-    ]
+    ],
+    "textureDetail": "basic"
   }
 ]

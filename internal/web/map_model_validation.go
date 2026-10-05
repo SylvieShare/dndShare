@@ -9,6 +9,9 @@ import (
 )
 
 func validateMapModel(m battlemap.Model) error {
+	if m.TextureDetail != "basic" && m.TextureDetail != "detailed" {
+		return errors.New("invalid textureDetail; expected basic or detailed")
+	}
 	if !isUUID(m.ID) || m.Collection == "" || m.SourceCode == "" || m.SourceName == "" || strings.TrimSpace(m.Name) == "" || m.Version < 1 || len([]rune(m.Name)) > 160 || len(m.Collection) > 80 || len(m.SourceCode) > 80 || len(m.SourceName) > 255 {
 		return errors.New("invalid model identity or names")
 	}

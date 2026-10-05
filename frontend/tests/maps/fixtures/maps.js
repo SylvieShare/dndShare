@@ -138,6 +138,7 @@ const catalogue = [
   terrainType: "cave",
   wallLayout: m.wallLayout || (m.tileType === "wall" ? "straight" : "none"),
   wallMode: m.wallMode || "center",
+  textureDetail: m.textureDetail || "basic",
   supportSlots: m.supportSlots || [],
   width: m.width || 1,
   height: m.height || 1,
