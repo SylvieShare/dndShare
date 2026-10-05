@@ -115,7 +115,8 @@
   background: var(--surface);
   font-size: 13px;
 }
-.map-save-status {
+.map-save-status,
+.map-selection-count {
   font-size: 11px;
   color: var(--text-muted);
   white-space: nowrap;

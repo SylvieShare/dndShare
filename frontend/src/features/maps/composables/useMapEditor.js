@@ -9,18 +9,20 @@ import {
 import { getMapModels, resetMapModels, saveMap } from "@/shared/api/mapsApi";
 import { clone, newMap, resized, uid } from "../lib/mapModel";
 import { editorGestures } from "./editorGestures";
+import { editorTileDrag } from "./editorTileDrag";
+import { editorWallBrush } from "./editorWallBrush";
 
 export function useMapEditor(source, onSaved) {
   const draft = ref(clone(source || newMap())),
-    tool = ref(
-      source?.document.kind && source.document.kind !== "tiles"
-        ? "select"
-        : "brush",
-    ),
+    tool = ref("select"),
     selectedModel = ref(""),
     placementRotation = ref(0),
     level = ref(0),
     selectedTile = ref(""),
+    selectedTiles = ref([]),
+    screenSelection = ref(null),
+    hoveredTile = ref(""),
+    draggingTile = ref(false),
     previewTile = ref(null),
     catalogue = shallowRef([]),
     loadingModels = ref(true),
@@ -47,6 +49,10 @@ export function useMapEditor(source, onSaved) {
     draft.value.revision = 0;
   }
   const dirty = computed(() => JSON.stringify(draft.value) !== saved.value);
+  function setTileSelection(ids, primary = ids[0] || "") {
+    selectedTiles.value = [...new Set(ids)];
+    selectedTile.value = primary;
+  }
   function checkpoint() {
     history.value.push(clone(draft.value));
     if (history.value.length > 50) history.value.shift();
@@ -61,12 +67,23 @@ export function useMapEditor(source, onSaved) {
     future.value.push(clone(draft.value));
     draft.value = history.value.pop();
     gestures.resetGesture();
+    setTileSelection(
+      selectedTiles.value.filter((id) =>
+        draft.value.document.tiles.some((t) => t.id === id),
+      ),
+    );
     selection.value = null;
   }
   function redo() {
     if (!future.value.length) return;
     history.value.push(clone(draft.value));
     draft.value = future.value.pop();
+    gestures.resetGesture();
+    setTileSelection(
+      selectedTiles.value.filter((id) =>
+        draft.value.document.tiles.some((t) => t.id === id),
+      ),
+    );
     selection.value = null;
   }
   // Document history never rolls the server's compare-and-swap version back.
@@ -134,15 +151,20 @@ export function useMapEditor(source, onSaved) {
   function pauseSave(value) {
     inGesture = value;
     clearTimeout(timer);
-    if (!value && !conflict.value) timer = setTimeout(save, 1200);
+    if (!value && !conflict.value && !stopped) timer = setTimeout(save, 1200);
   }
-  const gestures = editorGestures({
+  const state = {
     draft,
     tool,
     selectedModel,
     placementRotation,
     level,
     selectedTile,
+    selectedTiles,
+    screenSelection,
+    setTileSelection,
+    hoveredTile,
+    draggingTile,
     previewTile,
     selectedObject,
     selectedZone,
@@ -152,7 +174,11 @@ export function useMapEditor(source, onSaved) {
     checkpoint,
     change,
     pauseSave,
-  });
+    catalogue,
+  };
+  const tileDrag = editorTileDrag(state);
+  const wallBrush = editorWallBrush(state);
+  const gestures = editorGestures({ ...state, tileDrag, wallBrush });
   async function loadModels() {
     loadingModels.value = true;
     modelError.value = "";
@@ -193,6 +219,13 @@ export function useMapEditor(source, onSaved) {
     placementRotation,
     level,
     selectedTile,
+    selectedTiles,
+    screenSelection,
+    setTileSelection,
+    hoveredTile,
+    draggingTile,
+    tileDrag,
+    wallBrush,
     previewTile,
     catalogue,
     loadingModels,

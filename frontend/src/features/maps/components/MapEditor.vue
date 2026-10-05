@@ -1,5 +1,5 @@
 <template>
-  <main class="map-editor-workspace" @keydown="hotkey">
+  <main class="map-editor-workspace">
     <header class="map-editor-header">
       <ActionButton
         variant="quiet"
@@ -23,19 +23,28 @@
       >
     </header>
     <div class="map-editor">
-      <MapEditorInspector :editor="e" />
+      <MapEditorInspector :editor="e" @drag-tile="catalogueDrag.begin" />
       <div class="map-editor-main">
-        <div class="map-toolbar">
-          <ActionButton
-            :variant="e.tool === 'select' ? 'primary' : 'secondary'"
-            @click="e.tool = 'select'"
-            ><MousePointer2 :size="16" />Выбор</ActionButton
+        <div class="map-toolbar" role="toolbar" aria-label="Действия карты">
+          <span
+            class="map-selection-count"
+            role="status"
+            aria-label="Выбрано плиток"
+            >Выбрано: {{ e.selectedTiles.length }}</span
           >
-          <ActionButton
-            :variant="e.tool === 'pan' ? 'primary' : 'secondary'"
-            @click="e.tool = 'pan'"
-            ><Hand :size="16" />Обзор</ActionButton
-          >
+          <RemoveButton
+            icon="trash"
+            variant="boxed"
+            :disabled="!e.selectedTiles.length && !e.selectedObject"
+            :label="
+              e.selectedTiles.length > 1
+                ? 'Удалить плитки'
+                : e.selectedTiles.length
+                  ? 'Удалить плитку'
+                  : 'Удалить объект'
+            "
+            @click="e.removeSelected"
+          />
           <ActionButton
             variant="quiet"
             :disabled="!e.history.length"
@@ -53,19 +62,18 @@
           <ActionButton
             v-if="e.draft.document.kind === 'tiles'"
             variant="quiet"
-            :disabled="!e.selection"
+            :disabled="!e.selection && !e.selectedTiles.length"
+            aria-label="Копировать участок"
+            title="Копировать участок · Ctrl/Cmd+C"
             @click="e.copy"
-            ><Copy :size="16" />Копировать участок</ActionButton
-          >
+            ><Copy :size="16"
+          /></ActionButton>
           <ActionButton
             variant="quiet"
             title="Скачать карту как JSON"
             @click="exportMap"
             ><Download :size="16"
           /></ActionButton>
-          <span class="map-toolbar-note">
-            {{ toolHint }} · ПКМ / Shift — вращение
-          </span>
         </div>
         <div v-if="e.error" class="map-error" role="alert">
           {{ e.error }}
@@ -74,6 +82,7 @@
           >
         </div>
         <MapCanvas
+          ref="canvas"
           :document="e.draft.document"
           master
           :tool="e.tool"
@@ -82,9 +91,17 @@
           :selection="e.selection"
           :selected-object="e.selectedObject"
           :selected-tile="e.selectedTile"
+          :selected-tiles="e.selectedTiles"
+          :screen-selection="e.screenSelection"
+          :hovered-tile="e.hoveredTile"
           :preview-tile="e.previewTile"
+          :show-connections="e.selectedTiles.length === 1 && !e.draggingTile"
+          :connection-mask="connections.mask"
+          :connection-invalid="connections.invalid"
+          :hint="`${toolHint} · Cmd + клик/рамка: группа · Cmd + перенос: заполнить · Стрелки: камера · Alt: сдвиг · ПКМ/Shift: вращение`"
           :catalogue="e.catalogue"
           @gesture="e.handle"
+          @connection="connections.toggle"
         />
       </div>
     </div>
@@ -102,43 +119,42 @@
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, reactive, ref } from "vue";
-import { ActionButton, ConfirmDialog } from "@sylvieshare/share-ui";
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import {
-  ArrowLeft,
-  Copy,
-  Download,
-  Hand,
-  MousePointer2,
-  Redo2,
-  Save,
-  Undo2,
-} from "@lucide/vue";
+  ActionButton,
+  ConfirmDialog,
+  RemoveButton,
+} from "@sylvieshare/share-ui";
+import { ArrowLeft, Copy, Download, Redo2, Save, Undo2 } from "@lucide/vue";
 import MapCanvas from "./MapCanvas.vue";
 import MapEditorInspector from "./MapEditorInspector.vue";
 import { useMapEditor } from "../composables/useMapEditor";
+import { useCatalogueDrag } from "../composables/useCatalogueDrag";
+import { useTileConnections } from "../composables/useTileConnections";
 import { KINDS } from "../lib/mapModel";
 const props = defineProps({ map: Object }),
   emit = defineEmits(["close", "saved"]),
   confirmClose = ref(false);
 const e = reactive(useMapEditor(props.map, (map) => emit("saved", map)));
+const canvas = ref(null),
+  catalogueDrag = useCatalogueDrag(e, canvas);
+const connections = reactive(useTileConnections(e));
 const toolHint = computed(
   () =>
     ({
-      brush: "Расставляйте плитки · R — поворот",
-      fill: "Нажмите на замкнутую область",
-      rect: "Протяните прямоугольник",
-      erase: "Удаляет плитки выбранного уровня",
-      select: "Перемещайте плитки и объекты или выделите участок",
-      pan: "Перетаскивайте поле",
+      select: "Тайл из каталога: перетащить · R: поворот",
       object: "Нажмите, чтобы поставить объект",
       zone: "Протяните область зоны",
       "zone-brush": "Закрасьте клетки зоны",
       paste: "Нажмите, чтобы вставить участок",
+      "wall-brush":
+        "Рисуйте стены · Стыки подбираются автоматически · Alt: перемещение поля",
     })[e.tool],
 );
 let resolveLeave;
 async function prepareLeave() {
+  catalogueDrag.cancel();
+  e.resetGesture();
   if (e.saving) return false;
   if (e.dirty) await e.save();
   if (!e.dirty) return true;
@@ -153,7 +169,22 @@ function finishLeave(leave) {
 }
 defineExpose({ prepareLeave });
 function hotkey(event) {
+  if (
+    event.defaultPrevented ||
+    confirmClose.value ||
+    document.querySelector('[role="dialog"]')
+  )
+    return;
   if (event.target.closest("input,textarea,select,[contenteditable]")) return;
+  if (event.key.startsWith("Arrow")) {
+    event.preventDefault();
+    canvas.value?.panArrow(event.key);
+    catalogueDrag.cameraMoved();
+  }
+  if (event.key === "Escape") {
+    catalogueDrag.cancel();
+    e.handle({ phase: "cancel" });
+  }
   if ((event.metaKey || event.ctrlKey) && event.code === "KeyZ") {
     event.preventDefault();
     event.shiftKey ? e.redo() : e.undo();
@@ -179,6 +210,8 @@ function hotkey(event) {
     e.removeSelected();
   }
 }
+onMounted(() => window.addEventListener("keydown", hotkey));
+onBeforeUnmount(() => window.removeEventListener("keydown", hotkey));
 function exportMap() {
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(e.draft, null, 2)], { type: "application/json" }),

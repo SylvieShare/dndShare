@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
+import { dragTile } from "./editorHelpers";
 
 async function point(page, x, y) {
   const b = await page.locator(".map-canvas-surface").boundingBox();
@@ -23,13 +24,13 @@ async function ready(page, mode = "") {
   const top = page.getByTitle("Вид сверху", { exact: true });
   if (await top.count()) await top.click();
 }
-test("editor paints, undoes, saves versions and creates zones", async ({
+test("editor drops tiles, undoes, saves versions and creates zones", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await ready(page, "editor");
   const p = await point(page, 3.5, 3.5);
-  await page.mouse.click(p.x, p.y);
+  await dragTile(page, p);
   await expect
     .poll(() =>
       page.evaluate(
@@ -49,7 +50,7 @@ test("editor paints, undoes, saves versions and creates zones", async ({
       ),
     )
     .toBeUndefined();
-  await page.getByRole("radio", { name: "Зоны", exact: true }).click();
+  await page.getByRole("tab", { name: "Зоны", exact: true }).click();
   await page.getByRole("button", { name: "Новая зона", exact: true }).click();
   const a = await point(page, 2, 2),
     b = await point(page, 4, 4);
@@ -139,11 +140,11 @@ for (const kind of ["image-grid", "image"])
     await page.setViewportSize({ width: 1440, height: 1000 });
     await ready(page, `editor&kind=${kind}`);
     await expect(
-      page.getByRole("radio", { name: "Плитки", exact: true }),
+      page.getByRole("tab", { name: "Плитки", exact: true }),
     ).toHaveCount(0);
     const p = await point(page, 3.5, 3.5);
     await page.mouse.click(p.x, p.y);
-    await page.getByRole("radio", { name: "Зоны", exact: true }).click();
+    await page.getByRole("tab", { name: "Зоны", exact: true }).click();
     await page.getByRole("button", { name: "Новая зона", exact: true }).click();
     const a = await point(page, 2.2, 2.2),
       b = await point(page, 4.2, 4.2);
@@ -206,13 +207,11 @@ test("conflicting writes require an explicit reload before replacing local chang
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
-test("editor rotates a tile before placing and erases it", async ({ page }) => {
+test("editor rotates a dragged tile before placing and deletes it from its menu", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await ready(page, "editor");
   const p = await point(page, 4.5, 4.5);
-  await page.locator(".map-canvas-surface").focus();
-  await page.keyboard.press("r");
-  await page.mouse.click(p.x, p.y);
+  await dragTile(page, p, { rotate: true });
   await expect
     .poll(() =>
       page.evaluate(
@@ -222,8 +221,8 @@ test("editor rotates a tile before placing and erases it", async ({ page }) => {
       ),
     )
     .toBe(90);
-  await page.getByRole("button", { name: "Ластик", exact: true }).click();
   await page.mouse.click(p.x, p.y);
+  await page.getByRole("button", { name: "Удалить плитку", exact: true }).click();
   await expect
     .poll(() =>
       page.evaluate(() =>
@@ -262,7 +261,7 @@ test("real compressed model uses the same editor and shader when local assets ex
   await page.setViewportSize({ width: 1440, height: 1000 });
   await ready(page, "editor");
   const p = await point(page, 4.5, 4.5);
-  await page.mouse.click(p.x, p.y);
+  await dragTile(page, p);
   await expect
     .poll(() =>
       page.evaluate(

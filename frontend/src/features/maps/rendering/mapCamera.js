@@ -15,7 +15,9 @@ export function mapCamera(camera, gpu, host, render) {
       tilt: ISOMETRIC_TILT,
       azimuth: ISOMETRIC_AZIMUTH,
     },
-    readonly = false;
+    readonly = false,
+    sizedWidth = 0,
+    sizedHeight = 0;
   const ray = new Raycaster(),
     point = new Vector3(),
     plane = new Plane(new Vector3(0, 1, 0), -FLOOR);
@@ -42,7 +44,11 @@ export function mapCamera(camera, gpu, host, render) {
     }
     pixels = Math.max(0.5, pixels);
     view.cellPixels = pixels;
-    gpu.setSize(width, height);
+    if (width !== sizedWidth || height !== sizedHeight) {
+      gpu.setSize(width, height);
+      sizedWidth = width;
+      sizedHeight = height;
+    }
     camera.left = -width / 2 / pixels;
     camera.right = width / 2 / pixels;
     camera.top = height / 2 / pixels;
@@ -81,6 +87,13 @@ export function mapCamera(camera, gpu, host, render) {
       return result ? { x: result.x, y: result.z } : { x: -1, y: -1 };
     },
     ray: cast,
+    project(point) {
+      const p = point.clone().project(camera);
+      return {
+        x: ((p.x + 1) * host.clientWidth) / 2,
+        y: ((1 - p.y) * host.clientHeight) / 2,
+      };
+    },
     getView: () => ({ ...view }),
   };
 }

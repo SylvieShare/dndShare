@@ -1,13 +1,17 @@
 <template>
   <aside class="map-inspector">
-    <MultiToggle
-      v-model="tab"
-      :options="tabs"
-      block
-      aria-label="Инструменты карты"
-    />
+    <SlidingTabs v-model="tab" :tabs="tabs" aria-label="Инструменты карты">
+      <template #icon="{ tab: item }">
+        <span :title="item.label" role="img" :aria-label="item.label">
+          <component :is="item.icon" :size="20" aria-hidden="true" />
+        </span>
+      </template>
+    </SlidingTabs>
     <template v-if="tab === 'paint'">
-      <MapTilePalette :editor="editor" />
+      <MapTilePalette
+        :editor="editor"
+        @drag-tile="(id, event) => emit('drag-tile', id, event)"
+      />
     </template>
     <template v-else-if="tab === 'objects'">
       <p class="map-hint">
@@ -137,6 +141,7 @@
       <FormField label="Название" vertical
         ><FormTextInput
           :value="editor.draft.name"
+          aria-label="Название карты"
           :maxlength="160"
           @change="
             editor.change((m) => {
@@ -246,20 +251,24 @@ import {
   FormNumberInput,
   FormSelect,
   FormTextInput,
-  MultiToggle,
+  SlidingTabs,
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
 import {
+  Box,
+  Layers,
   Paintbrush,
   Plus,
   RotateCw,
   Square,
+  Settings2,
   Trash2,
   Upload,
 } from "@lucide/vue";
 import { interactive, OBJECTS } from "../lib/mapModel";
 import MapTilePalette from "./MapTilePalette.vue";
 const props = defineProps({ editor: { type: Object, required: true } });
+const emit = defineEmits(["drag-tile"]);
 const d = computed(() => props.editor.draft.document),
   tab = ref(d.value.kind === "tiles" ? "paint" : "settings"),
   fileInput = ref(null),
@@ -267,10 +276,12 @@ const d = computed(() => props.editor.draft.document),
   uploadError = ref(""),
   pendingSize = ref(null);
 const tabs = computed(() => [
-  ...(d.value.kind === "tiles" ? [{ value: "paint", label: "Плитки" }] : []),
-  { value: "objects", label: "Объекты" },
-  { value: "zones", label: "Зоны" },
-  { value: "settings", label: "Карта" },
+  ...(d.value.kind === "tiles"
+    ? [{ key: "paint", label: "Плитки", icon: Layers }]
+    : []),
+  { key: "objects", label: "Объекты", icon: Box },
+  { key: "zones", label: "Зоны", icon: Square },
+  { key: "settings", label: "Карта", icon: Settings2 },
 ]);
 const object = computed(() =>
     d.value.objects.find((o) => o.id === props.editor.selectedObject),
@@ -279,8 +290,11 @@ const object = computed(() =>
     d.value.zones.find((z) => z.id === props.editor.selectedZone),
   );
 watch(tab, (v) => {
-  props.editor.tool =
-    v === "paint" ? "brush" : v === "zones" ? "zone" : "select";
+  props.editor.resetGesture();
+  props.editor.hoveredTile = "";
+  props.editor.setTileSelection([]);
+  props.editor.selectedObject = "";
+  props.editor.tool = v === "zones" ? "zone" : "select";
 });
 function resize(w, h) {
   if (w < d.value.width || h < d.value.height) pendingSize.value = [w, h];

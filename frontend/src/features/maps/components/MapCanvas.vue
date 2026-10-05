@@ -1,7 +1,11 @@
 <template>
   <div
     class="map-canvas"
-    :class="{ 'map-canvas--draw': tool !== 'pan' && !readonly }"
+    :class="{
+      'map-canvas--draw': !['pan', 'select'].includes(tool) && !readonly,
+      'map-canvas--select': tool === 'select' && !readonly,
+      'map-canvas--hover': !!hoveredTile,
+    }"
     @contextmenu.prevent
   >
     <div
@@ -9,11 +13,30 @@
       class="map-canvas-surface"
       tabindex="0"
       aria-label="Поле карты. Колесо — масштаб, Alt — перемещение, правая кнопка или Shift — вращение обзора."
-      @pointerdown="down"
-      @pointermove="move"
-      @pointerup="up"
-      @pointercancel="cancel"
+      @pointerdown="pointer.down"
+      @pointermove="pointer.move"
+      @pointerup="pointer.up"
+      @pointercancel="pointer.cancel"
+      @pointerleave="pointer.leave"
       @wheel.prevent="wheel"
+    />
+    <div
+      v-if="screenSelection"
+      class="map-selection-marquee"
+      :style="{
+        left: `${screenSelection.left}px`,
+        top: `${screenSelection.top}px`,
+        width: `${screenSelection.width}px`,
+        height: `${screenSelection.height}px`,
+      }"
+      aria-hidden="true"
+    />
+    <MapTileConnections
+      v-if="showConnections && selectedTile && !readonly"
+      :points="connectionPoints"
+      :mask="connectionMask"
+      :invalid="connectionInvalid"
+      @toggle="emit('connection', $event)"
     />
     <LoadingState
       v-if="loading"
@@ -26,40 +49,15 @@
         >Повторить загрузку</ActionButton
       >
     </div>
-    <div v-if="!readonly" class="map-canvas-controls">
-      <ActionButton
-        variant="secondary"
-        title="Уменьшить"
-        aria-label="Уменьшить"
-        @click="zoom(0.8)"
-        ><Minus :size="16"
-      /></ActionButton>
-      <ActionButton variant="secondary" title="Показать всю карту" @click="fit"
-        ><Scan :size="16" /> Вписать</ActionButton
-      >
-      <ActionButton
-        variant="secondary"
-        title="Увеличить"
-        aria-label="Увеличить"
-        @click="zoom(1.25)"
-        ><Plus :size="16"
-      /></ActionButton>
-      <ActionButton
-        v-if="document.kind === 'tiles'"
-        variant="secondary"
-        :title="topView ? 'Изометрический вид' : 'Вид сверху'"
-        @click="toggleView"
-      >
-        <Box :size="16" />{{ topView ? "Изометрия" : "Сверху" }}
-      </ActionButton>
-      <ActionButton
-        variant="secondary"
-        title="Повернуть обзор на 90°"
-        aria-label="Повернуть обзор на 90°"
-        @click="rotateView"
-        ><RotateCw :size="16"
-      /></ActionButton>
-    </div>
+    <MapCanvasControls
+      v-if="!readonly"
+      :kind="document.kind"
+      :top-view="topView"
+      @zoom="zoom"
+      @fit="fit"
+      @toggle-view="toggleView"
+    />
+    <p v-if="!readonly && hint" class="map-controls-hint">{{ hint }}</p>
     <div v-if="document.credit" class="map-credit">
       <a
         v-if="document.credit.source"
@@ -76,9 +74,11 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
-import { Box, Minus, Plus, RotateCw, Scan } from "@lucide/vue";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
+import MapTileConnections from "./MapTileConnections.vue";
+import MapCanvasControls from "./MapCanvasControls.vue";
+import { useMapCanvasPointer } from "../composables/useMapCanvasPointer";
 const props = defineProps({
   document: { type: Object, required: true },
   state: Object,
@@ -92,20 +92,31 @@ const props = defineProps({
   selectedObject: String,
   selectedToken: String,
   selectedTile: String,
+  selectedTiles: Array,
+  screenSelection: Object,
+  hoveredTile: String,
+  showConnections: Boolean,
+  connectionMask: Number,
+  connectionInvalid: Boolean,
   previewTile: Object,
   catalogue: Array,
   publicCode: String,
   tabletop: Boolean,
+  hint: {
+    type: String,
+    default: "Колесо: масштаб · Alt: перемещение · ПКМ/Shift: вращение",
+  },
 });
-const emit = defineEmits(["gesture", "view"]);
+const emit = defineEmits(["gesture", "view", "connection"]);
 const host = ref(null),
   loading = ref(true),
   error = ref(""),
-  topView = ref(false);
+  topView = ref(false),
+  connectionPoints = ref([]);
 let renderer,
   dead = false,
-  frame = 0,
-  drag = null;
+  frame = 0;
+const pointer = useMapCanvasPointer(host, props, () => renderer, emit, setView);
 function redraw() {
   if (frame || !renderer) return;
   frame = requestAnimationFrame(() => {
@@ -126,6 +137,8 @@ watch(
     props.selectedToken,
     props.master,
     props.selectedTile,
+    props.selectedTiles,
+    props.hoveredTile,
     props.previewTile,
     props.catalogue,
   ],
@@ -167,15 +180,6 @@ function toggleView() {
     });
   }
 }
-function rotateView() {
-  const view = renderer?.getView();
-  if (view)
-    setView({
-      ...view,
-      rotation: (view.rotation + 90) % 360,
-      azimuth: (view.azimuth + 90) % 360,
-    });
-}
 function zoom(factor) {
   const view = renderer?.getView();
   if (view)
@@ -197,73 +201,42 @@ function wheel(event) {
     y: view.y + before.y - after.y,
   });
 }
-function down(event) {
-  if (props.readonly || !renderer || drag) return;
-  host.value.focus({ preventScroll: true });
-  host.value.setPointerCapture(event.pointerId);
-  drag = {
-    id: event.pointerId,
-    orbit: event.button === 2 || event.shiftKey,
-    pan: event.button === 1 || event.altKey || props.tool === "pan",
-    screen: { x: event.clientX, y: event.clientY },
-    point: renderer.world(event),
-    view: renderer.getView(),
-  };
-  if (!drag.pan && !drag.orbit)
-    emit("gesture", {
-      phase: "start",
-      point: drag.point,
-      hit: renderer.pick(event),
-      event,
-    });
+function updateAnchor() {
+  connectionPoints.value =
+    props.showConnections && props.selectedTile
+      ? renderer?.connectionPoints(props.selectedTile) || []
+      : [];
 }
-function move(event) {
-  if (!renderer || props.readonly) return;
-  const point = renderer.world(event);
-  if (!drag) {
-    emit("gesture", { phase: "hover", point, event });
-    return;
-  }
-  if (event.pointerId !== drag.id) return;
-  if (drag.orbit) {
-    topView.value = false;
-    setView({
-      ...drag.view,
-      fit: false,
-      azimuth:
-        (drag.view.azimuth + (event.clientX - drag.screen.x) * 0.4) % 360,
-      tilt: Math.max(
-        20,
-        Math.min(90, drag.view.tilt + (event.clientY - drag.screen.y) * 0.25),
-      ),
-    });
-  } else if (drag.pan) {
-    const v = renderer.getView();
-    setView({
-      ...v,
-      fit: false,
-      x: v.x + drag.point.x - point.x,
-      y: v.y + drag.point.y - point.y,
-    });
-  } else emit("gesture", { phase: "move", point, event });
-}
-function up(event) {
-  if (!drag || event.pointerId !== drag.id) return;
-  if (!drag.pan && !drag.orbit)
-    emit("gesture", { phase: "end", point: renderer.world(event), event });
-  drag = null;
-  host.value.releasePointerCapture(event.pointerId);
-}
-function cancel(event) {
-  if (drag && !drag.pan && !drag.orbit)
-    emit("gesture", { phase: "cancel", event });
-  drag = null;
+function panArrow(key) {
+  const direction = {
+    ArrowLeft: [-1, 0],
+    ArrowRight: [1, 0],
+    ArrowUp: [0, -1],
+    ArrowDown: [0, 1],
+  }[key];
+  const view = renderer?.getView();
+  if (!direction || !view) return;
+  const top = props.tabletop || props.document.kind !== "tiles";
+  const yaw = ((top ? view.rotation : view.azimuth) * Math.PI) / 180,
+    pitch = ((top ? 90 : view.tilt) * Math.PI) / 180,
+    dx = (direction[0] * 48) / view.cellPixels,
+    dy = (direction[1] * 48) / (view.cellPixels * Math.sin(pitch));
+  setView({
+    ...view,
+    fit: false,
+    x: view.x + dx * Math.cos(yaw) + dy * Math.sin(yaw),
+    y: view.y - dx * Math.sin(yaw) + dy * Math.cos(yaw),
+  });
 }
 onMounted(async () => {
   try {
-    const r = await createMapRenderer(host.value, (message) => {
-      error.value = message;
-    });
+    const r = await createMapRenderer(
+      host.value,
+      (message) => {
+        error.value = message;
+      },
+      updateAnchor,
+    );
     if (dead) {
       r.destroy();
       return;
@@ -282,7 +255,18 @@ onBeforeUnmount(() => {
   cancelAnimationFrame(frame);
   renderer?.destroy();
 });
-defineExpose({ fit, getView: () => renderer?.getView(), setView });
+defineExpose({
+  panArrow,
+  fit,
+  getView: () => renderer?.getView(),
+  setView,
+  pointAt: pointer.pointAt,
+  centerPoint: () => {
+    const view = renderer?.getView();
+    return view && { x: view.x, y: view.y };
+  },
+  focus: () => host.value?.focus({ preventScroll: true }),
+});
 </script>
 <style scoped>
 .map-canvas {
@@ -307,29 +291,47 @@ defineExpose({ fit, getView: () => renderer?.getView(), setView });
 .map-canvas--draw .map-canvas-surface {
   cursor: crosshair;
 }
+.map-canvas--select .map-canvas-surface {
+  cursor: default;
+}
+.map-canvas--select .map-canvas-surface:active {
+  cursor: grabbing;
+}
+.map-canvas--hover .map-canvas-surface {
+  cursor: pointer;
+}
+.map-selection-marquee {
+  position: absolute;
+  border: 1px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  pointer-events: none;
+}
 .map-canvas-surface :deep(canvas) {
   display: block;
 }
-.map-canvas-controls {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-}
 .map-credit {
   position: absolute;
-  bottom: 8px;
+  top: 8px;
   right: 12px;
   padding: 3px 6px;
   border-radius: 4px;
   font-size: 10px;
   background: var(--surface);
   color: var(--text-muted);
+}
+.map-controls-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  max-width: min(480px, calc(100% - 270px));
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+  pointer-events: none;
 }
 .map-credit a {
   color: var(--text-2);

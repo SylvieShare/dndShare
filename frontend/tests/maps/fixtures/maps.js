@@ -34,12 +34,16 @@ const catalogue = [
     name: "Пол 1",
     tileType: "floor",
   },
+  { id: "33333333-3333-4333-8333-333333333333", sourceCode: "LC-003", sourceName: "Wall Angle", name: "Угол стены", tileType: "wall", wallLayout: "angle" },
+  { id: "44444444-4444-4444-8444-444444444444", sourceCode: "LC-004", sourceName: "Wall T-Shaped", name: "Т-образная стена", tileType: "wall", wallLayout: "tee" },
+  { id: "55555555-5555-4555-8555-555555555555", sourceCode: "LC-005", sourceName: "Wall X-Shaped", name: "Х-образная стена", tileType: "wall", wallLayout: "cross" },
+  { id: "66666666-6666-4666-8666-666666666666", sourceCode: "LC-006", sourceName: "Wall Corner", name: "Окончание стены", tileType: "wall", wallLayout: "corner" },
 ].map((m) => ({
   ...m,
   collection: "lost-cave",
   version: 1,
   terrainType: "cave",
-  wallLayout: m.tileType === "wall" ? "straight" : "none",
+  wallLayout: m.wallLayout || (m.tileType === "wall" ? "straight" : "none"),
   width: 1,
   height: 1,
   surfaceHeight: 0.42,
@@ -60,6 +64,15 @@ cubeScene.add(cube);
 const glb = await new GLTFExporter().parseAsync(cubeScene, { binary: true });
 const source = newMap();
 const params = new URLSearchParams(location.search);
+let wallGlb = glb;
+if (params.has("shaped")) {
+  const wallScene = new Scene(), material = new MeshStandardMaterial({ color: 0x896849 });
+  const left = new Mesh(new BoxGeometry(0.2, 0.8, 1), material), top = new Mesh(new BoxGeometry(1, 0.8, 0.2), material);
+  left.position.set(-0.4, 0.4, 0);
+  top.position.set(0, 0.4, -0.4);
+  wallScene.add(left, top);
+  wallGlb = await new GLTFExporter().parseAsync(wallScene, { binary: true });
+}
 source.id = "test-map";
 source.name = "Крепость на переправе";
 source.revision = 1;
@@ -142,7 +155,7 @@ window.fetch = async (url, options = {}) => {
       url,
     )
   )
-    return new Response(glb, {
+    return new Response(url.includes(WALL) ? wallGlb : glb, {
       headers: { "Content-Type": "model/gltf-binary" },
     });
   if (

@@ -48,7 +48,7 @@ function rect(points, x, y, w, h, z = FLOOR + 0.01) {
     y,
   );
 }
-export function buildAnnotations(d, options, metadata) {
+export function buildAnnotations(d, options) {
   const group = new Group();
   if (d.grid.visible && d.kind !== "image") {
     const p = [];
@@ -79,21 +79,6 @@ export function buildAnnotations(d, options, metadata) {
       r = options.selection;
     rect(p, r.x, r.y, r.width, r.height);
     group.add(lines(p, 0xc1adf1));
-  }
-  const tile = d.tiles.find((t) => t.id === options.selectedTile);
-  if (tile) {
-    const m = metadata(tile.modelId),
-      swap = tile.rotation % 180 !== 0,
-      p = [];
-    rect(
-      p,
-      tile.x,
-      tile.y,
-      swap ? m?.height || 1 : m?.width || 1,
-      swap ? m?.width || 1 : m?.height || 1,
-      FLOOR + tile.level * 2 + 0.02,
-    );
-    group.add(lines(p, 0xf2d397));
   }
   return group;
 }

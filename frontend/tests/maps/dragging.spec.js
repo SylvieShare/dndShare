@@ -1,0 +1,200 @@
+import { test, expect } from "@playwright/test";
+import { dragTile, mapPoint } from "./editorHelpers";
+
+async function ready(page, shaped = false) {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(
+    `/tests/maps/fixtures/maps.html?mode=editor${shaped ? "&shaped" : ""}`,
+  );
+  await expect(page.locator(".map-canvas canvas")).toBeVisible();
+  await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
+  await page.getByTitle("Вид сверху", { exact: true }).click();
+}
+async function goldPixels(page) {
+  const png = await page.locator(".map-canvas canvas").screenshot();
+  return page.evaluate(async (base64) => {
+    const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+    const bitmap = await createImageBitmap(
+      new Blob([bytes], { type: "image/png" }),
+    );
+    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height),
+      ctx = canvas.getContext("2d");
+    ctx.drawImage(bitmap, 0, 0);
+    bitmap.close();
+    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let count = 0;
+    for (let i = 0; i < pixels.length; i += 4)
+      if (
+        pixels[i] > 80 &&
+        pixels[i] > pixels[i + 1] * 1.08 &&
+        pixels[i + 1] > pixels[i + 2] * 1.25
+      )
+        count++;
+    return count;
+  }, png.toString("base64"));
+}
+
+test("editor defaults to selection and exposes icon sections without brush controls", async ({
+  page,
+}) => {
+  await ready(page);
+  for (const name of [
+    "Выбор",
+    "Обзор",
+    "Расставлять",
+    "Ластик",
+    "Заполнить",
+    "Повернуть выбранную",
+  ])
+    await expect(page.getByRole("button", { name, exact: true })).toHaveCount(
+      0,
+    );
+  await expect(page.getByLabel("Поиск плиток", { exact: true })).toHaveCount(0);
+  for (const name of ["Плитки", "Объекты", "Зоны", "Карта"])
+    await expect(page.getByRole("tab", { name, exact: true })).toBeVisible();
+  const point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.click(point.x, point.y);
+  await page.waitForTimeout(1400);
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+});
+
+test("hover outlines actual geometry and selection strengthens it with actions in the toolbar", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  await ready(page, true);
+  await page.mouse.move(0, 0);
+  const baseline = await goldPixels(page);
+  const empty = await mapPoint(page, 1.8, 1.8),
+    wall = await mapPoint(page, 1.1, 1.5);
+  await page.mouse.move(empty.x, empty.y);
+  await expect(page.locator(".map-canvas--hover")).toHaveCount(0);
+  await page.mouse.click(empty.x, empty.y);
+  await expect(page.getByRole("group", { name: "Стыки стен" })).toHaveCount(0);
+  await page.mouse.move(wall.x, wall.y);
+  await expect(page.locator(".map-canvas--hover")).toBeVisible();
+  const hovered = await goldPixels(page);
+  expect(hovered).toBeGreaterThan(baseline + 20);
+  await page.mouse.click(wall.x, wall.y);
+  await expect(page.getByRole("group", { name: "Стыки стен" })).toBeVisible();
+  const selected = await goldPixels(page);
+  expect(selected).toBeGreaterThan(hovered + 20);
+  const point = await page
+    .getByRole("button", { name: "Стык: Север", exact: true })
+    .boundingBox();
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+  const bounds = await page.locator(".map-canvas-surface").boundingBox();
+  await page.mouse.move(
+    bounds.x + bounds.width / 2,
+    bounds.y + bounds.height / 2,
+  );
+  await page.mouse.down({ button: "right" });
+  await page.mouse.move(
+    bounds.x + bounds.width / 2 + 100,
+    bounds.y + bounds.height / 2 - 80,
+    { steps: 5 },
+  );
+  await page.mouse.up({ button: "right" });
+  await expect
+    .poll(async () => {
+      const next = await page
+        .getByRole("button", { name: "Стык: Север", exact: true })
+        .boundingBox();
+      return Math.abs(next.x - point.x) + Math.abs(next.y - point.y);
+    })
+    .toBeGreaterThan(20);
+  await page
+    .getByRole("button", { name: "Удалить плитку", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) => t.x === 1 && t.y === 1),
+      ),
+    )
+    .toBe(false);
+  expect(errors.filter((e) => /THREE|WebGL|shader/i.test(e))).toEqual([]);
+});
+
+test("dragging can be cancelled or dropped outside without saving a tile", async ({
+  page,
+}) => {
+  await ready(page);
+  const card = await page
+    .getByRole("button", { name: "Пол 1", exact: true })
+    .boundingBox();
+  const point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.move(card.x + 30, card.y + 30);
+  await page.mouse.down();
+  await page.mouse.move(point.x, point.y, { steps: 8 });
+  await page.keyboard.press("Escape");
+  await page.mouse.up();
+  await dragTile(page, { x: 10, y: 10 });
+  await page.waitForTimeout(1400);
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+  await expect(page.getByRole("alert")).toHaveCount(0);
+});
+
+test("occupied drops are rejected and moving an existing tile is a single undo", async ({
+  page,
+}) => {
+  await ready(page);
+  await dragTile(page, await mapPoint(page, 1.5, 1.5));
+  await expect(page.getByRole("alert")).toContainText("уже есть");
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+  await dragTile(page, await mapPoint(page, 4.5, 4.5));
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) => t.x === 4 && t.y === 4),
+      ),
+    )
+    .toBe(true);
+  const original = await mapPoint(page, 4.5, 4.5),
+    target = await mapPoint(page, 5.5, 4.5);
+  await page.mouse.move(original.x, original.y);
+  await page.mouse.down();
+  await page.mouse.move(target.x, target.y, { steps: 12 });
+  await page.mouse.up();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) => t.x === 5 && t.y === 4),
+      ),
+    )
+    .toBe(true);
+  await page.getByTitle("Отменить · Ctrl/Cmd+Z").click();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) => t.x === 4 && t.y === 4),
+      ),
+    )
+    .toBe(true);
+  expect(
+    await page.evaluate(() =>
+      window.lastSaved.document.tiles.some((t) => t.x === 5 && t.y === 4),
+    ),
+  ).toBe(false);
+});
+
+test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
+  await ready(page);
+  await page.getByRole("button", { name: "Пол 1", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("r");
+  await page.keyboard.press("Enter");
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some(
+          (t) => t.x === 5 && t.y === 5 && t.rotation === 90,
+        ),
+      ),
+    )
+    .toBe(true);
+});

@@ -11,6 +11,7 @@ import {
   Scene,
   SRGBColorSpace,
   TextureLoader,
+  Vector3,
   WebGLRenderer,
 } from "three";
 import { modelAssets } from "./modelAssets";
@@ -19,8 +20,13 @@ import { createTileLayer } from "./tileLayer";
 import { buildAnnotations, disposeAnnotations, FLOOR } from "./annotations";
 import { buildSceneObjects, disposeObjects } from "./sceneObjects";
 import { mapCamera } from "./mapCamera";
+import { createTilePreview } from "./tilePreview";
+import { createTileOutline } from "./tileOutline";
+import { tileBounds } from "./tileTransform";
+import { CONNECTIONS } from "../lib/tileConnections";
+import { tileSize } from "../lib/tilePlacement";
 
-export async function createMapRenderer(host, onError) {
+export async function createMapRenderer(host, onError, onFrame) {
   const gpu = new WebGLRenderer({ antialias: true });
   gpu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   gpu.toneMapping = ACESFilmicToneMapping;
@@ -46,6 +52,8 @@ export async function createMapRenderer(host, onError) {
     objectKey = "",
     fogKey = "",
     backgroundKey = "",
+    annotationKey = "",
+    lastFrame = 0,
     frame = 0;
   let annotations = new Group(),
     objects = new Group(),
@@ -53,13 +61,21 @@ export async function createMapRenderer(host, onError) {
   scene.add(annotations, objects, background);
   const assets = modelAssets(onError),
     fog = createMapFog(),
-    tiles = createTileLayer(assets, fog);
-  scene.add(tiles.root);
+    tiles = createTileLayer(assets, fog),
+    preview = createTilePreview(assets),
+    outline = createTileOutline(gpu, assets);
+  scene.add(tiles.root, preview.root);
   function render() {
     if (frame || dead) return;
-    frame = requestAnimationFrame(() => {
+    frame = requestAnimationFrame((time) => {
       frame = 0;
-      if (!dead) gpu.render(scene, camera);
+      if (dead) return;
+      const moving = preview.advance(Math.min(32, time - lastFrame || 16));
+      lastFrame = time;
+      gpu.render(scene, camera);
+      outline.render(scene, camera, annotations, preview.root);
+      onFrame?.();
+      if (moving) render();
     });
   }
   const view = mapCamera(camera, gpu, host, render);
@@ -71,7 +87,9 @@ export async function createMapRenderer(host, onError) {
     view.document(d, opts);
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
     const ids = new Set(d.tiles.map((t) => t.modelId));
-    if (opts.previewTile) ids.add(opts.previewTile.modelId);
+    if (opts.previewTile)
+      for (const tile of opts.previewTile.group || [opts.previewTile])
+        ids.add(tile.modelId);
     if (ids.size) await assets.ensure(ids, tier, opts);
     if (dead || id !== epoch) return;
     const nextFog = JSON.stringify([
@@ -88,11 +106,17 @@ export async function createMapRenderer(host, onError) {
       fogKey = nextFog;
       fog.update(d, nextState, opts.master);
     }
-    const nextTiles = JSON.stringify([d.tiles, tier, opts.previewTile]);
+    const nextTiles = JSON.stringify([
+      d.tiles,
+      tier,
+      opts.previewTile?.tileIds,
+    ]);
     if (nextTiles !== tileKey) {
       tileKey = nextTiles;
-      tiles.rebuild(d.tiles, tier, opts.previewTile);
+      tiles.rebuild(d.tiles, tier, opts.previewTile?.tileIds);
     }
+    preview.update(opts.previewTile, tier);
+    outline.update(d, opts, tier);
     const nextObjects = JSON.stringify([
       d.objects,
       nextState,
@@ -111,10 +135,24 @@ export async function createMapRenderer(host, onError) {
       );
       scene.add(objects);
     }
-    scene.remove(annotations);
-    disposeAnnotations(annotations);
-    annotations = buildAnnotations(d, opts, (id) => assets.metadata(id));
-    scene.add(annotations);
+    const nextAnnotations = JSON.stringify([
+      d.width,
+      d.height,
+      d.kind,
+      d.grid,
+      d.zones,
+      opts.master,
+      opts.showZones,
+      opts.selectedZone,
+      opts.selection,
+    ]);
+    if (nextAnnotations !== annotationKey) {
+      annotationKey = nextAnnotations;
+      scene.remove(annotations);
+      disposeAnnotations(annotations);
+      annotations = buildAnnotations(d, opts);
+      scene.add(annotations);
+    }
     const nextBackground = JSON.stringify([
       d.kind,
       d.width,
@@ -171,6 +209,23 @@ export async function createMapRenderer(host, onError) {
       update(current, state, options).catch((error) => onError(error.message));
   });
   observer.observe(host);
+  function screenBounds(tile) {
+    const model = assets.model(tile.modelId, tier),
+      metadata = assets.metadata(tile.modelId);
+    if (!model || !metadata) return null;
+    const bounds = tileBounds(tile, metadata, model),
+      points = [];
+    for (const x of [bounds.min.x, bounds.max.x])
+      for (const y of [bounds.min.y, bounds.max.y])
+        for (const z of [bounds.min.z, bounds.max.z])
+          points.push(view.project(new Vector3(x, y, z)));
+    return {
+      left: Math.min(...points.map((p) => p.x)),
+      right: Math.max(...points.map((p) => p.x)),
+      top: Math.min(...points.map((p) => p.y)),
+      bottom: Math.max(...points.map((p) => p.y)),
+    };
+  }
   return {
     update,
     camera: changeCamera,
@@ -178,8 +233,10 @@ export async function createMapRenderer(host, onError) {
     world: view.world,
     pick(event) {
       const ray = view.ray(event),
-        hits = ray.intersectObject(objects, true);
+        hits = ray.intersectObject(objects, true),
+        tile = tiles.hit(ray);
       for (const hit of hits) {
+        if (tile && tile.distance < hit.distance) return tile;
         let node = hit.object;
         while (node) {
           if (node.userData.objectId)
@@ -188,7 +245,70 @@ export async function createMapRenderer(host, onError) {
           node = node.parent;
         }
       }
-      return tiles.hit(ray);
+      return tile;
+    },
+    connectionPoints(id) {
+      const tile = current?.tiles.find((t) => t.id === id),
+        metadata = tile && assets.metadata(tile.modelId);
+      if (!tile || !metadata) return [];
+      const b = screenBounds(tile);
+      if (
+        !b ||
+        b.right < 0 ||
+        b.left > host.clientWidth ||
+        b.bottom < 0 ||
+        b.top > host.clientHeight
+      )
+        return [];
+      const size = tileSize(tile, metadata),
+        pose = view.getView();
+      const radius = Math.max(
+        size.width,
+        size.height,
+        128 /
+          (pose.cellPixels *
+            Math.max(0.35, Math.sin((pose.tilt * Math.PI) / 180))),
+      );
+      const points = CONNECTIONS.map((direction) =>
+        view.project(
+          new Vector3(
+            tile.x + size.width / 2 + (direction.x * radius) / 2,
+            tile.level * 2 + metadata.maxHeight + 0.12,
+            tile.y + size.height / 2 + (direction.y * radius) / 2,
+          ),
+        ),
+      );
+      const minX = Math.min(...points.map((p) => p.x)),
+        maxX = Math.max(...points.map((p) => p.x)),
+        minY = Math.min(...points.map((p) => p.y)),
+        maxY = Math.max(...points.map((p) => p.y));
+      const dx =
+          minX < 26
+            ? 26 - minX
+            : maxX > host.clientWidth - 26
+              ? host.clientWidth - 26 - maxX
+              : 0,
+        dy =
+          minY < 26
+            ? 26 - minY
+            : maxY > host.clientHeight - 90
+              ? host.clientHeight - 90 - maxY
+              : 0;
+      return points.map((p) => ({ x: p.x + dx, y: p.y + dy }));
+    },
+    tilesInRect(rect) {
+      return (current?.tiles || [])
+        .filter((tile) => {
+          const b = screenBounds(tile);
+          return (
+            b &&
+            b.right >= rect.left &&
+            b.left <= rect.left + rect.width &&
+            b.bottom >= rect.top &&
+            b.top <= rect.top + rect.height
+          );
+        })
+        .map((tile) => tile.id);
     },
     destroy() {
       dead = true;
@@ -199,6 +319,8 @@ export async function createMapRenderer(host, onError) {
       disposeObjects(objects);
       disposeObjects(background);
       tiles.destroy();
+      preview.destroy();
+      outline.destroy();
       fog.destroy();
       assets.destroy();
       gpu.dispose();
