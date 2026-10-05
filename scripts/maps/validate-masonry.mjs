@@ -11,6 +11,7 @@ const revisions = path.resolve(
     "stone-dungeon",
 );
 const allowRoughness = process.argv.includes("--roughness");
+const allowMetallic = process.argv.includes("--metallic");
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp");
 async function source(asset) {
@@ -81,7 +82,10 @@ for (const entry of await fs.readdir(revisions, {
             .toBuffer({ resolveWithObject: true });
         assert.deepEqual(a.info, b.info, "ORM layout changed");
         for (let p = 0; p < a.data.length; p++)
-          if (p % a.info.channels !== 1)
+          if (
+            p % a.info.channels !== 1 &&
+            !(allowMetallic && p % a.info.channels === 2)
+          )
             assert.equal(b.data[p], a.data[p], "AO/metallic channel changed");
       } else if (!baseImages.has(i))
         assert.deepEqual(

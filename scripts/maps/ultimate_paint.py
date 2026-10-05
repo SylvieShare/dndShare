@@ -6,6 +6,7 @@ stone, timber, iron, linen, ivory and accent colours, rather than baked lighting
 import bpy
 import numpy as np
 from ud006_material import timber_parts, SPEC as TIMBER_SPEC
+from ud010_material import door_parts, SPEC as DOOR_SPEC
 
 PALETTE = {
     'stone': (.34, .375, .39), 'wood': (.39, .22, .105),
@@ -55,7 +56,12 @@ def paint(obj, row):
         region(floor & (z>13.8), 'wood')
     if code==35:
         region(z>12, 'wood')
-    if code in [10, 11, 82, 83]:
+    if code==10:
+        parts=door_parts(x,y,z)
+        region(parts==1,'wood');region(parts==2,'iron')
+        colour[parts==1]=DOOR_SPEC['woodColor'];colour[parts==2]=DOOR_SPEC['ironColor']
+        rough[parts==1]=.86;rough[parts==2]=.65;metal[parts==2]=.65
+    if code in [11, 82, 83]:
         region((x>8)&(z>16)&(abs(y)<11.7)&(z<54.5), 'wood')
         region((x>8)&(z>16)&(abs(y)<11.8)&((abs(z-23)<1.1)|(abs(z-42)<1.1)), 'iron')
         if code==11:

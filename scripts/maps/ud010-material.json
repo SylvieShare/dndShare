@@ -1,0 +1,22 @@
+{
+  "woodColor": [0.3, 0.275, 0.195],
+  "ironColor": [0.19, 0.205, 0.22],
+  "portal": {
+    "minX": 8.3,
+    "maxX": 17.4,
+    "bottom": 16.2,
+    "spring": 48.9,
+    "radius": 14.65
+  },
+  "hardware": {
+    "front": 10.82,
+    "back": 15.79,
+    "bevelFront": 10.95,
+    "bevelBack": 15.64
+  },
+  "straps": [
+    { "a": [-11.7, 21.4], "b": [0.6, 21.0], "radius": 2.45 },
+    { "a": [-11.7, 35.2], "b": [0.6, 34.2], "radius": 2.45 }
+  ],
+  "ring": { "center": [10.0, 34.8], "radius": [4.8, 5.6] }
+}
