@@ -7,7 +7,7 @@ async function ready(page) {
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
-test("collection filters and full-size side wall controls", async ({
+test("collection filters and selecting a side wall without layout controls", async ({
   page,
 }) => {
   await ready(page);
@@ -18,23 +18,11 @@ test("collection filters and full-size side wall controls", async ({
   await dragTile(page, await mapPoint(page, 4.5, 4.5), {
     name: "Боковая стена",
   });
-  const group = page.getByRole("group", { name: "Стороны стен" });
-  await expect(group.getByRole("button")).toHaveCount(4);
-  const north = page.getByRole("button", {
-    name: "Сторона: Север",
-    exact: true,
-  });
-  const bounds = await north.boundingBox();
-  const host = await page.locator(".map-canvas-surface").boundingBox();
-  const cell = Math.min((host.width - 40) / 12, (host.height - 40) / 10);
-  expect(bounds.width).toBeGreaterThanOrEqual(cell - 3);
-  expect(bounds.height).toBeGreaterThanOrEqual(18);
-  await expect(north.locator("polygon")).toHaveCount(3);
-  await page.mouse.click(
-    bounds.x + bounds.width / 2,
-    bounds.y + bounds.height / 2,
+  await expect(page.getByRole("status", { name: "Выбрано плиток" })).toHaveText(
+    "Выбрано: 1",
   );
-  await expect(north).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(".map-tile-connections")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /^Сторона:/ })).toHaveCount(0);
 });
 test("a frame supports upper tiles, carries them and deletes the dependent stack", async ({
   page,

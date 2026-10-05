@@ -15,6 +15,39 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
   await expect(
     sidebar.getByRole("button", { name: /^Стены \(/ }),
   ).toBeVisible();
+  await expect(
+    sidebar.getByRole("button", { name: "Кисть стенами", exact: true }),
+  ).toHaveCount(0);
+  await expect(sidebar.getByLabel("Тип плитки", { exact: true })).toHaveCount(
+    0,
+  );
+  await expect(
+    sidebar.getByLabel("Расположение стен", { exact: true }),
+  ).toHaveCount(0);
+  const picker = sidebar.getByRole("toolbar", { name: "Типы тайлов" });
+  await expect(picker.getByRole("button")).toHaveCount(13);
+  await picker
+    .getByRole("button", { name: "Прямые стены", exact: true })
+    .click();
+  await expect(
+    sidebar.getByRole("button", { name: "Стена 1", exact: true }),
+  ).toBeVisible();
+  await expect(
+    sidebar.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    picker.getByRole("button", { name: "Прямые стены", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await picker.getByRole("button", { name: "Углы стен", exact: true }).click();
+  await expect(
+    sidebar.getByRole("button", { name: "Угол стены", exact: true }),
+  ).toBeVisible();
+  await expect(
+    sidebar.getByRole("button", { name: "Стена 1", exact: true }),
+  ).toHaveCount(0);
+  for (const button of await picker.getByRole("button").all())
+    await expect(button.locator("svg")).toHaveCount(1);
+  await picker.getByRole("button", { name: "Все тайлы", exact: true }).click();
   const before = await page.locator(".map-canvas").boundingBox();
   await page.getByRole("button", { name: "Свернуть список плиток" }).click();
   const collapsed = await page.locator(".map-canvas").boundingBox();

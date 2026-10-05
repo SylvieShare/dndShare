@@ -84,12 +84,9 @@ test("hover outlines actual geometry and selection strengthens it with actions i
   const hovered = await goldPixels(page);
   expect(hovered).toBeGreaterThan(baseline + 20);
   await page.mouse.click(wall.x, wall.y);
-  await expect(page.getByRole("group", { name: "Стыки стен" })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Стыки стен" })).toHaveCount(0);
   const selected = await goldPixels(page);
   expect(selected).toBeGreaterThan(hovered + 20);
-  const point = await page
-    .getByRole("button", { name: "Стык: Север", exact: true })
-    .boundingBox();
   expect(await page.evaluate(() => window.requests)).toEqual([]);
   const bounds = await page.locator(".map-canvas-surface").boundingBox();
   await page.mouse.move(
@@ -103,14 +100,7 @@ test("hover outlines actual geometry and selection strengthens it with actions i
     { steps: 5 },
   );
   await page.mouse.up({ button: "right" });
-  await expect
-    .poll(async () => {
-      const next = await page
-        .getByRole("button", { name: "Стык: Север", exact: true })
-        .boundingBox();
-      return Math.abs(next.x - point.x) + Math.abs(next.y - point.y);
-    })
-    .toBeGreaterThan(20);
+  await expect(page.locator(".map-tile-connections")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Удалить плитку", exact: true })
     .click();

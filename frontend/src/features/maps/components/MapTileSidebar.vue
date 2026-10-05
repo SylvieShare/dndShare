@@ -32,7 +32,6 @@
         draggable
         @model="(id, event) => emit('model', id, event)"
         @drag-tile="(id, event) => emit('drag-tile', id, event)"
-        @tool="emit('tool', $event)"
       />
     </div>
   </aside>
@@ -43,7 +42,7 @@ import { ActionButton } from "@sylvieshare/share-ui";
 import { PanelLeftOpen, PanelLeftClose } from "@lucide/vue";
 import MapTilePalette from "./MapTilePalette.vue";
 defineProps({ editor: Object });
-const emit = defineEmits(["model", "drag-tile", "tool"]);
+const emit = defineEmits(["model", "drag-tile"]);
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 </script>
 <style scoped>

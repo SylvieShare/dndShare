@@ -23,13 +23,11 @@ import { mapCamera } from "./mapCamera";
 import { createTilePreview } from "./tilePreview";
 import { createTileOutline } from "./tileOutline";
 import { tileBounds } from "./tileTransform";
-import { CONNECTIONS } from "../lib/tileConnections";
-import { tileSize } from "../lib/tilePlacement";
 import { structureView } from "./structureView";
 import { createObjectPreview } from "./objectPreview";
 import { createPlacementAnchors } from "./placementAnchors";
 
-export async function createMapRenderer(host, onError, onFrame) {
+export async function createMapRenderer(host, onError) {
   const gpu = new WebGLRenderer({ antialias: true });
   gpu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   gpu.toneMapping = ACESFilmicToneMapping;
@@ -92,7 +90,6 @@ export async function createMapRenderer(host, onError, onFrame) {
           (o) => o.userData.objectId === options.selectedObject,
         ),
       ]);
-      onFrame?.();
       if (moving) render();
     });
   }
@@ -330,48 +327,6 @@ export async function createMapRenderer(host, onError, onFrame) {
         }
       }
       return tile;
-    },
-    connectionPoints(id) {
-      const tile = current?.tiles.find((t) => t.id === id),
-        metadata = tile && assets.metadata(tile.modelId);
-      if (!tile || !metadata) return [];
-      const b = screenBounds(tile);
-      if (
-        !b ||
-        b.right < 0 ||
-        b.left > host.clientWidth ||
-        b.bottom < 0 ||
-        b.top > host.clientHeight
-      )
-        return [];
-      const size = tileSize(tile, metadata),
-        elevation = (preview.posed(tile.id) || structure.posed(tile)).elevation;
-      const points = CONNECTIONS.map((direction) =>
-        view.project(
-          new Vector3(
-            tile.x + size.width / 2 + (direction.x * size.width) / 2,
-            elevation + metadata.maxHeight - (metadata.mountDepth || 0) + 0.15,
-            tile.y + size.height / 2 + (direction.y * size.height) / 2,
-          ),
-        ),
-      );
-      const minX = Math.min(...points.map((p) => p.x)),
-        maxX = Math.max(...points.map((p) => p.x)),
-        minY = Math.min(...points.map((p) => p.y)),
-        maxY = Math.max(...points.map((p) => p.y));
-      const dx =
-          minX < 26
-            ? 26 - minX
-            : maxX > host.clientWidth - 26
-              ? host.clientWidth - 26 - maxX
-              : 0,
-        dy =
-          minY < 26
-            ? 26 - minY
-            : maxY > host.clientHeight - 90
-              ? host.clientHeight - 90 - maxY
-              : 0;
-      return points.map((p) => ({ x: p.x + dx, y: p.y + dy }));
     },
     tilesInRect(rect) {
       return (current?.tiles || [])

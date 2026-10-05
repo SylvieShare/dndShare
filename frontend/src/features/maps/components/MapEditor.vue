@@ -17,7 +17,6 @@
       :editor="e"
       @model="placeModel"
       @object="placeObject"
-      @tool="startTool"
     />
     <MapEditorSettings
       v-if="view === 'settings'"
@@ -36,7 +35,6 @@
         :editor="e"
         @model="placeModel"
         @drag-tile="dragModel"
-        @tool="startTool"
       />
       <div class="map-editor-main">
         <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
@@ -62,15 +60,6 @@
           :preview-tile="e.previewTile"
           :preview-object="e.previewObject"
           :show-anchors="e.showAnchors"
-          :show-connections="
-            e.selectedTiles.length === 1 &&
-            e.tool !== 'paste' &&
-            !e.draggingTile &&
-            connections.mode !== 'none'
-          "
-          :connection-mode="connections.mode"
-          :connection-mask="connections.mask"
-          :connection-invalid="connections.invalid"
           :hint="editorHints(e.tool, e.draggingTile)"
           :catalogue="e.catalogue"
           :placement-model="
@@ -79,7 +68,6 @@
           :placement-rotation="e.placementRotation"
           :placement-hint="e.placementHint"
           @gesture="e.handle"
-          @connection="connections.toggle"
           @camera-move="cursor.moved"
         />
       </div>
@@ -118,7 +106,6 @@ import { editorHints } from "../lib/editorHints";
 import MapCanvas from "./MapCanvas.vue";
 import { useMapEditor } from "../composables/useMapEditor";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
-import { useTileConnections } from "../composables/useTileConnections";
 import { useMapCursor } from "../composables/useMapCursor";
 import { snap } from "../lib/mapModel";
 const props = defineProps({ map: Object }),
@@ -132,8 +119,7 @@ const reference = ref(null),
 const canvas = ref(null),
   catalogueDrag = useCatalogueDrag(e, canvas);
 const cursor = useMapCursor(e, canvas, catalogueDrag);
-const connections = reactive(useTileConnections(e)),
-  view = ref("map");
+const view = ref("map");
 function setView(next) {
   if (next === "reference") {
     if (!isAdmin.value) return;

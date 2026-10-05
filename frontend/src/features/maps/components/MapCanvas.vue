@@ -31,14 +31,6 @@
       }"
       aria-hidden="true"
     />
-    <MapTileConnections
-      v-if="showConnections && selectedTile && !readonly"
-      :points="connectionPoints"
-      :mask="connectionMask"
-      :invalid="connectionInvalid"
-      :mode="connectionMode"
-      @toggle="emit('connection', $event)"
-    />
     <LoadingState
       v-if="loading"
       class="map-canvas-message"
@@ -83,7 +75,6 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
-import MapTileConnections from "./MapTileConnections.vue";
 import MapCanvasControls from "./MapCanvasControls.vue";
 import { useMapCanvasPointer } from "../composables/useMapCanvasPointer";
 import { useCameraPan } from "../composables/useCameraPan";
@@ -103,10 +94,6 @@ const props = defineProps({
   selectedTiles: Array,
   screenSelection: Object,
   hoveredTile: String,
-  showConnections: Boolean,
-  connectionMask: Number,
-  connectionInvalid: Boolean,
-  connectionMode: String,
   previewTile: Object,
   previewObject: Object,
   showAnchors: Boolean,
@@ -124,12 +111,11 @@ const props = defineProps({
 const hintLines = computed(() =>
   Array.isArray(props.hint) ? props.hint : (props.hint || "").split(/\s*·\s*/),
 );
-const emit = defineEmits(["gesture", "view", "connection", "camera-move"]);
+const emit = defineEmits(["gesture", "view", "camera-move"]);
 const host = ref(null),
   loading = ref(true),
   error = ref(""),
-  topView = ref(false),
-  connectionPoints = ref([]);
+  topView = ref(false);
 let renderer,
   dead = false,
   frame = 0;
@@ -226,24 +212,14 @@ function wheel(event) {
     y: view.y + before.y - after.y,
   });
 }
-function updateAnchor() {
-  connectionPoints.value =
-    props.showConnections && props.selectedTile
-      ? renderer?.connectionPoints(props.selectedTile) || []
-      : [];
-}
 function panArrow(key) {
   keyboardPan.down(key);
 }
 onMounted(async () => {
   try {
-    const r = await createMapRenderer(
-      host.value,
-      (message) => {
-        error.value = message;
-      },
-      updateAnchor,
-    );
+    const r = await createMapRenderer(host.value, (message) => {
+      error.value = message;
+    });
     if (dead) {
       r.destroy();
       return;

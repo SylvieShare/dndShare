@@ -126,52 +126,16 @@ test("command rectangle selects tiles in screen space without moving them", asyn
     .toBe(0);
 });
 
-test("eight connection points retain the last supported model after an invalid attempt", async ({
+test("selecting a central wall shows its contour without changing its layout", async ({
   page,
 }) => {
   await ready(page);
-  await dragTile(page, await mapPoint(page, 4.5, 4.5));
-  const group = page.getByRole("group", { name: "Стыки стен" });
-  await expect(group.getByRole("button")).toHaveCount(8);
-  await page.getByRole("button", { name: "Стык: Север", exact: true }).click();
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          window.lastSaved?.document.tiles.find((t) => t.x === 4 && t.y === 4)
-            ?.modelId,
-      ),
-    )
-    .toBe("66666666-6666-4666-8666-666666666666");
-  await page.getByRole("button", { name: "Стык: Восток", exact: true }).click();
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          window.lastSaved?.document.tiles.find((t) => t.x === 4 && t.y === 4)
-            ?.modelId,
-      ),
-    )
-    .toBe("33333333-3333-4333-8333-333333333333");
-  await page
-    .getByRole("button", { name: "Стык: Северо-восток", exact: true })
-    .click();
-  await expect(page.locator(".map-tile-connections--invalid")).toBeVisible();
-  await expect(page.getByText("Нет подходящей модели")).toBeVisible();
-  await clickPoint(page, 2.1, 4.1);
-  await expect(group).toHaveCount(0);
-  await clickPoint(page, 4.5, 4.5);
-  await expect(group).toBeVisible();
-  await expect(page.locator(".map-tile-connections--invalid")).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: "Стык: Север", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByRole("button", { name: "Стык: Восток", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await expect(
-    page.getByRole("button", { name: "Стык: Северо-восток", exact: true }),
-  ).toHaveAttribute("aria-pressed", "false");
+  await clickPoint(page, 1.5, 1.5);
+  await expect(count(page)).toHaveText("Выбрано: 1");
+  await expect(page.locator(".map-tile-connections")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /^Стык:/ })).toHaveCount(0);
+  await page.waitForTimeout(1400);
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
 });
 
 test("arrow keys move the camera and leave text field navigation alone", async ({
