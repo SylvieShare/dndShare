@@ -221,7 +221,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-001-Wall 1.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 17,
+    "supportSlots": []
   },
   {
     "id": "7023f957-aa38-5f46-9e2f-51850f95c4d0",
@@ -457,7 +461,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-002-Wall 2.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 17,
+    "supportSlots": []
   },
   {
     "id": "b760fea6-d927-5365-b41d-b0328fd045d9",
@@ -677,7 +685,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-003-Wall Angle.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 65,
+    "supportSlots": []
   },
   {
     "id": "6c569452-b750-5d00-91cb-934728e0c2a4",
@@ -977,7 +989,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-004-Wall T-Shaped.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 21,
+    "supportSlots": []
   },
   {
     "id": "70ce5dd7-4abc-5d47-a79a-52ac73451e19",
@@ -1321,7 +1337,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-005-Wall X-Shaped.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 85,
+    "supportSlots": []
   },
   {
     "id": "41883fd8-4a48-563d-a9c3-7a688900a17f",
@@ -1485,7 +1505,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-006-Wall Corner.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 1,
+    "supportSlots": []
   },
   {
     "id": "6dda1209-023e-54b3-8d10-13c09b1be4f0",
@@ -1534,7 +1558,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-007-Ground 1.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 0,
+    "supportSlots": []
   },
   {
     "id": "a5ea55e3-1a8b-53d8-8bf8-4e1f57b1aae1",
@@ -1583,7 +1611,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-008-Ground 2.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 0,
+    "supportSlots": []
   },
   {
     "id": "3ca1a93f-29c5-5925-8cb0-2ce1ccd301ab",
@@ -1632,7 +1664,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-009-Ground 3.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 0,
+    "supportSlots": []
   },
   {
     "id": "945b1830-1690-5a27-9f67-2c3a69b6f1c4",
@@ -1871,7 +1907,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-010-Stalagmite Ground 1.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 0,
+    "supportSlots": []
   },
   {
     "id": "ac971598-ad9a-5e0e-9519-23a5dcefafa4",
@@ -2012,7 +2052,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-011-Stalagmite Ground 2.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 0,
+    "supportSlots": []
   },
   {
     "id": "81c86366-3066-5afa-a68c-0811f456b4ee",
@@ -2297,7 +2341,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-012-Stalagmite Wall 1.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 17,
+    "supportSlots": []
   },
   {
     "id": "de5c1210-fb91-5ad7-a2b8-58954650ca6c",
@@ -2594,7 +2642,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-013-Stalagmite Wall 2.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 17,
+    "supportSlots": []
   },
   {
     "id": "5c3f8aec-74be-5d18-b4bb-b358d37ea212",
@@ -2885,7 +2937,11 @@
         "mimeType": "model/stl",
         "fileName": "LC-014-Stalagmite Angle.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 65,
+    "supportSlots": []
   },
   {
     "id": "c10ec89c-02ec-556d-a29d-762dce9e9013",
@@ -3172,6 +3228,10 @@
         "mimeType": "model/stl",
         "fileName": "LC-015-Stalagmite Corner.stl"
       }
-    }
+    },
+    "collectionName": "Lost Cave",
+    "wallMode": "center",
+    "wallMask": 1,
+    "supportSlots": []
   }
 ]

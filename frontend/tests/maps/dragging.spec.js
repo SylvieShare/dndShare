@@ -11,7 +11,12 @@ async function ready(page, shaped = false) {
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
 async function goldPixels(page) {
+  const style = await page.addStyleTag({
+    content:
+      ".map-canvas > :not(.map-canvas-surface) { visibility: hidden !important; }",
+  });
   const png = await page.locator(".map-canvas canvas").screenshot();
+  await style.evaluate((node) => node.remove());
   return page.evaluate(async (base64) => {
     const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
     const bitmap = await createImageBitmap(
@@ -138,13 +143,28 @@ test("dragging can be cancelled or dropped outside without saving a tile", async
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
-test("occupied drops are rejected and moving an existing tile is a single undo", async ({
+test("occupied drops magnetize to a free position and moving a tile is a single undo", async ({
   page,
 }) => {
   await ready(page);
   await dragTile(page, await mapPoint(page, 1.5, 1.5));
-  await expect(page.getByRole("alert")).toContainText("уже есть");
-  expect(await page.evaluate(() => window.requests)).toEqual([]);
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          window.lastSaved?.document.tiles.filter((t) =>
+            t.modelId.startsWith("2222"),
+          ).length,
+      ),
+    )
+    .toBe(1);
+  expect(
+    await page.evaluate(
+      () =>
+        window.lastSaved.document.tiles.find((t) => t.x === 1 && t.y === 1)
+          .modelId,
+    ),
+  ).toBe("11111111-1111-4111-8111-111111111111");
   await dragTile(page, await mapPoint(page, 4.5, 4.5));
   await expect
     .poll(() =>
@@ -185,7 +205,10 @@ test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
   await ready(page);
   await page.getByRole("button", { name: "Пол 1", exact: true }).focus();
   await page.keyboard.press("Enter");
-  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.down("ArrowLeft");
+  await page.waitForTimeout(140);
+  await page.keyboard.up("ArrowLeft");
+  await page.waitForTimeout(180);
   await page.keyboard.press("r");
   await page.keyboard.press("Enter");
   await expect

@@ -25,6 +25,7 @@ import { createTileOutline } from "./tileOutline";
 import { tileBounds } from "./tileTransform";
 import { CONNECTIONS } from "../lib/tileConnections";
 import { tileSize } from "../lib/tilePlacement";
+import { structureView } from "./structureView";
 
 export async function createMapRenderer(host, onError, onFrame) {
   const gpu = new WebGLRenderer({ antialias: true });
@@ -79,6 +80,7 @@ export async function createMapRenderer(host, onError, onFrame) {
     });
   }
   const view = mapCamera(camera, gpu, host, render);
+  const structure = structureView(assets, view);
   async function update(d, nextState, opts = {}) {
     const id = ++epoch;
     current = d;
@@ -92,6 +94,28 @@ export async function createMapRenderer(host, onError, onFrame) {
         ids.add(tile.modelId);
     if (ids.size) await assets.ensure(ids, tier, opts);
     if (dead || id !== epoch) return;
+    const placed = structure.update(d);
+    view.document(d, { ...opts, sceneHeight: structure.top() });
+    const nextTier = view.getView().cellPixels < 72 ? "lod" : "render";
+    if (nextTier !== tier && ids.size) {
+      tier = nextTier;
+      await assets.ensure(ids, tier, opts);
+      if (dead || id !== epoch) return;
+    }
+    let previewOptions = opts;
+    if (opts.previewTile) {
+      const group = structure.preview(
+        opts.previewTile.group || [opts.previewTile],
+      );
+      previewOptions = {
+        ...opts,
+        previewTile: {
+          ...opts.previewTile,
+          elevation: group[0].elevation,
+          group,
+        },
+      };
+    }
     const nextFog = JSON.stringify([
       d.width,
       d.height,
@@ -113,10 +137,10 @@ export async function createMapRenderer(host, onError, onFrame) {
     ]);
     if (nextTiles !== tileKey) {
       tileKey = nextTiles;
-      tiles.rebuild(d.tiles, tier, opts.previewTile?.tileIds);
+      tiles.rebuild(placed, tier, opts.previewTile?.tileIds);
     }
-    preview.update(opts.previewTile, tier);
-    outline.update(d, opts, tier);
+    preview.update(previewOptions.previewTile, tier);
+    outline.update({ ...d, tiles: placed }, previewOptions, tier);
     const nextObjects = JSON.stringify([
       d.objects,
       nextState,
@@ -145,12 +169,14 @@ export async function createMapRenderer(host, onError, onFrame) {
       opts.showZones,
       opts.selectedZone,
       opts.selection,
+      opts.activeLevel,
+      nextTiles,
     ]);
     if (nextAnnotations !== annotationKey) {
       annotationKey = nextAnnotations;
       scene.remove(annotations);
       disposeAnnotations(annotations);
-      annotations = buildAnnotations(d, opts);
+      annotations = buildAnnotations(d, opts, structure.context());
       scene.add(annotations);
     }
     const nextBackground = JSON.stringify([
@@ -213,7 +239,7 @@ export async function createMapRenderer(host, onError, onFrame) {
     const model = assets.model(tile.modelId, tier),
       metadata = assets.metadata(tile.modelId);
     if (!model || !metadata) return null;
-    const bounds = tileBounds(tile, metadata, model),
+    const bounds = tileBounds(structure.posed(tile), metadata, model),
       points = [];
     for (const x of [bounds.min.x, bounds.max.x])
       for (const y of [bounds.min.y, bounds.max.y])
@@ -231,6 +257,7 @@ export async function createMapRenderer(host, onError, onFrame) {
     camera: changeCamera,
     getView: view.getView,
     world: view.world,
+    placementPoint: structure.point,
     pick(event) {
       const ray = view.ray(event),
         hits = ray.intersectObject(objects, true),
@@ -261,20 +288,13 @@ export async function createMapRenderer(host, onError, onFrame) {
       )
         return [];
       const size = tileSize(tile, metadata),
-        pose = view.getView();
-      const radius = Math.max(
-        size.width,
-        size.height,
-        128 /
-          (pose.cellPixels *
-            Math.max(0.35, Math.sin((pose.tilt * Math.PI) / 180))),
-      );
+        elevation = structure.posed(tile).elevation;
       const points = CONNECTIONS.map((direction) =>
         view.project(
           new Vector3(
-            tile.x + size.width / 2 + (direction.x * radius) / 2,
-            tile.level * 2 + metadata.maxHeight + 0.12,
-            tile.y + size.height / 2 + (direction.y * radius) / 2,
+            tile.x + size.width / 2 + (direction.x * size.width) / 2,
+            elevation + metadata.maxHeight + 0.15,
+            tile.y + size.height / 2 + (direction.y * size.height) / 2,
           ),
         ),
       );

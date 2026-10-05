@@ -216,3 +216,26 @@ Go сначала читает embedded текущую сборку, затем 
 ## Связанные страницы
 
 [Оглавление wiki](README.md)
+
+### Полный импорт коллекций моделей
+
+Локальные multipart RAR распаковываются скриптом `scripts/maps/extract-collections.py`;
+все варианты для печати остаются в игнорируемом `models/collections`. Для редактора
+выбираются исходники без поддержек, бонусные блоки и базовые элементы. Исходные
+текстовые ID и названия сохраняются; у двух разных UD-055 используются разные
+версии каталога. Никакие STL, GLB, текстуры или превью не коммитятся.
+
+`inspect-collections.py` определяет площадь, затем Blender запускает
+`prepare-collections.py` для обрезки основания, облегчения, запекания цвета/normal
+и превью. Структурные каркасы сохраняют геометрию. `package-collections.mjs`
+выпускает Meshopt render/LOD и нормализует центр. `collection-catalogue.py`
+создаёт manifest с коллекциями, центральными/боковыми стенами, стыками и слотами.
+Результат — `models/collections/upload/catalogue.json` и файлы по SHA-256.
+Пакет возобновляемый; готовые модели проверяются локальным тестом
+`MAP_MODEL_MANIFEST=/absolute/path/catalogue.json go test ./internal/web -run TestPreparedCollectionManifest`.
+
+После выпуска MCP-схемы модели передаются напрямую в S3 существующим
+`cmd/map-model-upload -assets models/collections/upload -workers 4`; токен приходит
+из `MCP_AUTH_TOKEN`. SSH используется только штатным deploy приложения, без
+пересылки моделей. Уже зарегистрированные UUID пропускаются, одновременно
+обрабатываются до восьми моделей.

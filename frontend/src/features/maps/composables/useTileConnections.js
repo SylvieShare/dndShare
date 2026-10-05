@@ -1,5 +1,9 @@
 import { computed, ref, watch } from "vue";
-import { connectionVariant, tileConnections } from "../lib/tileConnections";
+import {
+  connectionVariant,
+  tileConnections,
+  wallControlMode,
+} from "../lib/tileConnections";
 
 export function useTileConnections(editor) {
   const draftMask = ref(0);
@@ -25,6 +29,13 @@ export function useTileConnections(editor) {
       !!tile.value &&
       !connectionVariant(tile.value, draftMask.value, editor.catalogue),
   );
+  const mode = computed(() =>
+    tile.value
+      ? wallControlMode(
+          editor.catalogue.find((m) => m.id === tile.value.modelId),
+        )
+      : "none",
+  );
   function toggle(index) {
     if (!tile.value) return;
     draftMask.value ^= 1 << index;
@@ -41,5 +52,5 @@ export function useTileConnections(editor) {
         }),
       );
   }
-  return { mask: draftMask, invalid, toggle };
+  return { mask: draftMask, invalid, toggle, mode };
 }

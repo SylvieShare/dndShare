@@ -60,12 +60,12 @@ const tile = {
 };
 
 describe("tile dragging", () => {
-  it("uses fractional preview positions and snaps only the committed drop", () => {
+  it("previews magnetic anchors without committing the dragged model", () => {
     const e = setup();
     e.tileDrag.begin("floor");
     e.tileDrag.move({ x: 3.27, y: 4.64 });
-    expect(e.previewTile.value.x).toBeCloseTo(2.77);
-    expect(e.previewTile.value.y).toBeCloseTo(4.14);
+    expect(e.previewTile.value.x).toBe(3);
+    expect(e.previewTile.value.y).toBe(4);
     expect(e.draft.value.document.tiles).toEqual([]);
     expect(e.history.value).toEqual([]);
     e.tileDrag.drop({ x: 3.27, y: 4.64 });
@@ -108,15 +108,15 @@ describe("tile dragging", () => {
     e.tileDrag.drop({ x: 5.2, y: 4.4 });
     expect(e.draft.value.document.tiles[0]).toEqual({ ...tile, x: 5, y: 4 });
   });
-  it("rejects occupied cells, including the rotated footprint of wide models", () => {
+  it("magnetizes to a free cell beside a rotated wide model", () => {
     const e = setup([{ ...tile, modelId: "wide", rotation: 90 }]);
     e.tileDrag.begin("floor");
     e.tileDrag.move({ x: 2.5, y: 3.5 });
-    expect(e.previewTile.value.valid).toBe(false);
+    expect(e.previewTile.value.valid).toBe(true);
     e.tileDrag.drop({ x: 2.5, y: 3.5 });
-    expect(e.draft.value.document.tiles).toHaveLength(1);
-    expect(e.error.value).toContain("уже есть");
-    expect(e.history.value).toEqual([]);
+    expect(e.draft.value.document.tiles).toHaveLength(2);
+    expect(e.draft.value.document.tiles[0]).toEqual({...tile,modelId:'wide',rotation:90});
+    expect(e.history.value).toHaveLength(1);
   });
   it("ignores an outside drop instead of creating or deleting a tile", () => {
     const e = setup([tile]);
@@ -124,7 +124,7 @@ describe("tile dragging", () => {
     e.tileDrag.drop(null);
     expect(e.draft.value.document.tiles).toEqual([tile]);
     e.tileDrag.begin("wide");
-    e.tileDrag.drop({ x: 7.5, y: 7.5 });
+    e.tileDrag.drop({ x: 15.5, y: 15.5 });
     expect(e.draft.value.document.tiles).toEqual([tile]);
     expect(e.error.value).toContain("границу");
   });
@@ -178,18 +178,14 @@ describe("tile dragging", () => {
     expect(e.selectedTiles.value).toEqual([tile.id, other.id]);
     expect(e.history.value).toEqual([]);
   });
-  it("moves a group atomically and rejects the entire drop on a collision", () => {
+  it("magnetizes a group atomically without overlapping obstacles", () => {
     const other = { ...tile, id: "other", x: 4 };
     const obstacle = { ...tile, id: "obstacle", x: 6, y: 5 };
     const e = setup([tile, other, obstacle]);
     e.setTileSelection([tile.id, other.id]);
     e.tileDrag.begin("floor", { x: 2.5, y: 2.5 }, tile);
     e.tileDrag.drop({ x: 4.5, y: 5.5 });
-    expect(e.draft.value.document.tiles).toEqual([tile, other, obstacle]);
-    expect(e.history.value).toEqual([]);
-    e.tileDrag.begin("floor", { x: 2.5, y: 2.5 }, tile);
-    e.tileDrag.drop({ x: 3.5, y: 4.5 });
-    expect(e.draft.value.document.tiles.slice(0, 2)).toEqual([{ ...tile, x: 3, y: 4 }, { ...other, x: 5, y: 4 }]);
+    expect(e.draft.value.document.tiles.slice(0,2)).toEqual([{...tile,x:4,y:4},{...other,x:6,y:4}]);
     expect(e.history.value).toHaveLength(1);
     e.gestures.removeSelected();
     expect(e.draft.value.document.tiles).toEqual([obstacle]);

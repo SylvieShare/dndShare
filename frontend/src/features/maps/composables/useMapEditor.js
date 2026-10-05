@@ -18,6 +18,7 @@ export function useMapEditor(source, onSaved) {
     selectedModel = ref(""),
     placementRotation = ref(0),
     level = ref(0),
+    collection = ref("lost-cave"),
     selectedTile = ref(""),
     selectedTiles = ref([]),
     screenSelection = ref(null),
@@ -175,6 +176,7 @@ export function useMapEditor(source, onSaved) {
     change,
     pauseSave,
     catalogue,
+    collection,
   };
   const tileDrag = editorTileDrag(state);
   const wallBrush = editorWallBrush(state);
@@ -228,6 +230,7 @@ export function useMapEditor(source, onSaved) {
     wallBrush,
     previewTile,
     catalogue,
+    collection,
     loadingModels,
     modelError,
     retryModels,

@@ -20,6 +20,7 @@ function contains(polygon, x, y) {
   return inside;
 }
 export function modelConnections(model) {
+  if (Number.isInteger(model?.wallMask)) return model.wallMask;
   if (!model || model.tileType !== "wall") return 0;
   if (masks.has(model)) return masks.get(model);
   const fallback = { straight: 17, angle: 65, tee: 21, cross: 85, corner: 1 };
@@ -36,6 +37,9 @@ export function modelConnections(model) {
     });
   masks.set(model, mask);
   return mask;
+}
+export function wallControlMode(model) {
+  return model?.wallMode || "center";
 }
 export function rotateConnections(mask, rotation) {
   const shift = (((rotation / 45) % 8) + 8) % 8;
@@ -60,11 +64,16 @@ export function connectionVariant(tile, mask, catalogue) {
     if (
       model.collection !== current.collection ||
       model.terrainType !== current.terrainType ||
-      model.width !== 1 ||
-      model.height !== 1
+      wallControlMode(model) !== wallControlMode(current) ||
+      !["floor", "wall"].includes(model.tileType)
     )
       continue;
     for (const rotation of [0, 90, 180, 270]) {
+      const currentWidth = tile.rotation % 180 ? current.height : current.width,
+        currentHeight = tile.rotation % 180 ? current.width : current.height;
+      const width = rotation % 180 ? model.height : model.width,
+        height = rotation % 180 ? model.width : model.height;
+      if (width !== currentWidth || height !== currentHeight) continue;
       if (rotateConnections(modelConnections(model), rotation) !== mask)
         continue;
       const score =

@@ -17,7 +17,10 @@ export function editorWallBrush(e) {
   function update() {
     const document = e.draft.value.document;
     const seed = e.catalogue.value.find(
-      (m) => m.tileType === "wall" && m.wallLayout === "straight",
+      (m) =>
+        m.tileType === "wall" &&
+        m.collection === (e.collection?.value || "lost-cave") &&
+        m.wallLayout === "straight",
     );
     if (!seed) {
       e.error.value = "В каталоге нет стен";

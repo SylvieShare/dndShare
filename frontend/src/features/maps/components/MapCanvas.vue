@@ -36,6 +36,7 @@
       :points="connectionPoints"
       :mask="connectionMask"
       :invalid="connectionInvalid"
+      :mode="connectionMode"
       @toggle="emit('connection', $event)"
     />
     <LoadingState
@@ -79,6 +80,7 @@ import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
 import MapTileConnections from "./MapTileConnections.vue";
 import MapCanvasControls from "./MapCanvasControls.vue";
 import { useMapCanvasPointer } from "../composables/useMapCanvasPointer";
+import { useCameraPan } from "../composables/useCameraPan";
 const props = defineProps({
   document: { type: Object, required: true },
   state: Object,
@@ -98,8 +100,11 @@ const props = defineProps({
   showConnections: Boolean,
   connectionMask: Number,
   connectionInvalid: Boolean,
+  connectionMode: String,
   previewTile: Object,
   catalogue: Array,
+  activeLevel: { type: Number, default: 0 },
+  placementModel: String,
   publicCode: String,
   tabletop: Boolean,
   hint: {
@@ -107,7 +112,7 @@ const props = defineProps({
     default: "Колесо: масштаб · Alt: перемещение · ПКМ/Shift: вращение",
   },
 });
-const emit = defineEmits(["gesture", "view", "connection"]);
+const emit = defineEmits(["gesture", "view", "connection", "camera-move"]);
 const host = ref(null),
   loading = ref(true),
   error = ref(""),
@@ -117,6 +122,12 @@ let renderer,
   dead = false,
   frame = 0;
 const pointer = useMapCanvasPointer(host, props, () => renderer, emit, setView);
+const keyboardPan = useCameraPan(
+  () => renderer?.getView(),
+  setView,
+  () => props.tabletop || props.document.kind !== "tiles",
+  () => emit("camera-move"),
+);
 function redraw() {
   if (frame || !renderer) return;
   frame = requestAnimationFrame(() => {
@@ -141,6 +152,7 @@ watch(
     props.hoveredTile,
     props.previewTile,
     props.catalogue,
+    props.activeLevel,
   ],
   redraw,
   { deep: true },
@@ -208,25 +220,7 @@ function updateAnchor() {
       : [];
 }
 function panArrow(key) {
-  const direction = {
-    ArrowLeft: [-1, 0],
-    ArrowRight: [1, 0],
-    ArrowUp: [0, -1],
-    ArrowDown: [0, 1],
-  }[key];
-  const view = renderer?.getView();
-  if (!direction || !view) return;
-  const top = props.tabletop || props.document.kind !== "tiles";
-  const yaw = ((top ? view.rotation : view.azimuth) * Math.PI) / 180,
-    pitch = ((top ? 90 : view.tilt) * Math.PI) / 180,
-    dx = (direction[0] * 48) / view.cellPixels,
-    dy = (direction[1] * 48) / (view.cellPixels * Math.sin(pitch));
-  setView({
-    ...view,
-    fit: false,
-    x: view.x + dx * Math.cos(yaw) + dy * Math.sin(yaw),
-    y: view.y - dx * Math.sin(yaw) + dy * Math.cos(yaw),
-  });
+  keyboardPan.down(key);
 }
 onMounted(async () => {
   try {
@@ -257,6 +251,8 @@ onBeforeUnmount(() => {
 });
 defineExpose({
   panArrow,
+  releaseArrow: keyboardPan.up,
+  stopCamera: keyboardPan.stop,
   fit,
   getView: () => renderer?.getView(),
   setView,
@@ -292,7 +288,7 @@ defineExpose({
   cursor: crosshair;
 }
 .map-canvas--select .map-canvas-surface {
-  cursor: default;
+  cursor: grab;
 }
 .map-canvas--select .map-canvas-surface:active {
   cursor: grabbing;

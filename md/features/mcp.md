@@ -161,6 +161,13 @@ URL через MCP, выполняет PUT прямо в S3 и регистри�
 MCP_AUTH_TOKEN, `-assets` указывает папку content-addressed файлов с
 catalogue.json; endpoint по умолчанию https://dndshare.ru/mcp.
 
+Расширенный каталог поддерживает `tileType=stairs/frame`, `collectionName`,
+`wallMode=center/edge/none`, `wallMask` и `supportSlots` с целыми координатами и
+размерами, а также относительной высотой `elevation`. Слоты проверяются на выход
+за площадь, пересечение и высоту. При регистрации сохраняются в PostgreSQL;
+read API возвращают их в каталоге. Импортёр допускает 1–8 параллельных моделей,
+пропускает уже зарегистрированные UUID и возобновляет прерванную загрузку.
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md)

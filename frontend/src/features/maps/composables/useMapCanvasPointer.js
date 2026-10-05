@@ -13,35 +13,52 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       event.clientY > r.bottom
     )
       return null;
-    return getRenderer().world(event);
+    return (
+      getRenderer().placementPoint?.(
+        event,
+        props.activeLevel,
+        props.placementModel,
+      ) || getRenderer().world(event)
+    );
   }
   function down(event) {
     if (props.readonly || !getRenderer() || drag) return;
     host.value.focus({ preventScroll: true });
     host.value.setPointerCapture(event.pointerId);
+    const hit = getRenderer().pick(event);
+    const additive = event.metaKey || event.ctrlKey;
     drag = {
       id: event.pointerId,
       orbit: event.button === 2 || event.shiftKey,
-      pan: event.button === 1 || event.altKey || props.tool === "pan",
+      pan:
+        event.button === 1 ||
+        event.altKey ||
+        props.tool === "pan" ||
+        (props.tool === "select" && event.button === 0 && !additive && !hit),
+      emptyPan:
+        props.tool === "select" && event.button === 0 && !additive && !hit,
       screen: { x: event.clientX, y: event.clientY },
-      point: getRenderer().world(event),
+      point: hit?.point || pointAt(event),
       view: getRenderer().getView(),
-      region:
-        !!props.selectedTiles &&
-        props.tool === "select" &&
-        (event.metaKey || event.ctrlKey || !getRenderer().pick(event)),
+      region: !!props.selectedTiles && props.tool === "select" && additive,
     };
-    if (!drag.pan && !drag.orbit)
+    if ((!drag.pan || drag.emptyPan) && !drag.orbit)
       emit("gesture", {
         phase: "start",
         point: drag.point,
-        hit: getRenderer().pick(event),
+        hit,
         event,
       });
   }
   function move(event) {
     if (!getRenderer() || props.readonly) return;
-    const point = getRenderer().world(event);
+    const point =
+      drag?.point?.elevation !== undefined
+        ? {
+            ...getRenderer().world(event, drag.point.elevation),
+            elevation: drag.point.elevation,
+          }
+        : pointAt(event);
     if (!drag) {
       emit("gesture", {
         phase: "hover",
@@ -92,8 +109,15 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   }
   function up(event) {
     if (!drag || event.pointerId !== drag.id) return;
-    if (!drag.pan && !drag.orbit) {
-      const point = pointAt(event);
+    if ((!drag.pan || drag.emptyPan) && !drag.orbit) {
+      const inside = pointAt(event);
+      const point =
+        inside && drag.point?.elevation !== undefined
+          ? {
+              ...getRenderer().world(event, drag.point.elevation),
+              elevation: drag.point.elevation,
+            }
+          : inside;
       emit("gesture", { phase: point ? "end" : "cancel", point, event });
     }
     drag = null;

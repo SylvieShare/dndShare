@@ -1,4 +1,9 @@
-import { tileGroupStatus, tileSize } from "../lib/tilePlacement";
+import {
+  nearestTilePlacement,
+  tileGroupStatus,
+  tileSize,
+} from "../lib/tilePlacement";
+import { dependentTiles, structureContext } from "../lib/tileStructure";
 import { uid } from "../lib/mapModel";
 import { enclosedEmptyCells } from "../lib/enclosedTiles";
 
@@ -15,7 +20,12 @@ export function editorTileDrag(e) {
     drag.fill = fill && !drag.tile.id;
     if (drag.fill) {
       const cells = enclosedEmptyCells(
-        e.draft.value.document,
+        {
+          ...e.draft.value.document,
+          tiles: e.draft.value.document.tiles.filter(
+            (t) => t.level === drag.tile.level,
+          ),
+        },
         point,
         e.catalogue.value,
       );
@@ -34,8 +44,19 @@ export function editorTileDrag(e) {
     const { width, height } = tileSize(drag.tile, model(drag.tile.modelId));
     const x = point.x - drag.offset.x - width / 2,
       y = point.y - drag.offset.y - height / 2;
-    const dx = x - drag.tile.x,
-      dy = y - drag.tile.y;
+    const nearest = nearestTilePlacement(
+      e.draft.value.document,
+      { ...drag.tile, x, y },
+      e.catalogue.value,
+      drag.tiles.map((t) => t.id).filter(Boolean),
+      2,
+      drag.tiles,
+      drag.tile,
+    );
+    const px = nearest?.x ?? Math.round(x),
+      py = nearest?.y ?? Math.round(y);
+    const dx = px - drag.tile.x,
+      dy = py - drag.tile.y;
     drag.targets = drag.tiles.map((tile) => ({
       ...tile,
       x: tile.x + Math.round(dx),
@@ -50,9 +71,9 @@ export function editorTileDrag(e) {
       ...drag.tile,
       tileId: drag.tile.id,
       tileIds: drag.tiles.map((t) => t.id).filter(Boolean),
-      x,
-      y,
-      valid: status.valid && !drag.fill,
+      x: px,
+      y: py,
+      valid: status.valid && !drag.fill && !!nearest,
       group: drag.tiles.map((tile) => ({
         ...tile,
         x: tile.x + dx,
@@ -81,9 +102,16 @@ export function editorTileDrag(e) {
           level: e.level.value,
         };
     const size = tileSize(source, model(modelId));
+    const groupIds = tile
+      ? dependentTiles(
+          e.draft.value.document,
+          e.catalogue.value,
+          e.selectedTiles.value,
+        )
+      : [];
     const tiles = tile
       ? e.draft.value.document.tiles
-          .filter((t) => e.selectedTiles.value.includes(t.id))
+          .filter((t) => groupIds.includes(t.id))
           .map((t) => ({ ...t }))
       : [source];
     drag = {
@@ -116,7 +144,11 @@ export function editorTileDrag(e) {
         drag.targets,
         e.catalogue.value,
       );
-      if (status.valid && (!drag.fill || e.previewTile.value?.fill)) {
+      if (
+        status.valid &&
+        e.previewTile.value?.valid &&
+        (!drag.fill || e.previewTile.value?.fill)
+      ) {
         const placements = drag.targets.map((tile) => ({
           ...tile,
           id: tile.id || uid(),
@@ -129,6 +161,7 @@ export function editorTileDrag(e) {
             !old ||
             old.x !== tile.x ||
             old.y !== tile.y ||
+            old.level !== tile.level ||
             old.rotation !== tile.rotation
           );
         });

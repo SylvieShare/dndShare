@@ -76,19 +76,25 @@ export function modelAssets(onError) {
   const owned = new Map();
   let catalogue = new Map(),
     catalogueKey = "",
+    sourceCatalogue,
     dead = false;
   return {
     async ensure(ids, tier, options = {}) {
       const key = options.publicCode
         ? `${options.publicCode}:${[...ids].sort().join(",")}`
         : "private";
-      if (catalogueKey !== key || !catalogue.size) {
+      if (
+        catalogueKey !== key ||
+        !catalogue.size ||
+        (options.catalogue && options.catalogue !== sourceCatalogue)
+      ) {
         const models = options.catalogue?.length
           ? options.catalogue
           : await getMapModels(options.publicCode);
         if (dead) return;
         catalogue = new Map(models.map((m) => [m.id, m]));
         catalogueKey = key;
+        sourceCatalogue = options.catalogue;
       }
       await Promise.all(
         [...ids].map(async (id) => {
@@ -118,6 +124,7 @@ export function modelAssets(onError) {
     metadata(id) {
       return catalogue.get(id);
     },
+    catalogue: () => [...catalogue.values()],
     model(id, tier) {
       const m = catalogue.get(id);
       return m && owned.get(tier === "lod" ? m.lodUrl : m.renderUrl)?.value;

@@ -95,13 +95,21 @@
           :screen-selection="e.screenSelection"
           :hovered-tile="e.hoveredTile"
           :preview-tile="e.previewTile"
-          :show-connections="e.selectedTiles.length === 1 && !e.draggingTile"
+          :show-connections="
+            e.selectedTiles.length === 1 &&
+            !e.draggingTile &&
+            connections.mode !== 'none'
+          "
+          :connection-mode="connections.mode"
           :connection-mask="connections.mask"
           :connection-invalid="connections.invalid"
           :hint="`${toolHint} · Cmd + клик/рамка: группа · Cmd + перенос: заполнить · Стрелки: камера · Alt: сдвиг · ПКМ/Shift: вращение`"
           :catalogue="e.catalogue"
+          :active-level="e.level"
+          :placement-model="e.selectedModel"
           @gesture="e.handle"
           @connection="connections.toggle"
+          @camera-move="catalogueDrag.cameraMoved"
         />
       </div>
     </div>
@@ -179,7 +187,6 @@ function hotkey(event) {
   if (event.key.startsWith("Arrow")) {
     event.preventDefault();
     canvas.value?.panArrow(event.key);
-    catalogueDrag.cameraMoved();
   }
   if (event.key === "Escape") {
     catalogueDrag.cancel();
@@ -210,8 +217,27 @@ function hotkey(event) {
     e.removeSelected();
   }
 }
-onMounted(() => window.addEventListener("keydown", hotkey));
-onBeforeUnmount(() => window.removeEventListener("keydown", hotkey));
+function keyup(event) {
+  canvas.value?.releaseArrow(event.key);
+}
+function blur() {
+  canvas.value?.stopCamera();
+}
+function focusin(event) {
+  if (event.target.closest("input,textarea,select,[contenteditable]")) blur();
+}
+onMounted(() => {
+  window.addEventListener("keydown", hotkey);
+  window.addEventListener("keyup", keyup);
+  window.addEventListener("blur", blur);
+  window.addEventListener("focusin", focusin);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", hotkey);
+  window.removeEventListener("keyup", keyup);
+  window.removeEventListener("blur", blur);
+  window.removeEventListener("focusin", focusin);
+});
 function exportMap() {
   const url = URL.createObjectURL(
     new Blob([JSON.stringify(e.draft, null, 2)], { type: "application/json" }),

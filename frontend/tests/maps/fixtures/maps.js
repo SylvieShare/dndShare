@@ -19,6 +19,9 @@ import "@sylvieshare/share-ui/styles.css";
 import "../../../src/app/theme.css";
 const WALL = "11111111-1111-4111-8111-111111111111",
   FLOOR = "22222222-2222-4222-8222-222222222222";
+const FRAME = "77777777-7777-4777-8777-777777777777",
+  UD_FLOOR = "88888888-8888-4888-8888-888888888888",
+  UD_WALL = "99999999-9999-4999-8999-999999999999";
 const catalogue = [
   {
     id: WALL,
@@ -34,20 +37,85 @@ const catalogue = [
     name: "Пол 1",
     tileType: "floor",
   },
-  { id: "33333333-3333-4333-8333-333333333333", sourceCode: "LC-003", sourceName: "Wall Angle", name: "Угол стены", tileType: "wall", wallLayout: "angle" },
-  { id: "44444444-4444-4444-8444-444444444444", sourceCode: "LC-004", sourceName: "Wall T-Shaped", name: "Т-образная стена", tileType: "wall", wallLayout: "tee" },
-  { id: "55555555-5555-4555-8555-555555555555", sourceCode: "LC-005", sourceName: "Wall X-Shaped", name: "Х-образная стена", tileType: "wall", wallLayout: "cross" },
-  { id: "66666666-6666-4666-8666-666666666666", sourceCode: "LC-006", sourceName: "Wall Corner", name: "Окончание стены", tileType: "wall", wallLayout: "corner" },
+  {
+    id: "33333333-3333-4333-8333-333333333333",
+    sourceCode: "LC-003",
+    sourceName: "Wall Angle",
+    name: "Угол стены",
+    tileType: "wall",
+    wallLayout: "angle",
+  },
+  {
+    id: "44444444-4444-4444-8444-444444444444",
+    sourceCode: "LC-004",
+    sourceName: "Wall T-Shaped",
+    name: "Т-образная стена",
+    tileType: "wall",
+    wallLayout: "tee",
+  },
+  {
+    id: "55555555-5555-4555-8555-555555555555",
+    sourceCode: "LC-005",
+    sourceName: "Wall X-Shaped",
+    name: "Х-образная стена",
+    tileType: "wall",
+    wallLayout: "cross",
+  },
+  {
+    id: "66666666-6666-4666-8666-666666666666",
+    sourceCode: "LC-006",
+    sourceName: "Wall Corner",
+    name: "Окончание стены",
+    tileType: "wall",
+    wallLayout: "corner",
+  },
+  {
+    id: FRAME,
+    sourceCode: "TEST-GRID",
+    sourceName: "Grid 2x1",
+    name: "Каркас 2×1",
+    tileType: "frame",
+    wallMode: "none",
+    collection: "ultimate-dungeon",
+    width: 2,
+    height: 1,
+    maxHeight: 0.6,
+    supportSlots: [{ x: 0, y: 0, width: 2, height: 1, elevation: 0.6 }],
+  },
+  {
+    id: UD_FLOOR,
+    sourceCode: "UD-016",
+    sourceName: "Ground",
+    name: "Каменный пол",
+    tileType: "floor",
+    wallMode: "edge",
+    wallMask: 0,
+    collection: "ultimate-dungeon",
+  },
+  {
+    id: UD_WALL,
+    sourceCode: "UD-001",
+    sourceName: "Wall",
+    name: "Боковая стена",
+    tileType: "wall",
+    wallMode: "edge",
+    wallMask: 1,
+    collection: "ultimate-dungeon",
+  },
 ].map((m) => ({
   ...m,
-  collection: "lost-cave",
+  collection: m.collection || "lost-cave",
+  collectionName:
+    m.collection === "ultimate-dungeon" ? "Ultimate Dungeon" : "Lost Cave",
   version: 1,
   terrainType: "cave",
   wallLayout: m.wallLayout || (m.tileType === "wall" ? "straight" : "none"),
-  width: 1,
-  height: 1,
+  wallMode: m.wallMode || "center",
+  supportSlots: m.supportSlots || [],
+  width: m.width || 1,
+  height: m.height || 1,
   surfaceHeight: 0.42,
-  maxHeight: 1,
+  maxHeight: m.maxHeight || 1,
   tags: [],
   blockers: [],
   renderUrl: `/api/maps/models/${m.id}/render`,
@@ -62,12 +130,34 @@ const cubeScene = new Scene(),
 cube.position.y = 0.2;
 cubeScene.add(cube);
 const glb = await new GLTFExporter().parseAsync(cubeScene, { binary: true });
+const frameScene = new Scene();
+for (const x of [-0.95, 0, 0.95]) {
+  const bar = new Mesh(
+    new BoxGeometry(0.1, 0.6, 1),
+    new MeshStandardMaterial({ color: 0x747b80 }),
+  );
+  bar.position.set(x, 0.3, 0);
+  frameScene.add(bar);
+}
+for (const z of [-0.45, 0.45]) {
+  const bar = new Mesh(
+    new BoxGeometry(2, 0.6, 0.1),
+    new MeshStandardMaterial({ color: 0x747b80 }),
+  );
+  bar.position.set(0, 0.3, z);
+  frameScene.add(bar);
+}
+const frameGlb = await new GLTFExporter().parseAsync(frameScene, {
+  binary: true,
+});
 const source = newMap();
 const params = new URLSearchParams(location.search);
 let wallGlb = glb;
 if (params.has("shaped")) {
-  const wallScene = new Scene(), material = new MeshStandardMaterial({ color: 0x896849 });
-  const left = new Mesh(new BoxGeometry(0.2, 0.8, 1), material), top = new Mesh(new BoxGeometry(1, 0.8, 0.2), material);
+  const wallScene = new Scene(),
+    material = new MeshStandardMaterial({ color: 0x896849 });
+  const left = new Mesh(new BoxGeometry(0.2, 0.8, 1), material),
+    top = new Mesh(new BoxGeometry(1, 0.8, 0.2), material);
   left.position.set(-0.4, 0.4, 0);
   top.position.set(0, 0.4, -0.4);
   wallScene.add(left, top);
@@ -155,9 +245,12 @@ window.fetch = async (url, options = {}) => {
       url,
     )
   )
-    return new Response(url.includes(WALL) ? wallGlb : glb, {
-      headers: { "Content-Type": "model/gltf-binary" },
-    });
+    return new Response(
+      url.includes(FRAME) ? frameGlb : url.includes(WALL) ? wallGlb : glb,
+      {
+        headers: { "Content-Type": "model/gltf-binary" },
+      },
+    );
   if (
     url === "/api/maps/models" ||
     url === "/api/public/sessions/ABC-123/map-models"
@@ -187,13 +280,15 @@ window.fetch = async (url, options = {}) => {
     if (data) {
       result = { ...data, id: "test-copy", revision: 1 };
       window.lastSaved = result;
-    } else result = [source, ...(window.lastSaved?.id === "test-copy" ? [window.lastSaved] : [])];
-  }
-  else if (url === "/api/maps/test-copy") {
+    } else
+      result = [
+        source,
+        ...(window.lastSaved?.id === "test-copy" ? [window.lastSaved] : []),
+      ];
+  } else if (url === "/api/maps/test-copy") {
     result = { ...data, revision: data.revision + 1 };
     window.lastSaved = result;
-  }
-  else if (url === "/api/maps/test-map") {
+  } else if (url === "/api/maps/test-map") {
     if (data.revision !== templateRevision)
       return new Response("{}", { status: 409 });
     result = { ...data, id: "test-map", revision: ++templateRevision };
@@ -226,10 +321,17 @@ const router = createRouter({
     { path: "/maps/editor", name: "MapEditor", component: ViewMapEditor },
   ],
 });
-const pinia = createPinia(), account = useAccountStore(pinia);
+const pinia = createPinia(),
+  account = useAccountStore(pinia);
 account.status = "success";
 account.user = { id: 1, login: "tester", roles: ["ADMIN"] };
-await router.push(mode === "library" ? "/maps" : mode === "editor" ? "/maps/editor?id=test-map" : "/map-screen/ABC-123");
+await router.push(
+  mode === "library"
+    ? "/maps"
+    : mode === "editor"
+      ? "/maps/editor?id=test-map"
+      : "/map-screen/ABC-123",
+);
 window.mapRoute = () => router.currentRoute.value.fullPath;
 createApp({
   render: () =>

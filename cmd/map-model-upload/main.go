@@ -17,6 +17,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 
@@ -61,7 +62,7 @@ func (c client) call(ctx context.Context, name string, args any, out any) error 
 			} `json:"structuredContent"`
 		} `json:"result"`
 	}
-	if err = json.NewDecoder(io.LimitReader(response.Body, 4<<20)).Decode(&envelope); err != nil {
+	if err = json.NewDecoder(io.LimitReader(response.Body, 32<<20)).Decode(&envelope); err != nil {
 		return err
 	}
 	if envelope.Error != nil {
@@ -82,6 +83,7 @@ func (c client) call(ctx context.Context, name string, args any, out any) error 
 func main() {
 	dir := flag.String("assets", ".", "Folder with content-addressed assets and catalogue.json")
 	endpoint := flag.String("mcp-url", "https://dndshare.ru/mcp", "MCP endpoint")
+	workers := flag.Int("workers", 4, "Parallel model uploads (1–8)")
 	flag.Parse()
 	token := os.Getenv("MCP_AUTH_TOKEN")
 	if token == "" {
@@ -102,17 +104,58 @@ func main() {
 		log.Fatal(err)
 	}
 	c := client{url: *endpoint, token: token, http: &http.Client{Timeout: 10 * time.Minute, CheckRedirect: func(r *http.Request, v []*http.Request) error { return http.ErrUseLastResponse }}}
-	for _, m := range models {
-		for _, kind := range []string{"preview", "render", "lod", "source"} {
-			if err = upload(ctx, c, *dir, kind, m.Assets[kind]); err != nil {
-				log.Fatalf("%s %s: %v", m.SourceCode, kind, err)
+	if *workers < 1 || *workers > 8 {
+		log.Fatal("workers must be 1–8")
+	}
+	var existing []battlemap.Model
+	if err = c.call(ctx, "map_tile_models_list", map[string]any{}, &existing); err != nil {
+		log.Fatal(err)
+	}
+	known := map[string]bool{}
+	for _, model := range existing {
+		known[model.ID] = true
+	}
+	jobs := make(chan battlemap.Model)
+	failures := make(chan error, *workers)
+	var wg sync.WaitGroup
+	for i := 0; i < *workers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for model := range jobs {
+				for _, kind := range []string{"preview", "render", "lod", "source"} {
+					if err := upload(ctx, c, *dir, kind, model.Assets[kind]); err != nil {
+						failures <- fmt.Errorf("%s %s: %w", model.SourceCode, kind, err)
+						stop()
+						return
+					}
+				}
+				if err := c.call(ctx, "map_tile_model_register", map[string]any{"model": model}, nil); err != nil {
+					failures <- fmt.Errorf("%s: %w", model.SourceCode, err)
+					stop()
+					return
+				}
+				log.Printf("registered %s %s version %d", model.Collection, model.SourceCode, model.Version)
 			}
-			log.Printf("uploaded %s %s", m.SourceCode, kind)
+		}()
+	}
+sendLoop:
+	for _, model := range models {
+		if known[model.ID] {
+			continue
 		}
-		if err = c.call(ctx, "map_tile_model_register", map[string]any{"model": m}, nil); err != nil {
-			log.Fatalf("register %s: %v", m.SourceCode, err)
+		select {
+		case jobs <- model:
+		case <-ctx.Done():
+			break sendLoop
 		}
-		log.Printf("registered %s", m.SourceCode)
+	}
+	close(jobs)
+	wg.Wait()
+	close(failures)
+	for err := range failures {
+		log.Print(err)
+		os.Exit(1)
 	}
 }
 

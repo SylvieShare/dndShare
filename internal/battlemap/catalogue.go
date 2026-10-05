@@ -3,7 +3,6 @@ package battlemap
 import (
 	_ "embed"
 	"encoding/json"
-	"fmt"
 	"regexp"
 )
 
@@ -11,21 +10,33 @@ const DocumentVersion = 2
 const MaxTiles = 4096
 
 type ModelMetadata struct {
-	ID            string         `json:"id"`
-	Collection    string         `json:"collection"`
-	SourceCode    string         `json:"sourceCode"`
-	SourceName    string         `json:"sourceName"`
-	Name          string         `json:"name"`
-	Version       int            `json:"version"`
-	TileType      string         `json:"tileType"`
-	TerrainType   string         `json:"terrainType"`
-	WallLayout    string         `json:"wallLayout"`
-	Width         int            `json:"width"`
-	Height        int            `json:"height"`
-	SurfaceHeight float64        `json:"surfaceHeight"`
-	MaxHeight     float64        `json:"maxHeight"`
-	Blockers      [][][2]float64 `json:"blockers"`
-	Tags          []string       `json:"tags"`
+	ID             string         `json:"id"`
+	Collection     string         `json:"collection"`
+	CollectionName string         `json:"collectionName"`
+	SourceCode     string         `json:"sourceCode"`
+	SourceName     string         `json:"sourceName"`
+	Name           string         `json:"name"`
+	Version        int            `json:"version"`
+	TileType       string         `json:"tileType"`
+	TerrainType    string         `json:"terrainType"`
+	WallLayout     string         `json:"wallLayout"`
+	WallMode       string         `json:"wallMode"`
+	WallMask       int            `json:"wallMask"`
+	Width          int            `json:"width"`
+	Height         int            `json:"height"`
+	SurfaceHeight  float64        `json:"surfaceHeight"`
+	MaxHeight      float64        `json:"maxHeight"`
+	Blockers       [][][2]float64 `json:"blockers"`
+	Tags           []string       `json:"tags"`
+	SupportSlots   []SupportSlot  `json:"supportSlots"`
+}
+
+type SupportSlot struct {
+	X         int     `json:"x"`
+	Y         int     `json:"y"`
+	Width     int     `json:"width"`
+	Height    int     `json:"height"`
+	Elevation float64 `json:"elevation"`
 }
 
 type ModelAsset struct {
@@ -77,25 +88,6 @@ func TileFootprint(tile Tile, model ModelMetadata) (int, int) {
 }
 
 func ValidateTileModels(d Document, models map[string]ModelMetadata) error {
-	occupied := map[[3]int]bool{}
-	for _, tile := range d.Tiles {
-		model, ok := models[tile.ModelID]
-		if !ok {
-			return fmt.Errorf("Модель плитки отсутствует в каталоге")
-		}
-		width, height := TileFootprint(tile, model)
-		if tile.X+width > int(d.Width) || tile.Y+height > int(d.Height) {
-			return fmt.Errorf("Плитка выходит за границу карты")
-		}
-		for y := tile.Y; y < tile.Y+height; y++ {
-			for x := tile.X; x < tile.X+width; x++ {
-				key := [3]int{x, y, tile.Level}
-				if occupied[key] {
-					return fmt.Errorf("Плитки на одном уровне не должны перекрываться")
-				}
-				occupied[key] = true
-			}
-		}
-	}
-	return nil
+	_, err := ResolveTilePlacements(d, models)
+	return err
 }

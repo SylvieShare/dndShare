@@ -75,14 +75,30 @@ func validateMapModel(m battlemap.Model) error {
 	if !isUUID(m.ID) || m.Collection == "" || m.SourceCode == "" || m.SourceName == "" || strings.TrimSpace(m.Name) == "" || m.Version < 1 || len([]rune(m.Name)) > 160 || len(m.Collection) > 80 || len(m.SourceCode) > 80 || len(m.SourceName) > 255 {
 		return errors.New("invalid model identity or names")
 	}
-	if m.TileType != "floor" && m.TileType != "wall" && m.TileType != "prop" {
+	if m.TileType != "floor" && m.TileType != "wall" && m.TileType != "prop" && m.TileType != "stairs" && m.TileType != "frame" {
 		return errors.New("invalid tileType")
+	}
+	if m.CollectionName == "" || len(m.CollectionName) > 160 || (m.WallMode != "center" && m.WallMode != "edge" && m.WallMode != "none") || m.WallMask < 0 || m.WallMask > 255 {
+		return errors.New("invalid collection label or wall controls")
 	}
 	if m.TerrainType == "" || len(m.TerrainType) > 32 || len(m.WallLayout) > 32 || m.Width < 1 || m.Height < 1 || m.Width > 8 || m.Height > 8 || m.SurfaceHeight < 0 || m.MaxHeight < m.SurfaceHeight || m.MaxHeight > 32 {
 		return errors.New("invalid model geometry")
 	}
 	if len(m.Blockers) > 100 || len(m.Tags) > 32 {
 		return errors.New("too many geometry contours or tags")
+	}
+	if len(m.SupportSlots) > 64 {
+		return errors.New("too many support slots")
+	}
+	for i, slot := range m.SupportSlots {
+		if slot.X < 0 || slot.Y < 0 || slot.Width < 1 || slot.Height < 1 || slot.X+slot.Width > m.Width || slot.Y+slot.Height > m.Height || slot.Elevation <= 0 || slot.Elevation > m.MaxHeight+.001 {
+			return errors.New("invalid support slot")
+		}
+		for _, other := range m.SupportSlots[:i] {
+			if slot.X < other.X+other.Width && slot.X+slot.Width > other.X && slot.Y < other.Y+other.Height && slot.Y+slot.Height > other.Y {
+				return errors.New("overlapping support slots")
+			}
+		}
 	}
 	for _, p := range m.Blockers {
 		if len(p) < 3 || len(p) > 500 {

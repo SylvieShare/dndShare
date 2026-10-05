@@ -17,7 +17,8 @@ export function mapCamera(camera, gpu, host, render) {
     },
     readonly = false,
     sizedWidth = 0,
-    sizedHeight = 0;
+    sizedHeight = 0,
+    sceneHeight = 1;
   const ray = new Raycaster(),
     point = new Vector3(),
     plane = new Plane(new Vector3(0, 1, 0), -FLOOR);
@@ -39,7 +40,7 @@ export function mapCamera(camera, gpu, host, render) {
         (width - 40) / (c * document.width + s * document.height),
         (height - 40) /
           ((s * document.width + c * document.height) * Math.sin(pitch) +
-            2 * Math.cos(pitch)),
+            2 * Math.max(1, sceneHeight) * Math.cos(pitch)),
       );
     }
     pixels = Math.max(0.5, pixels);
@@ -79,10 +80,13 @@ export function mapCamera(camera, gpu, host, render) {
     update,
     document(d, options) {
       document = d;
+      if (options.sceneHeight !== undefined)
+        sceneHeight = options.sceneHeight || 1;
       readonly = !!options.tabletop || d.kind !== "tiles";
       update();
     },
-    world(event) {
+    world(event, elevation = FLOOR) {
+      plane.constant = -elevation;
       const result = cast(event).ray.intersectPlane(plane, point);
       return result ? { x: result.x, y: result.z } : { x: -1, y: -1 };
     },

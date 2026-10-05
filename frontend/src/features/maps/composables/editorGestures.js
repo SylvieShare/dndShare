@@ -8,6 +8,7 @@ import {
   uid,
 } from "../lib/mapModel";
 import { tileGroupStatus, tilePlacementStatus } from "../lib/tilePlacement";
+import { dependentTiles } from "../lib/tileStructure";
 
 export function editorGestures(e) {
   let gesture = null,
@@ -85,6 +86,10 @@ export function editorGestures(e) {
     }
     try {
       if (phase === "start") {
+        if (tool === "select" && !hit && !event?.metaKey && !event?.ctrlKey) {
+          e.setTileSelection([]);
+          e.selectedObject.value = "";
+        }
         if (!inside(d, point.x, point.y) && !(tool === "select" && hit)) return;
         e.pauseSave(true);
         e.selection.value = null;
@@ -110,6 +115,7 @@ export function editorGestures(e) {
               e.setTileSelection(ids);
             }
           } else if (tile) {
+            e.level.value = tile.level;
             if (!e.selectedTiles.value.includes(tile.id))
               e.setTileSelection([tile.id]);
             e.selectedTile.value = tile.id;
@@ -240,11 +246,12 @@ export function editorGestures(e) {
       (e.tool.value.startsWith("zone") ? e.selectedZone.value : "");
     if (!selected) return;
     e.change((m) => {
-      if (e.selectedTiles.value.length)
-        m.document.tiles = m.document.tiles.filter(
-          (t) => !e.selectedTiles.value.includes(t.id),
+      if (e.selectedTiles.value.length) {
+        const ids = new Set(
+          dependentTiles(m.document, e.catalogue.value, e.selectedTiles.value),
         );
-      else if (e.selectedObject.value)
+        m.document.tiles = m.document.tiles.filter((t) => !ids.has(t.id));
+      } else if (e.selectedObject.value)
         m.document.objects = m.document.objects.filter(
           (o) => o.id !== selected,
         );

@@ -7,18 +7,38 @@
     >
   </div>
   <template v-else>
+    <FormSelect v-model:value="editor.collection" aria-label="Коллекция плиток">
+      <option
+        v-for="collection in collections"
+        :key="collection.id"
+        :value="collection.id"
+      >
+        {{ collection.name }}
+      </option>
+    </FormSelect>
+    <FormSelect
+      :value="editor.level"
+      aria-label="Уровень размещения"
+      @change="changeLevel($event)"
+    >
+      <option v-for="level in 16" :key="level" :value="level - 1">
+        Уровень {{ level
+        }}{{
+          level === 1 ? " · свободное размещение" : " · нужны опорные слоты"
+        }}
+      </option>
+    </FormSelect>
     <ActionButton
       :variant="editor.tool === 'wall-brush' ? 'primary' : 'secondary'"
       :aria-pressed="editor.tool === 'wall-brush'"
       @click="toggleWalls"
       ><Paintbrush :size="16" />Кисть стенами</ActionButton
     >
-    <MultiToggle
-      v-model="type"
-      block
-      :options="types"
-      aria-label="Тип плитки"
-    />
+    <FormSelect v-model:value="type" aria-label="Тип плитки">
+      <option v-for="option in types" :key="option.value" :value="option.value">
+        {{ option.label }}
+      </option>
+    </FormSelect>
     <FormSelect v-model:value="wall" aria-label="Расположение стен">
       <option v-for="option in walls" :key="option.value" :value="option.value">
         {{ option.label }}
@@ -55,6 +75,12 @@
         />
         <span class="map-model-name">{{ model.name }}</span>
         <span class="map-model-code">{{ model.sourceCode }}</span>
+        <span class="map-model-code" v-if="model.width > 1 || model.height > 1"
+          >{{ model.width }} × {{ model.height }} клетки</span
+        >
+        <span class="map-model-code" v-if="model.supportSlots?.length"
+          >Слотов: {{ model.supportSlots.length }}</span
+        >
       </BaseTile>
     </div>
     <p v-if="!filtered.length" class="map-hint">
@@ -63,17 +89,36 @@
   </template>
 </template>
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { Paintbrush } from "@lucide/vue";
 import {
   ActionButton,
   BaseTile,
   FormSelect,
   LoadingState,
-  MultiToggle,
 } from "@sylvieshare/share-ui";
 const props = defineProps({ editor: { type: Object, required: true } });
 const emit = defineEmits(["drag-tile"]);
+const collections = computed(() => [
+  ...new Map(
+    props.editor.catalogue.map((m) => [
+      m.collection,
+      { id: m.collection, name: m.collectionName || m.collection },
+    ]),
+  ).values(),
+]);
+function changeLevel(value) {
+  props.editor.resetGesture();
+  props.editor.setTileSelection([]);
+  props.editor.level = Number(value);
+}
+watch(
+  () => props.editor.collection,
+  () => {
+    props.editor.resetGesture();
+    props.editor.setTileSelection([]);
+  },
+);
 function toggleWalls() {
   const next = props.editor.tool === "wall-brush" ? "select" : "wall-brush";
   props.editor.resetGesture();
@@ -95,10 +140,14 @@ const types = [
   { value: "all", label: "Все" },
   { value: "floor", label: "Пол" },
   { value: "wall", label: "Стены" },
+  { value: "stairs", label: "Лестницы" },
+  { value: "frame", label: "Каркасы" },
+  { value: "prop", label: "Декор" },
 ];
 const filtered = computed(() =>
   props.editor.catalogue.filter(
     (m) =>
+      m.collection === props.editor.collection &&
       (type.value === "all" || m.tileType === type.value) &&
       (wall.value === "all" || m.wallLayout === wall.value),
   ),

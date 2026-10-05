@@ -62,6 +62,7 @@ export function createTileLayer(assets, fog) {
         ? {
             tileId: hit.object.userData.tiles[hit.instanceId].id,
             distance: hit.distance,
+            point: { x: hit.point.x, y: hit.point.z, elevation: hit.point.y },
           }
         : null;
     },

@@ -42,7 +42,7 @@ func ValidateDocument(d *Document) error {
 	for _, tile := range d.Tiles {
 		if !identifier.MatchString(tile.ID) || tileIDs[tile.ID] || !modelIdentifier.MatchString(tile.ModelID) ||
 			tile.X < 0 || tile.Y < 0 || float64(tile.X) >= d.Width || float64(tile.Y) >= d.Height ||
-			tile.Level != 0 || (tile.Rotation != 0 && tile.Rotation != 90 && tile.Rotation != 180 && tile.Rotation != 270) {
+			tile.Level < 0 || tile.Level > 15 || (tile.Rotation != 0 && tile.Rotation != 90 && tile.Rotation != 180 && tile.Rotation != 270) {
 			return fmt.Errorf("Некорректная плитка карты")
 		}
 		tileIDs[tile.ID] = true
