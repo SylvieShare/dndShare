@@ -4,6 +4,7 @@ import {
   tileSize,
 } from "../lib/tilePlacement";
 import { dependentTiles, structureContext } from "../lib/tileStructure";
+import { groupRotationPivot, rotateMapGroup } from "../lib/mapGroupRotation";
 import { uid } from "../lib/mapModel";
 import { enclosedEmptyCells } from "../lib/enclosedTiles";
 
@@ -228,7 +229,31 @@ export function editorTileDrag(e) {
   }
   function rotate() {
     if (!drag) return false;
-    for (const tile of drag.tiles) tile.rotation = (tile.rotation + 90) % 360;
+    if (drag.tiles.length === 1)
+      drag.tile.rotation = (drag.tile.rotation + 90) % 360;
+    else {
+      drag.pivot ||= groupRotationPivot(drag.tiles, [], e.catalogue.value);
+      const size = tileSize(drag.tile, model(drag.tile.modelId));
+      const grab = {
+        x: drag.tile.x + size.width / 2 + drag.offset.x,
+        y: drag.tile.y + size.height / 2 + drag.offset.y,
+      };
+      const id = drag.tile.id,
+        rootId = drag.root.id;
+      drag.tiles = rotateMapGroup(
+        drag.tiles,
+        [],
+        e.catalogue.value,
+        drag.pivot,
+      ).tiles;
+      drag.tile = drag.tiles.find((t) => t.id === id);
+      drag.root = drag.tiles.find((t) => t.id === rootId);
+      const rotatedSize = tileSize(drag.tile, model(drag.tile.modelId));
+      drag.offset = {
+        x: grab.x - drag.tile.x - rotatedSize.width / 2,
+        y: grab.y - drag.tile.y - rotatedSize.height / 2,
+      };
+    }
     e.placementRotation.value = drag.tile.rotation;
     move(drag.point, { fill: drag.fill });
     return true;

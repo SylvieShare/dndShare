@@ -19,6 +19,17 @@ it("matches newly assigned UUIDs and returns cancelled existing tiles to their s
   });
   expect(landingTarget({ ...placed, x: 4 }, [placed]).target.x).toBe(1);
   expect(landingTarget(tile, [])).toMatchObject({ hidden: [], fade: true });
+  expect(
+    landingTarget({ ...tile, id: "clipboard-tile-0", clipboard: true }, [
+      placed,
+    ]),
+  ).toMatchObject({ hidden: ["new"], fade: false });
+  expect(
+    landingTarget(
+      { ...tile, id: "clipboard-tile-0", clipboard: true, valid: false },
+      [placed],
+    ),
+  ).toMatchObject({ hidden: [], fade: true });
 });
 it("raises a tile, hides the committed copy during descent, and restores it after landing", () => {
   const geometry = new BoxGeometry(1, 0.4, 1),

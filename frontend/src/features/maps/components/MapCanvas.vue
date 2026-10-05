@@ -107,6 +107,7 @@ const props = defineProps({
   catalogue: Array,
   placementModel: String,
   placementRotation: Number,
+  placementHint: Object,
   publicCode: String,
   tabletop: Boolean,
   hint: {

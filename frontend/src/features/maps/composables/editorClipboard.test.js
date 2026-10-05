@@ -19,6 +19,7 @@ function setup() {
     selectedObject: ref(""),
     tool: ref("select"),
     selectedModel: ref(""),
+    placementHint: ref(null),
     previewTile: ref(null),
     previewObject: ref(null),
     catalogue: ref([{ id: "floor", width: 1, height: 1 }]),
@@ -52,4 +53,56 @@ it("preserves the buffer after a blocked paste", () => {
   clipboard.begin({ x: 4.5, y: 4.5 });
   clipboard.paste({ x: 4.5, y: 4.5 });
   expect(e.draft.value.document.tiles).toHaveLength(2);
+});
+
+it("places a copied stack onto an upper socket and keeps preview IDs distinct", () => {
+  const { e, clipboard } = setup();
+  const source = { ...e.draft.value.document.tiles[0], modelId: "frame" };
+  const child = { ...source, id: "child", modelId: "floor", level: 1 };
+  e.catalogue.value.push({
+    id: "frame",
+    width: 2,
+    height: 1,
+    supportSlots: [{ x: 0, y: 0, width: 2, height: 1, elevation: 0.6 }],
+  });
+  e.draft.value.document.tiles = [
+    source,
+    child,
+    { ...source, id: "receiver", x: 4, y: 4 },
+  ];
+  e.selectedTiles.value = ["old", "child"];
+  clipboard.copy();
+  clipboard.begin({ x: 5, y: 4.5, level: 1 });
+  expect(e.previewTile.value).toMatchObject({ valid: true, level: 1 });
+  expect(new Set(e.previewTile.value.group.map((t) => t.id)).size).toBe(2);
+  clipboard.paste({ x: 5, y: 4.5, level: 1 });
+  expect(e.draft.value.document.tiles.slice(3)).toMatchObject([
+    { x: 4, y: 4, level: 1 },
+    { x: 4, y: 4, level: 2 },
+  ]);
+});
+it("cancels paste back to selection without consuming the buffer and rotates its preview as a whole", () => {
+  const { e, clipboard } = setup();
+  e.draft.value.document.tiles.push({
+    ...e.draft.value.document.tiles[0],
+    id: "second",
+    x: 3,
+  });
+  e.selectedTiles.value.push("second");
+  clipboard.copy();
+  clipboard.begin({ x: 5.5, y: 4.5 });
+  clipboard.rotate();
+  expect(e.previewTile.value.group).toMatchObject([
+    { x: 5, y: 3, rotation: 90 },
+    { x: 5, y: 5, rotation: 90 },
+  ]);
+  clipboard.cancel();
+  expect(e.tool.value).toBe("select");
+  expect(e.previewTile.value).toBeNull();
+  expect(e.draft.value.document.tiles).toHaveLength(2);
+  clipboard.begin({ x: 5.5, y: 4.5 });
+  expect(e.previewTile.value.group).toMatchObject([
+    { x: 4, y: 4, rotation: 0 },
+    { x: 6, y: 4, rotation: 0 },
+  ]);
 });

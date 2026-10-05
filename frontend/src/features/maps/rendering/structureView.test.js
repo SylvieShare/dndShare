@@ -19,7 +19,7 @@ const base = {
   rotation: 0,
   level: 0,
 };
-function setup(tiles) {
+function setup(tiles, width = 8) {
   const view = structureView(
     {
       catalogue: () => models,
@@ -31,7 +31,7 @@ function setup(tiles) {
         new Raycaster(new Vector3(x, 10, y), new Vector3(0, -1, 0)),
     },
   );
-  view.update({ width: 8, height: 8, tiles });
+  view.update({ width, height: 8, tiles });
   return view;
 }
 it("detects upper sockets without a selected level and drops to ground away from them", () => {
@@ -71,4 +71,18 @@ it("uses the bottom member of a dragged stack when it is grabbed by an upper til
   expect(
     view.point({ x: 5.5, y: 5.5 }, "floor", { levelOffset: 1, grabHeight: 1 }),
   ).toMatchObject({ level: 1 });
+});
+
+it("detects the supporting socket of a copied group whose cursor lies in a gap", () => {
+  const view = setup(
+    [
+      { ...base, x: 4, y: 4 },
+      { ...base, id: "right", x: 8, y: 4 },
+    ],
+    12,
+  );
+  expect(view.point({ x: 6.5, y: 4.5 }, "floor")).toMatchObject({ level: 0 });
+  expect(
+    view.point({ x: 6.5, y: 4.5 }, "floor", { grabOffset: { x: 2, y: 0 } }),
+  ).toMatchObject({ level: 1, elevation: 0.6 });
 });

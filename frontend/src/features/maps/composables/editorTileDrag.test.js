@@ -261,3 +261,45 @@ describe("tile dragging", () => {
     expect(e.draft.value.document.tiles).toEqual([obstacle]);
   });
 });
+
+it("rotates a selected assembly about a shared pivot and keeps a dragged group's pivot fixed", () => {
+  const second = { ...tile, id: "second", x: 4 };
+  const e = setup([tile, second]);
+  e.setTileSelection([tile.id, second.id]);
+  e.gestures.rotate();
+  expect(e.draft.value.document.tiles).toMatchObject([
+    { x: 3, y: 1, rotation: 90 },
+    { x: 3, y: 3, rotation: 90 },
+  ]);
+  for (let i = 0; i < 3; i++) e.gestures.rotate();
+  expect(e.draft.value.document.tiles).toEqual([tile, second]);
+  e.tileDrag.begin("floor", { x: 2.5, y: 2.5 }, tile);
+  e.tileDrag.move({ x: 3.5, y: 4.5 });
+  e.gestures.rotate();
+  expect(e.previewTile.value.group).toMatchObject([
+    { x: 4, y: 3, rotation: 90 },
+    { x: 4, y: 5, rotation: 90 },
+  ]);
+  expect(e.draft.value.document.tiles).toEqual([tile, second]);
+  e.tileDrag.cancel();
+});
+it("rotates a supporting frame with dependent tiles and rejects a blocked turn atomically", () => {
+  const base = { ...tile, id: "base", modelId: "frame" };
+  const child = { ...tile, id: "child", level: 1 };
+  const e = setup([base, child]);
+  e.setTileSelection([base.id]);
+  e.gestures.rotate();
+  expect(e.draft.value.document.tiles).toMatchObject([
+    { x: 3, y: 2, rotation: 90 },
+    { x: 3, y: 2, level: 1, rotation: 90 },
+  ]);
+  expect(e.history.value).toHaveLength(1);
+  const second = { ...tile, id: "second", x: 4 };
+  const blocker = { ...tile, id: "blocker", x: 3, y: 1 };
+  const blocked = setup([tile, second, blocker]);
+  blocked.setTileSelection([tile.id, second.id]);
+  blocked.gestures.rotate();
+  expect(blocked.draft.value.document.tiles).toEqual([tile, second, blocker]);
+  expect(blocked.history.value).toHaveLength(0);
+  expect(blocked.error.value).toContain("уже есть");
+});

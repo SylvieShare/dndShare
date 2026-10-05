@@ -40,9 +40,9 @@
           :selected-zone="e.selectedZone"
           :show-zones="e.tool.startsWith('zone')"
           :selection="e.selection"
-          :selected-object="e.selectedObject"
-          :selected-tile="e.selectedTile"
-          :selected-tiles="e.selectedTiles"
+          :selected-object="e.tool === 'paste' ? '' : e.selectedObject"
+          :selected-tile="e.tool === 'paste' ? '' : e.selectedTile"
+          :selected-tiles="e.tool === 'paste' ? [] : e.selectedTiles"
           :screen-selection="e.screenSelection"
           :hovered-tile="e.hoveredTile"
           :preview-tile="e.previewTile"
@@ -50,6 +50,7 @@
           :show-anchors="e.showAnchors"
           :show-connections="
             e.selectedTiles.length === 1 &&
+            e.tool !== 'paste' &&
             !e.draggingTile &&
             connections.mode !== 'none'
           "
@@ -62,9 +63,10 @@
             e.draggingTile || e.tool === 'paste' ? e.selectedModel : ''
           "
           :placement-rotation="e.placementRotation"
+          :placement-hint="e.placementHint"
           @gesture="e.handle"
           @connection="connections.toggle"
-          @camera-move="catalogueDrag.cameraMoved"
+          @camera-move="cursor.moved"
         />
       </div>
     </div>
@@ -99,6 +101,7 @@ import MapCanvas from "./MapCanvas.vue";
 import { useMapEditor } from "../composables/useMapEditor";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
 import { useTileConnections } from "../composables/useTileConnections";
+import { useMapCursor } from "../composables/useMapCursor";
 import { snap } from "../lib/mapModel";
 const props = defineProps({ map: Object }),
   emit = defineEmits(["close", "saved"]),
@@ -106,6 +109,7 @@ const props = defineProps({ map: Object }),
 const e = reactive(useMapEditor(props.map, (map) => emit("saved", map)));
 const canvas = ref(null),
   catalogueDrag = useCatalogueDrag(e, canvas);
+const cursor = useMapCursor(e, canvas, catalogueDrag);
 const connections = reactive(useTileConnections(e)),
   view = ref("map");
 function setView(next) {
@@ -146,7 +150,7 @@ const toolHint = computed(
       object: "Нажмите, чтобы поставить объект",
       zone: "Протяните область зоны",
       "zone-brush": "Закрасьте клетки зоны",
-      paste: "Нажмите, чтобы вставить участок",
+      paste: "Нажмите, чтобы вставить участок · R: поворот · ПКМ/Esc: отмена",
       "wall-brush":
         "Рисуйте стены · Стыки подбираются автоматически · Alt: перемещение поля",
     })[e.tool],
@@ -203,12 +207,16 @@ function hotkey(event) {
   if ((event.metaKey || event.ctrlKey) && event.code === "KeyV") {
     event.preventDefault();
     setView("map");
-    nextTick(() => e.beginPaste(canvas.value?.centerPoint()));
+    if (e.beginPaste())
+      nextTick(() => {
+        e.previewPaste(cursor.point());
+        canvas.value?.focus();
+      });
   }
   if (event.code === "KeyR") {
     event.preventDefault();
     e.rotate();
-    catalogueDrag.cameraMoved();
+    nextTick(cursor.moved);
   }
   if (event.key === "Delete" || event.key === "Backspace") {
     event.preventDefault();

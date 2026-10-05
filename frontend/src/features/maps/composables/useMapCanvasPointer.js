@@ -17,12 +17,18 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       getRenderer().placementPoint?.(
         event,
         props.placementModel,
-        props.previewTile || { rotation: props.placementRotation || 0 },
+        props.placementHint ||
+          props.previewTile || { rotation: props.placementRotation || 0 },
       ) || getRenderer().world(event)
     );
   }
   function down(event) {
     if (props.readonly || !getRenderer() || drag) return;
+    if (props.tool === "paste" && event.button === 2) {
+      event.preventDefault();
+      emit("gesture", { phase: "cancel", event });
+      return;
+    }
     host.value.focus({ preventScroll: true });
     host.value.setPointerCapture(event.pointerId);
     const hit = getRenderer().pick(event);
@@ -44,7 +50,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         !additive &&
         (!hit || hit.anchor),
       screen: { x: event.clientX, y: event.clientY },
-      point: hit?.point || pointAt(event),
+      point:
+        props.tool === "paste" ? pointAt(event) : hit?.point || pointAt(event),
       view: getRenderer().getView(),
       region: !!props.selectedTiles && props.tool === "select" && additive,
     };

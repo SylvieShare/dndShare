@@ -4,11 +4,13 @@ const poseKey = (tile) =>
 // A committed catalogue tile receives a UUID only on drop. Existing UUIDs also
 // let cancellation animate back to the unchanged document rather than teleport.
 export function landingTarget(preview, placed) {
+  if (preview.clipboard && preview.valid === false)
+    return { target: preview, hidden: [], fade: true };
   const original = preview.group || [preview];
   const ids = new Map(placed.map((t) => [t.id, t]));
   const positions = new Map(placed.map((t) => [poseKey(t), t]));
   const group = original.map((t) =>
-    t.id ? ids.get(t.id) : positions.get(poseKey(t)),
+    t.id && !preview.clipboard ? ids.get(t.id) : positions.get(poseKey(t)),
   );
   if (group.some((t) => !t)) return { target: preview, hidden: [], fade: true };
   const index = Math.max(

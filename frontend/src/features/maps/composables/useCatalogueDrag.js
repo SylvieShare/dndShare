@@ -74,6 +74,12 @@ export function useCatalogueDrag(editor, canvas) {
     editor.tileDrag.move(canvas.value?.pointAt(event), { fill: fillKey });
   }
   function freeDrop(event) {
+    if (freePlacement && event.button === 2) {
+      event.preventDefault();
+      event.stopPropagation();
+      cancel();
+      return;
+    }
     if (!freePlacement || event.button !== 0) return;
     const point = canvas.value?.pointAt(event);
     if (!point) return;

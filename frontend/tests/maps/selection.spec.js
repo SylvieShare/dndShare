@@ -63,7 +63,7 @@ test("command clicks select a group that can be moved, rotated and deleted", asy
       page.evaluate(
         () =>
           window.lastSaved?.document.tiles.filter(
-            (t) => [4, 6].includes(t.x) && t.y === 4 && t.rotation === 90,
+            (t) => t.x === 5 && [3, 5].includes(t.y) && t.rotation === 90,
           ).length,
       ),
     )
@@ -75,8 +75,8 @@ test("command clicks select a group that can be moved, rotated and deleted", asy
     .poll(() =>
       page.evaluate(
         () =>
-          window.lastSaved?.document.tiles.filter(
-            (t) => [4, 6].includes(t.x) && t.y === 4,
+          window.lastSaved?.document.tiles.filter((t) =>
+            t.modelId.startsWith("2222"),
           ).length,
       ),
     )

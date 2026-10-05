@@ -11,10 +11,12 @@ import { tileGroupStatus, tilePlacementStatus } from "../lib/tilePlacement";
 import { dependentTiles } from "../lib/tileStructure";
 import { editorClipboard } from "./editorClipboard";
 import { latestModelVersions } from "../lib/modelVersions";
+import { editorGroupRotation } from "./editorGroupRotation";
 
 export function editorGestures(e) {
   let gesture = null;
   const clipboard = editorClipboard(e);
+  const rotateGroup = editorGroupRotation(e);
   const doc = () => e.draft.value.document;
   function checkpoint() {
     if (gesture.changed) return;
@@ -38,6 +40,7 @@ export function editorGestures(e) {
   function resetGesture() {
     gesture = null;
     e.tileDrag.cancel();
+    clipboard.cancel();
     e.wallBrush?.cancel();
     e.hoveredTile.value = "";
     e.screenSelection.value = null;
@@ -86,6 +89,10 @@ export function editorGestures(e) {
         e.wallBrush.begin(point);
       if (phase === "move") e.wallBrush.move(point);
       if (phase === "end") e.wallBrush.end(point);
+      return;
+    }
+    if (tool === "paste") {
+      if (phase === "start") clipboard.paste(point);
       return;
     }
     try {
@@ -144,7 +151,6 @@ export function editorGestures(e) {
           e.tool.value = "select";
           if (e.previewObject) e.previewObject.value = null;
         }
-        if (tool === "paste") clipboard.paste(point);
         zoneBrush(point);
       }
       if (phase === "move" && gesture) {
@@ -292,27 +298,16 @@ export function editorGestures(e) {
     e.hoveredTile.value = "";
   }
   function rotate() {
+    if (clipboard.rotate()) return;
     if (e.tileDrag.rotate()) return;
-    const tiles = doc().tiles.filter((t) =>
-      e.selectedTiles.value.includes(t.id),
-    );
-    if (tiles.length && e.tool.value === "select") {
-      const rotated = tiles.map((tile) => ({
-        ...tile,
-        rotation: (tile.rotation + 90) % 360,
-      }));
-      const status = tileGroupStatus(doc(), rotated, e.catalogue.value);
-      if (status.valid)
-        e.change(() =>
-          rotated.forEach((tile, i) => Object.assign(tiles[i], tile)),
-        );
-      else e.error.value = status.message;
-    } else e.placementRotation.value = (e.placementRotation.value + 90) % 360;
+    if (!rotateGroup())
+      e.placementRotation.value = (e.placementRotation.value + 90) % 360;
   }
   return {
     handle,
     copy: clipboard.copy,
     beginPaste: clipboard.begin,
+    previewPaste: clipboard.preview,
     removeSelected,
     rotate,
     resetGesture,
