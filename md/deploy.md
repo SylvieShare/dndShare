@@ -306,6 +306,28 @@ stone-dungeon/upload. UUID/версии новые, остальные мета�
 painted.spec.js принимает MAP_MODEL_TEST_ASSETS — папку с UD-002 и UD-031, у
 каждого render.glb/lod.glb.
 
+### Детальная покраска UD-006
+
+После сохранения актуального MCP-реестра `node scripts/maps/paint-ud006.mjs`
+исправляет вертикальную стойку, наклонный упор и доску у основания. Их измеренные
+границы в обрезанном STL (миллиметры) задаёт ud006-material.json; этот же файл
+читает исходная Blender-разметка. uv_surface.mjs переводит UV-пиксели в положения
+и нормали поверхности с учётом node matrices и KHR_texture_transform.
+Верхние кирпичи возвращаются к камню; дерево имеет состаренный цвет, волокна вдоль
+каждой детали и кольца на торцах. Albedo — 2048×2048 в render и 1024×1024 в LOD;
+шероховатость дерева и ошибочно размеченных кирпичей исправляется в ORM.
+Geometry/UV, normal, каналы AO и metallic сохраняются побайтно.
+
+Результат лежит в models/collections/ud006-painted. preview-model-revisions.py
+запускается с `-- --base models/collections/ud006-painted --size 512 --front`,
+чтобы показать дерево со стороны подпорок. Упаковка:
+`node scripts/maps/package-masonry.mjs --base=models/collections/ud006-painted --recipe=ud006-measured-timber-v1`.
+Проверки: `node --test scripts/maps/ud006_material.test.mjs` и
+`node scripts/maps/validate-masonry.mjs --base=ud006-painted --roughness`.
+Последний разрешает менять только G-канал ORM и сравнивает остальные каналы,
+normal и геометрию с исходной версией. Manifest проверяется на совместимость
+с зарегистрированными моделями; новый UUID/версия загружаются обычным MCP-клиентом.
+
 ### Упрощённые монтажные выступы
 
 Сохранить реестр через `cmd/map-model-upload -snapshot models/collections/registry.json`.

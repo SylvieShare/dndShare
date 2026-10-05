@@ -5,6 +5,7 @@ stone, timber, iron, linen, ivory and accent colours, rather than baked lighting
 """
 import bpy
 import numpy as np
+from ud006_material import timber_parts, SPEC as TIMBER_SPEC
 
 PALETTE = {
     'stone': (.34, .375, .39), 'wood': (.39, .22, .105),
@@ -44,10 +45,14 @@ def paint(obj, row):
     # Raised detail is separate from masonry and the intact mounting-free floor.
     if code in [2, 3, 13, 25, 69, 70, 71, 76]:
         region((z>15.3)&(x<7.2), 'bone')
-    if code in [6, 40]:
+    if code==6:
+        timber = timber_parts(x, y, z)>0
+        region(timber, 'wood')
+        colour[timber] = TIMBER_SPEC['woodColor']
+        rough[timber] = .87
+    if code==40:
         region((z>34)&(x>7), 'wood')
-        if code==40:
-            region(floor & (z>13.8), 'wood')
+        region(floor & (z>13.8), 'wood')
     if code==35:
         region(z>12, 'wood')
     if code in [10, 11, 82, 83]:

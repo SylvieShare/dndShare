@@ -7,7 +7,7 @@ import bpy
 from mathutils import Vector
 
 
-def preview(report):
+def preview(report, size=256, front=False):
     directory = report.parent
     if (directory/'preview.png').exists():
         return
@@ -21,7 +21,7 @@ def preview(report):
             obj.location.y -= row['placementOffset'][1]
             obj.location.z -= row['mountDepth']
     scene.render.engine = 'BLENDER_EEVEE'
-    scene.render.resolution_x = scene.render.resolution_y = 256
+    scene.render.resolution_x = scene.render.resolution_y = size
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = 'PNG'
     scene.view_settings.view_transform = 'AgX'
@@ -41,7 +41,7 @@ def preview(report):
     camera.data.type = 'ORTHO'
     camera.data.ortho_scale = max(row['width'], row['height'], row['maxHeight'], 1)*1.5
     centre = Vector((0, 0, (row['maxHeight']-row['mountDepth'])/2))
-    camera.location = centre+Vector((2, -2.85, 2.45))
+    camera.location = centre+Vector((-2, 2.85, 2.45) if front else (2, -2.85, 2.45))
     camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
     scene.camera = camera
     scene.render.filepath = str(directory/'preview.png')
@@ -53,8 +53,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--base', type=Path, required=True)
     parser.add_argument('--codes', nargs='*')
+    parser.add_argument('--size', type=int, choices=[256, 512, 1024], default=256)
+    parser.add_argument('--front', action='store_true')
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     for report in sorted(args.base.glob('*/report.json')):
         if args.codes and json.loads(report.read_text())['model']['sourceCode'] not in args.codes:
             continue
-        preview(report)
+        preview(report, args.size, args.front)

@@ -2,10 +2,24 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
+import { createRequire } from "node:module";
 import { readGlb, embeddedImage } from "./glb_textures.mjs";
 const base = path.resolve(import.meta.dirname, "../../models/collections");
+const revisions = path.resolve(
+  base,
+  process.argv.find((a) => a.startsWith("--base="))?.slice(7) ||
+    "stone-dungeon",
+);
+const allowRoughness = process.argv.includes("--roughness");
+const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
+  sharp = require("sharp");
 async function source(asset) {
-  for (const folder of ["simple-pegs/upload", "painted/upload", "upload"]) {
+  for (const folder of [
+    "stone-dungeon/upload",
+    "simple-pegs/upload",
+    "painted/upload",
+    "upload",
+  ]) {
     const file = path.join(base, folder, path.basename(asset.key));
     if (await fs.stat(file).catch(() => null)) return file;
   }
@@ -14,11 +28,11 @@ async function source(asset) {
 let models = 0,
   tiers = 0,
   views = 0;
-for (const entry of await fs.readdir(path.join(base, "stone-dungeon"), {
+for (const entry of await fs.readdir(revisions, {
   withFileTypes: true,
 })) {
   if (!entry.isDirectory() || entry.name === "upload") continue;
-  const directory = path.join(base, "stone-dungeon", entry.name);
+  const directory = path.join(revisions, entry.name);
   const report = JSON.parse(
     await fs.readFile(path.join(directory, "report.json"), "utf8"),
   );
@@ -51,8 +65,25 @@ for (const entry of await fs.readdir(path.join(base, "stone-dungeon"), {
       }),
     );
     const imageViews = new Set(before.json.images.map((i) => i.bufferView));
+    const ormImages = new Set(
+      before.json.materials.flatMap((m) => {
+        const index = m.pbrMetallicRoughness?.metallicRoughnessTexture?.index;
+        return index === undefined ? [] : [before.json.textures[index].source];
+      }),
+    );
     for (let i = 0; i < before.json.images.length; i++)
-      if (!baseImages.has(i))
+      if (allowRoughness && ormImages.has(i)) {
+        const a = await sharp(embeddedImage(before, i))
+            .raw()
+            .toBuffer({ resolveWithObject: true }),
+          b = await sharp(embeddedImage(after, i))
+            .raw()
+            .toBuffer({ resolveWithObject: true });
+        assert.deepEqual(a.info, b.info, "ORM layout changed");
+        for (let p = 0; p < a.data.length; p++)
+          if (p % a.info.channels !== 1)
+            assert.equal(b.data[p], a.data[p], "AO/metallic channel changed");
+      } else if (!baseImages.has(i))
         assert.deepEqual(
           embeddedImage(after, i),
           embeddedImage(before, i),

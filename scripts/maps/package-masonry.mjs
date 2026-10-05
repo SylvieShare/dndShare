@@ -4,7 +4,11 @@ import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { MASONRY_REVISION } from "./masonry_palette.mjs";
 const root = path.resolve(import.meta.dirname, "../.."),
-  base = path.join(root, "models/collections/stone-dungeon"),
+  base = path.resolve(
+    root,
+    process.argv.find((a) => a.startsWith("--base="))?.slice(7) ||
+      "models/collections/stone-dungeon",
+  ),
   out = path.join(base, "upload");
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp");
@@ -21,6 +25,9 @@ for (const m of registry) {
 }
 await fs.mkdir(out, { recursive: true });
 const models = [];
+const recipe =
+  process.argv.find((a) => a.startsWith("--recipe="))?.slice(9) ||
+  MASONRY_REVISION;
 for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   (a, b) => a.name.localeCompare(b.name),
 )) {
@@ -29,8 +36,7 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   const report = JSON.parse(
     await fs.readFile(path.join(directory, "report.json"), "utf8"),
   );
-  if (report.recipe !== MASONRY_REVISION)
-    throw new Error("Unexpected colour recipe");
+  if (report.recipe !== recipe) throw new Error("Unexpected colour recipe");
   const temporary = path.join(directory, "preview-next.webp");
   await sharp(path.join(directory, "preview.png"))
     .webp({ quality: 88 })
@@ -67,7 +73,7 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
     };
   }
   const identity = createHash("sha256")
-    .update(`${MASONRY_REVISION}:${report.model.id}:${JSON.stringify(assets)}`)
+    .update(`${recipe}:${report.model.id}:${JSON.stringify(assets)}`)
     .digest();
   identity[6] = (identity[6] & 15) | 128;
   identity[8] = (identity[8] & 63) | 128;
