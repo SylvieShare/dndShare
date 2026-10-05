@@ -1,6 +1,9 @@
 package battlemap
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
 
 func TestUpperTilesAllowRotatedPartialSupports(t *testing.T) {
 	models := map[string]ModelMetadata{
@@ -51,5 +54,20 @@ func TestBridgeUsesHighestSupportingCellsAndKeepsCollisionChecks(t *testing.T) {
 	d.Tiles = append(d.Tiles, Tile{ID: "overlap", ModelID: "bridge", X: 2, Y: 1, Level: 1})
 	if _, err := ResolveTilePlacements(d, models); err == nil {
 		t.Fatal("accepted overlapping bridges")
+	}
+}
+
+func TestMountingBodyDatumDoesNotAddThePegToStackHeight(t *testing.T) {
+	models := map[string]ModelMetadata{
+		"level": {Width: 1, Height: 1, MountDepth: .15, SupportSlots: []SupportSlot{{Width: 1, Height: 1, Elevation: .85}}},
+	}
+	d := Document{Width: 4, Height: 4, Tiles: []Tile{
+		{ID: "top", ModelID: "level", X: 1, Y: 1, Level: 2},
+		{ID: "middle", ModelID: "level", X: 1, Y: 1, Level: 1},
+		{ID: "base", ModelID: "level", X: 1, Y: 1},
+	}}
+	placements, err := ResolveTilePlacements(d, models)
+	if err != nil || math.Abs(placements["middle"].Elevation-.7) > .000001 || math.Abs(placements["top"].Elevation-1.4) > .000001 {
+		t.Fatalf("peg counted in stack height: %+v %v", placements, err)
 	}
 }

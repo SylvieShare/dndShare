@@ -77,7 +77,7 @@ func ResolveTilePlacements(d Document, models map[string]ModelMetadata) (map[str
 			slot := RotatedSupportSlot(raw, model, tile.Rotation)
 			for y := slot.Y; y < slot.Y+slot.Height; y++ {
 				for x := slot.X; x < slot.X+slot.Width; x++ {
-					sockets[[3]int{tile.X + x, tile.Y + y, tile.Level + 1}] = supportCell{placement.Elevation + slot.Elevation, tile.ID}
+					sockets[[3]int{tile.X + x, tile.Y + y, tile.Level + 1}] = supportCell{placement.Elevation + slot.Elevation - model.MountDepth, tile.ID}
 				}
 			}
 		}

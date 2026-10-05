@@ -26,6 +26,8 @@ import { tileBounds } from "./tileTransform";
 import { CONNECTIONS } from "../lib/tileConnections";
 import { tileSize } from "../lib/tilePlacement";
 import { structureView } from "./structureView";
+import { createObjectPreview } from "./objectPreview";
+import { createPlacementAnchors } from "./placementAnchors";
 
 export async function createMapRenderer(host, onError, onFrame) {
   const gpu = new WebGLRenderer({ antialias: true });
@@ -55,7 +57,8 @@ export async function createMapRenderer(host, onError, onFrame) {
     backgroundKey = "",
     annotationKey = "",
     lastFrame = 0,
-    frame = 0;
+    frame = 0,
+    placedTiles = [];
   let annotations = new Group(),
     objects = new Group(),
     background = new Group();
@@ -63,18 +66,32 @@ export async function createMapRenderer(host, onError, onFrame) {
   const assets = modelAssets(onError),
     fog = createMapFog(),
     tiles = createTileLayer(assets, fog),
-    preview = createTilePreview(assets),
-    outline = createTileOutline(gpu, assets);
-  scene.add(tiles.root, preview.root);
+    preview = createTilePreview(assets, () => {
+      tileKey = "";
+      tiles.rebuild(placedTiles, tier, []);
+      if (current)
+        outline.update({ ...current, tiles: placedTiles }, options, tier);
+    }),
+    outline = createTileOutline(gpu, assets),
+    objectPreview = createObjectPreview(fog),
+    anchors = createPlacementAnchors();
+  scene.add(tiles.root, preview.root, objectPreview.root, anchors.root);
   function render() {
     if (frame || dead) return;
     frame = requestAnimationFrame((time) => {
       frame = 0;
       if (dead) return;
-      const moving = preview.advance(Math.min(32, time - lastFrame || 16));
+      const delta = Math.min(32, time - lastFrame || 16);
+      const moving = preview.advance(delta) | objectPreview.advance(delta);
       lastFrame = time;
       gpu.render(scene, camera);
-      outline.render(scene, camera, annotations, preview.root);
+      outline.render(scene, camera, annotations, [
+        preview.root,
+        objectPreview.root,
+        ...objects.children.filter(
+          (o) => o.userData.objectId === options.selectedObject,
+        ),
+      ]);
       onFrame?.();
       if (moving) render();
     });
@@ -89,12 +106,14 @@ export async function createMapRenderer(host, onError, onFrame) {
     view.document(d, opts);
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
     const ids = new Set(d.tiles.map((t) => t.modelId));
+    for (const id of preview.modelIds()) ids.add(id);
     if (opts.previewTile)
       for (const tile of opts.previewTile.group || [opts.previewTile])
         ids.add(tile.modelId);
     if (ids.size) await assets.ensure(ids, tier, opts);
     if (dead || id !== epoch) return;
     const placed = structure.update(d);
+    placedTiles = placed;
     view.document(d, { ...opts, sceneHeight: structure.top() });
     const nextTier = view.getView().cellPixels < 72 ? "lod" : "render";
     if (nextTier !== tier && ids.size) {
@@ -132,29 +151,47 @@ export async function createMapRenderer(host, onError, onFrame) {
       fogKey = nextFog;
       fog.update(d, nextState, opts.master);
     }
-    const nextTiles = JSON.stringify([
-      d.tiles,
-      tier,
-      opts.previewTile?.tileIds,
-    ]);
+    preview.update(previewOptions.previewTile, tier, placed);
+    objectPreview.update(opts.previewObject);
+    anchors.update(d, structure.context(), opts);
+    const hiddenIds = preview.hiddenIds();
+    const nextTiles = JSON.stringify([d.tiles, tier, hiddenIds]);
     if (nextTiles !== tileKey) {
       tileKey = nextTiles;
-      tiles.rebuild(placed, tier, opts.previewTile?.tileIds);
+      tiles.rebuild(placed, tier, hiddenIds);
     }
-    preview.update(previewOptions.previewTile, tier);
-    outline.update({ ...d, tiles: placed }, previewOptions, tier);
+    outline.update(
+      { ...d, tiles: placed },
+      {
+        ...previewOptions,
+        selectedTiles: (opts.selectedTiles || []).filter(
+          (id) => !hiddenIds.includes(id),
+        ),
+        selectedTile: hiddenIds.includes(opts.selectedTile)
+          ? ""
+          : opts.selectedTile,
+        hoveredTile: hiddenIds.includes(opts.hoveredTile)
+          ? ""
+          : opts.hoveredTile,
+      },
+      tier,
+    );
     const nextObjects = JSON.stringify([
       d.objects,
       nextState,
       opts.master,
       opts.selectedToken,
+      opts.previewObject?.id,
     ]);
     if (nextObjects !== objectKey) {
       objectKey = nextObjects;
       scene.remove(objects);
       disposeObjects(objects);
       objects = buildSceneObjects(
-        d,
+        {
+          ...d,
+          objects: d.objects.filter((o) => o.id !== opts.previewObject?.id),
+        },
         nextState,
         { ...opts, invalidate: render },
         fog,
@@ -240,7 +277,11 @@ export async function createMapRenderer(host, onError, onFrame) {
     const model = assets.model(tile.modelId, tier),
       metadata = assets.metadata(tile.modelId);
     if (!model || !metadata) return null;
-    const bounds = tileBounds(structure.posed(tile), metadata, model),
+    const bounds = tileBounds(
+        preview.posed(tile.id) || structure.posed(tile),
+        metadata,
+        model,
+      ),
       points = [];
     for (const x of [bounds.min.x, bounds.max.x])
       for (const y of [bounds.min.y, bounds.max.y])
@@ -262,7 +303,19 @@ export async function createMapRenderer(host, onError, onFrame) {
     pick(event) {
       const ray = view.ray(event),
         hits = ray.intersectObject(objects, true),
-        tile = tiles.hit(ray);
+        fixed = tiles.hit(ray),
+        moving = preview.hit(ray),
+        tile =
+          moving && (!fixed || moving.distance < fixed.distance)
+            ? moving
+            : fixed;
+      const anchor = anchors.hit(ray);
+      if (
+        anchor &&
+        (!tile || anchor.distance < tile.distance) &&
+        (!hits[0] || anchor.distance < hits[0].distance)
+      )
+        return anchor;
       for (const hit of hits) {
         if (tile && tile.distance < hit.distance) return tile;
         let node = hit.object;
@@ -289,12 +342,12 @@ export async function createMapRenderer(host, onError, onFrame) {
       )
         return [];
       const size = tileSize(tile, metadata),
-        elevation = structure.posed(tile).elevation;
+        elevation = (preview.posed(tile.id) || structure.posed(tile)).elevation;
       const points = CONNECTIONS.map((direction) =>
         view.project(
           new Vector3(
             tile.x + size.width / 2 + (direction.x * size.width) / 2,
-            elevation + metadata.maxHeight + 0.15,
+            elevation + metadata.maxHeight - (metadata.mountDepth || 0) + 0.15,
             tile.y + size.height / 2 + (direction.y * size.height) / 2,
           ),
         ),
@@ -341,6 +394,8 @@ export async function createMapRenderer(host, onError, onFrame) {
       disposeObjects(background);
       tiles.destroy();
       preview.destroy();
+      objectPreview.destroy();
+      anchors.destroy();
       outline.destroy();
       fog.destroy();
       assets.destroy();

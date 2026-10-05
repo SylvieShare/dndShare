@@ -9,10 +9,12 @@ import {
 } from "../lib/mapModel";
 import { tileGroupStatus, tilePlacementStatus } from "../lib/tilePlacement";
 import { dependentTiles } from "../lib/tileStructure";
+import { editorClipboard } from "./editorClipboard";
+import { latestModelVersions } from "../lib/modelVersions";
 
 export function editorGestures(e) {
-  let gesture = null,
-    clipboard = null;
+  let gesture = null;
+  const clipboard = editorClipboard(e);
   const doc = () => e.draft.value.document;
   function checkpoint() {
     if (gesture.changed) return;
@@ -33,29 +35,13 @@ export function editorGestures(e) {
       if (inside(d, p.x, p.y)) cells.add(p.y * Math.ceil(d.width) + p.x);
     zone.cells = [...cells];
   }
-  function paste(point) {
-    if (!clipboard) return;
-    const d = doc(),
-      x = Math.floor(point.x),
-      y = Math.floor(point.y);
-    checkpoint();
-    for (const t of clipboard.tiles) {
-      const placed = { ...t, x: x + t.x, y: y + t.y };
-      if (tilePlacementStatus(d, placed, e.catalogue.value).valid)
-        paint(d, [placed], t.modelId, 1, t.rotation, t.level);
-    }
-    for (const o of clipboard.objects) {
-      const next = { ...o, id: uid(), x: o.x + x, y: o.y + y };
-      if (inside(d, next.x, next.y)) d.objects.push(next);
-    }
-    e.tool.value = "select";
-  }
   function resetGesture() {
     gesture = null;
     e.tileDrag.cancel();
     e.wallBrush?.cancel();
     e.hoveredTile.value = "";
     e.screenSelection.value = null;
+    if (e.previewObject) e.previewObject.value = null;
     e.pauseSave(false);
   }
   function cancel() {
@@ -70,7 +56,25 @@ export function editorGestures(e) {
     const d = doc(),
       tool = e.tool.value;
     if (phase === "hover") {
+      if (tool === "paste") clipboard.preview(point);
       e.hoveredTile.value = tool === "select" ? hit?.tileId || "" : "";
+      if (
+        e.previewObject &&
+        tool === "object" &&
+        point &&
+        inside(d, point.x, point.y)
+      )
+        e.previewObject.value = {
+          id: "preview-object",
+          kind: e.objectKind.value,
+          ...snap(d, point),
+          scale: 1,
+          rotation: e.placementRotation.value,
+          open: false,
+          placing: true,
+        };
+      else if (e.previewObject && tool === "object")
+        e.previewObject.value = null;
       return;
     }
     if (phase === "cancel") {
@@ -95,11 +99,13 @@ export function editorGestures(e) {
         e.selection.value = null;
         gesture = {
           start: point,
+          tool,
           last: point,
           before: clone(e.draft.value),
           screen: event && { x: event.clientX, y: event.clientY },
           additive: !!(event?.metaKey || event?.ctrlKey),
           selection: [...e.selectedTiles.value],
+          anchor: hit?.anchor,
         };
         if (tool === "select") {
           const tile = d.tiles.find((t) => t.id === hit?.tileId);
@@ -136,8 +142,9 @@ export function editorGestures(e) {
           e.selectedObject.value = o.id;
           e.setTileSelection([]);
           e.tool.value = "select";
+          if (e.previewObject) e.previewObject.value = null;
         }
-        if (tool === "paste") paste(point);
+        if (tool === "paste") clipboard.paste(point);
         zoneBrush(point);
       }
       if (phase === "move" && gesture) {
@@ -162,6 +169,11 @@ export function editorGestures(e) {
             d.objects.find((o) => o.id === gesture.object.id),
             snap(d, point, gesture.object.scale),
           );
+          if (e.previewObject)
+            e.previewObject.value = {
+              ...d.objects.find((o) => o.id === gesture.object.id),
+              moving: true,
+            };
         } else if (!gesture.object) {
           zoneBrush(point, gesture.last);
           if (["zone", "select"].includes(tool) && moved)
@@ -182,6 +194,51 @@ export function editorGestures(e) {
         gesture.last = point;
       }
       if (phase === "end" && gesture) {
+        const click =
+          event && gesture.screen
+            ? Math.hypot(
+                event.clientX - gesture.screen.x,
+                event.clientY - gesture.screen.y,
+              ) < 5
+            : !gesture.moved;
+        if (
+          tool === "select" &&
+          gesture.tool === "select" &&
+          gesture.anchor &&
+          click &&
+          !gesture.additive
+        ) {
+          const candidates = latestModelVersions(e.catalogue.value).filter(
+            (m) =>
+              m.collection === e.collection.value &&
+              m.tileType === "floor" &&
+              m.width === 1 &&
+              m.height === 1 &&
+              !m.wallMask,
+          );
+          candidates.sort(
+            (a, b) =>
+              (/^Ground(?: Stones| \d|$)/i.test(b.sourceName) ? 1 : 0) -
+                (/^Ground(?: Stones| \d|$)/i.test(a.sourceName) ? 1 : 0) ||
+              a.sourceCode.localeCompare(b.sourceCode),
+          );
+          const model = candidates[0];
+          if (model) {
+            const tile = {
+              id: uid(),
+              modelId: model.id,
+              x: Math.floor(gesture.anchor.x),
+              y: Math.floor(gesture.anchor.y),
+              level: gesture.anchor.level,
+              rotation: 0,
+            };
+            const status = tileGroupStatus(d, [tile], e.catalogue.value);
+            if (status.valid) {
+              e.change((m) => m.document.tiles.push(tile));
+              e.setTileSelection([tile.id]);
+            } else e.error.value = status.message;
+          }
+        }
         if (e.draggingTile.value) e.tileDrag.drop(point);
         else if (gesture.tile && !gesture.moved)
           e.setTileSelection([gesture.tile.id]);
@@ -210,32 +267,6 @@ export function editorGestures(e) {
       cancel();
       e.error.value = cause.message;
     }
-  }
-  function copy() {
-    const r = e.selection.value,
-      d = doc();
-    const selected = new Set(e.selectedTiles.value);
-    if (!r && !selected.size) return;
-    const tiles = selected.size
-      ? d.tiles.filter((t) => selected.has(t.id))
-      : d.tiles;
-    const origin = r || {
-      x: Math.min(...tiles.map((t) => t.x)),
-      y: Math.min(...tiles.map((t) => t.y)),
-    };
-    const includes = (o) =>
-      o.x >= r.x && o.y >= r.y && o.x < r.x + r.width && o.y < r.y + r.height;
-    clipboard = {
-      tiles: tiles
-        .filter((t) => selected.size || includes(t))
-        .map((t) => ({ ...t, x: t.x - origin.x, y: t.y - origin.y })),
-      objects: r
-        ? d.objects
-            .filter(includes)
-            .map((o) => ({ ...o, x: o.x - origin.x, y: o.y - origin.y }))
-        : [],
-    };
-    e.tool.value = "paste";
   }
   function removeSelected() {
     e.tileDrag.cancel();
@@ -278,5 +309,12 @@ export function editorGestures(e) {
       else e.error.value = status.message;
     } else e.placementRotation.value = (e.placementRotation.value + 90) % 360;
   }
-  return { handle, copy, removeSelected, rotate, resetGesture };
+  return {
+    handle,
+    copy: clipboard.copy,
+    beginPaste: clipboard.begin,
+    removeSelected,
+    rotate,
+    resetGesture,
+  };
 }

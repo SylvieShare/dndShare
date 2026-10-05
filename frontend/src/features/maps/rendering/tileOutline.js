@@ -16,8 +16,9 @@ import { tileTransform } from "./tileTransform";
 
 export function createTileOutline(gpu, assets) {
   const maskScene = new Scene(),
-    root = new Group();
-  maskScene.add(root);
+    root = new Group(),
+    motion = new Group();
+  maskScene.add(root, motion);
   const target = new WebGLRenderTarget(1, 1, { samples: 4 });
   const depth = new MeshBasicMaterial({ colorWrite: false });
   const hover = new MeshBasicMaterial({
@@ -65,7 +66,8 @@ export function createTileOutline(gpu, assets) {
   const flatCamera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const size = new Vector2(),
     clearColour = new Color();
-  let key = "";
+  let key = "",
+    motionKey = "";
   function clear() {
     root.children.forEach((mesh) => mesh.dispose?.());
     root.clear();
@@ -118,8 +120,48 @@ export function createTileOutline(gpu, assets) {
       }
     }
   }
-  function render(scene, camera, annotations, preview) {
-    if (!root.children.length) return;
+  function syncMotion(previews) {
+    const source = [];
+    for (const preview of previews)
+      if (preview.visible) {
+        preview.updateMatrixWorld(true);
+        preview.traverse((mesh) => {
+          if (mesh.isMesh)
+            source.push({
+              mesh,
+              material:
+                preview.userData.outlineStyle === "hover" ? hover : selected,
+            });
+        });
+      }
+    const next = source
+      .map(({ mesh, material }) => `${mesh.id}:${material === selected}`)
+      .join(",");
+    if (next !== motionKey) {
+      motion.children.forEach((mesh) => mesh.dispose?.());
+      motion.clear();
+      motionKey = next;
+      for (const { mesh, material } of source) {
+        const copy = mesh.isInstancedMesh
+          ? new InstancedMesh(mesh.geometry, material, mesh.count)
+          : new Mesh(mesh.geometry, material);
+        copy.matrixAutoUpdate = false;
+        copy.frustumCulled = false;
+        motion.add(copy);
+      }
+    }
+    source.forEach(({ mesh }, i) => {
+      const copy = motion.children[i];
+      copy.matrix.copy(mesh.matrixWorld);
+      if (mesh.isInstancedMesh) {
+        copy.instanceMatrix.array.set(mesh.instanceMatrix.array);
+        copy.instanceMatrix.needsUpdate = true;
+      }
+    });
+  }
+  function render(scene, camera, annotations, previews) {
+    syncMotion(previews);
+    if (!root.children.length && !motion.children.length) return;
     gpu.getDrawingBufferSize(size);
     if (target.width !== size.x || target.height !== size.y)
       target.setSize(size.x, size.y);
@@ -132,7 +174,7 @@ export function createTileOutline(gpu, assets) {
       background = scene.background,
       override = scene.overrideMaterial,
       annotationVisible = annotations.visible,
-      previewVisible = preview.visible,
+      previewVisible = previews.map((p) => p.visible),
       clearAlpha = gpu.getClearAlpha();
     gpu.getClearColor(clearColour);
     try {
@@ -143,7 +185,7 @@ export function createTileOutline(gpu, assets) {
       scene.background = null;
       scene.overrideMaterial = depth;
       annotations.visible = false;
-      preview.visible = false;
+      previews.forEach((p) => (p.visible = false));
       // The depth prepass hides edges behind other models; the mask uses actual geometry.
       gpu.render(scene, camera);
       gpu.render(maskScene, camera);
@@ -153,7 +195,7 @@ export function createTileOutline(gpu, assets) {
       scene.background = background;
       scene.overrideMaterial = override;
       annotations.visible = annotationVisible;
-      preview.visible = previewVisible;
+      previews.forEach((p, i) => (p.visible = previewVisible[i]));
       gpu.setClearColor(clearColour, clearAlpha);
       gpu.autoClear = autoClear;
       gpu.setRenderTarget(previousTarget);
@@ -161,6 +203,8 @@ export function createTileOutline(gpu, assets) {
   }
   function destroy() {
     clear();
+    motion.children.forEach((mesh) => mesh.dispose?.());
+    motion.clear();
     target.dispose();
     depth.dispose();
     hover.dispose();

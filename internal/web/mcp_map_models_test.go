@@ -3,6 +3,7 @@ package web
 import (
 	"encoding/binary"
 	"encoding/json"
+	"math"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -71,6 +72,21 @@ func TestRegisteredModelMetadataValidation(t *testing.T) {
 	m.Width = 0
 	if validateMapModel(m) == nil {
 		t.Fatal("accepted invalid footprint")
+	}
+}
+
+func TestRegisteredModelMountDepthValidation(t *testing.T) {
+	for _, depth := range []float64{-1, 5, math.NaN(), math.Inf(1)} {
+		m := battlemap.InitialCatalogue()[0]
+		m.MountDepth = depth
+		if validateMapModel(m) == nil {
+			t.Fatalf("accepted mounting depth %v", depth)
+		}
+	}
+	m := battlemap.InitialCatalogue()[0]
+	m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: m.MountDepth}}
+	if validateMapModel(m) == nil {
+		t.Fatal("accepted a socket below the body datum")
 	}
 }
 

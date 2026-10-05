@@ -85,7 +85,11 @@ export function structureContext(document, catalogue) {
         for (let x = slot.x; x < slot.x + slot.width; x++)
           supportsMap.set(
             structureCellKey(tile.x + x, tile.y + y, tile.level + 1),
-            { elevation: result.elevation + slot.elevation, parent: tile.id },
+            {
+              elevation:
+                result.elevation + slot.elevation - (model.mountDepth || 0),
+              parent: tile.id,
+            },
           );
     }
     return result;

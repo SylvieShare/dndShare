@@ -295,7 +295,7 @@ import { useSessionPage } from '../composables/useSessionPage'
 const SessionMapWorkspace = defineAsyncComponent(() => import('@/features/maps/components/SessionMapWorkspace.vue'))
 const DndHpCalcModal = defineAsyncComponent(() => import('@/features/character-editor/blocks/dnd/DndHpCalcModal.vue'))
 
-const toolbarHeight = ref(78)
+const toolbarHeight = ref(64)
 
 const {
   allEncounterPlayersSelected, applySessionEdit, chapterGraph, chapterGraphTab, closeCreate,

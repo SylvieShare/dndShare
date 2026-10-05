@@ -18,7 +18,7 @@ func (s *Store) RegisterMapModel(ctx context.Context, m battlemap.Model) (battle
 	} else if !errors.Is(err, ErrNotFound) {
 		return m, err
 	}
-	geometry, err := json.Marshal(map[string]any{"width": m.Width, "height": m.Height, "surfaceHeight": m.SurfaceHeight, "maxHeight": m.MaxHeight, "blockers": m.Blockers, "tags": m.Tags,
+	geometry, err := json.Marshal(map[string]any{"width": m.Width, "height": m.Height, "mountDepth": m.MountDepth, "surfaceHeight": m.SurfaceHeight, "maxHeight": m.MaxHeight, "blockers": m.Blockers, "tags": m.Tags,
 		"collectionName": m.CollectionName, "wallMode": m.WallMode, "wallMask": m.WallMask, "supportSlots": m.SupportSlots})
 	if err != nil {
 		return m, err

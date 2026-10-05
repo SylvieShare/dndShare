@@ -74,6 +74,7 @@ def walls(row,polygons):
  if row['tileType']=='wall' and mode=='edge':layout='angle' if mask.bit_count()==2 else 'straight' if mask.bit_count()==1 else 'custom'
  return mode,mask,layout
 
+mounts={(r['collection'],r['code'],r['sourceName']):r['mountDepth'] for r in json.loads((MODELS/'collections/manifest.json').read_text())}
 rows=json.loads((ROOT/'internal/battlemap/catalogue.json').read_text());old={m['sourceCode'] for m in rows}
 for report in sorted(BASE.glob('*/*/report.json')):
  row=json.loads(report.read_text())
@@ -88,6 +89,7 @@ for report in sorted(BASE.glob('*/*/report.json')):
     'collection':row['collection'],'collectionName':row['collectionName'],'sourceCode':row['code'],'sourceName':row['sourceName'],'name':row['sourceName'],'version':row.get('variantVersion',1),
     'tileType':row['tileType'],'terrainType':row['terrainType'],'wallLayout':layout,'wallMode':mode,'wallMask':mask,'width':row['width'],'height':row['height'],
     'surfaceHeight':row['surfaceHeight'],'maxHeight':row['maxHeight'],'blockers':blockers,'tags':tags,'supportSlots':row['supportSlots'],'assets':files}
+ m['mountDepth']=mounts[(row['collection'],row['code'],row['sourceName'])]
  rows.append(m);print('CATALOGUED',m['sourceCode'],m['wallMode'],m['wallMask'],len(m['supportSlots']),flush=True)
 # Existing assets are linked into the upload workspace, but are not retransferred if already registered.
 for model in rows[:15]:

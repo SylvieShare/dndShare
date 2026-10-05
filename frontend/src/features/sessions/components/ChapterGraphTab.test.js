@@ -19,16 +19,18 @@ const hotkeyHints = readFileSync(fileURLToPath(new URL('./CanvasHotkeyHints.vue'
 const hotkeys = readFileSync(fileURLToPath(new URL('../../narrative-graph/composables/useGraphHotkeys.js', import.meta.url)), 'utf8')
 const navigation = readFileSync(fileURLToPath(new URL('../composables/useSessionGraphNavigation.js', import.meta.url)), 'utf8')
 
+const workspaceHeader = readFileSync(fileURLToPath(new URL('../../../shared/ui/WorkspaceHeader.vue', import.meta.url)), 'utf8')
+
 describe('chapter graph workspace', () => {
   it('compiles the graph tab', () => {
     expect(ChapterGraphTab).toBeTruthy()
   })
 
   it('keeps the canvas transparent and separates its semantic header with a panel surface', () => {
-    expect(toolbar).toContain('<header ref="header" class="chapter-toolbar">')
+    expect(toolbar).toContain('<WorkspaceHeader class="chapter-toolbar"')
     expect(toolbar).not.toContain('<BaseTile')
-    expect(toolbar).toContain('border-bottom: 1px solid var(--border-strong);')
-    expect(toolbar).toContain('background: var(--surface);')
+    expect(workspaceHeader).toContain('border-bottom: 1px solid var(--border-strong);')
+    expect(workspaceHeader).toContain('background: var(--surface);')
     expect(canvas).not.toContain('<BaseTile')
   })
 
@@ -125,7 +127,7 @@ describe('chapter graph workspace', () => {
   })
 
   it('groups navigation and tools centrally, with music at the far right', () => {
-    expect(toolbar).toContain('grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);')
+    expect(workspaceHeader).toContain('grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);')
     expect(toolbar).toContain('.chapter-toolbar-left { min-width: 0; display: flex;')
     expect(toolbar).toContain('.chapter-toolbar-center { display: flex; align-items: center; justify-self: center;')
     expect(toolbar).toContain('.chapter-music-tab { justify-self: end; align-self: center; }')

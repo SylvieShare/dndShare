@@ -1,80 +1,27 @@
 <template>
   <main class="map-editor-workspace">
-    <header class="map-editor-header">
-      <ActionButton
-        variant="quiet"
-        aria-label="Закрыть редактор"
-        @click="emit('close')"
-      >
-        <ArrowLeft :size="18" />Карты
-      </ActionButton>
-      <div class="map-editor-heading">
-        <h1>Редактор карты</h1>
-        <span>{{ KINDS[e.draft.document.kind] }}</span>
-      </div>
-      <span class="map-save-status" role="status">{{
-        e.saving ? "Сохраняем…" : e.dirty ? "Есть изменения" : "Сохранено"
-      }}</span>
-      <ActionButton
-        :disabled="!e.dirty || e.conflict"
-        :loading="e.saving"
-        @click="e.save"
-        ><Save :size="16" />Сохранить</ActionButton
-      >
-    </header>
-    <div class="map-editor">
+    <MapEditorHeader
+      :editor="e"
+      :view="view"
+      @close="emit('close')"
+      @view="setView"
+      @collection="
+        catalogueDrag.cancel();
+        e.resetGesture();
+        e.collection = $event;
+      "
+    />
+    <MapItemsLibrary
+      v-if="view === 'items'"
+      :editor="e"
+      @model="placeModel"
+      @object="placeObject"
+    />
+    <MapEditorSettings v-if="view === 'settings'" :editor="e" />
+    <div v-show="view === 'map'" class="map-editor">
       <MapEditorInspector :editor="e" @drag-tile="catalogueDrag.begin" />
       <div class="map-editor-main">
-        <div class="map-toolbar" role="toolbar" aria-label="Действия карты">
-          <span
-            class="map-selection-count"
-            role="status"
-            aria-label="Выбрано плиток"
-            >Выбрано: {{ e.selectedTiles.length }}</span
-          >
-          <RemoveButton
-            icon="trash"
-            variant="boxed"
-            :disabled="!e.selectedTiles.length && !e.selectedObject"
-            :label="
-              e.selectedTiles.length > 1
-                ? 'Удалить плитки'
-                : e.selectedTiles.length
-                  ? 'Удалить плитку'
-                  : 'Удалить объект'
-            "
-            @click="e.removeSelected"
-          />
-          <ActionButton
-            variant="quiet"
-            :disabled="!e.history.length"
-            title="Отменить · Ctrl/Cmd+Z"
-            @click="e.undo"
-            ><Undo2 :size="17"
-          /></ActionButton>
-          <ActionButton
-            variant="quiet"
-            :disabled="!e.future.length"
-            title="Повторить · Ctrl/Cmd+Shift+Z"
-            @click="e.redo"
-            ><Redo2 :size="17"
-          /></ActionButton>
-          <ActionButton
-            v-if="e.draft.document.kind === 'tiles'"
-            variant="quiet"
-            :disabled="!e.selection && !e.selectedTiles.length"
-            aria-label="Копировать участок"
-            title="Копировать участок · Ctrl/Cmd+C"
-            @click="e.copy"
-            ><Copy :size="16"
-          /></ActionButton>
-          <ActionButton
-            variant="quiet"
-            title="Скачать карту как JSON"
-            @click="exportMap"
-            ><Download :size="16"
-          /></ActionButton>
-        </div>
+        <MapEditorActions :editor="e" @export="exportMap" />
         <div v-if="e.error" class="map-error" role="alert">
           {{ e.error }}
           <ActionButton v-if="!e.conflict" variant="quiet" @click="e.save"
@@ -95,6 +42,8 @@
           :screen-selection="e.screenSelection"
           :hovered-tile="e.hoveredTile"
           :preview-tile="e.previewTile"
+          :preview-object="e.previewObject"
+          :show-anchors="e.showAnchors"
           :show-connections="
             e.selectedTiles.length === 1 &&
             !e.draggingTile &&
@@ -105,7 +54,9 @@
           :connection-invalid="connections.invalid"
           :hint="`${toolHint} · Cmd + клик/рамка: группа · Cmd + перенос: заполнить · Стрелки: камера · Alt: сдвиг · ПКМ/Shift: вращение`"
           :catalogue="e.catalogue"
-          :placement-model="e.draggingTile ? e.selectedModel : ''"
+          :placement-model="
+            e.draggingTile || e.tool === 'paste' ? e.selectedModel : ''
+          "
           :placement-rotation="e.placementRotation"
           @gesture="e.handle"
           @connection="connections.toggle"
@@ -127,26 +78,60 @@
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import {
-  ActionButton,
-  ConfirmDialog,
-  RemoveButton,
-} from "@sylvieshare/share-ui";
-import { ArrowLeft, Copy, Download, Redo2, Save, Undo2 } from "@lucide/vue";
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+} from "vue";
+import { ActionButton, ConfirmDialog } from "@sylvieshare/share-ui";
+import MapEditorHeader from "./MapEditorHeader.vue";
+import MapEditorActions from "./MapEditorActions.vue";
+import MapItemsLibrary from "./MapItemsLibrary.vue";
+import MapEditorSettings from "./MapEditorSettings.vue";
 import MapCanvas from "./MapCanvas.vue";
 import MapEditorInspector from "./MapEditorInspector.vue";
 import { useMapEditor } from "../composables/useMapEditor";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
 import { useTileConnections } from "../composables/useTileConnections";
-import { KINDS } from "../lib/mapModel";
+import { snap } from "../lib/mapModel";
 const props = defineProps({ map: Object }),
   emit = defineEmits(["close", "saved"]),
   confirmClose = ref(false);
 const e = reactive(useMapEditor(props.map, (map) => emit("saved", map)));
 const canvas = ref(null),
   catalogueDrag = useCatalogueDrag(e, canvas);
-const connections = reactive(useTileConnections(e));
+const connections = reactive(useTileConnections(e)),
+  view = ref("map");
+function setView(next) {
+  catalogueDrag.cancel();
+  e.resetGesture();
+  view.value = next;
+}
+async function placeModel(id, event) {
+  setView("map");
+  await nextTick();
+  catalogueDrag.place(id, event);
+}
+async function placeObject(kind) {
+  setView("map");
+  await nextTick();
+  e.objectKind = kind;
+  e.tool = "object";
+  const point = canvas.value?.centerPoint();
+  if (point)
+    e.previewObject = {
+      id: "preview-object",
+      kind,
+      ...snap(e.draft.document, point),
+      scale: 1,
+      rotation: 0,
+      open: false,
+      placing: true,
+    };
+}
 const toolHint = computed(
   () =>
     ({
@@ -207,6 +192,11 @@ function hotkey(event) {
   ) {
     event.preventDefault();
     e.copy();
+  }
+  if ((event.metaKey || event.ctrlKey) && event.code === "KeyV") {
+    event.preventDefault();
+    setView("map");
+    nextTick(() => e.beginPaste(canvas.value?.centerPoint()));
   }
   if (event.code === "KeyR") {
     event.preventDefault();

@@ -104,7 +104,9 @@ export function structureView(assets, cameraView) {
     for (const tile of document?.tiles || [])
       height = Math.max(
         height,
-        posed(tile).elevation + (assets.metadata(tile.modelId)?.maxHeight || 0),
+        posed(tile).elevation +
+          (assets.metadata(tile.modelId)?.maxHeight || 0) -
+          (assets.metadata(tile.modelId)?.mountDepth || 0),
       );
     return height;
   }

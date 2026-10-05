@@ -21,7 +21,7 @@ function box(root, w, h, d, x, y, z, material) {
   root.add(mesh);
   return mesh;
 }
-function prop(object, open, fog) {
+export function buildMapProp(object, open, fog) {
   const root = new Group(),
     wood = fog.material(
       new MeshStandardMaterial({ color: 0x826343, roughness: 0.9 }),
@@ -146,7 +146,7 @@ function label(name) {
 export function buildSceneObjects(d, state, options, fog) {
   const root = new Group();
   for (const o of d.objects)
-    root.add(prop(o, state?.objects?.[o.id] ?? o.open, fog));
+    root.add(buildMapProp(o, state?.objects?.[o.id] ?? o.open, fog));
   for (const token of state?.tokens || []) {
     if (
       !options.master &&

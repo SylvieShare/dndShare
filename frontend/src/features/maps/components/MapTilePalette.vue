@@ -7,15 +7,6 @@
     >
   </div>
   <template v-else>
-    <FormSelect v-model:value="editor.collection" aria-label="Коллекция плиток">
-      <option
-        v-for="collection in collections"
-        :key="collection.id"
-        :value="collection.id"
-      >
-        {{ collection.name }}
-      </option>
-    </FormSelect>
     <ActionButton
       :variant="editor.tool === 'wall-brush' ? 'primary' : 'secondary'"
       :aria-pressed="editor.tool === 'wall-brush'"
@@ -88,14 +79,6 @@ import {
 } from "@sylvieshare/share-ui";
 const props = defineProps({ editor: { type: Object, required: true } });
 const emit = defineEmits(["drag-tile"]);
-const collections = computed(() => [
-  ...new Map(
-    props.editor.catalogue.map((m) => [
-      m.collection,
-      { id: m.collection, name: m.collectionName || m.collection },
-    ]),
-  ).values(),
-]);
 watch(
   () => props.editor.collection,
   () => {

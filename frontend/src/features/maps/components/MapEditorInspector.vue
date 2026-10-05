@@ -281,7 +281,7 @@ const tabs = computed(() => [
     : []),
   { key: "objects", label: "Объекты", icon: Box },
   { key: "zones", label: "Зоны", icon: Square },
-  { key: "settings", label: "Карта", icon: Settings2 },
+  { key: "settings", label: "Свойства карты", icon: Settings2 },
 ]);
 const object = computed(() =>
     d.value.objects.find((o) => o.id === props.editor.selectedObject),

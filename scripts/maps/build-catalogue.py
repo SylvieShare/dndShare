@@ -78,6 +78,7 @@ def blockers(path,cut):
     return polygons
 
 rows=json.loads((MODELS/'prepared/report.json').read_text())
+mounts={r['code']:r['mountDepth'] for r in json.loads((MODELS/'collections/manifest.json').read_text()) if r['collection']=='lost-cave'}
 catalogue=[]
 for row in rows:
     code=row['code'];index=int(code[-3:])-1
@@ -97,6 +98,7 @@ for row in rows:
            'surfaceHeight':round(14.74/35,6),'maxHeight':round(row['cropped']['max'][2]/35,6),
            'blockers':blockers(MODELS/'lost-cave/originals'/row['sourceFile'],row['cutHeight']),
            'tags':['rock']+(['stalagmite'] if index>=9 else []),'assets':files}
+    model['mountDepth']=mounts[code]
     catalogue.append(model)
     print(code,model['id'],'blockers',len(model['blockers']))
 dest=ROOT/'internal/battlemap/catalogue.json'

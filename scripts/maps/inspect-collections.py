@@ -2,6 +2,9 @@
 from pathlib import Path
 import hashlib, json, math, re, struct
 import numpy as np
+from importlib.util import spec_from_file_location, module_from_spec
+_spec=spec_from_file_location('measure_mounts',Path(__file__).with_name('measure-mounts.py'))
+_mounts=module_from_spec(_spec);_spec.loader.exec_module(_mounts)
 
 ROOT=Path(__file__).resolve().parents[2]
 BASE=ROOT/'models/collections'
@@ -46,6 +49,7 @@ for collection,path in paths:
       'code':code,'sourceName':source_name,'sourcePath':str(path.relative_to(ROOT/'models')),
       'sourceBytes':size,'sourceSHA256':checksum,'triangles':count,'min':low.tolist(),'max':high.tolist(),
       'width':width,'height':height,'cutHeight':float(cut),'tileType':kind}
+ row['mountDepth'],_= _mounts.measure(row)
  rows.append(row)
 rows.sort(key=lambda r:(r['collection'],r['code']))
 for row in rows:

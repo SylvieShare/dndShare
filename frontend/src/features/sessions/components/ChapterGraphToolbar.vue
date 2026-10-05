@@ -1,5 +1,6 @@
 <template>
-  <header ref="header" class="chapter-toolbar">
+  <WorkspaceHeader class="chapter-toolbar" @resize="emit('resize', $event)">
+    <template #identity>
     <SessionToolbarIdentity
       :session="session" :is-dm="isDm" :arcs="arcs" :selected-arc="selectedArc" :current-arc="currentArc"
       :locked="locked" :reorder-pending="reorderPending"
@@ -7,7 +8,8 @@
       @select-arc="emit('select-arc', $event)" @create-arc="emit('create-arc')"
       @edit-arc="emit('edit-arc', $event)" @reorder-arcs="emit('reorder-arcs', $event)"
     />
-    <div class="chapter-toolbar-center">
+    </template>
+    <template #navigation><div class="chapter-toolbar-center">
       <nav data-tutorial="session-navigation" class="chapter-primary-nav" aria-label="Раздел сессии">
         <button
           type="button"
@@ -107,12 +109,15 @@
 
 
     </div>
-    <SessionToolbarMusic v-if="isDm" :primary-view="primaryView" :show-shortcut-hints="showShortcutHints" @select-view="emit('select-view', $event)" />
-  </header>
+    </template>
+    <template #actions><SessionToolbarMusic v-if="isDm" :primary-view="primaryView" :show-shortcut-hints="showShortcutHints" @select-view="emit('select-view', $event)" />
+    </template>
+  </WorkspaceHeader>
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed } from 'vue'
+import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
 import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
@@ -138,15 +143,8 @@ const emit = defineEmits([
   'select-view', 'resize',
   'edit-session', 'session-updated', 'open-combat',
 ])
-const header = ref(null)
 const account = useAccountStore()
 const mapsAvailable = computed(() => account.hasRole('ADMIN'))
-let headerObserver
-onMounted(() => {
-  headerObserver = new ResizeObserver(() => emit('resize', header.value.getBoundingClientRect().height))
-  headerObserver.observe(header.value)
-})
-onBeforeUnmount(() => headerObserver?.disconnect())
 const primaryViews = [
   { key: 'story', label: 'Сюжет', icon: BookOpenText, shortcut: '1' },
   { key: 'locations', label: 'Локации', icon: Map, shortcut: '2' },
@@ -165,20 +163,6 @@ const visibleLibraryViews = computed(() => props.isDm ? primaryViews.slice(1) : 
 </script>
 
 <style scoped>
-.chapter-toolbar {
-  position: relative;
-  z-index: 20;
-  display: grid;
-  grid-template-columns: minmax(150px, 1fr) auto minmax(142px, 1fr);
-  align-items: center;
-  gap: 12px;
-  flex: none;
-  min-height: 78px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border-strong);
-  background: var(--surface);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--scrim) 45%, transparent);
-}
 .chapter-toolbar-center { display: flex; align-items: center; justify-self: center; min-width: 0; gap: 14px; }
 .chapter-primary-nav { display: flex; align-items: center; gap: 2px; }
 .chapter-primary-tab {
@@ -247,11 +231,9 @@ const visibleLibraryViews = computed(() => props.isDm ? primaryViews.slice(1) : 
 .chapter-primary-tab:disabled { cursor: not-allowed; opacity: 0.45; }
 
 @container (max-width: 1100px) {
-  .chapter-toolbar { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 14px; }
   .chapter-toolbar-center { grid-row: 2; grid-column: 1 / -1; max-width: 100%; overflow-x: auto; }
 }
 @media (max-width: 760px) {
-  .chapter-toolbar { padding: 8px 12px; }
   .chapter-toolbar-center { justify-self: stretch; }
   .chapter-primary-tab { flex: none; }
 }

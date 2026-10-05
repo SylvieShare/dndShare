@@ -5,15 +5,6 @@
   overflow: hidden;
   background: var(--bg);
 }
-.map-editor-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 18px;
-  flex: none;
-  border-bottom: 1px solid var(--border-strong);
-  background: var(--surface);
-}
 .map-editor-heading {
   margin-right: auto;
   min-width: 0;
@@ -53,6 +44,7 @@
   font-size: 11px;
 }
 .map-editor-main {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -138,10 +130,6 @@
   font-size: 20px;
 }
 @media (max-width: 760px) {
-  .map-editor-header {
-    gap: 8px;
-    padding: 8px;
-  }
   .map-editor-heading h1 {
     font-size: 18px;
   }
@@ -164,6 +152,9 @@
     display: none;
   }
   .map-editor-main {
+  position: relative;
     padding: 8px;
   }
 }
+
+.map-editor-main > .map-error {position:absolute;z-index:18;top:14px;left:14px;right:92px;}

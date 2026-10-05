@@ -34,9 +34,15 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         event.button === 1 ||
         event.altKey ||
         props.tool === "pan" ||
-        (props.tool === "select" && event.button === 0 && !additive && !hit),
+        (props.tool === "select" &&
+          event.button === 0 &&
+          !additive &&
+          (!hit || hit.anchor)),
       emptyPan:
-        props.tool === "select" && event.button === 0 && !additive && !hit,
+        props.tool === "select" &&
+        event.button === 0 &&
+        !additive &&
+        (!hit || hit.anchor),
       screen: { x: event.clientX, y: event.clientY },
       point: hit?.point || pointAt(event),
       view: getRenderer().getView(),

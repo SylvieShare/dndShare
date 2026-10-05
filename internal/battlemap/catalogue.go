@@ -24,6 +24,7 @@ type ModelMetadata struct {
 	WallMask       int            `json:"wallMask"`
 	Width          int            `json:"width"`
 	Height         int            `json:"height"`
+	MountDepth     float64        `json:"mountDepth"`
 	SurfaceHeight  float64        `json:"surfaceHeight"`
 	MaxHeight      float64        `json:"maxHeight"`
 	Blockers       [][][2]float64 `json:"blockers"`

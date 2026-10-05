@@ -99,7 +99,7 @@ test("command rectangle selects tiles in screen space without moving them", asyn
       ),
     )
     .toBe(2);
-  await clickPoint(page, 3.5, 3.5);
+  await clickPoint(page, 3.1, 3.1);
   const start = await mapPoint(page, 3.8, 3.8),
     end = await mapPoint(page, 6.9, 4.9);
   await page.keyboard.down("Meta");
@@ -158,7 +158,7 @@ test("eight connection points retain the last supported model after an invalid a
     .click();
   await expect(page.locator(".map-tile-connections--invalid")).toBeVisible();
   await expect(page.getByText("Нет подходящей модели")).toBeVisible();
-  await clickPoint(page, 2.5, 4.5);
+  await clickPoint(page, 2.1, 4.1);
   await expect(group).toHaveCount(0);
   await clickPoint(page, 4.5, 4.5);
   await expect(group).toBeVisible();
@@ -182,7 +182,7 @@ test("arrow keys move the camera and leave text field navigation alone", async (
   const before = await canvas.screenshot({ animations: 'disabled' });
   await page.keyboard.press("ArrowRight");
   expect((await canvas.screenshot()).equals(before)).toBe(false);
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page.getByRole("tab", { name: "Свойства карты", exact: true }).click();
   const after = await canvas.screenshot({ animations: 'disabled' });
   await page.getByLabel("Название карты", { exact: true }).focus();
   await page.keyboard.press("ArrowLeft");

@@ -21,6 +21,7 @@ const WALL = "11111111-1111-4111-8111-111111111111",
   FLOOR = "22222222-2222-4222-8222-222222222222";
 const FRAME = "77777777-7777-4777-8777-777777777777",
   BRIDGE = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  PEG = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
   UD_FLOOR = "88888888-8888-4888-8888-888888888888",
   UD_WALL = "99999999-9999-4999-8999-999999999999";
 const catalogue = [
@@ -96,6 +97,18 @@ const catalogue = [
     maxHeight: 0.2,
   },
   {
+    id: PEG,
+    sourceCode: "TEST-PEG",
+    sourceName: "Tile with insertion peg",
+    name: "Плитка с выступом",
+    tileType: "floor",
+    wallMode: "none",
+    collection: "ultimate-dungeon",
+    mountDepth: 0.2,
+    surfaceHeight: 0.4,
+    maxHeight: 0.4,
+  },
+  {
     id: UD_FLOOR,
     sourceCode: "UD-016",
     sourceName: "Ground",
@@ -127,7 +140,7 @@ const catalogue = [
   supportSlots: m.supportSlots || [],
   width: m.width || 1,
   height: m.height || 1,
-  surfaceHeight: 0.42,
+  surfaceHeight: m.surfaceHeight ?? 0.42,
   maxHeight: m.maxHeight || 1,
   tags: [],
   blockers: [],
@@ -173,6 +186,19 @@ bridgeScene.add(bridge);
 const bridgeGlb = await new GLTFExporter().parseAsync(bridgeScene, {
   binary: true,
 });
+const pegScene = new Scene();
+for (const [width, height, depth, y, colour] of [
+  [0.9, 0.2, 0.9, 0.3, 0x55ccff],
+  [0.5, 0.2, 0.5, 0.1, 0xf37bae],
+]) {
+  const part = new Mesh(
+    new BoxGeometry(width, height, depth),
+    new MeshStandardMaterial({ color: colour }),
+  );
+  part.position.y = y;
+  pegScene.add(part);
+}
+const pegGlb = await new GLTFExporter().parseAsync(pegScene, { binary: true });
 const source = newMap();
 const params = new URLSearchParams(location.search);
 let wallGlb = glb;
@@ -274,9 +300,11 @@ window.fetch = async (url, options = {}) => {
         ? frameGlb
         : url.includes(BRIDGE)
           ? bridgeGlb
-          : url.includes(WALL)
-            ? wallGlb
-            : glb,
+          : url.includes(PEG)
+            ? pegGlb
+            : url.includes(WALL)
+              ? wallGlb
+              : glb,
       {
         headers: { "Content-Type": "model/gltf-binary" },
       },

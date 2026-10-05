@@ -30,7 +30,7 @@ it("eases vertical snapping in the actual instance transform", () => {
   preview.advance(3000);
   preview.root.children[0].getMatrixAt(0, matrix);
   position.setFromMatrixPosition(matrix);
-  expect(position.y).toBeCloseTo(0.6, 5);
+  expect(position.y).toBeCloseTo(0.82, 5);
   preview.destroy();
   geometry.dispose();
   material.dispose();

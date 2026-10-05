@@ -84,6 +84,7 @@ func main() {
 	dir := flag.String("assets", ".", "Folder with content-addressed assets and catalogue.json")
 	endpoint := flag.String("mcp-url", "https://dndshare.ru/mcp", "MCP endpoint")
 	workers := flag.Int("workers", 4, "Parallel model uploads (1–8)")
+	snapshot := flag.String("snapshot", "", "Write registered metadata to this file and exit without uploading")
 	flag.Parse()
 	token := os.Getenv("MCP_AUTH_TOKEN")
 	if token == "" {
@@ -95,20 +96,31 @@ func main() {
 	}
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
-	raw, err := os.ReadFile(filepath.Join(*dir, "catalogue.json"))
-	if err != nil {
-		log.Fatal(err)
-	}
 	var models []battlemap.Model
-	if err = json.Unmarshal(raw, &models); err != nil {
-		log.Fatal(err)
-	}
 	c := client{url: *endpoint, token: token, http: &http.Client{Timeout: 10 * time.Minute, CheckRedirect: func(r *http.Request, v []*http.Request) error { return http.ErrUseLastResponse }}}
 	if *workers < 1 || *workers > 8 {
 		log.Fatal("workers must be 1–8")
 	}
 	var existing []battlemap.Model
 	if err = c.call(ctx, "map_tile_models_list", map[string]any{}, &existing); err != nil {
+		log.Fatal(err)
+	}
+	if *snapshot != "" {
+		raw, err := json.MarshalIndent(existing, "", "  ")
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err = os.WriteFile(*snapshot, append(raw, '\n'), 0600); err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("saved %d registered model versions", len(existing))
+		return
+	}
+	raw, err := os.ReadFile(filepath.Join(*dir, "catalogue.json"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = json.Unmarshal(raw, &models); err != nil {
 		log.Fatal(err)
 	}
 	known := map[string]bool{}

@@ -3,6 +3,7 @@ package web
 import (
 	"encoding/json"
 	"errors"
+	"math"
 	"net/http"
 	"strings"
 
@@ -84,6 +85,9 @@ func validateMapModel(m battlemap.Model) error {
 	if m.TerrainType == "" || len(m.TerrainType) > 32 || len(m.WallLayout) > 32 || m.Width < 1 || m.Height < 1 || m.Width > 8 || m.Height > 8 || m.SurfaceHeight < 0 || m.MaxHeight < m.SurfaceHeight || m.MaxHeight > 32 {
 		return errors.New("invalid model geometry")
 	}
+	if math.IsNaN(m.MountDepth) || math.IsInf(m.MountDepth, 0) || m.MountDepth < 0 || m.MountDepth > m.SurfaceHeight {
+		return errors.New("invalid model mounting depth")
+	}
 	if len(m.Blockers) > 100 || len(m.Tags) > 32 {
 		return errors.New("too many geometry contours or tags")
 	}
@@ -91,7 +95,7 @@ func validateMapModel(m battlemap.Model) error {
 		return errors.New("too many support slots")
 	}
 	for i, slot := range m.SupportSlots {
-		if slot.X < 0 || slot.Y < 0 || slot.Width < 1 || slot.Height < 1 || slot.X+slot.Width > m.Width || slot.Y+slot.Height > m.Height || slot.Elevation <= 0 || slot.Elevation > m.MaxHeight+.001 {
+		if slot.X < 0 || slot.Y < 0 || slot.Width < 1 || slot.Height < 1 || slot.X+slot.Width > m.Width || slot.Y+slot.Height > m.Height || slot.Elevation <= m.MountDepth || slot.Elevation > m.MaxHeight+.001 {
 			return errors.New("invalid support slot")
 		}
 		for _, other := range m.SupportSlots[:i] {

@@ -61,7 +61,7 @@ test("a frame supports upper tiles, carries them and deletes the dependent stack
       ),
     )
     .toBe(1);
-  const empty = await mapPoint(page, 8.5, 5.5);
+  const empty = await mapPoint(page, 8.1, 5.1);
   await page.mouse.click(empty.x, empty.y);
   const start = await mapPoint(page, 4.02, 4.5),
     end = await mapPoint(page, 6.02, 4.5);

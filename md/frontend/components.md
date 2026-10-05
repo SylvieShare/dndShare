@@ -288,6 +288,16 @@ viewBox по реальной ширине, 20 столбцов, линия/за
 общий итог. Хроника и уведомления используют этот общий компонент; сам виджет
 не определяет крит по выпавшему числу.
 
+## Общие композиции рабочих мест
+
+`shared/ui/WorkspaceHeader.vue` объединяет шапки сессии и редактора карт:
+слоты identity/navigation/actions, высота 64px и ResizeObserver для dock-layout.
+`WorkspaceToolsRail.vue` размещает доменные действия плавающей колонкой справа
+над рабочей областью. Это композиции layout DnD Share; они не заменяют кнопки,
+формы или tabs библиотеки share-ui. Управление и данные остаются в адаптерах
+SessionToolsRail, ChapterGraphToolbar и MapEditorHeader/MapEditorActions.
+Имена tutorial-целей сессии сохранены, пройденное обучение не перезапускается.
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md) · [Frontend: архитектура и разработка](../frontend.md) · [Сопровождение share-ui](share-ui.md) · [CSS variables](../css-variables.md)

@@ -231,6 +231,11 @@ Go сначала читает embedded текущую сборку, затем 
 выпускает Meshopt render/LOD и нормализует центр. `collection-catalogue.py`
 создаёт manifest с коллекциями, центральными/боковыми стенами, стыками и слотами.
 Результат — `models/collections/upload/catalogue.json` и файлы по SHA-256.
+`inspect-collections.py` измеряет mountDepth по переходу монтажного сужения к
+ширине корпуса. `measure-mounts.py` повторяет измерения без переподготовки
+файлов и сохраняет диагностику в models/collections/mounts.json. Каталоги и
+цветные версии сохраняют значение; GLB остаётся на исходном нуле, смещение
+применяется при размещении вместе с мировой высотой пазов.
 Пакет возобновляемый; готовые модели проверяются локальным тестом
 `MAP_MODEL_MANIFEST=/absolute/path/catalogue.json go test ./internal/web -run TestPreparedCollectionManifest`.
 
@@ -262,3 +267,18 @@ Go сначала читает embedded текущую сборку, затем 
 остаются вне Git. Локальная проверка manifest и загрузка выполняются существующими
 тестом и MCP-клиентом с `-assets models/collections/painted/upload`.
 Клиент пропускает уже зарегистрированные файлы и не передаёт STL повторно.
+
+### Упрощённые монтажные выступы
+
+Сохранить реестр через `cmd/map-model-upload -snapshot models/collections/registry.json`.
+`node scripts/maps/simplify-pegs.mjs` берёт последние именованные варианты,
+декодирует Meshopt и обрезает только часть ниже mountDepth, сохраняя атрибуты
+корпуса и текстуры. Сечения выступов определяют отдельные пирамиды для каждой
+опоры; каждая содержит 12 треугольников и простой материал. Оба уровня детализации
+получают одинаковое число выступов. `--codes=UD-001,UD-019` ограничивает пробный пакет.
+
+Локальный Blender запускает `preview-simple-pegs.py`, затем
+`node scripts/maps/package-simple-pegs.mjs` создаёт content-addressed пакет в
+models/collections/simple-pegs/upload. Source STL используются повторно;
+метаданные сохраняются, увеличиваются UUID/версия и меняются render/lod/preview.
+Пакет загружается через тот же MCP-клиент без передачи моделей по SSH.

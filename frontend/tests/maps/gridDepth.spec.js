@@ -27,7 +27,16 @@ test("grid lines remain visible in empty space and are occluded by model geometr
   await page.getByTitle("Вид сверху", { exact: true }).click();
   await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
   await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) =>
+          t.modelId.startsWith("7777"),
+        ),
+      ),
+    )
+    .toBe(true);
+  await page.getByRole("tab", { name: "Свойства карты", exact: true }).click();
   const canvas = page.locator(".map-canvas canvas"),
     bounds = await canvas.boundingBox();
   const inside = await mapPoint(page, 5, 4.5),

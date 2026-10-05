@@ -181,4 +181,5 @@ var schemaParts = []struct {
 	{"rps-invitations", schemaRPSInvitationsSQL},
 	{"two-weapon-fighting", schemaTwoWeaponFightingSQL},
 	{"model-support-slots", schemaModelSupportSlotsSQL},
+	{"model-mount-depth", schemaModelMountDepthSQL},
 }

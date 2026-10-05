@@ -57,7 +57,7 @@ test("editor defaults to selection and exposes icon sections without brush contr
   await expect(page.getByLabel("Поиск плиток", { exact: true })).toHaveCount(0);
   for (const name of ["Плитки", "Объекты", "Зоны", "Карта"])
     await expect(page.getByRole("tab", { name, exact: true })).toBeVisible();
-  const point = await mapPoint(page, 4.5, 4.5);
+  const point = await mapPoint(page, 4.1, 4.1);
   await page.mouse.click(point.x, point.y);
   await page.waitForTimeout(1400);
   expect(await page.evaluate(() => window.requests)).toEqual([]);
