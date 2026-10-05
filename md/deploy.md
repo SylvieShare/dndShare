@@ -352,6 +352,23 @@ preview-model-revisions.py с `-- --base models/collections/ud010-painted --size
 Последняя разрешает изменения G/B ORM, проверяет сохранность AO, normal и геометрии.
 Совместимость manifest и загрузка через MCP выполняются обычным клиентом.
 
+### Материал обломков UD-009
+
+`node scripts/maps/paint-ud009.mjs` разделяет по положениям поверхности основание,
+пол, целую стену и насыпь. ud009_material.mjs сохраняет холодную палитру камня,
+добавляет непрерывное объёмное зерно, слабую вариацию оттенка и более светлые
+обломки. Пылевой слой зависит от направления нормали и остаётся слабым; он не
+запекает свет от камеры. Шероховатость камня изменяется в G-канале ORM, тогда как
+geometry/UV, normal, AO и metallic сохраняются. Albedo: 2048×2048 / 1024×1024.
+Цветовая основа — совместимая версия 3 с исходным запечённым рельефом.
+
+Результаты лежат в models/collections/ud009-painted. Превью:
+preview-model-revisions.py с `-- --base models/collections/ud009-painted --size 512 --front`.
+Упаковка: `node scripts/maps/package-masonry.mjs --base=models/collections/ud009-painted --recipe=ud009-layered-stone-v1`.
+Проверки: `node --test scripts/maps/ud009_material.test.mjs` и
+`node scripts/maps/validate-masonry.mjs --base=ud009-painted --roughness`.
+Manifest проверяется на совместимость, новая визуальная версия загружается через MCP.
+
 ### Упрощённые монтажные выступы
 
 Сохранить реестр через `cmd/map-model-upload -snapshot models/collections/registry.json`.
