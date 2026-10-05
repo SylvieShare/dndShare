@@ -115,7 +115,6 @@ export function editorGestures(e) {
               e.setTileSelection(ids);
             }
           } else if (tile) {
-            e.level.value = tile.level;
             if (!e.selectedTiles.value.includes(tile.id))
               e.setTileSelection([tile.id]);
             e.selectedTile.value = tile.id;

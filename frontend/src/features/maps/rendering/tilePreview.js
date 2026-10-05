@@ -64,7 +64,7 @@ export function createTilePreview(assets) {
       position = null;
       return;
     }
-    position ||= { x: tile.x, y: tile.y };
+    position ||= { x: tile.x, y: tile.y, elevation: tile.elevation || 0 };
     for (const node of root.children)
       for (const material of Array.isArray(node.material)
         ? node.material
@@ -79,9 +79,20 @@ export function createTilePreview(assets) {
     const amount = 1 - Math.exp(-delta / 45);
     position.x += (target.x - position.x) * amount;
     position.y += (target.y - position.y) * amount;
+    position.elevation +=
+      ((target.elevation || 0) - position.elevation) * amount;
     const moving =
-      Math.hypot(target.x - position.x, target.y - position.y) > 0.001;
-    if (!moving) Object.assign(position, { x: target.x, y: target.y });
+      Math.hypot(
+        target.x - position.x,
+        target.y - position.y,
+        (target.elevation || 0) - position.elevation,
+      ) > 0.001;
+    if (!moving)
+      Object.assign(position, {
+        x: target.x,
+        y: target.y,
+        elevation: target.elevation || 0,
+      });
     const group = target.group || [target];
     for (const node of root.children) {
       node.userData.indices.forEach((index, slot) => {
@@ -91,6 +102,10 @@ export function createTilePreview(assets) {
             ...tile,
             x: tile.x + position.x - target.x,
             y: tile.y + position.y - target.y,
+            elevation:
+              (tile.elevation || 0) +
+              position.elevation -
+              (target.elevation || 0),
           },
           node.userData.metadata,
         );

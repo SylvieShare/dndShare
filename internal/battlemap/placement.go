@@ -28,7 +28,7 @@ func RotatedSupportSlot(slot SupportSlot, model ModelMetadata, rotation int) Sup
 	return slot
 }
 
-// Every footprint cell on an upper level must have a coplanar socket below it.
+// One socket cell can support an overhang. The highest sockets define the plane.
 func ResolveTilePlacements(d Document, models map[string]ModelMetadata) (map[string]TilePlacement, error) {
 	result := map[string]TilePlacement{}
 	occupied := map[[3]int]bool{}
@@ -45,8 +45,7 @@ func ResolveTilePlacements(d Document, models map[string]ModelMetadata) (map[str
 			return nil, fmt.Errorf("Плитка выходит за границу карты")
 		}
 		placement := TilePlacement{Supports: []string{}}
-		seen := map[string]bool{}
-		planeSet := false
+		supports := []supportCell{}
 		for y := tile.Y; y < tile.Y+height; y++ {
 			for x := tile.X; x < tile.X+width; x++ {
 				key := [3]int{x, y, tile.Level}
@@ -55,20 +54,22 @@ func ResolveTilePlacements(d Document, models map[string]ModelMetadata) (map[str
 				}
 				if tile.Level > 0 {
 					socket, ok := sockets[key]
-					if !ok {
-						return nil, fmt.Errorf("Для верхнего уровня нужен опорный слот под каждой клеткой плитки")
-					}
-					if planeSet && math.Abs(socket.elevation-placement.Elevation) > .015 {
-						return nil, fmt.Errorf("Опорные слоты должны находиться на одной высоте")
-					}
-					placement.Elevation = socket.elevation
-					planeSet = true
-					if !seen[socket.parent] {
-						placement.Supports = append(placement.Supports, socket.parent)
-						seen[socket.parent] = true
+					if ok {
+						supports = append(supports, socket)
+						placement.Elevation = math.Max(placement.Elevation, socket.elevation)
 					}
 				}
 				occupied[key] = true
+			}
+		}
+		if tile.Level > 0 && len(supports) == 0 {
+			return nil, fmt.Errorf("Для верхнего уровня нужен опорный слот хотя бы под одной клеткой плитки")
+		}
+		seen := map[string]bool{}
+		for _, socket := range supports {
+			if math.Abs(socket.elevation-placement.Elevation) <= .015 && !seen[socket.parent] {
+				placement.Supports = append(placement.Supports, socket.parent)
+				seen[socket.parent] = true
 			}
 		}
 		result[tile.ID] = placement

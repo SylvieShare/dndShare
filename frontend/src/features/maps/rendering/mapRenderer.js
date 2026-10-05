@@ -111,7 +111,9 @@ export async function createMapRenderer(host, onError, onFrame) {
         ...opts,
         previewTile: {
           ...opts.previewTile,
-          elevation: group[0].elevation,
+          elevation: (
+            group.find((t) => t.id === opts.previewTile.tileId) || group[0]
+          ).elevation,
           group,
         },
       };
@@ -169,14 +171,13 @@ export async function createMapRenderer(host, onError, onFrame) {
       opts.showZones,
       opts.selectedZone,
       opts.selection,
-      opts.activeLevel,
       nextTiles,
     ]);
     if (nextAnnotations !== annotationKey) {
       annotationKey = nextAnnotations;
       scene.remove(annotations);
       disposeAnnotations(annotations);
-      annotations = buildAnnotations(d, opts, structure.context());
+      annotations = buildAnnotations(d, opts);
       scene.add(annotations);
     }
     const nextBackground = JSON.stringify([

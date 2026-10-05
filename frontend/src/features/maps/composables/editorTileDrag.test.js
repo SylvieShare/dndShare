@@ -14,6 +14,12 @@ function setup(tiles = []) {
       catalogue: [
         { id: "floor", width: 1, height: 1 },
         { id: "wide", width: 2, height: 1 },
+        {
+          id: "frame",
+          width: 2,
+          height: 1,
+          supportSlots: [{ x: 0, y: 0, width: 2, height: 1, elevation: 0.6 }],
+        },
       ],
       tool: "select",
       selectedModel: "floor",
@@ -60,6 +66,47 @@ const tile = {
 };
 
 describe("tile dragging", () => {
+  it("moves between socket and ground levels using cursor candidates rather than an editor mode", () => {
+    const frame = { ...tile, id: "frame", modelId: "frame", x: 4, y: 4 };
+    const e = setup([tile, frame]);
+    e.tileDrag.begin("floor", { x: 2.2, y: 2.4, elevation: 0.4 }, tile);
+    e.tileDrag.move({
+      x: 4.2,
+      y: 4.4,
+      candidates: [
+        { x: 4.2, y: 4.4, level: 1 },
+        { x: 4.2, y: 4.4, level: 0 },
+      ],
+    });
+    expect(e.previewTile.value).toMatchObject({ level: 1, valid: true });
+    e.tileDrag.drop({ x: 4.2, y: 4.4, level: 1 });
+    expect(e.draft.value.document.tiles[0]).toMatchObject({
+      x: 4,
+      y: 4,
+      level: 1,
+    });
+    const above = e.draft.value.document.tiles[0];
+    e.tileDrag.begin("floor", { x: 4.2, y: 4.4, elevation: 1 }, above);
+    e.tileDrag.drop({ x: 2.2, y: 2.4, level: 0 });
+    expect(e.draft.value.document.tiles[0]).toMatchObject({
+      x: 2,
+      y: 2,
+      level: 0,
+    });
+  });
+  it("raises a frame together with its dependent tiles and keeps their relative levels", () => {
+    const base = { ...tile, modelId: "frame" },
+      child = { ...tile, id: "child", level: 1 };
+    const receiver = { ...base, id: "receiver", x: 4, y: 4 };
+    const e = setup([base, child, receiver]);
+    e.tileDrag.begin("frame", { x: 2.2, y: 2.4, elevation: 0.6 }, base);
+    e.tileDrag.drop({ x: 4.2, y: 4.4, level: 1 });
+    expect(e.draft.value.document.tiles.slice(0, 2)).toMatchObject([
+      { x: 4, y: 4, level: 1 },
+      { x: 4, y: 4, level: 2 },
+    ]);
+    expect(e.history.value).toHaveLength(1);
+  });
   it("previews magnetic anchors without committing the dragged model", () => {
     const e = setup();
     e.tileDrag.begin("floor");
@@ -115,7 +162,11 @@ describe("tile dragging", () => {
     expect(e.previewTile.value.valid).toBe(true);
     e.tileDrag.drop({ x: 2.5, y: 3.5 });
     expect(e.draft.value.document.tiles).toHaveLength(2);
-    expect(e.draft.value.document.tiles[0]).toEqual({...tile,modelId:'wide',rotation:90});
+    expect(e.draft.value.document.tiles[0]).toEqual({
+      ...tile,
+      modelId: "wide",
+      rotation: 90,
+    });
     expect(e.history.value).toHaveLength(1);
   });
   it("ignores an outside drop instead of creating or deleting a tile", () => {
@@ -165,15 +216,31 @@ describe("tile dragging", () => {
     const other = { ...tile, id: "other", x: 4 };
     const e = setup([tile, other]);
     e.setTileSelection([tile.id]);
-    const start = (id) => e.gestures.handle({ phase: "start", point: { x: 4.5, y: 2.5 }, hit: { tileId: id }, event: { metaKey: true, clientX: 50, clientY: 50 } });
+    const start = (id) =>
+      e.gestures.handle({
+        phase: "start",
+        point: { x: 4.5, y: 2.5 },
+        hit: { tileId: id },
+        event: { metaKey: true, clientX: 50, clientY: 50 },
+      });
     start(other.id);
     e.gestures.handle({ phase: "end", point: { x: 4.5, y: 2.5 } });
     expect(e.selectedTiles.value).toEqual([tile.id, other.id]);
     start(other.id);
     e.gestures.handle({ phase: "end", point: { x: 4.5, y: 2.5 } });
     expect(e.selectedTiles.value).toEqual([tile.id]);
-    e.gestures.handle({ phase: "start", point: { x: 3.5, y: 1.5 }, event: { metaKey: true, clientX: 10, clientY: 10 } });
-    e.gestures.handle({ phase: "move", point: { x: 5.5, y: 3.5 }, event: { clientX: 70, clientY: 70 }, screenRect: { left: 10, top: 10, width: 60, height: 60 }, regionTiles: [other.id] });
+    e.gestures.handle({
+      phase: "start",
+      point: { x: 3.5, y: 1.5 },
+      event: { metaKey: true, clientX: 10, clientY: 10 },
+    });
+    e.gestures.handle({
+      phase: "move",
+      point: { x: 5.5, y: 3.5 },
+      event: { clientX: 70, clientY: 70 },
+      screenRect: { left: 10, top: 10, width: 60, height: 60 },
+      regionTiles: [other.id],
+    });
     e.gestures.handle({ phase: "end", point: { x: 5.5, y: 3.5 } });
     expect(e.selectedTiles.value).toEqual([tile.id, other.id]);
     expect(e.history.value).toEqual([]);
@@ -185,7 +252,10 @@ describe("tile dragging", () => {
     e.setTileSelection([tile.id, other.id]);
     e.tileDrag.begin("floor", { x: 2.5, y: 2.5 }, tile);
     e.tileDrag.drop({ x: 4.5, y: 5.5 });
-    expect(e.draft.value.document.tiles.slice(0,2)).toEqual([{...tile,x:4,y:4},{...other,x:6,y:4}]);
+    expect(e.draft.value.document.tiles.slice(0, 2)).toEqual([
+      { ...tile, x: 4, y: 4 },
+      { ...other, x: 6, y: 4 },
+    ]);
     expect(e.history.value).toHaveLength(1);
     e.gestures.removeSelected();
     expect(e.draft.value.document.tiles).toEqual([obstacle]);

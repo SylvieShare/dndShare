@@ -50,6 +50,7 @@ export function nearestTilePlacement(
         ...t,
         x: t.x + next.x - origin.x,
         y: t.y + next.y - origin.y,
+        level: t.level + next.level - origin.level,
       }));
       const result = translated
         ? context.checkGroup(translated)

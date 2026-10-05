@@ -16,18 +16,6 @@
         {{ collection.name }}
       </option>
     </FormSelect>
-    <FormSelect
-      :value="editor.level"
-      aria-label="Уровень размещения"
-      @change="changeLevel($event)"
-    >
-      <option v-for="level in 16" :key="level" :value="level - 1">
-        Уровень {{ level
-        }}{{
-          level === 1 ? " · свободное размещение" : " · нужны опорные слоты"
-        }}
-      </option>
-    </FormSelect>
     <ActionButton
       :variant="editor.tool === 'wall-brush' ? 'primary' : 'secondary'"
       :aria-pressed="editor.tool === 'wall-brush'"
@@ -108,11 +96,6 @@ const collections = computed(() => [
     ]),
   ).values(),
 ]);
-function changeLevel(value) {
-  props.editor.resetGesture();
-  props.editor.setTileSelection([]);
-  props.editor.level = Number(value);
-}
 watch(
   () => props.editor.collection,
   () => {

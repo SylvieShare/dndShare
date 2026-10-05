@@ -103,8 +103,8 @@ const props = defineProps({
   connectionMode: String,
   previewTile: Object,
   catalogue: Array,
-  activeLevel: { type: Number, default: 0 },
   placementModel: String,
+  placementRotation: Number,
   publicCode: String,
   tabletop: Boolean,
   hint: {
@@ -152,7 +152,6 @@ watch(
     props.hoveredTile,
     props.previewTile,
     props.catalogue,
-    props.activeLevel,
   ],
   redraw,
   { deep: true },
@@ -259,7 +258,12 @@ defineExpose({
   pointAt: pointer.pointAt,
   centerPoint: () => {
     const view = renderer?.getView();
-    return view && { x: view.x, y: view.y };
+    if (!view) return null;
+    const bounds = host.value.getBoundingClientRect();
+    return pointer.pointAt({
+      clientX: bounds.x + bounds.width / 2,
+      clientY: bounds.y + bounds.height / 2,
+    });
   },
   focus: () => host.value?.focus({ preventScroll: true }),
 });

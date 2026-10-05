@@ -70,10 +70,7 @@ export function useCatalogueDrag(editor, canvas) {
       window.addEventListener("pointercancel", cancel);
     } else {
       const center = canvas.value?.centerPoint();
-      keyboardPoint = center && {
-        x: Math.floor(center.x) + 0.5,
-        y: Math.floor(center.y) + 0.5,
-      };
+      keyboardPoint = center;
       editor.tileDrag.move(keyboardPoint);
       canvas.value?.focus();
     }
@@ -89,10 +86,7 @@ export function useCatalogueDrag(editor, canvas) {
       });
     if (keyboardPoint) {
       const center = canvas.value.centerPoint();
-      keyboardPoint = {
-        x: Math.floor(center.x) + 0.5,
-        y: Math.floor(center.y) + 0.5,
-      };
+      keyboardPoint = center;
       editor.tileDrag.move(keyboardPoint, { fill: fillKey });
     }
   }

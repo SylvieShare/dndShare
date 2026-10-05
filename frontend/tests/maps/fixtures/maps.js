@@ -20,6 +20,7 @@ import "../../../src/app/theme.css";
 const WALL = "11111111-1111-4111-8111-111111111111",
   FLOOR = "22222222-2222-4222-8222-222222222222";
 const FRAME = "77777777-7777-4777-8777-777777777777",
+  BRIDGE = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
   UD_FLOOR = "88888888-8888-4888-8888-888888888888",
   UD_WALL = "99999999-9999-4999-8999-999999999999";
 const catalogue = [
@@ -81,6 +82,18 @@ const catalogue = [
     height: 1,
     maxHeight: 0.6,
     supportSlots: [{ x: 0, y: 0, width: 2, height: 1, elevation: 0.6 }],
+  },
+  {
+    id: BRIDGE,
+    sourceCode: "UD-019",
+    sourceName: "Bridge",
+    name: "Мост 3×1",
+    tileType: "prop",
+    wallMode: "none",
+    collection: "ultimate-dungeon",
+    width: 3,
+    height: 1,
+    maxHeight: 0.2,
   },
   {
     id: UD_FLOOR,
@@ -148,6 +161,16 @@ for (const z of [-0.45, 0.45]) {
   frameScene.add(bar);
 }
 const frameGlb = await new GLTFExporter().parseAsync(frameScene, {
+  binary: true,
+});
+const bridgeScene = new Scene(),
+  bridge = new Mesh(
+    new BoxGeometry(2.9, 0.2, 0.9),
+    new MeshStandardMaterial({ color: 0x896849 }),
+  );
+bridge.position.y = 0.1;
+bridgeScene.add(bridge);
+const bridgeGlb = await new GLTFExporter().parseAsync(bridgeScene, {
   binary: true,
 });
 const source = newMap();
@@ -247,7 +270,13 @@ window.fetch = async (url, options = {}) => {
   ) {
     if (params.has("realModels")) return nativeFetch(rawUrl, options);
     return new Response(
-      url.includes(FRAME) ? frameGlb : url.includes(WALL) ? wallGlb : glb,
+      url.includes(FRAME)
+        ? frameGlb
+        : url.includes(BRIDGE)
+          ? bridgeGlb
+          : url.includes(WALL)
+            ? wallGlb
+            : glb,
       {
         headers: { "Content-Type": "model/gltf-binary" },
       },

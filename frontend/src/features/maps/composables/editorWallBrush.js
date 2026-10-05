@@ -7,7 +7,8 @@ export function editorWallBrush(e) {
   let cells = null,
     last = null,
     targets = null,
-    status = null;
+    status = null,
+    level = 0;
   const directions = [
     [0, -1, 0],
     [1, 0, 2],
@@ -31,8 +32,9 @@ export function editorWallBrush(e) {
       document.tiles
         .filter(
           (t) =>
+            t.level === level &&
             e.catalogue.value.find((m) => m.id === t.modelId)?.tileType ===
-            "wall",
+              "wall",
         )
         .map((t) => key(t.x, t.y)),
     );
@@ -47,7 +49,7 @@ export function editorWallBrush(e) {
     for (const cell of affected) {
       const [x, y] = cell.split(",").map(Number);
       const old = document.tiles.find(
-        (t) => t.x === x && t.y === y && t.level === e.level.value,
+        (t) => t.x === x && t.y === y && t.level === level,
       );
       const source =
         old &&
@@ -65,7 +67,7 @@ export function editorWallBrush(e) {
         x,
         y,
         rotation: variant.rotation,
-        level: e.level.value,
+        level,
       });
     }
     status = tileGroupStatus(document, targets, e.catalogue.value);
@@ -98,6 +100,7 @@ export function editorWallBrush(e) {
     update();
   }
   function begin(point) {
+    level = point.level || 0;
     cells = new Set();
     last = point;
     e.setTileSelection([]);

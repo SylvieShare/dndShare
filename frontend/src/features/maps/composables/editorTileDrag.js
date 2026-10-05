@@ -18,12 +18,13 @@ export function editorTileDrag(e) {
       return;
     }
     drag.fill = fill && !drag.tile.id;
+    const targetLevel = point.level ?? drag.tile.level;
     if (drag.fill) {
       const cells = enclosedEmptyCells(
         {
           ...e.draft.value.document,
           tiles: e.draft.value.document.tiles.filter(
-            (t) => t.level === drag.tile.level,
+            (t) => t.level === targetLevel,
           ),
         },
         point,
@@ -31,36 +32,55 @@ export function editorTileDrag(e) {
       );
       const size = tileSize(drag.tile, model(drag.tile.modelId));
       if (cells?.length && size.width === 1 && size.height === 1) {
-        drag.targets = cells.map((cell) => ({ ...drag.tile, ...cell }));
+        drag.targets = cells.map((cell) => ({
+          ...drag.tile,
+          ...cell,
+          level: targetLevel,
+        }));
+        const valid = tileGroupStatus(
+          e.draft.value.document,
+          drag.targets,
+          e.catalogue.value,
+        ).valid;
         e.previewTile.value = {
           ...drag.targets[0],
           group: drag.targets,
-          valid: true,
+          valid,
           fill: true,
         };
         return;
       }
     }
     const { width, height } = tileSize(drag.tile, model(drag.tile.modelId));
-    const x = point.x - drag.offset.x - width / 2,
-      y = point.y - drag.offset.y - height / 2;
-    const nearest = nearestTilePlacement(
-      e.draft.value.document,
-      { ...drag.tile, x, y },
-      e.catalogue.value,
-      drag.tiles.map((t) => t.id).filter(Boolean),
-      2,
-      drag.tiles,
-      drag.tile,
-    );
+    let x,
+      y,
+      level = targetLevel,
+      nearest = null;
+    for (const candidate of point.candidates || [point]) {
+      x = candidate.x - drag.offset.x - width / 2;
+      y = candidate.y - drag.offset.y - height / 2;
+      level = candidate.level ?? drag.tile.level;
+      nearest = nearestTilePlacement(
+        e.draft.value.document,
+        { ...drag.tile, x, y, level },
+        e.catalogue.value,
+        drag.tiles.map((t) => t.id).filter(Boolean),
+        2,
+        drag.tiles,
+        drag.tile,
+      );
+      if (nearest) break;
+    }
     const px = nearest?.x ?? Math.round(x),
       py = nearest?.y ?? Math.round(y);
     const dx = px - drag.tile.x,
-      dy = py - drag.tile.y;
+      dy = py - drag.tile.y,
+      dl = (nearest?.level ?? level) - drag.tile.level;
     drag.targets = drag.tiles.map((tile) => ({
       ...tile,
       x: tile.x + Math.round(dx),
       y: tile.y + Math.round(dy),
+      level: tile.level + dl,
     }));
     const status = tileGroupStatus(
       e.draft.value.document,
@@ -73,11 +93,21 @@ export function editorTileDrag(e) {
       tileIds: drag.tiles.map((t) => t.id).filter(Boolean),
       x: px,
       y: py,
+      level: drag.tile.level + dl,
+      grabOffset: drag.offset,
+      grabHeight: drag.grabHeight,
+      levelOffset: drag.tile.level - drag.root.level,
+      supportBounds: {
+        x: drag.root.x - drag.tile.x,
+        y: drag.root.y - drag.tile.y,
+        ...tileSize(drag.root, model(drag.root.modelId)),
+      },
       valid: status.valid && !drag.fill && !!nearest,
       group: drag.tiles.map((tile) => ({
         ...tile,
         x: tile.x + dx,
         y: tile.y + dy,
+        level: tile.level + dl,
       })),
     };
   }
@@ -99,7 +129,7 @@ export function editorTileDrag(e) {
           x: 0,
           y: 0,
           rotation: e.placementRotation.value,
-          level: e.level.value,
+          level: 0,
         };
     const size = tileSize(source, model(modelId));
     const groupIds = tile
@@ -114,7 +144,9 @@ export function editorTileDrag(e) {
           .filter((t) => groupIds.includes(t.id))
           .map((t) => ({ ...t }))
       : [source];
+    const root = tiles.reduce((a, b) => (b.level < a.level ? b : a), tiles[0]);
     drag = {
+      root,
       tile: tiles.find((t) => t.id === source.id) || source,
       tiles,
       offset: tile
@@ -123,6 +155,16 @@ export function editorTileDrag(e) {
             y: point.y - tile.y - size.height / 2,
           }
         : { x: 0, y: 0 },
+      grabHeight: tile
+        ? Math.max(
+            0,
+            (point.elevation ?? 0.44) -
+              (structureContext(
+                e.draft.value.document,
+                e.catalogue.value,
+              ).placements.get(root.id)?.elevation || 0),
+          )
+        : undefined,
     };
     e.draggingTile.value = true;
     e.pauseSave(true);

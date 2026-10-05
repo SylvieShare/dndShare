@@ -34,6 +34,8 @@ export function structureContext(document, catalogue) {
     const model = models.get(tile.modelId);
     if (!model)
       return { valid: false, message: "Модель отсутствует в каталоге" };
+    if (!Number.isInteger(tile.level) || tile.level < 0 || tile.level > 15)
+      return { valid: false, message: "Допустимы уровни от 1 до 16" };
     const size = tileSize(tile, model);
     if (
       tile.x < 0 ||
@@ -42,8 +44,8 @@ export function structureContext(document, catalogue) {
       tile.y + size.height > document.height
     )
       return { valid: false, message: "Плитка выходит за границу карты" };
-    let elevation = 0,
-      plane = null;
+    let elevation = 0;
+    const found = [];
     const supports = new Set();
     for (let y = tile.y; y < tile.y + size.height; y++)
       for (let x = tile.x; x < tile.x + size.width; x++) {
@@ -52,21 +54,20 @@ export function structureContext(document, catalogue) {
           return { valid: false, message: "Здесь уже есть плитка" };
         if (tile.level > 0) {
           const slot = supportsMap.get(key);
-          if (!slot)
-            return {
-              valid: false,
-              message: "На этом уровне нет подходящего опорного слота",
-            };
-          if (plane !== null && Math.abs(plane - slot.elevation) > 0.015)
-            return {
-              valid: false,
-              message: "Опорные слоты находятся на разной высоте",
-            };
-          plane = slot.elevation;
-          elevation = slot.elevation;
-          supports.add(slot.parent);
+          if (slot) {
+            found.push(slot);
+            elevation = Math.max(elevation, slot.elevation);
+          }
         }
       }
+    if (tile.level > 0 && !found.length)
+      return {
+        valid: false,
+        message: "Нужен опорный слот хотя бы под одной клеткой плитки",
+      };
+    for (const slot of found)
+      if (Math.abs(slot.elevation - elevation) <= 0.015)
+        supports.add(slot.parent);
     return { valid: true, message: "", elevation, supports: [...supports] };
   }
   function register(tile, cells, supportsMap, poses) {

@@ -16,8 +16,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     return (
       getRenderer().placementPoint?.(
         event,
-        props.activeLevel,
         props.placementModel,
+        props.previewTile || { rotation: props.placementRotation || 0 },
       ) || getRenderer().world(event)
     );
   }
@@ -53,7 +53,8 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   function move(event) {
     if (!getRenderer() || props.readonly) return;
     const point =
-      drag?.point?.elevation !== undefined
+      drag?.point?.elevation !== undefined &&
+      (!props.placementModel || drag.pan || drag.orbit || drag.region)
         ? {
             ...getRenderer().world(event, drag.point.elevation),
             elevation: drag.point.elevation,
@@ -112,7 +113,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     if ((!drag.pan || drag.emptyPan) && !drag.orbit) {
       const inside = pointAt(event);
       const point =
-        inside && drag.point?.elevation !== undefined
+        inside && drag.point?.elevation !== undefined && !props.placementModel
           ? {
               ...getRenderer().world(event, drag.point.elevation),
               elevation: drag.point.elevation,

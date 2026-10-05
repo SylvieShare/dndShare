@@ -105,8 +105,8 @@
           :connection-invalid="connections.invalid"
           :hint="`${toolHint} · Cmd + клик/рамка: группа · Cmd + перенос: заполнить · Стрелки: камера · Alt: сдвиг · ПКМ/Shift: вращение`"
           :catalogue="e.catalogue"
-          :active-level="e.level"
-          :placement-model="e.selectedModel"
+          :placement-model="e.draggingTile ? e.selectedModel : ''"
+          :placement-rotation="e.placementRotation"
           @gesture="e.handle"
           @connection="connections.toggle"
           @camera-move="catalogueDrag.cameraMoved"
@@ -211,6 +211,7 @@ function hotkey(event) {
   if (event.code === "KeyR") {
     event.preventDefault();
     e.rotate();
+    catalogueDrag.cameraMoved();
   }
   if (event.key === "Delete" || event.key === "Backspace") {
     event.preventDefault();
