@@ -4,15 +4,18 @@ const up = new Vector3(0, 1, 0);
 const localBounds = new WeakMap();
 export function tileTransform(tile, model) {
   const { width, height } = tileSize(tile, model);
-  return new Matrix4().compose(
-    new Vector3(
-      tile.x + width / 2,
-      (tile.elevation || 0) - (model.mountDepth || 0),
-      tile.y + height / 2,
-    ),
-    new Quaternion().setFromAxisAngle(up, (-tile.rotation * Math.PI) / 180),
-    new Vector3(1, 1, 1),
-  );
+  const [offsetX, offsetZ] = model.placementOffset || [0, 0];
+  return new Matrix4()
+    .compose(
+      new Vector3(
+        tile.x + width / 2,
+        (tile.elevation || 0) - (model.mountDepth || 0),
+        tile.y + height / 2,
+      ),
+      new Quaternion().setFromAxisAngle(up, (-tile.rotation * Math.PI) / 180),
+      new Vector3(1, 1, 1),
+    )
+    .multiply(new Matrix4().makeTranslation(offsetX, 0, offsetZ));
 }
 export function tileBounds(tile, metadata, model) {
   let bounds = localBounds.get(model);

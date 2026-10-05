@@ -88,6 +88,11 @@ func validateMapModel(m battlemap.Model) error {
 	if math.IsNaN(m.MountDepth) || math.IsInf(m.MountDepth, 0) || m.MountDepth < 0 || m.MountDepth > m.SurfaceHeight {
 		return errors.New("invalid model mounting depth")
 	}
+	for _, offset := range m.PlacementOffset {
+		if math.IsNaN(offset) || math.IsInf(offset, 0) || math.Abs(offset) > 8 {
+			return errors.New("invalid model placement offset")
+		}
+	}
 	if len(m.Blockers) > 100 || len(m.Tags) > 32 {
 		return errors.New("too many geometry contours or tags")
 	}

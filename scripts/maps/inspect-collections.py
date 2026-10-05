@@ -1,7 +1,8 @@
 """Inventory canonical, unsupported meshes without altering print originals."""
 from pathlib import Path
-import hashlib, json, math, re, struct
+import hashlib, json, re, struct
 import numpy as np
+from tile_footprint import footprint
 from importlib.util import spec_from_file_location, module_from_spec
 _spec=spec_from_file_location('measure_mounts',Path(__file__).with_name('measure-mounts.py'))
 _mounts=module_from_spec(_spec);_spec.loader.exec_module(_mounts)
@@ -33,9 +34,6 @@ for collection,path in paths:
  if size!=84+count*50:raise ValueError('Unexpected STL encoding: '+str(path))
  data=np.memmap(path,dtype=np.dtype([('normal','<f4',(3,)),('v','<f4',(3,3)),('attr','<u2')]),mode='r',offset=84,shape=(count,))['v']
  low=data.min(axis=(0,1)).astype(float);high=data.max(axis=(0,1)).astype(float)
- spans=high-low
- grid=re.search(r'(\d+)\s*[xX]\s*(\d+)',source_name)
- width,height=(max(1,math.ceil(spans[0]/35-.025)),max(1,math.ceil(spans[1]/35-.025)))
  text=source_name.lower()
  kind='frame' if 'level grid' in text or source_name=='Grid 3X3' else 'stairs' if any(w in text for w in ['stair','ladder']) else 'wall' if any(w in text for w in ['wall','angle','corner','door','prison']) else 'floor' if any(w in text for w in ['ground','water','railway','level']) else 'prop'
  # Structural grids retain their lower ledges and upper sockets.
@@ -48,8 +46,9 @@ for collection,path in paths:
  row={'collection':collection,'collectionName':names[collection],'terrainType':terrain[collection],
       'code':code,'sourceName':source_name,'sourcePath':str(path.relative_to(ROOT/'models')),
       'sourceBytes':size,'sourceSHA256':checksum,'triangles':count,'min':low.tolist(),'max':high.tolist(),
-      'width':width,'height':height,'cutHeight':float(cut),'tileType':kind}
+      'cutHeight':float(cut),'tileType':kind}
  row['mountDepth'],_= _mounts.measure(row)
+ row.update(footprint(row,data))
  rows.append(row)
 rows.sort(key=lambda r:(r['collection'],r['code']))
 for row in rows:

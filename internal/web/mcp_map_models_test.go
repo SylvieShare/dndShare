@@ -101,3 +101,17 @@ func TestMapMCPDefinitionsIncludeDirectUploads(t *testing.T) {
 		}
 	}
 }
+
+func TestRegisteredModelPlacementOffsetValidation(t *testing.T) {
+	model := battlemap.InitialCatalogue()[0]
+	model.PlacementOffset = [2]float64{.002601, .246171}
+	if err := validateMapModel(model); err != nil {
+		t.Fatal(err)
+	}
+	for _, offset := range []float64{9, -9, math.NaN(), math.Inf(1)} {
+		model.PlacementOffset[0] = offset
+		if validateMapModel(model) == nil {
+			t.Fatalf("accepted invalid placement offset %v", offset)
+		}
+	}
+}

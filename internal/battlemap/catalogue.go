@@ -10,26 +10,27 @@ const DocumentVersion = 2
 const MaxTiles = 4096
 
 type ModelMetadata struct {
-	ID             string         `json:"id"`
-	Collection     string         `json:"collection"`
-	CollectionName string         `json:"collectionName"`
-	SourceCode     string         `json:"sourceCode"`
-	SourceName     string         `json:"sourceName"`
-	Name           string         `json:"name"`
-	Version        int            `json:"version"`
-	TileType       string         `json:"tileType"`
-	TerrainType    string         `json:"terrainType"`
-	WallLayout     string         `json:"wallLayout"`
-	WallMode       string         `json:"wallMode"`
-	WallMask       int            `json:"wallMask"`
-	Width          int            `json:"width"`
-	Height         int            `json:"height"`
-	MountDepth     float64        `json:"mountDepth"`
-	SurfaceHeight  float64        `json:"surfaceHeight"`
-	MaxHeight      float64        `json:"maxHeight"`
-	Blockers       [][][2]float64 `json:"blockers"`
-	Tags           []string       `json:"tags"`
-	SupportSlots   []SupportSlot  `json:"supportSlots"`
+	ID              string         `json:"id"`
+	Collection      string         `json:"collection"`
+	CollectionName  string         `json:"collectionName"`
+	SourceCode      string         `json:"sourceCode"`
+	SourceName      string         `json:"sourceName"`
+	Name            string         `json:"name"`
+	Version         int            `json:"version"`
+	TileType        string         `json:"tileType"`
+	TerrainType     string         `json:"terrainType"`
+	WallLayout      string         `json:"wallLayout"`
+	WallMode        string         `json:"wallMode"`
+	WallMask        int            `json:"wallMask"`
+	Width           int            `json:"width"`
+	Height          int            `json:"height"`
+	PlacementOffset [2]float64     `json:"placementOffset"`
+	MountDepth      float64        `json:"mountDepth"`
+	SurfaceHeight   float64        `json:"surfaceHeight"`
+	MaxHeight       float64        `json:"maxHeight"`
+	Blockers        [][][2]float64 `json:"blockers"`
+	Tags            []string       `json:"tags"`
+	SupportSlots    []SupportSlot  `json:"supportSlots"`
 }
 
 type SupportSlot struct {
