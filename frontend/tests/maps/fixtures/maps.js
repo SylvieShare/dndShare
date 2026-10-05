@@ -244,13 +244,15 @@ window.fetch = async (url, options = {}) => {
     /^\/api\/(maps\/models|public\/sessions\/ABC-123\/map-models)\/[^/]+\/(render|lod)$/.test(
       url,
     )
-  )
+  ) {
+    if (params.has("realModels")) return nativeFetch(rawUrl, options);
     return new Response(
       url.includes(FRAME) ? frameGlb : url.includes(WALL) ? wallGlb : glb,
       {
         headers: { "Content-Type": "model/gltf-binary" },
       },
     );
+  }
   if (
     url === "/api/maps/models" ||
     url === "/api/public/sessions/ABC-123/map-models"

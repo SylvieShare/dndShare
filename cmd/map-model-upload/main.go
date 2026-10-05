@@ -112,8 +112,12 @@ func main() {
 		log.Fatal(err)
 	}
 	known := map[string]bool{}
+	knownAssets := map[battlemap.ModelAsset]bool{}
 	for _, model := range existing {
 		known[model.ID] = true
+		for _, asset := range model.Assets {
+			knownAssets[asset] = true
+		}
 	}
 	jobs := make(chan battlemap.Model)
 	failures := make(chan error, *workers)
@@ -124,6 +128,9 @@ func main() {
 			defer wg.Done()
 			for model := range jobs {
 				for _, kind := range []string{"preview", "render", "lod", "source"} {
+					if knownAssets[model.Assets[kind]] {
+						continue // Immutable, already verified asset; registration checks S3 again.
+					}
 					if err := upload(ctx, c, *dir, kind, model.Assets[kind]); err != nil {
 						failures <- fmt.Errorf("%s %s: %w", model.SourceCode, kind, err)
 						stop()

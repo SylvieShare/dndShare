@@ -26,9 +26,13 @@ type mapModelView struct {
 	PreviewURL string `json:"previewUrl"`
 }
 
-func modelView(model battlemap.Model, base string) mapModelView {
+func modelView(model, visual battlemap.Model, base string) mapModelView {
 	path := base + "/" + model.ID
-	return mapModelView{model.ModelMetadata, path + "/render", path + "/lod", path + "/preview"}
+	query := ""
+	if visual.ID != model.ID {
+		query = "?revision=" + url.QueryEscape(visual.ID)
+	}
+	return mapModelView{model.ModelMetadata, path + "/render" + query, path + "/lod" + query, path + "/preview" + query}
 }
 
 func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
@@ -38,8 +42,9 @@ func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result := []mapModelView{}
+	visuals := battlemap.LatestVisualModels(models)
 	for _, m := range models {
-		result = append(result, modelView(m, "/api/maps/models"))
+		result = append(result, modelView(m, visuals[m.ID], "/api/maps/models"))
 	}
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, result)
@@ -80,9 +85,10 @@ func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result := []mapModelView{}
+	visuals := battlemap.LatestVisualModels(models)
 	for _, m := range models {
 		if ids[m.ID] {
-			result = append(result, modelView(m, "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models"))
+			result = append(result, modelView(m, visuals[m.ID], "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models"))
 		}
 	}
 	w.Header().Set("Cache-Control", "no-store")
@@ -158,6 +164,18 @@ func (s *Server) streamMapModel(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		mapError(w, err)
 		return
+	}
+	if revision := r.URL.Query().Get("revision"); revision != "" {
+		if !isUUID(revision) || r.PathValue("variant") == "source" {
+			notFound(w, "")
+			return
+		}
+		visual, err := s.store.GetMapModel(r.Context(), revision)
+		if err != nil || !battlemap.VisualRevision(m, visual) {
+			notFound(w, "")
+			return
+		}
+		m = visual
 	}
 	asset, ok := m.Assets[r.PathValue("variant")]
 	if !ok {

@@ -1,6 +1,7 @@
 import { inside, lineCells, uid } from "../lib/mapModel";
 import { connectionVariant } from "../lib/tileConnections";
 import { tileGroupStatus } from "../lib/tilePlacement";
+import { latestModelVersions } from "../lib/modelVersions";
 
 export function editorWallBrush(e) {
   let cells = null,
@@ -16,7 +17,7 @@ export function editorWallBrush(e) {
   const key = (x, y) => `${x},${y}`;
   function update() {
     const document = e.draft.value.document;
-    const seed = e.catalogue.value.find(
+    const seed = latestModelVersions(e.catalogue.value).find(
       (m) =>
         m.tileType === "wall" &&
         m.collection === (e.collection?.value || "lost-cave") &&

@@ -91,6 +91,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { Paintbrush } from "@lucide/vue";
+import { latestModelVersions } from "../lib/modelVersions";
 import {
   ActionButton,
   BaseTile,
@@ -145,7 +146,7 @@ const types = [
   { value: "prop", label: "Декор" },
 ];
 const filtered = computed(() =>
-  props.editor.catalogue.filter(
+  latestModelVersions(props.editor.catalogue).filter(
     (m) =>
       m.collection === props.editor.collection &&
       (type.value === "all" || m.tileType === type.value) &&

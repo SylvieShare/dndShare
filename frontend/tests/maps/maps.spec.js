@@ -207,7 +207,9 @@ test("conflicting writes require an explicit reload before replacing local chang
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
-test("editor rotates a dragged tile before placing and deletes it from its menu", async ({ page }) => {
+test("editor rotates a dragged tile before placing and deletes it from its menu", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await ready(page, "editor");
   const p = await point(page, 4.5, 4.5);
@@ -222,7 +224,9 @@ test("editor rotates a dragged tile before placing and deletes it from its menu"
     )
     .toBe(90);
   await page.mouse.click(p.x, p.y);
-  await page.getByRole("button", { name: "Удалить плитку", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Удалить плитку", exact: true })
+    .click();
   await expect
     .poll(() =>
       page.evaluate(() =>
@@ -244,10 +248,12 @@ test("real compressed model uses the same editor and shader when local assets ex
     "Local model files are intentionally excluded from Git",
   );
   const errors = [];
+  let modelRequests = 0;
   page.on("console", (message) => {
     if (message.type() === "error") errors.push(message.text());
   });
   await page.route("**/api/maps/models/*/*", async (route) => {
+    modelRequests++;
     const parts = new URL(route.request().url()).pathname.split("/");
     const code = parts[4].startsWith("1111") ? "LC-001" : "LC-007";
     await route.fulfill({
@@ -259,7 +265,7 @@ test("real compressed model uses the same editor and shader when local assets ex
     });
   });
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await ready(page, "editor");
+  await ready(page, "editor&realModels");
   const p = await point(page, 4.5, 4.5);
   await dragTile(page, p);
   await expect
@@ -274,4 +280,5 @@ test("real compressed model uses the same editor and shader when local assets ex
   expect(errors.filter((e) => /THREE|WebGL|shader|decode/i.test(e))).toEqual(
     [],
   );
+  expect(modelRequests).toBeGreaterThan(0);
 });
