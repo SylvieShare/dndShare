@@ -7,10 +7,12 @@ test("painted GLBs decode both tiers and render PBR textures in the editor", asy
   page,
 }) => {
   test.setTimeout(90000);
-  const assets = path.resolve(
-    import.meta.dirname,
-    "../../../models/collections/painted/ultimate-dungeon",
-  );
+  const assets =
+    process.env.MAP_MODEL_TEST_ASSETS ||
+    path.resolve(
+      import.meta.dirname,
+      "../../../models/collections/painted/ultimate-dungeon",
+    );
   test.skip(
     !fs.existsSync(path.join(assets, "UD-031/render.glb")),
     "Local scans are excluded from Git",

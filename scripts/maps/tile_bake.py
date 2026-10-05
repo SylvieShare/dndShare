@@ -46,7 +46,7 @@ def bake(target, source, directory):
     rgba[invalid] = (.5, .5, 1, 1)
     normal.image.pixels.foreach_set(rgba.ravel())
     save(normal, directory, 'normal')
-    colour = texture(nodes, 'Colour', (.23, .21, .17, 1))
+    colour = texture(nodes, 'Colour', (.095, .115, .126, 1))
     activate(target)
     bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR'}, use_selected_to_active=False,
                         margin=8, use_clear=False)

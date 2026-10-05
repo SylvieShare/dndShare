@@ -179,7 +179,7 @@ export function pegPrimitive(doc, pads, height, collection) {
   }
   const palette = {
     "lost-cave": [0.14, 0.085, 0.035, 1],
-    "ultimate-dungeon": [0.22, 0.2, 0.16, 1],
+    "ultimate-dungeon": [0.05925, 0.07324, 0.08082, 1],
     "toxic-sewer": [0.13, 0.15, 0.085, 1],
     "basic-elements": [0.2, 0.22, 0.25, 1],
   };

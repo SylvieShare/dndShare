@@ -277,6 +277,35 @@ manifest, переводит blockers в координаты основания
 тестом и MCP-клиентом с `-assets models/collections/painted/upload`.
 Клиент пропускает уже зарегистрированные файлы и не передаёт STL повторно.
 
+### Исправление палитры Ultimate Dungeon по PDF
+
+Сохранить текущий реестр через `cmd/map-model-upload -snapshot models/collections/registry.json`.
+`node scripts/maps/repaint-ultimate.mjs` выбирает последние именованные варианты
+Ultimate Dungeon и меняет только камень в albedo; `--codes=UD-001,UD-031`
+ограничивает пробу. Палитра задана в masonry_palette.mjs. Цветовая маска в linear
+RGB отделяет прежний бежевый камень от дерева, костей, металла и других материалов,
+сохраняет зерно и плавно смешивает границы. glb_textures.mjs заменяет embedded PNG
+и пересчитывает смещения bufferViews и Meshopt-потоков, сохраняя сами байты
+геометрии и остальные изображения. Простой монтажный выступ получает тот же
+холодный оттенок без текстуры. При полной переподготовке STL эту палитру используют
+ultimate_paint.py и peg-geometry.mjs.
+Для UD-087/088/089 исправляется прежняя ошибочная разметка всего ствола как кости:
+column_materials.mjs строит маску по позициям треугольников и UV, оставляет светлыми
+черепа в полостях и перекрашивает каменную оболочку. UV-поля получают четыре
+пикселя запаса, чтобы на швах не оставалась бежевая кайма.
+
+Результаты лежат в models/collections/stone-dungeon. Локальный Blender запускает
+preview-model-revisions.py с `-- --base models/collections/stone-dungeon`, затем
+`node scripts/maps/package-masonry.mjs` выпускает content-addressed пакет в
+stone-dungeon/upload. UUID/версии новые, остальные метаданные и source STL
+копируются из реестра. Перед загрузкой проверяются совместимость manifest,
+сохранность геометрии/normal/ORM и тест `node --test scripts/maps/masonry_palette.test.mjs`.
+`node scripts/maps/validate-masonry.mjs` сравнивает исходные и новые GLB побайтно
+для геометрии и normal/ORM, а также проверяет узлы, UV/accessors и материалы.
+Загрузка выполняется тем же MCP-клиентом. Для browser-проверки новых файлов
+painted.spec.js принимает MAP_MODEL_TEST_ASSETS — папку с UD-002 и UD-031, у
+каждого render.glb/lod.glb.
+
 ### Упрощённые монтажные выступы
 
 Сохранить реестр через `cmd/map-model-upload -snapshot models/collections/registry.json`.

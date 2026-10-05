@@ -7,7 +7,7 @@ import bpy
 import numpy as np
 
 PALETTE = {
-    'stone': (.54, .51, .45), 'wood': (.39, .22, .105),
+    'stone': (.34, .375, .39), 'wood': (.39, .22, .105),
     'iron': (.34, .35, .33), 'bone': (.79, .72, .52),
     'cloth': (.39, .17, .14), 'sack': (.57, .49, .29),
     'ceramic': (.69, .61, .45), 'water': (.16, .37, .43),
@@ -95,8 +95,13 @@ def paint(obj, row):
         region((z>13.5)&(z<16.5), 'toxic' if code==65 else 'water')
     if code==80:
         region((z>29)&(abs(x)<13)&(abs(y)<12), 'cloth')
-    if code in [87, 88, 89]:
-        region(z>16, 'bone')
+    radius = np.hypot(x, y)
+    if code==87:
+        region((radius<7.5)&(z>51), 'bone')
+    if code==88:
+        region(((radius<8.5)&(z>24))|((radius>13)&(z>24)&(z<32)&(y<-6)), 'bone')
+    if code==89:
+        region((x*x+((z-27-.3*y)/np.hypot(1,.3))**2<6.5**2)&(z>16), 'bone')
 
     # Broad variation follows real positions, without black cracks or fake light.
     variation = 1+.065*np.sin(x*.63+y*.37+z*.28)+.04*np.sin(x*1.9-y*1.1)
