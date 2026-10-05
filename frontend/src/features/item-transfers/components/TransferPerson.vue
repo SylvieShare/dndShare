@@ -1,7 +1,9 @@
 <template>
   <span class="transfer-person" :style="{ '--person-size': `${size}px` }">
-    <img v-if="imageUrl" :src="imageUrl" alt="" />
-    <span v-else class="transfer-person-initial" aria-hidden="true">{{ name?.slice(0, 1) || '?' }}</span>
+    <slot name="avatar">
+      <img v-if="imageUrl" :src="imageUrl" alt="" />
+      <span v-else class="transfer-person-initial" aria-hidden="true">{{ name?.slice(0, 1) || '?' }}</span>
+    </slot>
     <span class="transfer-person-copy"><strong>{{ name || 'Без имени' }}</strong><slot /></span>
   </span>
 </template>

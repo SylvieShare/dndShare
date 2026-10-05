@@ -47,6 +47,45 @@ func testSessionKarmicDicePostgres(t *testing.T, s *Store, sessionID int64) {
 	if err != nil || high.BalanceBefore != -6 || high.Rolls[0] < 1 || high.Rolls[0] > 20 {
 		t.Fatalf("separate scale: %+v %v", high, err)
 	}
+
+	// Player scales project current media, preferring the icon over portrait data.
+	if _, err = s.pool.Exec(ctx, `INSERT INTO dndshare.storage_image VALUES(101,'/hero-icon.png',false),(102,'/deleted-icon.png',true);
+ UPDATE dndshare."char" SET icon_image_id=101,data=jsonb_set(data,'{values,ava}','{"url":"/hero-portrait.png"}') WHERE id=1;
+ UPDATE dndshare."char" SET icon_image_id=102,data=jsonb_set(data,'{values,ava}','{"url":"/other-portrait.png"}') WHERE id=2;`); err != nil {
+		t.Fatal(err)
+	}
+	mediaScales, err := s.SessionKarmicScales(ctx, sessionID)
+	if err != nil || len(mediaScales) != 2 {
+		t.Fatal("scale media read failed", mediaScales, err)
+	}
+	byKey := map[string]SessionKarmicScale{}
+	for _, scale := range mediaScales {
+		byKey[scale.Key] = scale
+		if scale.Probabilities != karmicProbabilities(scale.Balance) {
+			t.Fatal("chart differs from roller", scale)
+		}
+	}
+	if byKey["char:"+hero].ImageURL == nil || *byKey["char:"+hero].ImageURL != "/hero-icon.png" {
+		t.Fatal("preferred character icon lost")
+	}
+	if byKey["char:"+other].ImageURL == nil || *byKey["char:"+other].ImageURL != "/other-portrait.png" {
+		t.Fatal("deleted icon did not use character portrait")
+	}
+	if _, err = s.pool.Exec(ctx, `DELETE FROM dndshare.session_participant WHERE session_id=$1 AND char_id=2`, sessionID); err != nil {
+		t.Fatal(err)
+	}
+	mediaScales, err = s.SessionKarmicScales(ctx, sessionID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, scale := range mediaScales {
+		if scale.Key == "char:"+other && scale.ImageURL != nil {
+			t.Fatal("former participant's private media exposed")
+		}
+	}
+	if _, err = s.pool.Exec(ctx, `INSERT INTO dndshare.session_participant(session_id,char_id,user_id) VALUES($1,2,20)`, sessionID); err != nil {
+		t.Fatal(err)
+	}
 	if _, err = s.pool.Exec(ctx, `CREATE TABLE dndshare.session_encounter (id bigserial PRIMARY KEY, session_id bigint, data jsonb, deleted bool DEFAULT false);
  CREATE TABLE dndshare.item (id bigint, name text);
  INSERT INTO dndshare.item VALUES(30,'Гоблин');

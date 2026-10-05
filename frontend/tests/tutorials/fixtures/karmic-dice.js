@@ -9,6 +9,12 @@ import '@sylvieshare/share-ui/styles.css'
 import '../../../src/app/theme.css'
 
 const pinia = createPinia(), session = ref({ settings: { players: {}, combat: {}, interactions: {}, autoAccept: {}, karmicDice: { enabled: false, separate: false } } })
+const playerIcon = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#6d68b7"/><circle cx="24" cy="17" r="8" fill="#dad8ee"/><path d="M10 39a14 14 0 0128 0" fill="#dad8ee"/></svg>')
+function probabilities(balance) {
+  const weights = Array.from({ length: 20 }, (_, index) => 1 + .85 * balance / 6 * (2 * index / 19 - 1))
+  const total = weights.reduce((sum, value) => sum + value, 0)
+  return weights.map(value => value / total)
+}
 window.requests = []; window.scales = []; window.failedRead = false
 window.fetch = async (url, options = {}) => {
   if (String(url).endsWith('/settings')) {
@@ -16,7 +22,7 @@ window.fetch = async (url, options = {}) => {
     return new Response(null, { status: 204 })
   }
   if (String(url).endsWith('/karmic-dice')) return window.failedRead
-    ? Response.json({ desc: 'Ошибка чтения' }, { status: 503 }) : Response.json({ scales: window.scales })
+    ? Response.json({ desc: 'Ошибка чтения' }, { status: 503 }) : Response.json({ scales: window.scales.map(scale => ({ ...scale, probabilities: probabilities(scale.balance), ...(scale.key.startsWith('char:') ? { imageUrl: playerIcon } : {}) })) })
   if (String(url).endsWith('/d20')) {
     const body = JSON.parse(options.body); window.requests.push(body)
     const separate = session.value.settings.karmicDice.separate

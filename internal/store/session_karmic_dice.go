@@ -26,9 +26,11 @@ type SessionD20Result struct {
 }
 
 type SessionKarmicScale struct {
-	Key     string  `json:"key"`
-	Name    string  `json:"name"`
-	Balance float64 `json:"balance"`
+	Key           string      `json:"key"`
+	Name          string      `json:"name"`
+	Balance       float64     `json:"balance"`
+	ImageURL      *string     `json:"imageUrl,omitempty"`
+	Probabilities [20]float64 `json:"probabilities"`
 }
 
 func ValidSessionD20Request(req SessionD20Request) bool {
@@ -157,7 +159,13 @@ func karmicNPCActor(ctx context.Context, tx pgx.Tx, sessionID int64, uid string)
 }
 
 func (s *Store) SessionKarmicScales(ctx context.Context, sessionID int64) ([]SessionKarmicScale, error) {
-	rows, err := s.pool.Query(ctx, `SELECT actor_key,actor_name,balance FROM dndshare.session_karmic_scale WHERE session_id=$1 ORDER BY actor_name,actor_key`, sessionID)
+	rows, err := s.pool.Query(ctx, `SELECT k.actor_key,k.actor_name,k.balance,
+ COALESCE(NULLIF(icon.url,''),NULLIF(c.data#>>'{values,ava,url}',''))
+ FROM dndshare.session_karmic_scale k
+ LEFT JOIN dndshare."char" c ON k.actor_key='char:'||c.uuid::text AND NOT c.deleted
+ AND EXISTS(SELECT 1 FROM dndshare.session_participant p WHERE p.session_id=k.session_id AND p.char_id=c.id)
+ LEFT JOIN dndshare.storage_image icon ON icon.id=c.icon_image_id AND NOT icon.deleted
+ WHERE k.session_id=$1 ORDER BY k.actor_name,k.actor_key`, sessionID)
 	if err != nil {
 		return nil, err
 	}
@@ -165,9 +173,10 @@ func (s *Store) SessionKarmicScales(ctx context.Context, sessionID int64) ([]Ses
 	scales := []SessionKarmicScale{}
 	for rows.Next() {
 		var scale SessionKarmicScale
-		if err := rows.Scan(&scale.Key, &scale.Name, &scale.Balance); err != nil {
+		if err := rows.Scan(&scale.Key, &scale.Name, &scale.Balance, &scale.ImageURL); err != nil {
 			return nil, err
 		}
+		scale.Probabilities = karmicProbabilities(scale.Balance)
 		scales = append(scales, scale)
 	}
 	return scales, rows.Err()

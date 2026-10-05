@@ -131,3 +131,34 @@ func TestSessionD20Validation(t *testing.T) {
 		t.Fatal("roll mode broken")
 	}
 }
+
+func TestKarmicChartProbabilities(t *testing.T) {
+	for _, balance := range []float64{-6, -1.7, 0, 1.7, 6} {
+		probabilities, total := karmicProbabilities(balance), 0.0
+		for _, chance := range probabilities {
+			if chance <= 0 || chance >= 1 {
+				t.Fatal("invalid graph probability", chance)
+			}
+			total += chance
+		}
+		if math.Abs(total-1) > 1e-12 {
+			t.Fatal("graph probabilities do not sum to one", total)
+		}
+		if balance == 0 {
+			for _, chance := range probabilities {
+				if chance != .05 {
+					t.Fatal("neutral graph is not uniform")
+				}
+			}
+		}
+	}
+	positive, negative := karmicProbabilities(6), karmicProbabilities(-6)
+	if math.Abs(positive[0]-.0075) > 1e-12 || math.Abs(positive[19]-.0925) > 1e-12 {
+		t.Fatal("graph does not show actual d20 extremes")
+	}
+	for index := range positive {
+		if math.Abs(positive[index]-negative[19-index]) > 1e-12 {
+			t.Fatal("opposite tilts are not symmetric")
+		}
+	}
+}

@@ -29,6 +29,19 @@ func karmicWeights(balance float64) [20]float64 {
 	return weights
 }
 
+// The chart uses the same normalized weights as the real d20 roller.
+func karmicProbabilities(balance float64) [20]float64 {
+	probabilities := karmicWeights(balance)
+	total := 0.0
+	for _, weight := range probabilities {
+		total += weight
+	}
+	for i := range probabilities {
+		probabilities[i] /= total
+	}
+	return probabilities
+}
+
 func karmicFace(weights [20]float64, unit float64) int {
 	total := 0.0
 	for _, weight := range weights {

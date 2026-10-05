@@ -13,10 +13,11 @@
     </FormField>
     <p>Общая шкала учитывает броски всех участников, включая существ мастера. Отдельные шкалы учитывают каждого персонажа и каждое существо независимо. Переключение режима или включения сбрасывает шкалы в центр.</p>
     <p v-if="!settings?.enabled">Выключено — все значения d20 равновероятны.</p>
-    <LoadingState v-else-if="loading" label="Загружаем шкалы…" />
-    <div v-else-if="error" role="alert"><p>{{ error }}</p><ActionButton size="sm" variant="quiet" @click="refresh">Повторить</ActionButton></div>
+    <LoadingState v-if="settings?.enabled && loading" label="Загружаем шкалы…" />
+    <div v-else-if="settings?.enabled && error" role="alert"><p>{{ error }}</p><ActionButton size="sm" variant="quiet" @click="refresh">Повторить</ActionButton></div>
     <template v-else>
-      <KarmicDiceScale v-for="scale in visibleScales" :key="scale.key" :name="scale.name" :balance="scale.balance" />
+      <KarmicDiceScale v-for="scale in visibleScales" :key="scale.key" :name="scale.name" :actor-key="scale.key" :balance="scale.balance" :image-url="scale.imageUrl" :probabilities="scale.probabilities" />
+      <KarmicDiceDistribution v-if="settings?.enabled && settings?.separate && !scales.length" name="Каждый участник" />
       <p v-if="settings?.enabled && settings?.separate && !scales.length">Пока бросков нет. Отдельная шкала появится после первого броска персонажа или существа.</p>
     </template>
   </BaseTile>
@@ -26,6 +27,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { ActionButton, BaseTile, FormField, LoadingState, ToggleSwitch, ValueSelect } from '@sylvieshare/share-ui'
 import { getKarmicScales } from '@/shared/api/sessionDiceApi'
 import KarmicDiceScale from './KarmicDiceScale.vue'
+import KarmicDiceDistribution from './KarmicDiceDistribution.vue'
 const props = defineProps({ sessionUuid: { type: String, required: true }, settings: Object, saving: Boolean })
 const emit = defineEmits(['update-setting'])
 const modes = [{ value: 'shared', label: 'Общая для всех' }, { value: 'separate', label: 'Для каждого своя' }]
