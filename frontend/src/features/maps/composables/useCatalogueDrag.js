@@ -2,8 +2,7 @@ import { nextTick, onBeforeUnmount } from "vue";
 
 // The drop target is a Three.js world coordinate, rather than a sortable DOM slot.
 export function useCatalogueDrag(editor, canvas) {
-  let pointer = null,
-    pointerEvent = null,
+  let pointerEvent = null,
     fillKey = false,
     keyboardPoint = null,
     freePlacement = false;
@@ -17,14 +16,10 @@ export function useCatalogueDrag(editor, canvas) {
     return { ...snap(point), candidates: point.candidates?.map(snap) };
   }
   function cleanup() {
-    if (pointer?.element.hasPointerCapture(pointer.id))
-      pointer.element.releasePointerCapture(pointer.id);
-    pointer = null;
     pointerEvent = null;
+    fillKey = false;
     keyboardPoint = null;
     freePlacement = false;
-    window.removeEventListener("pointermove", move);
-    window.removeEventListener("pointerup", drop);
     window.removeEventListener("pointercancel", cancel);
     window.removeEventListener("keydown", key);
     window.removeEventListener("keyup", key);
@@ -34,19 +29,6 @@ export function useCatalogueDrag(editor, canvas) {
   }
   function cancel() {
     editor.tileDrag.cancel();
-    cleanup();
-  }
-  function move(event) {
-    if (event.pointerId !== pointer?.id) return;
-    pointerEvent = event;
-    fillKey = event.metaKey || event.ctrlKey;
-    editor.tileDrag.move(canvas.value?.pointAt(event), { fill: fillKey });
-  }
-  function drop(event) {
-    if (event.pointerId !== pointer?.id) return;
-    editor.tileDrag.drop(canvas.value?.pointAt(event), {
-      fill: event.metaKey || event.ctrlKey,
-    });
     cleanup();
   }
   function key(event) {
@@ -62,34 +44,15 @@ export function useCatalogueDrag(editor, canvas) {
       event.preventDefault();
       cancel();
     }
-    if (!keyboardPoint) return;
+    if (!freePlacement) return;
     if (event.key === "Enter") {
       event.preventDefault();
-      editor.tileDrag.drop(keyboardPoint, { fill: fillKey });
+      editor.tileDrag.drop(
+        keyboardPoint || canvas.value?.pointAt(pointerEvent),
+        { fill: fillKey },
+      );
       cleanup();
     }
-  }
-  function begin(id, event) {
-    if (event.type === "pointerdown" && event.button !== 0) return;
-    cancel();
-    event.preventDefault();
-    event.currentTarget.focus({ preventScroll: true });
-    editor.tileDrag.begin(id);
-    if (event.type === "pointerdown") {
-      pointer = { id: event.pointerId, element: event.currentTarget };
-      pointer.element.setPointerCapture(pointer.id);
-      window.addEventListener("pointermove", move);
-      window.addEventListener("pointerup", drop);
-      window.addEventListener("pointercancel", cancel);
-    } else {
-      const center = canvas.value?.centerPoint();
-      keyboardPoint = keyboardAnchor(center);
-      editor.tileDrag.move(keyboardPoint);
-      canvas.value?.focus();
-    }
-    window.addEventListener("keydown", key);
-    window.addEventListener("keyup", key);
-    window.addEventListener("blur", cancel);
   }
   onBeforeUnmount(cancel);
   function cameraMoved() {
@@ -105,10 +68,10 @@ export function useCatalogueDrag(editor, canvas) {
   }
   function freeMove(event) {
     if (!freePlacement) return;
+    keyboardPoint = null;
     pointerEvent = event;
-    editor.tileDrag.move(canvas.value?.pointAt(event), {
-      fill: event.metaKey || event.ctrlKey,
-    });
+    fillKey = event.metaKey || event.ctrlKey;
+    editor.tileDrag.move(canvas.value?.pointAt(event), { fill: fillKey });
   }
   function freeDrop(event) {
     if (!freePlacement || event.button !== 0) return;
@@ -121,18 +84,27 @@ export function useCatalogueDrag(editor, canvas) {
   }
   async function place(id, event) {
     cancel();
+    fillKey = event.metaKey || event.ctrlKey;
     editor.tileDrag.begin(id);
     freePlacement = true;
     await nextTick();
-    pointerEvent = event;
+    const keyboard = event.type.startsWith("key");
+    pointerEvent = keyboard ? null : event;
+    keyboardPoint = keyboard
+      ? keyboardAnchor(canvas.value?.centerPoint())
+      : null;
     editor.tileDrag.move(
-      canvas.value?.pointAt(event) || canvas.value?.centerPoint(),
+      keyboardPoint ||
+        canvas.value?.pointAt(event) ||
+        canvas.value?.centerPoint(),
     );
+    canvas.value?.focus();
     window.addEventListener("pointermove", freeMove);
+    window.addEventListener("pointercancel", cancel);
     window.addEventListener("pointerdown", freeDrop, true);
     window.addEventListener("keydown", key);
     window.addEventListener("keyup", key);
     window.addEventListener("blur", cancel);
   }
-  return { begin, place, cancel, cameraMoved };
+  return { place, cancel, cameraMoved };
 }

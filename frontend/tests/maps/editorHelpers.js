@@ -1,16 +1,16 @@
+export async function pickTile(page, name = "Пол 1") {
+  await page.getByRole("tab", { name: "Предметы", exact: true }).click();
+  await page.getByRole("button", { name, exact: true }).click();
+}
 export async function dragTile(
   page,
   point,
   { name = "Пол 1", rotate = false } = {},
 ) {
-  const card = await page
-    .getByRole("button", { name, exact: true })
-    .boundingBox();
-  await page.mouse.move(card.x + card.width / 2, card.y + card.height / 2);
-  await page.mouse.down();
+  await pickTile(page, name);
   await page.mouse.move(point.x, point.y, { steps: 12 });
   if (rotate) await page.keyboard.press("r");
-  await page.mouse.up();
+  await page.mouse.click(point.x, point.y);
 }
 export async function mapPoint(page, x, y) {
   const b = await page.locator(".map-canvas-surface").boundingBox();

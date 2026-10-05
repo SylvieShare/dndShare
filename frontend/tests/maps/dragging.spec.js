@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint } from "./editorHelpers";
+import { dragTile, mapPoint, pickTile } from "./editorHelpers";
 
 async function ready(page, shaped = false) {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -55,7 +55,7 @@ test("editor defaults to selection and exposes icon sections without brush contr
       0,
     );
   await expect(page.getByLabel("Поиск плиток", { exact: true })).toHaveCount(0);
-  for (const name of ["Плитки", "Объекты", "Зоны", "Карта"])
+  for (const name of ["Карта", "Предметы", "Настройки"])
     await expect(page.getByRole("tab", { name, exact: true })).toBeVisible();
   const point = await mapPoint(page, 4.1, 4.1);
   await page.mouse.click(point.x, point.y);
@@ -128,12 +128,8 @@ test("dragging can be cancelled or dropped outside without saving a tile", async
   page,
 }) => {
   await ready(page);
-  const card = await page
-    .getByRole("button", { name: "Пол 1", exact: true })
-    .boundingBox();
   const point = await mapPoint(page, 4.5, 4.5);
-  await page.mouse.move(card.x + 30, card.y + 30);
-  await page.mouse.down();
+  await pickTile(page);
   await page.mouse.move(point.x, point.y, { steps: 8 });
   await page.keyboard.press("Escape");
   await page.mouse.up();
@@ -203,6 +199,7 @@ test("occupied drops magnetize to a free position and moving a tile is a single 
 
 test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
   await ready(page);
+  await page.getByRole("tab", { name: "Предметы", exact: true }).click();
   await page.getByRole("button", { name: "Пол 1", exact: true }).focus();
   await page.keyboard.press("Enter");
   await page.keyboard.down("ArrowLeft");

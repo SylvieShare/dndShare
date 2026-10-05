@@ -106,11 +106,14 @@ export async function createMapRenderer(host, onError, onFrame) {
     view.document(d, opts);
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
     const ids = new Set(d.tiles.map((t) => t.modelId));
-    for (const id of preview.modelIds()) ids.add(id);
+    const previewIds = preview.modelIds();
     if (opts.previewTile)
       for (const tile of opts.previewTile.group || [opts.previewTile])
-        ids.add(tile.modelId);
+        previewIds.add(tile.modelId);
+    for (const id of previewIds) ids.add(id);
     if (ids.size) await assets.ensure(ids, tier, opts);
+    // Moving tiles keep their full geometry even when the map uses distant LOD.
+    if (previewIds.size) await assets.ensure(previewIds, "render", opts);
     if (dead || id !== epoch) return;
     const placed = structure.update(d);
     placedTiles = placed;
@@ -151,7 +154,7 @@ export async function createMapRenderer(host, onError, onFrame) {
       fogKey = nextFog;
       fog.update(d, nextState, opts.master);
     }
-    preview.update(previewOptions.previewTile, tier, placed);
+    preview.update(previewOptions.previewTile, placed);
     objectPreview.update(opts.previewObject);
     anchors.update(d, structure.context(), opts);
     const hiddenIds = preview.hiddenIds();

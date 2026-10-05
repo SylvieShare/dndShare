@@ -24,7 +24,8 @@
       </option>
     </FormSelect>
     <p class="map-hint">
-      Перетащите плитку на карту. R — поворот, Esc — отмена. На карте:
+      Выберите плитку, затем нажмите на карте. R — поворот, Esc — отмена. На
+      карте:
       {{ editor.draft.document.tiles.length }}.
     </p>
     <div class="map-model-grid">
@@ -38,11 +39,11 @@
         role="button"
         tabindex="0"
         :aria-label="model.name"
-        :title="`${model.sourceCode} · ${model.sourceName} · Перетащите на карту`"
-        @pointerdown="emit('drag-tile', model.id, $event)"
+        :title="`${model.sourceCode} · ${model.sourceName} · Выберите для размещения`"
+        @click="emit('model', model.id, $event)"
         @dragstart.prevent
-        @keydown.enter.prevent.stop="emit('drag-tile', model.id, $event)"
-        @keydown.space.prevent.stop="emit('drag-tile', model.id, $event)"
+        @keydown.enter.prevent.stop="emit('model', model.id, $event)"
+        @keydown.space.prevent.stop="emit('model', model.id, $event)"
       >
         <img
           :src="model.previewUrl"
@@ -78,7 +79,7 @@ import {
   LoadingState,
 } from "@sylvieshare/share-ui";
 const props = defineProps({ editor: { type: Object, required: true } });
-const emit = defineEmits(["drag-tile"]);
+const emit = defineEmits(["model", "tool"]);
 watch(
   () => props.editor.collection,
   () => {
@@ -87,10 +88,7 @@ watch(
   },
 );
 function toggleWalls() {
-  const next = props.editor.tool === "wall-brush" ? "select" : "wall-brush";
-  props.editor.resetGesture();
-  props.editor.setTileSelection([]);
-  props.editor.tool = next;
+  emit("tool", props.editor.tool === "wall-brush" ? "select" : "wall-brush");
 }
 const type = ref("all"),
   wall = ref("all");
@@ -123,7 +121,7 @@ const filtered = computed(() =>
 <style scoped>
 .map-model-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 8px;
 }
 .map-model-card {
@@ -133,12 +131,9 @@ const filtered = computed(() =>
   flex-direction: column;
   gap: 3px;
   padding: 6px;
-  cursor: grab;
+  cursor: pointer;
   touch-action: none;
   user-select: none;
-}
-.map-model-card:active {
-  cursor: grabbing;
 }
 .map-model-card img {
   width: 100%;

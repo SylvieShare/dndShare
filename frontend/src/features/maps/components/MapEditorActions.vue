@@ -1,5 +1,16 @@
 <template>
   <WorkspaceToolsRail role="toolbar" aria-label="Действия карты">
+    <ActionButton
+      v-if="editor.draft.document.kind === 'tiles'"
+      :variant="editor.tool === 'wall-brush' ? 'primary' : 'secondary'"
+      :aria-pressed="editor.tool === 'wall-brush'"
+      aria-label="Кисть стенами"
+      title="Кисть стенами"
+      @click="
+        emit('tool', editor.tool === 'wall-brush' ? 'select' : 'wall-brush')
+      "
+      ><Paintbrush :size="20" />
+    </ActionButton>
     <span class="map-selection-count" role="status" aria-label="Выбрано плиток"
       >Выбрано: {{ editor.selectedTiles.length }}</span
     >
@@ -33,7 +44,11 @@
     <ActionButton
       v-if="editor.draft.document.kind === 'tiles'"
       variant="secondary"
-      :disabled="!editor.selection && !editor.selectedTiles.length && !editor.selectedObject"
+      :disabled="
+        !editor.selection &&
+        !editor.selectedTiles.length &&
+        !editor.selectedObject
+      "
       aria-label="Копировать участок"
       title="Копировать участок · Ctrl/Cmd+C"
       @click="editor.copy"
@@ -49,8 +64,8 @@
 </template>
 <script setup>
 import { ActionButton, RemoveButton } from "@sylvieshare/share-ui";
-import { Copy, Download, Redo2, Undo2 } from "@lucide/vue";
+import { Copy, Download, Paintbrush, Redo2, Undo2 } from "@lucide/vue";
 import WorkspaceToolsRail from "@/shared/ui/WorkspaceToolsRail.vue";
 defineProps({ editor: Object });
-const emit = defineEmits(["export"]);
+const emit = defineEmits(["export", "tool"]);
 </script>

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mapPoint, dragTile } from "./editorHelpers";
+import { mapPoint, dragTile, pickTile } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
@@ -13,14 +13,36 @@ test("shared header, global collection, floating actions and independent visibil
   expect(await page.locator(".workspace-header").boundingBox()).toMatchObject({
     height: 64,
   });
+  await expect(page.getByLabel("Название карты", { exact: true })).toHaveCount(
+    0,
+  );
   const canvas = await page.locator(".map-canvas").boundingBox(),
     actions = await page
       .getByRole("toolbar", { name: "Действия карты" })
       .boundingBox();
+  expect(canvas).toMatchObject({ x: 0, y: 64, width: 1440, height: 936 });
+  await expect(page.locator(".map-inspector")).toHaveCount(0);
+  for (const name of ["Карта", "Предметы", "Настройки"]) {
+    const tab = page.getByRole("tab", { name, exact: true });
+    await expect(tab.locator("svg")).toHaveCount(1);
+  }
   expect(actions.y).toBeGreaterThanOrEqual(canvas.y);
   expect(actions.x).toBeGreaterThan(canvas.x + canvas.width / 2);
   await page.getByRole("tab", { name: "Настройки", exact: true }).click();
-  await page.getByLabel("Показывать точки размещения").click();
+  await expect(page.getByLabel("Название карты", { exact: true })).toHaveValue(
+    "Крепость на переправе",
+  );
+  await expect(
+    page
+      .getByRole("group", { name: "Ширина карты", exact: true })
+      .getByRole("spinbutton"),
+  ).toHaveValue("12");
+  await expect(
+    page
+      .getByRole("group", { name: "Высота карты", exact: true })
+      .getByRole("spinbutton"),
+  ).toHaveValue("10");
+  await page.getByLabel("Показывать точки в пазах").click();
   await page.getByLabel("Показывать сетку", { exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.grid.visible))
@@ -28,23 +50,36 @@ test("shared header, global collection, floating actions and independent visibil
   await page.getByRole("tab", { name: "Карта", exact: true }).click();
   await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
   await page.getByRole("tab", { name: "Настройки", exact: true }).click();
-  await expect(
-    page.getByLabel("Показывать точки размещения"),
-  ).not.toBeChecked();
+  await expect(page.getByLabel("Показывать точки в пазах")).not.toBeChecked();
 });
-test("clicking a sphere inserts basic floor from the global collection", async ({
+test("ground has no clickable spheres and socket spheres insert floor from the global collection", async ({
   page,
 }) => {
   await ready(page);
   await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
   const p = await mapPoint(page, 4.5, 4.5);
   await page.mouse.click(p.x, p.y);
+  await page.waitForTimeout(1200);
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+  await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) =>
+          t.modelId.startsWith("7777"),
+        ),
+      ),
+    )
+    .toBe(true);
+  await page.waitForTimeout(800);
+  await page.mouse.click(p.x, p.y);
   await expect
     .poll(() =>
       page.evaluate(
         () =>
-          window.lastSaved?.document.tiles.find((t) => t.x === 4 && t.y === 4)
-            ?.modelId,
+          window.lastSaved?.document.tiles.find(
+            (t) => t.x === 4 && t.y === 4 && t.level === 1,
+          )?.modelId,
       ),
     )
     .toBe("88888888-8888-4888-8888-888888888888");
@@ -108,4 +143,28 @@ test("copy only stores a snapshot and repeated paste creates independent copies"
   );
   expect(new Set(ids).size).toBe(2);
   await expect(page.getByRole("alert")).toHaveCount(0);
+});
+
+test("moving tiles load full render geometry while the wide map uses LOD", async ({
+  page,
+}) => {
+  await ready(page);
+  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  for (let i = 0; i < 3; i++)
+    await page.getByTitle("Уменьшить", { exact: true }).click();
+  await pickTile(page, "Каменный пол");
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.loadedModels
+          .filter((url) => url.includes("88888888-8888-4888-8888-888888888888"))
+          .sort(),
+      ),
+    )
+    .toEqual([
+      "/api/maps/models/88888888-8888-4888-8888-888888888888/lod",
+      "/api/maps/models/88888888-8888-4888-8888-888888888888/render",
+    ]);
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+  await page.keyboard.press("Escape");
 });

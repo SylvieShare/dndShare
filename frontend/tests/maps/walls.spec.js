@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mapPoint } from "./editorHelpers";
+import { mapPoint, pickTile } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
@@ -58,20 +58,16 @@ test("command tile drag previews and fills a bounded room on release", async ({
   page,
 }) => {
   await ready(page);
-  const card = await page
-      .getByRole("button", { name: "Пол 1", exact: true })
-      .boundingBox(),
-    point = await mapPoint(page, 4.5, 4.5);
+  const point = await mapPoint(page, 4.5, 4.5);
   const before = await page.locator(".map-canvas canvas").screenshot();
-  await page.mouse.move(card.x + 30, card.y + 30);
+  await pickTile(page);
   await page.keyboard.down("Meta");
-  await page.mouse.down();
   await page.mouse.move(point.x, point.y, { steps: 12 });
   expect(
     (await page.locator(".map-canvas canvas").screenshot()).equals(before),
   ).toBe(false);
   expect(await page.evaluate(() => window.requests)).toEqual([]);
-  await page.mouse.up();
+  await page.mouse.click(point.x, point.y);
   await page.keyboard.up("Meta");
   await expect
     .poll(() =>
@@ -89,15 +85,11 @@ test("unbounded command drops do not fill the map and camera controls stay at th
   page,
 }) => {
   await ready(page);
-  const card = await page
-      .getByRole("button", { name: "Пол 1", exact: true })
-      .boundingBox(),
-    point = await mapPoint(page, 0.5, 0.5);
-  await page.mouse.move(card.x + 30, card.y + 30);
+  const point = await mapPoint(page, 0.5, 0.5);
+  await pickTile(page);
   await page.keyboard.down("Meta");
-  await page.mouse.down();
   await page.mouse.move(point.x, point.y, { steps: 8 });
-  await page.mouse.up();
+  await page.mouse.click(point.x, point.y);
   await page.keyboard.up("Meta");
   await expect(page.getByRole("alert")).toContainText("не замкнута");
   expect(await page.evaluate(() => window.requests)).toEqual([]);

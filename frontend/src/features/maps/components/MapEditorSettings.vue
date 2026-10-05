@@ -1,31 +1,18 @@
 <template>
   <section class="map-editor-settings" aria-label="Настройки редактора">
-    <ToggleSwitch
-      label="Показывать точки размещения"
-      :model-value="editor.showAnchors"
-      @update:model-value="editor.showAnchors = $event"
-    />
-    <ToggleSwitch
-      v-if="editor.draft.document.kind !== 'image'"
-      label="Показывать сетку"
-      :model-value="editor.draft.document.grid.visible"
-      @update:model-value="
-        editor.change((m) => {
-          m.document.grid.visible = $event;
-        })
-      "
-    />
+    <MapEditorInspector :editor="editor" @tool="emit('tool', $event)" />
   </section>
 </template>
 <script setup>
-import { ToggleSwitch } from "@sylvieshare/share-ui";
+import MapEditorInspector from "./MapEditorInspector.vue";
 defineProps({ editor: Object });
+const emit = defineEmits(["tool"]);
 </script>
 <style scoped>
 .map-editor-settings {
   padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  min-height: 0;
+  overflow: auto;
+  flex: 1;
 }
 </style>

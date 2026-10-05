@@ -15,14 +15,22 @@
     <template #navigation>
       <SlidingTabs
         :model-value="view"
-        :tabs="[
-          { key: 'map', title: 'Карта' },
-          { key: 'items', title: 'Предметы' },
-          { key: 'settings', title: 'Настройки' },
-        ]"
+        :tabs="tabs"
         aria-label="Режим редактора"
         @update:model-value="emit('view', $event)"
-      />
+      >
+        <template #icon="{ tab }">
+          <span
+            class="map-mode-icon"
+            role="img"
+            :aria-label="tab.label"
+            :title="tab.label"
+          >
+            <component :is="tab.icon" :size="24" aria-hidden="true" />
+            <span aria-hidden="true">{{ tab.label }}</span>
+          </span>
+        </template>
+      </SlidingTabs>
     </template>
     <template #actions>
       <div class="map-global-collection">
@@ -61,9 +69,14 @@
 <script setup>
 import { ActionButton, FormSelect, SlidingTabs } from "@sylvieshare/share-ui";
 import { computed } from "vue";
-import { ArrowLeft, Save } from "@lucide/vue";
+import { ArrowLeft, Box, Map as MapIcon, Save, Settings2 } from "@lucide/vue";
 import WorkspaceHeader from "@/shared/ui/WorkspaceHeader.vue";
 const props = defineProps({ editor: Object, view: String });
+const tabs = [
+  { key: "map", label: "Карта", icon: MapIcon },
+  { key: "items", label: "Предметы", icon: Box },
+  { key: "settings", label: "Настройки", icon: Settings2 },
+];
 const emit = defineEmits(["close", "view", "collection"]);
 const collections = computed(() => [
   ...new Map(
@@ -75,6 +88,16 @@ const collections = computed(() => [
 ]);
 </script>
 <style scoped>
+.map-mode-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 54px;
+  gap: 5px;
+  font-size: 10px;
+}
 .map-global-collection {
   width: 180px;
   max-width: 28vw;

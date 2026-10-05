@@ -36,7 +36,6 @@ test("grid lines remain visible in empty space and are occluded by model geometr
       ),
     )
     .toBe(true);
-  await page.getByRole("tab", { name: "Свойства карты", exact: true }).click();
   const canvas = page.locator(".map-canvas canvas"),
     bounds = await canvas.boundingBox();
   const inside = await mapPoint(page, 5, 4.5),
@@ -48,7 +47,9 @@ test("grid lines remain visible in empty space and are occluded by model geometr
     height: 16,
   });
   const withGrid = await canvas.screenshot({ animations: "disabled" });
+  await page.getByRole("tab", { name: "Настройки", exact: true }).click();
   await page.getByLabel("Показывать сетку", { exact: true }).click();
+  await page.getByRole("tab", { name: "Карта", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.grid.visible))
     .toBe(false);

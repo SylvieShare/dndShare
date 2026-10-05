@@ -26,7 +26,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
     }
     root.clear();
   }
-  function update(tile, tier, placed = []) {
+  function update(tile, placed = []) {
     if (tile) {
       if (!active && (!tile.id || tile.id !== target?.id)) {
         position = null;
@@ -55,7 +55,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
     tile = target;
     root.userData.outlineStyle = tile?.wallBrush ? "hover" : "selected";
     const group = tile?.group || (tile ? [tile] : []);
-    const nextKey = group.map((t) => `${t.modelId}:${tier}`).join(",");
+    const nextKey = group.map((t) => t.modelId).join(",");
     if (key !== nextKey) {
       clear();
       key = nextKey;
@@ -66,7 +66,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       });
       for (const [id, indices] of buckets) {
         const metadata = assets.metadata(id),
-          model = assets.model(id, tier);
+          model = assets.model(id, "render");
         if (!metadata || !model) continue;
         for (const part of model.parts) {
           const materials = (

@@ -283,6 +283,7 @@ window.EventSource = class {
   }
   close() {}
 };
+window.loadedModels = [];
 const nativeFetch = window.fetch.bind(window);
 window.fetch = async (url, options = {}) => {
   const rawUrl = typeof url === "string" ? url : url.url;
@@ -294,6 +295,7 @@ window.fetch = async (url, options = {}) => {
       url,
     )
   ) {
+    window.loadedModels.push(url);
     if (params.has("realModels")) return nativeFetch(rawUrl, options);
     return new Response(
       url.includes(FRAME)

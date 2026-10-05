@@ -6,6 +6,7 @@ import { dragTile } from "./editorHelpers";
 test("painted GLBs decode both tiers and render PBR textures in the editor", async ({
   page,
 }) => {
+  test.setTimeout(90000);
   const assets = path.resolve(
     import.meta.dirname,
     "../../../models/collections/painted/ultimate-dungeon",

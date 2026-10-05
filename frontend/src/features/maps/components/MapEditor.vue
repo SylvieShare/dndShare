@@ -16,12 +16,16 @@
       :editor="e"
       @model="placeModel"
       @object="placeObject"
+      @tool="startTool"
     />
-    <MapEditorSettings v-if="view === 'settings'" :editor="e" />
+    <MapEditorSettings
+      v-if="view === 'settings'"
+      :editor="e"
+      @tool="startTool"
+    />
     <div v-show="view === 'map'" class="map-editor">
-      <MapEditorInspector :editor="e" @drag-tile="catalogueDrag.begin" />
       <div class="map-editor-main">
-        <MapEditorActions :editor="e" @export="exportMap" />
+        <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
         <div v-if="e.error" class="map-error" role="alert">
           {{ e.error }}
           <ActionButton v-if="!e.conflict" variant="quiet" @click="e.save"
@@ -92,7 +96,6 @@ import MapEditorActions from "./MapEditorActions.vue";
 import MapItemsLibrary from "./MapItemsLibrary.vue";
 import MapEditorSettings from "./MapEditorSettings.vue";
 import MapCanvas from "./MapCanvas.vue";
-import MapEditorInspector from "./MapEditorInspector.vue";
 import { useMapEditor } from "../composables/useMapEditor";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
 import { useTileConnections } from "../composables/useTileConnections";
@@ -109,6 +112,10 @@ function setView(next) {
   catalogueDrag.cancel();
   e.resetGesture();
   view.value = next;
+}
+function startTool(tool) {
+  setView("map");
+  e.tool = tool;
 }
 async function placeModel(id, event) {
   setView("map");
@@ -135,7 +142,7 @@ async function placeObject(kind) {
 const toolHint = computed(
   () =>
     ({
-      select: "Тайл из каталога: перетащить · R: поворот",
+      select: "Предметы: выбрать плитку · R: поворот",
       object: "Нажмите, чтобы поставить объект",
       zone: "Протяните область зоны",
       "zone-brush": "Закрасьте клетки зоны",

@@ -1,19 +1,13 @@
 <template>
-  <aside class="map-inspector">
+  <section class="map-properties">
     <SlidingTabs v-model="tab" :tabs="tabs" aria-label="Инструменты карты">
       <template #icon="{ tab: item }">
-        <span :title="item.label" role="img" :aria-label="item.label">
+        <span aria-hidden="true">
           <component :is="item.icon" :size="20" aria-hidden="true" />
         </span>
       </template>
     </SlidingTabs>
-    <template v-if="tab === 'paint'">
-      <MapTilePalette
-        :editor="editor"
-        @drag-tile="(id, event) => emit('drag-tile', id, event)"
-      />
-    </template>
-    <template v-else-if="tab === 'objects'">
+    <template v-if="tab === 'objects'">
       <p class="map-hint">
         Объекты располагаются поверх покрытия. Выбранный объект можно
         перемещать, поворачивать и открывать.
@@ -31,7 +25,7 @@
       >
       <ActionButton
         :variant="editor.tool === 'object' ? 'primary' : 'secondary'"
-        @click="editor.tool = 'object'"
+        @click="emit('tool', 'object')"
         ><Plus :size="16" />Разместить на карте</ActionButton
       >
       <template v-if="object">
@@ -104,13 +98,13 @@
         />
         <ActionButton
           :variant="editor.tool === 'zone' ? 'primary' : 'secondary'"
-          @click="editor.tool = 'zone'"
+          @click="emit('tool', 'zone')"
           ><Square :size="16" />Добавить область</ActionButton
         >
         <ActionButton
           v-if="d.kind !== 'image'"
           :variant="editor.tool === 'zone-brush' ? 'primary' : 'secondary'"
-          @click="editor.tool = 'zone-brush'"
+          @click="emit('tool', 'zone-brush')"
           ><Paintbrush :size="16" />Добавить клетки</ActionButton
         >
         <ActionButton
@@ -138,6 +132,12 @@
       </template>
     </template>
     <template v-else>
+      <ToggleSwitch
+        v-if="d.kind === 'tiles'"
+        label="Показывать точки в пазах"
+        :model-value="editor.showAnchors"
+        @update:model-value="editor.showAnchors = $event"
+      />
       <FormField label="Название" vertical
         ><FormTextInput
           :value="editor.draft.name"
@@ -154,6 +154,8 @@
         :hint="d.kind === 'image' ? 'условные единицы' : 'клеток'"
         ><FormNumberInput
           :value="d.width"
+          role="group"
+          aria-label="Ширина карты"
           :min="2"
           :max="Math.min(160, Math.floor(16000 / d.height))"
           @change="resize($event, d.height)"
@@ -163,6 +165,8 @@
         :hint="d.kind === 'image' ? 'условные единицы' : 'клеток'"
         ><FormNumberInput
           :value="d.height"
+          role="group"
+          aria-label="Высота карты"
           :min="2"
           :max="Math.min(160, Math.floor(16000 / d.width))"
           @change="resize(d.width, $event)"
@@ -240,7 +244,7 @@
       "
       @cancel="pendingSize = null"
     />
-  </aside>
+  </section>
 </template>
 <script setup>
 import { computed, ref, watch } from "vue";
@@ -256,7 +260,6 @@ import {
 } from "@sylvieshare/share-ui";
 import {
   Box,
-  Layers,
   Paintbrush,
   Plus,
   RotateCw,
@@ -266,36 +269,31 @@ import {
   Upload,
 } from "@lucide/vue";
 import { interactive, OBJECTS } from "../lib/mapModel";
-import MapTilePalette from "./MapTilePalette.vue";
 const props = defineProps({ editor: { type: Object, required: true } });
-const emit = defineEmits(["drag-tile"]);
+const emit = defineEmits(["tool"]);
 const d = computed(() => props.editor.draft.document),
-  tab = ref(d.value.kind === "tiles" ? "paint" : "settings"),
+  tab = ref("settings"),
   fileInput = ref(null),
   uploading = ref(false),
   uploadError = ref(""),
   pendingSize = ref(null);
-const tabs = computed(() => [
-  ...(d.value.kind === "tiles"
-    ? [{ key: "paint", label: "Плитки", icon: Layers }]
-    : []),
-  { key: "objects", label: "Объекты", icon: Box },
-  { key: "zones", label: "Зоны", icon: Square },
-  { key: "settings", label: "Свойства карты", icon: Settings2 },
-]);
+const tabs = [
+  {
+    key: "settings",
+    title: "Свойства карты",
+    label: "Свойства карты",
+    icon: Settings2,
+  },
+  { key: "zones", title: "Зоны", label: "Зоны", icon: Square },
+  { key: "objects", title: "Объекты", label: "Объекты", icon: Box },
+];
 const object = computed(() =>
     d.value.objects.find((o) => o.id === props.editor.selectedObject),
   ),
   zone = computed(() =>
     d.value.zones.find((z) => z.id === props.editor.selectedZone),
   );
-watch(tab, (v) => {
-  props.editor.resetGesture();
-  props.editor.hoveredTile = "";
-  props.editor.setTileSelection([]);
-  props.editor.selectedObject = "";
-  props.editor.tool = v === "zones" ? "zone" : "select";
-});
+watch(tab, () => props.editor.resetGesture());
 function resize(w, h) {
   if (w < d.value.width || h < d.value.height) pendingSize.value = [w, h];
   else props.editor.resize(w, h);

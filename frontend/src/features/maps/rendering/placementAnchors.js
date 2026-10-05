@@ -11,23 +11,11 @@ export function createPlacementAnchors() {
     geometry = new SphereGeometry(0.055, 8, 6),
     matrix = new Matrix4();
   const materials = {
-    gray: new MeshBasicMaterial({
-      color: 0x8c939d,
-      transparent: true,
-      opacity: 0.12,
-      depthWrite: false,
-    }),
     green: new MeshBasicMaterial({
       color: 0x73c99a,
-      transparent: true,
-      opacity: 0.65,
-      depthWrite: false,
     }),
     purple: new MeshBasicMaterial({
       color: 0xb399e5,
-      transparent: true,
-      opacity: 0.9,
-      depthWrite: false,
     }),
   };
   let key = "";
@@ -39,8 +27,7 @@ export function createPlacementAnchors() {
     root.visible = !!options.showAnchors && document.kind === "tiles";
     if (!root.visible) return;
     const ignored = new Set(options.previewTile?.tileIds || []),
-      active = new Set(),
-      near = new Set();
+      active = new Set();
     for (const tile of options.previewTile?.group ||
       (options.previewTile ? [options.previewTile] : [])) {
       const size = tileSize(tile, context.models.get(tile.modelId));
@@ -48,26 +35,7 @@ export function createPlacementAnchors() {
         for (let x = tile.x; x < tile.x + size.width; x++)
           active.add(`${x},${y},${tile.level}`);
     }
-    for (const [cell, id] of context.occupied) {
-      if (ignored.has(id)) continue;
-      const [x, y, level] = cell.split(",").map(Number);
-      if (level) continue;
-      for (let dy = -1; dy <= 1; dy++)
-        for (let dx = -1; dx <= 1; dx++) near.add(`${x + dx},${y + dy}`);
-    }
-    const groups = { gray: [], green: [], purple: [] };
-    for (let y = 0; y < document.height; y++)
-      for (let x = 0; x < document.width; x++) {
-        const cell = `${x},${y},0`,
-          occupant = context.occupied.get(cell);
-        if (occupant && !ignored.has(occupant)) continue;
-        const colour = active.has(cell)
-          ? "purple"
-          : near.has(`${x},${y}`)
-            ? "green"
-            : "gray";
-        groups[colour].push({ x: x + 0.5, y: y + 0.5, level: 0, elevation: 0 });
-      }
+    const groups = { green: [], purple: [] };
     for (const [cell, slot] of context.sockets) {
       const occupant = context.occupied.get(cell);
       if (ignored.has(slot.parent) || (occupant && !ignored.has(occupant)))

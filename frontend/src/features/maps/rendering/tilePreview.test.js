@@ -6,7 +6,10 @@ it("eases vertical snapping in the actual instance transform", () => {
     material = new MeshStandardMaterial();
   const preview = createTilePreview({
     metadata: () => ({ width: 1, height: 1 }),
-    model: () => ({ parts: [{ geometry, material, matrix: new Matrix4() }] }),
+    model: (_, tier) =>
+      tier === "render"
+        ? { parts: [{ geometry, material, matrix: new Matrix4() }] }
+        : null,
   });
   const tile = {
     id: "tile",
@@ -17,9 +20,9 @@ it("eases vertical snapping in the actual instance transform", () => {
     level: 0,
     elevation: 0,
   };
-  preview.update(tile, "render");
+  preview.update(tile);
   preview.advance(16);
-  preview.update({ ...tile, level: 1, elevation: 0.6 }, "render");
+  preview.update({ ...tile, level: 1, elevation: 0.6 });
   expect(preview.advance(16)).toBe(true);
   const matrix = new Matrix4(),
     position = new Vector3();

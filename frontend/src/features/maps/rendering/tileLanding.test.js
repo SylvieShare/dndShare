@@ -36,14 +36,14 @@ it("raises a tile, hides the committed copy during descent, and restores it afte
     preview.root.children[0].getMatrixAt(0, matrix);
     return new Vector3().setFromMatrixPosition(matrix).y;
   };
-  preview.update(tile, "render");
+  preview.update(tile);
   preview.advance(16);
   expect(y()).toBeGreaterThan(0.4);
   expect(y()).toBeLessThan(0.65);
   preview.advance(3000);
   expect(y()).toBeCloseTo(0.65);
   const placed = { ...tile, id: "new" };
-  preview.update(null, "render", [placed]);
+  preview.update(null, [placed]);
   expect(preview.hiddenIds()).toEqual(["new"]);
   preview.advance(80);
   expect(y()).toBeGreaterThan(0.4);

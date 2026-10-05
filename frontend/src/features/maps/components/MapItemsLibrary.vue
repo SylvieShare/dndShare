@@ -18,40 +18,25 @@
         ><Box :size="28" /><span>{{ object.name }}</span></BaseTile
       >
     </div>
-    <h2>Модели коллекции</h2>
-    <div class="map-items-grid">
-      <BaseTile
-        v-for="model in models"
-        :key="model.id"
-        interactive
-        role="button"
-        tabindex="0"
-        :aria-label="model.name"
-        @click="emit('model', model.id, $event)"
-        @keydown.enter.prevent="emit('model', model.id, $event)"
-        ><img :src="model.previewUrl" alt="" width="140" height="140" /><span>{{
-          model.name
-        }}</span
-        ><small>{{ model.sourceCode }}</small></BaseTile
-      >
-    </div>
+    <template v-if="editor.draft.document.kind === 'tiles'">
+      <h2>Плитки коллекции</h2>
+      <div class="map-items-palette">
+        <MapTilePalette
+          :editor="editor"
+          @model="(id, event) => emit('model', id, event)"
+          @tool="emit('tool', $event)"
+        />
+      </div>
+    </template>
   </section>
 </template>
 <script setup>
-import { computed } from "vue";
 import { BaseTile } from "@sylvieshare/share-ui";
 import { Box } from "@lucide/vue";
 import { OBJECTS } from "../lib/mapModel";
-import { latestModelVersions } from "../lib/modelVersions";
-const props = defineProps({ editor: Object }),
-  emit = defineEmits(["model", "object"]);
-const models = computed(() =>
-  latestModelVersions(props.editor.catalogue).filter(
-    (m) =>
-      m.collection === props.editor.collection &&
-      ["prop", "stairs"].includes(m.tileType),
-  ),
-);
+import MapTilePalette from "./MapTilePalette.vue";
+defineProps({ editor: Object });
+const emit = defineEmits(["model", "object", "tool"]);
 </script>
 <style scoped>
 .map-items-library {
@@ -76,6 +61,11 @@ const models = computed(() =>
   gap: 10px;
   padding: 14px;
   cursor: pointer;
+}
+.map-items-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 .map-items-grid img {
   object-fit: contain;
