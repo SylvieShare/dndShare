@@ -35,3 +35,12 @@ export const saveMapDisplay = (uuid, display) =>
   fetchPut(`/sessions/${uuid}/map-display`, display);
 export const getPublicMap = (code) =>
   fetchGet(`/public/sessions/${encodeURIComponent(code)}/map`);
+
+export async function saveMapModelMetadata(id, metadata) {
+  const model = await fetchPut(
+    `/maps/models/${encodeURIComponent(id)}`,
+    metadata,
+  );
+  resetMapModels();
+  return model;
+}

@@ -14,26 +14,25 @@
         aria-hidden="true"
       />
       <template v-if="mode === 'edge'">
-        <line
-          v-for="(index, side) in [0, 2, 4, 6]"
-          :key="index"
-          :x1="points[[7, 1, 3, 5][side]].x"
-          :y1="points[[7, 1, 3, 5][side]].y"
-          :x2="points[[1, 3, 5, 7][side]].x"
-          :y2="points[[1, 3, 5, 7][side]].y"
-          class="map-connection-side"
-          :class="{ 'map-connection-active': !!(mask & (1 << index)) }"
+        <g
+          v-for="wall in walls"
+          :key="wall.index"
+          class="map-connection-wall"
+          :class="{ 'map-connection-active': !!(mask & (1 << wall.index)) }"
           tabindex="0"
           role="button"
-          :aria-label="`Сторона: ${CONNECTIONS[index].label}`"
-          :aria-pressed="!!(mask & (1 << index))"
+          :aria-label="`Сторона: ${CONNECTIONS[wall.index].label}`"
+          :aria-pressed="!!(mask & (1 << wall.index))"
           @pointerdown.stop
-          @click="emit('toggle', index)"
-          @keydown.enter.prevent="emit('toggle', index)"
-          @keydown.space.prevent="emit('toggle', index)"
+          @click="emit('toggle', wall.index)"
+          @keydown.enter.prevent="emit('toggle', wall.index)"
+          @keydown.space.prevent="emit('toggle', wall.index)"
         >
-          <title>{{ CONNECTIONS[index].label }}</title>
-        </line>
+          <title>{{ CONNECTIONS[wall.index].label }}</title>
+          <polygon :points="wall.front" class="map-connection-wall-face" />
+          <polygon :points="wall.side" class="map-connection-wall-side" />
+          <polygon :points="wall.top" class="map-connection-wall-top" />
+        </g>
       </template>
       <template v-else>
         <circle
@@ -70,13 +69,16 @@
   </div>
 </template>
 <script setup>
+import { computed } from "vue";
+import { connectionWallShapes } from "../lib/connectionWalls";
 import { CONNECTIONS } from "../lib/tileConnections";
-defineProps({
+const props = defineProps({
   points: { type: Array, default: () => [] },
   mask: Number,
   invalid: Boolean,
   mode: { type: String, default: "center" },
 });
+const walls = computed(() => connectionWallShapes(props.points));
 const emit = defineEmits(["toggle"]);
 </script>
 <style scoped>
@@ -92,7 +94,7 @@ const emit = defineEmits(["toggle"]);
   overflow: visible;
   filter: drop-shadow(0 1px 2px var(--bg));
 }
-.map-connection-plane polygon {
+.map-connection-plane > polygon {
   fill: color-mix(in srgb, var(--accent) 18%, transparent);
   stroke: var(--text-1);
   stroke-width: 2;
@@ -108,16 +110,27 @@ const emit = defineEmits(["toggle"]);
   fill: var(--accent-soft);
   stroke: var(--text-on-accent);
 }
-.map-connection-side {
-  stroke: var(--text-1);
-  stroke-width: 6;
-  stroke-linecap: round;
-  pointer-events: stroke;
+.map-connection-wall {
+  pointer-events: auto;
   cursor: pointer;
 }
-.map-connection-side.map-connection-active {
-  stroke: var(--accent-soft);
-  stroke-width: 8;
+.map-connection-wall polygon {
+  fill: var(--surface);
+  stroke: var(--text-1);
+  stroke-width: 1.5;
+  pointer-events: all;
+}
+.map-connection-wall .map-connection-wall-top {
+  fill: var(--surface-raised);
+}
+.map-connection-wall.map-connection-active polygon {
+  fill: var(--accent-soft);
+  stroke: var(--text-on-accent);
+}
+.map-connection-wall:hover polygon,
+.map-connection-wall:focus polygon {
+  stroke: var(--accent);
+  stroke-width: 3;
 }
 .map-connection-point:hover,
 .map-connection-point:focus {
@@ -125,8 +138,7 @@ const emit = defineEmits(["toggle"]);
   stroke-width: 3;
 }
 .map-tile-connections--invalid polygon,
-.map-tile-connections--invalid .map-connection-point,
-.map-tile-connections--invalid .map-connection-side {
+.map-tile-connections--invalid .map-connection-point {
   stroke: var(--danger);
 }
 .map-tile-connections--invalid .map-connection-active {

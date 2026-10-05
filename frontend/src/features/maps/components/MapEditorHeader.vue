@@ -27,7 +27,7 @@
             :title="tab.label"
           >
             <component :is="tab.icon" :size="24" aria-hidden="true" />
-            <span aria-hidden="true">{{ tab.label }}</span>
+            <span aria-hidden="true">{{ tab.caption || tab.label }}</span>
           </span>
         </template>
       </SlidingTabs>
@@ -69,14 +69,31 @@
 <script setup>
 import { ActionButton, FormSelect, SlidingTabs } from "@sylvieshare/share-ui";
 import { computed } from "vue";
-import { ArrowLeft, Box, Map as MapIcon, Save, Settings2 } from "@lucide/vue";
+import {
+  ArrowLeft,
+  BookOpenText,
+  Box,
+  Map as MapIcon,
+  Save,
+  Settings2,
+} from "@lucide/vue";
 import WorkspaceHeader from "@/shared/ui/WorkspaceHeader.vue";
-const props = defineProps({ editor: Object, view: String });
-const tabs = [
+const props = defineProps({ editor: Object, view: String, admin: Boolean });
+const tabs = computed(() => [
   { key: "map", label: "Карта", icon: MapIcon },
   { key: "items", label: "Предметы", icon: Box },
   { key: "settings", label: "Настройки", icon: Settings2 },
-];
+  ...(props.admin
+    ? [
+        {
+          key: "reference",
+          label: "Справочник тайлов",
+          caption: "Справочник",
+          icon: BookOpenText,
+        },
+      ]
+    : []),
+]);
 const emit = defineEmits(["close", "view", "collection"]);
 const collections = computed(() => [
   ...new Map(

@@ -13,11 +13,12 @@ func TestPrivateMapRoutesRequireAuthentication(t *testing.T) {
 	mux := http.NewServeMux()
 	s.routesBattleMaps(mux)
 	s.routesMapModels(mux)
+	s.routesMapModelEditing(mux)
 	for _, route := range []string{
 		"GET /api/maps", "POST /api/maps", "PUT /api/maps/system-dungeon", "DELETE /api/maps/system-dungeon",
 		"GET /api/sessions/test/maps", "POST /api/sessions/test/maps", "PUT /api/sessions/test/maps/test-map",
 		"DELETE /api/sessions/test/maps/test-map", "PUT /api/sessions/test/map-display", "GET /api/sessions/test/map-events",
-		"GET /api/maps/models", "GET /api/maps/models/test/render",
+		"GET /api/maps/models", "GET /api/maps/models/test/render", "PUT /api/maps/models/test",
 	} {
 		t.Run(route, func(t *testing.T) {
 			method, path, _ := strings.Cut(route, " ")

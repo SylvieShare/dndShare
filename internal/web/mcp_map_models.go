@@ -3,9 +3,7 @@ package web
 import (
 	"encoding/json"
 	"errors"
-	"math"
 	"net/http"
-	"strings"
 
 	"dndshare/internal/battlemap"
 )
@@ -70,62 +68,4 @@ func (s *Server) toolMapModels(r *http.Request, name string, args map[string]jso
 		return s.store.RegisterMapModel(r.Context(), model)
 	}
 	return nil, errors.New("unknown map model tool")
-}
-
-func validateMapModel(m battlemap.Model) error {
-	if !isUUID(m.ID) || m.Collection == "" || m.SourceCode == "" || m.SourceName == "" || strings.TrimSpace(m.Name) == "" || m.Version < 1 || len([]rune(m.Name)) > 160 || len(m.Collection) > 80 || len(m.SourceCode) > 80 || len(m.SourceName) > 255 {
-		return errors.New("invalid model identity or names")
-	}
-	if m.TileType != "floor" && m.TileType != "wall" && m.TileType != "prop" && m.TileType != "stairs" && m.TileType != "frame" {
-		return errors.New("invalid tileType")
-	}
-	if m.CollectionName == "" || len(m.CollectionName) > 160 || (m.WallMode != "center" && m.WallMode != "edge" && m.WallMode != "none") || m.WallMask < 0 || m.WallMask > 255 {
-		return errors.New("invalid collection label or wall controls")
-	}
-	if m.TerrainType == "" || len(m.TerrainType) > 32 || len(m.WallLayout) > 32 || m.Width < 1 || m.Height < 1 || m.Width > 8 || m.Height > 8 || m.SurfaceHeight < 0 || m.MaxHeight < m.SurfaceHeight || m.MaxHeight > 32 {
-		return errors.New("invalid model geometry")
-	}
-	if math.IsNaN(m.MountDepth) || math.IsInf(m.MountDepth, 0) || m.MountDepth < 0 || m.MountDepth > m.SurfaceHeight {
-		return errors.New("invalid model mounting depth")
-	}
-	for _, offset := range m.PlacementOffset {
-		if math.IsNaN(offset) || math.IsInf(offset, 0) || math.Abs(offset) > 8 {
-			return errors.New("invalid model placement offset")
-		}
-	}
-	if len(m.Blockers) > 100 || len(m.Tags) > 32 {
-		return errors.New("too many geometry contours or tags")
-	}
-	if len(m.SupportSlots) > 64 {
-		return errors.New("too many support slots")
-	}
-	for i, slot := range m.SupportSlots {
-		if slot.X < 0 || slot.Y < 0 || slot.Width < 1 || slot.Height < 1 || slot.X+slot.Width > m.Width || slot.Y+slot.Height > m.Height || slot.Elevation <= m.MountDepth || slot.Elevation > m.MaxHeight+.001 {
-			return errors.New("invalid support slot")
-		}
-		for _, other := range m.SupportSlots[:i] {
-			if slot.X < other.X+other.Width && slot.X+slot.Width > other.X && slot.Y < other.Y+other.Height && slot.Y+slot.Height > other.Y {
-				return errors.New("overlapping support slots")
-			}
-		}
-	}
-	for _, p := range m.Blockers {
-		if len(p) < 3 || len(p) > 500 {
-			return errors.New("invalid blocker polygon")
-		}
-		for _, v := range p {
-			if v[0] < -.01 || v[1] < -.01 || v[0] > float64(m.Width)+.01 || v[1] > float64(m.Height)+.01 {
-				return errors.New("blocker point outside footprint")
-			}
-		}
-	}
-	if len(m.Assets) != 4 {
-		return errors.New("four model assets required")
-	}
-	for _, key := range []string{"render", "lod", "preview", "source"} {
-		if _, ok := m.Assets[key]; !ok {
-			return errors.New("missing model asset " + key)
-		}
-	}
-	return nil
 }

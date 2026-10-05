@@ -5,6 +5,7 @@ import { createPinia } from "pinia";
 import { createRouter, createMemoryHistory, RouterView } from "vue-router";
 import { useAccountStore } from "../../../src/stores/account";
 import MapLibrary from "../../../src/features/maps/components/MapLibrary.vue";
+import MapEditorHeader from "../../../src/features/maps/components/MapEditorHeader.vue";
 import ViewMapEditor from "../../../src/features/maps/pages/ViewMapEditor.vue";
 import SessionMapWorkspace from "../../../src/features/maps/components/SessionMapWorkspace.vue";
 import ViewMapScreen from "../../../src/features/maps/pages/ViewMapScreen.vue";
@@ -283,6 +284,7 @@ window.EventSource = class {
   }
   close() {}
 };
+const modelAssetAliases = new Map();
 window.loadedModels = [];
 const nativeFetch = window.fetch.bind(window);
 window.fetch = async (url, options = {}) => {
@@ -297,14 +299,19 @@ window.fetch = async (url, options = {}) => {
   ) {
     window.loadedModels.push(url);
     if (params.has("realModels")) return nativeFetch(rawUrl, options);
+    const modelId = url.split("/")[4];
+    const assetUrl = url.replace(
+      modelId,
+      modelAssetAliases.get(modelId) || modelId,
+    );
     return new Response(
-      url.includes(FRAME)
+      assetUrl.includes(FRAME)
         ? frameGlb
-        : url.includes(BRIDGE)
+        : assetUrl.includes(BRIDGE)
           ? bridgeGlb
-          : url.includes(PEG)
+          : assetUrl.includes(PEG)
             ? pegGlb
-            : url.includes(WALL)
+            : assetUrl.includes(WALL)
               ? wallGlb
               : glb,
       {
@@ -335,6 +342,43 @@ window.fetch = async (url, options = {}) => {
       }),
       { status },
     );
+  }
+  if (options.method === "PUT" && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
+    const old = catalogue.find((m) => m.id === url.split("/")[4]);
+    if (!old) return new Response("{}", { status: 404 });
+    const latest = catalogue
+      .filter(
+        (m) =>
+          m.collection === old.collection &&
+          m.sourceCode === old.sourceCode &&
+          m.sourceName === old.sourceName,
+      )
+      .sort((a, b) => b.version - a.version)[0];
+    if (latest.id !== old.id || window.failNextModelSave) {
+      window.failNextModelSave = false;
+      return new Response(
+        JSON.stringify({
+          desc: "Параметры тайла уже изменены. Обновите справочник.",
+        }),
+        { status: 409 },
+      );
+    }
+    const id = crypto.randomUUID();
+    const saved = {
+      ...old,
+      ...data,
+      id,
+      version: latest.version + 1,
+      renderUrl: `/api/maps/models/${id}/render`,
+      lodUrl: `/api/maps/models/${id}/lod`,
+      previewUrl: old.previewUrl,
+    };
+    catalogue.push(saved);
+    modelAssetAliases.set(id, modelAssetAliases.get(old.id) || old.id);
+    window.lastModelSaved = saved;
+    return new Response(JSON.stringify(saved), {
+      headers: { "Content-Type": "application/json" },
+    });
   }
   let result;
   if (url === "/api/maps") {
@@ -385,7 +429,11 @@ const router = createRouter({
 const pinia = createPinia(),
   account = useAccountStore(pinia);
 account.status = "success";
-account.user = { id: 1, login: "tester", roles: ["ADMIN"] };
+account.user = {
+  id: 1,
+  login: "tester",
+  roles: params.has("noAdmin") ? [] : ["ADMIN"],
+};
 await router.push(
   mode === "library"
     ? "/maps"
@@ -396,22 +444,28 @@ await router.push(
 window.mapRoute = () => router.currentRoute.value.fullPath;
 createApp({
   render: () =>
-    mode === "editor" || mode === "library"
-      ? h(RouterView)
-      : mode === "screen"
-        ? h(ViewMapScreen)
-        : h(
-            "div",
-            { style: "height:95vh;padding:16px;box-sizing:border-box" },
-            [
-              h(SessionMapWorkspace, {
-                sessionUuid: "test",
-                session: { displayCode: "ABC-123" },
-                participants: [],
-                encounter: { encounter: { combatants: [] } },
-              }),
-            ],
-          ),
+    mode === "header"
+      ? h(MapEditorHeader, {
+          editor: { draft: source, catalogue, dirty: false },
+          view: "map",
+          admin: account.hasRole("ADMIN"),
+        })
+      : mode === "editor" || mode === "library"
+        ? h(RouterView)
+        : mode === "screen"
+          ? h(ViewMapScreen)
+          : h(
+              "div",
+              { style: "height:95vh;padding:16px;box-sizing:border-box" },
+              [
+                h(SessionMapWorkspace, {
+                  sessionUuid: "test",
+                  session: { displayCode: "ABC-123" },
+                  participants: [],
+                  encounter: { encounter: { combatants: [] } },
+                }),
+              ],
+            ),
 })
   .use(pinia)
   .use(router)

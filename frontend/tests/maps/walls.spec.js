@@ -13,6 +13,7 @@ test("wall brush previews corners and commits one connected stroke", async ({
 }) => {
   await ready(page);
   await page
+    .getByRole("toolbar", { name: "Действия карты" })
     .getByRole("button", { name: "Кисть стенами", exact: true })
     .click();
   const first = await mapPoint(page, 4.5, 3.5),

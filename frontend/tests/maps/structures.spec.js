@@ -24,12 +24,17 @@ test("collection filters and full-size side wall controls", async ({
     name: "Сторона: Север",
     exact: true,
   });
+  const bounds = await north.boundingBox();
   const host = await page.locator(".map-canvas-surface").boundingBox();
   const cell = Math.min((host.width - 40) / 12, (host.height - 40) / 10);
-  expect(
-    Number(await north.getAttribute("x2")) -
-      Number(await north.getAttribute("x1")),
-  ).toBeCloseTo(cell, 0);
+  expect(bounds.width).toBeGreaterThanOrEqual(cell - 3);
+  expect(bounds.height).toBeGreaterThanOrEqual(18);
+  await expect(north.locator("polygon")).toHaveCount(3);
+  await page.mouse.click(
+    bounds.x + bounds.width / 2,
+    bounds.y + bounds.height / 2,
+  );
+  await expect(north).toHaveAttribute("aria-pressed", "false");
 });
 test("a frame supports upper tiles, carries them and deletes the dependent stack", async ({
   page,

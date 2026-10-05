@@ -169,10 +169,10 @@
 }
 
 .map-editor-workspace > .map-editor {
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr);
+  display: flex;
 }
 .map-editor-workspace .map-editor-main {
+  flex: 1;
   gap: 0;
   padding: 0;
 }

@@ -20,7 +20,7 @@ test("shared header, global collection, floating actions and independent visibil
     actions = await page
       .getByRole("toolbar", { name: "Действия карты" })
       .boundingBox();
-  expect(canvas).toMatchObject({ x: 0, y: 64, width: 1440, height: 936 });
+  expect(canvas).toMatchObject({ x: 286, y: 64, width: 1154, height: 936 });
   await expect(page.locator(".map-inspector")).toHaveCount(0);
   for (const name of ["Карта", "Предметы", "Настройки"]) {
     const tab = page.getByRole("tab", { name, exact: true });

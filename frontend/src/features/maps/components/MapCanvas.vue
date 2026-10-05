@@ -58,7 +58,13 @@
       @fit="fit"
       @toggle-view="toggleView"
     />
-    <p v-if="!readonly && hint" class="map-controls-hint">{{ hint }}</p>
+    <ul
+      v-if="!readonly && hintLines.length"
+      class="map-controls-hint"
+      aria-label="Управление картой"
+    >
+      <li v-for="(line, index) in hintLines" :key="index">{{ line }}</li>
+    </ul>
     <div v-if="document.credit" class="map-credit">
       <a
         v-if="document.credit.source"
@@ -73,7 +79,7 @@
   </div>
 </template>
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
@@ -111,10 +117,13 @@ const props = defineProps({
   publicCode: String,
   tabletop: Boolean,
   hint: {
-    type: String,
+    type: [String, Array],
     default: "Колесо: масштаб · Alt: перемещение · ПКМ/Shift: вращение",
   },
 });
+const hintLines = computed(() =>
+  Array.isArray(props.hint) ? props.hint : (props.hint || "").split(/\s*·\s*/),
+);
 const emit = defineEmits(["gesture", "view", "connection", "camera-move"]);
 const host = ref(null),
   loading = ref(true),
@@ -328,7 +337,8 @@ defineExpose({
   position: absolute;
   bottom: 16px;
   left: 16px;
-  max-width: min(480px, calc(100% - 270px));
+  max-width: min(420px, calc(100% - 270px));
+  list-style: none;
   margin: 0;
   padding: 8px 10px;
   border-radius: 8px;
@@ -350,5 +360,18 @@ defineExpose({
   background: var(--surface);
   color: var(--text-1);
   border-radius: 12px;
+}
+</style>
+
+<style scoped>
+.map-controls-hint li {
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .map-controls-hint {
+    bottom: 76px;
+    max-width: calc(100% - 32px);
+    font-size: 10px;
+  }
 }
 </style>

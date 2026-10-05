@@ -204,7 +204,7 @@ export function useMapEditor(source, onSaved) {
   }
   function retryModels() {
     resetMapModels();
-    loadModels();
+    return loadModels();
   }
   onMounted(loadModels);
   function beforeUnload(e) {

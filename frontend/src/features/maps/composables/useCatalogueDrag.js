@@ -2,7 +2,8 @@ import { nextTick, onBeforeUnmount } from "vue";
 
 // The drop target is a Three.js world coordinate, rather than a sortable DOM slot.
 export function useCatalogueDrag(editor, canvas) {
-  let pointerEvent = null,
+  let pointer = null,
+    pointerEvent = null,
     fillKey = false,
     keyboardPoint = null,
     freePlacement = false;
@@ -16,6 +17,11 @@ export function useCatalogueDrag(editor, canvas) {
     return { ...snap(point), candidates: point.candidates?.map(snap) };
   }
   function cleanup() {
+    if (pointer?.element.hasPointerCapture(pointer.id))
+      pointer.element.releasePointerCapture(pointer.id);
+    pointer = null;
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", drop);
     pointerEvent = null;
     fillKey = false;
     keyboardPoint = null;
@@ -30,6 +36,35 @@ export function useCatalogueDrag(editor, canvas) {
   function cancel() {
     editor.tileDrag.cancel();
     cleanup();
+  }
+  function move(event) {
+    if (event.pointerId !== pointer?.id) return;
+    pointerEvent = event;
+    fillKey = event.metaKey || event.ctrlKey;
+    editor.tileDrag.move(canvas.value?.pointAt(event), { fill: fillKey });
+  }
+  function drop(event) {
+    if (event.pointerId !== pointer?.id) return;
+    editor.tileDrag.drop(canvas.value?.pointAt(event), {
+      fill: event.metaKey || event.ctrlKey,
+    });
+    cleanup();
+  }
+  function begin(id, event) {
+    if (event.button !== 0) return;
+    cancel();
+    event.preventDefault();
+    event.currentTarget.focus({ preventScroll: true });
+    editor.tileDrag.begin(id);
+    pointer = { id: event.pointerId, element: event.currentTarget };
+    pointer.element.setPointerCapture(pointer.id);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", drop);
+    window.addEventListener("pointercancel", cancel);
+    window.addEventListener("pointerdown", freeDrop, true);
+    window.addEventListener("keydown", key);
+    window.addEventListener("keyup", key);
+    window.addEventListener("blur", cancel);
   }
   function key(event) {
     if (["Meta", "Control"].includes(event.key)) {
@@ -74,7 +109,7 @@ export function useCatalogueDrag(editor, canvas) {
     editor.tileDrag.move(canvas.value?.pointAt(event), { fill: fillKey });
   }
   function freeDrop(event) {
-    if (freePlacement && event.button === 2) {
+    if ((freePlacement || pointer) && event.button === 2) {
       event.preventDefault();
       event.stopPropagation();
       cancel();
@@ -112,5 +147,5 @@ export function useCatalogueDrag(editor, canvas) {
     window.addEventListener("keyup", key);
     window.addEventListener("blur", cancel);
   }
-  return { place, cancel, cameraMoved };
+  return { begin, place, cancel, cameraMoved };
 }

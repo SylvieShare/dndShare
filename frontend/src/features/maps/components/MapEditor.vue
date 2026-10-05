@@ -3,6 +3,7 @@
     <MapEditorHeader
       :editor="e"
       :view="view"
+      :admin="isAdmin"
       @close="emit('close')"
       @view="setView"
       @collection="
@@ -23,7 +24,20 @@
       :editor="e"
       @tool="startTool"
     />
+    <MapTileReference
+      v-if="referenceOpened && isAdmin"
+      v-show="view === 'reference'"
+      ref="reference"
+      :editor="e"
+    />
     <div v-show="view === 'map'" class="map-editor">
+      <MapTileSidebar
+        v-if="e.draft.document.kind === 'tiles'"
+        :editor="e"
+        @model="placeModel"
+        @drag-tile="dragModel"
+        @tool="startTool"
+      />
       <div class="map-editor-main">
         <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
         <div v-if="e.error" class="map-error" role="alert">
@@ -57,7 +71,7 @@
           :connection-mode="connections.mode"
           :connection-mask="connections.mask"
           :connection-invalid="connections.invalid"
-          :hint="`${toolHint} · Cmd + клик/рамка: группа · Cmd + перенос: заполнить · Стрелки: камера · Alt: сдвиг · ПКМ/Shift: вращение`"
+          :hint="editorHints(e.tool, e.draggingTile)"
           :catalogue="e.catalogue"
           :placement-model="
             e.draggingTile || e.tool === 'paste' ? e.selectedModel : ''
@@ -97,6 +111,10 @@ import MapEditorHeader from "./MapEditorHeader.vue";
 import MapEditorActions from "./MapEditorActions.vue";
 import MapItemsLibrary from "./MapItemsLibrary.vue";
 import MapEditorSettings from "./MapEditorSettings.vue";
+import MapTileReference from "./MapTileReference.vue";
+import MapTileSidebar from "./MapTileSidebar.vue";
+import { useAccountStore } from "@/stores/account";
+import { editorHints } from "../lib/editorHints";
 import MapCanvas from "./MapCanvas.vue";
 import { useMapEditor } from "../composables/useMapEditor";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
@@ -107,15 +125,27 @@ const props = defineProps({ map: Object }),
   emit = defineEmits(["close", "saved"]),
   confirmClose = ref(false);
 const e = reactive(useMapEditor(props.map, (map) => emit("saved", map)));
+const account = useAccountStore(),
+  isAdmin = computed(() => account.hasRole("ADMIN"));
+const reference = ref(null),
+  referenceOpened = ref(false);
 const canvas = ref(null),
   catalogueDrag = useCatalogueDrag(e, canvas);
 const cursor = useMapCursor(e, canvas, catalogueDrag);
 const connections = reactive(useTileConnections(e)),
   view = ref("map");
 function setView(next) {
+  if (next === "reference") {
+    if (!isAdmin.value) return;
+    referenceOpened.value = true;
+  }
   catalogueDrag.cancel();
   e.resetGesture();
   view.value = next;
+}
+function dragModel(id, event) {
+  e.resetGesture();
+  catalogueDrag.begin(id, event);
 }
 function startTool(tool) {
   setView("map");
@@ -143,22 +173,14 @@ async function placeObject(kind) {
       placing: true,
     };
 }
-const toolHint = computed(
-  () =>
-    ({
-      select: "Предметы: выбрать плитку · R: поворот",
-      object: "Нажмите, чтобы поставить объект",
-      zone: "Протяните область зоны",
-      "zone-brush": "Закрасьте клетки зоны",
-      paste: "Нажмите, чтобы вставить участок · R: поворот · ПКМ/Esc: отмена",
-      "wall-brush":
-        "Рисуйте стены · Стыки подбираются автоматически · Alt: перемещение поля",
-    })[e.tool],
-);
 let resolveLeave;
 async function prepareLeave() {
   catalogueDrag.cancel();
   e.resetGesture();
+  if (reference.value?.prepareLeave() === false) {
+    setView("reference");
+    return false;
+  }
   if (e.saving) return false;
   if (e.dirty) await e.save();
   if (!e.dirty) return true;
@@ -179,7 +201,11 @@ function hotkey(event) {
     document.querySelector('[role="dialog"]')
   )
     return;
-  if (event.target.closest("input,textarea,select,[contenteditable]")) return;
+  if (
+    view.value === "reference" ||
+    event.target.closest("input,textarea,select,[contenteditable]")
+  )
+    return;
   if (event.key.startsWith("Arrow")) {
     event.preventDefault();
     canvas.value?.panArrow(event.key);

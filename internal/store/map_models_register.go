@@ -2,7 +2,6 @@ package store
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"reflect"
 
@@ -18,18 +17,13 @@ func (s *Store) RegisterMapModel(ctx context.Context, m battlemap.Model) (battle
 	} else if !errors.Is(err, ErrNotFound) {
 		return m, err
 	}
-	geometry, err := json.Marshal(map[string]any{"width": m.Width, "height": m.Height, "mountDepth": m.MountDepth, "surfaceHeight": m.SurfaceHeight, "maxHeight": m.MaxHeight, "blockers": m.Blockers, "tags": m.Tags,
-		"collectionName": m.CollectionName, "wallMode": m.WallMode, "wallMask": m.WallMask, "supportSlots": m.SupportSlots, "placementOffset": m.PlacementOffset})
-	if err != nil {
-		return m, err
-	}
-	assets, err := json.Marshal(m.Assets)
+	geometry, assets, err := marshalMapModel(m)
 	if err != nil {
 		return m, err
 	}
 	_, err = s.pool.Exec(ctx, `INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
 VALUES($1::uuid,$2,$3,$4,$5,$6,$7,$8,$9,CAST($10 AS jsonb),CAST($11 AS jsonb)) ON CONFLICT DO NOTHING`,
-		m.ID, m.Collection, m.SourceCode, m.SourceName, m.Name, m.Version, m.TileType, m.TerrainType, m.WallLayout, json.RawMessage(geometry), json.RawMessage(assets))
+		m.ID, m.Collection, m.SourceCode, m.SourceName, m.Name, m.Version, m.TileType, m.TerrainType, m.WallLayout, geometry, assets)
 	if err != nil {
 		return m, err
 	}
