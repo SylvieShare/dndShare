@@ -1,0 +1,307 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 100000,
+  "lodTriangles": 40000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "pine",
+    "fern",
+    "forest",
+    "outdoor",
+    "xl"
+  ],
+  "recipe": "majestic-measured-pines-3-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3500000,
+      6500000
+    ],
+    "targetLODBytes": [
+      1200000,
+      2800000
+    ],
+    "targetShadowBytes": [
+      80000,
+      220000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "995106 source triangles; two disconnected tree trunks above 30 mm, large crown 107.52 mm, smaller 69.06 mm, open ground and broad leaves. Compare accepted MH-005."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [
+        -35,
+        36
+      ],
+      [
+        -11,
+        34
+      ],
+      [
+        9,
+        19
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        -23,
+        5
+      ],
+      [
+        -38,
+        22
+      ]
+    ],
+    [
+      [
+        -40,
+        4
+      ],
+      [
+        -20,
+        6
+      ],
+      [
+        -9,
+        -11
+      ],
+      [
+        -21,
+        -28
+      ],
+      [
+        -40,
+        -24
+      ]
+    ]
+  ],
+  "soilSurfaceMM": 15.5,
+  "grassHeightFadeMM": 0.5,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "trees": [
+    {
+      "baseXY": [
+        22,
+        -20
+      ],
+      "topXY": [
+        21,
+        -20.5
+      ],
+      "heightMM": 107.52,
+      "foliageRadiusMM": 38,
+      "trunkRadiusMM": 4.8,
+      "rootRadiusMM": 12,
+      "barkTopMM": 70
+    },
+    {
+      "baseXY": [
+        25,
+        29
+      ],
+      "topXY": [
+        22.1,
+        17.2
+      ],
+      "heightMM": 69.06,
+      "foliageRadiusMM": 31,
+      "trunkRadiusMM": 3.6,
+      "rootRadiusMM": 9,
+      "barkTopMM": 45
+    }
+  ],
+  "blockers": [
+    [
+      [
+        2.471429,
+        2.071429
+      ],
+      [
+        2.44533,
+        2.202634
+      ],
+      [
+        2.371008,
+        2.313865
+      ],
+      [
+        2.259777,
+        2.388187
+      ],
+      [
+        2.128571,
+        2.414286
+      ],
+      [
+        1.997366,
+        2.388187
+      ],
+      [
+        1.886135,
+        2.313865
+      ],
+      [
+        1.811813,
+        2.202634
+      ],
+      [
+        1.785714,
+        2.071429
+      ],
+      [
+        1.811813,
+        1.940223
+      ],
+      [
+        1.886135,
+        1.828992
+      ],
+      [
+        1.997366,
+        1.75467
+      ],
+      [
+        2.128571,
+        1.728571
+      ],
+      [
+        2.259777,
+        1.75467
+      ],
+      [
+        2.371008,
+        1.828992
+      ],
+      [
+        2.44533,
+        1.940223
+      ]
+    ],
+    [
+      [
+        2.471429,
+        0.671429
+      ],
+      [
+        2.451855,
+        0.769833
+      ],
+      [
+        2.396113,
+        0.853256
+      ],
+      [
+        2.31269,
+        0.908998
+      ],
+      [
+        2.214286,
+        0.928571
+      ],
+      [
+        2.115881,
+        0.908998
+      ],
+      [
+        2.032458,
+        0.853256
+      ],
+      [
+        1.976717,
+        0.769833
+      ],
+      [
+        1.957143,
+        0.671429
+      ],
+      [
+        1.976717,
+        0.573024
+      ],
+      [
+        2.032458,
+        0.489601
+      ],
+      [
+        2.115881,
+        0.43386
+      ],
+      [
+        2.214286,
+        0.414286
+      ],
+      [
+        2.31269,
+        0.43386
+      ],
+      [
+        2.396113,
+        0.489601
+      ],
+      [
+        2.451855,
+        0.573024
+      ]
+    ]
+  ],
+  "stones": [
+    {
+      "centreMM": [
+        -12,
+        26,
+        16.7
+      ],
+      "radiiMM": [
+        3.4,
+        3.4,
+        2.1
+      ]
+    }
+  ],
+  "ferns": [
+    {
+      "centreMM": [
+        22,
+        29,
+        18
+      ],
+      "radiiMM": [
+        24,
+        24,
+        6
+      ],
+      "minZMM": 16.4
+    }
+  ]
+}

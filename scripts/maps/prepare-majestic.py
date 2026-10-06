@@ -86,6 +86,8 @@ def main():
             if [x,y] in recipe.get('blockedCells',[]): continue
             hit = tree.ray_cast((centre[0]+(x-(recipe['width']-1)/2)*35, centre[1]-(y-(recipe['height']-1)/2)*35, recipe.get('standMaxZMM',100)), (0, 0, -1))
             if hit[0] is None: raise ValueError('Missing ground support point')
+            if hit[0].z < datum+.5:
+                raise ValueError(f'Cell {x},{y} hits the insertion cut, not a standable surface; review occupied cells')
             points.append({'x':x+.5,'y':y+.5,'elevation':round(hit[0].z/35,6)})
     high = max(v.co.z for v in target.data.vertices)/35
     for obj in [target, peg]:
