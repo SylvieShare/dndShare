@@ -1,6 +1,7 @@
 // Deliberately prepare one reviewed catalogue entry per invocation.
 import earlierSpecs from "./ultimate-detail.json" with { type: "json" };
 import furnitureSpecs from "./ultimate-furniture.json" with { type: "json" };
+import lightingSpecs from "./ultimate-lighting.json" with { type: "json" };
 import { prepareSurfaceRevision } from "./prepare-surface-revision.mjs";
 import { paintStone } from "./ultimate_surface.mjs";
 import { makeRaisedPainter } from "./raised_material.mjs";
@@ -15,9 +16,11 @@ import { paintWallBags, paintGroundBags } from "./sacks_material.mjs";
 import { makeTablePainter } from "./table_material.mjs";
 import { paintBarrel } from "./barrel_material.mjs";
 import { paintWoodFloor } from "./wood_floor_material.mjs";
+import { makeTorchPainter } from "./torch_material.mjs";
+import { paintBrazier } from "./brazier_material.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
-const specs = { ...earlierSpecs, ...furnitureSpecs };
+const specs = { ...earlierSpecs, ...furnitureSpecs, ...lightingSpecs };
 const code = process.argv[2],
   spec = specs[code];
 if (!spec)
@@ -96,8 +99,31 @@ if (spec.material === "bones") {
   };
   painter = makeAddedBonePainter(reference, spec);
   parts = ["stone", "bone"];
+} else if (spec.material === "brazier") {
+  painter = paintBrazier;
+  parts = ["stone", "iron", "charcoal"];
+} else if (spec.material === "torch") {
+  let bare;
+  if (spec.bareReference) {
+    const directory = path.join(collectionBase, "added-reference", code);
+    bare = {
+      spec: JSON.parse(
+        await fs.readFile(path.join(directory, "reference.json"), "utf8"),
+      ),
+      data: await fs.readFile(path.join(directory, "distance.bin")),
+    };
+    if (bare.spec.bare !== spec.bareReference)
+      throw new Error("Unexpected bare torch reference: " + code);
+  }
+  painter = makeTorchPainter(spec, bare);
+  parts = [
+    "stone",
+    "wood",
+    "iron",
+    ...(spec.lit ? ["flame"] : ["charcoal", "ash"]),
+  ];
 } else if (spec.material === "wood-floor") {
-  painter = paintWoodFloor;
+  painter = (rgb, p, n) => paintWoodFloor(rgb, p, n, spec);
   parts = ["stone", "wood", "iron"];
 } else if (spec.material === "barrel") {
   painter = paintBarrel;

@@ -35,5 +35,13 @@
     "referencePage": 5,
     "material": "wood-floor",
     "notes": "Six longitudinal boards with varied aged timber tones; twelve individually measured iron nail heads. The thin stone base and gaps below z=8.3 mm stay grey."
+  },
+  "UD-040": {
+    "sourceName": "Wall Wood Ground",
+    "referencePage": 6,
+    "material": "wood-floor",
+    "wall": true,
+    "heightOffset": 6.75,
+    "notes": "Five-board timber ground with longitudinal grain and ten iron nail heads, measured at the higher base datum. The intact wall, including its formerly brown top row, stays cool grey masonry."
   }
 }

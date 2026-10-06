@@ -1,0 +1,33 @@
+{
+  "UD-036": {
+    "sourceName": "Torch Basic",
+    "referencePage": 6,
+    "material": "torch",
+    "variant": "basic",
+    "lit": true,
+    "notes": "Cool stone wall on both faces; bounded charred timber grip and worn iron basket. Yellow flame roots, orange lobes and red tips, without painting surrounding bricks."
+  },
+  "UD-037": {
+    "sourceName": "Torch Lit",
+    "referencePage": 6,
+    "material": "torch",
+    "variant": "niche",
+    "lit": true,
+    "bareReference": "UD-038",
+    "notes": "Grey arch and paving; measured vertical grip, iron cup and stakes. Flame is isolated against the corresponding extinguished model, including the low roots inside the cup."
+  },
+  "UD-038": {
+    "sourceName": "Torch Extinguished",
+    "referencePage": 6,
+    "material": "torch",
+    "variant": "niche",
+    "lit": false,
+    "notes": "Grey arch, worn iron cup and vertical charred grip; dark burnt stub and lighter dusty ash inside the cup, without flame colouring on the wall."
+  },
+  "UD-039": {
+    "sourceName": "Brazier",
+    "referencePage": 6,
+    "material": "brazier",
+    "notes": "Worn iron cage, hoops and rivets, including the low base ring. The measured coal pile is nonmetallic charcoal with pale ash dust; surrounding rubble and paving stay stone."
+  }
+}

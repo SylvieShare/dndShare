@@ -19,7 +19,9 @@ const nails = [
   [7.7935, -14.9786, 10.2645],
   [14.049, -14.5695, 10.8095],
 ];
-export function woodFloorPartAt([x, y, z]) {
+export function woodFloorPartAt([x, y, height], spec = {}) {
+  if (spec.wall && x > 9.75) return "stone";
+  const z = height - (spec.heightOffset ?? 0);
   if (
     nails.some(
       ([cx, cy, cz]) => Math.hypot(x - cx, y - cy) < 1.07 && z > cz - 0.65,
@@ -28,9 +30,9 @@ export function woodFloorPartAt([x, y, z]) {
     return "iron";
   return z > 8.3 ? "wood" : "stone";
 }
-export function paintWoodFloor(rgb, p, n) {
+export function paintWoodFloor(rgb, p, n, spec = {}) {
   const d = detailAt(rgb),
-    part = woodFloorPartAt(p);
+    part = woodFloorPartAt(p, spec);
   if (part === "stone")
     return {
       ...paintStone(
@@ -39,7 +41,7 @@ export function paintWoodFloor(rgb, p, n) {
         ),
         p,
         n,
-        { datum: 8.3 },
+        { datum: spec.wall ? 13.4 : 8.3 },
       ),
       part,
     };
