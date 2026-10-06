@@ -18,10 +18,12 @@ const html = await fs.readFile(path.join(dir, 'index.html'), 'utf8')
 for (const match of html.matchAll(/(?:src|href)="([^"]+\.(?:css|js))"/g)) initial.add(match[1].replace(/^\//, ''))
 // Basis is a worker dependency fetched only for KTX2, not a navigation chunk.
 const decoderFiles = ['js', 'wasm'].map(extension => {
-  const key = `node_modules/three/examples/jsm/libs/basis/basis_transcoder.${extension}`
-  const asset = manifest[key]
-  if (!asset || asset.src !== key || asset.isEntry || asset.isDynamicEntry || asset.imports?.length) {
-    throw new Error(`Missing or unexpected Basis decoder asset: ${key}`)
+  const source = `node_modules/three/examples/jsm/libs/basis/basis_transcoder.${extension}`
+  // A clean deploy checkout may reuse dependencies through a node_modules symlink.
+  const matches = Object.entries(manifest).filter(([key]) => key === source || key.endsWith(`/${source}`))
+  const [key, asset] = matches[0] || []
+  if (matches.length !== 1 || asset.src !== key || asset.isEntry || asset.isDynamicEntry || asset.imports?.length) {
+    throw new Error(`Missing or unexpected Basis decoder asset: ${source}`)
   }
   return asset.file
 })
