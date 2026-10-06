@@ -41,6 +41,14 @@ const catalogue = [
     tileType: "floor",
   },
   {
+    id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+    sourceCode: "TEST-DECOR",
+    sourceName: "Ground Bones",
+    name: "Пол с декором",
+    tileType: "floor",
+    hasDecor: true,
+  },
+  {
     id: "33333333-3333-4333-8333-333333333333",
     sourceCode: "LC-003",
     sourceName: "Wall Angle",
@@ -334,6 +342,8 @@ window.EventSource = class {
 };
 const modelAssetAliases = new Map();
 window.loadedModels = [];
+window.releaseModelLoads = () =>
+  window.pendingModelLoads?.splice(0).forEach((resolve) => resolve());
 const nativeFetch = window.fetch.bind(window);
 window.fetch = async (url, options = {}) => {
   const rawUrl = typeof url === "string" ? url : url.url;
@@ -346,6 +356,10 @@ window.fetch = async (url, options = {}) => {
     )
   ) {
     window.loadedModels.push(url);
+    if (params.get("slowModel") && url.includes(params.get("slowModel")))
+      await new Promise((resolve) =>
+        (window.pendingModelLoads ||= []).push(resolve),
+      );
     if (params.has("realModels")) return nativeFetch(rawUrl, options);
     const modelId = url.split("/")[4];
     const assetUrl = url.replace(

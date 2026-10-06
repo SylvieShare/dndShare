@@ -1,7 +1,7 @@
 import { nextTick, onBeforeUnmount } from "vue";
 
 // The drop target is a Three.js world coordinate, rather than a sortable DOM slot.
-export function useCatalogueDrag(editor, canvas) {
+export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
   let pointer = null,
     pointerEvent = null,
     fillKey = false,
@@ -9,6 +9,7 @@ export function useCatalogueDrag(editor, canvas) {
     freePlacement = false;
   function keyboardAnchor(point) {
     if (!point) return null;
+    if (driver.kind === "object") return point;
     const snap = (p) => ({
       ...p,
       x: Math.floor(p.x + 1e-8) + 0.5,
@@ -31,21 +32,38 @@ export function useCatalogueDrag(editor, canvas) {
     window.removeEventListener("keyup", key);
     window.removeEventListener("blur", cancel);
     window.removeEventListener("pointerdown", freeDrop, true);
+    window.removeEventListener("mousedown", rightCancel, true);
+    window.removeEventListener("contextmenu", rightCancel, true);
     window.removeEventListener("pointermove", freeMove);
   }
   function cancel() {
-    editor.tileDrag.cancel();
+    driver.cancel();
     cleanup();
+  }
+  function rightCancel(event) {
+    // A second mouse button while LMB is held emits mousedown, not pointerdown.
+    if (
+      (event.button !== 2 && !(event.buttons & 2)) ||
+      (!pointer && !freePlacement)
+    )
+      return;
+    event.preventDefault();
+    event.stopPropagation();
+    cancel();
   }
   function move(event) {
     if (event.pointerId !== pointer?.id) return;
+    if (event.buttons & 2) {
+      rightCancel(event);
+      return;
+    }
     pointerEvent = event;
     fillKey = event.metaKey || event.ctrlKey;
-    editor.tileDrag.move(canvas.value?.pointAt(event), { fill: fillKey });
+    driver.move(canvas.value?.pointAt(event), { fill: fillKey });
   }
   function drop(event) {
     if (event.pointerId !== pointer?.id) return;
-    editor.tileDrag.drop(canvas.value?.pointAt(event), {
+    driver.drop(canvas.value?.pointAt(event), {
       fill: event.metaKey || event.ctrlKey,
     });
     cleanup();
@@ -55,13 +73,15 @@ export function useCatalogueDrag(editor, canvas) {
     cancel();
     event.preventDefault();
     event.currentTarget.focus({ preventScroll: true });
-    editor.tileDrag.begin(id);
+    driver.begin(id);
     pointer = { id: event.pointerId, element: event.currentTarget };
     pointer.element.setPointerCapture(pointer.id);
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", drop);
     window.addEventListener("pointercancel", cancel);
     window.addEventListener("pointerdown", freeDrop, true);
+    window.addEventListener("mousedown", rightCancel, true);
+    window.addEventListener("contextmenu", rightCancel, true);
     window.addEventListener("keydown", key);
     window.addEventListener("keyup", key);
     window.addEventListener("blur", cancel);
@@ -70,7 +90,7 @@ export function useCatalogueDrag(editor, canvas) {
     if (["Meta", "Control"].includes(event.key)) {
       fillKey = event.metaKey || event.ctrlKey;
       if (pointerEvent)
-        editor.tileDrag.move(canvas.value?.pointAt(pointerEvent), {
+        driver.move(canvas.value?.pointAt(pointerEvent), {
           fill: fillKey,
         });
     }
@@ -82,23 +102,22 @@ export function useCatalogueDrag(editor, canvas) {
     if (!freePlacement) return;
     if (event.key === "Enter") {
       event.preventDefault();
-      editor.tileDrag.drop(
-        keyboardPoint || canvas.value?.pointAt(pointerEvent),
-        { fill: fillKey },
-      );
+      driver.drop(keyboardPoint || canvas.value?.pointAt(pointerEvent), {
+        fill: fillKey,
+      });
       cleanup();
     }
   }
   onBeforeUnmount(cancel);
   function cameraMoved() {
     if (pointerEvent)
-      editor.tileDrag.move(canvas.value?.pointAt(pointerEvent), {
+      driver.move(canvas.value?.pointAt(pointerEvent), {
         fill: fillKey,
       });
     if (keyboardPoint) {
       const center = canvas.value.centerPoint();
       keyboardPoint = keyboardAnchor(center);
-      editor.tileDrag.move(keyboardPoint, { fill: fillKey });
+      driver.move(keyboardPoint, { fill: fillKey });
     }
   }
   function freeMove(event) {
@@ -106,7 +125,7 @@ export function useCatalogueDrag(editor, canvas) {
     keyboardPoint = null;
     pointerEvent = event;
     fillKey = event.metaKey || event.ctrlKey;
-    editor.tileDrag.move(canvas.value?.pointAt(event), { fill: fillKey });
+    driver.move(canvas.value?.pointAt(event), { fill: fillKey });
   }
   function freeDrop(event) {
     if ((freePlacement || pointer) && event.button === 2) {
@@ -120,13 +139,13 @@ export function useCatalogueDrag(editor, canvas) {
     if (!point) return;
     event.preventDefault();
     event.stopPropagation();
-    editor.tileDrag.drop(point, { fill: event.metaKey || event.ctrlKey });
+    driver.drop(point, { fill: event.metaKey || event.ctrlKey });
     cleanup();
   }
-  async function place(id, event) {
+  async function place(id, event = { type: "keydown" }) {
     cancel();
     fillKey = event.metaKey || event.ctrlKey;
-    editor.tileDrag.begin(id);
+    driver.begin(id);
     freePlacement = true;
     await nextTick();
     const keyboard = event.type.startsWith("key");
@@ -134,7 +153,7 @@ export function useCatalogueDrag(editor, canvas) {
     keyboardPoint = keyboard
       ? keyboardAnchor(canvas.value?.centerPoint())
       : null;
-    editor.tileDrag.move(
+    driver.move(
       keyboardPoint ||
         canvas.value?.pointAt(event) ||
         canvas.value?.centerPoint(),
@@ -143,6 +162,8 @@ export function useCatalogueDrag(editor, canvas) {
     window.addEventListener("pointermove", freeMove);
     window.addEventListener("pointercancel", cancel);
     window.addEventListener("pointerdown", freeDrop, true);
+    window.addEventListener("mousedown", rightCancel, true);
+    window.addEventListener("contextmenu", rightCancel, true);
     window.addEventListener("keydown", key);
     window.addEventListener("keyup", key);
     window.addEventListener("blur", cancel);

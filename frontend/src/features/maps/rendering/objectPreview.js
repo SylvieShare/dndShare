@@ -1,9 +1,12 @@
 import { Group } from "three";
 import { buildMapProp, disposeObjects } from "./sceneObjects";
 import { FLOOR } from "./annotations";
+import { createRotationMotion } from "./rotationMotion";
 export function createObjectPreview(fog, assets) {
   const root = new Group();
   root.userData.outlineStyle = "selected";
+  root.userData.outlineType = "object";
+  const rotation = createRotationMotion();
   let target = null,
     key = "",
     position = null;
@@ -15,18 +18,12 @@ export function createObjectPreview(fog, assets) {
       root.clear();
       key = "";
       position = null;
+      rotation.clear();
       return;
     }
     const group = object.group || [object],
       next = JSON.stringify(
-        group.map((o) => [
-          o.id,
-          o.kind,
-          o.modelId,
-          o.scale,
-          o.rotation,
-          o.open,
-        ]),
+        group.map((o) => [o.id, o.kind, o.modelId, o.scale, o.open]),
       );
     if (next !== key) {
       disposeObjects(root);
@@ -55,14 +52,22 @@ export function createObjectPreview(fog, assets) {
     position.y += (target.y - position.y) * amount;
     position.lift += (lift - position.lift) * amount;
     (target.group || [target]).forEach((o, i) =>
-      root.children[i].position.set(
-        o.x + position.x - target.x,
-        (o.elevation ?? FLOOR) + position.lift,
-        o.y + position.y - target.y,
-      ),
+      rotation.set(o.id || i, {
+        x: o.x + position.x - target.x,
+        y: o.y + position.y - target.y,
+        elevation: (o.elevation ?? FLOOR) + position.lift,
+        rotation: o.rotation,
+      }),
     );
+    const turning = rotation.advance(delta);
+    (target.group || [target]).forEach((o, i) => {
+      const pose = rotation.pose(o.id || i);
+      root.children[i].position.set(pose.x, pose.elevation, pose.y);
+      root.children[i].rotation.y = (-pose.rotation * Math.PI) / 180;
+    });
     root.updateMatrixWorld(true);
     return (
+      turning ||
       Math.hypot(
         target.x - position.x,
         target.y - position.y,

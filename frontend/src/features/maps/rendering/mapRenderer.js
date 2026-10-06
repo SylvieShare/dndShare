@@ -1,8 +1,8 @@
+import { mapScreenQueries } from "./mapScreenQueries";
+import { createLoadingPreview } from "./loadingPreview";
+import { createObjectMotion } from "./objectMotion";
 import { objectPlacementAnchors } from "./objectPlacementAnchors";
-import {
-  resolvedSurfacePosition,
-  surfacePoints,
-} from "../lib/surfacePlacement";
+import { resolvedSurfacePosition } from "../lib/surfacePlacement";
 import {
   ACESFilmicToneMapping,
   Color,
@@ -16,7 +16,6 @@ import {
   Scene,
   SRGBColorSpace,
   TextureLoader,
-  Vector3,
   WebGLRenderer,
 } from "three";
 import { modelAssets } from "./modelAssets";
@@ -27,12 +26,11 @@ import { buildSceneObjects, disposeObjects } from "./sceneObjects";
 import { mapCamera } from "./mapCamera";
 import { createTilePreview } from "./tilePreview";
 import { createTileOutline } from "./tileOutline";
-import { tileBounds } from "./tileTransform";
 import { structureView } from "./structureView";
 import { createObjectPreview } from "./objectPreview";
 import { createPlacementAnchors } from "./placementAnchors";
 
-export async function createMapRenderer(host, onError) {
+export async function createMapRenderer(host, onError, onPreviewLoading) {
   const gpu = new WebGLRenderer({ antialias: true });
   gpu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   gpu.toneMapping = ACESFilmicToneMapping;
@@ -67,8 +65,10 @@ export async function createMapRenderer(host, onError) {
     background = new Group();
   scene.add(annotations, objects, background);
   const assets = modelAssets(onError),
+    loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
     tiles = createTileLayer(assets, fog),
+    objectMotion = createObjectMotion(assets, tiles),
     preview = createTilePreview(assets, () => {
       tileKey = "";
       tiles.rebuild(placedTiles, tier, []);
@@ -81,6 +81,7 @@ export async function createMapRenderer(host, onError) {
     anchors = createPlacementAnchors();
   scene.add(
     tiles.root,
+    loadingPreview.root,
     preview.root,
     objectPreview.root,
     anchors.root,
@@ -92,16 +93,39 @@ export async function createMapRenderer(host, onError) {
       frame = 0;
       if (dead) return;
       const delta = Math.min(32, time - lastFrame || 16);
-      const moving = preview.advance(delta) | objectPreview.advance(delta);
+      const moving =
+        preview.advance(delta) |
+        objectPreview.advance(delta) |
+        tiles.advance(delta) |
+        objectMotion.advance(delta, objects) |
+        loadingPreview.advance(delta);
       lastFrame = time;
       gpu.render(scene, camera);
-      outline.render(scene, camera, annotations, [
-        preview.root,
-        objectPreview.root,
-        ...objects.children.filter(
-          (o) => o.userData.objectId === options.selectedObject,
-        ),
-      ]);
+      for (const object of objects.children) {
+        object.userData.outlineType = "object";
+        object.userData.outlineStyle =
+          object.userData.objectId === options.selectedObject
+            ? "selected"
+            : "hover";
+      }
+      outline.render(
+        scene,
+        camera,
+        annotations,
+        [
+          preview.root,
+          objectPreview.root,
+          ...objects.children.filter(
+            (o) =>
+              options.master &&
+              o.userData.objectId &&
+              [options.selectedObject, options.hoveredObject].includes(
+                o.userData.objectId,
+              ),
+          ),
+        ],
+        tiles.transform,
+      );
       if (moving) render();
     });
   }
@@ -118,23 +142,44 @@ export async function createMapRenderer(host, onError) {
       ...d.tiles.map((t) => t.modelId),
       ...d.objects.map((o) => o.modelId).filter(Boolean),
     ]);
-    if (opts.previewObject?.modelId) ids.add(opts.previewObject.modelId);
-    if (opts.placementObject) ids.add(opts.placementObject);
+
     const previewIds = preview.modelIds();
     if (opts.previewTile)
       for (const tile of opts.previewTile.group || [opts.previewTile])
         previewIds.add(tile.modelId);
-    for (const id of previewIds) ids.add(id);
-    if (ids.size) await assets.ensure(ids, tier, opts);
-    // Moving tiles keep their full geometry even when the map uses distant LOD.
-    if (previewIds.size) await assets.ensure(previewIds, "render", opts);
-    if (opts.previewObject?.modelId)
-      await assets.ensure(
-        new Set([opts.previewObject.modelId]),
-        "render",
-        opts,
-      );
+    const objectIds = new Set(
+      (
+        opts.previewObject?.group ||
+        (opts.previewObject ? [opts.previewObject] : [])
+      )
+        .map((o) => o.modelId)
+        .filter(Boolean),
+    );
+    if (opts.placementObject) objectIds.add(opts.placementObject);
+    const movingIds = new Set([...previewIds, ...objectIds]);
+    const pending = ids.size
+      ? assets.ensure(ids, tier, opts)
+      : Promise.resolve();
+    const previewPending = movingIds.size
+      ? assets.ensure(movingIds, "render", opts)
+      : Promise.resolve();
+    // Start rendering the preview immediately; network loading does not block it.
+    const readyMetadata = d.tiles.every((t) => assets.metadata(t.modelId));
+    if (readyMetadata) structure.update(d);
+    const loadingOptions = {
+      ...opts,
+      previewTile: opts.previewTile && {
+        ...opts.previewTile,
+        group: readyMetadata
+          ? structure.preview(opts.previewTile.group || [opts.previewTile])
+          : opts.previewTile.group,
+      },
+    };
+    loadingPreview.update(loadingOptions, opts.catalogue || assets.catalogue());
+    render();
+    await Promise.all([pending, previewPending]);
     if (dead || id !== epoch) return;
+    loadingPreview.update(opts, opts.catalogue || assets.catalogue());
     const placed = structure.update(d);
     placedTiles = placed;
     view.document(d, { ...opts, sceneHeight: structure.top() });
@@ -178,6 +223,7 @@ export async function createMapRenderer(host, onError) {
     const posedObjects = d.objects.map((o) =>
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
+    objectMotion.update(posedObjects, d);
     const posedTokens = (nextState?.tokens || []).map((t) =>
       resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
     );
@@ -196,7 +242,8 @@ export async function createMapRenderer(host, onError) {
       opts.previewObject,
       !!opts.placementObject ||
         !!opts.surfacePlacement ||
-        (!!opts.previewObject?.modelId && !!opts.previewObject?.placing),
+        (!!opts.previewObject?.modelId &&
+          (!!opts.previewObject?.placing || !!opts.previewObject?.moving)),
     );
     anchors.update(d, structure.context(), opts);
     const hiddenIds = preview.hiddenIds();
@@ -322,51 +369,22 @@ export async function createMapRenderer(host, onError) {
       update(current, state, options).catch((error) => onError(error.message));
   });
   observer.observe(host);
-  function screenBounds(tile) {
-    const model = assets.model(tile.modelId, tier),
-      metadata = assets.metadata(tile.modelId);
-    if (!model || !metadata) return null;
-    const bounds = tileBounds(
-        preview.posed(tile.id) || structure.posed(tile),
-        metadata,
-        model,
-      ),
-      points = [];
-    for (const x of [bounds.min.x, bounds.max.x])
-      for (const y of [bounds.min.y, bounds.max.y])
-        for (const z of [bounds.min.z, bounds.max.z])
-          points.push(view.project(new Vector3(x, y, z)));
-    return {
-      left: Math.min(...points.map((p) => p.x)),
-      right: Math.max(...points.map((p) => p.x)),
-      top: Math.min(...points.map((p) => p.y)),
-      bottom: Math.max(...points.map((p) => p.y)),
-    };
-  }
   return {
     update,
     camera: changeCamera,
     getView: view.getView,
     world: view.world,
     placementPoint: structure.point,
-    surfacePoint(event, ignored = "") {
-      const points = surfacePoints(current, assets.catalogue(), ignored),
-        rect = host.getBoundingClientRect();
-      let best = null,
-        distance = Infinity;
-      for (const point of points) {
-        const p = view.project(new Vector3(point.x, point.elevation, point.y));
-        const next = Math.hypot(
-          p.x + rect.left - event.clientX,
-          p.y + rect.top - event.clientY,
-        );
-        if (next < distance) {
-          distance = next;
-          best = point;
-        }
-      }
-      return best;
-    },
+    ...mapScreenQueries(
+      host,
+      view,
+      assets,
+      preview,
+      tiles,
+      structure,
+      () => current,
+      () => tier,
+    ),
     pick(event) {
       const ray = view.ray(event),
         hits = ray.intersectObject(objects, true),
@@ -397,20 +415,6 @@ export async function createMapRenderer(host, onError) {
       }
       return tile;
     },
-    tilesInRect(rect) {
-      return (current?.tiles || [])
-        .filter((tile) => {
-          const b = screenBounds(tile);
-          return (
-            b &&
-            b.right >= rect.left &&
-            b.left <= rect.left + rect.width &&
-            b.bottom >= rect.top &&
-            b.top <= rect.top + rect.height
-          );
-        })
-        .map((tile) => tile.id);
-    },
     destroy() {
       dead = true;
       epoch++;
@@ -422,6 +426,8 @@ export async function createMapRenderer(host, onError) {
       tiles.destroy();
       preview.destroy();
       objectPreview.destroy();
+      objectMotion.destroy();
+      loadingPreview.destroy();
       anchors.destroy();
       surfaceAnchors.destroy();
       outline.destroy();

@@ -162,10 +162,7 @@ test("moving tiles load full render geometry while the wide map uses LOD", async
           .sort(),
       ),
     )
-    .toEqual([
-      "/api/maps/models/88888888-8888-4888-8888-888888888888/lod",
-      "/api/maps/models/88888888-8888-4888-8888-888888888888/render",
-    ]);
+    .toEqual(["/api/maps/models/88888888-8888-4888-8888-888888888888/render"]);
   expect(await page.evaluate(() => window.requests)).toEqual([]);
   await page.keyboard.press("Escape");
 });

@@ -4,7 +4,7 @@
     :class="{
       'map-canvas--draw': !['pan', 'select'].includes(tool) && !readonly,
       'map-canvas--select': tool === 'select' && !readonly,
-      'map-canvas--hover': !!hoveredTile,
+      'map-canvas--hover': !!hoveredTile || !!hoveredObject,
     }"
     @contextmenu.prevent
   >
@@ -42,6 +42,11 @@
         >Повторить загрузку</ActionButton
       >
     </div>
+    <LoadingState
+      v-if="previewLoading"
+      class="map-model-loading"
+      label="Загружаем модель…"
+    />
     <MapCanvasControls
       v-if="!readonly"
       :kind="document.kind"
@@ -94,6 +99,7 @@ const props = defineProps({
   selectedTiles: Array,
   screenSelection: Object,
   hoveredTile: String,
+  hoveredObject: String,
   previewTile: Object,
   previewObject: Object,
   showAnchors: Boolean,
@@ -116,6 +122,7 @@ const hintLines = computed(() =>
 const emit = defineEmits(["gesture", "view", "camera-move"]);
 const host = ref(null),
   loading = ref(true),
+  previewLoading = ref(0),
   error = ref(""),
   topView = ref(false);
 let renderer,
@@ -150,6 +157,7 @@ watch(
     props.selectedTile,
     props.selectedTiles,
     props.hoveredTile,
+    props.hoveredObject,
     props.previewTile,
     props.previewObject,
     props.showAnchors,
@@ -221,9 +229,15 @@ function panArrow(key) {
 }
 onMounted(async () => {
   try {
-    const r = await createMapRenderer(host.value, (message) => {
-      error.value = message;
-    });
+    const r = await createMapRenderer(
+      host.value,
+      (message) => {
+        error.value = message;
+      },
+      (count) => {
+        previewLoading.value = count;
+      },
+    );
     if (dead) {
       r.destroy();
       return;
@@ -330,6 +344,12 @@ defineExpose({
 }
 .map-credit a {
   color: var(--text-2);
+}
+.map-model-loading {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  pointer-events: none;
 }
 .map-canvas-message {
   position: absolute;

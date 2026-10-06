@@ -6,16 +6,19 @@ import {
   SphereGeometry,
 } from "three";
 import { tileSize } from "../lib/tilePlacement";
+import { TILE_ACCENT } from "./mapAccents";
 export function createPlacementAnchors() {
   const root = new Group(),
     geometry = new SphereGeometry(0.055, 8, 6),
     matrix = new Matrix4();
   const materials = {
     green: new MeshBasicMaterial({
-      color: 0x73c99a,
+      color: TILE_ACCENT,
+      toneMapped: false,
     }),
     purple: new MeshBasicMaterial({
-      color: 0xb399e5,
+      color: TILE_ACCENT,
+      toneMapped: false,
     }),
   };
   let key = "";
@@ -62,7 +65,8 @@ export function createPlacementAnchors() {
       );
       mesh.userData.points = points;
       points.forEach((p, i) => {
-        matrix.makeTranslation(p.x, p.elevation + 0.03, p.y);
+        matrix.makeScale(...Array(3).fill(colour === "purple" ? 1.4 : 1));
+        matrix.setPosition(p.x, p.elevation + 0.03, p.y);
         mesh.setMatrixAt(i, matrix);
       });
       mesh.instanceMatrix.needsUpdate = true;

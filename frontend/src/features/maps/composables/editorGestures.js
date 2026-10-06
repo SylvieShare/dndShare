@@ -44,6 +44,7 @@ export function editorGestures(e) {
     clipboard.cancel();
     e.wallBrush?.cancel();
     e.hoveredTile.value = "";
+    if (e.hoveredObject) e.hoveredObject.value = "";
     e.screenSelection.value = null;
     if (e.previewObject) e.previewObject.value = null;
     e.pauseSave(false);
@@ -62,6 +63,8 @@ export function editorGestures(e) {
     if (phase === "hover") {
       if (tool === "paste") clipboard.preview(point);
       e.hoveredTile.value = tool === "select" ? hit?.tileId || "" : "";
+      if (e.hoveredObject)
+        e.hoveredObject.value = tool === "select" ? hit?.objectId || "" : "";
       if (
         e.previewObject &&
         tool === "object" &&
@@ -313,6 +316,22 @@ export function editorGestures(e) {
   function rotate() {
     if (clipboard.rotate()) return;
     if (e.tileDrag.rotate()) return;
+    if (e.tool.value === "object") {
+      e.placementRotation.value = (e.placementRotation.value + 90) % 360;
+      if (e.previewObject?.value)
+        e.previewObject.value = {
+          ...e.previewObject.value,
+          rotation: e.placementRotation.value,
+        };
+      return;
+    }
+    const object = doc().objects.find((o) => o.id === e.selectedObject.value);
+    if (e.tool.value === "select" && object) {
+      e.change(() => {
+        object.rotation = (object.rotation + 90) % 360;
+      });
+      return;
+    }
     if (!rotateGroup())
       e.placementRotation.value = (e.placementRotation.value + 90) % 360;
   }

@@ -48,7 +48,9 @@ for (const real of [false, true])
     await rail.getByRole("button", { name: "Объекты", exact: true }).click();
     const objects = page.getByRole("region", { name: "Каталог объектов" });
     await expect(objects.getByRole("button")).toHaveCount(1);
-    await objects.getByRole("button", { name: "Сундук", exact: true }).click();
+    await objects
+      .getByRole("button", { name: "Сундук", exact: true })
+      .press("Enter");
     const point = await mapPoint(page, 4.5, 4.5);
     await page.mouse.move(point.x, point.y);
     await page.mouse.click(point.x, point.y);

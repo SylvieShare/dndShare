@@ -10,7 +10,7 @@ async function ready(page, shaped = false) {
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
-async function goldPixels(page) {
+async function bluePixels(page) {
   const style = await page.addStyleTag({
     content:
       ".map-canvas > :not(.map-canvas-surface) { visibility: hidden !important; }",
@@ -30,9 +30,9 @@ async function goldPixels(page) {
     let count = 0;
     for (let i = 0; i < pixels.length; i += 4)
       if (
-        pixels[i] > 80 &&
-        pixels[i] > pixels[i + 1] * 1.08 &&
-        pixels[i + 1] > pixels[i + 2] * 1.25
+        pixels[i + 2] > 110 &&
+        pixels[i + 2] > pixels[i] + 25 &&
+        pixels[i + 2] > pixels[i + 1] + 10
       )
         count++;
     return count;
@@ -72,7 +72,7 @@ test("hover outlines actual geometry and selection strengthens it with actions i
   });
   await ready(page, true);
   await page.mouse.move(0, 0);
-  const baseline = await goldPixels(page);
+  const baseline = await bluePixels(page);
   const empty = await mapPoint(page, 1.8, 1.8),
     wall = await mapPoint(page, 1.1, 1.5);
   await page.mouse.move(empty.x, empty.y);
@@ -81,11 +81,11 @@ test("hover outlines actual geometry and selection strengthens it with actions i
   await expect(page.getByRole("group", { name: "Стыки стен" })).toHaveCount(0);
   await page.mouse.move(wall.x, wall.y);
   await expect(page.locator(".map-canvas--hover")).toBeVisible();
-  const hovered = await goldPixels(page);
+  const hovered = await bluePixels(page);
   expect(hovered).toBeGreaterThan(baseline + 20);
   await page.mouse.click(wall.x, wall.y);
   await expect(page.getByRole("group", { name: "Стыки стен" })).toHaveCount(0);
-  const selected = await goldPixels(page);
+  const selected = await bluePixels(page);
   expect(selected).toBeGreaterThan(hovered + 20);
   expect(await page.evaluate(() => window.requests)).toEqual([]);
   const bounds = await page.locator(".map-canvas-surface").boundingBox();

@@ -49,6 +49,7 @@ describe("tile geometry picking", () => {
   it("uses the actual rotated instance and skips the tile being dragged", () => {
     const { layer, ray, tile } = setup();
     layer.rebuild([{ ...tile, rotation: 90 }], "lod");
+    layer.advance(280);
     expect(layer.hit(ray(1.5, 1.9))).toBeNull();
     expect(layer.hit(ray(1.5, 1.1))?.tileId).toBe("wall");
     layer.rebuild([tile], "lod", tile.id);

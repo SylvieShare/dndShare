@@ -65,7 +65,9 @@
         <MapObjectPalette
           v-else
           :editor="editor"
+          draggable
           @object="(id, event) => emit('object', id, event)"
+          @drag-object="(id, event) => emit('drag-object', id, event)"
         />
       </div>
     </div>
@@ -78,7 +80,13 @@ import { PanelLeftOpen, PanelLeftClose, Layers, Box } from "@lucide/vue";
 import MapObjectPalette from "./MapObjectPalette.vue";
 import MapTilePalette from "./MapTilePalette.vue";
 defineProps({ editor: Object });
-const emit = defineEmits(["model", "drag-tile", "collection", "object"]);
+const emit = defineEmits([
+  "model",
+  "drag-tile",
+  "collection",
+  "object",
+  "drag-object",
+]);
 const tab = ref("tiles");
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 </script>

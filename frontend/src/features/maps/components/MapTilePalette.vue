@@ -17,7 +17,11 @@
         @update:model-value="emit('collection', $event)"
       />
       <MapTileCategoryPicker v-model="category" />
-      <ToggleSwitch v-model="decorOnly" label="Есть декор" />
+      <MultiToggle
+        v-model="decor"
+        :options="decorOptions"
+        aria-label="Декор тайлов"
+      />
       <p class="map-hint">
         {{
           mode === "inspect"
@@ -71,7 +75,7 @@ import {
   ActionButton,
   DetailSection,
   LoadingState,
-  ToggleSwitch,
+  MultiToggle,
 } from "@sylvieshare/share-ui";
 import MapCollectionPicker from "./MapCollectionPicker.vue";
 import MapTileCard from "./MapTileCard.vue";
@@ -88,7 +92,11 @@ import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
 const emit = defineEmits(["model", "drag-tile", "collection"]);
 const category = ref("floor");
-const decorOnly = ref(false);
+const decor = ref("without");
+const decorOptions = [
+  { value: "without", label: "Без декора" },
+  { value: "with", label: "С декором" },
+];
 const models = computed(() =>
   latestModelVersions(props.editor.catalogue).filter(
     (m) => m.collection === props.editor.collection && m.tileType !== "object",
@@ -98,6 +106,7 @@ function initialCategory() {
   const selected = models.value.find((m) => m.id === props.selectedId);
   if (selected) {
     category.value = selected.tileType;
+    decor.value = selected.hasDecor ? "with" : "without";
     return;
   }
   const first = TILE_CATEGORIES.find((c) =>
@@ -117,6 +126,7 @@ watch(
   () => props.selectedId,
   (id) => {
     const selected = models.value.find((m) => m.id === id);
+    if (selected) decor.value = selected.hasDecor ? "with" : "without";
     if (selected && !matchesTileCategory(selected, category.value))
       category.value = selected.tileType;
   },
@@ -126,7 +136,7 @@ const filtered = computed(() =>
   models.value.filter(
     (m) =>
       matchesTileCategory(m, category.value) &&
-      (!decorOnly.value || m.hasDecor),
+      !!m.hasDecor === (decor.value === "with"),
   ),
 );
 const groups = computed(() => groupedTileModels(filtered.value));

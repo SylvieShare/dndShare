@@ -33,6 +33,7 @@
         @model="placeModel"
         @drag-tile="dragModel"
         @object="placeObject"
+        @drag-object="dragObject"
       />
       <div class="map-editor-main">
         <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
@@ -55,6 +56,7 @@
           :selected-tiles="e.tool === 'paste' ? [] : e.selectedTiles"
           :screen-selection="e.screenSelection"
           :hovered-tile="e.hoveredTile"
+          :hovered-object="e.hoveredObject"
           :preview-tile="e.previewTile"
           :preview-object="e.previewObject"
           :show-anchors="e.showAnchors"
@@ -106,8 +108,7 @@ import MapCanvas from "./MapCanvas.vue";
 import { useMapEditor } from "../composables/useMapEditor";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
 import { useMapCursor } from "../composables/useMapCursor";
-import { snap } from "../lib/mapModel";
-import { nearestSurface } from "../lib/surfacePlacement";
+import { editorObjectDrag } from "../composables/editorObjectDrag";
 const props = defineProps({ map: Object }),
   emit = defineEmits(["close", "saved"]),
   confirmClose = ref(false);
@@ -117,8 +118,14 @@ const account = useAccountStore(),
 const reference = ref(null),
   referenceOpened = ref(false);
 const canvas = ref(null),
-  catalogueDrag = useCatalogueDrag(e, canvas);
-const cursor = useMapCursor(e, canvas, catalogueDrag);
+  catalogueDrag = useCatalogueDrag(e, canvas),
+  objectCatalogue = useCatalogueDrag(e, canvas, editorObjectDrag(e));
+const cursor = useMapCursor(e, canvas, {
+  cameraMoved() {
+    catalogueDrag.cameraMoved();
+    objectCatalogue.cameraMoved();
+  },
+});
 const view = ref("map");
 function setView(next) {
   if (next === "reference") {
@@ -126,18 +133,26 @@ function setView(next) {
     referenceOpened.value = true;
   }
   catalogueDrag.cancel();
+  objectCatalogue.cancel();
   e.resetGesture();
   view.value = next;
 }
 function changeCollection(value) {
   catalogueDrag.cancel();
+  objectCatalogue.cancel();
   e.resetGesture();
   if (reference.value) reference.value.changeCollection(value);
   else e.collection = value;
 }
 function dragModel(id, event) {
+  objectCatalogue.cancel();
   e.resetGesture();
   catalogueDrag.begin(id, event);
+}
+function dragObject(id, event) {
+  catalogueDrag.cancel();
+  e.resetGesture();
+  objectCatalogue.begin(id, event);
 }
 function startTool(tool) {
   if (tool === "object") {
@@ -155,33 +170,16 @@ async function placeModel(id, event) {
   await nextTick();
   catalogueDrag.place(id, event);
 }
-async function placeObject(modelId) {
+async function placeObject(modelId, event) {
   setView("map");
   await nextTick();
-  e.objectKind = "chest";
-  e.objectModel = modelId;
-  e.tool = "object";
-  await nextTick();
-  const pointer = cursor.point() || canvas.value?.centerPoint();
-  const point =
-    e.draft.document.kind === "tiles" && pointer
-      ? nearestSurface(pointer, e.draft.document, e.catalogue)
-      : pointer;
-  if (point)
-    e.previewObject = {
-      id: "preview-object",
-      kind: "chest",
-      modelId,
-      ...(point.placement ? point : snap(e.draft.document, point)),
-      scale: 1,
-      rotation: 0,
-      open: false,
-      placing: true,
-    };
+  objectCatalogue.place(modelId, event);
 }
+
 let resolveLeave;
 async function prepareLeave() {
   catalogueDrag.cancel();
+  objectCatalogue.cancel();
   e.resetGesture();
   if (reference.value?.prepareLeave() === false) {
     setView("reference");
@@ -218,6 +216,7 @@ function hotkey(event) {
   }
   if (event.key === "Escape") {
     catalogueDrag.cancel();
+    objectCatalogue.cancel();
     e.handle({ phase: "cancel" });
   }
   if ((event.metaKey || event.ctrlKey) && event.code === "KeyZ") {

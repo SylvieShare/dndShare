@@ -1,9 +1,30 @@
 import { Group, InstancedMesh, Matrix4 } from "three";
-import { tileTransform } from "./tileTransform";
+import { tilePose, tilePoseTransform } from "./tileTransform";
+import { createRotationMotion } from "./rotationMotion";
 
 export function createTileLayer(assets, fog) {
   const root = new Group(),
     temp = new Matrix4();
+  const motion = createRotationMotion();
+  const transform = (id) => {
+    const pose = motion.pose(id),
+      metadata = assets.metadata(allTiles.get(id)?.modelId);
+    return pose && metadata ? tilePoseTransform(pose, metadata) : null;
+  };
+  let allTiles = new Map();
+  function apply() {
+    for (const mesh of root.children) {
+      mesh.userData.tiles.forEach((tile, i) =>
+        mesh.setMatrixAt(
+          i,
+          temp.multiplyMatrices(transform(tile.id), mesh.userData.partMatrix),
+        ),
+      );
+      mesh.instanceMatrix.needsUpdate = true;
+      mesh.computeBoundingSphere();
+    }
+    root.updateMatrixWorld(true);
+  }
   function clear() {
     root.traverse((node) => {
       if (!node.isMesh) return;
@@ -19,6 +40,12 @@ export function createTileLayer(assets, fog) {
     root,
     rebuild(tiles, tier, hiddenIds) {
       clear();
+      allTiles = new Map(tiles.map((t) => [t.id, t]));
+      motion.retain(new Set(allTiles.keys()));
+      for (const tile of tiles) {
+        const metadata = assets.metadata(tile.modelId);
+        if (metadata) motion.set(tile.id, tilePose(tile, metadata));
+      }
       const hidden = new Set(
         Array.isArray(hiddenIds) ? hiddenIds : hiddenIds ? [hiddenIds] : [],
       );
@@ -43,10 +70,11 @@ export function createTileLayer(assets, fog) {
             items.length,
           );
           mesh.userData.tiles = items;
+          mesh.userData.partMatrix = part.matrix;
           items.forEach((tile, i) =>
             mesh.setMatrixAt(
               i,
-              temp.multiplyMatrices(tileTransform(tile, metadata), part.matrix),
+              temp.multiplyMatrices(transform(tile.id), part.matrix),
             ),
           );
           mesh.instanceMatrix.needsUpdate = true;
@@ -55,6 +83,13 @@ export function createTileLayer(assets, fog) {
         }
       }
       root.updateMatrixWorld(true);
+    },
+    transform,
+    advance(delta) {
+      if (!motion.isMoving()) return false;
+      const moving = motion.advance(delta);
+      apply();
+      return moving;
     },
     hit(ray) {
       const hit = ray.intersectObjects(root.children, false)[0];

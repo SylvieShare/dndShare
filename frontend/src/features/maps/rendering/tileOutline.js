@@ -13,6 +13,7 @@ import {
   WebGLRenderTarget,
 } from "three";
 import { tileTransform } from "./tileTransform";
+import { TILE_ACCENT, OBJECT_ACCENT } from "./mapAccents";
 
 export function createTileOutline(gpu, assets) {
   const maskScene = new Scene(),
@@ -23,16 +24,22 @@ export function createTileOutline(gpu, assets) {
   const depth = new MeshBasicMaterial({ colorWrite: false });
   const hover = new MeshBasicMaterial({
     color: 0xff0000,
+    toneMapped: false,
     polygonOffset: true,
     polygonOffsetFactor: -1,
     polygonOffsetUnits: -1,
   });
   const selected = new MeshBasicMaterial({
     color: 0x00ff00,
+    toneMapped: false,
     polygonOffset: true,
     polygonOffsetFactor: -1,
     polygonOffsetUnits: -1,
   });
+  const objectHover = hover.clone();
+  objectHover.color.setRGB(0, 0, 0.55);
+  const objectSelected = selected.clone();
+  objectSelected.color.setHex(0x0000ff);
   const shader = new ShaderMaterial({
     transparent: true,
     depthTest: false,
@@ -41,22 +48,26 @@ export function createTileOutline(gpu, assets) {
     uniforms: {
       mask: { value: target.texture },
       texel: { value: new Vector2(1, 1) },
-      colour: { value: new Color(0xf2d397) },
+      tileColour: { value: new Color(TILE_ACCENT) },
+      objectColour: { value: new Color(OBJECT_ACCENT) },
     },
     vertexShader: `varying vec2 vUv;
       void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
-    fragmentShader: `uniform sampler2D mask; uniform vec2 texel; uniform vec3 colour;
+    fragmentShader: `uniform sampler2D mask; uniform vec2 texel; uniform vec3 tileColour; uniform vec3 objectColour;
       varying vec2 vUv;
       void main() {
-        vec2 center = texture2D(mask, vUv).rg;
-        vec2 edge = vec2(0.0);
+        vec3 center = texture2D(mask, vUv).rgb;
+        vec3 edge = vec3(0.0);
         for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) {
           vec2 offset = vec2(float(x), float(y)) * texel;
           edge.r = max(edge.r, texture2D(mask, vUv + offset).r);
           edge.g = max(edge.g, texture2D(mask, vUv + offset * 2.0).g);
+          edge.b = max(edge.b, texture2D(mask, vUv + offset).b);
+          float outerObject = texture2D(mask, vUv + offset * 2.0).b;
+          edge.b = max(edge.b, outerObject * step(0.75, outerObject));
         }
-        edge = max(edge - center, vec2(0.0));
-        gl_FragColor = vec4(colour, max(edge.r * 0.55, edge.g));
+        edge = max(edge - center, vec3(0.0));
+        gl_FragColor = vec4(edge.b > 0.0 ? objectColour : tileColour, max(max(edge.r * 0.55, edge.g), edge.b));
         #include <colorspace_fragment>
       }`,
   });
@@ -105,6 +116,7 @@ export function createTileOutline(gpu, assets) {
       if (!model || !metadata) continue;
       for (const part of model.parts) {
         const mesh = new InstancedMesh(part.geometry, material, entries.length);
+        mesh.userData = { entries, metadata, partMatrix: part.matrix };
         entries.forEach(([tile], index) =>
           mesh.setMatrixAt(
             index,
@@ -130,12 +142,18 @@ export function createTileOutline(gpu, assets) {
             source.push({
               mesh,
               material:
-                preview.userData.outlineStyle === "hover" ? hover : selected,
+                preview.userData.outlineType === "object"
+                  ? preview.userData.outlineStyle === "hover"
+                    ? objectHover
+                    : objectSelected
+                  : preview.userData.outlineStyle === "hover"
+                    ? hover
+                    : selected,
             });
         });
       }
     const next = source
-      .map(({ mesh, material }) => `${mesh.id}:${material === selected}`)
+      .map(({ mesh, material }) => `${mesh.id}:${material.id}`)
       .join(",");
     if (next !== motionKey) {
       motion.children.forEach((mesh) => mesh.dispose?.());
@@ -159,7 +177,21 @@ export function createTileOutline(gpu, assets) {
       }
     });
   }
-  function render(scene, camera, annotations, previews) {
+  function render(scene, camera, annotations, previews, tileMatrix) {
+    if (tileMatrix)
+      for (const mesh of root.children) {
+        const { entries, metadata, partMatrix } = mesh.userData;
+        entries.forEach(([tile], i) =>
+          mesh.setMatrixAt(
+            i,
+            new Matrix4().multiplyMatrices(
+              tileMatrix(tile.id) || tileTransform(tile, metadata),
+              partMatrix,
+            ),
+          ),
+        );
+        mesh.instanceMatrix.needsUpdate = true;
+      }
     syncMotion(previews);
     if (!root.children.length && !motion.children.length) return;
     gpu.getDrawingBufferSize(size);
@@ -209,6 +241,8 @@ export function createTileOutline(gpu, assets) {
     depth.dispose();
     hover.dispose();
     selected.dispose();
+    objectHover.dispose();
+    objectSelected.dispose();
     shader.dispose();
     quad.geometry.dispose();
   }

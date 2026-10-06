@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 import { Raycaster, Vector3 } from "three";
+import { TILE_ACCENT } from "./mapAccents";
 import { createPlacementAnchors } from "./placementAnchors";
 import { structureContext } from "../lib/tileStructure";
 it("shows only opaque free sockets, colours the target and can disable picking", () => {
@@ -32,10 +33,9 @@ it("shows only opaque free sockets, colours the target and can disable picking",
   );
   expect(hit.anchor).toMatchObject({ level: 1, elevation: 0.6 });
   expect(
-    anchors.root.children.some((m) => m.material.color.getHex() === 0xb399e5),
-  ).toBe(true);
-  expect(
-    anchors.root.children.some((m) => m.material.color.getHex() === 0x73c99a),
+    anchors.root.children.every(
+      (m) => m.material.color.getHex() === TILE_ACCENT,
+    ),
   ).toBe(true);
   const points = anchors.root.children.flatMap((m) => m.userData.points);
   expect(points).toHaveLength(2);
@@ -43,6 +43,7 @@ it("shows only opaque free sockets, colours the target and can disable picking",
   for (const mesh of anchors.root.children) {
     expect(mesh.material.transparent).toBe(false);
     expect(mesh.material.opacity).toBe(1);
+    expect(mesh.material.toneMapped).toBe(false);
     expect(mesh.material.depthWrite).toBe(true);
   }
   expect(

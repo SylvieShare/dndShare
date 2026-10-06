@@ -1,11 +1,13 @@
 import { Color, Group, InstancedMesh, Matrix4 } from "three";
-import { tileTransform } from "./tileTransform";
+import { tilePose, tilePoseTransform } from "./tileTransform";
+import { createRotationMotion } from "./rotationMotion";
 import { landingTarget } from "./tileLanding";
 
 export function createTilePreview(assets, onSettled = () => {}) {
   const root = new Group(),
     errorColour = new Color(0xe85c8a),
     matrix = new Matrix4();
+  const rotation = createRotationMotion();
   let key = "",
     target = null,
     position = null,
@@ -31,6 +33,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       if (!active && (!tile.id || tile.id !== target?.id)) {
         position = null;
         lift = 0;
+        rotation.clear();
       }
       active = true;
       landing = false;
@@ -115,7 +118,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       ((target.elevation || 0) - position.elevation) * amount;
     lift += (liftTarget - lift) * vertical;
     opacity += (opacityTarget - opacity) * vertical;
-    const moving =
+    let moving =
       Math.hypot(
         target.x - position.x,
         target.y - position.y,
@@ -130,21 +133,33 @@ export function createTilePreview(assets, onSettled = () => {}) {
         elevation: target.elevation || 0,
       });
     const group = target.group || [target];
+    rotation.retain(new Set(group.map((t, i) => t.id || i)));
+    group.forEach((tile, index) => {
+      const metadata = assets.metadata(tile.modelId);
+      if (metadata)
+        rotation.set(
+          tile.id || index,
+          tilePose(
+            {
+              ...tile,
+              x: tile.x + position.x - target.x,
+              y: tile.y + position.y - target.y,
+              elevation:
+                (tile.elevation || 0) +
+                position.elevation -
+                (target.elevation || 0) +
+                lift,
+            },
+            metadata,
+          ),
+        );
+    });
+    moving = rotation.advance(delta) || moving;
     for (const node of root.children) {
       node.userData.indices.forEach((index, slot) => {
         const tile = group[index];
-        const placement = tileTransform(
-          {
-            ...tile,
-            x: tile.x + position.x - target.x,
-            y: tile.y + position.y - target.y,
-            // The insertion peg stays below the body's datum; lift is visual.
-            elevation:
-              (tile.elevation || 0) +
-              position.elevation -
-              (target.elevation || 0) +
-              lift,
-          },
+        const placement = tilePoseTransform(
+          rotation.pose(tile.id || index),
           node.userData.metadata,
         );
         node.setMatrixAt(
@@ -167,6 +182,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       root.visible = false;
       clear();
       key = "";
+      rotation.clear();
       onSettled();
     }
     return moving;
