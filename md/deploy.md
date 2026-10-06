@@ -33,14 +33,18 @@ S3-клиент сохраняет path-style адресацию и исполь
 3. копирует `frontend/target/dist` в `internal/assets/dist`;
 4. собирает один статический `linux/amd64` бинарь с текущим Git SHA в
    `internal/web.BuildCommit`;
-5. копирует основной бинарь, `deploy/dndshare.service` и
+5. проверяет минимум 256 МиБ свободного места в файловой системе домашнего
+   каталога на VM; при нехватке останавливается до загрузки и перезапуска приложения;
+6. копирует основной бинарь, `deploy/dndshare.service` и
    `deploy/dndshare-run.sh` на VM;
-6. атомарно заменяет основной бинарь и перезапускает systemd unit; системные
+7. устанавливает `deploy/journald-storage.conf` как journald drop-in, перезапуская
+   только journald при изменении настройки;
+8. атомарно заменяет основной бинарь и перезапускает systemd unit; системные
    изображения и image-sync бинарники штатный deploy не передаёт;
-7. до 30 секунд опрашивает `GET /api/health`;
-8. считает deploy успешным только если ответ содержит `status=ok` и точный
+9. до 30 секунд опрашивает `GET /api/health`;
+10. считает deploy успешным только если ответ содержит `status=ok` и точный
    `commitSha` выкатываемого commit;
-9. печатает systemd status и хвост `~/dndshare-log.txt`.
+11. печатает systemd status и хвост `~/dndshare-log.txt`.
 
 Если startup SQL не применился или БД недоступна, сервис не проходит readiness,
 а deploy завершается с ошибкой.
@@ -49,11 +53,30 @@ S3-клиент сохраняет path-style адресацию и исполь
 
 - `deploy/deploy.sh` — local build/upload/readiness.
 - `deploy/dndshare.service` — актуальный systemd unit.
+- `deploy/journald-storage.conf` — постоянные журналы до 128 МиБ, резерв 512 МиБ
+  свободного места; устанавливается в `/etc/systemd/journald.conf.d/60-dndshare-storage.conf`.
 - `deploy/dndshare-run.sh` — VM wrapper: получает secrets, экспортирует env и
   делает `exec ~/dndshare`.
 - `deploy/fetch-secrets.sh` — получает payload Yandex Lockbox в
   `~/dndshare.env` с mode 600.
 - `deploy/setup-vm.sh` и `deploy/bootstrap-vm.sh` — одноразовая подготовка VM.
+
+## Свободное место и обрывы HTTP
+
+Заполненная файловая система VM обрывает буферизацию больших ответов nginx и
+запись тел запросов. Симптомы: `ERR_INCOMPLETE_CHUNKED_ENCODING` при загрузке
+каталога моделей и ошибки сохранения карты; в `/var/log/nginx/error.log` —
+`No space left on device`. Health-check может оставаться успешным, поскольку
+его ответ мал.
+
+Проверяют `df -h /`, `journalctl --disk-usage` и размеры каталогов. Для аварийного
+освобождения места в журналах: `sudo journalctl --rotate` и
+`sudo journalctl --vacuum-size=128M`; удаляются только архивные журналы, текущий
+журнал остаётся. Постоянный лимит journald применяется штатным deploy.
+Кэш хешированных frontend-ресурсов не очищается: он нужен открытым вкладкам.
+Карты и каталог находятся в PostgreSQL, модели — в S3; их для очистки диска VM
+не удаляют. Проверка минимального места перед deploy предотвращает выпуск
+на уже переполненный диск.
 
 ## Secrets and environment
 

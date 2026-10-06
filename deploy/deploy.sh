@@ -50,18 +50,34 @@ ls -lh build/dndshare | awk '{print "    бинарь:", $5}'
 echo "==> Архив frontend assets для открытых вкладок"
 tar -czf build/frontend-assets.tar.gz -C "$FRONTEND_DIR/target/dist" static
 
+echo "==> Проверка свободного места на VM"
+ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" 'bash -s' <<'DISK_CHECK'
+  set -euo pipefail
+  available_bytes=$(df -PB1 "$HOME" | awk 'NR==2 {print $4}')
+  if [ "$available_bytes" -lt 268435456 ]; then
+    echo "ОШИБКА: для deploy нужно хотя бы 256 МиБ свободного места; доступно $available_bytes байт" >&2
+    exit 1
+  fi
+DISK_CHECK
+
 echo "==> Копирование основного бинаря + unit + run.sh на $VM_HOST"
 # .new + mv на VM — чтобы не ловить 'text file busy' при перезаписи работающего бинаря.
 scp -i "$SSH_KEY" build/frontend-assets.tar.gz "$VM_USER@$VM_HOST:~/dndshare-frontend-assets.new.tar.gz"
 scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:~/dndshare.new"
 scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.service"
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
+scp -i "$SSH_KEY" deploy/journald-storage.conf "$VM_USER@$VM_HOST:~/dndshare-journald-storage.conf"
 
 echo "==> Обновление unit + перезапуск сервиса (секреты подтянутся в run.sh)"
 ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set -e
   expected_commit="$1"
   chmod +x ~/dndshare.new ~/dndshare-run.sh ~/fetch-secrets.sh
+  sudo install -d -m 755 /etc/systemd/journald.conf.d
+  if ! sudo cmp -s ~/dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf; then
+    sudo install -m 644 ~/dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf
+    sudo systemctl restart systemd-journald
+  fi
   while IFS= read -r unit_line; do
     case "$unit_line" in
       Environment=*) export "${unit_line#Environment=}" ;;
