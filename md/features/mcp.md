@@ -162,7 +162,7 @@ MCP_AUTH_TOKEN, `-assets` указывает папку content-addressed фай
 catalogue.json; endpoint по умолчанию https://dndshare.ru/mcp.
 
 Каталог поддерживает единый `tileType`: `floor`, `wall-straight`, `wall-angle`,
-`wall-tee`, `wall-cross`, `wall-corner`, `wall-custom`, `stairs`, `frame`, `prop`.
+`wall-tee`, `wall-cross`, `wall-end`, `wall-corner`, `wall-diagonal`, `stairs`, `frame`, `prop`.
 `collection`/`collectionName` задают пак; отдельных terrainType и wallLayout нет.
 Также поддерживаются `collectionName`,
 `wallMode=center/edge/none`, `wallMask` и `supportSlots` с целыми координатами и

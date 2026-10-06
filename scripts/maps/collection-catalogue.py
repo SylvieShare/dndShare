@@ -1,5 +1,6 @@
 """Build a complete, reproducible S3 manifest from prepared collection assets."""
 from pathlib import Path
+from tile_category import tile_category
 import hashlib, json, os, uuid
 import numpy as np
 from PIL import Image
@@ -90,7 +91,7 @@ for report in sorted(BASE.glob('*/*/report.json')):
  tags=[tag for tag in ['wood','skull','bone','pipe','stalagmite','water','railway','mushroom','crystal'] if tag in row['sourceName'].lower()]
  m={'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'dndshare:'+row['collection']+':'+row['code']+':'+files['render']['sha256'])),
     'collection':row['collection'],'collectionName':row['collectionName'],'sourceCode':row['code'],'sourceName':row['sourceName'],'name':row['sourceName'],'version':row.get('variantVersion',1),
-    'tileType':('wall-'+(layout if layout in ['straight','angle','tee','cross','corner'] else 'custom')) if row['tileType']=='wall' else row['tileType'],'wallMode':mode,'wallMask':mask,'width':row['width'],'height':row['height'],
+    'tileType':tile_category(row['tileType'],row['sourceName'],mode,mask,layout),'wallMode':mode,'wallMask':mask,'width':row['width'],'height':row['height'],
     'surfaceHeight':row['surfaceHeight'],'maxHeight':row['maxHeight'],'blockers':blockers,'tags':tags,'supportSlots':row['supportSlots'],'assets':files}
  m['mountDepth']=placement['mountDepth']
  m['placementOffset']=placement['placementOffset']

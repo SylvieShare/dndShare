@@ -24,7 +24,7 @@ export function modelConnections(model) {
   if (Number.isInteger(model?.wallMask)) return model.wallMask;
   if (!isWallTile(model)) return 0;
   if (masks.has(model)) return masks.get(model);
-  const fallback = { straight: 17, angle: 65, tee: 21, cross: 85, corner: 1 };
+  const fallback = { straight: 17, angle: 65, tee: 21, cross: 85, end: 1 };
   let mask = 0;
   if (!model.blockers?.length) mask = fallback[model.tileType.slice(5)] || 0;
   else

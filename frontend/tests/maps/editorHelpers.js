@@ -9,7 +9,13 @@ export async function pickTile(page, name = "Пол 1") {
   );
   const labels = {
     floor: "Пол",
-    wall: "Все стены",
+    "wall-straight": "Прямые стены",
+    "wall-angle": "Внутренние углы (Angle)",
+    "wall-tee": "Т-образные стены",
+    "wall-cross": "Х-образные стены",
+    "wall-end": "Выступы и окончания стен",
+    "wall-corner": "Наружные углы (Corner)",
+    "wall-diagonal": "Диагональные стены",
     stairs: "Лестницы",
     frame: "Каркасы",
     prop: "Декор",
@@ -17,7 +23,7 @@ export async function pickTile(page, name = "Пол 1") {
   await page
     .getByRole("toolbar", { name: "Типы тайлов" })
     .getByRole("button", {
-      name: kind?.startsWith("wall-") ? "Все стены" : labels[kind],
+      name: labels[kind],
       exact: true,
     })
     .click();

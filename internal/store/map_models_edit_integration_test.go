@@ -50,7 +50,15 @@ func TestMapModelRevisionPersistence(t *testing.T) {
 	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
 SELECT '00000000-0000-4000-8000-000000000099','migration-test','CUSTOM','Custom wall','Custom wall',1,'wall','cave','arched-door',geometry,assets
 FROM dndshare.map_model LIMIT 1`)
+	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
+SELECT item.id::uuid,'shape-reference',item.code,item.name,item.name,1,'wall','dungeon','custom',model.geometry,model.assets
+FROM (VALUES
+ ('00000000-0000-4000-8000-000000000096','UD-096','Wall Corner'),
+ ('00000000-0000-4000-8000-000000000097','UD-097','Wall Diagonal'),
+ ('00000000-0000-4000-8000-000000000014','UD-014','Angle')
+) AS item(id,code,name) CROSS JOIN LATERAL (SELECT geometry,assets FROM dndshare.map_model LIMIT 1) model`)
 	exec(schemaModelTileCategoriesSQL)
+	exec(schemaModelWallShapesSQL)
 	s := &Store{pool: pool}
 	for _, expected := range battlemap.InitialCatalogue() {
 		migrated, err := s.GetMapModel(ctx, expected.ID)
@@ -59,8 +67,18 @@ FROM dndshare.map_model LIMIT 1`)
 		}
 	}
 	custom, err := s.GetMapModel(ctx, "00000000-0000-4000-8000-000000000099")
-	if err != nil || custom.TileType != "wall-custom" {
+	if err != nil || custom.TileType != "wall-straight" {
 		t.Fatalf("unknown wall shape lost during migration: %+v %v", custom, err)
+	}
+	for id, category := range map[string]string{
+		"00000000-0000-4000-8000-000000000096": "wall-corner",
+		"00000000-0000-4000-8000-000000000097": "wall-diagonal",
+		"00000000-0000-4000-8000-000000000014": "wall-angle",
+	} {
+		model, err := s.GetMapModel(ctx, id)
+		if err != nil || model.TileType != category {
+			t.Fatalf("wall shape reference classified incorrectly: %+v %v", model, err)
+		}
 	}
 	var oldColumns int
 	if err := pool.QueryRow(ctx, `SELECT count(*) FROM information_schema.columns WHERE table_schema='dndshare' AND table_name='map_model' AND column_name IN ('wall_layout','terrain_type')`).Scan(&oldColumns); err != nil || oldColumns != 0 {

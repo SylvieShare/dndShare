@@ -45,6 +45,7 @@ func TestEditedMapModelRejectsIdentityChangesAndInvalidGeometry(t *testing.T) {
 		func(m *battlemap.ModelMetadata) { m.Width = 0 },
 		func(m *battlemap.ModelMetadata) { m.TileType = "wall" },
 		func(m *battlemap.ModelMetadata) { m.TileType = "wall-unknown" },
+		func(m *battlemap.ModelMetadata) { m.TileType = "wall-custom" },
 		func(m *battlemap.ModelMetadata) { m.MaxHeight = math.NaN() },
 		func(m *battlemap.ModelMetadata) {
 			m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: 99}}

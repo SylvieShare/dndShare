@@ -302,9 +302,10 @@ BaseTile через DetailSection. Полноэкранный выбор дос�
 ADMIN видит MapTileReference: MapModelFields и MapModelSlots составлены из общих
 FormField/FormTextInput/FormSelect/ToggleSwitch/DetailSection; сохранение параметров
 создаёт новую версию каталога. MapTileCategoryPicker использует ActionButton с
-доменными SVG-силуэтами TileCategoryIcon: типы тайлов и формы стен выбираются одним
+общими для всех паков WebP-иконками TileCategoryIcon: типы тайлов и формы стен выбираются одним
 набором иконок; начальная категория — пол или первый доступный тип коллекции.
-TileCategoryIcon рисует непрозрачные видимые грани без задних рёбер.
+TileCategoryIcon загружает растровые ассеты из `frontend/src/assets/maps/tile-types/`: без текста и рамки,
+с прозрачным фоном. Blender-скрипт воспроизводит непрозрачные объёмные силуэты.
 MapTileReference доступен ADMIN через вкладку в общей шапке.
 MapCollectionPicker размещён над левым каталогом и доступен в свёрнутом виде;
 он составляет выбор пака из общих ActionButton/BasePopover/BaseTile. Доменная

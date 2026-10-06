@@ -24,6 +24,18 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
   await expect(sidebar.locator(".map-model-card button")).toHaveCount(0);
   const picker = sidebar.getByRole("toolbar", { name: "Типы тайлов" });
   await expect(picker.getByRole("button")).toHaveCount(11);
+  for (const name of ["Все стены", "Сложные стены"])
+    await expect(picker.getByRole("button", { name, exact: true })).toHaveCount(
+      0,
+    );
+  for (const name of [
+    "Наружные углы (Corner)",
+    "Диагональные стены",
+    "Выступы и окончания стен",
+  ])
+    await expect(
+      picker.getByRole("button", { name, exact: true }),
+    ).toBeVisible();
   await expect(
     picker.getByRole("button", { name: "Все тайлы", exact: true }),
   ).toHaveCount(0);
@@ -42,7 +54,9 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
   await expect(
     picker.getByRole("button", { name: "Прямые стены", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await picker.getByRole("button", { name: "Углы стен", exact: true }).click();
+  await picker
+    .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
+    .click();
   await expect(
     sidebar.getByRole("button", { name: "Угол стены", exact: true }),
   ).toBeVisible();
@@ -50,7 +64,7 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
     sidebar.getByRole("button", { name: "Стена 1", exact: true }),
   ).toHaveCount(0);
   for (const button of await picker.getByRole("button").all())
-    await expect(button.locator("svg")).toHaveCount(1);
+    await expect(button.locator("img")).toHaveCount(1);
   await picker.getByRole("button", { name: "Пол", exact: true }).click();
   const before = await page.locator(".map-canvas").boundingBox();
   await page.getByRole("button", { name: "Свернуть список плиток" }).click();
@@ -247,7 +261,7 @@ test("reference uses filter categories and preserves a draft when changing packs
   await expect(page.getByLabel("Форма стен", { exact: true })).toHaveCount(0);
   await expect(
     page.getByLabel("Тип тайла", { exact: true }).locator("option"),
-  ).toHaveCount(10);
+  ).toHaveCount(11);
   await page
     .getByLabel("Тип тайла", { exact: true })
     .selectOption("wall-angle");
@@ -279,8 +293,54 @@ test("reference uses filter categories and preserves a draft when changing packs
   expect(saved).not.toHaveProperty("terrainType");
   await page.getByRole("tab", { name: "Карта", exact: true }).click();
   const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
-  await sidebar.getByRole("button", { name: "Углы стен", exact: true }).click();
+  await sidebar
+    .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
+    .click();
   await expect(
     sidebar.getByRole("button", { name: "Пол 1", exact: true }),
   ).toBeVisible();
+});
+
+test("corner and diagonal have independent filters and use the same WebP icons across packs", async ({
+  page,
+}) => {
+  await ready(page);
+  const picker = page
+    .getByRole("complementary", { name: "Каталог плиток" })
+    .getByRole("toolbar", { name: "Типы тайлов" });
+  const sources = await picker
+    .locator("img")
+    .evaluateAll((images) => images.map((img) => img.src));
+  for (const src of sources) expect(src).toMatch(/\.webp(?:\?|$)/);
+  await choosePack(page, "ultimate-dungeon");
+  expect(
+    await picker
+      .locator("img")
+      .evaluateAll((images) => images.map((img) => img.src)),
+  ).toEqual(sources);
+  await picker
+    .getByRole("button", { name: "Наружные углы (Corner)", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Наружный угол", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Диагональная стена", exact: true }),
+  ).toHaveCount(0);
+  await picker
+    .getByRole("button", { name: "Диагональные стены", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Диагональная стена", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Наружный угол", exact: true }),
+  ).toHaveCount(0);
+  expect(
+    await picker
+      .locator("img")
+      .evaluateAll((images) =>
+        images.every((img) => img.complete && img.naturalWidth === 192),
+      ),
+  ).toBe(true);
 });
