@@ -17,6 +17,7 @@
 | Изменить справочник или механику записи | [Справочник](features/handbook.md), [редактор](features/catalogue-editor.md), [оценка поддержки](features/item-automation.md) |
 | Изменить endpoint или формат данных | [HTTP API](api.md), [БД и миграции](database.md), страница фичи |
 | Подготовить изображения | [Медиа справочника](handbook-media.md), [стиль обложек](handbook-art-style.md), [маскоты](mascot.md) |
+| Подготовить модели карт | [Пайплайн обработки моделей](features/maps-model-pipeline.md), [материалы Ultimate Dungeon](features/maps-textures.md) |
 | Выпустить изменение или разобраться с production | [Деплой и окружение](deploy.md) |
 | Обновить саму документацию | [Устройство и проверка wiki](documentation.md) |
 
@@ -55,6 +56,8 @@
 | --- | --- |
 | [Сессии](features/sessions.md) | Подготовка сюжета, бой, экран игроков, хроника и инвентарь мастера. |
 | [Игровые карты](features/maps.md) | Библиотека, редактор, туман, жетоны и трансляция на стол. |
+| [Обработка моделей 3D-карт](features/maps-model-pipeline.md) | Импорт, геометрия, покраска, превью, тени, проверки и публикация через MCP. |
+| [Текстуры моделей](features/maps-textures.md) | Материалы и разметка отдельных моделей Ultimate Dungeon. |
 | [Majestic Highlands XL](features/majestic-highlands.md) | Исходники нового пака, подготовка и проверка моделей 3×3. |
 | [Применение урона](features/session-damage.md) | Цели, защиты, изменение HP и история существа. |
 | [Дневники](features/journals.md) | Лента событий, задания, права и дневник внутри листа. |

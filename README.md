@@ -17,6 +17,8 @@ frontend, PostgreSQL и S3-compatible object storage.
   [Архитектура](md/architecture.md), [frontend](md/frontend.md),
   [HTTP API](md/api.md), [БД](md/database.md) и страницы фич в `md/features/`
   описывают реализованное состояние; крупные темы имеют собственные подразделы.
+- [Обработка моделей 3D-карт](md/features/maps-model-pipeline.md) описывает
+  подготовку геометрии, текстур, превью, теней и публикацию в S3 через MCP.
 - [Деплой](md/deploy.md) описывает выпуск и окружение,
   [лимиты файлов](md/file-size-rules.md) — границы реализации,
   [сопровождение wiki](md/documentation.md) — структуру, ссылки и проверку
