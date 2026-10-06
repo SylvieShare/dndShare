@@ -117,7 +117,7 @@ export function editorWallBrush(e) {
     cells = new Set();
     last = point;
     e.setTileSelection([]);
-    e.selectedObject.value = "";
+    e.setObjectSelection([]);
     e.hoveredTile.value = "";
     e.selection.value = null;
     e.error.value = "";

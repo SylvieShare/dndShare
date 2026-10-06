@@ -105,7 +105,7 @@ export function editorGestures(e) {
       if (phase === "start") {
         if (tool === "select" && !hit && !event?.metaKey && !event?.ctrlKey) {
           e.setTileSelection([]);
-          e.selectedObject.value = "";
+          e.setObjectSelection([]);
         }
         if (!inside(d, point.x, point.y) && !(tool === "select" && hit)) return;
         e.pauseSave(true);
@@ -125,8 +125,13 @@ export function editorGestures(e) {
           const object = hit?.objectId
             ? d.objects.find((o) => o.id === hit.objectId)
             : null;
-          e.selectedObject.value = object?.id || "";
           if (gesture.additive) {
+            if (object)
+              e.setObjectSelection(
+                e.selectedObjects.value.includes(object.id)
+                  ? e.selectedObjects.value.filter((id) => id !== object.id)
+                  : [...e.selectedObjects.value, object.id],
+              );
             if (tile) {
               const ids = e.selectedTiles.value.includes(tile.id)
                 ? e.selectedTiles.value.filter((id) => id !== tile.id)
@@ -134,12 +139,16 @@ export function editorGestures(e) {
               e.setTileSelection(ids);
             }
           } else if (tile) {
+            e.setObjectSelection([]);
             if (!e.selectedTiles.value.includes(tile.id))
               e.setTileSelection([tile.id]);
             e.selectedTile.value = tile.id;
             gesture.tile = { ...tile };
-          } else e.setTileSelection([]);
-          if (object) gesture.object = { ...object };
+          } else {
+            e.setTileSelection([]);
+            e.setObjectSelection(object ? [object.id] : []);
+          }
+          if (object && !gesture.additive) gesture.object = { ...object };
         }
         if (tool === "object") {
           if (point.invalidSurface) {
@@ -157,7 +166,7 @@ export function editorGestures(e) {
             open: false,
           };
           d.objects.push(o);
-          e.selectedObject.value = o.id;
+          e.setObjectSelection([o.id]);
           e.setTileSelection([]);
           e.tool.value = "select";
           if (e.previewObject) e.previewObject.value = null;
@@ -298,19 +307,23 @@ export function editorGestures(e) {
       (e.tool.value.startsWith("zone") ? e.selectedZone.value : "");
     if (!selected) return;
     e.change((m) => {
+      const objects = new Set(e.selectedObjects.value);
       if (e.selectedTiles.value.length) {
         const ids = new Set(
           dependentTiles(m.document, e.catalogue.value, e.selectedTiles.value),
         );
         m.document.tiles = m.document.tiles.filter((t) => !ids.has(t.id));
-      } else if (e.selectedObject.value)
         m.document.objects = m.document.objects.filter(
-          (o) => o.id !== selected,
+          (o) => !objects.has(o.id) && !ids.has(o.placement?.tileId),
+        );
+      } else if (objects.size)
+        m.document.objects = m.document.objects.filter(
+          (o) => !objects.has(o.id),
         );
       else m.document.zones = m.document.zones.filter((z) => z.id !== selected);
     });
     e.setTileSelection([]);
-    e.selectedObject.value = "";
+    e.setObjectSelection([]);
     e.hoveredTile.value = "";
   }
   function rotate() {
@@ -325,10 +338,15 @@ export function editorGestures(e) {
         };
       return;
     }
-    const object = doc().objects.find((o) => o.id === e.selectedObject.value);
-    if (e.tool.value === "select" && object) {
+    if (e.selectedTiles.value.length && rotateGroup()) return;
+    const objects = doc().objects.filter((o) =>
+      e.selectedObjects.value.includes(o.id),
+    );
+    if (e.tool.value === "select" && objects.length) {
       e.change(() => {
-        object.rotation = (object.rotation + 90) % 360;
+        objects.forEach((object) => {
+          object.rotation = (object.rotation + 90) % 360;
+        });
       });
       return;
     }

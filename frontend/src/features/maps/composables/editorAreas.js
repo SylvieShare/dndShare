@@ -14,16 +14,13 @@ export function editorAreas(e) {
       o.y < r.y + r.height;
     return {
       tiles: d.tiles
-        .filter(
-          (t) =>
-            !hidden.tiles.has(t.id) && e.selectedTiles.value.includes(t.id),
-        )
+        .filter((t) => e.selectedTiles.value.includes(t.id))
         .map((t) => t.id),
       objects: d.objects
         .filter(
           (o) =>
-            !hidden.objects.has(o.id) &&
-            (o.id === e.selectedObject.value || inside(o)),
+            e.selectedObjects.value.includes(o.id) ||
+            (!hidden.objects.has(o.id) && inside(o)),
         )
         .map((o) => o.id),
     };
@@ -57,32 +54,60 @@ export function editorAreas(e) {
       e.setTileSelection(
         e.selectedTiles.value.filter((id) => !area.tileIds.includes(id)),
       );
-      if (area.objectIds.includes(e.selectedObject.value))
-        e.selectedObject.value = "";
+      e.setObjectSelection(
+        e.selectedObjects.value.filter((id) => !area.objectIds.includes(id)),
+      );
       e.selection.value = null;
     }
   }
+  function actionMembers(id, removing) {
+    const area = e.draft.value.document.areas.find((a) => a.id === id);
+    if (!area) return { tiles: [], objects: [] };
+    return {
+      tiles: members.value.tiles.filter(
+        (id) => area.tileIds.includes(id) === removing,
+      ),
+      objects: members.value.objects.filter(
+        (id) => area.objectIds.includes(id) === removing,
+      ),
+    };
+  }
+  function areaSelectionCounts(id) {
+    const add = actionMembers(id, false),
+      remove = actionMembers(id, true);
+    return {
+      add: add.tiles.length + add.objects.length,
+      remove: remove.tiles.length + remove.objects.length,
+    };
+  }
   function addSelectionToArea(id) {
-    e.change((m) => assignArea(m.document, id, members.value));
+    const selected = actionMembers(id, false);
+    if (!selected.tiles.length && !selected.objects.length) return;
+    e.change((m) => assignArea(m.document, id, selected));
   }
   function removeSelectionFromArea(id) {
-    const selected = members.value;
+    const selected = actionMembers(id, true);
+    if (!selected.tiles.length && !selected.objects.length) return;
     e.change((m) => {
-      const a = m.document.areas.find((a) => a.id === id);
-      if (!a) return;
-      a.tileIds = a.tileIds.filter((id) => !selected.tiles.includes(id));
-      a.objectIds = a.objectIds.filter((id) => !selected.objects.includes(id));
+      const area = m.document.areas.find((a) => a.id === id);
+      area.tileIds = area.tileIds.filter((id) => !selected.tiles.includes(id));
+      area.objectIds = area.objectIds.filter(
+        (id) => !selected.objects.includes(id),
+      );
     });
+  }
+  function selectArea(id) {
+    const area = e.draft.value.document.areas.find((a) => a.id === id);
+    if (!area) return;
+    e.tool.value = "select";
+    e.selection.value = null;
+    e.screenSelection.value = null;
+    e.setTileSelection(area.tileIds);
+    e.setObjectSelection(area.objectIds);
   }
   function removeArea(id) {
     e.change((m) => {
       m.document.areas = m.document.areas.filter((a) => a.id !== id);
-    });
-  }
-  function removeAreaMember(id, kind, member) {
-    e.change((m) => {
-      const a = m.document.areas.find((a) => a.id === id);
-      if (a) a[kind] = a[kind].filter((value) => value !== member);
     });
   }
   return {
@@ -92,9 +117,7 @@ export function editorAreas(e) {
     addSelectionToArea,
     removeSelectionFromArea,
     removeArea,
-    removeAreaMember,
-    areaSelectionCount: computed(
-      () => members.value.tiles.length + members.value.objects.length,
-    ),
+    selectArea,
+    areaSelectionCounts,
   };
 }

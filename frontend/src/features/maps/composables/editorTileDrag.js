@@ -117,7 +117,7 @@ export function editorTileDrag(e) {
     e.tool.value = "select";
     e.selectedModel.value = modelId;
     e.hoveredTile.value = "";
-    e.selectedObject.value = "";
+    e.setObjectSelection([]);
     if (!tile || !e.selectedTiles.value.includes(tile.id))
       e.setTileSelection(tile ? [tile.id] : []);
     e.selectedTile.value = tile?.id || "";

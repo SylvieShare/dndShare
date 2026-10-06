@@ -336,6 +336,21 @@ if (params.has("areaExample")) {
       objectIds: ["area-chest"],
     },
   ];
+  if (params.has("twoAreaObjects")) {
+    source.document.tiles.push({
+      ...source.document.tiles[0],
+      id: "area-floor-2",
+      x: 5,
+    });
+    source.document.objects.push({
+      ...source.document.objects[0],
+      id: "area-chest-2",
+      x: 5.5,
+      placement: { tileId: "area-floor-2", point: 0 },
+    });
+    source.document.areas[0].tileIds.push("area-floor-2");
+    source.document.areas[0].objectIds.push("area-chest-2");
+  }
 }
 let templateRevision = 1;
 let board = { ...clone(source), state: initialState() };

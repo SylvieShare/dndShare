@@ -11,6 +11,75 @@ async function ready(page, mode = "editor", extra = "") {
 const areas = (page) => page.getByRole("region", { name: "Области карты" });
 const open = (page) =>
   page.getByRole("button", { name: "Области", exact: true }).click();
+
+test("area selection includes all tiles and objects and buttons count only applicable members", async ({
+  page,
+}) => {
+  await ready(page, "editor", "&areaExample&twoAreaObjects");
+  await open(page);
+  await areas(page)
+    .getByRole("button", { name: "Выбрать все объекты в области", exact: true })
+    .click();
+  await expect(
+    page.getByRole("status", { name: "Выбрано плиток", exact: true }),
+  ).toHaveText("Выбрано: 2");
+  await expect(
+    page.getByRole("status", { name: "Выбрано объектов", exact: true }),
+  ).toHaveText("Объектов: 2");
+  await expect(
+    areas(page).getByRole("button", {
+      name: "Добавить выбранное (0)",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await expect(
+    areas(page).getByRole("button", {
+      name: "Убрать выбранное из области (4)",
+      exact: true,
+    }),
+  ).toBeEnabled();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("r");
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          window.lastSaved?.document.tiles.every((t) => t.rotation === 90) &&
+          window.lastSaved.document.objects.every((o) => o.rotation === 90),
+      ),
+    )
+    .toBe(true);
+  await areas(page)
+    .getByRole("button", { name: "Создать область", exact: true })
+    .click();
+  await expect(
+    areas(page).getByRole("button", {
+      name: "Убрать выбранное из области (0)",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await areas(page)
+    .getByRole("button", { name: "Добавить выбранное (4)", exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.areas.map(
+          (a) => a.tileIds.length + a.objectIds.length,
+        ),
+      ),
+    )
+    .toEqual([0, 4]);
+  await page
+    .getByRole("button", { name: "Удалить выбранное", exact: true })
+    .click();
+  await expect
+    .poll(() => page.evaluate(() => window.lastSaved?.document.objects.length))
+    .toBe(0);
+  expect(
+    await page.evaluate(() => window.lastSaved.document.tiles.length),
+  ).toBe(0);
+});
 test("named areas contain selected tiles and objects, hide without deleting, and can be removed", async ({
   page,
 }) => {
@@ -41,8 +110,26 @@ test("named areas contain selected tiles and objects, hide without deleting, and
     .getByRole("button", { name: "Добавить выбранное (1)", exact: true })
     .click();
   await expect(
-    areas(page).getByText("Тайлов: 1 · Объектов: 1", { exact: true }),
-  ).toBeVisible();
+    areas(page).getByText("Состав области", { exact: true }),
+  ).toHaveCount(0);
+  await areas(page)
+    .getByRole("button", { name: "Выбрать все объекты в области", exact: true })
+    .click();
+  await expect(
+    page.getByRole("status", { name: "Выбрано объектов", exact: true }),
+  ).toHaveText("Объектов: 1");
+  await expect(
+    areas(page).getByRole("button", {
+      name: "Добавить выбранное (0)",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await expect(
+    areas(page).getByRole("button", {
+      name: "Убрать выбранное из области (2)",
+      exact: true,
+    }),
+  ).toBeEnabled();
   await page
     .getByRole("switch", { name: "Скрыть область «Зал»", exact: true })
     .click();
@@ -103,7 +190,6 @@ test("adding a selected model to another area transfers it and undo restores mem
   await create.click();
   await areas(page)
     .getByRole("button", { name: "Добавить выбранное (1)", exact: true })
-    .nth(1)
     .click();
   await expect
     .poll(() =>

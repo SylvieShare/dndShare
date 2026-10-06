@@ -38,6 +38,7 @@ export function useMapEditor(source, onSaved) {
     objectModel = ref("");
   const selectedZone = ref(""),
     selectedObject = ref(""),
+    selectedObjects = ref([]),
     selection = ref(null),
     saving = ref(false),
     error = ref(""),
@@ -66,6 +67,10 @@ export function useMapEditor(source, onSaved) {
     if (history.value.length > 50) history.value.shift();
     future.value = [];
   }
+  function setObjectSelection(ids) {
+    selectedObjects.value = [...new Set(ids)];
+    selectedObject.value = selectedObjects.value[0] || "";
+  }
   function change(fn) {
     checkpoint();
     fn(draft.value);
@@ -82,6 +87,11 @@ export function useMapEditor(source, onSaved) {
       ),
     );
     selection.value = null;
+    setObjectSelection(
+      selectedObjects.value.filter((id) =>
+        draft.value.document.objects.some((o) => o.id === id),
+      ),
+    );
   }
   function redo() {
     if (!future.value.length) return;
@@ -94,6 +104,11 @@ export function useMapEditor(source, onSaved) {
       ),
     );
     selection.value = null;
+    setObjectSelection(
+      selectedObjects.value.filter((id) =>
+        draft.value.document.objects.some((o) => o.id === id),
+      ),
+    );
   }
   // Document history never rolls the server's compare-and-swap version back.
   let record = { id: draft.value.id, revision: draft.value.revision };
@@ -183,6 +198,8 @@ export function useMapEditor(source, onSaved) {
     previewObject,
     showAnchors,
     selectedObject,
+    selectedObjects,
+    setObjectSelection,
     selectedZone,
     selection,
     history,
@@ -256,6 +273,8 @@ export function useMapEditor(source, onSaved) {
     objectModel,
     selectedZone,
     selectedObject,
+    selectedObjects,
+    setObjectSelection,
     selection,
     saving,
     error,

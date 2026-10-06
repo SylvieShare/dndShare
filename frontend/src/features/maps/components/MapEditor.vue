@@ -53,6 +53,7 @@
           :show-zones="e.tool.startsWith('zone')"
           :selection="e.selection"
           :selected-object="e.tool === 'paste' ? '' : e.selectedObject"
+          :selected-objects="e.tool === 'paste' ? [] : e.selectedObjects"
           :selected-tile="e.tool === 'paste' ? '' : e.selectedTile"
           :selected-tiles="e.tool === 'paste' ? [] : e.selectedTiles"
           :screen-selection="e.screenSelection"

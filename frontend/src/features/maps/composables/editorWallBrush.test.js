@@ -11,11 +11,16 @@ function setup() {
     level: ref(0),
     previewTile: ref(null),
     selectedObject: ref(""),
+    selectedObjects: ref([]),
     hoveredTile: ref(""),
     selection: ref(null),
     error: ref(""),
     pauseSave() {},
     setTileSelection() {},
+    setObjectSelection(ids) {
+      e.selectedObjects.value = ids;
+      e.selectedObject.value = ids[0] || "";
+    },
     history: [],
   };
   e.change = (fn) => {

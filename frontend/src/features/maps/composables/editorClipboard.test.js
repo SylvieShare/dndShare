@@ -17,6 +17,7 @@ function setup() {
     selection: ref(null),
     selectedTiles: ref(["old"]),
     selectedObject: ref(""),
+    selectedObjects: ref([]),
     tool: ref("select"),
     selectedModel: ref(""),
     placementHint: ref(null),
@@ -26,6 +27,10 @@ function setup() {
     error: ref(""),
     tileDrag: { cancel: vi.fn() },
     setTileSelection: vi.fn(),
+    setObjectSelection(ids) {
+      e.selectedObjects.value = [...new Set(ids)];
+      e.selectedObject.value = ids[0] || "";
+    },
     change(fn) {
       fn(e.draft.value);
     },
@@ -162,7 +167,7 @@ it("pastes an object alone onto a free shared point instead of retaining the sou
     placement: { tileId: "old", point: 0 },
   });
   e.selectedTiles.value = [];
-  e.selectedObject.value = "chest";
+  e.setObjectSelection(["chest"]);
   clipboard.copy();
   clipboard.begin({ x: 4.5, y: 4.5 });
   expect(e.previewObject.value).toMatchObject({

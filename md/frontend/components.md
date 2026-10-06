@@ -342,6 +342,8 @@ MapCollectionPicker размещён над левым каталогом и д�
 rotationMotion не меняет сохранённые координаты и угол документа.
 
 Вкладка «Области» редактора — доменная композиция MapAreasPanel/MapAreaCard на
-BaseTile, AddButton, FormField/FormTextInput, ToggleSwitch, DetailSection и
-RemoveButton. editorAreas управляет членством и обычной историей документа;
+BaseTile, AddButton, FormField/FormTextInput, ToggleSwitch, ActionButton и
+RemoveButton. Карточка не выводит состав: кнопка выделяет тайлы и предметы целиком.
+editorAreas считает добавляемые/убираемые элементы отдельно и управляет членством
+с обычной историей документа;
 mapAreas задаёт скрытие в редакторе/трансляции и прозрачность в сессии.

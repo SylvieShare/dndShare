@@ -39,7 +39,7 @@ export function editorObjectDrag(e) {
       const { placing, ...object } = e.previewObject;
       object.id = uid();
       e.change((m) => m.document.objects.push(object));
-      e.selectedObject = object.id;
+      e.setObjectSelection([object.id]);
       e.setTileSelection([]);
       e.error = "";
     }

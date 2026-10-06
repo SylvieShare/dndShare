@@ -113,7 +113,8 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       for (const object of objects.children) {
         object.userData.outlineType = "object";
         object.userData.outlineStyle =
-          object.userData.objectId === options.selectedObject
+          object.userData.objectId === options.selectedObject ||
+          options.selectedObjects?.includes(object.userData.objectId)
             ? "selected"
             : "hover";
       }
@@ -128,9 +129,11 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
             (o) =>
               options.master &&
               o.userData.objectId &&
-              [options.selectedObject, options.hoveredObject].includes(
-                o.userData.objectId,
-              ),
+              [
+                ...(options.selectedObjects || []),
+                options.selectedObject,
+                options.hoveredObject,
+              ].includes(o.userData.objectId),
           ),
         ],
         tiles.transform,

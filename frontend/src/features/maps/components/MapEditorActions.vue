@@ -14,16 +14,27 @@
     <span class="map-selection-count" role="status" aria-label="Выбрано плиток"
       >Выбрано: {{ editor.selectedTiles.length }}</span
     >
+    <span
+      v-if="editor.selectedObjects.length"
+      class="map-selection-count"
+      role="status"
+      aria-label="Выбрано объектов"
+      >Объектов: {{ editor.selectedObjects.length }}</span
+    >
     <RemoveButton
       icon="trash"
       variant="boxed"
       :disabled="!editor.selectedTiles.length && !editor.selectedObject"
       :label="
-        editor.selectedTiles.length > 1
-          ? 'Удалить плитки'
-          : editor.selectedTiles.length
-            ? 'Удалить плитку'
-            : 'Удалить объект'
+        editor.selectedTiles.length && editor.selectedObjects.length
+          ? 'Удалить выбранное'
+          : editor.selectedObjects.length > 1
+            ? 'Удалить объекты'
+            : editor.selectedTiles.length > 1
+              ? 'Удалить плитки'
+              : editor.selectedTiles.length
+                ? 'Удалить плитку'
+                : 'Удалить объект'
       "
       @click="editor.removeSelected"
     />

@@ -15,7 +15,8 @@ export function editorClipboard(e) {
   function copy() {
     const d = e.draft.value.document,
       r = e.selection.value,
-      ids = new Set(e.selectedTiles.value);
+      ids = new Set(e.selectedTiles.value),
+      objectIds = new Set(e.selectedObjects.value);
     const hidden = hiddenAreaMembers(d);
     const includes = (o) =>
       r &&
@@ -25,15 +26,13 @@ export function editorClipboard(e) {
       o.y < r.y + r.height;
     const tiles = d.tiles.filter(
       (t) =>
-        !hidden.tiles.has(t.id) &&
-        (ids.has(t.id) || (!ids.size && includes(t))),
+        ids.has(t.id) || (!hidden.tiles.has(t.id) && !ids.size && includes(t)),
     );
     const objects = d.objects.filter(
       (o) =>
-        !hidden.objects.has(o.id) &&
-        (o.id === e.selectedObject.value ||
-          includes(o) ||
-          tiles.some((t) => t.id === o.placement?.tileId)),
+        objectIds.has(o.id) ||
+        (!hidden.objects.has(o.id) &&
+          (includes(o) || tiles.some((t) => t.id === o.placement?.tileId))),
     );
     if (!tiles.length && !objects.length) return;
     const origin = r || {
@@ -210,7 +209,7 @@ export function editorClipboard(e) {
       m.document.objects.push(...objects);
     });
     e.setTileSelection(tiles.map((t) => t.id));
-    e.selectedObject.value = objects[0]?.id || "";
+    e.setObjectSelection(objects.map((o) => o.id));
     cancel();
   }
   function cancel() {

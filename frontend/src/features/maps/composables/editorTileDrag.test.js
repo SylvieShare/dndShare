@@ -30,6 +30,7 @@ function setup(tiles = []) {
       selectedTiles: [],
       screenSelection: null,
       selectedObject: "",
+      selectedObjects: [],
       selectedZone: "",
       selection: null,
       previewTile: null,
@@ -43,6 +44,10 @@ function setup(tiles = []) {
   e.setTileSelection = (ids, primary = ids[0] || "") => {
     e.selectedTiles.value = [...new Set(ids)];
     e.selectedTile.value = primary;
+  };
+  e.setObjectSelection = (ids) => {
+    e.selectedObjects.value = [...new Set(ids)];
+    e.selectedObject.value = ids[0] || "";
   };
   e.checkpoint = () => {
     e.history.value.push(clone(e.draft.value));
