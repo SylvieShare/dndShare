@@ -53,8 +53,10 @@ export function doorGrain(y, z) {
   return clamp(value, 0.77, 1.2);
 }
 export function paintDoorPixel(rgb, [x, y, z], normal) {
-  const part = doorPartAt(x, y, z),
-    detail = bakedMaterialDetail(rgb);
+  return paintDoorMaterial(rgb, [x, y, z], normal, doorPartAt(x, y, z));
+}
+export function paintDoorMaterial(rgb, [x, y, z], normal, part) {
+  const detail = bakedMaterialDetail(rgb);
   const grain =
     part === "wood"
       ? doorGrain(y, z)

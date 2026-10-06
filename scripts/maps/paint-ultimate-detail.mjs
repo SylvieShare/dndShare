@@ -5,6 +5,7 @@ import { paintStone } from "./ultimate_surface.mjs";
 import { makeRaisedPainter } from "./raised_material.mjs";
 import { paintFloorJoint } from "./floor_seams.mjs";
 import { makeMetalPainter } from "./measured_metal.mjs";
+import { paintDoorBar } from "./ultimate_door.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 const code = process.argv[2],
@@ -59,6 +60,8 @@ const row = sourceRows.find(
 );
 let painter = (rgb, p, n) => paintStone(rgb, p, n, spec),
   parts = ["base", "floor", "wall"];
+if (spec.material === "stone" && model.maxHeight * 35 <= 15.9)
+  parts = model.maxHeight * 35 <= 13.4 ? ["base"] : ["base", "floor"];
 if (spec.material === "bones") {
   const floor = JSON.parse(
     await fs.readFile(
@@ -72,6 +75,9 @@ if (spec.material === "bones") {
   );
   painter = makeRaisedPainter(floor, spec);
   parts = ["stone", "bone"];
+} else if (spec.material === "door-bar") {
+  painter = paintDoorBar;
+  parts = ["stone", "wood", "iron"];
 } else if (spec.material.startsWith("iron-")) {
   painter = makeMetalPainter(spec);
   parts = ["stone", "iron"];

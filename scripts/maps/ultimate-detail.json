@@ -54,5 +54,47 @@
     "material": "stone",
     "loose": true,
     "notes": "Broken masonry and fallen pieces retain cold stone; raised rubble is a little lighter and dustier than the standing piers."
+  },
+  "UD-011": {
+    "sourceName": "Door Bar",
+    "referencePage": 3,
+    "material": "door-bar",
+    "notes": "Reuse measured UD-010 door parts, with the rounded iron inspection-window frame and vertical bars at y=-7.4..7.4, z=42.95..55.55 mm; vertical aged wood grain remains on both sides."
+  },
+  "UD-012": {
+    "sourceName": "Corridor",
+    "referencePage": 3,
+    "material": "stone",
+    "notes": "Both opposing walls and cobbles are cool masonry; consistent edge wear and recessed floor mortar."
+  },
+  "UD-014": {
+    "sourceName": "Angle",
+    "referencePage": 3,
+    "material": "stone",
+    "notes": "Both walls, exposed brick caps and the irregular floor remain stone; light wear follows the actual geometry."
+  },
+  "UD-015": {
+    "sourceName": "Well",
+    "referencePage": 3,
+    "material": "stone",
+    "notes": "Outer ring, worn lip and inner shaft remain cold stone; no invented water in the empty well."
+  },
+  "UD-016": {
+    "sourceName": "Ground Stones 1",
+    "referencePage": 3,
+    "material": "stone",
+    "notes": "Irregular pavers, lighter worn crests and darker recessed mortar; preserve the thin floor datum."
+  },
+  "UD-017": {
+    "sourceName": "Ground Stones 2",
+    "referencePage": 3,
+    "material": "stone",
+    "notes": "Large and small pavers remain separate, with cold grain and visibly recessed mortar."
+  },
+  "UD-018": {
+    "sourceName": "Ground Hole",
+    "referencePage": 3,
+    "material": "stone",
+    "notes": "Stone around the broken hole, worn fracture edges and dark recessed joints; the shaft remains open."
   }
 }
