@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
+import { prepareShadow } from "./shadow_model.mjs";
 const root = path.resolve(import.meta.dirname, "../.."),
   base = path.join(root, "models/collections/majestic-highlands");
 const code = process.argv.find((a) => a.startsWith("--code="))?.slice(7);
@@ -144,6 +145,15 @@ const report = {
   sourcePath: row.sourcePath,
   sourceSHA256: row.sourceSHA256,
 };
+const shadow = await prepareShadow(
+  path.join(review, "lod.glb"),
+  path.join(review, "shadow-next.glb"),
+);
+await fs.rename(
+  path.join(review, "shadow-next.glb"),
+  path.join(review, "shadow.glb"),
+);
+report.tiers.shadow = { triangles: shadow.triangles, bytes: shadow.asset.size };
 await fs.writeFile(
   path.join(review, "report.json"),
   JSON.stringify(report, null, 2) + "\n",
@@ -165,6 +175,7 @@ const assets = {};
 for (const [kind, file, mime] of [
   ["render", path.join(review, "render.glb"), "model/gltf-binary"],
   ["lod", path.join(review, "lod.glb"), "model/gltf-binary"],
+  ["shadow", path.join(review, "shadow.glb"), "model/gltf-binary"],
   ["preview", path.join(review, "preview.webp"), "image/webp"],
   ["source", path.join(root, "models", row.sourcePath), "model/stl"],
 ]) {
@@ -188,6 +199,13 @@ for (const [kind, file, mime] of [
     fileName: kind === "source" ? path.basename(file) : kind + ext,
   };
 }
+report.runtimeBytes = [
+  ...new Map(
+    Object.entries(assets)
+      .filter(([kind]) => kind !== "source")
+      .map(([, asset]) => [asset.sha256, asset.size]),
+  ).values(),
+].reduce((sum, bytes) => sum + bytes, 0);
 const hash = createHash("sha256")
   .update(
     "majestic-individual-materials-v1:" + JSON.stringify({ model, assets }),
@@ -198,10 +216,7 @@ hash[8] = (hash[8] & 63) | 128;
 const hex = hash.subarray(0, 16).toString("hex"),
   id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 const registry = JSON.parse(
-  await fs.readFile(
-    path.join(base, "registry-snapshot.json"),
-    "utf8",
-  ),
+  await fs.readFile(path.join(base, "registry-snapshot.json"), "utf8"),
 );
 const registered = registry.find((m) => m.id === id);
 const version =

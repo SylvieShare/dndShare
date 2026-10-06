@@ -3,6 +3,7 @@ package web
 import (
 	"dndshare/internal/battlemap"
 	"encoding/json"
+	"errors"
 	"os"
 	"testing"
 )
@@ -39,15 +40,44 @@ func TestPreparedCollectionManifest(t *testing.T) {
 		if err := validateMapModel(model); err != nil {
 			t.Errorf("%s: %v", model.SourceCode, err)
 		}
-		if len(previous) != 0 {
-			compatible := false
-			for _, old := range previous {
-				compatible = compatible || battlemap.VisualRevision(old, model)
-			}
-			if !compatible {
-				t.Errorf("%s %s changes the original placement/source contract", model.SourceCode, model.SourceName)
-			}
+		if err := preparedRevisionError(model, previous); err != nil {
+			t.Errorf("%s %s: %v", model.SourceCode, model.SourceName, err)
 		}
 	}
 	t.Logf("validated %d model manifests", len(models))
+}
+
+func preparedRevisionError(model battlemap.Model, previous []battlemap.Model) error {
+	if len(previous) == 0 {
+		if model.Version > 1 {
+			return errors.New("MAP_MODEL_PREVIOUS_MANIFEST must contain a fresh registry for a revision")
+		}
+		return nil
+	}
+	for _, old := range previous {
+		if battlemap.VisualRevision(old, model) {
+			return nil
+		}
+	}
+	return errors.New("changes the original placement/source contract")
+}
+
+func TestPreparedRevisionRequiresComparisonAndPreservesPlacement(t *testing.T) {
+	old := battlemap.InitialCatalogue()[0]
+	if err := preparedRevisionError(old, nil); err != nil {
+		t.Fatal("first version rejected", err)
+	}
+	revision := old
+	revision.Version++
+	if err := preparedRevisionError(revision, nil); err == nil {
+		t.Fatal("revision passed without comparison registry")
+	}
+	previous := []battlemap.Model{old}
+	if err := preparedRevisionError(revision, previous); err != nil {
+		t.Fatal("compatible revision rejected", err)
+	}
+	revision.MountDepth += .1
+	if err := preparedRevisionError(revision, previous); err == nil {
+		t.Fatal("changed insertion depth accepted")
+	}
 }

@@ -4,6 +4,8 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { localModelAsset } from "./local_model_assets.mjs";
+import { prepareShadow } from "./shadow_model.mjs";
+import { isDeepStrictEqual } from "node:util";
 const base = path.resolve(
   import.meta.dirname,
   "../../models/collections/majestic-highlands",
@@ -15,36 +17,61 @@ const report = JSON.parse(
 const registry = JSON.parse(
   await fs.readFile(path.join(base, "registry-snapshot.json"), "utf8"),
 );
-const previous = registry.find(
+const reviewed = registry.find(
   (m) => m.id === (report.previousModelID ?? report.model.id),
 );
 if (
-  !previous ||
-  previous.sourceCode !== "MH-001" ||
-  previous.collection !== "majestic-highlands"
+  !reviewed ||
+  reviewed.sourceCode !== "MH-001" ||
+  reviewed.collection !== "majestic-highlands"
 )
   throw new Error("Reviewed published source required");
-const latest = Math.max(
-  ...registry
-    .filter(
-      (m) =>
-        m.collection === previous.collection &&
-        m.sourceCode === previous.sourceCode,
-    )
-    .map((m) => m.version),
-);
+const family = registry
+  .filter(
+    (m) =>
+      m.collection === reviewed.collection &&
+      m.sourceCode === reviewed.sourceCode &&
+      m.sourceName === reviewed.sourceName &&
+      m.assets.source.sha256 === reviewed.assets.source.sha256,
+  )
+  .sort((a, b) => b.version - a.version);
+const previous = family[0],
+  latest = previous.version;
+function placement(model) {
+  const { id, version, assets, textureDetail, ...metadata } = model;
+  return metadata;
+}
+if (!isDeepStrictEqual(placement(previous), placement(reviewed)))
+  throw new Error("Placement changed after review");
+for (const kind of ["render", "lod"])
+  if (previous.assets[kind].sha256 !== report.model.assets[kind].sha256)
+    throw new Error("Newer visual assets need review before packaging");
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json");
 const sharp = require("sharp");
 await sharp(path.join(directory, "preview.png"))
   .resize(512, 512)
   .webp({ quality: 90 })
-  .toFile(path.join(directory, "preview.webp"));
+  .toFile(path.join(directory, "preview-next.webp"));
+await fs.rename(
+  path.join(directory, "preview-next.webp"),
+  path.join(directory, "preview.webp"),
+);
 const upload = path.join(base, "optimized-upload/MH-001");
 await fs.mkdir(upload, { recursive: true });
 const assets = {};
+const shadow = await prepareShadow(
+  path.join(directory, "lod.glb"),
+  path.join(directory, "shadow-next.glb"),
+);
+await fs.rename(
+  path.join(directory, "shadow-next.glb"),
+  path.join(directory, "shadow.glb"),
+);
+report.tiers.shadow = { triangles: shadow.triangles, bytes: shadow.asset.size };
 for (const [kind, file, mime] of [
   ["render", path.join(directory, "render.glb"), "model/gltf-binary"],
   ["lod", path.join(directory, "lod.glb"), "model/gltf-binary"],
+  ["shadow", path.join(directory, "shadow.glb"), "model/gltf-binary"],
   ["preview", path.join(directory, "preview.webp"), "image/webp"],
   ["source", await localModelAsset(previous.assets.source), "model/stl"],
 ]) {
@@ -73,6 +100,13 @@ for (const [kind, file, mime] of [
           fileName: kind + ext,
         };
 }
+report.runtimeBytes = [
+  ...new Map(
+    Object.entries(assets)
+      .filter(([kind]) => kind !== "source")
+      .map(([, asset]) => [asset.sha256, asset.size]),
+  ).values(),
+].reduce((sum, bytes) => sum + bytes, 0);
 const hash = createHash("sha256")
   .update(report.recipe + ":" + previous.id + ":" + JSON.stringify(assets))
   .digest();
@@ -80,13 +114,16 @@ hash[6] = (hash[6] & 15) | 128;
 hash[8] = (hash[8] & 63) | 128;
 const hex = hash.subarray(0, 16).toString("hex");
 const id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-const registered = registry.find((m) => m.id === id);
-if (latest !== previous.version && registered?.version !== latest)
-  throw new Error("A newer revision needs review");
-const model = {
+const registered = family.find(
+  (m) =>
+    isDeepStrictEqual(m.assets, assets) &&
+    isDeepStrictEqual(placement(m), placement(previous)) &&
+    m.textureDetail === previous.textureDetail,
+);
+const model = registered ?? {
   ...previous,
   id,
-  version: registered?.version ?? latest + 1,
+  version: latest + 1,
   assets,
 };
 report.previousModelID = previous.id;

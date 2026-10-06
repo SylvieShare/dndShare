@@ -78,6 +78,9 @@ manifest, переводит blockers в координаты основания
 (требуется NumPy).
 Пакет возобновляемый; готовые модели проверяются локальным тестом
 `MAP_MODEL_MANIFEST=/absolute/path/catalogue.json go test ./internal/web -run TestPreparedCollectionManifest`.
+Для обновления существующей версии обязательно добавить
+`MAP_MODEL_PREVIOUS_MANIFEST=/absolute/path/registry-snapshot.json`;
+[общая инструкция](maps-model-pipeline.md#проверки) описывает сравнение и пять ресурсов.
 
 После выпуска MCP-схемы модели передаются напрямую в S3 существующим
 `cmd/map-model-upload -assets models/collections/upload -workers 4`; токен приходит
