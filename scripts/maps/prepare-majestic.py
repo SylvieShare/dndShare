@@ -35,6 +35,24 @@ def add_peg(centre, height, recipe):
     return obj
 
 
+def support_points(obj, centre, recipe, datum):
+    obj.data.update()
+    tree = BVHTree.FromObject(obj, bpy.context.evaluated_depsgraph_get())
+    points, invalid = [], []
+    for y in range(recipe['height']):
+        for x in range(recipe['width']):
+            if [x,y] in recipe.get('blockedCells',[]): continue
+            position=(centre[0]+(x-(recipe['width']-1)/2)*35,
+                      centre[1]-(y-(recipe['height']-1)/2)*35,recipe.get('standMaxZMM',100))
+            hit=tree.ray_cast(position,(0,0,-1))
+            if hit[0] is None or hit[0].z<datum+.5:
+                invalid.append([x,y])
+            else:
+                points.append({'x':x+.5,'y':y+.5,'elevation':round(hit[0].z/35,6)})
+    if invalid: raise ValueError(f'Cells {invalid} have no standable surface; review occupied cells before baking')
+    return points
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--code', required=True)
@@ -62,6 +80,7 @@ def main():
     datum = recipe['mountDepthMM']
     crop(source, datum)
     for v in source.data.vertices: v.co.z += datum
+    support_points(source, row['mountCenterMM'], recipe, datum)
     shade(source); paint(source, recipe, args.code); source.data.materials.append(material())
     target = bpy.data.objects.new(args.code+' browser', source.data.copy())
     bpy.context.collection.objects.link(target); activate(target)
@@ -79,16 +98,7 @@ def main():
     source.hide_render = True; source.hide_viewport = True
     centre = row['mountCenterMM']
     peg = add_peg(centre, datum, recipe)
-    tree = BVHTree.FromObject(target, bpy.context.evaluated_depsgraph_get())
-    points = []
-    for y in range(recipe['height']):
-        for x in range(recipe['width']):
-            if [x,y] in recipe.get('blockedCells',[]): continue
-            hit = tree.ray_cast((centre[0]+(x-(recipe['width']-1)/2)*35, centre[1]-(y-(recipe['height']-1)/2)*35, recipe.get('standMaxZMM',100)), (0, 0, -1))
-            if hit[0] is None: raise ValueError('Missing ground support point')
-            if hit[0].z < datum+.5:
-                raise ValueError(f'Cell {x},{y} hits the insertion cut, not a standable surface; review occupied cells')
-            points.append({'x':x+.5,'y':y+.5,'elevation':round(hit[0].z/35,6)})
+    points = support_points(target, centre, recipe, datum)
     high = max(v.co.z for v in target.data.vertices)/35
     for obj in [target, peg]:
         for v in obj.data.vertices:

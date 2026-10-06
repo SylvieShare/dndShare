@@ -1,0 +1,102 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 100000,
+  "lodTriangles": 40000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "giant-pine", "forest", "stone", "outdoor", "xl"],
+  "recipe": "majestic-measured-giant-pine-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [3500000, 6500000],
+    "targetLODBytes": [1200000, 2800000],
+    "targetShadowBytes": [80000, 220000],
+    "targetPreviewBytes": [15000, 100000],
+    "basis": "757334 source triangles and one 128.86 mm crown with stones and broad leaves. Keep branch gaps and visible base; compare accepted MH-006."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [1, 0],
+    [0, 1],
+    [1, 1]
+  ],
+  "trees": [
+    {
+      "baseXY": [4, 0],
+      "topXY": [5.5, 1],
+      "heightMM": 128.86,
+      "foliageRadiusMM": 54,
+      "trunkRadiusMM": 7,
+      "rootRadiusMM": 16,
+      "barkTopMM": 90
+    }
+  ],
+  "blockers": [
+    [
+      [2.128571, 1.5],
+      [2.1034, 1.658923],
+      [2.030352, 1.80229],
+      [1.916575, 1.916066],
+      [1.773209, 1.989115],
+      [1.614286, 2.014286],
+      [1.455363, 1.989115],
+      [1.311996, 1.916066],
+      [1.19822, 1.80229],
+      [1.125171, 1.658923],
+      [1.1, 1.5],
+      [1.125171, 1.341077],
+      [1.19822, 1.19771],
+      [1.311996, 1.083934],
+      [1.455363, 1.010885],
+      [1.614286, 0.985714],
+      [1.773209, 1.010885],
+      [1.916575, 1.083934],
+      [2.030352, 1.19771],
+      [2.1034, 1.341077]
+    ]
+  ],
+  "stones": [
+    {
+      "centreMM": [30, 37, 18.5],
+      "radiiMM": [6.2, 6.2, 4]
+    },
+    {
+      "centreMM": [27, -30, 18],
+      "radiiMM": [6, 6, 3.7]
+    },
+    {
+      "centreMM": [-14, -34, 18.2],
+      "radiiMM": [6.4, 6.2, 4]
+    }
+  ],
+  "ferns": [
+    {
+      "centreMM": [-34, 3, 18],
+      "radiiMM": [18, 22, 6],
+      "minZMM": 16.2
+    },
+    {
+      "centreMM": [-9, -27, 18],
+      "radiiMM": [20, 18, 6],
+      "minZMM": 16.2
+    }
+  ],
+  "stoneRing": {
+    "centreXY": [4, 0],
+    "innerRadiusMM": 12,
+    "outerRadiusMM": 28,
+    "minZMM": 17.8,
+    "maxZMM": 24
+  }
+}

@@ -26,6 +26,13 @@ def apply_pines(obj, positions, colours, roughness, coverage, recipe):
         grain=.95+.07*np.sin(angle*19+z*.08)+.025*np.sin(z*.31)
         bark=np.array([.32,.205,.115])*grain[:,None]
         colours[wood]=bark[wood];roughness[wood]=.94
+    if recipe.get('stoneRing'):
+        ring=recipe['stoneRing']; radial=np.linalg.norm(positions[:,:2]-np.array(ring['centreXY']),axis=1)
+        weight=np.clip((radial-ring['innerRadiusMM'])/1.2,0,1)*np.clip((ring['outerRadiusMM']-radial)/1.2,0,1)
+        weight*=np.clip((z-ring['minZMM'])/.7,0,1)*np.clip((ring['maxZMM']-z)/1.5,0,1)
+        material=np.array([.40,.36,.28])*(1+.045*np.sin(x*.53+y*.67+z*.19))[:,None]
+        colours=colours*(1-weight[:,None])+material*weight[:,None]
+        roughness=roughness*(1-weight)+.92*weight
     bark_cores=np.zeros(len(positions),bool)
     for tree in recipe['trees']:
         t=np.clip((z-15)/(tree['heightMM']-15),0,1)
