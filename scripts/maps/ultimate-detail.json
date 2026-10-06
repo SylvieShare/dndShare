@@ -1,0 +1,58 @@
+{
+  "UD-001": {
+    "sourceName": "Wall",
+    "referencePage": 2,
+    "material": "stone",
+    "notes": "Cool grey blocks, worn edges and dust at the floor; intact wall and reverse masonry stay stone."
+  },
+  "UD-002": {
+    "sourceName": "Wall Skulls 1",
+    "referencePage": 2,
+    "material": "bones",
+    "floorReference": "ultimate-wall-floor.json",
+    "floorHeight": 14.13,
+    "wallFront": 9.9,
+    "notes": "Raised bones above the measured 14.35 mm floor crest; the irregular wall front is excluded at x=9.9 mm."
+  },
+  "UD-003": {
+    "sourceName": "Wall Skulls 2",
+    "referencePage": 2,
+    "material": "bones",
+    "floorReference": "ultimate-wall-floor.json",
+    "floorHeight": 14.13,
+    "wallFront": 9.9,
+    "notes": "All skulls and long bones in front of the wall receive aged ivory; floor joints and irregular wall remain stone."
+  },
+  "UD-004": {
+    "sourceName": "Wall Window",
+    "referencePage": 2,
+    "material": "iron-window",
+    "notes": "Two vertical bars inside the measured arched opening are dark iron; arched surround, sill and walls remain grey masonry."
+  },
+  "UD-005": {
+    "sourceName": "Wall Window Broken",
+    "referencePage": 2,
+    "material": "bones",
+    "floorReference": "ultimate-wall-floor.json",
+    "floorHeight": 14.13,
+    "wallFront": 9.9,
+    "sillBones": true,
+    "notes": "Floor skull plus two skulls on the broken sill; sill bones above z=31.25 mm are isolated from the two arch piers."
+  },
+  "UD-007": {
+    "sourceName": "Wall Chains",
+    "referencePage": 2,
+    "material": "iron-chains",
+    "originalIron": true,
+    "notes": "Shackles and chain protrusions in front of x=9.9 mm and above the stone floor receive dark iron, gentle wear and PBR metal response.",
+    "ironColor": [0.26, 0.275, 0.285],
+    "metallic": 0.55
+  },
+  "UD-008": {
+    "sourceName": "Wall Broken",
+    "referencePage": 2,
+    "material": "stone",
+    "loose": true,
+    "notes": "Broken masonry and fallen pieces retain cold stone; raised rubble is a little lighter and dustier than the standing piers."
+  }
+}

@@ -7,9 +7,9 @@ import bpy
 from mathutils import Vector
 
 
-def preview(report, size=256, front=False):
+def preview(report, size=256, front=False, review=False, inside=False):
     directory = report.parent
-    if (directory/'preview.png').exists():
+    if (directory/'preview.png').exists() and not review:
         return
     row = json.loads(report.read_text())['model']
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -41,11 +41,17 @@ def preview(report, size=256, front=False):
     camera.data.type = 'ORTHO'
     camera.data.ortho_scale = max(row['width'], row['height'], row['maxHeight'], 1)*1.5
     centre = Vector((0, 0, (row['maxHeight']-row['mountDepth'])/2))
-    camera.location = centre+Vector((-2, 2.85, 2.45) if front else (2, -2.85, 2.45))
+    camera.location = centre+Vector((-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45))
     camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
     scene.camera = camera
     scene.render.filepath = str(directory/'preview.png')
     bpy.ops.render.render(write_still=True)
+    if review:
+        for name, position in [('reverse', (2, -2.85, 2.45)), ('top', (0, -.01, 5))]:
+            camera.location = centre+Vector(position)
+            camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
+            scene.render.filepath = str(directory/(name+'.png'))
+            bpy.ops.render.render(write_still=True)
     print('PREVIEW_REVISION', row['sourceCode'], flush=True)
 
 
@@ -55,8 +61,10 @@ if __name__ == '__main__':
     parser.add_argument('--codes', nargs='*')
     parser.add_argument('--size', type=int, choices=[256, 512, 1024], default=256)
     parser.add_argument('--front', action='store_true')
+    parser.add_argument('--review', action='store_true')
+    parser.add_argument('--inside', action='store_true')
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     for report in sorted(args.base.glob('*/report.json')):
         if args.codes and json.loads(report.read_text())['model']['sourceCode'] not in args.codes:
             continue
-        preview(report, args.size, args.front)
+        preview(report, args.size, args.front, args.review, args.inside)

@@ -1,5 +1,8 @@
 import { OLD_STONE, srgbToLinear } from "./masonry_palette.mjs";
-export const SKULL_RECIPE = "ud013-measured-bones-v1";
+import { finishBone } from "./bone_finish.mjs";
+import { addedWallSurface } from "./wall_added_surface.mjs";
+import boneCentres from "./ud013-bone-centres.json" with { type: "json" };
+export const SKULL_RECIPE = "ud013-aged-ivory-v2";
 const stone = OLD_STONE.map(srgbToLinear),
   bone = [0.79, 0.72, 0.52].map(srgbToLinear);
 const dot = (a, b) => a.reduce((n, v, i) => n + v * b[i], 0);
@@ -38,7 +41,7 @@ export function skullPartAt(x, y, z, floorHeight = 13.7) {
   if (x >= 9.9 || y >= 9.9 || z < 13.6) return "stone";
   return z > floorHeight + 0.42 ? "bone" : "stone";
 }
-export function makeSkullPainter(reference) {
+export function makeSkullPainter(reference, wallReference) {
   const floorHeight = (x, y) => {
     const gx = clamp(
         (x - reference.min) / reference.step,
@@ -60,13 +63,16 @@ export function makeSkullPainter(reference) {
       at(jx, jy) * tx * ty
     );
   };
-  return (rgb, [x, y, z], normal) => {
-    const part = skullPartAt(x, y, z, floorHeight(x, y)),
+  return (rgb, [x, y, z], normal, ao) => {
+    const part = addedWallSurface([x, y, z], wallReference)
+        ? "bone"
+        : skullPartAt(x, y, z, floorHeight(x, y)),
       d = detail(rgb),
       variation =
         1 +
         0.035 * Math.sin(x * 0.61 + y * 0.37 + z * 0.11) +
         0.018 * Math.sin(x * 2.7 - y * 1.9 + z * 0.8);
+    if (part === "bone") return finishBone(d, [x, y, z], ao, boneCentres);
     const aged =
       part === "bone" ? 1 - 0.035 * Math.sin(x * 0.16 + y * 0.2) ** 2 : 1;
     return {

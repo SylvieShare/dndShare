@@ -4,6 +4,7 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { readGlb, embeddedImage, replaceImages } from "./glb_textures.mjs";
 import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
+import { localModelAsset } from "./local_model_assets.mjs";
 const root = path.resolve(import.meta.dirname, "../.."),
   base = path.join(root, "models/collections");
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json");
@@ -18,25 +19,44 @@ const io = new NodeIO()
   .registerDependencies({ "meshopt.decoder": MeshoptDecoder });
 export async function prepareSurfaceRevision({
   code,
+  sourceName,
   folder,
   recipe,
   paintPixel,
   parts,
   updateMetallic = false,
   colorReferenceVersion,
+  textureDetail = "detailed",
+  preserveORM = false,
+  preserveTextureSize = false,
+  sampleAO = false,
+  allowEmptyParts = false,
 }) {
   const models = JSON.parse(
     await fs.readFile(path.join(base, "registry.json"), "utf8"),
   );
   const model = models
-    .filter((m) => m.collection === "ultimate-dungeon" && m.sourceCode === code)
+    .filter(
+      (m) =>
+        m.collection === "ultimate-dungeon" &&
+        m.sourceCode === code &&
+        (sourceName === undefined || m.sourceName === sourceName),
+    )
     .sort((a, b) => b.version - a.version)[0];
   if (!model) throw new Error(code + " not registered");
-  const directory = path.join(base, folder, code + "__" + model.version);
+  const suffix =
+    sourceName === undefined
+      ? ""
+      : "__" + sourceName.replace(/[^a-z0-9]+/gi, "_");
+  const directory = path.join(
+    base,
+    folder,
+    code + suffix + "__" + model.version,
+  );
   await fs.mkdir(directory, { recursive: true });
   await fs.rm(path.join(directory, "preview.png"), { force: true });
   const report = {
-    model: { ...model, textureDetail: "detailed" },
+    model: { ...model, textureDetail },
     recipe,
     tiers: {},
   };
@@ -57,18 +77,7 @@ export async function prepareSurfaceRevision({
     throw new Error("Invalid colour reference");
   report.colorReferenceVersion = colorReference.version;
   async function original(asset) {
-    for (const folder of [
-      "stone-dungeon/upload",
-      "ud006-painted/upload",
-      "ud010-painted/upload",
-      "simple-pegs/upload",
-      "painted/upload",
-      "upload",
-    ]) {
-      const p = path.join(base, folder, path.basename(asset.key));
-      if (await fs.stat(p).catch(() => null)) return p;
-    }
-    throw new Error("Missing local " + asset.fileName);
+    return localModelAsset(asset);
   }
   for (const tier of ["render", "lod"]) {
     const source = await original(model.assets[tier]),
@@ -85,13 +94,17 @@ export async function prepareSurfaceRevision({
       glb.json.textures[
         material.pbrMetallicRoughness.metallicRoughnessTexture.index
       ].source;
-    const size = tier === "render" ? 2048 : 1024;
     const colorGlb = readGlb(
       await fs.readFile(await original(colorReference.assets[tier])),
     );
     for (const key of ["accessors", "meshes", "nodes"])
       if (JSON.stringify(colorGlb.json[key]) !== JSON.stringify(glb.json[key]))
         throw new Error("Colour reference geometry/UV mismatch: " + key);
+    const size = preserveTextureSize
+      ? (await sharp(embeddedImage(colorGlb, colorIndex)).metadata()).width
+      : tier === "render"
+        ? 2048
+        : 1024;
     const color = await sharp(embeddedImage(colorGlb, colorIndex))
       .resize(size, size)
       .raw()
@@ -99,6 +112,20 @@ export async function prepareSurfaceRevision({
     const before = Buffer.from(color.data),
       counts = Object.fromEntries(parts.map((part) => [part, 0])),
       channels = color.info.channels;
+    let ao;
+    if (sampleAO) {
+      const { index: colorSlot, ...colorInfo } =
+        material.pbrMetallicRoughness.baseColorTexture;
+      const { index: ormSlot, ...ormInfo } =
+        material.pbrMetallicRoughness.metallicRoughnessTexture;
+      if (JSON.stringify(colorInfo) !== JSON.stringify(ormInfo))
+        throw new Error("AO and colour UV transforms differ");
+      ao = await sharp(embeddedImage(glb, ormIndex))
+        .resize(size, size)
+        .extractChannel(0)
+        .raw()
+        .toBuffer();
+    }
     const coverage = rasterizeSurface(
       doc,
       size,
@@ -106,12 +133,12 @@ export async function prepareSurfaceRevision({
       (index, position, normal) => {
         const pixel = index * channels,
           rgb = [before[pixel], before[pixel + 1], before[pixel + 2]],
-          paint = paintPixel(rgb, position, normal);
+          paint = paintPixel(rgb, position, normal, ao?.[index]);
         for (let c = 0; c < 3; c++) color.data[pixel + c] = paint.rgb[c];
         counts[paint.part]++;
       },
     );
-    if (parts.some((part) => !counts[part]))
+    if (!allowEmptyParts && parts.some((part) => !counts[part]))
       throw new Error("A surface material was missed");
     let black = 0;
     for (let i = 0; i < coverage.length; i++)
@@ -136,12 +163,31 @@ export async function prepareSurfaceRevision({
     const orm = await sharp(embeddedImage(glb, ormIndex))
       .raw()
       .toBuffer({ resolveWithObject: true });
+    const ormColor = sampleAO
+      ? await sharp(embeddedImage(colorGlb, colorIndex))
+          .resize(orm.info.width, orm.info.height)
+          .raw()
+          .toBuffer({ resolveWithObject: true })
+      : null;
     const ormCoverage = rasterizeSurface(
       doc,
       orm.info.width,
       orm.info.height,
       (index, position, normal) => {
-        const paint = paintPixel([80, 85, 89], position, normal);
+        const offset = index * (ormColor?.info.channels ?? 0);
+        const rgb = ormColor
+          ? [
+              ormColor.data[offset],
+              ormColor.data[offset + 1],
+              ormColor.data[offset + 2],
+            ]
+          : [80, 85, 89];
+        const paint = paintPixel(
+          rgb,
+          position,
+          normal,
+          orm.data[index * orm.info.channels],
+        );
         // Stone roughness is restored where the old height mask coloured bricks wood.
         const roughness = paint.roughness ?? 0.9;
         orm.data[index * orm.info.channels + 1] = Math.round(roughness * 255);
@@ -176,7 +222,14 @@ export async function prepareSurfaceRevision({
         colorIndex,
         await sharp(color.data, { raw: color.info }).png().toBuffer(),
       ],
-      [ormIndex, await sharp(orm.data, { raw: orm.info }).png().toBuffer()],
+      ...(preserveORM
+        ? []
+        : [
+            [
+              ormIndex,
+              await sharp(orm.data, { raw: orm.info }).png().toBuffer(),
+            ],
+          ]),
     ]);
     const output = path.join(directory, tier + ".glb"),
       bytes = replaceImages(glb, replacements);

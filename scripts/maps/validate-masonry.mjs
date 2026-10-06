@@ -4,6 +4,7 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { readGlb, embeddedImage } from "./glb_textures.mjs";
+import { localModelAsset } from "./local_model_assets.mjs";
 const base = path.resolve(import.meta.dirname, "../../models/collections");
 const revisions = path.resolve(
   base,
@@ -15,16 +16,7 @@ const allowMetallic = process.argv.includes("--metallic");
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp");
 async function source(asset) {
-  for (const folder of [
-    "stone-dungeon/upload",
-    "simple-pegs/upload",
-    "painted/upload",
-    "upload",
-  ]) {
-    const file = path.join(base, folder, path.basename(asset.key));
-    if (await fs.stat(file).catch(() => null)) return file;
-  }
-  throw new Error("Missing original " + asset.sha256);
+  return localModelAsset(asset);
 }
 let models = 0,
   tiers = 0,

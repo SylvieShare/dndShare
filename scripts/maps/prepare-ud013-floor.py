@@ -1,11 +1,16 @@
 """Measure the bare UD-014 corner floor to separate low UD-013 bones from stone."""
+import argparse
 import json
 from pathlib import Path
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[2]
 rows=json.loads((ROOT/'models/collections/manifest.json').read_text())
-row=next(r for r in rows if r['code']=='UD-014')
+parser=argparse.ArgumentParser()
+parser.add_argument('--code',default='UD-014')
+parser.add_argument('--out',default='models/collections/ud013-floor.json')
+args=parser.parse_args()
+row=next(r for r in rows if r['collection']=='ultimate-dungeon' and r['code']==args.code)
 dtype=np.dtype([('normal','<f4',(3,)),('v','<f4',(3,3)),('a','<u2')])
 triangles=np.memmap(ROOT/'models'/row['sourcePath'],dtype=dtype,mode='r',offset=84,shape=(row['triangles'],))['v'].copy()
 triangles[:,:,2]-=row['cutHeight']
@@ -26,6 +31,6 @@ for triangle in triangles:
     np.maximum(target,np.where(mask,z,-np.inf),out=target)
 heights[~np.isfinite(heights)]=13.7
 heights[heights<12.8]=13.7
-out=ROOT/'models/collections/ud013-floor.json'
+out=ROOT/args.out
 out.write_text(json.dumps({'step':step,'size':size,'min':-17.5,'sourceSHA256':row['sourceSHA256'],'heights':np.round(heights,3).reshape(-1).tolist()})+'\n')
 print('Measured bare corner floor',size,step,float(heights.min()),float(heights.max()))
