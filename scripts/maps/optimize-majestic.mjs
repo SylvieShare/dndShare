@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { majesticModel } from "./majestic_model.mjs";
+import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -60,6 +61,8 @@ for (const tier of ["render", "lod"]) {
     );
   if (info.sourceSHA256 !== measured.sourceSHA256)
     throw new Error("Source changed");
+  if (!isDeepStrictEqual(info.recipe, measured.recipe))
+    throw new Error("Render and LOD must be baked with the same material recipe");
   const drift = Math.max(
     ...info.placementPoints.map((p, i) =>
       Math.abs(p.elevation - metadata.placementPoints[i].elevation),

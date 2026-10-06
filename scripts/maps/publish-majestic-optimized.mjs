@@ -48,6 +48,8 @@ if (previous && reviewed.assets)
   for (const kind of ["render", "lod"])
     if (previous.assets[kind].sha256 !== reviewed.assets[kind].sha256)
       throw new Error("Newer visual assets need review before packaging");
+if (!previous && report.reviewStatus !== "accepted")
+  throw new Error("Inspect final render and LOD before publication");
 const sourceFile = previous
   ? await localModelAsset(previous.assets.source)
   : path.join(root, "models", report.sourcePath);

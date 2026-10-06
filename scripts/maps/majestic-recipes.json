@@ -9,13 +9,29 @@
     "lodTriangles": 20000,
     "tileType": "floor",
     "hasDecor": false,
-    "tags": ["grass", "outdoor", "xl"],
+    "tags": [
+      "grass",
+      "outdoor",
+      "xl"
+    ],
     "recipe": "majestic-grass-v1",
     "sizeAssessment": {
-      "targetRenderBytes": [2000000, 4000000],
-      "targetLODBytes": [1000000, 2000000],
-      "targetShadowBytes": [40000, 150000],
-      "targetPreviewBytes": [15000, 60000],
+      "targetRenderBytes": [
+        2000000,
+        4000000
+      ],
+      "targetLODBytes": [
+        1000000,
+        2000000
+      ],
+      "targetShadowBytes": [
+        40000,
+        150000
+      ],
+      "targetPreviewBytes": [
+        15000,
+        60000
+      ],
       "basis": "Reviewed MH-001 grass; retain blade relief at the working map scale."
     }
   },
@@ -29,44 +45,210 @@
     "lodTriangles": 20000,
     "tileType": "floor",
     "hasDecor": false,
-    "tags": ["grass", "dirt", "outdoor", "xl"],
+    "tags": [
+      "grass",
+      "dirt",
+      "outdoor",
+      "xl"
+    ],
     "recipe": "majestic-measured-dirt-grass-v1",
     "grassReference": "MH-001",
     "grassMatchMM": 0.07,
     "grassBlendMM": 0.12,
-    "soilTopRGB": [0.45, 0.3, 0.17],
+    "soilTopRGB": [
+      0.45,
+      0.3,
+      0.17
+    ],
     "sizeAssessment": {
-      "targetRenderBytes": [2000000, 4000000],
-      "targetLODBytes": [900000, 1800000],
-      "targetShadowBytes": [40000, 150000],
-      "targetPreviewBytes": [15000, 60000],
+      "targetRenderBytes": [
+        2000000,
+        4000000
+      ],
+      "targetLODBytes": [
+        900000,
+        1800000
+      ],
+      "targetShadowBytes": [
+        40000,
+        150000
+      ],
+      "targetPreviewBytes": [
+        15000,
+        60000
+      ],
       "basis": "393578 source triangles, 3x3 base. Compare to the accepted MH-001; open soil needs less fine geometry than grass."
     },
     "grassCoverLossMM": 0.15,
     "grassCoverFadeMM": 0.3,
     "soilDomains": [
       [
-        [-11, 29],
-        [3, 28],
-        [12, 22],
-        [22, 13],
-        [19, 1],
-        [5, -7],
-        [-9, -3],
-        [-14, 13]
+        [
+          -11,
+          29
+        ],
+        [
+          3,
+          28
+        ],
+        [
+          12,
+          22
+        ],
+        [
+          22,
+          13
+        ],
+        [
+          19,
+          1
+        ],
+        [
+          5,
+          -7
+        ],
+        [
+          -9,
+          -3
+        ],
+        [
+          -14,
+          13
+        ]
       ],
       [
-        [-34, -2],
-        [-20, 5],
-        [-6, -3],
-        [4, -5],
-        [26, -11],
-        [19, -36],
-        [-12, -36],
-        [-34, -25]
+        [
+          -34,
+          -2
+        ],
+        [
+          -20,
+          5
+        ],
+        [
+          -6,
+          -3
+        ],
+        [
+          4,
+          -5
+        ],
+        [
+          26,
+          -11
+        ],
+        [
+          19,
+          -36
+        ],
+        [
+          -12,
+          -36
+        ],
+        [
+          -34,
+          -25
+        ]
       ]
     ],
     "soilSurfaceMM": 15.3,
     "grassHeightFadeMM": 0.95
+  },
+  "MH-003": {
+    "width": 3,
+    "height": 3,
+    "mountDepthMM": 9.75,
+    "pegBottomHalfMM": 47.03,
+    "pegTopHalfMM": 48.65,
+    "renderTriangles": 60000,
+    "lodTriangles": 20000,
+    "tileType": "floor",
+    "hasDecor": false,
+    "tags": [
+      "grass",
+      "dirt",
+      "outdoor",
+      "xl"
+    ],
+    "recipe": "majestic-measured-dirt-grass-2-v1",
+    "grassReference": "MH-001",
+    "grassMatchMM": 0.07,
+    "grassBlendMM": 0.12,
+    "soilTopRGB": [
+      0.45,
+      0.3,
+      0.17
+    ],
+    "sizeAssessment": {
+      "targetRenderBytes": [
+        2000000,
+        4000000
+      ],
+      "targetLODBytes": [
+        900000,
+        1800000
+      ],
+      "targetShadowBytes": [
+        40000,
+        150000
+      ],
+      "targetPreviewBytes": [
+        15000,
+        60000
+      ],
+      "basis": "393654 source triangles, 3x3 measured base and a wider bare soil area. Compare accepted MH-002; preserve the irregular grass boundary and individual pebbles."
+    },
+    "grassCoverLossMM": 0.15,
+    "grassCoverFadeMM": 0.3,
+    "soilDomains": [
+      [
+        [
+          -45,
+          27
+        ],
+        [
+          -31,
+          35
+        ],
+        [
+          -9,
+          35
+        ],
+        [
+          8,
+          27
+        ],
+        [
+          11,
+          13
+        ],
+        [
+          18,
+          7
+        ],
+        [
+          9,
+          -9
+        ],
+        [
+          -5,
+          -17
+        ],
+        [
+          -26,
+          -18
+        ],
+        [
+          -34,
+          -4
+        ],
+        [
+          -39,
+          14
+        ]
+      ]
+    ],
+    "soilSurfaceMM": 15.55,
+    "grassHeightFadeMM": 0.4
   }
 }

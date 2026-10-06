@@ -262,6 +262,15 @@ preview-model-revisions.py с `-- --base models/collections/ud013-aged-bones --s
 `node scripts/maps/validate-masonry.mjs --base=ud013-aged-bones --roughness`.
 Совместимость manifest и загрузка через MCP используют общий клиент.
 
+## Majestic Highlands XL
+
+Индивидуальные рецепты, измерения оснований, покраска и результаты по размеру
+описаны в [Majestic Highlands XL](majestic-highlands.md). Параметры каждого
+принятого исходника хранятся в scripts/maps/majestic-recipes.json. Модели идут
+по одной; report.json сохраняет целевой диапазон, результаты сравнения
+вариантов, ракурсы проверки и подтверждённую MCP-публикацию. Очередь и снимок
+реестра находятся в локальной папке коллекции, независимо от Ultimate Dungeon.
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md) · [Инструкция обработки моделей](maps-model-pipeline.md) ·

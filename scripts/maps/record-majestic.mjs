@@ -30,6 +30,8 @@ for (const model of models) {
     "report.json",
   );
   const report = JSON.parse(await fs.readFile(reportFile, "utf8"));
+  if (!isDeepStrictEqual(report.model, model))
+    throw new Error("Prepared report changed after packaging");
   report.published = {
     id: live.id,
     version: live.version,
@@ -50,6 +52,28 @@ for (const model of models) {
     recipe: report.materialRecipe ?? report.recipe,
   });
 }
+const manifestFile = path.join(base, "manifest.json");
+const manifest = JSON.parse(await fs.readFile(manifestFile, "utf8"));
+for (const model of models) {
+  const row = manifest.find(
+    (r) =>
+      r.code === model.sourceCode &&
+      r.sourceSHA256 === model.assets.source.sha256,
+  );
+  if (!row)
+    throw new Error("Source inventory does not match the published model");
+  Object.assign(row, {
+    width: model.width,
+    height: model.height,
+    footprintReviewed: true,
+    reviewStatus: "published",
+  });
+}
+await fs.writeFile(
+  manifestFile + ".next",
+  JSON.stringify(manifest, null, 2) + "\n",
+);
+await fs.rename(manifestFile + ".next", manifestFile);
 await fs.writeFile(
   path.join(base, "progress.json.next"),
   JSON.stringify(progress, null, 2) + "\n",
