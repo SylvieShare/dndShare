@@ -17,6 +17,11 @@ const io = new NodeIO()
   .registerExtensions(ALL_EXTENSIONS)
   .registerDependencies({ "meshopt.decoder": MeshoptDecoder });
 report.resourceMetrics = {};
+report.resourceMetrics.source = {
+  bytes: report.model.assets.source.size,
+  sha256: report.model.assets.source.sha256,
+  archive: true,
+};
 for (const tier of ["render", "lod", "shadow"]) {
   const resource =
       tier === "shadow"

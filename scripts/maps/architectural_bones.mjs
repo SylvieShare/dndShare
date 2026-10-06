@@ -25,6 +25,17 @@ function nearPath(p, path) {
     return Math.hypot(...p.map((v, j) => v - a[j] - t * d[j])) < path.radius;
   });
 }
+function inTube(p, tube) {
+  const d = p.map((v, i) => v - tube.origin[i]),
+    length = Math.hypot(...tube.direction),
+    axis = tube.direction.map((v) => v / length),
+    along = d.reduce((s, v, i) => s + v * axis[i], 0);
+  return (
+    along > tube.range[0] &&
+    along < tube.range[1] &&
+    d.reduce((s, v) => s + v * v, 0) - along * along < tube.radius * tube.radius
+  );
+}
 export function architecturalBonePartAt(p, spec) {
   if (
     spec.stoneGuards?.some((box) =>
@@ -40,7 +51,8 @@ export function architecturalBonePartAt(p, spec) {
       p[2] > spec.cavity.z[1])
   )
     return "stone";
-  return spec.heads.some((h) => inVolume(p, h)) ||
+  return (spec.boneTube && inTube(p, spec.boneTube)) ||
+    spec.heads.some((h) => inVolume(p, h)) ||
     spec.piles?.some((v) => inVolume(p, v)) ||
     spec.bonePaths?.some((path) => nearPath(p, path))
     ? "bone"

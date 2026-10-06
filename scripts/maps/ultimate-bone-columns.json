@@ -187,5 +187,58 @@
       "previewKiB": [15, 150],
       "basis": "Comparable reviewed UD-078/085/086: several small sculpted details. Keep geometry, UV, normal and AO; compare smaller albedo maps before publication."
     }
+  },
+  "UD-089": {
+    "sourceName": "Column Skulls Broken 2",
+    "referencePage": 12,
+    "material": "architectural-bones",
+    "floorSeams": "ao-only",
+    "boneTube": {
+      "origin": [0, 0, 27],
+      "direction": [0, 1, 0.3],
+      "radius": 5.5,
+      "range": [-12.5, 12.5]
+    },
+    "stoneGuards": [
+      {
+        "min": [-4.2, -17, 19.2],
+        "max": [2.2, -12.4, 24.5]
+      }
+    ],
+    "heads": [],
+    "boneGroups": [
+      {
+        "position": [-3.5308, 7.2797, 30.0015],
+        "tone": "ivory"
+      },
+      {
+        "position": [1.1755, 9.8749, 26.709],
+        "tone": "grey"
+      },
+      {
+        "position": [1.9991, 4.2225, 29.0783],
+        "tone": "old"
+      },
+      {
+        "position": [-1.2953, 3.4522, 31.8312],
+        "tone": "ivory"
+      },
+      {
+        "position": [1.5285, -10.7159, 26.9645],
+        "tone": "grey"
+      },
+      {
+        "position": [-2.5307, -11.0031, 23.5191],
+        "tone": "ivory"
+      }
+    ],
+    "weightBudget": {
+      "renderMiB": [3, 5.5],
+      "lodMiB": [1, 2],
+      "shadowKiB": [40, 100],
+      "previewKiB": [15, 150],
+      "basis": "Similar complexity to reviewed UD-088; preserve the tilted shell and compare two albedo/roughness packing variants."
+    },
+    "notes": "Bone follows the measured sloping cavity axis instead of a horizontal cut. Keep the front loose stone block and all shell/rubble grey, restore the old ivory seams and vary individual skull ages."
   }
 }

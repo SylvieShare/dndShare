@@ -79,3 +79,20 @@ test("broken column distinguishes complete skulls, bowed femurs and neighbouring
   ])
     assert.equal(architecturalBonePartAt(p, spec), "stone");
 });
+test("fallen column follows its tilted cavity and preserves the loose internal stone block", () => {
+  const spec = columns["UD-089"];
+  for (const p of [
+    [-3.5308, 7.2797, 30.0015],
+    [-1.2953, 3.4522, 31.8312],
+    [1.5285, -10.7159, 26.9645],
+    [-2.5307, -11.0031, 23.5191],
+  ])
+    assert.equal(architecturalBonePartAt(p, spec), "bone");
+  for (const p of [
+    [-1.221, -13.7183, 22.7932],
+    [0.3713, -13.1903, 23.5719],
+    [-4.9427, -9.9081, 34.8235],
+    [0, 0, 14],
+  ])
+    assert.equal(architecturalBonePartAt(p, spec), "stone");
+});
