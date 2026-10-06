@@ -20,6 +20,7 @@ import { makeUtilityPainter } from "./utility_material.mjs";
 import { makeWeaponsPainter } from "./weapons_material.mjs";
 import { makeWaterPainter } from "./water_material.mjs";
 import { makeArchitecturalBonePainter } from "./architectural_bones.mjs";
+import { makeAltarPainter } from "./altar_material.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 export async function individualPainter({ code, spec, model, collectionBase }) {
@@ -28,7 +29,22 @@ export async function individualPainter({ code, spec, model, collectionBase }) {
     parts = ["base", "floor", "wall"];
   if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
     parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
-  if (spec.material === "architectural-bones") {
+  if (spec.material === "altar") {
+    let bare;
+    if (spec.sheet) {
+      const directory = path.join(collectionBase, "added-reference", code);
+      bare = {
+        spec: JSON.parse(
+          await fs.readFile(path.join(directory, "reference.json"), "utf8"),
+        ),
+        data: await fs.readFile(path.join(directory, "distance.bin")),
+      };
+      if (bare.spec.bare !== spec.bareReference)
+        throw new Error("Unexpected bare altar reference");
+    }
+    painter = makeAltarPainter(spec, bare);
+    parts = ["stone", "bone", "gold", ...(spec.sheet ? ["cloth"] : [])];
+  } else if (spec.material === "architectural-bones") {
     painter = makeArchitecturalBonePainter(spec);
     parts = ["stone", "bone"];
   } else if (spec.material === "water") {

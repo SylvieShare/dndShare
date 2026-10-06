@@ -1,0 +1,147 @@
+{
+  "UD-080": {
+    "sourceName": "Autel",
+    "referencePage": 11,
+    "material": "altar",
+    "sheet": true,
+    "bareReference": "UD-081",
+    "boneGroups": [
+      {
+        "position": [-9, -17, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, -12.5, 18],
+        "tone": "grey"
+      },
+      {
+        "position": [-9, -8, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, -3.5, 18],
+        "tone": "old"
+      },
+      {
+        "position": [-9, 1, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, 5.5, 18],
+        "tone": "grey"
+      },
+      {
+        "position": [-9, 10, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, 14.5, 18],
+        "tone": "old"
+      },
+      {
+        "position": [-9, 19, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-1.6, -23.2, 17],
+        "tone": "grey"
+      },
+      {
+        "position": [6.6, -24.3, 19],
+        "tone": "ivory"
+      },
+      {
+        "position": [-1.6, 23.2, 17],
+        "tone": "ivory"
+      },
+      {
+        "position": [6.6, 24.3, 19],
+        "tone": "old"
+      },
+      {
+        "position": [-13.5, -16.1, 18.1],
+        "tone": "old"
+      }
+    ],
+    "notes": "Complete muted red woven drapery compared with the bare UD-081 over its full 1x2 footprint. Separate aged skulls and long bones from the four stone column feet; worn gold only on the raised crosses and scrollwork.",
+    "extraHeads": [
+      {
+        "centre": [-13.5, -16.1, 18.1],
+        "radius": [3, 2.8, 2.4],
+        "minZ": 15.4
+      }
+    ]
+  },
+  "UD-081": {
+    "sourceName": "Autel Without Sheet",
+    "referencePage": 11,
+    "material": "altar",
+    "sheet": false,
+    "boneGroups": [
+      {
+        "position": [-9, -17, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, -12.5, 18],
+        "tone": "grey"
+      },
+      {
+        "position": [-9, -8, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, -3.5, 18],
+        "tone": "old"
+      },
+      {
+        "position": [-9, 1, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, 5.5, 18],
+        "tone": "grey"
+      },
+      {
+        "position": [-9, 10, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-9, 14.5, 18],
+        "tone": "old"
+      },
+      {
+        "position": [-9, 19, 18],
+        "tone": "ivory"
+      },
+      {
+        "position": [-1.6, -23.2, 17],
+        "tone": "grey"
+      },
+      {
+        "position": [6.6, -24.3, 19],
+        "tone": "ivory"
+      },
+      {
+        "position": [-1.6, 23.2, 17],
+        "tone": "ivory"
+      },
+      {
+        "position": [6.6, 24.3, 19],
+        "tone": "old"
+      },
+      {
+        "position": [-13.5, -16.1, 18.1],
+        "tone": "old"
+      }
+    ],
+    "notes": "Bare stone top preserves the engraved pentagram; use the same measured bone row, separate loose skull, column feet and worn-gold relief as the covered altar. Preserve the complete 1x2 footprint.",
+    "extraHeads": [
+      {
+        "centre": [-13.5, -16.1, 18.1],
+        "radius": [3, 2.8, 2.4],
+        "minZ": 15.4
+      }
+    ]
+  }
+}

@@ -32,7 +32,9 @@ if args.wall:
     triangles=np.concatenate([triangles,source_triangles(wall)])
 vertices,indices=np.unique(triangles.reshape(-1,3),axis=0,return_inverse=True)
 tree=BVHTree.FromPolygons(vertices.tolist(),indices.reshape(-1,3).tolist(),all_triangles=True)
-step=.25;low=[-17.75,-17.75,args.min_z];high=[17.75,17.75,target['max'][2]-target['cutHeight']+.5]
+step=.25
+low=[target['min'][0]-.25,target['min'][1]-.25,args.min_z]
+high=[target['max'][0]+.25,target['max'][1]+.25,target['max'][2]-target['cutHeight']+.5]
 size=[int(np.ceil((b-a)/step))+1 for a,b in zip(low,high)]
 samples=np.empty((size[2],size[1],size[0]),np.uint8)
 for iz in range(size[2]):
