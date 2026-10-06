@@ -42,9 +42,9 @@ func (s *Store) ReviseMapModel(ctx context.Context, expectedID string, edited ba
 	if err != nil {
 		return edited, err
 	}
-	_, err = tx.Exec(ctx, `INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
-VALUES($1::uuid,$2,$3,$4,$5,$6,$7,$8,$9,CAST($10 AS jsonb),CAST($11 AS jsonb))`,
-		edited.ID, edited.Collection, edited.SourceCode, edited.SourceName, edited.Name, edited.Version, edited.TileType, edited.TerrainType, edited.WallLayout, geometry, assets)
+	_, err = tx.Exec(ctx, `INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,geometry,assets)
+VALUES($1::uuid,$2,$3,$4,$5,$6,$7,CAST($8 AS jsonb),CAST($9 AS jsonb))`,
+		edited.ID, edited.Collection, edited.SourceCode, edited.SourceName, edited.Name, edited.Version, edited.TileType, geometry, assets)
 	if IsUniqueViolation(err) {
 		return edited, ErrMapModelConflict
 	}

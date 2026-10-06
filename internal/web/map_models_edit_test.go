@@ -14,6 +14,7 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 	input.Name = "  Исправленная стена  "
 	input.Width = 2
 	input.TextureDetail = "detailed"
+	input.TileType = "wall-angle"
 	input.PlacementOffset = [2]float64{-.25, .1}
 	edited, err := editedMapModel(original, input)
 	if err != nil {
@@ -22,7 +23,7 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 	if edited.Name != "Исправленная стена" || edited.Width != 2 || edited.PlacementOffset != input.PlacementOffset {
 		t.Fatalf("edit not applied: %+v", edited.ModelMetadata)
 	}
-	if edited.TextureDetail != "detailed" || original.TextureDetail != "basic" {
+	if edited.TextureDetail != "detailed" || original.TextureDetail != "basic" || edited.TileType != "wall-angle" || original.TileType != "wall-straight" {
 		t.Fatal("texture detail edit was not isolated to the new metadata")
 	}
 	if !reflect.DeepEqual(edited.Assets, original.Assets) || edited.ID != original.ID || edited.Version != original.Version {
@@ -42,6 +43,8 @@ func TestEditedMapModelRejectsIdentityChangesAndInvalidGeometry(t *testing.T) {
 		func(m *battlemap.ModelMetadata) { m.SourceName = "other" },
 		func(m *battlemap.ModelMetadata) { m.Version++ },
 		func(m *battlemap.ModelMetadata) { m.Width = 0 },
+		func(m *battlemap.ModelMetadata) { m.TileType = "wall" },
+		func(m *battlemap.ModelMetadata) { m.TileType = "wall-unknown" },
 		func(m *battlemap.ModelMetadata) { m.MaxHeight = math.NaN() },
 		func(m *battlemap.ModelMetadata) {
 			m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: 99}}

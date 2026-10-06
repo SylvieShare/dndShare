@@ -40,6 +40,13 @@ export function useModelReference(editor) {
     const model = editor.catalogue.find((m) => m.id === id);
     if (model && model.id !== base.value?.id) request(() => load(model));
   }
+  function changeCollection(value) {
+    if (value === editor.collection) return;
+    request(() => {
+      editor.collection = value;
+      if (models.value.length) load(firstModel());
+    });
+  }
   function discard() {
     confirmDiscard.value = false;
     const action = pending;
@@ -131,6 +138,7 @@ export function useModelReference(editor) {
     dirty,
     confirmDiscard,
     choose,
+    changeCollection,
     discard,
     reset,
     save,

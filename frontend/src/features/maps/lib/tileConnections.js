@@ -1,3 +1,4 @@
+import { isWallTile } from "./tileCategories";
 export const CONNECTIONS = [
   { key: "n", label: "Север", x: 0, y: -1 },
   { key: "ne", label: "Северо-восток", x: 1, y: -1 },
@@ -21,11 +22,11 @@ function contains(polygon, x, y) {
 }
 export function modelConnections(model) {
   if (Number.isInteger(model?.wallMask)) return model.wallMask;
-  if (!model || model.tileType !== "wall") return 0;
+  if (!isWallTile(model)) return 0;
   if (masks.has(model)) return masks.get(model);
   const fallback = { straight: 17, angle: 65, tee: 21, cross: 85, corner: 1 };
   let mask = 0;
-  if (!model.blockers?.length) mask = fallback[model.wallLayout] || 0;
+  if (!model.blockers?.length) mask = fallback[model.tileType.slice(5)] || 0;
   else
     CONNECTIONS.forEach(({ x, y }, index) => {
       if (
@@ -63,9 +64,8 @@ export function connectionVariant(tile, mask, catalogue) {
   for (const model of catalogue) {
     if (
       model.collection !== current.collection ||
-      model.terrainType !== current.terrainType ||
       wallControlMode(model) !== wallControlMode(current) ||
-      !["floor", "wall"].includes(model.tileType)
+      (model.tileType !== "floor" && !isWallTile(model))
     )
       continue;
     for (const rotation of [0, 90, 180, 270]) {

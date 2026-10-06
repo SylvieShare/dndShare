@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint } from "./editorHelpers";
+import { dragTile, mapPoint, choosePack } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
@@ -11,7 +11,7 @@ test("collection filters and selecting a side wall without layout controls", asy
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   await expect(
     page.getByRole("button", { name: "Стена 1", exact: true }),
   ).toHaveCount(0);
@@ -28,7 +28,7 @@ test("a frame supports upper tiles, carries them and deletes the dependent stack
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
   await expect
     .poll(() =>
@@ -115,7 +115,7 @@ test("a three-cell bridge automatically rests on one cell and can rotate above a
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
   await dragTile(page, await mapPoint(page, 6.5, 4.5), { name: "Мост 3×1" });
   await expect
@@ -147,7 +147,7 @@ test("dragging an existing upper tile away from sockets automatically places it 
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
   await dragTile(page, await mapPoint(page, 4.5, 4.5), {
     name: "Каменный пол",
@@ -183,7 +183,7 @@ test("new tiles automatically choose the top socket of a multi-storey frame", as
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   for (let i = 0; i < 2; i++)
     await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
   await dragTile(page, await mapPoint(page, 4.5, 4.5), {

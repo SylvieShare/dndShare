@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint } from "./editorHelpers";
+import { dragTile, mapPoint, choosePack } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
@@ -59,7 +59,7 @@ test("a copied tile pastes directly into a frame socket without pointer movement
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
   await dragTile(page, await mapPoint(page, 2.5, 3.5), {
     name: "Каменный пол",
@@ -93,7 +93,7 @@ test("a copied group uses its actual supports when the cursor is over the gap be
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   for (const x of [5, 9])
     await dragTile(page, await mapPoint(page, x, 4.5), { name: "Каркас 2×1" });
   for (const x of [2.5, 6.5])

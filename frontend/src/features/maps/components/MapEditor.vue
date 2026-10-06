@@ -6,15 +6,11 @@
       :admin="isAdmin"
       @close="emit('close')"
       @view="setView"
-      @collection="
-        catalogueDrag.cancel();
-        e.resetGesture();
-        e.collection = $event;
-      "
     />
     <MapItemsLibrary
       v-if="view === 'items'"
       :editor="e"
+      @collection="changeCollection"
       @model="placeModel"
       @object="placeObject"
     />
@@ -33,6 +29,7 @@
       <MapTileSidebar
         v-if="e.draft.document.kind === 'tiles'"
         :editor="e"
+        @collection="changeCollection"
         @model="placeModel"
         @drag-tile="dragModel"
       />
@@ -128,6 +125,12 @@ function setView(next) {
   catalogueDrag.cancel();
   e.resetGesture();
   view.value = next;
+}
+function changeCollection(value) {
+  catalogueDrag.cancel();
+  e.resetGesture();
+  if (reference.value) reference.value.changeCollection(value);
+  else e.collection = value;
 }
 function dragModel(id, event) {
   e.resetGesture();

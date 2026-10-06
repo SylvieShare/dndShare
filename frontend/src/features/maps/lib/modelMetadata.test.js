@@ -5,8 +5,7 @@ it("copies editable metadata deeply, preserves identity and excludes URLs and as
     id: "one",
     version: 2,
     textureDetail: "detailed",
-    tileType: "wall",
-    wallLayout: "straight",
+    tileType: "wall-straight",
     width: 1,
     height: 1,
     tags: ["stone"],
@@ -27,12 +26,12 @@ it("copies editable metadata deeply, preserves identity and excludes URLs and as
   expect(source.tags).toEqual(["stone"]);
   expect(
     groupedTileModels([
-      { tileType: "wall" },
+      { tileType: "wall-straight" },
       { tileType: "floor" },
-      { tileType: "wall" },
+      { tileType: "wall-straight" },
     ]).map((g) => [g.value, g.models.length]),
   ).toEqual([
     ["floor", 1],
-    ["wall", 2],
+    ["wall-straight", 2],
   ]);
 });

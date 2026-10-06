@@ -33,20 +33,6 @@
       </SlidingTabs>
     </template>
     <template #actions>
-      <div class="map-global-collection">
-        <FormSelect
-          :value="editor.collection"
-          aria-label="Коллекция плиток"
-          @change="emit('collection', $event)"
-          ><option
-            v-for="collection in collections"
-            :key="collection.id"
-            :value="collection.id"
-          >
-            {{ collection.name }}
-          </option></FormSelect
-        >
-      </div>
       <span class="map-save-status" role="status">{{
         editor.saving
           ? "Сохраняем…"
@@ -67,7 +53,7 @@
   </WorkspaceHeader>
 </template>
 <script setup>
-import { ActionButton, FormSelect, SlidingTabs } from "@sylvieshare/share-ui";
+import { ActionButton, SlidingTabs } from "@sylvieshare/share-ui";
 import { computed } from "vue";
 import {
   ArrowLeft,
@@ -94,15 +80,7 @@ const tabs = computed(() => [
       ]
     : []),
 ]);
-const emit = defineEmits(["close", "view", "collection"]);
-const collections = computed(() => [
-  ...new Map(
-    props.editor.catalogue.map((m) => [
-      m.collection,
-      { id: m.collection, name: m.collectionName || m.collection },
-    ]),
-  ).values(),
-]);
+const emit = defineEmits(["close", "view"]);
 </script>
 <style scoped>
 .map-mode-icon {
@@ -115,15 +93,7 @@ const collections = computed(() => [
   gap: 5px;
   font-size: 10px;
 }
-.map-global-collection {
-  width: 180px;
-  max-width: 28vw;
-}
 @media (max-width: 760px) {
-  .map-global-collection {
-    width: 135px;
-    max-width: 34vw;
-  }
   .map-save-status,
   .map-save-label {
     display: none;

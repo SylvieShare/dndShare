@@ -10,7 +10,6 @@ _mounts=module_from_spec(_spec);_spec.loader.exec_module(_mounts)
 ROOT=Path(__file__).resolve().parents[2]
 BASE=ROOT/'models/collections'
 names={'lost-cave':'Lost Cave','ultimate-dungeon':'Ultimate Dungeon','toxic-sewer':'Toxic Sewer','basic-elements':'Basic Elements'}
-terrain={'lost-cave':'cave','ultimate-dungeon':'dungeon','toxic-sewer':'sewer','basic-elements':'structure'}
 paths=[]
 for collection in names:
  if collection=='basic-elements':continue
@@ -43,7 +42,7 @@ for collection,path in paths:
  if code=='UD-104':cut=low[2]
  if high[2]<=cut+1:cut=low[2]
  with path.open('rb') as f:checksum=hashlib.file_digest(f,'sha256').hexdigest()
- row={'collection':collection,'collectionName':names[collection],'terrainType':terrain[collection],
+ row={'collection':collection,'collectionName':names[collection],
       'code':code,'sourceName':source_name,'sourcePath':str(path.relative_to(ROOT/'models')),
       'sourceBytes':size,'sourceSHA256':checksum,'triangles':count,'min':low.tolist(),'max':high.tolist(),
       'cutHeight':float(cut),'tileType':kind}

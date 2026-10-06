@@ -1,15 +1,10 @@
 import { modelConnections } from "./tileConnections";
-export const TILE_TYPES = [
-  { value: "floor", label: "Пол" },
-  { value: "wall", label: "Стены" },
-  { value: "stairs", label: "Лестницы" },
-  { value: "frame", label: "Каркасы" },
-  { value: "prop", label: "Декор" },
-];
+import { TILE_TYPES } from "./tileCategories";
+export { TILE_TYPES } from "./tileCategories";
 export const WALL_MODES = [
   { value: "none", label: "Без стыков" },
-  { value: "center", label: "Центральные стены: точки" },
-  { value: "edge", label: "Боковые стены: стороны" },
+  { value: "center", label: "По центру клетки" },
+  { value: "edge", label: "По краям клетки" },
 ];
 export const TEXTURE_DETAILS = [
   { value: "basic", label: "Поверхностная" },
@@ -25,8 +20,6 @@ export const METADATA_KEYS = [
   "version",
   "textureDetail",
   "tileType",
-  "terrainType",
-  "wallLayout",
   "wallMode",
   "wallMask",
   "width",

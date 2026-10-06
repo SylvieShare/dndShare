@@ -10,6 +10,7 @@
 </template>
 <script setup>
 import { onMounted, ref, watch } from "vue";
+import { isWallTile } from "../lib/tileCategories";
 import { getMapModels } from "@/shared/api/mapsApi";
 const props = defineProps({ document: { type: Object, required: true } }),
   canvas = ref(null);
@@ -25,9 +26,9 @@ function draw() {
   c.fillRect(0, 0, 420, 280);
   for (const tile of d.tiles) {
     const model = models.get(tile.modelId);
-    c.fillStyle = model?.tileType === "wall" ? "#5b412e" : "#99774f";
+    c.fillStyle = isWallTile(model) ? "#5b412e" : "#99774f";
     c.fillRect(ox + tile.x * s, oy + tile.y * s, s, s);
-    if (model?.tileType === "wall") {
+    if (isWallTile(model)) {
       c.strokeStyle = "#d0aa7c";
       c.lineWidth = Math.max(1, s * 0.16);
       c.save();

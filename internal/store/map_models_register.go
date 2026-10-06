@@ -21,9 +21,9 @@ func (s *Store) RegisterMapModel(ctx context.Context, m battlemap.Model) (battle
 	if err != nil {
 		return m, err
 	}
-	_, err = s.pool.Exec(ctx, `INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
-VALUES($1::uuid,$2,$3,$4,$5,$6,$7,$8,$9,CAST($10 AS jsonb),CAST($11 AS jsonb)) ON CONFLICT DO NOTHING`,
-		m.ID, m.Collection, m.SourceCode, m.SourceName, m.Name, m.Version, m.TileType, m.TerrainType, m.WallLayout, geometry, assets)
+	_, err = s.pool.Exec(ctx, `INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,geometry,assets)
+VALUES($1::uuid,$2,$3,$4,$5,$6,$7,CAST($8 AS jsonb),CAST($9 AS jsonb)) ON CONFLICT DO NOTHING`,
+		m.ID, m.Collection, m.SourceCode, m.SourceName, m.Name, m.Version, m.TileType, geometry, assets)
 	if err != nil {
 		return m, err
 	}

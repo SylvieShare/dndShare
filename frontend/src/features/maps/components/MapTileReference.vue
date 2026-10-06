@@ -3,6 +3,7 @@
     <div class="map-reference-catalogue">
       <MapTilePalette
         :editor="editor"
+        @collection="reference.changeCollection"
         compact
         grouped
         mode="inspect"
@@ -113,6 +114,7 @@ const selected = computed(() =>
 );
 defineExpose({
   prepareLeave: reference.prepareLeave,
+  changeCollection: reference.changeCollection,
 });
 </script>
 <style scoped>

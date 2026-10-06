@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mapPoint } from "./editorHelpers";
+import { mapPoint, choosePack } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
@@ -194,4 +194,93 @@ test("unsaved tile parameters survive view switching and must be saved or cancel
     page.getByRole("button", { name: "Создать карту", exact: true }),
   ).toBeVisible();
   expect(await page.evaluate(() => window.lastModelSaved)).toBeUndefined();
+});
+
+test("pack selection lives on the left, supports keyboard and stays available when collapsed", async ({
+  page,
+}) => {
+  await ready(page);
+  await expect(
+    page.locator(".workspace-header").getByRole("combobox"),
+  ).toHaveCount(0);
+  const selector = page.getByRole("combobox", {
+    name: "Пак тайлов",
+    exact: true,
+  });
+  await selector.focus();
+  await page.keyboard.press("ArrowDown");
+  await expect(
+    page.getByRole("listbox", { name: "Паки тайлов" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("option", { name: "Lost Cave", exact: true }),
+  ).toBeFocused();
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await expect(selector).toHaveAttribute("title", "Ultimate Dungeon");
+  await expect(
+    page.getByRole("button", { name: "Каменный пол", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Свернуть список плиток" }).click();
+  await choosePack(page, "lost-cave");
+  await page.getByRole("combobox", { name: "Пак тайлов", exact: true }).click();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("listbox", { name: "Паки тайлов" })).toHaveCount(
+    0,
+  );
+  await page.getByRole("button", { name: "Развернуть список плиток" }).click();
+  await expect(
+    page.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toBeVisible();
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
+});
+test("reference uses filter categories and preserves a draft when changing packs", async ({
+  page,
+}) => {
+  await ready(page);
+  await page
+    .getByRole("tab", { name: "Справочник тайлов", exact: true })
+    .click();
+  await expect(page.getByLabel("Тип местности", { exact: true })).toHaveCount(
+    0,
+  );
+  await expect(page.getByLabel("Форма стен", { exact: true })).toHaveCount(0);
+  await expect(
+    page.getByLabel("Тип тайла", { exact: true }).locator("option"),
+  ).toHaveCount(10);
+  await page
+    .getByLabel("Тип тайла", { exact: true })
+    .selectOption("wall-angle");
+  await choosePack(page, "ultimate-dungeon");
+  await expect(page.getByRole("dialog")).toContainText(
+    "Отменить изменения параметров?",
+  );
+  await page
+    .getByRole("button", { name: "Продолжить редактирование", exact: true })
+    .click();
+  await expect(page.getByLabel("Тип тайла", { exact: true })).toHaveValue(
+    "wall-angle",
+  );
+  await expect(
+    page
+      .getByRole("region", { name: "Справочник тайлов", exact: true })
+      .getByRole("combobox", { name: "Пак тайлов", exact: true }),
+  ).toHaveAttribute("title", "Lost Cave");
+  await page
+    .getByRole("button", { name: "Сохранить параметры", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toContainText([
+    "Сохранено",
+    "Параметры сохранены · версия 2",
+  ]);
+  const saved = await page.evaluate(() => window.lastModelSaved);
+  expect(saved.tileType).toBe("wall-angle");
+  expect(saved).not.toHaveProperty("wallLayout");
+  expect(saved).not.toHaveProperty("terrainType");
+  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
+  await sidebar.getByRole("button", { name: "Углы стен", exact: true }).click();
+  await expect(
+    sidebar.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toBeVisible();
 });

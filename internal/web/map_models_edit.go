@@ -19,8 +19,6 @@ func editedMapModel(original battlemap.Model, input battlemap.ModelMetadata) (ba
 		return original, errors.New("Исходный код, коллекция и версия тайла не редактируются")
 	}
 	input.Name = strings.TrimSpace(input.Name)
-	input.TerrainType = strings.TrimSpace(input.TerrainType)
-	input.WallLayout = strings.TrimSpace(input.WallLayout)
 	model := battlemap.Model{ModelMetadata: input, Assets: original.Assets}
 	if err := validateMapModel(model); err != nil {
 		return original, err

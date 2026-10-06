@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint } from "./editorHelpers";
+import { dragTile, mapPoint, choosePack } from "./editorHelpers";
 
 async function pixels(page, png, rectangle) {
   return page.evaluate(
@@ -25,7 +25,7 @@ test("grid lines remain visible in empty space and are occluded by model geometr
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   await dragTile(page, await mapPoint(page, 5, 4.5), { name: "Каркас 2×1" });
   await expect
     .poll(() =>

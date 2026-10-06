@@ -16,7 +16,10 @@ export async function pickTile(page, name = "Пол 1") {
   };
   await page
     .getByRole("toolbar", { name: "Типы тайлов" })
-    .getByRole("button", { name: labels[kind], exact: true })
+    .getByRole("button", {
+      name: kind?.startsWith("wall-") ? "Все стены" : labels[kind],
+      exact: true,
+    })
     .click();
   await page.getByRole("button", { name, exact: true }).click();
 }
@@ -37,4 +40,13 @@ export async function mapPoint(page, x, y) {
     x: b.x + b.width / 2 + (x - 6) * s,
     y: b.y + b.height / 2 + (y - 5) * s,
   };
+}
+
+export async function choosePack(page, id) {
+  const names = {
+    "lost-cave": "Lost Cave",
+    "ultimate-dungeon": "Ultimate Dungeon",
+  };
+  await page.getByRole("combobox", { name: "Пак тайлов", exact: true }).click();
+  await page.getByRole("option", { name: names[id], exact: true }).click();
 }

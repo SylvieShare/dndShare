@@ -184,4 +184,5 @@ var schemaParts = []struct {
 	{"model-mount-depth", schemaModelMountDepthSQL},
 	{"model-base-footprints", schemaModelBaseFootprintsSQL},
 	{"model-texture-detail", schemaModelTextureDetailSQL},
+	{"model-tile-categories", schemaModelTileCategoriesSQL},
 }

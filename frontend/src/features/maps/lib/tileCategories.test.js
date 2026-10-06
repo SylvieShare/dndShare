@@ -2,13 +2,13 @@ import { expect, it } from "vitest";
 import { TILE_CATEGORIES, matchesTileCategory } from "./tileCategories";
 it("filters wall shapes in the same category list as other tile types", () => {
   const models = [
-    { id: "floor", tileType: "floor", wallLayout: "none" },
-    { id: "straight", tileType: "wall", wallLayout: "straight" },
-    { id: "angle", tileType: "wall", wallLayout: "angle" },
-    { id: "arch", tileType: "wall", wallLayout: "custom" },
-    { id: "unknown", tileType: "wall", wallLayout: "arched-door" },
-    { id: "frame", tileType: "frame", wallLayout: "none" },
-    { id: "prop", tileType: "prop", wallLayout: "straight" },
+    { id: "floor", tileType: "floor" },
+    { id: "straight", tileType: "wall-straight" },
+    { id: "angle", tileType: "wall-angle" },
+    { id: "arch", tileType: "wall-custom" },
+    { id: "unknown", tileType: "wall-custom" },
+    { id: "frame", tileType: "frame" },
+    { id: "prop", tileType: "prop" },
   ];
   const ids = (value) =>
     models.filter((m) => matchesTileCategory(m, value)).map((m) => m.id);

@@ -23,6 +23,7 @@
       <div class="map-items-palette">
         <MapTilePalette
           :editor="editor"
+          @collection="emit('collection', $event)"
           @model="(id, event) => emit('model', id, event)"
         />
       </div>
@@ -35,7 +36,7 @@ import { Box } from "@lucide/vue";
 import { OBJECTS } from "../lib/mapModel";
 import MapTilePalette from "./MapTilePalette.vue";
 defineProps({ editor: Object });
-const emit = defineEmits(["model", "object"]);
+const emit = defineEmits(["model", "object", "collection"]);
 </script>
 <style scoped>
 .map-items-library {

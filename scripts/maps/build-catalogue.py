@@ -93,8 +93,8 @@ for row in rows:
     }
     model={'id':str(uuid.uuid5(uuid.NAMESPACE_URL,'dndshare:lost-cave:'+code+':'+files['render']['sha256'])),
            'collection':'lost-cave','sourceCode':code,'sourceName':row['name'],'name':NAMES[index],
-           'version':1,'tileType':'floor' if index in [6,7,8,9,10] else 'wall',
-           'terrainType':'cave','wallLayout':WALLS[index],'width':1,'height':1,
+           'version':1,'tileType':'floor' if index in [6,7,8,9,10] else 'wall-'+WALLS[index],
+           'width':1,'height':1,
            'surfaceHeight':round(14.74/35,6),'maxHeight':round(row['cropped']['max'][2]/35,6),
            'blockers':blockers(MODELS/'lost-cave/originals'/row['sourceFile'],row['cutHeight']),
            'tags':['rock']+(['stalagmite'] if index>=9 else []),'assets':files}

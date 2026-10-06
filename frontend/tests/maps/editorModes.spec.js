@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mapPoint, dragTile, pickTile } from "./editorHelpers";
+import { mapPoint, dragTile, pickTile, choosePack } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
@@ -48,7 +48,7 @@ test("shared header, global collection, floating actions and independent visibil
     .poll(() => page.evaluate(() => window.lastSaved?.document.grid.visible))
     .toBe(false);
   await page.getByRole("tab", { name: "Карта", exact: true }).click();
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   await page.getByRole("tab", { name: "Настройки", exact: true }).click();
   await expect(page.getByLabel("Показывать точки в пазах")).not.toBeChecked();
 });
@@ -56,7 +56,7 @@ test("ground has no clickable spheres and socket spheres insert floor from the g
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   const p = await mapPoint(page, 4.5, 4.5);
   await page.mouse.click(p.x, p.y);
   await page.waitForTimeout(1200);
@@ -149,7 +149,7 @@ test("moving tiles load full render geometry while the wide map uses LOD", async
   page,
 }) => {
   await ready(page);
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
   for (let i = 0; i < 3; i++)
     await page.getByTitle("Уменьшить", { exact: true }).click();
   await pickTile(page, "Каменный пол");

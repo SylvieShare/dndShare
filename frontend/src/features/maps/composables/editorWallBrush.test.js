@@ -49,8 +49,8 @@ describe("automatic wall brush", () => {
     brush.move({ x: 4.5, y: 4.5 });
     expect(e.previewTile.value.group).toHaveLength(5);
     expect(
-      e.previewTile.value.group.every(
-        (t) => catalogue.find((m) => m.id === t.modelId).tileType === "wall",
+      e.previewTile.value.group.every((t) =>
+        catalogue.find((m) => m.id === t.modelId).tileType.startsWith("wall-"),
       ),
     ).toBe(true);
     brush.cancel();

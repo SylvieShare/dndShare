@@ -161,7 +161,10 @@ URL через MCP, выполняет PUT прямо в S3 и регистри�
 MCP_AUTH_TOKEN, `-assets` указывает папку content-addressed файлов с
 catalogue.json; endpoint по умолчанию https://dndshare.ru/mcp.
 
-Расширенный каталог поддерживает `tileType=stairs/frame`, `collectionName`,
+Каталог поддерживает единый `tileType`: `floor`, `wall-straight`, `wall-angle`,
+`wall-tee`, `wall-cross`, `wall-corner`, `wall-custom`, `stairs`, `frame`, `prop`.
+`collection`/`collectionName` задают пак; отдельных terrainType и wallLayout нет.
+Также поддерживаются `collectionName`,
 `wallMode=center/edge/none`, `wallMask` и `supportSlots` с целыми координатами и
 размерами, а также относительной высотой `elevation`. Слоты проверяются на выход
 за площадь, пересечение и высоту. При регистрации сохраняются в PostgreSQL;

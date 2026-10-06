@@ -19,8 +19,6 @@ type ModelMetadata struct {
 	Version         int            `json:"version"`
 	TextureDetail   string         `json:"textureDetail"`
 	TileType        string         `json:"tileType"`
-	TerrainType     string         `json:"terrainType"`
-	WallLayout      string         `json:"wallLayout"`
 	WallMode        string         `json:"wallMode"`
 	WallMask        int            `json:"wallMask"`
 	Width           int            `json:"width"`

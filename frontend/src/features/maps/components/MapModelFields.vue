@@ -28,19 +28,6 @@
         </option>
       </FormSelect>
     </FormField>
-    <FormField label="Тип местности" vertical
-      ><FormTextInput
-        v-model:value="model.terrainType"
-        aria-label="Тип местности"
-        :maxlength="32"
-        required
-    /></FormField>
-    <FormField label="Форма стен" vertical
-      ><FormTextInput
-        v-model:value="model.wallLayout"
-        aria-label="Форма стен"
-        :maxlength="32"
-    /></FormField>
     <FormField label="Расположение стен" vertical
       ><FormSelect
         :value="model.wallMode"
@@ -90,6 +77,7 @@
     /></FormField>
   </div>
   <p class="map-hint">
+    Расположение стен задаёт геометрию стыков: по центру клетки или по её краям.
     Размеры и высоты — в единицах сетки. Высоты измеряются от нижней точки
     модели; монтажное основание находится ниже поверхности размещения.
   </p>

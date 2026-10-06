@@ -42,6 +42,11 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaBattleMapsSQL)
 	exec(schema3DMapsSQL)
+	exec(schemaModelSupportSlotsSQL)
+	exec(schemaModelMountDepthSQL)
+	exec(schemaModelBaseFootprintsSQL)
+	exec(schemaModelTextureDetailSQL)
+	exec(schemaModelTileCategoriesSQL)
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
 	m, err := s.SaveBattleMap(ctx, 1, BattleMap{Name: preset.Name, Document: preset.Document})

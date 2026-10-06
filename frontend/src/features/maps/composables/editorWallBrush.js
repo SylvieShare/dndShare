@@ -1,3 +1,4 @@
+import { isWallTile } from "../lib/tileCategories";
 import { inside, lineCells, uid } from "../lib/mapModel";
 import { connectionVariant } from "../lib/tileConnections";
 import { tileGroupStatus } from "../lib/tilePlacement";
@@ -20,9 +21,8 @@ export function editorWallBrush(e) {
     const document = e.draft.value.document;
     const seed = latestModelVersions(e.catalogue.value).find(
       (m) =>
-        m.tileType === "wall" &&
-        m.collection === (e.collection?.value || "lost-cave") &&
-        m.wallLayout === "straight",
+        m.tileType === "wall-straight" &&
+        m.collection === (e.collection?.value || "lost-cave"),
     );
     if (!seed) {
       e.error.value = "В каталоге нет стен";
@@ -33,8 +33,7 @@ export function editorWallBrush(e) {
         .filter(
           (t) =>
             t.level === level &&
-            e.catalogue.value.find((m) => m.id === t.modelId)?.tileType ===
-              "wall",
+            isWallTile(e.catalogue.value.find((m) => m.id === t.modelId)),
         )
         .map((t) => key(t.x, t.y)),
     );
@@ -52,8 +51,7 @@ export function editorWallBrush(e) {
         (t) => t.x === x && t.y === y && t.level === level,
       );
       const source =
-        old &&
-        e.catalogue.value.find((m) => m.id === old.modelId)?.tileType === "wall"
+        old && isWallTile(e.catalogue.value.find((m) => m.id === old.modelId))
           ? old
           : { modelId: seed.id, rotation: 0 };
       let mask = 0;

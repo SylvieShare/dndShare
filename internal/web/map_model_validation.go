@@ -15,13 +15,13 @@ func validateMapModel(m battlemap.Model) error {
 	if !isUUID(m.ID) || m.Collection == "" || m.SourceCode == "" || m.SourceName == "" || strings.TrimSpace(m.Name) == "" || m.Version < 1 || len([]rune(m.Name)) > 160 || len(m.Collection) > 80 || len(m.SourceCode) > 80 || len(m.SourceName) > 255 {
 		return errors.New("invalid model identity or names")
 	}
-	if m.TileType != "floor" && m.TileType != "wall" && m.TileType != "prop" && m.TileType != "stairs" && m.TileType != "frame" {
+	if !battlemap.ValidTileType(m.TileType) {
 		return errors.New("invalid tileType")
 	}
 	if m.CollectionName == "" || len(m.CollectionName) > 160 || (m.WallMode != "center" && m.WallMode != "edge" && m.WallMode != "none") || m.WallMask < 0 || m.WallMask > 255 {
 		return errors.New("invalid collection label or wall controls")
 	}
-	if m.TerrainType == "" || len(m.TerrainType) > 32 || len(m.WallLayout) > 32 || m.Width < 1 || m.Height < 1 || m.Width > 8 || m.Height > 8 || m.SurfaceHeight < 0 || m.MaxHeight < m.SurfaceHeight || m.MaxHeight > 32 {
+	if m.Width < 1 || m.Height < 1 || m.Width > 8 || m.Height > 8 || m.SurfaceHeight < 0 || m.MaxHeight < m.SurfaceHeight || m.MaxHeight > 32 {
 		return errors.New("invalid model geometry")
 	}
 	if math.IsNaN(m.SurfaceHeight) || math.IsInf(m.SurfaceHeight, 0) || math.IsNaN(m.MaxHeight) || math.IsInf(m.MaxHeight, 0) {

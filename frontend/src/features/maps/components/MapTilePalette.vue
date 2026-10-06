@@ -11,6 +11,11 @@
       >
     </div>
     <template v-else>
+      <MapCollectionPicker
+        :catalogue="editor.catalogue"
+        :model-value="editor.collection"
+        @update:model-value="emit('collection', $event)"
+      />
       <MapTileCategoryPicker v-model="category" />
       <p class="map-hint">
         {{
@@ -66,6 +71,7 @@ import {
   DetailSection,
   LoadingState,
 } from "@sylvieshare/share-ui";
+import MapCollectionPicker from "./MapCollectionPicker.vue";
 import MapTileCard from "./MapTileCard.vue";
 import { groupedTileModels } from "../lib/modelMetadata";
 const props = defineProps({
@@ -78,7 +84,7 @@ const props = defineProps({
 });
 import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
-const emit = defineEmits(["model", "drag-tile"]);
+const emit = defineEmits(["model", "drag-tile", "collection"]);
 const category = ref("floor");
 const models = computed(() =>
   latestModelVersions(props.editor.catalogue).filter(

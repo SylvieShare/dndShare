@@ -25,7 +25,7 @@ revision. Системные пресеты создаются кодом и н�
 
 Миграция `166_3d_maps.sql`, код `3d-maps`, добавляет `map_model`:
 UUID версии, коллекцию, source_code, исходное source_name, отдельное name,
-номер версии, tile_type, terrain_type, wall_layout, JSONB геометрии и JSONB
+номер версии, tile_type, JSONB геометрии и JSONB
 asset metadata. Геометрия содержит размеры в клетках, высоту пола, максимальную
 высоту, контуры препятствий и теги. Assets описывают source/render/lod/preview:
 S3 object key, SHA-256, byte-size, MIME и имя файла. Ключи содержат хэш файла;
@@ -40,6 +40,15 @@ UD-006, UD-009 и UD-010, остальные записи получают basic
 оформления версии, поэтому она не ограничивает совместимость размещения.
 Read API показывает значение выбранных визуальных assets; MCP сохраняет
 историческое значение конкретной версии.
+
+Миграция `175_model_tile_categories.sql` объединяет тип и форму в `tile_type`:
+`floor`, `wall-straight`, `wall-angle`, `wall-tee`, `wall-cross`, `wall-corner`,
+`wall-custom`, `stairs`, `frame`, `prop`. Известные прежние формы стен переносятся
+в соответствующий тип; остальные стены становятся `wall-custom`. Поля
+`terrain_type`/`wall_layout` удалены; пак определяется `collection`. Индекс
+фильтра теперь покрывает `(collection,tile_type)`. `wallMode` и `wallMask`
+по-прежнему описывают геометрию стыков независимо от категории. Миграция сохраняет
+UUID, версии, assets, размещения и ссылки FK существующих карт.
 
 `battle_map_model` и `session_map_model` фиксируют используемые версии через FK
 с RESTRICT на удаление модели и CASCADE при удалении карты. Сохранение документа

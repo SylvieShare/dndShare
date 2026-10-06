@@ -1,11 +1,11 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint } from "./editorHelpers";
+import { dragTile, mapPoint, choosePack } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
-  await page.getByLabel("Коллекция плиток").selectOption("ultimate-dungeon");
+  await choosePack(page, "ultimate-dungeon");
 }
 async function cyan(page, canvas) {
   const png = await canvas.screenshot({ animations: "disabled" });

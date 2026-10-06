@@ -24,9 +24,17 @@
         />
       </ActionButton>
     </div>
+    <MapCollectionPicker
+      v-if="collapsed"
+      :catalogue="editor.catalogue"
+      :model-value="editor.collection"
+      compact
+      @update:model-value="emit('collection', $event)"
+    />
     <div v-show="!collapsed" class="map-tile-sidebar-content">
       <MapTilePalette
         :editor="editor"
+        @collection="emit('collection', $event)"
         compact
         grouped
         draggable
@@ -40,9 +48,10 @@
 import { ref } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { PanelLeftOpen, PanelLeftClose } from "@lucide/vue";
+import MapCollectionPicker from "./MapCollectionPicker.vue";
 import MapTilePalette from "./MapTilePalette.vue";
 defineProps({ editor: Object });
-const emit = defineEmits(["model", "drag-tile"]);
+const emit = defineEmits(["model", "drag-tile", "collection"]);
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 </script>
 <style scoped>

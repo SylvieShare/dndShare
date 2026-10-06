@@ -43,7 +43,29 @@ func TestMapModelRevisionPersistence(t *testing.T) {
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
 	exec(schemaBattleMapsSQL)
 	exec(schema3DMapsSQL)
+	exec(schemaModelSupportSlotsSQL)
+	exec(schemaModelMountDepthSQL)
+	exec(schemaModelBaseFootprintsSQL)
+	exec(schemaModelTextureDetailSQL)
+	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
+SELECT '00000000-0000-4000-8000-000000000099','migration-test','CUSTOM','Custom wall','Custom wall',1,'wall','cave','arched-door',geometry,assets
+FROM dndshare.map_model LIMIT 1`)
+	exec(schemaModelTileCategoriesSQL)
 	s := &Store{pool: pool}
+	for _, expected := range battlemap.InitialCatalogue() {
+		migrated, err := s.GetMapModel(ctx, expected.ID)
+		if err != nil || migrated.TileType != expected.TileType || !reflect.DeepEqual(migrated.Assets, expected.Assets) {
+			t.Fatalf("migration changed identity/assets or lost category for %s: %+v %v", expected.SourceCode, migrated, err)
+		}
+	}
+	custom, err := s.GetMapModel(ctx, "00000000-0000-4000-8000-000000000099")
+	if err != nil || custom.TileType != "wall-custom" {
+		t.Fatalf("unknown wall shape lost during migration: %+v %v", custom, err)
+	}
+	var oldColumns int
+	if err := pool.QueryRow(ctx, `SELECT count(*) FROM information_schema.columns WHERE table_schema='dndshare' AND table_name='map_model' AND column_name IN ('wall_layout','terrain_type')`).Scan(&oldColumns); err != nil || oldColumns != 0 {
+		t.Fatalf("redundant fields survived migration: %d %v", oldColumns, err)
+	}
 	base := battlemap.InitialCatalogue()[0]
 	base.Collection = "test"
 	base.ID = "00000000-0000-4000-8000-000000000001"
@@ -54,11 +76,12 @@ func TestMapModelRevisionPersistence(t *testing.T) {
 	edit.ID = "00000000-0000-4000-8000-000000000002"
 	edit.Name = "Updated"
 	edit.Width = 2
+	edit.TileType = "wall-angle"
 	saved, err := s.ReviseMapModel(ctx, base.ID, edit)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if saved.Version != 2 || saved.Width != 2 || !reflect.DeepEqual(saved.Assets, base.Assets) {
+	if saved.Version != 2 || saved.Width != 2 || saved.TileType != "wall-angle" || !reflect.DeepEqual(saved.Assets, base.Assets) {
 		t.Fatalf("unexpected revision: %+v", saved)
 	}
 	old, err := s.GetMapModel(ctx, base.ID)
