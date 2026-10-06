@@ -1,0 +1,154 @@
+{
+  "UD-041": {
+    "sourceName": "Fountain Empty",
+    "referencePage": 6,
+    "material": "fountain",
+    "variant": "empty",
+    "heads": [
+      {
+        "centre": [0.9, -12.9, 16.4],
+        "radius": [2.7, 2.75, 2.45],
+        "minZ": 14.39
+      }
+    ],
+    "bones": [
+      [
+        [-10.0, 14.45, 15.0],
+        [-7.5, 11.65, 14.2],
+        [-3.6, 6.9, 14.75]
+      ],
+      [
+        [-7.5, -9.1, 14.85],
+        [-6.0, -5.8, 14.48],
+        [-4.85, -1.25, 14.3]
+      ]
+    ],
+    "boneTips": [
+      {
+        "centre": [-5.35, -0.3, 14.55],
+        "radius": [0.9, 1.1, 0.55],
+        "minZ": 14.15
+      }
+    ],
+    "chains": [
+      [
+        [10.6, 13.0, 37.0],
+        [9.9, 13.2, 33.5],
+        [8.7, 13.1, 30.0],
+        [6.45, 12.6, 27.5],
+        [3.25, 10.85, 26.8],
+        [0.2, 8.35, 26.25]
+      ],
+      [
+        [10.6, -13.2, 37.5],
+        [9.4, -13.1, 34.3],
+        [8.45, -12.7, 30.6],
+        [6.25, -12.3, 27.6],
+        [3.4, -11.1, 26.15],
+        [0.45, -8.65, 26.1]
+      ]
+    ],
+    "notes": "Two individually measured iron chains and their anchor eyes; one skull and two long bones receive aged ivory. Preserve the empty stone bowl, carved arch and floor joints."
+  },
+  "UD-042": {
+    "sourceName": "Fountain Crystal",
+    "referencePage": 6,
+    "material": "fountain",
+    "variant": "crystal",
+    "bareReference": "UD-041",
+    "bareWallReference": "UD-001",
+    "bareMaxZ": 28,
+    "oldPigments": [[0.24, 0.52, 0.64]],
+    "notes": "Purple mineral facets, darker bodies and pale lavender crests. Compare against the empty basin plus matching plain wall, so the bowl and bricks stay stone, including previously turquoise areas and grey outer crystals."
+  },
+  "UD-043": {
+    "sourceName": "Fountain Toxic Liquid",
+    "referencePage": 6,
+    "material": "fountain",
+    "variant": "toxic",
+    "bareReference": "UD-041",
+    "oldPigments": [[0.32, 0.52, 0.12]],
+    "boneRadius": 0.85,
+    "boneDatums": [14.39, 13.55, 14.39, 24.5, 14.39, 24.5],
+    "boneTones": ["ivory", "grey", "old", "ivory", "grey", "old"],
+    "heads": [
+      {
+        "centre": [-8.5, 5.6, 16.0],
+        "radius": [3.0, 2.8, 2.1],
+        "minZ": 14.2
+      },
+      {
+        "centre": [0.5, 13.4, 17.1],
+        "radius": [3.1, 2.8, 2.5],
+        "minZ": 14.35
+      },
+      {
+        "centre": [-3.3, -9.2, 15.9],
+        "radius": [2.7, 2.6, 2.25],
+        "minZ": 14.15
+      },
+      {
+        "centre": [2.0, -12.9, 15.8],
+        "radius": [2.9, 2.8, 2.2],
+        "minZ": 14.3
+      },
+      {
+        "centre": [5.4, 12.3, 26.9],
+        "radius": [2.8, 2.7, 2.6],
+        "minZ": 25.0
+      },
+      {
+        "centre": [6.0, -5.4, 23.7],
+        "radius": [2.8, 2.8, 2.25],
+        "minZ": 22.0
+      }
+    ],
+    "bones": [
+      [
+        [-12.27, 14.03, 14.9],
+        [-8.86, 12.36, 14.45],
+        [-4.8, 10.33, 14.5]
+      ],
+      [
+        [-4.58, 13.81, 16.35],
+        [-4.43, 7.64, 14.2],
+        [-5.23, 2.85, 13.8]
+      ],
+      [
+        [-8.5, -11.3, 15.0],
+        [-6.68, -6.37, 14.8],
+        [-4.8, -1.43, 14.85]
+      ],
+      [
+        [-3.55, -3.41, 25.8],
+        [-0.66, -6.49, 26.3],
+        [2.58, -10.35, 26.65],
+        [7.44, -12.14, 25.5],
+        [8.7, -14.88, 25.5]
+      ],
+      [
+        [-6.82, -14.26, 14.55],
+        [-3.25, -14.48, 14.25],
+        [1.11, -15.23, 14.3],
+        [5.7, -15.63, 14.4]
+      ],
+      [
+        [-1.46, -2.98, 25.8],
+        [2.75, -6.75, 25.05],
+        [7.54, -11.98, 25.85],
+        [8.7, -14.88, 25.5]
+      ]
+    ],
+    "notes": "Six measured skulls and long bones in varied aged ivory; carved spout head stays stone. Green acid belongs only to the pool, foam and pouring stream; compare against the empty basin to protect masonry."
+  },
+  "UD-044": {
+    "sourceName": "Fountain Treasure",
+    "referencePage": 6,
+    "material": "fountain",
+    "variant": "treasure",
+    "bareReference": "UD-042",
+    "bareWallReference": "UD-001",
+    "bareMaxZ": 27,
+    "notes": "Warm worn gold on coins, rings and the measured hanging necklace, with two silver coins and eight separately bounded coloured gemstones. Restore stone on the entire basin and wall, including the previously golden front."
+  }
+}
