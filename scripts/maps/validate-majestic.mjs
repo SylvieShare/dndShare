@@ -7,7 +7,12 @@ const root = path.resolve(import.meta.dirname, "../.."),
   base = path.join(root, "models/collections/majestic-highlands");
 const code = process.argv.find((a) => a.startsWith("--code="))?.slice(7);
 if (!code) throw new Error("Reviewed code required");
-const directory = path.join(base, "review", code),
+const optimized = process.argv.includes("--optimized");
+const directory = path.join(
+    base,
+    optimized ? "optimized-review" : "review",
+    code,
+  ),
   report = JSON.parse(
     await fs.readFile(path.join(directory, "report.json"), "utf8"),
   );
@@ -22,7 +27,33 @@ const io = new NodeIO()
   .registerExtensions(ALL_EXTENSIONS)
   .registerDependencies({ "meshopt.decoder": MeshoptDecoder });
 for (const tier of ["render", "lod"]) {
-  const doc = await io.read(path.join(directory, tier + ".glb"));
+  const runtime = await io.read(path.join(directory, tier + ".glb"));
+  if (optimized) {
+    if (
+      !runtime
+        .getRoot()
+        .listExtensionsRequired()
+        .some((e) => e.extensionName === "KHR_texture_basisu")
+    )
+      throw new Error("KTX2 extension must be required");
+    for (const texture of runtime.getRoot().listTextures()) {
+      const bytes = Buffer.from(texture.getImage());
+      if (
+        texture.getMimeType() !== "image/ktx2" ||
+        bytes.readUInt32LE(12) !== 0 ||
+        bytes.readUInt32LE(40) < 10
+      )
+        throw new Error("Expected transcodable KTX2 with mipmaps");
+    }
+  }
+  const doc = optimized
+    ? await io.read(
+        path.join(
+          directory,
+          tier === "render" ? "preview-model.glb" : "lod-preview-model.glb",
+        ),
+      )
+    : runtime;
   await doc.transform(dequantize());
   let pegTriangles = 0,
     triangles = 0;
@@ -66,7 +97,11 @@ for (const tier of ["render", "lod"]) {
           throw new Error("Black surface pixel");
         if (slot === "Normal" && data[offset + 2] < 128)
           throw new Error("Opposite normal hemisphere");
-        if (slot === "MetallicRoughness" && data[offset + 2] !== 0)
+        if (
+          slot === "MetallicRoughness" &&
+          data[offset + 2] !== 0 &&
+          (!optimized || mat.getMetallicFactor() !== 0)
+        )
           throw new Error("Grass must be nonmetallic");
         pixelsChecked++;
       },

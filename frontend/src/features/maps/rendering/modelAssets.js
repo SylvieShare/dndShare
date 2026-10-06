@@ -1,9 +1,7 @@
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+import { acquireModelLoader } from "./modelLoader";
 import { getMapModels } from "@/shared/api/mapsApi";
 
 const cache = new Map();
-const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 let loading = 0;
 const queue = [];
 async function limited(fn) {
@@ -39,13 +37,13 @@ function disposeModel(model) {
   });
   images.forEach((value) => value?.close?.());
 }
-function acquire(url) {
-  let entry = cache.get(url);
+function acquire(url, loader) {
+  const key = `${loader.key}:${url}`;
+  let entry = cache.get(key);
   if (!entry) {
     entry = {
       refs: 0,
-      promise: limited(async () => {
-        const gltf = await loader.loadAsync(url);
+      promise: loader.load(url, limited).then((gltf) => {
         gltf.scene.updateMatrixWorld(true);
         const parts = [];
         gltf.scene.traverse((node) => {
@@ -60,19 +58,21 @@ function acquire(url) {
         return { parts };
       }),
     };
-    cache.set(url, entry);
+    cache.set(key, entry);
   }
   entry.refs++;
   return entry.promise;
 }
-function release(url) {
-  const entry = cache.get(url);
+function release(url, loader) {
+  const key = `${loader.key}:${url}`;
+  const entry = cache.get(key);
   if (!entry || --entry.refs > 0) return;
-  cache.delete(url);
+  cache.delete(key);
   entry.promise.then(disposeModel).catch(() => {});
 }
 
-export function modelAssets(onError) {
+export function modelAssets(onError, renderer) {
+  const loader = acquireModelLoader(renderer);
   const owned = new Map();
   let catalogue = new Map(),
     catalogueKey = "",
@@ -103,7 +103,7 @@ export function modelAssets(onError) {
             throw new Error("Модель плитки отсутствует в каталоге");
           const url = tier === "lod" ? metadata.lodUrl : metadata.renderUrl;
           if (!owned.has(url)) {
-            const entry = { promise: acquire(url), value: null };
+            const entry = { promise: acquire(url, loader), value: null };
             owned.set(url, entry);
             entry.promise
               .then((value) => {
@@ -112,7 +112,7 @@ export function modelAssets(onError) {
               .catch((error) => {
                 if (owned.get(url) === entry) {
                   owned.delete(url);
-                  release(url);
+                  release(url, loader);
                 }
                 if (!dead) onError(error.message);
               });
@@ -130,9 +130,11 @@ export function modelAssets(onError) {
       return m && owned.get(tier === "lod" ? m.lodUrl : m.renderUrl)?.value;
     },
     destroy() {
+      if (dead) return;
       dead = true;
-      owned.forEach((_, url) => release(url));
+      owned.forEach((_, url) => release(url, loader));
       owned.clear();
+      loader.release();
     },
   };
 }

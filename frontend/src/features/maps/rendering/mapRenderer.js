@@ -53,7 +53,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     objects = new Group();
   let appearance = areaAppearance({ areas: [] });
   scene.add(annotations, objects);
-  const assets = modelAssets(onError),
+  const assets = modelAssets(onError, gpu),
     lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),

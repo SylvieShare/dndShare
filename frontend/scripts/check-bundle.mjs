@@ -16,11 +16,22 @@ function visit(key) {
 visit('index.html')
 const html = await fs.readFile(path.join(dir, 'index.html'), 'utf8')
 for (const match of html.matchAll(/(?:src|href)="([^"]+\.(?:css|js))"/g)) initial.add(match[1].replace(/^\//, ''))
-const files = (await fs.readdir(dir, {recursive: true})).filter(file => /\.(js|css)$/.test(file))
+// Basis is a worker dependency fetched only for KTX2, not a navigation chunk.
+const decoderFiles = ['js', 'wasm'].map(extension => {
+  const key = `node_modules/three/examples/jsm/libs/basis/basis_transcoder.${extension}`
+  const asset = manifest[key]
+  if (!asset || asset.src !== key || asset.isEntry || asset.isDynamicEntry || asset.imports?.length) {
+    throw new Error(`Missing or unexpected Basis decoder asset: ${key}`)
+  }
+  return asset.file
+})
+const files = (await fs.readdir(dir, {recursive: true})).filter(file => /\.(js|css)$/.test(file) && !decoderFiles.includes(file))
 const sizes = await Promise.all(files.map(async file => ({file, gzip: gzipSync(await fs.readFile(path.join(dir, file))).length})))
+const decoderSizes = await Promise.all(decoderFiles.map(async file => gzipSync(await fs.readFile(path.join(dir, file))).length))
 const measured = {
   initialGzip: sizes.filter(row => initial.has(row.file)).reduce((sum, row) => sum + row.gzip, 0),
   totalGzip: sizes.reduce((sum, row) => sum + row.gzip, 0),
+  textureDecoderGzip: decoderSizes.reduce((sum, bytes) => sum + bytes, 0),
 }
 let failed = false
 for (const extension of ['js', 'css']) {

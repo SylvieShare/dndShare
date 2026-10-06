@@ -42,7 +42,7 @@ export function createModelPreview(host, onFrame, onError) {
     asset = null,
     fitKey = "",
     bounds = new Box3();
-  let assets = modelAssets(onError),
+  let assets = modelAssets(onError, gpu),
     options = {};
   function render() {
     if (frame || dead) return;
@@ -106,7 +106,7 @@ export function createModelPreview(host, onFrame, onError) {
       asset = null;
       fitKey = "";
       assets.destroy();
-      assets = modelAssets(onError);
+      assets = modelAssets(onError, gpu);
       const owner = assets;
       await owner.ensure(new Set([source.id]), "render", {
         catalogue: [source],

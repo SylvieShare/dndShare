@@ -39,12 +39,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--code', required=True)
     parser.add_argument('--force', action='store_true')
+    parser.add_argument('--optimized-tier', choices=['render', 'lod'])
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
     if args.code != 'MH-001':
         raise ValueError('No individually reviewed recipe for '+args.code)
     base = ROOT/'models/collections/majestic-highlands'
     row = next(r for r in json.loads((base/'manifest.json').read_text()) if r['code']==args.code)
     out = base/'prepared'/args.code
+    budget = 120000
+    if args.optimized_tier:
+        budget = 60000 if args.optimized_tier=='render' else 20000
+        out = base/'optimized-native'/args.code/args.optimized_tier
     out.mkdir(parents=True, exist_ok=True)
     if (out/'report.json').exists() and not args.force:
         raise ValueError('Already prepared; use --force after reviewing changes')
@@ -60,13 +65,13 @@ def main():
     target = bpy.data.objects.new(args.code+' browser', source.data.copy())
     bpy.context.collection.objects.link(target); activate(target)
     decimate = target.modifiers.new('Browser surface budget', 'DECIMATE')
-    decimate.ratio = min(1, 120000/len(target.data.polygons)); decimate.use_collapse_triangulate = True
+    decimate.ratio = min(1, budget/len(target.data.polygons)); decimate.use_collapse_triangulate = True
     bpy.ops.object.modifier_apply(modifier=decimate.name); shade(target)
     bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.uv.smart_project(angle_limit=1.35, island_margin=.0015, margin_method='FRACTION', area_weight=.8)
     bpy.ops.object.mode_set(mode='OBJECT')
     target.data.materials[0] = target.data.materials[0].copy()
-    tile_bake.SIZE = 2048
+    tile_bake.SIZE = 1024 if args.optimized_tier=='lod' else 2048
     print('MAJESTIC_BAKE', args.code, len(target.data.polygons), flush=True)
     tile_bake.bake(target, source, out)
     quality = tile_bake.validate_maps(target)
@@ -90,7 +95,7 @@ def main():
     report = {**row, 'reviewStatus':'prepared', 'footprintReviewed':True, 'mountDepth':round(datum/35,6), 'maxHeight':round(high,6),
               'surfaceHeight':max(p['elevation'] for p in points), 'placementPoints':points,
               'renderTriangles':len(target.data.polygons)+12, 'pegTriangles':12,
-              'quality':quality, 'seconds':round(time.monotonic()-started,2)}
+              'geometryBudget':budget, 'quality':quality, 'seconds':round(time.monotonic()-started,2)}
     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print('MAJESTIC_PREPARED', args.code, report['seconds'], quality, flush=True)
 
