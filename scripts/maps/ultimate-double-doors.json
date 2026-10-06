@@ -1,0 +1,42 @@
+{
+  "UD-082": {
+    "sourceName": "Double Door Left",
+    "referencePage": 11,
+    "material": "double-door",
+    "floorReference": "ultimate-wall-floor.json",
+    "mirror": false,
+    "head": {
+      "centre": [8.9, -5.7, 54],
+      "radius": [4.7, 9.3, 11.8]
+    },
+    "chain": [
+      [10.34, 10.26, 24.51],
+      [8.2, 11.66, 21.19],
+      [5.64, 11.68, 17.6],
+      [-0.46, 12.63, 15.86],
+      [-8.14, 12.31, 14.13],
+      [-11.8, 12, 14.3]
+    ],
+    "notes": "Vertical wood grain on the complete door planks, curved grain following the arch frame and transverse grain on its bottom rail. Separate aged ivory skull, iron studs, straps, hinge collars, handle and measured chain; the floor stays masonry."
+  },
+  "UD-083": {
+    "sourceName": "Double Door Right",
+    "referencePage": 11,
+    "material": "double-door",
+    "floorReference": "ultimate-wall-floor.json",
+    "mirror": true,
+    "head": {
+      "centre": [8.9, -5.7, 54],
+      "radius": [4.7, 9.3, 11.8]
+    },
+    "chain": [
+      [10.34, 10.26, 24.51],
+      [8.2, 11.66, 21.19],
+      [5.64, 11.68, 17.6],
+      [-0.46, 12.63, 15.86],
+      [-8.14, 12.31, 14.13],
+      [-11.8, 12, 14.3]
+    ],
+    "notes": "Individually reviewed mirrored leaf: vertical planks, grain following the opposite arch, aged ivory skull, iron fittings on both faces and full hinge collars. Sample the matching reflected floor to protect cobbles below the chain."
+  }
+}
