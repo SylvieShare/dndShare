@@ -3,6 +3,7 @@ import earlierSpecs from "./ultimate-detail.json" with { type: "json" };
 import furnitureSpecs from "./ultimate-furniture.json" with { type: "json" };
 import lightingSpecs from "./ultimate-lighting.json" with { type: "json" };
 import fountainSpecs from "./ultimate-fountains.json" with { type: "json" };
+import floorSpecs from "./ultimate-floors.json" with { type: "json" };
 import { prepareSurfaceRevision } from "./prepare-surface-revision.mjs";
 import { paintStone } from "./ultimate_surface.mjs";
 import { makeRaisedPainter } from "./raised_material.mjs";
@@ -20,6 +21,7 @@ import { paintWoodFloor } from "./wood_floor_material.mjs";
 import { makeTorchPainter } from "./torch_material.mjs";
 import { paintBrazier } from "./brazier_material.mjs";
 import { makeFountainPainter } from "./fountain_material.mjs";
+import { makeGroundGlyphPainter } from "./ground_glyph.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 const specs = {
@@ -27,6 +29,7 @@ const specs = {
   ...furnitureSpecs,
   ...lightingSpecs,
   ...fountainSpecs,
+  ...floorSpecs,
 };
 const code = process.argv[2],
   spec = specs[code];
@@ -83,7 +86,16 @@ let painter = (rgb, p, n) => paintStone(rgb, p, n, spec),
   parts = ["base", "floor", "wall"];
 if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
   parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
-if (spec.material === "bones") {
+if (spec.material === "glyph") {
+  const floor = JSON.parse(
+    await fs.readFile(
+      path.join(collectionBase, "ultimate-slab-floor.json"),
+      "utf8",
+    ),
+  );
+  painter = makeGroundGlyphPainter(floor, spec);
+  parts = ["base", "floor", "glyph"];
+} else if (spec.material === "bones") {
   const floor = JSON.parse(
     await fs.readFile(
       path.resolve(

@@ -1,0 +1,68 @@
+{
+  "UD-045": {
+    "sourceName": "Ground Tile 1",
+    "referencePage": 7,
+    "material": "stone",
+    "notes": "Intact cool grey slab, small worn chips, restrained surface mottling and dark perimeter joint. The authored slab stays one piece without painted internal divisions."
+  },
+  "UD-046": {
+    "sourceName": "Ground Tile 2",
+    "referencePage": 7,
+    "material": "stone",
+    "notes": "Two chipped corners and the large slab remain cool grey; recesses at real fractures receive darker dirt, while the exposed edges retain pale wear."
+  },
+  "UD-047": {
+    "sourceName": "Ground Tile 3",
+    "referencePage": 7,
+    "material": "stone",
+    "notes": "Cracked centre and edge fragments remain stone with coherent cool grain, dusty exposed crests and darker mortar in the actual fracture network."
+  },
+  "UD-048": {
+    "sourceName": "Ground Symbol Crossbow",
+    "referencePage": 7,
+    "material": "glyph",
+    "pigment": [0.22, 0.245, 0.26],
+    "notes": "The uncoloured crossbow and surrounding ring are darkened only inside the actual carved recess, measured against the intact slab. Pale worn lip and cold stone outside the carving."
+  },
+  "UD-049": {
+    "sourceName": "Ground Symbol Pentacle",
+    "referencePage": 7,
+    "material": "glyph",
+    "pigment": [0.6, 0.24, 0.205],
+    "notes": "Muted red paint only in the recessed pentacle and its circle, matching the PDF; stone triangles, worn lip and outer slab remain cold grey."
+  },
+  "UD-050": {
+    "sourceName": "Ground Symbol Fire",
+    "referencePage": 7,
+    "material": "glyph",
+    "pigment": [0.82, 0.64, 0.24],
+    "gradient": {
+      "axis": 0,
+      "from": 11,
+      "to": -13,
+      "color": [0.7, 0.31, 0.14]
+    },
+    "notes": "Yellow base at positive X fades to warm orange at the left-pointing flame tips; pigment stays inside the measured carving, with the surrounding stone grey."
+  },
+  "UD-051": {
+    "sourceName": "Ground Symbol Skull",
+    "referencePage": 7,
+    "material": "glyph",
+    "pigment": [0.79, 0.785, 0.735],
+    "notes": "Off-white skull and crossed bones only in the carved icon; raised eyes, nose and surrounding stone remain grey, with worn pigment in the actual chipped recess."
+  },
+  "UD-052": {
+    "sourceName": "Ground Symbol Cross 1",
+    "referencePage": 7,
+    "material": "glyph",
+    "pigment": [0.82, 0.7, 0.22],
+    "notes": "Ochre-yellow paint fills the angular recessed cross, following the PDF; the intact slab, chipped upper lip and surrounding stone stay grey."
+  },
+  "UD-053": {
+    "sourceName": "Ground Symbol Cross 2",
+    "referencePage": 7,
+    "material": "glyph",
+    "pigment": [0.555, 0.39, 0.64],
+    "notes": "Muted lavender paint fills the rounded recessed cross, matching the PDF; upper stone edges and the surrounding slab keep the shared cold-grey material."
+  }
+}
