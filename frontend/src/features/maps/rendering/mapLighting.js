@@ -2,7 +2,7 @@ import {
   DirectionalLight,
   HemisphereLight,
   PointLight,
-  PCFSoftShadowMap,
+  PCFShadowMap,
   Vector3,
 } from "three";
 import { DEFAULT_SUN, lightOpacity, lightPose } from "../lib/mapLighting";
@@ -22,7 +22,7 @@ export function createMapLighting(scene, gpu, assets) {
     markers = createLightMarkers();
   scene.add(proxies.root, markers.root);
   gpu.shadowMap.enabled = true;
-  gpu.shadowMap.type = PCFSoftShadowMap;
+  gpu.shadowMap.type = PCFShadowMap;
   gpu.shadowMap.autoUpdate = false;
   let slots = [],
     key = "",
