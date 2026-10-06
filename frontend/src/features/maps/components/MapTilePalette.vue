@@ -35,6 +35,8 @@
               :model="model"
               :selected="(selectedId || editor.selectedModel) === model.id"
               :draggable="draggable"
+              :reference-link="referenceLinks && mode === 'place'"
+              @reference="emit('reference', $event)"
               @model="(id, event) => emit('model', id, event)"
               @drag-tile="(id, event) => emit('drag-tile', id, event)"
             />
@@ -48,6 +50,8 @@
           :model="model"
           :selected="(selectedId || editor.selectedModel) === model.id"
           :draggable="draggable"
+          :reference-link="referenceLinks && mode === 'place'"
+          @reference="emit('reference', $event)"
           @model="(id, event) => emit('model', id, event)"
           @drag-tile="(id, event) => emit('drag-tile', id, event)"
         />
@@ -59,7 +63,7 @@
   </section>
 </template>
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { latestModelVersions } from "../lib/modelVersions";
 import {
   ActionButton,
@@ -74,18 +78,48 @@ const props = defineProps({
   grouped: Boolean,
   draggable: Boolean,
   selectedId: String,
+  referenceLinks: Boolean,
   mode: { type: String, default: "place" },
 });
 import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
-import { matchesTileCategory } from "../lib/tileCategories";
-const emit = defineEmits(["model", "drag-tile"]);
-const category = ref("all");
-const filtered = computed(() =>
+import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
+const emit = defineEmits(["model", "drag-tile", "reference"]);
+const category = ref("floor");
+const models = computed(() =>
   latestModelVersions(props.editor.catalogue).filter(
-    (m) =>
-      m.collection === props.editor.collection &&
-      matchesTileCategory(m, category.value),
+    (m) => m.collection === props.editor.collection,
   ),
+);
+function initialCategory() {
+  const selected = models.value.find((m) => m.id === props.selectedId);
+  if (selected) {
+    category.value = selected.tileType;
+    return;
+  }
+  const first = TILE_CATEGORIES.find((c) =>
+    models.value.some((m) => matchesTileCategory(m, c.value)),
+  );
+  category.value = first?.value || "floor";
+}
+watch(() => props.editor.collection, initialCategory);
+watch(
+  () => props.editor.loadingModels,
+  (loading) => {
+    if (!loading) initialCategory();
+  },
+  { immediate: true },
+);
+watch(
+  () => props.selectedId,
+  (id) => {
+    const selected = models.value.find((m) => m.id === id);
+    if (selected && !matchesTileCategory(selected, category.value))
+      category.value = selected.tileType;
+  },
+  { immediate: true },
+);
+const filtered = computed(() =>
+  models.value.filter((m) => matchesTileCategory(m, category.value)),
 );
 const groups = computed(() => groupedTileModels(filtered.value));
 </script>

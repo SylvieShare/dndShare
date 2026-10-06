@@ -23,6 +23,8 @@
       <div class="map-items-palette">
         <MapTilePalette
           :editor="editor"
+          :reference-links="referenceLinks"
+          @reference="emit('reference', $event)"
           @model="(id, event) => emit('model', id, event)"
         />
       </div>
@@ -34,8 +36,8 @@ import { BaseTile } from "@sylvieshare/share-ui";
 import { Box } from "@lucide/vue";
 import { OBJECTS } from "../lib/mapModel";
 import MapTilePalette from "./MapTilePalette.vue";
-defineProps({ editor: Object });
-const emit = defineEmits(["model", "object"]);
+defineProps({ editor: Object, referenceLinks: Boolean });
+const emit = defineEmits(["model", "object", "reference"]);
 </script>
 <style scoped>
 .map-items-library {

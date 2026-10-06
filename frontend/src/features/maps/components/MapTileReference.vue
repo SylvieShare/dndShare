@@ -111,7 +111,10 @@ const reference = reactive(useModelReference(props.editor));
 const selected = computed(() =>
   props.editor.catalogue.find((m) => m.id === reference.base?.id),
 );
-defineExpose({ prepareLeave: reference.prepareLeave });
+defineExpose({
+  prepareLeave: reference.prepareLeave,
+  choose: reference.choose,
+});
 </script>
 <style scoped>
 .map-tile-reference {

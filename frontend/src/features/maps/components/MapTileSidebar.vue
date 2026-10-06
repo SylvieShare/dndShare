@@ -27,6 +27,8 @@
     <div v-show="!collapsed" class="map-tile-sidebar-content">
       <MapTilePalette
         :editor="editor"
+        :reference-links="referenceLinks"
+        @reference="emit('reference', $event)"
         compact
         grouped
         draggable
@@ -41,8 +43,8 @@ import { ref } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { PanelLeftOpen, PanelLeftClose } from "@lucide/vue";
 import MapTilePalette from "./MapTilePalette.vue";
-defineProps({ editor: Object });
-const emit = defineEmits(["model", "drag-tile"]);
+defineProps({ editor: Object, referenceLinks: Boolean });
+const emit = defineEmits(["model", "drag-tile", "reference"]);
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 </script>
 <style scoped>

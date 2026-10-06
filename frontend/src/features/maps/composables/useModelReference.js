@@ -105,17 +105,19 @@ export function useModelReference(editor) {
     }
     return true;
   }
+  const firstModel = () =>
+    models.value.find((m) => m.tileType === "floor") || models.value[0];
   watch(
     models,
     () => {
-      if (!base.value && models.value.length) load(models.value[0]);
+      if (!base.value && models.value.length) load(firstModel());
       else if (
         !dirty.value &&
         base.value &&
         !models.value.some((m) => m.id === base.value.id) &&
         models.value.length
       )
-        load(models.value[0]);
+        load(firstModel());
     },
     { immediate: true },
   );

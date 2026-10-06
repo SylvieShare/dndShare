@@ -13,9 +13,6 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
   const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
   await expect(sidebar.getByRole("button", { name: /^Пол \(/ })).toBeVisible();
   await expect(
-    sidebar.getByRole("button", { name: /^Стены \(/ }),
-  ).toBeVisible();
-  await expect(
     sidebar.getByRole("button", { name: "Кисть стенами", exact: true }),
   ).toHaveCount(0);
   await expect(sidebar.getByLabel("Тип плитки", { exact: true })).toHaveCount(
@@ -25,7 +22,13 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
     sidebar.getByLabel("Расположение стен", { exact: true }),
   ).toHaveCount(0);
   const picker = sidebar.getByRole("toolbar", { name: "Типы тайлов" });
-  await expect(picker.getByRole("button")).toHaveCount(13);
+  await expect(picker.getByRole("button")).toHaveCount(11);
+  await expect(
+    picker.getByRole("button", { name: "Все тайлы", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    picker.getByRole("button", { name: "Без стен", exact: true }),
+  ).toHaveCount(0);
   await picker
     .getByRole("button", { name: "Прямые стены", exact: true })
     .click();
@@ -47,7 +50,7 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
   ).toHaveCount(0);
   for (const button of await picker.getByRole("button").all())
     await expect(button.locator("svg")).toHaveCount(1);
-  await picker.getByRole("button", { name: "Все тайлы", exact: true }).click();
+  await picker.getByRole("button", { name: "Пол", exact: true }).click();
   const before = await page.locator(".map-canvas").boundingBox();
   await page.getByRole("button", { name: "Свернуть список плиток" }).click();
   const collapsed = await page.locator(".map-canvas").boundingBox();
@@ -188,4 +191,39 @@ test("unsaved tile parameters survive view switching and must be saved or cancel
     page.getByRole("button", { name: "Создать карту", exact: true }),
   ).toBeVisible();
   expect(await page.evaluate(() => window.lastModelSaved)).toBeUndefined();
+});
+
+test("a tile shortcut opens that exact tile in the admin reference without starting placement", async ({
+  page,
+}) => {
+  await ready(page);
+  const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
+  await sidebar
+    .getByRole("toolbar", { name: "Типы тайлов" })
+    .getByRole("button", { name: "Все стены", exact: true })
+    .click();
+  await sidebar
+    .getByRole("button", { name: "Параметры LC-001: Стена 1", exact: true })
+    .click();
+  await expect(
+    page.getByRole("tab", { name: "Справочник тайлов", exact: true }),
+  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByLabel("Название тайла", { exact: true })).toHaveValue(
+    "Стена 1",
+  );
+  await expect(page.getByLabel("Тип тайла", { exact: true })).toHaveValue(
+    "wall",
+  );
+  const reference = page.getByRole("region", {
+    name: "Справочник тайлов",
+    exact: true,
+  });
+  await expect(
+    reference.getByRole("button", { name: "Стена 1", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await expect(page.locator(".map-controls-hint")).not.toContainText(
+    "разместить плитку",
+  );
+  expect(await page.evaluate(() => window.requests)).toEqual([]);
 });

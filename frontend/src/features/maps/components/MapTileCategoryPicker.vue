@@ -21,7 +21,7 @@
 import { ActionButton } from "@sylvieshare/share-ui";
 import { TILE_CATEGORIES } from "../lib/tileCategories";
 import TileCategoryIcon from "./TileCategoryIcon.vue";
-defineProps({ modelValue: { type: String, default: "all" } });
+defineProps({ modelValue: { type: String, default: "floor" } });
 const emit = defineEmits(["update:modelValue"]);
 </script>
 <style scoped>

@@ -1,5 +1,4 @@
 export const TILE_CATEGORIES = [
-  { value: "all", label: "Все тайлы" },
   { value: "floor", label: "Пол", tileType: "floor" },
   { value: "wall", label: "Все стены", tileType: "wall" },
   {
@@ -38,14 +37,13 @@ export const TILE_CATEGORIES = [
     tileType: "wall",
     layout: "custom",
   },
-  { value: "wall-none", label: "Без стен", layout: "none" },
   { value: "stairs", label: "Лестницы", tileType: "stairs" },
   { value: "frame", label: "Каркасы", tileType: "frame" },
   { value: "prop", label: "Декор", tileType: "prop" },
 ];
 export function matchesTileCategory(model, value) {
   const category = TILE_CATEGORIES.find((c) => c.value === value);
-  if (!category || value === "all") return true;
+  if (!category) return false;
   if (category.tileType && model.tileType !== category.tileType) return false;
   if (category.layout === "custom")
     return !["none", "straight", "angle", "tee", "cross", "corner"].includes(

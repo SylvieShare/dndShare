@@ -16,7 +16,9 @@ it("filters wall shapes in the same category list as other tile types", () => {
   expect(ids("wall-straight")).toEqual(["straight"]);
   expect(ids("wall-angle")).toEqual(["angle"]);
   expect(ids("wall-custom")).toEqual(["arch", "unknown"]);
-  expect(ids("wall-none")).toEqual(["floor", "frame"]);
+  expect(ids("floor")).toEqual(["floor"]);
+  expect(ids("all")).toEqual([]);
+  expect(ids("wall-none")).toEqual([]);
   expect(ids("prop")).toEqual(["prop"]);
   expect(new Set(TILE_CATEGORIES.map((c) => c.value)).size).toBe(
     TILE_CATEGORIES.length,

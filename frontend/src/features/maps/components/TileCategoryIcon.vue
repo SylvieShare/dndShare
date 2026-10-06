@@ -10,15 +10,7 @@
     stroke-linecap="round"
     aria-hidden="true"
   >
-    <g v-if="kind === 'all'">
-      <path
-        v-for="(p, i) in allTiles"
-        :key="i"
-        :d="p"
-        class="tile-category-face"
-      />
-    </g>
-    <g v-else>
+    <g>
       <path :d="base" class="tile-category-base" />
       <g v-for="(solid, index) in solids" :key="index">
         <path
@@ -30,11 +22,6 @@
         <path :d="solid.top" class="tile-category-face" />
       </g>
       <path v-if="kind === 'floor'" d="M11 19l4-2 3 2 4-2M15 17v-3" />
-      <path
-        v-if="kind === 'wall-none'"
-        d="M8 14l16 12M24 14L8 26"
-        stroke-width="2"
-      />
       <g v-if="kind === 'frame'">
         <path
           v-for="(line, index) in frame"
@@ -75,12 +62,6 @@ function solid(polygon, height) {
   };
 }
 const base = path(rectangle(1, 1, 25, 25).map((p) => point(...p)));
-const allTiles = [
-  rectangle(2, 2, 11, 11),
-  rectangle(15, 2, 24, 11),
-  rectangle(2, 15, 11, 24),
-  rectangle(15, 15, 24, 24),
-].map((p) => path(p.map((v) => point(...v))));
 const shapes = {
   "wall-straight": [
     [3, 10],
