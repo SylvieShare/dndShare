@@ -309,6 +309,34 @@ if (params.get("kind")) {
   source.document.tiles = [];
   source.document.background = { url: "/maps/city.svg" };
 }
+if (params.has("areaExample")) {
+  source.document.grid.visible = false;
+  source.document.tiles = [
+    { id: "area-floor", modelId: FLOOR, x: 4, y: 4, rotation: 0, level: 0 },
+  ];
+  source.document.objects = [
+    {
+      id: "area-chest",
+      modelId: "ffffffff-ffff-4fff-8fff-ffffffffffff",
+      kind: "chest",
+      x: 4.5,
+      y: 4.5,
+      rotation: 0,
+      scale: 1,
+      open: false,
+      placement: { tileId: "area-floor", point: 0 },
+    },
+  ];
+  source.document.areas = [
+    {
+      id: "area-room",
+      name: "Зал",
+      hidden: params.has("hiddenArea"),
+      tileIds: ["area-floor"],
+      objectIds: ["area-chest"],
+    },
+  ];
+}
 let templateRevision = 1;
 let board = { ...clone(source), state: initialState() };
 board.state.zones.left = "visible";
@@ -326,6 +354,10 @@ board.state.tokens = [
     physical: false,
   },
 ];
+if (params.has("areaExample")) {
+  board.state.fog = false;
+  board.state.tokens = [];
+}
 let display = {
   mapId: board.id,
   visible: true,

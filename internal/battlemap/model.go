@@ -32,6 +32,14 @@ type Zone struct {
 	Rects []Rect `json:"rects"`
 }
 
+type Area struct {
+	ID        string   `json:"id"`
+	Name      string   `json:"name"`
+	Hidden    bool     `json:"hidden"`
+	TileIDs   []string `json:"tileIds"`
+	ObjectIDs []string `json:"objectIds"`
+}
+
 type Object struct {
 	ID        string           `json:"id"`
 	Kind      string           `json:"kind"`
@@ -68,6 +76,7 @@ type Document struct {
 	Tiles      []Tile     `json:"tiles"`
 	Objects    []Object   `json:"objects"`
 	Zones      []Zone     `json:"zones"`
+	Areas      []Area     `json:"areas"`
 	Credit     *Credit    `json:"credit,omitempty"`
 }
 

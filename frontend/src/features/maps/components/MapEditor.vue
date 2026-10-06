@@ -34,6 +34,7 @@
         @drag-tile="dragModel"
         @object="placeObject"
         @drag-object="dragObject"
+        @tab="stopPlacement"
       />
       <div class="map-editor-main">
         <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
@@ -153,6 +154,11 @@ function dragObject(id, event) {
   catalogueDrag.cancel();
   e.resetGesture();
   objectCatalogue.begin(id, event);
+}
+function stopPlacement() {
+  catalogueDrag.cancel();
+  objectCatalogue.cancel();
+  e.resetGesture();
 }
 function startTool(tool) {
   if (tool === "object") {

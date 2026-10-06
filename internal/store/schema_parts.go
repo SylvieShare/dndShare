@@ -188,4 +188,5 @@ var schemaParts = []struct {
 	{"model-wall-shapes", schemaModelWallShapesSQL},
 	{"model-surfaces-objects", schemaModelSurfacesObjectsSQL},
 	{"measured-placement-points", schemaMeasuredPlacementPointsSQL},
+	{"map-areas", schemaMapAreasSQL},
 }

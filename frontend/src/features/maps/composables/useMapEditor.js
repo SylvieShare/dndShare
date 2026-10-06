@@ -1,4 +1,6 @@
 import { syncSurfaceObjects } from "../lib/surfacePlacement";
+import { pruneAreas } from "../lib/mapAreas";
+import { editorAreas } from "./editorAreas";
 import {
   computed,
   onBeforeUnmount,
@@ -67,6 +69,7 @@ export function useMapEditor(source, onSaved) {
   function change(fn) {
     checkpoint();
     fn(draft.value);
+    pruneAreas(draft.value.document);
   }
   function undo() {
     if (!history.value.length) return;
@@ -108,6 +111,7 @@ export function useMapEditor(source, onSaved) {
     saving.value = true;
     error.value = "";
     syncSurfaceObjects(draft.value.document, catalogue.value);
+    pruneAreas(draft.value.document);
     const snapshot = { ...clone(draft.value), ...record },
       key = JSON.stringify(snapshot);
     try {
@@ -266,6 +270,7 @@ export function useMapEditor(source, onSaved) {
     redo,
     resize,
     addZone,
+    ...editorAreas(state),
     ...gestures,
   };
 }

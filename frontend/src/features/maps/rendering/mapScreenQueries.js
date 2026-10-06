@@ -10,6 +10,7 @@ export function mapScreenQueries(
   structure,
   getDocument,
   getTier,
+  getHiddenTiles = () => new Set(),
 ) {
   function screenBounds(tile) {
     const model = assets.model(tile.modelId, getTier()),
@@ -38,7 +39,12 @@ export function mapScreenQueries(
     surfacePoint(event, ignored = "") {
       const document = getDocument();
       if (!document) return null;
-      const points = surfacePoints(document, assets.catalogue(), ignored),
+      const points = surfacePoints(
+          document,
+          assets.catalogue(),
+          ignored,
+          getHiddenTiles(),
+        ),
         rect = host.getBoundingClientRect();
       let best = null,
         distance = Infinity;
@@ -57,6 +63,7 @@ export function mapScreenQueries(
     },
     tilesInRect(rect) {
       return (getDocument()?.tiles || [])
+        .filter((tile) => !getHiddenTiles().has(tile.id))
         .filter((tile) => {
           const b = screenBounds(tile);
           return (

@@ -111,6 +111,7 @@ const props = defineProps({
   placementHint: Object,
   publicCode: String,
   tabletop: Boolean,
+  areaMode: { type: String, default: "hide" },
   hint: {
     type: [String, Array],
     default: "Колесо: масштаб · Alt: перемещение · ПКМ/Shift: вращение",
@@ -164,6 +165,7 @@ watch(
     props.catalogue,
     props.placementObject,
     props.surfacePlacement,
+    props.areaMode,
   ],
   redraw,
   { deep: true },

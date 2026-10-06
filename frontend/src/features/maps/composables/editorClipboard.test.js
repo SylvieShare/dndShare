@@ -176,3 +176,26 @@ it("pastes an object alone onto a free shared point instead of retaining the sou
   clipboard.paste({ x: 6.5, y: 6.5 });
   expect(d.objects).toHaveLength(2);
 });
+
+it("does not copy hidden area models when the selection rectangle crosses them", () => {
+  const { e, clipboard } = setup(),
+    d = e.draft.value.document;
+  d.tiles.push({ ...d.tiles[0], id: "visible", x: 2, y: 2 });
+  d.objects.push({
+    id: "secret",
+    kind: "chest",
+    x: 1.5,
+    y: 1.5,
+    rotation: 0,
+    scale: 1,
+  });
+  d.areas = [
+    { id: "room", hidden: true, tileIds: ["old"], objectIds: ["secret"] },
+  ];
+  e.selectedTiles.value = [];
+  e.selection.value = { x: 0, y: 0, width: 4, height: 4 };
+  clipboard.copy();
+  clipboard.begin({ x: 5.5, y: 5.5 });
+  expect(e.previewTile.value.group).toHaveLength(1);
+  expect(e.previewObject.value).toBeNull();
+});

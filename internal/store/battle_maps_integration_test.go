@@ -50,8 +50,10 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaModelWallShapesSQL)
 	exec(schemaModelSurfacesObjectsSQL)
 	exec(schemaMeasuredPlacementPointsSQL)
+	exec(schemaMapAreasSQL)
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
+	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
 	m, err := s.SaveBattleMap(ctx, 1, BattleMap{Name: preset.Name, Document: preset.Document})
 	if err != nil {
 		t.Fatal(err)
@@ -66,6 +68,9 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	b, err := s.AddSessionMap(ctx, 20, m)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if len(b.Document.Areas) != 1 || !b.Document.Areas[0].Hidden || b.Document.Areas[0].Name != "Вход" {
+		t.Fatal("area metadata was not copied into session")
 	}
 	m.Document.Tiles[0].Rotation = 90
 	if _, err := s.SaveBattleMap(ctx, 1, m); err != nil {

@@ -1,4 +1,5 @@
 import { structureContext } from "./tileStructure";
+import { hiddenAreaMembers } from "./mapAreas";
 
 export function surfacePosition(tile, model, point, elevation = 0) {
   let x = point.x,
@@ -12,7 +13,12 @@ export function surfacePosition(tile, model, point, elevation = 0) {
     elevation: elevation + point.elevation - (model.mountDepth || 0),
   };
 }
-export function surfacePoints(document, catalogue, ignoreObject = "") {
+export function surfacePoints(
+  document,
+  catalogue,
+  ignoreObject = "",
+  hiddenTiles = new Set(),
+) {
   const context = structureContext(document, catalogue);
   const occupied = new Set(
     document.objects
@@ -20,6 +26,7 @@ export function surfacePoints(document, catalogue, ignoreObject = "") {
       .map((o) => `${o.placement.tileId}:${o.placement.point}`),
   );
   return document.tiles.flatMap((tile) => {
+    if (hiddenTiles.has(tile.id)) return [];
     const model = context.models.get(tile.modelId);
     if (!model?.canStand) return [];
     return (model.placementPoints || []).flatMap((point, index) =>
@@ -47,7 +54,8 @@ export function resolvedSurfacePosition(entity, document, catalogue, context) {
     models = new Map(catalogue.map((m) => [m.id, m]));
   const model = models.get(tile?.modelId),
     point = model?.placementPoints?.[entity.placement.point];
-  if (!tile || !point) return { ...entity, elevation: entity.elevation ?? 0.44 };
+  if (!tile || !point)
+    return { ...entity, elevation: entity.elevation ?? 0.44 };
   const poses = context || structureContext(document, catalogue);
   return {
     ...entity,
@@ -60,7 +68,12 @@ export function resolvedSurfacePosition(entity, document, catalogue, context) {
   };
 }
 export function nearestSurface(point, document, catalogue, ignoreObject = "") {
-  const candidates = surfacePoints(document, catalogue, ignoreObject);
+  const candidates = surfacePoints(
+    document,
+    catalogue,
+    ignoreObject,
+    hiddenAreaMembers(document).tiles,
+  );
   candidates.sort(
     (a, b) =>
       Math.hypot(a.x - point.x, a.y - point.y) -

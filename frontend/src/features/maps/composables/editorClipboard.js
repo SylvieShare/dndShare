@@ -5,6 +5,7 @@ import {
 import { clone, inside, uid } from "../lib/mapModel";
 import { tileGroupStatus, tileSize } from "../lib/tilePlacement";
 import { groupRotationPivot, rotateMapGroup } from "../lib/mapGroupRotation";
+import { hiddenAreaMembers } from "../lib/mapAreas";
 export function editorClipboard(e) {
   let clipboard = null,
     targets = null,
@@ -15,6 +16,7 @@ export function editorClipboard(e) {
     const d = e.draft.value.document,
       r = e.selection.value,
       ids = new Set(e.selectedTiles.value);
+    const hidden = hiddenAreaMembers(d);
     const includes = (o) =>
       r &&
       o.x >= r.x &&
@@ -22,13 +24,16 @@ export function editorClipboard(e) {
       o.x < r.x + r.width &&
       o.y < r.y + r.height;
     const tiles = d.tiles.filter(
-      (t) => ids.has(t.id) || (!ids.size && includes(t)),
+      (t) =>
+        !hidden.tiles.has(t.id) &&
+        (ids.has(t.id) || (!ids.size && includes(t))),
     );
     const objects = d.objects.filter(
       (o) =>
-        o.id === e.selectedObject.value ||
-        includes(o) ||
-        tiles.some((t) => t.id === o.placement?.tileId),
+        !hidden.objects.has(o.id) &&
+        (o.id === e.selectedObject.value ||
+          includes(o) ||
+          tiles.some((t) => t.id === o.placement?.tileId)),
     );
     if (!tiles.length && !objects.length) return;
     const origin = r || {

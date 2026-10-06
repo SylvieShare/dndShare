@@ -1,6 +1,7 @@
 import { Group, InstancedMesh, Matrix4 } from "three";
 import { tilePose, tilePoseTransform } from "./tileTransform";
 import { createRotationMotion } from "./rotationMotion";
+import { applyAreaOpacity } from "./areaOpacity";
 
 export function createTileLayer(assets, fog) {
   const root = new Group(),
@@ -38,7 +39,7 @@ export function createTileLayer(assets, fog) {
   }
   return {
     root,
-    rebuild(tiles, tier, hiddenIds) {
+    rebuild(tiles, tier, hiddenIds, opacity = () => 1) {
       clear();
       allTiles = new Map(tiles.map((t) => [t.id, t]));
       motion.retain(new Set(allTiles.keys()));
@@ -52,7 +53,7 @@ export function createTileLayer(assets, fog) {
       const buckets = new Map();
       for (const tile of tiles) {
         if (hidden.has(tile.id)) continue;
-        const key = `${tile.modelId}:${Math.floor(tile.x / 12)},${Math.floor(tile.y / 12)}`;
+        const key = `${tile.modelId}:${Math.floor(tile.x / 12)},${Math.floor(tile.y / 12)}:${opacity(tile.id)}`;
         if (!buckets.has(key)) buckets.set(key, []);
         buckets.get(key).push(tile);
       }
@@ -71,6 +72,7 @@ export function createTileLayer(assets, fog) {
           );
           mesh.userData.tiles = items;
           mesh.userData.partMatrix = part.matrix;
+          applyAreaOpacity(mesh, opacity(items[0].id));
           items.forEach((tile, i) =>
             mesh.setMatrixAt(
               i,

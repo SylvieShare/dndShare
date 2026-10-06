@@ -10,13 +10,14 @@ export function objectPlacementAnchors() {
     points = [];
   return {
     root,
-    update(document, catalogue, object, show) {
+    update(document, catalogue, object, show, hiddenTiles) {
       root.visible = !!show;
       if (!show) return;
       points = surfacePoints(
         document,
         catalogue,
         object?.moving ? object.id : "",
+        hiddenTiles,
       );
       const next = JSON.stringify([points, object?.placement]);
       if (key === next) return;

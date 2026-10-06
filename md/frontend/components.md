@@ -340,3 +340,8 @@ MapCollectionPicker размещён над левым каталогом и д�
 3D-превью. Текстовый статус использует общий LoadingState. Цвета сфер и контуров
 заданы в mapAccents: синий для тайлов, зелёный для объектов. Визуальный поворот
 rotationMotion не меняет сохранённые координаты и угол документа.
+
+Вкладка «Области» редактора — доменная композиция MapAreasPanel/MapAreaCard на
+BaseTile, AddButton, FormField/FormTextInput, ToggleSwitch, DetailSection и
+RemoveButton. editorAreas управляет членством и обычной историей документа;
+mapAreas задаёт скрытие в редакторе/трансляции и прозрачность в сессии.

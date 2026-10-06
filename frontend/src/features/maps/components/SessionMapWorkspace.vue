@@ -104,6 +104,7 @@
           >
         </div>
         <MapCanvas
+          area-mode="ghost"
           :key="c.selected.id"
           ref="canvas"
           :document="c.selected.document"

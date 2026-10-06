@@ -1,4 +1,5 @@
 import { buildModelObject } from "./modelObject";
+import { applyAreaOpacity } from "./areaOpacity";
 import {
   BoxGeometry,
   CanvasTexture,
@@ -147,10 +148,17 @@ function label(name) {
 }
 export function buildSceneObjects(d, state, options, fog, assets, tier) {
   const root = new Group();
-  for (const o of d.objects)
-    root.add(
-      buildMapProp(o, state?.objects?.[o.id] ?? o.open, fog, assets, tier),
+  for (const o of d.objects) {
+    const object = buildMapProp(
+      o,
+      state?.objects?.[o.id] ?? o.open,
+      fog,
+      assets,
+      tier,
     );
+    applyAreaOpacity(object, options.areaObjectOpacity?.(o.id) ?? 1);
+    root.add(object);
+  }
   for (const token of state?.tokens || []) {
     if (
       !options.master &&

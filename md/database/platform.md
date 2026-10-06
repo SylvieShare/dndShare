@@ -57,6 +57,12 @@ UUID, версии, assets, размещения и ссылки FK сущест
 wall-custom больше нет в CHECK/API. UUID, assets, геометрия стыков и документы
 карт сохраняются. Тот же выбор формы используется импортёром.
 
+Миграция `179_map_areas.sql` добавляет пустой список `areas` существующим
+документам battle_map/session_map. Каждая область хранит id, name, hidden,
+tileIds и objectIds внутри JSONB документа. Go API проверяет имена, существование
+элементов и единственное членство каждого экземпляра; изменение состава сохраняется
+с обычной revision карты. Копия для сессии сохраняет области исходной карты.
+
 Миграция `177_model_surfaces_objects.sql` добавляет hasDecor/canStand/hidden
 и placementPoints в geometry, категории bridge/passage/column и тип object.
 Декор больше не является tile_type. Три UD-модели скрыты из нового каталога

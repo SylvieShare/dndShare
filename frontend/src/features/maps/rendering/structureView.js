@@ -5,7 +5,8 @@ import { tileSize } from "../lib/tilePlacement";
 
 export function structureView(assets, cameraView) {
   let context = structureContext({ width: 2, height: 2, tiles: [] }, []),
-    document;
+    document,
+    hiddenTiles = new Set();
   function update(d) {
     document = d;
     context = structureContext(d, assets.catalogue());
@@ -50,6 +51,7 @@ export function structureView(assets, cameraView) {
         assets.metadata(modelId),
       );
     for (const [key, slot] of context.sockets) {
+      if (hiddenTiles.has(slot.parent)) continue;
       const level = Number(key.split(",")[2]);
       if (level + levelOffset < 16 && !ignored.has(slot.parent))
         planes.set(`${level}:${slot.elevation}`, {
@@ -110,5 +112,15 @@ export function structureView(assets, cameraView) {
       );
     return height;
   }
-  return { update, posed, preview, point, top, context: () => context };
+  return {
+    update,
+    posed,
+    preview,
+    point,
+    top,
+    context: () => context,
+    hideTiles(ids) {
+      hiddenTiles = ids;
+    },
+  };
 }

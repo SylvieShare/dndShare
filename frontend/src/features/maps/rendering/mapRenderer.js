@@ -1,3 +1,5 @@
+import { areaAppearance } from "../lib/mapAreas";
+import { createMapBackground } from "./mapBackground";
 import { mapScreenQueries } from "./mapScreenQueries";
 import { createLoadingPreview } from "./loadingPreview";
 import { createObjectMotion } from "./objectMotion";
@@ -9,19 +11,14 @@ import {
   DirectionalLight,
   Group,
   HemisphereLight,
-  Mesh,
-  MeshBasicMaterial,
   OrthographicCamera,
-  PlaneGeometry,
   Scene,
-  SRGBColorSpace,
-  TextureLoader,
   WebGLRenderer,
 } from "three";
 import { modelAssets } from "./modelAssets";
 import { createMapFog } from "./mapFog";
 import { createTileLayer } from "./tileLayer";
-import { buildAnnotations, disposeAnnotations, FLOOR } from "./annotations";
+import { buildAnnotations, disposeAnnotations } from "./annotations";
 import { buildSceneObjects, disposeObjects } from "./sceneObjects";
 import { mapCamera } from "./mapCamera";
 import { createTilePreview } from "./tilePreview";
@@ -55,25 +52,37 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     tileKey = "",
     objectKey = "",
     fogKey = "",
-    backgroundKey = "",
     annotationKey = "",
     lastFrame = 0,
     frame = 0,
     placedTiles = [];
   let annotations = new Group(),
-    objects = new Group(),
-    background = new Group();
-  scene.add(annotations, objects, background);
+    objects = new Group();
+  let appearance = areaAppearance({ areas: [] });
+  scene.add(annotations, objects);
   const assets = modelAssets(onError),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
+    background = createMapBackground(scene, fog, onError, render),
     tiles = createTileLayer(assets, fog),
     objectMotion = createObjectMotion(assets, tiles),
     preview = createTilePreview(assets, () => {
       tileKey = "";
-      tiles.rebuild(placedTiles, tier, []);
+      tiles.rebuild(
+        placedTiles,
+        tier,
+        [...appearance.hiddenTiles],
+        appearance.tileOpacity,
+      );
       if (current)
-        outline.update({ ...current, tiles: placedTiles }, options, tier);
+        outline.update(
+          {
+            ...current,
+            tiles: placedTiles.filter((t) => !appearance.hiddenTiles.has(t.id)),
+          },
+          options,
+          tier,
+        );
     }),
     outline = createTileOutline(gpu, assets),
     objectPreview = createObjectPreview(fog, assets),
@@ -136,6 +145,8 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     current = d;
     state = nextState;
     options = opts;
+    appearance = areaAppearance(d, opts.areaMode);
+    structure.hideTiles(appearance.hiddenTiles);
     view.document(d, opts);
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
     const ids = new Set([
@@ -244,16 +255,37 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
         !!opts.surfacePlacement ||
         (!!opts.previewObject?.modelId &&
           (!!opts.previewObject?.placing || !!opts.previewObject?.moving)),
+      appearance.hiddenTiles,
     );
-    anchors.update(d, structure.context(), opts);
-    const hiddenIds = preview.hiddenIds();
-    const nextTiles = JSON.stringify([d.tiles, tier, hiddenIds]);
+    const context = structure.context();
+    anchors.update(
+      d,
+      {
+        ...context,
+        sockets: new Map(
+          [...context.sockets].filter(
+            ([, slot]) => !appearance.hiddenTiles.has(slot.parent),
+          ),
+        ),
+      },
+      opts,
+    );
+    const hiddenIds = [
+      ...new Set([...preview.hiddenIds(), ...appearance.hiddenTiles]),
+    ];
+    const nextTiles = JSON.stringify([
+      d.tiles,
+      tier,
+      hiddenIds,
+      d.areas,
+      opts.areaMode,
+    ]);
     if (nextTiles !== tileKey) {
       tileKey = nextTiles;
-      tiles.rebuild(placed, tier, hiddenIds);
+      tiles.rebuild(placed, tier, hiddenIds, appearance.tileOpacity);
     }
     outline.update(
-      { ...d, tiles: placed },
+      { ...d, tiles: placed.filter((t) => !appearance.hiddenTiles.has(t.id)) },
       {
         ...previewOptions,
         selectedTiles: (opts.selectedTiles || []).filter(
@@ -276,6 +308,8 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       opts.master,
       opts.selectedToken,
       opts.previewObject?.id,
+      d.areas,
+      opts.areaMode,
     ]);
     if (nextObjects !== objectKey) {
       objectKey = nextObjects;
@@ -284,10 +318,18 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       objects = buildSceneObjects(
         {
           ...d,
-          objects: posedObjects.filter((o) => o.id !== opts.previewObject?.id),
+          objects: posedObjects.filter(
+            (o) =>
+              o.id !== opts.previewObject?.id &&
+              !appearance.hiddenObjects.has(o.id),
+          ),
         },
         nextState && { ...nextState, tokens: posedTokens },
-        { ...opts, invalidate: render },
+        {
+          ...opts,
+          invalidate: render,
+          areaObjectOpacity: appearance.objectOpacity,
+        },
         fog,
         assets,
         tier,
@@ -313,47 +355,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       annotations = buildAnnotations(d, opts);
       scene.add(annotations);
     }
-    const nextBackground = JSON.stringify([
-      d.kind,
-      d.width,
-      d.height,
-      d.background,
-    ]);
-    if (nextBackground !== backgroundKey) {
-      backgroundKey = nextBackground;
-      scene.remove(background);
-      disposeObjects(background);
-      background = new Group();
-      scene.add(background);
-      if (d.kind !== "tiles" && d.background.url) {
-        const key = backgroundKey;
-        const url = d.background.assetId
-          ? opts.publicCode
-            ? `/api/public/sessions/${encodeURIComponent(opts.publicCode)}/map-background`
-            : `/api/storage/images/${d.background.assetId}`
-          : d.background.url;
-        new TextureLoader().load(
-          url,
-          (texture) => {
-            if (dead || backgroundKey !== key) {
-              texture.dispose();
-              return;
-            }
-            texture.colorSpace = SRGBColorSpace;
-            const mesh = new Mesh(
-              new PlaneGeometry(d.width, d.height),
-              fog.material(new MeshBasicMaterial({ map: texture })),
-            );
-            mesh.rotation.x = -Math.PI / 2;
-            mesh.position.set(d.width / 2, FLOOR - 0.02, d.height / 2);
-            background.add(mesh);
-            render();
-          },
-          undefined,
-          () => onError("Не удалось загрузить фон карты"),
-        );
-      }
-    }
+    background.update(d, opts);
     render();
   }
   function changeCamera(next) {
@@ -384,6 +386,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       structure,
       () => current,
       () => tier,
+      () => appearance.hiddenTiles,
     ),
     pick(event) {
       const ray = view.ray(event),
@@ -422,7 +425,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       cancelAnimationFrame(frame);
       disposeAnnotations(annotations);
       disposeObjects(objects);
-      disposeObjects(background);
+      background.destroy();
       tiles.destroy();
       preview.destroy();
       objectPreview.destroy();

@@ -1,7 +1,8 @@
 import { isWallTile } from "../lib/tileCategories";
 import { inside, lineCells, uid } from "../lib/mapModel";
 import { connectionVariant } from "../lib/tileConnections";
-import { tileGroupStatus } from "../lib/tilePlacement";
+import { tileGroupStatus, tileSize } from "../lib/tilePlacement";
+import { hiddenAreaMembers } from "../lib/mapAreas";
 import { latestModelVersions } from "../lib/modelVersions";
 
 export function editorWallBrush(e) {
@@ -19,6 +20,18 @@ export function editorWallBrush(e) {
   const key = (x, y) => `${x},${y}`;
   function update() {
     const document = e.draft.value.document;
+    const hidden = hiddenAreaMembers(document).tiles,
+      blocked = new Set();
+    for (const tile of document.tiles)
+      if (hidden.has(tile.id) && tile.level === level) {
+        const size = tileSize(
+          tile,
+          e.catalogue.value.find((m) => m.id === tile.modelId),
+        );
+        for (let y = tile.y; y < tile.y + size.height; y++)
+          for (let x = tile.x; x < tile.x + size.width; x++)
+            blocked.add(key(x, y));
+      }
     const seed = latestModelVersions(e.catalogue.value).find(
       (m) =>
         m.tileType === "wall-straight" &&
@@ -33,14 +46,16 @@ export function editorWallBrush(e) {
         .filter(
           (t) =>
             t.level === level &&
+            !hidden.has(t.id) &&
             isWallTile(e.catalogue.value.find((m) => m.id === t.modelId)),
         )
         .map((t) => key(t.x, t.y)),
     );
-    for (const cell of cells) walls.add(cell);
-    const affected = new Set(cells);
+    for (const cell of cells) if (!blocked.has(cell)) walls.add(cell);
+    const affected = new Set([...cells].filter((cell) => !blocked.has(cell)));
     for (const cell of cells) {
       const [x, y] = cell.split(",").map(Number);
+      if (blocked.has(cell)) continue;
       for (const [dx, dy] of directions)
         if (walls.has(key(x + dx, y + dy))) affected.add(key(x + dx, y + dy));
     }

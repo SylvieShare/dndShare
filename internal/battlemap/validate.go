@@ -60,6 +60,9 @@ func ValidateDocument(d *Document) error {
 		}
 		ids[object.ID] = true
 	}
+	if err := validateAreas(d, tileIDs, ids); err != nil {
+		return err
+	}
 	ids = map[string]bool{}
 	totalCells := 0
 	for _, zone := range d.Zones {

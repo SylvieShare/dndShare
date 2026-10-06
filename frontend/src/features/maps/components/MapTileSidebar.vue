@@ -11,10 +11,7 @@
         :variant="tab === 'tiles' ? 'primary' : 'quiet'"
         aria-label="Плитки"
         title="Плитки"
-        @click="
-          tab = 'tiles';
-          collapsed = false;
-        "
+        @click="openTab('tiles')"
         ><template #icon><Layers :size="22" /></template
       ></ActionButton>
       <ActionButton
@@ -22,17 +19,22 @@
         :variant="tab === 'objects' ? 'primary' : 'quiet'"
         aria-label="Объекты"
         title="Объекты"
-        @click="
-          tab = 'objects';
-          collapsed = false;
-        "
+        @click="openTab('objects')"
         ><template #icon><Box :size="22" /></template
+      ></ActionButton>
+      <ActionButton
+        icon-only
+        :variant="tab === 'areas' ? 'primary' : 'quiet'"
+        aria-label="Области"
+        title="Области"
+        @click="openTab('areas')"
+        ><template #icon><Group :size="22" /></template
       ></ActionButton>
     </nav>
     <div v-show="!collapsed" class="map-sidebar-panel">
       <div class="map-tile-sidebar-heading">
         <strong v-if="!collapsed">{{
-          tab === "tiles" ? "Плитки" : "Объекты"
+          tab === "tiles" ? "Плитки" : tab === "objects" ? "Объекты" : "Области"
         }}</strong>
         <ActionButton
           variant="quiet"
@@ -63,12 +65,13 @@
           @drag-tile="(id, event) => emit('drag-tile', id, event)"
         />
         <MapObjectPalette
-          v-else
+          v-else-if="tab === 'objects'"
           :editor="editor"
           draggable
           @object="(id, event) => emit('object', id, event)"
           @drag-object="(id, event) => emit('drag-object', id, event)"
         />
+        <MapAreasPanel v-else :editor="editor" />
       </div>
     </div>
   </aside>
@@ -76,7 +79,8 @@
 <script setup>
 import { ref } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
-import { PanelLeftOpen, PanelLeftClose, Layers, Box } from "@lucide/vue";
+import { PanelLeftOpen, PanelLeftClose, Layers, Box, Group } from "@lucide/vue";
+import MapAreasPanel from "./MapAreasPanel.vue";
 import MapObjectPalette from "./MapObjectPalette.vue";
 import MapTilePalette from "./MapTilePalette.vue";
 defineProps({ editor: Object });
@@ -86,9 +90,15 @@ const emit = defineEmits([
   "collection",
   "object",
   "drag-object",
+  "tab",
 ]);
 const tab = ref("tiles");
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
+function openTab(value) {
+  tab.value = value;
+  collapsed.value = false;
+  emit("tab", value);
+}
 </script>
 <style scoped>
 .map-tile-sidebar {

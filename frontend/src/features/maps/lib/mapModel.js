@@ -26,6 +26,7 @@ export function newMap(kind = "tiles") {
       tiles: [],
       objects: [],
       zones: [],
+      areas: [],
     },
     revision: 0,
   };
