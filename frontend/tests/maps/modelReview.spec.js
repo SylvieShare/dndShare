@@ -11,7 +11,9 @@ test("decodes both reviewed tiers and preserves dedicated shadows under sun and 
   const report = JSON.parse(
       fs.readFileSync(path.join(directory, "report.json"), "utf8"),
     ),
-    shadow = await localModelAsset(report.model.assets.shadow),
+    shadow = report.preparedShadow
+      ? path.join(directory, path.basename(report.preparedShadow.asset.key))
+      : await localModelAsset(report.model.assets.shadow),
     errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => {

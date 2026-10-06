@@ -38,3 +38,13 @@ test("visual revisions retain the verified source and shadow references", () => 
     /shadow asset is required/,
   );
 });
+test("a prepared geometry-only shadow replaces the fallback without mutating the baseline", () => {
+  const source = { sha256: "source" },
+    fallback = { sha256: "textured-lod" },
+    prepared = { asset: { sha256: "geometry-only" } };
+  const model = { assets: { source, shadow: fallback } };
+  const assets = preservedRevisionAssets(model, prepared);
+  assert.equal(assets.source, source);
+  assert.equal(assets.shadow, prepared.asset);
+  assert.equal(model.assets.shadow, fallback);
+});

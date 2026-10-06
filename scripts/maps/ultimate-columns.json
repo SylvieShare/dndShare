@@ -62,5 +62,65 @@
       "z": [34.9, 70.8]
     },
     "notes": "Four separately bounded iron chains between the square stone cap and the ornamented plinth. The measured cylindrical masonry remains grey inside the loops; protect both horizontal stone plates and the carved base frieze."
+  },
+  "UD-090": {
+    "sourceName": "Column Square Key",
+    "referencePage": 13,
+    "material": "key-column",
+    "floorSeams": "ao-only",
+    "chainBand": {
+      "near": 8.4,
+      "far": 16,
+      "radius": 14.2,
+      "z": [34.9, 70.8]
+    },
+    "button": {
+      "half": 7,
+      "z": [86.9, 87.95]
+    },
+    "weightBudget": {
+      "renderMiB": [3, 5.5],
+      "lodMiB": [1, 2],
+      "shadowKiB": [40, 120],
+      "previewKiB": [15, 150],
+      "basis": "Same detailed square shaft and four chains as UD-086 with one raised button; keep all geometry and compare two lighter texture variants."
+    },
+    "notes": "Muted red only on the measured inset cross at about 87.7 mm; the four raised stone quadrants at 88.3 mm, cube sides and cap remain grey. Four chains use the already reviewed square-column boundaries."
+  },
+  "UD-091": {
+    "sourceName": "Column Round Key",
+    "referencePage": 13,
+    "material": "key-column",
+    "floorSeams": "ao-only",
+    "button": {
+      "half": 7,
+      "z": [86.9, 87.95]
+    },
+    "weightBudget": {
+      "renderMiB": [3, 5.5],
+      "lodMiB": [1, 2],
+      "shadowKiB": [40, 120],
+      "previewKiB": [15, 150],
+      "basis": "Same cylindrical stonework as reviewed UD-084 and inset key as UD-090; unchanged geometry, compare two lighter texture variants."
+    },
+    "notes": "Measured inset red cross at 87.6 mm, raised stone quadrants at 88.33 mm. Protect the square button sides, perimeter seam, column cap, round shaft and mounting plinth; no metal chains."
+  },
+  "UD-092": {
+    "sourceName": "Level Key",
+    "referencePage": 13,
+    "material": "key-column",
+    "floorSeams": "ao-only",
+    "button": {
+      "half": 7,
+      "z": [36.9, 37.8]
+    },
+    "weightBudget": {
+      "renderMiB": [2, 5],
+      "lodMiB": [0.7, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [10, 100],
+      "basis": "Low 1x1 masonry pedestal with fewer visible surfaces than UD-091; preserve the measured relief and compare two texture-size candidates."
+    },
+    "notes": "Recess samples at 37.42–37.49 mm, raised corners at 38.12 mm. Red inset cross only, cold grey cube sides, upper slab and perimeter masonry; unchanged support and mounting data."
   }
 }

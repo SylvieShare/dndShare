@@ -59,7 +59,15 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
     .webp({ quality: 88 })
     .toFile(temporary);
   await fs.rename(temporary, path.join(directory, "preview.webp"));
-  const assets = preservedRevisionAssets(report.model);
+  const assets = preservedRevisionAssets(report.model, report.preparedShadow);
+  if (report.preparedShadow) {
+    const shadowName = path.basename(assets.shadow.key);
+    await fs
+      .link(path.join(directory, shadowName), path.join(out, shadowName))
+      .catch((e) => {
+        if (e.code !== "EEXIST") throw e;
+      });
+  }
   const sourceName = path.basename(assets.source.key);
   await fs
     .link(

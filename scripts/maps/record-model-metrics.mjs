@@ -25,7 +25,9 @@ report.resourceMetrics.source = {
 for (const tier of ["render", "lod", "shadow"]) {
   const resource =
       tier === "shadow"
-        ? await localModelAsset(report.model.assets.shadow)
+        ? report.preparedShadow
+          ? path.join(directory, path.basename(report.preparedShadow.asset.key))
+          : await localModelAsset(report.model.assets.shadow)
         : path.join(directory, tier + ".glb"),
     bytes = await fs.readFile(resource),
     doc = await io.readBinary(bytes);
@@ -68,7 +70,11 @@ for (const tier of ["render", "lod", "shadow"]) {
     bounds: getBounds(doc.getRoot().listScenes()[0]),
     maps,
     ...(tier === "shadow"
-      ? { reused: true, sha256: report.model.assets.shadow.sha256 }
+      ? {
+          reused: !report.preparedShadow,
+          sha256: (report.preparedShadow?.asset ?? report.model.assets.shadow)
+            .sha256,
+        }
       : {}),
   };
   if (

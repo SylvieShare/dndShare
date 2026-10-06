@@ -8,8 +8,11 @@ export function includePreparedVariant(seen, model) {
     throw new Error("More than one prepared revision selected: " + key);
   seen.add(key);
 }
-export function preservedRevisionAssets(model) {
+export function preservedRevisionAssets(model, preparedShadow) {
   if (!model.assets.shadow)
     throw new Error("Refresh the prepared baseline: shadow asset is required");
-  return { source: model.assets.source, shadow: model.assets.shadow };
+  return {
+    source: model.assets.source,
+    shadow: preparedShadow?.asset ?? model.assets.shadow,
+  };
 }
