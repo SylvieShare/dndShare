@@ -1,6 +1,7 @@
 // Re-baked 60k/20k geometry and portable GPU textures for one reviewed tile.
 import fs from "node:fs/promises";
 import path from "node:path";
+import { majesticModel } from "./majestic_model.mjs";
 import { createRequire } from "node:module";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -20,29 +21,48 @@ const io = new NodeIO()
     "meshopt.encoder": MeshoptEncoder,
     "meshopt.decoder": MeshoptDecoder,
   });
+const code =
+  process.argv.find((a) => a.startsWith("--code="))?.slice(7) ?? "MH-001";
+const nativeRoot = path.join(base, "optimized-native", code);
+const measured = JSON.parse(
+  await fs.readFile(path.join(nativeRoot, "render/report.json"), "utf8"),
+);
 const tools = process.env.KTX_TOOLS ?? "/private/tmp/dndshare-ktx-tools/bin",
-  out = path.join(base, "optimized-review/MH-001");
+  out = path.join(base, "optimized-review", code);
 const registry = JSON.parse(
   await fs.readFile(path.join(base, "registry-snapshot.json"), "utf8"),
 );
 const previous = registry
   .filter(
-    (m) => m.collection === "majestic-highlands" && m.sourceCode === "MH-001",
+    (m) =>
+      m.collection === "majestic-highlands" &&
+      m.sourceCode === code &&
+      m.sourceName === measured.sourceName &&
+      m.assets.source.sha256 === measured.sourceSHA256,
   )
   .sort((a, b) => b.version - a.version)[0];
-if (!previous) throw new Error("Registered MH-001 required");
+const metadata = previous ?? majesticModel(measured);
 await fs.mkdir(out, { recursive: true });
-const report = { model: previous, recipe: "majestic-ktx2-v1", tiers: {} };
+const report = {
+  model: metadata,
+  recipe: "majestic-ktx2-v1",
+  materialRecipe: measured.recipe.recipe,
+  sourcePath: measured.sourcePath,
+  sourceSHA256: measured.sourceSHA256,
+  sizeAssessment: measured.recipe.sizeAssessment,
+  tiers: {},
+};
+if (previous) report.previousModelID = previous.id;
 for (const tier of ["render", "lod"]) {
-  const native = path.join(base, "optimized-native/MH-001", tier),
+  const native = path.join(nativeRoot, tier),
     info = JSON.parse(
       await fs.readFile(path.join(native, "report.json"), "utf8"),
     );
-  if (info.sourceSHA256 !== previous.assets.source.sha256)
+  if (info.sourceSHA256 !== measured.sourceSHA256)
     throw new Error("Source changed");
   const drift = Math.max(
     ...info.placementPoints.map((p, i) =>
-      Math.abs(p.elevation - previous.placementPoints[i].elevation),
+      Math.abs(p.elevation - metadata.placementPoints[i].elevation),
     ),
   );
   if (drift > 0.03) throw new Error("Support surface drift exceeds 1.05 mm");

@@ -3,27 +3,35 @@ import bpy
 import numpy as np
 
 
-def paint(obj):
+def paint(obj, recipe=None, code=None):
+    recipe = recipe or {}
     mesh = obj.data
     positions = np.empty(len(mesh.vertices)*3, np.float32)
     mesh.vertices.foreach_get('co', positions)
     x, y, z = positions.reshape(-1, 3).T
     t = np.clip((z-14.15)/.55, 0, 1)
     t = t*t*(3-2*t)
+    from majestic_surface import grass_weights
+    coverage = grass_weights(obj, recipe, code)
+    t *= coverage
     tip = np.clip((z-14.75)/1.55, 0, 1)*.7
     variation = 1 + .06*np.sin(x*.17+y*.21) + .04*np.sin(x*.41-y*.33)
-    soil = np.array([.255, .185, .115])
+    soil_side = np.array([.255, .185, .115])
+    soil_top = np.array(recipe.get('soilTopRGB', soil_side))
+    soil_mix = np.clip((z-13.7)/1.2, 0, 1)
+    soil = soil_side[None,:]*(1-soil_mix[:,None])+soil_top[None,:]*soil_mix[:,None]
     patch = (np.sin(x*.13+y*.09)+np.sin(x*.23-y*.11)+2)/4
     grass = (1-patch[:, None])*np.array([.275, .37, .13]) + patch[:, None]*np.array([.36, .405, .145])
     dry = np.array([.57, .585, .245])
-    rgb = (soil[None, :]*(1-t[:, None]) +
+    rgb = (soil*(1-t[:, None]) +
            ((1-tip[:, None])*grass + tip[:, None]*dry)*t[:, None])
     rgb = np.clip(rgb*variation[:, None], .04, .9)
     linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     attribute = mesh.color_attributes.new('Paint', 'FLOAT_COLOR', 'POINT')
     attribute.data.foreach_set('color', np.column_stack([linear, np.ones(len(x))]).astype(np.float32).ravel())
     surface = mesh.color_attributes.new('Surface', 'FLOAT_COLOR', 'POINT')
-    surface.data.foreach_set('color', np.tile([1, .94, 0, 1], (len(x), 1)).astype(np.float32).ravel())
+    roughness = .97-.03*t if recipe.get('grassReference') else np.full(len(x),.94)
+    surface.data.foreach_set('color', np.column_stack([np.ones(len(x)), roughness, np.zeros(len(x)), np.ones(len(x))]).astype(np.float32).ravel())
 
 
 def material():

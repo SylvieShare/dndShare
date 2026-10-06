@@ -14,9 +14,9 @@ import tile_bake
 from majestic_grass import paint, material
 
 
-def add_peg(centre, height):
+def add_peg(centre, height, recipe):
     x, y = centre
-    bottom, top = 47.03, 48.65
+    bottom, top = recipe['pegBottomHalfMM'], recipe['pegTopHalfMM']
     verts = [(x+sx*r, y+sy*r, z) for r, z in [(bottom, 0), (top, height)]
              for sx, sy in [(-1, -1), (1, -1), (1, 1), (-1, 1)]]
     faces = [(0, 2, 1), (0, 3, 2), (4, 5, 6), (4, 6, 7)]
@@ -41,14 +41,15 @@ def main():
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--optimized-tier', choices=['render', 'lod'])
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
-    if args.code != 'MH-001':
-        raise ValueError('No individually reviewed recipe for '+args.code)
+    recipes = json.loads((ROOT/'scripts/maps/majestic-recipes.json').read_text())
+    if args.code not in recipes: raise ValueError('No individually reviewed recipe for '+args.code)
+    recipe = recipes[args.code]
     base = ROOT/'models/collections/majestic-highlands'
     row = next(r for r in json.loads((base/'manifest.json').read_text()) if r['code']==args.code)
     out = base/'prepared'/args.code
     budget = 120000
     if args.optimized_tier:
-        budget = 60000 if args.optimized_tier=='render' else 20000
+        budget = recipe['renderTriangles' if args.optimized_tier=='render' else 'lodTriangles']
         out = base/'optimized-native'/args.code/args.optimized_tier
     out.mkdir(parents=True, exist_ok=True)
     if (out/'report.json').exists() and not args.force:
@@ -58,10 +59,10 @@ def main():
     scene = bpy.context.scene; scene.render.threads_mode = 'FIXED'; scene.render.threads = 8
     bpy.ops.wm.stl_import(filepath=str(ROOT/'models'/row['sourcePath']))
     source = bpy.context.object; source.name = args.code+' sculpt'
-    datum = 9.75
+    datum = recipe['mountDepthMM']
     crop(source, datum)
     for v in source.data.vertices: v.co.z += datum
-    shade(source); paint(source); source.data.materials.append(material())
+    shade(source); paint(source, recipe, args.code); source.data.materials.append(material())
     target = bpy.data.objects.new(args.code+' browser', source.data.copy())
     bpy.context.collection.objects.link(target); activate(target)
     decimate = target.modifiers.new('Browser surface budget', 'DECIMATE')
@@ -77,12 +78,12 @@ def main():
     quality = tile_bake.validate_maps(target)
     source.hide_render = True; source.hide_viewport = True
     centre = row['mountCenterMM']
-    peg = add_peg(centre, datum)
+    peg = add_peg(centre, datum, recipe)
     tree = BVHTree.FromObject(target, bpy.context.evaluated_depsgraph_get())
     points = []
-    for y in range(3):
-        for x in range(3):
-            hit = tree.ray_cast((centre[0]+(x-1)*35, centre[1]-(y-1)*35, 100), (0, 0, -1))
+    for y in range(recipe['height']):
+        for x in range(recipe['width']):
+            hit = tree.ray_cast((centre[0]+(x-(recipe['width']-1)/2)*35, centre[1]-(y-(recipe['height']-1)/2)*35, 100), (0, 0, -1))
             if hit[0] is None: raise ValueError('Missing ground support point')
             points.append({'x':x+.5,'y':y+.5,'elevation':round(hit[0].z/35,6)})
     high = max(v.co.z for v in target.data.vertices)/35
@@ -92,10 +93,10 @@ def main():
     activate(target); peg.select_set(True)
     bpy.ops.export_scene.gltf(filepath=str(out/'model.glb'), export_format='GLB', use_selection=True,
                              export_animations=False, export_tangents=True, export_cameras=False, export_lights=False)
-    report = {**row, 'reviewStatus':'prepared', 'footprintReviewed':True, 'mountDepth':round(datum/35,6), 'maxHeight':round(high,6),
+    report = {**row, 'width':recipe['width'], 'height':recipe['height'], 'reviewStatus':'prepared', 'footprintReviewed':True, 'mountDepth':round(datum/35,6), 'maxHeight':round(high,6),
               'surfaceHeight':max(p['elevation'] for p in points), 'placementPoints':points,
               'renderTriangles':len(target.data.polygons)+12, 'pegTriangles':12,
-              'geometryBudget':budget, 'quality':quality, 'seconds':round(time.monotonic()-started,2)}
+              'geometryBudget':budget, 'recipe':recipe, 'quality':quality, 'seconds':round(time.monotonic()-started,2)}
     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print('MAJESTIC_PREPARED', args.code, report['seconds'], quality, flush=True)
 

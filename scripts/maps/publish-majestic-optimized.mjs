@@ -10,42 +10,47 @@ const base = path.resolve(
   import.meta.dirname,
   "../../models/collections/majestic-highlands",
 );
-const directory = path.join(base, "optimized-review/MH-001");
+const code =
+  process.argv.find((a) => a.startsWith("--code="))?.slice(7) ?? "MH-001";
+const root = path.resolve(import.meta.dirname, "../..");
+const directory = path.join(base, "optimized-review", code);
 const report = JSON.parse(
   await fs.readFile(path.join(directory, "report.json"), "utf8"),
 );
 const registry = JSON.parse(
   await fs.readFile(path.join(base, "registry-snapshot.json"), "utf8"),
 );
-const reviewed = registry.find(
-  (m) => m.id === (report.previousModelID ?? report.model.id),
-);
+const reviewed = report.model;
 if (
-  !reviewed ||
-  reviewed.sourceCode !== "MH-001" ||
+  reviewed.sourceCode !== code ||
   reviewed.collection !== "majestic-highlands"
 )
-  throw new Error("Reviewed published source required");
+  throw new Error("Individually reviewed Majestic model required");
+const sourceSHA = report.sourceSHA256 ?? reviewed.assets.source.sha256;
 const family = registry
   .filter(
     (m) =>
       m.collection === reviewed.collection &&
       m.sourceCode === reviewed.sourceCode &&
       m.sourceName === reviewed.sourceName &&
-      m.assets.source.sha256 === reviewed.assets.source.sha256,
+      m.assets.source.sha256 === sourceSHA,
   )
   .sort((a, b) => b.version - a.version);
 const previous = family[0],
-  latest = previous.version;
+  latest = previous?.version ?? 0;
 function placement(model) {
   const { id, version, assets, textureDetail, ...metadata } = model;
   return metadata;
 }
-if (!isDeepStrictEqual(placement(previous), placement(reviewed)))
+if (previous && !isDeepStrictEqual(placement(previous), placement(reviewed)))
   throw new Error("Placement changed after review");
-for (const kind of ["render", "lod"])
-  if (previous.assets[kind].sha256 !== report.model.assets[kind].sha256)
-    throw new Error("Newer visual assets need review before packaging");
+if (previous && reviewed.assets)
+  for (const kind of ["render", "lod"])
+    if (previous.assets[kind].sha256 !== reviewed.assets[kind].sha256)
+      throw new Error("Newer visual assets need review before packaging");
+const sourceFile = previous
+  ? await localModelAsset(previous.assets.source)
+  : path.join(root, "models", report.sourcePath);
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json");
 const sharp = require("sharp");
 await sharp(path.join(directory, "preview.png"))
@@ -56,7 +61,7 @@ await fs.rename(
   path.join(directory, "preview-next.webp"),
   path.join(directory, "preview.webp"),
 );
-const upload = path.join(base, "optimized-upload/MH-001");
+const upload = path.join(base, "optimized-upload", code);
 await fs.mkdir(upload, { recursive: true });
 const assets = {};
 const shadow = await prepareShadow(
@@ -73,7 +78,7 @@ for (const [kind, file, mime] of [
   ["lod", path.join(directory, "lod.glb"), "model/gltf-binary"],
   ["shadow", path.join(directory, "shadow.glb"), "model/gltf-binary"],
   ["preview", path.join(directory, "preview.webp"), "image/webp"],
-  ["source", await localModelAsset(previous.assets.source), "model/stl"],
+  ["source", sourceFile, "model/stl"],
 ]) {
   const bytes = await fs.readFile(file),
     sha256 = createHash("sha256").update(bytes).digest("hex");
@@ -84,20 +89,20 @@ for (const [kind, file, mime] of [
     (kind === "source" ? 256 : kind === "preview" ? 4 : 32) * 1048576
   )
     throw new Error("MCP size limit exceeded");
-  if (kind === "source" && sha256 !== previous.assets.source.sha256)
+  if (kind === "source" && sha256 !== sourceSHA)
     throw new Error("Original source changed");
   await fs.link(file, path.join(upload, name)).catch((e) => {
     if (e.code !== "EEXIST") throw e;
   });
   assets[kind] =
-    kind === "source"
+    kind === "source" && previous
       ? previous.assets.source
       : {
           key: "map-models/" + name,
           sha256,
           size: bytes.length,
           mimeType: mime,
-          fileName: kind + ext,
+          fileName: kind === "source" ? path.basename(sourceFile) : kind + ext,
         };
 }
 report.runtimeBytes = [
@@ -108,7 +113,13 @@ report.runtimeBytes = [
   ).values(),
 ].reduce((sum, bytes) => sum + bytes, 0);
 const hash = createHash("sha256")
-  .update(report.recipe + ":" + previous.id + ":" + JSON.stringify(assets))
+  .update(
+    report.recipe +
+      ":" +
+      (previous?.id ?? "new") +
+      ":" +
+      JSON.stringify(assets),
+  )
   .digest();
 hash[6] = (hash[6] & 15) | 128;
 hash[8] = (hash[8] & 63) | 128;
@@ -117,16 +128,16 @@ const id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.sl
 const registered = family.find(
   (m) =>
     isDeepStrictEqual(m.assets, assets) &&
-    isDeepStrictEqual(placement(m), placement(previous)) &&
-    m.textureDetail === previous.textureDetail,
+    isDeepStrictEqual(placement(m), placement(reviewed)) &&
+    m.textureDetail === reviewed.textureDetail,
 );
 const model = registered ?? {
-  ...previous,
+  ...reviewed,
   id,
   version: latest + 1,
   assets,
 };
-report.previousModelID = previous.id;
+if (previous) report.previousModelID = previous.id;
 report.model = model;
 await fs.writeFile(
   path.join(directory, "report.json"),
