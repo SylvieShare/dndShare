@@ -20,7 +20,7 @@ test("shared header, global collection, floating actions and independent visibil
     actions = await page
       .getByRole("toolbar", { name: "Действия карты" })
       .boundingBox();
-  expect(canvas).toMatchObject({ x: 286, y: 64, width: 1154, height: 936 });
+  expect(canvas).toMatchObject({ x: 334, y: 64, width: 1106, height: 936 });
   await expect(page.locator(".map-inspector")).toHaveCount(0);
   for (const name of ["Карта", "Предметы", "Настройки"]) {
     const tab = page.getByRole("tab", { name, exact: true });
@@ -88,6 +88,7 @@ test("items return to the map and place a cursor preview on click", async ({
   page,
 }) => {
   await ready(page);
+  await dragTile(page, await mapPoint(page, 4.5, 4.5));
   await page.getByRole("tab", { name: "Предметы", exact: true }).click();
   await page.getByRole("button", { name: "Сундук", exact: true }).click();
   await expect(

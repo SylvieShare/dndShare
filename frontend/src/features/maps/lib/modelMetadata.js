@@ -16,6 +16,10 @@ export const METADATA_KEYS = [
   "version",
   "textureDetail",
   "tileType",
+  "hasDecor",
+  "canStand",
+  "hidden",
+  "placementPoints",
   "wallMode",
   "wallMask",
   "width",
@@ -38,6 +42,10 @@ export function modelMetadata(model) {
   result.supportSlots ||= [];
   result.blockers ||= [];
   result.tags ||= [];
+  result.placementPoints ||= [];
+  result.hasDecor ??= false;
+  result.canStand ??= false;
+  result.hidden ??= false;
   return JSON.parse(JSON.stringify(result));
 }
 export function groupedTileModels(models) {

@@ -108,6 +108,10 @@
           ref="canvas"
           :document="c.selected.document"
           :state="c.selected.state"
+          :surface-placement="
+            c.selected.document.kind === 'tiles' &&
+            (!!pendingToken || !!drag?.token)
+          "
           :master="!playerPreview"
           :readonly="c.conflict"
           :tool="tool"
@@ -279,10 +283,11 @@ function gesture({ phase, point, hit }) {
     if (!inside(m.document, point.x, point.y) && (!hit || pendingToken.value))
       return;
     if (pendingToken.value) {
+      if (m.document.kind === "tiles" && !point.placement) return;
       const token = {
         ...pendingToken.value,
         id: uid(),
-        ...snap(m.document, point),
+        ...(point.placement ? point : snap(m.document, point)),
         size: 1,
         hidden: false,
         physical: false,
@@ -311,7 +316,11 @@ function gesture({ phase, point, hit }) {
     c.editing = true;
   } else if (phase === "move" && drag?.token) {
     const token = m.state.tokens.find((t) => t.id === drag.token);
-    Object.assign(token, snap(m.document, point, token.size));
+    if (m.document.kind !== "tiles" || point.placement)
+      Object.assign(
+        token,
+        point.placement ? point : snap(m.document, point, token.size),
+      );
   } else if (phase === "end" && drag) {
     if (drag.token) c.persist();
     else if (Math.hypot(point.x - drag.start.x, point.y - drag.start.y) < 0.3) {

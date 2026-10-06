@@ -17,6 +17,11 @@ func (s *Store) RegisterMapModel(ctx context.Context, m battlemap.Model) (battle
 	} else if !errors.Is(err, ErrNotFound) {
 		return m, err
 	}
+	var retired bool
+	if err := s.pool.QueryRow(ctx, `SELECT coalesce(bool_or((geometry->>'hidden')::boolean),false) FROM dndshare.map_model WHERE collection=$1 AND source_code=$2`, m.Collection, m.SourceCode).Scan(&retired); err != nil {
+		return m, err
+	}
+	m.Hidden = m.Hidden || retired
 	geometry, assets, err := marshalMapModel(m)
 	if err != nil {
 		return m, err

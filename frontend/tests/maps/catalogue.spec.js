@@ -23,7 +23,7 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
   ).toHaveCount(0);
   await expect(sidebar.locator(".map-model-card button")).toHaveCount(0);
   const picker = sidebar.getByRole("toolbar", { name: "Типы тайлов" });
-  await expect(picker.getByRole("button")).toHaveCount(11);
+  await expect(picker.getByRole("button")).toHaveCount(13);
   for (const name of ["Все стены", "Сложные стены"])
     await expect(picker.getByRole("button", { name, exact: true })).toHaveCount(
       0,
@@ -69,8 +69,8 @@ test("grouped sidebar collapses and drags tiles directly onto the map, with one 
   const before = await page.locator(".map-canvas").boundingBox();
   await page.getByRole("button", { name: "Свернуть список плиток" }).click();
   const collapsed = await page.locator(".map-canvas").boundingBox();
-  expect(collapsed.width - before.width).toBe(238);
-  await page.getByRole("button", { name: "Развернуть список плиток" }).click();
+  expect(collapsed.width - before.width).toBe(286);
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   const card = await sidebar
     .getByRole("button", { name: "Пол 1", exact: true })
     .boundingBox();
@@ -236,13 +236,14 @@ test("pack selection lives on the left, supports keyboard and stays available wh
     page.getByRole("button", { name: "Каменный пол", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Свернуть список плиток" }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   await choosePack(page, "lost-cave");
   await page.getByRole("combobox", { name: "Пак тайлов", exact: true }).click();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("listbox", { name: "Паки тайлов" })).toHaveCount(
     0,
   );
-  await page.getByRole("button", { name: "Развернуть список плиток" }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Пол 1", exact: true }),
   ).toBeVisible();
@@ -263,7 +264,7 @@ test("reference uses filter categories and preserves a draft when changing packs
     page
       .getByRole("toolbar", { name: "Тип тайла", exact: true })
       .getByRole("button"),
-  ).toHaveCount(11);
+  ).toHaveCount(13);
   await page
     .getByRole("toolbar", { name: "Тип тайла", exact: true })
     .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })

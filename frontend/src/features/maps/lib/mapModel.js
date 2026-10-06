@@ -1,17 +1,4 @@
-export const OBJECTS = [
-  ["door", "Дверь"],
-  ["double-door", "Двойная дверь"],
-  ["portcullis", "Решётка"],
-  ["barrel", "Бочка"],
-  ["crate", "Ящик"],
-  ["table", "Стол"],
-  ["chest", "Сундук"],
-  ["torch", "Факел"],
-  ["stairs", "Лестница"],
-  ["column", "Колонна"],
-  ["rubble", "Камни"],
-  ["bridge", "Мостик"],
-].map(([id, name]) => ({ id, name }));
+export const OBJECTS = [{ id: "chest", name: "Сундук" }];
 export const KINDS = {
   tiles: "3D-конструктор",
   "image-grid": "Изображение с сеткой",

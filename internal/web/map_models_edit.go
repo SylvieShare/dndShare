@@ -15,7 +15,7 @@ func (s *Server) routesMapModelEditing(mux *http.ServeMux) {
 }
 
 func editedMapModel(original battlemap.Model, input battlemap.ModelMetadata) (battlemap.Model, error) {
-	if input.ID != original.ID || input.Version != original.Version || input.Collection != original.Collection || input.CollectionName != original.CollectionName || input.SourceCode != original.SourceCode || input.SourceName != original.SourceName {
+	if input.ID != original.ID || input.Version != original.Version || input.Collection != original.Collection || input.CollectionName != original.CollectionName || input.SourceCode != original.SourceCode || input.SourceName != original.SourceName || input.Hidden != original.Hidden {
 		return original, errors.New("Исходный код, коллекция и версия тайла не редактируются")
 	}
 	input.Name = strings.TrimSpace(input.Name)

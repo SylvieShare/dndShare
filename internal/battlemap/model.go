@@ -33,13 +33,20 @@ type Zone struct {
 }
 
 type Object struct {
-	ID       string  `json:"id"`
-	Kind     string  `json:"kind"`
-	X        float64 `json:"x"`
-	Y        float64 `json:"y"`
-	Rotation float64 `json:"rotation"`
-	Scale    float64 `json:"scale"`
-	Open     bool    `json:"open"`
+	ID        string           `json:"id"`
+	Kind      string           `json:"kind"`
+	X         float64          `json:"x"`
+	Y         float64          `json:"y"`
+	Rotation  float64          `json:"rotation"`
+	Scale     float64          `json:"scale"`
+	Open      bool             `json:"open"`
+	ModelID   string           `json:"modelId,omitempty"`
+	Placement *PlacementAnchor `json:"placement,omitempty"`
+}
+
+type PlacementAnchor struct {
+	TileID string `json:"tileId"`
+	Point  int    `json:"point"`
 }
 
 type Tile struct {
@@ -65,17 +72,18 @@ type Document struct {
 }
 
 type Token struct {
-	ID       string  `json:"id"`
-	Kind     string  `json:"kind"`
-	Ref      string  `json:"ref"`
-	Name     string  `json:"name"`
-	ImageURL string  `json:"imageUrl,omitempty"`
-	Color    string  `json:"color"`
-	X        float64 `json:"x"`
-	Y        float64 `json:"y"`
-	Size     float64 `json:"size"`
-	Hidden   bool    `json:"hidden"`
-	Physical bool    `json:"physical"`
+	ID        string           `json:"id"`
+	Kind      string           `json:"kind"`
+	Ref       string           `json:"ref"`
+	Name      string           `json:"name"`
+	ImageURL  string           `json:"imageUrl,omitempty"`
+	Color     string           `json:"color"`
+	X         float64          `json:"x"`
+	Y         float64          `json:"y"`
+	Size      float64          `json:"size"`
+	Hidden    bool             `json:"hidden"`
+	Physical  bool             `json:"physical"`
+	Placement *PlacementAnchor `json:"placement,omitempty"`
 }
 
 type State struct {

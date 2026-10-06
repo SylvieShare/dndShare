@@ -35,6 +35,7 @@ func (s *Store) ReviseMapModel(ctx context.Context, expectedID string, edited ba
 	edited.Collection, edited.CollectionName = old.Collection, old.CollectionName
 	edited.SourceCode, edited.SourceName = old.SourceCode, old.SourceName
 	edited.Assets = old.Assets
+	edited.Hidden = old.Hidden
 	if err = tx.QueryRow(ctx, `SELECT coalesce(max(version),0)+1 FROM dndshare.map_model WHERE collection=$1 AND source_code=$2`, old.Collection, old.SourceCode).Scan(&edited.Version); err != nil {
 		return edited, err
 	}

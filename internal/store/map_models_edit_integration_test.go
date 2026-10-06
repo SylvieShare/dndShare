@@ -59,6 +59,8 @@ FROM (VALUES
 ) AS item(id,code,name) CROSS JOIN LATERAL (SELECT geometry,assets FROM dndshare.map_model LIMIT 1) model`)
 	exec(schemaModelTileCategoriesSQL)
 	exec(schemaModelWallShapesSQL)
+	exec(schemaModelSurfacesObjectsSQL)
+	exec(schemaMeasuredPlacementPointsSQL)
 	s := &Store{pool: pool}
 	for _, expected := range battlemap.InitialCatalogue() {
 		migrated, err := s.GetMapModel(ctx, expected.ID)

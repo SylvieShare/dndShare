@@ -93,6 +93,9 @@ for report in sorted(BASE.glob('*/*/report.json')):
     'collection':row['collection'],'collectionName':row['collectionName'],'sourceCode':row['code'],'sourceName':row['sourceName'],'name':row['sourceName'],'version':row.get('variantVersion',1),
     'tileType':tile_category(row['tileType'],row['sourceName'],mode,mask,layout),'wallMode':mode,'wallMask':mask,'width':row['width'],'height':row['height'],
     'surfaceHeight':row['surfaceHeight'],'maxHeight':row['maxHeight'],'blockers':blockers,'tags':tags,'supportSlots':row['supportSlots'],'assets':files}
+ m['hasDecor']=row['tileType']=='prop' or bool(tags)
+ m['canStand']=False;m['placementPoints']=[]
+ m['hidden']=row['collection']=='ultimate-dungeon' and row['code'] in ['UD-104','UD-108','UD-092']
  m['mountDepth']=placement['mountDepth']
  m['placementOffset']=placement['placementOffset']
  rows.append(m);print('CATALOGUED',m['sourceCode'],m['wallMode'],m['wallMask'],len(m['supportSlots']),flush=True)

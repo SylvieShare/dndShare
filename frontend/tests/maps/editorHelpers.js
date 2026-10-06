@@ -1,5 +1,6 @@
 export async function pickTile(page, name = "Пол 1") {
-  await page.getByRole("tab", { name: "Предметы", exact: true }).click();
+  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   const kind = await page.evaluate(
     async (name) =>
       (await (await fetch("/api/maps/models")).json()).find(
@@ -18,7 +19,9 @@ export async function pickTile(page, name = "Пол 1") {
     "wall-diagonal": "Диагональные стены",
     stairs: "Лестницы",
     frame: "Каркасы",
-    prop: "Декор",
+    bridge: "Мосты",
+    passage: "Проходы и двери",
+    column: "Колонны",
   };
   await page
     .getByRole("toolbar", { name: "Типы тайлов" })
@@ -27,7 +30,7 @@ export async function pickTile(page, name = "Пол 1") {
       exact: true,
     })
     .click();
-  await page.getByRole("button", { name, exact: true }).click();
+  await page.getByRole("button", { name, exact: true }).press("Enter");
 }
 export async function dragTile(
   page,

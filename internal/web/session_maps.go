@@ -87,6 +87,17 @@ func (s *Server) handleSaveSessionMap(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, err.Error())
 		return
 	}
+	models, err := s.store.MapModelsForDocument(r.Context(), m.Document)
+	if err != nil {
+		mapError(w, err)
+		return
+	}
+	for _, token := range req.State.Tokens {
+		if err := battlemap.ValidateSurfaceAnchor(m.Document, models, token.Placement, token.X, token.Y); err != nil {
+			badRequest(w, err.Error())
+			return
+		}
+	}
 	m, err = s.store.SaveSessionMapState(r.Context(), sid, id, req.Revision, req.State)
 	if err != nil {
 		mapError(w, err)

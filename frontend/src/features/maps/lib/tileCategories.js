@@ -9,7 +9,9 @@ export const TILE_TYPES = [
   { value: "wall-end", label: "Выступы и окончания стен" },
   { value: "stairs", label: "Лестницы" },
   { value: "frame", label: "Каркасы" },
-  { value: "prop", label: "Декор" },
+  { value: "bridge", label: "Мосты" },
+  { value: "passage", label: "Проходы и двери" },
+  { value: "column", label: "Колонны" },
 ];
 export const TILE_CATEGORIES = TILE_TYPES;
 export function isWallTile(model) {

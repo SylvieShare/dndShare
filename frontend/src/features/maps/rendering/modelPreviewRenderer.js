@@ -136,7 +136,8 @@ export function createModelPreview(host, onFrame, onError) {
         .find(
           (hit) =>
             hit.object.userData.port !== undefined ||
-            hit.object.userData.slot !== undefined,
+            hit.object.userData.slot !== undefined ||
+            hit.object.userData.point !== undefined,
         )?.object.userData;
     },
     destroy() {

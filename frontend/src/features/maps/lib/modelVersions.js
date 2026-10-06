@@ -3,6 +3,7 @@
 export function latestModelVersions(catalogue) {
   const latest = new Map();
   for (const model of catalogue) {
+    if (model.hidden) continue;
     const key = JSON.stringify([
       model.collection,
       model.sourceCode,

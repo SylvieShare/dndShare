@@ -10,26 +10,36 @@ const DocumentVersion = 2
 const MaxTiles = 4096
 
 type ModelMetadata struct {
-	ID              string         `json:"id"`
-	Collection      string         `json:"collection"`
-	CollectionName  string         `json:"collectionName"`
-	SourceCode      string         `json:"sourceCode"`
-	SourceName      string         `json:"sourceName"`
-	Name            string         `json:"name"`
-	Version         int            `json:"version"`
-	TextureDetail   string         `json:"textureDetail"`
-	TileType        string         `json:"tileType"`
-	WallMode        string         `json:"wallMode"`
-	WallMask        int            `json:"wallMask"`
-	Width           int            `json:"width"`
-	Height          int            `json:"height"`
-	PlacementOffset [2]float64     `json:"placementOffset"`
-	MountDepth      float64        `json:"mountDepth"`
-	SurfaceHeight   float64        `json:"surfaceHeight"`
-	MaxHeight       float64        `json:"maxHeight"`
-	Blockers        [][][2]float64 `json:"blockers"`
-	Tags            []string       `json:"tags"`
-	SupportSlots    []SupportSlot  `json:"supportSlots"`
+	ID              string           `json:"id"`
+	Collection      string           `json:"collection"`
+	CollectionName  string           `json:"collectionName"`
+	SourceCode      string           `json:"sourceCode"`
+	SourceName      string           `json:"sourceName"`
+	Name            string           `json:"name"`
+	Version         int              `json:"version"`
+	TextureDetail   string           `json:"textureDetail"`
+	TileType        string           `json:"tileType"`
+	HasDecor        bool             `json:"hasDecor"`
+	CanStand        bool             `json:"canStand"`
+	Hidden          bool             `json:"hidden"`
+	PlacementPoints []PlacementPoint `json:"placementPoints"`
+	WallMode        string           `json:"wallMode"`
+	WallMask        int              `json:"wallMask"`
+	Width           int              `json:"width"`
+	Height          int              `json:"height"`
+	PlacementOffset [2]float64       `json:"placementOffset"`
+	MountDepth      float64          `json:"mountDepth"`
+	SurfaceHeight   float64          `json:"surfaceHeight"`
+	MaxHeight       float64          `json:"maxHeight"`
+	Blockers        [][][2]float64   `json:"blockers"`
+	Tags            []string         `json:"tags"`
+	SupportSlots    []SupportSlot    `json:"supportSlots"`
+}
+
+type PlacementPoint struct {
+	X         float64 `json:"x"`
+	Y         float64 `json:"y"`
+	Elevation float64 `json:"elevation"`
 }
 
 type SupportSlot struct {
@@ -90,5 +100,8 @@ func TileFootprint(tile Tile, model ModelMetadata) (int, int) {
 
 func ValidateTileModels(d Document, models map[string]ModelMetadata) error {
 	_, err := ResolveTilePlacements(d, models)
-	return err
+	if err != nil {
+		return err
+	}
+	return ValidateObjectModels(d, models)
 }

@@ -9,7 +9,7 @@ from mathutils import Vector
 
 KINDS = ["floor", "wall-straight", "wall-angle", "wall-tee", "wall-cross",
          "wall-end", "wall-corner", "wall-diagonal", "stairs", "frame", "prop",
-         "wall-mode-none", "wall-mode-center", "wall-mode-edge"]
+         "wall-mode-none", "wall-mode-center", "wall-mode-edge", "bridge", "passage", "column"]
 
 
 def material(name, color):
@@ -122,6 +122,20 @@ def tile(kind):
         for course in range(4):
             box("Outside corner", (.73, .73, .35 + course * .27),
                 (.43, .43, .26), stone[course], bevel=.025)
+    if kind == "bridge":
+        for x in [-.74, .74]:
+            box("Stone abutment", (x, 0, .5), (.35, 1.2, .55), stone[2])
+        for x in range(7):
+            box("Bridge plank", (-.75+x*.25, 0, .85), (.23, 1.2, .15), wood)
+    if kind == "passage":
+        for x in [-.68, .68]:
+            box("Door jamb", (x, 0, .75), (.33, .35, 1.04), stone[2])
+        box("Lintel", (0, 0, 1.26), (1.7, .35, .25), stone[3])
+    if kind == "column":
+        box("Column base", (0, 0, .33), (.8, .8, .22), stone[3])
+        for row in range(4):
+            box("Column course", (0, 0, .53+row*.22), (.48, .48, .2), stone[row])
+        box("Capital", (0, 0, 1.37), (.7, .7, .18), stone[2])
     if kind == "stairs":
         for step in range(4):
             height = .22 * (step + 1)

@@ -72,6 +72,11 @@ func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[str
 		for _, t := range m.Document.Tiles {
 			ids[t.ModelID] = true
 		}
+		for _, object := range m.Document.Objects {
+			if object.ModelID != "" {
+				ids[object.ModelID] = true
+			}
+		}
 	}
 	return ids, true
 }

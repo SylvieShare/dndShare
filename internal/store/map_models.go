@@ -73,12 +73,21 @@ func syncMapModels(ctx context.Context, tx pgx.Tx, table, parent string, id stri
 		return err
 	}
 	seen := map[string]bool{}
+	ids := []string{}
 	for _, tile := range d.Tiles {
-		if seen[tile.ModelID] {
+		ids = append(ids, tile.ModelID)
+	}
+	for _, object := range d.Objects {
+		if object.ModelID != "" {
+			ids = append(ids, object.ModelID)
+		}
+	}
+	for _, modelID := range ids {
+		if seen[modelID] {
 			continue
 		}
-		seen[tile.ModelID] = true
-		if _, err := tx.Exec(ctx, `INSERT INTO dndshare.`+table+` (`+parent+`,model_id) VALUES($1::uuid,$2::uuid)`, id, tile.ModelID); err != nil {
+		seen[modelID] = true
+		if _, err := tx.Exec(ctx, `INSERT INTO dndshare.`+table+` (`+parent+`,model_id) VALUES($1::uuid,$2::uuid)`, id, modelID); err != nil {
 			return err
 		}
 	}

@@ -56,7 +56,7 @@ function rectangle(x, z, width, height, y) {
 export function modelPreviewGuides() {
   const root = new Group();
   let descriptors = { labels: [], ports: [], sockets: [] };
-  function update(model, bounds, { activeField, selectedSlot }) {
+  function update(model, bounds, { activeField, selectedSlot, selectedPoint }) {
     clear(root);
     const g = previewGeometry(model),
       labels = [];
@@ -180,6 +180,31 @@ export function modelPreviewGuides() {
       mesh.userData = { slot: p.index };
       root.add(mesh);
     });
+    (model.placementPoints || []).forEach((point, index) => {
+      const valid = [point.x, point.y, point.elevation].every(Number.isFinite);
+      const mesh = new Mesh(
+        sphere,
+        new MeshStandardMaterial({
+          color: !valid
+            ? 0xec7777
+            : index === selectedPoint
+              ? 0xd9b3ff
+              : model.canStand
+                ? 0x78d4e7
+                : 0x737d8a,
+          roughness: 0.35,
+        }),
+      );
+      mesh.position.set(
+        Number.isFinite(point.x) ? point.x : g.width / 2,
+        (Number.isFinite(point.elevation)
+          ? point.elevation - g.mount
+          : g.surface) + 0.035,
+        Number.isFinite(point.y) ? point.y : g.height / 2,
+      );
+      mesh.userData.point = index;
+      root.add(mesh);
+    });
     const slot = model.supportSlots[selectedSlot],
       first = sockets.find((p) => p.index === selectedSlot);
     if (slot && first) {
@@ -203,8 +228,7 @@ export function modelPreviewGuides() {
     Object.values(materials).forEach((m) => {
       if (!used.has(m)) m.dispose();
     });
-    if (!ports.some(() => model.wallMode !== "edge") && !sockets.length)
-      sphere.dispose();
+    if (!root.children.some((n) => n.geometry === sphere)) sphere.dispose();
     root.updateMatrixWorld(true);
     descriptors = { labels, ports, sockets };
     return descriptors;

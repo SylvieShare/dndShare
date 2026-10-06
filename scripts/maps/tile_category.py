@@ -3,8 +3,12 @@ import re
 
 
 def tile_category(kind, name, mode, mask, shape):
-    if kind != 'wall':
-        return kind
+    text = name.lower()
+    if 'bridge' in text: return 'bridge'
+    if any(word in text for word in ['door','passage','archway','entrance','gate']): return 'passage'
+    if any(word in text for word in ['column','pillar']): return 'column'
+    if kind == 'prop': return 'floor'
+    if kind != 'wall': return kind
     if shape == 'corner' and mode == 'center' and mask.bit_count() == 1:
         return 'wall-end'
     text = name.lower()

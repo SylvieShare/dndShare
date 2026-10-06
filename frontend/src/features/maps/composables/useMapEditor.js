@@ -1,3 +1,4 @@
+import { syncSurfaceObjects } from "../lib/surfacePlacement";
 import {
   computed,
   onBeforeUnmount,
@@ -30,7 +31,8 @@ export function useMapEditor(source, onSaved) {
     catalogue = shallowRef([]),
     loadingModels = ref(true),
     modelError = ref(""),
-    objectKind = ref("barrel");
+    objectKind = ref("chest"),
+    objectModel = ref("");
   const selectedZone = ref(""),
     selectedObject = ref(""),
     selection = ref(null),
@@ -104,6 +106,7 @@ export function useMapEditor(source, onSaved) {
       return;
     saving.value = true;
     error.value = "";
+    syncSurfaceObjects(draft.value.document, catalogue.value);
     const snapshot = { ...clone(draft.value), ...record },
       key = JSON.stringify(snapshot);
     try {
@@ -163,6 +166,7 @@ export function useMapEditor(source, onSaved) {
     placementRotation,
     placementHint,
     objectKind,
+    objectModel,
     selectedTile,
     selectedTiles,
     screenSelection,
@@ -242,6 +246,7 @@ export function useMapEditor(source, onSaved) {
     modelError,
     retryModels,
     objectKind,
+    objectModel,
     selectedZone,
     selectedObject,
     selection,

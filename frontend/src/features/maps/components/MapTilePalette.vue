@@ -17,6 +17,7 @@
         @update:model-value="emit('collection', $event)"
       />
       <MapTileCategoryPicker v-model="category" />
+      <ToggleSwitch v-model="decorOnly" label="Есть декор" />
       <p class="map-hint">
         {{
           mode === "inspect"
@@ -70,6 +71,7 @@ import {
   ActionButton,
   DetailSection,
   LoadingState,
+  ToggleSwitch,
 } from "@sylvieshare/share-ui";
 import MapCollectionPicker from "./MapCollectionPicker.vue";
 import MapTileCard from "./MapTileCard.vue";
@@ -86,9 +88,10 @@ import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
 const emit = defineEmits(["model", "drag-tile", "collection"]);
 const category = ref("floor");
+const decorOnly = ref(false);
 const models = computed(() =>
   latestModelVersions(props.editor.catalogue).filter(
-    (m) => m.collection === props.editor.collection,
+    (m) => m.collection === props.editor.collection && m.tileType !== "object",
   ),
 );
 function initialCategory() {
@@ -120,7 +123,11 @@ watch(
   { immediate: true },
 );
 const filtered = computed(() =>
-  models.value.filter((m) => matchesTileCategory(m, category.value)),
+  models.value.filter(
+    (m) =>
+      matchesTileCategory(m, category.value) &&
+      (!decorOnly.value || m.hasDecor),
+  ),
 );
 const groups = computed(() => groupedTileModels(filtered.value));
 </script>

@@ -1,7 +1,7 @@
 import { Group } from "three";
 import { buildMapProp, disposeObjects } from "./sceneObjects";
 import { FLOOR } from "./annotations";
-export function createObjectPreview(fog) {
+export function createObjectPreview(fog, assets) {
   const root = new Group();
   root.userData.outlineStyle = "selected";
   let target = null,
@@ -19,17 +19,29 @@ export function createObjectPreview(fog) {
     }
     const group = object.group || [object],
       next = JSON.stringify(
-        group.map((o) => [o.id, o.kind, o.scale, o.rotation, o.open]),
+        group.map((o) => [
+          o.id,
+          o.kind,
+          o.modelId,
+          o.scale,
+          o.rotation,
+          o.open,
+        ]),
       );
     if (next !== key) {
       disposeObjects(root);
       root.clear();
       key = next;
-      for (const o of group) root.add(buildMapProp(o, o.open, fog));
+      for (const o of group)
+        root.add(buildMapProp(o, o.open, fog, assets, "render"));
       root.traverse((n) => {
         if (n.isMesh) {
-          n.material.transparent = true;
-          n.material.opacity = 0.7;
+          for (const material of Array.isArray(n.material)
+            ? n.material
+            : [n.material]) {
+            material.transparent = true;
+            material.opacity = 0.7;
+          }
         }
       });
     }
@@ -45,7 +57,7 @@ export function createObjectPreview(fog) {
     (target.group || [target]).forEach((o, i) =>
       root.children[i].position.set(
         o.x + position.x - target.x,
-        FLOOR + position.lift,
+        (o.elevation ?? FLOOR) + position.lift,
         o.y + position.y - target.y,
       ),
     );

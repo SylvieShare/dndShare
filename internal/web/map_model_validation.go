@@ -43,6 +43,14 @@ func validateMapModel(m battlemap.Model) error {
 			return errors.New("invalid model tag")
 		}
 	}
+	if len(m.PlacementPoints) > 256 {
+		return errors.New("too many placement points")
+	}
+	for _, point := range m.PlacementPoints {
+		if math.IsNaN(point.X) || math.IsInf(point.X, 0) || math.IsNaN(point.Y) || math.IsInf(point.Y, 0) || math.IsNaN(point.Elevation) || math.IsInf(point.Elevation, 0) || point.X < 0 || point.X > float64(m.Width) || point.Y < 0 || point.Y > float64(m.Height) || point.Elevation < m.MountDepth || point.Elevation > m.MaxHeight+.001 {
+			return errors.New("invalid placement point")
+		}
+	}
 	if len(m.SupportSlots) > 64 {
 		return errors.New("too many support slots")
 	}

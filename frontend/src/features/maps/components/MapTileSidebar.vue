@@ -5,64 +5,108 @@
     aria-label="Каталог плиток"
     @contextmenu.prevent
   >
-    <div class="map-tile-sidebar-heading">
-      <strong v-if="!collapsed">Плитки</strong>
+    <nav class="map-sidebar-tabs" aria-label="Боковые вкладки редактора">
       <ActionButton
-        variant="quiet"
-        :aria-label="
-          collapsed ? 'Развернуть список плиток' : 'Свернуть список плиток'
+        icon-only
+        :variant="tab === 'tiles' ? 'primary' : 'quiet'"
+        aria-label="Плитки"
+        title="Плитки"
+        @click="
+          tab = 'tiles';
+          collapsed = false;
         "
-        :title="
-          collapsed ? 'Развернуть список плиток' : 'Свернуть список плиток'
+        ><template #icon><Layers :size="22" /></template
+      ></ActionButton>
+      <ActionButton
+        icon-only
+        :variant="tab === 'objects' ? 'primary' : 'quiet'"
+        aria-label="Объекты"
+        title="Объекты"
+        @click="
+          tab = 'objects';
+          collapsed = false;
         "
-        :aria-expanded="!collapsed"
-        @click="collapsed = !collapsed"
-      >
-        <PanelLeftOpen v-if="collapsed" :size="20" /><PanelLeftClose
-          v-else
-          :size="20"
+        ><template #icon><Box :size="22" /></template
+      ></ActionButton>
+    </nav>
+    <div v-show="!collapsed" class="map-sidebar-panel">
+      <div class="map-tile-sidebar-heading">
+        <strong v-if="!collapsed">{{
+          tab === "tiles" ? "Плитки" : "Объекты"
+        }}</strong>
+        <ActionButton
+          variant="quiet"
+          :aria-label="
+            collapsed ? 'Развернуть список плиток' : 'Свернуть список плиток'
+          "
+          :title="
+            collapsed ? 'Развернуть список плиток' : 'Свернуть список плиток'
+          "
+          :aria-expanded="!collapsed"
+          @click="collapsed = !collapsed"
+        >
+          <PanelLeftOpen v-if="collapsed" :size="20" /><PanelLeftClose
+            v-else
+            :size="20"
+          />
+        </ActionButton>
+      </div>
+      <div v-show="!collapsed" class="map-tile-sidebar-content">
+        <MapTilePalette
+          v-if="tab === 'tiles'"
+          :editor="editor"
+          @collection="emit('collection', $event)"
+          compact
+          grouped
+          draggable
+          @model="(id, event) => emit('model', id, event)"
+          @drag-tile="(id, event) => emit('drag-tile', id, event)"
         />
-      </ActionButton>
-    </div>
-    <MapCollectionPicker
-      v-if="collapsed"
-      :catalogue="editor.catalogue"
-      :model-value="editor.collection"
-      compact
-      @update:model-value="emit('collection', $event)"
-    />
-    <div v-show="!collapsed" class="map-tile-sidebar-content">
-      <MapTilePalette
-        :editor="editor"
-        @collection="emit('collection', $event)"
-        compact
-        grouped
-        draggable
-        @model="(id, event) => emit('model', id, event)"
-        @drag-tile="(id, event) => emit('drag-tile', id, event)"
-      />
+        <MapObjectPalette
+          v-else
+          :editor="editor"
+          @object="(id, event) => emit('object', id, event)"
+        />
+      </div>
     </div>
   </aside>
 </template>
 <script setup>
 import { ref } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
-import { PanelLeftOpen, PanelLeftClose } from "@lucide/vue";
-import MapCollectionPicker from "./MapCollectionPicker.vue";
+import { PanelLeftOpen, PanelLeftClose, Layers, Box } from "@lucide/vue";
+import MapObjectPalette from "./MapObjectPalette.vue";
 import MapTilePalette from "./MapTilePalette.vue";
 defineProps({ editor: Object });
-const emit = defineEmits(["model", "drag-tile", "collection"]);
+const emit = defineEmits(["model", "drag-tile", "collection", "object"]);
+const tab = ref("tiles");
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 </script>
 <style scoped>
 .map-tile-sidebar {
-  width: 286px;
+  width: 334px;
   flex: none;
   min-height: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   border-right: 1px solid var(--border-strong);
   background: var(--surface);
+}
+.map-sidebar-tabs {
+  width: 48px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 6px;
+  border-right: 1px solid var(--border-strong);
+}
+.map-sidebar-panel {
+  width: 286px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 .map-tile-sidebar--collapsed {
   width: 48px;
@@ -83,7 +127,10 @@ const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 }
 @media (max-width: 760px) {
   .map-tile-sidebar {
-    width: min(286px, calc(100vw - 100px));
+    width: min(334px, calc(100vw - 100px));
+  }
+  .map-sidebar-panel {
+    width: calc(100% - 48px);
   }
   .map-tile-sidebar--collapsed {
     width: 48px;

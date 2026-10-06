@@ -13,6 +13,21 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       event.clientY > r.bottom
     )
       return null;
+    if (
+      props.document.kind === "tiles" &&
+      (props.placementObject ||
+        props.surfacePlacement ||
+        (props.previewObject?.modelId &&
+          props.previewObject?.placing &&
+          !props.previewTile))
+    ) {
+      return (
+        getRenderer().surfacePoint(
+          event,
+          props.previewObject?.moving ? props.previewObject.id : "",
+        ) || { ...getRenderer().world(event), invalidSurface: true }
+      );
+    }
     return (
       getRenderer().placementPoint?.(
         event,
@@ -51,7 +66,11 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         (!hit || hit.anchor),
       screen: { x: event.clientX, y: event.clientY },
       point:
-        props.tool === "paste" ? pointAt(event) : hit?.point || pointAt(event),
+        props.tool === "paste" ||
+        props.placementObject ||
+        props.surfacePlacement
+          ? pointAt(event)
+          : hit?.point || pointAt(event),
       view: getRenderer().getView(),
       region: !!props.selectedTiles && props.tool === "select" && additive,
     };

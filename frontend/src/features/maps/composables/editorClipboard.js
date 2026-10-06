@@ -1,3 +1,7 @@
+import {
+  nearestSurface,
+  resolvedSurfacePosition,
+} from "../lib/surfacePlacement";
 import { clone, inside, uid } from "../lib/mapModel";
 import { tileGroupStatus, tileSize } from "../lib/tilePlacement";
 import { groupRotationPivot, rotateMapGroup } from "../lib/mapGroupRotation";
@@ -21,7 +25,10 @@ export function editorClipboard(e) {
       (t) => ids.has(t.id) || (!ids.size && includes(t)),
     );
     const objects = d.objects.filter(
-      (o) => o.id === e.selectedObject.value || includes(o),
+      (o) =>
+        o.id === e.selectedObject.value ||
+        includes(o) ||
+        tiles.some((t) => t.id === o.placement?.tileId),
     );
     if (!tiles.length && !objects.length) return;
     const origin = r || {
@@ -32,6 +39,7 @@ export function editorClipboard(e) {
     clipboard = {
       tiles: tiles.map((t) => ({
         ...clone(t),
+        originalId: t.id,
         id: undefined,
         x: t.x - origin.x,
         y: t.y - origin.y,
@@ -90,12 +98,46 @@ export function editorClipboard(e) {
       }));
       const objects = payload.objects.map((o, i) => ({
         ...o,
+        placement:
+          o.placement &&
+          payload.tiles.some((t) => t.originalId === o.placement.tileId)
+            ? {
+                ...o.placement,
+                tileId: payload.tiles.find(
+                  (t) => t.originalId === o.placement.tileId,
+                ).id,
+              }
+            : o.placement,
         id: `clipboard-object-${i}`,
         x: x + o.x,
         y: y + o.y,
         placing: true,
       }));
+      const previewDocument = {
+        ...e.draft.value.document,
+        tiles: [...e.draft.value.document.tiles, ...tiles],
+        objects: [...e.draft.value.document.objects],
+      };
+      for (const object of objects) {
+        if (!object.modelId || previewDocument.kind !== "tiles") continue;
+        if (tiles.some((t) => t.id === object.placement?.tileId))
+          Object.assign(
+            object,
+            resolvedSurfacePosition(object, previewDocument, e.catalogue.value),
+          );
+        else {
+          const surface = nearestSurface(
+            object,
+            previewDocument,
+            e.catalogue.value,
+          );
+          if (surface) Object.assign(object, surface);
+          else object.invalidSurface = true;
+        }
+        previewDocument.objects.push(object);
+      }
       const valid =
+        !objects.some((o) => o.invalidSurface) &&
         (!tiles.length ||
           tileGroupStatus(e.draft.value.document, tiles, e.catalogue.value)
             .valid) &&
@@ -124,7 +166,9 @@ export function editorClipboard(e) {
     e.tileDrag.cancel();
     e.tool.value = "paste";
     payload = clone(clipboard);
-    payload.tiles.forEach((t, i) => (t.id = `clipboard-tile-${i}`));
+    payload.tiles.forEach((t, i) => {
+      t.id = `clipboard-tile-${i}`;
+    });
     pivot = groupRotationPivot(
       payload.tiles,
       payload.objects,
@@ -142,9 +186,17 @@ export function editorClipboard(e) {
       e.error.value = "Участок нельзя вставить в эту позицию";
       return;
     }
-    const tiles = targets.tiles.map((t) => ({ ...t, id: uid() })),
-      objects = targets.objects.map(({ placing, ...o }) => ({
+    const mapping = new Map(targets.tiles.map((t) => [t.id, uid()]));
+    const tiles = targets.tiles.map(({ originalId, ...t }) => ({
+        ...t,
+        id: mapping.get(t.id),
+      })),
+      objects = targets.objects.map(({ placing, invalidSurface, ...o }) => ({
         ...o,
+        placement:
+          o.placement && mapping.has(o.placement.tileId)
+            ? { ...o.placement, tileId: mapping.get(o.placement.tileId) }
+            : o.placement,
         id: uid(),
       }));
     e.error.value = "";

@@ -86,7 +86,7 @@ const catalogue = [
     sourceCode: "UD-019",
     sourceName: "Bridge",
     name: "Мост 3×1",
-    tileType: "prop",
+    tileType: "bridge",
     wallMode: "none",
     collection: "ultimate-dungeon",
     width: 3,
@@ -145,12 +145,35 @@ const catalogue = [
     wallMask: 0,
     collection: "ultimate-dungeon",
   },
+  {
+    id: "ffffffff-ffff-4fff-8fff-ffffffffffff",
+    sourceCode: "MA-DungeonChest",
+    sourceName: "MA_DungeonChest_Full_Prop",
+    name: "Сундук",
+    tileType: "object",
+    wallMode: "none",
+    collection: "map-objects",
+    canStand: false,
+  },
 ].map((m) => ({
   ...m,
   collection: m.collection || "lost-cave",
   collectionName:
     m.collection === "ultimate-dungeon" ? "Ultimate Dungeon" : "Lost Cave",
   version: 1,
+  hidden: false,
+  hasDecor: !!m.hasDecor,
+  canStand:
+    m.canStand ?? ["floor", "stairs", "bridge", "passage"].includes(m.tileType),
+  placementPoints:
+    m.placementPoints ||
+    (["floor", "stairs", "bridge", "passage"].includes(m.tileType)
+      ? Array.from({ length: (m.width || 1) * (m.height || 1) }, (_, i) => ({
+          x: (i % (m.width || 1)) + 0.5,
+          y: Math.floor(i / (m.width || 1)) + 0.5,
+          elevation: m.surfaceHeight ?? 0.42,
+        }))
+      : []),
   wallMode: m.wallMode || "center",
   textureDetail: m.textureDetail || "basic",
   supportSlots: m.supportSlots || [],
@@ -237,6 +260,16 @@ paint(source.document, lineCells({ x: 1, y: 1 }, { x: 10, y: 1 }), WALL);
 paint(source.document, lineCells({ x: 1, y: 1 }, { x: 1, y: 8 }), WALL);
 paint(source.document, lineCells({ x: 10, y: 1 }, { x: 10, y: 8 }), WALL);
 paint(source.document, lineCells({ x: 1, y: 8 }, { x: 10, y: 8 }), WALL);
+if (!params.get("mode") || params.get("mode") === "board") {
+  paint(
+    source.document,
+    [
+      { x: 3, y: 3 },
+      { x: 4, y: 4 },
+    ],
+    FLOOR,
+  );
+}
 source.document.objects = [
   { id: "door", kind: "door", x: 6, y: 5, rotation: 0, scale: 1, open: false },
   {

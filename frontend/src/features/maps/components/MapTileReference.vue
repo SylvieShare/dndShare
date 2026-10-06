@@ -54,9 +54,11 @@
               :source="selected"
               :active-field="activeField"
               :selected-slot="selectedSlot"
+              :selected-point="selectedPoint"
               :disabled="reference.saving"
               @active="activeField = $event"
               @slot="selectedSlot = $event"
+              @point="selectedPoint = $event"
             />
             <MapModelGeometryFields
               :model="reference.draft"
@@ -76,6 +78,11 @@
               :model="reference.draft"
               :selected-slot="selectedSlot"
               @select="selectedSlot = $event"
+            />
+            <MapModelPlacementPoints
+              :model="reference.draft"
+              :selected-point="selectedPoint"
+              @select="selectedPoint = $event"
             />
           </div>
         </div>
@@ -140,12 +147,14 @@ import { Save } from "@lucide/vue";
 import MapTilePalette from "./MapTilePalette.vue";
 import MapModelFields from "./MapModelFields.vue";
 import MapModelPreview from "./MapModelPreview.vue";
+import MapModelPlacementPoints from "./MapModelPlacementPoints.vue";
 import MapModelSize from "./MapModelSize.vue";
 import MapModelGeometryFields from "./MapModelGeometryFields.vue";
 import MapModelSlots from "./MapModelSlots.vue";
 import { useModelReference } from "../composables/useModelReference";
 const props = defineProps({ editor: Object });
 const reference = reactive(useModelReference(props.editor));
+const selectedPoint = ref(-1);
 const activeField = ref(""),
   selectedSlot = ref(-1);
 watch(

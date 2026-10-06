@@ -40,7 +40,7 @@ test("icon choices and preview point/side clicks edit the wall mask without rota
   });
   await expect(modes.locator("img")).toHaveCount(3);
   const types = page.getByRole("toolbar", { name: "Тип тайла", exact: true });
-  await expect(types.getByRole("button")).toHaveCount(11);
+  await expect(types.getByRole("button")).toHaveCount(13);
   await expect(page.locator("select[aria-label='Тип тайла']")).toHaveCount(0);
   const yaw = await page
     .locator(".model-preview")

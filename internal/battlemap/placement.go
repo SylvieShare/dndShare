@@ -37,7 +37,7 @@ func ResolveTilePlacements(d Document, models map[string]ModelMetadata) (map[str
 	sort.SliceStable(tiles, func(i, j int) bool { return tiles[i].Level < tiles[j].Level })
 	for _, tile := range tiles {
 		model, ok := models[tile.ModelID]
-		if !ok {
+		if !ok || model.TileType == "object" {
 			return nil, fmt.Errorf("Модель плитки отсутствует в каталоге")
 		}
 		width, height := TileFootprint(tile, model)

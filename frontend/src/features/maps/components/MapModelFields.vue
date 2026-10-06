@@ -40,15 +40,30 @@
       ><MapWallModePicker :model="model"
     /></FormField>
   </div>
+  <div class="model-availability">
+    <ToggleSwitch v-model="model.hasDecor" label="Декор" />
+    <ToggleSwitch v-model="model.canStand" label="Можно встать" />
+  </div>
 </template>
 <script setup>
-import { FormField, FormSelect, FormTextInput } from "@sylvieshare/share-ui";
+import {
+  FormField,
+  FormSelect,
+  FormTextInput,
+  ToggleSwitch,
+} from "@sylvieshare/share-ui";
 import { TEXTURE_DETAILS } from "../lib/modelMetadata";
 import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 import MapWallModePicker from "./MapWallModePicker.vue";
 defineProps({ model: Object });
 </script>
 <style scoped>
+.model-availability {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 12px 0;
+}
 .model-core-fields {
   display: grid;
   grid-template-columns: 1fr 0.65fr 1fr;

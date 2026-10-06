@@ -69,6 +69,7 @@ export function useModelReference(editor) {
           m.surfaceHeight,
           m.maxHeight,
           ...m.placementOffset,
+          ...m.placementPoints.flatMap((p) => [p.x, p.y, p.elevation]),
           ...m.supportSlots.flatMap((s) => [
             s.x,
             s.y,

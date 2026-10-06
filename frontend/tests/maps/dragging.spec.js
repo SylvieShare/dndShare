@@ -189,7 +189,7 @@ test("occupied drops magnetize to a free position and moving a tile is a single 
 
 test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
   await ready(page);
-  await page.getByRole("tab", { name: "Предметы", exact: true }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   await page.getByRole("button", { name: "Пол 1", exact: true }).focus();
   await page.keyboard.press("Enter");
   await page.keyboard.down("ArrowLeft");

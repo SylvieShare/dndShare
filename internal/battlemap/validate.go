@@ -52,6 +52,12 @@ func ValidateDocument(d *Document) error {
 		if !identifier.MatchString(object.ID) || ids[object.ID] || !ObjectKinds[object.Kind] || !bounded(object.X, 0, d.Width) || !bounded(object.Y, 0, d.Height) || !bounded(object.Scale, .25, 8) || !bounded(object.Rotation, -360, 360) {
 			return fmt.Errorf("Некорректный объект карты")
 		}
+		if object.ModelID != "" && !modelIdentifier.MatchString(object.ModelID) {
+			return fmt.Errorf("Некорректная модель объекта")
+		}
+		if object.Placement != nil && (!tileIDs[object.Placement.TileID] || object.Placement.Point < 0 || object.Placement.Point >= 256) {
+			return fmt.Errorf("Некорректная точка объекта")
+		}
 		ids[object.ID] = true
 	}
 	ids = map[string]bool{}

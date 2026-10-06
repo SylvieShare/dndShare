@@ -1,3 +1,4 @@
+import { buildModelObject } from "./modelObject";
 import {
   BoxGeometry,
   CanvasTexture,
@@ -21,7 +22,8 @@ function box(root, w, h, d, x, y, z, material) {
   root.add(mesh);
   return mesh;
 }
-export function buildMapProp(object, open, fog) {
+export function buildMapProp(object, open, fog, assets, tier) {
+  if (object.modelId) return buildModelObject(object, assets, fog, tier);
   const root = new Group(),
     wood = fog.material(
       new MeshStandardMaterial({ color: 0x826343, roughness: 0.9 }),
@@ -29,7 +31,7 @@ export function buildMapProp(object, open, fog) {
     stone = fog.material(
       new MeshStandardMaterial({ color: 0x827b6c, roughness: 0.95 }),
     );
-  root.position.set(object.x, FLOOR, object.y);
+  root.position.set(object.x, object.elevation ?? FLOOR, object.y);
   root.scale.setScalar(object.scale);
   root.rotation.y = (-object.rotation * Math.PI) / 180;
   switch (object.kind) {
@@ -143,10 +145,12 @@ function label(name) {
   sprite.renderOrder = 12;
   return sprite;
 }
-export function buildSceneObjects(d, state, options, fog) {
+export function buildSceneObjects(d, state, options, fog, assets, tier) {
   const root = new Group();
   for (const o of d.objects)
-    root.add(buildMapProp(o, state?.objects?.[o.id] ?? o.open, fog));
+    root.add(
+      buildMapProp(o, state?.objects?.[o.id] ?? o.open, fog, assets, tier),
+    );
   for (const token of state?.tokens || []) {
     if (
       !options.master &&
@@ -156,7 +160,7 @@ export function buildSceneObjects(d, state, options, fog) {
     )
       continue;
     const group = new Group();
-    group.position.set(token.x, FLOOR + 0.05, token.y);
+    group.position.set(token.x, (token.elevation ?? FLOOR) + 0.05, token.y);
     group.userData.tokenId = token.id;
     const material = fog.material(
       new MeshStandardMaterial({
@@ -211,11 +215,15 @@ export function disposeObjects(root) {
   const materials = new Set();
   root.traverse((n) => {
     n.userData.dead = true;
-    n.geometry?.dispose();
-    if (n.material) materials.add(n.material);
+    if (!n.userData.borrowedGeometry) n.geometry?.dispose();
+    if (n.material)
+      for (const material of Array.isArray(n.material)
+        ? n.material
+        : [n.material])
+        materials.add(material);
   });
   materials.forEach((m) => {
-    m.map?.dispose();
+    if (!m.userData.borrowedTextures) m.map?.dispose();
     m.dispose();
   });
 }

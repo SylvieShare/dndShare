@@ -32,6 +32,7 @@
         @collection="changeCollection"
         @model="placeModel"
         @drag-tile="dragModel"
+        @object="placeObject"
       />
       <div class="map-editor-main">
         <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
@@ -62,6 +63,7 @@
           :placement-model="
             e.draggingTile || e.tool === 'paste' ? e.selectedModel : ''
           "
+          :placement-object="e.tool === 'object' ? e.objectModel : ''"
           :placement-rotation="e.placementRotation"
           :placement-hint="e.placementHint"
           @gesture="e.handle"
@@ -105,6 +107,7 @@ import { useMapEditor } from "../composables/useMapEditor";
 import { useCatalogueDrag } from "../composables/useCatalogueDrag";
 import { useMapCursor } from "../composables/useMapCursor";
 import { snap } from "../lib/mapModel";
+import { nearestSurface } from "../lib/surfacePlacement";
 const props = defineProps({ map: Object }),
   emit = defineEmits(["close", "saved"]),
   confirmClose = ref(false);
@@ -137,6 +140,13 @@ function dragModel(id, event) {
   catalogueDrag.begin(id, event);
 }
 function startTool(tool) {
+  if (tool === "object") {
+    const model = e.catalogue
+      .filter((m) => m.tileType === "object" && !m.hidden)
+      .sort((a, b) => b.version - a.version)[0];
+    if (model) placeObject(model.id);
+    return;
+  }
   setView("map");
   e.tool = tool;
 }
@@ -145,17 +155,24 @@ async function placeModel(id, event) {
   await nextTick();
   catalogueDrag.place(id, event);
 }
-async function placeObject(kind) {
+async function placeObject(modelId) {
   setView("map");
   await nextTick();
-  e.objectKind = kind;
+  e.objectKind = "chest";
+  e.objectModel = modelId;
   e.tool = "object";
-  const point = canvas.value?.centerPoint();
+  await nextTick();
+  const pointer = cursor.point() || canvas.value?.centerPoint();
+  const point =
+    e.draft.document.kind === "tiles" && pointer
+      ? nearestSurface(pointer, e.draft.document, e.catalogue)
+      : pointer;
   if (point)
     e.previewObject = {
       id: "preview-object",
-      kind,
-      ...snap(e.draft.document, point),
+      kind: "chest",
+      modelId,
+      ...(point.placement ? point : snap(e.draft.document, point)),
       scale: 1,
       rotation: 0,
       open: false,

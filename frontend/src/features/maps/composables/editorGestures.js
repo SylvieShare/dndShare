@@ -1,3 +1,4 @@
+import { nearestSurface } from "../lib/surfacePlacement";
 import {
   clone,
   inside,
@@ -65,12 +66,14 @@ export function editorGestures(e) {
         e.previewObject &&
         tool === "object" &&
         point &&
-        inside(d, point.x, point.y)
+        inside(d, point.x, point.y) &&
+        !point.invalidSurface
       )
         e.previewObject.value = {
           id: "preview-object",
           kind: e.objectKind.value,
-          ...snap(d, point),
+          modelId: e.objectModel?.value || "",
+          ...(point.placement ? point : snap(d, point)),
           scale: 1,
           rotation: e.placementRotation.value,
           open: false,
@@ -136,13 +139,18 @@ export function editorGestures(e) {
           if (object) gesture.object = { ...object };
         }
         if (tool === "object") {
+          if (point.invalidSurface) {
+            e.error.value = "На карте нет доступных точек размещения";
+            return;
+          }
           checkpoint();
           const o = {
             id: uid(),
             kind: e.objectKind.value,
-            ...snap(d, point),
+            modelId: e.objectModel?.value || "",
+            ...(point.placement ? point : snap(d, point)),
             scale: 1,
-            rotation: 0,
+            rotation: e.placementRotation.value,
             open: false,
           };
           d.objects.push(o);
@@ -171,10 +179,15 @@ export function editorGestures(e) {
           if (e.draggingTile.value) e.tileDrag.move(point);
         } else if (gesture.object && moved) {
           checkpoint();
-          Object.assign(
-            d.objects.find((o) => o.id === gesture.object.id),
-            snap(d, point, gesture.object.scale),
-          );
+          const target =
+            gesture.object.modelId && d.kind === "tiles"
+              ? nearestSurface(point, d, e.catalogue.value, gesture.object.id)
+              : snap(d, point, gesture.object.scale);
+          if (target)
+            Object.assign(
+              d.objects.find((o) => o.id === gesture.object.id),
+              target,
+            );
           if (e.previewObject)
             e.previewObject.value = {
               ...d.objects.find((o) => o.id === gesture.object.id),

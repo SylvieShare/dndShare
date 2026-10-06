@@ -1,3 +1,8 @@
+import { objectPlacementAnchors } from "./objectPlacementAnchors";
+import {
+  resolvedSurfacePosition,
+  surfacePoints,
+} from "../lib/surfacePlacement";
 import {
   ACESFilmicToneMapping,
   Color,
@@ -71,9 +76,16 @@ export async function createMapRenderer(host, onError) {
         outline.update({ ...current, tiles: placedTiles }, options, tier);
     }),
     outline = createTileOutline(gpu, assets),
-    objectPreview = createObjectPreview(fog),
+    objectPreview = createObjectPreview(fog, assets),
+    surfaceAnchors = objectPlacementAnchors(),
     anchors = createPlacementAnchors();
-  scene.add(tiles.root, preview.root, objectPreview.root, anchors.root);
+  scene.add(
+    tiles.root,
+    preview.root,
+    objectPreview.root,
+    anchors.root,
+    surfaceAnchors.root,
+  );
   function render() {
     if (frame || dead) return;
     frame = requestAnimationFrame((time) => {
@@ -102,7 +114,12 @@ export async function createMapRenderer(host, onError) {
     options = opts;
     view.document(d, opts);
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
-    const ids = new Set(d.tiles.map((t) => t.modelId));
+    const ids = new Set([
+      ...d.tiles.map((t) => t.modelId),
+      ...d.objects.map((o) => o.modelId).filter(Boolean),
+    ]);
+    if (opts.previewObject?.modelId) ids.add(opts.previewObject.modelId);
+    if (opts.placementObject) ids.add(opts.placementObject);
     const previewIds = preview.modelIds();
     if (opts.previewTile)
       for (const tile of opts.previewTile.group || [opts.previewTile])
@@ -111,6 +128,12 @@ export async function createMapRenderer(host, onError) {
     if (ids.size) await assets.ensure(ids, tier, opts);
     // Moving tiles keep their full geometry even when the map uses distant LOD.
     if (previewIds.size) await assets.ensure(previewIds, "render", opts);
+    if (opts.previewObject?.modelId)
+      await assets.ensure(
+        new Set([opts.previewObject.modelId]),
+        "render",
+        opts,
+      );
     if (dead || id !== epoch) return;
     const placed = structure.update(d);
     placedTiles = placed;
@@ -152,7 +175,29 @@ export async function createMapRenderer(host, onError) {
       fog.update(d, nextState, opts.master);
     }
     preview.update(previewOptions.previewTile, placed);
-    objectPreview.update(opts.previewObject);
+    const posedObjects = d.objects.map((o) =>
+      resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
+    );
+    const posedTokens = (nextState?.tokens || []).map((t) =>
+      resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
+    );
+    objectPreview.update(
+      opts.previewObject &&
+        resolvedSurfacePosition(
+          opts.previewObject,
+          d,
+          assets.catalogue(),
+          structure.context(),
+        ),
+    );
+    surfaceAnchors.update(
+      d,
+      assets.catalogue(),
+      opts.previewObject,
+      !!opts.placementObject ||
+        !!opts.surfacePlacement ||
+        (!!opts.previewObject?.modelId && !!opts.previewObject?.placing),
+    );
     anchors.update(d, structure.context(), opts);
     const hiddenIds = preview.hiddenIds();
     const nextTiles = JSON.stringify([d.tiles, tier, hiddenIds]);
@@ -177,8 +222,10 @@ export async function createMapRenderer(host, onError) {
       tier,
     );
     const nextObjects = JSON.stringify([
-      d.objects,
+      posedObjects,
       nextState,
+      posedTokens,
+      tier,
       opts.master,
       opts.selectedToken,
       opts.previewObject?.id,
@@ -190,11 +237,13 @@ export async function createMapRenderer(host, onError) {
       objects = buildSceneObjects(
         {
           ...d,
-          objects: d.objects.filter((o) => o.id !== opts.previewObject?.id),
+          objects: posedObjects.filter((o) => o.id !== opts.previewObject?.id),
         },
-        nextState,
+        nextState && { ...nextState, tokens: posedTokens },
         { ...opts, invalidate: render },
         fog,
+        assets,
+        tier,
       );
       scene.add(objects);
     }
@@ -300,6 +349,24 @@ export async function createMapRenderer(host, onError) {
     getView: view.getView,
     world: view.world,
     placementPoint: structure.point,
+    surfacePoint(event, ignored = "") {
+      const points = surfacePoints(current, assets.catalogue(), ignored),
+        rect = host.getBoundingClientRect();
+      let best = null,
+        distance = Infinity;
+      for (const point of points) {
+        const p = view.project(new Vector3(point.x, point.elevation, point.y));
+        const next = Math.hypot(
+          p.x + rect.left - event.clientX,
+          p.y + rect.top - event.clientY,
+        );
+        if (next < distance) {
+          distance = next;
+          best = point;
+        }
+      }
+      return best;
+    },
     pick(event) {
       const ray = view.ray(event),
         hits = ray.intersectObject(objects, true),
@@ -309,6 +376,8 @@ export async function createMapRenderer(host, onError) {
           moving && (!fixed || moving.distance < fixed.distance)
             ? moving
             : fixed;
+      const surfaceAnchor = surfaceAnchors.hit(ray);
+      if (surfaceAnchor) return surfaceAnchor;
       const anchor = anchors.hit(ray);
       if (
         anchor &&
@@ -354,6 +423,7 @@ export async function createMapRenderer(host, onError) {
       preview.destroy();
       objectPreview.destroy();
       anchors.destroy();
+      surfaceAnchors.destroy();
       outline.destroy();
       fog.destroy();
       assets.destroy();

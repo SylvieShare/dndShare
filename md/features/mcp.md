@@ -162,7 +162,7 @@ MCP_AUTH_TOKEN, `-assets` указывает папку content-addressed фай
 catalogue.json; endpoint по умолчанию https://dndshare.ru/mcp.
 
 Каталог поддерживает единый `tileType`: `floor`, `wall-straight`, `wall-angle`,
-`wall-tee`, `wall-cross`, `wall-end`, `wall-corner`, `wall-diagonal`, `stairs`, `frame`, `prop`.
+`wall-tee`, `wall-cross`, `wall-end`, `wall-corner`, `wall-diagonal`, `stairs`, `frame`, `bridge`, `passage`, `column`, `object`.
 `collection`/`collectionName` задают пак; отдельных terrainType и wallLayout нет.
 Также поддерживаются `collectionName`,
 `wallMode=center/edge/none`, `wallMask` и `supportSlots` с целыми координатами и
@@ -198,6 +198,12 @@ assets; остальные версии имеют `basic`. Поле не вли
 заданы в координатах занятой площади, с учётом этого смещения. Выделение и
 наведение используют полную геометрию, включая свесы. Изменение привязки
 несовместимо с визуальной ревизией другой привязки.
+
+Модели объектов используют тот же MCP/S3 pipeline с tileType=object. Каждая версия
+также хранит hasDecor/canStand/hidden и placementPoints [{x,y,elevation}]; точки
+общие для размещения объектов и персонажей. Hidden-модели не предлагаются в
+новом каталоге, но сохраняют assets и доступ для прежних документов. Новые
+версии скрытого семейства остаются скрытыми.
 
 ## Связанные страницы
 

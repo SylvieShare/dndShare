@@ -119,9 +119,10 @@ const props = defineProps({
   source: Object,
   activeField: String,
   selectedSlot: Number,
+  selectedPoint: Number,
   disabled: Boolean,
 });
-const emit = defineEmits(["active", "slot"]);
+const emit = defineEmits(["active", "slot", "point"]);
 const host = ref(null),
   loading = ref(true),
   error = ref(""),
@@ -133,6 +134,7 @@ let renderer,
 const options = () => ({
   activeField: props.activeField,
   selectedSlot: props.selectedSlot,
+  selectedPoint: props.selectedPoint,
 });
 async function load() {
   const id = ++epoch;
@@ -178,6 +180,7 @@ function up(event) {
     const hit = renderer?.hit(event);
     if (hit?.port !== undefined) toggle(hit.port);
     if (hit?.slot !== undefined) emit("slot", hit.slot);
+    if (hit?.point !== undefined) emit("point", hit.point);
   }
   drag = null;
   if (host.value.hasPointerCapture(event.pointerId))
@@ -222,7 +225,12 @@ onMounted(async () => {
 });
 watch(() => [props.source?.id, props.source?.renderUrl], load);
 watch(
-  () => [props.model, props.activeField, props.selectedSlot],
+  () => [
+    props.model,
+    props.activeField,
+    props.selectedSlot,
+    props.selectedPoint,
+  ],
   () => renderer?.update(props.model, options()),
   { deep: true },
 );

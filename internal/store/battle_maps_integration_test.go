@@ -48,6 +48,8 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaModelTextureDetailSQL)
 	exec(schemaModelTileCategoriesSQL)
 	exec(schemaModelWallShapesSQL)
+	exec(schemaModelSurfacesObjectsSQL)
+	exec(schemaMeasuredPlacementPointsSQL)
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
 	m, err := s.SaveBattleMap(ctx, 1, BattleMap{Name: preset.Name, Document: preset.Document})

@@ -106,3 +106,73 @@ it("cancels paste back to selection without consuming the buffer and rotates its
     { x: 6, y: 4, rotation: 0 },
   ]);
 });
+
+it("copies attached objects with their tile, preserving the new anchor and preview height on repeated pastes", () => {
+  const { e, clipboard } = setup();
+  const d = e.draft.value.document;
+  d.kind = "tiles";
+  Object.assign(e.catalogue.value[0], {
+    canStand: true,
+    mountDepth: 0.2,
+    placementPoints: [{ x: 0.25, y: 0.75, elevation: 0.9 }],
+  });
+  d.objects.push({
+    id: "chest",
+    modelId: "chest-model",
+    x: 1.25,
+    y: 1.75,
+    rotation: 0,
+    scale: 1,
+    placement: { tileId: "old", point: 0 },
+  });
+  clipboard.copy();
+  for (const x of [3.5, 5.5]) {
+    clipboard.begin({ x, y: 3.5 });
+    expect(e.previewObject.value.group[0]).toMatchObject({
+      x: x - 0.25,
+      y: 3.75,
+      elevation: 0.7,
+      placement: { tileId: "clipboard-tile-0", point: 0 },
+    });
+    clipboard.paste({ x, y: 3.5 });
+    const object = d.objects.at(-1),
+      tile = d.tiles.at(-1);
+    expect(object.placement).toEqual({ tileId: tile.id, point: 0 });
+    expect(object.x).toBe(tile.x + 0.25);
+    expect(object.y).toBe(tile.y + 0.75);
+  }
+});
+
+it("pastes an object alone onto a free shared point instead of retaining the source anchor", () => {
+  const { e, clipboard } = setup();
+  const d = e.draft.value.document;
+  d.kind = "tiles";
+  Object.assign(e.catalogue.value[0], {
+    canStand: true,
+    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.6 }],
+  });
+  d.tiles.push({ ...d.tiles[0], id: "target", x: 4, y: 4 });
+  d.objects.push({
+    id: "chest",
+    modelId: "chest-model",
+    x: 1.5,
+    y: 1.5,
+    rotation: 0,
+    scale: 1,
+    placement: { tileId: "old", point: 0 },
+  });
+  e.selectedTiles.value = [];
+  e.selectedObject.value = "chest";
+  clipboard.copy();
+  clipboard.begin({ x: 4.5, y: 4.5 });
+  expect(e.previewObject.value).toMatchObject({
+    x: 4.5,
+    y: 4.5,
+    placement: { tileId: "target", point: 0 },
+  });
+  clipboard.paste({ x: 4.5, y: 4.5 });
+  expect(d.objects.at(-1).placement.tileId).toBe("target");
+  clipboard.begin({ x: 6.5, y: 6.5 });
+  clipboard.paste({ x: 6.5, y: 6.5 });
+  expect(d.objects).toHaveLength(2);
+});

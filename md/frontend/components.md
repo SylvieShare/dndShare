@@ -297,7 +297,8 @@ viewBox по реальной ширине, 20 столбцов, линия/за
 SessionToolsRail, ChapterGraphToolbar и MapEditorHeader/MapEditorActions.
 Режимы редактора карт показывают иконки с небольшими подписями в icon-slot SlidingTabs;
 название и размеры карты редактируются на отдельной странице настроек. Слева от
-canvas расположен сворачиваемый MapTileSidebar; MapTilePalette группирует карточки
+canvas расположен сворачиваемый MapTileSidebar с отдельной иконковой полосой
+«Плитки / Объекты»; MapObjectPalette показывает только модели tileType=object; MapTilePalette группирует карточки
 BaseTile через DetailSection. Полноэкранный выбор доступен и в режиме предметов.
 ADMIN видит MapTileReference: MapModelFields и MapModelSlots составлены из общих
 FormField/FormTextInput/FormSelect/ToggleSwitch/DetailSection; сохранение параметров
@@ -316,7 +317,9 @@ MapModelGeometryFields связывает цветные отметки высо
 Стыки переключаются по сферам или широким сторонам на поднятой плоскости;
 клавиатурные альтернативы внутри превью используют ActionButton. Пазы показывают
 зелёные сферы по каждой занимаемой клетке; выбор подсвечивает соответствующую
-карточку BaseTile в MapModelSlots. Все изменения относятся к черновику параметров.
+карточку BaseTile в MapModelSlots. Все изменения относятся к черновику параметров. MapModelPlacementPoints хранит
+общие точки для предметов и персонажей; голубые сферы отличают их от опорных пазов.
+Список категорий включает мосты, проходы и колонны; декор выбирается ToggleSwitch.
 
 MapCollectionPicker размещён над левым каталогом и доступен в свёрнутом виде;
 он составляет выбор пака из общих ActionButton/BasePopover/BaseTile. Доменная
