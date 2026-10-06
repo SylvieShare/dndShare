@@ -22,6 +22,7 @@ import { makeWaterPainter } from "./water_material.mjs";
 import { makeArchitecturalBonePainter } from "./architectural_bones.mjs";
 import { makeAltarPainter } from "./altar_material.mjs";
 import { makeDoubleDoorPainter } from "./double_door_material.mjs";
+import { makeColumnHardwarePainter } from "./column_hardware.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 export async function individualPainter({ code, spec, model, collectionBase }) {
@@ -30,7 +31,18 @@ export async function individualPainter({ code, spec, model, collectionBase }) {
     parts = ["base", "floor", "wall"];
   if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
     parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
-  if (spec.material === "double-door") {
+  if (spec.material === "column-hardware") {
+    const floor = spec.floorReference
+      ? JSON.parse(
+          await fs.readFile(
+            path.join(collectionBase, spec.floorReference),
+            "utf8",
+          ),
+        )
+      : undefined;
+    painter = makeColumnHardwarePainter(spec, floor);
+    parts = ["stone", "iron", ...(spec.variant === "slave" ? ["wood"] : [])];
+  } else if (spec.material === "double-door") {
     const floor = JSON.parse(
       await fs.readFile(path.join(collectionBase, spec.floorReference), "utf8"),
     );

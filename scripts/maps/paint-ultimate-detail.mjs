@@ -14,6 +14,7 @@ import waterSpecs from "./ultimate-water.json" with { type: "json" };
 import archSpecs from "./ultimate-arches.json" with { type: "json" };
 import altarSpecs from "./ultimate-altars.json" with { type: "json" };
 import doubleDoorSpecs from "./ultimate-double-doors.json" with { type: "json" };
+import columnSpecs from "./ultimate-columns.json" with { type: "json" };
 import { prepareSurfaceRevision } from "./prepare-surface-revision.mjs";
 import { paintFloorJoint } from "./floor_seams.mjs";
 import fs from "node:fs/promises";
@@ -33,6 +34,7 @@ const specs = {
   ...archSpecs,
   ...altarSpecs,
   ...doubleDoorSpecs,
+  ...columnSpecs,
 };
 const code = process.argv[2];
 const requestedName = process.argv

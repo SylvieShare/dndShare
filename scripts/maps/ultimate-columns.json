@@ -1,0 +1,66 @@
+{
+  "UD-084": {
+    "sourceName": "Column",
+    "referencePage": 12,
+    "material": "stone",
+    "floorSeams": "ao-only",
+    "notes": "Cold grey cylindrical brickwork, worn cap and base rings, dark mortar and neutral square plinth. Keep the filled centre at the top and all mounting data intact."
+  },
+  "UD-085": {
+    "sourceName": "Column Slave Chains",
+    "referencePage": 12,
+    "material": "column-hardware",
+    "variant": "slave",
+    "floorReference": "ultimate-wall-floor.json",
+    "floorSeams": "ao-only",
+    "rings": [
+      [1.6, 13.1],
+      [-6.4, -13]
+    ],
+    "topBolts": [
+      [-6.4, 0],
+      [4.87, 0]
+    ],
+    "floorChains": [
+      [
+        [-11.5, 0, 20],
+        [-14.11, -3.82, 17.4],
+        [-13.56, -6.24, 16.42],
+        [-10.76, -10.11, 15.92],
+        [-8.6, -12, 15.5]
+      ],
+      [
+        [11.5, 0, 20],
+        [11.47, 6.13, 15.91],
+        [12.79, 12.22, 16.02],
+        [7.41, 15.06, 15.39],
+        [2.3, 14.5, 15.8]
+      ]
+    ],
+    "notes": "Vertical timber on the complete post and end rings on its top cut. Crossed metal pins, bolt caps, side bolts, both vertical and floor chains and two anchor rings stay iron; the two loose blocks and base cobbles remain stone.",
+    "backPins": [
+      [
+        [8.5, 3.8, 69],
+        [8.5, -7.3, 58.2]
+      ],
+      [
+        [8.5, -7.3, 68.3],
+        [8.5, 3.8, 58.7]
+      ]
+    ]
+  },
+  "UD-086": {
+    "sourceName": "Column Square",
+    "referencePage": 12,
+    "material": "column-hardware",
+    "variant": "square",
+    "floorSeams": "ao-only",
+    "chainBand": {
+      "near": 8.4,
+      "far": 16,
+      "radius": 14.2,
+      "z": [34.9, 70.8]
+    },
+    "notes": "Four separately bounded iron chains between the square stone cap and the ornamented plinth. The measured cylindrical masonry remains grey inside the loops; protect both horizontal stone plates and the carved base frieze."
+  }
+}
