@@ -30,6 +30,9 @@ def paint(obj, recipe=None, code=None):
     if recipe.get('trees'):
         from majestic_pines import apply_pines
         rgb, roughness = apply_pines(obj, positions.reshape(-1,3), rgb, roughness, coverage, recipe)
+    if recipe.get('masonryReference'):
+        from majestic_masonry import apply_masonry
+        rgb, roughness = apply_masonry(obj, positions.reshape(-1,3), rgb, roughness, recipe)
     linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     attribute = mesh.color_attributes.new('Paint', 'FLOAT_COLOR', 'POINT')
     attribute.data.foreach_set('color', np.column_stack([linear, np.ones(len(x))]).astype(np.float32).ravel())
