@@ -24,6 +24,7 @@ import { makeAltarPainter } from "./altar_material.mjs";
 import { makeDoubleDoorPainter } from "./double_door_material.mjs";
 import { makeColumnHardwarePainter } from "./column_hardware.mjs";
 import { makeKeyColumnPainter } from "./key_column_material.mjs";
+import { makeWoodenGrillePainter } from "./prison_wood_door.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 export async function individualPainter({ code, spec, model, collectionBase }) {
@@ -32,7 +33,10 @@ export async function individualPainter({ code, spec, model, collectionBase }) {
     parts = ["base", "floor", "wall"];
   if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
     parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
-  if (spec.material === "key-column") {
+  if (spec.material === "wooden-grille") {
+    painter = makeWoodenGrillePainter(spec);
+    parts = ["stone", "soil", "wood", "iron"];
+  } else if (spec.material === "key-column") {
     painter = makeKeyColumnPainter(spec);
     parts = ["stone", "glyph", ...(spec.chainBand ? ["iron"] : [])];
   } else if (spec.material === "column-hardware") {

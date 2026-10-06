@@ -47,11 +47,11 @@ export function prisonPartAt(p, spec) {
       ? "soil"
       : "stone";
 }
-export function makePrisonPainter(spec) {
+export function makePrisonPainter(spec, partAt = (p) => prisonPartAt(p, spec)) {
   const detailAt = fitBakedMaterials([OLD_STONE, [0.34, 0.35, 0.33]]);
   return (rgb, p, n) => {
     const d = detailAt(rgb),
-      part = prisonPartAt(p, spec);
+      part = partAt(p);
     if (part === "soil") {
       const grain = 0.91 + surfaceNoise(...p.map((v) => v * 0.5)) * 0.18;
       const dust = clamp((d - 1.02) * 0.18 + Math.max(0, n[2]) * 0.02, 0, 0.12);

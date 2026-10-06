@@ -39,5 +39,98 @@
       "basis": "Angular 1x1 stone stair, same five-level relief and construction as reviewed UD-094; compare two lighter texture variants."
     },
     "notes": "Five nested angular worn stone steps, each elevated tread and joint follows AO only. Both exposed sides, corner silhouette, base and support heights remain intact."
+  },
+  "UD-096": {
+    "sourceName": "Wall Corner",
+    "referencePage": 14,
+    "material": "stone",
+    "weightBudget": {
+      "renderMiB": [2, 5.5],
+      "lodMiB": [0.7, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Slender 1x1 masonry corner and cobbled floor, simpler wall area than reviewed UD-093; preserve silhouette and compare two lighter atlases."
+    },
+    "notes": "Cold grey stone corner post, worn cap, floor cobbles and dark mortar at the post foot; keep corner placement and all mounting dimensions."
+  },
+  "UD-097": {
+    "sourceName": "Wall Diagonal",
+    "referencePage": 14,
+    "material": "stone",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Diagonal 1x1 solid masonry wall with two exposed floor regions, comparable to reviewed UD-093; compare two lighter atlases without touching geometry."
+    },
+    "notes": "Cold grey diagonal brickwork on both faces with triangular terminal caps; dark joints on the cobbled floor on either side. Preserve the diagonal wall and 1x1 mounting contract."
+  },
+  "UD-098": {
+    "sourceName": "Prison Cell Door 2",
+    "referencePage": 14,
+    "material": "wooden-grille",
+    "floorSeams": "ao-only",
+    "posts": [-15.75, -5.375, 5.625, 15.75],
+    "railSamples": [
+      [
+        -16.5,
+        [
+          [26.38, 30.25],
+          [32.12, 36.12],
+          [38.75, 42.62],
+          [51.75, 55.62],
+          [65.25, 69.12]
+        ]
+      ],
+      [
+        -10,
+        [
+          [25.38, 29.25],
+          [31.88, 35.88],
+          [38.88, 42.75],
+          [51.25, 55.25],
+          [65.75, 69.62]
+        ]
+      ],
+      [
+        0,
+        [
+          [24.88, 28.88],
+          [31.62, 35.5],
+          [39.5, 43.38],
+          [51.25, 55.12],
+          [66.25, 70.12]
+        ]
+      ],
+      [
+        5,
+        [
+          [25, 29],
+          [31.5, 35.5],
+          [39.62, 43.62],
+          [51.38, 55.25],
+          [66, 69.88]
+        ]
+      ],
+      [
+        14.4,
+        [
+          [26, 29.88],
+          [31.75, 35.62],
+          [39.5, 43.38],
+          [51.88, 55.75],
+          [65.62, 69.5]
+        ]
+      ]
+    ],
+    "weightBudget": {
+      "renderMiB": [3, 6],
+      "lodMiB": [1, 2.5],
+      "shadowKiB": [40, 120],
+      "previewKiB": [15, 120],
+      "basis": "Thin four-post grille with lock, five straps and soil atlas, comparable to reviewed UD-054–059 and wooden doors; keep openings and compare two lighter variants."
+    },
+    "notes": "PDF confirms vertical dark timber and pointed wooden tips, worn iron straps/rivets/collars and lock, brown dusty earth and grey mounting plinth. Measured front timber x13.23, rear15.6; straps project to12.6/16.5. Five warped rail bands measured at five Y positions protect wood between them on both faces. Four spike profiles measured separately: centres Y -15.75,-5.375,5.625,15.75; body half width2.1 follows separately measured bowing at20,47,60 mm and protects the complete timber sides. Soil recesses at13.1 mm remain earth, stone below12.4 mm."
   }
 }
