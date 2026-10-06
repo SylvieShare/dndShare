@@ -12,6 +12,7 @@ parser.add_argument('--points',nargs='+',default=[])
 parser.add_argument('--project',nargs='+',default=[])
 parser.add_argument('--view',choices=['top','inside','front','reverse'],default='top')
 parser.add_argument('--normals',action='store_true')
+parser.add_argument('--focus-max-z',type=float)
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 model=json.loads(args.report.read_text())['model']
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -25,6 +26,7 @@ bpy.context.view_layer.update()
 bounds=[obj.matrix_world@Vector(c) for obj in bpy.context.scene.objects if obj.type=='MESH' for c in obj.bound_box]
 low=Vector(tuple(min(p[a] for p in bounds) for a in range(3)))
 high=Vector(tuple(max(p[a] for p in bounds) for a in range(3)))
+if args.focus_max_z is not None:high.z=min(high.z,args.focus_max_z/35-model['mountDepth'])
 centre=(low+high)/2;scale=max(*(high-low),1)*1.5
 directions={'top':(0,-.01,5),'inside':(-2,-2.85,2.45),'front':(-2,2.85,2.45),'reverse':(2,-2.85,2.45)}
 camera=centre+Vector(directions[args.view]);rotation=(centre-camera).to_track_quat('-Z','Y')

@@ -1,0 +1,151 @@
+{
+  "UD-078": {
+    "sourceName": "Arch",
+    "referencePage": 11,
+    "material": "architectural-bones",
+    "heads": [
+      {
+        "centre": [-13.5, -6.3, 40.5],
+        "radius": [3.2, 3.3, 3.2],
+        "minZ": 38
+      },
+      {
+        "centre": [13.5, -6.5, 38.8],
+        "radius": [3.2, 3.4, 3.2],
+        "minZ": 35.6
+      },
+      {
+        "centre": [5.9, 20.2, 40.9],
+        "radius": [2.6, 3.2, 3.2],
+        "minZ": 38.5
+      },
+      {
+        "centre": [5.5, 15.2, 19.2],
+        "radius": [3.4, 3.6, 3.4],
+        "minZ": 14.35
+      },
+      {
+        "centre": [13.1, 15.3, 16.1],
+        "radius": [3.3, 3.4, 2.5],
+        "minZ": 14.35
+      },
+      {
+        "centre": [-13.3, 5.4, 16.1],
+        "radius": [3.4, 3.6, 2.8],
+        "minZ": 14.35
+      },
+      {
+        "centre": [-7.9, 16.6, 14.8],
+        "radius": [2.6, 2.9, 2.4],
+        "minZ": 13.8
+      },
+      {
+        "centre": [-5.5, 15.2, 19.2],
+        "radius": [3.4, 3.6, 3.4],
+        "minZ": 14.35
+      },
+      {
+        "centre": [12.6, 5.4, 16.1],
+        "radius": [3.4, 3.6, 2.8],
+        "minZ": 14.35
+      },
+      {
+        "centre": [-8.2, 16.2, 16.7],
+        "radius": [3, 3.2, 3],
+        "minZ": 14
+      }
+    ],
+    "piles": [
+      {
+        "centre": [-11.5, 12, 16],
+        "radius": [5.3, 6.4, 4],
+        "minZ": 14.3
+      },
+      {
+        "centre": [10.5, 14, 16.5],
+        "radius": [6.1, 4.5, 4.8],
+        "minZ": 14.3
+      }
+    ],
+    "bonePaths": [
+      {
+        "points": [
+          [-13.85, 17.31, 15.35],
+          [-12.4, 12.4, 15.3],
+          [-10.64, 7.97, 15.52]
+        ],
+        "radius": 1.25
+      },
+      {
+        "points": [
+          [8.88, 18, 14.82],
+          [10.25, 13.5, 14.8],
+          [11.86, 9.05, 14.86]
+        ],
+        "radius": 1.15
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [-13.5, -6.3, 40.5],
+        "tone": "ivory"
+      },
+      {
+        "position": [13.5, -6.5, 38.8],
+        "tone": "grey"
+      },
+      {
+        "position": [5.9, 20.2, 40.9],
+        "tone": "old"
+      },
+      {
+        "position": [5.5, 15.2, 19.2],
+        "tone": "ivory"
+      },
+      {
+        "position": [13.1, 15.3, 16.1],
+        "tone": "grey"
+      },
+      {
+        "position": [-13.3, 5.4, 16.1],
+        "tone": "old"
+      },
+      {
+        "position": [-7.9, 16.6, 14.8],
+        "tone": "grey"
+      },
+      {
+        "position": [-5.5, 15.2, 19.2],
+        "tone": "ivory"
+      },
+      {
+        "position": [12.6, 5.4, 16.1],
+        "tone": "old"
+      },
+      {
+        "position": [-8.2, 16.2, 16.7],
+        "tone": "ivory"
+      }
+    ],
+    "notes": "Measured skulls on three different stone caps, skeletal piles on both sides, and two long bone paths. Keep the full grey overhanging arch and authored 1x1 placement data."
+  },
+  "UD-079": {
+    "sourceName": "Arch Broken",
+    "referencePage": 11,
+    "material": "architectural-bones",
+    "heads": [
+      {
+        "centre": [5.5, 11.8, 40.8],
+        "radius": [2.6, 3, 3.2],
+        "minZ": 38.5
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [5.5, 11.8, 40.8],
+        "tone": "ivory"
+      }
+    ],
+    "notes": "A single measured ivory skull on the rear wall. The shattered column crown, front posts and all fallen rubble remain grey stone; do not reuse skeletal-pile regions from the intact arch."
+  }
+}
