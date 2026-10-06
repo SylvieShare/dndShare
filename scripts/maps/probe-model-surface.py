@@ -9,6 +9,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--report',type=Path,required=True)
 parser.add_argument('--size',type=int,default=1024)
 parser.add_argument('--points',nargs='+',required=True)
+parser.add_argument('--view',choices=['top','inside','front','reverse'],default='top')
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 model=json.loads(args.report.read_text())['model']
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -23,7 +24,8 @@ bounds=[obj.matrix_world@Vector(c) for obj in bpy.context.scene.objects if obj.t
 low=Vector(tuple(min(p[a] for p in bounds) for a in range(3)))
 high=Vector(tuple(max(p[a] for p in bounds) for a in range(3)))
 centre=(low+high)/2;scale=max(*(high-low),1)*1.5
-camera=centre+Vector((0,-.01,5));rotation=(centre-camera).to_track_quat('-Z','Y')
+directions={'top':(0,-.01,5),'inside':(-2,-2.85,2.45),'front':(-2,2.85,2.45),'reverse':(2,-2.85,2.45)}
+camera=centre+Vector(directions[args.view]);rotation=(centre-camera).to_track_quat('-Z','Y')
 graph=bpy.context.evaluated_depsgraph_get()
 for text in args.points:
     x,y=map(float,text.split(','))

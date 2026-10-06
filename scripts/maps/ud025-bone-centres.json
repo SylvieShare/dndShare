@@ -1,0 +1,38 @@
+[
+  {
+    "position": [2.3, 3.9, 45.02],
+    "tone": "grey"
+  },
+  {
+    "position": [0.3, 0.35, 45.27],
+    "tone": "ivory"
+  },
+  {
+    "position": [-4.7, 5, 43.45],
+    "tone": "old"
+  },
+  {
+    "position": [-7.4, 4, 41.26],
+    "tone": "ivory"
+  },
+  {
+    "position": [-6.5, -3.1, 41.78],
+    "tone": "grey"
+  },
+  {
+    "position": [-1.2, -6.1, 40.85],
+    "tone": "old"
+  },
+  {
+    "position": [2.75, -4.3, 41.57],
+    "tone": "ivory"
+  },
+  {
+    "position": [5.2, 2.7, 44.72],
+    "tone": "old"
+  },
+  {
+    "position": [5.65, -3.1, 39.13],
+    "tone": "grey"
+  }
+]

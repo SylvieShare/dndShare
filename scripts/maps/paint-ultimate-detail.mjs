@@ -8,6 +8,9 @@ import { makeMetalPainter } from "./measured_metal.mjs";
 import { paintDoorBar } from "./ultimate_door.mjs";
 import { makeBridgePainter } from "./bridge_material.mjs";
 import { makeAddedBonePainter } from "./added_bones.mjs";
+import { paintPedestal } from "./ud025_material.mjs";
+import { makeBedPainter } from "./bed_material.mjs";
+import { paintWallBags, paintGroundBags } from "./sacks_material.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 const code = process.argv[2],
@@ -60,10 +63,11 @@ const row = sourceRows.find(
     r.code === code &&
     r.sourceName === spec.sourceName,
 );
+const datum = spec.datum ?? 13.4;
 let painter = (rgb, p, n) => paintStone(rgb, p, n, spec),
   parts = ["base", "floor", "wall"];
-if (spec.material === "stone" && model.maxHeight * 35 <= 15.9)
-  parts = model.maxHeight * 35 <= 13.4 ? ["base"] : ["base", "floor"];
+if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
+  parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
 if (spec.material === "bones") {
   const floor = JSON.parse(
     await fs.readFile(
@@ -87,6 +91,27 @@ if (spec.material === "bones") {
   };
   painter = makeAddedBonePainter(reference, spec);
   parts = ["stone", "bone"];
+} else if (spec.material === "ground-bags") {
+  painter = paintGroundBags;
+  parts = ["stone", "ceramic", "leather", "cloth", "rope"];
+} else if (spec.material === "wall-bags") {
+  painter = paintWallBags;
+  parts = [
+    "stone",
+    "wood",
+    "iron",
+    "ceramic",
+    "leather",
+    "sack-back",
+    "sack-front",
+    "rope",
+  ];
+} else if (spec.material === "bed") {
+  painter = makeBedPainter(spec);
+  parts = ["stone", "wood", "cloth", "pillow", "straw"];
+} else if (spec.material === "skull-pedestal") {
+  painter = paintPedestal;
+  parts = ["stone", "bone", "iron"];
 } else if (spec.material === "bridge-bones") {
   painter = makeBridgePainter(code);
   parts = code === "UD-019" ? ["stone", "bone", "iron"] : ["stone", "bone"];
@@ -104,11 +129,7 @@ await prepareSurfaceRevision({
   recipe: "ultimate-individual-materials-v1",
   paintPixel: (rgb, p, n, ao) => {
     const painted = painter(rgb, p, n, ao);
-    if (
-      ["iron", "wood", "bone", "cloth", "water", "gold", "crystal"].includes(
-        painted.part,
-      )
-    )
+    if (!["stone", "base", "floor", "wall"].includes(painted.part))
       return painted;
     return {
       ...painted,
@@ -119,6 +140,7 @@ await prepareSurfaceRevision({
         row.cutHeight,
         [model.width * 17.5, model.height * 17.5],
         ao,
+        spec.floorSeams !== "ao-only",
       ).rgb,
     };
   },

@@ -15,6 +15,7 @@ export function floorJointWeight(
   cutHeight = 11.5,
   bounds = [17.5, 17.5],
   ao = 255,
+  useHeight = true,
 ) {
   const lo = Math.min(...rgb),
     hi = Math.max(...rgb);
@@ -28,7 +29,7 @@ export function floorJointWeight(
     (1 - smooth(13.5 + offset, 14.18 + offset, z));
   const exposed = smooth(-0.15, 0.45, nz);
   const recessed = (1 - smooth(0.78, 0.95, ao / 255)) * smooth(0.35, 0.8, nz);
-  return Math.max(band * exposed, recessed);
+  return Math.max(useHeight ? band * exposed : 0, recessed);
 }
 export function paintFloorJoint(
   rgb,
@@ -37,8 +38,17 @@ export function paintFloorJoint(
   cutHeight = 11.5,
   bounds = [17.5, 17.5],
   ao = 255,
+  useHeight = true,
 ) {
-  const weight = floorJointWeight(rgb, point, normal, cutHeight, bounds, ao);
+  const weight = floorJointWeight(
+    rgb,
+    point,
+    normal,
+    cutHeight,
+    bounds,
+    ao,
+    useHeight,
+  );
   const factor = 1 - 0.66 * weight;
   return {
     part: weight > 0.02 ? "joint" : "unchanged",

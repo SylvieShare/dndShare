@@ -193,6 +193,52 @@
     "sourceName": "Stair Down",
     "referencePage": 4,
     "material": "stone",
-    "notes": "Recessed descending steps, worn rim and dark stone mortar; keep the opening and levels intact."
+    "notes": "Recessed descending steps, worn rim and dark stone mortar; keep the opening and levels intact.",
+    "datum": 10.7,
+    "floorSeams": "ao-only"
+  },
+  "UD-025": {
+    "sourceName": "Stair Angle Skulls",
+    "referencePage": 4,
+    "material": "skull-pedestal",
+    "notes": "Grey masonry and stone top plate, bone pile above the measured cap, separate femurs on the low treads and iron hanging chains."
+  },
+  "UD-027": {
+    "sourceName": "Bed 1",
+    "referencePage": 5,
+    "material": "bed",
+    "notes": "Grey stone wall and fallen bricks; vertical grain on four posts, longitudinal bed rails, pale pillow, straw filling and distinct stitched linen patches."
+  },
+  "UD-028": {
+    "sourceName": "Wall Bags",
+    "referencePage": 5,
+    "material": "wall-bags",
+    "notes": "Separate olive and ochre linen bags, ceramic jug, leather pouch, vertical wooden bucket staves, iron hoop, rope and the grey stone wall."
+  },
+  "UD-029": {
+    "sourceName": "Ground Bags",
+    "referencePage": 5,
+    "material": "ground-bags",
+    "notes": "All three cloth sacks are painted over their complete geometry in ochre, worn brown and olive; separate ceramic jugs, leather pouch and coarse rope."
+  },
+  "UD-030": {
+    "sourceName": "Bed 2",
+    "referencePage": 5,
+    "material": "bed",
+    "blanketColor": [0.485, 0.5, 0.355],
+    "patches": [
+      {
+        "x": [-13.4, -4.8],
+        "y": [4.8, 13.4],
+        "color": [0.37, 0.44, 0.28]
+      },
+      {
+        "x": [-11.9, -1.35],
+        "y": [-11.4, -0.4],
+        "color": [0.62, 0.575, 0.425]
+      }
+    ],
+    "notes": "Olive blanket with separately measured green and linen repairs; vertical timber posts, longitudinal rails, pale pillow and straw, with all fallen stones grey.",
+    "extraDrape": true
   }
 }
