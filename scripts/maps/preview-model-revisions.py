@@ -64,12 +64,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--base', type=Path, required=True)
     parser.add_argument('--codes', nargs='*')
+    parser.add_argument('--source-name')
     parser.add_argument('--size', type=int, choices=[256, 512, 1024], default=256)
     parser.add_argument('--front', action='store_true')
     parser.add_argument('--review', action='store_true')
     parser.add_argument('--inside', action='store_true')
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     for report in sorted(args.base.glob('*/report.json')):
+        if args.source_name and json.loads(report.read_text())['model']['sourceName'] != args.source_name:
+            continue
         if args.codes and json.loads(report.read_text())['model']['sourceCode'] not in args.codes:
             continue
         preview(report, args.size, args.front, args.review, args.inside)
