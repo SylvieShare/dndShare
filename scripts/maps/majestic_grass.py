@@ -40,7 +40,8 @@ def paint(obj, recipe=None, code=None):
     surface.data.foreach_set('color', np.column_stack([np.ones(len(x)), roughness, np.zeros(len(x)), np.ones(len(x))]).astype(np.float32).ravel())
 
 
-def material():
+def material(recipe=None):
+    recipe = recipe or {}
     mat = bpy.data.materials.new('Majestic grass and earth')
     mat.use_nodes = True
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
@@ -64,6 +65,14 @@ def material():
     links.new(geometry.outputs['Pointiness'], wear.inputs[0])
     finish = nodes.new('ShaderNodeMixRGB'); finish.blend_type = 'MULTIPLY'; finish.inputs[0].default_value = 1
     links.new(mix.outputs[0], finish.inputs[1]); links.new(wear.outputs['Color'], finish.inputs[2])
+    if recipe.get('darkenJoints'):
+        mask=nodes.new('ShaderNodeVertexColor');mask.layer_name='Masonry'
+        ao=nodes.new('ShaderNodeAmbientOcclusion');ao.inputs['Distance'].default_value=.9;ao.samples=16
+        remap=nodes.new('ShaderNodeMath');remap.operation='MULTIPLY_ADD';remap.inputs[1].default_value=.45;remap.inputs[2].default_value=.55
+        links.new(ao.outputs['AO'],remap.inputs[0])
+        dirt=nodes.new('ShaderNodeMixRGB');dirt.blend_type='MULTIPLY'
+        links.new(mask.outputs['Color'],dirt.inputs[0]);links.new(finish.outputs[0],dirt.inputs[1]);links.new(remap.outputs[0],dirt.inputs[2])
+        finish=dirt
     shader = nodes.get('Principled BSDF')
     links.new(finish.outputs[0], shader.inputs['Base Color'])
     shader.inputs['Roughness'].default_value = .94

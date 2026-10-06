@@ -1,0 +1,44 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 60000,
+  "lodTriangles": 25000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "stone", "ruins", "outdoor", "xl"],
+  "recipe": "majestic-measured-small-ruins-v1",
+  "sizeAssessment": {
+    "targetRenderBytes": [2000000, 4500000],
+    "targetLODBytes": [700000, 1700000],
+    "targetShadowBytes": [50000, 150000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "473520 source triangles, mostly grass and planar masonry. Preserve tall column silhouettes and low stone ring; compare MH-008 with lower geometry budgets."
+  },
+  "standMaxZMM": 25,
+  "blockedCells": [],
+  "masonryReference": {
+    "code": "MH-001",
+    "rotateZ": 180,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRGB": [0.48, 0.445, 0.35],
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "blockers": [
+    [
+      [0.2, 2.65],
+      [2.25, 2.65],
+      [2.25, 2.97],
+      [0.2, 2.97]
+    ]
+  ],
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 15.1
+  }
+}

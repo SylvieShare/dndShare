@@ -81,7 +81,7 @@ def main():
     crop(source, datum)
     for v in source.data.vertices: v.co.z += datum
     support_points(source, row['mountCenterMM'], recipe, datum)
-    shade(source); paint(source, recipe, args.code); source.data.materials.append(material())
+    shade(source); paint(source, recipe, args.code); source.data.materials.append(material(recipe))
     target = bpy.data.objects.new(args.code+' browser', source.data.copy())
     bpy.context.collection.objects.link(target); activate(target)
     decimate = target.modifiers.new('Browser surface budget', 'DECIMATE')

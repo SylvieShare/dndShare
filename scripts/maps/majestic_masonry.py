@@ -23,14 +23,17 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     weight=np.clip((distances-settings['matchMM'])/settings['blendMM'],0,1)
     weight=weight*weight*(3-2*weight)
     x,y,z=positions.T;u=(x-y)/2**.5;v=(x+y)/2**.5
-    region=((u>-62)&(u<53)&(v>-34)&(v<46)&(z>15.1))
+    bounds=recipe.get('masonryRegion',{'u':[-62,53],'v':[-34,46],'minZMM':15.1})
+    region=(u>bounds['u'][0])&(u<bounds['u'][1])&(v>bounds['v'][0])&(v<bounds['v'][1])&(z>bounds['minZMM'])
     weight*=region
     for box in recipe.get('masonryOverrides',[]):
         mask=(u>=box['u'][0])&(u<=box['u'][1])&(v>=box['v'][0])&(v<=box['v'][1])&(z>=box['z'][0])&(z<=box['z'][1])
         weight=np.maximum(weight,mask.astype(np.float32))
-    grain=1+.035*np.sin(x*.17+y*.13+z*.07)+.018*np.sin(x*1.83-y*1.41+z*.67)
+    grain=1+recipe.get('stoneVariation',.035)*np.sin(x*.17+y*.13+z*.07)+.018*np.sin(x*1.83-y*1.41+z*.67)
     colour=np.array(recipe.get('masonryRGB',[.47,.445,.37]))*grain[:,None]
     colours=colours*(1-weight[:,None])+colour*weight[:,None]
     roughness=roughness*(1-weight)+.93*weight
+    attr=obj.data.color_attributes.new('Masonry','FLOAT_COLOR','POINT')
+    attr.data.foreach_set('color',np.column_stack([weight,weight,weight,np.ones(len(weight))]).astype(np.float32).ravel())
     print('MASONRY_REFERENCE',np.quantile(distances,[.1,.5,.9,1]).tolist(),float(weight.mean()),flush=True)
     return colours,roughness
