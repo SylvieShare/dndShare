@@ -15,8 +15,6 @@
     <MapItemsLibrary
       v-if="view === 'items'"
       :editor="e"
-      :reference-links="isAdmin"
-      @reference="openTileReference"
       @model="placeModel"
       @object="placeObject"
     />
@@ -35,8 +33,6 @@
       <MapTileSidebar
         v-if="e.draft.document.kind === 'tiles'"
         :editor="e"
-        :reference-links="isAdmin"
-        @reference="openTileReference"
         @model="placeModel"
         @drag-tile="dragModel"
       />
@@ -132,12 +128,6 @@ function setView(next) {
   catalogueDrag.cancel();
   e.resetGesture();
   view.value = next;
-}
-async function openTileReference(id) {
-  if (!isAdmin.value) return;
-  setView("reference");
-  await nextTick();
-  reference.value?.choose(id);
 }
 function dragModel(id, event) {
   e.resetGesture();

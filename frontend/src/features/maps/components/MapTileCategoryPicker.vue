@@ -10,7 +10,11 @@
       :aria-pressed="modelValue === category.value"
       @click="emit('update:modelValue', category.value)"
     >
-      <template #icon><TileCategoryIcon :kind="category.value" /></template>
+      <template #icon
+        ><TileCategoryIcon
+          :kind="category.value"
+          :selected="modelValue === category.value"
+      /></template>
     </ActionButton>
   </div>
   <p class="map-hint" aria-live="polite">

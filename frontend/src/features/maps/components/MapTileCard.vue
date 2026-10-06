@@ -30,29 +30,16 @@
     <small v-if="model.supportSlots?.length"
       >Пазов: {{ model.supportSlots.length }}</small
     >
-    <ActionButton
-      v-if="referenceLink"
-      variant="quiet"
-      :aria-label="`Параметры ${model.sourceCode}: ${model.name}`"
-      title="Открыть тайл в админском справочнике"
-      @pointerdown.stop
-      @keydown.stop
-      @click.stop="emit('reference', model.id)"
-    >
-      <BookOpenText :size="14" />Справочник
-    </ActionButton>
   </BaseTile>
 </template>
 <script setup>
-import { BookOpenText } from "@lucide/vue";
-import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import { BaseTile } from "@sylvieshare/share-ui";
 defineProps({
   model: Object,
   selected: Boolean,
   draggable: Boolean,
-  referenceLink: Boolean,
 });
-const emit = defineEmits(["model", "drag-tile", "reference"]);
+const emit = defineEmits(["model", "drag-tile"]);
 </script>
 <style scoped>
 .map-model-card {

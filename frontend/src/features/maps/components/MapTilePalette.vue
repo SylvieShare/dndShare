@@ -35,8 +35,6 @@
               :model="model"
               :selected="(selectedId || editor.selectedModel) === model.id"
               :draggable="draggable"
-              :reference-link="referenceLinks && mode === 'place'"
-              @reference="emit('reference', $event)"
               @model="(id, event) => emit('model', id, event)"
               @drag-tile="(id, event) => emit('drag-tile', id, event)"
             />
@@ -50,8 +48,6 @@
           :model="model"
           :selected="(selectedId || editor.selectedModel) === model.id"
           :draggable="draggable"
-          :reference-link="referenceLinks && mode === 'place'"
-          @reference="emit('reference', $event)"
           @model="(id, event) => emit('model', id, event)"
           @drag-tile="(id, event) => emit('drag-tile', id, event)"
         />
@@ -78,12 +74,11 @@ const props = defineProps({
   grouped: Boolean,
   draggable: Boolean,
   selectedId: String,
-  referenceLinks: Boolean,
   mode: { type: String, default: "place" },
 });
 import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
-const emit = defineEmits(["model", "drag-tile", "reference"]);
+const emit = defineEmits(["model", "drag-tile"]);
 const category = ref("floor");
 const models = computed(() =>
   latestModelVersions(props.editor.catalogue).filter(

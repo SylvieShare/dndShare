@@ -113,7 +113,6 @@ const selected = computed(() =>
 );
 defineExpose({
   prepareLeave: reference.prepareLeave,
-  choose: reference.choose,
 });
 </script>
 <style scoped>
