@@ -7,13 +7,13 @@ import bpy
 from mathutils import Vector
 
 
-def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None):
+def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None, tier='render'):
     directory = report.parent
     if (directory/'preview.png').exists() and not review:
         return
     row = json.loads(report.read_text())['model']
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    bpy.ops.import_scene.gltf(filepath=str(directory/'preview-model.glb'))
+    bpy.ops.import_scene.gltf(filepath=str(directory/('lod-preview-model.glb' if tier=='lod' else 'preview-model.glb')))
     scene = bpy.context.scene
     for obj in list(scene.objects):
         if obj.parent is None:
@@ -47,6 +47,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     if focus_max_z is not None:
         high.z = min(high.z, focus_max_z/35-row['mountDepth'])
     prefix = 'focus-' if focus_max_z is not None else ''
+    if tier=='lod':prefix='lod-'+prefix
     camera.data.ortho_scale = max(*(high-low), 1)*1.5
     centre = (low+high)/2
     camera.location = centre+Vector((-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45))
@@ -73,10 +74,11 @@ if __name__ == '__main__':
     parser.add_argument('--review', action='store_true')
     parser.add_argument('--inside', action='store_true')
     parser.add_argument('--focus-max-z', type=float)
+    parser.add_argument('--tier', choices=['render','lod'], default='render')
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     for report in sorted(args.base.glob('*/report.json')):
         if args.source_name and json.loads(report.read_text())['model']['sourceName'] != args.source_name:
             continue
         if args.codes and json.loads(report.read_text())['model']['sourceCode'] not in args.codes:
             continue
-        preview(report, args.size, args.front, args.review, args.inside, args.focus_max_z)
+        preview(report, args.size, args.front, args.review, args.inside, args.focus_max_z, args.tier)

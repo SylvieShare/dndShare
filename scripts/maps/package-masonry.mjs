@@ -3,6 +3,10 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { MASONRY_REVISION } from "./masonry_palette.mjs";
+import {
+  includePreparedVariant,
+  preservedRevisionAssets,
+} from "./prepared_revision.mjs";
 const root = path.resolve(import.meta.dirname, "../.."),
   base = path.resolve(
     root,
@@ -14,7 +18,10 @@ const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp");
 const registry = JSON.parse(
   await fs.readFile(
-    path.join(root, "models/collections/registry.json"),
+    path.join(
+      root,
+      "models/collections/ultimate-dungeon/registry-snapshot.json",
+    ),
     "utf8",
   ),
 );
@@ -25,6 +32,7 @@ for (const m of registry) {
 }
 await fs.mkdir(out, { recursive: true });
 const models = [];
+const included = new Set();
 const recipe =
   process.argv.find((a) => a.startsWith("--recipe="))?.slice(9) ||
   MASONRY_REVISION;
@@ -44,13 +52,14 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
     .find((a) => a.startsWith("--source-name="))
     ?.slice(14);
   if (requestedName && report.model.sourceName !== requestedName) continue;
+  includePreparedVariant(included, report.model);
   if (report.recipe !== recipe) throw new Error("Unexpected colour recipe");
   const temporary = path.join(directory, "preview-next.webp");
   await sharp(path.join(directory, "preview.png"))
     .webp({ quality: 88 })
     .toFile(temporary);
   await fs.rename(temporary, path.join(directory, "preview.webp"));
-  const assets = { source: report.model.assets.source };
+  const assets = preservedRevisionAssets(report.model);
   const sourceName = path.basename(assets.source.key);
   await fs
     .link(

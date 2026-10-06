@@ -6,6 +6,8 @@ const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const srgb = (v) =>
   v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055;
 function inVolume(p, v) {
+  if (v.maxZ !== undefined && p[2] > v.maxZ) return false;
+  if (v.radialMin && Math.hypot(p[0], p[1]) < v.radialMin) return false;
   return (
     p[2] > v.minZ &&
     p.reduce((sum, n, i) => sum + ((n - v.centre[i]) / v.radius[i]) ** 2, 0) <
@@ -24,6 +26,20 @@ function nearPath(p, path) {
   });
 }
 export function architecturalBonePartAt(p, spec) {
+  if (
+    spec.stoneGuards?.some((box) =>
+      p.every((v, i) => v >= box.min[i] && v <= box.max[i]),
+    )
+  )
+    return "stone";
+  if (
+    spec.cavity &&
+    (Math.hypot(p[0] - spec.cavity.centre[0], p[1] - spec.cavity.centre[1]) >=
+      spec.cavity.radius ||
+      p[2] < spec.cavity.z[0] ||
+      p[2] > spec.cavity.z[1])
+  )
+    return "stone";
   return spec.heads.some((h) => inVolume(p, h)) ||
     spec.piles?.some((v) => inVolume(p, v)) ||
     spec.bonePaths?.some((path) => nearPath(p, path))

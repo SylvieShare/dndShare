@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-const base = path.resolve(import.meta.dirname, "../../models/collections");
+const base = path.resolve(import.meta.dirname, "../../models");
 let index;
 async function walk(directory, result) {
   for (const entry of await fs.readdir(directory, { withFileTypes: true })) {

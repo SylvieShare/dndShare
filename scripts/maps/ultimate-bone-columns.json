@@ -1,0 +1,191 @@
+{
+  "UD-087": {
+    "sourceName": "Column Skulls",
+    "referencePage": 12,
+    "material": "architectural-bones",
+    "floorSeams": "ao-only",
+    "cavity": {
+      "centre": [0, 0],
+      "radius": 6.65,
+      "z": [57.5, 65.6]
+    },
+    "heads": [],
+    "piles": [
+      {
+        "centre": [0, 0, 61.3],
+        "radius": [7.2, 7.2, 5.5],
+        "minZ": 57.5
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [-3.335, 4.8087, 61.5616],
+        "tone": "grey"
+      },
+      {
+        "position": [1.8182, 4.9013, 62.9636],
+        "tone": "ivory"
+      },
+      {
+        "position": [3.7268, 0.0352, 62.5828],
+        "tone": "old"
+      },
+      {
+        "position": [0.3868, -0.9239, 64.9907],
+        "tone": "ivory"
+      },
+      {
+        "position": [-0.2812, -5.0229, 62.7341],
+        "tone": "grey"
+      },
+      {
+        "position": [-5.1481, -0.6311, 61.7622],
+        "tone": "ivory"
+      },
+      {
+        "position": [-4.003, -3.8714, 59.5951],
+        "tone": "old"
+      }
+    ],
+    "notes": "Seven measured skull centres vary between ivory, grey and old bone inside the upper cavity. Keep the full inner stone rim, cylindrical brickwork and plinth grey, correcting the old bone-coloured rim and base-edge speckles."
+  },
+  "UD-088": {
+    "sourceName": "Column Skulls Broken 1",
+    "referencePage": 12,
+    "material": "architectural-bones",
+    "floorSeams": "ao-only",
+    "stoneGuards": [
+      {
+        "min": [-20, 1.2, 41.2],
+        "max": [-6.4, 6.2, 55]
+      }
+    ],
+    "heads": [
+      {
+        "centre": [5.2, -13.6, 26.5],
+        "radius": [3.6, 4.2, 3.5],
+        "minZ": 24.5,
+        "maxZ": 29.4,
+        "radialMin": 12.4
+      },
+      {
+        "centre": [11.9, -14, 20],
+        "radius": [4.2, 4.2, 3.6],
+        "minZ": 18.2,
+        "radialMin": 18
+      },
+      {
+        "centre": [-3.86, 5.12, 45.8],
+        "radius": [2.8, 2.8, 2.5],
+        "minZ": 42.5
+      },
+      {
+        "centre": [2.55, 5.85, 42],
+        "radius": [2.5, 2.7, 2.5],
+        "minZ": 39.5
+      },
+      {
+        "centre": [6.26, 0.4, 40.5],
+        "radius": [2.8, 2.8, 2.5],
+        "minZ": 38
+      },
+      {
+        "centre": [1.31, -4.62, 38.7],
+        "radius": [2.6, 2.8, 2.5],
+        "minZ": 36.6
+      },
+      {
+        "centre": [-3.35, -3.24, 41.3],
+        "radius": [2.6, 2.8, 2.5],
+        "minZ": 38.5
+      },
+      {
+        "centre": [-5.89, 1.63, 42],
+        "radius": [2.8, 2.9, 2.7],
+        "minZ": 39
+      },
+      {
+        "centre": [0.29, -0.04, 40.9],
+        "radius": [2.9, 2.8, 2.5],
+        "minZ": 38
+      }
+    ],
+    "piles": [
+      {
+        "centre": [0, 0, 42.7],
+        "radius": [7.8, 7.8, 8],
+        "minZ": 38
+      }
+    ],
+    "bonePaths": [
+      {
+        "points": [
+          [-0.8, -8.33, 40.82],
+          [3.81, -8.73, 37.89],
+          [8.95, -7.38, 39.56]
+        ],
+        "radius": 1.2
+      },
+      {
+        "points": [
+          [5.53, -1.7, 37.42],
+          [3.42, -5.34, 36.56]
+        ],
+        "radius": 1.05
+      },
+      {
+        "points": [
+          [6.55, -2.94, 38.96],
+          [4.51, -5.85, 37.34]
+        ],
+        "radius": 1.05
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [-3.8571, 5.1181, 47.239],
+        "tone": "ivory"
+      },
+      {
+        "position": [2.5454, 5.8532, 43.4705],
+        "tone": "grey"
+      },
+      {
+        "position": [6.2559, 0.3998, 41.8524],
+        "tone": "old"
+      },
+      {
+        "position": [1.3085, -4.6172, 40.3176],
+        "tone": "ivory"
+      },
+      {
+        "position": [-3.3478, -3.24, 42.8593],
+        "tone": "old"
+      },
+      {
+        "position": [-5.8943, 1.6334, 43.4679],
+        "tone": "grey"
+      },
+      {
+        "position": [0.2899, -0.0377, 42.351],
+        "tone": "ivory"
+      },
+      {
+        "position": [5.2, -13.6, 26.5],
+        "tone": "grey"
+      },
+      {
+        "position": [11.9, -14, 20],
+        "tone": "ivory"
+      }
+    ],
+    "notes": "Separate upper skeletal pile, bowed femur on the rim, a skull on the lower ledge and the loose floor skull. Protect the measured tall rear brick; restore the old ivory-coloured lower masonry and plinth edges to grey.",
+    "weightBudget": {
+      "renderMiB": [3, 5.5],
+      "lodMiB": [1, 2],
+      "shadowKiB": [40, 100],
+      "previewKiB": [15, 150],
+      "basis": "Comparable reviewed UD-078/085/086: several small sculpted details. Keep geometry, UV, normal and AO; compare smaller albedo maps before publication."
+    }
+  }
+}

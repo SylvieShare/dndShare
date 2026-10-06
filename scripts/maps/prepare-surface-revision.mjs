@@ -31,9 +31,13 @@ export async function prepareSurfaceRevision({
   preserveTextureSize = false,
   sampleAO = false,
   allowEmptyParts = false,
+  weightBudget,
 }) {
   const models = JSON.parse(
-    await fs.readFile(path.join(base, "registry.json"), "utf8"),
+    await fs.readFile(
+      path.join(base, "ultimate-dungeon/registry-snapshot.json"),
+      "utf8",
+    ),
   );
   const model = models
     .filter(
@@ -59,6 +63,7 @@ export async function prepareSurfaceRevision({
     model: { ...model, textureDetail },
     recipe,
     tiers: {},
+    ...(weightBudget ? { weightBudget } : {}),
   };
   const colorReference =
     colorReferenceVersion === undefined
@@ -241,13 +246,17 @@ export async function prepareSurfaceRevision({
       blackSurfacePixels: black,
       bytes: bytes.length,
     };
-    if (tier === "render") {
-      const preview = await io.read(output);
-      await preview.transform(dequantize());
-      for (const ext of preview.getRoot().listExtensionsUsed())
-        if (ext.extensionName === "EXT_meshopt_compression") ext.dispose();
-      await io.write(path.join(directory, "preview-model.glb"), preview);
-    }
+    const preview = await io.read(output);
+    await preview.transform(dequantize());
+    for (const ext of preview.getRoot().listExtensionsUsed())
+      if (ext.extensionName === "EXT_meshopt_compression") ext.dispose();
+    await io.write(
+      path.join(
+        directory,
+        tier === "render" ? "preview-model.glb" : "lod-preview-model.glb",
+      ),
+      preview,
+    );
     console.log("PAINTED_SURFACES", code, tier, report.tiers[tier]);
   }
   await fs.writeFile(

@@ -15,7 +15,7 @@ if (
   )
 )
   throw new Error("Only reviewed Ultimate Dungeon models can be recorded");
-const file = path.join(base, "registry.json"),
+const file = path.join(base, "ultimate-dungeon/registry-snapshot.json"),
   registry = JSON.parse(await fs.readFile(file, "utf8"));
 for (const model of published)
   if (!registry.some((m) => m.id === model.id)) registry.push(model);

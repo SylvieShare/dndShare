@@ -15,6 +15,7 @@ import archSpecs from "./ultimate-arches.json" with { type: "json" };
 import altarSpecs from "./ultimate-altars.json" with { type: "json" };
 import doubleDoorSpecs from "./ultimate-double-doors.json" with { type: "json" };
 import columnSpecs from "./ultimate-columns.json" with { type: "json" };
+import boneColumnSpecs from "./ultimate-bone-columns.json" with { type: "json" };
 import { prepareSurfaceRevision } from "./prepare-surface-revision.mjs";
 import { paintFloorJoint } from "./floor_seams.mjs";
 import fs from "node:fs/promises";
@@ -35,6 +36,7 @@ const specs = {
   ...altarSpecs,
   ...doubleDoorSpecs,
   ...columnSpecs,
+  ...boneColumnSpecs,
 };
 const code = process.argv[2];
 const requestedName = process.argv
@@ -49,7 +51,10 @@ if (!spec)
   throw new Error("No individually reviewed material specification: " + code);
 const registry = JSON.parse(
   await fs.readFile(
-    path.resolve(import.meta.dirname, "../../models/collections/registry.json"),
+    path.resolve(
+      import.meta.dirname,
+      "../../models/collections/ultimate-dungeon/registry-snapshot.json",
+    ),
     "utf8",
   ),
 );
@@ -125,4 +130,5 @@ await prepareSurfaceRevision({
   updateMetallic: true,
   colorReferenceVersion: reference.version,
   sampleAO: true,
+  weightBudget: spec.weightBudget,
 });

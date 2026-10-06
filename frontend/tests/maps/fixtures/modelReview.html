@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <body>
+    <script type="module">
+      import {
+        WebGLRenderer,
+        Scene,
+        OrthographicCamera,
+        HemisphereLight,
+        DirectionalLight,
+        PointLight,
+        Mesh,
+        MeshStandardMaterial,
+        MeshBasicMaterial,
+        PlaneGeometry,
+        Box3,
+        Vector3,
+      } from "three";
+      import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
+      const gpu = new WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      gpu.setSize(640, 480);
+      gpu.shadowMap.enabled = true;
+      document.body.append(gpu.domElement);
+      const loader = acquireModelLoader(gpu);
+      const count = (root) => {
+        let total = 0;
+        root.traverse((n) => {
+          if (n.isMesh) total += n.geometry.index.count / 3;
+        });
+        return total;
+      };
+      function pixels() {
+        const gl = gpu.getContext(),
+          p = new Uint8Array(640 * 480 * 4);
+        gl.readPixels(0, 0, 640, 480, gl.RGBA, gl.UNSIGNED_BYTE, p);
+        return p;
+      }
+      window.reviewModel = async (tier, model) => {
+        const [visible, shadow] = await Promise.all([
+          loader.load("/model-review/" + tier + ".glb"),
+          loader.load("/model-review/shadow.glb"),
+        ]);
+        for (const root of [visible.scene, shadow.scene])
+          root.position.set(
+            model.placementOffset[0],
+            -model.mountDepth,
+            model.placementOffset[1],
+          );
+        const scene = new Scene();
+        scene.add(
+          visible.scene,
+          shadow.scene,
+          new HemisphereLight(0xffffff, 0x625141, 0.8),
+        );
+        visible.scene.traverse((n) => {
+          if (n.isMesh) {
+            n.castShadow = false;
+            n.receiveShadow = true;
+          }
+        });
+        const proxyMaterial = new MeshBasicMaterial({
+          colorWrite: false,
+          depthWrite: false,
+        });
+        shadow.scene.traverse((n) => {
+          if (n.isMesh) {
+            n.material = proxyMaterial;
+            n.castShadow = true;
+          }
+        });
+        const ground = new Mesh(
+          new PlaneGeometry(10, 10),
+          new MeshStandardMaterial({ color: 0x999999, roughness: 1 }),
+        );
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+        const bounds = new Box3().setFromObject(visible.scene),
+          centre = bounds.getCenter(new Vector3()),
+          camera = new OrthographicCamera(-2.8, 2.8, 2.1, -2.1, 0.1, 100);
+        camera.position.copy(centre).add(new Vector3(4, 5, 6));
+        camera.lookAt(centre);
+        const shadowBounds = new Box3().setFromObject(shadow.scene),
+          drift = Math.max(
+            ...["min", "max"].flatMap((s) =>
+              ["x", "y", "z"].map((a) =>
+                Math.abs(bounds[s][a] - shadowBounds[s][a]),
+              ),
+            ),
+          );
+        const shadowChecks = [];
+        for (const [name, pos] of [
+          ["sun-a", [3, 5, 4]],
+          ["sun-b", [-4, 5, -2]],
+          ["point", [0, 3, 2]],
+        ]) {
+          const light =
+            name === "point"
+              ? new PointLight(0xfff2df, 60, 30)
+              : new DirectionalLight(0xfff2df, 3);
+          light.position.set(...pos);
+          light.shadow.mapSize.set(1024, 1024);
+          light.shadow.camera.near = 0.1;
+          light.shadow.camera.far = 30;
+          if (name !== "point")
+            Object.assign(light.shadow.camera, {
+              left: -5,
+              right: 5,
+              top: 5,
+              bottom: -5,
+            });
+          scene.add(light);
+          light.castShadow = false;
+          gpu.render(scene, camera);
+          const plain = pixels();
+          light.castShadow = true;
+          gpu.render(scene, camera);
+          const shaded = pixels();
+          let changed = 0;
+          for (let i = 0; i < plain.length; i += 4)
+            if (
+              Math.max(
+                ...[0, 1, 2].map((c) => Math.abs(plain[i + c] - shaded[i + c])),
+              ) > 8
+            )
+              changed++;
+          shadowChecks.push({ name, changed });
+          scene.remove(light);
+        }
+        const textures = new Set();
+        visible.scene.traverse((n) => {
+          if (n.isMesh)
+            for (const t of Object.values(n.material))
+              if (t?.isTexture) textures.add(t);
+        });
+        return {
+          triangles: count(visible.scene),
+          shadowTriangles: count(shadow.scene),
+          drift,
+          shadowChecks,
+          rendered: gpu.info.render.triangles,
+          textures: [...textures].map((t) => ({
+            width: t.image.width,
+            height: t.image.height,
+            colorSpace: t.colorSpace,
+          })),
+        };
+      };
+    </script>
+  </body>
+</html>

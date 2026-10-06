@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import specs from "./ultimate-arches.json" with { type: "json" };
+import columns from "./ultimate-bone-columns.json" with { type: "json" };
 import { architecturalBonePartAt } from "./architectural_bones.mjs";
 test("arch skulls on both sides and low femurs receive bone material", () => {
   const spec = specs["UD-078"];
@@ -51,6 +52,30 @@ test("broken arch has one rear skull and no ivory rubble or broken post caps", (
     [-11, 5, 16],
     [11, 5, 16],
     [0, 0, 70],
+  ])
+    assert.equal(architecturalBonePartAt(p, spec), "stone");
+});
+test("upright bone column preserves all measured skull centres and excludes its stone rim", () => {
+  const spec = columns["UD-087"];
+  for (const h of spec.boneGroups)
+    assert.equal(architecturalBonePartAt(h.position, spec), "bone");
+  assert.equal(architecturalBonePartAt([0, 7.2868, 63.0896], spec), "stone");
+  assert.equal(architecturalBonePartAt([0, 0, 16], spec), "stone");
+});
+test("broken column distinguishes complete skulls, bowed femurs and neighbouring support planes", () => {
+  const spec = columns["UD-088"];
+  for (const p of [
+    [4.0733, -16.1105, 27.3052],
+    [10.0473, -15.197, 20.361],
+    [10.2056, -16.5758, 18.6669],
+    [5.5283, -1.7012, 37.4212],
+    [3.4184, -5.3372, 36.5558],
+  ])
+    assert.equal(architecturalBonePartAt(p, spec), "bone");
+  for (const p of [
+    [-6.7949, 2.7103, 43.7444],
+    [5.5835, -12.3119, 29.8445],
+    [9.9016, -14.1161, 22.7319],
   ])
     assert.equal(architecturalBonePartAt(p, spec), "stone");
 });
