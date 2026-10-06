@@ -132,5 +132,46 @@
       "basis": "Thin four-post grille with lock, five straps and soil atlas, comparable to reviewed UD-054–059 and wooden doors; keep openings and compare two lighter variants."
     },
     "notes": "PDF confirms vertical dark timber and pointed wooden tips, worn iron straps/rivets/collars and lock, brown dusty earth and grey mounting plinth. Measured front timber x13.23, rear15.6; straps project to12.6/16.5. Five warped rail bands measured at five Y positions protect wood between them on both faces. Four spike profiles measured separately: centres Y -15.75,-5.375,5.625,15.75; body half width2.1 follows separately measured bowing at20,47,60 mm and protects the complete timber sides. Soil recesses at13.1 mm remain earth, stone below12.4 mm."
+  },
+  "UD-101": {
+    "sourceName": "Wall Round Angle",
+    "referencePage": 14,
+    "material": "stone",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Alternate numbered rounded 1x1 wall, source bounds and construction inspected against detailed UD-093; compare two lighter texture atlases."
+    },
+    "notes": "Individually inspected alternate numbered round-wall source: same grey worn curved masonry and internal cobbles as the author photo UD-093. Preserve this distinct source ID, mounting depth, silhouette and original coordinates."
+  },
+  "UD-102": {
+    "sourceName": "Stair Without Bones",
+    "referencePage": 14,
+    "material": "stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Alternate numbered 1x1 stair comparable to separately reviewed UD-094; compare two lighter atlas variants."
+    },
+    "notes": "Individually inspected alternate numbered straight stair source; five cold grey stone treads, AO follows raised surfaces, worn edges and side brickwork. Keep its distinct source ID, geometry, support slots and heights."
+  },
+  "UD-103": {
+    "sourceName": "Stair Angle Without Bones",
+    "referencePage": 14,
+    "material": "stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Alternate numbered angular 1x1 stair comparable to individually reviewed UD-095; compare two lighter albedo/roughness atlases."
+    },
+    "notes": "Individually inspected alternate numbered angular stair source: five nested worn stone levels, raised tread joints use AO only. Preserve original source ID, all geometry and support height metadata."
   }
 }
