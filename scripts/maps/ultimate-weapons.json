@@ -1,0 +1,17 @@
+{
+  "UD-068": {
+    "sourceName": "Wall Weapons",
+    "referencePage": 9,
+    "material": "weapons",
+    "shaftRows": [10.8, 3.6, -1.4, -6.1, -12.2],
+    "rope": [
+      [8.5, 15.0, 32.0],
+      [8.2, 8.8, 26.65],
+      [8.26, 1.89, 26.9],
+      [8.4, -6.6, 28.85],
+      [9.55, -13.3, 29.85],
+      [9.4, -15.6, 32.8]
+    ],
+    "notes": "Longitudinal timber on the upper crossbeam, vertical posts and weapon hafts; iron blades and collars with worn edges. The measured front rope is beige fibre, and the masonry and pavers stay grey."
+  }
+}

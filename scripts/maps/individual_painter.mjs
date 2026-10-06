@@ -15,6 +15,9 @@ import { paintBrazier } from "./brazier_material.mjs";
 import { makeFountainPainter } from "./fountain_material.mjs";
 import { makeGroundGlyphPainter } from "./ground_glyph.mjs";
 import { makePrisonPainter } from "./prison_material.mjs";
+import { makeTorturePainter } from "./torture_material.mjs";
+import { makeUtilityPainter } from "./utility_material.mjs";
+import { makeWeaponsPainter } from "./weapons_material.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 export async function individualPainter({ code, spec, model, collectionBase }) {
@@ -23,7 +26,45 @@ export async function individualPainter({ code, spec, model, collectionBase }) {
     parts = ["base", "floor", "wall"];
   if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
     parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
-  if (spec.material === "prison") {
+  if (spec.material === "weapons") {
+    painter = makeWeaponsPainter(spec);
+    parts = ["stone", "rope", "beam", "post", "shaft", "iron"];
+  } else if (spec.material === "utility") {
+    let bare;
+    if (spec.bareReference) {
+      const directory = path.join(collectionBase, "added-reference", code);
+      bare = {
+        spec: JSON.parse(
+          await fs.readFile(path.join(directory, "reference.json"), "utf8"),
+        ),
+        data: await fs.readFile(path.join(directory, "distance.bin")),
+      };
+      if (
+        bare.spec.bare !== spec.bareReference ||
+        bare.spec.bareOffsetZ !== spec.bareOffsetZ
+      )
+        throw new Error("Unexpected utility reference");
+    }
+    painter = makeUtilityPainter(spec, bare);
+    parts =
+      spec.variant === "pit"
+        ? ["stone", "wood"]
+        : ["stone", "iron", ...(spec.variant === "poison" ? ["toxic"] : [])];
+  } else if (spec.material === "torture") {
+    painter = makeTorturePainter(spec);
+    if (spec.variant === "trap") parts = ["stone", "iron", "wood"];
+    else
+      parts = [
+        "stone",
+        "iron",
+        "bone",
+        ...(spec.variant === "rack"
+          ? ["wood", "roller"]
+          : spec.variant === "chair"
+            ? ["wood"]
+            : []),
+      ];
+  } else if (spec.material === "prison") {
     painter = makePrisonPainter(spec);
     if (spec.variant === "corner") {
       parts = ["soil", "stone", "iron"];

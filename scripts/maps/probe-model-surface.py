@@ -10,6 +10,7 @@ parser.add_argument('--report',type=Path,required=True)
 parser.add_argument('--size',type=int,default=1024)
 parser.add_argument('--points',nargs='+',required=True)
 parser.add_argument('--view',choices=['top','inside','front','reverse'],default='top')
+parser.add_argument('--normals',action='store_true')
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 model=json.loads(args.report.read_text())['model']
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -34,4 +35,5 @@ for text in args.points:
     if hit[0]:
         p=hit[1];stl=[(p.x-model['placementOffset'][0])*35,(p.y+model['placementOffset'][1])*35,(p.z+model['mountDepth'])*35]
         print('SURFACE_POINT',text,[round(v,4) for v in stl],flush=True)
+        if args.normals:print('SURFACE_NORMAL',text,[round(v,4) for v in hit[2]],flush=True)
     else:print('SURFACE_MISSING',text,flush=True)

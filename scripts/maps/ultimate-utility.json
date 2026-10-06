@@ -1,0 +1,38 @@
+{
+  "UD-064": {
+    "sourceName": "Ground Grid",
+    "referencePage": 9,
+    "material": "utility",
+    "variant": "grate",
+    "notes": "Worn slightly green iron on the square frame, all five crossbars and rivets. The outer plinth and visible stone below the slots remain grey."
+  },
+  "UD-065": {
+    "sourceName": "Ground Toxic Poison",
+    "referencePage": 9,
+    "material": "utility",
+    "variant": "poison",
+    "bareReference": "UD-064",
+    "bareOffsetZ": -6.9,
+    "notes": "Bright lime poison with paler foam follows only the raised spill; exposed frame and bars stay worn iron. Align the bare grate by the measured 6.9 mm crop difference, preserving the low stone plinth."
+  },
+  "UD-066": {
+    "sourceName": "Ground Lever",
+    "referencePage": 9,
+    "material": "utility",
+    "variant": "lever",
+    "oldPigments": [[0.39, 0.22, 0.105]],
+    "notes": "The complete gear, lever, collar, rivets and mechanism frame are worn iron, correcting the old wooden patch. Cobblestones and the floor visible through the mechanism remain stone."
+  },
+  "UD-067": {
+    "sourceName": "Hole Trap",
+    "referencePage": 9,
+    "material": "utility",
+    "variant": "pit",
+    "posts": [
+      [-0.25, 4.4, 2.2],
+      [-4.15, -2.3, 2.0],
+      [4.4, -2.8, 2.6]
+    ],
+    "notes": "Three separately measured wooden spikes with vertical grain and end rings; the pit walls, exposed bottom and broken stone rim stay grey. Preserve the authored cavity and placement data."
+  }
+}

@@ -6,6 +6,9 @@ import lightingSpecs from "./ultimate-lighting.json" with { type: "json" };
 import fountainSpecs from "./ultimate-fountains.json" with { type: "json" };
 import floorSpecs from "./ultimate-floors.json" with { type: "json" };
 import prisonSpecs from "./ultimate-prison.json" with { type: "json" };
+import tortureSpecs from "./ultimate-torture.json" with { type: "json" };
+import utilitySpecs from "./ultimate-utility.json" with { type: "json" };
+import weaponsSpecs from "./ultimate-weapons.json" with { type: "json" };
 import { prepareSurfaceRevision } from "./prepare-surface-revision.mjs";
 import { paintFloorJoint } from "./floor_seams.mjs";
 import fs from "node:fs/promises";
@@ -17,6 +20,9 @@ const specs = {
   ...fountainSpecs,
   ...floorSpecs,
   ...prisonSpecs,
+  ...tortureSpecs,
+  ...utilitySpecs,
+  ...weaponsSpecs,
 };
 const code = process.argv[2];
 const requestedName = process.argv
