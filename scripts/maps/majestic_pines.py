@@ -26,6 +26,20 @@ def apply_pines(obj, positions, colours, roughness, coverage, recipe):
         grain=.95+.07*np.sin(angle*19+z*.08)+.025*np.sin(z*.31)
         bark=np.array([.32,.205,.115])*grain[:,None]
         colours[wood]=bark[wood];roughness[wood]=.94
+    bark_cores=np.zeros(len(positions),bool)
+    for tree in recipe['trees']:
+        t=np.clip((z-15)/(tree['heightMM']-15),0,1)
+        base,top=np.array(tree['baseXY']),np.array(tree['topXY'])
+        centre=base[None,:]+t[:,None]*(top-base)
+        bark_cores|=(np.linalg.norm(positions[:,:2]-centre,axis=1)<tree['trunkRadiusMM']) & (z>15.2) & (z<tree['barkTopMM'])
+    for fern in recipe.get('ferns',[]):
+        centre=np.array(fern['centreMM']); radii=np.array(fern['radiiMM'])
+        distance=((positions-centre)/radii)**2
+        weight=np.clip((1.1-distance.sum(1))/.25,0,1)*np.clip((z-fern['minZMM'])/.45,0,1)*(~bark_cores)
+        vein=.94+.055*np.sin(x*.9+y*.6)+.025*np.sin(x*1.7-y*.8)
+        material=np.array([.31,.43,.12])*vein[:,None]
+        colours=colours*(1-weight[:,None])+material*weight[:,None]
+        roughness=roughness*(1-weight)+.88*weight
     for stone in recipe.get('stones',[]):
         centre=np.array(stone['centreMM']); radii=np.array(stone['radiiMM'])
         distance=((positions-centre)/radii)**2
