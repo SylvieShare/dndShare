@@ -67,19 +67,20 @@ type Tile struct {
 }
 
 type Document struct {
-	Version    int        `json:"version"`
-	Kind       string     `json:"kind"`
-	Width      float64    `json:"width"`
-	Height     float64    `json:"height"`
-	Grid       Grid       `json:"grid"`
-	Background Background `json:"background"`
-	Tiles      []Tile     `json:"tiles"`
-	Objects    []Object   `json:"objects"`
-	Zones      []Zone     `json:"zones"`
-	Areas      []Area     `json:"areas"`
-	Sun        *SunLight  `json:"sun"`
-	Lights     []Light    `json:"lights"`
-	Credit     *Credit    `json:"credit,omitempty"`
+	Version         int        `json:"version"`
+	Kind            string     `json:"kind"`
+	Width           float64    `json:"width"`
+	Height          float64    `json:"height"`
+	Grid            Grid       `json:"grid"`
+	Background      Background `json:"background"`
+	Tiles           []Tile     `json:"tiles"`
+	Objects         []Object   `json:"objects"`
+	Zones           []Zone     `json:"zones"`
+	Areas           []Area     `json:"areas"`
+	LightingEnabled bool       `json:"lightingEnabled"`
+	Sun             *SunLight  `json:"sun"`
+	Lights          []Light    `json:"lights"`
+	Credit          *Credit    `json:"credit,omitempty"`
 }
 
 type Token struct {

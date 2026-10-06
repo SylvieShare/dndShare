@@ -312,6 +312,10 @@ export function useMapEditor(source, onSaved) {
     ...gestures,
     ...lighting,
     lightDrag: lighting.driver,
+    copy() {
+      if (lighting.copyLight()) return;
+      if (gestures.copy()) lighting.copiedLight.value = null;
+    },
     handle(event) {
       if (event.phase === "start" && !event.hit?.lightId)
         lighting.selectedLight.value = "";

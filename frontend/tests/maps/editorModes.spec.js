@@ -22,13 +22,19 @@ test("shared header, global collection, floating actions and independent visibil
       .boundingBox();
   expect(canvas).toMatchObject({ x: 334, y: 64, width: 1106, height: 936 });
   await expect(page.locator(".map-inspector")).toHaveCount(0);
-  for (const name of ["Карта", "Предметы", "Настройки"]) {
+  for (const name of ["Карта"]) {
     const tab = page.getByRole("tab", { name, exact: true });
     await expect(tab.locator("svg")).toHaveCount(1);
   }
+  for (const name of ["Предметы", "Настройки"])
+    await expect(page.getByRole("tab", { name, exact: true })).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Настройки", exact: true }).locator("svg"),
+  ).toHaveCount(1);
   expect(actions.y).toBeGreaterThanOrEqual(canvas.y);
   expect(actions.x).toBeGreaterThan(canvas.x + canvas.width / 2);
-  await page.getByRole("tab", { name: "Настройки", exact: true }).click();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await expect(page.locator(".map-canvas canvas")).toBeVisible();
   await expect(page.getByLabel("Название карты", { exact: true })).toHaveValue(
     "Крепость на переправе",
   );
@@ -47,9 +53,9 @@ test("shared header, global collection, floating actions and independent visibil
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.grid.visible))
     .toBe(false);
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   await choosePack(page, "ultimate-dungeon");
-  await page.getByRole("tab", { name: "Настройки", exact: true }).click();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await expect(page.getByLabel("Показывать точки в пазах")).not.toBeChecked();
 });
 test("ground has no clickable spheres and socket spheres insert floor from the global collection", async ({
@@ -84,13 +90,15 @@ test("ground has no clickable spheres and socket spheres insert floor from the g
     )
     .toBe("88888888-8888-4888-8888-888888888888");
 });
-test("items return to the map and place a cursor preview on click", async ({
+test("objects from the side palette place a cursor preview on click", async ({
   page,
 }) => {
   await ready(page);
   await dragTile(page, await mapPoint(page, 4.5, 4.5));
-  await page.getByRole("tab", { name: "Предметы", exact: true }).click();
-  await page.getByRole("button", { name: "Сундук", exact: true }).click();
+  await page.getByRole("button", { name: "Объекты", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Сундук", exact: true })
+    .press("Enter");
   await expect(
     page.getByRole("tab", { name: "Карта", exact: true }),
   ).toHaveAttribute("aria-selected", "true");

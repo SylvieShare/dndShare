@@ -5,7 +5,8 @@ export function editorLighting(e) {
   const activeLight = ref(""),
     selectedLight = ref(""),
     hoveredLight = ref(""),
-    previewLight = ref(null);
+    previewLight = ref(null),
+    copiedLight = ref(null);
   let gesture = null,
     editKey = "",
     editTimer;
@@ -19,6 +20,20 @@ export function editorLighting(e) {
     fn();
     clearTimeout(editTimer);
     editTimer = setTimeout(finishLightEdit, 350);
+  }
+  function updateLightingMode(value) {
+    patch("lightingEnabled", () => {
+      e.draft.value.document.lightingEnabled = value;
+    });
+  }
+  function copyLight() {
+    const light = e.draft.value.document.lights.find(
+      (l) => l.id === selectedLight.value,
+    );
+    if (!light) return false;
+    const { anchor, areaId, ...snapshot } = clone(light);
+    copiedLight.value = { ...snapshot, offset: [0, 0] };
+    return true;
   }
   function updateSun(field, value) {
     patch(`sun:${field}`, () => {
@@ -38,6 +53,7 @@ export function editorLighting(e) {
     selectedLight.value = id;
     e.setTileSelection([]);
     e.setObjectSelection([]);
+    e.selection.value = null;
     e.tool.value = "select";
   }
   function removeLight(id = selectedLight.value) {
@@ -146,12 +162,22 @@ export function editorLighting(e) {
   const driver = {
     kind: "light",
     begin(kind) {
-      preset = LIGHT_PRESETS.find((p) => p.kind === kind) || LIGHT_PRESETS[0];
+      preset =
+        typeof kind === "object"
+          ? clone(kind)
+          : {
+              ...(LIGHT_PRESETS.find((p) => p.kind === kind) ||
+                LIGHT_PRESETS[0]),
+              enabled: true,
+              shadows: true,
+              showMarker: true,
+            };
       placing = true;
       e.tool.value = "light";
       selectedLight.value = "";
       e.setTileSelection([]);
       e.setObjectSelection([]);
+      e.selection.value = null;
       e.pauseSave(true);
     },
     move(point) {
@@ -165,8 +191,6 @@ export function editorLighting(e) {
               y: point.y,
               elevation: point.elevation || 0,
               offset: [0, 0],
-              enabled: true,
-              shadows: false,
               placing: true,
             }
           : null;
@@ -177,6 +201,7 @@ export function editorLighting(e) {
         const { placing, ...light } = previewLight.value;
         light.id = uid();
         light.shadows =
+          !!light.shadows &&
           e.draft.value.document.lights.filter((l) => l.enabled && l.shadows)
             .length < 2;
         e.change((m) => m.document.lights.push(light));
@@ -194,6 +219,9 @@ export function editorLighting(e) {
     },
   };
   return {
+    copiedLight,
+    copyLight,
+    updateLightingMode,
     activeLight,
     selectedLight,
     hoveredLight,

@@ -15,22 +15,23 @@ type LightAnchor struct {
 	ID   string `json:"id"`
 }
 type Light struct {
-	ID        string       `json:"id"`
-	Name      string       `json:"name"`
-	Kind      string       `json:"kind"`
-	Color     string       `json:"color"`
-	X         float64      `json:"x"`
-	Y         float64      `json:"y"`
-	Elevation float64      `json:"elevation"`
-	Height    float64      `json:"height"`
-	Intensity float64      `json:"intensity"`
-	Radius    float64      `json:"radius"`
-	Enabled   bool         `json:"enabled"`
-	Shadows   bool         `json:"shadows"`
-	Flicker   bool         `json:"flicker"`
-	Offset    [2]float64   `json:"offset"`
-	Anchor    *LightAnchor `json:"anchor,omitempty"`
-	AreaID    string       `json:"areaId,omitempty"`
+	ID         string       `json:"id"`
+	Name       string       `json:"name"`
+	Kind       string       `json:"kind"`
+	Color      string       `json:"color"`
+	X          float64      `json:"x"`
+	Y          float64      `json:"y"`
+	Elevation  float64      `json:"elevation"`
+	Height     float64      `json:"height"`
+	Intensity  float64      `json:"intensity"`
+	Radius     float64      `json:"radius"`
+	Enabled    bool         `json:"enabled"`
+	ShowMarker bool         `json:"showMarker"`
+	Shadows    bool         `json:"shadows"`
+	Flicker    bool         `json:"flicker"`
+	Offset     [2]float64   `json:"offset"`
+	Anchor     *LightAnchor `json:"anchor,omitempty"`
+	AreaID     string       `json:"areaId,omitempty"`
 }
 
 func DefaultSun() *SunLight { return &SunLight{Enabled: true, Angle: 225, Elevation: 45} }

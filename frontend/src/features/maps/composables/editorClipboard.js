@@ -56,6 +56,7 @@ export function editorClipboard(e) {
         y: o.y - origin.y,
       })),
     };
+    return true;
   }
   function placementContext() {
     const root = [...payload.tiles].sort((a, b) => a.level - b.level)[0];

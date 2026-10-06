@@ -146,13 +146,13 @@ test("arrow keys move the camera and leave text field navigation alone", async (
   const before = await canvas.screenshot({ animations: "disabled" });
   await page.keyboard.press("ArrowRight");
   expect((await canvas.screenshot()).equals(before)).toBe(false);
-  await page.getByRole("tab", { name: "Настройки", exact: true }).click();
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   const after = await canvas.screenshot({ animations: "disabled" });
-  await page.getByRole("tab", { name: "Настройки", exact: true }).click();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await page.getByLabel("Название карты", { exact: true }).focus();
   await page.keyboard.press("ArrowLeft");
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   expect(
     (await canvas.screenshot({ animations: "disabled" })).equals(after),
   ).toBe(true);

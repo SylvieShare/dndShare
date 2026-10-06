@@ -9,6 +9,7 @@
       <ActionButton
         icon-only
         :variant="tab === 'tiles' ? 'primary' : 'quiet'"
+        v-if="editor.draft.document.kind === 'tiles'"
         aria-label="Плитки"
         title="Плитки"
         @click="openTab('tiles')"
@@ -37,6 +38,22 @@
         title="Области"
         @click="openTab('areas')"
         ><template #icon><Group :size="22" /></template
+      ></ActionButton>
+      <ActionButton
+        icon-only
+        :variant="tab === 'zones' ? 'primary' : 'quiet'"
+        aria-label="Зоны"
+        title="Зоны"
+        @click="openTab('zones')"
+        ><template #icon><Square :size="22" /></template
+      ></ActionButton>
+      <ActionButton
+        icon-only
+        :variant="tab === 'settings' ? 'primary' : 'quiet'"
+        aria-label="Настройки"
+        title="Настройки"
+        @click="openTab('settings')"
+        ><template #icon><Settings :size="22" /></template
       ></ActionButton>
     </nav>
     <div v-show="!collapsed" class="map-sidebar-panel">
@@ -78,10 +95,15 @@
           @drag-object="(id, event) => emit('drag-object', id, event)"
         />
         <MapAreasPanel v-else-if="tab === 'areas'" :editor="editor" />
+        <MapPropertiesPanel v-else-if="tab === 'settings'" :editor="editor" />
+        <MapZonesPanel
+          v-else-if="tab === 'zones'"
+          :editor="editor"
+          @tool="emit('tool', $event)"
+        />
         <MapLightingPanel
           v-else
           :editor="editor"
-          @drag-light="(kind, event) => emit('drag-light', kind, event)"
           @place-light="(kind, event) => emit('place-light', kind, event)"
         />
       </div>
@@ -98,28 +120,36 @@ import {
   Box,
   Group,
   Lightbulb,
+  Square,
+  Settings,
 } from "@lucide/vue";
+import MapPropertiesPanel from "./MapPropertiesPanel.vue";
+import MapZonesPanel from "./MapZonesPanel.vue";
 import MapLightingPanel from "./MapLightingPanel.vue";
 import MapAreasPanel from "./MapAreasPanel.vue";
 import MapObjectPalette from "./MapObjectPalette.vue";
 import MapTilePalette from "./MapTilePalette.vue";
-defineProps({ editor: Object });
+const props = defineProps({ editor: Object });
 const emit = defineEmits([
+  "tool",
   "model",
   "drag-tile",
   "collection",
   "object",
   "drag-object",
   "tab",
-  "drag-light",
   "place-light",
 ]);
-const tab = ref("tiles");
+const tab = ref(
+  props.editor.draft.document.kind === "tiles" ? "tiles" : "settings",
+);
 const labels = {
   tiles: "Плитки",
   objects: "Объекты",
   areas: "Области",
   lights: "Освещение",
+  settings: "Настройки",
+  zones: "Зоны",
 };
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 function openTab(value) {

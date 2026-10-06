@@ -50,8 +50,8 @@ test("editor drops tiles, undoes, saves versions and creates zones", async ({
       ),
     )
     .toBeUndefined();
-  await page.getByRole("tab", { name: "Настройки", exact: true }).click();
-  await page.getByRole("tab", { name: "Зоны", exact: true }).click();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await page.getByRole("button", { name: "Зоны", exact: true }).click();
   await page.getByRole("button", { name: "Новая зона", exact: true }).click();
   await page
     .getByRole("button", { name: "Добавить область", exact: true })
@@ -148,8 +148,8 @@ for (const kind of ["image-grid", "image"])
     ).toHaveCount(0);
     const p = await point(page, 3.5, 3.5);
     await page.mouse.click(p.x, p.y);
-    await page.getByRole("tab", { name: "Настройки", exact: true }).click();
-    await page.getByRole("tab", { name: "Зоны", exact: true }).click();
+    await page.getByRole("button", { name: "Настройки", exact: true }).click();
+    await page.getByRole("button", { name: "Зоны", exact: true }).click();
     await page.getByRole("button", { name: "Новая зона", exact: true }).click();
     await page
       .getByRole("button", { name: "Добавить область", exact: true })

@@ -33,7 +33,10 @@ test("records real-model lighting frame intervals with cached shadows", async ({
   await page.goto(
     "/tests/maps/fixtures/maps.html?mode=editor&realModels&lightBenchmark",
   );
-  await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
+  // Cold GLB decoding and the first three shadow passes can exceed 5 s on SwiftShader.
+  await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0, {
+    timeout: 30000,
+  });
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
   await page.waitForTimeout(1000);
   const metrics = await page.evaluate(async () => {

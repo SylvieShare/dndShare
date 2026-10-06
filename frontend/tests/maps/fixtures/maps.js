@@ -364,6 +364,7 @@ if (params.has("areaExample")) {
   }
 }
 if (params.has("lightExample")) {
+  source.document.lightingEnabled = true;
   source.document.sun = { enabled: false, angle: 225, elevation: 45 };
   source.document.grid.visible = false;
   source.document.tiles = [
@@ -386,6 +387,7 @@ if (params.has("lightExample")) {
         intensity: 12,
         radius: 4,
         enabled: true,
+        showMarker: true,
         shadows: !params.has("noShadow"),
         flicker: false,
         offset: [0, 0],
@@ -393,6 +395,7 @@ if (params.has("lightExample")) {
     ];
 }
 if (params.has("lightBenchmark")) {
+  source.document.lightingEnabled = true;
   source.document.width = source.document.height = 20;
   source.document.tiles = [];
   source.document.objects = [];
@@ -419,6 +422,7 @@ if (params.has("lightBenchmark")) {
     intensity: 12,
     radius: 8,
     enabled: true,
+    showMarker: true,
     shadows: true,
     flicker: true,
     offset: [0, 0],

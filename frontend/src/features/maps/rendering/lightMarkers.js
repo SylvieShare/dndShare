@@ -27,6 +27,7 @@ export function createLightMarkers() {
     key = next;
     clear();
     for (const light of lights) {
+      if (!light.showMarker && light.id !== options.previewLight?.id) continue;
       const node = new Group(),
         selected =
           light.id === options.selectedLight ||

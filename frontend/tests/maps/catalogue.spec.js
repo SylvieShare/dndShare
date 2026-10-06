@@ -100,7 +100,9 @@ test("admin tile reference saves a fresh version and leaves existing map tiles u
   page,
 }) => {
   await ready(page);
-  await page.getByRole("tab", { name: "Предметы", exact: true }).click();
+  await expect(
+    page.getByRole("tab", { name: "Предметы", exact: true }),
+  ).toHaveCount(0);
   await expect(page.locator(".map-model-card button")).toHaveCount(0);
   await page
     .getByRole("tab", { name: "Справочник тайлов", exact: true })

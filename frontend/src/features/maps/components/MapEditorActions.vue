@@ -24,7 +24,11 @@
     <RemoveButton
       icon="trash"
       variant="boxed"
-      :disabled="!editor.selectedTiles.length && !editor.selectedObject"
+      :disabled="
+        !editor.selectedTiles.length &&
+        !editor.selectedObject &&
+        !editor.selectedLight
+      "
       :label="
         editor.selectedTiles.length && editor.selectedObjects.length
           ? 'Удалить выбранное'
@@ -34,7 +38,9 @@
               ? 'Удалить плитки'
               : editor.selectedTiles.length
                 ? 'Удалить плитку'
-                : 'Удалить объект'
+                : editor.selectedLight
+                  ? 'Удалить источник света'
+                  : 'Удалить объект'
       "
       @click="editor.removeSelected"
     />
@@ -53,12 +59,13 @@
       ><Redo2 :size="20"
     /></ActionButton>
     <ActionButton
-      v-if="editor.draft.document.kind === 'tiles'"
+      v-if="editor.draft.document.kind === 'tiles' || editor.selectedLight"
       variant="secondary"
       :disabled="
         !editor.selection &&
         !editor.selectedTiles.length &&
-        !editor.selectedObject
+        !editor.selectedObject &&
+        !editor.selectedLight
       "
       aria-label="Копировать участок"
       title="Копировать участок · Ctrl/Cmd+C"

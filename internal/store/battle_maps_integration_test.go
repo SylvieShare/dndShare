@@ -52,11 +52,13 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaMeasuredPlacementPointsSQL)
 	exec(schemaMapAreasSQL)
 	exec(schemaMapLightingSQL)
+	exec(schemaMapLightingModeSQL)
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
 	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
+	preset.Document.LightingEnabled = true
 	preset.Document.Sun = &battlemap.SunLight{Enabled: false, Angle: 90, Elevation: 30}
-	preset.Document.Lights = []battlemap.Light{{ID: "torch", Name: "Факел", Kind: "torch", Color: "#ffc36a", X: 3, Y: 3, Height: .9, Intensity: 8, Radius: 4, Enabled: true, Shadows: true, Offset: [2]float64{}, Anchor: &battlemap.LightAnchor{Kind: "tile", ID: preset.Document.Tiles[0].ID}, AreaID: "room"}}
+	preset.Document.Lights = []battlemap.Light{{ID: "torch", Name: "Факел", Kind: "torch", Color: "#ffc36a", X: 3, Y: 3, Height: .9, Intensity: 8, Radius: 4, Enabled: true, ShowMarker: true, Shadows: true, Offset: [2]float64{}, Anchor: &battlemap.LightAnchor{Kind: "tile", ID: preset.Document.Tiles[0].ID}, AreaID: "room"}}
 	m, err := s.SaveBattleMap(ctx, 1, BattleMap{Name: preset.Name, Document: preset.Document})
 	if err != nil {
 		t.Fatal(err)
@@ -75,8 +77,21 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	if len(b.Document.Areas) != 1 || !b.Document.Areas[0].Hidden || b.Document.Areas[0].Name != "Вход" {
 		t.Fatal("area metadata was not copied into session")
 	}
-	if b.Document.Sun.Enabled || b.Document.Sun.Angle != 90 || len(b.Document.Lights) != 1 || b.Document.Lights[0].Anchor.ID != preset.Document.Tiles[0].ID {
+	if !b.Document.LightingEnabled || !b.Document.Lights[0].ShowMarker || b.Document.Sun.Enabled || b.Document.Sun.Angle != 90 || len(b.Document.Lights) != 1 || b.Document.Lights[0].Anchor.ID != preset.Document.Tiles[0].ID {
 		t.Fatal("lighting metadata was not copied into session")
+	}
+	// Migrate existing template and session documents without losing light settings.
+	for _, table := range []string{"battle_map", "session_map"} {
+		exec("UPDATE dndshare." + table + " SET document = (document - 'lightingEnabled') || jsonb_build_object('lights', (SELECT jsonb_agg(light - 'showMarker') FROM jsonb_array_elements(document->'lights') light))")
+	}
+	exec(schemaMapLightingModeSQL)
+	migrated, err := s.GetBattleMap(ctx, 1, m.ID)
+	if err != nil || migrated.Document.LightingEnabled || !migrated.Document.Lights[0].ShowMarker || migrated.Document.Lights[0].Color != "#ffc36a" || migrated.Document.Sun.Angle != 90 {
+		t.Fatal("template lighting migration lost metadata", err)
+	}
+	migratedSession, err := s.GetSessionMap(ctx, 10, a.ID)
+	if err != nil || migratedSession.Document.LightingEnabled || !migratedSession.Document.Lights[0].ShowMarker || migratedSession.Document.Lights[0].AreaID != "room" {
+		t.Fatal("session lighting migration lost metadata", err)
 	}
 	m.Document.Tiles[0].Rotation = 90
 	if _, err := s.SaveBattleMap(ctx, 1, m); err != nil {

@@ -12,6 +12,13 @@ export function editorHints(tool, dragging) {
       "Esc — отмена вставки",
       ...camera,
     ];
+  if (tool === "light")
+    return [
+      "ЛКМ — поставить источник света",
+      "ПКМ — отмена вставки",
+      "Esc — отмена вставки",
+      ...camera,
+    ];
   if (dragging)
     return [
       "ЛКМ — разместить плитку",

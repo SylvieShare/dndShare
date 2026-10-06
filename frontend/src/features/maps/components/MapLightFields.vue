@@ -15,6 +15,14 @@
       label="Источник включён"
       @update:model-value="editor.updateLight(light.id, 'enabled', $event)"
     />
+    <FormField label="Показывать сферу"
+      ><CompactCheckbox
+        :model-value="light.showMarker"
+        label="Показывать сферу источника"
+        @update:model-value="
+          editor.updateLight(light.id, 'showMarker', $event)
+        "
+    /></FormField>
     <FormField label="Цвет" vertical
       ><ColorPresetPicker
         :model-value="light.color"
@@ -95,6 +103,7 @@
 import { computed } from "vue";
 import {
   ActionButton,
+  CompactCheckbox,
   AppSlider,
   BaseTile,
   ColorPresetPicker,

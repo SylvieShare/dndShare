@@ -27,6 +27,7 @@ export function newMap(kind = "tiles") {
       objects: [],
       zones: [],
       areas: [],
+      lightingEnabled: false,
       sun: { enabled: true, angle: 225, elevation: 45 },
       lights: [],
     },

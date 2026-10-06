@@ -3,6 +3,7 @@
     <ToggleSwitch
       :model-value="sun.enabled"
       label="Солнечный свет"
+      :disabled="!editor.draft.document.lightingEnabled"
       @update:model-value="editor.updateSun('enabled', $event)"
     />
     <FormField :label="`Направление: ${Math.round(sun.angle)}°`" vertical
@@ -11,7 +12,7 @@
         :min="0"
         :max="360"
         :step="1"
-        :disabled="!sun.enabled"
+        :disabled="!editor.draft.document.lightingEnabled || !sun.enabled"
         label="Направление солнца"
         @update:model-value="editor.updateSun('angle', $event)"
         @change="editor.finishLightEdit"
@@ -24,7 +25,7 @@
         :min="10"
         :max="85"
         :step="1"
-        :disabled="!sun.enabled"
+        :disabled="!editor.draft.document.lightingEnabled || !sun.enabled"
         label="Высота солнца"
         @update:model-value="editor.updateSun('elevation', $event)"
         @change="editor.finishLightEdit"

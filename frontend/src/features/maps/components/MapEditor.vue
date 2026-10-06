@@ -7,18 +7,6 @@
       @close="emit('close')"
       @view="setView"
     />
-    <MapItemsLibrary
-      v-if="view === 'items'"
-      :editor="e"
-      @collection="changeCollection"
-      @model="placeModel"
-      @object="placeObject"
-    />
-    <MapEditorSettings
-      v-if="view === 'settings'"
-      :editor="e"
-      @tool="startTool"
-    />
     <MapTileReference
       v-if="referenceOpened && isAdmin"
       v-show="view === 'reference'"
@@ -27,7 +15,6 @@
     />
     <div v-show="view === 'map'" class="map-editor">
       <MapTileSidebar
-        v-if="e.draft.document.kind === 'tiles'"
         :editor="e"
         @collection="changeCollection"
         @model="placeModel"
@@ -35,7 +22,7 @@
         @object="placeObject"
         @drag-object="dragObject"
         @tab="stopPlacement"
-        @drag-light="dragLight"
+        @tool="startTool"
         @place-light="placeLight"
       />
       <div class="map-editor-main">
@@ -107,8 +94,6 @@ import {
 import { ActionButton, ConfirmDialog } from "@sylvieshare/share-ui";
 import MapEditorHeader from "./MapEditorHeader.vue";
 import MapEditorActions from "./MapEditorActions.vue";
-import MapItemsLibrary from "./MapItemsLibrary.vue";
-import MapEditorSettings from "./MapEditorSettings.vue";
 import MapTileReference from "./MapTileReference.vue";
 import MapTileSidebar from "./MapTileSidebar.vue";
 import { useAccountStore } from "@/stores/account";
@@ -157,10 +142,6 @@ function changeCollection(value) {
   if (reference.value) reference.value.changeCollection(value);
   else e.collection = value;
 }
-function dragLight(kind, event) {
-  stopPlacement();
-  lightCatalogue.begin(kind, event);
-}
 async function placeLight(kind, event) {
   setView("map");
   await nextTick();
@@ -174,6 +155,7 @@ function dragModel(id, event) {
 }
 function dragObject(id, event) {
   catalogueDrag.cancel();
+  lightCatalogue.cancel();
   e.resetGesture();
   objectCatalogue.begin(id, event);
 }
@@ -261,7 +243,7 @@ function hotkey(event) {
   if (
     (event.metaKey || event.ctrlKey) &&
     event.code === "KeyC" &&
-    e.draft.document.kind === "tiles"
+    (e.draft.document.kind === "tiles" || e.selectedLight)
   ) {
     event.preventDefault();
     e.copy();
@@ -269,7 +251,11 @@ function hotkey(event) {
   if ((event.metaKey || event.ctrlKey) && event.code === "KeyV") {
     event.preventDefault();
     setView("map");
-    if (e.beginPaste())
+    if (e.copiedLight) {
+      nextTick(() =>
+        lightCatalogue.place(e.copiedLight, cursor.pointerEvent()),
+      );
+    } else if (e.beginPaste())
       nextTick(() => {
         e.previewPaste(cursor.point());
         canvas.value?.focus();

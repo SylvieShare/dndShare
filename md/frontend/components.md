@@ -348,9 +348,15 @@ editorAreas считает добавляемые/убираемые элеме�
 с обычной историей документа;
 mapAreas задаёт скрытие в редакторе/трансляции и прозрачность в сессии.
 
+MapPropertiesPanel и MapZonesPanel открываются боковыми иконками; карта остаётся
+видимой, без вложенных вкладок прежнего инспектора.
 Освещение карты — MapLightingPanel/MapLightFields/MapSunSettings на BaseTile,
-ActionButton, AppSlider, ColorPresetPicker, FormField/FormTextInput/FormSelect и
-ToggleSwitch. editorLighting объединяет изменение ползунка в один шаг истории;
-перенос из списка использует useCatalogueDrag. Маркеры источников — предметные
+ActionButton, AppSlider, ColorPresetPicker, FormField/FormTextInput/FormSelect,
+CompactCheckbox и ToggleSwitch. MapLightPresetMenu сочетает общий пунктирный
+AddButton с BasePopover и ActionButton: доменная композиция нужна для выбора
+пресета перед вставкой в координаты Three.js. editorLighting объединяет изменение
+ползунка в один шаг истории; постановка из меню и повторная вставка скопированного
+источника используют useCatalogueDrag. Галка режима восстанавливает прежний
+постоянный свет; галка сферы управляет только маркером редактора. Маркеры источников — предметные
 Three.js-сферы для ray picking; это координаты 3D-сцены. Shadow geometry хранит
 облегчённые контуры и не дублирует видимые скульптурные меши в теневых проходах.

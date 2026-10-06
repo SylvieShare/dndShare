@@ -47,9 +47,9 @@ test("grid lines remain visible in empty space and are occluded by model geometr
     height: 16,
   });
   const withGrid = await canvas.screenshot({ animations: "disabled" });
-  await page.getByRole("tab", { name: "Настройки", exact: true }).click();
+  await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await page.getByLabel("Показывать сетку", { exact: true }).click();
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page.getByRole("button", { name: "Плитки", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.grid.visible))
     .toBe(false);

@@ -19,5 +19,10 @@ export function useMapCursor(editor, canvas, catalogueDrag) {
     window.removeEventListener("pointermove", remember);
     window.removeEventListener("pointerdown", remember);
   });
-  return { point, moved };
+  return {
+    point,
+    moved,
+    pointerEvent: () =>
+      pointer ? { ...pointer, type: "pointermove" } : { type: "keydown" },
+  };
 }

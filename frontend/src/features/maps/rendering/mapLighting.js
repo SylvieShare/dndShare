@@ -29,37 +29,58 @@ export function createMapLighting(scene, gpu, assets) {
     proxyKey = "",
     active = [],
     clock = 0,
-    sunKey = "";
+    sunKey = "",
+    enabled = false;
   function update(d, options, context, placed, objects, view) {
+    enabled = !!d.lightingEnabled;
+    gpu.shadowMap.enabled = enabled;
+    proxies.root.visible = enabled;
     const settings = d.sun || DEFAULT_SUN,
-      sky = JSON.stringify([settings, d.width, d.height, options.sceneHeight]);
-    sun.visible = settings.enabled;
-    fill.visible = settings.enabled;
-    ambient.intensity = settings.enabled ? 0.6 : 0.28;
+      sky = JSON.stringify([
+        enabled,
+        settings,
+        d.width,
+        d.height,
+        options.sceneHeight,
+      ]);
+    sun.visible = !enabled || settings.enabled;
+    sun.castShadow = enabled && settings.enabled;
+    sun.intensity = enabled ? 2.8 : 3;
+    fill.visible = !enabled || settings.enabled;
+    fill.color.set(enabled ? 0xbdcfff : 0xe0e8ff);
+    fill.intensity = enabled ? 0.18 : 0.6;
+    ambient.color.set(enabled ? 0xcbd5ee : 0xffffff);
+    ambient.groundColor.set(enabled ? 0x695641 : 0x625141);
+    ambient.intensity = enabled ? (settings.enabled ? 0.6 : 0.28) : 2;
     if (sky !== sunKey) {
       sunKey = sky;
-      const angle = (settings.angle * Math.PI) / 180,
-        e = (settings.elevation * Math.PI) / 180,
-        distance = Math.max(d.width, d.height) * 2 + 30;
-      const center = new Vector3(d.width / 2, 0, d.height / 2);
-      sun.target.position.copy(center);
-      sun.position
-        .copy(center)
-        .add(
-          new Vector3(
-            Math.sin(angle) * Math.cos(e) * distance,
-            Math.sin(e) * distance,
-            Math.cos(angle) * Math.cos(e) * distance,
-          ),
-        );
-      const radius = Math.hypot(d.width, d.height) / 2 + 10,
-        c = sun.shadow.camera;
-      c.left = c.bottom = -radius;
-      c.right = c.top = radius;
-      c.near = 0.1;
-      c.far = distance * 3;
-      c.updateProjectionMatrix();
-      gpu.shadowMap.needsUpdate = true;
+      if (!enabled) {
+        sun.target.position.set(0, 0, 0);
+        sun.position.set(-20, 40, -25);
+      } else {
+        const angle = (settings.angle * Math.PI) / 180,
+          e = (settings.elevation * Math.PI) / 180,
+          distance = Math.max(d.width, d.height) * 2 + 30;
+        const center = new Vector3(d.width / 2, 0, d.height / 2);
+        sun.target.position.copy(center);
+        sun.position
+          .copy(center)
+          .add(
+            new Vector3(
+              Math.sin(angle) * Math.cos(e) * distance,
+              Math.sin(e) * distance,
+              Math.cos(angle) * Math.cos(e) * distance,
+            ),
+          );
+        const radius = Math.hypot(d.width, d.height) / 2 + 10,
+          c = sun.shadow.camera;
+        c.left = c.bottom = -radius;
+        c.right = c.top = radius;
+        c.near = 0.1;
+        c.far = distance * 3;
+        c.updateProjectionMatrix();
+        gpu.shadowMap.needsUpdate = true;
+      }
     }
     const all = [
       ...(d.lights || []).filter((l) => l.id !== options.previewLight?.id),
@@ -73,7 +94,7 @@ export function createMapLighting(scene, gpu, assets) {
       options,
     );
     const next = all
-      .filter((l) => l.enabled && l.opacity > 0)
+      .filter((l) => enabled && l.enabled && l.opacity > 0)
       .sort(
         (a, b) =>
           Number(b.id === options.selectedLight) -
@@ -118,13 +139,16 @@ export function createMapLighting(scene, gpu, assets) {
       light.intensity = source.intensity * source.opacity;
     });
     active = next;
-    const nextProxy = proxies.update(d, placed, objects, options);
+    const nextProxy = enabled
+      ? proxies.update(d, placed, objects, options)
+      : "";
     if (proxyKey !== nextProxy) {
       proxyKey = nextProxy;
       gpu.shadowMap.needsUpdate = true;
     }
   }
   function advance(delta, tileMatrix, objects) {
+    if (!enabled) return false;
     clock += delta / 1000;
     if (proxies.advance(tileMatrix, objects)) gpu.shadowMap.needsUpdate = true;
     let moving = false;
