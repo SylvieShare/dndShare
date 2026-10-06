@@ -6,6 +6,8 @@ import { makeRaisedPainter } from "./raised_material.mjs";
 import { paintFloorJoint } from "./floor_seams.mjs";
 import { makeMetalPainter } from "./measured_metal.mjs";
 import { paintDoorBar } from "./ultimate_door.mjs";
+import { makeBridgePainter } from "./bridge_material.mjs";
+import { makeAddedBonePainter } from "./added_bones.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 const code = process.argv[2],
@@ -27,7 +29,7 @@ const versions = registry
   )
   .sort((a, b) => b.version - a.version);
 const model = versions[0];
-if (model.textureDetail === "detailed")
+if (model.textureDetail === "detailed" && !process.argv.includes("--force"))
   throw new Error("Already detailed: " + code);
 let reference;
 const collectionBase = path.resolve(
@@ -75,6 +77,19 @@ if (spec.material === "bones") {
   );
   painter = makeRaisedPainter(floor, spec);
   parts = ["stone", "bone"];
+} else if (spec.material === "added-bones") {
+  const directory = path.join(collectionBase, "added-reference", code);
+  const reference = {
+    spec: JSON.parse(
+      await fs.readFile(path.join(directory, "reference.json"), "utf8"),
+    ),
+    data: await fs.readFile(path.join(directory, "distance.bin")),
+  };
+  painter = makeAddedBonePainter(reference, spec);
+  parts = ["stone", "bone"];
+} else if (spec.material === "bridge-bones") {
+  painter = makeBridgePainter(code);
+  parts = code === "UD-019" ? ["stone", "bone", "iron"] : ["stone", "bone"];
 } else if (spec.material === "door-bar") {
   painter = paintDoorBar;
   parts = ["stone", "wood", "iron"];
@@ -88,7 +103,7 @@ await prepareSurfaceRevision({
   folder: "ultimate-detail/" + code,
   recipe: "ultimate-individual-materials-v1",
   paintPixel: (rgb, p, n, ao) => {
-    const painted = painter(rgb, p, n);
+    const painted = painter(rgb, p, n, ao);
     if (
       ["iron", "wood", "bone", "cloth", "water", "gold", "crystal"].includes(
         painted.part,

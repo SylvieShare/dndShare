@@ -36,6 +36,10 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   const report = JSON.parse(
     await fs.readFile(path.join(directory, "report.json"), "utf8"),
   );
+  const inputVersion = process.argv
+    .find((a) => a.startsWith("--version="))
+    ?.slice(10);
+  if (inputVersion && report.model.version !== Number(inputVersion)) continue;
   if (report.recipe !== recipe) throw new Error("Unexpected colour recipe");
   const temporary = path.join(directory, "preview-next.webp");
   await sharp(path.join(directory, "preview.png"))

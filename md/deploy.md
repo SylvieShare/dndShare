@@ -379,19 +379,23 @@ Manifest проверяется на совместимость, новая ви
 
 `prepare-ud013-floor.py` измеряет высоты пола исходного пустого угла UD-014
 и сохраняет сетку 0,1 мм в models/collections/ud013-floor.json. Значения ниже
-поверхности пола исключаются из эталона. `node scripts/maps/paint-ud013.mjs`
+поверхности пола исключаются из эталона. Затем Blender запускает
+`prepare-ud013-wall-reference.py`: две сетки расстояний до кладки UD-014 отделяют
+черепа, пересекающие стену, от каменной поверхности. `node scripts/maps/paint-ud013.mjs`
 отделяет две каменные стены от насыпи костей; низкие детали сравниваются с высотой
 эталонного пола, чтобы не использовать один общий горизонтальный срез.
 ud013_material.mjs восстанавливает вариацию запечённого рельефа из старой смеси
-камня и кости, задаёт холодную кладку и состаренный светлый тон костяных деталей.
+камня и кости. `ud013-bone-centres.json` размечает отдельные черепа;
+bone_finish.mjs задаёт светлые, сероватые и потемневшие оттенки, загрязнения
+в углублениях и потёртые кромки. Пол сохраняет усиленные тёмные швы.
 Geometry/UV, normal, AO и metallic сохраняются; меняются albedo и roughness.
 Albedo — 2048×2048 / 1024×1024, textureDetail новой версии — detailed.
 
-Результаты: models/collections/ud013-painted. Превью создаётся через
-preview-model-revisions.py с `-- --base models/collections/ud013-painted --size 512 --front`.
-Упаковка: `node scripts/maps/package-masonry.mjs --base=models/collections/ud013-painted --recipe=ud013-measured-bones-v1`.
+Результаты: models/collections/ud013-aged-bones. Превью создаётся через
+preview-model-revisions.py с `-- --base models/collections/ud013-aged-bones --size 512 --inside --review`.
+Упаковка: `node scripts/maps/package-masonry.mjs --base=models/collections/ud013-aged-bones --recipe=ud013-aged-ivory-v2`.
 Проверки: `node --test scripts/maps/ud013_material.test.mjs` и
-`node scripts/maps/validate-masonry.mjs --base=ud013-painted --roughness`.
+`node scripts/maps/validate-masonry.mjs --base=ud013-aged-bones --roughness`.
 Совместимость manifest и загрузка через MCP используют общий клиент.
 
 ### Упрощённые монтажные выступы

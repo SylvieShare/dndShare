@@ -96,5 +96,103 @@
     "referencePage": 3,
     "material": "stone",
     "notes": "Stone around the broken hole, worn fracture edges and dark recessed joints; the shaft remains open."
+  },
+  "UD-019": {
+    "sourceName": "Bridge",
+    "referencePage": 4,
+    "material": "bridge-bones",
+    "notes": "Six skulls and the long bones at both ends are ivory; both middle chains and both padlocks are separate dark iron. Preserve 3\u00d71 placement and stone masonry."
+  },
+  "UD-020": {
+    "sourceName": "Bridge Broken",
+    "referencePage": 4,
+    "material": "bridge-bones",
+    "notes": "Two skulls and femurs measured as 3D surfaces on the collapsed foreground; preserve 1\u00d71 placement and the decorative overhang."
+  },
+  "UD-021": {
+    "sourceName": "Stair 1",
+    "referencePage": 4,
+    "material": "added-bones",
+    "bareReference": "UD-102",
+    "notes": "The supplied STL has one femur; isolate its measured capsule and keep the differing stone chips out of the bone comparison.",
+    "boneRegions": [
+      {
+        "line": [
+          [-2.2, 5],
+          [2.1, 15.6]
+        ],
+        "radius": 1.25,
+        "z": [22, 30]
+      }
+    ]
+  },
+  "UD-022": {
+    "sourceName": "Stair 2",
+    "referencePage": 4,
+    "material": "added-bones",
+    "bareReference": "UD-102",
+    "notes": "Two femurs in the supplied STL, separately measured on their treads; stone chips and neighbouring risers stay grey.",
+    "boneRegions": [
+      {
+        "line": [
+          [-6.34, 15.95],
+          [-5.06, 7.89]
+        ],
+        "radius": 1.25,
+        "z": [23.6, 25.5]
+      },
+      {
+        "line": [
+          [7.29, -5.48],
+          [9.23, -14.93]
+        ],
+        "radius": 1.3,
+        "z": [33.4, 35.4]
+      }
+    ]
+  },
+  "UD-023": {
+    "sourceName": "Level",
+    "referencePage": 4,
+    "material": "stone",
+    "notes": "Stone level frame, weathered upper lip and the empty interior; preserve the socket geometry and placement datum."
+  },
+  "UD-024": {
+    "sourceName": "Stair Angle",
+    "referencePage": 4,
+    "material": "added-bones",
+    "bareReference": "UD-103",
+    "notes": "Compare to the matching bare angled staircase; grey stone on all levels and aged bone on each skull.",
+    "boneRegions": [
+      {
+        "centre": [10.9, 12.45],
+        "radius": 3.5,
+        "z": [19.8, 24.5]
+      },
+      {
+        "centre": [0.17, 5.38],
+        "radius": 3.7,
+        "z": [24.5, 28.5]
+      },
+      {
+        "centre": [1, -13.64],
+        "radius": 3.7,
+        "z": [29.5, 33.5]
+      },
+      {
+        "line": [
+          [-5.34, -4.18],
+          [-5.73, -12.13]
+        ],
+        "radius": 1.25,
+        "z": [22.9, 25.5]
+      }
+    ]
+  },
+  "UD-026": {
+    "sourceName": "Stair Down",
+    "referencePage": 4,
+    "material": "stone",
+    "notes": "Recessed descending steps, worn rim and dark stone mortar; keep the opening and levels intact."
   }
 }

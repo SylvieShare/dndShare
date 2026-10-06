@@ -39,8 +39,13 @@ def preview(report, size=256, front=False, review=False, inside=False):
     camera = bpy.data.objects.new('Camera', bpy.data.cameras.new('Camera'))
     scene.collection.objects.link(camera)
     camera.data.type = 'ORTHO'
-    camera.data.ortho_scale = max(row['width'], row['height'], row['maxHeight'], 1)*1.5
-    centre = Vector((0, 0, (row['maxHeight']-row['mountDepth'])/2))
+    bpy.context.view_layer.update()
+    bounds = [obj.matrix_world@Vector(corner) for obj in scene.objects
+              if obj.type == 'MESH' for corner in obj.bound_box]
+    low = Vector(tuple(min(point[axis] for point in bounds) for axis in range(3)))
+    high = Vector(tuple(max(point[axis] for point in bounds) for axis in range(3)))
+    camera.data.ortho_scale = max(*(high-low), 1)*1.5
+    centre = (low+high)/2
     camera.location = centre+Vector((-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45))
     camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
     scene.camera = camera
