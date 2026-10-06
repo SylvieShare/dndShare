@@ -16,6 +16,7 @@ import altarSpecs from "./ultimate-altars.json" with { type: "json" };
 import doubleDoorSpecs from "./ultimate-double-doors.json" with { type: "json" };
 import columnSpecs from "./ultimate-columns.json" with { type: "json" };
 import boneColumnSpecs from "./ultimate-bone-columns.json" with { type: "json" };
+import bonusSpecs from "./ultimate-bonus.json" with { type: "json" };
 import { prepareSurfaceRevision } from "./prepare-surface-revision.mjs";
 import { paintFloorJoint } from "./floor_seams.mjs";
 import fs from "node:fs/promises";
@@ -37,6 +38,7 @@ const specs = {
   ...doubleDoorSpecs,
   ...columnSpecs,
   ...boneColumnSpecs,
+  ...bonusSpecs,
 };
 const code = process.argv[2];
 const requestedName = process.argv

@@ -1,0 +1,43 @@
+{
+  "UD-093": {
+    "sourceName": "Wall Round Angle",
+    "referencePage": 14,
+    "material": "stone",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Plain rounded 1x1 wall like reviewed UD-072–073; retain the curved silhouette and relief, compare two lighter texture variants."
+    },
+    "notes": "Cold grey worn masonry on both faces and upper stones, dark relief joints across the internal stone floor. Preserve rounded wall, mounting peg and all placement metadata."
+  },
+  "UD-094": {
+    "sourceName": "Stair Without Bones",
+    "referencePage": 14,
+    "material": "stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Compact solid 1x1 stair comparable to reviewed UD-007 and UD-093; keep all step edges and compare two lighter texture variants."
+    },
+    "notes": "Cold grey five worn masonry steps, end faces and base. AO follows each elevated tread and riser; no invented bones, preserve stair height and support slots."
+  },
+  "UD-095": {
+    "sourceName": "Stair Angle Without Bones",
+    "referencePage": 14,
+    "material": "stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Angular 1x1 stone stair, same five-level relief and construction as reviewed UD-094; compare two lighter texture variants."
+    },
+    "notes": "Five nested angular worn stone steps, each elevated tread and joint follows AO only. Both exposed sides, corner silhouette, base and support heights remain intact."
+  }
+}
