@@ -45,7 +45,10 @@ def support_points(obj, centre, recipe, datum):
             position=(centre[0]+(x-(recipe['width']-1)/2)*35,
                       centre[1]-(y-(recipe['height']-1)/2)*35,recipe.get('standMaxZMM',100))
             hit=tree.ray_cast(position,(0,0,-1))
-            if hit[0] is None or hit[0].z<datum+.5:
+            for _ in range(16):
+                if hit[0] is None or hit[1].z>0: break
+                hit=tree.ray_cast((position[0],position[1],hit[0].z-.01),(0,0,-1))
+            if hit[0] is None or hit[0].z<datum+.5 or hit[1].z<=0:
                 invalid.append([x,y])
             else:
                 points.append({'x':x+.5,'y':y+.5,'elevation':round(hit[0].z/35,6)})

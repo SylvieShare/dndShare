@@ -29,6 +29,11 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     for box in recipe.get('masonryOverrides',[]):
         mask=(u>=box['u'][0])&(u<=box['u'][1])&(v>=box['v'][0])&(v<=box['v'][1])&(z>=box['z'][0])&(z<=box['z'][1])
         weight=np.maximum(weight,mask.astype(np.float32))
+    normals=np.empty(len(obj.data.vertices)*3,np.float32)
+    obj.data.vertices.foreach_get('normal',normals); normals=normals.reshape(-1,3)
+    for box in recipe.get('masonryBoxes',[]):
+        mask=(x>=box['x'][0])&(x<=box['x'][1])&(y>=box['y'][0])&(y<=box['y'][1])&(z>=box['z'][0])&(z<=box['z'][1])&(distances>box.get('referenceDeltaMM',.03))&(normals[:,2]>.55)
+        weight=np.maximum(weight,mask.astype(np.float32))
     grain=1+recipe.get('stoneVariation',.035)*np.sin(x*.17+y*.13+z*.07)+.018*np.sin(x*1.83-y*1.41+z*.67)
     colour=np.array(recipe.get('masonryRGB',[.47,.445,.37]))*grain[:,None]
     colours=colours*(1-weight[:,None])+colour*weight[:,None]

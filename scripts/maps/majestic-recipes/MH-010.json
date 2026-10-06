@@ -1,0 +1,104 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 70000,
+  "lodTriangles": 30000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stone", "ruins", "outdoor", "xl"],
+  "recipe": "majestic-measured-medium-ruins-1-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2500000, 5000000],
+    "targetLODBytes": [800000, 2000000],
+    "targetShadowBytes": [60000, 170000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "551972 source triangles with two broken walls, openings, soil and scattered blocks. Compare MH-009; use 70k/30k while preserving wall openings."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-11, 29],
+      [3, 28],
+      [12, 22],
+      [22, 13],
+      [19, 1],
+      [5, -7],
+      [-9, -3],
+      [-14, 13]
+    ],
+    [
+      [-34, -2],
+      [-20, 5],
+      [-6, -3],
+      [4, -5],
+      [26, -11],
+      [19, -36],
+      [-12, -36],
+      [-34, -25]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 25,
+  "blockedCells": [],
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 15.1
+  },
+  "masonryRGB": [0.48, 0.445, 0.35],
+  "stoneVariation": 0.085,
+  "darkenJoints": true,
+  "blockers": [
+    [
+      [1.0, 0.04],
+      [2.97, 0.04],
+      [2.97, 0.3],
+      [1.0, 0.3]
+    ],
+    [
+      [2.7, 0.04],
+      [2.97, 0.04],
+      [2.97, 0.42],
+      [2.7, 0.42]
+    ],
+    [
+      [2.7, 1.05],
+      [2.97, 1.05],
+      [2.97, 1.85],
+      [2.7, 1.85]
+    ],
+    [
+      [0.06, 2.65],
+      [2.05, 2.65],
+      [2.05, 2.98],
+      [0.06, 2.98]
+    ]
+  ],
+  "masonryBoxes": [
+    {
+      "x": [-30, -10],
+      "y": [-7, 20],
+      "z": [15.1, 24]
+    },
+    {
+      "x": [-44, -30],
+      "y": [-34, -18],
+      "z": [15.1, 23]
+    }
+  ]
+}
