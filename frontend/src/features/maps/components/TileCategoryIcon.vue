@@ -47,7 +47,7 @@ function solid(polygon, height, bottom = 0) {
       .flatMap((p, i) => {
         const q = polygon[(i + 1) % polygon.length];
         // The camera faces +X/+Y; omit edges whose outward normal faces away.
-        if (q[0] - p[0] <= q[1] - p[1]) return [];
+        if (q[0] - p[0] >= q[1] - p[1]) return [];
         return [
           {
             depth: p[0] + p[1] + q[0] + q[1],
