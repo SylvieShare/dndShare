@@ -1,0 +1,223 @@
+{
+  "UD-069": {
+    "sourceName": "Small Wall Skulls 1",
+    "referencePage": 10,
+    "material": "added-bones",
+    "boneRegions": [
+      {
+        "centre": [13.3, 13.5],
+        "radius": 4.1,
+        "z": [30.05, 35]
+      },
+      {
+        "centre": [13.1, -9.6],
+        "radius": 4,
+        "z": [23.65, 28]
+      },
+      {
+        "line": [
+          [-14.28, 3.19],
+          [-13.77, -7.7]
+        ],
+        "radius": 0.72,
+        "z": [13.32, 15.9],
+        "direct": true,
+        "jointRadius": 1.27
+      },
+      {
+        "line": [
+          [-6.58, 7.3],
+          [0, -0.3]
+        ],
+        "radius": 0.8,
+        "z": [13.32, 15.9],
+        "direct": true,
+        "jointRadius": 1.35
+      },
+      {
+        "line": [
+          [3.39, -12.01],
+          [8.53, -13.76]
+        ],
+        "radius": 0.65,
+        "z": [13.32, 15.9],
+        "direct": true,
+        "jointRadius": 1.2000000000000002
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [13.3, 13.5, 32],
+        "tone": "ivory"
+      },
+      {
+        "position": [13.1, -9.6, 25],
+        "tone": "grey"
+      },
+      {
+        "position": [-14, -2, 14],
+        "tone": "old"
+      },
+      {
+        "position": [-3, 3, 14],
+        "tone": "ivory"
+      },
+      {
+        "position": [6, -13, 14],
+        "tone": "grey"
+      }
+    ],
+    "notes": "Two separately bounded skulls on stone caps and three measured floor bones. The bare wall protects skull caps; floor bone shafts and joints use measured direct regions because the empty variant has a different cobble layout."
+  },
+  "UD-072": {
+    "sourceName": "Small Wall",
+    "referencePage": 10,
+    "material": "stone",
+    "notes": "Worn cold-grey low masonry and dark cobble joints; preserve the irregular single row."
+  },
+  "UD-073": {
+    "sourceName": "Small Angle",
+    "referencePage": 10,
+    "material": "stone",
+    "notes": "Worn cold-grey low corner masonry and dark cobble joints; preserve both edge walls."
+  },
+  "UD-070": {
+    "sourceName": "Small Wall Skulls 2",
+    "referencePage": 10,
+    "material": "added-bones",
+    "boneRegions": [
+      {
+        "centre": [13.4, 14.4],
+        "radius": 3.7,
+        "z": [18.95, 24],
+        "direct": true
+      },
+      {
+        "centre": [13.1, 0],
+        "radius": 4,
+        "z": [30, 34.3]
+      },
+      {
+        "line": [
+          [-14.66, 9.44],
+          [-13.02, 4.73]
+        ],
+        "radius": 0.7,
+        "z": [13.32, 16.5],
+        "direct": true,
+        "jointRadius": 1.25
+      },
+      {
+        "line": [
+          [-1.03, 9.44],
+          [8.31, 4.31]
+        ],
+        "radius": 0.78,
+        "z": [13.32, 16.5],
+        "direct": true,
+        "jointRadius": 1.33
+      },
+      {
+        "line": [
+          [-1.23, -14.86],
+          [9.02, -11.79]
+        ],
+        "radius": 0.72,
+        "z": [13.8, 16.5],
+        "direct": true,
+        "jointRadius": 1.27
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [13.4, 14.4, 21],
+        "tone": "old"
+      },
+      {
+        "position": [13.1, 0, 32],
+        "tone": "ivory"
+      },
+      {
+        "position": [-13, 7, 14],
+        "tone": "grey"
+      },
+      {
+        "position": [4, 7, 14],
+        "tone": "ivory"
+      },
+      {
+        "position": [4, -13, 15],
+        "tone": "old"
+      }
+    ],
+    "notes": "Two bounded skulls on separate stone levels, two long bones and a broken floor bone. Direct measured shaft and joint contours avoid the different cobble layout in the bare small wall."
+  },
+  "UD-071": {
+    "sourceName": "Small Angle Skulls",
+    "referencePage": 10,
+    "material": "added-bones",
+    "boneRegions": [
+      {
+        "centre": [-14.3, 14],
+        "radius": 3.65,
+        "z": [19.15, 24],
+        "direct": true
+      },
+      {
+        "centre": [4.1, 13.9],
+        "radius": 3.6,
+        "z": [23.7, 28.4],
+        "direct": true
+      },
+      {
+        "centre": [13.3, 3.7],
+        "radius": 3.9,
+        "z": [24.65, 29.5],
+        "direct": true
+      },
+      {
+        "line": [
+          [-8.41, 8.11],
+          [-2.15, 2.47]
+        ],
+        "radius": 0.78,
+        "jointRadius": 1.35,
+        "z": [13.25, 15.9],
+        "direct": true
+      },
+      {
+        "line": [
+          [-4.31, -4.2],
+          [2.05, 2.37]
+        ],
+        "radius": 0.8,
+        "jointRadius": 1.35,
+        "z": [13.25, 15.9],
+        "direct": true
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [-14.3, 14, 21],
+        "tone": "grey"
+      },
+      {
+        "position": [4.1, 13.9, 26],
+        "tone": "ivory"
+      },
+      {
+        "position": [13.3, 3.7, 27],
+        "tone": "old"
+      },
+      {
+        "position": [-5, 5, 14],
+        "tone": "grey"
+      },
+      {
+        "position": [-1, -1, 14],
+        "tone": "ivory"
+      }
+    ],
+    "notes": "Three individually bounded skulls and two measured floor bones; repair the old ivory-coloured side wall to cold grey. Stone caps remain below separate measured skull boundaries."
+  }
+}

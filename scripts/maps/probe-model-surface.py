@@ -8,7 +8,8 @@ from mathutils import Vector
 parser=argparse.ArgumentParser()
 parser.add_argument('--report',type=Path,required=True)
 parser.add_argument('--size',type=int,default=1024)
-parser.add_argument('--points',nargs='+',required=True)
+parser.add_argument('--points',nargs='+',default=[])
+parser.add_argument('--project',nargs='+',default=[])
 parser.add_argument('--view',choices=['top','inside','front','reverse'],default='top')
 parser.add_argument('--normals',action='store_true')
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
@@ -27,6 +28,11 @@ high=Vector(tuple(max(p[a] for p in bounds) for a in range(3)))
 centre=(low+high)/2;scale=max(*(high-low),1)*1.5
 directions={'top':(0,-.01,5),'inside':(-2,-2.85,2.45),'front':(-2,2.85,2.45),'reverse':(2,-2.85,2.45)}
 camera=centre+Vector(directions[args.view]);rotation=(centre-camera).to_track_quat('-Z','Y')
+for text in args.project:
+    x,y,z=map(float,text.split(','))
+    world=Vector((x/35+model['placementOffset'][0],y/35-model['placementOffset'][1],z/35-model['mountDepth']))
+    local=rotation.inverted()@(world-camera)
+    print('PROJECTED_POINT',text,[round((local.x/scale+.5)*args.size,2),round((.5-local.y/scale)*args.size,2)],flush=True)
 graph=bpy.context.evaluated_depsgraph_get()
 for text in args.points:
     x,y=map(float,text.split(','))

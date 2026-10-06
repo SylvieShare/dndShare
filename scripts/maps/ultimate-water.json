@@ -1,0 +1,91 @@
+{
+  "UD-074": {
+    "sourceName": "Water",
+    "referencePage": 10,
+    "material": "water",
+    "variant": "plain",
+    "waterMinZ": 5.8,
+    "notes": "Cool blue water with pale wave crests and low roughness follows the actual thin slab height, correcting the old all-stone mask. Preserve the authored ripples and neutral insertion base."
+  },
+  "UD-075": {
+    "sourceName": "Water With Rocks",
+    "referencePage": 10,
+    "material": "water",
+    "variant": "rocks",
+    "waterMinZ": 5.8,
+    "stoneMinZ": 9.5,
+    "stoneDatum": 5.8,
+    "notes": "Three grey exposed stone blocks above the local measured wave crests (up to 9.30 mm). Use the 9.5 mm water line to keep surrounding sculpted ripples blue and lower stone edges submerged; preserve the flow around all three rocks."
+  },
+  "UD-076": {
+    "sourceName": "Water With Skulls",
+    "referencePage": 10,
+    "material": "water",
+    "variant": "bones",
+    "waterMinZ": 5.8,
+    "heads": [
+      {
+        "centre": [-0.72, 9.84, 9.9],
+        "radius": [3, 2.9, 1.9]
+      },
+      {
+        "centre": [-2.4, 7.9, 8.9],
+        "radius": [1.6, 1.4, 1.2]
+      },
+      {
+        "centre": [9.64, -9.03, 10.2],
+        "radius": [3.45, 3, 2.2]
+      },
+      {
+        "centre": [7.1, -8, 9],
+        "radius": [1.7, 1.6, 1.1]
+      }
+    ],
+    "bones": [
+      {
+        "line": [
+          [-13.02, -2.36],
+          [-0.41, -9.44]
+        ],
+        "radius": 0.85,
+        "jointRadius": 1.35,
+        "minZ": 8
+      },
+      {
+        "line": [
+          [-3.25, -4.85],
+          [-1.7, -4.1]
+        ],
+        "radius": 0.6,
+        "jointRadius": 0.9,
+        "minZ": 8.2
+      }
+    ],
+    "boneGroups": [
+      {
+        "position": [-0.72, 9.84, 10],
+        "tone": "grey"
+      },
+      {
+        "position": [9.64, -9.03, 11],
+        "tone": "ivory"
+      },
+      {
+        "position": [-6, -6, 9.5],
+        "tone": "old"
+      }
+    ],
+    "notes": "Two separately measured ivory skulls, one long bone and a small fragment above the water line, with different age tones. Shared blue waves and low roughness remain around the bone boundaries."
+  },
+  "UD-077": {
+    "sourceName": "Well Water",
+    "referencePage": 10,
+    "material": "water",
+    "variant": "well",
+    "centre": [0, 0],
+    "radius": 9.85,
+    "waterMinZ": 20,
+    "waterMaxZ": 22.25,
+    "notes": "Blue swirling water is confined to the measured inner disk; include the raised spiral crests at z 21.72 mm. Restore the entire cobbled floor and both faces of the stone ring to grey, correcting the old water-coloured masonry."
+  }
+}

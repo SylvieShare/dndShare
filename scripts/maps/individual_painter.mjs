@@ -18,6 +18,7 @@ import { makePrisonPainter } from "./prison_material.mjs";
 import { makeTorturePainter } from "./torture_material.mjs";
 import { makeUtilityPainter } from "./utility_material.mjs";
 import { makeWeaponsPainter } from "./weapons_material.mjs";
+import { makeWaterPainter } from "./water_material.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 export async function individualPainter({ code, spec, model, collectionBase }) {
@@ -26,7 +27,10 @@ export async function individualPainter({ code, spec, model, collectionBase }) {
     parts = ["base", "floor", "wall"];
   if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
     parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
-  if (spec.material === "weapons") {
+  if (spec.material === "water") {
+    painter = makeWaterPainter(spec);
+    parts = ["stone", "water", ...(spec.variant === "bones" ? ["bone"] : [])];
+  } else if (spec.material === "weapons") {
     painter = makeWeaponsPainter(spec);
     parts = ["stone", "rope", "beam", "post", "shaft", "iron"];
   } else if (spec.material === "utility") {

@@ -27,15 +27,24 @@ function inRegion(p, region) {
     0,
     Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy)),
   );
-  return Math.hypot(x - a[0] - t * dx, y - a[1] - t * dy) < region.radius;
+  return (
+    Math.hypot(x - a[0] - t * dx, y - a[1] - t * dy) < region.radius ||
+    (region.jointRadius &&
+      [a, b].some(
+        ([cx, cy]) => Math.hypot(x - cx, y - cy) < region.jointRadius,
+      ))
+  );
 }
 export function makeAddedBonePainter(reference, spec) {
   return (rgb, p, n, ao) => {
     const detail = pairDetail(rgb, [0.79, 0.72, 0.52]);
-    const permitted =
-      !spec.boneRegions || spec.boneRegions.some((r) => inRegion(p, r));
-    if (permitted && addedDistance(p, reference) > 0.4)
-      return finishBone(detail, p, ao);
+    const regions = spec.boneRegions?.filter((r) => inRegion(p, r));
+    const permitted = !regions || regions.length > 0;
+    if (
+      permitted &&
+      (regions?.some((r) => r.direct) || addedDistance(p, reference) > 0.4)
+    )
+      return finishBone(detail, p, ao, spec.boneGroups);
     const stone = OLD_STONE.map((v) =>
       Math.round(Math.min(1, toSrgb(srgbToLinear(v) * detail)) * 255),
     );
