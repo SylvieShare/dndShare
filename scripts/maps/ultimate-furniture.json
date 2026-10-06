@@ -1,0 +1,39 @@
+{
+  "UD-031": {
+    "sourceName": "Ground Table Full",
+    "referencePage": 5,
+    "material": "table",
+    "full": true,
+    "bareReference": "UD-032",
+    "notes": "Longitudinal tabletop boards and vertical legs; four ochre plates, dark ceramic cups, a clay bottle, silver spoons, a woven basket and three individually coloured fruit. Grey paving below."
+  },
+  "UD-032": {
+    "sourceName": "Ground Table Empty",
+    "referencePage": 5,
+    "material": "table",
+    "full": false,
+    "notes": "Weathered grey-brown wood with grain along the tabletop boards and vertically on the legs; grey stone paving and dark recessed mortar below."
+  },
+  "UD-033": {
+    "sourceName": "Ground Bench",
+    "bench": true,
+    "referencePage": 5,
+    "material": "table",
+    "full": false,
+    "boardAxis": "x",
+    "seatHeight": 18.4,
+    "notes": "Grain follows the long bench boards and vertical short legs; worn timber stays separate from grey stone paving."
+  },
+  "UD-034": {
+    "sourceName": "Wall Barrel",
+    "referencePage": 5,
+    "material": "barrel",
+    "notes": "Horizontal barrel staves, vertically boarded end, diagonal wooden supports; four transverse iron hoops and the separate protruding middle chain; grey wall and stone floor."
+  },
+  "UD-035": {
+    "sourceName": "Ground Wood",
+    "referencePage": 5,
+    "material": "wood-floor",
+    "notes": "Six longitudinal boards with varied aged timber tones; twelve individually measured iron nail heads. The thin stone base and gaps below z=8.3 mm stay grey."
+  }
+}

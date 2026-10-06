@@ -1,5 +1,6 @@
 // Deliberately prepare one reviewed catalogue entry per invocation.
-import specs from "./ultimate-detail.json" with { type: "json" };
+import earlierSpecs from "./ultimate-detail.json" with { type: "json" };
+import furnitureSpecs from "./ultimate-furniture.json" with { type: "json" };
 import { prepareSurfaceRevision } from "./prepare-surface-revision.mjs";
 import { paintStone } from "./ultimate_surface.mjs";
 import { makeRaisedPainter } from "./raised_material.mjs";
@@ -11,8 +12,12 @@ import { makeAddedBonePainter } from "./added_bones.mjs";
 import { paintPedestal } from "./ud025_material.mjs";
 import { makeBedPainter } from "./bed_material.mjs";
 import { paintWallBags, paintGroundBags } from "./sacks_material.mjs";
+import { makeTablePainter } from "./table_material.mjs";
+import { paintBarrel } from "./barrel_material.mjs";
+import { paintWoodFloor } from "./wood_floor_material.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
+const specs = { ...earlierSpecs, ...furnitureSpecs };
 const code = process.argv[2],
   spec = specs[code];
 if (!spec)
@@ -91,6 +96,29 @@ if (spec.material === "bones") {
   };
   painter = makeAddedBonePainter(reference, spec);
   parts = ["stone", "bone"];
+} else if (spec.material === "wood-floor") {
+  painter = paintWoodFloor;
+  parts = ["stone", "wood", "iron"];
+} else if (spec.material === "barrel") {
+  painter = paintBarrel;
+  parts = ["stone", "wood", "chain", "hoop"];
+} else if (spec.material === "table") {
+  let bare;
+  if (spec.bareReference) {
+    const directory = path.join(collectionBase, "added-reference", code);
+    bare = {
+      spec: JSON.parse(
+        await fs.readFile(path.join(directory, "reference.json"), "utf8"),
+      ),
+      data: await fs.readFile(path.join(directory, "distance.bin")),
+    };
+    if (bare.spec.bare !== spec.bareReference)
+      throw new Error("Unexpected bare furniture reference: " + code);
+  }
+  painter = makeTablePainter(spec, bare);
+  parts = spec.full
+    ? ["stone", "wood", "plate", "ceramic", "iron", "basket", "fruit"]
+    : ["stone", "wood"];
 } else if (spec.material === "ground-bags") {
   painter = paintGroundBags;
   parts = ["stone", "ceramic", "leather", "cloth", "rope"];
