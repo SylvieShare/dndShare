@@ -1,11 +1,7 @@
 import { modelConnections } from "./tileConnections";
 import { TILE_TYPES } from "./tileCategories";
 export { TILE_TYPES } from "./tileCategories";
-export const WALL_MODES = [
-  { value: "none", label: "Без стыков" },
-  { value: "center", label: "По центру клетки" },
-  { value: "edge", label: "По краям клетки" },
-];
+export { WALL_MODES } from "./wallModes";
 export const TEXTURE_DETAILS = [
   { value: "basic", label: "Поверхностная" },
   { value: "detailed", label: "Детальная" },

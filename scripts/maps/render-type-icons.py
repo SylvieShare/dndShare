@@ -8,7 +8,8 @@ from mathutils import Vector
 
 
 KINDS = ["floor", "wall-straight", "wall-angle", "wall-tee", "wall-cross",
-         "wall-end", "wall-corner", "wall-diagonal", "stairs", "frame", "prop"]
+         "wall-end", "wall-corner", "wall-diagonal", "stairs", "frame", "prop",
+         "wall-mode-none", "wall-mode-center", "wall-mode-edge"]
 
 
 def material(name, color):
@@ -101,6 +102,21 @@ def tile(kind):
     }
     if kind in footprints:
         wall(footprints[kind])
+    if kind == "wall-mode-center":
+        wall(footprints["wall-straight"])
+        violet = material("Connection points", (.55, .32, .85))
+        for x, y in [(0, -.85), (.85, -.85), (.85, 0), (.85, .85),
+                     (0, .85), (-.85, .85), (-.85, 0), (-.85, -.85)]:
+            bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=12, radius=.09, location=(x, y, 1.36))
+            bpy.context.object.data.materials.append(violet)
+            bpy.ops.object.shade_smooth()
+    if kind == "wall-mode-edge":
+        wall(footprints["wall-angle"])
+        violet = material("Connection sides", (.55, .32, .85))
+        for x in [-.88, .88]:
+            box("Side", (x, 0, 1.36), (.12, 1.5, .16), violet)
+        for y in [-.88, .88]:
+            box("Side", (0, y, 1.36), (1.5, .12, .16), violet)
     if kind == "wall-corner":
         # UD-096 is a column at the outside corner, rather than an L-shaped wall.
         for course in range(4):
@@ -167,7 +183,8 @@ def render(kind, output):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--kinds", nargs="+", choices=KINDS, default=KINDS)
     args = parser.parse_args(sys.argv[sys.argv.index("--") + 1:])
     args.output.mkdir(parents=True, exist_ok=True)
-    for kind in KINDS:
+    for kind in args.kinds:
         render(kind, args.output)

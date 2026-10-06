@@ -1,5 +1,5 @@
 <template>
-  <div class="map-tile-category-picker" role="toolbar" aria-label="Типы тайлов">
+  <div class="map-tile-category-picker" role="toolbar" :aria-label="label">
     <ActionButton
       v-for="category in TILE_CATEGORIES"
       :key="category.value"
@@ -21,7 +21,10 @@
 import { ActionButton } from "@sylvieshare/share-ui";
 import { TILE_CATEGORIES } from "../lib/tileCategories";
 import TileCategoryIcon from "./TileCategoryIcon.vue";
-defineProps({ modelValue: { type: String, default: "floor" } });
+defineProps({
+  modelValue: { type: String, default: "floor" },
+  label: { type: String, default: "Типы тайлов" },
+});
 const emit = defineEmits(["update:modelValue"]);
 </script>
 <style scoped>

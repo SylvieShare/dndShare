@@ -260,11 +260,14 @@ test("reference uses filter categories and preserves a draft when changing packs
   );
   await expect(page.getByLabel("Форма стен", { exact: true })).toHaveCount(0);
   await expect(
-    page.getByLabel("Тип тайла", { exact: true }).locator("option"),
+    page
+      .getByRole("toolbar", { name: "Тип тайла", exact: true })
+      .getByRole("button"),
   ).toHaveCount(11);
   await page
-    .getByLabel("Тип тайла", { exact: true })
-    .selectOption("wall-angle");
+    .getByRole("toolbar", { name: "Тип тайла", exact: true })
+    .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
+    .click();
   await choosePack(page, "ultimate-dungeon");
   await expect(page.getByRole("dialog")).toContainText(
     "Отменить изменения параметров?",
@@ -272,9 +275,11 @@ test("reference uses filter categories and preserves a draft when changing packs
   await page
     .getByRole("button", { name: "Продолжить редактирование", exact: true })
     .click();
-  await expect(page.getByLabel("Тип тайла", { exact: true })).toHaveValue(
-    "wall-angle",
-  );
+  await expect(
+    page
+      .getByRole("toolbar", { name: "Тип тайла", exact: true })
+      .getByRole("button", { name: "Внутренние углы (Angle)", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(
     page
       .getByRole("region", { name: "Справочник тайлов", exact: true })

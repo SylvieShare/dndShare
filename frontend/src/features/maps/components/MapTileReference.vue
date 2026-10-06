@@ -19,8 +19,12 @@
       @keydown.meta.s.prevent.stop="reference.save"
     >
       <h2>{{ reference.base.sourceCode }} · {{ reference.base.name }}</h2>
-      <div class="map-reference-identity">
-        <img :src="selected?.previewUrl" alt="" width="160" height="160" />
+      <DetailSection
+        label="Исходные данные тайла"
+        collapsible
+        :default-open="false"
+        class="map-reference-identity"
+      >
         <dl>
           <dt>Коллекция</dt>
           <dd>
@@ -36,15 +40,45 @@
           <dt>UUID</dt>
           <dd>{{ reference.base.id }}</dd>
         </dl>
-      </div>
+      </DetailSection>
       <p class="map-hint">
         Параметры применяются к новым размещениям. Уже собранные карты сохраняют
         прежние версии тайлов. Правка разметки не меняет саму 3D-модель.
       </p>
       <fieldset :disabled="reference.saving">
-        <MapModelFields :model="reference.draft" /><MapModelSlots
-          :model="reference.draft"
-        />
+        <MapModelFields :model="reference.draft" />
+        <div class="map-model-workbench">
+          <div class="map-model-visual">
+            <MapModelPreview
+              :model="reference.draft"
+              :source="selected"
+              :active-field="activeField"
+              :selected-slot="selectedSlot"
+              :disabled="reference.saving"
+              @active="activeField = $event"
+              @slot="selectedSlot = $event"
+            />
+            <MapModelGeometryFields
+              :model="reference.draft"
+              @active="activeField = $event"
+            />
+            <p class="map-hint">
+              Монтажная часть — ниже плоскости 0. Высоты поверхности и модели
+              измеряются от нижней точки модели.
+            </p>
+          </div>
+          <div class="map-model-dimensions">
+            <MapModelSize
+              :model="reference.draft"
+              :disabled="reference.saving"
+            />
+            <MapModelSlots
+              :model="reference.draft"
+              :selected-slot="selectedSlot"
+              @select="selectedSlot = $event"
+            />
+          </div>
+        </div>
         <DetailSection
           :label="`Контуры препятствий (${reference.draft.blockers.length})`"
           collapsible
@@ -95,7 +129,7 @@
   </section>
 </template>
 <script setup>
-import { computed, reactive } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import {
   ActionButton,
   ConfirmDialog,
@@ -105,10 +139,22 @@ import {
 import { Save } from "@lucide/vue";
 import MapTilePalette from "./MapTilePalette.vue";
 import MapModelFields from "./MapModelFields.vue";
+import MapModelPreview from "./MapModelPreview.vue";
+import MapModelSize from "./MapModelSize.vue";
+import MapModelGeometryFields from "./MapModelGeometryFields.vue";
 import MapModelSlots from "./MapModelSlots.vue";
 import { useModelReference } from "../composables/useModelReference";
 const props = defineProps({ editor: Object });
 const reference = reactive(useModelReference(props.editor));
+const activeField = ref(""),
+  selectedSlot = ref(-1);
+watch(
+  () => reference.base?.id,
+  () => {
+    activeField.value = "";
+    selectedSlot.value = -1;
+  },
+);
 const selected = computed(() =>
   props.editor.catalogue.find((m) => m.id === reference.base?.id),
 );
@@ -123,7 +169,7 @@ defineExpose({
   grid-template-columns: 300px minmax(0, 1fr);
   min-height: 0;
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
 }
 .map-reference-catalogue {
   padding: 18px;
@@ -132,7 +178,7 @@ defineExpose({
 }
 .map-reference-form {
   padding: 24px;
-  max-width: 900px;
+  overflow: auto;
   min-width: 0;
 }
 .map-reference-form h2 {
@@ -146,15 +192,12 @@ defineExpose({
   min-width: 0;
 }
 .map-reference-identity {
-  display: flex;
-  gap: 18px;
-  align-items: start;
-  margin-bottom: 16px;
-}
-.map-reference-identity img {
-  object-fit: contain;
+  margin-bottom: 12px;
 }
 .map-reference-identity dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 12px;
   margin: 0;
   font-size: 12px;
   overflow-wrap: anywhere;
@@ -172,6 +215,30 @@ defineExpose({
   gap: 10px;
   margin-top: 20px;
 }
+.map-model-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: start;
+}
+.map-model-visual {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+}
+.map-model-dimensions {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+@media (max-width: 1150px) {
+  .map-model-workbench {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .map-model-visual {
+    position: static;
+  }
+}
 @media (max-width: 760px) {
   .map-tile-reference {
     grid-template-columns: minmax(0, 1fr);
@@ -183,10 +250,6 @@ defineExpose({
   }
   .map-reference-form {
     padding: 16px;
-  }
-  .map-reference-identity img {
-    width: 96px;
-    height: 96px;
   }
 }
 </style>

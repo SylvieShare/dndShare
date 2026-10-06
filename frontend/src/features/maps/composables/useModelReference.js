@@ -60,6 +60,25 @@ export function useModelReference(editor) {
     if (!draft.value || !dirty.value || saving.value) return;
     error.value = status.value = "";
     try {
+      const m = draft.value;
+      if (
+        ![
+          m.width,
+          m.height,
+          m.mountDepth,
+          m.surfaceHeight,
+          m.maxHeight,
+          ...m.placementOffset,
+          ...m.supportSlots.flatMap((s) => [
+            s.x,
+            s.y,
+            s.width,
+            s.height,
+            s.elevation,
+          ]),
+        ].every(Number.isFinite)
+      )
+        throw new Error("Заполните числовые параметры тайла и пазов");
       const contours = JSON.parse(blockers.value);
       if (
         !Array.isArray(contours) ||

@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { TILE_TYPES } from "../../frontend/src/features/maps/lib/tileCategories.js";
+import { WALL_MODES } from "../../frontend/src/features/maps/lib/wallModes.js";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const require = createRequire(
@@ -26,3 +27,12 @@ for (const { value } of TILE_TYPES) {
   bytes += (await fs.stat(file)).size;
 }
 console.log(`Exported ${TILE_TYPES.length} shared tile icons: ${bytes} bytes`);
+const modeOutput = path.join(root, "frontend/src/assets/maps/wall-modes");
+await fs.mkdir(modeOutput, { recursive: true });
+for (const { value } of WALL_MODES) {
+  await sharp(path.join(source, `wall-mode-${value}.png`))
+    .resize(192, 192)
+    .webp({ quality: 92, effort: 6 })
+    .toFile(path.join(modeOutput, `${value}.webp`));
+}
+console.log(`Exported ${WALL_MODES.length} shared wall placement icons`);
