@@ -258,6 +258,17 @@ if (params.has("shaped")) {
   top.position.set(0, 0.4, -0.4);
   wallScene.add(left, top);
   wallGlb = await new GLTFExporter().parseAsync(wallScene, { binary: true });
+  if (params.has("lightExample"))
+    catalogue.find((m) => m.id === WALL).blockers = [
+      [
+        [0, 0],
+        [1, 0],
+        [1, 0.2],
+        [0.2, 0.2],
+        [0.2, 1],
+        [0, 1],
+      ],
+    ];
 }
 source.id = "test-map";
 source.name = "Крепость на переправе";
@@ -352,6 +363,67 @@ if (params.has("areaExample")) {
     source.document.areas[0].objectIds.push("area-chest-2");
   }
 }
+if (params.has("lightExample")) {
+  source.document.sun = { enabled: false, angle: 225, elevation: 45 };
+  source.document.grid.visible = false;
+  source.document.tiles = [
+    { id: "light-floor", modelId: FLOOR, x: 4, y: 4, level: 0, rotation: 0 },
+    { id: "light-wall", modelId: WALL, x: 5, y: 4, level: 0, rotation: 0 },
+    { id: "light-receiver", modelId: FLOOR, x: 6, y: 4, level: 0, rotation: 0 },
+  ];
+  source.document.objects = [];
+  if (params.has("lit"))
+    source.document.lights = [
+      {
+        id: "test-light",
+        name: "Факел",
+        kind: "torch",
+        color: "#ff8c44",
+        x: 4.5,
+        y: 4.5,
+        elevation: 0.2,
+        height: 0.55,
+        intensity: 12,
+        radius: 4,
+        enabled: true,
+        shadows: !params.has("noShadow"),
+        flicker: false,
+        offset: [0, 0],
+      },
+    ];
+}
+if (params.has("lightBenchmark")) {
+  source.document.width = source.document.height = 20;
+  source.document.tiles = [];
+  source.document.objects = [];
+  source.document.grid.visible = false;
+  for (let y = 1; y < 19; y++)
+    for (let x = 1; x < 19; x++)
+      source.document.tiles.push({
+        id: `bench-${x}-${y}`,
+        modelId: x === 1 || y === 1 || x === 18 || y === 18 ? WALL : FLOOR,
+        x,
+        y,
+        level: 0,
+        rotation: 0,
+      });
+  source.document.lights = [0, 1].map((i) => ({
+    id: `lamp-${i}`,
+    name: "Факел",
+    kind: "torch",
+    color: i ? "#7ccaff" : "#ffc36a",
+    x: 7 + i * 6,
+    y: 9,
+    elevation: 0.3,
+    height: 1.1,
+    intensity: 12,
+    radius: 8,
+    enabled: true,
+    shadows: true,
+    flicker: true,
+    offset: [0, 0],
+  }));
+}
 let templateRevision = 1;
 let board = { ...clone(source), state: initialState() };
 board.state.zones.left = "visible";
@@ -370,6 +442,14 @@ board.state.tokens = [
   },
 ];
 if (params.has("areaExample")) {
+  board.state.fog = false;
+  board.state.tokens = [];
+}
+if (params.has("lightExample")) {
+  board.state.fog = false;
+  board.state.tokens = [];
+}
+if (params.has("lightBenchmark")) {
   board.state.fog = false;
   board.state.tokens = [];
 }

@@ -14,6 +14,11 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     )
       return null;
     if (
+      props.placementLight ||
+      (props.selectedLight && drag && !drag.pan && !drag.orbit)
+    )
+      return getRenderer().lightPoint(event);
+    if (
       props.document.kind === "tiles" &&
       (props.placementObject ||
         props.surfacePlacement ||
@@ -68,7 +73,9 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       point:
         props.tool === "paste" ||
         props.placementObject ||
-        props.surfacePlacement
+        props.surfacePlacement ||
+        props.placementLight ||
+        hit?.lightId
           ? pointAt(event)
           : hit?.point || pointAt(event),
       view: getRenderer().getView(),
@@ -85,6 +92,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   function move(event) {
     if (!getRenderer() || props.readonly) return;
     const point =
+      !props.selectedLight &&
       drag?.point?.elevation !== undefined &&
       (!props.placementModel || drag.pan || drag.orbit || drag.region)
         ? {

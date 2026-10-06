@@ -71,6 +71,7 @@ export function createTileLayer(assets, fog) {
             items.length,
           );
           mesh.userData.tiles = items;
+          mesh.receiveShadow = true;
           mesh.userData.partMatrix = part.matrix;
           applyAreaOpacity(mesh, opacity(items[0].id));
           items.forEach((tile, i) =>

@@ -51,9 +51,12 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaModelSurfacesObjectsSQL)
 	exec(schemaMeasuredPlacementPointsSQL)
 	exec(schemaMapAreasSQL)
+	exec(schemaMapLightingSQL)
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
 	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
+	preset.Document.Sun = &battlemap.SunLight{Enabled: false, Angle: 90, Elevation: 30}
+	preset.Document.Lights = []battlemap.Light{{ID: "torch", Name: "Факел", Kind: "torch", Color: "#ffc36a", X: 3, Y: 3, Height: .9, Intensity: 8, Radius: 4, Enabled: true, Shadows: true, Offset: [2]float64{}, Anchor: &battlemap.LightAnchor{Kind: "tile", ID: preset.Document.Tiles[0].ID}, AreaID: "room"}}
 	m, err := s.SaveBattleMap(ctx, 1, BattleMap{Name: preset.Name, Document: preset.Document})
 	if err != nil {
 		t.Fatal(err)
@@ -71,6 +74,9 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	}
 	if len(b.Document.Areas) != 1 || !b.Document.Areas[0].Hidden || b.Document.Areas[0].Name != "Вход" {
 		t.Fatal("area metadata was not copied into session")
+	}
+	if b.Document.Sun.Enabled || b.Document.Sun.Angle != 90 || len(b.Document.Lights) != 1 || b.Document.Lights[0].Anchor.ID != preset.Document.Tiles[0].ID {
+		t.Fatal("lighting metadata was not copied into session")
 	}
 	m.Document.Tiles[0].Rotation = 90
 	if _, err := s.SaveBattleMap(ctx, 1, m); err != nil {

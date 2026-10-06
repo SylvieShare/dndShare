@@ -1,6 +1,8 @@
 import { syncSurfaceObjects } from "../lib/surfacePlacement";
 import { pruneAreas } from "../lib/mapAreas";
 import { editorAreas } from "./editorAreas";
+import { editorLighting } from "./editorLighting";
+import { syncLights } from "../lib/mapLighting";
 import {
   computed,
   onBeforeUnmount,
@@ -75,12 +77,16 @@ export function useMapEditor(source, onSaved) {
     checkpoint();
     fn(draft.value);
     pruneAreas(draft.value.document);
+    if (catalogue.value.length)
+      syncLights(draft.value.document, catalogue.value);
   }
   function undo() {
     if (!history.value.length) return;
     future.value.push(clone(draft.value));
     draft.value = history.value.pop();
     gestures.resetGesture();
+    lighting.reset();
+    lighting.driver.cancel();
     setTileSelection(
       selectedTiles.value.filter((id) =>
         draft.value.document.tiles.some((t) => t.id === id),
@@ -98,6 +104,8 @@ export function useMapEditor(source, onSaved) {
     history.value.push(clone(draft.value));
     draft.value = future.value.pop();
     gestures.resetGesture();
+    lighting.reset();
+    lighting.driver.cancel();
     setTileSelection(
       selectedTiles.value.filter((id) =>
         draft.value.document.tiles.some((t) => t.id === id),
@@ -127,6 +135,7 @@ export function useMapEditor(source, onSaved) {
     error.value = "";
     syncSurfaceObjects(draft.value.document, catalogue.value);
     pruneAreas(draft.value.document);
+    syncLights(draft.value.document, catalogue.value);
     const snapshot = { ...clone(draft.value), ...record },
       key = JSON.stringify(snapshot);
     try {
@@ -213,6 +222,15 @@ export function useMapEditor(source, onSaved) {
   const tileDrag = editorTileDrag(state);
   const wallBrush = editorWallBrush(state);
   const gestures = editorGestures({ ...state, tileDrag, wallBrush });
+  const lighting = editorLighting(state);
+  watch(
+    [selectedTiles, selectedObjects],
+    () => {
+      if (selectedTiles.value.length || selectedObjects.value.length)
+        lighting.selectedLight.value = "";
+    },
+    { deep: true },
+  );
   async function loadModels() {
     loadingModels.value = true;
     modelError.value = "";
@@ -245,6 +263,7 @@ export function useMapEditor(source, onSaved) {
     stopped = true;
     clearTimeout(timer);
     window.removeEventListener("beforeunload", beforeUnload);
+    lighting.finishLightEdit();
   });
   return {
     draft,
@@ -291,5 +310,22 @@ export function useMapEditor(source, onSaved) {
     addZone,
     ...editorAreas(state),
     ...gestures,
+    ...lighting,
+    lightDrag: lighting.driver,
+    handle(event) {
+      if (event.phase === "start" && !event.hit?.lightId)
+        lighting.selectedLight.value = "";
+      if (!lighting.handle(event)) gestures.handle(event);
+    },
+    resetGesture() {
+      lighting.reset();
+      lighting.driver.cancel();
+      gestures.resetGesture();
+    },
+    removeSelected() {
+      lighting.selectedLight.value
+        ? lighting.removeLight()
+        : gestures.removeSelected();
+    },
   };
 }

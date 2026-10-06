@@ -347,3 +347,10 @@ RemoveButton. Карточка не выводит состав: кнопка в
 editorAreas считает добавляемые/убираемые элементы отдельно и управляет членством
 с обычной историей документа;
 mapAreas задаёт скрытие в редакторе/трансляции и прозрачность в сессии.
+
+Освещение карты — MapLightingPanel/MapLightFields/MapSunSettings на BaseTile,
+ActionButton, AppSlider, ColorPresetPicker, FormField/FormTextInput/FormSelect и
+ToggleSwitch. editorLighting объединяет изменение ползунка в один шаг истории;
+перенос из списка использует useCatalogueDrag. Маркеры источников — предметные
+Three.js-сферы для ray picking; это координаты 3D-сцены. Shadow geometry хранит
+облегчённые контуры и не дублирует видимые скульптурные меши в теневых проходах.

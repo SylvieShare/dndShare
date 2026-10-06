@@ -9,7 +9,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     freePlacement = false;
   function keyboardAnchor(point) {
     if (!point) return null;
-    if (driver.kind === "object") return point;
+    if (driver.kind === "object" || driver.kind === "light") return point;
     const snap = (p) => ({
       ...p,
       x: Math.floor(p.x + 1e-8) + 0.5,

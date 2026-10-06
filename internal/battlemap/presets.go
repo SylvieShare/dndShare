@@ -10,7 +10,7 @@ type Preset struct {
 func Presets() []Preset {
 	makeDocument := func(width, height float64) Document {
 		return Document{Version: DocumentVersion, Kind: "tiles", Width: width, Height: height,
-			Grid: Grid{Visible: true}, Tiles: []Tile{}, Objects: []Object{}, Zones: []Zone{}, Areas: []Area{}}
+			Grid: Grid{Visible: true}, Tiles: []Tile{}, Objects: []Object{}, Zones: []Zone{}, Areas: []Area{}, Sun: DefaultSun(), Lights: []Light{}}
 	}
 	cave := makeDocument(20, 14)
 	put := func(x, y int, code string, rotation int) {

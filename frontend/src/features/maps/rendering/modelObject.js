@@ -19,6 +19,7 @@ export function buildModelObject(object, assets, fog, tier = "render") {
       Array.isArray(part.material) ? materials : materials[0],
     );
     mesh.matrixAutoUpdate = false;
+    mesh.receiveShadow = true;
     mesh.matrix.copy(part.matrix);
     mesh.userData.borrowedGeometry = true;
     root.add(mesh);

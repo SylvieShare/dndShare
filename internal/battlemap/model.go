@@ -77,6 +77,8 @@ type Document struct {
 	Objects    []Object   `json:"objects"`
 	Zones      []Zone     `json:"zones"`
 	Areas      []Area     `json:"areas"`
+	Sun        *SunLight  `json:"sun"`
+	Lights     []Light    `json:"lights"`
 	Credit     *Credit    `json:"credit,omitempty"`
 }
 

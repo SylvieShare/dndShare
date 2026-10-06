@@ -16,6 +16,14 @@
       ></ActionButton>
       <ActionButton
         icon-only
+        :variant="tab === 'lights' ? 'primary' : 'quiet'"
+        aria-label="Освещение"
+        title="Освещение"
+        @click="openTab('lights')"
+        ><template #icon><Lightbulb :size="22" /></template
+      ></ActionButton>
+      <ActionButton
+        icon-only
         :variant="tab === 'objects' ? 'primary' : 'quiet'"
         aria-label="Объекты"
         title="Объекты"
@@ -33,9 +41,7 @@
     </nav>
     <div v-show="!collapsed" class="map-sidebar-panel">
       <div class="map-tile-sidebar-heading">
-        <strong v-if="!collapsed">{{
-          tab === "tiles" ? "Плитки" : tab === "objects" ? "Объекты" : "Области"
-        }}</strong>
+        <strong v-if="!collapsed">{{ labels[tab] }}</strong>
         <ActionButton
           variant="quiet"
           :aria-label="
@@ -71,7 +77,13 @@
           @object="(id, event) => emit('object', id, event)"
           @drag-object="(id, event) => emit('drag-object', id, event)"
         />
-        <MapAreasPanel v-else :editor="editor" />
+        <MapAreasPanel v-else-if="tab === 'areas'" :editor="editor" />
+        <MapLightingPanel
+          v-else
+          :editor="editor"
+          @drag-light="(kind, event) => emit('drag-light', kind, event)"
+          @place-light="(kind, event) => emit('place-light', kind, event)"
+        />
       </div>
     </div>
   </aside>
@@ -79,7 +91,15 @@
 <script setup>
 import { ref } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
-import { PanelLeftOpen, PanelLeftClose, Layers, Box, Group } from "@lucide/vue";
+import {
+  PanelLeftOpen,
+  PanelLeftClose,
+  Layers,
+  Box,
+  Group,
+  Lightbulb,
+} from "@lucide/vue";
+import MapLightingPanel from "./MapLightingPanel.vue";
 import MapAreasPanel from "./MapAreasPanel.vue";
 import MapObjectPalette from "./MapObjectPalette.vue";
 import MapTilePalette from "./MapTilePalette.vue";
@@ -91,8 +111,16 @@ const emit = defineEmits([
   "object",
   "drag-object",
   "tab",
+  "drag-light",
+  "place-light",
 ]);
 const tab = ref("tiles");
+const labels = {
+  tiles: "Плитки",
+  objects: "Объекты",
+  areas: "Области",
+  lights: "Освещение",
+};
 const collapsed = ref(window.matchMedia("(max-width: 760px)").matches);
 function openTab(value) {
   tab.value = value;

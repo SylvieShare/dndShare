@@ -1,3 +1,4 @@
+import { createMapLighting } from "./mapLighting";
 import { areaAppearance } from "../lib/mapAreas";
 import { createMapBackground } from "./mapBackground";
 import { mapScreenQueries } from "./mapScreenQueries";
@@ -8,9 +9,7 @@ import { resolvedSurfacePosition } from "../lib/surfacePlacement";
 import {
   ACESFilmicToneMapping,
   Color,
-  DirectionalLight,
   Group,
-  HemisphereLight,
   OrthographicCamera,
   Scene,
   WebGLRenderer,
@@ -35,13 +34,6 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
   const scene = new Scene();
   scene.background = new Color(0x161b23);
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0.01, 2000);
-  scene.add(new HemisphereLight(0xffffff, 0x625141, 2));
-  const light = new DirectionalLight(0xfff2df, 3);
-  light.position.set(-20, 40, -25);
-  scene.add(light);
-  const fill = new DirectionalLight(0xe0e8ff, 0.6);
-  fill.position.set(20, 12, 25);
-  scene.add(fill);
   host.appendChild(gpu.domElement);
   let dead = false,
     epoch = 0,
@@ -55,12 +47,14 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     annotationKey = "",
     lastFrame = 0,
     frame = 0,
+    flickerTimer = 0,
     placedTiles = [];
   let annotations = new Group(),
     objects = new Group();
   let appearance = areaAppearance({ areas: [] });
   scene.add(annotations, objects);
   const assets = modelAssets(onError),
+    lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
     background = createMapBackground(scene, fog, onError, render),
@@ -101,13 +95,19 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     frame = requestAnimationFrame((time) => {
       frame = 0;
       if (dead) return;
-      const delta = Math.min(32, time - lastFrame || 16);
+      const elapsed = time - lastFrame || 16,
+        delta = Math.min(32, elapsed);
       const moving =
         preview.advance(delta) |
         objectPreview.advance(delta) |
         tiles.advance(delta) |
         objectMotion.advance(delta, objects) |
         loadingPreview.advance(delta);
+      const flickering = lighting.advance(
+        Math.min(250, elapsed),
+        tiles.transform,
+        objects,
+      );
       lastFrame = time;
       gpu.render(scene, camera);
       for (const object of objects.children) {
@@ -137,8 +137,14 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
           ),
         ],
         tiles.transform,
+        lighting.excluded,
       );
       if (moving) render();
+      else if (flickering && !flickerTimer)
+        flickerTimer = setTimeout(() => {
+          flickerTimer = 0;
+          render();
+        }, 100);
     });
   }
   const view = mapCamera(camera, gpu, host, render);
@@ -358,6 +364,14 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       annotations = buildAnnotations(d, opts);
       scene.add(annotations);
     }
+    lighting.update(
+      d,
+      { ...previewOptions, sceneHeight: structure.top() },
+      structure.context(),
+      placed,
+      posedObjects,
+      view.getView(),
+    );
     background.update(d, opts);
     render();
   }
@@ -391,6 +405,17 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       () => tier,
       () => appearance.hiddenTiles,
     ),
+    lightPoint(event) {
+      const ray = view.ray(event),
+        hits = [
+          ...ray.intersectObject(tiles.root, true),
+          ...ray.intersectObject(objects, true),
+        ].sort((a, b) => a.distance - b.distance);
+      const hit = hits[0];
+      return hit
+        ? { x: hit.point.x, y: hit.point.z, elevation: hit.point.y }
+        : { ...view.world(event, 0), elevation: 0 };
+    },
     pick(event) {
       const ray = view.ray(event),
         hits = ray.intersectObject(objects, true),
@@ -400,6 +425,8 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
           moving && (!fixed || moving.distance < fixed.distance)
             ? moving
             : fixed;
+      const lamp = lighting.pick(ray);
+      if (lamp) return lamp;
       const surfaceAnchor = surfaceAnchors.hit(ray);
       if (surfaceAnchor) return surfaceAnchor;
       const anchor = anchors.hit(ray);
@@ -426,6 +453,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       epoch++;
       observer.disconnect();
       cancelAnimationFrame(frame);
+      clearTimeout(flickerTimer);
       disposeAnnotations(annotations);
       disposeObjects(objects);
       background.destroy();
@@ -438,6 +466,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       surfaceAnchors.destroy();
       outline.destroy();
       fog.destroy();
+      lighting.destroy();
       assets.destroy();
       gpu.dispose();
       gpu.domElement.remove();

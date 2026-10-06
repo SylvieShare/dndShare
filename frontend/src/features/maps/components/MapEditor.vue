@@ -35,6 +35,8 @@
         @object="placeObject"
         @drag-object="dragObject"
         @tab="stopPlacement"
+        @drag-light="dragLight"
+        @place-light="placeLight"
       />
       <div class="map-editor-main">
         <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
@@ -62,6 +64,11 @@
           :preview-tile="e.previewTile"
           :preview-object="e.previewObject"
           :show-anchors="e.showAnchors"
+          edit-lights
+          :selected-light="e.selectedLight"
+          :hovered-light="e.hoveredLight"
+          :preview-light="e.previewLight"
+          :placement-light="e.tool === 'light'"
           :hint="editorHints(e.tool, e.draggingTile)"
           :catalogue="e.catalogue"
           :placement-model="
@@ -122,10 +129,12 @@ const reference = ref(null),
 const canvas = ref(null),
   catalogueDrag = useCatalogueDrag(e, canvas),
   objectCatalogue = useCatalogueDrag(e, canvas, editorObjectDrag(e));
+const lightCatalogue = useCatalogueDrag(e, canvas, e.lightDrag);
 const cursor = useMapCursor(e, canvas, {
   cameraMoved() {
     catalogueDrag.cameraMoved();
     objectCatalogue.cameraMoved();
+    lightCatalogue.cameraMoved();
   },
 });
 const view = ref("map");
@@ -136,18 +145,30 @@ function setView(next) {
   }
   catalogueDrag.cancel();
   objectCatalogue.cancel();
+  lightCatalogue.cancel();
   e.resetGesture();
   view.value = next;
 }
 function changeCollection(value) {
   catalogueDrag.cancel();
   objectCatalogue.cancel();
+  lightCatalogue.cancel();
   e.resetGesture();
   if (reference.value) reference.value.changeCollection(value);
   else e.collection = value;
 }
+function dragLight(kind, event) {
+  stopPlacement();
+  lightCatalogue.begin(kind, event);
+}
+async function placeLight(kind, event) {
+  setView("map");
+  await nextTick();
+  lightCatalogue.place(kind, event);
+}
 function dragModel(id, event) {
   objectCatalogue.cancel();
+  lightCatalogue.cancel();
   e.resetGesture();
   catalogueDrag.begin(id, event);
 }
@@ -159,6 +180,7 @@ function dragObject(id, event) {
 function stopPlacement() {
   catalogueDrag.cancel();
   objectCatalogue.cancel();
+  lightCatalogue.cancel();
   e.resetGesture();
 }
 function startTool(tool) {
@@ -187,6 +209,7 @@ let resolveLeave;
 async function prepareLeave() {
   catalogueDrag.cancel();
   objectCatalogue.cancel();
+  lightCatalogue.cancel();
   e.resetGesture();
   if (reference.value?.prepareLeave() === false) {
     setView("reference");
@@ -224,6 +247,7 @@ function hotkey(event) {
   if (event.key === "Escape") {
     catalogueDrag.cancel();
     objectCatalogue.cancel();
+    lightCatalogue.cancel();
     e.handle({ phase: "cancel" });
   }
   if ((event.metaKey || event.ctrlKey) && event.code === "KeyZ") {

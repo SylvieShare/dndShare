@@ -178,6 +178,9 @@ func (s *Server) handlePublicMap(w http.ResponseWriter, r *http.Request) {
 		for i := range value.Document.Areas {
 			value.Document.Areas[i].Name = ""
 		}
+		for i := range value.Document.Lights {
+			value.Document.Lights[i].Name = ""
+		}
 		m = &value
 	}
 	w.Header().Set("Cache-Control", "no-store")

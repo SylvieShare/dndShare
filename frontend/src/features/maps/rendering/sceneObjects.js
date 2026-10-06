@@ -19,6 +19,7 @@ import { FLOOR } from "./annotations";
 
 function box(root, w, h, d, x, y, z, material) {
   const mesh = new Mesh(new BoxGeometry(w, h, d), material);
+  mesh.receiveShadow = true;
   mesh.position.set(x, y, z);
   root.add(mesh);
   return mesh;

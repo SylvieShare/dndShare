@@ -177,7 +177,14 @@ export function createTileOutline(gpu, assets) {
       }
     });
   }
-  function render(scene, camera, annotations, previews, tileMatrix) {
+  function render(
+    scene,
+    camera,
+    annotations,
+    previews,
+    tileMatrix,
+    excluded = [],
+  ) {
     if (tileMatrix)
       for (const mesh of root.children) {
         const { entries, metadata, partMatrix } = mesh.userData;
@@ -207,6 +214,8 @@ export function createTileOutline(gpu, assets) {
       override = scene.overrideMaterial,
       annotationVisible = annotations.visible,
       previewVisible = previews.map((p) => p.visible),
+      excludedVisible = excluded.map((p) => p.visible),
+      shadowsEnabled = gpu.shadowMap.enabled,
       clearAlpha = gpu.getClearAlpha();
     gpu.getClearColor(clearColour);
     try {
@@ -218,6 +227,8 @@ export function createTileOutline(gpu, assets) {
       scene.overrideMaterial = depth;
       annotations.visible = false;
       previews.forEach((p) => (p.visible = false));
+      excluded.forEach((p) => (p.visible = false));
+      gpu.shadowMap.enabled = false;
       // The depth prepass hides edges behind other models; the mask uses actual geometry.
       gpu.render(scene, camera);
       gpu.render(maskScene, camera);
@@ -228,6 +239,8 @@ export function createTileOutline(gpu, assets) {
       scene.overrideMaterial = override;
       annotations.visible = annotationVisible;
       previews.forEach((p, i) => (p.visible = previewVisible[i]));
+      excluded.forEach((p, i) => (p.visible = excludedVisible[i]));
+      gpu.shadowMap.enabled = shadowsEnabled;
       gpu.setClearColor(clearColour, clearAlpha);
       gpu.autoClear = autoClear;
       gpu.setRenderTarget(previousTarget);

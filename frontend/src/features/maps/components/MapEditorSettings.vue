@@ -1,10 +1,12 @@
 <template>
   <section class="map-editor-settings" aria-label="Настройки редактора">
     <MapEditorInspector :editor="editor" @tool="emit('tool', $event)" />
+    <MapSunSettings :editor="editor" />
   </section>
 </template>
 <script setup>
 import MapEditorInspector from "./MapEditorInspector.vue";
+import MapSunSettings from "./MapSunSettings.vue";
 defineProps({ editor: Object });
 const emit = defineEmits(["tool"]);
 </script>
