@@ -1,0 +1,122 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 80000,
+  "lodTriangles": 30000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "pine", "forest", "outdoor", "xl"],
+  "recipe": "majestic-measured-pines-1-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [3000000, 5500000],
+    "targetLODBytes": [1000000, 2500000],
+    "targetShadowBytes": [60000, 180000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "734714 source triangles with two pine crowns and exposed trunks. Preserve branch openings and ground relief; compare MH-002 and use a modestly larger geometry budget."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-25, 36],
+      [8, 33],
+      [23, 14],
+      [14, 0],
+      [-3, 2],
+      [-24, 15]
+    ],
+    [
+      [-30, -6],
+      [-12, 0],
+      [11, -9],
+      [18, -24],
+      [-5, -30],
+      [-29, -23]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [0, 0],
+    [2, 2]
+  ],
+  "trees": [
+    {
+      "baseXY": [-35, 35],
+      "topXY": [-34, 33.5],
+      "heightMM": 64.34,
+      "foliageRadiusMM": 28,
+      "trunkRadiusMM": 3.6,
+      "rootRadiusMM": 9,
+      "barkTopMM": 43
+    },
+    {
+      "baseXY": [31, -31],
+      "topXY": [27, -32],
+      "heightMM": 84.74,
+      "foliageRadiusMM": 34,
+      "trunkRadiusMM": 4,
+      "rootRadiusMM": 10,
+      "barkTopMM": 55
+    }
+  ],
+  "blockers": [
+    [
+      [0.728571, 0.5],
+      [0.711172, 0.58747],
+      [0.661624, 0.661624],
+      [0.58747, 0.711172],
+      [0.5, 0.728571],
+      [0.41253, 0.711172],
+      [0.338376, 0.661624],
+      [0.288828, 0.58747],
+      [0.271429, 0.5],
+      [0.288828, 0.41253],
+      [0.338376, 0.338376],
+      [0.41253, 0.288828],
+      [0.5, 0.271429],
+      [0.58747, 0.288828],
+      [0.661624, 0.338376],
+      [0.711172, 0.41253]
+    ],
+    [
+      [2.614286, 2.385714],
+      [2.596887, 2.473185],
+      [2.547339, 2.547339],
+      [2.473185, 2.596887],
+      [2.385714, 2.614286],
+      [2.298244, 2.596887],
+      [2.22409, 2.547339],
+      [2.174542, 2.473185],
+      [2.157143, 2.385714],
+      [2.174542, 2.298244],
+      [2.22409, 2.22409],
+      [2.298244, 2.174542],
+      [2.385714, 2.157143],
+      [2.473185, 2.174542],
+      [2.547339, 2.22409],
+      [2.596887, 2.298244]
+    ]
+  ],
+  "stones": [
+    {
+      "centreMM": [-2.8, -42, 16.7],
+      "radiiMM": [3.4, 3.1, 2.1]
+    },
+    {
+      "centreMM": [-27, 40.5, 16.6],
+      "radiiMM": [3.5, 3.5, 2]
+    },
+    {
+      "centreMM": [33, -1.5, 16.6],
+      "radiiMM": [4.5, 3.8, 2.1]
+    }
+  ]
+}

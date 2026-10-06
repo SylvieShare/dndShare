@@ -43,7 +43,7 @@ def main():
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
     recipes = json.loads((ROOT/'scripts/maps/majestic-recipes.json').read_text())
     if args.code not in recipes: raise ValueError('No individually reviewed recipe for '+args.code)
-    recipe = recipes[args.code]
+    recipe = json.loads((Path(__file__).parent/recipes[args.code]).read_text())
     base = ROOT/'models/collections/majestic-highlands'
     row = next(r for r in json.loads((base/'manifest.json').read_text()) if r['code']==args.code)
     out = base/'prepared'/args.code
@@ -83,7 +83,8 @@ def main():
     points = []
     for y in range(recipe['height']):
         for x in range(recipe['width']):
-            hit = tree.ray_cast((centre[0]+(x-(recipe['width']-1)/2)*35, centre[1]-(y-(recipe['height']-1)/2)*35, 100), (0, 0, -1))
+            if [x,y] in recipe.get('blockedCells',[]): continue
+            hit = tree.ray_cast((centre[0]+(x-(recipe['width']-1)/2)*35, centre[1]-(y-(recipe['height']-1)/2)*35, recipe.get('standMaxZMM',100)), (0, 0, -1))
             if hit[0] is None: raise ValueError('Missing ground support point')
             points.append({'x':x+.5,'y':y+.5,'elevation':round(hit[0].z/35,6)})
     high = max(v.co.z for v in target.data.vertices)/35

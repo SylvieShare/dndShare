@@ -24,9 +24,7 @@ def polygon_weight(positions, polygon):
     return inside*np.clip(distance/2,0,1)
 
 
-def grass_weights(obj, recipe, code):
-    if 'grassReference' not in recipe:
-        return np.ones(len(obj.data.vertices),np.float32)
+def reference_weights(obj, recipe, code, positions):
     root=Path(__file__).resolve().parents[2]
     manifest=json.loads((root/'models/collections/majestic-highlands/manifest.json').read_text())
     reference=next(r for r in manifest if r['code']==recipe['grassReference'])
@@ -44,16 +42,21 @@ def grass_weights(obj, recipe, code):
     loss=np.where((current>0)&(original>0),np.maximum(0,original-current),0)
     padded=np.pad(loss,1,mode='edge')
     loss=sum(padded[y:y+211,x:x+211] for y in range(3) for x in range(3))/9
-    xyz=np.empty(len(obj.data.vertices)*3,np.float32)
-    obj.data.vertices.foreach_get('co',xyz)
-    loss=sample_field(loss,xyz.reshape(-1,3))
+    loss=sample_field(loss,positions)
     covered=np.clip((loss-recipe['grassCoverLossMM'])/recipe['grassCoverFadeMM'],0,1)
     weights*=1-covered*covered*(3-2*covered)
+    print('GRASS_REFERENCE',len(distances),np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),float(weights.mean()),flush=True)
+    return weights
+
+
+def grass_weights(obj, recipe, code):
+    xyz=np.empty(len(obj.data.vertices)*3,np.float32)
+    obj.data.vertices.foreach_get('co',xyz)
     positions=xyz.reshape(-1,3)
+    weights=reference_weights(obj,recipe,code,positions) if recipe.get('grassReference') else np.ones(len(positions),np.float32)
     if recipe.get('soilDomains'):
         domain=np.maximum.reduce([polygon_weight(positions,p) for p in recipe['soilDomains']])
         height=np.clip((positions[:,2]-recipe['soilSurfaceMM'])/recipe['grassHeightFadeMM'],0,1)
         height=height*height*(3-2*height)
         weights*=1-domain*(1-height)
-    print('GRASS_REFERENCE',len(distances),np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),float(weights.mean()),flush=True)
     return weights

@@ -26,11 +26,14 @@ def paint(obj, recipe=None, code=None):
     rgb = (soil*(1-t[:, None]) +
            ((1-tip[:, None])*grass + tip[:, None]*dry)*t[:, None])
     rgb = np.clip(rgb*variation[:, None], .04, .9)
+    roughness = .97-.03*t if recipe.get('grassReference') or recipe.get('soilDomains') else np.full(len(x),.94)
+    if recipe.get('trees'):
+        from majestic_pines import apply_pines
+        rgb, roughness = apply_pines(obj, positions.reshape(-1,3), rgb, roughness, coverage, recipe)
     linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     attribute = mesh.color_attributes.new('Paint', 'FLOAT_COLOR', 'POINT')
     attribute.data.foreach_set('color', np.column_stack([linear, np.ones(len(x))]).astype(np.float32).ravel())
     surface = mesh.color_attributes.new('Surface', 'FLOAT_COLOR', 'POINT')
-    roughness = .97-.03*t if recipe.get('grassReference') else np.full(len(x),.94)
     surface.data.foreach_set('color', np.column_stack([np.ones(len(x)), roughness, np.zeros(len(x)), np.ones(len(x))]).astype(np.float32).ravel())
 
 

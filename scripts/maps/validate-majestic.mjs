@@ -108,10 +108,23 @@ for (const tier of ["render", "lod"]) {
       slot,
     );
   }
+  const recipeIndex = JSON.parse(
+    await fs.readFile(
+      path.join(root, "scripts/maps/majestic-recipes.json"),
+      "utf8",
+    ),
+  );
+  const recipe = JSON.parse(
+    await fs.readFile(
+      path.join(root, "scripts/maps", recipeIndex[code]),
+      "utf8",
+    ),
+  );
   if (
-    report.model.width !== 3 ||
-    report.model.height !== 3 ||
-    report.model.placementPoints.length !== 9
+    report.model.width !== recipe.width ||
+    report.model.height !== recipe.height ||
+    report.model.placementPoints.length !==
+      recipe.width * recipe.height - (recipe.blockedCells?.length ?? 0)
   )
     throw new Error("Incorrect reviewed footprint");
   console.log("MAJESTIC_VALIDATED", code, tier, {

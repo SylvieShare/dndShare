@@ -1,0 +1,43 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 60000,
+  "lodTriangles": 20000,
+  "tileType": "floor",
+  "hasDecor": false,
+  "tags": ["grass", "dirt", "outdoor", "xl"],
+  "recipe": "majestic-measured-dirt-grass-2-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2000000, 4000000],
+    "targetLODBytes": [900000, 1800000],
+    "targetShadowBytes": [40000, 150000],
+    "targetPreviewBytes": [15000, 60000],
+    "basis": "393654 source triangles, 3x3 measured base and a wider bare soil area. Compare accepted MH-002; preserve the irregular grass boundary and individual pebbles."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-45, 27],
+      [-31, 35],
+      [-9, 35],
+      [8, 27],
+      [11, 13],
+      [18, 7],
+      [9, -9],
+      [-5, -17],
+      [-26, -18],
+      [-34, -4],
+      [-39, 14]
+    ]
+  ],
+  "soilSurfaceMM": 15.55,
+  "grassHeightFadeMM": 0.4
+}

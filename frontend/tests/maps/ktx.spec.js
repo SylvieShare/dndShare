@@ -15,6 +15,9 @@ test("decodes and renders actual KTX2/Meshopt models in both geometry tiers", as
     !fs.existsSync(path.join(base, "render.glb")),
     "Local model files are excluded from Git",
   );
+  const report = JSON.parse(
+    fs.readFileSync(path.join(base, "report.json"), "utf8"),
+  );
   const errors = [],
     decoderRequests = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -34,8 +37,8 @@ test("decodes and renders actual KTX2/Meshopt models in both geometry tiers", as
   await page.goto("/tests/maps/fixtures/ktx.html");
   await page.waitForFunction(() => window.decodeTile);
   for (const [tier, triangles, size] of [
-    ["render", 60012, 2048],
-    ["lod", 20012, 1024],
+    ["render", report.tiers.render.triangles, 2048],
+    ["lod", report.tiers.lod.triangles, 1024],
   ]) {
     const decoded = await page.evaluate(
       (url) => window.decodeTile(url),
