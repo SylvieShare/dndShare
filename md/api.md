@@ -33,9 +33,9 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, textureDetail (basic/detailed) используемой визуальной версии и renderUrl/lodUrl/previewUrl |
+| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, textureDetail (basic/detailed) используемой визуальной версии и renderUrl/lodUrl/shadowUrl/previewUrl |
 | `PUT /api/maps/models/{modelId}` | ADMIN: полная ModelMetadata текущей версии → новая версия с новым UUID; файлы и старые версии неизменны, устаревшая правка получает 409 |
-| `GET /api/maps/models/{modelId}/{variant}` | ADMIN: source/render/lod/preview из S3; ETag и immutable cache |
+| `GET /api/maps/models/{modelId}/{variant}` | ADMIN: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |
 | `POST /api/maps` | Создать `{name,document}` |
 | `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
@@ -49,7 +49,7 @@
 | `GET /api/public/sessions/{code}/map` | Публичный `{display,map}`; map=null при выключенном экране |
 | `GET /api/public/sessions/{code}/map-events` | Публичный SSE отдельного экрана карты |
 | `GET /api/public/sessions/{code}/map-models` | Только модели включённой карты трансляции |
-| `GET /api/public/sessions/{code}/map-models/{modelId}/{variant}` | render/lod/preview текущей карты; исходник STL недоступен |
+| `GET /api/public/sessions/{code}/map-models/{modelId}/{variant}` | render/lod/shadow/preview текущей карты; исходник STL недоступен |
 | `GET /api/public/sessions/{code}/map-background` | Фон текущей карты через origin приложения |
 
 Документ имеет version=2. Плитка: `{id,modelId,x,y,rotation,level}`;

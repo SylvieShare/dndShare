@@ -61,6 +61,7 @@ FROM (VALUES
 	exec(schemaModelWallShapesSQL)
 	exec(schemaModelSurfacesObjectsSQL)
 	exec(schemaMeasuredPlacementPointsSQL)
+	exec(schemaModelShadowAssetsSQL)
 	s := &Store{pool: pool}
 	for _, expected := range battlemap.InitialCatalogue() {
 		migrated, err := s.GetMapModel(ctx, expected.ID)
@@ -142,5 +143,35 @@ FROM (VALUES
 	}
 	if successes != 1 || conflicts != 1 {
 		t.Fatalf("concurrent edits: success=%d conflict=%d", successes, conflicts)
+	}
+	shadowBase := battlemap.InitialCatalogue()[0]
+	shadowBase.Collection = "shadow-test"
+	shadowBase.ID = "00000000-0000-4000-8000-000000000010"
+	if _, err = s.RegisterMapModel(ctx, shadowBase); err != nil {
+		t.Fatal(err)
+	}
+	asset := shadowBase.Assets["shadow"]
+	asset.SHA256 = strings.Repeat("f", 64)
+	asset.Key = "map-models/" + asset.SHA256 + ".glb"
+	asset.FileName = "shadow.glb"
+	shadow, err := s.ReviseMapModelShadow(ctx, shadowBase.ID, shadowBase.Assets["lod"].SHA256, "00000000-0000-4000-8000-000000000011", asset)
+	if err != nil || shadow.Version != 2 || !battlemap.VisualRevision(shadowBase, shadow) {
+		t.Fatalf("shadow broke immutable presentation: %+v %v", shadow, err)
+	}
+	for _, kind := range []string{"render", "lod", "preview", "source"} {
+		if shadow.Assets[kind] != shadowBase.Assets[kind] {
+			t.Fatal("shadow changed existing asset", kind)
+		}
+	}
+	unchanged, err := s.GetMapModel(ctx, shadowBase.ID)
+	if err != nil || !reflect.DeepEqual(unchanged, shadowBase) {
+		t.Fatal("shadow publication mutated original model", err)
+	}
+	repeated, err := s.ReviseMapModelShadow(ctx, shadowBase.ID, shadowBase.Assets["lod"].SHA256, "00000000-0000-4000-8000-000000000012", asset)
+	if err != nil || repeated.ID != shadow.ID {
+		t.Fatal("shadow registration is not idempotent", err)
+	}
+	if _, err = s.ReviseMapModelShadow(ctx, shadow.ID, strings.Repeat("a", 64), "00000000-0000-4000-8000-000000000013", asset); !errors.Is(err, ErrMapModelConflict) {
+		t.Fatal("stale shadow geometry accepted", err)
 	}
 }

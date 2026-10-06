@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        background: #171c24;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import {
+        Scene,
+        OrthographicCamera,
+        WebGLRenderer,
+        ACESFilmicToneMapping,
+        Group,
+        Mesh,
+        BoxGeometry,
+        Matrix4,
+      } from "three";
+      import { modelAssets } from "../../../src/features/maps/rendering/modelAssets.js";
+      import { createMapLighting } from "../../../src/features/maps/rendering/mapLighting.js";
+      import { tileTransform } from "../../../src/features/maps/rendering/tileTransform.js";
+      import { buildModelObject } from "../../../src/features/maps/rendering/modelObject.js";
+      const { model } = await (await fetch("/shadow-case")).json(),
+        errors = [];
+      const gpu = new WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      gpu.setSize(450, 450);
+      gpu.toneMapping = ACESFilmicToneMapping;
+      document.body.append(gpu.domElement);
+      const assets = modelAssets((e) => errors.push(e), gpu);
+      await assets.ensure(new Set([model.id]), "render", {
+        catalogue: [model],
+      });
+      await assets.ensure(new Set([model.id]), "shadow", {
+        catalogue: [model],
+      });
+      const scene = new Scene(),
+        objects = new Group(),
+        tile = {
+          id: "tile",
+          modelId: model.id,
+          x: 1,
+          y: 1,
+          rotation: 0,
+          elevation: 0,
+        },
+        cx = 1 + model.width / 2,
+        cz = 1 + model.height / 2,
+        d = {
+          width: model.width + 2,
+          height: model.height + 2,
+          tiles: [],
+          objects: [],
+          areas: [],
+          lightingEnabled: true,
+          sun: { enabled: true, angle: 0, elevation: 85 },
+          lights: [],
+        };
+      let visual;
+      if (model.tileType === "object") {
+        const object = {
+          id: "object",
+          modelId: model.id,
+          x: cx,
+          y: cz,
+          rotation: 0,
+          scale: 1,
+          elevation: 0,
+        };
+        d.objects = [object];
+        visual = buildModelObject(
+          object,
+          assets,
+          { material: (m) => m },
+          "render",
+        );
+        objects.add(visual);
+        scene.add(objects);
+      } else {
+        d.tiles = [tile];
+        visual = new Group();
+        visual.matrixAutoUpdate = false;
+        visual.matrix.copy(tileTransform(tile, model));
+        for (const p of assets.model(model.id, "render").parts) {
+          const mesh = new Mesh(p.geometry, p.material);
+          mesh.receiveShadow = true;
+          mesh.matrixAutoUpdate = false;
+          mesh.matrix.copy(p.matrix);
+          visual.add(mesh);
+        }
+        scene.add(visual);
+      }
+      const actualShadow = assets.model(model.id, "shadow"),
+        legacyGeometry = new BoxGeometry(
+          model.width,
+          model.maxHeight,
+          model.height,
+        );
+      legacyGeometry.translate(0, model.maxHeight / 2, 0);
+      const nativeModel = assets.model.bind(assets);
+      assets.model = (id, tier) =>
+        tier === "shadow" && new URLSearchParams(location.search).has("legacy")
+          ? { parts: [{ geometry: legacyGeometry, matrix: new Matrix4() }] }
+          : nativeModel(id, tier);
+      const lighting = createMapLighting(scene, gpu, assets),
+        camera = new OrthographicCamera(-0.72, 0.72, 0.72, -0.72, 0.1, 30);
+      camera.position.set(cx, 10, cz);
+      camera.up.set(0, 0, -1);
+      camera.lookAt(cx, 0, cz);
+      const ctx = new OffscreenCanvas(450, 450).getContext("2d");
+      function capture() {
+        ctx.drawImage(gpu.domElement, 0, 0);
+        const pixels = ctx.getImageData(0, 0, 450, 450).data;
+        return Array.from(
+          { length: 450 * 450 },
+          (_, i) =>
+            0.2126 * pixels[i * 4] +
+            0.7152 * pixels[i * 4 + 1] +
+            0.0722 * pixels[i * 4 + 2],
+        );
+      }
+      async function draw(angle, mode, shadows) {
+        d.sun = { enabled: mode === "sun", angle, elevation: 85 };
+        d.lights =
+          mode === "point"
+            ? [
+                {
+                  id: "light",
+                  kind: "torch",
+                  color: "#fff1d9",
+                  x: cx,
+                  y: cz,
+                  elevation: 0,
+                  height: model.maxHeight + 1.5,
+                  intensity: 18,
+                  radius: 8,
+                  enabled: true,
+                  shadows,
+                  flicker: false,
+                  offset: [0, 0],
+                },
+              ]
+            : [];
+        lighting.update(
+          d,
+          {},
+          null,
+          d.tiles,
+          d.objects,
+          { x: cx, y: cz },
+          objects,
+        );
+        lighting.advance(0, () => visual.matrix, objects);
+        gpu.shadowMap.enabled = shadows;
+        gpu.shadowMap.needsUpdate = true;
+        scene.traverse((n) => {
+          if (n.isMesh)
+            for (const m of Array.isArray(n.material)
+              ? n.material
+              : [n.material])
+              m.needsUpdate = true;
+        });
+        await new Promise(requestAnimationFrame);
+        gpu.render(scene, camera);
+        return capture();
+      }
+      window.compare = async (angle, mode) => {
+        const baseline = await draw(angle, mode, false),
+          shadowed = await draw(angle, mode, true),
+          sorted = baseline.filter((v) => v > 30).sort((a, b) => a - b),
+          threshold = sorted[Math.floor(sorted.length * 0.5)];
+        let direct = 0,
+          withShadow = 0,
+          count = 0;
+        baseline.forEach((v, i) => {
+          if (v >= threshold) {
+            direct += v;
+            withShadow += shadowed[i];
+            count++;
+          }
+        });
+        return {
+          ratio: withShadow / direct,
+          count,
+          errors,
+          triangles: actualShadow.parts.reduce(
+            (n, p) =>
+              n +
+              (p.geometry.index?.count ||
+                p.geometry.attributes.position.count) /
+                3,
+            0,
+          ),
+        };
+      };
+      window.ready = true;
+    </script>
+  </body>
+</html>

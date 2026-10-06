@@ -1,167 +1,187 @@
 import {
-  Box3,
-  BoxGeometry,
   Group,
+  InstancedMesh,
   Matrix4,
+  Vector3,
   Mesh,
   MeshBasicMaterial,
-  Vector3,
   DoubleSide,
+  DynamicDrawUsage,
 } from "three";
-import { shadowPrism } from "./shadowGeometry";
 import { tileTransform } from "./tileTransform";
 import { hiddenAreaMembers } from "../lib/mapAreas";
+
+// The shadow asset shares the visible model's local coordinate system. Never
+// extrude gameplay blocker polygons: they fill stairs, bowls and door openings.
 export function createShadowProxies(assets) {
   const root = new Group(),
     material = new MeshBasicMaterial({ colorWrite: false, depthWrite: false });
   material.shadowSide = DoubleSide;
-  const geometry = new Map();
+  const matrix = new Matrix4(),
+    previous = new Matrix4();
   let key = "",
-    nodes = [];
-  function box(w, h, d, x = 0, y = h / 2, z = 0) {
-    const g = new BoxGeometry(w, Math.max(0.03, h), d);
-    g.translate(x, y, z);
-    return g;
+    batches = [],
+    legacy = [];
+  function clear() {
+    root.traverse((node) => {
+      if (node.isInstancedMesh) node.dispose();
+    });
+    root.clear();
+    batches = [];
+    legacy = [];
   }
-  function tileGeometry(model) {
-    const id = model.id;
-    if (geometry.has(id)) return geometry.get(id);
-    const [ox, oz] = model.placementOffset || [0, 0],
-      mount = model.mountDepth || 0;
-    const base = Math.max(0.03, model.surfaceHeight - mount);
-    const parts = [
-      box(model.width, base, model.height, -ox, mount + base / 2, -oz),
-    ];
-    const height = model.maxHeight - model.surfaceHeight;
-    for (const polygon of model.blockers || []) {
-      if (height < 0.05 || polygon.length < 3) continue;
-      parts.push(
-        shadowPrism(
-          polygon,
-          model.surfaceHeight,
-          model.maxHeight,
-          model.width,
-          model.height,
-          model.placementOffset,
-        ),
-      );
-    }
-    if (
-      !model.blockers?.length &&
-      ["column", "stairs", "frame"].includes(model.tileType) &&
-      height > 0.05
-    )
-      parts.push(
-        box(
-          model.width * 0.75,
-          height,
-          model.height * 0.75,
-          -ox,
-          model.surfaceHeight + height / 2,
-          -oz,
-        ),
-      );
-    geometry.set(id, parts);
-    return parts;
-  }
-  function objectGeometry(object) {
-    const id = `object:${object.modelId || object.kind}`;
-    if (geometry.has(id)) return geometry.get(id);
-    const model =
-        assets.model(object.modelId, "lod") ||
-        assets.model(object.modelId, "render"),
-      bounds = new Box3();
-    for (const part of model?.parts || []) {
-      part.geometry.computeBoundingBox();
-      bounds.union(part.geometry.boundingBox.clone().applyMatrix4(part.matrix));
-    }
-    const size = bounds.isEmpty()
-      ? new Vector3(0.65, 0.6, 0.65)
-      : bounds.getSize(new Vector3());
-    const center = bounds.isEmpty()
-      ? new Vector3(0, 0.3, 0)
-      : bounds.getCenter(new Vector3());
-    const parts = [box(size.x, size.y, size.z, center.x, center.y, center.z)];
-    geometry.set(id, parts);
-    return parts;
-  }
-  function update(document, placed, objects, options) {
+  function update(
+    document,
+    placed,
+    objects,
+    options,
+    objectRoot,
+    objectPreview,
+  ) {
     const hidden = hiddenAreaMembers(document),
       ignored = new Set(options.previewTile?.tileIds || []);
     const tiles = [
       ...placed.filter((t) => !ignored.has(t.id)),
       ...(options.previewTile?.group || []),
     ]
-      .map((t, i) => ({ ...t, id: t.id || `shadow-preview-${i}` }))
+      .map((t, i) => ({ ...t, id: t.id || i }))
       .filter((t) => !hidden.tiles.has(t.id));
-    const props = objects.filter((o) => !hidden.objects.has(o.id));
+    const previews = (
+      options.previewObject?.group ||
+      (options.previewObject ? [options.previewObject] : [])
+    ).map((o, i) => ({
+      ...o,
+      id: o.id || `shadow-object-${i}`,
+      previewIndex: i,
+    }));
+    const previewIds = new Set(previews.map((o) => o.id));
+    const props = [
+      ...objects.filter((o) => !previewIds.has(o.id)),
+      ...previews,
+    ].filter((o) => !hidden.objects.has(o.id));
+    const buckets = new Map();
+    for (const item of [
+      ...tiles.map((tile) => ({ tile, model: assets.metadata(tile.modelId) })),
+      ...props.filter((o) => o.modelId).map((object) => ({ object })),
+    ]) {
+      const instance = item.tile || item.object;
+      const id = instance.modelId;
+      const source = assets.model(id, "shadow");
+      if (!source || (item.tile && !item.model)) continue;
+      const bucket = `${id}:${Math.floor(instance.x / 8)},${Math.floor(instance.y / 8)}`;
+      if (!buckets.has(bucket)) buckets.set(bucket, { source, items: [] });
+      buckets.get(bucket).items.push(item);
+    }
+    const primitives = new Map(
+      [...(objectRoot?.children || []), ...(objectPreview?.children || [])]
+        .filter((o) =>
+          props.some((p) => !p.modelId && p.id === o.userData.objectId),
+        )
+        .map((o) => [o.userData.objectId, o]),
+    );
     const next = JSON.stringify([
-      tiles.map((t) => [t.id, t.modelId]),
-      props.map((o) => [o.id, o.modelId, o.kind]),
+      [...buckets].map(([id, { source, items }]) => [
+        id,
+        source.parts.map((p) => p.geometry.id),
+        items.map((item) => (item.tile || item.object).id),
+      ]),
+      [...primitives].map(([id, visual]) => [id, visual.uuid]),
     ]);
     if (next !== key) {
-      root.clear();
-      nodes = [];
+      clear();
       key = next;
-      for (const tile of tiles) {
-        const model = assets.metadata(tile.modelId);
-        if (!model) continue;
-        const group = new Group();
-        for (const g of tileGeometry(model)) {
-          const m = new Mesh(g, material);
-          m.castShadow = true;
-          group.add(m);
+      for (const [bucket, { source, items }] of buckets) {
+        for (const part of source.parts) {
+          const mesh = new InstancedMesh(part.geometry, material, items.length);
+          mesh.castShadow = true;
+          // WebGL invokes onBeforeShadow separately. Keep the invisible shadow
+          // geometry out of the normal color pass without extra vertex work.
+          mesh.onBeforeRender = () => {
+            mesh.count = 0;
+          };
+          mesh.onAfterRender = () => {
+            mesh.count = items.length;
+          };
+          mesh.instanceMatrix.setUsage(DynamicDrawUsage);
+          root.add(mesh);
+          batches.push({ mesh, part, items, bucket });
         }
+      }
+      for (const visual of primitives.values()) {
+        visual.updateMatrixWorld(true);
+        const inverse = visual.matrixWorld.clone().invert(),
+          group = new Group();
         group.matrixAutoUpdate = false;
-        group.userData.tile = tile.id;
+        visual.traverse((node) => {
+          if (!node.isMesh) return;
+          const mesh = new Mesh(node.geometry, material);
+          mesh.castShadow = true;
+          mesh.matrixAutoUpdate = false;
+          mesh.matrix.multiplyMatrices(inverse, node.matrixWorld);
+          group.add(mesh);
+        });
         root.add(group);
-        nodes.push({ group, tile, model });
+        legacy.push({ group, visual });
       }
-      for (const object of props) {
-        const group = new Group();
-        for (const g of objectGeometry(object)) {
-          const m = new Mesh(g, material);
-          m.castShadow = true;
-          group.add(m);
-        }
-        group.userData.object = object.id;
-        root.add(group);
-        nodes.push({ group, object });
+    } else {
+      for (const batch of batches) {
+        batch.items = buckets.get(batch.bucket).items;
       }
-    }
-    const byId = new Map(tiles.map((t) => [t.id, t])),
-      byObject = new Map(props.map((o) => [o.id, o]));
-    for (const node of nodes) {
-      if (node.tile) node.tile = byId.get(node.tile.id);
-      else node.object = byObject.get(node.object.id);
     }
     return next;
   }
-  function advance(tileMatrix, objects) {
+  function advance(tileMatrix, objects, objectPreview) {
     let changed = false;
     const objectRoots = new Map(
       objects.children.map((o) => [o.userData.objectId, o]),
     );
-    for (const node of nodes) {
-      let matrix;
-      if (node.tile)
-        matrix =
-          tileMatrix(node.tile.id) || tileTransform(node.tile, node.model);
-      else {
-        const visual = objectRoots.get(node.object.id);
-        if (visual) {
-          visual.updateMatrix();
-          matrix = visual.matrix;
+    for (const { mesh, part, items } of batches) {
+      let dirty = false;
+      items.forEach((item, i) => {
+        let pose;
+        if (item.tile) {
+          pose =
+            tileMatrix(item.tile.id) || tileTransform(item.tile, item.model);
         } else {
-          const o = node.object;
-          matrix = new Matrix4().makeRotationY((-o.rotation * Math.PI) / 180);
-          matrix.scale(new Vector3(o.scale, o.scale, o.scale));
-          matrix.setPosition(o.x, o.elevation || 0, o.y);
+          const object = item.object;
+          const visual =
+            object.previewIndex == null
+              ? objectRoots.get(object.id)
+              : objectPreview?.children[object.previewIndex];
+          if (visual) {
+            visual.updateMatrix();
+            pose = visual.matrix;
+          } else {
+            pose = new Matrix4().makeRotationY(
+              (-(object.rotation || 0) * Math.PI) / 180,
+            );
+            pose.scale(new Vector3().setScalar(object.scale || 1));
+            pose.setPosition(object.x, object.elevation || 0, object.y);
+          }
         }
+        matrix.multiplyMatrices(pose, part.matrix);
+        mesh.getMatrixAt(i, previous);
+        // Instance buffers use float32; compare after quantization to avoid
+        // invalidating all shadow maps every frame for a stationary scene.
+        if (
+          matrix.elements.every(
+            (v, n) => Math.fround(v) === previous.elements[n],
+          )
+        )
+          return;
+        mesh.setMatrixAt(i, matrix);
+        dirty = true;
+      });
+      if (dirty) {
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.computeBoundingSphere();
+        changed = true;
       }
-      if (!node.group.matrix.equals(matrix)) {
-        node.group.matrix.copy(matrix);
-        node.group.matrixAutoUpdate = false;
+    }
+    for (const { group, visual } of legacy) {
+      visual.updateMatrix();
+      if (!group.matrix.equals(visual.matrix)) {
+        group.matrix.copy(visual.matrix);
         changed = true;
       }
     }
@@ -173,8 +193,7 @@ export function createShadowProxies(assets) {
     update,
     advance,
     destroy() {
-      root.clear();
-      geometry.forEach((parts) => parts.forEach((g) => g.dispose()));
+      clear();
       material.dispose();
     },
   };

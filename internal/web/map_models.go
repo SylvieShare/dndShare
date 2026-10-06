@@ -24,6 +24,7 @@ type mapModelView struct {
 	RenderURL  string `json:"renderUrl"`
 	LODURL     string `json:"lodUrl"`
 	PreviewURL string `json:"previewUrl"`
+	ShadowURL  string `json:"shadowUrl"`
 }
 
 func modelView(model, visual battlemap.Model, base string) mapModelView {
@@ -34,7 +35,11 @@ func modelView(model, visual battlemap.Model, base string) mapModelView {
 	}
 	metadata := model.ModelMetadata
 	metadata.TextureDetail = visual.TextureDetail
-	return mapModelView{metadata, path + "/render" + query, path + "/lod" + query, path + "/preview" + query}
+	shadowPath := "/shadow"
+	if visual.Assets["shadow"].SHA256 == visual.Assets["lod"].SHA256 {
+		shadowPath = "/lod"
+	}
+	return mapModelView{metadata, path + "/render" + query, path + "/lod" + query, path + "/preview" + query, path + shadowPath + query}
 }
 
 func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {

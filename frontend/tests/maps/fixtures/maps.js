@@ -193,6 +193,7 @@ const catalogue = [
   blockers: [],
   renderUrl: `/api/maps/models/${m.id}/render`,
   lodUrl: `/api/maps/models/${m.id}/lod`,
+  shadowUrl: `/api/maps/models/${m.id}/lod`,
   previewUrl: "/maps/city.svg",
 }));
 const cubeScene = new Scene(),

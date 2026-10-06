@@ -45,7 +45,7 @@ func parseMapAsset(args map[string]json.RawMessage) (string, battlemap.ModelAsse
 	mime := ""
 	limit := int64(32 << 20)
 	switch kind {
-	case "render", "lod":
+	case "render", "lod", "shadow":
 		if ext == ".glb" {
 			mime = "model/gltf-binary"
 		}

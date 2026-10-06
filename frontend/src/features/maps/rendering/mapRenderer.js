@@ -105,8 +105,9 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
         loadingPreview.advance(delta);
       const flickering = lighting.advance(
         Math.min(250, elapsed),
-        tiles.transform,
+        (id) => preview.transform(id) || tiles.transform(id),
         objects,
+        objectPreview.root,
       );
       lastFrame = time;
       gpu.render(scene, camera);
@@ -183,6 +184,10 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     const previewPending = movingIds.size
       ? assets.ensure(movingIds, "render", opts)
       : Promise.resolve();
+    const shadowPending =
+      d.lightingEnabled && (ids.size || movingIds.size)
+        ? assets.ensure(new Set([...ids, ...movingIds]), "shadow", opts)
+        : Promise.resolve();
     // Start rendering the preview immediately; network loading does not block it.
     const readyMetadata = d.tiles.every((t) => assets.metadata(t.modelId));
     if (readyMetadata) structure.update(d);
@@ -197,7 +202,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     };
     loadingPreview.update(loadingOptions, opts.catalogue || assets.catalogue());
     render();
-    await Promise.all([pending, previewPending]);
+    await Promise.all([pending, previewPending, shadowPending]);
     if (dead || id !== epoch) return;
     loadingPreview.update(opts, opts.catalogue || assets.catalogue());
     const placed = structure.update(d);
@@ -371,6 +376,8 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       placed,
       posedObjects,
       view.getView(),
+      objects,
+      objectPreview.root,
     );
     background.update(d, opts);
     render();

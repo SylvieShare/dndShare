@@ -38,6 +38,8 @@ func (s *Server) toolMapModels(r *http.Request, name string, args map[string]jso
 			return nil, errors.New("model UUID required")
 		}
 		return s.store.GetMapModel(r.Context(), id)
+	case "map_tile_model_register_shadow":
+		return s.toolRegisterMapShadow(r, args)
 	case "map_tile_model_register":
 		if err := s.mcpRequireWrite(); err != nil {
 			return nil, err
@@ -45,6 +47,9 @@ func (s *Server) toolMapModels(r *http.Request, name string, args map[string]jso
 		var model battlemap.Model
 		if err := json.Unmarshal(args["model"], &model); err != nil {
 			return nil, errors.New("model must be a complete JSON object")
+		}
+		if err := s.assignMapShadow(r, &model); err != nil {
+			return nil, err
 		}
 		if err := validateMapModel(model); err != nil {
 			return nil, err

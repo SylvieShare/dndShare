@@ -218,6 +218,13 @@
         "size": 18998484,
         "mimeType": "model/stl",
         "fileName": "LC-001-Wall 1.stl"
+      },
+      "shadow": {
+        "key": "map-models/28a314043e009fa4d2710e6de16bcf5d50b3e9cd455125b003cecdd7ac782747.glb",
+        "sha256": "28a314043e009fa4d2710e6de16bcf5d50b3e9cd455125b003cecdd7ac782747",
+        "size": 1985100,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-001.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -472,6 +479,13 @@
         "size": 19998184,
         "mimeType": "model/stl",
         "fileName": "LC-002-Wall 2.stl"
+      },
+      "shadow": {
+        "key": "map-models/bd9b5938283dc6bdb1559b648ee4546587f0e4808c65bf7050c60b8aa20c376e.glb",
+        "sha256": "bd9b5938283dc6bdb1559b648ee4546587f0e4808c65bf7050c60b8aa20c376e",
+        "size": 1881088,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-002.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -710,6 +724,13 @@
         "size": 18997984,
         "mimeType": "model/stl",
         "fileName": "LC-003-Wall Angle.stl"
+      },
+      "shadow": {
+        "key": "map-models/7dd990b12b88852f0cb56dce48c39ed8a130a1ff6c48a0cf6a8715ec4af0acb3.glb",
+        "sha256": "7dd990b12b88852f0cb56dce48c39ed8a130a1ff6c48a0cf6a8715ec4af0acb3",
+        "size": 1919244,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-003.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -1028,6 +1049,13 @@
         "size": 20996284,
         "mimeType": "model/stl",
         "fileName": "LC-004-Wall T-Shaped.stl"
+      },
+      "shadow": {
+        "key": "map-models/47c4d03fce5982f4069d09414e7431592f8efa7239043163aacec1f9b0ebd4d2.glb",
+        "sha256": "47c4d03fce5982f4069d09414e7431592f8efa7239043163aacec1f9b0ebd4d2",
+        "size": 1898820,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-004.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -1390,6 +1418,13 @@
         "size": 21986984,
         "mimeType": "model/stl",
         "fileName": "LC-005-Wall X-Shaped.stl"
+      },
+      "shadow": {
+        "key": "map-models/79fac236d98bdcfa975ca05916384d9d44dd441bb58467e63a43c90c8809e11e.glb",
+        "sha256": "79fac236d98bdcfa975ca05916384d9d44dd441bb58467e63a43c90c8809e11e",
+        "size": 1820540,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-005.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -1566,6 +1601,13 @@
         "size": 16998784,
         "mimeType": "model/stl",
         "fileName": "LC-006-Wall Corner.stl"
+      },
+      "shadow": {
+        "key": "map-models/c76b979139bab116365910af08740951b148f8ec369118ba4569ed0593eb53aa.glb",
+        "sha256": "c76b979139bab116365910af08740951b148f8ec369118ba4569ed0593eb53aa",
+        "size": 1969816,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-006.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -1633,6 +1675,13 @@
         "size": 12998484,
         "mimeType": "model/stl",
         "fileName": "LC-007-Ground 1.stl"
+      },
+      "shadow": {
+        "key": "map-models/1c8270b4720668fd5477a0c9fd24c46338e317090f4872f0c9323451066a7af8.glb",
+        "sha256": "1c8270b4720668fd5477a0c9fd24c46338e317090f4872f0c9323451066a7af8",
+        "size": 2035760,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-007.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -1700,6 +1749,13 @@
         "size": 12996584,
         "mimeType": "model/stl",
         "fileName": "LC-008-Ground 2.stl"
+      },
+      "shadow": {
+        "key": "map-models/139cdcaab209241db267040c6f46ebf488aa20846947309a67947d62e31b7077.glb",
+        "sha256": "139cdcaab209241db267040c6f46ebf488aa20846947309a67947d62e31b7077",
+        "size": 2300664,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-008.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -1767,6 +1823,13 @@
         "size": 12995784,
         "mimeType": "model/stl",
         "fileName": "LC-009-Ground 3.stl"
+      },
+      "shadow": {
+        "key": "map-models/1a8778cb198199ce66780db7746996791e1570f95de0349dadffa682a27688ef.glb",
+        "sha256": "1a8778cb198199ce66780db7746996791e1570f95de0349dadffa682a27688ef",
+        "size": 2032792,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-009.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -2024,6 +2087,13 @@
         "size": 15998884,
         "mimeType": "model/stl",
         "fileName": "LC-010-Stalagmite Ground 1.stl"
+      },
+      "shadow": {
+        "key": "map-models/f3a618881a8294c16ae6f51ac1e1c9e92ddd836dc1476fea1bf00a45b4b0cdc1.glb",
+        "sha256": "f3a618881a8294c16ae6f51ac1e1c9e92ddd836dc1476fea1bf00a45b4b0cdc1",
+        "size": 2106732,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-010.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -2183,6 +2253,13 @@
         "size": 16998584,
         "mimeType": "model/stl",
         "fileName": "LC-011-Stalagmite Ground 2.stl"
+      },
+      "shadow": {
+        "key": "map-models/f657394008ceca708193033dc45e5211a8787455332cd661a3b2296ef618775c.glb",
+        "sha256": "f657394008ceca708193033dc45e5211a8787455332cd661a3b2296ef618775c",
+        "size": 2064552,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-011.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -2486,6 +2563,13 @@
         "size": 21931684,
         "mimeType": "model/stl",
         "fileName": "LC-012-Stalagmite Wall 1.stl"
+      },
+      "shadow": {
+        "key": "map-models/893d70b5f01174148c4af114700d64ca5cd75e75a439c50b6c1b312289c9faf8.glb",
+        "sha256": "893d70b5f01174148c4af114700d64ca5cd75e75a439c50b6c1b312289c9faf8",
+        "size": 1957372,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-012.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -2801,6 +2885,13 @@
         "size": 21981684,
         "mimeType": "model/stl",
         "fileName": "LC-013-Stalagmite Wall 2.stl"
+      },
+      "shadow": {
+        "key": "map-models/290738b7d0e4da4952f7921446db63afd0908391b38f563540eddd844db29095.glb",
+        "sha256": "290738b7d0e4da4952f7921446db63afd0908391b38f563540eddd844db29095",
+        "size": 1979412,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-013.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -3104,6 +3195,13 @@
         "size": 21997984,
         "mimeType": "model/stl",
         "fileName": "LC-014-Stalagmite Angle.stl"
+      },
+      "shadow": {
+        "key": "map-models/d503362eaf36003e389c89294cfbab62ebaf9f278cf6a11f4dbf2758554c7980.glb",
+        "sha256": "d503362eaf36003e389c89294cfbab62ebaf9f278cf6a11f4dbf2758554c7980",
+        "size": 2003076,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-014.lod.glb"
       }
     },
     "collectionName": "Lost Cave",
@@ -3409,6 +3507,13 @@
         "size": 18997684,
         "mimeType": "model/stl",
         "fileName": "LC-015-Stalagmite Corner.stl"
+      },
+      "shadow": {
+        "key": "map-models/ad72916473a287043c5a7dc97915c7583bbc7e8919e9a761e3e7b34ce9a7ecb3.glb",
+        "sha256": "ad72916473a287043c5a7dc97915c7583bbc7e8919e9a761e3e7b34ce9a7ecb3",
+        "size": 1955932,
+        "mimeType": "model/gltf-binary",
+        "fileName": "LC-015.lod.glb"
       }
     },
     "collectionName": "Lost Cave",

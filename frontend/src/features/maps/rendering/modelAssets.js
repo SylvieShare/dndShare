@@ -101,7 +101,7 @@ export function modelAssets(onError, renderer) {
           const metadata = catalogue.get(id);
           if (!metadata)
             throw new Error("Модель плитки отсутствует в каталоге");
-          const url = tier === "lod" ? metadata.lodUrl : metadata.renderUrl;
+          const url = metadata[`${tier}Url`];
           if (!owned.has(url)) {
             const entry = { promise: acquire(url, loader), value: null };
             owned.set(url, entry);
@@ -127,7 +127,7 @@ export function modelAssets(onError, renderer) {
     catalogue: () => [...catalogue.values()],
     model(id, tier) {
       const m = catalogue.get(id);
-      return m && owned.get(tier === "lod" ? m.lodUrl : m.renderUrl)?.value;
+      return m && owned.get(m[`${tier}Url`])?.value;
     },
     destroy() {
       if (dead) return;

@@ -50,7 +50,7 @@ func TestMapAssetInputValidation(t *testing.T) {
 func TestMapWritesRejectBeforeTouchingStorage(t *testing.T) {
 	s := &Server{cfg: config.Config{MCPWriteEnabled: false}}
 	r := httptest.NewRequest("POST", "/mcp", nil)
-	for _, name := range []string{"map_tile_asset_prepare_upload", "map_tile_asset_complete_upload", "map_tile_model_register"} {
+	for _, name := range []string{"map_tile_asset_prepare_upload", "map_tile_asset_complete_upload", "map_tile_model_register", "map_tile_model_register_shadow"} {
 		if _, err := s.dispatchTool(r, name, map[string]json.RawMessage{}); err == nil || !strings.Contains(err.Error(), "disabled") {
 			t.Fatalf("%s: %v", name, err)
 		}
@@ -124,5 +124,20 @@ func TestRegisteredModelPlacementOffsetValidation(t *testing.T) {
 		if validateMapModel(model) == nil {
 			t.Fatalf("accepted invalid placement offset %v", offset)
 		}
+	}
+}
+
+func TestMapShadowUploadAndMetadata(t *testing.T) {
+	a := mapAssetArgs()
+	a["kind"] = json.RawMessage(`"shadow"`)
+	a["fileName"] = json.RawMessage(`"shadow.glb"`)
+	kind, asset, err := parseMapAsset(a)
+	if err != nil || kind != "shadow" || asset.MimeType != "model/gltf-binary" {
+		t.Fatalf("shadow upload: %s %+v %v", kind, asset, err)
+	}
+	model := battlemap.InitialCatalogue()[0]
+	delete(model.Assets, "shadow")
+	if validateMapModel(model) == nil {
+		t.Fatal("stored model without shadow accepted")
 	}
 }

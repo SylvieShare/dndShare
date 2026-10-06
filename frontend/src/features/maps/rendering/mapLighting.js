@@ -31,7 +31,16 @@ export function createMapLighting(scene, gpu, assets) {
     clock = 0,
     sunKey = "",
     enabled = false;
-  function update(d, options, context, placed, objects, view) {
+  function update(
+    d,
+    options,
+    context,
+    placed,
+    objects,
+    view,
+    objectRoot,
+    objectPreview,
+  ) {
     enabled = !!d.lightingEnabled;
     gpu.shadowMap.enabled = enabled;
     proxies.root.visible = enabled;
@@ -140,17 +149,18 @@ export function createMapLighting(scene, gpu, assets) {
     });
     active = next;
     const nextProxy = enabled
-      ? proxies.update(d, placed, objects, options)
+      ? proxies.update(d, placed, objects, options, objectRoot, objectPreview)
       : "";
     if (proxyKey !== nextProxy) {
       proxyKey = nextProxy;
       gpu.shadowMap.needsUpdate = true;
     }
   }
-  function advance(delta, tileMatrix, objects) {
+  function advance(delta, tileMatrix, objects, objectPreview) {
     if (!enabled) return false;
     clock += delta / 1000;
-    if (proxies.advance(tileMatrix, objects)) gpu.shadowMap.needsUpdate = true;
+    if (proxies.advance(tileMatrix, objects, objectPreview))
+      gpu.shadowMap.needsUpdate = true;
     let moving = false;
     active.forEach((source, i) => {
       const flicker = source.flicker

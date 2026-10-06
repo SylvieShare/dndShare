@@ -74,10 +74,10 @@ func validateMapModel(m battlemap.Model) error {
 			}
 		}
 	}
-	if len(m.Assets) != 4 {
-		return errors.New("four model assets required")
+	if len(m.Assets) != 5 {
+		return errors.New("five model assets required")
 	}
-	for _, key := range []string{"render", "lod", "preview", "source"} {
+	for _, key := range []string{"render", "lod", "preview", "source", "shadow"} {
 		if _, ok := m.Assets[key]; !ok {
 			return errors.New("missing model asset " + key)
 		}

@@ -87,6 +87,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
             Array.isArray(part.material) ? materials : materials[0],
             indices.length,
           );
+          mesh.receiveShadow = true;
           mesh.frustumCulled = false;
           mesh.userData = { partMatrix: part.matrix, metadata, indices };
           root.add(mesh);
@@ -214,12 +215,22 @@ export function createTilePreview(assets, onSettled = () => {}) {
       point: { x: hit.point.x, y: hit.point.z, elevation: hit.point.y },
     };
   }
+  function transform(id) {
+    if (!target || !position) return null;
+    const group = target.group || [target];
+    const index = group.findIndex((tile, i) => (tile.id || i) === id);
+    if (index < 0) return null;
+    const metadata = assets.metadata(group[index].modelId);
+    const pose = rotation.pose(group[index].id || index);
+    return metadata && pose ? tilePoseTransform(pose, metadata) : null;
+  }
   return {
     root,
     update,
     advance,
     posed,
     hit,
+    transform,
     hiddenIds: () => hidden,
     modelIds: () =>
       new Set(

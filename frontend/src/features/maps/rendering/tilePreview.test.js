@@ -28,6 +28,9 @@ it("eases vertical snapping in the actual instance transform", () => {
     position = new Vector3();
   preview.root.children[0].getMatrixAt(0, matrix);
   position.setFromMatrixPosition(matrix);
+  preview
+    .transform("tile")
+    .elements.forEach((v, i) => expect(v).toBeCloseTo(matrix.elements[i], 6));
   expect(position.y).toBeGreaterThan(0);
   expect(position.y).toBeLessThan(0.6);
   preview.advance(3000);

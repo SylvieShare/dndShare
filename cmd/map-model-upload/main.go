@@ -139,7 +139,10 @@ func main() {
 		go func() {
 			defer wg.Done()
 			for model := range jobs {
-				for _, kind := range []string{"preview", "render", "lod", "source"} {
+				for _, kind := range []string{"preview", "render", "lod", "shadow", "source"} {
+					if _, present := model.Assets[kind]; !present {
+						continue // Optional shadow is resolved by registration.
+					}
 					if knownAssets[model.Assets[kind]] {
 						continue // Immutable, already verified asset; registration checks S3 again.
 					}
