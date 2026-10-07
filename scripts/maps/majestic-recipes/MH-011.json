@@ -1,0 +1,84 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 70000,
+  "lodTriangles": 30000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stone", "ruins", "outdoor", "xl"],
+  "recipe": "majestic-measured-medium-ruins-2-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2500000, 5000000],
+    "targetLODBytes": [800000, 2000000],
+    "targetShadowBytes": [60000, 170000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "572678 source triangles; two diagonal broken wall groups on MH-002 terrain rotated 90 degrees. Preserve openings, ground and slab edges with 70k/30k."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-29, -11],
+      [-28, 3],
+      [-22, 12],
+      [-13, 22],
+      [-1, 19],
+      [7, 5],
+      [3, -9],
+      [-13, -14]
+    ],
+    [
+      [2, -34],
+      [-5, -20],
+      [3, -6],
+      [5, 4],
+      [11, 26],
+      [36, 19],
+      [36, -12],
+      [25, -34]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 25,
+  "blockedCells": [
+    [2, 0],
+    [0, 2]
+  ],
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 90,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 15.1
+  },
+  "masonryRGB": [0.48, 0.445, 0.35],
+  "stoneVariation": 0.085,
+  "darkenJoints": true,
+  "blockers": [
+    [
+      [0.162045, 2.676331],
+      [1.076331, 1.762045],
+      [1.237955, 1.923669],
+      [0.323669, 2.837955]
+    ],
+    [
+      [1.762045, 1.076331],
+      [2.676331, 0.162045],
+      [2.837955, 0.323669],
+      [1.923669, 1.237955]
+    ]
+  ],
+  "grassReferenceRotation": 90
+}
