@@ -10,3 +10,12 @@ test("Lost Cave snapshots and review journals cannot overwrite Ultimate Dungeon 
   assert.ok(lc.detail.endsWith("lost-cave/detailed"));
   assert.throws(() => reviewCollection("../ultimate-dungeon"), /Unsupported/);
 });
+test("Toxic Sewer has a separate registry and processing journal", () => {
+  const ts = requestedCollection(["--collection=toxic-sewer"]);
+  for (const name of ["ultimate-dungeon", "lost-cave"]) {
+    const other = reviewCollection(name);
+    assert.notEqual(ts.snapshot, other.snapshot);
+    assert.notEqual(ts.detail, other.detail);
+  }
+  assert.ok(ts.detail.endsWith("toxic-sewer/detailed"));
+});

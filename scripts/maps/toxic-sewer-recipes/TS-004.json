@@ -1,0 +1,64 @@
+{
+  "sourceName": "Wall Pipes 1",
+  "material": "sewer-components",
+  "referencePage": 2,
+  "renderTriangles": 32000,
+  "lodTriangles": 9000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.0],
+    "lodMiB": [0.25, 0.65],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell brick wall with two curved thin pipes; preserve both tubes and fittings while checking metallic masks against bare masonry."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-14.122, 6.0786, 14.3],
+        [-14.122, 6.0786, 32.3],
+        [-14.122, 6.5, 33.8],
+        [-14.122, 7.6, 35.0],
+        [-14.122, 9.1, 35.5],
+        [-14.122, 11.0, 35.5]
+      ],
+      "radius": 2.1,
+      "min": [-16.322, 3.8, 14.1],
+      "max": [-11.922, 12.8, 37.6]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [14.541, 6.0786, 14.3],
+        [14.541, 6.0786, 32.3],
+        [14.541, 6.5, 33.8],
+        [14.541, 7.6, 35.0],
+        [14.541, 9.1, 35.5],
+        [14.541, 11.0, 35.5]
+      ],
+      "radius": 2.1,
+      "min": [12.341000000000001, 3.8, 14.1],
+      "max": [16.741, 12.8, 37.6]
+    }
+  ],
+  "notes": "Two wall-mounted pipes are copper; compare measured bare TS-001 surface to exclude adjacent brick and floor. Individual path/radius is checked on front, reverse and top.",
+  "measurements": {
+    "crossSectionsMM": [20, 25, 32, 35],
+    "shaftCentresXY": [
+      [-14.122, 6.0786],
+      [14.541, 6.0786]
+    ],
+    "shaftRadiusMM": 1.398,
+    "maskRadiusWithFittingsMM": 2.1,
+    "bareWallFrontYMM": [10.528, 10.989]
+  }
+}

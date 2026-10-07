@@ -1,0 +1,21 @@
+{
+  "sourceName": "Level Grid 2X3",
+  "material": "sewer-masonry",
+  "referencePage": 15,
+  "renderTriangles": 60000,
+  "lodTriangles": 16000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [2, 7],
+    "lodMiB": [0.3, 2.5],
+    "shadowKiB": [25, 160],
+    "previewKiB": [8, 55],
+    "basis": "Structural frame 2x3: preserve every cavity, crossbar, support slot and accepted mounting mesh; independent geometry and atlas budget."
+  },
+  "notes": "Brick outer faces and plain inner braces remain green masonry. Structural openings and support slots must survive render, LOD and shadow."
+}

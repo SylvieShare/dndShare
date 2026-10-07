@@ -1,0 +1,20 @@
+{
+  "sourceName": "Bridge",
+  "material": "sewer-masonry",
+  "referencePage": 7,
+  "renderTriangles": 50000,
+  "lodTriangles": 12000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [2, 5],
+    "lodMiB": [0.6, 1.8],
+    "shadowKiB": [35, 110],
+    "previewKiB": [8, 50],
+    "basis": "Three-cell bridge with arch, deck joints and two mounting supports; larger atlas for the long span."
+  }
+}

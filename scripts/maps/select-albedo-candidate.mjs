@@ -7,7 +7,7 @@ if (
   !file ||
   !(
     ["original", "png", "ktx-balanced", "ktx-compact"].includes(name) ||
-    /^albedo-\d+-\d+(?:-roughness4)?$/.test(name)
+    /^(?:albedo|maps)-\d+-\d+(?:-roughness4)?$/.test(name)
   ) ||
   !reason
 )

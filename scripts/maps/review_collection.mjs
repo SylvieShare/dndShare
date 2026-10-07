@@ -1,12 +1,12 @@
 import path from "node:path";
 export function reviewCollection(collection = "ultimate-dungeon") {
-  if (!["ultimate-dungeon", "lost-cave"].includes(collection))
+  if (!["ultimate-dungeon", "lost-cave", "toxic-sewer"].includes(collection))
     throw new Error("Unsupported review collection: " + collection);
   const base = path.resolve(import.meta.dirname, "../../models/collections");
   const detailFolder =
     collection === "ultimate-dungeon"
       ? "ultimate-detail"
-      : "lost-cave/detailed";
+      : collection + "/detailed";
   return {
     collection,
     base,

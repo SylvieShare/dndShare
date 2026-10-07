@@ -1,0 +1,21 @@
+{
+  "sourceName": "Level Grid 3X6",
+  "material": "sewer-masonry",
+  "referencePage": 16,
+  "renderTriangles": 100000,
+  "lodTriangles": 24000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [2, 7],
+    "lodMiB": [0.3, 2.5],
+    "shadowKiB": [25, 160],
+    "previewKiB": [8, 55],
+    "basis": "Structural frame 3x6: preserve every cavity, crossbar, support slot and accepted mounting mesh; independent geometry and atlas budget."
+  },
+  "notes": "Brick outer faces and plain inner braces remain green masonry. Structural openings and support slots must survive render, LOD and shadow."
+}

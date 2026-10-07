@@ -1,0 +1,20 @@
+{
+  "sourceName": "Well Empty",
+  "material": "sewer-masonry",
+  "referencePage": 10,
+  "renderTriangles": 24000,
+  "lodTriangles": 7000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.8, 2.1],
+    "lodMiB": [0.25, 0.7],
+    "shadowKiB": [20, 80],
+    "previewKiB": [8, 45],
+    "basis": "Well Empty: one-cell masonry construction; budget selected for its openings, steps and sculpted block joints, independently of TS-001."
+  }
+}
