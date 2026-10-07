@@ -215,5 +215,102 @@
       "basis": "Alternate numbered diagonal 1x1 wall comparable to reviewed UD-097; inspect both faces and compare two lighter atlases."
     },
     "notes": "Individually inspected alternate numbered diagonal wall source: both grey masonry faces, worn triangular terminal stones and two cobbled floor regions. Preserve its distinct ID, coordinates and mounting data."
+  },
+  "UD-107": {
+    "sourceName": "Level Grid 1x1",
+    "referencePage": 16,
+    "material": "frame-stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [2, 5],
+      "lodMiB": [0.7, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [10, 100],
+      "basis": "1x1 hollow masonry frame with sculpted exterior and smooth inner slot, similar to small reviewed walls; preserve all slot faces and compare two lighter atlases."
+    },
+    "notes": "Cold grey masonry throughout the three exterior courses and chipped rim; smooth inner slot walls, shelf and opening remain unobstructed. Preserve slot elevation0.716446, 1x1 size, zero mounting depth and original geometry."
+  },
+  "UD-108": {
+    "sourceName": "Key 2",
+    "referencePage": 14,
+    "material": "stone",
+    "datum": 100,
+    "floorSeams": "ao-only",
+    "preserveTextureSize": true,
+    "weightBudget": {
+      "renderMiB": [0.3, 1.4],
+      "lodMiB": [0.1, 0.5],
+      "shadowKiB": [1, 10],
+      "previewKiB": [5, 50],
+      "basis": "Small smooth mechanical key with1220 source triangles, comparable to UD-104; preserve accepted1024/512 maps and compare768/384 variants."
+    },
+    "notes": "Individually inspected smooth mounting key: rounded square post and thin base flange, blank upper face, neutral grey wear only. Preserve original cropped coordinates, prop type, hidden status and placement; no red glyph invented."
+  },
+  "UD-109": {
+    "sourceName": "Prison Cell Door 2",
+    "referencePage": 14,
+    "material": "wooden-grille",
+    "floorSeams": "ao-only",
+    "posts": [-15.75, -5.375, 5.625, 15.75],
+    "railSamples": [
+      [
+        -16.5,
+        [
+          [26.38, 30.25],
+          [32.12, 36.12],
+          [38.75, 42.62],
+          [51.75, 55.62],
+          [65.25, 69.12]
+        ]
+      ],
+      [
+        -10,
+        [
+          [25.38, 29.25],
+          [31.88, 35.88],
+          [38.88, 42.75],
+          [51.25, 55.25],
+          [65.75, 69.62]
+        ]
+      ],
+      [
+        0,
+        [
+          [24.88, 28.88],
+          [31.62, 35.5],
+          [39.5, 43.38],
+          [51.25, 55.12],
+          [66.25, 70.12]
+        ]
+      ],
+      [
+        5,
+        [
+          [25, 29],
+          [31.5, 35.5],
+          [39.62, 43.62],
+          [51.38, 55.25],
+          [66, 69.88]
+        ]
+      ],
+      [
+        14.4,
+        [
+          [26, 29.88],
+          [31.75, 35.62],
+          [39.5, 43.38],
+          [51.88, 55.75],
+          [65.62, 69.5]
+        ]
+      ]
+    ],
+    "weightBudget": {
+      "renderMiB": [3, 6],
+      "lodMiB": [1, 2.5],
+      "shadowKiB": [40, 120],
+      "previewKiB": [15, 120],
+      "basis": "SHA-identical source to reviewed wooden grille UD-098 with same crop; independently prepare and compare two lighter atlases."
+    },
+    "notes": "Individually inspected alternate numbered prison door. Source STL SHA and crop match UD-098, so reuse measured bowed stock, warped iron straps and ground boundaries. Preserve the distinct sourceCode, original geometry/UV and metadata; verify both faces and LOD again."
   }
 }

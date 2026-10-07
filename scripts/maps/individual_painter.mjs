@@ -33,7 +33,13 @@ export async function individualPainter({ code, spec, model, collectionBase }) {
     parts = ["base", "floor", "wall"];
   if (spec.material === "stone" && model.maxHeight * 35 <= datum + 2.5)
     parts = model.maxHeight * 35 <= datum ? ["base"] : ["base", "floor"];
-  if (spec.material === "wooden-grille") {
+  if (spec.material === "frame-stone") {
+    painter = (rgb, p, n) => ({
+      ...paintStone(rgb, p, n, { datum: -10 }),
+      part: "stone",
+    });
+    parts = ["stone"];
+  } else if (spec.material === "wooden-grille") {
     painter = makeWoodenGrillePainter(spec);
     parts = ["stone", "soil", "wood", "iron"];
   } else if (spec.material === "key-column") {
