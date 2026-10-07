@@ -89,3 +89,26 @@ test("LC-020 follows concentric arcs and radial timber while leaving gaps stone"
   ])
     assert.equal(railwayPartAt(p, s), "rock");
 });
+test("rail wear changes smoothly through the former 13.8mm colour boundary", () => {
+  const values = [13.799, 13.801].map((z) =>
+    paintRailway([8.3, 14, z], [0, 0, 1], 255, specs["LC-021"]),
+  );
+  assert.ok(Math.abs(values[0].roughness - values[1].roughness) < 0.01);
+  assert.ok(values[0].rgb.every((v, i) => Math.abs(v - values[1].rgb[i]) <= 2));
+});
+test("right junction keeps crossing rails and hidden fastener distinct from four timber axes", () => {
+  const s = specs["LC-021"];
+  for (const p of [
+    [-8.263, 13.5911, 14.1201],
+    [15.3455, 7.4643, 14.05],
+    [-2.4171, 2.523, 11.4305],
+  ])
+    assert.equal(railwayPartAt(p, s), "iron");
+  for (const p of [
+    [0.4497, 11.9132, 9.9762],
+    [-0.3935, -12.4824, 9.9926],
+    [2.8667, -3.8815, 9.6709],
+    [13.3782, 0.7271, 10.043],
+  ])
+    assert.equal(railwayPartAt(p, s), "wood");
+});

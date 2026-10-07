@@ -1,0 +1,125 @@
+{
+  "sourceName": "Railway T-Shaped Right",
+  "referencePage": 4,
+  "material": "cave-railway",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 16000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.6, 4.8],
+    "lodMiB": [0.7, 2.2],
+    "shadowKiB": [25, 120],
+    "previewKiB": [10, 150],
+    "basis": "319980-triangle1x1 right track junction with straight and curved rails, five fasteners and four timber directions.45k/16k preserve fused junction edges; two KTX2 comparisons."
+  },
+  "notes": "Author page4: right T junction. Two straight iron rails join quarter-circle arcs; grain follows four measured timber segments and five hex heads stay iron. Measured groupCode LC-railway-t-shaped-right is distinct from plain turn; preserve LC-021 logical identity, sourceCode/sourceName, footprint and mounting0. Sharp light patches persisted with neutral normals: confirmed hard wear threshold13.8mm instead. Preserve rebaked normals, change wear to smooth transition13.2-14.15mm; timber and stone channels unchanged.",
+  "railway": {
+    "rails": [
+      {
+        "arc": {
+          "centre": [17.5, -17.5],
+          "radius": 25.55
+        },
+        "halfWidth": 2.75,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "arc": {
+          "centre": [17.5, -17.5],
+          "radius": 8.3
+        },
+        "halfWidth": 2.75,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -12.48,
+        "y": 10.39,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 13.04,
+        "y": 12.87,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.2,
+        "y": -12.93,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 14.78,
+        "y": -14.34,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -2.42,
+        "y": 2.52,
+        "radius": 2.25,
+        "minZ": 9.4
+      }
+    ],
+    "ties": [
+      {
+        "segment": [
+          [-15.9, 10.2],
+          [15.9, 13.4]
+        ],
+        "halfWidth": 3.2
+      },
+      {
+        "segment": [
+          [-15.9, -13.8],
+          [15.9, -10.3]
+        ],
+        "halfWidth": 3.2
+      },
+      {
+        "segment": [
+          [-4.4, 4.5],
+          [14.1, -12.8]
+        ],
+        "halfWidth": 3.2
+      },
+      {
+        "segment": [
+          [12.1, 15.5],
+          [14.4, -12.5]
+        ],
+        "halfWidth": 3.1
+      }
+    ],
+    "timberHalfLength": 17.55,
+    "timberMinZ": 7.15,
+    "timberMaxZ": 10.4,
+    "woodTint": [0.36, 0.255, 0.135]
+  },
+  "groupCode": "LC-railway-t-shaped-right"
+}

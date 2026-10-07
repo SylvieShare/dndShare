@@ -95,7 +95,8 @@ export function paintRailway(p, n, ao, spec) {
   }
   const noise = surfaceNoise(...p.map((v) => v * 0.5));
   const rust = Math.max(0, Math.min(1, (noise - 0.55) * 1.7));
-  const top = Math.max(0, n[2]) * (p[2] > 13.8 ? 0.12 : 0);
+  const height = Math.max(0, Math.min(1, (p[2] - 13.2) / 0.95));
+  const top = Math.max(0, n[2]) * height * height * (3 - 2 * height) * 0.12;
   return {
     part,
     rgb: [0.29, 0.3, 0.285].map((v, i) =>
