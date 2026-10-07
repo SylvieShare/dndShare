@@ -1,0 +1,31 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 20000,
+  "lodTriangles": 5000,
+  "tileType": "floor",
+  "hasDecor": false,
+  "tags": ["dirt", "soil", "outdoor", "xl"],
+  "recipe": "majestic-baked-soil-ground-v1",
+  "sizeAssessment": {
+    "targetRenderBytes": [800000, 2200000],
+    "targetLODBytes": [250000, 800000],
+    "targetShadowBytes": [10000, 50000],
+    "targetPreviewBytes": [8000, 40000],
+    "basis": "313102 source triangles, flat 3x3 soil with small grain. Bake fine relief instead of keeping it as geometry; compare source with 20k/5k and 1024/512 colour maps."
+  },
+  "baseSurface": "soil",
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13.0,
+  "soilTopFadeMM": 0.8,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "renderColourSize": 1024,
+  "lodColourSize": 512,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "standMaxZMM": 25
+}

@@ -93,12 +93,10 @@ for (const tier of ["render", "lod"]) {
       colour = colours.has(texture),
       normal = normals.has(texture);
     const size = colour
-      ? tier === "render"
-        ? 2048
-        : 1024
-      : tier === "render"
-        ? 1024
-        : 512;
+      ? (measured.recipe[tier + "ColourSize"] ??
+        (tier === "render" ? 2048 : 1024))
+      : (measured.recipe[tier + "DataSize"] ??
+        (tier === "render" ? 1024 : 512));
     const { data, info: imageInfo } = await sharp(
       Buffer.from(texture.getImage()),
     )
@@ -193,6 +191,8 @@ for (const tier of ["render", "lod"]) {
     triangles: info.renderTriangles,
     bytes: (await fs.stat(path.join(out, tier + ".glb"))).size,
     placementDrift: drift,
+    colourSize:
+      measured.recipe[tier + "ColourSize"] ?? (tier === "render" ? 2048 : 1024),
     quality: info.quality,
   };
 }

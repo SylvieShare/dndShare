@@ -37,8 +37,12 @@ test("decodes and renders actual KTX2/Meshopt models in both geometry tiers", as
   await page.goto("/tests/maps/fixtures/ktx.html");
   await page.waitForFunction(() => window.decodeTile);
   for (const [tier, triangles, size] of [
-    ["render", report.tiers.render.triangles, 2048],
-    ["lod", report.tiers.lod.triangles, 1024],
+    [
+      "render",
+      report.tiers.render.triangles,
+      report.tiers.render.colourSize ?? 2048,
+    ],
+    ["lod", report.tiers.lod.triangles, report.tiers.lod.colourSize ?? 1024],
   ]) {
     const decoded = await page.evaluate(
       (url) => window.decodeTile(url),

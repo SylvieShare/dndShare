@@ -94,7 +94,7 @@ def main():
     bpy.ops.uv.smart_project(angle_limit=1.35, island_margin=.0015, margin_method='FRACTION', area_weight=.8)
     bpy.ops.object.mode_set(mode='OBJECT')
     target.data.materials[0] = target.data.materials[0].copy()
-    tile_bake.SIZE = 1024 if args.optimized_tier=='lod' else 2048
+    tile_bake.SIZE = recipe.get('lodBakeSize',1024) if args.optimized_tier=='lod' else recipe.get('renderBakeSize',2048)
     print('MAJESTIC_BAKE', args.code, len(target.data.polygons), flush=True)
     tile_bake.bake(target, source, out)
     quality = tile_bake.validate_maps(target)
