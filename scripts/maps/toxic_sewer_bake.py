@@ -7,7 +7,8 @@ import bpy
 import numpy as np
 from mathutils import Matrix, Vector
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from tile_mesh import activate, crop, shade
+from tile_mesh import activate, shade
+from sewer_crop import crop, clip_mount
 from mathutils.bvhtree import BVHTree
 
 
@@ -70,6 +71,41 @@ def bake_tier(report, directory, tier):
     target = bpy.data.objects.new(report['model']['sourceCode']+' detailed body', source.data.copy())
     scene.collection.objects.link(target)
     datum = report['model']['mountDepth']*35
+    mount_source_bounds = None
+    if report['materialSpec'].get('mounting') == 'source-opening':
+        for obj in mounting:
+            bpy.data.objects.remove(obj, do_unlink=True)
+        mount = bpy.data.objects.new('Source insertion geometry', source.data.copy())
+        scene.collection.objects.link(mount)
+        clip_mount(mount, datum)
+        bpy.context.view_layer.update()
+        mount_source_bounds = bounds(mount)
+        activate(mount)
+        modifier = mount.modifiers.new('Open mounting budget', 'DECIMATE')
+        modifier.ratio = min(1, report['materialSpec'][tier+'MountTriangles']/len(mount.data.polygons))
+        modifier.use_collapse_triangulate = True
+        bpy.ops.object.modifier_apply(modifier=modifier.name)
+        for vertex in mount.data.vertices:
+            if vertex.co.z < -.1 or vertex.co.z > datum+.1:
+                raise ValueError('Mount decimation moved a cut plane more than0.1 mm')
+            if abs(vertex.co.z) < .05:
+                vertex.co.z = 0
+            elif abs(vertex.co.z-datum) < .05:
+                vertex.co.z = datum
+        shade(mount)
+        mat = bpy.data.materials.new('Simple insertion pegs — source opening')
+        mat.use_nodes = True
+        shader = mat.node_tree.nodes.get('Principled BSDF')
+        shader.inputs['Base Color'].default_value = (.13, .15, .085, 1)
+        shader.inputs['Roughness'].default_value = .9
+        mount.data.materials.clear()
+        mount.data.materials.append(mat)
+        for face in mount.data.polygons:
+            face.material_index = 0
+        mount.matrix_world = Matrix.Scale(1/35, 4) @ mount.matrix_world
+        mounting = [mount]
+        report['mountingCorrection'] = {'method': 'Source annular mounting geometry',
+                                       'reason': report['materialSpec']['mountingCorrectionReason']}
     crop(target, datum)
     for v in target.data.vertices:
         v.co.z += datum
@@ -89,6 +125,10 @@ def bake_tier(report, directory, tier):
     distances = [tree.find_nearest(v.co)[3] for v in sample if v.co.z>datum+.01]
     if max(distances,default=0)>1:
         raise ValueError('Detailed mesh strays more than1 mm from original sculpt')
+    for px, py in report['materialSpec'].get('openingProbesMM', []):
+        probe = Vector((px+report['sourceShiftMM'][0], py+report['sourceShiftMM'][1], sculpt[1][2]+1))
+        if BVHTree.FromObject(target, bpy.context.evaluated_depsgraph_get()).ray_cast(probe, Vector((0, 0, -1)))[0] is not None:
+            raise ValueError('Body preparation filled the source shaft')
     size = report['materialSpec'][tier+'BakeSize']
     normal = image_target(target, tier+'-normal', size, (.5,.5,1,1))
     activate(target)
@@ -134,7 +174,7 @@ def bake_tier(report, directory, tier):
     return {'bakeSize':size, 'repairedOppositeNormals':repaired, 'acceptedBoundsMM':before,
             'sourceBoundsMM':sculpt, 'triangles':len(target.data.polygons), 'sourceDeviationMM':max(distances,default=0),
             'uvRepacked':True,
-            'mountingMeshesRetained':len(mounting)}
+            'mountingMeshesRetained':len(mounting), 'mountSourceBoundsMM':mount_source_bounds}
 
 
 if __name__ == '__main__':

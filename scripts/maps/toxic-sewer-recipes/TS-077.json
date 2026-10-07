@@ -15,6 +15,14 @@
     "lodMiB": [0.25, 0.7],
     "shadowKiB": [20, 80],
     "previewKiB": [8, 45],
-    "basis": "Well Empty: one-cell masonry construction; budget selected for its openings, steps and sculpted block joints, independently of TS-001."
-  }
+    "basis": "One-cell empty well: preserve the shaft through body and mounting; include a small separate annular mount instead of overlapping solid proxies."
+  },
+  "mounting": "source-opening",
+  "renderMountTriangles": 1500,
+  "lodMountTriangles": 800,
+  "openingProbesMM": [
+    [0, 0],
+    [1, 1]
+  ],
+  "mountingCorrectionReason": "Accepted proxy contained a solid outer peg plus a false inner peg for the shaft contour. Rebuild the original annular mounting volume so body and mounting preserve the opening, footprint and depth."
 }
