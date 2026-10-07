@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { localModelAsset } from "./local_model_assets.mjs";
 import { prepareShadow } from "./shadow_model.mjs";
+import { transparentPreview } from "./preview_image.mjs";
 import { isDeepStrictEqual } from "node:util";
 const base = path.resolve(
   import.meta.dirname,
@@ -71,8 +72,12 @@ const require = createRequire("/private/tmp/dndshare-model-tools/package.json");
 const sharp = require("sharp");
 await sharp(path.join(directory, "preview.png"))
   .resize(512, 512)
-  .webp({ quality: 90 })
-  .toFile(path.join(directory, "preview-next.webp"));
+  .png()
+  .toFile(path.join(directory, "catalogue-preview.png"));
+const preview = await transparentPreview(
+  path.join(directory, "catalogue-preview.png"),
+);
+await fs.writeFile(path.join(directory, "preview-next.webp"), preview.bytes);
 await fs.rename(
   path.join(directory, "preview-next.webp"),
   path.join(directory, "preview.webp"),

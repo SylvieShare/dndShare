@@ -39,6 +39,9 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
         weight=np.maximum(weight,mask.astype(np.float32))
     grain=1+recipe.get('stoneVariation',.035)*np.sin(x*.17+y*.13+z*.07)+.018*np.sin(x*1.83-y*1.41+z*.67)
     colour=np.array(recipe.get('masonryRGB',[.47,.445,.37]))*grain[:,None]
+    if recipe.get('masonryTopRGB'):
+        top=np.clip((normals[:,2]-.4)/.35,0,1)*np.clip((z-recipe['masonryTopMinZMM'])/2,0,1)
+        colour=colour*(1-top[:,None])+np.array(recipe['masonryTopRGB'])*grain[:,None]*top[:,None]
     colours=colours*(1-weight[:,None])+colour*weight[:,None]
     roughness=roughness*(1-weight)+.93*weight
     attr=obj.data.color_attributes.new('Masonry','FLOAT_COLOR','POINT')
