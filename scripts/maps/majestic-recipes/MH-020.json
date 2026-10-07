@@ -1,0 +1,63 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stones", "outdoor", "xl"],
+  "recipe": "majestic-dirt-straight-measured-soil-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 25,
+  "ferns": [
+    {
+      "centreMM": [-10, -40, 16.2],
+      "radiiMM": [26, 15, 4.6],
+      "minZMM": 15.05
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [-42, 44, 17.1],
+      "radiiMM": [6.7, 5.2, 4.7]
+    },
+    {
+      "centreMM": [-32, 40, 16],
+      "radiiMM": [3.5, 5.1, 2.8]
+    },
+    {
+      "centreMM": [-19, -28, 17.4],
+      "radiiMM": [8.2, 7.2, 5]
+    },
+    {
+      "centreMM": [12, -41, 17.8],
+      "radiiMM": [8, 7, 5.3]
+    },
+    {
+      "centreMM": [35, -40, 18.5],
+      "radiiMM": [12, 10.2, 5.4]
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [1500000, 3200000],
+    "targetLODBytes": [500000, 1200000],
+    "targetShadowBytes": [25000, 65000],
+    "targetPreviewBytes": [12000, 50000],
+    "basis": "354562 source triangles, measured 3x3 floor. Large stone cluster and broad leaves along the edge need 40k/12k silhouette, unlike flatter MH-018/019. Soil reference matches MH-015 rotated 270 degrees."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512
+}
