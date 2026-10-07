@@ -1,14 +1,30 @@
 import { caveRockPixel } from "./lost_cave_surface.mjs";
 import { finishWood } from "./organic_finish.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
+function profileAt(y, samples, fallback) {
+  if (!samples) return fallback;
+  if (y <= samples[0][0]) return samples[0][1];
+  for (let i = 1; i < samples.length; i++) {
+    const [a, x] = samples[i - 1],
+      [b, v] = samples[i];
+    if (y <= b) return x + ((v - x) * (y - a)) / (b - a);
+  }
+  return samples.at(-1)[1];
+}
+function onTie(x, y, t) {
+  return (
+    (!t.x || (x >= t.x[0] && x <= t.x[1])) &&
+    Math.abs(y - t.y - t.slope * x) <= t.halfWidth
+  );
+}
 
 export function railwayPartAt([x, y, z], spec) {
   const railway = spec.railway;
   if (
     railway.rails.some(
       (r) =>
-        Math.abs(x - r.x) <= r.halfWidth &&
-        z >= r.minZ &&
+        Math.abs(x - profileAt(y, r.samples, r.x)) <= r.halfWidth &&
+        z >= profileAt(y, r.minZProfile, r.minZ) &&
         y >= r.y[0] &&
         y <= r.y[1],
     )
@@ -24,7 +40,7 @@ export function railwayPartAt([x, y, z], spec) {
     Math.abs(x) <= railway.timberHalfLength &&
     z >= railway.timberMinZ &&
     z <= railway.timberMaxZ &&
-    railway.ties.some((t) => Math.abs(y - t.y - t.slope * x) <= t.halfWidth)
+    railway.ties.some((t) => onTie(x, y, t))
   )
     return "wood";
   return "rock";
@@ -36,18 +52,29 @@ export function paintRailway(p, n, ao, spec) {
   const detail =
     0.78 + 0.22 * Math.max(0, Math.min(1, (ao / 255 - 0.65) / 0.35));
   if (part === "wood") {
-    const tie = spec.railway.ties.reduce((a, b) =>
-      Math.abs(p[1] - a.y - a.slope * p[0]) <
-      Math.abs(p[1] - b.y - b.slope * p[0])
-        ? a
-        : b,
-    );
+    const tie = spec.railway.ties
+      .filter((t) => onTie(p[0], p[1], t))
+      .reduce((a, b) =>
+        Math.abs(p[1] - a.y - a.slope * p[0]) <
+        Math.abs(p[1] - b.y - b.slope * p[0])
+          ? a
+          : b,
+      );
+    const angle = Math.atan(tie.slope),
+      c = Math.cos(angle),
+      s = Math.sin(angle);
+    const local = [
+      p[0] * c + (p[1] - tie.y) * s,
+      -p[0] * s + (p[1] - tie.y) * c,
+      p[2],
+    ];
+    const normal = [n[0] * c + n[1] * s, -n[0] * s + n[1] * c, n[2]];
     return finishWood(
       detail,
-      p,
-      n,
+      local,
+      normal,
       "x",
-      [0, tie.y, 8.8],
+      [0, 0, 8.8],
       spec.railway.woodTint,
     );
   }

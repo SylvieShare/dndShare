@@ -43,3 +43,28 @@ test("measured lower rail ends and bolt side faces remain iron", () => {
     assert.equal(railwayPartAt(p, spec), "iron");
   assert.equal(railwayPartAt([-9.0263, -17.1703, 6.2227], spec), "rock");
 });
+test("LC-019 separates bent rail fragments and broken timber from the gap", () => {
+  const s = specs["LC-019"];
+  for (const p of [
+    [-10.283, 7.4084, 13.9606],
+    [8.3725, 4.145, 16.0589],
+    [8.4849, -7.8198, 14.059],
+    [-13.3174, 2.0763, 10.8815],
+  ])
+    assert.equal(railwayPartAt(p, s), "iron");
+  for (const p of [
+    [-10.7326, 2.3042, 9.3391],
+    [-3.4277, -1.1804, 9.6947],
+    [7.5297, -1.2365, 9.6756],
+    [-0.1124, -12.1384, 10.0413],
+  ])
+    assert.equal(railwayPartAt(p, s), "wood");
+  for (const p of [
+    [-0.0562, 0.0023, 8.3916],
+    [-0.0562, 5.0572, 9.5606],
+    [0, -5.3904, 7.5474],
+    [8.9382, 2.648, 8.7196],
+    [9.1845, 2.6076, 9.5365],
+  ])
+    assert.equal(railwayPartAt(p, s), "rock");
+});
