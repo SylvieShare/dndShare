@@ -1,0 +1,93 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 45000,
+  "lodTriangles": 15000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "water", "rock", "arch", "outdoor", "xl"],
+  "recipe": "majestic-water-start-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2200000, 4200000],
+    "targetLODBytes": [700000, 1500000],
+    "targetShadowBytes": [30000, 85000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "431432 source triangles, measured 3x3 base and 37.43 mm arch over water. Ground matches MH-002. Test 45k/15k preserving arch opening, banks and sculpted ripples; separate water albedo and roughness by surface reference. Water reference MH-045 needs an independent 90-degree rotation; unrotated reference rejected due to false soil patches."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-11, 29],
+      [3, 28],
+      [12, 22],
+      [22, 13],
+      [19, 1],
+      [5, -7],
+      [-9, -3],
+      [-14, 13]
+    ],
+    [
+      [-34, -2],
+      [-20, 5],
+      [-6, -3],
+      [4, -5],
+      [26, -11],
+      [19, -36],
+      [-12, -36],
+      [-34, -25]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 45,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 17.3
+  },
+  "masonryRGB": [0.51, 0.355, 0.19],
+  "masonryTopRGB": [0.665, 0.51, 0.285],
+  "masonryTopMinZMM": 25,
+  "stoneVariation": 0.045,
+  "darkenJoints": true,
+  "blockers": [],
+  "water": {
+    "reference": "MH-045",
+    "rotateZ": 90,
+    "matchMM": 0.06,
+    "blendMM": 0.16,
+    "minZMM": 10.05,
+    "lowZMM": 11.5,
+    "highZMM": 14.1,
+    "boundsMM": [
+      [-54, -54, 10],
+      [-14, 54, 14.4]
+    ],
+    "deepRGB": [0.035, 0.28, 0.33],
+    "shallowRGB": [0.14, 0.56, 0.58],
+    "crestRGB": [0.52, 0.78, 0.74],
+    "roughness": 0.28,
+    "stones": [
+      {
+        "centreMM": [-41, -5, 15],
+        "radiiMM": [7, 8, 5],
+        "minZMM": 13.6,
+        "rgb": [0.39, 0.415, 0.385]
+      }
+    ]
+  }
+}
