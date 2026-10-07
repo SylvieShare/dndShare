@@ -1,0 +1,101 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "rock", "crater", "outdoor", "xl"],
+  "recipe": "majestic-weathered-small-crater-2-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2200000, 4000000],
+    "targetLODBytes": [700000, 1400000],
+    "targetShadowBytes": [30000, 80000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "452576 source triangles, measured 3x3 base and two different bowls up to 42.14 mm. Ground matches MH-002 rotated 90 degrees. Test 40k/14k preserving both openings and irregular rims; three crater cells excluded."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-29, -11],
+      [-28, 3],
+      [-22, 12],
+      [-13, 22],
+      [-1, 19],
+      [7, 5],
+      [3, -9],
+      [-13, -14]
+    ],
+    [
+      [2, -34],
+      [-5, -20],
+      [3, -6],
+      [5, 4],
+      [11, 26],
+      [36, 19],
+      [36, -12],
+      [25, -34]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 19.8,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 90,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 17.3
+  },
+  "masonryRGB": [0.51, 0.355, 0.19],
+  "masonryTopRGB": [0.665, 0.51, 0.285],
+  "masonryTopMinZMM": 23,
+  "stoneVariation": 0.045,
+  "darkenJoints": true,
+  "blockers": [
+    [
+      [1.94, 0.12],
+      [2.92, 0.12],
+      [2.92, 1.4],
+      [1.94, 1.4]
+    ],
+    [
+      [0.1, 2.03],
+      [1.85, 2.03],
+      [1.85, 3],
+      [0.1, 3]
+    ]
+  ],
+  "blockedCells": [
+    [2, 0],
+    [0, 2],
+    [1, 2]
+  ],
+  "grassReferenceRotation": 90,
+  "masonryInteriors": [
+    {
+      "centreMM": [29, 25],
+      "minZMM": 18,
+      "radiusMM": 23,
+      "rgb": [0.335, 0.215, 0.11]
+    },
+    {
+      "centreMM": [-19, -31],
+      "minZMM": 18,
+      "radiusMM": 30,
+      "rgb": [0.355, 0.235, 0.125]
+    }
+  ]
+}
