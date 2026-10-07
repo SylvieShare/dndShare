@@ -1,0 +1,86 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.85,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "rock", "crater", "outdoor", "xl"],
+  "recipe": "majestic-weathered-small-crater-1-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2100000, 3800000],
+    "targetLODBytes": [650000, 1300000],
+    "targetShadowBytes": [25000, 75000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "459816 source triangles, measured 3x3 base with 49.67 mm hollow crater. UNS ground matches MH-002 +0.1 mm in Z. Test 40k/12k preserving inner bowl and rim; exclude two crater cells from ground placement."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-11, 29],
+      [3, 28],
+      [12, 22],
+      [22, 13],
+      [19, 1],
+      [5, -7],
+      [-9, -3],
+      [-14, 13]
+    ],
+    [
+      [-34, -2],
+      [-20, 5],
+      [-6, -3],
+      [4, -5],
+      [26, -11],
+      [19, -36],
+      [-12, -36],
+      [-34, -25]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 19.8,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [0, 0, 0.1]
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 17.3
+  },
+  "masonryRGB": [0.51, 0.355, 0.19],
+  "masonryTopRGB": [0.665, 0.51, 0.285],
+  "masonryTopMinZMM": 37,
+  "stoneVariation": 0.045,
+  "darkenJoints": true,
+  "blockers": [
+    [
+      [2.02, 0.28],
+      [2.94, 0.28],
+      [2.94, 1.93],
+      [2.02, 1.93]
+    ]
+  ],
+  "grassReferenceTranslationMM": [0, 0, 0.1],
+  "blockedCells": [
+    [2, 0],
+    [2, 1]
+  ],
+  "masonryInterior": {
+    "centreMM": [31, 19],
+    "minZMM": 25,
+    "rgb": [0.335, 0.215, 0.11]
+  }
+}

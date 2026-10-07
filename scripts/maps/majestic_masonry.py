@@ -42,6 +42,13 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     if recipe.get('masonryTopRGB'):
         top=np.clip((normals[:,2]-.4)/.35,0,1)*np.clip((z-recipe['masonryTopMinZMM'])/2,0,1)
         colour=colour*(1-top[:,None])+np.array(recipe['masonryTopRGB'])*grain[:,None]*top[:,None]
+    if recipe.get('masonryInterior'):
+        interior=recipe['masonryInterior']
+        radial=positions[:,:2]-np.array(interior['centreMM'])
+        inward=-radial/np.maximum(np.linalg.norm(radial,axis=1)[:,None],1e-6)
+        facing=(normals[:,:2]*inward).sum(1)
+        inner=np.clip((facing-.2)/.45,0,1)*np.clip((z-interior['minZMM'])/2,0,1)
+        colour=colour*(1-inner[:,None])+np.array(interior['rgb'])*grain[:,None]*inner[:,None]
     colours=colours*(1-weight[:,None])+colour*weight[:,None]
     roughness=roughness*(1-weight)+.93*weight
     attr=obj.data.color_attributes.new('Masonry','FLOAT_COLOR','POINT')
