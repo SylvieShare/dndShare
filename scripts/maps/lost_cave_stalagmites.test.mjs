@@ -41,3 +41,20 @@ test("tall LC-011 deposits include measured flared lower rings while low floor s
   ])
     assert.equal(calciteWeightAt(p, s), 0);
 });
+test("LC-012 includes tall tips and hanging rings while keeping the stone cap and end face", () => {
+  const s = specs["LC-012"];
+  for (const p of [
+    [3.7534, -0.6781, 35.9886],
+    [12.0319, 3.0771, 35.0712],
+    [-4.4402, 6.0014, 29.8533],
+    [-3.8952, -14.6476, 28.7477],
+  ])
+    assert.ok(calciteWeightAt(p, s) > 0.6);
+  for (const p of [
+    [1.269, -7.5538, 38.481],
+    [0.2015, 4.9794, 38.4811],
+    [1.5562, -17.2861, 23.9118],
+    [16.442, -10.744, 14.7328],
+  ])
+    assert.equal(calciteWeightAt(p, s), 0);
+});
