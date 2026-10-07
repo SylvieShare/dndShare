@@ -7,13 +7,17 @@ from mathutils.bvhtree import BVHTree
 
 
 def shoreline_distance(positions, points):
-    distance=np.full(len(positions),np.inf)
+    distance=np.full(len(positions),np.inf);side=np.zeros(len(positions))
     for a,b in zip(points,points[1:]):
         a,b=np.array(a),np.array(b);edge=b-a
         if edge@edge<1e-8: raise ValueError('Distinct shoreline points required')
         t=np.clip(((positions[:,:2]-a)*edge).sum(1)/(edge@edge),0,1)
-        distance=np.minimum(distance,np.linalg.norm(positions[:,:2]-a-t[:,None]*edge,axis=1))
-    return distance
+        candidate=np.linalg.norm(positions[:,:2]-a-t[:,None]*edge,axis=1)
+        delta=positions[:,:2]-a
+        signed=(edge[0]*delta[:,1]-edge[1]*delta[:,0])/np.linalg.norm(edge)
+        side=np.where(candidate<distance,signed,side)
+        distance=np.minimum(distance,candidate)
+    return distance,side
 
 
 def apply_water(obj, positions, colours, roughness, recipe):
@@ -49,8 +53,14 @@ def apply_water(obj, positions, colours, roughness, recipe):
             near=np.clip((1.7-radius)/.25,0,1)*np.clip((radius-.75)/.15,0,1)
             low=np.clip((settings['restoreLowWaterAroundBanksMM']-z)/.2,0,1)
             weight=np.maximum(weight,near*low)
-    shorelines=[(shore,shoreline_distance(positions,shore['pointsMM'])) for shore in settings.get('shorelines',[])]
-    for shore,distance in shorelines:
+    if settings.get('lowWaterDomain'):
+        from majestic_surface import polygon_weight
+        area=settings['lowWaterDomain']
+        near=polygon_weight(positions,area['pointsMM'],area.get('featherMM',.5))
+        low=np.clip((area['maxZMM']-z)/.2,0,1)
+        weight=np.maximum(weight,near*low)
+    shorelines=[(shore,*shoreline_distance(positions,shore['pointsMM'])) for shore in settings.get('shorelines',[])]
+    for shore,distance,side in shorelines:
         near=np.clip((shore['waterRestoreWidthMM']-distance)/2,0,1)
         low=np.clip((shore['waterRestoreMaxZMM']-z)/.2,0,1)
         weight=np.maximum(weight,near*low)
@@ -82,8 +92,9 @@ def apply_water(obj, positions, colours, roughness, recipe):
         shade=1+.045*np.sin(x*.51+y*.43+z*.21)
         colours=colours*(1-bank_weight[:,None])+np.array(bank['rgb'])*shade[:,None]*bank_weight[:,None]
         roughness=roughness*(1-bank_weight)+.88*bank_weight
-    for shore,distance in shorelines:
+    for shore,distance,side in shorelines:
         shore_weight=np.clip((shore['stoneWidthMM']-distance)/.8,0,1)*np.clip((z-shore['minZMM'])/.4,0,1)*(1-weight)
+        if 'landwardWidthMM' in shore: shore_weight*=np.clip((shore['landwardWidthMM']-side)/.8,0,1)
         shade=1+.045*np.sin(x*.51+y*.43+z*.21)
         colours=colours*(1-shore_weight[:,None])+np.array(shore['rgb'])*shade[:,None]*shore_weight[:,None]
         roughness=roughness*(1-shore_weight)+.88*shore_weight
