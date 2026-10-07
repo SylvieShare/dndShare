@@ -1,0 +1,126 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "pine", "forest", "stones", "outdoor", "xl"],
+  "recipe": "majestic-dirt-angle-pine-leaves-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 19,
+  "ferns": [
+    {
+      "centreMM": [32, 0, 16.5],
+      "radiiMM": [24, 26, 7],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [12, -36, 16.4],
+      "radiiMM": [24, 20, 7],
+      "minZMM": 15.1
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [42, 25, 19],
+      "radiiMM": [6.5, 8, 7],
+      "minZMM": 16.1
+    },
+    {
+      "centreMM": [35, -31, 23],
+      "radiiMM": [12, 14, 12],
+      "minZMM": 16.5
+    },
+    {
+      "centreMM": [36, -44, 17.5],
+      "radiiMM": [6, 4, 5],
+      "minZMM": 16.2
+    },
+    {
+      "centreMM": [-11, -19, 16.8],
+      "radiiMM": [5.4, 6, 4.5],
+      "minZMM": 15.4
+    },
+    {
+      "centreMM": [21, -30, 17.6],
+      "radiiMM": [4.5, 7, 5],
+      "minZMM": 16.3
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [2000000, 4200000],
+    "targetLODBytes": [700000, 1600000],
+    "targetShadowBytes": [40000, 110000],
+    "targetPreviewBytes": [14000, 65000],
+    "basis": "413362 source triangles; measured 3x3 angle with 53.55 mm young pine, broad leaves and a large boulder. Test 50k/18k and 2048/1024 colour to preserve separate thin leaves."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "blockedCells": [
+    [2, 1],
+    [2, 2]
+  ],
+  "trees": [
+    {
+      "baseXY": [31, 0],
+      "topXY": [32, 1],
+      "heightMM": 53.55,
+      "foliageRadiusMM": 14,
+      "trunkRadiusMM": 2,
+      "rootRadiusMM": 5,
+      "barkTopMM": 31
+    }
+  ],
+  "blockers": [
+    [
+      [2.5, 1.5],
+      [2.491301, 1.456265],
+      [2.466526, 1.419188],
+      [2.42945, 1.394414],
+      [2.385714, 1.385714],
+      [2.341979, 1.394414],
+      [2.304902, 1.419188],
+      [2.280128, 1.456265],
+      [2.271429, 1.5],
+      [2.280128, 1.543735],
+      [2.304902, 1.580812],
+      [2.341979, 1.605586],
+      [2.385714, 1.614286],
+      [2.42945, 1.605586],
+      [2.466526, 1.580812],
+      [2.491301, 1.543735]
+    ],
+    [
+      [2.785714, 2.385714],
+      [2.763966, 2.276376],
+      [2.702031, 2.183684],
+      [2.609338, 2.121749],
+      [2.5, 2.1],
+      [2.390662, 2.121749],
+      [2.297969, 2.183684],
+      [2.236034, 2.276376],
+      [2.214286, 2.385714],
+      [2.236034, 2.495052],
+      [2.297969, 2.587745],
+      [2.390662, 2.64968],
+      [2.5, 2.671429],
+      [2.609338, 2.64968],
+      [2.702031, 2.587745],
+      [2.763966, 2.495052]
+    ]
+  ]
+}
