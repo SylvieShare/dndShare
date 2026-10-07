@@ -7,9 +7,14 @@ import bpy
 from mathutils import Vector
 
 
-def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None, tier='render'):
+def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None, tier='render', transparent=False, camera_shift_y=0):
     directory = report.parent
-    if (directory/'preview.png').exists() and not review:
+    prefix = 'focus-' if focus_max_z is not None else ''
+    if tier == 'lod':
+        prefix = 'lod-' + prefix
+    if transparent:
+        prefix = 'transparent-' + prefix
+    if (directory/(prefix+'preview.png')).exists() and not review:
         return
     row = json.loads(report.read_text())['model']
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -24,6 +29,8 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     scene.render.resolution_x = scene.render.resolution_y = size
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = 'PNG'
+    scene.render.image_settings.color_mode = 'RGBA'
+    scene.render.film_transparent = transparent
     scene.view_settings.view_transform = 'AgX'
     scene.world = bpy.data.worlds.new('Preview world')
     scene.world.use_nodes = True
@@ -39,6 +46,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     camera = bpy.data.objects.new('Camera', bpy.data.cameras.new('Camera'))
     scene.collection.objects.link(camera)
     camera.data.type = 'ORTHO'
+    camera.data.shift_y = camera_shift_y
     bpy.context.view_layer.update()
     bounds = [obj.matrix_world@Vector(corner) for obj in scene.objects
               if obj.type == 'MESH' for corner in obj.bound_box]
@@ -46,8 +54,6 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     high = Vector(tuple(max(point[axis] for point in bounds) for axis in range(3)))
     if focus_max_z is not None:
         high.z = min(high.z, focus_max_z/35-row['mountDepth'])
-    prefix = 'focus-' if focus_max_z is not None else ''
-    if tier=='lod':prefix='lod-'+prefix
     camera.data.ortho_scale = max(*(high-low), 1)*1.5
     centre = (low+high)/2
     camera.location = centre+Vector((-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45))
@@ -75,10 +81,12 @@ if __name__ == '__main__':
     parser.add_argument('--inside', action='store_true')
     parser.add_argument('--focus-max-z', type=float)
     parser.add_argument('--tier', choices=['render','lod'], default='render')
+    parser.add_argument('--transparent', action='store_true', help='Render alpha instead of the world backdrop, preserving its illumination')
+    parser.add_argument('--camera-shift-y', type=float, default=0, help='Vertical framing shift in fractions of the square image')
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     for report in sorted(args.base.glob('*/report.json')):
         if args.source_name and json.loads(report.read_text())['model']['sourceName'] != args.source_name:
             continue
         if args.codes and json.loads(report.read_text())['model']['sourceCode'] not in args.codes:
             continue
-        preview(report, args.size, args.front, args.review, args.inside, args.focus_max_z, args.tier)
+        preview(report, args.size, args.front, args.review, args.inside, args.focus_max_z, args.tier, args.transparent, args.camera_shift_y)
