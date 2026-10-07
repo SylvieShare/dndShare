@@ -1,0 +1,38 @@
+{
+  "sourceName": "Stalagmite Column Key",
+  "referencePage": 3,
+  "material": "cave-stalagmites",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 20000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 5.5],
+    "lodMiB": [0.8, 2.5],
+    "shadowKiB": [45, 180],
+    "previewKiB": [10, 150],
+    "basis": "719978-triangle tall1x1 pillar with square upper key, comparable to checked LC-016;60k/20k preserve thin deposits, key silhouette and adjoining cap, two KTX2 comparisons."
+  },
+  "notes": "Author page3: separate upper square key at88.422mm and rough cap near77.5mm stay stone; ringed column below is calcite with transition76-77.6mm and dirty roots above15.6mm. Independently measured key faces and cap edge. Preserve mounting0.150531, key dimensions, no standing points or supportSlots and LC-017 definitionId.",
+  "calcite": {
+    "tint": [0.58, 0.39, 0.205],
+    "roughness": 0.78
+  },
+  "stalagmites": [
+    {
+      "x": 0,
+      "y": 0,
+      "radius": 24.5,
+      "base": 15.6,
+      "top": 77.6,
+      "topFadeMM": 1.6
+    }
+  ]
+}
