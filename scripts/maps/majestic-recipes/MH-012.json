@@ -1,7 +1,7 @@
 {
   "width": 3,
   "height": 3,
-  "mountDepthMM": 9.75,
+  "mountDepthMM": 9.85,
   "pegBottomHalfMM": 47.03,
   "pegTopHalfMM": 48.65,
   "renderTriangles": 85000,
@@ -9,7 +9,7 @@
   "tileType": "floor",
   "hasDecor": true,
   "tags": ["grass", "dirt", "stone", "ruins", "outdoor", "xl"],
-  "recipe": "majestic-measured-tall-ruins-1-v1",
+  "recipe": "majestic-canonical-uns-tall-ruins-1-v1",
   "grassReference": "MH-001",
   "grassMatchMM": 0.07,
   "grassBlendMM": 0.12,
@@ -19,69 +19,71 @@
     "targetLODBytes": [1000000, 2500000],
     "targetShadowBytes": [70000, 200000],
     "targetPreviewBytes": [15000, 100000],
-    "basis": "771926 source triangles and 118.66 mm broken arch/walls. Protect altered central soil below 16.4 mm; preserve silhouette and openings with 85k/35k."
+    "basis": "Correct canonical UNS MH-012: 739934 triangles, 106.17 mm ruin. NL filename 012 contains shape 013; use UNS geometry following PDF and retain historical NL registration."
   },
   "grassCoverLossMM": 0.15,
   "grassCoverFadeMM": 0.3,
   "soilDomains": [
     [
-      [-22, 25],
-      [12, 27],
-      [22, 8],
-      [13, -15],
-      [-10, -19],
-      [-22, -2]
+      [45, -27],
+      [31, -35],
+      [9, -35],
+      [-8, -27],
+      [-11, -13],
+      [-18, -7],
+      [-9, 9],
+      [5, 17],
+      [26, 18],
+      [34, 4],
+      [39, -14]
     ]
   ],
-  "soilSurfaceMM": 15.3,
-  "grassHeightFadeMM": 0.55,
+  "soilSurfaceMM": 15.65,
+  "grassHeightFadeMM": 0.4,
+  "sourceVariant": "unsupported",
   "standMaxZMM": 25,
-  "blockedCells": [[2, 2]],
+  "blockedCells": [[0, 1]],
+  "grassReferenceRotation": 180,
+  "grassReferenceTranslationMM": [0, 0, 0.1],
   "masonryReference": {
-    "code": "MH-001",
+    "code": "MH-003",
     "rotateZ": 180,
+    "translationMM": [0, 0, 0.1],
     "matchMM": 0.06,
     "blendMM": 0.2
   },
   "masonryRegion": {
     "u": [-100, 100],
     "v": [-100, 100],
-    "minZMM": 16.4
+    "minZMM": 15.2
   },
   "masonryRGB": [0.48, 0.445, 0.35],
   "stoneVariation": 0.085,
   "darkenJoints": true,
   "blockers": [
     [
-      [0.03, 0.03],
-      [1.3, 0.03],
-      [1.3, 0.32],
-      [0.03, 0.32]
+      [0.04, 1.15],
+      [0.34, 1.15],
+      [0.34, 2.99],
+      [0.04, 2.99]
     ],
     [
-      [1.9, 0.03],
-      [2.98, 0.03],
-      [2.98, 0.32],
-      [1.9, 0.32]
+      [0.04, 0.03],
+      [0.34, 0.03],
+      [0.34, 0.75],
+      [0.04, 0.75]
     ],
     [
-      [2.7, 0.04],
-      [2.98, 0.04],
-      [2.98, 1.03],
-      [2.7, 1.03]
+      [0.04, 0.03],
+      [1.65, 0.03],
+      [1.65, 0.34],
+      [0.04, 0.34]
     ],
     [
-      [2.7, 1.65],
-      [2.98, 1.65],
-      [2.98, 2.95],
-      [2.7, 2.95]
-    ],
-    [
-      [0.95, 2.66],
-      [2.97, 2.66],
-      [2.97, 2.99],
-      [0.95, 2.99]
+      [2.6, 0.87],
+      [2.99, 0.87],
+      [2.99, 2.92],
+      [2.6, 2.92]
     ]
-  ],
-  "grassReferenceRotation": 180
+  ]
 }

@@ -37,7 +37,21 @@ const family = registry
   )
   .sort((a, b) => b.version - a.version);
 const previous = family[0],
-  latest = previous?.version ?? 0;
+  latest = Math.max(
+    0,
+    ...registry
+      .filter(
+        (m) =>
+          m.collection === reviewed.collection &&
+          m.sourceCode === reviewed.sourceCode,
+      )
+      .map((m) => m.version),
+  );
+const newSource = !previous && latest > 0;
+if (newSource && !process.argv.includes("--new-source"))
+  throw new Error(
+    "Existing code has a different source; review the replacement and pass --new-source explicitly",
+  );
 function placement(model) {
   const { id, version, assets, textureDetail, ...metadata } = model;
   return metadata;
@@ -140,6 +154,18 @@ const model = registered ?? {
   assets,
 };
 if (previous) report.previousModelID = previous.id;
+if (newSource)
+  report.sourceReplacement = {
+    reason: report.sourceNote ?? "Reviewed canonical source correction",
+    replaces: registry
+      .filter(
+        (m) =>
+          m.collection === model.collection &&
+          m.sourceCode === model.sourceCode,
+      )
+      .map((m) => m.id),
+    compatibleVisualRevision: false,
+  };
 report.model = model;
 await fs.writeFile(
   path.join(directory, "report.json"),

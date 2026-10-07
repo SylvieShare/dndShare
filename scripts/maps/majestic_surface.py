@@ -34,6 +34,9 @@ def reference_weights(obj, recipe, code, positions):
     angle=np.deg2rad(degrees); c,s=np.cos(angle),np.sin(angle)
     for v in ref.data.vertices:
         x,y=v.co.x,v.co.y;v.co.x,v.co.y=x*c-y*s,x*s+y*c
+    shift=np.array(recipe.get('grassReferenceTranslationMM',[0,0,0]))
+    for v in ref.data.vertices:
+        v.co.x+=float(shift[0]);v.co.y+=float(shift[1]);v.co.z+=float(shift[2])
     ref.data.update()
     tree=BVHTree.FromObject(ref,bpy.context.evaluated_depsgraph_get())
     distances=np.array([tree.find_nearest(v.co)[3] for v in obj.data.vertices],np.float32)
@@ -44,7 +47,7 @@ def reference_weights(obj, recipe, code, positions):
     base=root/'models/collections/majestic-highlands/survey'
     current=np.load(base/code/'top-surface.npy')[:,:,0]
     original=np.load(base/recipe['grassReference']/'top-surface.npy')[:,:,0]
-    original=np.rot90(original,-int(degrees//90))
+    original=np.rot90(original,-int(degrees//90))+shift[2]
     loss=np.where((current>0)&(original>0),np.maximum(0,original-current),0)
     padded=np.pad(loss,1,mode='edge')
     loss=sum(padded[y:y+211,x:x+211] for y in range(3) for x in range(3))/9

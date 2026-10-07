@@ -4,7 +4,9 @@ import (
 	"dndshare/internal/battlemap"
 	"encoding/json"
 	"errors"
+	"maps"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -40,11 +42,34 @@ func TestPreparedCollectionManifest(t *testing.T) {
 		if err := validateMapModel(model); err != nil {
 			t.Errorf("%s: %v", model.SourceCode, err)
 		}
-		if err := preparedRevisionError(model, previous); err != nil {
-			t.Errorf("%s %s: %v", model.SourceCode, model.SourceName, err)
+		var revisionErr error
+		if os.Getenv("MAP_MODEL_NEW_SOURCE") == "1" {
+			revisionErr = preparedNewSourceError(model, previous)
+		} else {
+			revisionErr = preparedRevisionError(model, previous)
+		}
+		if revisionErr != nil {
+			t.Errorf("%s %s: %v", model.SourceCode, model.SourceName, revisionErr)
 		}
 	}
 	t.Logf("validated %d model manifests", len(models))
+}
+
+func preparedNewSourceError(model battlemap.Model, previous []battlemap.Model) error {
+	maximum := 0
+	for _, old := range previous {
+		if old.Collection != model.Collection || old.SourceCode != model.SourceCode {
+			continue
+		}
+		if old.Assets["source"].SHA256 == model.Assets["source"].SHA256 {
+			return errors.New("existing source must use the ordinary visual revision comparison")
+		}
+		maximum = max(maximum, old.Version)
+	}
+	if maximum == 0 || model.Version <= maximum {
+		return errors.New("new source requires a fresh registry of the existing code and a higher version")
+	}
+	return nil
 }
 
 func preparedRevisionError(model battlemap.Model, previous []battlemap.Model) error {
@@ -79,5 +104,28 @@ func TestPreparedRevisionRequiresComparisonAndPreservesPlacement(t *testing.T) {
 	revision.MountDepth += .1
 	if err := preparedRevisionError(revision, previous); err == nil {
 		t.Fatal("changed insertion depth accepted")
+	}
+}
+
+func TestPreparedNewSourceIsExplicitAndCannotBypassOrdinaryComparison(t *testing.T) {
+	old := battlemap.InitialCatalogue()[0]
+	model := old
+	model.Version++
+	if preparedNewSourceError(model, []battlemap.Model{old}) == nil {
+		t.Fatal("ordinary source passed the new-source exception")
+	}
+	model.Assets = maps.Clone(old.Assets)
+	asset := model.Assets["source"]
+	asset.SHA256 = strings.Repeat("a", 64)
+	model.Assets["source"] = asset
+	if preparedNewSourceError(model, nil) == nil || preparedRevisionError(model, []battlemap.Model{old}) == nil {
+		t.Fatal("source replacement passed without explicit comparison mode and registry")
+	}
+	if err := preparedNewSourceError(model, []battlemap.Model{old}); err != nil {
+		t.Fatal(err)
+	}
+	model.Version = old.Version
+	if preparedNewSourceError(model, []battlemap.Model{old}) == nil {
+		t.Fatal("old version reused for a different source")
 	}
 }

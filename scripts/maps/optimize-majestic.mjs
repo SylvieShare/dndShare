@@ -50,6 +50,7 @@ const report = {
   materialRecipe: measured.recipe.recipe,
   sourcePath: measured.sourcePath,
   sourceSHA256: measured.sourceSHA256,
+  sourceNote: measured.sourceNote,
   sizeAssessment: measured.recipe.sizeAssessment,
   tiers: {},
 };
@@ -62,7 +63,9 @@ for (const tier of ["render", "lod"]) {
   if (info.sourceSHA256 !== measured.sourceSHA256)
     throw new Error("Source changed");
   if (!isDeepStrictEqual(info.recipe, measured.recipe))
-    throw new Error("Render and LOD must be baked with the same material recipe");
+    throw new Error(
+      "Render and LOD must be baked with the same material recipe",
+    );
   const drift = Math.max(
     ...info.placementPoints.map((p, i) =>
       Math.abs(p.elevation - metadata.placementPoints[i].elevation),

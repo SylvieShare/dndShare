@@ -35,7 +35,8 @@ def main():
         match = re.fullmatch(r'(MH-\d{3})-(.+)', original.stem)
         code, name = match.groups() if match else (original.stem, original.stem)
         path = original
-        if match:
+        # This supplied NL archive swaps the shapes of 012/013; canonical UNS labels match the PDF.
+        if match and code not in {'MH-012','MH-013'}:
             variants = list(source.rglob(code + '-NL-' + name + '.stl'))
             if len(variants) > 1:
                 variants = [p for p in variants if '(1)' not in p.parent.name]

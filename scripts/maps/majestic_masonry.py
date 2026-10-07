@@ -16,6 +16,9 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     angle=np.deg2rad(settings['rotateZ']); c,s=np.cos(angle),np.sin(angle)
     for v in reference.data.vertices:
         x,y=v.co.x,v.co.y;v.co.x,v.co.y=x*c-y*s,x*s+y*c
+    shift=np.array(settings.get('translationMM',[0,0,0]))
+    for v in reference.data.vertices:
+        v.co.x+=float(shift[0]);v.co.y+=float(shift[1]);v.co.z+=float(shift[2])
     reference.data.update()
     tree=BVHTree.FromObject(reference,bpy.context.evaluated_depsgraph_get())
     distances=np.array([tree.find_nearest(v.co)[3] for v in obj.data.vertices],np.float32)
