@@ -27,8 +27,8 @@ def paint(obj, recipe=None, code=None):
     rgb = (soil*(1-t[:, None]) +
            ((1-tip[:, None])*grass + tip[:, None]*dry)*t[:, None])
     rgb = np.clip(rgb*variation[:, None], .04, .9)
-    roughness = .97-.03*t if recipe.get('grassReference') or recipe.get('soilDomains') or recipe.get('baseSurface')=='soil' else np.full(len(x),.94)
-    if recipe.get('trees'):
+    roughness = .97-.03*t if recipe.get('grassReference') or recipe.get('soilReference') or recipe.get('soilDomains') or recipe.get('baseSurface')=='soil' else np.full(len(x),.94)
+    if recipe.get('trees') or recipe.get('ferns') or recipe.get('stones'):
         from majestic_pines import apply_pines
         rgb, roughness = apply_pines(obj, positions.reshape(-1,3), rgb, roughness, coverage, recipe)
     if recipe.get('masonryReference'):

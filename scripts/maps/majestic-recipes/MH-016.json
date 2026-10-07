@@ -1,0 +1,63 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stones", "outdoor", "xl"],
+  "recipe": "majestic-dirt-corner-measured-soil-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 25,
+  "ferns": [
+    {
+      "centreMM": [-31, 12, 16.2],
+      "radiiMM": [23, 17, 4.5],
+      "minZMM": 15.05
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [-29, 43, 17.6],
+      "radiiMM": [4.5, 4.5, 3.5]
+    },
+    {
+      "centreMM": [-29, 31, 19],
+      "radiiMM": [11, 10.5, 6.2]
+    },
+    {
+      "centreMM": [-39, -35, 17],
+      "radiiMM": [5, 5, 3.5]
+    },
+    {
+      "centreMM": [-31, -37, 16.6],
+      "radiiMM": [5, 4, 3]
+    },
+    {
+      "centreMM": [31, -36, 17.5],
+      "radiiMM": [7, 7, 4.5]
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [1500000, 3200000],
+    "targetLODBytes": [500000, 1200000],
+    "targetShadowBytes": [25000, 65000],
+    "targetPreviewBytes": [12000, 50000],
+    "basis": "352504 source triangles; mostly flat 3x3 soil with local blades, broad leaves and small stones. Compare 40k/12k with 1024/1024 colour and 1024/512 data maps."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512
+}

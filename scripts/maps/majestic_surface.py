@@ -27,7 +27,8 @@ def polygon_weight(positions, polygon):
 def reference_weights(obj, recipe, code, positions):
     root=Path(__file__).resolve().parents[2]
     manifest=json.loads((root/'models/collections/majestic-highlands/manifest.json').read_text())
-    reference=next(r for r in manifest if r['code']==recipe['grassReference'])
+    reference_key = 'soilReference' if recipe.get('soilReference') else 'grassReference'
+    reference=next(r for r in manifest if r['code']==recipe[reference_key])
     bpy.ops.wm.stl_import(filepath=str(root/'models'/reference['sourcePath']))
     ref=bpy.context.object
     degrees=recipe.get('grassReferenceRotation',0)
@@ -44,6 +45,9 @@ def reference_weights(obj, recipe, code, positions):
     start=recipe['grassMatchMM']; blend=recipe['grassBlendMM']
     t=np.clip((distances-start)/blend,0,1)
     weights=1-t*t*(3-2*t)
+    if reference_key == 'soilReference':
+        print('SOIL_REFERENCE',len(distances),np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),flush=True)
+        return 1-weights
     base=root/'models/collections/majestic-highlands/survey'
     current=np.load(base/code/'top-surface.npy')[:,:,0]
     original=np.load(base/recipe['grassReference']/'top-surface.npy')[:,:,0]
@@ -62,7 +66,7 @@ def grass_weights(obj, recipe, code):
     xyz=np.empty(len(obj.data.vertices)*3,np.float32)
     obj.data.vertices.foreach_get('co',xyz)
     positions=xyz.reshape(-1,3)
-    weights=reference_weights(obj,recipe,code,positions) if recipe.get('grassReference') else np.ones(len(positions),np.float32)
+    weights=reference_weights(obj,recipe,code,positions) if recipe.get('grassReference') or recipe.get('soilReference') else np.ones(len(positions),np.float32)
     if recipe.get('soilDomains'):
         domain=np.maximum.reduce([polygon_weight(positions,p) for p in recipe['soilDomains']])
         height=np.clip((positions[:,2]-recipe['soilSurfaceMM'])/recipe['grassHeightFadeMM'],0,1)

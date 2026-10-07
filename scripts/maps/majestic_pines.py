@@ -6,7 +6,7 @@ def apply_pines(obj, positions, colours, roughness, coverage, recipe):
     normals=np.empty(len(obj.data.vertices)*3,np.float32)
     obj.data.vertices.foreach_get('normal',normals); normals=normals.reshape(-1,3)
     x,y,z=positions.T
-    for tree in recipe['trees']:
+    for tree in recipe.get('trees',[]):
         t=np.clip((z-15)/(tree['heightMM']-15),0,1)
         base,top=np.array(tree['baseXY']),np.array(tree['topXY'])
         centres=base[None,:]+t[:,None]*(top-base)
@@ -34,7 +34,7 @@ def apply_pines(obj, positions, colours, roughness, coverage, recipe):
         colours=colours*(1-weight[:,None])+material*weight[:,None]
         roughness=roughness*(1-weight)+.92*weight
     bark_cores=np.zeros(len(positions),bool)
-    for tree in recipe['trees']:
+    for tree in recipe.get('trees',[]):
         t=np.clip((z-15)/(tree['heightMM']-15),0,1)
         base,top=np.array(tree['baseXY']),np.array(tree['topXY'])
         centre=base[None,:]+t[:,None]*(top-base)
