@@ -1,0 +1,121 @@
+{
+  "sourceName": "Railway Up",
+  "referencePage": 4,
+  "material": "cave-railway",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.9, 5.5],
+    "lodMiB": [0.8, 2.4],
+    "shadowKiB": [35, 150],
+    "previewKiB": [10, 150],
+    "basis": "559974-triangle1x1 steep straight climb with taller rock sides, four timber ties and eight heads.55k/18k preserve vertical rock area and thin timber, two KTX2 comparisons."
+  },
+  "notes": "Author page4: steep straight railway. Nine measured rail top points fit headZ=45.052+0.7164*y mm; material grade=headZ-14.12. Greater relative vertical thickness requires iron shoe from6.25mm, timber6.4-10.25mm, heads8.8mm. Four timber axes and eight heads separately measured. Preserve mount0.147477, source coordinates, stand point and LC-024 identity/group.",
+  "railway": {
+    "rails": [
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 6.25,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 6.25,
+        "y": [-17.6, 17.6]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -12.645,
+        "y": 12.691,
+        "radius": 2.25,
+        "minZ": 8.8
+      },
+      {
+        "x": -12.645,
+        "y": 1.189,
+        "radius": 2.25,
+        "minZ": 8.8
+      },
+      {
+        "x": -12.645,
+        "y": -6.335,
+        "radius": 2.25,
+        "minZ": 8.8
+      },
+      {
+        "x": -12.645,
+        "y": -14.984,
+        "radius": 2.25,
+        "minZ": 8.8
+      },
+      {
+        "x": 12.818,
+        "y": 10.096,
+        "radius": 2.25,
+        "minZ": 8.8
+      },
+      {
+        "x": 12.818,
+        "y": 3.263,
+        "radius": 2.25,
+        "minZ": 8.8
+      },
+      {
+        "x": 12.6,
+        "y": -5.7,
+        "radius": 2.25,
+        "minZ": 8.8
+      },
+      {
+        "x": 12.818,
+        "y": -14.293,
+        "radius": 2.25,
+        "minZ": 8.8
+      }
+    ],
+    "ties": [
+      {
+        "y": 11.4,
+        "slope": -0.1,
+        "halfWidth": 2.7
+      },
+      {
+        "y": 2.2,
+        "slope": 0.08,
+        "halfWidth": 2.7
+      },
+      {
+        "y": -6.1,
+        "slope": 0.02,
+        "halfWidth": 2.7
+      },
+      {
+        "y": -14.6,
+        "slope": 0.03,
+        "halfWidth": 2.7
+      }
+    ],
+    "timberHalfLength": 15.9,
+    "timberMinZ": 6.4,
+    "timberMaxZ": 10.25,
+    "woodTint": [0.36, 0.255, 0.135],
+    "grade": [
+      [-17.6, 18.323359999999997],
+      [17.6, 43.540639999999996]
+    ]
+  },
+  "groupCode": "LC-railway-up"
+}

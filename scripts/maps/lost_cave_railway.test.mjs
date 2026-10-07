@@ -133,3 +133,26 @@ test("curved uphill track uses measured relative material heights and preserves 
   ])
     assert.equal(railwayPartAt(p, s), "rock");
 });
+test("steep LC-024 separates four ties and eight heads from the tall rock base", () => {
+  const s = specs["LC-024"];
+  for (const p of [
+    [-7.7081, 16.5744, 56.9258],
+    [-7.7081, -16.2893, 33.3818],
+    [-12.6448, 12.6911, 49.9197],
+    [12.818, -5.4708, 37.1184],
+  ])
+    assert.equal(railwayPartAt(p, s), "iron");
+  for (const p of [
+    [0, 12.6927, 49.1698],
+    [0, 1.7091, 41.3904],
+    [0, -6.3334, 35.3634],
+    [0, -14.1178, 30.26],
+  ])
+    assert.equal(railwayPartAt(p, s), "wood");
+  for (const p of [
+    [-0.0866, 7.0721, 44.7329],
+    [-0.0866, -2.4382, 36.4825],
+    [-8.3, 13, 30],
+  ])
+    assert.equal(railwayPartAt(p, s), "rock");
+});
