@@ -1,7 +1,8 @@
-// Re-baked 60k/20k geometry and portable GPU textures for one reviewed tile.
+// Individually re-baked geometry and portable GPU textures for one reviewed tile.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { majesticModel } from "./majestic_model.mjs";
+import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
 import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
 import { execFile } from "node:child_process";
@@ -86,7 +87,12 @@ for (const tier of ["render", "lod"]) {
       .listMaterials()
       .map((m) => m.getNormalTexture()),
   );
-  for (const mat of doc.getRoot().listMaterials()) mat.setMetallicFactor(0);
+  for (const mat of doc.getRoot().listMaterials())
+    mat.setMetallicFactor(
+      mat.getMetallicRoughnessTexture()
+        ? (measured.recipe.metallicFactor ?? 0)
+        : 0,
+    );
   const textures = doc.getRoot().listTextures();
   for (let index = 0; index < textures.length; index++) {
     const texture = textures[index],
@@ -95,8 +101,10 @@ for (const tier of ["render", "lod"]) {
     const size = colour
       ? (measured.recipe[tier + "ColourSize"] ??
         (tier === "render" ? 2048 : 1024))
-      : (measured.recipe[tier + "DataSize"] ??
-        (tier === "render" ? 1024 : 512));
+      : !normal && measured.recipe[tier + "ORMSize"]
+        ? measured.recipe[tier + "ORMSize"]
+        : (measured.recipe[tier + "DataSize"] ??
+          (tier === "render" ? 1024 : 512));
     const { data, info: imageInfo } = await sharp(
       Buffer.from(texture.getImage()),
     )
@@ -115,6 +123,9 @@ for (const tier of ["render", "lod"]) {
         for (let j = 0; j < 3; j++)
           data[i + j] = Math.round((n[j] / length + 1) * 127.5);
       }
+    const slot = colour ? "BaseColor" : normal ? "Normal" : "MetallicRoughness";
+    const coverage = rasterizeSurface(doc, size, size, () => {}, slot);
+    extendUvGutters(data, imageInfo.channels, coverage, size, size, 4);
     const name = tier + "-" + index,
       input = path.join(out, name + ".png"),
       encoded = path.join(out, name + ".ktx2"),
@@ -167,7 +178,13 @@ for (const tier of ["render", "lod"]) {
     );
   }
   doc.createExtension(KHRTextureBasisu).setRequired(true);
-  await doc.transform(meshopt({ encoder: MeshoptEncoder, level: "high" }));
+  await doc.transform(
+    meshopt({
+      encoder: MeshoptEncoder,
+      level: "high",
+      quantizeTexcoord: measured.recipe.quantizeTexcoord ?? 12,
+    }),
+  );
   await io.write(path.join(out, tier + ".glb"), doc);
   const preview = await io.read(path.join(out, tier + ".glb"));
   await preview.transform(dequantize());

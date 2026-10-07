@@ -22,6 +22,31 @@ const sharp = require("sharp"),
   { ALL_EXTENSIONS } = require("@gltf-transform/extensions"),
   { dequantize } = require("@gltf-transform/functions"),
   { MeshoptDecoder } = require("meshoptimizer");
+const recipeIndex = JSON.parse(
+  await fs.readFile(
+    path.join(root, "scripts/maps/majestic-recipes.json"),
+    "utf8",
+  ),
+);
+const recipe = JSON.parse(
+  await fs.readFile(path.join(root, "scripts/maps", recipeIndex[code]), "utf8"),
+);
+function reviewedMetalRegion(position) {
+  return (recipe.wheels ?? []).some((w) => {
+    const length = Math.hypot(...w.normal),
+      n = w.normal.map((v) => v / length),
+      d = position.map((v, i) => v - w.centreMM[i]);
+    const axial = d.reduce((s, v, i) => s + v * n[i], 0),
+      radial = Math.hypot(...d.map((v, i) => v - axial * n[i]));
+    return (
+      Math.abs(axial) < w.halfThicknessMM + 1.5 &&
+      radial < w.radiusMM + 2 &&
+      (radial > w.radiusMM - w.ironBandMM - 1.5 ||
+        (radial < (w.ironHubRadiusMM ?? 0) + 1.5 &&
+          Math.abs(axial) > w.hubFaceMM - 1.5))
+    );
+  });
+}
 await MeshoptDecoder.ready;
 const io = new NodeIO()
   .registerExtensions(ALL_EXTENSIONS)
@@ -71,7 +96,8 @@ for (const tier of ["render", "lod"]) {
     throw new Error("Insertion taper must have twelve triangles");
   if (triangles !== report.tiers[tier].triangles)
     throw new Error("Triangle count mismatch");
-  let pixelsChecked = 0;
+  let pixelsChecked = 0,
+    metalPixels = 0;
   const mat = doc
     .getRoot()
     .listMaterials()
@@ -88,7 +114,7 @@ for (const tier of ["render", "lod"]) {
       doc,
       info.width,
       info.height,
-      (i) => {
+      (i, position) => {
         const offset = i * info.channels;
         if (
           slot === "BaseColor" &&
@@ -100,26 +126,22 @@ for (const tier of ["render", "lod"]) {
         if (
           slot === "MetallicRoughness" &&
           data[offset + 2] !== 0 &&
-          (!optimized || mat.getMetallicFactor() !== 0)
+          (!optimized || mat.getMetallicFactor() !== 0) &&
+          !recipe.metallicFactor
         )
           throw new Error("Grass must be nonmetallic");
+        if (slot === "MetallicRoughness" && recipe.metallicFactor) {
+          if (data[offset + 2] > 32 && !reviewedMetalRegion(position))
+            throw new Error("Metal leaked outside reviewed wheel hardware");
+          if (data[offset + 2] > 128) metalPixels++;
+        }
         pixelsChecked++;
       },
       slot,
     );
   }
-  const recipeIndex = JSON.parse(
-    await fs.readFile(
-      path.join(root, "scripts/maps/majestic-recipes.json"),
-      "utf8",
-    ),
-  );
-  const recipe = JSON.parse(
-    await fs.readFile(
-      path.join(root, "scripts/maps", recipeIndex[code]),
-      "utf8",
-    ),
-  );
+  if (recipe.metallicFactor && metalPixels < 100)
+    throw new Error("Reviewed iron parts lost their metallic channel");
   if (
     report.model.width !== recipe.width ||
     report.model.height !== recipe.height ||

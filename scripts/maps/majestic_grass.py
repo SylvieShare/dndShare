@@ -37,11 +37,15 @@ def paint(obj, recipe=None, code=None):
     if recipe.get('roundedAccents'):
         from majestic_accents import apply_accents
         rgb, roughness = apply_accents(positions.reshape(-1,3), rgb, roughness, recipe)
+    metallic = np.zeros(len(x),np.float32)
+    if recipe.get('woodReference'):
+        from majestic_wood import apply_wood
+        rgb, roughness, metallic = apply_wood(obj, positions.reshape(-1,3), rgb, roughness, recipe)
     linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     attribute = mesh.color_attributes.new('Paint', 'FLOAT_COLOR', 'POINT')
     attribute.data.foreach_set('color', np.column_stack([linear, np.ones(len(x))]).astype(np.float32).ravel())
     surface = mesh.color_attributes.new('Surface', 'FLOAT_COLOR', 'POINT')
-    surface.data.foreach_set('color', np.column_stack([np.ones(len(x)), roughness, np.zeros(len(x)), np.ones(len(x))]).astype(np.float32).ravel())
+    surface.data.foreach_set('color', np.column_stack([np.ones(len(x)), roughness, metallic, np.ones(len(x))]).astype(np.float32).ravel())
 
 
 def material(recipe=None):
@@ -77,6 +81,9 @@ def material(recipe=None):
         dirt=nodes.new('ShaderNodeMixRGB');dirt.blend_type='MULTIPLY'
         links.new(mask.outputs['Color'],dirt.inputs[0]);links.new(finish.outputs[0],dirt.inputs[1]);links.new(remap.outputs[0],dirt.inputs[2])
         finish=dirt
+    if recipe.get('woodReference'):
+        from majestic_wood import wood_finish
+        finish=wood_finish(nodes,links,finish,recipe)
     shader = nodes.get('Principled BSDF')
     links.new(finish.outputs[0], shader.inputs['Base Color'])
     shader.inputs['Roughness'].default_value = .94

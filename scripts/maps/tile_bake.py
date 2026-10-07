@@ -22,7 +22,7 @@ def save(node, directory, name):
     node.image.save()
 
 
-def bake(target, source, directory):
+def bake(target, source, directory, surface_finish=None):
     scene = bpy.context.scene
     scene.render.engine = 'CYCLES'
     scene.cycles.device = 'CPU'
@@ -69,6 +69,8 @@ def bake(target, source, directory):
     links.new(remap.outputs[0], combine.inputs['Red'])
     links.new(separate.outputs['Green'], combine.inputs['Green'])
     links.new(separate.outputs['Blue'], combine.inputs['Blue'])
+    if surface_finish:
+        surface_finish(nodes, links, combine, separate)
     emit = nodes.new('ShaderNodeEmission')
     links.new(combine.outputs[0], emit.inputs['Color'])
     output = nodes.get('Material Output')

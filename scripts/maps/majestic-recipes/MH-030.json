@@ -1,0 +1,126 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "cart", "wood", "iron", "ruins", "outdoor", "xl"],
+  "recipe": "majestic-cart-directional-timber-iron-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2500000, 5000000],
+    "targetLODBytes": [900000, 2000000],
+    "targetShadowBytes": [45000, 130000],
+    "targetPreviewBytes": [15000, 75000],
+    "basis": "492122 source triangles, measured 3x3 cart ruins with open wheels and separate planks. Test 65k/22k preserving spoke gaps, directional timber, iron bands and hubs; 2048/1024 colour."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [11, -29],
+      [-3, -28],
+      [-12, -22],
+      [-22, -13],
+      [-19, -1],
+      [-5, 7],
+      [9, 3],
+      [14, -13]
+    ],
+    [
+      [34, 2],
+      [20, -5],
+      [6, 3],
+      [-4, 5],
+      [-26, 11],
+      [-19, 36],
+      [12, 36],
+      [34, 25]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 45,
+  "blockedCells": [
+    [0, 0],
+    [0, 1],
+    [0, 2],
+    [1, 2]
+  ],
+  "grassReferenceRotation": 180,
+  "woodReference": {
+    "code": "MH-002",
+    "rotateZ": 180,
+    "matchMM": 0.07,
+    "blendMM": 0.2
+  },
+  "woodDirection": [0.31, 0.9507, 0],
+  "woodRGB": [0.47, 0.325, 0.18],
+  "woodMinZMM": 15.1,
+  "metallicFactor": 1,
+  "woodParts": [
+    {
+      "minMM": [-52, 25, 15],
+      "maxMM": [-13, 54, 28],
+      "direction": [0.84, -0.54, 0]
+    },
+    {
+      "minMM": [-43, -9, 15],
+      "maxMM": [-10, 8, 36],
+      "direction": [-0.95, 0.31, 0]
+    },
+    {
+      "minMM": [-25, 22, 15],
+      "maxMM": [8, 42, 30],
+      "direction": [0.82, -0.57, 0]
+    }
+  ],
+  "wheels": [
+    {
+      "centreMM": [35, 31.5, 17.9],
+      "normal": [0.03, 0.01, 1],
+      "radiusMM": 16.1,
+      "halfThicknessMM": 4,
+      "ironBandMM": 0.9,
+      "ironHubRadiusMM": 2,
+      "hubFaceMM": 1.8
+    },
+    {
+      "centreMM": [-11, -33, 25],
+      "normal": [0.766, -0.256, 0.589],
+      "radiusMM": 16.1,
+      "halfThicknessMM": 3.8,
+      "ironBandMM": 0.85,
+      "ironHubRadiusMM": 2.1,
+      "hubFaceMM": 1.5
+    },
+    {
+      "centreMM": [1, -31, 18.2],
+      "normal": [-0.137, -0.244, 0.96],
+      "radiusMM": 15.7,
+      "halfThicknessMM": 4,
+      "ironBandMM": 0.85,
+      "ironHubRadiusMM": 2,
+      "hubFaceMM": 1.5
+    }
+  ],
+  "blockers": [
+    [
+      [0, 0],
+      [1.25, 0],
+      [1.4, 2.4],
+      [1, 3],
+      [0, 3]
+    ]
+  ],
+  "quantizeTexcoord": 16,
+  "renderORMSize": 2048,
+  "lodORMSize": 1024
+}

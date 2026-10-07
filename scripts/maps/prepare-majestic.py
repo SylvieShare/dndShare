@@ -96,7 +96,11 @@ def main():
     target.data.materials[0] = target.data.materials[0].copy()
     tile_bake.SIZE = recipe.get('lodBakeSize',1024) if args.optimized_tier=='lod' else recipe.get('renderBakeSize',2048)
     print('MAJESTIC_BAKE', args.code, len(target.data.polygons), flush=True)
-    tile_bake.bake(target, source, out)
+    surface_finish = None
+    if recipe.get('woodReference'):
+        from majestic_wood import iron_orm
+        surface_finish = iron_orm
+    tile_bake.bake(target, source, out, surface_finish=surface_finish)
     quality = tile_bake.validate_maps(target)
     source.hide_render = True; source.hide_viewport = True
     centre = row['mountCenterMM']
