@@ -1,0 +1,51 @@
+{
+  "sourceName": "Stalagmite Ground 2",
+  "referencePage": 3,
+  "material": "cave-stalagmites",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.7, 4.8],
+    "lodMiB": [0.7, 2.2],
+    "shadowKiB": [30, 120],
+    "previewKiB": [10, 130],
+    "basis": "Three tall deposits from339,970 source triangles with greater ringed surface area than reviewed LC-010;45k/14k budgets and two checked KTX2 candidates."
+  },
+  "notes": "Author page3: three taller ringed calcite deposits, measured using matching fitted preview camera. Separate warm mineral, gradual dirty root above15.5 mm and surrounding natural floor. Preserve mounting depth0.149843, centre standing point and logical definitionId LC-011. Rear lower rings measured separately: middle body extends to radius4.80 mm and smaller deposit beyond4.07 mm; reviewed masks5.2/4.7 mm, with root transition above15.5 mm protecting low floor rocks.",
+  "calcite": {
+    "tint": [0.58, 0.39, 0.205],
+    "roughness": 0.78
+  },
+  "stalagmites": [
+    {
+      "x": -9.37,
+      "y": 5.96,
+      "radius": 5.75,
+      "base": 15.5,
+      "top": 45.3
+    },
+    {
+      "x": -6.59,
+      "y": 11.15,
+      "radius": 5.2,
+      "base": 15.5,
+      "top": 37
+    },
+    {
+      "x": 1.36,
+      "y": 13.41,
+      "radius": 4.7,
+      "base": 15.5,
+      "top": 33
+    }
+  ]
+}

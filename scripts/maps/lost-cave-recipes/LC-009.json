@@ -1,0 +1,25 @@
+{
+  "sourceName": "Ground 3",
+  "referencePage": 2,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 30000,
+  "lodTriangles": 10000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.2, 3.5],
+    "lodMiB": [0.5, 1.5],
+    "shadowKiB": [20, 80],
+    "previewKiB": [10, 100],
+    "basis": "259,914-triangle1x1 floor comparable to reviewed LC-007/008;30k/10k budgets and independent comparison of two KTX2 candidates."
+  },
+  "notes": "Author page2: third arrangement of natural floor plates, shallow recesses and loose edge rubble. Verify its own cutHeight4.6 mm and plate heights; warm mineral variation with dust above and dark fractures below. Preserve mounting depth0.151091 and central standing point at0.396027. Four nearly tangent decoded normal samples require minimum positive Z0.05 during resampling before KTX2; validate the decoded surface again.",
+  "normalMinZ": 0.05
+}

@@ -1,0 +1,24 @@
+{
+  "sourceName": "Wall 2",
+  "referencePage": 2,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [20, 90],
+    "previewKiB": [10, 120],
+    "basis": "Same class as reviewed LC-001, with399,962 source triangles;40k/12k budgets and two KTX2 variants, target comparable to measured1.77/0.61 MiB of LC-001."
+  },
+  "notes": "Author page2: alternate straight natural rock wall with a different cracked upper ledge and scattered floor fragments. Independently retain central wall mask17, mounting depth0.15004 and the measured placement point; warm mineral variation, dusty ledges, darker fractures on both sides."
+}

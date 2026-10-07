@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import specs from "./lost-cave-recipes.json" with { type: "json" };
+import specs from "./lost_cave_recipes.mjs";
 import { calciteWeightAt, paintStalagmites } from "./lost_cave_stalagmites.mjs";
 test("all seven measured deposits are separate from the surrounding floor", () => {
   const s = specs["LC-010"];
@@ -23,4 +23,21 @@ test("calcite has a gradual dirty root and remains a nonmetallic mineral", () =>
   assert.equal(value.part, "calcite");
   assert.equal(value.metallic, 0);
   assert.equal(value.roughness, s.calcite.roughness);
+});
+test("tall LC-011 deposits include measured flared lower rings while low floor stays stone", () => {
+  const s = specs["LC-011"];
+  for (const p of [
+    [-2.8582, 9.7058, 23.4038],
+    [-3.3188, 8.4041, 20.2998],
+    [-2.7598, 8.2602, 18.775],
+    [1.694, 9.3541, 17.928],
+  ])
+    assert.ok(calciteWeightAt(p, s) > 0.6);
+  for (const p of [
+    [-2.6919, 7.8957, 15.7008],
+    [-4.6417, 3.4732, 14.7281],
+    [7.0341, 11.2928, 14.4973],
+    [0, 0, 13.8012],
+  ])
+    assert.equal(calciteWeightAt(p, s), 0);
 });

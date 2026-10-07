@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
-import specs from "./lost-cave-recipes.json" with { type: "json" };
+import specs from "./lost_cave_recipes.mjs";
 import { reviewCollection } from "./review_collection.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
 const code = process.argv[2],

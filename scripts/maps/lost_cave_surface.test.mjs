@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import specs from "./lost-cave-recipes.json" with { type: "json" };
+import specs from "./lost_cave_recipes.mjs";
 import { caveRockPixel } from "./lost_cave_surface.mjs";
 test("natural fractures stay darker than exposed rock without black albedo or metal", () => {
   const s = specs["LC-001"];

@@ -1,0 +1,24 @@
+{
+  "sourceName": "Ground 1",
+  "referencePage": 2,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 30000,
+  "lodTriangles": 10000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.2, 3.5],
+    "lodMiB": [0.5, 1.5],
+    "shadowKiB": [20, 80],
+    "previewKiB": [10, 100],
+    "basis": "Low1x1 natural floor from259,968 source triangles, less exposed vertical area than reviewed walls;30k/10k budgets and two KTX2 comparisons to preserve thin rubble and cracks."
+  },
+  "notes": "Author page2: flat natural ground with several large plates, shallow fractures and loose stone fragments at the perimeter. Independently verify cutHeight4.6 mm, warm dusty upper surfaces, darker floor fractures, unchanged0.1512 mounting depth and central standing point."
+}

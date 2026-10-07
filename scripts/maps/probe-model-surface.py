@@ -15,6 +15,7 @@ parser.add_argument('--view',choices=['top','inside','front','reverse'],default=
 parser.add_argument('--normals',action='store_true')
 parser.add_argument('--albedo',action='store_true')
 parser.add_argument('--focus-max-z',type=float)
+parser.add_argument('--fit-from',choices=['inside','front','reverse'])
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 model=json.loads(args.report.read_text())['model']
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -31,6 +32,12 @@ high=Vector(tuple(max(p[a] for p in bounds) for a in range(3)))
 if args.focus_max_z is not None:high.z=min(high.z,args.focus_max_z/35-model['mountDepth'])
 centre=(low+high)/2;scale=max(*(high-low),1)*1.5
 directions={'top':(0,-.01,5),'inside':(-2,-2.85,2.45),'front':(-2,2.85,2.45),'reverse':(2,-2.85,2.45)}
+if args.fit_from:
+    start=centre+Vector(directions[args.fit_from])
+    fitted=(centre-start).to_track_quat('-Z','Y').inverted()
+    projected=[fitted@(p-centre) for p in bounds]
+    scale=max(max(p.x for p in projected)-min(p.x for p in projected),
+              max(p.y for p in projected)-min(p.y for p in projected),.1)*1.18
 camera=centre+Vector(directions[args.view]);rotation=(centre-camera).to_track_quat('-Z','Y')
 for text in args.project:
     x,y,z=map(float,text.split(','))

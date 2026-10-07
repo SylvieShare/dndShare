@@ -7,7 +7,7 @@ import { localModelAsset } from "./local_model_assets.mjs";
 import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
 import { caveRockPixel } from "./lost_cave_surface.mjs";
 import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
-import specs from "./lost-cave-recipes.json" with { type: "json" };
+import specs from "./lost_cave_recipes.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One rebaked Lost Cave report required");
 const directory = path.dirname(path.resolve(file)),

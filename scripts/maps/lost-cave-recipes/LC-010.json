@@ -1,0 +1,79 @@
+{
+  "sourceName": "Stalagmite Ground 1",
+  "referencePage": 3,
+  "material": "cave-stalagmites",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4.5],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [25, 100],
+    "previewKiB": [10, 120],
+    "basis": "Seven small ringed deposits and floor from319,976 triangles, comparable to1x1 reviewed walls;40k/12k budgets, preserve tips and compare two KTX2 variants."
+  },
+  "notes": "Author page3: seven measured warm calcite stalagmites on natural rock floor. Separate warmer deposits and layered rings with a gradual dirty transition near base14.1 mm; empty floors do not exactly match, so direct measured XY masks protect surrounding rocks. Preserve source coordinates, mounting depth0.149789 and centre standing point.",
+  "calcite": {
+    "tint": [0.58, 0.39, 0.205],
+    "roughness": 0.78
+  },
+  "stalagmites": [
+    {
+      "x": -8.06,
+      "y": 12.66,
+      "radius": 3.25,
+      "base": 14.1,
+      "top": 29
+    },
+    {
+      "x": -6.26,
+      "y": 9.08,
+      "radius": 2.15,
+      "base": 14.1,
+      "top": 24
+    },
+    {
+      "x": -12.68,
+      "y": 7.01,
+      "radius": 3.35,
+      "base": 14.1,
+      "top": 32.6
+    },
+    {
+      "x": 10.52,
+      "y": 11.03,
+      "radius": 2.85,
+      "base": 14.1,
+      "top": 27
+    },
+    {
+      "x": 13.13,
+      "y": 14.58,
+      "radius": 1.85,
+      "base": 14.1,
+      "top": 20
+    },
+    {
+      "x": -11.45,
+      "y": -11.98,
+      "radius": 3.8,
+      "base": 14.1,
+      "top": 32
+    },
+    {
+      "x": -12.22,
+      "y": -6.98,
+      "radius": 2.5,
+      "base": 14.1,
+      "top": 23
+    }
+  ]
+}

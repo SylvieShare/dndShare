@@ -1,0 +1,24 @@
+{
+  "sourceName": "Wall Corner",
+  "referencePage": 2,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [20, 90],
+    "previewKiB": [10, 120],
+    "basis": "1x1 narrow corner outcrop with339,974 source triangles and more exposed floor than LC-005;40k/12k budgets with two separately checked KTX2 candidates."
+  },
+  "notes": "Author page2: slender natural corner outcrop on a broader cracked rock floor. Inspect the narrow upright silhouette, loose fragments around its foot, cap and rear face. Warm dusty mineral stone with dark contact crevices; preserve mask1, mounting depth0.150231 and original standing point."
+}
