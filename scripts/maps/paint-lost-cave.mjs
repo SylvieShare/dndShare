@@ -9,6 +9,7 @@ import { caveRockPixel } from "./lost_cave_surface.mjs";
 import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
 import { paintRailway } from "./lost_cave_railway.mjs";
 import { paintCrystal } from "./lost_cave_crystal.mjs";
+import { paintWagon } from "./lost_cave_wagon.mjs";
 import specs from "./lost_cave_recipes.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One rebaked Lost Cave report required");
@@ -18,9 +19,13 @@ if (report.model.collection !== "lost-cave" || !report.rebake)
   throw new Error("Complete source normal/AO rebake first");
 const spec = specs[report.model.sourceCode];
 if (
-  !["cave-rock", "cave-stalagmites", "cave-railway", "cave-crystal"].includes(
-    spec.material,
-  )
+  ![
+    "cave-rock",
+    "cave-stalagmites",
+    "cave-railway",
+    "cave-crystal",
+    "cave-wagon",
+  ].includes(spec.material)
 )
   throw new Error("Unsupported individually reviewed surface material");
 for (const field of [
@@ -65,16 +70,21 @@ for (const tier of ["render", "lod"]) {
     ...(spec.material === "cave-stalagmites" ? { calcite: 0 } : {}),
     ...(spec.material === "cave-railway" ? { wood: 0, iron: 0 } : {}),
     ...(spec.material === "cave-crystal" ? { crystal: 0 } : {}),
+    ...(spec.material === "cave-wagon"
+      ? { bucket: 0, wheel: 0, hardware: 0, brass: 0 }
+      : {}),
   };
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
     const value =
-      spec.material === "cave-crystal"
-        ? paintCrystal(p, n, ao[i], spec)
-        : spec.material === "cave-railway"
-          ? paintRailway(p, n, ao[i], spec)
-          : spec.material === "cave-stalagmites"
-            ? paintStalagmites(p, n, ao[i], spec)
-            : caveRockPixel(p, n, ao[i], report.materialSpec);
+      spec.material === "cave-wagon"
+        ? paintWagon(p, n, ao[i], spec)
+        : spec.material === "cave-crystal"
+          ? paintCrystal(p, n, ao[i], spec)
+          : spec.material === "cave-railway"
+            ? paintRailway(p, n, ao[i], spec)
+            : spec.material === "cave-stalagmites"
+              ? paintStalagmites(p, n, ao[i], spec)
+              : caveRockPixel(p, n, ao[i], report.materialSpec);
     counts[value.part]++;
     colour.set(value.rgb, i * 3);
     orm[i * 3] = ao[i];

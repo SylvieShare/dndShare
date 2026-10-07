@@ -1,4 +1,10 @@
-const fields = new Set(["name", "tileType", "maxHeight", "surfaceHeight"]);
+const fields = new Set([
+  "name",
+  "tileType",
+  "maxHeight",
+  "surfaceHeight",
+  "placementPoints",
+]);
 export function correctedCaveModel(model, source, spec, explicit) {
   const correction = spec.geometryCorrection;
   if (!correction)
@@ -23,6 +29,14 @@ export function correctedCaveModel(model, source, spec, explicit) {
   for (const key of Object.keys(correction.metadata))
     if (!fields.has(key))
       throw new Error("Unexpected correction metadata: " + key);
+  if (
+    ![0, 180].includes(correction.rotationXDeg ?? 0) ||
+    (model.placementPoints?.length &&
+      !Object.hasOwn(correction.metadata, "placementPoints"))
+  )
+    throw new Error(
+      "Restored orientation and existing placement points require explicit review",
+    );
   const result = { ...structuredClone(model), ...correction.metadata };
   if (
     !Number.isFinite(result.maxHeight) ||
@@ -35,9 +49,27 @@ export function correctedCaveModel(model, source, spec, explicit) {
     throw new Error(
       "Restored object heights must match the complete original sculpt",
     );
+  if (
+    result.placementPoints?.some(
+      (p) =>
+        ![p.x, p.y, p.elevation].every(Number.isFinite) ||
+        p.x < 0 ||
+        p.y < 0 ||
+        p.x > result.width ||
+        p.y > result.height ||
+        p.elevation < 0 ||
+        p.elevation > result.maxHeight,
+    )
+  )
+    throw new Error(
+      "Corrected placement points must lie inside the restored object",
+    );
   return {
     model: result,
     cutHeight: 0,
-    correction: structuredClone(correction),
+    correction: {
+      ...structuredClone(correction),
+      rotationOriginZMM: source.max[2],
+    },
   };
 }

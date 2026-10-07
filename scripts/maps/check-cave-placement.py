@@ -30,12 +30,15 @@ report = json.loads(args.report.read_text())
 directory = args.report.parent
 checks = {}
 for tier in ['render','lod']:
-    before = heights(directory/(tier+'-input.glb'),report['model'])
+    before = heights(directory/(tier+'-input.glb'),report.get('originalModel',report['model']))
     after = heights(directory/('preview-model.glb' if tier=='render' else 'lod-preview-model.glb'),report['model'])
-    drift = max((abs(a-b) for a,b in zip(before,after)),default=0)
+    expected = [p['elevation'] for p in report['model']['placementPoints']] if report.get('geometryCorrection') else before
+    drift = max((abs(a-b) for a,b in zip(expected,after)),default=0)
     if drift > .03:
         raise ValueError('Existing placement surface changed by more than1.05 mm')
-    checks[tier] = {'points':len(before),'maxDriftMM':drift*35,'before':before,'after':after}
+    checks[tier] = {'points':len(after),'maxDriftMM':drift*35,'before':before,'after':after}
+    if report.get('geometryCorrection'):
+        checks[tier]['expectedCorrectedHeights'] = expected
 report['placementChecks'] = checks
 args.report.write_text(json.dumps(report,indent=2)+'\n')
 print('CAVE_PLACEMENT',checks,flush=True)

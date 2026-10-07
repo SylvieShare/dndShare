@@ -56,3 +56,25 @@ test("ordinary recipes retain their cut, and restoration cannot silently overrid
     correctedCaveModel({ ...model, mountDepth: 0.15 }, source, spec, true),
   );
 });
+test("upside-down print restoration requires measured points and a declared180 degree orientation", () => {
+  const placed = {
+    ...model,
+    width: 1,
+    height: 1,
+    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.1 }],
+  };
+  const s = structuredClone(spec);
+  s.geometryCorrection.rotationXDeg = 180;
+  assert.throws(() => correctedCaveModel(placed, source, s, true));
+  s.geometryCorrection.metadata.placementPoints = [
+    { x: 0.5, y: 0.5, elevation: 0.2 },
+  ];
+  const corrected = correctedCaveModel(placed, source, s, true);
+  assert.equal(corrected.correction.rotationOriginZMM, source.max[2]);
+  assert.equal(corrected.model.placementPoints[0].elevation, 0.2);
+  s.geometryCorrection.rotationXDeg = 90;
+  assert.throws(() => correctedCaveModel(placed, source, s, true));
+  s.geometryCorrection.rotationXDeg = 180;
+  s.geometryCorrection.metadata.placementPoints[0].elevation = 1;
+  assert.throws(() => correctedCaveModel(placed, source, s, true));
+});

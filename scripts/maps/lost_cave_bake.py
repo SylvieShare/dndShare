@@ -57,9 +57,14 @@ def bake_tier(report, directory, tier):
     bpy.ops.wm.stl_import(filepath=report['sourcePath'])
     source = bpy.context.object
     crop(source, report['cutHeight'])
+    correction = report.get('geometryCorrection',{})
     for v in source.data.vertices:
+        if correction.get('rotationXDeg') == 180:
+            v.co.y = -v.co.y
+            v.co.z = correction['rotationOriginZMM']-v.co.z
         v.co.x += report['sourceShiftMM'][0]
         v.co.y += report['sourceShiftMM'][1]
+    source.data.update()
     shade(source)
     bpy.context.view_layer.update()
     sculpt = bounds(source)
