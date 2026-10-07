@@ -1,0 +1,78 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stones", "outdoor", "xl"],
+  "recipe": "majestic-dirt-path-leaves-stones-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 27,
+  "ferns": [
+    {
+      "centreMM": [23, 40, 16.4],
+      "radiiMM": [24, 23, 7],
+      "minZMM": 15.1
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [-39, 39, 17.1],
+      "radiiMM": [5.2, 5.2, 5],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [-25, 42, 19],
+      "radiiMM": [7.3, 6.7, 7],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [-10, 28, 16.9],
+      "radiiMM": [4.5, 5.7, 4.8],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [-18, -40, 18.7],
+      "radiiMM": [12, 12, 10],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [-29, -45, 17.3],
+      "radiiMM": [6, 6, 5.7],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [27, -39, 16.3],
+      "radiiMM": [4.8, 4.7, 3.8],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [39, -46, 16.2],
+      "radiiMM": [5.2, 5.2, 4.4],
+      "minZMM": 15.0
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [1500000, 3200000],
+    "targetLODBytes": [500000, 1200000],
+    "targetShadowBytes": [25000, 65000],
+    "targetPreviewBytes": [12000, 50000],
+    "basis": "372796 source triangles, measured 3x3 straight path with broad leaves and seven stone parts. Test 40k/12k and 1024 colour; retain larger stone and plant silhouettes while baking fine soil."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512
+}
