@@ -104,6 +104,8 @@ type State struct {
 	Zones             map[string]string `json:"zones"`
 	Objects           map[string]bool   `json:"objects"`
 	Tokens            []Token           `json:"tokens"`
+	Areas             map[string]bool   `json:"areas,omitempty"`
+	Lighting          *SessionLighting  `json:"lighting,omitempty"`
 }
 
 type Camera struct {

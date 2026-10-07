@@ -18,8 +18,9 @@
 вкладку «Карта» с подсказкой «Скоро будет»; она не переключает рабочее место.
 
 Вкладка мастера «Карта» добавляет карты из библиотеки `/maps`, расставляет
-жетоны игроков и существ encounter, управляет зонами тумана и интерактивными
-объектами. Копия карты, двери, расстановка и видимость сохраняются в сессии.
+жетоны игроков и существ encounter, управляет областями, туманом, интерактивными
+объектами и освещением. Копия карты, двери, расстановка, видимость и свет
+сохраняются в сессии. Панель стоит слева от игроков; «Карта» занимает всё поле.
 После первого открытия вкладка сохраняется при переходах к сюжету и бою.
 Трансляция `/map-screen/:code` имеет отдельную камеру и калибровку под
 физические миниатюры; основной экран сессии не переключается.
@@ -202,7 +203,7 @@ viewport max-height), so the uncovered canvas below a short player list remains
 available for pan and node dragging.
 
 The session page is a campaign workspace rather than a stack of independent
-content pages. Its semantic header groups `Сюжет`, `Бой`, `Локации`, `NPC`,
+content pages. Its semantic header groups `Сюжет`, `Бой`, `Карта`, `Локации`, `NPC`,
 `Задания`, `Материалы`, `Дневник`, `Хроника` and `Настройки` in the center.
 Presentation, timer, dice and treasure controls form a vertical tool rail on the right. All these buttons use unframed
 24px icons with small labels underneath and no backing surface. `Музыка` keeps
@@ -215,12 +216,20 @@ participant rail remains on the left and the
 right tool rail stays visible, including on mobile. In `Сюжет` the chapter canvas fills all available
 width below `AppHeader`; the participant and tool rails reserve horizontal safe
 areas. CSS safe-area variables keep focus, zoom and newly created nodes in the
-uncovered part of the canvas. All secondary tabs (world catalogues, music,
-journal and chronicle) share `SessionTabWorkspace`: it owns the canvas background,
-starts content 28px after the visible participant rail, and limits content width
-to 1440px, left-aligned with that rail. Collapsing the rail updates the same safe
+uncovered part of the canvas. `SessionTabWorkspace` has two layout modes:
+`full` fills the whole working field without padding or a width limit, while
+`column` owns the canvas background, starts content 28px after the visible
+participant rail and limits content width to 1440px, left-aligned with that rail.
+The map uses `full`; world catalogues, music, journal, chronicle and settings use
+`column`. Story fills the field through its graph canvas. The map stays mounted
+when switching between Map and Combat, preserving the selected map and camera.
+In Map and Combat its editor-style inspector sits to the left of the player rail;
+collapsing the inspector moves players and combat controls to the new safe area.
+On mobile the player rail is hidden and the inspector opens over the canvas. Collapsing the rail updates the same safe
 area for every tab. Catalogue columns retain an 8px internal gap. Story and
-combat are outside this wrapper and have no width limit. On mobile (up to 760px)
+combat controls are outside this wrapper and have no width limit. For accounts
+with map access, combat controls overlay the same map; active combat has a
+horizontal initiative track below and a smaller current-turn preview on the right. On mobile (up to 760px)
 the participant rail disappears and the shared wrapper uses 16px outer padding on the left and reserves the tool rail on the right.
 Individual tab components own their internal layout and scrolling, not rail
 offsets or outer padding; this also applies to loading and error states.

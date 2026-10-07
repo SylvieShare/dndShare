@@ -13,7 +13,7 @@ const pinia = createPinia()
 const account = useAccountStore(pinia)
 const guest = new URLSearchParams(location.search).has('guest')
 account.status = guest ? 'none' : 'success'
-account.user = { id: guest ? 0 : 1, roles: [], login: guest ? '' : 'Игрок' }
+account.user = { id: guest ? 0 : 1, roles: new URLSearchParams(location.search).has('admin') ? ['ADMIN'] : [], login: guest ? '' : 'Игрок' }
 const router = createRouter({ history: createMemoryHistory(), routes: [
   { path: '/char/:uuid', name: 'Character', component: ViewCharacter },
   { path: '/sessions/:uuid', name: 'Session', component: ViewSession },

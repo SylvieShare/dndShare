@@ -101,6 +101,9 @@ func ValidateDocument(d *Document) error {
 }
 
 func ValidateState(s *State, d Document) error {
+	if err := validateSessionPresentation(*s, d); err != nil {
+		return err
+	}
 	if !visibility(s.DefaultVisibility) || len(s.Tokens) > 250 {
 		return fmt.Errorf("Некорректное состояние карты")
 	}

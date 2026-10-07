@@ -45,6 +45,14 @@
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+B</kbd>
         </button>
 
+        <MapAvailabilityGate v-if="isDm" :disabled="!mapsAvailable">
+        <button type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': mapsAvailable && primaryView === 'maps' }"
+          :aria-disabled="!mapsAvailable || undefined"
+          :aria-current="mapsAvailable && primaryView === 'maps' ? 'page' : undefined" @click="mapsAvailable && emit('select-view', 'maps')">
+          <Map :size="24" /><span>Карта</span>
+        </button>
+        </MapAvailabilityGate>
+
         <span v-if="visibleLibraryViews.length" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 
         <button
@@ -62,13 +70,6 @@
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.alt }}+{{ view.shortcut }}</kbd>
         </button>
 
-        <MapAvailabilityGate v-if="isDm" :disabled="!mapsAvailable">
-        <button type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': mapsAvailable && primaryView === 'maps' }"
-          :aria-disabled="!mapsAvailable || undefined"
-          :aria-current="mapsAvailable && primaryView === 'maps' ? 'page' : undefined" @click="mapsAvailable && emit('select-view', 'maps')">
-          <Map :size="24" /><span>Карта</span>
-        </button>
-        </MapAvailabilityGate>
         <span v-if="isDm" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 
 

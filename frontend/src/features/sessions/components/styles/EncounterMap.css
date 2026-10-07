@@ -1,0 +1,28 @@
+.enc-wrap--map-overlay { pointer-events: none; }
+.enc-wrap--map-overlay > .enc-toolbar {
+  min-height: 0;
+  max-height: 132px;
+  grid-template-columns: minmax(0, 1fr);
+  pointer-events: auto;
+  overflow: auto;
+}
+.enc-wrap--map-overlay .enc-context-art { display: none; }
+.enc-wrap--map-overlay .enc-toolbar-body { padding: 8px 12px; gap: 6px; }
+.enc-wrap--map-overlay .enc-toolbar-top { flex-wrap: wrap; gap: 6px; }
+.enc-wrap--map-overlay .enc-toolbar-flow,
+.enc-wrap--map-overlay .enc-toolbar-actions { flex-wrap: wrap; }
+.enc-wrap--map-overlay > .enc-content {
+  top: 144px;
+  right: auto;
+  width: min(520px, 100%);
+  max-height: calc(100% - 144px);
+  pointer-events: auto;
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 8px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+.enc-wrap--map-overlay > .enc-content--combat-active { bottom: 174px; overflow-y: auto; }
+.enc-wrap--map-overlay .enc-combat-layout--active { display: block; height: auto; }
+.enc-wrap--map-overlay .enc-combat-layout--active > .enc-combat-primary { overflow: visible; height: auto; }

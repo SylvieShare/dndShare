@@ -45,9 +45,10 @@
     <div
       v-else-if="session"
       class="campaign-workspace"
-      :style="{ '--session-toolbar-height': `${toolbarHeight}px` }"
+      :style="{ '--session-toolbar-height': `${toolbarHeight}px`, '--session-map-panel-width': `${mapPanelWidth}px` }"
       :class="{
         'campaign-workspace--combat': primaryView === 'story' && workspaceMotionMode === 'combat',
+        'campaign-workspace--map': mapVisible,
         'campaign-workspace--players-collapsed': playersRailMode === 'compact',
       }"
     >
@@ -60,6 +61,7 @@
         :is-dm="isDm"
         :locked="!!workspaceMode"
         :primary-view="primaryView"
+        :map-background="mapVisible"
         :workspace-chapter-id="workspaceChapter?.id ?? null"
         :workspace-scene="workspaceScene"
         :workspace-level="workspaceLevel"
@@ -80,9 +82,19 @@
         @toolbar-resize="toolbarHeight = $event"
         @open-chapters="openChapters"
       >
+        <template #full-workspace>
+          <SessionMapWorkspace
+            v-if="mapVisited && mapsAvailable"
+            ref="mapWorkspace"
+            :session-uuid="sessionUuid"
+            :session="session"
+            :participants="participants"
+            :encounter="encounter"
+            :combat="workspaceMode === 'combat'"
+            @inspector-resize="mapPanelWidth = $event"
+          />
+        </template>
         <template #primary-workspace>
-          <SessionMapWorkspace v-if="mapVisited && mapsAvailable" v-show="primaryView === 'maps'" ref="mapWorkspace" :session-uuid="sessionUuid" :session="session" :participants="participants" :encounter="encounter" />
-          <p v-if="primaryView === 'maps' && !mapsAvailable" role="status">Скоро будет</p>
           <SessionSettingsWorkspace v-if="primaryView === 'settings'" :session-uuid="sessionUuid" :settings="sessionSettings"
             :saving="settingsSaving" :error="settingsError" @update-setting="updateSessionSetting" />
           <SessionMusicWorkspace v-else-if="primaryView === 'music'" :is-dm="isDm" />
@@ -114,6 +126,7 @@
           v-show="primaryView === 'story'"
           ref="combatWorkspace"
           :closing="workspaceClosing"
+          :map-overlay="mapVisible"
           :session-uuid="sessionUuid"
           :session="session"
           :participants="participants"
@@ -322,9 +335,11 @@ const route = useRoute()
 const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || null)
 provide('applicationEncounter', encounter)
 const mapVisited = ref(false), mapWorkspace = ref(null)
+const mapPanelWidth = ref(334)
 const account = useAccountStore()
 const mapsAvailable = computed(() => account.hasRole('ADMIN'))
-watch(primaryView, (view) => { if (view === 'maps') mapVisited.value = true }, { immediate: true })
+const mapVisible = computed(() => mapsAvailable.value && (primaryView.value === 'maps' || (primaryView.value === 'story' && workspaceMode.value === 'combat')))
+watch(mapVisible, (visible) => { if (visible) mapVisited.value = true }, { immediate: true })
 onBeforeRouteLeave(() => mapWorkspace.value?.prepareLeave() ?? true)
 </script>
 

@@ -1,58 +1,21 @@
 <template>
-  <aside class="map-inspector">
-    <MultiToggle
-      v-model="tab"
-      :options="[
-        { value: 'zones', label: 'Туман' },
-        { value: 'tokens', label: 'Жетоны' },
-        { value: 'screen', label: 'Стол' },
-      ]"
-      block
-      aria-label="Управление картой"
-    />
-    <template v-if="tab === 'zones'">
-      <ToggleSwitch
-        :model-value="map.state.fog"
-        label="Туман войны"
-        :disabled="controller.conflict"
-        @update:model-value="
-          controller.change((s) => {
-            s.fog = $event;
-          })
-        "
-      />
-      <p class="map-hint">
-        Штриховка видна только мастеру. На столе скрытая область закрыта полностью. В пересечении
-        зон действует наиболее открытая.
-      </p>
-      <div class="map-tool-grid">
-        <ActionButton variant="secondary" @click="all('visible')"
-          ><Eye :size="15" />Открыть всё</ActionButton
-        ><ActionButton variant="secondary" @click="all('hidden')"
-          ><EyeOff :size="15" />Скрыть всё</ActionButton
-        >
-      </div>
-      <div v-for="zone in map.document.zones" :key="zone.id" class="map-zone-row">
-        <button type="button" class="map-zone-name" @click="emit('zone', zone.id)">
-          {{ zone.name }}
-        </button>
-        <FormSelect
-          :value="map.state.zones[zone.id] || 'hidden'"
-          :aria-label="`Видимость зоны ${zone.name}`"
-          @change="
-            controller.change((s) => {
-              s.zones[zone.id] = $event;
-            })
-          "
-          ><option v-for="v in VISIBILITY" :key="v.value" :value="v.value">
-            {{ v.label }}
-          </option></FormSelect
-        >
-      </div>
-      <p v-if="!map.document.zones.length" class="map-hint">
-        Зон пока нет. Их можно подготовить в редакторе исходной карты перед добавлением в сессию.
-      </p>
-    </template>
+  <aside class="session-map-inspector" :class="{ 'session-map-inspector--collapsed': collapsed }" aria-label="Управление картой">
+    <nav class="session-map-tabs" aria-label="Вкладки карты">
+      <ActionButton v-for="item in tabs" :key="item.key" icon-only
+        :variant="tab === item.key && !collapsed ? 'primary' : 'quiet'"
+        :aria-label="item.label" :title="item.label" :aria-pressed="tab === item.key && !collapsed"
+        @click="openTab(item.key)">
+        <template #icon><component :is="item.icon" :size="22" /></template>
+      </ActionButton>
+    </nav>
+    <div v-show="!collapsed" class="session-map-panel">
+      <header class="session-map-panel-heading">
+        <strong>{{ tabs.find(item => item.key === tab)?.label }}</strong>
+        <ActionButton variant="quiet" icon-only aria-label="Свернуть управление картой" title="Свернуть управление картой"
+          @click="collapsed = true"><template #icon><PanelLeftClose :size="20" /></template></ActionButton>
+      </header>
+      <div class="session-map-panel-content">
+    <SessionMapAreasPanel v-if="tab === 'areas'" :controller="controller" @zone="emit('zone', $event)" />
     <template v-else-if="tab === 'tokens'">
       <template v-if="token">
         <strong>{{ token.name }}</strong>
@@ -148,6 +111,7 @@
         ><Plus :size="15" />Свободная метка</ActionButton
       >
     </template>
+    <SessionMapLightingPanel v-else-if="tab === 'lights'" :controller="controller" />
     <MapDisplaySettings
       v-else-if="controller.display"
       :display="controller.display"
@@ -157,6 +121,8 @@
       @update="controller.updateDisplay"
       @frame="emit('frame')"
     />
+      </div>
+    </div>
   </aside>
 </template>
 <script setup>
@@ -166,11 +132,11 @@ import {
   FormField,
   FormSelect,
   FormTextInput,
-  MultiToggle,
   ToggleSwitch,
 } from '@sylvieshare/share-ui';
-import { Eye, EyeOff, Plus, Trash2, UserRound } from '@lucide/vue';
-import { VISIBILITY } from '../lib/mapModel';
+import { Group, Lightbulb, MonitorUp, PanelLeftClose, EyeOff, Plus, Trash2, UserRound } from '@lucide/vue';
+import SessionMapAreasPanel from './SessionMapAreasPanel.vue';
+import SessionMapLightingPanel from './SessionMapLightingPanel.vue';
 import MapDisplaySettings from './MapDisplaySettings.vue';
 const props = defineProps({
     controller: { type: Object, required: true },
@@ -179,15 +145,15 @@ const props = defineProps({
     pending: Object,
     screenPath: String,
   }),
-  emit = defineEmits(['place', 'token', 'zone', 'frame']);
-const tab = ref('zones'),
+  emit = defineEmits(['place', 'token', 'zone', 'frame', 'resize']);
+const tab = ref('areas'),
   search = ref(''),
   map = computed(() => props.controller.selected),
   token = computed(() => map.value.state.tokens.find((t) => t.id === props.selectedToken));
 watch(
   () => props.selectedToken,
   (id) => {
-    if (id) tab.value = 'tokens';
+    if (id) openTab('tokens');
   },
 );
 const available = computed(() =>
@@ -197,32 +163,44 @@ const available = computed(() =>
       c.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()),
   ),
 );
-function all(value) {
-  props.controller.change((s) => {
-    s.defaultVisibility = value;
-    s.zones = Object.fromEntries(map.value.document.zones.map((z) => [z.id, value]));
-  });
+const collapsed = ref(window.matchMedia('(max-width: 1200px)').matches);
+const tabs = [
+  { key: 'areas', label: 'Области', icon: Group },
+  { key: 'tokens', label: 'Жетоны', icon: UserRound },
+  { key: 'lights', label: 'Освещение', icon: Lightbulb },
+  { key: 'screen', label: 'Трансляция', icon: MonitorUp },
+];
+function openTab(key) {
+  tab.value = key;
+  collapsed.value = false;
 }
+watch(collapsed, value => emit('resize', value || window.matchMedia('(max-width: 760px)').matches ? 48 : 334), { immediate: true });
 </script>
 <style scoped>
-.map-zone-row {
-  display: grid;
-  gap: 7px;
-  padding-block: 7px;
-  border-bottom: 1px solid var(--border-strong);
+.session-map-inspector {
+  position: absolute;
+  z-index: 8;
+  top: 14px;
+  left: 14px;
+  bottom: 14px;
+  display: flex;
+  width: 334px;
+  min-height: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+  overflow: hidden;
 }
-.map-zone-name {
-  padding: 0;
-  background: none;
-  border: none;
-  font: inherit;
-  color: var(--text-1);
-  text-align: left;
-  cursor: pointer;
-}
-.map-token-avatar {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
+.session-map-inspector--collapsed { width: 48px; }
+.session-map-tabs { display: flex; flex-direction: column; gap: 6px; width: 48px; flex: none; padding-top: 6px; border-right: 1px solid var(--border-strong); }
+.session-map-panel { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
+.session-map-panel-heading { display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 12px; }
+.session-map-panel-content { display: flex; flex-direction: column; gap: 14px; overflow: auto; min-height: 0; padding: 8px 12px 18px; }
+.session-map-panel-content hr { width: 100%; border: 0; border-top: 1px solid var(--border-strong); }
+.map-token-avatar { width: 24px; height: 24px; object-fit: contain; }
+@media (max-width: 760px) {
+  .session-map-inspector:not(.session-map-inspector--collapsed) { width: min(334px, calc(100vw - 42px)); }
 }
 </style>

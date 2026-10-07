@@ -1,10 +1,14 @@
 <template>
-  <div class="session-tab-workspace">
+  <div class="session-tab-workspace" :class="`session-tab-workspace--${mode}`">
     <div class="session-tab-workspace-content">
       <slot />
     </div>
   </div>
 </template>
+
+<script setup>
+defineProps({ mode: { type: String, default: 'column', validator: value => ['full', 'column'].includes(value) } })
+</script>
 
 <style scoped>
 .session-tab-workspace {
@@ -30,7 +34,10 @@
   min-height: 0;
 }
 
+.session-tab-workspace--full { padding: 0; background: transparent; }
+.session-tab-workspace--full .session-tab-workspace-content { max-width: none; }
+
 @media (max-width: 760px) {
-  .session-tab-workspace { padding: 16px calc(var(--chapter-safe-right, 0px) + 12px) 16px 16px; }
+  .session-tab-workspace--column { padding: 16px calc(var(--chapter-safe-right, 0px) + 12px) 16px 16px; }
 }
 </style>

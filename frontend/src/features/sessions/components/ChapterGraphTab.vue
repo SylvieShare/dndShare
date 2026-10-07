@@ -30,7 +30,7 @@
       <LoadingState v-if="primaryView === 'story' && graph.loading.value" class="chapter-graph-loading" label="Загружаем карту кампании…" compact />
       <SessionGraphCanvas
         v-else-if="!graph.loading.value"
-        v-show="primaryView === 'story'"
+        v-show="primaryView === 'story' && !mapBackground"
         ref="canvas"
         :graph="graph"
         :session-uuid="sessionUuid"
@@ -63,7 +63,10 @@
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
         @workspace-context-change="$emit('workspace-context-change', $event)"
       />
-      <SessionTabWorkspace v-show="primaryView !== 'story'">
+      <SessionTabWorkspace mode="full" v-show="mapBackground">
+        <slot name="full-workspace" />
+      </SessionTabWorkspace>
+      <SessionTabWorkspace mode="column" v-show="primaryView !== 'story' && primaryView !== 'maps'">
         <slot name="primary-workspace" />
       </SessionTabWorkspace>
       <slot />
@@ -202,6 +205,7 @@ const props = defineProps({
   isDm: { type: Boolean, default: false },
   locked: { type: Boolean, default: false },
   primaryView: { type: String, default: 'story' },
+  mapBackground: { type: Boolean, default: false },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
   workspaceScene: { type: Object, default: null },

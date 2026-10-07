@@ -67,11 +67,12 @@ for (const mobile of [false, true])
       mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 },
     );
     await ready(page);
-    await page.getByLabel("Видимость зоны Хранилище").selectOption("explored");
+    await page.getByRole("button", { name: "Области", exact: true }).click();
+    await page.getByRole("switch", { name: "Показывать Хранилище", exact: true }).click();
     await expect
       .poll(() => page.evaluate(() => window.latestBoard.state.zones.right))
-      .toBe("explored");
-    await page.getByRole("radio", { name: "Жетоны", exact: true }).click();
+      .toBe("visible");
+    await page.getByRole("button", { name: "Жетоны", exact: true }).click();
     await page.getByRole("button", { name: "Следопыт", exact: true }).click();
     await page.getByRole("switch", { name: "Физическая миниатюра" }).click();
     await expect
@@ -79,7 +80,7 @@ for (const mobile of [false, true])
         page.evaluate(() => window.latestBoard.state.tokens[0].physical),
       )
       .toBe(true);
-    await page.getByRole("radio", { name: "Стол", exact: true }).click();
+    await page.getByRole("button", { name: "Трансляция", exact: true }).click();
     await page.getByRole("switch", { name: "Вписывать всю карту" }).click();
     await expect
       .poll(() => page.evaluate(() => window.latestDisplay.camera.fit))
@@ -153,15 +154,14 @@ test("failed session writes retain changes and retry with the original version",
   await page.evaluate(() => {
     window.failNextSave = 500;
   });
-  await page.getByLabel("Видимость зоны Хранилище").selectOption("explored");
+  await page.getByRole("button", { name: "Области", exact: true }).click();
+  await page.getByRole("switch", { name: "Показывать Хранилище", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("Нет связи");
-  await expect(page.getByLabel("Видимость зоны Хранилище")).toHaveValue(
-    "explored",
-  );
+  await expect(page.getByRole("switch", { name: "Показывать Хранилище", exact: true })).toBeChecked();
   await page.getByRole("button", { name: "Повторить", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.latestBoard.state.zones.right))
-    .toBe("explored");
+    .toBe("visible");
   const versions = await page.evaluate(() =>
     window.requests
       .filter((r) => r.url.endsWith("/maps/test-map"))
@@ -177,18 +177,15 @@ test("conflicting writes require an explicit reload before replacing local chang
   await page.evaluate(() => {
     window.failNextSave = 409;
   });
-  await page.getByLabel("Видимость зоны Хранилище").selectOption("explored");
+  await page.getByRole("button", { name: "Области", exact: true }).click();
+  await page.getByRole("switch", { name: "Показывать Хранилище", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("другой вкладке");
-  await expect(page.getByLabel("Видимость зоны Хранилище")).toHaveValue(
-    "explored",
-  );
+  await expect(page.getByRole("switch", { name: "Показывать Хранилище", exact: true })).toBeChecked();
   await page
     .getByRole("button", { name: "Загрузить с сервера", exact: true })
     .click();
   await page.getByRole("button", { name: "Загрузить", exact: true }).click();
-  await expect(page.getByLabel("Видимость зоны Хранилище")).toHaveValue(
-    "hidden",
-  );
+  await expect(page.getByRole("switch", { name: "Показывать Хранилище", exact: true })).not.toBeChecked();
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 

@@ -1,5 +1,5 @@
 <template>
-  <section class="session-map-workspace" data-tutorial="session-map">
+  <section class="session-map-workspace" :class="{ 'session-map-workspace--combat': combat }" data-tutorial="session-map">
     <header class="map-toolbar">
       <Map :size="24" /><strong>Карта</strong>
       <FormSelect
@@ -11,18 +11,20 @@
         ><option v-for="m in c.maps" :key="m.id" :value="m.id">
           {{ m.name
           }}{{
-            c.display?.mapId === m.id && c.display.visible ? " · на столе" : ""
+            c.display?.mapId === m.id && c.display.visible ? " · в трансляции" : ""
           }}
         </option></FormSelect
       >
-      <ActionButton variant="secondary" @click="picker = true"
-        ><Plus :size="16" />Добавить карту</ActionButton
+      <ActionButton variant="secondary" aria-label="Добавить карту" title="Добавить карту" @click="picker = true"
+        ><Plus :size="16" /><span class="session-map-action-label">Добавить карту</span></ActionButton
       >
       <template v-if="c.selected">
         <ActionButton
           :disabled="c.displaySaving || c.conflict"
+          aria-label="Транслировать карту"
+          title="Транслировать карту"
           @click="broadcast"
-          ><MonitorUp :size="16" />Транслировать карту</ActionButton
+          ><MonitorUp :size="16" /><span class="session-map-action-label">Транслировать карту</span></ActionButton
         >
         <ActionButton
           variant="quiet"
@@ -53,13 +55,13 @@
     </div>
     <LoadingState v-if="c.loading" label="Открываем карты сессии…" />
     <div v-else-if="!c.selected" class="map-empty">
-      <Map :size="48" /><strong>Подготовьте игровой стол</strong
+      <Map :size="48" /><strong>Добавьте карту сессии</strong
       ><span
         >Добавьте карту из библиотеки. Её туман, двери и жетоны будут сохранены
         в этой сессии.</span
       ><ActionButton @click="picker = true">Выбрать карту</ActionButton>
     </div>
-    <div v-else class="map-editor session-map-editor">
+    <div v-else class="session-map-editor">
       <SessionMapInspector
         :controller="c"
         :candidates="candidates"
@@ -76,8 +78,9 @@
         "
         @zone="selectedZone = $event"
         @frame="frame"
+        @resize="inspectorWidth = $event"
       />
-      <div class="map-editor-main">
+      <div class="session-map-main">
         <div class="map-toolbar">
           <ActionButton
             :variant="tool === 'select' ? 'primary' : 'secondary'"
@@ -99,12 +102,10 @@
               >Отмена</ActionButton
             ></span
           >
-          <span v-else class="map-toolbar-note"
-            >Перетащите жетон · нажмите на дверь</span
-          >
         </div>
         <MapCanvas
-          area-mode="ghost"
+          :area-mode="playerPreview ? 'hide' : 'ghost'"
+          :hint="combat ? '' : undefined"
           :key="c.selected.id"
           ref="canvas"
           :document="c.selected.document"
@@ -183,7 +184,10 @@ const props = defineProps({
   session: Object,
   participants: { type: Array, default: () => [] },
   encounter: Object,
+  combat: Boolean,
 });
+const emit = defineEmits(['inspector-resize']);
+const inspectorWidth = ref(334);
 const c = reactive(useSessionMaps(props.sessionUuid)),
   picker = ref(false),
   pendingDelete = ref(null),
@@ -231,6 +235,7 @@ const candidates = computed(() => [
     })),
 ]);
 let drag = null;
+watch(() => [!!c.selected, inspectorWidth.value], ([selected, width]) => emit('inspector-resize', selected ? width : 0), { immediate: true });
 watch(
   () => c.selectedID,
   () => {
@@ -347,37 +352,37 @@ function gesture({ phase, point, hit }) {
 }
 </script>
 <style scoped>
-.session-map-workspace {
-  height: 100%;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.session-map-workspace > .map-toolbar > select {
-  flex: 1;
-  min-width: 140px;
-  max-width: 320px;
-}
-.session-map-workspace > .map-toolbar > strong {
-  font-family: var(--font-display);
-  font-size: 24px;
-  color: var(--text-1);
-  margin-right: 12px;
-}
-.session-map-editor {
-  flex: 1;
-  min-height: 0;
+.session-map-workspace { position: relative; height: 100%; min-height: 0; }
+.session-map-workspace > .map-toolbar,
+.session-map-main > .map-toolbar {
+  position: absolute;
+  z-index: 7;
+  top: 14px;
+  left: max(14px, var(--chapter-safe-left, 362px));
+  right: var(--chapter-safe-right, 86px);
+  padding: 8px;
   border: 1px solid var(--border-strong);
-  border-radius: 14px;
-  overflow: hidden;
+  border-radius: 10px;
+  background: var(--surface);
 }
-.session-map-editor .map-editor-main {
-  padding: 10px;
+.session-map-workspace > .map-toolbar > select { flex: 1; min-width: 100px; max-width: 240px; }
+.session-map-workspace > .map-toolbar > strong { display: none; }
+.session-map-workspace > .map-toolbar > svg { display: none; }
+.session-map-main > .map-toolbar { top: auto; bottom: 14px; right: auto; max-width: calc(100% - var(--chapter-safe-left, 362px) - 100px); }
+.session-map-editor, .session-map-main { position: absolute; inset: 0; min-width: 0; min-height: 0; }
+.session-map-main > :deep(.map-canvas) { border-radius: 0; }
+.session-map-main :deep(.map-controls-hint) { left: var(--chapter-safe-left, 362px); bottom: 76px; }
+.session-map-main :deep(.map-canvas-controls) { right: calc(var(--chapter-safe-right, 0px) + 14px); }
+.session-map-workspace--combat .session-map-main :deep(.map-canvas-controls) { bottom: 188px; }
+.session-map-workspace--combat .session-map-main > .map-toolbar { bottom: auto; top: 68px; }
+.session-map-workspace > .map-error { position: absolute; z-index: 9; top: 68px; left: var(--chapter-safe-left, 362px); right: var(--chapter-safe-right, 14px); }
+.session-map-workspace > .map-empty,
+.session-map-workspace > :deep(.loading-state) { position: absolute; top: 90px; bottom: 0; left: var(--chapter-safe-left, 362px); right: var(--chapter-safe-right, 14px); }
+@media (max-width: 1400px) {
+  .session-map-action-label { display: none; }
 }
 @media (max-width: 760px) {
-  .session-map-workspace > .map-toolbar > strong {
-    display: none;
-  }
+  .session-map-workspace > .map-toolbar { left: 76px; right: 14px; flex-wrap: wrap; }
+  .session-map-main > .map-toolbar { left: 76px; bottom: 76px; max-width: calc(100% - 100px); }
 }
 </style>

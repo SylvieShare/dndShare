@@ -302,7 +302,10 @@ from different entity tables cannot reuse a node. Returning prepares the parent
 viewport before its payload appears and keeps the returning node in the ancestor
 position for one painted frame before animating it to its saved coordinates.
 Combat appears together with the participant-rail transition and hides the
-narrative canvas for the duration of the workspace. The selected chapter,
+narrative canvas for the duration of the workspace. For accounts with map access,
+the same map workspace occupies the field underneath the combat controls; the
+initiative track and smaller current-turn preview overlay it during active combat.
+The selected chapter,
 scenario and narrative level remain mounted as hidden state, so closing combat
 restores the same canvas without reloading or resetting it. Reduced-motion users
 skip the transition.

@@ -48,8 +48,20 @@ func Visibility(d Document, s State, x, y float64) string {
 func PublicState(d Document, s State) State {
 	result := s
 	result.Tokens = []Token{}
+	hiddenTiles := map[string]bool{}
+	for _, area := range d.Areas {
+		hidden := area.Hidden
+		if visible, ok := s.Areas[area.ID]; ok {
+			hidden = !visible
+		}
+		if hidden {
+			for _, id := range area.TileIDs {
+				hiddenTiles[id] = true
+			}
+		}
+	}
 	for _, t := range s.Tokens {
-		if t.Hidden || t.Physical || Visibility(d, s, t.X, t.Y) != "visible" {
+		if t.Hidden || t.Physical || Visibility(d, s, t.X, t.Y) != "visible" || (t.Placement != nil && hiddenTiles[t.Placement.TileID]) {
 			continue
 		}
 		t.Ref = ""

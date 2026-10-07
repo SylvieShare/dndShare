@@ -1,4 +1,5 @@
 import { createMapLighting } from "./mapLighting";
+import { sessionMapDocument } from "../lib/sessionMapPresentation";
 import { areaAppearance } from "../lib/mapAreas";
 import { createMapBackground } from "./mapBackground";
 import { mapScreenQueries } from "./mapScreenQueries";
@@ -153,6 +154,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
   async function update(d, nextState, opts = {}) {
     const id = ++epoch;
     current = d;
+    d = sessionMapDocument(d, nextState);
     state = nextState;
     options = opts;
     appearance = areaAppearance(d, opts.areaMode);
@@ -249,7 +251,9 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
     objectMotion.update(posedObjects, d);
-    const posedTokens = (nextState?.tokens || []).map((t) =>
+    const posedTokens = (nextState?.tokens || []).filter(t =>
+      opts.master || !appearance.hiddenTiles.has(t.placement?.tileId),
+    ).map((t) =>
       resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
     );
     objectPreview.update(
