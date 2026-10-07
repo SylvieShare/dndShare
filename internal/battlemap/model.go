@@ -33,6 +33,7 @@ type Zone struct {
 }
 
 type Area struct {
+	Color     string   `json:"color"`
 	ID        string   `json:"id"`
 	Name      string   `json:"name"`
 	Hidden    bool     `json:"hidden"`

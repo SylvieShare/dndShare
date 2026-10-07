@@ -12,32 +12,42 @@ const areas = (page) => page.getByRole("region", { name: "Области кар�
 const open = (page) =>
   page.getByRole("button", { name: "Области", exact: true }).click();
 
-test("area selection includes all tiles and objects and buttons count only applicable members", async ({
+const focus = (page) =>
+  page.getByRole("complementary", { name: "Выбранные элементы", exact: true });
+test("the compact area list opens a focus with every model and light, and edits preserve membership", async ({
   page,
 }) => {
-  await ready(page, "editor", "&areaExample&twoAreaObjects");
+  await ready(page, "editor", "&areaExample&twoAreaObjects&attachmentExample");
   await open(page);
-  await areas(page)
-    .getByRole("button", { name: "Выбрать все объекты в области", exact: true })
+  await expect(areas(page).getByRole("textbox")).toHaveCount(0);
+  await areas(page).getByRole("button", { name: "Зал", exact: true }).click();
+  const panel = focus(page);
+  await expect(
+    panel.getByRole("heading", { name: "Зал", exact: true }),
+  ).toBeVisible();
+  await expect(panel.locator(".map-area-members .map-entity-row")).toHaveCount(
+    6,
+  );
+  await expect(
+    panel.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toHaveCount(2);
+  await expect(
+    panel.getByRole("button", { name: "Сундук", exact: true }),
+  ).toHaveCount(2);
+  await panel
+    .getByRole("button", { name: "Цвет области", exact: true })
     .click();
+  await page.getByRole("button", { name: "#22c55e", exact: true }).click();
+  await expect
+    .poll(() => page.evaluate(() => window.lastSaved?.document.areas[0].color))
+    .toBe("#22c55e");
+  await panel
+    .getByLabel("Название области", { exact: true })
+    .fill("Зелёный зал");
+  await panel.getByLabel("Название области", { exact: true }).press("Enter");
   await expect(
-    page.getByRole("status", { name: "Выбрано плиток", exact: true }),
-  ).toHaveText("Выбрано: 2");
-  await expect(
-    page.getByRole("status", { name: "Выбрано объектов", exact: true }),
-  ).toHaveText("Объектов: 2");
-  await expect(
-    areas(page).getByRole("button", {
-      name: "Добавить выбранное (0)",
-      exact: true,
-    }),
-  ).toBeDisabled();
-  await expect(
-    areas(page).getByRole("button", {
-      name: "Убрать выбранное из области (4)",
-      exact: true,
-    }),
-  ).toBeEnabled();
+    areas(page).getByRole("button", { name: "Зелёный зал", exact: true }),
+  ).toBeVisible();
   await page.locator(".map-canvas-surface").focus();
   await page.keyboard.press("r");
   await expect
@@ -49,156 +59,92 @@ test("area selection includes all tiles and objects and buttons count only appli
       ),
     )
     .toBe(true);
-  await areas(page)
-    .getByRole("button", { name: "Создать область", exact: true })
+  await expect(
+    panel.getByRole("heading", { name: "Зелёный зал", exact: true }),
+  ).toBeVisible();
+  await panel
+    .getByRole("switch", { name: "Скрыть область «Зелёный зал»", exact: true })
     .click();
   await expect(
-    areas(page).getByRole("button", {
-      name: "Убрать выбранное из области (0)",
-      exact: true,
-    }),
-  ).toBeDisabled();
-  await areas(page)
-    .getByRole("button", { name: "Добавить выбранное (4)", exact: true })
+    panel.getByRole("heading", { name: "Зелёный зал", exact: true }),
+  ).toBeVisible();
+  await expect(panel.locator(".map-area-members .map-entity-row")).toHaveCount(
+    6,
+  );
+  await panel
+    .getByRole("switch", { name: "Скрыть область «Зелёный зал»", exact: true })
     .click();
+  await panel
+    .getByRole("button", { name: "Убрать Пол 1 из области", exact: true })
+    .first()
+    .click();
+  await expect(panel.locator(".map-area-members .map-entity-row")).toHaveCount(
+    4,
+  );
   await expect
     .poll(() =>
-      page.evaluate(() =>
-        window.lastSaved?.document.areas.map(
-          (a) => a.tileIds.length + a.objectIds.length,
-        ),
-      ),
+      page.evaluate(() => window.lastSaved?.document.areas[0].tileIds.length),
     )
-    .toEqual([0, 4]);
-  await page
-    .getByRole("button", { name: "Удалить выбранное", exact: true })
-    .click();
-  await expect
-    .poll(() => page.evaluate(() => window.lastSaved?.document.objects.length))
-    .toBe(0);
-  expect(
-    await page.evaluate(() => window.lastSaved.document.tiles.length),
-  ).toBe(0);
-});
-test("named areas contain selected tiles and objects, hide without deleting, and can be removed", async ({
-  page,
-}) => {
-  await ready(page);
-  const floor = await mapPoint(page, 4.5, 4.5),
-    other = await mapPoint(page, 5.5, 4.5);
-  await dragTile(page, floor);
-  await dragTile(page, other);
-  await page.mouse.click(floor.x, floor.y);
-  await open(page);
-  await areas(page)
-    .getByRole("button", { name: "Создать область", exact: true })
-    .click();
-  await page.getByLabel("Название области 1", { exact: true }).fill("Зал");
-  await page.getByLabel("Название области 1", { exact: true }).press("Enter");
-  await areas(page)
-    .getByRole("button", { name: "Добавить выбранное (1)", exact: true })
-    .click();
-  await page.getByRole("button", { name: "Объекты", exact: true }).click();
-  await page
-    .getByRole("region", { name: "Каталог объектов" })
+    .toBe(1);
+  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await expect(panel.locator(".map-area-members .map-entity-row")).toHaveCount(
+    6,
+  );
+  await panel
     .getByRole("button", { name: "Сундук", exact: true })
-    .press("Enter");
-  await page.mouse.move(other.x, other.y);
-  await page.mouse.click(other.x, other.y);
-  await open(page);
-  await areas(page)
-    .getByRole("button", { name: "Добавить выбранное (1)", exact: true })
+    .first()
     .click();
   await expect(
-    areas(page).getByText("Состав области", { exact: true }),
-  ).toHaveCount(0);
-  await areas(page)
-    .getByRole("button", { name: "Выбрать все объекты в области", exact: true })
-    .click();
-  await expect(
-    page.getByRole("status", { name: "Выбрано объектов", exact: true }),
-  ).toHaveText("Объектов: 1");
-  await expect(
-    areas(page).getByRole("button", {
-      name: "Добавить выбранное (0)",
+    panel.getByRole("heading", { name: "Сундук", exact: true }),
+  ).toBeVisible();
+  await expect(panel.locator(".map-area-members")).toHaveCount(0);
+  await panel
+    .getByRole("button", {
+      name: "Перейти к области «Зелёный зал»",
       exact: true,
-    }),
-  ).toBeDisabled();
-  await expect(
-    areas(page).getByRole("button", {
-      name: "Убрать выбранное из области (2)",
-      exact: true,
-    }),
-  ).toBeEnabled();
-  await page
-    .getByRole("switch", { name: "Скрыть область «Зал»", exact: true })
+    })
     .click();
-  await expect
-    .poll(() =>
-      page.evaluate(() => window.lastSaved?.document.areas[0]?.hidden),
-    )
-    .toBe(true);
-  await page.mouse.move(floor.x, floor.y);
-  await expect(page.locator(".map-canvas--hover")).toHaveCount(0);
-  expect(
-    await page.evaluate(() => window.lastSaved.document.areas[0].name),
-  ).toBe("Зал");
-  await page
-    .getByRole("switch", { name: "Скрыть область «Зал»", exact: true })
-    .click();
-  await expect
-    .poll(() =>
-      page.evaluate(() => window.lastSaved?.document.areas[0]?.hidden),
-    )
-    .toBe(false);
-  await page.mouse.move(floor.x, floor.y);
-  await expect(page.locator(".map-canvas--hover")).toBeVisible();
-  await areas(page)
-    .getByRole("button", { name: "Удалить область «Зал»", exact: true })
+  await expect(panel.locator(".map-area-members .map-entity-row")).toHaveCount(
+    6,
+  );
+  await panel
+    .getByRole("button", { name: "Удалить область «Зелёный зал»", exact: true })
     .click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.areas.length))
     .toBe(0);
   expect(
-    await page.evaluate(
-      () =>
-        window.lastSaved.document.tiles.filter(
-          (t) => [4, 5].includes(t.x) && t.y === 4,
-        ).length,
-    ),
-  ).toBe(2);
-  expect(
-    await page.evaluate(
-      () => window.lastSaved.document.objects.filter((o) => o.modelId).length,
-    ),
-  ).toBe(1);
+    await page.evaluate(() => [
+      window.lastSaved.document.tiles.length,
+      window.lastSaved.document.objects.length,
+    ]),
+  ).toEqual([2, 2]);
 });
-test("adding a selected model to another area transfers it and undo restores membership", async ({
+test("creation captures an ordinary selection, an empty focus stays usable, and models can transfer between areas", async ({
   page,
 }) => {
   await ready(page);
-  await dragTile(page, await mapPoint(page, 4.5, 4.5));
+  const point = await mapPoint(page, 4.5, 4.5);
+  await dragTile(page, point);
   await open(page);
-  const create = areas(page).getByRole("button", {
-    name: "Создать область",
-    exact: true,
-  });
-  await create.click();
   await areas(page)
-    .getByRole("button", { name: "Добавить выбранное (1)", exact: true })
+    .getByRole("button", { name: "Создать область", exact: true })
     .click();
-  await create.click();
+  const panel = focus(page);
+  await panel.getByLabel("Название области", { exact: true }).fill("Вход");
+  await panel.getByLabel("Название области", { exact: true }).press("Enter");
   await areas(page)
-    .getByRole("button", { name: "Добавить выбранное (1)", exact: true })
+    .getByRole("button", { name: "Создать область", exact: true })
     .click();
-  await expect
-    .poll(() =>
-      page.evaluate(() =>
-        window.lastSaved?.document.areas.map((a) => a.tileIds.length),
-      ),
-    )
-    .toEqual([0, 1]);
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await expect(
+    panel.getByRole("heading", { name: "Область 2", exact: true }),
+  ).toBeVisible();
+  await expect(panel.locator(".map-area-members .map-entity-row")).toHaveCount(
+    0,
+  );
+  await expect(
+    page.getByRole("button", { name: "Копировать выбранное", exact: true }),
+  ).toBeDisabled();
   await expect
     .poll(() =>
       page.evaluate(() =>
@@ -206,6 +152,58 @@ test("adding a selected model to another area transfers it and undo restores mem
       ),
     )
     .toEqual([1, 0]);
+  await areas(page).getByRole("button", { name: "Вход", exact: true }).click();
+  await panel
+    .getByRole("button", { name: "Убрать Пол 1 из области", exact: true })
+    .click();
+  await page.mouse.click(point.x, point.y);
+  await panel
+    .getByRole("button", { name: "Добавить в область", exact: true })
+    .click();
+  await page.getByRole("menuitem", { name: "Область 2", exact: true }).click();
+  await panel
+    .getByRole("button", { name: "Перейти к области «Область 2»", exact: true })
+    .click();
+  await expect(
+    panel.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toBeVisible();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Delete");
+  await expect
+    .poll(() => page.evaluate(() => window.lastSaved?.document.areas.length))
+    .toBe(1);
+  expect(
+    await page.evaluate(() =>
+      window.lastSaved.document.tiles.some((t) => t.x === 4 && t.y === 4),
+    ),
+  ).toBe(true);
+  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await expect(
+    areas(page).getByRole("button", { name: "Область 2", exact: true }),
+  ).toBeVisible();
+  await areas(page)
+    .getByRole("button", { name: "Область 2", exact: true })
+    .click();
+  await expect(
+    panel.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toBeVisible();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Control+c");
+  await page.keyboard.press("Control+v");
+  await expect(page.locator(".map-controls-hint")).toContainText(
+    "вставить участок",
+  );
+  await areas(page)
+    .getByRole("button", { name: "Область 2", exact: true })
+    .click();
+  await expect(
+    panel.getByRole("heading", { name: "Область 2", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".map-controls-hint")).not.toContainText(
+    "вставить участок",
+  );
+  await page.keyboard.press("Escape");
+  await expect(panel).toHaveCount(0);
 });
 async function modelPixels(page) {
   const style = await page.addStyleTag({

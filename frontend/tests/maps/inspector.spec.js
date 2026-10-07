@@ -49,39 +49,30 @@ test("category cells fill each row and single selection shows preview, identity 
     "MA-DungeonChest",
   );
 });
-test("mixed area selection groups repeated models, assigns them to another area and deletes them", async ({
+test("area focus lists individual models and opening a row switches to the element inspector", async ({
   page,
 }) => {
   await ready(page, "&areaExample&twoAreaObjects");
   await page.getByRole("button", { name: "Области", exact: true }).click();
   await page
-    .getByRole("button", { name: "Выбрать все объекты в области", exact: true })
+    .getByRole("region", { name: "Области карты", exact: true })
+    .getByRole("button", { name: "Зал", exact: true })
     .click();
   const panel = selection(page);
-  await expect(panel.locator(".map-entity-row")).toHaveCount(2);
-  await expect(panel.locator(".map-entity-count")).toHaveText(["×2", "×2"]);
+  await expect(panel.locator(".map-entity-row")).toHaveCount(4);
+  await expect(panel.locator(".map-entity-count")).toHaveCount(0);
   await panel
-    .getByRole("button", { name: "Добавить в область", exact: true })
+    .getByRole("button", { name: "Пол 1", exact: true })
+    .first()
     .click();
-  await page
-    .getByRole("menuitem", { name: "Создать область", exact: true })
-    .click();
-  await expect
-    .poll(() => page.evaluate(() => window.lastSaved?.document.areas.length))
-    .toBe(2);
-  const area = await page.evaluate(() => window.lastSaved.document.areas[1]);
-  expect(area.tileIds).toHaveLength(2);
-  expect(area.objectIds).toHaveLength(2);
+  await expect(
+    panel.getByRole("heading", { name: "Пол 1", exact: true }),
+  ).toBeVisible();
+  await expect(panel.locator(".map-selection-preview")).toBeVisible();
   await panel
-    .getByRole("button", { name: "Удалить выбранное", exact: true })
+    .getByRole("button", { name: "Перейти к области «Зал»", exact: true })
     .click();
-  await expect
-    .poll(() => page.evaluate(() => window.lastSaved?.document.tiles.length))
-    .toBe(0);
-  await expect
-    .poll(() => page.evaluate(() => window.lastSaved?.document.objects.length))
-    .toBe(0);
-  await expect(panel).toHaveCount(0);
+  await expect(panel.locator(".map-entity-row")).toHaveCount(4);
 });
 test("light rows toggle by switch, show their area, and anchor picking focuses the linked model", async ({
   page,
@@ -181,7 +172,6 @@ test("single inspector has framed preview actions, tabular XYZ, and navigates to
     panel.getByRole("status", { name: "Выбрано плиток" }),
   ).toHaveCount(0);
   await expect(panel.locator(".map-selected-frame")).toBeVisible();
-  const name = await panel.locator(".map-selected-heading h3").innerText();
   await expect(panel.locator(".map-selected-heading small")).toHaveText(
     /.+ · (LC-007|MA-DungeonChest)$/,
   );
@@ -207,9 +197,11 @@ test("single inspector has framed preview actions, tabular XYZ, and navigates to
     })
     .click();
   await expect(
-    page.getByLabel("Название области 1", { exact: true }),
-  ).toBeFocused();
-  await expect(panel.locator(".map-selected-heading h3")).toHaveText(name);
+    panel.getByLabel("Название области", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    panel.getByRole("heading", { name: "Зал", exact: true }),
+  ).toBeVisible();
 });
 
 test("text can be selected and copied natively in the catalogue and the inspector", async ({

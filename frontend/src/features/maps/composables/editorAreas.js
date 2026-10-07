@@ -1,7 +1,63 @@
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { uid } from "../lib/mapModel";
-import { assignArea, hiddenAreaMembers } from "../lib/mapAreas";
+import {
+  assignArea,
+  hiddenAreaMembers,
+  DEFAULT_AREA_COLOR,
+} from "../lib/mapAreas";
 export function editorAreas(e) {
+  const focusedArea = ref("");
+  const focused = computed(() =>
+    e.draft.value.document.areas.find((a) => a.id === focusedArea.value),
+  );
+  function clearAreaFocus(clearSelection = false) {
+    const hadFocus = !!focusedArea.value;
+    focusedArea.value = "";
+    if (clearSelection && hadFocus) {
+      e.setTileSelection([]);
+      e.setObjectSelection([]);
+    }
+  }
+  function syncFocus() {
+    if (!focusedArea.value) return;
+    if (!focused.value) {
+      clearAreaFocus(true);
+      return;
+    }
+    e.setTileSelection(focused.value.tileIds);
+    e.setObjectSelection(focused.value.objectIds);
+    if (e.selectedLight) e.selectedLight.value = "";
+  }
+  watch(
+    () => [
+      focusedArea.value,
+      focused.value?.tileIds.slice(),
+      focused.value?.objectIds.slice(),
+    ],
+    syncFocus,
+    { deep: true, flush: "sync" },
+  );
+  watch(
+    [
+      e.selectedTiles,
+      e.selectedObjects,
+      e.tool,
+      ...(e.selectedLight ? [e.selectedLight] : []),
+    ],
+    () => {
+      const area = focused.value;
+      if (!area) return;
+      const same = (a, b) =>
+        a.length === b.length && a.every((id) => b.includes(id));
+      if (
+        e.tool.value !== "select" ||
+        e.selectedLight?.value ||
+        !same(e.selectedTiles.value, area.tileIds) ||
+        !same(e.selectedObjects.value, area.objectIds)
+      )
+        clearAreaFocus();
+    },
+  );
   const members = computed(() => {
     const d = e.draft.value.document,
       r = e.selection.value;
@@ -34,6 +90,7 @@ export function editorAreas(e) {
         id,
         name: `Область ${m.document.areas.length + 1}`,
         hidden: false,
+        color: DEFAULT_AREA_COLOR,
         tileIds: [],
         objectIds: [],
       });
@@ -54,13 +111,32 @@ export function editorAreas(e) {
       area.name = name;
     });
   }
+  function setAreaColor(id, value) {
+    value = String(value).trim();
+    if (/^#[0-9a-f]{3}$/i.test(value))
+      value = "#" + [...value.slice(1)].map((c) => c + c).join("");
+    if (/^#[0-9a-f]{8}$/i.test(value)) value = value.slice(0, 7);
+    const area = e.draft.value.document.areas.find((a) => a.id === id);
+    if (!area || !/^#[0-9a-f]{6}$/i.test(value) || value === area.color) return;
+    e.change(() => {
+      area.color = value;
+    });
+  }
+  function removeAreaMember(id, kind, memberId) {
+    const area = e.draft.value.document.areas.find((a) => a.id === id);
+    const key = kind === "tile" ? "tileIds" : "objectIds";
+    if (!area || !area[key].includes(memberId)) return;
+    e.change(() => {
+      area[key] = area[key].filter((item) => item !== memberId);
+    });
+  }
   function setAreaHidden(id, hidden) {
     const area = e.draft.value.document.areas.find((a) => a.id === id);
     if (!area || area.hidden === hidden) return;
     e.change(() => {
       area.hidden = hidden;
     });
-    if (hidden) {
+    if (hidden && focusedArea.value !== id) {
       e.setTileSelection(
         e.selectedTiles.value.filter((id) => !area.tileIds.includes(id)),
       );
@@ -114,6 +190,8 @@ export function editorAreas(e) {
     e.screenSelection.value = null;
     e.setTileSelection(area.tileIds);
     e.setObjectSelection(area.objectIds);
+    if (e.selectedLight) e.selectedLight.value = "";
+    focusedArea.value = id;
   }
   function removeArea(id) {
     e.change((m) => {
@@ -121,6 +199,10 @@ export function editorAreas(e) {
     });
   }
   return {
+    focusedArea,
+    clearAreaFocus,
+    setAreaColor,
+    removeAreaMember,
     addArea,
     renameArea,
     setAreaHidden,

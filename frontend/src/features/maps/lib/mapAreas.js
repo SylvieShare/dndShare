@@ -1,3 +1,4 @@
+export const DEFAULT_AREA_COLOR = "#8b5cf6";
 export function hiddenAreaMembers(document) {
   const tiles = new Set(),
     objects = new Set();

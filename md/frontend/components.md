@@ -370,12 +370,16 @@ MapCollectionPicker размещён над левым каталогом и д�
 заданы в mapAccents: синий для тайлов, зелёный для объектов. Визуальный поворот
 rotationMotion не меняет сохранённые координаты и угол документа.
 
-Вкладка «Области» редактора — доменная композиция MapAreasPanel/MapAreaCard на
-BaseTile, AddButton, FormField/FormTextInput, ToggleSwitch, ActionButton и
-RemoveButton. Карточка не выводит состав: кнопка выделяет тайлы и предметы целиком.
-editorAreas считает добавляемые/убираемые элементы отдельно и управляет членством
-с обычной историей документа;
+Вкладка «Области» редактора — компактный MapAreasPanel: AddButton и строки
+MapEntityRow с иконкой Group, цветом, количеством и EyeOff для скрытых областей.
+MapAreaFocus открывается внутри правой MapSelectionPanel даже для пустой области.
+Он составляет FormField/FormTextInput, ColorPresetPicker, ToggleSwitch,
+MapInspectorSection, полный список MapEntityRow и RemoveButton. Строки моделей
+позволяют перейти к их фокусу либо убрать отдельное членство через ActionButton.
+editorAreas хранит transient focusedArea, поддерживает полное выделение текущего
+состава, проверяет/нормализует RGB и управляет членством с историей документа;
 mapAreas задаёт скрытие в редакторе/трансляции и прозрачность в сессии.
+MapTileSidebar отменяет незавершённое размещение перед переходом к области.
 
 MapPropertiesPanel открывается боковой иконкой; карта остаётся видимой.
 Инструменты зон и кисть стен удалены из редактора. MapEditorActions содержит

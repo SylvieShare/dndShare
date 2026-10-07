@@ -155,6 +155,7 @@ function beginBinding(id) {
 }
 function focusEntries(entries) {
   placement.cancel();
+  e.clearAreaFocus();
   if (entries[0]?.kind === "light") e.selectLight(entries[0].id);
   else {
     e.selectedLight = "";

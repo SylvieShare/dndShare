@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 import {
+  areaMapEntities,
   groupMapEntities,
   mapEntity,
   selectedMapEntities,
@@ -87,4 +88,38 @@ it("shows a light's inherited area and actual height above its support", () => {
   expect(entry.areaName).toBe("Зал");
   expect(entry.position).toEqual({ x: 1.5, y: 2.5, elevation: 1.1 });
   expect(mapEntity(document, catalogue, "tile", "removed")).toBeNull();
+});
+
+it("lists every area instance and direct or inherited sources without grouping models", () => {
+  const d = structuredClone(document);
+  d.areas[0].tileIds.push("b");
+  d.areas[0].objectIds.push("chest-1");
+  d.lights.push(
+    { ...d.lights[0], id: "direct", anchor: null, areaId: "room", x: 1, y: 2 },
+    {
+      ...d.lights[0],
+      id: "object-light",
+      anchor: { kind: "object", id: "chest-1" },
+    },
+    {
+      ...d.lights[0],
+      id: "outside",
+      anchor: null,
+      areaId: "other",
+      x: 3,
+      y: 4,
+    },
+  );
+  const entries = areaMapEntities(
+    { draft: { document: d }, catalogue },
+    d.areas[0],
+  );
+  expect(entries.map((e) => e.id)).toEqual([
+    "a",
+    "b",
+    "chest-1",
+    "lamp",
+    "direct",
+    "object-light",
+  ]);
 });

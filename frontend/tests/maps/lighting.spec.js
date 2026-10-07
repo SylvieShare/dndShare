@@ -22,9 +22,7 @@ test("light presets place onto the map and sunlight sliders persist with undo", 
   await expect(
     panel.getByRole("switch", { name: "Дневной свет", exact: true }),
   ).toBeDisabled();
-  await panel
-    .getByRole("switch", { name: "Освещение", exact: true })
-    .click();
+  await panel.getByRole("switch", { name: "Освещение", exact: true }).click();
   await panel
     .getByRole("switch", { name: "Дневной свет", exact: true })
     .click();
@@ -156,9 +154,6 @@ test("a source binds to a selected tile, follows it and belongs to its hidden ar
   await areas
     .getByRole("button", { name: "Создать область", exact: true })
     .click();
-  await areas
-    .getByRole("button", { name: "Добавить выбранное (1)", exact: true })
-    .click();
   await page
     .getByRole("switch", { name: "Скрыть область «Область 1»", exact: true })
     .click();
@@ -201,9 +196,7 @@ test("lighting mode restores fixed light and an unchecked marker keeps its sourc
   expect(
     await page.evaluate(() => window.lastSaved.document.lights[0].enabled),
   ).toBe(true);
-  await panel
-    .getByRole("switch", { name: "Освещение", exact: true })
-    .click();
+  await panel.getByRole("switch", { name: "Освещение", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.lightingEnabled))
     .toBe(false);
@@ -211,9 +204,7 @@ test("lighting mode restores fixed light and an unchecked marker keeps its sourc
     panel.getByRole("switch", { name: "Дневной свет", exact: true }),
   ).toBeDisabled();
   const fixed = await colour(page);
-  await panel
-    .getByRole("switch", { name: "Освещение", exact: true })
-    .click();
+  await panel.getByRole("switch", { name: "Освещение", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.lightingEnabled))
     .toBe(true);

@@ -85,3 +85,17 @@ export function groupMapEntities(entries) {
   }
   return [...groups.values()];
 }
+
+export function areaMapEntities(editor, area) {
+  const d = editor.draft.document,
+    c = structureContext(d, editor.catalogue);
+  return [
+    ...area.tileIds.map((id) => mapEntity(d, editor.catalogue, "tile", id, c)),
+    ...area.objectIds.map((id) =>
+      mapEntity(d, editor.catalogue, "object", id, c),
+    ),
+    ...d.lights
+      .filter((l) => lightArea(l, d) === area.id)
+      .map((l) => mapEntity(d, editor.catalogue, "light", l.id, c)),
+  ].filter(Boolean);
+}

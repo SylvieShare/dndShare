@@ -12,7 +12,11 @@
     @keydown.enter.self.prevent="selectable && emit('select', entry)"
     @keydown.space.self.prevent="selectable && emit('select', entry)"
   >
-    <span class="map-entity-thumbnail" aria-hidden="true">
+    <span
+      class="map-entity-thumbnail"
+      :style="{ color: entry.color }"
+      aria-hidden="true"
+    >
       <img
         v-if="entry.previewUrl"
         :src="entry.previewUrl"
@@ -27,7 +31,9 @@
             ? entry.enabled
               ? Lightbulb
               : LightbulbOff
-            : Box
+            : entry.kind === 'area'
+              ? Group
+              : Box
         "
         :size="28"
       />
@@ -59,7 +65,7 @@
 <script setup>
 import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { hasSelectedText } from "../lib/textSelection";
-import { Box, Lightbulb, LightbulbOff } from "@lucide/vue";
+import { Box, Group, Lightbulb, LightbulbOff } from "@lucide/vue";
 defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,

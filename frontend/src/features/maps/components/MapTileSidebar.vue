@@ -27,7 +27,7 @@
     <MapAreasPanel
       v-else-if="tab === 'areas'"
       :editor="editor"
-      :focus-area="focusArea"
+      @focus="selectArea"
     />
     <MapPropertiesPanel v-else-if="tab === 'settings'" :editor="editor" />
     <MapLightingPanel
@@ -38,7 +38,7 @@
   </MapSidebar>
 </template>
 <script setup>
-import { computed, nextTick, ref } from "vue";
+import { computed, ref } from "vue";
 import { Layers, Box, Group, Lightbulb, Settings } from "@lucide/vue";
 import MapSidebar from "./MapSidebar.vue";
 import MapPropertiesPanel from "./MapPropertiesPanel.vue";
@@ -56,15 +56,15 @@ const emit = defineEmits([
   "tab",
   "place-light",
 ]);
-const sidebar = ref(null),
-  focusArea = ref("");
+const sidebar = ref(null);
+function selectArea(id) {
+  emit("tab", "areas");
+  props.editor.selectArea(id);
+}
 defineExpose({
   openArea(id) {
-    focusArea.value = "";
     sidebar.value?.openTab("areas");
-    nextTick(() => {
-      focusArea.value = id;
-    });
+    props.editor.selectArea(id);
   },
 });
 const tab = ref(

@@ -195,4 +195,5 @@ var schemaParts = []struct {
 	{"model-furnishings", schemaModelFurnishingsSQL},
 	{"model-behaviour", schemaModelBehaviourSQL},
 	{"model-group-codes", schemaModelGroupCodesSQL},
+	{"map-area-colors", schemaMapAreaColorsSQL},
 }

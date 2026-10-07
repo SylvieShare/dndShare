@@ -3,20 +3,25 @@
     <AddButton
       label="Создать область"
       :disabled="editor.draft.document.areas.length >= 200"
-      @click="editor.addArea"
+      @click="create"
     />
-    <p class="map-hint">
-      Выделите тайлы или объект на карте и добавьте их в область. Модель может
-      входить в одну область.
-    </p>
-    <MapAreaCard
-      v-for="(area, index) in editor.draft.document.areas"
+    <MapEntityRow
+      v-for="area in editor.draft.document.areas"
       :key="area.id"
-      :area="area"
-      :index="index"
-      :editor="editor"
-      :focus="focusArea === area.id"
-    />
+      :entry="{
+        kind: 'area',
+        id: area.id,
+        name: area.name,
+        color: area.color || DEFAULT_AREA_COLOR,
+        count: area.tileIds.length + area.objectIds.length,
+      }"
+      :selected="editor.focusedArea === area.id"
+      @select="emit('focus', area.id)"
+    >
+      <template #actions
+        ><EyeOff v-if="area.hidden" :size="16" aria-label="Область скрыта"
+      /></template>
+    </MapEntityRow>
     <p v-if="!editor.draft.document.areas.length" class="map-hint">
       Областей пока нет.
     </p>
@@ -24,13 +29,20 @@
 </template>
 <script setup>
 import { AddButton } from "@sylvieshare/share-ui";
-import MapAreaCard from "./MapAreaCard.vue";
-defineProps({ editor: Object, focusArea: String });
+import { EyeOff } from "@lucide/vue";
+import { DEFAULT_AREA_COLOR } from "../lib/mapAreas";
+import MapEntityRow from "./MapEntityRow.vue";
+const props = defineProps({ editor: Object });
+const emit = defineEmits(["focus"]);
+function create() {
+  const id = props.editor.addArea(!props.editor.focusedArea);
+  emit("focus", id);
+}
 </script>
 <style scoped>
 .map-areas-panel {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 </style>

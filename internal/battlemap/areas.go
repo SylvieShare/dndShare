@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const DefaultAreaColor = "#8b5cf6"
+
 func validateAreas(d *Document, tiles, objects map[string]bool) error {
 	if len(d.Areas) > 200 {
 		return fmt.Errorf("На карте может быть до 200 областей")
@@ -12,6 +14,12 @@ func validateAreas(d *Document, tiles, objects map[string]bool) error {
 	areaIDs, tileMembers, objectMembers := map[string]bool{}, map[string]bool{}, map[string]bool{}
 	for i := range d.Areas {
 		a := &d.Areas[i]
+		if a.Color == "" {
+			a.Color = DefaultAreaColor
+		}
+		if !color.MatchString(a.Color) {
+			return fmt.Errorf("Некорректный цвет области")
+		}
 		if !identifier.MatchString(a.ID) || areaIDs[a.ID] || strings.TrimSpace(a.Name) == "" || len([]rune(a.Name)) > 100 || len(a.TileIDs) > MaxTiles || len(a.ObjectIDs) > 1000 {
 			return fmt.Errorf("Некорректная область карты")
 		}

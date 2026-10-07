@@ -215,6 +215,10 @@ export function useMapEditor(source, onSaved) {
   const tileDrag = editorTileDrag(state);
   const gestures = editorGestures({ ...state, tileDrag });
   const lighting = editorLighting(state);
+  const areas = editorAreas({
+    ...state,
+    selectedLight: lighting.selectedLight,
+  });
   watch(
     [selectedTiles, selectedObjects],
     () => {
@@ -308,7 +312,7 @@ export function useMapEditor(source, onSaved) {
     undo,
     redo,
     resize,
-    ...editorAreas(state),
+    ...areas,
     ...editorTransitions(state),
     ...gestures,
     ...lighting,
@@ -318,6 +322,8 @@ export function useMapEditor(source, onSaved) {
       if (gestures.copy()) lighting.copiedLight.value = null;
     },
     handle(event) {
+      if (event.phase === "start" || event.phase === "cancel")
+        areas.clearAreaFocus(event.phase === "cancel");
       if (lighting.handle(event)) return;
       if (event.phase === "start") lighting.selectedLight.value = "";
       gestures.handle(event);
@@ -328,6 +334,10 @@ export function useMapEditor(source, onSaved) {
       gestures.resetGesture();
     },
     removeSelected() {
+      if (areas.focusedArea.value) {
+        areas.removeArea(areas.focusedArea.value);
+        return;
+      }
       lighting.selectedLight.value
         ? lighting.removeLight()
         : gestures.removeSelected();

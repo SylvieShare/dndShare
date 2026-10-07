@@ -59,7 +59,7 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaMapLightingModeSQL)
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
-	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
+	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Color: "#22c55e", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
 	preset.Document.LightingEnabled = true
 	preset.Document.Sun = &battlemap.SunLight{Enabled: false, Angle: 90, Elevation: 30}
 	preset.Document.Lights = []battlemap.Light{{ID: "torch", Name: "Факел", Kind: "torch", Color: "#ffc36a", X: 3, Y: 3, Height: .9, Intensity: 8, Radius: 4, Enabled: true, ShowMarker: true, Shadows: true, Offset: [2]float64{}, Anchor: &battlemap.LightAnchor{Kind: "tile", ID: preset.Document.Tiles[0].ID}, AreaID: "room"}}
@@ -78,11 +78,26 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(b.Document.Areas) != 1 || !b.Document.Areas[0].Hidden || b.Document.Areas[0].Name != "Вход" {
+	if len(b.Document.Areas) != 1 || !b.Document.Areas[0].Hidden || b.Document.Areas[0].Name != "Вход" || b.Document.Areas[0].Color != "#22c55e" {
 		t.Fatal("area metadata was not copied into session")
 	}
 	if !b.Document.LightingEnabled || !b.Document.Lights[0].ShowMarker || b.Document.Sun.Enabled || b.Document.Sun.Angle != 90 || len(b.Document.Lights) != 1 || b.Document.Lights[0].Anchor.ID != preset.Document.Tiles[0].ID {
 		t.Fatal("lighting metadata was not copied into session")
+	}
+	exec("UPDATE dndshare.battle_map SET document = jsonb_set(document, '{areas,0}', (document->'areas'->0) - 'color')")
+	exec("UPDATE dndshare.session_map SET document = jsonb_set(document, '{areas,0}', (document->'areas'->0) - 'color') WHERE session_id=10")
+	exec(schemaMapAreaColorsSQL)
+	legacyMap, err := s.GetBattleMap(ctx, 1, m.ID)
+	if err != nil || legacyMap.Document.Areas[0].Color != battlemap.DefaultAreaColor || legacyMap.Document.Areas[0].Name != "Вход" || legacyMap.Revision != m.Revision {
+		t.Fatal("area color migration damaged template", err)
+	}
+	legacySession, err := s.GetSessionMap(ctx, 10, a.ID)
+	if err != nil || legacySession.Document.Areas[0].Color != battlemap.DefaultAreaColor || !legacySession.Document.Areas[0].Hidden {
+		t.Fatal("area color migration damaged session", err)
+	}
+	coloredSession, err := s.GetSessionMap(ctx, 20, b.ID)
+	if err != nil || coloredSession.Document.Areas[0].Color != "#22c55e" {
+		t.Fatal("migration replaced custom area color", err)
 	}
 	// Migrate existing template and session documents without losing light settings.
 	for _, table := range []string{"battle_map", "session_map"} {

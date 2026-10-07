@@ -1,5 +1,5 @@
 import { expect, it, vi } from "vitest";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { editorAreas } from "./editorAreas";
 function setup() {
   const e = {
@@ -65,4 +65,49 @@ it("selects every tile and object of an area, including explicit selection of a 
   areas.removeSelectionFromArea("room");
   expect(e.draft.value.document.areas[0].objectIds).toEqual([]);
   expect(e.draft.value.document.objects).toHaveLength(2);
+});
+
+it("keeps focused membership selected during edits and hiding, and exits for an individual selection", async () => {
+  const { e, areas } = setup();
+  areas.selectArea("room");
+  expect(areas.focusedArea.value).toBe("room");
+  areas.setAreaHidden("room", true);
+  expect(e.selectedTiles.value).toEqual(["a"]);
+  expect(e.selectedObjects.value).toEqual(["one"]);
+  e.draft.value.document.areas[0].tileIds.push("b");
+  expect(e.selectedTiles.value).toEqual(["a", "b"]);
+  areas.removeAreaMember("room", "object", "one");
+  expect(e.selectedObjects.value).toEqual([]);
+  await nextTick();
+  expect(areas.focusedArea.value).toBe("room");
+  e.setTileSelection(["b"]);
+  await nextTick();
+  expect(areas.focusedArea.value).toBe("");
+});
+it("focuses empty areas, defaults colors, normalizes custom RGB, and deletes only the area", () => {
+  const { e, areas } = setup();
+  const id = areas.addArea();
+  areas.selectArea(id);
+  expect(areas.focusedArea.value).toBe(id);
+  expect(e.selectedTiles.value).toEqual([]);
+  areas.setAreaColor(id, "#0f8");
+  expect(e.draft.value.document.areas.at(-1).color).toBe("#00ff88");
+  const edits = e.change.mock.calls.length;
+  areas.setAreaColor(id, "bad");
+  expect(e.change).toHaveBeenCalledTimes(edits);
+  areas.removeArea(id);
+  expect(areas.focusedArea.value).toBe("");
+  expect(e.draft.value.document.tiles).toHaveLength(2);
+  expect(e.draft.value.document.objects).toHaveLength(2);
+});
+it("membership changes restore the whole focused selection without creating selection history", () => {
+  const { e, areas } = setup();
+  areas.selectArea("room");
+  const before = e.change.mock.calls.length;
+  areas.renameArea("room", "Переименованный зал");
+  expect(areas.focusedArea.value).toBe("room");
+  expect(e.change).toHaveBeenCalledTimes(before + 1);
+  areas.clearAreaFocus(true);
+  expect(e.selectedTiles.value).toEqual([]);
+  expect(e.selectedObjects.value).toEqual([]);
 });
