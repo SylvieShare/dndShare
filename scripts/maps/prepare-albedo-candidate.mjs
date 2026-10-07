@@ -25,8 +25,22 @@ await MeshoptDecoder.ready;
 const io = new NodeIO()
   .registerExtensions(ALL_EXTENSIONS)
   .registerDependencies({ "meshopt.decoder": MeshoptDecoder });
-const name =
-  roughnessStep === 1 ? "albedo-1536-768" : "albedo-1536-768-roughness4";
+const sizes = [
+  Number(
+    process.argv.find((a) => a.startsWith("--render-size="))?.slice(14) || 1536,
+  ),
+  Number(
+    process.argv.find((a) => a.startsWith("--lod-size="))?.slice(11) || 768,
+  ),
+];
+for (const [i, tier] of ["render", "lod"].entries())
+  if (
+    !Number.isInteger(sizes[i]) ||
+    sizes[i] < 64 ||
+    sizes[i] >= report.tiers[tier].textureSize
+  )
+    throw new Error("Candidate must reduce each accepted atlas size: " + tier);
+const name = `albedo-${sizes[0]}-${sizes[1]}${roughnessStep === 1 ? "" : "-roughness4"}`;
 const original = path.join(directory, "candidates/original"),
   candidate = path.join(directory, "candidates", name);
 await fs.mkdir(original, { recursive: true });
@@ -58,8 +72,8 @@ lighter.optimization = {
   baseline: structuredClone(report.tiers),
 };
 for (const [tier, size] of [
-  ["render", 1536],
-  ["lod", 768],
+  ["render", sizes[0]],
+  ["lod", sizes[1]],
 ]) {
   const before = await fs.readFile(path.join(directory, tier + ".glb")),
     glb = readGlb(before);

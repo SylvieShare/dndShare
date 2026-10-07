@@ -5,9 +5,7 @@ const file = process.argv[2],
   reason = process.argv[4];
 if (
   !file ||
-  !["original", "albedo-1536-768", "albedo-1536-768-roughness4"].includes(
-    name,
-  ) ||
+  !(name === "original" || /^albedo-\d+-\d+(?:-roughness4)?$/.test(name)) ||
   !reason
 )
   throw new Error(

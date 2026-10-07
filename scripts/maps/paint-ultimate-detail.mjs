@@ -132,5 +132,6 @@ await prepareSurfaceRevision({
   updateMetallic: true,
   colorReferenceVersion: reference.version,
   sampleAO: true,
+  preserveTextureSize: spec.preserveTextureSize ?? false,
   weightBudget: spec.weightBudget,
 });

@@ -173,5 +173,47 @@
       "basis": "Alternate numbered angular 1x1 stair comparable to individually reviewed UD-095; compare two lighter albedo/roughness atlases."
     },
     "notes": "Individually inspected alternate numbered angular stair source: five nested worn stone levels, raised tread joints use AO only. Preserve original source ID, all geometry and support height metadata."
+  },
+  "UD-104": {
+    "sourceName": "Stair Support",
+    "referencePage": 14,
+    "material": "stone",
+    "datum": 100,
+    "floorSeams": "ao-only",
+    "preserveTextureSize": true,
+    "weightBudget": {
+      "renderMiB": [0.3, 1.4],
+      "lodMiB": [0.1, 0.5],
+      "shadowKiB": [1, 10],
+      "previewKiB": [5, 50],
+      "basis": "Smooth structural support with only188 source triangles and no sculpted relief; retain accepted1024/512 maps then compare768/384 candidates, unlike large masonry atlases."
+    },
+    "notes": "Smooth neutral dark-grey L-shaped stair support, slight surface wear only, no invented joints. Preserve inner opening, rounded bend, geometry, dimensions and zero mounting depth; prepare a separate texture-free shadow."
+  },
+  "UD-105": {
+    "sourceName": "Wall Corner",
+    "referencePage": 14,
+    "material": "stone",
+    "weightBudget": {
+      "renderMiB": [2, 5.5],
+      "lodMiB": [0.7, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Alternate numbered slender corner, same class as reviewed UD-096; compare two lighter atlases after its own preparation."
+    },
+    "notes": "Individually inspected alternate numbered corner source: cold grey slender brick post and cap, dark cobbled joints around its foot. Preserve its own source ID, 1x1 placement and mounting geometry."
+  },
+  "UD-106": {
+    "sourceName": "Wall Diagonal",
+    "referencePage": 14,
+    "material": "stone",
+    "weightBudget": {
+      "renderMiB": [2.5, 5.5],
+      "lodMiB": [0.8, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [15, 100],
+      "basis": "Alternate numbered diagonal 1x1 wall comparable to reviewed UD-097; inspect both faces and compare two lighter atlases."
+    },
+    "notes": "Individually inspected alternate numbered diagonal wall source: both grey masonry faces, worn triangular terminal stones and two cobbled floor regions. Preserve its distinct ID, coordinates and mounting data."
   }
 }
