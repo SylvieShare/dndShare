@@ -1,0 +1,99 @@
+{
+  "sourceName": "Railway",
+  "referencePage": 4,
+  "material": "cave-railway",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4.5],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [20, 100],
+    "previewKiB": [10, 140],
+    "basis": "299950-triangle1x1 rail floor with narrow iron rails, six bolt heads, three grain-carved timber ties and rubble.40k/14k retain material boundaries; two KTX2 comparisons."
+  },
+  "notes": "Author page4: brown cave rock, timber grain along three crosswise ties, dark iron rails and hexagonal bolts. Directly measured dimensions and heights separate all three materials, worn upper steel and restrained rust. MountDepth0 retained: accepted original already has mounting part removed, do not add pegs. Preserve placement point and LC-018 definitionId. Actual rail end face at8.7749mm requires metal from7.9mm. Bolt side faces measured at9.7166/10.4918mm adjust cap minima and centres, preventing wood-coloured hardware.",
+  "railway": {
+    "rails": [
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -12.75,
+        "y": 10.39,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.81,
+        "y": 1.06,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.75,
+        "y": -12.08,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.75,
+        "y": 11.8,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.5,
+        "y": 0.0,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.64,
+        "y": -9.6,
+        "radius": 2.25,
+        "minZ": 9.4
+      }
+    ],
+    "ties": [
+      {
+        "y": 11.45,
+        "slope": 0.085,
+        "halfWidth": 3.5
+      },
+      {
+        "y": -0.3,
+        "slope": -0.07,
+        "halfWidth": 3.4
+      },
+      {
+        "y": -10.65,
+        "slope": 0.11,
+        "halfWidth": 3.5
+      }
+    ],
+    "timberHalfLength": 15.9,
+    "timberMinZ": 7.15,
+    "timberMaxZ": 9.95,
+    "woodTint": [0.36, 0.255, 0.135]
+  }
+}

@@ -16,10 +16,11 @@ parser.add_argument('--normals',action='store_true')
 parser.add_argument('--albedo',action='store_true')
 parser.add_argument('--focus-max-z',type=float)
 parser.add_argument('--fit-from',choices=['inside','front','reverse'])
+parser.add_argument('--tier',choices=['render','lod'],default='render')
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 model=json.loads(args.report.read_text())['model']
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.import_scene.gltf(filepath=str(args.report.parent/'preview-model.glb'))
+bpy.ops.import_scene.gltf(filepath=str(args.report.parent/('lod-preview-model.glb' if args.tier=='lod' else 'preview-model.glb')))
 for obj in bpy.context.scene.objects:
     if obj.parent is None:
         obj.location.x+=model['placementOffset'][0]
