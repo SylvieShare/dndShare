@@ -2,10 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash, randomUUID } from "node:crypto";
-import { createRequire } from "node:module";
-const sharp = createRequire("/private/tmp/dndshare-model-tools/package.json")(
-  "sharp",
-);
+import { transparentPreview } from "./preview_image.mjs";
 const argument = (name) =>
   process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const collection = argument("collection"),
@@ -34,24 +31,12 @@ if (checksum(await fs.readFile(reference)) !== original.assets.render.sha256)
   throw new Error(
     "Preview reference does not match the latest registered render asset",
   );
-const metadata = await sharp(preview).metadata();
-if (!metadata.hasAlpha || metadata.width !== metadata.height)
-  throw new Error("A square image with alpha is required");
-const rgba = await sharp(preview).ensureAlpha().raw().toBuffer();
-let transparent = 0,
-  solid = 0;
-for (let i = 3; i < rgba.length; i += 4) {
-  if (rgba[i] === 0) transparent++;
-  if (rgba[i] === 255) solid++;
-}
-if (!transparent || !solid)
-  throw new Error(
-    "Preview must contain transparent background and opaque model pixels",
-  );
+const image = await transparentPreview(preview);
+const metadata = { width: image.width, height: image.height };
+const transparent = image.transparentPixels,
+  solid = image.opaquePixels;
 await fs.mkdir(output, { recursive: true });
-const bytes = await sharp(preview)
-  .webp({ quality: 88, alphaQuality: 100 })
-  .toBuffer();
+const bytes = image.bytes;
 const sha256 = checksum(bytes),
   fileName = sha256 + ".webp";
 await fs.writeFile(path.join(output, fileName), bytes);

@@ -40,6 +40,8 @@ func (s *Server) toolMapModels(r *http.Request, name string, args map[string]jso
 		return s.store.GetMapModel(r.Context(), id)
 	case "map_tile_model_register_shadow":
 		return s.toolRegisterMapShadow(r, args)
+	case "map_tile_model_register_preview":
+		return s.toolRegisterMapPreview(r, args)
 	case "map_tile_model_register":
 		if err := s.mcpRequireWrite(); err != nil {
 			return nil, err

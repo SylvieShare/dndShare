@@ -149,7 +149,8 @@ rollback; apply требует точный token и включённые MCP wr
 - `map_tile_asset_prepare_upload`: kind, fileName, SHA-256 и size; возвращает
   временный S3 uploadKey, подписанный PUT URL на 15 минут и необходимые headers.
 - `map_tile_asset_complete_upload`: тот же descriptor и uploadKey. Сервер читает
-  S3-объект, проверяет размер, SHA-256 и формат, копирует его в постоянный
+  S3-объект, проверяет размер, SHA-256 и формат; для preview также декодирует WebP,
+  требует прозрачные углы и видимую модель. Копирует его в постоянный
   content-addressed key и удаляет временный объект. Прежние версии не заменяются.
 - `map_tile_model_register`: полный model object с именами, sourceCode, версией,
   tileType, wallMode/wallMask, геометрией и assets render/lod/shadow/preview/source. Если shadow не указан,
@@ -158,6 +159,12 @@ rollback; apply требует точный token и включённые MCP wr
   UUID и номера версии.
   Определение по исходной идентичности назначается автоматически и сохраняет переходы
   и встроенный свет при новых версиях; [контракт поведения](maps-model-behaviour.md).
+
+- `map_tile_model_register_preview`: id версии, expectedRenderSHA256 и asset
+  нового прозрачного WebP после complete_upload. Проверяет только новый preview,
+  прозрачные углы и наличие модели; добавляет совместимую версию с прежней
+  разметкой и четырьмя остальными ресурсами. Ожидаемый SHA активного render
+  защищает от устаревшего рендера; повторная публикация того же asset идемпотентна.
 
 - `map_tile_model_register_shadow`: id существующей модели, expectedLodSHA256
   и asset, полученный после complete_upload. Проверяет только новый shadow GLB

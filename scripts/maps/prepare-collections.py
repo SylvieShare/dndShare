@@ -52,7 +52,7 @@ def texture(target, source, name, kind, directory):
 def preview(obj, path, width, height, top):
     scene=bpy.context.scene;scene.render.engine='BLENDER_EEVEE'
     scene.render.resolution_x=256;scene.render.resolution_y=256;scene.render.resolution_percentage=100
-    scene.render.image_settings.file_format='PNG';scene.render.film_transparent=False
+    scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGBA';scene.render.film_transparent=True
     scene.world=bpy.data.worlds.new('Preview world');scene.world.use_nodes=True
     scene.world.node_tree.nodes['Background'].inputs['Color'].default_value=(.09,.105,.13,1)
     scene.world.node_tree.nodes['Background'].inputs['Strength'].default_value=.6

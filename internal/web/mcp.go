@@ -190,7 +190,7 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 	switch name {
 	case "map_tile_model_behaviour_get", "map_tile_model_behaviour_update":
 		return s.toolMapModelBehaviour(r, name, args)
-	case "map_tile_models_list", "map_tile_model_get", "map_tile_model_register", "map_tile_model_register_shadow":
+	case "map_tile_models_list", "map_tile_model_get", "map_tile_model_register", "map_tile_model_register_shadow", "map_tile_model_register_preview":
 		return s.toolMapModels(r, name, args)
 	case "map_tile_asset_prepare_upload":
 		return s.toolPrepareMapUpload(r, args)

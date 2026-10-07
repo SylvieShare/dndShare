@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 import bpy
 from mathutils import Vector
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from preview_alpha import transparent_preview
 
 
 def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None, tier='render', transparent=False, camera_shift_y=0):
@@ -14,7 +16,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
         prefix = 'lod-' + prefix
     if transparent:
         prefix = 'transparent-' + prefix
-    if (directory/(prefix+'preview.png')).exists() and not review:
+    if transparent_preview(directory/(prefix+'preview.png')) and not review:
         return
     row = json.loads(report.read_text())['model']
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -30,7 +32,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = 'PNG'
     scene.render.image_settings.color_mode = 'RGBA'
-    scene.render.film_transparent = transparent
+    scene.render.film_transparent = True
     scene.view_settings.view_transform = 'AgX'
     scene.world = bpy.data.worlds.new('Preview world')
     scene.world.use_nodes = True
@@ -54,10 +56,16 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     high = Vector(tuple(max(point[axis] for point in bounds) for axis in range(3)))
     if focus_max_z is not None:
         high.z = min(high.z, focus_max_z/35-row['mountDepth'])
-    camera.data.ortho_scale = max(*(high-low), 1)*1.5
     centre = (low+high)/2
-    camera.location = centre+Vector((-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45))
+    direction = Vector((-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45)).normalized()
+    distance = max((high-low).length, 1)*2+5
+    camera.location = centre+direction*distance
     camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
+    camera.data.clip_end = distance*4
+    bpy.context.view_layer.update()
+    projected = [camera.matrix_world.inverted()@point for point in bounds]
+    camera.data.ortho_scale = max(max(p.x for p in projected)-min(p.x for p in projected),
+                                 max(p.y for p in projected)-min(p.y for p in projected), .1)*1.18
     scene.camera = camera
     scene.render.filepath = str(directory/(prefix+'preview.png'))
     bpy.ops.render.render(write_still=True)
@@ -81,7 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--inside', action='store_true')
     parser.add_argument('--focus-max-z', type=float)
     parser.add_argument('--tier', choices=['render','lod'], default='render')
-    parser.add_argument('--transparent', action='store_true', help='Render alpha instead of the world backdrop, preserving its illumination')
+    parser.add_argument('--transparent', action='store_true', help='Write transparent-preview.png separately; every public preview has alpha')
     parser.add_argument('--camera-shift-y', type=float, default=0, help='Vertical framing shift in fractions of the square image')
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
     for report in sorted(args.base.glob('*/report.json')):

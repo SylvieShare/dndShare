@@ -30,6 +30,8 @@ def preview(obj, directory, row, top):
     scene.render.resolution_x = scene.render.resolution_y = 512
     scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = 'PNG'
+    scene.render.image_settings.color_mode = 'RGBA'
+    scene.render.film_transparent = True
     scene.view_settings.view_transform = 'AgX'
     scene.world = bpy.data.worlds.new('Preview background')
     scene.world.use_nodes = True

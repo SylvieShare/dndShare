@@ -13,6 +13,10 @@ func mapModelToolDefinitions() []map[string]any {
 		"size": mcpIntegerProperty("Expected byte size"), "uploadKey": mcpStringProperty("Temporary key returned by prepare_upload"),
 	}, "kind", "fileName", "sha256", "size", "uploadKey")
 	return []map[string]any{
+		mcpDefinition("map_tile_model_register_preview", "Attach a verified transparent WebP preview by appending a compatible immutable revision. Checks the expected render hash; preserves all placement metadata, shared behaviour and four other assets without re-uploading them. Requires MCP writes.", mcpObjectSchema(map[string]any{
+			"id": mcpStringProperty("Existing model version UUID"), "expectedRenderSHA256": mcpStringProperty("Render SHA-256 used to generate this preview"),
+			"asset": map[string]any{"type": "object", "description": "Transparent WebP asset metadata returned by complete_upload"},
+		}, "id", "expectedRenderSHA256", "asset")),
 		mcpDefinition("map_tile_model_behaviour_get", "Get shared transitions and embedded light templates by stable model definitionId, e.g. UD-010. Includes the revision required for updates.", mcpObjectSchema(map[string]any{"definitionId": mcpStringProperty("Stable logical model ID; not the asset version UUID")}, "definitionId")),
 		mcpDefinition("map_tile_model_behaviour_update", "Replace shared model behaviour with compare-and-swap revision. Preserves immutable model versions, geometry and S3 assets. Supply the complete current transitions and defaultLights; omitted entries are removed. Requires MCP writes.", mcpObjectSchema(map[string]any{
 			"definitionId": mcpStringProperty("Stable logical model ID"),

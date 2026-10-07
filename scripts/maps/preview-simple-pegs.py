@@ -5,13 +5,15 @@ from pathlib import Path
 import sys
 import bpy
 from mathutils import Vector
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from preview_alpha import transparent_preview
 
 BASE = Path(__file__).resolve().parents[2]/'models/collections/simple-pegs'
 
 
 def preview(report):
     directory=report.parent
-    if (directory/'preview.png').exists():
+    if transparent_preview(directory/'preview.png'):
         return
     row=json.loads(report.read_text())['model']
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -24,6 +26,8 @@ def preview(report):
     scene.render.resolution_x=scene.render.resolution_y=256
     scene.render.resolution_percentage=100
     scene.render.image_settings.file_format='PNG'
+    scene.render.image_settings.color_mode='RGBA'
+    scene.render.film_transparent=True
     scene.view_settings.view_transform='AgX'
     scene.world=bpy.data.worlds.new('Preview world');scene.world.use_nodes=True
     scene.world.node_tree.nodes['Background'].inputs['Color'].default_value=(.09,.105,.13,1)

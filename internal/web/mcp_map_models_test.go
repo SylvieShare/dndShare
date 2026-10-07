@@ -50,7 +50,7 @@ func TestMapAssetInputValidation(t *testing.T) {
 func TestMapWritesRejectBeforeTouchingStorage(t *testing.T) {
 	s := &Server{cfg: config.Config{MCPWriteEnabled: false}}
 	r := httptest.NewRequest("POST", "/mcp", nil)
-	for _, name := range []string{"map_tile_asset_prepare_upload", "map_tile_asset_complete_upload", "map_tile_model_register", "map_tile_model_register_shadow", "map_tile_model_behaviour_update"} {
+	for _, name := range []string{"map_tile_asset_prepare_upload", "map_tile_asset_complete_upload", "map_tile_model_register", "map_tile_model_register_shadow", "map_tile_model_register_preview", "map_tile_model_behaviour_update"} {
 		if _, err := s.dispatchTool(r, name, map[string]json.RawMessage{}); err == nil || !strings.Contains(err.Error(), "disabled") {
 			t.Fatalf("%s: %v", name, err)
 		}

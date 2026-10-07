@@ -108,6 +108,7 @@ FROM (VALUES
 		}
 	}
 	testMapModelBehaviours(t, ctx, s)
+	testMapModelPreviewRevision(t, ctx, s)
 	var oldColumns int
 	if err := pool.QueryRow(ctx, `SELECT count(*) FROM information_schema.columns WHERE table_schema='dndshare' AND table_name='map_model' AND column_name IN ('wall_layout','terrain_type')`).Scan(&oldColumns); err != nil || oldColumns != 0 {
 		t.Fatalf("redundant fields survived migration: %d %v", oldColumns, err)

@@ -8,7 +8,7 @@ scene = bpy.context.scene
 scene.render.engine = "CYCLES"; scene.cycles.device = "CPU"; scene.cycles.samples = 32
 scene.render.threads_mode = "FIXED"; scene.render.threads = 6
 scene.render.resolution_x = scene.render.resolution_y = 768; scene.render.resolution_percentage = 100
-scene.render.image_settings.file_format = "PNG"; scene.render.film_transparent = True
+scene.render.image_settings.file_format = "PNG"; scene.render.image_settings.color_mode = "RGBA"; scene.render.film_transparent = True
 scene.world = bpy.data.worlds.new("Studio"); scene.world.use_nodes = True
 scene.world.node_tree.nodes['Background'].inputs['Strength'].default_value = .7
 for name, location, energy in [('Key',(-2,-3,4),250),('Fill',(2,1,3),180)]:

@@ -157,7 +157,19 @@ func (s *Server) verifyMapAsset(r *http.Request, key string, asset battlemap.Mod
 			}
 		}
 	}
-	n, err := io.Copy(io.Discard, reader)
+	var n int64
+	if asset.MimeType == "image/webp" {
+		data, readErr := io.ReadAll(reader)
+		if readErr != nil {
+			return readErr
+		}
+		n = int64(len(data))
+		if err = transparentMapPreview(append(header, data...)); err != nil {
+			return err
+		}
+	} else {
+		n, err = io.Copy(io.Discard, reader)
+	}
 	if err != nil {
 		return err
 	}
