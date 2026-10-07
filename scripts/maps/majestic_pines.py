@@ -51,6 +51,8 @@ def apply_pines(obj, positions, colours, roughness, coverage, recipe):
         centre=np.array(stone['centreMM']); radii=np.array(stone['radiiMM'])
         distance=((positions-centre)/radii)**2
         weight=np.clip((1.15-distance.sum(1))/.25,0,1)
+        if 'minZMM' in stone:
+            weight*=np.clip((z-stone['minZMM'])/.5,0,1)
         material=np.array([.41,.365,.28])*(1+.04*np.sin(x*.71+y*.53+z*.37))[:,None]
         colours=colours*(1-weight[:,None])+material*weight[:,None]
         roughness=roughness*(1-weight)+.92*weight

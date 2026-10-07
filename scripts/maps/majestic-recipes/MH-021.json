@@ -1,0 +1,99 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 70000,
+  "lodTriangles": 25000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "pine", "forest", "stones", "outdoor", "xl"],
+  "recipe": "majestic-dirt-straight-pines-measured-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 19,
+  "ferns": [],
+  "stones": [
+    {
+      "centreMM": [-37, -12, 18.5],
+      "radiiMM": [6.7, 6.7, 7.5],
+      "minZMM": 16.2
+    },
+    {
+      "centreMM": [-35, -22, 17.4],
+      "radiiMM": [5.5, 5.7, 5.5],
+      "minZMM": 16.1
+    },
+    {
+      "centreMM": [-11, -46, 18.2],
+      "radiiMM": [6.5, 5.8, 6.3],
+      "minZMM": 16.3
+    },
+    {
+      "centreMM": [12, -39, 18.7],
+      "radiiMM": [10.7, 10.4, 7.8],
+      "minZMM": 17.0
+    },
+    {
+      "centreMM": [28, -42, 18.7],
+      "radiiMM": [8, 10, 7],
+      "minZMM": 16.8
+    },
+    {
+      "centreMM": [20, -33, 17.2],
+      "radiiMM": [5.3, 5.1, 4.9],
+      "minZMM": 16.5
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [2500000, 5000000],
+    "targetLODBytes": [900000, 1800000],
+    "targetShadowBytes": [60000, 140000],
+    "targetPreviewBytes": [14000, 70000],
+    "basis": "554266 source triangles, measured 3x3 ground and a 76.94 mm pine. Preserve crown gaps and exposed trunk with 70k/25k; ground uses rotated MH-015 and separately measured rocks."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "blockedCells": [[0, 2]],
+  "trees": [
+    {
+      "baseXY": [-25, -29],
+      "topXY": [-25, -25],
+      "heightMM": 76.94,
+      "foliageRadiusMM": 36,
+      "trunkRadiusMM": 3.6,
+      "rootRadiusMM": 9,
+      "barkTopMM": 43
+    }
+  ],
+  "blockers": [
+    [
+      [1.014286, 2.328571],
+      [0.996887, 2.241101],
+      [0.947339, 2.166947],
+      [0.873185, 2.117399],
+      [0.785714, 2.1],
+      [0.698244, 2.117399],
+      [0.62409, 2.166947],
+      [0.574542, 2.241101],
+      [0.557143, 2.328571],
+      [0.574542, 2.416042],
+      [0.62409, 2.490196],
+      [0.698244, 2.539744],
+      [0.785714, 2.557143],
+      [0.873185, 2.539744],
+      [0.947339, 2.490196],
+      [0.996887, 2.416042]
+    ]
+  ]
+}
