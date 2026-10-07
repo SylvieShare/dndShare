@@ -6,6 +6,7 @@ import { setSurfaceAtlas } from "./pbr_revision.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
 import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
 import { caveRockPixel } from "./lost_cave_surface.mjs";
+import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
 import specs from "./lost-cave-recipes.json" with { type: "json" };
 const file = process.argv[2];
 if (!file) throw new Error("One rebaked Lost Cave report required");
@@ -14,7 +15,7 @@ const directory = path.dirname(path.resolve(file)),
 if (report.model.collection !== "lost-cave" || !report.rebake)
   throw new Error("Complete source normal/AO rebake first");
 const spec = specs[report.model.sourceCode];
-if (spec.material !== "cave-rock")
+if (!["cave-rock", "cave-stalagmites"].includes(spec.material))
   throw new Error("Unsupported individually reviewed surface material");
 for (const field of [
   "sourceName",
@@ -53,8 +54,16 @@ for (const tier of ["render", "lod"]) {
   const colour = Buffer.alloc(size * size * 3, 96),
     orm = Buffer.alloc(size * size * 3);
   let pixels = 0;
+  const counts = {
+    rock: 0,
+    ...(spec.material === "cave-stalagmites" ? { calcite: 0 } : {}),
+  };
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
-    const value = caveRockPixel(p, n, ao[i], report.materialSpec);
+    const value =
+      spec.material === "cave-stalagmites"
+        ? paintStalagmites(p, n, ao[i], spec)
+        : caveRockPixel(p, n, ao[i], report.materialSpec);
+    counts[value.part]++;
     colour.set(value.rgb, i * 3);
     orm[i * 3] = ao[i];
     orm[i * 3 + 1] = Math.round(value.roughness * 255);
@@ -116,7 +125,7 @@ for (const tier of ["render", "lod"]) {
   report.tiers[tier] = {
     textureSize: size,
     bytes: bytes.length,
-    surfacePixels: { rock: pixels },
+    surfacePixels: counts,
     blackSurfacePixels: black,
     invalidNormalPixels: invalid,
   };
