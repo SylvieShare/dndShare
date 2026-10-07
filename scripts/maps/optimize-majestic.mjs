@@ -79,7 +79,8 @@ for (const tier of ["render", "lod"]) {
     doc
       .getRoot()
       .listMaterials()
-      .map((m) => m.getBaseColorTexture()),
+      .flatMap((m) => [m.getBaseColorTexture(), m.getEmissiveTexture()])
+      .filter(Boolean),
   );
   const normals = new Set(
     doc
@@ -123,7 +124,16 @@ for (const tier of ["render", "lod"]) {
         for (let j = 0; j < 3; j++)
           data[i + j] = Math.round((n[j] / length + 1) * 127.5);
       }
-    const slot = colour ? "BaseColor" : normal ? "Normal" : "MetallicRoughness";
+    const slot = colour
+      ? doc
+          .getRoot()
+          .listMaterials()
+          .some((m) => m.getEmissiveTexture() === texture)
+        ? "Emissive"
+        : "BaseColor"
+      : normal
+        ? "Normal"
+        : "MetallicRoughness";
     const coverage = rasterizeSurface(doc, size, size, () => {}, slot);
     extendUvGutters(data, imageInfo.channels, coverage, size, size, 4);
     const name = tier + "-" + index,
@@ -210,6 +220,7 @@ for (const tier of ["render", "lod"]) {
     placementDrift: drift,
     colourSize:
       measured.recipe[tier + "ColourSize"] ?? (tier === "render" ? 2048 : 1024),
+    textureCount: doc.getRoot().listTextures().length,
     quality: info.quality,
   };
 }

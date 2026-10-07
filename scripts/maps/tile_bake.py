@@ -22,7 +22,7 @@ def save(node, directory, name):
     node.image.save()
 
 
-def bake(target, source, directory, surface_finish=None):
+def bake(target, source, directory, surface_finish=None, extra_bake=None):
     scene = bpy.context.scene
     scene.render.engine = 'CYCLES'
     scene.cycles.device = 'CPU'
@@ -92,6 +92,8 @@ def bake(target, source, directory, surface_finish=None):
     occlusion = nodes.new('ShaderNodeGroup')
     occlusion.node_tree = group
     links.new(packed.outputs['Red'], occlusion.inputs['Occlusion'])
+    if extra_bake:
+        extra_bake(target, directory, nodes, links, shader, output)
 
 
 def validate_maps(target):

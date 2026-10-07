@@ -19,13 +19,15 @@ def apply_wood(obj, positions, colours, roughness, recipe):
     bpy.data.objects.remove(reference,do_unlink=True)
     weight=np.clip((distances-settings['matchMM'])/settings['blendMM'],0,1)
     weight=weight*weight*(3-2*weight);weight*=positions[:,2]>recipe.get('woodMinZMM',15.1)
-    directions=np.tile(np.array(recipe['woodDirection']), (len(positions),1))
+    directions=np.tile(np.array(recipe['woodDirection'],dtype=np.float32), (len(positions),1))
     for part in recipe.get('woodParts',[]):
         mask=np.all((positions>=part['minMM'])&(positions<=part['maxMM']),axis=1)
         directions[mask]=part['direction']
     directions/=np.linalg.norm(directions,axis=1)[:,None]
     along=(positions*directions).sum(1)
     across=positions[:,0]*directions[:,1]-positions[:,1]*directions[:,0]
+    vertical=np.abs(directions[:,2])>.8
+    across[vertical]=positions[vertical,0]
     grain=.93+.075*np.sin(across*4.4+.24*np.sin(along*.19))+.025*np.sin(across*15.7+along*.035)
     board=1+.06*np.sin(across*.48+positions[:,2]*.09)
     timber=np.array(recipe.get('woodRGB',[.47,.325,.18]))*(grain*board)[:,None]
@@ -34,7 +36,7 @@ def apply_wood(obj, positions, colours, roughness, recipe):
     end_mask=(np.abs((normals*directions).sum(1))>.82).astype(np.float32)
     end_radius=np.hypot(across-np.round(across/6)*6,positions[:,2]-np.round(positions[:,2]/6)*6)
     for wheel in recipe.get('wheels',[]):
-        normal=np.array(wheel['normal']);normal/=np.linalg.norm(normal)
+        normal=np.array(wheel['normal'],dtype=float);normal/=np.linalg.norm(normal)
         delta=positions-np.array(wheel['centreMM']);axial=delta@normal
         plane=delta-axial[:,None]*normal;radial=np.linalg.norm(plane,axis=1)
         domain=(np.abs(axial)<wheel['halfThicknessMM'])&(radial<wheel['radiusMM']+.8)
@@ -86,6 +88,7 @@ def wood_finish(nodes, links, finish, recipe):
     mask=nodes.new('ShaderNodeVertexColor');mask.layer_name='Wood'
     colour=nodes.new('ShaderNodeMixRGB');colour.blend_type='MULTIPLY'
     links.new(mask.outputs['Color'],colour.inputs[0]);links.new(finish.outputs[0],colour.inputs[1]);links.new(shape.outputs[0],colour.inputs[2])
+    if not recipe.get('wheels'):return colour
     iron=iron_mask(nodes,links,recipe,mask.outputs['Color'])
     painted=nodes.new('ShaderNodeMixRGB')
     links.new(iron,painted.inputs[0]);links.new(colour.outputs[0],painted.inputs[1])
@@ -111,7 +114,7 @@ def iron_mask(nodes, links, recipe, wood):
         return node
     coords=nodes.new('ShaderNodeTexCoord'); result=None
     for wheel in recipe['wheels']:
-        normal=np.array(wheel['normal']);normal/=np.linalg.norm(normal)
+        normal=np.array(wheel['normal'],dtype=float);normal/=np.linalg.norm(normal)
         delta=vector('SUBTRACT',coords.outputs['Object'],wheel['centreMM']).outputs['Vector']
         axial=vector('DOT_PRODUCT',delta,normal).outputs['Value']
         scaled=vector('SCALE',normal);links.new(axial,scaled.inputs[3])

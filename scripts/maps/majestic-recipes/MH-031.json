@@ -1,0 +1,473 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 70000,
+  "lodTriangles": 25000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": [
+    "camp",
+    "tent",
+    "canvas",
+    "wood",
+    "bedroll",
+    "campfire",
+    "outdoor",
+    "xl"
+  ],
+  "recipe": "majestic-lit-camp-canvas-wood-flame-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3000000,
+      5500000
+    ],
+    "targetLODBytes": [
+      1000000,
+      2200000
+    ],
+    "targetShadowBytes": [
+      65000,
+      150000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      80000
+    ],
+    "basis": "567820 source triangles, measured 3x3 camp with 65.77 mm tent poles. Test 70k/25k preserving tent opening and folds; individual canvas, bedding, wooden utensils and emissive flame atlas."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [
+        -45,
+        27
+      ],
+      [
+        -31,
+        35
+      ],
+      [
+        -9,
+        35
+      ],
+      [
+        8,
+        27
+      ],
+      [
+        11,
+        13
+      ],
+      [
+        18,
+        7
+      ],
+      [
+        9,
+        -9
+      ],
+      [
+        -5,
+        -17
+      ],
+      [
+        -26,
+        -18
+      ],
+      [
+        -34,
+        -4
+      ],
+      [
+        -39,
+        14
+      ]
+    ]
+  ],
+  "soilSurfaceMM": 15.55,
+  "grassHeightFadeMM": 0.4,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [
+      1,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      0,
+      1
+    ]
+  ],
+  "woodReference": {
+    "code": "MH-003",
+    "rotateZ": 0,
+    "matchMM": 0.07,
+    "blendMM": 0.2
+  },
+  "woodDirection": [
+    0,
+    0,
+    1
+  ],
+  "flameReference": "MH-032",
+  "woodParts": [
+    {
+      "minMM": [
+        -14,
+        5,
+        52
+      ],
+      "maxMM": [
+        50,
+        17,
+        67
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "minMM": [
+        -46,
+        -26,
+        15
+      ],
+      "maxMM": [
+        -18,
+        2,
+        25
+      ],
+      "direction": [
+        0.7,
+        0.7,
+        0.05
+      ]
+    },
+    {
+      "minMM": [
+        -25,
+        19,
+        23
+      ],
+      "maxMM": [
+        -11,
+        32,
+        28
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ]
+    }
+  ],
+  "camp": {
+    "poles": [
+      {
+        "fromMM": [
+          -8,
+          -16,
+          15
+        ],
+        "toMM": [
+          -8,
+          15,
+          65
+        ],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [
+          -8,
+          44,
+          15
+        ],
+        "toMM": [
+          -8,
+          5,
+          65
+        ],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [
+          44,
+          -16,
+          15
+        ],
+        "toMM": [
+          44,
+          15,
+          65
+        ],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [
+          44,
+          44,
+          15
+        ],
+        "toMM": [
+          44,
+          5,
+          65
+        ],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [
+          -11,
+          11,
+          57
+        ],
+        "toMM": [
+          0,
+          11,
+          54.3
+        ],
+        "radiusMM": 1.6
+      },
+      {
+        "fromMM": [
+          0,
+          11,
+          54.3
+        ],
+        "toMM": [
+          15,
+          11,
+          52.2
+        ],
+        "radiusMM": 1.6
+      },
+      {
+        "fromMM": [
+          15,
+          11,
+          52.2
+        ],
+        "toMM": [
+          30,
+          11,
+          52.5
+        ],
+        "radiusMM": 1.6
+      },
+      {
+        "fromMM": [
+          30,
+          11,
+          52.5
+        ],
+        "toMM": [
+          44,
+          11,
+          55
+        ],
+        "radiusMM": 1.6
+      }
+    ],
+    "fabric": [
+      {
+        "minMM": [
+          -6.5,
+          -16,
+          15
+        ],
+        "maxMM": [
+          42.5,
+          44,
+          57
+        ],
+        "minZMM": 15.2,
+        "rgb": [
+          0.66,
+          0.555,
+          0.375
+        ],
+        "roughness": 0.97
+      },
+      {
+        "minMM": [
+          -18,
+          -53,
+          15
+        ],
+        "maxMM": [
+          28,
+          -22,
+          24
+        ],
+        "minZMM": 15.3,
+        "rgb": [
+          0.62,
+          0.535,
+          0.255
+        ],
+        "roughness": 0.96
+      },
+      {
+        "minMM": [
+          36,
+          -53,
+          15
+        ],
+        "maxMM": [
+          46,
+          -23,
+          29
+        ],
+        "minZMM": 15.8,
+        "rgb": [
+          0.43,
+          0.36,
+          0.2
+        ],
+        "roughness": 0.94
+      }
+    ],
+    "pillows": [
+      {
+        "minMM": [
+          26,
+          -44,
+          15.4
+        ],
+        "maxMM": [
+          39,
+          -27,
+          29
+        ],
+        "rgb": [
+          0.76,
+          0.705,
+          0.53
+        ]
+      }
+    ],
+    "ropes": [
+      {
+        "centreMM": [
+          -8,
+          10,
+          57
+        ],
+        "radiusMM": 3.8
+      },
+      {
+        "centreMM": [
+          44,
+          10,
+          57
+        ],
+        "radiusMM": 3.8
+      }
+    ],
+    "flame": {
+      "minMM": [
+        -47,
+        -27,
+        17
+      ],
+      "maxMM": [
+        -18,
+        4,
+        43
+      ],
+      "baseZMM": 18,
+      "topZMM": 41
+    }
+  },
+  "blockers": [
+    [
+      [
+        1.2,
+        0.22
+      ],
+      [
+        2.8,
+        0.22
+      ],
+      [
+        2.8,
+        2
+      ],
+      [
+        1.2,
+        2
+      ]
+    ],
+    [
+      [
+        1.05,
+        2.1
+      ],
+      [
+        2.8,
+        2.1
+      ],
+      [
+        2.8,
+        3
+      ],
+      [
+        1.05,
+        3
+      ]
+    ],
+    [
+      [
+        0.1,
+        1.45
+      ],
+      [
+        0.95,
+        1.45
+      ],
+      [
+        0.95,
+        2.15
+      ],
+      [
+        0.1,
+        2.15
+      ]
+    ]
+  ],
+  "emissionStrength": 0.9,
+  "quantizeTexcoord": 16
+}

@@ -50,7 +50,7 @@ test("decodes and renders actual KTX2/Meshopt models in both geometry tiers", as
     );
     expect(decoded.triangles).toBe(triangles);
     expect(decoded.rendered).toBeGreaterThan(0);
-    expect(decoded.textures).toHaveLength(3);
+    expect(decoded.textures).toHaveLength(report.tiers[tier].textureCount ?? 3);
     expect(decoded.textures.every((t) => t.compressed && t.mips >= 10)).toBe(
       true,
     );

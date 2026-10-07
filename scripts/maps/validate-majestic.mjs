@@ -97,7 +97,8 @@ for (const tier of ["render", "lod"]) {
   if (triangles !== report.tiers[tier].triangles)
     throw new Error("Triangle count mismatch");
   let pixelsChecked = 0,
-    metalPixels = 0;
+    metalPixels = 0,
+    emissivePixels = 0;
   const mat = doc
     .getRoot()
     .listMaterials()
@@ -106,7 +107,8 @@ for (const tier of ["render", "lod"]) {
     ["BaseColor", mat.getBaseColorTexture()],
     ["Normal", mat.getNormalTexture()],
     ["MetallicRoughness", mat.getMetallicRoughnessTexture()],
-  ]) {
+    ["Emissive", mat.getEmissiveTexture()],
+  ].filter(([, texture]) => texture)) {
     const { data, info } = await sharp(Buffer.from(texture.getImage()))
       .raw()
       .toBuffer({ resolveWithObject: true });
@@ -135,6 +137,20 @@ for (const tier of ["render", "lod"]) {
             throw new Error("Metal leaked outside reviewed wheel hardware");
           if (data[offset + 2] > 128) metalPixels++;
         }
+        if (
+          slot === "Emissive" &&
+          Math.max(data[offset], data[offset + 1], data[offset + 2]) > 64
+        ) {
+          const bounds = recipe.camp?.flame;
+          if (
+            !bounds ||
+            position.some(
+              (v, j) => v < bounds.minMM[j] - 2 || v > bounds.maxMM[j] + 2,
+            )
+          )
+            throw new Error("Emission leaked outside the reviewed flame");
+          emissivePixels++;
+        }
         pixelsChecked++;
       },
       slot,
@@ -142,6 +158,8 @@ for (const tier of ["render", "lod"]) {
   }
   if (recipe.metallicFactor && metalPixels < 100)
     throw new Error("Reviewed iron parts lost their metallic channel");
+  if (recipe.flameReference && emissivePixels < 100)
+    throw new Error("Flame lost its emission texture");
   if (
     report.model.width !== recipe.width ||
     report.model.height !== recipe.height ||

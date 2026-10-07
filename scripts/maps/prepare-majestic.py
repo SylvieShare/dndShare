@@ -97,10 +97,15 @@ def main():
     tile_bake.SIZE = recipe.get('lodBakeSize',1024) if args.optimized_tier=='lod' else recipe.get('renderBakeSize',2048)
     print('MAJESTIC_BAKE', args.code, len(target.data.polygons), flush=True)
     surface_finish = None
-    if recipe.get('woodReference'):
+    if recipe.get('wheels'):
         from majestic_wood import iron_orm
         surface_finish = iron_orm
-    tile_bake.bake(target, source, out, surface_finish=surface_finish)
+    extra_bake = None
+    if recipe.get('flameReference'):
+        from majestic_camp import bake_emission
+        from functools import partial
+        extra_bake = partial(bake_emission,strength=recipe.get('emissionStrength',1))
+    tile_bake.bake(target, source, out, surface_finish=surface_finish, extra_bake=extra_bake)
     quality = tile_bake.validate_maps(target)
     source.hide_render = True; source.hide_viewport = True
     centre = row['mountCenterMM']

@@ -41,6 +41,9 @@ def paint(obj, recipe=None, code=None):
     if recipe.get('woodReference'):
         from majestic_wood import apply_wood
         rgb, roughness, metallic = apply_wood(obj, positions.reshape(-1,3), rgb, roughness, recipe)
+    if recipe.get('camp'):
+        from majestic_camp import apply_camp
+        rgb, roughness = apply_camp(obj,positions.reshape(-1,3),rgb,roughness,recipe)
     linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     attribute = mesh.color_attributes.new('Paint', 'FLOAT_COLOR', 'POINT')
     attribute.data.foreach_set('color', np.column_stack([linear, np.ones(len(x))]).astype(np.float32).ravel())
