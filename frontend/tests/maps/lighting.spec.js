@@ -17,25 +17,25 @@ test("light presets place onto the map and sunlight sliders persist with undo", 
   await page.getByRole("button", { name: "Освещение", exact: true }).click();
   const panel = page.getByRole("region", { name: "Освещение карты" });
   await expect(
-    panel.getByRole("checkbox", { name: "Режим освещения", exact: true }),
+    panel.getByRole("switch", { name: "Освещение", exact: true }),
   ).not.toBeChecked();
   await expect(
-    panel.getByRole("switch", { name: "Солнечный свет", exact: true }),
+    panel.getByRole("switch", { name: "Дневной свет", exact: true }),
   ).toBeDisabled();
   await panel
-    .getByRole("checkbox", { name: "Режим освещения", exact: true })
+    .getByRole("switch", { name: "Освещение", exact: true })
     .click();
   await panel
-    .getByRole("switch", { name: "Солнечный свет", exact: true })
+    .getByRole("switch", { name: "Дневной свет", exact: true })
     .click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.sun.enabled))
     .toBe(false);
   await panel
-    .getByRole("switch", { name: "Солнечный свет", exact: true })
+    .getByRole("switch", { name: "Дневной свет", exact: true })
     .click();
   const angle = panel.getByRole("slider", {
-    name: "Направление солнца",
+    name: "Направление дневного света",
     exact: true,
   });
   await angle.fill("90");
@@ -191,7 +191,7 @@ test("lighting mode restores fixed light and an unchecked marker keeps its sourc
   await panel.getByRole("button", { name: "Факел", exact: true }).click();
   await page
     .getByRole("complementary", { name: "Выбранные элементы" })
-    .getByRole("checkbox", { name: "Показывать сферу источника", exact: true })
+    .getByRole("switch", { name: "Показывать сферу источника", exact: true })
     .click();
   await expect
     .poll(() =>
@@ -202,17 +202,17 @@ test("lighting mode restores fixed light and an unchecked marker keeps its sourc
     await page.evaluate(() => window.lastSaved.document.lights[0].enabled),
   ).toBe(true);
   await panel
-    .getByRole("checkbox", { name: "Режим освещения", exact: true })
+    .getByRole("switch", { name: "Освещение", exact: true })
     .click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.lightingEnabled))
     .toBe(false);
   await expect(
-    panel.getByRole("switch", { name: "Солнечный свет", exact: true }),
+    panel.getByRole("switch", { name: "Дневной свет", exact: true }),
   ).toBeDisabled();
   const fixed = await colour(page);
   await panel
-    .getByRole("checkbox", { name: "Режим освещения", exact: true })
+    .getByRole("switch", { name: "Освещение", exact: true })
     .click();
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.lightingEnabled))

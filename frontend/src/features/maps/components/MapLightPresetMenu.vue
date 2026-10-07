@@ -2,7 +2,7 @@
   <div @keydown.stop>
     <AddButton
       ref="trigger"
-      variant="icon"
+      block
       label="Добавить источник света"
       aria-haspopup="menu"
       :aria-expanded="open"

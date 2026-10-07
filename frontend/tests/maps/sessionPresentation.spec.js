@@ -9,6 +9,36 @@ async function ready(page, options) {
 }
 
 for (const mobile of [false, true]) {
+  test(`editor and session share sidebar and lighting styles ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+    await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 })
+    const styles = []
+    for (const mode of ['editor', 'board']) {
+      await page.goto(`/tests/maps/fixtures/maps.html?mode=${mode}&lightExample&lit`)
+      await expect(page.getByText('Подготавливаем карту…')).toHaveCount(0)
+      await page.getByRole('button', { name: 'Освещение', exact: true }).click()
+      const panel = page.getByRole('region', { name: 'Освещение карты', exact: true })
+      await expect(panel.getByRole('switch', { name: 'Освещение', exact: true })).toBeChecked()
+      await expect(panel.getByRole('switch', { name: 'Дневной свет', exact: true })).toBeVisible()
+      await expect(panel.getByRole('switch', { name: 'Факел', exact: true })).toBeChecked()
+      await expect(panel.getByRole('checkbox')).toHaveCount(0)
+      await expect(panel.locator('.detail-section-label')).toHaveText(['Дневное освещение', 'Источники света'])
+      if (mode === 'editor') {
+        await expect(panel.locator('.map-light-sources > :first-child').getByRole('button', { name: 'Добавить источник света', exact: true })).toBeVisible()
+      } else await expect(panel.getByRole('button', { name: 'Добавить источник света', exact: true })).toHaveCount(0)
+      styles.push(await page.locator('.map-sidebar').evaluate(sidebar => {
+        const css = getComputedStyle(sidebar)
+        const heading = getComputedStyle(sidebar.querySelector('.detail-section-label'))
+        return { width: css.width, borderRadius: css.borderRadius, shadow: css.boxShadow, headingFont: heading.font, headingBorder: heading.borderBottom }
+      }))
+      await panel.getByRole('switch', { name: 'Факел', exact: true }).click()
+      await expect.poll(() => page.evaluate(mode => mode === 'editor'
+        ? window.lastSaved?.document.lights[0].enabled
+        : window.latestBoard.state.lighting?.lights['test-light'], mode)).toBe(false)
+      await expect(page.getByRole('alert')).toHaveCount(0)
+    }
+    expect(styles[0]).toEqual(styles[1])
+  })
+
   test(`session area visibility survives panel switches ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
     await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 })
     await ready(page, 'areaExample&hiddenArea')
@@ -20,7 +50,7 @@ for (const mobile of [false, true]) {
     await page.getByRole('switch', { name: 'Зал', exact: true }).click()
     await expect.poll(() => page.evaluate(() => window.latestBoard.state.areas?.['area-room'])).toBe(true)
     expect(await page.evaluate(() => window.latestBoard.document.areas[0].hidden)).toBe(true)
-    await page.getByRole('button', { name: 'Свернуть управление картой', exact: true }).click()
+    await page.getByRole('button', { name: 'Свернуть панель карты', exact: true }).click()
     await expect(page.locator('.session-map-inspector')).toHaveClass(/collapsed/)
     await page.getByRole('button', { name: 'Области', exact: true }).click()
     await expect(page.getByRole('switch', { name: 'Зал', exact: true })).toBeChecked()

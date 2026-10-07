@@ -81,7 +81,7 @@ test("mixed area selection groups repeated models, assigns them to another area 
     .toBe(0);
   await expect(panel).toHaveCount(0);
 });
-test("light rows toggle by icon, show their area, and anchor picking focuses the linked model", async ({
+test("light rows toggle by switch, show their area, and anchor picking focuses the linked model", async ({
   page,
 }) => {
   await ready(page, "&lightExample&shaped&lit");
@@ -98,7 +98,7 @@ test("light rows toggle by icon, show their area, and anchor picking focuses the
   const panel = selection(page);
   await expect(panel.getByLabel("Название источника света")).toBeVisible();
   await lights
-    .getByRole("button", { name: "Выключить Факел", exact: true })
+    .getByRole("switch", { name: "Факел", exact: true })
     .click();
   await expect
     .poll(() =>
@@ -106,10 +106,10 @@ test("light rows toggle by icon, show their area, and anchor picking focuses the
     )
     .toBe(false);
   await expect(
-    lights.getByRole("button", { name: "Включить Факел", exact: true }),
+    lights.getByRole("switch", { name: "Факел", exact: true }),
   ).toBeVisible();
   await lights
-    .getByRole("button", { name: "Включить Факел", exact: true })
+    .getByRole("switch", { name: "Факел", exact: true })
     .click();
   await panel
     .getByRole("button", { name: "Добавить в область", exact: true })

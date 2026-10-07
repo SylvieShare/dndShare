@@ -313,18 +313,18 @@
 }
 
 .campaign-workspace--map .workspace-dock--left {
-  left: calc(var(--session-map-panel-width) + 28px);
+  left: calc(var(--session-map-panel-width) + 14px);
 }
 .campaign-workspace--map .campaign-graph {
-  --chapter-safe-left: calc(var(--session-map-panel-width) + var(--participant-rail-width) + 56px);
+  --chapter-safe-left: calc(var(--session-map-panel-width) + var(--participant-rail-width) + 42px);
 }
 .campaign-workspace--map.campaign-workspace--players-collapsed .campaign-graph {
-  --chapter-safe-left: calc(var(--session-map-panel-width) + 108px);
+  --chapter-safe-left: calc(var(--session-map-panel-width) + 94px);
 }
 @media (max-width: 760px) {
   .campaign-workspace--map .campaign-graph,
   .campaign-workspace--map.campaign-workspace--players-collapsed .campaign-graph {
-    --chapter-safe-left: calc(var(--session-map-panel-width) + 28px);
+    --chapter-safe-left: calc(var(--session-map-panel-width) + 14px);
     --chapter-safe-right: 14px;
   }
 }

@@ -17,14 +17,13 @@
       @update:model-value="editor.updateLight(light.id, 'enabled', $event)"
     />
     <template v-if="!light.builtinKey">
-      <FormField label="Показывать сферу"
-        ><CompactCheckbox
+      <ToggleSwitch
           :model-value="light.showMarker"
           label="Показывать сферу источника"
           @update:model-value="
             editor.updateLight(light.id, 'showMarker', $event)
           "
-      /></FormField>
+      />
       <FormField label="Цвет" vertical
         ><ColorPresetPicker
           :model-value="light.color"
@@ -113,7 +112,6 @@
 import { computed } from "vue";
 import {
   ActionButton,
-  CompactCheckbox,
   AppSlider,
   ColorPresetPicker,
   FormField,

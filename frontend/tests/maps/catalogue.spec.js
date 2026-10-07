@@ -72,7 +72,7 @@ test("sidebar offers populated categories and drags tiles directly onto the map,
     await expect(button.locator("img")).toHaveCount(1);
   await picker.getByRole("button", { name: "Пол", exact: true }).click();
   const before = await page.locator(".map-canvas").boundingBox();
-  await page.getByRole("button", { name: "Свернуть список плиток" }).click();
+  await page.getByRole("button", { name: "Свернуть панель карты" }).click();
   const collapsed = await page.locator(".map-canvas").boundingBox();
   expect(collapsed.width - before.width).toBe(286);
   await page.getByRole("button", { name: "Плитки", exact: true }).click();
@@ -244,7 +244,7 @@ test("pack selection lives on the left, supports keyboard and stays available wh
   await expect(
     page.getByRole("button", { name: "Каменный пол", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Свернуть список плиток" }).click();
+  await page.getByRole("button", { name: "Свернуть панель карты" }).click();
   await page.getByRole("button", { name: "Плитки", exact: true }).click();
   await choosePack(page, "lost-cave");
   await page.getByRole("combobox", { name: "Пак тайлов", exact: true }).click();

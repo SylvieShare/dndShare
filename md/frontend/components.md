@@ -344,9 +344,9 @@ MapCollectionPicker размещён над левым каталогом и д�
 
 `SessionTabWorkspace` предоставляет два режима доменной раскладки: `full`
 для всей рабочей области и `column` для центральных колонок. Панель
-`SessionMapInspector` повторяет композицию боковых вкладок редактора на общих
-`ActionButton`, `ToggleSwitch`, `DetailSection` и `AppSlider`; логика областей
-и света вынесена в отдельные панели сессионной карты. Это доменные композиции,
+`SessionMapInspector` и `MapTileSidebar` используют общий `MapSidebar`;
+`MapLightingControls` и `MapEntityRow` переиспользуются для освещения обеих страниц.
+Логика областей и сохранения света остаётся в адаптерах редактора и сессии. Это доменные композиции,
 общие базовые примитивы остаются в share-ui.
 
 ## Связанные страницы
@@ -385,15 +385,26 @@ DetailSection, BaseTile, FormField, FormSelect, FormTextInput и ToggleSwitch.
 редактируется той же правой панелью. Иконки категорий палитры находятся в
 растягивающихся строках BaseTile 80px с изображениями 64px; поле типа справочника
 сохраняет компактный вариант.
-Освещение карты — MapLightingPanel/MapLightFields/MapSunSettings и MapEntityRow на BaseTile,
-ActionButton, AppSlider, ColorPresetPicker, FormField/FormTextInput/FormSelect,
-CompactCheckbox и ToggleSwitch. MapLightPresetMenu сочетает общий пунктирный
-AddButton с BasePopover и ActionButton: доменная композиция нужна для выбора
+MapSidebar — общая доменная композиция боковой панели редактора и карты сессии:
+вертикальные вкладки на ActionButton, единый заголовок, сворачивание и область
+прокрутки. MapTileSidebar и SessionMapInspector задают список вкладок и содержимое;
+стили панели хранятся только в MapSidebar. Сессионный адаптер задаёт позицию
+в рабочем поле и резервирует ширину для колонки игроков.
+
+MapLightingControls — общая панель освещения редактора и сессии на ToggleSwitch,
+MapSunSettings и DetailSection. Названия секций — «Дневное освещение» и
+«Источники света». MapLightingPanel и SessionMapLightingPanel адаптируют
+изменения к документу редактора или сессионным переопределениям соответственно.
+MapEntityRow переиспользуется в обоих списках источников; ToggleSwitch справа
+меняет включение, отдельно от выбора строки редактора. MapLightFields использует
+AppSlider, ColorPresetPicker, FormField/FormTextInput/FormSelect и ToggleSwitch.
+MapLightPresetMenu — первый элемент списка редактора, общий пунктирный
+AddButton в режиме block с BasePopover и ActionButton: доменная композиция нужна для выбора
 пресета перед вставкой в координаты Three.js. editorLightBinding принимает
 следующий клик по модели, строка привязки выделяет её и центрирует камеру.
 editorLighting объединяет изменение
 ползунка в один шаг истории; постановка из меню и повторная вставка скопированного
-источника используют useCatalogueDrag. Галка режима восстанавливает прежний
-постоянный свет; галка сферы управляет только маркером редактора. Маркеры источников — предметные
+источника используют useCatalogueDrag. Переключатель режима восстанавливает
+прежний постоянный свет; переключатель сферы управляет только маркером редактора. Маркеры источников — предметные
 Three.js-сферы для ray picking; это координаты 3D-сцены. Геометрия shadow хранится отдельным GLB, загружается при включённом освещении
 и разделяется между теневыми экземплярами.

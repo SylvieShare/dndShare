@@ -1,20 +1,6 @@
 <template>
-  <aside class="session-map-inspector" :class="{ 'session-map-inspector--collapsed': collapsed }" aria-label="Управление картой">
-    <nav class="session-map-tabs" aria-label="Вкладки карты">
-      <ActionButton v-for="item in tabs" :key="item.key" icon-only
-        :variant="tab === item.key && !collapsed ? 'primary' : 'quiet'"
-        :aria-label="item.label" :title="item.label" :aria-pressed="tab === item.key && !collapsed"
-        @click="openTab(item.key)">
-        <template #icon><component :is="item.icon" :size="22" /></template>
-      </ActionButton>
-    </nav>
-    <div v-show="!collapsed" class="session-map-panel">
-      <header class="session-map-panel-heading">
-        <strong>{{ tabs.find(item => item.key === tab)?.label }}</strong>
-        <ActionButton variant="quiet" icon-only aria-label="Свернуть управление картой" title="Свернуть управление картой"
-          @click="collapsed = true"><template #icon><PanelLeftClose :size="20" /></template></ActionButton>
-      </header>
-      <div class="session-map-panel-content">
+  <MapSidebar ref="sidebar" v-model:tab="tab" class="session-map-inspector" :tabs="tabs" :collapse-at="1200"
+    aria-label="Управление картой" @resize="sidebarWidth = $event">
     <SessionMapAreasPanel v-if="tab === 'areas'" :controller="controller" @zone="emit('zone', $event)" />
     <template v-else-if="tab === 'tokens'">
       <template v-if="token">
@@ -121,9 +107,7 @@
       @update="controller.updateDisplay"
       @frame="emit('frame')"
     />
-      </div>
-    </div>
-  </aside>
+  </MapSidebar>
 </template>
 <script setup>
 import { computed, ref, watch } from 'vue';
@@ -133,8 +117,10 @@ import {
   FormSelect,
   FormTextInput,
   ToggleSwitch,
+  useIsMobile,
 } from '@sylvieshare/share-ui';
-import { Group, Lightbulb, MonitorUp, PanelLeftClose, EyeOff, Plus, Trash2, UserRound } from '@lucide/vue';
+import { Group, Lightbulb, MonitorUp, EyeOff, Plus, Trash2, UserRound } from '@lucide/vue';
+import MapSidebar from './MapSidebar.vue';
 import SessionMapAreasPanel from './SessionMapAreasPanel.vue';
 import SessionMapLightingPanel from './SessionMapLightingPanel.vue';
 import MapDisplaySettings from './MapDisplaySettings.vue';
@@ -153,7 +139,7 @@ const tab = ref('areas'),
 watch(
   () => props.selectedToken,
   (id) => {
-    if (id) openTab('tokens');
+    if (id) sidebar.value?.openTab('tokens');
   },
 );
 const available = computed(() =>
@@ -163,44 +149,18 @@ const available = computed(() =>
       c.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()),
   ),
 );
-const collapsed = ref(window.matchMedia('(max-width: 1200px)').matches);
+const sidebar = ref(null);
+const sidebarWidth = ref(334);
+const mobile = useIsMobile(760);
 const tabs = [
   { key: 'areas', label: 'Области', icon: Group },
   { key: 'tokens', label: 'Жетоны', icon: UserRound },
   { key: 'lights', label: 'Освещение', icon: Lightbulb },
   { key: 'screen', label: 'Трансляция', icon: MonitorUp },
 ];
-function openTab(key) {
-  tab.value = key;
-  collapsed.value = false;
-}
-watch(collapsed, value => emit('resize', value || window.matchMedia('(max-width: 760px)').matches ? 48 : 334), { immediate: true });
+watch([sidebarWidth, mobile], ([width, isMobile]) => emit('resize', isMobile ? 48 : width), { immediate: true });
 </script>
 <style scoped>
-.session-map-inspector {
-  position: absolute;
-  z-index: 8;
-  top: 14px;
-  left: 14px;
-  bottom: 14px;
-  display: flex;
-  width: 334px;
-  min-height: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-  box-sizing: border-box;
-  overflow: hidden;
-}
-.session-map-inspector--collapsed { width: 48px; }
-.session-map-tabs { display: flex; flex-direction: column; gap: 6px; width: 48px; flex: none; padding-top: 6px; border-right: 1px solid var(--border-strong); }
-.session-map-panel { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
-.session-map-panel-heading { display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 12px; }
-.session-map-panel-content { display: flex; flex-direction: column; gap: 14px; overflow: auto; min-height: 0; padding: 8px 12px 18px; }
-.session-map-panel-content hr { width: 100%; border: 0; border-top: 1px solid var(--border-strong); }
+.session-map-inspector { position: absolute; z-index: 8; top: 0; left: 0; bottom: 0; }
 .map-token-avatar { width: 24px; height: 24px; object-fit: contain; }
-@media (max-width: 760px) {
-  .session-map-inspector:not(.session-map-inspector--collapsed) { width: min(334px, calc(100vw - 42px)); }
-}
 </style>

@@ -12,19 +12,7 @@
     @keydown.enter.self.prevent="selectable && emit('select', entry)"
     @keydown.space.self.prevent="selectable && emit('select', entry)"
   >
-    <ActionButton
-      v-if="entry.kind === 'light' && toggleLight"
-      icon-only
-      variant="quiet"
-      :aria-label="`${entry.enabled ? 'Выключить' : 'Включить'} ${entry.name}`"
-      :aria-pressed="entry.enabled"
-      @click.stop="emit('toggle', entry.id)"
-    >
-      <template #icon
-        ><component :is="entry.enabled ? Lightbulb : LightbulbOff" :size="28"
-      /></template>
-    </ActionButton>
-    <span v-else class="map-entity-thumbnail" aria-hidden="true">
+    <span class="map-entity-thumbnail" aria-hidden="true">
       <img
         v-if="entry.previewUrl"
         :src="entry.previewUrl"
@@ -56,16 +44,20 @@
     <strong v-if="entry.count" class="map-entity-count"
       >×{{ entry.count }}</strong
     >
+    <ToggleSwitch v-if="entry.kind === 'light' && toggleLight" :model-value="entry.enabled"
+      :aria-label="entry.name" :disabled="toggleDisabled" @click.stop @keydown.stop
+      @update:model-value="emit('toggle', entry.id)" />
     <slot name="actions" />
   </BaseTile>
 </template>
 <script setup>
-import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { Box, Lightbulb, LightbulbOff } from "@lucide/vue";
 defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,
   toggleLight: Boolean,
+  toggleDisabled: Boolean,
   selectable: { type: Boolean, default: true },
 });
 const emit = defineEmits(["select", "toggle"]);
