@@ -1,9 +1,13 @@
 .session-page {
-  height: calc(100vh - var(--header-h));
+  --header-h: 0px;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
+
+.session-loading { display: flex; flex: 1; min-height: 0; flex-direction: column; padding: 14px; }
+.session-loading > :first-child { align-self: flex-start; }
 
 .campaign-workspace {
   --participant-rail-width: 264px;

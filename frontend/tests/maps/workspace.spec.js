@@ -26,7 +26,14 @@ for (const mobile of [false, true])
     expect(bounds).toEqual({ x: 0, y: 0, ...viewport });
     const canvas = await page.locator(".map-canvas-surface").boundingBox();
     expect(canvas.height).toBeGreaterThan(mobile ? 300 : 700);
-    await page.getByRole("button", { name: "Закрыть редактор" }).click();
+    const back = page.getByRole("button", { name: "Закрыть редактор" });
+    const offset = await back.evaluate(button => {
+      const icon = button.querySelector(':scope > svg').getBoundingClientRect();
+      const label = button.querySelector(':scope > span').getBoundingClientRect();
+      return Math.abs(icon.y + icon.height / 2 - label.y - label.height / 2);
+    });
+    expect(offset).toBeLessThan(1);
+    await back.click();
     await expect(
       page.getByRole("button", { name: "Создать карту", exact: true }),
     ).toBeVisible();

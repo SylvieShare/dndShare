@@ -1,6 +1,7 @@
 <template>
   <WorkspaceHeader class="chapter-toolbar" @resize="emit('resize', $event)">
     <template #identity>
+    <SessionBackButton />
     <SessionToolbarIdentity
       :session="session" :is-dm="isDm" :arcs="arcs" :selected-arc="selectedArc" :current-arc="currentArc"
       :locked="locked" :reorder-pending="reorderPending"
@@ -121,6 +122,7 @@ import { computed } from 'vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
+import SessionBackButton from './SessionBackButton.vue'
 import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
 import { useAccountStore } from '@/stores/account'
 import SessionToolbarMusic from './SessionToolbarMusic.vue'

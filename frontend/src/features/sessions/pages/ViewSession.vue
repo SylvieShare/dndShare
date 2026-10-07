@@ -31,7 +31,10 @@
       @saved="applySessionEdit"
     />
 
-    <LoadingState v-if="loading" label="Открываем сессию…" fill />
+    <div v-if="loading" class="session-loading">
+      <SessionBackButton />
+      <LoadingState label="Открываем сессию…" fill />
+    </div>
 
     <SessionPlayerView
       v-else-if="session && !isDm"
@@ -296,6 +299,7 @@ import { RowActionMenu } from '@sylvieshare/share-ui'
 import SessionCenterWorkspace from '@/features/sessions/components/SessionCenterWorkspace.vue'
 import SessionParticipantCard from '@/features/sessions/components/SessionParticipantCard'
 import SessionPlayerView from '@/features/sessions/components/SessionPlayerView.vue'
+import SessionBackButton from '@/features/sessions/components/SessionBackButton.vue'
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionTimerStack from '@/features/sessions/components/SessionTimerStack.vue'
 import SessionSettingsWorkspace from '@/features/sessions/components/SessionSettingsWorkspace.vue'

@@ -9,6 +9,7 @@
 
     <div class="player-session__content">
       <header class="player-session__intro">
+        <SessionBackButton />
         <div data-tutorial="session-connection" class="player-session__eyebrow">
           <span class="player-session__live-dot" :class="`player-session__live-dot--${liveStatus}`" />
           {{ liveLabel }}
@@ -117,6 +118,7 @@
 
 <script setup>
 import SessionTutorialSettings from '@/features/tutorials/components/SessionTutorialSettings.vue'
+import SessionBackButton from './SessionBackButton.vue'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { BookOpen, ExternalLink, UsersRound } from '@lucide/vue'

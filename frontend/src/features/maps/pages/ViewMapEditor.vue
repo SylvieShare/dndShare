@@ -13,7 +13,8 @@
       <p v-if="error" role="alert">{{ error }}</p>
       <p v-else role="status">Скоро будет</p>
       <ActionButton variant="secondary" @click="router.push({ name: 'Maps' })">
-        <ArrowLeft :size="16" />К картам
+        <template #icon><ArrowLeft :size="16" /></template>
+        К картам
       </ActionButton>
       <ActionButton v-if="error" variant="quiet" @click="load(route)">
         Повторить

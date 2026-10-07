@@ -202,6 +202,12 @@ error message (up to the
 viewport max-height), so the uncovered canvas below a short player list remains
 available for pan and node dragging.
 
+The session page fills the viewport on desktop and mobile, without the global
+sidebar or app header. `SessionBackButton` returns to the session list from the
+DM toolbar, player intro and loading state; its icon uses the shared button's
+`icon` slot for vertical alignment. Session notifications, account/game-context
+loading and diagnostics remain active in this standalone workspace.
+
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header groups `Сюжет`, `Бой`, `Карта`, `Локации`, `NPC`,
 `Задания`, `Материалы`, `Дневник`, `Хроника` and `Настройки` in the center.
@@ -214,7 +220,7 @@ horizontally scrollable row. The measured header height controls the participant
 rail offset so the two never overlap. The
 participant rail remains on the left and the
 right tool rail stays visible, including on mobile. In `Сюжет` the chapter canvas fills all available
-width below `AppHeader`; the participant and tool rails reserve horizontal safe
+width below the workspace toolbar; the participant and tool rails reserve horizontal safe
 areas. CSS safe-area variables keep focus, zoom and newly created nodes in the
 uncovered part of the canvas. `SessionTabWorkspace` has two layout modes:
 `full` fills the whole working field without padding or a width limit, while

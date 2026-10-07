@@ -141,7 +141,7 @@ const routes = [
         path: '/sessions/:uuid',
         name: "Session",
         component: ViewSession,
-        meta: { title: 'Сессия', section: 'sessions', depth: 1, mobileBackTo: { name: 'Sessions' } },
+        meta: { title: 'Сессия', section: 'sessions', depth: 1, standaloneView: true, applicationServices: true },
     },
     {
         path: '/screen/:code',

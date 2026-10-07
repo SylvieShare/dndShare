@@ -5,8 +5,10 @@
         variant="quiet"
         aria-label="Закрыть редактор"
         @click="emit('close')"
-        ><ArrowLeft :size="18" />Карты</ActionButton
       >
+        <template #icon><ArrowLeft :size="18" /></template>
+        Карты
+      </ActionButton>
       <div class="map-editor-heading">
         <h1>Редактор карты</h1>
         <span>{{ editor.draft.name }}</span>

@@ -22,12 +22,12 @@
       </transition>
     </router-view>
   </div>
-  <AppNotifications v-if="!isStandaloneRoute"/>
-  <ConsoleErrorInbox v-if="!isStandaloneRoute"/>
+  <AppNotifications v-if="showsApplicationServices"/>
+  <ConsoleErrorInbox v-if="showsApplicationServices"/>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from "@/shared/ui/AppHeader";
 import DesktopSidebar from '@/shared/ui/DesktopSidebar.vue'
@@ -44,13 +44,16 @@ const isMobile = useIsMobile()
 const usesMobileChrome = useIsMobile(640)
 const isPrintRoute = computed(() => !!route.meta?.printView)
 const isStandaloneRoute = computed(() => isPrintRoute.value || !!route.meta?.standaloneView)
+const showsApplicationServices = computed(() => !isStandaloneRoute.value || !!route.meta?.applicationServices)
 const pageTransitionMode = computed(() => (isMobile.value ? undefined : 'out-in'))
 
-onMounted(() => {
-  if (isStandaloneRoute.value) return
-  useTextStore().downloadText()
+let applicationServicesStarted = false
+watch(showsApplicationServices, enabled => {
+  if (!enabled || applicationServicesStarted) return
+  applicationServicesStarted = true
+  useTextStore().downloadText().catch(() => null)
   useGameContextStore().ensure().catch(() => null)
-})
+}, { immediate: true })
 </script>
 
 <style>
