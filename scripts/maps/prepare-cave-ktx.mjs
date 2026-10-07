@@ -5,6 +5,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { readGlb, embeddedImage, replaceImages } from "./glb_textures.mjs";
 import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
+import { caveTexturePlan } from "./cave_texture_plan.mjs";
 const run = promisify(execFile),
   file = process.argv[2],
   name = process.argv[3];
@@ -21,6 +22,7 @@ const directory = path.dirname(path.resolve(file)),
 if (report.model.collection !== "lost-cave" || !report.weightBudget)
   throw new Error("One measured Lost Cave report required");
 const normalMinZ = report.materialSpec.normalMinZ ?? 0.01;
+const sizes = caveTexturePlan(report.materialSpec, name);
 if (!Number.isFinite(normalMinZ) || normalMinZ < 0.01 || normalMinZ > 0.2)
   throw new Error("Reviewed normal minimum Z must be between0.01 and0.2");
 await fs.mkdir(out, { recursive: true });
@@ -83,7 +85,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
     invalid = 0;
   for (const [slot, index] of slots) {
     const image = g.json.textures[index].source,
-      size = variants[name][ti * 2 + (slot === "BaseColor" ? 0 : 1)],
+      size = sizes[ti * 2 + (slot === "BaseColor" ? 0 : 1)],
       result = await sharp(embeddedImage(g, image))
         .resize(size, size)
         .removeAlpha()
@@ -213,7 +215,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
   );
   candidate.tiers[tier] = {
     ...candidate.tiers[tier],
-    textureSize: variants[name][ti * 2],
+    textureSize: sizes[ti * 2],
     bytes: final.length,
     blackSurfacePixels: black,
     invalidNormalPixels: invalid,

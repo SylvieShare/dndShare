@@ -46,14 +46,41 @@ for (const tier of ["render", "lod"]) {
     after = await io.read(path.join(dir, tier + ".glb"));
   const a = getBounds(before.getRoot().listScenes()[0]),
     b = getBounds(after.getRoot().listScenes()[0]);
-  const drift = Math.max(
+  const oldDrift = Math.max(
     ...["min", "max"].flatMap((s) => a[s].map((v, i) => Math.abs(v - b[s][i]))),
   );
+  let drift = oldDrift;
+  if (report.geometryCorrection) {
+    const [low, high] = report.rebake[tier].sourceBoundsMM;
+    const expected = {
+      min: [low[0] / 35, low[2] / 35, -high[1] / 35],
+      max: [high[0] / 35, high[2] / 35, -low[1] / 35],
+    };
+    drift = Math.max(
+      ...["min", "max"].flatMap((s) =>
+        expected[s].map((v, i) => Math.abs(v - b[s][i])),
+      ),
+    );
+    if (
+      report.model.assets.source.sha256 !==
+        report.geometryCorrection.sourceSHA256 ||
+      Math.abs(b.max[1] - report.model.maxHeight) > 0.03
+    )
+      throw new Error(
+        "Corrected model differs from reviewed original sculpt or height",
+      );
+  }
   if (drift > 0.03) throw new Error("Accepted bounds drift exceeds1.05 mm");
   if (report.rebake[tier].sourceDeviationMM > 1)
     throw new Error("Geometry strays from original sculpt");
   checks[tier] = {
     boundsDrift: drift,
+    ...(report.geometryCorrection
+      ? {
+          originalBoundsDrift: oldDrift,
+          geometryCorrection: report.geometryCorrection.reason,
+        }
+      : {}),
     mounting: assertSameSurface(mounting(before), mounting(after)),
     sourceDeviationMM: report.rebake[tier].sourceDeviationMM,
   };

@@ -51,6 +51,13 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   if (report.model.collection !== review.collection)
     throw new Error("Prepared report belongs to another collection");
   if (report.recipe !== recipe) throw new Error("Unexpected colour recipe");
+  if (
+    report.geometryCorrection &&
+    !process.argv.includes("--geometry-correction")
+  )
+    throw new Error(
+      "Explicit incompatible geometry correction required before packaging",
+    );
   const temporary = path.join(directory, "preview-next.webp");
   await sharp(path.join(directory, "preview.png"))
     .webp({ quality: 88 })

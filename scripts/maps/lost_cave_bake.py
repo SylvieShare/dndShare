@@ -63,9 +63,9 @@ def bake_tier(report, directory, tier):
     shade(source)
     bpy.context.view_layer.update()
     sculpt = bounds(source)
-    if max(abs(before[s][a]-sculpt[s][a]) for s in range(2) for a in [0,1]) > 1:
+    if not report.get('geometryCorrection') and max(abs(before[s][a]-sculpt[s][a]) for s in range(2) for a in [0,1]) > 1:
         raise ValueError('Accepted mesh and source have different XY coordinates')
-    if abs(before[1][2]-sculpt[1][2]) > 1:
+    if not report.get('geometryCorrection') and abs(before[1][2]-sculpt[1][2]) > 1:
         raise ValueError('Accepted mesh and source have different heights')
     target = bpy.data.objects.new(report['model']['sourceCode']+' detailed body', source.data.copy())
     scene.collection.objects.link(target)
@@ -79,6 +79,10 @@ def bake_tier(report, directory, tier):
     modifier.use_collapse_triangulate = True
     bpy.ops.object.modifier_apply(modifier=modifier.name)
     shade(target)
+    if report['materialSpec'].get('flatFacets'):
+        for obj in [source,target]:
+            for face in obj.data.polygons:
+                face.use_smooth = False
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.uv.smart_project(angle_limit=1.4, island_margin=.0015,

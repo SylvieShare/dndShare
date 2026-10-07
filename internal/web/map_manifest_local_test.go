@@ -43,7 +43,11 @@ func TestPreparedCollectionManifest(t *testing.T) {
 			t.Errorf("%s: %v", model.SourceCode, err)
 		}
 		var revisionErr error
-		if os.Getenv("MAP_MODEL_NEW_SOURCE") == "1" {
+		if os.Getenv("MAP_MODEL_NEW_SOURCE") == "1" && os.Getenv("MAP_MODEL_GEOMETRY_CORRECTION") == "1" {
+			revisionErr = errors.New("choose one explicit correction mode")
+		} else if os.Getenv("MAP_MODEL_GEOMETRY_CORRECTION") == "1" {
+			revisionErr = preparedGeometryCorrectionError(model, previous, os.Getenv("MAP_MODEL_CORRECTION_REASON"))
+		} else if os.Getenv("MAP_MODEL_NEW_SOURCE") == "1" {
 			revisionErr = preparedNewSourceError(model, previous)
 		} else {
 			revisionErr = preparedRevisionError(model, previous)

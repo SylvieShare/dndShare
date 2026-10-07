@@ -1,0 +1,46 @@
+{
+  "sourceName": "Crystals for Wagon",
+  "referencePage": 4,
+  "material": "cave-crystal",
+  "floorHeightMM": 0,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "renderTriangles": 25000,
+  "lodTriangles": 8000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [0.5, 2.2],
+    "lodMiB": [0.2, 0.9],
+    "shadowKiB": [15, 70],
+    "previewKiB": [10, 100],
+    "basis": "179936-triangle compact crystal insert, complete sculpt restored after wrong11.5mm cut.25k/8k retain mineral facets and cargo slab;1024/512 bake sizes, two KTX2 comparisons."
+  },
+  "notes": "Author page4: complete blue mineral insert with rectangular cargo foundation and angular crystal rubble. Full source preview matches PDF; old universal11.5mm cut left floating tips only. Restore original0-17.1222mm body as object, preserve original STL and logical ID; incompatible geometry must not auto-replace old placements. Flat source facets, blue-violet mineral variation, nonmetallic restrained polish. Crystal facet geometry carries its own normals: transferred relief caused jagged bright edge pixels, so use an explicit neutral tangent map while retaining actual flat face normals and baked AO.",
+  "groupCode": "LC-crystals-for-wagon",
+  "flatFacets": true,
+  "crystal": {
+    "tint": [0.14, 0.22, 0.63]
+  },
+  "geometryCorrection": {
+    "sourceSHA256": "d59774860b670fe10676424eb4f3a0222ce0b9153816722345482a2b2252b2f4",
+    "previousCutHeightMM": 11.5,
+    "cutHeightMM": 0,
+    "reason": "Restore the complete original LC-026 crystal insert: the universal11.5mm mounting cut wrongly removed its foundation and most crystals, leaving floating tips. Original STL, logical identity and old placed UUIDs are preserved.",
+    "metadata": {
+      "name": "\u041a\u0440\u0438\u0441\u0442\u0430\u043b\u043b\u044b \u0434\u043b\u044f \u0432\u0430\u0433\u043e\u043d\u0435\u0442\u043a\u0438",
+      "tileType": "object",
+      "surfaceHeight": 0.48920571428571424,
+      "maxHeight": 0.48920571428571424
+    }
+  },
+  "textureCandidates": {
+    "ktx-balanced": [1024, 1024, 512, 512],
+    "ktx-compact": [512, 512, 256, 256]
+  },
+  "normalMode": "geometry"
+}

@@ -8,6 +8,7 @@ import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
 import { caveRockPixel } from "./lost_cave_surface.mjs";
 import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
 import { paintRailway } from "./lost_cave_railway.mjs";
+import { paintCrystal } from "./lost_cave_crystal.mjs";
 import specs from "./lost_cave_recipes.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One rebaked Lost Cave report required");
@@ -16,7 +17,11 @@ const directory = path.dirname(path.resolve(file)),
 if (report.model.collection !== "lost-cave" || !report.rebake)
   throw new Error("Complete source normal/AO rebake first");
 const spec = specs[report.model.sourceCode];
-if (!["cave-rock", "cave-stalagmites", "cave-railway"].includes(spec.material))
+if (
+  !["cave-rock", "cave-stalagmites", "cave-railway", "cave-crystal"].includes(
+    spec.material,
+  )
+)
   throw new Error("Unsupported individually reviewed surface material");
 for (const field of [
   "sourceName",
@@ -59,14 +64,17 @@ for (const tier of ["render", "lod"]) {
     rock: 0,
     ...(spec.material === "cave-stalagmites" ? { calcite: 0 } : {}),
     ...(spec.material === "cave-railway" ? { wood: 0, iron: 0 } : {}),
+    ...(spec.material === "cave-crystal" ? { crystal: 0 } : {}),
   };
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
     const value =
-      spec.material === "cave-railway"
-        ? paintRailway(p, n, ao[i], spec)
-        : spec.material === "cave-stalagmites"
-          ? paintStalagmites(p, n, ao[i], spec)
-          : caveRockPixel(p, n, ao[i], report.materialSpec);
+      spec.material === "cave-crystal"
+        ? paintCrystal(p, n, ao[i], spec)
+        : spec.material === "cave-railway"
+          ? paintRailway(p, n, ao[i], spec)
+          : spec.material === "cave-stalagmites"
+            ? paintStalagmites(p, n, ao[i], spec)
+            : caveRockPixel(p, n, ao[i], report.materialSpec);
     counts[value.part]++;
     colour.set(value.rgb, i * 3);
     orm[i * 3] = ao[i];
@@ -82,6 +90,8 @@ for (const tier of ["render", "lod"]) {
     invalid = 0;
   for (let i = 0; i < coverage.length; i++)
     if (coverage[i]) {
+      if (spec.normalMode === "geometry")
+        normal.data.set([128, 128, 255], i * 3);
       if (Math.max(...colour.subarray(i * 3, i * 3 + 3)) < 4) black++;
       if (normal.data[i * 3 + 2] < 128) invalid++;
     }

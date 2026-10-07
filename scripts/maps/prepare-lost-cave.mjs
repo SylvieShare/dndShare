@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import specs from "./lost_cave_recipes.mjs";
 import { reviewCollection } from "./review_collection.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
+import { correctedCaveModel } from "./lost_cave_correction.mjs";
 const code = process.argv[2],
   spec = specs[code];
 if (!spec)
@@ -16,7 +17,9 @@ const review = reviewCollection("lost-cave"),
 if (!model || model.textureDetail === "detailed")
   throw new Error("Missing or already reviewed model");
 if (!spec.groupCode || model.code !== spec.groupCode)
-  throw new Error("Review the current logical model family code before preparing");
+  throw new Error(
+    "Review the current logical model family code before preparing",
+  );
 const rows = JSON.parse(
     await fs.readFile(path.join(review.base, "manifest.json"), "utf8"),
   ),
@@ -28,6 +31,12 @@ const rows = JSON.parse(
   );
 if (source.sourceSHA256 !== model.assets.source.sha256)
   throw new Error("Canonical STL differs from accepted source");
+const corrected = correctedCaveModel(
+  model,
+  source,
+  spec,
+  process.argv.includes("--geometry-correction"),
+);
 const directory = path.join(
   review.detail,
   code,
@@ -54,16 +63,21 @@ for (const tier of ["render", "lod"]) {
   await io.write(path.join(directory, tier + "-input.glb"), doc);
 }
 const report = {
-  model: { ...model, textureDetail: "detailed" },
+  model: { ...corrected.model, textureDetail: "detailed" },
   recipe: "lost-cave-individual-v1",
   sourcePath: path.resolve(review.base, "..", source.sourcePath),
-  cutHeight: source.cutHeight,
-  sourceShiftMM: [
-    (acceptedBounds.min[0] + acceptedBounds.max[0]) * 17.5 -
-      (source.min[0] + source.max[0]) / 2,
-    -(acceptedBounds.min[2] + acceptedBounds.max[2]) * 17.5 -
-      (source.min[1] + source.max[1]) / 2,
-  ],
+  cutHeight: corrected.cutHeight,
+  ...(corrected.correction
+    ? { geometryCorrection: corrected.correction, originalModel: model }
+    : {}),
+  sourceShiftMM: corrected.correction
+    ? [0, 0]
+    : [
+        (acceptedBounds.min[0] + acceptedBounds.max[0]) * 17.5 -
+          (source.min[0] + source.max[0]) / 2,
+        -(acceptedBounds.min[2] + acceptedBounds.max[2]) * 17.5 -
+          (source.min[1] + source.max[1]) / 2,
+      ],
   materialSpec: spec,
   weightBudget: spec.weightBudget,
   geometry:
