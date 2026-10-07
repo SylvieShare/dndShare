@@ -1,0 +1,75 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stones", "outdoor", "xl"],
+  "recipe": "majestic-dirt-two-corners-measured-soil-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 0,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 25,
+  "ferns": [
+    {
+      "centreMM": [-19, -27, 16.2],
+      "radiiMM": [21, 23, 4.7],
+      "minZMM": 15.05
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [-34, -28, 19],
+      "radiiMM": [9, 10, 6.4]
+    },
+    {
+      "centreMM": [-43, -29, 17.3],
+      "radiiMM": [4.3, 4.5, 3.7]
+    },
+    {
+      "centreMM": [-34, -42, 17.4],
+      "radiiMM": [4.7, 5.2, 4.3]
+    },
+    {
+      "centreMM": [35, 32, 17.5],
+      "radiiMM": [7, 6.5, 4.7]
+    },
+    {
+      "centreMM": [44, 46, 16.5],
+      "radiiMM": [5.5, 4.7, 3.6]
+    },
+    {
+      "centreMM": [40, 39, 16.5],
+      "radiiMM": [4.3, 4.5, 3.3]
+    },
+    {
+      "centreMM": [34, -37, 16.7],
+      "radiiMM": [5.5, 4.6, 3.5]
+    },
+    {
+      "centreMM": [39, -29, 16.2],
+      "radiiMM": [5, 4.7, 3.2]
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [1500000, 3200000],
+    "targetLODBytes": [500000, 1200000],
+    "targetShadowBytes": [25000, 65000],
+    "targetPreviewBytes": [12000, 50000],
+    "basis": "352708 source triangles, measured 3x3 base, two grass corners, broad leaves and eight stone parts. Test 40k/12k using measured MH-015 soil reference and 1024 colour maps."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512
+}
