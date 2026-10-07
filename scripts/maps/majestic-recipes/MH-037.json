@@ -1,0 +1,143 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "bones", "dragon", "vertebrae", "outdoor", "xl"],
+  "recipe": "majestic-aged-dragon-tail-bones-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2500000, 4500000],
+    "targetLODBytes": [850000, 1700000],
+    "targetShadowBytes": [40000, 110000],
+    "targetPreviewBytes": [15000, 75000],
+    "basis": "474266 source triangles, measured 3x3 tail vertebrae up to 39.64 mm. Terrain matches MH-002 rotated 270 degrees. Test 50k/18k preserving spaces and vertebral projections, aged ivory and local cavity dirt."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [29, 11],
+      [28, -3],
+      [22, -12],
+      [13, -22],
+      [1, -19],
+      [-7, -5],
+      [-3, 9],
+      [13, 14]
+    ],
+    [
+      [-2, 34],
+      [5, 20],
+      [-3, 6],
+      [-5, -4],
+      [-11, -26],
+      [-36, -19],
+      [-36, 12],
+      [-25, 34]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [2, 0],
+    [2, 1],
+    [2, 2],
+    [1, 2],
+    [0, 2]
+  ],
+  "grassReferenceRotation": 270,
+  "boneReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.18
+  },
+  "boneMinZMM": 14.3,
+  "boneDirtDistanceMM": 1.2,
+  "boneLowMatchMM": 0.8,
+  "boneLowBlendMM": 1.0,
+  "bonePlantCeilingMM": 19.5,
+  "bonePlantFadeMM": 1.2,
+  "blockers": [
+    [
+      [2.2, 0.1],
+      [2.85, 0.1],
+      [2.85, 1.8],
+      [2.3, 2.3],
+      [1.55, 2.8],
+      [0.1, 2.9],
+      [0.1, 2.4],
+      [1.65, 2.3],
+      [2.2, 1.6]
+    ]
+  ],
+  "bonePlantRegions": [
+    {
+      "minMM": [-52, -52, 14],
+      "maxMM": [52, 52, 21],
+      "featherMM": 0.6
+    }
+  ],
+  "boneKeepSegments": [
+    {
+      "fromMM": [-42, -41, 15],
+      "toMM": [-42, -41, 33.917],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-22, -35, 15],
+      "toMM": [-22, -35, 39.186],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-1, -31, 15],
+      "toMM": [-1, -31, 39.412],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [15, -21, 15],
+      "toMM": [15, -21, 37.564],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [25, -9, 15],
+      "toMM": [25, -9, 37.473],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [32, 5, 15],
+      "toMM": [32, 5, 38.362],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [37, 20, 15],
+      "toMM": [37, 20, 39.611],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [41, 36, 15],
+      "toMM": [41, 36, 37.546],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [42, 44, 15],
+      "toMM": [42, 44, 35.478],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [30, 39, 18.3],
+      "toMM": [41, 36, 19.5],
+      "radiusMM": 3.8
+    }
+  ]
+}
