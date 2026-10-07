@@ -112,3 +112,24 @@ test("right junction keeps crossing rails and hidden fastener distinct from four
   ])
     assert.equal(railwayPartAt(p, s), "wood");
 });
+test("curved uphill track uses measured relative material heights and preserves the rock body", () => {
+  const s = specs["LC-023"];
+  for (const p of [
+    [-7.9935, 16.7758, 32.0266],
+    [-7.9935, 0.1132, 23.6708],
+    [-13.0288, 11.4399, 25.0218],
+  ])
+    assert.equal(railwayPartAt(p, s), "iron");
+  for (const p of [
+    [0.1888, 12.6992, 24.7972],
+    [0.1888, 0.1216, 19.4998],
+    [0.1888, -12.0212, 17.1343],
+  ])
+    assert.equal(railwayPartAt(p, s), "wood");
+  for (const p of [
+    [-0.4406, 6.0366, 20.2558],
+    [-0.4406, -6.1653, 15.9341],
+    [-8.3, 13, 20],
+  ])
+    assert.equal(railwayPartAt(p, s), "rock");
+});

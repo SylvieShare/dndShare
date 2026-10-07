@@ -43,8 +43,9 @@ function onRail(x, y, z, r) {
   );
 }
 
-export function railwayPartAt([x, y, z], spec) {
+export function railwayPartAt([x, y, worldZ], spec) {
   const railway = spec.railway;
+  const z = worldZ - profileAt(y, railway.grade, 0);
   if (railway.rails.some((r) => onRail(x, y, z, r))) return "iron";
   if (
     railway.bolts.some(
@@ -64,7 +65,12 @@ export function railwayPartAt([x, y, z], spec) {
 
 export function paintRailway(p, n, ao, spec) {
   const part = railwayPartAt(p, spec);
-  if (part === "rock") return caveRockPixel(p, n, ao, spec);
+  const grade = profileAt(p[1], spec.railway.grade, 0);
+  if (part === "rock")
+    return caveRockPixel(p, n, ao, {
+      ...spec,
+      floorHeightMM: spec.floorHeightMM + grade,
+    });
   const detail =
     0.78 + 0.22 * Math.max(0, Math.min(1, (ao / 255 - 0.65) / 0.35));
   if (part === "wood") {
@@ -81,7 +87,7 @@ export function paintRailway(p, n, ao, spec) {
     const local = [
       (p[0] - origin[0]) * c + (p[1] - origin[1]) * s,
       -(p[0] - origin[0]) * s + (p[1] - origin[1]) * c,
-      p[2],
+      p[2] - grade,
     ];
     const normal = [n[0] * c + n[1] * s, -n[0] * s + n[1] * c, n[2]];
     return finishWood(
@@ -95,7 +101,7 @@ export function paintRailway(p, n, ao, spec) {
   }
   const noise = surfaceNoise(...p.map((v) => v * 0.5));
   const rust = Math.max(0, Math.min(1, (noise - 0.55) * 1.7));
-  const height = Math.max(0, Math.min(1, (p[2] - 13.2) / 0.95));
+  const height = Math.max(0, Math.min(1, (p[2] - grade - 13.2) / 0.95));
   const top = Math.max(0, n[2]) * height * height * (3 - 2 * height) * 0.12;
   return {
     part,

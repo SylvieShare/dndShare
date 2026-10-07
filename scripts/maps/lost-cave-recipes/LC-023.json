@@ -1,0 +1,113 @@
+{
+  "sourceName": "Railway Curved Up",
+  "referencePage": 4,
+  "material": "cave-railway",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 16000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.7, 4.8],
+    "lodMiB": [0.7, 2.2],
+    "shadowKiB": [25, 120],
+    "previewKiB": [10, 150],
+    "basis": "379976-triangle1x1 track with curved uphill grade and larger rock side walls.45k/16k preserve curved elevation and debris, mounting retained; two KTX2 candidates."
+  },
+  "notes": "Author page4: vertical curved climb. Rail head profile measured at nine y positions, local material heights subtract grade derived from head minus14.12mm. Three timber ties and six heads separate from tall rock body. Preserve mounting0.148, curved source coordinates, standing point and LC-023 identity/group.",
+  "railway": {
+    "rails": [
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -13.03,
+        "y": 11.44,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -13.03,
+        "y": -0.95,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -13.03,
+        "y": -11.71,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.65,
+        "y": 12.82,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.65,
+        "y": -0.32,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.65,
+        "y": -11.7,
+        "radius": 2.25,
+        "minZ": 9.4
+      }
+    ],
+    "ties": [
+      {
+        "y": 12.4,
+        "slope": 0.06,
+        "halfWidth": 3.2
+      },
+      {
+        "y": -0.4,
+        "slope": 0.025,
+        "halfWidth": 3.2
+      },
+      {
+        "y": -11.7,
+        "slope": -0.02,
+        "halfWidth": 3.2
+      }
+    ],
+    "timberHalfLength": 15.9,
+    "timberMinZ": 7.15,
+    "timberMaxZ": 10.5,
+    "woodTint": [0.36, 0.255, 0.135],
+    "grade": [
+      [-17.6, 6.75],
+      [-16.5605, 6.7479],
+      [-13.0991, 6.898],
+      [-8.6942, 7.4121],
+      [-4.2901, 8.2941],
+      [0.1132, 9.5508],
+      [4.5158, 11.1956],
+      [8.9176, 13.2346],
+      [13.3185, 15.6783],
+      [16.7758, 17.9066],
+      [17.6, 18.36]
+    ]
+  },
+  "groupCode": "LC-railway-curved-up"
+}
