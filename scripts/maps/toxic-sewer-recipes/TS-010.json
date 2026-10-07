@@ -1,0 +1,88 @@
+{
+  "sourceName": "Wall Wood 1",
+  "material": "sewer-components",
+  "referencePage": 3,
+  "renderTriangles": 32000,
+  "lodTriangles": 9000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.0],
+    "lodMiB": [0.25, 0.65],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell brick wall with two curved thin pipes; preserve both tubes and fittings while checking metallic masks against bare masonry."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "rubble",
+      "ellipsoid": {
+        "centre": [-6, -5, 15.8],
+        "radius": [1.4, 1.5, 1.5]
+      },
+      "min": [-7.4, -6.5, 14.3]
+    },
+    {
+      "part": "rubble",
+      "ellipsoid": {
+        "centre": [8.2, 6.5, 15.7],
+        "radius": [1.6, 1.4, 1.6]
+      },
+      "min": [6.6, 5.1, 14.3]
+    },
+    {
+      "part": "rubble",
+      "ellipsoid": {
+        "centre": [3.5, -11.2, 15.6],
+        "radius": [1.5, 1.5, 1.6]
+      },
+      "min": [2.0, -12.7, 14.3]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "path": [
+        [-11.8, -13.3, 15.5],
+        [-6.8, 8.4, 15.5]
+      ],
+      "radius": 4.1,
+      "min": [-15.4, -15.3, 14.3],
+      "max": [-4.5, 10.2, 17.9],
+      "direction": [5, 21.7, 0]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "path": [
+        [11, -13.8, 15.5],
+        [6.4, 9.0, 15.5]
+      ],
+      "radius": 4.0,
+      "min": [3.8, -15.5, 14.3],
+      "max": [14.2, 10.2, 17.9],
+      "direction": [-4.6, 22.8, 0]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "min": [-15.4, -15.3, 14.3],
+      "max": [14.2, 10.2, 17.9],
+      "axis": "x"
+    }
+  ],
+  "notes": "Long raised planks follow their own diagonal grain; shorter underlying boards use transverse grain. Measured bare wall/floor excludes masonry; three loose stones remain rubble.",
+  "measurements": {
+    "sectionsZMM": [14.5, 16, 18, 22],
+    "floorDetailMaxZMM": 16.805,
+    "wallFrontYMM": 10.527,
+    "longPlankDirections": [
+      [5, 21.7, 0],
+      [-4.6, 22.8, 0]
+    ]
+  }
+}

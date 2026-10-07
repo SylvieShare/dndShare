@@ -49,6 +49,39 @@ export function finishSewerPart(region, p, n, ao) {
   const coarse = surfaceNoise(...p.map((v) => v * 0.15));
   const detail = 0.82 + (0.18 * ao) / 255;
   if (region.part === "bone") return finishBone(detail, p, ao);
+  if (region.part === "wood" && region.direction) {
+    const dot = (a, b) => a.reduce((sum, v, i) => sum + v * b[i], 0);
+    const cross = (a, b) => [
+      a[1] * b[2] - a[2] * b[1],
+      a[2] * b[0] - a[0] * b[2],
+      a[0] * b[1] - a[1] * b[0],
+    ];
+    const unit = (v) => {
+      const length = Math.hypot(...v);
+      if (!length) throw Error("Wood direction must be nonzero");
+      return v.map((x) => x / length);
+    };
+    const along = unit(region.direction),
+      across = unit(
+        cross(Math.abs(along[2]) < 0.9 ? [0, 0, 1] : [0, 1, 0], along),
+      ),
+      normal = cross(along, across);
+    const basis = [along, across, normal],
+      centre = region.centre ?? [0, 0, 0];
+    return finishWood(
+      detail,
+      basis.map((a) =>
+        dot(
+          p.map((v, i) => v - centre[i]),
+          a,
+        ),
+      ),
+      basis.map((a) => dot(n, a)),
+      "x",
+      [0, 0, 0],
+      region.tint ?? [0.44, 0.285, 0.1],
+    );
+  }
   if (region.part === "wood")
     return finishWood(
       detail,

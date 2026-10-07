@@ -1,0 +1,166 @@
+{
+  "sourceName": "Wall Pipes 2",
+  "material": "sewer-components",
+  "referencePage": 2,
+  "renderTriangles": 34000,
+  "lodTriangles": 9500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [
+    124,
+    137,
+    77
+  ],
+  "mortarColor": [
+    58,
+    64,
+    39
+  ],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [
+    13.0,
+    13.25,
+    13.5,
+    14.1
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      0.8,
+      2.0
+    ],
+    "lodMiB": [
+      0.25,
+      0.65
+    ],
+    "shadowKiB": [
+      20,
+      70
+    ],
+    "previewKiB": [
+      8,
+      45
+    ],
+    "basis": "One-cell brick wall with two curved thin pipes; preserve both tubes and fittings while checking metallic masks against bare masonry."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "stone",
+      "min": [
+        -18,
+        -8.5,
+        14.2
+      ],
+      "max": [
+        18,
+        10.8,
+        20.05
+      ]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [
+          -14.944,
+          -10.8,
+          15.3
+        ],
+        [
+          -14.944,
+          -10.8,
+          18.5
+        ],
+        [
+          -14.944,
+          -9.8,
+          21.0
+        ],
+        [
+          -14.944,
+          -8.3,
+          22.072
+        ],
+        [
+          -14.944,
+          11.5,
+          22.072
+        ]
+      ],
+      "radius": 2.5,
+      "min": [
+        -17.644000000000002,
+        -13.5,
+        14.25
+      ],
+      "max": [
+        -12.244,
+        12.8,
+        25.0
+      ]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [
+          14.99,
+          -10.8,
+          15.3
+        ],
+        [
+          14.99,
+          -10.8,
+          18.5
+        ],
+        [
+          14.99,
+          -9.8,
+          21.0
+        ],
+        [
+          14.99,
+          -8.3,
+          22.072
+        ],
+        [
+          14.99,
+          11.5,
+          22.072
+        ]
+      ],
+      "radius": 2.5,
+      "min": [
+        12.29,
+        -13.5,
+        14.25
+      ],
+      "max": [
+        17.69,
+        12.8,
+        25.0
+      ]
+    }
+  ],
+  "notes": "Two longitudinal pipes and front elbows receive copper; high green stone rails under pipes are checked separately in XZ sections and all views.",
+  "measurements": {
+    "sectionsZMM": [
+      16,
+      18,
+      20,
+      23
+    ],
+    "sectionsYMM": [
+      -11,
+      0,
+      10
+    ],
+    "horizontalPipeHeightMM": 22.072,
+    "shaftMaskRadiusMM": 2.5,
+    "shaftCentresXMM": [
+      -14.944,
+      14.99
+    ],
+    "shaftRadiusMM": 2.102
+  }
+}

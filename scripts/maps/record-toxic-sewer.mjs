@@ -58,6 +58,23 @@ const rows = reports
   .join("\n");
 const file = path.join(root, "md/features/toxic-sewer.md");
 let text = await fs.readFile(file, "utf8");
+const publicationDates = [
+  ...new Set(
+    reports.map(({ report }) =>
+      new Intl.DateTimeFormat("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "Europe/Moscow",
+      }).format(new Date(report.publication.confirmedAt)),
+    ),
+  ),
+];
+if (publicationDates.length)
+  text = text.replace(
+    /^## Подтверждённые публикации.*$/m,
+    "## Подтверждённые публикации — " + publicationDates.join("; "),
+  );
 const start = text.indexOf("| Модель | UUID версии |");
 const end = text.indexOf("\n\nTS-001:", start);
 if (start < 0 || end < 0)

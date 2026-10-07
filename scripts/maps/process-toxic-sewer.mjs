@@ -261,6 +261,10 @@ if (mode === "prepare") {
     "package",
   );
   const packet = path.join(packetBase, "upload");
+  const checkedReport = JSON.parse(await fs.readFile(report, "utf8"));
+  checkedReport.shadowReview = prepared.shadowReview;
+  checkedReport.visualReview = note;
+  await fs.writeFile(report, JSON.stringify(checkedReport, null, 2) + "\n");
   if (
     !(await fs.readFile(path.join(directory, "preview.webp"))).equals(
       previewCheck.bytes,

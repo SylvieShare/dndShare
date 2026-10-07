@@ -1,0 +1,73 @@
+{
+  "sourceName": "Wall Wood Corner",
+  "material": "sewer-components",
+  "referencePage": 3,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.0],
+    "lodMiB": [0.25, 0.65],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell brick wall with two curved thin pipes; preserve both tubes and fittings while checking metallic masks against bare masonry."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "iron",
+      "min": [-17.7, 2.8, 36.9],
+      "max": [-6.4, 17.65, 38.8]
+    },
+    {
+      "part": "iron",
+      "min": [-17.7, 2.8, 40.0],
+      "max": [-6.4, 17.65, 42.0]
+    },
+    {
+      "part": "wood",
+      "min": [-17.45, 5.1, 14.3],
+      "max": [-6.15, 17.65, 45.5],
+      "axis": "z",
+      "centre": [-12.2, 11.2, 28]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "min": [-17.45, -12.8, 14.3],
+      "max": [-7.0, 10.7, 37.5],
+      "direction": [0, 8, 20],
+      "centre": [-13, -1, 25]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "min": [-11, -13.2, 14.1],
+      "max": [15.6, -5, 16.2],
+      "axis": "x"
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "min": [-11, -1.5, 14.1],
+      "max": [16.2, 7.2, 16.2],
+      "axis": "x"
+    }
+  ],
+  "notes": "Vertical timber post and curved brace use separate longitudinal directions; two low cross-planks retain transverse grain. Measured upper collar bands iron; masonry excluded. Protruding upper fittings are included down to Y=2.8 mm; pillar width includes its small side knot.",
+  "measurements": {
+    "sectionsZMM": [14.5, 16, 25, 30, 35, 36, 40],
+    "sectionXMM": -13,
+    "pillarXMM": [-17.3, -7.17],
+    "pillarMaxZMM": 45.193,
+    "bandHeightRangesMM": [
+      [36.9, 38.8],
+      [40, 42]
+    ]
+  }
+}

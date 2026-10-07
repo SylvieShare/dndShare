@@ -1,0 +1,74 @@
+{
+  "sourceName": "Wall Pipes 3",
+  "material": "sewer-components",
+  "referencePage": 2,
+  "renderTriangles": 32000,
+  "lodTriangles": 9000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.0],
+    "lodMiB": [0.25, 0.65],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell brick wall with two curved thin pipes; preserve both tubes and fittings while checking metallic masks against bare masonry."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-7.2, 14.3, 35.55],
+        [-2.8, 14.3, 35.55]
+      ],
+      "radius": 2.82,
+      "min": [-7.3, 11.3, 34.1],
+      "max": [-2.6999999999999997, 17.15, 38.3]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-0.2, 14.3, 35.55],
+        [4.2, 14.3, 35.55]
+      ],
+      "radius": 2.82,
+      "min": [-0.30000000000000004, 11.3, 34.1],
+      "max": [4.3, 17.15, 38.3]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-14, 14.3, 31.6],
+        [-14, 14.3, 33.5],
+        [-13.2, 14.3, 35.0],
+        [-11.4, 14.3, 35.55],
+        [11.4, 14.3, 35.55],
+        [13.2, 14.3, 35.0],
+        [14, 14.3, 33.5],
+        [14, 14.3, 31.6]
+      ],
+      "radius": 2.45,
+      "min": [-16.5, 11.7, 30.8],
+      "max": [16.5, 17.0, 38.2]
+    }
+  ],
+  "notes": "Top pipe and both downturned ends copper, wall remains green. Check cap contacts and fittings in reverse/top views.",
+  "measurements": {
+    "sectionsXMM": [0, 12, -12],
+    "sectionsYMM": [11, 12, 14],
+    "pipeCentreYZMM": [14.3, 35.55],
+    "pipeRadiusMM": 2.16,
+    "fittingXRangesMM": [
+      [-7.2, -2.8],
+      [-0.2, 4.2]
+    ],
+    "fittingMaxRadiusMM": 2.755
+  }
+}

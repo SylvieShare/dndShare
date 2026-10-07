@@ -1,0 +1,20 @@
+{
+  "sourceName": "Wall Round Border",
+  "material": "sewer-masonry",
+  "referencePage": 2,
+  "renderTriangles": 32000,
+  "lodTriangles": 9000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 80],
+    "previewKiB": [8, 45],
+    "basis": "One-cell wall with curved border and floor; retain smooth border profile, masonry joints and accepted footprint."
+  }
+}

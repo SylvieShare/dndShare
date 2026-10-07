@@ -1,0 +1,41 @@
+{
+  "sourceName": "Wall Round Border Pipe",
+  "material": "sewer-components",
+  "referencePage": 2,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.0],
+    "lodMiB": [0.25, 0.65],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell brick wall with two curved thin pipes; preserve both tubes and fittings while checking metallic masks against bare masonry."
+  },
+  "referenceCode": "TS-009",
+  "regions": [
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-17.3, 14.1, 40.9],
+        [17.3, 14.1, 40.9]
+      ],
+      "radius": 3.75,
+      "min": [-17.65, 10.3, 37.6],
+      "max": [17.65, 17.7, 44.6]
+    }
+  ],
+  "notes": "Large top tube is copper including end lips; rounded border, wall and floor remain green stone. Compare against bare TS-009 and check end cavities.",
+  "measurements": {
+    "sectionsXMM": [0, 12],
+    "sectionsYMM": [13],
+    "pipeCentreYZMM": [14.1, 40.9],
+    "pipeRadiusMM": 3.4
+  }
+}
