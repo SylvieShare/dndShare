@@ -47,6 +47,9 @@ def paint(obj, recipe=None, code=None):
     if recipe.get('fungiReference'):
         from majestic_fungi import apply_fungi
         rgb, roughness = apply_fungi(obj,positions.reshape(-1,3),rgb,roughness,recipe)
+    if recipe.get('boneReference'):
+        from majestic_bones import apply_bones
+        rgb, roughness = apply_bones(obj,positions.reshape(-1,3),rgb,roughness,recipe)
     linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     attribute = mesh.color_attributes.new('Paint', 'FLOAT_COLOR', 'POINT')
     attribute.data.foreach_set('color', np.column_stack([linear, np.ones(len(x))]).astype(np.float32).ravel())
@@ -90,6 +93,9 @@ def material(recipe=None):
     if recipe.get('woodReference'):
         from majestic_wood import wood_finish
         finish=wood_finish(nodes,links,finish,recipe)
+    if recipe.get('boneReference'):
+        from majestic_bones import bone_finish
+        finish=bone_finish(nodes,links,finish,recipe)
     shader = nodes.get('Principled BSDF')
     links.new(finish.outputs[0], shader.inputs['Base Color'])
     shader.inputs['Roughness'].default_value = .94

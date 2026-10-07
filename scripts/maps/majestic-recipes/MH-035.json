@@ -1,0 +1,167 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 70000,
+  "lodTriangles": 25000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "bones", "dragon", "skull", "outdoor", "xl"],
+  "recipe": "majestic-aged-dragon-head-bones-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [3000000, 5000000],
+    "targetLODBytes": [1000000, 2000000],
+    "targetShadowBytes": [60000, 160000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "492586 source triangles, measured 3x3 skull and broken bone fragments up to 50.66 mm. Test 70k/25k retaining eye/nasal openings, cortical pits and ring grooves. Individual aged ivory with local dirt; compare against rotated MH-002 terrain."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [29, 11],
+      [28, -3],
+      [22, -12],
+      [13, -22],
+      [1, -19],
+      [-7, -5],
+      [-3, 9],
+      [13, 14]
+    ],
+    [
+      [-2, 34],
+      [5, 20],
+      [-3, 6],
+      [-5, -4],
+      [-11, -26],
+      [-36, -19],
+      [-36, 12],
+      [-25, 34]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [0, 0],
+    [1, 0],
+    [0, 1],
+    [1, 1],
+    [2, 1],
+    [1, 2],
+    [2, 2]
+  ],
+  "grassReferenceRotation": 270,
+  "boneReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.18
+  },
+  "boneMinZMM": 14.3,
+  "boneDirtDistanceMM": 1.2,
+  "blockers": [
+    [
+      [0.05, 0.1],
+      [0.7, 0.05],
+      [2.8, 1.15],
+      [2.8, 1.55],
+      [1.4, 1.4],
+      [1.55, 2.65],
+      [1.2, 2.9],
+      [0.65, 1.5],
+      [0.35, 1]
+    ],
+    [
+      [1.65, 1.65],
+      [2.9, 1.8],
+      [2.9, 2.7],
+      [2.3, 2.7],
+      [1.65, 2.1]
+    ]
+  ],
+  "boneLowMatchMM": 0.8,
+  "boneLowBlendMM": 1.0,
+  "bonePlantCeilingMM": 19.5,
+  "bonePlantFadeMM": 1.2,
+  "bonePlantRegions": [
+    {
+      "minMM": [-9, 27, 14],
+      "maxMM": [27, 49, 25],
+      "featherMM": 0.6
+    },
+    {
+      "minMM": [-44, -8, 14],
+      "maxMM": [-28, 22, 23],
+      "featherMM": 0.6
+    },
+    {
+      "minMM": [8, -41, 14],
+      "maxMM": [45, -5, 23.1],
+      "featherMM": 0.6
+    },
+    {
+      "minMM": [-21, -17, 14],
+      "maxMM": [15, 25, 22],
+      "featherMM": 0.6
+    }
+  ],
+  "boneKeepSegments": [
+    {
+      "fromMM": [40, -7, 17.8],
+      "toMM": [38, -12, 20.8],
+      "radiusMM": 3.8
+    },
+    {
+      "fromMM": [38, -12, 20.8],
+      "toMM": [35, -18, 23.4],
+      "radiusMM": 3.2
+    },
+    {
+      "fromMM": [35, -18, 23.4],
+      "toMM": [31, -24, 25.8],
+      "radiusMM": 3.5
+    },
+    {
+      "fromMM": [31, -24, 25.8],
+      "toMM": [28, -30, 27.2],
+      "radiusMM": 4.6
+    },
+    {
+      "fromMM": [28, -30, 27.2],
+      "toMM": [22, -31, 23],
+      "radiusMM": 4.6
+    },
+    {
+      "fromMM": [22, -31, 23],
+      "toMM": [14, -31, 18.4],
+      "radiusMM": 3.8
+    },
+    {
+      "fromMM": [-37, 15, 18],
+      "toMM": [-37, 5, 18],
+      "radiusMM": 2.5
+    },
+    {
+      "fromMM": [-37, 5, 18],
+      "toMM": [-32, -4, 18],
+      "radiusMM": 2.5
+    },
+    {
+      "fromMM": [-32, -4, 18],
+      "toMM": [-25, -12, 18],
+      "radiusMM": 2.5
+    },
+    {
+      "fromMM": [-25, -12, 18],
+      "toMM": [-16, -19, 18],
+      "radiusMM": 2.5
+    }
+  ]
+}
