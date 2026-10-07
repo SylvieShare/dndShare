@@ -1,31 +1,35 @@
 // Called only after MCP confirms registration; models/ remains ignored by Git.
 import fs from "node:fs/promises";
 import path from "node:path";
-const root = path.resolve(import.meta.dirname, "../.."),
-  base = path.join(root, "models/collections");
+import assert from "node:assert/strict";
+import { requestedCollection } from "./review_collection.mjs";
 const directory = process.argv[2];
+const review = requestedCollection();
 if (!directory) throw new Error("Registered asset directory required");
 const published = JSON.parse(
   await fs.readFile(path.join(directory, "catalogue.json"), "utf8"),
 );
 if (
   published.some(
-    (m) =>
-      m.collection !== "ultimate-dungeon" || m.textureDetail !== "detailed",
+    (m) => m.collection !== review.collection || m.textureDetail !== "detailed",
   )
 )
-  throw new Error("Only reviewed Ultimate Dungeon models can be recorded");
-const file = path.join(base, "ultimate-dungeon/registry-snapshot.json"),
+  throw new Error("Only matching reviewed models can be recorded");
+const file = review.snapshot,
   registry = JSON.parse(await fs.readFile(file, "utf8"));
 for (const model of published)
-  if (!registry.some((m) => m.id === model.id)) registry.push(model);
+  assert.deepEqual(
+    registry.find((m) => m.id === model.id),
+    model,
+    "Confirm publication from a fresh MCP snapshot first",
+  );
 await fs.writeFile(file + ".next", JSON.stringify(registry, null, 2) + "\n", {
   mode: 0o600,
 });
 await fs.rename(file + ".next", file);
 const latest = new Map();
 for (const model of registry.filter(
-  (m) => m.collection === "ultimate-dungeon",
+  (m) => m.collection === review.collection,
 )) {
   const key = model.sourceCode + ":" + model.sourceName;
   if (!latest.has(key) || latest.get(key).version < model.version)
@@ -45,7 +49,7 @@ const progress = [...latest.values()]
     version: m.version,
   }));
 await fs.writeFile(
-  path.join(base, "ultimate-detail/progress.json"),
+  path.join(review.detail, "progress.json"),
   JSON.stringify(progress, null, 2) + "\n",
 );
 console.log(

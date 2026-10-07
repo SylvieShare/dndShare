@@ -33,6 +33,24 @@ export function embeddedImage(glb, imageIndex) {
   );
 }
 
+export function appendEmbeddedImage(glb, bytes, mimeType = "image/png") {
+  const start = Math.ceil(glb.json.buffers[0].byteLength / 4) * 4;
+  const binary = Buffer.alloc(start + Math.ceil(bytes.length / 4) * 4);
+  glb.bin.copy(binary, 0, 0, glb.json.buffers[0].byteLength);
+  bytes.copy(binary, start);
+  const bufferView = glb.json.bufferViews.length;
+  glb.json.bufferViews.push({
+    buffer: 0,
+    byteOffset: start,
+    byteLength: bytes.length,
+  });
+  const index = glb.json.images.length;
+  glb.json.images.push({ bufferView, mimeType });
+  glb.json.buffers[0].byteLength = binary.length;
+  glb.bin = binary;
+  return index;
+}
+
 export function replaceImages(glb, images) {
   const { json, bin } = glb;
   const replacements = [...images]

@@ -5,7 +5,10 @@ const file = process.argv[2],
   reason = process.argv[4];
 if (
   !file ||
-  !(name === "original" || /^albedo-\d+-\d+(?:-roughness4)?$/.test(name)) ||
+  !(
+    ["original", "png", "ktx-balanced", "ktx-compact"].includes(name) ||
+    /^albedo-\d+-\d+(?:-roughness4)?$/.test(name)
+  ) ||
   !reason
 )
   throw new Error(

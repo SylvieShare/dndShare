@@ -3,6 +3,8 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { MASONRY_REVISION } from "./masonry_palette.mjs";
+import { requestedCollection } from "./review_collection.mjs";
+import { localModelAsset } from "./local_model_assets.mjs";
 import {
   includePreparedVariant,
   preservedRevisionAssets,
@@ -16,15 +18,8 @@ const root = path.resolve(import.meta.dirname, "../.."),
   out = path.join(base, "upload");
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp");
-const registry = JSON.parse(
-  await fs.readFile(
-    path.join(
-      root,
-      "models/collections/ultimate-dungeon/registry-snapshot.json",
-    ),
-    "utf8",
-  ),
-);
+const review = requestedCollection();
+const registry = JSON.parse(await fs.readFile(review.snapshot, "utf8"));
 const versions = new Map();
 for (const m of registry) {
   const key = `${m.collection}:${m.sourceCode}`;
@@ -53,6 +48,8 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
     ?.slice(14);
   if (requestedName && report.model.sourceName !== requestedName) continue;
   includePreparedVariant(included, report.model);
+  if (report.model.collection !== review.collection)
+    throw new Error("Prepared report belongs to another collection");
   if (report.recipe !== recipe) throw new Error("Unexpected colour recipe");
   const temporary = path.join(directory, "preview-next.webp");
   await sharp(path.join(directory, "preview.png"))
@@ -70,10 +67,7 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   }
   const sourceName = path.basename(assets.source.key);
   await fs
-    .link(
-      path.join(root, "models/collections/upload", sourceName),
-      path.join(out, sourceName),
-    )
+    .link(await localModelAsset(assets.source), path.join(out, sourceName))
     .catch((error) => {
       if (error.code !== "EEXIST") throw error;
     });

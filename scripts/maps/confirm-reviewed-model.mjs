@@ -1,21 +1,22 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
+import { requestedCollection } from "./review_collection.mjs";
 const code = process.argv[2],
   snapshot = process.argv[3];
 if (!code || path.basename(code) !== code || !snapshot)
   throw new Error("One reviewed code and fresh MCP snapshot required");
-const base = path.resolve(import.meta.dirname, "../../models/collections"),
-  directory = path.join(base, "ultimate-detail", code, "upload");
+const review = requestedCollection(),
+  directory = path.join(review.detail, code, "upload");
 const packet = JSON.parse(
   await fs.readFile(path.join(directory, "catalogue.json"), "utf8"),
 );
 if (
   packet.length !== 1 ||
-  packet[0].collection !== "ultimate-dungeon" ||
+  packet[0].collection !== review.collection ||
   packet[0].sourceCode !== code
 )
-  throw new Error("One matching Ultimate Dungeon variant required");
+  throw new Error("One matching reviewed variant required");
 const local = packet[0],
   remote = JSON.parse(await fs.readFile(snapshot, "utf8"));
 assert.deepEqual(
@@ -40,11 +41,11 @@ assert.deepEqual(Object.keys(latest.assets).sort(), [
   "shadow",
   "source",
 ]);
-const file = path.join(base, "ultimate-dungeon/registry-snapshot.json");
+const file = review.snapshot;
 await fs.writeFile(
   file + ".next",
   JSON.stringify(
-    remote.filter((m) => m.collection === "ultimate-dungeon"),
+    remote.filter((m) => m.collection === review.collection),
     null,
     2,
   ) + "\n",

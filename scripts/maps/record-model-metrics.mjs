@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { localModelAsset } from "./local_model_assets.mjs";
+import { textureDimensions } from "./texture_dimensions.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One reviewed report path required");
 const report = JSON.parse(await fs.readFile(file, "utf8")),
@@ -55,7 +56,7 @@ for (const tier of ["render", "lod", "shadow"]) {
       const texture = mat["get" + slot + "Texture"]();
       if (!texture) continue;
       const data = Buffer.from(texture.getImage()),
-        meta = await sharp(data).metadata();
+        meta = await textureDimensions(data, texture.getMimeType());
       maps.push({
         slot,
         width: meta.width,

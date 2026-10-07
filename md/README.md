@@ -17,7 +17,7 @@
 | Изменить справочник или механику записи | [Справочник](features/handbook.md), [редактор](features/catalogue-editor.md), [оценка поддержки](features/item-automation.md) |
 | Изменить endpoint или формат данных | [HTTP API](api.md), [БД и миграции](database.md), страница фичи |
 | Подготовить изображения | [Медиа справочника](handbook-media.md), [стиль обложек](handbook-art-style.md), [маскоты](mascot.md) |
-| Подготовить модели карт | [Пайплайн обработки моделей](features/maps-model-pipeline.md), [материалы Ultimate Dungeon](features/maps-textures.md) |
+| Подготовить модели карт | [Пайплайн обработки моделей](features/maps-model-pipeline.md), [материалы Ultimate Dungeon](features/maps-textures.md), [Lost Cave](features/lost-cave.md) |
 | Выпустить изменение или разобраться с production | [Деплой и окружение](deploy.md) |
 | Обновить саму документацию | [Устройство и проверка wiki](documentation.md) |
 
