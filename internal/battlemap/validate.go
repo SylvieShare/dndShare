@@ -17,26 +17,20 @@ func bounded(n, lo, hi float64) bool {
 func visibility(s string) bool { return s == "hidden" || s == "explored" || s == "visible" }
 
 func ValidateDocument(d *Document) error {
-	if d.Version != DocumentVersion || (d.Kind != "tiles" && d.Kind != "image-grid" && d.Kind != "image") {
+	if d.Version != DocumentVersion || d.Kind != "tiles" {
 		return fmt.Errorf("Неизвестный формат карты")
 	}
 	if !bounded(d.Width, 2, 160) || !bounded(d.Height, 2, 160) || d.Width*d.Height > 16000 {
 		return fmt.Errorf("Размер карты: от 2 до 160 клеток по стороне, не более 16000 клеток")
 	}
-	if d.Kind == "tiles" && (math.Trunc(d.Width) != d.Width || math.Trunc(d.Height) != d.Height) {
+	if math.Trunc(d.Width) != d.Width || math.Trunc(d.Height) != d.Height {
 		return fmt.Errorf("Размер клеточной карты должен быть целым")
-	}
-	if !bounded(d.Grid.OffsetX, -1, 1) || !bounded(d.Grid.OffsetY, -1, 1) {
-		return fmt.Errorf("Некорректная сетка")
 	}
 	if len(d.Tiles) > MaxTiles || len(d.Objects) > 1000 || len(d.Zones) > 200 {
 		return fmt.Errorf("Слишком много элементов карты")
 	}
-	if d.Kind != "tiles" && (len(d.Tiles) > 0 || (d.Background.AssetID == nil && !BuiltinBackground(d.Background.URL))) {
-		return fmt.Errorf("Для карты требуется изображение; изменение её клеток недоступно")
-	}
-	if d.Kind == "tiles" {
-		d.Background = Background{}
+	if err := validateMapTags(d); err != nil {
+		return err
 	}
 	tileIDs := map[string]bool{}
 	for _, tile := range d.Tiles {
@@ -75,7 +69,7 @@ func ValidateDocument(d *Document) error {
 		}
 		ids[zone.ID] = true
 		for _, cell := range zone.Cells {
-			if d.Kind == "image" || cell < 0 || cell >= int(math.Ceil(d.Width)*math.Ceil(d.Height)) {
+			if cell < 0 || cell >= int(math.Ceil(d.Width)*math.Ceil(d.Height)) {
 				return fmt.Errorf("Клетка зоны вне карты")
 			}
 		}
@@ -84,9 +78,6 @@ func ValidateDocument(d *Document) error {
 				return fmt.Errorf("Область зоны вне карты")
 			}
 		}
-	}
-	if d.Credit != nil && (len(d.Credit.Author) > 200 || len(d.Credit.License) > 300 || !SafeURL(d.Credit.Source)) {
-		return fmt.Errorf("Некорректный источник карты")
 	}
 	if d.Tiles == nil {
 		d.Tiles = []Tile{}
@@ -162,8 +153,4 @@ func SafeURL(raw string) bool {
 	}
 	u, err := url.Parse(raw)
 	return err == nil && (u.Scheme == "https" || u.Scheme == "http") && u.Host != "" && u.User == nil
-}
-
-func BuiltinBackground(raw string) bool {
-	return raw == "/maps/cavern.png" || raw == "/maps/city.svg"
 }

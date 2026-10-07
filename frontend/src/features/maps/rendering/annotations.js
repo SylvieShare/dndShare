@@ -51,12 +51,12 @@ function rect(points, x, y, w, h, z = FLOOR + 0.01) {
 }
 export function buildAnnotations(d, options) {
   const group = new Group();
-  if (d.grid.visible && d.kind !== "image") {
+  if (d.grid.visible) {
     const p = [];
-    const elevation = d.kind === "tiles" ? -0.003 : FLOOR;
-    for (let x = d.grid.offsetX; x <= d.width; x++)
+    const elevation = -0.003;
+    for (let x = 0; x <= d.width; x++)
       if (x >= 0) p.push(x, elevation, 0, x, elevation, d.height);
-    for (let y = d.grid.offsetY; y <= d.height; y++)
+    for (let y = 0; y <= d.height; y++)
       if (y >= 0) p.push(0, elevation, y, d.width, elevation, y);
     group.add(lines(p, 0xc8b695, 0.25, true));
   }
@@ -67,8 +67,8 @@ export function buildAnnotations(d, options) {
       for (const cell of zone.cells)
         rect(
           p,
-          (cell % Math.ceil(d.width)) + d.grid.offsetX,
-          Math.floor(cell / Math.ceil(d.width)) + d.grid.offsetY,
+          cell % Math.ceil(d.width),
+          Math.floor(cell / Math.ceil(d.width)),
           1,
           1,
         );

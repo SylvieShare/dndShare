@@ -107,21 +107,6 @@ func (s *Server) handleSaveMap(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	if m.Document.Background.AssetID != nil {
-		image, err := s.store.GetActiveUserStorageImage(r.Context(), *m.Document.Background.AssetID, uid)
-		if err != nil {
-			mapError(w, err)
-			return
-		}
-		if image.MimeType != nil && !strings.HasPrefix(*image.MimeType, "image/") {
-			badRequest(w, "Фон должен быть изображением")
-			return
-		}
-		m.Document.Background.URL = image.URL
-	} else if m.Document.Kind != "tiles" && !battlemap.BuiltinBackground(m.Document.Background.URL) {
-		badRequest(w, "Загрузите изображение карты")
-		return
-	}
 	m, err := s.store.SaveBattleMap(r.Context(), uid, m)
 	if err != nil {
 		mapError(w, err)

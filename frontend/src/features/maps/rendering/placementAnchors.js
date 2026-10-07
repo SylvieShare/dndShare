@@ -27,7 +27,7 @@ export function createPlacementAnchors() {
     root.clear();
   }
   function update(document, context, options) {
-    root.visible = !!options.showAnchors && document.kind === "tiles";
+    root.visible = !!options.showAnchors;
     if (!root.visible) return;
     const ignored = new Set(options.previewTile?.tileIds || []),
       active = new Set();

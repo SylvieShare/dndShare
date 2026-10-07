@@ -13,11 +13,10 @@ import {
 } from "./mapModel";
 
 describe("map geometry and fog", () => {
-  it("aligns rectangular zones to the calibrated image grid", () => {
-    const d = newMap("image-grid").document;
-    d.grid.offsetX = 0.5;
+  it("aligns rectangular selections to the 3D grid", () => {
+    const d = newMap().document;
     expect(rectangle(d, { x: 1.6, y: 1.1 }, { x: 2.6, y: 2.1 })).toEqual({
-      x: 1.5,
+      x: 1,
       y: 1,
       width: 2,
       height: 2,
@@ -74,7 +73,6 @@ describe("map geometry and fog", () => {
   it("does not wrap negative offset-grid columns into the previous row", () => {
     const d = newMap().document,
       s = initialState();
-    d.grid.offsetX = 0.5;
     d.zones = [{ id: "last", cells: [29] }];
     s.zones.last = "visible";
     expect(visibilityAt(d, s, 0.1, 1.1)).toBe("hidden");

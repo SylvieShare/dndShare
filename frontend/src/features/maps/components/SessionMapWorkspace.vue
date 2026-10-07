@@ -11,12 +11,20 @@
         ><option v-for="m in c.maps" :key="m.id" :value="m.id">
           {{ m.name
           }}{{
-            c.display?.mapId === m.id && c.display.visible ? " · в трансляции" : ""
+            c.display?.mapId === m.id && c.display.visible
+              ? " · в трансляции"
+              : ""
           }}
         </option></FormSelect
       >
-      <ActionButton variant="secondary" aria-label="Добавить карту" title="Добавить карту" @click="picker = true"
-        ><Plus :size="16" /><span class="session-map-action-label">Добавить карту</span></ActionButton
+      <ActionButton
+        variant="secondary"
+        aria-label="Добавить карту"
+        title="Добавить карту"
+        @click="picker = true"
+        ><Plus :size="16" /><span class="session-map-action-label"
+          >Добавить карту</span
+        ></ActionButton
       >
       <template v-if="c.selected">
         <ActionButton
@@ -24,7 +32,9 @@
           aria-label="Транслировать карту"
           title="Транслировать карту"
           @click="broadcast"
-          ><MonitorUp :size="16" /><span class="session-map-action-label">Транслировать карту</span></ActionButton
+          ><MonitorUp :size="16" /><span class="session-map-action-label"
+            >Транслировать карту</span
+          ></ActionButton
         >
         <ActionButton
           variant="quiet"
@@ -109,10 +119,7 @@
           ref="canvas"
           :document="c.selected.document"
           :state="c.selected.state"
-          :surface-placement="
-            c.selected.document.kind === 'tiles' &&
-            (!!pendingToken || !!drag?.token)
-          "
+          :surface-placement="!!pendingToken || !!drag?.token"
           :master="!playerPreview"
           :readonly="c.conflict"
           :tool="tool"
@@ -184,7 +191,7 @@ const props = defineProps({
   participants: { type: Array, default: () => [] },
   encounter: Object,
 });
-const emit = defineEmits(['inspector-resize']);
+const emit = defineEmits(["inspector-resize"]);
 const inspectorWidth = ref(334);
 const c = reactive(useSessionMaps(props.sessionUuid)),
   picker = ref(false),
@@ -233,7 +240,11 @@ const candidates = computed(() => [
     })),
 ]);
 let drag = null;
-watch(() => [!!c.selected, inspectorWidth.value], ([selected, width]) => emit('inspector-resize', selected ? width : 0), { immediate: true });
+watch(
+  () => [!!c.selected, inspectorWidth.value],
+  ([selected, width]) => emit("inspector-resize", selected ? width : 0),
+  { immediate: true },
+);
 watch(
   () => c.selectedID,
   () => {
@@ -287,7 +298,7 @@ function gesture({ phase, point, hit }) {
     if (!inside(m.document, point.x, point.y) && (!hit || pendingToken.value))
       return;
     if (pendingToken.value) {
-      if (m.document.kind === "tiles" && !point.placement) return;
+      if (!point.placement) return;
       const token = {
         ...pendingToken.value,
         id: uid(),
@@ -320,7 +331,7 @@ function gesture({ phase, point, hit }) {
     c.editing = true;
   } else if (phase === "move" && drag?.token) {
     const token = m.state.tokens.find((t) => t.id === drag.token);
-    if (m.document.kind !== "tiles" || point.placement)
+    if (point.placement)
       Object.assign(
         token,
         point.placement ? point : snap(m.document, point, token.size),
@@ -350,7 +361,11 @@ function gesture({ phase, point, hit }) {
 }
 </script>
 <style scoped>
-.session-map-workspace { position: relative; height: 100%; min-height: 0; }
+.session-map-workspace {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+}
 .session-map-workspace > .map-toolbar,
 .session-map-main > .map-toolbar {
   position: absolute;
@@ -363,22 +378,70 @@ function gesture({ phase, point, hit }) {
   border-radius: 10px;
   background: var(--surface);
 }
-.session-map-workspace > .map-toolbar > select { flex: 1; min-width: 100px; max-width: 240px; }
-.session-map-workspace > .map-toolbar > strong { display: none; }
-.session-map-workspace > .map-toolbar > svg { display: none; }
-.session-map-main > .map-toolbar { top: auto; bottom: 14px; right: auto; max-width: calc(100% - var(--chapter-safe-left, 362px) - 100px); }
-.session-map-editor, .session-map-main { position: absolute; inset: 0; min-width: 0; min-height: 0; }
-.session-map-main > :deep(.map-canvas) { border-radius: 0; }
-.session-map-main :deep(.map-controls-hint) { left: var(--chapter-safe-left, 362px); bottom: 76px; }
-.session-map-main :deep(.map-canvas-controls) { right: calc(var(--chapter-safe-right, 0px) + 14px); }
-.session-map-workspace > .map-error { position: absolute; z-index: 9; top: 68px; left: var(--chapter-safe-left, 362px); right: var(--chapter-safe-right, 14px); }
+.session-map-workspace > .map-toolbar > select {
+  flex: 1;
+  min-width: 100px;
+  max-width: 240px;
+}
+.session-map-workspace > .map-toolbar > strong {
+  display: none;
+}
+.session-map-workspace > .map-toolbar > svg {
+  display: none;
+}
+.session-map-main > .map-toolbar {
+  top: auto;
+  bottom: 14px;
+  right: auto;
+  max-width: calc(100% - var(--chapter-safe-left, 362px) - 100px);
+}
+.session-map-editor,
+.session-map-main {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  min-height: 0;
+}
+.session-map-main > :deep(.map-canvas) {
+  border-radius: 0;
+}
+.session-map-main :deep(.map-controls-hint) {
+  left: var(--chapter-safe-left, 362px);
+  bottom: 76px;
+}
+.session-map-main :deep(.map-canvas-controls) {
+  right: calc(var(--chapter-safe-right, 0px) + 14px);
+}
+.session-map-workspace > .map-error {
+  position: absolute;
+  z-index: 9;
+  top: 68px;
+  left: var(--chapter-safe-left, 362px);
+  right: var(--chapter-safe-right, 14px);
+}
 .session-map-workspace > .map-empty,
-.session-map-workspace > :deep(.loading-state) { position: absolute; top: 90px; bottom: 0; left: var(--chapter-safe-left, 362px); right: var(--chapter-safe-right, 14px); }
+.session-map-workspace > :deep(.loading-state) {
+  position: absolute;
+  top: 90px;
+  bottom: 0;
+  left: var(--chapter-safe-left, 362px);
+  right: var(--chapter-safe-right, 14px);
+}
 @media (max-width: 1400px) {
-  .session-map-action-label { display: none; }
+  .session-map-action-label {
+    display: none;
+  }
 }
 @media (max-width: 760px) {
-  .session-map-workspace > .map-toolbar { left: 76px; right: 14px; flex-wrap: wrap; }
-  .session-map-main > .map-toolbar { left: 76px; bottom: 76px; max-width: calc(100% - 100px); }
+  .session-map-workspace > .map-toolbar {
+    left: 76px;
+    right: 14px;
+    flex-wrap: wrap;
+  }
+  .session-map-main > .map-toolbar {
+    left: 76px;
+    bottom: 76px;
+    max-width: calc(100% - 100px);
+  }
 }
 </style>

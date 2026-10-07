@@ -67,9 +67,9 @@ func (s *Store) SaveBattleMap(ctx context.Context, userID int64, m BattleMap) (B
 	defer tx.Rollback(ctx)
 	var result BattleMap
 	if m.ID == "" {
-		result, err = scanBattleMap(tx.QueryRow(ctx, `INSERT INTO dndshare.battle_map(owner_user_id,name,document,asset_id) VALUES($1,$2,CAST($3 AS jsonb),$4) RETURNING id::text,name,document,revision,changed_at`, userID, m.Name, json.RawMessage(raw), m.Document.Background.AssetID))
+		result, err = scanBattleMap(tx.QueryRow(ctx, `INSERT INTO dndshare.battle_map(owner_user_id,name,document) VALUES($1,$2,CAST($3 AS jsonb)) RETURNING id::text,name,document,revision,changed_at`, userID, m.Name, json.RawMessage(raw)))
 	} else {
-		result, err = scanBattleMap(tx.QueryRow(ctx, `UPDATE dndshare.battle_map SET name=$3,document=CAST($4 AS jsonb),asset_id=$5,revision=revision+1,changed_at=now() WHERE owner_user_id=$1 AND id=$2::uuid AND revision=$6 RETURNING id::text,name,document,revision,changed_at`, userID, m.ID, m.Name, json.RawMessage(raw), m.Document.Background.AssetID, m.Revision))
+		result, err = scanBattleMap(tx.QueryRow(ctx, `UPDATE dndshare.battle_map SET name=$3,document=CAST($4 AS jsonb),revision=revision+1,changed_at=now() WHERE owner_user_id=$1 AND id=$2::uuid AND revision=$5 RETURNING id::text,name,document,revision,changed_at`, userID, m.ID, m.Name, json.RawMessage(raw), m.Revision))
 	}
 	if errors.Is(err, ErrNotFound) {
 		return result, ErrMapConflict

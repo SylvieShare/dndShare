@@ -34,7 +34,7 @@ import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
 import { ArrowLeft } from "@lucide/vue";
 import { useAccountStore } from "@/stores/account";
 import { getMaps } from "@/shared/api/mapsApi";
-import { clone, KINDS, newMap } from "../lib/mapModel";
+import { clone, newMap } from "../lib/mapModel";
 import MapEditor from "../components/MapEditor.vue";
 
 const route = useRoute(),
@@ -68,10 +68,7 @@ async function load(target) {
       }
       map.value = draft;
     } else {
-      const kind = Object.hasOwn(KINDS, target.query.kind)
-        ? target.query.kind
-        : "tiles";
-      map.value = newMap(kind);
+      map.value = newMap();
     }
     recordId = map.value.id;
   } catch (cause) {

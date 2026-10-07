@@ -22,7 +22,6 @@
       ><Plus :size="16"
     /></ActionButton>
     <ActionButton
-      v-if="kind === 'tiles'"
       variant="secondary"
       :title="topView ? 'Изометрический вид' : 'Вид сверху'"
       @click="emit('toggle-view')"
@@ -33,7 +32,7 @@
 <script setup>
 import { ActionButton } from "@sylvieshare/share-ui";
 import { Box, Minus, Plus, Scan } from "@lucide/vue";
-defineProps({ kind: String, topView: Boolean });
+defineProps({ topView: Boolean });
 const emit = defineEmits(["zoom", "fit", "toggle-view"]);
 </script>
 <style scoped>

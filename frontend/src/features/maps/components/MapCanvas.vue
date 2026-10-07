@@ -49,7 +49,6 @@
     />
     <MapCanvasControls
       v-if="!readonly"
-      :kind="document.kind"
       :top-view="topView"
       @zoom="zoom"
       @fit="fit"
@@ -62,17 +61,6 @@
     >
       <li v-for="(line, index) in hintLines" :key="index">{{ line }}</li>
     </ul>
-    <div v-if="document.credit" class="map-credit">
-      <a
-        v-if="document.credit.source"
-        :href="document.credit.source"
-        target="_blank"
-        rel="noopener noreferrer"
-        >{{ document.credit.author }}</a
-      >
-      <span v-else>{{ document.credit.author }}</span> ·
-      {{ document.credit.license }}
-    </div>
   </div>
 </template>
 <script setup>
@@ -140,7 +128,7 @@ const pointer = useMapCanvasPointer(host, props, () => renderer, emit, setView);
 const keyboardPan = useCameraPan(
   () => renderer?.getView(),
   setView,
-  () => props.tabletop || props.document.kind !== "tiles",
+  () => props.tabletop,
   () => emit("camera-move"),
 );
 function redraw() {
@@ -331,16 +319,6 @@ defineExpose({
 .map-canvas-surface :deep(canvas) {
   display: block;
 }
-.map-credit {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 10px;
-  background: var(--surface);
-  color: var(--text-muted);
-}
 .map-controls-hint {
   position: absolute;
   bottom: 16px;
@@ -355,9 +333,6 @@ defineExpose({
   font-size: 11px;
   line-height: 1.5;
   pointer-events: none;
-}
-.map-credit a {
-  color: var(--text-2);
 }
 .map-model-loading {
   position: absolute;

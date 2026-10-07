@@ -7,7 +7,7 @@ func Visibility(d Document, s State, x, y float64) string {
 		return "visible"
 	}
 	level := -1
-	cx, cy := int(math.Floor(x-d.Grid.OffsetX)), int(math.Floor(y-d.Grid.OffsetY))
+	cx, cy := int(math.Floor(x)), int(math.Floor(y))
 	cell := cy*int(math.Ceil(d.Width)) + cx
 	validCell := cx >= 0 && cy >= 0 && cx < int(math.Ceil(d.Width)) && cy < int(math.Ceil(d.Height))
 	for _, z := range d.Zones {

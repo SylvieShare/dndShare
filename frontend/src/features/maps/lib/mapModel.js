@@ -1,9 +1,4 @@
 export const OBJECTS = [{ id: "chest", name: "Сундук" }];
-export const KINDS = {
-  tiles: "3D-конструктор",
-  "image-grid": "Изображение с сеткой",
-  image: "Изображение без сетки",
-};
 export const VISIBILITY = [
   { value: "hidden", label: "Скрыта" },
   { value: "explored", label: "Исследована" },
@@ -13,16 +8,16 @@ export const clone = (value) => JSON.parse(JSON.stringify(value));
 export const uid = () => crypto.randomUUID();
 export const interactive = (kind) =>
   ["door", "double-door", "portcullis", "chest", "torch"].includes(kind);
-export function newMap(kind = "tiles") {
+export function newMap() {
   return {
     name: "Новая карта",
     document: {
       version: 2,
-      kind,
+      kind: "tiles",
+      tags: [],
       width: 30,
       height: 22,
-      grid: { visible: kind !== "image", offsetX: 0, offsetY: 0 },
-      background: {},
+      grid: { visible: true },
       tiles: [],
       objects: [],
       zones: [],
@@ -47,14 +42,8 @@ export function inside(d, x, y) {
   return x >= 0 && y >= 0 && x < d.width && y < d.height;
 }
 export function snap(d, p, size = 1) {
-  const x =
-    d.kind === "image"
-      ? p.x
-      : Math.round(p.x - size / 2 - d.grid.offsetX) + size / 2 + d.grid.offsetX;
-  const y =
-    d.kind === "image"
-      ? p.y
-      : Math.round(p.y - size / 2 - d.grid.offsetY) + size / 2 + d.grid.offsetY;
+  const x = Math.round(p.x - size / 2) + size / 2;
+  const y = Math.round(p.y - size / 2) + size / 2;
   return {
     x:
       size > d.width
@@ -67,8 +56,8 @@ export function snap(d, p, size = 1) {
   };
 }
 export function zoneContains(d, z, x, y) {
-  const cx = Math.floor(x - d.grid.offsetX),
-    cy = Math.floor(y - d.grid.offsetY);
+  const cx = Math.floor(x),
+    cy = Math.floor(y);
   const cell = cy * Math.ceil(d.width) + cx;
   return (
     (cx >= 0 &&
@@ -99,12 +88,10 @@ export function rectangle(d, a, b, snapToGrid = true) {
   let right = Math.min(d.width, Math.max(a.x, b.x)),
     bottom = Math.min(d.height, Math.max(a.y, b.y));
   if (snapToGrid) {
-    const ox = d.kind === "image-grid" ? d.grid.offsetX : 0,
-      oy = d.kind === "image-grid" ? d.grid.offsetY : 0;
-    x = Math.max(0, Math.floor(x - ox) + ox);
-    y = Math.max(0, Math.floor(y - oy) + oy);
-    right = Math.min(d.width, Math.floor(right - ox) + 1 + ox);
-    bottom = Math.min(d.height, Math.floor(bottom - oy) + 1 + oy);
+    x = Math.max(0, Math.floor(x));
+    y = Math.max(0, Math.floor(y));
+    right = Math.min(d.width, Math.floor(right) + 1);
+    bottom = Math.min(d.height, Math.floor(bottom) + 1);
   }
   return {
     x,

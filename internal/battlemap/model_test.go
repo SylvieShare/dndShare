@@ -52,7 +52,7 @@ func TestVisibilityAndPublicProjection(t *testing.T) {
 func TestInvalidDocumentsAndState(t *testing.T) {
 	for _, change := range []func(*Document){
 		func(d *Document) { d.Width = 100000 }, func(d *Document) { d.Tiles[0].X = -1 },
-		func(d *Document) { d.Tiles[0].ModelID = "unknown" }, func(d *Document) { d.Kind = "image"; d.Background.URL = "javascript:bad" },
+		func(d *Document) { d.Tiles[0].ModelID = "unknown" }, func(d *Document) { d.Kind = "image" },
 		func(d *Document) { d.Zones = []Zone{{ID: "room", Rects: []Rect{{29, 21, 5, 5}}}} },
 		func(d *Document) { d.Tiles = append(d.Tiles, d.Tiles[0]) },
 		func(d *Document) { d.Version = 1 },
@@ -76,13 +76,12 @@ func TestInvalidDocumentsAndState(t *testing.T) {
 	}
 }
 
-func TestOffsetGridDoesNotWrapZoneCells(t *testing.T) {
+func TestNegativeGridColumnDoesNotWrapZoneCells(t *testing.T) {
 	d := Presets()[0].Document
-	d.Grid.OffsetX = .5
 	d.Zones = []Zone{{ID: "last", Cells: []int{29}}}
 	s := InitialState()
 	s.Zones["last"] = "visible"
-	if Visibility(d, s, .1, 1.1) != "hidden" {
+	if Visibility(d, s, -.1, 1.1) != "hidden" {
 		t.Fatal("negative grid column wrapped to preceding row")
 	}
 }

@@ -75,6 +75,7 @@ if (params.has("shaped")) {
 source.id = "test-map";
 source.name = "Крепость на переправе";
 source.revision = 1;
+source.document.tags = ["подземелье", "камень"];
 source.document.width = 12;
 source.document.height = 10;
 paint(source.document, lineCells({ x: 1, y: 1 }, { x: 10, y: 1 }), WALL);
@@ -117,11 +118,6 @@ source.document.zones = [
     cells: [],
   },
 ];
-if (params.get("kind")) {
-  source.document.kind = params.get("kind");
-  source.document.tiles = [];
-  source.document.background = { url: "/maps/city.svg" };
-}
 if (params.has("areaExample")) {
   source.document.grid.visible = false;
   source.document.tiles = [
@@ -482,6 +478,25 @@ window.fetch = async (url, options = {}) => {
     } else
       result = [
         source,
+        ...(params.has("tagsExample")
+          ? [
+              {
+                ...clone(source),
+                id: "forest-map",
+                name: "Лесная поляна",
+                document: { ...clone(source.document), tags: ["лес", "улица"] },
+              },
+              {
+                ...clone(source),
+                id: "forest-dungeon",
+                name: "Заброшенный храм",
+                document: {
+                  ...clone(source.document),
+                  tags: ["лес", "подземелье"],
+                },
+              },
+            ]
+          : []),
         ...(window.lastSaved?.id === "test-copy" ? [window.lastSaved] : []),
       ];
   } else if (url === "/api/maps/test-copy") {

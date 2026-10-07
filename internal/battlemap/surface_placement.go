@@ -50,7 +50,7 @@ func ValidateObjectModels(d Document, models map[string]ModelMetadata) error {
 		if !ok || model.TileType != "object" {
 			return fmt.Errorf("Модель объекта отсутствует в каталоге")
 		}
-		if d.Kind == "tiles" && object.Placement == nil {
+		if object.Placement == nil {
 			return fmt.Errorf("Для объекта нужна точка размещения на тайле")
 		}
 		if err := ValidateSurfaceAnchor(d, models, object.Placement, object.X, object.Y); err != nil {

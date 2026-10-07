@@ -128,9 +128,7 @@ export function useMapEditor(source, onSaved) {
       loadingModels.value ||
       conflict.value ||
       !dirty.value ||
-      !draft.value.name.trim() ||
-      (draft.value.document.kind !== "tiles" &&
-        !draft.value.document.background.url)
+      !draft.value.name.trim()
     )
       return;
     saving.value = true;

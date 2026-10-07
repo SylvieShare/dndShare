@@ -10,7 +10,7 @@ type Preset struct {
 func Presets() []Preset {
 	makeDocument := func(width, height float64) Document {
 		return Document{Version: DocumentVersion, Kind: "tiles", Width: width, Height: height,
-			Grid: Grid{Visible: true}, Tiles: []Tile{}, Objects: []Object{}, Zones: []Zone{}, Areas: []Area{}, Sun: DefaultSun(), Lights: []Light{}}
+			Tags: []string{}, Grid: Grid{Visible: true}, Tiles: []Tile{}, Objects: []Object{}, Zones: []Zone{}, Areas: []Area{}, Sun: DefaultSun(), Lights: []Light{}}
 	}
 	cave := makeDocument(20, 14)
 	put := func(x, y int, code string, rotation int) {
@@ -41,16 +41,8 @@ func Presets() []Preset {
 	}
 	cave.Zones = []Zone{{ID: "west", Name: "Входной зал", Cells: []int{}, Rects: []Rect{{2, 2, 8, 10}}},
 		{ID: "east", Name: "Дальний зал", Cells: []int{}, Rects: []Rect{{10, 2, 8, 10}}}}
-	image := makeDocument(40, 40)
-	image.Kind = "image-grid"
-	image.Background = Background{URL: "/maps/cavern.png"}
-	image.Credit = &Credit{Author: "Ferrin", Source: "https://opengameart.org/content/cavern-battlemap", License: "CC0"}
-	city := makeDocument(40, 30)
-	city.Kind = "image"
-	city.Grid.Visible = false
-	city.Background = Background{URL: "/maps/city.svg"}
-	return []Preset{{"system-cave", "Пещерные залы", cave},
-		{"system-stalagmites", "Пустая пещера", makeDocument(24, 18)},
-		{"system-cavern-image", "Подземное озеро · Ferrin", image},
-		{"system-city", "Речной город", city}}
+	cave.Tags = []string{"пещера", "подземелье"}
+	empty := makeDocument(24, 18)
+	empty.Tags = []string{"пещера"}
+	return []Preset{{"system-cave", "Пещерные залы", cave}, {"system-stalagmites", "Пустая пещера", empty}}
 }

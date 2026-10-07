@@ -1,65 +1,64 @@
 <template>
-  <div class="map-thumbnail">
-    <img
-      v-if="document.kind !== 'tiles'"
-      :src="document.background.url"
-      alt=""
-      loading="lazy"
-    /><canvas v-else ref="canvas" width="420" height="280" aria-hidden="true" />
+  <div ref="host" class="map-thumbnail" :aria-busy="loading">
+    <img v-if="url" :src="url" alt="" loading="lazy" />
+    <LoadingState v-else-if="loading" label="Готовим превью…" />
+    <span v-else class="map-hint">Превью недоступно</span>
   </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from "vue";
-import { isWallTile } from "../lib/tileCategories";
-import { getMapModels } from "@/shared/api/mapsApi";
-const props = defineProps({ document: { type: Object, required: true } }),
-  canvas = ref(null);
-let models = new Map();
-function draw() {
-  if (!canvas.value) return;
-  const c = canvas.value.getContext("2d"),
-    d = props.document,
-    s = Math.min(420 / d.width, 280 / d.height),
-    ox = (420 - d.width * s) / 2,
-    oy = (280 - d.height * s) / 2;
-  c.fillStyle = "#161b23";
-  c.fillRect(0, 0, 420, 280);
-  for (const tile of d.tiles) {
-    const model = models.get(tile.modelId);
-    c.fillStyle = isWallTile(model) ? "#5b412e" : "#99774f";
-    c.fillRect(ox + tile.x * s, oy + tile.y * s, s, s);
-    if (isWallTile(model)) {
-      c.strokeStyle = "#d0aa7c";
-      c.lineWidth = Math.max(1, s * 0.16);
-      c.save();
-      c.translate(ox + (tile.x + 0.5) * s, oy + (tile.y + 0.5) * s);
-      c.rotate((tile.rotation * Math.PI) / 180);
-      c.beginPath();
-      c.moveTo(-s * 0.4, -s * 0.35);
-      c.lineTo(s * 0.4, -s * 0.35);
-      c.stroke();
-      c.restore();
-    }
-  }
-  for (const o of d.objects) {
-    c.fillStyle = ["door", "double-door"].includes(o.kind)
-      ? "#d2a571"
-      : "#b99f74";
-    c.beginPath();
-    c.arc(ox + o.x * s, oy + o.y * s, s * 0.3, 0, Math.PI * 2);
-    c.fill();
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { LoadingState } from "@sylvieshare/share-ui";
+import { requestMapSnapshot } from "../rendering/mapSnapshots";
+const props = defineProps({ document: { type: Object, required: true } });
+const host = ref(null),
+  url = ref(""),
+  loading = ref(true);
+let observer,
+  controller,
+  visible = false;
+function clear() {
+  controller?.abort();
+  if (url.value) URL.revokeObjectURL(url.value);
+  url.value = "";
+}
+async function load() {
+  clear();
+  loading.value = true;
+  const request = new AbortController();
+  controller = request;
+  try {
+    const blob = await requestMapSnapshot(props.document, request.signal);
+    if (!request.signal.aborted) url.value = URL.createObjectURL(blob);
+  } catch {
+    /* The card stays usable when GPU or model loading fails. */
+  } finally {
+    if (!request.signal.aborted) loading.value = false;
   }
 }
-onMounted(async () => {
-  draw();
-  try {
-    models = new Map((await getMapModels()).map((m) => [m.id, m]));
-    draw();
-  } catch {
-    /* The full editor reports catalogue errors. */
-  }
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        visible = true;
+        observer.disconnect();
+        load();
+      }
+    },
+    { rootMargin: "200px" },
+  );
+  observer.observe(host.value);
 });
-watch(() => props.document, draw, { deep: true });
+watch(
+  () => props.document,
+  () => {
+    if (visible) load();
+  },
+  { deep: true },
+);
+onBeforeUnmount(() => {
+  observer?.disconnect();
+  clear();
+});
 </script>
 <style scoped>
 .map-thumbnail {
@@ -67,9 +66,10 @@ watch(() => props.document, draw, { deep: true });
   background: var(--bg);
   border-radius: 9px;
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
-.map-thumbnail img,
-.map-thumbnail canvas {
+.map-thumbnail img {
   width: 100%;
   height: 100%;
   display: block;

@@ -196,6 +196,7 @@ func (s *Server) handlePublicMap(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		value.State = battlemap.PublicState(value.Document, value.State)
+		value.Document.Tags = []string{}
 		for i := range value.Document.Zones {
 			value.Document.Zones[i].Name = ""
 		}

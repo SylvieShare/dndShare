@@ -57,9 +57,29 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaMapAreasSQL)
 	exec(schemaMapLightingSQL)
 	exec(schemaMapLightingModeSQL)
+	exec(`INSERT INTO dndshare.battle_map(owner_user_id,name,document) VALUES
+(1,'legacy image','{"kind":"image","version":2}'),
+(1,'legacy grid','{"kind":"image-grid","version":2}'),
+(1,'kept 3d','{"kind":"tiles","version":2,"tags":["лес"],"grid":{"visible":true,"offsetX":0,"offsetY":0},"background":{},"credit":{}}');
+INSERT INTO dndshare.session_map(session_id,name,document,state) VALUES
+(10,'legacy session','{"kind":"image-grid","version":2}','{}'),
+(20,'kept session','{"kind":"tiles","version":2,"tags":null,"grid":{"visible":true},"background":{}}','{}');
+INSERT INTO dndshare.session_map_display(session_id,map_id,visible)
+SELECT 10,id,true FROM dndshare.session_map WHERE name='legacy session';`)
+	exec(schema3DMapTagsSQL)
+	var remaining, active, tags int
+	if err := pool.QueryRow(ctx, `SELECT (SELECT count(*) FROM dndshare.battle_map),(SELECT count(*) FROM dndshare.session_map_display WHERE visible OR map_id IS NOT NULL),jsonb_array_length(document->'tags') FROM dndshare.session_map WHERE name='kept session'`).Scan(&remaining, &active, &tags); err != nil || remaining != 1 || active != 0 || tags != 0 {
+		t.Fatal("3d-only cleanup damaged data or retained images", err, remaining, active, tags)
+	}
+	var clean bool
+	if err := pool.QueryRow(ctx, `SELECT document->'tags'='["лес"]'::jsonb AND NOT document ? 'background' AND NOT document ? 'credit' AND NOT (document->'grid') ? 'offsetX' FROM dndshare.battle_map WHERE name='kept 3d'`).Scan(&clean); err != nil || !clean {
+		t.Fatal("3d metadata was not migrated", err)
+	}
+	exec("DELETE FROM dndshare.battle_map WHERE name='kept 3d'; DELETE FROM dndshare.session_map WHERE name='kept session'; DELETE FROM dndshare.session_map_display WHERE session_id=10")
 	s := &Store{pool: pool}
 	preset := battlemap.Presets()[0]
 	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Color: "#22c55e", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
+	preset.Document.Tags = []string{"подземелье", "лес"}
 	preset.Document.LightingEnabled = true
 	preset.Document.Sun = &battlemap.SunLight{Enabled: false, Angle: 90, Elevation: 30}
 	preset.Document.Lights = []battlemap.Light{{ID: "torch", Name: "Факел", Kind: "torch", Color: "#ffc36a", X: 3, Y: 3, Height: .9, Intensity: 8, Radius: 4, Enabled: true, ShowMarker: true, Shadows: true, Offset: [2]float64{}, Anchor: &battlemap.LightAnchor{Kind: "tile", ID: preset.Document.Tiles[0].ID}, AreaID: "room"}}
@@ -77,6 +97,9 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	b, err := s.AddSessionMap(ctx, 20, m)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if len(b.Document.Tags) != 2 || b.Document.Tags[1] != "лес" {
+		t.Fatal("map tags did not survive session copy")
 	}
 	if len(b.Document.Areas) != 1 || !b.Document.Areas[0].Hidden || b.Document.Areas[0].Name != "Вход" || b.Document.Areas[0].Color != "#22c55e" {
 		t.Fatal("area metadata was not copied into session")

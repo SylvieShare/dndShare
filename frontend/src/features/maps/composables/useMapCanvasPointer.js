@@ -33,12 +33,11 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     )
       return getRenderer().lightPoint(event);
     if (
-      props.document.kind === "tiles" &&
-      (props.placementObject ||
-        props.surfacePlacement ||
-        (props.previewObject?.modelId &&
-          props.previewObject?.placing &&
-          !props.previewTile))
+      props.placementObject ||
+      props.surfacePlacement ||
+      (props.previewObject?.modelId &&
+        props.previewObject?.placing &&
+        !props.previewTile)
     ) {
       return (
         getRenderer().surfacePoint(

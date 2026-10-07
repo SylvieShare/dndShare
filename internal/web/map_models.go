@@ -16,7 +16,6 @@ func (s *Server) routesMapModels(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/maps/models/{modelId}/{variant}", s.mapAdminOnly(s.handleMapModelAsset))
 	mux.HandleFunc("GET /api/public/sessions/{code}/map-models", s.handlePublicMapModels)
 	mux.HandleFunc("GET /api/public/sessions/{code}/map-models/{modelId}/{variant}", s.handlePublicMapModelAsset)
-	mux.HandleFunc("GET /api/public/sessions/{code}/map-background", s.handlePublicMapBackground)
 }
 
 type mapModelView struct {
@@ -121,52 +120,6 @@ func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, result)
-}
-
-func (s *Server) handlePublicMapBackground(w http.ResponseWriter, r *http.Request) {
-	session, ok := s.publicMapSession(w, r)
-	if !ok {
-		return
-	}
-	display, err := s.store.GetMapDisplay(r.Context(), session.ID)
-	if err != nil {
-		mapError(w, err)
-		return
-	}
-	if !display.Visible || display.MapID == nil {
-		notFound(w, "")
-		return
-	}
-	m, err := s.store.GetSessionMap(r.Context(), session.ID, *display.MapID)
-	if err != nil {
-		mapError(w, err)
-		return
-	}
-	if m.Document.Background.AssetID == nil {
-		notFound(w, "")
-		return
-	}
-	image, err := s.store.GetActiveUserStorageImage(r.Context(), *m.Document.Background.AssetID, session.OwnerUserID)
-	if err != nil {
-		mapError(w, err)
-		return
-	}
-	if image.Key == nil {
-		notFound(w, "")
-		return
-	}
-	body, err := s.s3.GetObject(r.Context(), *image.Key)
-	if err != nil {
-		serverError(w, err)
-		return
-	}
-	defer body.Body.Close()
-	w.Header().Set("Content-Type", body.ContentType)
-	w.Header().Set("Content-Length", strconv.FormatInt(body.ContentLength, 10))
-	w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
-	if _, err = io.Copy(w, body.Body); err != nil {
-		log.Printf("stream map background: %v", err)
-	}
 }
 
 func (s *Server) handleMapModelAsset(w http.ResponseWriter, r *http.Request) { s.streamMapModel(w, r) }

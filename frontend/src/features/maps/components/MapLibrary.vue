@@ -3,7 +3,7 @@
     <div class="map-library-toolbar">
       <FormTextInput
         v-model:value="query"
-        placeholder="Найти карту…"
+        placeholder="Название или тег…"
         aria-label="Поиск карт"
       />
       <MultiToggle
@@ -15,7 +15,15 @@
         ]"
         aria-label="Источник карт"
       />
-      <ActionButton v-if="!picker" @click="creating = true"
+      <SearchMultiSelect
+        v-model="selectedTags"
+        :options="tagOptions"
+        label="Теги карт"
+        placeholder="Найти тег…"
+        empty-label="Теги не найдены"
+        remove-label="Убрать тег"
+      />
+      <ActionButton v-if="!picker" @click="create"
         ><Plus :size="17" />Создать карту</ActionButton
       >
     </div>
@@ -47,9 +55,12 @@
           >
         </button>
         <span class="map-library-meta"
-          >{{ KINDS[map.document.kind] }} · {{ map.document.width }} ×
-          {{ map.document.height }} · {{ map.document.zones.length }} зон</span
+          >3D-карта · {{ map.document.width }} × {{ map.document.height }} ·
+          {{ map.document.tiles.length }} плиток</span
         >
+        <div class="map-library-tags" aria-label="Теги карты">
+          <span v-for="tag in map.document.tags" :key="tag">{{ tag }}</span>
+        </div>
         <div class="map-library-actions">
           <span class="map-library-badge">{{
             map.system ? "Системная" : "Моя карта"
@@ -77,22 +88,6 @@
         </div>
       </BaseTile>
     </div>
-    <AppModalFrame
-      v-if="creating"
-      title="Новая карта"
-      close-label="Закрыть"
-      @close="creating = false"
-    >
-      <div class="map-kind-list">
-        <ActionButton
-          v-for="(label, kind) in KINDS"
-          :key="kind"
-          variant="secondary"
-          @click="create(kind)"
-          >{{ label }}</ActionButton
-        >
-      </div>
-    </AppModalFrame>
     <AppModalFrame
       v-if="preview"
       :title="preview.name"
@@ -126,7 +121,7 @@
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, defineAsyncComponent, onMounted, ref } from "vue";
+import { computed, defineAsyncComponent, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import {
   ActionButton,
@@ -136,10 +131,11 @@ import {
   FormTextInput,
   LoadingState,
   MultiToggle,
+  SearchMultiSelect,
 } from "@sylvieshare/share-ui";
 import { Copy, Map, Plus, Trash2 } from "@lucide/vue";
 import { deleteMap, getMaps } from "@/shared/api/mapsApi";
-import { KINDS } from "../lib/mapModel";
+import { availableMapTags, matchesMapTags } from "../lib/mapTags";
 import MapThumbnail from "./MapThumbnail.vue";
 const MapCanvas = defineAsyncComponent(() => import("./MapCanvas.vue"));
 const props = defineProps({ picker: Boolean }),
@@ -149,7 +145,7 @@ const maps = ref([]),
   error = ref(""),
   query = ref(""),
   filter = ref("all"),
-  creating = ref(false),
+  selectedTags = ref([]),
   preview = ref(null),
   pendingDelete = ref(null),
   deleting = ref(false);
@@ -158,9 +154,16 @@ const filtered = computed(() =>
   maps.value.filter(
     (m) =>
       (filter.value === "all" || m.system === (filter.value === "system")) &&
-      m.name.toLocaleLowerCase().includes(query.value.toLocaleLowerCase()),
+      matchesMapTags(m, query.value, selectedTags.value),
   ),
 );
+const tags = computed(() => availableMapTags(maps.value));
+const tagOptions = computed(() =>
+  tags.value.map((tag) => ({ value: tag, label: tag })),
+);
+watch(tags, (values) => {
+  selectedTags.value = selectedTags.value.filter((tag) => values.includes(tag));
+});
 async function load() {
   loading.value = true;
   error.value = "";
@@ -183,9 +186,8 @@ function open(map) {
 function duplicate(map) {
   router.push({ name: "MapEditor", query: { copy: map.id } });
 }
-function create(kind) {
-  creating.value = false;
-  router.push({ name: "MapEditor", query: { kind } });
+function create() {
+  router.push({ name: "MapEditor" });
 }
 async function remove() {
   deleting.value = true;
@@ -264,9 +266,11 @@ onMounted(load);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-.map-kind-list {
+.map-library-tags {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
 }
 </style>

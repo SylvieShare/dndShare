@@ -166,10 +166,9 @@ export function editorGestures(e) {
           if (e.draggingTile.value) e.tileDrag.move(point);
         } else if (gesture.object && moved) {
           checkpoint();
-          const target =
-            gesture.object.modelId && d.kind === "tiles"
-              ? nearestSurface(point, d, e.catalogue.value, gesture.object.id)
-              : snap(d, point, gesture.object.scale);
+          const target = gesture.object.modelId
+            ? nearestSurface(point, d, e.catalogue.value, gesture.object.id)
+            : snap(d, point, gesture.object.scale);
           if (target)
             Object.assign(
               d.objects.find((o) => o.id === gesture.object.id),
@@ -182,12 +181,7 @@ export function editorGestures(e) {
             };
         } else if (!gesture.object) {
           if (tool === "select" && moved)
-            e.selection.value = rectangle(
-              d,
-              gesture.start,
-              point,
-              d.kind !== "image",
-            );
+            e.selection.value = rectangle(d, gesture.start, point);
           if (tool === "select" && screenRect && moved) {
             e.screenSelection.value = screenRect;
             e.setTileSelection([

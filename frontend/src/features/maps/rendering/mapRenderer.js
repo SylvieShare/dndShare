@@ -1,7 +1,6 @@
 import { createMapLighting } from "./mapLighting";
 import { sessionMapDocument } from "../lib/sessionMapPresentation";
 import { areaAppearance } from "../lib/mapAreas";
-import { createMapBackground } from "./mapBackground";
 import { mapScreenQueries } from "./mapScreenQueries";
 import { createLoadingPreview } from "./loadingPreview";
 import { createObjectMotion } from "./objectMotion";
@@ -58,7 +57,6 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
-    background = createMapBackground(scene, fog, onError, render),
     tiles = createTileLayer(assets, fog),
     objectMotion = createObjectMotion(
       assets,
@@ -399,7 +397,6 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       objects,
       objectPreview.root,
     );
-    background.update(d, opts);
     render();
   }
   function changeCamera(next) {
@@ -417,6 +414,27 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
   observer.observe(host);
   return {
     update,
+    snapshot() {
+      tiles.advance(1000);
+      objectMotion.advance(1000, objects);
+      lighting.advance(
+        0,
+        (id) => tiles.transform(id),
+        objects,
+        objectPreview.root,
+      );
+      gpu.render(scene, camera);
+      return new Promise((resolve, reject) =>
+        gpu.domElement.toBlob(
+          (blob) =>
+            blob
+              ? resolve(blob)
+              : reject(new Error("Не удалось создать превью карты")),
+          "image/webp",
+          0.88,
+        ),
+      );
+    },
     camera: changeCamera,
     getView: view.getView,
     world: view.world,
@@ -483,7 +501,6 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       clearTimeout(flickerTimer);
       disposeAnnotations(annotations);
       disposeObjects(objects);
-      background.destroy();
       tiles.destroy();
       preview.destroy();
       objectPreview.destroy();

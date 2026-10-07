@@ -2,20 +2,7 @@
 package battlemap
 
 type Grid struct {
-	Visible bool    `json:"visible"`
-	OffsetX float64 `json:"offsetX"`
-	OffsetY float64 `json:"offsetY"`
-}
-
-type Background struct {
-	AssetID *int64 `json:"assetId,omitempty"`
-	URL     string `json:"url,omitempty"`
-}
-
-type Credit struct {
-	Author  string `json:"author"`
-	Source  string `json:"source"`
-	License string `json:"license"`
+	Visible bool `json:"visible"`
 }
 
 type Rect struct {
@@ -68,20 +55,19 @@ type Tile struct {
 }
 
 type Document struct {
-	Version         int        `json:"version"`
-	Kind            string     `json:"kind"`
-	Width           float64    `json:"width"`
-	Height          float64    `json:"height"`
-	Grid            Grid       `json:"grid"`
-	Background      Background `json:"background"`
-	Tiles           []Tile     `json:"tiles"`
-	Objects         []Object   `json:"objects"`
-	Zones           []Zone     `json:"zones"`
-	Areas           []Area     `json:"areas"`
-	LightingEnabled bool       `json:"lightingEnabled"`
-	Sun             *SunLight  `json:"sun"`
-	Lights          []Light    `json:"lights"`
-	Credit          *Credit    `json:"credit,omitempty"`
+	Tags            []string  `json:"tags"`
+	Version         int       `json:"version"`
+	Kind            string    `json:"kind"`
+	Width           float64   `json:"width"`
+	Height          float64   `json:"height"`
+	Grid            Grid      `json:"grid"`
+	Tiles           []Tile    `json:"tiles"`
+	Objects         []Object  `json:"objects"`
+	Zones           []Zone    `json:"zones"`
+	Areas           []Area    `json:"areas"`
+	LightingEnabled bool      `json:"lightingEnabled"`
+	Sun             *SunLight `json:"sun"`
+	Lights          []Light   `json:"lights"`
 }
 
 type Token struct {

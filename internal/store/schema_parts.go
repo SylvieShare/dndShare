@@ -196,4 +196,5 @@ var schemaParts = []struct {
 	{"model-behaviour", schemaModelBehaviourSQL},
 	{"model-group-codes", schemaModelGroupCodesSQL},
 	{"map-area-colors", schemaMapAreaColorsSQL},
+	{"3d-map-tags", schema3DMapTagsSQL},
 }

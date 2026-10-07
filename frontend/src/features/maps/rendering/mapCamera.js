@@ -82,7 +82,7 @@ export function mapCamera(camera, gpu, host, render) {
       document = d;
       if (options.sceneHeight !== undefined)
         sceneHeight = options.sceneHeight || 1;
-      readonly = !!options.tabletop || d.kind !== "tiles";
+      readonly = !!options.tabletop;
       update();
     },
     world(event, elevation = FLOOR) {

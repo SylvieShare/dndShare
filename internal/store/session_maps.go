@@ -69,7 +69,7 @@ func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap)
 		return SessionMap{}, err
 	}
 	defer tx.Rollback(ctx)
-	result, err := scanSessionMap(tx.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state,asset_id) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb),$5) RETURNING id::text,name,document,state,revision,changed_at`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state), m.Document.Background.AssetID))
+	result, err := scanSessionMap(tx.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb)) RETURNING id::text,name,document,state,revision,changed_at`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state)))
 	if err != nil {
 		return result, err
 	}

@@ -67,13 +67,9 @@ defineExpose({
     props.editor.selectArea(id);
   },
 });
-const tab = ref(
-  props.editor.draft.document.kind === "tiles" ? "tiles" : "settings",
-);
+const tab = ref("tiles");
 const tabs = computed(() => [
-  ...(props.editor.draft.document.kind === "tiles"
-    ? [{ key: "tiles", label: "Плитки", icon: Layers }]
-    : []),
+  { key: "tiles", label: "Плитки", icon: Layers },
   { key: "lights", label: "Освещение", icon: Lightbulb },
   { key: "objects", label: "Объекты", icon: Box },
   { key: "areas", label: "Области", icon: Group },

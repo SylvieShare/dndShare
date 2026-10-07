@@ -30,8 +30,8 @@ export function createMapFog() {
         for (const z of zones) {
           c.fillStyle = colour(values[state.zones[z.id]] ?? 0);
           for (const cell of z.cells) {
-            const x = (cell % Math.ceil(d.width)) + d.grid.offsetX,
-              y = Math.floor(cell / Math.ceil(d.width)) + d.grid.offsetY;
+            const x = cell % Math.ceil(d.width),
+              y = Math.floor(cell / Math.ceil(d.width));
             c.fillRect(x * scale, y * scale, scale, scale);
           }
           for (const r of z.rects)

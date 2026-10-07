@@ -124,7 +124,7 @@ export function editorClipboard(e) {
         objects: [...e.draft.value.document.objects],
       };
       for (const object of objects) {
-        if (!object.modelId || previewDocument.kind !== "tiles") continue;
+        if (!object.modelId) continue;
         if (tiles.some((t) => t.id === object.placement?.tileId))
           Object.assign(
             object,

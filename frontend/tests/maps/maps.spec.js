@@ -68,7 +68,9 @@ for (const mobile of [false, true])
     );
     await ready(page);
     await page.getByRole("button", { name: "Области", exact: true }).click();
-    await page.getByRole("switch", { name: "Показывать Хранилище", exact: true }).click();
+    await page
+      .getByRole("switch", { name: "Показывать Хранилище", exact: true })
+      .click();
     await expect
       .poll(() => page.evaluate(() => window.latestBoard.state.zones.right))
       .toBe("visible");
@@ -127,26 +129,6 @@ test("standalone map display renders without master controls", async ({
   await expect(page.getByRole("radio")).toHaveCount(0);
 });
 
-for (const kind of ["image-grid", "image"])
-  test(`${kind} keeps its background and existing fog zones while editor zone tools are absent`, async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1440, height: 1000 });
-    await ready(page, `editor&kind=${kind}`);
-    await expect(
-      page.getByRole("button", { name: "Зоны", exact: true }),
-    ).toHaveCount(0);
-    await page.getByLabel("Название карты", { exact: true }).fill("Новый фон");
-    await page.getByLabel("Название карты", { exact: true }).blur();
-    await expect
-      .poll(() => page.evaluate(() => window.lastSaved?.name))
-      .toBe("Новый фон");
-    const d = await page.evaluate(() => window.lastSaved.document);
-    expect(d.tiles).toEqual([]);
-    expect(d.background.url).toBe("/maps/city.svg");
-    expect(d.zones).toHaveLength(2);
-  });
-
 test("failed session writes retain changes and retry with the original version", async ({
   page,
 }) => {
@@ -155,9 +137,13 @@ test("failed session writes retain changes and retry with the original version",
     window.failNextSave = 500;
   });
   await page.getByRole("button", { name: "Области", exact: true }).click();
-  await page.getByRole("switch", { name: "Показывать Хранилище", exact: true }).click();
+  await page
+    .getByRole("switch", { name: "Показывать Хранилище", exact: true })
+    .click();
   await expect(page.getByRole("alert")).toContainText("Нет связи");
-  await expect(page.getByRole("switch", { name: "Показывать Хранилище", exact: true })).toBeChecked();
+  await expect(
+    page.getByRole("switch", { name: "Показывать Хранилище", exact: true }),
+  ).toBeChecked();
   await page.getByRole("button", { name: "Повторить", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.latestBoard.state.zones.right))
@@ -178,14 +164,20 @@ test("conflicting writes require an explicit reload before replacing local chang
     window.failNextSave = 409;
   });
   await page.getByRole("button", { name: "Области", exact: true }).click();
-  await page.getByRole("switch", { name: "Показывать Хранилище", exact: true }).click();
+  await page
+    .getByRole("switch", { name: "Показывать Хранилище", exact: true })
+    .click();
   await expect(page.getByRole("alert")).toContainText("другой вкладке");
-  await expect(page.getByRole("switch", { name: "Показывать Хранилище", exact: true })).toBeChecked();
+  await expect(
+    page.getByRole("switch", { name: "Показывать Хранилище", exact: true }),
+  ).toBeChecked();
   await page
     .getByRole("button", { name: "Загрузить с сервера", exact: true })
     .click();
   await page.getByRole("button", { name: "Загрузить", exact: true }).click();
-  await expect(page.getByRole("switch", { name: "Показывать Хранилище", exact: true })).not.toBeChecked();
+  await expect(
+    page.getByRole("switch", { name: "Показывать Хранилище", exact: true }),
+  ).not.toBeChecked();
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
