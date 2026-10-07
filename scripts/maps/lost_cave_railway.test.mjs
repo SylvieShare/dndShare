@@ -156,3 +156,24 @@ test("steep LC-024 separates four ties and eight heads from the tall rock base",
   ])
     assert.equal(railwayPartAt(p, s), "rock");
 });
+test("LC-025 follows its own flattening grade without painting surrounding rocks", () => {
+  const s = specs["LC-025"];
+  for (const p of [
+    [-8.0266, 17.3722, 46.0171],
+    [-8.0266, -16.9038, 32.9673],
+    [-12.6456, 12.2299, 42.6419],
+    [12.7971, -12.5854, 31.8268],
+  ])
+    assert.equal(railwayPartAt(p, s), "iron");
+  for (const p of [
+    [0, 13.5949, 41.6111],
+    [0, -0.0283, 38.2166],
+    [0, -13.4152, 30.2825],
+  ])
+    assert.equal(railwayPartAt(p, s), "wood");
+  for (const p of [
+    [0, 6.9401, 37.264],
+    [0, -7.0592, 32.6275],
+  ])
+    assert.equal(railwayPartAt(p, s), "rock");
+});

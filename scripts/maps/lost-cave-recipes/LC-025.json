@@ -1,0 +1,129 @@
+{
+  "sourceName": "Railway Curved Down",
+  "referencePage": 4,
+  "material": "cave-railway",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 17000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5.2],
+    "lodMiB": [0.7, 2.3],
+    "shadowKiB": [30, 140],
+    "previewKiB": [10, 150],
+    "basis": "499968-triangle1x1 curved transition from climb to flat upper deck, taller rock body than LC-023.50k/17k preserve grade and three timber ties, two KTX2 candidates."
+  },
+  "notes": "Author page4: climb flattens toward positive y. Independent nine-point rail head profile defines material grade=headZ-14.12mm; shoe lower boundary follows changing slope. Six head centres corrected from actual top surfaces, three timber axes. Preserve mount0.148954, stand point, LC-025 source identity and reviewed family.",
+  "railway": {
+    "rails": [
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6],
+        "minZProfile": [
+          [-17.6, 6.25],
+          [-12.5, 6.5],
+          [-8.2, 6.75],
+          [0, 7.25],
+          [8.9, 7.65],
+          [17.6, 7.9]
+        ]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6],
+        "minZProfile": [
+          [-17.6, 6.25],
+          [-12.5, 6.5],
+          [-8.2, 6.75],
+          [0, 7.25],
+          [8.9, 7.65],
+          [17.6, 7.9]
+        ]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -12.6456,
+        "y": 12.2299,
+        "radius": 2.25,
+        "minZ": 9.15
+      },
+      {
+        "x": -12.6456,
+        "y": -1.6947,
+        "radius": 2.25,
+        "minZ": 9.15
+      },
+      {
+        "x": -12.6456,
+        "y": -14.7032,
+        "radius": 2.25,
+        "minZ": 9.15
+      },
+      {
+        "x": 12.7971,
+        "y": 9.9598,
+        "radius": 2.25,
+        "minZ": 9.15
+      },
+      {
+        "x": 12.7971,
+        "y": -1.8457,
+        "radius": 2.25,
+        "minZ": 9.15
+      },
+      {
+        "x": 12.7971,
+        "y": -12.5854,
+        "radius": 2.25,
+        "minZ": 9.15
+      }
+    ],
+    "ties": [
+      {
+        "y": 11.9,
+        "slope": -0.09,
+        "halfWidth": 3.3
+      },
+      {
+        "y": -1.7,
+        "slope": -0.005,
+        "halfWidth": 2.9
+      },
+      {
+        "y": -14,
+        "slope": 0.08,
+        "halfWidth": 3.1
+      }
+    ],
+    "timberHalfLength": 15.9,
+    "timberMinZ": 6.4,
+    "timberMaxZ": 10.5,
+    "woodTint": [0.36, 0.255, 0.135],
+    "grade": [
+      [-17.6, 18.27],
+      [-16.9038, 18.8473],
+      [-12.5183, 22.0092],
+      [-8.2076, 24.7249],
+      [-4.0473, 26.9573],
+      [0.1137, 28.7935],
+      [4.654, 30.3325],
+      [8.8925, 31.3115],
+      [13.2076, 31.8352],
+      [17.3722, 31.8971],
+      [17.6, 31.91]
+    ]
+  },
+  "groupCode": "LC-railway-curved-down"
+}
