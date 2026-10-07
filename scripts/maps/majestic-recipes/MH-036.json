@@ -1,0 +1,209 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 60000,
+  "lodTriangles": 22000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "bones", "dragon", "ribs", "outdoor", "xl"],
+  "recipe": "majestic-aged-dragon-body-bones-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2800000, 4800000],
+    "targetLODBytes": [950000, 1900000],
+    "targetShadowBytes": [50000, 140000],
+    "targetPreviewBytes": [15000, 75000],
+    "basis": "452292 source triangles, measured 3x3 body bones up to 35.51 mm. Test 60k/22k preserving curved ribs, gaps and cortical pits; own unrotated MH-002 terrain comparison and aged bone palette."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-11, 29],
+      [3, 28],
+      [12, 22],
+      [22, 13],
+      [19, 1],
+      [5, -7],
+      [-9, -3],
+      [-14, 13]
+    ],
+    [
+      [-34, -2],
+      [-20, 5],
+      [-6, -3],
+      [4, -5],
+      [26, -11],
+      [19, -36],
+      [-12, -36],
+      [-34, -25]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [1, 0],
+    [2, 0],
+    [0, 1],
+    [1, 1],
+    [2, 1],
+    [0, 2],
+    [1, 2]
+  ],
+  "boneReference": {
+    "code": "MH-002",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.18
+  },
+  "boneMinZMM": 14.3,
+  "boneDirtDistanceMM": 1.2,
+  "boneLowMatchMM": 0.8,
+  "boneLowBlendMM": 1.0,
+  "bonePlantCeilingMM": 19.5,
+  "bonePlantFadeMM": 1.2,
+  "blockers": [
+    [
+      [0.85, 0.1],
+      [2.85, 0.1],
+      [2.85, 1.5],
+      [2.35, 1.5],
+      [1.8, 0.8],
+      [0.85, 0.55]
+    ],
+    [
+      [0.15, 1],
+      [1.6, 0.8],
+      [2.65, 1.7],
+      [2.2, 2.2],
+      [1.5, 2.8],
+      [0.35, 2.85]
+    ]
+  ],
+  "boneKeepSegments": [
+    {
+      "fromMM": [-40, -13, 18.922],
+      "toMM": [-35, -26, 19.663],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-35, -26, 19.663],
+      "toMM": [-31, -39, 18.282],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-32, 3, 18.578],
+      "toMM": [-26, -18, 22.36],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-26, -18, 22.36],
+      "toMM": [-19, -33, 20.66],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-19, -33, 20.66],
+      "toMM": [-11, -42, 22.485],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-21, 10, 20.847],
+      "toMM": [-14, -13, 23.888],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-14, -13, 23.888],
+      "toMM": [-6, -29, 21.058],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-6, -29, 21.058],
+      "toMM": [5, -36, 27.891],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [-9, 16, 22.918],
+      "toMM": [0, -6, 25.161],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [0, -6, 25.161],
+      "toMM": [7, -20, 22.874],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [7, -20, 22.874],
+      "toMM": [17, -27, 30.35],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [9, 11, 24.228],
+      "toMM": [17, -3, 22.646],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [17, -3, 22.646],
+      "toMM": [26, -6, 25.166],
+      "radiusMM": 5.6
+    },
+    {
+      "fromMM": [26, -6, 25.166],
+      "toMM": [35, -7, 28.615],
+      "radiusMM": 5.6
+    },
+    {
+      "fromMM": [-18, 42, 16.504],
+      "toMM": [0, 38, 18.68],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [0, 38, 18.68],
+      "toMM": [14, 33, 21.063],
+      "radiusMM": 7
+    },
+    {
+      "fromMM": [14, 33, 21.063],
+      "toMM": [25, 31, 22.275],
+      "radiusMM": 9
+    },
+    {
+      "fromMM": [41, 43, 16.7],
+      "toMM": [39, 29, 20.326],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [39, 29, 20.326],
+      "toMM": [31, 17, 29.152],
+      "radiusMM": 7
+    },
+    {
+      "fromMM": [31, 17, 29.152],
+      "toMM": [20, 12, 31.996],
+      "radiusMM": 7
+    },
+    {
+      "fromMM": [45, 18, 18.544],
+      "toMM": [41, 9, 24.44],
+      "radiusMM": 5.5
+    },
+    {
+      "fromMM": [41, 9, 24.44],
+      "toMM": [34, 7, 22.041],
+      "radiusMM": 5.5
+    }
+  ],
+  "bonePlantRegions": [
+    {
+      "minMM": [-52, -52, 14],
+      "maxMM": [52, 52, 21.2],
+      "featherMM": 0.6
+    }
+  ]
+}
