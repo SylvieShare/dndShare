@@ -4,7 +4,6 @@
     class="enc-wrap"
     :class="{
       'enc-wrap--workspace': workspace,
-      'enc-wrap--map-overlay': mapOverlay,
       'enc-wrap--combat-starting': combatTransitionPhase === 'starting',
       'enc-wrap--combat-ending': combatTransitionPhase === 'ending',
     }"
@@ -72,9 +71,6 @@
                 </button>
               </div>
             </template>
-            <button v-if="mapOverlay && enc.encounter.active" type="button" class="enc-icon-btn"
-              :aria-expanded="mapRosterOpen" title="Состав боя и запас" aria-label="Состав боя и запас"
-              @click="mapRosterOpen = !mapRosterOpen"><UsersRound :size="18" /></button>
           </div>
           <span class="enc-combat-summary">{{ encounterSummary }}</span>
         </div>
@@ -138,10 +134,7 @@
       </div>
     </BaseTile>
 
-    <EncounterMapOverlay v-if="mapOverlay && enc.encounter.active && !mapRosterOpen"
-      @view-participant="$emit('view-participant', $event)" />
     <div
-      v-if="!mapOverlay || !enc.encounter.active || mapRosterOpen"
       class="enc-content"
       :class="{ 'enc-content--combat-active': enc.encounter.active || combatTransitionPhase === 'ending' }"
     >
@@ -268,7 +261,7 @@
 
         <Transition name="enc-turn-preview">
           <EncounterTurnPreview
-            v-if="enc.encounter.active && !mapOverlay"
+            v-if="enc.encounter.active"
             :combatant="currentTurnCombatant"
             @view-participant="$emit('view-participant', $event)"
           />
@@ -364,7 +357,6 @@ import {
   Square,
   Swords,
   Trash2,
-  UsersRound,
 } from '@lucide/vue'
 import { AppModalFrame } from '@sylvieshare/share-ui'
 import { BaseTile } from '@sylvieshare/share-ui'
@@ -375,7 +367,6 @@ import EncounterGraveyardMenu from '@/features/sessions/components/EncounterGrav
 import EncounterRow from '@/features/sessions/components/EncounterRow'
 import EncounterScenarioCombatMenu from '@/features/sessions/components/EncounterScenarioCombatMenu.vue'
 import EncounterTurnPreview from '@/features/sessions/components/EncounterTurnPreview.vue'
-import EncounterMapOverlay from './EncounterMapOverlay.vue'
 import { useEncounterCombatTransition } from '@/features/sessions/composables/useEncounterCombatTransition'
 import { currentChapterLabel } from '@/features/sessions/lib/chapterGraph'
 import { sessionImageUrl } from '@/features/sessions/lib/sessionImages'
@@ -394,7 +385,6 @@ const props = defineProps({
   participants: { type: Array, default: () => [] },
   isDm: { type: Boolean, default: false },
   workspace: { type: Boolean, default: false },
-  mapOverlay: { type: Boolean, default: false },
   encounter: { type: Object, required: true },
   chapter: { type: Object, default: null },
   scene: { type: Object, default: null },
@@ -405,7 +395,6 @@ defineEmits(['view-participant', 'import-combat-block'])
 const enc = props.encounter
 const shortcutLabels = sessionShortcutLabels()
 const encounterRoot = ref(null)
-const mapRosterOpen = ref(false)
 
 const {
   transitioning: combatTransitioning,
@@ -482,4 +471,3 @@ defineExpose({ toggleCombat })
 
 <style scoped src="./styles/EncounterToolbar.css"></style>
 <style scoped src="./styles/EncounterTab.css"></style>
-<style scoped src="./styles/EncounterMap.css"></style>

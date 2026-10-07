@@ -17,15 +17,8 @@ load/save, players, NPC item cache, HP, initiative, flow, states and dice.
 `useEncounter.js` composes them; row components remain presentation-only.
 
 The encounter workspace has no shared backing surface. Its header and every NPC
-row are separate `BaseTile` surfaces. For accounts with map access the same
-session map fills the working field underneath combat controls. During active
-combat `EncounterMapOverlay` places a horizontal initiative track at the bottom
-and a current-turn preview up to 320px wide on the right, with a 54px portrait.
-It reuses `EncounterRow` for selection, initiative, HP, effects and row menus;
-the current turn scrolls into view. `Состав боя и запас` switches to the regular
-roster for adding, reordering and moving participants. Before combat starts,
-the reserve stays available over the map. Without map access the workspace uses
-two columns. The left column, capped at 800px, contains the initiative queue and
+row are separate `BaseTile` surfaces. The map and its inspector are not shown
+in Combat. During active combat, the workspace uses two columns. The left column, capped at 800px, contains the initiative queue and
 NPC reserve. The sticky right column follows the current turn: bestiary NPCs
 show live combat values plus their reference abilities and actions; simplified
 NPCs show the encounter values and description; players show a compact combat

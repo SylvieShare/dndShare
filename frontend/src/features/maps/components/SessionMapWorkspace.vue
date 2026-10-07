@@ -1,5 +1,5 @@
 <template>
-  <section class="session-map-workspace" :class="{ 'session-map-workspace--combat': combat }" data-tutorial="session-map">
+  <section class="session-map-workspace" data-tutorial="session-map">
     <header class="map-toolbar">
       <Map :size="24" /><strong>Карта</strong>
       <FormSelect
@@ -105,7 +105,6 @@
         </div>
         <MapCanvas
           :area-mode="playerPreview ? 'hide' : 'ghost'"
-          :hint="combat ? '' : undefined"
           :key="c.selected.id"
           ref="canvas"
           :document="c.selected.document"
@@ -184,7 +183,6 @@ const props = defineProps({
   session: Object,
   participants: { type: Array, default: () => [] },
   encounter: Object,
-  combat: Boolean,
 });
 const emit = defineEmits(['inspector-resize']);
 const inspectorWidth = ref(334);
@@ -373,8 +371,6 @@ function gesture({ phase, point, hit }) {
 .session-map-main > :deep(.map-canvas) { border-radius: 0; }
 .session-map-main :deep(.map-controls-hint) { left: var(--chapter-safe-left, 362px); bottom: 76px; }
 .session-map-main :deep(.map-canvas-controls) { right: calc(var(--chapter-safe-right, 0px) + 14px); }
-.session-map-workspace--combat .session-map-main :deep(.map-canvas-controls) { bottom: 188px; }
-.session-map-workspace--combat .session-map-main > .map-toolbar { bottom: auto; top: 68px; }
 .session-map-workspace > .map-error { position: absolute; z-index: 9; top: 68px; left: var(--chapter-safe-left, 362px); right: var(--chapter-safe-right, 14px); }
 .session-map-workspace > .map-empty,
 .session-map-workspace > :deep(.loading-state) { position: absolute; top: 90px; bottom: 0; left: var(--chapter-safe-left, 362px); right: var(--chapter-safe-right, 14px); }

@@ -1,13 +1,12 @@
 <template>
   <section
     class="session-center-workspace"
-    :class="{ 'session-center-workspace--closing': closing, 'session-center-workspace--map': mapOverlay }"
+    :class="{ 'session-center-workspace--closing': closing }"
     aria-label="Бой"
   >
     <EncounterTab
       ref="encounterTab"
       workspace
-      :map-overlay="mapOverlay"
       :session-uuid="sessionUuid"
       :session="session"
       :participants="participants"
@@ -27,7 +26,6 @@ import { ref } from 'vue'
 import EncounterTab from '@/features/sessions/components/EncounterTab'
 
 defineProps({
-  mapOverlay: { type: Boolean, default: false },
   closing: { type: Boolean, default: false },
   sessionUuid: { type: String, required: true },
   session: { type: Object, required: true },
@@ -70,8 +68,7 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
   animation: none;
 }
 
-.session-center-workspace:not(.session-center-workspace--map) :deep(.enc-wrap) { pointer-events: auto; }
-.session-center-workspace--map { top: 126px; bottom: 14px; }
+.session-center-workspace :deep(.enc-wrap) { pointer-events: auto; }
 
 @keyframes session-workspace-in {
   from { opacity: 0; transform: translateY(9px); }
@@ -89,6 +86,5 @@ defineExpose({ toggleCombat: () => encounterTab.value?.toggleCombat() })
     bottom: 0;
     left: 0;
   }
-  .session-center-workspace--map { top: 164px; bottom: 14px; left: 76px; right: 14px; }
 }
 </style>

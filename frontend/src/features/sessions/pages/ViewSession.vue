@@ -90,7 +90,6 @@
             :session="session"
             :participants="participants"
             :encounter="encounter"
-            :combat="workspaceMode === 'combat'"
             @inspector-resize="mapPanelWidth = $event"
           />
         </template>
@@ -126,7 +125,6 @@
           v-show="primaryView === 'story'"
           ref="combatWorkspace"
           :closing="workspaceClosing"
-          :map-overlay="mapVisible"
           :session-uuid="sessionUuid"
           :session="session"
           :participants="participants"
@@ -338,7 +336,7 @@ const mapVisited = ref(false), mapWorkspace = ref(null)
 const mapPanelWidth = ref(334)
 const account = useAccountStore()
 const mapsAvailable = computed(() => account.hasRole('ADMIN'))
-const mapVisible = computed(() => mapsAvailable.value && (primaryView.value === 'maps' || (primaryView.value === 'story' && workspaceMode.value === 'combat')))
+const mapVisible = computed(() => mapsAvailable.value && primaryView.value === 'maps')
 watch(mapVisible, (visible) => { if (visible) mapVisited.value = true }, { immediate: true })
 onBeforeRouteLeave(() => mapWorkspace.value?.prepareLeave() ?? true)
 </script>

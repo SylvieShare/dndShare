@@ -223,13 +223,13 @@ participant rail and limits content width to 1440px, left-aligned with that rail
 The map uses `full`; world catalogues, music, journal, chronicle and settings use
 `column`. Story fills the field through its graph canvas. The map stays mounted
 when switching between Map and Combat, preserving the selected map and camera.
-In Map and Combat its editor-style inspector sits to the left of the player rail;
-collapsing the inspector moves players and combat controls to the new safe area.
+In Map its editor-style inspector sits to the left of the player rail;
+collapsing the inspector moves players to the new safe area.
 On mobile the player rail is hidden and the inspector opens over the canvas. Collapsing the rail updates the same safe
 area for every tab. Catalogue columns retain an 8px internal gap. Story and
-combat controls are outside this wrapper and have no width limit. For accounts
-with map access, combat controls overlay the same map; active combat has a
-horizontal initiative track below and a smaller current-turn preview on the right. On mobile (up to 760px)
+combat controls are outside this wrapper and have no width limit. Combat keeps
+its original initiative/reserve column and current-turn preview; the map and map
+inspector are hidden, and players return to their usual left position. On mobile (up to 760px)
 the participant rail disappears and the shared wrapper uses 16px outer padding on the left and reserves the tool rail on the right.
 Individual tab components own their internal layout and scrolling, not rail
 offsets or outer padding; this also applies to loading and error states.

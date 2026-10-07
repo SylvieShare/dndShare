@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { initialState, newMap } from '../../src/features/maps/lib/mapModel'
 
-for (const mobile of [false, true]) test(`session shares the map between full workspace and combat overlays ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+for (const mobile of [false, true]) test(`combat keeps its original columns and hides the map ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
   await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1680, height: 1000 })
   page.on('pageerror', error => { throw error })
   await page.addInitScript(() => {
@@ -51,17 +51,20 @@ for (const mobile of [false, true]) test(`session shares the map between full wo
     expect(inspector.x + inspector.width).toBeLessThan(players.x)
   }
   await page.getByRole('button', { name: /^Открыть бой/ }).click()
-  await expect(page.getByRole('region', { name: 'Линия инициативы' })).toBeVisible()
+  await expect(page.locator('.session-map-workspace')).not.toBeVisible()
+  await expect(page.locator('.session-map-inspector')).not.toBeVisible()
+  await expect(page.locator('.enc-combat-layout--active')).toBeVisible()
+  await expect(page.getByText('ЗАПАС НПС', { exact: true })).toBeVisible()
   await expect(page.getByRole('complementary', { name: 'Текущий ход' })).toContainText('Гоблин')
   expect(await before.evaluate(element => element.isConnected)).toBe(true)
-  await page.getByRole('button', { name: 'Следующий ход', exact: true }).click()
+  const nextTurn = page.getByRole('button', { name: 'Следующий ход', exact: true })
+  if (mobile) {
+    await nextTurn.focus()
+    await nextTurn.press('Enter')
+  } else await nextTurn.click()
   await expect(page.getByRole('complementary', { name: 'Текущий ход' })).toContainText('Орк')
-  await page.getByRole('button', { name: 'Состав боя и запас', exact: true }).click()
-  await expect(page.getByText('ЗАПАС НПС', { exact: true })).toBeVisible()
-  await page.getByRole('button', { name: 'Состав боя и запас', exact: true }).click()
-  await expect(page.getByRole('region', { name: 'Линия инициативы' })).toBeVisible()
   await page.getByRole('button', { name: 'Карта', exact: true }).click()
-  await expect(page.getByRole('region', { name: 'Линия инициативы' })).toHaveCount(0)
+  await expect(page.locator('.session-center-workspace')).not.toBeVisible()
   expect(await before.evaluate(element => element.isConnected)).toBe(true)
   await expect(page.locator('.session-map-workspace')).toBeVisible()
 })

@@ -267,10 +267,9 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     }
   }
 
-  const combatTrackLayout = ref(false)
   const sortable = useSortable({
     groups: {
-      'combat':         { items: inCombat, get layout() { return combatTrackLayout.value ? 'grid' : 'list' }, accepts: () => true },
+      'combat':         { items: inCombat,        accepts: () => true },
       'reserve-npc':    { items: reserveNpcs,     accepts: (item) => item?.type === 'npc' },
       'reserve-player': { items: reservePlayers,  accepts: (item) => item?.type === 'player' },
       'dead':           { items: deadCombatants,  accepts: () => true },
@@ -389,7 +388,6 @@ export function useEncounter({ sessionUuid, participants, canEditPlayers, autoRo
     deadCombatants,
     npcReserveCollapsed,
     sortable,
-    combatTrackLayout,
     SIDE_OPTIONS,
     ICON_COLOR_SWATCHES,
     ENCOUNTER_LETTERS,
