@@ -99,6 +99,9 @@ def material(recipe=None):
     if recipe.get('boneReference'):
         from majestic_bones import bone_finish
         finish=bone_finish(nodes,links,finish,recipe)
+    if recipe.get('water'):
+        from majestic_water import water_cap_finish
+        finish=water_cap_finish(nodes,links,finish,recipe)
     shader = nodes.get('Principled BSDF')
     links.new(finish.outputs[0], shader.inputs['Base Color'])
     shader.inputs['Roughness'].default_value = .94

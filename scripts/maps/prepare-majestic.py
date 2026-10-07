@@ -100,6 +100,10 @@ def main():
     if recipe.get('wheels'):
         from majestic_wood import iron_orm
         surface_finish = iron_orm
+    if any('forceAboveMM' in s for s in recipe.get('water',{}).get('stones',[])):
+        from majestic_water import water_caps_orm
+        from functools import partial
+        surface_finish = partial(water_caps_orm,previous=surface_finish)
     extra_bake = None
     if recipe.get('flameReference'):
         from majestic_camp import bake_emission
