@@ -43,6 +43,7 @@ const emit = defineEmits(["model", "drag-tile"]);
 </script>
 <style scoped>
 .map-model-card {
+  --surface: var(--map-model-preview-bg);
   display: flex;
   height: auto;
   min-width: 0;

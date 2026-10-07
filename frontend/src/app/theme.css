@@ -26,6 +26,8 @@
   --side-minion: #a06ce8;
   /* A dark tabletop remains dark regardless of the application theme. */
   --map-screen-void: #0d1119;
+  /* Catalogue backdrop matches the former opaque model previews. */
+  --map-model-preview-bg: #424952;
 
   /* Player handout surfaces are content palettes, not application chrome. */
   --material-note-parchment-bg: #d8c394;

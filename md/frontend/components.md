@@ -299,7 +299,10 @@ SessionToolsRail, ChapterGraphToolbar и MapEditorHeader/MapEditorActions.
 название и размеры карты редактируются на отдельной странице настроек. Слева от
 canvas расположен сворачиваемый MapTileSidebar с отдельной иконковой полосой
 «Плитки / Объекты»; MapObjectPalette показывает только модели tileType=object; MapTilePalette показывает карточки BaseTile одной сеткой выбранной категории
-без повторного заголовка и раскрываемого раздела. Полноэкранный выбор доступен и в режиме предметов.
+без повторного заголовка и раскрываемого раздела. Карточки MapTileCard задают контекстный
+токен surface через map-model-preview-bg: серо-синий студийный фон прежних
+непрозрачных превью. Прозрачные WebP показывают фон карточки; hover и выделение
+остаются состояниями общего BaseTile. Полноэкранный выбор доступен и в режиме предметов.
 ADMIN видит MapTileReference: MapModelFields и MapModelSlots составлены из общих
 FormField/FormTextInput/FormSelect/ToggleSwitch/DetailSection; сохранение параметров
 создаёт новую версию каталога. MapTileCategoryPicker использует интерактивный BaseTile с

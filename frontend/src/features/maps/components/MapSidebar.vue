@@ -1,5 +1,5 @@
 <template>
-  <aside ref="element" class="map-sidebar" :class="{ 'map-sidebar--collapsed': collapsed }" @contextmenu.prevent>
+  <aside ref="element" class="map-sidebar" :class="{ 'map-sidebar--collapsed': collapsed }">
     <nav class="map-sidebar-tabs" :aria-label="tabsLabel">
       <ActionButton v-for="item in tabs" :key="item.key" icon-only
         :variant="tab === item.key && !collapsed ? 'primary' : 'quiet'"

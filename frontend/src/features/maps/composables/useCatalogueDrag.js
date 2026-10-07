@@ -40,7 +40,19 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     driver.cancel();
     cleanup();
   }
+  function onTabRail(event) {
+    if (event.target?.closest?.(".map-sidebar-tabs")) return true;
+    // Pointer capture can keep the source card as target while the cursor is on the rail.
+    return (
+      Number.isFinite(event.clientX) &&
+      Number.isFinite(event.clientY) &&
+      !!document
+        .elementFromPoint(event.clientX, event.clientY)
+        ?.closest(".map-sidebar-tabs")
+    );
+  }
   function rightCancel(event) {
+    if (onTabRail(event)) return;
     // A second mouse button while LMB is held emits mousedown, not pointerdown.
     if (
       (event.button !== 2 && !(event.buttons & 2)) ||
@@ -128,6 +140,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     driver.move(canvas.value?.pointAt(event), { fill: fillKey });
   }
   function freeDrop(event) {
+    if (event.button === 2 && onTabRail(event)) return;
     if ((freePlacement || pointer) && event.button === 2) {
       event.preventDefault();
       event.stopPropagation();

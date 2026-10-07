@@ -207,3 +207,59 @@ test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
     )
     .toBe(true);
 });
+
+test("sidebar tab rail keeps the native context menu, including during pending tile placement", async ({
+  page,
+}) => {
+  await ready(page);
+  await page.evaluate(() => {
+    window.railContexts = [];
+    window.addEventListener("contextmenu", (event) => {
+      if (
+        event.target.closest(".map-sidebar-tabs") ||
+        document
+          .elementFromPoint(event.clientX, event.clientY)
+          ?.closest(".map-sidebar-tabs")
+      )
+        window.railContexts.push(event.defaultPrevented);
+    });
+  });
+  const rail = page.locator(".map-sidebar-tabs");
+  await rail.click({ button: "right", position: { x: 24, y: 20 } });
+  await expect
+    .poll(() => page.evaluate(() => window.railContexts))
+    .toEqual([false]);
+  await pickTile(page, "Пол 1");
+  await rail.click({ button: "right", position: { x: 24, y: 20 } });
+  await expect
+    .poll(() => page.evaluate(() => window.railContexts))
+    .toEqual([false, false]);
+  const point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.move(point.x, point.y);
+  await page.mouse.click(point.x, point.y);
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          window.lastSaved?.document.tiles.filter((t) =>
+            t.modelId.startsWith("2222"),
+          ).length,
+      ),
+    )
+    .toBe(1);
+  const card = page.getByRole("button", { name: "Пол 1", exact: true });
+  const cardBounds = await card.boundingBox();
+  const railBounds = await rail.boundingBox();
+  await page.mouse.move(cardBounds.x + cardBounds.width / 2, cardBounds.y + 25);
+  await page.mouse.down();
+  await expect
+    .poll(() => card.evaluate((element) => element.hasPointerCapture(1)))
+    .toBe(true);
+  await page.mouse.move(railBounds.x + 24, railBounds.y + 20, { steps: 5 });
+  await page.mouse.down({ button: "right" });
+  await page.mouse.up({ button: "right" });
+  await expect
+    .poll(() => page.evaluate(() => window.railContexts))
+    .toEqual([false, false, false]);
+  await page.mouse.up();
+});
