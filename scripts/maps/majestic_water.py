@@ -33,6 +33,12 @@ def apply_water(obj, positions, colours, roughness, recipe):
             near=np.clip((1.7-radius)/.25,0,1)
             low=np.clip((settings['restoreLowWaterAroundStonesMM']-z)/.2,0,1)
             weight=np.maximum(weight,near*low)
+    if settings.get('restoreLowWaterAroundBanksMM'):
+        for bank in settings.get('banks',[]):
+            radius=np.linalg.norm((positions[:,:2]-np.array(bank['centreMM']))/np.array(bank['radiiMM']),axis=1)
+            near=np.clip((1.7-radius)/.25,0,1)*np.clip((radius-.75)/.15,0,1)
+            low=np.clip((settings['restoreLowWaterAroundBanksMM']-z)/.2,0,1)
+            weight=np.maximum(weight,near*low)
     weight*=np.clip((z-settings['minZMM'])/.35,0,1)*np.clip((normals[:,2]-.05)/.2,0,1)
     if settings.get('boundsMM'):
         lo,hi=np.array(settings['boundsMM'][0]),np.array(settings['boundsMM'][1])
