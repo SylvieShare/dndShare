@@ -54,7 +54,7 @@ if (newSource && !process.argv.includes("--new-source"))
     "Existing code has a different source; review the replacement and pass --new-source explicitly",
   );
 function placement(model) {
-  const { id, version, assets, textureDetail, ...metadata } = model;
+  const { id, version, assets, textureDetail, code, ...metadata } = model;
   return metadata;
 }
 if (previous && !isDeepStrictEqual(placement(previous), placement(reviewed)))

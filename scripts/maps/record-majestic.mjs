@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
+import { confirmedMajesticModel } from "./majestic_identity.mjs";
 const base = path.resolve(
   import.meta.dirname,
   "../../models/collections/majestic-highlands",
@@ -21,8 +22,7 @@ for (const model of models) {
   if (model.collection !== "majestic-highlands")
     throw new Error("Wrong collection");
   const live = registry.find((m) => m.id === model.id);
-  if (!live || !isDeepStrictEqual(live, model))
-    throw new Error("MCP has not confirmed this exact model");
+  confirmedMajesticModel(model, live);
   const reportFile = path.join(
     base,
     "optimized-review",
@@ -32,9 +32,13 @@ for (const model of models) {
   const report = JSON.parse(await fs.readFile(reportFile, "utf8"));
   if (!isDeepStrictEqual(report.model, model))
     throw new Error("Prepared report changed after packaging");
+  report.model = live;
+  Object.assign(model, live);
   report.published = {
     id: live.id,
     version: live.version,
+    definitionId: live.definitionId,
+    groupCode: live.code,
     verifiedAt: new Date().toISOString(),
   };
   await fs.writeFile(reportFile, JSON.stringify(report, null, 2) + "\n");
@@ -52,6 +56,14 @@ for (const model of models) {
     recipe: report.materialRecipe ?? report.recipe,
   });
 }
+await fs.writeFile(
+  path.join(directory, "catalogue.json.next"),
+  JSON.stringify(models, null, 2) + "\n",
+);
+await fs.rename(
+  path.join(directory, "catalogue.json.next"),
+  path.join(directory, "catalogue.json"),
+);
 const manifestFile = path.join(base, "manifest.json");
 const manifest = JSON.parse(await fs.readFile(manifestFile, "utf8"));
 for (const model of models) {

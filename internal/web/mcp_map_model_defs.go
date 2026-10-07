@@ -13,6 +13,11 @@ func mapModelToolDefinitions() []map[string]any {
 		"size": mcpIntegerProperty("Expected byte size"), "uploadKey": mcpStringProperty("Temporary key returned by prepare_upload"),
 	}, "kind", "fileName", "sha256", "size", "uploadKey")
 	return []map[string]any{
+		mcpDefinition("map_tile_model_group_update", "Change the shared family/group code by stable definitionId without creating asset versions or changing placement, lights or transitions. Read the current code via model_get/list first; stale expectedCode is rejected. Repeating the same target code is idempotent. Requires MCP writes.", mcpObjectSchema(map[string]any{
+			"definitionId": mcpStringProperty("Stable logical model ID, e.g. MH-031; not a resource version UUID"),
+			"expectedCode": mcpStringProperty("Current family code from a fresh model read"),
+			"code":         mcpStringProperty("Target family code with unchanged pack prefix and lower-kebab-case name, e.g. MH-campfire"),
+		}, "definitionId", "expectedCode", "code")),
 		mcpDefinition("map_tile_model_register_preview", "Attach a verified transparent WebP preview by appending a compatible immutable revision. Checks the expected render hash; preserves all placement metadata, shared behaviour and four other assets without re-uploading them. Requires MCP writes.", mcpObjectSchema(map[string]any{
 			"id": mcpStringProperty("Existing model version UUID"), "expectedRenderSHA256": mcpStringProperty("Render SHA-256 used to generate this preview"),
 			"asset": map[string]any{"type": "object", "description": "Transparent WebP asset metadata returned by complete_upload"},

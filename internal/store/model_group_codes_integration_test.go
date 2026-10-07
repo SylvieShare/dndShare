@@ -7,6 +7,7 @@ import (
 
 func testModelGroupCodeRules(t *testing.T, ctx context.Context, s *Store) {
 	t.Helper()
+	testMapModelGroupUpdate(t, ctx, s)
 	cases := []struct{ pack, name, want string }{
 		{"ultimate-dungeon", "Door", "UD-door"}, {"ultimate-dungeon", "Door Open", "UD-door"},
 		{"ultimate-dungeon", "Ground 1", "UD-ground"}, {"ultimate-dungeon", "Ground 2", "UD-ground"},

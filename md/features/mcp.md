@@ -140,6 +140,10 @@ rollback; apply требует точный token и включённые MCP wr
 
 - `map_tile_models_list`: метаданные, постоянный definitionId и assets; опциональный фильтр collection.
 - `map_tile_model_get`: одна версия по UUID.
+- `map_tile_model_group_update`: definitionId, текущий expectedCode и новый code;
+  меняет семейство всех версий элемента без новых ресурсов и без изменения
+  размещения, света или переходов. Префикс пака сохраняется. Чужая правка
+  expectedCode отклоняется; повтор уже установленного code идемпотентен.
 - `map_tile_model_behaviour_get`: definitionId → текущее поведение и revision.
 - `map_tile_model_behaviour_update`: definitionId и полный behaviour с ожидаемой
   revision; меняет встроенные источники и направленные переходы атомарно, без
