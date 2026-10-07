@@ -23,6 +23,7 @@ def shoreline_distance(positions, points):
 def apply_water(obj, positions, colours, roughness, recipe):
     root=Path(__file__).resolve().parents[2]
     settings=recipe['water']
+    original_colours=colours.copy();original_roughness=roughness.copy()
     rows=json.loads((root/'models/collections/majestic-highlands/manifest.json').read_text())
     row=next(r for r in rows if r['code']==settings['reference'])
     bpy.ops.wm.stl_import(filepath=str(root/'models'/row['sourcePath']))
@@ -57,6 +58,7 @@ def apply_water(obj, positions, colours, roughness, recipe):
         from majestic_surface import polygon_weight
         area=settings['lowWaterDomain']
         near=polygon_weight(positions,area['pointsMM'],area.get('featherMM',.5))
+        near_domain=near
         low=np.clip((area['maxZMM']-z)/.2,0,1)
         weight=np.maximum(weight,near*low)
     shorelines=[(shore,*shoreline_distance(positions,shore['pointsMM'])) for shore in settings.get('shorelines',[])]
@@ -65,6 +67,8 @@ def apply_water(obj, positions, colours, roughness, recipe):
         low=np.clip((shore['waterRestoreMaxZMM']-z)/.2,0,1)
         weight=np.maximum(weight,near*low)
     weight*=np.clip((z-settings['minZMM'])/.35,0,1)*np.clip((normals[:,2]-.05)/.2,0,1)
+    if settings.get('clipToLowWaterDomain'):
+        weight*=near_domain
     if settings.get('boundsMM'):
         lo,hi=np.array(settings['boundsMM'][0]),np.array(settings['boundsMM'][1])
         weight*=np.all((positions>=lo)&(positions<=hi),axis=1)
@@ -98,6 +102,11 @@ def apply_water(obj, positions, colours, roughness, recipe):
         shade=1+.045*np.sin(x*.51+y*.43+z*.21)
         colours=colours*(1-shore_weight[:,None])+np.array(shore['rgb'])*shade[:,None]*shore_weight[:,None]
         roughness=roughness*(1-shore_weight)+.88*shore_weight
+    for box in settings.get('plantKeepBoxes',[]):
+        lo,hi=np.array(box['minMM']),np.array(box['maxMM'])
+        keep=np.clip(np.minimum(positions-lo,hi-positions).min(1)/box.get('featherMM',.2),0,1)
+        colours=colours*(1-keep[:,None])+original_colours*keep[:,None]
+        roughness=roughness*(1-keep)+original_roughness*keep
     print('WATER_REFERENCE',np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),int((weight>.5).sum()),flush=True)
     return colours,roughness
 
