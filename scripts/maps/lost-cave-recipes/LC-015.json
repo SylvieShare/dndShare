@@ -1,0 +1,71 @@
+{
+  "sourceName": "Stalagmite Corner",
+  "referencePage": 3,
+  "material": "cave-stalagmites",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.7, 4.8],
+    "lodMiB": [0.7, 2.2],
+    "shadowKiB": [30, 120],
+    "previewKiB": [10, 130],
+    "basis": "379952-triangle narrow rock outcrop with five separate ringed deposits and exposed floor;45k/14k compared to checked LC-011, two independent KTX2 variants."
+  },
+  "notes": "Author page3: five measured ringed upright deposits beside narrow rough rock corner. Warm calcite, dirty roots above15.4mm, mineral striation; protect central outcrop and surrounding stone fragments. Preserve mask, mount0.149677, standing points and LC-015 definitionId. Thin deposit against outcrop tapers to radius1.1mm at32mm to avoid colouring adjoining rough rock.",
+  "calcite": {
+    "tint": [0.58, 0.39, 0.205],
+    "roughness": 0.78
+  },
+  "stalagmites": [
+    {
+      "x": -6.65,
+      "y": -3.17,
+      "radius": 3.8,
+      "base": 15.4,
+      "top": 27.3
+    },
+    {
+      "x": -9.6,
+      "y": -9.4,
+      "radius": 5.5,
+      "base": 15.4,
+      "top": 35.6
+    },
+    {
+      "x": 3.8,
+      "y": 3.07,
+      "radius": 3.8,
+      "base": 15.4,
+      "top": 32,
+      "radiusProfile": [
+        [15.4, 3.8],
+        [23, 2.7],
+        [28, 1.7],
+        [32, 1.1]
+      ]
+    },
+    {
+      "x": 7.55,
+      "y": -6.87,
+      "radius": 4.2,
+      "base": 15.4,
+      "top": 27.9
+    },
+    {
+      "x": 12.15,
+      "y": -8.5,
+      "radius": 5.4,
+      "base": 15.4,
+      "top": 37.2
+    }
+  ]
+}
