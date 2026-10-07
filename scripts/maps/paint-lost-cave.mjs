@@ -10,6 +10,7 @@ import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
 import { paintRailway } from "./lost_cave_railway.mjs";
 import { paintCrystal } from "./lost_cave_crystal.mjs";
 import { paintWagon } from "./lost_cave_wagon.mjs";
+import { paintWagonOnTrack } from "./lost_cave_wagon_track.mjs";
 import specs from "./lost_cave_recipes.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One rebaked Lost Cave report required");
@@ -25,6 +26,7 @@ if (
     "cave-railway",
     "cave-crystal",
     "cave-wagon",
+    "cave-wagon-track",
   ].includes(spec.material)
 )
   throw new Error("Unsupported individually reviewed surface material");
@@ -38,6 +40,21 @@ for (const field of [
   if (spec[field] !== report.materialSpec[field])
     throw new Error("Geometry recipe changed; rebake before painting");
 report.materialSpec = structuredClone(spec);
+let wagonReference;
+if (spec.material === "cave-wagon-track") {
+  const base = path.resolve(
+    import.meta.dirname,
+    "../../models/collections/lost-cave/wagon-reference",
+  );
+  wagonReference = {
+    spec: JSON.parse(
+      await fs.readFile(path.join(base, "reference.json"), "utf8"),
+    ),
+    data: await fs.readFile(path.join(base, "distance.bin")),
+  };
+  if (wagonReference.spec.sourceSHA256 !== spec.wagonReferenceSHA256)
+    throw new Error("Reviewed original wagon reference required");
+}
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp"),
   { NodeIO } = require("@gltf-transform/core"),
@@ -70,21 +87,24 @@ for (const tier of ["render", "lod"]) {
     ...(spec.material === "cave-stalagmites" ? { calcite: 0 } : {}),
     ...(spec.material === "cave-railway" ? { wood: 0, iron: 0 } : {}),
     ...(spec.material === "cave-crystal" ? { crystal: 0 } : {}),
-    ...(spec.material === "cave-wagon"
+    ...(["cave-wagon", "cave-wagon-track"].includes(spec.material)
       ? { bucket: 0, wheel: 0, hardware: 0, brass: 0 }
       : {}),
+    ...(spec.material === "cave-wagon-track" ? { wood: 0, iron: 0 } : {}),
   };
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
     const value =
-      spec.material === "cave-wagon"
-        ? paintWagon(p, n, ao[i], spec)
-        : spec.material === "cave-crystal"
-          ? paintCrystal(p, n, ao[i], spec)
-          : spec.material === "cave-railway"
-            ? paintRailway(p, n, ao[i], spec)
-            : spec.material === "cave-stalagmites"
-              ? paintStalagmites(p, n, ao[i], spec)
-              : caveRockPixel(p, n, ao[i], report.materialSpec);
+      spec.material === "cave-wagon-track"
+        ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
+        : spec.material === "cave-wagon"
+          ? paintWagon(p, n, ao[i], spec)
+          : spec.material === "cave-crystal"
+            ? paintCrystal(p, n, ao[i], spec)
+            : spec.material === "cave-railway"
+              ? paintRailway(p, n, ao[i], spec)
+              : spec.material === "cave-stalagmites"
+                ? paintStalagmites(p, n, ao[i], spec)
+                : caveRockPixel(p, n, ao[i], report.materialSpec);
     counts[value.part]++;
     colour.set(value.rgb, i * 3);
     orm[i * 3] = ao[i];

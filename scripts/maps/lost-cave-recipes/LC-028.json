@@ -1,0 +1,117 @@
+{
+  "sourceName": "Wagon Empty",
+  "referencePage": 5,
+  "material": "cave-wagon-track",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 70000,
+  "lodTriangles": 24000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 6],
+    "lodMiB": [0.8, 2.8],
+    "shadowKiB": [40, 180],
+    "previewKiB": [10, 160],
+    "basis": "640004-triangle compound1x1 empty wagon on detailed rail/rock base.70k/24k retain shell cavity, wheels and track fragments; independent body/reference mask, two KTX2 comparisons."
+  },
+  "notes": "Author page5: upright empty wagon on rail tile. Body offset17.482mm measured from common rim/floor; original upright LC-027 BVH grid separates vehicle surfaces from rails, timber and rubble near crossings. Track offset7mm; preserve original slotless footprint, mount0.150426, interior standing point, LC-028 logical ID and LC-wagon group. Orange rusty shell, dark wheels/iron rails, grey tubing, brass disk and timber grain. Low outer floor stone at-14.7673/.6983/14.7981mm excluded by measured timber minimum14.9mm (local7.9); raised ties remain wood.",
+  "groupCode": "LC-wagon",
+  "wagon": {
+    "tint": [0.46, 0.265, 0.12],
+    "wheelsY": [7.1, -7.1],
+    "pipe": {
+      "x": -10.1
+    },
+    "brass": {
+      "x": 8.2,
+      "y": 17.1,
+      "z": 31.2,
+      "radius": 1.9
+    }
+  },
+  "railway": {
+    "rails": [
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -12.75,
+        "y": 10.39,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.81,
+        "y": 1.06,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.75,
+        "y": -12.08,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.75,
+        "y": 11.8,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.5,
+        "y": 0.0,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.64,
+        "y": -9.6,
+        "radius": 2.25,
+        "minZ": 9.4
+      }
+    ],
+    "ties": [
+      {
+        "y": 11.45,
+        "slope": 0.085,
+        "halfWidth": 3.5
+      },
+      {
+        "y": -0.3,
+        "slope": -0.07,
+        "halfWidth": 3.4
+      },
+      {
+        "y": -10.65,
+        "slope": 0.11,
+        "halfWidth": 3.5
+      }
+    ],
+    "timberHalfLength": 15.9,
+    "timberMinZ": 7.9,
+    "timberMaxZ": 9.95,
+    "woodTint": [0.36, 0.255, 0.135]
+  },
+  "wagonOffsetZMM": 17.482,
+  "trackOffsetZMM": 7,
+  "wagonMatchMM": 0.28,
+  "wagonReferenceSHA256": "a4237eee9799b1666cb6c035c2971ce58c051f9b4cadb122754152947bff543b"
+}
