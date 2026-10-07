@@ -23,6 +23,11 @@ def apply_wood(obj, positions, colours, roughness, recipe):
     for part in recipe.get('woodParts',[]):
         mask=np.all((positions>=part['minMM'])&(positions<=part['maxMM']),axis=1)
         directions[mask]=part['direction']
+    for segment in recipe.get('woodSegments',[]):
+        a,b=np.array(segment['fromMM']),np.array(segment['toMM']);axis=b-a
+        t=np.clip(((positions-a)*axis).sum(1)/(axis@axis),0,1)
+        mask=np.linalg.norm(positions-a-t[:,None]*axis,axis=1)<segment['radiusMM']
+        directions[mask]=axis
     directions/=np.linalg.norm(directions,axis=1)[:,None]
     along=(positions*directions).sum(1)
     across=positions[:,0]*directions[:,1]-positions[:,1]*directions[:,0]

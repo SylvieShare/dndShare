@@ -1,0 +1,208 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": [
+    "camp",
+    "tent",
+    "canvas",
+    "wood",
+    "bedroll",
+    "unlit-campfire",
+    "outdoor",
+    "xl"
+  ],
+  "recipe": "majestic-unlit-camp-directional-logs-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2800000, 5200000],
+    "targetLODBytes": [900000, 2000000],
+    "targetShadowBytes": [55000, 140000],
+    "targetPreviewBytes": [15000, 75000],
+    "basis": "548386 source triangles, independently measured 3x3 unlit camp. Tent/utensils match MH-031, but logs are individually visible and need their own grain axes. Test 65k/22k with 2048/1024 colour and no emission map."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-45, 27],
+      [-31, 35],
+      [-9, 35],
+      [8, 27],
+      [11, 13],
+      [18, 7],
+      [9, -9],
+      [-5, -17],
+      [-26, -18],
+      [-34, -4],
+      [-39, 14]
+    ]
+  ],
+  "soilSurfaceMM": 15.55,
+  "grassHeightFadeMM": 0.4,
+  "standMaxZMM": 19,
+  "blockedCells": [
+    [1, 0],
+    [2, 0],
+    [1, 1],
+    [2, 1],
+    [1, 2],
+    [2, 2],
+    [0, 1]
+  ],
+  "woodReference": {
+    "code": "MH-003",
+    "rotateZ": 0,
+    "matchMM": 0.07,
+    "blendMM": 0.2
+  },
+  "woodDirection": [0, 0, 1],
+  "woodParts": [
+    {
+      "minMM": [-14, 5, 52],
+      "maxMM": [50, 17, 67],
+      "direction": [1, 0, 0]
+    },
+    {
+      "minMM": [-46, -26, 15],
+      "maxMM": [-18, 2, 25],
+      "direction": [0.7, 0.7, 0.05]
+    },
+    {
+      "minMM": [-25, 19, 23],
+      "maxMM": [-11, 32, 28],
+      "direction": [1, 0, 0]
+    }
+  ],
+  "camp": {
+    "poles": [
+      {
+        "fromMM": [-8, -16, 15],
+        "toMM": [-8, 15, 65],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [-8, 44, 15],
+        "toMM": [-8, 5, 65],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [44, -16, 15],
+        "toMM": [44, 15, 65],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [44, 44, 15],
+        "toMM": [44, 5, 65],
+        "radiusMM": 2.4
+      },
+      {
+        "fromMM": [-11, 11, 57],
+        "toMM": [0, 11, 54.3],
+        "radiusMM": 1.6
+      },
+      {
+        "fromMM": [0, 11, 54.3],
+        "toMM": [15, 11, 52.2],
+        "radiusMM": 1.6
+      },
+      {
+        "fromMM": [15, 11, 52.2],
+        "toMM": [30, 11, 52.5],
+        "radiusMM": 1.6
+      },
+      {
+        "fromMM": [30, 11, 52.5],
+        "toMM": [44, 11, 55],
+        "radiusMM": 1.6
+      }
+    ],
+    "fabric": [
+      {
+        "minMM": [-6.5, -16, 15],
+        "maxMM": [42.5, 44, 57],
+        "minZMM": 15.2,
+        "rgb": [0.66, 0.555, 0.375],
+        "roughness": 0.97
+      },
+      {
+        "minMM": [-18, -53, 15],
+        "maxMM": [28, -22, 24],
+        "minZMM": 15.3,
+        "rgb": [0.62, 0.535, 0.255],
+        "roughness": 0.96
+      },
+      {
+        "minMM": [36, -53, 15],
+        "maxMM": [46, -23, 29],
+        "minZMM": 15.8,
+        "rgb": [0.43, 0.36, 0.2],
+        "roughness": 0.94
+      }
+    ],
+    "pillows": [
+      {
+        "minMM": [26, -44, 15.4],
+        "maxMM": [39, -27, 29],
+        "rgb": [0.76, 0.705, 0.53]
+      }
+    ],
+    "ropes": [
+      {
+        "centreMM": [-8, 10, 57],
+        "radiusMM": 3.8
+      },
+      {
+        "centreMM": [44, 10, 57],
+        "radiusMM": 3.8
+      }
+    ]
+  },
+  "blockers": [
+    [
+      [1.2, 0.22],
+      [2.8, 0.22],
+      [2.8, 2],
+      [1.2, 2]
+    ],
+    [
+      [1.05, 2.1],
+      [2.8, 2.1],
+      [2.8, 3],
+      [1.05, 3]
+    ],
+    [
+      [0.1, 1.45],
+      [0.95, 1.45],
+      [0.95, 2.15],
+      [0.1, 2.15]
+    ]
+  ],
+  "quantizeTexcoord": 16,
+  "woodSegments": [
+    {
+      "fromMM": [-37, 5, 18],
+      "toMM": [-32, -27, 18],
+      "radiusMM": 3.8
+    },
+    {
+      "fromMM": [-44, -17, 19],
+      "toMM": [-18, -5, 19],
+      "radiusMM": 4.5
+    },
+    {
+      "fromMM": [-42, -2, 22],
+      "toMM": [-24, -22, 22],
+      "radiusMM": 5.5
+    }
+  ]
+}
