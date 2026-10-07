@@ -1,6 +1,6 @@
 <template>
   <div class="map-selection-actions">
-    <ActionMenu title="Добавить в область">
+    <ActionMenu v-if="!builtin" title="Добавить в область">
       <template #trigger
         ><ActionButton variant="secondary"
           ><FolderPlus :size="18" />Добавить в область</ActionButton
@@ -29,6 +29,7 @@
       </template>
     </ActionMenu>
     <RemoveButton
+      v-if="!builtin"
       icon="trash"
       label="Удалить выбранное"
       @click="editor.removeSelected"
@@ -36,6 +37,7 @@
   </div>
 </template>
 <script setup>
+import { computed } from "vue";
 import {
   ActionButton,
   ActionMenu,
@@ -44,6 +46,13 @@ import {
 } from "@sylvieshare/share-ui";
 import { FolderPlus, Plus } from "@lucide/vue";
 const props = defineProps({ editor: Object });
+const builtin = computed(
+  () =>
+    props.editor.selectedLight &&
+    props.editor.draft.document.lights.find(
+      (l) => l.id === props.editor.selectedLight,
+    )?.builtinKey,
+);
 function add(id) {
   const e = props.editor;
   if (e.selectedLight) e.updateLight(e.selectedLight, "areaId", id);

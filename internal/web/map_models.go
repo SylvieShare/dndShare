@@ -21,10 +21,11 @@ func (s *Server) routesMapModels(mux *http.ServeMux) {
 
 type mapModelView struct {
 	battlemap.ModelMetadata
-	RenderURL  string `json:"renderUrl"`
-	LODURL     string `json:"lodUrl"`
-	PreviewURL string `json:"previewUrl"`
-	ShadowURL  string `json:"shadowUrl"`
+	Behaviour  battlemap.ModelBehaviour `json:"behaviour"`
+	RenderURL  string                   `json:"renderUrl"`
+	LODURL     string                   `json:"lodUrl"`
+	PreviewURL string                   `json:"previewUrl"`
+	ShadowURL  string                   `json:"shadowUrl"`
 }
 
 func modelView(model, visual battlemap.Model, base string) mapModelView {
@@ -39,7 +40,7 @@ func modelView(model, visual battlemap.Model, base string) mapModelView {
 	if visual.Assets["shadow"].SHA256 == visual.Assets["lod"].SHA256 {
 		shadowPath = "/lod"
 	}
-	return mapModelView{metadata, path + "/render" + query, path + "/lod" + query, path + "/preview" + query, path + shadowPath + query}
+	return mapModelView{ModelMetadata: metadata, Behaviour: battlemap.ModelBehaviour{DefaultLights: []battlemap.ModelLight{}, Transitions: []battlemap.ModelTransition{}}, RenderURL: path + "/render" + query, LODURL: path + "/lod" + query, PreviewURL: path + "/preview" + query, ShadowURL: path + shadowPath + query}
 }
 
 func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
@@ -50,8 +51,15 @@ func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
 	}
 	result := []mapModelView{}
 	visuals := battlemap.LatestVisualModels(models)
+	behaviours, err := s.store.MapModelBehaviours(r.Context())
+	if err != nil {
+		serverError(w, err)
+		return
+	}
 	for _, m := range models {
-		result = append(result, modelView(m, visuals[m.ID], "/api/maps/models"))
+		view := modelView(m, visuals[m.ID], "/api/maps/models")
+		view.Behaviour = behaviours[m.DefinitionID]
+		result = append(result, view)
 	}
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, result)
@@ -98,9 +106,17 @@ func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
 	}
 	result := []mapModelView{}
 	visuals := battlemap.LatestVisualModels(models)
+	behaviours, err := s.store.MapModelBehaviours(r.Context())
+	if err != nil {
+		serverError(w, err)
+		return
+	}
 	for _, m := range models {
 		if ids[m.ID] {
-			result = append(result, modelView(m, visuals[m.ID], "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models"))
+			view := modelView(m, visuals[m.ID], "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models")
+			view.Behaviour = behaviours[m.DefinitionID]
+			view.Behaviour.Transitions = []battlemap.ModelTransition{}
+			result = append(result, view)
 		}
 	}
 	w.Header().Set("Cache-Control", "no-store")

@@ -1,6 +1,7 @@
 <template>
   <div class="map-light-fields">
-    <FormField label="Название" vertical
+    <p v-if="light.builtinKey" class="map-hint">Встроенный источник модели.</p>
+    <FormField v-else label="Название" vertical
       ><FormTextInput
         :value="light.name"
         aria-label="Название источника света"
@@ -15,81 +16,85 @@
       label="Источник включён"
       @update:model-value="editor.updateLight(light.id, 'enabled', $event)"
     />
-    <FormField label="Показывать сферу"
-      ><CompactCheckbox
-        :model-value="light.showMarker"
-        label="Показывать сферу источника"
-        @update:model-value="
-          editor.updateLight(light.id, 'showMarker', $event)
-        "
-    /></FormField>
-    <FormField label="Цвет" vertical
-      ><ColorPresetPicker
-        :model-value="light.color"
-        :colors="colours"
-        allow-custom
-        aria-label="Цвет источника света"
-        custom-label="Свой цвет света"
-        @update:model-value="editor.updateLight(light.id, 'color', $event)"
-    /></FormField>
-    <FormField
-      v-for="field in fields"
-      :key="field.key"
-      :label="`${field.label}: ${light[field.key]}`"
-      vertical
-    >
-      <AppSlider
-        :model-value="light[field.key]"
-        :min="field.min"
-        :max="field.max"
-        :step="field.step"
-        :label="field.label"
-        @update:model-value="editor.updateLight(light.id, field.key, $event)"
-        @change="editor.finishLightEdit"
+    <template v-if="!light.builtinKey">
+      <FormField label="Показывать сферу"
+        ><CompactCheckbox
+          :model-value="light.showMarker"
+          label="Показывать сферу источника"
+          @update:model-value="
+            editor.updateLight(light.id, 'showMarker', $event)
+          "
+      /></FormField>
+      <FormField label="Цвет" vertical
+        ><ColorPresetPicker
+          :model-value="light.color"
+          :colors="colours"
+          allow-custom
+          aria-label="Цвет источника света"
+          custom-label="Свой цвет света"
+          @update:model-value="editor.updateLight(light.id, 'color', $event)"
+      /></FormField>
+      <FormField
+        v-for="field in fields"
+        :key="field.key"
+        :label="`${field.label}: ${light[field.key]}`"
+        vertical
+      >
+        <AppSlider
+          :model-value="light[field.key]"
+          :min="field.min"
+          :max="field.max"
+          :step="field.step"
+          :label="field.label"
+          @update:model-value="editor.updateLight(light.id, field.key, $event)"
+          @change="editor.finishLightEdit"
+        />
+      </FormField>
+      <ToggleSwitch
+        :model-value="light.flicker"
+        label="Мерцание"
+        @update:model-value="editor.updateLight(light.id, 'flicker', $event)"
       />
-    </FormField>
-    <ToggleSwitch
-      :model-value="light.flicker"
-      label="Мерцание"
-      @update:model-value="editor.updateLight(light.id, 'flicker', $event)"
-    />
-    <ToggleSwitch
-      :model-value="light.shadows"
-      :disabled="!light.shadows && shadowCount >= 2"
-      label="Создавать тени"
-      @update:model-value="editor.updateLight(light.id, 'shadows', $event)"
-    />
-    <p class="map-hint">
-      Тени доступны у двух локальных источников одновременно.
-    </p>
-    <FormField label="Область" vertical
-      ><FormSelect
-        :value="light.areaId || ''"
-        aria-label="Область источника света"
-        @change="editor.updateLight(light.id, 'areaId', $event)"
-        ><option value="">По привязке</option>
-        <option
-          v-for="area in editor.draft.document.areas"
-          :key="area.id"
-          :value="area.id"
-        >
-          {{ area.name }}
-        </option></FormSelect
-      ></FormField
-    >
-    <ActionButton
-      variant="secondary"
-      @click="
-        editor.bindingLight === light.id
-          ? editor.cancelLightBinding()
-          : emit('bind', light.id)
-      "
-    >
-      {{ editor.bindingLight === light.id ? "Отменить привязку" : "Привязать" }}
-    </ActionButton>
-    <p v-if="editor.bindingLight === light.id" class="map-hint" role="status">
-      Нажмите на плитку или объект на карте.
-    </p>
+      <ToggleSwitch
+        :model-value="light.shadows"
+        :disabled="!light.shadows && shadowCount >= 2"
+        label="Создавать тени"
+        @update:model-value="editor.updateLight(light.id, 'shadows', $event)"
+      />
+      <p class="map-hint">
+        Тени доступны у двух локальных источников одновременно.
+      </p>
+      <FormField label="Область" vertical
+        ><FormSelect
+          :value="light.areaId || ''"
+          aria-label="Область источника света"
+          @change="editor.updateLight(light.id, 'areaId', $event)"
+          ><option value="">По привязке</option>
+          <option
+            v-for="area in editor.draft.document.areas"
+            :key="area.id"
+            :value="area.id"
+          >
+            {{ area.name }}
+          </option></FormSelect
+        ></FormField
+      >
+      <ActionButton
+        variant="secondary"
+        @click="
+          editor.bindingLight === light.id
+            ? editor.cancelLightBinding()
+            : emit('bind', light.id)
+        "
+      >
+        {{
+          editor.bindingLight === light.id ? "Отменить привязку" : "Привязать"
+        }}
+      </ActionButton>
+      <p v-if="editor.bindingLight === light.id" class="map-hint" role="status">
+        Нажмите на плитку или объект на карте.
+      </p>
+    </template>
     <template v-if="anchor">
       <p class="map-hint">
         Привязан к {{ light.anchor.kind === "tile" ? "тайлу" : "объекту" }}.
@@ -97,7 +102,7 @@
       <MapEntityRow :entry="anchor" @select="emit('focus', $event)" />
     </template>
     <ActionButton
-      v-if="light.anchor"
+      v-if="light.anchor && !light.builtinKey"
       variant="quiet"
       @click="editor.bindLight(light.id, null)"
       >Отвязать источник</ActionButton

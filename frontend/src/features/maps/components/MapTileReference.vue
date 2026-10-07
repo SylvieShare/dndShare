@@ -1,13 +1,30 @@
 <template>
   <section class="map-tile-reference" aria-label="Справочник тайлов">
     <div class="map-reference-catalogue">
+      <MultiToggle
+        :model-value="reference.kind"
+        :options="[
+          { value: 'tile', label: 'Плитки' },
+          { value: 'object', label: 'Объекты' },
+        ]"
+        aria-label="Тип моделей справочника"
+        @update:model-value="reference.changeKind"
+      />
       <MapTilePalette
+        v-if="reference.kind === 'tile'"
         :editor="editor"
         @collection="reference.changeCollection"
         compact
         mode="inspect"
         :selected-id="reference.base?.id"
         @model="reference.choose"
+      />
+      <MapObjectPalette
+        v-else
+        :editor="editor"
+        mode="inspect"
+        :selected-id="reference.base?.id"
+        @object="reference.choose"
       />
     </div>
     <form
@@ -36,13 +53,16 @@
           <dd>{{ reference.base.sourceName }}</dd>
           <dt>Версия</dt>
           <dd>{{ reference.base.version }}</dd>
-          <dt>UUID</dt>
+          <dt>ID модели</dt>
+          <dd>{{ reference.base.definitionId }}</dd>
+          <dt>ID версии</dt>
           <dd>{{ reference.base.id }}</dd>
         </dl>
       </DetailSection>
       <p class="map-hint">
-        Параметры применяются к новым размещениям. Уже собранные карты сохраняют
-        прежние версии тайлов. Правка разметки не меняет саму 3D-модель.
+        Геометрия применяется к новым размещениям. Уже собранные карты сохраняют
+        прежние версии моделей. Переходы и встроенный свет общие для всех
+        версий.
       </p>
       <fieldset :disabled="reference.saving">
         <MapModelFields :model="reference.draft" />
@@ -100,6 +120,11 @@
             :rows="8"
           />
         </DetailSection>
+        <MapModelBehaviourFields
+          :model="reference.draft"
+          :behaviour="reference.behaviour"
+          :catalogue="editor.catalogue"
+        />
       </fieldset>
       <p v-if="reference.error" class="map-error" role="alert">
         {{ reference.error
@@ -141,10 +166,13 @@ import {
   ConfirmDialog,
   DetailSection,
   FormTextarea,
+  MultiToggle,
 } from "@sylvieshare/share-ui";
 import { Save } from "@lucide/vue";
 import MapTilePalette from "./MapTilePalette.vue";
+import MapObjectPalette from "./MapObjectPalette.vue";
 import MapModelFields from "./MapModelFields.vue";
+import MapModelBehaviourFields from "./MapModelBehaviourFields.vue";
 import MapModelPreview from "./MapModelPreview.vue";
 import MapModelPlacementPoints from "./MapModelPlacementPoints.vue";
 import MapModelSize from "./MapModelSize.vue";

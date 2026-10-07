@@ -2,6 +2,7 @@ import { syncSurfaceObjects } from "../lib/surfacePlacement";
 import { pruneAreas } from "../lib/mapAreas";
 import { editorAreas } from "./editorAreas";
 import { editorLighting } from "./editorLighting";
+import { editorTransitions } from "./editorTransitions";
 import { syncLights } from "../lib/mapLighting";
 import {
   computed,
@@ -227,6 +228,7 @@ export function useMapEditor(source, onSaved) {
     modelError.value = "";
     try {
       catalogue.value = await getMapModels();
+      syncLights(draft.value.document, catalogue.value);
       if (!selectedModel.value)
         selectedModel.value =
           catalogue.value.find((m) => m.sourceCode === "LC-007")?.id ||
@@ -247,6 +249,10 @@ export function useMapEditor(source, onSaved) {
     return loadModels();
   }
   onMounted(loadModels);
+  watch(catalogue, () => {
+    if (catalogue.value.length)
+      syncLights(draft.value.document, catalogue.value);
+  });
   function beforeUnload(e) {
     if (dirty.value) {
       e.preventDefault();
@@ -303,6 +309,7 @@ export function useMapEditor(source, onSaved) {
     redo,
     resize,
     ...editorAreas(state),
+    ...editorTransitions(state),
     ...gestures,
     ...lighting,
     lightDrag: lighting.driver,

@@ -1,16 +1,16 @@
 <template>
   <BaseTile
     class="map-entity-row"
-    interactive
+    :interactive="selectable"
     :framed="selected"
     :tint="selected"
     :color="entry.color"
-    role="button"
-    tabindex="0"
+    :role="selectable ? 'button' : undefined"
+    :tabindex="selectable ? 0 : undefined"
     :aria-label="entry.name"
-    @click="emit('select', entry)"
-    @keydown.enter.self.prevent="emit('select', entry)"
-    @keydown.space.self.prevent="emit('select', entry)"
+    @click="selectable && emit('select', entry)"
+    @keydown.enter.self.prevent="selectable && emit('select', entry)"
+    @keydown.space.self.prevent="selectable && emit('select', entry)"
   >
     <ActionButton
       v-if="entry.kind === 'light' && toggleLight"
@@ -56,6 +56,7 @@
     <strong v-if="entry.count" class="map-entity-count"
       >×{{ entry.count }}</strong
     >
+    <slot name="actions" />
   </BaseTile>
 </template>
 <script setup>
@@ -65,6 +66,7 @@ defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,
   toggleLight: Boolean,
+  selectable: { type: Boolean, default: true },
 });
 const emit = defineEmits(["select", "toggle"]);
 </script>

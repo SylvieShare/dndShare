@@ -1,6 +1,7 @@
 import { structureContext } from "./tileStructure";
 import { tileSize } from "./tilePlacement";
 import { resolvedSurfacePosition } from "./surfacePlacement";
+import { builtinLightPose, syncBuiltinLights } from "./builtinLights";
 export const LIGHT_PRESETS = [
   {
     kind: "torch",
@@ -32,6 +33,8 @@ export const LIGHT_PRESETS = [
 ];
 export const DEFAULT_SUN = { enabled: true, angle: 225, elevation: 45 };
 export function lightPose(light, document, catalogue, context) {
+  const builtin = builtinLightPose(light, document, catalogue, context);
+  if (builtin) return builtin;
   let x = light.x,
     y = light.y,
     elevation = light.elevation || 0,
@@ -94,6 +97,8 @@ export function lightOpacity(light, document, mode) {
   return hidden ? (mode === "ghost" ? 0.12 : 0) : 1;
 }
 export function syncLights(document, catalogue) {
+  syncBuiltinLights(document, catalogue);
+  const context = structureContext(document, catalogue);
   const tiles = new Set(document.tiles.map((t) => t.id)),
     objects = new Set(document.objects.map((o) => o.id)),
     areas = new Set(document.areas?.map((a) => a.id));
@@ -105,7 +110,7 @@ export function syncLights(document, catalogue) {
   for (const light of document.lights) {
     if (light.areaId && !areas.has(light.areaId)) light.areaId = "";
     if (light.anchor) {
-      const pose = lightPose(light, document, catalogue);
+      const pose = lightPose(light, document, catalogue, context);
       light.x = pose.x;
       light.y = pose.y;
       light.elevation = pose.elevation;

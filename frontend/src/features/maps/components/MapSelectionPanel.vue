@@ -69,6 +69,10 @@
           @bind="emit('bind', $event)"
           @focus="emit('focus', [$event])"
         />
+        <template v-else>
+          <MapModelTransitions :editor="editor" :entry="single" />
+          <MapModelLights :editor="editor" :entry="single" />
+        </template>
       </template>
       <template v-else>
         <h3>Выбрано: {{ entries.length }}</h3>
@@ -92,6 +96,8 @@ import { groupMapEntities, selectedMapEntities } from "../lib/editorEntities";
 import MapEntityRow from "./MapEntityRow.vue";
 import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
+import MapModelTransitions from "./MapModelTransitions.vue";
+import MapModelLights from "./MapModelLights.vue";
 const props = defineProps({ editor: Object });
 const emit = defineEmits(["focus", "bind"]);
 const entries = computed(() => selectedMapEntities(props.editor));

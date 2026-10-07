@@ -11,6 +11,14 @@ var ErrMapModelConflict = errors.New("map model revision conflict")
 
 // Metadata edits append a revision. Placed UUIDs and their assets stay immutable.
 func (s *Store) ReviseMapModel(ctx context.Context, expectedID string, edited battlemap.Model) (battlemap.Model, error) {
+	return s.reviseMapModel(ctx, expectedID, edited, nil)
+}
+
+func (s *Store) ReviseMapModelWithBehaviour(ctx context.Context, expectedID string, edited battlemap.Model, behaviour *battlemap.ModelBehaviour) (battlemap.Model, error) {
+	return s.reviseMapModel(ctx, expectedID, edited, behaviour)
+}
+
+func (s *Store) reviseMapModel(ctx context.Context, expectedID string, edited battlemap.Model, behaviour *battlemap.ModelBehaviour) (battlemap.Model, error) {
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return edited, err
@@ -33,6 +41,7 @@ func (s *Store) ReviseMapModel(ctx context.Context, expectedID string, edited ba
 		return edited, ErrMapModelConflict
 	}
 	edited.Collection, edited.CollectionName = old.Collection, old.CollectionName
+	edited.DefinitionID = old.DefinitionID
 	edited.SourceCode, edited.SourceName = old.SourceCode, old.SourceName
 	edited.Assets = old.Assets
 	edited.Hidden = old.Hidden
@@ -51,6 +60,11 @@ VALUES($1::uuid,$2,$3,$4,$5,$6,$7,CAST($8 AS jsonb),CAST($9 AS jsonb))`,
 	}
 	if err != nil {
 		return edited, err
+	}
+	if behaviour != nil {
+		if err = saveModelBehaviour(ctx, tx, old.DefinitionID, *behaviour); err != nil {
+			return edited, err
+		}
 	}
 	if err = tx.Commit(ctx); err != nil {
 		return edited, err

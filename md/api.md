@@ -33,8 +33,8 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, textureDetail (basic/detailed) используемой визуальной версии и renderUrl/lodUrl/shadowUrl/previewUrl |
-| `PUT /api/maps/models/{modelId}` | ADMIN: полная ModelMetadata текущей версии → новая версия с новым UUID; файлы и старые версии неизменны, устаревшая правка получает 409 |
+| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, постоянный definitionId, behaviour (revision/defaultLights/transitions), textureDetail (basic/detailed) используемой визуальной версии и renderUrl/lodUrl/shadowUrl/previewUrl |
+| `PUT /api/maps/models/{modelId}` | ADMIN: ModelMetadata и необязательный behaviour → новая версия с новым UUID; поведение логической модели сохраняется в той же транзакции; устаревшая версия/ревизия получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | ADMIN: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |
 | `POST /api/maps` | Создать `{name,document}` |

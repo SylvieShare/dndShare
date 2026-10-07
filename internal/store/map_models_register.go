@@ -10,6 +10,7 @@ import (
 
 func (s *Store) RegisterMapModel(ctx context.Context, m battlemap.Model) (battlemap.Model, error) {
 	if old, err := s.GetMapModel(ctx, m.ID); err == nil {
+		m.DefinitionID = old.DefinitionID
 		if !reflect.DeepEqual(old, m) {
 			return old, errors.New("model version is immutable; provide a new UUID and version")
 		}
@@ -36,6 +37,7 @@ VALUES($1::uuid,$2,$3,$4,$5,$6,$7,CAST($8 AS jsonb),CAST($9 AS jsonb)) ON CONFLI
 	if err != nil {
 		return m, errors.New("collection, sourceCode and version are already registered under another UUID")
 	}
+	m.DefinitionID = old.DefinitionID
 	if !reflect.DeepEqual(old, m) {
 		return old, errors.New("model version is immutable")
 	}

@@ -15,7 +15,7 @@ func (s *Server) routesMapModelEditing(mux *http.ServeMux) {
 }
 
 func editedMapModel(original battlemap.Model, input battlemap.ModelMetadata) (battlemap.Model, error) {
-	if input.ID != original.ID || input.Version != original.Version || input.Collection != original.Collection || input.CollectionName != original.CollectionName || input.SourceCode != original.SourceCode || input.SourceName != original.SourceName || input.Hidden != original.Hidden {
+	if input.ID != original.ID || input.DefinitionID != original.DefinitionID || input.Version != original.Version || input.Collection != original.Collection || input.CollectionName != original.CollectionName || input.SourceCode != original.SourceCode || input.SourceName != original.SourceName || input.Hidden != original.Hidden {
 		return original, errors.New("Исходный код, коллекция и версия тайла не редактируются")
 	}
 	input.Name = strings.TrimSpace(input.Name)
@@ -32,7 +32,10 @@ func (s *Server) handleEditMapModel(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "Некорректный идентификатор тайла")
 		return
 	}
-	var input battlemap.ModelMetadata
+	var input struct {
+		battlemap.ModelMetadata
+		Behaviour *battlemap.ModelBehaviour `json:"behaviour"`
+	}
 	if decodeJSON(r, &input) != nil {
 		badRequest(w, "Некорректные параметры тайла")
 		return
@@ -42,7 +45,7 @@ func (s *Server) handleEditMapModel(w http.ResponseWriter, r *http.Request) {
 		mapError(w, err)
 		return
 	}
-	edited, err := editedMapModel(original, input)
+	edited, err := editedMapModel(original, input.ModelMetadata)
 	if err != nil {
 		badRequest(w, "Некорректные параметры тайла: "+err.Error())
 		return
@@ -52,15 +55,26 @@ func (s *Server) handleEditMapModel(w http.ResponseWriter, r *http.Request) {
 		serverError(w, err)
 		return
 	}
-	saved, err := s.store.ReviseMapModel(r.Context(), id, edited)
+	saved, err := s.store.ReviseMapModelWithBehaviour(r.Context(), id, edited, input.Behaviour)
 	if errors.Is(err, store.ErrMapModelConflict) {
 		conflict(w, "Параметры тайла уже изменены. Обновите справочник перед сохранением.")
 		return
 	}
 	if err != nil {
+		if errors.Is(err, store.ErrInvalidMapModels) {
+			badRequest(w, strings.TrimPrefix(err.Error(), store.ErrInvalidMapModels.Error()+": "))
+			return
+		}
 		mapError(w, err)
 		return
 	}
 	w.Header().Set("Cache-Control", "no-store")
-	writeJSON(w, http.StatusOK, modelView(saved, saved, "/api/maps/models"))
+	behaviours, err := s.store.MapModelBehaviours(r.Context())
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	view := modelView(saved, saved, "/api/maps/models")
+	view.Behaviour = behaviours[saved.DefinitionID]
+	writeJSON(w, http.StatusOK, view)
 }

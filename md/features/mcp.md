@@ -138,7 +138,7 @@ rollback; apply требует точный token и включённые MCP wr
 [пайплайне обработки моделей](maps-model-pipeline.md).
 Каталог и передача файлов поддерживаются отдельными tools:
 
-- `map_tile_models_list`: метаданные и assets, опциональный фильтр collection.
+- `map_tile_models_list`: метаданные, постоянный definitionId и assets; опциональный фильтр collection.
 - `map_tile_model_get`: одна версия по UUID.
 - `map_tile_asset_prepare_upload`: kind, fileName, SHA-256 и size; возвращает
   временный S3 uploadKey, подписанный PUT URL на 15 минут и необходимые headers.
@@ -146,10 +146,12 @@ rollback; apply требует точный token и включённые MCP wr
   S3-объект, проверяет размер, SHA-256 и формат, копирует его в постоянный
   content-addressed key и удаляет временный объект. Прежние версии не заменяются.
 - `map_tile_model_register`: полный model object с именами, sourceCode, версией,
-  типом, местностью, схемой стен, геометрией и assets render/lod/shadow/preview/source. Если shadow не указан,
+  tileType, wallMode/wallMask, геометрией и assets render/lod/shadow/preview/source. Если shadow не указан,
   наследует его от совместимой версии или назначает загруженный LOD. Проверяет наличие
   и SHA-256 всех файлов; идентичный повтор идемпотентен. Изменение требует нового
   UUID и номера версии.
+  Определение по исходной идентичности назначается автоматически и сохраняет переходы
+  и встроенный свет при новых версиях; [контракт поведения](maps-model-behaviour.md).
 
 - `map_tile_model_register_shadow`: id существующей модели, expectedLodSHA256
   и asset, полученный после complete_upload. Проверяет только новый shadow GLB

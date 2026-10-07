@@ -61,6 +61,14 @@ func (s *Server) handleListMaps(w http.ResponseWriter, r *http.Request) {
 	for _, p := range battlemap.Presets() {
 		maps = append(maps, store.BattleMap{ID: p.ID, Name: p.Name, Document: p.Document, System: true, Revision: 1})
 	}
+	documents := make([]*battlemap.Document, 0, len(maps))
+	for i := range maps {
+		documents = append(documents, &maps[i].Document)
+	}
+	if err := s.store.HydrateMapLights(r.Context(), documents...); err != nil {
+		serverError(w, err)
+		return
+	}
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, maps)
 }
@@ -91,7 +99,7 @@ func (s *Server) handleSaveMap(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, err.Error())
 		return
 	}
-	if _, err := s.store.MapModelsForDocument(r.Context(), m.Document); err != nil {
+	if err := s.store.PrepareMapDocument(r.Context(), &m.Document); err != nil {
 		if errors.Is(err, store.ErrInvalidMapModels) {
 			badRequest(w, strings.TrimPrefix(err.Error(), store.ErrInvalidMapModels.Error()+": "))
 		} else {

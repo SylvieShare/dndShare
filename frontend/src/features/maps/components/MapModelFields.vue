@@ -32,7 +32,7 @@
         "
     /></FormField>
   </div>
-  <div class="model-classification">
+  <div v-if="model.tileType !== 'object'" class="model-classification">
     <FormField label="Тип тайла" vertical
       ><MapTileCategoryPicker v-model="model.tileType" label="Тип тайла"
     /></FormField>
@@ -41,7 +41,10 @@
     /></FormField>
   </div>
   <div class="model-availability">
-    <ToggleSwitch v-model="model.hasDecor" label="Есть предметы или декорации" />
+    <ToggleSwitch
+      v-model="model.hasDecor"
+      label="Есть предметы или декорации"
+    />
     <ToggleSwitch v-model="model.canStand" label="Можно встать" />
   </div>
 </template>

@@ -62,6 +62,7 @@ FROM (VALUES
 	exec(schemaModelSurfacesObjectsSQL)
 	exec(schemaMeasuredPlacementPointsSQL)
 	exec(schemaModelShadowAssetsSQL)
+	exec(schemaModelBehaviourSQL)
 	s := &Store{pool: pool}
 	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,geometry,assets)
 SELECT item.id::uuid,item.collection,item.code,item.name,item.name,1,'floor',
@@ -106,6 +107,7 @@ FROM (VALUES
 			t.Fatalf("wall shape reference classified incorrectly: %+v %v", model, err)
 		}
 	}
+	testMapModelBehaviours(t, ctx, s)
 	var oldColumns int
 	if err := pool.QueryRow(ctx, `SELECT count(*) FROM information_schema.columns WHERE table_schema='dndshare' AND table_name='map_model' AND column_name IN ('wall_layout','terrain_type')`).Scan(&oldColumns); err != nil || oldColumns != 0 {
 		t.Fatalf("redundant fields survived migration: %d %v", oldColumns, err)
@@ -113,7 +115,7 @@ FROM (VALUES
 	base := battlemap.InitialCatalogue()[0]
 	base.Collection = "test"
 	base.ID = "00000000-0000-4000-8000-000000000001"
-	if _, err = s.RegisterMapModel(ctx, base); err != nil {
+	if base, err = s.RegisterMapModel(ctx, base); err != nil {
 		t.Fatal(err)
 	}
 	edit := base
@@ -170,7 +172,7 @@ FROM (VALUES
 	shadowBase := battlemap.InitialCatalogue()[0]
 	shadowBase.Collection = "shadow-test"
 	shadowBase.ID = "00000000-0000-4000-8000-000000000010"
-	if _, err = s.RegisterMapModel(ctx, shadowBase); err != nil {
+	if shadowBase, err = s.RegisterMapModel(ctx, shadowBase); err != nil {
 		t.Fatal(err)
 	}
 	asset := shadowBase.Assets["shadow"]

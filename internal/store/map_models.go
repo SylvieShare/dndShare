@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-const mapModelColumns = `id::text,collection,source_code,source_name,name,version,tile_type,geometry,assets`
+const mapModelColumns = `id::text,collection,source_code,source_name,name,version,tile_type,geometry,assets,definition_id::text`
 
 var ErrInvalidMapModels = errors.New("invalid map models")
 
@@ -18,7 +18,7 @@ func scanMapModel(row pgx.Row) (battlemap.Model, error) {
 	var m battlemap.Model
 	var geometry, assets []byte
 	err := row.Scan(&m.ID, &m.Collection, &m.SourceCode, &m.SourceName, &m.Name, &m.Version,
-		&m.TileType, &geometry, &assets)
+		&m.TileType, &geometry, &assets, &m.DefinitionID)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return m, ErrNotFound
 	}

@@ -16,6 +16,7 @@ type LightAnchor struct {
 }
 type Light struct {
 	ID         string       `json:"id"`
+	BuiltinKey string       `json:"builtinKey,omitempty"`
 	Name       string       `json:"name"`
 	Kind       string       `json:"kind"`
 	Color      string       `json:"color"`
@@ -39,7 +40,13 @@ func validateLighting(d *Document, tiles, objects map[string]bool) error {
 	if d.Sun == nil {
 		d.Sun = DefaultSun()
 	}
-	if !bounded(d.Sun.Angle, 0, 360) || !bounded(d.Sun.Elevation, 10, 85) || len(d.Lights) > 32 {
+	manualCount := 0
+	for _, l := range d.Lights {
+		if l.BuiltinKey == "" {
+			manualCount++
+		}
+	}
+	if !bounded(d.Sun.Angle, 0, 360) || !bounded(d.Sun.Elevation, 10, 85) || manualCount > 32 || len(d.Lights) > (MaxTiles+1000)*8+32 {
 		return fmt.Errorf("Некорректные настройки освещения")
 	}
 	areas := map[string]bool{}
@@ -49,10 +56,19 @@ func validateLighting(d *Document, tiles, objects map[string]bool) error {
 	ids := map[string]bool{}
 	shadows := 0
 	for _, light := range d.Lights {
+		heightLimit := 16.0
+		margin := 0.0
+		if light.BuiltinKey != "" {
+			heightLimit = 256
+			margin = 128
+		}
+		if light.BuiltinKey != "" && (!identifier.MatchString(light.BuiltinKey) || len(light.BuiltinKey) > 32 || light.Anchor == nil) {
+			return fmt.Errorf("Некорректная привязка встроенного света")
+		}
 		if !identifier.MatchString(light.ID) || ids[light.ID] || strings.TrimSpace(light.Name) == "" || len([]rune(light.Name)) > 100 ||
 			(light.Kind != "torch" && light.Kind != "candle" && light.Kind != "magic") || !color.MatchString(light.Color) ||
-			!bounded(light.X, 0, d.Width) || !bounded(light.Y, 0, d.Height) || !bounded(light.Elevation, 0, 512) ||
-			!bounded(light.Height, 0, 16) || !bounded(light.Intensity, 0, 50) || !bounded(light.Radius, .25, 32) ||
+			!bounded(light.X, -margin, d.Width+margin) || !bounded(light.Y, -margin, d.Height+margin) || !bounded(light.Elevation, 0, 512) ||
+			!bounded(light.Height, 0, heightLimit) || !bounded(light.Intensity, 0, 50) || !bounded(light.Radius, .25, 32) ||
 			!bounded(light.Offset[0], -8, 8) || !bounded(light.Offset[1], -8, 8) || (light.AreaID != "" && !areas[light.AreaID]) {
 			return fmt.Errorf("Некорректный источник освещения")
 		}

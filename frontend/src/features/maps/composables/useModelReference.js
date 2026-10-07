@@ -5,6 +5,9 @@ import { latestModelVersions } from "../lib/modelVersions";
 export function useModelReference(editor) {
   const base = ref(null),
     draft = ref(null),
+    behaviour = ref(null),
+    baseBehaviour = ref(null),
+    kind = ref("tile"),
     blockers = ref(""),
     error = ref(""),
     saving = ref(false),
@@ -12,8 +15,10 @@ export function useModelReference(editor) {
     confirmDiscard = ref(false);
   let pending = null;
   const models = computed(() =>
-    latestModelVersions(editor.catalogue).filter(
-      (m) => m.collection === editor.collection,
+    latestModelVersions(editor.catalogue).filter((m) =>
+      kind.value === "object"
+        ? m.tileType === "object"
+        : m.collection === editor.collection && m.tileType !== "object",
     ),
   );
   const dirty = computed(
@@ -21,11 +26,19 @@ export function useModelReference(editor) {
       base.value &&
       (JSON.stringify(draft.value) !==
         JSON.stringify(modelMetadata(base.value)) ||
+        JSON.stringify(behaviour.value) !==
+          JSON.stringify(baseBehaviour.value) ||
         blockers.value !== JSON.stringify(base.value.blockers, null, 2)),
   );
   function load(model) {
     base.value = modelMetadata(model);
     draft.value = modelMetadata(model);
+    baseBehaviour.value = JSON.parse(
+      JSON.stringify(
+        model.behaviour || { revision: 1, defaultLights: [], transitions: [] },
+      ),
+    );
+    behaviour.value = JSON.parse(JSON.stringify(baseBehaviour.value));
     blockers.value = JSON.stringify(draft.value.blockers, null, 2);
     error.value = status.value = "";
   }
@@ -47,6 +60,13 @@ export function useModelReference(editor) {
       if (models.value.length) load(firstModel());
     });
   }
+  function changeKind(value) {
+    if (value === kind.value) return;
+    request(() => {
+      kind.value = value;
+      if (models.value.length) load(firstModel());
+    });
+  }
   function discard() {
     confirmDiscard.value = false;
     const action = pending;
@@ -54,7 +74,7 @@ export function useModelReference(editor) {
     action?.();
   }
   function reset() {
-    if (base.value) load(base.value);
+    if (base.value) load({ ...base.value, behaviour: baseBehaviour.value });
   }
   async function save() {
     if (!draft.value || !dirty.value || saving.value) return;
@@ -98,9 +118,17 @@ export function useModelReference(editor) {
       saving.value = true;
       const saved = await saveMapModelMetadata(base.value.id, {
         ...modelMetadata(draft.value),
+        behaviour: JSON.parse(JSON.stringify(behaviour.value)),
         blockers: contours,
       });
-      editor.catalogue = [...editor.catalogue, saved];
+      editor.catalogue = [
+        ...editor.catalogue.map((m) =>
+          m.definitionId && m.definitionId === saved.definitionId
+            ? { ...m, behaviour: saved.behaviour }
+            : m,
+        ),
+        saved,
+      ];
       if (editor.selectedModel === base.value.id)
         editor.selectedModel = saved.id;
       load(saved);
@@ -151,6 +179,8 @@ export function useModelReference(editor) {
   return {
     base,
     draft,
+    behaviour,
+    kind,
     blockers,
     error,
     saving,
@@ -159,6 +189,7 @@ export function useModelReference(editor) {
     confirmDiscard,
     choose,
     changeCollection,
+    changeKind,
     discard,
     reset,
     save,

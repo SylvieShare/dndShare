@@ -25,6 +25,14 @@ func (s *Server) handleListSessionMaps(w http.ResponseWriter, r *http.Request) {
 		mapError(w, err)
 		return
 	}
+	presentations := make([]*store.SessionMap, 0, len(maps))
+	for i := range maps {
+		presentations = append(presentations, &maps[i])
+	}
+	if err := s.store.HydrateSessionMapLights(r.Context(), presentations...); err != nil {
+		serverError(w, err)
+		return
+	}
 	display, err := s.store.GetMapDisplay(r.Context(), sid)
 	if err != nil {
 		mapError(w, err)
@@ -49,6 +57,10 @@ func (s *Server) handleAddSessionMap(w http.ResponseWriter, r *http.Request) {
 	m, err := s.findMap(r, uid, req.MapID)
 	if err != nil {
 		mapError(w, err)
+		return
+	}
+	if err := s.store.HydrateMapLights(r.Context(), &m.Document); err != nil {
+		serverError(w, err)
 		return
 	}
 	result, err := s.store.AddSessionMap(r.Context(), sid, m)
@@ -83,6 +95,10 @@ func (s *Server) handleSaveSessionMap(w http.ResponseWriter, r *http.Request) {
 		mapError(w, err)
 		return
 	}
+	if err := s.store.HydrateSessionMapLights(r.Context(), &m); err != nil {
+		serverError(w, err)
+		return
+	}
 	if err := battlemap.ValidateState(&req.State, m.Document); err != nil {
 		badRequest(w, err.Error())
 		return
@@ -101,6 +117,10 @@ func (s *Server) handleSaveSessionMap(w http.ResponseWriter, r *http.Request) {
 	m, err = s.store.SaveSessionMapState(r.Context(), sid, id, req.Revision, req.State)
 	if err != nil {
 		mapError(w, err)
+		return
+	}
+	if err := s.store.HydrateSessionMapLights(r.Context(), &m); err != nil {
+		serverError(w, err)
 		return
 	}
 	s.mapEvents.publish(sid)
@@ -169,6 +189,10 @@ func (s *Server) handlePublicMap(w http.ResponseWriter, r *http.Request) {
 		value, err := s.store.GetSessionMap(r.Context(), session.ID, *display.MapID)
 		if err != nil {
 			mapError(w, err)
+			return
+		}
+		if err := s.store.HydrateSessionMapLights(r.Context(), &value); err != nil {
+			serverError(w, err)
 			return
 		}
 		value.State = battlemap.PublicState(value.Document, value.State)

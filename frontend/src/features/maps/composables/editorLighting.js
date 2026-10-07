@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { editorLightBinding } from "./editorLightBinding";
 import { clone, inside, uid } from "../lib/mapModel";
 import { DEFAULT_SUN, LIGHT_PRESETS, lightPose } from "../lib/mapLighting";
+import { manualLightCount } from "../lib/builtinLights";
 export function editorLighting(e) {
   const selectedLight = ref(""),
     hoveredLight = ref(""),
@@ -31,7 +32,7 @@ export function editorLighting(e) {
       (l) => l.id === selectedLight.value,
     );
     if (!light) return false;
-    const { anchor, areaId, ...snapshot } = clone(light);
+    const { anchor, areaId, builtinKey, ...snapshot } = clone(light);
     copiedLight.value = { ...snapshot, offset: [0, 0] };
     return true;
   }
@@ -43,7 +44,7 @@ export function editorLighting(e) {
   }
   function updateLight(id, field, value) {
     const light = e.draft.value.document.lights.find((l) => l.id === id);
-    if (light)
+    if (light && (!light.builtinKey || field === "enabled"))
       patch(`${id}:${field}`, () => {
         light[field] = value;
       });
@@ -60,14 +61,16 @@ export function editorLighting(e) {
     if (!id) return;
     finishLightEdit();
     e.change((m) => {
-      m.document.lights = m.document.lights.filter((l) => l.id !== id);
+      const light = m.document.lights.find((l) => l.id === id);
+      if (light?.builtinKey) light.enabled = false;
+      else m.document.lights = m.document.lights.filter((l) => l.id !== id);
     });
     selectedLight.value = "";
     binding.cancelLightBinding();
   }
   function bindLight(id, anchor) {
     const light = e.draft.value.document.lights.find((l) => l.id === id);
-    if (!light) return;
+    if (!light || light.builtinKey) return;
     e.change(() => {
       light.anchor = anchor;
       light.offset = [0, 0];
@@ -111,6 +114,10 @@ export function editorLighting(e) {
         (l) => l.id === hit.lightId,
       );
       if (!light) return false;
+      if (light.builtinKey) {
+        selectLight(light.id);
+        return true;
+      }
       selectLight(light.id);
       gesture = {
         before: clone(e.draft.value),
@@ -212,7 +219,7 @@ export function editorLighting(e) {
     },
     drop(point) {
       driver.move(point);
-      if (previewLight.value && e.draft.value.document.lights.length < 32) {
+      if (previewLight.value && manualLightCount(e.draft.value.document) < 32) {
         const { placing, ...light } = previewLight.value;
         light.id = uid();
         light.shadows =

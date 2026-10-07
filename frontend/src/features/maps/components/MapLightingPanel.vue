@@ -10,7 +10,7 @@
     <div class="map-lighting-heading">
       <h3>Источники света</h3>
       <MapLightPresetMenu
-        :disabled="editor.draft.document.lights.length >= 32"
+        :disabled="manualLightCount(editor.draft.document) >= 32"
         @place-light="(kind, event) => emit('place-light', kind, event)"
       />
     </div>
@@ -29,6 +29,7 @@
 import { computed } from "vue";
 import { CompactCheckbox, FormField } from "@sylvieshare/share-ui";
 import { mapEntity } from "../lib/editorEntities";
+import { manualLightCount } from "../lib/builtinLights";
 import MapLightPresetMenu from "./MapLightPresetMenu.vue";
 import MapSunSettings from "./MapSunSettings.vue";
 import MapEntityRow from "./MapEntityRow.vue";

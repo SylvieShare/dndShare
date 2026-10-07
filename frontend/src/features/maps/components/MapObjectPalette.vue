@@ -1,6 +1,9 @@
 <template>
   <section class="map-object-palette" aria-label="Каталог объектов">
-    <p class="map-hint">
+    <p v-if="mode === 'inspect'" class="map-hint">
+      Выберите объект для просмотра параметров.
+    </p>
+    <p v-else class="map-hint">
       {{
         draggable
           ? "Перетащите объект на подсвеченную точку."
@@ -13,6 +16,7 @@
         v-for="model in models"
         :key="model.id"
         :model="model"
+        :selected="selectedId === model.id"
         :draggable="draggable"
         @model="(id, event) => emit('object', id, event)"
         @drag-tile="(id, event) => emit('drag-object', id, event)"
@@ -25,7 +29,12 @@
 import { computed } from "vue";
 import MapTileCard from "./MapTileCard.vue";
 import { latestModelVersions } from "../lib/modelVersions";
-const props = defineProps({ editor: Object, draggable: Boolean });
+const props = defineProps({
+  editor: Object,
+  draggable: Boolean,
+  selectedId: String,
+  mode: { type: String, default: "place" },
+});
 const emit = defineEmits(["object", "drag-object"]);
 const models = computed(() =>
   latestModelVersions(props.editor.catalogue).filter(

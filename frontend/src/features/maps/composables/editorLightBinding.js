@@ -10,7 +10,10 @@ export function editorLightBinding(e, selectedLight, bindLight) {
     e.hoveredObject.value = "";
   }
   function beginLightBinding(id) {
-    if (!e.draft.value.document.lights.some((l) => l.id === id)) return;
+    if (
+      !e.draft.value.document.lights.some((l) => l.id === id && !l.builtinKey)
+    )
+      return;
     selectedLight.value = id;
     e.setTileSelection([]);
     e.setObjectSelection([]);
