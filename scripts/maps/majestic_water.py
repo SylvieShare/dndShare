@@ -45,5 +45,12 @@ def apply_water(obj, positions, colours, roughness, recipe):
         shade=1+.04*np.sin(x*.63+y*.47+z*.31)
         colours=colours*(1-stone_weight[:,None])+np.array(stone['rgb'])*shade[:,None]*stone_weight[:,None]
         roughness=roughness*(1-stone_weight)+.82*stone_weight
+    for bank in settings.get('banks',[]):
+        radius=np.linalg.norm((positions[:,:2]-np.array(bank['centreMM']))/np.array(bank['radiiMM']),axis=1)
+        bank_weight=np.clip((radius-bank['innerRadius'])/.12,0,1)*np.clip((bank['outerRadius']-radius)/.12,0,1)
+        bank_weight*=np.clip((z-bank['minZMM'])/.4,0,1)*(1-weight)
+        shade=1+.045*np.sin(x*.51+y*.43+z*.21)
+        colours=colours*(1-bank_weight[:,None])+np.array(bank['rgb'])*shade[:,None]*bank_weight[:,None]
+        roughness=roughness*(1-bank_weight)+.88*bank_weight
     print('WATER_REFERENCE',np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),int((weight>.5).sum()),flush=True)
     return colours,roughness
