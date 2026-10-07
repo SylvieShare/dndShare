@@ -1,0 +1,100 @@
+{
+  "sourceName": "Railway Angle",
+  "referencePage": 4,
+  "material": "cave-railway",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4.5],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [20, 100],
+    "previewKiB": [10, 140],
+    "basis": "299966-triangle1x1 quarter-circle track with two iron arcs, three radial timber ties and four fasteners;40k/14k budgets preserve curve and cross-material boundaries, two KTX2 candidates."
+  },
+  "notes": "Author page4: two measured concentric rail arcs centred17.5/-17.5mm, outer radius25.55 and inner8.3mm. Three straight timber segments fan around corner with grain along each measured axis. Four bolt heads, natural rock remains exposed outside and between ties. Preserve mountDepth0, original footprint, wall/placement metadata and LC-020 definitionId. Inner corner bolt head and side measured13.3725/-15.0827 and12.6981/-15.6447mm; corrected centre13.3/-15.2.",
+  "railway": {
+    "rails": [
+      {
+        "arc": {
+          "centre": [17.5, -17.5],
+          "radius": 25.55
+        },
+        "halfWidth": 2.75,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "arc": {
+          "centre": [17.5, -17.5],
+          "radius": 8.3
+        },
+        "halfWidth": 2.75,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      }
+    ],
+    "bolts": [
+      {
+        "x": 13.04,
+        "y": 12.19,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -3.03,
+        "y": 4.55,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.2,
+        "y": -9.28,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 13.3,
+        "y": -15.2,
+        "radius": 2.25,
+        "minZ": 9.4
+      }
+    ],
+    "ties": [
+      {
+        "segment": [
+          [-15.3, -8.4],
+          [12.8, -13.9]
+        ],
+        "halfWidth": 3.1
+      },
+      {
+        "segment": [
+          [-5.2, 6.6],
+          [14.1, -12.8]
+        ],
+        "halfWidth": 3.2
+      },
+      {
+        "segment": [
+          [12.1, 15.5],
+          [14.4, -12.5]
+        ],
+        "halfWidth": 3.1
+      }
+    ],
+    "timberHalfLength": 17.55,
+    "timberMinZ": 7.15,
+    "timberMaxZ": 10.4,
+    "woodTint": [0.36, 0.255, 0.135]
+  },
+  "groupCode": "LC-railway-angle"
+}

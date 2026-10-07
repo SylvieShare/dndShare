@@ -20,5 +20,6 @@
     "previewKiB": [10, 100],
     "basis": "259,930-triangle1x1 ground, comparable to independently reviewed LC-007;30k/10k budgets and two KTX2 candidates, preserve its own lower central surface."
   },
-  "notes": "Author page2: distinct arrangement of broad natural plates and scattered perimeter rubble, lower central standing surface. Verify cutHeight4.6 mm, dusty upper plates and darker joints at their actual relief; preserve mount0.151346 and point0.5/0.5 at elevation0.384191."
+  "notes": "Author page2: distinct arrangement of broad natural plates and scattered perimeter rubble, lower central standing surface. Verify cutHeight4.6 mm, dusty upper plates and darker joints at their actual relief; preserve mount0.151346 and point0.5/0.5 at elevation0.384191.",
+  "groupCode": "LC-ground"
 }

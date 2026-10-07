@@ -20,5 +20,6 @@
     "previewKiB": [10, 120],
     "basis": "1x1 narrow corner outcrop with339,974 source triangles and more exposed floor than LC-005;40k/12k budgets with two separately checked KTX2 candidates."
   },
-  "notes": "Author page2: slender natural corner outcrop on a broader cracked rock floor. Inspect the narrow upright silhouette, loose fragments around its foot, cap and rear face. Warm dusty mineral stone with dark contact crevices; preserve mask1, mounting depth0.150231 and original standing point."
+  "notes": "Author page2: slender natural corner outcrop on a broader cracked rock floor. Inspect the narrow upright silhouette, loose fragments around its foot, cap and rear face. Warm dusty mineral stone with dark contact crevices; preserve mask1, mounting depth0.150231 and original standing point.",
+  "groupCode": "LC-wall-corner"
 }

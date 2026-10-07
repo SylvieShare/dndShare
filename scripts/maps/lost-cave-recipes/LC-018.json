@@ -95,5 +95,6 @@
     "timberMinZ": 7.15,
     "timberMaxZ": 9.95,
     "woodTint": [0.36, 0.255, 0.135]
-  }
+  },
+  "groupCode": "LC-railway"
 }

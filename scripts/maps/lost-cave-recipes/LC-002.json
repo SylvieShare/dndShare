@@ -20,5 +20,6 @@
     "previewKiB": [10, 120],
     "basis": "Same class as reviewed LC-001, with399,962 source triangles;40k/12k budgets and two KTX2 variants, target comparable to measured1.77/0.61 MiB of LC-001."
   },
-  "notes": "Author page2: alternate straight natural rock wall with a different cracked upper ledge and scattered floor fragments. Independently retain central wall mask17, mounting depth0.15004 and the measured placement point; warm mineral variation, dusty ledges, darker fractures on both sides."
+  "notes": "Author page2: alternate straight natural rock wall with a different cracked upper ledge and scattered floor fragments. Independently retain central wall mask17, mounting depth0.15004 and the measured placement point; warm mineral variation, dusty ledges, darker fractures on both sides.",
+  "groupCode": "LC-wall"
 }

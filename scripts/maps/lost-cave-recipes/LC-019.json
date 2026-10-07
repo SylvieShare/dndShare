@@ -133,5 +133,6 @@
     "timberMaxZ": 10.4,
     "woodTint": [0.36, 0.255, 0.135]
   },
-  "normalMinZ": 0.05
+  "normalMinZ": 0.05,
+  "groupCode": "LC-railway-broken"
 }

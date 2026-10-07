@@ -12,24 +12,40 @@ function profileAt(y, samples, fallback) {
   return samples.at(-1)[1];
 }
 function onTie(x, y, t) {
+  if (t.segment) {
+    const [[ax, ay], [bx, by]] = t.segment,
+      dx = bx - ax,
+      dy = by - ay;
+    const length = Math.hypot(dx, dy),
+      along = ((x - ax) * dx + (y - ay) * dy) / length;
+    return (
+      along >= 0 &&
+      along <= length &&
+      Math.abs((x - ax) * dy - (y - ay) * dx) / length <= t.halfWidth
+    );
+  }
   return (
     (!t.x || (x >= t.x[0] && x <= t.x[1])) &&
     Math.abs(y - t.y - t.slope * x) <= t.halfWidth
   );
 }
+function onRail(x, y, z, r) {
+  const distance = r.arc
+    ? Math.abs(
+        Math.hypot(x - r.arc.centre[0], y - r.arc.centre[1]) - r.arc.radius,
+      )
+    : Math.abs(x - profileAt(y, r.samples, r.x));
+  return (
+    distance <= r.halfWidth &&
+    z >= profileAt(y, r.minZProfile, r.minZ) &&
+    y >= r.y[0] &&
+    y <= r.y[1]
+  );
+}
 
 export function railwayPartAt([x, y, z], spec) {
   const railway = spec.railway;
-  if (
-    railway.rails.some(
-      (r) =>
-        Math.abs(x - profileAt(y, r.samples, r.x)) <= r.halfWidth &&
-        z >= profileAt(y, r.minZProfile, r.minZ) &&
-        y >= r.y[0] &&
-        y <= r.y[1],
-    )
-  )
-    return "iron";
+  if (railway.rails.some((r) => onRail(x, y, z, r))) return "iron";
   if (
     railway.bolts.some(
       (b) => Math.hypot(x - b.x, y - b.y) <= b.radius && z >= b.minZ,
@@ -52,20 +68,19 @@ export function paintRailway(p, n, ao, spec) {
   const detail =
     0.78 + 0.22 * Math.max(0, Math.min(1, (ao / 255 - 0.65) / 0.35));
   if (part === "wood") {
-    const tie = spec.railway.ties
-      .filter((t) => onTie(p[0], p[1], t))
-      .reduce((a, b) =>
-        Math.abs(p[1] - a.y - a.slope * p[0]) <
-        Math.abs(p[1] - b.y - b.slope * p[0])
-          ? a
-          : b,
-      );
-    const angle = Math.atan(tie.slope),
+    const tie = spec.railway.ties.find((t) => onTie(p[0], p[1], t));
+    const origin = tie.segment?.[0] || [0, tie.y];
+    const angle = tie.segment
+        ? Math.atan2(
+            tie.segment[1][1] - origin[1],
+            tie.segment[1][0] - origin[0],
+          )
+        : Math.atan(tie.slope),
       c = Math.cos(angle),
       s = Math.sin(angle);
     const local = [
-      p[0] * c + (p[1] - tie.y) * s,
-      -p[0] * s + (p[1] - tie.y) * c,
+      (p[0] - origin[0]) * c + (p[1] - origin[1]) * s,
+      -(p[0] - origin[0]) * s + (p[1] - origin[1]) * c,
       p[2],
     ];
     const normal = [n[0] * c + n[1] * s, -n[0] * s + n[1] * c, n[2]];

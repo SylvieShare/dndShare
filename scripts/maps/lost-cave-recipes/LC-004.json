@@ -20,5 +20,6 @@
     "previewKiB": [10, 120],
     "basis": "1x1 three-arm rock junction with419,924 source triangles;40k/12k budgets comparable to reviewed LC-003, verify two KTX2 candidates independently."
   },
-  "notes": "Author page2: three arms meet at a natural rock junction; inspect all upper branches, re-entrant pockets and floor fragments on both sides. Warm mineral rock, dusty ledges and deeper contact crevices. Preserve central mask21, mounting depth0.149923 and original standing point."
+  "notes": "Author page2: three arms meet at a natural rock junction; inspect all upper branches, re-entrant pockets and floor fragments on both sides. Warm mineral rock, dusty ledges and deeper contact crevices. Preserve central mask21, mounting depth0.149923 and original standing point.",
+  "groupCode": "LC-wall-t-shaped"
 }

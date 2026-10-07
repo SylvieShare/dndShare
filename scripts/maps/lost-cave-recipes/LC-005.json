@@ -20,5 +20,6 @@
     "previewKiB": [10, 120],
     "basis": "1x1 four-arm rock junction with439,738 source triangles;40k/12k budgets comparable to verified T-wall LC-004, compare two KTX2 candidates independently."
   },
-  "notes": "Author page2: four natural wall arms form a cross, worn plateau and fractured re-entrant corners. Inspect all four faces and upper branches; dusty ledges with deeper local crevices. Preserve mask85, mounting depth0.149951 and absence of standable points."
+  "notes": "Author page2: four natural wall arms form a cross, worn plateau and fractured re-entrant corners. Inspect all four faces and upper branches; dusty ledges with deeper local crevices. Preserve mask85, mounting depth0.149951 and absence of standable points.",
+  "groupCode": "LC-wall-x-shaped"
 }

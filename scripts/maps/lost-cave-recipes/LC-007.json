@@ -20,5 +20,6 @@
     "previewKiB": [10, 100],
     "basis": "Low1x1 natural floor from259,968 source triangles, less exposed vertical area than reviewed walls;30k/10k budgets and two KTX2 comparisons to preserve thin rubble and cracks."
   },
-  "notes": "Author page2: flat natural ground with several large plates, shallow fractures and loose stone fragments at the perimeter. Independently verify cutHeight4.6 mm, warm dusty upper surfaces, darker floor fractures, unchanged0.1512 mounting depth and central standing point."
+  "notes": "Author page2: flat natural ground with several large plates, shallow fractures and loose stone fragments at the perimeter. Independently verify cutHeight4.6 mm, warm dusty upper surfaces, darker floor fractures, unchanged0.1512 mounting depth and central standing point.",
+  "groupCode": "LC-ground"
 }

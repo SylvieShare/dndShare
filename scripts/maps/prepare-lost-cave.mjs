@@ -15,6 +15,8 @@ const review = reviewCollection("lost-cave"),
     .sort((a, b) => b.version - a.version)[0];
 if (!model || model.textureDetail === "detailed")
   throw new Error("Missing or already reviewed model");
+if (!spec.groupCode || model.code !== spec.groupCode)
+  throw new Error("Review the current logical model family code before preparing");
 const rows = JSON.parse(
     await fs.readFile(path.join(review.base, "manifest.json"), "utf8"),
   ),

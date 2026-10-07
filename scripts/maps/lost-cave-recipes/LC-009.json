@@ -21,5 +21,6 @@
     "basis": "259,914-triangle1x1 floor comparable to reviewed LC-007/008;30k/10k budgets and independent comparison of two KTX2 candidates."
   },
   "notes": "Author page2: third arrangement of natural floor plates, shallow recesses and loose edge rubble. Verify its own cutHeight4.6 mm and plate heights; warm mineral variation with dust above and dark fractures below. Preserve mounting depth0.151091 and central standing point at0.396027. Four nearly tangent decoded normal samples require minimum positive Z0.05 during resampling before KTX2; validate the decoded surface again.",
-  "normalMinZ": 0.05
+  "normalMinZ": 0.05,
+  "groupCode": "LC-ground"
 }

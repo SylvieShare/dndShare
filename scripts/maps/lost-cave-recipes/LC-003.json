@@ -20,5 +20,6 @@
     "previewKiB": [10, 120],
     "basis": "1x1 natural corner with379,958 source triangles;40k/12k meshes comparable to verified LC-001/002, separate comparison of two KTX2 candidates."
   },
-  "notes": "Author page2: two natural wall arms form a corner, loose fragments and fractured lower ledge inside the open quarter. Inspect inner and outer faces; warm mineral rock and dusty horizontal ledges, dark contact fractures. Preserve central wall mask65, mounting depth0.149966 and the point0.75/0.25."
+  "notes": "Author page2: two natural wall arms form a corner, loose fragments and fractured lower ledge inside the open quarter. Inspect inner and outer faces; warm mineral rock and dusty horizontal ledges, dark contact fractures. Preserve central wall mask65, mounting depth0.149966 and the point0.75/0.25.",
+  "groupCode": "LC-wall-angle"
 }

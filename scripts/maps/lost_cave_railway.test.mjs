@@ -68,3 +68,24 @@ test("LC-019 separates bent rail fragments and broken timber from the gap", () =
   ])
     assert.equal(railwayPartAt(p, s), "rock");
 });
+test("LC-020 follows concentric arcs and radial timber while leaving gaps stone", () => {
+  const s = specs["LC-020"];
+  for (const p of [
+    [-7.9241, -14.961, 14.1187],
+    [-0.1124, -2.1403, 10.5679],
+    [15.3425, 7.5189, 14.1123],
+    [10.0035, -15.3541, 13.9595],
+  ])
+    assert.equal(railwayPartAt(p, s), "iron");
+  for (const p of [
+    [1.2926, -11.5808, 10.0419],
+    [7.1935, -5.3989, 10.0419],
+    [13.3755, 2.0757, 10.0397],
+  ])
+    assert.equal(railwayPartAt(p, s), "wood");
+  for (const p of [
+    [0.1124, -7.474, 7.9387],
+    [9.1043, -0.2255, 8.5604],
+  ])
+    assert.equal(railwayPartAt(p, s), "rock");
+});

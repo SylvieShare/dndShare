@@ -20,5 +20,6 @@
     "previewKiB": [10, 120],
     "basis": "A compact 1x1 natural wall rebuilt from its379k-triangle sculpt at reviewed40k/12k budgets, replacing old20k/5k meshes; compare two KTX2 variants against PNG at identical scale."
   },
-  "notes": "Warm brown cave rock per author PDF, restrained dusty highlights and mineral variation, dark fractures around loose floor rocks. Both wall faces and upper ledges inspected separately; preserve central wall mask17 and accepted mounting data."
+  "notes": "Warm brown cave rock per author PDF, restrained dusty highlights and mineral variation, dark fractures around loose floor rocks. Both wall faces and upper ledges inspected separately; preserve central wall mask17 and accepted mounting data.",
+  "groupCode": "LC-wall"
 }
