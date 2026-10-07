@@ -12,11 +12,11 @@
       R — поворот, Esc — отмена.
     </p>
     <div class="map-object-grid">
-      <MapTileCard
-        v-for="model in models"
-        :key="model.id"
-        :model="model"
-        :selected="selectedId === model.id"
+      <MapModelGroupCard
+        v-for="group in groups"
+        :key="group.key"
+        :group="group"
+        :selected-id="selectedId"
         :draggable="draggable"
         @model="(id, event) => emit('object', id, event)"
         @drag-tile="(id, event) => emit('drag-object', id, event)"
@@ -27,7 +27,8 @@
 </template>
 <script setup>
 import { computed } from "vue";
-import MapTileCard from "./MapTileCard.vue";
+import MapModelGroupCard from "./MapModelGroupCard.vue";
+import { modelGroups } from "../lib/modelGroups";
 import { latestModelVersions } from "../lib/modelVersions";
 const props = defineProps({
   editor: Object,
@@ -41,6 +42,7 @@ const models = computed(() =>
     (m) => m.tileType === "object",
   ),
 );
+const groups = computed(() => modelGroups(models.value));
 </script>
 <style scoped>
 .map-object-grid {

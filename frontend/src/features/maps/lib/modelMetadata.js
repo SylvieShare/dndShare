@@ -8,6 +8,7 @@ export const TEXTURE_DETAILS = [
 export const METADATA_KEYS = [
   "id",
   "definitionId",
+  "code",
   "collection",
   "collectionName",
   "sourceCode",

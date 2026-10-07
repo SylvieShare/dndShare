@@ -51,7 +51,8 @@ export function mapEntity(document, catalogue, kind, id, context) {
       model?.name ||
       OBJECTS.find((t) => t.id === item.kind)?.name ||
       (kind === "object" ? "Объект" : "Плитка"),
-    code: model?.sourceCode,
+    code: model?.definitionId,
+    groupCode: model?.code,
     sourceName: model?.sourceName,
     previewUrl: model?.previewUrl,
     position,

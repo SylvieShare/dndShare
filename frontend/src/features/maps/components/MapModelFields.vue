@@ -1,5 +1,12 @@
 <template>
   <div class="model-core-fields">
+    <FormField label="Код группы" vertical
+      ><FormTextInput
+        v-model:value="model.code"
+        aria-label="Код группы"
+        :maxlength="160"
+        required
+    /></FormField>
     <FormField label="Название тайла" vertical
       ><FormTextInput
         v-model:value="model.name"
@@ -69,7 +76,7 @@ defineProps({ model: Object });
 }
 .model-core-fields {
   display: grid;
-  grid-template-columns: 1fr 0.65fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 .model-classification {

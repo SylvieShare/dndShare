@@ -23,7 +23,11 @@
       draggable="false"
     />
     <span class="map-model-name">{{ model.name }}</span
-    ><small>{{ model.sourceCode }}</small>
+    ><small>{{ model.definitionId }}</small>
+    <MapModelLightBadge
+      class="map-card-light"
+      :count="model.behaviour?.defaultLights?.length || 0"
+    />
     <small v-if="model.width > 1 || model.height > 1"
       >{{ model.width }} × {{ model.height }} клетки</small
     >
@@ -34,6 +38,7 @@
 </template>
 <script setup>
 import { BaseTile } from "@sylvieshare/share-ui";
+import MapModelLightBadge from "./MapModelLightBadge.vue";
 defineProps({
   model: Object,
   selected: Boolean,
@@ -60,6 +65,11 @@ const emit = defineEmits(["model", "drag-tile"]);
   object-fit: contain;
   border-radius: 6px;
   pointer-events: none;
+}
+.map-card-light {
+  position: absolute;
+  right: 6px;
+  top: 6px;
 }
 .map-model-name {
   white-space: normal;

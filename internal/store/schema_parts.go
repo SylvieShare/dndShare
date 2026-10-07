@@ -194,4 +194,5 @@ var schemaParts = []struct {
 	{"model-shadow-assets", schemaModelShadowAssetsSQL},
 	{"model-furnishings", schemaModelFurnishingsSQL},
 	{"model-behaviour", schemaModelBehaviourSQL},
+	{"model-group-codes", schemaModelGroupCodesSQL},
 }

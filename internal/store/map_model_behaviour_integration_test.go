@@ -42,6 +42,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	}
 	b := battlemap.ModelBehaviour{Revision: 1, DefaultLights: []battlemap.ModelLight{{Key: "flame", Name: "Факел", Kind: "torch", Color: "#ffc36a", Position: [3]float64{.5, .5, 1}, Intensity: 8, Radius: 4, Enabled: true}}, Transitions: []battlemap.ModelTransition{{ID: "00000000-0000-4000-8000-000000000025", ToDefinitionID: target.DefinitionID, Action: "open"}}}
 	edit := source
+	edit.Code = "BEH-door"
 	edit.ID = "00000000-0000-4000-8000-000000000022"
 	saved, err := s.ReviseMapModelWithBehaviour(ctx, source.ID, edit, &b)
 	if err != nil {
@@ -50,6 +51,11 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	if saved.DefinitionID != source.DefinitionID {
 		t.Fatal("metadata revision changed logical identity")
 	}
+	oldCode, err := s.GetMapModel(ctx, source.ID)
+	if err != nil || oldCode.Code != "BEH-door" || saved.Code != "BEH-door" {
+		t.Fatal("group code did not apply to all versions", err)
+	}
+
 	behaviours, err := s.MapModelBehaviours(ctx)
 	if err != nil {
 		t.Fatal(err)

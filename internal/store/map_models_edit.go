@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"dndshare/internal/battlemap"
 )
@@ -42,6 +43,12 @@ func (s *Store) reviseMapModel(ctx context.Context, expectedID string, edited ba
 	}
 	edited.Collection, edited.CollectionName = old.Collection, old.CollectionName
 	edited.DefinitionID = old.DefinitionID
+	if !battlemap.ValidModelGroupCode(edited.Code) {
+		return edited, fmt.Errorf("%w: Некорректный код группы", ErrInvalidMapModels)
+	}
+	if _, err = tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET code=$2 WHERE id=$1`, old.DefinitionID, edited.Code); err != nil {
+		return edited, err
+	}
 	edited.SourceCode, edited.SourceName = old.SourceCode, old.SourceName
 	edited.Assets = old.Assets
 	edited.Hidden = old.Hidden

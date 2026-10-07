@@ -1,3 +1,4 @@
+import { groupExamples } from "./groups";
 import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
 import { createApp, h } from "vue";
@@ -34,6 +35,7 @@ import {
 } from "./catalogue";
 const source = newMap();
 const params = new URLSearchParams(location.search);
+if (params.has("groups")) groupExamples(catalogue);
 if (params.has("tileFilterExample")) {
   catalogue.find((m) => m.id === UD_WALL).hasDecor = true;
   catalogue.find((m) => m.sourceCode === "UD-096").hidden = true;
@@ -356,6 +358,11 @@ window.loadedModels = [];
 window.releaseModelLoads = () =>
   window.pendingModelLoads?.splice(0).forEach((resolve) => resolve());
 const nativeFetch = window.fetch.bind(window);
+const modelDto = ({ id, definitionId, ...model }) => ({
+  ...model,
+  id: definitionId,
+  versionId: id,
+});
 window.fetch = async (url, options = {}) => {
   const rawUrl = typeof url === "string" ? url : url.url;
   const endpoint = new URL(rawUrl, location.origin).pathname;
@@ -396,10 +403,14 @@ window.fetch = async (url, options = {}) => {
     url === "/api/maps/models" ||
     url === "/api/public/sessions/ABC-123/map-models"
   )
-    return new Response(JSON.stringify(catalogue), {
+    return new Response(JSON.stringify(catalogue.map(modelDto)), {
       headers: { "Content-Type": "application/json" },
     });
-  const data = options.body ? JSON.parse(options.body) : null;
+  let data = options.body ? JSON.parse(options.body) : null;
+  if (data && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
+    const { id, versionId, ...fields } = data;
+    data = { ...fields, id: versionId, definitionId: id };
+  }
   if (options.method === "PUT" || options.method === "POST")
     window.requests.push({ url, data });
   if (options.method === "PUT" && window.failNextSave) {
@@ -452,7 +463,7 @@ window.fetch = async (url, options = {}) => {
     catalogue.push(saved);
     modelAssetAliases.set(id, modelAssetAliases.get(old.id) || old.id);
     window.lastModelSaved = saved;
-    return new Response(JSON.stringify(saved), {
+    return new Response(JSON.stringify(modelDto(saved)), {
       headers: { "Content-Type": "application/json" },
     });
   }

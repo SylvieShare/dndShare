@@ -124,7 +124,7 @@ export function useModelReference(editor) {
       editor.catalogue = [
         ...editor.catalogue.map((m) =>
           m.definitionId && m.definitionId === saved.definitionId
-            ? { ...m, behaviour: saved.behaviour }
+            ? { ...m, code: saved.code, behaviour: saved.behaviour }
             : m,
         ),
         saved,

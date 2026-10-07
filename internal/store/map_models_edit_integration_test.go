@@ -63,6 +63,7 @@ FROM (VALUES
 	exec(schemaMeasuredPlacementPointsSQL)
 	exec(schemaModelShadowAssetsSQL)
 	exec(schemaModelBehaviourSQL)
+	exec(schemaModelGroupCodesSQL)
 	s := &Store{pool: pool}
 	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,geometry,assets)
 SELECT item.id::uuid,item.collection,item.code,item.name,item.name,1,'floor',
@@ -109,6 +110,7 @@ FROM (VALUES
 	}
 	testMapModelBehaviours(t, ctx, s)
 	testMapModelPreviewRevision(t, ctx, s)
+	testModelGroupCodeRules(t, ctx, s)
 	var oldColumns int
 	if err := pool.QueryRow(ctx, `SELECT count(*) FROM information_schema.columns WHERE table_schema='dndshare' AND table_name='map_model' AND column_name IN ('wall_layout','terrain_type')`).Scan(&oldColumns); err != nil || oldColumns != 0 {
 		t.Fatalf("redundant fields survived migration: %d %v", oldColumns, err)

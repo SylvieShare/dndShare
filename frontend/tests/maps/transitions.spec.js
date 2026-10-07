@@ -34,8 +34,8 @@ test("embedded and attached lights are separate, toggle independently, and attac
     }),
   ).toBeVisible();
   await lights
-    .getByRole("button", { name: "Выключить Встроенный факел", exact: true })
-    .click();
+    .getByRole("switch", { name: "Встроенный факел", exact: true })
+    .uncheck();
   await expect
     .poll(() =>
       page.evaluate(
@@ -78,8 +78,8 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
 }) => {
   await ready(page);
   await panel(page)
-    .getByRole("button", { name: "Выключить Встроенный факел", exact: true })
-    .click();
+    .getByRole("switch", { name: "Встроенный факел", exact: true })
+    .uncheck();
   await expect
     .poll(() =>
       page.evaluate(
@@ -151,7 +151,13 @@ test("model reference saves transition definitions and multiple light templates 
   await catalogue
     .getByRole("button", { name: "Прямые стены", exact: true })
     .click();
-  await catalogue.getByRole("button", { name: "Стена 1", exact: true }).click();
+  await catalogue
+    .getByRole("button", { name: "Группа LC-wall", exact: true })
+    .hover();
+  await page
+    .getByRole("region", { name: "Варианты LC-wall", exact: true })
+    .getByRole("button", { name: "Стена 1", exact: true })
+    .click();
   await expect(
     reference.getByLabel("Переход 1: действие", { exact: true }),
   ).toHaveValue("extinguish");

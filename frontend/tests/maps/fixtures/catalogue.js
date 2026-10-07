@@ -152,6 +152,10 @@ const catalogue = [
     m.collection === "ultimate-dungeon" ? "Ultimate Dungeon" : "Lost Cave",
   version: 1,
   definitionId: m.sourceCode,
+  code: `${m.collection === "ultimate-dungeon" ? "UD" : m.collection === "map-objects" ? "MA" : "LC"}-${m.sourceName
+    .toLowerCase()
+    .replace(/\s+\d+$/, "")
+    .replace(/[^a-z0-9]+/g, "-")}`,
   behaviour: { revision: 1, defaultLights: [], transitions: [] },
   hidden: false,
   hasDecor: !!m.hasDecor,

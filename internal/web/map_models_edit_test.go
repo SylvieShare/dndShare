@@ -10,6 +10,7 @@ import (
 
 func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 	original := battlemap.InitialCatalogue()[0]
+	original.Code = "LC-wall"
 	input := original.ModelMetadata
 	input.Name = "  Исправленная стена  "
 	input.Width = 2
@@ -35,6 +36,7 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 }
 func TestEditedMapModelRejectsIdentityChangesAndInvalidGeometry(t *testing.T) {
 	original := battlemap.InitialCatalogue()[0]
+	original.Code = "LC-wall"
 	for _, change := range []func(*battlemap.ModelMetadata){
 		func(m *battlemap.ModelMetadata) { m.ID = "00000000-0000-4000-8000-000000000001" },
 		func(m *battlemap.ModelMetadata) { m.Collection = "other" },

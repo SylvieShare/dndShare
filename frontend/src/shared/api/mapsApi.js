@@ -1,16 +1,24 @@
 import { fetchGet, fetchPost, fetchPut, fetchDelete } from "./http";
 export const getMaps = () => fetchGet("/maps");
 let modelCatalogue;
+const runtimeModel = ({ id, versionId, ...model }) => ({
+  ...model,
+  id: versionId,
+  definitionId: id,
+});
+const catalogueModels = (models) => models.map(runtimeModel);
 export function getMapModels(publicCode) {
   if (publicCode)
     return fetchGet(
       `/public/sessions/${encodeURIComponent(publicCode)}/map-models`,
-    );
+    ).then(catalogueModels);
   if (!modelCatalogue)
-    modelCatalogue = fetchGet("/maps/models").catch((error) => {
-      modelCatalogue = null;
-      throw error;
-    });
+    modelCatalogue = fetchGet("/maps/models")
+      .then(catalogueModels)
+      .catch((error) => {
+        modelCatalogue = null;
+        throw error;
+      });
   return modelCatalogue;
 }
 export const resetMapModels = () => {
@@ -37,10 +45,12 @@ export const getPublicMap = (code) =>
   fetchGet(`/public/sessions/${encodeURIComponent(code)}/map`);
 
 export async function saveMapModelMetadata(id, metadata) {
-  const model = await fetchPut(
-    `/maps/models/${encodeURIComponent(id)}`,
-    metadata,
-  );
+  const { id: versionId, definitionId: logicalId, ...fields } = metadata;
+  const model = await fetchPut(`/maps/models/${encodeURIComponent(id)}`, {
+    ...fields,
+    id: logicalId,
+    versionId,
+  });
   resetMapModels();
-  return model;
+  return runtimeModel(model);
 }

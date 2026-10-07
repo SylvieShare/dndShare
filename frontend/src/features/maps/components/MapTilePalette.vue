@@ -38,11 +38,11 @@
         }}
       </p>
       <div class="map-model-grid">
-        <MapTileCard
-          v-for="model in filtered"
-          :key="model.id"
-          :model="model"
-          :selected="(selectedId || editor.selectedModel) === model.id"
+        <MapModelGroupCard
+          v-for="group in groups"
+          :key="group.key"
+          :group="group"
+          :selected-id="selectedId || editor.selectedModel"
           :draggable="draggable"
           @model="(id, event) => emit('model', id, event)"
           @drag-tile="(id, event) => emit('drag-tile', id, event)"
@@ -59,7 +59,8 @@ import { computed, ref, watch } from "vue";
 import { latestModelVersions } from "../lib/modelVersions";
 import { ActionButton, LoadingState, MultiToggle } from "@sylvieshare/share-ui";
 import MapCollectionPicker from "./MapCollectionPicker.vue";
-import MapTileCard from "./MapTileCard.vue";
+import MapModelGroupCard from "./MapModelGroupCard.vue";
+import { modelGroups } from "../lib/modelGroups";
 const props = defineProps({
   editor: { type: Object, required: true },
   compact: Boolean,
@@ -146,6 +147,7 @@ const filtered = computed(() =>
     (m) => !!m.hasDecor === (content.value === "furnished"),
   ),
 );
+const groups = computed(() => modelGroups(filtered.value));
 </script>
 <style scoped>
 .map-tile-palette {

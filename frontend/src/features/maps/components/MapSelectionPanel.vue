@@ -40,6 +40,9 @@
           <strong v-if="single.code" class="map-selection-code">{{
             single.code
           }}</strong>
+          <small v-if="single.groupCode" class="map-hint"
+            >Code: {{ single.groupCode }}</small
+          >
           <p
             v-if="single.sourceName && single.sourceName !== single.name"
             class="map-hint"

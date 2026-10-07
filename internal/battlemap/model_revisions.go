@@ -14,6 +14,8 @@ func VisualRevision(original, revision Model) bool {
 	a.Version, b.Version = 0, 0
 	// Texture workmanship describes the visual asset, not its placement contract.
 	a.TextureDetail, b.TextureDetail = "", ""
+	// Group membership is shared by all versions of a logical element.
+	a.Code, b.Code = "", ""
 	return reflect.DeepEqual(a, b)
 }
 

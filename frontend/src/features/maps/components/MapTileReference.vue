@@ -47,7 +47,13 @@
             {{ reference.base.collectionName }} ·
             {{ reference.base.collection }}
           </dd>
-          <dt>Исходный код</dt>
+          <dt>ID</dt>
+          <dd>{{ reference.base.definitionId }}</dd>
+          <dt>Code</dt>
+          <dd>{{ reference.base.code }}</dd>
+          <dt>Name</dt>
+          <dd>{{ reference.base.name }}</dd>
+          <dt>ID исходного файла</dt>
           <dd>{{ reference.base.sourceCode }}</dd>
           <dt>Исходное имя</dt>
           <dd>{{ reference.base.sourceName }}</dd>

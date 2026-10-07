@@ -12,6 +12,7 @@ const MaxTiles = 4096
 type ModelMetadata struct {
 	ID              string           `json:"id"`
 	DefinitionID    string           `json:"definitionId"`
+	Code            string           `json:"code"`
 	Collection      string           `json:"collection"`
 	CollectionName  string           `json:"collectionName"`
 	SourceCode      string           `json:"sourceCode"`

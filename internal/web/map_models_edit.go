@@ -19,6 +19,10 @@ func editedMapModel(original battlemap.Model, input battlemap.ModelMetadata) (ba
 		return original, errors.New("Исходный код, коллекция и версия тайла не редактируются")
 	}
 	input.Name = strings.TrimSpace(input.Name)
+	input.Code = strings.TrimSpace(input.Code)
+	if !battlemap.ValidModelGroupCode(input.Code) {
+		return original, errors.New("Укажите код группы, например UD-door")
+	}
 	model := battlemap.Model{ModelMetadata: input, Assets: original.Assets}
 	if err := validateMapModel(model); err != nil {
 		return original, err
@@ -34,12 +38,15 @@ func (s *Server) handleEditMapModel(w http.ResponseWriter, r *http.Request) {
 	}
 	var input struct {
 		battlemap.ModelMetadata
+		LogicalID string                    `json:"id"`
+		VersionID string                    `json:"versionId"`
 		Behaviour *battlemap.ModelBehaviour `json:"behaviour"`
 	}
 	if decodeJSON(r, &input) != nil {
 		badRequest(w, "Некорректные параметры тайла")
 		return
 	}
+	input.ModelMetadata.ID, input.DefinitionID = input.VersionID, input.LogicalID
 	original, err := s.store.GetMapModel(r.Context(), id)
 	if err != nil {
 		mapError(w, err)
