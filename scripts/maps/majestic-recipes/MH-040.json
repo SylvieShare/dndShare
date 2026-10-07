@@ -1,0 +1,69 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "rock", "cliff", "sandstone", "outdoor", "xl"],
+  "recipe": "majestic-weathered-big-rock-2-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2600000, 4500000],
+    "targetLODBytes": [850000, 1700000],
+    "targetShadowBytes": [40000, 100000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "550116 source triangles, measured 3x3 base and 74.51 mm high rock. Ground matches MH-002 rotated 180 degrees. Test 50k/18k retaining rim and horizontal fractures; independently lighten the upper plateau."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [11, -29],
+      [-3, -28],
+      [-12, -22],
+      [-22, -13],
+      [-19, -1],
+      [-5, 7],
+      [9, 3],
+      [14, -13]
+    ],
+    [
+      [34, 2],
+      [20, -5],
+      [6, 3],
+      [-4, 5],
+      [-26, 11],
+      [-19, 36],
+      [12, 36],
+      [34, 25]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "standMaxZMM": 90,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 180,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 17.3
+  },
+  "masonryRGB": [0.51, 0.355, 0.19],
+  "masonryTopRGB": [0.665, 0.51, 0.285],
+  "masonryTopMinZMM": 55,
+  "stoneVariation": 0.045,
+  "darkenJoints": true,
+  "blockers": [],
+  "grassReferenceRotation": 180
+}
