@@ -1,0 +1,108 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 45000,
+  "lodTriangles": 15000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "pine", "forest", "stones", "outdoor", "xl"],
+  "recipe": "majestic-right-path-corner-pine-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 19,
+  "ferns": [
+    {
+      "centreMM": [-21, -37, 16.4],
+      "radiiMM": [20, 17, 7],
+      "minZMM": 15.1
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [-41, -31, 18.3],
+      "radiiMM": [7.3, 8.2, 5.8],
+      "minZMM": 16.2
+    },
+    {
+      "centreMM": [-33, -31, 16.8],
+      "radiiMM": [4, 5, 4],
+      "minZMM": 15.9
+    },
+    {
+      "centreMM": [37, -38, 17.2],
+      "radiiMM": [7.5, 6.5, 5],
+      "minZMM": 15.7
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [2000000, 3800000],
+    "targetLODBytes": [650000, 1400000],
+    "targetShadowBytes": [35000, 85000],
+    "targetPreviewBytes": [12000, 60000],
+    "basis": "400958 source triangles, measured 3x3 corner with 59.36 mm young pine, low leaves and three stones. Soil matches rotated MH-015 without a Z shift; datum 9.75 mm. Test 45k/15k and 2048/1024 colour."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "blockedCells": [[0, 2]],
+  "trees": [
+    {
+      "baseXY": [-17, -37],
+      "topXY": [-14, -32],
+      "heightMM": 59.36,
+      "foliageRadiusMM": 17,
+      "trunkRadiusMM": 2.4,
+      "rootRadiusMM": 6,
+      "barkTopMM": 35
+    }
+  ],
+  "blockers": [
+    [
+      [1.142857, 2.557143],
+      [1.13307, 2.507941],
+      [1.105199, 2.466229],
+      [1.063488, 2.438358],
+      [1.014286, 2.428571],
+      [0.965084, 2.438358],
+      [0.923372, 2.466229],
+      [0.895501, 2.507941],
+      [0.885714, 2.557143],
+      [0.895501, 2.606345],
+      [0.923372, 2.648057],
+      [0.965084, 2.675927],
+      [1.014286, 2.685714],
+      [1.063488, 2.675927],
+      [1.105199, 2.648057],
+      [1.13307, 2.606345]
+    ],
+    [
+      [0.5, 2.385714],
+      [0.486951, 2.320111],
+      [0.44979, 2.264496],
+      [0.394174, 2.227335],
+      [0.328571, 2.214286],
+      [0.262969, 2.227335],
+      [0.207353, 2.264496],
+      [0.170192, 2.320111],
+      [0.157143, 2.385714],
+      [0.170192, 2.451317],
+      [0.207353, 2.506933],
+      [0.262969, 2.544094],
+      [0.328571, 2.557143],
+      [0.394174, 2.544094],
+      [0.44979, 2.506933],
+      [0.486951, 2.451317]
+    ]
+  ]
+}
