@@ -1,0 +1,53 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 30000,
+  "lodTriangles": 8000,
+  "tileType": "floor",
+  "hasDecor": false,
+  "tags": ["grass", "dirt", "stones", "outdoor", "xl"],
+  "recipe": "majestic-dirt-three-corners-measured-soil-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 25,
+  "ferns": [],
+  "stones": [
+    {
+      "centreMM": [-42, 32, 16.5],
+      "radiiMM": [5, 4.6, 3.4]
+    },
+    {
+      "centreMM": [-42, -33, 16.3],
+      "radiiMM": [4, 4.5, 3.3]
+    },
+    {
+      "centreMM": [40, -40, 16.3],
+      "radiiMM": [4.2, 4.3, 3.3]
+    },
+    {
+      "centreMM": [46, -44, 16.3],
+      "radiiMM": [4.2, 5, 3.5]
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [1000000, 2500000],
+    "targetLODBytes": [350000, 1000000],
+    "targetShadowBytes": [18000, 45000],
+    "targetPreviewBytes": [10000, 45000],
+    "basis": "588254 source triangles, measured 3x3 flat dirt, three grass corners and four low stones. Test 30k/8k pre-UV meshes; relief can be baked while preserving low blade edges."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512
+}
