@@ -1,0 +1,62 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 35000,
+  "lodTriangles": 10000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stones", "outdoor", "xl"],
+  "recipe": "majestic-two-path-corners-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 25,
+  "ferns": [],
+  "stones": [
+    {
+      "centreMM": [-34, 36, 16.8],
+      "radiiMM": [5.2, 6.7, 5.8],
+      "minZMM": 15.0
+    },
+    {
+      "centreMM": [-43, -44, 16.8],
+      "radiiMM": [4.7, 4.6, 4.1],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [-15, -34, 17.8],
+      "radiiMM": [6.7, 7, 6],
+      "minZMM": 15.0
+    },
+    {
+      "centreMM": [-1, -41, 18.4],
+      "radiiMM": [11, 9, 7],
+      "minZMM": 15.3
+    },
+    {
+      "centreMM": [3, -29, 17.5],
+      "radiiMM": [6.4, 7, 6],
+      "minZMM": 15.0
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [1300000, 2800000],
+    "targetLODBytes": [400000, 1100000],
+    "targetShadowBytes": [22000, 65000],
+    "targetPreviewBytes": [10000, 50000],
+    "basis": "352994 source triangles, measured 3x3 low path with five stone parts. Test 35k/10k and 1024 colour, retaining the larger stone silhouettes and baking soil grain."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512
+}
