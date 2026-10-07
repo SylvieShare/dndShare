@@ -1,0 +1,95 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 70000,
+  "lodTriangles": 25000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "pine", "forest", "stones", "outdoor", "xl"],
+  "recipe": "majestic-path-angle-large-pine-v1",
+  "soilReference": "MH-015",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 19,
+  "ferns": [
+    {
+      "centreMM": [27, 9, 16.4],
+      "radiiMM": [23, 23, 7],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [1, -35, 16.3],
+      "radiiMM": [23, 19, 7],
+      "minZMM": 15.1
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [43, 12, 19],
+      "radiiMM": [7.5, 9, 8],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [48, -7, 18],
+      "radiiMM": [5.6, 8, 6.5],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [-19, -40, 17.4],
+      "radiiMM": [6, 6.3, 5.8],
+      "minZMM": 15.1
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [2500000, 5000000],
+    "targetLODBytes": [900000, 1800000],
+    "targetShadowBytes": [60000, 140000],
+    "targetPreviewBytes": [14000, 70000],
+    "basis": "594820 source triangles, measured 3x3 angle with a dense 70.83 mm pine. Test 70k/25k and 2048/1024 colour to preserve branch gaps and broad leaves. Soil matches rotated MH-015 without Z shift."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "blockedCells": [[2, 2]],
+  "trees": [
+    {
+      "baseXY": [22, -22],
+      "topXY": [26, -20],
+      "heightMM": 70.83,
+      "foliageRadiusMM": 31,
+      "trunkRadiusMM": 3.4,
+      "rootRadiusMM": 8,
+      "barkTopMM": 44
+    }
+  ],
+  "blockers": [
+    [
+      [2.328571, 2.128571],
+      [2.313347, 2.052035],
+      [2.269993, 1.98715],
+      [2.205108, 1.943796],
+      [2.128571, 1.928571],
+      [2.052035, 1.943796],
+      [1.98715, 1.98715],
+      [1.943796, 2.052035],
+      [1.928571, 2.128571],
+      [1.943796, 2.205108],
+      [1.98715, 2.269993],
+      [2.052035, 2.313347],
+      [2.128571, 2.328571],
+      [2.205108, 2.313347],
+      [2.269993, 2.269993],
+      [2.313347, 2.205108]
+    ]
+  ]
+}
