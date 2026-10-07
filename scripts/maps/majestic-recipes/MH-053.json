@@ -1,0 +1,181 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 48000,
+  "lodTriangles": 18000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["water", "shore", "stones", "grass", "fern", "outdoor", "xl"],
+  "recipe": "majestic-river-angle-v1",
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [1900000, 3300000],
+    "targetLODBytes": [850000, 1350000],
+    "targetShadowBytes": [45000, 90000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "352560 source triangles, measured 3x3 angle river up to 18.64 mm. 96.8% of sampled surface outside the new north-west corner matches MH-051; main stones measured again, new corner measured separately. Test 48k/18k with colour 1024 in both tiers, render data 1024 and LOD data 512."
+  },
+  "standMaxZMM": 20,
+  "blockers": [],
+  "water": {
+    "reference": "MH-045",
+    "rotateZ": 180,
+    "matchMM": 0.06,
+    "blendMM": 0.16,
+    "minZMM": 10.05,
+    "lowZMM": 11.5,
+    "highZMM": 14.1,
+    "boundsMM": [
+      [-54, -54, 10],
+      [54, 54, 14.4]
+    ],
+    "deepRGB": [0.035, 0.28, 0.33],
+    "shallowRGB": [0.14, 0.56, 0.58],
+    "crestRGB": [0.52, 0.78, 0.74],
+    "roughness": 0.4,
+    "stones": [
+      {
+        "centreMM": [-43, 18, 14.4],
+        "radiiMM": [5.5, 6, 4],
+        "minZMM": 12.6,
+        "rgb": [0.455, 0.46, 0.405],
+        "forceAboveMM": 13.87
+      },
+      {
+        "centreMM": [-46, 0, 15.6],
+        "radiiMM": [7.5, 8, 5],
+        "minZMM": 12.8,
+        "rgb": [0.435, 0.45, 0.395],
+        "forceAboveMM": 15.13
+      },
+      {
+        "centreMM": [-31, -11, 17.4],
+        "radiiMM": [9, 9, 6],
+        "minZMM": 12.9,
+        "rgb": [0.45, 0.46, 0.4],
+        "forceAboveMM": 17.18
+      },
+      {
+        "centreMM": [7, 25, 16.2],
+        "radiiMM": [9, 9, 5.5],
+        "minZMM": 12.8,
+        "rgb": [0.43, 0.45, 0.395],
+        "forceAboveMM": 15.86
+      },
+      {
+        "centreMM": [14.85, 3.19, 15.94],
+        "radiiMM": [3.8, 3.8, 3.8],
+        "minZMM": 13.0,
+        "rgb": [0.435, 0.45, 0.395],
+        "forceAboveMM": 15.69
+      },
+      {
+        "centreMM": [9.45, -4.06, 14.99],
+        "radiiMM": [3.8, 3.8, 3.8],
+        "minZMM": 13.0,
+        "rgb": [0.42, 0.435, 0.39],
+        "forceAboveMM": 14.74
+      },
+      {
+        "centreMM": [4.72, -9.62, 14.71],
+        "radiiMM": [3.8, 3.8, 3.8],
+        "minZMM": 13.0,
+        "rgb": [0.45, 0.455, 0.405],
+        "forceAboveMM": 14.46
+      },
+      {
+        "centreMM": [-2.7, -14.35, 14.55],
+        "radiiMM": [3.8, 3.8, 3.8],
+        "minZMM": 13.0,
+        "rgb": [0.425, 0.44, 0.395],
+        "forceAboveMM": 14.3
+      }
+    ],
+    "banks": [
+      {
+        "centreMM": [-52, 52],
+        "radiiMM": [28, 28],
+        "innerRadius": 0.7,
+        "outerRadius": 1.2,
+        "minZMM": 12.3,
+        "rgb": [0.415, 0.435, 0.39]
+      }
+    ],
+    "restoreLowWaterAroundStonesMM": 14.3,
+    "shorelines": [
+      {
+        "pointsMM": [
+          [36, 54],
+          [36, 35],
+          [32, 22],
+          [28, 13],
+          [19, 5],
+          [7, -1],
+          [-6, -10],
+          [-16, -18],
+          [-27, -29],
+          [-45, -36],
+          [-54, -38]
+        ],
+        "stoneWidthMM": 6,
+        "waterRestoreWidthMM": 11,
+        "waterRestoreMaxZMM": 14.3,
+        "minZMM": 12.3,
+        "rgb": [0.415, 0.435, 0.39],
+        "landwardWidthMM": 2.5
+      }
+    ],
+    "lowWaterDomain": {
+      "pointsMM": [
+        [-26, 54],
+        [36, 54],
+        [36, 35],
+        [32, 22],
+        [28, 13],
+        [19, 5],
+        [7, -1],
+        [-6, -10],
+        [-16, -18],
+        [-27, -29],
+        [-45, -36],
+        [-54, -38],
+        [-54, 25],
+        [-39, 30],
+        [-30, 39]
+      ],
+      "maxZMM": 14.3,
+      "featherMM": 0.5
+    },
+    "restoreLowWaterAroundBanksMM": 14.3
+  },
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "ferns": [
+    {
+      "centreMM": [12, -32, 16.5],
+      "radiiMM": [18, 18, 6],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [47, -8, 16],
+      "radiiMM": [15, 18, 5],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [25, -42, 16.5],
+      "radiiMM": [14, 13, 5],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [-48, 43, 16.3],
+      "radiiMM": [16, 16, 6],
+      "minZMM": 15.2
+    }
+  ],
+  "lodORMSize": 512
+}
