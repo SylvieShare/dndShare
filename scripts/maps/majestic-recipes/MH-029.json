@@ -1,0 +1,164 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 85000,
+  "lodTriangles": 30000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "pine", "forest", "stones", "outdoor", "xl"],
+  "recipe": "majestic-path-end-two-pines-own-soil-v1",
+  "grassReferenceRotation": 270,
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.14,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "soilTopStartMM": 13,
+  "soilTopFadeMM": 0.8,
+  "standMaxZMM": 19,
+  "ferns": [
+    {
+      "centreMM": [27, -29, 16.4],
+      "radiiMM": [23, 23, 7],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [25, -1, 16.3],
+      "radiiMM": [22, 18, 7],
+      "minZMM": 15.1
+    }
+  ],
+  "stones": [
+    {
+      "centreMM": [-1, 36, 20],
+      "radiiMM": [13, 10, 9],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [-18, 41, 17.4],
+      "radiiMM": [6, 6.5, 6],
+      "minZMM": 15.1
+    },
+    {
+      "centreMM": [28, -7, 18.3],
+      "radiiMM": [9.5, 9, 7.5],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [3, -44, 17.5],
+      "radiiMM": [6.5, 7.5, 6],
+      "minZMM": 15.1
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [3000000, 5500000],
+    "targetLODBytes": [1000000, 2200000],
+    "targetShadowBytes": [65000, 160000],
+    "targetPreviewBytes": [15000, 80000],
+    "basis": "675056 source triangles, measured 3x3 path end with 87.32 mm pine and a young pine. Terrain does not match previous soil source; measure own dirt domain. Test 85k/30k preserving the tall open branches and thin leaves."
+  },
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "blockedCells": [
+    [2, 0],
+    [2, 2],
+    [1, 0]
+  ],
+  "trees": [
+    {
+      "baseXY": [25, 24],
+      "topXY": [26.5, 23],
+      "heightMM": 87.32,
+      "foliageRadiusMM": 34,
+      "trunkRadiusMM": 3.8,
+      "rootRadiusMM": 8,
+      "barkTopMM": 54
+    },
+    {
+      "baseXY": [29, -30],
+      "topXY": [32, -31.5],
+      "heightMM": 56.8,
+      "foliageRadiusMM": 16,
+      "trunkRadiusMM": 2.3,
+      "rootRadiusMM": 6,
+      "barkTopMM": 32
+    }
+  ],
+  "blockers": [
+    [
+      [2.4, 0.814286],
+      [2.385863, 0.743216],
+      [2.345606, 0.682966],
+      [2.285355, 0.642708],
+      [2.214286, 0.628571],
+      [2.143216, 0.642708],
+      [2.082966, 0.682966],
+      [2.042708, 0.743216],
+      [2.028571, 0.814286],
+      [2.042708, 0.885355],
+      [2.082966, 0.945606],
+      [2.143216, 0.985863],
+      [2.214286, 1.0],
+      [2.285355, 0.985863],
+      [2.345606, 0.945606],
+      [2.385863, 0.885355]
+    ],
+    [
+      [2.457143, 2.357143],
+      [2.447356, 2.307941],
+      [2.419485, 2.266229],
+      [2.377774, 2.238358],
+      [2.328571, 2.228571],
+      [2.279369, 2.238358],
+      [2.237658, 2.266229],
+      [2.209787, 2.307941],
+      [2.2, 2.357143],
+      [2.209787, 2.406345],
+      [2.237658, 2.448057],
+      [2.279369, 2.475927],
+      [2.328571, 2.485714],
+      [2.377774, 2.475927],
+      [2.419485, 2.448057],
+      [2.447356, 2.406345]
+    ],
+    [
+      [1.757143, 0.471429],
+      [1.735394, 0.36209],
+      [1.673459, 0.269398],
+      [1.580767, 0.207463],
+      [1.471429, 0.185714],
+      [1.36209, 0.207463],
+      [1.269398, 0.269398],
+      [1.207463, 0.36209],
+      [1.185714, 0.471429],
+      [1.207463, 0.580767],
+      [1.269398, 0.673459],
+      [1.36209, 0.735394],
+      [1.471429, 0.757143],
+      [1.580767, 0.735394],
+      [1.673459, 0.673459],
+      [1.735394, 0.580767]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.9,
+  "soilDomains": [
+    [
+      [-54, 25],
+      [-27, 22],
+      [-11, 21],
+      [-10, 9],
+      [7, -3],
+      [4, -22],
+      [-3, -36],
+      [-11, -54],
+      [-54, -54]
+    ]
+  ],
+  "soilDomainFeatherMM": 6
+}

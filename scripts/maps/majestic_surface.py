@@ -14,14 +14,14 @@ def sample_field(field, positions):
             field[y+1,x]*(1-tx)*ty+field[y+1,x+1]*tx*ty)
 
 
-def polygon_weight(positions, polygon):
+def polygon_weight(positions, polygon, feather=2):
     p=positions[:,:2]; x,y=p.T; inside=np.zeros(len(p),bool); distance=np.full(len(p),np.inf)
     for a,b in zip(polygon,polygon[1:]+polygon[:1]):
         a,b=np.array(a),np.array(b); edge=b-a
         inside^=((a[1]>y)!=(b[1]>y)) & (x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1]+1e-12)+a[0])
         t=np.clip(((p-a)*edge).sum(1)/(edge@edge),0,1)
         distance=np.minimum(distance,np.linalg.norm(p-a-t[:,None]*edge,axis=1))
-    return inside*np.clip(distance/2,0,1)
+    return inside*np.clip(distance/feather,0,1)
 
 
 def reference_weights(obj, recipe, code, positions):
@@ -68,7 +68,7 @@ def grass_weights(obj, recipe, code):
     positions=xyz.reshape(-1,3)
     weights=reference_weights(obj,recipe,code,positions) if recipe.get('grassReference') or recipe.get('soilReference') else np.ones(len(positions),np.float32)
     if recipe.get('soilDomains'):
-        domain=np.maximum.reduce([polygon_weight(positions,p) for p in recipe['soilDomains']])
+        domain=np.maximum.reduce([polygon_weight(positions,p,recipe.get('soilDomainFeatherMM',2)) for p in recipe['soilDomains']])
         height=np.clip((positions[:,2]-recipe['soilSurfaceMM'])/recipe['grassHeightFadeMM'],0,1)
         height=height*height*(3-2*height)
         weights*=1-domain*(1-height)
