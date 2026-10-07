@@ -50,7 +50,7 @@ func TestMapAssetInputValidation(t *testing.T) {
 func TestMapWritesRejectBeforeTouchingStorage(t *testing.T) {
 	s := &Server{cfg: config.Config{MCPWriteEnabled: false}}
 	r := httptest.NewRequest("POST", "/mcp", nil)
-	for _, name := range []string{"map_tile_asset_prepare_upload", "map_tile_asset_complete_upload", "map_tile_model_register", "map_tile_model_register_shadow"} {
+	for _, name := range []string{"map_tile_asset_prepare_upload", "map_tile_asset_complete_upload", "map_tile_model_register", "map_tile_model_register_shadow", "map_tile_model_behaviour_update"} {
 		if _, err := s.dispatchTool(r, name, map[string]json.RawMessage{}); err == nil || !strings.Contains(err.Error(), "disabled") {
 			t.Fatalf("%s: %v", name, err)
 		}
@@ -139,5 +139,20 @@ func TestMapShadowUploadAndMetadata(t *testing.T) {
 	delete(model.Assets, "shadow")
 	if validateMapModel(model) == nil {
 		t.Fatal("stored model without shadow accepted")
+	}
+}
+
+func TestMapBehaviourToolRejectsInvalidInputBeforeStore(t *testing.T) {
+	s := &Server{cfg: config.Config{MCPWriteEnabled: true}}
+	r := httptest.NewRequest("POST", "/mcp", nil)
+	for _, args := range []map[string]json.RawMessage{
+		{},
+		{"definitionId": json.RawMessage(`" "`)},
+		{"definitionId": json.RawMessage(`"UD-036"`), "behaviour": json.RawMessage(`{"revision":0}`)},
+		{"definitionId": json.RawMessage(`"UD-036"`), "behaviour": json.RawMessage(`{"revision":1,"defaultLights":[{"key":"lamp","name":"Light","kind":"torch","color":"invalid","radius":4}]}`)},
+	} {
+		if _, err := s.dispatchTool(r, "map_tile_model_behaviour_update", args); err == nil {
+			t.Fatal("accepted invalid behaviour")
+		}
 	}
 }

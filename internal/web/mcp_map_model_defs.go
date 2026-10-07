@@ -13,6 +13,11 @@ func mapModelToolDefinitions() []map[string]any {
 		"size": mcpIntegerProperty("Expected byte size"), "uploadKey": mcpStringProperty("Temporary key returned by prepare_upload"),
 	}, "kind", "fileName", "sha256", "size", "uploadKey")
 	return []map[string]any{
+		mcpDefinition("map_tile_model_behaviour_get", "Get shared transitions and embedded light templates by stable model definitionId, e.g. UD-010. Includes the revision required for updates.", mcpObjectSchema(map[string]any{"definitionId": mcpStringProperty("Stable logical model ID; not the asset version UUID")}, "definitionId")),
+		mcpDefinition("map_tile_model_behaviour_update", "Replace shared model behaviour with compare-and-swap revision. Preserves immutable model versions, geometry and S3 assets. Supply the complete current transitions and defaultLights; omitted entries are removed. Requires MCP writes.", mcpObjectSchema(map[string]any{
+			"definitionId": mcpStringProperty("Stable logical model ID"),
+			"behaviour":    map[string]any{"type": "object", "description": "Complete {revision, defaultLights:[{key,name,kind,color,position:[x,y,height],intensity,radius,enabled,flicker}], transitions:[{id,toDefinitionId,action}]}. Read first and retain unrelated lights and directed transitions. Height excludes mounting peg; position is local footprint coordinates."},
+		}, "definitionId", "behaviour")),
 		mcpDefinition("map_tile_models_list", "List versioned 3D tile catalogue metadata and registered S3 assets; no file bytes. Optional collection filter.", mcpObjectSchema(map[string]any{"collection": mcpStringProperty("Optional collection code")})),
 		mcpDefinition("map_tile_model_get", "Get one immutable tile model version and asset metadata.", mcpObjectSchema(map[string]any{"id": mcpStringProperty("Model version UUID")}, "id")),
 		mcpDefinition("map_tile_asset_prepare_upload", "Prepare a 15-minute signed PUT URL for a tile asset. Upload file bytes directly to Object Storage, not to the application or SSH server. Requires MCP writes; then call complete_upload.", asset),

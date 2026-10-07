@@ -89,4 +89,30 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	if _, err = s.ReviseMapModelWithBehaviour(ctx, saved.ID, edit, &b); !errors.Is(err, ErrInvalidMapModels) {
 		t.Fatal("self transition accepted", err)
 	}
+	current, err := s.GetMapModelBehaviour(ctx, source.DefinitionID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	current.DefaultLights[0].Intensity = 12
+	updated, err := s.UpdateMapModelBehaviour(ctx, source.DefinitionID, current)
+	if err != nil || updated.Revision != 3 || len(updated.Transitions) != 1 {
+		t.Fatal("standalone behaviour update", updated, err)
+	}
+	unchanged, err := s.GetMapModel(ctx, saved.ID)
+	if err != nil || unchanged.Version != saved.Version || unchanged.Assets["render"] != saved.Assets["render"] {
+		t.Fatal("behaviour revised immutable resources", err)
+	}
+	if _, err = s.UpdateMapModelBehaviour(ctx, source.DefinitionID, current); !errors.Is(err, ErrMapModelConflict) {
+		t.Fatal("stale standalone update accepted", err)
+	}
+	current = updated
+	current.Transitions[0].ToDefinitionID = source.DefinitionID
+	if _, err = s.UpdateMapModelBehaviour(ctx, source.DefinitionID, current); !errors.Is(err, ErrInvalidMapModels) {
+		t.Fatal("invalid standalone transition accepted", err)
+	}
+	after, err := s.GetMapModelBehaviour(ctx, source.DefinitionID)
+	if err != nil || after.Revision != 3 || after.DefaultLights[0].Intensity != 12 || after.Transitions[0].ToDefinitionID != target.DefinitionID {
+		t.Fatal("rollback lost previous behaviour", after, err)
+	}
+
 }

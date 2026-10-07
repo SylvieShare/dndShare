@@ -140,6 +140,12 @@ rollback; apply требует точный token и включённые MCP wr
 
 - `map_tile_models_list`: метаданные, постоянный definitionId и assets; опциональный фильтр collection.
 - `map_tile_model_get`: одна версия по UUID.
+- `map_tile_model_behaviour_get`: definitionId → текущее поведение и revision.
+- `map_tile_model_behaviour_update`: definitionId и полный behaviour с ожидаемой
+  revision; меняет встроенные источники и направленные переходы атомарно, без
+  новых версий GLB или изменений S3. Перед записью прочитать актуальное поведение
+  и сохранить остальные шаблоны/связи. Устаревшая revision отклоняется.
+
 - `map_tile_asset_prepare_upload`: kind, fileName, SHA-256 и size; возвращает
   временный S3 uploadKey, подписанный PUT URL на 15 минут и необходимые headers.
 - `map_tile_asset_complete_upload`: тот же descriptor и uploadKey. Сервер читает
