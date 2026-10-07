@@ -1,0 +1,87 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 85000,
+  "lodTriangles": 35000,
+  "tileType": "floor",
+  "hasDecor": true,
+  "tags": ["grass", "dirt", "stone", "ruins", "outdoor", "xl"],
+  "recipe": "majestic-measured-tall-ruins-1-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [3000000, 6000000],
+    "targetLODBytes": [1000000, 2500000],
+    "targetShadowBytes": [70000, 200000],
+    "targetPreviewBytes": [15000, 100000],
+    "basis": "771926 source triangles and 118.66 mm broken arch/walls. Protect altered central soil below 16.4 mm; preserve silhouette and openings with 85k/35k."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [-22, 25],
+      [12, 27],
+      [22, 8],
+      [13, -15],
+      [-10, -19],
+      [-22, -2]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.55,
+  "standMaxZMM": 25,
+  "blockedCells": [[2, 2]],
+  "masonryReference": {
+    "code": "MH-001",
+    "rotateZ": 180,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "minZMM": 16.4
+  },
+  "masonryRGB": [0.48, 0.445, 0.35],
+  "stoneVariation": 0.085,
+  "darkenJoints": true,
+  "blockers": [
+    [
+      [0.03, 0.03],
+      [1.3, 0.03],
+      [1.3, 0.32],
+      [0.03, 0.32]
+    ],
+    [
+      [1.9, 0.03],
+      [2.98, 0.03],
+      [2.98, 0.32],
+      [1.9, 0.32]
+    ],
+    [
+      [2.7, 0.04],
+      [2.98, 0.04],
+      [2.98, 1.03],
+      [2.7, 1.03]
+    ],
+    [
+      [2.7, 1.65],
+      [2.98, 1.65],
+      [2.98, 2.95],
+      [2.7, 2.95]
+    ],
+    [
+      [0.95, 2.66],
+      [2.97, 2.66],
+      [2.97, 2.99],
+      [0.95, 2.99]
+    ]
+  ],
+  "grassReferenceRotation": 180
+}
