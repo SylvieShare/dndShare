@@ -57,7 +57,7 @@ test("a moving tile rises above its body datum and smoothly returns after releas
   expect(before.count).toBeGreaterThan(10);
   await page.mouse.move(bounds.x + before.x, bounds.y + before.y);
   await page.mouse.down();
-  await page.mouse.move(bounds.x + before.x + 6, bounds.y + before.y);
+  await page.waitForTimeout(550);
   await expect
     .poll(async () => (await cyan(page, canvas)).y)
     .toBeLessThan(before.y - 4);

@@ -1,3 +1,4 @@
+import { attachmentExample } from "./attachments";
 import { groupExamples } from "./groups";
 import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
@@ -164,6 +165,7 @@ if (params.has("areaExample")) {
     source.document.areas[0].objectIds.push("area-chest-2");
   }
 }
+if (params.has("attachmentExample")) attachmentExample(source, Scene);
 if (params.has("lightExample")) {
   source.document.lightingEnabled = true;
   source.document.sun = { enabled: false, angle: 225, elevation: 45 };

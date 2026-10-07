@@ -27,8 +27,10 @@ test("category cells fill each row and single selection shows preview, identity 
     panel.getByRole("heading", { name: "Пол 1", exact: true }),
   ).toBeVisible();
   await expect(panel.locator(".map-selection-preview")).toBeVisible();
-  await expect(panel.getByText("LC-007", { exact: true })).toBeVisible();
-  await expect(panel.locator("dl dd")).toHaveText(["4", "4", "0", "0°"]);
+  await expect(panel.locator(".map-selected-heading small")).toContainText(
+    "LC-007",
+  );
+  await expect(panel.locator("table td")).toHaveText(["4", "4", "0", "0°"]);
   const box = await panel.boundingBox(),
     canvas = await page.locator(".map-canvas").boundingBox();
   expect(box.height).toBeLessThan(canvas.height);
@@ -43,9 +45,9 @@ test("category cells fill each row and single selection shows preview, identity 
   await expect(
     panel.getByRole("heading", { name: "Сундук", exact: true }),
   ).toBeVisible();
-  await expect(
-    panel.getByText("MA-DungeonChest", { exact: true }),
-  ).toBeVisible();
+  await expect(panel.locator(".map-selected-heading small")).toContainText(
+    "MA-DungeonChest",
+  );
 });
 test("mixed area selection groups repeated models, assigns them to another area and deletes them", async ({
   page,
@@ -97,9 +99,7 @@ test("light rows toggle by switch, show their area, and anchor picking focuses t
   await lights.getByRole("button", { name: "Факел", exact: true }).click();
   const panel = selection(page);
   await expect(panel.getByLabel("Название источника света")).toBeVisible();
-  await lights
-    .getByRole("switch", { name: "Факел", exact: true })
-    .click();
+  await lights.getByRole("switch", { name: "Факел", exact: true }).click();
   await expect
     .poll(() =>
       page.evaluate(() => window.lastSaved?.document.lights[0].enabled),
@@ -108,9 +108,7 @@ test("light rows toggle by switch, show their area, and anchor picking focuses t
   await expect(
     lights.getByRole("switch", { name: "Факел", exact: true }),
   ).toBeVisible();
-  await lights
-    .getByRole("switch", { name: "Факел", exact: true })
-    .click();
+  await lights.getByRole("switch", { name: "Факел", exact: true }).click();
   await panel
     .getByRole("button", { name: "Добавить в область", exact: true })
     .click();
@@ -170,4 +168,175 @@ test("autosave only opens an error popup on failure and records the last success
     "datetime",
     await page.evaluate(() => window.lastSaved.changedAt),
   );
+});
+
+test("single inspector has framed preview actions, tabular XYZ, and navigates to its area", async ({
+  page,
+}) => {
+  await ready(page, "&areaExample");
+  const point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.click(point.x, point.y);
+  const panel = selection(page);
+  await expect(
+    panel.getByRole("status", { name: "Выбрано плиток" }),
+  ).toHaveCount(0);
+  await expect(panel.locator(".map-selected-frame")).toBeVisible();
+  const name = await panel.locator(".map-selected-heading h3").innerText();
+  await expect(panel.locator(".map-selected-heading small")).toHaveText(
+    /.+ · (LC-007|MA-DungeonChest)$/,
+  );
+  await expect(panel.locator("table th")).toHaveText([
+    "X",
+    "Y",
+    "Z",
+    "Поворот",
+  ]);
+  await expect(
+    panel.getByRole("button", { name: "Удалить элемент", exact: true }),
+  ).toBeVisible();
+  await expect(
+    panel.getByRole("button", { name: "Скопировать элемент", exact: true }),
+  ).toBeVisible();
+  await expect(
+    panel.getByRole("region", { name: "Область", exact: true }),
+  ).toContainText("Зал");
+  await panel
+    .getByRole("button", {
+      name: "Перейти к области «Зал»",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByLabel("Название области 1", { exact: true }),
+  ).toBeFocused();
+  await expect(panel.locator(".map-selected-heading h3")).toHaveText(name);
+});
+
+test("text can be selected and copied natively in the catalogue and the inspector", async ({
+  page,
+}) => {
+  await ready(page);
+  await dragTile(page, await mapPoint(page, 4.5, 4.5));
+  await page.evaluate(() => {
+    window.nativeCopies = [];
+    window.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.code === "KeyC")
+        window.nativeCopies.push(event.defaultPrevented);
+    });
+  });
+  const name = page
+    .getByRole("button", { name: "Пол 1", exact: true })
+    .locator(".map-model-name");
+  await selectText(page, name);
+  expect(await page.evaluate(() => window.getSelection().toString())).toContain(
+    "Пол",
+  );
+  await page.keyboard.press("Control+c");
+  expect(await page.evaluate(() => window.nativeCopies)).toEqual([false]);
+  await expect(page.locator(".map-controls-hint")).not.toContainText(
+    "разместить плитку",
+  );
+  const title = selection(page).locator(".map-selected-heading h3");
+  await selectText(page, title);
+  expect(await page.evaluate(() => window.getSelection().toString())).toContain(
+    "Пол",
+  );
+  await page.keyboard.press("Control+c");
+  expect(await page.evaluate(() => window.nativeCopies)).toEqual([
+    false,
+    false,
+  ]);
+  await title.click();
+  await selection(page)
+    .getByRole("button", { name: "Скопировать элемент", exact: true })
+    .click();
+  const target = await mapPoint(page, 6.5, 4.5);
+  await page.mouse.move(target.x, target.y);
+  await page.keyboard.press("Control+v");
+  await page.mouse.click(target.x, target.y);
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) => t.x === 6 && t.y === 4),
+      ),
+    )
+    .toBe(true);
+});
+
+async function selectText(page, locator) {
+  const bounds = await locator.evaluate((element) => {
+    window.getSelection().removeAllRanges();
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    const r = range.getBoundingClientRect();
+    return { x: r.x, y: r.y, width: r.width, height: r.height };
+  });
+  await page.mouse.move(bounds.x + 1, bounds.y + bounds.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(
+    bounds.x + bounds.width - 1,
+    bounds.y + bounds.height / 2,
+    { steps: 8 },
+  );
+  await page.mouse.up();
+}
+
+test("tile and chest lights follow the moving preview before save, and attached members commit together", async ({
+  page,
+}) => {
+  await ready(page, "&areaExample&attachmentExample");
+  await expect
+    .poll(() => page.evaluate(() => window.lastSaved?.document.lights.length))
+    .toBe(2);
+  const savedBefore = await page.evaluate(() => window.requests.length);
+  const poses = () =>
+    page.evaluate(() => {
+      const result = {};
+      window.attachmentScene?.traverse((node) => {
+        if (node.isGroup && (node.userData.lightId || node.userData.objectId))
+          result[node.userData.lightId || node.userData.objectId] =
+            node.position.toArray();
+      });
+      return result;
+    });
+  const start = await mapPoint(page, 4.1, 4.1),
+    end = await mapPoint(page, 6.1, 5.1);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.waitForTimeout(550);
+  await page.mouse.move(end.x, end.y, { steps: 10 });
+  await expect
+    .poll(async () => {
+      const current = await poses();
+      return ["tile-lamp", "object-lamp", "area-chest"].map((id) =>
+        Number(current[id]?.[0].toFixed(3)),
+      );
+    })
+    .toEqual([6.2, 6.8, 6.5]);
+  const current = await poses();
+  expect(current["tile-lamp"][1]).toBeGreaterThan(1);
+  expect(current["area-chest"][1]).toBeGreaterThan(0.6);
+  expect(await page.evaluate(() => window.requests.length)).toBe(savedBefore);
+  await page.mouse.up();
+  await expect
+    .poll(() => page.evaluate(() => window.lastSaved?.document.tiles[0].x))
+    .toBe(6);
+  const d = await page.evaluate(() => window.lastSaved.document);
+  expect(d.objects[0]).toMatchObject({
+    x: 6.5,
+    y: 5.5,
+    placement: { tileId: "area-floor", point: 0 },
+  });
+  for (const [id, x] of [
+    ["tile-lamp", 6.2],
+    ["object-lamp", 6.8],
+  ]) {
+    const light = d.lights.find((l) => l.id === id);
+    expect(light.x).toBeCloseTo(x);
+    expect(light.y).toBeCloseTo(5.5);
+  }
+  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await expect
+    .poll(() => page.evaluate(() => window.lastSaved?.document.objects[0].x))
+    .toBe(4.5);
 });

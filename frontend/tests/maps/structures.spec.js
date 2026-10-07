@@ -18,8 +18,8 @@ test("collection filters and selecting a side wall without layout controls", asy
   await dragTile(page, await mapPoint(page, 4.5, 4.5), {
     name: "Боковая стена",
   });
-  await expect(page.getByRole("status", { name: "Выбрано плиток" })).toHaveText(
-    "Выбрано: 1",
+  await expect(page.locator(".map-selected-heading h3")).toHaveText(
+    "Боковая стена",
   );
   await expect(page.locator(".map-tile-connections")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /^Сторона:/ })).toHaveCount(0);
@@ -60,6 +60,7 @@ test("a frame supports upper tiles, carries them and deletes the dependent stack
     end = await mapPoint(page, 6.02, 4.5);
   await page.mouse.move(start.x, start.y);
   await page.mouse.down();
+  await page.waitForTimeout(550);
   await page.mouse.move(end.x, end.y, { steps: 12 });
   await page.mouse.up();
   await expect
@@ -166,6 +167,7 @@ test("dragging an existing upper tile away from sockets automatically places it 
     end = await mapPoint(page, 7.5, 5.5);
   await page.mouse.move(start.x, start.y);
   await page.mouse.down();
+  await page.waitForTimeout(550);
   await page.mouse.move(end.x, end.y, { steps: 12 });
   await page.mouse.up();
   await expect

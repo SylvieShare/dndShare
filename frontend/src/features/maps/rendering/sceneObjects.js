@@ -155,7 +155,7 @@ export function buildSceneObjects(d, state, options, fog, assets, tier) {
       state?.objects?.[o.id] ?? o.open,
       fog,
       assets,
-      tier,
+      options.renderObjects?.includes(o.id) ? "render" : tier,
     );
     applyAreaOpacity(object, options.areaObjectOpacity?.(o.id) ?? 1);
     root.add(object);

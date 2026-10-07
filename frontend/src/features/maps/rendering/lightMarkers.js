@@ -57,6 +57,7 @@ export function createLightMarkers() {
         outline.renderOrder = 15;
         node.add(outline);
       }
+      node.userData.lightId = light.id;
       node.position.set(light.x, light.worldHeight, light.y);
       node.renderOrder = 15;
       root.add(node);
@@ -66,6 +67,10 @@ export function createLightMarkers() {
   return {
     root,
     update,
+    move(id, position) {
+      const node = root.children.find((n) => n.userData.lightId === id);
+      if (node) node.position.copy(position);
+    },
     hit(ray) {
       if (!root.visible) return null;
       const h = ray

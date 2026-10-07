@@ -142,6 +142,12 @@ export function editorGestures(e) {
           if (e.previewObject) e.previewObject.value = null;
         }
       }
+      if (phase === "hold" && gesture) {
+        if (gesture.tile)
+          e.tileDrag.begin(gesture.tile.modelId, gesture.start, gesture.tile);
+        if (gesture.object && e.previewObject)
+          e.previewObject.value = { ...gesture.object, moving: true };
+      }
       if (phase === "move" && gesture) {
         const moved =
           event && gesture.screen

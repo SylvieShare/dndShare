@@ -5,24 +5,25 @@
     aria-label="Освещение выбранной модели"
   >
     <template v-for="group in groups" :key="group.title">
-      <h4 v-if="group.entries.length">{{ group.title }}</h4>
-      <MapEntityRow
-        v-for="light in group.entries"
-        :key="light.id"
-        :entry="light"
-        toggle-light
-        @toggle="editor.toggleLight"
-        @select="editor.selectLight(light.id)"
-      >
-        <template v-if="!light.item.builtinKey" #actions>
-          <ActionButton
-            variant="quiet"
-            :aria-label="`Отвязать ${light.name}`"
-            @click.stop="editor.bindLight(light.id, null)"
-            >Отвязать</ActionButton
-          >
-        </template>
-      </MapEntityRow>
+      <MapInspectorSection v-if="group.entries.length" :title="group.title">
+        <MapEntityRow
+          v-for="light in group.entries"
+          :key="light.id"
+          :entry="light"
+          toggle-light
+          @toggle="editor.toggleLight"
+          @select="editor.selectLight(light.id)"
+        >
+          <template v-if="!light.item.builtinKey" #actions>
+            <ActionButton
+              variant="quiet"
+              :aria-label="`Отвязать ${light.name}`"
+              @click.stop="editor.bindLight(light.id, null)"
+              >Отвязать</ActionButton
+            >
+          </template>
+        </MapEntityRow>
+      </MapInspectorSection>
     </template>
   </section>
 </template>
@@ -30,6 +31,7 @@
 import { computed } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { mapEntity } from "../lib/editorEntities";
+import MapInspectorSection from "./MapInspectorSection.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 const props = defineProps({ editor: Object, entry: Object });
 const lights = computed(() =>

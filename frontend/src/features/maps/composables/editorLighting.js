@@ -129,6 +129,8 @@ export function editorLighting(e) {
       return true;
     }
     if (!gesture) return false;
+    if (phase === "hold")
+      previewLight.value = { ...gesture.light, moving: true };
     if (
       phase === "move" &&
       point &&

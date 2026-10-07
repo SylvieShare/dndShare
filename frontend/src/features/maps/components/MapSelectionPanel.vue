@@ -5,10 +5,7 @@
     aria-label="Выбранные элементы"
   >
     <BaseTile class="map-selection-content">
-      <div
-        v-if="editor.selectedTiles.length || editor.selectedObjects.length"
-        class="map-selection-summary"
-      >
+      <div v-if="entries.length > 1" class="map-selection-summary">
         <span
           v-if="editor.selectedTiles.length"
           role="status"
@@ -23,48 +20,12 @@
         >
       </div>
       <template v-if="entries.length === 1">
-        <MapEntityRow
-          v-if="single.kind === 'light'"
+        <MapSelectedEntity :entry="single" :editor="editor" />
+        <MapSelectionActions
+          :editor="editor"
           :entry="single"
-          @select="emit('focus', [single])"
+          @area="emit('area', $event)"
         />
-        <template v-else>
-          <img
-            v-if="single.previewUrl"
-            class="map-selection-preview"
-            :src="single.previewUrl"
-            alt=""
-            draggable="false"
-          />
-          <h3>{{ single.name }}</h3>
-          <strong v-if="single.code" class="map-selection-code">{{
-            single.code
-          }}</strong>
-          <small v-if="single.groupCode" class="map-hint"
-            >Code: {{ single.groupCode }}</small
-          >
-          <p
-            v-if="single.sourceName && single.sourceName !== single.name"
-            class="map-hint"
-          >
-            {{ single.sourceName }}
-          </p>
-        </template>
-        <dl
-          class="map-selection-coordinates"
-          aria-label="Координаты выбранного элемента"
-        >
-          <dt>X</dt>
-          <dd>{{ number(single.position.x) }}</dd>
-          <dt>Y</dt>
-          <dd>{{ number(single.position.y) }}</dd>
-          <dt>Высота</dt>
-          <dd>{{ number(single.position.elevation) }}</dd>
-          <template v-if="single.kind !== 'light'"
-            ><dt>Поворот</dt>
-            <dd>{{ single.item.rotation }}°</dd></template
-          >
-        </dl>
         <MapLightFields
           v-if="single.kind === 'light'"
           :editor="editor"
@@ -88,7 +49,11 @@
           />
         </div>
       </template>
-      <MapSelectionActions :editor="editor" />
+      <MapSelectionActions
+        v-if="entries.length > 1"
+        :editor="editor"
+        @area="emit('area', $event)"
+      />
     </BaseTile>
   </aside>
 </template>
@@ -96,18 +61,17 @@
 import { computed } from "vue";
 import { BaseTile } from "@sylvieshare/share-ui";
 import { groupMapEntities, selectedMapEntities } from "../lib/editorEntities";
+import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
 import MapModelTransitions from "./MapModelTransitions.vue";
 import MapModelLights from "./MapModelLights.vue";
 const props = defineProps({ editor: Object });
-const emit = defineEmits(["focus", "bind"]);
+const emit = defineEmits(["focus", "bind", "area"]);
 const entries = computed(() => selectedMapEntities(props.editor));
 const groups = computed(() => groupMapEntities(entries.value));
 const single = computed(() => entries.value[0]);
-const format = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
-const number = (value) => format.format(value || 0);
 </script>
 <style scoped>
 .map-selection-panel {
@@ -119,6 +83,7 @@ const number = (value) => format.format(value || 0);
   max-width: calc(100% - 24px);
   max-height: calc(100% - 100px);
   overflow: auto;
+  user-select: text;
 }
 .map-selection-content {
   padding: 14px;
@@ -126,37 +91,15 @@ const number = (value) => format.format(value || 0);
   flex-direction: column;
   gap: 12px;
 }
+.map-selection-panel h3 {
+  margin: 0;
+  font-size: 17px;
+}
 .map-selection-summary {
   display: flex;
   gap: 12px;
   font-size: 12px;
   color: var(--text-muted);
-}
-.map-selection-panel h3 {
-  margin: 0;
-  font-size: 17px;
-}
-.map-selection-preview {
-  width: 100%;
-  height: 150px;
-  object-fit: contain;
-}
-.map-selection-code {
-  font: 13px var(--font-mono);
-  color: var(--text-muted);
-}
-.map-selection-coordinates {
-  display: grid;
-  grid-template-columns: repeat(3, auto 1fr);
-  gap: 6px;
-  margin: 0;
-  font-size: 12px;
-}
-.map-selection-coordinates dt {
-  color: var(--text-muted);
-}
-.map-selection-coordinates dd {
-  margin: 0;
 }
 .map-selection-list {
   display: flex;

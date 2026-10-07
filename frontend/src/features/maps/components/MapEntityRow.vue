@@ -8,7 +8,7 @@
     :role="selectable ? 'button' : undefined"
     :tabindex="selectable ? 0 : undefined"
     :aria-label="entry.name"
-    @click="selectable && emit('select', entry)"
+    @click="selectable && !hasSelectedText() && emit('select', entry)"
     @keydown.enter.self.prevent="selectable && emit('select', entry)"
     @keydown.space.self.prevent="selectable && emit('select', entry)"
   >
@@ -44,14 +44,21 @@
     <strong v-if="entry.count" class="map-entity-count"
       >×{{ entry.count }}</strong
     >
-    <ToggleSwitch v-if="entry.kind === 'light' && toggleLight" :model-value="entry.enabled"
-      :aria-label="entry.name" :disabled="toggleDisabled" @click.stop @keydown.stop
-      @update:model-value="emit('toggle', entry.id)" />
+    <ToggleSwitch
+      v-if="entry.kind === 'light' && toggleLight"
+      :model-value="entry.enabled"
+      :aria-label="entry.name"
+      :disabled="toggleDisabled"
+      @click.stop
+      @keydown.stop
+      @update:model-value="emit('toggle', entry.id)"
+    />
     <slot name="actions" />
   </BaseTile>
 </template>
 <script setup>
 import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
+import { hasSelectedText } from "../lib/textSelection";
 import { Box, Lightbulb, LightbulbOff } from "@lucide/vue";
 defineProps({
   entry: { type: Object, required: true },
@@ -83,6 +90,7 @@ const emit = defineEmits(["select", "toggle"]);
   object-fit: contain;
 }
 .map-entity-label {
+  user-select: text;
   flex: 1;
   min-width: 0;
   display: flex;

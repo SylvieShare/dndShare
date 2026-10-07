@@ -1,6 +1,6 @@
 import { Vector3 } from "three";
 import { createRotationMotion } from "./rotationMotion";
-export function createObjectMotion(assets, tiles) {
+export function createObjectMotion(assets, tileMatrix) {
   const motion = createRotationMotion(),
     point = new Vector3();
   let objects = new Map(),
@@ -23,8 +23,11 @@ export function createObjectMotion(assets, tiles) {
         const parent = parents.get(object.placement?.tileId),
           model = assets.metadata(parent?.modelId);
         const anchor = model?.placementPoints?.[object.placement?.point],
-          matrix = parent && tiles.transform(parent.id);
-        if (anchor && matrix)
+          matrix = parent && tileMatrix(parent.id);
+        if (anchor && matrix) {
+          child.rotation.y +=
+            Math.atan2(matrix.elements[8], matrix.elements[0]) +
+            (parent.rotation * Math.PI) / 180;
           child.position.copy(
             point
               .set(
@@ -34,6 +37,7 @@ export function createObjectMotion(assets, tiles) {
               )
               .applyMatrix4(matrix),
           );
+        }
       }
       root.updateMatrixWorld(true);
       return moving;

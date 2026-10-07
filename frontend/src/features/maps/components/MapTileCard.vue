@@ -8,9 +8,13 @@
     tabindex="0"
     :aria-label="model.name"
     :title="`${model.sourceCode} · ${model.sourceName}`"
-    @pointerdown="draggable && emit('drag-tile', model.id, $event)"
-    @click="!draggable && emit('model', model.id, $event)"
-    @dragstart.prevent
+    @pointerdown="
+      draggable &&
+      !isSelectableText($event) &&
+      emit('drag-tile', model.id, $event)
+    "
+    @click="!draggable && !hasSelectedText() && emit('model', model.id, $event)"
+    @dragstart="!isSelectableText($event) && $event.preventDefault()"
     @keydown.enter.prevent.stop="emit('model', model.id, $event)"
     @keydown.space.prevent.stop="emit('model', model.id, $event)"
   >
@@ -38,6 +42,7 @@
 </template>
 <script setup>
 import { BaseTile } from "@sylvieshare/share-ui";
+import { hasSelectedText, isSelectableText } from "../lib/textSelection";
 import MapModelLightBadge from "./MapModelLightBadge.vue";
 defineProps({
   model: Object,
@@ -57,7 +62,7 @@ const emit = defineEmits(["model", "drag-tile"]);
   padding: 6px;
   cursor: pointer;
   touch-action: none;
-  user-select: none;
+  user-select: auto;
 }
 .map-model-card img {
   width: 100%;
@@ -72,11 +77,13 @@ const emit = defineEmits(["model", "drag-tile"]);
   top: 6px;
 }
 .map-model-name {
+  user-select: text;
   white-space: normal;
   font-size: 12px;
   line-height: 1.3;
 }
 .map-model-card small {
+  user-select: text;
   font-family: var(--font-mono);
   font-size: 10px;
   opacity: 0.7;

@@ -5,6 +5,7 @@ import {
 } from "../lib/tilePlacement";
 import { dependentTiles, structureContext } from "../lib/tileStructure";
 import { groupRotationPivot, rotateMapGroup } from "../lib/mapGroupRotation";
+import { syncSurfaceObjects } from "../lib/surfacePlacement";
 import { uid } from "../lib/mapModel";
 import { enclosedEmptyCells } from "../lib/enclosedTiles";
 
@@ -212,9 +213,15 @@ export function editorTileDrag(e) {
           e.change((m) => {
             for (const tile of placements) {
               const old = m.document.tiles.find((t) => t.id === tile.id);
-              if (old) Object.assign(old, tile);
-              else m.document.tiles.push(tile);
+              if (old) {
+                const turn = tile.rotation - old.rotation;
+                for (const object of m.document.objects)
+                  if (object.placement?.tileId === tile.id)
+                    object.rotation = (object.rotation + turn + 360) % 360;
+                Object.assign(old, tile);
+              } else m.document.tiles.push(tile);
             }
+            syncSurfaceObjects(m.document, e.catalogue.value);
           });
         e.setTileSelection(
           placements.map((t) => t.id),

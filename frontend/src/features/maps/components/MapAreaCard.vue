@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="map-area-card">
+  <BaseTile ref="card" class="map-area-card" :framed="focus">
     <FormField label="Название области" vertical>
       <FormTextInput
         v-model:value="name"
@@ -41,7 +41,7 @@
   </BaseTile>
 </template>
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import {
   ActionButton,
   BaseTile,
@@ -50,7 +50,24 @@ import {
   RemoveButton,
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
-const props = defineProps({ area: Object, index: Number, editor: Object });
+const props = defineProps({
+  area: Object,
+  index: Number,
+  editor: Object,
+  focus: Boolean,
+});
+const card = ref(null);
+watch(
+  () => props.focus,
+  async (value) => {
+    if (!value) return;
+    await nextTick();
+    const element = card.value?.$el;
+    element?.scrollIntoView({ block: "nearest" });
+    element?.querySelector("input")?.focus({ preventScroll: true });
+  },
+  { immediate: true },
+);
 const name = ref(props.area.name);
 watch(
   () => props.area.name,

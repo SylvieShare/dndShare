@@ -15,6 +15,7 @@
       :area="area"
       :index="index"
       :editor="editor"
+      :focus="focusArea === area.id"
     />
     <p v-if="!editor.draft.document.areas.length" class="map-hint">
       Областей пока нет.
@@ -24,7 +25,7 @@
 <script setup>
 import { AddButton } from "@sylvieshare/share-ui";
 import MapAreaCard from "./MapAreaCard.vue";
-defineProps({ editor: Object });
+defineProps({ editor: Object, focusArea: String });
 </script>
 <style scoped>
 .map-areas-panel {

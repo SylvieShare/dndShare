@@ -162,6 +162,7 @@ test("occupied drops magnetize to a free position and moving a tile is a single 
     target = await mapPoint(page, 5.5, 4.5);
   await page.mouse.move(original.x, original.y);
   await page.mouse.down();
+  await page.waitForTimeout(550);
   await page.mouse.move(target.x, target.y, { steps: 12 });
   await page.mouse.up();
   await expect
@@ -262,4 +263,47 @@ test("sidebar tab rail keeps the native context menu, including during pending t
     .poll(() => page.evaluate(() => window.railContexts))
     .toEqual([false, false, false]);
   await page.mouse.up();
+});
+
+test("a quick drag over a tile pans the camera while a held drag edits and Escape cancels it", async ({
+  page,
+}) => {
+  await ready(page);
+  await dragTile(page, await mapPoint(page, 4.5, 4.5));
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        window.lastSaved?.document.tiles.some((t) => t.x === 4 && t.y === 4),
+      ),
+    )
+    .toBe(true);
+  const original = await page.evaluate(() =>
+    JSON.stringify(window.lastSaved.document),
+  );
+  const canvas = page.locator(".map-canvas canvas"),
+    before = await canvas.screenshot();
+  let point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.move(point.x, point.y);
+  await page.mouse.down();
+  await page.mouse.move(point.x + 90, point.y, { steps: 8 });
+  await page.mouse.up();
+  await page.waitForTimeout(600);
+  expect((await canvas.screenshot()).equals(before)).toBe(false);
+  expect(
+    await page.evaluate(() => JSON.stringify(window.lastSaved.document)),
+  ).toBe(original);
+  await page.getByTitle("Показать всю карту", { exact: true }).click();
+  point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.move(point.x, point.y);
+  await page.mouse.down();
+  await page.waitForTimeout(550);
+  await expect(page.locator(".map-controls-hint")).toContainText(
+    "разместить плитку",
+  );
+  await page.keyboard.press("Escape");
+  await page.mouse.up();
+  await page.waitForTimeout(600);
+  expect(
+    await page.evaluate(() => JSON.stringify(window.lastSaved.document)),
+  ).toBe(original);
 });

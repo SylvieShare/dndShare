@@ -26,13 +26,15 @@ test("command clicks select a group that can be moved, rotated and deleted", asy
   await expect(count(page)).toHaveText("Выбрано: 2");
   await expect(page.getByRole("group", { name: "Стыки стен" })).toHaveCount(0);
   await clickPoint(page, 4.5, 4.5, true);
-  await expect(count(page)).toHaveText("Выбрано: 1");
+  await expect(count(page)).toHaveCount(0);
+  await expect(page.locator(".map-selected-heading h3")).toBeVisible();
   await clickPoint(page, 4.5, 4.5, true);
   await expect(count(page)).toHaveText("Выбрано: 2");
   const start = await mapPoint(page, 4.5, 4.5),
     end = await mapPoint(page, 5.5, 6.5);
   await page.mouse.move(start.x, start.y);
   await page.mouse.down();
+  await page.waitForTimeout(550);
   await page.mouse.move(end.x, end.y, { steps: 12 });
   await page.mouse.up();
   await expect
@@ -131,7 +133,8 @@ test("selecting a central wall shows its contour without changing its layout", a
 }) => {
   await ready(page);
   await clickPoint(page, 1.5, 1.5);
-  await expect(count(page)).toHaveText("Выбрано: 1");
+  await expect(count(page)).toHaveCount(0);
+  await expect(page.locator(".map-selected-heading h3")).toBeVisible();
   await expect(page.locator(".map-tile-connections")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /^Стык:/ })).toHaveCount(0);
   await page.waitForTimeout(1400);

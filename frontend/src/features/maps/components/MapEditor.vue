@@ -32,6 +32,7 @@
     </AppModalFrame>
     <div class="map-editor">
       <MapTileSidebar
+        ref="sidebar"
         :editor="e"
         @collection="changeCollection"
         @model="placement.placeModel"
@@ -49,6 +50,7 @@
           ref="canvas"
           :document="e.draft.document"
           master
+          hold-to-drag
           :tool="e.tool"
           :selection="e.selection"
           :selected-object="e.tool === 'paste' ? '' : e.selectedObject"
@@ -81,6 +83,7 @@
           :editor="e"
           @focus="focusEntries"
           @bind="beginBinding"
+          @area="sidebar?.openArea($event)"
         />
       </div>
     </div>
@@ -125,7 +128,8 @@ const account = useAccountStore(),
   isAdmin = computed(() => account.hasRole("ADMIN"));
 const reference = ref(null),
   referenceOpen = ref(false),
-  canvas = ref(null);
+  canvas = ref(null),
+  sidebar = ref(null);
 const placement = useEditorPlacement(e, canvas);
 useMapEditorKeys(
   e,

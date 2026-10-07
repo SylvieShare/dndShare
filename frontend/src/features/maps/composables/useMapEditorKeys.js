@@ -1,4 +1,5 @@
 import { nextTick, onMounted, onBeforeUnmount } from "vue";
+import { hasSelectedText } from "../lib/textSelection";
 export function useMapEditorKeys(editor, canvas, placement, blocked) {
   function keydown(event) {
     if (
@@ -25,6 +26,7 @@ export function useMapEditorKeys(editor, canvas, placement, blocked) {
       event.preventDefault();
       editor.save();
     }
+    if (command && event.code === "KeyC" && hasSelectedText()) return;
     if (command && event.code === "KeyC") {
       event.preventDefault();
       editor.copy();

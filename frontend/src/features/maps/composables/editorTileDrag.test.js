@@ -308,3 +308,40 @@ it("rotates a supporting frame with dependent tiles and rejects a blocked turn a
   expect(blocked.history.value).toHaveLength(0);
   expect(blocked.error.value).toContain("уже есть");
 });
+
+it("a hold lifts without motion and moving a rotated tile carries its attached object in one undo", () => {
+  const e = setup([tile]);
+  e.catalogue.value[0].placementPoints = [{ x: 0.25, y: 0.5, elevation: 0.4 }];
+  const object = {
+    id: "chest",
+    x: 2.25,
+    y: 2.5,
+    rotation: 30,
+    placement: { tileId: tile.id, point: 0 },
+  };
+  e.draft.value.document.objects = [object];
+  e.gestures.handle({
+    phase: "start",
+    point: { x: 2.2, y: 2.4 },
+    hit: { tileId: tile.id },
+  });
+  e.gestures.handle({ phase: "hold" });
+  expect(e.draggingTile.value).toBe(true);
+  expect(e.previewTile.value.tileId).toBe(tile.id);
+  e.tileDrag.move({ x: 5.2, y: 4.4 });
+  e.tileDrag.rotate();
+  expect(e.draft.value.document.objects[0]).toEqual(object);
+  e.tileDrag.drop({ x: 5.2, y: 4.4 });
+  expect(e.draft.value.document.objects[0]).toMatchObject({
+    x: 5.5,
+    y: 4.25,
+    rotation: 120,
+    placement: object.placement,
+  });
+  expect(e.history.value).toHaveLength(1);
+  expect(e.history.value[0].document.objects[0]).toMatchObject({
+    x: 2.25,
+    y: 2.5,
+    rotation: 30,
+  });
+});

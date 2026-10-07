@@ -1,10 +1,10 @@
 <template>
-  <section
+  <MapInspectorSection
+    title="Переходы"
     v-if="transitions.length"
     class="model-transitions"
     aria-label="Переходы модели"
   >
-    <h4>Переходы</h4>
     <div v-for="transition in transitions" :key="transition.id">
       <MapEntityRow :entry="transition.entry" :selectable="false">
         <template #actions>
@@ -22,12 +22,13 @@
       </MapEntityRow>
       <p v-if="transition.reason" class="map-hint">{{ transition.reason }}</p>
     </div>
-  </section>
+  </MapInspectorSection>
 </template>
 <script setup>
 import { computed } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { transitionDocument, transitionLabel } from "../lib/modelTransitions";
+import MapInspectorSection from "./MapInspectorSection.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 const props = defineProps({ editor: Object, entry: Object });
 const transitions = computed(() =>

@@ -7,7 +7,7 @@ export function editorHints(tool, dragging) {
   const camera = [
     "Стрелки — камера",
     "Колесо — масштаб",
-    "Alt + перенос — сдвиг поля",
+    "ЛКМ + перенос — камера",
   ];
   if (tool === "paste")
     return [
@@ -36,6 +36,7 @@ export function editorHints(tool, dragging) {
   const action = tool === "object" ? "ЛКМ — поставить объект" : null;
   return [
     action || "Плитка из списка — перетащить",
+    "Удержать ½ с + перенос — элемент",
     "R — поворот",
     "Cmd/Ctrl + клик — группа",
     "Cmd/Ctrl + рамка — группа",

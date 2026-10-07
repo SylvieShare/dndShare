@@ -107,6 +107,7 @@ const props = defineProps({
   hoveredTile: String,
   hoveredObject: String,
   previewTile: Object,
+  holdToDrag: Boolean,
   previewObject: Object,
   showAnchors: Boolean,
   catalogue: Array,

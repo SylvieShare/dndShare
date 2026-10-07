@@ -1,7 +1,21 @@
-import { onBeforeUnmount } from "vue";
+import { onMounted, onBeforeUnmount } from "vue";
 
 export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
-  let drag = null;
+  let drag = null,
+    holdTimer;
+  function clearHold() {
+    clearTimeout(holdTimer);
+    holdTimer = null;
+  }
+  function start(event) {
+    drag.started = true;
+    emit("gesture", {
+      phase: "start",
+      point: drag.point,
+      hit: drag.hit,
+      event,
+    });
+  }
   function pointAt(event) {
     const r = host.value?.getBoundingClientRect();
     if (
@@ -53,10 +67,22 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     host.value.setPointerCapture(event.pointerId);
     const hit = getRenderer().pick(event);
     const additive = event.metaKey || event.ctrlKey;
+    const delayed =
+      props.holdToDrag &&
+      props.tool === "select" &&
+      event.button === 0 &&
+      !additive &&
+      !event.altKey &&
+      !event.shiftKey;
     drag = {
       id: event.pointerId,
+      hit,
+      delayed,
+      started: false,
+      moved: false,
       orbit: event.button === 2 || event.shiftKey,
       pan:
+        delayed ||
         event.button === 1 ||
         event.altKey ||
         props.tool === "pan" ||
@@ -81,13 +107,15 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       view: getRenderer().getView(),
       region: !!props.selectedTiles && props.tool === "select" && additive,
     };
-    if ((!drag.pan || drag.emptyPan) && !drag.orbit)
-      emit("gesture", {
-        phase: "start",
-        point: drag.point,
-        hit,
-        event,
-      });
+    if (delayed && (hit?.tileId || hit?.objectId || hit?.lightId)) {
+      holdTimer = setTimeout(() => {
+        if (!drag || drag.moved) return;
+        drag.pan = false;
+        start(event);
+        emit("gesture", { phase: "hold", point: drag.point, hit, event });
+      }, 500);
+    } else if (!delayed && (!drag.pan || drag.emptyPan) && !drag.orbit)
+      start(event);
   }
   function move(event) {
     if (!getRenderer() || props.readonly) return;
@@ -110,6 +138,16 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       return;
     }
     if (event.pointerId !== drag.id) return;
+    if (
+      Math.hypot(
+        event.clientX - drag.screen.x,
+        event.clientY - drag.screen.y,
+      ) >= 5
+    ) {
+      drag.moved = true;
+      clearHold();
+    }
+    if (drag.delayed && drag.pan && !drag.moved) return;
     if (drag.orbit) {
       setView({
         ...drag.view,
@@ -150,7 +188,9 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   }
   function up(event) {
     if (!drag || event.pointerId !== drag.id) return;
-    if ((!drag.pan || drag.emptyPan) && !drag.orbit) {
+    clearHold();
+    if (drag.delayed && !drag.started && !drag.moved) start(event);
+    if (drag.started && !drag.orbit) {
       const inside = pointAt(event);
       const point =
         inside && drag.point?.elevation !== undefined && !props.placementModel
@@ -165,15 +205,28 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     host.value.releasePointerCapture(event.pointerId);
   }
   function cancel(event) {
-    if (drag && !drag.pan && !drag.orbit)
+    clearHold();
+    if (drag?.started && !drag.orbit)
       emit("gesture", { phase: "cancel", event });
+    if (drag && host.value?.hasPointerCapture?.(drag.id))
+      host.value.releasePointerCapture(drag.id);
     drag = null;
   }
   function leave(event) {
     if (!drag) emit("gesture", { phase: "hover", hit: null, event });
   }
+  function key(event) {
+    if (event.key === "Escape") cancel(event);
+  }
+  onMounted(() => {
+    window.addEventListener("blur", cancel);
+    window.addEventListener("keydown", key);
+  });
   onBeforeUnmount(() => {
+    clearHold();
     drag = null;
+    window.removeEventListener("blur", cancel);
+    window.removeEventListener("keydown", key);
   });
   return { down, move, up, cancel, leave, pointAt };
 }

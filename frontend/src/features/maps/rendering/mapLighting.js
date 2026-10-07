@@ -6,6 +6,7 @@ import {
   Vector3,
 } from "three";
 import { DEFAULT_SUN, lightOpacity, lightPose } from "../lib/mapLighting";
+import { createAttachedLights } from "./attachedLights";
 import { createLightMarkers } from "./lightMarkers";
 import { createShadowProxies } from "./shadowProxies";
 export function createMapLighting(scene, gpu, assets) {
@@ -19,7 +20,8 @@ export function createMapLighting(scene, gpu, assets) {
   fill.position.set(20, 12, 25);
   scene.add(ambient, sun, sun.target, fill);
   const proxies = createShadowProxies(assets),
-    markers = createLightMarkers();
+    markers = createLightMarkers(),
+    attachments = createAttachedLights();
   scene.add(proxies.root, markers.root);
   gpu.shadowMap.enabled = true;
   gpu.shadowMap.type = PCFShadowMap;
@@ -30,7 +32,8 @@ export function createMapLighting(scene, gpu, assets) {
     active = [],
     clock = 0,
     sunKey = "",
-    enabled = false;
+    enabled = false,
+    sources = [];
   function update(
     d,
     options,
@@ -98,6 +101,9 @@ export function createMapLighting(scene, gpu, assets) {
       ...lightPose(l, d, assets.catalogue(), context),
       opacity: lightOpacity(l, d, options.areaMode),
     }));
+    for (const light of all) if (light.moving) light.worldHeight += 0.22;
+    sources = all;
+    attachments.update(all, placed, objects, assets.catalogue());
     markers.update(
       all.filter((l) => l.opacity > 0),
       options,
@@ -157,6 +163,22 @@ export function createMapLighting(scene, gpu, assets) {
     }
   }
   function advance(delta, tileMatrix, objects, objectPreview) {
+    const slotsById = new Map(active.map((l, i) => [l.id, slots[i]]));
+    for (const source of sources) {
+      const position = attachments.position(
+        source,
+        tileMatrix,
+        objects,
+        objectPreview,
+      );
+      if (!position) continue;
+      markers.move(source.id, position);
+      const light = slotsById.get(source.id);
+      if (light && !light.position.equals(position)) {
+        light.position.copy(position);
+        gpu.shadowMap.needsUpdate = true;
+      }
+    }
     if (!enabled) return false;
     clock += delta / 1000;
     if (proxies.advance(tileMatrix, objects, objectPreview))

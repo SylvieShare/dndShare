@@ -60,7 +60,10 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     fog = createMapFog(),
     background = createMapBackground(scene, fog, onError, render),
     tiles = createTileLayer(assets, fog),
-    objectMotion = createObjectMotion(assets, tiles),
+    objectMotion = createObjectMotion(
+      assets,
+      (id) => preview.transform(id) || tiles.transform(id),
+    ),
     preview = createTilePreview(assets, () => {
       tileKey = "";
       tiles.rebuild(
@@ -178,6 +181,15 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
         .map((o) => o.modelId)
         .filter(Boolean),
     );
+    const movingParents = new Set(
+      opts.previewTile?.tileIds || preview.hiddenIds(),
+    );
+    const renderObjects = d.objects
+      .filter((o) => movingParents.has(o.placement?.tileId))
+      .map((o) => o.id);
+    for (const object of d.objects)
+      if (renderObjects.includes(object.id) && object.modelId)
+        objectIds.add(object.modelId);
     if (opts.placementObject) objectIds.add(opts.placementObject);
     const movingIds = new Set([...previewIds, ...objectIds]);
     const pending = ids.size
@@ -251,11 +263,13 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
     objectMotion.update(posedObjects, d);
-    const posedTokens = (nextState?.tokens || []).filter(t =>
-      opts.master || !appearance.hiddenTiles.has(t.placement?.tileId),
-    ).map((t) =>
-      resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
-    );
+    const posedTokens = (nextState?.tokens || [])
+      .filter(
+        (t) => opts.master || !appearance.hiddenTiles.has(t.placement?.tileId),
+      )
+      .map((t) =>
+        resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
+      );
     objectPreview.update(
       opts.previewObject &&
         resolvedSurfacePosition(
@@ -326,6 +340,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       opts.master,
       opts.selectedToken,
       opts.previewObject?.id,
+      renderObjects,
       d.areas,
       opts.areaMode,
     ]);
@@ -346,6 +361,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
         {
           ...opts,
           invalidate: render,
+          renderObjects,
           areaObjectOpacity: appearance.objectOpacity,
         },
         fog,
