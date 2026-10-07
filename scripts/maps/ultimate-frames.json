@@ -1,0 +1,72 @@
+{
+  "UD-Level Grid 1x1": {
+    "sourceName": "Level Grid 1x1",
+    "referencePage": 16,
+    "material": "frame-stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [2, 5],
+      "lodMiB": [0.7, 2],
+      "shadowKiB": [25, 100],
+      "previewKiB": [10, 100],
+      "basis": "1x1 hollow masonry frame with sculpted exterior and smooth inner slot, similar to small reviewed walls; preserve all slot faces and compare two lighter atlases."
+    },
+    "notes": "Individually inspected named Level Grid1x1 source; SHA matches UD-107. Cold grey three-course exterior, chipped rim, smooth inner slot walls and open shelf; preserve its distinct text ID and measured support elevation."
+  },
+  "UD-Level Grid 2X2": {
+    "sourceName": "Level Grid 2X2",
+    "referencePage": 16,
+    "material": "frame-stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [3, 7],
+      "lodMiB": [1, 3],
+      "shadowKiB": [40, 160],
+      "previewKiB": [15, 150],
+      "basis": "Four-slot2x2 masonry frame with more exposed perimeter and internal dividers than reviewed1x1; retain all geometry and compare two lighter atlases."
+    },
+    "notes": "Three cold-grey exterior masonry courses, chipped upper rim, cross dividers and four smooth slot walls/shelves. Preserve four holes and slots at elevation0.716437,2x2 mounting footprint and original geometry."
+  },
+  "UD-Level Grid 2X3": {
+    "sourceName": "Level Grid 2X3",
+    "referencePage": 16,
+    "material": "frame-stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [3, 8],
+      "lodMiB": [1, 3],
+      "shadowKiB": [40, 180],
+      "previewKiB": [15, 150],
+      "basis": "Six-slot2x3 frame with longer outer brickwork and extra dividers than reviewed2x2; preserve thin rims and compare two lighter atlases."
+    },
+    "notes": "Grey exterior stone courses and worn rim, smooth inner slot surfaces, centre spine and two transverse dividers. Preserve all six openings and six support slots at elevation0.716449,2x3 footprint and original geometry."
+  },
+  "UD-Level Grid 3X3": {
+    "sourceName": "Level Grid 3X3",
+    "referencePage": 17,
+    "material": "frame-stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [3.5, 9],
+      "lodMiB": [1.2, 3.5],
+      "shadowKiB": [50, 220],
+      "previewKiB": [15, 180],
+      "basis": "Nine-slot3x3 masonry frame with greater perimeter and intersecting dividers than reviewed2x3; keep geometry and compare two lighter atlases."
+    },
+    "notes": "Grey exterior stone courses, worn rim and complete3x3 inner grid with smooth slot walls and shelves. Preserve nine open holes and nine support slots at elevation0.716457,3x3 footprint and all original geometry."
+  },
+  "UD-Level Grid 3X6": {
+    "sourceName": "Level Grid 3X6",
+    "referencePage": 17,
+    "material": "frame-stone",
+    "floorSeams": "ao-only",
+    "weightBudget": {
+      "renderMiB": [4, 11],
+      "lodMiB": [1.5, 4.5],
+      "shadowKiB": [80, 300],
+      "previewKiB": [15, 180],
+      "basis": "Largest eighteen-slot frame, roughly double the grid area of reviewed3x3 with longer perimeter and many dividers; preserve accepted geometry and compare two lighter atlases."
+    },
+    "notes": "Cold grey complete exterior masonry perimeter and3x6 inner grid, smooth shelves and slot walls, worn upper ribs. Preserve18 holes and slots at elevation0.716451 and the original6-wide by3-high coordinate orientation, distinct source ID and geometry."
+  }
+}
