@@ -249,6 +249,19 @@ for (const [width, height, depth, y, colour] of [
 const pegGlb = await new GLTFExporter().parseAsync(pegScene, { binary: true });
 const source = newMap();
 const params = new URLSearchParams(location.search);
+if (params.has("tileFilterExample")) {
+  catalogue.find((m) => m.id === UD_WALL).hasDecor = true;
+  catalogue.find((m) => m.sourceCode === "UD-096").hidden = true;
+  const angle = catalogue.find((m) => m.sourceCode === "LC-003");
+  catalogue.push({
+    ...angle,
+    id: "12345678-1234-4234-8234-123456789abc",
+    version: 2,
+    name: "Проём с обстановкой",
+    tileType: "passage",
+    hasDecor: true,
+  });
+}
 let wallGlb = glb;
 if (params.has("shaped")) {
   const wallScene = new Scene(),

@@ -82,7 +82,6 @@
           :editor="editor"
           @collection="emit('collection', $event)"
           compact
-          grouped
           draggable
           @model="(id, event) => emit('model', id, event)"
           @drag-tile="(id, event) => emit('drag-tile', id, event)"

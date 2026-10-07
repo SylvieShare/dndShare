@@ -1,6 +1,7 @@
 """Build a complete, reproducible S3 manifest from prepared collection assets."""
 from pathlib import Path
 from tile_category import tile_category
+from tile_furnishings import has_furnishings
 import hashlib, json, os, uuid
 import numpy as np
 from PIL import Image
@@ -93,7 +94,7 @@ for report in sorted(BASE.glob('*/*/report.json')):
     'collection':row['collection'],'collectionName':row['collectionName'],'sourceCode':row['code'],'sourceName':row['sourceName'],'name':row['sourceName'],'version':row.get('variantVersion',1),
     'tileType':tile_category(row['tileType'],row['sourceName'],mode,mask,layout),'wallMode':mode,'wallMask':mask,'width':row['width'],'height':row['height'],
     'surfaceHeight':row['surfaceHeight'],'maxHeight':row['maxHeight'],'blockers':blockers,'tags':tags,'supportSlots':row['supportSlots'],'assets':files}
- m['hasDecor']=row['tileType']=='prop' or bool(tags)
+ m['hasDecor']=has_furnishings(row['tileType'],row['sourceName'])
  m['canStand']=False;m['placementPoints']=[]
  m['hidden']=row['collection']=='ultimate-dungeon' and row['code'] in ['UD-104','UD-108','UD-092']
  m['mountDepth']=placement['mountDepth']

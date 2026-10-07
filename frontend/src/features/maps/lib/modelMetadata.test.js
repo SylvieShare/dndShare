@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { groupedTileModels, modelMetadata } from "./modelMetadata";
+import { modelMetadata } from "./modelMetadata";
 it("copies editable metadata deeply, preserves identity and excludes URLs and assets", () => {
   const source = {
     id: "one",
@@ -24,14 +24,4 @@ it("copies editable metadata deeply, preserves identity and excludes URLs and as
   draft.tags.push("new");
   expect(source.supportSlots[0].x).toBe(0);
   expect(source.tags).toEqual(["stone"]);
-  expect(
-    groupedTileModels([
-      { tileType: "wall-straight" },
-      { tileType: "floor" },
-      { tileType: "wall-straight" },
-    ]).map((g) => [g.value, g.models.length]),
-  ).toEqual([
-    ["floor", 1],
-    ["wall-straight", 2],
-  ]);
 });

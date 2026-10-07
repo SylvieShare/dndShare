@@ -51,6 +51,7 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaModelSurfacesObjectsSQL)
 	exec(schemaMeasuredPlacementPointsSQL)
 	exec(schemaModelShadowAssetsSQL)
+	exec(schemaModelFurnishingsSQL)
 	exec(schemaMapAreasSQL)
 	exec(schemaMapLightingSQL)
 	exec(schemaMapLightingModeSQL)

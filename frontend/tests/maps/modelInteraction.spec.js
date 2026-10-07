@@ -35,25 +35,27 @@ async function pixels(page, colour) {
     { base64: png.toString("base64"), colour },
   );
 }
-test("decor toggle offers exactly undecorated or decorated tiles", async ({
+test("content filter separates free tiles and tiles with built-in items", async ({
   page,
 }) => {
   await ready(page);
-  const toggle = page.getByRole("radiogroup", { name: "Декор тайлов" });
+  const toggle = page.getByRole("radiogroup", { name: "Наполнение плиток" });
   await expect(
-    toggle.getByRole("radio", { name: "Без декора", exact: true }),
+    toggle.getByRole("radio", { name: "Свободные", exact: true }),
   ).toHaveAttribute("aria-checked", "true");
   await expect(
     page.getByRole("button", { name: "Пол с декором", exact: true }),
   ).toHaveCount(0);
-  await toggle.getByRole("radio", { name: "С декором", exact: true }).click();
+  await toggle
+    .getByRole("radio", { name: "С предметами", exact: true })
+    .click();
   await expect(
     page.getByRole("button", { name: "Пол с декором", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Пол 1", exact: true }),
   ).toHaveCount(0);
-  await toggle.getByRole("radio", { name: "Без декора", exact: true }).click();
+  await toggle.getByRole("radio", { name: "Свободные", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Пол 1", exact: true }),
   ).toBeVisible();

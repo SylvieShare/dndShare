@@ -63,6 +63,29 @@ FROM (VALUES
 	exec(schemaMeasuredPlacementPointsSQL)
 	exec(schemaModelShadowAssetsSQL)
 	s := &Store{pool: pool}
+	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,geometry,assets)
+SELECT item.id::uuid,item.collection,item.code,item.name,item.name,1,'floor',
+ model.geometry || '{"hasDecor":false,"canStand":true,"placementPoints":[{"x":0.5,"y":0.5,"elevation":0.4}]}'::jsonb,model.assets
+FROM (VALUES
+ ('00000000-0000-4000-8000-000000000131','ultimate-dungeon','UD-031','Ground Table Full'),
+ ('00000000-0000-4000-8000-000000000168','lost-cave','LC-068','Well Ground Empty'),
+ ('00000000-0000-4000-8000-000000000149','ultimate-dungeon','UD-049','Ground Symbol Pentacle')
+) AS item(id,collection,code,name) CROSS JOIN LATERAL (SELECT geometry,assets FROM dndshare.map_model LIMIT 1) model`)
+	beforeContent := map[string]battlemap.Model{}
+	for _, id := range []string{"00000000-0000-4000-8000-000000000131", "00000000-0000-4000-8000-000000000168", "00000000-0000-4000-8000-000000000149"} {
+		beforeContent[id], err = s.GetMapModel(ctx, id)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	exec(schemaModelFurnishingsSQL)
+	for id, expected := range beforeContent {
+		expected.HasDecor = expected.SourceCode != "UD-049"
+		after, err := s.GetMapModel(ctx, id)
+		if err != nil || !reflect.DeepEqual(after, expected) {
+			t.Fatalf("furnishings correction changed placement or assets: %+v %v", after, err)
+		}
+	}
 	for _, expected := range battlemap.InitialCatalogue() {
 		migrated, err := s.GetMapModel(ctx, expected.ID)
 		if err != nil || migrated.TileType != expected.TileType || !reflect.DeepEqual(migrated.Assets, expected.Assets) {

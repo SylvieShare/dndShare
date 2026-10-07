@@ -1,5 +1,4 @@
 import { modelConnections } from "./tileConnections";
-import { TILE_TYPES } from "./tileCategories";
 export { TILE_TYPES } from "./tileCategories";
 export { WALL_MODES } from "./wallModes";
 export const TEXTURE_DETAILS = [
@@ -47,10 +46,4 @@ export function modelMetadata(model) {
   result.canStand ??= false;
   result.hidden ??= false;
   return JSON.parse(JSON.stringify(result));
-}
-export function groupedTileModels(models) {
-  return TILE_TYPES.map((type) => ({
-    ...type,
-    models: models.filter((m) => m.tileType === type.value),
-  })).filter((g) => g.models.length);
 }

@@ -41,7 +41,7 @@
     /></FormField>
   </div>
   <div class="model-availability">
-    <ToggleSwitch v-model="model.hasDecor" label="Декор" />
+    <ToggleSwitch v-model="model.hasDecor" label="Есть предметы или декорации" />
     <ToggleSwitch v-model="model.canStand" label="Можно встать" />
   </div>
 </template>

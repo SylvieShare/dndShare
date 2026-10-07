@@ -5,7 +5,6 @@
         :editor="editor"
         @collection="reference.changeCollection"
         compact
-        grouped
         mode="inspect"
         :selected-id="reference.base?.id"
         @model="reference.choose"

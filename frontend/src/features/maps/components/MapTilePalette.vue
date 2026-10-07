@@ -16,11 +16,16 @@
         :model-value="editor.collection"
         @update:model-value="emit('collection', $event)"
       />
-      <MapTileCategoryPicker v-model="category" />
+      <MapTileCategoryPicker
+        v-if="categories.length"
+        v-model="category"
+        :categories="categories"
+      />
       <MultiToggle
-        v-model="decor"
-        :options="decorOptions"
-        aria-label="Декор тайлов"
+        v-if="contentOptions.length === 2"
+        v-model="content"
+        :options="contentOptions"
+        aria-label="Наполнение плиток"
       />
       <p class="map-hint">
         {{
@@ -31,27 +36,7 @@
               : "Выберите плитку, затем нажмите на карте."
         }}
       </p>
-      <template v-if="grouped">
-        <DetailSection
-          v-for="group in groups"
-          :key="group.value"
-          :label="`${group.label} (${group.models.length})`"
-          collapsible
-        >
-          <div class="map-model-grid">
-            <MapTileCard
-              v-for="model in group.models"
-              :key="model.id"
-              :model="model"
-              :selected="(selectedId || editor.selectedModel) === model.id"
-              :draggable="draggable"
-              @model="(id, event) => emit('model', id, event)"
-              @drag-tile="(id, event) => emit('drag-tile', id, event)"
-            />
-          </div>
-        </DetailSection>
-      </template>
-      <div v-else class="map-model-grid">
+      <div class="map-model-grid">
         <MapTileCard
           v-for="model in filtered"
           :key="model.id"
@@ -63,7 +48,7 @@
         />
       </div>
       <p v-if="!filtered.length" class="map-hint">
-        Плиток с такими фильтрами нет.
+        В выбранном паке пока нет плиток.
       </p>
     </template>
   </section>
@@ -71,19 +56,12 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { latestModelVersions } from "../lib/modelVersions";
-import {
-  ActionButton,
-  DetailSection,
-  LoadingState,
-  MultiToggle,
-} from "@sylvieshare/share-ui";
+import { ActionButton, LoadingState, MultiToggle } from "@sylvieshare/share-ui";
 import MapCollectionPicker from "./MapCollectionPicker.vue";
 import MapTileCard from "./MapTileCard.vue";
-import { groupedTileModels } from "../lib/modelMetadata";
 const props = defineProps({
   editor: { type: Object, required: true },
   compact: Boolean,
-  grouped: Boolean,
   draggable: Boolean,
   selectedId: String,
   mode: { type: String, default: "place" },
@@ -92,29 +70,58 @@ import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
 const emit = defineEmits(["model", "drag-tile", "collection"]);
 const category = ref("floor");
-const decor = ref("without");
-const decorOptions = [
-  { value: "without", label: "Без декора" },
-  { value: "with", label: "С декором" },
+const preferredContent = ref("free");
+const CONTENT_OPTIONS = [
+  { value: "free", label: "Свободные" },
+  { value: "furnished", label: "С предметами" },
 ];
 const models = computed(() =>
   latestModelVersions(props.editor.catalogue).filter(
     (m) => m.collection === props.editor.collection && m.tileType !== "object",
   ),
 );
+const categories = computed(() =>
+  TILE_CATEGORIES.filter((c) =>
+    models.value.some((m) => matchesTileCategory(m, c.value)),
+  ),
+);
+const categoryModels = computed(() =>
+  models.value.filter((m) => matchesTileCategory(m, category.value)),
+);
+const contentOptions = computed(() =>
+  CONTENT_OPTIONS.filter((option) =>
+    categoryModels.value.some(
+      (m) => !!m.hasDecor === (option.value === "furnished"),
+    ),
+  ),
+);
+// Keep the last explicit choice while categories with only one variant show
+// that available variant automatically.
+const content = computed({
+  get: () =>
+    contentOptions.value.find((o) => o.value === preferredContent.value)
+      ?.value || contentOptions.value[0]?.value,
+  set: (value) => {
+    preferredContent.value = value;
+  },
+});
 function initialCategory() {
   const selected = models.value.find((m) => m.id === props.selectedId);
   if (selected) {
     category.value = selected.tileType;
-    decor.value = selected.hasDecor ? "with" : "without";
+    preferredContent.value = selected.hasDecor ? "furnished" : "free";
     return;
   }
-  const first = TILE_CATEGORIES.find((c) =>
-    models.value.some((m) => matchesTileCategory(m, c.value)),
-  );
-  category.value = first?.value || "floor";
+  category.value = categories.value[0]?.value || "";
 }
 watch(() => props.editor.collection, initialCategory);
+watch(
+  categories,
+  (available) => {
+    if (!available.some((c) => c.value === category.value)) initialCategory();
+  },
+  { immediate: true },
+);
 watch(
   () => props.editor.loadingModels,
   (loading) => {
@@ -126,20 +133,18 @@ watch(
   () => props.selectedId,
   (id) => {
     const selected = models.value.find((m) => m.id === id);
-    if (selected) decor.value = selected.hasDecor ? "with" : "without";
+    if (selected)
+      preferredContent.value = selected.hasDecor ? "furnished" : "free";
     if (selected && !matchesTileCategory(selected, category.value))
       category.value = selected.tileType;
   },
   { immediate: true },
 );
 const filtered = computed(() =>
-  models.value.filter(
-    (m) =>
-      matchesTileCategory(m, category.value) &&
-      !!m.hasDecor === (decor.value === "with"),
+  categoryModels.value.filter(
+    (m) => !!m.hasDecor === (content.value === "furnished"),
   ),
 );
-const groups = computed(() => groupedTileModels(filtered.value));
 </script>
 <style scoped>
 .map-tile-palette {
