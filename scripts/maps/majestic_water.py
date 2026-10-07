@@ -27,6 +27,12 @@ def apply_water(obj, positions, colours, roughness, recipe):
     x,y,z=positions.T
     normals=np.empty(len(positions)*3,np.float32)
     obj.data.vertices.foreach_get('normal',normals);normals=normals.reshape(-1,3)
+    if settings.get('restoreLowWaterAroundStonesMM'):
+        for stone in settings.get('stones',[]):
+            radius=np.linalg.norm((positions[:,:2]-np.array(stone['centreMM'][:2]))/np.array(stone['radiiMM'][:2]),axis=1)
+            near=np.clip((1.7-radius)/.25,0,1)
+            low=np.clip((settings['restoreLowWaterAroundStonesMM']-z)/.2,0,1)
+            weight=np.maximum(weight,near*low)
     weight*=np.clip((z-settings['minZMM'])/.35,0,1)*np.clip((normals[:,2]-.05)/.2,0,1)
     if settings.get('boundsMM'):
         lo,hi=np.array(settings['boundsMM'][0]),np.array(settings['boundsMM'][1])
