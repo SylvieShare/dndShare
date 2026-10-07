@@ -142,5 +142,78 @@
       "basis": "1x1 narrow corner outcrop with339,974 source triangles and more exposed floor than LC-005;40k/12k budgets with two separately checked KTX2 candidates."
     },
     "notes": "Author page2: slender natural corner outcrop on a broader cracked rock floor. Inspect the narrow upright silhouette, loose fragments around its foot, cap and rear face. Warm dusty mineral stone with dark contact crevices; preserve mask1, mounting depth0.150231 and original standing point."
+  },
+  "LC-007": {
+    "sourceName": "Ground 1",
+    "referencePage": 2,
+    "material": "cave-rock",
+    "floorHeightMM": 14.735,
+    "renderBakeSize": 2048,
+    "lodBakeSize": 1024,
+    "renderTriangles": 30000,
+    "lodTriangles": 10000,
+    "palette": {
+      "rock": [0.46, 0.335, 0.225],
+      "mineral": [0.455, 0.405, 0.34],
+      "dust": [0.61, 0.475, 0.33],
+      "recess": [0.255, 0.18, 0.12]
+    },
+    "weightBudget": {
+      "renderMiB": [1.2, 3.5],
+      "lodMiB": [0.5, 1.5],
+      "shadowKiB": [20, 80],
+      "previewKiB": [10, 100],
+      "basis": "Low1x1 natural floor from259,968 source triangles, less exposed vertical area than reviewed walls;30k/10k budgets and two KTX2 comparisons to preserve thin rubble and cracks."
+    },
+    "notes": "Author page2: flat natural ground with several large plates, shallow fractures and loose stone fragments at the perimeter. Independently verify cutHeight4.6 mm, warm dusty upper surfaces, darker floor fractures, unchanged0.1512 mounting depth and central standing point."
+  },
+  "LC-008": {
+    "sourceName": "Ground 2",
+    "referencePage": 2,
+    "material": "cave-rock",
+    "floorHeightMM": 14.735,
+    "renderBakeSize": 2048,
+    "lodBakeSize": 1024,
+    "renderTriangles": 30000,
+    "lodTriangles": 10000,
+    "palette": {
+      "rock": [0.46, 0.335, 0.225],
+      "mineral": [0.455, 0.405, 0.34],
+      "dust": [0.61, 0.475, 0.33],
+      "recess": [0.255, 0.18, 0.12]
+    },
+    "weightBudget": {
+      "renderMiB": [1.2, 3.5],
+      "lodMiB": [0.5, 1.5],
+      "shadowKiB": [20, 80],
+      "previewKiB": [10, 100],
+      "basis": "259,930-triangle1x1 ground, comparable to independently reviewed LC-007;30k/10k budgets and two KTX2 candidates, preserve its own lower central surface."
+    },
+    "notes": "Author page2: distinct arrangement of broad natural plates and scattered perimeter rubble, lower central standing surface. Verify cutHeight4.6 mm, dusty upper plates and darker joints at their actual relief; preserve mount0.151346 and point0.5/0.5 at elevation0.384191."
+  },
+  "LC-009": {
+    "sourceName": "Ground 3",
+    "referencePage": 2,
+    "material": "cave-rock",
+    "floorHeightMM": 14.735,
+    "renderBakeSize": 2048,
+    "lodBakeSize": 1024,
+    "renderTriangles": 30000,
+    "lodTriangles": 10000,
+    "palette": {
+      "rock": [0.46, 0.335, 0.225],
+      "mineral": [0.455, 0.405, 0.34],
+      "dust": [0.61, 0.475, 0.33],
+      "recess": [0.255, 0.18, 0.12]
+    },
+    "weightBudget": {
+      "renderMiB": [1.2, 3.5],
+      "lodMiB": [0.5, 1.5],
+      "shadowKiB": [20, 80],
+      "previewKiB": [10, 100],
+      "basis": "259,914-triangle1x1 floor comparable to reviewed LC-007/008;30k/10k budgets and independent comparison of two KTX2 candidates."
+    },
+    "notes": "Author page2: third arrangement of natural floor plates, shallow recesses and loose edge rubble. Verify its own cutHeight4.6 mm and plate heights; warm mineral variation with dust above and dark fractures below. Preserve mounting depth0.151091 and central standing point at0.396027. Four nearly tangent decoded normal samples require minimum positive Z0.05 during resampling before KTX2; validate the decoded surface again.",
+    "normalMinZ": 0.05
   }
 }

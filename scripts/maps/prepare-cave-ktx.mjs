@@ -20,6 +20,9 @@ const directory = path.dirname(path.resolve(file)),
   tools = process.env.KTX_TOOLS || "/private/tmp/dndshare-ktx-tools/bin";
 if (report.model.collection !== "lost-cave" || !report.weightBudget)
   throw new Error("One measured Lost Cave report required");
+const normalMinZ = report.materialSpec.normalMinZ ?? 0.01;
+if (!Number.isFinite(normalMinZ) || normalMinZ < 0.01 || normalMinZ > 0.2)
+  throw new Error("Reviewed normal minimum Z must be between0.01 and0.2");
 await fs.mkdir(out, { recursive: true });
 const baseline = path.join(directory, "candidates/png");
 await fs.mkdir(baseline, { recursive: true });
@@ -92,7 +95,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
         const n = [
             data[i] / 127.5 - 1,
             data[i + 1] / 127.5 - 1,
-            Math.max(0.01, data[i + 2] / 127.5 - 1),
+            Math.max(normalMinZ, data[i + 2] / 127.5 - 1),
           ],
           length = Math.hypot(...n);
         for (let c = 0; c < 3; c++)
