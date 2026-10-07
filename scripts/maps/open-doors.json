@@ -1,0 +1,44 @@
+{
+  "UD-010": {
+    "code": "UD-010-OPEN",
+    "sourceName": "Door Open",
+    "name": "Door — открытая",
+    "angle": 90,
+    "hinge": [12.95, -14.5],
+    "cut": {
+      "x": [8.3, 17.4],
+      "bottom": 16.2,
+      "spring": 48.9,
+      "radius": 14.65,
+      "segments": 64
+    },
+    "weightBudget": {
+      "renderMiB": [3, 6],
+      "lodMiB": [1, 2.5],
+      "shadowKiB": [35, 100],
+      "previewKiB": [15, 120],
+      "basis": "Derived from detailed UD-010, rigid door rotation plus capped cuts; preserve the accepted relief, compare two lighter texture variants."
+    }
+  },
+  "UD-011": {
+    "code": "UD-011-OPEN",
+    "sourceName": "Door Bar Open",
+    "name": "Door Bar — открытая",
+    "angle": 90,
+    "hinge": [12.95, -14.5],
+    "cut": {
+      "x": [8.3, 17.4],
+      "bottom": 16.2,
+      "spring": 48.9,
+      "radius": 14.65,
+      "segments": 64
+    },
+    "weightBudget": {
+      "renderMiB": [3, 6.5],
+      "lodMiB": [1, 2.5],
+      "shadowKiB": [35, 110],
+      "previewKiB": [15, 130],
+      "basis": "Same opening as UD-010-OPEN with the barred inspection window of detailed UD-011; preserve bars and compare two lighter texture variants."
+    }
+  }
+}
