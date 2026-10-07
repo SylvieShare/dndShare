@@ -40,7 +40,9 @@ test("copy assigns its saved URL, keeps editing and can be reopened", async ({
   await page.goto("/tests/maps/fixtures/maps.html?mode=library");
   await page.getByTitle("Дублировать карту").click();
   await readyEditor(page);
-  await page.getByRole("button", { name: "Сохранить", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Сохранить", exact: true }),
+  ).toHaveCount(0);
   await expect
     .poll(() => page.evaluate(() => window.mapRoute()))
     .toBe("/maps/editor?id=test-copy");
@@ -121,6 +123,9 @@ test("leaving a conflicted editor preserves changes until discard is confirmed",
   const b = await page.locator(".map-canvas-surface").boundingBox();
   await dragTile(page, await mapPoint(page, 4.5, 4.5));
   await expect(page.getByRole("alert")).toContainText("другой вкладке");
+  await page
+    .getByRole("button", { name: "Вернуться к карте", exact: true })
+    .click();
   await page.getByRole("button", { name: "Закрыть редактор" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("button", { name: "Продолжить редактирование" }).click();

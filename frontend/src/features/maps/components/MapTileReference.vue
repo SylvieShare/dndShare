@@ -167,6 +167,7 @@ const selected = computed(() =>
   props.editor.catalogue.find((m) => m.id === reference.base?.id),
 );
 defineExpose({
+  dirty: computed(() => reference.dirty),
   prepareLeave: reference.prepareLeave,
   changeCollection: reference.changeCollection,
 });

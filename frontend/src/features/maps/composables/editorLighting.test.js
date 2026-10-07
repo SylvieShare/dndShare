@@ -15,6 +15,8 @@ function setup(lights = []) {
     }),
     catalogue: ref([]),
     tool: ref("select"),
+    hoveredTile: ref(""),
+    hoveredObject: ref(""),
     selection: ref(null),
     history: ref([]),
     setTileSelection: vi.fn(),
@@ -92,4 +94,56 @@ it("keeps a copied source usable when both shadow slots are already occupied", (
   l.driver.begin(l.copiedLight.value);
   l.driver.drop({ x: 4, y: 4, elevation: 0 });
   expect(e.draft.value.document.lights[2].shadows).toBe(false);
+});
+it("binds after clicking a model, consumes the click and cancels picking with Escape", () => {
+  const { e, lighting: l } = setup([
+    { id: "lamp", kind: "torch", x: 1, y: 1, height: 1, offset: [0, 0] },
+  ]);
+  e.draft.value.document.tiles.push({
+    id: "floor",
+    modelId: "floor-model",
+    x: 2,
+    y: 3,
+    level: 0,
+    rotation: 0,
+  });
+  e.catalogue.value.push({
+    id: "floor-model",
+    width: 1,
+    height: 1,
+    surfaceHeight: 0.4,
+    maxHeight: 0.4,
+    mountDepth: 0.1,
+    supportSlots: [],
+  });
+  l.selectLight("lamp");
+  l.beginLightBinding("lamp");
+  expect(e.tool.value).toBe("bind-light");
+  expect(l.handle({ phase: "start", hit: null })).toBe(true);
+  expect(l.bindingLight.value).toBe("lamp");
+  expect(l.handle({ phase: "start", hit: { tileId: "floor" } })).toBe(true);
+  expect(e.draft.value.document.lights[0]).toMatchObject({
+    anchor: { kind: "tile", id: "floor" },
+    x: 2.5,
+    y: 3.5,
+  });
+  expect(e.draft.value.document.lights[0].elevation).toBeCloseTo(0.3);
+  expect(l.selectedLight.value).toBe("lamp");
+  expect(l.handle({ phase: "end" })).toBe(true);
+  expect(e.tool.value).toBe("select");
+  l.beginLightBinding("lamp");
+  expect(l.handle({ phase: "cancel" })).toBe(true);
+  expect(l.bindingLight.value).toBe("");
+});
+it("enables a source from its icon even when its old shadow option exceeds the current budget", () => {
+  const { e, lighting: l } = setup([
+    { id: "a", enabled: true, shadows: true },
+    { id: "b", enabled: true, shadows: true },
+    { id: "c", enabled: false, shadows: true },
+  ]);
+  l.toggleLight("c");
+  expect(e.draft.value.document.lights[2]).toMatchObject({
+    enabled: true,
+    shadows: false,
+  });
 });

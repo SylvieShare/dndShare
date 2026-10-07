@@ -1,89 +1,77 @@
 <template>
-  <WorkspaceToolsRail role="toolbar" aria-label="Действия карты">
+  <div class="map-header-actions" role="toolbar" aria-label="Действия карты">
     <ActionButton
-      v-if="editor.draft.document.kind === 'tiles'"
-      :variant="editor.tool === 'wall-brush' ? 'primary' : 'secondary'"
-      :aria-pressed="editor.tool === 'wall-brush'"
-      aria-label="Кисть стенами"
-      title="Кисть стенами"
-      @click="
-        emit('tool', editor.tool === 'wall-brush' ? 'select' : 'wall-brush')
-      "
-      ><Paintbrush :size="20" />
-    </ActionButton>
-    <span class="map-selection-count" role="status" aria-label="Выбрано плиток"
-      >Выбрано: {{ editor.selectedTiles.length }}</span
-    >
-    <span
-      v-if="editor.selectedObjects.length"
-      class="map-selection-count"
-      role="status"
-      aria-label="Выбрано объектов"
-      >Объектов: {{ editor.selectedObjects.length }}</span
-    >
-    <RemoveButton
-      icon="trash"
-      variant="boxed"
-      :disabled="
-        !editor.selectedTiles.length &&
-        !editor.selectedObject &&
-        !editor.selectedLight
-      "
-      :label="
-        editor.selectedTiles.length && editor.selectedObjects.length
-          ? 'Удалить выбранное'
-          : editor.selectedObjects.length > 1
-            ? 'Удалить объекты'
-            : editor.selectedTiles.length > 1
-              ? 'Удалить плитки'
-              : editor.selectedTiles.length
-                ? 'Удалить плитку'
-                : editor.selectedLight
-                  ? 'Удалить источник света'
-                  : 'Удалить объект'
-      "
-      @click="editor.removeSelected"
-    />
-    <ActionButton
-      variant="secondary"
+      icon-only
+      variant="quiet"
       :disabled="!editor.history.length"
+      aria-label="Отменить"
       title="Отменить · Ctrl/Cmd+Z"
       @click="editor.undo"
-      ><Undo2 :size="20"
-    /></ActionButton>
+    >
+      <template #icon><Undo2 :size="20" /></template>
+    </ActionButton>
     <ActionButton
-      variant="secondary"
+      icon-only
+      variant="quiet"
       :disabled="!editor.future.length"
+      aria-label="Повторить"
       title="Повторить · Ctrl/Cmd+Shift+Z"
       @click="editor.redo"
-      ><Redo2 :size="20"
-    /></ActionButton>
+    >
+      <template #icon><Redo2 :size="20" /></template>
+    </ActionButton>
     <ActionButton
-      v-if="editor.draft.document.kind === 'tiles' || editor.selectedLight"
-      variant="secondary"
-      :disabled="
-        !editor.selection &&
-        !editor.selectedTiles.length &&
-        !editor.selectedObject &&
-        !editor.selectedLight
-      "
-      aria-label="Копировать участок"
-      title="Копировать участок · Ctrl/Cmd+C"
+      icon-only
+      variant="quiet"
+      :disabled="!hasSelection"
+      aria-label="Копировать выбранное"
+      title="Копировать выбранное · Ctrl/Cmd+C"
       @click="editor.copy"
-      ><Copy :size="20"
-    /></ActionButton>
+    >
+      <template #icon><Copy :size="20" /></template>
+    </ActionButton>
     <ActionButton
-      variant="secondary"
-      title="Скачать карту как JSON"
-      @click="emit('export')"
-      ><Download :size="20"
-    /></ActionButton>
-  </WorkspaceToolsRail>
+      icon-only
+      variant="quiet"
+      :disabled="!hasSelection"
+      :aria-label="deleteLabel"
+      title="Удалить выбранное · Delete"
+      @click="editor.removeSelected"
+    >
+      <template #icon><Trash2 :size="20" /></template>
+    </ActionButton>
+  </div>
 </template>
 <script setup>
-import { ActionButton, RemoveButton } from "@sylvieshare/share-ui";
-import { Copy, Download, Paintbrush, Redo2, Undo2 } from "@lucide/vue";
-import WorkspaceToolsRail from "@/shared/ui/WorkspaceToolsRail.vue";
-defineProps({ editor: Object });
-const emit = defineEmits(["export", "tool"]);
+import { computed } from "vue";
+import { ActionButton } from "@sylvieshare/share-ui";
+import { Copy, Redo2, Trash2, Undo2 } from "@lucide/vue";
+const props = defineProps({ editor: Object });
+const deleteLabel = computed(() => {
+  const e = props.editor;
+  if (e.selectedTiles.length && e.selectedObjects.length)
+    return "Удалить выделение";
+  if (e.selectedTiles.length)
+    return e.selectedTiles.length === 1 ? "Удалить плитку" : "Удалить плитки";
+  if (e.selectedObjects.length)
+    return e.selectedObjects.length === 1
+      ? "Удалить объект"
+      : "Удалить объекты";
+  return "Удалить источник света";
+});
+const hasSelection = computed(
+  () =>
+    !!(
+      props.editor.selectedTiles.length ||
+      props.editor.selectedObjects.length ||
+      props.editor.selectedLight
+    ),
+);
 </script>
+<style scoped>
+.map-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+</style>

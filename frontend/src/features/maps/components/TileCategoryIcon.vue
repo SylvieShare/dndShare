@@ -1,8 +1,14 @@
 <template>
-  <img :src="icons[kind]" width="36" height="36" alt="" draggable="false" />
+  <img
+    :src="icons[kind]"
+    :width="size"
+    :height="size"
+    alt=""
+    draggable="false"
+  />
 </template>
 <script setup>
-defineProps({ kind: String });
+defineProps({ kind: String, size: { type: Number, default: 36 } });
 const files = import.meta.glob("@/assets/maps/tile-types/*.webp", {
   eager: true,
   import: "default",

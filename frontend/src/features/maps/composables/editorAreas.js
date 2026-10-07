@@ -25,16 +25,26 @@ export function editorAreas(e) {
         .map((o) => o.id),
     };
   });
-  function addArea() {
-    e.change((m) =>
+  function addArea(includeSelection = false, lightId = null) {
+    const id = uid();
+    const selected =
+      includeSelection === true ? members.value : { tiles: [], objects: [] };
+    e.change((m) => {
       m.document.areas.push({
-        id: uid(),
+        id,
         name: `Область ${m.document.areas.length + 1}`,
         hidden: false,
         tileIds: [],
         objectIds: [],
-      }),
-    );
+      });
+      if (selected.tiles.length || selected.objects.length)
+        assignArea(m.document, id, selected);
+      if (lightId) {
+        const light = m.document.lights.find((l) => l.id === lightId);
+        if (light) light.areaId = id;
+      }
+    });
+    return id;
   }
   function renameArea(id, name) {
     name = name.trim();

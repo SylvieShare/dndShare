@@ -1,5 +1,12 @@
 <template>
   <section class="map-properties" aria-label="Свойства карты">
+    <div class="map-last-save" role="status" aria-label="Последнее сохранение">
+      <strong>Последнее сохранение</strong>
+      <time v-if="editor.lastSavedAt" :datetime="editor.lastSavedAt">{{
+        savedTime
+      }}</time>
+      <span v-else>Ещё не сохранялась</span>
+    </div>
     <ToggleSwitch
       v-if="d.kind === 'tiles'"
       label="Показывать точки в пазах"
@@ -125,6 +132,14 @@ import {
 } from "@sylvieshare/share-ui";
 import { Upload } from "@lucide/vue";
 const props = defineProps({ editor: { type: Object, required: true } });
+const savedTime = computed(
+  () =>
+    props.editor.lastSavedAt &&
+    new Intl.DateTimeFormat("ru-RU", {
+      dateStyle: "short",
+      timeStyle: "medium",
+    }).format(new Date(props.editor.lastSavedAt)),
+);
 const d = computed(() => props.editor.draft.document),
   fileInput = ref(null),
   uploading = ref(false),
@@ -178,3 +193,16 @@ async function upload(event) {
   }
 }
 </script>
+
+<style scoped>
+.map-last-save {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+}
+.map-last-save time,
+.map-last-save span {
+  color: var(--text-muted);
+}
+</style>

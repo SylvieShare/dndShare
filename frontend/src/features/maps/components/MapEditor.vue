@@ -2,44 +2,54 @@
   <main class="map-editor-workspace">
     <MapEditorHeader
       :editor="e"
-      :view="view"
       :admin="isAdmin"
       @close="emit('close')"
-      @view="setView"
+      @reference="openReference"
     />
-    <MapTileReference
-      v-if="referenceOpened && isAdmin"
-      v-show="view === 'reference'"
-      ref="reference"
-      :editor="e"
-    />
-    <div v-show="view === 'map'" class="map-editor">
+    <AppModalFrame
+      v-if="referenceOpen && isAdmin"
+      title="Справочник тайлов"
+      close-label="Закрыть справочник тайлов"
+      :width="1400"
+      :padded="false"
+      :body-scroll="false"
+      :dismissible="!reference?.dirty"
+      :show-close="false"
+      @close="closeReference"
+    >
+      <template #header-actions>
+        <div class="map-reference-close">
+          <ActionButton
+            icon-only
+            variant="quiet"
+            aria-label="Закрыть справочник тайлов"
+            @click="closeReference"
+            ><template #icon><X :size="20" /></template
+          ></ActionButton>
+        </div>
+      </template>
+      <MapTileReference ref="reference" :editor="e" />
+    </AppModalFrame>
+    <div class="map-editor">
       <MapTileSidebar
         :editor="e"
         @collection="changeCollection"
-        @model="placeModel"
-        @drag-tile="dragModel"
-        @object="placeObject"
-        @drag-object="dragObject"
-        @tab="stopPlacement"
-        @tool="startTool"
-        @place-light="placeLight"
+        @model="placement.placeModel"
+        @drag-tile="placement.dragModel"
+        @object="placement.placeObject"
+        @drag-object="placement.dragObject"
+        @tab="placement.cancel"
+        @place-light="placement.placeLight"
       />
       <div class="map-editor-main">
-        <MapEditorActions :editor="e" @export="exportMap" @tool="startTool" />
-        <div v-if="e.error" class="map-error" role="alert">
+        <div v-if="e.error && !e.saveError" class="map-error" role="alert">
           {{ e.error }}
-          <ActionButton v-if="!e.conflict" variant="quiet" @click="e.save"
-            >Повторить сохранение</ActionButton
-          >
         </div>
         <MapCanvas
           ref="canvas"
           :document="e.draft.document"
           master
           :tool="e.tool"
-          :selected-zone="e.selectedZone"
-          :show-zones="e.tool.startsWith('zone')"
           :selection="e.selection"
           :selected-object="e.tool === 'paste' ? '' : e.selectedObject"
           :selected-objects="e.tool === 'paste' ? [] : e.selectedObjects"
@@ -65,14 +75,20 @@
           :placement-rotation="e.placementRotation"
           :placement-hint="e.placementHint"
           @gesture="e.handle"
-          @camera-move="cursor.moved"
+          @camera-move="placement.cursor.moved"
+        />
+        <MapSelectionPanel
+          :editor="e"
+          @focus="focusEntries"
+          @bind="beginBinding"
         />
       </div>
     </div>
+    <MapSaveErrorDialog :editor="e" />
     <ConfirmDialog
       v-if="confirmClose"
       title="Остались несохранённые изменения"
-      message="Можно вернуться в редактор и повторить сохранение или скачать карту. При закрытии несохранённые изменения будут потеряны."
+      message="Можно вернуться в редактор и повторить сохранение. При закрытии несохранённые изменения будут потеряны."
       confirm-label="Закрыть без сохранения"
       cancel-label="Продолжить редактирование"
       :z-index="3300"
@@ -83,26 +99,24 @@
 </template>
 <script setup>
 import "../styles/maps.css";
+import { computed, reactive, ref } from "vue";
 import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  reactive,
-  ref,
-} from "vue";
-import { ActionButton, ConfirmDialog } from "@sylvieshare/share-ui";
+  ActionButton,
+  AppModalFrame,
+  ConfirmDialog,
+} from "@sylvieshare/share-ui";
+import { X } from "@lucide/vue";
 import MapEditorHeader from "./MapEditorHeader.vue";
-import MapEditorActions from "./MapEditorActions.vue";
+import MapSelectionPanel from "./MapSelectionPanel.vue";
+import MapSaveErrorDialog from "./MapSaveErrorDialog.vue";
 import MapTileReference from "./MapTileReference.vue";
 import MapTileSidebar from "./MapTileSidebar.vue";
 import { useAccountStore } from "@/stores/account";
 import { editorHints } from "../lib/editorHints";
 import MapCanvas from "./MapCanvas.vue";
 import { useMapEditor } from "../composables/useMapEditor";
-import { useCatalogueDrag } from "../composables/useCatalogueDrag";
-import { useMapCursor } from "../composables/useMapCursor";
-import { editorObjectDrag } from "../composables/editorObjectDrag";
+import { useEditorPlacement } from "../composables/useEditorPlacement";
+import { useMapEditorKeys } from "../composables/useMapEditorKeys";
 const props = defineProps({ map: Object }),
   emit = defineEmits(["close", "saved"]),
   confirmClose = ref(false);
@@ -110,91 +124,67 @@ const e = reactive(useMapEditor(props.map, (map) => emit("saved", map)));
 const account = useAccountStore(),
   isAdmin = computed(() => account.hasRole("ADMIN"));
 const reference = ref(null),
-  referenceOpened = ref(false);
-const canvas = ref(null),
-  catalogueDrag = useCatalogueDrag(e, canvas),
-  objectCatalogue = useCatalogueDrag(e, canvas, editorObjectDrag(e));
-const lightCatalogue = useCatalogueDrag(e, canvas, e.lightDrag);
-const cursor = useMapCursor(e, canvas, {
-  cameraMoved() {
-    catalogueDrag.cameraMoved();
-    objectCatalogue.cameraMoved();
-    lightCatalogue.cameraMoved();
-  },
-});
-const view = ref("map");
-function setView(next) {
-  if (next === "reference") {
-    if (!isAdmin.value) return;
-    referenceOpened.value = true;
-  }
-  catalogueDrag.cancel();
-  objectCatalogue.cancel();
-  lightCatalogue.cancel();
-  e.resetGesture();
-  view.value = next;
+  referenceOpen = ref(false),
+  canvas = ref(null);
+const placement = useEditorPlacement(e, canvas);
+useMapEditorKeys(
+  e,
+  canvas,
+  placement,
+  () => confirmClose.value || referenceOpen.value,
+);
+function openReference() {
+  if (!isAdmin.value) return;
+  placement.cancel();
+  referenceOpen.value = true;
+}
+function closeReference() {
+  if (reference.value?.prepareLeave() !== false) referenceOpen.value = false;
 }
 function changeCollection(value) {
-  catalogueDrag.cancel();
-  objectCatalogue.cancel();
-  lightCatalogue.cancel();
-  e.resetGesture();
-  if (reference.value) reference.value.changeCollection(value);
-  else e.collection = value;
+  placement.cancel();
+  e.collection = value;
 }
-async function placeLight(kind, event) {
-  setView("map");
-  await nextTick();
-  lightCatalogue.place(kind, event);
+function beginBinding(id) {
+  placement.cancel();
+  e.beginLightBinding(id);
 }
-function dragModel(id, event) {
-  objectCatalogue.cancel();
-  lightCatalogue.cancel();
-  e.resetGesture();
-  catalogueDrag.begin(id, event);
-}
-function dragObject(id, event) {
-  catalogueDrag.cancel();
-  lightCatalogue.cancel();
-  e.resetGesture();
-  objectCatalogue.begin(id, event);
-}
-function stopPlacement() {
-  catalogueDrag.cancel();
-  objectCatalogue.cancel();
-  lightCatalogue.cancel();
-  e.resetGesture();
-}
-function startTool(tool) {
-  if (tool === "object") {
-    const model = e.catalogue
-      .filter((m) => m.tileType === "object" && !m.hidden)
-      .sort((a, b) => b.version - a.version)[0];
-    if (model) placeObject(model.id);
-    return;
+function focusEntries(entries) {
+  placement.cancel();
+  if (entries[0]?.kind === "light") e.selectLight(entries[0].id);
+  else {
+    e.selectedLight = "";
+    e.setTileSelection(
+      entries.filter((x) => x.kind === "tile").map((x) => x.id),
+    );
+    e.setObjectSelection(
+      entries.filter((x) => x.kind === "object").map((x) => x.id),
+    );
   }
-  setView("map");
-  e.tool = tool;
-}
-async function placeModel(id, event) {
-  setView("map");
-  await nextTick();
-  catalogueDrag.place(id, event);
-}
-async function placeObject(modelId, event) {
-  setView("map");
-  await nextTick();
-  objectCatalogue.place(modelId, event);
+  const view = canvas.value?.getView();
+  if (view && entries.length)
+    canvas.value.setView({
+      ...view,
+      fit: false,
+      x:
+        entries.reduce(
+          (n, entry) => n + (entry.focusPosition || entry.position).x,
+          0,
+        ) / entries.length,
+      y:
+        entries.reduce(
+          (n, entry) => n + (entry.focusPosition || entry.position).y,
+          0,
+        ) / entries.length,
+    });
+  canvas.value?.focus();
 }
 
 let resolveLeave;
 async function prepareLeave() {
-  catalogueDrag.cancel();
-  objectCatalogue.cancel();
-  lightCatalogue.cancel();
-  e.resetGesture();
+  placement.cancel();
   if (reference.value?.prepareLeave() === false) {
-    setView("reference");
+    referenceOpen.value = true;
     return false;
   }
   if (e.saving) return false;
@@ -210,96 +200,12 @@ function finishLeave(leave) {
   resolveLeave?.(leave);
 }
 defineExpose({ prepareLeave });
-function hotkey(event) {
-  if (
-    event.defaultPrevented ||
-    confirmClose.value ||
-    document.querySelector('[role="dialog"]')
-  )
-    return;
-  if (
-    view.value === "reference" ||
-    event.target.closest("input,textarea,select,[contenteditable]")
-  )
-    return;
-  if (event.key.startsWith("Arrow")) {
-    event.preventDefault();
-    canvas.value?.panArrow(event.key);
-  }
-  if (event.key === "Escape") {
-    catalogueDrag.cancel();
-    objectCatalogue.cancel();
-    lightCatalogue.cancel();
-    e.handle({ phase: "cancel" });
-  }
-  if ((event.metaKey || event.ctrlKey) && event.code === "KeyZ") {
-    event.preventDefault();
-    event.shiftKey ? e.redo() : e.undo();
-  }
-  if ((event.metaKey || event.ctrlKey) && event.code === "KeyS") {
-    event.preventDefault();
-    e.save();
-  }
-  if (
-    (event.metaKey || event.ctrlKey) &&
-    event.code === "KeyC" &&
-    (e.draft.document.kind === "tiles" || e.selectedLight)
-  ) {
-    event.preventDefault();
-    e.copy();
-  }
-  if ((event.metaKey || event.ctrlKey) && event.code === "KeyV") {
-    event.preventDefault();
-    setView("map");
-    if (e.copiedLight) {
-      nextTick(() =>
-        lightCatalogue.place(e.copiedLight, cursor.pointerEvent()),
-      );
-    } else if (e.beginPaste())
-      nextTick(() => {
-        e.previewPaste(cursor.point());
-        canvas.value?.focus();
-      });
-  }
-  if (event.code === "KeyR") {
-    event.preventDefault();
-    e.rotate();
-    nextTick(cursor.moved);
-  }
-  if (event.key === "Delete" || event.key === "Backspace") {
-    event.preventDefault();
-    e.removeSelected();
-  }
-}
-function keyup(event) {
-  canvas.value?.releaseArrow(event.key);
-}
-function blur() {
-  canvas.value?.stopCamera();
-}
-function focusin(event) {
-  if (event.target.closest("input,textarea,select,[contenteditable]")) blur();
-}
-onMounted(() => {
-  window.addEventListener("keydown", hotkey);
-  window.addEventListener("keyup", keyup);
-  window.addEventListener("blur", blur);
-  window.addEventListener("focusin", focusin);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener("keydown", hotkey);
-  window.removeEventListener("keyup", keyup);
-  window.removeEventListener("blur", blur);
-  window.removeEventListener("focusin", focusin);
-});
-function exportMap() {
-  const url = URL.createObjectURL(
-    new Blob([JSON.stringify(e.draft, null, 2)], { type: "application/json" }),
-  );
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${e.draft.name}.json`;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 </script>
+
+<style scoped>
+.map-reference-close {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+</style>

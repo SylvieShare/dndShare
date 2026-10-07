@@ -8,53 +8,6 @@ async function ready(page) {
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
 
-test("wall brush previews corners and commits one connected stroke", async ({
-  page,
-}) => {
-  await ready(page);
-  await page
-    .getByRole("toolbar", { name: "Действия карты" })
-    .getByRole("button", { name: "Кисть стенами", exact: true })
-    .click();
-  const first = await mapPoint(page, 4.5, 3.5),
-    corner = await mapPoint(page, 5.5, 3.5),
-    end = await mapPoint(page, 5.5, 4.5);
-  await page.mouse.move(first.x, first.y);
-  await page.mouse.down();
-  await page.mouse.move(corner.x, corner.y, { steps: 6 });
-  await page.mouse.move(end.x, end.y, { steps: 6 });
-  expect(await page.evaluate(() => window.requests)).toEqual([]);
-  await page.mouse.up();
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          window.lastSaved?.document.tiles.find((t) => t.x === 5 && t.y === 3)
-            ?.modelId,
-      ),
-    )
-    .toBe("33333333-3333-4333-8333-333333333333");
-  expect(
-    await page.evaluate(
-      () =>
-        window.lastSaved.document.tiles.find((t) => t.x === 5 && t.y === 3)
-          .rotation,
-    ),
-  ).toBe(270);
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z").click();
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          window.lastSaved?.document.tiles.filter(
-            (t) =>
-              (t.x === 4 && t.y === 3) || (t.x === 5 && [3, 4].includes(t.y)),
-          ).length,
-      ),
-    )
-    .toBe(0);
-});
-
 test("command tile drag previews and fills a bounded room on release", async ({
   page,
 }) => {

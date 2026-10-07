@@ -55,7 +55,8 @@ test("light presets place onto the map and sunlight sliders persist with undo", 
   expect(
     await page.evaluate(() => window.lastSaved.document.lights[0]),
   ).toMatchObject({ kind: "torch", enabled: true, shadows: true });
-  await panel
+  await page
+    .getByRole("complementary", { name: "Выбранные элементы" })
     .getByRole("slider", { name: "Высота источника", exact: true })
     .fill("1.5");
   await expect
@@ -133,10 +134,11 @@ test("a source binds to a selected tile, follows it and belongs to its hidden ar
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.lights.length))
     .toBe(1);
-  await page.mouse.click(point.x - 20, point.y - 20);
-  await panel
-    .getByRole("button", { name: "Привязать к выбранной модели", exact: true })
+  await page
+    .getByRole("complementary", { name: "Выбранные элементы" })
+    .getByRole("button", { name: "Привязать", exact: true })
     .click();
+  await page.mouse.click(point.x - 20, point.y - 20);
   await expect
     .poll(() =>
       page.evaluate(() => window.lastSaved?.document.lights[0].anchor?.kind),
@@ -145,6 +147,10 @@ test("a source binds to a selected tile, follows it and belongs to its hidden ar
   const parent = await page.evaluate(
     () => window.lastSaved.document.lights[0].anchor.id,
   );
+  await page
+    .getByRole("complementary", { name: "Выбранные элементы" })
+    .getByRole("button", { name: "Пол 1", exact: true })
+    .click();
   await page.getByRole("button", { name: "Области", exact: true }).click();
   const areas = page.getByRole("region", { name: "Области карты" });
   await areas
@@ -183,7 +189,8 @@ test("lighting mode restores fixed light and an unchecked marker keeps its sourc
   await page.getByRole("button", { name: "Освещение", exact: true }).click();
   const panel = page.getByRole("region", { name: "Освещение карты" });
   await panel.getByRole("button", { name: "Факел", exact: true }).click();
-  await panel
+  await page
+    .getByRole("complementary", { name: "Выбранные элементы" })
     .getByRole("checkbox", { name: "Показывать сферу источника", exact: true })
     .click();
   await expect

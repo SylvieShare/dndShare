@@ -24,7 +24,7 @@ async function ready(page, mode = "") {
   const top = page.getByTitle("Вид сверху", { exact: true });
   if (await top.count()) await top.click();
 }
-test("editor drops tiles, undoes, saves versions and creates zones", async ({
+test("editor drops tiles, undoes and autosaves versions without zone controls", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -50,24 +50,13 @@ test("editor drops tiles, undoes, saves versions and creates zones", async ({
       ),
     )
     .toBeUndefined();
+  await expect(
+    page.getByRole("button", { name: "Зоны", exact: true }),
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "Настройки", exact: true }).click();
-  await page.getByRole("button", { name: "Зоны", exact: true }).click();
-  await page.getByRole("button", { name: "Новая зона", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Добавить область", exact: true })
-    .click();
-  const a = await point(page, 2, 2),
-    b = await point(page, 4, 4);
-  await page.mouse.move(a.x, a.y);
-  await page.mouse.down();
-  await page.mouse.move(b.x, b.y, { steps: 4 });
-  await page.mouse.up();
-  await expect
-    .poll(() => page.evaluate(() => window.lastSaved?.document.zones.length))
-    .toBe(3);
-  expect(
-    await page.evaluate(() => window.lastSaved.document.zones[2].rects.length),
-  ).toBe(1);
+  await expect(
+    page.getByLabel("Последнее сохранение", { exact: true }).locator("time"),
+  ).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 for (const mobile of [false, true])
@@ -138,35 +127,23 @@ test("standalone map display renders without master controls", async ({
 });
 
 for (const kind of ["image-grid", "image"])
-  test(`${kind} keeps the background fixed and edits rectangular zones`, async ({
+  test(`${kind} keeps its background and existing fog zones while editor zone tools are absent`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await ready(page, `editor&kind=${kind}`);
     await expect(
-      page.getByRole("tab", { name: "Плитки", exact: true }),
+      page.getByRole("button", { name: "Зоны", exact: true }),
     ).toHaveCount(0);
-    const p = await point(page, 3.5, 3.5);
-    await page.mouse.click(p.x, p.y);
-    await page.getByRole("button", { name: "Настройки", exact: true }).click();
-    await page.getByRole("button", { name: "Зоны", exact: true }).click();
-    await page.getByRole("button", { name: "Новая зона", exact: true }).click();
-    await page
-      .getByRole("button", { name: "Добавить область", exact: true })
-      .click();
-    const a = await point(page, 2.2, 2.2),
-      b = await point(page, 4.2, 4.2);
-    await page.mouse.move(a.x, a.y);
-    await page.mouse.down();
-    await page.mouse.move(b.x, b.y, { steps: 4 });
-    await page.mouse.up();
+    await page.getByLabel("Название карты", { exact: true }).fill("Новый фон");
+    await page.getByLabel("Название карты", { exact: true }).blur();
     await expect
-      .poll(() => page.evaluate(() => window.lastSaved?.document.zones.length))
-      .toBe(3);
+      .poll(() => page.evaluate(() => window.lastSaved?.name))
+      .toBe("Новый фон");
     const d = await page.evaluate(() => window.lastSaved.document);
     expect(d.tiles).toEqual([]);
     expect(d.background.url).toBe("/maps/city.svg");
-    expect(d.zones[2].rects[0].x).toBeCloseTo(kind === "image" ? 2.2 : 2, 1);
+    expect(d.zones).toHaveLength(2);
   });
 
 test("failed session writes retain changes and retry with the original version", async ({

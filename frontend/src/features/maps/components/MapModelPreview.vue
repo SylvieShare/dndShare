@@ -155,7 +155,7 @@ function toggle(index) {
 }
 function down(event) {
   if (event.button !== 0) return;
-  host.value.focus();
+  host.value.focus({ preventScroll: true });
   host.value.setPointerCapture(event.pointerId);
   drag = {
     x: event.clientX,

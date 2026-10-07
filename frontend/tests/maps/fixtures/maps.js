@@ -590,7 +590,12 @@ window.fetch = async (url, options = {}) => {
   let result;
   if (url === "/api/maps") {
     if (data) {
-      result = { ...data, id: "test-copy", revision: 1 };
+      result = {
+        ...data,
+        id: "test-copy",
+        revision: 1,
+        changedAt: new Date().toISOString(),
+      };
       window.lastSaved = result;
     } else
       result = [
@@ -598,12 +603,21 @@ window.fetch = async (url, options = {}) => {
         ...(window.lastSaved?.id === "test-copy" ? [window.lastSaved] : []),
       ];
   } else if (url === "/api/maps/test-copy") {
-    result = { ...data, revision: data.revision + 1 };
+    result = {
+      ...data,
+      revision: data.revision + 1,
+      changedAt: new Date().toISOString(),
+    };
     window.lastSaved = result;
   } else if (url === "/api/maps/test-map") {
     if (data.revision !== templateRevision)
       return new Response("{}", { status: 409 });
-    result = { ...data, id: "test-map", revision: ++templateRevision };
+    result = {
+      ...data,
+      id: "test-map",
+      revision: ++templateRevision,
+      changedAt: new Date().toISOString(),
+    };
     window.lastSaved = result;
   } else if (url === "/api/sessions/test/maps/test-map") {
     if (data.revision !== board.revision)
@@ -653,8 +667,16 @@ createApp({
   render: () =>
     mode === "header"
       ? h(MapEditorHeader, {
-          editor: { draft: source, catalogue, dirty: false },
-          view: "map",
+          editor: {
+            draft: source,
+            catalogue,
+            dirty: false,
+            history: [],
+            future: [],
+            selectedTiles: [],
+            selectedObjects: [],
+            selectedLight: "",
+          },
           admin: account.hasRole("ADMIN"),
         })
       : mode === "editor" || mode === "library"

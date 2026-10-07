@@ -5,15 +5,16 @@ async function ready(page) {
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page
-    .getByRole("tab", { name: "Справочник тайлов", exact: true })
+    .getByRole("button", { name: "Справочник тайлов", exact: true })
     .click();
   await expect(page.locator(".model-preview-label")).toHaveCount(5);
 }
 async function clickMarker(page, selector) {
   const marker = page.locator(selector).first();
   await expect(marker).toBeAttached();
+  await marker.scrollIntoViewIfNeeded();
   const box = await marker.boundingBox();
-  await page.mouse.click(box.x + 1, box.y + 1);
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 }
 async function save(page) {
   await page

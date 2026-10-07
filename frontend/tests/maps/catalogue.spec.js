@@ -110,7 +110,7 @@ test("admin tile reference saves a fresh version and leaves existing map tiles u
   ).toHaveCount(0);
   await expect(page.locator(".map-model-card button")).toHaveCount(0);
   await page
-    .getByRole("tab", { name: "Справочник тайлов", exact: true })
+    .getByRole("button", { name: "Справочник тайлов", exact: true })
     .click();
   const reference = page.getByRole("region", {
     name: "Справочник тайлов",
@@ -130,10 +130,11 @@ test("admin tile reference saves a fresh version and leaves existing map tiles u
   await page
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
-  await expect(page.getByRole("status")).toContainText([
-    "Сохранено",
-    "Параметры сохранены · версия 2",
-  ]);
+  await expect(
+    page
+      .getByRole("region", { name: "Справочник тайлов", exact: true })
+      .getByRole("status"),
+  ).toContainText("Параметры сохранены · версия 2");
   const saved = await page.evaluate(() => window.lastModelSaved);
   expect(saved).toMatchObject({
     name: "Исправленный пол",
@@ -147,7 +148,9 @@ test("admin tile reference saves a fresh version and leaves existing map tiles u
       window.requests.filter((r) => r.url === "/api/maps/test-map"),
     ),
   ).toEqual([]);
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
+    .click();
   await expect(
     page
       .getByRole("complementary", { name: "Каталог плиток" })
@@ -159,11 +162,11 @@ test("reference is hidden from a non-admin and a conflict keeps the edit draft",
 }) => {
   await page.goto("/tests/maps/fixtures/maps.html?mode=header&noAdmin");
   await expect(
-    page.getByRole("tab", { name: "Справочник тайлов", exact: true }),
+    page.getByRole("button", { name: "Справочник тайлов", exact: true }),
   ).toHaveCount(0);
   await ready(page);
   await page
-    .getByRole("tab", { name: "Справочник тайлов", exact: true })
+    .getByRole("button", { name: "Справочник тайлов", exact: true })
     .click();
   await page
     .getByLabel("Название тайла", { exact: true })
@@ -181,39 +184,38 @@ test("reference is hidden from a non-admin and a conflict keeps the edit draft",
   expect(await page.evaluate(() => window.lastModelSaved)).toBeUndefined();
 });
 
-test("unsaved tile parameters survive view switching and must be saved or cancelled before leaving", async ({
+test("the reference modal protects unsaved parameters until saved or cancelled", async ({
   page,
 }) => {
   await ready(page);
   await page
-    .getByRole("tab", { name: "Справочник тайлов", exact: true })
+    .getByRole("button", { name: "Справочник тайлов", exact: true })
     .click();
-  await page
+  const modal = page.getByRole("dialog", {
+    name: "Справочник тайлов",
+    exact: true,
+  });
+  await modal
     .getByLabel("Название тайла", { exact: true })
     .fill("Несохранённые параметры");
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
-  await page
-    .getByRole("tab", { name: "Справочник тайлов", exact: true })
+  await modal
+    .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
     .click();
-  await expect(page.getByLabel("Название тайла", { exact: true })).toHaveValue(
+  await expect(modal).toBeVisible();
+  await expect(modal.getByRole("alert")).toContainText(
+    "Сохраните или отмените",
+  );
+  await expect(modal.getByLabel("Название тайла", { exact: true })).toHaveValue(
     "Несохранённые параметры",
   );
-  await page
-    .getByRole("button", { name: "Закрыть редактор", exact: true })
-    .click();
-  await expect(page.getByRole("alert")).toContainText("Сохраните или отмените");
-  await expect(
-    page.getByRole("tab", { name: "Справочник тайлов", exact: true }),
-  ).toHaveAttribute("aria-selected", "true");
-  await page
+  await modal
     .getByRole("button", { name: "Отменить изменения", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Закрыть редактор", exact: true })
+  await modal
+    .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
     .click();
-  await expect(
-    page.getByRole("button", { name: "Создать карту", exact: true }),
-  ).toBeVisible();
+  await expect(modal).toHaveCount(0);
+  await expect(page.locator(".map-canvas canvas")).toBeVisible();
   expect(await page.evaluate(() => window.lastModelSaved)).toBeUndefined();
 });
 
@@ -261,7 +263,7 @@ test("reference uses filter categories and preserves a draft when changing packs
 }) => {
   await ready(page);
   await page
-    .getByRole("tab", { name: "Справочник тайлов", exact: true })
+    .getByRole("button", { name: "Справочник тайлов", exact: true })
     .click();
   await expect(page.getByLabel("Тип местности", { exact: true })).toHaveCount(
     0,
@@ -277,9 +279,12 @@ test("reference uses filter categories and preserves a draft when changing packs
     .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
     .click();
   await choosePack(page, "ultimate-dungeon");
-  await expect(page.getByRole("dialog")).toContainText(
-    "Отменить изменения параметров?",
-  );
+  await expect(
+    page.getByRole("dialog", {
+      name: "Отменить изменения параметров?",
+      exact: true,
+    }),
+  ).toContainText("Отменить изменения параметров?");
   await page
     .getByRole("button", { name: "Продолжить редактирование", exact: true })
     .click();
@@ -296,15 +301,18 @@ test("reference uses filter categories and preserves a draft when changing packs
   await page
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
-  await expect(page.getByRole("status")).toContainText([
-    "Сохранено",
-    "Параметры сохранены · версия 2",
-  ]);
+  await expect(
+    page
+      .getByRole("region", { name: "Справочник тайлов", exact: true })
+      .getByRole("status"),
+  ).toContainText("Параметры сохранены · версия 2");
   const saved = await page.evaluate(() => window.lastModelSaved);
   expect(saved.tileType).toBe("wall-angle");
   expect(saved).not.toHaveProperty("wallLayout");
   expect(saved).not.toHaveProperty("terrainType");
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
+    .click();
   const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
   await sidebar
     .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })

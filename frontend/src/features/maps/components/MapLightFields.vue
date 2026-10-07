@@ -1,5 +1,5 @@
 <template>
-  <BaseTile class="map-light-fields">
+  <div class="map-light-fields">
     <FormField label="Название" vertical
       ><FormTextInput
         :value="light.name"
@@ -79,25 +79,30 @@
     >
     <ActionButton
       variant="secondary"
-      :disabled="!editor.selectedTile && !editor.selectedObject"
-      @click="bind"
-      >Привязать к выбранной модели</ActionButton
+      @click="
+        editor.bindingLight === light.id
+          ? editor.cancelLightBinding()
+          : emit('bind', light.id)
+      "
     >
-    <p v-if="light.anchor" class="map-hint">
-      Привязан к {{ light.anchor.kind === "tile" ? "тайлу" : "объекту" }}.
+      {{ editor.bindingLight === light.id ? "Отменить привязку" : "Привязать" }}
+    </ActionButton>
+    <p v-if="editor.bindingLight === light.id" class="map-hint" role="status">
+      Нажмите на плитку или объект на карте.
     </p>
+    <template v-if="anchor">
+      <p class="map-hint">
+        Привязан к {{ light.anchor.kind === "tile" ? "тайлу" : "объекту" }}.
+      </p>
+      <MapEntityRow :entry="anchor" @select="emit('focus', $event)" />
+    </template>
     <ActionButton
       v-if="light.anchor"
       variant="quiet"
       @click="editor.bindLight(light.id, null)"
       >Отвязать источник</ActionButton
     >
-    <RemoveButton
-      icon="trash"
-      label="Удалить источник света"
-      @click="editor.removeLight(light.id)"
-    />
-  </BaseTile>
+  </div>
 </template>
 <script setup>
 import { computed } from "vue";
@@ -105,14 +110,15 @@ import {
   ActionButton,
   CompactCheckbox,
   AppSlider,
-  BaseTile,
   ColorPresetPicker,
   FormField,
   FormSelect,
   FormTextInput,
-  RemoveButton,
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
+import { mapEntity } from "../lib/editorEntities";
+import MapEntityRow from "./MapEntityRow.vue";
+const emit = defineEmits(["bind", "focus"]);
 const props = defineProps({ editor: Object, light: Object });
 const colours = [
   "#ffc36a",
@@ -135,21 +141,22 @@ const shadowCount = computed(
       (l) => l.enabled && l.shadows && l.id !== props.light.id,
     ).length,
 );
-function bind() {
-  const e = props.editor;
-  e.bindLight(
-    props.light.id,
-    e.selectedObject
-      ? { kind: "object", id: e.selectedObject }
-      : { kind: "tile", id: e.selectedTile },
-  );
-}
+const anchor = computed(
+  () =>
+    props.light.anchor &&
+    mapEntity(
+      props.editor.draft.document,
+      props.editor.catalogue,
+      props.light.anchor.kind,
+      props.light.anchor.id,
+    ),
+);
 </script>
 <style scoped>
 .map-light-fields {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 12px;
+  padding: 0;
 }
 </style>

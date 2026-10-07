@@ -1,9 +1,9 @@
 import { ref } from "vue";
+import { editorLightBinding } from "./editorLightBinding";
 import { clone, inside, uid } from "../lib/mapModel";
 import { DEFAULT_SUN, LIGHT_PRESETS, lightPose } from "../lib/mapLighting";
 export function editorLighting(e) {
-  const activeLight = ref(""),
-    selectedLight = ref(""),
+  const selectedLight = ref(""),
     hoveredLight = ref(""),
     previewLight = ref(null),
     copiedLight = ref(null);
@@ -49,7 +49,7 @@ export function editorLighting(e) {
       });
   }
   function selectLight(id) {
-    activeLight.value = id;
+    binding.cancelLightBinding();
     selectedLight.value = id;
     e.setTileSelection([]);
     e.setObjectSelection([]);
@@ -63,7 +63,7 @@ export function editorLighting(e) {
       m.document.lights = m.document.lights.filter((l) => l.id !== id);
     });
     selectedLight.value = "";
-    activeLight.value = "";
+    binding.cancelLightBinding();
   }
   function bindLight(id, anchor) {
     const light = e.draft.value.document.lights.find((l) => l.id === id);
@@ -85,7 +85,23 @@ export function editorLighting(e) {
       }
     });
   }
+  const binding = editorLightBinding(e, selectedLight, bindLight);
+  function toggleLight(id) {
+    const light = e.draft.value.document.lights.find((l) => l.id === id);
+    if (!light) return;
+    e.change(() => {
+      if (
+        !light.enabled &&
+        light.shadows &&
+        e.draft.value.document.lights.filter((l) => l.enabled && l.shadows)
+          .length >= 2
+      )
+        light.shadows = false;
+      light.enabled = !light.enabled;
+    });
+  }
   function handle({ phase, point, hit, event }) {
+    if (binding.handleBinding({ phase, point, hit, event })) return true;
     if (phase === "hover") {
       hoveredLight.value = hit?.lightId || "";
       return false;
@@ -146,6 +162,7 @@ export function editorLighting(e) {
     return true;
   }
   function reset() {
+    binding.cancelLightBinding();
     gesture = null;
     previewLight.value = null;
     hoveredLight.value = "";
@@ -154,8 +171,6 @@ export function editorLighting(e) {
       !e.draft.value.document.lights.some((l) => l.id === selectedLight.value)
     )
       selectedLight.value = "";
-    if (!e.draft.value.document.lights.some((l) => l.id === activeLight.value))
-      activeLight.value = "";
   }
   let placing = false,
     preset;
@@ -206,7 +221,6 @@ export function editorLighting(e) {
             .length < 2;
         e.change((m) => m.document.lights.push(light));
         selectedLight.value = light.id;
-        activeLight.value = light.id;
       }
       driver.cancel();
     },
@@ -222,7 +236,8 @@ export function editorLighting(e) {
     copiedLight,
     copyLight,
     updateLightingMode,
-    activeLight,
+    ...binding,
+    toggleLight,
     selectedLight,
     hoveredLight,
     previewLight,

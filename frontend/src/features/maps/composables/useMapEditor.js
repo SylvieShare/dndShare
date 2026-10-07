@@ -12,10 +12,9 @@ import {
   watch,
 } from "vue";
 import { getMapModels, resetMapModels, saveMap } from "@/shared/api/mapsApi";
-import { clone, newMap, resized, uid } from "../lib/mapModel";
+import { clone, newMap, resized } from "../lib/mapModel";
 import { editorGestures } from "./editorGestures";
 import { editorTileDrag } from "./editorTileDrag";
-import { editorWallBrush } from "./editorWallBrush";
 
 export function useMapEditor(source, onSaved) {
   const draft = ref(clone(source || newMap())),
@@ -38,12 +37,13 @@ export function useMapEditor(source, onSaved) {
     modelError = ref(""),
     objectKind = ref("chest"),
     objectModel = ref("");
-  const selectedZone = ref(""),
-    selectedObject = ref(""),
+  const selectedObject = ref(""),
     selectedObjects = ref([]),
     selection = ref(null),
     saving = ref(false),
     error = ref(""),
+    saveError = ref(""),
+    lastSavedAt = ref(source?.system ? null : source?.changedAt || null),
     conflict = ref(false);
   const history = ref([]),
     future = ref([]),
@@ -124,6 +124,7 @@ export function useMapEditor(source, onSaved) {
     clearTimeout(timer);
     if (
       saving.value ||
+      loadingModels.value ||
       conflict.value ||
       !dirty.value ||
       !draft.value.name.trim() ||
@@ -133,6 +134,7 @@ export function useMapEditor(source, onSaved) {
       return;
     saving.value = true;
     error.value = "";
+    saveError.value = "";
     syncSurfaceObjects(draft.value.document, catalogue.value);
     pruneAreas(draft.value.document);
     syncLights(draft.value.document, catalogue.value);
@@ -149,9 +151,11 @@ export function useMapEditor(source, onSaved) {
         id: result.id,
         revision: result.revision,
       });
+      lastSavedAt.value = result.changedAt;
       onSaved?.(result);
     } catch (cause) {
       error.value = cause.message;
+      saveError.value = cause.message;
       conflict.value = cause.status === 409;
     } finally {
       saving.value = false;
@@ -165,23 +169,12 @@ export function useMapEditor(source, onSaved) {
       clearTimeout(timer);
       if (!inGesture && !conflict.value) timer = setTimeout(save, 1200);
     },
-    { deep: true },
+    { deep: true, immediate: true },
   );
   function resize(width, height) {
     change((m) => {
       m.document = resized(m.document, width, height);
     });
-  }
-  function addZone() {
-    const z = {
-      id: uid(),
-      name: `Зона ${draft.value.document.zones.length + 1}`,
-      cells: [],
-      rects: [],
-    };
-    change((m) => m.document.zones.push(z));
-    selectedZone.value = z.id;
-    tool.value = "zone";
   }
   function pauseSave(value) {
     inGesture = value;
@@ -209,7 +202,6 @@ export function useMapEditor(source, onSaved) {
     selectedObject,
     selectedObjects,
     setObjectSelection,
-    selectedZone,
     selection,
     history,
     error,
@@ -220,8 +212,7 @@ export function useMapEditor(source, onSaved) {
     collection,
   };
   const tileDrag = editorTileDrag(state);
-  const wallBrush = editorWallBrush(state);
-  const gestures = editorGestures({ ...state, tileDrag, wallBrush });
+  const gestures = editorGestures({ ...state, tileDrag });
   const lighting = editorLighting(state);
   watch(
     [selectedTiles, selectedObjects],
@@ -245,6 +236,10 @@ export function useMapEditor(source, onSaved) {
       modelError.value = cause.message;
     } finally {
       loadingModels.value = false;
+      if (dirty.value && !inGesture && !conflict.value && !stopped) {
+        clearTimeout(timer);
+        timer = setTimeout(save, 1200);
+      }
     }
   }
   function retryModels() {
@@ -279,7 +274,6 @@ export function useMapEditor(source, onSaved) {
     hoveredObject,
     draggingTile,
     tileDrag,
-    wallBrush,
     previewTile,
     previewObject,
     showAnchors,
@@ -290,13 +284,14 @@ export function useMapEditor(source, onSaved) {
     retryModels,
     objectKind,
     objectModel,
-    selectedZone,
     selectedObject,
     selectedObjects,
     setObjectSelection,
     selection,
     saving,
     error,
+    saveError,
+    lastSavedAt,
     conflict,
     dirty,
     history,
@@ -307,7 +302,6 @@ export function useMapEditor(source, onSaved) {
     undo,
     redo,
     resize,
-    addZone,
     ...editorAreas(state),
     ...gestures,
     ...lighting,
@@ -317,9 +311,9 @@ export function useMapEditor(source, onSaved) {
       if (gestures.copy()) lighting.copiedLight.value = null;
     },
     handle(event) {
-      if (event.phase === "start" && !event.hit?.lightId)
-        lighting.selectedLight.value = "";
-      if (!lighting.handle(event)) gestures.handle(event);
+      if (lighting.handle(event)) return;
+      if (event.phase === "start") lighting.selectedLight.value = "";
+      gestures.handle(event);
     },
     resetGesture() {
       lighting.reset();

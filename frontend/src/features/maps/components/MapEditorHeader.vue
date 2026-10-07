@@ -12,82 +12,26 @@
         <span>{{ editor.draft.name }}</span>
       </div>
     </template>
-    <template #navigation>
-      <SlidingTabs
-        :model-value="view"
-        :tabs="tabs"
-        aria-label="Режим редактора"
-        @update:model-value="emit('view', $event)"
-      >
-        <template #icon="{ tab }">
-          <span
-            class="map-mode-icon"
-            role="img"
-            :aria-label="tab.label"
-            :title="tab.label"
-          >
-            <component :is="tab.icon" :size="24" aria-hidden="true" />
-            <span aria-hidden="true">{{ tab.caption || tab.label }}</span>
-          </span>
-        </template>
-      </SlidingTabs>
-    </template>
+    <template #navigation><MapEditorActions :editor="editor" /></template>
     <template #actions>
-      <span class="map-save-status" role="status">{{
-        editor.saving
-          ? "Сохраняем…"
-          : editor.dirty
-            ? "Есть изменения"
-            : "Сохранено"
-      }}</span>
       <ActionButton
-        :disabled="!editor.dirty || editor.conflict"
-        :loading="editor.saving"
-        aria-label="Сохранить"
-        @click="editor.save"
-        ><Save :size="16" /><span class="map-save-label"
-          >Сохранить</span
-        ></ActionButton
+        v-if="admin"
+        icon-only
+        variant="secondary"
+        aria-label="Справочник тайлов"
+        title="Справочник тайлов"
+        @click="emit('reference')"
       >
+        <template #icon><BookOpenText :size="24" /></template>
+      </ActionButton>
     </template>
   </WorkspaceHeader>
 </template>
 <script setup>
-import { ActionButton, SlidingTabs } from "@sylvieshare/share-ui";
-import { computed } from "vue";
-import { ArrowLeft, BookOpenText, Map as MapIcon, Save } from "@lucide/vue";
+import { ActionButton } from "@sylvieshare/share-ui";
+import { ArrowLeft, BookOpenText } from "@lucide/vue";
 import WorkspaceHeader from "@/shared/ui/WorkspaceHeader.vue";
-const props = defineProps({ editor: Object, view: String, admin: Boolean });
-const tabs = computed(() => [
-  { key: "map", label: "Карта", icon: MapIcon },
-  ...(props.admin
-    ? [
-        {
-          key: "reference",
-          label: "Справочник тайлов",
-          caption: "Справочник",
-          icon: BookOpenText,
-        },
-      ]
-    : []),
-]);
-const emit = defineEmits(["close", "view"]);
+import MapEditorActions from "./MapEditorActions.vue";
+defineProps({ editor: Object, admin: Boolean });
+const emit = defineEmits(["close", "reference"]);
 </script>
-<style scoped>
-.map-mode-icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 48px;
-  min-height: 54px;
-  gap: 5px;
-  font-size: 10px;
-}
-@media (max-width: 760px) {
-  .map-save-status,
-  .map-save-label {
-    display: none;
-  }
-}
-</style>

@@ -6,7 +6,7 @@ async function ready(page) {
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
-test("shared header, global collection, floating actions and independent visibility settings", async ({
+test("shared header actions, global collection and independent visibility settings", async ({
   page,
 }) => {
   await ready(page);
@@ -22,17 +22,25 @@ test("shared header, global collection, floating actions and independent visibil
       .boundingBox();
   expect(canvas).toMatchObject({ x: 334, y: 64, width: 1106, height: 936 });
   await expect(page.locator(".map-inspector")).toHaveCount(0);
-  for (const name of ["Карта"]) {
-    const tab = page.getByRole("tab", { name, exact: true });
-    await expect(tab.locator("svg")).toHaveCount(1);
-  }
-  for (const name of ["Предметы", "Настройки"])
-    await expect(page.getByRole("tab", { name, exact: true })).toHaveCount(0);
+  await expect(page.getByRole("tab")).toHaveCount(0);
+  await expect(
+    page
+      .getByRole("button", { name: "Справочник тайлов", exact: true })
+      .locator("svg"),
+  ).toHaveCount(1);
+  for (const name of [
+    "Зоны",
+    "Кисть стенами",
+    "Сохранить",
+    "Скачать карту как JSON",
+  ])
+    await expect(page.getByRole("button", { name, exact: true })).toHaveCount(
+      0,
+    );
   await expect(
     page.getByRole("button", { name: "Настройки", exact: true }).locator("svg"),
   ).toHaveCount(1);
-  expect(actions.y).toBeGreaterThanOrEqual(canvas.y);
-  expect(actions.x).toBeGreaterThan(canvas.x + canvas.width / 2);
+  expect(actions.y + actions.height).toBeLessThanOrEqual(canvas.y);
   await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
   await expect(page.getByLabel("Название карты", { exact: true })).toHaveValue(
@@ -99,9 +107,7 @@ test("objects from the side palette place a cursor preview on click", async ({
   await page
     .getByRole("button", { name: "Сундук", exact: true })
     .press("Enter");
-  await expect(
-    page.getByRole("tab", { name: "Карта", exact: true }),
-  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator(".map-canvas canvas")).toBeVisible();
   const p = await mapPoint(page, 4.5, 4.5);
   await page.mouse.move(p.x, p.y);
   await page.mouse.click(p.x, p.y);

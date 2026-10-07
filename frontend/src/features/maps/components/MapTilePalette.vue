@@ -20,6 +20,7 @@
         v-if="categories.length"
         v-model="category"
         :categories="categories"
+        large
       />
       <MultiToggle
         v-if="contentOptions.length === 2"

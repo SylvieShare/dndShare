@@ -1,4 +1,9 @@
 export function editorHints(tool, dragging) {
+  if (tool === "bind-light")
+    return [
+      "Выберите плитку или объект для привязки света",
+      "Esc — отмена привязки",
+    ];
   const camera = [
     "Стрелки — камера",
     "Колесо — масштаб",
@@ -28,12 +33,7 @@ export function editorHints(tool, dragging) {
       "Esc — отмена размещения",
       ...camera,
     ];
-  const action = {
-    object: "ЛКМ — поставить объект",
-    zone: "ЛКМ + перенос — область зоны",
-    "zone-brush": "ЛКМ + перенос — клетки зоны",
-    "wall-brush": "ЛКМ + перенос — рисовать стены",
-  }[tool];
+  const action = tool === "object" ? "ЛКМ — поставить объект" : null;
   return [
     action || "Плитка из списка — перетащить",
     "R — поворот",

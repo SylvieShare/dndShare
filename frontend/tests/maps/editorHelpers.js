@@ -1,5 +1,12 @@
 export async function pickTile(page, name = "Пол 1") {
-  await page.getByRole("tab", { name: "Карта", exact: true }).click();
+  const reference = page.getByRole("dialog", {
+    name: "Справочник тайлов",
+    exact: true,
+  });
+  if (await reference.count())
+    await reference
+      .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
+      .click();
   await page.getByRole("button", { name: "Плитки", exact: true }).click();
   const kind = await page.evaluate(
     async (name) =>
@@ -56,6 +63,11 @@ export async function choosePack(page, id) {
     "lost-cave": "Lost Cave",
     "ultimate-dungeon": "Ultimate Dungeon",
   };
-  await page.getByRole("combobox", { name: "Пак тайлов", exact: true }).click();
+  const modal = page.getByRole("dialog", {
+    name: "Справочник тайлов",
+    exact: true,
+  });
+  const root = (await modal.count()) ? modal : page;
+  await root.getByRole("combobox", { name: "Пак тайлов", exact: true }).click();
   await page.getByRole("option", { name: names[id], exact: true }).click();
 }

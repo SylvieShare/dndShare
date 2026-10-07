@@ -1,13 +1,5 @@
 import { nearestSurface } from "../lib/surfacePlacement";
-import {
-  clone,
-  inside,
-  lineCells,
-  paint,
-  rectangle,
-  snap,
-  uid,
-} from "../lib/mapModel";
+import { clone, inside, rectangle, snap, uid } from "../lib/mapModel";
 import { tileGroupStatus, tilePlacementStatus } from "../lib/tilePlacement";
 import { dependentTiles } from "../lib/tileStructure";
 import { editorClipboard } from "./editorClipboard";
@@ -24,25 +16,10 @@ export function editorGestures(e) {
     e.checkpoint();
     gesture.changed = true;
   }
-  function zoneBrush(point, previous = point) {
-    if (e.tool.value !== "zone-brush") return;
-    const d = doc(),
-      zone = d.zones.find((z) => z.id === e.selectedZone.value);
-    if (!zone) return;
-    checkpoint();
-    const cells = new Set(zone.cells);
-    for (const p of lineCells(
-      { x: previous.x - d.grid.offsetX, y: previous.y - d.grid.offsetY },
-      { x: point.x - d.grid.offsetX, y: point.y - d.grid.offsetY },
-    ))
-      if (inside(d, p.x, p.y)) cells.add(p.y * Math.ceil(d.width) + p.x);
-    zone.cells = [...cells];
-  }
   function resetGesture() {
     gesture = null;
     e.tileDrag.cancel();
     clipboard.cancel();
-    e.wallBrush?.cancel();
     e.hoveredTile.value = "";
     if (e.hoveredObject) e.hoveredObject.value = "";
     e.screenSelection.value = null;
@@ -88,13 +65,6 @@ export function editorGestures(e) {
     }
     if (phase === "cancel") {
       cancel();
-      return;
-    }
-    if (tool === "wall-brush") {
-      if (phase === "start" && inside(d, point.x, point.y))
-        e.wallBrush.begin(point);
-      if (phase === "move") e.wallBrush.move(point);
-      if (phase === "end") e.wallBrush.end(point);
       return;
     }
     if (tool === "paste") {
@@ -171,7 +141,6 @@ export function editorGestures(e) {
           e.tool.value = "select";
           if (e.previewObject) e.previewObject.value = null;
         }
-        zoneBrush(point);
       }
       if (phase === "move" && gesture) {
         const moved =
@@ -206,8 +175,7 @@ export function editorGestures(e) {
               moving: true,
             };
         } else if (!gesture.object) {
-          zoneBrush(point, gesture.last);
-          if (["zone", "select"].includes(tool) && moved)
+          if (tool === "select" && moved)
             e.selection.value = rectangle(
               d,
               gesture.start,
@@ -274,23 +242,6 @@ export function editorGestures(e) {
         else if (gesture.tile && !gesture.moved)
           e.setTileSelection([gesture.tile.id]);
         if (e.selectedTiles.value.length) e.selection.value = null;
-        if (tool === "zone") {
-          checkpoint();
-          let zone = d.zones.find((z) => z.id === e.selectedZone.value);
-          if (!zone) {
-            zone = {
-              id: uid(),
-              name: `Зона ${d.zones.length + 1}`,
-              cells: [],
-              rects: [],
-            };
-            d.zones.push(zone);
-            e.selectedZone.value = zone.id;
-          }
-          zone.rects.push(
-            rectangle(d, gesture.start, point, d.kind !== "image"),
-          );
-        }
         if (tool !== "select") e.selection.value = null;
         resetGesture();
       }
@@ -301,10 +252,7 @@ export function editorGestures(e) {
   }
   function removeSelected() {
     e.tileDrag.cancel();
-    const selected =
-      e.selectedTile.value ||
-      e.selectedObject.value ||
-      (e.tool.value.startsWith("zone") ? e.selectedZone.value : "");
+    const selected = e.selectedTile.value || e.selectedObject.value;
     if (!selected) return;
     e.change((m) => {
       const objects = new Set(e.selectedObjects.value);
@@ -320,7 +268,6 @@ export function editorGestures(e) {
         m.document.objects = m.document.objects.filter(
           (o) => !objects.has(o.id),
         );
-      else m.document.zones = m.document.zones.filter((z) => z.id !== selected);
     });
     e.setTileSelection([]);
     e.setObjectSelection([]);
