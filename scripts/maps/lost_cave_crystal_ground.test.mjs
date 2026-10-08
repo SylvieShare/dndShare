@@ -38,3 +38,25 @@ test("crystal floor separates three source clusters from free brown slabs and lo
     "rock",
   );
 });
+test("decorated wall protects structural source surfaces before classifying inclined crystal growth", () => {
+  const s = specs["LC-039"];
+  const known = new Map([
+    [JSON.stringify([-6.0363, 1.199, 38.1387]), 0.0844],
+    [JSON.stringify([-0.4116, 5.2454, 38.4802]), 0.0371],
+    [JSON.stringify([2.0578, -11.2174, 38.4794]), 0.0441],
+    [JSON.stringify([6.1049, 9.0304, 32.361]), 3.5545],
+  ]);
+  const reference = { distanceAt: (p) => known.get(JSON.stringify(p)) ?? 4 };
+  for (const p of [
+    [-6.0363, 1.199, 38.1387],
+    [-0.4116, 5.2454, 38.4802],
+    [2.0578, -11.2174, 38.4794],
+  ])
+    assert.equal(crystalGroundPartAt(p, s, reference), "rock");
+  for (const p of [
+    [6.1049, 9.0304, 32.361],
+    [1.0597, -0.5548, 27.2856],
+    [15.6855, -5.8727, 17.3047],
+  ])
+    assert.equal(crystalGroundPartAt(p, s, reference), "crystal");
+});

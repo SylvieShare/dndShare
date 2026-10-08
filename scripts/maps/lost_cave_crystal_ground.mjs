@@ -2,7 +2,12 @@ import { paintCrystal } from "./lost_cave_crystal.mjs";
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
 const clamp = (v) => Math.max(0, Math.min(1, v));
-export function crystalGroundPartAt(p, spec) {
+export function crystalGroundPartAt(p, spec, wallReference) {
+  if (
+    wallReference &&
+    wallReference.distanceAt(p) <= spec.crystal.wallReference.matchMM
+  )
+    return "rock";
   const c = spec.crystal;
   return p[2] > spec.floorHeightMM + 0.22 &&
     c.clusters.some((r) =>
@@ -15,8 +20,8 @@ export function crystalGroundPartAt(p, spec) {
     ? "crystal"
     : "rock";
 }
-export function paintCrystalGround(p, n, ao, spec) {
-  if (crystalGroundPartAt(p, spec) === "crystal")
+export function paintCrystalGround(p, n, ao, spec, wallReference) {
+  if (crystalGroundPartAt(p, spec, wallReference) === "crystal")
     return paintCrystal(p, n, ao, spec);
   const value = caveRockPixel(p, n, ao, spec),
     c = spec.crystal;

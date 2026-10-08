@@ -1,0 +1,56 @@
+{
+  "sourceName": "Crystal Wall 1",
+  "referencePage": 6,
+  "material": "cave-crystal-ground",
+  "floorHeightMM": 14.7405,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 20000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 5.5],
+    "lodMiB": [0.8, 2.5],
+    "shadowKiB": [35, 145],
+    "previewKiB": [10, 180],
+    "basis": "459976-triangle1x1 complete wall with steep crystal growth and thin satellites.60k/20k protect brown wall fractures, leaning facets and contact with wall;2048/1024 bakes, two KTX2 data budgets and original wall distance reference."
+  },
+  "notes": "Author page6: blue-cyan inclined growth on one face of the complete brown cave wall. Original LC-001 wall reference matches native structural points-.4116/5.2454/38.4802,2.0578/-11.2174/38.4794,-6.0363/1.199/38.1387 within0.0844mm; crystal face6.1049/9.0304/32.361 is3.5545mm away. Uint16 quarter-mm trilinear reference with0.35mm tolerance protects common wall and floor before growth masks. Crystal heads4.4909/9.0049/32.2246,1.0597/-.5548/27.2856 and satellites15.6855/-5.8727/17.3047 included across tile bounds, floor14.7405mm remains brown with separate grey crust. Actual facets, crystal-only neutral normal; source normal relief on brown wall. Preserve LC-039, source, central wall mode/mask17, peg/footprint and standing point; familyLC-crystal-wall.",
+  "groupCode": "LC-crystal-wall",
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "flatFacets": true,
+  "crystal": {
+    "tint": [0.055, 0.4, 0.68],
+    "normalMode": "geometry",
+    "crustTint": [0.29, 0.315, 0.335],
+    "crustWidthMM": 1.6,
+    "clusters": [
+      {
+        "x": 9,
+        "y": 0,
+        "rx": 8,
+        "ry": 14,
+        "crustStrength": 0.88,
+        "bounds": {
+          "min": [-17.6, -17.6],
+          "max": [17.6, 17.6]
+        }
+      }
+    ],
+    "strataStrength": 0,
+    "wallReference": {
+      "code": "LC-001",
+      "sourceSHA256": "037f7b7a7360f0a91b76a8f6f152aca04fa7ea6eb74084366fa972a9fb3a42bb",
+      "matchMM": 0.35
+    }
+  },
+  "normalMinZ": 0.1
+}

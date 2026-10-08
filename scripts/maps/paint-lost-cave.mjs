@@ -13,6 +13,8 @@ import { paintWagon } from "./lost_cave_wagon.mjs";
 import { paintWagonOnTrack } from "./lost_cave_wagon_track.mjs";
 import { paintBoulderGround } from "./lost_cave_boulder_ground.mjs";
 import { paintCrystalGround } from "./lost_cave_crystal_ground.mjs";
+import { wallReferenceDistance } from "./lost_cave_wall_reference.mjs";
+import { createHash } from "node:crypto";
 import specs from "./lost_cave_recipes.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One rebaked Lost Cave report required");
@@ -45,6 +47,27 @@ for (const field of [
     throw new Error("Geometry recipe changed; rebake before painting");
 report.materialSpec = structuredClone(spec);
 let wagonReference;
+let crystalWallReference;
+if (spec.crystal?.wallReference) {
+  const base = path.resolve(
+    import.meta.dirname,
+    "../../models/collections/lost-cave/wall-reference",
+  );
+  const field = {
+    spec: JSON.parse(
+      await fs.readFile(path.join(base, "reference.json"), "utf8"),
+    ),
+    data: await fs.readFile(path.join(base, "distance.bin")),
+  };
+  if (
+    field.spec.sourceCode !== spec.crystal.wallReference.code ||
+    field.spec.sourceSHA256 !== spec.crystal.wallReference.sourceSHA256 ||
+    createHash("sha256").update(field.data).digest("hex") !==
+      field.spec.fieldSHA256
+  )
+    throw new Error("Verified original undecorated wall reference required");
+  crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
+}
 if (spec.material === "cave-wagon-track") {
   const base = path.resolve(
     import.meta.dirname,
@@ -105,7 +128,7 @@ for (const tier of ["render", "lod"]) {
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
     const value =
       spec.material === "cave-crystal-ground"
-        ? paintCrystalGround(p, n, ao[i], spec)
+        ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
         : spec.material === "cave-boulders"
           ? paintBoulderGround(p, n, ao[i], spec)
           : spec.material === "cave-wagon-track"
