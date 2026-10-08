@@ -86,3 +86,30 @@ test("spiral bowl stays orange while the lower red cap and its ivory spots remai
     "bud",
   );
 });
+
+test("mushroom wall keeps structural stone separate from green shelves and red buds", () => {
+  const s = specs["LC-053"],
+    far = { distanceAt: () => 5 };
+  assert.equal(
+    mushroomPartAt([3.7506, 7.4986, 32.0429], [0, 0, 1], s, undefined, {
+      distanceAt: () => 0.1895,
+    }),
+    "rock",
+  );
+  assert.equal(
+    mushroomPartAt([5.5591, 6.4858, 21.6844], [0, 0, 1], s, undefined, far),
+    "shelf-green",
+  );
+  assert.equal(
+    mushroomPartAt([6.7362, 6.6416, 33.3341], [0, 0, 1], s, undefined, far),
+    "shelf",
+  );
+  assert.equal(
+    mushroomPartAt([13.2899, -1.9403, 16.7321], [0, 0, 1], s, undefined, far),
+    "bud",
+  );
+  assert.equal(
+    mushroomPartAt([15.4598, -5.9652, 36.7521], [0, 0, 1], s, undefined, far),
+    "wart",
+  );
+});

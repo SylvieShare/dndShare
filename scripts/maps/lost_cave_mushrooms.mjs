@@ -21,10 +21,12 @@ function inside(p, shape) {
     ) <= 1
   );
 }
-export function mushroomPartAt(p, n, spec, projectedPart) {
+export function mushroomPartAt(p, n, spec, projectedPart, wallReference) {
   const visiblePart = projectedPart?.(p);
   if (visiblePart) return visiblePart;
   const m = spec.mushrooms;
+  if (wallReference && wallReference.distanceAt(p) <= m.wallReference.matchMM)
+    return "rock";
   const isBud = m.buds.some(
     (v) =>
       inside(p, v) &&
@@ -73,7 +75,8 @@ export function mushroomPartAt(p, n, spec, projectedPart) {
   )
     return "bowl";
   if (m.stalks.some((v) => inside(p, v))) return "stalk";
-  if ((m.shelves ?? []).some((v) => inside(p, v))) return "shelf";
+  const shelf = (m.shelves ?? []).find((v) => inside(p, v));
+  if (shelf) return shelf.part ?? "shelf";
   if (inside(p, m.shelf))
     return p[2] > m.shelfTopMinMM || n[2] > 0.45 ? "shelf" : "stalk";
   if (
@@ -90,8 +93,8 @@ export function mushroomPartAt(p, n, spec, projectedPart) {
     return "bud";
   return "rock";
 }
-export function paintMushrooms(p, n, ao, spec, projectedPart) {
-  const part = mushroomPartAt(p, n, spec, projectedPart);
+export function paintMushrooms(p, n, ao, spec, projectedPart, wallReference) {
+  const part = mushroomPartAt(p, n, spec, projectedPart, wallReference);
   if (part === "rock")
     return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
   const m = spec.mushrooms;
@@ -116,7 +119,7 @@ export function paintMushrooms(p, n, ao, spec, projectedPart) {
       ) * 0.025;
     variation += fibres;
   }
-  if (part === "shelf" || part === "bowl") {
+  if (part === "shelf" || part === "shelf-green" || part === "bowl") {
     const radius = Math.hypot(
       p[0] - (part === "bowl" ? m.bowl.centre[0] : (m.shelf?.centre[0] ?? 0)),
       p[1] - (part === "bowl" ? m.bowl.centre[1] : (m.shelf?.centre[1] ?? 0)),
@@ -135,7 +138,7 @@ export function paintMushrooms(p, n, ao, spec, projectedPart) {
     roughness:
       part === "cap" || part === "bud" || part === "blue"
         ? 0.55 + recess * 0.2
-        : part === "shelf"
+        : part === "shelf" || part === "shelf-green"
           ? 0.78
           : 0.87,
     metallic: 0,

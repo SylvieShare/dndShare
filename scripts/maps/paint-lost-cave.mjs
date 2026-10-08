@@ -58,7 +58,10 @@ for (const field of [
 report.materialSpec = structuredClone(spec);
 let wagonReference;
 let crystalWallReference;
-const bareReference = spec.crystal?.wallReference ?? spec.bones?.reference;
+const bareReference =
+  spec.crystal?.wallReference ??
+  spec.bones?.reference ??
+  spec.mushrooms?.wallReference;
 if (bareReference) {
   const base = path.resolve(
     import.meta.dirname,
@@ -174,6 +177,7 @@ for (const tier of ["render", "lod"]) {
           gills: 0,
           bud: 0,
           shelf: 0,
+          "shelf-green": 0,
           bowl: 0,
           blue: 0,
           disc: 0,
@@ -202,7 +206,14 @@ for (const tier of ["render", "lod"]) {
     if (used) checkUv?.(i, p);
     const value =
       spec.material === "cave-mushrooms"
-        ? paintMushrooms(p, n, ao[i], spec, mushroomProjection)
+        ? paintMushrooms(
+            p,
+            n,
+            ao[i],
+            spec,
+            mushroomProjection,
+            crystalWallReference,
+          )
         : spec.material === "cave-bones"
           ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
           : spec.material === "cave-crystal-ground"
