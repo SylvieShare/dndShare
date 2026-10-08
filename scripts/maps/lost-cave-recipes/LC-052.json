@@ -1,0 +1,146 @@
+{
+  "sourceName": "Mushrooms Ground 3",
+  "referencePage": 8,
+  "material": "cave-mushrooms",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 70000,
+  "lodTriangles": 24000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.5, 6],
+    "lodMiB": [0.8, 2.5],
+    "shadowKiB": [50, 180],
+    "previewKiB": [10, 190],
+    "basis": "540004-triangle1x1 tall concave spiral bowl, thin rim, seven sculpted white warts on a second red cap, two shelves and red buds.70k/24k protect concentric relief, openings and rounded shapes;2048/1024 original bakes and two KTX2 budgets."
+  },
+  "notes": "Author page8: concentric orange bowl, ivory stalks, red cap with seven real white bumps, amber shelves and red buds on brown stone. Upper bowl source surfaces36.6\u201344.4mm, underside3.2693/-4.5482/29.4019; preserve centre standing point at raw1.051932. Diagnostic source copy sliced only above34mm reveals the hidden cap peaks for mask placement; original STL unchanged. Red cap native-12.8324/-10.5686/31.77 and rim-5.7628/-13.045/27.5821; white bumps use source peaks. Shelves5.0212/-9.2048/17.773 and-9.1412/9.1403/18.6135. Preserve current UUIDc2f138a1-bf1d-5f67-a025-cb8a7b7e67b2, LC-052, familyLC-mushrooms-ground, source, cut11.5, mount.14954, footprint and original standing point. Full bowl surfaces above34mm take the bowl material; lower bowl X>=-2 prevents intersection with the red cap. The red cap is limited to26\u201334mm and X<=-2. Broader stalk cylinders retain the real outer shells, not only their interiors. Inspect bud boundaries before acceptance. Native cap side-17.1787/-6.3229/28.4245 requires RX8.1. Highest front bud-5.3681/-12.6391/19.6828 has centre above the floor at-4.8/-11.5/17.1. Additional front bud-12.7308/-11.2194/17.3726 is distinct from the red mushroom stalk; bounded buds take priority there. Highest bud surface-4.2323/-12.5093/19.915mm requires radius3.25. A further separate rounded bud at-.8598/-7.1632/17.4382 is included as its own bounded sphere, not the stone ground.",
+  "groupCode": "LC-mushrooms-ground",
+  "uvAngleLimitRad": 0.35,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "mushrooms": {
+    "cap": {
+      "centre": [-9.7, -7, 29],
+      "radius": [8.1, 8.2, 5],
+      "xMax": -2.0
+    },
+    "capFloorMM": 26.0,
+    "warts": [
+      {
+        "centre": [-10.9437, -1.3809, 32.5466],
+        "radius": [0.8, 0.8, 0.8]
+      },
+      {
+        "centre": [-15.2568, -5.0486, 31.76],
+        "radius": [0.75, 0.75, 0.75]
+      },
+      {
+        "centre": [-13.3899, -7.3049, 33.3306],
+        "radius": [1.1, 1.1, 1.1]
+      },
+      {
+        "centre": [-9.7206, -7.3057, 33.7469],
+        "radius": [0.85, 0.85, 0.85]
+      },
+      {
+        "centre": [-6.18, -5.0519, 33.3744],
+        "radius": [1.15, 1.15, 1.15]
+      },
+      {
+        "centre": [-10.4287, -10.8438, 32.4997],
+        "radius": [0.85, 0.85, 0.85]
+      },
+      {
+        "centre": [-7.0168, -10.0723, 32.9865],
+        "radius": [1.25, 1.25, 1.25]
+      }
+    ],
+    "stalks": [
+      {
+        "profile": "cylinder",
+        "centre": [0.4, 2.7, 0],
+        "radius": [9.0, 9, 1],
+        "zRange": [14.8, 28.5]
+      },
+      {
+        "profile": "cylinder",
+        "centre": [-9.5, -7, 0],
+        "radius": [5, 5, 1],
+        "zRange": [14.8, 26]
+      }
+    ],
+    "buds": [
+      {
+        "centre": [-14.3, -8, 14.4],
+        "radius": [3.3, 3.3, 3.3],
+        "minZ": 14.8
+      },
+      {
+        "centre": [-4.8, -11.5, 17.1],
+        "radius": [3.25, 3.25, 3.25],
+        "minZ": 14.8
+      },
+      {
+        "centre": [-13.2, -4, 14.4],
+        "radius": [3.5, 3.5, 3.5],
+        "minZ": 14.8
+      },
+      {
+        "centre": [9, 8, 14.4],
+        "radius": [2.8, 2.8, 2.8],
+        "minZ": 14.8
+      },
+      {
+        "centre": [-11.5, -10.6, 15.8],
+        "radius": [3.0, 3.0, 3.0],
+        "minZ": 14.8
+      },
+      {
+        "centre": [-1.6, -5.4, 16.87],
+        "radius": [2.5, 2.5, 2.5],
+        "minZ": 14.8
+      }
+    ],
+    "shelf": {
+      "centre": [6.8, -10.2, 17.5],
+      "radius": [7.0, 6.0, 3.0]
+    },
+    "shelfTopMinMM": 16.5,
+    "palette": {
+      "cap": [0.8, 0.235, 0.055],
+      "bud": [0.74, 0.18, 0.035],
+      "wart": [0.9, 0.825, 0.7],
+      "stalk": [0.64, 0.555, 0.405],
+      "gills": [0.72, 0.625, 0.44],
+      "shelf": [0.88, 0.58, 0.125],
+      "bowl": [0.92, 0.455, 0.065]
+    },
+    "bowl": {
+      "centre": [0.5, 2.5, 37],
+      "radius": [19, 19, 12],
+      "minZ": 28.5,
+      "fullZ": 34,
+      "lowerXMin": -2.0
+    },
+    "shelves": [
+      {
+        "centre": [-10.7, 9.3, 17.5],
+        "radius": [8.0, 8.0, 3.0]
+      }
+    ],
+    "budsPriority": true,
+    "capMaxZ": 34
+  }
+}

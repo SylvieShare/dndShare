@@ -58,10 +58,22 @@ export function mushroomPartAt(p, n, spec, projectedPart) {
     const capXY =
       ((p[0] - m.cap.centre[0]) / m.cap.radius[0]) ** 2 +
       ((p[1] - m.cap.centre[1]) / m.cap.radius[1]) ** 2;
-    if (capXY <= 1 && p[2] >= m.capFloorMM)
+    if (
+      capXY <= 1 &&
+      p[2] >= m.capFloorMM &&
+      (m.cap.xMax === undefined || p[0] <= m.cap.xMax) &&
+      (m.capMaxZ === undefined || p[2] <= m.capMaxZ)
+    )
       return n[2] < -0.3 ? "gills" : "cap";
   }
+  if (
+    m.bowl &&
+    p[2] >= m.bowl.minZ &&
+    (p[2] >= m.bowl.fullZ || p[0] >= m.bowl.lowerXMin)
+  )
+    return "bowl";
   if (m.stalks.some((v) => inside(p, v))) return "stalk";
+  if ((m.shelves ?? []).some((v) => inside(p, v))) return "shelf";
   if (inside(p, m.shelf))
     return p[2] > m.shelfTopMinMM || n[2] > 0.45 ? "shelf" : "stalk";
   if (
@@ -104,10 +116,10 @@ export function paintMushrooms(p, n, ao, spec, projectedPart) {
       ) * 0.025;
     variation += fibres;
   }
-  if (part === "shelf") {
+  if (part === "shelf" || part === "bowl") {
     const radius = Math.hypot(
-      p[0] - m.shelf.centre[0],
-      p[1] - m.shelf.centre[1],
+      p[0] - (part === "bowl" ? m.bowl.centre[0] : (m.shelf?.centre[0] ?? 0)),
+      p[1] - (part === "bowl" ? m.bowl.centre[1] : (m.shelf?.centre[1] ?? 0)),
     );
     variation +=
       Math.sin(

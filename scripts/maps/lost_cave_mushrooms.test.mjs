@@ -61,3 +61,28 @@ test("porous blue cap and orange radial disc retain their own material boundarie
   assert(lower.rgb[1] > upper.rgb[1] && upper.rgb[0] > lower.rgb[0]);
   assert.equal(lower.metallic, 0);
 });
+
+test("spiral bowl stays orange while the lower red cap and its ivory spots remain distinct", () => {
+  const s = specs["LC-052"];
+  assert.equal(mushroomPartAt([7.6219, 9.4506, 44.1042], [0, 0, 1], s), "bowl");
+  assert.equal(
+    mushroomPartAt([-17.1787, -6.3229, 28.4245], [1, 0, 0], s),
+    "cap",
+  );
+  assert.equal(
+    mushroomPartAt([-9.7206, -7.3057, 33.7469], [0, 0, 1], s),
+    "wart",
+  );
+  assert.equal(
+    mushroomPartAt([5.7909, -1.7531, 24.3216], [1, 0, 0], s),
+    "stalk",
+  );
+  assert.equal(
+    mushroomPartAt([-5.3681, -12.6391, 19.6828], [0, 0, 1], s),
+    "bud",
+  );
+  assert.equal(
+    mushroomPartAt([-12.7308, -11.2194, 17.3726], [0, 0, 1], s),
+    "bud",
+  );
+});

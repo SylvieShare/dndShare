@@ -174,6 +174,7 @@ for (const tier of ["render", "lod"]) {
           gills: 0,
           bud: 0,
           shelf: 0,
+          bowl: 0,
           blue: 0,
           disc: 0,
           "disc-centre": 0,
