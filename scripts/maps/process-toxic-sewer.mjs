@@ -172,15 +172,32 @@ if (mode !== "publish") {
         path.join(repaintReference, tier + ".glb"),
       );
   }
+  const cachedReference = spec.referenceCode
+    ? await fs
+        .readFile(
+          path.join(base, "references", spec.referenceCode + ".json"),
+          "utf8",
+        )
+        .then(JSON.parse)
+        .catch((error) => {
+          if (error.code === "ENOENT") return null;
+          throw error;
+        })
+    : null;
   if (
     spec.referenceCode &&
-    !(await fs
-      .stat(path.join(base, "references", spec.referenceCode + ".json"))
-      .catch(() => null))
+    (!cachedReference ||
+      (cachedReference.minimumWallYMM ?? 8) !== (spec.referenceWallMinYMM ?? 8))
   )
     blend(
       "toxic_sewer_reference.py",
-      ["--code", spec.referenceCode],
+      [
+        "--code",
+        spec.referenceCode,
+        ...(spec.referenceWallMinYMM !== undefined
+          ? ["--minimum-wall-y", String(spec.referenceWallMinYMM)]
+          : []),
+      ],
       "reference",
     );
   node("paint-toxic-sewer.mjs", [report], "paint");

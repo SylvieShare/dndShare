@@ -51,6 +51,7 @@ if (reference)
     code: reference.code,
     sourceSHA256: reference.sourceSHA256,
     stepMM: reference.floor.step,
+    minimumWallYMM: reference.minimumWallYMM ?? 8,
   };
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp"),

@@ -1,0 +1,56 @@
+{
+  "sourceName": "Tunnel Corner",
+  "material": "sewer-components",
+  "referencePage": 11,
+  "renderTriangles": 26000,
+  "lodTriangles": 7500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.8, 2.1],
+    "lodMiB": [0.25, 0.75],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell narrow tunnel corner, partial stone crown and copper riser; retain collar rings, hollow angled mouth and standing stone support."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "ellipsoid": {
+        "centre": [8.3, 7.2, 40],
+        "radius": [3.4, 3.4, 3.5]
+      },
+      "min": [4.8, 3.7, 36.4],
+      "max": [11.8, 10.7, 43.5]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [10.8, 10.5, 15.3],
+        [10.82, 10.3, 20],
+        [10.85, 10.0, 26],
+        [10.88, 9.725, 31.5],
+        [10.88, 9.6, 34],
+        [10.2, 9, 36.2],
+        [9, 8.1, 38.3],
+        [8.3, 7.1, 40]
+      ],
+      "radius": 3.25,
+      "min": [7.4, 6.0, 15.25],
+      "max": [14.2, 13.8, 43.5]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [20, 30, 40],
+    "sectionYMM": 12,
+    "lowerPipeXYMM": [10.8, 10.3],
+    "mouthXYMM": [8.3, 7.1],
+    "measuredCollarRadiusMM": 3.04,
+    "riserYDriftMM": [10.3, 9.725]
+  },
+  "notes": "Corner stone fragments supported beside a copper riser with collars and a forward-bending hollow mouth. Pipe radius and end volume exclude the standing corner masonry; green tiled floor remains uncovered. Native vertex measurements show the riser drifts forward by 0.575mm from z20 to31.5; centred tube masks now cover 3.04mm collars without broadening onto the stone post."
+}

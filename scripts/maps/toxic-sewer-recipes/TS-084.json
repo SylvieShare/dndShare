@@ -1,0 +1,44 @@
+{
+  "sourceName": "Tunnel Wall Broken",
+  "material": "sewer-components",
+  "referencePage": 11,
+  "renderTriangles": 30000,
+  "lodTriangles": 9000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 80],
+    "previewKiB": [8, 45],
+    "basis": "One-cell broken tunnel wall with two remaining posts, irregular opening, fallen blocks and floor chips; preserve fracture silhouette and protect standing masonry."
+  },
+  "referenceCode": "TS-081",
+  "regions": [
+    {
+      "part": "rubble",
+      "added": true,
+      "min": [-13.7, -16, 15.25],
+      "max": [13.7, 14.5, 43.6]
+    },
+    {
+      "part": "rubble",
+      "ellipsoid": {
+        "centre": [-14, -14.8, 16.1],
+        "radius": [0.9, 0.8, 1.4]
+      },
+      "min": [-15, -16, 15.25],
+      "max": [-13, -13.5, 18]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 25, 35],
+    "frontPlaneReference": "TS-081",
+    "standingSideBankProtectionXMM": 13.7
+  },
+  "notes": "Broken tunnel wall: intact masonry and outside bank feet stay green. Added fallen blocks and exposed broken faces are rubble, measured against intact Tunnel Wall; front loose chip has its own bounded region. Preserve the irregular gap and broken crown."
+}

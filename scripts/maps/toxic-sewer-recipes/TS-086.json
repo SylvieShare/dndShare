@@ -1,0 +1,73 @@
+{
+  "sourceName": "Tunnel Angle Pipe",
+  "material": "sewer-components",
+  "referencePage": 11,
+  "renderTriangles": 40000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [1, 2.6],
+    "lodMiB": [0.3, 0.9],
+    "shadowKiB": [30, 85],
+    "previewKiB": [8, 45],
+    "basis": "One-cell tall curved tunnel corner with unequal copper tubes and a low poison spill; retain fittings, pipe/stone boundary, bank ends and sloping crowns."
+  },
+  "referenceCode": "TS-085",
+  "referenceWallMinYMM": 3,
+  "regions": [
+    {
+      "part": "copper",
+      "added": true,
+      "min": [-14.8, 6.1, 27.8],
+      "max": [-9.3, 11.9, 32.1]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-2.5, -2.2, 15.3],
+        [-2.5, -2.2, 31],
+        [-2.5, -1.5, 34],
+        [-2.5, 0.3, 35.8],
+        [-2.5, 2.5, 36.8],
+        [-2.5, 5.7, 37],
+        [-2.5, 8.5, 37]
+      ],
+      "radius": 3.1,
+      "min": [-6, -6, 15.25],
+      "max": [1, 11.6, 40.2]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-12.4, 8.5, 17],
+        [-12.4, 8.5, 28],
+        [-12.4, 8.8, 29.3],
+        [-12.4, 9.8, 30],
+        [-12.4, 11, 30]
+      ],
+      "radius": 2.15,
+      "min": [-14.8, 6.1, 16.5],
+      "max": [-10, 13.2, 32.3]
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-14, -14.3, 15.1],
+      "max": [7, 9.5, 17.5]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 25, 35, 45],
+    "sectionsXMM": [-2.5, -12.4],
+    "largePipeXYMM": [-2.5, -2.2],
+    "smallPipeXYMM": [-12.4, 8.5]
+  },
+  "notes": "Tunnel corner with two copper pipes and glossy lime floor spill. Both tube bends and collars are bounded separately; intact Tunnel Angle reference excludes masonry, including the forward-sloping crown through a 3mm minimum wall Y filter. Upper small-pipe elbow uses its own bounded added-surface region; initial narrow path left part of the elbow green and was rejected."
+}
