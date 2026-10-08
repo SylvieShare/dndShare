@@ -1,0 +1,127 @@
+{
+  "sourceName": "Mushrooms Ground 2",
+  "referencePage": 8,
+  "material": "cave-mushrooms",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.2, 5.5],
+    "lodMiB": [0.8, 2.3],
+    "shadowKiB": [45, 150],
+    "previewKiB": [10, 180],
+    "basis": "519948-triangle1x1 with a56.38mm tall blue porous cap, hollow fluted stalk, large folded radial orange disc and four red buds.65k/22k preserve pores, radial ridges and thin rim;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page8: tall cap transitions cyan at the base to purple at the top, with actual sculpted pores; its hollow stalk is ivory. Folded radial disc is orange with a pale perforated centre, four small buds red and bare floor brown. Native blue surfaces-13.1843/-5.1004/47.1155,-8.2436/-4.0108/54.4181,-4.0785/-9.3632/37.3682; stalk-8.7722/-9.2273/33.0795 and-7.1324/-12.0977/23.0978. Orange disc spans1.1289/15.2029/24.2781 to13.0864/-5.556/31.6637; cream centre7.0932/2.742/25.7162. Independently review colour boundaries and holes from reverse view. Preserve current UUID9a45b487-e45d-5a00-9112-a9c2333294b8, LC-051, familyLC-mushrooms-ground, source, cut11.5, mount.146874, footprint and original standing point. Porous stalk must retain full outer shell, not only inner cavities: native3.4185/-11.1308/23.6619 and1.2508/-13.9943/22.3446 require cylindrical footprint. Red buds precede its envelope. Lower blue cap Xmax2 protects the adjacent orange rim; verified blue0.6578/-2.7227/36.5028 stays included. The positive-X lower blue bound initially captured the orange rim. A sloped seam X<=-2.5+.56*(Z-35.5) below43mm follows the actual leaning cap; native1.7288/-.3897/38.7417 and-.1952/2.6496/39.3491 belong to the orange rim. High cap bounds remain unchanged. Slanted clipping alone rejected because it removed the real cap wedge. A measured complete reverse silhouette with original-source depth restores only the visible blue cap and excludes the folded orange surface behind it.",
+  "groupCode": "LC-mushrooms-ground",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "mushrooms": {
+    "warts": [],
+    "stalks": [
+      {
+        "profile": "cylinder",
+        "centre": [-5.4, -6.5, 0],
+        "radius": [10.5, 10, 1],
+        "zRange": [14.8, 35.5]
+      }
+    ],
+    "buds": [
+      {
+        "centre": [-8.7, 11.7, 15.5],
+        "radius": [3, 3, 3],
+        "minZ": 14.8
+      },
+      {
+        "centre": [-12.0, 7.1, 15.5],
+        "radius": [3.1, 3.1, 3.1],
+        "minZ": 14.8
+      },
+      {
+        "centre": [-13.7, -0.4, 15.4],
+        "radius": [3.4, 3.4, 3.4],
+        "minZ": 14.8
+      },
+      {
+        "centre": [-14.3, -7, 14.8],
+        "radius": [2.8, 2.8, 2.8],
+        "minZ": 14.7
+      }
+    ],
+    "palette": {
+      "cap": [0.8, 0.235, 0.055],
+      "bud": [0.74, 0.18, 0.035],
+      "wart": [0.9, 0.825, 0.7],
+      "stalk": [0.64, 0.555, 0.405],
+      "gills": [0.72, 0.625, 0.44],
+      "shelf": [0.88, 0.58, 0.125],
+      "blueLow": [0.085, 0.48, 0.78],
+      "blueHigh": [0.48, 0.25, 0.72],
+      "disc": [0.92, 0.43, 0.065],
+      "disc-centre": [0.76, 0.65, 0.45]
+    },
+    "blue": {
+      "centre": [-7.1, -2.4],
+      "radius": [10.5, 10.3],
+      "minZ": 35.5,
+      "maxZ": 56.38,
+      "lowXMax": -2.5,
+      "lowXSlope": 0.56
+    },
+    "disc": {
+      "centre": [7.6, 5.5, 28.5],
+      "radius": [14.6, 15.5, 14.5],
+      "minZ": 19.5,
+      "creamCentre": [7, 4, 26],
+      "creamRadius": 4.3
+    },
+    "budsPriority": true,
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "part": "blue",
+        "toleranceMM": 0.6,
+        "polygons": [
+          [
+            [410, 242],
+            [438, 236],
+            [465, 245],
+            [491, 267],
+            [510, 298],
+            [528, 334],
+            [528, 370],
+            [524, 402],
+            [516, 430],
+            [506, 454],
+            [493, 476],
+            [480, 487],
+            [438, 488],
+            [403, 480],
+            [373, 466],
+            [342, 447],
+            [330, 419],
+            [337, 389],
+            [335, 358],
+            [347, 321],
+            [365, 282],
+            [387, 255]
+          ]
+        ]
+      }
+    ]
+  }
+}

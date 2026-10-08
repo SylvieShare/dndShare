@@ -35,3 +35,29 @@ test("mushroom floor separates sculpted white warts, red skin, stalk, shelf, bud
   assert(cap.rgb[0] > cap.rgb[1] * 2 && cap.metallic === 0);
   assert(stalk.roughness > cap.roughness && stalk.metallic === 0);
 });
+
+test("porous blue cap and orange radial disc retain their own material boundaries", () => {
+  const s = specs["LC-051"];
+  for (const p of [
+    [-13.1843, -5.1004, 47.1155],
+    [-8.2436, -4.0108, 54.4181],
+    [-4.0785, -9.3632, 37.3682],
+  ])
+    assert.equal(mushroomPartAt(p, [0, 0, 1], s), "blue");
+  assert.equal(
+    mushroomPartAt([-8.7722, -9.2273, 33.0795], [0, 0, 1], s),
+    "stalk",
+  );
+  assert.equal(
+    mushroomPartAt([13.0864, -5.556, 31.6637], [0, 0, 1], s),
+    "disc",
+  );
+  assert.equal(
+    mushroomPartAt([7.0932, 2.742, 25.7162], [0, 0, 1], s),
+    "disc-centre",
+  );
+  const lower = paintMushrooms([-7, -2, 38], [0, 0, 1], 240, s),
+    upper = paintMushrooms([-7, -2, 54], [0, 0, 1], 240, s);
+  assert(lower.rgb[1] > upper.rgb[1] && upper.rgb[0] > lower.rgb[0]);
+  assert.equal(lower.metallic, 0);
+});

@@ -80,9 +80,9 @@ if (bareReference) {
     throw new Error("Verified original undecorated wall reference required");
   crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
 }
-if (spec.bones?.projectedViews) {
+async function reviewedViews(masks) {
   const views = [];
-  for (const mask of spec.bones.projectedViews) {
+  for (const mask of masks) {
     const base = path.resolve(
       import.meta.dirname,
       "../../models/collections/lost-cave/bone-views",
@@ -103,16 +103,25 @@ if (spec.bones?.projectedViews) {
       createHash("sha256").update(view.data).digest("hex") !==
         view.spec.fieldSHA256
     )
-      throw new Error("Verified original source bone projection required");
+      throw new Error("Verified original source material projection required");
     views.push({ view, mask });
   }
+  return (p) =>
+    views.find(({ view, mask }) =>
+      projectedBoneAt(p, view, mask.polygons, mask.toleranceMM),
+    )?.mask;
+}
+if (spec.bones?.projectedViews) {
+  const match = await reviewedViews(spec.bones.projectedViews);
   crystalWallReference = {
     ...crystalWallReference,
-    projectedBoneAt: (p) =>
-      views.some(({ view, mask }) =>
-        projectedBoneAt(p, view, mask.polygons, mask.toleranceMM),
-      ),
+    projectedBoneAt: (p) => Boolean(match(p)),
   };
+}
+let mushroomProjection;
+if (spec.mushrooms?.projectedViews) {
+  const match = await reviewedViews(spec.mushrooms.projectedViews);
+  mushroomProjection = (p) => match(p)?.part;
 }
 if (spec.material === "cave-wagon-track") {
   const base = path.resolve(
@@ -158,7 +167,17 @@ for (const tier of ["render", "lod"]) {
   const counts = {
     rock: 0,
     ...(spec.material === "cave-mushrooms"
-      ? { cap: 0, wart: 0, stalk: 0, gills: 0, bud: 0, shelf: 0 }
+      ? {
+          cap: 0,
+          wart: 0,
+          stalk: 0,
+          gills: 0,
+          bud: 0,
+          shelf: 0,
+          blue: 0,
+          disc: 0,
+          "disc-centre": 0,
+        }
       : {}),
     ...(spec.material === "cave-bones" ? { bone: 0 } : {}),
     ...(spec.material === "cave-stalagmites" ? { calcite: 0 } : {}),
@@ -182,7 +201,7 @@ for (const tier of ["render", "lod"]) {
     if (used) checkUv?.(i, p);
     const value =
       spec.material === "cave-mushrooms"
-        ? paintMushrooms(p, n, ao[i], spec)
+        ? paintMushrooms(p, n, ao[i], spec, mushroomProjection)
         : spec.material === "cave-bones"
           ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
           : spec.material === "cave-crystal-ground"
