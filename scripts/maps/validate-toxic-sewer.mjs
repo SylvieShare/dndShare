@@ -98,13 +98,19 @@ for (const tier of ["render", "lod"]) {
     after = await io.read(path.join(dir, tier + ".glb"));
   await before.transform(dequantize());
   await after.transform(dequantize());
-  const atlasSize = report.materialSpec[tier + "BakeSize"];
-  rasterizeSurface(
-    after,
-    atlasSize,
-    atlasSize,
-    uvSurfaceTracker(atlasSize, atlasSize),
-  );
+  const atlasSizes = [
+    ...new Set([
+      report.materialSpec[tier + "BakeSize"],
+      report.tiers[tier].textureSize,
+    ]),
+  ];
+  for (const atlasSize of atlasSizes)
+    rasterizeSurface(
+      after,
+      atlasSize,
+      atlasSize,
+      uvSurfaceTracker(atlasSize, atlasSize),
+    );
   const a = getBounds(before.getRoot().listScenes()[0]),
     b = getBounds(after.getRoot().listScenes()[0]);
   const drift = Math.max(
@@ -162,6 +168,7 @@ for (const tier of ["render", "lod"]) {
   } else mountCheck = assertSameSurface(mounting(before), mounting(after));
   checks[tier] = {
     uvSurfaceUnique: true,
+    uvAtlasSizes: atlasSizes,
     boundsDrift: drift,
     mounting: mountCheck,
     sourceDeviationMM: report.rebake[tier].sourceDeviationMM,
