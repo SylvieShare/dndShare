@@ -1,0 +1,73 @@
+{
+  "sourceName": "Tunnel Box",
+  "material": "sewer-components",
+  "referencePage": 11,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.9, 2.5],
+    "lodMiB": [0.3, 0.9],
+    "shadowKiB": [25, 80],
+    "previewKiB": [8, 45],
+    "basis": "One-cell tunnel wall and large timber crate, with many carved boards and reinforcing uprights; retain crate corners, wall crown and floor separation."
+  },
+  "regions": [
+    {
+      "part": "wood",
+      "axis": "z",
+      "min": [-14.100000000000001, -7.3, 15.3],
+      "max": [-11.5, -4.3, 34.5]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "min": [-14.100000000000001, 7.199999999999999, 15.3],
+      "max": [-11.5, 10.2, 34.5]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "min": [10.899999999999999, -7.3, 15.3],
+      "max": [13.5, -4.3, 34.5]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "min": [10.899999999999999, 7.199999999999999, 15.3],
+      "max": [13.5, 10.2, 34.5]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "min": [-12.6, -7.3, 15.3],
+      "max": [-10.9, 10.1, 34.5]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "min": [10.9, -7.3, 15.3],
+      "max": [12.5, 10.1, 34.5]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "min": [-12.6, -8.8, 15.3],
+      "max": [12.5, 10.1, 34.5]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [20, 30, 35, 40],
+    "sectionsYMM": [-12, -8.1],
+    "crateBoundsMM": [
+      [-14.1, -8.8, 15.3],
+      [13.5, 10.2, 34.5]
+    ]
+  },
+  "notes": "Wooden crate inside green tunnel masonry: vertical grain on corner uprights, longitudinal side boards, transverse front/back/top boards. Bounds exclude surrounding floor, stone bank feet and rear wall. Sculpted nails, splits and frame joints remain in geometry/normal."
+}

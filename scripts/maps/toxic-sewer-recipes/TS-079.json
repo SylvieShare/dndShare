@@ -1,0 +1,38 @@
+{
+  "sourceName": "Well Water",
+  "material": "sewer-components",
+  "referencePage": 10,
+  "renderTriangles": 24000,
+  "lodTriangles": 7000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.7, 2.0],
+    "lodMiB": [0.2, 0.75],
+    "shadowKiB": [20, 60],
+    "previewKiB": [8, 45],
+    "basis": "One-cell filled well with cobbled perimeter, thick stone ring and spiral water surface; preserve its closed centre and the liquid/stone boundary."
+  },
+  "regions": [
+    {
+      "part": "toxic",
+      "ellipsoid": {
+        "centre": [0, 0, 16.6],
+        "radius": [10.25, 10.25, 100]
+      },
+      "min": [-10.3, -10.3, 15.0],
+      "max": [10.3, 10.3, 18.9]
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "sectionsZMM": [15, 18],
+    "liquidSurfaceMM": [15.6, 18.9],
+    "innerRadiusMM": 10.25
+  },
+  "notes": "Filled stone well on cobbled floor, with a closed sculpted liquid spiral. Cylindrical liquid bounds retain the high peripheral waves while excluding the stone inner rim. Source central liquid is above mounting datum: no through opening."
+}

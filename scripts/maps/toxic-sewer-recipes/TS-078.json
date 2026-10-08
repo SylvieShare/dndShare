@@ -1,0 +1,56 @@
+{
+  "sourceName": "Well Pipe",
+  "material": "sewer-components",
+  "referencePage": 10,
+  "renderTriangles": 28000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell filled stone well with a high diagonal pipe arch; preserve collars, well rim, liquid surface and the filled volume."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [-14, 13, 14],
+        [-14, 13, 20],
+        [-13, 12.8, 24],
+        [-11, 11, 28],
+        [-10, 9.5, 30],
+        [-1, 0.2, 30],
+        [1.5, -2.3, 28],
+        [2.1, -3.2, 24],
+        [2.1, -3.2, 14]
+      ],
+      "radius": 3.2,
+      "min": [-18, -7, 14.0],
+      "max": [6, 17, 33]
+    },
+    {
+      "part": "toxic",
+      "ellipsoid": {
+        "centre": [0, 0, 13.3],
+        "radius": [10.2, 10.2, 1.1]
+      },
+      "min": [-10.3, -10.3, 12.2],
+      "max": [10.3, 10.3, 14.4]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [10, 18, 24, 30],
+    "sectionYMM": 0,
+    "outerPipeXYMM": [-14, 13],
+    "innerPipeXYMM": [2.1, -3.2],
+    "waterLevelMM": [12.8, 14.1]
+  },
+  "notes": "Stone well with a diagonal copper arch, collar at its outer foot and inner end dipping into toxic water. Source section at z10 is solid: keep its filled volume and accepted mounting rather than inventing a through shaft. Bare stone rim and flat slab remain green."
+}

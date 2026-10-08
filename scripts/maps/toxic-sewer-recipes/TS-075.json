@@ -1,0 +1,144 @@
+{
+  "sourceName": "Water Outlet On",
+  "material": "sewer-components",
+  "referencePage": 10,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.9, 2.5],
+    "lodMiB": [0.3, 0.9],
+    "shadowKiB": [25, 75],
+    "previewKiB": [8, 45],
+    "basis": "One-cell on-state outlet with three sculpted poison streams and front puddle; preserve the copper fixture, circular frame, empty gaps and flow silhouette."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "min": [-16.4, -12.9, 14.7],
+      "max": [-11.8, -8.9, 17.5]
+    },
+    {
+      "part": "copper",
+      "min": [-16.4, 7.7, 19.4],
+      "max": [-11.8, 10.2, 24.4]
+    },
+    {
+      "part": "copper",
+      "color": [119, 138, 64],
+      "roughness": 0.58,
+      "path": [
+        [-14.1, -11, 15.4],
+        [-14.1, -10.6, 18],
+        [-14.1, -8.3, 20.5],
+        [-14.1, -5.5, 21.5],
+        [-14.1, 7.8, 21.5],
+        [-14.1, 9.5, 21.5]
+      ],
+      "radius": 1.8,
+      "min": [-16.1, -12.5, 16.5],
+      "max": [-12.1, 10.2, 24]
+    },
+    {
+      "part": "copper",
+      "min": [11.8, -12.9, 14.7],
+      "max": [16.4, -8.9, 17.5]
+    },
+    {
+      "part": "copper",
+      "min": [11.8, 7.7, 19.4],
+      "max": [16.4, 10.2, 24.4]
+    },
+    {
+      "part": "copper",
+      "color": [119, 138, 64],
+      "roughness": 0.58,
+      "path": [
+        [14.1, -11, 15.4],
+        [14.1, -10.6, 18],
+        [14.1, -8.3, 20.5],
+        [14.1, -5.5, 21.5],
+        [14.1, 7.8, 21.5],
+        [14.1, 9.5, 21.5]
+      ],
+      "radius": 1.8,
+      "min": [12.1, -12.5, 16.5],
+      "max": [16.1, 10.2, 24]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-4.7, -0.9, 18.7],
+        [-4.7, -0.9, 33.4]
+      ],
+      "radius": 1.65,
+      "ellipsoid": {
+        "centre": [0, -0.9, 26],
+        "radius": [7.45, 100, 7.45]
+      }
+    },
+    {
+      "part": "copper",
+      "path": [
+        [0, -0.9, 18.7],
+        [0, -0.9, 33.4]
+      ],
+      "radius": 1.65,
+      "ellipsoid": {
+        "centre": [0, -0.9, 26],
+        "radius": [7.45, 100, 7.45]
+      }
+    },
+    {
+      "part": "copper",
+      "path": [
+        [4.7, -0.9, 18.7],
+        [4.7, -0.9, 33.4]
+      ],
+      "radius": 1.65,
+      "ellipsoid": {
+        "centre": [0, -0.9, 26],
+        "radius": [7.45, 100, 7.45]
+      }
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-7.5, -0.9, 26],
+        [7.5, -0.9, 26]
+      ],
+      "radius": 1.2,
+      "ellipsoid": {
+        "centre": [0, -0.9, 26],
+        "radius": [7.45, 100, 7.45]
+      }
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-6.5, -6, 9.15],
+      "max": [6.5, 4.5, 22.3]
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-7.3, -18, 9.15],
+      "max": [7.3, -2.7, 11.7]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [10.2, 15, 20],
+    "flowBoundsMM": [
+      [-7.3, -18, 9.15],
+      [7.3, 4.5, 22.3]
+    ],
+    "unchangedFixtureReference": "TS-076"
+  },
+  "notes": "On state keeps the measured copper inner tubes and patinated side pipes of Outlet Off. Three streams and the added front puddle are glossy lime, bounded separately and compared against the original off-state surface. Existing family and directed transitions are retained.",
+  "referenceCode": "TS-076"
+}
