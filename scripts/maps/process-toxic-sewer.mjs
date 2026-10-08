@@ -78,8 +78,12 @@ async function snapshot(file) {
       });
       break;
     } catch (error) {
-      if (attempt === 3 || !/HTTP (502|503|504)/.test(error.message))
-        throw error;
+      const transient =
+        /HTTP (502|503|504)/.test(error.message) ||
+        ["UND_ERR_SOCKET", "ECONNRESET", "ETIMEDOUT"].includes(
+          error.cause?.code,
+        );
+      if (attempt === 3 || !transient) throw error;
       await new Promise((resolve) => setTimeout(resolve, 2000 * 2 ** attempt));
     }
   }
