@@ -1,0 +1,220 @@
+{
+  "sourceName": "Bones Angle",
+  "referencePage": 7,
+  "material": "cave-bones",
+  "floorHeightMM": 14.7399,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 20000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [40, 125],
+    "previewKiB": [10, 150],
+    "basis": "399968-triangle1x1 angular wall with curved ribs, narrow rounded caps and small loose bone pieces.60k/20k protect curves and contact zones;2048/1024 original bakes, wall reference and two colour budgets."
+  },
+  "notes": "Author page7: curved pale ribs around a brown angular wall, aged ivory/ochre variation with sculpted cavities and pores. Both native arms-17.0219/-2.5223/26.9034,-9.6894/-4.0152/21.4443 and cap-9.0411/3.4766/38.2558 match LC-003 within.06347mm. Bones at-11.6863/-12.2461/17.1257,-6.3686/-9.6733/19.0514,-1.8355/-5.9825/19.1772,4.6383/-4.46/21.7558,9.7908/1.3335/20.5015,12.8056/10.1734/17.8864 differ2.3819\u20135.9638mm. Flat floor-3.3218/-14.6121/14.7399 and5.9354/-14.6677/14.7393 match.0164mm and stay rock. Verified LC-003.35mm plusZ14\u201327 and inner footprint protects wall, caps, floor and cliffs. Preserve current UUID2d729250-8f38-5906-bcfa-d67eb2bf7a7f, LC-048, familyLC-bones-angle, source, cut11.5, mount.14988, footprint, wallMask65 and standable point. SmartUV.55rad rejected because LOD surfaces overlap by.377mm. Use.3rad projection after simplification and rebake source normal/AO; strict.1mm UV validation stays enabled. Initial.35mm mask rejected because locally altered wall at-5.7843/-2.756/24.1168,-1.1633/.2133/24.2744,2.79/6.5225/23.9159 differs.5337\u2013.9086mm. Source-distance threshold1.1mm protects these structural surfaces; front bone caps remain4.3193\u20136.3260mm away. Six small measured lower-cap volumes retain bone colour where ribs coincide with the original plate; outer-X volumes stay within16.5mm. Point-volume lower masks rejected because they produced pale spots on shared floor. Final six continuous source silhouettes use a verified1024 depth field, .6mm surface tolerance and source/cut checks; the wall behind the silhouette is excluded. Masks follow measured cap-to-end paths and override bare-floor coincidences, preserving full front shafts. Standard data1024/512 and compact data768/384 candidates rejected because reduced tangent/ORM atlases introduce visible pale glints on small wall charts. Compare full-resolution KTX2 data2048/1024 before selecting.",
+  "groupCode": "LC-bones-angle",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "bones": {
+    "reference": {
+      "code": "LC-003",
+      "sourceSHA256": "fc038bb912ac394c677a40fef72f0a797f92f5f890875cb136867186a3a45170"
+    },
+    "matchMM": 1.1,
+    "minZ": 14,
+    "maxZ": 27,
+    "regions": [
+      [
+        [-16.5, -16.5],
+        [16.5, -16.5],
+        [16.5, 16.5],
+        [-16.5, 16.5]
+      ]
+    ],
+    "groups": [
+      {
+        "position": [-11.6863, -12.2461, 17.1257],
+        "tone": "old"
+      },
+      {
+        "position": [-6.3686, -9.6733, 19.0514],
+        "tone": "ivory"
+      },
+      {
+        "position": [-1.8355, -5.9825, 19.1772],
+        "tone": "old"
+      },
+      {
+        "position": [4.6383, -4.46, 21.7558],
+        "tone": "ivory"
+      },
+      {
+        "position": [9.7908, 1.3335, 20.5015],
+        "tone": "old"
+      },
+      {
+        "position": [12.8056, 10.1734, 17.8864],
+        "tone": "ivory"
+      }
+    ],
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "toleranceMM": 0.6,
+        "polygons": [
+          [
+            [248, 535],
+            [270, 528],
+            [291, 531],
+            [307, 541],
+            [309, 555],
+            [305, 566],
+            [312, 581],
+            [330, 590],
+            [348, 606],
+            [363, 621],
+            [365, 633],
+            [353, 642],
+            [337, 639],
+            [324, 628],
+            [308, 611],
+            [297, 591],
+            [289, 579],
+            [271, 567],
+            [250, 558]
+          ],
+          [
+            [342, 526],
+            [360, 519],
+            [379, 522],
+            [391, 531],
+            [394, 542],
+            [383, 550],
+            [376, 559],
+            [381, 577],
+            [395, 601],
+            [412, 627],
+            [430, 649],
+            [430, 661],
+            [428, 671],
+            [411, 669],
+            [395, 656],
+            [374, 637],
+            [360, 613],
+            [347, 590],
+            [330, 575],
+            [318, 556],
+            [322, 542]
+          ],
+          [
+            [425, 519],
+            [443, 511],
+            [462, 514],
+            [475, 523],
+            [474, 536],
+            [462, 547],
+            [449, 558],
+            [452, 580],
+            [474, 610],
+            [500, 639],
+            [520, 668],
+            [530, 685],
+            [523, 698],
+            [510, 708],
+            [494, 706],
+            [469, 694],
+            [452, 675],
+            [437, 648],
+            [420, 616],
+            [407, 590],
+            [394, 570],
+            [394, 552],
+            [407, 535]
+          ],
+          [
+            [514, 513],
+            [536, 505],
+            [556, 508],
+            [570, 518],
+            [568, 531],
+            [555, 545],
+            [550, 561],
+            [558, 589],
+            [579, 622],
+            [593, 655],
+            [609, 682],
+            [611, 700],
+            [596, 716],
+            [577, 720],
+            [562, 710],
+            [548, 688],
+            [531, 660],
+            [516, 628],
+            [501, 592],
+            [496, 565],
+            [499, 544],
+            [504, 531]
+          ],
+          [
+            [611, 507],
+            [633, 499],
+            [653, 503],
+            [666, 512],
+            [665, 527],
+            [652, 541],
+            [646, 558],
+            [656, 583],
+            [672, 611],
+            [690, 634],
+            [692, 651],
+            [682, 670],
+            [666, 680],
+            [650, 674],
+            [637, 658],
+            [626, 637],
+            [615, 607],
+            [606, 578],
+            [600, 552],
+            [601, 535]
+          ],
+          [
+            [713, 500],
+            [737, 492],
+            [757, 498],
+            [769, 509],
+            [766, 523],
+            [754, 534],
+            [750, 553],
+            [755, 576],
+            [759, 599],
+            [751, 616],
+            [742, 632],
+            [726, 636],
+            [714, 626],
+            [713, 610],
+            [718, 593],
+            [723, 574],
+            [717, 555],
+            [699, 541],
+            [699, 524]
+          ]
+        ]
+      }
+    ]
+  },
+  "textureCandidates": {
+    "ktx-balanced": [2048, 2048, 1024, 1024],
+    "ktx-compact": [1536, 768, 768, 384]
+  }
+}

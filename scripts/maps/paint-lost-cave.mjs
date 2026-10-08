@@ -16,6 +16,7 @@ import { paintCrystal } from "./lost_cave_crystal.mjs";
 import { paintWagon } from "./lost_cave_wagon.mjs";
 import { paintWagonOnTrack } from "./lost_cave_wagon_track.mjs";
 import { paintBoulderGround } from "./lost_cave_boulder_ground.mjs";
+import { projectedBoneAt } from "./lost_cave_bone_view.mjs";
 import { paintCaveBones } from "./lost_cave_bones.mjs";
 import { paintCrystalGround } from "./lost_cave_crystal_ground.mjs";
 import { wallReferenceDistance } from "./lost_cave_wall_reference.mjs";
@@ -76,6 +77,40 @@ if (bareReference) {
   )
     throw new Error("Verified original undecorated wall reference required");
   crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
+}
+if (spec.bones?.projectedViews) {
+  const views = [];
+  for (const mask of spec.bones.projectedViews) {
+    const base = path.resolve(
+      import.meta.dirname,
+      "../../models/collections/lost-cave/bone-views",
+      report.model.sourceCode,
+      mask.name,
+    );
+    const view = {
+      spec: JSON.parse(
+        await fs.readFile(path.join(base, "reference.json"), "utf8"),
+      ),
+      data: await fs.readFile(path.join(base, "depth.bin")),
+    };
+    if (
+      view.spec.sourceSHA256 !== report.model.assets.source.sha256 ||
+      view.spec.cutHeight !== report.cutHeight ||
+      JSON.stringify(view.spec.sourceShiftMM) !==
+        JSON.stringify(report.sourceShiftMM) ||
+      createHash("sha256").update(view.data).digest("hex") !==
+        view.spec.fieldSHA256
+    )
+      throw new Error("Verified original source bone projection required");
+    views.push({ view, mask });
+  }
+  crystalWallReference = {
+    ...crystalWallReference,
+    projectedBoneAt: (p) =>
+      views.some(({ view, mask }) =>
+        projectedBoneAt(p, view, mask.polygons, mask.toleranceMM),
+      ),
+  };
 }
 if (spec.material === "cave-wagon-track") {
   const base = path.resolve(
