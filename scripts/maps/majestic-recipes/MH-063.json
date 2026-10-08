@@ -1,0 +1,137 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 55000,
+  "lodTriangles": 20000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "low",
+    "outdoor",
+    "xl"
+  ],
+  "recipe": "majestic-low-wall-2-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2200000, 4200000],
+    "targetLODBytes": [750000, 1650000],
+    "targetShadowBytes": [45000, 115000],
+    "targetPreviewBytes": [15000, 95000],
+    "basis": "452452 source triangles; measured 3x3 base 104.94x104.98 mm, height 43.32 mm. Lower floor matches MH-003 rotated 270 for 89.6% sampled heights, own raised grassy ridge and curved cliff; inner wall reaches X=28 mm at source Y=-15. Centre of right column lies on raised rock at 36.92 mm and is blocked; eight lower points remain. Blocker follows measured wall profile. Reuse tested ochre stone and raised-grass logic; compare render colour 1024/2048 with 55k/20k and data 1024/512."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [27, 45],
+      [35, 31],
+      [35, 9],
+      [27, -8],
+      [13, -11],
+      [7, -18],
+      [-9, -9],
+      [-17, 5],
+      [-18, 26],
+      [-4, 34],
+      [14, 39]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [2.964286, 0.0],
+      [2.921429, 0.071429],
+      [2.821429, 0.214286],
+      [2.592857, 0.5],
+      [2.421429, 0.785714],
+      [2.392857, 1.071429],
+      [2.435714, 1.357143],
+      [2.435714, 1.5],
+      [2.321429, 1.642857],
+      [2.278571, 1.928571],
+      [2.421429, 2.214286],
+      [2.521429, 2.5],
+      [2.621429, 2.785714],
+      [2.892857, 2.928571],
+      [2.964286, 3.0],
+      [3, 3],
+      [3, 0]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-003",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "x": [25, 54],
+    "y": [-54, 54],
+    "minZMM": 15.1
+  },
+  "masonryRGB": [0.54, 0.38, 0.215],
+  "masonryTopRGB": [0.62, 0.46, 0.27],
+  "masonryTopMinZMM": 35,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [26.5, -54, 34],
+    "maxMM": [54, 54, 45],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.12,
+    "normalFade": 0.28,
+    "exclusions": [
+      {
+        "centreMM": [40, -33, 39.6],
+        "radiiMM": [3.7, 3.0, 2.6],
+        "minZMM": 38.6
+      },
+      {
+        "centreMM": [45.3, -16, 42.2],
+        "radiiMM": [2.6, 2.4, 2.3],
+        "minZMM": 41.15
+      },
+      {
+        "centreMM": [44.1, 16.6, 40.3],
+        "radiiMM": [2.4, 2.6, 1.8],
+        "minZMM": 39.3
+      },
+      {
+        "minMM": [32.8, 4, 35],
+        "maxMM": [35.3, 13.5, 37.4],
+        "featherMM": 0.2
+      }
+    ]
+  },
+  "masonryBackFace": {
+    "xMM": 52.47,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 15.2
+  },
+  "blockedCells": [[2, 1]]
+}

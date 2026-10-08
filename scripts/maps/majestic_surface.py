@@ -80,6 +80,14 @@ def grass_weights(obj, recipe, code):
         cap=np.clip((settings['depthMM']-(top-positions[:,2]))/settings['depthFadeMM'],0,1)
         cap*=np.clip((normals[:,2]-settings['normalMin'])/settings['normalFade'],0,1)
         cap*=np.all((positions>=settings['minMM'])&(positions<=settings['maxMM']),axis=1)
+        for area in settings.get('exclusions',[]):
+            if 'minMM' in area:
+                lo,hi=np.array(area['minMM']),np.array(area['maxMM'])
+                excluded=np.clip(np.minimum(positions-lo,hi-positions).min(1)/area.get('featherMM',.2),0,1)
+            else:
+                radius=np.linalg.norm((positions-np.array(area['centreMM']))/np.array(area['radiiMM']),axis=1)
+                excluded=np.clip((1-radius)/.12,0,1)*np.clip((positions[:,2]-area['minZMM'])/.35,0,1)
+            cap*=1-excluded
         attribute=obj.data.color_attributes.new('RaisedGrass','FLOAT_COLOR','POINT')
         attribute.data.foreach_set('color',np.column_stack([cap]*3+[np.ones(len(cap))]).astype(np.float32).ravel())
         weights=np.maximum(weights,cap)
