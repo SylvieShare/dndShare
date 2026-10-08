@@ -72,4 +72,15 @@ def grass_weights(obj, recipe, code):
         height=np.clip((positions[:,2]-recipe['soilSurfaceMM'])/recipe['grassHeightFadeMM'],0,1)
         height=height*height*(3-2*height)
         weights*=1-domain*(1-height)
+    if recipe.get('raisedGrass'):
+        settings=recipe['raisedGrass']
+        field=np.load(Path(__file__).resolve().parents[2]/'models/collections/majestic-highlands/survey'/code/'top-surface.npy')[:,:,0]
+        top=sample_field(field,positions)
+        normals=np.empty(len(positions)*3,np.float32);obj.data.vertices.foreach_get('normal',normals);normals=normals.reshape(-1,3)
+        cap=np.clip((settings['depthMM']-(top-positions[:,2]))/settings['depthFadeMM'],0,1)
+        cap*=np.clip((normals[:,2]-settings['normalMin'])/settings['normalFade'],0,1)
+        cap*=np.all((positions>=settings['minMM'])&(positions<=settings['maxMM']),axis=1)
+        attribute=obj.data.color_attributes.new('RaisedGrass','FLOAT_COLOR','POINT')
+        attribute.data.foreach_set('color',np.column_stack([cap]*3+[np.ones(len(cap))]).astype(np.float32).ravel())
+        weights=np.maximum(weights,cap)
     return weights

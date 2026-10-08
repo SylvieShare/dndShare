@@ -15,7 +15,14 @@ def paint(obj, recipe=None, code=None):
     from majestic_surface import grass_weights
     coverage = grass_weights(obj, recipe, code)
     t *= coverage
-    tip = np.clip((z-14.75)/1.55, 0, 1)*.7
+    tip_height=z
+    if recipe.get('raisedGrass'):
+        from majestic_surface import sample_field
+        from pathlib import Path
+        field=np.load(Path(__file__).resolve().parents[2]/'models/collections/majestic-highlands/survey'/code/'top-surface.npy')[:,:,0]
+        cap=np.empty(len(z)*4,np.float32);mesh.color_attributes['RaisedGrass'].data.foreach_get('color',cap);cap=cap.reshape(-1,4)[:,0]
+        tip_height=np.where(cap>0,z-(sample_field(field,positions.reshape(-1,3))-16),z)
+    tip = np.clip((tip_height-14.75)/1.55, 0, 1)*.7
     variation = 1 + .06*np.sin(x*.17+y*.21) + .04*np.sin(x*.41-y*.33)
     soil_side = np.array([.255, .185, .115])
     soil_top = np.array(recipe.get('soilTopRGB', soil_side))
@@ -93,6 +100,9 @@ def material(recipe=None):
         dirt=nodes.new('ShaderNodeMixRGB');dirt.blend_type='MULTIPLY'
         links.new(mask.outputs['Color'],dirt.inputs[0]);links.new(finish.outputs[0],dirt.inputs[1]);links.new(remap.outputs[0],dirt.inputs[2])
         finish=dirt
+    if recipe.get('masonryBackFace'):
+        from majestic_masonry import masonry_back_finish
+        finish=masonry_back_finish(nodes,links,finish,recipe,ramp.outputs[0],wear.outputs[0])
     if recipe.get('woodReference'):
         from majestic_wood import wood_finish
         finish=wood_finish(nodes,links,finish,recipe)

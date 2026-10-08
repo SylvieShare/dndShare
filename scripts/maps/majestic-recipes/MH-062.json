@@ -1,0 +1,108 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 55000,
+  "lodTriangles": 20000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "low",
+    "outdoor",
+    "xl"
+  ],
+  "recipe": "majestic-low-wall-1-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2300000, 4200000],
+    "targetLODBytes": [750000, 1600000],
+    "targetShadowBytes": [45000, 110000],
+    "targetPreviewBytes": [15000, 90000],
+    "basis": "452404 source triangles; measured 3x3 base 104.96x104.97 mm, height 42.20 mm. East cliff starts about X=40 mm; lower floor matches MH-002 rotated 270 for 84.4% sampled heights. Grass on cliff top is measured relative to local top field rather than global Z. Warm ochre stone palette follows author PDF page 20, separate earth and olive grass. Test 55k/20k with colour 2048/1024 and data 1024/512, east edge bit4 and nine ground points, no mechanical slots."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [29, 11],
+      [28, -3],
+      [22, -12],
+      [13, -22],
+      [1, -19],
+      [-7, -5],
+      [-3, 9],
+      [13, 14]
+    ],
+    [
+      [-2, 34],
+      [5, 20],
+      [-3, 6],
+      [-5, -4],
+      [-11, -26],
+      [-36, -19],
+      [-36, 12],
+      [-25, 34]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [2.57, 0],
+      [3, 0],
+      [3, 3],
+      [2.57, 3]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "x": [32, 54],
+    "y": [-54, 54],
+    "minZMM": 15.1
+  },
+  "masonryRGB": [0.54, 0.38, 0.215],
+  "masonryTopRGB": [0.62, 0.46, 0.27],
+  "masonryTopMinZMM": 35,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [41, -54, 34],
+    "maxMM": [54, 54, 44],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.12,
+    "normalFade": 0.28
+  },
+  "masonryBackFace": {
+    "xMM": 52.48,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 15.2
+  }
+}

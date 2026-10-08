@@ -28,6 +28,8 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     x,y,z=positions.T;u=(x-y)/2**.5;v=(x+y)/2**.5
     bounds=recipe.get('masonryRegion',{'u':[-62,53],'v':[-34,46],'minZMM':15.1})
     region=(u>bounds['u'][0])&(u<bounds['u'][1])&(v>bounds['v'][0])&(v<bounds['v'][1])&(z>bounds['minZMM'])
+    if 'x' in bounds: region&=(x>=bounds['x'][0])&(x<=bounds['x'][1])
+    if 'y' in bounds: region&=(y>=bounds['y'][0])&(y<=bounds['y'][1])
     weight*=region
     for box in recipe.get('masonryOverrides',[]):
         mask=(u>=box['u'][0])&(u<=box['u'][1])&(v>=box['v'][0])&(v<=box['v'][1])&(z>=box['z'][0])&(z<=box['z'][1])
@@ -37,6 +39,9 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     for box in recipe.get('masonryBoxes',[]):
         mask=(x>=box['x'][0])&(x<=box['x'][1])&(y>=box['y'][0])&(y<=box['y'][1])&(z>=box['z'][0])&(z<=box['z'][1])&(distances>box.get('referenceDeltaMM',.03))&(normals[:,2]>.55)
         weight=np.maximum(weight,mask.astype(np.float32))
+    if recipe.get('raisedGrass'):
+        cap=np.empty(len(positions)*4,np.float32);obj.data.color_attributes['RaisedGrass'].data.foreach_get('color',cap)
+        weight*=1-np.clip(cap.reshape(-1,4)[:,0],0,1)
     grain=1+recipe.get('stoneVariation',.035)*np.sin(x*.17+y*.13+z*.07)+.018*np.sin(x*1.83-y*1.41+z*.67)
     colour=np.array(recipe.get('masonryRGB',[.47,.445,.37]))*grain[:,None]
     if recipe.get('masonryTopRGB'):
@@ -58,3 +63,32 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     attr.data.foreach_set('color',np.column_stack([weight,weight,weight,np.ones(len(weight))]).astype(np.float32).ravel())
     print('MASONRY_REFERENCE',np.quantile(distances,[.1,.5,.9,1]).tolist(),float(weight.mean()),flush=True)
     return colours,roughness
+
+
+def masonry_back_finish(nodes, links, finish, recipe, noise, wear):
+    settings=recipe.get('masonryBackFace')
+    if not settings: return finish
+    def scalar(op,a,b=None):
+        node=nodes.new('ShaderNodeMath');node.operation=op
+        for i,v in enumerate([a,b]):
+            if v is None: continue
+            if isinstance(v,(int,float)): node.inputs[i].default_value=v
+            else: links.new(v,node.inputs[i])
+        return node.outputs[0]
+    def clamp(v):return scalar('MINIMUM',scalar('MAXIMUM',v,0),1)
+    coords=nodes.new('ShaderNodeTexCoord');position=nodes.new('ShaderNodeSeparateXYZ');links.new(coords.outputs['Object'],position.inputs[0])
+    geometry=nodes.new('ShaderNodeNewGeometry');normal=nodes.new('ShaderNodeSeparateXYZ');links.new(geometry.outputs['True Normal'],normal.inputs[0])
+    distance=scalar('ABSOLUTE',scalar('SUBTRACT',position.outputs['X'],settings['xMM']))
+    plane=clamp(scalar('DIVIDE',scalar('SUBTRACT',settings['distanceMM'],distance),.07))
+    facing=clamp(scalar('DIVIDE',scalar('SUBTRACT',normal.outputs['X'],settings['normalXMin']),.015))
+    height=clamp(scalar('DIVIDE',scalar('SUBTRACT',position.outputs['Z'],settings['minZMM']),.5))
+    mask=scalar('MULTIPLY',scalar('MULTIPLY',plane,facing),height)
+    rgb=np.array(recipe['masonryRGB']);linear=np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
+    colour=nodes.new('ShaderNodeMixRGB');colour.blend_type='MULTIPLY';colour.inputs[0].default_value=1;colour.inputs[1].default_value=(*linear,1);links.new(noise,colour.inputs[2])
+    worn=nodes.new('ShaderNodeMixRGB');worn.blend_type='MULTIPLY';worn.inputs[0].default_value=1;links.new(colour.outputs[0],worn.inputs[1]);links.new(wear,worn.inputs[2]);colour=worn
+    if recipe.get('darkenJoints'):
+        ao=nodes.new('ShaderNodeAmbientOcclusion');ao.inputs['Distance'].default_value=.9;ao.samples=16
+        shade=scalar('ADD',scalar('MULTIPLY',ao.outputs['AO'],.45),.55)
+        dirt=nodes.new('ShaderNodeMixRGB');dirt.blend_type='MULTIPLY';dirt.inputs[0].default_value=1;links.new(colour.outputs[0],dirt.inputs[1]);links.new(shade,dirt.inputs[2]);colour=dirt
+    result=nodes.new('ShaderNodeMixRGB');links.new(mask,result.inputs[0]);links.new(finish.outputs[0],result.inputs[1]);links.new(colour.outputs[0],result.inputs[2])
+    return result
