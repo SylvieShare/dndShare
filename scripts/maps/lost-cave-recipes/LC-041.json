@@ -1,0 +1,59 @@
+{
+  "sourceName": "Crystal Angle",
+  "referencePage": 6,
+  "material": "cave-crystal-ground",
+  "floorHeightMM": 14.7398,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 20000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 5.5],
+    "lodMiB": [0.8, 2.5],
+    "shadowKiB": [35, 145],
+    "previewKiB": [10, 180],
+    "basis": "439970-triangle1x1 angled wall with many small polygonal crystal heads and two brown curved arms.60k/20k protect small tips, concave wall and contact zones;2048/1024 bakes, UV overlap checks, original angle reference and two KTX2 budgets."
+  },
+  "notes": "Author page6: dense blue-cyan short growth inside a brown angled wall. Native curved arms-9.0743/-2.5927/29.9833 and2.9867/8.7598/31.6745 match LC-003 reference within0.1172mm; caps38.3687/38.4813mm remain brown. Crystal faces8.9118/3.6601/23.9226,10.1211/-8.0938/24.4717 and-.3486/-10.1309/18.142 lie3.3989\u20139.7257mm from wall. Independent LC-003 reference0.35mm protects both arms; floor14.7398mm remains brown with grey root crust. Preserve current UUID, LC-041, source, original angle mask65, peg/footprint and non-standing availability; familyLC-crystal-angle. UV0.3rad after simplification and source normal/AO rebake passes strict0.1mm used-pixel overlap validation in both tiers. Surface-based gutters include subpixel wall facets so adjacent blue islands cannot colour brown wall caps.",
+  "groupCode": "LC-crystal-angle",
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "flatFacets": true,
+  "crystal": {
+    "tint": [0.055, 0.4, 0.68],
+    "normalMode": "geometry",
+    "crustTint": [0.29, 0.315, 0.335],
+    "crustWidthMM": 1.6,
+    "clusters": [
+      {
+        "x": 5,
+        "y": -4,
+        "rx": 11,
+        "ry": 11,
+        "crustStrength": 0.88,
+        "bounds": {
+          "min": [-17.6, -17.6],
+          "max": [17.6, 17.6]
+        }
+      }
+    ],
+    "strataStrength": 0,
+    "wallReference": {
+      "code": "LC-003",
+      "sourceSHA256": "fc038bb912ac394c677a40fef72f0a797f92f5f890875cb136867186a3a45170",
+      "matchMM": 0.35
+    }
+  },
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true
+}

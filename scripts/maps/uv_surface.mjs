@@ -1,12 +1,11 @@
 // Sample baked UV pixels back onto the physical surface, in cropped STL mm.
-export function rasterizeSurface(
+function visitSurfaceTriangles(
   doc,
   width,
   height,
   visitor,
   slot = "BaseColor",
 ) {
-  const coverage = new Uint8Array(width * height);
   for (const node of doc.getRoot().listNodes()) {
     if (!node.getMesh()) continue;
     const matrix = node.getWorldMatrix();
@@ -53,39 +52,135 @@ export function rasterizeSurface(
             (u * Math.sin(angle) + v * Math.cos(angle) + offset[1]) * height,
           ]);
         }
-        const [[ax, ay], [bx, by], [cx, cy]] = pixels,
-          den = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy);
-        if (Math.abs(den) < 1e-6) continue;
-        const minX = Math.max(0, Math.floor(Math.min(ax, bx, cx))),
-          maxX = Math.min(width - 1, Math.ceil(Math.max(ax, bx, cx))),
-          minY = Math.max(0, Math.floor(Math.min(ay, by, cy))),
-          maxY = Math.min(height - 1, Math.ceil(Math.max(ay, by, cy)));
-        for (let y = minY; y <= maxY; y++)
-          for (let x = minX; x <= maxX; x++) {
-            const a =
-                ((by - cy) * (x + 0.5 - cx) + (cx - bx) * (y + 0.5 - cy)) / den,
-              b =
-                ((cy - ay) * (x + 0.5 - cx) + (ax - cx) * (y + 0.5 - cy)) / den,
-              c = 1 - a - b;
-            if (a < -0.001 || b < -0.001 || c < -0.001) continue;
-            const position = points[0].map(
-                (v, k) => v * a + points[1][k] * b + points[2][k] * c,
-              ),
-              normal = directions[0].map(
-                (v, k) => v * a + directions[1][k] * b + directions[2][k] * c,
-              );
-            const length = Math.hypot(...normal);
-            visitor(
-              y * width + x,
-              position,
-              normal.map((v) => v / length),
-            );
-            coverage[y * width + x] = 1;
-          }
+        visitor(pixels, points, directions);
       }
     }
   }
+}
+
+function surfaceSample(points, directions, weights) {
+  const position = points[0].map((_, k) =>
+    weights.reduce((sum, w, j) => sum + points[j][k] * w, 0),
+  );
+  const normal = directions[0].map((_, k) =>
+    weights.reduce((sum, w, j) => sum + directions[j][k] * w, 0),
+  );
+  const length = Math.hypot(...normal);
+  return [position, normal.map((v) => v / (length || 1))];
+}
+
+export function rasterizeSurface(
+  doc,
+  width,
+  height,
+  visitor,
+  slot = "BaseColor",
+) {
+  const coverage = new Uint8Array(width * height);
+  visitSurfaceTriangles(
+    doc,
+    width,
+    height,
+    (pixels, points, directions) => {
+      const [[ax, ay], [bx, by], [cx, cy]] = pixels;
+      const den = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy);
+      if (Math.abs(den) < 1e-6) return;
+      const minX = Math.max(0, Math.floor(Math.min(ax, bx, cx))),
+        maxX = Math.min(width - 1, Math.ceil(Math.max(ax, bx, cx))),
+        minY = Math.max(0, Math.floor(Math.min(ay, by, cy))),
+        maxY = Math.min(height - 1, Math.ceil(Math.max(ay, by, cy)));
+      for (let y = minY; y <= maxY; y++)
+        for (let x = minX; x <= maxX; x++) {
+          const a =
+              ((by - cy) * (x + 0.5 - cx) + (cx - bx) * (y + 0.5 - cy)) / den,
+            b = ((cy - ay) * (x + 0.5 - cx) + (ax - cx) * (y + 0.5 - cy)) / den,
+            c = 1 - a - b;
+          if (a < -0.001 || b < -0.001 || c < -0.001) continue;
+          visitor(
+            y * width + x,
+            ...surfaceSample(points, directions, [a, b, c]),
+          );
+          coverage[y * width + x] = 1;
+        }
+    },
+    slot,
+  );
   return coverage;
+}
+
+// Include subpixel UV triangles in bilinear-filter gutters. Covered texels remain
+// authoritative; each uncovered texel is painted from the closest triangle edge.
+export function seedSurfaceGutters(
+  doc,
+  width,
+  height,
+  coverage,
+  visitor,
+  radius = 1,
+  slot = "BaseColor",
+) {
+  const seeded = coverage.slice();
+  const distance = new Float32Array(width * height).fill(Infinity);
+  visitSurfaceTriangles(
+    doc,
+    width,
+    height,
+    (pixels, points, directions) => {
+      const minX = Math.max(
+          0,
+          Math.floor(Math.min(...pixels.map((p) => p[0])) - radius),
+        ),
+        maxX = Math.min(
+          width - 1,
+          Math.ceil(Math.max(...pixels.map((p) => p[0])) + radius),
+        ),
+        minY = Math.max(
+          0,
+          Math.floor(Math.min(...pixels.map((p) => p[1])) - radius),
+        ),
+        maxY = Math.min(
+          height - 1,
+          Math.ceil(Math.max(...pixels.map((p) => p[1])) + radius),
+        );
+      for (let y = minY; y <= maxY; y++)
+        for (let x = minX; x <= maxX; x++) {
+          const index = y * width + x;
+          if (coverage[index]) continue;
+          let nearest = distance[index],
+            weights;
+          for (let edge = 0; edge < 3; edge++) {
+            const next = (edge + 1) % 3;
+            const a = pixels[edge],
+              b = pixels[next];
+            const dx = b[0] - a[0],
+              dy = b[1] - a[1],
+              den = dx * dx + dy * dy;
+            const t = den
+              ? Math.max(
+                  0,
+                  Math.min(
+                    1,
+                    ((x + 0.5 - a[0]) * dx + (y + 0.5 - a[1]) * dy) / den,
+                  ),
+                )
+              : 0;
+            const d =
+              (x + 0.5 - a[0] - dx * t) ** 2 + (y + 0.5 - a[1] - dy * t) ** 2;
+            if (d >= nearest || d > radius * radius) continue;
+            nearest = d;
+            weights = [0, 0, 0];
+            weights[edge] = 1 - t;
+            weights[next] = t;
+          }
+          if (!weights) continue;
+          distance[index] = nearest;
+          seeded[index] = 1;
+          visitor(index, ...surfaceSample(points, directions, weights));
+        }
+    },
+    slot,
+  );
+  return seeded;
 }
 
 export function extendUvGutters(

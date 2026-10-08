@@ -4,7 +4,11 @@ import { createRequire } from "node:module";
 import { readGlb, replaceImages } from "./glb_textures.mjs";
 import { setSurfaceAtlas } from "./pbr_revision.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
-import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
+import {
+  rasterizeSurface,
+  seedSurfaceGutters,
+  extendUvGutters,
+} from "./uv_surface.mjs";
 import { caveRockPixel } from "./lost_cave_surface.mjs";
 import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
 import { paintRailway } from "./lost_cave_railway.mjs";
@@ -130,8 +134,8 @@ for (const tier of ["render", "lod"]) {
   const checkUv = spec.validateUvOverlaps
     ? uvSurfaceTracker(size, size)
     : undefined;
-  const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
-    checkUv?.(i, p);
+  const paintPixel = (i, p, n, used = true) => {
+    if (used) checkUv?.(i, p);
     const value =
       spec.material === "cave-crystal-ground"
         ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
@@ -148,15 +152,22 @@ for (const tier of ["render", "lod"]) {
                   : spec.material === "cave-stalagmites"
                     ? paintStalagmites(p, n, ao[i], spec)
                     : caveRockPixel(p, n, ao[i], report.materialSpec);
-    counts[value.part]++;
-    if (spec.crystal?.normalMode === "geometry" && value.part === "crystal")
-      neutralNormal[i] = 1;
+    if (used) counts[value.part]++;
+    neutralNormal[i] = Number(
+      spec.crystal?.normalMode === "geometry" && value.part === "crystal",
+    );
     colour.set(value.rgb, i * 3);
     orm[i * 3] = ao[i];
     orm[i * 3 + 1] = Math.round(value.roughness * 255);
     orm[i * 3 + 2] = Math.round(value.metallic * 255);
-    pixels++;
-  });
+    if (used) pixels++;
+  };
+  const coverage = rasterizeSurface(doc, size, size, paintPixel);
+  const colourCoverage = spec.surfaceGutters
+    ? seedSurfaceGutters(doc, size, size, coverage, (i, p, n) =>
+        paintPixel(i, p, n, false),
+      )
+    : coverage;
   const normal = await sharp(path.join(directory, tier + "-normal.png"))
     .removeAlpha()
     .raw()
@@ -174,8 +185,8 @@ for (const tier of ["render", "lod"]) {
     throw new Error(
       `Used UV defects: ${black} black, ${invalid} invalid normals`,
     );
-  extendUvGutters(colour, 3, coverage.slice(), size, size, 12);
-  extendUvGutters(orm, 3, coverage.slice(), size, size, 12);
+  extendUvGutters(colour, 3, colourCoverage.slice(), size, size, 12);
+  extendUvGutters(orm, 3, colourCoverage.slice(), size, size, 12);
   extendUvGutters(normal.data, 3, coverage.slice(), size, size, 12);
   const raw = { width: size, height: size, channels: 3 };
   const replacements = new Map();
