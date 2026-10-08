@@ -1,12 +1,12 @@
 {
-  "sourceName": "Wagon Crystals",
+  "sourceName": "Wagon Rocks",
   "referencePage": 5,
   "material": "cave-wagon-track",
   "floorHeightMM": 7.5,
   "renderBakeSize": 2048,
   "lodBakeSize": 1024,
-  "renderTriangles": 80000,
-  "lodTriangles": 28000,
+  "renderTriangles": 75000,
+  "lodTriangles": 25000,
   "palette": {
     "rock": [0.46, 0.335, 0.225],
     "mineral": [0.455, 0.405, 0.34],
@@ -18,9 +18,9 @@
     "lodMiB": [0.8, 2.8],
     "shadowKiB": [40, 180],
     "previewKiB": [10, 160],
-    "basis": "659950-triangle compound1x1 loaded wagon:80k/28k keep crystal tips, thin rim, tubing, wheels and track;2048/1024 bakes and two KTX2 comparisons. Runtime render target2–6MiB; source archived separately."
+    "basis": "639932-triangle1x1 loaded wagon.75k/25k keep rounded boulder silhouettes, metal cavity, wheels and track.2048/1024 bakes, two compressed variants; render2–6MiB, LOD0.8–2.8MiB."
   },
-  "notes": "Author page5: blue crystal cargo inside rusty wagon. Original body rotated180Z relative to LC-028, same17.482mm vertical offset. Inverse rotation used for original LC-027 BVH reference and all wheel/pipe/brass masks. Wagon surfaces take priority over cargo: measured interior x/y ±15.9, height36.8–60.1mm excludes rim and external hardware. Neutral tangent normal only on crystalline cargo; vehicle, track and stone retain source relief. Original source, footprint, mount and standing metadata preserved; stable LC-029, family LC-wagon. Full-resolution albedo retained in both KTX candidates: smaller maps produced visible blue cross-island bleed on track rubble and hardware; compact reduces only normal/ORM resolution.",
+  "notes": "Author page5: muted grey-green boulder cargo with dusty raised faces and dark crevices, separated from rusty iron shell. LC-027 original wagon reference in same orientation as LC-028, offset17.482mm; cargo classification follows body reference so narrow rim stays iron. Top samples -0.3714/2.3544/62.8252, -10.2127/9.4272/54.4826; rim15.1855Y and-15.7832X at53.44mm protects body boundary. Preserve source, LC-030 ID, placement point, peg and footprint; family LC-wagon. Reference tolerance0.35mm includes measured rim at-3.9563/-13.5575/53.0912mm (grid distance0.2902mm); interior boulders remain outside reference.",
   "groupCode": "LC-wagon",
   "wagon": {
     "tint": [0.46, 0.265, 0.12],
@@ -112,20 +112,19 @@
   },
   "wagonOffsetZMM": 17.482,
   "trackOffsetZMM": 7,
-  "wagonMatchMM": 0.28,
+  "wagonMatchMM": 0.35,
   "wagonReferenceSHA256": "a4237eee9799b1666cb6c035c2971ce58c051f9b4cadb122754152947bff543b",
-  "wagonRotationZDeg": 180,
+  "wagonRotationZDeg": 0,
   "cargo": {
+    "material": "boulder",
     "min": [-15.9, -15.9, 36.8],
-    "max": [15.9, 15.9, 60.1],
-    "material": "crystal"
-  },
-  "crystal": {
-    "tint": [0.14, 0.22, 0.63],
-    "normalMode": "geometry"
+    "max": [15.9, 15.9, 64.3]
   },
   "textureCandidates": {
-    "ktx-balanced": [2048, 1024, 1024, 512],
-    "ktx-compact": [2048, 768, 1024, 384]
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
   }
 }

@@ -91,7 +91,7 @@ for (const tier of ["render", "lod"]) {
       ? { bucket: 0, wheel: 0, hardware: 0, brass: 0 }
       : {}),
     ...(spec.material === "cave-wagon-track" ? { wood: 0, iron: 0 } : {}),
-    ...(spec.cargo ? { crystal: 0 } : {}),
+    ...(spec.cargo ? { [spec.cargo.material]: 0 } : {}),
   };
   const neutralNormal = new Uint8Array(size * size);
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
