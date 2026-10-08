@@ -43,3 +43,11 @@ export function caveRockPixel(p, n, ao, spec) {
     metallic: 0,
   };
 }
+export function darkenCaveFloorJoints(value, p, spec) {
+  const depth = spec.floorHeightMM - p[2];
+  if (depth > 0.25 && depth < 3)
+    value.rgb = value.rgb.map((v) =>
+      Math.round(v * (1 - Math.min(1, depth / 1.5) * 0.22)),
+    );
+  return value;
+}

@@ -6,7 +6,8 @@ export function paintCrystal(p, n, ao, spec) {
   const inclusion = surfaceNoise(...p.map((v) => v * 0.11));
   const clean =
     0.82 + 0.18 * Math.max(0, Math.min(1, (ao / 255 - 0.65) / 0.35));
-  const strata = 1 + 0.06 * Math.sin(p[2] * 1.7);
+  const strata =
+    1 + (spec.crystal.strataStrength ?? 0.06) * Math.sin(p[2] * 1.7);
   const tint = spec.crystal.tint;
   return {
     part: "crystal",
