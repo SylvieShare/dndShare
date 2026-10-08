@@ -6,7 +6,13 @@ def apply_waterfall(positions, colours, roughness, recipe):
     settings = recipe.get('waterfall')
     if not settings:
         return colours, roughness
-    x, y, z = positions.T
+    local = positions.copy()
+    angle = np.deg2rad(settings.get('rotateZ', 0))
+    if angle:
+        c, s = np.cos(angle), np.sin(angle)
+        local[:, 0] = positions[:, 0]*c + positions[:, 1]*s
+        local[:, 1] = -positions[:, 0]*s + positions[:, 1]*c
+    x, y, z = local.T
     profile = np.array(settings['profileXZMM'])
     front = np.interp(z, profile[:, 1], profile[:, 0])
     distance = np.abs(x-front)
@@ -14,7 +20,7 @@ def apply_waterfall(positions, colours, roughness, recipe):
     weight *= np.clip((y-settings['minYMM'])/.8, 0, 1) * np.clip((settings['maxYMM']-y)/.8, 0, 1)
     weight *= np.clip((z-settings['minZMM'])/.5, 0, 1) * np.clip((settings['maxZMM']-z)/.5, 0, 1)
     for area in settings.get('rockExclusions', []):
-        radius = np.linalg.norm((positions-np.array(area['centreMM']))/np.array(area['radiiMM']), axis=1)
+        radius = np.linalg.norm((local-np.array(area['centreMM']))/np.array(area['radiiMM']), axis=1)
         weight *= 1-np.clip((1-radius)/.12, 0, 1)
     fraction = np.clip((z-settings['minZMM'])/(settings['maxZMM']-settings['minZMM']), 0, 1)
     colour = np.array(settings['lowerRGB'])*(1-fraction[:, None]) + np.array(settings['upperRGB'])*fraction[:, None]
