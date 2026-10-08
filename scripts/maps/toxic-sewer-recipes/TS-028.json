@@ -1,0 +1,123 @@
+{
+  "sourceName": "Wall Window",
+  "material": "sewer-components",
+  "referencePage": 5,
+  "renderTriangles": 32000,
+  "lodTriangles": 9500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.3],
+    "lodMiB": [0.25, 0.85],
+    "shadowKiB": [20, 80],
+    "previewKiB": [8, 45],
+    "basis": "One-cell high round window with five thin metal rods and real open grid; preserve ring silhouette, gaps and floor damage."
+  },
+  "referenceCode": "TS-019",
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [-4.65, 14.2, 33.3],
+        [-4.65, 14.2, 52.8]
+      ],
+      "radius": 1.15,
+      "ellipsoid": {
+        "centre": [0, 14.2, 43.2],
+        "radius": [9.35, 100, 9.35]
+      }
+    },
+    {
+      "part": "copper",
+      "path": [
+        [0.056, 14.2, 33.3],
+        [0.056, 14.2, 52.8]
+      ],
+      "radius": 1.15,
+      "ellipsoid": {
+        "centre": [0, 14.2, 43.2],
+        "radius": [9.35, 100, 9.35]
+      }
+    },
+    {
+      "part": "copper",
+      "path": [
+        [4.65, 14.2, 33.3],
+        [4.65, 14.2, 52.8]
+      ],
+      "radius": 1.15,
+      "ellipsoid": {
+        "centre": [0, 14.2, 43.2],
+        "radius": [9.35, 100, 9.35]
+      }
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-9.5, 14.3, 38.9],
+        [9.5, 14.3, 38.9]
+      ],
+      "radius": 1.15,
+      "ellipsoid": {
+        "centre": [0, 14.2, 43.2],
+        "radius": [9.35, 100, 9.35]
+      }
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-9.5, 14.3, 46.6],
+        [9.5, 14.3, 46.6]
+      ],
+      "radius": 1.15,
+      "ellipsoid": {
+        "centre": [0, 14.2, 43.2],
+        "radius": [9.35, 100, 9.35]
+      }
+    },
+    {
+      "part": "rubble",
+      "eroded": 0.6,
+      "min": [-16, -16, 13.1],
+      "max": [16, 10, 14.1],
+      "ellipsoid": {
+        "centre": [-10, 4, 13.6],
+        "radius": [4, 4, 1]
+      }
+    },
+    {
+      "part": "rubble",
+      "eroded": 0.6,
+      "min": [-16, -16, 13.1],
+      "max": [16, 10, 14.1],
+      "ellipsoid": {
+        "centre": [0, 3, 13.6],
+        "radius": [3.5, 3, 1]
+      }
+    },
+    {
+      "part": "rubble",
+      "eroded": 0.6,
+      "min": [-16, -16, 13.1],
+      "max": [16, 10, 14.1],
+      "ellipsoid": {
+        "centre": [7, -5, 13.6],
+        "radius": [4, 3.5, 1]
+      }
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [20, 30, 43.2],
+    "sectionYMM": 13.8,
+    "sectionXMM": 7,
+    "windowCentreXZMM": [0, 43.2],
+    "verticalRodXMM": [-4.65, 0.056, 4.65],
+    "horizontalRodZMM": [38.9, 46.6],
+    "medianFloorOffsetFromGroundBasicMM": -0.2266
+  },
+  "notes": "Circular green masonry window with three vertical and two horizontal copper rods, measured on both sides. Rod masks are clipped to the opening. Three bounded damaged floor patches use a 0.6mm height deficit; the broad 0.18mm mask falsely marked intact lower cobbles and was rejected."
+}

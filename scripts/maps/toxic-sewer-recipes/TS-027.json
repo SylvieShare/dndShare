@@ -1,0 +1,82 @@
+{
+  "sourceName": "Corner Pipe Right",
+  "material": "sewer-components",
+  "referencePage": 4,
+  "renderTriangles": 28000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell corner pillar with two unequal copper tubes, horizontal outlets and fittings; preserve tube openings and their separation from stone."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [17.6, 13.83, 40.75],
+        [5, 13.83, 40.75]
+      ],
+      "radius": 3.65,
+      "min": [5, 10.03, 37.3],
+      "max": [18, 18.03, 44.6]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [2.36, 13.83, 14.25],
+        [2.36, 13.83, 34],
+        [3, 13.83, 37],
+        [5, 13.83, 40.75],
+        [17.6, 13.83, 40.75]
+      ],
+      "radius": 3.15,
+      "min": [-1, 10.53, 14.3],
+      "max": [18, 18.03, 45]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [13.55, 3.65, 14.2],
+        [13.55, 3.65, 30.5],
+        [13.55, 4.03, 32.8],
+        [13.55, 5.13, 34.1],
+        [13.55, 6.53, 34.7],
+        [13.55, 8.229999999999999, 34.7]
+      ],
+      "radius": 1.95,
+      "min": [11.6, 1.6300000000000001, 14.3],
+      "max": [15.5, 10.03, 37]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [10.45, 4.2, 14.25],
+        [10.45, 4.2, 23],
+        [10.45, 4.8, 24.5],
+        [10.45, 6.5, 25.8],
+        [10.45, 8.3, 26.1]
+      ],
+      "radius": 1.9,
+      "min": [8.4, 2.1, 14.3],
+      "max": [12.4, 10.3, 28.6]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [20, 40],
+    "sectionYMM": 4,
+    "sectionXMM": 13.55,
+    "largePipeXYMM": [2.37, 13.84],
+    "smallPipeXYMM": [13.55, 3.65],
+    "additionalBranchXYMM": [10.45, 4.2],
+    "additionalSectionXMM": 10.45
+  },
+  "notes": "Right-handed corner measured independently: large upper pipe, front thin pipe and additional low parallel branch. Copper masks include all bends and coupling rims; olive pillar remains separate. The added branch bends backward into the pillar at z26, not sideways into the other tube."
+}

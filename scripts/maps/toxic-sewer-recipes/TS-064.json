@@ -1,0 +1,115 @@
+{
+  "sourceName": "Water Empty",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 22000,
+  "lodTriangles": 6500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.6, 1.8],
+    "lodMiB": [0.2, 0.7],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell empty straight channel: two raised cobbled banks, low flat bed and several small loose rocks."
+  },
+  "regions": [
+    {
+      "part": "rubble",
+      "min": [-8, -16, 9.15],
+      "max": [8, 8, 11.8],
+      "ellipsoid": {
+        "centre": [-5.7, 5.5, 10],
+        "radius": [1.8, 1.4, 2]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -16, 9.15],
+      "max": [8, 8, 11.8],
+      "ellipsoid": {
+        "centre": [5.5, 4, 10],
+        "radius": [0.9, 0.9, 2]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -16, 9.15],
+      "max": [8, 8, 11.8],
+      "ellipsoid": {
+        "centre": [3.5, 0, 10],
+        "radius": [1.7, 1.4, 2]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -16, 9.15],
+      "max": [8, 8, 11.8],
+      "ellipsoid": {
+        "centre": [5.4, -13.3, 10],
+        "radius": [1.7, 1.6, 2]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -17, 9.15],
+      "max": [8, 17, 11.8],
+      "ellipsoid": {
+        "centre": [4.7, 13.5, 9.75],
+        "radius": [0.9, 1.1, 1.6]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -17, 9.15],
+      "max": [8, 17, 11.8],
+      "ellipsoid": {
+        "centre": [-4.3, -1, 9.75],
+        "radius": [0.9, 0.9, 1.6]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -17, 9.15],
+      "max": [8, 17, 11.8],
+      "ellipsoid": {
+        "centre": [5.5, -5.5, 9.75],
+        "radius": [0.65, 0.85, 1.6]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -17, 9.15],
+      "max": [8, 17, 11.8],
+      "ellipsoid": {
+        "centre": [-5, -10.5, 9.75],
+        "radius": [1.2, 1.1, 1.6]
+      }
+    },
+    {
+      "part": "rubble",
+      "min": [-8, -17, 9.15],
+      "max": [8, 17, 11.8],
+      "ellipsoid": {
+        "centre": [-6.3, -14.7, 9.75],
+        "radius": [0.65, 0.9, 1.6]
+      }
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "sectionsZMM": [9.7, 10.1],
+    "channelFloorMM": [9.2, 9.5],
+    "debrisCentresXYMM": [
+      [-5.7, 5.5],
+      [5.5, 4],
+      [3.5, 0],
+      [5.4, -13.3]
+    ]
+  },
+  "notes": "Empty straight masonry channel, without liquid. Nine measured loose-rock groups are brown; recessed floor, sidewalls and raised cobble banks remain olive masonry."
+}

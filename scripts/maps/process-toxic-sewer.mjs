@@ -14,9 +14,9 @@ const code = process.argv[2],
 if (
   !code ||
   path.basename(code) !== code ||
-  !["prepare", "publish"].includes(mode)
+  !["prepare", "repaint", "publish"].includes(mode)
 )
-  throw Error("One model code and prepare/publish required");
+  throw Error("One model code and prepare/repaint/publish required");
 const spec = specs[code];
 if (!spec) throw Error("Measured model recipe missing");
 const renderSize = spec.renderBakeSize * 0.75,
@@ -114,7 +114,7 @@ async function collage(report) {
   );
 }
 await fs.mkdir(path.join(base, "detailed", code), { recursive: true });
-if (mode === "prepare") {
+if (mode !== "publish") {
   const models = await snapshot(path.join(base, "registry-snapshot.json"));
   const current = models
     .filter((m) => m.sourceCode === code)
@@ -128,36 +128,50 @@ if (mode === "prepare") {
     `${code.replaceAll(" ", "_")}__v${current.version}`,
   );
   const report = path.join(directory, "report.json");
-  node("prepare-toxic-sewer.mjs", [code], "prepare");
-  const accepted = path.join(directory, "accepted");
-  await fs.mkdir(accepted, { recursive: true });
-  await fs.writeFile(
-    path.join(accepted, "report.json"),
-    JSON.stringify({ model: current }),
-  );
-  await fs.copyFile(
-    path.join(directory, "render-input.glb"),
-    path.join(accepted, "preview-model.glb"),
-  );
-  await fs.copyFile(
-    path.join(directory, "lod-input.glb"),
-    path.join(accepted, "lod-preview-model.glb"),
-  );
-  const acceptedArgs = [
-    "--base",
-    directory,
-    "--size",
-    "512",
-    "--inside",
-    "--review",
-  ];
-  blend("preview-model-revisions.py", acceptedArgs, "accepted-preview");
-  blend(
-    "preview-model-revisions.py",
-    [...acceptedArgs, "--tier", "lod"],
-    "accepted-lod",
-  );
-  blend("toxic_sewer_bake.py", ["--report", report], "bake");
+  let repaintReference;
+  if (mode === "prepare") {
+    node("prepare-toxic-sewer.mjs", [code], "prepare");
+    const accepted = path.join(directory, "accepted");
+    await fs.mkdir(accepted, { recursive: true });
+    await fs.writeFile(
+      path.join(accepted, "report.json"),
+      JSON.stringify({ model: current }),
+    );
+    await fs.copyFile(
+      path.join(directory, "render-input.glb"),
+      path.join(accepted, "preview-model.glb"),
+    );
+    await fs.copyFile(
+      path.join(directory, "lod-input.glb"),
+      path.join(accepted, "lod-preview-model.glb"),
+    );
+    const acceptedArgs = [
+      "--base",
+      directory,
+      "--size",
+      "512",
+      "--inside",
+      "--review",
+    ];
+    blend("preview-model-revisions.py", acceptedArgs, "accepted-preview");
+    blend(
+      "preview-model-revisions.py",
+      [...acceptedArgs, "--tier", "lod"],
+      "accepted-lod",
+    );
+    blend("toxic_sewer_bake.py", ["--report", report], "bake");
+  } else {
+    const prepared = JSON.parse(await fs.readFile(report, "utf8"));
+    if (prepared.publication || prepared.model.id !== current.id)
+      throw Error("Prepared baseline changed or already published");
+    repaintReference = path.join(directory, "repaint-reference");
+    await fs.mkdir(repaintReference, { recursive: true });
+    for (const tier of ["render", "lod"])
+      await fs.copyFile(
+        path.join(directory, tier + ".glb"),
+        path.join(repaintReference, tier + ".glb"),
+      );
+  }
   if (
     spec.referenceCode &&
     !(await fs
@@ -171,7 +185,11 @@ if (mode === "prepare") {
     );
   node("paint-toxic-sewer.mjs", [report], "paint");
   node("prepare-reviewed-shadow.mjs", [report], "shadow");
-  node("validate-toxic-sewer.mjs", [report], "validate");
+  node(
+    "validate-toxic-sewer.mjs",
+    [report, ...(repaintReference ? ["--reference=" + repaintReference] : [])],
+    "validate",
+  );
   const previewArgs = [
     "--base",
     path.dirname(directory),

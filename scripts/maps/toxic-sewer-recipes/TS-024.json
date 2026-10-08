@@ -1,0 +1,38 @@
+{
+  "sourceName": "Ground Grid",
+  "material": "sewer-components",
+  "referencePage": 4,
+  "renderTriangles": 24000,
+  "lodTriangles": 7000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.6, 1.6],
+    "lodMiB": [0.2, 0.65],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell recessed grate with sculpted slots, green stone ring and unchanged solid insertion peg."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "color": [135, 111, 59],
+      "roughness": 0.66,
+      "ellipsoid": {
+        "centre": [0, 0, 11.8],
+        "radius": [10.3, 10.3, 2]
+      },
+      "min": [-10.5, -10.5, 10.6],
+      "max": [10.5, 10.5, 13.25]
+    }
+  ],
+  "notes": "Recessed copper grate inside the green stone ring. Section at z5 is solid; preserve source recess rather than inventing a through shaft.",
+  "measurements": {
+    "sectionsZMM": [5, 11, 12, 13.5, 14.5],
+    "innerRadiusMM": 10.3
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "sourceName": "Corner Wood",
+  "material": "sewer-components",
+  "referencePage": 4,
+  "renderTriangles": 32000,
+  "lodTriangles": 9500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 80],
+    "previewKiB": [8, 45],
+    "basis": "One-cell tall timber corner, two curved braces and retaining bands; preserve cut end grain and sculpted timber silhouette."
+  },
+  "referenceCode": "TS-019",
+  "regions": [
+    {
+      "part": "iron",
+      "min": [-16, 4, 37.0],
+      "max": [-4, 16, 38.7]
+    },
+    {
+      "part": "iron",
+      "min": [-16, 4, 40.4],
+      "max": [-4, 16, 42.2]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-18, 4, 28],
+      "max": [-4, 18, 46]
+    },
+    {
+      "part": "wood",
+      "direction": [1, 0, -0.6],
+      "added": true,
+      "min": [-10, 9, 14.2],
+      "max": [18, 18, 30]
+    },
+    {
+      "part": "wood",
+      "direction": [0, -1, -0.6],
+      "added": true,
+      "min": [-18, -18, 14.2],
+      "max": [-9, 10, 30]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-18, -18, 14.2],
+      "max": [18, 18, 46]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [20, 30, 40],
+    "sectionYMM": 12,
+    "bandHeightsMM": [
+      [37, 38.7],
+      [40.4, 42.2]
+    ]
+  },
+  "notes": "Timber corner with vertical grain on posts and sloping grain along the two braces. Exposed iron bands are bounded around the posts; bare cobbled floor reference excludes stone."
+}

@@ -34,8 +34,15 @@ for (const field of [
   "lodTriangles",
   "renderBakeSize",
   "lodBakeSize",
+  "mounting",
+  "renderMountTriangles",
+  "lodMountTriangles",
+  "openingProbesMM",
+  "mountInnerColor",
 ])
-  if (spec[field] !== report.materialSpec[field])
+  if (
+    JSON.stringify(spec[field]) !== JSON.stringify(report.materialSpec[field])
+  )
     throw new Error("Geometry recipe changed; rebake before painting");
 report.materialSpec = structuredClone(spec);
 if (reference)
