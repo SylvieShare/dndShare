@@ -100,6 +100,9 @@ def material(recipe=None):
         dirt=nodes.new('ShaderNodeMixRGB');dirt.blend_type='MULTIPLY'
         links.new(mask.outputs['Color'],dirt.inputs[0]);links.new(finish.outputs[0],dirt.inputs[1]);links.new(remap.outputs[0],dirt.inputs[2])
         finish=dirt
+    if any('maxZMM' in s for s in recipe.get('water',{}).get('shorelines',[])):
+        from majestic_water import shoreline_height_finish
+        finish=shoreline_height_finish(nodes,links,finish,recipe,ramp.outputs[0],wear.outputs[0])
     if recipe.get('masonryBackFace') or recipe.get('masonryBackFaces'):
         from majestic_masonry import masonry_back_finish
         finish=masonry_back_finish(nodes,links,finish,recipe,ramp.outputs[0],wear.outputs[0])

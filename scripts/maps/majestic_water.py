@@ -101,8 +101,15 @@ def apply_water(obj, positions, colours, roughness, recipe):
         shade=1+.045*np.sin(x*.51+y*.43+z*.21)
         colours=colours*(1-bank_weight[:,None])+np.array(bank['rgb'])*shade[:,None]*bank_weight[:,None]
         roughness=roughness*(1-bank_weight)+.88*bank_weight
+    if any('maxZMM' in shore for shore,_,_ in shorelines):
+        rgb=np.clip(colours,0,1)
+        linear=np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
+        attribute=obj.data.color_attributes.new('Before Shoreline','FLOAT_COLOR','POINT')
+        attribute.data.foreach_set('color',np.column_stack([linear,np.ones(len(linear))]).astype(np.float32).ravel())
     for shore,distance,side in shorelines:
         shore_weight=np.clip((shore['stoneWidthMM']-distance)/.8,0,1)*np.clip((z-shore['minZMM'])/.4,0,1)*(1-weight)
+        if 'maxZMM' in shore:
+            shore_weight*=np.clip((shore['maxZMM']-z)/shore.get('heightFadeMM',.5),0,1)
         if 'landwardWidthMM' in shore: shore_weight*=np.clip((shore['landwardWidthMM']-side)/.8,0,1)
         shade=1+.045*np.sin(x*.51+y*.43+z*.21)
         colours=colours*(1-shore_weight[:,None])+np.array(shore['rgb'])*shade[:,None]*shore_weight[:,None]
@@ -118,6 +125,26 @@ def apply_water(obj, positions, colours, roughness, recipe):
         roughness=roughness*(1-timber)+original_roughness*timber
     print('WATER_REFERENCE',np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),int((weight>.5).sum()),flush=True)
     return colours,roughness
+
+
+def shoreline_height_finish(nodes, links, finish, recipe, noise, wear):
+    bounded=[s for s in recipe.get('water',{}).get('shorelines',[]) if 'maxZMM' in s]
+    if not bounded: return finish
+    coords=nodes.new('ShaderNodeTexCoord');position=nodes.new('ShaderNodeSeparateXYZ')
+    links.new(coords.outputs['Object'],position.inputs[0])
+    ceiling=max(s['maxZMM'] for s in bounded)
+    height=nodes.new('ShaderNodeMapRange');height.clamp=True
+    height.inputs['From Min'].default_value=ceiling
+    height.inputs['From Max'].default_value=ceiling+.35
+    links.new(position.outputs['Z'],height.inputs['Value'])
+    original=nodes.new('ShaderNodeVertexColor');original.layer_name='Before Shoreline'
+    grain=nodes.new('ShaderNodeMixRGB');grain.blend_type='MULTIPLY';grain.inputs[0].default_value=1
+    links.new(original.outputs['Color'],grain.inputs[1]);links.new(noise,grain.inputs[2])
+    worn=nodes.new('ShaderNodeMixRGB');worn.blend_type='MULTIPLY';worn.inputs[0].default_value=1
+    links.new(grain.outputs[0],worn.inputs[1]);links.new(wear,worn.inputs[2])
+    repaired=nodes.new('ShaderNodeMixRGB');links.new(height.outputs['Result'],repaired.inputs[0])
+    links.new(finish.outputs[0],repaired.inputs[1]);links.new(worn.outputs[0],repaired.inputs[2])
+    return repaired
 
 
 def water_cap_finish(nodes, links, finish, recipe):
