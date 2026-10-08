@@ -666,7 +666,9 @@
           0.435,
           0.39
         ],
-        "landwardWidthMM": 2.5
+        "landwardWidthMM": 2.5,
+        "maxZMM": 17.5,
+        "heightFadeMM": 0.5
       }
     ],
     "lowWaterDomain": {
