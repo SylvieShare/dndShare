@@ -30,6 +30,10 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     region=(u>bounds['u'][0])&(u<bounds['u'][1])&(v>bounds['v'][0])&(v<bounds['v'][1])&(z>bounds['minZMM'])
     if 'x' in bounds: region&=(x>=bounds['x'][0])&(x<=bounds['x'][1])
     if 'y' in bounds: region&=(y>=bounds['y'][0])&(y<=bounds['y'][1])
+    if bounds.get('anyBoundsMM'):
+        domain=np.zeros(len(positions),bool)
+        for lo,hi in bounds['anyBoundsMM']:domain|=np.all((positions>=lo)&(positions<=hi),axis=1)
+        region&=domain
     weight*=region
     for box in recipe.get('masonryOverrides',[]):
         mask=(u>=box['u'][0])&(u<=box['u'][1])&(v>=box['v'][0])&(v<=box['v'][1])&(z>=box['z'][0])&(z<=box['z'][1])
@@ -69,8 +73,8 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
 
 
 def masonry_back_finish(nodes, links, finish, recipe, noise, wear):
-    settings=recipe.get('masonryBackFace')
-    if not settings: return finish
+    settings_list=recipe.get('masonryBackFaces') or ([recipe['masonryBackFace']] if recipe.get('masonryBackFace') else [])
+    if not settings_list: return finish
     def scalar(op,a,b=None):
         node=nodes.new('ShaderNodeMath');node.operation=op
         for i,v in enumerate([a,b]):
@@ -81,17 +85,19 @@ def masonry_back_finish(nodes, links, finish, recipe, noise, wear):
     def clamp(v):return scalar('MINIMUM',scalar('MAXIMUM',v,0),1)
     coords=nodes.new('ShaderNodeTexCoord');position=nodes.new('ShaderNodeSeparateXYZ');links.new(coords.outputs['Object'],position.inputs[0])
     geometry=nodes.new('ShaderNodeNewGeometry');normal=nodes.new('ShaderNodeSeparateXYZ');links.new(geometry.outputs['True Normal'],normal.inputs[0])
-    distance=scalar('ABSOLUTE',scalar('SUBTRACT',position.outputs['X'],settings['xMM']))
-    plane=clamp(scalar('DIVIDE',scalar('SUBTRACT',settings['distanceMM'],distance),.07))
-    facing=clamp(scalar('DIVIDE',scalar('SUBTRACT',normal.outputs['X'],settings['normalXMin']),.015))
-    height=clamp(scalar('DIVIDE',scalar('SUBTRACT',position.outputs['Z'],settings['minZMM']),.5))
-    mask=scalar('MULTIPLY',scalar('MULTIPLY',plane,facing),height)
-    rgb=np.array(recipe['masonryRGB']);linear=np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
-    colour=nodes.new('ShaderNodeMixRGB');colour.blend_type='MULTIPLY';colour.inputs[0].default_value=1;colour.inputs[1].default_value=(*linear,1);links.new(noise,colour.inputs[2])
-    worn=nodes.new('ShaderNodeMixRGB');worn.blend_type='MULTIPLY';worn.inputs[0].default_value=1;links.new(colour.outputs[0],worn.inputs[1]);links.new(wear,worn.inputs[2]);colour=worn
-    if recipe.get('darkenJoints'):
-        ao=nodes.new('ShaderNodeAmbientOcclusion');ao.inputs['Distance'].default_value=.9;ao.samples=16
-        shade=scalar('ADD',scalar('MULTIPLY',ao.outputs['AO'],.45),.55)
-        dirt=nodes.new('ShaderNodeMixRGB');dirt.blend_type='MULTIPLY';dirt.inputs[0].default_value=1;links.new(colour.outputs[0],dirt.inputs[1]);links.new(shade,dirt.inputs[2]);colour=dirt
-    result=nodes.new('ShaderNodeMixRGB');links.new(mask,result.inputs[0]);links.new(finish.outputs[0],result.inputs[1]);links.new(colour.outputs[0],result.inputs[2])
-    return result
+    for settings in settings_list:
+        distance=scalar('ABSOLUTE',scalar('SUBTRACT',position.outputs[settings.get('axis','X')],settings.get('coordinateMM',settings.get('xMM'))))
+        plane=clamp(scalar('DIVIDE',scalar('SUBTRACT',settings['distanceMM'],distance),.07))
+        facing=clamp(scalar('DIVIDE',scalar('SUBTRACT',scalar('MULTIPLY',normal.outputs[settings.get('axis','X')],settings.get('normalSign',1)),settings.get('normalMin',settings.get('normalXMin'))),.015))
+        height=clamp(scalar('DIVIDE',scalar('SUBTRACT',position.outputs['Z'],settings['minZMM']),.5))
+        mask=scalar('MULTIPLY',scalar('MULTIPLY',plane,facing),height)
+        rgb=np.array(recipe['masonryRGB']);linear=np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
+        colour=nodes.new('ShaderNodeMixRGB');colour.blend_type='MULTIPLY';colour.inputs[0].default_value=1;colour.inputs[1].default_value=(*linear,1);links.new(noise,colour.inputs[2])
+        worn=nodes.new('ShaderNodeMixRGB');worn.blend_type='MULTIPLY';worn.inputs[0].default_value=1;links.new(colour.outputs[0],worn.inputs[1]);links.new(wear,worn.inputs[2]);colour=worn
+        if recipe.get('darkenJoints'):
+            ao=nodes.new('ShaderNodeAmbientOcclusion');ao.inputs['Distance'].default_value=.9;ao.samples=16
+            shade=scalar('ADD',scalar('MULTIPLY',ao.outputs['AO'],.45),.55)
+            dirt=nodes.new('ShaderNodeMixRGB');dirt.blend_type='MULTIPLY';dirt.inputs[0].default_value=1;links.new(colour.outputs[0],dirt.inputs[1]);links.new(shade,dirt.inputs[2]);colour=dirt
+        result=nodes.new('ShaderNodeMixRGB');links.new(mask,result.inputs[0]);links.new(finish.outputs[0],result.inputs[1]);links.new(colour.outputs[0],result.inputs[2])
+        finish=result
+    return finish
