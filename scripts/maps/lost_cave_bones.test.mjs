@@ -36,3 +36,20 @@ test("low bone cavities stay pale while unrelated changed ground and mounting st
   assert(bone.rgb[0] > bone.rgb[2]);
   assert(bone.roughness >= 0.8);
 });
+
+test("second jaw uses measured contours and keeps stone between teeth without a bare-ground fallback", () => {
+  const spec = specs["LC-044"];
+  for (const p of [
+    [-4.6062, 3.4696, 15.7986],
+    [7.752, -12.2574, 14.9494],
+    [-10.7854, 11.8976, 14.8632],
+  ])
+    assert.equal(caveBonePartAt(p, spec), "bone");
+  for (const p of [
+    [10.5607, 13.5834, 14.5562],
+    [5.505, 4.5963, 14.2054],
+    [9.4372, 7.4044, 14.4965],
+    [0, 0, 8],
+  ])
+    assert.equal(caveBonePartAt(p, spec), "rock");
+});

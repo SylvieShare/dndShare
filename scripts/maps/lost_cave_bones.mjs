@@ -30,8 +30,10 @@ function nearPath(p, path) {
   });
 }
 export function caveBonePartAt(p, spec, reference) {
-  if (!reference)
-    throw new Error("Verified bare source required for cave bones");
+  if (!reference && !spec.bones.regionsOnly)
+    throw new Error(
+      "Verified bare source or individually measured bone regions required",
+    );
   if (p[2] < spec.bones.minZ) return "rock";
   if (
     spec.bones.volumes?.some(
@@ -45,6 +47,7 @@ export function caveBonePartAt(p, spec, reference) {
     spec.bones.directRegions?.some((poly) => inPolygon(p, poly))
   )
     return "bone";
+  if (spec.bones.regionsOnly) return "rock";
   if (
     spec.bones.regions &&
     !spec.bones.regions.some((poly) => inPolygon(p, poly))
