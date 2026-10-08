@@ -34,6 +34,9 @@ def main():
     for original in canonical:
         match = re.fullmatch(r'(MH-\d{3})-(.+)', original.stem)
         code, name = match.groups() if match else (original.stem, original.stem)
+        # UNS 071 has a duplicated word; the NL file and author PDF agree.
+        if code == 'MH-071':
+            name = 'Low Water Angle'
         path = original
         # This supplied NL archive swaps the shapes of 012/013; canonical UNS labels match the PDF.
         if match and code not in {'MH-012','MH-013'}:

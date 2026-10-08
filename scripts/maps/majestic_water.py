@@ -66,7 +66,7 @@ def apply_water(obj, positions, colours, roughness, recipe):
         near=np.clip((shore['waterRestoreWidthMM']-distance)/2,0,1)
         low=np.clip((shore['waterRestoreMaxZMM']-z)/.2,0,1)
         weight=np.maximum(weight,near*low)
-    weight*=np.clip((z-settings['minZMM'])/.35,0,1)*np.clip((normals[:,2]-.05)/.2,0,1)
+    weight*=np.clip((z-settings['minZMM'])/.35,0,1)*np.clip((normals[:,2]-settings.get('normalMin',.05))/settings.get('normalFade',.2),0,1)
     if settings.get('clipToLowWaterDomain'):
         weight*=near_domain
     if settings.get('preserveWood'):
