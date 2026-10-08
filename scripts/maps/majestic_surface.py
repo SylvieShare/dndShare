@@ -74,7 +74,7 @@ def grass_weights(obj, recipe, code):
         weights*=1-domain*(1-height)
     if recipe.get('raisedGrass'):
         settings=recipe['raisedGrass']
-        field=np.load(Path(__file__).resolve().parents[2]/'models/collections/majestic-highlands/survey'/code/'top-surface.npy')[:,:,0]
+        field=np.load(Path(__file__).resolve().parents[2]/'models/collections/majestic-highlands/survey'/settings.get('fieldCode',code)/'top-surface.npy')[:,:,0]
         top=sample_field(field,positions)
         normals=np.empty(len(positions)*3,np.float32);obj.data.vertices.foreach_get('normal',normals);normals=normals.reshape(-1,3)
         cap=np.clip((settings['depthMM']-(top-positions[:,2]))/settings['depthFadeMM'],0,1)

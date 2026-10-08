@@ -1,0 +1,189 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 75000,
+  "lodTriangles": 28000,
+  "tileType": "wall-straight",
+  "hasDecor": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "low",
+    "outdoor",
+    "xl",
+    "pine",
+    "fern",
+    "forest"
+  ],
+  "recipe": "majestic-low-wall-pines-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2800000, 4800000],
+    "targetLODBytes": [1000000, 2100000],
+    "targetShadowBytes": [70000, 145000],
+    "targetPreviewBytes": [18000, 100000],
+    "basis": "574032 source triangles, measured 3x3 base 104.96x104.98 mm and max 64.68 mm. Bare MH-062 matches 97.94% sampled lower floor and 99.81% unobstructed wall. Two pine crowns measured at 64.68 and 50.03 mm plus one broad-leaf fern area. Separate new vegetation from bare wall, preserve trunk bark and gaps, keep cap grass from bare-wall height field. Test 75k/28k and colour 1024/2048 render, LOD 1024, data 1024/512. Two occupied cells excluded, seven lower-floor points, no slots."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [29, 11],
+      [28, -3],
+      [22, -12],
+      [13, -22],
+      [1, -19],
+      [-7, -5],
+      [-3, 9],
+      [13, 14]
+    ],
+    [
+      [-2, 34],
+      [5, 20],
+      [-3, 6],
+      [-5, -4],
+      [-11, -26],
+      [-36, -19],
+      [-36, 12],
+      [-25, 34]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [2.57, 0],
+      [3, 0],
+      [3, 3],
+      [2.57, 3]
+    ],
+    [
+      [2.585714, 1.271429],
+      [2.57049, 1.194892],
+      [2.527136, 1.130007],
+      [2.462251, 1.086653],
+      [2.385714, 1.071429],
+      [2.309178, 1.086653],
+      [2.244293, 1.130007],
+      [2.200938, 1.194892],
+      [2.185714, 1.271429],
+      [2.200938, 1.347965],
+      [2.244293, 1.41285],
+      [2.309178, 1.456204],
+      [2.385714, 1.471429],
+      [2.462251, 1.456204],
+      [2.527136, 1.41285],
+      [2.57049, 1.347965]
+    ],
+    [
+      [2.785714, 2.585714],
+      [2.77484, 2.531045],
+      [2.743872, 2.484699],
+      [2.697526, 2.453731],
+      [2.642857, 2.442857],
+      [2.588188, 2.453731],
+      [2.541842, 2.484699],
+      [2.510874, 2.531045],
+      [2.5, 2.585714],
+      [2.510874, 2.640383],
+      [2.541842, 2.68673],
+      [2.588188, 2.717697],
+      [2.642857, 2.728571],
+      [2.697526, 2.717697],
+      [2.743872, 2.68673],
+      [2.77484, 2.640383]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [-100, 100],
+    "v": [-100, 100],
+    "x": [32, 54],
+    "y": [-54, 54],
+    "minZMM": 15.1
+  },
+  "masonryRGB": [0.54, 0.38, 0.215],
+  "masonryTopRGB": [0.62, 0.46, 0.27],
+  "masonryTopMinZMM": 35,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [41, -54, 34],
+    "maxMM": [54, 54, 44],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.12,
+    "normalFade": 0.28,
+    "fieldCode": "MH-062"
+  },
+  "masonryBackFace": {
+    "xMM": 52.48,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 15.2
+  },
+  "blockedCells": [
+    [2, 1],
+    [2, 2]
+  ],
+  "vegetationReference": {
+    "code": "MH-062",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.18
+  },
+  "trees": [
+    {
+      "baseXY": [31, 8],
+      "topXY": [31, 12],
+      "heightMM": 64.68,
+      "foliageRadiusMM": 22,
+      "trunkRadiusMM": 2.7,
+      "rootRadiusMM": 7,
+      "barkTopMM": 41
+    },
+    {
+      "baseXY": [40, -38],
+      "topXY": [40, -38.5],
+      "heightMM": 50.03,
+      "foliageRadiusMM": 13,
+      "trunkRadiusMM": 2.0,
+      "rootRadiusMM": 5,
+      "barkTopMM": 34
+    }
+  ],
+  "ferns": [
+    {
+      "centreMM": [26, -11, 20],
+      "radiiMM": [23, 25, 11],
+      "minZMM": 15.5,
+      "boundsMM": [
+        [4, -37, 15.5],
+        [47, 5.5, 30]
+      ]
+    }
+  ]
+}
