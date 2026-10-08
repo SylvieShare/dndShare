@@ -1,0 +1,78 @@
+{
+  "sourceName": "Rocks Ground 2",
+  "referencePage": 5,
+  "material": "cave-boulders",
+  "floorHeightMM": 14.73,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 15000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [20, 90],
+    "previewKiB": [10, 120],
+    "basis": "340000-triangle dense rubble1x1.45k/15k preserve larger rounded silhouettes and low boulders around all edges;2048/1024 bakes, two KTX2 candidates against PNG. Render1.5–4MiB, LOD0.6–2MiB."
+  },
+  "notes": "Author page5: dense grey-green rubble and large boulders on the brown cave base. Surface measurements: upper heads20.1136,21.7301,25.407,27.1423mm; lower stones15.9413,16.9481,19.4806mm. Exposed corner floor-14.1611/-12.3899/14.7231 has nearly vertical upnormal and stays brown. Seven measured root envelopes cover individual lower groups and exclude low foundation; relief joints darkened only on brown material. Preserve LC-033, original source, accepted peg, footprint and central standing point; familyLC-rocks-ground. Full2048/1024 albedo retained after reduced maps produced brown cross-island flecks on upper green stones, especially LOD. Data maps compared at1024/512 and768/384.",
+  "groupCode": "LC-rocks-ground",
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31],
+    "topThresholdMM": 14.98,
+    "rootMinZMM": 14.25,
+    "roots": [
+      {
+        "x": -10,
+        "y": 8,
+        "rx": 6.7,
+        "ry": 8.6
+      },
+      {
+        "x": 0,
+        "y": 8,
+        "rx": 6,
+        "ry": 7
+      },
+      {
+        "x": 10,
+        "y": 6,
+        "rx": 6.6,
+        "ry": 8.5
+      },
+      {
+        "x": -10,
+        "y": -5,
+        "rx": 6.5,
+        "ry": 7
+      },
+      {
+        "x": 0,
+        "y": -4,
+        "rx": 7.8,
+        "ry": 8.3
+      },
+      {
+        "x": 8,
+        "y": -10,
+        "rx": 6.5,
+        "ry": 6
+      },
+      {
+        "x": -4,
+        "y": -12,
+        "rx": 8,
+        "ry": 4.5
+      }
+    ]
+  },
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  }
+}
