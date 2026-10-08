@@ -1,0 +1,410 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 55000,
+  "lodTriangles": 20000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "low",
+    "outdoor",
+    "xl",
+    "corridor"
+  ],
+  "recipe": "majestic-low-corridor-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      2800000,
+      5000000
+    ],
+    "targetLODBytes": [
+      1000000,
+      2400000
+    ],
+    "targetShadowBytes": [
+      45000,
+      115000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      90000
+    ],
+    "basis": "512004 source triangles; measured 3x3 base104.94x104.98 mm, max43.30 mm. Two opposite E/W cliff walls, lower floor matches MH-062 at92.8% sampled heights; middle eastern centre blocked at36.91 mm, eight lower points. Raised grass on both ridges with stone shelves and measured rock exclusions. Warm ochre PDF page21. Test55k/20k colour1024/2048, data1024/512, 16 bit UV; no slots."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [
+        29,
+        11
+      ],
+      [
+        28,
+        -3
+      ],
+      [
+        22,
+        -12
+      ],
+      [
+        13,
+        -22
+      ],
+      [
+        1,
+        -19
+      ],
+      [
+        -7,
+        -5
+      ],
+      [
+        -3,
+        9
+      ],
+      [
+        13,
+        14
+      ]
+    ],
+    [
+      [
+        -2,
+        34
+      ],
+      [
+        5,
+        20
+      ],
+      [
+        -3,
+        6
+      ],
+      [
+        -5,
+        -4
+      ],
+      [
+        -11,
+        -26
+      ],
+      [
+        -36,
+        -19
+      ],
+      [
+        -36,
+        12
+      ],
+      [
+        -25,
+        34
+      ]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 68,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [
+        0.014286,
+        0.014286
+      ],
+      [
+        0.1,
+        0.214286
+      ],
+      [
+        0.228571,
+        0.5
+      ],
+      [
+        0.3,
+        0.928571
+      ],
+      [
+        0.342857,
+        1.5
+      ],
+      [
+        0.442857,
+        2.071429
+      ],
+      [
+        0.285714,
+        2.5
+      ],
+      [
+        0.2,
+        2.785714
+      ],
+      [
+        0.014286,
+        2.985714
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2.985714,
+        0.014286
+      ],
+      [
+        2.842857,
+        0.214286
+      ],
+      [
+        2.614286,
+        0.5
+      ],
+      [
+        2.428571,
+        0.928571
+      ],
+      [
+        2.457143,
+        1.5
+      ],
+      [
+        2.371429,
+        2.071429
+      ],
+      [
+        2.542857,
+        2.5
+      ],
+      [
+        2.642857,
+        2.785714
+      ],
+      [
+        2.957143,
+        2.985714
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        0
+      ]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "y": [
+      -54,
+      54
+    ],
+    "minZMM": 15.1,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          15.1
+        ],
+        [
+          -32,
+          54,
+          44
+        ]
+      ],
+      [
+        [
+          26,
+          -54,
+          15.1
+        ],
+        [
+          54,
+          54,
+          44
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.62,
+    0.46,
+    0.27
+  ],
+  "masonryTopMinZMM": 35,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      34
+    ],
+    "maxMM": [
+      54,
+      54,
+      45
+    ],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.12,
+    "normalFade": 0.28,
+    "exclusions": [
+      {
+        "minMM": [
+          -46,
+          -45,
+          37
+        ],
+        "maxMM": [
+          -34,
+          43,
+          39.35
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "centreMM": [
+          45.7,
+          -16.5,
+          42.2
+        ],
+        "radiiMM": [
+          3.5,
+          4,
+          2.5
+        ],
+        "minZMM": 40.2
+      },
+      {
+        "centreMM": [
+          39.3,
+          -32.5,
+          40.0
+        ],
+        "radiiMM": [
+          3.2,
+          3.5,
+          2.2
+        ],
+        "minZMM": 38.8
+      },
+      {
+        "centreMM": [
+          -43,
+          -19.5,
+          40.2
+        ],
+        "radiiMM": [
+          3.6,
+          3.4,
+          2.2
+        ],
+        "minZMM": 38.8
+      },
+      {
+        "centreMM": [
+          -47,
+          23,
+          40.6
+        ],
+        "radiiMM": [
+          3,
+          3,
+          2
+        ],
+        "minZMM": 39.7
+      },
+      {
+        "centreMM": [
+          44,
+          -22.5,
+          40.0
+        ],
+        "radiiMM": [
+          3.2,
+          3.6,
+          2.0
+        ],
+        "minZMM": 38.8
+      }
+    ]
+  },
+  "blockedCells": [
+    [
+      2,
+      1
+    ]
+  ],
+  "uvAngleLimitRad": 0.55,
+  "quantizeTexcoord": 16,
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.5,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 15.2
+    },
+    {
+      "axis": "X",
+      "coordinateMM": -52.5,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 15.2
+    }
+  ],
+  "lodUVAngleLimitRad": 0.15
+}
