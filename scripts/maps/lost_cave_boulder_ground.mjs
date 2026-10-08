@@ -11,6 +11,7 @@ export function boulderGroundPartAt(p, n, spec) {
     )
   )
     return "boulder";
+  if (spec.boulder.onlyVolumes) return "rock";
   if (p[2] > spec.boulder.topThresholdMM) return "boulder";
   if (
     p[2] > spec.boulder.rootMinZMM &&

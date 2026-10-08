@@ -1,0 +1,93 @@
+{
+  "sourceName": "Rocks Wall Broken",
+  "referencePage": 5,
+  "material": "cave-boulders",
+  "floorHeightMM": 14.73,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5],
+    "lodMiB": [0.7, 2.2],
+    "shadowKiB": [30, 130],
+    "previewKiB": [10, 160],
+    "basis": "379854-triangle1x1 broken wall with two slender ends and asymmetrical rubble.55k/18k retain wall fractures and rounded boulder shapes;2048/1024 bakes and full-resolution color masks, two data-map budgets."
+  },
+  "notes": "Author page5: two warm brown broken wall ends with a grey-green rounded rubble heap on one side. Flat wall caps38.4802mm and relief38.9962mm; brown structural samples-.0695/7.0745/25.6643,-6.6675/1.3947/18.064. Seven individual3D boulder envelopes cover measured rubble11.043/10.0696/21.3837,8.8899/6.4547/23.0598,5.7646/-6.0409/20.0765,13.8211/1.3288/16.2671 and lower groups. Native wall ends remain brown by default; all surfaces outside explicit boulder volumes stay brown. FixedX split rejected for straight color boundaries; LC-001 reference rejected because changed wall surfaces differ from the complete original. Preserve LC-035 source, wall mode/mask, footprint, mount and standing point, familyLC-rocks-wall-broken. Additional head samples7.3131/7.5851/27.6257 and8.5662/7.8553/26.7024 extend the highest boulder volume; outer heads14.3701/7.3242/17.7176 and15.188/-14.0366/17.0164 receive separate envelopes. High wall caps and side faces stay brown by default; broad axis-aligned wall masks rejected because they clipped adjacent boulders. Native pixel probes of residual brown faces10.3824/4.9044/18.4339 and7.8963/-9.6924/20.7403 showed envelope gaps, not UV corruption. Highest boulder lower extent and front boulder top enlarged to include entire surfaces; low boundary stays above flat foundation.",
+  "groupCode": "LC-rocks-wall-broken",
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31],
+    "topThresholdMM": 14.98,
+    "rootMinZMM": 14.25,
+    "roots": [
+      {
+        "x": 10,
+        "y": 10,
+        "rx": 5.8,
+        "ry": 6
+      },
+      {
+        "x": 9,
+        "y": 2,
+        "rx": 7,
+        "ry": 7
+      },
+      {
+        "x": 10,
+        "y": -8,
+        "rx": 5.8,
+        "ry": 8
+      }
+    ],
+    "volumes": [
+      {
+        "center": [8.2, 7.2, 23.5],
+        "radius": [4.6, 5, 7.5]
+      },
+      {
+        "center": [10.7, 11.3, 22],
+        "radius": [4, 4.5, 5]
+      },
+      {
+        "center": [7.5, -5, 20],
+        "radius": [4.5, 4, 5]
+      },
+      {
+        "center": [13, 2, 17],
+        "radius": [3, 4, 3.8]
+      },
+      {
+        "center": [12.5, -7.5, 18],
+        "radius": [4, 4, 4.5]
+      },
+      {
+        "center": [7, 2, 19.5],
+        "radius": [3.5, 4, 4.5]
+      },
+      {
+        "center": [8, -11.2, 19.3],
+        "radius": [4.5, 4.5, 4.5]
+      },
+      {
+        "center": [13.5, 7.7, 18.5],
+        "radius": [3, 4, 4]
+      },
+      {
+        "center": [13.7, -12.8, 16.8],
+        "radius": [3.5, 3.5, 3.5]
+      }
+    ],
+    "onlyVolumes": true
+  },
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  }
+}

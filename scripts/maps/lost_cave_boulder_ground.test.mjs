@@ -30,6 +30,26 @@ test("ground boulders remain distinct from flat slabs and low foundation", () =>
   assert.equal(boulder.metallic, 0);
   assert.ok(boulder.rgb[1] > boulder.rgb[0]);
 });
+test("broken wall retains brown structural ends and fractures beside green rubble", () => {
+  const s = specs["LC-035"];
+  for (const p of [
+    [-1.1807, 14.5496, 38.4802],
+    [-2.2225, -12.3297, 38.9962],
+    [-0.0695, 7.0745, 25.6643],
+    [-6.6675, 1.3947, 18.064],
+  ])
+    assert.equal(boulderGroundPartAt(p, [0, 0, 1], s), "rock");
+  for (const p of [
+    [11.043, 10.0696, 21.3837],
+    [8.8899, 6.4547, 23.0598],
+    [5.7646, -6.0409, 20.0765],
+    [13.8211, 1.3288, 16.2671],
+    [10.3824, 4.9044, 18.4339],
+    [7.8963, -9.6924, 20.7403],
+    [7.3131, 7.5851, 27.6257],
+  ])
+    assert.equal(boulderGroundPartAt(p, [0, 0, 1], s), "boulder");
+});
 test("pit stones are colored independently of the low cavity and brown walls", () => {
   const s = specs["LC-034"];
   for (const p of [
