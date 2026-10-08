@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
+import { uvSurfaceTracker } from "./uv_surface_overlap.mjs";
 import { readGlb, replaceImages } from "./glb_textures.mjs";
 import { setSurfaceAtlas } from "./pbr_revision.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
@@ -50,6 +51,8 @@ if (spec.proximityReference) {
   );
   if (
     !bare ||
+    (spec.proximityReference.minimumSurfaceZMM !== undefined &&
+      !grid.cutCapsExcluded) ||
     grid.sourceSHA256 !== bare.sourceSHA256 ||
     grid.code !== spec.proximityReference.code ||
     grid.stepMM !== spec.proximityReference.stepMM ||
@@ -85,6 +88,7 @@ for (const field of [
   "mountInnerColor",
   "mountInnerRoughness",
   "mountRegions",
+  "uvAngleLimitRad",
 ])
   if (
     JSON.stringify(spec[field]) !== JSON.stringify(report.materialSpec[field])
@@ -105,6 +109,7 @@ if (reference)
             sourceSHA256: reference.proximity.sourceSHA256,
             rotationZDegrees: reference.proximity.rotationZDegrees ?? 0,
             minimumSurfaceZMM: reference.proximity.minimumSurfaceZMM ?? null,
+            cutCapsExcluded: reference.proximity.cutCapsExcluded ?? false,
             boundsMM: reference.proximity.boundsMM,
             stepMM: reference.proximity.stepMM,
             thresholdMM: reference.proximity.thresholdMM,
@@ -145,7 +150,9 @@ for (const tier of ["render", "lod"]) {
       (part) => [part, 0],
     ),
   );
+  const trackSurface = uvSurfaceTracker(size, size);
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
+    trackSurface(i, p);
     const value = sewerMasonryPixel(
       p,
       n,

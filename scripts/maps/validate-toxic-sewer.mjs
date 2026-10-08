@@ -4,6 +4,8 @@ import { createRequire } from "node:module";
 import { assertSameSurface } from "./surface_geometry.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
 import { worldPoint } from "./peg-geometry.mjs";
+import { rasterizeSurface } from "./uv_surface.mjs";
+import { uvSurfaceTracker } from "./uv_surface_overlap.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One Toxic Sewer report required");
 const report = JSON.parse(await fs.readFile(file, "utf8")),
@@ -96,6 +98,13 @@ for (const tier of ["render", "lod"]) {
     after = await io.read(path.join(dir, tier + ".glb"));
   await before.transform(dequantize());
   await after.transform(dequantize());
+  const atlasSize = report.materialSpec[tier + "BakeSize"];
+  rasterizeSurface(
+    after,
+    atlasSize,
+    atlasSize,
+    uvSurfaceTracker(atlasSize, atlasSize),
+  );
   const a = getBounds(before.getRoot().listScenes()[0]),
     b = getBounds(after.getRoot().listScenes()[0]);
   const drift = Math.max(
@@ -152,10 +161,15 @@ for (const tier of ["render", "lod"]) {
     };
   } else mountCheck = assertSameSurface(mounting(before), mounting(after));
   checks[tier] = {
+    uvSurfaceUnique: true,
     boundsDrift: drift,
     mounting: mountCheck,
     sourceDeviationMM: report.rebake[tier].sourceDeviationMM,
   };
+  if (report.reunwrapAcceptedGeometry) {
+    checks[tier].retainedGeometry = assertSameSurface(before, after);
+    checks[tier].openings = assertOpenings(after);
+  }
   if (reference)
     checks[tier].candidate = assertSameSurface(
       await io.read(path.join(reference, tier + ".glb")),

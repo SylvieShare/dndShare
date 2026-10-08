@@ -1,0 +1,113 @@
+{
+  "sourceName": "Pipe Water T-Shaped Skulls",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.9],
+    "lodMiB": [0.35, 1],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Three-way copper-pipe water junction with one partly submerged skull and one long bone; preserve six pipe lips, fittings, bone silhouette and steep central wave."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-10.8, -2.5, 11.9],
+        "radius": [3, 3.2, 2.5]
+      },
+      "min": [-14, -6, 10.6],
+      "max": [-7.3, 1, 13.3]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-3.2, -13.1, 11.9],
+        "radius": [2.3, 2.8, 2.3]
+      },
+      "min": [-6, -16.5, 10.6],
+      "max": [0, -9.7, 13.3]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-18, 13.4, 16.2],
+        [18, 13.4, 16.2]
+      ],
+      "radius": 3.9,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-18, -13.5, 16.2],
+        [-13.5, -13.5, 16.2],
+        [-13.5, -18, 16.2]
+      ],
+      "radius": 4.4,
+      "min": [-18, -18, 13.65],
+      "max": [-9.3, -9.3, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [18, -13.5, 16.2],
+        [13.5, -13.5, 16.2],
+        [13.5, -18, 16.2]
+      ],
+      "radius": 4.4,
+      "min": [9.3, -18, 13.65],
+      "max": [18, -9.3, 20.2]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 8.8, 0]
+    },
+    {
+      "part": "stone",
+      "max": [-8.8, -8.8, 13.65]
+    },
+    {
+      "part": "stone",
+      "min": [8.8, -18, 0],
+      "max": [18, -8.8, 13.65]
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.8],
+      "added": true
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [11.6, 12.1, 12.5, 18],
+    "skullCentreXYMM": [-10.8, -2.5],
+    "longBoneCentreXYMM": [-3.2, -13.1],
+    "bareWaterReference": "TS-058",
+    "upperBankReference": "TS-066"
+  },
+  "notes": "Authorpage8: one ivory skull and a long bone in the lime three-way channel. Measured skull/bone positions match AngleSkulls but water reference is this sourceTShaped counterpart. Bone height comparison excludes old bubbles; independent EmptyTShaped upper-bank distance preserves green masonry. Full water mask retains steep central wave without height-band stripe.",
+  "referenceCode": "TS-058",
+  "referenceFloorMaxZMM": 12.8,
+  "proximityReference": {
+    "code": "TS-066",
+    "minimumSurfaceZMM": 11.6,
+    "boundsMM": [
+      [-18, -18, 9.4],
+      [18, 18, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

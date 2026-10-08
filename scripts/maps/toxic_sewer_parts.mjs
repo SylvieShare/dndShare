@@ -54,7 +54,14 @@ export function sewerPartAt(p, spec, reference, shift = [0, 0]) {
     spec.regions?.find(
       (r) =>
         inSewerRegion(local, r) &&
-        (!r.added || addedSewerSurface(local, reference)) &&
+        (!r.added ||
+          ((r.added !== "both" || addedSewerSurface(local, reference)) &&
+            addedSewerSurface(
+              local,
+              (r.added === "height" || r.added === "both") && reference
+                ? { ...reference, proximity: undefined }
+                : reference,
+            ))) &&
         (!r.eroded ||
           (reference &&
             referenceSample(reference.floor, local[0], local[1]) !== null &&

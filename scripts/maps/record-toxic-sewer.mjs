@@ -32,7 +32,7 @@ for (const entry of await fs.readdir(path.join(base, "detailed"), {
     });
     if (!raw) continue;
     const report = JSON.parse(raw);
-    if (!report.publication) continue;
+    if (!report.publication || report.publication.supersededAt) continue;
     const model = registry.find((m) => m.id === report.publication.id);
     assert.ok(model, "Publication must be confirmed in the MCP snapshot");
     assert.equal(

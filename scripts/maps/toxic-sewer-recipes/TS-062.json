@@ -1,0 +1,150 @@
+{
+  "sourceName": "Pipe Water End Skulls 1",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 40000,
+  "lodTriangles": 12500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.1, 3.2],
+    "lodMiB": [0.4, 1.2],
+    "shadowKiB": [30, 100],
+    "previewKiB": [8, 45],
+    "basis": "Dead-end pipe channel with large intertwined long-bone pile and one skull; preserve bone overlaps/socket, U-shaped copper pipe and curved stone bank."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [0.1, -8.3, 11.9],
+        "radius": [3.1, 3.7, 2.5]
+      },
+      "min": [-4, -12, 10.6],
+      "max": [4, 0, 13.5]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "path": [
+        [-5.5, -5.8, 11.8],
+        [-4.5, 2.1, 12.1],
+        [-2.8, 6.5, 12.1]
+      ],
+      "radius": 1.65,
+      "min": [-8, -12, 10.6],
+      "max": [8, 8, 13.5]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "path": [
+        [-1, -3.5, 11.8],
+        [5, 3.6, 12.2]
+      ],
+      "radius": 1.6,
+      "min": [-8, -12, 10.6],
+      "max": [8, 8, 13.5]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "path": [
+        [-1.5, -5, 11.8],
+        [0.8, 4, 12.1]
+      ],
+      "radius": 1.6,
+      "min": [-8, -12, 10.6],
+      "max": [8, 8, 13.5]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "path": [
+        [4, -5.6, 12.1],
+        [5, -1, 12.1],
+        [5.9, 3.3, 12.1]
+      ],
+      "radius": 1.4,
+      "min": [-8, -12, 10.6],
+      "max": [8, 8, 13.5]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "path": [
+        [-6.2, -1.7, 11.8],
+        [-4.4, -3.5, 11.8]
+      ],
+      "radius": 1.6,
+      "min": [-8, -12, 10.6],
+      "max": [8, 8, 13.5]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-13.4, -18, 16.2],
+        [-13.4, 1.6410267108574533e-15, 16.2],
+        [-12.943406072273515, 3.468175204373782, 16.2],
+        [-11.604740410711479, 6.699999999999999, 16.2],
+        [-9.475230867899736, 9.475230867899738, 16.2],
+        [-6.700000000000003, 11.604740410711477, 16.2],
+        [-3.4681752043737766, 12.943406072273516, 16.2],
+        [8.205133554287267e-16, 13.4, 16.2],
+        [3.468175204373778, 12.943406072273516, 16.2],
+        [6.699999999999998, 11.604740410711479, 16.2],
+        [9.475230867899738, 9.475230867899736, 16.2],
+        [11.604740410711479, 6.6999999999999975, 16.2],
+        [12.943406072273515, 3.46817520437378, 16.2],
+        [13.4, 0.0, 16.2],
+        [13.4, -18, 16.2]
+      ],
+      "radius": 3.9,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 8.8, 0]
+    },
+    {
+      "part": "stone",
+      "max": [-8.8, 18, 13.65]
+    },
+    {
+      "part": "stone",
+      "min": [8.8, -18, 0]
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.8]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12, 13, 14, 15, 18],
+    "skullCentreXYMM": [0.1, -8.3],
+    "bonePathsMeasured": 5,
+    "uPipeRadiusMM": 13.4,
+    "upperBankReference": "TS-067"
+  },
+  "notes": "Authorpage8: skull and interlaced long bones in lime dead-end water. Six bounded bone groups use Water height reference to exclude low liquid; upper EmptyEnd geometry, with virtual cut caps omitted, protects the U bank. Continuous measured U pipe and collars remain copper; source overlapping bone silhouettes retained.",
+  "referenceCode": "TS-068",
+  "referenceFloorMaxZMM": 15,
+  "proximityReference": {
+    "code": "TS-067",
+    "minimumSurfaceZMM": 11.6,
+    "boundsMM": [
+      [-18, -18, 9.4],
+      [18, 18, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

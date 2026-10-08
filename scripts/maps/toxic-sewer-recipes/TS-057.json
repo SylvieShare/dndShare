@@ -1,0 +1,109 @@
+{
+  "sourceName": "Pipe Water Angle Skulls",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.9],
+    "lodMiB": [0.35, 1],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Curved copper-pipe channel with one submerged skull and one long bone; preserve socket, bone tips, pipe collars and the opposite elbow without painting adjacent waves ivory."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-10.8, -2.5, 11.9],
+        "radius": [3, 3.2, 2.5]
+      },
+      "min": [-14, -6, 10.6],
+      "max": [-7.3, 1, 13.3]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-3.2, -13.1, 11.9],
+        "radius": [2.3, 2.8, 2.3]
+      },
+      "min": [-6, -16.5, 10.6],
+      "max": [0, -9.7, 13.3]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-18, 13.4, 16.2],
+        [8.205133554287267e-16, 13.4, 16.2],
+        [3.468175204373778, 12.943406072273516, 16.2],
+        [6.699999999999998, 11.604740410711479, 16.2],
+        [9.475230867899738, 9.475230867899736, 16.2],
+        [11.604740410711477, 6.7, 16.2],
+        [12.943406072273516, 3.4681752043737775, 16.2],
+        [13.4, 0.0, 16.2],
+        [13.4, -18, 16.2]
+      ],
+      "radius": 3.9,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-18, -13.5, 16.2],
+        [-13.5, -13.5, 16.2],
+        [-13.5, -18, 16.2]
+      ],
+      "radius": 4.4,
+      "min": [-18, -18, 13.65],
+      "max": [-9.3, -9.3, 20.2]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 8.8, 0]
+    },
+    {
+      "part": "stone",
+      "min": [8.8, -18, 0]
+    },
+    {
+      "part": "stone",
+      "max": [-8.8, -8.8, 13.65]
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.8],
+      "surfaceBandMM": 0.65,
+      "added": true
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [11.6, 12.1, 12.5, 18],
+    "skullCentreXYMM": [-10.8, -2.5],
+    "longBoneCentreXYMM": [-3.2, -13.1],
+    "bareWaterReference": "TS-056",
+    "upperBankReference": "TS-065"
+  },
+  "notes": "Authorpage8: one ivory skull and long bone inside the curved lime channel. Bone added-height test uses bare PipeWaterAngle surface; separate upper-bank3D field preserves old stone under liquid mask. Explicit pipe/stone masks and placement remain measured for this source.",
+  "referenceCode": "TS-056",
+  "referenceFloorMaxZMM": 12.8,
+  "proximityReference": {
+    "code": "TS-065",
+    "minimumSurfaceZMM": 11.6,
+    "boundsMM": [
+      [-18, -18, 9.4],
+      [18, 18, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

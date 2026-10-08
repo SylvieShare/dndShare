@@ -54,7 +54,12 @@ def bake_tier(report, directory, tier):
     before = bounds(target)
     original_materials = list(target.data.materials)
     mounting = [o for o in meshes if o != target]
-    bpy.data.objects.remove(target, do_unlink=True)
+    reuse_geometry = report.get('reunwrapAcceptedGeometry', False)
+    if reuse_geometry:
+        target.data.transform(target.matrix_world)
+        target.matrix_world = Matrix.Identity(4)
+    if not reuse_geometry:
+        bpy.data.objects.remove(target, do_unlink=True)
     bpy.ops.wm.stl_import(filepath=report['sourcePath'])
     source = bpy.context.object
     crop(source, report['cutHeight'])
@@ -68,11 +73,12 @@ def bake_tier(report, directory, tier):
         raise ValueError('Accepted mesh and source have different XY coordinates')
     if abs(before[1][2]-sculpt[1][2]) > 1:
         raise ValueError('Accepted mesh and source have different heights')
-    target = bpy.data.objects.new(report['model']['sourceCode']+' detailed body', source.data.copy())
-    scene.collection.objects.link(target)
+    if not reuse_geometry:
+        target = bpy.data.objects.new(report['model']['sourceCode']+' detailed body', source.data.copy())
+        scene.collection.objects.link(target)
     datum = report['model']['mountDepth']*35
     mount_source_bounds = None
-    if report['materialSpec'].get('mounting') == 'source-opening':
+    if not reuse_geometry and report['materialSpec'].get('mounting') == 'source-opening':
         for obj in mounting:
             bpy.data.objects.remove(obj, do_unlink=True)
         mount = bpy.data.objects.new('Source insertion geometry', source.data.copy())
@@ -144,18 +150,24 @@ def bake_tier(report, directory, tier):
         mounting = [mount]
         report['mountingCorrection'] = {'method': 'Source annular mounting geometry',
                                        'reason': report['materialSpec']['mountingCorrectionReason']}
-    crop(target, datum)
-    for v in target.data.vertices:
-        v.co.z += datum
-    activate(target)
-    modifier = target.modifiers.new('Reviewed body budget', 'DECIMATE')
-    modifier.ratio = min(1, report['materialSpec'][tier+'Triangles']/len(target.data.polygons))
-    modifier.use_collapse_triangulate = True
-    bpy.ops.object.modifier_apply(modifier=modifier.name)
+    if not reuse_geometry:
+        crop(target, datum)
+        for v in target.data.vertices:
+            v.co.z += datum
+        activate(target)
+        modifier = target.modifiers.new('Reviewed body budget', 'DECIMATE')
+        modifier.ratio = min(1, report['materialSpec'][tier+'Triangles']/len(target.data.polygons))
+        modifier.use_collapse_triangulate = True
+        bpy.ops.object.modifier_apply(modifier=modifier.name)
+    else:
+        activate(target)
     shade(target)
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.smart_project(angle_limit=1.4, island_margin=.0015,
+    uv_angle = report['materialSpec'].get('uvAngleLimitRad', .55)
+    if not .2 <= uv_angle <= 1.4:
+        raise ValueError('UV angle must be between0.2 and1.4 radians')
+    bpy.ops.uv.smart_project(angle_limit=uv_angle, island_margin=.0015,
                              margin_method='FRACTION', area_weight=.8)
     bpy.ops.object.mode_set(mode='OBJECT')
     tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())
@@ -211,7 +223,7 @@ def bake_tier(report, directory, tier):
     print('TOXIC_SEWER_REBAKE', tier, size, repaired, before, sculpt, flush=True)
     return {'bakeSize':size, 'repairedOppositeNormals':repaired, 'acceptedBoundsMM':before,
             'sourceBoundsMM':sculpt, 'triangles':len(target.data.polygons), 'sourceDeviationMM':max(distances,default=0),
-            'uvRepacked':True,
+            'uvRepacked':True, 'uvAngleLimitRad':uv_angle, 'acceptedGeometryRetained':reuse_geometry,
             'mountingMeshesRetained':len(mounting), 'mountSourceBoundsMM':mount_source_bounds}
 
 
@@ -221,5 +233,7 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
     report = json.loads(args.report.read_text())
     report['rebake'] = {tier:bake_tier(report,args.report.parent,tier) for tier in ['render','lod']}
-    report['geometry'] = 'Body rebuilt from original sculpt at reviewed budgets; mounting meshes and accepted coordinates retained'
+    report['geometry'] = ('Accepted detailed geometry and mounting retained; new UV and source normal/AO bake'
+                          if report.get('reunwrapAcceptedGeometry') else
+                          'Body rebuilt from original sculpt at reviewed budgets; mounting meshes and accepted coordinates retained')
     args.report.write_text(json.dumps(report,indent=2)+'\n')

@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import { openSync, closeSync } from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { mapTool } from "./mcp_maps_client.mjs";
@@ -13,6 +14,8 @@ const backendRoot = path.resolve(process.env.MAP_MODEL_BACKEND_ROOT || root);
 const base = path.join(root, "models/collections/toxic-sewer");
 const code = process.argv[2],
   mode = process.argv[3];
+const reviseUv = process.argv.includes("--revise-uv");
+if (reviseUv && mode !== "prepare") throw Error("UV revision requires prepare");
 if (
   !code ||
   path.basename(code) !== code ||
@@ -137,7 +140,7 @@ await fs.mkdir(path.join(base, "detailed", code), { recursive: true });
 if (mode !== "publish") {
   const models = await snapshot(path.join(base, "registry-snapshot.json"));
   const current = models.filter((m) => m.sourceCode === code)[0];
-  if (!current || current.textureDetail === "detailed")
+  if (!current || (current.textureDetail === "detailed" && !reviseUv))
     throw Error("Model missing or already processed");
   directory = path.join(
     base,
@@ -148,7 +151,37 @@ if (mode !== "publish") {
   const report = path.join(directory, "report.json");
   let repaintReference;
   if (mode === "prepare") {
+    let prior;
+    if (reviseUv) {
+      if (current.textureDetail !== "detailed")
+        throw Error("UV revision requires a published detailed model");
+      const summary = JSON.parse(
+        await fs.readFile(path.join(base, "publication-summary.json"), "utf8"),
+      );
+      const entry = summary.models.find(
+        (m) => m.code === code && m.id === current.id,
+      );
+      if (!entry) throw Error("Reviewed current publication missing");
+      const file = path.join(root, entry.report);
+      const data = JSON.parse(await fs.readFile(file, "utf8"));
+      const bytes = await fs.readFile(
+        path.join(path.dirname(file), "render.glb"),
+      );
+      if (
+        createHash("sha256").update(bytes).digest("hex") !==
+        current.assets.render.sha256
+      )
+        throw Error("Current assets differ from the local reviewed result");
+      prior = { file, data };
+    }
     node("prepare-toxic-sewer.mjs", [code], "prepare");
+    if (prior) {
+      const data = JSON.parse(await fs.readFile(report, "utf8"));
+      data.reunwrapAcceptedGeometry = true;
+      data.supersedesReport = prior.file;
+      data.sourceShiftMM = prior.data.sourceShiftMM;
+      await fs.writeFile(report, JSON.stringify(data, null, 2) + "\n");
+    }
     const accepted = path.join(directory, "accepted");
     await fs.mkdir(accepted, { recursive: true });
     await fs.writeFile(
@@ -238,6 +271,7 @@ if (mode !== "publish") {
       });
     if (
       !cached ||
+      (proximity.minimumSurfaceZMM !== undefined && !cached.cutCapsExcluded) ||
       cached.stepMM !== proximity.stepMM ||
       (cached.rotationZDegrees ?? 0) !== (proximity.rotationZDegrees ?? 0) ||
       (cached.minimumSurfaceZMM ?? null) !==
@@ -333,21 +367,48 @@ if (mode !== "publish") {
   )[0];
   assertModelBaseline(prepared.model, latest);
   node("select-albedo-candidate.mjs", [report, candidate, note], "select");
+  const selectedReview = JSON.parse(await fs.readFile(report, "utf8"));
+  selectedReview.shadowReview = prepared.shadowReview;
+  selectedReview.visualReview = note;
+  await fs.writeFile(report, JSON.stringify(selectedReview, null, 2) + "\n");
   node("validate-toxic-sewer.mjs", [report], "final-validate");
   const previewCheck = await transparentPreview(
     path.join(directory, "preview.png"),
   );
   node("record-model-metrics.mjs", [report], "metrics");
+  // Package only the selected baseline; reviewed prior reports remain local.
+  const selection = await fs.mkdtemp(path.join(packetBase, "pack-selection-"));
+  const picked = path.join(selection, "current");
+  await fs.mkdir(picked);
+  for (const name of [
+    "report.json",
+    "preview.png",
+    "render.glb",
+    "lod.glb",
+    prepared.preparedShadow.asset.sha256 + ".glb",
+  ])
+    await fs.copyFile(path.join(directory, name), path.join(picked, name));
   node(
     "package-masonry.mjs",
     [
       "--collection=toxic-sewer",
-      "--base=" + packetBase,
+      "--base=" + selection,
       "--recipe=toxic-sewer-individual-v1",
     ],
     "package",
   );
   const packet = path.join(packetBase, "upload");
+  const stagedPacket = path.join(selection, "upload");
+  await fs.mkdir(packet, { recursive: true });
+  for (const name of await fs.readdir(stagedPacket)) {
+    const from = path.join(stagedPacket, name),
+      to = path.join(packet, name);
+    if (name === "catalogue.json") await fs.copyFile(from, to);
+    else
+      await fs.link(from, to).catch((error) => {
+        if (error.code !== "EEXIST") throw error;
+      });
+  }
   const checkedReport = JSON.parse(await fs.readFile(report, "utf8"));
   checkedReport.shadowReview = prepared.shadowReview;
   checkedReport.visualReview = note;
@@ -418,6 +479,15 @@ if (mode !== "publish") {
     registry: fresh,
   };
   await fs.writeFile(report, JSON.stringify(data, null, 2) + "\n");
+  if (data.supersedesReport) {
+    const prior = JSON.parse(await fs.readFile(data.supersedesReport, "utf8"));
+    prior.publication.supersededAt = data.publication.confirmedAt;
+    prior.publication.supersededBy = report;
+    await fs.writeFile(
+      data.supersedesReport,
+      JSON.stringify(prior, null, 2) + "\n",
+    );
+  }
   console.log(
     "CONFIRMED",
     code,

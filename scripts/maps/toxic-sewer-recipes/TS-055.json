@@ -1,0 +1,99 @@
+{
+  "sourceName": "Pipe Water Skulls",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.9, 2.6],
+    "lodMiB": [0.3, 0.95],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Straight copper-pipe water channel with two submerged skulls and one long bone; preserve sockets, bone ends, collars and flowing liquid around the objects."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [-2.9, -1.7, 11.9],
+        "radius": [3, 3.3, 2.6]
+      },
+      "min": [-9, -17, 10.6],
+      "max": [9, 17, 13.2]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [4.25, -12, 11.9],
+        "radius": [3, 3.4, 2.6]
+      },
+      "min": [-9, -17, 10.6],
+      "max": [9, 17, 13.2]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [5, 2.4, 11.9],
+        "radius": [2, 3.3, 2.2]
+      },
+      "min": [-9, -17, 10.6],
+      "max": [9, 17, 13.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-13.7, -18, 16.2],
+        [-13.7, 18, 16.2]
+      ],
+      "radius": 3.85,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [13.5, -18, 16.2],
+        [13.5, 18, 16.2]
+      ],
+      "radius": 3.85,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-8.7, -18, 9.4],
+      "max": [8.7, 18, 12.8]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [11.6, 12.1, 12.5, 13, 14, 18],
+    "skullCentresXYMM": [
+      [-2.9, -1.7],
+      [4.25, -12]
+    ],
+    "longBoneCentreXYMM": [5, 2.4],
+    "bareWaterPipeReference": "TS-054"
+  },
+  "notes": "Authorpage8: two partly submerged ivory skulls and a long bone in lime water, copper rails and green supports. Three bounded bone volumes require complete3D distance from bare PipeWater, keeping nearby unchanged bubbles and waves liquid; pipe geometry and normal/AO remain source-based.",
+  "referenceCode": "TS-054",
+  "referenceFloorMaxZMM": 12.8,
+  "proximityReference": {
+    "code": "TS-054",
+    "boundsMM": [
+      [-10, -18, 10.2],
+      [10, 18, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

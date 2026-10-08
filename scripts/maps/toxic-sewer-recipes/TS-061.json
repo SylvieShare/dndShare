@@ -1,0 +1,95 @@
+{
+  "sourceName": "Pipe Water Wooden Bridge Skulls",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 40000,
+  "lodTriangles": 12500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.9],
+    "lodMiB": [0.35, 1.1],
+    "shadowKiB": [30, 95],
+    "previewKiB": [8, 45],
+    "basis": "Cracked timber bridge over straight pipe-water channel with two partly submerged skulls at front edge; preserve plank gap, sockets, jagged copper stumps and water visible below."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [-3.1, -10.8, 11.8],
+        "radius": [2.5, 2.9, 2.4]
+      },
+      "min": [-6, -15, 10.6],
+      "max": [0, -7.6, 13.2]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [4.2, -12, 11.9],
+        "radius": [3, 3.4, 2.6]
+      },
+      "min": [0.6, -16.5, 10.6],
+      "max": [8, -8.2, 13.2]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "min": [-17, -8.5, 12.3],
+      "max": [17, 8.5, 16.25]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-13.7, -18, 16.2],
+        [-13.7, 18, 16.2]
+      ],
+      "radius": 3.85,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [13.5, -18, 16.2],
+        [13.5, 18, 16.2]
+      ],
+      "radius": 3.85,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-8.7, -18, 9.4],
+      "max": [8.7, 18, 12.8]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [11.6, 12.1, 12.5, 15, 18],
+    "skullCentresXYMM": [
+      [-3.1, -10.8],
+      [4.2, -12]
+    ],
+    "bareBridgeReference": "TS-060",
+    "grainDirection": "X"
+  },
+  "notes": "Authorpage8: two ivory skulls beside brown transverse boards, copper torn pipes, lime water and green banks. Complete bareBridge distance excludes old water/wood/metal from skull masks; precise wood volume preserves fully brown boards without old-pipe gold stripes. Exposed skull parts remain below bridge edge.",
+  "referenceCode": "TS-060",
+  "referenceFloorMaxZMM": 12.8,
+  "proximityReference": {
+    "code": "TS-060",
+    "boundsMM": [
+      [-9, -18, 10.2],
+      [9, -7, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

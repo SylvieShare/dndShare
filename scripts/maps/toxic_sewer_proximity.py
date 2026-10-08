@@ -39,7 +39,15 @@ if spec.get('minimumSurfaceZMM') is not None:
         vertex.co.z += spec['minimumSurfaceZMM']
 source.data.update()
 bpy.context.view_layer.update()
-tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())
+if spec.get('minimumSurfaceZMM') is not None:
+    # Caps close the scratch mesh but are not part of the original bank.
+    # Including their artificial plane can incorrectly reject water waves.
+    minimum = spec['minimumSurfaceZMM']
+    faces = [list(face.vertices) for face in source.data.polygons
+             if not all(abs(source.data.vertices[i].co.z-minimum) < 1e-4 for i in face.vertices)]
+    tree = BVHTree.FromPolygons([v.co for v in source.data.vertices], faces)
+else:
+    tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())
 low, high = spec['boundsMM']
 step = spec['stepMM']
 size = [int(np.ceil((high[i]-low[i])/step))+1 for i in range(3)]
@@ -55,7 +63,7 @@ directory = ROOT/'models/collections/toxic-sewer/references'
 directory.mkdir(exist_ok=True)
 binary = directory/(spec['code']+'-proximity.f32')
 binary.write_bytes(values.tobytes())
-descriptor = {**spec, 'low': low, 'size': size, 'sourceSHA256': row['sourceSHA256'],
+descriptor = {**spec, 'cutCapsExcluded': True, 'low': low, 'size': size, 'sourceSHA256': row['sourceSHA256'],
               'binary': binary.name, 'valuesSHA256': hashlib.sha256(values.tobytes()).hexdigest()}
 (directory/(spec['code']+'-proximity.json')).write_text(json.dumps(descriptor,indent=2)+'\n')
 print('TOXIC_SEWER_PROXIMITY', spec['code'], size, len(values), flush=True)

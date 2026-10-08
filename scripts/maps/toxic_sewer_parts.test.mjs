@@ -31,6 +31,40 @@ test("water surface band leaves the taller channel wall stone", () => {
   assert.equal(sewerPartAt([0, 0, 12.2], spec, reference).part, "stone");
   assert.equal(sewerPartAt([0, 0, 8.5], spec, reference).part, "stone");
 });
+test("bone height reference excludes old water even with a separate distant bank field", () => {
+  const reference = {
+    floor: { low: [0, 0], step: 1, size: [1, 1], values: [10.8] },
+    wall: { low: [0, 0], step: 1, size: [0, 0], values: [] },
+    proximity: {
+      low: [0, 0, 0],
+      stepMM: 20,
+      size: [2, 2, 2],
+      values: Array(8).fill(5),
+      thresholdMM: 0.35,
+    },
+  };
+  const spec = { regions: [{ part: "bone", added: "height" }] };
+  assert.equal(sewerPartAt([0, 0, 10.8], spec, reference).part, "stone");
+  assert.equal(sewerPartAt([0, 0, 12.4], spec, reference).part, "bone");
+});
+test("combined bone test excludes both original water and the old bank", () => {
+  const ref = {
+    floor: { low: [0, 0], step: 1, size: [1, 1], values: [10.8] },
+    wall: { low: [0, 0], step: 1, size: [0, 0], values: [] },
+    proximity: {
+      low: [0, 0, 0],
+      stepMM: 20,
+      size: [2, 2, 2],
+      values: Array(8).fill(0),
+      thresholdMM: 0.35,
+    },
+  };
+  const spec = { regions: [{ part: "bone", added: "both" }] };
+  assert.equal(sewerPartAt([0, 0, 12.4], spec, ref).part, "stone");
+  ref.proximity.values.fill(5);
+  assert.equal(sewerPartAt([0, 0, 10.8], spec, ref).part, "stone");
+  assert.equal(sewerPartAt([0, 0, 12.4], spec, ref).part, "bone");
+});
 test("pipe volumes exclude adjacent masonry, include both surfaces and respect ends", () => {
   const r = {
     part: "copper",

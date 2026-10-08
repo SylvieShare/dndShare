@@ -1,0 +1,184 @@
+{
+  "sourceName": "Pipe Water End Skulls 2",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 48000,
+  "lodTriangles": 16000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.3, 3.7],
+    "lodMiB": [0.45, 1.3],
+    "shadowKiB": [35, 115],
+    "previewKiB": [8, 45],
+    "basis": "Dead-end copper-pipe water tile with dense skeleton pile: six skulls, two rib cages and long bones; retain sockets, thin ribs, anatomical overlaps and U-shaped pipe."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-8.4, 5.8, 16.5],
+        "radius": [2.1, 2.1, 1.6]
+      },
+      "min": [-10.15, 4.05, 15.9],
+      "max": [-6.3, 7.85, 18]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-4.4, 6.9, 16.3],
+        "radius": [2.1, 2.4, 1.7]
+      },
+      "min": [-6.6, 4.3, 15.9],
+      "max": [-2.2, 9.1, 18]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-6.5, 6, 13.7],
+        "radius": [2.6, 2.8, 2.5]
+      },
+      "min": [-9, -9, 12.2],
+      "max": [9, 10, 15.7]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-3.2, 6.7, 14.4],
+        "radius": [2.6, 2.8, 2.5]
+      },
+      "min": [-9, -9, 12.2],
+      "max": [9, 10, 15.7]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [3.4, 4.7, 13.9],
+        "radius": [2.6, 2.8, 2.5]
+      },
+      "min": [-9, -9, 12.2],
+      "max": [9, 10, 15.7]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [5.8, -0.3, 13],
+        "radius": [2.6, 2.8, 2.5]
+      },
+      "min": [-9, -9, 12.2],
+      "max": [9, 10, 15.7]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [2.6, -4.3, 13.9],
+        "radius": [2.6, 2.8, 2.5]
+      },
+      "min": [-9, -9, 12.2],
+      "max": [9, 10, 15.7]
+    },
+    {
+      "part": "bone",
+      "added": "height",
+      "ellipsoid": {
+        "centre": [-5.5, -2.8, 13.6],
+        "radius": [2.6, 2.8, 2.5]
+      },
+      "min": [-9, -9, 12.2],
+      "max": [9, 10, 15.7]
+    },
+    {
+      "part": "bone",
+      "added": "both",
+      "min": [-8.7, -12, 11.25],
+      "max": [8.7, 11.5, 16]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-13.4, -18, 16.2],
+        [-13.4, 1.6410267108574533e-15, 16.2],
+        [-12.943406072273515, 3.468175204373782, 16.2],
+        [-11.604740410711479, 6.699999999999999, 16.2],
+        [-9.475230867899736, 9.475230867899738, 16.2],
+        [-6.700000000000003, 11.604740410711477, 16.2],
+        [-3.4681752043737766, 12.943406072273516, 16.2],
+        [8.205133554287267e-16, 13.4, 16.2],
+        [3.468175204373778, 12.943406072273516, 16.2],
+        [6.699999999999998, 11.604740410711479, 16.2],
+        [9.475230867899738, 9.475230867899736, 16.2],
+        [11.604740410711479, 6.6999999999999975, 16.2],
+        [12.943406072273515, 3.46817520437378, 16.2],
+        [13.4, 0.0, 16.2],
+        [13.4, -18, 16.2]
+      ],
+      "radius": 3.9,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 8.8, 0]
+    },
+    {
+      "part": "stone",
+      "max": [-8.8, 18, 13.65]
+    },
+    {
+      "part": "stone",
+      "min": [8.8, -18, 0]
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.8]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12, 13, 14, 15, 18],
+    "skeletonBoundsMM": [
+      [-8.7, -12, 11.25],
+      [8.7, 11.5, 16]
+    ],
+    "skullCentresXYMM": [
+      [-6.5, 6],
+      [-3.2, 6.7],
+      [3.4, 4.7],
+      [5.8, -0.3],
+      [2.6, -4.3],
+      [-5.5, -2.8]
+    ],
+    "ribCages": 2,
+    "upperBankReference": "TS-067",
+    "highSkullCapsXYZMM": [
+      [-8.4, 5.8, 17.6],
+      [-4.4, 6.9, 16.9]
+    ]
+  },
+  "notes": "Authorpage9: dense ivory skulls and two rib cages in lime liquid, framed by copper U pipe and green banks. Bone region requires both added height relative to Water and distance from old EmptyEnd upper bank, preventing bank whitening. Thin ribs/overlaps come from source; virtual reference cut caps omitted. Initial combined bank test left green patches on two skull crowns touching old masonry. Six precise skull volumes precede broad skeleton/bank test and use water height alone, restoring bone crowns while source bank protection remains outside these volumes. Green skull caps persisted after correct measured masks; render/LOD UV overlap was confirmed. New0.55rad unfolding before normal/AO bake is required, with per-used-pixel physical distance validation. Source slices16/17mm and atlas positions identify two high skull caps beyond the initial16mm limit. Their measured upper volumes extend to18mm without broadening the entire skeleton into the pipe. Source slices16/17mm and atlas positions identify two high skull caps beyond the initial16mm limit. Their measured upper volumes extend to18mm without broadening the entire skeleton into the pipe.",
+  "referenceCode": "TS-068",
+  "referenceFloorMaxZMM": 15,
+  "proximityReference": {
+    "code": "TS-067",
+    "minimumSurfaceZMM": 11.6,
+    "boundsMM": [
+      [-18, -18, 9.4],
+      [18, 18, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  },
+  "uvAngleLimitRad": 0.55
+}
