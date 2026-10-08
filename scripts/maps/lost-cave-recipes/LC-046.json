@@ -1,0 +1,68 @@
+{
+  "sourceName": "Bones Wall 1",
+  "referencePage": 7,
+  "material": "cave-bones",
+  "floorHeightMM": 14.739,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [40, 125],
+    "previewKiB": [10, 150],
+    "basis": "399928-triangle1x1 straight wall with four tall porous bone fragments and one standable point.55k/18k protect narrow caps, cavities and wall relief;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page7: four aged ivory/ochre bone fragments on the positive-X side of warm brown wall. Correct bare reference is LC-002: native wall3.1806/7.8762/28.5869 and2.5303/-6.7839/32.4619 match within.1295/.0516mm, whereas LC-001 differed1.7mm and wrongly coloured structural wall. Actual bones11.407/-3.0912/20.5622 and7.0276/1.416/24.7433 differ3.8578\u20135.0218mm from LC-002. LC-002 reference.35mm within nativeX1.2\u201312.9,Y-13.3\u201311.7,Z14.2\u201334 protects walls, raised cap and surrounding rubble. Outside preview shows four fragments from two diagonals; separately inspect back. Preserve current UUID3548004e-7457-54a5-ab77-8ba72b04befd, LC-046, familyLC-bones-wall, source, cut11.5, mount.150214, footprint, wallMask17 and standable point.",
+  "groupCode": "LC-bones-wall",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "bones": {
+    "reference": {
+      "code": "LC-002",
+      "sourceSHA256": "6c6a203c6b2e52b275564a420c263fb58618ad6d3ae888364ff7948bc24474ca"
+    },
+    "matchMM": 0.35,
+    "minZ": 14.2,
+    "maxZ": 34,
+    "regions": [
+      [
+        [1.2, -13.3],
+        [12.9, -13.3],
+        [12.9, 11.7],
+        [1.2, 11.7]
+      ]
+    ],
+    "groups": [
+      {
+        "position": [7, -9, 24],
+        "tone": "ivory"
+      },
+      {
+        "position": [7, -3, 24],
+        "tone": "old"
+      },
+      {
+        "position": [7, 3, 24],
+        "tone": "ivory"
+      },
+      {
+        "position": [7, 9, 24],
+        "tone": "old"
+      }
+    ]
+  },
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  }
+}

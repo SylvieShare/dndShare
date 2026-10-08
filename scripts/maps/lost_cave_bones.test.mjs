@@ -124,3 +124,32 @@ test("cave bone padding protects unchanged stone and fades colour at dirty conta
   assert(dirty.rgb[0] < pale.rgb[0]);
   assert(dirty.roughness >= pale.roughness);
 });
+
+test("wall bones use the matching structural source without colouring caps, ends or rubble", () => {
+  const spec = specs["LC-046"];
+  assert.equal(spec.bones.reference.code, "LC-002");
+  const walls = [
+    [3.1806, 7.8762, 28.5869],
+    [2.5303, -6.7839, 32.4619],
+  ];
+  const reference = {
+    distanceAt: (p) =>
+      walls.some((w) => w.every((v, i) => v === p[i])) ? 0.1295 : 3.8,
+  };
+  for (const p of [
+    [4.6264, -11.5593, 23.8482],
+    [4.7016, -6.4365, 25.5711],
+    [5.0489, -0.5676, 26.995],
+    [4.9629, 4.8032, 27.118],
+  ])
+    assert.equal(caveBonePartAt(p, spec, reference), "bone");
+  for (const p of [
+    ...walls,
+    [-3.3561, 12.8919, 38.4799],
+    [-3.9055, 17.4828, 35.0307],
+    [4.0661, 17.4974, 19.3883],
+    [13.2163, 4.2639, 16.7227],
+    [7.8679, 13.3613, 21.059],
+  ])
+    assert.equal(caveBonePartAt(p, spec, reference), "rock");
+});

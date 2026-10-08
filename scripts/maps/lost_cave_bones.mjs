@@ -51,7 +51,11 @@ function caveBoneWeight(p, spec, reference, normal) {
     throw new Error(
       "Verified bare source or individually measured bone regions required",
     );
-  if (p[2] < spec.bones.minZ) return 0;
+  if (
+    p[2] < spec.bones.minZ ||
+    (spec.bones.maxZ !== undefined && p[2] > spec.bones.maxZ)
+  )
+    return 0;
   const sample = p.map((v, i) => v + (spec.bones.referenceOffsetMM?.[i] ?? 0));
   if (
     spec.bones.volumes?.some(
