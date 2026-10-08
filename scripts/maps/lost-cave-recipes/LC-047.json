@@ -1,0 +1,86 @@
+{
+  "sourceName": "Bones Wall 2",
+  "referencePage": 7,
+  "material": "cave-bones",
+  "floorHeightMM": 14.739,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 20000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [40, 125],
+    "previewKiB": [10, 150],
+    "basis": "419940-triangle1x1 wall with four tilted porous fragments, narrow tips and a separate long front bone.60k/20k protect caps and openings;2048/1024 source bakes and full/reduced colour comparisons."
+  },
+  "notes": "Author page7: four tilted pale aged fragments with narrow tips and one long front bone on warm brown wall. Correct LC-001 structure at-.3916/-.7969/33.0626 differs.1226mm; wrong LC-002 differs2.6159mm. Bone4.9423/-7.8877/26.9395 and3.6694/-2.1766/26.3587 differ4.0157/4.4245mm from LC-001. Front bone10.9762/-12.0698/17.3215,12.0695/-6.9286/16.53,12.3181/-1.7966/16.6501,12.0903/2.6566/17.4451 differs1.3520\u20132.9073mm. Source mask.35mm withinX.7\u201313.8,Y-14.5\u201314.1,Z14.1\u201335 excludes structural surfaces and lower cliffs. Preview outside shows the decorated face from two diagonals; separately inspect backside. Preserve current UUIDde2bc244-586a-5d6d-bf0e-429caf5e1afb, LC-047 and familyLC-bones-wall, source, cut11.5, mount.149834, footprint, wallMask17 and standable point. Highest bone cap2.3604/-4.1614/35.0895mm requires maxZ36.5. Two exact cap volumes protect lower cap8.2545/13.7933/25.7491 beyond the main Y band and the wide front end13.2078/3.4129/16.9902 beyond main X band; both originally clipped brown and now remain bone.",
+  "groupCode": "LC-bones-wall",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "bones": {
+    "reference": {
+      "code": "LC-001",
+      "sourceSHA256": "037f7b7a7360f0a91b76a8f6f152aca04fa7ea6eb74084366fa972a9fb3a42bb"
+    },
+    "matchMM": 0.35,
+    "minZ": 14.1,
+    "maxZ": 36.5,
+    "regions": [
+      [
+        [0.7, -14.5],
+        [13.8, -14.5],
+        [13.8, 14.1],
+        [0.7, 14.1]
+      ]
+    ],
+    "groups": [
+      {
+        "position": [7, -10, 26],
+        "tone": "ivory"
+      },
+      {
+        "position": [7, -4, 24],
+        "tone": "old"
+      },
+      {
+        "position": [7, 2, 22],
+        "tone": "ivory"
+      },
+      {
+        "position": [7, 8, 19],
+        "tone": "old"
+      },
+      {
+        "position": [12, -6, 17],
+        "tone": "ivory"
+      },
+      {
+        "position": [12, 3, 17],
+        "tone": "old"
+      }
+    ],
+    "volumes": [
+      {
+        "centre": [8.2545, 13.7933, 25.7491],
+        "radius": [2, 2.3, 1.9]
+      },
+      {
+        "centre": [13.2078, 3.4129, 16.9902],
+        "radius": [2.8, 2.3, 2.3]
+      }
+    ]
+  },
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  }
+}
