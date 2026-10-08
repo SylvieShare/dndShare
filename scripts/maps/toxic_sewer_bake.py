@@ -102,14 +102,14 @@ def bake_tier(report, directory, tier):
         mount.data.materials.append(mat)
         for face in mount.data.polygons:
             face.material_index = 0
+        def linear(v):
+            s = v/255
+            return s/12.92 if s <= .04045 else ((s+.055)/1.055)**2.4
         inner_colour = report['materialSpec'].get('mountInnerColor')
         if inner_colour:
             inner = bpy.data.materials.new('Simple insertion pegs — exposed pit rock')
             inner.use_nodes = True
             shader = inner.node_tree.nodes.get('Principled BSDF')
-            def linear(v):
-                s = v/255
-                return s/12.92 if s <= .04045 else ((s+.055)/1.055)**2.4
             shader.inputs['Base Color'].default_value = (*[linear(v) for v in inner_colour], 1)
             shader.inputs['Roughness'].default_value = report['materialSpec'].get('mountInnerRoughness', .89)
             mount.data.materials.append(inner)
@@ -120,6 +120,27 @@ def bake_tier(report, directory, tier):
                 if x*face.normal.x+y*face.normal.y < -.1:
                     face.material_index = 1
         mount.matrix_world = Matrix.Scale(1/35, 4) @ mount.matrix_world
+        # Visible decorations can continue below the accepted mounting datum.
+        for region in report['materialSpec'].get('mountRegions', []):
+            material = bpy.data.materials.new('Simple insertion pegs — '+region['part'])
+            material.use_nodes = True
+            shader = material.node_tree.nodes.get('Principled BSDF')
+            shader.inputs['Base Color'].default_value = (*[linear(v) for v in region['color']], 1)
+            shader.inputs['Roughness'].default_value = region['roughness']
+            shader.inputs['Metallic'].default_value = region.get('metallic', 0)
+            mount.data.materials.append(material)
+            index = len(mount.data.materials)-1
+            for face in mount.data.polygons:
+                p = face.center-Vector((*report['sourceShiftMM'], 0))
+                if any(p[i] < region['min'][i] or p[i] > region['max'][i] for i in range(3)):
+                    continue
+                for a, b in zip(region['path'], region['path'][1:]):
+                    a, b = Vector(a), Vector(b)
+                    d = b-a
+                    t = max(0, min(1, (p-a).dot(d)/d.length_squared)) if d.length_squared else 0
+                    if (p-a-t*d).length < region['radius']:
+                        face.material_index = index
+                        break
         mounting = [mount]
         report['mountingCorrection'] = {'method': 'Source annular mounting geometry',
                                        'reason': report['materialSpec']['mountingCorrectionReason']}

@@ -1,0 +1,73 @@
+{
+  "sourceName": "Angle 2",
+  "material": "sewer-components",
+  "referencePage": 5,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.7],
+    "lodMiB": [0.35, 0.95],
+    "shadowKiB": [25, 90],
+    "previewKiB": [8, 45],
+    "basis": "Curved corner with round sewer opening, two thin rods, hanging fluid strands and puddle; preserve circle rim, rod gaps and liquid/masonry separation."
+  },
+  "referenceCode": "TS-029",
+  "proximityReference": {
+    "code": "TS-029",
+    "boundsMM": [
+      [-18, -18, 13.5],
+      [18, 18, 24]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [4.8, 8.5, 20.3],
+        [4.8, 8.5, 33.4]
+      ],
+      "radius": 1.14
+    },
+    {
+      "part": "copper",
+      "path": [
+        [8.4, 5.2, 19.8],
+        [8.4, 5.2, 33.8]
+      ],
+      "radius": 1.14
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [2.3, 0.7, 14],
+      "max": [11, 11, 23.3]
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-6, -12, 13.8],
+      "max": [12, 11, 16]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [15, 22, 28, 32],
+    "rodCentresXYMM": [
+      [4.8, 8.5],
+      [8.4, 5.2]
+    ],
+    "lowerStreamCentresXYMM": [
+      [3.8, 6.2],
+      [7.6, 2.7]
+    ],
+    "holeCentreZMM": 26.8
+  },
+  "notes": "Green rounded corner and circular masonry rim with two measured copper rods. Two lower toxic strands and their puddle are bounded below23.3mm; complete bare Angle1 distance excludes surviving wall/floor while leaving the dark opening interior masonry. Source sculpt and placement retained."
+}

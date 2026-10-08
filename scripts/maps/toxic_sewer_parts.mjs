@@ -21,12 +21,15 @@ export function inSewerRegion(p, region) {
   }
   if (
     region.ellipsoid &&
-    p.reduce(
-      (s, v, i) =>
-        s +
-        ((v - region.ellipsoid.centre[i]) / region.ellipsoid.radius[i]) ** 2,
-      0,
-    ) > 1
+    (region.ellipsoid.basis
+      ? region.ellipsoid.basis.map((axis) =>
+          axis.reduce(
+            (sum, v, i) => sum + v * (p[i] - region.ellipsoid.centre[i]),
+            0,
+          ),
+        )
+      : p.map((v, i) => v - region.ellipsoid.centre[i])
+    ).reduce((s, v, i) => s + (v / region.ellipsoid.radius[i]) ** 2, 0) > 1
   )
     return false;
   if (region.path) {

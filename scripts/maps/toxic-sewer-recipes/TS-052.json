@@ -1,0 +1,58 @@
+{
+  "sourceName": "Stair Broken",
+  "material": "sewer-components",
+  "referencePage": 7,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.9, 2.6],
+    "lodMiB": [0.3, 0.95],
+    "shadowKiB": [25, 90],
+    "previewKiB": [8, 45],
+    "basis": "Broken stair with deep irregular central shaft, shattered treads and remaining side steps; preserve source opening through body and mount, inner fracture and standing stair profiles."
+  },
+  "regions": [
+    {
+      "part": "rubble",
+      "added": true,
+      "min": [-15, -16, 0],
+      "max": [15, 16, 39],
+      "ellipsoid": {
+        "centre": [0, -1, 15],
+        "radius": [13.8, 15, 40]
+      }
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [0, 5, 10, 15, 20, 25],
+    "centralShaftThroughCrop": true,
+    "bareStairReference": "TS-049"
+  },
+  "notes": "Brown fractured interior and loose stair rubble follow complete source distance to intact Stair; surviving treads, risers and outer side banks stay green. Inner shaft crosses crop datum and must remain open through render/LOD/shadow. Source annular mounting restores this opening without changing accepted footprint, datum, depth or standing points.",
+  "referenceCode": "TS-049",
+  "mounting": "source-opening",
+  "renderMountTriangles": 1500,
+  "lodMountTriangles": 800,
+  "openingProbesMM": [
+    [0, 0],
+    [1, 1]
+  ],
+  "mountingCorrectionReason": "Source StairBroken has a continuous central opening at Z0 and throughout mount depth; solid accepted insertion proxy would close it. Restore source annular mounting at the accepted datum and footprint.",
+  "mountInnerColor": [137, 108, 62],
+  "referenceFloorMaxZMM": 40,
+  "proximityReference": {
+    "code": "TS-049",
+    "boundsMM": [
+      [-18, -18, 0],
+      [18, 18, 40]
+    ],
+    "stepMM": 0.35,
+    "thresholdMM": 0.45
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "sourceName": "Cistern",
+  "material": "sewer-components",
+  "referencePage": 6,
+  "renderTriangles": 44000,
+  "lodTriangles": 14000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.2, 3.4],
+    "lodMiB": [0.4, 1.2],
+    "shadowKiB": [35, 110],
+    "previewKiB": [8, 45],
+    "basis": "Tall one-cell cistern with three connected tubes, riveted shell, angled round side port and top grille; preserve grille gaps, shell fittings and green liquid behind the openings."
+  },
+  "referenceCode": "TS-041",
+  "regions": [
+    {
+      "part": "toxic",
+      "ellipsoid": {
+        "centre": [-8.591347391416553, -8.591347391416553, 37],
+        "radius": [6.25, 0.6, 6.25],
+        "basis": [
+          [0.7071067811865476, -0.7071067811865476, 0],
+          [-0.7071067811865476, -0.7071067811865476, 0],
+          [0, 0, 1]
+        ]
+      }
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.45,
+      "ellipsoid": {
+        "centre": [0, 0, 52.5],
+        "radius": [9, 9, 100]
+      },
+      "min": [-10, -10, 52],
+      "max": [10, 10, 53]
+    },
+    {
+      "part": "copper",
+      "min": [-18, -18, 14.25],
+      "max": [18, 18, 56]
+    }
+  ],
+  "notes": "Copper cistern body, pipes, rivets and both grille frames over green cobbles. Glossy lime liquid under top bars and behind the southwest side port. Direct source ray intersections in the45degree hatch plane measure liquid depth11.84-12.48mm and raised bars13.87-14.12mm; thin oriented ellipse separates them. Initial guessed depth planes were rejected because a bar turned green or the window stayed copper. Palette follows authorpage6.",
+  "measurements": {
+    "sectionsZMM": [15, 20, 30, 40, 43],
+    "sectionYMM": 0,
+    "topMM": 54.6691,
+    "topLiquidHeightMM": [52.3, 53],
+    "sideWindowAxisXY": [-0.7071067811865476, -0.7071067811865476],
+    "sideWindowCentreXYZMM": [-8.591347391416553, -8.591347391416553, 37],
+    "sideWindowDepthMM": [11.84, 12.48],
+    "grilleOutwardDepthMM": [13.87, 14.12]
+  },
+  "referenceFloorMaxZMM": 53
+}

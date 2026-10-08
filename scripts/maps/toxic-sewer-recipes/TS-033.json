@@ -1,0 +1,85 @@
+{
+  "sourceName": "Wall Fountain Skulls",
+  "material": "sewer-components",
+  "referencePage": 5,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.35, 1],
+    "shadowKiB": [30, 95],
+    "previewKiB": [8, 45],
+    "basis": "Wall fountain with round stone basin, two submerged skulls and crown pipe; preserve bowl/rim thickness, eye sockets, sculpted waves and open pipe lips."
+  },
+  "referenceCode": "TS-033",
+  "regions": [
+    {
+      "part": "bone",
+      "ellipsoid": {
+        "centre": [-5.3, 2.8, 23],
+        "radius": [2.8, 2.8, 3.1]
+      },
+      "min": [-9, -1, 21.1],
+      "max": [-1.5, 6.5, 25.9]
+    },
+    {
+      "part": "bone",
+      "ellipsoid": {
+        "centre": [8.2, 6.9, 23],
+        "radius": [2.6, 2.8, 3.1]
+      },
+      "min": [4.9, 3.5, 21.1],
+      "max": [11, 10, 25.9]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-17.3, 14.1, 40.9],
+        [17.3, 14.1, 40.9]
+      ],
+      "radius": 3.75,
+      "min": [-17.65, 10.3, 37.6],
+      "max": [17.65, 17.7, 44.6]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "ellipsoid": {
+        "centre": [0, 5.5, 21.2],
+        "radius": [10.4, 10.4, 100]
+      },
+      "min": [-10.5, -4.8, 20.1],
+      "max": [10.5, 11.15, 22.3]
+    }
+  ],
+  "notes": "Authorpage5: green stone fountain with two ivory skulls, glossy lime liquid and copper crown tube. Skull volumes precede water. Own highest-water field below22.3mm excludes rim and skull tops. Complete bareRoundBorder distance protects old wall crown from copper. No invented outlet stream above the source basin.",
+  "measurements": {
+    "sectionsZMM": [15, 18, 22, 26, 40],
+    "sectionXMM": 0,
+    "skullCentresXYMM": [
+      [-5.3, 2.8],
+      [8.2, 6.9]
+    ],
+    "innerBasinCentreXYMM": [0, 5.5],
+    "innerBasinRadiusMM": 10.5,
+    "waterHeightMM": [20.5, 22.1],
+    "stoneRimTopMM": 23.1
+  },
+  "referenceFloorMaxZMM": 22.3,
+  "proximityReference": {
+    "code": "TS-009",
+    "boundsMM": [
+      [-18, 10, 37],
+      [18, 18, 45]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

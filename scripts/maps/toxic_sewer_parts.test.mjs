@@ -5,6 +5,23 @@ import {
   sewerPartAt,
   finishSewerPart,
 } from "./toxic_sewer_parts.mjs";
+test("angled window mask follows the hatch plane and excludes its raised metal frame", () => {
+  const q = Math.SQRT1_2;
+  const region = {
+    ellipsoid: {
+      centre: [0, 0, 20],
+      radius: [5, 0.8, 5],
+      basis: [
+        [q, -q, 0],
+        [q, q, 0],
+        [0, 0, 1],
+      ],
+    },
+  };
+  assert.equal(inSewerRegion([2, -2, 20], region), true);
+  assert.equal(inSewerRegion([1, 1, 20], region), false);
+  assert.equal(inSewerRegion([0, 0, 26], region), false);
+});
 test("pipe volumes exclude adjacent masonry, include both surfaces and respect ends", () => {
   const r = {
     part: "copper",

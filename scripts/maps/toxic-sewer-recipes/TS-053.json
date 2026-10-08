@@ -1,0 +1,156 @@
+{
+  "sourceName": "Well Ladder Down",
+  "material": "sewer-components",
+  "referencePage": 7,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.35, 1],
+    "shadowKiB": [30, 100],
+    "previewKiB": [8, 45],
+    "basis": "Open well with ladder descending into shaft; preserve hooked upper rails, three visible rungs, deep tube continuation and clear source opening through mounting."
+  },
+  "mounting": "source-opening",
+  "renderMountTriangles": 1500,
+  "lodMountTriangles": 800,
+  "openingProbesMM": [
+    [0, 0],
+    [1, 1]
+  ],
+  "mountingCorrectionReason": "WellLadderDown source shaft remains open at the cropped datum; replace solid accepted proxy with annular source while retaining visible deep ladder segments and accepted mounting parameters.",
+  "referenceCode": "TS-077",
+  "proximityReference": {
+    "code": "TS-077",
+    "boundsMM": [
+      [-9, 0, 0],
+      [9, 18, 27]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.4
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-4.3008, 2.8, 0],
+        [-4.8, 7.65, 19.7],
+        [-4.8, 8.3, 22.8],
+        [-4.8, 10.8, 24.5],
+        [-4.8, 12.7, 24.5],
+        [-4.8, 15.5, 22.3],
+        [-4.8, 15.8, 16.7]
+      ],
+      "radius": 2.4
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [4.3008, 2.8, 0],
+        [4.8, 7.65, 19.7],
+        [4.8, 8.3, 22.8],
+        [4.8, 10.8, 24.5],
+        [4.8, 12.7, 24.5],
+        [4.8, 15.5, 22.3],
+        [4.8, 15.8, 16.7]
+      ],
+      "radius": 2.4
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-5.1, 3.5, 2.65],
+        [5.1, 3.5, 2.65]
+      ],
+      "radius": 1.23
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-5.1, 5.45, 10.9],
+        [5.1, 5.45, 10.9]
+      ],
+      "radius": 1.23
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-5.1, 7.65, 19.7],
+        [5.1, 7.65, 19.7]
+      ],
+      "radius": 1.23
+    }
+  ],
+  "mountRegions": [
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-4.3008, 2.8, 0],
+        [-4.8, 7.65, 19.7],
+        [-4.8, 8.3, 22.8],
+        [-4.8, 10.8, 24.5],
+        [-4.8, 12.7, 24.5],
+        [-4.8, 15.5, 22.3],
+        [-4.8, 15.8, 16.7]
+      ],
+      "radius": 1.9,
+      "color": [171, 115, 42],
+      "roughness": 0.46,
+      "metallic": 0.68,
+      "min": [-7, 0, 0],
+      "max": [7, 8, 6]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [4.3008, 2.8, 0],
+        [4.8, 7.65, 19.7],
+        [4.8, 8.3, 22.8],
+        [4.8, 10.8, 24.5],
+        [4.8, 12.7, 24.5],
+        [4.8, 15.5, 22.3],
+        [4.8, 15.8, 16.7]
+      ],
+      "radius": 1.9,
+      "color": [171, 115, 42],
+      "roughness": 0.46,
+      "metallic": 0.68,
+      "min": [-7, 0, 0],
+      "max": [7, 8, 6]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-5.1, 3.5, 2.65],
+        [5.1, 3.5, 2.65]
+      ],
+      "radius": 1.23,
+      "color": [171, 115, 42],
+      "roughness": 0.46,
+      "metallic": 0.68,
+      "min": [-7, 0, 0],
+      "max": [7, 8, 6]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [0, 5, 10, 15, 20, 25],
+    "sectionsXMM": [0, 4],
+    "rungCentresYZMM": [
+      [3.5, 2.65],
+      [5.45, 10.9],
+      [7.65, 19.7]
+    ],
+    "ladderContinuesBelowMountDatum": true
+  },
+  "notes": "Copper ladder hooks over a green well rim and descends deep into the shaft. Source annular mounting preserves centre opening, with lower rail/rung faces explicitly copper below the accepted datum. Complete bareWell proximity protects masonry from upper rail masks. Original depth, footprint and standing points retained. First1.9mm rail radius clipped enlarged green collar bands; final2.4mm radius includes measured2.25mm collars while bare-well distance excludes the adjacent stone."
+}

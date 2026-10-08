@@ -67,9 +67,19 @@ function blend(script, args, label) {
   );
 }
 async function snapshot(file) {
-  const all = await mapTool("map_tile_models_list", {
-    collection: "toxic-sewer",
-  });
+  let all;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try {
+      all = await mapTool("map_tile_models_list", {
+        collection: "toxic-sewer",
+      });
+      break;
+    } catch (error) {
+      if (attempt === 3 || !/HTTP (502|503|504)/.test(error.message))
+        throw error;
+      await new Promise((resolve) => setTimeout(resolve, 2000 * 2 ** attempt));
+    }
+  }
   const models = all.filter((m) => m.collection === "toxic-sewer");
   if (!models.length) throw Error("MCP collection snapshot is empty");
   await fs.writeFile(file, JSON.stringify(models, null, 2) + "\n", {
