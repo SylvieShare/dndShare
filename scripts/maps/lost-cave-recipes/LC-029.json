@@ -1,0 +1,197 @@
+{
+  "sourceName": "Wagon Crystals",
+  "referencePage": 5,
+  "material": "cave-wagon-track",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 80000,
+  "lodTriangles": 28000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2,
+      6
+    ],
+    "lodMiB": [
+      0.8,
+      2.8
+    ],
+    "shadowKiB": [
+      40,
+      180
+    ],
+    "previewKiB": [
+      10,
+      160
+    ],
+    "basis": "659950-triangle compound1x1 loaded wagon:80k/28k keep crystal tips, thin rim, tubing, wheels and track;2048/1024 bakes and two KTX2 comparisons. Runtime render target2–6MiB; source archived separately."
+  },
+  "notes": "Author page5: blue crystal cargo inside rusty wagon. Original body rotated180Z relative to LC-028, same17.482mm vertical offset. Inverse rotation used for original LC-027 BVH reference and all wheel/pipe/brass masks. Wagon surfaces take priority over cargo: measured interior x/y ±15.9, height36.8–60.1mm excludes rim and external hardware. Neutral tangent normal only on crystalline cargo; vehicle, track and stone retain source relief. Original source, footprint, mount and standing metadata preserved; stable LC-029, family LC-wagon. Full-resolution albedo retained in both KTX candidates: smaller maps produced visible blue cross-island bleed on track rubble and hardware; compact reduces only normal/ORM resolution.",
+  "groupCode": "LC-wagon",
+  "wagon": {
+    "tint": [
+      0.46,
+      0.265,
+      0.12
+    ],
+    "wheelsY": [
+      7.1,
+      -7.1
+    ],
+    "pipe": {
+      "x": -10.1
+    },
+    "brass": {
+      "x": 8.2,
+      "y": 17.1,
+      "z": 31.2,
+      "radius": 1.9
+    }
+  },
+  "railway": {
+    "rails": [
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [
+          -17.6,
+          17.6
+        ]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [
+          -17.6,
+          17.6
+        ]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -12.75,
+        "y": 10.39,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.81,
+        "y": 1.06,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.75,
+        "y": -12.08,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.75,
+        "y": 11.8,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.5,
+        "y": 0,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.64,
+        "y": -9.6,
+        "radius": 2.25,
+        "minZ": 9.4
+      }
+    ],
+    "ties": [
+      {
+        "y": 11.45,
+        "slope": 0.085,
+        "halfWidth": 3.5
+      },
+      {
+        "y": -0.3,
+        "slope": -0.07,
+        "halfWidth": 3.4
+      },
+      {
+        "y": -10.65,
+        "slope": 0.11,
+        "halfWidth": 3.5
+      }
+    ],
+    "timberHalfLength": 15.9,
+    "timberMinZ": 7.9,
+    "timberMaxZ": 9.95,
+    "woodTint": [
+      0.36,
+      0.255,
+      0.135
+    ]
+  },
+  "wagonOffsetZMM": 17.482,
+  "trackOffsetZMM": 7,
+  "wagonMatchMM": 0.28,
+  "wagonReferenceSHA256": "a4237eee9799b1666cb6c035c2971ce58c051f9b4cadb122754152947bff543b",
+  "wagonRotationZDeg": 180,
+  "cargo": {
+    "min": [
+      -15.9,
+      -15.9,
+      36.8
+    ],
+    "max": [
+      15.9,
+      15.9,
+      60.1
+    ]
+  },
+  "crystal": {
+    "tint": [
+      0.14,
+      0.22,
+      0.63
+    ],
+    "normalMode": "geometry"
+  },
+  "textureCandidates": {
+    "ktx-balanced": [
+      2048,
+      1024,
+      1024,
+      512
+    ],
+    "ktx-compact": [
+      2048,
+      768,
+      1024,
+      384
+    ]
+  }
+}

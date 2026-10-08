@@ -91,7 +91,9 @@ for (const tier of ["render", "lod"]) {
       ? { bucket: 0, wheel: 0, hardware: 0, brass: 0 }
       : {}),
     ...(spec.material === "cave-wagon-track" ? { wood: 0, iron: 0 } : {}),
+    ...(spec.cargo ? { crystal: 0 } : {}),
   };
+  const neutralNormal = new Uint8Array(size * size);
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
     const value =
       spec.material === "cave-wagon-track"
@@ -106,6 +108,8 @@ for (const tier of ["render", "lod"]) {
                 ? paintStalagmites(p, n, ao[i], spec)
                 : caveRockPixel(p, n, ao[i], report.materialSpec);
     counts[value.part]++;
+    if (spec.crystal?.normalMode === "geometry" && value.part === "crystal")
+      neutralNormal[i] = 1;
     colour.set(value.rgb, i * 3);
     orm[i * 3] = ao[i];
     orm[i * 3 + 1] = Math.round(value.roughness * 255);
@@ -120,7 +124,7 @@ for (const tier of ["render", "lod"]) {
     invalid = 0;
   for (let i = 0; i < coverage.length; i++)
     if (coverage[i]) {
-      if (spec.normalMode === "geometry")
+      if (spec.normalMode === "geometry" || neutralNormal[i])
         normal.data.set([128, 128, 255], i * 3);
       if (Math.max(...colour.subarray(i * 3, i * 3 + 3)) < 4) black++;
       if (normal.data[i * 3 + 2] < 128) invalid++;
