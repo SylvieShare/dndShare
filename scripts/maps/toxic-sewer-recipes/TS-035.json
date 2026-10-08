@@ -1,0 +1,83 @@
+{
+  "sourceName": "Wooden Bin Empty",
+  "material": "sewer-components",
+  "referencePage": 5,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.9, 2.5],
+    "lodMiB": [0.3, 0.9],
+    "shadowKiB": [25, 80],
+    "previewKiB": [8, 45],
+    "basis": "One-cell wall and open timber bin with loose splinters and two hoops; preserve open interior, stave ends, metal/wood boundaries and wall masonry."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "wood",
+      "axis": "x",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 16],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 15.0],
+      "max": [10.3, 7.5, 16.9]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 16.9],
+      "max": [10.3, 7.5, 25.4]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 17.6],
+      "max": [13.5, 10.2, 19.1]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 21.3],
+      "max": [13.5, 10.2, 22.7]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-16.5, -17, 14.1],
+      "max": [16.5, 10.2, 27]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 18.5, 20.5, 22, 23.2, 28],
+    "sectionYMM": 0,
+    "binCentreXYMM": [0.3, -2.6],
+    "innerRadiusMM": 9.8,
+    "hoopHeightsMM": [
+      [17.6, 19.1],
+      [21.3, 22.7]
+    ]
+  },
+  "notes": "Empty open wooden bin: horizontal bottom boards, vertical inner staves and timber debris, with two dark external iron hoops. Inner timber volumes precede hoop masks to avoid painting the cavity metal; measured bare Wall Basic excludes masonry and floor."
+}

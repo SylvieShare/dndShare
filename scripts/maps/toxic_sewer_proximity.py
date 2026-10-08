@@ -1,0 +1,50 @@
+"""Measure distance to a complete bare sculpt for overlapping added parts."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import sys
+import bpy
+import numpy as np
+from mathutils import Vector
+from mathutils.bvhtree import BVHTree
+
+ROOT = Path(__file__).resolve().parents[2]
+parser = argparse.ArgumentParser()
+parser.add_argument('--report', type=Path, required=True)
+parser.add_argument('--reference-spec')
+args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
+report = json.loads(args.report.read_text())
+spec = json.loads(args.reference_spec) if args.reference_spec else report['materialSpec']['proximityReference']
+row = next(r for r in json.loads((ROOT/'models/collections/manifest.json').read_text())
+           if r['collection'] == 'toxic-sewer' and r['code'] == spec['code'])
+source_path = ROOT/'models'/row['sourcePath']
+if hashlib.sha256(source_path.read_bytes()).hexdigest() != row['sourceSHA256']:
+    raise RuntimeError('Bare source changed')
+bpy.ops.wm.read_factory_settings(use_empty=True)
+bpy.ops.wm.stl_import(filepath=str(source_path))
+source = bpy.context.object
+for vertex in source.data.vertices:
+    vertex.co.z -= row['cutHeight']
+source.data.update()
+bpy.context.view_layer.update()
+tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())
+low, high = spec['boundsMM']
+step = spec['stepMM']
+size = [int(np.ceil((high[i]-low[i])/step))+1 for i in range(3)]
+values = np.empty(np.prod(size), dtype='<f4')
+index = 0
+for z in range(size[2]):
+    for y in range(size[1]):
+        for x in range(size[0]):
+            point = Vector((low[0]+x*step, low[1]+y*step, low[2]+z*step))
+            values[index] = tree.find_nearest(point)[3]
+            index += 1
+directory = ROOT/'models/collections/toxic-sewer/references'
+directory.mkdir(exist_ok=True)
+binary = directory/(spec['code']+'-proximity.f32')
+binary.write_bytes(values.tobytes())
+descriptor = {**spec, 'low': low, 'size': size, 'sourceSHA256': row['sourceSHA256'],
+              'binary': binary.name, 'valuesSHA256': hashlib.sha256(values.tobytes()).hexdigest()}
+(directory/(spec['code']+'-proximity.json')).write_text(json.dumps(descriptor,indent=2)+'\n')
+print('TOXIC_SEWER_PROXIMITY', spec['code'], size, len(values), flush=True)

@@ -1,0 +1,87 @@
+{
+  "sourceName": "Box",
+  "material": "sewer-components",
+  "referencePage": 6,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.9, 2.5],
+    "lodMiB": [0.3, 0.9],
+    "shadowKiB": [25, 80],
+    "previewKiB": [8, 45],
+    "basis": "Closed timber crate with lid, corner posts, rope loops, carved boards and rear wall; preserve relief and individual grain directions without coloring the cobbled floor."
+  },
+  "regions": [
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-13.7, -8.6, 15.2],
+      "max": [-10.3, -5.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-13.7, 7.3999999999999995, 15.2],
+      "max": [-10.3, 11.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [10.3, -8.6, 15.2],
+      "max": [13.7, -5.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [10.3, 7.3999999999999995, 15.2],
+      "max": [13.7, 11.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": true,
+      "min": [-12.4, -10.6, 17.5],
+      "max": [-10.4, 10.5, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": true,
+      "min": [10.4, -10.6, 17.5],
+      "max": [12.4, 10.5, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "added": true,
+      "min": [-14.5, -10.6, 15.2],
+      "max": [14.5, 10.5, 34.6]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 20, 25, 28, 30],
+    "sectionsYMM": [0, -7],
+    "crateBoundsMM": [
+      [-14.5, -10.6, 15.2],
+      [14.5, 10.5, 34.6]
+    ],
+    "cornerPostsXYMM": [
+      [-12, -6.8],
+      [-12, 9.2],
+      [12, -6.8],
+      [12, 9.2]
+    ]
+  },
+  "notes": "Closed wooden box against green masonry; front and lid boards follow X, side boards Y, corner uprights Z. Bare Wall Basic comparison excludes rear wall and floor. Carved rope handles stay brown; nail recesses and split board ends retain source normal/AO.",
+  "referenceCode": "TS-001"
+}

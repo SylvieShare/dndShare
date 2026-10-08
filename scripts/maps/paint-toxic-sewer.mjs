@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { createHash } from "node:crypto";
 import { readGlb, replaceImages } from "./glb_textures.mjs";
 import { setSurfaceAtlas } from "./pbr_revision.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
@@ -26,6 +27,33 @@ const reference = spec.referenceCode
       ),
     )
   : null;
+if (spec.proximityReference) {
+  if (!reference) throw Error("Bare surface reference required for proximity");
+  const base = path.resolve(
+    import.meta.dirname,
+    "../../models/collections/toxic-sewer/references",
+  );
+  const grid = JSON.parse(
+    await fs.readFile(
+      path.join(base, spec.proximityReference.code + "-proximity.json"),
+      "utf8",
+    ),
+  );
+  const bytes = await fs.readFile(path.join(base, grid.binary));
+  if (
+    grid.sourceSHA256 !== reference.sourceSHA256 ||
+    grid.code !== spec.proximityReference.code ||
+    createHash("sha256").update(bytes).digest("hex") !== grid.valuesSHA256
+  )
+    throw Error("Proximity field source or bytes differ");
+  const values = new Float32Array(bytes.length / 4);
+  for (let i = 0; i < values.length; i++) values[i] = bytes.readFloatLE(i * 4);
+  reference.proximity = {
+    ...grid,
+    thresholdMM: spec.proximityReference.thresholdMM,
+    values,
+  };
+}
 if (!["sewer-masonry", "sewer-components"].includes(spec.material))
   throw new Error("Unsupported individually reviewed surface material");
 for (const field of [
@@ -53,6 +81,16 @@ if (reference)
     stepMM: reference.floor.step,
     minimumWallYMM: reference.minimumWallYMM ?? 8,
     maximumFloorZMM: reference.maximumFloorZMM ?? 15,
+    ...(reference.proximity
+      ? {
+          proximity: {
+            boundsMM: reference.proximity.boundsMM,
+            stepMM: reference.proximity.stepMM,
+            thresholdMM: reference.proximity.thresholdMM,
+            valuesSHA256: reference.proximity.valuesSHA256,
+          },
+        }
+      : {}),
   };
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp"),

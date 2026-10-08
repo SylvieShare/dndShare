@@ -1,0 +1,100 @@
+{
+  "sourceName": "Wooden Bin Tentacles",
+  "material": "sewer-components",
+  "referencePage": 13,
+  "renderTriangles": 44000,
+  "lodTriangles": 14000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.1, 3.0],
+    "lodMiB": [0.35, 1.1],
+    "shadowKiB": [35, 100],
+    "previewKiB": [8, 45],
+    "basis": "One-cell wall and timber bin with several tall curved tentacles and low hanging limbs; retain wood/metal boundaries, organic suckers, overhanging curves and standing masonry."
+  },
+  "referenceCode": "TS-035",
+  "regions": [
+    {
+      "part": "tentacle",
+      "added": true,
+      "roughness": 0.52,
+      "min": [-17.5, -18, 15.5],
+      "max": [17.5, 18, 59],
+      "colorGradient": {
+        "startMM": 16,
+        "endMM": 38,
+        "from": [127, 154, 27],
+        "to": [181, 197, 23]
+      }
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 16],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 15.0],
+      "max": [10.3, 7.5, 16.9]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 16.9],
+      "max": [10.3, 7.5, 25.4]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 17.6],
+      "max": [13.5, 10.2, 19.1]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 21.3],
+      "max": [13.5, 10.2, 22.7]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "min": [-16.5, -17, 14.1],
+      "max": [16.5, 10.2, 27]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 22, 28, 40],
+    "organicTopMM": 58.5687,
+    "bareBinReference": "TS-035",
+    "proximityStepMM": 0.35
+  },
+  "notes": "Yellow-green tentacles wrap over the timber rim and metal hoops. Complete 3D distance to Empty Bin, including its entire wall crown, excludes old wood, metal and masonry from organic paint. Preserved explicit timber volumes retain the original brown bin and splinters. Initial partial-height proximity and inherited added-wood tests were rejected.",
+  "proximityReference": {
+    "code": "TS-035",
+    "boundsMM": [
+      [-18, -18, 14],
+      [18, 18, 39]
+    ],
+    "stepMM": 0.35,
+    "thresholdMM": 0.45
+  }
+}

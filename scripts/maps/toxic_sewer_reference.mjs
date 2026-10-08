@@ -7,6 +7,10 @@ export function referenceSample(grid, a, b) {
 export function addedSewerSurface(p, reference, shift = [0, 0]) {
   if (!reference) throw Error("Measured bare surface required for this mask");
   const [x, y, z] = [p[0] - shift[0], p[1] - shift[1], p[2]];
+  if (reference.proximity) {
+    const distance = proximitySample(reference.proximity, [x, y, z]);
+    if (distance !== null) return distance > reference.proximity.thresholdMM;
+  }
   const floor = referenceSample(reference.floor, x, y);
   const wall = referenceSample(reference.wall, x, z);
   const distances = [];
@@ -14,3 +18,4 @@ export function addedSewerSurface(p, reference, shift = [0, 0]) {
   if (wall !== null) distances.push(Math.abs(y - wall));
   return !distances.length || Math.min(...distances) > 0.38;
 }
+import { proximitySample } from "./toxic_sewer_proximity.mjs";

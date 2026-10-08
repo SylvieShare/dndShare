@@ -6,8 +6,10 @@ import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { mapTool } from "./mcp_maps_client.mjs";
 import { transparentPreview } from "./preview_image.mjs";
+import { assertModelBaseline } from "./toxic_sewer_baseline.mjs";
 import specs from "./toxic_sewer_recipes.mjs";
 const root = path.resolve(import.meta.dirname, "../..");
+const backendRoot = path.resolve(process.env.MAP_MODEL_BACKEND_ROOT || root);
 const base = path.join(root, "models/collections/toxic-sewer");
 const code = process.argv[2],
   mode = process.argv[3];
@@ -31,7 +33,7 @@ function run(command, args, label) {
   const file = path.join(base, "detailed", code, label + ".log");
   const fd = openSync(file, "w");
   const result = spawnSync(command, args, {
-    cwd: root,
+    cwd: command === "go" ? backendRoot : root,
     stdio: ["ignore", fd, fd],
     env: { ...process.env, GOCACHE: "/private/tmp/dndshare-go-cache" },
   });
@@ -39,7 +41,15 @@ function run(command, args, label) {
   if (result.status !== 0) throw Error(label + " failed; inspect " + file);
 }
 function node(script, args, label) {
-  run(process.execPath, ["scripts/maps/" + script, ...args], label);
+  const shared = [
+    "package-masonry.mjs",
+    "confirm-reviewed-model.mjs",
+    "record-reviewed-model.mjs",
+  ].includes(script);
+  const file = shared
+    ? path.join(backendRoot, "scripts/maps", script)
+    : "scripts/maps/" + script;
+  run(process.execPath, [file, ...args], label);
 }
 function blend(script, args, label) {
   run(
@@ -160,8 +170,8 @@ if (mode !== "publish") {
     blend("toxic_sewer_bake.py", ["--report", report], "bake");
   } else {
     const prepared = JSON.parse(await fs.readFile(report, "utf8"));
-    if (prepared.publication || prepared.model.id !== current.id)
-      throw Error("Prepared baseline changed or already published");
+    if (prepared.publication) throw Error("Already published");
+    assertModelBaseline(prepared.model, current);
     repaintReference = path.join(directory, "repaint-reference");
     await fs.mkdir(repaintReference, { recursive: true });
     for (const tier of ["render", "lod"])
@@ -204,6 +214,29 @@ if (mode !== "publish") {
       ],
       "reference",
     );
+  if (spec.proximityReference) {
+    const proximity = spec.proximityReference;
+    const cached = await fs
+      .readFile(
+        path.join(base, "references", proximity.code + "-proximity.json"),
+        "utf8",
+      )
+      .then(JSON.parse)
+      .catch((error) => {
+        if (error.code === "ENOENT") return null;
+        throw error;
+      });
+    if (
+      !cached ||
+      cached.stepMM !== proximity.stepMM ||
+      JSON.stringify(cached.boundsMM) !== JSON.stringify(proximity.boundsMM)
+    )
+      blend(
+        "toxic_sewer_proximity.py",
+        ["--report", report, "--reference-spec", JSON.stringify(proximity)],
+        "proximity",
+      );
+  }
   node("paint-toxic-sewer.mjs", [report], "paint");
   node("prepare-reviewed-shadow.mjs", [report], "shadow");
   node(
@@ -267,9 +300,15 @@ if (mode !== "publish") {
   const directories = (await fs.readdir(packetBase)).filter((n) =>
     n.startsWith(code.replaceAll(" ", "_") + "__v"),
   );
-  directories.sort(
-    (a, b) => Number(b.split("__v")[1]) - Number(a.split("__v")[1]),
+  const modified = new Map(
+    await Promise.all(
+      directories.map(async (name) => [
+        name,
+        (await fs.stat(path.join(packetBase, name, "report.json"))).mtimeMs,
+      ]),
+    ),
   );
+  directories.sort((a, b) => modified.get(b) - modified.get(a));
   directory = path.join(packetBase, directories[0]);
   const report = path.join(directory, "report.json");
   const prepared = JSON.parse(await fs.readFile(report, "utf8"));
@@ -279,8 +318,7 @@ if (mode !== "publish") {
   const latest = current.filter(
     (m) => m.sourceCode === code && m.sourceName === prepared.model.sourceName,
   )[0];
-  if (latest.id !== prepared.model.id)
-    throw Error("Accepted model changed during preparation");
+  assertModelBaseline(prepared.model, latest);
   node("select-albedo-candidate.mjs", [report, candidate, note], "select");
   node("validate-toxic-sewer.mjs", [report], "final-validate");
   const previewCheck = await transparentPreview(
@@ -322,7 +360,7 @@ if (mode !== "publish") {
       "TestPreparedCollectionManifest",
       "-count=1",
     ],
-    { cwd: root, env: testEnv, encoding: "utf8" },
+    { cwd: backendRoot, env: testEnv, encoding: "utf8" },
   );
   if (validation.status !== 0)
     throw Error(
@@ -362,6 +400,7 @@ if (mode !== "publish") {
   data.publication = {
     id: model.id,
     definitionId: model.definitionId,
+
     confirmedAt: new Date().toISOString(),
     registry: fresh,
   };

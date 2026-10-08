@@ -1,0 +1,50 @@
+{
+  "sourceName": "Wall Broken",
+  "material": "sewer-components",
+  "referencePage": 2,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.6],
+    "lodMiB": [0.35, 0.9],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Broken wall with two fractured posts, loose masonry and excavated floor; keep chipped crown, central gap and source mounting."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "rubble",
+      "added": true,
+      "min": [-18, -18, 14.2],
+      "max": [18, 18, 42]
+    },
+    {
+      "part": "rubble",
+      "eroded": 0.65,
+      "min": [-16.5, -16.5, 12.5],
+      "max": [16.5, 10.5, 14.2]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [14.5, 16, 25, 35],
+    "standingPostInsideXMM": [-7.3, 10],
+    "fractureComparison": "Complete bare Wall Basic surface; surviving outer masonry excluded by proximity."
+  },
+  "notes": "Author page2: brown exposed fracture and loose masonry, green surviving wall and cobbles. Compare complete 3D bare wall surface so both fractured post faces can be treated without coloring intact back faces. Floor deficit mask restricted below cobble crowns.",
+  "proximityReference": {
+    "code": "TS-001",
+    "boundsMM": [
+      [-18, -18, 14.2],
+      [18, 18, 42]
+    ],
+    "stepMM": 0.35,
+    "thresholdMM": 0.5
+  }
+}
