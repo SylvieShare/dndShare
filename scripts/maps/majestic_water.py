@@ -69,6 +69,11 @@ def apply_water(obj, positions, colours, roughness, recipe):
     weight*=np.clip((z-settings['minZMM'])/.35,0,1)*np.clip((normals[:,2]-.05)/.2,0,1)
     if settings.get('clipToLowWaterDomain'):
         weight*=near_domain
+    if settings.get('preserveWood'):
+        attribute=obj.data.color_attributes.get('Wood')
+        if attribute is None: raise ValueError('Measured wood mask required before water protection')
+        wood=np.empty(len(positions)*4,np.float32);attribute.data.foreach_get('color',wood)
+        weight*=1-np.clip(wood.reshape(-1,4)[:,0],0,1)
     if settings.get('boundsMM'):
         lo,hi=np.array(settings['boundsMM'][0]),np.array(settings['boundsMM'][1])
         weight*=np.all((positions>=lo)&(positions<=hi),axis=1)
