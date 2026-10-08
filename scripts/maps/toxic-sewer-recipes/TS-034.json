@@ -1,0 +1,168 @@
+{
+  "sourceName": "Wooden Bin Chains",
+  "material": "sewer-components",
+  "referencePage": 5,
+  "renderTriangles": 44000,
+  "lodTriangles": 14000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.1, 3.1],
+    "lodMiB": [0.4, 1.2],
+    "shadowKiB": [35, 105],
+    "previewKiB": [8, 45],
+    "basis": "Timber bin with broken lid boards, two crossing draped chains, metal hoops and splinters; preserve link openings, chain/wood boundaries and wall masonry."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "wood",
+      "direction": [1, 0.2, 0],
+      "ellipsoid": {
+        "centre": [1.2, -2.7, 26],
+        "radius": [10.5, 10.5, 100]
+      },
+      "min": [-12, -16, 24.3],
+      "max": [14, 10, 27.25]
+    },
+    {
+      "part": "iron",
+      "color": [77, 78, 62],
+      "roughness": 0.66,
+      "added": true,
+      "path": [
+        [-15, -16, 14.3],
+        [-12, -13, 21],
+        [-10, -12, 25.8],
+        [-6, -8, 28],
+        [1.2, -2.7, 28.8],
+        [7, 3, 28],
+        [11, 7.5, 25.8],
+        [14, 10, 14.3]
+      ],
+      "radius": 2.8,
+      "min": [-18, -18, 14],
+      "max": [18, 11, 31.5]
+    },
+    {
+      "part": "iron",
+      "color": [77, 78, 62],
+      "roughness": 0.66,
+      "added": true,
+      "path": [
+        [-15, 10, 14.3],
+        [-12, 7, 22],
+        [-10, 5.5, 28],
+        [-5, 1, 28.3],
+        [1.2, -2.7, 28.8],
+        [6, -7.5, 28.4],
+        [11, -12, 25.8],
+        [14, -16, 14.3]
+      ],
+      "radius": 2.8,
+      "min": [-18, -18, 14],
+      "max": [18, 11, 31.5]
+    },
+    {
+      "part": "wood",
+      "direction": [1, 0.2, 0],
+      "ellipsoid": {
+        "centre": [1.2, -2.7, 26],
+        "radius": [12.4, 12.4, 100]
+      },
+      "min": [-12, -16, 24.3],
+      "max": [14, 10, 27.8]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 16],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 15.0],
+      "max": [10.3, 7.5, 16.9]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 16.9],
+      "max": [10.3, 7.5, 25.4]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 17.6],
+      "max": [13.5, 10.2, 19.1]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 21.3],
+      "max": [13.5, 10.2, 22.7]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-16.5, -17, 14.1],
+      "max": [16.5, 10.2, 27]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [18, 22, 25, 28, 32],
+    "binCentreXYMM": [1.2, -2.7],
+    "crossingChainPathsMM": [
+      [
+        [-15, -16, 14.3],
+        [-12, -13, 21],
+        [-10, -12, 25.8],
+        [-6, -8, 28],
+        [1.2, -2.7, 28.8],
+        [7, 3, 28],
+        [11, 7.5, 25.8],
+        [14, 10, 14.3]
+      ],
+      [
+        [-15, 10, 14.3],
+        [-12, 7, 22],
+        [-10, 5.5, 28],
+        [-5, 1, 28.3],
+        [1.2, -2.7, 28.8],
+        [6, -7.5, 28.4],
+        [11, -12, 25.8],
+        [14, -16, 14.3]
+      ]
+    ],
+    "lidHeightMM": [24.3, 27.8]
+  },
+  "notes": "Authorpage5: brown staves, broken lid and timber debris, dark metal hoops and two crossing chains. Measured chain paths precede all timber; full bareWall distance excludes old masonry and floor. Lid grain follows its board direction; new0.55rad UV must pass physical used-pixel uniqueness. Initial chain volumes stained lid gaps metallic. Inner timber surface below27.25mm precedes chain masks;2.25mm chain radius reduces spill onto loose wood while retaining raised metal links. Atlas-coordinate inspection found267 raised link pixels outside the2.25mm tubes. Final2.8mm paths cover rotated link corners; inner timber priority keeps the lid gaps wooden.",
+  "uvAngleLimitRad": 0.55,
+  "proximityReference": {
+    "code": "TS-001",
+    "boundsMM": [
+      [-18, -18, 14],
+      [18, 13, 33]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

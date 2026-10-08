@@ -399,6 +399,10 @@ if (mode !== "publish") {
   );
   const packet = path.join(packetBase, "upload");
   const stagedPacket = path.join(selection, "upload");
+  await fs.copyFile(
+    path.join(picked, "preview.webp"),
+    path.join(directory, "preview.webp"),
+  );
   await fs.mkdir(packet, { recursive: true });
   for (const name of await fs.readdir(stagedPacket)) {
     const from = path.join(stagedPacket, name),

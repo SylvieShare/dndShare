@@ -1,0 +1,245 @@
+{
+  "sourceName": "Wall Debris 1",
+  "material": "sewer-components",
+  "referencePage": 2,
+  "renderTriangles": 56000,
+  "lodTriangles": 17500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.4, 4.2],
+    "lodMiB": [0.5, 1.5],
+    "shadowKiB": [40, 140],
+    "previewKiB": [10, 55],
+    "basis": "One-cell wall with upper/lateral pipes, three skulls, timber splinters, broken copper tubing, vessel and wet debris; preserve all openings and distinguish small materials on both sides."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "wood",
+      "added": true,
+      "direction": [5.2, 12.4, 8.5],
+      "min": [3.6, 0.5, 15.8],
+      "max": [7.6, 5.1, 22.3]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "direction": [5.5, 12, 7],
+      "path": [
+        [0, -4, 16],
+        [5.5, 8, 23]
+      ],
+      "radius": 2.1,
+      "min": [-1, -5, 15.2],
+      "max": [6.5, 10, 25.5]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [-12.2, -4.8, 18.8],
+        "radius": [3.8, 4, 100]
+      },
+      "min": [-17, -9, 14.5],
+      "max": [-8, 0, 22.5]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [5.6, -1.2, 19.3],
+        "radius": [3.6, 4, 100]
+      },
+      "min": [1.5, -5.5, 15],
+      "max": [10, 3, 23]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [7.1, -11.4, 17.5],
+        "radius": [3.4, 3.7, 100]
+      },
+      "min": [3.2, -16, 14],
+      "max": [11, -7, 21]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-14.122, 6.0786, 14.3],
+        [-14.122, 6.0786, 32.3],
+        [-14.122, 6.5, 33.8],
+        [-14.122, 7.6, 35.0],
+        [-14.122, 9.1, 35.5],
+        [-14.122, 11.0, 35.5]
+      ],
+      "radius": 2.1,
+      "min": [-16.322, 3.8, 14.1],
+      "max": [-11.922, 12.8, 37.6]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [14.541, 6.0786, 14.3],
+        [14.541, 6.0786, 32.3],
+        [14.541, 6.5, 33.8],
+        [14.541, 7.6, 35.0],
+        [14.541, 9.1, 35.5],
+        [14.541, 11.0, 35.5]
+      ],
+      "radius": 2.1,
+      "min": [12.341000000000001, 3.8, 14.1],
+      "max": [16.741, 12.8, 37.6]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-7.2, 14.3, 41.949999999999996],
+        [-2.8, 14.3, 41.949999999999996]
+      ],
+      "radius": 2.82,
+      "min": [-7.3, 11.3, 40.5],
+      "max": [-2.6999999999999997, 17.15, 44.699999999999996]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-0.2, 14.3, 41.949999999999996],
+        [4.2, 14.3, 41.949999999999996]
+      ],
+      "radius": 2.82,
+      "min": [-0.30000000000000004, 11.3, 40.5],
+      "max": [4.3, 17.15, 44.699999999999996]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-14, 14.3, 38.0],
+        [-14, 14.3, 39.9],
+        [-13.2, 14.3, 41.4],
+        [-11.4, 14.3, 41.949999999999996],
+        [11.4, 14.3, 41.949999999999996],
+        [13.2, 14.3, 41.4],
+        [14, 14.3, 39.9],
+        [14, 14.3, 38.0]
+      ],
+      "radius": 2.45,
+      "min": [-16.5, 11.7, 37.2],
+      "max": [16.5, 17.0, 44.6]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "ellipsoid": {
+        "centre": [-7.2, 5.6, 19.3],
+        "radius": [3.3, 3.6, 5.1]
+      },
+      "min": [-11, 1.5, 14.5],
+      "max": [-3, 10, 24.5]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-10, -11.7, 16],
+        [-5.7, -5.5, 19.5],
+        [-1.5, 2.7, 23]
+      ],
+      "radius": 3,
+      "min": [-14, -15, 14.3],
+      "max": [2, 7, 25]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [10.6, 5.8, 20],
+        [9.7, -2.4, 19.6],
+        [10.9, -8.8, 17.7]
+      ],
+      "radius": 3,
+      "min": [6, -13, 14.3],
+      "max": [15, 9, 24]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "direction": [1, 0.25, 0],
+      "path": [
+        [-9, -11, 15.2],
+        [4, -7.8, 16.4]
+      ],
+      "radius": 1.2,
+      "min": [-14, -15, 14.4],
+      "max": [8, -4.5, 19]
+    },
+    {
+      "part": "rubble",
+      "added": true,
+      "min": [-18, 10.7, 31],
+      "max": [18, 18, 42],
+      "color": [137, 108, 62]
+    },
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-16.5, -16.5, 14.2],
+      "max": [16.5, 9.5, 16.1]
+    },
+    {
+      "part": "rubble",
+      "added": true,
+      "min": [-18, -18, 14.4],
+      "max": [18, 10.5, 24.5],
+      "color": [133, 117, 69]
+    }
+  ],
+  "notes": "Authorpage2: green wall/floor, copper crown/lateral and loose pipes/vessel, ivory skulls, timber splinters and lime wet debris. Measured bareWall3D protects existing masonry. Skull/wood volumes precede pipe/debris regions; full source sections and preview rays locate small components. Both surfaces and LOD need visual review before MCP publication. Actual crown rays reach40.546\u201342.545mm, so its recipe is6.4mm above standalonePipes3. Narrow timber priority protects its straight edge from neighboring skull volumes; skull masks include all their vertical surfaces, and no bone trajectory is inferred across the broken copper pipe. Timber edge rays at4.831,2.293,19.779 and3.634,.587,18.731mm determine its slanted plane and full grain direction. Rear timber-face probes define an additional priority volume on positiveX/positiveY, excluding the front skull. This avoids bone-colored stripes on the splintered reverse side.",
+  "measurements": {
+    "sectionsZMM": [16, 20, 25, 30, 35],
+    "skullSurfaceProbesXYZMM": [
+      [-14.767, -6.205, 17.696],
+      [4.227, -3.427, 17.577],
+      [4.941, -13.147, 14.986]
+    ],
+    "vesselNeckSurfaceXYZMM": [-7.239, 6.311, 21.272],
+    "woodSurfaceXYZMM": [1.6, -0.012, 18.109],
+    "crownSurfaceProbesXYZMM": [
+      [-2.125, 12.573, 40.546],
+      [5.635, 12.384, 42.545],
+      [11.855, 12.557, 41.726]
+    ],
+    "timberEdgeSurfaceProbesXYZMM": [
+      [4.831, 2.293, 19.779],
+      [3.634, 0.587, 18.731],
+      [3.599, 3.605, 20.059]
+    ],
+    "rearTimberEdgeProbesXYZMM": [
+      [5.436, 2.728, 18.296],
+      [4.861, 0.735, 16.339],
+      [6.026, 3.931, 20.176],
+      [6.938, 1.353, 17.9]
+    ]
+  },
+  "uvAngleLimitRad": 0.55,
+  "uvIslandMargin": 0.0025,
+  "proximityReference": {
+    "code": "TS-001",
+    "boundsMM": [
+      [-18, -18, 14.1],
+      [18, 18, 42]
+    ],
+    "stepMM": 0.35,
+    "thresholdMM": 0.45
+  }
+}

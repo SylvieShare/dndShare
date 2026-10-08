@@ -1,0 +1,110 @@
+{
+  "sourceName": "Wall Light 2",
+  "material": "sewer-components",
+  "referencePage": 6,
+  "renderTriangles": 32000,
+  "lodTriangles": 9500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.35, 1],
+    "shadowKiB": [25, 90],
+    "previewKiB": [8, 45],
+    "basis": "Round wall lamp with convex glass, circular metal rim and three grille bars; preserve aperture shape and material/emission boundaries in recessed stone pocket."
+  },
+  "regions": [
+    {
+      "part": "iron",
+      "color": [68, 70, 55],
+      "roughness": 0.54,
+      "path": [
+        [0, 13.5, 25.6],
+        [0, 12.7, 27],
+        [0, 11.7, 29],
+        [0, 11.5, 31],
+        [0, 11.65, 33],
+        [0, 12.4, 35],
+        [0, 13.5, 36]
+      ],
+      "radius": 0.48
+    },
+    {
+      "part": "iron",
+      "color": [68, 70, 55],
+      "roughness": 0.54,
+      "path": [
+        [-5, 13.5, 28.5],
+        [-3, 12.8, 28.5],
+        [0, 11.9, 28.5],
+        [3, 12.8, 28.5],
+        [5, 13.5, 28.5]
+      ],
+      "radius": 0.42
+    },
+    {
+      "part": "iron",
+      "color": [68, 70, 55],
+      "roughness": 0.54,
+      "path": [
+        [-5, 13.5, 33.1],
+        [-3, 12.8, 33.1],
+        [0, 11.6, 33.1],
+        [3, 12.8, 33.1],
+        [5, 13.5, 33.1]
+      ],
+      "radius": 0.42
+    },
+    {
+      "part": "glass",
+      "color": [214, 189, 40],
+      "roughness": 0.18,
+      "emission": [230, 198, 42],
+      "ellipsoid": {
+        "centre": [0, 13, 30.7],
+        "radius": [5.15, 100, 5.15]
+      },
+      "min": [-5.3, 12.05, 25.4],
+      "max": [5.3, 13.95, 36]
+    },
+    {
+      "part": "iron",
+      "color": [68, 70, 55],
+      "roughness": 0.54,
+      "ellipsoid": {
+        "centre": [0, 13, 30.7],
+        "radius": [6.7, 100, 6.7]
+      },
+      "min": [-7, 11, 23.8],
+      "max": [7, 14.05, 37.4]
+    }
+  ],
+  "notes": "Authorpage6: round warm emitting glass behind dark curved grille/rim, green wall and floor without painted light. Source ray intersections separate deeper glass from convex front bars; explicit paths precede circular glass. Emissive atlas is glass-only; source sculpt and coordinate metadata preserved. Built-in wall-lamp behaviour confirmed through MCP: warm light placed at emitting glass in local footprint coordinates, body height excludes mounting depth; existing transitions preserved.",
+  "measurements": {
+    "sectionsZMM": [25, 30, 35],
+    "sectionXMM": 0,
+    "glassCircleCentreXZMM": [0, 30.7],
+    "glassRadiusMM": 5.15,
+    "sourceRayDepthYMM": {
+      "glass": [12.19, 13.56],
+      "centreBar": [11.52, 12.64]
+    }
+  },
+  "uvAngleLimitRad": 0.55,
+  "uvIslandMargin": 0.0025,
+  "defaultLight": {
+    "key": "wall-lamp",
+    "name": "\u041d\u0430\u0441\u0442\u0435\u043d\u043d\u044b\u0439 \u0444\u043e\u043d\u0430\u0440\u044c",
+    "kind": "torch",
+    "color": "#e6c62a",
+    "position": [0.5, 0.17, 0.728],
+    "intensity": 3,
+    "radius": 2.5,
+    "enabled": true,
+    "flicker": false
+  }
+}

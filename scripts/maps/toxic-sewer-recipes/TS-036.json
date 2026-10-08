@@ -1,0 +1,216 @@
+{
+  "sourceName": "Box Skulls",
+  "material": "sewer-components",
+  "referencePage": 5,
+  "renderTriangles": 46000,
+  "lodTriangles": 14500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.2, 3.5],
+    "lodMiB": [0.4, 1.2],
+    "shadowKiB": [35, 110],
+    "previewKiB": [8, 45],
+    "basis": "Broken timber crate with stone blocks, skulls/long bone and two flowing liquid strands; preserve front notch, bone sockets, rope loops, splinters and individual materials."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "ellipsoid": {
+        "centre": [-11.4, 0, 34.7],
+        "radius": [1.3, 1.5, 1.4]
+      },
+      "min": [-13.3, -2, 32.2],
+      "max": [-9.8, 2, 36.1]
+    },
+    {
+      "part": "bone",
+      "ellipsoid": {
+        "centre": [-10.3, -2.5, 34.5],
+        "radius": [1.3, 1.4, 1.5]
+      },
+      "min": [-12, -4.3, 32.2],
+      "max": [-8.7, -0.8, 36.1]
+    },
+    {
+      "part": "toxic",
+      "path": [
+        [0.1, -6.5, 27],
+        [-1.3, -7.8, 25],
+        [-3.3, -7.8, 23]
+      ],
+      "radius": 1.25,
+      "min": [-4.5, -8.4, 23.8],
+      "max": [2.5, -6.2, 28.2]
+    },
+    {
+      "part": "toxic",
+      "path": [
+        [2.7, -6.6, 26.3],
+        [1.8, -7.8, 24],
+        [1.4, -7.8, 22]
+      ],
+      "radius": 1.3,
+      "min": [0, -8.4, 23.8],
+      "max": [4.3, -6.4, 27.8]
+    },
+    {
+      "part": "bone",
+      "ellipsoid": {
+        "centre": [0.2, -2.7, 28.5],
+        "radius": [4, 4.5, 4.5]
+      },
+      "min": [-4.5, -7.2, 24],
+      "max": [5, 2, 33.5]
+    },
+    {
+      "part": "bone",
+      "ellipsoid": {
+        "centre": [3.6, -4.7, 26.8],
+        "radius": [2.8, 3, 3.4]
+      },
+      "min": [0, -7.2, 23.4],
+      "max": [6.5, 0, 30.5]
+    },
+    {
+      "part": "bone",
+      "path": [
+        [-10.5, -1.4, 33.3],
+        [-2.2, 3.6, 33.3]
+      ],
+      "radius": 1.7,
+      "min": [-14, -4, 30.8],
+      "max": [0.5, 6, 36]
+    },
+    {
+      "part": "stone",
+      "ellipsoid": {
+        "centre": [-7, 5.7, 33.5],
+        "radius": [4.8, 4.6, 100]
+      },
+      "min": [-12, 1.3, 30.5],
+      "max": [-1.5, 11, 36]
+    },
+    {
+      "part": "stone",
+      "ellipsoid": {
+        "centre": [5.8, 3.8, 33.5],
+        "radius": [4.8, 4.8, 100]
+      },
+      "min": [0.8, -1.5, 30.5],
+      "max": [11, 9.5, 36]
+    },
+    {
+      "part": "stone",
+      "min": [-16, -17, 14.1],
+      "max": [-6.4, -10.2, 20]
+    },
+    {
+      "part": "toxic",
+      "path": [
+        [-1.3, -7.8, 27],
+        [-3.3, -7.8, 23],
+        [-3.4, -8, 19],
+        [-3.5, -10, 16.5],
+        [-4, -14, 16.1]
+      ],
+      "radius": 1.35,
+      "min": [-6, -17, 14.4],
+      "max": [-0.2, -7.65, 28.5]
+    },
+    {
+      "part": "toxic",
+      "path": [
+        [1.7, -7.8, 27],
+        [1.4, -7.8, 22],
+        [1.8, -8.35, 18],
+        [2.4, -11.5, 16.3],
+        [2.6, -15, 16.1],
+        [1.8, -16.5, 15.4]
+      ],
+      "radius": 1.45,
+      "min": [-0.2, -18, 14.4],
+      "max": [5, -7.65, 28.5]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "added": "height",
+      "min": [-17, -17, 14.1],
+      "max": [17, 10.5, 17.5]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": "height",
+      "min": [-13.7, -8.6, 15.2],
+      "max": [-10.3, -5.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": "height",
+      "min": [-13.7, 7.3999999999999995, 15.2],
+      "max": [-10.3, 11.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": "height",
+      "min": [10.3, -8.6, 15.2],
+      "max": [13.7, -5.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": "height",
+      "min": [10.3, 7.3999999999999995, 15.2],
+      "max": [13.7, 11.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": "height",
+      "min": [-12.4, -10.6, 17.5],
+      "max": [-10.4, 10.5, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": "height",
+      "min": [10.4, -10.6, 17.5],
+      "max": [12.4, 10.5, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "added": "height",
+      "min": [-14.5, -10.6, 15.2],
+      "max": [14.5, 10.5, 34.6]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [20, 26, 30, 34, 38],
+    "sectionYMM": 0,
+    "stoneBlockCentresXYMM": [
+      [-7, 5.7],
+      [5.8, 3.8]
+    ],
+    "skullCentresXYZMM": [
+      [0.2, -2.7, 28.5],
+      [3.6, -4.7, 26.8]
+    ],
+    "bareBoxReference": "TS-045",
+    "femurKnobsXYZMM": [
+      [-11.4, 0, 35.5],
+      [-10.3, -2.5, 35.5]
+    ]
+  },
+  "notes": "Authorpage5: brown broken timber crate and floor splinters, two green stone blocks, ivory skulls/long bone and lime drips. Specific bone/stone/flow volumes precede wood. OldBox3D distance protects existing wooden faces beneath new liquid; timber height test uses bareWall. New0.55rad UV must pass physical uniqueness. Source sections18/22mm place both drips at Y-7.8/-8.3 and X-3.4/+1.8. Explicit thin-surface trajectories replace bareBox distance, which rejected liquid coinciding with old timber. Front loose block is entirely stone; femur extent includes its two left knobs. Source35mm slice resolves high femur knobs outside the first cap bound; measured head volumes and diagonal shaft restore ivory. Upper mouth-fluid trajectories connect to the lower drips. Rejected unused bareBox field removed; geometry/UV unchanged.",
+  "referenceCode": "TS-001",
+  "uvAngleLimitRad": 0.55
+}

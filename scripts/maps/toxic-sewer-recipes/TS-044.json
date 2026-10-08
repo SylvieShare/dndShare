@@ -1,0 +1,198 @@
+{
+  "sourceName": "Treasure 2",
+  "material": "sewer-components",
+  "referencePage": 6,
+  "renderTriangles": 44000,
+  "lodTriangles": 14000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.2, 3.5],
+    "lodMiB": [0.4, 1.3],
+    "shadowKiB": [35, 110],
+    "previewKiB": [8, 45],
+    "basis": "Open timber crate with a dense coin/jewel heap replacing the lid; preserve coin rims, colored cut stones, raised wooden frame, rope handles and source standing masonry."
+  },
+  "regions": [
+    {
+      "part": "wood",
+      "axis": "x",
+      "min": [-13.7, -8.9, 29.2],
+      "max": [13.7, -5.5, 32.1],
+      "added": true
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "min": [-13.7, -8.6, 28.2],
+      "max": [-9.7, 10.8, 34.6],
+      "added": true
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "min": [9.7, -8.6, 28.2],
+      "max": [13.7, 10.8, 34.6],
+      "added": true
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "min": [-13.7, 8.2, 29.2],
+      "max": [13.7, 11.2, 34.6],
+      "added": true
+    },
+    {
+      "part": "gem",
+      "color": [161, 53, 142],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "ellipsoid": {
+        "centre": [0, -2, 32.5],
+        "radius": [1.35, 1.35, 100]
+      },
+      "min": [-10.4, -6, 27.5],
+      "max": [10.4, 9, 34]
+    },
+    {
+      "part": "gem",
+      "color": [192, 51, 64],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "ellipsoid": {
+        "centre": [-3, -1.5, 32.5],
+        "radius": [1.35, 1.35, 100]
+      },
+      "min": [-10.4, -6, 27.5],
+      "max": [10.4, 9, 34]
+    },
+    {
+      "part": "gem",
+      "color": [64, 141, 190],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "ellipsoid": {
+        "centre": [0.2, 1.9, 32.5],
+        "radius": [1.35, 1.35, 100]
+      },
+      "min": [-10.4, -6, 27.5],
+      "max": [10.4, 9, 34]
+    },
+    {
+      "part": "gem",
+      "color": [76, 152, 66],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "ellipsoid": {
+        "centre": [4.7, -3.5, 32.5],
+        "radius": [1.35, 1.35, 100]
+      },
+      "min": [-10.4, -6, 27.5],
+      "max": [10.4, 9, 34]
+    },
+    {
+      "part": "gem",
+      "color": [201, 122, 43],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "ellipsoid": {
+        "centre": [-4.1, 3.4, 32.5],
+        "radius": [1.35, 1.35, 100]
+      },
+      "min": [-10.4, -6, 27.5],
+      "max": [10.4, 9, 34]
+    },
+    {
+      "part": "gem",
+      "color": [117, 78, 179],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "ellipsoid": {
+        "centre": [2.1, -0.8, 32.5],
+        "radius": [1.35, 1.35, 100]
+      },
+      "min": [-10.4, -6, 27.5],
+      "max": [10.4, 9, 34]
+    },
+    {
+      "part": "gold",
+      "roughness": 0.3,
+      "metallic": 0.83,
+      "min": [-10.4, -6, 27.5],
+      "max": [10.4, 9, 34]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-13.7, -8.6, 15.2],
+      "max": [-10.3, -5.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [-13.7, 7.3999999999999995, 15.2],
+      "max": [-10.3, 11.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [10.3, -8.6, 15.2],
+      "max": [13.7, -5.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "min": [10.3, 7.3999999999999995, 15.2],
+      "max": [13.7, 11.0, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": true,
+      "min": [-12.4, -10.6, 17.5],
+      "max": [-10.4, 10.5, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": true,
+      "min": [10.4, -10.6, 17.5],
+      "max": [12.4, 10.5, 34.6]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "added": true,
+      "min": [-14.5, -10.6, 15.2],
+      "max": [14.5, 10.5, 34.6]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [26, 30, 34, 37],
+    "coinVolumeMM": [
+      [-10.4, -6, 27.5],
+      [10.4, 9, 34]
+    ],
+    "gemCentresXYZMM": [
+      [0, -2, 31.5],
+      [-3, -1.5, 31],
+      [0.2, 1.9, 31.5],
+      [4.7, -3.5, 31],
+      [-4.1, 3.4, 31.5],
+      [2.1, -0.8, 31.5]
+    ],
+    "framePriority": true
+  },
+  "notes": "Authorpage6: gold coins and colored faceted stones in brown timber crate with green wall/floor. Precise frame volumes precede the treasure region. No difference test against closedBox: new contents occupy the removed lid volume. Physical-surface gutters prevent gold leakage onto tiny wood/stone triangles;0.55rad UV and nonzero coverage required. First gemstone height estimate under-covered raised contents;32.5mm centres and2.3mm vertical extent include the visible facets. Wooden frame uses bareWall test so the rear bar cannot color original masonry. Gemstones span different heap heights; final narrowXY facet volumes cover their full vertical extent while frame priority protects timber.",
+  "referenceCode": "TS-001",
+  "uvAngleLimitRad": 0.55,
+  "uvIslandMargin": 0.003
+}

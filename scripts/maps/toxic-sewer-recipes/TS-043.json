@@ -1,0 +1,182 @@
+{
+  "sourceName": "Treasure 1",
+  "material": "sewer-components",
+  "referencePage": 6,
+  "renderTriangles": 42000,
+  "lodTriangles": 13000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.1, 3.2],
+    "lodMiB": [0.4, 1.2],
+    "shadowKiB": [30, 105],
+    "previewKiB": [8, 45],
+    "basis": "Open timber bin filled with upright gold coins, coin stacks and small colored cut stones; preserve relief, coin rims, gem facets, staves and surrounding splinters."
+  },
+  "referenceCode": "TS-001",
+  "regions": [
+    {
+      "part": "gem",
+      "color": [165, 56, 142],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "added": true,
+      "ellipsoid": {
+        "centre": [1.6, -1, 21.5],
+        "radius": [1.05, 1.05, 1.65]
+      },
+      "min": [-11, -14, 18.7],
+      "max": [11, 8, 24.8]
+    },
+    {
+      "part": "gem",
+      "color": [192, 51, 64],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "added": true,
+      "ellipsoid": {
+        "centre": [-0.4, -1.5, 21.5],
+        "radius": [1.05, 1.05, 1.65]
+      },
+      "min": [-11, -14, 18.7],
+      "max": [11, 8, 24.8]
+    },
+    {
+      "part": "gem",
+      "color": [67, 142, 188],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "added": true,
+      "ellipsoid": {
+        "centre": [-1.1, 0.3, 21.6],
+        "radius": [1.05, 1.05, 1.65]
+      },
+      "min": [-11, -14, 18.7],
+      "max": [11, 8, 24.8]
+    },
+    {
+      "part": "gem",
+      "color": [82, 152, 65],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "added": true,
+      "ellipsoid": {
+        "centre": [-4.5, -2.6, 21.2],
+        "radius": [1.05, 1.05, 1.65]
+      },
+      "min": [-11, -14, 18.7],
+      "max": [11, 8, 24.8]
+    },
+    {
+      "part": "gem",
+      "color": [119, 81, 176],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "added": true,
+      "ellipsoid": {
+        "centre": [2.2, -3.2, 21.5],
+        "radius": [1.05, 1.05, 1.65]
+      },
+      "min": [-11, -14, 18.7],
+      "max": [11, 8, 24.8]
+    },
+    {
+      "part": "gem",
+      "color": [195, 112, 43],
+      "roughness": 0.18,
+      "metallic": 0.04,
+      "added": true,
+      "ellipsoid": {
+        "centre": [-0.5, -5, 21.2],
+        "radius": [1.05, 1.05, 1.65]
+      },
+      "min": [-11, -14, 18.7],
+      "max": [11, 8, 24.8]
+    },
+    {
+      "part": "gold",
+      "roughness": 0.3,
+      "metallic": 0.83,
+      "added": true,
+      "min": [-11, -14, 17.2],
+      "max": [11, 8, 25]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 16],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 15.0],
+      "max": [10.3, 7.5, 16.9]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [9.8, 9.8, 100]
+      },
+      "min": [-10, -13, 16.9],
+      "max": [10.3, 7.5, 25.4]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 17.6],
+      "max": [13.5, 10.2, 19.1]
+    },
+    {
+      "part": "iron",
+      "color": [78, 76, 60],
+      "roughness": 0.7,
+      "ellipsoid": {
+        "centre": [0.3, -2.6, 20],
+        "radius": [12.8, 12.8, 100]
+      },
+      "min": [-13, -16, 21.3],
+      "max": [13.5, 10.2, 22.7]
+    },
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": "height",
+      "min": [-16.5, -17, 14.1],
+      "max": [16.5, 10.2, 27]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [22, 25, 28, 31],
+    "gemCentresXYZMM": [
+      [1.6, -1, 21.5],
+      [-0.4, -1.5, 21.5],
+      [-1.1, 0.3, 21.6],
+      [-4.5, -2.6, 21.2],
+      [2.2, -3.2, 21.5],
+      [-0.5, -5, 21.2]
+    ],
+    "bareTimberBinReference": "TS-035"
+  },
+  "notes": "Authorpage6: gold coins/stacks and colored gemstones in brown timber with dark hoops, green wall/floor. Full bareEmptyBin distance protects wood from metal/gem paint. Specific colored facet volumes precede general gold; measured source silhouettes and new0.55rad UV retained. Small gold seam specks on old masonry are outside physical masks; enlarged0.008 UV island margin is required to prevent cross-material filtering bleed.0.008 fraction margin collapsed the high-island-count atlas and was rejected before publication.0.003 packing is tested with mandatory nonzero UV coverage.",
+  "uvAngleLimitRad": 0.55,
+  "proximityReference": {
+    "code": "TS-035",
+    "boundsMM": [
+      [-14, -16, 15],
+      [14, 11, 25.5]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  },
+  "uvIslandMargin": 0.003
+}

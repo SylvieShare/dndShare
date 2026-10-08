@@ -137,6 +137,8 @@ export function finishSewerPart(region, p, n, ao) {
     rubble: [137, 108, 62],
     tentacle: [145, 164, 55],
     gold: [206, 155, 49],
+    gem: [80, 137, 182],
+    glass: [230, 198, 42],
   };
   let colours = region.color ?? palette[region.part];
   if (region.colorGradient) {
@@ -153,6 +155,7 @@ export function finishSewerPart(region, p, n, ao) {
   const factor = detail * (0.94 + 0.12 * coarse + 0.04 * (grain - 0.5));
   return {
     part: region.part,
+    ...(region.emission ? { emission: region.emission } : {}),
     rgb: colours.map((v) => Math.round(clamp(v * factor, 8, 245))),
     roughness:
       region.roughness ??

@@ -5,6 +5,20 @@ import {
   sewerPartAt,
   finishSewerPart,
 } from "./toxic_sewer_parts.mjs";
+test("lamp emission is confined to explicit glass regions", () => {
+  const glass = finishSewerPart(
+    { part: "glass", roughness: 0.18, emission: [230, 198, 42] },
+    [0, 10, 28],
+    [0, -1, 0],
+    255,
+  );
+  assert.deepEqual(glass.emission, [230, 198, 42]);
+  assert.equal(glass.metallic, 0);
+  assert.equal(
+    finishSewerPart({ part: "iron" }, [0, 10, 28], [0, -1, 0], 255).emission,
+    undefined,
+  );
+});
 test("angled window mask follows the hatch plane and excludes its raised metal frame", () => {
   const q = Math.SQRT1_2;
   const region = {

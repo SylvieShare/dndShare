@@ -167,7 +167,10 @@ def bake_tier(report, directory, tier):
     uv_angle = report['materialSpec'].get('uvAngleLimitRad', .55)
     if not .2 <= uv_angle <= 1.4:
         raise ValueError('UV angle must be between0.2 and1.4 radians')
-    bpy.ops.uv.smart_project(angle_limit=uv_angle, island_margin=.0015,
+    uv_margin = report['materialSpec'].get('uvIslandMargin', .0025)
+    if not .0015 <= uv_margin <= .02:
+        raise ValueError('UV island margin outside reviewed range')
+    bpy.ops.uv.smart_project(angle_limit=uv_angle, island_margin=uv_margin,
                              margin_method='FRACTION', area_weight=.8)
     bpy.ops.object.mode_set(mode='OBJECT')
     tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())
@@ -223,7 +226,7 @@ def bake_tier(report, directory, tier):
     print('TOXIC_SEWER_REBAKE', tier, size, repaired, before, sculpt, flush=True)
     return {'bakeSize':size, 'repairedOppositeNormals':repaired, 'acceptedBoundsMM':before,
             'sourceBoundsMM':sculpt, 'triangles':len(target.data.polygons), 'sourceDeviationMM':max(distances,default=0),
-            'uvRepacked':True, 'uvAngleLimitRad':uv_angle, 'acceptedGeometryRetained':reuse_geometry,
+            'uvRepacked':True, 'uvAngleLimitRad':uv_angle, 'uvIslandMargin':uv_margin, 'acceptedGeometryRetained':reuse_geometry,
             'mountingMeshesRetained':len(mounting), 'mountSourceBoundsMM':mount_source_bounds}
 
 

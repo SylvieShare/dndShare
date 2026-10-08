@@ -15,7 +15,7 @@
     "lodMiB": [0.25, 0.65],
     "shadowKiB": [20, 70],
     "previewKiB": [8, 45],
-    "basis": "One-cell brick wall with two curved thin pipes; preserve both tubes and fittings while checking metallic masks against bare masonry."
+    "basis": "One-cell brick wall over two long diagonal floor planks and shorter transverse boards; preserve timber profiles, sculpted masonry joints and three loose stones. Compare both texture candidates against the accepted geometry."
   },
   "referenceCode": "TS-001",
   "regions": [
@@ -75,7 +75,7 @@
       "axis": "x"
     }
   ],
-  "notes": "Long raised planks follow their own diagonal grain; shorter underlying boards use transverse grain. Measured bare wall/floor excludes masonry; three loose stones remain rubble.",
+  "notes": "Long raised planks follow their own diagonal grain; shorter underlying boards use transverse grain. Measured bare wall/floor excludes masonry; three loose stones remain rubble. UV correction retains all accepted triangles:0.55rad left a0.106mm distant-surface overlap in LOD. Use0.45rad and0.003 island margin, rebake normal/AO, and require decoded physical uniqueness in both tiers.",
   "measurements": {
     "sectionsZMM": [14.5, 16, 18, 22],
     "floorDetailMaxZMM": 16.805,
@@ -84,5 +84,7 @@
       [5, 21.7, 0],
       [-4.6, 22.8, 0]
     ]
-  }
+  },
+  "uvAngleLimitRad": 0.45,
+  "uvIslandMargin": 0.003
 }

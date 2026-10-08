@@ -1,0 +1,97 @@
+{
+  "sourceName": "Ground Debris 1",
+  "material": "sewer-components",
+  "referencePage": 6,
+  "renderTriangles": 50000,
+  "lodTriangles": 16000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13, 13.25, 13.5, 14.1],
+  "uvAngleLimitRad": 0.55,
+  "weightBudget": {
+    "renderMiB": [1.4, 3.8],
+    "lodMiB": [0.45, 1.4],
+    "shadowKiB": [40, 120],
+    "previewKiB": [10, 50],
+    "basis": "Dense conical masonry debris with separate hollow copper pipes and leaning timber; retain pipe rims, broken blocks and debris silhouette."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [5.9, 10.9, 37],
+        [5.4, 10.8, 32],
+        [6.3, 6.8, 28],
+        [9.3, 6.2, 21]
+      ],
+      "radius": 3.1,
+      "min": [2.2, 3, 18],
+      "max": [13, 14.3, 38]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [3.3, 6, 35],
+        [4.5, 5.7, 32],
+        [7.3, 5.8, 31]
+      ],
+      "radius": 1.85,
+      "min": [0.8, 3.2, 28],
+      "max": [11, 8, 37]
+    },
+    {
+      "part": "copper",
+      "ellipsoid": {
+        "centre": [1.2, 1.5, 36.5],
+        "radius": [3.7, 3.7, 3.2]
+      },
+      "min": [-2.7, -2.2, 34.8],
+      "max": [5, 5.2, 40]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-1.2, -5, 34],
+        [-2.5, -7.5, 30],
+        [-2.8, -9.2, 25],
+        [-5.2, -11.5, 18]
+      ],
+      "radius": 3.6,
+      "min": [-10, -16, 15.2],
+      "max": [2.7, -2, 35.5]
+    },
+    {
+      "part": "wood",
+      "direction": [0.35, 0.28, 0.9],
+      "path": [
+        [-12, -7, 16],
+        [-7.1, -3.3, 30.5]
+      ],
+      "radius": 1.8,
+      "min": [-15, -10, 14.5],
+      "max": [-5, 0, 33]
+    },
+    {
+      "part": "rubble",
+      "min": [-18, -18, 14.6],
+      "max": [18, 18, 21.5],
+      "color": [133, 117, 69]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [15, 20, 25, 30, 34, 38],
+    "sectionsXMM": [-8, 0, 8],
+    "sectionsYMM": [-8, 0, 8],
+    "largePipeRimXYMM": [5.9, 10.9],
+    "smallPipeRimXYMM": [3.3, 6],
+    "frontPipeSurfaceProbesXYZMM": [
+      [-3.915, -10.126, 22.75],
+      [-4.078, -9.16, 24.112],
+      [-2.855, -9.815, 30.562]
+    ]
+  },
+  "notes": "Authorpage6: green masonry heap, brown fractured low debris, hollow copper tubes and leaning timber. Individual paths follow22/28/32/36mm source sections and actual preview surface probes. The rear upper rim is near5.9,10.9mm; the front descending pipe surface reaches-3.915,-10.126 at22.75mm and-2.855,-9.815 at30.562mm. Separate measured paths and the timber grain direction protect adjacent stone. Full maps are lighter than the reduced-albedo candidate. Both decoded tiers pass physical UV uniqueness and nonzero coverage; source and placement are retained."
+}
