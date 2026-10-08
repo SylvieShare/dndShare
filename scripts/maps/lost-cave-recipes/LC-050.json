@@ -1,0 +1,130 @@
+{
+  "sourceName": "Mushrooms Ground 1",
+  "referencePage": 8,
+  "material": "cave-mushrooms",
+  "floorHeightMM": 14.2517,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 17000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 4.8],
+    "lodMiB": [0.6, 1.8],
+    "shadowKiB": [35, 110],
+    "previewKiB": [10, 140],
+    "basis": "319960-triangle1x1 mushroom floor with rounded red cap, eight raised white warts, fluted stalk, amber shelf and three red buds.50k/17k protect rounded silhouettes and cap details;2048/1024 source bakes and two texture budgets."
+  },
+  "notes": "Author page8: red-orange cap with eight actual ivory warts, aged pale fluted stalk, amber shelf and three red buds on brown stone. Measured cap/stalk boundary26.8mm; cap rim-12.5946/2.3464/28.5559 and stalk-12.3585/6.5855/23.6692. Warts use measured centres, not a random dot pattern. Shelf native11.946/9.4407/17.2913 and10.3319/7.1406/17.3106; buds5.6365/14.2226/16.3502,10.7606/4.6146/16.5169,14.7317/3.9736/16.769. Open native slabs14.2517mm remain brown with darker joints. Preserve current UUID4a3df395-7b6b-5032-857d-dd3dd2bb7157, LC-050, familyLC-mushrooms-ground, source, cut11.5, mount.135406, footprint and central standing point. Initial ellipsoids clipped red rim, amber perimeter and spherical buds. Cap uses full native XY footprint above26.6mm; expanded measured bud/shelf bounds retain their sides while keeping the floor separate. Source-normal fitting shows buds are shallow domes with centres below the slab, not full spheres centred at15mm. Measured centres6.18/14.6/13.22,10.12/5.94/12.71,14.37/4.39/13.6 and radii3.35/4.18/3.45 include their full curved skin; minZ14.45 keeps the bare slab brown. Shelf and its ivory support take priority over the overlapping bud envelope; explicit XY guards keep the red domes away from the shelf stem. Front bud point4.4832/12.6299/15.4133 must stay red; support8.8801/8.9703/15.2739 stays ivory. Final lower bud surface14.0557/1.8481/14.9344 requires Ymin1.5; it lies below the guessed2mm guard and remains red.",
+  "groupCode": "LC-mushrooms-ground",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "mushrooms": {
+    "cap": {
+      "centre": [-10.6, 9.4, 28.5],
+      "radius": [7.6, 7.5, 5.5]
+    },
+    "capFloorMM": 26.6,
+    "warts": [
+      {
+        "centre": [-10.5684, 14.6399, 31.6358],
+        "radius": [0.7280000000000001, 0.7280000000000001, 0.7280000000000001]
+      },
+      {
+        "centre": [-10.056, 11.6257, 33.5008],
+        "radius": [1.12, 1.12, 1.12]
+      },
+      {
+        "centre": [-14.2193, 11.3704, 33.0778],
+        "radius": [1.0080000000000002, 1.0080000000000002, 1.0080000000000002]
+      },
+      {
+        "centre": [-6.8535, 10.6671, 32.4315],
+        "radius": [0.9520000000000001, 0.9520000000000001, 0.9520000000000001]
+      },
+      {
+        "centre": [-14.8598, 8.4234, 33.3736],
+        "radius": [0.8960000000000001, 0.8960000000000001, 0.8960000000000001]
+      },
+      {
+        "centre": [-12.618, 6.8221, 33.411],
+        "radius": [0.8960000000000001, 0.8960000000000001, 0.8960000000000001]
+      },
+      {
+        "centre": [-8.1345, 6.8224, 33.2629],
+        "radius": [1.0080000000000002, 1.0080000000000002, 1.0080000000000002]
+      },
+      {
+        "centre": [-11.9775, 3.6214, 32.4692],
+        "radius": [1.064, 1.064, 1.064]
+      }
+    ],
+    "stalks": [
+      {
+        "centre": [-10.4, 9.4, 21],
+        "radius": [4.7, 4.8, 6.5]
+      },
+      {
+        "centre": [-10.7, 9.1, 16.6],
+        "radius": [5.4, 5.4, 4.0]
+      },
+      {
+        "centre": [10.8, 9.9, 15.15],
+        "radius": [2.6, 2.6, 2.1]
+      }
+    ],
+    "buds": [
+      {
+        "centre": [6.18, 14.6, 13.22],
+        "radius": [3.75, 3.75, 3.75],
+        "minZ": 14.45,
+        "bounds": {
+          "min": [3.4, 11.3, 14.45],
+          "max": [8.3, 16.8, 17.4]
+        }
+      },
+      {
+        "centre": [10.12, 5.94, 12.71],
+        "radius": [4.18, 4.18, 4.18],
+        "minZ": 14.45,
+        "bounds": {
+          "min": [7.7, 2.5, 14.45],
+          "max": [12.65, 7.25, 17.3]
+        }
+      },
+      {
+        "centre": [14.37, 4.39, 13.6],
+        "radius": [3.45, 3.45, 3.45],
+        "minZ": 14.45,
+        "bounds": {
+          "min": [12.15, 1.5, 14.45],
+          "max": [16.9, 6.6, 17.4]
+        }
+      }
+    ],
+    "shelf": {
+      "centre": [11.85, 10.35, 16.8],
+      "radius": [5.4, 5.4, 1.9]
+    },
+    "shelfTopMinMM": 16.2,
+    "palette": {
+      "cap": [0.8, 0.235, 0.055],
+      "bud": [0.74, 0.18, 0.035],
+      "wart": [0.9, 0.825, 0.7],
+      "stalk": [0.64, 0.555, 0.405],
+      "gills": [0.72, 0.625, 0.44],
+      "shelf": [0.88, 0.58, 0.125]
+    }
+  }
+}

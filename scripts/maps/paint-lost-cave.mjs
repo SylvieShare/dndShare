@@ -17,6 +17,7 @@ import { paintWagon } from "./lost_cave_wagon.mjs";
 import { paintWagonOnTrack } from "./lost_cave_wagon_track.mjs";
 import { paintBoulderGround } from "./lost_cave_boulder_ground.mjs";
 import { projectedBoneAt } from "./lost_cave_bone_view.mjs";
+import { paintMushrooms } from "./lost_cave_mushrooms.mjs";
 import { paintCaveBones } from "./lost_cave_bones.mjs";
 import { paintCrystalGround } from "./lost_cave_crystal_ground.mjs";
 import { wallReferenceDistance } from "./lost_cave_wall_reference.mjs";
@@ -41,6 +42,7 @@ if (
     "cave-boulders",
     "cave-crystal-ground",
     "cave-bones",
+    "cave-mushrooms",
   ].includes(spec.material)
 )
   throw new Error("Unsupported individually reviewed surface material");
@@ -155,6 +157,9 @@ for (const tier of ["render", "lod"]) {
   let pixels = 0;
   const counts = {
     rock: 0,
+    ...(spec.material === "cave-mushrooms"
+      ? { cap: 0, wart: 0, stalk: 0, gills: 0, bud: 0, shelf: 0 }
+      : {}),
     ...(spec.material === "cave-bones" ? { bone: 0 } : {}),
     ...(spec.material === "cave-stalagmites" ? { calcite: 0 } : {}),
     ...(spec.material === "cave-railway" ? { wood: 0, iron: 0 } : {}),
@@ -176,23 +181,25 @@ for (const tier of ["render", "lod"]) {
   const paintPixel = (i, p, n, used = true) => {
     if (used) checkUv?.(i, p);
     const value =
-      spec.material === "cave-bones"
-        ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
-        : spec.material === "cave-crystal-ground"
-          ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
-          : spec.material === "cave-boulders"
-            ? paintBoulderGround(p, n, ao[i], spec)
-            : spec.material === "cave-wagon-track"
-              ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
-              : spec.material === "cave-wagon"
-                ? paintWagon(p, n, ao[i], spec)
-                : spec.material === "cave-crystal"
-                  ? paintCrystal(p, n, ao[i], spec)
-                  : spec.material === "cave-railway"
-                    ? paintRailway(p, n, ao[i], spec)
-                    : spec.material === "cave-stalagmites"
-                      ? paintStalagmites(p, n, ao[i], spec)
-                      : caveRockPixel(p, n, ao[i], report.materialSpec);
+      spec.material === "cave-mushrooms"
+        ? paintMushrooms(p, n, ao[i], spec)
+        : spec.material === "cave-bones"
+          ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
+          : spec.material === "cave-crystal-ground"
+            ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
+            : spec.material === "cave-boulders"
+              ? paintBoulderGround(p, n, ao[i], spec)
+              : spec.material === "cave-wagon-track"
+                ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
+                : spec.material === "cave-wagon"
+                  ? paintWagon(p, n, ao[i], spec)
+                  : spec.material === "cave-crystal"
+                    ? paintCrystal(p, n, ao[i], spec)
+                    : spec.material === "cave-railway"
+                      ? paintRailway(p, n, ao[i], spec)
+                      : spec.material === "cave-stalagmites"
+                        ? paintStalagmites(p, n, ao[i], spec)
+                        : caveRockPixel(p, n, ao[i], report.materialSpec);
     if (used) counts[value.part]++;
     neutralNormal[i] = Number(
       spec.crystal?.normalMode === "geometry" && value.part === "crystal",

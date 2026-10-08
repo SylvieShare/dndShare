@@ -111,6 +111,7 @@ lost-cave/registry-snapshot.json и не перезаписывает состо
 - [Минеральные отложения LC-010–017](lost-cave-stalagmites.md).
 - [Валуны и кристаллы LC-032–042](lost-cave-minerals.md).
 - [Костяные конструкции LC-043–049](lost-cave-bones.md).
+- [Грибные конструкции LC-050–056](lost-cave-mushrooms.md).
 - Рельсы и вагонетки LC-018–031 описаны ниже.
 
 ## LC-018 — Railway
