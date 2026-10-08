@@ -1,0 +1,56 @@
+{
+  "sourceName": "Water Wooden Bridge",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 36000,
+  "lodTriangles": 11000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.7],
+    "lodMiB": [0.35, 1],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Bonus straight water channel with two long parallel timber boards crossing both banks; preserve narrow board gap, end bindings, wood splits and fluid underneath."
+  },
+  "regions": [
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": true,
+      "min": [-11, -17, 11.5],
+      "max": [12.6, 17, 17]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-18, -10, 9.4],
+      "max": [18, 10, 12.3]
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "sectionsZMM": [12, 14, 15, 16],
+    "bridgeBoundsMM": [
+      [-11, -17, 11.5],
+      [12.6, 17, 17]
+    ],
+    "boardDirection": "Y",
+    "waterBelowBridgeReference": "TS-096"
+  },
+  "notes": "Bonus100 absent from author catalogue; page9 palette. Two timber boards run along Y across the straight channel; carved end bindings and splits retained. Complete WaterStraight distance protects old banks and waves from wood, while the same unbridged height field paints exposed water beneath and between the boards.",
+  "referenceCode": "TS-096",
+  "proximityReference": {
+    "code": "TS-096",
+    "boundsMM": [
+      [-13, -18, 10.5],
+      [13, 18, 17]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.45
+  }
+}

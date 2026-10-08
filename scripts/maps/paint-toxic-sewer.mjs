@@ -40,9 +40,23 @@ if (spec.proximityReference) {
     ),
   );
   const bytes = await fs.readFile(path.join(base, grid.binary));
+  const archive = JSON.parse(
+    await fs.readFile(path.join(base, "../../manifest.json"), "utf8"),
+  );
+  const bare = archive.find(
+    (row) =>
+      row.collection === "toxic-sewer" &&
+      row.code === spec.proximityReference.code,
+  );
   if (
-    grid.sourceSHA256 !== reference.sourceSHA256 ||
+    !bare ||
+    grid.sourceSHA256 !== bare.sourceSHA256 ||
     grid.code !== spec.proximityReference.code ||
+    grid.stepMM !== spec.proximityReference.stepMM ||
+    (grid.rotationZDegrees ?? 0) !==
+      (spec.proximityReference.rotationZDegrees ?? 0) ||
+    JSON.stringify(grid.boundsMM) !==
+      JSON.stringify(spec.proximityReference.boundsMM) ||
     createHash("sha256").update(bytes).digest("hex") !== grid.valuesSHA256
   )
     throw Error("Proximity field source or bytes differ");
@@ -84,6 +98,9 @@ if (reference)
     ...(reference.proximity
       ? {
           proximity: {
+            code: reference.proximity.code,
+            sourceSHA256: reference.proximity.sourceSHA256,
+            rotationZDegrees: reference.proximity.rotationZDegrees ?? 0,
             boundsMM: reference.proximity.boundsMM,
             stepMM: reference.proximity.stepMM,
             thresholdMM: reference.proximity.thresholdMM,

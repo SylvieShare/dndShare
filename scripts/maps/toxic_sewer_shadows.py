@@ -28,6 +28,7 @@ def render(report):
         scene.render.threads = 8
         scene.render.resolution_x = scene.render.resolution_y = 384
         scene.render.resolution_percentage = 100
+        scene.view_settings.view_transform = 'AgX'
         scene.world = bpy.data.worlds.new('Diagnostic ambient')
         scene.world.use_nodes = True
         scene.world.node_tree.nodes['Background'].inputs['Strength'].default_value = .12
@@ -42,13 +43,17 @@ def render(report):
         scene.collection.objects.link(camera)
         camera.data.type = 'ORTHO'
         camera.data.ortho_scale = max(row['width'], row['height'], row['maxHeight'])*3.4
-        camera.location = centre + Vector((3, -4, 3))
+        # View the east shadow from the shaded side; the old camera hid it
+        # directly behind the model along the incoming sunlight direction.
+        camera.location = centre + Vector((-3, 4, 3) if name == 'sun-east' else (3, -4, 3))
         camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
         scene.camera = camera
         scene.render.filepath = str(directory/('shadow-'+name+'.png'))
         bpy.ops.render.render(write_still=True)
     data = json.loads(report.read_text())
     data['shadowReview'] = {'geometry': 'Published shadow decoded without textures',
+                            'viewTransform': 'AgX',
+                            'cameraVariant': 'visible-east-shadow',
                             'views': ['sun-east', 'sun-west', 'point']}
     report.write_text(json.dumps(data, indent=2)+'\n')
 

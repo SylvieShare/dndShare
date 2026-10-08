@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 import bpy
@@ -24,7 +25,11 @@ if hashlib.sha256(source_path.read_bytes()).hexdigest() != row['sourceSHA256']:
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.wm.stl_import(filepath=str(source_path))
 source = bpy.context.object
+angle = math.radians(spec.get('rotationZDegrees', 0))
+cosine, sine = math.cos(angle), math.sin(angle)
 for vertex in source.data.vertices:
+    x, y = vertex.co.x, vertex.co.y
+    vertex.co.x, vertex.co.y = cosine*x-sine*y, sine*x+cosine*y
     vertex.co.z -= row['cutHeight']
 source.data.update()
 bpy.context.view_layer.update()

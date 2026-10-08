@@ -1,0 +1,37 @@
+{
+  "sourceName": "Water Straight",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 26000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.7, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 60],
+    "previewKiB": [8, 45],
+    "basis": "Bonus straight water channel with two raised cobbled banks across Y; preserve wave relief and clear liquid/stone boundaries."
+  },
+  "regions": [
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-18, -10, 9.4],
+      "max": [18, 10, 12.3]
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "sectionsZMM": [10.5, 11.5, 12.5],
+    "channelRangeYMM": [-8.4, 8.4],
+    "centralWaterHeightMM": [10.3, 11.44],
+    "waterDepressionHeightMM": 9.77
+  },
+  "notes": "Bonus96 is absent from main author catalogue; liquid palette follows page9. Source sections show channel across X with cobbled banks at Y sides, unlike blindly reusing an empty-channel mask. Glossy lime flowing top only; banks and support sides green nonmetallic masonry. Initial fixed10.15mm lower bound left gray water depressions and was rejected. Own highest-surface field with0.65mm depth and12.3mm upper bound follows waves, protects higher banks and excludes support sides.",
+  "referenceCode": "TS-096"
+}

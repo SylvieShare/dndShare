@@ -1,0 +1,50 @@
+{
+  "sourceName": "Water T-Shaped",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 26000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.7, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 60],
+    "previewKiB": [8, 45],
+    "basis": "Bonus three-way water junction with one long raised bank and two opposite corner islands; retain three open channel edges, waves and cobbled bank relief."
+  },
+  "regions": [
+    {
+      "part": "stone",
+      "max": [-8.6, 18, 12.3]
+    },
+    {
+      "part": "stone",
+      "min": [8.6, 8.6, 0]
+    },
+    {
+      "part": "stone",
+      "min": [8.6, -18, 0],
+      "max": [18, -8.6, 12.3]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.3]
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "sectionsZMM": [11.5, 12.5],
+    "leftBankInsideXMM": -8.6,
+    "rightIslandInsideXMM": 8.6,
+    "rightIslandInsideYMM": [-8.6, 8.6]
+  },
+  "notes": "Bonus98 absent from main author catalogue; page9 palette. Own measured top field paints three-way flowing water below12.3mm. Three protected bank footprints keep all low outside cliff faces stone, while the centre and three open channel edges remain glossy lime. Geometry and mounting budgets chosen for this junction.",
+  "referenceCode": "TS-098"
+}

@@ -1,0 +1,56 @@
+{
+  "sourceName": "Water Angle",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 26000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.7, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 60],
+    "previewKiB": [8, 45],
+    "basis": "Bonus right-angle water channel with L-shaped cobbled bank and opposite corner island; keep the curved inner shoreline and separate high masonry from flowing water."
+  },
+  "regions": [
+    {
+      "part": "stone",
+      "max": [-8.6, 18, 12.3]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 8.8, 0]
+    },
+    {
+      "part": "stone",
+      "min": [8.6, -18, 0],
+      "max": [18, -8.6, 12.3]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.3]
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "sectionsZMM": [10.5, 11.5, 12.5],
+    "waterHeightMM": [9.7, 11.7],
+    "bankHeightMM": [13, 14.27],
+    "insideBankCurveXYMM": [
+      [-8.5, -5],
+      [-8.5, 0],
+      [-5, 6],
+      [0, 8.7],
+      [10, 8.7]
+    ]
+  },
+  "notes": "Bonus97 absent from main author catalogue; page9 supplies water palette. Own highest-surface field follows curved wave top across XY, with12.3mm ceiling protecting the elevated L-shaped bank and opposite cobbled island. No fixed rectangular channel stripe; lower support stays stone. Three protected bank footprints also exclude low outside cliff faces where the highest-surface grid loses the elevated cobble at the STL boundary.",
+  "referenceCode": "TS-097"
+}

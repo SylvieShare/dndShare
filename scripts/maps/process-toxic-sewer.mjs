@@ -229,6 +229,7 @@ if (mode !== "publish") {
     if (
       !cached ||
       cached.stepMM !== proximity.stepMM ||
+      (cached.rotationZDegrees ?? 0) !== (proximity.rotationZDegrees ?? 0) ||
       JSON.stringify(cached.boundsMM) !== JSON.stringify(proximity.boundsMM)
     )
       blend(

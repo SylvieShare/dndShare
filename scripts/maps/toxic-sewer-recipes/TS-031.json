@@ -1,0 +1,45 @@
+{
+  "sourceName": "Wall Angle Pipe 1",
+  "material": "sewer-components",
+  "referencePage": 5,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.5],
+    "lodMiB": [0.3, 0.9],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Curved one-cell masonry corner with continuous crown pipe, collars and open lips; preserve outer curvature, pipe cavities and brick joints."
+  },
+  "referenceCode": "TS-029",
+  "proximityReference": {
+    "code": "TS-029",
+    "boundsMM": [
+      [-18, -18, 37],
+      [18, 18, 45]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.38
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "added": true,
+      "min": [-18, -18, 37.4],
+      "max": [18, 18, 45]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [35, 39, 42],
+    "sectionYMM": 14,
+    "pipeCentreZMM": 40.9,
+    "bareCornerTopMM": 38.2
+  },
+  "notes": "Continuous curved copper pipe follows the rounded masonry crown. Complete bare Angle1 surface excludes both orthogonal walls; height bound avoids floor. Preserve collars, open ends and full corner silhouette."
+}

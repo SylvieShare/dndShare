@@ -1,0 +1,159 @@
+{
+  "sourceName": "Water End Skulls",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 48000,
+  "lodTriangles": 15000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1.1, 3.2],
+    "lodMiB": [0.4, 1.2],
+    "shadowKiB": [30, 100],
+    "previewKiB": [8, 45],
+    "basis": "Bonus dead-end water channel with a dense pile of multiple skulls, two rib cages and broken planks; retain sockets, thin ribs, wood ends and individual material boundaries."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [-6.4, -3.8, 14.5],
+        "radius": [3.3, 3.4, 3.5]
+      },
+      "min": [-10, -12, 11.8],
+      "max": [11, 12, 18]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [-5.8, -8.5, 15],
+        "radius": [4, 4, 4]
+      },
+      "min": [-10, -12, 11.8],
+      "max": [11, 12, 18]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [3.7, -7.5, 14.5],
+        "radius": [3.5, 3.4, 3.5]
+      },
+      "min": [-10, -12, 11.8],
+      "max": [11, 12, 18]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [-5.5, 4.8, 13.8],
+        "radius": [3.3, 3.4, 3]
+      },
+      "min": [-10, -12, 11.8],
+      "max": [11, 12, 18]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [0.4, 6.4, 13.8],
+        "radius": [2.8, 3, 3]
+      },
+      "min": [-10, -12, 11.8],
+      "max": [11, 12, 18]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "ellipsoid": {
+        "centre": [4.5, 1.8, 14.2],
+        "radius": [3.5, 3.5, 3.7]
+      },
+      "min": [-10, -12, 11.8],
+      "max": [11, 12, 18]
+    },
+    {
+      "part": "wood",
+      "axis": "y",
+      "added": true,
+      "min": [-11, -9, 12],
+      "max": [-7.8, 12, 16.8]
+    },
+    {
+      "part": "wood",
+      "direction": [1, 0.55, 0],
+      "added": true,
+      "min": [-9, 6.5, 12.1],
+      "max": [2, 12.3, 16.8]
+    },
+    {
+      "part": "wood",
+      "axis": "x",
+      "added": true,
+      "min": [-9, -12, 12.1],
+      "max": [17.7, -8.4, 16.2]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-9.5, -12, 12.1],
+      "max": [14.5, 11.5, 18]
+    },
+    {
+      "part": "stone",
+      "max": [-10.8, 18, 12.3]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 11.6, 0]
+    },
+    {
+      "part": "stone",
+      "max": [18, -11.6, 12.3]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.3]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12.5, 14, 15.5, 17],
+    "sectionYMM": 0,
+    "bonePileBoundsMM": [
+      [-9.5, -12, 12.1],
+      [11, 11.5, 18]
+    ],
+    "boneTopMM": 17.5722,
+    "bareEndRotationDegrees": 90,
+    "skullCentresXYZMM": [
+      [-6.4, -3.8, 14.5],
+      [-5.8, -8.5, 15],
+      [3.7, -7.5, 14.5],
+      [-5.5, 4.8, 13.8],
+      [0.4, 6.4, 13.8],
+      [4.5, 1.8, 14.2]
+    ],
+    "ribEndsMaxXMM": 14.5
+  },
+  "notes": "Bonus99 absent from main author PDF; bone/water palette follows page9. Source views show a dense skeleton pile and long broken planks inside the U bank. Rotated empty End proximity protects old masonry; own height field below12.3mm retains exposed liquid without using skull tops as water reference. Timber masks precede broad bone region and require positive distance from bare bank. Six bounded skull volumes precede timber masks so partly submerged faces beside planks remain bone. Right rib cage extends beyond the initial11mm bound; complete thin outer rib ends are included up to14.5mm.",
+  "referenceCode": "TS-099",
+  "referenceFloorMaxZMM": 12.3,
+  "proximityReference": {
+    "code": "TS-067",
+    "rotationZDegrees": 90,
+    "boundsMM": [
+      [-18, -18, 9.4],
+      [18, 18, 19]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.45
+  }
+}
