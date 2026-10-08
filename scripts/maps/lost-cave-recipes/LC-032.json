@@ -1,0 +1,78 @@
+{
+  "sourceName": "Rocks Ground 1",
+  "referencePage": 5,
+  "material": "cave-boulders",
+  "floorHeightMM": 14.7475,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 13000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [20, 90],
+    "previewKiB": [10, 120],
+    "basis": "299756-triangle floor1x1 with several isolated boulders.40k/13k preserve fractured floor slabs, seven measured roots and boulder contours;2048/1024 bakes, two KTX2 comparisons."
+  },
+  "notes": "Author page5: brown cave floor slabs with grey-green individual boulders and rubble. Flat slabs measured14.7475mm, seams13.46–14.49mm. Raised boulders measured at-11.9108/11.7247/20.3818,-6.1801/11.8984/17.8172,8.9893/12.6877/16.4374,12.9221/13.189/18.6284, and two lower corners. Threshold14.98mm plus individually measured root ellipses excludes horizontal floor; darker relief/AO joints applied only to brown material. Preserve original LC-032 source, footprint, mount and standing point, familyLC-rocks-ground.",
+  "groupCode": "LC-rocks-ground",
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31],
+    "topThresholdMM": 14.98,
+    "rootMinZMM": 14.3,
+    "roots": [
+      {
+        "x": -11.9,
+        "y": 11.7,
+        "rx": 5,
+        "ry": 6.2
+      },
+      {
+        "x": -6.2,
+        "y": 11.9,
+        "rx": 2.8,
+        "ry": 3.2
+      },
+      {
+        "x": 9,
+        "y": 12.7,
+        "rx": 2.8,
+        "ry": 3.2
+      },
+      {
+        "x": 12.9,
+        "y": 13.2,
+        "rx": 3.2,
+        "ry": 3.8
+      },
+      {
+        "x": -11.7,
+        "y": -13.4,
+        "rx": 3.4,
+        "ry": 3.4
+      },
+      {
+        "x": -14.9,
+        "y": -9.7,
+        "rx": 2,
+        "ry": 2.2
+      },
+      {
+        "x": 13.4,
+        "y": -12.8,
+        "rx": 2.8,
+        "ry": 2.8
+      }
+    ]
+  },
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  }
+}
