@@ -20,7 +20,7 @@
     "previewKiB": [10, 120],
     "basis": "339960-triangle1x1 hollow rubble pit.45k/15k protect open central cavity, thin walls and low isolated boulders;2048/1024 bakes. Full albedo retained; compare data maps1024/512 vs768/384. Render1.5–4MiB,LOD0.6–2MiB."
   },
-  "notes": "Author page5: brown broken rim and hollow pit walls with grey-green boulders around edge and several lower stones. Rim planes14.5929/14.601mm; upper rocks15.3214,17.8096,17.0145mm; lower boulders-9.0446/-6.2381/11.4255,-5.8986/-7.1278/6.8582,-7.0784/-1.8972/3.8306,8.2019/-.9443/4.8783,3.483/-5.7139/2.1537. Individual3D envelopes isolate low rocks instead of painting all pit walls green. Preserve hollow sculpt, original STL, LC-034, peg/footprint and current point; familyLC-rocks-hole. Full2048/1024 albedo candidates protect closely adjacent brown/green material islands. Explicit source-body correction removes the previous synthetic solid mounting pyramid, which filled the native hollow and clipped rocks below5.14311mm. Keep original11.5mm source cut, restore native0–18.1408mm sculpt without replacement mounting; remove false central standing availability/point. Old placed UUIDs remain unchanged. Descending boulder surfaces measured6.2469/7.4349/13.0476,6.3328/7.5573/10.1946,7.6001/4.2777/9.8541,1.4048/9.3367/8.8261 and5.9209/6.1879/6.3415 get individual3D volumes.",
+  "notes": "Author page5: brown broken rim and hollow pit walls with grey-green boulders around edge and several lower stones. Rim planes14.5929/14.601mm; upper rocks15.3214,17.8096,17.0145mm; lower boulders-9.0446/-6.2381/11.4255,-5.8986/-7.1278/6.8582,-7.0784/-1.8972/3.8306,8.2019/-.9443/4.8783,3.483/-5.7139/2.1537. Individual3D envelopes isolate low rocks instead of painting all pit walls green. Preserve hollow sculpt, original STL, LC-034, peg/footprint and current point; familyLC-rocks-hole. Full2048/1024 albedo candidates protect closely adjacent brown/green material islands. Explicit source-body correction removes the previous synthetic solid mounting pyramid, which filled the native hollow and clipped rocks below5.14311mm. Keep original11.5mm source cut, restore native0–18.1408mm sculpt without replacement mounting; remove false central standing availability/point. Old placed UUIDs remain unchanged. Descending boulder surfaces measured6.2469/7.4349/13.0476,6.3328/7.5573/10.1946,7.6001/4.2777/9.8541,1.4048/9.3367/8.8261 and5.9209/6.1879/6.3415 get individual3D volumes. Native mounting datum0.146946 retained independently of deleted synthetic peg mesh: rim14.6mm renders at9.45689mm, matching ordinary cave floor within0.02mm. Keeping the full native source below this datum preserves low stones and the hole; do not crop the cavity back to the datum.",
   "groupCode": "LC-rocks-hole",
   "boulder": {
     "tint": [0.31, 0.37, 0.31],
@@ -128,9 +128,9 @@
     "sourceSHA256": "f0f7497d9d6b9d86e9d46609e177ead93528cb564555bdb3431113a41e407755",
     "previousCutHeightMM": 11.5,
     "cutHeightMM": 11.5,
-    "reason": "Restore the native LC-034 hollow pit below its body datum: the old universal solid insertion pyramid filled the cavity, hid low stones and supplied a false central standing point. Preserve original STL and logical ID; remove synthetic mounting and invalid standing metadata in an incompatible revision.",
+    "reason": "Restore the native LC-034 hollow pit and low stones by removing the false solid insertion pyramid, while preserving the original mounting datum0.146946 so rim height matches adjacent tiles. Remove the invalid central standing point; original STL and logical identity remain unchanged.",
     "metadata": {
-      "mountDepth": 0,
+      "mountDepth": 0.146946,
       "canStand": false,
       "placementPoints": [],
       "tileType": "floor",

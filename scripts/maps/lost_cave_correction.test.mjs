@@ -49,7 +49,7 @@ test("false pit mounting is removed only with an explicit incompatible source-bo
     placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.146962 }],
     supportSlots: [],
   };
-  const src = { ...source, max: [17.5, 17.5, 29.6408] };
+  const src = { ...source, mountDepth: 0.146946, max: [17.5, 17.5, 29.6408] };
   const s = {
     geometryCorrection: {
       mode: "remove-false-mount",
@@ -59,7 +59,7 @@ test("false pit mounting is removed only with an explicit incompatible source-bo
       reason:
         "Restore native pit and low boulders hidden by a false universal solid mounting pyramid.",
       metadata: {
-        mountDepth: 0,
+        mountDepth: 0.146946,
         canStand: false,
         placementPoints: [],
         tileType: "floor",
@@ -70,7 +70,12 @@ test("false pit mounting is removed only with an explicit incompatible source-bo
   };
   const corrected = correctedCaveModel(old, src, s, true);
   assert.equal(corrected.cutHeight, 11.5);
-  assert.equal(corrected.model.mountDepth, 0);
+  assert.equal(corrected.model.mountDepth, 0.146946);
+  assert.equal(
+    correctedCaveModel({ ...old, mountDepth: 0 }, src, s, true).model
+      .mountDepth,
+    0.146946,
+  );
   assert.deepEqual(corrected.model.assets, old.assets);
   assert.equal(corrected.model.definitionId, "LC-034");
   assert.throws(() => correctedCaveModel(old, src, s, false));

@@ -28,7 +28,8 @@ export function correctedCaveModel(model, source, spec, explicit) {
     (removeMount
       ? correction.cutHeightMM !== source.cutHeight ||
         source.cutHeight <= 0 ||
-        model.mountDepth <= 0
+        !Number.isFinite(source.mountDepth) ||
+        source.mountDepth <= 0
       : correction.cutHeightMM !== 0 || model.mountDepth !== 0)
   )
     throw new Error(
@@ -52,7 +53,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
   if (
     removeMount &&
     (correction.rotationXDeg ||
-      result.mountDepth !== 0 ||
+      result.mountDepth !== source.mountDepth ||
       result.tileType !== model.tileType ||
       model.tileType !== "floor" ||
       result.canStand !== false ||
@@ -61,7 +62,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
       !Object.hasOwn(correction.metadata, "placementPoints"))
   )
     throw new Error(
-      "False hole mounting correction requires a slotless floor, no replacement mount and no standing point",
+      "False hole mounting correction requires the native mounting datum, a slotless floor and no standing point",
     );
   if (
     !Number.isFinite(result.maxHeight) ||

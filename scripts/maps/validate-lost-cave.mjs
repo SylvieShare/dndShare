@@ -85,7 +85,9 @@ for (const tier of ["render", "lod"]) {
       report.geometryCorrection?.mode === "remove-false-mount"
         ? (() => {
             if (
-              report.model.mountDepth !== 0 ||
+              report.model.mountDepth !==
+                report.geometryCorrection.metadata.mountDepth ||
+              report.model.mountDepth <= 0 ||
               report.rebake[tier].mountingMeshesRetained !== 0 ||
               mounting(after)
                 .getRoot()

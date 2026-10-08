@@ -59,8 +59,8 @@ def bake_tier(report, directory, tier):
     crop(source, report['cutHeight'])
     correction = report.get('geometryCorrection',{})
     if correction.get('mode') == 'remove-false-mount':
-        if report['model']['mountDepth'] != 0:
-            raise ValueError('Explicit hole correction must remove replacement mounting')
+        if report['model']['mountDepth'] <= 0:
+            raise ValueError('Explicit hole correction must preserve its native mounting datum')
         for obj in mounting:
             bpy.data.objects.remove(obj, do_unlink=True)
         mounting = []
@@ -81,9 +81,10 @@ def bake_tier(report, directory, tier):
     target = bpy.data.objects.new(report['model']['sourceCode']+' detailed body', source.data.copy())
     scene.collection.objects.link(target)
     datum = report['model']['mountDepth']*35
-    crop(target, datum)
-    for v in target.data.vertices:
-        v.co.z += datum
+    if correction.get('mode') != 'remove-false-mount':
+        crop(target, datum)
+        for v in target.data.vertices:
+            v.co.z += datum
     activate(target)
     modifier = target.modifiers.new('Reviewed body budget', 'DECIMATE')
     modifier.ratio = min(1, report['materialSpec'][tier+'Triangles']/len(target.data.polygons))
@@ -104,7 +105,8 @@ def bake_tier(report, directory, tier):
     bpy.ops.object.mode_set(mode='OBJECT')
     tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())
     sample = list(target.data.vertices)[::max(1,len(target.data.vertices)//1000)]
-    distances = [tree.find_nearest(v.co)[3] for v in sample if v.co.z>datum+.01]
+    checked_datum = 0 if correction.get('mode') == 'remove-false-mount' else datum
+    distances = [tree.find_nearest(v.co)[3] for v in sample if v.co.z>checked_datum+.01]
     if max(distances,default=0)>1:
         raise ValueError('Detailed mesh strays more than1 mm from original sculpt')
     size = report['materialSpec'][tier+'BakeSize']
