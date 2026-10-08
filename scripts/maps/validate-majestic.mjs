@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { rasterizeSurface } from "./uv_surface.mjs";
+import { uvSurfaceTracker } from "./uv_surface_overlap.mjs";
 const root = path.resolve(import.meta.dirname, "../.."),
   base = path.join(root, "models/collections/majestic-highlands");
 const code = process.argv.find((a) => a.startsWith("--code="))?.slice(7);
@@ -112,11 +113,13 @@ for (const tier of ["render", "lod"]) {
     const { data, info } = await sharp(Buffer.from(texture.getImage()))
       .raw()
       .toBuffer({ resolveWithObject: true });
+    const trackSurface = uvSurfaceTracker(info.width, info.height, 0.1);
     rasterizeSurface(
       doc,
       info.width,
       info.height,
       (i, position) => {
+        trackSurface(i, position);
         const offset = i * info.channels;
         if (
           slot === "BaseColor" &&
