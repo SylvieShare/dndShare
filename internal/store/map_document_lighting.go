@@ -30,9 +30,14 @@ func (s *Store) HydrateMapLights(ctx context.Context, documents ...*battlemap.Do
 	if len(documents) == 0 {
 		return nil
 	}
+	_, _, err := s.HydrateMapCatalogue(ctx, documents...)
+	return err
+}
+
+func (s *Store) HydrateMapCatalogue(ctx context.Context, documents ...*battlemap.Document) ([]battlemap.Model, map[string]battlemap.ModelBehaviour, error) {
 	catalogue, err := s.ListMapModels(ctx)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	models := map[string]battlemap.ModelMetadata{}
 	for _, m := range catalogue {
@@ -40,7 +45,7 @@ func (s *Store) HydrateMapLights(ctx context.Context, documents ...*battlemap.Do
 	}
 	behaviours, err := s.MapModelBehaviours(ctx)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	for _, d := range documents {
 		expected := map[string]bool{}
@@ -63,10 +68,10 @@ func (s *Store) HydrateMapLights(ctx context.Context, documents ...*battlemap.Do
 		}
 		d.Lights = lights
 		if err = battlemap.SyncBuiltinLights(d, models, behaviours); err != nil {
-			return err
+			return nil, nil, err
 		}
 	}
-	return nil
+	return catalogue, behaviours, nil
 }
 
 func (s *Store) HydrateSessionMapLights(ctx context.Context, maps ...*SessionMap) error {

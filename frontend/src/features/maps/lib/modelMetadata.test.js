@@ -16,7 +16,7 @@ it("copies editable metadata deeply, preserves identity and excludes URLs and as
   const draft = modelMetadata(source);
   expect(draft.wallMask).toBe(17);
   expect(draft.id).toBe("one");
-  expect(draft.version).toBe(2);
+  expect(draft).not.toHaveProperty("version");
   expect(draft.textureDetail).toBe("detailed");
   expect(draft.assets).toBeUndefined();
   expect(draft.renderUrl).toBeUndefined();

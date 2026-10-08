@@ -22,6 +22,9 @@ it("eases vertical snapping in the actual instance transform", () => {
   };
   preview.update(tile);
   preview.advance(16);
+  expect(preview.root.children[0].material.opacity).toBe(1);
+  expect(preview.root.children[0].material.transparent).toBe(false);
+  expect(preview.root.children[0].material.depthWrite).toBe(true);
   preview.update({ ...tile, level: 1, elevation: 0.6 });
   expect(preview.advance(16)).toBe(true);
   const matrix = new Matrix4(),

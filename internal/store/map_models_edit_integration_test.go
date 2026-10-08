@@ -6,7 +6,6 @@ import (
 	"os"
 	"reflect"
 	"strings"
-	"sync"
 	"testing"
 
 	"dndshare/internal/battlemap"
@@ -14,7 +13,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func TestMapModelRevisionPersistence(t *testing.T) {
+func TestCurrentMapModelPersistence(t *testing.T) {
 	dsn := os.Getenv("DNDSHARE_MAP_TEST_DSN")
 	if dsn == "" {
 		t.Skip("requires a disposable local dndshare_test_* database")
@@ -64,9 +63,11 @@ FROM (VALUES
 	exec(schemaModelShadowAssetsSQL)
 	exec(schemaModelBehaviourSQL)
 	exec(schemaModelGroupCodesSQL)
+	testCurrentModelMigration(t, ctx, pool)
+	exec(schemaMapPreviewsSQL)
 	s := &Store{pool: pool}
-	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,geometry,assets)
-SELECT item.id::uuid,item.collection,item.code,item.name,item.name,1,'floor',
+	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,tile_type,geometry,assets)
+SELECT item.id::uuid,item.collection,item.code,item.name,item.name,'floor',
  model.geometry || '{"hasDecor":false,"canStand":true,"placementPoints":[{"x":0.5,"y":0.5,"elevation":0.4}]}'::jsonb,model.assets
 FROM (VALUES
  ('00000000-0000-4000-8000-000000000131','ultimate-dungeon','UD-031','Ground Table Full'),
@@ -126,51 +127,27 @@ FROM (VALUES
 	edit.Name = "Updated"
 	edit.Width = 2
 	edit.TileType = "wall-angle"
-	saved, err := s.ReviseMapModel(ctx, base.ID, edit)
-	if err != nil {
-		t.Fatal(err)
+	saved, err := s.UpdateMapModel(ctx, base.ID, edit)
+	if err != nil || saved.ID != base.ID || saved.Width != 2 || saved.Name != "Updated" || !reflect.DeepEqual(saved.Assets, base.Assets) {
+		t.Fatal("current metadata update", saved, err)
 	}
-	if saved.Version != 2 || saved.Width != 2 || saved.TileType != "wall-angle" || !reflect.DeepEqual(saved.Assets, base.Assets) {
-		t.Fatalf("unexpected revision: %+v", saved)
-	}
-	old, err := s.GetMapModel(ctx, base.ID)
-	if err != nil || !reflect.DeepEqual(old, base) {
-		t.Fatalf("original changed: %+v %v", old, err)
-	}
-	loaded, err := s.GetMapModel(ctx, saved.ID)
+	loaded, err := s.GetMapModel(ctx, base.ID)
 	if err != nil || !reflect.DeepEqual(loaded, saved) {
-		t.Fatalf("revision readback: %+v %v", loaded, err)
+		t.Fatal("current readback", err)
 	}
-	if _, err = s.ReviseMapModel(ctx, base.ID, edit); !errors.Is(err, ErrMapModelConflict) {
-		t.Fatalf("stale edit accepted: %v", err)
+	saved.Assets["render"] = battlemap.ModelAsset{SHA256: strings.Repeat("e", 64), Key: "new-render.glb"}
+	published, err := s.RegisterMapModel(ctx, saved)
+	if err != nil || published.ID != base.ID || published.Assets["render"] != saved.Assets["render"] {
+		t.Fatal("current publication", err)
 	}
-	var wg sync.WaitGroup
-	results := make(chan error, 2)
-	for _, id := range []string{"00000000-0000-4000-8000-000000000003", "00000000-0000-4000-8000-000000000004"} {
-		wg.Add(1)
-		go func(id string) {
-			defer wg.Done()
-			m := saved
-			m.ID = id
-			m.Name = "Concurrent"
-			_, err := s.ReviseMapModel(ctx, saved.ID, m)
-			results <- err
-		}(id)
+	invalid := published
+	invalid.ID = "00000000-0000-4000-8000-000000000002"
+	if _, err = s.RegisterMapModel(ctx, invalid); err == nil {
+		t.Fatal("new UUID accepted for existing model")
 	}
-	wg.Wait()
-	close(results)
-	successes, conflicts := 0, 0
-	for err := range results {
-		if err == nil {
-			successes++
-		} else if errors.Is(err, ErrMapModelConflict) {
-			conflicts++
-		} else {
-			t.Fatal(err)
-		}
-	}
-	if successes != 1 || conflicts != 1 {
-		t.Fatalf("concurrent edits: success=%d conflict=%d", successes, conflicts)
+	var count int
+	if err = pool.QueryRow(ctx, `SELECT count(*) FROM dndshare.map_model WHERE definition_id=$1`, published.DefinitionID).Scan(&count); err != nil || count != 1 {
+		t.Fatal("historical rows survived", count, err)
 	}
 	shadowBase := battlemap.InitialCatalogue()[0]
 	shadowBase.Collection = "shadow-test"
@@ -182,8 +159,8 @@ FROM (VALUES
 	asset.SHA256 = strings.Repeat("f", 64)
 	asset.Key = "map-models/" + asset.SHA256 + ".glb"
 	asset.FileName = "shadow.glb"
-	shadow, err := s.ReviseMapModelShadow(ctx, shadowBase.ID, shadowBase.Assets["lod"].SHA256, "00000000-0000-4000-8000-000000000011", asset)
-	if err != nil || shadow.Version != 2 || !battlemap.VisualRevision(shadowBase, shadow) {
+	shadow, err := s.UpdateMapModelShadow(ctx, shadowBase.ID, shadowBase.Assets["lod"].SHA256, asset)
+	if err != nil || shadow.ID != shadowBase.ID || shadow.Assets["shadow"] != asset {
 		t.Fatalf("shadow broke immutable presentation: %+v %v", shadow, err)
 	}
 	for _, kind := range []string{"render", "lod", "preview", "source"} {
@@ -192,14 +169,14 @@ FROM (VALUES
 		}
 	}
 	unchanged, err := s.GetMapModel(ctx, shadowBase.ID)
-	if err != nil || !reflect.DeepEqual(unchanged, shadowBase) {
-		t.Fatal("shadow publication mutated original model", err)
+	if err != nil || !reflect.DeepEqual(unchanged, shadow) {
+		t.Fatal("shadow publication was not visible through the stable UUID", err)
 	}
-	repeated, err := s.ReviseMapModelShadow(ctx, shadowBase.ID, shadowBase.Assets["lod"].SHA256, "00000000-0000-4000-8000-000000000012", asset)
+	repeated, err := s.UpdateMapModelShadow(ctx, shadowBase.ID, shadowBase.Assets["lod"].SHA256, asset)
 	if err != nil || repeated.ID != shadow.ID {
 		t.Fatal("shadow registration is not idempotent", err)
 	}
-	if _, err = s.ReviseMapModelShadow(ctx, shadow.ID, strings.Repeat("a", 64), "00000000-0000-4000-8000-000000000013", asset); !errors.Is(err, ErrMapModelConflict) {
+	if _, err = s.UpdateMapModelShadow(ctx, shadow.ID, strings.Repeat("a", 64), asset); !errors.Is(err, ErrMapModelConflict) {
 		t.Fatal("stale shadow geometry accepted", err)
 	}
 }

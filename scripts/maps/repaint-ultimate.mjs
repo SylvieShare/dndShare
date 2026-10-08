@@ -29,8 +29,7 @@ const latest = new Map();
 for (const m of registry) {
   if (m.collection !== "ultimate-dungeon") continue;
   const key = `${m.sourceCode}:${m.sourceName}`;
-  if (!latest.has(key) || latest.get(key).version < m.version)
-    latest.set(key, m);
+  if (!latest.has(key)) latest.set(key, m);
 }
 const codes = process.argv
   .find((a) => a.startsWith("--codes="))
@@ -49,7 +48,7 @@ for (const model of [...latest.values()].sort((a, b) =>
   ),
 )) {
   if (codes && !codes.includes(model.sourceCode)) continue;
-  const slug = `${model.sourceCode}__${model.sourceName.replaceAll(/[^a-zA-Z0-9_-]/g, "_")}__${model.version}`;
+  const slug = `${model.sourceCode}__${model.sourceName.replaceAll(/[^a-zA-Z0-9_-]/g, "_")}__${model.assets.render.sha256.slice(0, 12)}`;
   const directory = path.join(base, "stone-dungeon", slug);
   await fs.mkdir(directory, { recursive: true });
   const existing = await fs

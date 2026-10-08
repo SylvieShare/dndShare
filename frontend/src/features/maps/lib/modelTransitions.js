@@ -1,5 +1,5 @@
 import { clone } from "./mapModel";
-import { latestModelVersions } from "./modelVersions";
+import { visibleModels } from "./visibleModels";
 import { structureContext } from "./tileStructure";
 import { surfacePosition, syncSurfaceObjects } from "./surfacePlacement";
 import { syncLights } from "./mapLighting";
@@ -25,7 +25,7 @@ export function transitionDocument(document, catalogue, kind, id, transition) {
       t.action === transition.action &&
       t.toDefinitionId === transition.toDefinitionId,
   );
-  const target = latestModelVersions(catalogue).find(
+  const target = visibleModels(catalogue).find(
     (m) => m.definitionId === edge?.toDefinitionId,
   );
   const fail = (reason) => ({ valid: false, reason, target });

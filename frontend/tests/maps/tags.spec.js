@@ -82,7 +82,7 @@ test("cards contain actual WebP snapshots and create immediately opens a 3D edit
   sizes.forEach((size) => {
     expect(size.width).toBeGreaterThan(400);
     expect(size.height).toBeGreaterThan(250);
-    expect(size.src).toMatch(/^blob:/);
+    expect(size.src).toMatch(/^data:image\/webp;base64,/);
   });
   const data = await page
     .locator(".map-thumbnail img")
@@ -114,4 +114,44 @@ test("cards contain actual WebP snapshots and create immediately opens a 3D edit
     page.getByText("Изображение с сеткой", { exact: true }),
   ).toHaveCount(0);
   expect(errors).toEqual([]);
+});
+
+test("stored map previews survive reload without downloading GLBs or uploading again", async ({
+  page,
+}) => {
+  await ready(page);
+  await expect
+    .poll(() =>
+      page
+        .locator(".map-thumbnail img")
+        .evaluateAll(
+          (imgs) =>
+            imgs.length === 3 &&
+            imgs.every((img) => img.complete && img.naturalWidth === 420),
+        ),
+    )
+    .toBe(true);
+  expect(
+    await page.evaluate(
+      () => window.requests.filter((r) => r.data?.preview).length,
+    ),
+  ).toBe(3);
+  await page.reload();
+  await expect
+    .poll(() =>
+      page
+        .locator(".map-thumbnail img")
+        .evaluateAll(
+          (imgs) =>
+            imgs.length === 3 &&
+            imgs.every((img) => img.complete && img.naturalWidth === 420),
+        ),
+    )
+    .toBe(true);
+  expect(await page.evaluate(() => window.loadedModels.length)).toBe(0);
+  expect(
+    await page.evaluate(
+      () => window.requests.filter((r) => r.data?.preview).length,
+    ),
+  ).toBe(0);
 });

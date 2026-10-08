@@ -10,14 +10,12 @@ const spec = specs[code];
 if (!spec) throw new Error("One measured Toxic Sewer recipe required");
 const review = reviewCollection("toxic-sewer");
 const registry = JSON.parse(await fs.readFile(review.snapshot, "utf8"));
-const model = registry
-  .filter(
-    (m) =>
-      m.collection === review.collection &&
-      m.sourceCode === code &&
-      m.sourceName === spec.sourceName,
-  )
-  .sort((a, b) => b.version - a.version)[0];
+const model = registry.filter(
+  (m) =>
+    m.collection === review.collection &&
+    m.sourceCode === code &&
+    m.sourceName === spec.sourceName,
+)[0];
 if (!model) throw new Error("Refresh the MCP registry: accepted model missing");
 const rows = JSON.parse(
   await fs.readFile(path.join(review.base, "manifest.json"), "utf8"),
@@ -40,7 +38,7 @@ if (
 const directory = path.join(
   review.detail,
   code,
-  `${code.replaceAll(" ", "_")}__v${model.version}`,
+  `${code.replaceAll(" ", "_")}__v${model.assets.render.sha256.slice(0, 12)}`,
 );
 await fs.mkdir(directory, { recursive: true });
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json");

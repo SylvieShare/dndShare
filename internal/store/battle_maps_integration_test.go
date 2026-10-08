@@ -54,6 +54,8 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaModelFurnishingsSQL)
 	exec(schemaModelBehaviourSQL)
 	exec(schemaModelGroupCodesSQL)
+	exec(schemaCurrentMapModelsSQL)
+	exec(schemaMapPreviewsSQL)
 	exec(schemaMapAreasSQL)
 	exec(schemaMapLightingSQL)
 	exec(schemaMapLightingModeSQL)
@@ -87,6 +89,7 @@ SELECT 10,id,true FROM dndshare.session_map WHERE name='legacy session';`)
 	if err != nil {
 		t.Fatal(err)
 	}
+	testMapPreviewPersistence(t, ctx, s, m)
 	if _, err := s.GetBattleMap(ctx, 2, m.ID); !errors.Is(err, ErrNotFound) {
 		t.Fatalf("owner isolation: %v", err)
 	}

@@ -31,7 +31,6 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	}
 	other := target
 	other.ID = "00000000-0000-4000-8000-000000000024"
-	other.Version = 2
 	other.SourceName = "Other variant"
 	other, err = s.RegisterMapModel(ctx, other)
 	if err != nil {
@@ -44,7 +43,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	edit := source
 	edit.Code = "BEH-door"
 	edit.ID = "00000000-0000-4000-8000-000000000022"
-	saved, err := s.ReviseMapModelWithBehaviour(ctx, source.ID, edit, &b)
+	saved, err := s.UpdateMapModelWithBehaviour(ctx, source.ID, edit, &b)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -84,7 +83,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal("read source IDs are not deterministic", err)
 	}
 	edit.ID = "00000000-0000-4000-8000-000000000023"
-	if _, err = s.ReviseMapModelWithBehaviour(ctx, saved.ID, edit, &b); !errors.Is(err, ErrMapModelConflict) {
+	if _, err = s.UpdateMapModelWithBehaviour(ctx, saved.ID, edit, &b); !errors.Is(err, ErrMapModelConflict) {
 		t.Fatal("stale behaviour edit accepted", err)
 	}
 	if _, err = s.GetMapModel(ctx, edit.ID); !errors.Is(err, ErrNotFound) {
@@ -92,7 +91,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	}
 	b.Revision = 2
 	b.Transitions[0].ToDefinitionID = source.DefinitionID
-	if _, err = s.ReviseMapModelWithBehaviour(ctx, saved.ID, edit, &b); !errors.Is(err, ErrInvalidMapModels) {
+	if _, err = s.UpdateMapModelWithBehaviour(ctx, saved.ID, edit, &b); !errors.Is(err, ErrInvalidMapModels) {
 		t.Fatal("self transition accepted", err)
 	}
 	current, err := s.GetMapModelBehaviour(ctx, source.DefinitionID)
@@ -105,7 +104,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal("standalone behaviour update", updated, err)
 	}
 	unchanged, err := s.GetMapModel(ctx, saved.ID)
-	if err != nil || unchanged.Version != saved.Version || unchanged.Assets["render"] != saved.Assets["render"] {
+	if err != nil || unchanged.ID != saved.ID || unchanged.Assets["render"] != saved.Assets["render"] {
 		t.Fatal("behaviour revised immutable resources", err)
 	}
 	if _, err = s.UpdateMapModelBehaviour(ctx, source.DefinitionID, current); !errors.Is(err, ErrMapModelConflict) {

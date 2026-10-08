@@ -12,7 +12,7 @@ const models = JSON.parse(await fs.readFile(path.join(base, "registry.json"), "u
 const latest = new Map();
 for (const m of models) {
   const key = `${m.collection}:${m.sourceCode}:${m.sourceName}`;
-  if (!latest.has(key) || latest.get(key).version < m.version) latest.set(key, m);
+  if (!latest.has(key)) latest.set(key, m);
 }
 const results = [];
 function transform(p, m) { return [m[0]*p[0]+m[4]*p[1]+m[8]*p[2]+m[12], m[1]*p[0]+m[5]*p[1]+m[9]*p[2]+m[13], m[2]*p[0]+m[6]*p[1]+m[10]*p[2]+m[14]]; }

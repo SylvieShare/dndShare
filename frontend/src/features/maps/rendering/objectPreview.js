@@ -23,7 +23,14 @@ export function createObjectPreview(fog, assets) {
     }
     const group = object.group || [object],
       next = JSON.stringify(
-        group.map((o) => [o.id, o.kind, o.modelId, o.scale, o.open]),
+        group.map((o) => [
+          o.id,
+          o.kind,
+          o.modelId,
+          o.scale,
+          o.open,
+          assets.metadata?.(o.modelId)?.renderUrl,
+        ]),
       );
     if (next !== key) {
       disposeObjects(root);
@@ -31,16 +38,6 @@ export function createObjectPreview(fog, assets) {
       key = next;
       for (const o of group)
         root.add(buildMapProp(o, o.open, fog, assets, "render"));
-      root.traverse((n) => {
-        if (n.isMesh) {
-          for (const material of Array.isArray(n.material)
-            ? n.material
-            : [n.material]) {
-            material.transparent = true;
-            material.opacity = 0.7;
-          }
-        }
-      });
     }
     position ||= { x: object.x, y: object.y, lift: 0 };
   }

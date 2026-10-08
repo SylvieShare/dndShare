@@ -1,3 +1,4 @@
+import { currentModel } from "./current_model.mjs";
 // Package one checked revision; preserve the source and every placement field.
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -28,33 +29,27 @@ if (
 )
   throw new Error("Individually reviewed Majestic model required");
 const sourceSHA = report.sourceSHA256 ?? reviewed.assets.source.sha256;
-const family = registry
-  .filter(
-    (m) =>
-      m.collection === reviewed.collection &&
-      m.sourceCode === reviewed.sourceCode &&
-      m.sourceName === reviewed.sourceName &&
-      m.assets.source.sha256 === sourceSHA,
-  )
-  .sort((a, b) => b.version - a.version);
-const previous = family[0],
-  latest = Math.max(
-    0,
-    ...registry
-      .filter(
-        (m) =>
-          m.collection === reviewed.collection &&
-          m.sourceCode === reviewed.sourceCode,
-      )
-      .map((m) => m.version),
-  );
-const newSource = !previous && latest > 0;
+const family = registry.filter(
+  (m) =>
+    m.collection === reviewed.collection &&
+    m.sourceCode === reviewed.sourceCode &&
+    m.sourceName === reviewed.sourceName &&
+    m.assets.source.sha256 === sourceSHA,
+);
+const previous = family[0];
+const current = registry.find(
+  (m) =>
+    m.collection === reviewed.collection &&
+    m.sourceCode === reviewed.sourceCode &&
+    m.sourceName === reviewed.sourceName,
+);
+const newSource = !previous && !!current;
 if (newSource && !process.argv.includes("--new-source"))
   throw new Error(
     "Existing code has a different source; review the replacement and pass --new-source explicitly",
   );
 function placement(model) {
-  const { id, version, assets, textureDetail, code, ...metadata } = model;
+  const { id, assets, textureDetail, code, ...metadata } = model;
   return metadata;
 }
 if (previous && !isDeepStrictEqual(placement(previous), placement(reviewed)))
@@ -133,31 +128,7 @@ report.runtimeBytes = [
       .map(([, asset]) => [asset.sha256, asset.size]),
   ).values(),
 ].reduce((sum, bytes) => sum + bytes, 0);
-const hash = createHash("sha256")
-  .update(
-    report.recipe +
-      ":" +
-      (previous?.id ?? "new") +
-      ":" +
-      JSON.stringify(assets),
-  )
-  .digest();
-hash[6] = (hash[6] & 15) | 128;
-hash[8] = (hash[8] & 63) | 128;
-const hex = hash.subarray(0, 16).toString("hex");
-const id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-const registered = family.find(
-  (m) =>
-    isDeepStrictEqual(m.assets, assets) &&
-    isDeepStrictEqual(placement(m), placement(reviewed)) &&
-    m.textureDetail === reviewed.textureDetail,
-);
-const model = registered ?? {
-  ...reviewed,
-  id,
-  version: latest + 1,
-  assets,
-};
+const model = currentModel(reviewed, registry, assets);
 if (previous) report.previousModelID = previous.id;
 if (newSource)
   report.sourceReplacement = {
@@ -183,7 +154,7 @@ await fs.writeFile(
 console.log(
   "MAJESTIC_KTX_MANIFEST",
   model.sourceCode,
-  model.version,
+  model.assets.render.sha256.slice(0, 12),
   model.id,
   report.tiers,
 );

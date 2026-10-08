@@ -1,3 +1,5 @@
+import { startModelRefresh } from "../lib/currentModelRefresh";
+import { getMapModels } from "@/shared/api/mapsApi";
 import { createMapLighting } from "./mapLighting";
 import { sessionMapDocument } from "../lib/sessionMapPresentation";
 import { areaAppearance } from "../lib/mapAreas";
@@ -303,7 +305,11 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     const hiddenIds = [
       ...new Set([...preview.hiddenIds(), ...appearance.hiddenTiles]),
     ];
+    const catalogueStamp = [...ids]
+      .sort()
+      .map((modelId) => assets.metadata(modelId));
     const nextTiles = JSON.stringify([
+      catalogueStamp,
       d.tiles,
       tier,
       hiddenIds,
@@ -331,6 +337,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       tier,
     );
     const nextObjects = JSON.stringify([
+      catalogueStamp,
       posedObjects,
       nextState,
       posedTokens,
@@ -397,6 +404,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       objects,
       objectPreview.root,
     );
+    assets.prune();
     render();
   }
   function changeCamera(next) {
@@ -412,6 +420,14 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       update(current, state, options).catch((error) => onError(error.message));
   });
   observer.observe(host);
+  const stopModelRefresh = startModelRefresh(
+    () =>
+      current && !options.catalogue ? getMapModels(options.publicCode) : null,
+    async (models) => {
+      assets.replaceCatalogue(models);
+      await update(current, state, options);
+    },
+  );
   return {
     update,
     snapshot() {
@@ -494,6 +510,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       return tile;
     },
     destroy() {
+      stopModelRefresh();
       dead = true;
       epoch++;
       observer.disconnect();

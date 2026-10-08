@@ -27,19 +27,16 @@ type mapModelView struct {
 	ShadowURL  string                   `json:"shadowUrl"`
 }
 
-func modelView(model, visual battlemap.Model, base string) mapModelView {
+func modelView(model battlemap.Model, base string) mapModelView {
 	path := base + "/" + model.ID
-	query := ""
-	if visual.ID != model.ID {
-		query = "?revision=" + url.QueryEscape(visual.ID)
-	}
 	metadata := model.ModelMetadata
-	metadata.TextureDetail = visual.TextureDetail
-	shadowPath := "/shadow"
-	if visual.Assets["shadow"].SHA256 == visual.Assets["lod"].SHA256 {
-		shadowPath = "/lod"
+	assetURL := func(kind string) string { return path + "/" + kind + "?sha=" + model.Assets[kind].SHA256 }
+	shadowURL := assetURL("shadow")
+	if model.Assets["shadow"].Key == model.Assets["lod"].Key {
+		shadowURL = assetURL("lod")
 	}
-	return mapModelView{ModelMetadata: metadata, Behaviour: battlemap.ModelBehaviour{DefaultLights: []battlemap.ModelLight{}, Transitions: []battlemap.ModelTransition{}}, RenderURL: path + "/render" + query, LODURL: path + "/lod" + query, PreviewURL: path + "/preview" + query, ShadowURL: path + shadowPath + query}
+	return mapModelView{ModelMetadata: metadata, Behaviour: battlemap.ModelBehaviour{DefaultLights: []battlemap.ModelLight{}, Transitions: []battlemap.ModelTransition{}}, RenderURL: assetURL("render"), LODURL: assetURL("lod"), ShadowURL: shadowURL, PreviewURL: assetURL("preview")}
+
 }
 
 func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
@@ -49,14 +46,13 @@ func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result := []mapModelView{}
-	visuals := battlemap.LatestVisualModels(models)
 	behaviours, err := s.store.MapModelBehaviours(r.Context())
 	if err != nil {
 		serverError(w, err)
 		return
 	}
 	for _, m := range models {
-		view := modelView(m, visuals[m.ID], "/api/maps/models")
+		view := modelView(m, "/api/maps/models")
 		view.Behaviour = behaviours[m.DefinitionID]
 		result = append(result, view)
 	}
@@ -104,7 +100,6 @@ func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	result := []mapModelView{}
-	visuals := battlemap.LatestVisualModels(models)
 	behaviours, err := s.store.MapModelBehaviours(r.Context())
 	if err != nil {
 		serverError(w, err)
@@ -112,7 +107,7 @@ func (s *Server) handlePublicMapModels(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, m := range models {
 		if ids[m.ID] {
-			view := modelView(m, visuals[m.ID], "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models")
+			view := modelView(m, "/api/public/sessions/"+url.PathEscape(r.PathValue("code"))+"/map-models")
 			view.Behaviour = behaviours[m.DefinitionID]
 			view.Behaviour.Transitions = []battlemap.ModelTransition{}
 			result = append(result, view)
@@ -146,25 +141,25 @@ func (s *Server) streamMapModel(w http.ResponseWriter, r *http.Request) {
 		mapError(w, err)
 		return
 	}
-	if revision := r.URL.Query().Get("revision"); revision != "" {
-		if !isUUID(revision) || r.PathValue("variant") == "source" {
-			notFound(w, "")
-			return
-		}
-		visual, err := s.store.GetMapModel(r.Context(), revision)
-		if err != nil || !battlemap.VisualRevision(m, visual) {
-			notFound(w, "")
-			return
-		}
-		m = visual
-	}
 	asset, ok := m.Assets[r.PathValue("variant")]
 	if !ok {
 		notFound(w, "")
 		return
 	}
+	if sha := r.URL.Query().Get("sha"); sha != "" && sha != asset.SHA256 {
+		notFound(w, "")
+		return
+	}
 	etag := `"` + asset.SHA256 + `"`
-	w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
+	if r.URL.Query().Get("sha") != "" {
+		if r.URL.Query().Get("sha") != "" {
+			w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
+		} else {
+			w.Header().Set("Cache-Control", "no-cache")
+		}
+	} else {
+		w.Header().Set("Cache-Control", "no-cache")
+	}
 	w.Header().Set("ETag", etag)
 	if r.Header.Get("If-None-Match") == etag {
 		w.WriteHeader(http.StatusNotModified)

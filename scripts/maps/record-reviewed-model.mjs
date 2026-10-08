@@ -32,8 +32,7 @@ for (const model of registry.filter(
   (m) => m.collection === review.collection,
 )) {
   const key = model.sourceCode + ":" + model.sourceName;
-  if (!latest.has(key) || latest.get(key).version < model.version)
-    latest.set(key, model);
+  if (!latest.has(key)) latest.set(key, model);
 }
 const progress = [...latest.values()]
   .sort(
@@ -46,7 +45,6 @@ const progress = [...latest.values()]
     name: m.sourceName,
     status: m.textureDetail === "detailed" ? "published" : "pending",
     id: m.id,
-    version: m.version,
   }));
 await fs.writeFile(
   path.join(review.detail, "progress.json"),

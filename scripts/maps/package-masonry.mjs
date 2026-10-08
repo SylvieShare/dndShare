@@ -1,3 +1,4 @@
+import { currentModel } from "./current_model.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -20,11 +21,6 @@ const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),
   sharp = require("sharp");
 const review = requestedCollection();
 const registry = JSON.parse(await fs.readFile(review.snapshot, "utf8"));
-const versions = new Map();
-for (const m of registry) {
-  const key = `${m.collection}:${m.sourceCode}`;
-  versions.set(key, Math.max(versions.get(key) || 0, m.version));
-}
 await fs.mkdir(out, { recursive: true });
 const models = [];
 const included = new Set();
@@ -39,10 +35,6 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   const report = JSON.parse(
     await fs.readFile(path.join(directory, "report.json"), "utf8"),
   );
-  const inputVersion = process.argv
-    .find((a) => a.startsWith("--version="))
-    ?.slice(10);
-  if (inputVersion && report.model.version !== Number(inputVersion)) continue;
   const requestedName = process.argv
     .find((a) => a.startsWith("--source-name="))
     ?.slice(14);
@@ -98,16 +90,6 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
       fileName,
     };
   }
-  const identity = createHash("sha256")
-    .update(`${recipe}:${report.model.id}:${JSON.stringify(assets)}`)
-    .digest();
-  identity[6] = (identity[6] & 15) | 128;
-  identity[8] = (identity[8] & 63) | 128;
-  const hex = identity.subarray(0, 16).toString("hex"),
-    id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-  const key = `${report.model.collection}:${report.model.sourceCode}`,
-    version = versions.get(key) + 1;
-  versions.set(key, version);
   const detailedRecipe = [
     "ud006-measured-timber-v1",
     "ud009-layered-stone-v1",
@@ -116,7 +98,9 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
   const textureDetail = detailedRecipe
     ? "detailed"
     : report.model.textureDetail || "basic";
-  models.push({ ...report.model, textureDetail, id, version, assets });
+  models.push(
+    currentModel({ ...report.model, textureDetail }, registry, assets),
+  );
 }
 await fs.writeFile(
   path.join(out, "catalogue.json"),

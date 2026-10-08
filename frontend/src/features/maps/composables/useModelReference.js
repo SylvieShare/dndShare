@@ -1,7 +1,7 @@
 import { computed, ref, watch } from "vue";
 import { saveMapModelMetadata } from "@/shared/api/mapsApi";
 import { modelMetadata } from "../lib/modelMetadata";
-import { latestModelVersions } from "../lib/modelVersions";
+import { visibleModels } from "../lib/visibleModels";
 export function useModelReference(editor) {
   const base = ref(null),
     draft = ref(null),
@@ -15,7 +15,7 @@ export function useModelReference(editor) {
     confirmDiscard = ref(false);
   let pending = null;
   const models = computed(() =>
-    latestModelVersions(editor.catalogue).filter((m) =>
+    visibleModels(editor.catalogue).filter((m) =>
       kind.value === "object"
         ? m.tileType === "object"
         : m.collection === editor.collection && m.tileType !== "object",
@@ -121,18 +121,13 @@ export function useModelReference(editor) {
         behaviour: JSON.parse(JSON.stringify(behaviour.value)),
         blockers: contours,
       });
-      editor.catalogue = [
-        ...editor.catalogue.map((m) =>
-          m.definitionId && m.definitionId === saved.definitionId
-            ? { ...m, code: saved.code, behaviour: saved.behaviour }
-            : m,
-        ),
-        saved,
-      ];
+      editor.catalogue = editor.catalogue.map((m) =>
+        m.id === saved.id ? saved : m,
+      );
       if (editor.selectedModel === base.value.id)
         editor.selectedModel = saved.id;
       load(saved);
-      status.value = `Параметры сохранены · версия ${saved.version}`;
+      status.value = "Параметры сохранены";
     } catch (cause) {
       error.value = cause.message;
     } finally {

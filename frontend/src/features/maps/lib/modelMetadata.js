@@ -14,7 +14,6 @@ export const METADATA_KEYS = [
   "sourceCode",
   "sourceName",
   "name",
-  "version",
   "textureDetail",
   "tileType",
   "hasDecor",

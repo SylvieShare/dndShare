@@ -85,7 +85,7 @@ import {
   FormSelect,
   RemoveButton,
 } from "@sylvieshare/share-ui";
-import { latestModelVersions } from "../lib/modelVersions";
+import { visibleModels } from "../lib/visibleModels";
 import { TRANSITION_ACTIONS } from "../lib/modelTransitions";
 import { uid } from "../lib/mapModel";
 import MapModelLightTemplate from "./MapModelLightTemplate.vue";
@@ -95,7 +95,7 @@ const props = defineProps({
   catalogue: Array,
 });
 const targets = computed(() =>
-  latestModelVersions(props.catalogue)
+  visibleModels(props.catalogue)
     .filter(
       (m) =>
         m.definitionId &&

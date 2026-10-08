@@ -1,9 +1,9 @@
 import { fetchGet, fetchPost, fetchPut, fetchDelete } from "./http";
 export const getMaps = () => fetchGet("/maps");
 let modelCatalogue;
-const runtimeModel = ({ id, versionId, ...model }) => ({
+const runtimeModel = ({ id, uuid, ...model }) => ({
   ...model,
-  id: versionId,
+  id: uuid,
   definitionId: id,
 });
 const catalogueModels = (models) => models.map(runtimeModel);
@@ -19,7 +19,13 @@ export function getMapModels(publicCode) {
         modelCatalogue = null;
         throw error;
       });
-  return modelCatalogue;
+  const pending = modelCatalogue;
+  pending
+    .finally(() => {
+      if (modelCatalogue === pending) modelCatalogue = null;
+    })
+    .catch(() => {});
+  return pending;
 }
 export const resetMapModels = () => {
   modelCatalogue = null;
@@ -45,12 +51,35 @@ export const getPublicMap = (code) =>
   fetchGet(`/public/sessions/${encodeURIComponent(code)}/map`);
 
 export async function saveMapModelMetadata(id, metadata) {
-  const { id: versionId, definitionId: logicalId, ...fields } = metadata;
+  const { id: uuid, definitionId: logicalId, ...fields } = metadata;
   const model = await fetchPut(`/maps/models/${encodeURIComponent(id)}`, {
     ...fields,
     id: logicalId,
-    versionId,
+    uuid,
   });
   resetMapModels();
   return runtimeModel(model);
+}
+
+export async function getMapPreviewContext(id) {
+  const context = await fetchGet(
+    `/maps/${encodeURIComponent(id)}/preview-context`,
+  );
+  return { ...context, models: catalogueModels(context.models) };
+}
+export async function uploadMapPreview(id, signature, blob) {
+  const response = await fetch(
+    `/api/maps/${encodeURIComponent(id)}/preview?signature=${encodeURIComponent(signature)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "image/webp" },
+      body: blob,
+    },
+  );
+  if (!response.ok) {
+    const error = new Error("Не удалось сохранить превью карты");
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
 }

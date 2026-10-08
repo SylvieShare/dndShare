@@ -121,6 +121,23 @@ export function modelAssets(onError, renderer) {
         }),
       );
     },
+    replaceCatalogue(models) {
+      catalogue = new Map(models.map((m) => [m.id, m]));
+    },
+    prune() {
+      const urls = new Set(
+        [...catalogue.values()].flatMap((m) => [
+          m.renderUrl,
+          m.lodUrl,
+          m.shadowUrl,
+        ]),
+      );
+      for (const url of owned.keys())
+        if (!urls.has(url)) {
+          owned.delete(url);
+          release(url, loader);
+        }
+    },
     metadata(id) {
       return catalogue.get(id);
     },

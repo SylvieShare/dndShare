@@ -1,3 +1,4 @@
+import { currentModel } from "./current_model.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -47,26 +48,16 @@ for (const kind of ["source", "shadow"])
     path.join(dir, path.basename(assets[kind].key)),
     path.join(out, path.basename(assets[kind].key)),
   );
-const identity = createHash("sha256")
-  .update(
-    report.recipe +
-      ":" +
-      report.model.sourceCode +
-      ":" +
-      JSON.stringify(assets),
-  )
-  .digest();
-identity[6] = (identity[6] & 15) | 128;
-identity[8] = (identity[8] & 63) | 128;
-const hex = identity.subarray(0, 16).toString("hex");
-report.model.id = [
-  hex.slice(0, 8),
-  hex.slice(8, 12),
-  hex.slice(12, 16),
-  hex.slice(16, 20),
-  hex.slice(20),
-].join("-");
-report.model.assets = assets;
+const registry = JSON.parse(
+  await fs.readFile(
+    path.resolve(
+      import.meta.dirname,
+      "../../models/collections/ultimate-dungeon/registry-snapshot.json",
+    ),
+    "utf8",
+  ),
+);
+report.model = currentModel(report.model, registry, assets);
 await fs.writeFile(file, JSON.stringify(report, null, 2) + "\n");
 await fs.writeFile(
   path.join(out, "catalogue.json"),
@@ -76,5 +67,5 @@ console.log(
   "OPEN_DOOR_PACKET",
   report.model.sourceCode,
   report.model.id,
-  report.model.version,
+  report.model.assets.render.sha256.slice(0, 12),
 );

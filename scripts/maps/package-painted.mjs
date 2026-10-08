@@ -1,3 +1,4 @@
+import { currentModel } from "./current_model.mjs";
 // Package painted GLBs and preserve the exact metadata/source of each revision.
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -34,11 +35,6 @@ const originals = JSON.parse(
     "utf8",
   ),
 );
-const versions = new Map();
-for (const model of originals) {
-  const key = `${model.collection}:${model.sourceCode}`;
-  versions.set(key, Math.max(model.version, versions.get(key) || 0));
-}
 const models = [];
 const codes = process.argv
   .find((arg) => arg.startsWith("--codes="))
@@ -155,19 +151,9 @@ for (const folder of (await fs.readdir(base, { withFileTypes: true })).sort(
     .catch((e) => {
       if (e.code !== "EEXIST") throw e;
     });
-  // Deterministic UUID with a dedicated namespace string; no mutable asset keys.
-  const identity = createHash("sha256")
-    .update(`painted-ultimate-v1:${original.id}:${assets.render.sha256}`)
-    .digest();
-  identity[6] = (identity[6] & 15) | 128; // UUID v8: application-defined SHA-256 identity.
-  identity[8] = (identity[8] & 63) | 128;
-  const hex = identity.subarray(0, 16).toString("hex");
-  const id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-  const key = `${original.collection}:${original.sourceCode}`,
-    version = versions.get(key) + 1;
-  versions.set(key, version);
-  models.push({ ...original, id, version, assets });
-  console.log("PACKAGED_PAINT", folder.name, version, assets.render.size);
+  // The current UUID is independent of content-addressed asset keys.
+  models.push(currentModel(original, originals, assets));
+  console.log("PACKAGED_PAINT", folder.name, assets.render.size);
 }
 await fs.writeFile(
   path.join(upload, "catalogue.json"),

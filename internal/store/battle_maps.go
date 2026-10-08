@@ -13,12 +13,14 @@ import (
 var ErrMapConflict = errors.New("map revision conflict")
 
 type BattleMap struct {
-	ID        string             `json:"id"`
-	Name      string             `json:"name"`
-	Document  battlemap.Document `json:"document"`
-	Revision  int64              `json:"revision"`
-	ChangedAt time.Time          `json:"changedAt"`
-	System    bool               `json:"system"`
+	ID               string             `json:"id"`
+	Name             string             `json:"name"`
+	Document         battlemap.Document `json:"document"`
+	Revision         int64              `json:"revision"`
+	ChangedAt        time.Time          `json:"changedAt"`
+	System           bool               `json:"system"`
+	PreviewURL       string             `json:"previewUrl,omitempty"`
+	PreviewSignature string             `json:"previewSignature,omitempty"`
 }
 
 func scanBattleMap(row pgx.Row) (BattleMap, error) {
@@ -84,9 +86,6 @@ func (s *Store) SaveBattleMap(ctx context.Context, userID int64, m BattleMap) (B
 }
 
 func (s *Store) DeleteBattleMap(ctx context.Context, userID int64, id string) error {
-	tag, err := s.pool.Exec(ctx, `DELETE FROM dndshare.battle_map WHERE owner_user_id=$1 AND id=$2::uuid`, userID, id)
-	if err == nil && tag.RowsAffected() == 0 {
-		return ErrNotFound
-	}
+	_, err := s.DeleteBattleMapWithPreview(ctx, userID, id)
 	return err
 }

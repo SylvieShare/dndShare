@@ -12,16 +12,17 @@ for (const entry of await fs.readdir(path.join(base, "detailed"), {
   withFileTypes: true,
 })) {
   if (!entry.isDirectory()) continue;
-  for (const version of await fs.readdir(
+  for (const preparedFolder of await fs.readdir(
     path.join(base, "detailed", entry.name),
     { withFileTypes: true },
   )) {
-    if (!version.isDirectory() || version.name === "upload") continue;
+    if (!preparedFolder.isDirectory() || preparedFolder.name === "upload")
+      continue;
     const file = path.join(
       base,
       "detailed",
       entry.name,
-      version.name,
+      preparedFolder.name,
       "report.json",
     );
     const raw = await fs.readFile(file, "utf8").catch((e) => {
@@ -33,10 +34,9 @@ for (const entry of await fs.readdir(path.join(base, "detailed"), {
     if (!report.publication) continue;
     const model = registry.find((m) => m.id === report.publication.id);
     assert.ok(model, "Publication must be confirmed in the MCP snapshot");
-    assert.equal(model.version, report.publication.version);
-    const latest = registry
-      .filter((m) => m.definitionId === model.definitionId)
-      .sort((a, b) => b.version - a.version)[0];
+    const latest = registry.filter(
+      (m) => m.definitionId === model.definitionId,
+    )[0];
     assert.equal(
       latest.id,
       model.id,
@@ -53,7 +53,7 @@ reports.sort((a, b) => a.model.sourceCode.localeCompare(b.model.sourceCode));
 const rows = reports
   .map(
     ({ model: m }) =>
-      `| ${m.sourceCode} ${m.sourceName} | \`${m.id}\` | ${m.version} | ${m.assets.render.size.toLocaleString("ru-RU")} Б | ${m.assets.lod.size.toLocaleString("ru-RU")} Б | ${m.assets.shadow.size.toLocaleString("ru-RU")} Б | ${m.assets.preview.size.toLocaleString("ru-RU")} Б |`,
+      `| ${m.sourceCode} ${m.sourceName} | \`${m.id}\` | ${m.assets.render.sha256.slice(0, 12)} | ${m.assets.render.size.toLocaleString("ru-RU")} Б | ${m.assets.lod.size.toLocaleString("ru-RU")} Б | ${m.assets.shadow.size.toLocaleString("ru-RU")} Б | ${m.assets.preview.size.toLocaleString("ru-RU")} Б |`,
   )
   .join("\n");
 const file = path.join(root, "md/features/toxic-sewer.md");
@@ -95,7 +95,7 @@ await fs.writeFile(
       models: reports.map(({ model, report, file }) => ({
         code: model.sourceCode,
         id: model.id,
-        version: model.version,
+
         assets: model.assets,
         triangles: Object.fromEntries(
           ["render", "lod", "shadow"].map((k) => [

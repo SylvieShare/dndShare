@@ -1,3 +1,4 @@
+import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
 import { groupExamples } from "./groups";
 import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
@@ -41,10 +42,7 @@ if (params.has("tileFilterExample")) {
   catalogue.find((m) => m.id === UD_WALL).hasDecor = true;
   catalogue.find((m) => m.sourceCode === "UD-096").hidden = true;
   const angle = catalogue.find((m) => m.sourceCode === "LC-003");
-  catalogue.push({
-    ...angle,
-    id: "12345678-1234-4234-8234-123456789abc",
-    version: 2,
+  Object.assign(angle, {
     name: "Проём с обстановкой",
     tileType: "passage",
     hasDecor: true,
@@ -351,6 +349,12 @@ window.EventSource = class {
   }
   close() {}
 };
+if (params.get("mode") === "library" && params.has("tagsExample")) {
+  const key = "fixture-document:" + location.search;
+  const stored = sessionStorage.getItem(key);
+  if (stored) source.document = JSON.parse(stored);
+  else sessionStorage.setItem(key, JSON.stringify(source.document));
+}
 const modelAssetAliases = new Map();
 window.loadedModels = [];
 window.releaseModelLoads = () =>
@@ -359,12 +363,15 @@ const nativeFetch = window.fetch.bind(window);
 const modelDto = ({ id, definitionId, ...model }) => ({
   ...model,
   id: definitionId,
-  versionId: id,
+  uuid: id,
 });
+const previews = previewFixture(catalogue, modelDto);
 window.fetch = async (url, options = {}) => {
   const rawUrl = typeof url === "string" ? url : url.url;
   const endpoint = new URL(rawUrl, location.origin).pathname;
   if (!endpoint.startsWith("/api/")) return nativeFetch(url, options);
+  const preview = await previews.handle(rawUrl, options);
+  if (preview) return preview;
   url = endpoint;
   if (
     /^\/api\/(maps\/models|public\/sessions\/ABC-123\/map-models)\/[^/]+\/(render|lod)$/.test(
@@ -406,8 +413,8 @@ window.fetch = async (url, options = {}) => {
     });
   let data = options.body ? JSON.parse(options.body) : null;
   if (data && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
-    const { id, versionId, ...fields } = data;
-    data = { ...fields, id: versionId, definitionId: id };
+    const { id, uuid, ...fields } = data;
+    data = { ...fields, id: uuid, definitionId: id };
   }
   if (options.method === "PUT" || options.method === "POST")
     window.requests.push({ url, data });
@@ -428,15 +435,7 @@ window.fetch = async (url, options = {}) => {
   if (options.method === "PUT" && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
     const old = catalogue.find((m) => m.id === url.split("/")[4]);
     if (!old) return new Response("{}", { status: 404 });
-    const latest = catalogue
-      .filter(
-        (m) =>
-          m.collection === old.collection &&
-          m.sourceCode === old.sourceCode &&
-          m.sourceName === old.sourceName,
-      )
-      .sort((a, b) => b.version - a.version)[0];
-    if (latest.id !== old.id || window.failNextModelSave) {
+    if (window.failNextModelSave) {
       window.failNextModelSave = false;
       return new Response(
         JSON.stringify({
@@ -445,21 +444,8 @@ window.fetch = async (url, options = {}) => {
         { status: 409 },
       );
     }
-    const id = crypto.randomUUID();
-    const saved = {
-      ...old,
-      ...data,
-      id,
-      version: latest.version + 1,
-      renderUrl: `/api/maps/models/${id}/render`,
-      lodUrl: `/api/maps/models/${id}/lod`,
-      previewUrl: old.previewUrl,
-    };
-    catalogue.forEach((m) => {
-      if (m.definitionId === saved.definitionId) m.behaviour = saved.behaviour;
-    });
-    catalogue.push(saved);
-    modelAssetAliases.set(id, modelAssetAliases.get(old.id) || old.id);
+    const saved = { ...old, ...data, id: old.id };
+    catalogue.splice(catalogue.indexOf(old), 1, saved);
     window.lastModelSaved = saved;
     return new Response(JSON.stringify(modelDto(saved)), {
       headers: { "Content-Type": "application/json" },
@@ -531,6 +517,12 @@ window.fetch = async (url, options = {}) => {
   } else if (url === "/api/public/sessions/ABC-123/map")
     result = { map: board, display };
   else return new Response("{}", { status: 404 });
+  if (url === "/api/maps")
+    result = Array.isArray(result)
+      ? await Promise.all(result.map(previews.decorate))
+      : await previews.decorate(result);
+  else if (/^\/api\/maps\/[^/]+$/.test(url))
+    result = await previews.decorate(result);
   return new Response(JSON.stringify(result), {
     headers: { "Content-Type": "application/json" },
   });

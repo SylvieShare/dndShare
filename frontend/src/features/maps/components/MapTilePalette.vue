@@ -56,7 +56,7 @@
 </template>
 <script setup>
 import { computed, ref, watch } from "vue";
-import { latestModelVersions } from "../lib/modelVersions";
+import { visibleModels } from "../lib/visibleModels";
 import { ActionButton, LoadingState, MultiToggle } from "@sylvieshare/share-ui";
 import MapCollectionPicker from "./MapCollectionPicker.vue";
 import MapModelGroupCard from "./MapModelGroupCard.vue";
@@ -78,7 +78,7 @@ const CONTENT_OPTIONS = [
   { value: "furnished", label: "С предметами" },
 ];
 const models = computed(() =>
-  latestModelVersions(props.editor.catalogue).filter(
+  visibleModels(props.editor.catalogue).filter(
     (m) => m.collection === props.editor.collection && m.tileType !== "object",
   ),
 );

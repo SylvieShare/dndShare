@@ -9,9 +9,9 @@ const code = process.argv[2],
 if (!specs[code] || !snapshot)
   throw new Error("Reviewed base door and fresh MCP snapshot required");
 const rows = JSON.parse(await fs.readFile(snapshot, "utf8"));
-const model = rows
-  .filter((m) => m.collection === "ultimate-dungeon" && m.sourceCode === code)
-  .sort((a, b) => b.version - a.version)[0];
+const model = rows.filter(
+  (m) => m.collection === "ultimate-dungeon" && m.sourceCode === code,
+)[0];
 if (!model || model.textureDetail !== "detailed")
   throw new Error("Detailed closed door required");
 if (
@@ -20,9 +20,7 @@ if (
       m.collection === model.collection && m.sourceCode === specs[code].code,
   )
 )
-  throw new Error(
-    "Open variant exists; do not overwrite its first-version packet",
-  );
+  throw new Error("Open variant exists; do not overwrite its current packet");
 const dir = path.resolve(
   import.meta.dirname,
   "../../models/collections/open-doors/reference",
@@ -53,4 +51,9 @@ for (const tier of ["render", "lod"]) {
     document,
   );
 }
-console.log("OPEN_DOOR_REFERENCE", code, model.id, model.version);
+console.log(
+  "OPEN_DOOR_REFERENCE",
+  code,
+  model.id,
+  model.assets.render.sha256.slice(0, 12),
+);

@@ -18,12 +18,6 @@ func testMapModelGroupUpdate(t *testing.T, ctx context.Context, s *Store) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	next := m
-	next.ID, next.Version = "30000000-0000-4000-8000-000000000092", 2
-	next, err = s.RegisterMapModel(ctx, next)
-	if err != nil {
-		t.Fatal(err)
-	}
 	target := m
 	target.ID, target.SourceCode, target.SourceName = "30000000-0000-4000-8000-000000000093", "MH-GROUP-TARGET", "Unlit Campfire Group Test"
 	target.DefinitionID, target.Code = "", ""
@@ -45,7 +39,7 @@ func testMapModelGroupUpdate(t *testing.T, ctx context.Context, s *Store) {
 	if got, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, m.Code, code); err != nil || got != code {
 		t.Fatal("group update", got, err)
 	}
-	for _, before := range []battlemap.Model{m, next} {
+	for _, before := range []battlemap.Model{m} {
 		got, err := s.GetMapModel(ctx, before.ID)
 		before.Code = code
 		if err != nil || !reflect.DeepEqual(got, before) {

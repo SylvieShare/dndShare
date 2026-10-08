@@ -16,8 +16,8 @@ export function createTilePreview(assets, onSettled = () => {}) {
     hidden = [],
     lift = 0,
     liftTarget = 0,
-    opacity = 0.7,
-    opacityTarget = 0.7;
+    opacity = 1,
+    opacityTarget = 1;
   function clear() {
     for (const node of root.children) {
       node.dispose();
@@ -32,6 +32,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
     if (tile) {
       if (!active && (!tile.id || tile.id !== target?.id)) {
         position = null;
+        opacity = 1;
         lift = 0;
         rotation.clear();
       }
@@ -44,7 +45,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
             0.22,
             (assets.metadata(tile.modelId)?.mountDepth || 0) + 0.05,
           );
-      opacityTarget = 0.7;
+      opacityTarget = 1;
       target = tile;
     } else if (target && (active || landing)) {
       const next = landingTarget(target, placed);
@@ -58,7 +59,9 @@ export function createTilePreview(assets, onSettled = () => {}) {
     tile = target;
     root.userData.outlineStyle = tile?.wallBrush ? "hover" : "selected";
     const group = tile?.group || (tile ? [tile] : []);
-    const nextKey = group.map((t) => t.modelId).join(",");
+    const nextKey = JSON.stringify(
+      group.map((t) => [t.modelId, assets.metadata(t.modelId)?.renderUrl]),
+    );
     if (key !== nextKey) {
       clear();
       key = nextKey;
@@ -76,9 +79,9 @@ export function createTilePreview(assets, onSettled = () => {}) {
             Array.isArray(part.material) ? part.material : [part.material]
           ).map((m) => {
             const copy = m.clone();
-            copy.transparent = true;
-            copy.opacity = 0.7;
-            copy.depthWrite = false;
+            copy.userData.baseOpacity = copy.opacity;
+            copy.userData.baseTransparent = copy.transparent;
+            copy.userData.baseDepthWrite = copy.depthWrite;
             copy.userData.baseColor = copy.color?.clone();
             return copy;
           });
@@ -171,8 +174,11 @@ export function createTilePreview(assets, onSettled = () => {}) {
       node.instanceMatrix.needsUpdate = true;
       for (const material of Array.isArray(node.material)
         ? node.material
-        : [node.material])
-        material.opacity = opacity;
+        : [node.material]) {
+        material.opacity = opacity * material.userData.baseOpacity;
+        material.transparent = material.userData.baseTransparent || opacity < 1;
+        material.depthWrite = material.userData.baseDepthWrite && opacity >= 1;
+      }
     }
     root.updateMatrixWorld(true);
     if (landing && !moving) {

@@ -43,8 +43,8 @@ func saveModelBehaviour(ctx context.Context, tx pgx.Tx, id string, b battlemap.M
 	for _, t := range b.Transitions {
 		var sameKind bool
 		err := tx.QueryRow(ctx, `SELECT (a.tile_type='object')=(z.tile_type='object') AND a.definition_id<>z.definition_id
-            FROM (SELECT tile_type,definition_id FROM dndshare.map_model WHERE definition_id=$1 ORDER BY version DESC LIMIT 1) a,
-                 (SELECT tile_type,definition_id FROM dndshare.map_model WHERE definition_id=$2 ORDER BY version DESC LIMIT 1) z`, id, t.ToDefinitionID).Scan(&sameKind)
+            FROM (SELECT tile_type,definition_id FROM dndshare.map_model WHERE definition_id=$1) a,
+                 (SELECT tile_type,definition_id FROM dndshare.map_model WHERE definition_id=$2) z`, id, t.ToDefinitionID).Scan(&sameKind)
 		if err == pgx.ErrNoRows || err == nil && !sameKind {
 			return fmt.Errorf("%w: Переход должен вести к другой модели того же типа", ErrInvalidMapModels)
 		}

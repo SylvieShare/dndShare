@@ -34,15 +34,13 @@ const tools = process.env.KTX_TOOLS ?? "/private/tmp/dndshare-ktx-tools/bin",
 const registry = JSON.parse(
   await fs.readFile(path.join(base, "registry-snapshot.json"), "utf8"),
 );
-const previous = registry
-  .filter(
-    (m) =>
-      m.collection === "majestic-highlands" &&
-      m.sourceCode === code &&
-      m.sourceName === measured.sourceName &&
-      m.assets.source.sha256 === measured.sourceSHA256,
-  )
-  .sort((a, b) => b.version - a.version)[0];
+const previous = registry.filter(
+  (m) =>
+    m.collection === "majestic-highlands" &&
+    m.sourceCode === code &&
+    m.sourceName === measured.sourceName &&
+    m.assets.source.sha256 === measured.sourceSHA256,
+)[0];
 const metadata = previous ?? majesticModel(measured);
 await fs.mkdir(out, { recursive: true });
 const report = {

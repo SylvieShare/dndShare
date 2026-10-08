@@ -27,7 +27,7 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 	if edited.TextureDetail != "detailed" || original.TextureDetail != "basic" || edited.TileType != "wall-angle" || original.TileType != "wall-straight" {
 		t.Fatal("texture detail edit was not isolated to the new metadata")
 	}
-	if !reflect.DeepEqual(edited.Assets, original.Assets) || edited.ID != original.ID || edited.Version != original.Version {
+	if !reflect.DeepEqual(edited.Assets, original.Assets) || edited.ID != original.ID {
 		t.Fatal("metadata edit changed assets or immutable identity")
 	}
 	if original.Name == edited.Name || original.Width != 1 {
@@ -43,7 +43,6 @@ func TestEditedMapModelRejectsIdentityChangesAndInvalidGeometry(t *testing.T) {
 		func(m *battlemap.ModelMetadata) { m.CollectionName = "Other" },
 		func(m *battlemap.ModelMetadata) { m.SourceCode = "OTHER-001" },
 		func(m *battlemap.ModelMetadata) { m.SourceName = "other" },
-		func(m *battlemap.ModelMetadata) { m.Version++ },
 		func(m *battlemap.ModelMetadata) { m.Width = 0 },
 		func(m *battlemap.ModelMetadata) { m.TileType = "wall" },
 		func(m *battlemap.ModelMetadata) { m.TileType = "wall-unknown" },

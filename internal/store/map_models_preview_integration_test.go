@@ -22,8 +22,8 @@ func testMapModelPreviewRevision(t *testing.T, ctx context.Context, s *Store) {
 	asset := base.Assets["preview"]
 	asset.SHA256 = strings.Repeat("c", 64)
 	asset.Key = "map-models/" + asset.SHA256 + ".webp"
-	next, err := s.ReviseMapModelPreview(ctx, base.ID, base.Assets["render"].SHA256, "00000000-0000-4000-8000-000000000042", asset)
-	if err != nil || !battlemap.VisualRevision(base, next) || next.DefinitionID != base.DefinitionID {
+	next, err := s.UpdateMapModelPreview(ctx, base.ID, base.Assets["render"].SHA256, asset)
+	if err != nil || next.ID != base.ID || next.DefinitionID != base.DefinitionID {
 		t.Fatal("incompatible preview revision", err)
 	}
 	for _, role := range []string{"source", "render", "lod", "shadow"} {
@@ -32,14 +32,14 @@ func testMapModelPreviewRevision(t *testing.T, ctx context.Context, s *Store) {
 		}
 	}
 	original, err := s.GetMapModel(ctx, base.ID)
-	if err != nil || !reflect.DeepEqual(base, original) {
-		t.Fatal("preview mutated existing version", err)
+	if err != nil || !reflect.DeepEqual(next, original) {
+		t.Fatal("preview update was not visible through stable UUID", err)
 	}
-	repeat, err := s.ReviseMapModelPreview(ctx, base.ID, base.Assets["render"].SHA256, "00000000-0000-4000-8000-000000000043", asset)
+	repeat, err := s.UpdateMapModelPreview(ctx, base.ID, base.Assets["render"].SHA256, asset)
 	if err != nil || repeat.ID != next.ID {
 		t.Fatal("preview is not idempotent", err)
 	}
-	if _, err = s.ReviseMapModelPreview(ctx, next.ID, strings.Repeat("d", 64), "00000000-0000-4000-8000-000000000044", asset); !errors.Is(err, ErrMapModelConflict) {
+	if _, err = s.UpdateMapModelPreview(ctx, next.ID, strings.Repeat("d", 64), asset); !errors.Is(err, ErrMapModelConflict) {
 		t.Fatal("stale render accepted", err)
 	}
 }

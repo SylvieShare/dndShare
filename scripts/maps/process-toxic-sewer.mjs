@@ -116,16 +116,14 @@ async function collage(report) {
 await fs.mkdir(path.join(base, "detailed", code), { recursive: true });
 if (mode !== "publish") {
   const models = await snapshot(path.join(base, "registry-snapshot.json"));
-  const current = models
-    .filter((m) => m.sourceCode === code)
-    .sort((a, b) => b.version - a.version)[0];
+  const current = models.filter((m) => m.sourceCode === code)[0];
   if (!current || current.textureDetail === "detailed")
     throw Error("Model missing or already processed");
   directory = path.join(
     base,
     "detailed",
     code,
-    `${code.replaceAll(" ", "_")}__v${current.version}`,
+    `${code.replaceAll(" ", "_")}__v${current.assets.render.sha256.slice(0, 12)}`,
   );
   const report = path.join(directory, "report.json");
   let repaintReference;
@@ -278,12 +276,9 @@ if (mode !== "publish") {
   if (prepared.publication || !prepared.shadowReview)
     throw Error("Already published or shadow review missing");
   const current = await snapshot(path.join(base, "registry-snapshot.json"));
-  const latest = current
-    .filter(
-      (m) =>
-        m.sourceCode === code && m.sourceName === prepared.model.sourceName,
-    )
-    .sort((a, b) => b.version - a.version)[0];
+  const latest = current.filter(
+    (m) => m.sourceCode === code && m.sourceName === prepared.model.sourceName,
+  )[0];
   if (latest.id !== prepared.model.id)
     throw Error("Accepted model changed during preparation");
   node("select-albedo-candidate.mjs", [report, candidate, note], "select");
@@ -367,10 +362,14 @@ if (mode !== "publish") {
   data.publication = {
     id: model.id,
     definitionId: model.definitionId,
-    version: model.version,
     confirmedAt: new Date().toISOString(),
     registry: fresh,
   };
   await fs.writeFile(report, JSON.stringify(data, null, 2) + "\n");
-  console.log("CONFIRMED", code, model.version, model.id);
+  console.log(
+    "CONFIRMED",
+    code,
+    model.assets.render.sha256.slice(0, 12),
+    model.id,
+  );
 }

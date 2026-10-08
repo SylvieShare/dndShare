@@ -101,7 +101,7 @@ test("sidebar offers populated categories and drags tiles directly onto the map,
     expect(text).not.toContain(" · ");
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
-test("admin tile reference saves a fresh version and leaves existing map tiles unchanged", async ({
+test("admin tile reference updates the current model while keeping placement IDs", async ({
   page,
 }) => {
   await ready(page);
@@ -131,18 +131,15 @@ test("admin tile reference saves a fresh version and leaves existing map tiles u
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
   await expect(
-    page
-      .getByRole("region", { name: "Справочник тайлов", exact: true })
-      .getByRole("status"),
-  ).toContainText("Параметры сохранены · версия 2");
+    reference.getByText("Параметры сохранены", { exact: true }),
+  ).toBeVisible();
   const saved = await page.evaluate(() => window.lastModelSaved);
   expect(saved).toMatchObject({
     name: "Исправленный пол",
     width: 2,
-    version: 2,
     textureDetail: "detailed",
   });
-  expect(saved.id).not.toBe("22222222-2222-4222-8222-222222222222");
+  expect(saved.id).toBe("22222222-2222-4222-8222-222222222222");
   expect(
     await page.evaluate(() =>
       window.requests.filter((r) => r.url === "/api/maps/test-map"),
@@ -305,7 +302,7 @@ test("reference uses filter categories and preserves a draft when changing packs
     page
       .getByRole("region", { name: "Справочник тайлов", exact: true })
       .getByRole("status"),
-  ).toContainText("Параметры сохранены · версия 2");
+  ).toContainText("Параметры сохранены");
   const saved = await page.evaluate(() => window.lastModelSaved);
   expect(saved.tileType).toBe("wall-angle");
   expect(saved).not.toHaveProperty("wallLayout");

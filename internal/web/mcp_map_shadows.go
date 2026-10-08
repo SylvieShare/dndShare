@@ -19,15 +19,10 @@ func (s *Server) assignMapShadow(r *http.Request, model *battlemap.Model) error 
 	if err != nil {
 		return err
 	}
-	version := 0
 	for _, old := range models {
-		if old.ID == model.ID {
+		if old.ID == model.ID && old.Assets["lod"].SHA256 == model.Assets["lod"].SHA256 {
 			model.Assets["shadow"] = old.Assets["shadow"]
-			return nil
-		}
-		if old.Version > version && battlemap.VisualRevision(old, *model) {
-			version = old.Version
-			model.Assets["shadow"] = old.Assets["shadow"]
+			break
 		}
 	}
 	return nil
@@ -63,9 +58,5 @@ func (s *Server) toolRegisterMapShadow(r *http.Request, args map[string]json.Raw
 	if err = s.verifyMapAsset(r, asset.Key, asset); err != nil {
 		return nil, err
 	}
-	revisionID, err := newUUID()
-	if err != nil {
-		return nil, err
-	}
-	return s.store.ReviseMapModelShadow(r.Context(), id, lodSHA, revisionID, asset)
+	return s.store.UpdateMapModelShadow(r.Context(), id, lodSHA, asset)
 }

@@ -65,9 +65,16 @@ func (s *Server) handleListMaps(w http.ResponseWriter, r *http.Request) {
 	for i := range maps {
 		documents = append(documents, &maps[i].Document)
 	}
-	if err := s.store.HydrateMapLights(r.Context(), documents...); err != nil {
+	models, behaviours, err := s.store.HydrateMapCatalogue(r.Context(), documents...)
+	if err != nil {
 		serverError(w, err)
 		return
+	}
+	for i := range maps {
+		if err := s.attachMapPreview(r, &maps[i], models, behaviours); err != nil {
+			serverError(w, err)
+			return
+		}
 	}
 	w.Header().Set("Cache-Control", "no-store")
 	writeJSON(w, http.StatusOK, maps)
@@ -112,6 +119,15 @@ func (s *Server) handleSaveMap(w http.ResponseWriter, r *http.Request) {
 		mapError(w, err)
 		return
 	}
+	models, behaviours, err := s.store.HydrateMapCatalogue(r.Context(), &m.Document)
+	if err != nil {
+		serverError(w, err)
+		return
+	}
+	if err = s.attachMapPreview(r, &m, models, behaviours); err != nil {
+		serverError(w, err)
+		return
+	}
 	writeJSON(w, http.StatusOK, m)
 }
 
@@ -125,9 +141,11 @@ func (s *Server) handleDeleteMap(w http.ResponseWriter, r *http.Request) {
 		notFound(w, "")
 		return
 	}
-	if err := s.store.DeleteBattleMap(r.Context(), uid, id); err != nil {
+	key, err := s.store.DeleteBattleMapWithPreview(r.Context(), uid, id)
+	if err != nil {
 		mapError(w, err)
 		return
 	}
+	s.removeMapPreviewObject(r.Context(), key)
 	w.WriteHeader(http.StatusNoContent)
 }

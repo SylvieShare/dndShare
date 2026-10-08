@@ -31,8 +31,7 @@ const depths = new Map(
 const latest = new Map();
 for (const m of registry) {
   const key = `${m.collection}:${m.sourceCode}:${m.sourceName}`;
-  if (!latest.has(key) || latest.get(key).version < m.version)
-    latest.set(key, m);
+  if (!latest.has(key)) latest.set(key, m);
 }
 const codes = process.argv
   .find((a) => a.startsWith("--codes="))
@@ -51,7 +50,7 @@ for (const model of latest.values()) {
   const key = `${model.collection}:${model.sourceCode}:${model.sourceName}`,
     depth = depths.get(key);
   if (!depth || (codes && !codes.includes(model.sourceCode))) continue;
-  const slug = `${model.collection}__${model.sourceCode.replaceAll(" ", "_")}__${model.version}`;
+  const slug = `${model.collection}__${model.sourceCode.replaceAll(" ", "_")}__${model.assets.render.sha256.slice(0, 12)}`;
   const directory = path.join(out, slug);
   await fs.mkdir(directory, { recursive: true });
   if (await fs.stat(path.join(directory, "report.json")).catch(() => null))

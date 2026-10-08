@@ -124,6 +124,12 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
   await panel(page)
     .getByRole("button", { name: "Погасить свет", exact: true })
     .click();
+  await expect(
+    panel(page).getByRole("heading", { name: "Потухший факел", exact: true }),
+  ).toBeVisible();
+  await expect
+    .poll(() => page.evaluate(() => window.lastSaved?.document.lights.length))
+    .toBe(0);
   await panel(page)
     .getByRole("button", { name: "Зажечь свет", exact: true })
     .click();
@@ -171,7 +177,7 @@ test("model reference saves transition definitions and multiple light templates 
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
   await expect(
-    reference.getByText("Параметры сохранены · версия 2", { exact: true }),
+    reference.getByText("Параметры сохранены", { exact: true }),
   ).toBeVisible();
   const saved = await page.evaluate(() => window.lastModelSaved);
   expect(saved.definitionId).toBe("LC-001");
@@ -215,7 +221,7 @@ test("object definitions are available in the same reference editor", async ({
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
   await expect(
-    reference.getByText("Параметры сохранены · версия 2", { exact: true }),
+    reference.getByText("Параметры сохранены", { exact: true }),
   ).toBeVisible();
   const saved = await page.evaluate(() => window.lastModelSaved);
   expect(saved.tileType).toBe("object");

@@ -3,7 +3,7 @@ import { clone, inside, rectangle, snap, uid } from "../lib/mapModel";
 import { tileGroupStatus, tilePlacementStatus } from "../lib/tilePlacement";
 import { dependentTiles } from "../lib/tileStructure";
 import { editorClipboard } from "./editorClipboard";
-import { latestModelVersions } from "../lib/modelVersions";
+import { visibleModels } from "../lib/visibleModels";
 import { editorGroupRotation } from "./editorGroupRotation";
 
 export function editorGestures(e) {
@@ -207,7 +207,7 @@ export function editorGestures(e) {
           click &&
           !gesture.additive
         ) {
-          const candidates = latestModelVersions(e.catalogue.value).filter(
+          const candidates = visibleModels(e.catalogue.value).filter(
             (m) =>
               m.collection === e.collection.value &&
               m.tileType === "floor" &&

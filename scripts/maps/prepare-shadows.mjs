@@ -20,8 +20,7 @@ const models = JSON.parse(await fs.readFile(input, "utf8")),
   latest = new Map();
 for (const m of models) {
   const key = `${m.collection}:${m.sourceCode}:${m.sourceName}:${m.assets.source.sha256}`;
-  if (!latest.has(key) || latest.get(key).version < m.version)
-    latest.set(key, m);
+  if (!latest.has(key)) latest.set(key, m);
 }
 const files = new Map();
 async function index(folder) {

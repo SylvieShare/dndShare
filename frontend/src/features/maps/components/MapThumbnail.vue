@@ -8,18 +8,16 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { LoadingState } from "@sylvieshare/share-ui";
-import { requestMapSnapshot } from "../rendering/mapSnapshots";
-const props = defineProps({ document: { type: Object, required: true } });
+import { ensureStoredMapPreview } from "../lib/mapStoredPreviews";
+const props = defineProps({ map: { type: Object, required: true } });
 const host = ref(null),
-  url = ref(""),
-  loading = ref(true);
+  url = ref(props.map.previewUrl || ""),
+  loading = ref(!props.map.previewUrl);
 let observer,
   controller,
   visible = false;
 function clear() {
   controller?.abort();
-  if (url.value) URL.revokeObjectURL(url.value);
-  url.value = "";
 }
 async function load() {
   clear();
@@ -27,8 +25,8 @@ async function load() {
   const request = new AbortController();
   controller = request;
   try {
-    const blob = await requestMapSnapshot(props.document, request.signal);
-    if (!request.signal.aborted) url.value = URL.createObjectURL(blob);
+    const stored = await ensureStoredMapPreview(props.map);
+    if (!request.signal.aborted) url.value = stored;
   } catch {
     /* The card stays usable when GPU or model loading fails. */
   } finally {
@@ -41,7 +39,7 @@ onMounted(() => {
       if (entries.some((e) => e.isIntersecting)) {
         visible = true;
         observer.disconnect();
-        load();
+        if (!url.value) load();
       }
     },
     { rootMargin: "200px" },
@@ -49,11 +47,13 @@ onMounted(() => {
   observer.observe(host.value);
 });
 watch(
-  () => props.document,
+  () => [props.map.id, props.map.previewSignature, props.map.previewUrl],
   () => {
-    if (visible) load();
+    clear();
+    url.value = props.map.previewUrl || "";
+    loading.value = !url.value;
+    if (visible && !url.value) load();
   },
-  { deep: true },
 );
 onBeforeUnmount(() => {
   observer?.disconnect();

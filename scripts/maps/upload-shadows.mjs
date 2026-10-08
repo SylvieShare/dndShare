@@ -28,14 +28,12 @@ const reports = [];
 for (const entry of entries) {
   let done = false;
   for (let attempt = 0; attempt < 4 && !done; attempt++) {
-    const latest = catalogue
-      .filter(
-        (m) =>
-          m.collection === entry.collection &&
-          m.sourceCode === entry.sourceCode &&
-          m.sourceName === entry.sourceName,
-      )
-      .sort((a, b) => b.version - a.version)[0];
+    const latest = catalogue.filter(
+      (m) =>
+        m.collection === entry.collection &&
+        m.sourceCode === entry.sourceCode &&
+        m.sourceName === entry.sourceName,
+    )[0];
     if (!latest || latest.hidden) {
       done = true;
       break;
@@ -93,7 +91,11 @@ for (const entry of entries) {
         expectedLodSHA256: sha,
         asset: uploaded.asset || uploaded,
       });
-      catalogue.push(revision);
+      catalogue.splice(
+        catalogue.findIndex((m) => m.id === revision.id),
+        1,
+        revision,
+      );
       reports.push({
         id: revision.id,
         code: entry.sourceCode,
@@ -111,11 +113,10 @@ for (const entry of entries) {
           published: completed,
           total: entries.length,
           code: entry.sourceCode,
-          version: revision.version,
         }),
       );
     } catch (error) {
-      if (!error.message.includes("revision conflict") || attempt === 3)
+      if (!error.message.includes("update conflict") || attempt === 3)
         throw error;
       catalogue = await mapTool("map_tile_models_list");
     }

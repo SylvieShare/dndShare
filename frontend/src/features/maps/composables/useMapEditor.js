@@ -1,3 +1,4 @@
+import { startModelRefresh } from "../lib/currentModelRefresh";
 import { syncSurfaceObjects } from "../lib/surfacePlacement";
 import { pruneAreas } from "../lib/mapAreas";
 import { editorAreas } from "./editorAreas";
@@ -152,6 +153,12 @@ export function useMapEditor(source, onSaved) {
       });
       lastSavedAt.value = result.changedAt;
       onSaved?.(result);
+      if (!result.previewUrl)
+        import("../lib/mapStoredPreviews")
+          .then(({ ensureStoredMapPreview }) => ensureStoredMapPreview(result))
+          .catch(() => {
+            // Document saving succeeds independently; missing images retry in the library.
+          });
     } catch (cause) {
       error.value = cause.message;
       saveError.value = cause.message;
@@ -250,7 +257,17 @@ export function useMapEditor(source, onSaved) {
     resetMapModels();
     return loadModels();
   }
-  onMounted(loadModels);
+  let stopModelRefresh;
+  onMounted(() => {
+    loadModels();
+    stopModelRefresh = startModelRefresh(
+      () => (inGesture ? null : getMapModels()),
+      (models) => {
+        if (JSON.stringify(models) !== JSON.stringify(catalogue.value))
+          catalogue.value = models;
+      },
+    );
+  });
   watch(catalogue, () => {
     if (catalogue.value.length)
       syncLights(draft.value.document, catalogue.value);
@@ -264,6 +281,7 @@ export function useMapEditor(source, onSaved) {
   window.addEventListener("beforeunload", beforeUnload);
   onBeforeUnmount(() => {
     stopped = true;
+    stopModelRefresh?.();
     clearTimeout(timer);
     window.removeEventListener("beforeunload", beforeUnload);
     lighting.finishLightEdit();

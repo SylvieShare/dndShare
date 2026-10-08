@@ -12,14 +12,12 @@ const registry = JSON.parse(
     "utf8",
   ),
 );
-const model = registry
-  .filter(
-    (m) =>
-      m.collection === "ultimate-dungeon" &&
-      m.sourceCode === code &&
-      (!sourceName || m.sourceName === sourceName),
-  )
-  .sort((a, b) => b.version - a.version)[0];
+const model = registry.filter(
+  (m) =>
+    m.collection === "ultimate-dungeon" &&
+    m.sourceCode === code &&
+    (!sourceName || m.sourceName === sourceName),
+)[0];
 if (!model) throw new Error("Missing " + code);
 const rows = JSON.parse(
   await fs.readFile(

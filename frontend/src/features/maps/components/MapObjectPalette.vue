@@ -29,7 +29,7 @@
 import { computed } from "vue";
 import MapModelGroupCard from "./MapModelGroupCard.vue";
 import { modelGroups } from "../lib/modelGroups";
-import { latestModelVersions } from "../lib/modelVersions";
+import { visibleModels } from "../lib/visibleModels";
 const props = defineProps({
   editor: Object,
   draggable: Boolean,
@@ -38,9 +38,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["object", "drag-object"]);
 const models = computed(() =>
-  latestModelVersions(props.editor.catalogue).filter(
-    (m) => m.tileType === "object",
-  ),
+  visibleModels(props.editor.catalogue).filter((m) => m.tileType === "object"),
 );
 const groups = computed(() => modelGroups(models.value));
 </script>

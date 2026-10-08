@@ -26,13 +26,14 @@ export function openDoorModel(parent, spec) {
     .map(([x, y]) => [clip(0.5 + x / 35), clip(0.5 - y / 35)]);
   const low = 0.5 - spec.cut.radius / 35,
     high = 0.5 + spec.cut.radius / 35;
+  const { version, definitionId, ...metadata } = structuredClone(parent);
   return {
-    ...structuredClone(parent),
+    ...metadata,
     id: "",
     sourceCode: spec.code,
     sourceName: spec.sourceName,
     name: spec.name,
-    version: 1,
+
     textureDetail: "detailed",
     tags: [
       ...parent.tags,

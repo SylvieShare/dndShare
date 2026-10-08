@@ -54,13 +54,12 @@ it("replaces an immutable model version, removes all its lights and preserves in
     { id: "attached", anchor: { kind: "tile", id: "tile" }, offset: [0, 0] },
     { id: "unrelated", x: 5, y: 5 },
   );
-  const revision = { ...clone(target), id: "off-v2", version: 2 };
-  models.push(revision);
+  const revision = target;
   const result = transitionDocument(d, models, "tile", "tile", edge);
   expect(result.valid).toBe(true);
   expect(result.document.tiles[0]).toEqual({
     ...d.tiles[0],
-    modelId: "off-v2",
+    modelId: "off-v1",
   });
   expect(result.document.areas).toEqual(d.areas);
   expect(result.document.lights.map((l) => l.id)).toEqual(["unrelated"]);

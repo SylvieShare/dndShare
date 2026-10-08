@@ -6,6 +6,7 @@ import (
 	"errors"
 	"maps"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -59,77 +60,52 @@ func TestPreparedCollectionManifest(t *testing.T) {
 	t.Logf("validated %d model manifests", len(models))
 }
 
-func preparedNewSourceError(model battlemap.Model, previous []battlemap.Model) error {
-	maximum := 0
-	for _, old := range previous {
-		if old.Collection != model.Collection || old.SourceCode != model.SourceCode {
-			continue
-		}
-		if old.Assets["source"].SHA256 == model.Assets["source"].SHA256 {
-			return errors.New("existing source must use the ordinary visual revision comparison")
-		}
-		maximum = max(maximum, old.Version)
-	}
-	if maximum == 0 || model.Version <= maximum {
-		return errors.New("new source requires a fresh registry of the existing code and a higher version")
-	}
-	return nil
-}
-
 func preparedRevisionError(model battlemap.Model, previous []battlemap.Model) error {
 	if len(previous) == 0 {
-		if model.Version > 1 {
-			return errors.New("MAP_MODEL_PREVIOUS_MANIFEST must contain a fresh registry for a revision")
-		}
 		return nil
 	}
 	for _, old := range previous {
-		if battlemap.VisualRevision(old, model) {
+		if old.ID != model.ID {
+			continue
+		}
+		a, b := old.ModelMetadata, model.ModelMetadata
+		a.TextureDetail, b.TextureDetail = "", ""
+		if !reflect.DeepEqual(a, b) || old.Assets["source"] != model.Assets["source"] {
+			return errors.New("changes placement/source contract; use explicit correction mode")
+		}
+		return nil
+	}
+	return errors.New("existing model must preserve its UUID")
+}
+func preparedNewSourceError(model battlemap.Model, previous []battlemap.Model) error {
+	for _, old := range previous {
+		if old.ID == model.ID && old.Assets["source"].SHA256 != model.Assets["source"].SHA256 {
 			return nil
 		}
 	}
-	return errors.New("changes the original placement/source contract")
+	return errors.New("new source requires a current registry, stable UUID and changed source")
 }
-
-func TestPreparedRevisionRequiresComparisonAndPreservesPlacement(t *testing.T) {
-	old := battlemap.InitialCatalogue()[0]
-	if err := preparedRevisionError(old, nil); err != nil {
-		t.Fatal("first version rejected", err)
-	}
-	revision := old
-	revision.Version++
-	if err := preparedRevisionError(revision, nil); err == nil {
-		t.Fatal("revision passed without comparison registry")
-	}
-	previous := []battlemap.Model{old}
-	if err := preparedRevisionError(revision, previous); err != nil {
-		t.Fatal("compatible revision rejected", err)
-	}
-	revision.MountDepth += .1
-	if err := preparedRevisionError(revision, previous); err == nil {
-		t.Fatal("changed insertion depth accepted")
-	}
-}
-
-func TestPreparedNewSourceIsExplicitAndCannotBypassOrdinaryComparison(t *testing.T) {
+func TestPreparedUpdatesRetainUUIDAndPlacement(t *testing.T) {
 	old := battlemap.InitialCatalogue()[0]
 	model := old
-	model.Version++
-	if preparedNewSourceError(model, []battlemap.Model{old}) == nil {
-		t.Fatal("ordinary source passed the new-source exception")
+	if err := preparedRevisionError(model, []battlemap.Model{old}); err != nil {
+		t.Fatal(err)
 	}
+	model.MountDepth += .1
+	if preparedRevisionError(model, []battlemap.Model{old}) == nil {
+		t.Fatal("changed datum accepted")
+	}
+	model = old
+	model.ID = "different"
+	if preparedRevisionError(model, []battlemap.Model{old}) == nil {
+		t.Fatal("new UUID accepted")
+	}
+	model = old
 	model.Assets = maps.Clone(old.Assets)
 	asset := model.Assets["source"]
 	asset.SHA256 = strings.Repeat("a", 64)
 	model.Assets["source"] = asset
-	if preparedNewSourceError(model, nil) == nil || preparedRevisionError(model, []battlemap.Model{old}) == nil {
-		t.Fatal("source replacement passed without explicit comparison mode and registry")
-	}
-	if err := preparedNewSourceError(model, []battlemap.Model{old}); err != nil {
-		t.Fatal(err)
-	}
-	model.Version = old.Version
-	if preparedNewSourceError(model, []battlemap.Model{old}) == nil {
-		t.Fatal("old version reused for a different source")
+	if preparedNewSourceError(model, []battlemap.Model{old}) != nil || preparedNewSourceError(model, nil) == nil {
+		t.Fatal("new source guard")
 	}
 }

@@ -36,7 +36,7 @@ for (const model of models) {
   Object.assign(model, live);
   report.published = {
     id: live.id,
-    version: live.version,
+
     definitionId: live.definitionId,
     groupCode: live.code,
     verifiedAt: new Date().toISOString(),
@@ -47,7 +47,7 @@ for (const model of models) {
   Object.assign(entry, {
     status: "published",
     id: live.id,
-    version: live.version,
+
     width: live.width,
     height: live.height,
     renderBytes: live.assets.render.size,

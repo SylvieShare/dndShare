@@ -110,7 +110,7 @@ test("embedded light badge marks only lit variants and grouped objects place the
     )
     .toBeTruthy();
 });
-test("catalogue ID is stable while versionId is an immutable UUID and group code edits persist", async ({
+test("catalogue ID is stable while uuid is an stable UUID and group code edits persist", async ({
   page,
 }) => {
   await ready(page);
@@ -118,7 +118,7 @@ test("catalogue ID is stable while versionId is an immutable UUID and group code
     async () => await (await fetch("/api/maps/models")).json(),
   );
   expect(models.find((m) => m.id === "LC-007")).toMatchObject({
-    versionId: "22222222-2222-4222-8222-222222222222",
+    uuid: "22222222-2222-4222-8222-222222222222",
     code: "LC-ground",
   });
   await page
@@ -136,7 +136,7 @@ test("catalogue ID is stable while versionId is an immutable UUID and group code
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
   await expect(
-    reference.getByText("Параметры сохранены · версия 2", { exact: true }),
+    reference.getByText("Параметры сохранены", { exact: true }),
   ).toBeVisible();
   expect(await page.evaluate(() => window.lastModelSaved.code)).toBe(
     "LC-ground-special",

@@ -68,9 +68,5 @@ func (s *Server) toolRegisterMapPreview(r *http.Request, args map[string]json.Ra
 	if err = s.verifyMapAsset(r, asset.Key, asset); err != nil {
 		return nil, err
 	}
-	revisionID, err := newUUID()
-	if err != nil {
-		return nil, err
-	}
-	return s.store.ReviseMapModelPreview(r.Context(), id, sha, revisionID, asset)
+	return s.store.UpdateMapModelPreview(r.Context(), id, sha, asset)
 }

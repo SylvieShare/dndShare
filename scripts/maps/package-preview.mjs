@@ -1,7 +1,8 @@
+import { currentModel } from "./current_model.mjs";
 // Publish a preview-only revision, reusing all verified geometry resources.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { transparentPreview } from "./preview_image.mjs";
 const argument = (name) =>
   process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -25,7 +26,7 @@ const variants = catalogue.filter(
 );
 if (!variants.length || new Set(variants.map((m) => m.sourceName)).size !== 1)
   throw new Error("Select exactly one registered source variant");
-const original = variants.sort((a, b) => b.version - a.version)[0];
+const original = variants[0];
 const checksum = (bytes) => createHash("sha256").update(bytes).digest("hex");
 if (checksum(await fs.readFile(reference)) !== original.assets.render.sha256)
   throw new Error(
@@ -40,14 +41,11 @@ const bytes = image.bytes;
 const sha256 = checksum(bytes),
   fileName = sha256 + ".webp";
 await fs.writeFile(path.join(output, fileName), bytes);
-const model = structuredClone(original);
-model.id = randomUUID();
-model.version =
-  Math.max(
-    ...catalogue
-      .filter((m) => m.collection === collection && m.sourceCode === code)
-      .map((m) => m.version),
-  ) + 1;
+const model = currentModel(
+  original,
+  catalogue,
+  structuredClone(original.assets),
+);
 model.assets.preview = {
   key: `map-models/${fileName}`,
   sha256,
@@ -66,7 +64,7 @@ await fs.writeFile(
       previousId: original.id,
       id: model.id,
       code,
-      version: model.version,
+
       width: metadata.width,
       height: metadata.height,
       transparentPixels: transparent,
@@ -80,7 +78,7 @@ await fs.writeFile(
 console.log(
   JSON.stringify({
     code,
-    version: model.version,
+
     bytes: bytes.length,
     hasAlpha: true,
     width: metadata.width,

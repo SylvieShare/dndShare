@@ -1,3 +1,4 @@
+import { currentModel } from "./current_model.mjs";
 // One reviewed tile; source bytes and derived assets stay in ignored models/.
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -206,29 +207,10 @@ report.runtimeBytes = [
       .map(([, asset]) => [asset.sha256, asset.size]),
   ).values(),
 ].reduce((sum, bytes) => sum + bytes, 0);
-const hash = createHash("sha256")
-  .update(
-    "majestic-individual-materials-v1:" + JSON.stringify({ model, assets }),
-  )
-  .digest();
-hash[6] = (hash[6] & 15) | 128;
-hash[8] = (hash[8] & 63) | 128;
-const hex = hash.subarray(0, 16).toString("hex"),
-  id = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 const registry = JSON.parse(
   await fs.readFile(path.join(base, "registry-snapshot.json"), "utf8"),
 );
-const registered = registry.find((m) => m.id === id);
-const version =
-  registered?.version ??
-  1 +
-    Math.max(
-      0,
-      ...registry
-        .filter((m) => m.collection === row.collection && m.sourceCode === code)
-        .map((m) => m.version),
-    );
-const prepared = { ...model, id, version, assets };
+const prepared = currentModel(model, registry, assets);
 report.model = prepared;
 await fs.writeFile(
   path.join(review, "report.json"),
@@ -238,4 +220,4 @@ await fs.writeFile(
   path.join(upload, "catalogue.json"),
   JSON.stringify([prepared], null, 2) + "\n",
 );
-console.log("MAJESTIC_MANIFEST", code, version, tiers);
+console.log("MAJESTIC_MANIFEST", code, prepared.id, tiers);

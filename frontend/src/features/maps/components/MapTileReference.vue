@@ -57,18 +57,14 @@
           <dd>{{ reference.base.sourceCode }}</dd>
           <dt>Исходное имя</dt>
           <dd>{{ reference.base.sourceName }}</dd>
-          <dt>Версия</dt>
-          <dd>{{ reference.base.version }}</dd>
           <dt>ID модели</dt>
           <dd>{{ reference.base.definitionId }}</dd>
-          <dt>ID версии</dt>
+          <dt>UUID</dt>
           <dd>{{ reference.base.id }}</dd>
         </dl>
       </DetailSection>
       <p class="map-hint">
-        Геометрия применяется к новым размещениям. Уже собранные карты сохраняют
-        прежние версии моделей. Переходы и встроенный свет общие для всех
-        версий.
+        Изменения модели применяются во всех картах и сессиях.
       </p>
       <fieldset :disabled="reference.saving">
         <MapModelFields :model="reference.draft" />

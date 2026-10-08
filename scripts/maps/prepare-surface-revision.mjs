@@ -25,7 +25,6 @@ export async function prepareSurfaceRevision({
   paintPixel,
   parts,
   updateMetallic = false,
-  colorReferenceVersion,
   textureDetail = "detailed",
   preserveORM = false,
   preserveTextureSize = false,
@@ -39,14 +38,12 @@ export async function prepareSurfaceRevision({
       "utf8",
     ),
   );
-  const model = models
-    .filter(
-      (m) =>
-        m.collection === "ultimate-dungeon" &&
-        m.sourceCode === code &&
-        (sourceName === undefined || m.sourceName === sourceName),
-    )
-    .sort((a, b) => b.version - a.version)[0];
+  const model = models.filter(
+    (m) =>
+      m.collection === "ultimate-dungeon" &&
+      m.sourceCode === code &&
+      (sourceName === undefined || m.sourceName === sourceName),
+  )[0];
   if (!model) throw new Error(code + " not registered");
   const suffix =
     sourceName === undefined
@@ -55,7 +52,7 @@ export async function prepareSurfaceRevision({
   const directory = path.join(
     base,
     folder,
-    code + suffix + "__" + model.version,
+    code + suffix + "__" + model.assets.render.sha256.slice(0, 12),
   );
   await fs.mkdir(directory, { recursive: true });
   await fs.rm(path.join(directory, "preview.png"), { force: true });
@@ -65,22 +62,7 @@ export async function prepareSurfaceRevision({
     tiers: {},
     ...(weightBudget ? { weightBudget } : {}),
   };
-  const colorReference =
-    colorReferenceVersion === undefined
-      ? model
-      : models.find(
-          (m) =>
-            m.collection === model.collection &&
-            m.sourceCode === code &&
-            m.sourceName === model.sourceName &&
-            m.version === colorReferenceVersion,
-        );
-  if (
-    !colorReference ||
-    colorReference.assets.source.sha256 !== model.assets.source.sha256
-  )
-    throw new Error("Invalid colour reference");
-  report.colorReferenceVersion = colorReference.version;
+  const colorReference = model;
   async function original(asset) {
     return localModelAsset(asset);
   }

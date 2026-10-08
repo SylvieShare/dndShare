@@ -24,15 +24,13 @@ assert.deepEqual(
   local,
   "Registered metadata differs from reviewed packet",
 );
-const latest = remote
-  .filter(
-    (m) =>
-      m.collection === local.collection &&
-      m.sourceCode === code &&
-      m.sourceName === local.sourceName,
-  )
-  .sort((a, b) => b.version - a.version)[0];
-assert.equal(latest.id, local.id, "Reviewed version is not current");
+const latest = remote.filter(
+  (m) =>
+    m.collection === local.collection &&
+    m.sourceCode === code &&
+    m.sourceName === local.sourceName,
+)[0];
+assert.equal(latest.id, local.id, "Reviewed model is not current");
 assert.equal(latest.textureDetail, "detailed");
 assert.deepEqual(Object.keys(latest.assets).sort(), [
   "lod",
@@ -52,4 +50,10 @@ await fs.writeFile(
   { mode: 0o600 },
 );
 await fs.rename(file + ".next", file);
-console.log("VERIFIED", code, latest.version, latest.id, "five resources");
+console.log(
+  "VERIFIED",
+  code,
+  latest.assets.render.sha256.slice(0, 12),
+  latest.id,
+  "five resources",
+);

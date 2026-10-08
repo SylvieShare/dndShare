@@ -11,9 +11,9 @@ if (!spec)
   throw new Error("One individually reviewed Lost Cave recipe required");
 const review = reviewCollection("lost-cave"),
   registry = JSON.parse(await fs.readFile(review.snapshot, "utf8")),
-  model = registry
-    .filter((m) => m.sourceCode === code && m.sourceName === spec.sourceName)
-    .sort((a, b) => b.version - a.version)[0];
+  model = registry.filter(
+    (m) => m.sourceCode === code && m.sourceName === spec.sourceName,
+  )[0];
 if (!model || model.textureDetail === "detailed")
   throw new Error("Missing or already reviewed model");
 if (!spec.groupCode || model.code !== spec.groupCode)
@@ -40,7 +40,7 @@ const corrected = correctedCaveModel(
 const directory = path.join(
   review.detail,
   code,
-  `${code}__${spec.sourceName.replace(/[^a-z0-9]+/gi, "_")}__${model.version}`,
+  `${code}__${spec.sourceName.replace(/[^a-z0-9]+/gi, "_")}__${model.assets.render.sha256.slice(0, 12)}`,
 );
 await fs.mkdir(directory, { recursive: true });
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json"),

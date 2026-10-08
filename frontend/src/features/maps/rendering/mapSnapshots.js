@@ -7,22 +7,28 @@ let running = false,
   renderer,
   host,
   idle;
-export async function requestMapSnapshot(document, signal) {
-  const catalogue = await getMapModels();
+export async function requestMapSnapshot(document, signal, options = {}) {
+  const catalogue = options.catalogue || (await getMapModels());
   const ids = new Set([
     ...document.tiles.map((t) => t.modelId),
     ...document.objects.map((o) => o.modelId).filter(Boolean),
   ]);
   const scene = JSON.parse(JSON.stringify(document));
   delete scene.tags;
-  const data = JSON.stringify([scene, catalogue.filter((m) => ids.has(m.id))]);
-  const hash = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(data),
-  );
-  const key = [...new Uint8Array(hash)]
-    .map((n) => n.toString(16).padStart(2, "0"))
-    .join("");
+  let key = options.key;
+  if (!key) {
+    const data = JSON.stringify([
+      scene,
+      catalogue.filter((m) => ids.has(m.id)),
+    ]);
+    const hash = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(data),
+    );
+    key = [...new Uint8Array(hash)]
+      .map((n) => n.toString(16).padStart(2, "0"))
+      .join("");
+  }
   if (signal?.aborted) throw new DOMException("Cancelled", "AbortError");
   if (cache.has(key)) return cache.get(key);
   return new Promise((resolve, reject) => {

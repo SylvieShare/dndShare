@@ -33,11 +33,14 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, постоянный id, code/name, UUID versionId, behaviour (revision/defaultLights/transitions), textureDetail (basic/detailed) используемой визуальной версии и renderUrl/lodUrl/shadowUrl/previewUrl |
-| `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/versionId, редактируемый code и необязательный behaviour → новая версия с новым UUID; поведение логической модели сохраняется в той же транзакции; устаревшая версия/ревизия получает 409 |
+| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl |
+| `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/uuid, редактируемый code и необязательный behaviour → обновление текущей модели с прежним UUID во всех картах; поведение сохраняется в той же транзакции; устаревшая behaviour.revision получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | ADMIN: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |
 | `POST /api/maps` | Создать `{name,document}` |
+| `GET /api/maps/{mapId}/preview-context` | ADMIN: свой/системный документ, актуальные используемые модели и SHA-256 подписи сцены |
+| `POST /api/maps/{mapId}/preview?signature=...` | ADMIN: WebP 64–1024 px, до 1 МБ → сохранённый в S3 снимок; устаревшая сцена получает 409 |
+| `GET /api/maps/{mapId}/preview?signature=...` | ADMIN: сохранённый WebP из S3; проверка владельца и подписи, immutable cache |
 | `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
 | `DELETE /api/maps/{mapId}` | Удалить свою карту; копии сессий сохраняются |
 | `GET /api/sessions/{uuid}/maps` | Владелец: `{maps,display}` |
@@ -54,13 +57,13 @@
 Документ имеет version=2. Плитка: `{id,modelId,x,y,rotation,level}`;
 координаты целые, rotation=0/90/180/270, level=0–15. Верхние уровни требуют
 опорных слотов под всей площадью, с учётом поворота и высоты. `modelId` ссылается
-на неизменяемую версию каталога; произвольные URL моделей не принимаются.
+на текущую модель каталога; произвольные URL моделей не принимаются.
 До 4096 плиток; сервер проверяет существование, размеры и перекрытия.
 Документ хранит `lightingEnabled` (первоначально false), `sun` и `lights`;
 каждый источник содержит `showMarker`, управляющий сферой редактора независимо
 от включения самого света. Режим и параметры сохраняются в сессионной копии.
 
-Карта содержит `id,name,document,revision,changedAt,system`. Сессионная копия
+Карта содержит `id,name,document,revision,changedAt,system,previewSignature` и `previewUrl`, если сохранён актуальный снимок. Сессионная копия
 добавляет `state`. Единственный формат документа `tiles` описан
 в [картах](features/maps.md). Состояние содержит туман, видимость зон,
 состояния объектов и жетоны; камера — `x,y,cellPixels,rotation,fit`.

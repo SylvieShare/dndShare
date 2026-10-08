@@ -1,8 +1,8 @@
-import { latestModelVersions } from "./modelVersions";
+import { visibleModels } from "./visibleModels";
 
 export function modelCollections(catalogue) {
   const packs = new Map();
-  for (const model of latestModelVersions(catalogue)) {
+  for (const model of visibleModels(catalogue)) {
     if (model.tileType === "object") continue;
     const pack = packs.get(model.collection) || {
       id: model.collection,

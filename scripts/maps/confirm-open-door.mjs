@@ -17,12 +17,10 @@ const base = path.resolve(
 assert.equal(packet.length, 1);
 const model = packet[0],
   rows = JSON.parse(await fs.readFile(snapshot, "utf8")),
-  latest = rows
-    .filter(
-      (m) =>
-        m.collection === model.collection && m.sourceCode === model.sourceCode,
-    )
-    .sort((a, b) => b.version - a.version)[0];
+  latest = rows.filter(
+    (m) =>
+      m.collection === model.collection && m.sourceCode === model.sourceCode,
+  )[0];
 assert.deepEqual(
   latest,
   model,
@@ -41,7 +39,7 @@ assert.deepEqual(
 );
 report.publication = {
   id: model.id,
-  version: model.version,
+
   verifiedAt: new Date().toISOString(),
 };
 await fs.writeFile(
@@ -61,6 +59,6 @@ console.log(
   "OPEN_DOOR_CONFIRMED",
   model.sourceCode,
   model.id,
-  model.version,
+  model.assets.render.sha256.slice(0, 12),
   "five resources; closed parent retained",
 );

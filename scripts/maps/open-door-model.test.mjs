@@ -31,7 +31,7 @@ test("open variant preserves mounting and leaves the central passage clear", () 
   };
   const m = openDoorModel(p, specs["UD-010"]);
   assert.equal(m.sourceCode, "UD-010-OPEN");
-  assert.equal(m.version, 1);
+  assert.equal(m.version, undefined);
   assert.equal(p.id, "original");
   assert.equal(p.assets.source.sha256, "original");
   for (const k of [

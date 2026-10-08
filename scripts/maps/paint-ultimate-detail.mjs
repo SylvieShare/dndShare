@@ -62,14 +62,12 @@ const registry = JSON.parse(
     "utf8",
   ),
 );
-const versions = registry
-  .filter(
-    (m) =>
-      m.collection === "ultimate-dungeon" &&
-      m.sourceCode === code &&
-      m.sourceName === spec.sourceName,
-  )
-  .sort((a, b) => b.version - a.version);
+const versions = registry.filter(
+  (m) =>
+    m.collection === "ultimate-dungeon" &&
+    m.sourceCode === code &&
+    m.sourceName === spec.sourceName,
+);
 const model = versions[0];
 if (model.textureDetail === "detailed" && !process.argv.includes("--force"))
   throw new Error("Already detailed: " + code);
@@ -132,7 +130,6 @@ await prepareSurfaceRevision({
   },
   parts,
   updateMetallic: true,
-  colorReferenceVersion: reference.version,
   sampleAO: true,
   preserveTextureSize: spec.preserveTextureSize ?? false,
   weightBudget: spec.weightBudget,

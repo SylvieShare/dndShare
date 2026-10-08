@@ -16,26 +16,21 @@ func preparedGeometryCorrectionError(model battlemap.Model, previous []battlemap
 		return errors.New("geometry correction requires a concrete recorded reason")
 	}
 	var original *battlemap.Model
-	maximum := 0
 	for i := range previous {
 		old := &previous[i]
-		if old.Collection != model.Collection || old.SourceCode != model.SourceCode {
-			continue
-		}
-		maximum = max(maximum, old.Version)
-		if old.SourceName == model.SourceName && old.Assets["source"] == model.Assets["source"] &&
-			(original == nil || old.Version > original.Version) {
+		if old.ID == model.ID && old.Assets["source"] == model.Assets["source"] {
 			original = old
+			break
 		}
 	}
-	if original == nil || model.Version <= maximum || model.ID == original.ID {
-		return errors.New("geometry correction requires the latest original source, a new UUID and a higher version")
+	if original == nil {
+		return errors.New("geometry correction requires current source and stable UUID")
 	}
 	if model.DefinitionID == "" || model.DefinitionID != original.DefinitionID ||
 		model.Code != original.Code || model.CollectionName != original.CollectionName || model.Hidden != original.Hidden {
 		return errors.New("geometry correction must preserve logical identity, group, collection and visibility")
 	}
-	if battlemap.VisualRevision(*original, model) {
+	if preparedRevisionError(model, []battlemap.Model{*original}) == nil {
 		return errors.New("compatible visuals must use ordinary revision comparison")
 	}
 	for _, kind := range []string{"render", "lod", "shadow"} {
@@ -50,8 +45,6 @@ func TestPreparedGeometryCorrectionRetainsOriginalAndDoesNotReplacePlacedVersion
 	old := battlemap.InitialCatalogue()[0]
 	old.DefinitionID, old.Code = old.SourceCode, "LC-floor"
 	revision := old
-	revision.ID = "01234567-89ab-4cde-8f01-23456789abcd"
-	revision.Version++
 	revision.MaxHeight += .4
 	revision.Assets = maps.Clone(old.Assets)
 	for _, kind := range []string{"render", "lod", "shadow"} {
@@ -66,12 +59,8 @@ func TestPreparedGeometryCorrectionRetainsOriginalAndDoesNotReplacePlacedVersion
 	if err := preparedGeometryCorrectionError(revision, []battlemap.Model{old}, reason); err != nil {
 		t.Fatal(err)
 	}
-	if battlemap.LatestVisualModels([]battlemap.Model{old, revision})[old.ID].ID != old.ID {
-		t.Fatal("old placed version inherited incompatible geometry")
-	}
 	for _, mutate := range []func(*battlemap.Model){
-		func(m *battlemap.Model) { m.ID = old.ID },
-		func(m *battlemap.Model) { m.Version = old.Version },
+		func(m *battlemap.Model) { m.ID = "different" },
 		func(m *battlemap.Model) { m.DefinitionID = "OTHER-001" },
 		func(m *battlemap.Model) { m.Code = "LC-other" },
 		func(m *battlemap.Model) { m.MaxHeight = old.MaxHeight },

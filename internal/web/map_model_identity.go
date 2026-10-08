@@ -2,7 +2,7 @@ package web
 
 import "encoding/json"
 
-// Catalogue identity is logical; immutable asset UUIDs are explicitly versionId.
+// Logical identity and its stable internal UUID are independent of asset updates.
 func (m mapModelView) MarshalJSON() ([]byte, error) {
 	type wire mapModelView
 	data, err := json.Marshal(wire(m))
@@ -14,7 +14,7 @@ func (m mapModelView) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	fields["id"], _ = json.Marshal(m.DefinitionID)
-	fields["versionId"], _ = json.Marshal(m.ID)
+	fields["uuid"], _ = json.Marshal(m.ID)
 	delete(fields, "definitionId")
 	return json.Marshal(fields)
 }

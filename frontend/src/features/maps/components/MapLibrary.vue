@@ -49,10 +49,9 @@
           :aria-label="`${picker ? 'Выбрать' : 'Открыть'} карту ${map.name}`"
           @click="open(map)"
         >
-          <MapThumbnail :document="map.document" /><span
-            class="map-library-name"
-            >{{ map.name }}</span
-          >
+          <MapThumbnail :map="map" /><span class="map-library-name">{{
+            map.name
+          }}</span>
         </button>
         <span class="map-library-meta"
           >3D-карта · {{ map.document.width }} × {{ map.document.height }} ·

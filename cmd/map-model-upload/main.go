@@ -16,6 +16,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"sync"
 	"syscall"
@@ -113,7 +114,7 @@ func main() {
 		if err = os.WriteFile(*snapshot, append(raw, '\n'), 0600); err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("saved %d registered model versions", len(existing))
+		log.Printf("saved %d current models", len(existing))
 		return
 	}
 	raw, err := os.ReadFile(filepath.Join(*dir, "catalogue.json"))
@@ -123,10 +124,10 @@ func main() {
 	if err = json.Unmarshal(raw, &models); err != nil {
 		log.Fatal(err)
 	}
-	known := map[string]bool{}
+	known := map[string]battlemap.Model{}
 	knownAssets := map[battlemap.ModelAsset]bool{}
 	for _, model := range existing {
-		known[model.ID] = true
+		known[model.ID] = model
 		for _, asset := range model.Assets {
 			knownAssets[asset] = true
 		}
@@ -157,13 +158,13 @@ func main() {
 					stop()
 					return
 				}
-				log.Printf("registered %s %s version %d", model.Collection, model.SourceCode, model.Version)
+				log.Printf("published %s %s %s", model.Collection, model.SourceCode, model.ID)
 			}
 		}()
 	}
 sendLoop:
 	for _, model := range models {
-		if known[model.ID] {
+		if old, exists := known[model.ID]; exists && reflect.DeepEqual(old, model) {
 			continue
 		}
 		select {

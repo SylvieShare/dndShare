@@ -18,8 +18,7 @@ const noUpload = process.argv.includes("--no-upload");
 const latest = new Map();
 for (const m of registry.filter((m) => m.collection === "ultimate-dungeon")) {
   const key = m.sourceCode + ":" + m.sourceName;
-  if (!latest.has(key) || latest.get(key).version < m.version)
-    latest.set(key, m);
+  if (!latest.has(key)) latest.set(key, m);
 }
 await fs.mkdir(path.dirname(progressFile), { recursive: true });
 async function run(command, args, log) {
@@ -134,7 +133,7 @@ for (const [key, m] of [...latest].sort(([a], [b]) => a.localeCompare(b))) {
   progress[key] = {
     status: "published",
     id: prepared[0].id,
-    version: prepared[0].version,
+
     sourceId: m.id,
     pixels: report.tiers.render.surfacePixels.joint,
     textureDetail: m.textureDetail,
@@ -145,7 +144,7 @@ for (const [key, m] of [...latest].sort(([a], [b]) => a.localeCompare(b))) {
     "FLOOR_PUBLISHED",
     completed,
     m.sourceCode,
-    prepared[0].version,
+    prepared[0].assets.render.sha256.slice(0, 12),
     flushTime(),
   );
 }

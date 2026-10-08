@@ -13,7 +13,7 @@ const catalogue = await mapTool("map_tile_models_list");
 const latest = new Map();
 for (const m of catalogue) {
   const old = latest.get(m.definitionId);
-  if (!old || old.version < m.version) latest.set(m.definitionId, m);
+  if (!old) latest.set(m.definitionId, m);
 }
 const records = JSON.parse(
   await fs
@@ -97,7 +97,7 @@ async function worker() {
       records.push({
         id: saved.id,
         definitionId: saved.definitionId,
-        version: saved.version,
+
         previousId: current.id,
         asset: saved.assets.preview,
       });
@@ -107,11 +107,10 @@ async function worker() {
           published: records.length,
           total: entries.length,
           code: saved.sourceCode,
-          version: saved.version,
         }),
       );
     } catch (error) {
-      if (error.message.includes("revision conflict"))
+      if (error.message.includes("update conflict"))
         changed.push({
           definitionId: current.definitionId,
           id: current.id,
