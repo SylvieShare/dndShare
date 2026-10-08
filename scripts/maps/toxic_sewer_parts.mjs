@@ -3,11 +3,22 @@
 import { finishBone } from "./bone_finish.mjs";
 import { finishWood } from "./organic_finish.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
-import { addedSewerSurface } from "./toxic_sewer_reference.mjs";
+import {
+  addedSewerSurface,
+  referenceSample,
+} from "./toxic_sewer_reference.mjs";
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 export function inSewerRegion(p, region) {
   if (region.min && p.some((v, i) => v < region.min[i])) return false;
   if (region.max && p.some((v, i) => v > region.max[i])) return false;
+  if (region.arch) {
+    const x = p[0] - region.arch.centreX;
+    if (
+      Math.abs(x) > region.arch.radius ||
+      p[2] > region.arch.baseZ + Math.sqrt(region.arch.radius ** 2 - x * x)
+    )
+      return false;
+  }
   if (
     region.ellipsoid &&
     p.reduce(
@@ -40,7 +51,12 @@ export function sewerPartAt(p, spec, reference, shift = [0, 0]) {
     spec.regions?.find(
       (r) =>
         inSewerRegion(local, r) &&
-        (!r.added || addedSewerSurface(local, reference)),
+        (!r.added || addedSewerSurface(local, reference)) &&
+        (!r.eroded ||
+          (reference &&
+            referenceSample(reference.floor, local[0], local[1]) !== null &&
+            local[2] <
+              referenceSample(reference.floor, local[0], local[1]) - r.eroded)),
     ) ?? { part: "stone" }
   );
 }
@@ -107,11 +123,14 @@ export function finishSewerPart(region, p, n, ao) {
   return {
     part: region.part,
     rgb: colours.map((v) => Math.round(clamp(v * factor, 8, 245))),
-    roughness: liquid
-      ? 0.24 + 0.08 * grain
-      : metal
-        ? 0.52 + 0.12 * grain
-        : 0.84 + 0.06 * grain,
-    metallic: metal ? (region.part === "gold" ? 0.8 : 0.68) : 0,
+    roughness:
+      region.roughness ??
+      (liquid
+        ? 0.24 + 0.08 * grain
+        : metal
+          ? 0.52 + 0.12 * grain
+          : 0.84 + 0.06 * grain),
+    metallic:
+      region.metallic ?? (metal ? (region.part === "gold" ? 0.8 : 0.68) : 0),
   };
 }

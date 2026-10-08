@@ -88,9 +88,9 @@ def bake_tier(report, directory, tier):
         for vertex in mount.data.vertices:
             if vertex.co.z < -.1 or vertex.co.z > datum+.1:
                 raise ValueError('Mount decimation moved a cut plane more than0.1 mm')
-            if abs(vertex.co.z) < .05:
+            if vertex.co.z < .05:
                 vertex.co.z = 0
-            elif abs(vertex.co.z-datum) < .05:
+            elif vertex.co.z > datum-.05:
                 vertex.co.z = datum
         shade(mount)
         mat = bpy.data.materials.new('Simple insertion pegs — source opening')
@@ -102,6 +102,23 @@ def bake_tier(report, directory, tier):
         mount.data.materials.append(mat)
         for face in mount.data.polygons:
             face.material_index = 0
+        inner_colour = report['materialSpec'].get('mountInnerColor')
+        if inner_colour:
+            inner = bpy.data.materials.new('Simple insertion pegs — exposed pit rock')
+            inner.use_nodes = True
+            shader = inner.node_tree.nodes.get('Principled BSDF')
+            def linear(v):
+                s = v/255
+                return s/12.92 if s <= .04045 else ((s+.055)/1.055)**2.4
+            shader.inputs['Base Color'].default_value = (*[linear(v) for v in inner_colour], 1)
+            shader.inputs['Roughness'].default_value = .89
+            mount.data.materials.append(inner)
+            for face in mount.data.polygons:
+                centre = face.center
+                x = centre.x-report['sourceShiftMM'][0]
+                y = centre.y-report['sourceShiftMM'][1]
+                if x*face.normal.x+y*face.normal.y < -.1:
+                    face.material_index = 1
         mount.matrix_world = Matrix.Scale(1/35, 4) @ mount.matrix_world
         mounting = [mount]
         report['mountingCorrection'] = {'method': 'Source annular mounting geometry',

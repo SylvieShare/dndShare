@@ -1,0 +1,40 @@
+{
+  "sourceName": "Ground 1",
+  "material": "sewer-components",
+  "referencePage": 4,
+  "renderTriangles": 22000,
+  "lodTriangles": 6500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.6, 1.6],
+    "lodMiB": [0.2, 0.65],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell mixed cobbles and exposed rubble/dirt patch; preserve intact green perimeter, recesses and broken edges."
+  },
+  "regions": [
+    {
+      "part": "rubble",
+      "eroded": 0.18,
+      "min": [-12.5, -12.5, 13.1],
+      "max": [12.5, 12.5, 14.15],
+      "ellipsoid": {
+        "centre": [-1, -1, 13.65],
+        "radius": [9.4, 9.0, 1.0]
+      }
+    }
+  ],
+  "measurements": {
+    "cutHeightMM": 4.6,
+    "sectionYMM": 0,
+    "sectionsZMM": [13.5, 14.3],
+    "centreSurfaceBandMM": [13.1, 14.15]
+  },
+  "notes": "Reddish broken surface selected by deficit from measured bare cobbles, not a painted circular footprint. Green intact cobbles and outer ring preserved.",
+  "referenceCode": "TS-019"
+}

@@ -1,0 +1,58 @@
+{
+  "sourceName": "Door 1",
+  "material": "sewer-components",
+  "referencePage": 3,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.35, 0.9],
+    "shadowKiB": [25, 100],
+    "previewKiB": [10, 60],
+    "basis": "Tall arched barred door: preserve narrow rods, multiple holes, lock and painted metal frame."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "ellipsoid": {
+        "centre": [-12.2, 13.2, 32.6],
+        "radius": [4.6, 3.1, 4.5]
+      }
+    },
+    {
+      "part": "copper",
+      "min": [-13.6, 10.2, 18.5],
+      "max": [13.3, 16.9, 64.0],
+      "arch": {
+        "centreX": 0,
+        "baseZ": 49.5,
+        "radius": 13.5
+      }
+    },
+    {
+      "part": "iron",
+      "color": [119, 132, 72],
+      "roughness": 0.72,
+      "metallic": 0.25,
+      "min": [-18, 9.8, 17.9],
+      "max": [18, 18.0, 67.0]
+    }
+  ],
+  "notes": "Painted green metal arch around ochre metal bars and lock; model openings stay real geometry, not texture masks. Check arch boundary on both sides.",
+  "measurements": {
+    "sectionsZMM": [20, 30, 40],
+    "sectionYMM": 14,
+    "innerArch": {
+      "centreX": 0,
+      "baseZ": 49.5,
+      "radius": 13.5
+    },
+    "frameMaxZMM": 66.386
+  }
+}

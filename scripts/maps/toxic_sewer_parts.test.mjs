@@ -66,3 +66,16 @@ test("specific hardware overrides timber and liquid never gets metallic stone ch
   const iron = finishSewerPart({ part: "iron" }, [0, 0, 19], [1, 0, 0], 230);
   assert.ok(iron.metallic > 0.5);
 });
+test("damaged floor mask follows the measured height deficit and keeps intact cobbles", () => {
+  const reference = {
+    floor: { low: [-1, -1], step: 1, size: [3, 3], values: Array(9).fill(14) },
+  };
+  const spec = { regions: [{ part: "rubble", eroded: 0.2 }] };
+  assert.equal(sewerPartAt([0, 0, 13.5], spec, reference).part, "rubble");
+  assert.equal(sewerPartAt([0, 0, 13.9], spec, reference).part, "stone");
+  assert.equal(sewerPartAt([2, 0, 13], spec, reference).part, "stone");
+  assert.equal(
+    sewerPartAt([5, 6, 13.5], spec, reference, [5, 6]).part,
+    "rubble",
+  );
+});

@@ -1,0 +1,66 @@
+{
+  "sourceName": "Door Pipe",
+  "material": "sewer-components",
+  "referencePage": 3,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.35, 0.9],
+    "shadowKiB": [25, 100],
+    "previewKiB": [10, 60],
+    "basis": "Open pipe portal with thick collars and wood floor: preserve the arch opening, tube profile and separate timber boards."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [-13.9, 11.55, 14.5],
+        [-13.9, 11.55, 21.0]
+      ],
+      "radius": 3.45,
+      "min": [-17.5, 7.7, 14.3],
+      "max": [-10.3, 15.5, 22.0]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [13.8, 11.55, 14.5],
+        [13.8, 11.55, 21.0]
+      ],
+      "radius": 3.45,
+      "min": [10.200000000000001, 7.7, 14.3],
+      "max": [17.400000000000002, 15.5, 22.0]
+    },
+    {
+      "part": "copper",
+      "min": [-18, 7.7, 17.6],
+      "max": [18, 15.5, 61.23310089111328]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "min": [-16.4, -16.2, 14.2],
+      "max": [16.4, 15.0, 17.5],
+      "axis": "x"
+    }
+  ],
+  "notes": "Entire tubular portal copper with independent low wood planks; stone perimeter stays green. Check lower collar/plank intersection and both sides.",
+  "measurements": {
+    "sectionsZMM": [16, 25, 40],
+    "sectionYMM": 14,
+    "pipeFeetCentresXYMM": [
+      [-13.9, 11.6],
+      [13.8, 11.6]
+    ],
+    "pipeMaxZMM": 59.2335,
+    "pipeFullMaxZMM": 60.98310089111328
+  },
+  "referenceCode": "TS-019"
+}

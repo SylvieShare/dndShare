@@ -1,0 +1,30 @@
+{
+  "sourceName": "Ground Poison Trap",
+  "material": "sewer-components",
+  "referencePage": 4,
+  "renderTriangles": 26000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell poison tendrils and bubbles on cobbles: maintain raised liquid silhouette and floor separation."
+  },
+  "referenceCode": "TS-019",
+  "regions": [
+    {
+      "part": "toxic",
+      "added": true,
+      "min": [-17.6, -17.6, 13.3],
+      "max": [17.6, 17.6, 40]
+    }
+  ],
+  "notes": "Lime poison trap follows the added sculpt surface against measured Ground Basic; uncovered cobbles and sidewalls remain olive masonry."
+}

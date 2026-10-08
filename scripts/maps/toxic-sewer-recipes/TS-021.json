@@ -1,0 +1,43 @@
+{
+  "sourceName": "Ground 2",
+  "material": "sewer-components",
+  "referencePage": 4,
+  "renderTriangles": 22000,
+  "lodTriangles": 6500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.6, 1.6],
+    "lodMiB": [0.2, 0.65],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell mixed cobbles and exposed rubble/dirt patch; preserve intact green perimeter, recesses and broken edges."
+  },
+  "regions": [
+    {
+      "part": "rubble",
+      "eroded": 0.16,
+      "min": [-12.5, -12.5, 13.1],
+      "max": [12.5, 12.5, 14.15],
+      "ellipsoid": {
+        "centre": [0.5, -1.5, 13.65],
+        "radius": [11.5, 10.5, 1.0]
+      }
+    }
+  ],
+  "measurements": {
+    "cutHeightMM": 4.6,
+    "sectionYMM": 0,
+    "sectionsZMM": [13.5, 14.3],
+    "centralDamagedBoundsMM": [
+      [-11, -12],
+      [12, 9]
+    ]
+  },
+  "notes": "Larger damaged centre follows deficit from bare cobbles while preserving intact stones; no brown colour on perimeter or sidewalls.",
+  "referenceCode": "TS-019"
+}

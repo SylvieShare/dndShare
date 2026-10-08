@@ -1,0 +1,49 @@
+{
+  "sourceName": "Ground Hole",
+  "material": "sewer-components",
+  "referencePage": 4,
+  "renderTriangles": 24000,
+  "lodTriangles": 7000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.6, 1.6],
+    "lodMiB": [0.2, 0.65],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell deep pit: source annular mounting and clear central opening, detailed rim and inner rock."
+  },
+  "regions": [
+    {
+      "part": "rubble",
+      "eroded": 0.18,
+      "min": [-14, -14, 0],
+      "max": [14, 14, 14.0],
+      "ellipsoid": {
+        "centre": [0, 0, 5],
+        "radius": [13.5, 13.5, 30]
+      }
+    }
+  ],
+  "measurements": {
+    "cutHeightMM": 11.5,
+    "sectionYMM": 0,
+    "sectionsZMM": [5],
+    "notes": "Native pit continues below the crop plane; cropped body and mounting must retain its central opening."
+  },
+  "notes": "Brown broken stone and dirt follow depressed source surfaces inside the pit; intact green cobbles and outer walls remain green.",
+  "referenceCode": "TS-019",
+  "mounting": "source-opening",
+  "renderMountTriangles": 1500,
+  "lodMountTriangles": 800,
+  "openingProbesMM": [
+    [0, 0],
+    [1, 1]
+  ],
+  "mountingCorrectionReason": "Accepted solid insertion proxies obstruct the cropped pit. Preserve the annular source section at the accepted datum, footprint and mount depth.",
+  "mountInnerColor": [137, 108, 62]
+}
