@@ -1,0 +1,89 @@
+{
+  "sourceName": "Water Tentacles",
+  "material": "sewer-components",
+  "referencePage": 13,
+  "renderTriangles": 40000,
+  "lodTriangles": 12000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 11.0,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.3, 1.0],
+    "shadowKiB": [30, 90],
+    "previewKiB": [8, 45],
+    "basis": "One-cell water with four tall curved tentacles and sculpted suckers; preserve tip curves, skin relief and water/organic material separation."
+  },
+  "regions": [
+    {
+      "part": "tentacle",
+      "added": true,
+      "roughness": 0.62,
+      "min": [-15, 0, 11.6],
+      "max": [0, 15, 49],
+      "colorGradient": {
+        "startMM": 27,
+        "endMM": 44,
+        "from": [121, 130, 81],
+        "to": [200, 142, 149]
+      }
+    },
+    {
+      "part": "tentacle",
+      "added": true,
+      "roughness": 0.62,
+      "min": [0, 0, 11.6],
+      "max": [16, 16, 57],
+      "colorGradient": {
+        "startMM": 32,
+        "endMM": 53,
+        "from": [121, 130, 81],
+        "to": [194, 102, 155]
+      }
+    },
+    {
+      "part": "tentacle",
+      "added": true,
+      "roughness": 0.62,
+      "min": [-15, -17, 11.6],
+      "max": [0, 0, 36],
+      "colorGradient": {
+        "startMM": 21,
+        "endMM": 32,
+        "from": [121, 130, 81],
+        "to": [207, 118, 180]
+      }
+    },
+    {
+      "part": "tentacle",
+      "added": true,
+      "roughness": 0.62,
+      "min": [0, -14, 11.6],
+      "max": [12, 0, 38],
+      "colorGradient": {
+        "startMM": 23,
+        "endMM": 33,
+        "from": [121, 130, 81],
+        "to": [207, 134, 164]
+      }
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 10.5]
+    },
+    {
+      "part": "toxic",
+      "color": [104, 147, 28],
+      "roughness": 0.88
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12, 18, 28, 40, 50],
+    "tentacleTopMM": [47.5, 56.5, 35.07, 36.01]
+  },
+  "notes": "Four fleshy tentacles in glossy poison water: grey-green lower roots fade to independently measured pink/peach/purple tips following the author palette. Bounded added-surface regions against Water keep nearby waves lime; each tip height has its own gradient.",
+  "referenceCode": "TS-068"
+}

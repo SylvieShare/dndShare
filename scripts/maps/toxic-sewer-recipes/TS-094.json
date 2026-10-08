@@ -1,0 +1,42 @@
+{
+  "sourceName": "Ground Tentacles",
+  "material": "sewer-components",
+  "referencePage": 13,
+  "renderTriangles": 38000,
+  "lodTriangles": 12000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.3, 1.0],
+    "shadowKiB": [30, 90],
+    "previewKiB": [8, 45],
+    "basis": "One-cell cobbled floor with multiple tall green tentacles and smaller shoots; preserve root/stone separation, curved tips and sucker relief."
+  },
+  "referenceCode": "TS-019",
+  "regions": [
+    {
+      "part": "tentacle",
+      "added": true,
+      "roughness": 0.6,
+      "min": [-15, -16, 14.3],
+      "max": [15.5, 15, 47],
+      "colorGradient": {
+        "startMM": 16,
+        "endMM": 28,
+        "from": [104, 128, 49],
+        "to": [157, 194, 36]
+      }
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 25, 40],
+    "tipMaxMM": 46.506,
+    "floorExclusionMinZMM": 14.3
+  },
+  "notes": "Olive roots and brighter green tentacles emerge from green cobbled ground, following the author green palette. Measured Ground Basic excludes intact floor from organic material; curved tips, small emerging shoots and suckers remain detailed."
+}

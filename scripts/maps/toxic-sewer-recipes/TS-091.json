@@ -1,0 +1,44 @@
+{
+  "sourceName": "Column Broken",
+  "material": "sewer-components",
+  "referencePage": 12,
+  "renderTriangles": 36000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.9, 2.5],
+    "lodMiB": [0.3, 0.9],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "One-cell broken masonry column with a sloped rough fracture and stepped plinth; retain intact brick sides, detailed fracture silhouette and small chips."
+  },
+  "referenceCode": "TS-091",
+  "referenceFloorMaxZMM": 70,
+  "regions": [
+    {
+      "part": "rubble",
+      "ellipsoid": {
+        "centre": [-12.6, -2.7, 35],
+        "radius": [1.4, 1.4, 2.2]
+      },
+      "min": [-14, -4.2, 33.1]
+    },
+    {
+      "part": "rubble",
+      "topSurfaceMM": 1.0,
+      "min": [-12.2, -12.2, 36],
+      "max": [12.2, 12.2, 69]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 25, 35],
+    "fractureTopRangeMM": [34, 68.04],
+    "topHeightGridStepMM": 0.2
+  },
+  "notes": "Broken column: exposed fracture and its loose chip are brown rock, while intact vertical brick faces and stepped base stay olive green. Top mask follows the original source highest surface at each XY, rather than a flat height cut. Source top reference includes the whole column up to70mm. Upper plinth ledge is protected by the fracture mask minimum z36 and narrow column footprint; initial broad top mask incorrectly coloured that ledge."
+}

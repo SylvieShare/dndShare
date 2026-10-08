@@ -37,7 +37,7 @@ def projected_grid(triangles, axes, value_axis, low, high, step, maximum):
             'values': [round(float(v), 4) if np.isfinite(v) else None for v in result.ravel()]}
 
 
-def prepare(code, minimum_wall_y=8):
+def prepare(code, minimum_wall_y=8, maximum_floor_z=15):
     rows = json.loads((ROOT/'models/collections/manifest.json').read_text())
     row = next(r for r in rows if r['collection'] == 'toxic-sewer' and r['code'] == code)
     dtype = np.dtype([('normal', '<f4', (3,)), ('v', '<f4', (3, 3)), ('a', '<u2')])
@@ -47,10 +47,11 @@ def prepare(code, minimum_wall_y=8):
     normal = np.cross(triangles[:, 1]-triangles[:, 0], triangles[:, 2]-triangles[:, 0])
     normal /= np.maximum(np.linalg.norm(normal, axis=1)[:, None], 1e-12)
     centres = triangles.mean(1)
-    floor = triangles[(triangles[:, :, 2].max(1) < 15)&(normal[:, 2] > .1)]
+    floor = triangles[(triangles[:, :, 2].max(1) < maximum_floor_z)&(normal[:, 2] > .1)]
     wall = triangles[(centres[:, 2] > 14.25)&(centres[:, 1] > minimum_wall_y)&(normal[:, 1] < -.1)]
     low, high = row['min'][:2], row['max'][:2]
     result = {'code': code, 'sourceSHA256': row['sourceSHA256'], 'minimumWallYMM': minimum_wall_y,
+              'maximumFloorZMM': maximum_floor_z,
               'floor': projected_grid(floor, [0, 1], 2, low, high, .2, True),
               'wall': projected_grid(wall, [0, 2], 1, [low[0], 14.25],
                                      [high[0], row['max'][2]-row['cutHeight']], .2, False)}
@@ -65,5 +66,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--code', required=True)
     parser.add_argument('--minimum-wall-y', type=float, default=8)
+    parser.add_argument('--maximum-floor-z', type=float, default=15)
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
-    prepare(args.code, args.minimum_wall_y)
+    prepare(args.code, args.minimum_wall_y, args.maximum_floor_z)

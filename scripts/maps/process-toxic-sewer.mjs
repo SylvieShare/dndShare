@@ -187,7 +187,10 @@ if (mode !== "publish") {
   if (
     spec.referenceCode &&
     (!cachedReference ||
-      (cachedReference.minimumWallYMM ?? 8) !== (spec.referenceWallMinYMM ?? 8))
+      (cachedReference.minimumWallYMM ?? 8) !==
+        (spec.referenceWallMinYMM ?? 8) ||
+      (cachedReference.maximumFloorZMM ?? 15) !==
+        (spec.referenceFloorMaxZMM ?? 15))
   )
     blend(
       "toxic_sewer_reference.py",
@@ -196,6 +199,9 @@ if (mode !== "publish") {
         spec.referenceCode,
         ...(spec.referenceWallMinYMM !== undefined
           ? ["--minimum-wall-y", String(spec.referenceWallMinYMM)]
+          : []),
+        ...(spec.referenceFloorMaxZMM !== undefined
+          ? ["--maximum-floor-z", String(spec.referenceFloorMaxZMM)]
           : []),
       ],
       "reference",

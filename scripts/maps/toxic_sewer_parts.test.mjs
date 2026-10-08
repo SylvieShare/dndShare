@@ -79,3 +79,37 @@ test("damaged floor mask follows the measured height deficit and keeps intact co
     "rubble",
   );
 });
+test("exposed column top follows source height while leaving lower brick sides intact", () => {
+  const reference = {
+    floor: { low: [0, 0], step: 1, size: [2, 2], values: [40, 55, 42, 57] },
+  };
+  const spec = {
+    regions: [{ part: "rubble", topSurfaceMM: 0.7, min: [0, 0, 34] }],
+  };
+  assert.equal(sewerPartAt([0, 0, 39.5], spec, reference).part, "rubble");
+  assert.equal(sewerPartAt([1, 0, 54.6], spec, reference).part, "rubble");
+  assert.equal(sewerPartAt([1, 0, 40], spec, reference).part, "stone");
+  assert.equal(sewerPartAt([2, 0, 60], spec, reference).part, "stone");
+  assert.equal(
+    sewerPartAt([3, 4, 39.5], spec, reference, [3, 4]).part,
+    "rubble",
+  );
+});
+test("flesh gradient reaches each measured tip without changing its roughness or metal", () => {
+  const region = {
+    part: "tentacle",
+    roughness: 0.62,
+    colorGradient: {
+      startMM: 20,
+      endMM: 40,
+      from: [120, 130, 80],
+      to: [200, 110, 170],
+    },
+  };
+  const base = finishSewerPart(region, [0, 0, 20], [0, 0, 1], 240);
+  const tip = finishSewerPart(region, [0, 0, 40], [0, 0, 1], 240);
+  assert.ok(base.rgb[1] > base.rgb[2]);
+  assert.ok(tip.rgb[2] > tip.rgb[1]);
+  assert.equal(tip.roughness, base.roughness);
+  assert.equal(tip.metallic, 0);
+});

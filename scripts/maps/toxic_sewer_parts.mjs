@@ -56,7 +56,14 @@ export function sewerPartAt(p, spec, reference, shift = [0, 0]) {
           (reference &&
             referenceSample(reference.floor, local[0], local[1]) !== null &&
             local[2] <
-              referenceSample(reference.floor, local[0], local[1]) - r.eroded)),
+              referenceSample(reference.floor, local[0], local[1]) -
+                r.eroded)) &&
+        (!r.topSurfaceMM ||
+          (reference &&
+            referenceSample(reference.floor, local[0], local[1]) !== null &&
+            local[2] >=
+              referenceSample(reference.floor, local[0], local[1]) -
+                r.topSurfaceMM)),
     ) ?? { part: "stone" }
   );
 }
@@ -115,7 +122,15 @@ export function finishSewerPart(region, p, n, ao) {
     tentacle: [145, 164, 55],
     gold: [206, 155, 49],
   };
-  const colours = region.color ?? palette[region.part];
+  let colours = region.color ?? palette[region.part];
+  if (region.colorGradient) {
+    const g = region.colorGradient;
+    if (!(g.endMM > g.startMM) || g.from.length !== 3 || g.to.length !== 3)
+      throw Error("A valid physical colour gradient required");
+    let t = clamp((p[2] - g.startMM) / (g.endMM - g.startMM));
+    t = t * t * (3 - 2 * t);
+    colours = g.from.map((v, i) => v * (1 - t) + g.to[i] * t);
+  }
   if (!colours) throw Error("Unknown sewer part: " + region.part);
   const metal = ["copper", "iron", "gold"].includes(region.part);
   const liquid = region.part === "toxic";
