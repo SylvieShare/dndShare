@@ -16,6 +16,7 @@ import { paintCrystal } from "./lost_cave_crystal.mjs";
 import { paintWagon } from "./lost_cave_wagon.mjs";
 import { paintWagonOnTrack } from "./lost_cave_wagon_track.mjs";
 import { paintBoulderGround } from "./lost_cave_boulder_ground.mjs";
+import { paintCaveBones } from "./lost_cave_bones.mjs";
 import { paintCrystalGround } from "./lost_cave_crystal_ground.mjs";
 import { wallReferenceDistance } from "./lost_cave_wall_reference.mjs";
 import { createHash } from "node:crypto";
@@ -38,6 +39,7 @@ if (
     "cave-wagon-track",
     "cave-boulders",
     "cave-crystal-ground",
+    "cave-bones",
   ].includes(spec.material)
 )
   throw new Error("Unsupported individually reviewed surface material");
@@ -53,11 +55,12 @@ for (const field of [
 report.materialSpec = structuredClone(spec);
 let wagonReference;
 let crystalWallReference;
-if (spec.crystal?.wallReference) {
+const bareReference = spec.crystal?.wallReference ?? spec.bones?.reference;
+if (bareReference) {
   const base = path.resolve(
     import.meta.dirname,
     "../../models/collections/lost-cave/wall-reference",
-    spec.crystal.wallReference.code,
+    bareReference.code,
   );
   const field = {
     spec: JSON.parse(
@@ -66,8 +69,8 @@ if (spec.crystal?.wallReference) {
     data: await fs.readFile(path.join(base, "distance.bin")),
   };
   if (
-    field.spec.sourceCode !== spec.crystal.wallReference.code ||
-    field.spec.sourceSHA256 !== spec.crystal.wallReference.sourceSHA256 ||
+    field.spec.sourceCode !== bareReference.code ||
+    field.spec.sourceSHA256 !== bareReference.sourceSHA256 ||
     createHash("sha256").update(field.data).digest("hex") !==
       field.spec.fieldSHA256
   )
@@ -117,6 +120,7 @@ for (const tier of ["render", "lod"]) {
   let pixels = 0;
   const counts = {
     rock: 0,
+    ...(spec.material === "cave-bones" ? { bone: 0 } : {}),
     ...(spec.material === "cave-stalagmites" ? { calcite: 0 } : {}),
     ...(spec.material === "cave-railway" ? { wood: 0, iron: 0 } : {}),
     ...(spec.material === "cave-crystal" ? { crystal: 0 } : {}),
@@ -137,21 +141,23 @@ for (const tier of ["render", "lod"]) {
   const paintPixel = (i, p, n, used = true) => {
     if (used) checkUv?.(i, p);
     const value =
-      spec.material === "cave-crystal-ground"
-        ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
-        : spec.material === "cave-boulders"
-          ? paintBoulderGround(p, n, ao[i], spec)
-          : spec.material === "cave-wagon-track"
-            ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
-            : spec.material === "cave-wagon"
-              ? paintWagon(p, n, ao[i], spec)
-              : spec.material === "cave-crystal"
-                ? paintCrystal(p, n, ao[i], spec)
-                : spec.material === "cave-railway"
-                  ? paintRailway(p, n, ao[i], spec)
-                  : spec.material === "cave-stalagmites"
-                    ? paintStalagmites(p, n, ao[i], spec)
-                    : caveRockPixel(p, n, ao[i], report.materialSpec);
+      spec.material === "cave-bones"
+        ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
+        : spec.material === "cave-crystal-ground"
+          ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
+          : spec.material === "cave-boulders"
+            ? paintBoulderGround(p, n, ao[i], spec)
+            : spec.material === "cave-wagon-track"
+              ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
+              : spec.material === "cave-wagon"
+                ? paintWagon(p, n, ao[i], spec)
+                : spec.material === "cave-crystal"
+                  ? paintCrystal(p, n, ao[i], spec)
+                  : spec.material === "cave-railway"
+                    ? paintRailway(p, n, ao[i], spec)
+                    : spec.material === "cave-stalagmites"
+                      ? paintStalagmites(p, n, ao[i], spec)
+                      : caveRockPixel(p, n, ao[i], report.materialSpec);
     if (used) counts[value.part]++;
     neutralNormal[i] = Number(
       spec.crystal?.normalMode === "geometry" && value.part === "crystal",
