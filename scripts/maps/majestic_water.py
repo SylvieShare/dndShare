@@ -112,6 +112,10 @@ def apply_water(obj, positions, colours, roughness, recipe):
         keep=np.clip(np.minimum(positions-lo,hi-positions).min(1)/box.get('featherMM',.2),0,1)
         colours=colours*(1-keep[:,None])+original_colours*keep[:,None]
         roughness=roughness*(1-keep)+original_roughness*keep
+    if settings.get('preserveWood'):
+        timber=np.clip(wood.reshape(-1,4)[:,0],0,1)
+        colours=colours*(1-timber[:,None])+original_colours*timber[:,None]
+        roughness=roughness*(1-timber)+original_roughness*timber
     print('WATER_REFERENCE',np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),int((weight>.5).sum()),flush=True)
     return colours,roughness
 

@@ -23,9 +23,16 @@ def apply_wood(obj, positions, colours, roughness, recipe):
     directions=np.tile(np.array(recipe['woodDirection'],dtype=np.float32), (len(positions),1))
     across_axes=np.full_like(positions,np.nan);end_centres=np.full_like(positions,np.nan)
     wood_colours=np.tile(np.array(recipe.get('woodRGB',[.47,.325,.18])),(len(positions),1))
+    measured_parts=np.zeros(len(positions),bool)
     for part in recipe.get('woodParts',[]):
         mask=np.all((positions>=part['minMM'])&(positions<=part['maxMM']),axis=1)
+        if 'heightPlane' in part:
+            plane=part['heightPlane'];anchor=np.array(plane['pointMM'])
+            height=anchor[2]+((positions[:,:2]-anchor[:2])*np.array(plane['slope'])).sum(1)
+            mask&=(positions[:,2]>=height-plane['belowMM'])&(positions[:,2]<=height+plane['aboveMM'])
+        measured_parts|=mask
         directions[mask]=part['direction']
+        if part.get('forceWood'): weight=np.maximum(weight,mask.astype(np.float32))
         if part.get('forceWoodSide'): weight=np.maximum(weight,(mask&(np.abs(normals[:,2])<.7)).astype(np.float32))
         if 'acrossDirection' in part: across_axes[mask]=part['acrossDirection']
         if 'endCentreMM' in part: end_centres[mask]=part['endCentreMM']
@@ -34,10 +41,12 @@ def apply_wood(obj, positions, colours, roughness, recipe):
         a,b=np.array(segment['fromMM']),np.array(segment['toMM']);axis=b-a
         t=np.clip(((positions-a)*axis).sum(1)/(axis@axis),0,1)
         mask=(np.linalg.norm(positions-a-t[:,None]*axis,axis=1)<segment['radiusMM'])&(t>=segment.get('minT',0))&(t<=segment.get('maxT',1))
+        measured_parts|=mask
         directions[mask]=axis
         if 'acrossDirection' in segment: across_axes[mask]=segment['acrossDirection']
         if 'endCentreMM' in segment: end_centres[mask]=segment['endCentreMM']
         if 'rgb' in segment: wood_colours[mask]=segment['rgb']
+    if recipe.get('woodOnlyParts'): weight*=measured_parts
     directions/=np.linalg.norm(directions,axis=1)[:,None]
     along=(positions*directions).sum(1)
     across=positions[:,0]*directions[:,1]-positions[:,1]*directions[:,0]
