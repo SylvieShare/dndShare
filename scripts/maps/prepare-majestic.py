@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import time
 import bpy
+import bmesh
 from mathutils.bvhtree import BVHTree
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -12,6 +13,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tile_mesh import activate, crop, shade
 import tile_bake
 from majestic_grass import paint, material
+
+
+def orient_outward(obj):
+    """Repair the occasional inward orientation chosen for a closed cut body."""
+    mesh = bmesh.new()
+    mesh.from_mesh(obj.data)
+    flipped = mesh.calc_volume(signed=True) < 0
+    if flipped:
+        bmesh.ops.reverse_faces(mesh, faces=list(mesh.faces))
+        mesh.to_mesh(obj.data)
+        obj.data.update()
+    mesh.free()
+    return flipped
 
 
 def add_peg(centre, height, recipe):
@@ -82,6 +96,8 @@ def main():
     source = bpy.context.object; source.name = args.code+' sculpt'
     datum = recipe['mountDepthMM']
     crop(source, datum)
+    if orient_outward(source):
+        print('MAJESTIC_REPAIRED_INWARD_CUT', args.code, flush=True)
     for v in source.data.vertices: v.co.z += datum
     support_points(source, row['mountCenterMM'], recipe, datum)
     shade(source); paint(source, recipe, args.code); source.data.materials.append(material(recipe))
