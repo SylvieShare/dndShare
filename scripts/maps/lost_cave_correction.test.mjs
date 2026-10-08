@@ -36,6 +36,63 @@ test("reviewed crop restoration retains logical ID and original file while corre
   assert.equal(result.model.tileType, "object");
   assert.equal(model.tileType, "floor");
 });
+test("false pit mounting is removed only with an explicit incompatible source-body correction", () => {
+  const old = {
+    ...model,
+    definitionId: "LC-034",
+    sourceCode: "LC-034",
+    code: "LC-rocks-hole",
+    mountDepth: 0.146946,
+    canStand: true,
+    width: 1,
+    height: 1,
+    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.146962 }],
+    supportSlots: [],
+  };
+  const src = { ...source, max: [17.5, 17.5, 29.6408] };
+  const s = {
+    geometryCorrection: {
+      mode: "remove-false-mount",
+      sourceSHA256: sha,
+      previousCutHeightMM: 11.5,
+      cutHeightMM: 11.5,
+      reason:
+        "Restore native pit and low boulders hidden by a false universal solid mounting pyramid.",
+      metadata: {
+        mountDepth: 0,
+        canStand: false,
+        placementPoints: [],
+        tileType: "floor",
+        maxHeight: (29.6408 - 11.5) / 35,
+        surfaceHeight: 14.6 / 35,
+      },
+    },
+  };
+  const corrected = correctedCaveModel(old, src, s, true);
+  assert.equal(corrected.cutHeight, 11.5);
+  assert.equal(corrected.model.mountDepth, 0);
+  assert.deepEqual(corrected.model.assets, old.assets);
+  assert.equal(corrected.model.definitionId, "LC-034");
+  assert.throws(() => correctedCaveModel(old, src, s, false));
+  for (const mutate of [
+    (v) => (v.geometryCorrection.metadata.mountDepth = 0.1),
+    (v) => (v.geometryCorrection.metadata.canStand = true),
+    (v) =>
+      (v.geometryCorrection.metadata.placementPoints = [
+        { x: 0.5, y: 0.5, elevation: 0.1 },
+      ]),
+    (v) => (v.geometryCorrection.cutHeightMM = 0),
+    (v) => (v.geometryCorrection.rotationXDeg = 180),
+    (v) => (v.geometryCorrection.mode = "other"),
+  ]) {
+    const changed = structuredClone(s);
+    mutate(changed);
+    assert.throws(() => correctedCaveModel(old, src, changed, true));
+  }
+  assert.throws(() =>
+    correctedCaveModel({ ...old, supportSlots: [{}] }, src, s, true),
+  );
+});
 test("ordinary recipes retain their cut, and restoration cannot silently override identity or another source", () => {
   assert.equal(correctedCaveModel(model, source, {}, false).cutHeight, 11.5);
   assert.throws(() => correctedCaveModel(model, source, spec, false));

@@ -1,0 +1,141 @@
+{
+  "sourceName": "Rocks Hole",
+  "referencePage": 5,
+  "material": "cave-boulders",
+  "floorHeightMM": 14.6,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 15000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [20, 90],
+    "previewKiB": [10, 120],
+    "basis": "339960-triangle1x1 hollow rubble pit.45k/15k protect open central cavity, thin walls and low isolated boulders;2048/1024 bakes. Full albedo retained; compare data maps1024/512 vs768/384. Render1.5–4MiB,LOD0.6–2MiB."
+  },
+  "notes": "Author page5: brown broken rim and hollow pit walls with grey-green boulders around edge and several lower stones. Rim planes14.5929/14.601mm; upper rocks15.3214,17.8096,17.0145mm; lower boulders-9.0446/-6.2381/11.4255,-5.8986/-7.1278/6.8582,-7.0784/-1.8972/3.8306,8.2019/-.9443/4.8783,3.483/-5.7139/2.1537. Individual3D envelopes isolate low rocks instead of painting all pit walls green. Preserve hollow sculpt, original STL, LC-034, peg/footprint and current point; familyLC-rocks-hole. Full2048/1024 albedo candidates protect closely adjacent brown/green material islands. Explicit source-body correction removes the previous synthetic solid mounting pyramid, which filled the native hollow and clipped rocks below5.14311mm. Keep original11.5mm source cut, restore native0–18.1408mm sculpt without replacement mounting; remove false central standing availability/point. Old placed UUIDs remain unchanged. Descending boulder surfaces measured6.2469/7.4349/13.0476,6.3328/7.5573/10.1946,7.6001/4.2777/9.8541,1.4048/9.3367/8.8261 and5.9209/6.1879/6.3415 get individual3D volumes.",
+  "groupCode": "LC-rocks-hole",
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31],
+    "topThresholdMM": 14.85,
+    "rootMinZMM": 14.1,
+    "roots": [
+      {
+        "x": -10.5,
+        "y": 11.4,
+        "rx": 4.7,
+        "ry": 4.5
+      },
+      {
+        "x": -11.6,
+        "y": 7,
+        "rx": 3.5,
+        "ry": 3
+      },
+      {
+        "x": 8.8,
+        "y": 10.7,
+        "rx": 5.5,
+        "ry": 5
+      },
+      {
+        "x": 11.85,
+        "y": -9.28,
+        "rx": 3.3,
+        "ry": 3.5
+      },
+      {
+        "x": -13,
+        "y": -9,
+        "rx": 3.7,
+        "ry": 4
+      },
+      {
+        "x": 0,
+        "y": -13,
+        "rx": 3,
+        "ry": 2.5
+      }
+    ],
+    "volumes": [
+      {
+        "center": [-8.8, -6.3, 9.5],
+        "radius": [2.8, 2.8, 4]
+      },
+      {
+        "center": [-5.9, -7.1, 5.4],
+        "radius": [2.8, 2.6, 3]
+      },
+      {
+        "center": [-7.1, -1.9, 2.4],
+        "radius": [2.2, 2.1, 2.3]
+      },
+      {
+        "center": [8.2, -0.944, 3.4],
+        "radius": [2.5, 2.3, 3]
+      },
+      {
+        "center": [3.2, -5.7, 1.2],
+        "radius": [3, 1.8, 2]
+      },
+      {
+        "center": [8.8, 8.8, 12.8],
+        "radius": [5.5, 5.2, 6.2]
+      },
+      {
+        "center": [7.8, 4.7, 10.5],
+        "radius": [3, 2.8, 4]
+      },
+      {
+        "center": [1.4, 9.4, 9.3],
+        "radius": [1.35, 1.5, 1.8]
+      },
+      {
+        "center": [5.7, 6.2, 7],
+        "radius": [2.8, 2.5, 3]
+      },
+      {
+        "center": [12.1, 4.8, 12.3],
+        "radius": [3.2, 3.4, 3.3]
+      },
+      {
+        "center": [-10.8, 8.3, 13.5],
+        "radius": [4.2, 4.3, 2.8]
+      },
+      {
+        "center": [-6, 12.3, 14.2],
+        "radius": [2.8, 2.5, 2.8]
+      },
+      {
+        "center": [4.6, 12.2, 13.8],
+        "radius": [2.8, 3, 3.5]
+      }
+    ]
+  },
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "geometryCorrection": {
+    "mode": "remove-false-mount",
+    "sourceSHA256": "f0f7497d9d6b9d86e9d46609e177ead93528cb564555bdb3431113a41e407755",
+    "previousCutHeightMM": 11.5,
+    "cutHeightMM": 11.5,
+    "reason": "Restore the native LC-034 hollow pit below its body datum: the old universal solid insertion pyramid filled the cavity, hid low stones and supplied a false central standing point. Preserve original STL and logical ID; remove synthetic mounting and invalid standing metadata in an incompatible revision.",
+    "metadata": {
+      "mountDepth": 0,
+      "canStand": false,
+      "placementPoints": [],
+      "tileType": "floor",
+      "maxHeight": 0.518308585030692,
+      "surfaceHeight": 0.41714285714285715
+    }
+  }
+}

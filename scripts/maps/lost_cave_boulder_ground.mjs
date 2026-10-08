@@ -1,6 +1,16 @@
 import { paintBoulder } from "./lost_cave_boulder.mjs";
 import { caveRockPixel } from "./lost_cave_surface.mjs";
 export function boulderGroundPartAt(p, n, spec) {
+  if (
+    spec.boulder.volumes?.some(
+      (v) =>
+        p.reduce(
+          (sum, value, i) => sum + ((value - v.center[i]) / v.radius[i]) ** 2,
+          0,
+        ) < 1,
+    )
+  )
+    return "boulder";
   if (p[2] > spec.boulder.topThresholdMM) return "boulder";
   if (
     p[2] > spec.boulder.rootMinZMM &&

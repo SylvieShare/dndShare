@@ -58,6 +58,12 @@ def bake_tier(report, directory, tier):
     source = bpy.context.object
     crop(source, report['cutHeight'])
     correction = report.get('geometryCorrection',{})
+    if correction.get('mode') == 'remove-false-mount':
+        if report['model']['mountDepth'] != 0:
+            raise ValueError('Explicit hole correction must remove replacement mounting')
+        for obj in mounting:
+            bpy.data.objects.remove(obj, do_unlink=True)
+        mounting = []
     for v in source.data.vertices:
         if correction.get('rotationXDeg') == 180:
             v.co.y = -v.co.y
@@ -152,5 +158,7 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
     report = json.loads(args.report.read_text())
     report['rebake'] = {tier:bake_tier(report,args.report.parent,tier) for tier in ['render','lod']}
-    report['geometry'] = 'Body rebuilt from original sculpt at reviewed budgets; mounting meshes and accepted coordinates retained'
+    report['geometry'] = ('Native cropped sculpt restored without false synthetic mounting; original STL retained'
+                          if report.get('geometryCorrection',{}).get('mode') == 'remove-false-mount'
+                          else 'Body rebuilt from original sculpt at reviewed budgets; mounting meshes and accepted coordinates retained')
     args.report.write_text(json.dumps(report,indent=2)+'\n')

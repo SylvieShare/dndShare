@@ -81,7 +81,23 @@ for (const tier of ["render", "lod"]) {
           geometryCorrection: report.geometryCorrection.reason,
         }
       : {}),
-    mounting: assertSameSurface(mounting(before), mounting(after)),
+    mounting:
+      report.geometryCorrection?.mode === "remove-false-mount"
+        ? (() => {
+            if (
+              report.model.mountDepth !== 0 ||
+              report.rebake[tier].mountingMeshesRetained !== 0 ||
+              mounting(after)
+                .getRoot()
+                .listNodes()
+                .some((n) => n.getMesh().listPrimitives().length)
+            )
+              throw new Error(
+                "False hole mounting still covers the corrected source",
+              );
+            return { removedFalseMount: true };
+          })()
+        : assertSameSurface(mounting(before), mounting(after)),
     sourceDeviationMM: report.rebake[tier].sourceDeviationMM,
   };
   if (reference)
