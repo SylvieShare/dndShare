@@ -15,6 +15,7 @@ import { paintBoulderGround } from "./lost_cave_boulder_ground.mjs";
 import { paintCrystalGround } from "./lost_cave_crystal_ground.mjs";
 import { wallReferenceDistance } from "./lost_cave_wall_reference.mjs";
 import { createHash } from "node:crypto";
+import { uvSurfaceTracker } from "./uv_surface_overlap.mjs";
 import specs from "./lost_cave_recipes.mjs";
 const file = process.argv[2];
 if (!file) throw new Error("One rebaked Lost Cave report required");
@@ -52,6 +53,7 @@ if (spec.crystal?.wallReference) {
   const base = path.resolve(
     import.meta.dirname,
     "../../models/collections/lost-cave/wall-reference",
+    spec.crystal.wallReference.code,
   );
   const field = {
     spec: JSON.parse(
@@ -125,7 +127,11 @@ for (const tier of ["render", "lod"]) {
       : {}),
   };
   const neutralNormal = new Uint8Array(size * size);
+  const checkUv = spec.validateUvOverlaps
+    ? uvSurfaceTracker(size, size)
+    : undefined;
   const coverage = rasterizeSurface(doc, size, size, (i, p, n) => {
+    checkUv?.(i, p);
     const value =
       spec.material === "cave-crystal-ground"
         ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
@@ -211,6 +217,7 @@ for (const tier of ["render", "lod"]) {
     surfacePixels: counts,
     blackSurfacePixels: black,
     invalidNormalPixels: invalid,
+    ...(checkUv ? { uvOverlaps: 0 } : {}),
   };
   console.log("LOST_CAVE_PAINTED", tier, report.tiers[tier]);
 }

@@ -96,7 +96,10 @@ def bake_tier(report, directory, tier):
                 face.use_smooth = False
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.smart_project(angle_limit=1.4, island_margin=.0015,
+    angle_limit=report['materialSpec'].get('uvAngleLimitRad',1.4)
+    if not .2<=angle_limit<=1.4:
+        raise ValueError('Reviewed UV projection angle outside supported range')
+    bpy.ops.uv.smart_project(angle_limit=angle_limit, island_margin=.0015,
                              margin_method='FRACTION', area_weight=.8)
     bpy.ops.object.mode_set(mode='OBJECT')
     tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())

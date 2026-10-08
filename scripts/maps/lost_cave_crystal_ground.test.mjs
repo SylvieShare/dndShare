@@ -38,6 +38,25 @@ test("crystal floor separates three source clusters from free brown slabs and lo
     "rock",
   );
 });
+test("second crystal wall uses its own undecorated source for both curved sides", () => {
+  const s = specs["LC-040"];
+  assert.equal(s.crystal.wallReference.code, "LC-002");
+  const sides = [
+    [-2.7455, 6.0734, 26.2957],
+    [-3.4973, -2.7916, 27.8567],
+    [3.7345, 4.4205, 36.4576],
+  ];
+  const known = new Map(sides.map((p) => [JSON.stringify(p), 0.049]));
+  const reference = { distanceAt: (p) => known.get(JSON.stringify(p)) ?? 2 };
+  for (const p of sides)
+    assert.equal(crystalGroundPartAt(p, s, reference), "rock");
+  for (const p of [
+    [9.4816, -10.2233, 31.9902],
+    [6.8481, 7.0468, 21.2348],
+    [13.5467, -9.9272, 16.1848],
+  ])
+    assert.equal(crystalGroundPartAt(p, s, reference), "crystal");
+});
 test("decorated wall protects structural source surfaces before classifying inclined crystal growth", () => {
   const s = specs["LC-039"];
   const known = new Map([
