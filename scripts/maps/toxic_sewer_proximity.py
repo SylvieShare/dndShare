@@ -31,6 +31,12 @@ for vertex in source.data.vertices:
     x, y = vertex.co.x, vertex.co.y
     vertex.co.x, vertex.co.y = cosine*x-sine*y, sine*x+cosine*y
     vertex.co.z -= row['cutHeight']
+if spec.get('minimumSurfaceZMM') is not None:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from sewer_crop import crop
+    crop(source, spec['minimumSurfaceZMM'])
+    for vertex in source.data.vertices:
+        vertex.co.z += spec['minimumSurfaceZMM']
 source.data.update()
 bpy.context.view_layer.update()
 tree = BVHTree.FromObject(source, bpy.context.evaluated_depsgraph_get())

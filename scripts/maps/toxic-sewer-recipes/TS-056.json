@@ -1,0 +1,89 @@
+{
+  "sourceName": "Pipe Water Angle",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 34000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.9, 2.6],
+    "lodMiB": [0.3, 0.95],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Right-angle water channel with continuous quarter-circle copper rail and separate elbow on opposite island; preserve bend, collars, three lips and curved green banks."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [-18, 13.4, 16.2],
+        [8.205133554287267e-16, 13.4, 16.2],
+        [3.468175204373778, 12.943406072273516, 16.2],
+        [6.699999999999998, 11.604740410711479, 16.2],
+        [9.475230867899738, 9.475230867899736, 16.2],
+        [11.604740410711477, 6.7, 16.2],
+        [12.943406072273516, 3.4681752043737775, 16.2],
+        [13.4, 0.0, 16.2],
+        [13.4, -18, 16.2]
+      ],
+      "radius": 3.9,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-18, -13.5, 16.2],
+        [-13.5, -13.5, 16.2],
+        [-13.5, -18, 16.2]
+      ],
+      "radius": 4.4,
+      "min": [-18, -18, 13.65],
+      "max": [-9.3, -9.3, 20.2]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 8.8, 0]
+    },
+    {
+      "part": "stone",
+      "min": [8.8, -18, 0]
+    },
+    {
+      "part": "stone",
+      "max": [-8.8, -8.8, 13.65]
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.8],
+      "surfaceBandMM": 0.65,
+      "added": true
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12, 15, 18],
+    "sectionYMM": 0,
+    "curveRadiusMM": 13.4,
+    "pipeCentreZMM": 16.2,
+    "oppositeElbowXYMM": [-13.5, -13.5]
+  },
+  "notes": "Authorpage8: curved copper pipe along positiveX/positiveY banks and short opposite elbow, with lime flowing channel. Explicit arc and elbow paths include collars; three stone footprints protect lower banks/island from liquid paint. Own water-height field retains wave depressions. Initial one-sided height mask colored higher inner bank faces. Final0.65mm absolute band around measured water height preserves the stone wall above liquid. Own height field also contains low bank bevels. Upper-bank distance to EmptyAngle cropped above11.6mm removes liquid paint from old masonry while excluding its submerged loose rocks from the reference.",
+  "referenceCode": "TS-056",
+  "referenceFloorMaxZMM": 12.8,
+  "proximityReference": {
+    "code": "TS-065",
+    "minimumSurfaceZMM": 11.6,
+    "boundsMM": [
+      [-18, -18, 9.4],
+      [18, 18, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}

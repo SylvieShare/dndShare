@@ -1,0 +1,67 @@
+{
+  "sourceName": "Pipe Water Wooden Bridge",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 38000,
+  "lodTriangles": 12000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [1, 2.9],
+    "lodMiB": [0.35, 1.1],
+    "shadowKiB": [30, 95],
+    "previewKiB": [8, 45],
+    "basis": "Two long cracked timber planks across straight water channel and four broken pipe stumps; preserve large plank gap, knots, splinter ends and exposed liquid under the bridge."
+  },
+  "regions": [
+    {
+      "part": "wood",
+      "axis": "x",
+      "min": [-17, -8.5, 12.3],
+      "max": [17, 8.5, 16.25]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-13.7, -18, 16.2],
+        [-13.7, 18, 16.2]
+      ],
+      "radius": 3.85,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [13.5, -18, 16.2],
+        [13.5, 18, 16.2]
+      ],
+      "radius": 3.85,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "toxic",
+      "topSurfaceMM": 0.65,
+      "min": [-8.7, -18, 9.4],
+      "max": [8.7, 18, 12.8]
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12, 15, 18, 21],
+    "sectionYMM": 0,
+    "bridgeBoundsMM": [
+      [-17, -8.5, 12.3],
+      [17, 8.5, 16.25]
+    ],
+    "grainDirection": "X",
+    "barePipeWaterReference": "TS-054"
+  },
+  "notes": "Authorpage8: transverse timber planks over lime water, four copper broken tube ends and green bank supports. Explicit measured timber volume replaces added-distance classification: the centre pipes are removed in this source, and old pipe surfaces coincide with new board ends, so the difference mask falsely left gold stripes on timber and was rejected. Wood stops below high torn metal lips and outside bridge width; carved knots, cracks, large gap and underside retained.",
+  "referenceCode": "TS-054",
+  "referenceFloorMaxZMM": 12.8
+}

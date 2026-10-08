@@ -22,6 +22,15 @@ test("angled window mask follows the hatch plane and excludes its raised metal f
   assert.equal(inSewerRegion([1, 1, 20], region), false);
   assert.equal(inSewerRegion([0, 0, 26], region), false);
 });
+test("water surface band leaves the taller channel wall stone", () => {
+  const reference = {
+    floor: { low: [0, 0], step: 1, size: [1, 1], values: [10.8] },
+  };
+  const spec = { regions: [{ part: "toxic", surfaceBandMM: 0.65 }] };
+  assert.equal(sewerPartAt([0, 0, 10.7], spec, reference).part, "toxic");
+  assert.equal(sewerPartAt([0, 0, 12.2], spec, reference).part, "stone");
+  assert.equal(sewerPartAt([0, 0, 8.5], spec, reference).part, "stone");
+});
 test("pipe volumes exclude adjacent masonry, include both surfaces and respect ends", () => {
   const r = {
     part: "copper",

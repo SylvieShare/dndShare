@@ -61,6 +61,12 @@ export function sewerPartAt(p, spec, reference, shift = [0, 0]) {
             local[2] <
               referenceSample(reference.floor, local[0], local[1]) -
                 r.eroded)) &&
+        (!r.surfaceBandMM ||
+          (reference &&
+            referenceSample(reference.floor, local[0], local[1]) !== null &&
+            Math.abs(
+              local[2] - referenceSample(reference.floor, local[0], local[1]),
+            ) <= r.surfaceBandMM)) &&
         (!r.topSurfaceMM ||
           (reference &&
             referenceSample(reference.floor, local[0], local[1]) !== null &&

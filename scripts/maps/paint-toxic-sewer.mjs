@@ -55,6 +55,8 @@ if (spec.proximityReference) {
     grid.stepMM !== spec.proximityReference.stepMM ||
     (grid.rotationZDegrees ?? 0) !==
       (spec.proximityReference.rotationZDegrees ?? 0) ||
+    (grid.minimumSurfaceZMM ?? null) !==
+      (spec.proximityReference.minimumSurfaceZMM ?? null) ||
     JSON.stringify(grid.boundsMM) !==
       JSON.stringify(spec.proximityReference.boundsMM) ||
     createHash("sha256").update(bytes).digest("hex") !== grid.valuesSHA256
@@ -102,6 +104,7 @@ if (reference)
             code: reference.proximity.code,
             sourceSHA256: reference.proximity.sourceSHA256,
             rotationZDegrees: reference.proximity.rotationZDegrees ?? 0,
+            minimumSurfaceZMM: reference.proximity.minimumSurfaceZMM ?? null,
             boundsMM: reference.proximity.boundsMM,
             stepMM: reference.proximity.stepMM,
             thresholdMM: reference.proximity.thresholdMM,

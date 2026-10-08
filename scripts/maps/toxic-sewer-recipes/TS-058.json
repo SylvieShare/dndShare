@@ -1,0 +1,95 @@
+{
+  "sourceName": "Pipe Water T-Shaped",
+  "material": "sewer-components",
+  "referencePage": 8,
+  "renderTriangles": 34000,
+  "lodTriangles": 10000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 13.8,
+  "floorJointRangeMM": [13.0, 13.25, 13.5, 14.1],
+  "weightBudget": {
+    "renderMiB": [0.9, 2.6],
+    "lodMiB": [0.3, 0.95],
+    "shadowKiB": [25, 85],
+    "previewKiB": [8, 45],
+    "basis": "Three-way water channel with one long copper pipe and two separate opposite elbows, six open end lips and three supporting masonry banks; preserve fittings and flowing junction."
+  },
+  "regions": [
+    {
+      "part": "copper",
+      "path": [
+        [-18, 13.4, 16.2],
+        [18, 13.4, 16.2]
+      ],
+      "radius": 3.9,
+      "min": [-18, -18, 13.65],
+      "max": [18, 18, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [-18, -13.5, 16.2],
+        [-13.5, -13.5, 16.2],
+        [-13.5, -18, 16.2]
+      ],
+      "radius": 4.4,
+      "min": [-18, -18, 13.65],
+      "max": [-9.3, -9.3, 20.2]
+    },
+    {
+      "part": "copper",
+      "path": [
+        [18, -13.5, 16.2],
+        [13.5, -13.5, 16.2],
+        [13.5, -18, 16.2]
+      ],
+      "radius": 4.4,
+      "min": [9.3, -18, 13.65],
+      "max": [18, -9.3, 20.2]
+    },
+    {
+      "part": "stone",
+      "min": [-18, 8.8, 0]
+    },
+    {
+      "part": "stone",
+      "max": [-8.8, -8.8, 13.65]
+    },
+    {
+      "part": "stone",
+      "min": [8.8, -18, 0],
+      "max": [18, -8.8, 13.65]
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 9.4],
+      "max": [18, 18, 12.8],
+      "added": true
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12, 15, 18],
+    "longPipeCentreYZMM": [13.4, 16.2],
+    "elbowCentresXYMM": [
+      [-13.5, -13.5],
+      [13.5, -13.5]
+    ],
+    "upperBankReference": "TS-066"
+  },
+  "notes": "Authorpage8: continuous back copper pipe and two opposite copper elbows over three green banks. Full upper-bank distance to EmptyTShaped above11.6mm excludes inner masonry and submerged rubble from liquid-mask ambiguity. Own height band follows three-way waves; measured paths retain all collars and lips. Absolute height band left a gray stripe on the steep central wave flank and was rejected. Upper-bank proximity alone protects old stone while all new flowing surfaces above9.4mm remain liquid.",
+  "referenceCode": "TS-058",
+  "referenceFloorMaxZMM": 12.8,
+  "proximityReference": {
+    "code": "TS-066",
+    "minimumSurfaceZMM": 11.6,
+    "boundsMM": [
+      [-18, -18, 9.4],
+      [18, 18, 13.2]
+    ],
+    "stepMM": 0.25,
+    "thresholdMM": 0.35
+  }
+}
