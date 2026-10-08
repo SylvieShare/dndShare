@@ -11,7 +11,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 VM_USER="${VM_USER:-sylvieshare}"
-VM_HOST="${VM_HOST:-213.165.196.171}"
+VM_HOST="${VM_HOST:-111.88.240.120}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/dndshare}"
 
 echo "==> Копирую deploy/ на $VM_USER@$VM_HOST"
@@ -20,4 +20,4 @@ scp -i "$SSH_KEY" -r "$SCRIPT_DIR" "$VM_USER@$VM_HOST:~/"
 echo "==> Выполняю setup-vm.sh на VM (sudo)"
 ssh -i "$SSH_KEY" -t "$VM_USER@$VM_HOST" 'sudo bash ~/deploy/setup-vm.sh'
 
-echo "==> Готово. Теперь деплой: VM_HOST=$VM_HOST ./deploy/deploy_mac.sh"
+echo "==> Готово. Теперь деплой: VM_HOST=$VM_HOST ./deploy/deploy.sh"

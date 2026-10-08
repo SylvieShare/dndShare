@@ -10,7 +10,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 VM_USER="${VM_USER:-sylvieshare}"
-VM_HOST="${VM_HOST:-213.165.196.171}"
+VM_HOST="${VM_HOST:-111.88.240.120}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/dndshare}"
 FRONTEND_DIR="${FRONTEND_DIR:-$ROOT_DIR/frontend}"
 
@@ -48,7 +48,7 @@ ls -lh build/dndshare | awk '{print "    бинарь:", $5}'
 # Hashed assets are append-only on the VM: already open tabs can load chunks
 # from their original release after the embedded frontend has been replaced.
 echo "==> Архив frontend assets для открытых вкладок"
-tar -czf build/frontend-assets.tar.gz -C "$FRONTEND_DIR/target/dist" static
+COPYFILE_DISABLE=1 tar -czf build/frontend-assets.tar.gz -C "$FRONTEND_DIR/target/dist" static
 
 echo "==> Проверка свободного места на VM"
 ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" 'bash -s' <<'DISK_CHECK'
@@ -65,6 +65,7 @@ echo "==> Копирование основного бинаря + unit + run.sh
 scp -i "$SSH_KEY" build/frontend-assets.tar.gz "$VM_USER@$VM_HOST:~/dndshare-frontend-assets.new.tar.gz"
 scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:~/dndshare.new"
 scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.service"
+scp -i "$SSH_KEY" deploy/nginx-dndshare.conf "$VM_USER@$VM_HOST:~/dndshare-nginx.conf"
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
 scp -i "$SSH_KEY" deploy/journald-storage.conf "$VM_USER@$VM_HOST:~/dndshare-journald-storage.conf"
 
@@ -100,6 +101,10 @@ ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   sudo systemctl stop dndshare || true
   mv ~/dndshare.new ~/dndshare
   sudo install -m 644 ~/dndshare.service /etc/systemd/system/dndshare.service
+  sudo install -m 644 ~/dndshare-nginx.conf /etc/nginx/sites-available/dndshare
+  sudo ln -sfn /etc/nginx/sites-available/dndshare /etc/nginx/sites-enabled/dndshare
+  sudo nginx -t
+  sudo systemctl reload nginx
   sudo systemctl daemon-reload
   sudo systemctl restart dndshare
   ready=false
