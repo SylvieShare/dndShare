@@ -1,0 +1,59 @@
+{
+  "sourceName": "Crystal Corner",
+  "referencePage": 6,
+  "material": "cave-crystal-ground",
+  "floorHeightMM": 14.7382,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 20000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 5.5],
+    "lodMiB": [0.8, 2.5],
+    "shadowKiB": [35, 145],
+    "previewKiB": [10, 180],
+    "basis": "399984-triangle1x1 wall end with many small crystal heads, long prisms and one standable floor point.60k/20k protect tips and interfaces;2048/1024 source bakes, original LC-006 wall reference, UV overlap checks and surface gutters; two KTX2 budgets."
+  },
+  "notes": "Author page6: brown wall end, blue-cyan crystals and grey root crust. Native wall points-.6764/11.6318/38.48,-.1127/9.3818/36.1256,-2.0856/5.4501/29.1507 match original LC-006 within.10281mm; crystal points2.7057/-1.0323/29.1474,-9.6953/-5.2357/17.1126,10.0335/-10.5894/16.5033 differ1.765\u20133.9964mm. LC-006 distance field.35mm protects wall and native base; floor14.7382 remains brown with darkened joints. SmartUV.3rad and overlap check retain strict.1mm. Surface gutters include subpixel charts. Preserve current UUID08a730b4-5aa5-511d-9d42-23b12e48dd90, definitionLC-042, familyLC-crystal-corner, peg, footprint, mask1 and existing standable floor point.",
+  "groupCode": "LC-crystal-corner",
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "flatFacets": true,
+  "crystal": {
+    "tint": [0.055, 0.4, 0.68],
+    "normalMode": "geometry",
+    "crustTint": [0.29, 0.315, 0.335],
+    "crustWidthMM": 1.6,
+    "clusters": [
+      {
+        "x": 0,
+        "y": -4,
+        "rx": 12,
+        "ry": 11,
+        "crustStrength": 0.88,
+        "bounds": {
+          "min": [-17.6, -17.6],
+          "max": [17.6, 17.6]
+        }
+      }
+    ],
+    "strataStrength": 0,
+    "wallReference": {
+      "code": "LC-006",
+      "sourceSHA256": "66cb174f298b21ad6cae6ea68e3d6b31f1f210ff798cde9d58c4b1c6cc18e8ef",
+      "matchMM": 0.35
+    }
+  },
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true
+}
