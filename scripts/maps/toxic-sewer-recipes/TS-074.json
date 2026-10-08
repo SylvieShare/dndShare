@@ -1,0 +1,109 @@
+{
+  "sourceName": "Water Debris 2",
+  "material": "sewer-components",
+  "referencePage": 10,
+  "renderTriangles": 42000,
+  "lodTriangles": 12000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 11.0,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [1, 2.8],
+    "lodMiB": [0.3, 1.0],
+    "shadowKiB": [35, 90],
+    "previewKiB": [8, 50],
+    "basis": "One-cell tall overlapping pipe/timber pile with several hollow mouths and broken ends; larger geometry budget than Debris 1 while keeping 1024/512 source-baked atlases."
+  },
+  "regions": [
+    {
+      "part": "wood",
+      "axis": "z",
+      "added": true,
+      "ellipsoid": {
+        "centre": [2, 7.5, 29],
+        "radius": [3.7, 3.7, 5]
+      },
+      "min": [-2, 3.5, 25]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-5.5, -9.5, 13],
+        [-5.4, -9.3, 18.6],
+        [-4.5, -5.5, 21.5],
+        [-3.5, -1.2, 25.2]
+      ],
+      "radius": 3.9,
+      "min": [-10, -14, 10.8],
+      "max": [1, 3, 29.2]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "min": [-10, -14.5, 10.8],
+      "max": [0.5, -4.5, 18]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-11.3, -1.2, 12.8],
+        [-11, -1, 15.9],
+        [-5.5, 1, 18.2]
+      ],
+      "radius": 3.0,
+      "min": [-14, -4, 10.8],
+      "max": [-3, 4, 22]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [8.5, 3, 15],
+        [7.2, 3.7, 21.6],
+        [5.5, 4.2, 24]
+      ],
+      "radius": 2.9,
+      "min": [2.5, 0, 10.8],
+      "max": [11.5, 7.5, 27]
+    },
+    {
+      "part": "copper",
+      "added": true,
+      "path": [
+        [-3.5, -1.2, 25.2],
+        [6, 4.5, 24.5]
+      ],
+      "radius": 2.9,
+      "min": [-6.5, -4.2, 21],
+      "max": [9, 7.5, 28.5]
+    },
+    {
+      "part": "wood",
+      "added": true,
+      "direction": [0.7, 0.45, 0.5],
+      "min": [-14, -14, 10.8],
+      "max": [13, 13, 32]
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 10.5]
+    },
+    {
+      "part": "toxic",
+      "color": [104, 147, 28],
+      "roughness": 0.88
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [16, 22, 28],
+    "upperTimberCentreXYMM": [2, 7.5],
+    "pileTopMM": 31.3622
+  },
+  "notes": "Tall debris pile: vertical upper timber stump, angled wooden splinters, and broken copper branches. Main lower mouth, left low stub and upper cross-pipe have separate measured volumes; initial brown pipe extensions were rejected. Bare Water reference excludes waves. The flared lower main tube is bounded by its full measured base volume, including its broken metal skirts.",
+  "referenceCode": "TS-068"
+}

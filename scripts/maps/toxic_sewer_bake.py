@@ -111,7 +111,7 @@ def bake_tier(report, directory, tier):
                 s = v/255
                 return s/12.92 if s <= .04045 else ((s+.055)/1.055)**2.4
             shader.inputs['Base Color'].default_value = (*[linear(v) for v in inner_colour], 1)
-            shader.inputs['Roughness'].default_value = .89
+            shader.inputs['Roughness'].default_value = report['materialSpec'].get('mountInnerRoughness', .89)
             mount.data.materials.append(inner)
             for face in mount.data.polygons:
                 centre = face.center

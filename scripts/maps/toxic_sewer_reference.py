@@ -9,6 +9,8 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def projected_grid(triangles, axes, value_axis, low, high, step, maximum):
+    if any(high[i] < low[i] for i in range(2)):
+        return {'low': low, 'step': step, 'size': [0, 0], 'values': []}
     size = [int(np.ceil((high[i]-low[i])/step))+1 for i in range(2)]
     empty = -np.inf if maximum else np.inf
     result = np.full((size[1], size[0]), empty, np.float32)

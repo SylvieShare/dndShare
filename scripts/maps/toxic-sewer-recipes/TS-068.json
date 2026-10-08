@@ -1,0 +1,36 @@
+{
+  "sourceName": "Water",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 24000,
+  "lodTriangles": 7000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 11.0,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.7, 2.0],
+    "lodMiB": [0.2, 0.75],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell flowing toxic water without loose objects: preserve waves and small bubbles; distinguish glossy top from matte slab sides."
+  },
+  "regions": [
+    {
+      "part": "toxic",
+      "min": [-18, -18, 10.5]
+    },
+    {
+      "part": "toxic",
+      "color": [104, 147, 28],
+      "roughness": 0.88
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "waterSurfaceMM": [10.5, 12.4153]
+  },
+  "notes": "Opaque lime toxic liquid with glossy flowing waves and bubbles. Lower slab sides are a darker matte green support; no baked directional lighting and no emission."
+}

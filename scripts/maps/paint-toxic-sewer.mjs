@@ -39,6 +39,7 @@ for (const field of [
   "lodMountTriangles",
   "openingProbesMM",
   "mountInnerColor",
+  "mountInnerRoughness",
 ])
   if (
     JSON.stringify(spec[field]) !== JSON.stringify(report.materialSpec[field])

@@ -1,0 +1,55 @@
+{
+  "sourceName": "Water Vortex",
+  "material": "sewer-components",
+  "referencePage": 10,
+  "renderTriangles": 28000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 11.0,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.8],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell deep vortex: preserve spiral waves, narrowing funnel and a source annular mounting section; do not fill its central opening."
+  },
+  "regions": [
+    {
+      "part": "toxic",
+      "ellipsoid": {
+        "centre": [0, 0, 5],
+        "radius": [16, 16, 100]
+      }
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 10]
+    },
+    {
+      "part": "toxic",
+      "color": [104, 147, 28],
+      "roughness": 0.88
+    }
+  ],
+  "measurements": {
+    "sectionYMM": 0,
+    "sectionsZMM": [5],
+    "cutHeightMM": 11.5,
+    "funnelSourceBottomBelowCropMM": 8
+  },
+  "notes": "Deep glossy lime vortex keeps its cropped central opening through body, annular mounting and shadow. Central funnel is liquid down to its lower edge; exterior slab sides remain matte. Accepted standing point is away from the opening and stays unchanged.",
+  "mounting": "source-opening",
+  "renderMountTriangles": 1500,
+  "lodMountTriangles": 900,
+  "openingProbesMM": [
+    [0, 0],
+    [1, 1]
+  ],
+  "mountingCorrectionReason": "Accepted solid insertion proxy closes the cropped vortex funnel. Rebuild its annular source section at the accepted origin, depth and footprint.",
+  "mountInnerColor": [126, 175, 26],
+  "mountInnerRoughness": 0.28
+}

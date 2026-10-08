@@ -1,0 +1,104 @@
+{
+  "sourceName": "Water Skulls 1",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 26000,
+  "lodTriangles": 8000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 11.0,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.7, 2.0],
+    "lodMiB": [0.2, 0.75],
+    "shadowKiB": [15, 45],
+    "previewKiB": [8, 45],
+    "basis": "One-cell flowing toxic water with three partly submerged skulls; preserve eye sockets and facial silhouette alongside the waves."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-18, -18, 10.6],
+      "max": [18, 18, 13.2],
+      "ellipsoid": {
+        "centre": [-8.1, -9.2, 12],
+        "radius": [2.8, 2.7, 2.3]
+      }
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-18, -18, 10.6],
+      "max": [18, 18, 13.2],
+      "ellipsoid": {
+        "centre": [6.3, -6.2, 12],
+        "radius": [2.7, 2.6, 2.3]
+      }
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-18, -18, 10.6],
+      "max": [18, 18, 13.2],
+      "ellipsoid": {
+        "centre": [-2.5, 8.9, 12],
+        "radius": [2.7, 2.8, 2.3]
+      }
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-1.7, -14.8, 10.6],
+      "max": [11.5, -7.9, 13.2]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-11.5, 2.2, 10.6],
+      "max": [-6.7, 5.8, 13.2]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [5.8, 6.4, 10.6],
+      "max": [10, 11, 13.2]
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 10.5]
+    },
+    {
+      "part": "toxic",
+      "color": [104, 147, 28],
+      "roughness": 0.88
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [11.3, 12, 12.6],
+    "skullCentresXYMM": [
+      [-8.1, -9.2],
+      [6.3, -6.2],
+      [-2.5, 8.9]
+    ],
+    "skullTopMM": 13.0123,
+    "extraBoneBoundsXYMM": [
+      [
+        [-1.31, -14.31],
+        [11.09, -8.31]
+      ],
+      [
+        [-10.91, 2.69],
+        [-7.11, 5.29]
+      ],
+      [
+        [6.29, 6.89],
+        [9.49, 10.49]
+      ]
+    ]
+  },
+  "notes": "Three partly submerged ivory skulls, one long bone and two jaws. Six measured positive height clusters against bare Water are bounded individually to exclude nearby waves. Glossy lime liquid and matte lower slab match Water.",
+  "referenceCode": "TS-068"
+}

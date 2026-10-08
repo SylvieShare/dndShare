@@ -1,0 +1,109 @@
+{
+  "sourceName": "Water Skulls 2",
+  "material": "sewer-components",
+  "referencePage": 9,
+  "renderTriangles": 30000,
+  "lodTriangles": 9500,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "stoneColor": [124, 137, 77],
+  "mortarColor": [58, 64, 39],
+  "floorHeightMM": 11.0,
+  "floorJointRangeMM": null,
+  "weightBudget": {
+    "renderMiB": [0.8, 2.2],
+    "lodMiB": [0.25, 0.85],
+    "shadowKiB": [20, 70],
+    "previewKiB": [8, 45],
+    "basis": "One-cell toxic water with seven bone groups, including two open rib cages: preserve thin ribs, eye sockets and liquid waves."
+  },
+  "regions": [
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-10.3, -10.8, 10.6],
+      "max": [-5.5, -5.8, 14.6]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [1.1, -10.3, 10.6],
+      "max": [13.5, 1.1, 14.6]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-14.8, -6, 10.6],
+      "max": [-10.4, -2.4, 14.6]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-12.6, 1.6, 10.6],
+      "max": [-7.2, 6.8, 14.6]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [-8.4, 3.8, 10.6],
+      "max": [2.9, 11.2, 14.6]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [10.8, 5.6, 10.6],
+      "max": [16.4, 12.4, 14.6]
+    },
+    {
+      "part": "bone",
+      "added": true,
+      "min": [6, 6.8, 10.6],
+      "max": [10, 11.2, 14.6]
+    },
+    {
+      "part": "toxic",
+      "min": [-18, -18, 10.5]
+    },
+    {
+      "part": "toxic",
+      "color": [104, 147, 28],
+      "roughness": 0.88
+    }
+  ],
+  "measurements": {
+    "sectionsZMM": [12.5, 13.2],
+    "boneBoundsMM": [
+      [
+        [-10.3, -10.8, 10.6],
+        [-5.5, -5.8, 14.6]
+      ],
+      [
+        [1.1, -10.3, 10.6],
+        [13.5, 1.1, 14.6]
+      ],
+      [
+        [-14.8, -6, 10.6],
+        [-10.4, -2.4, 14.6]
+      ],
+      [
+        [-12.6, 1.6, 10.6],
+        [-7.2, 6.8, 14.6]
+      ],
+      [
+        [-8.4, 3.8, 10.6],
+        [2.9, 11.2, 14.6]
+      ],
+      [
+        [10.8, 5.6, 10.6],
+        [16.4, 12.4, 14.6]
+      ],
+      [
+        [6, 6.8, 10.6],
+        [10, 11.2, 14.6]
+      ]
+    ],
+    "boneTopMM": 14.2551
+  },
+  "notes": "Three submerged skulls, two jaws and two rib cages. Seven bounded regions follow measured added-height clusters against Water; nearby isolated round bubble clusters stay liquid. Back rib region includes its detached lower rib ends.",
+  "referenceCode": "TS-068"
+}
