@@ -60,6 +60,17 @@ def paint(obj, recipe=None, code=None):
     if recipe.get('water'):
         from majestic_water import apply_water
         rgb, roughness = apply_water(obj,positions.reshape(-1,3),rgb,roughness,recipe)
+    if recipe.get('waterfall'):
+        from majestic_waterfall import apply_waterfall
+        rgb, roughness = apply_waterfall(positions.reshape(-1,3),rgb,roughness,recipe)
+        before_shore = mesh.color_attributes.get('Before Shoreline')
+        if before_shore is not None:
+            saved=np.empty(len(x)*4,np.float32);before_shore.data.foreach_get('color',saved)
+            saved=saved.reshape(-1,4)[:,:3]
+            srgb=np.where(saved<=.0031308,saved*12.92,1.055*np.power(np.maximum(saved,0),1/2.4)-.055)
+            repaired,_=apply_waterfall(positions.reshape(-1,3),srgb,roughness,recipe)
+            repaired=np.where(repaired<=.04045,repaired/12.92,((repaired+.055)/1.055)**2.4)
+            before_shore.data.foreach_set('color',np.column_stack([repaired,np.ones(len(x))]).astype(np.float32).ravel())
     linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     attribute = mesh.color_attributes.new('Paint', 'FLOAT_COLOR', 'POINT')
     attribute.data.foreach_set('color', np.column_stack([linear, np.ones(len(x))]).astype(np.float32).ravel())
