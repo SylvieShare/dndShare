@@ -29,12 +29,30 @@ function nearPath(p, path) {
     );
   });
 }
-export function caveBonePartAt(p, spec, reference) {
+function polygonDistance(p, polygon) {
+  return Math.min(
+    ...polygon.map((a, i) => {
+      const b = polygon[(i + 1) % polygon.length],
+        dx = b[0] - a[0],
+        dy = b[1] - a[1];
+      const den = dx * dx + dy * dy;
+      const t = den
+        ? Math.max(
+            0,
+            Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / den),
+          )
+        : 0;
+      return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+    }),
+  );
+}
+function caveBoneWeight(p, spec, reference, normal) {
   if (!reference && !spec.bones.regionsOnly)
     throw new Error(
       "Verified bare source or individually measured bone regions required",
     );
-  if (p[2] < spec.bones.minZ) return "rock";
+  if (p[2] < spec.bones.minZ) return 0;
+  const sample = p.map((v, i) => v + (spec.bones.referenceOffsetMM?.[i] ?? 0));
   if (
     spec.bones.volumes?.some(
       (v) =>
@@ -46,19 +64,49 @@ export function caveBonePartAt(p, spec, reference) {
     spec.bones.paths?.some((path) => nearPath(p, path)) ||
     spec.bones.directRegions?.some((poly) => inPolygon(p, poly))
   )
-    return "bone";
-  if (spec.bones.regionsOnly) return "rock";
+    return 1;
+  if (
+    spec.bones.regionPaddingMM &&
+    normal &&
+    (normal[2] < spec.bones.paddingNormalMaxZ ||
+      p[2] > spec.floorHeightMM + 0.15)
+  ) {
+    const distance = Math.min(
+      ...spec.bones.directRegions.map((poly) => polygonDistance(p, poly)),
+    );
+    const sourceDistance = spec.bones.paddingMatchMM
+      ? (reference?.distanceAt(sample) ?? 0)
+      : Infinity;
+    if (
+      distance < spec.bones.regionPaddingMM &&
+      sourceDistance > (spec.bones.paddingMatchMM ?? 0)
+    ) {
+      const edge = 1 - distance / spec.bones.regionPaddingMM;
+      const source = spec.bones.paddingMatchMM
+        ? Math.max(
+            0,
+            Math.min(1, (sourceDistance - spec.bones.paddingMatchMM) / 0.5),
+          )
+        : 1;
+      return spec.bones.softPadding ? edge * source * 0.75 : 1;
+    }
+  }
+
+  if (spec.bones.regionsOnly) return 0;
   if (
     spec.bones.regions &&
     !spec.bones.regions.some((poly) => inPolygon(p, poly))
   )
-    return "rock";
-  const sample = p.map((v, i) => v + (spec.bones.referenceOffsetMM?.[i] ?? 0));
-  return reference.distanceAt(sample) > spec.bones.matchMM ? "bone" : "rock";
+    return 0;
+  return reference.distanceAt(sample) > spec.bones.matchMM ? 1 : 0;
 }
 
+export function caveBonePartAt(p, spec, reference, normal) {
+  return caveBoneWeight(p, spec, reference, normal) > 0 ? "bone" : "rock";
+}
 export function paintCaveBones(p, n, ao, spec, reference) {
-  if (caveBonePartAt(p, spec, reference) === "rock")
+  const weight = caveBoneWeight(p, spec, reference, n);
+  if (!weight)
     return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
   const detail = 0.9 + 0.1 * Math.min(1, ao / 255);
   const value = finishBone(detail, p, ao, spec.bones.groups);
@@ -66,5 +114,12 @@ export function paintCaveBones(p, n, ao, spec, reference) {
   const age = surfaceNoise(...p.map((v) => v * 0.28));
   const speckle = Math.max(0, (pore - 0.62) / 0.38) * (0.25 + age * 0.2);
   value.rgb = value.rgb.map((v) => Math.round(v * (1 - speckle)));
+  if (weight < 1) {
+    const stone = darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
+    value.rgb = value.rgb.map((v, i) =>
+      Math.round(v * weight + stone.rgb[i] * (1 - weight)),
+    );
+    value.roughness = value.roughness * weight + stone.roughness * (1 - weight);
+  }
   return value;
 }

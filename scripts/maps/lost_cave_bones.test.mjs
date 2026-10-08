@@ -53,3 +53,74 @@ test("second jaw uses measured contours and keeps stone between teeth without a 
   ])
     assert.equal(caveBonePartAt(p, spec), "rock");
 });
+
+test("padded bone contour colours bulging sides while excluding adjacent flat ground", () => {
+  const spec = {
+    floorHeightMM: 14.7,
+    bones: {
+      regionsOnly: true,
+      minZ: 12.5,
+      regionPaddingMM: 0.85,
+      paddingNormalMaxZ: 0.8,
+      directRegions: [
+        [
+          [0, 0],
+          [2, 0],
+          [2, 2],
+          [0, 2],
+        ],
+      ],
+    },
+  };
+  assert.equal(
+    caveBonePartAt([2.5, 1, 14.6], spec, undefined, [1, 0, 0]),
+    "bone",
+  );
+  assert.equal(
+    caveBonePartAt([2.5, 1, 14.6], spec, undefined, [0, 0, 1]),
+    "rock",
+  );
+  assert.equal(
+    caveBonePartAt([2.5, 1, 15.2], spec, undefined, [0, 0, 1]),
+    "bone",
+  );
+  assert.equal(
+    caveBonePartAt([2.5, 1, 10], spec, undefined, [1, 0, 0]),
+    "rock",
+  );
+});
+
+test("cave bone padding protects unchanged stone and fades colour at dirty contacts", () => {
+  const spec = {
+    ...specs["LC-045"],
+    bones: {
+      regionsOnly: true,
+      minZ: 12.5,
+      regionPaddingMM: 0.7,
+      paddingNormalMaxZ: 0.8,
+      paddingMatchMM: 0.25,
+      softPadding: true,
+      directRegions: [
+        [
+          [0, 0],
+          [2, 0],
+          [2, 2],
+          [0, 2],
+        ],
+      ],
+    },
+  };
+  const p = [2.2, 1, 14.6],
+    normal = [1, 0, 0];
+  assert.equal(
+    caveBonePartAt(p, spec, { distanceAt: () => 0.1 }, normal),
+    "rock",
+  );
+  const dirty = paintCaveBones(p, normal, 240, spec, { distanceAt: () => 0.4 });
+  const pale = paintCaveBones([1.9, 1, 14.6], normal, 240, spec, {
+    distanceAt: () => 0.4,
+  });
+  assert.equal(dirty.part, "bone");
+  assert(dirty.rgb[0] < pale.rgb[0]);
+  assert(dirty.roughness >= pale.roughness);
+});
