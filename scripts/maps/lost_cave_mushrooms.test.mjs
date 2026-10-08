@@ -113,3 +113,36 @@ test("mushroom wall keeps structural stone separate from green shelves and red b
     "wart",
   );
 });
+
+test("porous orange wall fungus stays separate from its red neighbour and bare wall", () => {
+  const s = specs["LC-054"],
+    far = { distanceAt: () => 6 };
+  assert.equal(
+    mushroomPartAt([11.8661, -2.0258, 32.9293], [1, 0, 0], s, undefined, far),
+    "honeycomb",
+  );
+  assert.equal(
+    mushroomPartAt([11.5782, -0.5674, 20.0908], [1, 0, 0], s, undefined, far),
+    "honeycomb",
+  );
+  assert.equal(
+    mushroomPartAt([-0.2125, -3.0434, 33.5859], [0, 0, 1], s, undefined, {
+      distanceAt: () => 0.0726,
+    }),
+    "rock",
+  );
+  assert.equal(
+    mushroomPartAt([7.5944, 10.5729, 31.4596], [0, 0, 1], s, undefined, far),
+    "cap",
+  );
+  const value = paintMushrooms(
+    [11.8661, -2.0258, 32.9293],
+    [1, 0, 0],
+    220,
+    s,
+    undefined,
+    far,
+  );
+  assert(value.rgb[0] > value.rgb[1] && value.rgb[1] > value.rgb[2]);
+  assert.equal(value.metallic, 0);
+});

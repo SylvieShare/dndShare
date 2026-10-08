@@ -1,0 +1,133 @@
+{
+  "sourceName": "Mushrooms Wall 2",
+  "referencePage": 8,
+  "material": "cave-mushrooms",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.2, 5.8],
+    "lodMiB": [0.8, 2.4],
+    "shadowKiB": [45, 160],
+    "previewKiB": [10, 180],
+    "basis": "439960-triangle1x1 wall with a deeply porous orange form, red cap with seven sculpted white spots, two shelves and buds.65k/22k preserve thin hole walls, cap bumps and shelf rims;2048/1024 source bakes, structural reference and two KTX2 budgets."
+  },
+  "notes": "Author page8: porous orange egg-like form against a brown straight wall, red/ivory cap, ivory stalk, yellow shelves and red buds. Correct structural LC-001 matches-.2125/-3.0434/33.5859 within.0726mm; wrong LC-002 differs3.1018mm. Orange source11.8016/-5.2321/38.4938,11.8661/-2.0258/32.9293,13.804/.7358/26.991,11.5782/-.5674/20.0908 lie5.352\u201312.351mm from LC-001. Shelf points15.0484/-12.1905/16.1986 and11.6062/6.3239/17.6841 retain amber/yellow material. Masks keep visible original stone inside pores and behind the fungus. Preserve current UUIDa4d8fb8e-0aa3-56d7-b258-47bf60120aa5, LC-054, familyLC-mushrooms-wall, source, cut11.5, mount.150194, footprint, wallMask17 and standing point. Shelf masks take priority at the orange-body foot, preventing its colour from spilling onto the separate concentric shelf. Bud envelopes expanded within the existing minimum14.8mm guard to retain the complete red skin. Source-visible skin13.1484/2.5415/16.9181 stays red while neighbouring contact15.1375/3.258/15.4222 is outside the bud Y<=3 guard and remains stone.",
+  "groupCode": "LC-mushrooms-wall",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "mushrooms": {
+    "cap": {
+      "centre": [8.5, 11, 28.5],
+      "radius": [7.0, 7.2, 5]
+    },
+    "capFloorMM": 25.6,
+    "warts": [
+      {
+        "centre": [6.5833, 13.8644, 30.7941],
+        "radius": [0.75, 0.75, 0.75]
+      },
+      {
+        "centre": [9.9465, 13.7946, 29.9436],
+        "radius": [0.8, 0.8, 0.8]
+      },
+      {
+        "centre": [4.7944, 11.5742, 30.998],
+        "radius": [0.75, 0.75, 0.75]
+      },
+      {
+        "centre": [9.4456, 11.2866, 31.6763],
+        "radius": [1, 1, 1]
+      },
+      {
+        "centre": [10.4474, 9.3551, 31.3954],
+        "radius": [0.9, 0.9, 0.9]
+      },
+      {
+        "centre": [4.5797, 7.9945, 31.8578],
+        "radius": [1, 1, 1]
+      },
+      {
+        "centre": [7.8713, 7.6365, 32.0002],
+        "radius": [1, 1, 1]
+      }
+    ],
+    "stalks": [
+      {
+        "profile": "cylinder",
+        "centre": [8.5, 11, 0],
+        "radius": [4.4, 5.0, 1],
+        "zRange": [14.8, 25.6]
+      }
+    ],
+    "buds": [
+      {
+        "centre": [13.5, 0.1, 15.0],
+        "radius": [3.84, 3.84, 3.84],
+        "minZ": 14.8,
+        "bounds": {
+          "min": [9.5, -3.9, 14.8],
+          "max": [17.4, 3.0, 19.0]
+        }
+      },
+      {
+        "centre": [10.0, 13.4, 16.4],
+        "radius": [3.7199999999999998, 3.7199999999999998, 3.7199999999999998],
+        "minZ": 14.8
+      },
+      {
+        "centre": [14.2, 13.3, 14.9],
+        "radius": [3.0, 3.0, 3.0],
+        "minZ": 14.8
+      }
+    ],
+    "palette": {
+      "cap": [0.8, 0.235, 0.055],
+      "bud": [0.74, 0.18, 0.035],
+      "wart": [0.9, 0.825, 0.7],
+      "stalk": [0.67, 0.605, 0.43],
+      "gills": [0.73, 0.65, 0.46],
+      "shelf": [0.81, 0.71, 0.27],
+      "shelf-green": [0.63, 0.665, 0.235],
+      "honeycomb": [0.92, 0.49, 0.075]
+    },
+    "capMaxZ": 33.0,
+    "shelves": [
+      {
+        "centre": [12.0, -11.5, 16.3],
+        "radius": [6.5, 5.8, 2.8],
+        "part": "shelf"
+      },
+      {
+        "centre": [11.0, 6.5, 17.0],
+        "radius": [6.8, 7.1, 3.0],
+        "part": "shelf"
+      }
+    ],
+    "budsPriority": true,
+    "wallReference": {
+      "code": "LC-001",
+      "sourceSHA256": "037f7b7a7360f0a91b76a8f6f152aca04fa7ea6eb74084366fa972a9fb3a42bb",
+      "matchMM": 0.35
+    },
+    "honeycomb": {
+      "centre": [10, -6],
+      "radius": [8.6, 9.6],
+      "zRange": [16.0, 42]
+    }
+  }
+}

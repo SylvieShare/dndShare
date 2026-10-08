@@ -56,6 +56,19 @@ export function mushroomPartAt(p, n, spec, projectedPart, wallReference) {
       m.disc.creamRadius
       ? "disc-centre"
       : "disc";
+  if (m.honeycomb) {
+    const shelf = (m.shelves ?? []).find((v) => inside(p, v));
+    if (shelf) return shelf.part ?? "shelf";
+  }
+  if (
+    m.honeycomb &&
+    p[2] >= m.honeycomb.zRange[0] &&
+    p[2] <= m.honeycomb.zRange[1] &&
+    ((p[0] - m.honeycomb.centre[0]) / m.honeycomb.radius[0]) ** 2 +
+      ((p[1] - m.honeycomb.centre[1]) / m.honeycomb.radius[1]) ** 2 <=
+      1
+  )
+    return "honeycomb";
   if (m.cap) {
     const capXY =
       ((p[0] - m.cap.centre[0]) / m.cap.radius[0]) ** 2 +
