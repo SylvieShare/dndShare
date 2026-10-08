@@ -1,0 +1,142 @@
+{
+  "sourceName": "Wagon Tilted",
+  "referencePage": 5,
+  "material": "cave-wagon-track",
+  "floorHeightMM": 7.5,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 80000,
+  "lodTriangles": 28000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 6],
+    "lodMiB": [0.8, 2.8],
+    "shadowKiB": [40, 180],
+    "previewKiB": [10, 160],
+    "basis": "659994-triangle tilted wagon1x1.80k/28k protect large open interior, thin inclined rim, cargo and fixed undercarriage;2048/1024 bakes and two KTX2 variants."
+  },
+  "notes": "Author page5: tilted rusty bucket with a reduced grey-green rock load; fixed wheels and track. Native cargo envelopeX[-2.5,17.1],Y[-14,13],Z[32,46] follows diagonal floor z+(8/3)x-(4/3)y≈25.805mm with threshold26.75mm and lower-lip plane z-.2581x>30.3mm. Native wall thickness atY13.7293/-15.1355 excluded completely, including relief and rivets. Forward boulder16.1599/-10.2476/38.5391 retained after expandingX bound;13.6507/-15.5656/39.3386 is wall, not stone. Brass measured8.4684/17.3597/38.1309; stationary pipe-9.9142/17.1998/51.2611. Transfer of upright reference to upper bucket rejected; original reference still separates undercarriage from rails. Preserve source, LC-031, mount, footprint and standing metadata; familyLC-wagon. Full2048/1024 albedo retained after smaller maps produced orange specks on stone cargo in LOD; candidates compare1024/512 and768/384 normal/ORM.",
+  "groupCode": "LC-wagon",
+  "wagon": {
+    "tint": [0.46, 0.265, 0.12],
+    "wheelsY": [7.1, -7.1],
+    "pipe": {
+      "x": -10.1
+    },
+    "brass": {
+      "x": 8.2,
+      "y": 17.1,
+      "z": 20.65,
+      "radius": 1.9
+    }
+  },
+  "railway": {
+    "rails": [
+      {
+        "x": -8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      },
+      {
+        "x": 8.3,
+        "halfWidth": 2.72,
+        "minZ": 7.9,
+        "y": [-17.6, 17.6]
+      }
+    ],
+    "bolts": [
+      {
+        "x": -12.75,
+        "y": 10.39,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.81,
+        "y": 1.06,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": -12.75,
+        "y": -12.08,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.75,
+        "y": 11.8,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.5,
+        "y": 0,
+        "radius": 2.25,
+        "minZ": 9.4
+      },
+      {
+        "x": 12.64,
+        "y": -9.6,
+        "radius": 2.25,
+        "minZ": 9.4
+      }
+    ],
+    "ties": [
+      {
+        "y": 11.45,
+        "slope": 0.085,
+        "halfWidth": 3.5
+      },
+      {
+        "y": -0.3,
+        "slope": -0.07,
+        "halfWidth": 3.4
+      },
+      {
+        "y": -10.65,
+        "slope": 0.11,
+        "halfWidth": 3.5
+      }
+    ],
+    "timberHalfLength": 15.9,
+    "timberMinZ": 7.9,
+    "timberMaxZ": 9.95,
+    "woodTint": [0.36, 0.255, 0.135]
+  },
+  "wagonOffsetZMM": 17.482,
+  "trackOffsetZMM": 7,
+  "wagonMatchMM": 0.35,
+  "wagonReferenceSHA256": "a4237eee9799b1666cb6c035c2971ce58c051f9b4cadb122754152947bff543b",
+  "wagonRotationZDeg": 0,
+  "cargo": {
+    "material": "boulder",
+    "min": [-2.5, -14, 32],
+    "max": [17.1, 13, 46]
+  },
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
+  },
+  "tiltedWagon": {
+    "bodyMinZ": 29,
+    "cargoFloor": {
+      "xSlope": 2.6666666666666665,
+      "ySlope": -1.3333333333333333,
+      "intercept": 26.75
+    },
+    "lip": {
+      "xSlope": 0.2581,
+      "intercept": 30.3
+    }
+  }
+}

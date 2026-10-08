@@ -8,6 +8,21 @@ export function wagonLocalPoint(p, spec) {
   return [p[0] * sign, p[1] * sign, p[2] - spec.wagonOffsetZMM];
 }
 export function wagonOnTrackPartAt(p, spec, reference) {
+  if (spec.tiltedWagon) {
+    const floor = spec.tiltedWagon.cargoFloor;
+    const aboveFloor =
+      p[2] + floor.xSlope * p[0] + floor.ySlope * p[1] > floor.intercept;
+    const aboveLip =
+      p[2] - spec.tiltedWagon.lip.xSlope * p[0] >
+      spec.tiltedWagon.lip.intercept;
+    if (
+      aboveFloor &&
+      aboveLip &&
+      p.every((v, i) => v >= spec.cargo.min[i] && v <= spec.cargo.max[i])
+    )
+      return spec.cargo.material;
+    if (p[2] >= spec.tiltedWagon.bodyMinZ) return "wagon";
+  }
   const local = wagonLocalPoint(p, spec);
   if (wagonReferenceDistance(local, reference) <= spec.wagonMatchMM)
     return "wagon";
