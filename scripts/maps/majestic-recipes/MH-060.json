@@ -1,0 +1,603 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 55000,
+  "lodTriangles": 20000,
+  "tileType": "bridge",
+  "hasDecor": false,
+  "tags": [
+    "water",
+    "wood",
+    "bridge",
+    "shore",
+    "grass",
+    "stones",
+    "outdoor",
+    "xl",
+    "broken",
+    "debris"
+  ],
+  "recipe": "majestic-wooden-bridge-broken-v1",
+  "soilTopRGB": [0.45, 0.3, 0.17],
+  "sizeAssessment": {
+    "targetRenderBytes": [2200000, 3900000],
+    "targetLODBytes": [800000, 1550000],
+    "targetShadowBytes": [45000, 115000],
+    "targetPreviewBytes": [15000, 90000],
+    "basis": "464082 source triangles; independently measured 3x3 base, maximum 41.48 mm. Bank matches MH-059 99.97%, open low water matches MH-045 rotated 270 by 87.2%. Destroyed half leaves slanted timbers and nearly submerged loose planks; combine bare bank and full water references to avoid timber on waves. Standing points measured individually, surviving rail extent only. Test 55k/20k and colour 2048/1024, data 1024/512. Source ray heights confirm partially immersed plank tips, 0.13-0.28 mm water occlusion; per-pixel plane/polygon mask paints only visible timber, preserving overlying water."
+  },
+  "standMaxZMM": 50,
+  "blockers": [
+    [
+      [0.65, 0.63],
+      [0.86, 0.63],
+      [0.86, 3],
+      [0.65, 3]
+    ],
+    [
+      [2.14, 0.63],
+      [2.35, 0.63],
+      [2.35, 3],
+      [2.14, 3]
+    ]
+  ],
+  "water": {
+    "reference": "MH-045",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.16,
+    "minZMM": 10.05,
+    "lowZMM": 11.5,
+    "highZMM": 14.1,
+    "boundsMM": [
+      [-54, -54, 10],
+      [54, 54, 14.4]
+    ],
+    "deepRGB": [0.035, 0.28, 0.33],
+    "shallowRGB": [0.14, 0.56, 0.58],
+    "crestRGB": [0.52, 0.78, 0.74],
+    "roughness": 0.4,
+    "stones": [
+      {
+        "centreMM": [-42, 19, 14.5],
+        "radiiMM": [5, 5, 4],
+        "minZMM": 12.6,
+        "rgb": [0.45, 0.46, 0.405],
+        "forceAboveMM": 13.86
+      },
+      {
+        "centreMM": [34, 9, 14.6],
+        "radiiMM": [5, 5, 4],
+        "minZMM": 12.6,
+        "rgb": [0.455, 0.46, 0.41],
+        "forceAboveMM": 13.15
+      },
+      {
+        "centreMM": [40, 4, 15.5],
+        "radiiMM": [8, 8, 5],
+        "minZMM": 12.6,
+        "rgb": [0.435, 0.45, 0.4],
+        "forceAboveMM": 14.95
+      }
+    ],
+    "preserveWood": true,
+    "shorelines": [
+      {
+        "pointsMM": [
+          [54, -34],
+          [35, -31],
+          [27, -29],
+          [10, -31],
+          [-10, -26],
+          [-32, -30],
+          [-54, -35]
+        ],
+        "stoneWidthMM": 6,
+        "landwardWidthMM": 2.5,
+        "waterRestoreWidthMM": 11,
+        "waterRestoreMaxZMM": 14.3,
+        "minZMM": 12.3,
+        "rgb": [0.415, 0.435, 0.39]
+      }
+    ],
+    "restoreLowWaterAroundStonesMM": 14.3
+  },
+  "baseSurface": "grass",
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "lodORMSize": 512,
+  "woodReference": {
+    "code": "MH-052",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.18,
+    "extraReferences": [
+      {
+        "code": "MH-045",
+        "rotateZ": 270
+      }
+    ]
+  },
+  "woodMinZMM": 12.15,
+  "woodDirection": [1, 0, 0],
+  "woodRGB": [0.5, 0.35, 0.195],
+  "woodParts": [
+    {
+      "minMM": [-24, -52.55, 12.1],
+      "maxMM": [24, -47.45, 33],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -50.0, 13.889999999999999],
+      "rgb": [0.55, 0.4, 0.225],
+      "heightPlane": {
+        "pointMM": [0, -25, 30.74],
+        "slope": [0, 0.63],
+        "belowMM": 2.2,
+        "aboveMM": 1.0
+      }
+    },
+    {
+      "minMM": [-24, -47.55, 12.1],
+      "maxMM": [24, -42.45, 33],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -45.0, 17.04],
+      "rgb": [0.5677723691146129, 0.41283559991610935, 0.23289883071760573],
+      "heightPlane": {
+        "pointMM": [0, -25, 30.74],
+        "slope": [0, 0.63],
+        "belowMM": 2.2,
+        "aboveMM": 1.0
+      }
+    },
+    {
+      "minMM": [-24, -42.55, 12.1],
+      "maxMM": [24, -37.45, 33],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -40.0, 20.189999999999998],
+      "rgb": [0.5443650215361466, 0.3959302933316614, 0.22249556512717625],
+      "heightPlane": {
+        "pointMM": [0, -25, 30.74],
+        "slope": [0, 0.63],
+        "belowMM": 2.2,
+        "aboveMM": 1.0
+      }
+    },
+    {
+      "minMM": [-24, -37.55, 12.1],
+      "maxMM": [24, -32.45, 33],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -35.0, 23.339999999999996],
+      "rgb": [0.5340142797043105, 0.3884547575642242, 0.21789523542413797],
+      "forceWood": true,
+      "heightPlane": {
+        "pointMM": [0, -25, 30.74],
+        "slope": [0, 0.63],
+        "belowMM": 2.2,
+        "aboveMM": 1.0
+      }
+    },
+    {
+      "minMM": [-24, -32.55, 12.1],
+      "maxMM": [24, -27.45, 33],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -30.0, 26.49],
+      "rgb": [0.560703474904282, 0.4077302874308703, 0.22975709995745863],
+      "forceWood": true,
+      "heightPlane": {
+        "pointMM": [0, -25, 30.74],
+        "slope": [0, 0.63],
+        "belowMM": 2.2,
+        "aboveMM": 1.0
+      }
+    },
+    {
+      "minMM": [-24, -27.55, 12.1],
+      "maxMM": [24, -22.45, 33],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -25.0, 29.639999999999997],
+      "rgb": [0.5625920337148481, 0.4090942465718347, 0.23059645942882134],
+      "forceWood": true,
+      "heightPlane": {
+        "pointMM": [0, -25, 30.74],
+        "slope": [0, 0.63],
+        "belowMM": 2.2,
+        "aboveMM": 1.0
+      }
+    },
+    {
+      "minMM": [-24, -22.55, 27.1],
+      "maxMM": [24, -17.45, 31.1],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -20, 29.3],
+      "rgb": [0.5353040445017301, 0.3893862543623606, 0.21846846422299113]
+    },
+    {
+      "minMM": [-24, -17.55, 27.1],
+      "maxMM": [24, -12.45, 31.1],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -15, 29.3],
+      "rgb": [0.5420675247381896, 0.39427099008869254, 0.22147445543919542]
+    },
+    {
+      "minMM": [-24, -12.55, 27.1],
+      "maxMM": [24, -7.45, 31.1],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -10, 29.3],
+      "rgb": [0.5672110578449009, 0.4124302084435395, 0.23264935904217815]
+    },
+    {
+      "minMM": [-24, -7.55, 27.1],
+      "maxMM": [24, -2.45, 31.1],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -5, 29.3],
+      "rgb": [0.5524754683951001, 0.4017878382853501, 0.22610020817560003]
+    },
+    {
+      "minMM": [-24, -2.55, 27.1],
+      "maxMM": [24, 2.55, 31.1],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, 0, 29.3],
+      "rgb": [0.5320040602406858, 0.3870029323960509, 0.2170018045514159]
+    },
+    {
+      "minMM": [-24, -31, 22],
+      "maxMM": [24, -20, 31.8],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, 0],
+      "endCentreMM": [0, -26.25, 29.3],
+      "rgb": [0.545, 0.39, 0.22],
+      "forceWood": true
+    },
+    {
+      "minMM": [-29.85, -25, 23.0],
+      "maxMM": [-21.8, 2, 30.6],
+      "direction": [0, 1, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [-26.25, 0, 26.8],
+      "rgb": [0.365, 0.24, 0.12]
+    },
+    {
+      "minMM": [-29.85, -25, 31.0],
+      "maxMM": [-21.8, 2, 35.2],
+      "direction": [0, 1, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [-26.25, 0, 33.4],
+      "rgb": [0.455, 0.31, 0.17]
+    },
+    {
+      "minMM": [-29.85, -25, 35.2],
+      "maxMM": [-21.8, 2, 41.0],
+      "direction": [0, 1, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [-26.25, 0, 38.4],
+      "rgb": [0.46, 0.32, 0.18]
+    },
+    {
+      "minMM": [21.8, -25, 23.0],
+      "maxMM": [29.720000000000002, 2, 30.6],
+      "direction": [0, 1, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [26.12, 0, 26.8],
+      "rgb": [0.365, 0.24, 0.12]
+    },
+    {
+      "minMM": [21.8, -25, 31.0],
+      "maxMM": [29.720000000000002, 2, 35.2],
+      "direction": [0, 1, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [26.12, 0, 33.4],
+      "rgb": [0.455, 0.31, 0.17]
+    },
+    {
+      "minMM": [21.8, -25, 35.2],
+      "maxMM": [29.720000000000002, 2, 41.0],
+      "direction": [0, 1, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [26.12, 0, 38.4],
+      "rgb": [0.46, 0.32, 0.18]
+    },
+    {
+      "minMM": [-24, -27.95, 25.7],
+      "maxMM": [24, -22.349999999999998, 28.2],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [0, -25.15, 26.1],
+      "rgb": [0.39, 0.255, 0.13],
+      "forceWood": true
+    },
+    {
+      "minMM": [-24, -3.1199999999999997, 25.7],
+      "maxMM": [24, 2.48, 28.2],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 0, 1],
+      "endCentreMM": [0, -0.32, 26.1],
+      "rgb": [0.39, 0.255, 0.13],
+      "forceWood": true
+    },
+    {
+      "minMM": [-29.75, -54, 14.4],
+      "maxMM": [-22.75, -44.1, 29.1],
+      "direction": [0, 0, 1],
+      "acrossDirection": [1, 0.83, 0],
+      "endCentreMM": [-26.415, -47.259, 28.9],
+      "rgb": [0.435, 0.3, 0.16],
+      "forceWoodSide": false
+    },
+    {
+      "minMM": [-29.75, -30.05, 11.9],
+      "maxMM": [-22.75, -22.45, 42],
+      "direction": [0, 0, 1],
+      "acrossDirection": [1, 0.83, 0],
+      "endCentreMM": [-26.25, -26.25, 41.45],
+      "rgb": [0.435, 0.3, 0.16],
+      "forceWoodSide": true
+    },
+    {
+      "minMM": [-29.75, -3.52, 11.9],
+      "maxMM": [-22.75, 2.8800000000000003, 42],
+      "direction": [0, 0, 1],
+      "acrossDirection": [1, 0.83, 0],
+      "endCentreMM": [-26.25, -0.5, 41.45],
+      "rgb": [0.435, 0.3, 0.16],
+      "forceWoodSide": true
+    },
+    {
+      "minMM": [22.62, -54, 14.4],
+      "maxMM": [29.62, -44.1, 29.1],
+      "direction": [0, 0, 1],
+      "acrossDirection": [1, 0.83, 0],
+      "endCentreMM": [26.092, -47.315, 28.9],
+      "rgb": [0.435, 0.3, 0.16],
+      "forceWoodSide": false
+    },
+    {
+      "minMM": [22.62, -30.05, 11.9],
+      "maxMM": [29.62, -22.45, 42],
+      "direction": [0, 0, 1],
+      "acrossDirection": [1, 0.83, 0],
+      "endCentreMM": [26.12, -26.25, 41.45],
+      "rgb": [0.435, 0.3, 0.16],
+      "forceWoodSide": true
+    },
+    {
+      "minMM": [22.62, -3.52, 11.9],
+      "maxMM": [29.62, 2.8800000000000003, 42],
+      "direction": [0, 0, 1],
+      "acrossDirection": [1, 0.83, 0],
+      "endCentreMM": [26.12, -0.5, 41.45],
+      "rgb": [0.435, 0.3, 0.16],
+      "forceWoodSide": true
+    },
+    {
+      "minMM": [-24, 0, 16],
+      "maxMM": [24, 18, 31.8],
+      "direction": [1, 0, 0],
+      "acrossDirection": [0, 1, -1],
+      "endCentreMM": [0, 5, 25],
+      "rgb": [0.48, 0.335, 0.185],
+      "heightPlane": {
+        "pointMM": [0, 0, 32.0],
+        "slope": [0, -0.96],
+        "belowMM": 4.1,
+        "aboveMM": 2.0
+      }
+    },
+    {
+      "minMM": [-24, 28, 12.3],
+      "maxMM": [6, 41, 15.5],
+      "direction": [1, -0.2, 0],
+      "acrossDirection": [0.2, 1, 0],
+      "endCentreMM": [-10, 34, 13.7],
+      "rgb": [0.365, 0.255, 0.14]
+    },
+    {
+      "minMM": [-23, 20, 12.3],
+      "maxMM": [9, 30, 15.2],
+      "direction": [1, -0.12, 0],
+      "acrossDirection": [0.12, 1, 0],
+      "endCentreMM": [-8, 25, 13.5],
+      "rgb": [0.405, 0.285, 0.15]
+    }
+  ],
+  "woodSegments": [
+    {
+      "fromMM": [-26.25, -25.15, 30.0],
+      "toMM": [-26.25, -0.32, 13.5],
+      "radiusMM": 4.0,
+      "minT": 0.08,
+      "maxT": 0.92,
+      "acrossDirection": [0, 16.5, 24.83],
+      "endCentreMM": [-26.25, -25.15, 30.0],
+      "rgb": [0.405, 0.27, 0.14]
+    },
+    {
+      "fromMM": [26.12, -25.15, 30.0],
+      "toMM": [26.12, -0.32, 13.5],
+      "radiusMM": 4.0,
+      "minT": 0.08,
+      "maxT": 0.92,
+      "acrossDirection": [0, 16.5, 24.83],
+      "endCentreMM": [26.12, -25.15, 30.0],
+      "rgb": [0.405, 0.27, 0.14]
+    },
+    {
+      "fromMM": [-26.25, -48.5, 13.9],
+      "toMM": [-26.25, -25, 26.8],
+      "radiusMM": 3.4,
+      "minT": 0,
+      "maxT": 1,
+      "acrossDirection": [0, -12.9, 23.5],
+      "endCentreMM": [-26.25, -48.5, 13.9],
+      "rgb": [0.365, 0.24, 0.12]
+    },
+    {
+      "fromMM": [-26.25, -48.5, 20.9],
+      "toMM": [-26.25, -25, 33.4],
+      "radiusMM": 2.8,
+      "minT": 0,
+      "maxT": 1,
+      "acrossDirection": [0, -12.5, 23.5],
+      "endCentreMM": [-26.25, -48.5, 20.9],
+      "rgb": [0.455, 0.31, 0.17]
+    },
+    {
+      "fromMM": [-26.25, -48.5, 26.5],
+      "toMM": [-26.25, -25, 38.4],
+      "radiusMM": 3.2,
+      "minT": 0,
+      "maxT": 1,
+      "acrossDirection": [0, -11.899999999999999, 23.5],
+      "endCentreMM": [-26.25, -48.5, 26.5],
+      "rgb": [0.46, 0.32, 0.18]
+    },
+    {
+      "fromMM": [26.12, -48.5, 13.9],
+      "toMM": [26.12, -25, 26.8],
+      "radiusMM": 3.4,
+      "minT": 0,
+      "maxT": 1,
+      "acrossDirection": [0, -12.9, 23.5],
+      "endCentreMM": [26.12, -48.5, 13.9],
+      "rgb": [0.365, 0.24, 0.12]
+    },
+    {
+      "fromMM": [26.12, -48.5, 20.9],
+      "toMM": [26.12, -25, 33.4],
+      "radiusMM": 2.8,
+      "minT": 0,
+      "maxT": 1,
+      "acrossDirection": [0, -12.5, 23.5],
+      "endCentreMM": [26.12, -48.5, 20.9],
+      "rgb": [0.455, 0.31, 0.17]
+    },
+    {
+      "fromMM": [26.12, -48.5, 26.5],
+      "toMM": [26.12, -25, 38.4],
+      "radiusMM": 3.2,
+      "minT": 0,
+      "maxT": 1,
+      "acrossDirection": [0, -11.899999999999999, 23.5],
+      "endCentreMM": [26.12, -48.5, 26.5],
+      "rgb": [0.46, 0.32, 0.18]
+    },
+    {
+      "fromMM": [-26.25, 1.0, 37.3],
+      "toMM": [-26.25, 29, 13.7],
+      "radiusMM": 4.5,
+      "acrossDirection": [0, 23.599999999999998, 28],
+      "endCentreMM": [-26.25, 1, 37.3],
+      "rgb": [0.41, 0.28, 0.15]
+    },
+    {
+      "fromMM": [-26.25, 1.0, 30.0],
+      "toMM": [-26.25, 29, 12.9],
+      "radiusMM": 3.8,
+      "acrossDirection": [0, 17.1, 28],
+      "endCentreMM": [-26.25, 1, 30.0],
+      "rgb": [0.36, 0.235, 0.12]
+    },
+    {
+      "fromMM": [26.12, 1.0, 37.3],
+      "toMM": [26.12, 29, 13.7],
+      "radiusMM": 4.5,
+      "acrossDirection": [0, 23.599999999999998, 28],
+      "endCentreMM": [26.12, 1, 37.3],
+      "rgb": [0.41, 0.28, 0.15]
+    },
+    {
+      "fromMM": [26.12, 1.0, 30.0],
+      "toMM": [26.12, 29, 12.9],
+      "radiusMM": 3.8,
+      "acrossDirection": [0, 17.1, 28],
+      "endCentreMM": [26.12, 1, 30.0],
+      "rgb": [0.36, 0.235, 0.12]
+    }
+  ],
+  "woodPixelEnds": true,
+  "grassReference": "MH-052",
+  "grassReferenceRotation": 0,
+  "grassMatchMM": 0.06,
+  "grassBlendMM": 0.2,
+  "grassCoverLossMM": 1,
+  "grassCoverFadeMM": 1,
+  "ferns": [
+    {
+      "centreMM": [-30, -40, 16.3],
+      "radiiMM": [17, 14, 6],
+      "minZMM": 15.2
+    },
+    {
+      "centreMM": [23, -38, 16.3],
+      "radiiMM": [17, 14, 6],
+      "minZMM": 15.2
+    }
+  ],
+  "woodOnlyParts": true,
+  "woodSurfacePlanes": [
+    {
+      "pointMM": [0, 0, 14.195],
+      "normal": [0.0575, 0.0391, 1],
+      "distanceMM": 0.035,
+      "normalDot": 0.9998,
+      "minMM": [-24, 20, 12.2],
+      "maxMM": [12, 42, 15.7],
+      "direction": [1, -0.12, -0.0528],
+      "acrossDirection": [0.12, 1, 0],
+      "endCentreMM": [-8, 31, 13.44],
+      "rgb": [0.37, 0.26, 0.145],
+      "footprintsMM": [
+        [
+          [-19.2782, 26.1712],
+          [-19.1594, 24.8927],
+          [-18.9483, 23.7322],
+          [-18.5535, 23.0244],
+          [7.3895, 19.9586],
+          [9.8441, 23.6528],
+          [10.1176, 24.1862],
+          [10.2213, 25.0124],
+          [10.2191, 25.6613],
+          [9.3831, 30.0404],
+          [8.0531, 30.1544],
+          [5.9149, 30.3185],
+          [-18.7649, 30.0215],
+          [-19.1852, 29.0422]
+        ],
+        [
+          [-14.2272, 33.3708],
+          [-14.1962, 33.0865],
+          [2.3217, 30.0727],
+          [6.3803, 29.7181],
+          [8.4303, 29.6912],
+          [9.4859, 30.2034],
+          [9.5992, 30.3183],
+          [10.2994, 32.4574],
+          [10.195, 32.5569],
+          [2.467, 36.61],
+          [-13.1621, 39.4445],
+          [-13.843, 37.9695],
+          [-14.1604, 35.8204]
+        ]
+      ],
+      "bakePlaneDistanceMM": 0.1,
+      "bakeNormalDot": 0.98,
+      "roughness": 0.86,
+      "bakePlaneFadeMM": 0.035,
+      "bakeNormalFade": 0.015
+    }
+  ]
+}

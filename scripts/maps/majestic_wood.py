@@ -9,14 +9,17 @@ from mathutils.bvhtree import BVHTree
 def apply_wood(obj, positions, colours, roughness, recipe):
     root=Path(__file__).resolve().parents[2]
     rows=json.loads((root/'models/collections/majestic-highlands/manifest.json').read_text())
-    settings=recipe['woodReference']; row=next(r for r in rows if r['code']==settings['code'])
-    bpy.ops.wm.stl_import(filepath=str(root/'models'/row['sourcePath']))
-    reference=bpy.context.object;angle=np.deg2rad(settings['rotateZ']);c,s=np.cos(angle),np.sin(angle)
-    for v in reference.data.vertices:
-        x,y=v.co.x,v.co.y;v.co.x,v.co.y=x*c-y*s,x*s+y*c
-    reference.data.update();tree=BVHTree.FromObject(reference,bpy.context.evaluated_depsgraph_get())
-    distances=np.array([tree.find_nearest(v.co)[3] for v in obj.data.vertices],np.float32)
-    bpy.data.objects.remove(reference,do_unlink=True)
+    settings=recipe['woodReference'];distances=None
+    for reference_settings in [settings]+settings.get('extraReferences',[]):
+        row=next(r for r in rows if r['code']==reference_settings['code'])
+        bpy.ops.wm.stl_import(filepath=str(root/'models'/row['sourcePath']))
+        reference=bpy.context.object;angle=np.deg2rad(reference_settings.get('rotateZ',0));c,s=np.cos(angle),np.sin(angle)
+        for v in reference.data.vertices:
+            x,y=v.co.x,v.co.y;v.co.x,v.co.y=x*c-y*s,x*s+y*c
+        reference.data.update();tree=BVHTree.FromObject(reference,bpy.context.evaluated_depsgraph_get())
+        candidate=np.array([tree.find_nearest(v.co)[3] for v in obj.data.vertices],np.float32)
+        distances=candidate if distances is None else np.minimum(distances,candidate)
+        bpy.data.objects.remove(reference,do_unlink=True)
     weight=np.clip((distances-settings['matchMM'])/settings['blendMM'],0,1)
     weight=weight*weight*(3-2*weight);weight*=positions[:,2]>recipe.get('woodMinZMM',15.1)
     normals=np.array([tuple(v.normal) for v in obj.data.vertices])
@@ -46,6 +49,24 @@ def apply_wood(obj, positions, colours, roughness, recipe):
         if 'acrossDirection' in segment: across_axes[mask]=segment['acrossDirection']
         if 'endCentreMM' in segment: end_centres[mask]=segment['endCentreMM']
         if 'rgb' in segment: wood_colours[mask]=segment['rgb']
+    if recipe.get('woodSurfacePlanes'):
+        obj.data.calc_loop_triangles()
+        indices=np.array([t.vertices[:] for t in obj.data.loop_triangles],dtype=np.int32)
+        faces=positions[indices];centres=faces.mean(1)
+        face_normals=np.cross(faces[:,1]-faces[:,0],faces[:,2]-faces[:,0])
+        face_normals/=np.maximum(np.linalg.norm(face_normals,axis=1),1e-10)[:,None]
+        for plane in recipe['woodSurfacePlanes']:
+            normal=np.array(plane['normal'],dtype=float);normal/=np.linalg.norm(normal)
+            anchor=np.array(plane['pointMM'])
+            distances_to_plane=np.abs((faces-anchor)@normal)
+            valid=(distances_to_plane.max(1)<=plane['distanceMM'])&((face_normals@normal)>=plane['normalDot'])
+            valid&=np.all((centres>=plane['minMM'])&(centres<=plane['maxMM']),axis=1)
+            mask=np.zeros(len(positions),bool);mask[indices[valid].ravel()]=True
+            measured_parts|=mask;weight[mask]=1;directions[mask]=plane['direction']
+            if 'acrossDirection' in plane: across_axes[mask]=plane['acrossDirection']
+            if 'endCentreMM' in plane: end_centres[mask]=plane['endCentreMM']
+            if 'rgb' in plane: wood_colours[mask]=plane['rgb']
+            print('WOOD_SURFACE_PLANE',int(valid.sum()),int(mask.sum()),flush=True)
     if recipe.get('woodOnlyParts'): weight*=measured_parts
     directions/=np.linalg.norm(directions,axis=1)[:,None]
     along=(positions*directions).sum(1)
@@ -152,13 +173,13 @@ def wood_finish(nodes, links, finish, recipe):
     mask=nodes.new('ShaderNodeVertexColor');mask.layer_name='Wood'
     colour=nodes.new('ShaderNodeMixRGB');colour.blend_type='MULTIPLY'
     links.new(mask.outputs['Color'],colour.inputs[0]);links.new(finish.outputs[0],colour.inputs[1]);links.new(shape.outputs[0],colour.inputs[2])
-    if not recipe.get('wheels'):return colour
+    if not recipe.get('wheels'):return wood_plane_finish(nodes,links,colour,recipe)
     iron=iron_mask(nodes,links,recipe,mask.outputs['Color'])
     painted=nodes.new('ShaderNodeMixRGB')
     links.new(iron,painted.inputs[0]);links.new(colour.outputs[0],painted.inputs[1])
     rgb=np.array([.225,.235,.225]);linear=((rgb+.055)/1.055)**2.4
     painted.inputs[2].default_value=(*linear,1)
-    return painted
+    return wood_plane_finish(nodes,links,painted,recipe)
 
 
 def iron_mask(nodes, links, recipe, wood):
@@ -207,3 +228,55 @@ def iron_orm(nodes, links, combine, surface):
     links.new(difference.outputs[0],delta.inputs[0]);links.new(mask,delta.inputs[1])
     rough=nodes.new('ShaderNodeMath');rough.operation='SUBTRACT'
     links.new(surface.outputs['Green'],rough.inputs[0]);links.new(delta.outputs[0],rough.inputs[1]);links.new(rough.outputs[0],combine.inputs['Green'])
+
+
+def wood_plane_finish(nodes, links, finish, recipe):
+    if not recipe.get('woodSurfacePlanes'): return finish
+    def scalar(op,a,b=None):
+        node=nodes.new('ShaderNodeMath');node.operation=op
+        for i,v in enumerate([a,b]):
+            if v is None: continue
+            if isinstance(v,(int,float)): node.inputs[i].default_value=v
+            else: links.new(v,node.inputs[i])
+        return node.outputs[0]
+    def vector(op,a,b):
+        node=nodes.new('ShaderNodeVectorMath');node.operation=op;links.new(a,node.inputs[0])
+        if isinstance(b,(list,tuple,np.ndarray)): node.inputs[1].default_value=tuple(b)
+        else: links.new(b,node.inputs[1])
+        return node
+    def clamp(v):return scalar('MINIMUM',scalar('MAXIMUM',v,0),1)
+    coords=nodes.new('ShaderNodeTexCoord').outputs['Object']
+    channels=nodes.new('ShaderNodeSeparateXYZ');links.new(coords,channels.inputs[0])
+    normal=nodes.new('ShaderNodeNewGeometry').outputs['True Normal']
+    for i,plane in enumerate(recipe['woodSurfacePlanes']):
+        n=np.array(plane['normal'],dtype=float);n/=np.linalg.norm(n)
+        delta=vector('SUBTRACT',coords,plane['pointMM']).outputs['Vector']
+        distance=scalar('ABSOLUTE',vector('DOT_PRODUCT',delta,n).outputs['Value'])
+        height=clamp(scalar('DIVIDE',scalar('SUBTRACT',plane['bakePlaneDistanceMM'],distance),plane.get('bakePlaneFadeMM',.15)))
+        facing=clamp(scalar('DIVIDE',scalar('SUBTRACT',vector('DOT_PRODUCT',normal,n).outputs['Value'],plane['bakeNormalDot']),plane.get('bakeNormalFade',.02)))
+        area=None
+        for polygon in plane['footprintsMM']:
+            inside=None
+            for a,b in zip(polygon,polygon[1:]+polygon[:1]):
+                dx,dy=b[0]-a[0],b[1]-a[1];length=np.hypot(dx,dy)
+                cross=scalar('SUBTRACT',scalar('MULTIPLY',scalar('SUBTRACT',channels.outputs['Y'],a[1]),dx),scalar('MULTIPLY',scalar('SUBTRACT',channels.outputs['X'],a[0]),dy))
+                edge=clamp(scalar('ADD',scalar('DIVIDE',cross,length*.3),.5))
+                inside=edge if inside is None else scalar('MULTIPLY',inside,edge)
+            area=inside if area is None else scalar('MAXIMUM',area,inside)
+        mask=nodes.new('ShaderNodeMath');mask.name='Majestic Wood Plane '+str(i);mask.operation='MULTIPLY';mask['woodRoughness']=plane.get('roughness',.86)
+        links.new(area,mask.inputs[0]);links.new(scalar('MULTIPLY',height,facing),mask.inputs[1])
+        across=vector('DOT_PRODUCT',coords,plane['acrossDirection']).outputs['Value']
+        grain=scalar('ADD',scalar('MULTIPLY',scalar('SINE',scalar('MULTIPLY',across,4.4)),.085),.94)
+        rgb=np.array(plane['rgb']);linear=np.where(rgb<=.04045,rgb/12.92,((rgb+.055)/1.055)**2.4)
+        timber=nodes.new('ShaderNodeMixRGB');timber.blend_type='MULTIPLY';timber.inputs[0].default_value=1;timber.inputs[1].default_value=(*linear,1);links.new(grain,timber.inputs[2])
+        mix=nodes.new('ShaderNodeMixRGB');links.new(mask.outputs[0],mix.inputs[0]);links.new(finish.outputs[0],mix.inputs[1]);links.new(timber.outputs[0],mix.inputs[2]);finish=mix
+    return finish
+
+
+def wood_planes_orm(nodes, links, combine, surface, previous=None):
+    if previous: previous(nodes,links,combine,surface)
+    for mask in [n for n in nodes if n.name.startswith('Majestic Wood Plane ')]:
+        original=combine.inputs['Green'].links[0].from_socket
+        difference=nodes.new('ShaderNodeMath');difference.operation='SUBTRACT';difference.inputs[0].default_value=mask.get('woodRoughness',.86);links.new(original,difference.inputs[1])
+        delta=nodes.new('ShaderNodeMath');delta.operation='MULTIPLY';links.new(difference.outputs[0],delta.inputs[0]);links.new(mask.outputs[0],delta.inputs[1])
+        rough=nodes.new('ShaderNodeMath');rough.operation='ADD';links.new(original,rough.inputs[0]);links.new(delta.outputs[0],rough.inputs[1]);links.new(rough.outputs[0],combine.inputs['Green'])
