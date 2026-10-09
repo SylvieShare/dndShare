@@ -1,0 +1,562 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "tileType": "wall-end",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "medium",
+    "outdoor",
+    "xl",
+    "dead-end"
+  ],
+  "recipe": "majestic-medium-end-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      2900000,
+      5500000
+    ],
+    "targetLODBytes": [
+      900000,
+      2300000
+    ],
+    "targetShadowBytes": [
+      50000,
+      135000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "669620 source triangles,33481084B NL. Measured base104.98x104.94mm3x3,max66.76mm. Lowerfloor matches68 98.35%,91 actualrotate270 98.10%. ThreeE/S/Wcliffs, fourcentresexcluded at36.27/61.70/36.20/61.80mm,five lowerpoints,noslots/hasDecorfalse. Fourteenstonecapheightsindividuallymeasured, twoledgeboxes, owncap55..68mm, threecutrearplanes. Ochrecliff/olivegrass/earth PDF29. Test65k/22k colour1024/2048,data1024/512,UV16bit .35/.15,stripunusedColours."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [
+        45,
+        -27
+      ],
+      [
+        31,
+        -35
+      ],
+      [
+        9,
+        -35
+      ],
+      [
+        -8,
+        -27
+      ],
+      [
+        -11,
+        -13
+      ],
+      [
+        -18,
+        -7
+      ],
+      [
+        -9,
+        9
+      ],
+      [
+        5,
+        17
+      ],
+      [
+        26,
+        18
+      ],
+      [
+        34,
+        4
+      ],
+      [
+        39,
+        -14
+      ]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 84,
+  "grassReferenceRotation": 180,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [
+        0.042857,
+        0.0
+      ],
+      [
+        0.2,
+        0.214286
+      ],
+      [
+        0.3,
+        0.5
+      ],
+      [
+        0.485714,
+        0.928571
+      ],
+      [
+        0.6,
+        1.5
+      ],
+      [
+        0.771429,
+        2.071429
+      ],
+      [
+        1.071429,
+        2.357143
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2.985714,
+        0.0
+      ],
+      [
+        2.914286,
+        0.214286
+      ],
+      [
+        2.742857,
+        0.5
+      ],
+      [
+        2.685714,
+        0.928571
+      ],
+      [
+        2.542857,
+        1.5
+      ],
+      [
+        2.342857,
+        2.071429
+      ],
+      [
+        2.185714,
+        2.357143
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    [
+      [
+        1.071429,
+        2.357143
+      ],
+      [
+        1.414286,
+        2.414286
+      ],
+      [
+        1.757143,
+        2.385714
+      ],
+      [
+        2.185714,
+        2.314286
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        0,
+        3
+      ]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-003",
+    "rotateZ": 180,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "y": [
+      -54,
+      54
+    ],
+    "minZMM": 15.1,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          15.1
+        ],
+        [
+          -27,
+          54,
+          68
+        ]
+      ],
+      [
+        [
+          27,
+          -54,
+          15.1
+        ],
+        [
+          54,
+          54,
+          68
+        ]
+      ],
+      [
+        [
+          -54,
+          -54,
+          15.1
+        ],
+        [
+          54,
+          -27,
+          68
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.62,
+    0.46,
+    0.27
+  ],
+  "masonryTopMinZMM": 58,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      55
+    ],
+    "maxMM": [
+      54,
+      54,
+      68
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "exclusions": [
+      {
+        "centreMM": [
+          -42,
+          20,
+          64.932
+        ],
+        "radiiMM": [
+          3.0,
+          3.0,
+          2.1
+        ],
+        "minZMM": 64.132
+      },
+      {
+        "centreMM": [
+          -45,
+          30,
+          65.146
+        ],
+        "radiiMM": [
+          3.0,
+          2.6,
+          2.2
+        ],
+        "minZMM": 64.346
+      },
+      {
+        "centreMM": [
+          -49.5,
+          1,
+          65.729
+        ],
+        "radiiMM": [
+          2.5,
+          2.5,
+          2.0
+        ],
+        "minZMM": 64.929
+      },
+      {
+        "centreMM": [
+          -19,
+          -42,
+          64.844
+        ],
+        "radiiMM": [
+          3.0,
+          2.8,
+          2.0
+        ],
+        "minZMM": 64.044
+      },
+      {
+        "centreMM": [
+          -23,
+          -43.2,
+          65.151
+        ],
+        "radiiMM": [
+          2.8,
+          2.1,
+          2.0
+        ],
+        "minZMM": 64.351
+      },
+      {
+        "centreMM": [
+          -50,
+          -26.5,
+          65.313
+        ],
+        "radiiMM": [
+          2.4,
+          2.7,
+          2.1
+        ],
+        "minZMM": 64.513
+      },
+      {
+        "centreMM": [
+          27.5,
+          -50,
+          65.281
+        ],
+        "radiiMM": [
+          2.3,
+          2.2,
+          2.0
+        ],
+        "minZMM": 64.48100000000001
+      },
+      {
+        "centreMM": [
+          38.5,
+          -45.7,
+          64.282
+        ],
+        "radiiMM": [
+          2.2,
+          2.0,
+          2.1
+        ],
+        "minZMM": 63.482
+      },
+      {
+        "minMM": [
+          -34.0,
+          -35.0,
+          60.1
+        ],
+        "maxMM": [
+          -19.0,
+          -31.8,
+          62.0
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "minMM": [
+          -37.5,
+          -18.5,
+          60.2
+        ],
+        "maxMM": [
+          -33.3,
+          -11.8,
+          61.9
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "centreMM": [
+          42,
+          19,
+          60.652
+        ],
+        "radiiMM": [
+          2.8,
+          3.0,
+          2.0
+        ],
+        "minZMM": 59.852000000000004
+      },
+      {
+        "centreMM": [
+          43.2,
+          23,
+          63.017
+        ],
+        "radiiMM": [
+          2.1,
+          2.8,
+          2.0
+        ],
+        "minZMM": 62.217000000000006
+      },
+      {
+        "centreMM": [
+          50,
+          -27.5,
+          64.731
+        ],
+        "radiiMM": [
+          2.2,
+          2.3,
+          2.0
+        ],
+        "minZMM": 63.931
+      },
+      {
+        "centreMM": [
+          45.7,
+          -38.5,
+          65.207
+        ],
+        "radiiMM": [
+          2.0,
+          2.2,
+          2.1
+        ],
+        "minZMM": 64.407
+      },
+      {
+        "centreMM": [
+          37,
+          -22,
+          65.098
+        ],
+        "radiiMM": [
+          3.2,
+          3.6,
+          2.2
+        ],
+        "minZMM": 64.298
+      },
+      {
+        "centreMM": [
+          15.5,
+          -36.5,
+          61.427
+        ],
+        "radiiMM": [
+          3.4,
+          3.2,
+          2.1
+        ],
+        "minZMM": 60.627
+      }
+    ]
+  },
+  "blockedCells": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.5,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 15.2
+    },
+    {
+      "axis": "X",
+      "coordinateMM": -52.5,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 15.2
+    },
+    {
+      "axis": "Y",
+      "coordinateMM": -52.5,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 15.2
+    }
+  ],
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.35,
+  "stripAuxiliaryColours": true
+}
