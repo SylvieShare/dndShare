@@ -10,7 +10,7 @@ import (
 )
 
 // A reviewed import/cropping correction retains the original file and logical ID,
-// but deliberately changes placement metadata, so existing maps cannot inherit it.
+// and changes the current geometry/placement metadata used by existing maps.
 func preparedGeometryCorrectionError(model battlemap.Model, previous []battlemap.Model, reason string) error {
 	if len(strings.TrimSpace(reason)) < 30 {
 		return errors.New("geometry correction requires a concrete recorded reason")
@@ -41,7 +41,7 @@ func preparedGeometryCorrectionError(model battlemap.Model, previous []battlemap
 	return nil
 }
 
-func TestPreparedGeometryCorrectionRetainsOriginalAndDoesNotReplacePlacedVersion(t *testing.T) {
+func TestPreparedGeometryCorrectionPreservesCurrentIdentity(t *testing.T) {
 	old := battlemap.InitialCatalogue()[0]
 	old.DefinitionID, old.Code = old.SourceCode, "LC-floor"
 	revision := old

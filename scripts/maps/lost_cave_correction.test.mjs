@@ -140,3 +140,51 @@ test("upside-down print restoration requires measured points and a declared180 d
   s.geometryCorrection.metadata.placementPoints[0].elevation = 1;
   assert.throws(() => correctedCaveModel(placed, source, s, true));
 });
+
+test("native bridge crop restoration retains bridge identity and requires measured replacement points", () => {
+  const current = {
+    ...model,
+    tileType: "bridge",
+    width: 1,
+    height: 3,
+    supportSlots: [],
+    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.421143 }],
+  };
+  const src = { ...source, mountDepth: 0, max: [17.5, 52.5, 48.6675] };
+  const s = {
+    geometryCorrection: {
+      mode: "restore-native-bridge",
+      sourceSHA256: sha,
+      previousCutHeightMM: 11.5,
+      cutHeightMM: 0,
+      reason:
+        "Restore the native bridge stone and end keys removed by an incorrect universal mounting cut.",
+      metadata: {
+        tileType: "bridge",
+        maxHeight: 48.6675 / 35,
+        surfaceHeight: 17.9494 / 35,
+        placementPoints: [{ x: 0.5, y: 0.5, elevation: 17.9494 / 35 }],
+      },
+    },
+  };
+  const corrected = correctedCaveModel(current, src, s, true);
+  assert.equal(corrected.model.tileType, "bridge");
+  assert.equal(corrected.model.id, current.id);
+  assert.equal(corrected.cutHeight, 0);
+  assert.throws(() => correctedCaveModel(current, src, s, false));
+  assert.throws(() =>
+    correctedCaveModel({ ...current, tileType: "floor" }, src, s, true),
+  );
+  assert.throws(() =>
+    correctedCaveModel(current, { ...src, mountDepth: 0.15 }, s, true),
+  );
+  assert.throws(() =>
+    correctedCaveModel({ ...current, supportSlots: [{}] }, src, s, true),
+  );
+  const rotated = structuredClone(s);
+  rotated.geometryCorrection.rotationXDeg = 180;
+  assert.throws(() => correctedCaveModel(current, src, rotated, true));
+  const missing = structuredClone(s);
+  delete missing.geometryCorrection.metadata.placementPoints;
+  assert.throws(() => correctedCaveModel(current, src, missing, true));
+});

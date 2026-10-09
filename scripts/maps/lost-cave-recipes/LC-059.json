@@ -1,0 +1,175 @@
+{
+  "sourceName": "Bridge key",
+  "referencePage": 9,
+  "material": "cave-stalagmites",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 85000,
+  "lodTriangles": 30000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.7, 6.5],
+    "lodMiB": [1, 2.6],
+    "shadowKiB": [70, 200],
+    "previewKiB": [15, 190],
+    "basis": "859940-triangle1x3 complete native stone bridge key with thirteen ringed calcite deposits, irregular thin end keys, raised centre and restored lower rock.85k/30k preserve native ends and deposits, source2048/1024 rebake and two KTX2 budgets; incompatible crop correction retains source and UUID."
+  },
+  "notes": "Author page9: complete native1x3 stone bridge key with ringed calcite cones, irregular end keys and raised centre. Previous generic11.5mm crop cuts native stone and end overhangs; native mesh has no insertion peg and accepted mountDepth0. Restore full STL atcut0, unchanged UUIDcf4c8d92-9cd7-537d-a0fb-d807b930d8b4/definitionIdLC-059/codeLC-bridge-key and sourceSHA. Original source vertical rays atX0 show standing heights17.9494mm atY35,24.245mm atY0 and18.4168mm atY-35; previous uniformly14.735mm points were incorrect. Measure thirteen cone volumes individually; warm stone, dirty amber calcite, no metal.",
+  "calcite": {
+    "tint": [0.58, 0.39, 0.205],
+    "roughness": 0.78
+  },
+  "stalagmites": [
+    {
+      "x": 12.7863,
+      "y": 45.084,
+      "radius": 3.7,
+      "base": 15.5,
+      "top": 26.3178
+    },
+    {
+      "x": 12.5365,
+      "y": 43.305,
+      "radius": 5.0,
+      "base": 15.5,
+      "top": 34.1028
+    },
+    {
+      "x": -12.253,
+      "y": 20.2788,
+      "radius": 5.3,
+      "base": 20.7,
+      "top": 44.1391
+    },
+    {
+      "x": -12.6101,
+      "y": 18.53,
+      "radius": 3.7,
+      "base": 20.7,
+      "top": 39.4028
+    },
+    {
+      "x": 9.0682,
+      "y": 22.7252,
+      "radius": 3.6,
+      "base": 20.7,
+      "top": 33.6991
+    },
+    {
+      "x": 12.1123,
+      "y": 15.8014,
+      "radius": 4,
+      "base": 20.7,
+      "top": 33.5302
+    },
+    {
+      "x": -8.7824,
+      "y": -10.67,
+      "radius": 4.8,
+      "base": 21.5,
+      "top": 39.1858
+    },
+    {
+      "x": -11.4595,
+      "y": -14.9796,
+      "radius": 3.3,
+      "base": 21.5,
+      "top": 28.594099999999997
+    },
+    {
+      "x": -10.0001,
+      "y": -25.245,
+      "radius": 4.3,
+      "base": 21.5,
+      "top": 27.389899999999997
+    },
+    {
+      "x": 9.1267,
+      "y": -17.0191,
+      "radius": 4.3,
+      "base": 21.5,
+      "top": 39.7605
+    },
+    {
+      "x": 12.3196,
+      "y": -16.0607,
+      "radius": 3.2,
+      "base": 21.5,
+      "top": 39.836999999999996
+    },
+    {
+      "x": 11.1104,
+      "y": -18.3672,
+      "radius": 6.3,
+      "base": 21.5,
+      "top": 48.817499999999995
+    },
+    {
+      "x": -13.7978,
+      "y": -48.0228,
+      "radius": 4.5,
+      "base": 15.5,
+      "top": 27.8309
+    }
+  ],
+  "groupCode": "LC-bridge-key",
+  "floorHeightProfileMM": [
+    [-52.5, 9.6],
+    [-50, 9.59],
+    [-40, 17.5439],
+    [-35, 18.4168],
+    [-25, 19.3751],
+    [-15, 22.2926],
+    [0, 24.245],
+    [15, 23.5305],
+    [25, 20.0184],
+    [35, 17.9494],
+    [40, 17.895],
+    [50, 9.6215],
+    [52.5, 9.6]
+  ],
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "geometryCorrection": {
+    "mode": "restore-native-bridge",
+    "sourceSHA256": "fa2dddae2bb4794a38ec3468362a8992d63e1b39730f9a2aaf65664f3a92ae90",
+    "previousCutHeightMM": 11.5,
+    "cutHeightMM": 0,
+    "reason": "Restore the full native LC-059 bridge key after the universal11.5mm crop removed lower stone and end keys. The source has no mounting peg; preserve mountDepth0 and1x3 footprint, and replace incorrect uniform placement heights with measured original walk surfaces. Current UUID and original STL remain unchanged.",
+    "metadata": {
+      "tileType": "bridge",
+      "maxHeight": 1.3904998779296875,
+      "surfaceHeight": 0.5128400000000001,
+      "placementPoints": [
+        {
+          "x": 0.5,
+          "y": 0.5,
+          "elevation": 0.5128400000000001
+        },
+        {
+          "x": 0.5,
+          "y": 1.5,
+          "elevation": 0.6927142857142857
+        },
+        {
+          "x": 0.5,
+          "y": 2.5,
+          "elevation": 0.5261942857142857
+        }
+      ]
+    }
+  }
+}

@@ -16,7 +16,8 @@ export function correctedCaveModel(model, source, spec, explicit) {
       "Inspect the full source and explicitly enable geometry correction",
     );
   const removeMount = correction.mode === "remove-false-mount";
-  if (correction.mode && !removeMount)
+  const restoreBridge = correction.mode === "restore-native-bridge";
+  if (correction.mode && !removeMount && !restoreBridge)
     throw new Error("Unknown reviewed geometry correction mode");
   if (
     typeof correction.reason !== "string" ||
@@ -65,13 +66,25 @@ export function correctedCaveModel(model, source, spec, explicit) {
       "False hole mounting correction requires the native mounting datum, a slotless floor and no standing point",
     );
   if (
+    restoreBridge &&
+    (model.tileType !== "bridge" ||
+      source.mountDepth !== 0 ||
+      source.cutHeight <= 0 ||
+      correction.rotationXDeg ||
+      model.supportSlots?.length)
+  )
+    throw new Error(
+      "Native bridge restoration requires a slotless bridge without mounting or rotation",
+    );
+  if (
     !Number.isFinite(result.maxHeight) ||
     !Number.isFinite(result.surfaceHeight) ||
     result.surfaceHeight < 0 ||
     Math.abs(result.maxHeight - (source.max[2] - correction.cutHeightMM) / 35) >
       0.0001 ||
     result.surfaceHeight > result.maxHeight ||
-    (!removeMount && result.tileType !== "object")
+    (!removeMount &&
+      result.tileType !== (restoreBridge ? model.tileType : "object"))
   )
     throw new Error(
       "Corrected heights must match the source after its declared cut",
