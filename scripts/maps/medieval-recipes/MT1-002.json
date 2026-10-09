@@ -1,0 +1,87 @@
+{
+  "name": "Pavement 2",
+  "groupCode": "MED-pavement",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 10,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 56000,
+  "lodTriangles": 18000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.65,
+  "hasDecor": false,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "stone",
+    "pavement"
+  ],
+  "materials": {
+    "earthReference": {
+      "code": "MT1-001",
+      "matchMM": 0.2,
+      "blendMM": 0.3,
+      "minZMM": 17.25,
+      "xMM": [-10, 10],
+      "yMM": [-13, 13]
+    },
+    "rubbleRGB": [0.37, 0.29, 0.18],
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.39,
+      0.35,
+      0.29
+    ],
+    "stoneLightRGB": [
+      0.53,
+      0.47,
+      0.365
+    ],
+    "stoneStartMM": 17.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 18.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8
+  },
+  "weightBudget": {
+    "renderMiB": [
+      0.7,
+      1.8
+    ],
+    "lodMiB": [
+      0.2,
+      0.7
+    ],
+    "shadowKiB": [
+      30,
+      120
+    ],
+    "previewKiB": [
+      15,
+      90
+    ],
+    "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
+  },
+  "reviewNotes": "PDF page 2. Broken central pavement with gravel; 35×35 mm native base, 10 mm insertion taper, complete relief reaches 20.4895 mm. Warm sandstone outside and exposed earth/gravel in the middle. Stand surface measured on the surviving sculpt."
+}
