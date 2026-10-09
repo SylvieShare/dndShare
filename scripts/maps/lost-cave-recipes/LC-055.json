@@ -1,0 +1,101 @@
+{
+  "sourceName": "Mushrooms Angle",
+  "referencePage": 8,
+  "material": "cave-mushrooms",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5.2],
+    "lodMiB": [0.6, 2.1],
+    "shadowKiB": [35, 130],
+    "previewKiB": [10, 160],
+    "basis": "399844-triangle1x1 angular wall with five broad thin shelf mushrooms and four red buds.55k/18k protect shelf rims and concentric relief;2048/1024 source bakes, original corner reference and two KTX2 budgets."
+  },
+  "notes": "Author page8: upper aged amber/brown shelf, four yellow-green shelves and red buds on brown angular wall. Verified LC-003 protects open native wall-2.9567/8.6834/38.3122 within.0724mm and bare slab8.8817/-11.4652/14.717 within.0532mm. Shelf surfaces-6.1724/-6.967/30.1525,-8.513/-7.811/20.2148,1.1804/-10.8768/16.5048,13.0606/-5.237/16.3809,10.5591/7.403/18.1542 measured separately. Red bud surfaces-9.3761/-14.3431/17.17,-14.1827/-11.6731/17.2959,4.7117/-2.1764/19.2114,15.5736/11.6016/16.6723. Preserve current UUIDcdc25ad7-e8a7-5948-aa74-f55d7f95d900, LC-055 and familyLC-mushrooms-angle, source, cut11.5, mount.14968, footprint, wallMask65 and original standing point. Central bud peak3.5847/-.5723/20.3545 and side4.8911/-1.001/19.7035 require the larger actual dome centre3/.2/16.8 and radius4; minimum14.8 protects bare floor. Additional inside profile exposes the first bud lower skin at -12.4039/-14.4396/13.8675mm; radius3.9 and minZ13 retain its full dome, while the verified bare wall reference protects stone.",
+  "groupCode": "LC-mushrooms-angle",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "mushrooms": {
+    "warts": [],
+    "stalks": [],
+    "buds": [
+      {
+        "centre": [-9.5, -13.0, 15.0],
+        "radius": [3.9, 3.9, 3.9],
+        "minZ": 13.0
+      },
+      {
+        "centre": [-14.3, -10.5, 15.0],
+        "radius": [2.9, 2.9, 2.9],
+        "minZ": 14.8
+      },
+      {
+        "centre": [3.0, 0.2, 16.8],
+        "radius": [4.0, 4.0, 4.0],
+        "minZ": 14.8
+      },
+      {
+        "centre": [14.5, 12.5, 14.9],
+        "radius": [3.2, 3.2, 3.2],
+        "minZ": 14.8
+      }
+    ],
+    "palette": {
+      "cap": [0.8, 0.235, 0.055],
+      "bud": [0.74, 0.18, 0.035],
+      "wart": [0.9, 0.825, 0.7],
+      "stalk": [0.59, 0.61, 0.28],
+      "gills": [0.66, 0.67, 0.35],
+      "shelf": [0.72, 0.56, 0.32],
+      "shelf-green": [0.64, 0.66, 0.245]
+    },
+    "shelves": [
+      {
+        "centre": [-6.5, -6.5, 29.5],
+        "radius": [7.2, 6.2, 2.7],
+        "part": "shelf"
+      },
+      {
+        "centre": [-8.5, -7.8, 19.8],
+        "radius": [6.5, 5.8, 2.5],
+        "part": "shelf-green"
+      },
+      {
+        "centre": [1.2, -10.5, 16],
+        "radius": [7.4, 6.5, 2.4],
+        "part": "shelf-green"
+      },
+      {
+        "centre": [12.5, -5, 16.0],
+        "radius": [5.9, 6.5, 2.4],
+        "part": "shelf-green"
+      },
+      {
+        "centre": [10.5, 7.0, 17.6],
+        "radius": [6.5, 8, 2.8],
+        "part": "shelf-green"
+      }
+    ],
+    "budsPriority": true,
+    "wallReference": {
+      "code": "LC-003",
+      "sourceSHA256": "fc038bb912ac394c677a40fef72f0a797f92f5f890875cb136867186a3a45170",
+      "matchMM": 0.35
+    }
+  }
+}
