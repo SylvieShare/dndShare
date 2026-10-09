@@ -84,7 +84,7 @@
     "longBoneCentreXYMM": [5, 2.4],
     "bareWaterPipeReference": "TS-054"
   },
-  "notes": "Authorpage8: two partly submerged ivory skulls and a long bone in lime water, copper rails and green supports. Three bounded bone volumes require complete3D distance from bare PipeWater, keeping nearby unchanged bubbles and waves liquid; pipe geometry and normal/AO remain source-based.",
+  "notes": "Authorpage8: two partly submerged ivory skulls and a long bone in lime water, copper rails and green supports. Three bounded bone volumes require complete3D distance from bare PipeWater, keeping nearby unchanged bubbles and waves liquid; pipe geometry and normal/AO remain source-based. UV revision retains accepted geometry:0.55rad leaves a0.108mm distant-surface overlap in render. Use0.45rad/.003 margin, rebake normal/AO and require uniqueness at all published texture sizes.",
   "referenceCode": "TS-054",
   "referenceFloorMaxZMM": 12.8,
   "proximityReference": {
@@ -95,5 +95,7 @@
     ],
     "stepMM": 0.25,
     "thresholdMM": 0.35
-  }
+  },
+  "uvAngleLimitRad": 0.45,
+  "uvIslandMargin": 0.003
 }
