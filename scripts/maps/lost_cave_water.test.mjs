@@ -49,3 +49,22 @@ test("only the measured upward water inset is liquid, not the rim or neighbourin
   assert(v.rgb[1] > v.rgb[0] * 3);
   assert(v.normalNeutral);
 });
+
+test("the two LC-065 cups use their own elevations and leave their rims dry", () => {
+  const s = specs["LC-065"];
+  for (const p of [
+    [3.5322, 6.7896, 30.0137],
+    [11.2033, 9.1146, 30.0136],
+    [5.8164, -8.0495, 20.6945],
+    [11.9274, -6.9648, 20.6944],
+  ])
+    assert(caveWaterAt(p, [0, 0, 1], s));
+  for (const p of [
+    [12.2846, 0.7664, 31.9039],
+    [14.9853, -7.859, 22.4455],
+    [8.2562, -4.8385, 21.1733],
+    [11, 9, 20.6944],
+    [8, -8, 30.0136],
+  ])
+    assert.equal(caveWaterAt(p, [0, 0, 1], s), undefined);
+});

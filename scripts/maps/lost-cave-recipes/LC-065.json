@@ -1,0 +1,51 @@
+{
+  "sourceName": "Well Wall Full 2",
+  "referencePage": 10,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 4.5],
+    "lodMiB": [0.6, 1.8],
+    "shadowKiB": [30, 110],
+    "previewKiB": [15, 150],
+    "basis": "420010-triangle1x1 cave wall with two nested water cups at different elevations.55k/18k preserve layered rims and both water boundaries;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page10: Well Wall Water2. Native reverse rays verify upper water30.0136mm at3.5322/6.7896,5.8179/4.6074,8.3929/10.4921,11.2033/9.1146 and lower water20.6944mm at8.8993/-5.1578,7.9679/-7.4132,6.3793/-6.3437,5.8164/-8.0495,11.9274/-6.9648. Upward planar source triangles bound upperX2.67..12.50 Y-3.91..11.41 and lowerX4.65..14.57 Y-12.86..-2.68; measured circular masks cover those insets only. Native rims12.2846/.7664/31.9039,14.9853/-7.859/22.4455 and neck8.2562/-4.8385/21.1733 remain stone. Preserve UUID74c39fce-9ec5-5964-b6b2-ed27997bf282, familyLC-well-wall, source/cut11.5,mount.149914,footprint1x1,wallMask17, existing point.464677 and no receiving slots.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-well-wall",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "water": {
+    "colour": [0.055, 0.48, 0.425],
+    "surfaces": [
+      {
+        "heightMM": 30.0136,
+        "toleranceMM": 0.075,
+        "centre": [3.5, 3.8],
+        "radiusMM": 10
+      },
+      {
+        "heightMM": 20.6944,
+        "toleranceMM": 0.075,
+        "centre": [8, -8],
+        "radiusMM": 8.1
+      }
+    ]
+  }
+}
