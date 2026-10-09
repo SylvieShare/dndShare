@@ -61,7 +61,9 @@
     "grainDirection": "X",
     "barePipeWaterReference": "TS-054"
   },
-  "notes": "Authorpage8: transverse timber planks over lime water, four copper broken tube ends and green bank supports. Explicit measured timber volume replaces added-distance classification: the centre pipes are removed in this source, and old pipe surfaces coincide with new board ends, so the difference mask falsely left gold stripes on timber and was rejected. Wood stops below high torn metal lips and outside bridge width; carved knots, cracks, large gap and underside retained.",
+  "notes": "Authorpage8: transverse timber planks over lime water, four copper broken tube ends and green bank supports. Explicit measured timber volume replaces added-distance classification: the centre pipes are removed in this source, and old pipe surfaces coincide with new board ends, so the difference mask falsely left gold stripes on timber and was rejected. Wood stops below high torn metal lips and outside bridge width; carved knots, cracks, large gap and underside retained. UV correction retains accepted geometry:0.55rad leaves a0.244mm overlap in LOD. Use0.45rad/.003 margin, rebake normal/AO and validate all published texture sizes.",
   "referenceCode": "TS-054",
-  "referenceFloorMaxZMM": 12.8
+  "referenceFloorMaxZMM": 12.8,
+  "uvAngleLimitRad": 0.45,
+  "uvIslandMargin": 0.003
 }
