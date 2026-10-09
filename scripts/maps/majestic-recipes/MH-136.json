@@ -1,0 +1,433 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 90000,
+  "lodTriangles": 34000,
+  "tileType": "bridge",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "high",
+    "outdoor",
+    "xl",
+    "bridge",
+    "masonry",
+    "arched-bridge"
+  ],
+  "recipe": "majestic-high-stone-bridge-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3400000,
+      6900000
+    ],
+    "targetLODBytes": [
+      1100000,
+      3100000
+    ],
+    "targetShadowBytes": [
+      70000,
+      180000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "728414triangles,36420784B NL. Ownbase104.982x104.988mm3x3,max104.276mm,datum9.75. Bridgewitharchedstone span andochreE/Wcliffs,edge68,hasDecorfalse,nomechanicalslots. Nineobjectpoints from120mm:3middledeck92.23/92.23/92.43;6outside ground/rock29.091/15.302/15.397/15.383/15.309/16.027. Underarchsourcefloors15.396/15.533/15.904 andceilings52.356/75.676/52.372 measuredseparately;modelpointsmiddlerowdescribeupperdeck. OwnconstructedgrayvolumesX+-40,Y+-26.8,Z18..106,upperendvolumesallX Z86.5..106;lighterhorizontalslabY+-20.5Z90..94normalZMin.55. RGBgray.47/.45/.395,slab.53/.51/.455,ochrecliff.54/.38/.215 PDF40; sourcejointsculpt/AO darkenfloorjoints. Owncapfield82..96 withgrayexclusions protectsgrasssidecaps;grass001rot270 retainsfloor. TwoactualE/Wbackplanes52.514/-52.509. Bridgeparapetblockers Y+-20.5..28mm,wholepassagecheckedwithY-directedraysX-10/0/10Z40;knowncliffcontrols+-49,roof/deckpresence. Genericpalettebakeunitconfirmslegacyochre/outsideunchangedgrayareaandgeometryUVimmutable. Test90k/34k colour1024/2048,data1024/512,UV16bit.3/.15,stripauxColours. FinalR4361624B/90012,L1799264B/34012,shadow121372B,preview20814B;colour1024both vsR20484964240B+602616B no clearworkscalegain. PhysicalnearestRGB deck142/134/125,carvedjoint105/105/88,cliff145/103/62 provespalette/crevicecontrast. 21opening/control checks source/R/LODpassed,allUVblacknormalchannels and2browserKTXshadow tests passed. Minorolivecontactfringe remains,LODgrasssoftens."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 68,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 120,
+  "blockers": [
+    [
+      [
+        0,
+        2.085714
+      ],
+      [
+        3,
+        2.085714
+      ],
+      [
+        3,
+        2.3
+      ],
+      [
+        0,
+        2.3
+      ]
+    ],
+    [
+      [
+        0,
+        0.7
+      ],
+      [
+        3,
+        0.7
+      ],
+      [
+        3,
+        0.914286
+      ],
+      [
+        0,
+        0.914286
+      ]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 20,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          20
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      82
+    ],
+    "maxMM": [
+      54,
+      54,
+      96
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-136",
+    "exclusions": [
+      {
+        "minMM": [
+          -40,
+          -26.8,
+          18
+        ],
+        "maxMM": [
+          40,
+          26.8,
+          106
+        ],
+        "featherMM": 0.3,
+        "rgb": [
+          0.47,
+          0.45,
+          0.395
+        ]
+      },
+      {
+        "minMM": [
+          -54,
+          -26.8,
+          86.5
+        ],
+        "maxMM": [
+          54,
+          26.8,
+          106
+        ],
+        "featherMM": 0.3,
+        "rgb": [
+          0.47,
+          0.45,
+          0.395
+        ]
+      },
+      {
+        "minMM": [
+          -54,
+          -20.5,
+          90
+        ],
+        "maxMM": [
+          54,
+          20.5,
+          94
+        ],
+        "featherMM": 0.2,
+        "normalZMin": 0.55,
+        "rgb": [
+          0.53,
+          0.51,
+          0.455
+        ]
+      }
+    ]
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.3,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -40,
+        -26.8,
+        18
+      ],
+      "maxMM": [
+        40,
+        26.8,
+        106
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -26.8,
+        86.5
+      ],
+      "maxMM": [
+        54,
+        26.8,
+        106
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -20.5,
+        90
+      ],
+      "maxMM": [
+        54,
+        20.5,
+        94
+      ],
+      "featherMM": 0.2,
+      "normalZMin": 0.55,
+      "rgb": [
+        0.53,
+        0.51,
+        0.455
+      ]
+    }
+  ],
+  "blockedCells": [],
+  "grassReference": "MH-001",
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        82
+      ],
+      [
+        54,
+        54,
+        96
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "openingChecks": [
+    {
+      "name": "under-bridge-x-10",
+      "originMM": [
+        -10,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-bridge-x0",
+      "originMM": [
+        0,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-bridge-x10",
+      "originMM": [
+        10,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "solid-cliff-x-49",
+      "originMM": [
+        -49,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "solid-cliff-x49",
+      "originMM": [
+        49,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "arch-roof-present",
+      "originMM": [
+        0,
+        0,
+        25
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 100,
+      "clear": false
+    },
+    {
+      "name": "bridge-deck-present",
+      "originMM": [
+        0,
+        0,
+        120
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 100,
+      "clear": false
+    }
+  ],
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.514,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 9.75
+    },
+    {
+      "axis": "X",
+      "coordinateMM": -52.509,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 9.75
+    }
+  ]
+}
