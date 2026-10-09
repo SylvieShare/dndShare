@@ -97,6 +97,7 @@ export function createTileOutline(gpu, assets) {
     if (options.previewTile?.wallBrush && options.master)
       tiles.push(...options.previewTile.group.map((tile) => [tile, hover]));
     const nextKey = JSON.stringify([
+      assets.signature?.(new Set(document.tiles.map((t) => t.modelId)), tier),
       tiles.map(([tile, material]) => [tile, material === selected]),
       tier,
     ]);
@@ -111,7 +112,9 @@ export function createTileOutline(gpu, assets) {
     }
     for (const entries of buckets.values()) {
       const [first, material] = entries[0],
-        model = assets.model(first.modelId, tier),
+        model =
+          assets.visual?.(first.modelId, tier) ||
+          assets.model(first.modelId, tier),
         metadata = assets.metadata(first.modelId);
       if (!model || !metadata) continue;
       for (const part of model.parts) {

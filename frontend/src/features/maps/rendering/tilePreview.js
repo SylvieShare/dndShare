@@ -60,7 +60,11 @@ export function createTilePreview(assets, onSettled = () => {}) {
     root.userData.outlineStyle = tile?.wallBrush ? "hover" : "selected";
     const group = tile?.group || (tile ? [tile] : []);
     const nextKey = JSON.stringify(
-      group.map((t) => [t.modelId, assets.metadata(t.modelId)?.renderUrl]),
+      group.map((t) => [
+        t.modelId,
+        assets.metadata(t.modelId)?.renderUrl,
+        !!assets.model(t.modelId, "render"),
+      ]),
     );
     if (key !== nextKey) {
       clear();

@@ -38,6 +38,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
   host.appendChild(gpu.domElement);
   let dead = false,
     epoch = 0,
+    assetFrame = 0,
     current,
     options = {},
     state,
@@ -54,7 +55,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     objects = new Group();
   let appearance = areaAppearance({ areas: [] });
   scene.add(annotations, objects);
-  const assets = modelAssets(onError, gpu),
+  const assets = modelAssets(onError, gpu, assetsChanged),
     lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
@@ -93,6 +94,16 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     anchors.root,
     surfaceAnchors.root,
   );
+  function assetsChanged() {
+    if (dead || assetFrame || !current) return;
+    assetFrame = requestAnimationFrame(() => {
+      assetFrame = 0;
+      if (!dead && current)
+        update(current, state, options).catch((error) =>
+          onError(error.message),
+        );
+    });
+  }
   function render() {
     if (frame || dead) return;
     frame = requestAnimationFrame((time) => {
@@ -190,42 +201,13 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
         objectIds.add(object.modelId);
     if (opts.placementObject) objectIds.add(opts.placementObject);
     const movingIds = new Set([...previewIds, ...objectIds]);
-    const pending = ids.size
-      ? assets.ensure(ids, tier, opts)
-      : Promise.resolve();
-    const previewPending = movingIds.size
-      ? assets.ensure(movingIds, "render", opts)
-      : Promise.resolve();
-    const shadowPending =
-      d.lightingEnabled && (ids.size || movingIds.size)
-        ? assets.ensure(new Set([...ids, ...movingIds]), "shadow", opts)
-        : Promise.resolve();
-    // Start rendering the preview immediately; network loading does not block it.
-    const readyMetadata = d.tiles.every((t) => assets.metadata(t.modelId));
-    if (readyMetadata) structure.update(d);
-    const loadingOptions = {
-      ...opts,
-      previewTile: opts.previewTile && {
-        ...opts.previewTile,
-        group: readyMetadata
-          ? structure.preview(opts.previewTile.group || [opts.previewTile])
-          : opts.previewTile.group,
-      },
-    };
-    loadingPreview.update(loadingOptions, opts.catalogue || assets.catalogue());
-    render();
-    await Promise.all([pending, previewPending, shadowPending]);
+    await assets.prepare(new Set([...ids, ...movingIds]), opts);
     if (dead || id !== epoch) return;
-    loadingPreview.update(opts, opts.catalogue || assets.catalogue());
     const placed = structure.update(d);
     placedTiles = placed;
     view.document(d, { ...opts, sceneHeight: structure.top() });
-    const nextTier = view.getView().cellPixels < 72 ? "lod" : "render";
-    if (nextTier !== tier && ids.size) {
-      tier = nextTier;
-      await assets.ensure(ids, tier, opts);
-      if (dead || id !== epoch) return;
-    }
+    tier = view.getView().cellPixels < 72 ? "lod" : "render";
+    assets.progressive(ids, tier, movingIds, d.lightingEnabled);
     let previewOptions = opts;
     if (opts.previewTile) {
       const group = structure.preview(
@@ -297,6 +279,21 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
           (!!opts.previewObject?.placing || !!opts.previewObject?.moving)),
       appearance.hiddenTiles,
     );
+    loadingPreview.update(previewOptions, assets.catalogue(), {
+      tiles: placed.filter(
+        (t) =>
+          !appearance.hiddenTiles.has(t.id) &&
+          !preview.hiddenIds().includes(t.id),
+      ),
+      objects: posedObjects.filter(
+        (o) =>
+          !appearance.hiddenObjects.has(o.id) &&
+          o.id !== opts.previewObject?.id,
+      ),
+      tier,
+      tileOpacity: appearance.tileOpacity,
+      objectOpacity: appearance.objectOpacity,
+    });
     const context = structure.context();
     anchors.update(
       d,
@@ -316,8 +313,10 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     const catalogueStamp = [...ids]
       .sort()
       .map((modelId) => assets.metadata(modelId));
+    const visualStamp = assets.signature(ids, tier);
     const nextTiles = JSON.stringify([
       catalogueStamp,
+      visualStamp,
       d.tiles,
       tier,
       hiddenIds,
@@ -346,6 +345,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     );
     const nextObjects = JSON.stringify([
       catalogueStamp,
+      visualStamp,
       posedObjects,
       nextState,
       posedTokens,
@@ -439,7 +439,19 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
   );
   return {
     update,
-    snapshot() {
+    retry() {
+      assets.retryFailed();
+      return update(current, state, options);
+    },
+    async snapshot() {
+      const ids = new Set([
+        ...current.tiles.map((t) => t.modelId),
+        ...current.objects.map((o) => o.modelId).filter(Boolean),
+      ]);
+      await assets.ensure(ids, tier, options);
+      if (current.lightingEnabled) await assets.ensure(ids, "shadow", options);
+      await update(current, state, options);
+
       tiles.advance(1000);
       objectMotion.advance(1000, objects);
       lighting.advance(
@@ -490,11 +502,23 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       const ray = view.ray(event),
         hits = ray.intersectObject(objects, true),
         fixed = tiles.hit(ray),
+        pending = loadingPreview.hit(ray),
         moving = preview.hit(ray),
-        tile =
+        resolvedTile =
           moving && (!fixed || moving.distance < fixed.distance)
             ? moving
             : fixed;
+      const tile =
+        pending?.tileId &&
+        (!resolvedTile || pending.distance < resolvedTile.distance)
+          ? pending
+          : resolvedTile;
+      if (
+        pending?.objectId &&
+        (!tile || pending.distance < tile.distance) &&
+        (!hits[0] || pending.distance < hits[0].distance)
+      )
+        return pending;
       const lamp = lighting.pick(ray);
       if (lamp) return lamp;
       const surfaceAnchor = surfaceAnchors.hit(ray);
@@ -519,6 +543,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       return tile;
     },
     destroy() {
+      cancelAnimationFrame(assetFrame);
       stopModelRefresh();
       dead = true;
       epoch++;

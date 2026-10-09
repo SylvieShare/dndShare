@@ -59,7 +59,9 @@ export function createTileLayer(assets, fog) {
       }
       for (const items of buckets.values()) {
         const metadata = assets.metadata(items[0].modelId),
-          model = assets.model(items[0].modelId, tier);
+          model =
+            assets.visual?.(items[0].modelId, tier) ||
+            assets.model(items[0].modelId, tier);
         if (!metadata || !model) continue;
         for (const part of model.parts) {
           const materials = (

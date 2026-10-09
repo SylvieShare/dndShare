@@ -45,7 +45,11 @@
     <LoadingState
       v-if="previewLoading"
       class="map-model-loading"
-      label="Загружаем модель…"
+      :label="
+        previewLoading > 1
+          ? `Загружаем модели: ${previewLoading}…`
+          : 'Загружаем модель…'
+      "
     />
     <MapCanvasControls
       v-if="!readonly"
@@ -189,7 +193,7 @@ function fit() {
 async function retry() {
   error.value = "";
   try {
-    await renderer?.update(props.document, props.state, props);
+    await renderer?.retry();
   } catch (cause) {
     error.value = cause.message;
   }
