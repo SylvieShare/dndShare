@@ -1,6 +1,6 @@
 {
-  "name": "Ground 1 Corner",
-  "groupCode": "MED-ground-corner",
+  "name": "Path Straight",
+  "groupCode": "MED-path-straight",
   "tileType": "floor",
   "width": 1,
   "height": 1,
@@ -18,8 +18,8 @@
     ]
   ],
   "standToleranceMM": 0.35,
-  "renderTriangles": 52000,
-  "lodTriangles": 17000,
+  "renderTriangles": 58000,
+  "lodTriangles": 20000,
   "renderBakeSize": 1024,
   "lodBakeSize": 512,
   "uvAngleLimitRad": 0.55,
@@ -32,7 +32,7 @@
     "town",
     "earth",
     "stone",
-    "corner"
+    "path"
   ],
   "materials": {
     "earthRGB": [
@@ -76,6 +76,13 @@
     ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. One isolated sandstone corner above the brown gravel bed; full native 35 mm body, 10 mm insertion depth, 19.1814 mm maximum. Stone caps measured above 18.3 mm; soil/stone boundary above 17.2 mm. Clear centre remains available for standing. Sandstone palette aligned with author PDF; accepted geometry, UV, normal/ORM and placement retained.",
-  "uvIslandMargin": 0.0025
+  "reviewNotes": "PDF page 3. Straight gravel path between parallel sandstone edges. Preserve source spelling Path Staight separately from corrected display name. Native base 35 mm, datum 10 mm, maximum 19.529 mm. Plain 0.5 mm mounting collar keeps the complete lower geometry without wasting UV; visible stone/earth materials use measured heights and source support rays. Centre ray grazed a pebble: LOD normal.z=0.4958. Measured stand point moved only 0.7 mm in native +Y (tile x=0.5,y=0.48), with normals.z 0.911/0.911/0.913 and height differences below 0.006 mm in source/render/LOD.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.48
+    ]
+  ]
 }

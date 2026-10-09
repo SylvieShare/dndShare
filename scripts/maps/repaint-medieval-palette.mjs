@@ -1,0 +1,74 @@
+// Warm a reviewed stone palette using its measured height mask, preserving GLBs.
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { readGlb, replaceImages } from './glb_textures.mjs';
+import { rasterizeSurface, extendUvGutters } from './uv_surface.mjs';
+const code = process.argv[2];
+if (!/^MT1-\d{3}$/.test(code || '')) throw new Error('One source code required');
+const root = path.resolve(import.meta.dirname, '../..');
+const base = path.join(root, 'models/collections/medieval-town-vol1/review', code);
+const oldFolder = path.join(base, 'candidates/cool-baseline');
+const out = path.join(base, 'candidates/compact');
+const oldReport = JSON.parse(await fs.readFile(path.join(oldFolder, 'report.json'), 'utf8'));
+const index = JSON.parse(await fs.readFile(path.join(root, 'scripts/maps/medieval-recipes.json'), 'utf8'));
+const recipe = JSON.parse(await fs.readFile(path.join(root, 'scripts/maps', index[code]), 'utf8'));
+const before = oldReport.recipe.materials, after = recipe.materials;
+if (before.earthReference) throw new Error('Added earth requires its individual reference mask');
+const { stoneDarkRGB: oldDark, stoneLightRGB: oldLight, ...oldSettings } = before;
+const { stoneDarkRGB: newDark, stoneLightRGB: newLight, ...newSettings } = after;
+assert.deepEqual(newSettings, oldSettings, 'Only stone palette may change');
+const { materials: oldMaterials, reviewNotes: oldNotes, ...oldRecipe } = oldReport.recipe;
+const { materials: newMaterials, reviewNotes: newNotes, ...newRecipe } = recipe;
+assert.deepEqual(newRecipe, oldRecipe, 'Palette repaint cannot change geometry or placement recipe');
+const require = createRequire('/private/tmp/dndshare-model-tools/package.json');
+const sharp = require('sharp'), { NodeIO } = require('@gltf-transform/core');
+const { ALL_EXTENSIONS } = require('@gltf-transform/extensions');
+const { MeshoptDecoder } = require('meshoptimizer');
+await MeshoptDecoder.ready;
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder });
+const linear = v => v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4;
+const srgb = v => v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055;
+for (const [tier, preview] of [['render','preview-model.glb'],['lod','lod-preview-model.glb']]) {
+  const bytes = await fs.readFile(path.join(oldFolder, tier+'.glb'));
+  const glb = readGlb(bytes), doc = await io.readBinary(bytes);
+  const texture = glb.json.materials.find(m => m.pbrMetallicRoughness?.baseColorTexture).pbrMetallicRoughness.baseColorTexture.index;
+  const image = glb.json.textures[texture].source;
+  const view = glb.json.bufferViews[glb.json.images[image].bufferView];
+  const { data, info } = await sharp(glb.bin.subarray(view.byteOffset, view.byteOffset+view.byteLength)).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const visited = new Uint8Array(info.width*info.height);
+  const coverage = rasterizeSurface(doc, info.width, info.height, (i, p) => {
+    if(visited[i])return;
+    visited[i]=1;
+    const [x,y,z] = p;
+    let w = Math.max(0, Math.min(1, (z-before.stoneStartMM)/before.stoneBlendMM));
+    w = w*w*(3-2*w);
+    const patch = .5+.23*Math.sin(x*.23+y*.31)+.16*Math.sin(x*.49-y*.19);
+    const grain = 1+.035*Math.sin(x*1.77+y*1.39+z*.53);
+    for (let c=0;c<3;c++) {
+      const earth = before.earthRGB[c]*(1+.08*Math.sin(x*.39-y*.27));
+      const oldColour = earth*(1-w)+(oldDark[c]*(1-patch)+oldLight[c]*patch)*grain*w;
+      const newColour = earth*(1-w)+(newDark[c]*(1-patch)+newLight[c]*patch)*grain*w;
+      const value = linear(data[i*3+c]/255)*linear(newColour)/Math.max(1e-6,linear(oldColour));
+      data[i*3+c] = Math.round(Math.max(0,Math.min(1,srgb(value)))*255);
+    }
+  });
+  extendUvGutters(data, 3, coverage.slice(), info.width, info.height, 4);
+  const albedo = await sharp(data,{raw:info}).jpeg({quality:94,chromaSubsampling:'4:4:4'}).toBuffer();
+  const decoded = await sharp(albedo).removeAlpha().raw().toBuffer();
+  for(let i=0;i<coverage.length;i++)if(coverage[i]&&Math.max(...decoded.subarray(i*3,i*3+3))<4)throw new Error('Repaint created a black surface pixel');
+  await fs.writeFile(path.join(out,tier+'.glb'),replaceImages(glb,new Map([[image,albedo]])));
+  const previousPreview = readGlb(await fs.readFile(path.join(oldFolder,preview)));
+  const ti = previousPreview.json.materials.find(m=>m.pbrMetallicRoughness?.baseColorTexture).pbrMetallicRoughness.baseColorTexture.index;
+  await fs.writeFile(path.join(out,preview),replaceImages(previousPreview,new Map([[previousPreview.json.textures[ti].source,albedo]])));
+}
+await fs.copyFile(path.join(oldFolder,'shadow.glb'),path.join(out,'shadow.glb'));
+const report = structuredClone(oldReport);
+report.recipe=recipe;report.publication=null;
+report.recolour={preserved:'geometry/UV/tangents/normal/ORM/shadow',changed:'stone albedo palette'};
+for(const tier of ['render','lod','shadow'])report.tiers[tier].bytes=(await fs.stat(path.join(out,tier+'.glb'))).size;
+report.optimization={candidate:'compact',selection:'pending visual comparison',baselineTiers:oldReport.tiers};
+await fs.writeFile(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');
+await fs.writeFile(path.join(base,'report.json'),JSON.stringify({...oldReport,recipe,publication:null},null,2)+'\n');
+console.log('MEDIEVAL_PALETTE_REPAINT',code);

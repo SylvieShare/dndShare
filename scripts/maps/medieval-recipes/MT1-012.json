@@ -1,6 +1,6 @@
 {
-  "name": "Ground 1 Corner",
-  "groupCode": "MED-ground-corner",
+  "name": "Path Angle",
+  "groupCode": "MED-path-angle",
   "tileType": "floor",
   "width": 1,
   "height": 1,
@@ -18,8 +18,8 @@
     ]
   ],
   "standToleranceMM": 0.35,
-  "renderTriangles": 52000,
-  "lodTriangles": 17000,
+  "renderTriangles": 62000,
+  "lodTriangles": 22000,
   "renderBakeSize": 1024,
   "lodBakeSize": 512,
   "uvAngleLimitRad": 0.55,
@@ -32,7 +32,7 @@
     "town",
     "earth",
     "stone",
-    "corner"
+    "path"
   ],
   "materials": {
     "earthRGB": [
@@ -76,6 +76,14 @@
     ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. One isolated sandstone corner above the brown gravel bed; full native 35 mm body, 10 mm insertion depth, 19.1814 mm maximum. Stone caps measured above 18.3 mm; soil/stone boundary above 17.2 mm. Clear centre remains available for standing. Sandstone palette aligned with author PDF; accepted geometry, UV, normal/ORM and placement retained.",
-  "uvIslandMargin": 0.0025
+  "reviewNotes": "PDF page 3. Gravel path turns between warm sandstone borders. Native 35 mm base, 10 mm insertion datum, maximum 20.1426 mm. Preserve the bent path and jagged stone edge; lower mounting collar 0.5 mm has plain earth material, full geometry remains. Centre standing surface measured separately for this source. Centre ray grazed sloped gravel after simplification. Measured support moved 0.35 mm in native +X (tile x=0.51,y=0.5); source/render/LOD normal.z 0.749/0.807/0.820 and height difference below 0.006 mm. Render UV passed at 0.55 rad; LOD had a confirmed 0.116 mm overlap, so its angle is independently reduced to 0.45 rad.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.51,
+      0.5
+    ]
+  ],
+  "lodUVAngleLimitRad": 0.45
 }

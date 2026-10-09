@@ -1,5 +1,5 @@
 {
-  "name": "Ground 1 Corner",
+  "name": "Ground 3 Corners",
   "groupCode": "MED-ground-corner",
   "tileType": "floor",
   "width": 1,
@@ -76,6 +76,6 @@
     ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. One isolated sandstone corner above the brown gravel bed; full native 35 mm body, 10 mm insertion depth, 19.1814 mm maximum. Stone caps measured above 18.3 mm; soil/stone boundary above 17.2 mm. Clear centre remains available for standing. Sandstone palette aligned with author PDF; accepted geometry, UV, normal/ORM and placement retained.",
+  "reviewNotes": "PDF page 2. Three sandstone corner caps around the gravel bed; native 35 mm base and 10 mm insertion depth, maximum z=19.179 mm. Height mask separates raised sandstone from brown ground; center remains free and stand height is ray-measured. UV uses individually checked 0.55 rad split and 0.0025 margin. Warm sandstone palette from author PDF; albedo-only correction retains all accepted geometry and PBR data maps.",
   "uvIslandMargin": 0.0025
 }

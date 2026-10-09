@@ -39,24 +39,34 @@
       "matchMM": 0.2,
       "blendMM": 0.3,
       "minZMM": 17.25,
-      "xMM": [-10, 10],
-      "yMM": [-13, 13]
+      "xMM": [
+        -10,
+        10
+      ],
+      "yMM": [
+        -13,
+        13
+      ]
     },
-    "rubbleRGB": [0.37, 0.29, 0.18],
+    "rubbleRGB": [
+      0.37,
+      0.29,
+      0.18
+    ],
     "earthRGB": [
       0.29,
       0.235,
       0.16
     ],
     "stoneDarkRGB": [
-      0.39,
-      0.35,
-      0.29
+      0.42,
+      0.31,
+      0.185
     ],
     "stoneLightRGB": [
-      0.53,
-      0.47,
-      0.365
+      0.56,
+      0.425,
+      0.24
     ],
     "stoneStartMM": 17.2,
     "stoneBlendMM": 0.65,
@@ -83,5 +93,5 @@
     ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. Broken central pavement with gravel; 35×35 mm native base, 10 mm insertion taper, complete relief reaches 20.4895 mm. Warm sandstone outside and exposed earth/gravel in the middle. Stand surface measured on the surviving sculpt."
+  "reviewNotes": "PDF page 2. Broken central pavement with gravel; 35×35 mm native base, 10 mm insertion taper, complete relief reaches 20.4895 mm. Warm sandstone outside and exposed earth/gravel in the middle. Stand surface measured on the surviving sculpt. Sandstone palette aligned with the author PDF; geometry, UV, normal/ORM and placement retained."
 }

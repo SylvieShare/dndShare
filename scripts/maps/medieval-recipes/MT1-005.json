@@ -41,14 +41,14 @@
       0.125
     ],
     "stoneDarkRGB": [
-      0.39,
-      0.35,
-      0.29
+      0.42,
+      0.31,
+      0.185
     ],
     "stoneLightRGB": [
-      0.53,
-      0.47,
-      0.365
+      0.56,
+      0.425,
+      0.24
     ],
     "stoneStartMM": 17.2,
     "stoneBlendMM": 0.65,
@@ -76,6 +76,6 @@
     ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. Two isolated sandstone corners surround the gravel floor; native 35×35 mm footprint, 10 mm insertion depth, maximum z=19.179 mm. Measure stone caps above 18.3 mm and keep the central gravel standable; separate warm earth from stone corners by the sculpt height.",
+  "reviewNotes": "PDF page 2. Two isolated sandstone corners surround the gravel floor; native 35×35 mm footprint, 10 mm insertion depth, maximum z=19.179 mm. Measure stone caps above 18.3 mm and keep the central gravel standable; separate warm earth from stone corners by the sculpt height. Warm sandstone palette from author PDF; albedo-only correction retains all accepted geometry and PBR data maps.",
   "uvIslandMargin": 0.0025
 }

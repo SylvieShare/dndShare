@@ -4,11 +4,19 @@
   "tileType": "floor",
   "width": 1,
   "height": 1,
-  "mountCenterMM": [0, 0],
+  "mountCenterMM": [
+    0,
+    0
+  ],
   "mountDepthMM": 10,
   "pegBottomHalfMM": 11.375,
   "pegTopHalfMM": 17.15,
-  "standCells": [[0, 0]],
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
   "standToleranceMM": 0.35,
   "renderTriangles": 48000,
   "lodTriangles": 14000,
@@ -20,11 +28,27 @@
   "wallMask": 0,
   "blockers": [],
   "supportSlots": [],
-  "tags": ["town", "stone", "pavement"],
+  "tags": [
+    "town",
+    "stone",
+    "pavement"
+  ],
   "materials": {
-    "earthRGB": [0.29, 0.235, 0.16],
-    "stoneDarkRGB": [0.39, 0.35, 0.29],
-    "stoneLightRGB": [0.53, 0.47, 0.365],
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
     "stoneStartMM": 17.2,
     "stoneBlendMM": 0.65,
     "stoneIslandMM": 18.3,
@@ -32,11 +56,23 @@
     "jointDistanceMM": 0.8
   },
   "weightBudget": {
-    "renderMiB": [0.7, 1.8],
-    "lodMiB": [0.2, 0.7],
-    "shadowKiB": [30, 120],
-    "previewKiB": [15, 90],
+    "renderMiB": [
+      0.7,
+      1.8
+    ],
+    "lodMiB": [
+      0.2,
+      0.7
+    ],
+    "shadowKiB": [
+      30,
+      120
+    ],
+    "previewKiB": [
+      15,
+      90
+    ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. Native insertion taper reaches the full 35 mm body at z=10 mm; preserve body above that datum. Top cobbles are 17.2–19.26 mm. Earth sides and warm weathered sandstone, local dirt in joints; no integrated furniture."
+  "reviewNotes": "PDF page 2. Native insertion taper reaches the full 35 mm body at z=10 mm; preserve body above that datum. Top cobbles are 17.2–19.26 mm. Earth sides and warm weathered sandstone, local dirt in joints; no integrated furniture. Stone palette warmed after direct comparison with the author PDF; preserve the already confirmed geometry, UV and placement."
 }

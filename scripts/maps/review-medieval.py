@@ -36,6 +36,7 @@ def main():
                    '--', '--base', str(review), '--size', '512', '--review', '--front', '--tier', tier]
             if candidate is None: cmd += ['--codes', code]
             stages.append(('preview-'+label+'-'+tier, cmd))
+    stages.append(('comparison', ['node', str(script/'review-medieval-sheet.mjs'), code]))
     for stage, cmd in stages:
         log = BASE/(code+'-'+stage+'.log')
         with log.open('w') as output:

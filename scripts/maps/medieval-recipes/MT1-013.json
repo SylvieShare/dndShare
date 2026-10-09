@@ -1,6 +1,6 @@
 {
-  "name": "Ground 1 Corner",
-  "groupCode": "MED-ground-corner",
+  "name": "Path End",
+  "groupCode": "MED-path-end",
   "tileType": "floor",
   "width": 1,
   "height": 1,
@@ -18,8 +18,8 @@
     ]
   ],
   "standToleranceMM": 0.35,
-  "renderTriangles": 52000,
-  "lodTriangles": 17000,
+  "renderTriangles": 60000,
+  "lodTriangles": 21000,
   "renderBakeSize": 1024,
   "lodBakeSize": 512,
   "uvAngleLimitRad": 0.55,
@@ -32,7 +32,7 @@
     "town",
     "earth",
     "stone",
-    "corner"
+    "path"
   ],
   "materials": {
     "earthRGB": [
@@ -76,6 +76,8 @@
     ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. One isolated sandstone corner above the brown gravel bed; full native 35 mm body, 10 mm insertion depth, 19.1814 mm maximum. Stone caps measured above 18.3 mm; soil/stone boundary above 17.2 mm. Clear centre remains available for standing. Sandstone palette aligned with author PDF; accepted geometry, UV, normal/ORM and placement retained.",
-  "uvIslandMargin": 0.0025
+  "reviewNotes": "PDF page 3. Gravel path ending enclosed by sandstone on three sides. Native 35 mm base, datum 10 mm, maximum 19.732 mm. Preserve terminal stone curve and full gravel relief; plain mounting collar retains lower geometry; stand point and separate render/LOD UV are verified on this source.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "lodUVAngleLimitRad": 0.45
 }

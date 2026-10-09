@@ -20,15 +20,45 @@ from medieval_material import paint, material
 def support_points(obj, recipe):
     tree = BVHTree.FromObject(obj, bpy.context.evaluated_depsgraph_get())
     points = []
-    for x, y in recipe['standCells']:
+    locations = recipe.get('standPoints', [[x+.5, y+.5] for x, y in recipe['standCells']])
+    for x, y in locations:
         center = recipe['mountCenterMM']
-        origin = (center[0]+(x+.5-recipe['width']/2)*35,
-                  center[1]-(y+.5-recipe['height']/2)*35, 1200)
+        origin = (center[0]+(x-recipe['width']/2)*35,
+                  center[1]-(y-recipe['height']/2)*35, recipe.get('standRayTopMM', 1200))
         p, normal, _, _ = tree.ray_cast(origin, (0, 0, -1))
         if p is None or normal.z<.5 or p.z<recipe['mountDepthMM']+.1:
             raise ValueError(f'Invalid stand cell {x},{y}')
-        points.append({'x': x+.5, 'y': y+.5, 'elevation': round(p.z/35, 6)})
+        points.append({'x': x, 'y': y, 'elevation': round(p.z/35, 6)})
     return points
+
+
+def plain_mount_collar(target, recipe):
+    """Keep the full mesh, separating the tiny untextured mounting rim."""
+    thickness = recipe.get('plainMountCollarMM', 0)
+    if not thickness:
+        return None
+    cutoff = recipe['mountDepthMM']+thickness
+    collar = bpy.data.objects.new('Plain mounting rim', target.data.copy())
+    bpy.context.collection.objects.link(collar)
+    for obj, keep_bottom in [(collar, True), (target, False)]:
+        bm = bmesh.new(); bm.from_mesh(obj.data)
+        remove = [f for f in bm.faces if all(v.co.z<=cutoff for v in f.verts)!=keep_bottom]
+        bmesh.ops.delete(bm, geom=remove, context='FACES')
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+        bm.to_mesh(obj.data); bm.free(); obj.data.update()
+    if not len(collar.data.polygons) or not len(target.data.polygons):
+        raise ValueError('Mount collar separation removed the visible body')
+    collar.data.materials.clear()
+    mat = bpy.data.materials.new('Mount collar earth'); mat.use_nodes = True
+    rgb = recipe['materials']['earthRGB']
+    linear = [v/12.92 if v<=.04045 else ((v+.055)/1.055)**2.4 for v in rgb]
+    shader = mat.node_tree.nodes.get('Principled BSDF')
+    shader.inputs['Base Color'].default_value = (*linear, 1)
+    shader.inputs['Roughness'].default_value = .96
+    collar.data.materials.append(mat)
+    collar.hide_render = collar.hide_viewport = True
+    print('MEDIEVAL_PLAIN_MOUNT_COLLAR', len(collar.data.polygons), thickness, flush=True)
+    return collar
 
 
 def prepare(code, tier, force):
@@ -64,8 +94,9 @@ def prepare(code, tier, force):
     modifier = target.modifiers.new('Measured '+tier+' budget', 'DECIMATE')
     modifier.ratio = min(1, budget/len(target.data.polygons)); modifier.use_collapse_triangulate = True
     bpy.ops.object.modifier_apply(modifier=modifier.name); shade(target)
+    collar = plain_mount_collar(target, recipe)
     bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.smart_project(angle_limit=recipe.get('uvAngleLimitRad', .65), island_margin=recipe.get('uvIslandMargin', .002),
+    bpy.ops.uv.smart_project(angle_limit=recipe.get(tier+'UVAngleLimitRad', recipe.get('uvAngleLimitRad', .65)), island_margin=recipe.get(tier+'UVIslandMargin', recipe.get('uvIslandMargin', .002)),
                              margin_method='FRACTION', area_weight=.8)
     bpy.ops.object.mode_set(mode='OBJECT')
     target.data.materials[0] = target.data.materials[0].copy()
@@ -80,6 +111,9 @@ def prepare(code, tier, force):
     maximum = max(v.co.z for v in source.data.vertices)/35
     source.hide_render = source.hide_viewport = True
     objects = [target]
+    if collar is not None:
+        collar.hide_render = collar.hide_viewport = False
+        objects.append(collar)
     center = recipe['mountCenterMM']
     if datum:
         bottom, top = recipe['pegBottomHalfMM'], recipe['pegTopHalfMM']
@@ -110,7 +144,8 @@ def prepare(code, tier, force):
              'surfaceHeight': max([p['elevation'] for p in points], default=datum/35), 'maxHeight': round(maximum, 6),
              'blockers': recipe['blockers'], 'tags': recipe['tags'], 'supportSlots': recipe['supportSlots']}
     report = {'model': model, 'sourcePath': row['sourcePath'], 'sourceSHA256': row['sourceSHA256'],
-              'sourceTriangles': row['triangles'], 'triangles': len(target.data.polygons)+(12 if datum else 0),
+              'sourceTriangles': row['triangles'], 'triangles': sum(len(o.data.polygons) for o in objects),
+              'mountCollarTriangles': len(collar.data.polygons) if collar is not None else 0,
               'weightBudget': recipe['weightBudget'], 'recipe': recipe, 'quality': quality,
               'standDeviationsMM': deviations, 'seconds': round(time.monotonic()-start, 2)}
     (out/'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')

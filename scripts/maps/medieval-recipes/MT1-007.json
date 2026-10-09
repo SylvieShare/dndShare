@@ -1,5 +1,5 @@
 {
-  "name": "Ground 1 Corner",
+  "name": "Ground 4 Corners",
   "groupCode": "MED-ground-corner",
   "tileType": "floor",
   "width": 1,
@@ -18,8 +18,8 @@
     ]
   ],
   "standToleranceMM": 0.35,
-  "renderTriangles": 52000,
-  "lodTriangles": 17000,
+  "renderTriangles": 56000,
+  "lodTriangles": 18000,
   "renderBakeSize": 1024,
   "lodBakeSize": 512,
   "uvAngleLimitRad": 0.55,
@@ -76,6 +76,6 @@
     ],
     "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
   },
-  "reviewNotes": "PDF page 2. One isolated sandstone corner above the brown gravel bed; full native 35 mm body, 10 mm insertion depth, 19.1814 mm maximum. Stone caps measured above 18.3 mm; soil/stone boundary above 17.2 mm. Clear centre remains available for standing. Sandstone palette aligned with author PDF; accepted geometry, UV, normal/ORM and placement retained.",
+  "reviewNotes": "PDF page 2. Four sandstone corner caps around exposed gravel; full native 35 mm body, 10 mm insertion depth, maximum z=19.1793 mm. Preserve clear centre and all four corner shapes. Stone cap island threshold 18.3 mm; 0.55 rad UV and 0.0025 margin are verified independently for both tiers. Warm sandstone palette from author PDF; albedo-only correction retains all accepted geometry and PBR data maps.",
   "uvIslandMargin": 0.0025
 }
