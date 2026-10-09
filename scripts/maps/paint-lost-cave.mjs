@@ -13,6 +13,7 @@ import {
   extendUvGutters,
 } from "./uv_surface.mjs";
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
+import { paintCaveTreasure } from "./lost_cave_treasure.mjs";
 import { paintScaffoldingRamp } from "./lost_cave_scaffolding_ramp.mjs";
 import { paintScaffolding } from "./lost_cave_scaffolding.mjs";
 import { paintCutStone } from "./lost_cave_cut_stone.mjs";
@@ -22,7 +23,7 @@ import { paintCrystal } from "./lost_cave_crystal.mjs";
 import { paintWagon } from "./lost_cave_wagon.mjs";
 import { paintWagonOnTrack } from "./lost_cave_wagon_track.mjs";
 import { paintBoulderGround } from "./lost_cave_boulder_ground.mjs";
-import { projectedBoneAt } from "./lost_cave_bone_view.mjs";
+import { loadReviewedCaveViews } from "./reviewed_cave_views.mjs";
 import { paintMushrooms } from "./lost_cave_mushrooms.mjs";
 import { paintCaveBones } from "./lost_cave_bones.mjs";
 import { paintCrystalGround } from "./lost_cave_crystal_ground.mjs";
@@ -43,6 +44,7 @@ if (
     "cave-cut-stone",
     "cave-scaffolding",
     "cave-scaffolding-ramp",
+    "cave-treasure",
     "cave-stalagmites",
     "cave-railway",
     "cave-crystal",
@@ -72,7 +74,8 @@ let crystalWallReference;
 const bareReference =
   spec.crystal?.wallReference ??
   spec.bones?.reference ??
-  spec.mushrooms?.wallReference;
+  spec.mushrooms?.wallReference ??
+  spec.treasure?.wallReference;
 if (bareReference) {
   const base = path.resolve(
     import.meta.dirname,
@@ -94,43 +97,41 @@ if (bareReference) {
     throw new Error("Verified original undecorated wall reference required");
   crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
 }
-async function reviewedViews(masks) {
-  const views = [];
-  for (const mask of masks) {
-    const base = path.resolve(
-      import.meta.dirname,
-      "../../models/collections/lost-cave/bone-views",
-      report.model.sourceCode,
-      mask.name,
-    );
-    const view = {
-      spec: JSON.parse(
-        await fs.readFile(path.join(base, "reference.json"), "utf8"),
-      ),
-      data: await fs.readFile(path.join(base, "depth.bin")),
-    };
-    if (
-      view.spec.sourceSHA256 !== report.model.assets.source.sha256 ||
-      view.spec.cutHeight !== report.cutHeight ||
-      JSON.stringify(view.spec.sourceShiftMM) !==
-        JSON.stringify(report.sourceShiftMM) ||
-      createHash("sha256").update(view.data).digest("hex") !==
-        view.spec.fieldSHA256
-    )
-      throw new Error("Verified original source material projection required");
-    views.push({ view, mask });
-  }
-  return (p) =>
-    views.find(({ view, mask }) =>
-      projectedBoneAt(p, view, mask.polygons, mask.toleranceMM),
-    )?.mask;
-}
+const reviewedViews = (masks) => loadReviewedCaveViews(report, masks);
+
 if (spec.bones?.projectedViews) {
   const match = await reviewedViews(spec.bones.projectedViews);
   crystalWallReference = {
     ...crystalWallReference,
     projectedBoneAt: (p) => Boolean(match(p)),
   };
+}
+let treasureProjection;
+if (spec.treasure?.projectedViews) {
+  const masks = spec.treasure.projectedViews.flatMap((view) =>
+    view.regions.map((region) => ({
+      ...region,
+      name: view.name,
+      toleranceMM: view.toleranceMM,
+    })),
+  );
+  masks.sort((a, b) => Number(b.part === "gold") - Number(a.part === "gold"));
+  const match = await reviewedViews(masks);
+  const visible = await reviewedViews(
+    spec.treasure.projectedViews.map((view) => ({
+      ...view,
+      polygons: [
+        [
+          [0, 0],
+          [1024, 0],
+          [1024, 1024],
+          [0, 1024],
+        ],
+      ],
+    })),
+  );
+  treasureProjection = match;
+  treasureProjection.isVisible = (p) => Boolean(visible(p));
 }
 let mushroomProjection;
 if (spec.mushrooms?.projectedViews) {
@@ -186,6 +187,7 @@ for (const tier of ["render", "lod"]) {
   let pixels = 0;
   const counts = {
     rock: 0,
+    ...(spec.material === "cave-treasure" ? { gold: 0, gem: 0 } : {}),
     ...(["cave-scaffolding", "cave-scaffolding-ramp"].includes(spec.material)
       ? { wood: 0, iron: 0 }
       : {}),
@@ -227,38 +229,58 @@ for (const tier of ["render", "lod"]) {
   const paintPixel = (i, p, n, used = true) => {
     if (used) checkUv?.(i, p);
     const value =
-      spec.material === "cave-scaffolding-ramp"
-        ? paintScaffoldingRamp(p, n, ao[i], spec)
-        : spec.material === "cave-scaffolding"
-          ? paintScaffolding(p, n, ao[i], spec)
-          : spec.material === "cave-cut-stone"
-            ? paintCutStone(p, n, ao[i], spec)
-            : spec.material === "cave-mushrooms"
-              ? paintMushrooms(
-                  p,
-                  n,
-                  ao[i],
-                  spec,
-                  mushroomProjection,
-                  crystalWallReference,
-                )
-              : spec.material === "cave-bones"
-                ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
-                : spec.material === "cave-crystal-ground"
-                  ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
-                  : spec.material === "cave-boulders"
-                    ? paintBoulderGround(p, n, ao[i], spec)
-                    : spec.material === "cave-wagon-track"
-                      ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
-                      : spec.material === "cave-wagon"
-                        ? paintWagon(p, n, ao[i], spec)
-                        : spec.material === "cave-crystal"
-                          ? paintCrystal(p, n, ao[i], spec)
-                          : spec.material === "cave-railway"
-                            ? paintRailway(p, n, ao[i], spec)
-                            : spec.material === "cave-stalagmites"
-                              ? paintStalagmites(p, n, ao[i], spec)
-                              : caveRockPixel(p, n, ao[i], report.materialSpec);
+      spec.material === "cave-treasure"
+        ? paintCaveTreasure(
+            p,
+            n,
+            ao[i],
+            spec,
+            crystalWallReference,
+            treasureProjection,
+          )
+        : spec.material === "cave-scaffolding-ramp"
+          ? paintScaffoldingRamp(p, n, ao[i], spec)
+          : spec.material === "cave-scaffolding"
+            ? paintScaffolding(p, n, ao[i], spec)
+            : spec.material === "cave-cut-stone"
+              ? paintCutStone(p, n, ao[i], spec)
+              : spec.material === "cave-mushrooms"
+                ? paintMushrooms(
+                    p,
+                    n,
+                    ao[i],
+                    spec,
+                    mushroomProjection,
+                    crystalWallReference,
+                  )
+                : spec.material === "cave-bones"
+                  ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
+                  : spec.material === "cave-crystal-ground"
+                    ? paintCrystalGround(
+                        p,
+                        n,
+                        ao[i],
+                        spec,
+                        crystalWallReference,
+                      )
+                    : spec.material === "cave-boulders"
+                      ? paintBoulderGround(p, n, ao[i], spec)
+                      : spec.material === "cave-wagon-track"
+                        ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
+                        : spec.material === "cave-wagon"
+                          ? paintWagon(p, n, ao[i], spec)
+                          : spec.material === "cave-crystal"
+                            ? paintCrystal(p, n, ao[i], spec)
+                            : spec.material === "cave-railway"
+                              ? paintRailway(p, n, ao[i], spec)
+                              : spec.material === "cave-stalagmites"
+                                ? paintStalagmites(p, n, ao[i], spec)
+                                : caveRockPixel(
+                                    p,
+                                    n,
+                                    ao[i],
+                                    report.materialSpec,
+                                  );
     if (spec.floorHeightProfileMM && value.part === "rock")
       darkenCaveFloorJoints(value, p, spec);
     if (used) counts[value.part]++;
