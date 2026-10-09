@@ -35,7 +35,8 @@ export function scaffoldMemberAt(p, members) {
     if (
       Math.abs(q[0]) <= m.length / 2 &&
       Math.abs(q[1]) <= m.halfWidth &&
-      Math.abs(q[2]) <= m.halfDepth
+      Math.abs(q[2]) <= m.halfDepth &&
+      (!m.round || Math.hypot(q[1] / m.halfWidth, q[2] / m.halfDepth) <= 1)
     )
       return m;
   }

@@ -25,6 +25,12 @@ export function minePartAt(p, n, spec, reference, projection) {
   if (mine.woodReference && !reference)
     throw new Error("Verified bare mine wall required for added boards");
   const projected = projection?.(p);
+  const painted = scaffoldMemberAt(p, mine.grips || []);
+  if (projected?.part === "grip" && painted) return { part: "grip" };
+  if (painted && !mine.projectedGripsOnly)
+    return { part: "grip", member: painted };
+  const tool = scaffoldMemberAt(p, mine.ironMembers || []);
+  if (tool) return { part: "iron" };
   if (
     projected?.part === "iron" &&
     (!mine.hardwareVolumes ||
@@ -49,6 +55,17 @@ export function minePartAt(p, n, spec, reference, projection) {
 }
 export function paintCaveMine(p, n, ao, spec, reference, projection) {
   const value = minePartAt(p, n, spec, reference, projection);
+  if (value.part === "grip")
+    return {
+      part: "grip",
+      rgb: spec.mine.gripTint.map((v) =>
+        Math.round(
+          255 * v * (0.85 + 0.15 * Math.max(0, Math.min(1, ao / 255))),
+        ),
+      ),
+      roughness: 0.62,
+      metallic: 0,
+    };
   if (value.part === "wood")
     return finishScaffoldWood(p, n, ao, spec, value.member);
   if (value.part === "iron") {

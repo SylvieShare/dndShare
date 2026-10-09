@@ -42,6 +42,39 @@ test("mine posts, inclined braces and horizontal sleepers follow their own measu
     "boulder",
   );
 });
+test("LC-076 tool shafts follow measured axes and stay separate from iron working faces", () => {
+  const s = specs["LC-076"];
+  for (const p of [
+    [-0.6393, -5.0961, 30.1534],
+    [2.3401, -7.7799, 24.2119],
+    [4.6222, -9.2297, 20.7375],
+    [5.1069, 6.0635, 25.364],
+    [7.0392, 6.1363, 23.4785],
+  ])
+    assert.equal(minePartAt(p, [0, 0, 1], s).part, "wood");
+  for (const p of [
+    [1.2152, -13.986, 18.1338],
+    [8.4512, -7.5978, 18.5605],
+    [6.8604, -11.3379, 16.6964],
+    [13.4574, 6.5641, 16.6836],
+    [14.4235, 4.7001, 16.993],
+  ])
+    assert.equal(minePartAt(p, [0, 0, 1], s).part, "iron");
+  assert.equal(
+    minePartAt([0.8972, 7.022, 29.1597], [0, 0, 1], s, undefined, () => ({
+      part: "grip",
+    })).part,
+    "grip",
+  );
+  assert.equal(
+    minePartAt([0.8972, 7.022, 29.1597], [0, 0, 1], s).part,
+    "boulder",
+  );
+  assert.equal(
+    minePartAt([-7.0341, -8.1177, 25.1741], [0, 0, 1], s).part,
+    "boulder",
+  );
+});
 test("rejected projected iron on a long board still resolves the wood contour", () => {
   const m = specs["LC-075"].mine;
   assert.equal(

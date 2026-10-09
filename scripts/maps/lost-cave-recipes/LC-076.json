@@ -1,0 +1,430 @@
+{
+  "sourceName": "Mine Wall Debris",
+  "referencePage": 11,
+  "material": "cave-mine",
+  "floorHeightMM": 14.7394,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 30000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.4,
+      6.2
+    ],
+    "lodMiB": [
+      0.8,
+      2.2
+    ],
+    "shadowKiB": [
+      45,
+      130
+    ],
+    "previewKiB": [
+      20,
+      160
+    ],
+    "basis": "419992-triangle1x1 mine rubble with two posts, a pickaxe and shovel with hollow painted D-grip.65k/22k retain tool edges and grip opening.2048/1024 source rebake, full UASTC colour and two data budgets. LOD30k retains the measured D-grip rim after22k failed72-ray comparison."
+  },
+  "notes": "Author page11 Mine Wall Debris: grey-green rubble, warm posts, wooden tool shafts, grey iron pick/shovel and orange painted D-grip. Pick wood-.6393/-5.0961/30.1534,.0759/-5.875/28.5284,2.3401/-7.7799/24.2119,4.6222/-9.2297/20.7375. Pick head1.2152/-13.986/18.1338,8.4512/-7.5978/18.5605 and collar6.8604/-11.3379/16.6964. Shovel shaft5.1069/6.0635/25.364,7.0392/6.1363/23.4785, blade8.6265/6.2084/21.9732,13.4574/6.5641/16.6836,14.4235/4.7001/16.993. Grip-.3451/6.0553/29.4411,.8972/7.022/29.1597,1.5183/4.5371/29.4208. Verify both sides and open grip, exclude surrounding rock. Preserve UUIDd3a416b9-7b50-5dbb-9891-e5559e498692,source/cut11.5,familyLC-mine-wall-debris,mount.150217,1x1,no points/slots. Pick shaft principal axis fitted from native points:[1,-.7852,-1.7924], perpendicular errors.065..195mm. Collar extends to6.8604/-11.3379/16.6964 with axial extent2.07mm; measured collar length4.5mm retains that metal face. Tool shaft cross-sections use measured round profile, excluding nearby rubble at rectangular-box corners. Pick upper tip-.7199/-4.7516/30.5935 requires length16.2mm; shaft thickness stays.68mm. Blade lateral width2.3mm retains its edge without silver on adjacent stones. D-grip colour uses verified source-depth silhouettes with.35mm tolerance, retaining the stone behind its opening. Native grip edge1.1498/4.4777/29.9148 is painted; blade edge12.7454/3.0914/19.1987 sets lateral extent2.6mm. Grip colour now requires both source-depth silhouette and measured3D member bounds; direct contour-only colour was rejected for orange on nearby rubble. Native gripedge1.1498/4.4777/29.9148 sets depth.72mm. Native grip72-ray review: rendermax.075mm,22kLOD has1.590mm drift at rim pixel573/375. Original rear-facing opening rays remain, but rim loss exceeds.5mm quality limit. Raise LOD to30k before UV and rebake; keep strict ray check.30kLOD atUV.2rad rejected for.282mm physical-overlap; retry own SmartUV angle.25rad and source rebake without changing.1mm threshold.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-mine-wall-debris",
+  "uvAngleLimitRad": 0.25,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      2048,
+      1024,
+      1024,
+      512
+    ],
+    "ktx-compact": [
+      2048,
+      768,
+      1024,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [
+      0.5,
+      0.31,
+      0.145
+    ],
+    "postTint": [
+      0.45,
+      0.275,
+      0.125
+    ]
+  },
+  "boulder": {
+    "tint": [
+      0.31,
+      0.37,
+      0.31
+    ]
+  },
+  "mine": {
+    "stoneMinHeightMM": 14.95,
+    "members": [
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [
+          -13.95,
+          -14.5,
+          26.7
+        ],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [
+          -13.95,
+          14.5,
+          26.7
+        ],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "handle",
+        "axis": "x",
+        "direction": [
+          1,
+          -0.7852,
+          -1.7924
+        ],
+        "centre": [
+          2.6,
+          -7.68,
+          24.05
+        ],
+        "length": 16.2,
+        "halfWidth": 0.68,
+        "halfDepth": 0.68,
+        "round": true
+      },
+      {
+        "name": "handle",
+        "axis": "x",
+        "direction": [
+          1,
+          0.038,
+          -0.974
+        ],
+        "centre": [
+          5,
+          6.05,
+          25
+        ],
+        "length": 9.7,
+        "halfWidth": 0.68,
+        "halfDepth": 0.68,
+        "round": true
+      }
+    ],
+    "bolts": [],
+    "ironMembers": [
+      {
+        "name": "pick-head",
+        "axis": "x",
+        "direction": [
+          1,
+          0.85,
+          0.035
+        ],
+        "centre": [
+          5,
+          -10.7,
+          18.4
+        ],
+        "length": 11.8,
+        "halfWidth": 0.9,
+        "halfDepth": 0.88
+      },
+      {
+        "name": "pick-collar",
+        "axis": "x",
+        "direction": [
+          1,
+          -0.7852,
+          -1.7924
+        ],
+        "centre": [
+          6,
+          -10.5,
+          18.4
+        ],
+        "length": 4.5,
+        "halfWidth": 1.35,
+        "halfDepth": 1.35
+      },
+      {
+        "name": "shovel-blade",
+        "axis": "x",
+        "direction": [
+          1,
+          0,
+          -1
+        ],
+        "centre": [
+          11.7,
+          5.55,
+          19.25
+        ],
+        "length": 9.6,
+        "halfWidth": 2.6,
+        "halfDepth": 0.72
+      }
+    ],
+    "grips": [
+      {
+        "name": "painted-grip",
+        "axis": "x",
+        "direction": [
+          1,
+          0,
+          -1
+        ],
+        "centre": [
+          1.1,
+          5.5,
+          29.1
+        ],
+        "length": 4.9,
+        "halfWidth": 2.25,
+        "halfDepth": 0.85
+      }
+    ],
+    "gripTint": [
+      0.74,
+      0.29,
+      0.055
+    ],
+    "ironTint": [
+      0.48,
+      0.5,
+      0.48
+    ],
+    "projectedGripsOnly": true,
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "toleranceMM": 0.35,
+        "regions": [
+          {
+            "part": "grip",
+            "polygons": [
+              [
+                [
+                  540,
+                  369
+                ],
+                [
+                  548,
+                  354
+                ],
+                [
+                  558,
+                  347
+                ],
+                [
+                  570,
+                  336
+                ],
+                [
+                  579,
+                  337
+                ],
+                [
+                  585,
+                  350
+                ],
+                [
+                  594,
+                  370
+                ],
+                [
+                  595,
+                  386
+                ],
+                [
+                  586,
+                  396
+                ],
+                [
+                  567,
+                  402
+                ],
+                [
+                  550,
+                  390
+                ],
+                [
+                  540,
+                  379
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "outside",
+        "toleranceMM": 0.35,
+        "regions": [
+          {
+            "part": "grip",
+            "polygons": [
+              [
+                [
+                  519,
+                  446
+                ],
+                [
+                  528,
+                  429
+                ],
+                [
+                  536,
+                  416
+                ],
+                [
+                  545,
+                  415
+                ],
+                [
+                  558,
+                  427
+                ],
+                [
+                  572,
+                  437
+                ],
+                [
+                  575,
+                  448
+                ],
+                [
+                  563,
+                  463
+                ],
+                [
+                  550,
+                  477
+                ],
+                [
+                  533,
+                  477
+                ],
+                [
+                  520,
+                  467
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "top",
+        "toleranceMM": 0.35,
+        "regions": [
+          {
+            "part": "grip",
+            "polygons": [
+              [
+                [
+                  500,
+                  409
+                ],
+                [
+                  508,
+                  397
+                ],
+                [
+                  520,
+                  398
+                ],
+                [
+                  536,
+                  409
+                ],
+                [
+                  549,
+                  415
+                ],
+                [
+                  552,
+                  430
+                ],
+                [
+                  544,
+                  450
+                ],
+                [
+                  540,
+                  463
+                ],
+                [
+                  525,
+                  470
+                ],
+                [
+                  508,
+                  466
+                ],
+                [
+                  503,
+                  450
+                ]
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "c1d6386f6450f9f4ffe725857c24bd19bf7ef8d62f15f92208ce095c2a3ba391",
+    "mountDepthMM": 5.257594999999999,
+    "sourceTopWidthMM": 35,
+    "centresMM": [
+      [
+        0,
+        0
+      ]
+    ],
+    "reason": "Native sections 0.0500mm:25.99/25.99, 0.5000mm:26.76/26.76, 2.5000mm:30.20/30.20, 4.0000mm:32.78/32.78, 5.2576mm:34.93/34.93, 6.0000mm:35.00/34.99 confirm one centred cell; preserve datum and fit pyramid."
+  },
+  "albedoCodec": "uastc"
+}
