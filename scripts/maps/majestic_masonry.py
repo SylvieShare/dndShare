@@ -72,6 +72,55 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     return colours,roughness
 
 
+def masonry_box_finish(nodes, links, finish, recipe, noise, wear):
+    """Keep measured stone treads free of interpolated terrace grass."""
+    boxes = recipe.get('masonrySurfaceBoxes', [])
+    if not boxes:
+        return finish
+    def scalar(op, a, b):
+        node = nodes.new('ShaderNodeMath'); node.operation = op
+        for i, value in enumerate([a, b]):
+            if isinstance(value, (int, float)): node.inputs[i].default_value = value
+            else: links.new(value, node.inputs[i])
+        return node.outputs[0]
+    def clamp(value):
+        return scalar('MINIMUM', scalar('MAXIMUM', value, 0), 1)
+    coords = nodes.new('ShaderNodeTexCoord')
+    position = nodes.new('ShaderNodeSeparateXYZ')
+    links.new(coords.outputs['Object'], position.inputs[0])
+    geometry = nodes.new('ShaderNodeNewGeometry')
+    normal = nodes.new('ShaderNodeSeparateXYZ')
+    links.new(geometry.outputs['True Normal'], normal.inputs[0])
+    total = 0
+    for box in boxes:
+        weight = 1
+        for axis, lo, hi in zip('XYZ', box['minMM'], box['maxMM']):
+            distance = scalar('MINIMUM', scalar('SUBTRACT', position.outputs[axis], lo),
+                              scalar('SUBTRACT', hi, position.outputs[axis]))
+            weight = scalar('MULTIPLY', weight, clamp(scalar('DIVIDE', distance, box.get('featherMM', .2))))
+        if 'normalZMin' in box:
+            facing = clamp(scalar('DIVIDE', scalar('SUBTRACT', normal.outputs['Z'], box['normalZMin']), .1))
+            weight = scalar('MULTIPLY', weight, facing)
+        total = scalar('MAXIMUM', total, weight)
+    rgb = np.array(recipe.get('masonryTopRGB', recipe['masonryRGB']))
+    linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
+    colour = nodes.new('ShaderNodeMixRGB'); colour.blend_type = 'MULTIPLY'
+    colour.inputs[0].default_value = 1; colour.inputs[1].default_value = (*linear, 1)
+    links.new(noise, colour.inputs[2])
+    worn = nodes.new('ShaderNodeMixRGB'); worn.blend_type = 'MULTIPLY'
+    worn.inputs[0].default_value = 1
+    links.new(colour.outputs[0], worn.inputs[1]); links.new(wear, worn.inputs[2])
+    if recipe.get('darkenJoints'):
+        ao = nodes.new('ShaderNodeAmbientOcclusion'); ao.inputs['Distance'].default_value = .9; ao.samples = 16
+        shade = scalar('ADD', scalar('MULTIPLY', ao.outputs['AO'], .45), .55)
+        dirt = nodes.new('ShaderNodeMixRGB'); dirt.blend_type = 'MULTIPLY'; dirt.inputs[0].default_value = 1
+        links.new(worn.outputs[0], dirt.inputs[1]); links.new(shade, dirt.inputs[2]); worn = dirt
+    repaired = nodes.new('ShaderNodeMixRGB')
+    links.new(total, repaired.inputs[0]); links.new(finish.outputs[0], repaired.inputs[1])
+    links.new(worn.outputs[0], repaired.inputs[2])
+    return repaired
+
+
 def masonry_back_finish(nodes, links, finish, recipe, noise, wear):
     settings_list=recipe.get('masonryBackFaces') or ([recipe['masonryBackFace']] if recipe.get('masonryBackFace') else [])
     if not settings_list: return finish

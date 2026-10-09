@@ -117,6 +117,9 @@ def material(recipe=None):
     if recipe.get('masonryBackFace') or recipe.get('masonryBackFaces'):
         from majestic_masonry import masonry_back_finish
         finish=masonry_back_finish(nodes,links,finish,recipe,ramp.outputs[0],wear.outputs[0])
+    if recipe.get('masonrySurfaceBoxes'):
+        from majestic_masonry import masonry_box_finish
+        finish=masonry_box_finish(nodes,links,finish,recipe,ramp.outputs[0],wear.outputs[0])
     if recipe.get('woodReference'):
         from majestic_wood import wood_finish
         finish=wood_finish(nodes,links,finish,recipe)
