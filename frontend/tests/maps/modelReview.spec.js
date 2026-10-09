@@ -55,6 +55,10 @@ test("decodes both reviewed tiers and preserves dedicated shadows under sun and 
       report.tiers[tier].textureSize,
     );
     expect(result.shadowChecks.every((c) => c.changed > 50)).toBe(true);
+    if (report.materialSpec?.torch?.emission)
+      expect(result.emissionMaps).toEqual([
+        { width: report.tiers[tier].textureSize, colorSpace: "srgb" },
+      ]);
   }
   expect(errors).toEqual([]);
 });

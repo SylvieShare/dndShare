@@ -11,7 +11,9 @@ export function setSurfaceAtlas(glb, slot, bytes) {
       ? pbr.baseColorTexture
       : slot === "Normal"
         ? mat.normalTexture
-        : pbr.metallicRoughnessTexture;
+        : slot === "Emissive"
+          ? mat.emissiveTexture
+          : pbr.metallicRoughnessTexture;
   let index;
   if (existing) index = glb.json.textures[existing.index].source;
   else {
@@ -25,15 +27,16 @@ export function setSurfaceAtlas(glb, slot, bytes) {
         : {}),
     });
     const info = { ...structuredClone(pbr.baseColorTexture), index: texture };
-    if (slot !== "MetallicRoughness")
-      throw new Error("Only missing ORM is supported");
-    pbr.metallicRoughnessTexture = info;
+    if (slot === "Emissive") mat.emissiveTexture = info;
+    else if (slot === "MetallicRoughness") pbr.metallicRoughnessTexture = info;
+    else throw new Error("Only missing ORM or emissive is supported");
   }
   if (slot === "MetallicRoughness") {
     pbr.roughnessFactor = 1;
     pbr.metallicFactor = 1;
     mat.occlusionTexture = structuredClone(pbr.metallicRoughnessTexture);
   }
+  if (slot === "Emissive") mat.emissiveFactor = [1, 1, 1];
   return index;
 }
 

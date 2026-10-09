@@ -1,0 +1,288 @@
+{
+  "sourceName": "Mine Torch Lit",
+  "referencePage": 11,
+  "material": "cave-mine",
+  "floorHeightMM": 14.714,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 24000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.4, 6.6],
+    "lodMiB": [0.8, 2.4],
+    "shadowKiB": [45, 130],
+    "previewKiB": [20, 160],
+    "basis": "419984-triangle1x1 mine torch with bent flame, metal cup and two timber posts.65k/24k beforeUV protect flame and rim.2048/1024 source bake; full UASTC colour and emissive plus two data budgets."
+  },
+  "notes": "Author page11: mine stone grey-green, vertical timber warm brown, iron torch cup, bent yellow-orange flame. Native flame/cup boundaries measured in source-depth views; preserve UUID169269cd-40a0-521e-a564-79829e9655e3,original source/cut11.5,mount.150186,1x1,point.430089,no slots. Flame47.8726 at-13.4482/.2971,43.1469 at-9.0439/-.8214,root41.1813 at-7.6755/-1.414. Iron rim40.2756 at-6.6886/-2.956,stem37.159 at-7.9954/-1.7725. Native wood and stone reviewed both sides. Initial highest47.8726 probe hits stone behind the flame; flame peak checked through its narrow curved silhouette. Source-depth contour excludes the high rock even within XY bounds. Source-deep flame peak-12.2415/-.0705/46.9494 and rear-12.239/1.6647/46.5004; top reverse-disoccluded flame-10.6796/1.0453/44.3394,-9.588/.4993/44.4382,-8.9642/1.9058/42.9614. Complete upper/back contour; emission45% retains visible sculpt. Clay close-up confirms-11.5021/-.7169/45.9998 is the continuous flame shaft; initial concavity excluded it. Corrected full silhouette, retaining the stone behind at47.8726mm. Builtin light at measured flame core(-9.6,-.5,44)mm -> [.225714,.514286,1.106957] above mount; warm torch8/radius4.5. Register through behaviour_get/CAS update/get preserving all transitions and other sources. Source Y is inverted by GLB/map coordinates; verify [.225714,.514286] at all quarter turns and raised support. Additional outside review before upload found missing back-flame and rim texels; added own outside source-depth silhouettes, then regenerate both KTX candidates and complete checks before publication. Back root-9.4813/2.6973/41.7824 and outer shaft-10.3412/.6609/44.9141 refine outside contour; cup rim-8.4796/3.5841/40.9891 stays iron.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-mine-torch",
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [0.5, 0.31, 0.145],
+    "postTint": [0.45, 0.275, 0.125]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
+  },
+  "mine": {
+    "stoneMinHeightMM": 14.95,
+    "members": [
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-13.95, -14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-13.95, 14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      }
+    ],
+    "bolts": [],
+    "hardwareVolumes": [
+      {
+        "min": [-15, -5.1, 34.2],
+        "max": [-5.1, 5.1, 41.15]
+      }
+    ],
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "toleranceMM": 0.35,
+        "regions": [
+          {
+            "part": "iron",
+            "polygons": [
+              [
+                [366, 303],
+                [379, 300],
+                [398, 308],
+                [416, 313],
+                [433, 308],
+                [442, 297],
+                [448, 303],
+                [448, 315],
+                [436, 327],
+                [423, 334],
+                [405, 336],
+                [389, 331],
+                [373, 322]
+              ],
+              [
+                [383, 330],
+                [395, 335],
+                [413, 336],
+                [432, 330],
+                [442, 337],
+                [434, 347],
+                [418, 357],
+                [400, 358],
+                [387, 348]
+              ]
+            ]
+          },
+          {
+            "part": "flame",
+            "polygons": [
+              [
+                [382, 210],
+                [391, 215],
+                [395, 225],
+                [399, 232],
+                [409, 237],
+                [419, 253],
+                [427, 268],
+                [433, 284],
+                [438, 299],
+                [436, 311],
+                [425, 317],
+                [410, 317],
+                [392, 311],
+                [379, 300],
+                [370, 283],
+                [367, 268],
+                [369, 254],
+                [375, 247],
+                [379, 240],
+                [380, 228],
+                [379, 219]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "top",
+        "toleranceMM": 0.35,
+        "regions": [
+          {
+            "part": "iron",
+            "polygons": [
+              [
+                [344, 467],
+                [362, 461],
+                [389, 463],
+                [411, 474],
+                [430, 492],
+                [438, 512],
+                [434, 537],
+                [420, 555],
+                [401, 563],
+                [378, 560],
+                [358, 551],
+                [345, 534],
+                [341, 507]
+              ]
+            ]
+          },
+          {
+            "part": "flame",
+            "polygons": [
+              [
+                [351, 483],
+                [361, 480],
+                [374, 488],
+                [386, 492],
+                [398, 482],
+                [406, 488],
+                [409, 499],
+                [417, 509],
+                [423, 519],
+                [421, 530],
+                [410, 537],
+                [393, 545],
+                [375, 543],
+                [363, 547],
+                [358, 539],
+                [362, 531],
+                [367, 526],
+                [366, 516],
+                [357, 504],
+                [352, 495]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "name": "outside",
+        "toleranceMM": 0.35,
+        "regions": [
+          {
+            "part": "iron",
+            "polygons": [
+              [
+                [568, 279],
+                [576, 278],
+                [581, 292],
+                [584, 305],
+                [598, 316],
+                [613, 314],
+                [629, 306],
+                [644, 293],
+                [651, 290],
+                [650, 304],
+                [642, 317],
+                [628, 326],
+                [608, 334],
+                [587, 330],
+                [574, 320],
+                [567, 306]
+              ],
+              [
+                [578, 330],
+                [590, 332],
+                [609, 337],
+                [634, 324],
+                [640, 324],
+                [636, 342],
+                [628, 352],
+                [607, 358],
+                [591, 351],
+                [581, 342]
+              ]
+            ]
+          },
+          {
+            "part": "flame",
+            "polygons": [
+              [
+                [637, 220],
+                [649, 221],
+                [653, 228],
+                [650, 238],
+                [644, 247],
+                [641, 260],
+                [640, 281],
+                [640, 293],
+                [633, 308],
+                [620, 316],
+                [602, 317],
+                [588, 315],
+                [581, 311],
+                [577, 302],
+                [579, 291],
+                [586, 280],
+                [595, 264],
+                [607, 249],
+                [618, 236],
+                [630, 226]
+              ]
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "7a58ca3f407e00bc758c506af0e9e5493962be7f549db630aa5c2eb16e6167d9",
+    "mountDepthMM": 5.25651,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections.05=25.99/.5=26.76/2.5=30.20/4=32.78/datum5.25651=34.92/6=35mm confirm one native centred cell."
+  },
+  "albedoCodec": "uastc",
+  "torch": {
+    "lit": true,
+    "flameMinHeightMM": 40.55,
+    "flameMaxHeightMM": 47.2,
+    "emission": true,
+    "flameVolumes": [
+      {
+        "min": [-16, -4.4, 40.55],
+        "max": [-6.5, 4.4, 47.2]
+      }
+    ],
+    "light": {
+      "key": "mine-torch",
+      "name": "\u0424\u0430\u043a\u0435\u043b \u0448\u0430\u0445\u0442\u044b",
+      "kind": "torch",
+      "color": "#ffad54",
+      "position": [0.225714, 0.514286, 1.106957],
+      "intensity": 8,
+      "radius": 4.5,
+      "enabled": true,
+      "flicker": true
+    }
+  }
+}

@@ -85,6 +85,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
         "MetallicRoughness",
         mat.pbrMetallicRoughness.metallicRoughnessTexture.index,
       ],
+      ...(mat.emissiveTexture ? [["Emissive", mat.emissiveTexture.index]] : []),
     ];
   const encoded = new Map(),
     decoded = new Map();
@@ -92,7 +93,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
     invalid = 0;
   for (const [slot, index] of slots) {
     const image = g.json.textures[index].source,
-      size = sizes[ti * 2 + (slot === "BaseColor" ? 0 : 1)],
+      size = sizes[ti * 2 + (["BaseColor", "Emissive"].includes(slot) ? 0 : 1)],
       result = await sharp(embeddedImage(g, image))
         .resize(size, size)
         .removeAlpha()
@@ -124,7 +125,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
       "--genmipmap",
       "--upper_left_maps_to_s0t0",
       "--assign_oetf",
-      slot === "BaseColor" ? "srgb" : "linear",
+      ["BaseColor", "Emissive"].includes(slot) ? "srgb" : "linear",
       "--assign_primaries",
       "bt709",
       "--target_type",
@@ -141,7 +142,11 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
         "--uastc_quality",
         "3",
         "--uastc_rdo_l",
-        slot === "Normal" ? "0.35" : slot === "BaseColor" ? "0.1" : "1",
+        slot === "Normal"
+          ? "0.35"
+          : ["BaseColor", "Emissive"].includes(slot)
+            ? "0.1"
+            : "1",
         "--zcmp",
         "18",
       );

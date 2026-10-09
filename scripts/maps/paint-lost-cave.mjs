@@ -232,7 +232,8 @@ for (const tier of ["render", "lod"]) {
     .raw()
     .toBuffer();
   const colour = Buffer.alloc(size * size * 3, 96),
-    orm = Buffer.alloc(size * size * 3);
+    orm = Buffer.alloc(size * size * 3),
+    emission = spec.torch?.emission ? Buffer.alloc(size * size * 3) : undefined;
   let pixels = 0;
   const counts = {
     rock: 0,
@@ -243,6 +244,7 @@ for (const tier of ["render", "lod"]) {
           boulder: 0,
           grip: 0,
           ...(spec.bones ? { bone: 0 } : {}),
+          ...(spec.torch?.lit ? { flame: 0 } : {}),
         }
       : {}),
     ...(spec.material === "cave-water" ? { water: 0 } : {}),
@@ -381,6 +383,7 @@ for (const tier of ["render", "lod"]) {
           value.part === "cut-stone"),
     );
     colour.set(value.rgb, i * 3);
+    if (emission) emission.set(value.emission || [0, 0, 0], i * 3);
     orm[i * 3] = ao[i];
     orm[i * 3 + 1] = Math.round(value.roughness * 255);
     orm[i * 3 + 2] = Math.round(value.metallic * 255);
@@ -412,6 +415,8 @@ for (const tier of ["render", "lod"]) {
     );
   extendUvGutters(colour, 3, colourCoverage.slice(), size, size, 12);
   extendUvGutters(orm, 3, colourCoverage.slice(), size, size, 12);
+  if (emission)
+    extendUvGutters(emission, 3, colourCoverage.slice(), size, size, 12);
   extendUvGutters(normal.data, 3, coverage.slice(), size, size, 12);
   const raw = { width: size, height: size, channels: 3 };
   const replacements = new Map();
@@ -419,6 +424,7 @@ for (const tier of ["render", "lod"]) {
     ["BaseColor", colour],
     ["MetallicRoughness", orm],
     ["Normal", normal.data],
+    ...(emission ? [["Emissive", emission]] : []),
   ]) {
     const png = await sharp(data, { raw })
       .png({ compressionLevel: 9 })

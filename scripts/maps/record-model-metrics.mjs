@@ -52,7 +52,12 @@ for (const tier of ["render", "lod", "shadow"]) {
     );
   const maps = [];
   for (const mat of doc.getRoot().listMaterials())
-    for (const slot of ["BaseColor", "Normal", "MetallicRoughness"]) {
+    for (const slot of [
+      "BaseColor",
+      "Normal",
+      "MetallicRoughness",
+      "Emissive",
+    ]) {
       const texture = mat["get" + slot + "Texture"]();
       if (!texture) continue;
       const data = Buffer.from(texture.getImage()),

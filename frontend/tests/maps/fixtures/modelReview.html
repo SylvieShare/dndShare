@@ -136,12 +136,21 @@
             for (const t of Object.values(n.material))
               if (t?.isTexture) textures.add(t);
         });
+        const emissionMaps = [];
+        visible.scene.traverse((n) => {
+          if (n.isMesh && n.material.emissiveMap)
+            emissionMaps.push({
+              width: n.material.emissiveMap.image.width,
+              colorSpace: n.material.emissiveMap.colorSpace,
+            });
+        });
         return {
           triangles: count(visible.scene),
           shadowTriangles: count(shadow.scene),
           drift,
           shadowChecks,
           rendered: gpu.info.render.triangles,
+          emissionMaps,
           textures: [...textures].map((t) => ({
             width: t.image.width,
             height: t.image.height,

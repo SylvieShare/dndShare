@@ -9,6 +9,7 @@ import {
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { paintBoulder } from "./lost_cave_boulder.mjs";
 import { caveBonePartAt, paintCaveBones } from "./lost_cave_bones.mjs";
+import { paintMineFlame } from "./lost_cave_torch.mjs";
 export function mineProjectionAt(p, mine, ironMatch, woodMatch) {
   if (
     !mine.hardwareVolumes ||
@@ -55,6 +56,8 @@ export function minePartAt(p, n, spec, reference, projection) {
   return { part: p[2] > mine.stoneMinHeightMM ? "boulder" : "rock" };
 }
 export function paintCaveMine(p, n, ao, spec, reference, projection) {
+  const flame = paintMineFlame(p, spec, projection);
+  if (flame) return flame;
   if (spec.bones && caveBonePartAt(p, spec, reference, n) === "bone")
     return paintCaveBones(p, n, ao, spec, reference);
   const value = minePartAt(p, n, spec, reference, projection);

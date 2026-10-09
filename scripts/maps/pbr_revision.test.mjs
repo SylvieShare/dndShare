@@ -36,6 +36,15 @@ test("adding a missing packed PBR atlas retains the original mesh bytes and UV s
     texCoord: 1,
   });
   assert.equal(output.json.materials[0].pbrMetallicRoughness.metallicFactor, 1);
+  const emissionIndex = setSurfaceAtlas(glb, "Emissive", payload),
+    emitted = readGlb(replaceImages(glb, new Map([[emissionIndex, payload]])));
+  assert.deepEqual(emitted.bin.subarray(0, 4), geometry);
+  assert.deepEqual(emitted.json.materials[0].emissiveTexture, {
+    index: 2,
+    texCoord: 1,
+  });
+  assert.deepEqual(emitted.json.materials[0].emissiveFactor, [1, 1, 1]);
+  assert.notEqual(emissionIndex, index);
 });
 
 test("source-rebuilt vertex-colour body receives three independent PBR atlases without tinting the pegs", () => {
