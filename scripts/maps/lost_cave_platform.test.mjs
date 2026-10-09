@@ -61,3 +61,22 @@ test("LC-071 limits the low platform without colouring its taller cliff", () => 
     "rock",
   );
 });
+test("LC-072 distinguishes the small ledge from a nearby vertical side", () => {
+  const s = specs["LC-072"];
+  assert.equal(
+    platformPartAt([-3.1941, -3.0918, 24.347], [0, 0, 1], s),
+    "platform-top",
+  );
+  assert.equal(
+    platformPartAt([8.0984, 3.866, 21.129], [0, 0, 1], s),
+    "platform-top",
+  );
+  assert.equal(
+    platformPartAt([8.0984, 3.866, 21.129], [1, 0, 0], s),
+    "platform-side",
+  );
+  assert.equal(
+    platformPartAt([2.1545, 7.559, 31.363], [0.91, -0.32, 0.25], s),
+    "rock",
+  );
+});

@@ -5,6 +5,24 @@ const smooth = (a, b, v) => {
   const t = clamp((v - a) / (b - a));
   return t * t * (3 - 2 * t);
 };
+function platformTopMix(p, n, m) {
+  const main = smooth(m.topMinHeightMM - 0.4, m.topMinHeightMM + 0.7, p[2]);
+  const extra = Math.max(
+    0,
+    ...(m.topRegions || []).map(
+      (r) =>
+        smooth(r.minHeightMM - 0.2, r.minHeightMM + 0.4, p[2]) *
+        (1 - smooth(r.maxHeightMM - 0.3, r.maxHeightMM, p[2])) *
+        (1 -
+          smooth(
+            r.radiusMM - 0.6,
+            r.radiusMM,
+            Math.hypot(p[0] - r.centre[0], p[1] - r.centre[1]),
+          )),
+    ),
+  );
+  return Math.max(main, extra) * smooth(0.3, 0.95, n[2]);
+}
 export function platformPartAt(p, n, spec) {
   const m = spec.platform;
   if (
@@ -13,18 +31,14 @@ export function platformPartAt(p, n, spec) {
     p[2] > (m.maxHeightMM ?? Infinity)
   )
     return "rock";
-  return p[2] > m.topMinHeightMM && n[2] > 0.6
-    ? "platform-top"
-    : "platform-side";
+  return platformTopMix(p, n, m) > 0.4 ? "platform-top" : "platform-side";
 }
 export function paintCavePlatform(p, n, ao, spec) {
   const part = platformPartAt(p, n, spec);
   if (part === "rock")
     return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
   const m = spec.platform;
-  const topMix =
-    smooth(m.topMinHeightMM - 0.4, m.topMinHeightMM + 0.7, p[2]) *
-    smooth(0.3, 0.95, n[2]);
+  const topMix = platformTopMix(p, n, m);
   const radius = Math.hypot(p[0] - m.centre[0], p[1] - m.centre[1]);
   const bodyMix =
     smooth(m.minHeightMM, m.minHeightMM + 1.2, p[2]) *
