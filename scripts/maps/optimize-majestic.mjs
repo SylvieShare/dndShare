@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { majesticModel } from "./majestic_model.mjs";
 import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
+import { stripAuxiliaryColours } from "./auxiliary_colours.mjs";
 import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
 import { execFile } from "node:child_process";
@@ -186,6 +187,8 @@ for (const tier of ["render", "lod"]) {
     );
   }
   doc.createExtension(KHRTextureBasisu).setRequired(true);
+  if (measured.recipe.stripAuxiliaryColours)
+    console.log('AUXILIARY_COLOURS_REMOVED', tier, stripAuxiliaryColours(doc));
   await doc.transform(
     meshopt({
       encoder: MeshoptEncoder,

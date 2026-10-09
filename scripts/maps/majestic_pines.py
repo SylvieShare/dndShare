@@ -21,6 +21,9 @@ def apply_pines(obj, positions, colours, roughness, coverage, recipe):
         distances=np.array([tree.find_nearest(v.co)[3] for v in obj.data.vertices],np.float32);bpy.data.objects.remove(reference,do_unlink=True)
         added=np.clip((distances-settings['matchMM'])/settings['blendMM'],0,1);added=added*added*(3-2*added)
         print('VEGETATION_REFERENCE',np.quantile(distances,[0,.25,.5,.75,.9,1]).tolist(),flush=True)
+    if recipe.get('vegetationStoneSurface'):
+        from majestic_vegetation_surface import stone_surface_mask
+        added *= 1-stone_surface_mask(obj.data,positions,recipe['vegetationStoneSurface'])
     for tree in recipe.get('trees',[]):
         t=np.clip((z-15)/(tree['heightMM']-15),0,1)
         base,top=np.array(tree['baseXY']),np.array(tree['topXY'])

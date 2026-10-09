@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { stripAuxiliaryColours } from './auxiliary_colours.mjs';
+const require = createRequire('/private/tmp/dndshare-model-tools/package.json');
+const { Document } = require('@gltf-transform/core');
+const doc = new Document(), buffer = doc.createBuffer();
+const position = doc.createAccessor().setType('VEC3').setArray(new Float32Array([0,0,0,1,0,0,0,1,0])).setBuffer(buffer);
+const colour = doc.createAccessor().setType('VEC4').setArray(new Float32Array(12).fill(1)).setBuffer(buffer);
+const uv = doc.createAccessor().setType('VEC2').setArray(new Float32Array([0,0,1,0,0,1])).setBuffer(buffer);
+const primitive = doc.createPrimitive().setAttribute('POSITION',position).setAttribute('COLOR_0',colour).setAttribute('COLOR_1',colour).setAttribute('COLOR_12',colour).setAttribute('TEXCOORD_1',uv);
+doc.createMesh().addPrimitive(primitive);
+assert.equal(stripAuxiliaryColours(doc),2);
+assert.equal(primitive.getAttribute('POSITION'),position);
+assert.equal(primitive.getAttribute('COLOR_0'),colour);
+assert.equal(primitive.getAttribute('TEXCOORD_1'),uv);
+assert.equal(stripAuxiliaryColours(doc),0);
+console.log('AUXILIARY_COLOURS_TEST_PASSED');
