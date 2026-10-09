@@ -7,7 +7,9 @@ const code = process.argv[2],
 if (!code || path.basename(code) !== code || !snapshot)
   throw new Error("One reviewed code and fresh MCP snapshot required");
 const review = requestedCollection(),
-  directory = path.join(review.detail, code, "upload");
+  directory =
+    process.argv.find((a) => a.startsWith("--assets="))?.slice(9) ||
+    path.join(review.detail, code, "upload");
 const packet = JSON.parse(
   await fs.readFile(path.join(directory, "catalogue.json"), "utf8"),
 );
