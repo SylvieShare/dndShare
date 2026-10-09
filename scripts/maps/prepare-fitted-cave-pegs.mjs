@@ -92,6 +92,7 @@ for (const tier of ["render", "lod"]) {
     bytes: result.bytes.length,
     textureSize: dimensions.width,
     pads: result.pads.length,
+    padBounds: result.pads,
     bodyAndTexturesUnchanged: true,
   };
   await fs.writeFile(path.join(directory, tier + ".glb"), result.bytes);
