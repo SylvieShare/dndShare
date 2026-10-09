@@ -46,3 +46,18 @@ test("LC-070 uses its own upper cut and preserves the taller fractured side", ()
   );
   assert.equal(platformPartAt([0, 0, 26.5], [0, 0, 1], s), "platform-side");
 });
+test("LC-071 limits the low platform without colouring its taller cliff", () => {
+  const s = specs["LC-071"];
+  assert.equal(
+    platformPartAt([4.0308, 2.3762, 25.9604], [0, 0, 1], s),
+    "platform-top",
+  );
+  assert.equal(
+    platformPartAt([11.6632, -2.8875, 20.7543], [0.99, -0.1, 0], s),
+    "platform-side",
+  );
+  assert.equal(
+    platformPartAt([0.5784, 3.1164, 36.2164], [0.75, -0.66, 0], s),
+    "rock",
+  );
+});

@@ -9,7 +9,8 @@ export function platformPartAt(p, n, spec) {
   const m = spec.platform;
   if (
     Math.hypot(p[0] - m.centre[0], p[1] - m.centre[1]) > m.radiusMM ||
-    p[2] < m.minHeightMM
+    p[2] < m.minHeightMM ||
+    p[2] > (m.maxHeightMM ?? Infinity)
   )
     return "rock";
   return p[2] > m.topMinHeightMM && n[2] > 0.6
@@ -27,7 +28,8 @@ export function paintCavePlatform(p, n, ao, spec) {
   const radius = Math.hypot(p[0] - m.centre[0], p[1] - m.centre[1]);
   const bodyMix =
     smooth(m.minHeightMM, m.minHeightMM + 1.2, p[2]) *
-    (1 - smooth(m.radiusMM - 0.7, m.radiusMM, radius));
+    (1 - smooth(m.radiusMM - 0.7, m.radiusMM, radius)) *
+    (m.maxHeightMM ? 1 - smooth(m.maxHeightMM - 0.8, m.maxHeightMM, p[2]) : 1);
   const palette = {
     ...spec.palette,
     rock: m.sideTint.map((v, i) => {

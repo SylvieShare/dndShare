@@ -1,0 +1,51 @@
+{
+  "sourceName": "Big Rock Angle",
+  "referencePage": 10,
+  "material": "cave-platform",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 19000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 4.8],
+    "lodMiB": [0.6, 1.8],
+    "shadowKiB": [35, 110],
+    "previewKiB": [20, 150],
+    "basis": "399920-triangle1x1 angle cliff joined to a low layered platform.55k/19k protect curved rim, cliff fragments and top.2048/1024 source rebake, two UASTC budgets and two ETC1S comparisons for flat cut."
+  },
+  "notes": "Author page10 Big Rock Angle: brown natural angle cliff with low layered platform, no timber. Platform top.7906/.5452/26.1247,4.0308/2.3762/25.9604,6.8239/6.1579/25.8337,10.1466/2.0201/25.702,7.8709/-8.3501/25.8905; side4.1315/-10.9027/22.9138 and11.6632/-2.8875/20.7543. Upper cliff-5.9729/-2.2358/36.5673,-3.2266/.1796/38.383,.5784/3.1164/36.2164 remains cave rock. Platform material limited below27.3mm with smooth fade protects the tall cliff. Preserve UUIDe834976b-c85a-520c-b5ab-66d992d817e9,source/cut11.5,familyLC-big-rock-angle,mount.149574,wall-angle1x1,wallMask65,canStandfalse,no points or slots. Own source sections reviewed before fitting.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-big-rock-angle",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "platform": {
+    "centre": [0, 0],
+    "radiusMM": 14,
+    "minHeightMM": 15.2,
+    "topMinHeightMM": 25,
+    "topTint": [0.49, 0.37, 0.25],
+    "sideTint": [0.42, 0.325, 0.235],
+    "maxHeightMM": 27.3
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "6cf776f150f84a589d872aacafe0e99769100d0c35e5c5f144a2fd9206918b50",
+    "mountDepthMM": 5.2350900000000005,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native STL sections 0.0500mm:25.98/25.99, 0.5000mm:26.76/26.75, 2.5000mm:30.20/30.20, 4.0000mm:32.78/32.78, 5.2351mm:34.90/34.90, 6.0000mm:34.99/34.99 confirm one cell. Preserve datum and fit one centred pyramid."
+  },
+  "albedoCodec": "uastc"
+}
