@@ -1,5 +1,6 @@
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { finishWood } from "./organic_finish.mjs";
+import { scaffoldMemberCoordinates } from "./scaffold_member_geometry.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
 const clamp = (v) => Math.max(0, Math.min(1, v));
 export function scaffoldBoltAt(p, n, spec) {
@@ -69,25 +70,20 @@ export function scaffoldInnerAt(p, n, spec) {
     p[0] * n[0] + p[1] * n[1] < 0
   );
 }
-export function paintScaffolding(p, n, ao, spec) {
-  const bolt = scaffoldBoltAt(p, n, spec);
+export function finishScaffoldIron(p, ao) {
   const detail = 0.78 + 0.22 * clamp((ao / 255 - 0.65) / 0.35);
-  if (bolt) {
-    const rust = clamp((surfaceNoise(...p.map((v) => v * 0.7)) - 0.62) * 1.3);
-    return {
-      part: "iron",
-      rgb: [0.48, 0.5, 0.48].map((v, i) =>
-        Math.round(
-          255 * detail * (v * (1 - rust) + [0.36, 0.2, 0.1][i] * rust),
-        ),
-      ),
-      roughness: 0.58 + rust * 0.25,
-      metallic: 0.72 * (1 - rust * 0.6),
-    };
-  }
-  const beam = scaffoldBeamAt(p, spec);
-  if (!beam)
-    return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
+  const rust = clamp((surfaceNoise(...p.map((v) => v * 0.7)) - 0.62) * 1.3);
+  return {
+    part: "iron",
+    rgb: [0.48, 0.5, 0.48].map((v, i) =>
+      Math.round(255 * detail * (v * (1 - rust) + [0.36, 0.2, 0.1][i] * rust)),
+    ),
+    roughness: 0.58 + rust * 0.25,
+    metallic: 0.72 * (1 - rust * 0.6),
+  };
+}
+export function finishScaffoldWood(p, n, ao, spec, beam) {
+  const detail = 0.78 + 0.22 * clamp((ao / 255 - 0.65) / 0.35);
   const age = 0.96 + 0.08 * surfaceNoise(...beam.centre.map((v) => v * 0.21));
   const tint = (
     beam.axis === "z"
@@ -95,7 +91,10 @@ export function paintScaffolding(p, n, ao, spec) {
       : spec.scaffolding.woodTint
   ).map((v) => v * age);
   let value;
-  if (beam.slope !== undefined) {
+  if (beam.direction) {
+    const local = scaffoldMemberCoordinates(p, n, beam);
+    value = finishWood(detail, local.p, local.n, "x", [0, 0, 0], tint);
+  } else if (beam.slope !== undefined) {
     const length = Math.hypot(1, beam.slope),
       c = 1 / length,
       s = beam.slope / length;
@@ -118,6 +117,14 @@ export function paintScaffolding(p, n, ao, spec) {
       tint,
     );
   } else value = finishWood(detail, p, n, beam.axis, beam.centre, tint);
+  return value;
+}
+export function paintScaffolding(p, n, ao, spec) {
+  if (scaffoldBoltAt(p, n, spec)) return finishScaffoldIron(p, ao);
+  const beam = scaffoldBeamAt(p, spec);
+  if (!beam)
+    return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
+  const value = finishScaffoldWood(p, n, ao, spec, beam);
   value.normalNeutral =
     spec.scaffolding.liningGeometryNormals && scaffoldInnerAt(p, n, spec);
   return value;

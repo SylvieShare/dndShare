@@ -1,0 +1,256 @@
+{
+  "sourceName": "Scaffolding",
+  "referencePage": 9,
+  "material": "cave-scaffolding-ramp",
+  "floorHeightMM": 11.368,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 4.8],
+    "lodMiB": [0.65, 1.8],
+    "shadowKiB": [40, 130],
+    "previewKiB": [15, 160],
+    "basis": "539800-triangle1x1 timber structure with three differently pitched stringers, rear V-braces, eight hex heads, carved knots and open gaps.65k/22k preserve slender beams and joints;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page9: worn warm timber, eight grey hex bolts and timber floor boards with separate brown cave debris. Ramp rises in native+X. Outer wood-top profilez=x+27.73; central profilez=1.17x+25.25, so grain directions differ. Rear Y/Z braces measured at14.132/-11.607/16.305,14.998/-8.105/25.060,16.190/-4.603/33.315 and the opposite side; upright posts follow Z, top/bottom headers Y. All eight hex heads measured on original STL; carved round knots/dowels remain wood. Measured flat floor boards atz11.368 receive horizontal X grain; groove sides down to9.6mm stay wood while raised pebbles above11.52mm remain stone. Front post end-grain tops reach16.21mm. Preserve UUID8e3eeadd-3dae-57b6-b9ab-f09586fed7ae, LC-062/LC-scaffolding, source/cut11.5, mount.14956, floor1x1, hasDecortrue, standing point.721667 and no receiving slots. Native insertion sections span26mm atz.05,34.91mm at5.2346 and35mm at6; standard one-pad fit retains its centre and depth. Native side probe-4.3779/-3.0493/19.5019 remains part of central timber; widened only lateral member masks to retain its carved side face. Short rays from inside identify rear timber faces10.4061/-8/25.1,9.5765/8/25.1,11.1768/-5/33.2 and10.5331/5/33.2. Rear member centres are12.6/12.0mm in X, not their outer-face coordinates; direction includes X drift. Ground samples9.6338/-8.3332/13.4779 and-7.325/8.5914/12.3712 remain stone. Inner rear-post faces11.4033/15/18,11.478/-15/24.2 and11.4041/15/24.2 set post centreX13.9; a measured lower carved knee9.4558/-15/18 is separate. Outer stringer underside7.34/-15/28 and7.3422/15/28 puts its centre intercept at24.2 instead of24.55; preserve full thickness and vertical footer grain. Central underside probes2.0646/0/20 and8.849/0/28 define lower intercept17.584; central member centre intercept21.42 preserves both its top and underside.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-scaffolding",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [0.5, 0.3, 0.145],
+    "postTint": [0.425, 0.26, 0.125],
+    "ramp": {
+      "members": [
+        {
+          "name": "top-header",
+          "axis": "y",
+          "centre": [14.7, 0, 40.7],
+          "length": 36,
+          "halfWidth": 3.1,
+          "halfDepth": 2.9
+        },
+        {
+          "name": "rear-footer",
+          "axis": "z",
+          "centre": [15, -15, 9.5],
+          "length": 9,
+          "halfWidth": 3,
+          "halfDepth": 2.8
+        },
+        {
+          "name": "rear-knee",
+          "axis": "z",
+          "centre": [11, -15, 18.5],
+          "length": 8,
+          "halfWidth": 2.5,
+          "halfDepth": 2.8
+        },
+        {
+          "name": "rear-footer",
+          "axis": "z",
+          "centre": [15, 15, 9.5],
+          "length": 9,
+          "halfWidth": 3,
+          "halfDepth": 2.8
+        },
+        {
+          "name": "rear-post",
+          "axis": "z",
+          "centre": [13.9, -15, 22.5],
+          "length": 35,
+          "halfWidth": 3.0,
+          "halfDepth": 2.7
+        },
+        {
+          "name": "front-post",
+          "axis": "z",
+          "centre": [-15.1, -15, 11],
+          "length": 13,
+          "halfWidth": 2.9,
+          "halfDepth": 2.7
+        },
+        {
+          "name": "rear-post",
+          "axis": "z",
+          "centre": [13.9, 15, 22.5],
+          "length": 35,
+          "halfWidth": 3.0,
+          "halfDepth": 2.7
+        },
+        {
+          "name": "front-post",
+          "axis": "z",
+          "centre": [-15.1, 15, 11],
+          "length": 13,
+          "halfWidth": 2.9,
+          "halfDepth": 2.7
+        },
+        {
+          "name": "outer-stringer",
+          "axis": "x",
+          "centre": [-0.5, -14.5, 23.7],
+          "length": 37,
+          "halfWidth": 3.2,
+          "halfDepth": 2.75,
+          "direction": [1, 0, 1]
+        },
+        {
+          "name": "outer-stringer",
+          "axis": "x",
+          "centre": [-0.5, 14.5, 23.7],
+          "length": 37,
+          "halfWidth": 3.2,
+          "halfDepth": 2.75,
+          "direction": [1, 0, 1]
+        },
+        {
+          "name": "central-stringer",
+          "axis": "x",
+          "centre": [0, 0, 21.42],
+          "length": 35.8,
+          "halfWidth": 3.5,
+          "halfDepth": 2.75,
+          "direction": [1, 0, 1.17]
+        },
+        {
+          "name": "rear-brace",
+          "axis": "y",
+          "centre": [12.6, -8.1, 24.5],
+          "length": 26,
+          "halfWidth": 2.9,
+          "halfDepth": 2.3,
+          "direction": [0.29, 1, 2.4]
+        },
+        {
+          "name": "rear-brace",
+          "axis": "y",
+          "centre": [12.0, 8.1, 24.5],
+          "length": 26,
+          "halfWidth": 2.9,
+          "halfDepth": 2.3,
+          "direction": [0.29, -1, 2.4]
+        },
+        {
+          "name": "base-header",
+          "axis": "y",
+          "centre": [-15.7, 0, 9.7],
+          "length": 35.2,
+          "halfWidth": 2.9,
+          "halfDepth": 4.5
+        },
+        {
+          "name": "base-header",
+          "axis": "y",
+          "centre": [15.7, 0, 9.7],
+          "length": 35.2,
+          "halfWidth": 2.9,
+          "halfDepth": 4.5
+        },
+        {
+          "name": "base-side",
+          "axis": "x",
+          "centre": [0, -15.5, 10.3],
+          "length": 35.2,
+          "halfWidth": 2.9,
+          "halfDepth": 5.3
+        },
+        {
+          "name": "base-side",
+          "axis": "x",
+          "centre": [0, 15.5, 10.3],
+          "length": 35.2,
+          "halfWidth": 2.9,
+          "halfDepth": 5.3
+        },
+        {
+          "name": "front-cap",
+          "axis": "y",
+          "centre": [-15.1, 0, 14.3],
+          "length": 30.5,
+          "halfWidth": 2.9,
+          "halfDepth": 1.5
+        }
+      ],
+      "bolts": [
+        {
+          "centre": [-11.134, -14.9331, 17.9484],
+          "normal": [-0.7071067811865475, 0, 0.7071067811865475],
+          "u": [0.7071067811865475, 0, 0.7071067811865475],
+          "radius": [1.45, 1.45],
+          "depth": [-0.8, 0.6]
+        },
+        {
+          "centre": [-9.3027, -0.4986, 15.8324],
+          "normal": [-0.7601731008336426, 0, 0.6497205990031134],
+          "u": [0.6497205990031134, 0, 0.7601731008336426],
+          "radius": [1.45, 1.45],
+          "depth": [-0.8, 0.6]
+        },
+        {
+          "centre": [-11.134, 14.2196, 18.3563],
+          "normal": [-0.7071067811865475, 0, 0.7071067811865475],
+          "u": [0.7071067811865475, 0, 0.7071067811865475],
+          "radius": [1.45, 1.45],
+          "depth": [-0.8, 0.6]
+        },
+        {
+          "centre": [8.2772, 14.0351, 37.2177],
+          "normal": [-0.7071067811865475, 0, 0.7071067811865475],
+          "u": [0.7071067811865475, 0, 0.7071067811865475],
+          "radius": [1.45, 1.45],
+          "depth": [-0.8, 0.6]
+        },
+        {
+          "centre": [8.4237, -0.3217, 37.1109],
+          "normal": [-0.7601731008336426, 0, 0.6497205990031134],
+          "u": [0.6497205990031134, 0, 0.7601731008336426],
+          "radius": [1.45, 1.45],
+          "depth": [-0.8, 0.6]
+        },
+        {
+          "centre": [8.3505, -14.8256, 37.2957],
+          "normal": [-0.7071067811865475, 0, 0.7071067811865475],
+          "u": [0.7071067811865475, 0, 0.7071067811865475],
+          "radius": [1.45, 1.45],
+          "depth": [-0.8, 0.6]
+        },
+        {
+          "centre": [14.1372, 14.2428, 43.1819],
+          "normal": [0, 0, 1],
+          "u": [1, 0, 0],
+          "radius": [1.55, 1.55],
+          "depth": [-0.8, 0.6]
+        },
+        {
+          "centre": [14.2105, -14.8377, 43.3109],
+          "normal": [0, 0, 1],
+          "u": [1, 0, 0],
+          "radius": [1.55, 1.55],
+          "depth": [-0.8, 0.6]
+        }
+      ],
+      "floorDeck": {
+        "minZMM": 9.6,
+        "maxZMM": 11.52,
+        "halfMM": 13.35,
+        "axis": "x",
+        "centre": [0, 0, 10.6]
+      }
+    }
+  }
+}
