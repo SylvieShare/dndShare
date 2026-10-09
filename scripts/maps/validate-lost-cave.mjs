@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { mountingSurface } from "./mounting_surface.mjs";
 import { assertSameSurface } from "./surface_geometry.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
 const file = process.argv[2];
@@ -20,25 +21,6 @@ const checks = {};
 const reference = process.argv
   .find((a) => a.startsWith("--reference="))
   ?.slice(12);
-function mounting(doc) {
-  const nodes = doc
-    .getRoot()
-    .listNodes()
-    .filter((n) => n.getMesh())
-    .map((n) => ({
-      getWorldMatrix: () => n.getWorldMatrix(),
-      getMesh: () => ({
-        listPrimitives: () =>
-          n
-            .getMesh()
-            .listPrimitives()
-            .filter((p) =>
-              p.getMaterial()?.getName().startsWith("Simple insertion pegs"),
-            ),
-      }),
-    }));
-  return { getRoot: () => ({ listNodes: () => nodes }) };
-}
 for (const tier of ["render", "lod"]) {
   const before = await io.read(
       await localModelAsset(report.model.assets[tier]),
@@ -89,7 +71,7 @@ for (const tier of ["render", "lod"]) {
                 report.geometryCorrection.metadata.mountDepth ||
               report.model.mountDepth <= 0 ||
               report.rebake[tier].mountingMeshesRetained !== 0 ||
-              mounting(after)
+              mountingSurface(after)
                 .getRoot()
                 .listNodes()
                 .some((n) => n.getMesh().listPrimitives().length)
@@ -99,7 +81,7 @@ for (const tier of ["render", "lod"]) {
               );
             return { removedFalseMount: true };
           })()
-        : assertSameSurface(mounting(before), mounting(after)),
+        : assertSameSurface(mountingSurface(before), mountingSurface(after)),
     sourceDeviationMM: report.rebake[tier].sourceDeviationMM,
   };
   if (reference)

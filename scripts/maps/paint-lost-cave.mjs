@@ -13,6 +13,7 @@ import {
   extendUvGutters,
 } from "./uv_surface.mjs";
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
+import { paintScaffolding } from "./lost_cave_scaffolding.mjs";
 import { paintCutStone } from "./lost_cave_cut_stone.mjs";
 import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
 import { paintRailway } from "./lost_cave_railway.mjs";
@@ -39,6 +40,7 @@ if (
   ![
     "cave-rock",
     "cave-cut-stone",
+    "cave-scaffolding",
     "cave-stalagmites",
     "cave-railway",
     "cave-crystal",
@@ -180,6 +182,7 @@ for (const tier of ["render", "lod"]) {
   let pixels = 0;
   const counts = {
     rock: 0,
+    ...(spec.material === "cave-scaffolding" ? { wood: 0, iron: 0 } : {}),
     ...(spec.material === "cave-cut-stone" ? { "cut-stone": 0 } : {}),
     ...(spec.material === "cave-mushrooms"
       ? {
@@ -218,39 +221,42 @@ for (const tier of ["render", "lod"]) {
   const paintPixel = (i, p, n, used = true) => {
     if (used) checkUv?.(i, p);
     const value =
-      spec.material === "cave-cut-stone"
-        ? paintCutStone(p, n, ao[i], spec)
-        : spec.material === "cave-mushrooms"
-          ? paintMushrooms(
-              p,
-              n,
-              ao[i],
-              spec,
-              mushroomProjection,
-              crystalWallReference,
-            )
-          : spec.material === "cave-bones"
-            ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
-            : spec.material === "cave-crystal-ground"
-              ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
-              : spec.material === "cave-boulders"
-                ? paintBoulderGround(p, n, ao[i], spec)
-                : spec.material === "cave-wagon-track"
-                  ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
-                  : spec.material === "cave-wagon"
-                    ? paintWagon(p, n, ao[i], spec)
-                    : spec.material === "cave-crystal"
-                      ? paintCrystal(p, n, ao[i], spec)
-                      : spec.material === "cave-railway"
-                        ? paintRailway(p, n, ao[i], spec)
-                        : spec.material === "cave-stalagmites"
-                          ? paintStalagmites(p, n, ao[i], spec)
-                          : caveRockPixel(p, n, ao[i], report.materialSpec);
+      spec.material === "cave-scaffolding"
+        ? paintScaffolding(p, n, ao[i], spec)
+        : spec.material === "cave-cut-stone"
+          ? paintCutStone(p, n, ao[i], spec)
+          : spec.material === "cave-mushrooms"
+            ? paintMushrooms(
+                p,
+                n,
+                ao[i],
+                spec,
+                mushroomProjection,
+                crystalWallReference,
+              )
+            : spec.material === "cave-bones"
+              ? paintCaveBones(p, n, ao[i], spec, crystalWallReference)
+              : spec.material === "cave-crystal-ground"
+                ? paintCrystalGround(p, n, ao[i], spec, crystalWallReference)
+                : spec.material === "cave-boulders"
+                  ? paintBoulderGround(p, n, ao[i], spec)
+                  : spec.material === "cave-wagon-track"
+                    ? paintWagonOnTrack(p, n, ao[i], spec, wagonReference)
+                    : spec.material === "cave-wagon"
+                      ? paintWagon(p, n, ao[i], spec)
+                      : spec.material === "cave-crystal"
+                        ? paintCrystal(p, n, ao[i], spec)
+                        : spec.material === "cave-railway"
+                          ? paintRailway(p, n, ao[i], spec)
+                          : spec.material === "cave-stalagmites"
+                            ? paintStalagmites(p, n, ao[i], spec)
+                            : caveRockPixel(p, n, ao[i], report.materialSpec);
     if (spec.floorHeightProfileMM && value.part === "rock")
       darkenCaveFloorJoints(value, p, spec);
     if (used) counts[value.part]++;
     neutralNormal[i] = Number(
-      (spec.crystal?.normalMode === "geometry" && value.part === "crystal") ||
+      value.normalNeutral ||
+        (spec.crystal?.normalMode === "geometry" && value.part === "crystal") ||
         (spec.cutStone?.normalMode === "geometry" &&
           value.part === "cut-stone"),
     );

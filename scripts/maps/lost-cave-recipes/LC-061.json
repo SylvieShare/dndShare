@@ -1,0 +1,114 @@
+{
+  "sourceName": "Scaffolding Level",
+  "referencePage": 9,
+  "material": "cave-scaffolding",
+  "floorHeightMM": 13.55,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.7, 4.5],
+    "lodMiB": [0.55, 1.7],
+    "shadowKiB": [35, 110],
+    "previewKiB": [15, 150],
+    "basis": "561366-triangle wooden1x1 frame with four upright corner posts, horizontal boards, V-braces, eight bolt heads, open windows and stone core.55k/18k preserve holes and socket;2048/1024 source bakes, two KTX2 budgets, fitted mounting before first publication."
+  },
+  "notes": "Author PDF page9: warm worn timber, grey iron heads and brown stone core. Native side views confirm only8 heads: four lower heads on Y faces and four upper heads on X faces. Horizontal boards follow X/Y, corner posts Z and lower V-braces slopes+/-0.64. Native probes: horizontal board -8.7259/-17.5/22.9445; brace4.7095/-16.3067/9.8125; post12.9394/-17.5/22.0315; inner board11.3872/13.499/22.8161; stone-4.1756/5.0115/13.5756. Preserve UUIDbfa38e20-4215-582c-bd11-734306db0d05, LC-061, original source/cut11.5, frame1x1, mount.149446, inner point.387164, upper slot.836197. Do not add fictitious top bolts to Y faces or lower bolts to X faces. Inner flat board normals follow geometry; sculpted outer grain keeps source normal. Check fitted insertion into LC-060 and native wooden socket before publishing. Initial SmartUV angle.55 overlapped distinct surfaces by.206mm; rebuild UV with.3 and rebake before colour. Do not relax the.1mm physical overlap check. Native mounting datum is correct: sections atZ0.05/0.5/1.5/2.5/4/5.23mm span25.99/26.76/28.50/30.20/32.79/34.90mm, reaching35mm above6mm. Lower carved timber is part of the insertion taper and is intentionally simplified; do not shorten mountDepth. Legacy26mm blocks have duplicate indexed faces; compare unique mounting triangles before fitting.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-scaffolding-level",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "innerHalfMM": 13.5,
+    "postInnerMM": 12.5,
+    "postCentreMM": 15.1,
+    "sideCentreMM": 15.5,
+    "baseTopMM": 6.9,
+    "liningMinZMM": 13.5,
+    "liningGeometryNormals": true,
+    "panelBands": [
+      [13.0, 18.7],
+      [18.7, 23.25],
+      [23.25, 27.8],
+      [27.8, 29.3]
+    ],
+    "braces": {
+      "apexZMM": 13.7,
+      "slope": 0.64,
+      "halfWidthMM": 1.2,
+      "topMM": 14.7
+    },
+    "woodTint": [0.5, 0.3, 0.145],
+    "bolts": [
+      {
+        "axis": 1,
+        "centre": [-14.85, -17.5, 8.08],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      },
+      {
+        "axis": 1,
+        "centre": [15.15, -17.5, 7.92],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      },
+      {
+        "axis": 1,
+        "centre": [-14.93, 17.5, 7.83],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      },
+      {
+        "axis": 1,
+        "centre": [14.89, 17.5, 7.47],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      },
+      {
+        "axis": 0,
+        "centre": [-17.5, -15.26, 25.72],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      },
+      {
+        "axis": 0,
+        "centre": [-17.5, 14.89, 25.8],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      },
+      {
+        "axis": 0,
+        "centre": [17.5, -14.92, 26.01],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      },
+      {
+        "axis": 0,
+        "centre": [17.5, 14.76, 25.28],
+        "radius": [1.35, 1.3],
+        "minOuterMM": 16.85
+      }
+    ],
+    "postTint": [0.425, 0.26, 0.125]
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "820ab31c6d72ebb0fe64d2496cb530e694911c2e31de77271172d21083613a87",
+    "mountDepthMM": 5.2306099999999995,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native STL sections grow from26mm at the cropped bottom to34.9mm at5.23mm and35mm above6mm. Preserve mounting depth; replace two overlapping legacy26mm blocks with one centred fitted cell pyramid."
+  }
+}

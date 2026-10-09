@@ -1,5 +1,6 @@
 import { createRequire } from "node:module";
 import { readGlb, replaceImages } from "./glb_textures.mjs";
+import { reviewedCaveFootprint } from "./reviewed_cave_footprint.mjs";
 import { measurePads, pegPrimitive } from "./peg-geometry.mjs";
 const require = createRequire("/private/tmp/dndshare-model-tools/package.json");
 const { Document, NodeIO } = require("@gltf-transform/core");
@@ -28,9 +29,10 @@ export function fittedPads(pads) {
 }
 
 // Append a tiny replacement mesh; original body buffers, atlases and nodes stay intact.
-export async function fitCavePegs(bytes, model) {
+export async function fitCavePegs(bytes, model, sourceFootprint) {
   if (model.collection !== "lost-cave")
     throw new Error("One Lost Cave model required");
+  const reviewed = reviewedCaveFootprint(sourceFootprint, model);
   const source = readGlb(Buffer.from(bytes));
   const sourcePegs = source.json.meshes.filter((mesh) =>
     mesh.primitives.some((p) =>
@@ -44,7 +46,9 @@ export async function fitCavePegs(bytes, model) {
     sourcePegs.every(
       (mesh) =>
         mesh.extras?.dndShareInsertionProfile === "lost-cave-slot-fit-v1" &&
-        mesh.extras.mountDepth === model.mountDepth,
+        mesh.extras.mountDepth === model.mountDepth &&
+        (!reviewed ||
+          mesh.extras.sourceFootprintSignature === reviewed.signature),
     )
   )
     return { bytes, pads: [], unchanged: true };
@@ -64,7 +68,9 @@ export async function fitCavePegs(bytes, model) {
   if (!parts.length) return { bytes, pads: [], unchanged: true };
   if (!(model.mountDepth > 0 && model.mountDepth < 0.25))
     throw new Error("Reviewed insertion depth required");
-  const pads = fittedPads(measurePads(parts, model.mountDepth));
+  const pads = fittedPads(
+    reviewed?.pads ?? measurePads(parts, model.mountDepth),
+  );
   const primitive = pegPrimitive(
     new Document(),
     pads,
@@ -153,6 +159,7 @@ export async function fitCavePegs(bytes, model) {
     extras: {
       dndShareInsertionProfile: "lost-cave-slot-fit-v1",
       mountDepth: model.mountDepth,
+      ...(reviewed ? { sourceFootprintSignature: reviewed.signature } : {}),
     },
     primitives: [{ attributes, indices, material, mode: 4 }],
   });
