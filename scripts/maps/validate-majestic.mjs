@@ -123,12 +123,14 @@ for (const tier of ["render", "lod"]) {
       doc,
       info.width,
       info.height,
-      (i, position) => {
+      (i, position, physicalNormal) => {
         trackSurface(i, position);
         const offset = i * info.channels;
         if (slot === "BaseColor" || slot === "MetallicRoughness")
           for (const area of waterAreas) {
             if (position.some((v, k) => v < area.minMM[k] || v > area.maxMM[k]))
+              continue;
+            if (area.normalZMin != null && physicalNormal[2] < area.normalZMin)
               continue;
             const channel = slot === "BaseColor" ? area.colour : area.roughness;
             channel.total++;

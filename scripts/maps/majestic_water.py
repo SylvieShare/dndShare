@@ -82,6 +82,9 @@ def apply_water(obj, positions, colours, roughness, recipe):
         from water_surface_bands import water_surface_bands
         band_weight, height = water_surface_bands(positions, settings['surfaceBands'])
         weight *= band_weight
+        # Bands are painted by water_band_finish/ORM at the baked surface point.
+        # Vertex water colour would still leak beyond the bands after decimation.
+        weight[:] = 0
     low=np.array(settings['deepRGB']);high=np.array(settings['shallowRGB'])
     water=low*(1-height[:,None])+high*height[:,None]
     crest=np.clip((height-.65)/.35,0,1)*np.clip((normals[:,2]-.55)/.35,0,1)*.55
