@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import specs from "./lost_cave_recipes.mjs";
-import { minePartAt, paintCaveMine } from "./lost_cave_mine.mjs";
+import {
+  minePartAt,
+  paintCaveMine,
+  mineProjectionAt,
+} from "./lost_cave_mine.mjs";
 const s = specs["LC-073"];
 test("mine posts, inclined braces and horizontal sleepers follow their own measured timber axes", () => {
   for (const p of [
@@ -36,6 +40,27 @@ test("mine posts, inclined braces and horizontal sleepers follow their own measu
   assert.equal(
     minePartAt([-7.3591, -12.7027, 15.5393], [0, 0, 1], s).part,
     "boulder",
+  );
+});
+test("rejected projected iron on a long board still resolves the wood contour", () => {
+  const m = specs["LC-075"].mine;
+  assert.equal(
+    mineProjectionAt(
+      [1.8753, 7.8671, 16.4892],
+      m,
+      () => ({ part: "iron" }),
+      () => ({ part: "wood" }),
+    ).part,
+    "wood",
+  );
+  assert.equal(
+    mineProjectionAt(
+      [3.934, 10.1502, 18.3736],
+      m,
+      () => ({ part: "iron" }),
+      () => ({ part: "wood" }),
+    ).part,
+    "iron",
   );
 });
 test("mine stone and brown floor stay separate without fictitious metal at wooden knots", () => {
@@ -73,4 +98,43 @@ test("LC-074 contains only measured posts, leaving the missing braces as stone o
     "rock",
   );
   assert.equal(minePartAt([-3, 15.5, 22], [0, 1, 0], s).part, "boulder");
+});
+test("LC-075 protects its bare floor reference while separating raised iron from board grain", () => {
+  const s = specs["LC-075"],
+    added = { distanceAt: () => 1 },
+    bare = { distanceAt: () => 0.05 };
+  const board = [1.3804, 0.0775, 16.38];
+  assert.throws(() => minePartAt(board, [0, 0, 1], s));
+  assert.equal(minePartAt(board, [0, 0, 1], s, added).part, "wood");
+  assert.equal(minePartAt(board, [0, 0, 1], s, bare).part, "boulder");
+  assert.equal(
+    minePartAt([-13.6013, -17.4991, 32.816], [1, 0, 0], s, bare).part,
+    "wood",
+  );
+  const head = [3.934, 10.1502, 18.3736];
+  const metal = paintCaveMine(head, [0, 0.82, 0.55], 235, s, added, () => ({
+    part: "iron",
+  }));
+  assert.equal(metal.part, "iron");
+  assert(metal.metallic > 0.6);
+  assert.equal(
+    minePartAt(head, [0, 0.82, 0.55], s, bare, () => ({ part: "iron" })).part,
+    "boulder",
+  );
+  const visible = (p) => undefined;
+  visible.isVisible = (p) => true;
+  assert.equal(minePartAt(board, [0, 0, 1], s, added, visible).part, "boulder");
+  const wood = (p) => ({ part: "wood" });
+  wood.isVisible = (p) => true;
+  assert.equal(minePartAt(board, [0, 0, 1], s, added, wood).part, "wood");
+  assert.equal(
+    minePartAt(
+      [-4.2716, -9.3577, 16.0564],
+      [0, 0, 1],
+      s,
+      { distanceAt: () => 0.128 },
+      wood,
+    ).part,
+    "wood",
+  );
 });

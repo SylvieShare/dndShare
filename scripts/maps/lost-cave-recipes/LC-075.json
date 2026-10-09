@@ -1,0 +1,192 @@
+{
+  "sourceName": "Mine Wall 3",
+  "referencePage": 11,
+  "material": "cave-mine",
+  "floorHeightMM": 14.7394,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 70000,
+  "lodTriangles": 24000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.4, 6.3],
+    "lodMiB": [0.8, 2.3],
+    "shadowKiB": [45, 140],
+    "previewKiB": [20, 160],
+    "basis": "420006-triangle1x1 mine wall with timber posts, tilted board rack, two floor planks and numerous tilted hex heads/rectangular clamps.70k/24k retain sharp fasteners and board grain;2048/1024 source bake, full UASTC colour and two data budgets."
+  },
+  "notes": "Author page11 large reference confirms warm wood, grey-green stone and dark iron hex heads/clamps. Board axes alongY; post fibres Z. Source board planes-7.1089/2.8936/23.1855,-5.9355/-4.343/18.0798,-4.2101/-3.3039/16.1662,1.3804/.0775/16.38,2.4846/-6.8931/16.2856,9.3864/2.3554/16.258,12.2852/-6.2715/16.0458. Raised hardware separately source-depth reviewed from top/reverse/outside. Bare LC-074 protects shared wall, rubble and floor in gaps. Preserve UUID8114bcaf-90ed-566f-af6d-3b1fc1e09868,source/cut11.5,familyLC-mine-wall,mount.150157,1x1,point.439115,no slots. Full colour prevents known sparse mine-island seams. Added measured3D hardware bounds as a second condition on projected iron masks; upper rack heads restricted22.5..26.6mm, excluding tall wall and long board faces. Polygons alone were rejected after side-view spill inspection. Visible source surfaces outside reviewed wood contours no longer inherit broad board volumes. Projected iron is screened by measured hardware volumes before wood lookup, preserving wooden surfaces covered by a false iron silhouette. Independent test confirms rejected iron does not hide wood. Verified visible wood contour overrides an imperfect bare-floor distance match: native wood at-4.2716/-9.3577/16.0564 is only.128mm from a different LC-074 rubble surface. Bare reference remains required for hidden volume fallback. Metal side-8.2146/4.4892/24.2951 verifies.3mmXY envelope margin.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-mine-wall",
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [0.5, 0.31, 0.145],
+    "postTint": [0.45, 0.275, 0.125]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
+  },
+  "mine": {
+    "stoneMinHeightMM": 14.95,
+    "members": [
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-13.95, -14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-13.95, 14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "board",
+        "axis": "y",
+        "centre": [-6.5, 0, 20.7],
+        "length": 29.8,
+        "halfWidth": 4.7,
+        "halfDepth": 7.2
+      },
+      {
+        "name": "board",
+        "axis": "y",
+        "centre": [3, -1, 15.9],
+        "length": 29.8,
+        "halfWidth": 3.3,
+        "halfDepth": 1.9
+      },
+      {
+        "name": "board",
+        "axis": "y",
+        "centre": [10.8, -0.5, 15.6],
+        "length": 27.2,
+        "halfWidth": 3.8,
+        "halfDepth": 1.9
+      }
+    ],
+    "bolts": [],
+    "woodReference": {
+      "code": "LC-074",
+      "sourceSHA256": "64c4965acd9c37b3507047c03199bdae5c07d4647f060ed67cc93506a59b9929",
+      "matchMM": 0.2
+    },
+    "projectedViews": [
+      {
+        "name": "top",
+        "toleranceMM": 0.4,
+        "regionsFile": "LC-075-top.json"
+      },
+      {
+        "name": "reverse",
+        "toleranceMM": 0.4,
+        "regionsFile": "LC-075-reverse.json"
+      },
+      {
+        "name": "outside",
+        "toleranceMM": 0.4,
+        "regionsFile": "LC-075-outside.json"
+      }
+    ],
+    "ironTint": [0.23, 0.26, 0.24],
+    "hardwareVolumes": [
+      {
+        "min": [-11.159287217500502, 7.788931057713754, 23.256220350458456],
+        "max": [-7.7984098920179825, 11.153252297429319, 26.6]
+      },
+      {
+        "min": [-11.159287217500502, 2.9570880893893854, 23.30321723874121],
+        "max": [-8.074497624566233, 6.113531653807467, 25.99447512710019]
+      },
+      {
+        "min": [-11.090265284363438, -4.080767261417641, 23.123148467579945],
+        "max": [-7.660366025743856, 0.10506945670570994, 26.119994359824585]
+      },
+      {
+        "min": [-11.228309150637564, -8.292511916617842, 22.76662689828881],
+        "max": [-7.384278293195604, -4.859697502670438, 26.6]
+      },
+      {
+        "min": [-10.67613368554106, -12.085858229280113, 22.595636978223137],
+        "max": [-7.591344092606793, -7.897978997429464, 24.715422735035915]
+      },
+      {
+        "min": [-2.5315455753676317, 7.120547430895273, 13.295344974111858],
+        "max": [1.2434633489372637, 11.237716886330649, 16.99690889064132]
+      },
+      {
+        "min": [-3.566874572423576, 2.978213265868808, 13.341487622204825],
+        "max": [-0.275019180078121, 6.822739538621925, 16.099158240545815]
+      },
+      {
+        "min": [-2.4625236422305687, -3.0295216130964393, 13.287196617043437],
+        "max": [0.13911241874425667, 0.1987746170834752, 16.28690215620393]
+      },
+      {
+        "min": [-2.600567508504694, -6.7556700120718585, 13.323848140113322],
+        "max": [0.13911241874425667, -2.5642785195790596, 16.34706772297579]
+      },
+      {
+        "min": [-1.2891507789004986, -12.347618726847806, 14.628429142445716],
+        "max": [2.002704613444956, -8.227443237671476, 17.41199368607209]
+      },
+      {
+        "min": [1.5407484797190822, 8.012038425451244, 15.832789812031526],
+        "max": [4.9706477383386645, 11.996440375048426, 18.794043119256436]
+      },
+      {
+        "min": [5.47499866853167, -3.029924776982046, 13.719356201976408],
+        "max": [8.559788261465938, 0.8871244018490352, 16.516180795927767]
+      },
+      {
+        "min": [4.370647738338663, -6.271919295078948, 14.399272418816883],
+        "max": [7.800546996958245, -2.357685627071711, 16.408102864972548]
+      },
+      {
+        "min": [4.232603872064536, -9.169256163601958, 13.37029602783175],
+        "max": [7.524459264409993, -5.11931945682439, 15.780920789184618]
+      },
+      {
+        "min": [7.545656662643558, 7.873856532470917, 15.770137108717966],
+        "max": [10.97555592126314, 11.582008022321276, 17.495153963315303]
+      },
+      {
+        "min": [8.580985659699502, 2.489727465267046, 15.715937991239327],
+        "max": [12.632082316552651, 6.543874873038426, 18.277151631830204]
+      },
+      {
+        "min": [9.8924023893037, -0.06170401478807949, 15.77581328242138],
+        "max": [13.046213915375029, 3.641505646951991, 18.68550731627835]
+      },
+      {
+        "min": [10.513599787537265, -11.93295450225526, 15.626841871230306],
+        "max": [13.805455179882722, -7.812985171749601, 17.06906763676359]
+      }
+    ]
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "0d3362c62fb87c7458e886603fb7fba9abc9c7c0650be6b2e8aca73797f5b95e",
+    "mountDepthMM": 5.255495000000001,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections 0.0500mm:25.99/25.99, 0.5000mm:26.76/26.76, 2.5000mm:30.20/30.20, 4.0000mm:32.79/32.78, 5.2555mm:34.93/34.92, 6.0000mm:35.00/34.99 confirm one centred cell; preserve datum and fit pyramid."
+  },
+  "albedoCodec": "uastc"
+}

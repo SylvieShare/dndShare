@@ -15,7 +15,7 @@ import {
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { paintCaveWater } from "./lost_cave_water.mjs";
 import { paintCavePlatform } from "./lost_cave_platform.mjs";
-import { paintCaveMine } from "./lost_cave_mine.mjs";
+import { paintCaveMine, mineProjectionAt } from "./lost_cave_mine.mjs";
 import { paintCaveRope } from "./lost_cave_rope.mjs";
 import { paintCaveTreasure } from "./lost_cave_treasure.mjs";
 import { paintScaffoldingRamp } from "./lost_cave_scaffolding_ramp.mjs";
@@ -92,7 +92,8 @@ const bareReference =
   spec.bones?.reference ??
   spec.mushrooms?.wallReference ??
   spec.treasure?.wallReference ??
-  spec.rope?.wallReference;
+  spec.rope?.wallReference ??
+  spec.mine?.woodReference;
 if (bareReference) {
   const base = path.resolve(
     import.meta.dirname,
@@ -115,6 +116,34 @@ if (bareReference) {
   crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
 }
 const reviewedViews = (masks) => loadReviewedCaveViews(report, masks);
+let mineProjection;
+if (spec.mine?.projectedViews) {
+  const masks = spec.mine.projectedViews.flatMap((view) =>
+    view.regions.map((region) => ({
+      ...region,
+      name: view.name,
+      toleranceMM: view.toleranceMM,
+    })),
+  );
+  masks.sort((a, b) => Number(b.part === "iron") - Number(a.part === "iron"));
+  const ironMatch = await reviewedViews(masks.filter((m) => m.part === "iron"));
+  const woodMatch = await reviewedViews(masks.filter((m) => m.part !== "iron"));
+  mineProjection = (p) => mineProjectionAt(p, spec.mine, ironMatch, woodMatch);
+  const visible = await reviewedViews(
+    spec.mine.projectedViews.map((view) => ({
+      ...view,
+      polygons: [
+        [
+          [0, 0],
+          [1024, 0],
+          [1024, 1024],
+          [0, 1024],
+        ],
+      ],
+    })),
+  );
+  mineProjection.isVisible = (p) => Boolean(visible(p));
+}
 const ropeProjection = spec.rope?.projectedViews
   ? await reviewedViews(spec.rope.projectedViews)
   : undefined;
@@ -256,7 +285,7 @@ for (const tier of ["render", "lod"]) {
     if (used) checkUv?.(i, p);
     const value =
       spec.material === "cave-mine"
-        ? paintCaveMine(p, n, ao[i], spec)
+        ? paintCaveMine(p, n, ao[i], spec, crystalWallReference, mineProjection)
         : spec.material === "cave-platform"
           ? paintCavePlatform(p, n, ao[i], spec)
           : spec.material === "cave-rope"

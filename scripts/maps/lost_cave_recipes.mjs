@@ -3,7 +3,10 @@ import index from "./lost-cave-recipes.json" with { type: "json" };
 function readRecipe(file) {
   const url = new URL(file, import.meta.url);
   const spec = JSON.parse(fs.readFileSync(url, "utf8"));
-  for (const view of spec.treasure?.projectedViews || []) {
+  for (const view of [
+    ...(spec.treasure?.projectedViews || []),
+    ...(spec.mine?.projectedViews || []),
+  ]) {
     if (view.regionsFile)
       view.regions = JSON.parse(
         fs.readFileSync(new URL(view.regionsFile, url), "utf8"),
