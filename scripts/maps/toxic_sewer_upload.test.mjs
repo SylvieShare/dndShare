@@ -1,6 +1,33 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { putReviewedAsset } from "./toxic_sewer_upload.mjs";
+import {
+  putReviewedAsset,
+  retryUploadPreparation,
+} from "./toxic_sewer_upload.mjs";
+
+test("temporary upload-link failures retry while authorization failures stop", async () => {
+  let calls = 0;
+  const signed = await retryUploadPreparation(
+    async () => {
+      if (++calls < 3) throw Error("map_tile_asset_prepare_upload: HTTP 502");
+      return { key: "temporary-key" };
+    },
+    async () => {},
+  );
+  assert.deepEqual(signed, { key: "temporary-key" });
+  assert.equal(calls, 3);
+  await assert.rejects(
+    retryUploadPreparation(
+      async () => {
+        calls++;
+        throw Error("HTTP 401");
+      },
+      async () => {},
+    ),
+    /HTTP 401/,
+  );
+  assert.equal(calls, 4);
+});
 
 test("timeouts stop after four attempts and malformed URLs are sanitized", async () => {
   let calls = 0;

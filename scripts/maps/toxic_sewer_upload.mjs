@@ -1,4 +1,19 @@
 // Signed URLs stay in memory; logs contain only role, attempt and status.
+export async function retryUploadPreparation(
+  operation,
+  delay = (ms) => new Promise((r) => setTimeout(r, ms)),
+) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (attempt === 3 || !/HTTP (502|503|504)/.test(error.message))
+        throw error;
+      await delay(2000 * 2 ** attempt);
+    }
+  }
+}
+
 export async function putReviewedAsset(
   url,
   headers,

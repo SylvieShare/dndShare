@@ -3,7 +3,10 @@ import path from "node:path";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mapTool } from "./mcp_maps_client.mjs";
-import { putReviewedAsset } from "./toxic_sewer_upload.mjs";
+import {
+  putReviewedAsset,
+  retryUploadPreparation,
+} from "./toxic_sewer_upload.mjs";
 
 const directory = path.resolve(process.argv[2]);
 const packet = JSON.parse(
@@ -39,7 +42,9 @@ for (const kind of ["preview", "render", "lod", "shadow", "source"]) {
     sha256: asset.sha256,
     size: asset.size,
   };
-  const prepared = await mapTool("map_tile_asset_prepare_upload", args);
+  const prepared = await retryUploadPreparation(() =>
+    mapTool("map_tile_asset_prepare_upload", args),
+  );
   assert.deepEqual(prepared.asset, asset);
   await putReviewedAsset(prepared.uploadUrl, prepared.headers, bytes, kind);
   const completed = await mapTool("map_tile_asset_complete_upload", {
