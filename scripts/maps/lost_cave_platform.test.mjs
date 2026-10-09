@@ -34,3 +34,15 @@ test("stone top colour stays continuous across the former normal classification 
   assert(Math.max(...a.rgb.map((v, i) => Math.abs(v - b.rgb[i]))) <= 1);
   assert(Math.abs(a.roughness - b.roughness) < 0.001);
 });
+test("LC-070 uses its own upper cut and preserves the taller fractured side", () => {
+  const s = specs["LC-070"];
+  assert.equal(
+    platformPartAt([5.4867, 6.9016, 41.2627], [0, 0, 1], s),
+    "platform-top",
+  );
+  assert.equal(
+    platformPartAt([13.9503, -5.9139, 21.2244], [0.918, -0.388, -0.08], s),
+    "platform-side",
+  );
+  assert.equal(platformPartAt([0, 0, 26.5], [0, 0, 1], s), "platform-side");
+});
