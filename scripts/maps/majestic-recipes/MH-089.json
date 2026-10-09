@@ -1,0 +1,248 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 55000,
+  "lodTriangles": 22000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "medium",
+    "outdoor",
+    "xl"
+  ],
+  "recipe": "majestic-medium-wall-v1",
+  "grassReference": "MH-001",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      2400000,
+      4800000
+    ],
+    "targetLODBytes": [
+      800000,
+      2100000
+    ],
+    "targetShadowBytes": [
+      50000,
+      115000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      90000
+    ],
+    "basis": "512284 source triangles,25614284B NL; measured base104.96x104.98mm3x3,height66.75mm. Lowerfloor matches62 95.74%,bare2 actualrotate270 83.13%; nine lower centres and curved Ecliff blocker, no slots/hasDecorfalse. Olivegrass cap measured relative to own top field atZ55..68mm,ochre masonry/body,earth clearings. PDF28. Test65k/22k,colour1024/2048,data1024/512,UV16bit .55/.15. Optimisation trial55k versus65k; narrower cap mask1.6mm andnormal.4 to keep upper rock lip stone."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilDomains": [
+    [
+      [
+        29,
+        11
+      ],
+      [
+        28,
+        -3
+      ],
+      [
+        22,
+        -12
+      ],
+      [
+        13,
+        -22
+      ],
+      [
+        1,
+        -19
+      ],
+      [
+        -7,
+        -5
+      ],
+      [
+        -3,
+        9
+      ],
+      [
+        13,
+        14
+      ]
+    ],
+    [
+      [
+        -2,
+        34
+      ],
+      [
+        5,
+        20
+      ],
+      [
+        -3,
+        6
+      ],
+      [
+        -5,
+        -4
+      ],
+      [
+        -11,
+        -26
+      ],
+      [
+        -36,
+        -19
+      ],
+      [
+        -36,
+        12
+      ],
+      [
+        -25,
+        34
+      ]
+    ]
+  ],
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [
+        2.928571,
+        0.0
+      ],
+      [
+        2.842857,
+        0.214286
+      ],
+      [
+        2.714286,
+        0.5
+      ],
+      [
+        2.642857,
+        0.928571
+      ],
+      [
+        2.528571,
+        1.5
+      ],
+      [
+        2.457143,
+        1.928571
+      ],
+      [
+        2.642857,
+        2.357143
+      ],
+      [
+        2.714286,
+        2.5
+      ],
+      [
+        2.828571,
+        2.785714
+      ],
+      [
+        2.928571,
+        3.0
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        0
+      ]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "x": [
+      32,
+      54
+    ],
+    "y": [
+      -54,
+      54
+    ],
+    "minZMM": 15.1
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.62,
+    0.46,
+    0.27
+  ],
+  "masonryTopMinZMM": 58,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      32,
+      -54,
+      55
+    ],
+    "maxMM": [
+      54,
+      54,
+      68
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25
+  },
+  "masonryBackFace": {
+    "xMM": 52.48,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 15.2
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.35
+}
