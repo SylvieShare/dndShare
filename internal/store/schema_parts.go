@@ -199,4 +199,5 @@ var schemaParts = []struct {
 	{"3d-map-tags", schema3DMapTagsSQL},
 	{"map-previews", schemaMapPreviewsSQL},
 	{"current-map-models", schemaCurrentMapModelsSQL},
+	{"session-map-editor", schemaSessionMapEditorSQL},
 }

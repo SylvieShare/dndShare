@@ -18,7 +18,7 @@ import { clone, newMap, resized } from "../lib/mapModel";
 import { editorGestures } from "./editorGestures";
 import { editorTileDrag } from "./editorTileDrag";
 
-export function useMapEditor(source, onSaved) {
+export function useMapEditor(source, onSaved, options = {}) {
   const draft = ref(clone(source || newMap())),
     tool = ref("select"),
     selectedModel = ref(""),
@@ -52,8 +52,8 @@ export function useMapEditor(source, onSaved) {
     saved = ref(
       source?.id && !source.system ? JSON.stringify(draft.value) : "",
     );
+  const gesturing = ref(false);
   let timer,
-    inGesture = false,
     stopped = false;
   if (draft.value.system) {
     delete draft.value.id;
@@ -138,10 +138,11 @@ export function useMapEditor(source, onSaved) {
     syncSurfaceObjects(draft.value.document, catalogue.value);
     pruneAreas(draft.value.document);
     syncLights(draft.value.document, catalogue.value);
+    options.normalize?.(draft.value, catalogue.value);
     const snapshot = { ...clone(draft.value), ...record },
       key = JSON.stringify(snapshot);
     try {
-      const result = await saveMap(snapshot);
+      const result = await (options.save || saveMap)(snapshot);
       record = { id: result.id, revision: result.revision };
       draft.value.id = result.id;
       draft.value.revision = result.revision;
@@ -153,7 +154,7 @@ export function useMapEditor(source, onSaved) {
       });
       lastSavedAt.value = result.changedAt;
       onSaved?.(result);
-      if (!result.previewUrl)
+      if (!options.session && !result.previewUrl)
         import("../lib/mapStoredPreviews")
           .then(({ ensureStoredMapPreview }) => ensureStoredMapPreview(result))
           .catch(() => {
@@ -173,7 +174,7 @@ export function useMapEditor(source, onSaved) {
     draft,
     () => {
       clearTimeout(timer);
-      if (!inGesture && !conflict.value) timer = setTimeout(save, 1200);
+      if (!gesturing.value && !conflict.value) timer = setTimeout(save, 1200);
     },
     { deep: true, immediate: true },
   );
@@ -183,9 +184,23 @@ export function useMapEditor(source, onSaved) {
     });
   }
   function pauseSave(value) {
-    inGesture = value;
+    gesturing.value = value;
     clearTimeout(timer);
     if (!value && !conflict.value && !stopped) timer = setTimeout(save, 1200);
+  }
+  function receive(model) {
+    if (
+      !model ||
+      model.id !== draft.value.id ||
+      dirty.value ||
+      saving.value ||
+      gesturing.value
+    )
+      return;
+    draft.value = clone(model);
+    record = { id: model.id, revision: model.revision };
+    saved.value = JSON.stringify(draft.value);
+    lastSavedAt.value = model.changedAt;
   }
   const state = {
     draft,
@@ -238,16 +253,21 @@ export function useMapEditor(source, onSaved) {
     try {
       catalogue.value = await getMapModels();
       syncLights(draft.value.document, catalogue.value);
-      if (!selectedModel.value)
+      if (!selectedModel.value) {
+        collection.value =
+          catalogue.value.find(
+            (m) => m.id === draft.value.document.tiles[0]?.modelId,
+          )?.collection || collection.value;
         selectedModel.value =
           catalogue.value.find((m) => m.sourceCode === "LC-007")?.id ||
           catalogue.value[0]?.id ||
           "";
+      }
     } catch (cause) {
       modelError.value = cause.message;
     } finally {
       loadingModels.value = false;
-      if (dirty.value && !inGesture && !conflict.value && !stopped) {
+      if (dirty.value && !gesturing.value && !conflict.value && !stopped) {
         clearTimeout(timer);
         timer = setTimeout(save, 1200);
       }
@@ -261,7 +281,8 @@ export function useMapEditor(source, onSaved) {
   onMounted(() => {
     loadModels();
     stopModelRefresh = startModelRefresh(
-      () => (inGesture ? null : getMapModels()),
+      () =>
+        gesturing.value || options.active?.() === false ? null : getMapModels(),
       (models) => {
         if (JSON.stringify(models) !== JSON.stringify(catalogue.value))
           catalogue.value = models;
@@ -320,6 +341,8 @@ export function useMapEditor(source, onSaved) {
     lastSavedAt,
     conflict,
     dirty,
+    gesturing,
+    receive,
     history,
     future,
     save,

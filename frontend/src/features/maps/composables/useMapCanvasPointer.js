@@ -106,7 +106,10 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       view: getRenderer().getView(),
       region: !!props.selectedTiles && props.tool === "select" && additive,
     };
-    if (delayed && (hit?.tileId || hit?.objectId || hit?.lightId)) {
+    if (
+      delayed &&
+      (hit?.tileId || hit?.objectId || hit?.lightId || hit?.tokenId)
+    ) {
       holdTimer = setTimeout(() => {
         if (!drag || drag.moved) return;
         drag.pan = false;
@@ -120,6 +123,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     if (!getRenderer() || props.readonly) return;
     const point =
       !props.selectedLight &&
+      !props.surfacePlacement &&
       drag?.point?.elevation !== undefined &&
       (!props.placementModel || drag.pan || drag.orbit || drag.region)
         ? {
@@ -192,7 +196,10 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     if (drag.started && !drag.orbit) {
       const inside = pointAt(event);
       const point =
-        inside && drag.point?.elevation !== undefined && !props.placementModel
+        inside &&
+        drag.point?.elevation !== undefined &&
+        !props.placementModel &&
+        !props.surfacePlacement
           ? {
               ...getRenderer().world(event, drag.point.elevation),
               elevation: drag.point.elevation,

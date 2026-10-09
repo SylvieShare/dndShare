@@ -1,8 +1,12 @@
-export const TUTORIAL_REVISION = 11
-export const TUTORIAL_NAMES = { character: 'Лист персонажа', 'session-player': 'Сессия игрока', 'session-dm': 'Сессия мастера' }
+export const TUTORIAL_REVISION = 12;
+export const TUTORIAL_NAMES = {
+  character: "Лист персонажа",
+  "session-player": "Сессия игрока",
+  "session-dm": "Сессия мастера",
+};
 export function tutorialKey(entry) {
-  return JSON.stringify([entry.flowId, entry.sourceKey, entry.device])
+  return JSON.stringify([entry.flowId, entry.sourceKey, entry.device]);
 }
 export function hasSeenTutorial(entries, context) {
-  return entries.some(entry => tutorialKey(entry) === tutorialKey(context))
+  return entries.some((entry) => tutorialKey(entry) === tutorialKey(context));
 }

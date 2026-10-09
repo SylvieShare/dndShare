@@ -16,23 +16,15 @@
     </template>
     <template #navigation><MapEditorActions :editor="editor" /></template>
     <template #actions>
-      <ActionButton
-        v-if="admin"
-        icon-only
-        variant="secondary"
-        aria-label="Справочник тайлов"
-        title="Справочник тайлов"
-        @click="emit('reference')"
-      >
-        <template #icon><BookOpenText :size="24" /></template>
-      </ActionButton>
+      <MapReferenceButton v-if="admin" @click="emit('reference')" />
     </template>
   </WorkspaceHeader>
 </template>
 <script setup>
 import { ActionButton } from "@sylvieshare/share-ui";
-import { ArrowLeft, BookOpenText } from "@lucide/vue";
+import { ArrowLeft } from "@lucide/vue";
 import WorkspaceHeader from "@/shared/ui/WorkspaceHeader.vue";
+import MapReferenceButton from "./MapReferenceButton.vue";
 import MapEditorActions from "./MapEditorActions.vue";
 defineProps({ editor: Object, admin: Boolean });
 const emit = defineEmits(["close", "reference"]);

@@ -11,7 +11,14 @@ import (
 
 type SessionMap struct {
 	BattleMap
-	State battlemap.State `json:"state"`
+	State  battlemap.State `json:"state"`
+	Source *MapSource      `json:"source,omitempty"`
+}
+
+type MapSource struct {
+	ID     string `json:"id,omitempty"`
+	Name   string `json:"name"`
+	System bool   `json:"system"`
 }
 
 type MapDisplay struct {
@@ -23,8 +30,8 @@ type MapDisplay struct {
 
 func scanSessionMap(row pgx.Row) (SessionMap, error) {
 	var m SessionMap
-	var doc, state []byte
-	err := row.Scan(&m.ID, &m.Name, &doc, &state, &m.Revision, &m.ChangedAt)
+	var doc, state, source []byte
+	err := row.Scan(&m.ID, &m.Name, &doc, &state, &m.Revision, &m.ChangedAt, &source)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return m, ErrNotFound
 	}
@@ -34,11 +41,15 @@ func scanSessionMap(row pgx.Row) (SessionMap, error) {
 	if err == nil {
 		err = json.Unmarshal(state, &m.State)
 	}
+	if err == nil {
+		m.Source = &MapSource{}
+		err = json.Unmarshal(source, m.Source)
+	}
 	return m, err
 }
 
 func (s *Store) ListSessionMaps(ctx context.Context, sessionID int64) ([]SessionMap, error) {
-	rows, err := s.pool.Query(ctx, `SELECT id::text,name,document,state,revision,changed_at FROM dndshare.session_map WHERE session_id=$1 ORDER BY changed_at DESC`, sessionID)
+	rows, err := s.pool.Query(ctx, `SELECT id::text,name,document,state,revision,changed_at,source FROM dndshare.session_map WHERE session_id=$1 ORDER BY changed_at DESC`, sessionID)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +66,7 @@ func (s *Store) ListSessionMaps(ctx context.Context, sessionID int64) ([]Session
 }
 
 func (s *Store) GetSessionMap(ctx context.Context, sessionID int64, id string) (SessionMap, error) {
-	return scanSessionMap(s.pool.QueryRow(ctx, `SELECT id::text,name,document,state,revision,changed_at FROM dndshare.session_map WHERE session_id=$1 AND id=$2::uuid`, sessionID, id))
+	return scanSessionMap(s.pool.QueryRow(ctx, `SELECT id::text,name,document,state,revision,changed_at,source FROM dndshare.session_map WHERE session_id=$1 AND id=$2::uuid`, sessionID, id))
 }
 
 func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap) (SessionMap, error) {
@@ -63,13 +74,16 @@ func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap)
 	if err != nil {
 		return SessionMap{}, err
 	}
-	state, _ := json.Marshal(battlemap.InitialState())
+	initial := battlemap.InitialState()
+	initial.Fog = false
+	state, _ := json.Marshal(initial)
+	source, _ := json.Marshal(MapSource{ID: m.ID, Name: m.Name, System: m.System})
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return SessionMap{}, err
 	}
 	defer tx.Rollback(ctx)
-	result, err := scanSessionMap(tx.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb)) RETURNING id::text,name,document,state,revision,changed_at`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state)))
+	result, err := scanSessionMap(tx.QueryRow(ctx, `INSERT INTO dndshare.session_map(session_id,name,document,state,source) VALUES($1,$2,CAST($3 AS jsonb),CAST($4 AS jsonb),CAST($5 AS jsonb)) RETURNING id::text,name,document,state,revision,changed_at,source`, sessionID, m.Name, json.RawMessage(doc), json.RawMessage(state), json.RawMessage(source)))
 	if err != nil {
 		return result, err
 	}
@@ -79,16 +93,31 @@ func (s *Store) AddSessionMap(ctx context.Context, sessionID int64, m BattleMap)
 	return result, tx.Commit(ctx)
 }
 
-func (s *Store) SaveSessionMapState(ctx context.Context, sessionID int64, id string, revision int64, state battlemap.State) (SessionMap, error) {
-	raw, err := json.Marshal(state)
+func (s *Store) SaveSessionMap(ctx context.Context, sessionID int64, m SessionMap) (SessionMap, error) {
+	doc, err := json.Marshal(m.Document)
 	if err != nil {
-		return SessionMap{}, err
+		return m, err
 	}
-	m, err := scanSessionMap(s.pool.QueryRow(ctx, `UPDATE dndshare.session_map SET state=CAST($4 AS jsonb),revision=revision+1,changed_at=now() WHERE session_id=$1 AND id=$2::uuid AND revision=$3 RETURNING id::text,name,document,state,revision,changed_at`, sessionID, id, revision, json.RawMessage(raw)))
+	state, err := json.Marshal(m.State)
+	if err != nil {
+		return m, err
+	}
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return m, err
+	}
+	defer tx.Rollback(ctx)
+	result, err := scanSessionMap(tx.QueryRow(ctx, `UPDATE dndshare.session_map SET name=$4,document=CAST($5 AS jsonb),state=CAST($6 AS jsonb),revision=revision+1,changed_at=now() WHERE session_id=$1 AND id=$2::uuid AND revision=$3 RETURNING id::text,name,document,state,revision,changed_at,source`, sessionID, m.ID, m.Revision, m.Name, json.RawMessage(doc), json.RawMessage(state)))
 	if errors.Is(err, ErrNotFound) {
 		return m, ErrMapConflict
 	}
-	return m, err
+	if err != nil {
+		return m, err
+	}
+	if err = syncMapModels(ctx, tx, "session_map_model", "map_id", m.ID, m.Document); err != nil {
+		return m, err
+	}
+	return result, tx.Commit(ctx)
 }
 
 func (s *Store) DeleteSessionMap(ctx context.Context, sessionID int64, id string) error {

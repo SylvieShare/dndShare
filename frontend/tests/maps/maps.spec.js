@@ -60,42 +60,41 @@ test("editor drops tiles, undoes and autosaves versions without zone controls", 
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 for (const mobile of [false, true])
-  test(`table controls and physical tokens ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`session token focus and display settings ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     await page.setViewportSize(
       mobile ? { width: 430, height: 932 } : { width: 1440, height: 1000 },
     );
     await ready(page);
-    await page.getByRole("button", { name: "Области", exact: true }).click();
-    await page
-      .getByRole("switch", { name: "Показывать Хранилище", exact: true })
-      .click();
-    await expect
-      .poll(() => page.evaluate(() => window.latestBoard.state.zones.right))
-      .toBe("visible");
-    await page.getByRole("button", { name: "Жетоны", exact: true }).click();
+    await page.getByRole("button", { name: "Существа", exact: true }).click();
     await page.getByRole("button", { name: "Следопыт", exact: true }).click();
-    await page.getByRole("switch", { name: "Физическая миниатюра" }).click();
+    await page
+      .getByRole("switch", { name: "Физическая миниатюра", exact: true })
+      .click();
     await expect
       .poll(() =>
         page.evaluate(() => window.latestBoard.state.tokens[0].physical),
       )
       .toBe(true);
-    await page.getByRole("button", { name: "Трансляция", exact: true }).click();
-    await page.getByRole("switch", { name: "Вписывать всю карту" }).click();
+    await page
+      .locator(".map-sidebar")
+      .getByRole("button", { name: "Настройки", exact: true })
+      .click();
+    await page
+      .getByRole("switch", { name: "Вписывать всю карту", exact: true })
+      .click();
     await expect
       .poll(() => page.evaluate(() => window.latestDisplay.camera.fit))
       .toBe(false);
     await page
-      .getByRole("button", { name: "Затемнить экран", exact: true })
+      .getByRole("switch", { name: "Показывать карту игрокам", exact: true })
       .click();
     await expect
       .poll(() => page.evaluate(() => window.latestDisplay.visible))
       .toBe(false);
-    await expect(page.getByRole("alert")).toHaveCount(0);
   });
-test("tokens drag and doors open without changing the document", async ({
+test("held tokens move between surface points and procedural objects act from the shared focus", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -104,6 +103,7 @@ test("tokens drag and doors open without changing the document", async ({
     b = await point(page, 4.5, 4.5);
   await page.mouse.move(a.x, a.y);
   await page.mouse.down();
+  await page.waitForTimeout(550);
   await page.mouse.move(b.x, b.y, { steps: 5 });
   await page.mouse.up();
   await expect
@@ -111,6 +111,7 @@ test("tokens drag and doors open without changing the document", async ({
     .toBe(4.5);
   const door = await point(page, 6, 5);
   await page.mouse.click(door.x, door.y);
+  await page.getByRole("switch", { name: "Открыто", exact: true }).click();
   await expect
     .poll(() => page.evaluate(() => window.latestBoard.state.objects.door))
     .toBe(true);
@@ -129,55 +130,66 @@ test("standalone map display renders without master controls", async ({
   await expect(page.getByRole("radio")).toHaveCount(0);
 });
 
-test("failed session writes retain changes and retry with the original version", async ({
+test("failed full-scene saves retry the same revision and retain the draft", async ({
   page,
 }) => {
   await ready(page);
+  await page
+    .locator(".map-sidebar")
+    .getByRole("button", { name: "Настройки", exact: true })
+    .click();
   await page.evaluate(() => {
     window.failNextSave = 500;
   });
-  await page.getByRole("button", { name: "Области", exact: true }).click();
-  await page
-    .getByRole("switch", { name: "Показывать Хранилище", exact: true })
+  await page.getByRole("switch", { name: "Туман войны", exact: true }).click();
+  const dialog = page.getByRole("dialog", {
+    name: "Не удалось сохранить карту",
+  });
+  await expect(dialog.getByRole("alert")).toContainText("Нет связи");
+  await dialog
+    .getByRole("button", { name: "Повторить сохранение", exact: true })
     .click();
-  await expect(page.getByRole("alert")).toContainText("Нет связи");
-  await expect(
-    page.getByRole("switch", { name: "Показывать Хранилище", exact: true }),
-  ).toBeChecked();
-  await page.getByRole("button", { name: "Повторить", exact: true }).click();
   await expect
-    .poll(() => page.evaluate(() => window.latestBoard.state.zones.right))
-    .toBe("visible");
-  const versions = await page.evaluate(() =>
-    window.requests
-      .filter((r) => r.url.endsWith("/maps/test-map"))
-      .map((r) => r.data.revision),
-  );
-  expect(versions).toEqual([1, 1]);
+    .poll(() => page.evaluate(() => window.latestBoard.state.fog))
+    .toBe(false);
+  expect(
+    await page.evaluate(() =>
+      window.requests
+        .filter((r) => r.url === "/api/sessions/test/maps/test-map")
+        .map((r) => r.data.revision),
+    ),
+  ).toEqual([1, 1]);
 });
-
-test("conflicting writes require an explicit reload before replacing local changes", async ({
+test("scene conflicts require explicit server reload before replacing local changes", async ({
   page,
 }) => {
   await ready(page);
+  await page
+    .locator(".map-sidebar")
+    .getByRole("button", { name: "Настройки", exact: true })
+    .click();
   await page.evaluate(() => {
     window.failNextSave = 409;
   });
-  await page.getByRole("button", { name: "Области", exact: true }).click();
-  await page
-    .getByRole("switch", { name: "Показывать Хранилище", exact: true })
+  await page.getByRole("switch", { name: "Туман войны", exact: true }).click();
+  const dialog = page.getByRole("dialog", {
+    name: "Не удалось сохранить карту",
+  });
+  await expect(dialog.getByRole("alert")).toContainText("другой вкладке");
+  await dialog
+    .getByRole("button", { name: "Вернуться к карте", exact: true })
     .click();
-  await expect(page.getByRole("alert")).toContainText("другой вкладке");
-  await expect(
-    page.getByRole("switch", { name: "Показывать Хранилище", exact: true }),
-  ).toBeChecked();
   await page
     .getByRole("button", { name: "Загрузить с сервера", exact: true })
     .click();
   await page.getByRole("button", { name: "Загрузить", exact: true }).click();
+  await page
+    .locator(".map-sidebar")
+    .getByRole("button", { name: "Настройки", exact: true })
+    .click();
   await expect(
-    page.getByRole("switch", { name: "Показывать Хранилище", exact: true }),
-  ).not.toBeChecked();
+    page.getByRole("switch", { name: "Туман войны", exact: true }),
+  ).toBeChecked();
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 

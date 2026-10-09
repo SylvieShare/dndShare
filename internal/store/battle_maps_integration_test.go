@@ -56,6 +56,7 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	exec(schemaModelGroupCodesSQL)
 	exec(schemaCurrentMapModelsSQL)
 	exec(schemaMapPreviewsSQL)
+	testSessionMapEditorMigration(t, ctx, pool)
 	exec(schemaMapAreasSQL)
 	exec(schemaMapLightingSQL)
 	exec(schemaMapLightingModeSQL)
@@ -156,7 +157,7 @@ SELECT 10,id,true FROM dndshare.session_map WHERE name='legacy session';`)
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			_, err := s.SaveSessionMapState(ctx, 10, a.ID, a.Revision, a.State)
+			_, err := s.SaveSessionMap(ctx, 10, a)
 			out <- err
 		}()
 	}
@@ -173,6 +174,7 @@ SELECT 10,id,true FROM dndshare.session_map WHERE name='legacy session';`)
 	if winners != 1 {
 		t.Fatalf("concurrent saves succeeded %d times", winners)
 	}
+	testSessionSceneEdits(t, ctx, s, a.ID, m)
 	display, err := s.SaveMapDisplay(ctx, 10, MapDisplay{MapID: &a.ID, Visible: true, Camera: battlemap.Camera{CellPixels: 72}})
 	if err != nil {
 		t.Fatal(err)

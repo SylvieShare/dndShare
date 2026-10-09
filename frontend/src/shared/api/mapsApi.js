@@ -41,6 +41,8 @@ export const addSessionMap = (uuid, mapId) =>
 export const saveSessionMap = (uuid, map) =>
   fetchPut(`/sessions/${uuid}/maps/${map.id}`, {
     revision: map.revision,
+    name: map.name,
+    document: map.document,
     state: map.state,
   });
 export const deleteSessionMap = (uuid, id) =>

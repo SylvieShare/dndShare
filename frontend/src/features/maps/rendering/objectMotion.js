@@ -15,7 +15,9 @@ export function createObjectMotion(assets, tileMatrix) {
     advance(delta, root) {
       const moving = motion.advance(delta);
       for (const child of root.children) {
-        const object = objects.get(child.userData.objectId);
+        const object = objects.get(
+          child.userData.objectId || child.userData.tokenId,
+        );
         if (!object) continue;
         const pose = motion.pose(object.id);
         child.position.set(pose.x, pose.elevation, pose.y);
@@ -37,6 +39,7 @@ export function createObjectMotion(assets, tileMatrix) {
               )
               .applyMatrix4(matrix),
           );
+          if (child.userData.tokenId) child.position.y += 0.05;
         }
       }
       root.updateMatrixWorld(true);

@@ -79,22 +79,5 @@ func (s *Store) HydrateSessionMapLights(ctx context.Context, maps ...*SessionMap
 	for _, m := range maps {
 		documents = append(documents, &m.Document)
 	}
-	if err := s.HydrateMapLights(ctx, documents...); err != nil {
-		return err
-	}
-	for _, m := range maps {
-		if m.State.Lighting == nil {
-			continue
-		}
-		ids := map[string]bool{}
-		for _, l := range m.Document.Lights {
-			ids[l.ID] = true
-		}
-		for id := range m.State.Lighting.Lights {
-			if !ids[id] {
-				delete(m.State.Lighting.Lights, id)
-			}
-		}
-	}
-	return nil
+	return s.HydrateMapLights(ctx, documents...)
 }

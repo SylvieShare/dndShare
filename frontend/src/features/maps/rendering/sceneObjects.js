@@ -216,6 +216,10 @@ export function buildSceneObjects(d, state, options, fog, assets, tier) {
       marker.position.y = -0.04;
       group.add(marker);
     }
+    applyAreaOpacity(
+      group,
+      options.areaTileOpacity?.(token.placement?.tileId) ?? 1,
+    );
     root.add(group);
   }
   return root;

@@ -1,3 +1,4 @@
+import { sessionFixture, sessionAPI } from "./session";
 import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
 import { groupExamples } from "./groups";
@@ -307,7 +308,12 @@ if (params.has("transitions")) {
   ];
 }
 let templateRevision = 1;
-let board = { ...clone(source), state: initialState() };
+let board = {
+  ...clone(source),
+  source: { id: source.id, name: source.name, system: false },
+  state: initialState(),
+};
+window.templateMap = clone(source);
 board.state.zones.left = "visible";
 board.state.tokens = [
   {
@@ -355,6 +361,9 @@ if (params.get("mode") === "library" && params.has("tagsExample")) {
   if (stored) source.document = JSON.parse(stored);
   else sessionStorage.setItem(key, JSON.stringify(source.document));
 }
+const sessionHandler = sessionAPI(board, display, (id) =>
+  window.lastSaved?.id === id ? window.lastSaved : source,
+);
 const modelAssetAliases = new Map();
 window.loadedModels = [];
 window.releaseModelLoads = () =>
@@ -502,21 +511,12 @@ window.fetch = async (url, options = {}) => {
       changedAt: new Date().toISOString(),
     };
     window.lastSaved = result;
-  } else if (url === "/api/sessions/test/maps/test-map") {
-    if (data.revision !== board.revision)
-      return new Response("{}", { status: 409 });
-    board = { ...board, state: data.state, revision: board.revision + 1 };
-    window.latestBoard = clone(board);
-    result = board;
-  } else if (url === "/api/sessions/test/maps")
-    result = { maps: [board], display };
-  else if (url === "/api/sessions/test/map-display") {
-    display = { ...data, revision: display.revision + 1 };
-    window.latestDisplay = clone(display);
-    result = display;
-  } else if (url === "/api/public/sessions/ABC-123/map")
-    result = { map: board, display };
-  else return new Response("{}", { status: 404 });
+  } else {
+    const sessionResult = sessionHandler(url, options, data);
+    if (sessionResult) return sessionResult;
+    return new Response("{}", { status: 404 });
+  }
+
   if (url === "/api/maps")
     result = Array.isArray(result)
       ? await Promise.all(result.map(previews.decorate))
@@ -579,8 +579,7 @@ createApp({
                 h(SessionMapWorkspace, {
                   sessionUuid: "test",
                   session: { displayCode: "ABC-123" },
-                  participants: [],
-                  encounter: { encounter: { combatants: [] } },
+                  ...sessionFixture(pinia, source, params),
                 }),
               ],
             ),

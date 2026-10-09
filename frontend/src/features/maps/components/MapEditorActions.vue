@@ -49,6 +49,7 @@ import { Copy, Redo2, Trash2, Undo2 } from "@lucide/vue";
 const props = defineProps({ editor: Object });
 const deleteLabel = computed(() => {
   const e = props.editor;
+  if (e.tokenSelected) return "Убрать с карты";
   if (e.focusedArea) return "Удалить область";
   if (e.selectedTiles.length && e.selectedObjects.length)
     return "Удалить выделение";
@@ -71,6 +72,7 @@ const hasContent = computed(
 const hasSelection = computed(
   () =>
     !!(
+      props.editor.tokenSelected ||
       props.editor.focusedArea ||
       props.editor.selectedTiles.length ||
       props.editor.selectedObjects.length ||

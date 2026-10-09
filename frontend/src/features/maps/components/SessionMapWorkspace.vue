@@ -1,447 +1,263 @@
 <template>
   <section class="session-map-workspace" data-tutorial="session-map">
-    <header class="map-toolbar">
-      <Map :size="24" /><strong>Карта</strong>
-      <FormSelect
-        v-if="c.maps.length"
-        :value="c.selectedID"
-        aria-label="Карта сессии"
-        :disabled="c.editing"
-        @change="c.selectedID = $event"
-        ><option v-for="m in c.maps" :key="m.id" :value="m.id">
-          {{ m.name
-          }}{{
-            c.display?.mapId === m.id && c.display.visible
-              ? " · в трансляции"
-              : ""
-          }}
-        </option></FormSelect
-      >
-      <ActionButton
-        variant="secondary"
-        aria-label="Добавить карту"
-        title="Добавить карту"
-        @click="picker = true"
-        ><Plus :size="16" /><span class="session-map-action-label"
-          >Добавить карту</span
-        ></ActionButton
-      >
-      <template v-if="c.selected">
-        <ActionButton
-          :disabled="c.displaySaving || c.conflict"
-          aria-label="Транслировать карту"
-          title="Транслировать карту"
-          @click="broadcast"
-          ><MonitorUp :size="16" /><span class="session-map-action-label"
-            >Транслировать карту</span
-          ></ActionButton
-        >
-        <ActionButton
-          variant="quiet"
-          title="Убрать карту из сессии"
-          :disabled="c.saving"
-          @click="pendingDelete = c.selected"
-          ><Trash2 :size="16"
-        /></ActionButton>
-      </template>
-      <span class="map-save-status" role="status">{{
-        c.error
-          ? "Есть ошибка"
-          : c.saving
-            ? "Сохраняем…"
-            : c.connected
-              ? "Синхронизировано"
-              : "Восстанавливаем связь"
-      }}</span>
-    </header>
-    <div v-if="c.error" class="map-error" role="alert">
-      {{ c.error
-      }}<ActionButton
-        variant="quiet"
-        :disabled="c.saving"
-        @click="c.conflict ? (reloadConfirm = true) : c.retry()"
-        >{{ c.conflict ? "Загрузить с сервера" : "Повторить" }}</ActionButton
-      >
-    </div>
-    <LoadingState v-if="c.loading" label="Открываем карты сессии…" />
+    <LoadingState v-if="c.loading" label="Открываем карты сессии…" fill />
     <div v-else-if="!c.selected" class="map-empty">
-      <Map :size="48" /><strong>Добавьте карту сессии</strong
+      <Map :size="48" /><strong>Откройте карту сессии</strong
       ><span
-        >Добавьте карту из библиотеки. Её туман, двери и жетоны будут сохранены
-        в этой сессии.</span
-      ><ActionButton @click="picker = true">Выбрать карту</ActionButton>
+        >Выберите заготовку и редактируйте её независимую копию в этой
+        сессии.</span
+      >
+      <ActionButton @click="picker = 'library'">Открыть новую</ActionButton>
     </div>
-    <div v-else class="session-map-editor">
-      <SessionMapInspector
-        :controller="c"
-        :candidates="candidates"
-        :selected-token="selectedToken"
-        :pending="pendingToken"
-        :screen-path="screenPath"
-        @place="
-          pendingToken = $event;
-          tool = 'select';
-        "
-        @token="
-          selectedToken = $event;
-          tool = 'select';
-        "
-        @zone="selectedZone = $event"
-        @frame="frame"
-        @resize="inspectorWidth = $event"
-      />
-      <div class="session-map-main">
-        <div class="map-toolbar">
-          <ActionButton
-            :variant="tool === 'select' ? 'primary' : 'secondary'"
-            @click="tool = 'select'"
-            ><MousePointer2 :size="15" />Жетоны и двери</ActionButton
-          >
-          <ActionButton
-            :variant="tool === 'pan' ? 'primary' : 'secondary'"
-            @click="
-              tool = 'pan';
-              pendingToken = null;
-            "
-            ><Hand :size="15" />Обзор</ActionButton
-          >
-          <ToggleSwitch v-model="playerPreview" label="Вид игроков" />
-          <span v-if="pendingToken" class="map-hint"
-            >Поставить: {{ pendingToken.name }}
-            <ActionButton variant="quiet" @click="pendingToken = null"
-              >Отмена</ActionButton
-            ></span
-          >
-        </div>
-        <MapCanvas
-          :area-mode="playerPreview ? 'hide' : 'ghost'"
-          :key="c.selected.id"
-          ref="canvas"
-          :document="c.selected.document"
-          :state="c.selected.state"
-          :surface-placement="!!pendingToken || !!drag?.token"
-          :master="!playerPreview"
-          :readonly="c.conflict"
-          :tool="tool"
-          :selected-zone="selectedZone"
-          :selected-token="selectedToken"
-          @gesture="gesture"
+    <MapEditor
+      v-else
+      :key="`${c.selected.id}:${generation}`"
+      ref="workspace"
+      :map="c.selected"
+      :save="c.write"
+      :normalize="normalizeSessionMap"
+      session-mode
+      :embedded="integratedHeader"
+      :active="active"
+      :extra-tabs="tabs"
+      :custom-focus="!!tokens.candidate"
+      :selected-token="tokens.selected"
+      :surface-placement="tokens.surface"
+      :canvas-state="tokens.canvasState"
+      :player-preview="playerPreview"
+      :token-gesture="tokens.gesture"
+      :remove-token="removeToken"
+      @working="c.working"
+      @selection="tokens.clear"
+      @sidebar-resize="emit('inspector-resize', $event)"
+    >
+      <template #session-settings="{ editor }">
+        <SessionMapSettings
+          :editor="editor"
+          :controller="c"
+          :source-map="sourceMap"
+          :screen-path="screenPath"
+          :player-preview="playerPreview"
+          @switch="picker = 'session'"
+          @open="picker = 'library'"
+          @preview="playerPreview = $event"
+          @frame="frame"
+          @remove="pendingDelete = c.selected"
+          @reload="reloadConfirm = true"
         />
-      </div>
-    </div>
+      </template>
+      <template #creatures="{ editor }"
+        ><SessionMapCreatures
+          :editor="editor"
+          :candidates="candidates"
+          :selected="tokens.focused"
+          @focus="tokens.focus"
+          @place="tokens.place"
+      /></template>
+      <template #focus="{ editor }"
+        ><SessionMapCreatureFocus
+          v-if="tokens.candidate"
+          :editor="editor"
+          :tokens="tokens"
+          :candidate="tokens.candidate"
+          :token="tokens.token"
+          :encounter="encounter"
+          @participant="emit('participant', $event)"
+      /></template>
+    </MapEditor>
     <AppModalFrame
       v-if="picker"
-      title="Добавить карту в сессию"
-      width="1100px"
-      close-label="Закрыть"
-      @close="picker = false"
-      ><MapLibrary picker @select="add"
-    /></AppModalFrame>
+      :title="
+        picker === 'library' ? 'Открыть новую карту' : 'Переключить карту'
+      "
+      :width="1100"
+      close-label="Закрыть выбор карты"
+      @close="picker = ''"
+    >
+      <MapLibrary v-if="picker === 'library'" picker @select="add" />
+      <div v-else class="session-map-choices">
+        <BaseTile
+          v-for="map in c.maps"
+          :key="map.id"
+          interactive
+          framed
+          :tint="map.id === c.selectedID"
+          role="button"
+          tabindex="0"
+          :aria-label="map.name"
+          @click="select(map.id)"
+          @keydown.enter="select(map.id)"
+        >
+          <MapEntityRow
+            :entry="{ kind: 'map', name: map.name }"
+            :selectable="false"
+          /><small class="map-hint">{{ map.source?.name }}</small>
+        </BaseTile>
+      </div>
+    </AppModalFrame>
     <ConfirmDialog
       v-if="pendingDelete"
       title="Убрать карту из сессии?"
-      :message="`Расстановка, двери и туман карты «${pendingDelete.name}» будут удалены. Исходная карта останется в библиотеке.`"
+      :message="`Копия карты «${pendingDelete.name}» и её расстановка будут удалены. Заготовка останется в библиотеке.`"
       confirm-label="Убрать"
       @confirm="remove"
       @cancel="pendingDelete = null"
     />
     <ConfirmDialog
       v-if="reloadConfirm"
-      title="Загрузить состояние с сервера?"
-      message="Ваши несохранённые действия на карте будут отменены."
+      title="Загрузить карту с сервера?"
+      message="Несохранённые изменения будут отменены."
       confirm-label="Загрузить"
-      @confirm="
-        c.load(true).catch(() => {});
-        reloadConfirm = false;
-      "
+      @confirm="reload"
       @cancel="reloadConfirm = false"
     />
-    <ConfirmDialog
-      v-if="leaveConfirm"
-      title="Остались несохранённые действия"
-      message="Не удалось сохранить изменения карты. Можно остаться и повторить сохранение или уйти с потерей этих изменений."
-      confirm-label="Уйти без сохранения"
-      cancel-label="Остаться"
-      @confirm="finishLeave(true)"
-      @cancel="finishLeave(false)"
-    />
+    <div
+      v-if="c.error && !workspace?.editor?.saveError"
+      class="map-error"
+      role="alert"
+    >
+      {{ c.error }}
+    </div>
   </section>
 </template>
 <script setup>
 import "../styles/maps.css";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import {
   ActionButton,
   AppModalFrame,
+  BaseTile,
   ConfirmDialog,
-  FormSelect,
   LoadingState,
-  ToggleSwitch,
 } from "@sylvieshare/share-ui";
-import { Hand, Map, MonitorUp, MousePointer2, Plus, Trash2 } from "@lucide/vue";
-import { pvAvatar, pvName } from "@/features/sessions/lib/participantView";
+import { Map, Settings, UsersRound } from "@lucide/vue";
+import { getMaps } from "@/shared/api/mapsApi";
 import { useSessionMaps } from "../composables/useSessionMaps";
-import { clone, inside, interactive, snap, uid } from "../lib/mapModel";
-import MapCanvas from "./MapCanvas.vue";
+import { sessionTokens } from "../composables/sessionTokens";
+import { sessionCreatures } from "../lib/sessionCreatures";
+import { normalizeSessionMap } from "../lib/sessionMapState";
+import MapEditor from "./MapEditor.vue";
 import MapLibrary from "./MapLibrary.vue";
-import SessionMapInspector from "./SessionMapInspector.vue";
+import MapEntityRow from "./MapEntityRow.vue";
+import SessionMapCreatures from "./SessionMapCreatures.vue";
+import SessionMapCreatureFocus from "./SessionMapCreatureFocus.vue";
+import SessionMapSettings from "./SessionMapSettings.vue";
 const props = defineProps({
   sessionUuid: { type: String, required: true },
   session: Object,
   participants: { type: Array, default: () => [] },
   encounter: Object,
+  integratedHeader: Boolean,
+  active: { type: Boolean, default: true },
 });
-const emit = defineEmits(["inspector-resize"]);
-const inspectorWidth = ref(334);
+const emit = defineEmits(["inspector-resize", "participant"]);
 const c = reactive(useSessionMaps(props.sessionUuid)),
-  picker = ref(false),
+  workspace = ref(null),
+  picker = ref(""),
+  templates = ref([]),
+  generation = ref(0),
+  playerPreview = ref(false),
   pendingDelete = ref(null),
-  reloadConfirm = ref(false),
-  canvas = ref(null);
-const leaveConfirm = ref(false);
-let resolveLeave;
-async function prepareLeave() {
-  await c.flush();
-  if (!c.hasPending()) return true;
-  leaveConfirm.value = true;
-  return new Promise((resolve) => {
-    resolveLeave = resolve;
-  });
-}
-function finishLeave(leave) {
-  leaveConfirm.value = false;
-  resolveLeave?.(leave);
-}
-defineExpose({ prepareLeave });
-const selectedToken = ref(""),
-  selectedZone = ref(""),
-  pendingToken = ref(null),
-  tool = ref("select"),
-  playerPreview = ref(false);
+  reloadConfirm = ref(false);
+const candidates = computed(() =>
+  sessionCreatures(props.participants, props.encounter),
+);
+const tokens = reactive(
+  sessionTokens(
+    () => workspace.value?.editor,
+    candidates,
+    () => workspace.value?.canvas,
+  ),
+);
+const tabs = [
+  {
+    key: "session-settings",
+    label: "Настройки",
+    icon: Settings,
+    divider: true,
+  },
+  { key: "creatures", label: "Существа", icon: UsersRound },
+];
+const sourceMap = computed(() =>
+  templates.value.find((m) => m.id === c.selected?.source?.id),
+);
 const screenPath = computed(
   () => `/map-screen/${props.session?.displayCode || ""}`,
 );
-const candidates = computed(() => [
-  ...props.participants.map((p) => ({
-    kind: "player",
-    ref: String(p.charId),
-    name: pvName(p) || "Персонаж",
-    imageUrl: pvAvatar(p) || "",
-    color: p.color || "#a797d4",
-  })),
-  ...(props.encounter?.encounter?.combatants || [])
-    .filter((n) => n.type === "npc")
-    .map((n) => ({
-      kind: "creature",
-      ref: n.uid,
-      name: `${n.markerLetter ? n.markerLetter + " · " : ""}${props.encounter.npcName(n)}`,
-      imageUrl: props.encounter.npcItem(n)?.iconImageUrl || "",
-      color: n.iconColor || "#c18f6f",
-    })),
-]);
-let drag = null;
-watch(
-  () => [!!c.selected, inspectorWidth.value],
-  ([selected, width]) => emit("inspector-resize", selected ? width : 0),
-  { immediate: true },
+onMounted(() =>
+  getMaps()
+    .then((maps) => {
+      templates.value = maps;
+    })
+    .catch(() => {}),
 );
 watch(
   () => c.selectedID,
-  () => {
-    selectedToken.value = "";
-    selectedZone.value = "";
-    pendingToken.value = null;
-    drag = null;
+  (id) => {
+    tokens.reset();
+    playerPreview.value = false;
+    if (id && c.display && c.display.mapId !== id)
+      c.updateDisplay({
+        mapId: id,
+        camera: {
+          ...c.display.camera,
+          x: c.selected.document.width / 2,
+          y: c.selected.document.height / 2,
+        },
+      });
   },
 );
+function removeToken() {
+  if (!tokens.token) return false;
+  tokens.remove();
+  return true;
+}
+async function prepareLeave() {
+  return (await workspace.value?.prepareLeave()) ?? true;
+}
+async function select(id) {
+  if (await prepareLeave()) {
+    c.selectedID = id;
+    picker.value = "";
+  }
+}
 async function add(map) {
-  if (await c.add(map)) picker.value = false;
+  if ((await prepareLeave()) && (await c.add(map))) picker.value = "";
 }
 async function remove() {
-  if (await c.remove(pendingDelete.value.id)) pendingDelete.value = null;
+  if ((await prepareLeave()) && (await c.remove(pendingDelete.value.id)))
+    pendingDelete.value = null;
 }
-function broadcast() {
-  const d = c.selected.document;
-  return c.updateDisplay({
-    mapId: c.selected.id,
-    visible: true,
-    camera:
-      c.display?.mapId === c.selected.id
-        ? c.display.camera
-        : {
-            x: d.width / 2,
-            y: d.height / 2,
-            cellPixels: 64,
-            rotation: 0,
-            fit: true,
-          },
-  });
+async function reload() {
+  reloadConfirm.value = false;
+  c.editing = false;
+  await c.load(true);
+  generation.value++;
+  tokens.reset();
 }
 function frame() {
-  const view = canvas.value?.getView();
+  const view = workspace.value?.canvas?.getView();
   if (view)
     c.updateDisplay({
       camera: { ...c.display.camera, x: view.x, y: view.y, fit: false },
     });
 }
-function gesture({ phase, point, hit }) {
-  const m = c.selected;
-  if (!m || c.conflict || playerPreview.value) return;
-  if (phase === "hover") return;
-  if (phase === "cancel") {
-    if (drag?.before) m.state = drag.before;
-    drag = null;
-    c.editing = false;
-    return;
-  }
-  if (phase === "start") {
-    if (!inside(m.document, point.x, point.y) && (!hit || pendingToken.value))
-      return;
-    if (pendingToken.value) {
-      if (!point.placement) return;
-      const token = {
-        ...pendingToken.value,
-        id: uid(),
-        ...(point.placement ? point : snap(m.document, point)),
-        size: 1,
-        hidden: false,
-        physical: false,
-      };
-      c.change((s) => s.tokens.push(token));
-      selectedToken.value = token.id;
-      pendingToken.value = null;
-      return;
-    }
-    const token = hit?.tokenId
-      ? m.state.tokens.find((t) => t.id === hit.tokenId)
-      : [...m.state.tokens]
-          .reverse()
-          .find(
-            (t) =>
-              Math.abs(t.x - point.x) <= t.size / 2 &&
-              Math.abs(t.y - point.y) <= t.size / 2,
-          );
-    selectedToken.value = token?.id || "";
-    drag = {
-      start: point,
-      token: token?.id,
-      object: hit?.objectId,
-      before: clone(m.state),
-    };
-    c.editing = true;
-  } else if (phase === "move" && drag?.token) {
-    const token = m.state.tokens.find((t) => t.id === drag.token);
-    if (point.placement)
-      Object.assign(
-        token,
-        point.placement ? point : snap(m.document, point, token.size),
-      );
-  } else if (phase === "end" && drag) {
-    if (drag.token) c.persist();
-    else if (Math.hypot(point.x - drag.start.x, point.y - drag.start.y) < 0.3) {
-      const o = drag.object
-        ? m.document.objects.find(
-            (o) => o.id === drag.object && interactive(o.kind),
-          )
-        : [...m.document.objects]
-            .reverse()
-            .find(
-              (o) =>
-                interactive(o.kind) &&
-                Math.hypot(o.x - point.x, o.y - point.y) < o.scale * 0.7,
-            );
-      if (o)
-        c.change((s) => {
-          s.objects[o.id] = !(s.objects[o.id] ?? o.open);
-        });
-    }
-    drag = null;
-    c.editing = false;
-  }
-}
+defineExpose({
+  prepareLeave,
+  editor: computed(() => workspace.value?.editor),
+  openReference: () => workspace.value?.openReference(),
+});
 </script>
 <style scoped>
 .session-map-workspace {
   position: relative;
   height: 100%;
   min-height: 0;
+  --map-focus-right: var(--chapter-safe-right, 12px);
 }
-.session-map-workspace > .map-toolbar,
-.session-map-main > .map-toolbar {
-  position: absolute;
-  z-index: 7;
-  top: 14px;
-  left: max(14px, var(--chapter-safe-left, 362px));
-  right: var(--chapter-safe-right, 86px);
-  padding: 8px;
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  background: var(--surface);
-}
-.session-map-workspace > .map-toolbar > select {
-  flex: 1;
-  min-width: 100px;
-  max-width: 240px;
-}
-.session-map-workspace > .map-toolbar > strong {
-  display: none;
-}
-.session-map-workspace > .map-toolbar > svg {
-  display: none;
-}
-.session-map-main > .map-toolbar {
-  top: auto;
-  bottom: 14px;
-  right: auto;
-  max-width: calc(100% - var(--chapter-safe-left, 362px) - 100px);
-}
-.session-map-editor,
-.session-map-main {
-  position: absolute;
-  inset: 0;
-  min-width: 0;
-  min-height: 0;
-}
-.session-map-main > :deep(.map-canvas) {
-  border-radius: 0;
-}
-.session-map-main :deep(.map-controls-hint) {
-  left: var(--chapter-safe-left, 362px);
-  bottom: 76px;
-}
-.session-map-main :deep(.map-canvas-controls) {
-  right: calc(var(--chapter-safe-right, 0px) + 14px);
-}
-.session-map-workspace > .map-error {
-  position: absolute;
-  z-index: 9;
-  top: 68px;
-  left: var(--chapter-safe-left, 362px);
-  right: var(--chapter-safe-right, 14px);
-}
-.session-map-workspace > .map-empty,
-.session-map-workspace > :deep(.loading-state) {
-  position: absolute;
-  top: 90px;
-  bottom: 0;
-  left: var(--chapter-safe-left, 362px);
-  right: var(--chapter-safe-right, 14px);
-}
-@media (max-width: 1400px) {
-  .session-map-action-label {
-    display: none;
-  }
-}
-@media (max-width: 760px) {
-  .session-map-workspace > .map-toolbar {
-    left: 76px;
-    right: 14px;
-    flex-wrap: wrap;
-  }
-  .session-map-main > .map-toolbar {
-    left: 76px;
-    bottom: 76px;
-    max-width: calc(100% - 100px);
-  }
+.session-map-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
 }
 </style>

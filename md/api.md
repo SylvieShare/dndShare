@@ -45,7 +45,7 @@
 | `DELETE /api/maps/{mapId}` | Удалить свою карту; копии сессий сохраняются |
 | `GET /api/sessions/{uuid}/maps` | Владелец: `{maps,display}` |
 | `POST /api/sessions/{uuid}/maps` | Владелец: добавить независимую копию `{mapId}` |
-| `PUT /api/sessions/{uuid}/maps/{mapId}` | Владелец: сохранить `{revision,state}` |
+| `PUT /api/sessions/{uuid}/maps/{mapId}` | Владелец: атомарно сохранить `{name,document,state,revision}` и ссылки моделей |
 | `DELETE /api/sessions/{uuid}/maps/{mapId}` | Владелец: удалить копию и погасить её экран |
 | `PUT /api/sessions/{uuid}/map-display` | Владелец: `{mapId,visible,camera,revision}` |
 | `GET /api/sessions/{uuid}/map-events` | Владелец: SSE invalidations |
@@ -64,7 +64,7 @@
 от включения самого света. Режим и параметры сохраняются в сессионной копии.
 
 Карта содержит `id,name,document,revision,changedAt,system,previewSignature` и `previewUrl`, если сохранён актуальный снимок. Сессионная копия
-добавляет `state`. Единственный формат документа `tiles` описан
+добавляет `state` и неизменяемый `source: {id,name,system}`. Единственный формат документа `tiles` описан
 в [картах](features/maps.md). Состояние содержит туман, видимость зон,
 состояния объектов и жетоны; камера — `x,y,cellPixels,rotation,fit`.
 `document.tags` хранит до 32 строк по 64 символа; пробелы и дубликаты без учёта регистра нормализуются. Изображения карт больше не принимаются. Конфликт revision

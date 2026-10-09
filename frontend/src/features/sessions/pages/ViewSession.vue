@@ -85,15 +85,21 @@
         @toolbar-resize="toolbarHeight = $event"
         @open-chapters="openChapters"
       >
+        <template #workspace-actions>
+          <template v-if="mapVisible && mapWorkspace?.editor"><MapEditorActions :editor="mapWorkspace.editor" /><MapReferenceButton @click="mapWorkspace.openReference()" /></template>
+        </template>
         <template #full-workspace>
           <SessionMapWorkspace
             v-if="mapVisited && mapsAvailable"
             ref="mapWorkspace"
+            integrated-header
+            :active="mapVisible"
             :session-uuid="sessionUuid"
             :session="session"
             :participants="participants"
             :encounter="encounter"
             @inspector-resize="mapPanelWidth = $event"
+            @participant="openParticipant"
           />
         </template>
         <template #primary-workspace>
@@ -146,7 +152,7 @@
 
       <SessionShortcutHelp :active="showShortcutHints" @toggle="showShortcutHints = !showShortcutHints" />
 
-      <aside data-tutorial="session-players" class="workspace-dock workspace-dock--left">
+      <aside v-show="!mapVisible" data-tutorial="session-players" class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
           <span class="players-heading-label">ИГРОКИ</span>
           <button
@@ -303,6 +309,8 @@ import SessionBackButton from '@/features/sessions/components/SessionBackButton.
 import SessionShortcutHelp from '@/features/sessions/components/SessionShortcutHelp.vue'
 import SessionTimerStack from '@/features/sessions/components/SessionTimerStack.vue'
 import SessionSettingsWorkspace from '@/features/sessions/components/SessionSettingsWorkspace.vue'
+import MapReferenceButton from '@/features/maps/components/MapReferenceButton.vue'
+import MapEditorActions from '@/features/maps/components/MapEditorActions.vue'
 import SessionMusicWorkspace from '@/features/sessions/components/SessionMusicWorkspace.vue'
 import SessionJournalWorkspace from '@/features/sessions/components/SessionJournalWorkspace.vue'
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'

@@ -14,13 +14,20 @@
       />
       <component
         v-else
-        :is="entry.kind === 'light' ? Lightbulb : Box"
+        :is="
+          entry.kind === 'light'
+            ? Lightbulb
+            : ['player', 'creature', 'marker'].includes(entry.kind)
+              ? UserRound
+              : Box
+        "
         :size="64"
         :style="{ color: entry.color }"
       />
     </BaseTile>
     <div class="map-selected-buttons">
       <ActionButton
+        v-if="copyable"
         icon-only
         variant="quiet"
         aria-label="Скопировать элемент"
@@ -30,7 +37,7 @@
         <template #icon><Copy :size="18" /></template>
       </ActionButton>
       <ActionButton
-        v-if="!entry.item.builtinKey"
+        v-if="removable && !entry.item.builtinKey"
         icon-only
         variant="quiet"
         aria-label="Удалить элемент"
@@ -42,6 +49,7 @@
     </div>
   </div>
   <table
+    v-if="positionVisible"
     class="map-selection-coordinates"
     aria-label="Координаты выбранного элемента"
   >
@@ -50,7 +58,7 @@
         <th>X</th>
         <th>Y</th>
         <th>Z</th>
-        <th v-if="entry.kind !== 'light'">Поворот</th>
+        <th v-if="rotatable && entry.kind !== 'light'">Поворот</th>
       </tr>
     </thead>
     <tbody>
@@ -58,15 +66,24 @@
         <td>{{ number(entry.position.x) }}</td>
         <td>{{ number(entry.position.y) }}</td>
         <td>{{ number(entry.position.elevation) }}</td>
-        <td v-if="entry.kind !== 'light'">{{ entry.item.rotation }}°</td>
+        <td v-if="rotatable && entry.kind !== 'light'">
+          {{ entry.item.rotation }}°
+        </td>
       </tr>
     </tbody>
   </table>
 </template>
 <script setup>
 import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
-import { Box, Copy, Lightbulb, Trash2 } from "@lucide/vue";
-defineProps({ entry: Object, editor: Object });
+import { Box, Copy, Lightbulb, Trash2, UserRound } from "@lucide/vue";
+defineProps({
+  entry: Object,
+  editor: Object,
+  copyable: { type: Boolean, default: true },
+  removable: { type: Boolean, default: true },
+  rotatable: { type: Boolean, default: true },
+  positionVisible: { type: Boolean, default: true },
+});
 const format = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
 const number = (value) => format.format(value || 0);
 </script>

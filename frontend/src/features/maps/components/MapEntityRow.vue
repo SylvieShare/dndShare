@@ -33,7 +33,9 @@
               : LightbulbOff
             : entry.kind === 'area'
               ? Group
-              : Box
+              : ['player', 'creature', 'marker'].includes(entry.kind)
+                ? UserRound
+                : Box
         "
         :size="28"
       />
@@ -46,6 +48,7 @@
         ></strong
       >
       <small v-if="entry.code">{{ entry.code }}</small>
+      <slot name="details" />
     </span>
     <strong v-if="entry.count" class="map-entity-count"
       >×{{ entry.count }}</strong
@@ -65,7 +68,7 @@
 <script setup>
 import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { hasSelectedText } from "../lib/textSelection";
-import { Box, Group, Lightbulb, LightbulbOff } from "@lucide/vue";
+import { Box, Group, Lightbulb, LightbulbOff, UserRound } from "@lucide/vue";
 defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,

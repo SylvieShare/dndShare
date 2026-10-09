@@ -50,11 +50,7 @@ func PublicState(d Document, s State) State {
 	result.Tokens = []Token{}
 	hiddenTiles := map[string]bool{}
 	for _, area := range d.Areas {
-		hidden := area.Hidden
-		if visible, ok := s.Areas[area.ID]; ok {
-			hidden = !visible
-		}
-		if hidden {
+		if area.Hidden {
 			for _, id := range area.TileIDs {
 				hiddenTiles[id] = true
 			}

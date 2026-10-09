@@ -354,10 +354,9 @@ MapCollectionPicker размещён над левым каталогом и д�
 базовая геометрия кнопки остаётся в библиотеке.
 
 `SessionTabWorkspace` предоставляет два режима доменной раскладки: `full`
-для всей рабочей области и `column` для центральных колонок. Панель
-`SessionMapInspector` и `MapTileSidebar` используют общий `MapSidebar`;
+для всей рабочей области и `column` для центральных колонок. `MapEditor` и `MapTileSidebar` с общим `MapSidebar` используются и в библиотеке, и в сессии;
 `MapLightingControls` и `MapEntityRow` переиспользуются для освещения обеих страниц.
-Логика областей и сохранения света остаётся в адаптерах редактора и сессии. Это доменные композиции,
+Жесты, фокус и редактирование областей/света общие; адаптер сессии задаёт сохранение и дополнительные вкладки. Это доменные композиции,
 общие базовые примитивы остаются в share-ui.
 
 ## Связанные страницы
@@ -414,14 +413,19 @@ DetailSection, BaseTile, FormField, FormSelect, FormTextInput и ToggleSwitch.
 сохраняет компактный вариант.
 MapSidebar — общая доменная композиция боковой панели редактора и карты сессии:
 вертикальные вкладки на ActionButton, единый заголовок, сворачивание и область
-прокрутки. MapTileSidebar и SessionMapInspector задают список вкладок и содержимое;
-стили панели хранятся только в MapSidebar. Сессионный адаптер задаёт позицию
-в рабочем поле и резервирует ширину для колонки игроков.
+прокрутки. MapTileSidebar задаёт общие вкладки и принимает дополнительные слоты сессии,
+MapSidebar рисует разделитель между группами. SessionMapWorkspace добавляет
+SessionMapSettings и SessionMapCreatures; использует тот же MapEditor с внешним
+save/normalize и рабочими горячими клавишами только при активной вкладке.
+MapSelectionPanel предоставляет слот фокуса для SessionMapCreatureFocus;
+MapSelectedEntity показывает общие имя/превью/координаты с отключаемыми действиями.
+MapEntityRow имеет слот details для переиспользуемого SessionHpBar.
+MapReferenceButton — общий вход в справочник в шапках редактора и сессии.
+Игроки не резервируют дополнительную колонку на карте.
 
-MapLightingControls — общая панель освещения редактора и сессии на ToggleSwitch,
-MapSunSettings и DetailSection. Названия секций — «Дневное освещение» и
-«Источники света». MapLightingPanel и SessionMapLightingPanel адаптируют
-изменения к документу редактора или сессионным переопределениям соответственно.
+MapLightingControls, MapSunSettings и MapLightingPanel общие для обеих страниц;
+правки записываются в document. Сессионных копий панели и переопределений света нет.
+
 MapEntityRow переиспользуется в обоих списках источников; ToggleSwitch справа
 меняет включение, отдельно от выбора строки редактора. MapLightFields использует
 AppSlider, ColorPresetPicker, FormField/FormTextInput/FormSelect и ToggleSwitch.

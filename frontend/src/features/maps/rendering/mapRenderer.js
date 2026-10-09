@@ -1,7 +1,6 @@
 import { startModelRefresh } from "../lib/currentModelRefresh";
 import { getMapModels } from "@/shared/api/mapsApi";
 import { createMapLighting } from "./mapLighting";
-import { sessionMapDocument } from "../lib/sessionMapPresentation";
 import { areaAppearance } from "../lib/mapAreas";
 import { mapScreenQueries } from "./mapScreenQueries";
 import { createLoadingPreview } from "./loadingPreview";
@@ -157,7 +156,6 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
   async function update(d, nextState, opts = {}) {
     const id = ++epoch;
     current = d;
-    d = sessionMapDocument(d, nextState);
     state = nextState;
     options = opts;
     appearance = areaAppearance(d, opts.areaMode);
@@ -262,7 +260,6 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     const posedObjects = d.objects.map((o) =>
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
-    objectMotion.update(posedObjects, d);
     const posedTokens = (nextState?.tokens || [])
       .filter(
         (t) => opts.master || !appearance.hiddenTiles.has(t.placement?.tileId),
@@ -270,6 +267,17 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       .map((t) =>
         resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
       );
+    objectMotion.update(
+      [
+        ...posedObjects,
+        ...posedTokens.map((t) => ({
+          ...t,
+          rotation: 0,
+          elevation: t.elevation + 0.05,
+        })),
+      ],
+      d,
+    );
     objectPreview.update(
       opts.previewObject &&
         resolvedSurfacePosition(
@@ -368,6 +376,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
           invalidate: render,
           renderObjects,
           areaObjectOpacity: appearance.objectOpacity,
+          areaTileOpacity: appearance.tileOpacity,
         },
         fog,
         assets,

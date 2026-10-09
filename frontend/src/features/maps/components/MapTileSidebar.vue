@@ -7,6 +7,7 @@
     aria-label="Каталог плиток"
     tabs-label="Боковые вкладки редактора"
     @select="emit('tab', $event)"
+    @resize="emit('resize', $event)"
   >
     <MapTilePalette
       v-if="tab === 'tiles'"
@@ -31,10 +32,11 @@
     />
     <MapPropertiesPanel v-else-if="tab === 'settings'" :editor="editor" />
     <MapLightingPanel
-      v-else
+      v-else-if="tab === 'lights'"
       :editor="editor"
       @place-light="(kind, event) => emit('place-light', kind, event)"
     />
+    <slot v-else :name="tab" :editor="editor" />
   </MapSidebar>
 </template>
 <script setup>
@@ -46,7 +48,11 @@ import MapLightingPanel from "./MapLightingPanel.vue";
 import MapAreasPanel from "./MapAreasPanel.vue";
 import MapObjectPalette from "./MapObjectPalette.vue";
 import MapTilePalette from "./MapTilePalette.vue";
-const props = defineProps({ editor: Object });
+const props = defineProps({
+  editor: Object,
+  sessionMode: Boolean,
+  extraTabs: { type: Array, default: () => [] },
+});
 const emit = defineEmits([
   "model",
   "drag-tile",
@@ -55,6 +61,7 @@ const emit = defineEmits([
   "drag-object",
   "tab",
   "place-light",
+  "resize",
 ]);
 const sidebar = ref(null);
 function selectArea(id) {
@@ -73,6 +80,9 @@ const tabs = computed(() => [
   { key: "lights", label: "Освещение", icon: Lightbulb },
   { key: "objects", label: "Объекты", icon: Box },
   { key: "areas", label: "Области", icon: Group },
-  { key: "settings", label: "Настройки", icon: Settings },
+  ...(!props.sessionMode
+    ? [{ key: "settings", label: "Настройки", icon: Settings }]
+    : []),
+  ...props.extraTabs,
 ]);
 </script>

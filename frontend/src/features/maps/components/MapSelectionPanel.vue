@@ -1,12 +1,13 @@
 <template>
   <aside
-    v-if="area || entries.length"
+    v-if="customFocus || area || entries.length"
     class="map-selection-panel"
     aria-label="Выбранные элементы"
   >
     <BaseTile class="map-selection-content">
+      <slot v-if="customFocus" name="focus" />
       <MapAreaFocus
-        v-if="area"
+        v-else-if="area"
         :key="area.id"
         :editor="editor"
         :area="area"
@@ -42,6 +43,25 @@
             @focus="emit('focus', [$event])"
           />
           <template v-else>
+            <ToggleSwitch
+              v-if="
+                single.kind === 'object' &&
+                !single.item.modelId &&
+                interactive(single.item.kind)
+              "
+              :model-value="
+                editor.draft.state?.objects[single.id] ?? single.item.open
+              "
+              label="Открыто"
+              @update:model-value="
+                editor.change((m) => {
+                  if (m.state) m.state.objects[single.id] = $event;
+                  else
+                    m.document.objects.find((o) => o.id === single.id).open =
+                      $event;
+                })
+              "
+            />
             <MapModelTransitions :editor="editor" :entry="single" />
             <MapModelLights :editor="editor" :entry="single" />
           </template>
@@ -67,8 +87,9 @@
   </aside>
 </template>
 <script setup>
+import { interactive } from "../lib/mapModel";
 import { computed } from "vue";
-import { BaseTile } from "@sylvieshare/share-ui";
+import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { groupMapEntities, selectedMapEntities } from "../lib/editorEntities";
 import MapAreaFocus from "./MapAreaFocus.vue";
 import MapSelectedEntity from "./MapSelectedEntity.vue";
@@ -77,7 +98,7 @@ import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
 import MapModelTransitions from "./MapModelTransitions.vue";
 import MapModelLights from "./MapModelLights.vue";
-const props = defineProps({ editor: Object });
+const props = defineProps({ editor: Object, customFocus: Boolean });
 const emit = defineEmits(["focus", "bind", "area"]);
 const area = computed(() =>
   props.editor.draft.document.areas.find(
@@ -92,7 +113,7 @@ const single = computed(() => entries.value[0]);
 .map-selection-panel {
   position: absolute;
   z-index: 16;
-  right: 12px;
+  right: var(--map-focus-right, 12px);
   top: 12px;
   width: 300px;
   max-width: calc(100% - 24px);

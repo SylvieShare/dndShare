@@ -5,61 +5,30 @@ import (
 	"testing"
 )
 
-func TestSessionPresentationValidation(t *testing.T) {
-	d := Document{
-		Areas:  []Area{{ID: "room"}},
-		Lights: []Light{{ID: "torch", Enabled: true, Shadows: true}, {ID: "candle", Shadows: true}, {ID: "magic", Shadows: true}},
-	}
-	s := InitialState()
-	s.Areas = map[string]bool{"room": false}
-	s.Lighting = &SessionLighting{Enabled: true, Sun: *DefaultSun(), Lights: map[string]bool{"torch": false}}
-	raw, err := json.Marshal(s)
+func TestPlayStateDoesNotDuplicateScenePresentation(t *testing.T) {
+	raw, err := json.Marshal(InitialState())
 	if err != nil {
 		t.Fatal(err)
 	}
-	var saved State
-	if err := json.Unmarshal(raw, &saved); err != nil {
-		t.Fatal(err)
-	}
-	if err := ValidateState(&saved, d); err != nil {
-		t.Fatal(err)
-	}
-	if saved.Areas["room"] || saved.Lighting.Lights["torch"] {
-		t.Fatal("explicit disabled presentation was not preserved")
-	}
-	for _, mutate := range []func(*State){
-		func(s *State) { s.Areas["unknown"] = true },
-		func(s *State) { s.Lighting.Lights["unknown"] = true },
-		func(s *State) { s.Lighting.Sun.Elevation = 0 },
-		func(s *State) { s.Lighting.Sun.Angle = 361 },
-		func(s *State) { s.Lighting.Lights = map[string]bool{"torch": true, "candle": true, "magic": true} },
-	} {
-		var invalid State
-		if err := json.Unmarshal(raw, &invalid); err != nil {
-			t.Fatal(err)
-		}
-		mutate(&invalid)
-		if ValidateState(&invalid, d) == nil {
-			t.Fatal("invalid presentation accepted")
+	var fields map[string]any
+	json.Unmarshal(raw, &fields)
+	for _, key := range []string{"areas", "lighting"} {
+		if _, exists := fields[key]; exists {
+			t.Fatal("scene field in play state", key)
 		}
 	}
 }
-
-func TestPublicTokenVisibilityUsesSessionAreas(t *testing.T) {
+func TestPublicTokensUseEditedSceneAreas(t *testing.T) {
 	d := Document{Areas: []Area{{ID: "room", Hidden: true, TileIDs: []string{"floor"}}}}
 	s := InitialState()
 	s.Fog = false
-	s.Tokens = []Token{{ID: "hero", Ref: "internal", Placement: &PlacementAnchor{TileID: "floor"}}}
+	s.Tokens = []Token{{ID: "hero", Ref: "private", Placement: &PlacementAnchor{TileID: "floor"}}}
 	if len(PublicState(d, s).Tokens) != 0 {
-		t.Fatal("token on hidden area exposed")
+		t.Fatal("hidden area leaked")
 	}
-	s.Areas = map[string]bool{"room": true}
+	d.Areas[0].Hidden = false
 	public := PublicState(d, s)
 	if len(public.Tokens) != 1 || public.Tokens[0].Ref != "" {
-		t.Fatal("revealed area's public token missing or contains private link")
-	}
-	s.Areas["room"] = false
-	if len(PublicState(d, s).Tokens) != 0 {
-		t.Fatal("session area toggle ignored")
+		t.Fatal("revealed token missing or private reference leaked")
 	}
 }

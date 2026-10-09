@@ -1,52 +1,48 @@
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { computed, onBeforeUnmount, ref } from "vue";
 import {
   addSessionMap,
   deleteSessionMap,
   getSessionMaps,
   saveMapDisplay,
   saveSessionMap,
-} from '@/shared/api/mapsApi';
-import { clone } from '../lib/mapModel';
-import { useMapSync } from './useMapSync';
-
+} from "@/shared/api/mapsApi";
+import { clone } from "../lib/mapModel";
+import { useMapSync } from "./useMapSync";
 export function useSessionMaps(uuid) {
   const maps = ref([]),
     display = ref(null),
-    selectedID = ref(''),
+    selectedID = ref(""),
     loading = ref(true),
     saving = ref(false),
     displaySaving = ref(false),
-    error = ref(''),
+    error = ref(""),
     conflict = ref(false),
     editing = ref(false);
-  const pending = new Set(),
-    selected = computed(() => maps.value.find((m) => m.id === selectedID.value));
+  const selected = computed(() =>
+    maps.value.find((m) => m.id === selectedID.value),
+  );
   let stopped = false,
-    refreshAfterSave = false,
-    activeSave = null;
+    refreshPending = false;
+  const busy = () => saving.value || editing.value || displaySaving.value;
   async function load(force = false) {
-    if (!force && (saving.value || pending.size || editing.value || displaySaving.value)) {
-      refreshAfterSave = true;
+    if (!force && busy()) {
+      refreshPending = true;
       return;
     }
     try {
       const result = await getSessionMaps(uuid);
       if (stopped) return;
-      // An edit may have started while the read was in flight.
-      if (!force && (saving.value || pending.size || editing.value || displaySaving.value)) {
-        refreshAfterSave = true;
+      if (!force && busy()) {
+        refreshPending = true;
         return;
       }
       maps.value = result.maps;
       display.value = result.display;
-      error.value = '';
       if (!maps.value.some((m) => m.id === selectedID.value))
-        selectedID.value = result.display.mapId || maps.value[0]?.id || '';
-      if (force) {
-        pending.clear();
-        conflict.value = false;
-        error.value = '';
-      }
+        selectedID.value = result.display.mapId || maps.value[0]?.id || "";
+      error.value = "";
+      if (force) conflict.value = false;
+      refreshPending = false;
     } catch (cause) {
       error.value = cause.message;
       throw cause;
@@ -55,58 +51,31 @@ export function useSessionMaps(uuid) {
     }
   }
   const { connected } = useMapSync(`/api/sessions/${uuid}/map-events`, load);
-  function flush() {
-    if (!activeSave)
-      activeSave = savePending().finally(() => {
-        activeSave = null;
-      });
-    return activeSave;
+  function working(value) {
+    editing.value = value;
+    if (!value && refreshPending && !busy()) load().catch(() => {});
   }
-  async function savePending() {
-    if (conflict.value) return;
+  async function write(map) {
     saving.value = true;
-    error.value = '';
+    error.value = "";
     try {
-      while (pending.size) {
-        const id = pending.values().next().value,
-          m = maps.value.find((m) => m.id === id);
-        pending.delete(id);
-        if (!m) continue;
-        try {
-          const result = await saveSessionMap(uuid, clone(m));
-          m.revision = result.revision;
-        } catch (cause) {
-          pending.add(id);
-          throw cause;
-        }
-      }
+      const result = await saveSessionMap(uuid, clone(map));
+      maps.value = maps.value.map((m) => (m.id === result.id ? result : m));
+      return result;
     } catch (cause) {
       error.value = cause.message;
       conflict.value = cause.status === 409;
+      throw cause;
     } finally {
       saving.value = false;
-      if (refreshAfterSave && !pending.size && !stopped) {
-        refreshAfterSave = false;
-        load().catch(() => {});
-      }
     }
   }
-  function persist() {
-    if (!selected.value) return;
-    pending.add(selected.value.id);
-    flush();
-  }
-  function change(fn) {
-    if (!selected.value || conflict.value) return;
-    fn(selected.value.state);
-    persist();
-  }
   async function add(map) {
-    error.value = '';
     try {
       const result = await addSessionMap(uuid, map.id);
       maps.value.push(result);
       selectedID.value = result.id;
+      error.value = "";
       return true;
     } catch (cause) {
       error.value = cause.message;
@@ -114,7 +83,7 @@ export function useSessionMaps(uuid) {
     }
   }
   async function remove(id) {
-    if (saving.value || pending.size) return false;
+    if (busy()) return false;
     try {
       await deleteSessionMap(uuid, id);
       await load(true);
@@ -127,26 +96,21 @@ export function useSessionMaps(uuid) {
   async function updateDisplay(patch) {
     if (displaySaving.value || !display.value) return;
     displaySaving.value = true;
-    error.value = '';
+    error.value = "";
     try {
-      display.value = await saveMapDisplay(uuid, { ...clone(display.value), ...patch });
+      display.value = await saveMapDisplay(uuid, {
+        ...clone(display.value),
+        ...patch,
+      });
     } catch (cause) {
       error.value = cause.message;
-      if (cause.status === 409) conflict.value = true;
+      conflict.value = cause.status === 409;
     } finally {
       displaySaving.value = false;
     }
   }
-  function unload(event) {
-    if (pending.size || saving.value) {
-      event.preventDefault();
-      event.returnValue = '';
-    }
-  }
-  window.addEventListener('beforeunload', unload);
   onBeforeUnmount(() => {
     stopped = true;
-    window.removeEventListener('beforeunload', unload);
   });
   return {
     maps,
@@ -161,13 +125,10 @@ export function useSessionMaps(uuid) {
     editing,
     connected,
     load,
-    flush,
-    retry: () => (pending.size ? flush() : load().catch(() => {})),
-    persist,
-    change,
+    write,
+    working,
     add,
     remove,
     updateDisplay,
-    hasPending: () => pending.size > 0 || saving.value,
   };
 }
