@@ -44,11 +44,11 @@
       15000,
       100000
     ],
-    "basis": "459988 source triangles,22999484B originalUNS(highNLnotavailable). Measured104.930x104.970mm3x3,max92.663mm,mountcenter[-.006,-.273]mm,sourceimmutable. Floorfieldalignment bare2rot270 bestY-.25,Z+.112mm; grass/masonryreference translatedY-.27,Z+.1. Ownuppergrassfield83..94mm,1.6mm depth,norm.4; ochre wall andlargefloorrockvolume protectgrass. Nine actuallower/rock points via rayfrom40mm,E centres17.548/25.165/29.126mm. No slots/hasDecorfalse,Ebit4. PDF36palette. Test65k/24k colour1024/2048,data1024/512,UV16bit .35/.15,stripunusedColours. Rejectsbrownfoliage frombaregrassNN mismatch/oldcliffdomain:ownlowergrass directheightcolour;cliffX40+,highbodyZ32+,measuredfootrock31..42x/-40..-20y/20..34z. DirectraypickedhighbarelipZ86.49..88.35 protectedperpixelbelow88.6mm. FinalbasepixelstoneboxX31..54,Z18..33 protectsverticalwallroot whilepreservingmeasuredfloorgrassX23.76/25.91,Z17.13/18.36. Rejectsartificiallightbaseband fromgenericTopRGB inpixelbox; topstone/basebox sharebodyochreRGB, lighting/noise/AO supplyvariation."
+    "basis": "453112 triangles,22655684B reviewedNL HighWall filename(alias117), stablecanonicalHighWall1 identity. Same sculpt asinitialUNS with medianZ-.1008mm,100%surfacewithin.06mmaftershift, footprint104.944x104.983mm3x3,max92.562mm,centre[-.000526,-.272844]. Materiallimitsandmeasuredboxes movedZ-.1008mm,datum9.75unchanged. Nine lower/rockpoints from40mm,Ebit4,no slots/hasDecorfalse. Ownlowgrass anduppercapfield83..94mm;matchedochre body/pixelboxes,PDF36. Test65k/24k colour1024/2048,data1024/512,UV16bit .35/.15,stripunusedColours. Explicitnewsource update preservesUUID/definitionId/group."
   },
   "grassCoverLossMM": 0.15,
   "grassCoverFadeMM": 0.3,
-  "soilSurfaceMM": 15.3,
+  "soilSurfaceMM": 15.199200000000001,
   "grassHeightFadeMM": 0.95,
   "wallMode": "edge",
   "wallMask": 4,
@@ -118,7 +118,7 @@
     "translationMM": [
       0,
       -0.27,
-      0.1
+      -0.0007999999999999952
     ]
   },
   "masonryRegion": {
@@ -130,42 +130,42 @@
       -100,
       100
     ],
-    "minZMM": 15.2,
+    "minZMM": 15.0992,
     "anyBoundsMM": [
       [
         [
           40,
           -54,
-          15.2
+          15.0992
         ],
         [
           54,
           54,
-          94
+          93.8992
         ]
       ],
       [
         [
           -54,
           -54,
-          32
+          31.8992
         ],
         [
           54,
           54,
-          94
+          93.8992
         ]
       ],
       [
         [
           31,
           -40,
-          20
+          19.8992
         ],
         [
           42,
           -20,
-          34
+          33.8992
         ]
       ]
     ]
@@ -180,19 +180,19 @@
     0.38,
     0.215
   ],
-  "masonryTopMinZMM": 84,
+  "masonryTopMinZMM": 83.8992,
   "stoneVariation": 0.075,
   "darkenJoints": true,
   "raisedGrass": {
     "minMM": [
       32,
       -54,
-      83
+      82.8992
     ],
     "maxMM": [
       54,
       54,
-      94
+      93.8992
     ],
     "depthMM": 1.6,
     "depthFadeMM": 0.5,
@@ -204,12 +204,12 @@
         "minMM": [
           32,
           -50,
-          82
+          81.8992
         ],
         "maxMM": [
           48,
           50,
-          88.6
+          88.49919999999999
         ],
         "featherMM": 0.2
       }
@@ -236,12 +236,12 @@
       "minMM": [
         32,
         -50,
-        82
+        81.8992
       ],
       "maxMM": [
         48,
         50,
-        88.6
+        88.49919999999999
       ],
       "featherMM": 0.2
     },
@@ -249,12 +249,12 @@
       "minMM": [
         31,
         -54,
-        18
+        17.8992
       ],
       "maxMM": [
         54,
         54,
-        33
+        32.8992
       ],
       "featherMM": 0.3
     }

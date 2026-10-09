@@ -40,7 +40,9 @@ def main():
         path = original
         # This supplied NL archive swaps the shapes of 012/013; canonical UNS labels match the PDF.
         if match and code not in {'MH-012','MH-013'}:
-            variants = list(source.rglob(code + '-NL-' + name + '.stl'))
+            # 117 omits the variant number in the NL filename; keep its canonical name.
+            nl_name = 'High Wall' if code == 'MH-117' else name
+            variants = list(source.rglob(code + '-NL-' + nl_name + '.stl'))
             if len(variants) > 1:
                 variants = [p for p in variants if '(1)' not in p.parent.name]
             if variants:
