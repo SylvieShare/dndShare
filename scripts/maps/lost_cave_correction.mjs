@@ -41,7 +41,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
   for (const key of Object.keys(correction.metadata))
     if (
       !fields.has(key) ||
-      (!removeMount && ["mountDepth", "canStand"].includes(key))
+      (!removeMount && !restoreWell && ["mountDepth", "canStand"].includes(key))
     )
       throw new Error("Unexpected correction metadata: " + key);
   if (
@@ -62,10 +62,12 @@ export function correctedCaveModel(model, source, spec, explicit) {
       model.mountDepth !== source.mountDepth ||
       result.width !== 1 ||
       result.height !== 1 ||
-      result.canStand !== model.canStand ||
+      (model.sourceCode === "LC-068"
+        ? result.canStand !== false || result.placementPoints?.length !== 0
+        : result.canStand !== model.canStand ||
+          JSON.stringify(result.placementPoints) !==
+            JSON.stringify(model.placementPoints)) ||
       result.hasDecor !== true ||
-      JSON.stringify(result.placementPoints) !==
-        JSON.stringify(model.placementPoints) ||
       model.supportSlots?.length ||
       correction.rotationXDeg)
   )

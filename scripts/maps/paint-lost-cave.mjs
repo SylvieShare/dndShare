@@ -87,7 +87,8 @@ const bareReference =
   spec.crystal?.wallReference ??
   spec.bones?.reference ??
   spec.mushrooms?.wallReference ??
-  spec.treasure?.wallReference;
+  spec.treasure?.wallReference ??
+  spec.rope?.wallReference;
 if (bareReference) {
   const base = path.resolve(
     import.meta.dirname,
@@ -247,7 +248,7 @@ for (const tier of ["render", "lod"]) {
     if (used) checkUv?.(i, p);
     const value =
       spec.material === "cave-rope"
-        ? paintCaveRope(p, n, ao[i], spec, ropeProjection)
+        ? paintCaveRope(p, n, ao[i], spec, ropeProjection, crystalWallReference)
         : spec.material === "cave-water"
           ? paintCaveWater(p, n, ao[i], spec)
           : spec.material === "cave-treasure"

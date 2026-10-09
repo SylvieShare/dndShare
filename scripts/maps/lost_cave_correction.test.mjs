@@ -74,6 +74,21 @@ test("native hollow well correction preserves standable side and rejects arbitra
   const changed = structuredClone(s);
   changed.geometryCorrection.metadata.placementPoints = [];
   assert.throws(() => correctedCaveModel(old, src, changed, true));
+  const floor = {
+    ...old,
+    sourceCode: "LC-068",
+    definitionId: "LC-068",
+    tileType: "floor",
+    hasDecor: true,
+    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.15 }],
+  };
+  const empty = structuredClone(s);
+  empty.geometryCorrection.metadata.canStand = false;
+  empty.geometryCorrection.metadata.placementPoints = [];
+  const restored = correctedCaveModel(floor, src, empty, true);
+  assert.equal(restored.model.canStand, false);
+  assert.deepEqual(restored.model.placementPoints, []);
+  assert.throws(() => correctedCaveModel(floor, src, s, true));
 });
 test("reviewed crop restoration retains logical ID and original file while correcting full object height", () => {
   const result = correctedCaveModel(model, source, spec, true);

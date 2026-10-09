@@ -38,3 +38,18 @@ test("verified source silhouettes gate hemp independently of nearby stone and me
   );
   assert.throws(() => paintCaveRope(p, [0, 0, 1], 225, s));
 });
+test("LC-068 native bare well protects stone caught inside a rope silhouette", () => {
+  const s = specs["LC-068"],
+    p = [10, 8, 24];
+  assert.throws(() => paintCaveRope(p, [0, 0, 1], 225, s, () => true));
+  assert.equal(
+    paintCaveRope(p, [0, 0, 1], 225, s, () => true, { distanceAt: () => 0.05 })
+      .part,
+    "rock",
+  );
+  assert.equal(
+    paintCaveRope(p, [0, 0, 1], 225, s, () => true, { distanceAt: () => 1.5 })
+      .part,
+    "rope",
+  );
+});

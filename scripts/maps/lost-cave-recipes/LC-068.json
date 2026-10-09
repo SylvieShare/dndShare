@@ -1,0 +1,207 @@
+{
+  "sourceName": "Well Ground Empty",
+  "referencePage": 10,
+  "material": "cave-rope",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 4.5],
+    "lodMiB": [0.6, 1.8],
+    "shadowKiB": [45, 130],
+    "previewKiB": [20, 160],
+    "basis": "400012-triangle1x1 standalone hollow stone well with braided rope and floor coil;60k/22k preserve the cavity and strands;2048/1024 source rebake and two KTX2 budgets."
+  },
+  "notes": "Author page10 Well Ground Empty. Native centre cavity falls to cropped0mm, neighbours.817/4.839/0/3.764mm; old synthetic cap at5.25791mm gave false centre standing point. Preserve UUID8cdcfb7f-fd1e-5599-b5af-fc8a08720cbf,groupLC-well-ground,source/cut11.5,mount.150226,1x1,no slots; remove false centre point and canStandfalse. External native mount fitted after decimation; cavity preserved. Measure rope around rim and coil in three source-depth views with own paths. Native LC-066 bare well distance field protects unchanged stone lip, shell and pebbles inside projected rope silhouettes. Both source coordinate systems align without translation; match.2mm preserves the rope raised above stone.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-well-ground",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "rope": {
+    "colour": [0.58, 0.46, 0.23],
+    "roughness": 0.83,
+    "paths": [
+      [
+        [8.4, 8.1, 25.5],
+        [7.7, 7.3, 23.8],
+        [6.4, 7.6, 23.1],
+        [5, 8, 20],
+        [3.1, 10.3, 18.6],
+        [2, 9.6, 16.8],
+        [0.9, 8.8, 15.4]
+      ],
+      [
+        [9.4, 9.9, 26.2],
+        [9.5, 11.2, 24.9],
+        [10.3, 11.4, 22.7],
+        [9.5, 10.4, 19.4],
+        [9.5, 11.1, 17.2],
+        [11, 11.4, 15.8],
+        [12.7, 10, 16],
+        [14.3, 9, 16],
+        [15, 11.2, 16],
+        [13.7, 13.5, 16],
+        [11.5, 13.3, 16]
+      ]
+    ],
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "toleranceMM": 0.4,
+        "polygons": [
+          [
+            [675, 350],
+            [680, 330],
+            [690, 320],
+            [705, 307],
+            [718, 297],
+            [739, 293],
+            [758, 298],
+            [774, 310],
+            [780, 329],
+            [774, 351],
+            [759, 369],
+            [749, 372],
+            [744, 356],
+            [750, 347],
+            [759, 333],
+            [750, 318],
+            [735, 316],
+            [719, 326],
+            [708, 342],
+            [697, 350],
+            [686, 366],
+            [678, 385],
+            [664, 396],
+            [657, 388],
+            [660, 371],
+            [665, 355]
+          ]
+        ]
+      },
+      {
+        "name": "outside",
+        "toleranceMM": 0.4,
+        "polygons": [
+          [
+            [465, 445],
+            [475, 444],
+            [489, 455],
+            [501, 466],
+            [507, 480],
+            [501, 498],
+            [493, 517],
+            [489, 540],
+            [490, 561],
+            [501, 581],
+            [501, 602],
+            [497, 618],
+            [483, 636],
+            [471, 649],
+            [449, 654],
+            [421, 649],
+            [396, 641],
+            [381, 628],
+            [379, 613],
+            [386, 601],
+            [397, 592],
+            [410, 588],
+            [418, 594],
+            [409, 606],
+            [399, 615],
+            [402, 627],
+            [421, 631],
+            [443, 630],
+            [459, 618],
+            [470, 603],
+            [472, 586],
+            [468, 566],
+            [467, 545],
+            [472, 523],
+            [477, 503],
+            [474, 486],
+            [463, 475]
+          ]
+        ]
+      },
+      {
+        "name": "top",
+        "toleranceMM": 0.4,
+        "polygons": [
+          [
+            [653, 339],
+            [647, 350],
+            [638, 359],
+            [630, 373],
+            [619, 389],
+            [607, 399],
+            [594, 398],
+            [591, 389],
+            [603, 378],
+            [612, 365],
+            [623, 352],
+            [633, 342],
+            [642, 338]
+          ],
+          [
+            [678, 312],
+            [686, 296],
+            [702, 281],
+            [723, 273],
+            [746, 274],
+            [766, 281],
+            [781, 296],
+            [787, 315],
+            [784, 333],
+            [776, 350],
+            [764, 359],
+            [752, 354],
+            [757, 340],
+            [767, 328],
+            [768, 309],
+            [756, 293],
+            [739, 288],
+            [721, 291],
+            [709, 302],
+            [706, 317],
+            [698, 329],
+            [685, 328]
+          ]
+        ]
+      }
+    ],
+    "floorClearanceMM": 0.25,
+    "wallReference": {
+      "code": "LC-066",
+      "sourceSHA256": "62a79539e9b13d38082c5e33465db37de643519ffc3ca8294ecf2af86130cae7",
+      "matchMM": 0.2
+    }
+  },
+  "geometryCorrection": {
+    "mode": "restore-native-well",
+    "sourceSHA256": "1aafc541643a39ba3e8cdaccc495c243b323fbc8bbc2b94597b3b98b37a659eb",
+    "previousCutHeightMM": 11.5,
+    "cutHeightMM": 11.5,
+    "reason": "Restore the original LC-068 hollow well below mounting level: centre reaches0mm and neighbour rays.817..4.839mm but legacy solid peg capped them at5.25791mm and fabricated a centre standing point. Preserve the cavity, clip only outer mount and remove false standing metadata.",
+    "metadata": {
+      "hasDecor": true,
+      "canStand": false,
+      "maxHeight": 0.7589800153459821,
+      "placementPoints": []
+    }
+  }
+}

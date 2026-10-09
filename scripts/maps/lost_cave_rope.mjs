@@ -29,10 +29,17 @@ export function ropeAxisAt(p, paths) {
   if (!best) throw new Error("Measured rope paths required");
   return best;
 }
-export function paintCaveRope(p, n, ao, spec, projection) {
+export function paintCaveRope(p, n, ao, spec, projection, reference) {
   if (!projection)
     throw new Error("Reviewed source-depth rope contours required");
-  if (p[2] <= spec.floorHeightMM + spec.rope.floorClearanceMM || !projection(p))
+  if (spec.rope.wallReference && !reference)
+    throw new Error("Verified native bare-well reference required");
+  if (
+    (spec.rope.wallReference &&
+      reference.distanceAt(p) <= spec.rope.wallReference.matchMM) ||
+    p[2] <= spec.floorHeightMM + spec.rope.floorClearanceMM ||
+    !projection(p)
+  )
     return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
   const axis = ropeAxisAt(p, spec.rope.paths);
   const coarse = surfaceNoise(...p.map((v) => v * 1.3));
