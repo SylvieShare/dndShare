@@ -448,11 +448,7 @@ if (mode !== "publish") {
     throw Error(
       "Manifest validation failed: " + validation.stdout + validation.stderr,
     );
-  run(
-    "go",
-    ["run", "./cmd/map-model-upload", "-assets", packet, "-workers", "1"],
-    "upload",
-  );
+  node("upload-toxic-sewer.mjs", [packet], "upload");
   const fresh = path.join(base, "registry-after.json");
   await snapshot(fresh);
   node(
