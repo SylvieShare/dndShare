@@ -49,6 +49,10 @@ export function mushroomPartAt(p, n, spec, projectedPart, wallReference) {
       1
   )
     return "blue";
+  if (m.shelvesPriority) {
+    const shelf = (m.shelves ?? []).find((v) => inside(p, v));
+    if (shelf) return shelf.part ?? "shelf";
+  }
   if (m.stalks.some((v) => v.profile === "cylinder" && inside(p, v)))
     return "stalk";
   if (m.disc && p[2] >= m.disc.minZ && inside(p, m.disc))
@@ -69,15 +73,18 @@ export function mushroomPartAt(p, n, spec, projectedPart, wallReference) {
       1
   )
     return "honeycomb";
-  if (m.cap) {
+  const caps =
+    m.caps ??
+    (m.cap ? [{ ...m.cap, minZ: m.capFloorMM, maxZ: m.capMaxZ }] : []);
+  for (const cap of caps) {
     const capXY =
-      ((p[0] - m.cap.centre[0]) / m.cap.radius[0]) ** 2 +
-      ((p[1] - m.cap.centre[1]) / m.cap.radius[1]) ** 2;
+      ((p[0] - cap.centre[0]) / cap.radius[0]) ** 2 +
+      ((p[1] - cap.centre[1]) / cap.radius[1]) ** 2;
     if (
       capXY <= 1 &&
-      p[2] >= m.capFloorMM &&
-      (m.cap.xMax === undefined || p[0] <= m.cap.xMax) &&
-      (m.capMaxZ === undefined || p[2] <= m.capMaxZ)
+      p[2] >= cap.minZ &&
+      (cap.xMax === undefined || p[0] <= cap.xMax) &&
+      (cap.maxZ === undefined || p[2] <= cap.maxZ)
     )
       return n[2] < -0.3 ? "gills" : "cap";
   }

@@ -1,0 +1,204 @@
+{
+  "sourceName": "Mushrooms Corner",
+  "referencePage": 8,
+  "material": "cave-mushrooms",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.2, 5.5],
+    "lodMiB": [0.8, 2.3],
+    "shadowKiB": [45, 150],
+    "previewKiB": [10, 180],
+    "basis": "479984-triangle1x1 corner with tall porous blue cap, two red caps with sculpted spots, ivory fluted stalks, two shelf mushrooms and red buds.65k/22k preserve pores and rims;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page8: blue-to-violet porous cap, red caps with ivory sculpted spots, ivory stalks, yellow shelves and red buds on brown corner. Actual source has two red caps; preserve both. LC-006 matches structural -2.6376/10.5027/36.3831 within.10885mm whereas LC-003 differs.8559mm and LC-0012.0964mm. Blue surfaces4.5547/-8.6097/45.4667 and5.1603/-11.9411/33.392; red cap tops-9.0683/4.4148/28.8386 and-2.9677/-10.9402/29.0302; stalks-11.8391/4.3813/19.0771 and-3.7429/-14.8412/23.3413. Shelf points-12.5392/-7.8016/16.6551 and9.6489/-10.2986/16.883. Bud surfaces-13.7853/2.0273/16.1131,-4.4858/-15.3404/17.0548,1.6512/-15.2638/17.0833. Preserve UUID0daba58d-ad01-5136-9d8b-ac24c1cae841, definitionIdLC-056, codeLC-mushrooms-corner, original source/cut11.5, mount.149957, footprint, wallMask1 and standing point. Shelf masks take priority over overlapping cylindrical stalk envelopes; buds use measured full domes. Spot centres must be measured in the prepared mesh preview, because its retained mounting peg changes the source-only framing. Top review includes remaining rear and lateral sculpted warts; twenty measured volume samples cover all visible spots of the two caps.",
+  "groupCode": "LC-mushrooms-corner",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "mushrooms": {
+    "palette": {
+      "cap": [0.8, 0.235, 0.055],
+      "bud": [0.74, 0.18, 0.035],
+      "wart": [0.9, 0.825, 0.7],
+      "stalk": [0.64, 0.555, 0.405],
+      "gills": [0.72, 0.625, 0.44],
+      "shelf": [0.8, 0.64, 0.2],
+      "blueLow": [0.085, 0.48, 0.78],
+      "blueHigh": [0.48, 0.25, 0.72]
+    },
+    "blue": {
+      "centre": [6, -4],
+      "radius": [10, 11],
+      "minZ": 29.5,
+      "maxZ": 50.92,
+      "lowXMax": 20
+    },
+    "caps": [
+      {
+        "centre": [-9.3, 4.8, 0],
+        "radius": [7, 7, 1],
+        "minZ": 23.4,
+        "maxZ": 30.2
+      },
+      {
+        "centre": [-2.8, -8.8, 0],
+        "radius": [7.5, 7.1, 1],
+        "minZ": 23.8,
+        "maxZ": 29.6
+      }
+    ],
+    "warts": [
+      {
+        "centre": [-11.8474, 8.432, 28.3811],
+        "radius": [0.9, 0.9, 0.9]
+      },
+      {
+        "centre": [-11.646, 3.9627, 29.12],
+        "radius": [1.1, 1.1, 1.1]
+      },
+      {
+        "centre": [-14.4233, 5.3539, 27.8683],
+        "radius": [0.85, 0.85, 0.85]
+      },
+      {
+        "centre": [-7.3264, 5.3703, 28.6671],
+        "radius": [1.0, 1.0, 1.0]
+      },
+      {
+        "centre": [-8.4755, 8.4671, 28.1873],
+        "radius": [0.65, 0.65, 0.65]
+      },
+      {
+        "centre": [-6.8931, 2.8524, 27.6623],
+        "radius": [0.75, 0.75, 0.75]
+      },
+      {
+        "centre": [-5.1756, -8.4802, 28.5137],
+        "radius": [0.8, 0.8, 0.8]
+      },
+      {
+        "centre": [-3.3089, -11.719, 28.615],
+        "radius": [1.2, 1.2, 1.2]
+      },
+      {
+        "centre": [-2.2065, -14.6096, 25.9617],
+        "radius": [0.7, 0.7, 0.7]
+      },
+      {
+        "centre": [0.4049, -13.0212, 27.1055],
+        "radius": [0.8, 0.8, 0.8]
+      },
+      {
+        "centre": [1.8941, -7.4736, 27.0513],
+        "radius": [0.7, 0.7, 0.7]
+      },
+      {
+        "centre": [-1.6945, -6.3848, 28.8165],
+        "radius": [0.85, 0.85, 0.85]
+      },
+      {
+        "centre": [-1.5761, -7.8063, 28.464],
+        "radius": [0.65, 0.65, 0.65]
+      },
+      {
+        "centre": [-13.8133, 6.3516, 28.221],
+        "radius": [0.75, 0.75, 0.75]
+      },
+      {
+        "centre": [-11.7461, 5.2534, 29.0347],
+        "radius": [1.1, 1.1, 1.1]
+      },
+      {
+        "centre": [-9.4753, 6.8, 28.6332],
+        "radius": [0.85, 0.85, 0.85]
+      },
+      {
+        "centre": [-8.4502, 3.075, 28.6589],
+        "radius": [0.9, 0.9, 0.9]
+      },
+      {
+        "centre": [-1.4139, -9.0209, 28.9772],
+        "radius": [1.0, 1.0, 1.0]
+      },
+      {
+        "centre": [-0.4192, -10.9112, 28.4093],
+        "radius": [0.8, 0.8, 0.8]
+      },
+      {
+        "centre": [0.5036, -12.6096, 27.4191],
+        "radius": [0.75, 0.75, 0.75]
+      }
+    ],
+    "stalks": [
+      {
+        "profile": "cylinder",
+        "centre": [-9.1, 4.5, 0],
+        "radius": [4.4, 4.5, 1],
+        "zRange": [14.8, 23.4]
+      },
+      {
+        "profile": "cylinder",
+        "centre": [-2.8, -9.3, 0],
+        "radius": [4.6, 5.5, 1],
+        "zRange": [14.8, 23.8]
+      },
+      {
+        "profile": "cylinder",
+        "centre": [6, -4, 0],
+        "radius": [5.9, 6.1, 1],
+        "zRange": [14.8, 29.5]
+      }
+    ],
+    "shelves": [
+      {
+        "centre": [-11, -8, 16.5],
+        "radius": [7.5, 7.5, 3],
+        "part": "shelf"
+      },
+      {
+        "centre": [10, -8, 16.2],
+        "radius": [5.8, 7.5, 3],
+        "part": "shelf"
+      }
+    ],
+    "buds": [
+      {
+        "centre": [-12, 3.3, 15],
+        "radius": [3.2, 3.2, 3.2],
+        "minZ": 14.0
+      },
+      {
+        "centre": [-3.4, -13.3, 15],
+        "radius": [3.8, 3.8, 3.8],
+        "minZ": 14.0
+      },
+      {
+        "centre": [2.5, -13.5, 15],
+        "radius": [3.7, 3.7, 3.7],
+        "minZ": 14.0
+      }
+    ],
+    "budsPriority": true,
+    "wallReference": {
+      "code": "LC-006",
+      "sourceSHA256": "66cb174f298b21ad6cae6ea68e3d6b31f1f210ff798cde9d58c4b1c6cc18e8ef",
+      "matchMM": 0.35
+    },
+    "shelvesPriority": true
+  }
+}

@@ -146,3 +146,27 @@ test("porous orange wall fungus stays separate from its red neighbour and bare w
   assert(value.rgb[0] > value.rgb[1] && value.rgb[1] > value.rgb[2]);
   assert.equal(value.metallic, 0);
 });
+
+test("corner preserves two separate red caps, their undersides and original stone beside the blue fungus", () => {
+  const s = specs["LC-056"];
+  assert.equal(mushroomPartAt([-12.9395, 1.415, 27.0246], [0, 0, 1], s), "cap");
+  assert.equal(
+    mushroomPartAt([-6.0463, -12.391, 26.3964], [0, 0, 1], s),
+    "cap",
+  );
+  assert.equal(mushroomPartAt([-12.9395, 1.415, 24.5], [0, 0, -1], s), "gills");
+  assert.equal(
+    mushroomPartAt([8.3864, -9.4523, 17.199], [0, 0, 1], s),
+    "shelf",
+  );
+  assert.equal(
+    mushroomPartAt([5.1603, -11.9411, 33.392], [0, 0, 1], s),
+    "blue",
+  );
+  assert.equal(
+    mushroomPartAt([-2.6376, 10.5027, 36.3831], [0, 0, 1], s, undefined, {
+      distanceAt: () => 0.10885,
+    }),
+    "rock",
+  );
+});
