@@ -1,0 +1,1101 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 80000,
+  "lodTriangles": 30000,
+  "tileType": "wall-straight",
+  "hasDecor": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "medium",
+    "outdoor",
+    "xl",
+    "water",
+    "shore",
+    "river",
+    "corridor",
+    "wood",
+    "branches",
+    "arch",
+    "overhang"
+  ],
+  "recipe": "majestic-medium-river-corridor-branches-v1",
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3400000,
+      6200000
+    ],
+    "targetLODBytes": [
+      1100000,
+      2700000
+    ],
+    "targetShadowBytes": [
+      70000,
+      155000
+    ],
+    "targetPreviewBytes": [
+      18000,
+      100000
+    ],
+    "basis": "767942 source triangles,38397184B NL. Base104.96x105.01mm3x3,max101.087mm. E/Wcliffs anddeadbranch canopy, seven under-canopy lowerpoints viaZ25 rays,twoEcentresexcluded,noslots/hasDecortrue. Bare104 guideforwater/woodandcap field, lowwater71.60% agreement withmedian+.016mm; restorationpolygon handleswavevariation. Wood shape/11 directionalsegments and3 uprightendrings from94 shiftedZ-.115mm; forceabove68.085mm beyondcliff, preserveWoodinwater. Sixwetstonecaps,two boundedshore17.5mm/pixelrestore. Ochrecliffs,darkbrownwood,turquoise,graywetstone,olivegrass PDF32. Test80k/30k colour1024/2048,data1024/512,UV16bit .35/.15,stripunusedColours. Allnew highrockprojections above17mm paintedstone acrossfootprint; capgrass/wood overrides remain, lowbanks preserved. Three additional measuredlower wetrockcaps via directraypicks around15.7,-2.1;19,-13.3;21.8,-24, at17..19mm; forcepixelcaps removesgreeninterpolation."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 68,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [
+        0.014286,
+        0.0
+      ],
+      [
+        0.1,
+        0.214286
+      ],
+      [
+        0.271429,
+        0.5
+      ],
+      [
+        0.314286,
+        0.928571
+      ],
+      [
+        0.471429,
+        1.5
+      ],
+      [
+        0.485714,
+        2.071429
+      ],
+      [
+        0.3,
+        2.5
+      ],
+      [
+        0.2,
+        2.785714
+      ],
+      [
+        0.014286,
+        3.0
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2.985714,
+        0.0
+      ],
+      [
+        2.828571,
+        0.214286
+      ],
+      [
+        2.542857,
+        0.5
+      ],
+      [
+        2.357143,
+        0.928571
+      ],
+      [
+        2.257143,
+        1.5
+      ],
+      [
+        2.342857,
+        2.071429
+      ],
+      [
+        2.485714,
+        2.5
+      ],
+      [
+        2.642857,
+        2.785714
+      ],
+      [
+        2.942857,
+        3.0
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        0
+      ]
+    ]
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "y": [
+      -54,
+      54
+    ],
+    "minZMM": 17
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.62,
+    0.46,
+    0.27
+  ],
+  "masonryTopMinZMM": 58,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      55
+    ],
+    "maxMM": [
+      54,
+      54,
+      69
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "exclusions": [
+      {
+        "minMM": [
+          -46,
+          -45,
+          61.5
+        ],
+        "maxMM": [
+          -34,
+          43,
+          63.85
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "centreMM": [
+          45.7,
+          -16.5,
+          67.375
+        ],
+        "radiiMM": [
+          3.5,
+          4,
+          2.5
+        ],
+        "minZMM": 66.575
+      },
+      {
+        "centreMM": [
+          39.3,
+          -32.5,
+          64.415
+        ],
+        "radiiMM": [
+          3.2,
+          3.5,
+          2.2
+        ],
+        "minZMM": 63.61500000000001
+      },
+      {
+        "centreMM": [
+          -43,
+          -19.5,
+          65.096
+        ],
+        "radiiMM": [
+          3.6,
+          3.4,
+          2.2
+        ],
+        "minZMM": 64.296
+      },
+      {
+        "centreMM": [
+          -47,
+          23,
+          66.217
+        ],
+        "radiiMM": [
+          3,
+          3,
+          2
+        ],
+        "minZMM": 65.417
+      },
+      {
+        "centreMM": [
+          44,
+          -22.5,
+          64.391
+        ],
+        "radiiMM": [
+          3.2,
+          3.6,
+          2.0
+        ],
+        "minZMM": 63.59100000000001
+      }
+    ],
+    "fieldCode": "MH-104"
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "water": {
+    "reference": "MH-104",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.16,
+    "minZMM": 10.05,
+    "lowZMM": 11.5,
+    "highZMM": 14.1,
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        10
+      ],
+      [
+        54,
+        54,
+        14.4
+      ]
+    ],
+    "deepRGB": [
+      0.035,
+      0.28,
+      0.33
+    ],
+    "shallowRGB": [
+      0.14,
+      0.56,
+      0.58
+    ],
+    "crestRGB": [
+      0.52,
+      0.78,
+      0.74
+    ],
+    "roughness": 0.4,
+    "stones": [
+      {
+        "centreMM": [
+          -19,
+          -42,
+          14.5
+        ],
+        "radiiMM": [
+          5,
+          5,
+          4
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.45,
+          0.46,
+          0.405
+        ],
+        "forceAboveMM": 13.86
+      },
+      {
+        "centreMM": [
+          -10,
+          -24,
+          16.3
+        ],
+        "radiiMM": [
+          9,
+          9,
+          6
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "forceAboveMM": 15.65
+      },
+      {
+        "centreMM": [
+          -9,
+          34,
+          14.6
+        ],
+        "radiiMM": [
+          5,
+          5,
+          4
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.455,
+          0.46,
+          0.41
+        ],
+        "forceAboveMM": 13.15
+      },
+      {
+        "centreMM": [
+          -4,
+          40,
+          15.5
+        ],
+        "radiiMM": [
+          8,
+          8,
+          5
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.435,
+          0.45,
+          0.4
+        ],
+        "forceAboveMM": 14.95
+      },
+      {
+        "centreMM": [
+          -32.4,
+          6.9,
+          14.0
+        ],
+        "radiiMM": [
+          3.3,
+          3.3,
+          3.3
+        ],
+        "minZMM": 13.0,
+        "rgb": [
+          0.425,
+          0.44,
+          0.395
+        ],
+        "forceAboveMM": 13.68
+      },
+      {
+        "centreMM": [
+          -22.93,
+          25.47,
+          15.77
+        ],
+        "radiiMM": [
+          3.8,
+          3.8,
+          3.8
+        ],
+        "minZMM": 13.0,
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "forceAboveMM": 15.52
+      },
+      {
+        "centreMM": [
+          15.7,
+          -2.1,
+          18.4
+        ],
+        "radiiMM": [
+          10,
+          10,
+          7
+        ],
+        "minZMM": 14.7,
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "forceAboveMM": 16.4,
+        "waterRestoreMaxZMM": 14.1
+      },
+      {
+        "centreMM": [
+          19,
+          -13.3,
+          18.1
+        ],
+        "radiiMM": [
+          10,
+          10,
+          7
+        ],
+        "minZMM": 14.7,
+        "rgb": [
+          0.43,
+          0.45,
+          0.395
+        ],
+        "forceAboveMM": 16.4,
+        "waterRestoreMaxZMM": 14.1
+      },
+      {
+        "centreMM": [
+          21.8,
+          -24,
+          18.5
+        ],
+        "radiiMM": [
+          10,
+          10,
+          7
+        ],
+        "minZMM": 14.7,
+        "rgb": [
+          0.44,
+          0.455,
+          0.4
+        ],
+        "forceAboveMM": 16.4,
+        "waterRestoreMaxZMM": 14.1
+      }
+    ],
+    "banks": [],
+    "restoreLowWaterAroundStonesMM": 14.3,
+    "shorelines": [
+      {
+        "pointsMM": [
+          [
+            -33,
+            -54
+          ],
+          [
+            -33,
+            -36
+          ],
+          [
+            -30,
+            -25
+          ],
+          [
+            -24,
+            -14
+          ],
+          [
+            -26,
+            -5
+          ],
+          [
+            -28,
+            6
+          ],
+          [
+            -31,
+            26
+          ],
+          [
+            -35,
+            45
+          ],
+          [
+            -35,
+            54
+          ]
+        ],
+        "stoneWidthMM": 6,
+        "landwardWidthMM": 2.5,
+        "waterRestoreWidthMM": 11,
+        "waterRestoreMaxZMM": 14.3,
+        "minZMM": 12.3,
+        "rgb": [
+          0.415,
+          0.435,
+          0.39
+        ],
+        "maxZMM": 17.5,
+        "heightFadeMM": 0.5
+      },
+      {
+        "pointsMM": [
+          [
+            34,
+            54
+          ],
+          [
+            31,
+            35
+          ],
+          [
+            29,
+            27
+          ],
+          [
+            31,
+            10
+          ],
+          [
+            26,
+            -10
+          ],
+          [
+            30,
+            -32
+          ],
+          [
+            35,
+            -54
+          ]
+        ],
+        "stoneWidthMM": 6,
+        "landwardWidthMM": 2.5,
+        "waterRestoreWidthMM": 11,
+        "waterRestoreMaxZMM": 14.3,
+        "minZMM": 12.3,
+        "rgb": [
+          0.415,
+          0.435,
+          0.39
+        ],
+        "maxZMM": 17.5,
+        "heightFadeMM": 0.5
+      }
+    ],
+    "lowWaterDomain": {
+      "pointsMM": [
+        [
+          -33,
+          -54
+        ],
+        [
+          -33,
+          -36
+        ],
+        [
+          -30,
+          -25
+        ],
+        [
+          -24,
+          -14
+        ],
+        [
+          -26,
+          -5
+        ],
+        [
+          -28,
+          6
+        ],
+        [
+          -31,
+          26
+        ],
+        [
+          -35,
+          45
+        ],
+        [
+          -35,
+          54
+        ],
+        [
+          34,
+          54
+        ],
+        [
+          31,
+          35
+        ],
+        [
+          29,
+          27
+        ],
+        [
+          31,
+          10
+        ],
+        [
+          26,
+          -10
+        ],
+        [
+          30,
+          -32
+        ],
+        [
+          35,
+          -54
+        ]
+      ],
+      "maxZMM": 14.3,
+      "featherMM": 0.5
+    },
+    "normalMin": -0.2,
+    "normalFade": 0.2,
+    "clipToLowWaterDomain": true,
+    "preserveWood": true
+  },
+  "blockedCells": [
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.5,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 15.2
+    },
+    {
+      "axis": "X",
+      "coordinateMM": -52.5,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 15.2
+    }
+  ],
+  "renderUVAngleLimitRad": 0.35,
+  "stripAuxiliaryColours": true,
+  "woodMinZMM": 52.885,
+  "woodDirection": [
+    1,
+    0,
+    0
+  ],
+  "woodRGB": [
+    0.365,
+    0.255,
+    0.14
+  ],
+  "woodOnlyParts": true,
+  "woodPixelEnds": true,
+  "woodParts": [
+    {
+      "minMM": [
+        -54,
+        -22,
+        52.885
+      ],
+      "maxMM": [
+        54,
+        35,
+        103.885
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "rgb": [
+        0.365,
+        0.255,
+        0.14
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -22,
+        68.08500000000001
+      ],
+      "maxMM": [
+        54,
+        35,
+        103.885
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "rgb": [
+        0.365,
+        0.255,
+        0.14
+      ],
+      "forceWood": true
+    }
+  ],
+  "woodSegments": [
+    {
+      "fromMM": [
+        -50,
+        17,
+        73.885
+      ],
+      "toMM": [
+        -25,
+        13,
+        69.885
+      ],
+      "radiusMM": 10,
+      "rgb": [
+        0.38,
+        0.27,
+        0.15
+      ],
+      "endCentreMM": [
+        -50,
+        17,
+        73.885
+      ]
+    },
+    {
+      "fromMM": [
+        -25,
+        13,
+        69.885
+      ],
+      "toMM": [
+        0,
+        16,
+        69.885
+      ],
+      "radiusMM": 10,
+      "rgb": [
+        0.38,
+        0.27,
+        0.15
+      ],
+      "endCentreMM": [
+        -25,
+        13,
+        69.885
+      ]
+    },
+    {
+      "fromMM": [
+        0,
+        16,
+        69.885
+      ],
+      "toMM": [
+        28,
+        17,
+        68.885
+      ],
+      "radiusMM": 10,
+      "rgb": [
+        0.38,
+        0.27,
+        0.15
+      ],
+      "endCentreMM": [
+        0,
+        16,
+        69.885
+      ]
+    },
+    {
+      "fromMM": [
+        28,
+        17,
+        68.885
+      ],
+      "toMM": [
+        48,
+        19,
+        70.885
+      ],
+      "radiusMM": 10,
+      "rgb": [
+        0.38,
+        0.27,
+        0.15
+      ],
+      "endCentreMM": [
+        28,
+        17,
+        68.885
+      ]
+    },
+    {
+      "fromMM": [
+        -50,
+        -8,
+        73.885
+      ],
+      "toMM": [
+        -25,
+        -7,
+        66.885
+      ],
+      "radiusMM": 11,
+      "rgb": [
+        0.335,
+        0.225,
+        0.115
+      ],
+      "endCentreMM": [
+        -50,
+        -8,
+        73.885
+      ]
+    },
+    {
+      "fromMM": [
+        -25,
+        -7,
+        66.885
+      ],
+      "toMM": [
+        -5,
+        -6,
+        66.885
+      ],
+      "radiusMM": 11,
+      "rgb": [
+        0.335,
+        0.225,
+        0.115
+      ],
+      "endCentreMM": [
+        -25,
+        -7,
+        66.885
+      ]
+    },
+    {
+      "fromMM": [
+        -5,
+        -6,
+        66.885
+      ],
+      "toMM": [
+        20,
+        -3,
+        74.885
+      ],
+      "radiusMM": 11,
+      "rgb": [
+        0.335,
+        0.225,
+        0.115
+      ],
+      "endCentreMM": [
+        -5,
+        -6,
+        66.885
+      ]
+    },
+    {
+      "fromMM": [
+        20,
+        -3,
+        74.885
+      ],
+      "toMM": [
+        48,
+        -4,
+        68.885
+      ],
+      "radiusMM": 11,
+      "rgb": [
+        0.335,
+        0.225,
+        0.115
+      ],
+      "endCentreMM": [
+        20,
+        -3,
+        74.885
+      ]
+    },
+    {
+      "fromMM": [
+        -12,
+        0,
+        67.885
+      ],
+      "toMM": [
+        10,
+        -6,
+        59.885
+      ],
+      "radiusMM": 7,
+      "rgb": [
+        0.395,
+        0.28,
+        0.16
+      ],
+      "endCentreMM": [
+        -12,
+        0,
+        67.885
+      ]
+    },
+    {
+      "fromMM": [
+        10,
+        -6,
+        59.885
+      ],
+      "toMM": [
+        35,
+        -17,
+        60.885
+      ],
+      "radiusMM": 7,
+      "rgb": [
+        0.395,
+        0.28,
+        0.16
+      ],
+      "endCentreMM": [
+        10,
+        -6,
+        59.885
+      ]
+    },
+    {
+      "fromMM": [
+        35,
+        -17,
+        60.885
+      ],
+      "toMM": [
+        47,
+        -22,
+        64.885
+      ],
+      "radiusMM": 7,
+      "rgb": [
+        0.395,
+        0.28,
+        0.16
+      ],
+      "endCentreMM": [
+        35,
+        -17,
+        60.885
+      ]
+    },
+    {
+      "fromMM": [
+        34,
+        14.5,
+        84.885
+      ],
+      "toMM": [
+        34,
+        14.5,
+        101.885
+      ],
+      "radiusMM": 4.5,
+      "rgb": [
+        0.395,
+        0.28,
+        0.16
+      ],
+      "endCentreMM": [
+        34,
+        14.5,
+        101.08500000000001
+      ]
+    },
+    {
+      "fromMM": [
+        17,
+        -3,
+        79.885
+      ],
+      "toMM": [
+        17,
+        -3,
+        99.885
+      ],
+      "radiusMM": 4.5,
+      "rgb": [
+        0.38,
+        0.265,
+        0.145
+      ],
+      "endCentreMM": [
+        17,
+        -3,
+        99.385
+      ]
+    },
+    {
+      "fromMM": [
+        -16.5,
+        6.5,
+        74.885
+      ],
+      "toMM": [
+        -16.5,
+        6.5,
+        84.885
+      ],
+      "radiusMM": 3.5,
+      "rgb": [
+        0.38,
+        0.265,
+        0.145
+      ],
+      "endCentreMM": [
+        -16.5,
+        6.5,
+        84.485
+      ]
+    }
+  ],
+  "woodReference": {
+    "code": "MH-104",
+    "rotateZ": 0,
+    "matchMM": 0.18,
+    "blendMM": 0.2
+  }
+}
