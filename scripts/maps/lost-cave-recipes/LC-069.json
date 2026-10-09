@@ -1,0 +1,50 @@
+{
+  "sourceName": "Big Rock 1",
+  "referencePage": 10,
+  "material": "cave-platform",
+  "floorHeightMM": 14.6474,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.7, 4.3],
+    "lodMiB": [0.6, 1.8],
+    "shadowKiB": [35, 110],
+    "previewKiB": [20, 150],
+    "basis": "339842-triangle1x1 low layered natural stone platform.50k/18k retain top texture relief and slab strata;2048/1024 source bake, two KTX2 candidates."
+  },
+  "notes": "Author page10 Big Rock1: brown natural layered stone with a dusty flat upper cut, not timber or brick. Source top measured-6.1274/2.5429/26.428,-1.8278/2.0973/26.5698,1.0305/4.1115/26.3512,8.6684/3.1699/26.6317 and1.5745/-11.273/26.4539, upward. Side6.9311/-11.8045/24.1507 and edge11.1671/-8.6085/26.3024; floor15.0893/-10.2409/14.6474 protected from platform mask. Subtle top/side palette distinction, geological strata and source-derived recesses, no painted lighting. Preserve UUIDf92044dc-a6f7-5288-ba7d-176d6f22e5d6,source/cut11.5,familyLC-big-rock,mount.14774,1x1,point.760256 and no slots. Top and side tones blend continuously by actual height and surface tilt; no hard.6 normal cutoff affects colour or roughness, preventing triangle-shaped edge patches. The root fades into the surrounding floor. Both ETC1S budgets were rejected after PNG comparison: broad flat top acquired green/pink colour patches. UASTC sRGB colour preserves smooth natural stone; normal/ORM remains UASTC linear. Record additional bytes instead of publishing flat-surface colour artifacts.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-big-rock",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "platform": {
+    "centre": [0, 0],
+    "radiusMM": 14.5,
+    "minHeightMM": 15.2,
+    "topMinHeightMM": 25.5,
+    "topTint": [0.49, 0.37, 0.25],
+    "sideTint": [0.42, 0.325, 0.235]
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "8e560915d5e77831879564880cfff9ab7281da2f669de4025f7e2cb90df29080",
+    "mountDepthMM": 5.1709000000000005,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections measure26.16mm at.05mm,26.93mm at.5,30.37mm at2.5,32.96mm at4 and34.95mm at5.1709;35mm above6. Preserve native depth and fit one centred cell pyramid."
+  },
+  "albedoCodec": "uastc"
+}
