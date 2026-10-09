@@ -1,0 +1,105 @@
+{
+  "sourceName": "Mine Wall 1",
+  "referencePage": 11,
+  "material": "cave-mine",
+  "floorHeightMM": 14.7064,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.2, 5.2],
+    "lodMiB": [0.7, 2],
+    "shadowKiB": [45, 130],
+    "previewKiB": [20, 150],
+    "basis": "439866-triangle1x1 mine wall with two wooden posts, diagonal braces, floor sleepers and fragmented grey-green stone.65k/22k protect timber grain, triangular brace windows and rubble;2048/1024 source rebake and two texture budgets."
+  },
+  "notes": "Author page11 Mine Wall1: warm timber posts/braces and grey-green rock wall/rubble over brown dirt floor. No visible metal heads on this sculpt; both sides reviewed, carved knots remain wood. Native postx-13.3519/y-17.5003/z33.5124 andx-10.5052/y12.9272/z35.1129, inner edge-11.4318/11.8447/27.3445. Brace-7.6095/-16.5515/26.7632,-3.9023/-15.8266/22.7805,-2.3149/13.7521/20.3099,.0451/13.7533/17.803. Sleeper8.7178/13.8908/15.2374; floor2.6111/6.1317/14.7064 stays brown, wall-11.1439/2.5431/23.1131 is stone. Preserve UUID7a679c6d-22ac-561b-aa32-b3bb9e063cac,source/cut11.5,familyLC-mine-wall,mount.1503,1x1,wallMask160,point.419706,no slots. UV.3rad rejected by strict physical-overlap check: two surfaces.206mm apart shared a pixel. Repack at.2rad and rebake before material work; do not relax.1mm overlap tolerance. Native underside planes at-6.6328/13.7722/22.5218,-3.8484/13.7687/19.8522,-1.9059/13.7637/18.1089 and-1.6739/-17.0801/17.4054 measure lower brace thickness. Centre shifted toZ22 atX-4, halfDepth1.8 and length20.9 cover both broad faces and end joints; window rubble remains stone. End face-10.0416/15.6264/30.7075 has local axial extent10.472mm, so measured brace length21.1mm covers the complete end without changing geometry. Last native broad-edge probes-7.0467/13.7613/22.3607 and-2.6679/13.7683/17.7982 lie1.96mm/1.93mm below the measured brace axis. HalfDepth2.2mm covers real edge and sampling margin; stone within windows remains excluded by cross-member coordinates. Upper end probes-10.1607/15.4358/30.7692 and-10.363/15.6039/31.0968 measure axial extent10.975mm; final length22.3mm retains full native cap and joint. ETC1S at2048/1024 and1536/768 produced cyan/brown thin chart seams, compact worse. AtUV.2rad small islands cannot safely downsample colour. Compare full2048/1024 UASTC albedo with two normal/ORM budgets, retain actual material boundaries rather than colour speckles.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-mine-wall",
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [0.5, 0.31, 0.145],
+    "postTint": [0.45, 0.275, 0.125]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
+  },
+  "mine": {
+    "stoneMinHeightMM": 14.95,
+    "members": [
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-14, -14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.6,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "brace",
+        "axis": "x",
+        "direction": [1, 0, -1.05],
+        "centre": [-4, -15.625, 22],
+        "length": 22.3,
+        "halfWidth": 1.97,
+        "halfDepth": 2.2
+      },
+      {
+        "name": "sleeper",
+        "axis": "x",
+        "centre": [-2.8, -15.5, 14.85],
+        "length": 25.8,
+        "halfWidth": 2.1,
+        "halfDepth": 1.25
+      },
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-14, 14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.6,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "brace",
+        "axis": "x",
+        "direction": [1, 0, -1.05],
+        "centre": [-4, 15.625, 22],
+        "length": 22.3,
+        "halfWidth": 1.97,
+        "halfDepth": 2.2
+      },
+      {
+        "name": "sleeper",
+        "axis": "x",
+        "centre": [-2.8, 15.5, 14.85],
+        "length": 25.8,
+        "halfWidth": 2.1,
+        "halfDepth": 1.25
+      }
+    ],
+    "bolts": []
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "d088f8702e0304c4397bdcee77cf08d713c31e52cdb385dc63326164ae05e8eb",
+    "mountDepthMM": 5.2604999999999995,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections 0.0500mm:25.99/25.98, 0.5000mm:26.75/26.74, 2.5000mm:30.19/30.18, 4.0000mm:32.78/32.76, 5.2605mm:34.93/34.92, 6.0000mm:35.00/34.99 confirm one cell; preserve datum and fit one centred pyramid."
+  },
+  "albedoCodec": "uastc"
+}

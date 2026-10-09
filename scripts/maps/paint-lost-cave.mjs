@@ -15,6 +15,7 @@ import {
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { paintCaveWater } from "./lost_cave_water.mjs";
 import { paintCavePlatform } from "./lost_cave_platform.mjs";
+import { paintCaveMine } from "./lost_cave_mine.mjs";
 import { paintCaveRope } from "./lost_cave_rope.mjs";
 import { paintCaveTreasure } from "./lost_cave_treasure.mjs";
 import { paintScaffoldingRamp } from "./lost_cave_scaffolding_ramp.mjs";
@@ -51,6 +52,7 @@ if (
     "cave-water",
     "cave-rope",
     "cave-platform",
+    "cave-mine",
     "cave-stalagmites",
     "cave-railway",
     "cave-crystal",
@@ -205,6 +207,7 @@ for (const tier of ["render", "lod"]) {
   let pixels = 0;
   const counts = {
     rock: 0,
+    ...(spec.material === "cave-mine" ? { wood: 0, iron: 0, boulder: 0 } : {}),
     ...(spec.material === "cave-water" ? { water: 0 } : {}),
     ...(spec.material === "cave-rope" ? { rope: 0 } : {}),
     ...(spec.material === "cave-platform"
@@ -252,83 +255,85 @@ for (const tier of ["render", "lod"]) {
   const paintPixel = (i, p, n, used = true) => {
     if (used) checkUv?.(i, p);
     const value =
-      spec.material === "cave-platform"
-        ? paintCavePlatform(p, n, ao[i], spec)
-        : spec.material === "cave-rope"
-          ? paintCaveRope(
-              p,
-              n,
-              ao[i],
-              spec,
-              ropeProjection,
-              crystalWallReference,
-            )
-          : spec.material === "cave-water"
-            ? paintCaveWater(p, n, ao[i], spec)
-            : spec.material === "cave-treasure"
-              ? paintCaveTreasure(
-                  p,
-                  n,
-                  ao[i],
-                  spec,
-                  crystalWallReference,
-                  treasureProjection,
-                )
-              : spec.material === "cave-scaffolding-ramp"
-                ? paintScaffoldingRamp(p, n, ao[i], spec)
-                : spec.material === "cave-scaffolding"
-                  ? paintScaffolding(p, n, ao[i], spec)
-                  : spec.material === "cave-cut-stone"
-                    ? paintCutStone(p, n, ao[i], spec)
-                    : spec.material === "cave-mushrooms"
-                      ? paintMushrooms(
-                          p,
-                          n,
-                          ao[i],
-                          spec,
-                          mushroomProjection,
-                          crystalWallReference,
-                        )
-                      : spec.material === "cave-bones"
-                        ? paintCaveBones(
+      spec.material === "cave-mine"
+        ? paintCaveMine(p, n, ao[i], spec)
+        : spec.material === "cave-platform"
+          ? paintCavePlatform(p, n, ao[i], spec)
+          : spec.material === "cave-rope"
+            ? paintCaveRope(
+                p,
+                n,
+                ao[i],
+                spec,
+                ropeProjection,
+                crystalWallReference,
+              )
+            : spec.material === "cave-water"
+              ? paintCaveWater(p, n, ao[i], spec)
+              : spec.material === "cave-treasure"
+                ? paintCaveTreasure(
+                    p,
+                    n,
+                    ao[i],
+                    spec,
+                    crystalWallReference,
+                    treasureProjection,
+                  )
+                : spec.material === "cave-scaffolding-ramp"
+                  ? paintScaffoldingRamp(p, n, ao[i], spec)
+                  : spec.material === "cave-scaffolding"
+                    ? paintScaffolding(p, n, ao[i], spec)
+                    : spec.material === "cave-cut-stone"
+                      ? paintCutStone(p, n, ao[i], spec)
+                      : spec.material === "cave-mushrooms"
+                        ? paintMushrooms(
                             p,
                             n,
                             ao[i],
                             spec,
+                            mushroomProjection,
                             crystalWallReference,
                           )
-                        : spec.material === "cave-crystal-ground"
-                          ? paintCrystalGround(
+                        : spec.material === "cave-bones"
+                          ? paintCaveBones(
                               p,
                               n,
                               ao[i],
                               spec,
                               crystalWallReference,
                             )
-                          : spec.material === "cave-boulders"
-                            ? paintBoulderGround(p, n, ao[i], spec)
-                            : spec.material === "cave-wagon-track"
-                              ? paintWagonOnTrack(
-                                  p,
-                                  n,
-                                  ao[i],
-                                  spec,
-                                  wagonReference,
-                                )
-                              : spec.material === "cave-wagon"
-                                ? paintWagon(p, n, ao[i], spec)
-                                : spec.material === "cave-crystal"
-                                  ? paintCrystal(p, n, ao[i], spec)
-                                  : spec.material === "cave-railway"
-                                    ? paintRailway(p, n, ao[i], spec)
-                                    : spec.material === "cave-stalagmites"
-                                      ? paintStalagmites(p, n, ao[i], spec)
-                                      : caveRockPixel(
-                                          p,
-                                          n,
-                                          ao[i],
-                                          report.materialSpec,
-                                        );
+                          : spec.material === "cave-crystal-ground"
+                            ? paintCrystalGround(
+                                p,
+                                n,
+                                ao[i],
+                                spec,
+                                crystalWallReference,
+                              )
+                            : spec.material === "cave-boulders"
+                              ? paintBoulderGround(p, n, ao[i], spec)
+                              : spec.material === "cave-wagon-track"
+                                ? paintWagonOnTrack(
+                                    p,
+                                    n,
+                                    ao[i],
+                                    spec,
+                                    wagonReference,
+                                  )
+                                : spec.material === "cave-wagon"
+                                  ? paintWagon(p, n, ao[i], spec)
+                                  : spec.material === "cave-crystal"
+                                    ? paintCrystal(p, n, ao[i], spec)
+                                    : spec.material === "cave-railway"
+                                      ? paintRailway(p, n, ao[i], spec)
+                                      : spec.material === "cave-stalagmites"
+                                        ? paintStalagmites(p, n, ao[i], spec)
+                                        : caveRockPixel(
+                                            p,
+                                            n,
+                                            ao[i],
+                                            report.materialSpec,
+                                          );
     if (spec.floorHeightProfileMM && value.part === "rock")
       darkenCaveFloorJoints(value, p, spec);
     if (used) counts[value.part]++;
