@@ -1,0 +1,43 @@
+{
+  "sourceName": "Level",
+  "referencePage": 9,
+  "material": "cave-cut-stone",
+  "floorHeightMM": 13.49,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.6, 4.8],
+    "lodMiB": [0.5, 1.8],
+    "shadowKiB": [25, 110],
+    "previewKiB": [10, 140],
+    "basis": "439974-triangle1x1 stone frame with rough outer walls, four planar inner faces, thin uneven rim and intact upper socket.40k/14k preserve cavity, lip and floor;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page9: warm fractured outer stone, darker smooth cut inner walls and floor; no wood or metal. Native inner faces atY13.4991/Z18.5035 and24.937, X13.4998/Z20.9457 and13.5003/Z17.3007 point inward; floor2.9218/3.8516/13.4742. Outer16.0326/-17.5008/22.6648 remains rough rock. Preserve UUIDc3c707ca-b095-5dd1-a22c-48f1c2c4d501, LC-060/LC-level, original source/cut11.5, mount.146989, frame1x1, inner placement point.385453 and upper support slot.830654. Verify open socket and actual mounting peg clearance before publication. Smooth native inner planes use geometry normals to avoid circular source-bake shading patches; outer stone keeps its rebaked relief. Socket cross-sections are preserved. Legacy LC-001 single-taper insertion peg expands before the socket upper bevel and overlaps by about.8mm; repair legacy peg profiles before completing the collection, not the native socket. Both ETC1S budgets introduce visibly mottled colour blocks on the smooth lining; compare a UASTC colour atlas at compact dimensions, keeping sRGB and mipmaps.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-level",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "cutStone": {
+    "innerHalfMM": 13.5,
+    "floorMM": 13.49,
+    "topMM": 29.0729,
+    "tint": [0.435, 0.305, 0.195],
+    "roughness": 0.81,
+    "normalMode": "geometry"
+  },
+  "albedoCodec": "uastc"
+}

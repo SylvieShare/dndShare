@@ -22,6 +22,8 @@ const directory = path.dirname(path.resolve(file)),
 if (report.model.collection !== "lost-cave" || !report.weightBudget)
   throw new Error("One measured Lost Cave report required");
 const normalMinZ = report.materialSpec.normalMinZ ?? 0.01;
+if (!["etc1s", "uastc"].includes(report.materialSpec.albedoCodec ?? "etc1s"))
+  throw new Error("Unsupported reviewed albedo codec");
 const sizes = caveTexturePlan(report.materialSpec, name);
 if (!Number.isFinite(normalMinZ) || normalMinZ < 0.01 || normalMinZ > 0.2)
   throw new Error("Reviewed normal minimum Z must be between0.01 and0.2");
@@ -130,7 +132,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
       "--threads",
       "6",
     ];
-    if (slot === "BaseColor")
+    if (slot === "BaseColor" && report.materialSpec.albedoCodec !== "uastc")
       flags.push("--encode", "etc1s", "--qlevel", "255", "--clevel", "3");
     else
       flags.push(
@@ -139,7 +141,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
         "--uastc_quality",
         "3",
         "--uastc_rdo_l",
-        slot === "Normal" ? "0.35" : "1",
+        slot === "Normal" ? "0.35" : slot === "BaseColor" ? "0.1" : "1",
         "--zcmp",
         "18",
       );
