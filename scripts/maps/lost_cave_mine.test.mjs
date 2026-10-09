@@ -42,6 +42,24 @@ test("mine posts, inclined braces and horizontal sleepers follow their own measu
     "boulder",
   );
 });
+test("LC-077 has its measured wide corner and rotated third post without wood across the floor", () => {
+  const s = specs["LC-077"];
+  for (const p of [
+    [-9.553, 8.5663, 35.5645],
+    [-11.0698, 8.2044, 30.0959],
+    [-8.1097, 8.9127, 17.9714],
+    [14.3122, 10.8465, 36.4705],
+    [11.0472, 12.2549, 20.245],
+    [-7.8305, 10.0744, 30.3393],
+    [-7.8325, 10.3176, 22.3513],
+  ])
+    assert.equal(minePartAt(p, [1, 0, 0], s).part, "wood");
+  assert.equal(
+    minePartAt([6.1674, -6.0248, 14.707], [0, 0, 1], s).part,
+    "rock",
+  );
+  assert.equal(minePartAt([0, 12, 25], [0, -1, 0], s).part, "boulder");
+});
 test("LC-076 tool shafts follow measured axes and stay separate from iron working faces", () => {
   const s = specs["LC-076"];
   for (const p of [

@@ -1,0 +1,95 @@
+{
+  "sourceName": "Mine Angle 1",
+  "referencePage": 11,
+  "material": "cave-mine",
+  "floorHeightMM": 14.707,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.4, 6.3],
+    "lodMiB": [0.8, 2.2],
+    "shadowKiB": [45, 130],
+    "previewKiB": [20, 160],
+    "basis": "499930-triangle1x1 angle mine wall with two stone walls, two end posts and a wider joined corner post.65k/22k preserve wood knots and stone;2048/1024 source bake, full UASTC colour and two data budgets."
+  },
+  "notes": "Author page11 Mine Angle1: warm structural timber and grey-green wall/rubble over brown dirt floor. End post-14.552/-17.4741/31.4101 and-11.9205/-17.499/24.5546. Joined inner corner has native fronts-11.0698/8.2044/30.0959,-9.553/8.5663/35.5645,-8.1097/8.9127/17.9714; use two overlapping vertical timber bands rather than generic straight-wall box. Rotated third post14.3122/10.8465/36.4705,17.0601/10.8961/27.0029,11.0472/12.2549/20.245 and16.5777/10.502/15.5567. Floor6.1674/-6.0248/14.707 stays brown. No metal heads, braces or added tools. Preserve UUID05ea0af8-60fb-568d-b643-1ba034347441,source/cut11.5,familyLC-mine-angle,mount.14988,1x1,point.429465,no slots. Native knot/front points-9.553/8.5663/35.5645 and-8.1097/8.9127/17.9714 require a narrow corner inner-front band; rotated post inner edge11.0472/12.2549/20.245 sets XhalfWidth3.55mm, without filling adjacent wall with timber. Native inner post planeX-7.8305 atY10.0744/Z30.3393 andX-7.8325/Y10.3176/Z22.3513 requires the narrow inner-front band to extend toX-7.68,Y7.85..11.35; this covers the true timber plane, not the neighbouring wall.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-mine-angle",
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [0.5, 0.31, 0.145],
+    "postTint": [0.45, 0.275, 0.125]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
+  },
+  "mine": {
+    "stoneMinHeightMM": 14.95,
+    "members": [
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-13.95, -14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "corner-post-x",
+        "axis": "z",
+        "centre": [-14, 13, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 4.85
+      },
+      {
+        "name": "corner-post-y",
+        "axis": "z",
+        "centre": [-11, 14, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.1,
+        "halfDepth": 3.7
+      },
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [14.5, 14, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.55,
+        "halfDepth": 3.7
+      },
+      {
+        "name": "corner-inner-front",
+        "axis": "z",
+        "centre": [-9.8, 9.6, 26.7],
+        "length": 25.8,
+        "halfWidth": 2.12,
+        "halfDepth": 1.75
+      }
+    ],
+    "bolts": []
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "5f7a63236a8bf13c31eb06bb519292974edaa82f0de8eae3c8d169ff177b0922",
+    "mountDepthMM": 5.245800000000001,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections 0.0500mm:25.99/26.00, 0.5000mm:26.75/26.74, 2.5000mm:30.19/30.18, 4.0000mm:32.78/32.76, 5.2458mm:34.91/34.90, 6.0000mm:35.00/34.99 confirm one centred cell; preserve datum and fit pyramid."
+  },
+  "albedoCodec": "uastc"
+}
