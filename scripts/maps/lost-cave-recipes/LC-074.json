@@ -1,0 +1,71 @@
+{
+  "sourceName": "Mine Wall 2",
+  "referencePage": 11,
+  "material": "cave-mine",
+  "floorHeightMM": 14.7131,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 55000,
+  "lodTriangles": 19000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 5.8],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [35, 115],
+    "previewKiB": [20, 150],
+    "basis": "399864-triangle1x1 mine wall with two timber posts and no braces/sleepers.55k/19k protect knot relief and grey-green fragmented stone;2048/1024 source bake. Full UASTC colour justified by LC-073 chart-boundary comparison; two normal/ORM budgets."
+  },
+  "notes": "Author page11 Mine Wall2: two warm timber posts, grey-green stone wall/rubble and brown dirt floor; no braces, sleepers or metal heads. Native post-13.6013/-17.4991/32.816,-13.7175/-17.4538/18.8201,-11.3257/-17.4983/24.2847,-11.4243/11.9548/37.9101,-10.4228/13.6511/27.1278,-11.0725/11.6938/19.5546. Adjacent rock-8.2425/11.9858/15.5519 remains stone; floor.6955/6.5774/14.9388 and13.4288/-5.2006/14.5502 remain brown. Wood knots remain wood with vertical fibres and end grain. Preserve UUID1b3dcafc-47df-5c14-bbd4-1e276cede5e5,source/cut11.5,familyLC-mine-wall,mount.149746,1x1,point.420373,no slots. UV.2 and full colour atlas prevent known mine chart seams; compare own two data budgets.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-mine-wall",
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [0.5, 0.31, 0.145],
+    "postTint": [0.45, 0.275, 0.125]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
+  },
+  "mine": {
+    "stoneMinHeightMM": 14.95,
+    "members": [
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-13.95, -14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "post",
+        "axis": "z",
+        "centre": [-13.95, 14.5, 26.7],
+        "length": 25.8,
+        "halfWidth": 3.7,
+        "halfDepth": 3.1
+      }
+    ],
+    "bolts": []
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "64c4965acd9c37b3507047c03199bdae5c07d4647f060ed67cc93506a59b9929",
+    "mountDepthMM": 5.24111,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections 0.0500mm:25.99/26.00, 0.5000mm:26.76/26.75, 2.5000mm:30.20/30.19, 4.0000mm:32.79/32.77, 5.2411mm:34.92/34.90, 6.0000mm:35.00/34.99 confirm one centred cell; preserve datum and fit pyramid."
+  },
+  "albedoCodec": "uastc"
+}

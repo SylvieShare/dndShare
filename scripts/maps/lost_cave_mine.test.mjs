@@ -55,3 +55,22 @@ test("mine stone and brown floor stay separate without fictitious metal at woode
   assert.equal(wood.metallic, 0);
   assert.equal(wood.part, "wood");
 });
+test("LC-074 contains only measured posts, leaving the missing braces as stone or floor", () => {
+  const s = specs["LC-074"];
+  assert.equal(s.mine.members.length, 2);
+  for (const p of [
+    [-13.6013, -17.4991, 32.816],
+    [-10.4228, 13.6511, 27.1278],
+    [-11.0725, 11.6938, 19.5546],
+  ])
+    assert.equal(minePartAt(p, [1, 0, 0], s).member?.name, "post");
+  assert.equal(
+    minePartAt([-8.2425, 11.9858, 15.5519], [0, 0, 1], s).part,
+    "boulder",
+  );
+  assert.equal(
+    minePartAt([0.6955, 6.5774, 14.9388], [0, 0, 1], s).part,
+    "rock",
+  );
+  assert.equal(minePartAt([-3, 15.5, 22], [0, 1, 0], s).part, "boulder");
+});
