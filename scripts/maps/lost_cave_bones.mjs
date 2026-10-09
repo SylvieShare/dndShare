@@ -1,6 +1,7 @@
 import { finishBone } from "./bone_finish.mjs";
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
+import { scaffoldMemberAt } from "./scaffold_member_geometry.mjs";
 
 function inPolygon([x, y], polygon) {
   let inside = false;
@@ -47,6 +48,14 @@ function polygonDistance(p, polygon) {
   );
 }
 function caveBoneWeight(p, spec, reference, normal) {
+  if (
+    spec.bones.projectedVolumes &&
+    !spec.bones.projectedVolumes.some((v) =>
+      p.every((x, i) => x >= v.min[i] && x <= v.max[i]),
+    ) &&
+    !scaffoldMemberAt(p, spec.bones.projectedMembers || [])
+  )
+    return 0;
   if (!reference && !spec.bones.regionsOnly)
     throw new Error(
       "Verified bare source or individually measured bone regions required",

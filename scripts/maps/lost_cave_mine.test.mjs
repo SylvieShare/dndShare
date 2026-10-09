@@ -42,6 +42,43 @@ test("mine posts, inclined braces and horizontal sleepers follow their own measu
     "boulder",
   );
 });
+test("LC-078 bone silhouettes apply aged nonmetal ivory while mine stone keeps its own palette", () => {
+  const s = specs["LC-078"],
+    p = [-6.4403, 7.255, 29.218];
+  const b = paintCaveMine(p, [0, 0, 1], 230, s, {
+    projectedBoneAt: () => true,
+  });
+  assert.equal(b.part, "bone");
+  assert.equal(b.metallic, 0);
+  assert(b.rgb[0] > b.rgb[2]);
+  const stone = paintCaveMine([0, 8, 25], [0, -1, 0], 230, s, {
+    projectedBoneAt: () => false,
+  });
+  assert.equal(stone.part, "boulder");
+  assert(stone.rgb[1] > stone.rgb[0]);
+  const old = paintCaveMine([-5, -7.6, 18.5], [0, 0, 1], 210, s, {
+    projectedBoneAt: () => true,
+  });
+  assert.notDeepEqual(b.rgb, old.rgb);
+  assert.equal(
+    paintCaveMine([-9.5, 9, 37], [1, 0, 0], 230, s, {
+      projectedBoneAt: () => true,
+    }).part,
+    "wood",
+  );
+  assert.equal(
+    paintCaveMine([-7.7837, 0.6482, 24.8024], [0, 0, 1], 230, s, {
+      projectedBoneAt: () => true,
+    }).part,
+    "bone",
+  );
+  assert.equal(
+    paintCaveMine([-7.8653, 5.4464, 25.8514], [0, 0, 1], 230, s, {
+      projectedBoneAt: () => true,
+    }).part,
+    "boulder",
+  );
+});
 test("LC-077 has its measured wide corner and rotated third post without wood across the floor", () => {
   const s = specs["LC-077"];
   for (const p of [

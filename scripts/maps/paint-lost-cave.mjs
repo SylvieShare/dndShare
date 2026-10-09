@@ -237,7 +237,13 @@ for (const tier of ["render", "lod"]) {
   const counts = {
     rock: 0,
     ...(spec.material === "cave-mine"
-      ? { wood: 0, iron: 0, boulder: 0, grip: 0 }
+      ? {
+          wood: 0,
+          iron: 0,
+          boulder: 0,
+          grip: 0,
+          ...(spec.bones ? { bone: 0 } : {}),
+        }
       : {}),
     ...(spec.material === "cave-water" ? { water: 0 } : {}),
     ...(spec.material === "cave-rope" ? { rope: 0 } : {}),
