@@ -88,6 +88,9 @@ def grass_weights(obj, recipe, code):
                 radius=np.linalg.norm((positions-np.array(area['centreMM']))/np.array(area['radiiMM']),axis=1)
                 excluded=np.clip((1-radius)/.12,0,1)*np.clip((positions[:,2]-area['minZMM'])/.35,0,1)
             cap*=1-excluded
+        if recipe.get('raisedGrassStoneSurface'):
+            from majestic_vegetation_surface import stone_surface_mask
+            cap *= 1-stone_surface_mask(obj.data, positions, recipe['raisedGrassStoneSurface'])
         attribute=obj.data.color_attributes.new('RaisedGrass','FLOAT_COLOR','POINT')
         attribute.data.foreach_set('color',np.column_stack([cap]*3+[np.ones(len(cap))]).astype(np.float32).ravel())
         weights=np.maximum(weights,cap)
