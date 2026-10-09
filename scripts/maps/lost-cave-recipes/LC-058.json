@@ -1,0 +1,48 @@
+{
+  "sourceName": "Stair",
+  "referencePage": 9,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5],
+    "lodMiB": [0.6, 2.1],
+    "shadowKiB": [35, 130],
+    "previewKiB": [10, 160],
+    "basis": "439810-triangle1x1 stepped stone stair with five irregular treads, tall broken risers and rubble.50k/18k preserve leading edges and highest landing;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page9: five warm brown stone treads with fractured risers and rubble; no separate wood or metal. Original vertical rays atX-5/0/5 show approximate tread heights18.9,23.7,28.5,34.1,39.5mm, increasing along nativeY. Dust and joint shading follow five measured plateaus with narrow transitions, rather than one flat floor. Source extremes remain native; upper and lower standing points measured atY+/-13.125. Preserve UUID24935f56-dc35-540b-b9c5-e13ec3cb7794, LC-058/LC-stair, original source/cut11.5, mount.151137, footprint1x1, canStandtrue, hasDecorfalse and both standing points.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-stair",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "floorHeightProfileMM": [
+    [-17.5, 14.735],
+    [-16.2, 14.735],
+    [-15.8, 18.9],
+    [-10.5, 18.9],
+    [-9.8, 23.7],
+    [-3.5, 23.7],
+    [-2.8, 28.5],
+    [2.5, 28.5],
+    [3.3, 34.1],
+    [9.1, 34.1],
+    [9.8, 39.5],
+    [17.5, 39.5]
+  ],
+  "textureEncoder": "toktx v4.4.2"
+}

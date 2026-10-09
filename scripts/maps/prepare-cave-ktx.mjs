@@ -60,9 +60,14 @@ candidate.optimization = {
   baseline: structuredClone(report.tiers),
   maps: [],
 };
-candidate.optimization.encoder = (
-  await run(path.join(tools, "toktx"), ["--version"])
-).stdout.trim();
+const version = await run(path.join(tools, "toktx"), ["--version"]);
+candidate.optimization.encoder = (version.stdout || version.stderr).trim();
+if (
+  !candidate.optimization.encoder ||
+  (report.materialSpec.textureEncoder &&
+    candidate.optimization.encoder !== report.materialSpec.textureEncoder)
+)
+  throw new Error("Texture encoder differs from the reviewed recipe");
 for (const [ti, tier] of ["render", "lod"].entries()) {
   const bytes = await fs.readFile(path.join(directory, tier + ".glb")),
     g = readGlb(bytes),
