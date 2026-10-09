@@ -1,0 +1,741 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 120000,
+  "lodTriangles": 45000,
+  "tileType": "wall-angle",
+  "hasDecor": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "high",
+    "outdoor",
+    "xl",
+    "earth-clearings",
+    "stepped-cap",
+    "terraces",
+    "multi-level",
+    "stepped-angle",
+    "corner",
+    "pine",
+    "forest",
+    "fern"
+  ],
+  "recipe": "majestic-high-step-angle-pines-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      4300000,
+      8600000
+    ],
+    "targetLODBytes": [
+      1600000,
+      3600000
+    ],
+    "targetShadowBytes": [
+      100000,
+      240000
+    ],
+    "targetPreviewBytes": [
+      18000,
+      100000
+    ],
+    "basis": "934622triangles,46731184B NL. Ownbase104.834x104.988mm3x3,max129.667mm due3pines,datum9.75. E+Sedge20,noslots,hasDecortrue. Threeobjectpoints from150mm:Wcentre39.970,Scentre62.151,SEcap87.632;6othersoccupiedbyfern/crown orsteeprocknormalZ.16 excluded. Bare127comparison58.900%all,72.580%low within.15mm,median+.015625. Ownsource tips tall19/10.5/129.64,second5/19.5/104.49,sapling-19.5/-8.5/86.17; pickedstem2.277/29.183/29.006,smalltree-18.613/-.944/55.468. Mainstem axis extrapolated29/-22 to19/10.5,sourceaddedbottom60..65mm median16.456/-8.623/63.973,65..70 median23.906/-8.338/67.723; bark80/48/50mm, crown35/30/11mm. Groundleaves ownNWbounds, raisedleaves SW39..52mm protectedfromstone-mask bylimitingvegetationStoneSurfaceX>=-10mm. Own130grassfield,wideclifffacet .5mm2/.2rad,vegetationbare127.3/.5distance. Separate5root/leafblockers. PDF39oliveforest/bark/ochrestone;test120k/45k,colour1024/2048,data1024/512,UV16bit.55/.15,stripauxColours. Acceptedrender colour2048 5754820B vs10245148284B,606536B extra visiblycleanerforesttips. Initial.45UV17796pixels rejectedvisualmicroisland speckling;.6UVrejected2048overlap .137mm at308/1800. Final.55UV nativecolour2048165511pixels/data102441527;allnative/finalchannels pass. LOD1024retained2341084B duringR-onlyUV changes;minorcontactmoss remains."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 16.85,
+  "grassHeightFadeMM": 1.0,
+  "wallMode": "edge",
+  "wallMask": 20,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 150,
+  "blockers": [
+    [
+      [
+        2.971429,
+        0.042857
+      ],
+      [
+        2.914286,
+        0.214286
+      ],
+      [
+        2.771429,
+        0.5
+      ],
+      [
+        2.7,
+        0.928571
+      ],
+      [
+        2.657143,
+        1.5
+      ],
+      [
+        2.4,
+        2.071429
+      ],
+      [
+        1.014286,
+        2.5
+      ],
+      [
+        0.228571,
+        2.785714
+      ],
+      [
+        0.028571,
+        2.957143
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    [
+      [
+        2.328571,
+        1.728571
+      ],
+      [
+        2.317697,
+        1.78324
+      ],
+      [
+        2.28673,
+        1.829587
+      ],
+      [
+        2.240383,
+        1.860554
+      ],
+      [
+        2.185714,
+        1.871429
+      ],
+      [
+        2.131045,
+        1.860554
+      ],
+      [
+        2.084699,
+        1.829587
+      ],
+      [
+        2.053731,
+        1.78324
+      ],
+      [
+        2.042857,
+        1.728571
+      ],
+      [
+        2.053731,
+        1.673902
+      ],
+      [
+        2.084699,
+        1.627556
+      ],
+      [
+        2.131045,
+        1.596589
+      ],
+      [
+        2.185714,
+        1.585714
+      ],
+      [
+        2.240383,
+        1.596589
+      ],
+      [
+        2.28673,
+        1.627556
+      ],
+      [
+        2.317697,
+        1.673902
+      ]
+    ],
+    [
+      [
+        1.728571,
+        0.785714
+      ],
+      [
+        1.717697,
+        0.840383
+      ],
+      [
+        1.68673,
+        0.88673
+      ],
+      [
+        1.640383,
+        0.917697
+      ],
+      [
+        1.585714,
+        0.928571
+      ],
+      [
+        1.531045,
+        0.917697
+      ],
+      [
+        1.484699,
+        0.88673
+      ],
+      [
+        1.453731,
+        0.840383
+      ],
+      [
+        1.442857,
+        0.785714
+      ],
+      [
+        1.453731,
+        0.731045
+      ],
+      [
+        1.484699,
+        0.684699
+      ],
+      [
+        1.531045,
+        0.653731
+      ],
+      [
+        1.585714,
+        0.642857
+      ],
+      [
+        1.640383,
+        0.653731
+      ],
+      [
+        1.68673,
+        0.684699
+      ],
+      [
+        1.717697,
+        0.731045
+      ]
+    ],
+    [
+      [
+        1.128571,
+        1.585714
+      ],
+      [
+        1.119872,
+        1.62945
+      ],
+      [
+        1.095098,
+        1.666526
+      ],
+      [
+        1.058021,
+        1.691301
+      ],
+      [
+        1.014286,
+        1.7
+      ],
+      [
+        0.97055,
+        1.691301
+      ],
+      [
+        0.933474,
+        1.666526
+      ],
+      [
+        0.908699,
+        1.62945
+      ],
+      [
+        0.9,
+        1.585714
+      ],
+      [
+        0.908699,
+        1.541979
+      ],
+      [
+        0.933474,
+        1.504902
+      ],
+      [
+        0.97055,
+        1.480128
+      ],
+      [
+        1.014286,
+        1.471429
+      ],
+      [
+        1.058021,
+        1.480128
+      ],
+      [
+        1.095098,
+        1.504902
+      ],
+      [
+        1.119872,
+        1.541979
+      ]
+    ],
+    [
+      [
+        0.9,
+        0.757143
+      ],
+      [
+        0.871727,
+        0.899282
+      ],
+      [
+        0.791211,
+        1.019783
+      ],
+      [
+        0.670711,
+        1.100298
+      ],
+      [
+        0.528571,
+        1.128571
+      ],
+      [
+        0.386432,
+        1.100298
+      ],
+      [
+        0.265932,
+        1.019783
+      ],
+      [
+        0.185416,
+        0.899282
+      ],
+      [
+        0.157143,
+        0.757143
+      ],
+      [
+        0.185416,
+        0.615003
+      ],
+      [
+        0.265932,
+        0.494503
+      ],
+      [
+        0.386432,
+        0.413988
+      ],
+      [
+        0.528571,
+        0.385714
+      ],
+      [
+        0.670711,
+        0.413988
+      ],
+      [
+        0.791211,
+        0.494503
+      ],
+      [
+        0.871727,
+        0.615003
+      ]
+    ],
+    [
+      [
+        0.985714,
+        2.185714
+      ],
+      [
+        0.959616,
+        2.31692
+      ],
+      [
+        0.885294,
+        2.428151
+      ],
+      [
+        0.774063,
+        2.502473
+      ],
+      [
+        0.642857,
+        2.528571
+      ],
+      [
+        0.511651,
+        2.502473
+      ],
+      [
+        0.400421,
+        2.428151
+      ],
+      [
+        0.326098,
+        2.31692
+      ],
+      [
+        0.3,
+        2.185714
+      ],
+      [
+        0.326098,
+        2.054509
+      ],
+      [
+        0.400421,
+        1.943278
+      ],
+      [
+        0.511651,
+        1.868956
+      ],
+      [
+        0.642857,
+        1.842857
+      ],
+      [
+        0.774063,
+        1.868956
+      ],
+      [
+        0.885294,
+        1.943278
+      ],
+      [
+        0.959616,
+        2.054509
+      ]
+    ]
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-003",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 19,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          19
+        ],
+        [
+          54,
+          54,
+          95
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      23
+    ],
+    "maxMM": [
+      54,
+      54,
+      95
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-130",
+    "exclusions": []
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.55,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [],
+  "blockedCells": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      0,
+      2
+    ]
+  ],
+  "soilDomains": [
+    [
+      [
+        -49,
+        47
+      ],
+      [
+        42,
+        47
+      ],
+      [
+        42,
+        38
+      ],
+      [
+        10,
+        40
+      ],
+      [
+        -12,
+        35
+      ],
+      [
+        -29,
+        19
+      ],
+      [
+        -48,
+        19
+      ]
+    ]
+  ],
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        23
+      ],
+      [
+        54,
+        54,
+        95
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.434,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 9.75
+    },
+    {
+      "axis": "Y",
+      "coordinateMM": -52.499,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 9.75
+    }
+  ],
+  "vegetationReference": {
+    "code": "MH-127",
+    "rotateZ": 0,
+    "matchMM": 0.3,
+    "blendMM": 0.5
+  },
+  "trees": [
+    {
+      "baseXY": [
+        29,
+        -22
+      ],
+      "topXY": [
+        19,
+        10.5
+      ],
+      "heightMM": 129.668,
+      "foliageRadiusMM": 35,
+      "trunkRadiusMM": 3.2,
+      "rootRadiusMM": 5,
+      "barkTopMM": 80
+    },
+    {
+      "baseXY": [
+        3,
+        25
+      ],
+      "topXY": [
+        5,
+        19.5
+      ],
+      "heightMM": 104.49,
+      "foliageRadiusMM": 30,
+      "trunkRadiusMM": 2.8,
+      "rootRadiusMM": 5,
+      "barkTopMM": 48
+    },
+    {
+      "baseXY": [
+        -15,
+        -0.5
+      ],
+      "topXY": [
+        -19.5,
+        -8.5
+      ],
+      "heightMM": 86.17,
+      "foliageRadiusMM": 11,
+      "trunkRadiusMM": 2,
+      "rootRadiusMM": 4,
+      "barkTopMM": 50
+    }
+  ],
+  "ferns": [
+    {
+      "centreMM": [
+        -34,
+        26,
+        18.8
+      ],
+      "radiiMM": [
+        23,
+        22,
+        8
+      ],
+      "minZMM": 15.3,
+      "boundsMM": [
+        [
+          -53,
+          4,
+          15.3
+        ],
+        [
+          -13,
+          47,
+          24
+        ]
+      ]
+    },
+    {
+      "centreMM": [
+        -30,
+        -24,
+        43
+      ],
+      "radiiMM": [
+        24,
+        23,
+        9
+      ],
+      "minZMM": 39,
+      "boundsMM": [
+        [
+          -53,
+          -43,
+          39
+        ],
+        [
+          -9,
+          -8,
+          52
+        ]
+      ]
+    }
+  ],
+  "vegetationStoneSurface": {
+    "boundsMM": [
+      [
+        -10,
+        -54,
+        24
+      ],
+      [
+        54,
+        54,
+        96
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  }
+}
