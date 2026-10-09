@@ -1,0 +1,416 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 90000,
+  "lodTriangles": 34000,
+  "tileType": "passage",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "high",
+    "outdoor",
+    "xl",
+    "grotto",
+    "arch",
+    "passage",
+    "tunnel",
+    "two-ended"
+  ],
+  "recipe": "majestic-high-grotto-tunnel-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3300000,
+      6800000
+    ],
+    "targetLODBytes": [
+      1100000,
+      3000000
+    ],
+    "targetShadowBytes": [
+      70000,
+      180000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "749928triangles,37496484B NL. Ownbase105.019x104.990mm3x3,max93.154mm,datum9.75. PassageE+Wedge68,hasDecorfalse,nomechanicalslots. Threegroundpoints from22 at15.393/15.250/15.459;all6N/Srowcellsinsidelegs hitbottom0negative,excluded. Sourceceilings72.756/68.561/72.731=>clearances57.363/53.312/57.272mm. Occupancyat17Yrows notmergedblindly: owninnerN/Sboundary measuredper9X columns-51,-45,-35,-20,0,20,35,45,51;N19/20.5/20.5/24/25.5/22/18.5/19/18,S-18/-19/-18.5/-22.5/-25.5/-24/-20.5/-20.5/-19. Sourcevisiblelowfloor71.404%matches134within.15mm median+.04126,notassumedidentical. Grass001rot270nearestprotectsfloorandearth;own135capfield82..96,sourcebroadstone.5mm2/.2rad. Bodyochre,inwardwalls .44/.29/.16 darkbrown,no blacktexture;bothflatE/Wouterplanes52.514/-52.509. Openingchecks3clearcrossX atY-10/0/10Z40,highcentralZ55;2solidlegcontrolsY+-35Z40 andcentralverticalroofpresentfrom25. PDF40ochre/olive/earth,retainbothmouths androof. Test90k/34k colour1024/2048,data1024/512,UV16bit.25/.15,stripauxColours. Colour2048RUV.3nativeoverlap.745mmat192/1835rejected;R-only.25re-bake atchosen2048,LODnativepreserved. FinalR5159448B colour2048 vs10244582896B,576552B extra visiblycleanerstone/grassboundaries acceptedwithinrange. NativeR2048213029colourpixels,data102452814pixels allchannels pass;L1856852B/shadow121648B. Chosen7geometryrays3tiers=21checks pass (4clear,3solidroof/jambcontrols). Smallcloseupedge speckling/contactmoss remains,LODgrasssoftens;notfullshapeprovedbyrays."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 68,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 22,
+  "blockers": [
+    [
+      [
+        0.042857,
+        0.957143
+      ],
+      [
+        0.214286,
+        0.914286
+      ],
+      [
+        0.5,
+        0.914286
+      ],
+      [
+        0.928571,
+        0.814286
+      ],
+      [
+        1.5,
+        0.771429
+      ],
+      [
+        2.071429,
+        0.871429
+      ],
+      [
+        2.5,
+        0.971429
+      ],
+      [
+        2.785714,
+        0.957143
+      ],
+      [
+        2.957143,
+        0.985714
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        0.042857,
+        2.014286
+      ],
+      [
+        0.214286,
+        2.042857
+      ],
+      [
+        0.5,
+        2.028571
+      ],
+      [
+        0.928571,
+        2.142857
+      ],
+      [
+        1.5,
+        2.228571
+      ],
+      [
+        2.071429,
+        2.185714
+      ],
+      [
+        2.5,
+        2.085714
+      ],
+      [
+        2.785714,
+        2.085714
+      ],
+      [
+        2.957143,
+        2.042857
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        0,
+        3
+      ]
+    ]
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 20,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          20
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      82
+    ],
+    "maxMM": [
+      54,
+      54,
+      96
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-135",
+    "exclusions": []
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.25,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [],
+  "blockedCells": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "grassReference": "MH-001",
+  "masonryInterior": {
+    "centreMM": [
+      0,
+      0
+    ],
+    "minZMM": 20,
+    "radiusMM": 80,
+    "rgb": [
+      0.44,
+      0.29,
+      0.16
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        82
+      ],
+      [
+        54,
+        54,
+        96
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "openingChecks": [
+    {
+      "name": "central-passage-y-10",
+      "originMM": [
+        -70,
+        -10,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "central-passage-y0",
+      "originMM": [
+        -70,
+        0,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "central-passage-y10",
+      "originMM": [
+        -70,
+        10,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "solid-support-y-35",
+      "originMM": [
+        -70,
+        -35,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "solid-support-y35",
+      "originMM": [
+        -70,
+        35,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "high-central-passage",
+      "originMM": [
+        -70,
+        0,
+        55
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "central-roof-present",
+      "originMM": [
+        0,
+        0,
+        25
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 100,
+      "clear": false
+    }
+  ],
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.514,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 9.75
+    },
+    {
+      "axis": "X",
+      "coordinateMM": -52.509,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 9.75
+    }
+  ]
+}
