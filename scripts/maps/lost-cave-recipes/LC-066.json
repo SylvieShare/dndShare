@@ -1,0 +1,46 @@
+{
+  "sourceName": "Well Ground Full",
+  "referencePage": 10,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 16000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.6, 4],
+    "lodMiB": [0.5, 1.6],
+    "shadowKiB": [30, 100],
+    "previewKiB": [15, 150],
+    "basis": "339938-triangle standalone1x1 layered well with broad water inset;45k/16k protect ring and inset;2048/1024 source bakes, two KTX2 candidates."
+  },
+  "notes": "Author page10 Well Ground Water. Source upward plane20.8773mm measured at-2.0327/-3.853,-.8839/.7704 and3.6247/.1171. Planar triangles spanX-8..9.59,Y-10.51..10.35; radius10.9017 around.8/0, mask11.15. Rim9.9802/-6.6896/24.7559,6.3687/-12.8904/24.6004,3.1179/-14.3229/23.9054 and exterior10.6534/-5.888/19.001 remain stone. Preserve UUIDef94c951-f05d-5852-a81e-f87b661ef104, source/cut11.5,familyLC-well-ground,mount.150149,1x1,centrepoint.596533,hasDecortrue,canStandtrue,no slots. Water corners use explicit upward split normals before UV/bake: the joined rim otherwise introduces a bright diagonal reflection on the calm inset; positions and faces remain unchanged. Direct source and target vertex-coordinate and face-index comparisons run around the split-normal operation and fail on any geometry mutation. Final quantized candidates compare to the identically quantized PNG baseline; raw Blender export is not compared with the3e-6 exact-quantized tolerance.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-well-ground",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "water": {
+    "colour": [0.055, 0.48, 0.425],
+    "surfaces": [
+      {
+        "heightMM": 20.8773,
+        "toleranceMM": 0.075,
+        "centre": [0.8, 0],
+        "radiusMM": 11.15
+      }
+    ],
+    "normalMode": "planar"
+  }
+}

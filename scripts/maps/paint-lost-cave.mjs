@@ -70,6 +70,14 @@ for (const field of [
 ])
   if (spec[field] !== report.materialSpec[field])
     throw new Error("Geometry recipe changed; rebake before painting");
+if (spec.water?.normalMode !== report.materialSpec.water?.normalMode)
+  throw new Error("Water normal recipe changed; rebake before painting");
+if (
+  spec.water?.normalMode === "planar" &&
+  JSON.stringify(spec.water.surfaces) !==
+    JSON.stringify(report.materialSpec.water.surfaces)
+)
+  throw new Error("Planar water geometry mask changed; rebake before painting");
 report.materialSpec = structuredClone(spec);
 let wagonReference;
 let crystalWallReference;

@@ -82,6 +82,16 @@ for (const entry of (await fs.readdir(base, { withFileTypes: true })).sort(
     await fs.link(file, path.join(out, name)).catch((e) => {
       if (e.code !== "EEXIST") throw e;
     });
+    // A previous package may have been hard-linked to a working file that
+    // was rewritten during a rebake. Never accept stale content by name.
+    const packaged = await fs.readFile(path.join(out, name));
+    if (
+      packaged.length !== bytes.length ||
+      createHash("sha256").update(packaged).digest("hex") !== sha256
+    ) {
+      await fs.unlink(path.join(out, name));
+      await fs.writeFile(path.join(out, name), bytes, { flag: "wx" });
+    }
     assets[kind] = {
       key: `map-models/${name}`,
       sha256,

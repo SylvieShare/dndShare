@@ -68,3 +68,21 @@ test("the two LC-065 cups use their own elevations and leave their rims dry", ()
   ])
     assert.equal(caveWaterAt(p, [0, 0, 1], s), undefined);
 });
+
+test("LC-066 fills its measured basin without painting the outer ring", () => {
+  const s = specs["LC-066"];
+  for (const p of [
+    [-2.0327, -3.853, 20.8773],
+    [-0.8839, 0.7704, 20.8773],
+    [3.6247, 0.1171, 20.8773],
+    [5.3827, 9.8917, 20.8774],
+  ])
+    assert(caveWaterAt(p, [0, 0, 1], s));
+  for (const p of [
+    [9.9802, -6.6896, 24.7559],
+    [6.3687, -12.8904, 24.6004],
+    [10.6534, -5.888, 19.001],
+    [12, 0, 20.8773],
+  ])
+    assert.equal(caveWaterAt(p, [0, 0, 1], s), undefined);
+});

@@ -95,6 +95,35 @@ def bake_tier(report, directory, tier):
         for obj in [source,target]:
             for face in obj.data.polygons:
                 face.use_smooth = False
+    water = report['materialSpec'].get('water', {})
+    if water.get('normalMode') == 'planar':
+        # A calm inset must not inherit the joined stone rim's smooth normals.
+        # Keep every position/face and only override measured water corners.
+        for obj in [source, target]:
+            positions_before = [tuple(v.co) for v in obj.data.vertices]
+            faces_before = [tuple(f.vertices) for f in obj.data.polygons]
+            normals = [tuple(n.vector) for n in obj.data.corner_normals]
+            water_faces = 0
+            for face in obj.data.polygons:
+                points = [obj.data.vertices[i].co for i in face.vertices]
+                for surface in water['surfaces']:
+                    cx, cy = surface['centre']
+                    if face.normal.z > .95 and all(
+                        abs(p.z-surface['heightMM']) < surface['toleranceMM']
+                        and (p.x-cx)**2+(p.y-cy)**2 < surface['radiusMM']**2
+                        for p in points
+                    ):
+                        for loop in face.loop_indices:
+                            normals[loop] = (0, 0, 1)
+                        water_faces += 1
+                        break
+            if not water_faces:
+                raise ValueError('Measured planar water faces missing')
+            obj.data.normals_split_custom_set(normals)
+            if positions_before != [tuple(v.co) for v in obj.data.vertices] or \
+                    faces_before != [tuple(f.vertices) for f in obj.data.polygons]:
+                raise ValueError('Water normal correction changed geometry')
+            print('CAVE_PLANAR_WATER_NORMALS', obj.name, water_faces, 'positions/faces unchanged', flush=True)
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
     angle_limit=report['materialSpec'].get('uvAngleLimitRad',1.4)
