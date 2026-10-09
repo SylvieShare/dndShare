@@ -1,0 +1,474 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 80000,
+  "lodTriangles": 30000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "high",
+    "outdoor",
+    "xl",
+    "earth-clearings",
+    "stepped-cap",
+    "wall-variant",
+    "terraces",
+    "stepped-wall",
+    "multi-level",
+    "water",
+    "pools",
+    "multi-height-water"
+  ],
+  "recipe": "majestic-high-step-wall-water-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      2800000,
+      6000000
+    ],
+    "targetLODBytes": [
+      900000,
+      2500000
+    ],
+    "targetShadowBytes": [
+      60000,
+      160000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "471092triangles,23554684B NL. Ownbase104.802x104.979mm3x3,max93.701mm,datum9.75. Ewall edge4,8objectpoints from110mm,centre25.278waterexcluded; noslots/hasDecorfalse. Lowerfloor99.884%matches124 within.15mm median+.0026855,usevalidatedlowsoilpolygon. Two measurednativewaterplanes25.27 and56.5mm, ownsourcefield nearlyhorizontalbbox lowerX-11..33.5,Y-10..42.5,upperX4.5..33.5,Y-45.5..-2.5; twoheightbands/XYbounds restrictblueandownlocalheightcolour. Ochrestone/shallowblue/olivepalettePDF39,waterstaticopaque. Owngrass65..96 field includesrays28.349/-4.283/68.255 and28.483/8.745/68.232;bare56.394upperwaterand30.582lowerrockborder preserved. Sourcebroadstonefacet .5mm2/.2rad toprotectgrasslip; Eback52.403mm. Test80k/30k colour1024/2048,data1024/512,UV16bit.3/.15,stripauxColours. Watercolour/roughness computedperpixelheightbands topreventlongLODtrianglevertexrockmix. Physicaldecodedregions R lower449/451blue,upper666/669blue,intermediate243/243ochre;LODlower860/862blue(previous762/862rejected),upper1258/1260blue,rock426/433ochre. ORMwater/Rstonechecks all>=.97. Selected1024R4288936B vs20484905344B,616408B incrementnotclearworkingscale gain;LOD1737256B/shadow106004B. Staticopaque water,specular upperfrontreflectskeylightwhite,otheranglesblue;minorcontactmoss."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 16.85,
+  "grassHeightFadeMM": 1.0,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 110,
+  "blockers": [
+    [
+      [
+        2.957143,
+        0.042857
+      ],
+      [
+        2.814286,
+        0.214286
+      ],
+      [
+        2.542857,
+        0.5
+      ],
+      [
+        2.357143,
+        0.928571
+      ],
+      [
+        1.857143,
+        1.5
+      ],
+      [
+        1.514286,
+        2.071429
+      ],
+      [
+        1.614286,
+        2.5
+      ],
+      [
+        1.857143,
+        2.785714
+      ],
+      [
+        2.471429,
+        2.957143
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        0
+      ]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 20,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          20
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      65
+    ],
+    "maxMM": [
+      54,
+      54,
+      96
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-131",
+    "exclusions": [
+      {
+        "minMM": [
+          32,
+          -50,
+          82
+        ],
+        "maxMM": [
+          48,
+          50,
+          88.5
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "minMM": [
+          33,
+          16,
+          89.8
+        ],
+        "maxMM": [
+          40,
+          23,
+          93
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "minMM": [
+          42,
+          -19,
+          90.9
+        ],
+        "maxMM": [
+          49,
+          -12,
+          94
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "minMM": [
+          34,
+          -37,
+          87.4
+        ],
+        "maxMM": [
+          43,
+          -28,
+          92
+        ],
+        "featherMM": 0.2
+      }
+    ]
+  },
+  "masonryBackFace": {
+    "xMM": 52.403,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 9.75
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.3,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        32,
+        -50,
+        82
+      ],
+      "maxMM": [
+        48,
+        50,
+        88.5
+      ],
+      "featherMM": 0.2
+    },
+    {
+      "minMM": [
+        33,
+        16,
+        89.8
+      ],
+      "maxMM": [
+        40,
+        23,
+        93
+      ],
+      "featherMM": 0.2
+    },
+    {
+      "minMM": [
+        42,
+        -19,
+        90.9
+      ],
+      "maxMM": [
+        49,
+        -12,
+        94
+      ],
+      "featherMM": 0.2
+    },
+    {
+      "minMM": [
+        34,
+        -37,
+        87.4
+      ],
+      "maxMM": [
+        43,
+        -28,
+        92
+      ],
+      "featherMM": 0.2
+    }
+  ],
+  "blockedCells": [
+    [
+      1,
+      1
+    ]
+  ],
+  "soilDomains": [
+    [
+      [
+        -18,
+        33
+      ],
+      [
+        5,
+        33
+      ],
+      [
+        13,
+        15
+      ],
+      [
+        22,
+        3
+      ],
+      [
+        25,
+        -10
+      ],
+      [
+        8,
+        -25
+      ],
+      [
+        -8,
+        -27
+      ],
+      [
+        -8,
+        -3
+      ]
+    ]
+  ],
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        65
+      ],
+      [
+        54,
+        54,
+        96
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "water": {
+    "reference": "MH-131",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.16,
+    "minZMM": 24.8,
+    "lowZMM": 25.1,
+    "highZMM": 57,
+    "normalMin": 0.75,
+    "normalFade": 0.2,
+    "deepRGB": [
+      0.1,
+      0.32,
+      0.46
+    ],
+    "shallowRGB": [
+      0.27,
+      0.55,
+      0.67
+    ],
+    "crestRGB": [
+      0.55,
+      0.71,
+      0.78
+    ],
+    "roughness": 0.29,
+    "surfaceBands": [
+      {
+        "minZMM": 25.03,
+        "maxZMM": 25.6,
+        "lowZMM": 25.12,
+        "highZMM": 25.52,
+        "heightFadeMM": 0.08,
+        "boundsXYMM": [
+          [
+            -14,
+            -13
+          ],
+          [
+            36,
+            45
+          ]
+        ]
+      },
+      {
+        "minZMM": 56.13,
+        "maxZMM": 56.92,
+        "lowZMM": 56.25,
+        "highZMM": 56.8,
+        "heightFadeMM": 0.1,
+        "boundsXYMM": [
+          [
+            2,
+            -47
+          ],
+          [
+            36,
+            0
+          ]
+        ]
+      }
+    ],
+    "validationAreas": [
+      {
+        "name": "lower-water",
+        "minMM": [
+          0,
+          0,
+          25.13
+        ],
+        "maxMM": [
+          16,
+          17,
+          25.45
+        ],
+        "material": "water"
+      },
+      {
+        "name": "upper-water",
+        "minMM": [
+          10,
+          -35,
+          56.35
+        ],
+        "maxMM": [
+          27,
+          -12,
+          56.75
+        ],
+        "material": "water"
+      },
+      {
+        "name": "intermediate-rock",
+        "minMM": [
+          34,
+          -35,
+          35
+        ],
+        "maxMM": [
+          49,
+          35,
+          50
+        ],
+        "material": "stone"
+      }
+    ]
+  }
+}

@@ -104,6 +104,11 @@ for (const tier of ["render", "lod"]) {
     .getRoot()
     .listMaterials()
     .find((m) => m.getBaseColorTexture());
+  const waterAreas = (recipe.water?.validationAreas ?? []).map((area) => ({
+    ...area,
+    colour: { total: 0, correct: 0 },
+    roughness: { total: 0, correct: 0 },
+  }));
   for (const [slot, texture] of [
     ["BaseColor", mat.getBaseColorTexture()],
     ["Normal", mat.getNormalTexture()],
@@ -121,6 +126,23 @@ for (const tier of ["render", "lod"]) {
       (i, position) => {
         trackSurface(i, position);
         const offset = i * info.channels;
+        if (slot === "BaseColor" || slot === "MetallicRoughness")
+          for (const area of waterAreas) {
+            if (position.some((v, k) => v < area.minMM[k] || v > area.maxMM[k]))
+              continue;
+            const channel = slot === "BaseColor" ? area.colour : area.roughness;
+            channel.total++;
+            const isWater = area.material === "water";
+            const correct =
+              slot === "BaseColor"
+                ? isWater
+                  ? data[offset + 2] > data[offset] + 15
+                  : data[offset] > data[offset + 2] + 15
+                : isWater
+                  ? data[offset + 1] < 140
+                  : data[offset + 1] > 180;
+            if (correct) channel.correct++;
+          }
         if (
           slot === "BaseColor" &&
           Math.max(data[offset], data[offset + 1], data[offset + 2]) < 4
@@ -159,6 +181,19 @@ for (const tier of ["render", "lod"]) {
       slot,
     );
   }
+  for (const area of waterAreas)
+    for (const [name, channel] of [
+      ["colour", area.colour],
+      ["roughness", area.roughness],
+    ])
+      if (
+        channel.total < (area.minPixels ?? 50) ||
+        channel.correct / channel.total < (area.minimumFraction ?? .97)
+      )
+        throw new Error(
+          `${tier} ${area.name} ${name}: ${channel.correct}/${channel.total} expected water/stone pixels`,
+        );
+  if (waterAreas.length) console.log("MAJESTIC_WATER_AREAS", code, tier, waterAreas);
   if (recipe.metallicFactor && metalPixels < 100)
     throw new Error("Reviewed iron parts lost their metallic channel");
   if (recipe.flameReference && emissivePixels < 100)

@@ -127,6 +127,10 @@ def main():
         from majestic_water import water_caps_orm
         from functools import partial
         surface_finish = partial(water_caps_orm,previous=surface_finish)
+    if recipe.get('water', {}).get('surfaceBands'):
+        from majestic_water import water_bands_orm
+        from functools import partial
+        surface_finish = partial(water_bands_orm, roughness=recipe['water'].get('roughness', .28), previous=surface_finish)
     extra_bake = None
     if recipe.get('flameReference'):
         from majestic_camp import bake_emission

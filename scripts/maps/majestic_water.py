@@ -78,6 +78,10 @@ def apply_water(obj, positions, colours, roughness, recipe):
         lo,hi=np.array(settings['boundsMM'][0]),np.array(settings['boundsMM'][1])
         weight*=np.all((positions>=lo)&(positions<=hi),axis=1)
     height=np.clip((z-settings['lowZMM'])/(settings['highZMM']-settings['lowZMM']),0,1)
+    if settings.get('surfaceBands'):
+        from water_surface_bands import water_surface_bands
+        band_weight, height = water_surface_bands(positions, settings['surfaceBands'])
+        weight *= band_weight
     low=np.array(settings['deepRGB']);high=np.array(settings['shallowRGB'])
     water=low*(1-height[:,None])+high*height[:,None]
     crest=np.clip((height-.65)/.35,0,1)*np.clip((normals[:,2]-.55)/.35,0,1)*.55
@@ -147,7 +151,56 @@ def shoreline_height_finish(nodes, links, finish, recipe, noise, wear):
     return repaired
 
 
+def water_band_finish(nodes, links, finish, recipe):
+    """Paint water per baked surface point; long LOD triangles must not mix rock into pools."""
+    settings = recipe['water']
+    def scalar(op, a, b):
+        node = nodes.new('ShaderNodeMath'); node.operation = op
+        for i, value in enumerate([a, b]):
+            if isinstance(value, (int, float)): node.inputs[i].default_value = value
+            else: links.new(value, node.inputs[i])
+        return node.outputs[0]
+    def clamp(value): return scalar('MINIMUM', scalar('MAXIMUM', value, 0), 1)
+    coords = nodes.new('ShaderNodeTexCoord'); position = nodes.new('ShaderNodeSeparateXYZ')
+    links.new(coords.outputs['Object'], position.inputs[0])
+    geometry = nodes.new('ShaderNodeNewGeometry'); normal = nodes.new('ShaderNodeSeparateXYZ')
+    links.new(geometry.outputs['True Normal'], normal.inputs[0])
+    facing = clamp(scalar('DIVIDE', scalar('SUBTRACT', normal.outputs['Z'], settings.get('normalMin', .05)), settings.get('normalFade', .2)))
+    total = 0
+    for band in settings['surfaceBands']:
+        distance = scalar('MINIMUM', scalar('SUBTRACT', position.outputs['Z'], band['minZMM']), scalar('SUBTRACT', band['maxZMM'], position.outputs['Z']))
+        weight = scalar('MULTIPLY', facing, clamp(scalar('DIVIDE', distance, band.get('heightFadeMM', .1))))
+        if band.get('boundsXYMM'):
+            for axis, lo, hi in zip('XY', *band['boundsXYMM']):
+                inside = scalar('MULTIPLY', scalar('GREATER_THAN', position.outputs[axis], lo), scalar('LESS_THAN', position.outputs[axis], hi))
+                weight = scalar('MULTIPLY', weight, inside)
+        height = clamp(scalar('DIVIDE', scalar('SUBTRACT', position.outputs['Z'], band['lowZMM']), band['highZMM']-band['lowZMM']))
+        colour = nodes.new('ShaderNodeMixRGB'); links.new(height, colour.inputs[0])
+        for index, key in [(1, 'deepRGB'), (2, 'shallowRGB')]:
+            rgb = np.array(settings[key]); linear = np.where(rgb<=.04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
+            colour.inputs[index].default_value = (*linear, 1)
+        repaired = nodes.new('ShaderNodeMixRGB'); links.new(weight, repaired.inputs[0])
+        links.new(finish.outputs[0], repaired.inputs[1]); links.new(colour.outputs[0], repaired.inputs[2]); finish = repaired
+        total = scalar('MAXIMUM', total, weight)
+    mask = nodes.new('ShaderNodeMath'); mask.name = 'Majestic Water Surface Bands'; mask.operation = 'MULTIPLY'
+    mask.inputs[1].default_value = 1; links.new(total, mask.inputs[0])
+    return finish
+
+
+def water_bands_orm(nodes, links, combine, surface, roughness, previous=None):
+    if previous: previous(nodes, links, combine, surface)
+    original = combine.inputs['Green'].links[0].from_socket
+    difference = nodes.new('ShaderNodeMath'); difference.operation = 'SUBTRACT'; difference.inputs[0].default_value = roughness
+    links.new(original, difference.inputs[1])
+    delta = nodes.new('ShaderNodeMath'); delta.operation = 'MULTIPLY'
+    links.new(difference.outputs[0], delta.inputs[0]); links.new(nodes.get('Majestic Water Surface Bands').outputs[0], delta.inputs[1])
+    result = nodes.new('ShaderNodeMath'); result.operation = 'ADD'
+    links.new(original, result.inputs[0]); links.new(delta.outputs[0], result.inputs[1]); links.new(result.outputs[0], combine.inputs['Green'])
+
+
 def water_cap_finish(nodes, links, finish, recipe):
+    if recipe['water'].get('surfaceBands'):
+        finish = water_band_finish(nodes, links, finish, recipe)
     caps=[s for s in recipe['water'].get('stones',[]) if 'forceAboveMM' in s]
     if not caps: return finish
     def scalar(op,a,b):
