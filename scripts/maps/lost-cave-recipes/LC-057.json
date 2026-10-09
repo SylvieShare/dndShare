@@ -1,0 +1,130 @@
+{
+  "sourceName": "Bridge",
+  "referencePage": 9,
+  "material": "cave-stalagmites",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 85000,
+  "lodTriangles": 30000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.7, 6.5],
+    "lodMiB": [1, 2.6],
+    "shadowKiB": [70, 200],
+    "previewKiB": [15, 190],
+    "basis": "879886-triangle1x3 stone bridge with many ringed calcite cones, coarse rubble, raised centre and open underside.85k/30k preserve thin cone tips, broad path and clearance;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page9: cracked warm brown stone bridge with amber calcite rings; no timber or rope. Source879886triangles and43.99MB. Walkway native14.0723 atY39.0564,20.0667 atY7.1918,21.1359 atY.24 and15.4485 atY-33.3385; physical floor profile follows raised centre. Twelve observed cones include a fused tall cluster; axes and heights independently measured on the original STL. Preserve UUID89917f1b-d25c-5e54-ae3e-7ce5ce537e8f, LC-057/LC-bridge, source/cut11.5, mount.149949, footprint1x3, three standing points and open bridge underside. Calcite colour excludes the bare walking slabs; floor joints darkened relative to the local curved grade.",
+  "calcite": {
+    "tint": [0.58, 0.39, 0.205],
+    "roughness": 0.78
+  },
+  "stalagmites": [
+    {
+      "x": 13.845,
+      "y": 48.0277,
+      "radius": 4.6,
+      "base": 15.3,
+      "top": 32.1179
+    },
+    {
+      "x": -9.1664,
+      "y": 20.9773,
+      "radius": 3.5,
+      "base": 17.8,
+      "top": 31.103499999999997
+    },
+    {
+      "x": -12.8353,
+      "y": 17.8143,
+      "radius": 4.6,
+      "base": 17.8,
+      "top": 35.6573
+    },
+    {
+      "x": 10.0054,
+      "y": 25.2328,
+      "radius": 3.8,
+      "base": 17.8,
+      "top": 31.6728
+    },
+    {
+      "x": 13.3701,
+      "y": 17.5505,
+      "radius": 4.0,
+      "base": 17.8,
+      "top": 31.4884
+    },
+    {
+      "x": -9.7896,
+      "y": -11.7736,
+      "radius": 4.8,
+      "base": 19.0,
+      "top": 37.7526
+    },
+    {
+      "x": 9.2195,
+      "y": -16.3657,
+      "radius": 4.8,
+      "base": 19.0,
+      "top": 37.4658
+    },
+    {
+      "x": 13,
+      "y": -11.5,
+      "radius": 3.2,
+      "base": 19.0,
+      "top": 30.65
+    },
+    {
+      "x": 12.9,
+      "y": -15.2,
+      "radius": 3.7,
+      "base": 19.0,
+      "top": 35.449999999999996
+    },
+    {
+      "x": 12.2689,
+      "y": -20.2868,
+      "radius": 6.4,
+      "base": 19.0,
+      "top": 48.4251
+    },
+    {
+      "x": -11.8993,
+      "y": -47.2611,
+      "radius": 3.8,
+      "base": 15.3,
+      "top": 27.6145
+    },
+    {
+      "x": 12.6592,
+      "y": -48.0261,
+      "radius": 4.7,
+      "base": 15.3,
+      "top": 35.7097
+    }
+  ],
+  "groupCode": "LC-bridge",
+  "floorHeightProfileMM": [
+    [-52.5, 14.735],
+    [-35, 15.15],
+    [0, 21.2],
+    [35, 15.102],
+    [52.5, 14.735]
+  ],
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "normalMinZ": 0.1,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  }
+}

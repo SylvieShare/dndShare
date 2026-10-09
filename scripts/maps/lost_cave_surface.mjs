@@ -7,6 +7,18 @@ const smooth = (a, b, x) => {
 };
 const srgb = (v) =>
   v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055;
+export function caveFloorHeightAt(p, spec) {
+  const profile = spec.floorHeightProfileMM;
+  if (!profile) return spec.floorHeightMM;
+  const y = p[1];
+  if (y <= profile[0][0]) return profile[0][1];
+  for (let i = 1; i < profile.length; i++) {
+    const [a, z] = profile[i - 1],
+      [b, next] = profile[i];
+    if (y <= b) return z + ((next - z) * (y - a)) / (b - a);
+  }
+  return profile.at(-1)[1];
+}
 export function caveRockPixel(p, n, ao, spec) {
   const [x, y, z] = p;
   const strata =
@@ -19,7 +31,9 @@ export function caveRockPixel(p, n, ao, spec) {
   const recess = (1 - clamp((ao / 255 - 0.65) / 0.35)) * 0.54;
   const dusty =
     smooth(0.4, 0.95, n[2]) *
-    (0.08 + smooth(spec.floorHeightMM + 5, spec.floorHeightMM, z) * 0.16);
+    (0.08 +
+      smooth(caveFloorHeightAt(p, spec) + 5, caveFloorHeightAt(p, spec), z) *
+        0.16);
   const palette = spec.palette;
   const rgb = palette.rock.map((v, i) => {
     const base =
@@ -44,7 +58,7 @@ export function caveRockPixel(p, n, ao, spec) {
   };
 }
 export function darkenCaveFloorJoints(value, p, spec) {
-  const depth = spec.floorHeightMM - p[2];
+  const depth = caveFloorHeightAt(p, spec) - p[2];
   if (depth > 0.25 && depth < 3)
     value.rgb = value.rgb.map((v) =>
       Math.round(v * (1 - Math.min(1, depth / 1.5) * 0.22)),

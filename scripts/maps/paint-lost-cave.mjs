@@ -2,14 +2,17 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { readGlb, replaceImages } from "./glb_textures.mjs";
-import { setSurfaceAtlas } from "./pbr_revision.mjs";
+import {
+  setSurfaceAtlas,
+  initializeUntexturedSurfaceAtlas,
+} from "./pbr_revision.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
 import {
   rasterizeSurface,
   seedSurfaceGutters,
   extendUvGutters,
 } from "./uv_surface.mjs";
-import { caveRockPixel } from "./lost_cave_surface.mjs";
+import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { paintStalagmites } from "./lost_cave_stalagmites.mjs";
 import { paintRailway } from "./lost_cave_railway.mjs";
 import { paintCrystal } from "./lost_cave_crystal.mjs";
@@ -155,8 +158,14 @@ const io = new NodeIO()
   });
 for (const tier of ["render", "lod"]) {
   const original = path.join(directory, tier + "-repacked.glb"),
-    glb = readGlb(await fs.readFile(original)),
-    doc = await io.read(original);
+    glb = readGlb(await fs.readFile(original));
+  const atlasInitialized = initializeUntexturedSurfaceAtlas(
+    glb,
+    await fs.readFile(path.join(directory, tier + "-ao.png")),
+  );
+  const doc = atlasInitialized
+    ? await io.readBinary(replaceImages(glb, new Map()))
+    : await io.read(original);
   await doc.transform(dequantize());
   const size = report.rebake[tier].bakeSize;
   const ao = await sharp(path.join(directory, tier + "-ao.png"))
@@ -232,6 +241,8 @@ for (const tier of ["render", "lod"]) {
                       : spec.material === "cave-stalagmites"
                         ? paintStalagmites(p, n, ao[i], spec)
                         : caveRockPixel(p, n, ao[i], report.materialSpec);
+    if (spec.floorHeightProfileMM && value.part === "rock")
+      darkenCaveFloorJoints(value, p, spec);
     if (used) counts[value.part]++;
     neutralNormal[i] = Number(
       spec.crystal?.normalMode === "geometry" && value.part === "crystal",
@@ -243,6 +254,7 @@ for (const tier of ["render", "lod"]) {
     if (used) pixels++;
   };
   const coverage = rasterizeSurface(doc, size, size, paintPixel);
+  if (!pixels) throw new Error("Rebuilt body has no rasterized UV surface");
   const colourCoverage = spec.surfaceGutters
     ? seedSurfaceGutters(doc, size, size, coverage, (i, p, n) =>
         paintPixel(i, p, n, false),
