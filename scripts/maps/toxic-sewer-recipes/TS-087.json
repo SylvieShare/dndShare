@@ -52,5 +52,7 @@
     "measuredCollarRadiusMM": 3.04,
     "riserYDriftMM": [10.3, 9.725]
   },
-  "notes": "Corner stone fragments supported beside a copper riser with collars and a forward-bending hollow mouth. Pipe radius and end volume exclude the standing corner masonry; green tiled floor remains uncovered. Native vertex measurements show the riser drifts forward by 0.575mm from z20 to31.5; centred tube masks now cover 3.04mm collars without broadening onto the stone post."
+  "notes": "Corner stone fragments supported beside a copper riser with collars and a forward-bending hollow mouth. Pipe radius and end volume exclude the standing corner masonry; green tiled floor remains uncovered. Native vertex measurements show the riser drifts forward by 0.575mm from z20 to31.5; centred tube masks now cover 3.04mm collars without broadening onto the stone post. UV correction retains accepted geometry:0.55rad leaves a0.102mm overlap in render. Use0.45rad/.003 margin, rebake normal/AO and validate all published texture sizes.",
+  "uvAngleLimitRad": 0.45,
+  "uvIslandMargin": 0.003
 }
