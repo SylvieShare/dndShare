@@ -1,0 +1,261 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 90000,
+  "lodTriangles": 34000,
+  "tileType": "wall-angle",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "high",
+    "outdoor",
+    "xl",
+    "earth-clearings",
+    "stepped-cap",
+    "terraces",
+    "multi-level",
+    "stepped-angle",
+    "corner"
+  ],
+  "recipe": "majestic-high-step-angle-one-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3200000,
+      6700000
+    ],
+    "targetLODBytes": [
+      1100000,
+      2900000
+    ],
+    "targetShadowBytes": [
+      70000,
+      180000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "549956 triangles,27497884B NL. Ownbase104.838x104.988mm3x3,max92.577mm,datum9.75mm. E+S walls edge20; own threegrass terraces roughly27/40/62mm and uppercap88..92mm, ninecell rays from100mm positive normals .574..999; no slots,hasDecorfalse. Own raisedgrassfield23..95mm and source stonefacet mask .5mm2 seeds/.2rad. Lowerfloor only22.96%matches119 within.15mm, ownnorthsoilpolygon. Ownblocker>70mm atnineYrows. Two measured planarbacks X52.435,Y-52.498mm. PDF38ochre/olive/earthpalette. Test90k/34k colour1024/2048,data1024/512,UV16bit .3/.15; removeauxColours."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 16.85,
+  "grassHeightFadeMM": 1.0,
+  "wallMode": "edge",
+  "wallMask": 20,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 100,
+  "blockers": [
+    [
+      [
+        2.971429,
+        0.042857
+      ],
+      [
+        2.914286,
+        0.214286
+      ],
+      [
+        2.771429,
+        0.5
+      ],
+      [
+        2.7,
+        0.928571
+      ],
+      [
+        2.657143,
+        1.5
+      ],
+      [
+        2.4,
+        2.071429
+      ],
+      [
+        1.014286,
+        2.5
+      ],
+      [
+        0.228571,
+        2.785714
+      ],
+      [
+        0.028571,
+        2.957143
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        0
+      ]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-003",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 19,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          19
+        ],
+        [
+          54,
+          54,
+          95
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      23
+    ],
+    "maxMM": [
+      54,
+      54,
+      95
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-127",
+    "exclusions": []
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.3,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [],
+  "blockedCells": [],
+  "soilDomains": [
+    [
+      [
+        -49,
+        47
+      ],
+      [
+        42,
+        47
+      ],
+      [
+        42,
+        38
+      ],
+      [
+        10,
+        40
+      ],
+      [
+        -12,
+        35
+      ],
+      [
+        -29,
+        19
+      ],
+      [
+        -48,
+        19
+      ]
+    ]
+  ],
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        23
+      ],
+      [
+        54,
+        54,
+        95
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.435,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 9.75
+    },
+    {
+      "axis": "Y",
+      "coordinateMM": -52.498,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": -1,
+      "minZMM": 9.75
+    }
+  ]
+}
