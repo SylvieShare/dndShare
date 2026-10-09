@@ -9,7 +9,7 @@ import {
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { paintBoulder } from "./lost_cave_boulder.mjs";
 import { caveBonePartAt, paintCaveBones } from "./lost_cave_bones.mjs";
-import { paintMineFlame } from "./lost_cave_torch.mjs";
+import { paintMineFlame, finishMineCup } from "./lost_cave_torch.mjs";
 export function mineProjectionAt(p, mine, ironMatch, woodMatch) {
   if (
     !mine.hardwareVolumes ||
@@ -80,7 +80,7 @@ export function paintCaveMine(p, n, ao, spec, reference, projection) {
       iron.rgb = iron.rgb.map((v, i) =>
         Math.round((v * spec.mine.ironTint[i]) / [0.48, 0.5, 0.48][i]),
       );
-    return iron;
+    return finishMineCup(iron, p, n, spec);
   }
   if (value.part === "boulder") {
     const stone = paintBoulder(p, n, ao, spec);

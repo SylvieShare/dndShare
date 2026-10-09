@@ -245,6 +245,7 @@ for (const tier of ["render", "lod"]) {
           grip: 0,
           ...(spec.bones ? { bone: 0 } : {}),
           ...(spec.torch?.lit ? { flame: 0 } : {}),
+          ...(spec.torch?.soot ? { soot: 0 } : {}),
         }
       : {}),
     ...(spec.material === "cave-water" ? { water: 0 } : {}),
