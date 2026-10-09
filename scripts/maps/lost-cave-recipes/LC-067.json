@@ -1,0 +1,195 @@
+{
+  "sourceName": "Well Wall Empty",
+  "referencePage": 10,
+  "material": "cave-rope",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2, 5],
+    "lodMiB": [0.7, 2],
+    "shadowKiB": [45, 130],
+    "previewKiB": [20, 160],
+    "basis": "499972-triangle1x1 hollow well with detailed braided rope crossing the rim and falling inside;65k/22k preserve strand silhouette and cavity.2048/1024 source bake with two KTX2 budgets."
+  },
+  "notes": "Author page10 Well Wall Empty. Warm cave rock and straw/hemp rope, not gold. Native rope top9.8744/8.4993/26.8092,inner braid9.8692/7.193/24.5399,8.897/6.3095/22.6428,8.0196/5.4102/20.4574,7.0303/5.0287/18.0126. Adjacent stone lip12.4313/7.3635/24.303 and14.1575/6.3367/23.9146 remains rock. Use source-depth-reviewed silhouettes on reverse/outside for boundaries and actual strand axes for fibre direction. Preserve UUID3812b456-272c-5e11-ba09-aead22299090,source/cut11.5,familyLC-well-wall,mount.149834,1x1,wallMask17,point.480734,no slots and native hollow cavity. Source probes at14.464/12.012/14.7383 and11.7135/12.2183/14.746 confirm flat floor inside projected gaps; raised-rope guard excludes the first.25mm above14.735 floor. Raised visible rope lies15.8..26.8mm; contours are narrowed around floor coil. Native cavity restoration explicitly reviewed; original hollow floor extends below mounting datum. Solid legacy pads are removed; only native outer envelope is intersected with a fitted34.3/22.75mm frustum, preserving cavity. hasDecor corrected true for built-in well/rope. No support slot fabricated.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-well-wall",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "rope": {
+    "colour": [0.58, 0.46, 0.23],
+    "roughness": 0.83,
+    "paths": [
+      [
+        [9.9, 8.5, 26.8],
+        [10, 7.3, 24.5],
+        [8.9, 6.3, 22.6],
+        [8, 5.4, 20.5],
+        [7, 5, 18]
+      ],
+      [
+        [10.3, 9.4, 26.5],
+        [10.7, 10.8, 25.2],
+        [9.8, 10.8, 21.4],
+        [9.7, 10.7, 18],
+        [10.5, 12.5, 16],
+        [10.8, 14.2, 16],
+        [12.6, 14.8, 15.8],
+        [14.4, 14.2, 16],
+        [15.3, 13.4, 16]
+      ]
+    ],
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "toleranceMM": 0.45,
+        "polygons": [
+          [
+            [669, 439],
+            [670, 419],
+            [679, 408],
+            [699, 404],
+            [717, 410],
+            [729, 424],
+            [728, 438],
+            [719, 444],
+            [706, 442],
+            [691, 449],
+            [685, 468],
+            [677, 483],
+            [664, 499],
+            [652, 516],
+            [641, 535],
+            [629, 543],
+            [626, 533],
+            [633, 515],
+            [640, 496],
+            [648, 481],
+            [649, 464],
+            [660, 449],
+            [669, 439]
+          ]
+        ]
+      },
+      {
+        "name": "outside",
+        "toleranceMM": 0.45,
+        "polygons": [
+          [
+            [452, 528],
+            [460, 522],
+            [472, 526],
+            [481, 537],
+            [480, 552],
+            [486, 565],
+            [492, 583],
+            [494, 608],
+            [492, 634],
+            [493, 658],
+            [501, 679],
+            [519, 695],
+            [529, 710],
+            [527, 726],
+            [516, 737],
+            [499, 741],
+            [478, 739],
+            [453, 731],
+            [431, 725],
+            [431, 714],
+            [443, 706],
+            [462, 711],
+            [484, 711],
+            [496, 703],
+            [491, 688],
+            [483, 670],
+            [480, 649],
+            [482, 623],
+            [479, 601],
+            [472, 583],
+            [465, 571],
+            [459, 563],
+            [459, 546],
+            [452, 536]
+          ]
+        ]
+      },
+      {
+        "name": "top",
+        "toleranceMM": 0.4,
+        "polygons": [
+          [
+            [665, 350],
+            [670, 337],
+            [679, 326],
+            [692, 311],
+            [701, 300],
+            [716, 295],
+            [736, 306],
+            [744, 321],
+            [741, 337],
+            [730, 345],
+            [717, 339],
+            [718, 325],
+            [709, 316],
+            [698, 325],
+            [691, 342],
+            [683, 358],
+            [672, 361]
+          ],
+          [
+            [653, 399],
+            [632, 415],
+            [615, 435],
+            [605, 438],
+            [594, 432],
+            [595, 422],
+            [607, 416],
+            [620, 402],
+            [631, 384],
+            [638, 367],
+            [648, 350],
+            [657, 344],
+            [664, 350],
+            [661, 363],
+            [651, 378],
+            [652, 388]
+          ]
+        ]
+      }
+    ],
+    "floorClearanceMM": 0.25
+  },
+  "geometryCorrection": {
+    "mode": "restore-native-well",
+    "sourceSHA256": "e18cbdac41d6d8bc1c4132388df3d40816ff70dabc4d4d40b93aade9128de52c",
+    "previousCutHeightMM": 11.5,
+    "cutHeightMM": 11.5,
+    "reason": "Restore the native well cavity below mounting level: original rays reach3.46..6.45mm but a solid synthetic peg capped them at5.24419mm. Retain the void and clip only the outside mount to the measured fitted pyramid; keep UUID, source, depth and quarter-cell stand point.",
+    "metadata": {
+      "hasDecor": true,
+      "maxHeight": 1.0995256696428573,
+      "placementPoints": [
+        {
+          "x": 0.25,
+          "y": 0.25,
+          "elevation": 0.480734
+        }
+      ]
+    }
+  }
+}

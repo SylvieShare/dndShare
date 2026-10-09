@@ -63,25 +63,27 @@ for (const tier of ["render", "lod"]) {
           geometryCorrection: report.geometryCorrection.reason,
         }
       : {}),
-    mounting:
-      report.geometryCorrection?.mode === "remove-false-mount"
-        ? (() => {
-            if (
-              report.model.mountDepth !==
-                report.geometryCorrection.metadata.mountDepth ||
-              report.model.mountDepth <= 0 ||
-              report.rebake[tier].mountingMeshesRetained !== 0 ||
-              mountingSurface(after)
-                .getRoot()
-                .listNodes()
-                .some((n) => n.getMesh().listPrimitives().length)
-            )
-              throw new Error(
-                "False hole mounting still covers the corrected source",
-              );
-            return { removedFalseMount: true };
-          })()
-        : assertSameSurface(mountingSurface(before), mountingSurface(after)),
+    mounting: ["remove-false-mount", "restore-native-well"].includes(
+      report.geometryCorrection?.mode,
+    )
+      ? (() => {
+          if (
+            report.model.mountDepth !==
+              (report.geometryCorrection.metadata.mountDepth ??
+                report.originalModel.mountDepth) ||
+            report.model.mountDepth <= 0 ||
+            report.rebake[tier].mountingMeshesRetained !== 0 ||
+            mountingSurface(after)
+              .getRoot()
+              .listNodes()
+              .some((n) => n.getMesh().listPrimitives().length)
+          )
+            throw new Error(
+              "False hole mounting still covers the corrected source",
+            );
+          return { removedFalseMount: true };
+        })()
+      : assertSameSurface(mountingSurface(before), mountingSurface(after)),
     sourceDeviationMM: report.rebake[tier].sourceDeviationMM,
   };
   if (reference)

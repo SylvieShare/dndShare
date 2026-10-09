@@ -58,7 +58,7 @@ def bake_tier(report, directory, tier):
     source = bpy.context.object
     crop(source, report['cutHeight'])
     correction = report.get('geometryCorrection',{})
-    if correction.get('mode') == 'remove-false-mount':
+    if correction.get('mode') in ['remove-false-mount', 'restore-native-well']:
         if report['model']['mountDepth'] <= 0:
             raise ValueError('Explicit hole correction must preserve its native mounting datum')
         for obj in mounting:
@@ -81,7 +81,7 @@ def bake_tier(report, directory, tier):
     target = bpy.data.objects.new(report['model']['sourceCode']+' detailed body', source.data.copy())
     scene.collection.objects.link(target)
     datum = report['model']['mountDepth']*35
-    if correction.get('mode') != 'remove-false-mount':
+    if correction.get('mode') not in ['remove-false-mount', 'restore-native-well']:
         crop(target, datum)
         for v in target.data.vertices:
             v.co.z += datum
@@ -90,6 +90,11 @@ def bake_tier(report, directory, tier):
     modifier.ratio = min(1, report['materialSpec'][tier+'Triangles']/len(target.data.polygons))
     modifier.use_collapse_triangulate = True
     bpy.ops.object.modifier_apply(modifier=modifier.name)
+    if correction.get('mode') == 'restore-native-well':
+        from native_well_mount import fit_native_well_mount
+        # Fit after decimation so LOD cannot collapse the seating shoulder
+        # below the datum and move it into the receiving socket.
+        fit_native_well_mount(target, datum)
     shade(target)
     if report['materialSpec'].get('flatFacets'):
         for obj in [source,target]:

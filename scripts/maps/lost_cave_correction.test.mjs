@@ -28,6 +28,53 @@ const spec = {
     },
   },
 };
+test("native hollow well correction preserves standable side and rejects arbitrary floors", () => {
+  const old = {
+    ...model,
+    id: "well-uuid",
+    sourceCode: "LC-067",
+    definitionId: "LC-067",
+    tileType: "wall-straight",
+    width: 1,
+    height: 1,
+    mountDepth: 0.15,
+    canStand: true,
+    hasDecor: false,
+    surfaceHeight: 0.421143,
+    supportSlots: [],
+    placementPoints: [{ x: 0.25, y: 0.25, elevation: 0.48 }],
+  };
+  const src = { ...source, mountDepth: 0.15, max: [17.5, 17.5, 49.98] };
+  const s = {
+    geometryCorrection: {
+      mode: "restore-native-well",
+      sourceSHA256: sha,
+      previousCutHeightMM: 11.5,
+      cutHeightMM: 11.5,
+      reason:
+        "Restore native cavity below mount without a solid cap, preserving the standable side.",
+      metadata: {
+        maxHeight: (49.98 - 11.5) / 35,
+        hasDecor: true,
+        placementPoints: old.placementPoints,
+      },
+    },
+  };
+  const result = correctedCaveModel(old, src, s, true);
+  assert.equal(result.model.id, old.id);
+  assert.equal(result.model.mountDepth, old.mountDepth);
+  assert.deepEqual(result.model.placementPoints, old.placementPoints);
+  assert.equal(result.model.hasDecor, true);
+  assert.throws(() =>
+    correctedCaveModel({ ...old, sourceCode: "LC-034" }, src, s, true),
+  );
+  assert.throws(() =>
+    correctedCaveModel({ ...old, supportSlots: [{}] }, src, s, true),
+  );
+  const changed = structuredClone(s);
+  changed.geometryCorrection.metadata.placementPoints = [];
+  assert.throws(() => correctedCaveModel(old, src, changed, true));
+});
 test("reviewed crop restoration retains logical ID and original file while correcting full object height", () => {
   const result = correctedCaveModel(model, source, spec, true);
   assert.equal(result.cutHeight, 0);

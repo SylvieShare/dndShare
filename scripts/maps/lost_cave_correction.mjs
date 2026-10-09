@@ -6,6 +6,7 @@ const fields = new Set([
   "placementPoints",
   "mountDepth",
   "canStand",
+  "hasDecor",
 ]);
 export function correctedCaveModel(model, source, spec, explicit) {
   const correction = spec.geometryCorrection;
@@ -17,7 +18,8 @@ export function correctedCaveModel(model, source, spec, explicit) {
     );
   const removeMount = correction.mode === "remove-false-mount";
   const restoreBridge = correction.mode === "restore-native-bridge";
-  if (correction.mode && !removeMount && !restoreBridge)
+  const restoreWell = correction.mode === "restore-native-well";
+  if (correction.mode && !removeMount && !restoreBridge && !restoreWell)
     throw new Error("Unknown reviewed geometry correction mode");
   if (
     typeof correction.reason !== "string" ||
@@ -26,7 +28,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
     correction.sourceSHA256 !== model.assets.source.sha256 ||
     correction.sourceSHA256 !== source.sourceSHA256 ||
     correction.previousCutHeightMM !== source.cutHeight ||
-    (removeMount
+    (removeMount || restoreWell
       ? correction.cutHeightMM !== source.cutHeight ||
         source.cutHeight <= 0 ||
         !Number.isFinite(source.mountDepth) ||
@@ -51,6 +53,25 @@ export function correctedCaveModel(model, source, spec, explicit) {
       "Restored orientation and existing placement points require explicit review",
     );
   const result = { ...structuredClone(model), ...correction.metadata };
+  if (
+    restoreWell &&
+    (!["LC-067", "LC-068"].includes(model.sourceCode) ||
+      !["wall-straight", "floor"].includes(model.tileType) ||
+      result.tileType !== model.tileType ||
+      result.mountDepth !== model.mountDepth ||
+      model.mountDepth !== source.mountDepth ||
+      result.width !== 1 ||
+      result.height !== 1 ||
+      result.canStand !== model.canStand ||
+      result.hasDecor !== true ||
+      JSON.stringify(result.placementPoints) !==
+        JSON.stringify(model.placementPoints) ||
+      model.supportSlots?.length ||
+      correction.rotationXDeg)
+  )
+    throw new Error(
+      "Native well restoration requires the reviewed hollow1x1 well, unchanged datum and placement",
+    );
   if (
     removeMount &&
     (correction.rotationXDeg ||
@@ -84,6 +105,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
       0.0001 ||
     result.surfaceHeight > result.maxHeight ||
     (!removeMount &&
+      !restoreWell &&
       result.tileType !== (restoreBridge ? model.tileType : "object"))
   )
     throw new Error(

@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / 'scripts/maps'))
 from tile_mesh import crop
 
 DIRECTIONS = {
+    'top': Vector((0, -.01, 5)),
     'reverse': Vector((2, -2.85, 2.45)),
     'outside': Vector((2, 2.85, 2.45)),
     'inside': Vector((-2, -2.85, 2.45)),
