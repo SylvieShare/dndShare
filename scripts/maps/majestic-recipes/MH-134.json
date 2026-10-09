@@ -1,0 +1,333 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 80000,
+  "lodTriangles": 30000,
+  "tileType": "passage",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "high",
+    "outdoor",
+    "xl",
+    "grotto",
+    "arch",
+    "passage"
+  ],
+  "recipe": "majestic-high-grotto-entrance-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      2900000,
+      6200000
+    ],
+    "targetLODBytes": [
+      1000000,
+      2700000
+    ],
+    "targetShadowBytes": [
+      60000,
+      170000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "571410triangles,28570584B NL. Ownbase104.950x104.993mm3x3,max93.158mm,datum9.75. Naturalarch/grotto passage,Eedge4,hasDecorfalse,nomechanicalslots. Fivegroundpoints from22mm:15.891/15.415/15.144/15.371/15.980,notroofpoints. FourN/Slegcellsfrom22hitbottomnegative0mm=>excluded. GroundEcentre35/0 floor15.371 ceiling72.779=>57.407mmclearance;centralbackwallopeningfreeY-15..15. Ownrootblockerboundaries sampledfrom22mm negativefloor rays at17Ys;Nleg Xstarts50,42,-24,16,25 atY51,45,35,25,20;S35.5,-3.5,-14,39.5,50 atY-20,-25,-35,-45,-51. Sourcefloor73.575%matches118within.15mmmedian+.010193,notblindoldroofmetadata. Floorgrassreference001rot270 toretainunmodifiedbladesandearthclearings,owncapfield82..96 plus.5mm2/.2radstone protection. Allbody>20ochre; inwardarchwalls restraineddarkerbrown .44/.29/.16 andAO,notblack. MeasuredEback52.481,onlyactualgeometryfaces. PDF40ochre/olive/earth;preservebothopenings andintrados. Test80k/30k colour1024/2048,data1024/512,UV16bit.3/.15,stripauxColours. FinalR4200496B/80014,L1701376B/30012,shadow106612B;altcolour2048R4814608B +614112B no clearworking-scalegain. Source/R/LOD3clearportalrays atY-10/0/10,Z40mm across140mm plus2blockedsolidcontrolsY-35/35 =>15checks pass. Onlysampledrays,wholegeometryalsoinspected6viewsandshadowbrowser;minorcontactmoss andLODgrasssoftening."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 22,
+  "blockers": [
+    [
+      [
+        2.928571,
+        0.042857
+      ],
+      [
+        2.7,
+        0.214286
+      ],
+      [
+        0.814286,
+        0.5
+      ],
+      [
+        1.957143,
+        0.785714
+      ],
+      [
+        2.214286,
+        0.928571
+      ],
+      [
+        3,
+        0.928571
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    [
+      [
+        2.514286,
+        2.071429
+      ],
+      [
+        1.4,
+        2.214286
+      ],
+      [
+        1.1,
+        2.5
+      ],
+      [
+        2.628571,
+        2.785714
+      ],
+      [
+        2.928571,
+        2.957143
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        2.071429
+      ]
+    ]
+  ],
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 20,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          20
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      82
+    ],
+    "maxMM": [
+      54,
+      54,
+      96
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-134",
+    "exclusions": []
+  },
+  "masonryBackFace": {
+    "xMM": 52.481,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 9.75
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.3,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [],
+  "blockedCells": [
+    [
+      1,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "grassReference": "MH-001",
+  "masonryInterior": {
+    "centreMM": [
+      20,
+      0
+    ],
+    "minZMM": 20,
+    "radiusMM": 55,
+    "rgb": [
+      0.44,
+      0.29,
+      0.16
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        82
+      ],
+      [
+        54,
+        54,
+        96
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "openingChecks": [
+    {
+      "name": "central-passage-y-10",
+      "originMM": [
+        -70,
+        -10,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "central-passage-y0",
+      "originMM": [
+        -70,
+        0,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "central-passage-y10",
+      "originMM": [
+        -70,
+        10,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "solid-support-y-35",
+      "originMM": [
+        -70,
+        -35,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "solid-support-y35",
+      "originMM": [
+        -70,
+        35,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    }
+  ]
+}
