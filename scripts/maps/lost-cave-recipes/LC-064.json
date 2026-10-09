@@ -1,0 +1,45 @@
+{
+  "sourceName": "Well Wall Full 1",
+  "referencePage": 10,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 16000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.7, 4.3],
+    "lodMiB": [0.55, 1.7],
+    "shadowKiB": [30, 110],
+    "previewKiB": [15, 150],
+    "basis": "419910-triangle1x1 rock wall and layered well with an irregular flat water inset.50k/16k protect rim and water/stone boundary;2048/1024 source bakes and two KTX2 budgets."
+  },
+  "notes": "Author page10: brown cave wall/well and calm turquoise water. Actual horizontal inset is22.9759mm at6.0363/2.1898,6.7223/-2.6118,9.1231/-.554,12.2098/1.1609 and11.1123/-5.6986, all upward normals. Rim at7.6826/8.3598/24.7136 and6.4479/-9.7488/24.5494 stays stone; nearby rim surface12.8958/-5.0131/23.2329 is not water. Water has separate nonmetal low roughness, subtle nondirectional colour variation and geometry normals; lighting remains renderer-controlled. Preserve UUID42d564ef-b4f3-535b-b33f-8688b875e79e, LC-064/current familyLC-well-wall, source/cut11.5, mount.149689, footprint, wallMask17, existing point.480787 and no receiving slots. The water slab has interpolated vertex normals near its joined stone edge; classify the verified constant height and positive-facing surface, not a.96 smoothed-normal threshold which split it into triangles. Native ray probes at0.3442/-0.1246/22.9775 and1.0385/2.1107/22.9773 verify water extends across X=1.6; there is no straight X cutoff. Height tolerance and measured cup radius preserve the stone boundary.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-well-wall",
+  "uvAngleLimitRad": 0.3,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [1536, 768, 768, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "water": {
+    "colour": [0.055, 0.48, 0.425],
+    "surfaces": [
+      {
+        "heightMM": 22.9759,
+        "toleranceMM": 0.075,
+        "centre": [4.65, -1],
+        "radiusMM": 11.8
+      }
+    ]
+  }
+}
