@@ -16,8 +16,16 @@ assert.deepEqual(registry.find(m => m.id===model.id), model, 'Refresh MCP snapsh
 const file = path.join(base, 'review', code, 'report.json');
 const report = JSON.parse(await fs.readFile(file, 'utf8'));
 assert.deepEqual(report.model, model);
+if (Array.isArray(report.recipe.defaultLights)) {
+  assert.equal(report.behaviourPublication?.definitionId, model.definitionId, 'Verify built-in light behaviour before recording publication');
+  const managed = new Set(report.recipe.materials.kind==='torch' ? ['torch-flame'] : report.recipe.defaultLights.map(l => l.key));
+  assert.deepEqual(report.behaviourPublication.defaultLights.filter(l => managed.has(l.key)), report.recipe.defaultLights);
+}
+for (const desired of report.recipe.transitions || []) {
+  assert.ok(report.behaviourPublication?.transitions.some(t => t.toDefinitionId===desired.toDefinitionId && t.action===desired.action));
+}
 report.publication = { confirmedAt: new Date().toISOString(), uuid: model.id, definitionId: model.definitionId,
-  assetsVerified: true, placementVerified: true };
+  assetsVerified: true, placementVerified: true, ...(report.behaviourPublication ? { behaviourVerified: true } : {}) };
 await fs.writeFile(file, JSON.stringify(report, null, 2)+'\n');
 const inventory = JSON.parse(await fs.readFile(path.join(base, 'inventory.json'), 'utf8'));
 const progress = [];

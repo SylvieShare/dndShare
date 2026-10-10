@@ -7,6 +7,7 @@ import { currentModel } from './current_model.mjs';
 import { prepareShadow } from './shadow_model.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
+import { torchMetal, torchFlameDomain } from './medieval_torch_domains.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -45,10 +46,11 @@ if (!process.argv.includes('--publish-manifest')) {
     const normal = new Set(materials.map(m => m.getNormalTexture()));
     const colour = new Set(materials.map(m => m.getBaseColorTexture()));
     const orm = new Set(materials.map(m => m.getMetallicRoughnessTexture()));
+    const emissive = new Set(materials.map(m => m.getEmissiveTexture()));
     for (const texture of doc.getRoot().listTextures()) {
-      const pixels = colour.has(texture) ? size : size/2;
-      const slot = colour.has(texture) ? 'BaseColor' : normal.has(texture) ? 'Normal' : 'MetallicRoughness';
-      if (!colour.has(texture) && !normal.has(texture) && !orm.has(texture)) throw new Error('Unexpected texture');
+      const pixels = colour.has(texture) || emissive.has(texture) ? size : size/2;
+      const slot = colour.has(texture) ? 'BaseColor' : normal.has(texture) ? 'Normal' : emissive.has(texture) ? 'Emissive' : 'MetallicRoughness';
+      if (!colour.has(texture) && !normal.has(texture) && !orm.has(texture) && !emissive.has(texture)) throw new Error('Unexpected texture');
       const { data, info } = await sharp(Buffer.from(texture.getImage())).resize(pixels, pixels).removeAlpha().raw().toBuffer({ resolveWithObject: true });
       if (normal.has(texture)) {
         for (let i = 0; i < data.length; i += info.channels) {
@@ -67,11 +69,22 @@ if (!process.argv.includes('--publish-manifest')) {
             weight = Math.max(weight, Math.max(0, Math.min(1, (1-d)/.2)));
           }
           if (!used) data[i*3] = 255;
+          if (recipe.materials.kind==='torch') {
+            const metal = torchMetal(p, recipe.materials);
+            data[i*3+1] = Math.round((.9*(1-metal/.92)+.58*metal/.92)*255);
+            data[i*3+2] = Math.round(metal*255);
+            return;
+          }
           data[i*3+1] = Math.round((.88*(1-weight)+.43*weight)*255);
           data[i*3+2] = Math.round(weight*255);
         };
         coverage = rasterizeSurface(doc, pixels, pixels, (i,p) => writeHardware(i,p,true), slot);
         coverage = seedSurfaceGutters(doc, pixels, pixels, coverage, (i,p) => writeHardware(i,p,false), 1, slot);
+      }
+      if (emissive.has(texture) && recipe.materials.kind==='torch') {
+        coverage = rasterizeSurface(doc, pixels, pixels, (i,p) => {
+          if (!torchFlameDomain(p, recipe.materials.torch)) data.fill(0, i*3, i*3+3);
+        }, slot);
       }
       extendUvGutters(data, info.channels, coverage.slice(), pixels, pixels, 4);
       const pipeline = sharp(data, { raw: info });
@@ -88,7 +101,8 @@ if (!process.argv.includes('--publish-manifest')) {
     }
     const before = getBounds(doc.getRoot().listScenes()[0]);
     await io.write(path.join(review, tier==='render' ? 'preview-model.glb' : 'lod-preview-model.glb'), doc);
-    await doc.transform(meshopt({ encoder: MeshoptEncoder, level: 'medium', quantizePosition: 16 }));
+    await doc.transform(meshopt({ encoder: MeshoptEncoder, level: 'medium', quantizePosition: 16,
+      ...(recipe.materials.kind==='torch' ? { quantizeTexcoord: 16 } : {}) }));
     const final = await io.writeBinary(doc);
     await fs.writeFile(path.join(review, tier+'.glb'), final);
     const decoded = await io.readBinary(final);
@@ -97,6 +111,7 @@ if (!process.argv.includes('--publish-manifest')) {
       if (Math.abs(before[side][i]-after[side][i])>.0002) throw new Error('Packaging changed bounds');
     }
     tiers[tier] = { bytes: final.length, triangles: report.triangles, colourSize: size, normalORMSize: size/2,
+      ...(recipe.materials.torch?.flameReference ? { emissiveSize: size, emissiveFormat: 'PNG sRGB' } : {}),
       blackSurfacePixels: 0, invalidNormalPixels: 0, bounds: after, quality: report.quality };
     console.log('MEDIEVAL_PACKAGED', code, tier, tiers[tier].triangles, final.length);
   }

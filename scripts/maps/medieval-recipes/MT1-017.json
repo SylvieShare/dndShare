@@ -1,0 +1,240 @@
+{
+  "name": "Light Off",
+  "groupCode": "MED-light",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 72000,
+  "lodTriangles": 24000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0.015,
+        0.04
+      ],
+      [
+        0.36,
+        0.04
+      ],
+      [
+        0.36,
+        0.39
+      ],
+      [
+        0.015,
+        0.39
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "torch",
+    "wood",
+    "iron",
+    "unlit"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "torch",
+    "hardware": [
+      {
+        "centerMM": [
+          -16.3,
+          10.3,
+          40.25
+        ],
+        "radiiMM": [
+          0.7,
+          1.5,
+          1.45
+        ],
+        "minZMM": 38
+      },
+      {
+        "centerMM": [
+          -6.7,
+          9.4,
+          40.15
+        ],
+        "radiiMM": [
+          0.6,
+          1.5,
+          1.5
+        ],
+        "minZMM": 38
+      },
+      {
+        "centerMM": [
+          -12.1,
+          4.9,
+          39.7
+        ],
+        "radiiMM": [
+          1.5,
+          0.7,
+          1.5
+        ],
+        "minZMM": 38
+      },
+      {
+        "centerMM": [
+          -11.8,
+          14.85,
+          40
+        ],
+        "radiiMM": [
+          1.5,
+          0.7,
+          1.5
+        ],
+        "minZMM": 38
+      }
+    ],
+    "torch": {
+      "woodMinMM": [
+        -17,
+        4.5,
+        25.4
+      ],
+      "woodMaxMM": [
+        -6.3,
+        15.3,
+        60.2
+      ],
+      "basketCenterMM": [
+        -11.285,
+        10.305
+      ],
+      "woodDarkRGB": [
+        0.32,
+        0.145,
+        0.045
+      ],
+      "woodLightRGB": [
+        0.55,
+        0.29,
+        0.1
+      ],
+      "fuelRGB": [
+        0.17,
+        0.13,
+        0.095
+      ],
+      "fuelMinZMM": 64,
+      "fuelMaxZMM": 76.7,
+      "fuelRadiusMM": 3.8,
+      "ironRGB": [
+        0.2,
+        0.185,
+        0.16
+      ],
+      "ironDomains": [
+        {
+          "zMM": [
+            42.75,
+            43.5
+          ],
+          "minRadiusMM": 2.7,
+          "maxRadiusMM": 3.6
+        },
+        {
+          "zMM": [
+            55.35,
+            57.7
+          ],
+          "maxRadiusMM": 3.7
+        },
+        {
+          "zMM": [
+            59.9,
+            64.5
+          ],
+          "maxRadiusMM": 5.1
+        },
+        {
+          "zMM": [
+            64.5,
+            78
+          ],
+          "minRadiusMM": 3.8,
+          "maxRadiusMM": 6.2
+        }
+      ],
+      "flameMinZMM": 72.7,
+      "flameTopZMM": 84.947,
+      "flameRadiusMM": 3.8,
+      "flameMatchMM": 0.35,
+      "flameBlendMM": 0.25
+    }
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.4,
+      3.0
+    ],
+    "lodMiB": [
+      0.45,
+      1.1
+    ],
+    "shadowKiB": [
+      50,
+      150
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "One 35 mm paving base with an elevated timber torch, four bolts, iron rings and basket, charred fuel and a separate emissive flame. More silhouette detail than a plain floor; 76k/26k independent UV bakes and compact 768/384 colour maps."
+  },
+  "reviewNotes": "PDF page 3; unlit torch inspected full and close from both sides. Native insertion reaches the 35 mm body at z=17 mm; top 76.6756 mm. Vertical grain on the squared wooden foot and pole, four iron bolts, iron basket and rings, dark charred fuel inside and visible rolled cut end. The same measured material domains as the lit version preserve the paired appearance, but no flame geometry, emissive texture or active torch light. Central ground point measured below the torch with ray top30 mm. Ignite transition leads to MT1-016.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 30,
+  "defaultLights": [],
+  "transitions": [
+    {
+      "toDefinitionId": "MT1-016",
+      "action": "ignite"
+    }
+  ]
+}

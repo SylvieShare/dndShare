@@ -102,7 +102,8 @@ def prepare(code, tier, force):
     target.data.materials[0] = target.data.materials[0].copy()
     tile_bake.SIZE = recipe[tier+'BakeSize']
     print('MEDIEVAL_BAKE', code, tier, len(target.data.polygons), flush=True)
-    tile_bake.bake(target, source, out)
+    from medieval_torch import emission_bake
+    tile_bake.bake(target, source, out, extra_bake=emission_bake(recipe))
     quality = tile_bake.validate_maps(target)
     points = support_points(target, recipe)
     deviations = [abs(a['elevation']-b['elevation'])*35 for a, b in zip(points, original_points)]

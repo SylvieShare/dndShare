@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mapTool } from './mcp_maps_client.mjs';
+import { applyBehaviour } from './apply-medieval-behaviour.mjs';
 const run = promisify(execFile);
 const code = process.argv[2];
 if (!/^MT1-\d{3}$/.test(code || '')) throw new Error('One source code required');
@@ -20,6 +21,14 @@ const current = await mapTool('map_tile_model_get', { id: expected.id });
 assert.equal(current.definitionId, expected.definitionId);
 if (current.code!==expected.code) {
   await mapTool('map_tile_model_group_update', { definitionId: current.definitionId, expectedCode: current.code, code: expected.code });
+}
+const reportPath = path.join(base, 'review', code, 'report.json');
+const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
+const behaviour = await applyBehaviour(expected.definitionId, report.recipe);
+if (behaviour) {
+  report.behaviourPublication = behaviour;
+  await fs.writeFile(reportPath, JSON.stringify(report, null, 2)+'\n');
+  console.log('MEDIEVAL_BEHAVIOUR_CONFIRMED', code, behaviour.revision, behaviour.defaultLights.length, behaviour.transitions.length);
 }
 const registry = await mapTool('map_tile_models_list');
 assert.deepEqual(registry.find(m => m.id===expected.id), expected, 'Published metadata or assets differ');
