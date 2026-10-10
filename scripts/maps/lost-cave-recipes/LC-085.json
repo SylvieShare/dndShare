@@ -1,0 +1,55 @@
+{
+  "sourceName": "Rock Debris 2",
+  "referencePage": 12,
+  "material": "cave-boulders",
+  "floorHeightMM": 14.73,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5.2],
+    "lodMiB": [0.6, 2.1],
+    "shadowKiB": [30, 110],
+    "previewKiB": [20, 160],
+    "basis": "439996-triangle1x1 taller irregular debris with a standing flank.50k/18k beforeUV retain silhouette and protrusions;2048/1024 source normal/AO bake, two colour/data budgets."
+  },
+  "notes": "Author page12 and own three clay views: second taller warm brown debris heap with irregular protruding stones and a narrow standing flank. Preserve UUIDf77a1b6f-b2b5-52f7-b5bb-d952eb2ca701,source/cut11.5,mount.150046,1x1,quarterpoint1.044926,max1.526294,hasDecor/canStand,no slots. Own50k/18k source rebake retains the taller silhouette and facet relief; warm stone, dusty tops and dark recesses meet the separate brown floor through measured1.5mm root blend.",
+  "groupCode": "LC-rock-debris",
+  "boulder": {
+    "tint": [0.54, 0.335, 0.185],
+    "topThresholdMM": 15.0,
+    "rootMinZMM": 14.85,
+    "roots": [
+      {
+        "x": 0,
+        "y": 0,
+        "rx": 20,
+        "ry": 20
+      }
+    ],
+    "rootBlendMM": 1.5
+  },
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "c106616b610e55308a15594644690c242dd5302286eab73a2ee39bf4bb11d4d2",
+    "mountDepthMM": 5.25161,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections.05=25.98/.5=26.75/2.5=30.19/4=32.78/datum5.25161=34.92/6=35mm confirm one native centered cell."
+  }
+}
