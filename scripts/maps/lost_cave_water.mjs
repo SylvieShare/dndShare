@@ -34,6 +34,21 @@ export function paintCaveWater(p, n, ao, spec, projection, reference) {
       Math.hypot(...p.map((x, i) => x - g.centre[i])) < g.radiusMM &&
       n.reduce((sum, x, i) => sum + x * g.normal[i], 0) > g.normalDotMin,
   );
+  if (
+    !wave &&
+    (spec.water.boulderFaces?.some(
+      (face) =>
+        p.every((x, i) => x >= face.min[i] && x <= face.max[i]) &&
+        n.reduce((sum, x, i) => sum + x * face.normal[i], 0) >
+          face.normalDotMin,
+    ) ||
+      spec.water.boulderGuards?.some(
+        (g) =>
+          Math.hypot(...p.map((x, i) => x - g.centre[i])) < g.radiusMM &&
+          n.reduce((sum, x, i) => sum + x * g.normal[i], 0) > g.normalDotMin,
+      ))
+  )
+    return paintBoulder(p, n, ao, spec);
   let projected = wave ? undefined : projection?.(p);
   if (projected?.minHeightMM !== undefined && p[2] < projected.minHeightMM)
     projected = undefined;

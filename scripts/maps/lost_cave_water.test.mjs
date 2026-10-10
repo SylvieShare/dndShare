@@ -3,6 +3,36 @@ import assert from "node:assert/strict";
 import specs from "./lost_cave_recipes.mjs";
 import { caveWaterAt, paintCaveWater } from "./lost_cave_water.mjs";
 const s = specs["LC-064"];
+test("a measured broad inner cliff uses olive stone while its dry upper plateau stays brown", () => {
+  const s = specs["LC-103"],
+    empty = () => undefined;
+  assert.equal(
+    paintCaveWater(
+      [-7.7163, 5.3174, 12.4193],
+      [0.8363, -0.061, 0.5449],
+      230,
+      s,
+      empty,
+    ).part,
+    "boulder",
+  );
+  assert.equal(
+    paintCaveWater([-9.9521, 5.3732, 14.7813], [0, 0, 1], 230, s, empty).part,
+    "rock",
+  );
+});
+test("a measured submerged shoreline stone stays dry without painting its upward adjoining wave", () => {
+  const s = structuredClone(specs["LC-103"]),
+    p = [6.3099, 12.122, 11.1968];
+  assert.equal(
+    paintCaveWater(p, [-0.9574, -0.0792, 0.2776], 230, s, () => undefined).part,
+    "boulder",
+  );
+  assert.equal(
+    paintCaveWater(p, [0, 0, 1], 230, s, () => undefined).part,
+    "water",
+  );
+});
 test("vortex depth tint darkens only the declared deep water without adding emission", () => {
   const s = specs["LC-100"],
     n = [0, 0, 1];

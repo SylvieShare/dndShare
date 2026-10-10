@@ -33,13 +33,19 @@ export async function loadReviewedCaveViews(report, masks) {
     views.push({ view, mask });
   }
   return (p) =>
-    views.find(({ view, mask }) =>
-      projectedBoneAt(
-        p,
-        view,
-        mask.polygons,
-        mask.toleranceMM,
-        mask.depthPixelRadius ?? 0,
-      ),
+    views.find(
+      ({ view, mask }) =>
+        (mask.minHeightMM === undefined || p[2] >= mask.minHeightMM) &&
+        (!mask.volumes ||
+          mask.volumes.some((v) =>
+            p.every((x, i) => x >= v.min[i] && x <= v.max[i]),
+          )) &&
+        projectedBoneAt(
+          p,
+          view,
+          mask.polygons,
+          mask.toleranceMM,
+          mask.depthPixelRadius ?? 0,
+        ),
     )?.mask;
 }
