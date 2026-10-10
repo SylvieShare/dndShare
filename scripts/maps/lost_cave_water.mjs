@@ -1,5 +1,6 @@
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
+import { paintCavePlatform } from "./lost_cave_platform.mjs";
 const clamp = (v) => Math.max(0, Math.min(1, v));
 export function caveWaterAt(p, n, spec) {
   if (spec.water.tileVolume) {
@@ -13,7 +14,19 @@ export function caveWaterAt(p, n, spec) {
       Math.hypot(p[0] - s.centre[0], p[1] - s.centre[1]) < s.radiusMM,
   );
 }
-export function paintCaveWater(p, n, ao, spec) {
+export function paintCaveWater(p, n, ao, spec, projection, reference) {
+  if (spec.water.projectedViews && !projection)
+    throw new Error("Verified dry shoreline source masks required");
+  if (spec.water.bareReference && !reference)
+    throw new Error("Verified undecorated water reference required");
+  const addedRock =
+    spec.water.bareReference &&
+    reference.distanceAt(p) > spec.water.bareReference.matchMM;
+  if (
+    (projection?.(p)?.part === "platform" || addedRock) &&
+    (!spec.water.bareReference || addedRock)
+  )
+    return paintCavePlatform(p, n, ao, spec);
   const water = caveWaterAt(p, n, spec);
   if (!water)
     return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);

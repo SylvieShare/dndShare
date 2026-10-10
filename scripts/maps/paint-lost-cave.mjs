@@ -95,6 +95,7 @@ const bareReference =
   spec.mushrooms?.wallReference ??
   spec.treasure?.wallReference ??
   spec.rope?.wallReference ??
+  spec.water?.bareReference ??
   spec.mine?.woodReference;
 if (bareReference) {
   const base = path.resolve(
@@ -118,6 +119,9 @@ if (bareReference) {
   crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
 }
 const reviewedViews = (masks) => loadReviewedCaveViews(report, masks);
+const waterProjection = spec.water?.projectedViews
+  ? await reviewedViews(spec.water.projectedViews)
+  : undefined;
 let waterfallProjection;
 if (spec.waterfall?.projectedViews) {
   const masks = spec.waterfall.projectedViews;
@@ -269,6 +273,9 @@ for (const tier of ["render", "lod"]) {
         }
       : {}),
     ...(spec.material === "cave-water" ? { water: 0 } : {}),
+    ...(spec.water?.projectedViews
+      ? { "platform-top": 0, "platform-side": 0 }
+      : {}),
     ...(spec.material === "cave-waterfall"
       ? { water: 0, foam: 0, pool: 0, boulder: 0 }
       : {}),
@@ -335,7 +342,7 @@ for (const tier of ["render", "lod"]) {
                 crystalWallReference,
               )
             : spec.material === "cave-water"
-              ? paintCaveWater(p, n, ao[i], spec)
+              ? paintCaveWater(p, n, ao[i], spec, waterProjection, crystalWallReference)
               : spec.material === "cave-treasure"
                 ? paintCaveTreasure(
                     p,

@@ -23,6 +23,34 @@ test("a water tile preserves wave relief and keeps its mounting underside dry", 
   }
   assert.equal(caveWaterAt([0, 0, 5], [0, 0, -1], s), undefined);
 });
+
+test("the undecorated water field protects shared waves from the dry rock silhouette", () => {
+  const s = structuredClone(specs["LC-093"]);
+  const p = [0, 0, 11];
+  assert.throws(
+    () => paintCaveWater(p, [0, 0, 1], 230, s, () => undefined),
+    /reference/,
+  );
+  const water = paintCaveWater(
+    p,
+    [0, 0, 1],
+    230,
+    s,
+    () => ({ part: "platform" }),
+    { distanceAt: () => 0.05 },
+  );
+  assert.equal(water.part, "water");
+  const rock = paintCaveWater(
+    [0, 0, 13.6235],
+    [0, 0, 1],
+    230,
+    s,
+    () => undefined,
+    { distanceAt: () => 2.8 },
+  );
+  assert.equal(rock.part, "platform-top");
+  assert(rock.roughness > water.roughness + 0.5);
+});
 test("only the measured upward water inset is liquid, not the rim or neighbouring cliff", () => {
   for (const p of [
     [0.3442, -0.1246, 22.9775],

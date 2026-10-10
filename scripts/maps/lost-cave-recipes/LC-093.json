@@ -1,0 +1,590 @@
+{
+  "sourceName": "Water Rock 1",
+  "referencePage": 14,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 35000,
+  "lodTriangles": 12000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.2,
+      4.8
+    ],
+    "lodMiB": [
+      0.45,
+      1.7
+    ],
+    "shadowKiB": [
+      15,
+      70
+    ],
+    "previewKiB": [
+      10,
+      100
+    ],
+    "basis": "199928-triangle1x1 water tile with central fractured dryrock and broadwaves.35k/12k beforeUV preserve rockyedge and standingtop;2048/1024 sourcebake,twoUASTCbudgets."
+  },
+  "notes": "Author page14 turquoise waves surround singleflat warmbrownrock with olivegrey verticalfractured sides. Ownsource3views and surfaceprobes; preserve UUID255d47d3-41b3-5f0c-8875-f15e0eaaf50f,source/cut11.5,mount.151154,1x1,floor,point.389217,max.389249,water tag,hasDecortrue/canStandtrue/no slots. Own35k/12k source rebake. Dryrock projectedsource silhouettes protect shoreline belowtop; waterroughness.28,retainswavereief. Compare nativeundecorated LC092 wavefield at.18mm toexclude sharedwater fromdryrock masks; sourceSHAverified. Samewater waves reused, onlycentralrockadded.",
+  "groupCode": "LC-water-rock",
+  "floorHeightProfileMM": [
+    [
+      -17.6,
+      14.735
+    ],
+    [
+      17.6,
+      14.735
+    ]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "d195b960ff171ba6fb4630084efdc13dd033740e2dc978d555317157dbebd628",
+    "mountDepthMM": 5.29039,
+    "sourceTopWidthMM": 35,
+    "centresMM": [
+      [
+        0,
+        0
+      ]
+    ],
+    "reason": "Own native sections.05=25.94/.5=26.70/2.5=30.14/4=32.72/datum5.29039=34.94/6=35mm confirm one centered mounting cell."
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "water": {
+    "colour": [
+      0.095,
+      0.63,
+      0.53
+    ],
+    "tileVolume": {
+      "min": [
+        -18,
+        -18,
+        5.29
+      ],
+      "max": [
+        18,
+        18,
+        12
+      ]
+    },
+    "surfaces": [],
+    "roughness": 0.28,
+    "projectedViews": [
+      {
+        "name": "top",
+        "part": "platform",
+        "toleranceMM": 0.25,
+        "polygons": [
+          [
+            [
+              309,
+              458
+            ],
+            [
+              324,
+              437
+            ],
+            [
+              343,
+              417
+            ],
+            [
+              376,
+              405
+            ],
+            [
+              410,
+              386
+            ],
+            [
+              439,
+              370
+            ],
+            [
+              455,
+              365
+            ],
+            [
+              478,
+              380
+            ],
+            [
+              510,
+              383
+            ],
+            [
+              534,
+              395
+            ],
+            [
+              555,
+              399
+            ],
+            [
+              578,
+              405
+            ],
+            [
+              605,
+              402
+            ],
+            [
+              638,
+              420
+            ],
+            [
+              662,
+              445
+            ],
+            [
+              681,
+              475
+            ],
+            [
+              690,
+              503
+            ],
+            [
+              704,
+              536
+            ],
+            [
+              702,
+              560
+            ],
+            [
+              690,
+              575
+            ],
+            [
+              672,
+              594
+            ],
+            [
+              650,
+              602
+            ],
+            [
+              623,
+              584
+            ],
+            [
+              605,
+              581
+            ],
+            [
+              578,
+              593
+            ],
+            [
+              556,
+              603
+            ],
+            [
+              529,
+              608
+            ],
+            [
+              508,
+              624
+            ],
+            [
+              484,
+              647
+            ],
+            [
+              460,
+              659
+            ],
+            [
+              438,
+              670
+            ],
+            [
+              412,
+              670
+            ],
+            [
+              393,
+              654
+            ],
+            [
+              383,
+              631
+            ],
+            [
+              365,
+              615
+            ],
+            [
+              348,
+              600
+            ],
+            [
+              332,
+              579
+            ],
+            [
+              318,
+              552
+            ],
+            [
+              311,
+              520
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "reverse",
+        "part": "platform",
+        "toleranceMM": 0.25,
+        "polygons": [
+          [
+            [
+              329,
+              429
+            ],
+            [
+              337,
+              397
+            ],
+            [
+              354,
+              368
+            ],
+            [
+              375,
+              343
+            ],
+            [
+              408,
+              329
+            ],
+            [
+              438,
+              331
+            ],
+            [
+              467,
+              342
+            ],
+            [
+              496,
+              339
+            ],
+            [
+              526,
+              348
+            ],
+            [
+              548,
+              365
+            ],
+            [
+              574,
+              374
+            ],
+            [
+              601,
+              383
+            ],
+            [
+              626,
+              405
+            ],
+            [
+              651,
+              421
+            ],
+            [
+              662,
+              451
+            ],
+            [
+              674,
+              477
+            ],
+            [
+              678,
+              503
+            ],
+            [
+              661,
+              531
+            ],
+            [
+              642,
+              548
+            ],
+            [
+              618,
+              546
+            ],
+            [
+              592,
+              545
+            ],
+            [
+              572,
+              532
+            ],
+            [
+              550,
+              527
+            ],
+            [
+              525,
+              523
+            ],
+            [
+              497,
+              515
+            ],
+            [
+              470,
+              515
+            ],
+            [
+              447,
+              509
+            ],
+            [
+              422,
+              513
+            ],
+            [
+              395,
+              510
+            ],
+            [
+              368,
+              507
+            ],
+            [
+              345,
+              484
+            ],
+            [
+              330,
+              467
+            ],
+            [
+              317,
+              450
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "inside",
+        "part": "platform",
+        "toleranceMM": 0.25,
+        "polygons": [
+          [
+            [
+              323,
+              458
+            ],
+            [
+              335,
+              427
+            ],
+            [
+              360,
+              410
+            ],
+            [
+              388,
+              392
+            ],
+            [
+              412,
+              369
+            ],
+            [
+              439,
+              363
+            ],
+            [
+              466,
+              369
+            ],
+            [
+              496,
+              365
+            ],
+            [
+              520,
+              351
+            ],
+            [
+              550,
+              342
+            ],
+            [
+              578,
+              341
+            ],
+            [
+              606,
+              349
+            ],
+            [
+              635,
+              356
+            ],
+            [
+              665,
+              378
+            ],
+            [
+              689,
+              393
+            ],
+            [
+              692,
+              413
+            ],
+            [
+              674,
+              428
+            ],
+            [
+              667,
+              453
+            ],
+            [
+              642,
+              463
+            ],
+            [
+              626,
+              475
+            ],
+            [
+              610,
+              491
+            ],
+            [
+              587,
+              505
+            ],
+            [
+              562,
+              516
+            ],
+            [
+              532,
+              530
+            ],
+            [
+              505,
+              537
+            ],
+            [
+              478,
+              548
+            ],
+            [
+              458,
+              564
+            ],
+            [
+              431,
+              568
+            ],
+            [
+              405,
+              563
+            ],
+            [
+              377,
+              551
+            ],
+            [
+              352,
+              532
+            ],
+            [
+              337,
+              517
+            ],
+            [
+              329,
+              494
+            ]
+          ]
+        ]
+      }
+    ],
+    "bareReference": {
+      "code": "LC-092",
+      "sourceSHA256": "38fdcb288061c3c9715bff90c5ecc236244cc3389ffedb2b9e73cc41110a0c9a",
+      "matchMM": 0.18
+    }
+  },
+  "platform": {
+    "centre": [
+      0,
+      0
+    ],
+    "radiusMM": 15,
+    "minHeightMM": 9.9,
+    "topMinHeightMM": 12.7,
+    "topTint": [
+      0.49,
+      0.37,
+      0.25
+    ],
+    "sideTint": [
+      0.39,
+      0.4,
+      0.285
+    ]
+  }
+}
