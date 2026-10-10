@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from preview_alpha import transparent_preview
 
 
-def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None, tier='render', transparent=False, camera_shift_y=0, outside=False):
+def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None, tier='render', transparent=False, camera_shift_y=0, outside=False, west=False):
     directory = report.parent
     prefix = 'focus-' if focus_max_z is not None else ''
     if tier == 'lod':
@@ -57,7 +57,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     if focus_max_z is not None:
         high.z = min(high.z, focus_max_z/35-row['mountDepth'])
     centre = (low+high)/2
-    direction = Vector((2, 2.85, 2.45) if outside else (-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45)).normalized()
+    direction = Vector((-4, 0, 2.8) if west else (2, 2.85, 2.45) if outside else (-2, -2.85, 2.45) if inside else (-2, 2.85, 2.45) if front else (2, -2.85, 2.45)).normalized()
     distance = max((high-low).length, 1)*2+5
     camera.location = centre+direction*distance
     camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
@@ -89,6 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--review', action='store_true')
     parser.add_argument('--inside', action='store_true')
     parser.add_argument('--outside', action='store_true', help='Show the positive-X decorated side from the other diagonal')
+    parser.add_argument('--west', action='store_true', help='Show an east-facing corridor through its open western side')
     parser.add_argument('--focus-max-z', type=float)
     parser.add_argument('--tier', choices=['render','lod'], default='render')
     parser.add_argument('--transparent', action='store_true', help='Write transparent-preview.png separately; every public preview has alpha')
@@ -101,4 +102,4 @@ if __name__ == '__main__':
             continue
         if args.codes and json.loads(report.read_text())['model']['sourceCode'] not in args.codes:
             continue
-        preview(report, args.size, args.front, args.review, args.inside, args.focus_max_z, args.tier, args.transparent, args.camera_shift_y, args.outside)
+        preview(report, args.size, args.front, args.review, args.inside, args.focus_max_z, args.tier, args.transparent, args.camera_shift_y, args.outside, args.west)
