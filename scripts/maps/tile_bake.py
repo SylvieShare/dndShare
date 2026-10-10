@@ -101,8 +101,13 @@ def validate_maps(target):
     mesh = target.data
     mesh.calc_loop_triangles()
     uv = mesh.uv_layers.active.data
-    centres = np.array([np.mean([uv[i].uv[:] for i in tri.loops], axis=0)
-                        for tri in mesh.loop_triangles])
+    triangles = np.array([[uv[i].uv[:] for i in tri.loops] for tri in mesh.loop_triangles])
+    a, b = triangles[:, 1]-triangles[:, 0], triangles[:, 2]-triangles[:, 0]
+    area = np.abs(a[:, 0]*b[:, 1]-a[:, 1]*b[:, 0])
+    mapped = int((area>1e-14).sum())
+    if not mapped:
+        raise RuntimeError('UV packing collapsed the complete visible mesh')
+    centres = triangles.mean(1)
     xy = np.clip((centres*SIZE).astype(int), 0, SIZE-1)
     pixels = np.empty(SIZE*SIZE*4, np.float32)
     bpy.data.images['Colour'].pixels.foreach_get(pixels)
@@ -114,4 +119,4 @@ def validate_maps(target):
     if black or invalid:
         raise RuntimeError(f'Baked texture defects: {black} black, {invalid} flipped normals')
     return {'blackTriangleCentres': black, 'invalidNormalCentres': invalid,
-            'trianglesChecked': len(centres), 'textureSize': SIZE}
+            'trianglesChecked': len(centres), 'uvMappedTriangles': mapped, 'textureSize': SIZE}

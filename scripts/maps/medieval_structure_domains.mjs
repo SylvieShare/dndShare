@@ -63,6 +63,11 @@ export function structureLiquid(p, settings) {
   return part?.kind==='liquid' ? part : null;
 }
 
+export function structureFlame(p, settings) {
+  const part = (settings.surfaceParts || []).findLast(part => structureDomain(p, part));
+  return part?.kind==='flame' ? part : null;
+}
+
 export function structureFabricPigment(p, settings) {
   if ((settings.surfaceParts || []).some(part => structureDomain(p,part))) return null;
   if ((settings.produceParts || []).some(part => structureDomain(p,part))) return null;

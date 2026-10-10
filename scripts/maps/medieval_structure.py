@@ -103,8 +103,9 @@ def paint(obj, recipe):
             normals = np.column_stack([nx, ny, nz])
             u = p@direction
             v = np.where(np.abs(normals@transverse)>np.abs(normals@other), p@other, p@transverse)
-        elif axis=='arc-xz':
-            dx, dz = x-part['centerXZMM'][0], z-part['centerXZMM'][1]
+        elif axis in ('arc-xz', 'arc-yz'):
+            centre = part['centerXZMM'] if axis=='arc-xz' else part['centerYZMM']
+            dx, dz = (x if axis=='arc-xz' else y)-centre[0], z-centre[1]
             u, v = np.arctan2(dz, dx)*part['radiusMM'], np.hypot(dx, dz)
         elif axis=='crate':
             a = np.deg2rad(part['rotationZDeg'])
@@ -198,3 +199,10 @@ def paint(obj, recipe):
     linear = np.where(rgb<=.04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
     mesh.color_attributes['Paint'].data.foreach_set('color', np.column_stack([linear, np.ones(len(z))]).astype(np.float32).ravel())
     mesh.color_attributes['Surface'].data.foreach_set('color', surface.astype(np.float32).ravel())
+    flames = [part for part in settings.get('surfaceParts', []) if part.get('kind')=='flame']
+    if flames:
+        mask = np.zeros(len(z), np.float32)
+        for part in flames: mask = np.maximum(mask, domain(p, part).astype(np.float32))
+        attr = mesh.color_attributes.new('Flame', 'FLOAT_COLOR', 'POINT')
+        attr.data.foreach_set('color', np.column_stack([mask,mask,mask,np.ones(len(z))]).astype(np.float32).ravel())
+        print('MEDIEVAL_STRUCTURE_FLAMES', int(mask.sum()), len(flames), flush=True)

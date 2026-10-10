@@ -1,0 +1,1139 @@
+{
+  "name": "Tavern Sign",
+  "groupCode": "MED-tavern-sign",
+  "tileType": "floor",
+  "width": 1,
+  "height": 3,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 112000,
+  "lodTriangles": 36000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0.55
+      ],
+      [
+        0.27,
+        0.55
+      ],
+      [
+        0.27,
+        0.94
+      ],
+      [
+        0,
+        0.94
+      ]
+    ],
+    [
+      [
+        0,
+        2.06
+      ],
+      [
+        0.27,
+        2.06
+      ],
+      [
+        0.27,
+        2.45
+      ],
+      [
+        0,
+        2.45
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "tavern",
+    "sign",
+    "wood",
+    "iron",
+    "candle",
+    "light"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "stoneIslandMinCount": 2,
+    "woodParts": [
+      {
+        "name": "vertical timber gate",
+        "minMM": [
+          -17.6,
+          -44,
+          26.1
+        ],
+        "maxMM": [
+          1,
+          44,
+          124
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "rear plaque boards",
+        "minMM": [
+          -17.6,
+          -19,
+          83
+        ],
+        "maxMM": [
+          -8,
+          19,
+          109
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "horizontal top beam",
+        "minMM": [
+          -17.6,
+          -26,
+          109.7
+        ],
+        "maxMM": [
+          -8,
+          26,
+          115
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "curved upper arch grain",
+        "minMM": [
+          -17.6,
+          -24,
+          53
+        ],
+        "maxMM": [
+          -8,
+          24,
+          86.5
+        ],
+        "axis": "arc-yz",
+        "centerYZMM": [
+          0,
+          51
+        ],
+        "radiusMM": 27.4
+      },
+      {
+        "name": "lower diagonal brace -1",
+        "minMM": [
+          -17.6,
+          -26,
+          26.1
+        ],
+        "maxMM": [
+          -8,
+          -11,
+          51
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          -13,
+          18
+        ]
+      },
+      {
+        "name": "lower diagonal brace 1",
+        "minMM": [
+          -17.6,
+          11,
+          26.1
+        ],
+        "maxMM": [
+          -8,
+          26,
+          51
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          13,
+          18
+        ]
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [
+      {
+        "name": "iron post band -1 29.5",
+        "minMM": [
+          -17.6,
+          -31.6,
+          29.5
+        ],
+        "maxMM": [
+          -8.3,
+          -22,
+          32.5
+        ],
+        "rgb": [
+          0.245,
+          0.22,
+          0.165
+        ],
+        "roughness": 0.57,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "iron post band -1 53",
+        "minMM": [
+          -17.6,
+          -31.6,
+          53
+        ],
+        "maxMM": [
+          -8.3,
+          -22,
+          57
+        ],
+        "rgb": [
+          0.245,
+          0.22,
+          0.165
+        ],
+        "roughness": 0.57,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "iron post band -1 82.5",
+        "minMM": [
+          -17.6,
+          -31.6,
+          82.5
+        ],
+        "maxMM": [
+          -8.3,
+          -22,
+          88.5
+        ],
+        "rgb": [
+          0.245,
+          0.22,
+          0.165
+        ],
+        "roughness": 0.57,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "upper suspension chain -1",
+        "minMM": [
+          -17.6,
+          -33,
+          88.5
+        ],
+        "maxMM": [
+          -7.5,
+          -21.5,
+          109.8
+        ],
+        "rgb": [
+          0.24,
+          0.205,
+          0.14
+        ],
+        "roughness": 0.61,
+        "variation": 0.03,
+        "metallic": 0.78
+      },
+      {
+        "name": "lower anchor chain -1",
+        "minMM": [
+          -17.6,
+          -44,
+          26.1
+        ],
+        "maxMM": [
+          2,
+          -26,
+          49
+        ],
+        "rgb": [
+          0.255,
+          0.215,
+          0.15
+        ],
+        "roughness": 0.65,
+        "variation": 0.03,
+        "metallic": 0.75,
+        "excludeParts": [
+          {
+            "name": "preserve wooden post core",
+            "minMM": [
+              -17.6,
+              -30.7,
+              26.1
+            ],
+            "maxMM": [
+              -8.6,
+              -22,
+              82.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "lower brace plate -1",
+        "minMM": [
+          -9.6,
+          -21,
+          26.1
+        ],
+        "maxMM": [
+          -7.4,
+          -11,
+          37
+        ],
+        "rgb": [
+          0.23,
+          0.21,
+          0.17
+        ],
+        "roughness": 0.59,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "candle cup and bracket -1",
+        "minMM": [
+          -8.4,
+          -30.7,
+          58.0
+        ],
+        "maxMM": [
+          0.6,
+          -22.599999999999998,
+          64.65
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "iron post band 1 29.5",
+        "minMM": [
+          -17.6,
+          22,
+          29.5
+        ],
+        "maxMM": [
+          -8.3,
+          31.6,
+          32.5
+        ],
+        "rgb": [
+          0.245,
+          0.22,
+          0.165
+        ],
+        "roughness": 0.57,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "iron post band 1 53",
+        "minMM": [
+          -17.6,
+          22,
+          53
+        ],
+        "maxMM": [
+          -8.3,
+          31.6,
+          57
+        ],
+        "rgb": [
+          0.245,
+          0.22,
+          0.165
+        ],
+        "roughness": 0.57,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "iron post band 1 82.5",
+        "minMM": [
+          -17.6,
+          22,
+          82.5
+        ],
+        "maxMM": [
+          -8.3,
+          31.6,
+          88.5
+        ],
+        "rgb": [
+          0.245,
+          0.22,
+          0.165
+        ],
+        "roughness": 0.57,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "upper suspension chain 1",
+        "minMM": [
+          -17.6,
+          21.5,
+          88.5
+        ],
+        "maxMM": [
+          -7.5,
+          33,
+          109.8
+        ],
+        "rgb": [
+          0.24,
+          0.205,
+          0.14
+        ],
+        "roughness": 0.61,
+        "variation": 0.03,
+        "metallic": 0.78
+      },
+      {
+        "name": "lower anchor chain 1",
+        "minMM": [
+          -17.6,
+          26,
+          26.1
+        ],
+        "maxMM": [
+          2,
+          44,
+          49
+        ],
+        "rgb": [
+          0.255,
+          0.215,
+          0.15
+        ],
+        "roughness": 0.65,
+        "variation": 0.03,
+        "metallic": 0.75,
+        "excludeParts": [
+          {
+            "name": "preserve wooden post core",
+            "minMM": [
+              -17.6,
+              22,
+              26.1
+            ],
+            "maxMM": [
+              -8.6,
+              30.7,
+              82.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "lower brace plate 1",
+        "minMM": [
+          -9.6,
+          11,
+          26.1
+        ],
+        "maxMM": [
+          -7.4,
+          21,
+          37
+        ],
+        "rgb": [
+          0.23,
+          0.21,
+          0.17
+        ],
+        "roughness": 0.59,
+        "variation": 0.03,
+        "metallic": 0.8
+      },
+      {
+        "name": "candle cup and bracket 1",
+        "minMM": [
+          -8.4,
+          22.5,
+          58.0
+        ],
+        "maxMM": [
+          0.6,
+          30.6,
+          64.65
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "variation": 0.03,
+        "metallic": 0.8
+      }
+    ],
+    "hardware": [
+      {
+        "centerMM": [
+          -10.147278900146484,
+          -19.84000015258789,
+          113.05000305175781
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 111.75000305175782,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -10.140957946777343,
+          19.84000015258789,
+          113.05000305175781
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 111.75000305175782,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -7.615861053466797,
+          -26.940000534057617,
+          85.25
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 83.95,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -7.6040087890625,
+          26.940000534057617,
+          85.25
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 83.95,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -10.305386657714843,
+          -13.177000045776367,
+          104.51000213623047
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 103.21000213623047,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -10.30057632446289,
+          13.177000045776367,
+          104.51000213623047
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 103.21000213623047,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -10.258507843017577,
+          -13.177000045776367,
+          82.63999938964844
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 81.33999938964844,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -10.25315200805664,
+          13.177000045776367,
+          82.63999938964844
+        ],
+        "radiiMM": [
+          0.75,
+          1.2,
+          1.2
+        ],
+        "minZMM": 81.33999938964844,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "ochre shield behind pig",
+        "minMM": [
+          -9.55,
+          -11.5,
+          83.8
+        ],
+        "maxMM": [
+          -7.85,
+          11.5,
+          109
+        ],
+        "rgb": [
+          0.61,
+          0.39,
+          0.15
+        ],
+        "roughness": 0.78,
+        "variation": 0.03,
+        "kind": "painted-wood"
+      },
+      {
+        "name": "painted pig head",
+        "minMM": [
+          -7.85,
+          -10.8,
+          85.8
+        ],
+        "maxMM": [
+          3.2,
+          10.8,
+          103.5
+        ],
+        "rgb": [
+          0.73,
+          0.415,
+          0.335
+        ],
+        "roughness": 0.79,
+        "variation": 0.03,
+        "kind": "painted-wood"
+      },
+      {
+        "name": "lighter pig snout",
+        "minMM": [
+          -0.2,
+          -3.9,
+          89.8
+        ],
+        "maxMM": [
+          3.25,
+          3.9,
+          96.1
+        ],
+        "rgb": [
+          0.83,
+          0.53,
+          0.44
+        ],
+        "roughness": 0.78,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            1.4,
+            0,
+            93.1
+          ],
+          "radiiMM": [
+            3,
+            4,
+            3.4
+          ]
+        },
+        "kind": "painted-wood"
+      },
+      {
+        "name": "dark crest ground",
+        "minMM": [
+          -12.08,
+          -9.1,
+          109
+        ],
+        "maxMM": [
+          -11.64,
+          9.1,
+          122
+        ],
+        "rgb": [
+          0.145,
+          0.095,
+          0.06
+        ],
+        "roughness": 0.92,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            -11.9,
+            0,
+            115.2
+          ],
+          "radiiMM": [
+            10,
+            9.1,
+            7.1
+          ]
+        },
+        "kind": "painted-wood"
+      },
+      {
+        "name": "red raised dragon crest",
+        "minMM": [
+          -11.64,
+          -8.7,
+          108.5
+        ],
+        "maxMM": [
+          -10.45,
+          8.7,
+          121.8
+        ],
+        "rgb": [
+          0.64,
+          0.135,
+          0.09
+        ],
+        "roughness": 0.81,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            -11,
+            0,
+            115.3
+          ],
+          "radiiMM": [
+            10,
+            8.7,
+            6.9
+          ]
+        },
+        "kind": "painted-wood"
+      },
+      {
+        "name": "raised red plaque scroll -1 89.1",
+        "minMM": [
+          -11.76,
+          -16.05,
+          85.5
+        ],
+        "maxMM": [
+          -11.16,
+          -11.35,
+          92.69999999999999
+        ],
+        "rgb": [
+          0.56,
+          0.15,
+          0.09
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            -11.45,
+            -13.7,
+            89.1
+          ],
+          "radiiMM": [
+            10,
+            2.35,
+            3.6
+          ]
+        },
+        "kind": "painted-wood"
+      },
+      {
+        "name": "raised red plaque scroll -1 98.5",
+        "minMM": [
+          -11.76,
+          -16.05,
+          94.9
+        ],
+        "maxMM": [
+          -11.16,
+          -11.35,
+          102.1
+        ],
+        "rgb": [
+          0.56,
+          0.15,
+          0.09
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            -11.45,
+            -13.7,
+            98.5
+          ],
+          "radiiMM": [
+            10,
+            2.35,
+            3.6
+          ]
+        },
+        "kind": "painted-wood"
+      },
+      {
+        "name": "melted beeswax -1",
+        "minMM": [
+          -6.15,
+          -30.45,
+          64.65
+        ],
+        "maxMM": [
+          0.6,
+          -22.849999999999998,
+          70.5
+        ],
+        "rgb": [
+          0.82,
+          0.75,
+          0.48
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "kind": "wax"
+      },
+      {
+        "name": "candle flame -1",
+        "minMM": [
+          -4.55,
+          -28.15,
+          70.45
+        ],
+        "maxMM": [
+          -1.55,
+          -25.15,
+          73.72
+        ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "kind": "flame"
+      },
+      {
+        "name": "raised red plaque scroll 1 89.1",
+        "minMM": [
+          -11.76,
+          11.35,
+          85.5
+        ],
+        "maxMM": [
+          -11.16,
+          16.05,
+          92.69999999999999
+        ],
+        "rgb": [
+          0.56,
+          0.15,
+          0.09
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            -11.45,
+            13.7,
+            89.1
+          ],
+          "radiiMM": [
+            10,
+            2.35,
+            3.6
+          ]
+        },
+        "kind": "painted-wood"
+      },
+      {
+        "name": "raised red plaque scroll 1 98.5",
+        "minMM": [
+          -11.76,
+          11.35,
+          94.9
+        ],
+        "maxMM": [
+          -11.16,
+          16.05,
+          102.1
+        ],
+        "rgb": [
+          0.56,
+          0.15,
+          0.09
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            -11.45,
+            13.7,
+            98.5
+          ],
+          "radiiMM": [
+            10,
+            2.35,
+            3.6
+          ]
+        },
+        "kind": "painted-wood"
+      },
+      {
+        "name": "melted beeswax 1",
+        "minMM": [
+          -6.15,
+          22.75,
+          64.65
+        ],
+        "maxMM": [
+          0.6,
+          30.35,
+          70.5
+        ],
+        "rgb": [
+          0.82,
+          0.75,
+          0.48
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "kind": "wax"
+      },
+      {
+        "name": "candle flame 1",
+        "minMM": [
+          -4.55,
+          25.05,
+          70.45
+        ],
+        "maxMM": [
+          -1.55,
+          28.05,
+          73.72
+        ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03,
+        "kind": "flame"
+      }
+    ],
+    "emissionStrength": 1.6
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.1,
+      4.6
+    ],
+    "lodMiB": [
+      0.65,
+      1.55
+    ],
+    "shadowKiB": [
+      80,
+      200
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "1x3 paving and three insertion feet, tall122.7135mm timber arch, boarded plaque, four chain runs, coloured pig sculpture, raised scrolls/dragon and two candles.112k/36k separate pre-UV simplification/bakes preserve thin chain links, sculpted wax, flame tips and arch opening; compare1024/512 with768/384."
+  },
+  "reviewNotes": "PDF page6; neutral native front/back/top and direct +X view. Source1300064triangles/65003284bytes, max122.713501mm. Measured three feet nearY=-35,0,35, datum17mm and34.3/22.75mm fitted profile. +X is front of pig plaque; timber frame lies at negativeX. Three native floor rays [0,+/-35,25.3087/25.3068] and[0,0,25.2967]mm remain clear when starting at60mm. Preserve three stand points and separate post blockers. Grain follows vertical posts, horizontal rear plaque and beam, diagonal lower braces and measured YZ upper arch. Four native chain runs, iron bands, brace plates and candle cups retain metal independent of timber. Warm painted pig/snout, ochre shield, four red raised scrolls and red dragon over a dark medallion ground. Candle bodies extend to70.5mm; above70.5mm both source flame cross sections narrow to x[-4.39,-1.71],y centres-26.65/+26.55 and reach73.6324mm. Two bounded flame masks begin70.45mm and get separate emissive texture plus defaultLights at x=-3.05,y=-26.65/+26.55,z71.8mm relative to17mm datum. Review each flame, wax/cup boundaries, chain/post edges, pig/plate borders, glyph and rear boards in both tiers before publication. Initial SmartUV .5rad/.0025 failed physical overlap check with surfaces1.671mm apart; recreate both UV at.35rad/.003 margin and rebake before any visual acceptance. At.35rad/.003 the render UV collapsed to zero physical coverage and all four maps stayed at neutral fill; do not accept despite nonblack checks. Reduce island margins to.0008 render/.0012 LOD at the same.35 angle, require nonzero mapped triangles and physical pixel coverage, and rebake. Eight frontal hex heads on upper beam, post caps and plaque were independently ray-measured (MT1-034-bolt-measurements.json); .75/1.2/1.2mm feathered metallic domains sit .12mm behind the measured front face. Broad cap faces stay wood with iron side straps, while their fasteners remain metal. Initial lower-brace probe missed geometry and is not used. Compact candidate verified both flames with110/104 render and32/28 LOD emissive samples and zero emission outside measured domains.",
+  "uvIslandMargin": 0.003,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ],
+    [
+      0.5,
+      1.5
+    ],
+    [
+      0.5,
+      2.5
+    ]
+  ],
+  "standRayTopMM": 30,
+  "pegCentersMM": [
+    [
+      0,
+      -35
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      35
+    ]
+  ],
+  "defaultLights": [
+    {
+      "key": "tavern-candle-1",
+      "name": "Свеча вывески 1",
+      "kind": "candle",
+      "color": "#ffd899",
+      "position": [
+        0.412857,
+        2.261429,
+        1.565714
+      ],
+      "intensity": 3,
+      "radius": 2.5,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "tavern-candle-2",
+      "name": "Свеча вывески 2",
+      "kind": "candle",
+      "color": "#ffd899",
+      "position": [
+        0.412857,
+        0.741429,
+        1.565714
+      ],
+      "intensity": 3,
+      "radius": 2.5,
+      "enabled": true,
+      "flicker": true
+    }
+  ],
+  "renderUVIslandMargin": 0.0008,
+  "lodUVIslandMargin": 0.0012
+}

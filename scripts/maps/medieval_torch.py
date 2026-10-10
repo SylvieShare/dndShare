@@ -80,10 +80,11 @@ def paint(obj, recipe):
 
 
 def emission_bake(recipe):
-    if not recipe['materials'].get('torch', {}).get('flameReference'):
+    settings = recipe['materials']
+    if not settings.get('torch', {}).get('flameReference') and not any(p.get('kind')=='flame' for p in settings.get('surfaceParts', [])):
         return None
     def bake(target, directory, nodes, links, shader, output):
         from majestic_camp import bake_emission
         bake_emission(target, directory, nodes, links, shader, output,
-                      recipe['materials']['torch']['emissionStrength'])
+                      settings.get('torch', {}).get('emissionStrength', settings.get('emissionStrength', 1)))
     return bake

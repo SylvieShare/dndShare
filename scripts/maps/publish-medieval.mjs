@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mapTool } from './mcp_maps_client.mjs';
@@ -18,6 +19,16 @@ const expected = manifest[0];
 const reportPath = path.join(base, 'review', code, 'report.json');
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 assert.deepEqual(report.model,expected,'Publication manifest differs from reviewed resources');
+const flames = report.recipe.materials.surfaceParts?.filter(p => p.kind==='flame') || [];
+if (flames.length) for (const tier of ['render','lod']) {
+  const evidence = report.materialChannelReview?.[tier];
+  assert.equal(report.materialChannelAssets?.[tier],expected.assets[tier].sha256,'Flame QA differs from publication resources');
+  assert.equal(createHash('sha256').update(await fs.readFile(path.join(base,'review',code,tier+'.glb'))).digest('hex'),expected.assets[tier].sha256);
+  assert.equal(evidence?.emissionOutsideFlame,0,'Unverified flame boundaries');
+  assert.equal(evidence?.metalDomainMismatches,0);
+  assert.equal(evidence?.roughnessDomainMismatches,0);
+  for (const part of flames) assert.ok(evidence?.flamePartSamples?.[part.name]>=10,'Unverified flame: '+part.name);
+}
 const liquidCount = report.recipe.materials.surfaceParts?.filter(p => p.kind==='liquid').length || 0;
 if (liquidCount) for (const tier of ['render','lod']) {
   assert.equal(report.liquidPixelReview?.[tier]?.length,liquidCount,'Unverified liquid surfaces');

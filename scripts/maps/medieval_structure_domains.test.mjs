@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureMetal, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureFlame, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
 
@@ -50,4 +50,17 @@ test('measured cloth gaps keep sage pigment while crust and timber remain indepe
   }
   assert.equal(structureFabricPigment([5.6248,.1328,46.4572],bread),null);
   assert.equal(structureFabricPigment([15,0,54],bread),null);
+});
+
+test('two measured tavern flames stay separate from wax, iron cups and timber', () => {
+  const sign = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-034.json',import.meta.url))).materials;
+  for (const y of [-26.65,26.55]) {
+    assert.equal(structureFlame([-3.05,y,71.8],sign)?.kind,'flame');
+    assert.deepEqual(structureMetal([-3.05,y,71.8],sign),{metallic:0,roughness:.86});
+    assert.equal(structureFlame([-3.05,y,69],sign),null,'Wax cap must not emit');
+    assert.equal(structureFlame([-3.05,y,64],sign),null,'Cup must not emit');
+    assert.deepEqual(structureMetal([-3.05,y,64],sign),{metallic:.8,roughness:.5});
+    assert.equal(structureFlame([-10,y,72],sign),null,'Post must not emit');
+  }
+  assert.equal(structureFlame([-3.05,0,71.8],sign),null,'Opening between candles must not emit');
 });

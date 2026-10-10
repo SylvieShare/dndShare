@@ -14,6 +14,13 @@ const source = candidate==='balanced' ? directory : path.join(directory, 'candid
 const baseline = JSON.parse(await fs.readFile(path.join(directory, 'report.json'), 'utf8'));
 const selected = JSON.parse(await fs.readFile(path.join(source, 'report.json'), 'utf8'));
 const liquidCount = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='liquid').length || 0;
+const flames = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='flame') || [];
+if (flames.length) for (const tier of ['render','lod']) {
+  const evidence = selected.materialChannelReview?.[tier];
+  assert.equal(selected.materialChannelAssets?.[tier],createHash('sha256').update(await fs.readFile(path.join(source,tier+'.glb'))).digest('hex'),'Flame QA differs from selected resources');
+  assert.equal(evidence?.emissionOutsideFlame,0,'Unverified flame boundaries');
+  for (const part of flames) assert.ok(evidence?.flamePartSamples?.[part.name]>=10,'Unverified flame: '+part.name);
+}
 if (liquidCount) for (const tier of ['render','lod']) {
   assert.equal(selected.liquidPixelReview?.[tier]?.length,liquidCount,'Validate every liquid floor before selection');
   assert.equal(selected.liquidPixelAssets?.[tier],createHash('sha256').update(await fs.readFile(path.join(source,tier+'.glb'))).digest('hex'),'Liquid QA differs from selected resources');

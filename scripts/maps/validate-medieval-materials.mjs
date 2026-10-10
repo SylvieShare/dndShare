@@ -3,9 +3,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { createHash } from 'node:crypto';
 import { rasterizeSurface } from './uv_surface.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
-import { structureMetal } from './medieval_structure_domains.mjs';
+import { structureMetal, structureFlame } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
 const require = createRequire('/private/tmp/dndshare-model-tools/package.json');
 const { NodeIO } = require('@gltf-transform/core');
@@ -54,21 +55,27 @@ for (const tier of ['render', 'lod']) {
   assert.equal(mismatches, 0, 'Metal channel escaped the measured iron domains');
   assert.equal(roughnessMismatches, 0, 'Packing changed per-material roughness');
   let flameSamples = 0, outsideFlame = 0;
-  if (settings.kind==='torch' && settings.torch.flameReference) {
+  const flamePartSamples = Object.fromEntries((settings.surfaceParts || []).filter(p => p.kind==='flame').map(p => [p.name,0]));
+  if (settings.kind==='torch' && settings.torch.flameReference || settings.surfaceParts?.some(p => p.kind==='flame')) {
     assert.ok(material.getEmissiveTexture());
     const { data, info: e } = await sharp(Buffer.from(material.getEmissiveTexture().getImage())).removeAlpha().raw().toBuffer({ resolveWithObject: true });
     rasterizeSurface(doc, e.width, e.height, (i,p) => {
       if (Math.max(...data.subarray(i*3, i*3+3))>8) {
         flameSamples++;
-        if (!torchFlameDomain(p, settings.torch)) outsideFlame++;
+        const part = settings.kind==='structure' ? structureFlame(p,settings) : null;
+        if (part) flamePartSamples[part.name]++;
+        if (!(settings.kind==='structure' ? part : torchFlameDomain(p, settings.torch))) outsideFlame++;
       }
     }, 'Emissive');
     assert.ok(flameSamples>50);
+    for (const [name,count] of Object.entries(flamePartSamples)) assert.ok(count>=10,'Missing packed flame: '+name);
     assert.equal(outsideFlame, 0, 'Emission escaped the measured flame domain');
   } else assert.equal(material.getEmissiveTexture(), null);
   evidence[tier] = { metalSamples, metalDomainMismatches: mismatches, roughnessDomainMismatches: roughnessMismatches, quantizedBoundarySamples,
-    packingPositionToleranceMM: .01, flameSamples, emissionOutsideFlame: outsideFlame };
+    packingPositionToleranceMM: .01, flameSamples, flamePartSamples, emissionOutsideFlame: outsideFlame };
 }
 report.materialChannelReview = evidence;
+report.materialChannelAssets = Object.fromEntries(await Promise.all(['render','lod'].map(async tier =>
+  [tier,createHash('sha256').update(await fs.readFile(path.join(directory,tier+'.glb'))).digest('hex')])));
 await fs.writeFile(reportPath, JSON.stringify(report, null, 2)+'\n');
 console.log('MEDIEVAL_MATERIAL_CHANNELS', code, evidence);
