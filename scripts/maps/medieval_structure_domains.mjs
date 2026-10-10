@@ -15,6 +15,7 @@ export function structureDomain(p, part) {
     const s = part.projection, t = p.reduce((sum,v,i) => sum+(v-s.originMM[i])*s.axis[i], 0);
     if (t<s.rangeMM[0] || t>s.rangeMM[1]) return false;
   }
+  if ((part.excludeParts || []).some(excluded => structureDomain(p,excluded))) return false;
   return true;
 }
 

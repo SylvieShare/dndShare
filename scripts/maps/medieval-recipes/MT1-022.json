@@ -1,0 +1,889 @@
+{
+  "name": "Wooden Crates 4",
+  "groupCode": "MED-wooden-crates",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 76000,
+  "lodTriangles": 26000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0.045
+      ],
+      [
+        0.995,
+        0.045
+      ],
+      [
+        0.995,
+        0.96
+      ],
+      [
+        0,
+        0.96
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "crates",
+    "cage",
+    "sack",
+    "tool"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "left crate",
+        "centerMM": [
+          -8.079,
+          -5.915,
+          0
+        ],
+        "rotationZDeg": 73.25,
+        "minMM": [
+          -7.9559999999999995,
+          -7.979,
+          26.1
+        ],
+        "maxMM": [
+          7.9559999999999995,
+          7.979,
+          41.1
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          7.656,
+          7.679
+        ],
+        "railWidthMM": 1.45,
+        "lidAxis": "y"
+      },
+      {
+        "name": "right crate",
+        "centerMM": [
+          5.272,
+          5.709,
+          0
+        ],
+        "rotationZDeg": 53.75,
+        "minMM": [
+          -8.036,
+          -7.869,
+          26.1
+        ],
+        "maxMM": [
+          8.036,
+          7.869,
+          41.1
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          7.736,
+          7.569
+        ],
+        "railWidthMM": 1.45,
+        "lidAxis": "y"
+      },
+      {
+        "name": "wooden cage",
+        "minMM": [
+          -16,
+          4.6,
+          26.1
+        ],
+        "maxMM": [
+          -5.1,
+          15.6,
+          48.3
+        ],
+        "axis": "meridian",
+        "centerXYMM": [
+          -10.55,
+          10.08
+        ],
+        "radiusMM": 5.2,
+        "darkRGB": [
+          0.25,
+          0.115,
+          0.04
+        ],
+        "lightRGB": [
+          0.43,
+          0.235,
+          0.075
+        ]
+      },
+      {
+        "name": "plane handle",
+        "centerMM": [
+          2.782,
+          2.431,
+          0
+        ],
+        "rotationZDeg": 52.5,
+        "minMM": [
+          -1.1,
+          -5.3,
+          41.0
+        ],
+        "maxMM": [
+          1.1,
+          5.3,
+          44.0
+        ],
+        "axis": "y"
+      }
+    ],
+    "fabricParts": [
+      {
+        "name": "mustard sack",
+        "minMM": [
+          -1.6,
+          -16.1,
+          25.8
+        ],
+        "maxMM": [
+          14.5,
+          1.4,
+          40.9
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            6.45,
+            -7.9,
+            32.8
+          ],
+          "radiiMM": [
+            10.1,
+            10.6,
+            14
+          ]
+        },
+        "rgb": [
+          0.57,
+          0.48,
+          0.225
+        ],
+        "excludeParts": [
+          {
+            "centerMM": [
+              -8.079,
+              -5.915,
+              0
+            ],
+            "rotationZDeg": 73.25,
+            "minMM": [
+              -8.006,
+              -8.029,
+              26.1
+            ],
+            "maxMM": [
+              8.006,
+              8.029,
+              41.1
+            ]
+          },
+          {
+            "centerMM": [
+              5.272,
+              5.709,
+              0
+            ],
+            "rotationZDeg": 53.75,
+            "minMM": [
+              -8.086,
+              -7.919,
+              26.1
+            ],
+            "maxMM": [
+              8.086,
+              7.919,
+              41.1
+            ]
+          }
+        ]
+      }
+    ],
+    "ironParts": [
+      {
+        "name": "plane sole",
+        "centerMM": [
+          2.782,
+          2.431,
+          0
+        ],
+        "rotationZDeg": 52.5,
+        "minMM": [
+          -0.95,
+          -5.3,
+          40.7
+        ],
+        "maxMM": [
+          0.95,
+          5.3,
+          42.0
+        ],
+        "rgb": [
+          0.39,
+          0.385,
+          0.355
+        ],
+        "roughness": 0.34,
+        "metallic": 0.9
+      }
+    ],
+    "hardware": [
+      {
+        "centerMM": [
+          -3.60254010177779,
+          -15.257488093629469,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -3.60254010177779,
+          -15.257488093629469,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -16.96832115589139,
+          -11.23484458301385,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -16.96832115589139,
+          -11.23484458301385,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          0.810321155891387,
+          -0.5951554169861506,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          0.810321155891387,
+          -0.5951554169861506,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -12.555459898222212,
+          3.427488093629469,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -12.555459898222212,
+          3.427488093629469,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -2.7305027615205555,
+          -14.788925528759961,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -2.7305027615205555,
+          -14.788925528759961,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -17.436883720760896,
+          -10.362807242756617,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -17.436883720760896,
+          -10.362807242756617,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          1.278883720760895,
+          -1.4671927572433838,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          1.278883720760895,
+          -1.4671927572433838,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -13.427497238479445,
+          2.9589255287599614,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -13.427497238479445,
+          2.9589255287599614,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          6.237096546972666,
+          -4.591361433222692,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          6.237096546972666,
+          -4.591361433222692,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -4.84183942645401,
+          3.532050515996202,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -4.84183942645401,
+          3.532050515996202,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          15.385839426454009,
+          7.885949484003797,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          15.385839426454009,
+          7.885949484003797,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          4.306903453027334,
+          16.009361433222693,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          4.306903453027334,
+          16.009361433222693,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          7.21552452381441,
+          -4.440766964089962,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          7.21552452381441,
+          -4.440766964089962,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -4.99243389558674,
+          4.510478492837947,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -4.99243389558674,
+          4.510478492837947,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          15.53643389558674,
+          6.907521507162051,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          15.53643389558674,
+          6.907521507162051,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          3.3284754761855906,
+          15.85876696408996,
+          27.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 26.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          3.3284754761855906,
+          15.85876696408996,
+          39.5
+        ],
+        "radiiMM": [
+          0.85,
+          0.85,
+          0.7
+        ],
+        "minZMM": 38.65,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      }
+    ],
+    "stoneIslandMinCount": 2
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      3.0
+    ],
+    "lodMiB": [
+      0.45,
+      1.1
+    ],
+    "shadowKiB": [
+      50,
+      150
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "One 35 mm paving tile with two crates, a folded sack, an open wooden cage and a small hand plane. Preserve cage openings and separate timber/fabric/iron with 76k/26k independent bakes and compared1024/512 vs768/384 colour maps."
+  },
+  "reviewNotes": "PDF page4 and two 1000px source diagonals. Native datum17 mm, maximum 48.1464 mm; source paving probe[-13,-13,25.786873] mm. Closed-crate axes 73.25/53.75deg measured from side-plane normal histograms; cage excluded from that fit. Cage grain follows vertical meridians, retaining open slats and rings. Plane OBB center[2.782,2.431], angle 52.5deg, half widths[.887,5.179] mm; steel sole is separate from wooden arched handle. Mustard fabric sack uses a bounded ellipsoid and roughness .98. Occupied tile has no stand point; all metallic and roughness domains require decoded checks. Native stone-cap scans at25.1/25.2/25.3/25.4/25.5/25.7 mm consistently yield two large connected groups because the props join the surrounding paving; retain those measured groups rather than invent separate caps. Visual refinement: extend sack coverage to the sculpted lower hem and exclude the measured crate volumes so fabric cannot recolour wooden corners.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "surfaceHeightMM": 25.786873
+}

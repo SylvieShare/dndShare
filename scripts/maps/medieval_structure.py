@@ -21,6 +21,8 @@ def domain(p, part):
     if 'projection' in part:
         s = part['projection']; t = (p-np.array(s['originMM']))@np.array(s['axis'])
         mask &= (t>=s['rangeMM'][0])&(t<=s['rangeMM'][1])
+    for excluded in part.get('excludeParts', []):
+        mask &= ~domain(p, excluded)
     return mask
 
 
@@ -39,9 +41,14 @@ def paint(obj, recipe):
         mask = domain(p, part)
         q = coordinates(p, part)
         axis = part.get('axis', 'z')
-        if axis=='z': u, v = z, np.where(np.abs(nx)>np.abs(ny), y, x)
-        elif axis=='x': u, v = x, np.where(np.abs(ny)>np.abs(nz), z, y)
-        elif axis=='y': u, v = y, np.where(np.abs(nx)>np.abs(nz), z, x)
+        angle = np.deg2rad(part.get('rotationZDeg', 0))
+        qnx, qny = nx*np.cos(angle)+ny*np.sin(angle), -nx*np.sin(angle)+ny*np.cos(angle)
+        if axis=='z': u, v = q[:, 2], np.where(np.abs(qnx)>np.abs(qny), q[:, 1], q[:, 0])
+        elif axis=='x': u, v = q[:, 0], np.where(np.abs(qny)>np.abs(nz), q[:, 2], q[:, 1])
+        elif axis=='y': u, v = q[:, 1], np.where(np.abs(qnx)>np.abs(nz), q[:, 2], q[:, 0])
+        elif axis=='meridian':
+            u = z
+            v = np.arctan2(y-part['centerXYMM'][1], x-part['centerXYMM'][0])*part['radiusMM']
         elif axis=='floor-frame':
             horizontal = np.abs(y)>part['frameInnerHalfMM']
             u, v = np.where(horizontal, x, y), np.where(horizontal, y, x)
@@ -68,7 +75,7 @@ def paint(obj, recipe):
             v = np.where(top, np.where(top_x, q[:, 1], q[:, 0]), v)
         else: raise ValueError('Unknown measured timber axis')
         grain = np.clip(.5+.22*np.sin(v*6.8+.12*np.sin(u*.4))+.10*np.sin(v*18+.04*np.sin(u*.7)), .1, .9)
-        wood = np.array(settings['woodDarkRGB'])*(1-grain[:, None])+np.array(settings['woodLightRGB'])*grain[:, None]
+        wood = np.array(part.get('darkRGB', settings['woodDarkRGB']))*(1-grain[:, None])+np.array(part.get('lightRGB', settings['woodLightRGB']))*grain[:, None]
         wood *= (1+.045*np.sin(u*.17+v*.1))[:, None]
         # Visible ends of straight beams; curved grain follows the actual arc.
         ends = mask&((np.abs(nx)>.75) if axis=='x' else (np.abs(ny)>.75) if axis=='y' else (np.abs(nz)>.75) if axis=='z' else False)
