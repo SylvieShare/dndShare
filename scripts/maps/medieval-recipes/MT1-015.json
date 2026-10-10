@@ -1,0 +1,188 @@
+{
+  "name": "Ground Wood Cross",
+  "groupCode": "MED-ground-wood",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 10,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 64000,
+  "lodTriangles": 22000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": false,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "floor",
+    "cross"
+  ],
+  "materials": {
+    "kind": "wood-floor",
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "frameInnerHalfMM": 14.5,
+    "floorTopStartMM": 17.8,
+    "topBlendMM": 1.0,
+    "endCenterZMM": 18.4,
+    "plankWidthMM": 4.7,
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "jointDistanceMM": 0.65,
+    "crossReference": {
+      "code": "MT1-014",
+      "matchMM": 0.15,
+      "blendMM": 0.2,
+      "minZMM": 18.7
+    },
+    "crossCenterMM": [
+      -0.25,
+      0.56
+    ],
+    "upperCrossAngleDeg": -47.5,
+    "lowerCrossAngleDeg": 44,
+    "upperCrossMinZMM": 20.1,
+    "hardware": [
+      {
+        "centerMM": [
+          -0.25,
+          0.56,
+          20.96
+        ],
+        "radiiMM": [
+          1.55,
+          1.4,
+          0.42
+        ],
+        "minZMM": 20.55,
+        "rgb": [
+          0.18,
+          0.16,
+          0.14
+        ]
+      },
+      {
+        "centerMM": [
+          -9,
+          10.06,
+          20.84
+        ],
+        "radiiMM": [
+          1.25,
+          1.35,
+          0.32
+        ],
+        "minZMM": 20.55,
+        "rgb": [
+          0.18,
+          0.16,
+          0.14
+        ]
+      },
+      {
+        "centerMM": [
+          8.2,
+          -8.66,
+          20.8
+        ],
+        "radiiMM": [
+          1.2,
+          1.35,
+          0.32
+        ],
+        "minZMM": 20.52,
+        "rgb": [
+          0.18,
+          0.16,
+          0.14
+        ]
+      },
+      {
+        "centerMM": [
+          10.5,
+          11,
+          20.49
+        ],
+        "radiiMM": [
+          1.2,
+          1.15,
+          0.28
+        ],
+        "minZMM": 20.27,
+        "rgb": [
+          0.18,
+          0.16,
+          0.14
+        ]
+      },
+      {
+        "centerMM": [
+          -11.15,
+          -9.9,
+          20.16
+        ],
+        "radiiMM": [
+          1.15,
+          1.1,
+          0.24
+        ],
+        "minZMM": 19.98,
+        "rgb": [
+          0.18,
+          0.16,
+          0.14
+        ]
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      0.7,
+      1.8
+    ],
+    "lodMiB": [
+      0.2,
+      0.7
+    ],
+    "shadowKiB": [
+      30,
+      120
+    ],
+    "previewKiB": [
+      8,
+      40
+    ],
+    "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
+  },
+  "reviewNotes": "PDF page 3. Two crossed wooden braces added above the MT1-014 floor; separate them by exact nearest-source distance >0.15 mm. Measured lower brace direction 44 degrees, upper -47.5 degrees; frame and inner plank grain remain unchanged. Five measured raised fasteners have separate dark iron colour/roughness/metallic. Native base 35 mm, datum 10 mm, maximum 21.1095 mm.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5
+}

@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { currentModel } from './current_model.mjs';
 import { prepareShadow } from './shadow_model.mjs';
-import { rasterizeSurface, extendUvGutters } from './uv_surface.mjs';
+import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
@@ -57,7 +57,22 @@ if (!process.argv.includes('--publish-manifest')) {
           for (let c = 0; c < 3; c++) data[i+c] = Math.round((n[c]/length+1)*127.5);
         }
       }
-      const coverage = rasterizeSurface(doc, pixels, pixels, () => {}, slot);
+      let coverage = rasterizeSurface(doc, pixels, pixels, () => {}, slot);
+      if (orm.has(texture) && recipe.materials.hardware?.length) {
+        const writeHardware = (i, p, used) => {
+          let weight = 0;
+          for (const h of recipe.materials.hardware) {
+            if (p[2]<h.minZMM) continue;
+            const d = p.reduce((sum,v,c) => sum+((v-h.centerMM[c])/h.radiiMM[c])**2, 0);
+            weight = Math.max(weight, Math.max(0, Math.min(1, (1-d)/.2)));
+          }
+          if (!used) data[i*3] = 255;
+          data[i*3+1] = Math.round((.88*(1-weight)+.43*weight)*255);
+          data[i*3+2] = Math.round(weight*255);
+        };
+        coverage = rasterizeSurface(doc, pixels, pixels, (i,p) => writeHardware(i,p,true), slot);
+        coverage = seedSurfaceGutters(doc, pixels, pixels, coverage, (i,p) => writeHardware(i,p,false), 1, slot);
+      }
       extendUvGutters(data, info.channels, coverage.slice(), pixels, pixels, 4);
       const pipeline = sharp(data, { raw: info });
       const bytes = await (colour.has(texture) ? pipeline.jpeg({ quality: 94, chromaSubsampling: '4:4:4' }) : pipeline.png()).toBuffer();

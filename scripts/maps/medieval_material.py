@@ -38,6 +38,10 @@ def stone_islands(obj, settings):
 
 
 def paint(obj, recipe):
+    if recipe['materials'].get('kind')=='wood-floor':
+        from medieval_wood import paint as paint_wood
+        paint_wood(obj, recipe)
+        return
     mesh = obj.data
     positions = np.empty(len(mesh.vertices)*3, np.float32)
     mesh.vertices.foreach_get('co', positions)

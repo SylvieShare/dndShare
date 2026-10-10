@@ -1,0 +1,82 @@
+{
+  "name": "Ground Wood",
+  "groupCode": "MED-ground-wood",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 10,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 56000,
+  "lodTriangles": 18000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": false,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "floor"
+  ],
+  "materials": {
+    "kind": "wood-floor",
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "frameInnerHalfMM": 14.5,
+    "floorTopStartMM": 17.8,
+    "topBlendMM": 1.0,
+    "endCenterZMM": 18.4,
+    "plankWidthMM": 4.7,
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "jointDistanceMM": 0.65
+  },
+  "weightBudget": {
+    "renderMiB": [
+      0.7,
+      1.8
+    ],
+    "lodMiB": [
+      0.2,
+      0.7
+    ],
+    "shadowKiB": [
+      30,
+      120
+    ],
+    "previewKiB": [
+      8,
+      40
+    ],
+    "basis": "One 35 mm sandstone pavement tile, rounded cobbles and shallow joints; 1024/512 colour atlases, lower resolution normal/ORM and Meshopt geometry."
+  },
+  "reviewNotes": "PDF page 3. Full wooden floor with four frame rails and inner planks, native 35 mm base, 10 mm mounting depth, maximum 19.5249 mm. Measured sculpt normal variances: interior nx²=0.343,ny²=0.095; north/south nx²=0.097,ny²=0.321; east/west nx²=0.302,ny²=0.131. Grain follows Y inside and along east/west rails, X along north/south rails; separate end grain, warm wood palette, roughness and recessed dirt.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5
+}
