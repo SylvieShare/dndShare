@@ -39,6 +39,9 @@ export function structureMetal(p, settings) {
   for (const part of settings.stoneParts || []) if (structureDomain(p, part)) roughness = .91;
   for (const part of settings.fabricParts || []) if (structureDomain(p, part)) roughness = .98;
   for (const part of settings.produceParts || []) if (structureDomain(p, part)) roughness = part.roughness;
+  for (const part of settings.surfaceParts || []) if (structureDomain(p, part)) {
+    roughness = part.roughness; metallic = part.metallic || 0;
+  }
   for (const part of settings.ironParts || []) if (structureDomain(p, part)) {
     metallic = part.metallic; roughness = part.roughness;
   }

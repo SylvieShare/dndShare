@@ -69,14 +69,14 @@ if (!process.argv.includes('--publish-manifest')) {
             data[i*3+c] = Math.round((v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055)*255);
           }
         };
-        if (recipe.materials.produceParts?.length) {
+        if (recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => p.kind==='liquid')) {
           rasterizeSurface(doc,pixels,pixels,(i,p,n,rgba) => {
             if (data[i*3+1]>data[i*3]*1.18 && rgba[1]<rgba[0]*1.05) pigment(i,p,n,rgba);
           },slot,'COLOR_1');
         }
         coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,pigment,1,slot,'COLOR_1');
       }
-      if (orm.has(texture) && (recipe.materials.hardware?.length || recipe.materials.ironParts?.length)) {
+      if (orm.has(texture) && (recipe.materials.kind==='structure' || recipe.materials.hardware?.length || recipe.materials.ironParts?.length)) {
         const writeHardware = (i, p, used) => {
           let weight = 0;
           for (const h of recipe.materials.hardware || []) {

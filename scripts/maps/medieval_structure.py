@@ -124,6 +124,19 @@ def paint(obj, recipe):
         fruit *= (1+.022*np.sin(x*8.7+y*7.2+z*9.1))[:, None]
         rgb[mask] = fruit[mask]; surface[mask, 1] = part['roughness']; surface[mask, 2] = 0
         print('MEDIEVAL_PRODUCE', part['name'], int(mask.sum()), len(centers), flush=True)
+    for part in settings.get('surfaceParts', []):
+        mask = domain(p, part)
+        if part.get('centersMM'):
+            centers = np.array(part['centersMM'])
+            distance = ((p[:, None, :2]-centers[None, :, :2])**2).sum(2)
+            if part.get('centerRadiiMM'): distance /= np.array(part['centerRadiiMM'])[None, :]**2
+            nearest = distance.argmin(1)
+            finish = np.array(part['colorsRGB'])[nearest]
+        else: finish = np.tile(np.array(part['rgb']), (len(z), 1))
+        amplitude = part.get('variation', .025)
+        finish *= (1+amplitude*np.sin(x*1.73+y*2.31+z*1.17))[:, None]
+        rgb[mask] = finish[mask]; surface[mask, 1] = part['roughness']; surface[mask, 2] = part.get('metallic', 0)
+        print('MEDIEVAL_SURFACE_PART', part['name'], int(mask.sum()), flush=True)
     for part in settings.get('ironParts', []):
         mask = domain(p, part)
         iron = np.array(part['rgb'])*(1+.07*np.sin(x*1.2+y*.7+z*.6))[:, None]

@@ -1,0 +1,371 @@
+{
+  "name": "Potions",
+  "groupCode": "MED-potions",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 80000,
+  "lodTriangles": 26000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0.5
+      ],
+      [
+        1,
+        0.5
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "potions",
+    "ceramic",
+    "wood",
+    "liquid"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "wooden counter",
+        "centerMM": [
+          0,
+          -8,
+          0
+        ],
+        "rotationZDeg": 0,
+        "minMM": [
+          -17.6,
+          -8.1,
+          26.1
+        ],
+        "maxMM": [
+          17.6,
+          8.4,
+          36.05
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          16.2,
+          7.5
+        ],
+        "railWidthMM": 1.8,
+        "lidAxis": "x"
+      }
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneIslandMinCount": 2,
+    "surfaceParts": [
+      {
+        "name": "five ceramic vessels",
+        "kind": "ceramic",
+        "minMM": [
+          -17.2,
+          -16.1,
+          36.05
+        ],
+        "maxMM": [
+          17.3,
+          0.2,
+          51
+        ],
+        "centersMM": [
+          [
+            -11.35,
+            -5.45,
+            0
+          ],
+          [
+            -5.9,
+            -11.9,
+            0
+          ],
+          [
+            -1.8,
+            -5.3,
+            0
+          ],
+          [
+            4.45,
+            -11.4,
+            0
+          ],
+          [
+            10.95,
+            -5.3,
+            0
+          ]
+        ],
+        "colorsRGB": [
+          [
+            0.49,
+            0.28,
+            0.105
+          ],
+          [
+            0.46,
+            0.245,
+            0.085
+          ],
+          [
+            0.46,
+            0.355,
+            0.13
+          ],
+          [
+            0.39,
+            0.31,
+            0.11
+          ],
+          [
+            0.49,
+            0.365,
+            0.14
+          ]
+        ],
+        "roughness": 0.76,
+        "variation": 0.035,
+        "centerRadiiMM": [
+          5.8,
+          4.1,
+          4.1,
+          4.3,
+          6.2
+        ]
+      },
+      {
+        "name": "wooden cork",
+        "kind": "cork",
+        "minMM": [
+          -3.1,
+          -6.6,
+          45.65
+        ],
+        "maxMM": [
+          -0.5,
+          -4.0,
+          47.050000000000004
+        ],
+        "rgb": [
+          0.3,
+          0.2,
+          0.09
+        ],
+        "roughness": 0.98,
+        "variation": 0.1
+      },
+      {
+        "name": "wooden cork",
+        "kind": "cork",
+        "minMM": [
+          3.1500000000000004,
+          -12.700000000000001,
+          46.75
+        ],
+        "maxMM": [
+          5.75,
+          -10.1,
+          48.150000000000006
+        ],
+        "rgb": [
+          0.3,
+          0.2,
+          0.09
+        ],
+        "roughness": 0.98,
+        "variation": 0.1
+      },
+      {
+        "name": "large jar liquid",
+        "kind": "liquid",
+        "minMM": [
+          -13.05,
+          -7.15,
+          44.00554153442383
+        ],
+        "maxMM": [
+          -9.649999999999999,
+          -3.7499999999999996,
+          44.56554153442383
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -11.35,
+            -5.45,
+            44.28554153442383
+          ],
+          "radiiMM": [
+            1.7000000000000006,
+            1.7000000000000006,
+            0.5
+          ]
+        },
+        "rgb": [
+          0.28,
+          0.8,
+          0.065
+        ],
+        "roughness": 0.22,
+        "variation": 0.018
+      },
+      {
+        "name": "small jar liquid",
+        "kind": "liquid",
+        "minMM": [
+          -7.300000000000001,
+          -13.3,
+          42.033846588134764
+        ],
+        "maxMM": [
+          -4.5,
+          -10.5,
+          42.59384658813477
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -5.9,
+            -11.9,
+            42.313846588134766
+          ],
+          "radiiMM": [
+            1.4000000000000004,
+            1.4000000000000004,
+            0.5
+          ]
+        },
+        "rgb": [
+          0.28,
+          0.8,
+          0.065
+        ],
+        "roughness": 0.22,
+        "variation": 0.018
+      },
+      {
+        "name": "amphora liquid",
+        "kind": "liquid",
+        "minMM": [
+          10.149999999999999,
+          -6.1,
+          49.07688781738281
+        ],
+        "maxMM": [
+          11.75,
+          -4.5,
+          49.636887817382814
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            10.95,
+            -5.3,
+            49.35688781738281
+          ],
+          "radiiMM": [
+            0.8000000000000003,
+            0.8000000000000003,
+            0.5
+          ]
+        },
+        "rgb": [
+          0.28,
+          0.8,
+          0.065
+        ],
+        "roughness": 0.22,
+        "variation": 0.018
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      3.0
+    ],
+    "lodMiB": [
+      0.45,
+      1.1
+    ],
+    "shadowKiB": [
+      50,
+      150
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "One 35 mm tile with a wooden counter, five distinct ceramic vessels, two corks and three liquid surfaces. Preserve necks/handles and the open rear space with80k/26k independent bakes; compare1024/512 and768/384 colour/data maps."
+  },
+  "reviewNotes": "PDF page4 and two 1000px source diagonals. Native datum17 mm, maximum 50.8128 mm. Counter grain separates boards, corner posts and tabletop. Five upper vessel components separated at 41 mm give individual ceramic tones; two measured corks remain rough wood. Three liquid bottoms measured at[-11.35,-5.45,44.28554],[-5.9,-11.9,42.31385],[10.95,-5.3,49.35689] mm with safe radii 1.7/1.4/.8 mm, protected from ceramic rims. Green liquid is a glossy painted surface, not an emitting lamp. Rear paving at[0,10,25.785046] mm is usable; stand point[.5,.214286] and a blocker for the occupied southern half. Ceramic colour ownership uses measured relative body radii to keep large vessel flanks and handles on their own glaze, instead of dividing touching vessels at equal-distance planes.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.214286
+    ]
+  ],
+  "standRayTopMM": 30
+}
