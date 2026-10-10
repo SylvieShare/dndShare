@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest'
 import { resolveAppNavigation } from './appNavigation'
 
 describe('app navigation', () => {
-  it('keeps maps unavailable until an administrator opens them', () => {
+  it('opens maps for every authenticated user', () => {
     const map = admin => resolveAppNavigation({ authenticated: true, admin, path: '/maps' }).find(item => item.key === 'maps')
-    expect(map(false)).toMatchObject({ disabled: true, active: false })
-    expect(map(true)).toMatchObject({ disabled: false, active: true })
+    expect(map(false)).toMatchObject({ to: '/maps', active: true })
+    expect(map(true)).toMatchObject({ to: '/maps', active: true })
+    expect(map(false).disabled).toBeUndefined()
+    expect(resolveAppNavigation({ path: '/maps' }).some(item => item.key === 'maps')).toBe(false)
   })
   it('keeps the handbook, rules and character wizard public', () => {
     const items = resolveAppNavigation({ path: '/handbook/objects' })

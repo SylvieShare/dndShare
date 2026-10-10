@@ -87,7 +87,7 @@
       >
         <template #full-workspace>
           <SessionMapWorkspace
-            v-if="mapVisited && mapsAvailable"
+            v-if="mapVisited && isDm"
             ref="mapWorkspace"
             integrated-header
             :active="mapVisible"
@@ -283,7 +283,6 @@
 
 <script setup>
 import { computed, defineAsyncComponent, provide, watch } from 'vue'
-import { useAccountStore } from '@/stores/account'
 import { onBeforeRouteLeave, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import PageTutorial from '@/features/tutorials/components/PageTutorial.vue'
@@ -341,9 +340,7 @@ const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || n
 provide('applicationEncounter', encounter)
 const mapVisited = ref(false), mapWorkspace = ref(null)
 const mapPanelWidth = ref(334)
-const account = useAccountStore()
-const mapsAvailable = computed(() => account.hasRole('ADMIN'))
-const mapVisible = computed(() => mapsAvailable.value && primaryView.value === 'maps')
+const mapVisible = computed(() => isDm.value && primaryView.value === 'maps')
 watch(mapVisible, (visible) => { if (visible) mapVisited.value = true }, { immediate: true })
 onBeforeRouteLeave(() => mapWorkspace.value?.prepareLeave() ?? true)
 </script>

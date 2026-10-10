@@ -55,7 +55,7 @@ describe('session world workspaces', () => {
     expect(graphTab).toContain('v-show="primaryView === \'story\' && !mapBackground"')
     expect(graphTab).toMatch(/<SessionTabWorkspace mode="column" v-show="primaryView !== 'story' && primaryView !== 'maps'">\s*<slot name="primary-workspace" \/>\s*<\/SessionTabWorkspace>/)
     expect(graphTab).toMatch(/<SessionTabWorkspace mode="full" v-show="mapBackground">\s*<slot name="full-workspace" \/>\s*<\/SessionTabWorkspace>/)
-    expect(sessionView).toContain('v-if="mapVisited && mapsAvailable"')
+    expect(sessionView).toContain('v-if="mapVisited && isDm"')
     expect(sessionView).toContain(':map-background="mapVisible"')
     expect(toolbar.indexOf('<span>Бой</span>')).toBeLessThan(toolbar.indexOf('<span>Карта</span>'))
     expect(toolbar.indexOf('<span>Карта</span>')).toBeLessThan(toolbar.indexOf('v-for="view in visibleLibraryViews"'))

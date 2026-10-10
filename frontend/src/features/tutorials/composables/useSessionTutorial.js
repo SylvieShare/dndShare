@@ -1,5 +1,4 @@
 import { computed, nextTick, provide } from 'vue'
-import { useAccountStore } from '@/stores/account'
 import { useIsMobile } from '@sylvieshare/share-ui'
 import { usePageTutorial } from './usePageTutorial'
 import { sessionSteps } from '../flows/session'
@@ -9,13 +8,12 @@ export function useSessionTutorial({ root, session, isDm, ready, primaryView }) 
   // Matches the session toolbar's responsive layout.
   const mobile = useIsMobile(760)
   const actions = createTutorialActions()
-  const account = useAccountStore()
   provide(tutorialActionsKey, actions)
   const tutorial = usePageTutorial({
     flowId: computed(() => isDm.value ? 'session-dm' : 'session-player'),
     sourceKey: computed(() => session.value ? (session.value.systemId ? `source:${session.value.systemId}` : 'unassigned') : null),
     mobile, ready,
-    createSteps: () => sessionSteps({ mobile: mobile.value, dm: isDm.value, mapsAvailable: account.hasRole('ADMIN'),
+    createSteps: () => sessionSteps({ mobile: mobile.value, dm: isDm.value,
       target: name => visibleTarget(name === 'session-settings' ? document : root.value, name),
       action: actions.run,
       async showView(view, context) {

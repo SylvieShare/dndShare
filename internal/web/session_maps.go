@@ -185,7 +185,7 @@ func (s *Server) handleSaveMapDisplay(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handlePublicMap(w http.ResponseWriter, r *http.Request) {
-	session, ok := s.publicMapSession(w, r)
+	session, ok := s.publicDisplaySession(w, r)
 	if !ok {
 		return
 	}

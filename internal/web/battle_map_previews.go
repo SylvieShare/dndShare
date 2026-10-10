@@ -17,9 +17,9 @@ const maxMapPreviewBytes = 1 << 20
 
 func init() { registerRoutes((*Server).routesMapPreviews) }
 func (s *Server) routesMapPreviews(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/maps/{mapId}/preview-context", s.mapAdminOnly(s.handleMapPreviewContext))
-	mux.HandleFunc("POST /api/maps/{mapId}/preview", s.mapAdminOnly(s.handleSaveMapPreview))
-	mux.HandleFunc("GET /api/maps/{mapId}/preview", s.mapAdminOnly(s.handleMapPreview))
+	mux.HandleFunc("GET /api/maps/{mapId}/preview-context", s.mapUserOnly(s.handleMapPreviewContext))
+	mux.HandleFunc("POST /api/maps/{mapId}/preview", s.mapUserOnly(s.handleSaveMapPreview))
+	mux.HandleFunc("GET /api/maps/{mapId}/preview", s.mapUserOnly(s.handleMapPreview))
 }
 func (s *Server) handleMapPreviewContext(w http.ResponseWriter, r *http.Request) {
 	uid, ok := mustUser(w, r)

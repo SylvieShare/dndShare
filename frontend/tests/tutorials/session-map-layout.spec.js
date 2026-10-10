@@ -110,7 +110,7 @@ for (const mobile of [false, true])
       await route.fulfill({ json });
     });
     await page.goto(
-      "/tests/tutorials/fixtures/tutorials.html?page=/sessions/test&admin",
+      "/tests/tutorials/fixtures/tutorials.html?page=/sessions/test",
     );
     await page.getByRole("button", { name: "Карта", exact: true }).click();
     await expect(page.locator(".session-map-workspace")).toBeVisible();

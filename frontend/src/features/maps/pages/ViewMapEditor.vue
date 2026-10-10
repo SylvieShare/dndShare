@@ -11,7 +11,7 @@
     <LoadingState v-if="loading" label="Открываем редактор…" />
     <template v-else>
       <p v-if="error" role="alert">{{ error }}</p>
-      <p v-else role="status">Скоро будет</p>
+      <p v-else role="status">Войдите, чтобы открыть редактор карт.</p>
       <ActionButton variant="secondary" @click="router.push({ name: 'Maps' })">
         <template #icon><ArrowLeft :size="16" /></template>
         К картам
@@ -54,7 +54,7 @@ async function load(target) {
   generation.value++;
   try {
     await account.ensureAuth();
-    if (!account.hasRole("ADMIN")) return;
+    if (account.authStatus !== "success") return;
     const id = target.query.id || target.query.copy;
     if (id) {
       const source = (await getMaps()).find((m) => m.id === id);

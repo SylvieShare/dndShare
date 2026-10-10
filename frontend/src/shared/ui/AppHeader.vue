@@ -18,18 +18,16 @@
           <span class="brand-arrow">▾</span>
         </button>
         <div v-if="menuOpen" class="brand-menu">
-          <MapAvailabilityGate v-for="item in visibleItems" :key="item.key" :disabled="item.disabled">
-          <component
-            :is="item.disabled ? 'button' : RouterLink"
+          <RouterLink
+            v-for="item in visibleItems"
+            :key="item.key"
             class="brand-menu-item"
             :class="{ active: item.active }"
-            :to="item.disabled ? undefined : item.to"
-            :aria-disabled="item.disabled || undefined"
-            @click="!item.disabled && (menuOpen = false)"
+            :to="item.to"
+            @click="menuOpen = false"
           >
             {{ item.title }}
-          </component>
-          </MapAvailabilityGate>
+          </RouterLink>
         </div>
       </div>
 
@@ -55,7 +53,6 @@
 
 <script setup>
 import ActiveSessionShortcuts from '@/features/sessions/components/ActiveSessionShortcuts.vue'
-import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { useIsMobile } from '@sylvieshare/share-ui'
 import { RouterLink, useRoute, useRouter } from 'vue-router'

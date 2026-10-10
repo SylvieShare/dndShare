@@ -12,8 +12,8 @@ import (
 
 func init() { registerRoutes((*Server).routesMapModels) }
 func (s *Server) routesMapModels(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/maps/models", s.mapAdminOnly(s.handleMapModels))
-	mux.HandleFunc("GET /api/maps/models/{modelId}/{variant}", s.mapAdminOnly(s.handleMapModelAsset))
+	mux.HandleFunc("GET /api/maps/models", s.mapUserOnly(s.handleMapModels))
+	mux.HandleFunc("GET /api/maps/models/{modelId}/{variant}", s.mapUserOnly(s.handleMapModelAsset))
 	mux.HandleFunc("GET /api/public/sessions/{code}/map-models", s.handlePublicMapModels)
 	mux.HandleFunc("GET /api/public/sessions/{code}/map-models/{modelId}/{variant}", s.handlePublicMapModelAsset)
 }
@@ -61,7 +61,7 @@ func (s *Server) handleMapModels(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) publicModelIDs(w http.ResponseWriter, r *http.Request) (map[string]bool, bool) {
-	session, ok := s.publicMapSession(w, r)
+	session, ok := s.publicDisplaySession(w, r)
 	if !ok {
 		return nil, false
 	}

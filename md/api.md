@@ -27,20 +27,21 @@
 
 ## Игровые карты
 
-Все непубличные маршруты карт требуют `ADMIN` сверх указанных ниже проверок
-владельца. Публичные map/sse доступны по коду только у сессий администратора;
-для сессий остальных владельцев — 404. Основная трансляция сессии не затронута.
+Непубличные маршруты карт требуют входа. Личные карты и превью проверяют
+владельца; сессионные карты доступны ведущему — владельцу сессии, без требования
+`ADMIN`. Изменение общего справочника моделей требует `ADMIN`. Публичные map/SSE
+доступны без входа по коду трансляции любой сессии.
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | ADMIN: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl |
+| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl |
 | `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/uuid, редактируемый code и необязательный behaviour → обновление текущей модели с прежним UUID во всех картах; поведение сохраняется в той же транзакции; устаревшая behaviour.revision получает 409 |
-| `GET /api/maps/models/{modelId}/{variant}` | ADMIN: source/render/lod/shadow/preview из S3; ETag и immutable cache |
+| `GET /api/maps/models/{modelId}/{variant}` | Авторизованный пользователь: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |
 | `POST /api/maps` | Создать `{name,document}` |
-| `GET /api/maps/{mapId}/preview-context` | ADMIN: свой/системный документ, актуальные используемые модели и SHA-256 подписи сцены |
-| `POST /api/maps/{mapId}/preview?signature=...` | ADMIN: WebP 64–1024 px, до 1 МБ → сохранённый в S3 снимок; устаревшая сцена получает 409 |
-| `GET /api/maps/{mapId}/preview?signature=...` | ADMIN: сохранённый WebP из S3; проверка владельца и подписи, immutable cache |
+| `GET /api/maps/{mapId}/preview-context` | Авторизованный пользователь: свой/системный документ, актуальные используемые модели и SHA-256 подписи сцены |
+| `POST /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: WebP 64–1024 px, до 1 МБ → сохранённый в S3 снимок; устаревшая сцена получает 409 |
+| `GET /api/maps/{mapId}/preview?signature=...` | Авторизованный пользователь: сохранённый WebP из S3; проверка владельца и подписи, immutable cache |
 | `PUT /api/maps/{mapId}` | Заменить свой документ `{name,document,revision}` |
 | `DELETE /api/maps/{mapId}` | Удалить свою карту; копии сессий сохраняются |
 | `GET /api/sessions/{uuid}/maps` | Владелец: `{maps,display}` |

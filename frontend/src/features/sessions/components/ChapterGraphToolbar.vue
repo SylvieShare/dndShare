@@ -46,13 +46,10 @@
           <kbd v-if="showShortcutHints" class="chapter-shortcut-hint" aria-hidden="true">{{ shortcutLabels.panel }}+B</kbd>
         </button>
 
-        <MapAvailabilityGate v-if="isDm" :disabled="!mapsAvailable">
-        <button type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': mapsAvailable && primaryView === 'maps' }"
-          :aria-disabled="!mapsAvailable || undefined"
-          :aria-current="mapsAvailable && primaryView === 'maps' ? 'page' : undefined" @click="mapsAvailable && emit('select-view', 'maps')">
+        <button v-if="isDm" type="button" class="chapter-primary-tab" :class="{ 'chapter-primary-tab--active': primaryView === 'maps' }"
+          :aria-current="primaryView === 'maps' ? 'page' : undefined" @click="emit('select-view', 'maps')">
           <Map :size="24" /><span>Карта</span>
         </button>
-        </MapAvailabilityGate>
 
         <span v-if="visibleLibraryViews.length" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 
@@ -123,8 +120,6 @@ import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
 import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
 import SessionBackButton from './SessionBackButton.vue'
-import MapAvailabilityGate from '@/features/maps/components/MapAvailabilityGate.vue'
-import { useAccountStore } from '@/stores/account'
 import SessionToolbarMusic from './SessionToolbarMusic.vue'
 import { sessionShortcutLabels } from '@/features/sessions/lib/sessionShortcuts'
 
@@ -146,8 +141,6 @@ const emit = defineEmits([
   'select-view', 'resize',
   'edit-session', 'session-updated', 'open-combat',
 ])
-const account = useAccountStore()
-const mapsAvailable = computed(() => account.hasRole('ADMIN'))
 const primaryViews = [
   { key: 'story', label: 'Сюжет', icon: BookOpenText, shortcut: '1' },
   { key: 'locations', label: 'Локации', icon: Map, shortcut: '2' },

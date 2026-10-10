@@ -4,7 +4,6 @@ export function sessionSteps({
   target,
   action,
   showView,
-  mapsAvailable = false,
 }) {
   const step = (id, title, body, anchor, enter) => ({
     id,
@@ -131,5 +130,5 @@ export function sessionSteps({
       (context) => showView("settings", context),
     ),
   );
-  return mapsAvailable ? steps : steps.filter((step) => step.id !== "map");
+  return steps;
 }

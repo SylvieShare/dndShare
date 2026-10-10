@@ -5,14 +5,16 @@
       <h1>Карты</h1>
       <p>Подготовьте место для следующей истории. Рисуйте свои карты или начните с готовой.</p>
     </header>
-    <MapLibrary v-if="account.hasRole('ADMIN')" />
-    <p v-else role="status">Скоро будет</p>
+    <MapLibrary v-if="account.authStatus === 'success'" />
+    <p v-else-if="account.authStatus === 'none'" role="status">Войдите, чтобы открыть карты.</p>
   </main>
 </template>
 <script setup>
+import { onMounted } from 'vue';
 import MapLibrary from '../components/MapLibrary.vue';
 import { useAccountStore } from '@/stores/account';
 const account = useAccountStore();
+onMounted(() => account.ensureAuth());
 </script>
 <style scoped>
 .maps-page {
