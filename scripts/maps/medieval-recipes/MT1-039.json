@@ -1,0 +1,437 @@
+{
+  "name": "Wall Light",
+  "groupCode": "MED-wall-light",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 78000,
+  "lodTriangles": 25000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.22,
+        0
+      ],
+      [
+        0.22,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "plaster",
+    "wall",
+    "candle",
+    "light"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "lower timber post -1",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          -13.6,
+          50
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "broad upper timber post -1",
+        "minMM": [
+          -17.6,
+          -17.6,
+          34.7
+        ],
+        "maxMM": [
+          -6.6,
+          -8.45,
+          64.8
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "lower timber post 1",
+        "minMM": [
+          -17.6,
+          13.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          17.6,
+          50
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "broad upper timber post 1",
+        "minMM": [
+          -17.6,
+          8.45,
+          34.7
+        ],
+        "maxMM": [
+          -6.6,
+          17.6,
+          64.8
+        ],
+        "axis": "z"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [
+      {
+        "name": "candle shield bracket and cup -1",
+        "minMM": [
+          -6.65,
+          -17.23,
+          46.5
+        ],
+        "maxMM": [
+          3.25,
+          -8.73,
+          56.8
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "metallic": 0.8
+      },
+      {
+        "name": "candle shield bracket and cup 1",
+        "minMM": [
+          -6.65,
+          8.78,
+          46.5
+        ],
+        "maxMM": [
+          3.25,
+          17.28,
+          56.8
+        ],
+        "rgb": [
+          0.225,
+          0.195,
+          0.135
+        ],
+        "roughness": 0.5,
+        "metallic": 0.8
+      }
+    ],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "low wall rough plaster on both faces",
+        "kind": "plaster",
+        "minMM": [
+          -17.6,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          49.7
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "broad upper timber post -1",
+            "minMM": [
+              -17.6,
+              -17.6,
+              34.7
+            ],
+            "maxMM": [
+              -6.6,
+              -8.45,
+              64.8
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "broad upper timber post 1",
+            "minMM": [
+              -17.6,
+              8.45,
+              34.7
+            ],
+            "maxMM": [
+              -6.6,
+              17.6,
+              64.8
+            ],
+            "axis": "z"
+          }
+        ]
+      },
+      {
+        "name": "melted beeswax -1",
+        "kind": "wax",
+        "minMM": [
+          -3.4,
+          -17.18,
+          56.8
+        ],
+        "maxMM": [
+          3.35,
+          -8.780000000000001,
+          62.55
+        ],
+        "rgb": [
+          0.82,
+          0.75,
+          0.48
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      },
+      {
+        "name": "wall candle flame -1",
+        "kind": "flame",
+        "minMM": [
+          -1.6400000000000001,
+          -14.48,
+          62.5
+        ],
+        "maxMM": [
+          1.3599999999999999,
+          -11.48,
+          65.9716
+        ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      },
+      {
+        "name": "melted beeswax 1",
+        "kind": "wax",
+        "minMM": [
+          -3.4,
+          8.829999999999998,
+          56.8
+        ],
+        "maxMM": [
+          3.35,
+          17.23,
+          62.55
+        ],
+        "rgb": [
+          0.82,
+          0.75,
+          0.48
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      },
+      {
+        "name": "wall candle flame 1",
+        "kind": "flame",
+        "minMM": [
+          -1.78,
+          11.53,
+          62.5
+        ],
+        "maxMM": [
+          1.22,
+          14.53,
+          65.6529
+        ],
+        "rgb": [
+          1,
+          0.62,
+          0.075
+        ],
+        "roughness": 0.86,
+        "variation": 0.03
+      }
+    ],
+    "emissionStrength": 1.6
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.7,
+      3.9
+    ],
+    "lodMiB": [
+      0.55,
+      1.35
+    ],
+    "shadowKiB": [
+      55,
+      130
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "35mm floor with low plaster wall, two much broader upper posts, shield brackets, two cup holders, melted wax and individually shaped flames.78000/25000 separate pre-UV geometry/bakes retain candle silhouettes, dripping wax and timber carvings. Compare1024/512 with768/384 colour/emission textures."
+  },
+  "reviewNotes": "PDF page7 and source front/back/direct+X views. Source480000triangles/24000084bytes,max65.891602mm. Centre floor24.728069mm; native17mm datum andwest edge64 family footprint. Floor boards X,rails Y,posts Z. Broad upper posts reachx=-6.83 andinnerY8.575/8.615,startingz34.832..35.06 in measured core; protect both posts from plaster instead of copying narrow35 columns. Centre plaster reaches49.543mm. Candle-only x>-5.5 point slices exclude posts: wax caps broad until62.5mm, narrow flames above62.5. NegativeY flameboundsX[-1.4147,1.1290],Y[-14.2247,-11.6544],top65.8916; positiveY X[-1.5405,.9584],Y[11.8128,14.2672],top65.5729. Separate each metal shield/bracket/cup through56.8mm, rough beeswax56.8..62.55 and orange flame; keep metal volumeforward ofwood face withminX-6.65. Emissive1.6 is bounded per flame and gated by actual packed per-part pixel checks/SHA. Two defaultLights use own measured centres andheightabove17mm datum. Inspect wax/cup and flame/wood boundaries from both sides in both tiers and compare texture candidates before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "defaultLights": [
+    {
+      "key": "wall-candle-1",
+      "name": "Свеча стены 1",
+      "kind": "candle",
+      "color": "#ffd899",
+      "position": [
+        0.496,
+        0.870857,
+        1.348451
+      ],
+      "intensity": 3,
+      "radius": 2.5,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "wall-candle-2",
+      "name": "Свеча стены 2",
+      "kind": "candle",
+      "color": "#ffd899",
+      "position": [
+        0.492,
+        0.127714,
+        1.343899
+      ],
+      "intensity": 3,
+      "radius": 2.5,
+      "enabled": true,
+      "flicker": true
+    }
+  ]
+}
