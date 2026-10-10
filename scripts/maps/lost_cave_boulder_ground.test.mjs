@@ -5,6 +5,25 @@ import {
   boulderGroundPartAt,
   paintBoulderGround,
 } from "./lost_cave_boulder_ground.mjs";
+test("LC-084 warm debris preserves its flat floor and blends the low stone root without a normal threshold colour seam", () => {
+  const s = specs["LC-084"];
+  assert.equal(
+    boulderGroundPartAt([-13.4632, -14.4544, 14.748], [0, 0, 1], s),
+    "rock",
+  );
+  const p = paintBoulderGround(
+    [6.6047, -6.64, 37.5618],
+    [0.2945, -0.7648, 0.5731],
+    230,
+    s,
+  );
+  assert.equal(p.part, "boulder");
+  assert(p.rgb[0] > p.rgb[1] && p.rgb[1] > p.rgb[2]);
+  assert.equal(p.metallic, 0);
+  const a = paintBoulderGround([0, 0, 14.9], [0.46, 0, 0.89], 230, s),
+    b = paintBoulderGround([0, 0, 14.9], [0.415, 0, 0.91], 230, s);
+  assert(Math.max(...a.rgb.map((v, i) => Math.abs(v - b.rgb[i]))) < 5);
+});
 test("ground boulders remain distinct from flat slabs and low foundation", () => {
   const s = specs["LC-032"];
   assert.equal(

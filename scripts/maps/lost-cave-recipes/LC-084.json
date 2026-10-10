@@ -1,0 +1,55 @@
+{
+  "sourceName": "Rock Debris 1",
+  "referencePage": 12,
+  "material": "cave-boulders",
+  "floorHeightMM": 14.73,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 16000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5.0],
+    "lodMiB": [0.6, 2.0],
+    "shadowKiB": [25, 100],
+    "previewKiB": [20, 150],
+    "basis": "399966-triangle1x1 broad warm-brown debris heap.45k/16k beforeUV retain stone silhouette and standing top.2048/1024 source normal/AO bake; compare two ETC1S/UASTC map budgets before selecting."
+  },
+  "notes": "Author page12 and own three clay views: warm ferruginous-brown rock debris rather than grey-green mine masonry. Preserve UUID586841b2-283f-5984-938f-9e0b17091f75,source/cut11.5,mount.150134,1x1,point1.186108,hasDecor/canStand,no slots. One broad faceted boulder heap with lower surrounding dirt foundation; preserve upper standing ledge, silhouette, cavity relief and floor joints. Own native sections confirm one centered insertion foot. Initial root radius16 clipped original rock corners to grey foundation; own broader20mm root and1.5mm smooth material transition preserve flat floor14.748mm and remove the abrupt height seam. Side source3.2662/-11.5838/29.3256,upper6.6047/-6.64/37.5618,root14.3077/-4.0098/18.7183; floor-13.4632/-14.4544/14.748 stays distinct.",
+  "groupCode": "LC-rock-debris",
+  "boulder": {
+    "tint": [0.54, 0.335, 0.185],
+    "topThresholdMM": 15.0,
+    "rootMinZMM": 14.85,
+    "roots": [
+      {
+        "x": 0,
+        "y": 0,
+        "rx": 20,
+        "ry": 20
+      }
+    ],
+    "rootBlendMM": 1.5
+  },
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "251f3d3ddfc10980b919cd0bca21d0b2a85ac8bd666797aab8dd86e9f5a3ed25",
+    "mountDepthMM": 5.25469,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections.05=25.99/.5=26.75/2.5=30.20/4=32.78/datum5.25469=34.93/6=35mm confirm one native centered cell."
+  }
+}

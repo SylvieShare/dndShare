@@ -24,7 +24,27 @@ export function boulderGroundPartAt(p, n, spec) {
   return "rock";
 }
 export function paintBoulderGround(p, n, ao, spec) {
-  if (boulderGroundPartAt(p, n, spec) === "boulder")
-    return paintBoulder(p, n, ao, spec);
+  if (boulderGroundPartAt(p, n, spec) === "boulder") {
+    const stone = paintBoulder(p, n, ao, spec);
+    if (spec.boulder.rootBlendMM) {
+      const floor = darkenCaveFloorJoints(
+          caveRockPixel(p, n, ao, spec),
+          p,
+          spec,
+        ),
+        t = Math.max(
+          0,
+          Math.min(
+            1,
+            (p[2] - spec.boulder.rootMinZMM) / spec.boulder.rootBlendMM,
+          ),
+        ),
+        weight = t * t * (3 - 2 * t);
+      stone.rgb = stone.rgb.map((v, i) =>
+        Math.round(v * weight + floor.rgb[i] * (1 - weight)),
+      );
+    }
+    return stone;
+  }
   return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
 }
