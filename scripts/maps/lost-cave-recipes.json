@@ -113,5 +113,6 @@
   "LC-Level Grid 1X3": "./lost-cave-recipes/LC-grid-1x3.json",
   "LC-Level Grid 2X2": "./lost-cave-recipes/LC-grid-2x2.json",
   "LC-Level Grid 2X3": "./lost-cave-recipes/LC-grid-2x3.json",
-  "LC-Level Grid 3X3": "./lost-cave-recipes/LC-grid-3x3.json"
+  "LC-Level Grid 3X3": "./lost-cave-recipes/LC-grid-3x3.json",
+  "LC-Level Grid 3X6": "./lost-cave-recipes/LC-grid-3x6.json"
 }
