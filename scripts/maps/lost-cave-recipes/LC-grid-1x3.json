@@ -1,0 +1,138 @@
+{
+  "sourceName": "Level Grid 1X3",
+  "referencePage": 17,
+  "material": "cave-cut-stone",
+  "floorHeightMM": 11.33,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 80000,
+  "lodTriangles": 28000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.3,
+      6.5
+    ],
+    "lodMiB": [
+      0.7,
+      2.5
+    ],
+    "shadowKiB": [
+      50,
+      145
+    ],
+    "previewKiB": [
+      10,
+      140
+    ],
+    "basis": "1129332tri1x3grid3nativecavities/2crossbars/longroughwalls;80k28k beforeUV,2048/1024sourcebake,2UASTCbudgets."
+  },
+  "notes": "Author17brown3-cellstonegrid, own3clayviews/3nativeprofiles13levels confirm3throughholes/2crossbars/upper13.5lower8.5/ledge11.33/bevel~23.1..25.0899 atcentresY+35,0,-35. Source1129332tri/cut0/mount0;preserveUUID8b1c8e80-d219-5b5d-bf23-1f3285ff5b71/1x3frame/3quarterpoints/slots.716854/max.716854/flags/blockers.80k28ksourcebakebeforeUV,UASTC2budgets;verifyALLsourceplanes/holes/alltri fitsbothdepths at2mmrisebeforepub.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-level-grid",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "cutStone": {
+    "innerHalfMM": 13.5,
+    "floorMM": 11.33,
+    "topMM": 25.0899,
+    "tint": [
+      0.435,
+      0.305,
+      0.195
+    ],
+    "roughness": 0.81,
+    "normalMode": "geometry",
+    "lowerInnerHalfMM": 8.5,
+    "bevelStartMM": 23.12,
+    "bevelTopHalfMM": 15.53,
+    "centresMM": [
+      [
+        0,
+        35
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        -35
+      ]
+    ]
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "geometryCorrection": {
+    "mode": "correct-grid-insertion-seat",
+    "previousCutHeightMM": 0,
+    "cutHeightMM": 0,
+    "sourceSHA256": "9b7dddcbb6608da28586ae17a30c78cb6d250278e8df87656eaeefa53bf16b84",
+    "reason": "Ownnative1x3grid sourceprofiles atall3centres require measured2mm insertion rise for34.3mm fittedshort/deeppads;retainnativeframegeometry/source/physicalslotheight/UUID,verifyalltriangles and3throughholes.",
+    "metadata": {
+      "supportSlots": [
+        {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716854,
+          "insertionRise": 0.05714285714285714
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716854,
+          "insertionRise": 0.05714285714285714
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716854,
+          "insertionRise": 0.05714285714285714
+        }
+      ]
+    }
+  }
+}
