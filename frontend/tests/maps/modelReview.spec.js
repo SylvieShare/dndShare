@@ -54,7 +54,10 @@ test("decodes both reviewed tiers and preserves dedicated shadows under sun and 
     expect(result.textures.find((t) => t.colorSpace === "srgb").width).toBe(
       report.tiers[tier].textureSize,
     );
-    expect(result.shadowChecks.every((c) => c.changed > 50)).toBe(true);
+    expect(
+      result.shadowChecks.every((c) => c.changed > 50),
+      JSON.stringify(result.shadowChecks),
+    ).toBe(true);
     if (report.materialSpec?.torch?.emission)
       expect(result.emissionMaps).toEqual([
         { width: report.tiers[tier].textureSize, colorSpace: "srgb" },

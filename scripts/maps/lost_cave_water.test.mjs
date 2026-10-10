@@ -3,6 +3,26 @@ import assert from "node:assert/strict";
 import specs from "./lost_cave_recipes.mjs";
 import { caveWaterAt, paintCaveWater } from "./lost_cave_water.mjs";
 const s = specs["LC-064"];
+test("a water tile preserves wave relief and keeps its mounting underside dry", () => {
+  const s = {
+    ...specs["LC-064"],
+    water: {
+      colour: [0.095, 0.63, 0.53],
+      tileVolume: { min: [-18, -18, 5.3], max: [18, 18, 12] },
+    },
+  };
+  for (const p of [
+    [0, 0, 10.8],
+    [17.5, 0, 8],
+  ]) {
+    const v = paintCaveWater(p, [0, 0, 1], 230, s);
+    assert.equal(v.part, "water");
+    assert.equal(v.normalNeutral, undefined);
+    assert(v.rgb[1] > v.rgb[0] * 3);
+    assert(v.roughness < 0.23);
+  }
+  assert.equal(caveWaterAt([0, 0, 5], [0, 0, -1], s), undefined);
+});
 test("only the measured upward water inset is liquid, not the rim or neighbouring cliff", () => {
   for (const p of [
     [0.3442, -0.1246, 22.9775],

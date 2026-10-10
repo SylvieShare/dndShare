@@ -1,0 +1,117 @@
+{
+  "sourceName": "Water",
+  "referencePage": 14,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 30000,
+  "lodTriangles": 10000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1,
+      4.5
+    ],
+    "lodMiB": [
+      0.4,
+      1.6
+    ],
+    "shadowKiB": [
+      15,
+      70
+    ],
+    "previewKiB": [
+      10,
+      100
+    ],
+    "basis": "199994-triangle1x1 water tile with broad sculpted waves and no shoreline.30k/10k beforeUV preserve wave relief;2048/1024 source bake and twoUASTC budgets."
+  },
+  "notes": "Author page14 full turquoise water tile; broad waves retain source normal detail, wet nonmetal roughness. Preserve UUID59f94663-9e8b-521c-a473-07ac083d9453,source/cut11.5,mount.151234,1x1,floor,point.308127,max.329757,water tag,hasDecorfalse/canStandtrue/no slots. Waterbody ends at mountingdatum5.29319mm; nativebottomfoot remains dry. Own30k/10k source normal/AO rebake, twoUASTCbudgets+threeviews/bothtiers. Native waves[0,-.0078,10.7836],[-4.6086,4.6007,10.8416],[3.8217,-4.9532,10.5995],[6.9129,2.3526,10.8216] withupnormals.988..997. Initialroughness.18 gave large sharp plasticlooking highlights vsauthor; own.28..305 retainswetreflection withbroader softer highlights.",
+  "groupCode": "LC-water",
+  "floorHeightProfileMM": [
+    [
+      -17.6,
+      14.735
+    ],
+    [
+      17.6,
+      14.735
+    ]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "38fdcb288061c3c9715bff90c5ecc236244cc3389ffedb2b9e73cc41110a0c9a",
+    "mountDepthMM": 5.29319,
+    "sourceTopWidthMM": 35,
+    "centresMM": [
+      [
+        0,
+        0
+      ]
+    ],
+    "reason": "Own native sections.05=25.94/.5=26.70/2.5=30.14/4=32.72/datum5.29319=34.94/6=35mm confirm one centered mounting cell."
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "water": {
+    "colour": [
+      0.095,
+      0.63,
+      0.53
+    ],
+    "tileVolume": {
+      "min": [
+        -18,
+        -18,
+        5.29
+      ],
+      "max": [
+        18,
+        18,
+        12
+      ]
+    },
+    "surfaces": [],
+    "roughness": 0.28
+  }
+}

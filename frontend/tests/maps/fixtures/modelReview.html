@@ -92,8 +92,10 @@
             ),
           );
         const shadowChecks = [];
+        // A shallow tile hides its near-vertical shadow beneath its own body.
+        const shallow = bounds.max.y - bounds.min.y < 0.5;
         for (const [name, pos] of [
-          ["sun-a", [3, 5, 4]],
+          ["sun-a", shallow ? [4, 2, 5] : [3, 5, 4]],
           ["sun-b", [-4, 5, -2]],
           ["point", [0, 3, 2]],
         ]) {

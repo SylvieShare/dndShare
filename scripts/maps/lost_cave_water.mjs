@@ -2,6 +2,10 @@ import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
 const clamp = (v) => Math.max(0, Math.min(1, v));
 export function caveWaterAt(p, n, spec) {
+  if (spec.water.tileVolume) {
+    const v = spec.water.tileVolume;
+    return p.every((x, i) => x >= v.min[i] && x <= v.max[i]) ? v : undefined;
+  }
   return spec.water.surfaces.find(
     (s) =>
       Math.abs(p[2] - s.heightMM) < s.toleranceMM &&
@@ -13,6 +17,18 @@ export function paintCaveWater(p, n, ao, spec) {
   const water = caveWaterAt(p, n, spec);
   if (!water)
     return darkenCaveFloorJoints(caveRockPixel(p, n, ao, spec), p, spec);
+  if (spec.water.tileVolume) {
+    const noise = surfaceNoise(p[0] * 0.1, p[1] * 0.1, p[2] * 0.04);
+    const clean = 0.91 + 0.09 * clamp((ao / 255 - 0.5) / 0.5);
+    return {
+      part: "water",
+      rgb: spec.water.colour.map((v) =>
+        Math.round(255 * clamp(v * clean * (0.96 + noise * 0.08))),
+      ),
+      roughness: (spec.water.roughness ?? 0.18) + noise * 0.025,
+      metallic: 0,
+    };
+  }
   const noise = surfaceNoise(p[0] * 0.22, p[1] * 0.22, 0.7);
   const radius = Math.hypot(p[0] - water.centre[0], p[1] - water.centre[1]);
   const border = clamp(
