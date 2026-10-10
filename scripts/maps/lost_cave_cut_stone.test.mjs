@@ -2,6 +2,31 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { cutStonePartAt, paintCutStone } from "./lost_cave_cut_stone.mjs";
 import specs from "./lost_cave_recipes.mjs";
+test("grid lining includes its native lower through-hole wall and upper bevel in each socket", () => {
+  const s = {
+    cutStone: {
+      innerHalfMM: 13.5,
+      lowerInnerHalfMM: 8.5,
+      floorMM: 11.3209,
+      topMM: 25.0756,
+      bevelStartMM: 23.174,
+      bevelTopHalfMM: 15.53,
+      centresMM: [
+        [0, 0],
+        [0, 35],
+      ],
+    },
+  };
+  for (const y of [0, 35]) {
+    assert.equal(cutStonePartAt([8.499, y, 5], [-1, 0, 0], s), "cut-stone");
+    assert.equal(cutStonePartAt([13.5, y, 20], [-1, 0, 0], s), "cut-stone");
+    assert.equal(
+      cutStonePartAt([14.369, y, 24], [-0.689, 0, 0.725], s),
+      "cut-stone",
+    );
+    assert.equal(cutStonePartAt([16.5, y, 24], [1, 0, 0], s), "rock");
+  }
+});
 test("frame lining includes measured inward faces and floor while excluding outward cliff faces", () => {
   const s = specs["LC-060"];
   assert.equal(

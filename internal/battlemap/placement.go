@@ -12,8 +12,9 @@ type TilePlacement struct {
 }
 
 type supportCell struct {
-	elevation float64
-	parent    string
+	elevation     float64
+	insertionRise float64
+	parent        string
 }
 
 func RotatedSupportSlot(slot SupportSlot, model ModelMetadata, rotation int) SupportSlot {
@@ -55,6 +56,9 @@ func ResolveTilePlacements(d Document, models map[string]ModelMetadata) (map[str
 				if tile.Level > 0 {
 					socket, ok := sockets[key]
 					if ok {
+						if model.MountDepth > 0 {
+							socket.elevation += socket.insertionRise
+						}
 						supports = append(supports, socket)
 						placement.Elevation = math.Max(placement.Elevation, socket.elevation)
 					}
@@ -77,7 +81,7 @@ func ResolveTilePlacements(d Document, models map[string]ModelMetadata) (map[str
 			slot := RotatedSupportSlot(raw, model, tile.Rotation)
 			for y := slot.Y; y < slot.Y+slot.Height; y++ {
 				for x := slot.X; x < slot.X+slot.Width; x++ {
-					sockets[[3]int{tile.X + x, tile.Y + y, tile.Level + 1}] = supportCell{placement.Elevation + slot.Elevation - model.MountDepth, tile.ID}
+					sockets[[3]int{tile.X + x, tile.Y + y, tile.Level + 1}] = supportCell{elevation: placement.Elevation + slot.Elevation - model.MountDepth, insertionRise: slot.InsertionRise, parent: tile.ID}
 				}
 			}
 		}

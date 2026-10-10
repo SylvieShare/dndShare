@@ -33,6 +33,21 @@
           @update:value="slot[field.key] = Number($event)"
         />
       </FormField>
+      <FormField
+        v-if="model.tileType === 'frame'"
+        label="Подъём при вставке"
+        vertical
+      >
+        <FormTextInput
+          type="number"
+          :value="slot.insertionRise || 0"
+          min="0"
+          max="0.1"
+          step="any"
+          :aria-label="`Паз ${index + 1}: Подъём при вставке`"
+          @update:value="slot.insertionRise = Number($event)"
+        />
+      </FormField>
       <RemoveButton
         icon="trash"
         :label="`Удалить паз ${index + 1}`"

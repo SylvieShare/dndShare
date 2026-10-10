@@ -5,6 +5,25 @@ import (
 	"testing"
 )
 
+func TestSocketInsertionRiseOnlyLiftsMountedTiles(t *testing.T) {
+	models := map[string]ModelMetadata{
+		"frame":     {Width: 1, Height: 1, SupportSlots: []SupportSlot{{Width: 1, Height: 1, Elevation: .716446, InsertionRise: 2.0 / 35}}},
+		"mounted":   {Width: 1, Height: 1, MountDepth: .15},
+		"unmounted": {Width: 1, Height: 1},
+	}
+	for _, modelID := range []string{"mounted", "unmounted"} {
+		d := Document{Width: 4, Height: 4, Tiles: []Tile{{ID: "upper", ModelID: modelID, X: 1, Y: 1, Level: 1}, {ID: "base", ModelID: "frame", X: 1, Y: 1, Rotation: 90}}}
+		poses, err := ResolveTilePlacements(d, models)
+		want := .716446
+		if modelID == "mounted" {
+			want += 2.0 / 35
+		}
+		if err != nil || math.Abs(poses["upper"].Elevation-want) > 1e-8 {
+			t.Fatalf("%s: %+v %v", modelID, poses, err)
+		}
+	}
+}
+
 func TestUpperTilesAllowRotatedPartialSupports(t *testing.T) {
 	models := map[string]ModelMetadata{
 		"frame": {Width: 2, Height: 1, SupportSlots: []SupportSlot{{X: 0, Y: 0, Width: 2, Height: 1, Elevation: .7}}},

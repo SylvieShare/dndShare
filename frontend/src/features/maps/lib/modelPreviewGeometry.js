@@ -80,7 +80,11 @@ export function previewSockets(model) {
       slot.x + slot.width <= g.width &&
       slot.y + slot.height <= g.height &&
       slot.elevation > g.mount &&
-      slot.elevation <= Number(model.maxHeight) + 0.001;
+      slot.elevation <= Number(model.maxHeight) + 0.001 &&
+      Number.isFinite(slot.insertionRise ?? 0) &&
+      (slot.insertionRise ?? 0) >= 0 &&
+      (slot.insertionRise ?? 0) <= 0.1 &&
+      (!(slot.insertionRise > 0) || model.tileType === "frame");
     for (let y = 0; y < Math.max(1, Math.min(8, finite(slot.height, 1))); y++)
       for (let x = 0; x < Math.max(1, Math.min(8, finite(slot.width, 1))); x++)
         result.push({

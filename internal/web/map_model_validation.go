@@ -55,6 +55,9 @@ func validateMapModel(m battlemap.Model) error {
 		return errors.New("too many support slots")
 	}
 	for i, slot := range m.SupportSlots {
+		if math.IsNaN(slot.InsertionRise) || math.IsInf(slot.InsertionRise, 0) || slot.InsertionRise < 0 || slot.InsertionRise > .1 || (slot.InsertionRise > 0 && m.TileType != "frame") {
+			return errors.New("invalid support slot insertion rise")
+		}
 		if math.IsNaN(slot.Elevation) || math.IsInf(slot.Elevation, 0) || slot.X < 0 || slot.Y < 0 || slot.Width < 1 || slot.Height < 1 || slot.X+slot.Width > m.Width || slot.Y+slot.Height > m.Height || slot.Elevation <= m.MountDepth || slot.Elevation > m.MaxHeight+.001 {
 			return errors.New("invalid support slot")
 		}

@@ -55,8 +55,14 @@ export function structureContext(document, catalogue) {
         if (tile.level > 0) {
           const slot = supportsMap.get(key);
           if (slot) {
-            found.push(slot);
-            elevation = Math.max(elevation, slot.elevation);
+            const seat = {
+              ...slot,
+              elevation:
+                slot.elevation +
+                ((model.mountDepth || 0) > 0 ? slot.insertionRise || 0 : 0),
+            };
+            found.push(seat);
+            elevation = Math.max(elevation, seat.elevation);
           }
         }
       }
@@ -89,6 +95,7 @@ export function structureContext(document, catalogue) {
               elevation:
                 result.elevation + slot.elevation - (model.mountDepth || 0),
               parent: tile.id,
+              insertionRise: slot.insertionRise || 0,
             },
           );
     }

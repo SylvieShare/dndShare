@@ -20,6 +20,17 @@ const model = {
   supportSlots: [{ x: 0, y: 1, width: 2, height: 1, elevation: 1.2 }],
 };
 describe("model reference geometry", () => {
+  it("keeps a measured insertion rise separate from the physical rim sphere", () => {
+    const grid = {
+      ...model,
+      tileType: "frame",
+      supportSlots: [{ ...model.supportSlots[0], insertionRise: 2 / 35 }],
+    };
+    expect(previewSockets(grid)[0]).toEqual(previewSockets(model)[0]);
+    expect(previewSockets({ ...grid, tileType: "floor" })[0].valid).toBe(false);
+    grid.supportSlots[0].insertionRise = 0.101;
+    expect(previewSockets(grid)[0].valid).toBe(false);
+  });
   it("uses the map's actual body datum and mesh offsets for height annotations", () => {
     const g = previewGeometry(model),
       transform = tileTransform({ x: 0, y: 0, rotation: 0 }, model);

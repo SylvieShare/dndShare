@@ -44,11 +44,12 @@ type PlacementPoint struct {
 }
 
 type SupportSlot struct {
-	X         int     `json:"x"`
-	Y         int     `json:"y"`
-	Width     int     `json:"width"`
-	Height    int     `json:"height"`
-	Elevation float64 `json:"elevation"`
+	X             int     `json:"x"`
+	Y             int     `json:"y"`
+	Width         int     `json:"width"`
+	Height        int     `json:"height"`
+	Elevation     float64 `json:"elevation"`
+	InsertionRise float64 `json:"insertionRise,omitempty"`
 }
 
 type ModelAsset struct {

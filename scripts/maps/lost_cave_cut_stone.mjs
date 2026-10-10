@@ -5,18 +5,39 @@ const clamp = (v) => Math.max(0, Math.min(1, v));
 const srgb = (v) =>
   v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055;
 export function cutStonePartAt(p, n, spec) {
-  const c = spec.cutStone,
-    edge = Math.max(Math.abs(p[0]), Math.abs(p[1]));
-  const floor =
-    edge <= c.innerHalfMM + 0.15 &&
-    Math.abs(p[2] - c.floorMM) < 0.2 &&
-    n[2] > 0.1;
-  const wall =
-    Math.abs(edge - c.innerHalfMM) < 0.2 &&
-    p[2] >= c.floorMM - 0.2 &&
-    p[2] <= c.topMM + 0.1 &&
-    p[0] * n[0] + p[1] * n[1] < 0;
-  return floor || wall ? "cut-stone" : "rock";
+  const c = spec.cutStone;
+  for (const centre of c.centresMM ?? [[0, 0]]) {
+    const local = [p[0] - centre[0], p[1] - centre[1], p[2]],
+      edge = Math.max(Math.abs(local[0]), Math.abs(local[1]));
+    const floor =
+      edge <= c.innerHalfMM + 0.15 &&
+      Math.abs(p[2] - c.floorMM) < 0.2 &&
+      n[2] > 0.1;
+    const wall =
+      Math.abs(edge - c.innerHalfMM) < 0.2 &&
+      p[2] >= c.floorMM - 0.2 &&
+      p[2] <= c.topMM + 0.1 &&
+      local[0] * n[0] + local[1] * n[1] < 0;
+    const lower =
+      c.lowerInnerHalfMM !== undefined &&
+      Math.abs(edge - c.lowerInnerHalfMM) < 0.2 &&
+      p[2] <= c.floorMM + 0.2 &&
+      local[0] * n[0] + local[1] * n[1] < 0;
+    const bevelHalf =
+      c.bevelStartMM === undefined
+        ? undefined
+        : c.innerHalfMM +
+          ((c.bevelTopHalfMM - c.innerHalfMM) * (p[2] - c.bevelStartMM)) /
+            (c.topMM - c.bevelStartMM);
+    const bevel =
+      bevelHalf !== undefined &&
+      p[2] >= c.bevelStartMM &&
+      p[2] <= c.topMM + 0.05 &&
+      Math.abs(edge - bevelHalf) < 0.2 &&
+      local[0] * n[0] + local[1] * n[1] < 0;
+    if (floor || wall || lower || bevel) return "cut-stone";
+  }
+  return "rock";
 }
 export function paintCutStone(p, n, ao, spec) {
   const part = cutStonePartAt(p, n, spec);

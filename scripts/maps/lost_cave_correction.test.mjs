@@ -14,6 +14,38 @@ const model = {
   maxHeight: 0.16,
 };
 const source = { sourceSHA256: sha, cutHeight: 11.5, max: [15, 14, 17.1222] };
+test("a measured grid insertion rise preserves the native socket and mesh heights", () => {
+  const old = {
+      ...model,
+      sourceCode: "LC-Level Grid 1X1",
+      tileType: "frame",
+      supportSlots: [{ x: 0, y: 0, width: 1, height: 1, elevation: 0.716446 }],
+    },
+    src = { ...source, cutHeight: 0 },
+    s = {
+      geometryCorrection: {
+        mode: "correct-grid-insertion-seat",
+        previousCutHeightMM: 0,
+        cutHeightMM: 0,
+        sourceSHA256: sha,
+        reason:
+          "Measured native bevel raises a fitted insertion body2mm above the unchanged frame rim.",
+        metadata: {
+          supportSlots: [{ ...old.supportSlots[0], insertionRise: 2 / 35 }],
+        },
+      },
+    };
+  const result = correctedCaveModel(old, src, s, true);
+  assert.equal(result.model.maxHeight, old.maxHeight);
+  assert.equal(
+    result.model.supportSlots[0].elevation,
+    old.supportSlots[0].elevation,
+  );
+  assert.equal(result.model.supportSlots[0].insertionRise, 2 / 35);
+  assert.throws(() => correctedCaveModel(old, src, s, false));
+  s.geometryCorrection.metadata.supportSlots[0].elevation += 0.1;
+  assert.throws(() => correctedCaveModel(old, src, s, true));
+});
 const spec = {
   geometryCorrection: {
     sourceSHA256: sha,

@@ -16,6 +16,55 @@ export function correctedCaveModel(model, source, spec, explicit) {
     throw new Error(
       "Inspect the full source and explicitly enable geometry correction",
     );
+  if (correction.mode === "correct-grid-insertion-seat") {
+    const slots = correction.metadata?.supportSlots;
+    if (
+      model.tileType !== "frame" ||
+      model.mountDepth !== 0 ||
+      !model.sourceCode.startsWith("LC-Level Grid ") ||
+      source.cutHeight !== 0 ||
+      correction.previousCutHeightMM !== 0 ||
+      correction.cutHeightMM !== 0 ||
+      correction.sourceSHA256 !== source.sourceSHA256 ||
+      correction.sourceSHA256 !== model.assets.source.sha256 ||
+      typeof correction.reason !== "string" ||
+      correction.reason.trim().length < 30 ||
+      Object.keys(correction.metadata).join() !== "supportSlots" ||
+      !slots?.length ||
+      slots.length !== model.supportSlots?.length ||
+      slots.some(
+        (slot, i) =>
+          Object.keys(slot).some(
+            (k) =>
+              ![
+                "x",
+                "y",
+                "width",
+                "height",
+                "elevation",
+                "insertionRise",
+              ].includes(k),
+          ) ||
+          ["x", "y", "width", "height", "elevation"].some(
+            (k) => slot[k] !== model.supportSlots[i][k],
+          ) ||
+          !Number.isFinite(slot.insertionRise) ||
+          slot.insertionRise <= 0 ||
+          slot.insertionRise > 0.1,
+      )
+    )
+      throw new Error(
+        "Grid seat correction must retain native frame geometry, slot coordinates and source identity",
+      );
+    return {
+      model: {
+        ...structuredClone(model),
+        supportSlots: structuredClone(slots),
+      },
+      cutHeight: 0,
+      correction: structuredClone(correction),
+    };
+  }
   const removeMount = correction.mode === "remove-false-mount";
   const restoreBridge = correction.mode === "restore-native-bridge";
   const restoreWell = correction.mode === "restore-native-well";

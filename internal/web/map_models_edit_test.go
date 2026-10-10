@@ -34,6 +34,26 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 		t.Fatal("edited the original value")
 	}
 }
+
+func TestSupportSlotInsertionRiseIsBoundedAndFrameOnly(t *testing.T) {
+	m := battlemap.InitialCatalogue()[0]
+	m.TileType = "frame"
+	m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: m.MaxHeight, InsertionRise: 2.0 / 35}}
+	if err := validateMapModel(m); err != nil {
+		t.Fatal(err)
+	}
+	for _, rise := range []float64{-.01, .101, math.NaN(), math.Inf(1)} {
+		m.SupportSlots[0].InsertionRise = rise
+		if validateMapModel(m) == nil {
+			t.Fatalf("accepted rise %v", rise)
+		}
+	}
+	m.SupportSlots[0].InsertionRise = 2.0 / 35
+	m.TileType = "floor"
+	if validateMapModel(m) == nil {
+		t.Fatal("accepted insertion rise outside a frame")
+	}
+}
 func TestEditedMapModelRejectsIdentityChangesAndInvalidGeometry(t *testing.T) {
 	original := battlemap.InitialCatalogue()[0]
 	original.Code = "LC-wall"

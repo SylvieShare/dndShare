@@ -28,6 +28,35 @@ const floor = {
   level: 1,
 };
 const doc = (tiles) => ({ width: 8, height: 8, tiles });
+it("applies a measured socket rise to an insertion peg while unmounted frames stay on the rim", () => {
+  const catalogue = [
+    {
+      ...models[0],
+      supportSlots: [
+        {
+          x: 0,
+          y: 0,
+          width: 2,
+          height: 1,
+          elevation: 0.716446,
+          insertionRise: 2 / 35,
+        },
+      ],
+    },
+    { ...models[1], mountDepth: 0.15 },
+    models[2],
+  ];
+  expect(
+    structureContext(doc([floor, frame]), catalogue).placements.get("above")
+      .elevation,
+  ).toBeCloseTo(0.716446 + 2 / 35, 8);
+  expect(
+    structureContext(
+      doc([{ ...floor, modelId: "wide" }, frame]),
+      catalogue,
+    ).placements.get("above").elevation,
+  ).toBeCloseTo(0.716446, 8);
+});
 it("rejects floating tiles and allows one supporting cell under an overhang", () => {
   expect(tileGroupStatus(doc([]), [floor], models).valid).toBe(false);
   expect(tileGroupStatus(doc([frame]), [floor], models).valid).toBe(true);
