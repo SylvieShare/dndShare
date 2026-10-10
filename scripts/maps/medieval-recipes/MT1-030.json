@@ -1,0 +1,1492 @@
+{
+  "name": "Rare Spice Market",
+  "groupCode": "MED-rare-spice-market",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 96000,
+  "lodTriangles": 30000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0.5,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0.5,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        0.13
+      ],
+      [
+        0,
+        0.13
+      ]
+    ],
+    [
+      [
+        0,
+        0.87
+      ],
+      [
+        1,
+        0.87
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "market",
+    "spices",
+    "wood",
+    "canvas",
+    "sacks",
+    "grain"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "frame base grain",
+        "minMM": [
+          -13.3,
+          -17.3,
+          26.1
+        ],
+        "maxMM": [
+          15.4,
+          17.3,
+          85
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "lower rising brace -1",
+        "minMM": [
+          -11.2,
+          -17.2,
+          24.503
+        ],
+        "maxMM": [
+          15.3,
+          -12.8,
+          46.122
+        ],
+        "axis": "beam",
+        "direction": [
+          20.823,
+          0,
+          17.218999999999998
+        ],
+        "projection": {
+          "originMM": [
+            -8.009,
+            -15,
+            26.703
+          ],
+          "axis": [
+            -0.6372639371099426,
+            0,
+            0.7706456218386861
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "middle falling brace -1",
+        "minMM": [
+          -11.2,
+          -17.2,
+          41.721999999999994
+        ],
+        "maxMM": [
+          15.3,
+          -12.8,
+          61.739000000000004
+        ],
+        "axis": "beam",
+        "direction": [
+          21.424,
+          0,
+          -15.617000000000004
+        ],
+        "projection": {
+          "originMM": [
+            -8.61,
+            -15,
+            59.539
+          ],
+          "axis": [
+            0.589057230997878,
+            0,
+            0.8080913182364433
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "upper rising rafter -1",
+        "minMM": [
+          -11.2,
+          -17.2,
+          57.339
+        ],
+        "maxMM": [
+          15.3,
+          -12.8,
+          82.4
+        ],
+        "axis": "beam",
+        "direction": [
+          21.424,
+          0,
+          20.661
+        ],
+        "projection": {
+          "originMM": [
+            -8.61,
+            -15,
+            59.539
+          ],
+          "axis": [
+            -0.6941728763366972,
+            0,
+            0.7198083201508833
+          ],
+          "rangeMM": [
+            -2.2,
+            1.5
+          ]
+        }
+      },
+      {
+        "name": "vertical post -1 -8.61",
+        "minMM": [
+          -10.76,
+          -17.2,
+          26.1
+        ],
+        "maxMM": [
+          -6.459999999999999,
+          -12.8,
+          65.0
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "vertical post -1 12.814",
+        "minMM": [
+          10.664,
+          -17.2,
+          26.1
+        ],
+        "maxMM": [
+          14.964,
+          -12.8,
+          78.0
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "front end block -1",
+        "minMM": [
+          -11.2,
+          -17.2,
+          65
+        ],
+        "maxMM": [
+          -5.2,
+          -12.8,
+          71.0
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "rear end block -1",
+        "minMM": [
+          10.3,
+          -17.2,
+          78
+        ],
+        "maxMM": [
+          15.4,
+          -12.8,
+          82.5
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "lower rising brace 1",
+        "minMM": [
+          -11.2,
+          12.8,
+          24.503
+        ],
+        "maxMM": [
+          15.3,
+          17.2,
+          46.122
+        ],
+        "axis": "beam",
+        "direction": [
+          20.823,
+          0,
+          17.218999999999998
+        ],
+        "projection": {
+          "originMM": [
+            -8.009,
+            15,
+            26.703
+          ],
+          "axis": [
+            -0.6372639371099426,
+            0,
+            0.7706456218386861
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "middle falling brace 1",
+        "minMM": [
+          -11.2,
+          12.8,
+          41.721999999999994
+        ],
+        "maxMM": [
+          15.3,
+          17.2,
+          61.739000000000004
+        ],
+        "axis": "beam",
+        "direction": [
+          21.424,
+          0,
+          -15.617000000000004
+        ],
+        "projection": {
+          "originMM": [
+            -8.61,
+            15,
+            59.539
+          ],
+          "axis": [
+            0.589057230997878,
+            0,
+            0.8080913182364433
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "upper rising rafter 1",
+        "minMM": [
+          -11.2,
+          12.8,
+          57.339
+        ],
+        "maxMM": [
+          15.3,
+          17.2,
+          82.4
+        ],
+        "axis": "beam",
+        "direction": [
+          21.424,
+          0,
+          20.661
+        ],
+        "projection": {
+          "originMM": [
+            -8.61,
+            15,
+            59.539
+          ],
+          "axis": [
+            -0.6941728763366972,
+            0,
+            0.7198083201508833
+          ],
+          "rangeMM": [
+            -2.2,
+            1.5
+          ]
+        }
+      },
+      {
+        "name": "vertical post 1 -8.61",
+        "minMM": [
+          -10.76,
+          12.8,
+          26.1
+        ],
+        "maxMM": [
+          -6.459999999999999,
+          17.2,
+          65.0
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "vertical post 1 12.814",
+        "minMM": [
+          10.664,
+          12.8,
+          26.1
+        ],
+        "maxMM": [
+          14.964,
+          17.2,
+          78.0
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "front end block 1",
+        "minMM": [
+          -11.2,
+          12.8,
+          65
+        ],
+        "maxMM": [
+          -5.2,
+          17.2,
+          71.0
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "rear end block 1",
+        "minMM": [
+          10.3,
+          12.8,
+          78
+        ],
+        "maxMM": [
+          15.4,
+          17.2,
+          82.5
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "counter boards and corner legs",
+        "centerMM": [
+          8.35,
+          -0.25,
+          0
+        ],
+        "rotationZDeg": 0,
+        "minMM": [
+          -9.200000000000001,
+          -17.55,
+          26.1
+        ],
+        "maxMM": [
+          9.200000000000001,
+          17.55,
+          36.05
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          8.9,
+          17.25
+        ],
+        "railWidthMM": 1.65,
+        "lidAxis": "x",
+        "excludeParts": [
+          {
+            "name": "vertical post -1 -8.61",
+            "minMM": [
+              -10.76,
+              -17.2,
+              26.1
+            ],
+            "maxMM": [
+              -6.459999999999999,
+              -12.8,
+              65.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post -1 12.814",
+            "minMM": [
+              10.664,
+              -17.2,
+              26.1
+            ],
+            "maxMM": [
+              14.964,
+              -12.8,
+              78.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post 1 -8.61",
+            "minMM": [
+              -10.76,
+              12.8,
+              26.1
+            ],
+            "maxMM": [
+              -6.459999999999999,
+              17.2,
+              65.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post 1 12.814",
+            "minMM": [
+              10.664,
+              12.8,
+              26.1
+            ],
+            "maxMM": [
+              14.964,
+              17.2,
+              78.0
+            ],
+            "axis": "z"
+          }
+        ]
+      }
+    ],
+    "fabricParts": [
+      {
+        "name": "red canopy with long side skirts",
+        "minMM": [
+          -17.6,
+          -17.6,
+          49
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          85
+        ],
+        "excludeParts": [
+          {
+            "name": "lower rising brace -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              24.503
+            ],
+            "maxMM": [
+              15.3,
+              -12.8,
+              46.122
+            ],
+            "axis": "beam",
+            "direction": [
+              20.823,
+              0,
+              17.218999999999998
+            ],
+            "projection": {
+              "originMM": [
+                -8.009,
+                -15,
+                26.703
+              ],
+              "axis": [
+                -0.6372639371099426,
+                0,
+                0.7706456218386861
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "middle falling brace -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              41.721999999999994
+            ],
+            "maxMM": [
+              15.3,
+              -12.8,
+              61.739000000000004
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              -15.617000000000004
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                -15,
+                59.539
+              ],
+              "axis": [
+                0.589057230997878,
+                0,
+                0.8080913182364433
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "upper rising rafter -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              57.339
+            ],
+            "maxMM": [
+              15.3,
+              -12.8,
+              82.4
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              20.661
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                -15,
+                59.539
+              ],
+              "axis": [
+                -0.6941728763366972,
+                0,
+                0.7198083201508833
+              ],
+              "rangeMM": [
+                -2.2,
+                1.5
+              ]
+            }
+          },
+          {
+            "name": "vertical post -1 -8.61",
+            "minMM": [
+              -10.76,
+              -17.2,
+              26.1
+            ],
+            "maxMM": [
+              -6.459999999999999,
+              -12.8,
+              65.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post -1 12.814",
+            "minMM": [
+              10.664,
+              -17.2,
+              26.1
+            ],
+            "maxMM": [
+              14.964,
+              -12.8,
+              78.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "front end block -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              65
+            ],
+            "maxMM": [
+              -5.2,
+              -12.8,
+              71.0
+            ],
+            "axis": "y"
+          },
+          {
+            "name": "rear end block -1",
+            "minMM": [
+              10.3,
+              -17.2,
+              78
+            ],
+            "maxMM": [
+              15.4,
+              -12.8,
+              82.5
+            ],
+            "axis": "y"
+          },
+          {
+            "name": "lower rising brace 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              24.503
+            ],
+            "maxMM": [
+              15.3,
+              17.2,
+              46.122
+            ],
+            "axis": "beam",
+            "direction": [
+              20.823,
+              0,
+              17.218999999999998
+            ],
+            "projection": {
+              "originMM": [
+                -8.009,
+                15,
+                26.703
+              ],
+              "axis": [
+                -0.6372639371099426,
+                0,
+                0.7706456218386861
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "middle falling brace 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              41.721999999999994
+            ],
+            "maxMM": [
+              15.3,
+              17.2,
+              61.739000000000004
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              -15.617000000000004
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                15,
+                59.539
+              ],
+              "axis": [
+                0.589057230997878,
+                0,
+                0.8080913182364433
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "upper rising rafter 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              57.339
+            ],
+            "maxMM": [
+              15.3,
+              17.2,
+              82.4
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              20.661
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                15,
+                59.539
+              ],
+              "axis": [
+                -0.6941728763366972,
+                0,
+                0.7198083201508833
+              ],
+              "rangeMM": [
+                -2.2,
+                1.5
+              ]
+            }
+          },
+          {
+            "name": "vertical post 1 -8.61",
+            "minMM": [
+              -10.76,
+              12.8,
+              26.1
+            ],
+            "maxMM": [
+              -6.459999999999999,
+              17.2,
+              65.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post 1 12.814",
+            "minMM": [
+              10.664,
+              12.8,
+              26.1
+            ],
+            "maxMM": [
+              14.964,
+              17.2,
+              78.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "front end block 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              65
+            ],
+            "maxMM": [
+              -5.2,
+              17.2,
+              71.0
+            ],
+            "axis": "y"
+          },
+          {
+            "name": "rear end block 1",
+            "minMM": [
+              10.3,
+              12.8,
+              78
+            ],
+            "maxMM": [
+              15.4,
+              17.2,
+              82.5
+            ],
+            "axis": "y"
+          }
+        ],
+        "rgb": [
+          0.71,
+          0.195,
+          0.075
+        ]
+      },
+      {
+        "name": "three canvas sacks",
+        "minMM": [
+          0.4,
+          -17.1,
+          36.05
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          48.1
+        ],
+        "centersMM": [
+          [
+            9.3,
+            -10.2,
+            0
+          ],
+          [
+            9.0,
+            -0.8,
+            0
+          ],
+          [
+            9.8,
+            10.3,
+            0
+          ]
+        ],
+        "centerRadiiMM": [
+          6.3,
+          6.8,
+          7.8
+        ],
+        "colorsRGB": [
+          [
+            0.63,
+            0.44,
+            0.19
+          ],
+          [
+            0.47,
+            0.465,
+            0.24
+          ],
+          [
+            0.61,
+            0.465,
+            0.18
+          ]
+        ],
+        "excludeParts": [
+          {
+            "name": "lower rising brace -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              24.503
+            ],
+            "maxMM": [
+              15.3,
+              -12.8,
+              46.122
+            ],
+            "axis": "beam",
+            "direction": [
+              20.823,
+              0,
+              17.218999999999998
+            ],
+            "projection": {
+              "originMM": [
+                -8.009,
+                -15,
+                26.703
+              ],
+              "axis": [
+                -0.6372639371099426,
+                0,
+                0.7706456218386861
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "middle falling brace -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              41.721999999999994
+            ],
+            "maxMM": [
+              15.3,
+              -12.8,
+              61.739000000000004
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              -15.617000000000004
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                -15,
+                59.539
+              ],
+              "axis": [
+                0.589057230997878,
+                0,
+                0.8080913182364433
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "upper rising rafter -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              57.339
+            ],
+            "maxMM": [
+              15.3,
+              -12.8,
+              82.4
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              20.661
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                -15,
+                59.539
+              ],
+              "axis": [
+                -0.6941728763366972,
+                0,
+                0.7198083201508833
+              ],
+              "rangeMM": [
+                -2.2,
+                1.5
+              ]
+            }
+          },
+          {
+            "name": "vertical post -1 -8.61",
+            "minMM": [
+              -10.76,
+              -17.2,
+              26.1
+            ],
+            "maxMM": [
+              -6.459999999999999,
+              -12.8,
+              65.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post -1 12.814",
+            "minMM": [
+              10.664,
+              -17.2,
+              26.1
+            ],
+            "maxMM": [
+              14.964,
+              -12.8,
+              78.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "front end block -1",
+            "minMM": [
+              -11.2,
+              -17.2,
+              65
+            ],
+            "maxMM": [
+              -5.2,
+              -12.8,
+              71.0
+            ],
+            "axis": "y"
+          },
+          {
+            "name": "rear end block -1",
+            "minMM": [
+              10.3,
+              -17.2,
+              78
+            ],
+            "maxMM": [
+              15.4,
+              -12.8,
+              82.5
+            ],
+            "axis": "y"
+          },
+          {
+            "name": "lower rising brace 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              24.503
+            ],
+            "maxMM": [
+              15.3,
+              17.2,
+              46.122
+            ],
+            "axis": "beam",
+            "direction": [
+              20.823,
+              0,
+              17.218999999999998
+            ],
+            "projection": {
+              "originMM": [
+                -8.009,
+                15,
+                26.703
+              ],
+              "axis": [
+                -0.6372639371099426,
+                0,
+                0.7706456218386861
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "middle falling brace 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              41.721999999999994
+            ],
+            "maxMM": [
+              15.3,
+              17.2,
+              61.739000000000004
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              -15.617000000000004
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                15,
+                59.539
+              ],
+              "axis": [
+                0.589057230997878,
+                0,
+                0.8080913182364433
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "upper rising rafter 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              57.339
+            ],
+            "maxMM": [
+              15.3,
+              17.2,
+              82.4
+            ],
+            "axis": "beam",
+            "direction": [
+              21.424,
+              0,
+              20.661
+            ],
+            "projection": {
+              "originMM": [
+                -8.61,
+                15,
+                59.539
+              ],
+              "axis": [
+                -0.6941728763366972,
+                0,
+                0.7198083201508833
+              ],
+              "rangeMM": [
+                -2.2,
+                1.5
+              ]
+            }
+          },
+          {
+            "name": "vertical post 1 -8.61",
+            "minMM": [
+              -10.76,
+              12.8,
+              26.1
+            ],
+            "maxMM": [
+              -6.459999999999999,
+              17.2,
+              65.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post 1 12.814",
+            "minMM": [
+              10.664,
+              12.8,
+              26.1
+            ],
+            "maxMM": [
+              14.964,
+              17.2,
+              78.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "front end block 1",
+            "minMM": [
+              -11.2,
+              12.8,
+              65
+            ],
+            "maxMM": [
+              -5.2,
+              17.2,
+              71.0
+            ],
+            "axis": "y"
+          },
+          {
+            "name": "rear end block 1",
+            "minMM": [
+              10.3,
+              12.8,
+              78
+            ],
+            "maxMM": [
+              15.4,
+              17.2,
+              82.5
+            ],
+            "axis": "y"
+          }
+        ]
+      }
+    ],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -8.008934020996094,
+          -16.752466201782227,
+          26.702667236328125
+        ],
+        "radiiMM": [
+          1.05,
+          0.65,
+          1.05
+        ],
+        "minZMM": 25.602667236328124,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -8.609603881835938,
+          -15.754913330078125,
+          59.5392951965332
+        ],
+        "radiiMM": [
+          1.05,
+          0.65,
+          1.05
+        ],
+        "minZMM": 58.4392951965332,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          12.81429386138916,
+          -16.37333869934082,
+          43.921875
+        ],
+        "radiiMM": [
+          1.05,
+          0.65,
+          1.05
+        ],
+        "minZMM": 42.821875,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -8.008934020996094,
+          16.56842803955078,
+          26.702667236328125
+        ],
+        "radiiMM": [
+          1.05,
+          0.65,
+          1.05
+        ],
+        "minZMM": 25.602667236328124,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -8.609603881835938,
+          16.60696792602539,
+          59.5392951965332
+        ],
+        "radiiMM": [
+          1.05,
+          0.65,
+          1.05
+        ],
+        "minZMM": 58.4392951965332,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          12.81429386138916,
+          16.513370513916016,
+          43.921875
+        ],
+        "radiiMM": [
+          1.05,
+          0.65,
+          1.05
+        ],
+        "minZMM": 42.821875,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      }
+    ],
+    "stoneIslandMinCount": 2,
+    "surfaceParts": [
+      {
+        "name": "golden spices in front sack",
+        "kind": "grain",
+        "centerMM": [
+          9.45,
+          -8.9,
+          0
+        ],
+        "rotationZDeg": 15,
+        "minMM": [
+          -4.55,
+          -2.05,
+          42.8
+        ],
+        "maxMM": [
+          4.55,
+          2.05,
+          44.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            44
+          ],
+          "radiiMM": [
+            4.55,
+            2.05,
+            2.0
+          ]
+        },
+        "rgb": [
+          0.72,
+          0.535,
+          0.2
+        ],
+        "roughness": 0.93,
+        "variation": 0.08
+      },
+      {
+        "name": "pale seeds in middle sack",
+        "kind": "grain",
+        "centerMM": [
+          9.6,
+          -1.5,
+          0
+        ],
+        "rotationZDeg": -9,
+        "minMM": [
+          -4.8,
+          -2.05,
+          44.05
+        ],
+        "maxMM": [
+          4.8,
+          2.05,
+          45.95
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            45
+          ],
+          "radiiMM": [
+            4.8,
+            2.05,
+            2.0
+          ]
+        },
+        "rgb": [
+          0.66,
+          0.68,
+          0.38
+        ],
+        "roughness": 0.93,
+        "variation": 0.08
+      }
+    ],
+    "produceParts": []
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2,
+      3.9
+    ],
+    "lodMiB": [
+      0.65,
+      1.3
+    ],
+    "shadowKiB": [
+      70,
+      180
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "A 35mm market tile rising84.8404mm with a red curved canopy and longer side skirts, four posts, six measured XZ braces, six frame heads and three canvas sacks. Preserve two open grain mouths, tied rear sack and structural triangles using96k/30k triangles before independent UV bakes. Compare1024/512 and768/384 texture profiles; accept the lighter profile only when cloth does not contaminate small wood/floor surfaces."
+  },
+  "reviewNotes": "PDF page5 plus native front/back, lower cutaway and direct-front source views. Native source779988 triangles, maximum84.840401mm, datum17mm and fitted1x1 foot. Six frame heads measured by rays at front lower[-8.009,26.703], front upper[-8.610,59.539], rear middle[12.814,43.922] in nativeXZ; upper rafters reach[12.814,80.2]. Directional grain follows individual braces; front/rear end blocks stop at71/82.5mm below the red cloth. Two seed/grain mouths sample[9.45,-8.9,44.326714] and[9.6,-1.5,45.287819]mm, and the tied sack samples[9.8,10.3,42.69973]mm. Source cap cuts at44/46mm and upward-normal histograms identify the same three sack shapes asMT1-026 within about.01mm; retain their individual ochre/sage/mustard weave and separately bounded golden/pale contents. Frame volumes protect posts/braces from sack and canopy colour. Free left paving[-10,0,25.795494]mm supplies stand point[.214286,.5], while the positiveX counter and side-frame strips are blocked. Inspect cloth/wood contacts, all three sack shapes and both open mouths in both tiers.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.214286,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30
+}
