@@ -21,6 +21,7 @@ export function majesticModel(info) {
     height: r.height,
     placementOffset: [0, 0],
     mountDepth: info.mountDepth,
+    ...(r.mountProfile ? { mountProfile: r.mountProfile } : {}),
     surfaceHeight: info.surfaceHeight,
     maxHeight: info.maxHeight,
     blockers: r.blockers ?? [],

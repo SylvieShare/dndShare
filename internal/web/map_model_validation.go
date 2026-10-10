@@ -3,10 +3,13 @@ package web
 import (
 	"errors"
 	"math"
+	"regexp"
 	"strings"
 
 	"dndshare/internal/battlemap"
 )
+
+var mapMountProfile = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
 
 func validateMapModel(m battlemap.Model) error {
 	if m.TextureDetail != "basic" && m.TextureDetail != "detailed" {
@@ -29,6 +32,9 @@ func validateMapModel(m battlemap.Model) error {
 	}
 	if math.IsNaN(m.MountDepth) || math.IsInf(m.MountDepth, 0) || m.MountDepth < 0 || m.MountDepth > m.SurfaceHeight {
 		return errors.New("invalid model mounting depth")
+	}
+	if m.MountProfile != "" && (!mapMountProfile.MatchString(m.MountProfile) || m.MountDepth == 0) {
+		return errors.New("invalid model mount profile")
 	}
 	for _, offset := range m.PlacementOffset {
 		if math.IsNaN(offset) || math.IsInf(offset, 0) || math.Abs(offset) > 8 {
@@ -55,6 +61,14 @@ func validateMapModel(m battlemap.Model) error {
 		return errors.New("too many support slots")
 	}
 	for i, slot := range m.SupportSlots {
+		if len(slot.InsertionRises) > 16 || (len(slot.InsertionRises) > 0 && m.TileType != "frame") {
+			return errors.New("invalid support slot mounting profiles")
+		}
+		for profile, rise := range slot.InsertionRises {
+			if !mapMountProfile.MatchString(profile) || math.IsNaN(rise) || math.IsInf(rise, 0) || rise < 0 || rise > .1 {
+				return errors.New("invalid support slot profile rise")
+			}
+		}
 		if math.IsNaN(slot.InsertionRise) || math.IsInf(slot.InsertionRise, 0) || slot.InsertionRise < 0 || slot.InsertionRise > .1 || (slot.InsertionRise > 0 && m.TileType != "frame") {
 			return errors.New("invalid support slot insertion rise")
 		}

@@ -59,7 +59,9 @@ export function structureContext(document, catalogue) {
               ...slot,
               elevation:
                 slot.elevation +
-                ((model.mountDepth || 0) > 0 ? slot.insertionRise || 0 : 0),
+                ((model.mountDepth || 0) > 0
+                  ? slot.insertionRises?.[model.mountProfile] ?? slot.insertionRise ?? 0
+                  : 0),
             };
             found.push(seat);
             elevation = Math.max(elevation, seat.elevation);
@@ -96,6 +98,7 @@ export function structureContext(document, catalogue) {
                 result.elevation + slot.elevation - (model.mountDepth || 0),
               parent: tile.id,
               insertionRise: slot.insertionRise || 0,
+              insertionRises: slot.insertionRises,
             },
           );
     }

@@ -3,6 +3,7 @@ package web
 import (
 	"math"
 	"reflect"
+	"strings"
 	"testing"
 
 	"dndshare/internal/battlemap"
@@ -52,6 +53,34 @@ func TestSupportSlotInsertionRiseIsBoundedAndFrameOnly(t *testing.T) {
 	m.TileType = "floor"
 	if validateMapModel(m) == nil {
 		t.Fatal("accepted insertion rise outside a frame")
+	}
+}
+
+func TestMountProfilesAndMeasuredOverrides(t *testing.T) {
+	m := battlemap.InitialCatalogue()[0]
+	m.MountProfile = "db-pins"
+	m.TileType = "frame"
+	m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: m.MaxHeight, InsertionRises: map[string]float64{"xl-ring": 3.0 / 35, "db-pins": .1}}}
+	if err := validateMapModel(m); err != nil {
+		t.Fatal(err)
+	}
+	for _, profile := range []string{"bad profile", "UPPER", strings.Repeat("a", 65)} {
+		m.MountProfile = profile
+		if validateMapModel(m) == nil {
+			t.Fatalf("accepted profile %q", profile)
+		}
+	}
+	m.MountProfile = "db-pins"
+	for _, rise := range []float64{-.01, .101, math.NaN(), math.Inf(1)} {
+		m.SupportSlots[0].InsertionRises["xl-ring"] = rise
+		if validateMapModel(m) == nil {
+			t.Fatalf("accepted profile rise %v", rise)
+		}
+	}
+	m.SupportSlots[0].InsertionRises["xl-ring"] = 3.0 / 35
+	m.TileType = "floor"
+	if validateMapModel(m) == nil {
+		t.Fatal("accepted measured profiles outside a frame")
 	}
 }
 func TestEditedMapModelRejectsIdentityChangesAndInvalidGeometry(t *testing.T) {

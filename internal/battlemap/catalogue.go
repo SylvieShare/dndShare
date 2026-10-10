@@ -30,6 +30,7 @@ type ModelMetadata struct {
 	Height          int              `json:"height"`
 	PlacementOffset [2]float64       `json:"placementOffset"`
 	MountDepth      float64          `json:"mountDepth"`
+	MountProfile    string           `json:"mountProfile,omitempty"`
 	SurfaceHeight   float64          `json:"surfaceHeight"`
 	MaxHeight       float64          `json:"maxHeight"`
 	Blockers        [][][2]float64   `json:"blockers"`
@@ -44,12 +45,13 @@ type PlacementPoint struct {
 }
 
 type SupportSlot struct {
-	X             int     `json:"x"`
-	Y             int     `json:"y"`
-	Width         int     `json:"width"`
-	Height        int     `json:"height"`
-	Elevation     float64 `json:"elevation"`
-	InsertionRise float64 `json:"insertionRise,omitempty"`
+	X              int                `json:"x"`
+	Y              int                `json:"y"`
+	Width          int                `json:"width"`
+	Height         int                `json:"height"`
+	Elevation      float64            `json:"elevation"`
+	InsertionRise  float64            `json:"insertionRise,omitempty"`
+	InsertionRises map[string]float64 `json:"insertionRises,omitempty"`
 }
 
 type ModelAsset struct {

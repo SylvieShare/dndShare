@@ -35,6 +35,14 @@
         @focus="emit('active', field.key)"
       />
     </FormField>
+    <FormField v-if="model.mountDepth > 0" label="Профиль выступа" vertical>
+      <FormTextInput
+        v-model:value="model.mountProfile"
+        aria-label="Профиль выступа"
+        maxlength="64"
+        placeholder="По умолчанию"
+      />
+    </FormField>
   </div>
 </template>
 <script setup>

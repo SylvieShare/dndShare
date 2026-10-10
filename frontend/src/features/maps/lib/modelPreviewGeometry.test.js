@@ -6,6 +6,7 @@ import {
   previewGeometry,
   previewPorts,
   previewSockets,
+  setGeometryValue,
 } from "./modelPreviewGeometry";
 
 const model = {
@@ -20,6 +21,22 @@ const model = {
   supportSlots: [{ x: 0, y: 1, width: 2, height: 1, elevation: 1.2 }],
 };
 describe("model reference geometry", () => {
+  it("clears an insertion profile when the model no longer has a mounting part", () => {
+    const draft = { ...model, mountProfile: "xl-ring" };
+    setGeometryValue(draft, "mountDepth", 0);
+    expect(draft.mountProfile).toBe("");
+  });
+  it("validates profile rises without moving the physical slot markers", () => {
+    const frame = { ...model, tileType: "frame", supportSlots: [{ ...model.supportSlots[0], insertionRises: { "xl-ring": .08, "db-pins": .1 } }] };
+    expect(previewSockets(frame)[0]).toEqual(previewSockets(model)[0]);
+    for (const rises of [{ "bad profile": .05 }, { "xl-ring": -.01 }, { "xl-ring": .101 }, { "xl-ring": NaN }]) {
+      frame.supportSlots[0].insertionRises = rises;
+      expect(previewSockets(frame)[0].valid).toBe(false);
+    }
+    frame.supportSlots[0].insertionRises = { "xl-ring": .08 };
+    frame.tileType = "floor";
+    expect(previewSockets(frame)[0].valid).toBe(false);
+  });
   it("keeps a measured insertion rise separate from the physical rim sphere", () => {
     const grid = {
       ...model,

@@ -33,6 +33,18 @@
           @update:value="slot[field.key] = Number($event)"
         />
       </FormField>
+      <template v-if="model.tileType === 'frame'">
+        <FormField v-for="profile in Object.keys(slot.insertionRises || {})" :key="profile" :label="`Подъём: ${profile}`" vertical>
+          <FormTextInput type="number" :value="slot.insertionRises[profile]" min="0" max="0.1" step="any"
+            :aria-label="`Паз ${index + 1}: Подъём ${profile}`"
+            @update:value="slot.insertionRises[profile] = Number($event)" />
+          <RemoveButton icon="trash" :label="`Удалить профиль ${profile}`" @click="delete slot.insertionRises[profile]" />
+        </FormField>
+        <FormField label="Новый профиль выступа" vertical>
+          <FormTextInput v-model:value="newProfiles[index]" :aria-label="`Паз ${index + 1}: Новый профиль выступа`" maxlength="64" />
+          <ActionButton variant="secondary" :disabled="!validProfile(newProfiles[index]) || Object.keys(slot.insertionRises || {}).length >= 16" @click="addProfile(slot, index)">Добавить профиль</ActionButton>
+        </FormField>
+      </template>
       <FormField
         v-if="model.tileType === 'frame'"
         label="Подъём при вставке"
@@ -72,8 +84,18 @@ import {
   RemoveButton,
 } from "@sylvieshare/share-ui";
 import { Plus } from "@lucide/vue";
+import { reactive } from "vue";
 const props = defineProps({ model: Object, selectedSlot: Number });
 const emit = defineEmits(["select"]);
+const newProfiles = reactive({});
+const validProfile = (value) => /^[a-z][a-z0-9-]{0,63}$/.test(value || "");
+function addProfile(slot, index) {
+  const profile = newProfiles[index];
+  if (!validProfile(profile)) return;
+  slot.insertionRises ||= {};
+  slot.insertionRises[profile] ??= slot.insertionRise || 0;
+  newProfiles[index] = "";
+}
 function add() {
   props.model.supportSlots.push({
     x: 0,

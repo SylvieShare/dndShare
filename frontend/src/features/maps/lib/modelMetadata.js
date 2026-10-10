@@ -26,6 +26,7 @@ export const METADATA_KEYS = [
   "height",
   "placementOffset",
   "mountDepth",
+  "mountProfile",
   "surfaceHeight",
   "maxHeight",
   "blockers",
@@ -38,6 +39,7 @@ export function modelMetadata(model) {
   );
   result.wallMask ??= modelConnections(model);
   result.mountDepth ??= 0;
+  result.mountProfile ??= "";
   result.placementOffset ||= [0, 0];
   result.supportSlots ||= [];
   result.blockers ||= [];

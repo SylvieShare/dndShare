@@ -5,6 +5,24 @@ import (
 	"testing"
 )
 
+func TestSocketRiseUsesIncomingMountProfile(t *testing.T) {
+	models := map[string]ModelMetadata{
+		"frame": {Width: 1, Height: 1, MountDepth: 10.0 / 35, SupportSlots: []SupportSlot{{Width: 1, Height: 1, Elevation: 32.6662 / 35, InsertionRise: .5 / 35, InsertionRises: map[string]float64{"xl-ring": 3.0 / 35, "db-pins": 3.5 / 35, "flush": 0}}}},
+		"upper": {Width: 1, Height: 1, MountDepth: .2},
+	}
+	for profile, rise := range map[string]float64{"": .5, "xl-ring": 3, "db-pins": 3.5, "flush": 0} {
+		upper := models["upper"]
+		upper.MountProfile = profile
+		models["upper"] = upper
+		d := Document{Width: 4, Height: 4, Tiles: []Tile{{ID: "upper", ModelID: "upper", X: 1, Y: 1, Level: 1}, {ID: "base", ModelID: "frame", X: 1, Y: 1, Rotation: 90}}}
+		poses, err := ResolveTilePlacements(d, models)
+		want := (32.6662 - 10 + rise) / 35
+		if err != nil || math.Abs(poses["upper"].Elevation-want) > 1e-8 {
+			t.Fatalf("%s: %+v %v", profile, poses, err)
+		}
+	}
+}
+
 func TestSocketInsertionRiseOnlyLiftsMountedTiles(t *testing.T) {
 	models := map[string]ModelMetadata{
 		"frame":     {Width: 1, Height: 1, SupportSlots: []SupportSlot{{Width: 1, Height: 1, Elevation: .716446, InsertionRise: 2.0 / 35}}},

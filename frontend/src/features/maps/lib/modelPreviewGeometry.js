@@ -73,6 +73,7 @@ export function previewSockets(model) {
     g = previewGeometry(model);
   (model.supportSlots || []).forEach((slot, index) => {
     const valid =
+      (!model.mountProfile || (g.mount > 0 && /^[a-z][a-z0-9-]{0,63}$/.test(model.mountProfile))) &&
       slot.x >= 0 &&
       slot.y >= 0 &&
       slot.width >= 1 &&
@@ -84,7 +85,10 @@ export function previewSockets(model) {
       Number.isFinite(slot.insertionRise ?? 0) &&
       (slot.insertionRise ?? 0) >= 0 &&
       (slot.insertionRise ?? 0) <= 0.1 &&
-      (!(slot.insertionRise > 0) || model.tileType === "frame");
+      (!(slot.insertionRise > 0) || model.tileType === "frame") &&
+      Object.entries(slot.insertionRises || {}).every(
+        ([profile, rise]) => model.tileType === "frame" && /^[a-z][a-z0-9-]{0,63}$/.test(profile) && Number.isFinite(rise) && rise >= 0 && rise <= .1,
+      ) && Object.keys(slot.insertionRises || {}).length <= 16;
     for (let y = 0; y < Math.max(1, Math.min(8, finite(slot.height, 1))); y++)
       for (let x = 0; x < Math.max(1, Math.min(8, finite(slot.width, 1))); x++)
         result.push({
@@ -112,7 +116,10 @@ export function setGeometryValue(model, key, value) {
   const n = Number(value);
   if (key === "offsetX" || key === "offsetZ")
     model.placementOffset[key === "offsetX" ? 0 : 1] = n;
-  else model[key] = n;
+  else {
+    model[key] = n;
+    if (key === "mountDepth" && n === 0) model.mountProfile = "";
+  }
 }
 export function layoutPreviewLabels(labels, width, height) {
   const result = labels
