@@ -1,0 +1,45 @@
+{
+  "sourceName": "Wall to Flat Wall 2",
+  "referencePage": 12,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5.2],
+    "lodMiB": [0.7, 2.2],
+    "shadowKiB": [30, 125],
+    "previewKiB": [20, 170],
+    "basis": "419984-triangle1x1 mirrored curved/flat natural wall with its own fractured face.50k/18k beforeUV preserve silhouette and cap fractures;2048/1024 source rebake, two colour/data budgets."
+  },
+  "notes": "Author page12 and own three clay views: second warm brown curved/flat wall transition, with the steep fractured face exposed and opposite flat end. Preserve UUIDe8a994c2-62a8-533e-b180-d0548d81f82b,source/cut11.5,mount.15028,1x1,wallMask33,quarterpoint.481647,no slots,hasDecor/canStand. Own50k/18k source rebake retains tall ridges, cracked caps and scattered floor rocks. Restrained mineral/dust variation and dark floor joints through fixed14.735mm profile.",
+  "groupCode": "LC-wall-to-flat-wall",
+  "floorHeightProfileMM": [
+    [-17.6, 14.735],
+    [17.6, 14.735]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "29b40766be06a1196d5bd70edd1a80edac134db74327be4f0f5a24bf9d2c9a41",
+    "mountDepthMM": 5.2598,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections.05=25.98/.5=26.75/2.5=30.19/4=32.77/datum5.2598=34.93/6=35mm confirm one native centered cell."
+  }
+}
