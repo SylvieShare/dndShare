@@ -40,7 +40,8 @@ test("editor drops tiles, undoes and autosaves versions without zone controls", 
       ),
     )
     .toBe("22222222-2222-4222-8222-222222222222");
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z").click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect
     .poll(() =>
       page.evaluate(
@@ -210,9 +211,8 @@ test("editor rotates a dragged tile before placing and deletes it from its menu"
     )
     .toBe(90);
   await page.mouse.click(p.x, p.y);
-  await page
-    .getByRole("button", { name: "Удалить плитку", exact: true })
-    .click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Delete");
   await expect
     .poll(() =>
       page.evaluate(() =>

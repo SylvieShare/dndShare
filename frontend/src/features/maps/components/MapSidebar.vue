@@ -10,7 +10,7 @@
           v-if="item.divider"
           class="map-sidebar-divider"
           role="separator"
-          aria-label="Дополнительные вкладки сессии"
+          :aria-label="item.dividerLabel || 'Группы вкладок'"
         />
         <ActionButton
           icon-only

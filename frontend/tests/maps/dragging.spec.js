@@ -100,9 +100,8 @@ test("hover outlines actual geometry and selection strengthens it with actions i
   );
   await page.mouse.up({ button: "right" });
   await expect(page.locator(".map-tile-connections")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Удалить плитку", exact: true })
-    .click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Delete");
   await expect
     .poll(() =>
       page.evaluate(() =>
@@ -172,7 +171,8 @@ test("occupied drops magnetize to a free position and moving a tile is a single 
       ),
     )
     .toBe(true);
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z").click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect
     .poll(() =>
       page.evaluate(() =>

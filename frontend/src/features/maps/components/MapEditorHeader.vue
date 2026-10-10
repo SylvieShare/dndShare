@@ -14,7 +14,6 @@
         <span>{{ editor.draft.name }}</span>
       </div>
     </template>
-    <template #navigation><MapEditorActions :editor="editor" /></template>
     <template #actions>
       <MapReferenceButton v-if="admin" @click="emit('reference')" />
     </template>
@@ -25,7 +24,6 @@ import { ActionButton } from "@sylvieshare/share-ui";
 import { ArrowLeft } from "@lucide/vue";
 import WorkspaceHeader from "@/shared/ui/WorkspaceHeader.vue";
 import MapReferenceButton from "./MapReferenceButton.vue";
-import MapEditorActions from "./MapEditorActions.vue";
 defineProps({ editor: Object, admin: Boolean });
 const emit = defineEmits(["close", "reference"]);
 </script>

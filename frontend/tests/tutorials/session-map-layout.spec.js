@@ -128,7 +128,10 @@ for (const mobile of [false, true])
       page
         .locator(".chapter-toolbar")
         .getByRole("toolbar", { name: "Действия карты" }),
-    ).toBeVisible();
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Справочник тайлов", exact: true }),
+    ).toHaveCount(0);
     await expect(
       page.getByRole("button", { name: "Жетоны и двери", exact: true }),
     ).toHaveCount(0);

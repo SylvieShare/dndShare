@@ -174,7 +174,6 @@ const tabs = [
     key: "session-settings",
     label: "Настройки",
     icon: Settings,
-    divider: true,
   },
   { key: "creatures", label: "Существа", icon: UsersRound },
 ];

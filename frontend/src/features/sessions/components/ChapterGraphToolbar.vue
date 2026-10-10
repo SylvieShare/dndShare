@@ -112,7 +112,7 @@
 
     </div>
     </template>
-    <template #actions><slot name="workspace-actions" /><SessionToolbarMusic v-if="isDm" :primary-view="primaryView" :show-shortcut-hints="showShortcutHints" @select-view="emit('select-view', $event)" />
+    <template #actions><SessionToolbarMusic v-if="isDm" :primary-view="primaryView" :show-shortcut-hints="showShortcutHints" @select-view="emit('select-view', $event)" />
     </template>
   </WorkspaceHeader>
 </template>

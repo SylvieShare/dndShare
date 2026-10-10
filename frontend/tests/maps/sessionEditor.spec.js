@@ -24,8 +24,28 @@ test("session uses the full editor, writes its own scene and retains the templat
   await expect(
     page
       .locator(".map-sidebar")
-      .getByRole("separator", { name: "Дополнительные вкладки сессии" }),
+      .getByRole("separator", { name: "Вкладки редактора" }),
   ).toBeVisible();
+  expect(
+    await page
+      .locator(".map-sidebar-tabs > button")
+      .evaluateAll((buttons) =>
+        buttons.map((b) => b.getAttribute("aria-label")),
+      ),
+  ).toEqual([
+    "Настройки",
+    "Существа",
+    "Плитки",
+    "Освещение",
+    "Объекты",
+    "Области",
+  ]);
+  await expect(
+    page.getByRole("button", { name: "Справочник тайлов", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("toolbar", { name: "Действия карты" }),
+  ).toHaveCount(0);
   await dragTile(page, p);
   await expect
     .poll(() =>
@@ -42,9 +62,8 @@ test("session uses the full editor, writes its own scene and retains the templat
   await expect(
     page.getByRole("complementary", { name: "Выбранные элементы" }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Удалить плитку", exact: true })
-    .click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Delete");
   await expect
     .poll(() =>
       page.evaluate(() =>

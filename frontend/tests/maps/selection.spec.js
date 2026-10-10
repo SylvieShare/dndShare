@@ -47,7 +47,8 @@ test("command clicks select a group that can be moved, rotated and deleted", asy
       ),
     )
     .toBe(2);
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z").click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect
     .poll(() =>
       page.evaluate(
@@ -70,9 +71,8 @@ test("command clicks select a group that can be moved, rotated and deleted", asy
       ),
     )
     .toBe(2);
-  await page
-    .getByRole("button", { name: "Удалить плитки", exact: true })
-    .click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Delete");
   await expect
     .poll(() =>
       page.evaluate(
@@ -113,9 +113,8 @@ test("command rectangle selects tiles in screen space without moving them", asyn
   await page.keyboard.up("Meta");
   await expect(count(page)).toHaveText("Выбрано: 2");
   await expect(page.locator(".map-selection-marquee")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Удалить плитки", exact: true })
-    .click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Delete");
   await expect
     .poll(() =>
       page.evaluate(

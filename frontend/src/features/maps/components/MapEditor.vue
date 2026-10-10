@@ -6,7 +6,7 @@
     <MapEditorHeader
       v-if="!embedded"
       :editor="e"
-      :admin="isAdmin"
+      :admin="isAdmin && !sessionMode"
       @close="emit('close')"
       @reference="openReference"
     />

@@ -327,7 +327,8 @@ test("tile and chest lights follow the moving preview before save, and attached 
     expect(light.x).toBeCloseTo(x);
     expect(light.y).toBeCloseTo(5.5);
   }
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.objects[0].x))
     .toBe(4.5);

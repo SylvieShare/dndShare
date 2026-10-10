@@ -6,7 +6,7 @@ async function ready(page) {
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
-test("shared header actions, global collection and independent visibility settings", async ({
+test("simple header, global collection and independent visibility settings", async ({
   page,
 }) => {
   await ready(page);
@@ -16,10 +16,10 @@ test("shared header actions, global collection and independent visibility settin
   await expect(page.getByLabel("Название карты", { exact: true })).toHaveCount(
     0,
   );
-  const canvas = await page.locator(".map-canvas").boundingBox(),
-    actions = await page
-      .getByRole("toolbar", { name: "Действия карты" })
-      .boundingBox();
+  const canvas = await page.locator(".map-canvas").boundingBox();
+  await expect(
+    page.getByRole("toolbar", { name: "Действия карты" }),
+  ).toHaveCount(0);
   expect(canvas).toMatchObject({ x: 334, y: 64, width: 1106, height: 936 });
   await expect(page.locator(".map-inspector")).toHaveCount(0);
   await expect(page.getByRole("tab")).toHaveCount(0);
@@ -40,7 +40,6 @@ test("shared header actions, global collection and independent visibility settin
   await expect(
     page.getByRole("button", { name: "Настройки", exact: true }).locator("svg"),
   ).toHaveCount(1);
-  expect(actions.y + actions.height).toBeLessThanOrEqual(canvas.y);
   await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
   await expect(page.getByLabel("Название карты", { exact: true })).toHaveValue(

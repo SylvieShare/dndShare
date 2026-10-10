@@ -86,7 +86,8 @@ test("the compact area list opens a focus with every model and light, and edits 
       page.evaluate(() => window.lastSaved?.document.areas[0].tileIds.length),
     )
     .toBe(1);
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect(panel.locator(".map-area-members .map-entity-row")).toHaveCount(
     6,
   );
@@ -144,7 +145,7 @@ test("creation captures an ordinary selection, an empty focus stays usable, and 
   );
   await expect(
     page.getByRole("button", { name: "Копировать выбранное", exact: true }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await expect
     .poll(() =>
       page.evaluate(() =>
@@ -177,7 +178,8 @@ test("creation captures an ordinary selection, an empty focus stays usable, and 
       window.lastSaved.document.tiles.some((t) => t.x === 4 && t.y === 4),
     ),
   ).toBe(true);
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect(
     areas(page).getByRole("button", { name: "Область 2", exact: true }),
   ).toBeVisible();

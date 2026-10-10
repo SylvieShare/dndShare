@@ -21,7 +21,7 @@
       @edit-session="emit('edit-session')"
       @session-updated="emit('session-updated', $event)"
       @open-combat="openCombat"
-    ><template #workspace-actions><slot name="workspace-actions" /></template></ChapterGraphToolbar>
+    />
 
     <div class="chapter-canvas-stage" data-tutorial="session-content">
       <SessionToolsRail v-if="isDm" ref="toolsRail" :session-uuid="sessionUuid"

@@ -76,13 +76,19 @@ defineExpose({
 });
 const tab = ref("tiles");
 const tabs = computed(() => [
-  { key: "tiles", label: "Плитки", icon: Layers },
+  ...props.extraTabs,
+  {
+    key: "tiles",
+    label: "Плитки",
+    icon: Layers,
+    divider: props.extraTabs.length > 0,
+    dividerLabel: "Вкладки редактора",
+  },
   { key: "lights", label: "Освещение", icon: Lightbulb },
   { key: "objects", label: "Объекты", icon: Box },
   { key: "areas", label: "Области", icon: Group },
   ...(!props.sessionMode
     ? [{ key: "settings", label: "Настройки", icon: Settings }]
     : []),
-  ...props.extraTabs,
 ]);
 </script>

@@ -81,9 +81,8 @@ test("a frame supports upper tiles, carries them and deletes the dependent stack
         ).x,
     ),
   ).toBe(6);
-  await page
-    .getByRole("button", { name: "Удалить плитки", exact: true })
-    .click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("Delete");
   await expect
     .poll(() =>
       page.evaluate(
@@ -128,7 +127,8 @@ test("a three-cell bridge automatically rests on one cell and can rotate above a
       ),
     )
     .toMatchObject({ x: 5, y: 4, level: 1 });
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z").click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await dragTile(page, await mapPoint(page, 4.5, 5.5), {
     name: "Мост 3×1",
     rotate: true,

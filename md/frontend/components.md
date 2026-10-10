@@ -294,7 +294,7 @@ viewBox по реальной ширине, 20 столбцов, линия/за
 `WorkspaceToolsRail.vue` размещает доменные действия плавающей колонкой справа
 над рабочей областью. Это композиции layout DnD Share; они не заменяют кнопки,
 формы или tabs библиотеки share-ui. Управление и данные остаются в адаптерах
-SessionToolsRail, ChapterGraphToolbar и MapEditorHeader/MapEditorActions.
+SessionToolsRail, ChapterGraphToolbar и MapEditorHeader.
 Режимы редактора карт показывают иконки с небольшими подписями в icon-slot SlidingTabs;
 название и размеры карты редактируются на отдельной странице настроек. Слева от
 canvas расположен сворачиваемый MapTileSidebar с отдельной иконковой полосой
@@ -388,8 +388,8 @@ MapThumbnail создаёт WebP через последовательную о�
 mapRenderer.snapshot, выводит img и LoadingState. Один renderer освобождается
 после простоя; кэш Blob ограничен 64 снимками. Создание карты сразу открывает
 единственный 3D-конструктор. Режимы изображений и mapBackground удалены.
-Инструменты зон и кисть стен удалены из редактора. MapEditorActions содержит
-кнопки шапки; MapSaveErrorDialog использует AppModalFrame только при ошибке
+Инструменты зон, кисть стен и верхняя панель действий удалены из редактора.
+Операции доступны через клавиатуру и фокус справа; MapSaveErrorDialog использует AppModalFrame только при ошибке
 автосохранения. Настройки показывают последнее changedAt.
 MapSelectionPanel накладывается на холст через отдельный aside и BaseTile внутри,
 поэтому базовая относительная позиция карточки не меняет размеры canvas.
@@ -420,7 +420,8 @@ save/normalize и рабочими горячими клавишами толь�
 MapSelectionPanel предоставляет слот фокуса для SessionMapCreatureFocus;
 MapSelectedEntity показывает общие имя/превью/координаты с отключаемыми действиями.
 MapEntityRow имеет слот details для переиспользуемого SessionHpBar.
-MapReferenceButton — общий вход в справочник в шапках редактора и сессии.
+MapReferenceButton открывает справочник только из шапки редактора заготовок.
+В сессии первыми стоят «Настройки» и «Существа», затем разделитель и вкладки редактора.
 Игроки не резервируют дополнительную колонку на карте.
 
 MapLightingControls, MapSunSettings и MapLightingPanel общие для обеих страниц;

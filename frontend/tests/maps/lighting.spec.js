@@ -62,7 +62,8 @@ test("light presets place onto the map and sunlight sliders persist with undo", 
       page.evaluate(() => window.lastSaved?.document.lights[0].height),
     )
     .toBe(1.5);
-  await page.getByTitle("Отменить · Ctrl/Cmd+Z", { exact: true }).click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect
     .poll(() =>
       page.evaluate(() => window.lastSaved?.document.lights[0].height),
