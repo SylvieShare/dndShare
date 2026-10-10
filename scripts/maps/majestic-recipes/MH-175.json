@@ -1,0 +1,489 @@
+{
+  "width": 1,
+  "height": 3,
+  "mountDepthMM": 17,
+  "preserveNativeMount": true,
+  "renderTriangles": 45000,
+  "lodTriangles": 18000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "canStand": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "wall",
+    "edge",
+    "outdoor",
+    "db",
+    "three-pins",
+    "high"
+  ],
+  "recipe": "majestic-db-high-wall-v1",
+  "groupCode": "MH-db-wall",
+  "grassReference": "MH-175",
+  "grassReferenceRotation": 0,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "soilTopStartMM": 21.2,
+  "soilTopFadeMM": 1.2,
+  "soilSurfaceMM": 22.7,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "standMaxZMM": 120,
+  "placementPointOffsetsMM": {
+    "0,0": [
+      -9.5,
+      0.5
+    ],
+    "0,1": [
+      -13.5,
+      3.5
+    ],
+    "0,2": [
+      -9.5,
+      0
+    ]
+  },
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "renderUVAngleLimitRad": 0.45,
+  "lodUVAngleLimitRad": 0.25,
+  "quantizeTexcoord": 16,
+  "stripAuxiliaryColours": true,
+  "masonryReference": {
+    "code": "MH-001",
+    "rotateZ": 0,
+    "translationMM": [
+      0,
+      0,
+      7.2
+    ],
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 19.5,
+    "anyBoundsMM": [
+      [
+        [
+          -18,
+          -54,
+          19.5
+        ],
+        [
+          18,
+          54,
+          104
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.62,
+    0.46,
+    0.27
+  ],
+  "masonryTopMinZMM": 92.179,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "masonryBackFace": {
+    "xMM": 17.5,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 19.5
+  },
+  "raisedGrass": {
+    "minMM": [
+      -18,
+      -54,
+      90.179
+    ],
+    "maxMM": [
+      18,
+      54,
+      103.179
+    ],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": -0.5,
+    "normalFade": 0.35,
+    "fieldCode": "MH-175",
+    "exclusions": [
+      {
+        "centreMM": [
+          3.5,
+          17,
+          96.679
+        ],
+        "radiiMM": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "minZMM": 94.679
+      },
+      {
+        "centreMM": [
+          9.5,
+          -17.5,
+          99.179
+        ],
+        "radiiMM": [
+          4,
+          4,
+          4
+        ],
+        "minZMM": 97.179
+      },
+      {
+        "centreMM": [
+          4.5,
+          -33,
+          96.179
+        ],
+        "radiiMM": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "minZMM": 94.179
+      }
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -18,
+        -54,
+        90.179
+      ],
+      [
+        18,
+        54,
+        103.179
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.2,
+    "growAngleRad": 0.03
+  },
+  "lowGrassAreas": [
+    {
+      "minMM": [
+        -18,
+        -54,
+        20
+      ],
+      "maxMM": [
+        -4,
+        54,
+        27
+      ],
+      "featherMM": 0.2,
+      "stoneSurface": {
+        "boundsMM": [
+          [
+            -18,
+            -54,
+            20
+          ],
+          [
+            -4,
+            54,
+            29
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.5,
+        "growAngleRad": 0.01
+      }
+    },
+    {
+      "minMM": [
+        -18,
+        40,
+        20
+      ],
+      "maxMM": [
+        18,
+        54,
+        27
+      ],
+      "featherMM": 0.2,
+      "stoneSurface": {
+        "boundsMM": [
+          [
+            -18,
+            40,
+            20
+          ],
+          [
+            18,
+            54,
+            29
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.5,
+        "growAngleRad": 0.01
+      }
+    },
+    {
+      "minMM": [
+        -18,
+        -54,
+        20
+      ],
+      "maxMM": [
+        18,
+        -40,
+        27
+      ],
+      "featherMM": 0.2,
+      "stoneSurface": {
+        "boundsMM": [
+          [
+            -18,
+            -54,
+            20
+          ],
+          [
+            18,
+            -40,
+            29
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.5,
+        "growAngleRad": 0.01
+      }
+    }
+  ],
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -18,
+        -54,
+        -0.2
+      ],
+      "maxMM": [
+        18,
+        54,
+        17
+      ],
+      "featherMM": 0.1,
+      "rgb": [
+        0.255,
+        0.185,
+        0.115
+      ]
+    },
+    {
+      "minMM": [
+        -18,
+        -54,
+        26
+      ],
+      "maxMM": [
+        18,
+        54,
+        90.179
+      ],
+      "featherMM": 0.25,
+      "rgb": [
+        0.54,
+        0.38,
+        0.215
+      ]
+    }
+  ],
+  "openingChecks": [
+    {
+      "name": "native-pin--35",
+      "originMM": [
+        0,
+        -35,
+        -1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 3,
+      "clear": false
+    },
+    {
+      "name": "native-pin-0",
+      "originMM": [
+        0,
+        0,
+        -1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 3,
+      "clear": false
+    },
+    {
+      "name": "native-pin-35",
+      "originMM": [
+        0,
+        35,
+        -1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 3,
+      "clear": false
+    },
+    {
+      "name": "native-gap--17.5",
+      "originMM": [
+        0,
+        -17.5,
+        0.1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 10,
+      "clear": true
+    },
+    {
+      "name": "native-gap-17.5",
+      "originMM": [
+        0,
+        17.5,
+        0.1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 10,
+      "clear": true
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      1700000,
+      4500000
+    ],
+    "targetLODBytes": [
+      700000,
+      2100000
+    ],
+    "targetShadowBytes": [
+      30000,
+      110000
+    ],
+    "targetPreviewBytes": [
+      12000,
+      100000
+    ],
+    "basis": "Own288776tris14438884B NL SHAf4ca495ea893eea40ea56382d5d69603ce6ad4bbed8b1aa995ff7530a8b7c739. Own1x3base35.0858x104.9646Z17 overall35.1454x104.9891max100.462ctr[.02680,.00095]. Own3neutralviews+authorPDF51 highwall samefamilyMH-db-wall. Original3pins/2gaps/shoulders, undersidegapY+-17.5Z17.1795/17.1355 edge-17.4Z16.9416=>nativeMount17 preservefullnofalsepyramid. OWN3floor120mmRAYS offsets[-9.5,.5]/[-13.5,3.5]/[-9.5,0] =>(-9.5,35.5)22.87577nZ.9662;(-13.5,3.5)26.39639nZ.9508;(-9.5,-35)23.61284nZ.968. Old174middlepointundercliff sochooseOWNinsidecell lowerflatboulderedge notsamefloorcentres; standMax120 aboveTOTALnative100.462 toavoidunder-overhangfalsefloor. E4 OWNwallfrontZ60polyline,noSlots/noDecor. Lower17361388vertices73.957%within.15(max4.07) soNOcopylowgeometry/pads/blocker. UPPER173shiftZ50.17954518vertices100%within.15max.1341;INDIVIDUAL3roofstone793/1280/888verts100%max.130/.103/.093 =>verified3ellips shiftZ50.179, ownupperfield175bounds90.179..103.179 barestone.2/.03. Ownselfgrass175floorWest/endvolumesbroadstone.5/.01 andbodyochreabove19.5..104 perPixel26..90.179; nativepinsdarksoilbelow17. 15native SOURCE/RLODpin-gap rays required. R45kUV.55FAIL2k.543mm; .45native204742/816114quant204690/816118PASS largesttested. L18k.25native57403/230704quant57459/230654PASS largest. Initialcolour2048/1024ETC/data1024/512ORM1024/512 targetsR1.7..4.5M L.7..2.1M shadow30..110Kpreview12..100K highest1x3wall. FINAL6+3views/crops actual3roofstones+ownLOWpads/bodyfullfaces/3pins2gaps/UVmanifestbrowseralpha/freshMCP required. FINALCURRENT6RLOD+3alt+roof/basecrops ACTUALLYviewed. Chosen2kR3330080 vs1k2813384(+516696B):1kvisiblegreencliffspecks/darkedge bars,2kcleaner stone. L1175208shadow64224alpha512preview16610runtime4586122 withinallindividualestimates. Native/finalUV0.1mmallchannels,3roofgold2flooroliveRGBroughASSERTboth,15SOURCE/RLODnativepin-gaprays AFTERpackage,3native120mmpadsoutsideownblocker,GoManifest/2browserKTXLODsunpointshadowsalphaPASS. Native3pins/datum17 preserved. LODdrift.109655mm; smallgrassrockedgecontacttint/LODmipsofteningretained."
+  },
+  "blockers": [
+    [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        0.861785,
+        2.928571
+      ],
+      [
+        0.689138,
+        2.785714
+      ],
+      [
+        0.519334,
+        2.5
+      ],
+      [
+        0.419104,
+        2.214286
+      ],
+      [
+        0.398259,
+        1.928571
+      ],
+      [
+        0.418745,
+        1.642857
+      ],
+      [
+        0.36014,
+        1.5
+      ],
+      [
+        0.295277,
+        1.357143
+      ],
+      [
+        0.367703,
+        1.071429
+      ],
+      [
+        0.347201,
+        0.785714
+      ],
+      [
+        0.579932,
+        0.5
+      ],
+      [
+        0.676429,
+        0.357143
+      ],
+      [
+        0.938753,
+        0.071429
+      ]
+    ]
+  ]
+}
