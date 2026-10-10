@@ -1,0 +1,281 @@
+{
+  "name": "Window Without Glass",
+  "groupCode": "MED-window",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 73000,
+  "lodTriangles": 23000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": false,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.22,
+        0
+      ],
+      [
+        0.22,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "plaster",
+    "window",
+    "open"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "window and low wall vertical timbers",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -9.3,
+          17.6,
+          72.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "wide lower window sill",
+        "minMM": [
+          -17.6,
+          -17.6,
+          42.4
+        ],
+        "maxMM": [
+          -9.3,
+          17.6,
+          47.6
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "inner window bottom rail",
+        "minMM": [
+          -17.6,
+          -10.5,
+          47.6
+        ],
+        "maxMM": [
+          -11.0,
+          10.5,
+          49.0
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "horizontal window crossbar",
+        "minMM": [
+          -17.6,
+          -9,
+          56.65
+        ],
+        "maxMM": [
+          -11.0,
+          9,
+          59.0
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "top frame lintel",
+        "minMM": [
+          -17.6,
+          -17.6,
+          68.0
+        ],
+        "maxMM": [
+          -9.3,
+          17.6,
+          72.6
+        ],
+        "axis": "y"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -11.2842,
+          0,
+          58.0
+        ],
+        "radiiMM": [
+          0.65,
+          0.65,
+          0.65
+        ],
+        "minZMM": 57.25,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "low window wall rough plaster",
+        "kind": "plaster",
+        "minMM": [
+          -17.6,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          42.4
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.6,
+      3.5
+    ],
+    "lodMiB": [
+      0.45,
+      1.2
+    ],
+    "shadowKiB": [
+      50,
+      120
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "35mm timber floor/low plaster wall and empty taller window frame with four openings, central crossbars/fastener, broad sill and lintel.73000/23000 independent geometry/UV/bakes retain aperture boundaries and frame carvings. Compare1024/512 with768/384 maps."
+  },
+  "reviewNotes": "PDF page7 and native front/back empty41 views. Source440012triangles/22000684bytes,native max72.434998mm. Frame matches40 source rays atstiles/lintel/crossbars withinabout.003mm; four regions atY\u00b12..8,Z50..56/60..66 are actual holes, withno glass geometry/colour/emission. Preserve aperture profiles and timber depth from both sides. X floorboards,Y sill/lintel/rails/horizontalcrossbar,Z stiles/posts, lowplaster below42.4mm andone centralmetalfastener at[-11.2842,0,58]. Same measured1x1 mounting shoulder17mm andwestedge64, but independently ray-testcentre floor inboth tiers. Use own73000/23000 geometry budget andactual UV validation atall candidate resolutions. Check clear holes, innergrain, corner ends, source/target floor,shadow andfull alpha preview before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
