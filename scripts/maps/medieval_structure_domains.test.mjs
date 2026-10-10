@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureMetal, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
 
@@ -40,4 +40,14 @@ test('genuine baked potion colour survives sparse brown LOD vertex colours while
     assert.equal(shouldRepairGreenSpill(greenPixel, sparseBrownVertex, part.ellipsoid.centerMM, recipe.materials), false);
   }
   assert.equal(shouldRepairGreenSpill(greenPixel, sparseBrownVertex, [15,0,54], recipe.materials), true);
+});
+
+test('measured cloth gaps keep sage pigment while crust and timber remain independent', () => {
+  const bread = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-031.json',import.meta.url))).materials;
+  for (const position of [[7,4.7,43.330536],[8.5,-4.4,43.435104]]) {
+    const colour = structureFabricPigment(position,bread);
+    assert.ok(colour && colour[1]>colour[0]);
+  }
+  assert.equal(structureFabricPigment([5.6248,.1328,46.4572],bread),null);
+  assert.equal(structureFabricPigment([15,0,54],bread),null);
 });

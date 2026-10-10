@@ -60,6 +60,25 @@ export function structureLiquid(p, settings) {
   return part?.kind==='liquid' ? part : null;
 }
 
+export function structureFabricPigment(p, settings) {
+  if ((settings.surfaceParts || []).some(part => structureDomain(p,part))) return null;
+  if ((settings.produceParts || []).some(part => structureDomain(p,part))) return null;
+  if ((settings.ironParts || []).some(part => structureDomain(p,part))) return null;
+  const part = (settings.fabricParts || []).findLast(part => structureDomain(p,part));
+  if (!part || structureMetal(p,settings).metallic>.01) return null;
+  let rgb = part.rgb;
+  if (part.centersMM) {
+    let nearest = 0, best = Infinity;
+    part.centersMM.forEach((centre,i) => {
+      const distance = ((p[0]-centre[0])**2+(p[1]-centre[1])**2)/(part.centerRadiiMM?.[i] ?? 1)**2;
+      if (distance<best) { best=distance; nearest=i; }
+    });
+    rgb = part.colorsRGB[nearest];
+  }
+  const weave = 1+.018*Math.sin(p[0]*9)*Math.sin(p[1]*9+p[2]*11);
+  return rgb.map(c => c*weave);
+}
+
 export function shouldRepairGreenSpill(pixel, vertex, p, settings) {
   return pixel[1]>pixel[0]*1.18 && vertex[1]<vertex[0]*1.05 && !structureLiquid(p, settings);
 }

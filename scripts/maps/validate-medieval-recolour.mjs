@@ -14,6 +14,9 @@ const base = path.resolve(import.meta.dirname, '../../models/collections/medieva
 const baseline = process.argv.find(a => a.startsWith('--baseline='))?.slice(11) || 'candidates/cool-baseline';
 const baselinePath = path.resolve(base, baseline);
 assert.ok(baselinePath.startsWith(base+path.sep), 'Baseline must belong to this reviewed model');
+const candidate = process.argv.find(a => a.startsWith('--candidate='))?.slice(12) || 'compact';
+assert.ok(['balanced','compact'].includes(candidate));
+const nextPath = candidate==='balanced' ? base : path.join(base,'candidates',candidate);
 function geometry(doc) {
   return doc.getRoot().listNodes().filter(n => n.getMesh()).map(n => ({ matrix: n.getWorldMatrix(),
     primitives: n.getMesh().listPrimitives().map(p => ({ indices: p.getIndices().getArray(),
@@ -21,7 +24,7 @@ function geometry(doc) {
 }
 for (const tier of ['render', 'lod', 'shadow']) {
   const old = await io.read(path.join(baselinePath, tier+'.glb'));
-  const next = await io.read(path.join(base, 'candidates/compact', tier+'.glb'));
+  const next = await io.read(path.join(nextPath, tier+'.glb'));
   assert.deepEqual(geometry(next), geometry(old), 'Palette correction changed geometry/UV/normals');
   if (tier!=='shadow') for (const [i, material] of old.getRoot().listMaterials().entries()) {
     for (const slot of ['Normal', 'MetallicRoughness', 'Emissive']) {

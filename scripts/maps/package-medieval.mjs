@@ -8,7 +8,7 @@ import { prepareShadow } from './shadow_model.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
-import { structureMetal, structureLiquid, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureLiquid, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -65,6 +65,8 @@ if (!process.argv.includes('--publish-manifest')) {
         const pigment = (i,p,n,rgba) => {
           if (!rgba) throw new Error('Measured Paint attribute required for colour gutters');
           const liquid = structureLiquid(p, recipe.materials);
+          const fabric = structureFabricPigment(p, recipe.materials);
+          if (fabric) rgba = fabric.map(v => v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4);
           if (liquid) {
             const variation = 1+(liquid.variation ?? .025)*Math.sin(p[0]*1.73+p[1]*2.31+p[2]*1.17);
             rgba = liquid.rgb.map(c => {
@@ -77,9 +79,9 @@ if (!process.argv.includes('--publish-manifest')) {
             data[i*3+c] = Math.round((v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055)*255);
           }
         };
-        if (recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => p.kind==='liquid')) {
+        if (recipe.materials.fabricParts?.length || recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => p.kind==='liquid')) {
           rasterizeSurface(doc,pixels,pixels,(i,p,n,rgba) => {
-            if (structureLiquid(p,recipe.materials) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,recipe.materials)) pigment(i,p,n,rgba);
+            if (structureLiquid(p,recipe.materials) || structureFabricPigment(p,recipe.materials) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,recipe.materials)) pigment(i,p,n,rgba);
           },slot,'COLOR_1');
         }
         coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,pigment,1,slot,'COLOR_1');
