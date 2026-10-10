@@ -35,7 +35,7 @@ def main():
         for tier in ['render', 'lod']:
             cmd = [blender, '--background', '--python-exit-code', '1', '--python', str(script/'preview-model-revisions.py'),
                    '--', '--base', str(review), '--size', '512', '--review', '--front', '--tier', tier]
-            cmd += ['--codes', candidate or code]
+            cmd += ['--codes', code, '--report', str(review/(candidate or code)/'report.json')]
             stages.append(('preview-'+label+'-'+tier, cmd))
         recipe = json.loads((script/index[code]).read_text())
         if any(part.get('kind')=='liquid' for part in recipe['materials'].get('surfaceParts', [])):

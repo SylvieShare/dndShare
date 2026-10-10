@@ -36,7 +36,9 @@ for (const tier of ['render', 'lod']) {
       // Permit only the measured packing bound (0.01 native mm), not spill
       // onto a neighbouring material or any texture-pixel-size allowance.
       let boundary = false;
-      for (const dx of [-.01, 0, .01]) for (const dy of [-.01, 0, .01]) for (const dz of [-.01, 0, .01]) {
+      // Include interior offsets: a continuous bolt feather can match halfway
+      // between the centre and a corner without matching either endpoint.
+      for (const dx of [-.01, -.005, 0, .005, .01]) for (const dy of [-.01, -.005, 0, .005, .01]) for (const dz of [-.01, -.005, 0, .005, .01]) {
         const sample = surfaceAt([p[0]+dx,p[1]+dy,p[2]+dz]);
         if (Math.abs(actual-sample.metallic)<=.015 && Math.abs(actualRoughness-sample.roughness)<=.015) boundary = true;
       }

@@ -81,6 +81,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--base', type=Path, required=True)
+    parser.add_argument('--report', type=Path, help='Render one explicit report within a direct child of base')
     parser.add_argument('--codes', nargs='*')
     parser.add_argument('--source-name')
     parser.add_argument('--size', type=int, choices=[256, 512, 1024], default=256)
@@ -93,7 +94,9 @@ if __name__ == '__main__':
     parser.add_argument('--transparent', action='store_true', help='Write transparent-preview.png separately; every public preview has alpha')
     parser.add_argument('--camera-shift-y', type=float, default=0, help='Vertical framing shift in fractions of the square image')
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
-    for report in sorted(args.base.glob('*/report.json')):
+    if args.report and args.report.resolve().parent.parent!=args.base.resolve():
+        parser.error('--report must be inside a direct child of --base')
+    for report in ([args.report] if args.report else sorted(args.base.glob('*/report.json'))):
         if args.source_name and json.loads(report.read_text())['model']['sourceName'] != args.source_name:
             continue
         if args.codes and json.loads(report.read_text())['model']['sourceCode'] not in args.codes:

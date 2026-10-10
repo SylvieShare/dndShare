@@ -8,9 +8,9 @@ const candidate = process.argv.find(a => a.startsWith('--candidate='))?.slice(12
 const reason = process.argv.find(a => a.startsWith('--reason='))?.slice(9);
 const previewFacing = process.argv.find(a => a.startsWith('--preview='))?.slice(10) || 'front';
 assert.ok(['front','reverse'].includes(previewFacing), 'Reviewed front or reverse thumbnail required');
-if (!/^MT1-\d{3}$/.test(code || '') || candidate!=='compact' || !reason?.trim()) throw new Error('Reviewed model, compact candidate and visual selection reason required');
+if (!/^MT1-\d{3}$/.test(code || '') || !['balanced','compact'].includes(candidate) || !reason?.trim()) throw new Error('Reviewed model, texture candidate and visual selection reason required');
 const directory = path.resolve(import.meta.dirname, '../../models/collections/medieval-town-vol1/review', code);
-const source = path.join(directory, 'candidates', candidate);
+const source = candidate==='balanced' ? directory : path.join(directory, 'candidates', candidate);
 const baseline = JSON.parse(await fs.readFile(path.join(directory, 'report.json'), 'utf8'));
 const selected = JSON.parse(await fs.readFile(path.join(source, 'report.json'), 'utf8'));
 const liquidCount = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='liquid').length || 0;
@@ -31,7 +31,7 @@ for (const tier of ['render', 'lod', 'shadow']) {
   assert.equal(selected.tiers[tier].triangles, baseline.tiers[tier].triangles);
   assert.deepEqual(selected.tiers[tier].bounds, baseline.tiers[tier].bounds);
 }
-for (const file of ['render.glb', 'lod.glb', 'shadow.glb', 'preview-model.glb', 'lod-preview-model.glb', 'preview.png', 'reverse.png', 'top.png']) {
+for (const file of (candidate==='balanced' ? [] : ['render.glb', 'lod.glb', 'shadow.glb', 'preview-model.glb', 'lod-preview-model.glb', 'preview.png', 'reverse.png', 'top.png'])) {
   await fs.copyFile(path.join(source, file), path.join(directory, file));
 }
 if (previewFacing==='reverse') await fs.copyFile(path.join(source, 'reverse.png'), path.join(directory, 'preview.png'));
