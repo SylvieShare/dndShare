@@ -1,0 +1,96 @@
+{
+  "sourceName": "Level Grid 2X2",
+  "referencePage": 17,
+  "material": "cave-cut-stone",
+  "floorHeightMM": 11.32,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 80000,
+  "lodTriangles": 30000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.4, 7],
+    "lodMiB": [0.8, 2.7],
+    "shadowKiB": [60, 165],
+    "previewKiB": [10, 140],
+    "basis": "1000012tri2x2grid4cavities/crossbar/roughsquarewalls;80k30k beforeUV,2048/1024sourcebake,2UASTCbudgets."
+  },
+  "notes": "Author17square4-cellstonegrid;own3clayviews/4nativeprofiles13levels confirm4throughholes/crossbar/upper13.5lower8.5/ledge11.32/bevel~23.17..25.082. Ownsource1000012tri/cut0/mount0;keepUUID031539c5-c106-53b1-b7ec-4f7cca962f12/2x2frame/4quarterpoints/slots.716629/max.716629/flags/blockers.80k30kbakebeforeUV,UASTC2budgets;verifyALL4nativeholes/sourceplanes/alltri short/deepfits at2mmrisebeforepub.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-level-grid",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "cutStone": {
+    "innerHalfMM": 13.5,
+    "floorMM": 11.32,
+    "topMM": 25.082,
+    "tint": [0.435, 0.305, 0.195],
+    "roughness": 0.81,
+    "normalMode": "geometry",
+    "lowerInnerHalfMM": 8.5,
+    "bevelStartMM": 23.174,
+    "bevelTopHalfMM": 15.53,
+    "centresMM": [
+      [-17.5, 17.5],
+      [17.5, 17.5],
+      [-17.5, -17.5],
+      [17.5, -17.5]
+    ]
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "geometryCorrection": {
+    "mode": "correct-grid-insertion-seat",
+    "previousCutHeightMM": 0,
+    "cutHeightMM": 0,
+    "sourceSHA256": "4bcc54eef833a7bacf4ed8d80465c8092e3c7f30e49b602fda2dbdfd16007a85",
+    "reason": "Ownnative2x2gridprofiles atall4centres require measured2mm insertion rise for34.3mm fittedshort/deeppads;keepnativeframegeometry/source/physicalslotheight/UUID,verifyalltriangles and4throughholes.",
+    "metadata": {
+      "supportSlots": [
+        {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716629,
+          "insertionRise": 0.05714285714285714
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716629,
+          "insertionRise": 0.05714285714285714
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716629,
+          "insertionRise": 0.05714285714285714
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716629,
+          "insertionRise": 0.05714285714285714
+        }
+      ]
+    }
+  }
+}
