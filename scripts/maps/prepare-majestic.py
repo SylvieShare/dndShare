@@ -1,6 +1,7 @@
 """Prepare exactly one reviewed Majestic Highlands tile per invocation."""
 import argparse
 import json
+import math
 from pathlib import Path
 import sys
 import time
@@ -56,8 +57,11 @@ def support_points(obj, centre, recipe, datum):
     for y in range(recipe['height']):
         for x in range(recipe['width']):
             if [x,y] in recipe.get('blockedCells',[]): continue
-            position=(centre[0]+(x-(recipe['width']-1)/2)*35,
-                      centre[1]-(y-(recipe['height']-1)/2)*35,recipe.get('standMaxZMM',100))
+            offset = recipe.get('placementPointOffsetsMM', {}).get(f'{x},{y}', [0, 0])
+            if len(offset) != 2 or any(not math.isfinite(v) or abs(v) >= 17.5 for v in offset):
+                raise ValueError(f'Placement offset for {x},{y} must stay inside its cell')
+            position=(centre[0]+(x-(recipe['width']-1)/2)*35+offset[0],
+                      centre[1]-(y-(recipe['height']-1)/2)*35+offset[1],recipe.get('standMaxZMM',100))
             hit=tree.ray_cast(position,(0,0,-1))
             for _ in range(16):
                 if hit[0] is None or hit[1].z>0: break
@@ -65,7 +69,7 @@ def support_points(obj, centre, recipe, datum):
             if hit[0] is None or hit[0].z<datum+.5 or hit[1].z<=0:
                 invalid.append([x,y])
             else:
-                points.append({'x':x+.5,'y':y+.5,'elevation':round(hit[0].z/35,6)})
+                points.append({'x':round(x+.5+offset[0]/35,6),'y':round(y+.5-offset[1]/35,6),'elevation':round(hit[0].z/35,6)})
     if invalid: raise ValueError(f'Cells {invalid} have no standable surface; review occupied cells before baking')
     return points
 
