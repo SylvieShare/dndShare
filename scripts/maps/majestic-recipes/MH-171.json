@@ -1,0 +1,1242 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 65000,
+  "lodTriangles": 24000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "tags": [
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "outdoor",
+    "xl",
+    "water",
+    "river",
+    "high",
+    "waterfall",
+    "rocks",
+    "grass",
+    "end",
+    "enclosed-pool"
+  ],
+  "recipe": "majestic-high-waterfall-end-v1",
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3000000,
+      6500000
+    ],
+    "targetLODBytes": [
+      1100000,
+      3200000
+    ],
+    "targetShadowBytes": [
+      60000,
+      170000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "OWN629414tris31470784B NL SHA2ce5a0e662016ed3aaa345d4b4e27136f01a1d5f28052e34a80564d1881da4a6. Ownbase104.999x105.0013x3datum9.75max93.387centre[-.005302,-.000189]. Own3neutralviews+authorPDF49 EndwaterfallwaterINTERNALbowl,notopenedge. E4wallE3cellsblocked6W/Mactors,noSlots/noDecor. SourceNWN-35,35height16.807nZ.743=>ownoffset[.5,-.5]=-34.5,34.5height17.439nZ.937; NM0,35height15.176nZ.368=>ownoffset[-.5,-.5]=-.5,34.5height15.3326nZ.9976,othersWM15.118/MM12.711/WS14.725/SM14.870 own120mmtoprays. BODYwetstrip/cap2..19ALLwithin.15max.106 cap20 99.09%max.152, originalDRYregionsonly67.76/39.94 =>ownFRONTpicksupperat28.079,-36.148,51.171 through13.777,-28.651,52.221/top53.07: old71mmplatformgone, OWN22,-32,42r17,18,25 protectswide52mmledge; lowerown31.661,27.995,47.759/24.448,28.934,43.976 ->27,30,38r12,14,20. Own13frontXZ23.60814..45.07789 front14back4Y+-26 perPixelgraycaps. Ownfield171grass+topstonepatch713vertsALLwithin.15max.0591. LOW11529507pts84.875%within.15rawmedian-.0941mm ->referenceZ-.1 increases87.603% andmatches3Ddepth; usegrassReferenceTranslationMM andwater.translationMM[0,0,-.1]. ConnectedOWNwater6857height10..14.35 seededorigin: westboundY-30,-25,-20,-15,-10,-5,0,5,10,15,20 =X-34,-35,-31.5,-26,-23.5,-23,-13.5,-4,3.5,3,8; southbankY-35..-32 formsINTERNALbowl. Own15pointUshoreline+closedpooldomain/narrow3mm landward2mmwaterwardgraybank .15 protectsoutsidegrasssoil. Ownlowfloat[-6.5,-26.5]16.538 goldr7,6,4force14.55min14.45restore14.35; doNOTcopyold115falsecaps-11,-29height13.708/3,-40=15.140/-2,42=15.248. Own5dryboulderboxes matchingfield NNE14..43 andNW-25..-22.5. ExplicitR65kUV.55native181733/723666quanttestedPASS andL24k.25native41360/166263quant41271/166415PASS. InitialETCcolour2048/1024data1024/512ORM1024/1024 estimatesR3..6.5L1.1..3.2MBshadow60..170Kpreview15..100K. NeedCURRENT6+3views/crops own52mmplatform/poolshore/float/grass/graycaps/UV3areasmanifestbrowseralpha/freshMCP beforeacceptance. Actualfirst6views+Sbankcrop revealGRAYLEAVESnotrock; ownsourcepicks x-15.171/-9.621/-4.070/1.480 y-34.357 Z14.593/16.128/14.283/14.682 facets .089/.015/.006/.033, innerrockstrip atY-31.027. CorrectownUshoreSfrom-35to-32 andNWbend-29, landwardWidth.5,bankpolygonouter1mm/inner2.5mm (old3/2), restoreownsouthgrassboxY-40..-33.5X-28..11Z14.15..24 outsidegraybank. Re-bakebothsamegeometryUV andverifyleaf+adjacentrock/waves. Finalcrop revealedpartialfloatblue despitepeakgold; sourceCONNECTEDcapZ>14.55 204samples bboxX-12.5..-4.5Y-28..-20max16.538 => owncentre[-8.5,-24,16]r11,11,5 coversFULL8x8cap (oldcentre-6.5,-26.5r7,6,4 coveredonlypeak). Keepforce14.55/restoration14.35; re-bakefullcurrentchecksrequired. FINAL CURRENT6views+3alt+fullbankfallcrops ACTUALLYaccepted afterSleaf+FULLfloatrepairs. Fullfloatgoldnow; oliveSleaf+adjacentBLUEWAVE+goldfloatASSERTPASSboth,4wetgraycapASSERTPASSboth ETC1S. R4052264vscolour1024 3448240(+604024B)selected2048; L2037480 shadow85740 alpha512preview27054 runtime6202538 withinallindividualestimates. Native/final all-channelUV threeareas blacknormals manifestation2browserKTXLODsunpointshadowalphaPASS; own120mmactorpadsverified. LODdrift.084035mm,staticopaquewater andminorwetmaterialcontactsretained."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "standMaxZMM": 25,
+  "blockers": [
+    [
+      [
+        2.34,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        2.34,
+        3
+      ]
+    ]
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 16,
+    "anyBoundsMM": [
+      [
+        [
+          18,
+          -54,
+          16
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.62,
+    0.46,
+    0.27
+  ],
+  "masonryTopMinZMM": 35,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "masonryBackFace": {
+    "xMM": 52.505,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 9.75
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.25,
+  "quantizeTexcoord": 16,
+  "water": {
+    "reference": "MH-115",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.16,
+    "minZMM": 10.05,
+    "lowZMM": 11.5,
+    "highZMM": 14.5,
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        10
+      ],
+      [
+        32,
+        54,
+        15.5
+      ]
+    ],
+    "deepRGB": [
+      0.035,
+      0.28,
+      0.33
+    ],
+    "shallowRGB": [
+      0.14,
+      0.56,
+      0.58
+    ],
+    "crestRGB": [
+      0.52,
+      0.78,
+      0.74
+    ],
+    "roughness": 0.4,
+    "stones": [
+      {
+        "centreMM": [
+          -8.5,
+          -24,
+          16
+        ],
+        "radiiMM": [
+          11,
+          11,
+          5
+        ],
+        "minZMM": 14.45,
+        "rgb": [
+          0.54,
+          0.38,
+          0.215
+        ],
+        "forceAboveMM": 14.55,
+        "waterRestoreMaxZMM": 14.35
+      }
+    ],
+    "restoreLowWaterAroundStonesMM": 14.3,
+    "shorelines": [
+      {
+        "pointsMM": [
+          [
+            32,
+            20
+          ],
+          [
+            23,
+            25
+          ],
+          [
+            12,
+            23
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            -4,
+            5
+          ],
+          [
+            -23,
+            -5
+          ],
+          [
+            -26,
+            -15
+          ],
+          [
+            -35,
+            -25
+          ],
+          [
+            -35,
+            -29
+          ],
+          [
+            -28,
+            -32
+          ],
+          [
+            -14,
+            -32
+          ],
+          [
+            0,
+            -32
+          ],
+          [
+            13,
+            -29
+          ],
+          [
+            23,
+            -28
+          ],
+          [
+            32,
+            -20
+          ]
+        ],
+        "stoneWidthMM": 5,
+        "landwardWidthMM": 0.5,
+        "waterRestoreWidthMM": 8,
+        "waterRestoreMaxZMM": 14.5,
+        "minZMM": 12.3,
+        "maxZMM": 17.5,
+        "heightFadeMM": 0.5,
+        "rgb": [
+          0.415,
+          0.435,
+          0.39
+        ]
+      }
+    ],
+    "lowWaterDomain": {
+      "pointsMM": [
+        [
+          32,
+          20
+        ],
+        [
+          23,
+          25
+        ],
+        [
+          12,
+          23
+        ],
+        [
+          3,
+          15
+        ],
+        [
+          -4,
+          5
+        ],
+        [
+          -23,
+          -5
+        ],
+        [
+          -26,
+          -15
+        ],
+        [
+          -35,
+          -25
+        ],
+        [
+          -35,
+          -29
+        ],
+        [
+          -28,
+          -32
+        ],
+        [
+          -14,
+          -32
+        ],
+        [
+          0,
+          -32
+        ],
+        [
+          13,
+          -29
+        ],
+        [
+          23,
+          -28
+        ],
+        [
+          32,
+          -20
+        ]
+      ],
+      "maxZMM": 15.5,
+      "featherMM": 0.5
+    },
+    "clipToLowWaterDomain": true,
+    "normalMin": -0.2,
+    "normalFade": 0.2,
+    "bankStoneSurfaces": [
+      {
+        "boundsMM": [
+          [
+            -42,
+            -41,
+            13.3
+          ],
+          [
+            36,
+            35,
+            17.5
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.15,
+        "growAngleRad": 0.2,
+        "pointsMM": [
+          [
+            32.486,
+            20.874
+          ],
+          [
+            23.148,
+            25.989
+          ],
+          [
+            11.553,
+            23.894
+          ],
+          [
+            2.253,
+            15.664
+          ],
+          [
+            -4.61,
+            5.793
+          ],
+          [
+            -23.673,
+            -4.26
+          ],
+          [
+            -26.857,
+            -14.486
+          ],
+          [
+            -35.841,
+            -24.459
+          ],
+          [
+            -35.707,
+            -29.707
+          ],
+          [
+            -28.141,
+            -32.99
+          ],
+          [
+            -14.0,
+            -33.0
+          ],
+          [
+            0.11,
+            -32.994
+          ],
+          [
+            13.171,
+            -29.985
+          ],
+          [
+            23.428,
+            -28.904
+          ],
+          [
+            32.664,
+            -20.747
+          ],
+          [
+            30.339,
+            -18.131
+          ],
+          [
+            21.93,
+            -25.741
+          ],
+          [
+            12.572,
+            -26.537
+          ],
+          [
+            -0.276,
+            -29.515
+          ],
+          [
+            -14.0,
+            -29.5
+          ],
+          [
+            -27.646,
+            -29.525
+          ],
+          [
+            -33.232,
+            -27.232
+          ],
+          [
+            -32.897,
+            -26.352
+          ],
+          [
+            -23.856,
+            -16.286
+          ],
+          [
+            -21.318,
+            -6.85
+          ],
+          [
+            -2.476,
+            3.018
+          ],
+          [
+            4.869,
+            13.339
+          ],
+          [
+            13.118,
+            20.764
+          ],
+          [
+            22.629,
+            22.528
+          ],
+          [
+            30.786,
+            17.815
+          ]
+        ],
+        "featherMM": 0.5
+      }
+    ],
+    "bankStoneRGB": [
+      0.415,
+      0.435,
+      0.39
+    ],
+    "bankStoneRoughness": 0.88,
+    "validationAreas": [
+      {
+        "name": "middle-pool",
+        "minMM": [
+          -4,
+          -12,
+          11.5
+        ],
+        "maxMM": [
+          10,
+          2,
+          13.8
+        ],
+        "material": "water",
+        "normalZMin": 0.75
+      },
+      {
+        "name": "south-pool",
+        "minMM": [
+          -22,
+          -22,
+          11.5
+        ],
+        "maxMM": [
+          -12,
+          -12,
+          13.8
+        ],
+        "material": "water",
+        "normalZMin": 0.75
+      },
+      {
+        "name": "ochre-backcliff",
+        "minMM": [
+          52,
+          -30,
+          30
+        ],
+        "maxMM": [
+          53,
+          30,
+          80
+        ],
+        "material": "stone"
+      }
+    ],
+    "translationMM": [
+      0,
+      0,
+      -0.1
+    ],
+    "plantKeepBoxes": [
+      {
+        "minMM": [
+          -28,
+          -40,
+          14.15
+        ],
+        "maxMM": [
+          11,
+          -33.5,
+          24
+        ],
+        "featherMM": 0.2
+      }
+    ]
+  },
+  "blockedCells": [
+    [
+      2,
+      0
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "renderUVAngleLimitRad": 0.55,
+  "waterfall": {
+    "profileXZMM": [
+      [
+        23.608,
+        14
+      ],
+      [
+        29.54,
+        20
+      ],
+      [
+        34.937,
+        30
+      ],
+      [
+        36.747,
+        40
+      ],
+      [
+        37.744,
+        50
+      ],
+      [
+        38.537,
+        60
+      ],
+      [
+        38.807,
+        70
+      ],
+      [
+        39.321,
+        80
+      ],
+      [
+        39.86,
+        82
+      ],
+      [
+        39.81,
+        84
+      ],
+      [
+        40.711,
+        86
+      ],
+      [
+        42.643,
+        88
+      ],
+      [
+        45.077,
+        89
+      ]
+    ],
+    "widthMM": 5.2,
+    "featherMM": 0.8,
+    "minYMM": -26,
+    "maxYMM": 26,
+    "minZMM": 13.5,
+    "maxZMM": 89.5,
+    "lowerRGB": [
+      0.1,
+      0.5,
+      0.55
+    ],
+    "upperRGB": [
+      0.47,
+      0.77,
+      0.78
+    ],
+    "roughness": 0.48,
+    "rockExclusions": [
+      {
+        "centreMM": [
+          22,
+          -32,
+          42
+        ],
+        "radiiMM": [
+          17,
+          18,
+          25
+        ]
+      },
+      {
+        "centreMM": [
+          27,
+          30,
+          38
+        ],
+        "radiiMM": [
+          12,
+          14,
+          20
+        ]
+      },
+      {
+        "centreMM": [
+          36.368,
+          -5.079,
+          61.23
+        ],
+        "radiiMM": [
+          1.5,
+          2.447,
+          7.036
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          35.671,
+          -6.342,
+          51.727
+        ],
+        "radiiMM": [
+          1.868,
+          1.5,
+          6.067
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          34.701,
+          -7.217,
+          42.557
+        ],
+        "radiiMM": [
+          1.502,
+          2.059,
+          6.702
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          33.885,
+          -8.31,
+          34.333
+        ],
+        "radiiMM": [
+          1.715,
+          1.5,
+          5.122
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          32.739,
+          -8.613,
+          27.828
+        ],
+        "radiiMM": [
+          1.83,
+          1.5,
+          4.983
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          34.278,
+          -7.259,
+          65.348
+        ],
+        "radiiMM": [
+          1.535,
+          2.013,
+          6.662
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          33.897,
+          -9.133,
+          55.365
+        ],
+        "radiiMM": [
+          1.5,
+          2.262,
+          6.921
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          33.488,
+          -10.646,
+          45.602
+        ],
+        "radiiMM": [
+          1.562,
+          1.651,
+          6.442
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          32.599,
+          -11.153,
+          36.838
+        ],
+        "radiiMM": [
+          1.726,
+          1.5,
+          5.922
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          31.795,
+          -11.136,
+          29.814
+        ],
+        "radiiMM": [
+          1.5,
+          1.5,
+          4.702
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          31.288,
+          -9.447,
+          65.636
+        ],
+        "radiiMM": [
+          1.568,
+          2.609,
+          6.652
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          30.786,
+          -11.471,
+          56.181
+        ],
+        "radiiMM": [
+          1.5,
+          1.815,
+          6.402
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          31.02,
+          -12.61,
+          46.939
+        ],
+        "radiiMM": [
+          1.567,
+          1.724,
+          6.44
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          30.931,
+          -12.644,
+          38.917
+        ],
+        "radiiMM": [
+          1.657,
+          1.69,
+          5.183
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          30.445,
+          -12.113,
+          32.287
+        ],
+        "radiiMM": [
+          1.5,
+          1.5,
+          5.048
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          37.248,
+          -3.145,
+          69.137
+        ],
+        "radiiMM": [
+          3,
+          3,
+          3.5
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          31.804,
+          -5.185,
+          67.942
+        ],
+        "radiiMM": [
+          3,
+          3,
+          3.5
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          29.56,
+          -10.206,
+          69.731
+        ],
+        "radiiMM": [
+          3,
+          3,
+          3.5
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      },
+      {
+        "centreMM": [
+          20.466,
+          -8.309,
+          16.337
+        ],
+        "radiiMM": [
+          4,
+          4,
+          3
+        ],
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "roughness": 0.82
+      }
+    ],
+    "frontWidthMM": 14,
+    "backWidthMM": 4,
+    "perPixelRocks": true
+  },
+  "stripAuxiliaryColours": true,
+  "groupCode": "MH-high-waterfall-end",
+  "lodORMSize": 1024,
+  "grassReference": "MH-115",
+  "grassReferenceRotation": 0,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    -0.1
+  ],
+  "grassMatchMM": 0.1,
+  "grassBlendMM": 0.2,
+  "raisedGrass": {
+    "minMM": [
+      28,
+      -54,
+      83
+    ],
+    "maxMM": [
+      54,
+      54,
+      96
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-171",
+    "exclusions": [
+      {
+        "minMM": [
+          28,
+          -27,
+          83
+        ],
+        "maxMM": [
+          54,
+          27,
+          96
+        ],
+        "featherMM": 0.2
+      },
+      {
+        "minMM": [
+          41.5,
+          27.5,
+          89.5
+        ],
+        "maxMM": [
+          49,
+          33.5,
+          94
+        ],
+        "featherMM": 0.2
+      }
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        28,
+        -54,
+        83
+      ],
+      [
+        54,
+        54,
+        96
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        41.5,
+        27.5,
+        89.5
+      ],
+      "maxMM": [
+        49,
+        33.5,
+        94
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.62,
+        0.46,
+        0.27
+      ]
+    },
+    {
+      "minMM": [
+        6,
+        35,
+        16.2
+      ],
+      "maxMM": [
+        18,
+        45,
+        23
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.54,
+        0.38,
+        0.215
+      ]
+    },
+    {
+      "minMM": [
+        8,
+        28,
+        16.2
+      ],
+      "maxMM": [
+        16,
+        36,
+        21
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.54,
+        0.38,
+        0.215
+      ]
+    },
+    {
+      "minMM": [
+        10,
+        14,
+        16.2
+      ],
+      "maxMM": [
+        20,
+        29,
+        28
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.54,
+        0.38,
+        0.215
+      ]
+    },
+    {
+      "minMM": [
+        1,
+        21,
+        16.2
+      ],
+      "maxMM": [
+        9,
+        30,
+        20
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.54,
+        0.38,
+        0.215
+      ]
+    },
+    {
+      "minMM": [
+        -28,
+        34,
+        16.2
+      ],
+      "maxMM": [
+        -20,
+        45,
+        21
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.54,
+        0.38,
+        0.215
+      ]
+    }
+  ],
+  "placementPointOffsetsMM": {
+    "0,0": [
+      0.5,
+      -0.5
+    ],
+    "1,0": [
+      -0.5,
+      -0.5
+    ]
+  },
+  "lowGrassAreas": [
+    {
+      "minMM": [
+        -54,
+        -54,
+        14.2
+      ],
+      "maxMM": [
+        18,
+        54,
+        24
+      ],
+      "featherMM": 0.2,
+      "stoneSurface": {
+        "boundsMM": [
+          [
+            -54,
+            -54,
+            14.2
+          ],
+          [
+            18,
+            54,
+            26
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.15,
+        "growAngleRad": 0.2
+      }
+    }
+  ]
+}
