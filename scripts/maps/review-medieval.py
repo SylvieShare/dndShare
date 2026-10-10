@@ -42,6 +42,10 @@ def main():
             cmd = [blender,'--background','--python-exit-code','1','--python',str(script/'validate-medieval-liquids.py'),
                    '--','--code',code]+(['--candidate','compact'] if candidate else [])
             stages.append(('liquid-pixels-'+label,cmd))
+        if any(part.get('kind')=='glass' for part in recipe['materials'].get('surfaceParts', [])):
+            cmd = [blender,'--background','--python-exit-code','1','--python',str(script/'validate-medieval-glass.py'),
+                   '--','--code',code]+(['--candidate','compact'] if candidate else [])
+            stages.append(('glass-pixels-'+label,cmd))
     stages.append(('comparison', ['node', str(script/'review-medieval-sheet.mjs'), code]))
     for stage, cmd in stages:
         log = BASE/(code+'-'+stage+'.log')

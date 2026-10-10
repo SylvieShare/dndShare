@@ -68,6 +68,11 @@ export function structureFlame(p, settings) {
   return part?.kind==='flame' ? part : null;
 }
 
+export function structureGlass(p, settings) {
+  const part = (settings.surfaceParts || []).findLast(part => structureDomain(p, part));
+  return part?.kind==='glass' ? part : null;
+}
+
 export function structureFabricPigment(p, settings) {
   if ((settings.surfaceParts || []).some(part => structureDomain(p,part))) return null;
   if ((settings.produceParts || []).some(part => structureDomain(p,part))) return null;
@@ -88,5 +93,5 @@ export function structureFabricPigment(p, settings) {
 }
 
 export function shouldRepairGreenSpill(pixel, vertex, p, settings) {
-  return pixel[1]>pixel[0]*1.18 && vertex[1]<vertex[0]*1.05 && !structureLiquid(p, settings);
+  return pixel[1]>pixel[0]*1.18 && vertex[1]<vertex[0]*1.05 && !structureLiquid(p, settings) && !structureGlass(p, settings);
 }

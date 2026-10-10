@@ -1,0 +1,401 @@
+{
+  "name": "Window With Glass",
+  "groupCode": "MED-window",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 78000,
+  "lodTriangles": 25000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": false,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.22,
+        0
+      ],
+      [
+        0.22,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "plaster",
+    "window",
+    "glass"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "window and low wall vertical timbers",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -9.3,
+          17.6,
+          72.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "wide lower window sill",
+        "minMM": [
+          -17.6,
+          -17.6,
+          42.4
+        ],
+        "maxMM": [
+          -9.3,
+          17.6,
+          47.6
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "inner window bottom rail",
+        "minMM": [
+          -17.6,
+          -10.5,
+          47.6
+        ],
+        "maxMM": [
+          -11.0,
+          10.5,
+          49.0
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "horizontal window crossbar",
+        "minMM": [
+          -17.6,
+          -9,
+          56.65
+        ],
+        "maxMM": [
+          -11.0,
+          9,
+          59.0
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "top frame lintel",
+        "minMM": [
+          -17.6,
+          -17.6,
+          68.0
+        ],
+        "maxMM": [
+          -9.3,
+          17.6,
+          72.6
+        ],
+        "axis": "y"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -11.2842,
+          0,
+          58.0
+        ],
+        "radiiMM": [
+          0.65,
+          0.65,
+          0.65
+        ],
+        "minZMM": 57.25,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "low window wall rough plaster",
+        "kind": "plaster",
+        "minMM": [
+          -17.6,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          42.4
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065
+      },
+      {
+        "name": "green glass pane 1",
+        "kind": "glass",
+        "minMM": [
+          -14.5,
+          -8.45,
+          48.9
+        ],
+        "maxMM": [
+          -12.55,
+          0,
+          57.8
+        ],
+        "rgb": [
+          0.48,
+          0.59,
+          0.17
+        ],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-041",
+          "sourceSHA256": "bb864958798c042553c68e0489f4d73a9460f45a1da779d6c9c8b793cfe7e8aa",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-040",
+            "sourceSHA256": "71335070ed29d9ac71bcff8ae0658420dbafad945dea1cd075d7cec72c3837fc"
+          }
+        }
+      },
+      {
+        "name": "green glass pane 2",
+        "kind": "glass",
+        "minMM": [
+          -14.5,
+          0,
+          48.9
+        ],
+        "maxMM": [
+          -12.55,
+          8.45,
+          57.8
+        ],
+        "rgb": [
+          0.46,
+          0.6,
+          0.16
+        ],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-041",
+          "sourceSHA256": "bb864958798c042553c68e0489f4d73a9460f45a1da779d6c9c8b793cfe7e8aa",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-040",
+            "sourceSHA256": "71335070ed29d9ac71bcff8ae0658420dbafad945dea1cd075d7cec72c3837fc"
+          }
+        }
+      },
+      {
+        "name": "green glass pane 3",
+        "kind": "glass",
+        "minMM": [
+          -14.5,
+          -8.45,
+          57.8
+        ],
+        "maxMM": [
+          -12.55,
+          0,
+          66.95
+        ],
+        "rgb": [
+          0.51,
+          0.62,
+          0.2
+        ],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-041",
+          "sourceSHA256": "bb864958798c042553c68e0489f4d73a9460f45a1da779d6c9c8b793cfe7e8aa",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-040",
+            "sourceSHA256": "71335070ed29d9ac71bcff8ae0658420dbafad945dea1cd075d7cec72c3837fc"
+          }
+        }
+      },
+      {
+        "name": "green glass pane 4",
+        "kind": "glass",
+        "minMM": [
+          -14.5,
+          0,
+          57.8
+        ],
+        "maxMM": [
+          -12.55,
+          8.45,
+          66.95
+        ],
+        "rgb": [
+          0.5,
+          0.61,
+          0.18
+        ],
+        "roughness": 0.18,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-041",
+          "sourceSHA256": "bb864958798c042553c68e0489f4d73a9460f45a1da779d6c9c8b793cfe7e8aa",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-040",
+            "sourceSHA256": "71335070ed29d9ac71bcff8ae0658420dbafad945dea1cd075d7cec72c3837fc"
+          }
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.8,
+      3.8
+    ],
+    "lodMiB": [
+      0.5,
+      1.35
+    ],
+    "shadowKiB": [
+      55,
+      130
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "35mm floor and low plaster wall with taller timber frame, four sculpted glass panes, central crossbars, round fastener, broad sill and lintel.78000/25000 independent geometry/UV/bakes retain frame/profile, textured pane surfaces and floor boards. Compare1024/512 versus768/384 atlases."
+  },
+  "reviewNotes": "PDF page7, native front/back of40 and empty41. Source459976triangles/22998884bytes,max72.434006mm; centre floor24.727699mm and17mm native insertion. Westedge64 withclear centre andblocker. Window/frame native comparison to41 has median nearest distance.007963mm, whereas added glass spansX[-14.3199,-12.7402],Y[-8.1259,8.2754],Z49..66.805mm. Source rays atY\u00b12..8,Z50/52/54/56/60/64/66 hit panes aroundX=-12.77; empty41 has holes atthose points. CentralstileY0 atX=-11.773, horizontalbarZ58 atX=-12.071 andcentralfastenerX=-11.284. OuterY\u00b110 frame andZ68/70 lintel matchempty withinabout.003mm. Bound glass bywindow volume andexact .12mm source-reference exclusion projected back to40 atpack time; preserve all wood onboth sides. Four subtle green/ochre tones with.18 roughness andzero metal/emission; maintain sculpted glass aspainted opaque panes matching authorcatalogue. Physical per-pixel pigment/gutters prevent sparseLOD brown vertices from losing glass colour. X floorboards,Y rails/sill/lintel/horizontalbar,Z posts/stile, rough low plaster below42.4mm andone separately measured roundfastener. Review every pane, all crossbar edges, timberends andsill before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureMetal, structureFlame, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureFlame, structureGlass, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
 
@@ -63,4 +63,13 @@ test('two measured tavern flames stay separate from wax, iron cups and timber', 
     assert.equal(structureFlame([-10,y,72],sign),null,'Post must not emit');
   }
   assert.equal(structureFlame([-3.05,0,71.8],sign),null,'Opening between candles must not emit');
+});
+
+test('real green glass is preserved against sparse brown vertices while adjacent wood is repaired', () => {
+  const settings = { surfaceParts:[{kind:'glass',name:'pane',minMM:[-14.5,-8.5,49],maxMM:[-12.5,-1,57.5],rgb:[.48,.60,.17],roughness:.18}],stoneStartMM:24.2,stoneBlendMM:.65 };
+  assert.equal(structureGlass([-13,-5,53],settings)?.kind,'glass');
+  assert.equal(shouldRepairGreenSpill([40,180,12],[.12,.05,.015,1],[-13,-5,53],settings),false);
+  assert.equal(structureGlass([-11.77,0,53],settings),null);
+  assert.equal(shouldRepairGreenSpill([40,180,12],[.12,.05,.015,1],[-11.77,0,53],settings),true);
+  assert.deepEqual(structureMetal([-13,-5,53],settings),{metallic:0,roughness:.18});
 });

@@ -30,6 +30,12 @@ if (flames.length) for (const tier of ['render','lod']) {
   for (const part of flames) assert.ok(evidence?.flamePartSamples?.[part.name]>=10,'Unverified flame: '+part.name);
 }
 const liquidCount = report.recipe.materials.surfaceParts?.filter(p => p.kind==='liquid').length || 0;
+const glassCount = report.recipe.materials.surfaceParts?.filter(p => p.kind==='glass').length || 0;
+if (glassCount) for (const tier of ['render','lod']) {
+  assert.equal(report.glassPixelReview?.[tier]?.length,glassCount*2,'Unverified glass surfaces');
+  assert.equal(report.glassPixelAssets?.[tier],expected.assets[tier].sha256,'Glass QA differs from publication resources');
+  for (const pane of report.glassPixelReview[tier]) assert.ok(pane.greenRatio>=1.1 && pane.deviationMM<=.15 && pane.normalFacing>=.5,'Glass pane lost colour or shape');
+}
 if (liquidCount) for (const tier of ['render','lod']) {
   assert.equal(report.liquidPixelReview?.[tier]?.length,liquidCount,'Unverified liquid surfaces');
   assert.equal(report.liquidPixelAssets?.[tier],expected.assets[tier].sha256,'Liquid QA differs from publication resources');

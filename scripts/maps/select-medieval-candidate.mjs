@@ -14,6 +14,12 @@ const source = candidate==='balanced' ? directory : path.join(directory, 'candid
 const baseline = JSON.parse(await fs.readFile(path.join(directory, 'report.json'), 'utf8'));
 const selected = JSON.parse(await fs.readFile(path.join(source, 'report.json'), 'utf8'));
 const liquidCount = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='liquid').length || 0;
+const glassCount = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='glass').length || 0;
+if (glassCount) for (const tier of ['render','lod']) {
+  assert.equal(selected.glassPixelReview?.[tier]?.length,glassCount*2,'Validate both sides of every glass pane');
+  assert.equal(selected.glassPixelAssets?.[tier],createHash('sha256').update(await fs.readFile(path.join(source,tier+'.glb'))).digest('hex'),'Glass QA differs from selected resources');
+  for (const pane of selected.glassPixelReview[tier]) assert.ok(pane.greenRatio>=1.1 && pane.deviationMM<=.15 && pane.normalFacing>=.5,'Glass pane lost colour or shape');
+}
 const flames = selected.recipe.materials.surfaceParts?.filter(p => p.kind==='flame') || [];
 if (flames.length) for (const tier of ['render','lod']) {
   const evidence = selected.materialChannelReview?.[tier];
