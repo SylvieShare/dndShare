@@ -1,0 +1,1527 @@
+{
+  "name": "Potion Market",
+  "groupCode": "MED-potion-market",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 100000,
+  "lodTriangles": 32000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0.5
+      ],
+      [
+        1,
+        0.5
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.13,
+        0
+      ],
+      [
+        0.13,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        0.87,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0.87,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "market",
+    "potions",
+    "wood",
+    "ceramic",
+    "canvas",
+    "liquid"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "counter boards and legs",
+        "centerMM": [
+          0,
+          -9,
+          0
+        ],
+        "rotationZDeg": 0,
+        "minMM": [
+          -13.5,
+          -8,
+          26.1
+        ],
+        "maxMM": [
+          13.5,
+          7.2,
+          38.5
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          13.2,
+          7.5
+        ],
+        "railWidthMM": 1.5,
+        "lidAxis": "x"
+      },
+      {
+        "name": "side frame base grain",
+        "minMM": [
+          -17.2,
+          -12.1,
+          26.1
+        ],
+        "maxMM": [
+          17.2,
+          15.2,
+          85.3
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "lower rising brace side -1",
+        "minMM": [
+          -17.2,
+          -11.9,
+          24.92
+        ],
+        "maxMM": [
+          -12.8,
+          15.1,
+          46.580000000000005
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          21.4,
+          17.26
+        ],
+        "projection": {
+          "originMM": [
+            -15,
+            -8.68,
+            27.12
+          ],
+          "axis": [
+            0,
+            -0.6277951069120233,
+            0.7783786377704113
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "middle falling brace side -1",
+        "minMM": [
+          -17.2,
+          -11.9,
+          42.18
+        ],
+        "maxMM": [
+          -12.8,
+          15.1,
+          62.52
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          21.8,
+          -15.939999999999998
+        ],
+        "projection": {
+          "originMM": [
+            -15,
+            -9.08,
+            60.32
+          ],
+          "axis": [
+            0,
+            0.5902393825290088,
+            0.807228264688356
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "upper rising rafter side -1",
+        "minMM": [
+          -17.2,
+          -11.9,
+          58.12
+        ],
+        "maxMM": [
+          -12.8,
+          15.1,
+          83.10000000000001
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          21.8,
+          20.580000000000005
+        ],
+        "projection": {
+          "originMM": [
+            -15,
+            -9.08,
+            60.32
+          ],
+          "axis": [
+            0,
+            -0.6864668035935838,
+            0.727161142776488
+          ],
+          "rangeMM": [
+            -2.2,
+            1.5
+          ]
+        }
+      },
+      {
+        "name": "vertical post -1 -9",
+        "minMM": [
+          -17.2,
+          -11.15,
+          26.1
+        ],
+        "maxMM": [
+          -12.8,
+          -6.85,
+          65.5
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "vertical post -1 13",
+        "minMM": [
+          -17.2,
+          10.85,
+          26.1
+        ],
+        "maxMM": [
+          -12.8,
+          15.15,
+          78.0
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "lower rising brace side 1",
+        "minMM": [
+          12.8,
+          -11.9,
+          24.92
+        ],
+        "maxMM": [
+          17.2,
+          15.1,
+          46.580000000000005
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          21.4,
+          17.26
+        ],
+        "projection": {
+          "originMM": [
+            15,
+            -8.68,
+            27.12
+          ],
+          "axis": [
+            0,
+            -0.6277951069120233,
+            0.7783786377704113
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "middle falling brace side 1",
+        "minMM": [
+          12.8,
+          -11.9,
+          42.18
+        ],
+        "maxMM": [
+          17.2,
+          15.1,
+          62.52
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          21.8,
+          -15.939999999999998
+        ],
+        "projection": {
+          "originMM": [
+            15,
+            -9.08,
+            60.32
+          ],
+          "axis": [
+            0,
+            0.5902393825290088,
+            0.807228264688356
+          ],
+          "rangeMM": [
+            -3.2,
+            3.2
+          ]
+        }
+      },
+      {
+        "name": "upper rising rafter side 1",
+        "minMM": [
+          12.8,
+          -11.9,
+          58.12
+        ],
+        "maxMM": [
+          17.2,
+          15.1,
+          83.10000000000001
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          21.8,
+          20.580000000000005
+        ],
+        "projection": {
+          "originMM": [
+            15,
+            -9.08,
+            60.32
+          ],
+          "axis": [
+            0,
+            -0.6864668035935838,
+            0.727161142776488
+          ],
+          "rangeMM": [
+            -2.2,
+            1.5
+          ]
+        }
+      },
+      {
+        "name": "vertical post 1 -9",
+        "minMM": [
+          12.8,
+          -11.15,
+          26.1
+        ],
+        "maxMM": [
+          17.2,
+          -6.85,
+          65.5
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "vertical post 1 13",
+        "minMM": [
+          12.8,
+          10.85,
+          26.1
+        ],
+        "maxMM": [
+          17.2,
+          15.15,
+          78.0
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "front end block -1",
+        "minMM": [
+          -17.2,
+          -11.6,
+          65.5
+        ],
+        "maxMM": [
+          -12.8,
+          -6,
+          70.9
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "rear end block -1",
+        "minMM": [
+          -17.2,
+          10.1,
+          78
+        ],
+        "maxMM": [
+          -12.8,
+          15.15,
+          83.0
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "front end block 1",
+        "minMM": [
+          12.8,
+          -11.6,
+          65.5
+        ],
+        "maxMM": [
+          17.2,
+          -6,
+          70.9
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "rear end block 1",
+        "minMM": [
+          12.8,
+          10.1,
+          78
+        ],
+        "maxMM": [
+          17.2,
+          15.15,
+          83.0
+        ],
+        "axis": "x"
+      }
+    ],
+    "fabricParts": [
+      {
+        "name": "burgundy counter cloth",
+        "minMM": [
+          -14.3,
+          -17.4,
+          33.8
+        ],
+        "maxMM": [
+          14.3,
+          -1.3,
+          38.6
+        ],
+        "rgb": [
+          0.38,
+          0.115,
+          0.13
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -14.3,
+              -17.4,
+              36.85
+            ],
+            "maxMM": [
+              14.3,
+              -1.3,
+              38.6
+            ]
+          },
+          {
+            "minMM": [
+              -14.3,
+              -17.4,
+              33.8
+            ],
+            "maxMM": [
+              -13.25,
+              -1.3,
+              38.6
+            ]
+          },
+          {
+            "minMM": [
+              13.25,
+              -17.4,
+              33.8
+            ],
+            "maxMM": [
+              14.3,
+              -1.3,
+              38.6
+            ]
+          },
+          {
+            "minMM": [
+              -14.3,
+              -17.4,
+              33.8
+            ],
+            "maxMM": [
+              14.3,
+              -16.35,
+              38.6
+            ]
+          },
+          {
+            "minMM": [
+              -14.3,
+              -3.0,
+              33.8
+            ],
+            "maxMM": [
+              14.3,
+              -1.3,
+              38.6
+            ]
+          }
+        ]
+      },
+      {
+        "name": "complete green canopy with timber volumes protected",
+        "minMM": [
+          -17.6,
+          -17.6,
+          49
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          86
+        ],
+        "excludeParts": [
+          {
+            "name": "lower rising brace side -1",
+            "minMM": [
+              -17.2,
+              -11.9,
+              24.92
+            ],
+            "maxMM": [
+              -12.8,
+              15.1,
+              46.580000000000005
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              21.4,
+              17.26
+            ],
+            "projection": {
+              "originMM": [
+                -15,
+                -8.68,
+                27.12
+              ],
+              "axis": [
+                0,
+                -0.6277951069120233,
+                0.7783786377704113
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "middle falling brace side -1",
+            "minMM": [
+              -17.2,
+              -11.9,
+              42.18
+            ],
+            "maxMM": [
+              -12.8,
+              15.1,
+              62.52
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              21.8,
+              -15.939999999999998
+            ],
+            "projection": {
+              "originMM": [
+                -15,
+                -9.08,
+                60.32
+              ],
+              "axis": [
+                0,
+                0.5902393825290088,
+                0.807228264688356
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "upper rising rafter side -1",
+            "minMM": [
+              -17.2,
+              -11.9,
+              58.12
+            ],
+            "maxMM": [
+              -12.8,
+              15.1,
+              83.10000000000001
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              21.8,
+              20.580000000000005
+            ],
+            "projection": {
+              "originMM": [
+                -15,
+                -9.08,
+                60.32
+              ],
+              "axis": [
+                0,
+                -0.6864668035935838,
+                0.727161142776488
+              ],
+              "rangeMM": [
+                -2.2,
+                1.5
+              ]
+            }
+          },
+          {
+            "name": "vertical post -1 -9",
+            "minMM": [
+              -17.2,
+              -11.15,
+              26.1
+            ],
+            "maxMM": [
+              -12.8,
+              -6.85,
+              65.5
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post -1 13",
+            "minMM": [
+              -17.2,
+              10.85,
+              26.1
+            ],
+            "maxMM": [
+              -12.8,
+              15.15,
+              78.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "lower rising brace side 1",
+            "minMM": [
+              12.8,
+              -11.9,
+              24.92
+            ],
+            "maxMM": [
+              17.2,
+              15.1,
+              46.580000000000005
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              21.4,
+              17.26
+            ],
+            "projection": {
+              "originMM": [
+                15,
+                -8.68,
+                27.12
+              ],
+              "axis": [
+                0,
+                -0.6277951069120233,
+                0.7783786377704113
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "middle falling brace side 1",
+            "minMM": [
+              12.8,
+              -11.9,
+              42.18
+            ],
+            "maxMM": [
+              17.2,
+              15.1,
+              62.52
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              21.8,
+              -15.939999999999998
+            ],
+            "projection": {
+              "originMM": [
+                15,
+                -9.08,
+                60.32
+              ],
+              "axis": [
+                0,
+                0.5902393825290088,
+                0.807228264688356
+              ],
+              "rangeMM": [
+                -3.2,
+                3.2
+              ]
+            }
+          },
+          {
+            "name": "upper rising rafter side 1",
+            "minMM": [
+              12.8,
+              -11.9,
+              58.12
+            ],
+            "maxMM": [
+              17.2,
+              15.1,
+              83.10000000000001
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              21.8,
+              20.580000000000005
+            ],
+            "projection": {
+              "originMM": [
+                15,
+                -9.08,
+                60.32
+              ],
+              "axis": [
+                0,
+                -0.6864668035935838,
+                0.727161142776488
+              ],
+              "rangeMM": [
+                -2.2,
+                1.5
+              ]
+            }
+          },
+          {
+            "name": "vertical post 1 -9",
+            "minMM": [
+              12.8,
+              -11.15,
+              26.1
+            ],
+            "maxMM": [
+              17.2,
+              -6.85,
+              65.5
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "vertical post 1 13",
+            "minMM": [
+              12.8,
+              10.85,
+              26.1
+            ],
+            "maxMM": [
+              17.2,
+              15.15,
+              78.0
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "front end block -1",
+            "minMM": [
+              -17.2,
+              -11.6,
+              65.5
+            ],
+            "maxMM": [
+              -12.8,
+              -6,
+              70.9
+            ],
+            "axis": "x"
+          },
+          {
+            "name": "rear end block -1",
+            "minMM": [
+              -17.2,
+              10.1,
+              78
+            ],
+            "maxMM": [
+              -12.8,
+              15.15,
+              83.0
+            ],
+            "axis": "x"
+          },
+          {
+            "name": "front end block 1",
+            "minMM": [
+              12.8,
+              -11.6,
+              65.5
+            ],
+            "maxMM": [
+              17.2,
+              -6,
+              70.9
+            ],
+            "axis": "x"
+          },
+          {
+            "name": "rear end block 1",
+            "minMM": [
+              12.8,
+              10.1,
+              78
+            ],
+            "maxMM": [
+              17.2,
+              15.15,
+              83.0
+            ],
+            "axis": "x"
+          }
+        ],
+        "rgb": [
+          0.71,
+          0.775,
+          0.255
+        ]
+      }
+    ],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.729999542236328,
+          -12.695110321044922,
+          52.349998474121094
+        ],
+        "radiiMM": [
+          1.03,
+          0.52,
+          1.03
+        ],
+        "minZMM": 51.24999847412109,
+        "rgb": [
+          0.28,
+          0.225,
+          0.115
+        ]
+      },
+      {
+        "centerMM": [
+          14.630000114440918,
+          -13.339635848999023,
+          59.11000061035156
+        ],
+        "radiiMM": [
+          1.03,
+          0.52,
+          1.03
+        ],
+        "minZMM": 58.01000061035156,
+        "rgb": [
+          0.28,
+          0.225,
+          0.115
+        ]
+      },
+      {
+        "centerMM": [
+          15.140000343322754,
+          16.29367446899414,
+          72.83000183105469
+        ],
+        "radiiMM": [
+          1.03,
+          0.52,
+          1.03
+        ],
+        "minZMM": 71.7300018310547,
+        "rgb": [
+          0.28,
+          0.225,
+          0.115
+        ]
+      },
+      {
+        "centerMM": [
+          -14.630000114440918,
+          16.420902252197266,
+          64.95999908447266
+        ],
+        "radiiMM": [
+          1.03,
+          0.52,
+          1.03
+        ],
+        "minZMM": 63.859999084472655,
+        "rgb": [
+          0.28,
+          0.225,
+          0.115
+        ]
+      },
+      {
+        "centerMM": [
+          -16.331260681152344,
+          -8.680000305175781,
+          27.1200008392334
+        ],
+        "radiiMM": [
+          0.65,
+          1.05,
+          1.05
+        ],
+        "minZMM": 26.020000839233397,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -16.652973175048828,
+          -9.079999923706055,
+          60.31999969482422
+        ],
+        "radiiMM": [
+          0.65,
+          1.05,
+          1.05
+        ],
+        "minZMM": 59.21999969482422,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -15.869294166564941,
+          12.720000267028809,
+          44.380001068115234
+        ],
+        "radiiMM": [
+          0.65,
+          1.05,
+          1.05
+        ],
+        "minZMM": 43.28000106811523,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          16.787792205810547,
+          -8.680000305175781,
+          27.1200008392334
+        ],
+        "radiiMM": [
+          0.65,
+          1.05,
+          1.05
+        ],
+        "minZMM": 26.020000839233397,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          15.774202346801758,
+          -9.079999923706055,
+          60.31999969482422
+        ],
+        "radiiMM": [
+          0.65,
+          1.05,
+          1.05
+        ],
+        "minZMM": 59.21999969482422,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          16.399805068969727,
+          12.720000267028809,
+          44.380001068115234
+        ],
+        "radiiMM": [
+          0.65,
+          1.05,
+          1.05
+        ],
+        "minZMM": 43.28000106811523,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      }
+    ],
+    "stoneIslandMinCount": 2,
+    "surfaceParts": [
+      {
+        "name": "six ceramic vessels",
+        "kind": "ceramic",
+        "minMM": [
+          -14.5,
+          -16.8,
+          38.35
+        ],
+        "maxMM": [
+          14,
+          -1.8,
+          51.5
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -14.9,
+              -16.5,
+              33
+            ],
+            "maxMM": [
+              -6.700000000000001,
+              -7.8999999999999995,
+              53
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -10.8,
+                -12.2,
+                43
+              ],
+              "radiiMM": [
+                4.1,
+                4.3,
+                10
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -12.6,
+              -9.6,
+              34
+            ],
+            "maxMM": [
+              -4.4,
+              -1.4000000000000004,
+              50
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -8.5,
+                -5.5,
+                42
+              ],
+              "radiiMM": [
+                4.1,
+                4.1,
+                8
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -3.8,
+              -9.3,
+              34
+            ],
+            "maxMM": [
+              3.8,
+              -1.7000000000000002,
+              50
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                0,
+                -5.5,
+                42
+              ],
+              "radiiMM": [
+                3.8,
+                3.8,
+                8
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -6.8,
+              -16.3,
+              34
+            ],
+            "maxMM": [
+              1.7999999999999998,
+              -8.7,
+              50
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -2.5,
+                -12.5,
+                42
+              ],
+              "radiiMM": [
+                4.3,
+                3.8,
+                8
+              ]
+            }
+          },
+          {
+            "minMM": [
+              2.5999999999999996,
+              -15.600000000000001,
+              34
+            ],
+            "maxMM": [
+              7.0,
+              -11.2,
+              46
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                4.8,
+                -13.4,
+                40
+              ],
+              "radiiMM": [
+                2.2,
+                2.2,
+                6
+              ]
+            }
+          },
+          {
+            "minMM": [
+              2.3999999999999995,
+              -14.4,
+              34
+            ],
+            "maxMM": [
+              13.8,
+              -3.200000000000001,
+              52
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                8.1,
+                -8.8,
+                43
+              ],
+              "radiiMM": [
+                5.7,
+                5.6,
+                9
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -14.4,
+              -14,
+              45
+            ],
+            "maxMM": [
+              -6.5,
+              -11,
+              50.2
+            ]
+          }
+        ],
+        "centersMM": [
+          [
+            -10.8,
+            -12.2,
+            43
+          ],
+          [
+            -8.5,
+            -5.5,
+            42
+          ],
+          [
+            0,
+            -5.5,
+            42
+          ],
+          [
+            -2.5,
+            -12.5,
+            42
+          ],
+          [
+            4.8,
+            -13.4,
+            40
+          ],
+          [
+            8.1,
+            -8.8,
+            43
+          ]
+        ],
+        "centerRadiiMM": [
+          4.3,
+          4.1,
+          3.8,
+          4.1,
+          2.2,
+          5.6
+        ],
+        "colorsRGB": [
+          [
+            0.52,
+            0.34,
+            0.14
+          ],
+          [
+            0.44,
+            0.29,
+            0.105
+          ],
+          [
+            0.48,
+            0.355,
+            0.13
+          ],
+          [
+            0.39,
+            0.3,
+            0.105
+          ],
+          [
+            0.43,
+            0.265,
+            0.085
+          ],
+          [
+            0.5,
+            0.3,
+            0.12
+          ]
+        ],
+        "roughness": 0.76,
+        "variation": 0.035
+      },
+      {
+        "name": "back jar potion surface",
+        "kind": "liquid",
+        "minMM": [
+          -9.58,
+          -6.58,
+          44.37080551147461
+        ],
+        "maxMM": [
+          -7.42,
+          -4.42,
+          44.85080551147461
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -8.5,
+            -5.5,
+            44.61080551147461
+          ],
+          "radiiMM": [
+            1.0800000000000005,
+            1.0800000000000005,
+            0.5
+          ]
+        },
+        "rgb": [
+          0.28,
+          0.8,
+          0.065
+        ],
+        "roughness": 0.22,
+        "variation": 0.018
+      },
+      {
+        "name": "large jar potion surface",
+        "kind": "liquid",
+        "minMM": [
+          6.719999999999999,
+          -10.180000000000001,
+          46.91740203857422
+        ],
+        "maxMM": [
+          9.48,
+          -7.42,
+          47.39740203857422
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            8.1,
+            -8.8,
+            47.15740203857422
+          ],
+          "radiiMM": [
+            1.3800000000000003,
+            1.3800000000000003,
+            0.5
+          ]
+        },
+        "rgb": [
+          0.28,
+          0.8,
+          0.065
+        ],
+        "roughness": 0.22,
+        "variation": 0.018
+      },
+      {
+        "name": "amphora cork",
+        "kind": "cork",
+        "minMM": [
+          -11.8,
+          -13.55,
+          49.7468620300293
+        ],
+        "maxMM": [
+          -9.5,
+          -11.25,
+          51.1468620300293
+        ],
+        "rgb": [
+          0.3,
+          0.2,
+          0.09
+        ],
+        "roughness": 0.98,
+        "variation": 0.1
+      },
+      {
+        "name": "back bottle cork",
+        "kind": "cork",
+        "minMM": [
+          -1.3499999999999999,
+          -6.65,
+          46.85915908813477
+        ],
+        "maxMM": [
+          0.95,
+          -4.35,
+          48.259159088134766
+        ],
+        "rgb": [
+          0.3,
+          0.2,
+          0.09
+        ],
+        "roughness": 0.98,
+        "variation": 0.1
+      },
+      {
+        "name": "front bottle cork",
+        "kind": "cork",
+        "minMM": [
+          -3.65,
+          -13.65,
+          47.00085983276367
+        ],
+        "maxMM": [
+          -1.35,
+          -11.35,
+          48.40085983276367
+        ],
+        "rgb": [
+          0.3,
+          0.2,
+          0.09
+        ],
+        "roughness": 0.98,
+        "variation": 0.1
+      },
+      {
+        "name": "small bottle cork",
+        "kind": "cork",
+        "minMM": [
+          3.9499999999999997,
+          -14.25,
+          43.61304626464844
+        ],
+        "maxMM": [
+          5.6499999999999995,
+          -12.55,
+          45.01304626464844
+        ],
+        "rgb": [
+          0.3,
+          0.2,
+          0.09
+        ],
+        "roughness": 0.98,
+        "variation": 0.1
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2,
+      3.9
+    ],
+    "lodMiB": [
+      0.65,
+      1.3
+    ],
+    "shadowKiB": [
+      70,
+      180
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "One 35mm tile rising85.52mm with six ceramic vessels, four corks, two potion surfaces, long draped canopy, four posts and six side braces. Preserve the three open triangles per side, handles, curved canopy and floor using100k/32k triangles before independent UV bakes; compare1024/512 and768/384 colour/data maps."
+  },
+  "reviewNotes": "PDF page5 and eight native source views including a55mm cutaway. Native datum17mm, maximum85.5205mm, fitted1x1 foot. Six ceramic bodies use individually bounded volumes and measured ownership; amphora handles are explicitly included below50.2mm. Four measured cork caps and two flat green potion disks remain independent from pottery and burgundy cloth. Source counter rays measure37.18161\u201338.37033mm; cloth covers the upper surface and only the measured overhanging edge strips. The coherent green canvas protects native timber volumes: four shafts, separate end blocks and six YZ braces. Brace junctions use[-8.68,27.12],[-9.08,60.32],[12.72,44.38]mm; upper rafters reach[12.72,80.9]. Front/rear end blocks stop at70.9/83mm beneath the cloth, protecting the carved wooden faces without cutting rectangular holes in the canopy colour. Direct coloured side review identified lower brace surfaces outside the initial narrow domain; a3.2mm transverse envelope covers their full width. Four canopy buttons and six frame fasteners have source ray intersections. Back paving[0,10,25.785728]mm gives stand point[.5,.214286]; southern counter and side frame strips are blocked. Inspect all side triangles, cloth edges, pottery lips and both tiers before publication; choose the frontal goods view for the public thumbnail. Final source roof rays at[-16,0,73.45134],[-16,3,76.18345],[16,0,73.84945],[16,3,75.78873],[16,5,78.23123]mm identify actual canvas above the rafters. Upper rafter transverse limits[-2.2,1.5]mm preserve its wood and leave that entire canvas surface green; middle/lower braces keep the3.2mm envelope. Outer cloth skirts reach33.8mm, independently of the36.85mm tabletop threshold.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.214286
+    ]
+  ],
+  "standRayTopMM": 30
+}

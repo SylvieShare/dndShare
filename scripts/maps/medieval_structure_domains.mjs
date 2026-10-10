@@ -15,6 +15,7 @@ export function structureDomain(p, part) {
     const s = part.projection, t = p.reduce((sum,v,i) => sum+(v-s.originMM[i])*s.axis[i], 0);
     if (t<s.rangeMM[0] || t>s.rangeMM[1]) return false;
   }
+  if (part.includeParts?.length && !part.includeParts.some(child => structureDomain(p,child))) return false;
   if ((part.excludeParts || []).some(excluded => structureDomain(p,excluded))) return false;
   return true;
 }
@@ -52,4 +53,13 @@ export function structureMetal(p, settings) {
     metallic = Math.max(metallic, w*.9); roughness = roughness*(1-w)+.55*w;
   }
   return { metallic, roughness };
+}
+
+export function structureLiquid(p, settings) {
+  const part = (settings.surfaceParts || []).findLast(part => structureDomain(p, part));
+  return part?.kind==='liquid' ? part : null;
+}
+
+export function shouldRepairGreenSpill(pixel, vertex, p, settings) {
+  return pixel[1]>pixel[0]*1.18 && vertex[1]<vertex[0]*1.05 && !structureLiquid(p, settings);
 }

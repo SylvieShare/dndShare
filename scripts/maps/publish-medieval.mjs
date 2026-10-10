@@ -18,6 +18,14 @@ const expected = manifest[0];
 const reportPath = path.join(base, 'review', code, 'report.json');
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 assert.deepEqual(report.model,expected,'Publication manifest differs from reviewed resources');
+const liquidCount = report.recipe.materials.surfaceParts?.filter(p => p.kind==='liquid').length || 0;
+if (liquidCount) for (const tier of ['render','lod']) {
+  assert.equal(report.liquidPixelReview?.[tier]?.length,liquidCount,'Unverified liquid surfaces');
+  assert.equal(report.liquidPixelAssets?.[tier],expected.assets[tier].sha256,'Liquid QA differs from publication resources');
+  for (const floor of report.liquidPixelReview[tier]) {
+    assert.ok(floor.dominantRatio>=1.1 && floor.deviationMM<=.1 && floor.normalZ>=.5,'Liquid floor lost colour or geometry');
+  }
+}
 if (report.roughnessCorrection) for (const tier of ['render','lod']) {
   assert.equal(report.materialChannelReview?.[tier]?.metalDomainMismatches,0,'Unverified corrected metallic channel');
   assert.equal(report.materialChannelReview?.[tier]?.roughnessDomainMismatches,0,'Unverified corrected roughness');

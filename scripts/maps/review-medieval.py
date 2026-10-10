@@ -14,6 +14,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('code')
     parser.add_argument('--force', action='store_true')
+    parser.add_argument('--textures-only', action='store_true', help='Repack unchanged prepared geometry; recipe equality is still required')
     args = parser.parse_args()
     blender = os.environ.get('BLENDER', '/Applications/Blender.app/Contents/MacOS/Blender')
     script = ROOT/'scripts/maps'
@@ -22,7 +23,7 @@ def main():
     if code not in index:
         raise ValueError('Individually measured recipe required')
     stages = []
-    for tier in ['render', 'lod']:
+    for tier in ([] if args.textures_only else ['render', 'lod']):
         cmd = [blender, '--background', '--python-exit-code', '1', '--python', str(script/'prepare-medieval.py'),
                '--', '--code', code, '--tier', tier]+(['--force'] if args.force else [])
         stages.append((tier, cmd))
@@ -34,8 +35,13 @@ def main():
         for tier in ['render', 'lod']:
             cmd = [blender, '--background', '--python-exit-code', '1', '--python', str(script/'preview-model-revisions.py'),
                    '--', '--base', str(review), '--size', '512', '--review', '--front', '--tier', tier]
-            if candidate is None: cmd += ['--codes', code]
+            cmd += ['--codes', candidate or code]
             stages.append(('preview-'+label+'-'+tier, cmd))
+        recipe = json.loads((script/index[code]).read_text())
+        if any(part.get('kind')=='liquid' for part in recipe['materials'].get('surfaceParts', [])):
+            cmd = [blender,'--background','--python-exit-code','1','--python',str(script/'validate-medieval-liquids.py'),
+                   '--','--code',code]+(['--candidate','compact'] if candidate else [])
+            stages.append(('liquid-pixels-'+label,cmd))
     stages.append(('comparison', ['node', str(script/'review-medieval-sheet.mjs'), code]))
     for stage, cmd in stages:
         log = BASE/(code+'-'+stage+'.log')

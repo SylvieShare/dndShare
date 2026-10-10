@@ -21,6 +21,10 @@ def domain(p, part):
     if 'projection' in part:
         s = part['projection']; t = (p-np.array(s['originMM']))@np.array(s['axis'])
         mask &= (t>=s['rangeMM'][0])&(t<=s['rangeMM'][1])
+    if part.get('includeParts'):
+        included = np.zeros(len(p), bool)
+        for child in part['includeParts']: included |= domain(p, child)
+        mask &= included
     for excluded in part.get('excludeParts', []):
         mask &= ~domain(p, excluded)
     return mask
@@ -60,6 +64,15 @@ def paint(obj, recipe):
         elif axis=='diagonal-xz':
             angle = np.deg2rad(part['angleDeg'])
             u, v = x*np.cos(angle)+z*np.sin(angle), -x*np.sin(angle)+z*np.cos(angle)
+        elif axis=='beam':
+            direction = np.array(part['direction'], float)
+            direction /= np.linalg.norm(direction)
+            helper = np.array([1.,0.,0.]) if abs(direction[0])<.8 else np.array([0.,1.,0.])
+            transverse = np.cross(direction, helper); transverse /= np.linalg.norm(transverse)
+            other = np.cross(direction, transverse)
+            normals = np.column_stack([nx, ny, nz])
+            u = p@direction
+            v = np.where(np.abs(normals@transverse)>np.abs(normals@other), p@other, p@transverse)
         elif axis=='arc-xz':
             dx, dz = x-part['centerXZMM'][0], z-part['centerXZMM'][1]
             u, v = np.arctan2(dz, dx)*part['radiusMM'], np.hypot(dx, dz)

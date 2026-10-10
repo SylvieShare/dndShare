@@ -8,7 +8,7 @@ import { prepareShadow } from './shadow_model.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
-import { structureMetal } from './medieval_structure_domains.mjs';
+import { structureMetal, structureLiquid, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -64,6 +64,14 @@ if (!process.argv.includes('--publish-manifest')) {
       if (colour.has(texture)) {
         const pigment = (i,p,n,rgba) => {
           if (!rgba) throw new Error('Measured Paint attribute required for colour gutters');
+          const liquid = structureLiquid(p, recipe.materials);
+          if (liquid) {
+            const variation = 1+(liquid.variation ?? .025)*Math.sin(p[0]*1.73+p[1]*2.31+p[2]*1.17);
+            rgba = liquid.rgb.map(c => {
+              const v = c*variation;
+              return v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4;
+            });
+          }
           for (let c=0;c<3;c++) {
             const v = Math.max(0,Math.min(1,rgba[c]*.9));
             data[i*3+c] = Math.round((v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055)*255);
@@ -71,7 +79,7 @@ if (!process.argv.includes('--publish-manifest')) {
         };
         if (recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => p.kind==='liquid')) {
           rasterizeSurface(doc,pixels,pixels,(i,p,n,rgba) => {
-            if (data[i*3+1]>data[i*3]*1.18 && rgba[1]<rgba[0]*1.05) pigment(i,p,n,rgba);
+            if (structureLiquid(p,recipe.materials) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,recipe.materials)) pigment(i,p,n,rgba);
           },slot,'COLOR_1');
         }
         coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,pigment,1,slot,'COLOR_1');

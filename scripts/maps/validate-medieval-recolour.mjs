@@ -11,17 +11,20 @@ const { MeshoptDecoder } = require('meshoptimizer');
 await MeshoptDecoder.ready;
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder });
 const base = path.resolve(import.meta.dirname, '../../models/collections/medieval-town-vol1/review', code);
+const baseline = process.argv.find(a => a.startsWith('--baseline='))?.slice(11) || 'candidates/cool-baseline';
+const baselinePath = path.resolve(base, baseline);
+assert.ok(baselinePath.startsWith(base+path.sep), 'Baseline must belong to this reviewed model');
 function geometry(doc) {
   return doc.getRoot().listNodes().filter(n => n.getMesh()).map(n => ({ matrix: n.getWorldMatrix(),
     primitives: n.getMesh().listPrimitives().map(p => ({ indices: p.getIndices().getArray(),
       attributes: Object.fromEntries(p.listSemantics().map(s => [s, p.getAttribute(s).getArray()])) })) }));
 }
 for (const tier of ['render', 'lod', 'shadow']) {
-  const old = await io.read(path.join(base, 'candidates/cool-baseline', tier+'.glb'));
+  const old = await io.read(path.join(baselinePath, tier+'.glb'));
   const next = await io.read(path.join(base, 'candidates/compact', tier+'.glb'));
   assert.deepEqual(geometry(next), geometry(old), 'Palette correction changed geometry/UV/normals');
   if (tier!=='shadow') for (const [i, material] of old.getRoot().listMaterials().entries()) {
-    for (const slot of ['Normal', 'MetallicRoughness']) {
+    for (const slot of ['Normal', 'MetallicRoughness', 'Emissive']) {
       assert.deepEqual(next.getRoot().listMaterials()[i][`get${slot}Texture`]?.()?.getImage(),
         material[`get${slot}Texture`]?.()?.getImage(), 'Palette correction changed '+slot);
     }
