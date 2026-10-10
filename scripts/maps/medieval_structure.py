@@ -49,6 +49,11 @@ def paint(obj, recipe):
         elif axis=='meridian':
             u = z
             v = np.arctan2(y-part['centerXYMM'][1], x-part['centerXYMM'][0])*part['radiusMM']
+        elif axis=='log-x':
+            centers = np.array(part['capCentersMM'])
+            nearest = ((p[:, None, 1:]-centers[None, :, 1:])**2).sum(2).argmin(1)
+            dy, dz = y-centers[nearest, 1], z-centers[nearest, 2]
+            u, v = x, np.arctan2(dz, dy)*part['grainRadiusMM']
         elif axis=='floor-frame':
             horizontal = np.abs(y)>part['frameInnerHalfMM']
             u, v = np.where(horizontal, x, y), np.where(horizontal, y, x)
@@ -80,7 +85,18 @@ def paint(obj, recipe):
         # Visible ends of straight beams; curved grain follows the actual arc.
         ends = mask&((np.abs(nx)>.75) if axis=='x' else (np.abs(ny)>.75) if axis=='y' else (np.abs(nz)>.75) if axis=='z' else False)
         wood[ends] *= (.85+.15*np.sin(np.hypot(v[ends], u[ends]%4)*7))[:, None]
-        rgb[mask] = wood[mask]; surface[mask, 1] = .88
+        roughness = np.full(len(z), part.get('roughness', .88), np.float32)
+        if axis=='log-x':
+            end_region = np.zeros(len(z), bool)
+            for lo, hi in part['endRangesMM']: end_region |= (x>=lo)&(x<=hi)
+            cap = mask&end_region&(np.abs(nx)>.55)
+            radius = np.hypot(dy, dz)
+            rings = .5+.24*np.sin(radius*5.8+.1*np.sin(np.arctan2(dz,dy)*3))
+            cut = np.array(part['endDarkRGB'])*(1-rings[:, None])+np.array(part['endLightRGB'])*rings[:, None]
+            wood[cap] = cut[cap]
+            roughness[end_region] = part['endRoughness']
+            print('MEDIEVAL_LOG_ENDS', int(cap.sum()), len(centers), flush=True)
+        rgb[mask] = wood[mask]; surface[mask, 1] = roughness[mask]
         print('MEDIEVAL_BEAM', part['name'], int(mask.sum()), flush=True)
     for part in settings.get('stoneParts', []):
         mask = domain(p, part)

@@ -1,0 +1,307 @@
+{
+  "name": "Wooden Plank",
+  "groupCode": "MED-wooden-plank",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 72000,
+  "lodTriangles": 24000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0.045
+      ],
+      [
+        0.995,
+        0.045
+      ],
+      [
+        0.995,
+        0.96
+      ],
+      [
+        0,
+        0.96
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "logs",
+    "bark"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "log pile",
+        "minMM": [
+          -17.1,
+          -15.4,
+          26.1
+        ],
+        "maxMM": [
+          6.7,
+          15.4,
+          43.1
+        ],
+        "axis": "log-x",
+        "capCentersMM": [
+          [
+            4.803306716822819,
+            8.669061276261306,
+            29.48955606044024
+          ],
+          [
+            5.019756237098149,
+            -0.5752717602558423,
+            29.111192475832425
+          ],
+          [
+            4.5700744432255425,
+            -10.948642321525806,
+            36.147904857830504
+          ],
+          [
+            5.324752701075915,
+            -10.782306353560493,
+            30.013032322219487
+          ],
+          [
+            2.7684273337381367,
+            -3.544007252212827,
+            39.24641122937658
+          ],
+          [
+            3.4221342310164737,
+            -6.717001210138636,
+            28.525067195151617
+          ],
+          [
+            4.728133060654872,
+            4.466966786077024,
+            38.60171758710823
+          ],
+          [
+            4.1293891761785035,
+            0.08561591071150138,
+            34.05032408275718
+          ],
+          [
+            6.269962517601864,
+            5.316547400287832,
+            33.666953094388646
+          ],
+          [
+            3.8875154022247562,
+            -5.863365399068401,
+            34.11999600010534
+          ],
+          [
+            3.9502727677654135,
+            9.550571931474233,
+            35.042580012247505
+          ]
+        ],
+        "grainRadiusMM": 2.7,
+        "darkRGB": [
+          0.3,
+          0.14,
+          0.045
+        ],
+        "lightRGB": [
+          0.49,
+          0.265,
+          0.1
+        ],
+        "endDarkRGB": [
+          0.48,
+          0.285,
+          0.12
+        ],
+        "endLightRGB": [
+          0.7,
+          0.49,
+          0.255
+        ],
+        "endRangesMM": [
+          [
+            -17.1,
+            -14
+          ],
+          [
+            1.5,
+            6.7
+          ]
+        ],
+        "roughness": 0.94,
+        "endRoughness": 0.86
+      },
+      {
+        "name": "side posts",
+        "minMM": [
+          -17.1,
+          -17.3,
+          26.1
+        ],
+        "maxMM": [
+          -13,
+          17.3,
+          41.2
+        ],
+        "absYMM": [
+          14.4,
+          17.3
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "diagonal braces",
+        "minMM": [
+          -15.8,
+          -17.3,
+          25.8
+        ],
+        "maxMM": [
+          5.5,
+          17.3,
+          39.2
+        ],
+        "absYMM": [
+          14.4,
+          17.3
+        ],
+        "projection": {
+          "originMM": [
+            -15,
+            0,
+            36.8
+          ],
+          "axis": [
+            0.465,
+            0,
+            0.885
+          ],
+          "rangeMM": [
+            -1.3,
+            1.3
+          ]
+        },
+        "axis": "diagonal-xz",
+        "angleDeg": 152
+      }
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -15.2,
+          -16.3,
+          36.6
+        ],
+        "radiiMM": [
+          1,
+          0.65,
+          1
+        ],
+        "minZMM": 35.5,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      },
+      {
+        "centerMM": [
+          -15.2,
+          16.3,
+          36.6
+        ],
+        "radiiMM": [
+          1,
+          0.65,
+          1
+        ],
+        "minZMM": 35.5,
+        "rgb": [
+          0.21,
+          0.185,
+          0.145
+        ]
+      }
+    ],
+    "stoneIslandMinCount": 2
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      3.0
+    ],
+    "lodMiB": [
+      0.45,
+      1.1
+    ],
+    "shadowKiB": [
+      50,
+      150
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "One 35 mm paving tile with a dense log pile, carved cut ends and two side braces. Preserve end cracks and support silhouette with72k/24k independent bakes; compare1024/512 vs768/384 maps with bark/cut timber roughness."
+  },
+  "reviewNotes": "PDF page4; named Wooden Plank but the source is a log pile. Two 1000px source diagonals show logs along X and side posts/braces in the XZ plane. Eleven cap regions measured on positive-X surfaces at normal.x>.8 seed individual YZ growth rings; cut colour is gated by end X ranges and actual normals, bark grain runs axially. Diagonal braces follow 152deg; post grain is vertical. Bark roughness .94, end zone .86, rails .88, iron heads separate. Native datum17 mm, max42.9227 mm, occupied 1x1 tile; paving probe[12,0,25.784908] mm measured independently.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "surfaceHeightMM": 25.784908
+}

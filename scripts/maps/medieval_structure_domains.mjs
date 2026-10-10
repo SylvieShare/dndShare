@@ -32,7 +32,10 @@ export function terrainRoughness(p, settings) {
 
 export function structureMetal(p, settings) {
   let metallic = 0, roughness = terrainRoughness(p, settings);
-  for (const part of settings.woodParts || []) if (structureDomain(p, part)) roughness = .88;
+  for (const part of settings.woodParts || []) if (structureDomain(p, part)) {
+    roughness = part.roughness ?? .88;
+    if (part.axis==='log-x' && part.endRangesMM.some(([lo,hi]) => p[0]>=lo && p[0]<=hi)) roughness = part.endRoughness;
+  }
   for (const part of settings.stoneParts || []) if (structureDomain(p, part)) roughness = .91;
   for (const part of settings.fabricParts || []) if (structureDomain(p, part)) roughness = .98;
   for (const part of settings.produceParts || []) if (structureDomain(p, part)) roughness = part.roughness;
