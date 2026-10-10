@@ -178,6 +178,29 @@ def bake_tier(report, directory, tier):
         target.data.materials.append(mat)
     target.matrix_world = Matrix.Scale(1/35, 4) @ target.matrix_world
     activate(target)
+    if correction.get('mode') == 'restore-native-water-tile':
+        # The previous crop removed the complete native mounting shoulder.
+        # The rebuilt body starts at the reviewed datum; append only its foot.
+        from mathutils import Vector
+        z = datum / 35
+        low, high = .325, .49
+        verts = [(x*s, y*s, h) for h,s in [(0,low),(z,high)]
+                 for x,y in [(-1,-1),(1,-1),(1,1),(-1,1)]]
+        faces = [(0,3,2),(0,2,1),(4,5,6),(4,6,7),
+                 (0,1,5),(0,5,4),(1,2,6),(1,6,5),
+                 (2,3,7),(2,7,6),(3,0,4),(3,4,7)]
+        mesh = bpy.data.meshes.new('Reviewed native water foot')
+        mesh.from_pydata(verts, [], faces)
+        foot = bpy.data.objects.new('Simple insertion pegs', mesh)
+        scene.collection.objects.link(foot)
+        material = bpy.data.materials.new('Simple insertion pegs')
+        material.use_nodes = True
+        material.diffuse_color = (.16,.1,.06,1)
+        shader = material.node_tree.nodes.get('Principled BSDF')
+        shader.inputs['Base Color'].default_value = (.16,.1,.06,1)
+        shader.inputs['Roughness'].default_value = .95
+        mesh.materials.append(material)
+        mounting.append(foot)
     for obj in mounting:
         obj.select_set(True)
     bpy.ops.export_scene.gltf(filepath=str(directory/(tier+'-repacked.glb')),

@@ -19,7 +19,14 @@ export function correctedCaveModel(model, source, spec, explicit) {
   const removeMount = correction.mode === "remove-false-mount";
   const restoreBridge = correction.mode === "restore-native-bridge";
   const restoreWell = correction.mode === "restore-native-well";
-  if (correction.mode && !removeMount && !restoreBridge && !restoreWell)
+  const restoreWater = correction.mode === "restore-native-water-tile";
+  if (
+    correction.mode &&
+    !removeMount &&
+    !restoreBridge &&
+    !restoreWell &&
+    !restoreWater
+  )
     throw new Error("Unknown reviewed geometry correction mode");
   if (
     typeof correction.reason !== "string" ||
@@ -41,7 +48,10 @@ export function correctedCaveModel(model, source, spec, explicit) {
   for (const key of Object.keys(correction.metadata))
     if (
       !fields.has(key) ||
-      (!removeMount && !restoreWell && ["mountDepth", "canStand"].includes(key))
+      (!removeMount &&
+        !restoreWell &&
+        !restoreWater &&
+        ["mountDepth", "canStand"].includes(key))
     )
       throw new Error("Unexpected correction metadata: " + key);
   if (
@@ -53,6 +63,38 @@ export function correctedCaveModel(model, source, spec, explicit) {
       "Restored orientation and existing placement points require explicit review",
     );
   const result = { ...structuredClone(model), ...correction.metadata };
+  if (
+    restoreWater &&
+    (![
+      "LC-095",
+      "LC-096",
+      "LC-097",
+      "LC-098",
+      "LC-099",
+      "LC-100",
+      "LC-101",
+      "LC-102",
+      "LC-103",
+      "LC-104",
+      "LC-105",
+      "LC-106",
+    ].includes(model.sourceCode) ||
+      model.mountDepth !== 0 ||
+      source.mountDepth !== 0 ||
+      source.cutHeight !== 11.5 ||
+      correction.cutHeightMM !== 0 ||
+      correction.rotationXDeg ||
+      result.tileType !== model.tileType ||
+      result.width !== 1 ||
+      result.height !== 1 ||
+      !(result.mountDepth > 0.25 && result.mountDepth < 0.32) ||
+      result.canStand !== model.canStand ||
+      result.hasDecor !== model.hasDecor ||
+      model.supportSlots?.length)
+  )
+    throw new Error(
+      "Native water restoration requires a reviewed cropped slotless1x1 water tile and measured mounting datum",
+    );
   if (
     restoreWell &&
     (!["LC-067", "LC-068"].includes(model.sourceCode) ||
@@ -108,6 +150,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
     result.surfaceHeight > result.maxHeight ||
     (!removeMount &&
       !restoreWell &&
+      !restoreWater &&
       result.tileType !== (restoreBridge ? model.tileType : "object"))
   )
     throw new Error(

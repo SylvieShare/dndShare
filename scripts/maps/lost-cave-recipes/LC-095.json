@@ -1,0 +1,798 @@
+{
+  "sourceName": "Water Corner",
+  "referencePage": 14,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 45000,
+  "lodTriangles": 16000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      5.5
+    ],
+    "lodMiB": [
+      0.55,
+      2
+    ],
+    "shadowKiB": [
+      15,
+      70
+    ],
+    "previewKiB": [
+      10,
+      100
+    ],
+    "basis": "219938-triangle1x1 watercorner withnative9.94mm mounting shoulder losttoformer11.5mmcrop;45k/16k preserve shorelineclutter,source2048/1024rebake,twoUASTCbudgets."
+  },
+  "notes": "Author14 brownstone corner with10individualoliveboulders andturquoise waves. Original11.5mmcrop removednativefoot; fullsource sections23.83mm@.05,33.40@9,34.98/35.00@9.94. Explicitrestorecut0,mount9.94/35,height20.541399/35,point15.3888/35; UUID79706eea-5e60-5e5b-9e36-ad2512b69b33,source,1x1,wall-corner,flags/slots preserved. Watergridheight5.4488mm matchesLC0925.4904within.042mm. Deepfoot34.3/22.75 collidesLC0601.42mm; own34.3/14.8 clears81levels .0887/.0954mm andall40254/14096frametriangles have0inside expandedvolume. Ownsource-depthreversecontours+boulder priority .25mm/depthradius1; dryrearfaceactualX-17.49 withmeasuredbox/normal,waterwaveguardcentre[-1.05,4.9203,15.3974] preserveshorizontalwater. 9PBRareas bothtiers afterdecode; 2UASTCbudgets+PNG3views/bothtiers.45k/16k beforeUV,source normal/AO. Noemitter. CompactR2820172/L914144/S57128/P24264 confirmedMCP.",
+  "groupCode": "LC-water-corner",
+  "floorHeightProfileMM": [
+    [
+      -17.6,
+      14.735
+    ],
+    [
+      17.6,
+      14.735
+    ]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "e99f0fe30fefe448e1b122420cef2b965d215e355d97e5a749608e79a328f0be",
+    "mountDepthMM": 9.94,
+    "sourceTopWidthMM": 35,
+    "centresMM": [
+      [
+        0,
+        0
+      ]
+    ],
+    "reason": "FullSTLsections23.83mm@.05,25.86@4,33.40@9,34.98/35.00@9.94confirm longnativecenterfoot; previous11.5crop removedit. Restorecut0 andfitonecell. NativeLC060 socket13.49mmhalfwidth below25.1mm makes22.75bottom collide1.42mm; measuredlinear deepfrustum bottom14.8top34.3 keepsclearance.08mmminimum.",
+    "bottomWidthMM": 14.8
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "water": {
+    "colour": [
+      0.095,
+      0.63,
+      0.53
+    ],
+    "tileVolume": {
+      "min": [
+        -18,
+        -18,
+        9.94
+      ],
+      "max": [
+        18,
+        18,
+        16.3
+      ]
+    },
+    "surfaces": [],
+    "roughness": 0.28,
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "part": "boulder",
+        "toleranceMM": 0.25,
+        "depthPixelRadius": 1,
+        "polygons": [
+          [
+            [
+              260,
+              306
+            ],
+            [
+              271,
+              298
+            ],
+            [
+              287,
+              305
+            ],
+            [
+              296,
+              316
+            ],
+            [
+              302,
+              331
+            ],
+            [
+              295,
+              341
+            ],
+            [
+              283,
+              343
+            ],
+            [
+              270,
+              337
+            ],
+            [
+              257,
+              330
+            ]
+          ],
+          [
+            [
+              311,
+              322
+            ],
+            [
+              323,
+              312
+            ],
+            [
+              342,
+              310
+            ],
+            [
+              359,
+              320
+            ],
+            [
+              375,
+              333
+            ],
+            [
+              375,
+              346
+            ],
+            [
+              362,
+              357
+            ],
+            [
+              343,
+              359
+            ],
+            [
+              326,
+              356
+            ],
+            [
+              312,
+              349
+            ]
+          ],
+          [
+            [
+              400,
+              326
+            ],
+            [
+              414,
+              315
+            ],
+            [
+              430,
+              316
+            ],
+            [
+              444,
+              325
+            ],
+            [
+              450,
+              338
+            ],
+            [
+              444,
+              351
+            ],
+            [
+              429,
+              361
+            ],
+            [
+              413,
+              361
+            ],
+            [
+              400,
+              349
+            ]
+          ],
+          [
+            [
+              445,
+              317
+            ],
+            [
+              450,
+              302
+            ],
+            [
+              462,
+              297
+            ],
+            [
+              476,
+              305
+            ],
+            [
+              485,
+              317
+            ],
+            [
+              482,
+              332
+            ],
+            [
+              469,
+              344
+            ],
+            [
+              457,
+              344
+            ],
+            [
+              448,
+              332
+            ]
+          ],
+          [
+            [
+              483,
+              337
+            ],
+            [
+              495,
+              326
+            ],
+            [
+              509,
+              328
+            ],
+            [
+              522,
+              341
+            ],
+            [
+              530,
+              355
+            ],
+            [
+              528,
+              369
+            ],
+            [
+              512,
+              375
+            ],
+            [
+              498,
+              373
+            ],
+            [
+              484,
+              362
+            ]
+          ],
+          [
+            [
+              534,
+              359
+            ],
+            [
+              544,
+              345
+            ],
+            [
+              561,
+              341
+            ],
+            [
+              578,
+              351
+            ],
+            [
+              586,
+              367
+            ],
+            [
+              579,
+              379
+            ],
+            [
+              565,
+              386
+            ],
+            [
+              550,
+              384
+            ],
+            [
+              538,
+              376
+            ]
+          ],
+          [
+            [
+              520,
+              322
+            ],
+            [
+              524,
+              304
+            ],
+            [
+              537,
+              301
+            ],
+            [
+              550,
+              309
+            ],
+            [
+              555,
+              325
+            ],
+            [
+              548,
+              340
+            ],
+            [
+              535,
+              346
+            ],
+            [
+              524,
+              339
+            ]
+          ],
+          [
+            [
+              579,
+              338
+            ],
+            [
+              589,
+              329
+            ],
+            [
+              603,
+              330
+            ],
+            [
+              617,
+              341
+            ],
+            [
+              621,
+              353
+            ],
+            [
+              617,
+              365
+            ],
+            [
+              606,
+              373
+            ],
+            [
+              593,
+              371
+            ],
+            [
+              580,
+              356
+            ]
+          ],
+          [
+            [
+              616,
+              328
+            ],
+            [
+              625,
+              312
+            ],
+            [
+              640,
+              306
+            ],
+            [
+              654,
+              314
+            ],
+            [
+              663,
+              330
+            ],
+            [
+              661,
+              344
+            ],
+            [
+              651,
+              354
+            ],
+            [
+              638,
+              357
+            ],
+            [
+              624,
+              349
+            ]
+          ],
+          [
+            [
+              349,
+              247
+            ],
+            [
+              359,
+              230
+            ],
+            [
+              375,
+              230
+            ],
+            [
+              386,
+              243
+            ],
+            [
+              392,
+              261
+            ],
+            [
+              384,
+              275
+            ],
+            [
+              370,
+              278
+            ],
+            [
+              356,
+              267
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "reverse",
+        "part": "platform",
+        "toleranceMM": 0.25,
+        "polygons": [
+          [
+            [
+              248,
+              330
+            ],
+            [
+              270,
+              295
+            ],
+            [
+              298,
+              266
+            ],
+            [
+              325,
+              240
+            ],
+            [
+              351,
+              222
+            ],
+            [
+              373,
+              198
+            ],
+            [
+              405,
+              177
+            ],
+            [
+              429,
+              158
+            ],
+            [
+              454,
+              147
+            ],
+            [
+              480,
+              151
+            ],
+            [
+              506,
+              163
+            ],
+            [
+              530,
+              178
+            ],
+            [
+              552,
+              196
+            ],
+            [
+              578,
+              210
+            ],
+            [
+              607,
+              220
+            ],
+            [
+              633,
+              237
+            ],
+            [
+              658,
+              257
+            ],
+            [
+              680,
+              277
+            ],
+            [
+              695,
+              299
+            ],
+            [
+              707,
+              325
+            ],
+            [
+              710,
+              335
+            ],
+            [
+              698,
+              333
+            ],
+            [
+              684,
+              326
+            ],
+            [
+              670,
+              326
+            ],
+            [
+              652,
+              344
+            ],
+            [
+              638,
+              354
+            ],
+            [
+              622,
+              358
+            ],
+            [
+              606,
+              369
+            ],
+            [
+              591,
+              371
+            ],
+            [
+              578,
+              379
+            ],
+            [
+              565,
+              388
+            ],
+            [
+              549,
+              391
+            ],
+            [
+              535,
+              380
+            ],
+            [
+              523,
+              369
+            ],
+            [
+              509,
+              365
+            ],
+            [
+              495,
+              367
+            ],
+            [
+              478,
+              369
+            ],
+            [
+              466,
+              355
+            ],
+            [
+              450,
+              356
+            ],
+            [
+              434,
+              356
+            ],
+            [
+              418,
+              347
+            ],
+            [
+              404,
+              354
+            ],
+            [
+              387,
+              351
+            ],
+            [
+              371,
+              348
+            ],
+            [
+              354,
+              352
+            ],
+            [
+              338,
+              351
+            ],
+            [
+              322,
+              355
+            ],
+            [
+              307,
+              350
+            ],
+            [
+              290,
+              335
+            ],
+            [
+              272,
+              338
+            ],
+            [
+              260,
+              334
+            ]
+          ]
+        ]
+      }
+    ],
+    "waveGuards": [
+      {
+        "centre": [
+          -1.05,
+          4.9203,
+          15.3974
+        ],
+        "radiusMM": 0.75,
+        "normal": [
+          -0.0646,
+          0.0147,
+          0.9978
+        ],
+        "normalDotMin": 0.8
+      }
+    ],
+    "dryFaces": [
+      {
+        "min": [
+          -18,
+          -1,
+          9.94
+        ],
+        "max": [
+          -15.5,
+          18,
+          18
+        ],
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "normalDotMin": 0.15
+      }
+    ]
+  },
+  "platform": {
+    "centre": [
+      0,
+      0
+    ],
+    "radiusMM": 30,
+    "minHeightMM": 14.4,
+    "topMinHeightMM": 18.4,
+    "topTint": [
+      0.49,
+      0.37,
+      0.25
+    ],
+    "sideTint": [
+      0.46,
+      0.335,
+      0.225
+    ]
+  },
+  "geometryCorrection": {
+    "mode": "restore-native-water-tile",
+    "sourceSHA256": "e99f0fe30fefe448e1b122420cef2b965d215e355d97e5a749608e79a328f0be",
+    "previousCutHeightMM": 11.5,
+    "cutHeightMM": 0,
+    "reason": "Restore the native9.94mm mounting shoulder and water body removed by universal11.5mm crop. Correct mount0 to measured datum and restore heights, keeping original source, UUID, footprint and slots. Water level then matches LC092 within.042mm.",
+    "metadata": {
+      "mountDepth": 0.284,
+      "maxHeight": 0.5868971143450056,
+      "surfaceHeight": 0.5868971143450056,
+      "placementPoints": [
+        {
+          "x": 0.5,
+          "y": 0.5,
+          "elevation": 0.43968
+        }
+      ]
+    }
+  },
+  "boulder": {
+    "tint": [
+      0.39,
+      0.4,
+      0.285
+    ]
+  }
+}

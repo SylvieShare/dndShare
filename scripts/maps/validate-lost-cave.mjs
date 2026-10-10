@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { mountingSurface } from "./mounting_surface.mjs";
+import { worldPoint } from "./peg-geometry.mjs";
 import { assertSameSurface } from "./surface_geometry.mjs";
 import { localModelAsset } from "./local_model_assets.mjs";
 const file = process.argv[2];
@@ -83,7 +84,51 @@ for (const tier of ["render", "lod"]) {
             );
           return { removedFalseMount: true };
         })()
-      : assertSameSurface(mountingSurface(before), mountingSurface(after)),
+      : report.geometryCorrection?.mode === "restore-native-water-tile"
+        ? (() => {
+            const old = mountingSurface(before)
+              .getRoot()
+              .listNodes()
+              .flatMap((n) => n.getMesh().listPrimitives());
+            const parts = mountingSurface(after)
+              .getRoot()
+              .listNodes()
+              .flatMap((n) =>
+                n
+                  .getMesh()
+                  .listPrimitives()
+                  .map((p) => ({ primitive: p, matrix: n.getWorldMatrix() })),
+              );
+            if (
+              old.length ||
+              parts.length !== 1 ||
+              report.rebake[tier].mountingMeshesRetained !== 1
+            )
+              throw new Error(
+                "One explicitly restored native water foot required",
+              );
+            const p = parts[0].primitive.getAttribute("POSITION");
+            let low = Infinity,
+              high = -Infinity,
+              triangles = parts[0].primitive.getIndices().getCount() / 3;
+            for (let i = 0; i < p.getCount(); i++) {
+              const v = worldPoint(p.getElement(i, []), parts[0].matrix);
+              low = Math.min(low, v[1]);
+              high = Math.max(high, v[1]);
+              if (Math.max(Math.abs(v[0]), Math.abs(v[2])) > 0.491)
+                throw new Error("Restored insertion leaves its measured cell");
+            }
+            if (
+              triangles !== 12 ||
+              Math.abs(low) > 0.0001 ||
+              Math.abs(high - report.model.mountDepth) > 0.0001
+            )
+              throw new Error(
+                "Restored insertion differs from its measured datum",
+              );
+            return { restoredNativeWaterFoot: true, triangles, depth: high };
+          })()
+        : assertSameSurface(mountingSurface(before), mountingSurface(after)),
     sourceDeviationMM: report.rebake[tier].sourceDeviationMM,
   };
   if (reference)

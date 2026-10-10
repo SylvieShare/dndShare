@@ -1,6 +1,7 @@
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { surfaceNoise } from "./surface_noise.mjs";
 import { paintCavePlatform } from "./lost_cave_platform.mjs";
+import { paintBoulder } from "./lost_cave_boulder.mjs";
 const clamp = (v) => Math.max(0, Math.min(1, v));
 export function caveWaterAt(p, n, spec) {
   if (spec.water.tileVolume) {
@@ -19,11 +20,27 @@ export function paintCaveWater(p, n, ao, spec, projection, reference) {
     throw new Error("Verified dry shoreline source masks required");
   if (spec.water.bareReference && !reference)
     throw new Error("Verified undecorated water reference required");
+  if (
+    spec.water.dryFaces?.some(
+      (face) =>
+        p.every((x, i) => x >= face.min[i] && x <= face.max[i]) &&
+        n.reduce((sum, x, i) => sum + x * face.normal[i], 0) >
+          face.normalDotMin,
+    )
+  )
+    return caveRockPixel(p, n, ao, spec);
+  const wave = spec.water.waveGuards?.some(
+    (g) =>
+      Math.hypot(...p.map((x, i) => x - g.centre[i])) < g.radiusMM &&
+      n.reduce((sum, x, i) => sum + x * g.normal[i], 0) > g.normalDotMin,
+  );
+  const projected = wave ? undefined : projection?.(p);
+  if (projected?.part === "boulder") return paintBoulder(p, n, ao, spec);
   const addedRock =
     spec.water.bareReference &&
     reference.distanceAt(p) > spec.water.bareReference.matchMM;
   if (
-    (projection?.(p)?.part === "platform" || addedRock) &&
+    (projected?.part === "platform" || addedRock) &&
     (!spec.water.bareReference || addedRock)
   )
     return paintCavePlatform(p, n, ao, spec);

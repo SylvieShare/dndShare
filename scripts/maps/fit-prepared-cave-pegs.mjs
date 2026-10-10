@@ -67,7 +67,8 @@ if (results.every((r) => r.result.unchanged)) {
   report.insertionProfile = {
     name: "lost-cave-slot-fit-v1",
     topWidthMM: 34.3,
-    bottomWidthMM: 22.75,
+    bottomWidthMM:
+      report.materialSpec.sourceInsertionFootprint?.bottomWidthMM ?? 22.75,
     bodyAndAtlases: "selected candidate byte buffers retained",
     ...(report.materialSpec.sourceInsertionFootprint
       ? { sourceFootprint: report.materialSpec.sourceInsertionFootprint }

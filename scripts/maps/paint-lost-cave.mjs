@@ -276,6 +276,9 @@ for (const tier of ["render", "lod"]) {
     ...(spec.water?.projectedViews
       ? { "platform-top": 0, "platform-side": 0 }
       : {}),
+    ...(spec.water?.projectedViews?.some((v) => v.part === "boulder")
+      ? { boulder: 0 }
+      : {}),
     ...(spec.material === "cave-waterfall"
       ? { water: 0, foam: 0, pool: 0, boulder: 0 }
       : {}),

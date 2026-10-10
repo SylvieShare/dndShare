@@ -28,6 +28,50 @@ const spec = {
     },
   },
 };
+test("restored water tile keeps identity and measured deep mounting without inventing slots", () => {
+  const old = {
+    ...model,
+    sourceCode: "LC-095",
+    definitionId: "LC-095",
+    tileType: "wall-corner",
+    width: 1,
+    height: 1,
+    mountDepth: 0,
+    canStand: true,
+    hasDecor: false,
+    supportSlots: [],
+    placementPoints: [{ x: 0.5, y: 0.5, elevation: 0.111157 }],
+  };
+  const src = { ...source, mountDepth: 0, max: [17.5, 17.5, 20.5414] };
+  const s = {
+    geometryCorrection: {
+      mode: "restore-native-water-tile",
+      sourceSHA256: sha,
+      previousCutHeightMM: 11.5,
+      cutHeightMM: 0,
+      reason:
+        "Restore the source water mounting shoulder removed by the former universal11.5mm crop.",
+      metadata: {
+        mountDepth: 9.94 / 35,
+        maxHeight: 20.5414 / 35,
+        surfaceHeight: 20.5414 / 35,
+        placementPoints: [{ x: 0.5, y: 0.5, elevation: (3.8888 + 11.5) / 35 }],
+      },
+    },
+  };
+  const r = correctedCaveModel(old, src, s, true);
+  assert.equal(r.model.id, old.id);
+  assert.equal(r.model.tileType, old.tileType);
+  assert.equal(r.model.mountDepth, 9.94 / 35);
+  assert.equal(r.cutHeight, 0);
+  assert.throws(() => correctedCaveModel(old, src, s, false));
+  assert.throws(() =>
+    correctedCaveModel({ ...old, sourceCode: "LC-093" }, src, s, true),
+  );
+  assert.throws(() =>
+    correctedCaveModel({ ...old, supportSlots: [{}] }, src, s, true),
+  );
+});
 test("native hollow well correction preserves standable side and rejects arbitrary floors", () => {
   const old = {
     ...model,

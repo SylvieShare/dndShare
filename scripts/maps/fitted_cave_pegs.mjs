@@ -10,7 +10,9 @@ const { MeshoptDecoder } = require("meshoptimizer");
 const isPeg = (material) =>
   material?.getName().startsWith("Simple insertion pegs");
 
-export function fittedPads(pads) {
+export function fittedPads(pads, bottomWidthMM = 22.75) {
+  if (![22.75, 14.8].includes(bottomWidthMM))
+    throw new Error("Reviewed insertion bottom width required");
   return pads.map((pad) => {
     const top = { min: [], max: [] },
       bottom = { min: [], max: [] };
@@ -21,8 +23,8 @@ export function fittedPads(pads) {
       const centre = (pad.top.max[axis] + pad.top.min[axis]) / 2;
       top.min[axis] = centre - 0.98 / 2;
       top.max[axis] = centre + 0.98 / 2;
-      bottom.min[axis] = centre - 0.65 / 2;
-      bottom.max[axis] = centre + 0.65 / 2;
+      bottom.min[axis] = centre - bottomWidthMM / 70;
+      bottom.max[axis] = centre + bottomWidthMM / 70;
     }
     return { top, bottom };
   });
@@ -66,10 +68,11 @@ export async function fitCavePegs(bytes, model, sourceFootprint) {
         parts.push({ primitive, matrix: node.getWorldMatrix() });
   }
   if (!parts.length) return { bytes, pads: [], unchanged: true };
-  if (!(model.mountDepth > 0 && model.mountDepth < 0.25))
+  if (!(model.mountDepth > 0 && model.mountDepth < (reviewed ? 0.32 : 0.25)))
     throw new Error("Reviewed insertion depth required");
   const pads = fittedPads(
     reviewed?.pads ?? measurePads(parts, model.mountDepth),
+    sourceFootprint?.bottomWidthMM ?? 22.75,
   );
   const primitive = pegPrimitive(
     new Document(),

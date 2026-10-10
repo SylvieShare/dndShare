@@ -12,6 +12,8 @@ export function reviewedCaveFootprint(profile, model) {
     profile.centresMM?.length > model.width * model.height ||
     Math.abs(profile.mountDepthMM - model.mountDepth * 35) > 0.002 ||
     profile.sourceTopWidthMM !== 35 ||
+    (profile.bottomWidthMM !== undefined &&
+      (profile.bottomWidthMM !== 14.8 || model.mountDepth < 0.25)) ||
     !(model.mountDepth > 0) ||
     !Array.isArray(profile.centresMM) ||
     !profile.centresMM.length
@@ -53,7 +55,15 @@ export function reviewedCaveFootprint(profile, model) {
   return {
     pads,
     signature: createHash("sha256")
-      .update(JSON.stringify({ pads, depth: model.mountDepth }))
+      .update(
+        JSON.stringify({
+          pads,
+          depth: model.mountDepth,
+          ...(profile.bottomWidthMM
+            ? { bottomWidthMM: profile.bottomWidthMM }
+            : {}),
+        }),
+      )
       .digest("hex"),
   };
 }

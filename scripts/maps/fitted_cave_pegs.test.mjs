@@ -13,6 +13,23 @@ const pad = {
   top: { min: [-0.5, -0.5], max: [0.5, 0.5] },
   bottom: { min: [-0.372, -0.372], max: [0.372, 0.372] },
 };
+test("a measured deep water foot clears the narrow lower native socket", () => {
+  const p = fittedPads([pad], 14.8)[0],
+    depth = 9.94,
+    slot = 29.07289;
+  for (const [z, radius] of [
+    [19.14289, 13.4874],
+    [24.59889, 13.48994],
+    [25.09489, 13.49017],
+    [25.59089, 13.84849],
+    [28.07089, 16.28482],
+  ]) {
+    const t = (z - slot + depth) / depth;
+    const foot = (p.bottom.max[0] + (p.top.max[0] - p.bottom.max[0]) * t) * 35;
+    assert(radius - foot > 0.05);
+  }
+  assert.throws(() => fittedPads([pad], 20));
+});
 test("a simple fitted pyramid clears the independently measured LC-060 socket bevel", () => {
   const p = fittedPads([pad])[0],
     depth = 5.2556,
