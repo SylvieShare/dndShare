@@ -67,7 +67,7 @@ def validate(code, candidate):
         rows = []
         for part in parts:
             if part.get('rotationZDeg'): raise ValueError('Liquid probe currently requires native coordinates')
-            x, y, z = part['ellipsoid']['centerMM']
+            x, y, z = part.get('probeMM', part.get('ellipsoid', {}).get('centerMM', []))
             hits = []
             for obj, tree in meshes:
                 inv = obj.matrix_world.inverted()

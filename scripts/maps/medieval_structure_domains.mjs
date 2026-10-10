@@ -1,3 +1,5 @@
+import { awayFromSource } from './medieval_source_reference.mjs';
+
 export function structureDomain(p, part) {
   let q = p;
   if (part.rotationZDeg!==undefined) {
@@ -17,6 +19,7 @@ export function structureDomain(p, part) {
   }
   if (part.includeParts?.length && !part.includeParts.some(child => structureDomain(p,child))) return false;
   if ((part.excludeParts || []).some(excluded => structureDomain(p,excluded))) return false;
+  if (part.awayFromSource && !awayFromSource(p,part.awayFromSource)) return false;
   return true;
 }
 

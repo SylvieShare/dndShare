@@ -1,6 +1,30 @@
 """Individually measured beam, stone and iron regions for timber structures."""
 import numpy as np
 
+REFERENCE_TREES = {}
+
+def initialize_references(settings):
+    import bpy, json, hashlib
+    from pathlib import Path
+    from mathutils.bvhtree import BVHTree
+    root = Path(__file__).resolve().parents[2]
+    inventory = json.loads((root/'models/collections/medieval-town-vol1/inventory.json').read_text())
+    def visit(part):
+        ref = part.get('awayFromSource')
+        if ref and ref['code'] not in REFERENCE_TREES:
+            row = next(r for r in inventory if r['code']==ref['code'])
+            filename = root/'models'/row['sourcePath']
+            with filename.open('rb') as stream:
+                if row['sourceSHA256']!=ref['sourceSHA256'] or hashlib.file_digest(stream,'sha256').hexdigest()!=ref['sourceSHA256']:
+                    raise ValueError('Source reference changed')
+            bpy.ops.wm.stl_import(filepath=str(filename))
+            other = bpy.context.object
+            REFERENCE_TREES[ref['code']] = BVHTree.FromObject(other,bpy.context.evaluated_depsgraph_get())
+            bpy.data.objects.remove(other,do_unlink=True)
+        for child in part.get('includeParts', [])+part.get('excludeParts', []): visit(child)
+    for key in ['woodParts','stoneParts','fabricParts','produceParts','surfaceParts','ironParts']:
+        for part in settings.get(key, []): visit(part)
+
 
 def coordinates(p, part):
     if 'rotationZDeg' not in part: return p
@@ -27,6 +51,11 @@ def domain(p, part):
         mask &= included
     for excluded in part.get('excludeParts', []):
         mask &= ~domain(p, excluded)
+    if part.get('awayFromSource'):
+        ref = part['awayFromSource']; tree = REFERENCE_TREES[ref['code']]
+        candidates = np.flatnonzero(mask)
+        for i in candidates:
+            mask[i] = tree.find_nearest(tuple(p[i]),ref['matchMM'])[0] is None
     return mask
 
 
@@ -34,6 +63,7 @@ def paint(obj, recipe):
     from medieval_material import paint as terrain
     terrain(obj, {**recipe, 'materials': {**recipe['materials'], 'kind': 'terrain'}})
     mesh = obj.data; settings = recipe['materials']
+    initialize_references(settings)
     a = np.empty(len(mesh.vertices)*3, np.float32); mesh.vertices.foreach_get('co', a)
     p = a.reshape(-1, 3); x, y, z = p.T
     n = np.empty_like(a); mesh.vertices.foreach_get('normal', n); nx, ny, nz = n.reshape(-1, 3).T

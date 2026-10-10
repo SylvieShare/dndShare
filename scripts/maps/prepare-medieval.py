@@ -120,17 +120,22 @@ def prepare(code, tier, force):
     center = recipe['mountCenterMM']
     if datum:
         bottom, top = recipe['pegBottomHalfMM'], recipe['pegTopHalfMM']
-        verts = [(center[0]+sx*r, center[1]+sy*r, z) for r, z in [(bottom, 0), (top, datum)]
-                 for sx, sy in [(-1, -1), (1, -1), (1, 1), (-1, 1)]]
         faces = [(0, 2, 1), (0, 3, 2), (4, 5, 6), (4, 6, 7)]
         for i in range(4):
             j = (i+1)%4; faces += [(i, j, j+4), (i, j+4, i+4)]
-        mesh = bpy.data.meshes.new('Fitted insertion taper'); mesh.from_pydata(verts, [], faces); mesh.update()
-        peg = bpy.data.objects.new('Fitted insertion taper', mesh); bpy.context.collection.objects.link(peg)
         mat = bpy.data.materials.new('Insertion earth'); mat.use_nodes = True
         mat.node_tree.nodes.get('Principled BSDF').inputs['Base Color'].default_value = (.065, .045, .025, 1)
         mat.node_tree.nodes.get('Principled BSDF').inputs['Roughness'].default_value = .97
-        peg.data.materials.append(mat); objects.append(peg)
+        centers = recipe.get('pegCentersMM', [center])
+        if len(centers)!=len({tuple(p) for p in centers}) or not centers:
+            raise ValueError('Distinct native mounting centres required')
+        for peg_center in centers:
+            verts = [(peg_center[0]+sx*r, peg_center[1]+sy*r, z) for r, z in [(bottom, 0), (top, datum)]
+                     for sx, sy in [(-1, -1), (1, -1), (1, 1), (-1, 1)]]
+            mesh = bpy.data.meshes.new('Fitted insertion taper'); mesh.from_pydata(verts, [], faces); mesh.update()
+            peg = bpy.data.objects.new('Fitted insertion taper', mesh); bpy.context.collection.objects.link(peg)
+            peg.data.materials.append(mat); objects.append(peg)
+        print('MEDIEVAL_FITTED_PEGS', len(centers), centers, flush=True)
     for obj in objects:
         for v in obj.data.vertices:
             v.co.x = (v.co.x-center[0])/35; v.co.y = (v.co.y-center[1])/35; v.co.z /= 35

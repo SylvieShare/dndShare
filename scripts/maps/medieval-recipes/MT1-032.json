@@ -1,0 +1,229 @@
+{
+  "name": "Fountain Water",
+  "groupCode": "MED-fountain",
+  "tileType": "floor",
+  "width": 2,
+  "height": 2,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 110000,
+  "lodTriangles": 34000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.5,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0.15,
+        0.15
+      ],
+      [
+        1.85,
+        0.15
+      ],
+      [
+        1.85,
+        1.85
+      ],
+      [
+        0.15,
+        1.85
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "fountain",
+    "stone",
+    "water"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "stoneIslandMinCount": 2,
+    "woodParts": [],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [
+      {
+        "name": "carved sandstone bowls and central pedestal",
+        "minMM": [
+          -32,
+          -32,
+          28.5
+        ],
+        "maxMM": [
+          32,
+          32,
+          91
+        ],
+        "darkRGB": [
+          0.43,
+          0.365,
+          0.245
+        ],
+        "lightRGB": [
+          0.64,
+          0.56,
+          0.39
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "lower basin water and splash",
+        "kind": "liquid",
+        "minMM": [
+          -25,
+          -25,
+          30
+        ],
+        "maxMM": [
+          25,
+          25,
+          45
+        ],
+        "awayFromSource": {
+          "code": "MT1-033",
+          "sourceSHA256": "bb1f498e2fa25f1bc16c8c3e0a1302acc33f86c7289d42131cdb67f09eeb3418",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-032",
+            "sourceSHA256": "c1fe56f4fe26bdd4c9008f7d2299e41969a1a6eda904c87a2faa5d65eca8f870"
+          }
+        },
+        "probeMM": [
+          20,
+          0,
+          32.53727722167969
+        ],
+        "rgb": [
+          0.24,
+          0.58,
+          0.74
+        ],
+        "roughness": 0.24,
+        "variation": 0.035
+      },
+      {
+        "name": "middle bowl water and four falling sheets",
+        "kind": "liquid",
+        "minMM": [
+          -20,
+          -20,
+          45
+        ],
+        "maxMM": [
+          20,
+          20,
+          67
+        ],
+        "awayFromSource": {
+          "code": "MT1-033",
+          "sourceSHA256": "bb1f498e2fa25f1bc16c8c3e0a1302acc33f86c7289d42131cdb67f09eeb3418",
+          "matchMM": 0.12,
+          "projectTo": {
+            "code": "MT1-032",
+            "sourceSHA256": "c1fe56f4fe26bdd4c9008f7d2299e41969a1a6eda904c87a2faa5d65eca8f870"
+          }
+        },
+        "probeMM": [
+          10,
+          0,
+          66.03740692138672
+        ],
+        "rgb": [
+          0.24,
+          0.58,
+          0.74
+        ],
+        "roughness": 0.24,
+        "variation": 0.035
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.1,
+      4.4
+    ],
+    "lodMiB": [
+      0.65,
+      1.5
+    ],
+    "shadowKiB": [
+      80,
+      190
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "70mm 2x2 fountain, four falling sheets, two water surfaces, carved bowl rims, central pedestal and globe. 110k/34k independently UV-mapped meshes preserve thin flows and circular silhouette; compare 1024/512 and 768/384 textures."
+  },
+  "reviewNotes": "PDF page6 and native front/back/top of water and empty variants. Source1520016 triangles; native maximum90.694298mm, four peg centres at (+/-17.5,+/-17.5), datum17mm. Floor rays at four corners about25mm. Basin occupies the tile: remaining narrow corner strips are too small to claim a character stand surface. Empty variant exact SHA provides stone reference: .12mm nearest-surface mask identifies added pool, ripples, splashes and sheets while preserving globe, upper small cup, central shaft and both rims. Project packed surfaces back to source32 before reference comparison to prevent decimation painting stone blue. Actual lower water[20,0,32.537277] and middle bowl[10,0,66.037407]mm are quantitative albedo/height probes. Use opaque blue-green sculpted water with .24 roughness and zero metallic/emission. Four fitted tapers retain full70mm footprint. Review both candidates, all four sheet edges and both bowl interiors.",
+  "uvIslandMargin": 0.0025,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [],
+  "standRayTopMM": 30,
+  "pegCentersMM": [
+    [
+      -17.5,
+      -17.5
+    ],
+    [
+      -17.5,
+      17.5
+    ],
+    [
+      17.5,
+      -17.5
+    ],
+    [
+      17.5,
+      17.5
+    ]
+  ],
+  "surfaceHeightMM": 25.7864
+}

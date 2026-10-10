@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { rasterizeSurface } from './uv_surface.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
 import { structureMetal } from './medieval_structure_domains.mjs';
+import { initializeStructureReferences } from './medieval_source_reference.mjs';
 const require = createRequire('/private/tmp/dndshare-model-tools/package.json');
 const { NodeIO } = require('@gltf-transform/core');
 const { ALL_EXTENSIONS } = require('@gltf-transform/extensions');
@@ -19,6 +20,7 @@ const directory = path.resolve(import.meta.dirname, '../../models/collections/me
 const reportPath = path.join(directory, 'report.json');
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 const settings = report.recipe.materials;
+await initializeStructureReferences(settings,path.resolve(directory,'../'.repeat(candidate ? 4 : 2),'inventory.json'));
 assert.ok(['torch','structure'].includes(settings.kind));
 const surfaceAt = p => settings.kind==='structure' ? structureMetal(p, settings) : torchSurface(p, settings);
 const evidence = {};

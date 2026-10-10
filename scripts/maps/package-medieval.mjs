@@ -9,6 +9,7 @@ import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surf
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
 import { structureMetal, structureLiquid, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { initializeStructureReferences } from './medieval_source_reference.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -16,6 +17,7 @@ const code = process.argv.find(a => a.startsWith('--code='))?.slice(7);
 if (!/^MT1-\d{3}$/.test(code || '')) throw new Error('One source code required');
 const recipeIndex = JSON.parse(await fs.readFile(path.join(root, 'scripts/maps/medieval-recipes.json'), 'utf8'));
 const recipe = JSON.parse(await fs.readFile(path.join(root, 'scripts/maps', recipeIndex[code]), 'utf8'));
+await initializeStructureReferences(recipe.materials,path.join(base,'inventory.json'));
 const candidate = process.argv.find(a => a.startsWith('--candidate='))?.slice(12);
 if (candidate && candidate!=='compact') throw new Error('Unknown texture candidate');
 const review = path.join(base, 'review', code, ...(candidate ? ['candidates', candidate] : []));
