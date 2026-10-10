@@ -50,7 +50,24 @@ def add_peg(centre, height, recipe):
     return obj
 
 
+def prepare_mount_geometry(obj, datum, recipe):
+    if not recipe.get('preserveNativeMount'):
+        crop(obj, datum)
+        for vertex in obj.data.vertices:
+            vertex.co.z += datum
+    if orient_outward(obj):
+        print('MAJESTIC_REPAIRED_INWARD_GEOMETRY', obj.name, flush=True)
+
+
+def mount_objects(target, centre, datum, recipe):
+    if recipe.get('preserveNativeMount'):
+        return [target]
+    return [target, add_peg(centre, datum, recipe)]
+
+
 def support_points(obj, centre, recipe, datum):
+    if recipe.get('canStand') is False:
+        return []
     obj.data.update()
     tree = BVHTree.FromObject(obj, bpy.context.evaluated_depsgraph_get())
     points, invalid = [], []
@@ -99,10 +116,7 @@ def main():
     bpy.ops.wm.stl_import(filepath=str(ROOT/'models'/row['sourcePath']))
     source = bpy.context.object; source.name = args.code+' sculpt'
     datum = recipe['mountDepthMM']
-    crop(source, datum)
-    if orient_outward(source):
-        print('MAJESTIC_REPAIRED_INWARD_CUT', args.code, flush=True)
-    for v in source.data.vertices: v.co.z += datum
+    prepare_mount_geometry(source, datum, recipe)
     support_points(source, row['mountCenterMM'], recipe, datum)
     shade(source); paint(source, recipe, args.code); source.data.materials.append(material(recipe))
     target = bpy.data.objects.new(args.code+' browser', source.data.copy())
@@ -148,18 +162,20 @@ def main():
     quality = tile_bake.validate_maps(target)
     source.hide_render = True; source.hide_viewport = True
     centre = row['mountCenterMM']
-    peg = add_peg(centre, datum, recipe)
+    objects = mount_objects(target, centre, datum, recipe)
     points = support_points(target, centre, recipe, datum)
     high = max(v.co.z for v in target.data.vertices)/35
-    for obj in [target, peg]:
+    for obj in objects:
         for v in obj.data.vertices:
             v.co.x = (v.co.x-centre[0])/35; v.co.y = (v.co.y-centre[1])/35; v.co.z /= 35
-    activate(target); peg.select_set(True)
+    activate(target)
+    for obj in objects:
+        obj.select_set(True)
     bpy.ops.export_scene.gltf(filepath=str(out/'model.glb'), export_format='GLB', use_selection=True,
                              export_animations=False, export_tangents=True, export_cameras=False, export_lights=False)
     report = {**row, 'width':recipe['width'], 'height':recipe['height'], 'reviewStatus':'prepared', 'footprintReviewed':True, 'mountDepth':round(datum/35,6), 'maxHeight':round(high,6),
-              'surfaceHeight':max(p['elevation'] for p in points), 'placementPoints':points,
-              'renderTriangles':len(target.data.polygons)+12, 'pegTriangles':12,
+              'surfaceHeight':max(p['elevation'] for p in points) if points else recipe['surfaceHeightMM']/35, 'placementPoints':points,
+              'renderTriangles':sum(len(obj.data.polygons) for obj in objects), 'pegTriangles':0 if recipe.get('preserveNativeMount') else 12,
               'geometryBudget':budget, 'recipe':recipe, 'quality':quality, 'seconds':round(time.monotonic()-started,2)}
     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')
     print('MAJESTIC_PREPARED', args.code, report['seconds'], quality, flush=True)

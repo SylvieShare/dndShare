@@ -93,8 +93,8 @@ for (const tier of ["render", "lod"]) {
         if (!values.every(Number.isFinite)) throw new Error("Invalid " + name);
       }
     }
-  if (pegTriangles !== 12)
-    throw new Error("Insertion taper must have twelve triangles");
+  if (pegTriangles !== (recipe.preserveNativeMount ? 0 : 12))
+    throw new Error("Synthetic insertion count does not match the reviewed mounting mode");
   if (triangles !== report.tiers[tier].triangles)
     throw new Error("Triangle count mismatch");
   let pixelsChecked = 0,
@@ -203,8 +203,9 @@ for (const tier of ["render", "lod"]) {
   if (
     report.model.width !== recipe.width ||
     report.model.height !== recipe.height ||
+    report.model.canStand !== (recipe.canStand ?? true) ||
     report.model.placementPoints.length !==
-      recipe.width * recipe.height - (recipe.blockedCells?.length ?? 0)
+      (recipe.canStand === false ? 0 : recipe.width * recipe.height - (recipe.blockedCells?.length ?? 0))
   )
     throw new Error("Incorrect reviewed footprint");
   console.log("MAJESTIC_VALIDATED", code, tier, {

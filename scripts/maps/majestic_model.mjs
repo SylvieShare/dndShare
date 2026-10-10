@@ -12,7 +12,7 @@ export function majesticModel(info) {
     textureDetail: "detailed",
     tileType: r.tileType,
     hasDecor: r.hasDecor,
-    canStand: true,
+    canStand: r.canStand ?? true,
     hidden: false,
     placementPoints: info.placementPoints,
     wallMode: r.wallMode ?? "none",

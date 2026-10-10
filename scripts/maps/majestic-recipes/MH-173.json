@@ -1,0 +1,489 @@
+{
+  "width": 1,
+  "height": 3,
+  "mountDepthMM": 17,
+  "preserveNativeMount": true,
+  "renderTriangles": 35000,
+  "lodTriangles": 12000,
+  "tileType": "wall-straight",
+  "hasDecor": false,
+  "canStand": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "wall",
+    "edge",
+    "low",
+    "outdoor",
+    "db",
+    "three-pins"
+  ],
+  "recipe": "majestic-db-low-wall-v1",
+  "groupCode": "MH-db-wall",
+  "grassReference": "MH-173",
+  "grassReferenceRotation": 0,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "soilTopStartMM": 21.2,
+  "soilTopFadeMM": 1.2,
+  "soilSurfaceMM": 22.7,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "standMaxZMM": 65,
+  "placementPointOffsetsMM": {
+    "0,0": [
+      -10,
+      -0.5
+    ],
+    "0,1": [
+      -9,
+      0
+    ],
+    "0,2": [
+      -10.5,
+      -0.5
+    ]
+  },
+  "renderColourSize": 1024,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "renderUVAngleLimitRad": 0.45,
+  "lodUVAngleLimitRad": 0.25,
+  "quantizeTexcoord": 16,
+  "stripAuxiliaryColours": true,
+  "masonryReference": {
+    "code": "MH-001",
+    "rotateZ": 0,
+    "translationMM": [
+      0,
+      0,
+      7.2
+    ],
+    "matchMM": 0.06,
+    "blendMM": 0.2
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 19.5,
+    "anyBoundsMM": [
+      [
+        [
+          -18,
+          -54,
+          19.5
+        ],
+        [
+          18,
+          54,
+          53
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.62,
+    0.46,
+    0.27
+  ],
+  "masonryTopMinZMM": 42,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "masonryBackFace": {
+    "xMM": 17.5,
+    "distanceMM": 0.6,
+    "normalXMin": 0.98,
+    "minZMM": 19.5
+  },
+  "raisedGrass": {
+    "minMM": [
+      -18,
+      -54,
+      40
+    ],
+    "maxMM": [
+      18,
+      54,
+      53
+    ],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": -0.5,
+    "normalFade": 0.35,
+    "fieldCode": "MH-173",
+    "exclusions": [
+      {
+        "centreMM": [
+          3.5,
+          17,
+          46.5
+        ],
+        "radiiMM": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "minZMM": 44.5
+      },
+      {
+        "centreMM": [
+          9.5,
+          -17.5,
+          49
+        ],
+        "radiiMM": [
+          4,
+          4,
+          4
+        ],
+        "minZMM": 47
+      },
+      {
+        "centreMM": [
+          4.5,
+          -33,
+          46
+        ],
+        "radiiMM": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "minZMM": 44
+      }
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -18,
+        -54,
+        40
+      ],
+      [
+        18,
+        54,
+        53
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.2,
+    "growAngleRad": 0.03
+  },
+  "lowGrassAreas": [
+    {
+      "minMM": [
+        -18,
+        -54,
+        20
+      ],
+      "maxMM": [
+        -4,
+        54,
+        27
+      ],
+      "featherMM": 0.2,
+      "stoneSurface": {
+        "boundsMM": [
+          [
+            -18,
+            -54,
+            20
+          ],
+          [
+            -4,
+            54,
+            29
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.5,
+        "growAngleRad": 0.01
+      }
+    },
+    {
+      "minMM": [
+        -18,
+        40,
+        20
+      ],
+      "maxMM": [
+        18,
+        54,
+        27
+      ],
+      "featherMM": 0.2,
+      "stoneSurface": {
+        "boundsMM": [
+          [
+            -18,
+            40,
+            20
+          ],
+          [
+            18,
+            54,
+            29
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.5,
+        "growAngleRad": 0.01
+      }
+    },
+    {
+      "minMM": [
+        -18,
+        -54,
+        20
+      ],
+      "maxMM": [
+        18,
+        -40,
+        27
+      ],
+      "featherMM": 0.2,
+      "stoneSurface": {
+        "boundsMM": [
+          [
+            -18,
+            -54,
+            20
+          ],
+          [
+            18,
+            -40,
+            29
+          ]
+        ],
+        "normalXMax": 1,
+        "minAreaMM2": 0.5,
+        "growAngleRad": 0.01
+      }
+    }
+  ],
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -18,
+        -54,
+        -0.2
+      ],
+      "maxMM": [
+        18,
+        54,
+        17
+      ],
+      "featherMM": 0.1,
+      "rgb": [
+        0.255,
+        0.185,
+        0.115
+      ]
+    },
+    {
+      "minMM": [
+        -18,
+        -54,
+        26
+      ],
+      "maxMM": [
+        18,
+        54,
+        40
+      ],
+      "featherMM": 0.25,
+      "rgb": [
+        0.54,
+        0.38,
+        0.215
+      ]
+    }
+  ],
+  "openingChecks": [
+    {
+      "name": "native-pin--35",
+      "originMM": [
+        0,
+        -35,
+        -1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 3,
+      "clear": false
+    },
+    {
+      "name": "native-pin-0",
+      "originMM": [
+        0,
+        0,
+        -1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 3,
+      "clear": false
+    },
+    {
+      "name": "native-pin-35",
+      "originMM": [
+        0,
+        35,
+        -1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 3,
+      "clear": false
+    },
+    {
+      "name": "native-gap--17.5",
+      "originMM": [
+        0,
+        -17.5,
+        0.1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 10,
+      "clear": true
+    },
+    {
+      "name": "native-gap-17.5",
+      "originMM": [
+        0,
+        17.5,
+        0.1
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 10,
+      "clear": true
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      1200000,
+      3600000
+    ],
+    "targetLODBytes": [
+      500000,
+      1600000
+    ],
+    "targetShadowBytes": [
+      20000,
+      80000
+    ],
+    "targetPreviewBytes": [
+      12000,
+      90000
+    ],
+    "basis": "Own176142tris8807184B NL SHA097d7d57809c165631df50637dc904ba38e9c64b710b984fb31c80dd58122b88. Own1x3body35.0898x104.9238mm atZ17 (x-17.536..17.554,y-52.490..52.434),overall35.169x104.987max50.283,center[.01013,-.03233]. PDF50Bonuscover andPDF51wallpalette plusOWN3neutralviews. SourceTHREE DBmountpinscentresY-35,0,35 bottom24.31mm individual pinwidthnotone95mmXLtaper. NativeZ11.2width25.99,flare11.4..16.4width26.18..34.66,undersidegapY+-17.5 at17.123/17.136 andedge-17.4at16.939 =>DATUM17 nativeMountpreservedfull original,3pins+2gaps+flaredshoulders notfillbetweenpins. UnitactualBlenderfixture3pin/gap/unchangednativegeometry +ordinary12tri taper PASS; commonmodecanStandfalse/explicitSurfaceHeight supportsactualframes later. Ownfloor3pads sourcegrid(-10,34.5)22.984nZ.945,(-9,0)22.008nZ.974,(-10.5,-35.5)21.966nZ.958 ->celloffset[-10,-.5]/[-9,0]/[-10.5,-.5] own120mm exactrayrequiredaftercenteradjust. OwnwallFrontZ30 nativeX15.407atY50 to-5.525Y-15 back17.5 ->E4owncurvedblocker, actorsWest noSlots/noDecor. 173->062 shiftX-35Z8.08 bodyonly9.36%,floor10.79%<=.15 soDO_NOTcopy62materials. Ownselfgrass173sourcefloor/roof, measuredlowgrassWestarea andbroadstone.2/.03 perarea excludesbareboulders frommasonryprotection; upperownfield173Z40..53depth2.2leafnZ-.5. Fullbodyabove19.5ochre plusnative3pegssoilRGBbelow17, backplane17.5gold. Initial35kRUV.55 FAIL1k.610mm/2k.464; .45native209438/839825andquantPASS largesttested. L12k.25native64607/257685quant64620/257920PASSlargest. Initialcolour2k/1kETC,data1k512/ORMdefault1k512 targetsmuchsmallerthan3x3cliffs due1x3 and176ktris. FINAL6+3views+crops floor3pads/3pins+2gaps+shoulder/roofleafstone/bothwallfaces/sourceRLODprofiles/UVmanifestbrowseralpha/freshMCP required. Firstactual6views:3pins/gaps+allUV15nativeRLODvoidraysPASS, but roofrocksGREEN andbaseleafsbrown. OwnTopsourcepicks8.951,17.721,47.486/9.540,-20.201,46.836/9.422,-44.223,44.726 =>3ownroofrockellipsoids. BrownBASEleafsource-6.478,-39.354,24.215face.041/-0.471,46.151,23.469face.0066 and-13.426,-21.450,22.786face.208 =>area.5growth.01 replaces.2/.03 forfloor, twoN/Sbasecornergrassvolumes added tocoverwraparound. OwnbodymasonryperpixelZ26..40 eliminateslongtrianglegreeninterpbelowroofwithouttouchingfloor/uppergrass. Re-bakebothsamegeometry/UV requiredbeforeacceptance. Currentmarkedcropshowsprior3roofguessespaintedadjacentleaves. PreciseownSourceTOPstonespixels541367/594661/552790 give[3.415,17.014,47.283]area.0637/[9.657,-17.617,50.064]area.0545/[4.711,-32.803,46.739]area3.088. Replace(notadd)oldwrongellipsoids with3.5,17,46.5r3.5;9.5,-17.5,49r4min47protectnearleaf46.84;4.5,-33,46r3.5. RGB COLOR_0 sampledwhite so novertexdoubletintchange. Re-bakeCURRENTviews andphysical2leaf3stoneprobes beforeacceptance. Actual6RLOD+3alt CURRENTviews inspected afterpreciseroofstonefix. Threehead+twofloorleafphysicalRGB/roughnessASSERTPASSboth. Colour1k2696268vs2k3213820(-517552B) nearidenticalworkingviews/noobviousloss ->choose1k forR. R35kLOD12k geometrypreservednative3pins/2gaps15raysPASS, no synthetic. Reopt+viewFINAL1k andrepeatpackagechecksneeded. FINAL CURRENT6RLOD1kviews +previousaccepted2k6/alt3comparison +roof/basecrops ACTUALLYseen; 3preciseroofheads+2floorleaves RGBroughnessASSERTPASSbothtiers. R2696268/L1044704/shadow43456/alpha512preview21310/runtime3805738 allwithinestimates; selectedcolour1kvs2k3213820 saves517552B withoutobviousworkingscale loss. Native/fullUV andoptimized1kallchannels/.1mmphysicaltolerance, black/normals,15pin/gapSOURCE/RLOD rays AFTERpackage,manifest/2browserKTXLODsunpointshadowsalpha PASS; 3actorpadsoutsideownwallblocker. No syntheticinsertions, original3separatepins+shoulders retained. LODdrift.057715mm; grass/stone edgecontacttint andLODmipsofteningretained."
+  },
+  "blockers": [
+    [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        0.898444,
+        2.928571
+      ],
+      [
+        0.680891,
+        2.785714
+      ],
+      [
+        0.538097,
+        2.5
+      ],
+      [
+        0.430114,
+        2.214286
+      ],
+      [
+        0.342145,
+        1.928571
+      ],
+      [
+        0.358429,
+        1.642857
+      ],
+      [
+        0.464337,
+        1.5
+      ],
+      [
+        0.46505,
+        1.357143
+      ],
+      [
+        0.444087,
+        1.071429
+      ],
+      [
+        0.475168,
+        0.785714
+      ],
+      [
+        0.644392,
+        0.5
+      ],
+      [
+        0.775493,
+        0.357143
+      ],
+      [
+        0.940187,
+        0.071429
+      ]
+    ]
+  ]
+}

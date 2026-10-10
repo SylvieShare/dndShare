@@ -67,6 +67,7 @@ for (const tier of ["render", "lod"]) {
       "Render and LOD must be baked with the same material recipe",
     );
   const drift = Math.max(
+    0,
     ...info.placementPoints.map((p, i) =>
       Math.abs(p.elevation - metadata.placementPoints[i].elevation),
     ),
