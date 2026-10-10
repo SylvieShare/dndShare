@@ -6,6 +6,7 @@ import importlib.util
 import random
 from pathlib import Path
 from mathutils import Vector
+from mathutils.bvhtree import BVHTree
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('frame', ROOT/'scripts/maps/validate-majestic-frame.py')
@@ -62,7 +63,24 @@ def main():
         volumes = list(frame.profile_volumes(profiles[0], 10, (300, -300), angle))
         assert reference_collisions(vertices, faces, volumes) == frame.collisions(vertices, faces, volumes) == 0
     assert frame.collisions([], [], []) == 0
+    # A 0.02mm wall displacement moves a grazing hit by 1mm. A real 0.2mm
+    # displacement must still fail the unchanged 0.15mm surface tolerance.
+    def wall(displacement):
+        vertices = [(x, 10+.02*x+displacement, z)
+                    for x, z in [(-100, -100), (100, -100), (100, 100), (-100, 100)]]
+        return BVHTree.FromPolygons(vertices, [(0, 1, 2), (0, 2, 3)], all_triangles=True)
+    native = wall(0)
+    origin, direction = Vector((0, 11, 0)), Vector((1, 0, 0))
+    before = native.ray_cast(origin, direction, 100)[0]
+    for displacement, accepted in [(.02, True), (.2, False)]:
+        candidate = wall(displacement)
+        after = candidate.ray_cast(origin, direction, 100)[0]
+        assert (before-after).length > .15
+        drift = frame.surface_drift(native, candidate, before, after)
+        assert abs(drift-displacement) < .001, drift
+        assert (drift <= .15) == accepted, (displacement, drift)
     print('BROADPHASE_EXACT_EQUIVALENCE', count, 'positive controls', positive, len(faces), 'triangles')
+    print('GRAZING_SURFACE_DRIFT', '0.02mm accepted; 0.2mm rejected')
 
 
 if __name__ == '__main__':

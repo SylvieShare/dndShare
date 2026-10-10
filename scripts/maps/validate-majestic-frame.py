@@ -105,6 +105,11 @@ def load(filename, source=False):
     return vertices, faces, BVHTree.FromPolygons(vertices, faces, all_triangles=True)
 
 
+def surface_drift(native, candidate, before, after):
+    """Measure both surfaces without amplifying error along a grazing ray."""
+    return max(candidate.find_nearest(before)[3], native.find_nearest(after)[3])
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--code', required=True)
@@ -124,7 +129,7 @@ def main():
             shift = Vector((*row['mountCenterMM'], 0))
             vertices = [p+shift for p in vertices]
             tree = BVHTree.FromPolygons(vertices, faces, all_triangles=True)
-        drift = []
+        drift, ray_drift = [], []
         for x, y in settings['throughPointsMM']:
             if tree.ray_cast((x, y, row['max'][2]+10), (0, 0, -1), 1000)[0] is not None:
                 raise ValueError(f'{tier}: native through-hole filled at {x},{y}')
@@ -138,7 +143,8 @@ def main():
                     if (before is None) != (after is None):
                         raise ValueError(f'{tier}: socket surface missing at {origin}')
                     if before is not None:
-                        drift.append((before-after).length)
+                        drift.append(surface_drift(native, tree, before, after))
+                        ray_drift.append((before-after).length)
         if drift and max(drift) > settings['maxDriftMM']:
             raise ValueError(f'{tier}: socket drift {max(drift)}mm')
         fits = []
@@ -156,7 +162,8 @@ def main():
                 if count:
                     raise ValueError(f'{tier}: {profile["name"]} {pose}: {count} frame triangles intersect insertion')
                 fits.append({'profile': profile['name'], 'pose': pose, 'collidingTriangles': count, 'allFrameTrianglesTested': len(faces)})
-        result[tier] = {'throughHoles': len(settings['throughPointsMM']), 'maxNativeDriftMM': max(drift, default=0), 'fits': fits}
+        result[tier] = {'throughHoles': len(settings['throughPointsMM']), 'maxNativeDriftMM': max(drift, default=0),
+                        'maxRayHitDriftMM': max(ray_drift, default=0), 'fits': fits}
         print('MAJESTIC_FRAME_TIER_VALIDATED', args.code, tier, len(faces), max(drift, default=0), len(fits), flush=True)
     report_path = directory/'report.json'
     report = json.loads(report_path.read_text())
