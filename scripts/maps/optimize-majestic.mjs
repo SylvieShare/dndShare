@@ -153,7 +153,12 @@ for (const tier of ["render", "lod"]) {
       "--threads",
       "6",
     ];
-    if (colour)
+    const colourEncoding = measured.recipe[tier + "ColourEncoding"] ?? "etc1s";
+    if (colour && !["etc1s", "uastc"].includes(colourEncoding))
+      throw new Error("Unsupported Majestic colour encoding: " + colourEncoding);
+    if (colour && colourEncoding === "uastc")
+      flags.push("--encode", "uastc", "--uastc_quality", "3", "--uastc_rdo_l", "1", "--zcmp", "18");
+    else if (colour)
       flags.push("--encode", "etc1s", "--qlevel", "255", "--clevel", "3");
     else
       flags.push(
@@ -221,6 +226,7 @@ for (const tier of ["render", "lod"]) {
     placementDrift: drift,
     colourSize:
       measured.recipe[tier + "ColourSize"] ?? (tier === "render" ? 2048 : 1024),
+    colourEncoding: measured.recipe[tier + "ColourEncoding"] ?? "etc1s",
     textureCount: doc.getRoot().listTextures().length,
     quality: info.quality,
   };
