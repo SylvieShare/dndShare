@@ -111,7 +111,12 @@ def paint(obj, recipe):
             mask &= ((z>=s['topStartMM'])|
                      ((z>=s['edgeStartMM'])&(np.abs(q[:, 0])<s['edgeHalfXMM'])&(np.abs(q[:, 1])>s['edgeMinYMM'])))
         weave = 1+.018*np.sin(x*9)*np.sin(y*9+z*11)
-        fabric = np.array(part['rgb'])*weave[:, None]
+        if part.get('centersMM'):
+            centers = np.array(part['centersMM'])
+            distance = ((p[:, None, :2]-centers[None, :, :2])**2).sum(2)
+            if part.get('centerRadiiMM'): distance /= np.array(part['centerRadiiMM'])[None, :]**2
+            fabric = np.array(part['colorsRGB'])[distance.argmin(1)]*weave[:, None]
+        else: fabric = np.array(part['rgb'])*weave[:, None]
         rgb[mask] = fabric[mask]; surface[mask, 1] = .98; surface[mask, 2] = 0
         print('MEDIEVAL_FABRIC', part['name'], int(mask.sum()), flush=True)
     for part in settings.get('produceParts', []):

@@ -1,0 +1,286 @@
+{
+  "name": "Rare Spices",
+  "groupCode": "MED-rare-spices",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 72000,
+  "lodTriangles": 24000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0.5,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0.5,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "spices",
+    "wood",
+    "sacks",
+    "cloth",
+    "grain"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "counter boards and corner legs",
+        "centerMM": [
+          8.35,
+          -0.25,
+          0
+        ],
+        "rotationZDeg": 0,
+        "minMM": [
+          -9.200000000000001,
+          -17.55,
+          26.1
+        ],
+        "maxMM": [
+          9.200000000000001,
+          17.55,
+          36.05
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          8.9,
+          17.25
+        ],
+        "railWidthMM": 1.65,
+        "lidAxis": "x"
+      }
+    ],
+    "fabricParts": [
+      {
+        "name": "three canvas sacks",
+        "minMM": [
+          0.4,
+          -17.1,
+          36.05
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          48.1
+        ],
+        "centersMM": [
+          [
+            9.3,
+            -10.2,
+            0
+          ],
+          [
+            9.0,
+            -0.8,
+            0
+          ],
+          [
+            9.8,
+            10.3,
+            0
+          ]
+        ],
+        "centerRadiiMM": [
+          6.3,
+          6.8,
+          7.8
+        ],
+        "colorsRGB": [
+          [
+            0.63,
+            0.44,
+            0.19
+          ],
+          [
+            0.47,
+            0.465,
+            0.24
+          ],
+          [
+            0.61,
+            0.465,
+            0.18
+          ]
+        ]
+      }
+    ],
+    "ironParts": [],
+    "hardware": [],
+    "stoneIslandMinCount": 2,
+    "surfaceParts": [
+      {
+        "name": "golden spices in front sack",
+        "kind": "grain",
+        "centerMM": [
+          9.45,
+          -8.9,
+          0
+        ],
+        "rotationZDeg": 15,
+        "minMM": [
+          -4.55,
+          -2.05,
+          42.8
+        ],
+        "maxMM": [
+          4.55,
+          2.05,
+          44.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            44
+          ],
+          "radiiMM": [
+            4.55,
+            2.05,
+            2.0
+          ]
+        },
+        "rgb": [
+          0.72,
+          0.535,
+          0.2
+        ],
+        "roughness": 0.93,
+        "variation": 0.08
+      },
+      {
+        "name": "pale seeds in middle sack",
+        "kind": "grain",
+        "centerMM": [
+          9.6,
+          -1.5,
+          0
+        ],
+        "rotationZDeg": -9,
+        "minMM": [
+          -4.8,
+          -2.05,
+          44.05
+        ],
+        "maxMM": [
+          4.8,
+          2.05,
+          45.95
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            45
+          ],
+          "radiiMM": [
+            4.8,
+            2.05,
+            2.0
+          ]
+        },
+        "rgb": [
+          0.66,
+          0.68,
+          0.38
+        ],
+        "roughness": 0.93,
+        "variation": 0.08
+      }
+    ],
+    "produceParts": []
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      3.0
+    ],
+    "lodMiB": [
+      0.45,
+      1.1
+    ],
+    "shadowKiB": [
+      50,
+      150
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "One 35 mm counter tile with three folded canvas sacks and two openings filled with sculpted seeds. Preserve cloth lips, tied rear mouth, granular contents and the counter opening with72k/24k before UV bakes; compare1024/512 and768/384 colour/data maps."
+  },
+  "reviewNotes": "PDF page4 and native front/rear/top source views. Native datum17mm; maximum47.8813mm. Three touching sacks share a coherent canvas mask above the measured36.05mm countertop; weighted ownership by their individual measured body centres gives ochre, sage and mustard cloth without hard rectangular cuts. Source upper components at36.1/38/40/42 remain connected; two open grain regions and the tied rear sack are separated by their measured mouths. Front opening near[9.45,-8.9,44]mm,15deg and middle near[9.6,-1.5,45]mm,\u22129deg use elliptical domains and distinct seed colours/roughness. Grain remains separate from cloth lips. Left paving at[-10,0,25.785503]mm is available; blocker occupies the right half.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.214286,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30
+}
