@@ -107,5 +107,6 @@
   "LC-106": "./lost-cave-recipes/LC-106.json",
   "LC-107": "./lost-cave-recipes/LC-107.json",
   "LC-108": "./lost-cave-recipes/LC-108.json",
-  "LC-109": "./lost-cave-recipes/LC-109.json"
+  "LC-109": "./lost-cave-recipes/LC-109.json",
+  "LC-Level Grid 1X1": "./lost-cave-recipes/LC-grid-1x1.json"
 }

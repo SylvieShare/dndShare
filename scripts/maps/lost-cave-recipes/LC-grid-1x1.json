@@ -1,0 +1,114 @@
+{
+  "sourceName": "Level Grid 1X1",
+  "referencePage": 17,
+  "material": "cave-cut-stone",
+  "floorHeightMM": 11.3209,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      4.7
+    ],
+    "lodMiB": [
+      0.45,
+      1.7
+    ],
+    "shadowKiB": [
+      20,
+      100
+    ],
+    "previewKiB": [
+      10,
+      140
+    ],
+    "basis": "340000tri1x1roughstonegridwithplanarcutinnerwalls,nativeledge/throughhole;40k14k beforeUV,2048/1024sourcebake,2UASTCbudgets."
+  },
+  "notes": "Author17warmbrownrockframewithsmoothcutinnerlining,centralnativeTHROUGHHole,ledge11.3209mm,upperinnerhalf13.5/lowerhalf8.5,bevel23.17..25.0756. Ownsource340000tri/cut0/mount0;keepUUIDbaa73f2e-7f86-5675-b26b-104a291f0681/1x1frame/point.25.25at.323445/slot.716446/max.716446/flags/blockers. Ownsource13levelsconfirmnativeholeandfourfaces, needfullsocketplacementcheckagainstactualshort/deeppegs beforepub.40k14kbakebeforeUV,UASTC2budgets.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-level-grid",
+  "uvAngleLimitRad": 0.55,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "cutStone": {
+    "innerHalfMM": 13.5,
+    "floorMM": 11.3209,
+    "topMM": 25.0756,
+    "tint": [
+      0.435,
+      0.305,
+      0.195
+    ],
+    "roughness": 0.81,
+    "normalMode": "geometry",
+    "lowerInnerHalfMM": 8.5,
+    "bevelStartMM": 23.174,
+    "bevelTopHalfMM": 15.53,
+    "centresMM": [
+      [
+        0,
+        0
+      ]
+    ]
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "geometryCorrection": {
+    "mode": "correct-grid-insertion-seat",
+    "previousCutHeightMM": 0,
+    "cutHeightMM": 0,
+    "sourceSHA256": "4f9c5aa95754e2bb0e41a2f4feeeb2e1a43451ffad7f74bf22dcb770233a981f",
+    "reason": "Native Level Grid1x1 uppermouth15.524mm at25.0756 intersects existing34.3mm fitted pads. Allnativeframe triangles prove2mmrise clearsboth short5.29571mmanddeep9.94mmpads; preserveframegeometry andphysicalslotheight,onlyraiseincomingmountedtilebody.",
+    "metadata": {
+      "supportSlots": [
+        {
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1,
+          "elevation": 0.716446,
+          "insertionRise": 0.05714285714285714
+        }
+      ]
+    }
+  }
+}
