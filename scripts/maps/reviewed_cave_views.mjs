@@ -34,6 +34,12 @@ export async function loadReviewedCaveViews(report, masks) {
   }
   return (p) =>
     views.find(({ view, mask }) =>
-      projectedBoneAt(p, view, mask.polygons, mask.toleranceMM),
+      projectedBoneAt(
+        p,
+        view,
+        mask.polygons,
+        mask.toleranceMM,
+        mask.depthPixelRadius ?? 0,
+      ),
     )?.mask;
 }

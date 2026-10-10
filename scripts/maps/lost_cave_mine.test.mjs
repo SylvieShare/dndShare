@@ -7,6 +7,29 @@ import {
   mineProjectionAt,
 } from "./lost_cave_mine.mjs";
 const s = specs["LC-073"];
+test("LC-083 ring guards exclude both wooden backgrounds and keep horizontal rails separate from vertical boards", () => {
+  const s = specs["LC-083"],
+    iron = () => ({ part: "iron" });
+  for (const p of [
+    [-11.5519, 5.1087, 32.6274],
+    [-16.9969, 5.8785, 33.9377],
+    [-11.7831, -14.5398, 28.5327],
+  ])
+    assert.equal(minePartAt(p, [1, 0, 0], s, undefined, iron).part, "iron");
+  for (const p of [
+    [-12.4657, 8.3788, 31.1187],
+    [-15.9404, 6.93, 40.24],
+  ])
+    assert.equal(minePartAt(p, [1, 0, 0], s, undefined, iron).part, "wood");
+  assert.equal(
+    minePartAt([-17.03, -1.8873, 17.5884], [1, 0, 0], s).member.name,
+    "lower-rail",
+  );
+  assert.equal(
+    minePartAt([-12.4686, -5.5431, 20.9558], [1, 0, 0], s).member.name,
+    "vertical-boards",
+  );
+});
 test("LC-082 keeps its Y header and opposing braces wooden below the separate iron plate", () => {
   const s = specs["LC-082"];
   for (const p of [

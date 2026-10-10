@@ -8,7 +8,19 @@ function contains([x, y], polygon) {
   }
   return inside;
 }
-export function projectedBoneAt(p, view, polygons, toleranceMM = 0.6) {
+export function projectedBoneAt(
+  p,
+  view,
+  polygons,
+  toleranceMM = 0.6,
+  depthPixelRadius = 0,
+) {
+  if (
+    !Number.isInteger(depthPixelRadius) ||
+    depthPixelRadius < 0 ||
+    depthPixelRadius > 1
+  )
+    throw new Error("Source depth pixel radius must be0 or1");
   const s = view.spec,
     d = p.map((v, i) => v - s.centre[i]);
   const dot = (v) => v.reduce((n, a, i) => n + a * d[i], 0);
@@ -20,9 +32,15 @@ export function projectedBoneAt(p, view, polygons, toleranceMM = 0.6) {
   const x = Math.floor(pixel[0]),
     y = Math.floor(pixel[1]);
   if (x < 0 || y < 0 || x >= s.size || y >= s.size) return false;
-  const nearest = view.data.readFloatLE((y * s.size + x) * 4);
-  return (
-    Number.isFinite(nearest) &&
-    Math.abs(dot(s.outward) - nearest) <= toleranceMM
-  );
+  const depth = dot(s.outward);
+  for (let dy = -depthPixelRadius; dy <= depthPixelRadius; dy++)
+    for (let dx = -depthPixelRadius; dx <= depthPixelRadius; dx++) {
+      const nx = x + dx,
+        ny = y + dy;
+      if (nx < 0 || ny < 0 || nx >= s.size || ny >= s.size) continue;
+      const nearest = view.data.readFloatLE((ny * s.size + nx) * 4);
+      if (Number.isFinite(nearest) && Math.abs(depth - nearest) <= toleranceMM)
+        return true;
+    }
+  return false;
 }

@@ -123,6 +123,7 @@ if (spec.mine?.projectedViews) {
       ...region,
       name: view.name,
       toleranceMM: view.toleranceMM,
+      depthPixelRadius: view.depthPixelRadius ?? region.depthPixelRadius,
     })),
   );
   masks.sort((a, b) => Number(b.part === "iron") - Number(a.part === "iron"));

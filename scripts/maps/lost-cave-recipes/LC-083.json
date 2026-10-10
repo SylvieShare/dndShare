@@ -1,0 +1,183 @@
+{
+  "sourceName": "Mine Door",
+  "referencePage": 12,
+  "material": "cave-mine",
+  "floorHeightMM": 14.73,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 65000,
+  "lodTriangles": 26000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [2.4, 8.0],
+    "lodMiB": [0.8, 2.7],
+    "shadowKiB": [45, 155],
+    "previewKiB": [20, 170],
+    "basis": "459934-triangle1x1 wood door with two-side fasteners, hinges and thin hollow ring handle.65k/26k beforeUV retain handle loop and carved boards.2048/1024 source bake; full UASTC colour and compare two data budgets, retaining native ORM if ring boundaries demand it."
+  },
+  "notes": "Author page12 and own three clay views: vertical timber door boards, upper/lowerY rails, descendingY/Z diagonal board, hinge post, iron fasteners and ring handle. Grey-green rubble, brown floor with dark joints. Preserve UUID56cfa222-643a-5df7-81ba-9e988f2c2bbb,source/cut11.5,mount.149994,1x1,point.394785,passage,wallMask64,hasDecor/canStand,no slots. Ring front-11.5519/5.1087/32.6274 and lower-11.7491/7.3575/29.9765; wood in hole-12.4657/8.3788/31.1187. Upper stud-10.8871/-8.705/52.4415,lower-10.6997/-9.2747/17.2283. Separate timber axes, source-depth hardware and native ring opening must be checked. Board relief reaches beyond the initialX box; own full plank region remains above17.75mm, with lower rail separately below it. Hinge post extends to42mm; its end grain stays wood. Both Y rails extend through the board depth on both faces; lower rail stays wooden down to14.8mm. Each side has a separate ringX guard: front>=-12.3,back<=-16.05. Measured hole backgrounds-12.4606/-12.7397 stay wood, with discrete stud volumes never covering this area. Own inside silhouettes mark rear handle and six mirrored heads; front covers six heads and four hinge straps. Thin ring edge437.06/405.95 projects to a source pixel hitting wood1.97mm behind, while its immediate left neighbour hits the ring within.06-.19mm. Per-view depthPixelRadius1 checks3x3 pixels, keeping.35mm tolerance and the existing3D guards. Source edgeY17.2994 and lower boardZ14.0445 complete wooden edge bounds. Physical validation now rasterizes at native bake density and samples decoded ORM by scaled UV coordinates, so small islands retain control samples. Both reduced ORM plans lose hinge material (render121.1/118.4 versus native184); retain native ORM2048/1024 independently of normals. Final outside check before upload found lower end grain atY17.1703/Z14.0445 beyond the old33mm rail; expand only its measured length35.3mm. Rebuild both texture candidates and publication packet.",
+  "normalMinZ": 0.1,
+  "groupCode": "LC-mine-door",
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "textureCandidates": {
+    "ktx-balanced": [2048, 1024, 1024, 512],
+    "ktx-compact": [2048, 768, 1024, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "scaffolding": {
+    "woodTint": [0.5, 0.31, 0.145],
+    "postTint": [0.45, 0.275, 0.125]
+  },
+  "boulder": {
+    "tint": [0.31, 0.37, 0.31]
+  },
+  "mine": {
+    "stoneMinHeightMM": 14.95,
+    "members": [
+      {
+        "name": "upper-rail",
+        "axis": "y",
+        "centre": [-14.3, 0, 51.7],
+        "length": 32.5,
+        "halfWidth": 4.2,
+        "halfDepth": 2.4
+      },
+      {
+        "name": "lower-rail",
+        "axis": "y",
+        "centre": [-14.3, 0, 17.0],
+        "length": 35.3,
+        "halfWidth": 4.2,
+        "halfDepth": 3.1
+      },
+      {
+        "name": "diagonal-board",
+        "axis": "y",
+        "direction": [0, 1, -1.45],
+        "centre": [-13.3, 0, 34.5],
+        "length": 42,
+        "halfWidth": 2.5,
+        "halfDepth": 2.9
+      },
+      {
+        "name": "back-diagonal-board",
+        "axis": "y",
+        "direction": [0, 1, -1.45],
+        "centre": [-16.2, 0, 34.5],
+        "length": 42,
+        "halfWidth": 1.4,
+        "halfDepth": 2.9
+      },
+      {
+        "name": "vertical-boards",
+        "axis": "z",
+        "centre": [-15, 0, 38],
+        "length": 40.5,
+        "halfWidth": 3.8,
+        "halfDepth": 17.6
+      },
+      {
+        "name": "hinge-post",
+        "axis": "z",
+        "centre": [-14.8, -15, 27.2],
+        "length": 29.6,
+        "halfWidth": 2.8,
+        "halfDepth": 2.7
+      }
+    ],
+    "bolts": [],
+    "ironTint": [0.28, 0.29, 0.28],
+    "hardwareVolumes": [
+      {
+        "min": [-12.3, 4.1, 28.8],
+        "max": [-10.5, 10.6, 37.8]
+      },
+      {
+        "min": [-18.1, 4.1, 28.8],
+        "max": [-16.05, 10.6, 37.8]
+      },
+      {
+        "min": [-13.3, -16.9, 22.5],
+        "max": [-10.8, -12.3, 41.5]
+      },
+      {
+        "min": [-12.15, -10.205, 50.6415],
+        "max": [-10.0, -7.205, 54.241499999999995]
+      },
+      {
+        "min": [-18.0, -10.505, 50.5415],
+        "max": [-16.3, -6.905, 54.341499999999996]
+      },
+      {
+        "min": [-12.15, 11.0585, 50.522400000000005],
+        "max": [-10.0, 14.0585, 54.1224]
+      },
+      {
+        "min": [-18.0, 10.7585, 50.4224],
+        "max": [-16.3, 14.358500000000001, 54.2224]
+      },
+      {
+        "min": [-12.15, -4.560700000000001, 38.4247],
+        "max": [-10.0, -1.5607000000000002, 42.024699999999996]
+      },
+      {
+        "min": [-18.0, -4.8607000000000005, 38.3247],
+        "max": [-16.3, -1.2607000000000002, 42.1247]
+      },
+      {
+        "min": [-12.15, 4.1871, 21.6773],
+        "max": [-10.0, 7.1871, 25.2773]
+      },
+      {
+        "min": [-18.0, 3.8871, 21.5773],
+        "max": [-16.3, 7.4871, 25.377299999999998]
+      },
+      {
+        "min": [-12.15, -10.7747, 15.4283],
+        "max": [-10.0, -7.774699999999999, 19.0283]
+      },
+      {
+        "min": [-18.0, -11.0747, 15.3283],
+        "max": [-16.3, -7.4746999999999995, 19.1283]
+      },
+      {
+        "min": [-12.15, 9.2765, 14.893699999999999],
+        "max": [-10.0, 12.2765, 18.4937]
+      },
+      {
+        "min": [-18.0, 8.9765, 14.7937],
+        "max": [-16.3, 12.576500000000001, 18.5937]
+      }
+    ],
+    "projectedViews": [
+      {
+        "name": "reverse",
+        "toleranceMM": 0.35,
+        "regionsFile": "./LC-083-reverse.json",
+        "depthPixelRadius": 1
+      },
+      {
+        "name": "inside",
+        "toleranceMM": 0.35,
+        "regionsFile": "./LC-083-inside.json",
+        "depthPixelRadius": 1
+      }
+    ]
+  },
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "f7141f505e0aeb9276d9aa8a2e8b0939267eaa3ff7bcb8e1db29ab230de63a24",
+    "mountDepthMM": 5.24979,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections.05=25.99/.5=26.76/2.5=30.20/4=32.79/datum5.24979=34.92/6=35mm confirm one native centred cell."
+  },
+  "albedoCodec": "uastc",
+  "ormTextureSizes": [2048, 1024]
+}
