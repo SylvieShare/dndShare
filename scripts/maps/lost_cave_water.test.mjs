@@ -3,6 +3,21 @@ import assert from "node:assert/strict";
 import specs from "./lost_cave_recipes.mjs";
 import { caveWaterAt, paintCaveWater } from "./lost_cave_water.mjs";
 const s = specs["LC-064"];
+test("a projected shoreline rock stays inside its measured volume", () => {
+  const s = specs["LC-097"],
+    mask = () => ({
+      part: "boulder",
+      volumes: [{ min: [10, 9.6, 19.42], max: [15.5, 15.5, 22.5] }],
+    });
+  assert.equal(
+    paintCaveWater([12, 12, 21], [0, 0, 1], 230, s, mask).part,
+    "boulder",
+  );
+  assert.equal(
+    paintCaveWater([10, 13, 19.3459], [0, 0, 1], 230, s, mask).part,
+    "rock",
+  );
+});
 test("a raised shoreline boulder does not paint its lower adjoining plateau", () => {
   const s = specs["LC-096"],
     mask = () => ({ part: "boulder", minHeightMM: 19.42 });

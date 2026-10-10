@@ -37,6 +37,13 @@ export function paintCaveWater(p, n, ao, spec, projection, reference) {
   let projected = wave ? undefined : projection?.(p);
   if (projected?.minHeightMM !== undefined && p[2] < projected.minHeightMM)
     projected = undefined;
+  if (
+    projected?.volumes &&
+    !projected.volumes.some((v) =>
+      p.every((x, i) => x >= v.min[i] && x <= v.max[i]),
+    )
+  )
+    projected = undefined;
   if (projected?.part === "boulder") return paintBoulder(p, n, ao, spec);
   const addedRock =
     spec.water.bareReference &&
