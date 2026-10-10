@@ -1,0 +1,142 @@
+{
+  "sourceName": "Water Rock 2",
+  "referencePage": 14,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.3,
+      5
+    ],
+    "lodMiB": [
+      0.5,
+      1.8
+    ],
+    "shadowKiB": [
+      15,
+      70
+    ],
+    "previewKiB": [
+      10,
+      100
+    ],
+    "basis": "219970-triangle1x1 water tile with two dryrocks ofdistinctsizes and broadwaves.40k/14k beforeUV preserve bothrockedges andstandingtop;2048/1024 sourcebake,twoUASTCbudgets."
+  },
+  "notes": "Author page14 turquoise waves surround twoflat warmbrownrocks witholivegrey fracturedsides. Ownsource3views andsurfaceprobes; preserve UUIDfc0a396b-03c8-5225-8a76-2474a5fe91b9,source/cut11.5,mount.150863,1x1,floor,quarterpoint.422422,max.422886,water tag,hasDecortrue/canStandtrue/no slots. Own40k/14k source rebake. SharednativeLC092 wavefield .18mm guardswater; bothnative tops measured14.7855/14.7844mm; waterroughness.28. Owntops[-7.9806,7.687,14.7855],[-5.7325,6.282,14.7856],[5.2267,-7.2063,14.7844];dryedge[4.3837,-4.954,12.6754],water[9.4418,1.7941,10.6969].",
+  "groupCode": "LC-water-rock",
+  "floorHeightProfileMM": [
+    [
+      -17.6,
+      14.735
+    ],
+    [
+      17.6,
+      14.735
+    ]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "9438635f0a8cb25b6e5a44bef3573b24be838636b6280d8a38473c026eb41f4a",
+    "mountDepthMM": 5.280205,
+    "sourceTopWidthMM": 35,
+    "centresMM": [
+      [
+        0,
+        0
+      ]
+    ],
+    "reason": "Own native sections.05=25.93/.5=26.69/2.5=30.14/4=32.72/datum5.280205=34.92/6=35mm confirm one centered mounting cell."
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "water": {
+    "colour": [
+      0.095,
+      0.63,
+      0.53
+    ],
+    "tileVolume": {
+      "min": [
+        -18,
+        -18,
+        5.29
+      ],
+      "max": [
+        18,
+        18,
+        12
+      ]
+    },
+    "surfaces": [],
+    "roughness": 0.28,
+    "projectedViews": [],
+    "bareReference": {
+      "code": "LC-092",
+      "sourceSHA256": "38fdcb288061c3c9715bff90c5ecc236244cc3389ffedb2b9e73cc41110a0c9a",
+      "matchMM": 0.18
+    }
+  },
+  "platform": {
+    "centre": [
+      0,
+      0
+    ],
+    "radiusMM": 25,
+    "minHeightMM": 9.9,
+    "topMinHeightMM": 13.85,
+    "topTint": [
+      0.49,
+      0.37,
+      0.25
+    ],
+    "sideTint": [
+      0.39,
+      0.4,
+      0.285
+    ]
+  }
+}
