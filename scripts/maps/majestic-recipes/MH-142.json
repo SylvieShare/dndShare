@@ -1,0 +1,506 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 90000,
+  "lodTriangles": 34000,
+  "tileType": "bridge",
+  "hasDecor": false,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "high",
+    "outdoor",
+    "xl",
+    "bridge",
+    "masonry",
+    "arched-bridge",
+    "built-piers",
+    "bridge-cross",
+    "four-way"
+  ],
+  "recipe": "majestic-high-stone-bridge-cross-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      4000000,
+      7500000
+    ],
+    "targetLODBytes": [
+      1400000,
+      3300000
+    ],
+    "targetShadowBytes": [
+      70000,
+      180000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "1067844triangles,53392284B NL. Ownbase104.965x104.996mm3x3,max104.274mm,datum9.75. PDF42 four-way builtstone cross, no naturalcliffs/no receivingSlots=>wallModenone/mask0,hasDecorfalse. Fiveupperdeck points from120 at92.229/92.423mm and4cornerground15.408..16.010mm, not allpointsontop. Allbuiltstone above18 gray .47/.45/.395, crossdecktwo measured perpendicular boxes +-20.5mm,Z90..94normalZ>.55 lightgray .53/.51/.455. Grass001rot270 groundonly; nohighgrass/backcliffshader. FourLparapetsblockcornerswithoutclosing4connections. Bothaxis archpaths atZ40 only+-3/0clear;+-8solidjambs;roof/decksolid controls12raysx3=36checks. 90k/34k budgets,colour1kvs2k,data1k/512,UV16bit .35/.15,stripauxColours. Compare fullviews and LOD beforepublishing. Chosen2k reducesoliveUVfringe+601776B; 2knativecheck detected.106mmphysicaloverlap atRangle.35, re-unwrap/rebakeRangle.30, LOD.15unchanged. Rangle.30still.102mmoverlap; try.20 withoutchangingtolerance/geometry. FinalR5394596B/90012,L1855236B/34012,shadow123184B,preview24294B. FinalUV.20/.15 allnative/finalchannels pass; colour1024sameUV4806076B vs2048+588520B adopted cleanerstonejointfringes. LODplacementDrift.69223mm. Measuredfloor93.11%matches140within.15mm median+.000427. Final36geometryrays,manifest,2browserKTX/shadow/alpha,fresh5SHAs/UUID/familyMH-bridge-cross confirmed."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "none",
+  "wallMask": 0,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 120,
+  "blockers": [
+    [
+      [
+        0,
+        0.7
+      ],
+      [
+        0.914286,
+        0.7
+      ],
+      [
+        0.914286,
+        0.914286
+      ],
+      [
+        0,
+        0.914286
+      ]
+    ],
+    [
+      [
+        0.7,
+        0
+      ],
+      [
+        0.914286,
+        0
+      ],
+      [
+        0.914286,
+        0.914286
+      ],
+      [
+        0.7,
+        0.914286
+      ]
+    ],
+    [
+      [
+        0,
+        2.085714
+      ],
+      [
+        0.914286,
+        2.085714
+      ],
+      [
+        0.914286,
+        2.3
+      ],
+      [
+        0,
+        2.3
+      ]
+    ],
+    [
+      [
+        0.7,
+        2.085714
+      ],
+      [
+        0.914286,
+        2.085714
+      ],
+      [
+        0.914286,
+        3
+      ],
+      [
+        0.7,
+        3
+      ]
+    ],
+    [
+      [
+        2.085714,
+        0.7
+      ],
+      [
+        3,
+        0.7
+      ],
+      [
+        3,
+        0.914286
+      ],
+      [
+        2.085714,
+        0.914286
+      ]
+    ],
+    [
+      [
+        2.085714,
+        0
+      ],
+      [
+        2.3,
+        0
+      ],
+      [
+        2.3,
+        0.914286
+      ],
+      [
+        2.085714,
+        0.914286
+      ]
+    ],
+    [
+      [
+        2.085714,
+        2.085714
+      ],
+      [
+        3,
+        2.085714
+      ],
+      [
+        3,
+        2.3
+      ],
+      [
+        2.085714,
+        2.3
+      ]
+    ],
+    [
+      [
+        2.085714,
+        2.085714
+      ],
+      [
+        2.3,
+        2.085714
+      ],
+      [
+        2.3,
+        3
+      ],
+      [
+        2.085714,
+        3
+      ]
+    ]
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 20,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          20
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.47,
+    0.45,
+    0.395
+  ],
+  "masonryTopRGB": [
+    0.47,
+    0.45,
+    0.395
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.2,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -54,
+        -54,
+        18
+      ],
+      "maxMM": [
+        54,
+        54,
+        106
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -20.5,
+        90
+      ],
+      "maxMM": [
+        54,
+        20.5,
+        94
+      ],
+      "featherMM": 0.2,
+      "normalZMin": 0.55,
+      "rgb": [
+        0.53,
+        0.51,
+        0.455
+      ]
+    },
+    {
+      "minMM": [
+        -20.5,
+        -54,
+        90
+      ],
+      "maxMM": [
+        20.5,
+        54,
+        94
+      ],
+      "featherMM": 0.2,
+      "normalZMin": 0.55,
+      "rgb": [
+        0.53,
+        0.51,
+        0.455
+      ]
+    }
+  ],
+  "blockedCells": [],
+  "grassReference": "MH-001",
+  "openingChecks": [
+    {
+      "name": "under-cross-x--3",
+      "originMM": [
+        -70,
+        -3,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-cross-x-0",
+      "originMM": [
+        -70,
+        0,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-cross-x-3",
+      "originMM": [
+        -70,
+        3,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-cross-x--8",
+      "originMM": [
+        -70,
+        -8,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "under-cross-x-8",
+      "originMM": [
+        -70,
+        8,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "under-cross-y--3",
+      "originMM": [
+        -3,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-cross-y-0",
+      "originMM": [
+        0,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-cross-y-3",
+      "originMM": [
+        3,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-cross-y--8",
+      "originMM": [
+        -8,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "under-cross-y-8",
+      "originMM": [
+        8,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "cross-roof-present",
+      "originMM": [
+        0,
+        0,
+        25
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 100,
+      "clear": false
+    },
+    {
+      "name": "cross-deck-present",
+      "originMM": [
+        0,
+        0,
+        120
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 100,
+      "clear": false
+    }
+  ],
+  "groupCode": "MH-bridge-cross"
+}
