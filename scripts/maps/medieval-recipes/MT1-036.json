@@ -1,0 +1,361 @@
+{
+  "name": "Wall 2",
+  "groupCode": "MED-wall",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 69000,
+  "lodTriangles": 22000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": false,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.22,
+        0
+      ],
+      [
+        0.22,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "plaster",
+    "wall",
+    "interior",
+    "brace"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south vertical timber post",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          -13.6,
+          50
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "north vertical timber post",
+        "minMM": [
+          -17.6,
+          13.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          17.6,
+          50
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "front diagonal wall brace",
+        "minMM": [
+          -13.4,
+          -15.2,
+          25.7
+        ],
+        "maxMM": [
+          -10.25,
+          15.2,
+          49.6
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          0.7892387463714006,
+          0.6140864769933466
+        ],
+        "projection": {
+          "originMM": [
+            -10.738178597963774,
+            0.9163855072879344,
+            34.55908384567652
+          ],
+          "axis": [
+            0,
+            -0.6140864769933466,
+            0.7892387463714006
+          ],
+          "rangeMM": [
+            -2.749070501717172,
+            2.647719058557087
+          ]
+        }
+      },
+      {
+        "name": "rear diagonal wall brace",
+        "minMM": [
+          -17.55,
+          -15.2,
+          25.7
+        ],
+        "maxMM": [
+          -14.0,
+          15.2,
+          49.6
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          0.7958925841853294,
+          0.6054378534901813
+        ],
+        "projection": {
+          "originMM": [
+            -17.242953600067843,
+            1.9657967936438676,
+            35.42065171975838
+          ],
+          "axis": [
+            0,
+            -0.6054378534901813,
+            0.7958925841853294
+          ],
+          "rangeMM": [
+            -2.862670453625014,
+            2.379124064689902
+          ]
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "rough ochre plaster on both wall faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.6,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          50
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "front diagonal wall brace",
+            "minMM": [
+              -13.4,
+              -15.2,
+              25.7
+            ],
+            "maxMM": [
+              -10.25,
+              15.2,
+              49.6
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              0.7892387463714006,
+              0.6140864769933466
+            ],
+            "projection": {
+              "originMM": [
+                -10.738178597963774,
+                0.9163855072879344,
+                34.55908384567652
+              ],
+              "axis": [
+                0,
+                -0.6140864769933466,
+                0.7892387463714006
+              ],
+              "rangeMM": [
+                -2.749070501717172,
+                2.647719058557087
+              ]
+            }
+          },
+          {
+            "name": "rear diagonal wall brace",
+            "minMM": [
+              -17.55,
+              -15.2,
+              25.7
+            ],
+            "maxMM": [
+              -14.0,
+              15.2,
+              49.6
+            ],
+            "axis": "beam",
+            "direction": [
+              0,
+              0.7958925841853294,
+              0.6054378534901813
+            ],
+            "projection": {
+              "originMM": [
+                -17.242953600067843,
+                1.9657967936438676,
+                35.42065171975838
+              ],
+              "axis": [
+                0,
+                -0.6054378534901813,
+                0.7958925841853294
+              ],
+              "rangeMM": [
+                -2.862670453625014,
+                2.379124064689902
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.1,
+      2.8
+    ],
+    "lodMiB": [
+      0.35,
+      1.05
+    ],
+    "shadowKiB": [
+      45,
+      120
+    ],
+    "previewKiB": [
+      8,
+      35
+    ],
+    "basis": "35mm timber/plaster wall with diagonal beam on each face, carved frame and staggered floor boards.69000/22000 independent pre-UV geometry and bakes preserve both braces, floor gaps and plaster relief. Compare1024/512 with768/384 maps."
+  },
+  "reviewNotes": "PDF page7; native front/back source views. Source379990triangles/18999584bytes,max49.828999mm. Same1x1 footprint and17mm native insertion shoulder as35; measured centre floor24.728354mm. Both faces have diagonal bracing. Direct comparison to35 shows median .455mm change across plaster, so nearest-source difference is not a valid material mask here. Fit actual beam cores: front x>-10.85mm yields780vertices andYZ axis[.789239,.614086], rear x<-17.2 yields1216vertices andaxis[.795893,.605438]. Native transverse ranges[-2.349,2.248]/[-2.463,1.979]mm gain .4mm for curved flanks. Front timber boundedx[-11.35,-10.25],rear[-17.55,-16.65], with individual projections; exclude these exact regions from both-face ochre plaster. Preserve X floor boards, Y frame/fascia, Z posts and two oblique grains. Wall remainswest edge/64 withlocalX0..0.22 blocker; centre point must match source/render/LOD. Review complete brace flanks and contact edges in both tiers/candidates before publication. Render UV .35rad/.0012 passed, but LOD overlapped surfaces .759mm apart. Recreate LOD at.25rad/.0008 margin and rebake both reports before acceptance. Balanced passed UV and complete material checks; compact768px render had .227mm physical collision and is rejected without weakening .1mm tolerance. Initial thin X ranges left a plaster-coloured side face on the front brace: expand front depth to[-13.4,-10.25] and rear[-17.55,-14] according to actual protruding sculpt bounds (-12.9772front/-14.4482rear) plus contact margin. Keep both YZ projections and separate wall faces.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
