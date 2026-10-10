@@ -1,0 +1,47 @@
+{
+  "sourceName": "Flat Angle",
+  "referencePage": 15,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5.3],
+    "lodMiB": [0.6, 2],
+    "shadowKiB": [30, 100],
+    "previewKiB": [10, 120],
+    "basis": "459794tri1x1Lcliffwithtwotallfacesandfloor;60k22k beforeUV,2048/1024sourcebake,twoUASTCbudgets."
+  },
+  "notes": "Author15brownLcliff/cavefloor. Own3clayviewsconfirm2tallcliffsandnativeinsidecorner,ownfloorrocks. Source459794tri,cut11.5datum5.245905shortfootconfirmed. KeepUUID49f3b69f-e1b5-574c-9b13-b7ba52dc6b93/source/1x1edge-angle80/point.3947/max1.092414/flags/blockers/no slots.60k22ksourcebake beforeUV protects bothcliffoutlines and floor;ownAOjointsdarkened. UASTCcolour avoids107ETC1Sflatstoneblocks,2budgetsreviewrequired.",
+  "groupCode": "LC-flat-angle",
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "preserveSurfaceGutters": true,
+  "textureEncoder": "toktx v4.4.2",
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "floorHeightProfileMM": [
+    [-17.6, 14.735],
+    [17.6, 14.735]
+  ],
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "e29dac67a536939c94e2a1e40f2120226c2670f6ba57792f686865c6ab7d6733",
+    "mountDepthMM": 5.245905,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Ownsource25.985/25.980@.05,26.758@.5,30.201@2.5,32.783@4,34.920/34.909@5.245905,35@6 confirmoneshortfoot."
+  },
+  "albedoCodec": "uastc"
+}
