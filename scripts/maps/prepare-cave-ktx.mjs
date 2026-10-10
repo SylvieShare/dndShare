@@ -5,7 +5,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { readGlb, embeddedImage, replaceImages } from "./glb_textures.mjs";
 import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
-import { caveTexturePlan } from "./cave_texture_plan.mjs";
+import { caveTexturePlan, caveTextureSize } from "./cave_texture_plan.mjs";
 const run = promisify(execFile),
   file = process.argv[2],
   name = process.argv[3];
@@ -93,7 +93,7 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
     invalid = 0;
   for (const [slot, index] of slots) {
     const image = g.json.textures[index].source,
-      size = sizes[ti * 2 + (["BaseColor", "Emissive"].includes(slot) ? 0 : 1)],
+      size = caveTextureSize(report.materialSpec, sizes, tier, slot),
       result = await sharp(embeddedImage(g, image))
         .resize(size, size)
         .removeAlpha()

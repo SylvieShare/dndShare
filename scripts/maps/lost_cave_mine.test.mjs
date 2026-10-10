@@ -7,6 +7,42 @@ import {
   mineProjectionAt,
 } from "./lost_cave_mine.mjs";
 const s = specs["LC-073"];
+test("LC-082 keeps its Y header and opposing braces wooden below the separate iron plate", () => {
+  const s = specs["LC-082"];
+  for (const p of [
+    [-7.2582, -8.6979, 64.142],
+    [-9.5881, -15.6989, 64.108],
+  ])
+    assert.equal(minePartAt(p, [0, 0, 1], s).member.name, "head-beam");
+  assert.equal(
+    minePartAt([-6.0939, -6.3887, 48.9128], [1, 0, 0], s).member.name,
+    "long-brace",
+  );
+  assert.equal(
+    minePartAt([-6.6982, 6.8071, 54.2695], [1, 0, 0], s).member.name,
+    "short-brace",
+  );
+  for (const p of [
+    [-12.4504, 5.7817, 64.9465],
+    [-7.2015, 13.0294, 65.024],
+    [-11.4193, -12.3778, 71.4541],
+    [-11.4083, -1.3603, 71.9871],
+    [-11.1944, 10.0797, 71.1087],
+  ])
+    assert.equal(minePartAt(p, [0, 0, 1], s).part, "iron");
+  for (const p of [
+    [-4.2487, -14.9052, 41.063],
+    [-14.7085, 9.9646, 26.8845],
+    [-8.1111, 10.1347, 30.3264],
+  ])
+    assert.equal(
+      minePartAt(p, [1, 0, 0], s, undefined, () => ({ part: "iron" })).part,
+      "iron",
+    );
+  const metal = paintCaveMine([-11.1217, -4.44, 65.2297], [0, 0, 1], 230, s);
+  assert(metal.rgb[0] < 120);
+  assert(metal.metallic > 0.6);
+});
 test("LC-081 timber follows its own horizontal, tall and inclined members while hex heads stay separate", () => {
   const s = specs["LC-081"];
   for (const p of [

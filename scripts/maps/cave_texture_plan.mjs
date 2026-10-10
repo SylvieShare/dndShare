@@ -13,3 +13,27 @@ export function caveTexturePlan(spec, name) {
     throw new Error("Four reviewed texture sizes between128 and2048 required");
   return [...plan];
 }
+
+export function caveTextureSize(spec, plan, tier, slot) {
+  const ti = tier === "render" ? 0 : tier === "lod" ? 1 : -1;
+  if (ti < 0) throw new Error("Known cave texture tier required");
+  if (slot === "MetallicRoughness" && spec.ormTextureSizes) {
+    const values = spec.ormTextureSizes;
+    if (
+      !Array.isArray(values) ||
+      values.length !== 2 ||
+      values.some(
+        (v, i) =>
+          !Number.isInteger(v) ||
+          v < 128 ||
+          v > 2048 ||
+          v > (spec[i ? "lodBakeSize" : "renderBakeSize"] ?? 2048),
+      )
+    )
+      throw new Error(
+        "Two reviewed ORM sizes no larger than the source bake required",
+      );
+    return values[ti];
+  }
+  return plan[ti * 2 + (["BaseColor", "Emissive"].includes(slot) ? 0 : 1)];
+}
