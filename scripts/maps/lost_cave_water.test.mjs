@@ -3,6 +3,18 @@ import assert from "node:assert/strict";
 import specs from "./lost_cave_recipes.mjs";
 import { caveWaterAt, paintCaveWater } from "./lost_cave_water.mjs";
 const s = specs["LC-064"];
+test("a measured wave height cap excludes the adjoining raised stone", () => {
+  const s = structuredClone(specs["LC-106"]),
+    mask = () => ({ part: "boulder" });
+  assert.equal(
+    paintCaveWater([-1.2382, 11.3551, 11.1952], [0, 0, 1], 230, s, mask).part,
+    "water",
+  );
+  assert.equal(
+    paintCaveWater([-1.2382, 11.3551, 11.4], [0, 0, 1], 230, s, mask).part,
+    "boulder",
+  );
+});
 test("a measured broad inner cliff uses olive stone while its dry upper plateau stays brown", () => {
   const s = specs["LC-103"],
     empty = () => undefined;

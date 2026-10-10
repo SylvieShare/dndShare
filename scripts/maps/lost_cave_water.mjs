@@ -31,6 +31,7 @@ export function paintCaveWater(p, n, ao, spec, projection, reference) {
     return caveRockPixel(p, n, ao, spec);
   const wave = spec.water.waveGuards?.some(
     (g) =>
+      (g.maxHeightMM === undefined || p[2] <= g.maxHeightMM) &&
       Math.hypot(...p.map((x, i) => x - g.centre[i])) < g.radiusMM &&
       n.reduce((sum, x, i) => sum + x * g.normal[i], 0) > g.normalDotMin,
   );

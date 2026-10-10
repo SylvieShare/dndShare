@@ -1,0 +1,255 @@
+{
+  "sourceName": "Water to Path",
+  "referencePage": 15,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.4, 4.8],
+    "lodMiB": [0.45, 1.7],
+    "shadowKiB": [15, 70],
+    "previewKiB": [10, 100],
+    "basis": "239996tri1x1two-cornertransitionwater;40k14k beforeUV,2048/1024normalAO,twoUASTCbudgets."
+  },
+  "notes": "Author15 broadturquoise water-to-path tile withtwo browncornersandolivegreyinnerstones. Ownsource239996tris,cropped4.6mm,datum5.286995confirmedshortfoot. KeepUUID3cbb5866-00ed-5fdb-82cb-62477de26b9f/source/1x1floor/point.308173/max.451517/flags/water/no slots. Individualmeasurements afterbake.",
+  "groupCode": "LC-water-to-path",
+  "floorHeightProfileMM": [
+    [-17.6, 14.735],
+    [17.6, 14.735]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "55b9d5b752167f3053ea033cfcad05e38cd3cfd32d3ff88a49c6722aae1924aa",
+    "mountDepthMM": 5.286995,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Ownsource25.971/25.963@.05,26.713@.5,30.156@2.5,32.738@4,34.943/34.928@5.286995,35.023@6 confirmoneshortfoot."
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "water": {
+    "colour": [0.095, 0.63, 0.53],
+    "tileVolume": {
+      "min": [-18, -18, 5.28],
+      "max": [18, 18, 12]
+    },
+    "surfaces": [],
+    "roughness": 0.28,
+    "projectedViews": [
+      {
+        "name": "top",
+        "part": "boulder",
+        "toleranceMM": 0.3,
+        "depthPixelRadius": 1,
+        "volumes": [
+          {
+            "min": [-2.8, 6, 11],
+            "max": [18, 18, 13.6]
+          }
+        ],
+        "polygons": [
+          [
+            [464, 202],
+            [513, 204],
+            [519, 253],
+            [545, 303],
+            [574, 338],
+            [618, 346],
+            [663, 340],
+            [713, 348],
+            [769, 343],
+            [824, 351],
+            [824, 411],
+            [785, 412],
+            [745, 403],
+            [708, 397],
+            [668, 403],
+            [628, 402],
+            [582, 408],
+            [544, 396],
+            [515, 364],
+            [493, 325],
+            [480, 285]
+          ]
+        ]
+      },
+      {
+        "name": "top",
+        "part": "boulder",
+        "toleranceMM": 0.3,
+        "depthPixelRadius": 1,
+        "volumes": [
+          {
+            "min": [-3, -18, 10.98],
+            "max": [5.2, -5, 13.3]
+          },
+          {
+            "min": [5, -9.5, 11],
+            "max": [18, -5.5, 13.3]
+          }
+        ],
+        "polygons": [
+          [
+            [469, 814],
+            [458, 785],
+            [463, 744],
+            [465, 703],
+            [478, 669],
+            [496, 635],
+            [521, 606],
+            [559, 607],
+            [591, 618],
+            [625, 626],
+            [671, 625],
+            [705, 622],
+            [751, 619],
+            [790, 629],
+            [824, 629],
+            [824, 681],
+            [791, 691],
+            [752, 677],
+            [709, 676],
+            [670, 677],
+            [626, 677],
+            [589, 690],
+            [562, 716],
+            [553, 750],
+            [549, 786],
+            [534, 824],
+            [496, 824]
+          ]
+        ]
+      }
+    ],
+    "dryFaces": [
+      {
+        "min": [15.5, 8, 5.286995],
+        "max": [18, 18, 17],
+        "normal": [1, 0, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [15.5, -18, 5.286995],
+        "max": [18, -8, 17],
+        "normal": [1, 0, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [0, 15.5, 5.286995],
+        "max": [18, 18, 17],
+        "normal": [0, 1, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [0, -18, 5.286995],
+        "max": [18, -15.5, 17],
+        "normal": [0, -1, 0],
+        "normalDotMin": 0.15
+      }
+    ],
+    "boulderFaces": [
+      {
+        "min": [-1.9, 9, 11.1],
+        "max": [2, 17, 13.8],
+        "normal": [-1, 0, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [2, 6.6, 11.1],
+        "max": [17, 10.5, 13.8],
+        "normal": [0, -1, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [-1.9, -17, 11.1],
+        "max": [2, -8.5, 13.2],
+        "normal": [-1, 0, 0],
+        "normalDotMin": 0.15
+      }
+    ],
+    "waveGuards": [
+      {
+        "centre": [10.6263, -7.5942, 11.1277],
+        "normal": [-0.0086, -0.0259, 0.9996],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.78
+      },
+      {
+        "centre": [-1.4632, 10.2306, 11.1782],
+        "normal": [0, 0, 1],
+        "radiusMM": 1.4,
+        "normalDotMin": 0.88,
+        "maxHeightMM": 11.27
+      },
+      {
+        "centre": [1.2359, 7.9253, 11.0796],
+        "normal": [0.2806, -0.0196, 0.9596],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [-0.451, -6.6381, 11.0097],
+        "normal": [0.0036, -0.1296, 0.9916],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [1.8544, 5.2267, 10.8843],
+        "normal": [0.1356, 0.0213, 0.9905],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [7.871, 6.0707, 10.6066],
+        "normal": [0.0578, -0.0477, 0.9972],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [14.225, 5.958, 10.7084],
+        "normal": [-0.195, -0.1721, 0.9656],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [-0.2261, 8.9932, 11.3511],
+        "normal": [0.0387, 0.0151, 0.9991],
+        "radiusMM": 0.9,
+        "normalDotMin": 0.8
+      },
+      {
+        "centre": [-1.1258, 9.0495, 11.293],
+        "normal": [-0.1468, 0.0515, 0.9878],
+        "radiusMM": 0.9,
+        "normalDotMin": 0.8
+      },
+      {
+        "centre": [-1.2382, 11.3551, 11.1952],
+        "radiusMM": 0.65,
+        "normal": [0, 0, 1],
+        "normalDotMin": 0.93,
+        "maxHeightMM": 11.27
+      }
+    ]
+  },
+  "boulder": {
+    "tint": [0.39, 0.4, 0.285]
+  }
+}
