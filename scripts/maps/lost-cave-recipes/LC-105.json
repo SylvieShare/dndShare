@@ -1,0 +1,278 @@
+{
+  "sourceName": "Water Path End",
+  "referencePage": 15,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.7, 5.8],
+    "lodMiB": [0.55, 2.1],
+    "shadowKiB": [15, 70],
+    "previewKiB": [10, 100],
+    "basis": "259980tri1x1U-bankwater,50k18k beforeUV,2048/1024normalAO,2UASTCbudgets."
+  },
+  "notes": "Author15 brownUshore surroundingturquoisewaterend,olivegreyinnercliffs/loosestones. Ownsource259980tris,cropped4.6mm,datum5.301415confirmedshortfoot. KeepUUIDd288e8db-1c5f-5d4e-816f-8c134effe072/source/1x1floor/point.30845/max.457117/flags/water/no slots. Ownmeasurements afterbake.",
+  "groupCode": "LC-water-path-end",
+  "floorHeightProfileMM": [
+    [-17.6, 14.735],
+    [17.6, 14.735]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "5f85fc3d08d463efab4198e3ebd162327148ef4715f8ec39f78808ae6dc07d79",
+    "mountDepthMM": 5.301415,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Ownsource25.925/25.967@.05,26.684@.5,30.128@2.5,32.710@4,34.932/34.941@5.301415,35@6 confirmoneshortfoot."
+  },
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "water": {
+    "colour": [0.095, 0.63, 0.53],
+    "tileVolume": {
+      "min": [-18, -18, 5.3],
+      "max": [18, 18, 12]
+    },
+    "surfaces": [],
+    "roughness": 0.28,
+    "projectedViews": [
+      {
+        "name": "top",
+        "part": "boulder",
+        "toleranceMM": 0.3,
+        "depthPixelRadius": 1,
+        "volumes": [
+          {
+            "min": [-11, -17.5, 11.03],
+            "max": [-5, 8, 13.8]
+          },
+          {
+            "min": [-5.5, 4.5, 11.03],
+            "max": [5.5, 10, 13.7]
+          },
+          {
+            "min": [4.7, -17.5, 11.03],
+            "max": [10.6, 7.5, 13.8]
+          }
+        ],
+        "polygons": [
+          [
+            [317, 804],
+            [319, 737],
+            [318, 682],
+            [340, 632],
+            [350, 588],
+            [345, 545],
+            [356, 493],
+            [387, 441],
+            [420, 408],
+            [457, 373],
+            [493, 352],
+            [533, 349],
+            [574, 366],
+            [610, 401],
+            [642, 432],
+            [672, 475],
+            [682, 526],
+            [684, 565],
+            [658, 612],
+            [652, 653],
+            [639, 696],
+            [652, 737],
+            [655, 785],
+            [648, 820],
+            [591, 820],
+            [584, 767],
+            [591, 716],
+            [592, 674],
+            [607, 625],
+            [620, 576],
+            [626, 527],
+            [609, 481],
+            [583, 438],
+            [548, 414],
+            [512, 400],
+            [475, 415],
+            [441, 450],
+            [425, 490],
+            [403, 544],
+            [399, 591],
+            [379, 634],
+            [372, 677],
+            [388, 723],
+            [390, 771],
+            [404, 808],
+            [404, 824],
+            [361, 824]
+          ]
+        ]
+      },
+      {
+        "name": "reverse",
+        "part": "boulder",
+        "toleranceMM": 0.3,
+        "depthPixelRadius": 1,
+        "volumes": [
+          {
+            "min": [-10.2, -17, 11.1],
+            "max": [10.2, 10.5, 13.25]
+          }
+        ],
+        "polygons": [
+          [
+            [252, 534],
+            [264, 481],
+            [283, 450],
+            [320, 420],
+            [364, 391],
+            [405, 365],
+            [442, 348],
+            [479, 342],
+            [523, 342],
+            [557, 351],
+            [589, 370],
+            [626, 397],
+            [650, 429],
+            [669, 454],
+            [658, 479],
+            [638, 500],
+            [619, 489],
+            [595, 468],
+            [567, 447],
+            [535, 432],
+            [503, 423],
+            [466, 424],
+            [435, 436],
+            [403, 454],
+            [375, 477],
+            [346, 505],
+            [327, 536],
+            [302, 558],
+            [278, 555]
+          ]
+        ]
+      }
+    ],
+    "dryFaces": [
+      {
+        "min": [-18, -18, 5.301415],
+        "max": [-15.5, 18, 17],
+        "normal": [-1, 0, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [15.5, -18, 5.301415],
+        "max": [18, 18, 17],
+        "normal": [1, 0, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [-18, 15.5, 5.301415],
+        "max": [18, 18, 17],
+        "normal": [0, 1, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [-18, -18, 5.301415],
+        "max": [-8, -15.5, 17],
+        "normal": [0, -1, 0],
+        "normalDotMin": 0.15
+      },
+      {
+        "min": [8, -18, 5.301415],
+        "max": [18, -15.5, 17],
+        "normal": [0, -1, 0],
+        "normalDotMin": 0.15
+      }
+    ],
+    "waveGuards": [
+      {
+        "centre": [-4.6091, -5.2865, 11.0029],
+        "normal": [-0.0369, -0.1887, 0.9813],
+        "radiusMM": 1,
+        "normalDotMin": 0.88
+      },
+      {
+        "centre": [-6.8014, -14.2802, 10.9124],
+        "normal": [0.1241, 0.0271, 0.9919],
+        "radiusMM": 1,
+        "normalDotMin": 0.88
+      },
+      {
+        "centre": [-6.9138, -3.2632, 11.1523],
+        "normal": [-0.1401, -0.1659, 0.9761],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.87
+      },
+      {
+        "centre": [1.3493, 5.3369, 11.2692],
+        "normal": [-0.1922, -0.1932, 0.9622],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.87
+      },
+      {
+        "centre": [6.4083, -1.8576, 11.0189],
+        "normal": [0.0248, -0.0467, 0.9986],
+        "radiusMM": 1.2,
+        "normalDotMin": 0.87
+      },
+      {
+        "centre": [-1.7424, 4.0444, 11.1118],
+        "normal": [-0.0697, 0.0234, 0.9973],
+        "radiusMM": 1.4,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [-0.3371, 4.213, 11.1242],
+        "normal": [-0.0079, 0.0031, 1],
+        "radiusMM": 1.4,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [1.2369, 3.7633, 11.1271],
+        "normal": [-0.0057, -0.056, 0.9984],
+        "radiusMM": 1.4,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [-5.7334, -3.8254, 11.2128],
+        "normal": [-0.0881, -0.1689, 0.9817],
+        "radiusMM": 1.4,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [-5.7896, -2.7016, 11.391],
+        "normal": [-0.1179, -0.1267, 0.9849],
+        "radiusMM": 1.4,
+        "normalDotMin": 0.9
+      },
+      {
+        "centre": [-5.0026, -0.4531, 11.3823],
+        "normal": [0.0331, 0.1742, 0.9842],
+        "radiusMM": 1.4,
+        "normalDotMin": 0.9
+      }
+    ]
+  },
+  "boulder": {
+    "tint": [0.39, 0.4, 0.285]
+  },
+  "ormTextureSizes": [1024, 512]
+}
