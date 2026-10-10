@@ -118,9 +118,23 @@ if (bareReference) {
   crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
 }
 const reviewedViews = (masks) => loadReviewedCaveViews(report, masks);
-const waterfallProjection = spec.waterfall?.projectedViews
-  ? await reviewedViews(spec.waterfall.projectedViews)
-  : undefined;
+let waterfallProjection;
+if (spec.waterfall?.projectedViews) {
+  const masks = spec.waterfall.projectedViews;
+  const views = await Promise.all(masks.map((mask) => reviewedViews([mask])));
+  waterfallProjection = (p) => {
+    for (let i = 0; i < views.length; i++) {
+      const volumes = masks[i].volumes;
+      if (
+        volumes && !volumes.some((v) =>
+          p.every((x, k) => x >= v.min[k] && x <= v.max[k]),
+        )
+      ) continue;
+      const mask = views[i](p);
+      if (mask) return mask;
+    }
+  };
+}
 let mineProjection;
 if (spec.mine?.projectedViews) {
   const masks = spec.mine.projectedViews.flatMap((view) =>
