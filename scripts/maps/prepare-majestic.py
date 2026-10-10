@@ -135,6 +135,10 @@ def main():
         from majestic_water import water_bands_orm
         from functools import partial
         surface_finish = partial(water_bands_orm, roughness=recipe['water'].get('roughness', .28), previous=surface_finish)
+    if recipe.get('waterfall', {}).get('perPixelRocks'):
+        from majestic_waterfall import waterfall_stone_orm
+        from functools import partial
+        surface_finish = partial(waterfall_stone_orm, previous=surface_finish)
     extra_bake = None
     if recipe.get('flameReference'):
         from majestic_camp import bake_emission

@@ -39,3 +39,59 @@ def apply_waterfall(positions, colours, roughness, recipe):
         colours = colours*(1-stone[:, None]) + np.array(area['rgb'])*shade[:, None]*stone[:, None]
         roughness = roughness*(1-stone) + area.get('roughness', .82)*stone
     return colours, roughness
+
+
+def waterfall_stone_finish(nodes, links, finish, recipe):
+    settings = recipe.get('waterfall', {})
+    if not settings.get('perPixelRocks'):
+        return finish
+    coords = nodes.new('ShaderNodeTexCoord')
+    for index, area in enumerate(settings.get('rockExclusions', [])):
+        if 'rgb' not in area:
+            continue
+        delta = nodes.new('ShaderNodeVectorMath'); delta.operation = 'SUBTRACT'
+        links.new(coords.outputs['Object'], delta.inputs[0])
+        delta.inputs[1].default_value = area['centreMM']
+        scaled = nodes.new('ShaderNodeVectorMath'); scaled.operation = 'DIVIDE'
+        links.new(delta.outputs['Vector'], scaled.inputs[0])
+        scaled.inputs[1].default_value = area['radiiMM']
+        length = nodes.new('ShaderNodeVectorMath'); length.operation = 'LENGTH'
+        links.new(scaled.outputs['Vector'], length.inputs[0])
+        mask = nodes.new('ShaderNodeMapRange')
+        mask.name = f'Majestic Waterfall Stone {index}'
+        mask['roughness'] = area.get('roughness', .82)
+        mask.clamp = True
+        mask.inputs['From Min'].default_value = .88
+        mask.inputs['From Max'].default_value = 1
+        mask.inputs['To Min'].default_value = 1
+        mask.inputs['To Max'].default_value = 0
+        links.new(length.outputs['Value'], mask.inputs['Value'])
+        painted = nodes.new('ShaderNodeMixRGB')
+        links.new(mask.outputs['Result'], painted.inputs[0])
+        links.new(finish.outputs[0], painted.inputs[1])
+        rgb = np.array(area['rgb'])
+        linear = np.where(rgb <= .04045, rgb/12.92, ((rgb+.055)/1.055)**2.4)
+        painted.inputs[2].default_value = (*linear, 1)
+        finish = painted
+    return finish
+
+
+def waterfall_stone_orm(nodes, links, combine, surface, previous=None):
+    if previous:
+        previous(nodes, links, combine, surface)
+    original = combine.inputs['Green'].links[0].from_socket
+    for mask in list(nodes):
+        if not mask.name.startswith('Majestic Waterfall Stone '):
+            continue
+        desired = mask.get('roughness', .82)
+        difference = nodes.new('ShaderNodeMath'); difference.operation = 'SUBTRACT'
+        difference.inputs[0].default_value = desired
+        links.new(original, difference.inputs[1])
+        delta = nodes.new('ShaderNodeMath'); delta.operation = 'MULTIPLY'
+        links.new(difference.outputs[0], delta.inputs[0])
+        links.new(mask.outputs['Result'], delta.inputs[1])
+        repaired = nodes.new('ShaderNodeMath'); repaired.operation = 'ADD'
+        links.new(original, repaired.inputs[0])
+        links.new(delta.outputs[0], repaired.inputs[1])
+        original = repaired.outputs[0]
+    links.new(original, combine.inputs['Green'])

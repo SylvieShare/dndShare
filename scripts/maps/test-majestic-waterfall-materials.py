@@ -6,7 +6,7 @@ import bpy
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from majestic_waterfall import apply_waterfall
+from majestic_waterfall import apply_waterfall, waterfall_stone_finish, waterfall_stone_orm
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
@@ -60,6 +60,7 @@ np.testing.assert_allclose(old[:4], ochre[:4])
 np.testing.assert_allclose(old[12:16], ochre[12:16])
 np.testing.assert_allclose(old_rough[12:16], .94)
 paint = mesh.color_attributes.new('Fixture paint', 'FLOAT_COLOR', 'POINT')
+colours[12:16] = [.1,.5,.55]
 linear = np.where(colours <= .04045, colours/12.92, ((colours+.055)/1.055)**2.4)
 paint.data.foreach_set('color', np.column_stack([linear, np.ones(len(linear))]).astype(np.float32).ravel())
 mat = bpy.data.materials.new('Waterfall paint verification')
@@ -68,8 +69,11 @@ mesh.materials.append(mat)
 nodes, links = mat.node_tree.nodes, mat.node_tree.links
 colour = nodes.new('ShaderNodeVertexColor')
 colour.layer_name = 'Fixture paint'
+assert waterfall_stone_finish(nodes, links, colour, legacy) is colour
+recipe['waterfall']['perPixelRocks'] = True
+finish = waterfall_stone_finish(nodes, links, colour, recipe)
 emit = nodes.new('ShaderNodeEmission')
-links.new(colour.outputs['Color'], emit.inputs['Color'])
+links.new(finish.outputs[0], emit.inputs['Color'])
 links.new(emit.outputs[0], nodes.get('Material Output').inputs['Surface'])
 im = bpy.data.images.new('Waterfall colour check', width=160, height=32, is_data=True, float_buffer=True)
 tex = nodes.new('ShaderNodeTexImage')
@@ -84,6 +88,18 @@ for x in [16,48]:
 for x in [80,144]:
     assert pixels[16,x,0] > pixels[16,x,2]
 assert abs(pixels[16,112,0]-pixels[16,112,1]) < .04
+surface = nodes.new('ShaderNodeCombineColor')
+surface.inputs['Green'].default_value = .48
+combine = nodes.new('ShaderNodeCombineColor')
+separate = nodes.new('ShaderNodeSeparateColor')
+links.new(surface.outputs[0], separate.inputs[0])
+links.new(separate.outputs['Green'], combine.inputs['Green'])
+waterfall_stone_orm(nodes, links, combine, separate)
+links.new(combine.outputs[0], emit.inputs['Color'])
+bpy.ops.object.bake(type='EMIT', margin=1)
+orm_pixels = np.array(im.pixels[:]).reshape(32,160,4)
+assert orm_pixels[16,112,1] > .8
+assert abs(orm_pixels[16,48,1]-.48) < .01
 np.testing.assert_array_equal(np.array([v.co[:] for v in mesh.vertices]), positions)
 np.testing.assert_array_equal(np.array([v.uv[:] for v in uv.data]), saved_uv)
 print('MAJESTIC_WATERFALL_MATERIALS_VALIDATED', pixels[16,[16,48,80,112,144],:3].tolist(), flush=True)
