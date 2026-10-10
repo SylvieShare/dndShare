@@ -1,0 +1,47 @@
+{
+  "sourceName": "Flat Wall 2",
+  "referencePage": 15,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.5, 4.8],
+    "lodMiB": [0.5, 1.8],
+    "shadowKiB": [25, 90],
+    "previewKiB": [10, 120],
+    "basis": "402830tri1x1flatcliffandindividuallyarrangedfloorrocks;50k18k beforeUV,2048/1024normalAO,twoUASTCbudgets."
+  },
+  "notes": "Author15warmbrownflatcliff/floor; own3clayviewsconfirmdifferentfloorrocklayout andsamecliffoutline. Ownsource402830tris,cut11.5datum5.244715verifiedshortfoot. PreserveUUID973f12b2-e2c3-5eac-9db3-e7382f3a4985/source/1x1edgewall64/point.382761/max1.092426/flags/blockers/no slots.50k18ksourcebake beforeUV,ownAO/floorjoints. UASTCcolour fromindividuallyrebakedsource avoidsflatbrownETC1Scolourblocksobserved107;compare2budgets.",
+  "groupCode": "LC-flat-wall",
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "validateUvOverlaps": true,
+  "surfaceGutters": true,
+  "preserveSurfaceGutters": true,
+  "textureEncoder": "toktx v4.4.2",
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "floorHeightProfileMM": [
+    [-17.6, 14.735],
+    [17.6, 14.735]
+  ],
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "a16e26b0f476a39b7091190c049f1cd78700d08f7dc0839c16f54f2bd8fd4879",
+    "mountDepthMM": 5.244715,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Ownsource26.001/26.005@.05,26.771@.5,30.215@2.5,32.797@4,34.929/34.940@5.244715,35@6 confirmoneshortfoot."
+  },
+  "albedoCodec": "uastc"
+}
