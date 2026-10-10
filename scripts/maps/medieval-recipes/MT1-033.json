@@ -1,0 +1,192 @@
+{
+  "name": "Fountain Empty",
+  "groupCode": "MED-fountain",
+  "tileType": "floor",
+  "width": 2,
+  "height": 2,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 90000,
+  "lodTriangles": 28000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.5,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0.15,
+        0.15
+      ],
+      [
+        1.85,
+        0.15
+      ],
+      [
+        1.85,
+        1.85
+      ],
+      [
+        0.15,
+        1.85
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "fountain",
+    "stone",
+    "empty"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "stoneIslandMinCount": 2,
+    "woodParts": [],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [
+      {
+        "name": "carved sandstone bowls and central pedestal",
+        "minMM": [
+          -32,
+          -32,
+          28.5
+        ],
+        "maxMM": [
+          32,
+          32,
+          91
+        ],
+        "darkRGB": [
+          0.43,
+          0.365,
+          0.245
+        ],
+        "lightRGB": [
+          0.64,
+          0.56,
+          0.39
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "matte sediment on empty basin floor",
+        "kind": "stone",
+        "minMM": [
+          -23.6,
+          -23.6,
+          29.4
+        ],
+        "maxMM": [
+          23.6,
+          23.6,
+          30.2
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            29.8
+          ],
+          "radiiMM": [
+            23.6,
+            23.6,
+            10
+          ]
+        },
+        "rgb": [
+          0.39,
+          0.37,
+          0.255
+        ],
+        "roughness": 0.96,
+        "variation": 0.07
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.8,
+      3.8
+    ],
+    "lodMiB": [
+      0.55,
+      1.3
+    ],
+    "shadowKiB": [
+      65,
+      160
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "70mm 2x2 empty fountain with four mounting pegs, circular basin, loose interior stones, stepped pedestal, two carved bowls and globe. No falling sheets; 90k/28k independently baked geometry preserves rims, plinth bevels and pebbles. Compare 1024/512 versus 768/384 textures."
+  },
+  "reviewNotes": "PDF page6 and native front/back/top. Source 1500004 triangles, 75000284 bytes; native maximum 90.694199mm. Source rays show same four corner paving levels as32 within .0002mm, same17mm datum and four centres at (+/-17.5,+/-17.5)mm. Empty lower basin at [20,0,29.744673]mm and middle inner bowl [10,0,64.173912]mm, with no sheets or water: all rims, central shaft, upper small cup and globe remain worn sandstone. A matte olive-brown residue on the measured lower basin floor is bounded by23.6mm radius, z29.4..30.2mm; raised loose rocks retain warmer carved-stone pigment. Occupied basin leaves only narrow corner strips, so no character stand point. Four independently verified fitted tapers; review all bowl interiors, loose stones, plinth and both candidates before publication.",
+  "uvIslandMargin": 0.0025,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [],
+  "standRayTopMM": 30,
+  "pegCentersMM": [
+    [
+      -17.5,
+      -17.5
+    ],
+    [
+      -17.5,
+      17.5
+    ],
+    [
+      17.5,
+      -17.5
+    ],
+    [
+      17.5,
+      17.5
+    ]
+  ],
+  "surfaceHeightMM": 25.7864
+}

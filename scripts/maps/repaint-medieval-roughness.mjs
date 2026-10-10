@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { readGlb, replaceImages } from './glb_textures.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { structureMetal } from './medieval_structure_domains.mjs';
+import { initializeStructureReferences } from './medieval_source_reference.mjs';
 import { torchSurface } from './medieval_torch_domains.mjs';
 const code = process.argv[2];
 assert.match(code || '', /^MT1-\d{3}$/);
@@ -24,6 +25,7 @@ if (resume) {
   assert.deepEqual(current.recipe,report.recipe);
 }
 const settings = report.recipe.materials;
+await initializeStructureReferences(settings,path.join(root,'models/collections/medieval-town-vol1/inventory.json'));
 assert.ok(['structure','torch'].includes(settings.kind));
 if (!resume) await fs.mkdir(baseline);
 const candidate = path.join(directory, 'candidates/compact');
