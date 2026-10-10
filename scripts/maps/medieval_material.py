@@ -38,6 +38,10 @@ def stone_islands(obj, settings):
 
 
 def paint(obj, recipe):
+    if recipe['materials'].get('kind')=='structure':
+        from medieval_structure import paint as paint_structure
+        paint_structure(obj, recipe)
+        return
     if recipe['materials'].get('kind')=='torch':
         from medieval_torch import paint as paint_torch
         paint_torch(obj, recipe)
@@ -54,9 +58,16 @@ def paint(obj, recipe):
     # Height thresholds are measured per source, in native STL millimetres.
     stone = np.clip((z-settings['stoneStartMM'])/settings['stoneBlendMM'], 0, 1)
     stone = stone*stone*(3-2*stone)
+    if settings.get('stoneBordersMM'):
+        lo, hi = settings['stoneBordersMM']
+        edge = np.clip((np.maximum(np.abs(x), np.abs(y))-lo)/(hi-lo), 0, 1)
+        stone *= edge*edge*(3-2*edge)
     patch = .5+.23*np.sin(x*.23+y*.31)+.16*np.sin(x*.49-y*.19)
     grain = 1+.035*np.sin(x*1.77+y*1.39+z*.53)
     sand = np.array(settings['earthRGB'])*(1+.08*np.sin(x*.39-y*.27))[:, None]
+    if settings.get('gravelRGB'):
+        raised = np.clip((z-settings['gravelStartMM'])/settings['gravelBlendMM'], 0, 1)
+        sand = sand*(1-raised[:, None])+np.array(settings['gravelRGB'])*raised[:, None]*grain[:, None]
     rock = (np.array(settings['stoneDarkRGB'])*(1-patch[:, None])+
             np.array(settings['stoneLightRGB'])*patch[:, None])*grain[:, None]
     if settings.get('stoneIslandMM') is not None:

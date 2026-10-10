@@ -8,6 +8,7 @@ import { prepareShadow } from './shadow_model.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchMetal, torchFlameDomain } from './medieval_torch_domains.mjs';
+import { structureMetal } from './medieval_structure_domains.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -60,15 +61,21 @@ if (!process.argv.includes('--publish-manifest')) {
         }
       }
       let coverage = rasterizeSurface(doc, pixels, pixels, () => {}, slot);
-      if (orm.has(texture) && recipe.materials.hardware?.length) {
+      if (orm.has(texture) && (recipe.materials.hardware?.length || recipe.materials.ironParts?.length)) {
         const writeHardware = (i, p, used) => {
           let weight = 0;
-          for (const h of recipe.materials.hardware) {
+          for (const h of recipe.materials.hardware || []) {
             if (p[2]<h.minZMM) continue;
             const d = p.reduce((sum,v,c) => sum+((v-h.centerMM[c])/h.radiiMM[c])**2, 0);
             weight = Math.max(weight, Math.max(0, Math.min(1, (1-d)/.2)));
           }
           if (!used) data[i*3] = 255;
+          if (recipe.materials.kind==='structure') {
+            const channels = structureMetal(p, recipe.materials);
+            data[i*3+1] = Math.round(channels.roughness*255);
+            data[i*3+2] = Math.round(channels.metallic*255);
+            return;
+          }
           if (recipe.materials.kind==='torch') {
             const metal = torchMetal(p, recipe.materials);
             data[i*3+1] = Math.round((.9*(1-metal/.92)+.58*metal/.92)*255);
@@ -102,7 +109,7 @@ if (!process.argv.includes('--publish-manifest')) {
     const before = getBounds(doc.getRoot().listScenes()[0]);
     await io.write(path.join(review, tier==='render' ? 'preview-model.glb' : 'lod-preview-model.glb'), doc);
     await doc.transform(meshopt({ encoder: MeshoptEncoder, level: 'medium', quantizePosition: 16,
-      ...(recipe.materials.kind==='torch' ? { quantizeTexcoord: 16 } : {}) }));
+      ...(['torch','structure'].includes(recipe.materials.kind) ? { quantizeTexcoord: 16 } : {}) }));
     const final = await io.writeBinary(doc);
     await fs.writeFile(path.join(review, tier+'.glb'), final);
     const decoded = await io.readBinary(final);

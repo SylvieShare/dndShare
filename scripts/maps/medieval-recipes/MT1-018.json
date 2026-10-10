@@ -1,0 +1,422 @@
+{
+  "name": "Wooden Arch",
+  "groupCode": "MED-wooden-arch",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 88000,
+  "lodTriangles": 28000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.59,
+        0
+      ],
+      [
+        0.59,
+        0.215
+      ],
+      [
+        0,
+        0.215
+      ]
+    ],
+    [
+      [
+        0,
+        0.785
+      ],
+      [
+        0.59,
+        0.785
+      ],
+      [
+        0.59,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "arch",
+    "stone",
+    "iron"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.19,
+      0.095
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "stoneBordersMM": [
+      12.1,
+      13.7
+    ],
+    "gravelRGB": [
+      0.4,
+      0.28,
+      0.15
+    ],
+    "gravelStartMM": 25.1,
+    "gravelBlendMM": 0.85,
+    "woodDarkRGB": [
+      0.32,
+      0.15,
+      0.045
+    ],
+    "woodLightRGB": [
+      0.57,
+      0.31,
+      0.105
+    ],
+    "woodParts": [
+      {
+        "name": "uprights",
+        "minMM": [
+          -17.6,
+          -17,
+          27
+        ],
+        "maxMM": [
+          -9.5,
+          17,
+          82
+        ],
+        "absYMM": [
+          9.8,
+          17
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "diagonal feet",
+        "minMM": [
+          -12,
+          -17,
+          27
+        ],
+        "maxMM": [
+          3.1,
+          17,
+          46
+        ],
+        "absYMM": [
+          9.8,
+          17
+        ],
+        "axis": "diagonal-xz",
+        "angleDeg": 118
+      },
+      {
+        "name": "curved braces",
+        "minMM": [
+          -12,
+          -17,
+          52.7
+        ],
+        "maxMM": [
+          17.6,
+          17,
+          81.8
+        ],
+        "absYMM": [
+          9.8,
+          17
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          28.5,
+          42.5
+        ],
+        "radiusMM": 40.06
+      },
+      {
+        "name": "upper platform",
+        "minMM": [
+          -17.6,
+          -17,
+          81.5
+        ],
+        "maxMM": [
+          17.6,
+          17,
+          90
+        ],
+        "axis": "floor-frame",
+        "frameInnerHalfMM": 14.3
+      }
+    ],
+    "stoneParts": [
+      {
+        "minMM": [
+          -8.25,
+          -8.25,
+          84.2
+        ],
+        "maxMM": [
+          8.25,
+          8.25,
+          100
+        ],
+        "darkRGB": [
+          0.42,
+          0.31,
+          0.185
+        ],
+        "lightRGB": [
+          0.56,
+          0.425,
+          0.24
+        ]
+      }
+    ],
+    "ironParts": [
+      {
+        "rgb": [
+          0.43,
+          0.335,
+          0.225
+        ],
+        "roughness": 0.66,
+        "metallic": 0.72,
+        "minMM": [
+          -17.6,
+          -17,
+          25.8
+        ],
+        "maxMM": [
+          -9.5,
+          17,
+          34.5
+        ],
+        "absYMM": [
+          10.0,
+          17
+        ]
+      },
+      {
+        "rgb": [
+          0.43,
+          0.335,
+          0.225
+        ],
+        "roughness": 0.66,
+        "metallic": 0.72,
+        "minMM": [
+          -10,
+          -17,
+          25.8
+        ],
+        "maxMM": [
+          3.1,
+          17,
+          36.2
+        ],
+        "absYMM": [
+          9.8,
+          17
+        ],
+        "projection": {
+          "originMM": [
+            -2,
+            0,
+            27
+          ],
+          "axis": [
+            -0.4695,
+            0,
+            0.8829
+          ],
+          "rangeMM": [
+            -3,
+            7.5
+          ]
+        }
+      }
+    ],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.3,
+          -16.4,
+          84.6
+        ],
+        "radiiMM": [
+          1.25,
+          0.7,
+          1.25
+        ],
+        "minZMM": 83.3,
+        "rgb": [
+          0.19,
+          0.165,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.3,
+          -16.4,
+          84.6
+        ],
+        "radiiMM": [
+          1.25,
+          0.7,
+          1.25
+        ],
+        "minZMM": 83.3,
+        "rgb": [
+          0.19,
+          0.165,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.0,
+          -16.4,
+          52.7
+        ],
+        "radiiMM": [
+          1.25,
+          0.7,
+          1.25
+        ],
+        "minZMM": 51.400000000000006,
+        "rgb": [
+          0.19,
+          0.165,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.3,
+          16.4,
+          84.6
+        ],
+        "radiiMM": [
+          1.25,
+          0.7,
+          1.25
+        ],
+        "minZMM": 83.3,
+        "rgb": [
+          0.19,
+          0.165,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.3,
+          16.4,
+          84.6
+        ],
+        "radiiMM": [
+          1.25,
+          0.7,
+          1.25
+        ],
+        "minZMM": 83.3,
+        "rgb": [
+          0.19,
+          0.165,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.0,
+          16.4,
+          52.7
+        ],
+        "radiiMM": [
+          1.25,
+          0.7,
+          1.25
+        ],
+        "minZMM": 51.400000000000006,
+        "rgb": [
+          0.19,
+          0.165,
+          0.135
+        ]
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.8,
+      3.5
+    ],
+    "lodMiB": [
+      0.55,
+      1.25
+    ],
+    "shadowKiB": [
+      60,
+      180
+    ],
+    "previewKiB": [
+      10,
+      60
+    ],
+    "basis": "One 35 mm paving base with two tall posts, curved and diagonal braces, an open upper timber platform and a large stone cap. Preserve open spaces and silhouette using 88k/28k independent bakes; compare 1024/512 and 768/384 colour maps."
+  },
+  "reviewNotes": "PDF page3 and full/close front/back source views. Native mounting datum17 mm; maximum99.9527 mm. Ground point at native[0,0,26.4771], n.z=.872; ray starts35 mm beneath the arch. Vertical post grain, diagonal feet118deg, curved grain fitted to measured XZ arc center[28.5,42.5] radius40.06, platform grain Y internally/EW and X on NS rails (source normal variances confirm). Upper central cube is sandstone; four foot shoes are aged metal, six raised upper beam/post plugs separately iron. Ground centre remains earth/gravel with stone border; blockers follow the two feet and leave the central passage free.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "lodUVAngleLimitRad": 0.45,
+  "standRayTopMM": 35,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ]
+}

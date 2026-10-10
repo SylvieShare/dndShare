@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { rasterizeSurface } from './uv_surface.mjs';
 import { torchMetal, torchFlameDomain } from './medieval_torch_domains.mjs';
+import { structureMetal } from './medieval_structure_domains.mjs';
 const require = createRequire('/private/tmp/dndshare-model-tools/package.json');
 const { NodeIO } = require('@gltf-transform/core');
 const { ALL_EXTENSIONS } = require('@gltf-transform/extensions');
@@ -18,7 +19,8 @@ const directory = path.resolve(import.meta.dirname, '../../models/collections/me
 const reportPath = path.join(directory, 'report.json');
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 const settings = report.recipe.materials;
-assert.equal(settings.kind, 'torch');
+assert.ok(['torch','structure'].includes(settings.kind));
+const metalAt = p => settings.kind==='structure' ? structureMetal(p, settings).metallic : torchMetal(p, settings);
 const evidence = {};
 for (const tier of ['render', 'lod']) {
   const doc = await io.read(path.join(directory, tier+'.glb'));
@@ -27,7 +29,7 @@ for (const tier of ['render', 'lod']) {
   const { data: orm, info } = await sharp(Buffer.from(material.getMetallicRoughnessTexture().getImage())).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   let metalSamples = 0, mismatches = 0, quantizedBoundarySamples = 0;
   rasterizeSurface(doc, info.width, info.height, (i,p) => {
-    const actual = orm[i*3+2]/255, expected = torchMetal(p, settings);
+    const actual = orm[i*3+2]/255, expected = metalAt(p);
     if (actual>.1) metalSamples++;
     if (Math.abs(actual-expected)>.015) {
       // Packed POSITION/UV values can move a sample across a hard metal edge.
@@ -35,14 +37,14 @@ for (const tier of ['render', 'lod']) {
       // onto a neighbouring material or any texture-pixel-size allowance.
       let boundary = false;
       for (const dx of [-.01, 0, .01]) for (const dy of [-.01, 0, .01]) for (const dz of [-.01, 0, .01]) {
-        if (Math.abs(actual-torchMetal([p[0]+dx,p[1]+dy,p[2]+dz], settings))<=.015) boundary = true;
+        if (Math.abs(actual-metalAt([p[0]+dx,p[1]+dy,p[2]+dz]))<=.015) boundary = true;
       }
       if (boundary) quantizedBoundarySamples++; else mismatches++;
     }
   }, 'MetallicRoughness');
   assert.equal(mismatches, 0, 'Metal channel escaped the measured iron domains');
   let flameSamples = 0, outsideFlame = 0;
-  if (settings.torch.flameReference) {
+  if (settings.kind==='torch' && settings.torch.flameReference) {
     assert.ok(material.getEmissiveTexture());
     const { data, info: e } = await sharp(Buffer.from(material.getEmissiveTexture().getImage())).removeAlpha().raw().toBuffer({ resolveWithObject: true });
     rasterizeSurface(doc, e.width, e.height, (i,p) => {
@@ -59,4 +61,4 @@ for (const tier of ['render', 'lod']) {
 }
 report.materialChannelReview = evidence;
 await fs.writeFile(reportPath, JSON.stringify(report, null, 2)+'\n');
-console.log('MEDIEVAL_TORCH_CHANNELS', code, evidence);
+console.log('MEDIEVAL_MATERIAL_CHANNELS', code, evidence);
