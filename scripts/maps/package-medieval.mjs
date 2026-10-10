@@ -7,7 +7,7 @@ import { currentModel } from './current_model.mjs';
 import { prepareShadow } from './shadow_model.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
-import { torchMetal, torchFlameDomain } from './medieval_torch_domains.mjs';
+import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
 import { structureMetal } from './medieval_structure_domains.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
@@ -61,6 +61,21 @@ if (!process.argv.includes('--publish-manifest')) {
         }
       }
       let coverage = rasterizeSurface(doc, pixels, pixels, () => {}, slot);
+      if (colour.has(texture)) {
+        const pigment = (i,p,n,rgba) => {
+          if (!rgba) throw new Error('Measured Paint attribute required for colour gutters');
+          for (let c=0;c<3;c++) {
+            const v = Math.max(0,Math.min(1,rgba[c]*.9));
+            data[i*3+c] = Math.round((v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055)*255);
+          }
+        };
+        if (recipe.materials.produceParts?.length) {
+          rasterizeSurface(doc,pixels,pixels,(i,p,n,rgba) => {
+            if (data[i*3+1]>data[i*3]*1.18 && rgba[1]<rgba[0]*1.05) pigment(i,p,n,rgba);
+          },slot,'COLOR_1');
+        }
+        coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,pigment,1,slot,'COLOR_1');
+      }
       if (orm.has(texture) && (recipe.materials.hardware?.length || recipe.materials.ironParts?.length)) {
         const writeHardware = (i, p, used) => {
           let weight = 0;
@@ -77,9 +92,9 @@ if (!process.argv.includes('--publish-manifest')) {
             return;
           }
           if (recipe.materials.kind==='torch') {
-            const metal = torchMetal(p, recipe.materials);
-            data[i*3+1] = Math.round((.9*(1-metal/.92)+.58*metal/.92)*255);
-            data[i*3+2] = Math.round(metal*255);
+            const channels = torchSurface(p, recipe.materials);
+            data[i*3+1] = Math.round(channels.roughness*255);
+            data[i*3+2] = Math.round(channels.metallic*255);
             return;
           }
           data[i*3+1] = Math.round((.88*(1-weight)+.43*weight)*255);

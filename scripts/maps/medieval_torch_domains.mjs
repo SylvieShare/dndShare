@@ -1,4 +1,17 @@
 // Native STL millimetres, shared by ORM packing and physical-surface QA.
+import { terrainRoughness } from './medieval_structure_domains.mjs';
+
+export function torchSurface(p, settings) {
+  const spec = settings.torch;
+  const radius = Math.hypot(p[0]-spec.basketCenterMM[0],p[1]-spec.basketCenterMM[1]);
+  let roughness = terrainRoughness(p, settings);
+  if (p.every((v,i) => v>=spec.woodMinMM[i] && v<=spec.woodMaxMM[i])) roughness = .88;
+  if (p[2]>=spec.fuelMinZMM && p[2]<=spec.fuelMaxZMM && radius<spec.fuelRadiusMM) roughness = .98;
+  if (spec.flameReference && torchFlameDomain(p,spec)) roughness = .9;
+  const metallic = torchMetal(p, settings), weight = metallic/.92;
+  return { metallic, roughness: roughness*(1-weight)+.58*weight };
+}
+
 export function torchMetal(p, settings) {
   const spec = settings.torch;
   const radius = Math.hypot(p[0]-spec.basketCenterMM[0], p[1]-spec.basketCenterMM[1]);

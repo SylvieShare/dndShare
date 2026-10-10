@@ -10,6 +10,10 @@ const directory = path.resolve(import.meta.dirname, '../../models/collections/me
 const source = path.join(directory, 'candidates', candidate);
 const baseline = JSON.parse(await fs.readFile(path.join(directory, 'report.json'), 'utf8'));
 const selected = JSON.parse(await fs.readFile(path.join(source, 'report.json'), 'utf8'));
+if (selected.roughnessCorrection) for (const tier of ['render','lod']) {
+  assert.equal(selected.materialChannelReview?.[tier]?.metalDomainMismatches,0,'Validate corrected material channels before selection');
+  assert.equal(selected.materialChannelReview?.[tier]?.roughnessDomainMismatches,0,'Validate corrected roughness before selection');
+}
 assert.equal(selected.sourceSHA256, baseline.sourceSHA256);
 assert.deepEqual(selected.recipe, baseline.recipe);
 const { id: baselineID, assets: baselineAssets, ...baselineMetadata } = baseline.model;

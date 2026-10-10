@@ -15,15 +15,23 @@ const upload = path.join(base, 'upload', code);
 const manifest = JSON.parse(await fs.readFile(path.join(upload, 'catalogue.json'), 'utf8'));
 assert.equal(manifest.length, 1);
 const expected = manifest[0];
-const { stderr } = await run('go', ['run', './cmd/map-model-upload', '-assets', upload, '-workers', '1'], { cwd: root, maxBuffer: 1048576 });
+const reportPath = path.join(base, 'review', code, 'report.json');
+const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
+assert.deepEqual(report.model,expected,'Publication manifest differs from reviewed resources');
+if (report.roughnessCorrection) for (const tier of ['render','lod']) {
+  assert.equal(report.materialChannelReview?.[tier]?.metalDomainMismatches,0,'Unverified corrected metallic channel');
+  assert.equal(report.materialChannelReview?.[tier]?.roughnessDomainMismatches,0,'Unverified corrected roughness');
+}
+const uploader = process.env.DNDSHARE_MAP_UPLOADER;
+const { stderr } = await run(uploader || 'go',
+  [...(uploader ? [] : ['run','./cmd/map-model-upload']),'-assets',upload,'-workers','1'],
+  { cwd: root, maxBuffer: 1048576 });
 if (stderr) process.stdout.write(stderr);
 const current = await mapTool('map_tile_model_get', { id: expected.id });
 assert.equal(current.definitionId, expected.definitionId);
 if (current.code!==expected.code) {
   await mapTool('map_tile_model_group_update', { definitionId: current.definitionId, expectedCode: current.code, code: expected.code });
 }
-const reportPath = path.join(base, 'review', code, 'report.json');
-const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 const behaviour = await applyBehaviour(expected.definitionId, report.recipe);
 if (behaviour) {
   report.behaviourPublication = behaviour;

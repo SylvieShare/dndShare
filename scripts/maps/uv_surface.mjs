@@ -5,6 +5,7 @@ function visitSurfaceTriangles(
   height,
   visitor,
   slot = "BaseColor",
+  colorSemantic = null,
 ) {
   for (const node of doc.getRoot().listNodes()) {
     if (!node.getMesh()) continue;
@@ -16,7 +17,9 @@ function visitSurfaceTriangles(
       const uv = primitive.getAttribute("TEXCOORD_" + info.getTexCoord()),
         positions = primitive.getAttribute("POSITION"),
         normals = primitive.getAttribute("NORMAL"),
+        colors = colorSemantic ? primitive.getAttribute(colorSemantic) : null,
         indices = primitive.getIndices();
+      if (colorSemantic && !colors) throw new Error("Missing requested surface colour attribute");
       const transform = info.getExtension("KHR_texture_transform"),
         scale = transform?.getScale() || [1, 1],
         offset = transform?.getOffset() || [0, 0],
@@ -24,7 +27,8 @@ function visitSurfaceTriangles(
       for (let i = 0; i < indices.getCount(); i += 3) {
         const points = [],
           pixels = [],
-          directions = [];
+          directions = [],
+          colours = colors ? [] : null;
         for (let j = 0; j < 3; j++) {
           const index = indices.getScalar(i + j),
             p = positions.getElement(index, []),
@@ -45,6 +49,7 @@ function visitSurfaceTriangles(
           );
           points.push([world[0] * 35, -world[2] * 35, world[1] * 35]);
           directions.push([normal[0], -normal[2], normal[1]]);
+          if (colors) colours.push(colors.getElement(index, []));
           const u = t[0] * scale[0],
             v = t[1] * scale[1];
           pixels.push([
@@ -52,13 +57,13 @@ function visitSurfaceTriangles(
             (u * Math.sin(angle) + v * Math.cos(angle) + offset[1]) * height,
           ]);
         }
-        visitor(pixels, points, directions);
+        visitor(pixels, points, directions, colours);
       }
     }
   }
 }
 
-function surfaceSample(points, directions, weights) {
+function surfaceSample(points, directions, weights, colours = null) {
   const position = points[0].map((_, k) =>
     weights.reduce((sum, w, j) => sum + points[j][k] * w, 0),
   );
@@ -66,7 +71,8 @@ function surfaceSample(points, directions, weights) {
     weights.reduce((sum, w, j) => sum + directions[j][k] * w, 0),
   );
   const length = Math.hypot(...normal);
-  return [position, normal.map((v) => v / (length || 1))];
+  return [position, normal.map((v) => v / (length || 1)),
+    ...(colours ? [colours[0].map((_,k) => weights.reduce((sum,w,j) => sum+colours[j][k]*w,0))] : [])];
 }
 
 export function rasterizeSurface(
@@ -75,13 +81,14 @@ export function rasterizeSurface(
   height,
   visitor,
   slot = "BaseColor",
+  colorSemantic = null,
 ) {
   const coverage = new Uint8Array(width * height);
   visitSurfaceTriangles(
     doc,
     width,
     height,
-    (pixels, points, directions) => {
+    (pixels, points, directions, colours) => {
       const [[ax, ay], [bx, by], [cx, cy]] = pixels;
       const den = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy);
       if (Math.abs(den) < 1e-6) return;
@@ -98,12 +105,13 @@ export function rasterizeSurface(
           if (a < -0.001 || b < -0.001 || c < -0.001) continue;
           visitor(
             y * width + x,
-            ...surfaceSample(points, directions, [a, b, c]),
+            ...surfaceSample(points, directions, [a, b, c], colours),
           );
           coverage[y * width + x] = 1;
         }
     },
     slot,
+    colorSemantic,
   );
   return coverage;
 }
@@ -118,6 +126,7 @@ export function seedSurfaceGutters(
   visitor,
   radius = 1,
   slot = "BaseColor",
+  colorSemantic = null,
 ) {
   const seeded = coverage.slice();
   const distance = new Float32Array(width * height).fill(Infinity);
@@ -125,7 +134,7 @@ export function seedSurfaceGutters(
     doc,
     width,
     height,
-    (pixels, points, directions) => {
+    (pixels, points, directions, colours) => {
       const minX = Math.max(
           0,
           Math.floor(Math.min(...pixels.map((p) => p[0])) - radius),
@@ -175,10 +184,11 @@ export function seedSurfaceGutters(
           if (!weights) continue;
           distance[index] = nearest;
           seeded[index] = 1;
-          visitor(index, ...surfaceSample(points, directions, weights));
+          visitor(index, ...surfaceSample(points, directions, weights, colours));
         }
     },
     slot,
+    colorSemantic,
   );
   return seeded;
 }

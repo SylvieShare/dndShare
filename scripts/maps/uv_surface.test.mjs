@@ -21,6 +21,11 @@ function fixture() {
       [20, 0, 0],
     ],
     NORMAL: Array.from({ length: 6 }, () => [0, 1, 0]),
+    COLOR_0: Array.from({ length: 6 }, () => [1, 1, 1, 1]),
+    COLOR_1: [
+      ...Array.from({ length: 3 }, () => [.2, .06, .02, 1]),
+      ...Array.from({ length: 3 }, () => [.15, .55, .025, 1]),
+    ],
   };
   const primitive = {
     getMaterial: () => ({
@@ -65,4 +70,17 @@ test("subpixel wall triangles seed their own gutters without replacing used crys
   assert(
     seeded.reduce((a, b) => a + b, 0) > coverage.reduce((a, b) => a + b, 0),
   );
+});
+
+test("named Paint colours seed tiny timber islands beside green fruit without replacing used pixels", () => {
+  const doc = fixture(), size = 128, colours = new Map();
+  const coverage = rasterizeSurface(doc,size,size,(i,p,n,rgba) => colours.set(i,rgba),"BaseColor","COLOR_1");
+  const original = new Map(colours);
+  seedSurfaceGutters(doc,size,size,coverage,(i,p,n,rgba) => {
+    const expected = p[0]<500 ? [.2,.06,.02,1] : [.15,.55,.025,1];
+    for (let c=0;c<4;c++) assert(Math.abs(rgba[c]-expected[c])<1e-8);
+    colours.set(i,rgba);
+  },1,"BaseColor","COLOR_1");
+  assert([...colours.values()].some(c => Math.abs(c[0]-.2)<1e-8));
+  for (const [i,rgba] of original) assert.deepEqual(colours.get(i),rgba);
 });

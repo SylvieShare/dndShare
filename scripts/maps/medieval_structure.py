@@ -91,6 +91,16 @@ def paint(obj, recipe):
         fabric = np.array(part['rgb'])*weave[:, None]
         rgb[mask] = fabric[mask]; surface[mask, 1] = .98; surface[mask, 2] = 0
         print('MEDIEVAL_FABRIC', part['name'], int(mask.sum()), flush=True)
+    for part in settings.get('produceParts', []):
+        mask = domain(p, part)
+        centers = np.array(part['centersMM'])
+        nearest = ((p[:, None, :2]-centers[None, :, :2])**2).sum(2).argmin(1)
+        tones = .5+.23*np.sin(centers[:, 0]*3.71+centers[:, 1]*5.39)
+        t = tones[nearest]
+        fruit = np.array(part['darkRGB'])*(1-t[:, None])+np.array(part['lightRGB'])*t[:, None]
+        fruit *= (1+.022*np.sin(x*8.7+y*7.2+z*9.1))[:, None]
+        rgb[mask] = fruit[mask]; surface[mask, 1] = part['roughness']; surface[mask, 2] = 0
+        print('MEDIEVAL_PRODUCE', part['name'], int(mask.sum()), len(centers), flush=True)
     for part in settings.get('ironParts', []):
         mask = domain(p, part)
         iron = np.array(part['rgb'])*(1+.07*np.sin(x*1.2+y*.7+z*.6))[:, None]
