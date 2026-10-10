@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from majestic_masonry import masonry_box_finish
 
 
-def bake_patch(vertices, expected_stone):
+def bake_patch(vertices, expected_stone, raised_grass=None):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     mesh = bpy.data.meshes.new('Measured tread')
     mesh.from_pydata(vertices, [], [(0,1,2,3)]); mesh.update()
@@ -17,6 +17,11 @@ def bake_patch(vertices, expected_stone):
     uv = mesh.uv_layers.new()
     for i, point in enumerate([(0,0),(1,0),(1,1),(0,1)]): uv.data[i].uv = point
     original = [tuple(v.co) for v in mesh.vertices]
+    original_uv = [tuple(v.uv) for v in uv.data]
+    if raised_grass is not None:
+        attribute = mesh.color_attributes.new('RaisedGrass', 'FLOAT_COLOR', 'POINT')
+        for value in attribute.data:
+            value.color = (raised_grass, raised_grass, raised_grass, 1)
     mat = bpy.data.materials.new('Tread test'); mat.use_nodes = True
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
     shader = nodes.get('Principled BSDF')
@@ -26,6 +31,8 @@ def bake_patch(vertices, expected_stone):
     assert masonry_box_finish(nodes, links, finish, {}, white.outputs[0], white.outputs[0]) is finish
     recipe = {'masonryRGB':[.62,.46,.27], 'masonrySurfaceBoxes':[
         {'minMM':[24,4,54.5], 'maxMM':[42,13,57.5], 'normalZMin':.85}]}
+    if raised_grass is not None:
+        recipe['masonryPreserveRaisedGrass'] = True
     finish = masonry_box_finish(nodes, links, finish, recipe, white.outputs[0], white.outputs[0])
     links.new(finish.outputs[0], shader.inputs['Base Color']); mesh.materials.append(mat)
     image = bpy.data.images.new('Baked tread', width=16, height=16)
@@ -37,9 +44,12 @@ def bake_patch(vertices, expected_stone):
     if expected_stone: assert pixel[0] > pixel[1]*1.2, f'Stone became grass: {pixel}'
     else: assert pixel[1] > pixel[0]*1.2, f'Grass changed outside tread: {pixel}'
     assert original == [tuple(v.co) for v in mesh.vertices]
+    assert original_uv == [tuple(v.uv) for v in uv.data]
 
 
 bake_patch([(26,6,55.7),(28,6,55.7),(28,8,55.7),(26,8,55.7)], True)
 bake_patch([(0,6,55.7),(2,6,55.7),(2,8,55.7),(0,8,55.7)], False)
 bake_patch([(26,6,55),(26,8,55),(26,8,56),(26,6,56)], False)
+bake_patch([(26,6,55.7),(28,6,55.7),(28,8,55.7),(26,8,55.7)], False, raised_grass=1)
+bake_patch([(26,6,55.7),(28,6,55.7),(28,8,55.7),(26,8,55.7)], True, raised_grass=0)
 print('MAJESTIC_MASONRY_BOX_TEST_PASSED', flush=True)

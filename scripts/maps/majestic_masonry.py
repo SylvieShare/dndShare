@@ -98,6 +98,10 @@ def masonry_box_finish(nodes, links, finish, recipe, noise, wear):
     if recipe.get('masonryPreserveVegetation'):
         vegetation = nodes.new('ShaderNodeVertexColor'); vegetation.layer_name = 'Vegetation'
         vegetation_keep = scalar('SUBTRACT', 1, clamp(vegetation.outputs['Color']))
+    if recipe.get('masonryPreserveRaisedGrass'):
+        grass = nodes.new('ShaderNodeVertexColor'); grass.layer_name = 'RaisedGrass'
+        grass_keep = scalar('SUBTRACT', 1, clamp(grass.outputs['Color']))
+        vegetation_keep = grass_keep if vegetation_keep is None else scalar('MULTIPLY', vegetation_keep, grass_keep)
     palettes = {}
     for box in boxes:
         weight = 1

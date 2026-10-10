@@ -21,7 +21,8 @@ def paint(obj, recipe=None, code=None):
         from pathlib import Path
         field=np.load(Path(__file__).resolve().parents[2]/'models/collections/majestic-highlands/survey'/recipe['raisedGrass'].get('fieldCode',code)/'top-surface.npy')[:,:,0]
         cap=np.empty(len(z)*4,np.float32);mesh.color_attributes['RaisedGrass'].data.foreach_get('color',cap);cap=cap.reshape(-1,4)[:,0]
-        tip_height=np.where(cap>0,z-(sample_field(field,positions.reshape(-1,3))-16),z)
+        top = sample_field(field, positions.reshape(-1,3), recipe['raisedGrass'].get('fieldBoundsMM'))
+        tip_height=np.where(cap>0,z-(top-16),z)
     tip = np.clip((tip_height-14.75)/1.55, 0, 1)*.7
     variation = 1 + .06*np.sin(x*.17+y*.21) + .04*np.sin(x*.41-y*.33)
     soil_side = np.array([.255, .185, .115])

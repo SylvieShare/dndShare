@@ -16,9 +16,19 @@ from tile_mesh import activate, shade
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--code', required=True)
+    parser.add_argument('--field-code', help='Write only a named auxiliary height field in survey/')
+    parser.add_argument('--field-bounds-mm', type=float, nargs=4, metavar=('MIN_X', 'MIN_Y', 'MAX_X', 'MAX_Y'))
+    parser.add_argument('--field-ray-start-mm', type=float, default=1000)
     args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
+    bounds = args.field_bounds_mm or [-52.5, -52.5, 52.5, 52.5]
+    if not np.isfinite(bounds).all() or bounds[2] <= bounds[0] or bounds[3] <= bounds[1]:
+        parser.error('Height field bounds must be finite increasing XY corners')
+    if args.field_code is not None and (not args.field_code or Path(args.field_code).name != args.field_code or args.field_code in ['.', '..']):
+        parser.error('Field code must be a single directory name')
     row = next(r for r in json.loads((BASE/'manifest.json').read_text()) if r['code']==args.code)
-    out = BASE/'survey'/args.code; out.mkdir(parents=True, exist_ok=True)
+    if not np.isfinite(args.field_ray_start_mm) or args.field_ray_start_mm <= row['max'][2]:
+        parser.error('Height field rays must start above the complete source model')
+    out = BASE/'survey'/(args.field_code or args.code); out.mkdir(parents=True, exist_ok=True)
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.wm.stl_import(filepath=str(ROOT/'models'/row['sourcePath']))
     obj = bpy.context.object; shade(obj)
@@ -39,11 +49,18 @@ def main():
             sections[str(plane)]={'low':low.tolist(),'high':high.tolist(),'span':(high-low).tolist()}
     tree=BVHTree.FromObject(obj,bpy.context.evaluated_depsgraph_get())
     grid=np.zeros((211,211,4),np.float32)
-    for yi,y in enumerate(np.linspace(-52.5,52.5,211)):
-        for xi,x in enumerate(np.linspace(-52.5,52.5,211)):
-            p,n,_,_=tree.ray_cast((x,y,1000),(0,0,-1))
+    for yi,y in enumerate(np.linspace(bounds[1],bounds[3],211)):
+        for xi,x in enumerate(np.linspace(bounds[0],bounds[2],211)):
+            p,n,_,_=tree.ray_cast((x,y,args.field_ray_start_mm),(0,0,-1))
             if p: grid[yi,xi]=[p.z,*n]
     np.save(out/'top-surface.npy',grid)
+    if args.field_code:
+        metadata = {'sourceCode': args.code, 'sourceSHA256': row['sourceSHA256'],
+                    'fieldBoundsMM': [bounds[:2], bounds[2:]], 'resolution': [211, 211],
+                    'rayStartMM': args.field_ray_start_mm}
+        (out/'height-field.json').write_text(json.dumps(metadata, indent=2)+'\n')
+        print('MAJESTIC_HEIGHT_FIELD', args.field_code, metadata, flush=True)
+        return
     report={'source':row,'sections':sections,'topQuantiles':np.quantile(grid[:,:,0],[0,.1,.25,.5,.75,.9,1]).tolist()}
     (out/'survey.json').write_text(json.dumps(report,indent=2)+'\n')
     print('MAJESTIC_SURVEY',args.code,report['sections'],report['topQuantiles'],flush=True)

@@ -1,0 +1,816 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 10,
+  "mountProfile": "xl-ring",
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 32.65,
+  "renderTriangles": 45000,
+  "lodTriangles": 18000,
+  "tileType": "frame",
+  "hasDecor": false,
+  "tags": [
+    "frame",
+    "support",
+    "xl",
+    "scenic-level",
+    "one-face",
+    "hollow",
+    "stone",
+    "grass"
+  ],
+  "recipe": "majestic-scenic-level-one-face-v1",
+  "groupCode": "MH-scenic-level",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 3,
+      "height": 3,
+      "elevation": 0.9332942417689732,
+      "insertionRise": 0.014285714285714285,
+      "insertionRises": {
+        "xl-ring": 0.08857142857142858,
+        "db-pins": 0.1
+      }
+    }
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.25,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "openingChecks": [
+    {
+      "name": "open-cell--35--35",
+      "originMM": [
+        -34.86643600463867,
+        -30.414033889770508,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-0",
+      "originMM": [
+        -34.86643600463867,
+        4.585966110229492,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-35",
+      "originMM": [
+        -34.86643600463867,
+        39.58596611022949,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0--35",
+      "originMM": [
+        0.13356399536132812,
+        -30.414033889770508,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-0",
+      "originMM": [
+        0.13356399536132812,
+        4.585966110229492,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-35",
+      "originMM": [
+        0.13356399536132812,
+        39.58596611022949,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35--35",
+      "originMM": [
+        35.13356399536133,
+        -30.414033889770508,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-0",
+      "originMM": [
+        35.13356399536133,
+        4.585966110229492,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-35",
+      "originMM": [
+        35.13356399536133,
+        39.58596611022949,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    }
+  ],
+  "frameFit": {
+    "maxDriftMM": 0.15,
+    "throughPointsMM": [
+      [
+        -34.86643600463867,
+        -30.414033889770508
+      ],
+      [
+        -34.86643600463867,
+        4.585966110229492
+      ],
+      [
+        -34.86643600463867,
+        39.58596611022949
+      ],
+      [
+        0.13356399536132812,
+        -30.414033889770508
+      ],
+      [
+        0.13356399536132812,
+        4.585966110229492
+      ],
+      [
+        0.13356399536132812,
+        39.58596611022949
+      ],
+      [
+        35.13356399536133,
+        -30.414033889770508
+      ],
+      [
+        35.13356399536133,
+        4.585966110229492
+      ],
+      [
+        35.13356399536133,
+        39.58596611022949
+      ]
+    ],
+    "levelsMM": [
+      0.1,
+      1,
+      2,
+      5,
+      9,
+      9.75,
+      9.95,
+      10,
+      15,
+      20,
+      22,
+      23,
+      24,
+      25,
+      28,
+      30,
+      31,
+      32,
+      32.5
+    ],
+    "rayOffsetsMM": [
+      0,
+      17.5,
+      35,
+      45
+    ],
+    "profiles": [
+      {
+        "name": "xl-taper",
+        "depthMM": 9.75,
+        "riseMM": 0.5,
+        "sectionsMM": [
+          [
+            0.05,
+            47.0383
+          ],
+          [
+            9.75,
+            48.65
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              0.13356399536132812,
+              4.585966110229492
+            ]
+          }
+        ]
+      },
+      {
+        "name": "xl-ring",
+        "depthMM": 10,
+        "riseMM": 3.1,
+        "holeHalfMM": 40.35,
+        "sectionsMM": [
+          [
+            0.05,
+            46.99984722116236
+          ],
+          [
+            0.1,
+            47.05865952145656
+          ],
+          [
+            0.5,
+            47.39746159000014
+          ],
+          [
+            1,
+            47.810401695962
+          ],
+          [
+            1.5,
+            48.032125910601046
+          ],
+          [
+            2,
+            48.03256879566496
+          ],
+          [
+            3,
+            48.032440229804784
+          ],
+          [
+            4,
+            48.06334070178536
+          ],
+          [
+            4.5,
+            48.209317846466575
+          ],
+          [
+            5,
+            48.40645144293604
+          ],
+          [
+            6,
+            49.23908811848892
+          ],
+          [
+            7,
+            50.09276234057008
+          ],
+          [
+            8,
+            50.94643656265124
+          ],
+          [
+            9,
+            51.805869433691754
+          ],
+          [
+            9.75,
+            52.45071241782238
+          ],
+          [
+            9.95,
+            52.57162264900927
+          ],
+          [
+            10,
+            52.58782235163914
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              0.13356399536132812,
+              4.585966110229492
+            ]
+          }
+        ]
+      },
+      {
+        "name": "xl-ring-short",
+        "depthMM": 7.65,
+        "riseMM": 3.1,
+        "holeHalfMM": 40.39,
+        "sectionsMM": [
+          [
+            0.05,
+            47.91558152968617
+          ],
+          [
+            0.1,
+            47.955444735809415
+          ],
+          [
+            0.5,
+            47.98095230102539
+          ],
+          [
+            1,
+            47.9808230963982
+          ],
+          [
+            1.5,
+            47.980646971547486
+          ],
+          [
+            2,
+            47.9795297599029
+          ],
+          [
+            3,
+            48.678063519440656
+          ],
+          [
+            4,
+            49.54157794082104
+          ],
+          [
+            4.5,
+            49.97169611202361
+          ],
+          [
+            5,
+            50.40181428322617
+          ],
+          [
+            6,
+            51.2623825579459
+          ],
+          [
+            7,
+            52.12340342357665
+          ],
+          [
+            7.25,
+            52.33859431644733
+          ],
+          [
+            7.4,
+            52.46323173183178
+          ],
+          [
+            7.5,
+            52.52559032058819
+          ],
+          [
+            7.6,
+            52.54215443993592
+          ],
+          [
+            7.65,
+            52.54233913491242
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              0.13356399536132812,
+              4.585966110229492
+            ]
+          }
+        ]
+      },
+      {
+        "name": "db-pins",
+        "depthMM": 17,
+        "riseMM": 3.5,
+        "sectionsMM": [
+          [
+            0.05,
+            12.3
+          ],
+          [
+            1,
+            12.8
+          ],
+          [
+            2,
+            13.1
+          ],
+          [
+            5,
+            13.1
+          ],
+          [
+            9,
+            13.1
+          ],
+          [
+            11.2,
+            13.1
+          ],
+          [
+            11.5,
+            13.25
+          ],
+          [
+            12,
+            13.7
+          ],
+          [
+            14,
+            15.4
+          ],
+          [
+            15,
+            16.25
+          ],
+          [
+            16,
+            17.15
+          ],
+          [
+            16.5,
+            17.5
+          ],
+          [
+            17,
+            17.63
+          ]
+        ],
+        "pinCentresMM": [
+          [
+            0,
+            -35
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            35
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -34.86643600463867,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              0.13356399536132812,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              35.13356399536133,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              0.13356399536132812,
+              -30.414033889770508
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              0.13356399536132812,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              0.13356399536132812,
+              39.58596611022949
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              -34.86643600463867,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              0.13356399536132812,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              35.13356399536133,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              0.13356399536132812,
+              -30.414033889770508
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              0.13356399536132812,
+              4.585966110229492
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              0.13356399536132812,
+              39.58596611022949
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      1500000,
+      4000000
+    ],
+    "targetLODBytes": [
+      650000,
+      2200000
+    ],
+    "targetShadowBytes": [
+      45000,
+      140000
+    ],
+    "targetPreviewBytes": [
+      14000,
+      100000
+    ],
+    "basis": "Own400004tris20000284B SHA74b6f33c53d64af93279c09276e4b3056a0d8dc80b460c33fbbf542badec0ffa. Own3neutral+PDF55ACTUALLYviewed: squareframe3x3 onefrontscenicstone/grassrim vs3technicalcharcoalgrayfaces. Datum10 nativefullring; body105x105, actualmountcenter[.1335639954,4.58596611] consistentZ.1ring93.9265x94.0573 andZ10body104.991x105.110; sourceFULLbounds x+-52.6346y+-57.151 includeFRONTdecoroverhang(negativeY) notlargerfootprint. ActualsupportRIM32.665298 fromtechnicalmeshy>-47.5z<35, rimrays32.650..32.654; decorGrassmax42.081596 mustNOTbeusedslotheight. Surface32.65 canStandfalse[] slot3x3elevation32.665298/35; profiles all15nativewholeposes0 defaulttaper.5/fullring3/shortring3/DBpins3.5. Ownfullnativeincomingring17sections relativemountcenter minhole40.38447 => conservativehole40.35/radii+ .03 plusknown905envelope; finalallSourceRLODfullfit15poses/nineactualgridthroughpoints/19levels4offset4directions .15physical+rawraydiag required. Sourcefrontstoney<-47.9/groundz~38/leaf38..42; technical3facesgraysoilTop.3/.32/.34 usingfullsoilDomains suppressgrass thenownraisedGrassfield preciseXYbounds[-53,-58]to[53,-47] outsidelegacygrid restoresnarrowcanopy/tips. CommonfieldBounds actualEMITtesttranslatedgrass+stone andlegacy-lowgrass regressionPASS preservesgeometryUV. ComparestoneMH901 shiftedownmountcenter regiononlyfront y[-58,-47.9] z>9.8 ochre.52/.335/.17 AOjoints, raisedGrassprotection preservesplants. Fourcaps physicallypickedfromsource top annotation 1/2/3actualstone4initialleafmistakecorrected to735807: [-27.293,-52.177,41.889],[-6.298,-52.176,41.684],[27.643,-53.751,41.552],[39.015,-51.648,40.238]. Measuredellipsoidgrass-exclusions/broadstonefacet.2seed/.12rad growth, grass/stoneboundaries needFINALphysicalprobes+3views/crops. R45k L18k preserve400kcliff+smallgrassstrip/technicaltabs. PrebakeR.55native51261176/1k245828/2k985849 quant61182/245728/985718PASS; L.25all512/1knativequantPASS. Initialcolour2kR1kLOD/data1kR512LOD compare1kactualview/weights; targetsbasedoneplantscapehigherthanplainframes. Fiveassets shadow512alphapreview/native-finalallUVblacknormals/manifest/browserKTXLODsunpointshadow/6views+3alt/grassystripcrop/sourcephysical4stones3plantpoints/frontbodygraycontrol andMCP5SHAmetadataUUID beforepub. Initialfront-reverse revealednativecoincidentlowfrontgrayband dueReference mask; fixedfullmeasuredfrontboxy[-58,-47.8]z9.9..45 plusmasonryPreserveRaisedGrass keepsactualRaisedGrass plants protected. NeedrebakeRLOD/regressionbake/fullmaterialpoints/colorcompare re-view beforeanypub. Fullsourcefrontoutside raysX-35/.13356/+35 Z10.2..35 showinwardrecessYmax-.47.6867 atZ18: previousboxYmax-47.8 leftgraypatchesCONFIRMEDv2image. ExpandmeasuredfrontmaskYmax-47.35 with.08feather coversinsetband butleavestechnicalinsidepazy>-45.95. Newhero previewinside(negativeY)toactuallyshowdecoratedfront; retaintechnicalbackchecks. Re-bakefinalbeforepub. Finalv3fullfrontbodymaskYmax-47.35 fixesallgraylowpatches. ACTUALLYreviewed6RLOD+3alt1k/technicalback andpairedgray-joint/grassstripcloseups. Choose2kR2299412 vs1k1981404 saves318008but1kvisiblystrongerwarmflecksongrayjoints, 2kcleaner mixedpalette; minorfringes remain andLODgrasssoftens. PhysicalRLOD12probes allstoneochre/3leafolive/2framegray andrough>=180PASS, actualusedtexels/UVedgegutterfallback ONLYwhennearestpixel>.5mm; boulder4LODORMtinyUV coverdistance.529 replacedactualUVedgeencodedtexel at.038mm withoutrelax.5guard, allotherprobesunchanged. Alternate1kRsame12pointsPASS butwholeviewpreferred2k. Finalsourceall15fits0 at3mm, butafterquantizedR/L short-ring3mm each2faces collide. Exactwholeframe source/R/L sweeprise3.05mm clearsbothrings ALL0; choose3.10mm with.05mm guard sharedxl-ringoverride for thisreceiver; preservesactualGLBs/UV/physics. Updatingonlymodelmetadata andrecipe profiles/native reports, repackageallchecks/fullfits beforepub. FINALruntime3393212B render2299412/45000 LOD1014128/18000 shadow62016 preview17656 source20000284 separately; alltargetsmet. Aftermeasured3.10ringrise all15SOURCE400004/R45k/L18kvolume fitsZERO, 27holes clear, physicalsurfaceR.03874646 L.05556466 <=.15. Final12probeRLODcolor+ORMPASS incUVedgeLODstone4at.038mm/roughness>=180. CommonfieldBounds/stonePreserveRaisedGrass bake-tests+legacy regressionPASS; officialsurvey --field-code/--field-bounds-mm/--field-ray-start-mm90 EXACTarraymatchesworkingfield(2112114). Finalmanifest/browserKTXLODsunpointshadows/alpha/UV/normalsblack/allviews passed."
+  },
+  "masonryRGB": [
+    0.52,
+    0.335,
+    0.17
+  ],
+  "darkenJoints": true,
+  "soilDomains": [
+    [
+      [
+        -70,
+        -70
+      ],
+      [
+        70,
+        -70
+      ],
+      [
+        70,
+        70
+      ],
+      [
+        -70,
+        70
+      ]
+    ]
+  ],
+  "soilDomainFeatherMM": 1,
+  "soilSurfaceMM": 50,
+  "grassHeightFadeMM": 1,
+  "raisedGrass": {
+    "minMM": [
+      -53,
+      -58,
+      37.8
+    ],
+    "maxMM": [
+      53,
+      -47.95,
+      45
+    ],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": -0.2,
+    "normalFade": 0.5,
+    "fieldCode": "MH-907-front",
+    "fieldBoundsMM": [
+      [
+        -53,
+        -58
+      ],
+      [
+        53,
+        -47
+      ]
+    ],
+    "exclusions": [
+      {
+        "centreMM": [
+          -27.0,
+          -52.2,
+          39.9
+        ],
+        "radiiMM": [
+          3,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          -5.8,
+          -52.3,
+          39.8
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          27.6,
+          -53.3,
+          39.7
+        ],
+        "radiiMM": [
+          3.1,
+          2.6,
+          3.8
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          39.2,
+          -51.5,
+          38.5
+        ],
+        "radiiMM": [
+          2.7,
+          2.5,
+          3
+        ],
+        "minZMM": 37.9
+      }
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -53,
+        -58,
+        37.8
+      ],
+      [
+        53,
+        -47.95,
+        45
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.2,
+    "growAngleRad": 0.12
+  },
+  "masonryReference": {
+    "code": "MH-901",
+    "rotateZ": 0,
+    "translationMM": [
+      0.13356399536132812,
+      4.585966110229492,
+      0
+    ],
+    "matchMM": 0.05,
+    "blendMM": 0.15
+  },
+  "masonryRegion": {
+    "u": [
+      -120,
+      120
+    ],
+    "v": [
+      -120,
+      120
+    ],
+    "x": [
+      -54,
+      54
+    ],
+    "y": [
+      -58,
+      -47.35
+    ],
+    "minZMM": 9.8
+  },
+  "masonryPreserveRaisedGrass": true,
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -54,
+        -58,
+        9.9
+      ],
+      "maxMM": [
+        54,
+        -47.35,
+        45
+      ],
+      "featherMM": 0.08,
+      "rgb": [
+        0.52,
+        0.335,
+        0.17
+      ]
+    }
+  ],
+  "previewDirection": "inside"
+}

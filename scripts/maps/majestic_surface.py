@@ -6,8 +6,15 @@ import numpy as np
 from mathutils.bvhtree import BVHTree
 
 
-def sample_field(field, positions):
-    uv=np.clip((positions[:,:2]+52.5)*2,0,210)
+def sample_field(field, positions, bounds=None):
+    if bounds is None:
+        uv = (positions[:,:2]+52.5)*2
+    else:
+        bounds = np.asarray(bounds, dtype=np.float64)
+        if bounds.shape != (2, 2) or not np.isfinite(bounds).all() or (bounds[1] <= bounds[0]).any():
+            raise ValueError('Height field bounds must be finite increasing XY corners')
+        uv = (positions[:,:2]-bounds[0])*210/(bounds[1]-bounds[0])
+    uv=np.clip(uv,0,210)
     lo=np.minimum(uv.astype(int),209); t=uv-lo
     x,y=lo.T; tx,ty=t.T
     return (field[y,x]*(1-tx)*(1-ty)+field[y,x+1]*tx*(1-ty)+
@@ -89,7 +96,7 @@ def grass_weights(obj, recipe, code):
     if recipe.get('raisedGrass'):
         settings=recipe['raisedGrass']
         field=np.load(Path(__file__).resolve().parents[2]/'models/collections/majestic-highlands/survey'/settings.get('fieldCode',code)/'top-surface.npy')[:,:,0]
-        top=sample_field(field,positions)
+        top=sample_field(field,positions,settings.get('fieldBoundsMM'))
         normals=np.empty(len(positions)*3,np.float32);obj.data.vertices.foreach_get('normal',normals);normals=normals.reshape(-1,3)
         cap=np.clip((settings['depthMM']-(top-positions[:,2]))/settings['depthFadeMM'],0,1)
         cap*=np.clip((normals[:,2]-settings['normalMin'])/settings['normalFade'],0,1)
