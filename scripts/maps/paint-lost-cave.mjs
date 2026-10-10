@@ -14,6 +14,7 @@ import {
 } from "./uv_surface.mjs";
 import { caveRockPixel, darkenCaveFloorJoints } from "./lost_cave_surface.mjs";
 import { paintCaveWater } from "./lost_cave_water.mjs";
+import { paintWaterfall } from "./lost_cave_waterfall.mjs";
 import { paintCavePlatform } from "./lost_cave_platform.mjs";
 import { paintCaveMine, mineProjectionAt } from "./lost_cave_mine.mjs";
 import { paintCaveRope } from "./lost_cave_rope.mjs";
@@ -50,6 +51,7 @@ if (
     "cave-scaffolding-ramp",
     "cave-treasure",
     "cave-water",
+    "cave-waterfall",
     "cave-rope",
     "cave-platform",
     "cave-mine",
@@ -116,6 +118,9 @@ if (bareReference) {
   crystalWallReference = { distanceAt: (p) => wallReferenceDistance(p, field) };
 }
 const reviewedViews = (masks) => loadReviewedCaveViews(report, masks);
+const waterfallProjection = spec.waterfall?.projectedViews
+  ? await reviewedViews(spec.waterfall.projectedViews)
+  : undefined;
 let mineProjection;
 if (spec.mine?.projectedViews) {
   const masks = spec.mine.projectedViews.flatMap((view) =>
@@ -250,6 +255,9 @@ for (const tier of ["render", "lod"]) {
         }
       : {}),
     ...(spec.material === "cave-water" ? { water: 0 } : {}),
+    ...(spec.material === "cave-waterfall"
+      ? { water: 0, foam: 0, pool: 0, boulder: 0 }
+      : {}),
     ...(spec.material === "cave-rope" ? { rope: 0 } : {}),
     ...(spec.material === "cave-platform"
       ? { "platform-top": 0, "platform-side": 0 }
@@ -295,7 +303,10 @@ for (const tier of ["render", "lod"]) {
     : undefined;
   const paintPixel = (i, p, n, used = true) => {
     if (used) checkUv?.(i, p);
-    const value =
+    const waterfallValue = spec.material === "cave-waterfall"
+      ? paintWaterfall(p, n, ao[i], spec, waterfallProjection)
+      : undefined;
+    const value = waterfallValue ?? (
       spec.material === "cave-mine"
         ? paintCaveMine(p, n, ao[i], spec, crystalWallReference, mineProjection)
         : spec.material === "cave-platform"
@@ -374,7 +385,7 @@ for (const tier of ["render", "lod"]) {
                                             n,
                                             ao[i],
                                             report.materialSpec,
-                                          );
+                                          ));
     if (spec.floorHeightProfileMM && value.part === "rock")
       darkenCaveFloorJoints(value, p, spec);
     if (used) counts[value.part]++;

@@ -21,6 +21,13 @@ const directory = path.dirname(path.resolve(file)),
   tools = process.env.KTX_TOOLS || "/private/tmp/dndshare-ktx-tools/bin";
 if (report.model.collection !== "lost-cave" || !report.weightBudget)
   throw new Error("One measured Lost Cave report required");
+if (
+  report.materialSpec.preserveSurfaceGutters &&
+  !report.materialSpec.surfaceGutters
+)
+  throw new Error(
+    "Physical surface gutters must be prepared before preserving them",
+  );
 const normalMinZ = report.materialSpec.normalMinZ ?? 0.01;
 if (!["etc1s", "uastc"].includes(report.materialSpec.albedoCodec ?? "etc1s"))
   throw new Error("Unsupported reviewed albedo codec");
@@ -112,7 +119,10 @@ for (const [ti, tier] of ["render", "lod"].entries()) {
           data[i + c] = Math.round((n[c] / length + 1) * 127.5);
       }
     const coverage = rasterizeSurface(doc, size, size, () => {}, slot);
-    extendUvGutters(data, 3, coverage.slice(), size, size, 8);
+    // The painter has already seeded tiny islands from physical surfaces.
+    // A new coverage raster can miss them and overwrite their gutter colours.
+    if (!report.materialSpec.preserveSurfaceGutters)
+      extendUvGutters(data, 3, coverage.slice(), size, size, 8);
     const prefix = path.join(out, tier + "-" + slot),
       input = prefix + ".png",
       output = prefix + ".ktx2",
