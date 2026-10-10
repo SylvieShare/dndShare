@@ -28,7 +28,11 @@ def apply_water(obj, positions, colours, roughness, recipe):
     if settings.get('bankStoneSurfaces'):
         from majestic_vegetation_surface import stone_surface_mask
         for area in settings['bankStoneSurfaces']:
-            bank_stones = np.maximum(bank_stones, stone_surface_mask(obj.data, positions, area))
+            stone = stone_surface_mask(obj.data, positions, area)
+            if area.get('pointsMM'):
+                from majestic_surface import polygon_weight
+                stone *= polygon_weight(positions, area['pointsMM'], area.get('featherMM', .5))
+            bank_stones = np.maximum(bank_stones, stone)
     rows=json.loads((root/'models/collections/majestic-highlands/manifest.json').read_text())
     row=next(r for r in rows if r['code']==settings['reference'])
     bpy.ops.wm.stl_import(filepath=str(root/'models'/row['sourcePath']))
