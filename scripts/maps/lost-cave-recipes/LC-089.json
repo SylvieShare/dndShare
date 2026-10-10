@@ -1,0 +1,94 @@
+{
+  "sourceName": "Column Key",
+  "referencePage": 13,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 60000,
+  "lodTriangles": 22000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.0,
+      5.8
+    ],
+    "lodMiB": [
+      0.7,
+      2.3
+    ],
+    "shadowKiB": [
+      35,
+      135
+    ],
+    "previewKiB": [
+      20,
+      160
+    ],
+    "basis": "579986-triangle1x1 tall natural column with narrow waist, fractured cap and native square top-key.60k/22k beforeUV preserve shaft and top-key bevels;2048/1024 source rebake, two colour/data budgets."
+  },
+  "notes": "Author page13 and own three clay views: brown natural column with native square top-key, narrow faceted shaft, cracked cap and root rubble. Key is a protrusion, not an accepting slot. Preserve UUID47ee14e4-bd4c-5446-a3de-ee983124e201,source/cut11.5,mount.149912,1x1,column,max2.527289,canStandfalse,empty points and slots,hasDecortrue. Own60k/22k source normal/AO rebake, mineral/dust variation and dark floor joints through fixed14.735mm profile.",
+  "groupCode": "LC-column-key",
+  "floorHeightProfileMM": [
+    [
+      -17.6,
+      14.735
+    ],
+    [
+      17.6,
+      14.735
+    ]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "b265206b00152ac2fea81bd9349e50ba715b47d05fc225f86a222142eebaf312",
+    "mountDepthMM": 5.24692,
+    "sourceTopWidthMM": 35,
+    "centresMM": [
+      [
+        0,
+        0
+      ]
+    ],
+    "reason": "Native sections.05=25.98/.5=26.75/2.5=30.19/4=32.78/datum5.24692=34.92/6=35mm confirm one centered mounting cell; separate native upper key retained."
+  }
+}
