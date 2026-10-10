@@ -7,6 +7,42 @@ import {
   mineProjectionAt,
 } from "./lost_cave_mine.mjs";
 const s = specs["LC-073"];
+test("LC-081 timber follows its own horizontal, tall and inclined members while hex heads stay separate", () => {
+  const s = specs["LC-081"];
+  for (const p of [
+    [-9.5099, -15.4171, 64.0823],
+    [5.6914, -16.2936, 64.0641],
+  ])
+    assert.equal(minePartAt(p, [0, 0, 1], s).member.name, "head-beam");
+  for (const p of [
+    [-7.2979, -15.9604, 47.4576],
+    [-1.0089, -16.4126, 52.2142],
+    [-7.455, 11.1015, 47.7838],
+    [-5.2331, 11.3851, 54.7414],
+  ])
+    assert.equal(minePartAt(p, [0, -1, 0], s).member.name, "upper-brace");
+  assert.equal(
+    minePartAt([-14.5053, 10.5112, 53.435], [0, -1, 0], s).member.name,
+    "post",
+  );
+  for (const p of [
+    [-12.5612, -15.1607, 65.3453],
+    [5.6615, -15.269, 65.0713],
+    [-12.8648, 12.604, 65.4391],
+    [5.8802, 13.2246, 65.1863],
+    [-9.9111, -15.8275, 37.8314],
+  ])
+    assert.equal(
+      minePartAt(p, [0, 0, 1], s, undefined, () => ({ part: "iron" })).part,
+      "iron",
+    );
+  assert.equal(
+    minePartAt([-9.5099, -15.4171, 64.0823], [0, 0, 1], s, undefined, () => ({
+      part: "iron",
+    })).part,
+    "wood",
+  );
+});
 test("mine posts, inclined braces and horizontal sleepers follow their own measured timber axes", () => {
   for (const p of [
     [-13.3519, -17.5003, 33.5124],
