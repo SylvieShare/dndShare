@@ -24,6 +24,11 @@ def apply_water(obj, positions, colours, roughness, recipe):
     root=Path(__file__).resolve().parents[2]
     settings=recipe['water']
     original_colours=colours.copy();original_roughness=roughness.copy()
+    bank_stones = np.zeros(len(positions), np.float32)
+    if settings.get('bankStoneSurfaces'):
+        from majestic_vegetation_surface import stone_surface_mask
+        for area in settings['bankStoneSurfaces']:
+            bank_stones = np.maximum(bank_stones, stone_surface_mask(obj.data, positions, area))
     rows=json.loads((root/'models/collections/majestic-highlands/manifest.json').read_text())
     row=next(r for r in rows if r['code']==settings['reference'])
     bpy.ops.wm.stl_import(filepath=str(root/'models'/row['sourcePath']))
@@ -77,6 +82,7 @@ def apply_water(obj, positions, colours, roughness, recipe):
     if settings.get('boundsMM'):
         lo,hi=np.array(settings['boundsMM'][0]),np.array(settings['boundsMM'][1])
         weight*=np.all((positions>=lo)&(positions<=hi),axis=1)
+    weight *= 1-bank_stones
     height=np.clip((z-settings['lowZMM'])/(settings['highZMM']-settings['lowZMM']),0,1)
     if settings.get('surfaceBands'):
         from water_surface_bands import water_surface_bands
@@ -126,6 +132,9 @@ def apply_water(obj, positions, colours, roughness, recipe):
         keep=np.clip(np.minimum(positions-lo,hi-positions).min(1)/box.get('featherMM',.2),0,1)
         colours=colours*(1-keep[:,None])+original_colours*keep[:,None]
         roughness=roughness*(1-keep)+original_roughness*keep
+    if settings.get('bankStoneSurfaces'):
+        colours = colours*(1-bank_stones[:,None]) + np.array(settings.get('bankStoneRGB', [.415,.435,.39]))*bank_stones[:,None]
+        roughness = roughness*(1-bank_stones) + settings.get('bankStoneRoughness', .88)*bank_stones
     if settings.get('preserveWood'):
         timber=np.clip(wood.reshape(-1,4)[:,0],0,1)
         colours=colours*(1-timber[:,None])+original_colours*timber[:,None]

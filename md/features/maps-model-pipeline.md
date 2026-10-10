@@ -277,6 +277,13 @@ raisedGrassStoneSurface исключает из верхней травы изм
 Без собственного поля область использует прежний `lowGrassStoneSurface`.
 [test-majestic-low-grass.py](../../scripts/maps/test-majestic-low-grass.py)
 проверяет фактическим запеканием сохранение травы, камня и geometry/UV.
+У измеренного берега Majestic `water.bankStoneSurfaces` отделяет широкие
+каменные грани исходника и соседние грани с близкими нормалями от воды и травы.
+Области, порог площади, цвет `bankStoneRGB` и `bankStoneRoughness` выбирать
+по скульпту; проверять также мелкие волны и листья. Пример — берега MH-167.
+[test-majestic-bank-stones.py](../../scripts/maps/test-majestic-bank-stones.py)
+проверяет фактическим запеканием камень, мелкую волну, защищённую траву,
+прежние параметры и сохранение geometry/UV.
 
 Если природная скала и построенная кладка имеют разные оттенки камня,
 индивидуальные `masonrySurfaceBoxes` могут задавать собственный `rgb`.
