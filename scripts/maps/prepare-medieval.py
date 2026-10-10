@@ -106,6 +106,8 @@ def prepare(code, tier, force):
     tile_bake.bake(target, source, out, extra_bake=emission_bake(recipe))
     quality = tile_bake.validate_maps(target)
     points = support_points(target, recipe)
+    if not points and recipe['tileType']!='object' and 'surfaceHeightMM' not in recipe:
+        raise ValueError('Occupied tile requires an independently measured surfaceHeightMM')
     deviations = [abs(a['elevation']-b['elevation'])*35 for a, b in zip(points, original_points)]
     if max(deviations, default=0)>recipe['standToleranceMM']:
         raise ValueError('Simplification changed the measured stand surface')
@@ -142,7 +144,7 @@ def prepare(code, tier, force):
              'canStand': bool(points), 'hidden': False, 'placementPoints': points, 'wallMode': recipe['wallMode'],
              'wallMask': recipe['wallMask'], 'width': recipe['width'], 'height': recipe['height'],
              'placementOffset': [0, 0], 'mountDepth': round(datum/35, 6),
-             'surfaceHeight': max([p['elevation'] for p in points], default=datum/35), 'maxHeight': round(maximum, 6),
+             'surfaceHeight': round(recipe['surfaceHeightMM']/35, 6) if 'surfaceHeightMM' in recipe else max([p['elevation'] for p in points], default=datum/35), 'maxHeight': round(maximum, 6),
              'blockers': recipe['blockers'], 'tags': recipe['tags'], 'supportSlots': recipe['supportSlots']}
     report = {'model': model, 'sourcePath': row['sourcePath'], 'sourceSHA256': row['sourceSHA256'],
               'sourceTriangles': row['triangles'], 'triangles': sum(len(o.data.polygons) for o in objects),

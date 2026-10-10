@@ -2,8 +2,20 @@
 import numpy as np
 
 
+def coordinates(p, part):
+    if 'rotationZDeg' not in part: return p
+    angle = np.deg2rad(part['rotationZDeg'])
+    delta = p-np.array(part['centerMM'])
+    return np.column_stack([delta[:, 0]*np.cos(angle)+delta[:, 1]*np.sin(angle),
+                           -delta[:, 0]*np.sin(angle)+delta[:, 1]*np.cos(angle), delta[:, 2]])
+
+
 def domain(p, part):
-    mask = np.all((p>=part['minMM'])&(p<=part['maxMM']), axis=1)
+    q = coordinates(p, part)
+    mask = np.all((q>=part['minMM'])&(q<=part['maxMM']), axis=1)
+    if 'ellipsoid' in part:
+        e = part['ellipsoid']
+        mask &= (((q-np.array(e['centerMM']))/np.array(e['radiiMM']))**2).sum(1)<=1
     if 'absYMM' in part:
         mask &= (np.abs(p[:, 1])>=part['absYMM'][0])&(np.abs(p[:, 1])<=part['absYMM'][1])
     if 'projection' in part:
@@ -25,6 +37,7 @@ def paint(obj, recipe):
     mesh.color_attributes['Surface'].data.foreach_get('color', values); surface = values.reshape(-1, 4).copy()
     for part in settings['woodParts']:
         mask = domain(p, part)
+        q = coordinates(p, part)
         axis = part.get('axis', 'z')
         if axis=='z': u, v = z, np.where(np.abs(nx)>np.abs(ny), y, x)
         elif axis=='x': u, v = x, np.where(np.abs(ny)>np.abs(nz), z, y)
@@ -38,6 +51,17 @@ def paint(obj, recipe):
         elif axis=='arc-xz':
             dx, dz = x-part['centerXZMM'][0], z-part['centerXZMM'][1]
             u, v = np.arctan2(dz, dx)*part['radiusMM'], np.hypot(dx, dz)
+        elif axis=='crate':
+            a = np.deg2rad(part['rotationZDeg'])
+            qnx, qny = nx*np.cos(a)+ny*np.sin(a), -nx*np.sin(a)+ny*np.cos(a)
+            along_x = np.abs(qny)>=np.abs(qnx)
+            u, v = np.where(along_x, q[:, 0], q[:, 1]), z.copy()
+            hx, hy = part['halfXYMM']
+            corners = (np.abs(q[:, 0])>hx-part['railWidthMM'])&(np.abs(q[:, 1])>hy-part['railWidthMM'])
+            u = np.where(corners, z, u)
+            v = np.where(corners, np.where(along_x, q[:, 0], q[:, 1]), v)
+            top = nz>.6
+            u = np.where(top, q[:, 1], u); v = np.where(top, q[:, 0], v)
         else: raise ValueError('Unknown measured timber axis')
         grain = np.clip(.5+.22*np.sin(v*6.8+.12*np.sin(u*.4))+.10*np.sin(v*18+.04*np.sin(u*.7)), .1, .9)
         wood = np.array(settings['woodDarkRGB'])*(1-grain[:, None])+np.array(settings['woodLightRGB'])*grain[:, None]
@@ -52,6 +76,17 @@ def paint(obj, recipe):
         variation = .5+.2*np.sin(x*.25+y*.35+z*.12)
         stone = np.array(part['darkRGB'])*(1-variation[:, None])+np.array(part['lightRGB'])*variation[:, None]
         rgb[mask] = stone[mask]; surface[mask, 1] = .91; surface[mask, 2] = 0
+    for part in settings.get('fabricParts', []):
+        mask = domain(p, part)
+        q = coordinates(p, part)
+        if part.get('drapedOverCrate'):
+            s = part['drapedOverCrate']
+            mask &= ((z>=s['topStartMM'])|
+                     ((z>=s['edgeStartMM'])&(np.abs(q[:, 0])<s['edgeHalfXMM'])&(np.abs(q[:, 1])>s['edgeMinYMM'])))
+        weave = 1+.018*np.sin(x*9)*np.sin(y*9+z*11)
+        fabric = np.array(part['rgb'])*weave[:, None]
+        rgb[mask] = fabric[mask]; surface[mask, 1] = .98; surface[mask, 2] = 0
+        print('MEDIEVAL_FABRIC', part['name'], int(mask.sum()), flush=True)
     for part in settings.get('ironParts', []):
         mask = domain(p, part)
         iron = np.array(part['rgb'])*(1+.07*np.sin(x*1.2+y*.7+z*.6))[:, None]
