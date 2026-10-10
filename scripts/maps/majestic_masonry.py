@@ -46,6 +46,9 @@ def apply_masonry(obj, positions, colours, roughness, recipe):
     if recipe.get('raisedGrass'):
         cap=np.empty(len(positions)*4,np.float32);obj.data.color_attributes['RaisedGrass'].data.foreach_get('color',cap)
         weight*=1-np.clip(cap.reshape(-1,4)[:,0],0,1)
+    if recipe.get('lowGrassAreas'):
+        grass=np.empty(len(positions)*4,np.float32);obj.data.color_attributes['LowGrass'].data.foreach_get('color',grass)
+        weight*=1-np.clip(grass.reshape(-1,4)[:,0],0,1)
     if recipe.get('vegetationReference'):
         plants=np.empty(len(positions)*4,np.float32);obj.data.color_attributes['Vegetation'].data.foreach_get('color',plants)
         weight*=1-np.clip(plants.reshape(-1,4)[:,0],0,1)

@@ -24,6 +24,19 @@ def polygon_weight(positions, polygon, feather=2):
     return inside*np.clip(distance/feather,0,1)
 
 
+def low_grass_weights(obj, positions, recipe):
+    areas = recipe.get('lowGrassAreas', [])
+    mask = np.zeros(len(positions), np.float32)
+    for area in areas:
+        lo, hi = np.array(area['minMM']), np.array(area['maxMM'])
+        weight = np.clip(np.minimum(positions-lo, hi-positions).min(1)/area.get('featherMM', .2), 0, 1)
+        mask = np.maximum(mask, weight)
+    if areas and recipe.get('lowGrassStoneSurface'):
+        from majestic_vegetation_surface import stone_surface_mask
+        mask *= 1-stone_surface_mask(obj.data, positions, recipe['lowGrassStoneSurface'])
+    return mask
+
+
 def reference_weights(obj, recipe, code, positions):
     root=Path(__file__).resolve().parents[2]
     manifest=json.loads((root/'models/collections/majestic-highlands/manifest.json').read_text())
@@ -94,4 +107,9 @@ def grass_weights(obj, recipe, code):
         attribute=obj.data.color_attributes.new('RaisedGrass','FLOAT_COLOR','POINT')
         attribute.data.foreach_set('color',np.column_stack([cap]*3+[np.ones(len(cap))]).astype(np.float32).ravel())
         weights=np.maximum(weights,cap)
+    if recipe.get('lowGrassAreas'):
+        low = low_grass_weights(obj, positions, recipe)
+        attribute = obj.data.color_attributes.new('LowGrass', 'FLOAT_COLOR', 'POINT')
+        attribute.data.foreach_set('color', np.column_stack([low]*3+[np.ones(len(low))]).astype(np.float32).ravel())
+        weights = np.maximum(weights, low)
     return weights
