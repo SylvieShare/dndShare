@@ -56,9 +56,9 @@ def bake_tier(report, directory, tier):
     bpy.data.objects.remove(target, do_unlink=True)
     bpy.ops.wm.stl_import(filepath=report['sourcePath'])
     source = bpy.context.object
-    crop(source, report['cutHeight'])
     correction = report.get('geometryCorrection',{})
-    if correction.get('mode') in ['remove-false-mount', 'restore-native-well']:
+    crop(source, 0 if correction.get('mode') == 'restore-native-vortex' else report['cutHeight'])
+    if correction.get('mode') in ['remove-false-mount', 'restore-native-well', 'restore-native-vortex']:
         if report['model']['mountDepth'] <= 0:
             raise ValueError('Explicit hole correction must preserve its native mounting datum')
         for obj in mounting:
@@ -70,6 +70,8 @@ def bake_tier(report, directory, tier):
             v.co.z = correction['rotationOriginZMM']-v.co.z
         v.co.x += report['sourceShiftMM'][0]
         v.co.y += report['sourceShiftMM'][1]
+        if correction.get('mode') == 'restore-native-vortex':
+            v.co.z += correction['sourceShiftZMM']
     source.data.update()
     shade(source)
     bpy.context.view_layer.update()
@@ -81,7 +83,7 @@ def bake_tier(report, directory, tier):
     target = bpy.data.objects.new(report['model']['sourceCode']+' detailed body', source.data.copy())
     scene.collection.objects.link(target)
     datum = report['model']['mountDepth']*35
-    if correction.get('mode') not in ['remove-false-mount', 'restore-native-well']:
+    if correction.get('mode') not in ['remove-false-mount', 'restore-native-well', 'restore-native-vortex']:
         crop(target, datum)
         for v in target.data.vertices:
             v.co.z += datum
@@ -95,6 +97,9 @@ def bake_tier(report, directory, tier):
         # Fit after decimation so LOD cannot collapse the seating shoulder
         # below the datum and move it into the receiving socket.
         fit_native_well_mount(target, datum)
+    if correction.get('mode') == 'restore-native-vortex':
+        from native_vortex_mount import fit_native_vortex_mount
+        fit_native_vortex_mount(target, datum)
     shade(target)
     if report['materialSpec'].get('flatFacets'):
         for obj in [source,target]:

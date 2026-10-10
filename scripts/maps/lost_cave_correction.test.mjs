@@ -28,6 +28,45 @@ const spec = {
     },
   },
 };
+test("native vortex restoration keeps its outside datum and standing point while removing the false inner cap", () => {
+  const old = {
+    ...model,
+    sourceCode: "LC-100",
+    definitionId: "LC-100",
+    tileType: "floor",
+    width: 1,
+    height: 1,
+    mountDepth: 0.147391,
+    canStand: true,
+    hasDecor: false,
+    supportSlots: [],
+    placementPoints: [{ x: 0.25, y: 0.25, elevation: 0.253752 }],
+  };
+  const src = { ...source, mountDepth: 0.147391, max: [17.5, 17.5, 23.0348] };
+  const s = {
+    geometryCorrection: {
+      mode: "restore-native-vortex",
+      sourceSHA256: sha,
+      previousCutHeightMM: 11.5,
+      cutHeightMM: 11.5,
+      sourceShiftZMM: -11.5,
+      reason:
+        "Restore the native deep funnel below the former universal crop without filling it with a solid peg.",
+      metadata: {
+        maxHeight: (23.0348 - 11.5) / 35,
+        surfaceHeight: (23.0348 - 11.5) / 35,
+        placementPoints: old.placementPoints,
+      },
+    },
+  };
+  const r = correctedCaveModel(old, src, s, true);
+  assert.equal(r.model.mountDepth, old.mountDepth);
+  assert.deepEqual(r.model.placementPoints, old.placementPoints);
+  assert.throws(() =>
+    correctedCaveModel({ ...old, sourceCode: "LC-092" }, src, s, true),
+  );
+  assert.throws(() => correctedCaveModel(old, src, s, false));
+});
 test("restored water tile keeps identity and measured deep mounting without inventing slots", () => {
   const old = {
     ...model,

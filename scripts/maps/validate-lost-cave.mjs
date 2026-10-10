@@ -39,6 +39,8 @@ for (const tier of ["render", "lod"]) {
       min: [low[0] / 35, low[2] / 35, -high[1] / 35],
       max: [high[0] / 35, high[2] / 35, -low[1] / 35],
     };
+    if (report.geometryCorrection.mode === "restore-native-vortex")
+      expected.min[1] = report.materialSpec.vortex.mountBottomMM / 35;
     drift = Math.max(
       ...["min", "max"].flatMap((s) =>
         expected[s].map((v, i) => Math.abs(v - b[s][i])),
@@ -64,9 +66,11 @@ for (const tier of ["render", "lod"]) {
           geometryCorrection: report.geometryCorrection.reason,
         }
       : {}),
-    mounting: ["remove-false-mount", "restore-native-well"].includes(
-      report.geometryCorrection?.mode,
-    )
+    mounting: [
+      "remove-false-mount",
+      "restore-native-well",
+      "restore-native-vortex",
+    ].includes(report.geometryCorrection?.mode)
       ? (() => {
           if (
             report.model.mountDepth !==

@@ -59,10 +59,18 @@ export function paintCaveWater(p, n, ao, spec, projection, reference) {
   if (spec.water.tileVolume) {
     const noise = surfaceNoise(p[0] * 0.1, p[1] * 0.1, p[2] * 0.04);
     const clean = 0.91 + 0.09 * clamp((ao / 255 - 0.5) / 0.5);
+    const depthTint = spec.water.depthTint
+      ? 1 -
+        spec.water.depthTint.amount *
+          clamp(
+            (spec.water.depthTint.startMM - p[2]) /
+              (spec.water.depthTint.startMM - spec.water.depthTint.endMM),
+          )
+      : 1;
     return {
       part: "water",
       rgb: spec.water.colour.map((v) =>
-        Math.round(255 * clamp(v * clean * (0.96 + noise * 0.08))),
+        Math.round(255 * clamp(v * clean * depthTint * (0.96 + noise * 0.08))),
       ),
       roughness: (spec.water.roughness ?? 0.18) + noise * 0.025,
       metallic: 0,

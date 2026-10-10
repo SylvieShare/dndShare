@@ -20,12 +20,14 @@ export function correctedCaveModel(model, source, spec, explicit) {
   const restoreBridge = correction.mode === "restore-native-bridge";
   const restoreWell = correction.mode === "restore-native-well";
   const restoreWater = correction.mode === "restore-native-water-tile";
+  const restoreVortex = correction.mode === "restore-native-vortex";
   if (
     correction.mode &&
     !removeMount &&
     !restoreBridge &&
     !restoreWell &&
-    !restoreWater
+    !restoreWater &&
+    !restoreVortex
   )
     throw new Error("Unknown reviewed geometry correction mode");
   if (
@@ -35,7 +37,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
     correction.sourceSHA256 !== model.assets.source.sha256 ||
     correction.sourceSHA256 !== source.sourceSHA256 ||
     correction.previousCutHeightMM !== source.cutHeight ||
-    (removeMount || restoreWell
+    (removeMount || restoreWell || restoreVortex
       ? correction.cutHeightMM !== source.cutHeight ||
         source.cutHeight <= 0 ||
         !Number.isFinite(source.mountDepth) ||
@@ -51,6 +53,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
       (!removeMount &&
         !restoreWell &&
         !restoreWater &&
+        !restoreVortex &&
         ["mountDepth", "canStand"].includes(key))
     )
       throw new Error("Unexpected correction metadata: " + key);
@@ -63,6 +66,25 @@ export function correctedCaveModel(model, source, spec, explicit) {
       "Restored orientation and existing placement points require explicit review",
     );
   const result = { ...structuredClone(model), ...correction.metadata };
+  if (
+    restoreVortex &&
+    (model.sourceCode !== "LC-100" ||
+      model.tileType !== "floor" ||
+      model.width !== 1 ||
+      model.height !== 1 ||
+      model.supportSlots?.length ||
+      result.mountDepth !== model.mountDepth ||
+      result.mountDepth !== source.mountDepth ||
+      result.canStand !== model.canStand ||
+      result.hasDecor !== model.hasDecor ||
+      JSON.stringify(result.placementPoints) !==
+        JSON.stringify(model.placementPoints) ||
+      correction.rotationXDeg ||
+      correction.sourceShiftZMM !== -source.cutHeight)
+  )
+    throw new Error(
+      "Native vortex restoration requires the measured slotless1x1 water floor, unchanged datum and standing point",
+    );
   if (
     restoreWater &&
     (![
@@ -151,6 +173,7 @@ export function correctedCaveModel(model, source, spec, explicit) {
     (!removeMount &&
       !restoreWell &&
       !restoreWater &&
+      !restoreVortex &&
       result.tileType !== (restoreBridge ? model.tileType : "object"))
   )
     throw new Error(

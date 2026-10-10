@@ -1,0 +1,135 @@
+{
+  "sourceName": "Water Vortex",
+  "referencePage": 14,
+  "material": "cave-water",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 40000,
+  "lodTriangles": 14000,
+  "palette": {
+    "rock": [
+      0.46,
+      0.335,
+      0.225
+    ],
+    "mineral": [
+      0.455,
+      0.405,
+      0.34
+    ],
+    "dust": [
+      0.61,
+      0.475,
+      0.33
+    ],
+    "recess": [
+      0.255,
+      0.18,
+      0.12
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      5.5
+    ],
+    "lodMiB": [
+      0.5,
+      2
+    ],
+    "shadowKiB": [
+      25,
+      100
+    ],
+    "previewKiB": [
+      10,
+      100
+    ],
+    "basis": "259996-triangle1x1 spiralwaterfunnel withnativebottom7.963mmbelowacceptedzero.40k/14k retain deepcavity/swirl silhouette,2048/1024 sourcebake,twoUASTCbudgets."
+  },
+  "notes": "Author14 entirelyturquoise spiralwatervortex. Nativefullsourcecentre raw3.5373mm (shift-7.9627) removedbygeneric11.5crop andsolidpeg. Explicitrestore-native-vortex fullrawshiftZ-11.5; keepacceptedouterlevel/mount.147391/quarterpoint.253752 andUUIDa4ce55c8-604f-5d23-b642-ab4948ffc368/source/1x1/floor/flags/slots. Outerfootlowercylinder25.87mm@raw2.5..10; cliponlyouterenvelope belowdatum withbottom-10.3,half13.3 untilZ1.15,beveltohalf17.15@datum5.158685. Preservedeepfunnel,NOsolidpeg. Own40k/14kbeforeUVsourcebake; native9ray+fullslotcollision checks required.",
+  "groupCode": "LC-water-vortex",
+  "floorHeightProfileMM": [
+    [
+      -17.6,
+      14.735
+    ],
+    [
+      17.6,
+      14.735
+    ]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [
+      1536,
+      1024,
+      768,
+      512
+    ],
+    "ktx-compact": [
+      1024,
+      768,
+      512,
+      384
+    ]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "albedoCodec": "uastc",
+  "preserveSurfaceGutters": true,
+  "water": {
+    "colour": [
+      0.095,
+      0.63,
+      0.53
+    ],
+    "tileVolume": {
+      "min": [
+        -18,
+        -18,
+        -10.3
+      ],
+      "max": [
+        18,
+        18,
+        12
+      ]
+    },
+    "surfaces": [],
+    "roughness": 0.28,
+    "depthTint": {
+      "startMM": 4,
+      "endMM": -8,
+      "amount": 0.2
+    }
+  },
+  "vortex": {
+    "mountBottomMM": -10.3,
+    "mountCylinderHalfMM": 13.3,
+    "mountBevelStartMM": 1.15,
+    "mountTopHalfMM": 17.15
+  },
+  "geometryCorrection": {
+    "mode": "restore-native-vortex",
+    "sourceSHA256": "4f9a3ec29f3717424308aaeacf99a221424b9c4aad72711d8b6954c4e7b77c5d",
+    "previousCutHeightMM": 11.5,
+    "cutHeightMM": 11.5,
+    "sourceShiftZMM": -11.5,
+    "reason": "Restore the complete native vortex funnel fromfullSTL shifted-11.5mm, preserving outerwaterlevel andmountingdatum. Former crop andsolidpeg cap centreZ0/5.1587 butnativesurface is-7.9627mm. Cliponlyoutsideprofile forLC060,keep permanentUUID/source/placement.",
+    "metadata": {
+      "maxHeight": 0.3295657021658761,
+      "surfaceHeight": 0.3295657021658761,
+      "placementPoints": [
+        {
+          "x": 0.25,
+          "y": 0.25,
+          "elevation": 0.253752
+        }
+      ]
+    }
+  }
+}

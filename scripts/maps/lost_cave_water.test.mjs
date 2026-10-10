@@ -3,6 +3,16 @@ import assert from "node:assert/strict";
 import specs from "./lost_cave_recipes.mjs";
 import { caveWaterAt, paintCaveWater } from "./lost_cave_water.mjs";
 const s = specs["LC-064"];
+test("vortex depth tint darkens only the declared deep water without adding emission", () => {
+  const s = specs["LC-100"],
+    n = [0, 0, 1];
+  const rim = paintCaveWater([0, 0, 8], n, 255, s),
+    bottom = paintCaveWater([0, 0, -8], n, 255, s);
+  assert(bottom.rgb[1] < rim.rgb[1] * 0.9);
+  assert(bottom.rgb[1] > bottom.rgb[0] * 3);
+  assert.equal(bottom.emission, undefined);
+  assert.equal(bottom.normalNeutral, undefined);
+});
 test("a projected shoreline rock stays inside its measured volume", () => {
   const s = specs["LC-097"],
     mask = () => ({
