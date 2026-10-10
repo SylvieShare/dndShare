@@ -1,0 +1,539 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 10,
+  "mountProfile": "xl-ring",
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 57.7,
+  "renderTriangles": 6000,
+  "lodTriangles": 2500,
+  "tileType": "frame",
+  "hasDecor": false,
+  "tags": [
+    "frame",
+    "support",
+    "xl",
+    "light-level",
+    "hollow",
+    "technical",
+    "medium"
+  ],
+  "recipe": "majestic-medium-light-level-v1",
+  "groupCode": "MH-light-level",
+  "baseSurface": "soil",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 3,
+      "height": 3,
+      "elevation": 1.6498114285714287,
+      "insertionRise": 0.014285714285714285,
+      "insertionRises": {
+        "xl-ring": 0.08571428571428572,
+        "db-pins": 0.1
+      }
+    }
+  ],
+  "renderColourSize": 512,
+  "lodColourSize": 512,
+  "renderDataSize": 512,
+  "lodDataSize": 512,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.25,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "openingChecks": [
+    {
+      "name": "open-cell--35--35",
+      "originMM": [
+        -35,
+        -35,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-0",
+      "originMM": [
+        -35,
+        0,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-35",
+      "originMM": [
+        -35,
+        35,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0--35",
+      "originMM": [
+        0,
+        -35,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-0",
+      "originMM": [
+        0,
+        0,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-35",
+      "originMM": [
+        0,
+        35,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35--35",
+      "originMM": [
+        35,
+        -35,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-0",
+      "originMM": [
+        35,
+        0,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-35",
+      "originMM": [
+        35,
+        35,
+        80
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 90,
+      "clear": true
+    }
+  ],
+  "frameFit": {
+    "maxDriftMM": 0.15,
+    "throughPointsMM": [
+      [
+        -35,
+        -35
+      ],
+      [
+        -35,
+        0
+      ],
+      [
+        -35,
+        35
+      ],
+      [
+        0,
+        -35
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        35
+      ],
+      [
+        35,
+        -35
+      ],
+      [
+        35,
+        0
+      ],
+      [
+        35,
+        35
+      ]
+    ],
+    "levelsMM": [
+      0.1,
+      1,
+      2,
+      5,
+      9,
+      9.75,
+      10,
+      15,
+      20,
+      25,
+      30,
+      35,
+      40,
+      45.077200000000005,
+      47.077200000000005,
+      48.077200000000005,
+      49.077200000000005,
+      50.077200000000005,
+      51.077200000000005,
+      53.077200000000005,
+      55.077200000000005,
+      56.077200000000005,
+      57.077200000000005,
+      57.577200000000005
+    ],
+    "rayOffsetsMM": [
+      0,
+      17.5,
+      35,
+      45
+    ],
+    "profiles": [
+      {
+        "name": "xl-taper",
+        "depthMM": 9.75,
+        "riseMM": 0.5,
+        "sectionsMM": [
+          [
+            0.05,
+            47.0383
+          ],
+          [
+            9.75,
+            48.65
+          ]
+        ]
+      },
+      {
+        "name": "xl-ring",
+        "depthMM": 10,
+        "riseMM": 3,
+        "holeHalfMM": 40.42,
+        "sectionsMM": [
+          [
+            0.05,
+            46.93
+          ],
+          [
+            0.1,
+            46.98
+          ],
+          [
+            0.5,
+            47.31
+          ],
+          [
+            1,
+            47.73
+          ],
+          [
+            1.5,
+            47.95
+          ],
+          [
+            2,
+            47.95
+          ],
+          [
+            3,
+            47.96
+          ],
+          [
+            4,
+            47.99
+          ],
+          [
+            4.5,
+            48.14
+          ],
+          [
+            5,
+            48.33
+          ],
+          [
+            6,
+            49.17
+          ],
+          [
+            7,
+            50.02
+          ],
+          [
+            8,
+            50.88
+          ],
+          [
+            9,
+            51.73
+          ],
+          [
+            9.75,
+            52.37
+          ],
+          [
+            9.95,
+            52.52
+          ],
+          [
+            10,
+            52.52
+          ]
+        ]
+      },
+      {
+        "name": "db-pins",
+        "depthMM": 17,
+        "riseMM": 3.5,
+        "sectionsMM": [
+          [
+            0.05,
+            12.3
+          ],
+          [
+            1,
+            12.8
+          ],
+          [
+            2,
+            13.1
+          ],
+          [
+            5,
+            13.1
+          ],
+          [
+            9,
+            13.1
+          ],
+          [
+            11.2,
+            13.1
+          ],
+          [
+            11.5,
+            13.25
+          ],
+          [
+            12,
+            13.7
+          ],
+          [
+            14,
+            15.4
+          ],
+          [
+            15,
+            16.25
+          ],
+          [
+            16,
+            17.15
+          ],
+          [
+            16.5,
+            17.5
+          ],
+          [
+            17,
+            17.63
+          ]
+        ],
+        "pinCentresMM": [
+          [
+            0,
+            -35
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            35
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -35,
+              0
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              0,
+              0
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              35,
+              0
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              0,
+              -35
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              0,
+              0
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              0,
+              35
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              -35,
+              0
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              0,
+              0
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              35,
+              0
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              0,
+              -35
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              0,
+              0
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              0,
+              35
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      45000,
+      850000
+    ],
+    "targetLODBytes": [
+      25000,
+      500000
+    ],
+    "targetShadowBytes": [
+      2500,
+      30000
+    ],
+    "targetPreviewBytes": [
+      6000,
+      60000
+    ],
+    "basis": "Own88832tris4441684B unsupported(printsupportsfree) SHAf48d51b12a229597cc53b9231750442092f8722e3218c22aa7827f288253ce63. OWN3neutral+PDF53seen mediumtechnicalcharcoalframe105square3x3max57.7434. OwnouterbodyundersideX52.49Z9.9718 andfullfoot104.987at10 =>DATUM10 nativeWHOLE lowerRING retained nofalsepyramid. Original1largeTHROUGHHole/8tabs; canStandfalse[]noactorfloor/surface57.70 fromphysicalrimX51Z57.682/X52Z57.726, one3x3slotPhysical57.7434/35. Native901 LOWER14240verts99.944%within.15 max.1564, UPPER+25.0772 16804verts100%within.15max.0639 =>verifiedsameprofiles defaultXLtaperRise.5mm /xl-ring3mm /DBpins3.5mm butwholeSource/RLOD14volumeposes willverifyinthisframe,9throughrays plusown24levels4offsets4directionsmaxDrift.15. Ownslotraysconfirmtopwallradius50.53/tabs48.5 andheadbevel positions throughshifted47..57.5. Nativeexactprofiles savedframeFit from901 measuredcones/hole. R6kUV.55native51291665/1k366957/2k1473346quantPASS largesttested; L2500.25native512/1kPASS quant100351/405366. Initialcolour1024R512LOD/data512BOTH/ORM512BOTH compareR512ALT no pointless2k onplaintechnicalgray. TargetsR45..850K L25..500Kshadow2.5..30Kpreview6..60K fromtallerframebutretainsimpleplanes. FINAL6+3views/crops/gutterrims/8tabs/1hole/fullvolumeSourceRLOD/UVmanifestbrowseralpha/freshMCP required. Initial6RLOD+3alt512actuallyseen. R512340196vs1024392188saves51992B noobviousqualityloss ontechnicalframe. Somefaceted/mottled panels retained; PNGpreencode+ETCdecode fullcolor1024no grayhue-order violations. FullSource/RLOD14profileposes ZEROcollisions/9throughrays each maxDriftR.047665L.047722. Choose512R syncBOTHnative andFINAL6/fullfit verify beforepub. FINAL accepted six views/crops; R340196B L283940B shadow10708B preview12506B runtime647350B vs source4441684B. Final UV/manifest/browser KTX2/LOD/sun-point shadows/alpha passed;27 source/R/LOD opening rays and whole-frame14profileposes/tier ZEROcollisions; socketdriftR.04766464mm L.04772186mm. Selected renderColour512 vs1024392188B saves51992B; no obvious silhouette/material/tab loss; slight panel mottling retained. Both colour/data/ORM512; all target ranges met."
+  }
+}
