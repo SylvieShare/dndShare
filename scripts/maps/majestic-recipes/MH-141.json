@@ -1,0 +1,494 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 90000,
+  "lodTriangles": 34000,
+  "tileType": "bridge",
+  "hasDecor": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "high",
+    "outdoor",
+    "xl",
+    "bridge",
+    "masonry",
+    "arched-bridge",
+    "bridge-center",
+    "built-piers",
+    "broken",
+    "debris"
+  ],
+  "recipe": "majestic-high-stone-bridge-center-broken-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3300000,
+      6800000
+    ],
+    "targetLODBytes": [
+      1100000,
+      3000000
+    ],
+    "targetShadowBytes": [
+      70000,
+      180000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "770212triangles,38510684B NL. Ownbase104.928x105.003mm3x3,max104.275mm,datum9.75. BridgeCenterBrokenbuiltgraypiers,no naturalwalls=>none/0;hasDecortrue4fallenpieces,noslots. Nineptsfrom120. SourceWcentre-35/0 roughcut83.401normalZ.605;shift[-10,+10]to-45/10flat92.229normalZ1,metadata.214286/1.214286. Centralgapactualground15.531,Edeck92.424;6outside15.867/15.310/16.524/15.999/15.323/15.995. Lowfloor94.235%matches140 .15mm median+.001404. Own4rubblefieldcomponents532/94/646/259pix vs140below35mm,measuredXY/Z boxes preservelowgrass. Graybody.47/.45/.395/lightfloor.53/.51/.455 andcarvedjointsAO,no highcap/ochre borrowed. RailNleftpieceends-40,rightstart7.5;Srightstart13.5 lostWsectionsomitted. Wholecentralup25/down120ending20mustclear,mainYpassage/piers plusmeasuredsmallsideXportalY+-3/0clear/Y+-8solidcontrols inheritedbutrechecksource,12raysx3=36required. SharedMH-bridge-center viaMCP,originalID/name distinct. PDF42gray/olive/earthpalette. Test90k/34k colour1024/2048,data1024/512,UV16bit.35/.15,stripauxColours;pointoffsettested. FinalR4988616B colour2048/90014vs10244372272B+616344B visiblycleanslargeWfracturefaces accepted. L1874416B/34012,shadow121236B,preview22736B. NativeRcolour2k306086pixels/data1k76014 allchannelspass. Actual9points15.799/15.282/16.546,92.196/15.564/92.412,16.014/15.271/15.958;Wshift.214286/1.214286keepsflatremnant. LODdrift.69356mm below1.05mmguard. All36geometryrays/manifest/2browserKTXshadowalpha/familyMH-bridge-center confirmedfresh unchangedassets/pose. Smallcontactmoss/LODgrasssoftening remain."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "none",
+  "wallMask": 0,
+  "grassReferenceRotation": 270,
+  "standMaxZMM": 120,
+  "blockers": [
+    [
+      [
+        0,
+        0.7
+      ],
+      [
+        0.357143,
+        0.7
+      ],
+      [
+        0.357143,
+        0.914286
+      ],
+      [
+        0,
+        0.914286
+      ]
+    ],
+    [
+      [
+        1.714286,
+        0.7
+      ],
+      [
+        3,
+        0.7
+      ],
+      [
+        3,
+        0.914286
+      ],
+      [
+        1.714286,
+        0.914286
+      ]
+    ],
+    [
+      [
+        1.885714,
+        2.085714
+      ],
+      [
+        3,
+        2.085714
+      ],
+      [
+        3,
+        2.3
+      ],
+      [
+        1.885714,
+        2.3
+      ]
+    ]
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 20,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          20
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.47,
+    0.45,
+    0.395
+  ],
+  "masonryTopRGB": [
+    0.47,
+    0.45,
+    0.395
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.35,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -54,
+        -26.8,
+        18
+      ],
+      "maxMM": [
+        54,
+        26.8,
+        106
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -26.8,
+        86.5
+      ],
+      "maxMM": [
+        54,
+        26.8,
+        106
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -20.5,
+        90
+      ],
+      "maxMM": [
+        54,
+        20.5,
+        94
+      ],
+      "featherMM": 0.2,
+      "normalZMin": 0.55,
+      "rgb": [
+        0.53,
+        0.51,
+        0.455
+      ]
+    },
+    {
+      "minMM": [
+        21.5,
+        -42,
+        17.2
+      ],
+      "maxMM": [
+        37,
+        -25,
+        20.2
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -32,
+        -32,
+        17.3
+      ],
+      "maxMM": [
+        -25,
+        -25.5,
+        21.2
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        19.5,
+        24.5,
+        16.8
+      ],
+      "maxMM": [
+        36,
+        43,
+        26
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        33,
+        26.5,
+        16.8
+      ],
+      "maxMM": [
+        43.5,
+        36.5,
+        21.5
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    }
+  ],
+  "blockedCells": [],
+  "grassReference": "MH-001",
+  "openingChecks": [
+    {
+      "name": "under-bridge-x-10",
+      "originMM": [
+        -10,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-bridge-x0",
+      "originMM": [
+        0,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-bridge-x10",
+      "originMM": [
+        10,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "solid-masonry-pier-x-49",
+      "originMM": [
+        -49,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "solid-masonry-pier-x49",
+      "originMM": [
+        49,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "arch-roof-gap-clear",
+      "originMM": [
+        0,
+        0,
+        25
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 100,
+      "clear": true
+    },
+    {
+      "name": "bridge-deck-gap-clear",
+      "originMM": [
+        0,
+        0,
+        120
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 100,
+      "clear": true
+    },
+    {
+      "name": "narrow-side-arch-y-3",
+      "originMM": [
+        -70,
+        -3,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "narrow-side-arch-y0",
+      "originMM": [
+        -70,
+        0,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "narrow-side-arch-y3",
+      "originMM": [
+        -70,
+        3,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "side-jamb-y-8",
+      "originMM": [
+        -70,
+        -8,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "side-jamb-y8",
+      "originMM": [
+        -70,
+        8,
+        40
+      ],
+      "direction": [
+        1,
+        0,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    }
+  ],
+  "groupCode": "MH-bridge-center",
+  "placementPointOffsetsMM": {
+    "0,1": [
+      -10,
+      10
+    ]
+  }
+}
