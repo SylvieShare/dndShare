@@ -5,6 +5,7 @@ import math
 from pathlib import Path
 import sys
 import bpy
+import numpy as np
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
@@ -49,11 +50,28 @@ def profile_volumes(profile, elevation, translation=(0, 0), rotation=0):
 
 
 def collisions(vertices, faces, volumes):
+    if not faces:
+        return 0
+    positions = np.array([tuple(p) for p in vertices], dtype=np.float64)
+    indices = np.asarray(faces, dtype=np.int64)
+    lower = np.column_stack([positions[indices, axis].min(1) for axis in range(3)])
+    upper = np.column_stack([positions[indices, axis].max(1) for axis in range(3)])
+    position_scale = max(1, np.abs(positions).max())
     hit = set()
     for offset, cosine, sine, z0, z1, radius, planes in volumes:
-        for index, face in enumerate(faces):
+        origin = np.asarray(tuple(offset))
+        # Enclose the rotated square in world axes. The padding covers the
+        # float32 arithmetic used below; only provably disjoint faces skip clip.
+        world_radius = radius*(abs(cosine)+abs(sine))
+        padding = 8*np.finfo(np.float32).eps*max(position_scale, np.abs(origin).max(), radius)
+        volume_lower = origin+np.array([-world_radius, -world_radius, z0])-padding
+        volume_upper = origin+np.array([world_radius, world_radius, z1])+padding
+        candidates = np.flatnonzero(np.all(upper >= volume_lower, axis=1) & np.all(lower <= volume_upper, axis=1))
+        for index in candidates:
+            index = int(index)
             if index in hit:
                 continue
+            face = faces[index]
             polygon = [vertices[i]-offset for i in face]
             if max(p.z for p in polygon) < z0 or min(p.z for p in polygon) > z1:
                 continue
