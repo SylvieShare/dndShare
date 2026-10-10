@@ -34,7 +34,9 @@ export function paintCaveWater(p, n, ao, spec, projection, reference) {
       Math.hypot(...p.map((x, i) => x - g.centre[i])) < g.radiusMM &&
       n.reduce((sum, x, i) => sum + x * g.normal[i], 0) > g.normalDotMin,
   );
-  const projected = wave ? undefined : projection?.(p);
+  let projected = wave ? undefined : projection?.(p);
+  if (projected?.minHeightMM !== undefined && p[2] < projected.minHeightMM)
+    projected = undefined;
   if (projected?.part === "boulder") return paintBoulder(p, n, ao, spec);
   const addedRock =
     spec.water.bareReference &&

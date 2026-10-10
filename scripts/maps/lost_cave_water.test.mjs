@@ -3,10 +3,29 @@ import assert from "node:assert/strict";
 import specs from "./lost_cave_recipes.mjs";
 import { caveWaterAt, paintCaveWater } from "./lost_cave_water.mjs";
 const s = specs["LC-064"];
+test("a raised shoreline boulder does not paint its lower adjoining plateau", () => {
+  const s = specs["LC-096"],
+    mask = () => ({ part: "boulder", minHeightMM: 19.42 });
+  assert.equal(
+    paintCaveWater([1, 5, 19.3464], [0, 0, 1], 230, s, mask).part,
+    "rock",
+  );
+  assert.equal(
+    paintCaveWater([2, 4, 20.2], [0, 0, 1], 230, s, mask).part,
+    "boulder",
+  );
+});
 test("a measured dry rear cliff keeps its rock while the adjacent upward water stays wet", () => {
-  const s = specs["LC-095"], p = [-17.4931, 6.5793, 15.7514];
-  assert.equal(paintCaveWater(p, [-1, 0, 0], 230, s, () => undefined).part, "rock");
-  assert.equal(paintCaveWater(p, [0, 0, 1], 230, s, () => undefined).part, "water");
+  const s = specs["LC-095"],
+    p = [-17.4931, 6.5793, 15.7514];
+  assert.equal(
+    paintCaveWater(p, [-1, 0, 0], 230, s, () => undefined).part,
+    "rock",
+  );
+  assert.equal(
+    paintCaveWater(p, [0, 0, 1], 230, s, () => undefined).part,
+    "water",
+  );
 });
 test("a measured smooth wave next to a shoreline keeps water while the vertical rock remains dry", () => {
   const s = specs["LC-095"],
