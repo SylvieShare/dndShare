@@ -1,0 +1,45 @@
+{
+  "sourceName": "Wall to Flat Wall 1",
+  "referencePage": 12,
+  "material": "cave-rock",
+  "floorHeightMM": 14.735,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 1024,
+  "renderTriangles": 50000,
+  "lodTriangles": 18000,
+  "palette": {
+    "rock": [0.46, 0.335, 0.225],
+    "mineral": [0.455, 0.405, 0.34],
+    "dust": [0.61, 0.475, 0.33],
+    "recess": [0.255, 0.18, 0.12]
+  },
+  "weightBudget": {
+    "renderMiB": [1.8, 5.2],
+    "lodMiB": [0.7, 2.2],
+    "shadowKiB": [30, 125],
+    "previewKiB": [20, 170],
+    "basis": "419984-triangle1x1 curved/flat natural wall with deep ridge relief.50k/18k beforeUV preserve silhouette and cap fractures;2048/1024 source rebake and two colour/data budgets."
+  },
+  "notes": "Author page12 and own three clay views: warm brown natural wall transitioning from a fractured curved face to a flatter vertical end. Preserve UUID42ad152d-ae0c-547c-9af3-4cd8c15ba63b,source/cut11.5,mount.150089,1x1,wallMask144,quarterpoint.420794,no slots,hasDecor/canStand. Own50k/18k beforeUV protect tall ridges, cracked flat caps and scattered floor rocks. Restrained mineral/dust variation and dark floor joints.",
+  "groupCode": "LC-wall-to-flat-wall",
+  "floorHeightProfileMM": [
+    [-17.6, 14.735],
+    [17.6, 14.735]
+  ],
+  "normalMinZ": 0.1,
+  "uvAngleLimitRad": 0.2,
+  "surfaceGutters": true,
+  "validateUvOverlaps": true,
+  "textureCandidates": {
+    "ktx-balanced": [1536, 1024, 768, 512],
+    "ktx-compact": [1024, 768, 512, 384]
+  },
+  "textureEncoder": "toktx v4.4.2",
+  "sourceInsertionFootprint": {
+    "sourceSHA256": "0c0514cb63eee105b8e5530227088aa20be1260b7bc89d4b6d3c2f0d663edf29",
+    "mountDepthMM": 5.253115,
+    "sourceTopWidthMM": 35,
+    "centresMM": [[0, 0]],
+    "reason": "Native sections.05=25.99/.5=26.76/2.5=30.20/4=32.79/datum5.253115=34.93/6=35mm confirm one native centered cell."
+  }
+}
