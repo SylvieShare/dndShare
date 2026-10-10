@@ -60,6 +60,16 @@ np.testing.assert_allclose(result[0], legacy[0], atol=1e-6)
 np.testing.assert_allclose(result[1], linear(custom['masonrySurfaceBoxes'][1]['rgb']), atol=2e-4)
 np.testing.assert_allclose(result[2], [.02, .12, .01], atol=2e-4)
 np.testing.assert_array_equal(result[2], legacy[2])
+vegetation = mesh.color_attributes.new('Vegetation', 'FLOAT_COLOR', 'POINT')
+for vertex in mesh.vertices:
+    value = 1 if vertex.co.x > 1 else 0
+    vegetation.data[vertex.index].color = (value, value, value, 1)
+protected = copy.deepcopy(custom)
+protected['masonryPreserveVegetation'] = True
+preserved = bake(protected)
+np.testing.assert_allclose(preserved[0], result[0], atol=1e-6)
+np.testing.assert_allclose(preserved[1], [.02, .12, .01], atol=2e-4)
+np.testing.assert_allclose(preserved[2], result[2], atol=1e-6)
 np.testing.assert_array_equal(np.array([v.co[:] for v in mesh.vertices]), before_positions)
 np.testing.assert_array_equal(np.array([v.uv[:] for v in uv.data]), before_uv)
 print('MAJESTIC_MASONRY_PALETTES_VALIDATED', result.tolist(), flush=True)

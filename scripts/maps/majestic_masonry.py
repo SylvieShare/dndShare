@@ -91,6 +91,10 @@ def masonry_box_finish(nodes, links, finish, recipe, noise, wear):
     geometry = nodes.new('ShaderNodeNewGeometry')
     normal = nodes.new('ShaderNodeSeparateXYZ')
     links.new(geometry.outputs['True Normal'], normal.inputs[0])
+    vegetation_keep = None
+    if recipe.get('masonryPreserveVegetation'):
+        vegetation = nodes.new('ShaderNodeVertexColor'); vegetation.layer_name = 'Vegetation'
+        vegetation_keep = scalar('SUBTRACT', 1, clamp(vegetation.outputs['Color']))
     palettes = {}
     for box in boxes:
         weight = 1
@@ -101,6 +105,8 @@ def masonry_box_finish(nodes, links, finish, recipe, noise, wear):
         if 'normalZMin' in box:
             facing = clamp(scalar('DIVIDE', scalar('SUBTRACT', normal.outputs['Z'], box['normalZMin']), .1))
             weight = scalar('MULTIPLY', weight, facing)
+        if vegetation_keep is not None:
+            weight = scalar('MULTIPLY', weight, vegetation_keep)
         rgb = tuple(box.get('rgb', recipe.get('masonryTopRGB', recipe['masonryRGB'])))
         palettes[rgb] = scalar('MAXIMUM', palettes.get(rgb, 0), weight)
     for rgb, total in palettes.items():
