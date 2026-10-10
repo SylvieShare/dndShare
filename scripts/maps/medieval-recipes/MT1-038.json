@@ -1,0 +1,586 @@
+{
+  "name": "Angle",
+  "groupCode": "MED-wall-angle",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 88000,
+  "lodTriangles": 28000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": false,
+  "wallMode": "edge",
+  "wallMask": 80,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.22,
+        0
+      ],
+      [
+        0.22,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        0.78
+      ],
+      [
+        1,
+        0.78
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "plaster",
+    "wall",
+    "corner",
+    "brace"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor boards and north south fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west floor frame and fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "east floor frame and fascia",
+        "minMM": [
+          14.3,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "shared corner timber post",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          -10.1,
+          50
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "west outer timber post",
+        "minMM": [
+          -17.6,
+          13.6,
+          26.1
+        ],
+        "maxMM": [
+          -10.1,
+          17.6,
+          50
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south outer timber post",
+        "minMM": [
+          13.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          17.6,
+          -10.1,
+          50
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "west front corner brace",
+        "minMM": [
+          -13.4,
+          -15.2,
+          25.7
+        ],
+        "maxMM": [
+          -10.25,
+          15.2,
+          49.6
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.8129774841375728,
+          0.5822951230135305
+        ],
+        "projection": {
+          "originMM": [
+            -10.6,
+            0.0,
+            34.04999999999993
+          ],
+          "axis": [
+            0.0,
+            -0.5822951230135305,
+            0.8129774841375728
+          ],
+          "rangeMM": [
+            -3.0047723202745997,
+            3.1023296183711118
+          ]
+        }
+      },
+      {
+        "name": "west rear corner brace",
+        "minMM": [
+          -17.55,
+          -15.2,
+          25.7
+        ],
+        "maxMM": [
+          -14.0,
+          15.2,
+          49.6
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.8503783946149247,
+          0.5261716316679791
+        ],
+        "projection": {
+          "originMM": [
+            -17.2,
+            0.0,
+            32.90999999999995
+          ],
+          "axis": [
+            0.0,
+            -0.5261716316679791,
+            0.8503783946149247
+          ],
+          "rangeMM": [
+            -4.20528223863626,
+            4.230793590474708
+          ]
+        }
+      },
+      {
+        "name": "south front corner brace",
+        "minMM": [
+          -15.2,
+          -13.4,
+          25.7
+        ],
+        "maxMM": [
+          15.2,
+          -10.25,
+          49.6
+        ],
+        "axis": "beam",
+        "direction": [
+          0.8136991074913192,
+          0.0,
+          0.5812862999141049
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            -10.6,
+            34.03499999999993
+          ],
+          "axis": [
+            -0.5812862999141049,
+            0.0,
+            0.8136991074913192
+          ],
+          "rangeMM": [
+            -2.9950564342326547,
+            3.1293167869687286
+          ]
+        }
+      },
+      {
+        "name": "south rear corner brace",
+        "minMM": [
+          -15.2,
+          -17.55,
+          25.7
+        ],
+        "maxMM": [
+          15.2,
+          -14.0,
+          49.6
+        ],
+        "axis": "beam",
+        "direction": [
+          0.8525170053019593,
+          0.0,
+          0.5226994888757585
+        ],
+        "projection": {
+          "originMM": [
+            0.0,
+            -17.2,
+            32.894999999999946
+          ],
+          "axis": [
+            -0.5226994888757585,
+            0.0,
+            0.8525170053019593
+          ],
+          "rangeMM": [
+            -4.07468978909737,
+            4.164204074654075
+          ]
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "west rough plaster both faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -17.6,
+          -13.6,
+          26.6
+        ],
+        "maxMM": [
+          -10.1,
+          13.6,
+          50
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "shared corner timber post",
+            "minMM": [
+              -17.6,
+              -17.6,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              -10.1,
+              50
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "west front corner brace",
+            "minMM": [
+              -13.4,
+              -15.2,
+              25.7
+            ],
+            "maxMM": [
+              -10.25,
+              15.2,
+              49.6
+            ],
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.8129774841375728,
+              0.5822951230135305
+            ],
+            "projection": {
+              "originMM": [
+                -10.6,
+                0.0,
+                34.04999999999993
+              ],
+              "axis": [
+                0.0,
+                -0.5822951230135305,
+                0.8129774841375728
+              ],
+              "rangeMM": [
+                -3.0047723202745997,
+                3.1023296183711118
+              ]
+            }
+          },
+          {
+            "name": "west rear corner brace",
+            "minMM": [
+              -17.55,
+              -15.2,
+              25.7
+            ],
+            "maxMM": [
+              -14.0,
+              15.2,
+              49.6
+            ],
+            "axis": "beam",
+            "direction": [
+              0.0,
+              0.8503783946149247,
+              0.5261716316679791
+            ],
+            "projection": {
+              "originMM": [
+                -17.2,
+                0.0,
+                32.90999999999995
+              ],
+              "axis": [
+                0.0,
+                -0.5261716316679791,
+                0.8503783946149247
+              ],
+              "rangeMM": [
+                -4.20528223863626,
+                4.230793590474708
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "south rough plaster both faces and top",
+        "kind": "plaster",
+        "minMM": [
+          -13.6,
+          -17.6,
+          26.6
+        ],
+        "maxMM": [
+          13.6,
+          -10.1,
+          50
+        ],
+        "rgb": [
+          0.74,
+          0.535,
+          0.275
+        ],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "shared corner timber post",
+            "minMM": [
+              -17.6,
+              -17.6,
+              26.1
+            ],
+            "maxMM": [
+              -10.1,
+              -10.1,
+              50
+            ],
+            "axis": "z"
+          },
+          {
+            "name": "south front corner brace",
+            "minMM": [
+              -15.2,
+              -13.4,
+              25.7
+            ],
+            "maxMM": [
+              15.2,
+              -10.25,
+              49.6
+            ],
+            "axis": "beam",
+            "direction": [
+              0.8136991074913192,
+              0.0,
+              0.5812862999141049
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -10.6,
+                34.03499999999993
+              ],
+              "axis": [
+                -0.5812862999141049,
+                0.0,
+                0.8136991074913192
+              ],
+              "rangeMM": [
+                -2.9950564342326547,
+                3.1293167869687286
+              ]
+            }
+          },
+          {
+            "name": "south rear corner brace",
+            "minMM": [
+              -15.2,
+              -17.55,
+              25.7
+            ],
+            "maxMM": [
+              15.2,
+              -14.0,
+              49.6
+            ],
+            "axis": "beam",
+            "direction": [
+              0.8525170053019593,
+              0.0,
+              0.5226994888757585
+            ],
+            "projection": {
+              "originMM": [
+                0.0,
+                -17.2,
+                32.894999999999946
+              ],
+              "axis": [
+                -0.5226994888757585,
+                0.0,
+                0.8525170053019593
+              ],
+              "rangeMM": [
+                -4.07468978909737,
+                4.164204074654075
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.2,
+      4.6
+    ],
+    "lodMiB": [
+      0.65,
+      1.55
+    ],
+    "shadowKiB": [
+      65,
+      150
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "35mm corner with two plaster panels, three carved timber posts, four oblique braces and staggered floor boards.88000/28000 independent geometry/UV/bakes retain interior corner, beams on both sides and floor gaps. Compare1024/512 with768/384 textures; preserve exact mask boundaries and expose the open interior in the full preview."
+  },
+  "reviewNotes": "PDF page7; native front/back views. Source479970triangles/23998584bytes,max49.837002mm. Native17mm shoulder; centre floor24.727161mm and interior normal squares nx2=.062496,ny2=.285465,nz2=.652033 confirm X boards. Walls atnegativeX andnegativeY: west64+south16=edge80; two measured blockers protect these strips while centre remains clear. Three Z posts including a full7.5mm shared corner volume, explicitly subtracted from both plaster masks. Four beams measured independently by cross-section source rays atalong[-8,-4,0,4,8], z27..48mm. Coredepth front>-11.3/rear<-16.8 includes carved grooves; weighted planar triangle PCA is a cross-check. West beam frames are YZ, south XZ, with distinct origins/directions/transverse widths and .2mm contact margin. Full front depth[-13.4,-10.25],rear[-17.55,-14] retains wooden flanks. Plaster roughness.98 versuswood.88. No light or decor items. Review each beam and both panels from inside/outside in render/LOD, full alpha framing, placement and actual-sized UV before selecting textures. Initial outer beam mask missed shallow upper wooden flanges: source depth rays atalong0 show rear faces atdepth-16.50/-16.52,z35..36mm, while deep core lies-17.26 at30..33mm. Include reardepth<-16.3 in interval measurement. New exterior widths are about8mm normal to axis, withcentres32.91/32.895mm anddirectionswest[0,.850378,.526172],south[.852517,0,.522699]. Replace both rear projections; retain separate interior5.7mm widths. Inspect all four complete faces before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008
+}
