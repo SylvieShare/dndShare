@@ -1,0 +1,1087 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 9.75,
+  "pegBottomHalfMM": 47.03,
+  "pegTopHalfMM": 48.65,
+  "renderTriangles": 90000,
+  "lodTriangles": 34000,
+  "tileType": "bridge",
+  "hasDecor": true,
+  "tags": [
+    "grass",
+    "dirt",
+    "stone",
+    "cliff",
+    "wall",
+    "edge",
+    "high",
+    "outdoor",
+    "xl",
+    "bridge",
+    "masonry",
+    "arched-bridge",
+    "river",
+    "water",
+    "pines",
+    "ferns",
+    "bridge-start",
+    "broken",
+    "rubble"
+  ],
+  "recipe": "majestic-high-bridge-start-river-broken-v1",
+  "grassMatchMM": 0.07,
+  "grassBlendMM": 0.12,
+  "soilTopRGB": [
+    0.45,
+    0.3,
+    0.17
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      3800000,
+      7500000
+    ],
+    "targetLODBytes": [
+      1600000,
+      3500000
+    ],
+    "targetShadowBytes": [
+      70000,
+      200000
+    ],
+    "targetPreviewBytes": [
+      15000,
+      100000
+    ],
+    "basis": "609942triangles/30497184B NL, ownbase104.862x104.9933x3,max104.271,datum9.75. PDF43 andsource3neutralviews BridgeStartRiverBroken:actualEochrecliff4,Wcollapsedgraymasonry,remainingcentral/Eupperdeck92.225/92.419;Wcentre17.634normal.689shift+10Xto-25,0 measured15.853nZ.945safe samecell. NWfern18.194andSEpine48.312 excluded,7pointsincluding2deckand5lowerwater/shore/flatstone;noslots/hasDecortrue. OriginalWbrokenbody extendsYoutside+-26.8=>ownallWgrayvolume[-54,-54,16.5]..[0,54,82],sourcecontainsconstructedblocks/grassbelow16.5/NWfernprotectedVegetation,nonaturalWcliff. Existingbare139grayvolumes/fourlowrubble andbrokenparapets retained,vegetationReference139/field139. Addedplantsregions confirm145pine/ferndomains. Lowwater99.47%matches145within.15median-.000427 and96.78%99median+.000244 =>grass99direct/water99sixcaps+boundedshores. Extraexposedcube sourcefront9.653,-26.669,19.028 /8.523,-25.739,16.679 /12.664,-25.523,20.619 =>graycap10,-25.5,19r8/8/6force14.8 preservewaterbelow. SourceYpaths-10/0/10clear,knownWmasonry/Ecliff,centredeckpresent,Wgapclear up25/down120to20=>27rays. R90kUVcandidates.55passed1k168699/2k674303 unlike145,choose.55highesttestedoccupancy;LOD.15. Colour2kvs1k/LOD1k,normal1k/512ORM1k/1k;shadowindependent. Inspect6views+3alt/physicalwaterareas/finalUV/geometry/browsers/alpha beforeMCPfamilyMH-bridge-start-river. Commonpipeline696bcfb3 preservationofpreparedguttersread;LCflagdoesnotapplyautomaticallytoMajestic. First6RLODviewsshowedsoilstripesonlowelongatedblocksdespitespherecap. OwnlowWbar sourcepoint-25,0,15.853 andfrontcube9.65,-26.67,19.03/12.66,-25.52,20.62 measured; addboundedgraymasonryvolumes[-33,-11,14.6]..[-18,14,22] and[5,-32,14.8]..[17,-21,24],vegetationprotected,lowriverbelow14.4unchanged. Re-bakebothmaterialswithsamegeometryUV. FinalR4420964B/90014,L2389080B/34012,shadow121180B,preview24072B. Colour1k3801668B vs2k+619296B acceptedcleanbrokenfaces/joints;normal1k/512ORM1kbothtiers. Finalnative+optimizedUVallchannelspass. SixRLOD+threealtreviewed,3waterstoneareas/27geometrycontrols/manifest/2browserKTX/shadow/alpha pass. LODpointdrift.123795mm. Individual Wlowbargrayrepaired;otherblocksretainminorwarmcontactedges,olive/cyanfringingmostlyLOD. Fresh5hashes UUID1053b831-0456-4661-994a-ae48b29f71b4 confirmed."
+  },
+  "grassCoverLossMM": 0.15,
+  "grassCoverFadeMM": 0.3,
+  "soilSurfaceMM": 15.3,
+  "grassHeightFadeMM": 0.95,
+  "wallMode": "edge",
+  "wallMask": 4,
+  "grassReferenceRotation": 0,
+  "standMaxZMM": 120,
+  "blockers": [
+    [
+      [
+        1.385714,
+        0.7
+      ],
+      [
+        3,
+        0.7
+      ],
+      [
+        3,
+        0.914286
+      ],
+      [
+        1.385714,
+        0.914286
+      ]
+    ],
+    [
+      [
+        0.957143,
+        2.085714
+      ],
+      [
+        3,
+        2.085714
+      ],
+      [
+        3,
+        2.3
+      ],
+      [
+        0.957143,
+        2.3
+      ]
+    ]
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "masonryReference": {
+    "code": "MH-002",
+    "rotateZ": 270,
+    "matchMM": 0.06,
+    "blendMM": 0.2,
+    "translationMM": [
+      0,
+      0,
+      0
+    ]
+  },
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": 20,
+    "anyBoundsMM": [
+      [
+        [
+          -54,
+          -54,
+          20
+        ],
+        [
+          54,
+          54,
+          96
+        ]
+      ]
+    ]
+  },
+  "masonryRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopRGB": [
+    0.54,
+    0.38,
+    0.215
+  ],
+  "masonryTopMinZMM": 83.8992,
+  "stoneVariation": 0.075,
+  "darkenJoints": true,
+  "raisedGrass": {
+    "minMM": [
+      -54,
+      -54,
+      82
+    ],
+    "maxMM": [
+      54,
+      54,
+      96
+    ],
+    "depthMM": 1.6,
+    "depthFadeMM": 0.5,
+    "normalMin": 0.4,
+    "normalFade": 0.25,
+    "fieldCode": "MH-139",
+    "exclusions": [
+      {
+        "minMM": [
+          -40,
+          -26.8,
+          18
+        ],
+        "maxMM": [
+          40,
+          26.8,
+          106
+        ],
+        "featherMM": 0.3,
+        "rgb": [
+          0.47,
+          0.45,
+          0.395
+        ]
+      },
+      {
+        "minMM": [
+          -54,
+          -26.8,
+          86.5
+        ],
+        "maxMM": [
+          54,
+          26.8,
+          106
+        ],
+        "featherMM": 0.3,
+        "rgb": [
+          0.47,
+          0.45,
+          0.395
+        ]
+      },
+      {
+        "minMM": [
+          -54,
+          -20.5,
+          90
+        ],
+        "maxMM": [
+          54,
+          20.5,
+          94
+        ],
+        "featherMM": 0.2,
+        "normalZMin": 0.55,
+        "rgb": [
+          0.53,
+          0.51,
+          0.455
+        ]
+      }
+    ]
+  },
+  "uvAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.15,
+  "quantizeTexcoord": 16,
+  "renderUVAngleLimitRad": 0.55,
+  "stripAuxiliaryColours": true,
+  "grassReferenceTranslationMM": [
+    0,
+    0,
+    0
+  ],
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -54,
+        -26.8,
+        18
+      ],
+      "maxMM": [
+        40,
+        26.8,
+        106
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -26.8,
+        86.5
+      ],
+      "maxMM": [
+        54,
+        26.8,
+        106
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -20.5,
+        90
+      ],
+      "maxMM": [
+        54,
+        20.5,
+        94
+      ],
+      "featherMM": 0.2,
+      "normalZMin": 0.55,
+      "rgb": [
+        0.53,
+        0.51,
+        0.455
+      ]
+    },
+    {
+      "minMM": [
+        20.5,
+        -46.5,
+        16.8
+      ],
+      "maxMM": [
+        38,
+        -26,
+        25
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -49,
+        -45,
+        16.5
+      ],
+      "maxMM": [
+        -29,
+        -30.5,
+        22
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        23.5,
+        26.5,
+        17.2
+      ],
+      "maxMM": [
+        38,
+        40,
+        29.5
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -49.5,
+        28.5,
+        16.5
+      ],
+      "maxMM": [
+        -34,
+        41,
+        20.5
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -54,
+        -54,
+        16.5
+      ],
+      "maxMM": [
+        0,
+        54,
+        82
+      ],
+      "featherMM": 0.3,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        -33,
+        -11,
+        14.6
+      ],
+      "maxMM": [
+        -18,
+        14,
+        22
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    },
+    {
+      "minMM": [
+        5,
+        -32,
+        14.8
+      ],
+      "maxMM": [
+        17,
+        -21,
+        24
+      ],
+      "featherMM": 0.2,
+      "rgb": [
+        0.47,
+        0.45,
+        0.395
+      ]
+    }
+  ],
+  "blockedCells": [
+    [
+      0,
+      0
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "grassReference": "MH-099",
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        82
+      ],
+      [
+        54,
+        54,
+        96
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "openingChecks": [
+    {
+      "name": "under-bridge-x-10",
+      "originMM": [
+        -10,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-bridge-x0",
+      "originMM": [
+        0,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "under-bridge-x10",
+      "originMM": [
+        10,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140
+    },
+    {
+      "name": "solid-masonry-pier-x-49",
+      "originMM": [
+        -49,
+        -70,
+        25
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "solid-cliff-x49",
+      "originMM": [
+        49,
+        -70,
+        40
+      ],
+      "direction": [
+        0,
+        1,
+        0
+      ],
+      "distanceMM": 140,
+      "clear": false
+    },
+    {
+      "name": "arch-roof-present",
+      "originMM": [
+        0,
+        0,
+        25
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 100,
+      "clear": false
+    },
+    {
+      "name": "bridge-deck-present",
+      "originMM": [
+        0,
+        0,
+        120
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 100,
+      "clear": false
+    },
+    {
+      "name": "western-break-up-clear",
+      "originMM": [
+        -25,
+        0,
+        25
+      ],
+      "direction": [
+        0,
+        0,
+        1
+      ],
+      "distanceMM": 100
+    },
+    {
+      "name": "western-break-down-clear",
+      "originMM": [
+        -25,
+        0,
+        120
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 100
+    }
+  ],
+  "masonryBackFaces": [
+    {
+      "axis": "X",
+      "coordinateMM": 52.432,
+      "distanceMM": 0.6,
+      "normalMin": 0.98,
+      "normalSign": 1,
+      "minZMM": 9.75
+    }
+  ],
+  "groupCode": "MH-bridge-start-river",
+  "masonryPreserveVegetation": true,
+  "vegetationReference": {
+    "code": "MH-139",
+    "rotateZ": 0,
+    "matchMM": 0.18,
+    "blendMM": 0.25
+  },
+  "vegetationStoneSurface": {
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        19
+      ],
+      [
+        54,
+        54,
+        105
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.5,
+    "growAngleRad": 0.2
+  },
+  "trees": [
+    {
+      "baseXY": [
+        32,
+        -35
+      ],
+      "topXY": [
+        37,
+        -29
+      ],
+      "heightMM": 60.352,
+      "foliageRadiusMM": 21,
+      "trunkRadiusMM": 2.4,
+      "rootRadiusMM": 4,
+      "barkTopMM": 32
+    }
+  ],
+  "ferns": [
+    {
+      "centreMM": [
+        -38,
+        34,
+        17.5
+      ],
+      "radiiMM": [
+        20,
+        18,
+        7
+      ],
+      "minZMM": 15.2,
+      "boundsMM": [
+        [
+          -53,
+          23,
+          15.2
+        ],
+        [
+          -21,
+          48,
+          24
+        ]
+      ]
+    },
+    {
+      "centreMM": [
+        25,
+        -29,
+        19
+      ],
+      "radiiMM": [
+        22,
+        22,
+        9
+      ],
+      "minZMM": 15.2,
+      "boundsMM": [
+        [
+          10,
+          -51,
+          15.2
+        ],
+        [
+          49,
+          -10,
+          28
+        ]
+      ]
+    }
+  ],
+  "water": {
+    "reference": "MH-099",
+    "rotateZ": 0,
+    "matchMM": 0.06,
+    "blendMM": 0.16,
+    "minZMM": 10.05,
+    "lowZMM": 11.5,
+    "highZMM": 14.1,
+    "boundsMM": [
+      [
+        -54,
+        -54,
+        10
+      ],
+      [
+        54,
+        54,
+        14.4
+      ]
+    ],
+    "deepRGB": [
+      0.035,
+      0.28,
+      0.33
+    ],
+    "shallowRGB": [
+      0.14,
+      0.56,
+      0.58
+    ],
+    "crestRGB": [
+      0.52,
+      0.78,
+      0.74
+    ],
+    "roughness": 0.4,
+    "stones": [
+      {
+        "centreMM": [
+          -19,
+          -42,
+          14.5
+        ],
+        "radiiMM": [
+          5,
+          5,
+          4
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.45,
+          0.46,
+          0.405
+        ],
+        "forceAboveMM": 13.86
+      },
+      {
+        "centreMM": [
+          -10,
+          -24,
+          16.3
+        ],
+        "radiiMM": [
+          9,
+          9,
+          6
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "forceAboveMM": 15.65
+      },
+      {
+        "centreMM": [
+          -9,
+          34,
+          14.6
+        ],
+        "radiiMM": [
+          5,
+          5,
+          4
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.455,
+          0.46,
+          0.41
+        ],
+        "forceAboveMM": 13.15
+      },
+      {
+        "centreMM": [
+          -4,
+          40,
+          15.5
+        ],
+        "radiiMM": [
+          8,
+          8,
+          5
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.435,
+          0.45,
+          0.4
+        ],
+        "forceAboveMM": 14.95
+      },
+      {
+        "centreMM": [
+          -32.4,
+          6.9,
+          14.0
+        ],
+        "radiiMM": [
+          3.3,
+          3.3,
+          3.3
+        ],
+        "minZMM": 13.0,
+        "rgb": [
+          0.425,
+          0.44,
+          0.395
+        ],
+        "forceAboveMM": 13.68
+      },
+      {
+        "centreMM": [
+          -22.93,
+          25.47,
+          15.77
+        ],
+        "radiiMM": [
+          3.8,
+          3.8,
+          3.8
+        ],
+        "minZMM": 13.0,
+        "rgb": [
+          0.435,
+          0.45,
+          0.395
+        ],
+        "forceAboveMM": 15.52
+      },
+      {
+        "centreMM": [
+          10,
+          -25.5,
+          19
+        ],
+        "radiiMM": [
+          8,
+          8,
+          6
+        ],
+        "minZMM": 12.6,
+        "rgb": [
+          0.47,
+          0.45,
+          0.395
+        ],
+        "forceAboveMM": 14.8
+      }
+    ],
+    "banks": [],
+    "restoreLowWaterAroundStonesMM": 14.3,
+    "shorelines": [
+      {
+        "pointsMM": [
+          [
+            -33,
+            -54
+          ],
+          [
+            -33,
+            -36
+          ],
+          [
+            -30,
+            -25
+          ],
+          [
+            -24,
+            -14
+          ],
+          [
+            -26,
+            -5
+          ],
+          [
+            -28,
+            6
+          ],
+          [
+            -31,
+            26
+          ],
+          [
+            -35,
+            45
+          ],
+          [
+            -35,
+            54
+          ]
+        ],
+        "stoneWidthMM": 6,
+        "landwardWidthMM": 2.5,
+        "waterRestoreWidthMM": 11,
+        "waterRestoreMaxZMM": 14.3,
+        "minZMM": 12.3,
+        "rgb": [
+          0.415,
+          0.435,
+          0.39
+        ],
+        "maxZMM": 17.5,
+        "heightFadeMM": 0.5
+      },
+      {
+        "pointsMM": [
+          [
+            34,
+            54
+          ],
+          [
+            31,
+            35
+          ],
+          [
+            29,
+            27
+          ],
+          [
+            31,
+            10
+          ],
+          [
+            26,
+            -10
+          ],
+          [
+            30,
+            -32
+          ],
+          [
+            35,
+            -54
+          ]
+        ],
+        "stoneWidthMM": 6,
+        "landwardWidthMM": 2.5,
+        "waterRestoreWidthMM": 11,
+        "waterRestoreMaxZMM": 14.3,
+        "minZMM": 12.3,
+        "rgb": [
+          0.415,
+          0.435,
+          0.39
+        ],
+        "maxZMM": 17.5,
+        "heightFadeMM": 0.5
+      }
+    ],
+    "lowWaterDomain": {
+      "pointsMM": [
+        [
+          -33,
+          -54
+        ],
+        [
+          -33,
+          -36
+        ],
+        [
+          -30,
+          -25
+        ],
+        [
+          -24,
+          -14
+        ],
+        [
+          -26,
+          -5
+        ],
+        [
+          -28,
+          6
+        ],
+        [
+          -31,
+          26
+        ],
+        [
+          -35,
+          45
+        ],
+        [
+          -35,
+          54
+        ],
+        [
+          34,
+          54
+        ],
+        [
+          31,
+          35
+        ],
+        [
+          29,
+          27
+        ],
+        [
+          31,
+          10
+        ],
+        [
+          26,
+          -10
+        ],
+        [
+          30,
+          -32
+        ],
+        [
+          35,
+          -54
+        ]
+      ],
+      "maxZMM": 14.3,
+      "featherMM": 0.5
+    },
+    "normalMin": -0.2,
+    "normalFade": 0.2,
+    "clipToLowWaterDomain": true,
+    "validationAreas": [
+      {
+        "name": "south-open-river",
+        "minMM": [
+          -10,
+          -44,
+          11.5
+        ],
+        "maxMM": [
+          10,
+          -30,
+          13.8
+        ],
+        "material": "water",
+        "normalZMin": 0.75
+      },
+      {
+        "name": "north-open-river",
+        "minMM": [
+          -24,
+          38,
+          11.5
+        ],
+        "maxMM": [
+          -16,
+          48,
+          13.8
+        ],
+        "material": "water",
+        "normalZMin": 0.75
+      },
+      {
+        "name": "ochre-east-backcliff",
+        "minMM": [
+          52,
+          -30,
+          30
+        ],
+        "maxMM": [
+          53,
+          30,
+          80
+        ],
+        "material": "stone"
+      }
+    ]
+  },
+  "placementPointOffsetsMM": {
+    "0,1": [
+      10,
+      0
+    ]
+  },
+  "lodORMSize": 1024
+}
