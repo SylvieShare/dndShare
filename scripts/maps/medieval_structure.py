@@ -61,7 +61,11 @@ def paint(obj, recipe):
             u = np.where(corners, z, u)
             v = np.where(corners, np.where(along_x, q[:, 0], q[:, 1]), v)
             top = nz>.6
-            u = np.where(top, q[:, 1], u); v = np.where(top, q[:, 0], v)
+            frame_x = np.abs(q[:, 1])>hy-part['railWidthMM']
+            frame_y = np.abs(q[:, 0])>hx-part['railWidthMM']
+            top_x = frame_x|((~frame_y)&(part.get('lidAxis', 'y')=='x'))
+            u = np.where(top, np.where(top_x, q[:, 0], q[:, 1]), u)
+            v = np.where(top, np.where(top_x, q[:, 1], q[:, 0]), v)
         else: raise ValueError('Unknown measured timber axis')
         grain = np.clip(.5+.22*np.sin(v*6.8+.12*np.sin(u*.4))+.10*np.sin(v*18+.04*np.sin(u*.7)), .1, .9)
         wood = np.array(settings['woodDarkRGB'])*(1-grain[:, None])+np.array(settings['woodLightRGB'])*grain[:, None]
