@@ -27,13 +27,14 @@ def polygon_weight(positions, polygon, feather=2):
 def low_grass_weights(obj, positions, recipe):
     areas = recipe.get('lowGrassAreas', [])
     mask = np.zeros(len(positions), np.float32)
+    from majestic_vegetation_surface import stone_surface_mask
     for area in areas:
         lo, hi = np.array(area['minMM']), np.array(area['maxMM'])
         weight = np.clip(np.minimum(positions-lo, hi-positions).min(1)/area.get('featherMM', .2), 0, 1)
+        protection = area.get('stoneSurface', recipe.get('lowGrassStoneSurface'))
+        if protection:
+            weight *= 1-stone_surface_mask(obj.data, positions, protection)
         mask = np.maximum(mask, weight)
-    if areas and recipe.get('lowGrassStoneSurface'):
-        from majestic_vegetation_surface import stone_surface_mask
-        mask *= 1-stone_surface_mask(obj.data, positions, recipe['lowGrassStoneSurface'])
     return mask
 
 

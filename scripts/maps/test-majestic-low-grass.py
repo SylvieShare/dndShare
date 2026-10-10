@@ -58,4 +58,14 @@ assert pixels[32,16,1]>pixels[32,16,0]
 assert pixels[32,48,0]>pixels[32,48,1]
 np.testing.assert_array_equal(np.array([v.co[:] for v in mesh.vertices]),positions)
 np.testing.assert_array_equal(np.array([v.uv[:] for v in uv.data]),saved_uv)
+local = copy.deepcopy(recipe)
+local['lowGrassAreas'].append({
+    'minMM':[23,-23,18], 'maxMM':[25,-17,20],
+    'stoneSurface': {'boundsMM':[[23,-23,18],[25,-17,20]],
+                     'normalXMax':1, 'minAreaMM2':2, 'growAngleRad':.2},
+})
+local_mask = low_grass_weights(obj, positions, local)
+np.testing.assert_allclose(local_mask, 1)
+local['lowGrassAreas'][-1]['stoneSurface']['minAreaMM2'] = .25
+np.testing.assert_allclose(low_grass_weights(obj, positions, local), mask)
 print('MAJESTIC_LOW_GRASS_VALIDATED',pixels[32,[16,48],:3].tolist(),flush=True)
