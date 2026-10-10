@@ -1,0 +1,406 @@
+{
+  "name": "Breads",
+  "groupCode": "MED-breads",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 70000,
+  "lodTriangles": 23000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.55,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0.5,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0.5,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "food",
+    "bread",
+    "wood",
+    "cloth"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.29,
+      0.235,
+      0.16
+    ],
+    "stoneDarkRGB": [
+      0.42,
+      0.31,
+      0.185
+    ],
+    "stoneLightRGB": [
+      0.56,
+      0.425,
+      0.24
+    ],
+    "stoneStartMM": 24.2,
+    "stoneBlendMM": 0.65,
+    "stoneIslandMM": 25.3,
+    "stoneIslandMinVertices": 100,
+    "jointDistanceMM": 0.8,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "counter boards and corner legs",
+        "centerMM": [
+          8.35,
+          -0.25,
+          0
+        ],
+        "rotationZDeg": 0,
+        "minMM": [
+          -9.200000000000001,
+          -17.55,
+          26.1
+        ],
+        "maxMM": [
+          9.200000000000001,
+          17.55,
+          36.05
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          8.9,
+          17.25
+        ],
+        "railWidthMM": 1.65,
+        "lidAxis": "x"
+      },
+      {
+        "name": "raised bread display",
+        "centerMM": [
+          9.3,
+          0,
+          0
+        ],
+        "rotationZDeg": 0,
+        "minMM": [
+          -7.2,
+          -14,
+          35.85
+        ],
+        "maxMM": [
+          7.3,
+          14,
+          42.25
+        ],
+        "axis": "crate",
+        "halfXYMM": [
+          7.0,
+          13.7
+        ],
+        "railWidthMM": 1.5,
+        "lidAxis": "x"
+      }
+    ],
+    "fabricParts": [
+      {
+        "name": "sage draped tablecloth",
+        "centerMM": [
+          9.3,
+          0,
+          0
+        ],
+        "rotationZDeg": 0,
+        "minMM": [
+          -7.2,
+          -14.1,
+          36.8
+        ],
+        "maxMM": [
+          7.4,
+          14.1,
+          46.7
+        ],
+        "rgb": [
+          0.4,
+          0.455,
+          0.315
+        ],
+        "drapedOverCrate": {
+          "topStartMM": 41.2,
+          "edgeStartMM": 36.8,
+          "edgeHalfXMM": 7.0,
+          "edgeMinYMM": 12.0
+        }
+      }
+    ],
+    "ironParts": [],
+    "hardware": [],
+    "stoneIslandMinCount": 2,
+    "surfaceParts": [
+      {
+        "name": "bread loaf 1",
+        "kind": "bread",
+        "centerMM": [
+          6.179758985081507,
+          0.16761325592853712,
+          0
+        ],
+        "rotationZDeg": 121.20148176809943,
+        "minMM": [
+          -4.478087000610502,
+          -4.291598657519671,
+          42.05
+        ],
+        "maxMM": [
+          4.478087000610502,
+          4.291598657519671,
+          46.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            44
+          ],
+          "radiiMM": [
+            4.478087000610502,
+            4.291598657519671,
+            20
+          ]
+        },
+        "rgb": [
+          0.77,
+          0.485,
+          0.205
+        ],
+        "roughness": 0.84,
+        "variation": 0.045
+      },
+      {
+        "name": "bread loaf 2",
+        "kind": "bread",
+        "centerMM": [
+          7.519203266089847,
+          -8.37320652436496,
+          0
+        ],
+        "rotationZDeg": -173.31735658467045,
+        "minMM": [
+          -5.453548962371473,
+          -4.532898846850975,
+          42.05
+        ],
+        "maxMM": [
+          5.453548962371473,
+          4.532898846850975,
+          46.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            44
+          ],
+          "radiiMM": [
+            5.453548962371473,
+            4.532898846850975,
+            20
+          ]
+        },
+        "rgb": [
+          0.72,
+          0.435,
+          0.165
+        ],
+        "roughness": 0.84,
+        "variation": 0.045
+      },
+      {
+        "name": "bread loaf 3",
+        "kind": "bread",
+        "centerMM": [
+          12.582139479198192,
+          4.953672618671851,
+          0
+        ],
+        "rotationZDeg": 72.93236215385683,
+        "minMM": [
+          -2.8888333091266762,
+          -2.6534879513510936,
+          42.05
+        ],
+        "maxMM": [
+          2.8888333091266762,
+          2.6534879513510936,
+          46.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            44
+          ],
+          "radiiMM": [
+            2.8888333091266762,
+            2.6534879513510936,
+            20
+          ]
+        },
+        "rgb": [
+          0.82,
+          0.55,
+          0.255
+        ],
+        "roughness": 0.84,
+        "variation": 0.045
+      },
+      {
+        "name": "bread loaf 4",
+        "kind": "bread",
+        "centerMM": [
+          6.812196807763011,
+          8.211153406359486,
+          0
+        ],
+        "rotationZDeg": -137.37382413663866,
+        "minMM": [
+          -5.002008939386693,
+          -3.9636147381353903,
+          42.05
+        ],
+        "maxMM": [
+          5.002008939386693,
+          3.9636147381353903,
+          46.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            44
+          ],
+          "radiiMM": [
+            5.002008939386693,
+            3.9636147381353903,
+            20
+          ]
+        },
+        "rgb": [
+          0.69,
+          0.405,
+          0.14
+        ],
+        "roughness": 0.84,
+        "variation": 0.045
+      },
+      {
+        "name": "bread loaf 5",
+        "kind": "bread",
+        "centerMM": [
+          13.087093574552442,
+          -2.5876033911020255,
+          0
+        ],
+        "rotationZDeg": 113.12429601038457,
+        "minMM": [
+          -3.9830008579850777,
+          -3.1767700636697658,
+          42.05
+        ],
+        "maxMM": [
+          3.9830008579850777,
+          3.1767700636697658,
+          46.7
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            0,
+            44
+          ],
+          "radiiMM": [
+            3.9830008579850777,
+            3.1767700636697658,
+            20
+          ]
+        },
+        "rgb": [
+          0.79,
+          0.51,
+          0.215
+        ],
+        "roughness": 0.84,
+        "variation": 0.045
+      }
+    ],
+    "produceParts": []
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      3.0
+    ],
+    "lodMiB": [
+      0.45,
+      1.1
+    ],
+    "shadowKiB": [
+      50,
+      150
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "One 35 mm tile with two-tier wooden display, draped cloth and five scored bread loaves. Preserve stand opening and the scored crust with70k/23k triangles before independent UV bakes; compare1024/512 and768/384 colour/data maps."
+  },
+  "reviewNotes": "PDF page4 and front/rear/native-top source views. Native datum17mm; maximum46.4216mm. Five measured cap components at44mm provide independent loaf centres/radii and brown crust tones. Open cloth locations[11,1.5] and[15,12] have heights41.895699/41.680256mm; the crust starts42.1mm above that fabric. Scored cuts remain native geometry and baked normal/AO. Sage cloth includes the upper surface and drooping end panels, while two distinct counter tiers retain oriented timber. Left stand point measures[-10,0,25.785656]mm; right half is blocked. Compare the upper cloth/loaf boundary and each scored silhouette in both tiers. First top-view revealed crust on a raised cloth fold. Final crust domains follow the covariance-measured rotated cap footprints of all five loaves, expanded by only.35mm; individual elliptical masks keep the raised cloth green. Reverse review exposed a green patch on the widest lower flank of the front oval loaf; its full footprint clearance is.7mm beyond the44mm cap instead of.35mm. Other loaf masks remain unchanged.",
+  "uvIslandMargin": 0.0015,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.214286,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30
+}
