@@ -15,7 +15,7 @@
       ref="workspace"
       :map="c.selected"
       :save="c.write"
-      :normalize="normalizeSessionMap"
+      :normalize="normalize"
       session-mode
       :embedded="integratedHeader"
       :active="active"
@@ -134,7 +134,10 @@ import { Map, Settings, UsersRound } from "@lucide/vue";
 import { getMaps } from "@/shared/api/mapsApi";
 import { useSessionMaps } from "../composables/useSessionMaps";
 import { sessionTokens } from "../composables/sessionTokens";
-import { sessionCreatures } from "../lib/sessionCreatures";
+import {
+  sessionCreatures,
+  withCreaturePortraits,
+} from "../lib/sessionCreatures";
 import { normalizeSessionMap } from "../lib/sessionMapState";
 import MapEditor from "./MapEditor.vue";
 import MapLibrary from "./MapLibrary.vue";
@@ -206,6 +209,10 @@ watch(
       });
   },
 );
+function normalize(map, catalogue) {
+  normalizeSessionMap(map, catalogue);
+  map.state.tokens = withCreaturePortraits(map.state.tokens, candidates.value);
+}
 function removeToken() {
   if (!tokens.token) return false;
   tokens.remove();

@@ -1,6 +1,10 @@
 import { computed, ref } from "vue";
 import { clone, uid } from "../lib/mapModel";
-import { creatureKey, creatureToken } from "../lib/sessionCreatures";
+import {
+  creatureKey,
+  creatureToken,
+  withCreaturePortraits,
+} from "../lib/sessionCreatures";
 export function sessionTokens(getEditor, candidates, getCanvas) {
   const focused = ref(""),
     pending = ref(null),
@@ -22,7 +26,9 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
   );
   const canvasState = computed(() => {
     const s = getEditor()?.draft.state;
-    return preview.value ? { ...s, tokens: [...s.tokens, preview.value] } : s;
+    if (!s) return s;
+    const items = preview.value ? [...s.tokens, preview.value] : s.tokens;
+    return { ...s, tokens: withCreaturePortraits(items, candidates.value) };
   });
   function clear() {
     focused.value = "";
@@ -96,7 +102,10 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       if (pending.value) {
         const at = position(point);
         if (!at) return true;
-        const c = pending.value;
+        const c =
+          candidates.value.find(
+            (c) => creatureKey(c) === creatureKey(pending.value),
+          ) || pending.value;
         const placed = {
           kind: c.kind,
           ref: c.ref || "",

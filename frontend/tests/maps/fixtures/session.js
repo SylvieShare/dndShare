@@ -6,6 +6,9 @@ export function sessionFixture(pinia, source, params) {
         {
           charId: 41,
           charUuid: "character-41",
+          iconImageUrl: params.has("tokenPortraits")
+            ? "/tests/maps/fixtures/player-portrait.png"
+            : "",
           templateId: 41,
           color: "#a797d4",
           data: {
@@ -34,7 +37,10 @@ export function sessionFixture(pinia, source, params) {
   const encounter = {
     encounter: { combatants: npcs },
     npcName: () => "Огр",
-    npcItem: () => null,
+    npcItem: () =>
+      params.has("tokenPortraits")
+        ? { iconSvgId: 700, svg: '<svg viewBox="0 0 128 64" />' }
+        : null,
     npcHpObj: (c) => ({ current: c.hpCurrent, max: 30, temp: c.hpTemp }),
   };
   return { participants, encounter };
@@ -102,4 +108,34 @@ export function sessionAPI(initial, initialDisplay, getSource) {
       });
     return null;
   };
+}
+
+export function tokenPortraitExample(board) {
+  board.state.fog = false;
+  board.state.tokens = [
+    {
+      id: "hero",
+      kind: "player",
+      ref: "41",
+      name: "Лира",
+      color: "#a797d4",
+      size: 1,
+      x: 3.5,
+      y: 3.5,
+      hidden: false,
+      physical: false,
+    },
+    {
+      id: "ogre-token",
+      kind: "creature",
+      ref: "ogre",
+      name: "A · Огр",
+      color: "#c18f6f",
+      size: 1,
+      x: 4.5,
+      y: 4.5,
+      hidden: false,
+      physical: false,
+    },
+  ];
 }

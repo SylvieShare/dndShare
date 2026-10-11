@@ -4,6 +4,21 @@ import {
   pvHp,
   pvAc,
 } from "@/features/sessions/lib/participantView";
+export function creaturePortraitUrl(item) {
+  return (
+    item?.iconImageUrl || (item?.iconSvgId ? `/api/svg/${item.iconSvgId}` : "")
+  );
+}
+export function withCreaturePortraits(tokens, candidates) {
+  const portraits = new Map(
+    candidates.map((c) => [creatureKey(c), c.previewUrl]),
+  );
+  return tokens.map((t) =>
+    !t.imageUrl && portraits.get(creatureKey(t))
+      ? { ...t, imageUrl: portraits.get(creatureKey(t)) }
+      : t,
+  );
+}
 export function sessionCreatures(participants, encounter) {
   const combatants = encounter?.encounter?.combatants || [];
   return [
@@ -26,7 +41,7 @@ export function sessionCreatures(participants, encounter) {
         kind: "creature",
         ref: n.uid,
         name: `${n.markerLetter ? n.markerLetter + " · " : ""}${encounter.npcName(n)}`,
-        previewUrl: encounter.npcItem(n)?.iconImageUrl || "",
+        previewUrl: creaturePortraitUrl(encounter.npcItem(n)),
         color: n.iconColor || "#c18f6f",
         hp: encounter.npcHpObj?.(n) || {
           current: n.hpCurrent ?? 0,

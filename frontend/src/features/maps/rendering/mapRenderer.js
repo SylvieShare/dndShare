@@ -20,6 +20,7 @@ import { createMapFog } from "./mapFog";
 import { createTileLayer } from "./tileLayer";
 import { buildAnnotations, disposeAnnotations } from "./annotations";
 import { buildSceneObjects, disposeObjects } from "./sceneObjects";
+import { createTokenPortraits } from "./sceneTokens";
 import { mapCamera } from "./mapCamera";
 import { createTilePreview } from "./tilePreview";
 import { createTileOutline } from "./tileOutline";
@@ -59,6 +60,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
+    tokenPortraits = createTokenPortraits(render),
     tiles = createTileLayer(assets, fog),
     objectMotion = createObjectMotion(
       assets,
@@ -373,7 +375,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
         nextState && { ...nextState, tokens: posedTokens },
         {
           ...opts,
-          invalidate: render,
+          tokenPortraits,
           renderObjects,
           areaObjectOpacity: appearance.objectOpacity,
           areaTileOpacity: appearance.tileOpacity,
@@ -552,6 +554,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
       clearTimeout(flickerTimer);
       disposeAnnotations(annotations);
       disposeObjects(objects);
+      tokenPortraits.destroy();
       tiles.destroy();
       preview.destroy();
       objectPreview.destroy();

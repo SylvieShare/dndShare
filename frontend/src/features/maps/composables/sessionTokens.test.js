@@ -2,13 +2,13 @@ import { expect, it, vi } from "vitest";
 import { reactive, ref } from "vue";
 import { sessionTokens } from "./sessionTokens";
 function setup() {
-  const actor = {
+  const actor = reactive({
     kind: "player",
     ref: "41",
     name: "Лира",
     color: "#a797d4",
     hp: { current: 18, max: 24 },
-  };
+  });
   const editor = reactive({
     draft: { document: { tiles: [] }, state: { tokens: [] } },
     history: [],
@@ -75,4 +75,40 @@ it("held-token motion is one undoable change and cancellation restores position"
   expect(editor.draft.state.tokens[0].x).toBe(1.5);
   expect(editor.history).toHaveLength(0);
   expect(tokens.surface.value).toBe(false);
+});
+
+it("late creature artwork reaches existing and pending tokens without changing the stored map", () => {
+  const { actor, editor, tokens } = setup();
+  editor.draft.state.tokens.push({
+    ...actor,
+    id: "hero",
+    imageUrl: "",
+    x: 1.5,
+    y: 1.5,
+  });
+  tokens.place(actor);
+  tokens.gesture(
+    {
+      phase: "hover",
+      point: { x: 2.5, y: 3.5, placement: { tileId: "base", point: 0 } },
+    },
+    editor,
+  );
+  expect(tokens.canvasState.value.tokens.every((t) => !t.imageUrl)).toBe(true);
+  // The cached creature/participant data may arrive after the map and placement preview.
+  Object.assign(actor, { previewUrl: "/art/hero.webp" });
+  expect(
+    tokens.canvasState.value.tokens.every(
+      (t) => t.imageUrl === "/art/hero.webp",
+    ),
+  ).toBe(true);
+  expect(editor.draft.state.tokens[0].imageUrl).toBe("");
+  tokens.gesture(
+    {
+      phase: "start",
+      point: { x: 2.5, y: 3.5, placement: { tileId: "base", point: 0 } },
+    },
+    editor,
+  );
+  expect(editor.draft.state.tokens[0].imageUrl).toBe("/art/hero.webp");
 });

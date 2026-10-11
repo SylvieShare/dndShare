@@ -1,4 +1,4 @@
-import { sessionFixture, sessionAPI } from "./session";
+import { sessionFixture, sessionAPI, tokenPortraitExample } from "./session";
 import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
 import { groupExamples } from "./groups";
@@ -329,6 +329,7 @@ board.state.tokens = [
     physical: false,
   },
 ];
+if (params.has("tokenPortraits")) tokenPortraitExample(board);
 if (params.has("areaExample")) {
   board.state.fog = false;
   board.state.tokens = [];
