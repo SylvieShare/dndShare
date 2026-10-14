@@ -70,12 +70,15 @@ scp -i "$SSH_KEY" deploy/nginx-dndshare-http.conf "$VM_USER@$VM_HOST:~/dndshare-
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
 scp -i "$SSH_KEY" deploy/fetch-secrets.sh deploy/fetch-secrets.py "$VM_USER@$VM_HOST:~/"
 scp -i "$SSH_KEY" deploy/journald-storage.conf "$VM_USER@$VM_HOST:~/dndshare-journald-storage.conf"
+scp -i "$SSH_KEY" deploy/certbot-reload-nginx.sh "$VM_USER@$VM_HOST:~/dndshare-certbot-reload-nginx.sh"
 
 echo "==> Обновление unit + перезапуск сервиса (секреты подтянутся в run.sh)"
 ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   set -euo pipefail
   expected_commit="$1"
   chmod +x ~/dndshare.new ~/dndshare-run.sh ~/fetch-secrets.sh
+  sudo install -d -m 755 /etc/letsencrypt/renewal-hooks/deploy
+  sudo install -m 750 ~/dndshare-certbot-reload-nginx.sh /etc/letsencrypt/renewal-hooks/deploy/dndshare-nginx
   sudo install -d -m 755 /etc/systemd/journald.conf.d
   if ! sudo cmp -s ~/dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf; then
     sudo install -m 644 ~/dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf

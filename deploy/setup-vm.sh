@@ -5,6 +5,8 @@ APP_USER="sylvieshare"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 apt-get update -y
 apt-get install -y curl ca-certificates openssl python3 nginx certbot python3-certbot-nginx ufw
+install -d -m 755 /etc/letsencrypt/renewal-hooks/deploy
+install -m 750 "$SCRIPT_DIR/certbot-reload-nginx.sh" /etc/letsencrypt/renewal-hooks/deploy/dndshare-nginx
 id "$APP_USER" >/dev/null 2>&1 || useradd -m -s /bin/bash "$APP_USER"
 install -d -m 700 -o "$APP_USER" -g "$APP_USER" "/home/$APP_USER/.ssh"
 if [ -n "${1:-}" ]; then

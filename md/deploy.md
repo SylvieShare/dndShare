@@ -71,6 +71,9 @@ S3-клиент сохраняет path-style адресацию и исполь
   Lockbox в `~/dndshare.env` с mode 600. Python использует стандартную библиотеку
   и OpenSSL для подписи PS256, yc CLI и metadata не требуются.
 - `deploy/setup-vm.sh` и `deploy/bootstrap-vm.sh` — одноразовая подготовка VM.
+- `deploy/certbot-reload-nginx.sh` — deploy hook Certbot: проверяет nginx и
+  перечитывает конфигурацию после обновления сертификата. Устанавливается при
+  bootstrap и обычном deploy в `/etc/letsencrypt/renewal-hooks/deploy/dndshare-nginx`.
 
 ## Свободное место и обрывы HTTP
 
@@ -147,7 +150,8 @@ Go SDK подписывает запросы статическими ключа
 4. Переключить A-записи `dndshare.ru` и `www.dndshare.ru` на `72.56.16.183`.
 5. На VM выполнить `sudo certbot certonly --webroot -w /var/www/dndshare-acme
    -d dndshare.ru -d www.dndshare.ru`, затем повторить deploy: он включит HTTPS.
-   Certbot timer обновляет сертификат.
+   Certbot timer обновляет сертификат; deploy hook заставляет nginx использовать
+   обновлённые файлы. Проверка: `sudo certbot renew --dry-run --run-deploy-hooks`.
 
 Проверка загрузчика секретов: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest
 discover -s deploy -p 'test_*.py' -v`. Проверяются подпись/claims PS256,
