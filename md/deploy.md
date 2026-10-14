@@ -1,8 +1,11 @@
 # Deploy and secrets
 
 Production — один статический Go-бинарь с вшитым Vue frontend. Он работает на
-VM `111.88.240.120` под systemd; пользователь `sylvieshare`, ключ
+VM `72.56.16.183` под systemd; пользователь `sylvieshare`, ключ
 `~/.ssh/dndshare`. Docker, JAR и Maven в production path не используются.
+PostgreSQL — `rc1d-t6pv758r8anrqimo.mdb.yandexcloud.net:6432`, база
+`sylvieshare`, пользователь `sylvie`. Соединение использует `sslmode=verify-full`
+и корневой сертификат Yandex Cloud `/etc/ssl/certs/yandex-cloud-ca.pem`.
 
 Для сборки требуется Go 1.27.1 или новее (`go.mod`). При стандартном
 `GOTOOLCHAIN=auto` Go загрузит подходящий toolchain автоматически.
@@ -36,8 +39,8 @@ S3-клиент сохраняет path-style адресацию и исполь
    `internal/web.BuildCommit`;
 5. проверяет минимум 256 МиБ свободного места в файловой системе домашнего
    каталога на VM; при нехватке останавливается до загрузки и перезапуска приложения;
-6. копирует основной бинарь, nginx-конфигурацию, `deploy/dndshare.service` и
-   `deploy/dndshare-run.sh` на VM;
+6. копирует основной бинарь, nginx-конфигурации, `deploy/dndshare.service`,
+   `deploy/dndshare-run.sh` и обе части `fetch-secrets` на VM;
 7. устанавливает `deploy/journald-storage.conf` как journald drop-in, перезапуская
    только journald при изменении настройки;
 8. атомарно заменяет основной бинарь и перезапускает systemd unit; системные
@@ -57,12 +60,16 @@ S3-клиент сохраняет path-style адресацию и исполь
 - `deploy/nginx-dndshare.conf` — HTTPS для dndshare.ru/www, HTTP redirect и ACME;
   прокси на 127.0.0.1:8080 с `proxy_buffering off` для передачи ответов без
   временных proxy-файлов на диске. Внутренний 8080 закрыт UFW; открыты SSH, 80/443.
+- `deploy/nginx-dndshare-http.conf` — начальное HTTP-проксирование до выпуска
+  сертификата. Deploy выбирает HTTPS-конфигурацию только при наличии сертификата;
+  иначе оставляет HTTP. Production cookies всегда Secure: вход требует HTTPS.
 - `deploy/journald-storage.conf` — постоянные журналы до 128 МиБ, резерв 512 МиБ
   свободного места; устанавливается в `/etc/systemd/journald.conf.d/60-dndshare-storage.conf`.
 - `deploy/dndshare-run.sh` — VM wrapper: получает secrets, экспортирует env и
   делает `exec ~/dndshare`.
-- `deploy/fetch-secrets.sh` — получает payload Yandex Lockbox в
-  `~/dndshare.env` с mode 600.
+- `deploy/fetch-secrets.sh` и `deploy/fetch-secrets.py` — получают payload Yandex
+  Lockbox в `~/dndshare.env` с mode 600. Python использует стандартную библиотеку
+  и OpenSSL для подписи PS256, yc CLI и metadata не требуются.
 - `deploy/setup-vm.sh` и `deploy/bootstrap-vm.sh` — одноразовая подготовка VM.
 
 ## Свободное место и обрывы HTTP
@@ -86,8 +93,10 @@ S3-клиент сохраняет path-style адресацию и исполь
 
 ## Secrets and environment
 
-Секреты не хранятся в репозитории и не передаются с dev-машины. При каждом
-старте `dndshare-run.sh` вызывает `fetch-secrets.sh`, затем загружает env.
+Секреты приложения не хранятся в репозитории и не передаются с dev-машины.
+При каждом старте `dndshare-run.sh` вызывает `fetch-secrets.sh`, затем загружает
+env. Внешняя VM получает IAM-токен по авторизованному JSON-ключу сервисного
+аккаунта и читает Lockbox по публичному HTTPS API.
 
 Основные переменные:
 
@@ -107,7 +116,42 @@ credentials отсутствуют/оставлены dev-значениями, 
 В `dndshare.service` находятся только несекретные параметры и id Lockbox.
 `DB_PASSWORD`, storage credentials и MCP token приходят из Lockbox. Для ротации
 секрета обновить payload и перезапустить unit: wrapper всегда получает свежую
-версию.
+версию. Адрес БД, DB user и требование Secure-cookie из unit имеют приоритет над
+старыми одноимёнными записями Lockbox.
+
+Сервисному аккаунту нужна роль `lockbox.payloadViewer` на секрете
+`e6qc2l631pr9823st3lg`. Его авторизованный ключ находится только на VM в
+`/etc/dndshare/lockbox-sa-key.json` (владелец `root:sylvieshare`, mode 640;
+каталог mode 750). Путь задаёт `LOCKBOX_SERVICE_ACCOUNT_KEY_FILE`. На каждый
+запуск создаётся JWT со сроком 5 минут, обменивается на IAM-токен, затем
+получается payload. Токены и значения не печатаются. HTTP-ошибка, пустой payload
+или отсутствие обязательных credentials останавливают запуск; прежний env-файл
+не перезаписывается. Значения экранируются для Bash и файл заменяется атомарно.
+
+S3 остаётся в Yandex Object Storage, endpoint `https://storage.yandexcloud.net`.
+Go SDK подписывает запросы статическими ключами `OBJECT_STORAGE_ACCESS_KEY` и
+`OBJECT_STORAGE_SECRET_KEY` из Lockbox. Привязка VM к YC не требуется; после
+смены IP нужно учитывать возможные ограничения bucket policy.
+
+## Подготовка новой VM
+
+1. `./deploy/bootstrap-vm.sh` подключается под `root` (можно задать `VM_USER`),
+   создаёт `sylvieshare`, устанавливает его SSH-ключ и sudo для deploy, nginx,
+   certbot, OpenSSL/Python, CA для PostgreSQL и UFW с SSH/80/443.
+2. Создать сервисный аккаунт, выдать ему `lockbox.payloadViewer` на секрете и
+   создать авторизованный ключ. Передать JSON прямо на VM и установить через
+   `install -m 640 -o root -g sylvieshare` в
+   `/etc/dndshare/lockbox-sa-key.json`. JSON не включать в Git.
+3. Запустить `./deploy/deploy.sh`; readiness работает через localhost даже до
+   переключения DNS. HTTP через nginx позволяет проверить подготовку по IP.
+4. Переключить A-записи `dndshare.ru` и `www.dndshare.ru` на `72.56.16.183`.
+5. На VM выполнить `sudo certbot certonly --webroot -w /var/www/dndshare-acme
+   -d dndshare.ru -d www.dndshare.ru`, затем повторить deploy: он включит HTTPS.
+   Certbot timer обновляет сертификат.
+
+Проверка загрузчика секретов: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest
+discover -s deploy -p 'test_*.py' -v`. Проверяются подпись/claims PS256,
+экранирование Bash, права файла, отказ при ошибках payload и приоритет unit.
 
 Системная музыка загружается отдельно командой
 `go run ./cmd/system-music-upload -source-dir /path/to/tracks`. Команда сверяет
@@ -225,7 +269,7 @@ Go сначала читает embedded текущую сборку, затем 
 
 ## Перенос 2026-10-08
 
-Рабочая VM — 111.88.240.120. WeddingShare остановлен и отключён из автозапуска
+На эту дату рабочей VM стала 111.88.240.120. WeddingShare остановлен и отключён из автозапуска
 по запросу владельца; его бинарь, конфигурация и данные оставлены. Старый сервер
 213.165.196.171 выключен и не используется для следующих deploy. PostgreSQL и
 S3 остались прежними: секреты восстановлены из Lockbox через сервисный аккаунт

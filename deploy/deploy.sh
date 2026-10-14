@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Сборка единого бинаря (Vue-фронт вшит в Go-бинарь через go:embed) + деплой на
-# YC-виртуалку через systemd. Секреты тянутся из Lockbox НА VM при каждом старте
+# виртуалку через systemd. Секреты тянутся из Lockbox НА VM при каждом старте
 # (dndshare-run.sh). Запуск из любого cwd: ./deploy/deploy.sh
 #
 set -euo pipefail
@@ -10,7 +10,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 VM_USER="${VM_USER:-sylvieshare}"
-VM_HOST="${VM_HOST:-111.88.240.120}"
+VM_HOST="${VM_HOST:-72.56.16.183}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/dndshare}"
 FRONTEND_DIR="${FRONTEND_DIR:-$ROOT_DIR/frontend}"
 
@@ -66,12 +66,14 @@ scp -i "$SSH_KEY" build/frontend-assets.tar.gz "$VM_USER@$VM_HOST:~/dndshare-fro
 scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:~/dndshare.new"
 scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.service"
 scp -i "$SSH_KEY" deploy/nginx-dndshare.conf "$VM_USER@$VM_HOST:~/dndshare-nginx.conf"
+scp -i "$SSH_KEY" deploy/nginx-dndshare-http.conf "$VM_USER@$VM_HOST:~/dndshare-nginx-http.conf"
 scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
+scp -i "$SSH_KEY" deploy/fetch-secrets.sh deploy/fetch-secrets.py "$VM_USER@$VM_HOST:~/"
 scp -i "$SSH_KEY" deploy/journald-storage.conf "$VM_USER@$VM_HOST:~/dndshare-journald-storage.conf"
 
 echo "==> Обновление unit + перезапуск сервиса (секреты подтянутся в run.sh)"
 ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
-  set -e
+  set -euo pipefail
   expected_commit="$1"
   chmod +x ~/dndshare.new ~/dndshare-run.sh ~/fetch-secrets.sh
   sudo install -d -m 755 /etc/systemd/journald.conf.d
@@ -84,10 +86,7 @@ ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
       Environment=*) export "${unit_line#Environment=}" ;;
     esac
   done < ~/dndshare.service
-  ~/fetch-secrets.sh dndshare-secrets ~/dndshare.env
-  set -a
-  source ~/dndshare.env
-  set +a
+  ~/fetch-secrets.sh ~/dndshare.env
   asset_staging="$(mktemp -d /home/sylvieshare/dndshare-frontend-upload.XXXXXX)"
   trap 'rm -rf "$asset_staging"' EXIT
   tar -xzf ~/dndshare-frontend-assets.new.tar.gz -C "$asset_staging"
@@ -101,7 +100,11 @@ ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
   sudo systemctl stop dndshare || true
   mv ~/dndshare.new ~/dndshare
   sudo install -m 644 ~/dndshare.service /etc/systemd/system/dndshare.service
-  sudo install -m 644 ~/dndshare-nginx.conf /etc/nginx/sites-available/dndshare
+  if sudo test -s /etc/letsencrypt/live/dndshare.ru/fullchain.pem; then
+    sudo install -m 644 ~/dndshare-nginx.conf /etc/nginx/sites-available/dndshare
+  else
+    sudo install -m 644 ~/dndshare-nginx-http.conf /etc/nginx/sites-available/dndshare
+  fi
   sudo ln -sfn /etc/nginx/sites-available/dndshare /etc/nginx/sites-enabled/dndshare
   sudo nginx -t
   sudo systemctl reload nginx
