@@ -1,0 +1,1034 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 10,
+  "mountProfile": "xl-ring",
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 32.63,
+  "renderTriangles": 55000,
+  "lodTriangles": 26000,
+  "tileType": "frame",
+  "hasDecor": false,
+  "tags": [
+    "frame",
+    "support",
+    "xl",
+    "scenic-level",
+    "hollow",
+    "stone",
+    "grass",
+    "three-faces"
+  ],
+  "recipe": "majestic-scenic-level-three-faces-v1",
+  "groupCode": "MH-scenic-level",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 3,
+      "height": 3,
+      "elevation": 0.9336114065987723,
+      "insertionRise": 0.03571428571428571,
+      "insertionRises": {
+        "xl-ring": 0.10857142857142857,
+        "db-pins": 0.11714285714285713
+      }
+    }
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.25,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "openingChecks": [
+    {
+      "name": "open-cell--35--35",
+      "originMM": [
+        -39.83340644836426,
+        -34.91916275024414,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-0",
+      "originMM": [
+        -39.83340644836426,
+        0.08083724975585938,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-35",
+      "originMM": [
+        -39.83340644836426,
+        35.08083724975586,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0--35",
+      "originMM": [
+        -4.833406448364258,
+        -34.91916275024414,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-0",
+      "originMM": [
+        -4.833406448364258,
+        0.08083724975585938,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-35",
+      "originMM": [
+        -4.833406448364258,
+        35.08083724975586,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35--35",
+      "originMM": [
+        30.166593551635742,
+        -34.91916275024414,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-0",
+      "originMM": [
+        30.166593551635742,
+        0.08083724975585938,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-35",
+      "originMM": [
+        30.166593551635742,
+        35.08083724975586,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    }
+  ],
+  "frameFit": {
+    "maxDriftMM": 0.15,
+    "throughPointsMM": [
+      [
+        -39.83340644836426,
+        -34.91916275024414
+      ],
+      [
+        -39.83340644836426,
+        0.08083724975585938
+      ],
+      [
+        -39.83340644836426,
+        35.08083724975586
+      ],
+      [
+        -4.833406448364258,
+        -34.91916275024414
+      ],
+      [
+        -4.833406448364258,
+        0.08083724975585938
+      ],
+      [
+        -4.833406448364258,
+        35.08083724975586
+      ],
+      [
+        30.166593551635742,
+        -34.91916275024414
+      ],
+      [
+        30.166593551635742,
+        0.08083724975585938
+      ],
+      [
+        30.166593551635742,
+        35.08083724975586
+      ]
+    ],
+    "levelsMM": [
+      0.1,
+      1,
+      2,
+      5,
+      9,
+      9.75,
+      9.95,
+      10,
+      15,
+      20,
+      22,
+      23,
+      24,
+      25,
+      28,
+      30,
+      31,
+      32,
+      32.5
+    ],
+    "rayOffsetsMM": [
+      0,
+      17.5,
+      35,
+      45
+    ],
+    "profiles": [
+      {
+        "name": "xl-taper",
+        "depthMM": 9.75,
+        "riseMM": 1.25,
+        "sectionsMM": [
+          [
+            0.05,
+            47.0383
+          ],
+          [
+            9.75,
+            48.65
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.833406448364258,
+              0.08083724975585938
+            ]
+          }
+        ]
+      },
+      {
+        "name": "xl-ring",
+        "depthMM": 10,
+        "riseMM": 3.8,
+        "holeHalfMM": 40.1,
+        "sectionsMM": [
+          [
+            0.05,
+            47.000038617902405
+          ],
+          [
+            0.1,
+            47.06659015200288
+          ],
+          [
+            0.5,
+            47.42767088395413
+          ],
+          [
+            1,
+            47.839119113820395
+          ],
+          [
+            1.5,
+            48.06498813844839
+          ],
+          [
+            2,
+            48.0660236390382
+          ],
+          [
+            3,
+            48.068094640217815
+          ],
+          [
+            4,
+            48.07404204688949
+          ],
+          [
+            4.5,
+            48.220006254607085
+          ],
+          [
+            5,
+            48.41748825487812
+          ],
+          [
+            6,
+            49.24600119186679
+          ],
+          [
+            7,
+            50.10403218480986
+          ],
+          [
+            8,
+            50.96426921672707
+          ],
+          [
+            9,
+            51.87249980573109
+          ],
+          [
+            9.75,
+            52.45836727024207
+          ],
+          [
+            9.95,
+            52.590069265002825
+          ],
+          [
+            10,
+            52.600472433017494
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.833406448364258,
+              0.08083724975585938
+            ]
+          }
+        ],
+        "meshReferences": [
+          {
+            "code": "MH-901",
+            "depthMM": 9.95
+          },
+          {
+            "code": "MH-902",
+            "depthMM": 10
+          },
+          {
+            "code": "MH-903",
+            "depthMM": 10
+          },
+          {
+            "code": "MH-904",
+            "depthMM": 10
+          },
+          {
+            "code": "MH-905",
+            "depthMM": 10
+          },
+          {
+            "code": "MH-907",
+            "depthMM": 10
+          },
+          {
+            "code": "MH-908",
+            "depthMM": 10
+          },
+          {
+            "code": "MH-909",
+            "depthMM": 10
+          },
+          {
+            "code": "MH-910",
+            "depthMM": 10
+          }
+        ]
+      },
+      {
+        "name": "xl-ring-short",
+        "depthMM": 7.65,
+        "riseMM": 3.8,
+        "holeHalfMM": 40.39,
+        "sectionsMM": [
+          [
+            0.05,
+            47.91558152968617
+          ],
+          [
+            0.1,
+            47.955444735809415
+          ],
+          [
+            0.5,
+            47.98095230102539
+          ],
+          [
+            1,
+            47.9808230963982
+          ],
+          [
+            1.5,
+            47.980646971547486
+          ],
+          [
+            2,
+            47.9795297599029
+          ],
+          [
+            3,
+            48.678063519440656
+          ],
+          [
+            4,
+            49.54157794082104
+          ],
+          [
+            4.5,
+            49.97169611202361
+          ],
+          [
+            5,
+            50.40181428322617
+          ],
+          [
+            6,
+            51.2623825579459
+          ],
+          [
+            7,
+            52.12340342357665
+          ],
+          [
+            7.25,
+            52.33859431644733
+          ],
+          [
+            7.4,
+            52.46323173183178
+          ],
+          [
+            7.5,
+            52.52559032058819
+          ],
+          [
+            7.6,
+            52.54215443993592
+          ],
+          [
+            7.65,
+            52.54233913491242
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.833406448364258,
+              0.08083724975585938
+            ]
+          }
+        ]
+      },
+      {
+        "name": "db-pins",
+        "depthMM": 17,
+        "riseMM": 4.1,
+        "sectionsMM": [
+          [
+            0,
+            12.35
+          ],
+          [
+            1,
+            13.15
+          ],
+          [
+            2,
+            13.15
+          ],
+          [
+            5,
+            13.15
+          ],
+          [
+            9,
+            13.15
+          ],
+          [
+            11.2,
+            13.105
+          ],
+          [
+            11.5,
+            13.255
+          ],
+          [
+            12,
+            13.705
+          ],
+          [
+            14,
+            15.405
+          ],
+          [
+            15,
+            16.255
+          ],
+          [
+            15.5,
+            17.57
+          ],
+          [
+            17,
+            17.57
+          ]
+        ],
+        "pinCentresMM": [
+          [
+            0,
+            -35
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            35
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -39.83340644836426,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.833406448364258,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              30.166593551635742,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              -4.833406448364258,
+              -34.91916275024414
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              -4.833406448364258,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              -4.833406448364258,
+              35.08083724975586
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              -39.83340644836426,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              -4.833406448364258,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              30.166593551635742,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              -4.833406448364258,
+              -34.91916275024414
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              -4.833406448364258,
+              0.08083724975585938
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              -4.833406448364258,
+              35.08083724975586
+            ]
+          }
+        ],
+        "referenceModels": [
+          "MH-173",
+          "MH-174",
+          "MH-175"
+        ],
+        "meshReferences": [
+          {
+            "code": "MH-173",
+            "depthMM": 17
+          },
+          {
+            "code": "MH-174",
+            "depthMM": 17
+          },
+          {
+            "code": "MH-175",
+            "depthMM": 17
+          }
+        ]
+      }
+    ]
+  },
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      1900000,
+      5000000
+    ],
+    "targetLODBytes": [
+      900000,
+      2600000
+    ],
+    "targetShadowBytes": [
+      65000,
+      160000
+    ],
+    "targetPreviewBytes": [
+      16000,
+      110000
+    ],
+    "basis": "Own source c9f41ec88bb1e038a449aefe9cbe33379da4cc7d1865c654b7e8727fadab6a55:500002 triangles25000184B. PDF55 and own three neutral views inspected. Scenic sides +X/-Y/+Y, technical-X charcoal. Native3x3 ring datum10 centre[-4.833406448364258,0.08083724975585938], measured technical rim32.67639923095703 distinct from grass42.089096. Own17sections hole40.13934, conservative40.10; own field[-59,-63]..[59,63] sourceSHA/ray90. Eleven rocks individually picked; closeups corrected caps4/7/8/11 from neighboring leaves onto actual stones, original leaves retained as controls. Start55k/26k for third sculpted face; colour2048/1024,data1024/512. Native+exact quant16bit UV .1mm preflight before each bake; compare colour1024 at matching views. Initial rises1.25taper/3.8rings/4.1DB must be verified against all native/final surfaces including own self stack. Full reference meshes901..905/907..910 and173..175 with all rotations/offsets/tiers; no actual surface intersections or containment. Full native openings and .15mm physical socket drift unchanged. Six views+technical side+three altviews, all material/roughness probes, five-resource manifest, browserKTX/LOD/sun/pointshadows/alpha and freshMCP registry required. First bake front leaf13 became brown beside cap4; tighten its measured ellipsoid XY3.2/2.6 to2.4/2.0mm, retaining same geometry and UV.",
+    "actualBytes": {
+      "lod": 1365336,
+      "preview": 20698,
+      "render": 2975412,
+      "shadow": 89564,
+      "source": 25000184
+    },
+    "runtimeBytes": 4451010
+  },
+  "masonryRGB": [
+    0.52,
+    0.335,
+    0.17
+  ],
+  "darkenJoints": true,
+  "soilDomains": [
+    [
+      [
+        -70,
+        -70
+      ],
+      [
+        70,
+        -70
+      ],
+      [
+        70,
+        70
+      ],
+      [
+        -70,
+        70
+      ]
+    ]
+  ],
+  "soilDomainFeatherMM": 1,
+  "soilSurfaceMM": 50,
+  "grassHeightFadeMM": 1,
+  "raisedGrass": {
+    "minMM": [
+      -59,
+      -63,
+      37.8
+    ],
+    "maxMM": [
+      59,
+      63,
+      45
+    ],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": -0.2,
+    "normalFade": 0.5,
+    "fieldCode": "MH-910-rims",
+    "fieldBoundsMM": [
+      [
+        -59,
+        -63
+      ],
+      [
+        59,
+        63
+      ]
+    ],
+    "exclusions": [
+      {
+        "centreMM": [
+          -32.32831954956055,
+          -57.2794075012207,
+          39.83895416259766
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          -9.888663291931152,
+          -58.2309455871582,
+          40.18949432373047
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          22.24949073791504,
+          -57.27808380126953,
+          39.18342895507813
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          33.279151916503906,
+          -56.32661437988281,
+          38.86698455810547
+        ],
+        "radiiMM": [
+          2.4,
+          2.0,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          25.292158126831055,
+          57.394771575927734,
+          38.10525054931641
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          1.9016659259796143,
+          57.771053314208984,
+          40.11936874389649
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          -31.187320709228516,
+          57.96239471435547,
+          39.53464050292969
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          -41.646484375,
+          56.44310760498047,
+          38.51841278076172
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          53.81714630126953,
+          28.10580825805664,
+          39.71988983154297
+        ],
+        "radiiMM": [
+          2.6,
+          3.2,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          53.62697982788086,
+          -5.364491939544678,
+          40.17259140014649
+        ],
+        "radiiMM": [
+          2.6,
+          3.2,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          52.48598098754883,
+          -27.23354148864746,
+          40.09725494384766
+        ],
+        "radiiMM": [
+          2.6,
+          3.2,
+          4
+        ],
+        "minZMM": 37.9
+      }
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -59,
+        -63,
+        37.8
+      ],
+      [
+        59,
+        63,
+        45
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.2,
+    "growAngleRad": 0.12
+  },
+  "masonryReference": {
+    "code": "MH-901",
+    "rotateZ": 0,
+    "translationMM": [
+      -4.833406448364258,
+      0.08083724975585938,
+      0
+    ],
+    "matchMM": 0.05,
+    "blendMM": 0.15
+  },
+  "masonryRegion": {
+    "u": [
+      -130,
+      130
+    ],
+    "v": [
+      -130,
+      130
+    ],
+    "minZMM": 9.8,
+    "anyBoundsMM": [
+      [
+        [
+          -59,
+          -63,
+          9.9
+        ],
+        [
+          59,
+          -51.71916275024414,
+          45
+        ]
+      ],
+      [
+        [
+          -59,
+          51.88083724975586,
+          9.9
+        ],
+        [
+          59,
+          63,
+          45
+        ]
+      ],
+      [
+        [
+          46.96659355163574,
+          -63,
+          9.9
+        ],
+        [
+          59,
+          63,
+          45
+        ]
+      ]
+    ]
+  },
+  "masonryPreserveRaisedGrass": true,
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -59,
+        -63,
+        9.9
+      ],
+      "maxMM": [
+        59,
+        -51.71916275024414,
+        45
+      ],
+      "featherMM": 0.08,
+      "rgb": [
+        0.52,
+        0.335,
+        0.17
+      ]
+    },
+    {
+      "minMM": [
+        -59,
+        51.88083724975586,
+        9.9
+      ],
+      "maxMM": [
+        59,
+        63,
+        45
+      ],
+      "featherMM": 0.08,
+      "rgb": [
+        0.52,
+        0.335,
+        0.17
+      ]
+    },
+    {
+      "minMM": [
+        46.96659355163574,
+        -63,
+        9.9
+      ],
+      "maxMM": [
+        59,
+        63,
+        45
+      ],
+      "featherMM": 0.08,
+      "rgb": [
+        0.52,
+        0.335,
+        0.17
+      ]
+    }
+  ],
+  "previewDirection": "default"
+}

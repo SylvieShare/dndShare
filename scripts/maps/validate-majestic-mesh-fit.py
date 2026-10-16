@@ -117,8 +117,16 @@ def main():
             code = reference['code']
             native = next(r for r in rows if r['code']==code)
             report = json.loads((BASE/'optimized-review'/code/'report.json').read_text())
-            live = next(r for r in registry if r['id']==report['model']['id'])
-            references.append({'id':live['id'],'assets':{role:live['assets'][role]['sha256'] for role in ['source','render','lod']}})
+            if code == args.code:
+                # A new frame must also accept another copy of itself before
+                # publication. Its final resources are bound by the proof below.
+                own = frame.mesh_fit_assets(native,BASE/'optimized-review'/code)
+                if own['source'] != native['sourceSHA256']:
+                    raise ValueError(f'{code}: own source differs from inventory')
+                live = {'assets':{role:{'sha256':own[role]} for role in ['source','render','lod']}}
+            else:
+                live = next(r for r in registry if r['id']==report['model']['id'])
+                references.append({'id':live['id'],'assets':{role:live['assets'][role]['sha256'] for role in ['source','render','lod']}})
             for tier in ['source','render','lod']:
                 actual = ROOT/'models'/native['sourcePath'] if tier=='source' else BASE/'optimized-review'/code/(tier+'.glb')
                 if hashlib.sha256(actual.read_bytes()).hexdigest()!=live['assets'][tier]['sha256']:
