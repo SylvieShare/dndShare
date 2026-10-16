@@ -1,3 +1,4 @@
+import { modelDownloadsFixture, downloadMapExample } from "./downloads";
 import { sessionFixture, sessionAPI, tokenPortraitExample } from "./session";
 import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
@@ -307,6 +308,8 @@ if (params.has("transitions")) {
     },
   ];
 }
+if (params.has("downloadExample"))
+  downloadMapExample(source.document, catalogue);
 let templateRevision = 1;
 let board = {
   ...clone(source),
@@ -369,11 +372,25 @@ const modelAssetAliases = new Map();
 window.loadedModels = [];
 window.releaseModelLoads = () =>
   window.pendingModelLoads?.splice(0).forEach((resolve) => resolve());
+const modelBody = (id) => {
+  const key = modelAssetAliases.get(id) || id;
+  return key.includes(FRAME)
+    ? frameGlb
+    : key.includes(BRIDGE)
+      ? bridgeGlb
+      : key.includes(PEG)
+        ? pegGlb
+        : key.includes(WALL)
+          ? wallGlb
+          : glb;
+};
+const transfers = modelDownloadsFixture(params, modelBody);
 const nativeFetch = window.fetch.bind(window);
 const modelDto = ({ id, definitionId, ...model }) => ({
   ...model,
   id: definitionId,
   uuid: id,
+  assetBytes: transfers.sizes(id),
 });
 const previews = previewFixture(catalogue, modelDto);
 window.fetch = async (url, options = {}) => {
@@ -384,7 +401,7 @@ window.fetch = async (url, options = {}) => {
   if (preview) return preview;
   url = endpoint;
   if (
-    /^\/api\/(maps\/models|public\/sessions\/ABC-123\/map-models)\/[^/]+\/(render|lod)$/.test(
+    /^\/api\/(maps\/models|public\/sessions\/ABC-123\/map-models)\/[^/]+\/(render|lod|shadow)$/.test(
       url,
     )
   ) {
@@ -394,25 +411,7 @@ window.fetch = async (url, options = {}) => {
         (window.pendingModelLoads ||= []).push(resolve),
       );
     if (params.has("realModels")) return nativeFetch(rawUrl, options);
-    const modelId = url.split("/")[4];
-    const assetUrl = url.replace(
-      modelId,
-      modelAssetAliases.get(modelId) || modelId,
-    );
-    return new Response(
-      assetUrl.includes(FRAME)
-        ? frameGlb
-        : assetUrl.includes(BRIDGE)
-          ? bridgeGlb
-          : assetUrl.includes(PEG)
-            ? pegGlb
-            : assetUrl.includes(WALL)
-              ? wallGlb
-              : glb,
-      {
-        headers: { "Content-Type": "model/gltf-binary" },
-      },
-    );
+    return transfers.response(url, url.split("/").at(-2));
   }
   if (
     url === "/api/maps/models" ||

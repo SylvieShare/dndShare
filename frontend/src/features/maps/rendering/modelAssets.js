@@ -1,7 +1,23 @@
 import { acquireModelLoader } from "./modelLoader";
 import { getMapModels } from "@/shared/api/mapsApi";
-import { acquire, release, prioritize } from "./modelResourceCache";
-export function modelAssets(onError, renderer, onChange = () => {}) {
+import {
+  acquire,
+  release,
+  prioritize,
+  resourceKey,
+} from "./modelResourceCache";
+import { modelDownloads } from "./modelDownloadManager";
+import {
+  modelFile,
+  modelDownloadPlan,
+  modelDownloadProgress,
+} from "./modelDownloadProgress";
+export function modelAssets(
+  onError,
+  renderer,
+  onChange = () => {},
+  onProgress = () => {},
+) {
   const loader = acquireModelLoader(renderer),
     owned = new Map();
   let catalogue = new Map(),
@@ -9,7 +25,35 @@ export function modelAssets(onError, renderer, onChange = () => {}) {
     sourceCatalogue,
     preparing,
     dead = false,
-    wanted = new Set();
+    plan = new Map(),
+    lastProgress = "";
+  function progress() {
+    if (dead) return;
+    const files = [...plan.values()].filter(
+      (file) =>
+        !(
+          file.kind === "lod" &&
+          !file.requiredForShadow &&
+          owned.get(file.url)?.error &&
+          owned.get(file.fallbackUrl)?.value
+        ),
+    );
+    const snapshot = modelDownloadProgress(files, (url) => {
+      const state = modelDownloads.get(resourceKey(url, loader));
+      const entry = owned.get(url);
+      return entry?.value
+        ? { ...state, status: "ready" }
+        : entry?.error
+          ? { ...state, status: "failed" }
+          : state;
+    });
+    const key = JSON.stringify(snapshot);
+    if (key !== lastProgress) {
+      lastProgress = key;
+      onProgress(snapshot);
+    }
+  }
+  const unsubscribe = modelDownloads.subscribe(progress);
   async function prepare(ids, options = {}) {
     const key = options.publicCode
       ? `${options.publicCode}:${[...ids].sort().join(",")}`
@@ -48,26 +92,37 @@ export function modelAssets(onError, renderer, onChange = () => {}) {
     const url = metadata[`${tier}Url`];
     if (!url)
       return Promise.reject(new Error("У модели отсутствует файл " + tier));
+    if (!plan.has(url)) plan.set(url, modelFile(metadata, tier));
     let entry = owned.get(url);
     if (!entry) {
       entry = { value: null, error: null };
       owned.set(url, entry);
-      entry.promise = acquire(url, loader, priority)
+      entry.promise = acquire(
+        url,
+        loader,
+        priority,
+        metadata.assetBytes?.[tier] || 0,
+      )
         .then((value) => {
           if (!dead && owned.get(url) === entry) {
             entry.value = value;
+            progress();
             onChange();
           }
           return value;
         })
         .catch((error) => {
           entry.error = error;
-          if (!dead) onChange();
+          if (!dead) {
+            progress();
+            onChange();
+          }
           throw error;
         });
       entry.promise.catch(() => {});
     }
     prioritize(url, loader, priority);
+    progress();
     return entry.promise;
   }
   function model(id, tier) {
@@ -83,22 +138,19 @@ export function modelAssets(onError, renderer, onChange = () => {}) {
     if (!dead && error.name !== "AbortError") onError(error.message);
   }
   function progressive(ids, tier, details = new Set(), shadows = false) {
-    wanted = new Set(
-      [...ids].flatMap((id) => {
-        const m = catalogue.get(id);
-        return m
-          ? [
-              m.lodUrl,
-              ...(tier === "render" ? [m.renderUrl] : []),
-              ...(shadows ? [m.shadowUrl] : []),
-            ]
-          : [];
-      }),
-    );
-    for (const id of details) {
-      const m = catalogue.get(id);
-      if (m) wanted.add(m.renderUrl);
+    plan = modelDownloadPlan(catalogue, ids, tier, details, shadows);
+    for (const [url, entry] of owned) {
+      if (
+        !plan.has(url) &&
+        !entry.value &&
+        !entry.error &&
+        modelDownloads.get(resourceKey(url, loader))?.status === "queued"
+      ) {
+        owned.delete(url);
+        release(url, loader);
+      }
     }
+    progress();
     for (const id of ids) {
       const metadata = catalogue.get(id);
       if (!metadata) {
@@ -108,8 +160,13 @@ export function modelAssets(onError, renderer, onChange = () => {}) {
       request(id, "lod", 1)
         .catch(() => null)
         .then((lod) => {
-          if (dead || catalogue.get(id) !== metadata) return;
-          if (wanted.has(metadata.renderUrl) || !lod)
+          if (
+            dead ||
+            catalogue.get(id) !== metadata ||
+            (!plan.has(metadata.lodUrl) && !plan.has(metadata.renderUrl))
+          )
+            return;
+          if (plan.has(metadata.renderUrl) || !lod)
             return request(id, "render", 0);
         })
         .catch(report);
@@ -168,6 +225,7 @@ export function modelAssets(onError, renderer, onChange = () => {}) {
     destroy() {
       if (dead) return;
       dead = true;
+      unsubscribe();
       owned.forEach((_, url) => release(url, loader));
       owned.clear();
       loader.release();

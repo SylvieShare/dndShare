@@ -37,9 +37,6 @@ const emit = defineEmits(["zoom", "fit", "toggle-view"]);
 </script>
 <style scoped>
 .map-canvas-controls {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
   display: flex;
   gap: 4px;
   padding: 4px;

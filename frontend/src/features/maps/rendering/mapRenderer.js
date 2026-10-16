@@ -28,7 +28,12 @@ import { structureView } from "./structureView";
 import { createObjectPreview } from "./objectPreview";
 import { createPlacementAnchors } from "./placementAnchors";
 
-export async function createMapRenderer(host, onError, onPreviewLoading) {
+export async function createMapRenderer(
+  host,
+  onError,
+  onPreviewLoading,
+  onDownloadProgress,
+) {
   const gpu = new WebGLRenderer({ antialias: true });
   gpu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   gpu.toneMapping = ACESFilmicToneMapping;
@@ -56,7 +61,7 @@ export async function createMapRenderer(host, onError, onPreviewLoading) {
     objects = new Group();
   let appearance = areaAppearance({ areas: [] });
   scene.add(annotations, objects);
-  const assets = modelAssets(onError, gpu, assetsChanged),
+  const assets = modelAssets(onError, gpu, assetsChanged, onDownloadProgress),
     lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),

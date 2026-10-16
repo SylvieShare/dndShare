@@ -25,6 +25,7 @@ type mapModelView struct {
 	LODURL     string                   `json:"lodUrl"`
 	PreviewURL string                   `json:"previewUrl"`
 	ShadowURL  string                   `json:"shadowUrl"`
+	AssetBytes map[string]int64         `json:"assetBytes,omitempty"`
 }
 
 func modelView(model battlemap.Model, base string) mapModelView {
@@ -35,7 +36,14 @@ func modelView(model battlemap.Model, base string) mapModelView {
 	if model.Assets["shadow"].Key == model.Assets["lod"].Key {
 		shadowURL = assetURL("lod")
 	}
-	return mapModelView{ModelMetadata: metadata, Behaviour: battlemap.ModelBehaviour{DefaultLights: []battlemap.ModelLight{}, Transitions: []battlemap.ModelTransition{}}, RenderURL: assetURL("render"), LODURL: assetURL("lod"), ShadowURL: shadowURL, PreviewURL: assetURL("preview")}
+	sizes := map[string]int64{}
+	for _, kind := range []string{"render", "lod", "shadow", "preview"} {
+		sizes[kind] = model.Assets[kind].Size
+	}
+	if shadowURL == assetURL("lod") {
+		sizes["shadow"] = sizes["lod"]
+	}
+	return mapModelView{ModelMetadata: metadata, Behaviour: battlemap.ModelBehaviour{DefaultLights: []battlemap.ModelLight{}, Transitions: []battlemap.ModelTransition{}}, RenderURL: assetURL("render"), LODURL: assetURL("lod"), ShadowURL: shadowURL, PreviewURL: assetURL("preview"), AssetBytes: sizes}
 
 }
 

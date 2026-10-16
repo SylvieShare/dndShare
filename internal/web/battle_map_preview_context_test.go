@@ -39,3 +39,26 @@ func TestMapPreviewSignatureTracksSceneAndCurrentAssets(t *testing.T) {
 		t.Fatal("missing model accepted")
 	}
 }
+
+func TestMapPreviewSignatureIgnoresDownloadSizes(t *testing.T) {
+	model := battlemap.InitialCatalogue()[0]
+	d := battlemap.Document{Version: 2, Kind: "tiles", Width: 5, Height: 5, Tiles: []battlemap.Tile{{ID: "tile", ModelID: model.ID, X: 1, Y: 1}}}
+	before, err := buildMapPreviewContext(d, []battlemap.Model{model}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	model.Assets = maps.Clone(model.Assets)
+	asset := model.Assets["render"]
+	asset.Size++
+	model.Assets["render"] = asset
+	after, err := buildMapPreviewContext(d, []battlemap.Model{model}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if before.Signature != after.Signature {
+		t.Fatal("transfer sizes invalidated the stored screenshot")
+	}
+	if after.Models[0].AssetBytes["render"] != asset.Size {
+		t.Fatal("preview loader did not receive the current download size")
+	}
+}

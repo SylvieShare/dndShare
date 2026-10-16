@@ -25,7 +25,9 @@ test("scene is usable while one mesh is delayed, shows LOD before requesting ful
       ),
     ),
   ).toBe(false);
-  await expect(page.locator(".map-model-loading")).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Загрузка моделей" }),
+  ).toBeVisible();
   await page.evaluate(() => window.releaseModelLoads());
   await expect
     .poll(() =>
@@ -37,8 +39,13 @@ test("scene is usable while one mesh is delayed, shows LOD before requesting ful
     )
     .toBe(true);
   // The full file is still blocked, but the coarse version already replaced every placeholder.
-  await expect(page.locator(".map-model-loading")).toHaveCount(0);
+  await expect(
+    page.getByRole("region", { name: "Загрузка моделей" }),
+  ).toBeVisible();
   await page.evaluate(() => window.releaseModelLoads());
+  await expect(
+    page.getByRole("region", { name: "Загрузка моделей" }),
+  ).toHaveCount(0);
   await expect(page.getByRole("alert")).toHaveCount(0);
   expect(errors).toEqual([]);
 });

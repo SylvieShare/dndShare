@@ -29,10 +29,10 @@ export function acquireModelLoader(renderer) {
   }
   return {
     key,
-    async load(url, schedule = (fn) => fn()) {
+    async load(url, schedule = (fn) => fn(), onProgress) {
       profile.pending++;
       try {
-        return await schedule(() => profile.loader.loadAsync(url));
+        return await schedule(() => profile.loader.loadAsync(url, onProgress));
       } finally {
         profile.pending--;
         cleanup();

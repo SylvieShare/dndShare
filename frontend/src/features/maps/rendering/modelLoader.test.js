@@ -73,3 +73,15 @@ it("keeps the decoder alive for a queued model when its canvas closes, including
   next.release();
   expect(failed.dispose).toHaveBeenCalledTimes(1);
 });
+
+it("forwards byte progress from the GLB request to the download manager", async () => {
+  const owner = acquireModelLoader({ format: "bytes" }),
+    onProgress = vi.fn();
+  fake.loaders.at(-1).loadAsync.mockImplementation(async (url, progress) => {
+    progress({ loaded: 45, total: 100 });
+    return url;
+  });
+  await owner.load("/progress.glb", (fn) => fn(), onProgress);
+  expect(onProgress).toHaveBeenCalledWith({ loaded: 45, total: 100 });
+  owner.release();
+});

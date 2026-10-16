@@ -50,11 +50,16 @@ func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, beha
 	for i := range scene.Lights {
 		scene.Lights[i].Flicker = false
 	}
+	// Transfer metadata does not change the rendered scene or its saved preview.
+	signatureModels := append([]mapModelView{}, views...)
+	for i := range signatureModels {
+		signatureModels[i].AssetBytes = nil
+	}
 	raw, err := json.Marshal(struct {
 		Renderer string
 		Document battlemap.Document
 		Models   []mapModelView
-	}{"map-scene-v1", scene, views})
+	}{"map-scene-v1", scene, signatureModels})
 	if err != nil {
 		return mapPreviewContext{}, err
 	}

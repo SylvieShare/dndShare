@@ -42,22 +42,16 @@
         >Повторить загрузку</ActionButton
       >
     </div>
-    <LoadingState
-      v-if="previewLoading"
-      class="map-model-loading"
-      :label="
-        previewLoading > 1
-          ? `Загружаем модели: ${previewLoading}…`
-          : 'Загружаем модель…'
-      "
-    />
-    <MapCanvasControls
-      v-if="!readonly"
-      :top-view="topView"
-      @zoom="zoom"
-      @fit="fit"
-      @toggle-view="toggleView"
-    />
+    <div class="map-canvas-corner">
+      <MapDownloadManager :progress="downloads" @retry="retry" />
+      <MapCanvasControls
+        v-if="!readonly"
+        :top-view="topView"
+        @zoom="zoom"
+        @fit="fit"
+        @toggle-view="toggleView"
+      />
+    </div>
     <ul
       v-if="!readonly && hintLines.length"
       class="map-controls-hint"
@@ -73,6 +67,7 @@ import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
 import MapCanvasControls from "./MapCanvasControls.vue";
+import MapDownloadManager from "./MapDownloadManager.vue";
 import { useMapCanvasPointer } from "../composables/useMapCanvasPointer";
 import { useCameraPan } from "../composables/useCameraPan";
 const props = defineProps({
@@ -122,7 +117,7 @@ const hintLines = computed(() =>
 const emit = defineEmits(["gesture", "view", "camera-move"]);
 const host = ref(null),
   loading = ref(true),
-  previewLoading = ref(0),
+  downloads = ref(null),
   error = ref(""),
   topView = ref(false);
 let renderer,
@@ -240,8 +235,9 @@ onMounted(async () => {
       (message) => {
         error.value = message;
       },
-      (count) => {
-        previewLoading.value = count;
+      undefined,
+      (progress) => {
+        downloads.value = progress;
       },
     );
     if (dead) {
@@ -338,11 +334,19 @@ defineExpose({
   line-height: 1.5;
   pointer-events: none;
 }
-.map-model-loading {
+.map-canvas-corner {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: calc(100% - 32px);
   pointer-events: none;
+}
+.map-canvas-corner > * {
+  pointer-events: auto;
 }
 .map-canvas-message {
   position: absolute;
