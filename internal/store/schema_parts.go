@@ -201,4 +201,5 @@ var schemaParts = []struct {
 	{"current-map-models", schemaCurrentMapModelsSQL},
 	{"session-map-editor", schemaSessionMapEditorSQL},
 	{"majestic-db-mount-profiles", schemaMajesticDBMountProfilesSQL},
+	{"session-global-maps", schemaSessionGlobalMapsSQL},
 }

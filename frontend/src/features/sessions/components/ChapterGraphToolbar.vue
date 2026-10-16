@@ -50,6 +50,9 @@
           :aria-current="primaryView === 'maps' ? 'page' : undefined" @click="emit('select-view', 'maps')">
           <Map :size="24" /><span>Карта</span>
         </button>
+        <button v-if="isDm" type="button" class="chapter-primary-tab" data-tutorial="session-global-navigation"
+          :class="{ 'chapter-primary-tab--active': primaryView === 'globalMaps' }" :aria-current="primaryView === 'globalMaps' ? 'page' : undefined"
+          @click="emit('select-view', 'globalMaps')"><Globe :size="24" /><span>Глобальная карта</span></button>
 
         <span v-if="visibleLibraryViews.length" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 
@@ -117,7 +120,7 @@
 <script setup>
 import { computed } from 'vue'
 import WorkspaceHeader from '@/shared/ui/WorkspaceHeader.vue'
-import { BookOpenText, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
+import { BookOpenText, Globe, History, Images, Map, NotebookPen, ScrollText, Settings, Swords, UsersRound } from '@lucide/vue'
 import SessionToolbarIdentity from './SessionToolbarIdentity.vue'
 import SessionBackButton from './SessionBackButton.vue'
 import SessionToolbarMusic from './SessionToolbarMusic.vue'

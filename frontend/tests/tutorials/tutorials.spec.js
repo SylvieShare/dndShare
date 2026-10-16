@@ -22,6 +22,8 @@ async function mockApi(page, role = 'player', entries = []) {
     if (path === '/api/char/test') json = character
     else if (path === '/api/account/tutorials') json = { tutorials: entries }
     else if (path === '/api/sessions/test') json = { session: { uuid: 'test', name: 'Приключение', status: 'stopped', ownerUserId: role === 'dm' ? 1 : 2, systemId: 1 }, participants: [], myRole: role === 'dm' ? 'gm' : role }
+    else if (path === '/api/sessions/test/global-maps') json = { maps: [] }
+    else if (path === '/api/sessions/test/maps') json = { maps: [], display: { mapId: null, visible: false, revision: 0, camera: { x: 0, y: 0, cellPixels: 64, rotation: 0, fit: true } } }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
     await route.fulfill({ json })
   })

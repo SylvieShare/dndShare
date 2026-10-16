@@ -1,0 +1,21 @@
+.global-map-workspace { display: flex; width: 100%; height: 100%; min-height: 0; overflow: hidden; }
+.global-map-sidebar { z-index: 20; }
+.global-map-main { position: relative; flex: 1; min-width: 0; min-height: 0; margin-right: var(--chapter-safe-right, 86px); }
+.global-map-toolbar { position: absolute; z-index: 7; top: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 12px; background: color-mix(in srgb, var(--surface) 96%, transparent); box-shadow: var(--shadow-sm); }
+.global-map-identity { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--text-1); }
+.global-map-identity strong { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.global-map-identity small { color: var(--accent-soft); font-size: 10px; }
+.global-map-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.global-map-status { margin-left: auto; color: var(--text-muted); font-size: 10px; }
+.global-map-instruction { position: absolute; z-index: 6; bottom: 18px; left: 14px; max-width: calc(100% - 30px); background: var(--surface); padding: 8px 12px; border-radius: 8px; font-size: 11px; color: var(--text-2); pointer-events: none; }
+.global-map-empty { display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 14px; padding: 28px; text-align: center; color: var(--text-muted); }
+.global-map-empty h2 { margin: 0; color: var(--text-1); font: 28px var(--font-display); }
+.global-map-empty p { font-size: 13px; line-height: 1.6; }
+.global-map-error { position: absolute; z-index: 12; top: 92px; left: 14px; right: 14px; padding: 12px; border: 1px solid var(--danger); border-radius: 10px; background: var(--surface); color: var(--danger); font-size: 12px; }
+@media (max-width: 760px) {
+  .global-map-sidebar { position: absolute; top: 0; bottom: 0; left: 0; }
+  .global-map-main { margin-left: 48px; margin-right: 68px; }
+  .global-map-toolbar { gap: 4px; left: 6px; right: 6px; }
+  .global-map-identity strong { max-width: 140px; }
+  .global-map-status { display: none; }
+}

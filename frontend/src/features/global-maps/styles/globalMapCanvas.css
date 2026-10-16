@@ -1,0 +1,16 @@
+.global-map-canvas { position: absolute; inset: 0; overflow: hidden; touch-action: none; outline: none; cursor: grab; background-color: var(--app-canvas-bg); background-image: var(--app-canvas-pattern); background-size: var(--app-canvas-dot-size) var(--app-canvas-dot-size); }
+.global-map-canvas--adding { cursor: crosshair; }
+.global-map-canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.global-map-world { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+.global-map-image { width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; border-radius: 5px; box-shadow: var(--shadow-lg); }
+.global-map-paths { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.global-map-anchor { position: absolute; width: 30px; height: 30px; transform-origin: 0 0; z-index: 2; }
+.global-map-anchor:has(.global-map-point--selected) { z-index: 4; }
+.global-map-point { display: grid; place-items: center; width: 30px; height: 30px; border: 2px solid var(--route-color); border-radius: 50%; background: var(--surface); color: var(--text-1); font: 800 11px var(--font-ui); cursor: move; box-shadow: var(--shadow-sm); }
+.global-map-point--selected { background: var(--route-color); color: var(--bg); box-shadow: 0 0 0 5px color-mix(in srgb, var(--route-color) 28%, transparent); }
+.global-map-party { position: absolute; display: flex; gap: 6px; align-items: center; transform-origin: 0 0; pointer-events: none; z-index: 3; padding: 5px 8px; background: var(--surface); border: 1px solid var(--route-color); border-radius: 999px; box-shadow: var(--shadow-sm); }
+.global-map-route-name { white-space: nowrap; color: var(--text-2); font-size: 11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+.global-map-party-avatars { display: flex; padding-left: 4px; }
+.global-map-avatar { width: 30px; height: 30px; display: grid; place-items: center; margin-left: -4px; overflow: hidden; border: 2px solid var(--surface); border-radius: 50%; background: var(--surface-raised); color: var(--text-muted); }
+.global-map-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.global-map-message { position: absolute; inset: 35% 10%; display: grid; place-items: center; color: var(--text-muted); padding: 16px; background: var(--surface); border-radius: 12px; cursor: auto; }

@@ -16,5 +16,10 @@ for (const mobile of [false, true]) {
     expect(target).toHaveBeenCalledWith('session-content');
     expect(action).not.toHaveBeenCalled();
     expect(sessionSteps({ ...options, dm: false }).some((s) => s.id === 'map')).toBe(false);
+    const global = sessionSteps({ ...options, dm: true }).find(s => s.id === 'global-map');
+    await global.enter(context);
+    expect(showView).toHaveBeenCalledWith('globalMaps', context);
+    expect(sessionSteps({ ...options, dm: false }).some(s => s.id === 'global-map')).toBe(false);
+    expect(action).not.toHaveBeenCalled();
   });
 }

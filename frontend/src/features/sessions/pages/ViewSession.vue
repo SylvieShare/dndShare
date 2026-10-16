@@ -65,6 +65,7 @@
         :locked="!!workspaceMode"
         :primary-view="primaryView"
         :map-background="mapVisible"
+        :full-workspace="primaryView === 'globalMaps'"
         :workspace-chapter-id="workspaceChapter?.id ?? null"
         :workspace-scene="workspaceScene"
         :workspace-level="workspaceLevel"
@@ -86,8 +87,12 @@
         @open-chapters="openChapters"
       >
         <template #full-workspace>
+          <GlobalMapWorkspace v-if="globalMapsVisited" v-show="primaryView === 'globalMaps'" ref="globalMapWorkspace"
+            :session-uuid="sessionUuid" :participants="participants" :chapters="chapterGraph.chapters.value"
+            @open-chapter="openGlobalChapter" />
           <SessionMapWorkspace
             v-if="mapVisited && isDm"
+            v-show="mapVisible"
             ref="mapWorkspace"
             integrated-header
             :active="mapVisible"
@@ -106,7 +111,7 @@
           <SessionJournalWorkspace v-else-if="primaryView === 'journal'" :session-uuid="sessionUuid" :is-dm="isDm" :occurrence-id="requestedOccurrenceId" />
           <SessionChronicleWorkspace v-else-if="primaryView === 'events'" :live-status="liveStatus" />
           <SessionWorldLayer
-            v-else-if="primaryView !== 'maps' && primaryView !== 'story'"
+            v-else-if="primaryView !== 'maps' && primaryView !== 'story' && primaryView !== 'globalMaps'"
             ref="worldLayer"
             :session-uuid="sessionUuid"
             :active-view="primaryView"
@@ -149,7 +154,7 @@
 
       <SessionShortcutHelp :active="showShortcutHints" @toggle="showShortcutHints = !showShortcutHints" />
 
-      <aside v-show="!mapVisible" data-tutorial="session-players" class="workspace-dock workspace-dock--left">
+      <aside v-show="!mapVisible && primaryView !== 'globalMaps'" data-tutorial="session-players" class="workspace-dock workspace-dock--left">
         <div class="col-section-title">
           <span class="players-heading-label">ИГРОКИ</span>
           <button
@@ -310,6 +315,7 @@ import SessionJournalWorkspace from '@/features/sessions/components/SessionJourn
 import SessionWorldLayer from '@/features/sessions/components/SessionWorldLayer.vue'
 import { useSessionPage } from '../composables/useSessionPage'
 const SessionMapWorkspace = defineAsyncComponent(() => import('@/features/maps/components/SessionMapWorkspace.vue'))
+const GlobalMapWorkspace = defineAsyncComponent(() => import('@/features/global-maps/components/GlobalMapWorkspace.vue'))
 const DndHpCalcModal = defineAsyncComponent(() => import('@/features/character-editor/blocks/dnd/DndHpCalcModal.vue'))
 
 const toolbarHeight = ref(64)
@@ -340,9 +346,19 @@ const requestedOccurrenceId = computed(() => Number(route.query.occurrence) || n
 provide('applicationEncounter', encounter)
 const mapVisited = ref(false), mapWorkspace = ref(null)
 const mapPanelWidth = ref(334)
+const globalMapWorkspace = ref(null), globalMapsVisited = ref(false)
+watch(primaryView, view => { if (view === 'globalMaps' && isDm.value) globalMapsVisited.value = true }, { immediate: true })
+watch(isDm, dm => { if (dm && primaryView.value === 'globalMaps') globalMapsVisited.value = true })
+async function openGlobalChapter(chapter) {
+  await selectSessionView('story')
+  await openChapterScenes(chapter)
+}
 const mapVisible = computed(() => isDm.value && primaryView.value === 'maps')
 watch(mapVisible, (visible) => { if (visible) mapVisited.value = true }, { immediate: true })
-onBeforeRouteLeave(() => mapWorkspace.value?.prepareLeave() ?? true)
+onBeforeRouteLeave(async () => {
+  if (globalMapWorkspace.value && !(await globalMapWorkspace.value.prepareLeave())) return false
+  return mapWorkspace.value?.prepareLeave() ?? true
+})
 </script>
 
 <style scoped src="./styles/ViewSession.css"></style>

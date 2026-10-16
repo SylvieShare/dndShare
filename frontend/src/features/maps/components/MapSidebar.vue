@@ -70,7 +70,7 @@ onMounted(() => {
   observer.observe(element.value);
 });
 onBeforeUnmount(() => observer?.disconnect());
-defineExpose({ openTab });
+defineExpose({ openTab, collapse: () => { collapsed.value = true } });
 </script>
 <style scoped>
 .map-sidebar {

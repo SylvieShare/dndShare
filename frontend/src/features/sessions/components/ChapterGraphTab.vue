@@ -63,10 +63,10 @@
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
         @workspace-context-change="$emit('workspace-context-change', $event)"
       />
-      <SessionTabWorkspace mode="full" v-show="mapBackground">
+      <SessionTabWorkspace mode="full" v-show="mapBackground || fullWorkspace">
         <slot name="full-workspace" />
       </SessionTabWorkspace>
-      <SessionTabWorkspace mode="column" v-show="primaryView !== 'story' && primaryView !== 'maps'">
+      <SessionTabWorkspace mode="column" v-show="primaryView !== 'story' && primaryView !== 'maps' && primaryView !== 'globalMaps'">
         <slot name="primary-workspace" />
       </SessionTabWorkspace>
       <slot />
@@ -206,6 +206,7 @@ const props = defineProps({
   locked: { type: Boolean, default: false },
   primaryView: { type: String, default: 'story' },
   mapBackground: { type: Boolean, default: false },
+  fullWorkspace: { type: Boolean, default: false },
   workspaceChapterId: { type: [Number, String], default: null },
   workspaceMode: { type: String, default: null },
   workspaceScene: { type: Object, default: null },

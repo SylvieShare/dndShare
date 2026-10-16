@@ -359,6 +359,8 @@ MapCollectionPicker размещён над левым каталогом и д�
 Жесты, фокус и редактирование областей/света общие; адаптер сессии задаёт сохранение и дополнительные вкладки. Это доменные композиции,
 общие базовые примитивы остаются в share-ui.
 
+`GlobalMapWorkspace` переиспользует `MapSidebar`, `ActionButton`, `DetailSection`, `FormField`, `CompactCheckbox` и `ConfirmDialog`. SVG-маркеры и выноски — доменная композиция над загруженным изображением; геометрия и viewport вынесены отдельно. Подробности — [глобальные карты](../features/global-maps.md).
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md) · [Frontend: архитектура и разработка](../frontend.md) · [Сопровождение share-ui](share-ui.md) · [CSS variables](../css-variables.md)
