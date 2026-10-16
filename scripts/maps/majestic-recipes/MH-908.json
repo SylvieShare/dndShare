@@ -1,0 +1,901 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 10,
+  "mountProfile": "xl-ring",
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 32.65,
+  "renderTriangles": 45000,
+  "lodTriangles": 24000,
+  "tileType": "frame",
+  "hasDecor": false,
+  "tags": [
+    "frame",
+    "support",
+    "xl",
+    "scenic-level",
+    "hollow",
+    "stone",
+    "grass",
+    "two-faces",
+    "angle"
+  ],
+  "recipe": "majestic-scenic-level-angle-v1",
+  "groupCode": "MH-scenic-level",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 3,
+      "height": 3,
+      "elevation": 0.9334571838378907,
+      "insertionRise": 0.014285714285714285,
+      "insertionRises": {
+        "xl-ring": 0.1,
+        "db-pins": 0.1
+      }
+    }
+  ],
+  "renderColourSize": 2048,
+  "lodColourSize": 1024,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.25,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "openingChecks": [
+    {
+      "name": "open-cell--35--35",
+      "originMM": [
+        -39.73510551452637,
+        -30.422456741333008,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-0",
+      "originMM": [
+        -39.73510551452637,
+        4.577543258666992,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-35",
+      "originMM": [
+        -39.73510551452637,
+        39.57754325866699,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0--35",
+      "originMM": [
+        -4.735105514526367,
+        -30.422456741333008,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-0",
+      "originMM": [
+        -4.735105514526367,
+        4.577543258666992,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-35",
+      "originMM": [
+        -4.735105514526367,
+        39.57754325866699,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35--35",
+      "originMM": [
+        30.264894485473633,
+        -30.422456741333008,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-0",
+      "originMM": [
+        30.264894485473633,
+        4.577543258666992,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-35",
+      "originMM": [
+        30.264894485473633,
+        39.57754325866699,
+        65
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 75,
+      "clear": true
+    }
+  ],
+  "frameFit": {
+    "maxDriftMM": 0.15,
+    "throughPointsMM": [
+      [
+        -39.73510551452637,
+        -30.422456741333008
+      ],
+      [
+        -39.73510551452637,
+        4.577543258666992
+      ],
+      [
+        -39.73510551452637,
+        39.57754325866699
+      ],
+      [
+        -4.735105514526367,
+        -30.422456741333008
+      ],
+      [
+        -4.735105514526367,
+        4.577543258666992
+      ],
+      [
+        -4.735105514526367,
+        39.57754325866699
+      ],
+      [
+        30.264894485473633,
+        -30.422456741333008
+      ],
+      [
+        30.264894485473633,
+        4.577543258666992
+      ],
+      [
+        30.264894485473633,
+        39.57754325866699
+      ]
+    ],
+    "levelsMM": [
+      0.1,
+      1,
+      2,
+      5,
+      9,
+      9.75,
+      9.95,
+      10,
+      15,
+      20,
+      22,
+      23,
+      24,
+      25,
+      28,
+      30,
+      31,
+      32,
+      32.5
+    ],
+    "rayOffsetsMM": [
+      0,
+      17.5,
+      35,
+      45
+    ],
+    "profiles": [
+      {
+        "name": "xl-taper",
+        "depthMM": 9.75,
+        "riseMM": 0.5,
+        "sectionsMM": [
+          [
+            0.05,
+            47.0383
+          ],
+          [
+            9.75,
+            48.65
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.735105514526367,
+              4.577543258666992
+            ]
+          }
+        ]
+      },
+      {
+        "name": "xl-ring",
+        "depthMM": 10,
+        "riseMM": 3.5,
+        "holeHalfMM": 40.2,
+        "sectionsMM": [
+          [
+            0.05,
+            46.99984722116236
+          ],
+          [
+            0.1,
+            47.06659015200288
+          ],
+          [
+            0.5,
+            47.42767088395413
+          ],
+          [
+            1,
+            47.839119113820395
+          ],
+          [
+            1.5,
+            48.06498813844839
+          ],
+          [
+            2,
+            48.0660236390382
+          ],
+          [
+            3,
+            48.068094640217815
+          ],
+          [
+            4,
+            48.07404204688949
+          ],
+          [
+            4.5,
+            48.220006254607085
+          ],
+          [
+            5,
+            48.41748825487812
+          ],
+          [
+            6,
+            49.24600119186679
+          ],
+          [
+            7,
+            50.10403218480986
+          ],
+          [
+            8,
+            50.96426921672707
+          ],
+          [
+            9,
+            51.824502499495836
+          ],
+          [
+            9.75,
+            52.4551481793507
+          ],
+          [
+            9.95,
+            52.58063152948297
+          ],
+          [
+            10,
+            52.58922460451454
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.735105514526367,
+              4.577543258666992
+            ]
+          }
+        ]
+      },
+      {
+        "name": "xl-ring-short",
+        "depthMM": 7.65,
+        "riseMM": 3.5,
+        "holeHalfMM": 40.39,
+        "sectionsMM": [
+          [
+            0.05,
+            47.91558152968617
+          ],
+          [
+            0.1,
+            47.955444735809415
+          ],
+          [
+            0.5,
+            47.98095230102539
+          ],
+          [
+            1,
+            47.9808230963982
+          ],
+          [
+            1.5,
+            47.980646971547486
+          ],
+          [
+            2,
+            47.9795297599029
+          ],
+          [
+            3,
+            48.678063519440656
+          ],
+          [
+            4,
+            49.54157794082104
+          ],
+          [
+            4.5,
+            49.97169611202361
+          ],
+          [
+            5,
+            50.40181428322617
+          ],
+          [
+            6,
+            51.2623825579459
+          ],
+          [
+            7,
+            52.12340342357665
+          ],
+          [
+            7.25,
+            52.33859431644733
+          ],
+          [
+            7.4,
+            52.46323173183178
+          ],
+          [
+            7.5,
+            52.52559032058819
+          ],
+          [
+            7.6,
+            52.54215443993592
+          ],
+          [
+            7.65,
+            52.54233913491242
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.735105514526367,
+              4.577543258666992
+            ]
+          }
+        ]
+      },
+      {
+        "name": "db-pins",
+        "depthMM": 17,
+        "riseMM": 3.5,
+        "sectionsMM": [
+          [
+            0,
+            12.35
+          ],
+          [
+            1,
+            13.15
+          ],
+          [
+            2,
+            13.15
+          ],
+          [
+            5,
+            13.15
+          ],
+          [
+            9,
+            13.15
+          ],
+          [
+            11.2,
+            13.105
+          ],
+          [
+            11.5,
+            13.255
+          ],
+          [
+            12,
+            13.705
+          ],
+          [
+            14,
+            15.405
+          ],
+          [
+            15,
+            16.255
+          ],
+          [
+            15.5,
+            17.57
+          ],
+          [
+            17,
+            17.57
+          ]
+        ],
+        "pinCentresMM": [
+          [
+            0,
+            -35
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            35
+          ]
+        ],
+        "poses": [
+          {
+            "rotation": 0,
+            "translationMM": [
+              -39.73510551452637,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              -4.735105514526367,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 0,
+            "translationMM": [
+              30.264894485473633,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              -4.735105514526367,
+              -30.422456741333008
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              -4.735105514526367,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 90,
+            "translationMM": [
+              -4.735105514526367,
+              39.57754325866699
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              -39.73510551452637,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              -4.735105514526367,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 180,
+            "translationMM": [
+              30.264894485473633,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              -4.735105514526367,
+              -30.422456741333008
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              -4.735105514526367,
+              4.577543258666992
+            ]
+          },
+          {
+            "rotation": 270,
+            "translationMM": [
+              -4.735105514526367,
+              39.57754325866699
+            ]
+          }
+        ],
+        "referenceModels": [
+          "MH-173",
+          "MH-174",
+          "MH-175"
+        ]
+      }
+    ]
+  },
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      1600000,
+      4500000
+    ],
+    "targetLODBytes": [
+      700000,
+      2400000
+    ],
+    "targetShadowBytes": [
+      45000,
+      150000
+    ],
+    "targetPreviewBytes": [
+      16000,
+      110000
+    ],
+    "basis": "Own440000tris22000084B sourceSHAfc04e1100587779c35165550eb395881e419d4c6bb31b32be46bc604270927e6. Own3neutral+PDF55ACTUALLYseen twoadjacentfront(-Y)/right(+X) ochre/grassfaҫades vs2technicalcharcoal sides. 3x3nativefullringdatum10 realpegcenter[-4.7351055,4.5775433] sourceboundsX+-57.234/Y+-57.142 decoroverhangnotlargerfoot. OwnMechanicalRim32.671001 vsdecor42.087601; surface32.65 noactorfloorfalse[] one3x3slotRim/35. FrontoutsideXYZ13..18ymax-47.6856 /rightXmin47.7777 =>fullycoversbothfascia masks frontYmax-47.35/rightXmin47.35 with.08feather z9.9..45, warmochre.52/.335/.17 preserveRaisedGrass. Technical2faces .3/.32/.34 fullsoilDomains thenownRaisedGrass heightfield [-58,-58]..[58,58] sourceSHA/ray90 officialsurvey211grid includesbothoverhangs. Sevenactualcaps measuredfrommarkedsource/corrections: front[-31.950,-52.556,41.951],[-10.650,-52.739,41.875],[22.585,-53.657,41.674],[33.786,-52.002,40.872];right[53.801,31.177,41.326],[53.801,-3.895,41.748],[52.148,-30.701,40.213]; misplacedleafpoints4/8correctedwithcloseups; thirdoldrightmarker6isleaf NOTstone. 6leafcontrolssourceactualpoints. OwnRingnative17section minhole40.233 =>conservativehole40.20/radii+.03. Ring source3.1[66/48 collisions],3.2[41/0],3.3[6/0],3.35both0 =>3.40guard sharedxl-ring map. DBold symmetrictop17.63 gavefalsefrontcontacts and7mmrise; actual9sourceRLOD DB173175 prefixmax17.55052. RefinedcompleteDB envelopetop17.57/plate15.5..17.0, lowerbody1.18 oldenvelopeunderestimated.126mm fixed earlyradius; narrow11.2..15 oldradii+.005 avoidsunnecessarysidebloat. ALLmountingfaces clippedbyheight/Voronoi cells inside measuredprofile across9refs0outside (source/rawR/LOD), validatormount-profile permanent toverifyfreshassets. SourceMH908 all15fitsZERO at.5taper/3.4bothrings/3.5DB no max-schema changes. FinalRLOD wholeproof required. R45kUV.55 andL18kUV.25 native/quant5121k2kallplannedPASS. Startcolour2kR1kL/data1kR512L compareR1k actualwholeviews andgray-joint/plantcropproofs; targets extraface vs907. Need7caps6leaf/fullbothfasciagray2controls+ORM afterdecode, all6final+3altviews/native-finalUVblacknormals/freshMCP5SHAUUIDmetadata manifest/browserKTXLODsunpointshadowsalpha/27actualcellholes/19levels4offset4direction .15physical+raydiagnostic/framefull15SourceRLOD/envelopeall9refs beforepub. LOD18k physical leaf11 became brown RGB102/77/28 while render green107/115/49; try24k before accepting. FinalLOD24k1260876B fixes all19 colour+ORM probes; 18k1100260B rejected. 24k longring3.4=2contacts,3.45=0 =>3.50mm guard accepted, bothrings mapped3.5. Colour2048R2584756B vs1024R2213844B retained2048 for cleaner charcoal seams.",
+    "actualBytes": {
+      "lod": 1260876,
+      "preview": 19240,
+      "render": 2584756,
+      "shadow": 82516,
+      "source": 22000084
+    },
+    "runtimeBytes": 3947388
+  },
+  "masonryRGB": [
+    0.52,
+    0.335,
+    0.17
+  ],
+  "darkenJoints": true,
+  "soilDomains": [
+    [
+      [
+        -70,
+        -70
+      ],
+      [
+        70,
+        -70
+      ],
+      [
+        70,
+        70
+      ],
+      [
+        -70,
+        70
+      ]
+    ]
+  ],
+  "soilDomainFeatherMM": 1,
+  "soilSurfaceMM": 50,
+  "grassHeightFadeMM": 1,
+  "raisedGrass": {
+    "minMM": [
+      -58,
+      -58,
+      37.8
+    ],
+    "maxMM": [
+      58,
+      58,
+      45
+    ],
+    "depthMM": 2.2,
+    "depthFadeMM": 0.5,
+    "normalMin": -0.2,
+    "normalFade": 0.5,
+    "fieldCode": "MH-908-rims",
+    "fieldBoundsMM": [
+      [
+        -58,
+        -58
+      ],
+      [
+        58,
+        58
+      ]
+    ],
+    "exclusions": [
+      {
+        "centreMM": [
+          -31.950085,
+          -52.555538,
+          40.150527000000004
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          -10.650029,
+          -52.739002,
+          40.074958
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          22.585405,
+          -53.656712,
+          39.873885
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          33.786297,
+          -52.002499,
+          39.071563000000005
+        ],
+        "radiiMM": [
+          3.2,
+          2.6,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          53.801006,
+          31.177149,
+          39.526397
+        ],
+        "radiiMM": [
+          2.6,
+          3.2,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          53.801006,
+          -3.895419,
+          39.948253
+        ],
+        "radiiMM": [
+          2.6,
+          3.2,
+          4
+        ],
+        "minZMM": 37.9
+      },
+      {
+        "centreMM": [
+          52.148415,
+          -30.701075,
+          38.412601
+        ],
+        "radiiMM": [
+          2.6,
+          3.2,
+          4
+        ],
+        "minZMM": 37.9
+      }
+    ]
+  },
+  "raisedGrassStoneSurface": {
+    "boundsMM": [
+      [
+        -58,
+        -58,
+        37.8
+      ],
+      [
+        58,
+        58,
+        45
+      ]
+    ],
+    "normalXMax": 1,
+    "minAreaMM2": 0.2,
+    "growAngleRad": 0.12
+  },
+  "masonryReference": {
+    "code": "MH-901",
+    "rotateZ": 0,
+    "translationMM": [
+      -4.735105514526367,
+      4.577543258666992,
+      0
+    ],
+    "matchMM": 0.05,
+    "blendMM": 0.15
+  },
+  "masonryRegion": {
+    "u": [
+      -130,
+      130
+    ],
+    "v": [
+      -130,
+      130
+    ],
+    "minZMM": 9.8,
+    "anyBoundsMM": [
+      [
+        [
+          -58,
+          -58,
+          9.8
+        ],
+        [
+          58,
+          -47.35,
+          45
+        ]
+      ],
+      [
+        [
+          47.35,
+          -58,
+          9.8
+        ],
+        [
+          58,
+          58,
+          45
+        ]
+      ]
+    ]
+  },
+  "masonryPreserveRaisedGrass": true,
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -58,
+        -58,
+        9.9
+      ],
+      "maxMM": [
+        58,
+        -47.35,
+        45
+      ],
+      "featherMM": 0.08,
+      "rgb": [
+        0.52,
+        0.335,
+        0.17
+      ]
+    },
+    {
+      "minMM": [
+        47.35,
+        -58,
+        9.9
+      ],
+      "maxMM": [
+        58,
+        58,
+        45
+      ],
+      "featherMM": 0.08,
+      "rgb": [
+        0.52,
+        0.335,
+        0.17
+      ]
+    }
+  ],
+  "previewDirection": "default"
+}
