@@ -1,0 +1,439 @@
+{
+  "name": "Bar Plates",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 72000,
+  "lodTriangles": 24000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.39,
+        0
+      ],
+      [
+        0.39,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "bar vertical planks and corner posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "horizontal internal shelf",
+        "minMM": [
+          -12.3,
+          -14.1,
+          32.3
+        ],
+        "maxMM": [
+          -5.6,
+          14.1,
+          34.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "two long countertop boards",
+        "minMM": [
+          -17.3,
+          -17.6,
+          40.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.300000190734863,
+          -14.979999542236328,
+          43.35271072387695
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.300000190734863,
+          15.270000457763672,
+          43.4609375
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          -14.979999542236328,
+          43.378387451171875
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          15.270000457763672,
+          43.34292984008789
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "left plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          -8.55,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          0.8,
+          38.4
+        ],
+        "rgb": [
+          0.77,
+          0.67,
+          0.43
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "right plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          2.3,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          11.85,
+          38.4
+        ],
+        "rgb": [
+          0.72,
+          0.615,
+          0.38
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "goblet on left internal shelf",
+        "kind": "ceramic",
+        "minMM": [
+          -10.5,
+          -13.6,
+          34.6
+        ],
+        "maxMM": [
+          -6.6,
+          -8.55,
+          40.5
+        ],
+        "rgb": [
+          0.57,
+          0.325,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.04
+      },
+      {
+        "name": "single ochre bowl on south countertop",
+        "kind": "ceramic",
+        "minMM": [
+          -13.746649856567382,
+          -16.307299728393556,
+          42.8
+        ],
+        "maxMM": [
+          -4.897350673675537,
+          -7.489000205993652,
+          45.55249893188476
+        ],
+        "rgb": [
+          0.73,
+          0.49,
+          0.2
+        ],
+        "roughness": 0.58,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-045",
+            "sourceSHA256": "bd0ad5fef244b3d4b561994a0a89dd5e30f0e4e68e8277e802e1f95bd9dcd525"
+          }
+        }
+      },
+      {
+        "name": "golden central plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -16.353951568603517,
+          -7.060499782562256,
+          42.8
+        ],
+        "maxMM": [
+          -5.77655065536499,
+          3.497000093460083,
+          47.72009765625
+        ],
+        "rgb": [
+          0.82,
+          0.65,
+          0.28
+        ],
+        "roughness": 0.58,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-045",
+            "sourceSHA256": "bd0ad5fef244b3d4b561994a0a89dd5e30f0e4e68e8277e802e1f95bd9dcd525"
+          }
+        }
+      },
+      {
+        "name": "ochre north bowl stack",
+        "kind": "ceramic",
+        "minMM": [
+          -14.925150985717773,
+          5.343099956512451,
+          42.8
+        ],
+        "maxMM": [
+          -5.911150341033935,
+          14.436699981689452,
+          48.461796875
+        ],
+        "rgb": [
+          0.7,
+          0.45,
+          0.18
+        ],
+        "roughness": 0.58,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-045",
+            "sourceSHA256": "bd0ad5fef244b3d4b561994a0a89dd5e30f0e4e68e8277e802e1f95bd9dcd525"
+          }
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.4,
+      3.4
+    ],
+    "lodMiB": [
+      0.45,
+      1.3
+    ],
+    "shadowKiB": [
+      45,
+      130
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "35 mm bar tile with three added countertop dish groups and two hidden plate stacks plus goblet. Independent 72000/24000 triangle meshes and 1024/512 bakes preserve ceramic lips, open rear shelving, carved timber and fasteners. Compare compact 768/384 maps."
+  },
+  "reviewNotes": "PDF page 8 and native source front/back/top inspected. Source has 399952 triangles, 19997684 bytes and height 48.341797 mm. Full-height centre ray reaches floor at 24.706406 mm, normal Z=.98321; 17 mm mount datum. Floor normal squares X=.375895, Y=.040710 confirm Y grain. Countertop has one shallow south bowl (Z<=45.4325), a central plate stack (Z<=47.6001), and a north bowl stack (Z<=48.3418). Three groups were separated above 43.55 mm; measured XY bounds are recorded in their masks. Common countertop timber compared with MT1-044: 435 probes, median .001882 mm, P95 .011666 mm, max .027367 mm. The .08 mm reference threshold separates added ceramic from shared timber; projecting packed geometry to MT1-045 prevents simplification from painting wood. Three exposed fasteners were measured; the fourth is covered by the south bowl. Internal shelf ceramics retain independently bounded masks from the common sculpt. Review both sides, top, ceramic/wood contacts, source bowl depths, both LOD tiers and texture candidates.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
