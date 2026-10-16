@@ -1,0 +1,589 @@
+{
+  "name": "Tall Bar Empty",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 78000,
+  "lodTriangles": 26000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.39,
+        0
+      ],
+      [
+        0.39,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic",
+    "frame",
+    "timber"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "bar vertical planks and corner posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "horizontal internal shelf",
+        "minMM": [
+          -12.3,
+          -14.1,
+          32.3
+        ],
+        "maxMM": [
+          -5.6,
+          14.1,
+          34.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "two long countertop boards",
+        "minMM": [
+          -17.3,
+          -17.6,
+          40.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "upper frame vertical timber",
+        "minMM": [
+          -13.9,
+          -17.3,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south diagonal frame brace",
+        "minMM": [
+          -13,
+          -13.3,
+          54.5
+        ],
+        "maxMM": [
+          -8.8,
+          -3.3,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.766011030839048,
+          0.6428274267895694
+        ]
+      },
+      {
+        "name": "north diagonal frame brace",
+        "minMM": [
+          -13,
+          3.3,
+          54.5
+        ],
+        "maxMM": [
+          -8.8,
+          13.3,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          -0.7660627174106676,
+          0.6427658306050374
+        ]
+      },
+      {
+        "name": "upper horizontal Y crossbeam",
+        "minMM": [
+          -13.1,
+          -13,
+          63.6
+        ],
+        "maxMM": [
+          -8.5,
+          13,
+          67.5
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south continuous upright and end grain",
+        "minMM": [
+          -13.9,
+          -17.3,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          -12.6,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "north continuous upright and end grain",
+        "minMM": [
+          -13.9,
+          12.6,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.300000190734863,
+          -14.979999542236328,
+          43.35901641845703
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.300000190734863,
+          15.270000457763672,
+          43.467464447021484
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          -14.979999542236328,
+          43.38079833984375
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          15.270000457763672,
+          43.34864044189453
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.355400466918946,
+          -14.81559588692405,
+          44.25084200772372
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.300842007723716,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.185399627685547,
+          -14.705635791871606,
+          44.4087566282691
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.4587566282691,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.219799423217774,
+          -15.040426927454332,
+          66.0637045467601
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.1137045467601,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.237100219726562,
+          -14.930753980364118,
+          66.0245829990932
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.0745829990932,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.582299613952637,
+          14.853644561767577,
+          44.51844539642334
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.568445396423336,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.543900108337402,
+          14.827688881845186,
+          44.984512907086
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 44.034512907086,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.622399711608887,
+          14.627587786587801,
+          66.85436928488991
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.90436928488991,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.566899871826172,
+          14.960863862718854,
+          66.55578558785575
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.60578558785575,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "left plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          -8.55,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          0.8,
+          38.4
+        ],
+        "rgb": [
+          0.77,
+          0.67,
+          0.43
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "right plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          2.3,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          11.85,
+          38.4
+        ],
+        "rgb": [
+          0.72,
+          0.615,
+          0.38
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "goblet on left internal shelf",
+        "kind": "ceramic",
+        "minMM": [
+          -10.5,
+          -13.6,
+          34.6
+        ],
+        "maxMM": [
+          -6.6,
+          -8.55,
+          40.5
+        ],
+        "rgb": [
+          0.57,
+          0.325,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.04
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.6,
+      4.0
+    ],
+    "lodMiB": [
+      0.5,
+      1.5
+    ],
+    "shadowKiB": [
+      50,
+      145
+    ],
+    "previewKiB": [
+      8,
+      40
+    ],
+    "basis": "35 mm bar with a 68.83 mm tall open timber frame, two diagonal braces, one crossbeam, twelve small fasteners and hidden shelf ware. Independent 78000/26000 triangle meshes with 1024/512 bakes retain open corners, carved timber, plate lips and nail heads. Compare compact 768/384 maps, especially LOD floor flecks and narrow braces."
+  },
+  "reviewNotes": "PDF page 8 and native front/back plus 1000 px direct upper-frame views inspected. Source 439998 triangles, 21999984 bytes, height 68.830399 mm. Native 17 mm mount datum and clear full-height centre ray to floor 24.711761 mm (normal Z=.992844); floor normal squares X=.380990, Y=.040608 confirm Y boards. Upper frame bounds X[-13.7224,-8.0854], Y[-17.1298,17.0929], Z43.5535..68.8304. Four countertop heads measured directly; eight upper-frame heads measured independently on both X faces, at the two posts and two heights. Hardware volumes are centred .1 mm behind each measured cap extremum. Vertex PCA was biased by sampling/clipping, so diagonal directions use eight source edge probes per brace at X=-10.85 and Z59..62.5 mm: south [0,.766011,.642827], north [0,-.766063,.642766]. The source central opening remains empty up to Z63.6; the top beam begins near 63.8 and ends near 67.4. Grain follows the two measured braces, Y crossbeam and Z uprights; upright masks preserve their continuous grain at joints. The common internal shelf retains two cream plate stacks and a goblet. Review front/back/top, open-frame apertures in all runtime meshes, all twelve heads, shelf, mounting profile, both tiers and both texture candidates before publication. Close painted inspection found the broad .2 mm cap sample included nearby wood at one lower front fastening. Final head centres use only the first .025 mm of each protruding cap to keep the metal mask on the actual head.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
