@@ -1,0 +1,1062 @@
+{
+  "name": "Tall Bar Tablecloth",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 82000,
+  "lodTriangles": 28000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.39,
+        0
+      ],
+      [
+        0.39,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic",
+    "frame",
+    "timber",
+    "cloth",
+    "tableware",
+    "soup",
+    "foam"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "bar vertical planks and corner posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "horizontal internal shelf",
+        "minMM": [
+          -12.3,
+          -14.1,
+          32.3
+        ],
+        "maxMM": [
+          -5.6,
+          14.1,
+          34.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "two long countertop boards",
+        "minMM": [
+          -17.3,
+          -17.6,
+          40.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "upper frame vertical timber",
+        "minMM": [
+          -13.9,
+          -17.3,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south diagonal frame brace",
+        "minMM": [
+          -13,
+          -13.3,
+          54.5
+        ],
+        "maxMM": [
+          -8.8,
+          -3.3,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.7659760892843208,
+          0.6428690618195109
+        ]
+      },
+      {
+        "name": "north diagonal frame brace",
+        "minMM": [
+          -13,
+          3.3,
+          54.5
+        ],
+        "maxMM": [
+          -8.8,
+          13.3,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          -0.7658787389242133,
+          0.6429850365785013
+        ]
+      },
+      {
+        "name": "upper horizontal Y crossbeam",
+        "minMM": [
+          -13.1,
+          -13,
+          63.6
+        ],
+        "maxMM": [
+          -8.5,
+          13,
+          67.5
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south continuous upright and end grain",
+        "minMM": [
+          -13.9,
+          -17.3,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          -12.6,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "north continuous upright and end grain",
+        "minMM": [
+          -13.9,
+          12.6,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "honey wood spoon on tablecloth",
+        "minMM": [
+          -16.1,
+          -9.2,
+          43.82
+        ],
+        "maxMM": [
+          -5.1,
+          -4.9,
+          44.9
+        ],
+        "axis": "beam",
+        "direction": [
+          0.9900564645458526,
+          -0.14067052644732375,
+          0
+        ],
+        "darkRGB": [
+          0.43,
+          0.26,
+          0.09
+        ],
+        "lightRGB": [
+          0.72,
+          0.51,
+          0.22
+        ],
+        "roughness": 0.82,
+        "includeParts": [
+          {
+            "minMM": [
+              -10.7,
+              -9.2,
+              43.82
+            ],
+            "maxMM": [
+              -5.1,
+              -4.9,
+              44.9
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -7.85,
+                -6.9,
+                44.3
+              ],
+              "radiiMM": [
+                2.75,
+                1.95,
+                100
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -16.1,
+              -8,
+              43.82
+            ],
+            "maxMM": [
+              -9.2,
+              -5.2,
+              44.9
+            ],
+            "projection": {
+              "originMM": [
+                -12.4,
+                -6.4189028343986285,
+                44
+              ],
+              "axis": [
+                0.14067052644732375,
+                0.9900564645458526,
+                0
+              ],
+              "rangeMM": [
+                -0.85,
+                0.85
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [
+      {
+        "name": "red draped tablecloth and fringed folds",
+        "minMM": [
+          -17.6,
+          -10.1,
+          26.1
+        ],
+        "maxMM": [
+          -4.65,
+          10.1,
+          44.6
+        ],
+        "rgb": [
+          0.62,
+          0.105,
+          0.045
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -16.1,
+              -9.2,
+              43.82
+            ],
+            "maxMM": [
+              -5.1,
+              -4.9,
+              44.9
+            ],
+            "includeParts": [
+              {
+                "minMM": [
+                  -10.7,
+                  -9.2,
+                  43.82
+                ],
+                "maxMM": [
+                  -5.1,
+                  -4.9,
+                  44.9
+                ],
+                "ellipsoid": {
+                  "centerMM": [
+                    -7.85,
+                    -6.9,
+                    44.3
+                  ],
+                  "radiiMM": [
+                    2.75,
+                    1.95,
+                    100
+                  ]
+                }
+              },
+              {
+                "minMM": [
+                  -16.1,
+                  -8,
+                  43.82
+                ],
+                "maxMM": [
+                  -9.2,
+                  -5.2,
+                  44.9
+                ],
+                "projection": {
+                  "originMM": [
+                    -12.4,
+                    -6.4189028343986285,
+                    44
+                  ],
+                  "axis": [
+                    0.14067052644732375,
+                    0.9900564645458526,
+                    0
+                  ],
+                  "rangeMM": [
+                    -0.85,
+                    0.85
+                  ]
+                }
+              }
+            ]
+          }
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -17.6,
+              -10.1,
+              26.1
+            ],
+            "maxMM": [
+              -4.65,
+              10.1,
+              44.6
+            ],
+            "awayFromSource": {
+              "code": "MT1-047",
+              "sourceSHA256": "7d21eadb90fc177fe3f0281b0d45594c7a173947f9196b3ef67f5631af498d44",
+              "matchMM": 0.06,
+              "projectTo": {
+                "code": "MT1-049",
+                "sourceSHA256": "71717bd3b6d0bffefac7ab5eac2dbfa804e9edadc0d67d68686c1ea4a200a7ce"
+              }
+            }
+          },
+          {
+            "minMM": [
+              -16.8,
+              -9.4,
+              43.25
+            ],
+            "maxMM": [
+              -5.4,
+              8.1,
+              44.6
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                -4.5,
+                0
+              ],
+              "axis": [
+                -0.242535625,
+                0.9701425,
+                0
+              ],
+              "rangeMM": [
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -17.6,
+              -8.2,
+              27.2
+            ],
+            "maxMM": [
+              -15.2,
+              7.8,
+              42.8
+            ]
+          }
+        ]
+      }
+    ],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.300000190734863,
+          -14.979999542236328,
+          43.35285568237305
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.300000190734863,
+          15.270000457763672,
+          43.461341857910156
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          -14.979999542236328,
+          43.375274658203125
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          15.270000457763672,
+          43.343265533447266
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.354999923706055,
+          -14.799780035018921,
+          44.22870388031006
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.278703880310054,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.186700439453125,
+          -14.696777415275573,
+          44.39812393188477
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.448123931884766,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.220199966430664,
+          -15.051730742821327,
+          66.05957442063551
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.10957442063551,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.237700080871582,
+          -14.921140930869363,
+          66.00518521395597
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.05518521395597,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.583099746704102,
+          14.856612622737885,
+          44.55986142158508
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.60986142158508,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.542700386047363,
+          14.837175895427835,
+          44.98713657773774
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 44.03713657773774,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.621500396728516,
+          14.635321642901447,
+          66.82415070404878
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.87415070404877,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.565800285339355,
+          14.9785400390625,
+          66.56382548014322
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.61382548014322,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -15.181764770956601,
+          7.412941112237818,
+          44.258547838996435
+        ],
+        "radiiMM": [
+          0.68,
+          0.68,
+          0.38
+        ],
+        "minZMM": 43.81854783899643,
+        "rgb": [
+          0.38,
+          0.29,
+          0.12
+        ]
+      },
+      {
+        "centerMM": [
+          -6.147272825241089,
+          7.588181918317622,
+          44.069964842362836
+        ],
+        "radiiMM": [
+          0.56,
+          0.56,
+          0.32
+        ],
+        "minZMM": 43.68996484236283,
+        "rgb": [
+          0.38,
+          0.29,
+          0.12
+        ]
+      },
+      {
+        "centerMM": [
+          -15.455397106352306,
+          -8.000476201375326,
+          43.880906665135946
+        ],
+        "radiiMM": [
+          0.65,
+          0.65,
+          0.34
+        ],
+        "minZMM": 43.48090666513594,
+        "rgb": [
+          0.38,
+          0.29,
+          0.12
+        ]
+      },
+      {
+        "centerMM": [
+          -6.05,
+          -6.15,
+          44.22
+        ],
+        "radiiMM": [
+          0.58,
+          0.58,
+          0.3
+        ],
+        "minZMM": 43.86,
+        "rgb": [
+          0.38,
+          0.29,
+          0.12
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "left plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          -8.55,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          0.8,
+          38.4
+        ],
+        "rgb": [
+          0.77,
+          0.67,
+          0.43
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "right plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          2.3,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          11.85,
+          38.4
+        ],
+        "rgb": [
+          0.72,
+          0.615,
+          0.38
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "goblet on left internal shelf",
+        "kind": "ceramic",
+        "minMM": [
+          -10.5,
+          -13.6,
+          34.6
+        ],
+        "maxMM": [
+          -6.6,
+          -8.55,
+          40.5
+        ],
+        "rgb": [
+          0.57,
+          0.325,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.04
+      },
+      {
+        "name": "golden plate rim and bowl",
+        "kind": "ceramic",
+        "minMM": [
+          -16.3,
+          -5.7,
+          44.35
+        ],
+        "maxMM": [
+          -6.75,
+          3.6,
+          46.4
+        ],
+        "rgb": [
+          0.78,
+          0.59,
+          0.23
+        ],
+        "roughness": 0.59,
+        "variation": 0.03,
+        "ellipsoid": {
+          "centerMM": [
+            -11.55,
+            -1.05,
+            45
+          ],
+          "radiiMM": [
+            4.75,
+            4.75,
+            100
+          ]
+        }
+      },
+      {
+        "name": "ochre tankard and upper handle",
+        "kind": "ceramic",
+        "minMM": [
+          -12.15,
+          2.7,
+          43.9
+        ],
+        "maxMM": [
+          -6.25,
+          10.75,
+          49.5
+        ],
+        "rgb": [
+          0.64,
+          0.35,
+          0.12
+        ],
+        "roughness": 0.68,
+        "variation": 0.035,
+        "includeParts": [
+          {
+            "minMM": [
+              -12.15,
+              2.7,
+              43.9
+            ],
+            "maxMM": [
+              -6.25,
+              8.7,
+              49.5
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -9.25,
+                5.75,
+                46.3
+              ],
+              "radiiMM": [
+                2.9,
+                2.9,
+                100
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -9.6,
+              7.7,
+              44.2
+            ],
+            "maxMM": [
+              -6.7,
+              10.75,
+              49.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "cream sculpted foam in tankard",
+        "kind": "foam",
+        "minMM": [
+          -11.2,
+          3.8,
+          48.15
+        ],
+        "maxMM": [
+          -7.3,
+          7.7,
+          49.4
+        ],
+        "rgb": [
+          0.87,
+          0.77,
+          0.49
+        ],
+        "roughness": 0.93,
+        "variation": 0.035,
+        "ellipsoid": {
+          "centerMM": [
+            -9.25,
+            5.75,
+            48.8
+          ],
+          "radiiMM": [
+            1.85,
+            1.85,
+            100
+          ]
+        }
+      },
+      {
+        "name": "green soup inside golden plate",
+        "kind": "liquid",
+        "minMM": [
+          -14.9,
+          -3.9,
+          44.6
+        ],
+        "maxMM": [
+          -9.1,
+          1.8,
+          44.99
+        ],
+        "rgb": [
+          0.46,
+          0.63,
+          0.12
+        ],
+        "roughness": 0.48,
+        "variation": 0.025,
+        "ellipsoid": {
+          "centerMM": [
+            -12,
+            -1.05,
+            44.8
+          ],
+          "radiiMM": [
+            2.7,
+            2.6,
+            100
+          ]
+        },
+        "probeMM": [
+          -11.55,
+          -1.05,
+          44.829315185546875
+        ]
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.8,
+      4.5
+    ],
+    "lodMiB": [
+      0.6,
+      1.7
+    ],
+    "shadowKiB": [
+      60,
+      165
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "35 mm tall bar with deeply draped cloth, small fringe folds, four cloth studs plus twelve frame/counter fasteners, a carved spoon, golden soup plate and tankard foam. Independent 82000/28000 triangle meshes with 1024/512 bakes preserve cloth edges, open frame, rim/foam surfaces and tiny metallic masks. Compare compact 768/384 maps, checking every visible fastening and liquid colour."
+  },
+  "reviewNotes": "PDF page 8, native front/back/top, lower diagnostic views and close corner/contact views inspected. Source 440026 triangles, 22001384 bytes, height 68.824097 mm. Clear full-height floor ray Z24.706306, normal Z=.991396; datum17 mm. Floor normal squares X=.375471/Y=.040619 confirm Y boards. Cloth front bounds measured against MT1-047: X[-17.4886,-15.6393],Y[-9.673,9.8274],Z26.185999..42.7989. Bare timber calibration: 677 probes, median .004446 mm, P95 .010190, max .039950. The cloth mask unions the .06 mm source-difference domain with an inset top footprint where the cloth coincides with the old wooden surface. This prevents unpainted timber stripes within the cloth without extending its outer outline. Ceramics, liquid and foam override fabric; the spoon silhouette is explicitly excluded. Nine source handle peaks fit Y=-.142083337*X-8.180736215. The shared wood/fabric exclusion uses this axis, an .85 mm half-width, bowl ellipse centred [-7.85,-6.9] with radii2.75/1.95 and lower limit Z43.82. Plate/cup minima Z44.05/43.90 keep their colour off the cloth at contacts. Four tabletop and eight frame fasteners are measured independently. Three cloth studs are confirmed convex by ray profiles; a close view confirms the fourth dome partly under the spoon. Its centre [-6.05,-6.15,44.22] and .30 mm vertical radius avoid the higher spoon rim. Plate centre [-11.55,-1.05] is Z44.829315, normal Z=.998212. Inner floor is about44.716..44.922; the rim rises above45. Green soup is bounded by Z44.60..44.99 and an eccentric ellipse centred[-12,-1.05]; roughness.48 keeps dense soup less glossy than the initial water-like finish. Tankard foam probe[-8.25,5.8] is Z48.689156, lip49.353798. Verify16 metallic masks, ten clear frame points, actual packed green soup, three surface heights, all cloth/wood/ceramic contacts, both tiers and texture candidates before publication. Packed albedo probes of the front cloth interior found94/7822 timber-like render samples and4/2318 LOD samples near coincident folds at Z41..42.8. An inset front domain Y[-8.2,7.8],Z27.2..42.8 also restores fabric independently of the old wood reference, keeping the uneven hem and outer outline under source-difference control. Final close contact views place the exposed gold plate boundary at Z44.35; lower cloth folds remain red instead of receiving the plate pigment.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
