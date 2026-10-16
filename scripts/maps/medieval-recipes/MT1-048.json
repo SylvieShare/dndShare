@@ -1,0 +1,743 @@
+{
+  "name": "Tall Bar Bottle",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 82000,
+  "lodTriangles": 28000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.39,
+        0
+      ],
+      [
+        0.39,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic",
+    "frame",
+    "timber",
+    "bottle",
+    "glaze",
+    "bowls"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "bar vertical planks and corner posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "horizontal internal shelf",
+        "minMM": [
+          -12.3,
+          -14.1,
+          32.3
+        ],
+        "maxMM": [
+          -5.6,
+          14.1,
+          34.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "two long countertop boards",
+        "minMM": [
+          -17.3,
+          -17.6,
+          40.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "upper frame vertical timber",
+        "minMM": [
+          -13.9,
+          -17.3,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south diagonal frame brace",
+        "minMM": [
+          -13,
+          -13.3,
+          54.5
+        ],
+        "maxMM": [
+          -8.8,
+          -3.3,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.7660205454682584,
+          0.6428160887225148
+        ]
+      },
+      {
+        "name": "north diagonal frame brace",
+        "minMM": [
+          -13,
+          3.3,
+          54.5
+        ],
+        "maxMM": [
+          -8.8,
+          13.3,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          -0.7660513567454498,
+          0.6427793702573656
+        ]
+      },
+      {
+        "name": "upper horizontal Y crossbeam",
+        "minMM": [
+          -13.1,
+          -13,
+          63.6
+        ],
+        "maxMM": [
+          -8.5,
+          13,
+          67.5
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south continuous upright and end grain",
+        "minMM": [
+          -13.9,
+          -17.3,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          -12.6,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "north continuous upright and end grain",
+        "minMM": [
+          -13.9,
+          12.6,
+          43.55
+        ],
+        "maxMM": [
+          -8,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.300000190734863,
+          -14.979999542236328,
+          43.353065490722656
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.300000190734863,
+          15.270000457763672,
+          43.46135330200195
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          -14.979999542236328,
+          43.375247955322266
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          15.270000457763672,
+          43.34267044067383
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.353300476074219,
+          -14.787233020948326,
+          44.25179390285326
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.301793902853255,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.18530044555664,
+          -14.680176074688251,
+          44.39957985511193
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.44957985511193,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.220199966430664,
+          -15.034613013267517,
+          66.04002952575684
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.09002952575683,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.23640022277832,
+          -14.921450410570417,
+          66.02170126778739
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.07170126778739,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.58280029296875,
+          14.805119562149049,
+          44.58937377929688
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 43.639373779296875,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.54379997253418,
+          14.854129441579182,
+          44.975761286417644
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 44.02576128641764,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.621400260925293,
+          14.650207857290903,
+          66.86902936299641
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.91902936299641,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -8.567000007629394,
+          15.021949421275746,
+          66.56669824773616
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.61669824773615,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "left plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          -8.55,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          0.8,
+          38.4
+        ],
+        "rgb": [
+          0.77,
+          0.67,
+          0.43
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "right plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          2.3,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          11.85,
+          38.4
+        ],
+        "rgb": [
+          0.72,
+          0.615,
+          0.38
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "goblet on left internal shelf",
+        "kind": "ceramic",
+        "minMM": [
+          -10.5,
+          -13.6,
+          34.6
+        ],
+        "maxMM": [
+          -6.6,
+          -8.55,
+          40.5
+        ],
+        "rgb": [
+          0.57,
+          0.325,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.04
+      },
+      {
+        "name": "rear ochre bowl",
+        "kind": "ceramic",
+        "minMM": [
+          -17.07840072631836,
+          -10.50425064086914,
+          42.8
+        ],
+        "maxMM": [
+          -10.651699905395509,
+          -4.081550483703613,
+          46.44289886474609
+        ],
+        "rgb": [
+          0.73,
+          0.49,
+          0.2
+        ],
+        "roughness": 0.59,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-047",
+          "sourceSHA256": "7d21eadb90fc177fe3f0281b0d45594c7a173947f9196b3ef67f5631af498d44",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-048",
+            "sourceSHA256": "cf0b3f900b6b3704c992a5b25477a407bb41964ffe8575264b7db1a4680e4c4e"
+          }
+        }
+      },
+      {
+        "name": "front golden bowl",
+        "kind": "ceramic",
+        "minMM": [
+          -10.482799644470214,
+          -6.395050640106201,
+          42.8
+        ],
+        "maxMM": [
+          -4.176199798583984,
+          -0.07995041191577912,
+          46.380299682617185
+        ],
+        "rgb": [
+          0.8,
+          0.61,
+          0.25
+        ],
+        "roughness": 0.59,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-047",
+          "sourceSHA256": "7d21eadb90fc177fe3f0281b0d45594c7a173947f9196b3ef67f5631af498d44",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-048",
+            "sourceSHA256": "cf0b3f900b6b3704c992a5b25477a407bb41964ffe8575264b7db1a4680e4c4e"
+          }
+        }
+      },
+      {
+        "name": "turquoise glazed bottle",
+        "kind": "ceramic",
+        "minMM": [
+          -17.24649917602539,
+          3.410649662017822,
+          42.8
+        ],
+        "maxMM": [
+          -8.200699691772462,
+          12.454549903869628,
+          54.06629669189453
+        ],
+        "rgb": [
+          0.15,
+          0.61,
+          0.57
+        ],
+        "roughness": 0.43,
+        "variation": 0.035,
+        "awayFromSource": {
+          "code": "MT1-047",
+          "sourceSHA256": "7d21eadb90fc177fe3f0281b0d45594c7a173947f9196b3ef67f5631af498d44",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-048",
+            "sourceSHA256": "cf0b3f900b6b3704c992a5b25477a407bb41964ffe8575264b7db1a4680e4c4e"
+          }
+        }
+      },
+      {
+        "name": "ochre bottle neck collar",
+        "kind": "ceramic",
+        "minMM": [
+          -14.7,
+          6.05,
+          51.5
+        ],
+        "maxMM": [
+          -10.75,
+          9.95,
+          52.75
+        ],
+        "rgb": [
+          0.56,
+          0.4,
+          0.16
+        ],
+        "roughness": 0.62,
+        "metallic": 0.12,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-047",
+          "sourceSHA256": "7d21eadb90fc177fe3f0281b0d45594c7a173947f9196b3ef67f5631af498d44",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-048",
+            "sourceSHA256": "cf0b3f900b6b3704c992a5b25477a407bb41964ffe8575264b7db1a4680e4c4e"
+          }
+        }
+      },
+      {
+        "name": "green rounded bottle stopper",
+        "kind": "ceramic",
+        "minMM": [
+          -14.05,
+          6.72,
+          52.75
+        ],
+        "maxMM": [
+          -11.45,
+          9.25,
+          54.1
+        ],
+        "rgb": [
+          0.29,
+          0.38,
+          0.15
+        ],
+        "roughness": 0.72,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-047",
+          "sourceSHA256": "7d21eadb90fc177fe3f0281b0d45594c7a173947f9196b3ef67f5631af498d44",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-048",
+            "sourceSHA256": "cf0b3f900b6b3704c992a5b25477a407bb41964ffe8575264b7db1a4680e4c4e"
+          }
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.8,
+      4.4
+    ],
+    "lodMiB": [
+      0.6,
+      1.6
+    ],
+    "shadowKiB": [
+      55,
+      155
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "A 35 mm tall bar with a glazed bottle, separately measured collar/stopper, two deep small bowls, a thin open timber frame, twelve fastening heads and hidden shelf ware. Independent 82000/28000 triangle meshes and 1024/512 bakes preserve vessel rims, rounded stopper, carved braces and fastening masks. Compare compact maps and inspect every fastening in LOD."
+  },
+  "reviewNotes": "PDF page 8 and native front/back/top inspected. Source 460010 triangles, 23000584 bytes, maximum height 68.823898 mm. A clear full-height centre ray reaches floor 24.706627 mm, normal Z=.991603; native mount datum 17 mm. Floor normal squares X=.377702, Y=.040437 confirm Y boards. Source components above Z43.55 separate two bowls, the frame and a bottle: the bowls centre near [-13.842,-7.203] and [-7.435,-3.349], with actual floors at Z43.665142 and 43.654495 mm. Their rims reach 46.322899 and 46.260300 mm. Bottle bounds X[-17.1265,-8.3207], Y[3.53065,12.33455], Z43.55..53.946297. Native neck profiles show a narrow neck through Z51.5, a wide collar Z51.5..52.75 and a rounded stopper above Z52.75, centred near X=-12.79,Y=7.98. The collar/stopper use independent pigments and roughness. Common timber compared against MT1-047: 662 source samples, median .004800 mm, P95 .010753, maximum .036306; .08 mm source matching preserves wood at contacts. Packed surfaces project back to MT1-048 before comparison. Four countertop heads and eight upper-frame heads were independently measured; cap centres use the first .025 mm of each protrusion. Braces use this source own edge probes, while the crossbeam and continuous uprights keep Y/Z grain. Check front/back/top, bottle/collar/stopper, both empty bowl floors, hidden shelf, all twelve fastening masks, unobstructed frame points away from the new bottle, both tiers and candidates before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
