@@ -84,10 +84,10 @@ export function previewSockets(model) {
       slot.elevation <= Number(model.maxHeight) + 0.001 &&
       Number.isFinite(slot.insertionRise ?? 0) &&
       (slot.insertionRise ?? 0) >= 0 &&
-      (slot.insertionRise ?? 0) <= 0.1 &&
+      (slot.insertionRise ?? 0) <= 0.15 &&
       (!(slot.insertionRise > 0) || model.tileType === "frame") &&
       Object.entries(slot.insertionRises || {}).every(
-        ([profile, rise]) => model.tileType === "frame" && /^[a-z][a-z0-9-]{0,63}$/.test(profile) && Number.isFinite(rise) && rise >= 0 && rise <= .1,
+        ([profile, rise]) => model.tileType === "frame" && /^[a-z][a-z0-9-]{0,63}$/.test(profile) && Number.isFinite(rise) && rise >= 0 && rise <= .15,
       ) && Object.keys(slot.insertionRises || {}).length <= 16;
     for (let y = 0; y < Math.max(1, Math.min(8, finite(slot.height, 1))); y++)
       for (let x = 0; x < Math.max(1, Math.min(8, finite(slot.width, 1))); x++)

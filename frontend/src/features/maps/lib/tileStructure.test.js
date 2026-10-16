@@ -30,10 +30,10 @@ const floor = {
 const doc = (tiles) => ({ width: 8, height: 8, tiles });
 it("seats different mounting profiles at their measured rises and keeps the physical rim unchanged", () => {
   const catalogue = [
-    { ...models[0], mountDepth: 10 / 35, supportSlots: [{ x: 0, y: 0, width: 2, height: 1, elevation: 32.6662 / 35, insertionRise: .5 / 35, insertionRises: { "xl-ring": 3 / 35, "db-pins": 3.5 / 35, flush: 0 } }] },
+    { ...models[0], mountDepth: 10 / 35, supportSlots: [{ x: 0, y: 0, width: 2, height: 1, elevation: 32.6662 / 35, insertionRise: .5 / 35, insertionRises: { "xl-ring": 3 / 35, "db-pins": 4.1 / 35, flush: 0 } }] },
     { ...models[1], mountDepth: .2 },
   ];
-  for (const [profile, rise] of [["", .5], ["xl-ring", 3], ["db-pins", 3.5], ["flush", 0]]) {
+  for (const [profile, rise] of [["", .5], ["xl-ring", 3], ["db-pins", 4.1], ["flush", 0]]) {
     catalogue[1].mountProfile = profile;
     const result = structureContext(doc([frame, floor]), catalogue);
     expect(result.status.valid).toBe(true);

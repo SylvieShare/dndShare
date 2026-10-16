@@ -27,9 +27,9 @@ describe("model reference geometry", () => {
     expect(draft.mountProfile).toBe("");
   });
   it("validates profile rises without moving the physical slot markers", () => {
-    const frame = { ...model, tileType: "frame", supportSlots: [{ ...model.supportSlots[0], insertionRises: { "xl-ring": .08, "db-pins": .1 } }] };
+    const frame = { ...model, tileType: "frame", supportSlots: [{ ...model.supportSlots[0], insertionRises: { "xl-ring": .08, "db-pins": .15 } }] };
     expect(previewSockets(frame)[0]).toEqual(previewSockets(model)[0]);
-    for (const rises of [{ "bad profile": .05 }, { "xl-ring": -.01 }, { "xl-ring": .101 }, { "xl-ring": NaN }]) {
+    for (const rises of [{ "bad profile": .05 }, { "xl-ring": -.01 }, { "xl-ring": .151 }, { "xl-ring": NaN }]) {
       frame.supportSlots[0].insertionRises = rises;
       expect(previewSockets(frame)[0].valid).toBe(false);
     }
@@ -41,11 +41,11 @@ describe("model reference geometry", () => {
     const grid = {
       ...model,
       tileType: "frame",
-      supportSlots: [{ ...model.supportSlots[0], insertionRise: 2 / 35 }],
+      supportSlots: [{ ...model.supportSlots[0], insertionRise: .15 }],
     };
     expect(previewSockets(grid)[0]).toEqual(previewSockets(model)[0]);
     expect(previewSockets({ ...grid, tileType: "floor" })[0].valid).toBe(false);
-    grid.supportSlots[0].insertionRise = 0.101;
+    grid.supportSlots[0].insertionRise = 0.151;
     expect(previewSockets(grid)[0].valid).toBe(false);
   });
   it("uses the map's actual body datum and mesh offsets for height annotations", () => {

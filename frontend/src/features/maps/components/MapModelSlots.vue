@@ -35,7 +35,7 @@
       </FormField>
       <template v-if="model.tileType === 'frame'">
         <FormField v-for="profile in Object.keys(slot.insertionRises || {})" :key="profile" :label="`Подъём: ${profile}`" vertical>
-          <FormTextInput type="number" :value="slot.insertionRises[profile]" min="0" max="0.1" step="any"
+          <FormTextInput type="number" :value="slot.insertionRises[profile]" min="0" max="0.15" step="any"
             :aria-label="`Паз ${index + 1}: Подъём ${profile}`"
             @update:value="slot.insertionRises[profile] = Number($event)" />
           <RemoveButton icon="trash" :label="`Удалить профиль ${profile}`" @click="delete slot.insertionRises[profile]" />
@@ -54,7 +54,7 @@
           type="number"
           :value="slot.insertionRise || 0"
           min="0"
-          max="0.1"
+          max="0.15"
           step="any"
           :aria-label="`Паз ${index + 1}: Подъём при вставке`"
           @update:value="slot.insertionRise = Number($event)"

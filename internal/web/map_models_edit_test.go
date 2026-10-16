@@ -39,11 +39,11 @@ func TestEditedMapModelPreservesIdentityAndAssets(t *testing.T) {
 func TestSupportSlotInsertionRiseIsBoundedAndFrameOnly(t *testing.T) {
 	m := battlemap.InitialCatalogue()[0]
 	m.TileType = "frame"
-	m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: m.MaxHeight, InsertionRise: 2.0 / 35}}
+	m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: m.MaxHeight, InsertionRise: .15}}
 	if err := validateMapModel(m); err != nil {
 		t.Fatal(err)
 	}
-	for _, rise := range []float64{-.01, .101, math.NaN(), math.Inf(1)} {
+	for _, rise := range []float64{-.01, .151, math.NaN(), math.Inf(1)} {
 		m.SupportSlots[0].InsertionRise = rise
 		if validateMapModel(m) == nil {
 			t.Fatalf("accepted rise %v", rise)
@@ -60,7 +60,7 @@ func TestMountProfilesAndMeasuredOverrides(t *testing.T) {
 	m := battlemap.InitialCatalogue()[0]
 	m.MountProfile = "db-pins"
 	m.TileType = "frame"
-	m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: m.MaxHeight, InsertionRises: map[string]float64{"xl-ring": 3.0 / 35, "db-pins": .1}}}
+	m.SupportSlots = []battlemap.SupportSlot{{Width: 1, Height: 1, Elevation: m.MaxHeight, InsertionRises: map[string]float64{"xl-ring": 3.0 / 35, "db-pins": .15}}}
 	if err := validateMapModel(m); err != nil {
 		t.Fatal(err)
 	}
@@ -71,7 +71,7 @@ func TestMountProfilesAndMeasuredOverrides(t *testing.T) {
 		}
 	}
 	m.MountProfile = "db-pins"
-	for _, rise := range []float64{-.01, .101, math.NaN(), math.Inf(1)} {
+	for _, rise := range []float64{-.01, .151, math.NaN(), math.Inf(1)} {
 		m.SupportSlots[0].InsertionRises["xl-ring"] = rise
 		if validateMapModel(m) == nil {
 			t.Fatalf("accepted profile rise %v", rise)

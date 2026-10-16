@@ -65,11 +65,11 @@ func validateMapModel(m battlemap.Model) error {
 			return errors.New("invalid support slot mounting profiles")
 		}
 		for profile, rise := range slot.InsertionRises {
-			if !mapMountProfile.MatchString(profile) || math.IsNaN(rise) || math.IsInf(rise, 0) || rise < 0 || rise > .1 {
+			if !mapMountProfile.MatchString(profile) || math.IsNaN(rise) || math.IsInf(rise, 0) || rise < 0 || rise > .15 {
 				return errors.New("invalid support slot profile rise")
 			}
 		}
-		if math.IsNaN(slot.InsertionRise) || math.IsInf(slot.InsertionRise, 0) || slot.InsertionRise < 0 || slot.InsertionRise > .1 || (slot.InsertionRise > 0 && m.TileType != "frame") {
+		if math.IsNaN(slot.InsertionRise) || math.IsInf(slot.InsertionRise, 0) || slot.InsertionRise < 0 || slot.InsertionRise > .15 || (slot.InsertionRise > 0 && m.TileType != "frame") {
 			return errors.New("invalid support slot insertion rise")
 		}
 		if math.IsNaN(slot.Elevation) || math.IsInf(slot.Elevation, 0) || slot.X < 0 || slot.Y < 0 || slot.Width < 1 || slot.Height < 1 || slot.X+slot.Width > m.Width || slot.Y+slot.Height > m.Height || slot.Elevation <= m.MountDepth || slot.Elevation > m.MaxHeight+.001 {

@@ -1,5 +1,6 @@
 """Verify native frame holes, socket drift and complete insertion volumes."""
 import argparse
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -110,6 +111,18 @@ def surface_drift(native, candidate, before, after):
     return max(candidate.find_nearest(before)[3], native.find_nearest(after)[3])
 
 
+def mesh_fit_contract(recipe):
+    contract = {'frameFit': recipe['frameFit'], 'supportSlots': recipe['supportSlots']}
+    return hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest()
+
+
+def mesh_fit_assets(row, directory):
+    files = {'source': ROOT/'models'/row['sourcePath'],
+             'render': directory/'render.glb', 'lod': directory/'lod.glb',
+             'renderDecoded': directory/'preview-model.glb', 'lodDecoded': directory/'lod-preview-model.glb'}
+    return {role: hashlib.sha256(path.read_bytes()).hexdigest() for role, path in files.items()}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--code', required=True)
@@ -121,6 +134,15 @@ def main():
         raise ValueError('Reviewed native frame required')
     row = next(x for x in json.loads((BASE/'manifest.json').read_text()) if x['code'] == args.code)
     directory = BASE/'optimized-review'/args.code
+    proof = json.loads((directory/'report.json').read_text())
+    if any(p.get('meshReferences') for p in settings['profiles']):
+        if proof.get('meshFitRecipeSHA256') != mesh_fit_contract(recipe) or proof.get('meshFitAssetSHAs') != mesh_fit_assets(row,directory):
+            raise ValueError('Run the current native mesh fit before accepting reference mesh profiles')
+        registry = json.loads((BASE/'registry-snapshot.json').read_text())
+        for reference in proof['meshFitReferences']:
+            live = next(r for r in registry if r['id']==reference['id'])
+            if any(live['assets'][role]['sha256'] != sha for role,sha in reference['assets'].items()):
+                raise ValueError('Native mesh fit reference changed; rerun the check')
     native_vertices, native_faces, native = load(ROOT/'models'/row['sourcePath'], True)
     result = {}
     for tier, filename in [('source', None), ('render', directory/'preview-model.glb'), ('lod', directory/'lod-preview-model.glb')]:
@@ -150,6 +172,13 @@ def main():
         fits = []
         for profile in settings['profiles']:
             for pose in profile.get('poses', [{'translationMM': [0, 0], 'rotation': 0}]):
+                if profile.get('meshReferences'):
+                    checks = [check for check in proof['meshFitChecks'] if check['receiverTier']==tier and check['profile']==profile['name'] and check['pose']==pose]
+                    expected = {(reference['code'], role) for reference in profile['meshReferences'] for role in ['source','render','lod']}
+                    if {(check['referenceCode'],check['referenceTier']) for check in checks} != expected or any(check['surfaceIntersections'] for check in checks):
+                        raise ValueError('Incomplete native mesh fit proof')
+                    fits.append({'profile': profile['name'], 'pose': pose, 'method': 'native-mesh-surfaces-and-containment', 'referenceMeshes': len(checks)})
+                    continue
                 elevation = recipe['supportSlots'][0]['elevation']*35+profile['riseMM']
                 pieces = profile.get('pinCentresMM', [[0, 0]])
                 volumes = []

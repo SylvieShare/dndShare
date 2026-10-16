@@ -7,10 +7,10 @@ import (
 
 func TestSocketRiseUsesIncomingMountProfile(t *testing.T) {
 	models := map[string]ModelMetadata{
-		"frame": {Width: 1, Height: 1, MountDepth: 10.0 / 35, SupportSlots: []SupportSlot{{Width: 1, Height: 1, Elevation: 32.6662 / 35, InsertionRise: .5 / 35, InsertionRises: map[string]float64{"xl-ring": 3.0 / 35, "db-pins": 3.5 / 35, "flush": 0}}}},
+		"frame": {Width: 1, Height: 1, MountDepth: 10.0 / 35, SupportSlots: []SupportSlot{{Width: 1, Height: 1, Elevation: 32.6662 / 35, InsertionRise: .5 / 35, InsertionRises: map[string]float64{"xl-ring": 3.0 / 35, "db-pins": 4.1 / 35, "flush": 0}}}},
 		"upper": {Width: 1, Height: 1, MountDepth: .2},
 	}
-	for profile, rise := range map[string]float64{"": .5, "xl-ring": 3, "db-pins": 3.5, "flush": 0} {
+	for profile, rise := range map[string]float64{"": .5, "xl-ring": 3, "db-pins": 4.1, "flush": 0} {
 		upper := models["upper"]
 		upper.MountProfile = profile
 		models["upper"] = upper
