@@ -1,0 +1,349 @@
+{
+  "name": "Bar Empty",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 68000,
+  "lodTriangles": 22000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.39,
+        0
+      ],
+      [
+        0.39,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "bar vertical planks and corner posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "horizontal internal shelf",
+        "minMM": [
+          -12.3,
+          -14.1,
+          32.3
+        ],
+        "maxMM": [
+          -5.6,
+          14.1,
+          34.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "two long countertop boards",
+        "minMM": [
+          -17.3,
+          -17.6,
+          40.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.300000190734863,
+          -14.979999542236328,
+          43.356266021728516
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.300000190734863,
+          15.270000457763672,
+          43.464603424072266
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          -14.979999542236328,
+          43.378387451171875
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          15.270000457763672,
+          43.34685134887695
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "left plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          -8.55,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          0.8,
+          38.4
+        ],
+        "rgb": [
+          0.77,
+          0.67,
+          0.43
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "right plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          2.3,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          11.85,
+          38.4
+        ],
+        "rgb": [
+          0.72,
+          0.615,
+          0.38
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "goblet on left internal shelf",
+        "kind": "ceramic",
+        "minMM": [
+          -10.5,
+          -13.6,
+          34.6
+        ],
+        "maxMM": [
+          -6.6,
+          -8.55,
+          40.5
+        ],
+        "rgb": [
+          0.57,
+          0.325,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.04
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.2,
+      3.0
+    ],
+    "lodMiB": [
+      0.4,
+      1.2
+    ],
+    "shadowKiB": [
+      45,
+      120
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "35mm bar tile withsolidfront,cornerposts,two countertop planks,openrear andshelf,hidden two plate stacks/goblet andfour sunkfasteners.68000/22000 independent geometry/UV/bakes retain shelfprofile,plate lips andcarved timber. Compare1024/512 with768/384 maps."
+  },
+  "reviewNotes": "PDF page8 andsourcefront/back/top/direct+X. Source379978triangles/18998984bytes,max43.483997mm. Native17mm shoulder; fullheight100mm source rays at[0,0]hitfloor24.709114mm andconfirmclearance. Counterabove30mmoccupiesX[-17.1712,-3.9897], fullY35mm; blockerlocalX0..0.39 andwallMode none markfurniturewithoutwallports. Measured floornormal squares nx2=.271937,ny2=.056819 requireYboards;top/shelfboardsrunY andfront/posts Z. DespiteEmptyname, direct+Xview reveals TWO plate stacks andONE goblet behindshelf,notthreeplatestacks. Frontaldepthprofiles frominsideX-6.05 isolate platefronts centredY-4.2/+7.2 atZ34.8..38.3;backpanelliesaboutX-11.7 and shelfedgeX-5.85, so ceramicdomainsprotectedbyX[-11.25,-5.65], elliptical footprintsand34.6mm lowerthreshold. GobletleftY-11 extendsabout40mm. Four actual topheadsource rays atX-14.3/-6.95,Y-14.98/+15.27,Z43.3469..43.4646,ownmetal masks. Unionofcroppedplatevertices joined backing/shelf andwasnotusedasmaterialmask. Review ceramic/lowerwood contacts,openrear/shelf,fourheads,grain,footprofile,both tiers andcandidates beforepublication. Closephysicalview confirmed woodcolouronceramiclips. Per-pixelceramicpigment preservesgeometry/UV/normal/ORM/shadow exactly (both candidates checked); residualleft-edgebrownareaswereoutside theellipse, especiallyrightstackY2.3..3.05. SourcefrontprofilesjustifyboundingY[-8.55,.8]/[2.3,11.85] anddepthX[-11.5,-5.65],Z34.6..38.4. Remove ellipse clipping; preserve shelfbelow34.6 andbackpanelaroundX-11.7. Repreparefullreports forrefinedmaterialregions andinspect finalcloseview.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 30,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}

@@ -73,6 +73,22 @@ export function structureGlass(p, settings) {
   return part?.kind==='glass' ? part : null;
 }
 
+export function structureCeramicPigment(p, settings) {
+  const part = (settings.surfaceParts || []).findLast(part => structureDomain(p, part));
+  if (part?.kind!=='ceramic') return null;
+  let rgb = part.rgb;
+  if (part.centersMM) {
+    let nearest = 0, best = Infinity;
+    part.centersMM.forEach((centre,i) => {
+      const distance = ((p[0]-centre[0])**2+(p[1]-centre[1])**2)/(part.centerRadiiMM?.[i] ?? 1)**2;
+      if (distance<best) { best=distance; nearest=i; }
+    });
+    rgb = part.colorsRGB[nearest];
+  }
+  const variation = 1+(part.variation ?? .025)*Math.sin(p[0]*1.73+p[1]*2.31+p[2]*1.17);
+  return rgb.map(c => c*variation);
+}
+
 export function structureFabricPigment(p, settings) {
   if ((settings.surfaceParts || []).some(part => structureDomain(p,part))) return null;
   if ((settings.produceParts || []).some(part => structureDomain(p,part))) return null;

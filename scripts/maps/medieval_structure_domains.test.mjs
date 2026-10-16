@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureMetal, structureFlame, structureGlass, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureFlame, structureGlass, structureCeramicPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
 
@@ -72,4 +72,18 @@ test('real green glass is preserved against sparse brown vertices while adjacent
   assert.equal(structureGlass([-11.77,0,53],settings),null);
   assert.equal(shouldRepairGreenSpill([40,180,12],[.12,.05,.015,1],[-11.77,0,53],settings),true);
   assert.deepEqual(structureMetal([-13,-5,53],settings),{metallic:0,roughness:.18});
+});
+
+test('hidden bar ceramics retain their pigments while supporting wood remains unpainted', () => {
+  const bar = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-044.json',import.meta.url))).materials;
+  for (const p of [[-7,-4.2,36.5],[-7,7.2,36.5]]) {
+    const pigment = structureCeramicPigment(p,bar);
+    assert.ok(pigment && pigment[0]>.68 && pigment[1]>.54);
+  }
+  assert.ok(structureCeramicPigment([-8,-11,37],bar));
+  assert.equal(structureCeramicPigment([-5.85,1.5,34.3],bar),null,'Shelf stays timber');
+  assert.equal(structureCeramicPigment([-11.7,-4.2,36.5],bar),null,'Backing stays timber');
+  const vessels = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-024.json',import.meta.url))).materials;
+  assert.ok(structureCeramicPigment([-11.35,-5.45,40],vessels));
+  assert.equal(structureCeramicPigment([-1.8,-5.3,46],vessels),null,'Cork overrides ceramic');
 });
