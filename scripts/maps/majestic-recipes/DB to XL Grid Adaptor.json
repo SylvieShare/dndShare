@@ -1,0 +1,278 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 0,
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 13.753800392150879,
+  "renderTriangles": 416,
+  "lodTriangles": 416,
+  "tileType": "object",
+  "hasDecor": false,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [],
+  "tags": [
+    "technical",
+    "grid-adaptor",
+    "db-to-xl",
+    "native",
+    "xl"
+  ],
+  "recipe": "majestic-db-to-xl-grid-adaptor-v1",
+  "groupCode": "MH-grid-adaptor",
+  "baseSurface": "soil",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "renderColourSize": 512,
+  "lodColourSize": 512,
+  "renderDataSize": 512,
+  "lodDataSize": 512,
+  "renderBakeSize": 512,
+  "lodBakeSize": 512,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.55,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "previewDirection": "front",
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      5000,
+      40000
+    ],
+    "targetLODBytes": [
+      5000,
+      40000
+    ],
+    "targetShadowBytes": [
+      2000,
+      15000
+    ],
+    "targetPreviewBytes": [
+      5000,
+      30000
+    ],
+    "basis": "Own source eb0701887fa872de5c91a9d357de000b2bd490e8ac25f1331b38d88e3f964461:416triangles20884B. Own three neutral views show a plain crossed-bar technical insert, no sculpted relief, hollow centre and projecting bar ends. Measured bar centres +-17.5mm (35mm pitch), external96.4195mm =>logical3x3, not automatic2x2. Original full native body0..13.753800mm; no synthetic insertion or actor surfaces. Technical object without automatic upper slots pending user preference on mechanical compatibility. Preserve all416 triangles bothtiers; beforebake native+exactquant16 UV .1mm,512 maps. Compare baked512 PBR versus textureless uniform charcoal PBR with identical native mesh and normals, no invented texture details; target small geometry-dominated runtime. Actual views and shadows required; source unchanged. Baked512 maps78856B versus uniformPBR5632B at identical416tri geometry. Front comparison actually viewed: texture mottling removed, profile/shading retained. Choose uniform charcoal factors; preserve geometric normals, remove unused COLOR/UV/tangent/maps; Meshopt remains. Three paired views, complete accepted triangle surface and actual browser material/shadow checks required.",
+    "actualBytes": {
+      "lod": 5632,
+      "preview": 10920,
+      "render": 5632,
+      "shadow": 2880,
+      "source": 20884
+    },
+    "runtimeBytes": 19432
+  },
+  "uniformMaterial": {
+    "srgb": [
+      0.3,
+      0.32,
+      0.34
+    ],
+    "roughness": 0.94,
+    "metallic": 0
+  },
+  "openingChecks": [
+    {
+      "name": "open-cell--35--35",
+      "originMM": [
+        -35,
+        -34.999900817871094,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-0",
+      "originMM": [
+        -35,
+        9.918212890625e-05,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell--35-35",
+      "originMM": [
+        -35,
+        35.000099182128906,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0--35",
+      "originMM": [
+        0,
+        -34.999900817871094,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-0",
+      "originMM": [
+        0,
+        9.918212890625e-05,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell-0-35",
+      "originMM": [
+        0,
+        35.000099182128906,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35--35",
+      "originMM": [
+        35,
+        -34.999900817871094,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-0",
+      "originMM": [
+        35,
+        9.918212890625e-05,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-cell-35-35",
+      "originMM": [
+        35,
+        35.000099182128906,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "bar--17.5-0",
+      "originMM": [
+        -17.5,
+        9.918212890625e-05,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bar-17.5-0",
+      "originMM": [
+        17.5,
+        9.918212890625e-05,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bar-0--17.5",
+      "originMM": [
+        0,
+        -17.499900817871094,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bar-0-17.5",
+      "originMM": [
+        0,
+        17.500099182128906,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    }
+  ]
+}

@@ -18,6 +18,7 @@ test("decodes and renders actual KTX2/Meshopt models in both geometry tiers", as
   const report = JSON.parse(
     fs.readFileSync(path.join(base, "report.json"), "utf8"),
   );
+  test.skip(report.tiers.render.textureCount === 0, "Uniform PBR is checked by modelReview");
   const errors = [],
     decoderRequests = [];
   page.on("pageerror", (e) => errors.push(e.message));

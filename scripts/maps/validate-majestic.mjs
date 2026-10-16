@@ -4,6 +4,7 @@ import path from "node:path";
 import { createRequire } from "node:module";
 import { rasterizeSurface } from "./uv_surface.mjs";
 import { uvSurfaceTracker } from "./uv_surface_overlap.mjs";
+import { assertUniformMaterial } from "./uniform_material.mjs";
 const root = path.resolve(import.meta.dirname, "../.."),
   base = path.join(root, "models/collections/majestic-highlands");
 const code = process.argv.find((a) => a.startsWith("--code="))?.slice(7);
@@ -54,7 +55,7 @@ const io = new NodeIO()
   .registerDependencies({ "meshopt.decoder": MeshoptDecoder });
 for (const tier of ["render", "lod"]) {
   const runtime = await io.read(path.join(directory, tier + ".glb"));
-  if (optimized) {
+  if (optimized && !recipe.uniformMaterial) {
     if (
       !runtime
         .getRoot()
@@ -81,6 +82,7 @@ for (const tier of ["render", "lod"]) {
       )
     : runtime;
   await doc.transform(dequantize());
+  if (recipe.uniformMaterial) assertUniformMaterial(doc, recipe.uniformMaterial);
   let pegTriangles = 0,
     triangles = 0;
   for (const node of doc.getRoot().listNodes())
@@ -100,7 +102,7 @@ for (const tier of ["render", "lod"]) {
   let pixelsChecked = 0,
     metalPixels = 0,
     emissivePixels = 0;
-  const mat = doc
+  const mat = recipe.uniformMaterial ? doc.getRoot().listMaterials()[0] : doc
     .getRoot()
     .listMaterials()
     .find((m) => m.getBaseColorTexture());

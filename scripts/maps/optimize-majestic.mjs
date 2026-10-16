@@ -4,6 +4,7 @@ import path from "node:path";
 import { majesticModel } from "./majestic_model.mjs";
 import { rasterizeSurface, extendUvGutters } from "./uv_surface.mjs";
 import { stripAuxiliaryColours } from "./auxiliary_colours.mjs";
+import { applyUniformMaterial } from "./uniform_material.mjs";
 import { isDeepStrictEqual } from "node:util";
 import { createRequire } from "node:module";
 import { execFile } from "node:child_process";
@@ -15,7 +16,7 @@ const require = createRequire("/private/tmp/dndshare-model-tools/package.json");
 const sharp = require("sharp"),
   { NodeIO } = require("@gltf-transform/core"),
   { ALL_EXTENSIONS, KHRTextureBasisu } = require("@gltf-transform/extensions"),
-  { meshopt, dequantize } = require("@gltf-transform/functions"),
+  { meshopt, dequantize, prune } = require("@gltf-transform/functions"),
   { MeshoptEncoder, MeshoptDecoder } = require("meshoptimizer");
 await Promise.all([MeshoptEncoder.ready, MeshoptDecoder.ready]);
 const io = new NodeIO()
@@ -46,7 +47,7 @@ const metadata = previous ?? majesticModel(measured);
 await fs.mkdir(out, { recursive: true });
 const report = {
   model: metadata,
-  recipe: "majestic-ktx2-v1",
+  recipe: measured.recipe.uniformMaterial ? "majestic-uniform-pbr-v1" : "majestic-ktx2-v1",
   materialRecipe: measured.recipe.recipe,
   sourcePath: measured.sourcePath,
   sourceSHA256: measured.sourceSHA256,
@@ -75,6 +76,24 @@ for (const tier of ["render", "lod"]) {
   if (drift > 0.03) throw new Error("Support surface drift exceeds 1.05 mm");
   const doc = await io.read(path.join(native, "model.glb")),
     decodedImages = [];
+  if (measured.recipe.uniformMaterial) {
+    const uniformMaterial = applyUniformMaterial(doc, measured.recipe.uniformMaterial);
+    await doc.transform(prune(), meshopt({ encoder: MeshoptEncoder, level: "high" }));
+    await io.write(path.join(out, tier + ".glb"), doc);
+    const preview = await io.read(path.join(out, tier + ".glb"));
+    await preview.transform(dequantize());
+    for (const extension of preview.getRoot().listExtensionsUsed())
+      if (extension.extensionName === "EXT_meshopt_compression") extension.dispose();
+    await io.write(path.join(out, tier === "render" ? "preview-model.glb" : "lod-preview-model.glb"), preview);
+    report.tiers[tier] = {
+      triangles: info.renderTriangles,
+      bytes: (await fs.stat(path.join(out, tier + ".glb"))).size,
+      placementDrift: drift,
+      textureCount: 0,
+      uniformMaterial,
+    };
+    continue;
+  }
   const colours = new Set(
     doc
       .getRoot()

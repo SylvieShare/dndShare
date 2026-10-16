@@ -51,9 +51,20 @@ test("decodes both reviewed tiers and preserves dedicated shadows under sun and 
       expect(result.drift).toBeLessThan(acceptedDrift + 0.0002);
     }
     expect(result.rendered).toBeGreaterThan(0);
-    expect(result.textures.find((t) => t.colorSpace === "srgb").width).toBe(
-      report.tiers[tier].textureSize,
-    );
+    if (report.tiers[tier].textureCount === 0) {
+      expect(result.textures).toEqual([]);
+      expect(result.materials.length).toBeGreaterThan(0);
+      const uniform = report.tiers[tier].uniformMaterial;
+      for (const material of result.materials) {
+        material.color.forEach((value, i) => expect(value).toBeCloseTo(uniform.linear[i], 5));
+        expect(material.roughness).toBeCloseTo(uniform.roughness, 5);
+        expect(material.metallic).toBeCloseTo(uniform.metallic, 5);
+      }
+    } else {
+      expect(result.textures.find((t) => t.colorSpace === "srgb").width).toBe(
+        report.tiers[tier].textureSize,
+      );
+    }
     expect(
       result.shadowChecks.every((c) => c.changed > 50),
       JSON.stringify(result.shadowChecks),

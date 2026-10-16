@@ -132,11 +132,13 @@
           shadowChecks.push({ name, changed });
           scene.remove(light);
         }
-        const textures = new Set();
+        const textures = new Set(), materials = new Set();
         visible.scene.traverse((n) => {
-          if (n.isMesh)
+          if (n.isMesh) {
+            materials.add(n.material);
             for (const t of Object.values(n.material))
               if (t?.isTexture) textures.add(t);
+          }
         });
         const emissionMaps = [];
         visible.scene.traverse((n) => {
@@ -153,6 +155,9 @@
           shadowChecks,
           rendered: gpu.info.render.triangles,
           emissionMaps,
+          materials: [...materials].map((m) => ({
+            color: m.color.toArray(), roughness: m.roughness, metallic: m.metalness,
+          })),
           textures: [...textures].map((t) => ({
             width: t.image.width,
             height: t.image.height,
