@@ -73,9 +73,9 @@ export function structureGlass(p, settings) {
   return part?.kind==='glass' ? part : null;
 }
 
-export function structureCeramicPigment(p, settings) {
+export function structureSurfacePigment(p, settings) {
   const part = (settings.surfaceParts || []).findLast(part => structureDomain(p, part));
-  if (part?.kind!=='ceramic') return null;
+  if (!['ceramic','paint','foam'].includes(part?.kind)) return null;
   let rgb = part.rgb;
   if (part.centersMM) {
     let nearest = 0, best = Infinity;

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureMetal, structureFlame, structureGlass, structureCeramicPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureFlame, structureGlass, structureSurfacePigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
 
@@ -77,13 +77,24 @@ test('real green glass is preserved against sparse brown vertices while adjacent
 test('hidden bar ceramics retain their pigments while supporting wood remains unpainted', () => {
   const bar = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-044.json',import.meta.url))).materials;
   for (const p of [[-7,-4.2,36.5],[-7,7.2,36.5]]) {
-    const pigment = structureCeramicPigment(p,bar);
+    const pigment = structureSurfacePigment(p,bar);
     assert.ok(pigment && pigment[0]>.68 && pigment[1]>.54);
   }
-  assert.ok(structureCeramicPigment([-8,-11,37],bar));
-  assert.equal(structureCeramicPigment([-5.85,1.5,34.3],bar),null,'Shelf stays timber');
-  assert.equal(structureCeramicPigment([-11.7,-4.2,36.5],bar),null,'Backing stays timber');
+  assert.ok(structureSurfacePigment([-8,-11,37],bar));
+  assert.equal(structureSurfacePigment([-5.85,1.5,34.3],bar),null,'Shelf stays timber');
+  assert.equal(structureSurfacePigment([-11.7,-4.2,36.5],bar),null,'Backing stays timber');
   const vessels = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-024.json',import.meta.url))).materials;
-  assert.ok(structureCeramicPigment([-11.35,-5.45,40],vessels));
-  assert.equal(structureCeramicPigment([-1.8,-5.3,46],vessels),null,'Cork overrides ceramic');
+  assert.ok(structureSurfacePigment([-11.35,-5.45,40],vessels));
+  assert.equal(structureSurfacePigment([-1.8,-5.3,46],vessels),null,'Cork overrides ceramic');
+});
+
+test('solid paint and foam retain independent colours while later liquids take priority', () => {
+  const painted = {name:'paint',kind:'paint',minMM:[-2,-2,0],maxMM:[2,2,2],rgb:[.7,.12,.04],variation:0};
+  const foam = {name:'foam',kind:'foam',minMM:[-1,-1,1],maxMM:[1,1,2],rgb:[.85,.75,.5],variation:0};
+  const liquid = {...foam,kind:'liquid',minMM:[-.2,-.2,1],maxMM:[.2,.2,2]};
+  const settings = {surfaceParts:[painted,foam,liquid]};
+  assert.deepEqual(structureSurfacePigment([1.5,0,1],settings),painted.rgb);
+  assert.deepEqual(structureSurfacePigment([.5,0,1.5],settings),foam.rgb);
+  assert.equal(structureSurfacePigment([0,0,1.5],settings),null);
+  assert.equal(structureSurfacePigment([3,0,1],settings),null);
 });

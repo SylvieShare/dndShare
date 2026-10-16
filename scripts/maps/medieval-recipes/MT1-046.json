@@ -1,0 +1,800 @@
+{
+  "name": "Bar Shield",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 78000,
+  "lodTriangles": 26000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.39,
+        0
+      ],
+      [
+        0.39,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic",
+    "shield",
+    "paint",
+    "tableware"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "bar vertical planks and corner posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "horizontal internal shelf",
+        "minMM": [
+          -12.3,
+          -14.1,
+          32.3
+        ],
+        "maxMM": [
+          -5.6,
+          14.1,
+          34.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "two long countertop boards",
+        "minMM": [
+          -17.3,
+          -17.6,
+          40.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south honey wood spoon",
+        "minMM": [
+          -16.56580078125,
+          -15.288250083923339,
+          42.8
+        ],
+        "maxMM": [
+          -5.802100067138672,
+          -10.670250778198243,
+          45.1
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.9694685676150439,
+          0.24521561207727963,
+          0
+        ],
+        "darkRGB": [
+          0.43,
+          0.25,
+          0.085
+        ],
+        "lightRGB": [
+          0.7,
+          0.49,
+          0.2
+        ],
+        "roughness": 0.82,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      },
+      {
+        "name": "north honey wood spoon",
+        "minMM": [
+          -15.923000450134277,
+          10.29884994506836,
+          42.8
+        ],
+        "maxMM": [
+          -5.2123001861572265,
+          15.142049903869628,
+          45.1
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.9563320680272192,
+          -0.292282356057943,
+          0
+        ],
+        "darkRGB": [
+          0.43,
+          0.25,
+          0.085
+        ],
+        "lightRGB": [
+          0.7,
+          0.49,
+          0.2
+        ],
+        "roughness": 0.82,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      },
+      {
+        "minMM": [
+          -18,
+          -8,
+          25.4
+        ],
+        "maxMM": [
+          -15,
+          8.5,
+          41.4
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -16.5,
+            0.31924609729731834,
+            33.33058002093114
+          ],
+          "radiiMM": [
+            100,
+            7.8,
+            7.8
+          ]
+        },
+        "name": "green painted vertical shield planks",
+        "axis": "z",
+        "darkRGB": [
+          0.19,
+          0.36,
+          0.075
+        ],
+        "lightRGB": [
+          0.4,
+          0.59,
+          0.18
+        ],
+        "roughness": 0.86,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.300000190734863,
+          -14.979999542236328,
+          43.352264404296875
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -14.300000190734863,
+          15.270000457763672,
+          43.45998764038086
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          -14.979999542236328,
+          43.378387451171875
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.949999809265137,
+          15.270000457763672,
+          43.34150314331055
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.8,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "left plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          -8.55,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          0.8,
+          38.4
+        ],
+        "rgb": [
+          0.77,
+          0.67,
+          0.43
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "right plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -11.5,
+          2.3,
+          34.6
+        ],
+        "maxMM": [
+          -5.65,
+          11.85,
+          38.4
+        ],
+        "rgb": [
+          0.72,
+          0.615,
+          0.38
+        ],
+        "roughness": 0.65,
+        "variation": 0.035
+      },
+      {
+        "name": "goblet on left internal shelf",
+        "kind": "ceramic",
+        "minMM": [
+          -10.5,
+          -13.6,
+          34.6
+        ],
+        "maxMM": [
+          -6.6,
+          -8.55,
+          40.5
+        ],
+        "rgb": [
+          0.57,
+          0.325,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.04
+      },
+      {
+        "name": "south golden shallow plate",
+        "kind": "ceramic",
+        "minMM": [
+          -16.2,
+          -12.1,
+          42.8
+        ],
+        "maxMM": [
+          -6.2,
+          -2.3,
+          46.7
+        ],
+        "rgb": [
+          0.79,
+          0.61,
+          0.25
+        ],
+        "roughness": 0.6,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      },
+      {
+        "name": "north ochre deep plate",
+        "kind": "ceramic",
+        "minMM": [
+          -16.2,
+          1.5,
+          42.8
+        ],
+        "maxMM": [
+          -6.2,
+          11.5,
+          46.7
+        ],
+        "rgb": [
+          0.69,
+          0.46,
+          0.19
+        ],
+        "roughness": 0.6,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      },
+      {
+        "name": "ochre tankard and curved handle",
+        "kind": "ceramic",
+        "minMM": [
+          -10.55,
+          -5.5,
+          42.8
+        ],
+        "maxMM": [
+          -4.3,
+          2.85,
+          49.8
+        ],
+        "rgb": [
+          0.61,
+          0.35,
+          0.13
+        ],
+        "roughness": 0.67,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -10.55,
+              -3.5,
+              42.8
+            ],
+            "maxMM": [
+              -4.3,
+              2.85,
+              49.8
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -7.45,
+                -0.35,
+                46.3
+              ],
+              "radiiMM": [
+                3.02,
+                3.02,
+                100
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -6.55,
+              -5.5,
+              43.4
+            ],
+            "maxMM": [
+              -4.3,
+              -1.4,
+              49.5
+            ]
+          }
+        ]
+      },
+      {
+        "name": "cream sculpted foam inside tankard",
+        "kind": "foam",
+        "minMM": [
+          -9.3,
+          -2.2,
+          48.65
+        ],
+        "maxMM": [
+          -5.6,
+          1.5,
+          49.5
+        ],
+        "rgb": [
+          0.87,
+          0.77,
+          0.5
+        ],
+        "roughness": 0.93,
+        "variation": 0.03,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        },
+        "ellipsoid": {
+          "centerMM": [
+            -7.45,
+            -0.35,
+            49.1
+          ],
+          "radiiMM": [
+            1.8,
+            1.8,
+            100
+          ]
+        }
+      },
+      {
+        "minMM": [
+          -18,
+          -8,
+          25.4
+        ],
+        "maxMM": [
+          -15,
+          8.5,
+          41.4
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -16.5,
+            0.31924609729731834,
+            33.33058002093114
+          ],
+          "radiiMM": [
+            100,
+            7.8,
+            7.8
+          ]
+        },
+        "name": "opaque green paint on shield planks",
+        "kind": "paint",
+        "rgb": [
+          0.3,
+          0.48,
+          0.12
+        ],
+        "roughness": 0.86,
+        "metallic": 0,
+        "variation": 0.06,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      },
+      {
+        "minMM": [
+          -18,
+          -8,
+          25.4
+        ],
+        "maxMM": [
+          -17.2,
+          8.5,
+          41.4
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -16.5,
+            0.31924609729731834,
+            33.33058002093114
+          ],
+          "radiiMM": [
+            100,
+            6.72,
+            6.72
+          ]
+        },
+        "name": "red raised triskelion",
+        "kind": "paint",
+        "rgb": [
+          0.66,
+          0.13,
+          0.055
+        ],
+        "roughness": 0.76,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      },
+      {
+        "minMM": [
+          -18,
+          -8,
+          25.4
+        ],
+        "maxMM": [
+          -15,
+          8.5,
+          41.4
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -16.5,
+            0.31924609729731834,
+            33.33058002093114
+          ],
+          "radiiMM": [
+            100,
+            7.8,
+            7.8
+          ]
+        },
+        "name": "golden shield rim",
+        "kind": "paint",
+        "rgb": [
+          0.73,
+          0.55,
+          0.21
+        ],
+        "roughness": 0.66,
+        "metallic": 0.45,
+        "variation": 0.025,
+        "excludeParts": [
+          {
+            "minMM": [
+              -18,
+              -8,
+              25.4
+            ],
+            "maxMM": [
+              -15,
+              8.5,
+              41.4
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -16.5,
+                0.31924609729731834,
+                33.33058002093114
+              ],
+              "radiiMM": [
+                100,
+                6.72,
+                6.72
+              ]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-044",
+          "sourceSHA256": "14a99d0eba2094af647173753d2d0db842b455ed407ea626da9a06311e320baf",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-046",
+            "sourceSHA256": "bb5bb2a6794ea1420e4f9972e19c568376b33373070b3c4ef8d0fb1816d7fb66"
+          }
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.5,
+      4.1
+    ],
+    "lodMiB": [
+      0.5,
+      1.5
+    ],
+    "shadowKiB": [
+      50,
+      145
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "A 35 mm bar tile with fine raised shield spirals, separate rim, two plates, two spoons, tankard handle/foam and hidden shelf ware. Independent 78000/26000 triangle meshes and 1024/512 bakes preserve relief, dish depressions and carving. Compare 768/384 compact maps, especially floor flecks and spiral colour boundaries."
+  },
+  "reviewNotes": "PDF page 8 and native front/back/top plus a 1000 px shield view inspected. Source: 399816 triangles, 19990884 bytes, height 49.6161 mm. Full-height centre ray reaches floor 24.705460 mm, normal Z=.993616; mount datum 17 mm. Floor normal squares X=.382406 and Y=.040238 confirm Y grain. Two spoon PCA directions: [-.969469,.245216,0] and [-.956332,-.292282,0]. The plates and tankard join above 43.55 mm, so their union is not used as one material mask. Source plate centres [-11.1,-7.2] and [-11.1,6.6] have floors at 43.896385 and 45.010799 mm. Tankard centre [-7.45,-.35] reaches sculpted foam 49.128532 mm; its radius 1.8 mm footprint spans Z48.7225..49.3427, below the 49.6161 mm lip. Shield circle fit from 72 radial source rays: centre Y=.319246, Z=33.330580, radius=7.627044 mm. Flat green background is near X=-17.145; raised spirals reach -17.465. Red is limited to X<-17.20 and radius 6.72; the gold rim occupies radii 6.72..7.8 including its rounded outer bevel. Native radial probes show the flat field at radius 6.681 mm and raised rim at 6.881 mm. Per-pixel green paint restores the whole shield before the red/gold masks, retaining carved plank normals and preventing colour interpolation across long faces. Reference MT1-044 separates added utensils/shield from common timber and projects packed geometry back to MT1-046. Three exposed fasteners measured; fourth covered by spoon. Inspect all sides/top and shield close-up, both tiers and texture candidates; compare dish/foam surfaces in render/LOD/shadow and validate actual material channels before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.5,
+      0.5
+    ]
+  ],
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
