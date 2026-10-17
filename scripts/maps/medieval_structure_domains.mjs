@@ -96,6 +96,33 @@ export function structureSurfacePigment(p, settings) {
   return rgb.map(c => c*variation);
 }
 
+export function structureWoodPigment(p, n, settings) {
+  if (!settings.woodParts?.some(part => part.physicalPigment)) return null;
+  const part = (settings.woodParts || []).findLast(part => structureDomain(p,part));
+  if (!part?.physicalPigment) return null;
+  if (['stoneParts','fabricParts','produceParts','surfaceParts','ironParts'].some(key =>
+      (settings[key] || []).some(part => structureDomain(p,part))) ||
+      structureMetal(p,settings).metallic>.01) return null;
+  if (part.rotationZDeg!==undefined) throw new Error('Physical timber pigment requires native axes');
+  let u, v;
+  const dot = (a,b) => a.reduce((sum,x,i) => sum+x*b[i],0);
+  const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const unit = a => { const length=Math.hypot(...a); return a.map(x => x/length); };
+  if (part.axis==='x') { u=p[0]; v=Math.abs(n[1])>Math.abs(n[2]) ? p[2] : p[1]; }
+  else if (part.axis==='y') { u=p[1]; v=Math.abs(n[0])>Math.abs(n[2]) ? p[2] : p[0]; }
+  else if (part.axis==='z') { u=p[2]; v=Math.abs(n[0])>Math.abs(n[1]) ? p[1] : p[0]; }
+  else if (part.axis==='beam') {
+    const d=unit(part.direction), t=unit(cross(d,Math.abs(d[0])<.8 ? [1,0,0] : [0,1,0])), other=cross(d,t);
+    u=dot(p,d); v=Math.abs(dot(n,t))>Math.abs(dot(n,other)) ? dot(p,other) : dot(p,t);
+  } else throw new Error('Unsupported physical timber grain');
+  const grain=Math.max(.1,Math.min(.9,.5+.22*Math.sin(v*6.8+.12*Math.sin(u*.4))+.1*Math.sin(v*18+.04*Math.sin(u*.7))));
+  const dark=part.darkRGB || settings.woodDarkRGB, light=part.lightRGB || settings.woodLightRGB;
+  let variation=1+.045*Math.sin(u*.17+v*.1);
+  const endAxis={x:0,y:1,z:2}[part.axis];
+  if (endAxis!==undefined && Math.abs(n[endAxis])>.75) variation*=.85+.15*Math.sin(Math.hypot(v,((u%4)+4)%4)*7);
+  return dark.map((c,i) => (c*(1-grain)+light[i]*grain)*variation);
+}
+
 export function structureFabricPigment(p, settings) {
   if ((settings.surfaceParts || []).some(part => structureDomain(p,part))) return null;
   if ((settings.produceParts || []).some(part => structureDomain(p,part))) return null;

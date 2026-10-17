@@ -1,0 +1,473 @@
+{
+  "name": "Bar Stool",
+  "groupCode": "MED-seating",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 62000,
+  "lodTriangles": 20000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "floor",
+    "stool",
+    "seat",
+    "leather"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "interior floor X boards",
+        "minMM": [
+          -14.3,
+          -14.3,
+          17.5
+        ],
+        "maxMM": [
+          14.3,
+          14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "splayed stool leg -1 -1",
+        "minMM": [
+          5.71743324948802,
+          -16.434866631493424,
+          26.65
+        ],
+        "maxMM": [
+          9.31743324948802,
+          -12.834866631493423,
+          36.1
+        ],
+        "axis": "beam",
+        "direction": [
+          0.03373049759844293,
+          0.03373049759844182,
+          0.9988616055608118
+        ],
+        "darkRGB": [
+          0.29,
+          0.14,
+          0.045
+        ],
+        "lightRGB": [
+          0.53,
+          0.3,
+          0.11
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "splayed stool leg -1 1",
+        "minMM": [
+          5.841210553602831,
+          -10.72871097321949,
+          26.65
+        ],
+        "maxMM": [
+          9.441210553602831,
+          -7.12871097321949,
+          36.1
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.0031816637292069417,
+          0.0031817114124394292,
+          0.9999898768129617
+        ],
+        "darkRGB": [
+          0.29,
+          0.14,
+          0.045
+        ],
+        "lightRGB": [
+          0.53,
+          0.3,
+          0.11
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "splayed stool leg 1 -1",
+        "minMM": [
+          11.5077624441994,
+          -16.395262825669118,
+          26.65
+        ],
+        "maxMM": [
+          15.107762444199402,
+          -12.795262825669118,
+          36.1
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.03409924712403212,
+          0.034099247124030785,
+          0.9988365645545564
+        ],
+        "darkRGB": [
+          0.29,
+          0.14,
+          0.045
+        ],
+        "lightRGB": [
+          0.53,
+          0.3,
+          0.11
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "splayed stool leg 1 1",
+        "minMM": [
+          11.430955117396664,
+          -10.721344763584785,
+          26.65
+        ],
+        "maxMM": [
+          15.030955117396665,
+          -7.121344763584784,
+          36.1
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.033488229334314605,
+          -0.03348822933431486,
+          0.9988779089518922
+        ],
+        "darkRGB": [
+          0.29,
+          0.14,
+          0.045
+        ],
+        "lightRGB": [
+          0.53,
+          0.3,
+          0.11
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "horizontal stool rail 0 -1",
+        "minMM": [
+          6.33239974975586,
+          -15.725328636169433,
+          29.020000762939453
+        ],
+        "maxMM": [
+          14.532399749755859,
+          -13.16496925354004,
+          31.280000381469726
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.31,
+          0.155,
+          0.05
+        ],
+        "lightRGB": [
+          0.55,
+          0.32,
+          0.12
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "horizontal stool rail 0 1",
+        "minMM": [
+          6.33239974975586,
+          -10.284494590759277,
+          28.920000381469727
+        ],
+        "maxMM": [
+          14.532399749755859,
+          -7.725122261047363,
+          31.18
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.31,
+          0.155,
+          0.05
+        ],
+        "lightRGB": [
+          0.55,
+          0.32,
+          0.12
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "horizontal stool rail 1 -1",
+        "minMM": [
+          5.887910652160644,
+          -15.819899654388427,
+          26.920000381469727
+        ],
+        "maxMM": [
+          8.373914909362792,
+          -7.619899654388428,
+          29.079999618530273
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.31,
+          0.155,
+          0.05
+        ],
+        "lightRGB": [
+          0.55,
+          0.32,
+          0.12
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "horizontal stool rail 1 1",
+        "minMM": [
+          12.45889835357666,
+          -15.819899654388427,
+          26.82
+        ],
+        "maxMM": [
+          14.938173484802245,
+          -7.619899654388428,
+          28.880000762939453
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.31,
+          0.155,
+          0.05
+        ],
+        "lightRGB": [
+          0.55,
+          0.32,
+          0.12
+        ],
+        "roughness": 0.88
+      },
+      {
+        "name": "solid wooden circular seat frame",
+        "minMM": [
+          4.6,
+          -17.5,
+          35.6
+        ],
+        "maxMM": [
+          16.3,
+          -5.9,
+          39.0
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.32,
+          0.16,
+          0.055
+        ],
+        "lightRGB": [
+          0.57,
+          0.35,
+          0.14
+        ],
+        "roughness": 0.86,
+        "physicalPigment": true
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "mustard leather stool cushion",
+        "kind": "paint",
+        "minMM": [
+          5.2,
+          -16.95,
+          38.8
+        ],
+        "maxMM": [
+          15.65,
+          -6.45,
+          40.9
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            10.43239974975586,
+            -11.719899654388428,
+            39.5
+          ],
+          "radiiMM": [
+            4.95,
+            4.95,
+            100
+          ]
+        },
+        "rgb": [
+          0.65,
+          0.56,
+          0.145
+        ],
+        "roughness": 0.85,
+        "variation": 0.025
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.4,
+      3.8
+    ],
+    "lodMiB": [
+      0.45,
+      1.2
+    ],
+    "shadowKiB": [
+      45,
+      125
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "A 35mm planked floor with one offset tall bar stool, four splayed legs, four separately measured horizontal rails, circular wooden seat frame and domed mustard leather cushion.62000/20000 triangles with1024/512 colour maps preserve leg openings, carved boards and seat silhouette. Compare compact maps."
+  },
+  "reviewNotes": "PDF page9 and native front/back inspected. Source300020tri/15001084bytes/maxZ40.772202mm. Stool bounds aboveZ26.7: X[4.7295,16.1353],Y[-17.4252,-6.0146], seat centre[10.432400,-11.719900]. Conservative native blockerX4.5..16.4/Y-17.5..-5.8 keeps the other three quarter-floor positions free. Native points[8.75,8.75],[-8.75,8.75],[-8.75,-8.75] use actual floors25.398977,25.712492,25.712627mm; the fourth quarter lies on the cushion and is excluded. Interior floor grain runsX: measured normal squares X=.047559,Y=.258930. East/west frame rails keepY and north/south frame rails useX. Four leg directions fitted to paired inner/outer cross-section rays atZ31.8..34.8; the low rails have separate source-measured inner/outer bounds and levels and X/Y grain. Circular seat profiles separate solid wood ring from domed mustard upholstery aboveZ38.6 within radius5.1mm. No invented iron or lights. The old GroundWood floor does not match after simple height shifts, so its reference is not reused; explicit part bounds keep floor and stool timber independent. Check all four leg openings, rails, ring/cushion boundary, three stand points, original source profile, both tiers and texture candidates. Final upholstery boundary startsZ38.8 inside radius4.95mm. The circular frame opts into physicalPigment to restore native wood grain in actual colour pixels and UV gutters, excluding the cushion; this removes yellow interpolation onto the outer wood lip.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      8.75,
+      8.75
+    ],
+    [
+      -8.75,
+      8.75
+    ],
+    [
+      -8.75,
+      -8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        4.5,
+        -5.8
+      ],
+      [
+        16.4,
+        -5.8
+      ],
+      [
+        16.4,
+        -17.5
+      ],
+      [
+        4.5,
+        -17.5
+      ]
+    ]
+  ]
+}

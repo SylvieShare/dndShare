@@ -8,7 +8,7 @@ import { prepareShadow } from './shadow_model.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
-import { structureMetal, structureLiquid, structureFlame, structureGlass, structureSurfacePigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureLiquid, structureFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
@@ -72,6 +72,8 @@ if (!process.argv.includes('--publish-manifest')) {
       if (colour.has(texture)) {
         const pigment = (i,p,n,rgba) => {
           if (!rgba) throw new Error('Measured Paint attribute required for colour gutters');
+          const wood = structureWoodPigment(p,n,recipe.materials);
+          if (wood) rgba = wood.map(v => v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4);
           const liquid = structureLiquid(p, recipe.materials) || structureFlame(p, recipe.materials) || structureGlass(p, recipe.materials);
           const fabric = structureFabricPigment(p, recipe.materials);
           if (fabric) rgba = fabric.map(v => v<=.04045 ? v/12.92 : ((v+.055)/1.055)**2.4);
@@ -89,9 +91,9 @@ if (!process.argv.includes('--publish-manifest')) {
             data[i*3+c] = Math.round((v<=.0031308 ? v*12.92 : 1.055*v**(1/2.4)-.055)*255);
           }
         };
-        if (recipe.materials.fabricParts?.length || recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => ['liquid','flame','glass','ceramic','paint','foam'].includes(p.kind))) {
+        if (recipe.materials.woodParts?.some(p => p.physicalPigment) || recipe.materials.fabricParts?.length || recipe.materials.produceParts?.length || recipe.materials.surfaceParts?.some(p => ['liquid','flame','glass','ceramic','paint','foam'].includes(p.kind))) {
           rasterizeSurface(doc,pixels,pixels,(i,p,n,rgba) => {
-            if (structureLiquid(p,recipe.materials) || structureFlame(p,recipe.materials) || structureGlass(p,recipe.materials) || structureSurfacePigment(p,recipe.materials) || structureFabricPigment(p,recipe.materials) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,recipe.materials)) pigment(i,p,n,rgba);
+            if (structureWoodPigment(p,n,recipe.materials) || structureLiquid(p,recipe.materials) || structureFlame(p,recipe.materials) || structureGlass(p,recipe.materials) || structureSurfacePigment(p,recipe.materials) || structureFabricPigment(p,recipe.materials) || shouldRepairGreenSpill(data.subarray(i*3,i*3+3),rgba,p,recipe.materials)) pigment(i,p,n,rgba);
           },slot,'COLOR_1');
         }
         coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,pigment,1,slot,'COLOR_1');

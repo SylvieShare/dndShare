@@ -1,9 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureDomain, structureMetal, structureFlame, structureGlass, structureSurfacePigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureDomain, structureMetal, structureFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
+
+test('physical wood pigment restores a frame while preserving upholstery and metal', () => {
+  const timber={minMM:[-5,-5,-1],maxMM:[5,5,2],axis:'x',physicalPigment:true,darkRGB:[.3,.15,.05],lightRGB:[.55,.32,.12]};
+  const settings={stoneStartMM:0,stoneBlendMM:1,woodParts:[timber],surfaceParts:[{name:'cushion',kind:'paint',minMM:[-2,-2,.8],maxMM:[2,2,2],rgb:[.65,.56,.145],roughness:.85}]};
+  const wood=structureWoodPigment([4,0,.5],[0,1,0],settings);
+  assert.ok(wood[0]>wood[1]*1.4 && wood[1]>wood[2]*2,'Yellow upholstery must not replace the brown frame');
+  assert.equal(structureWoodPigment([0,0,1],[0,0,1],settings),null,'The cushion keeps its own pigment');
+  assert.equal(structureWoodPigment([6,0,1],[0,0,1],settings),null);
+  const cloth={minMM:[3,-1,0],maxMM:[5,1,1],rgb:[.2,.4,.1]};
+  assert.equal(structureWoodPigment([4,0,.5],[0,1,0],{...settings,fabricParts:[cloth]}),null,'Cloth retains its finish');
+  settings.hardware=[{centerMM:[4,0,.5],radiiMM:[.5,.5,.5],minZMM:0}];
+  assert.equal(structureWoodPigment([4,0,.5],[0,1,0],settings),null,'A fastening retains metal');
+});
+
+test('measured beam pigment agrees with straight grain on the same side face', () => {
+  const timber={minMM:[-5,-5,-1],maxMM:[5,5,2],axis:'x',physicalPigment:true,darkRGB:[.3,.15,.05],lightRGB:[.55,.32,.12]};
+  const settings={stoneStartMM:0,stoneBlendMM:1,woodParts:[timber]};
+  const expected=structureWoodPigment([-1.3,2.1,.7],[0,1,0],settings);
+  timber.axis='beam';timber.direction=[1,0,0];
+  assert.deepEqual(structureWoodPigment([-1.3,2.1,.7],[0,1,0],settings),expected);
+});
 
 test('a tapered hoop follows its tilted axis without painting an outer wooden support', () => {
   const shell = { originMM:[3,4,5], axis:[.6,.8,0], rangeMM:[-2,2], radiusAtOriginMM:8, radiusSlope:.2, thicknessMM:1, allowanceMM:.04 };
