@@ -6,8 +6,8 @@ import (
 	"math"
 )
 
-// Templates belong to logical models; enabled state belongs to placed instances.
-// Rebuild all other fields so a supplied builtinKey cannot evade manual-light limits.
+// Templates own identity, attachment and defaults. Explicit instance overrides
+// customize light settings; an unknown builtinKey can never create another source.
 func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours map[string]ModelBehaviour) error {
 	poses, err := ResolveTilePlacements(*d, models)
 	if err != nil {
@@ -79,14 +79,49 @@ func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours 
 				a := o.rotation * math.Pi / 180
 				x, y = o.x+x*math.Cos(a)-y*math.Sin(a), o.y+x*math.Sin(a)+y*math.Cos(a)
 			}
-			manual = append(manual, Light{ID: id, BuiltinKey: template.Key, Name: template.Name, Kind: template.Kind, Color: template.Color,
+			light := Light{ID: id, BuiltinKey: template.Key, Name: template.Name, Kind: template.Kind, Color: template.Color,
 				X: x, Y: y, Elevation: o.base, Height: template.Position[2] * o.scale, Intensity: template.Intensity, Radius: template.Radius,
-				Enabled: enabled, Flicker: template.Flicker, Offset: [2]float64{}, Anchor: &anchor})
+				Enabled: enabled, Flicker: template.Flicker, Offset: [2]float64{}, Anchor: &anchor, Overrides: old.Overrides}
+			applyLightOverrides(&light)
+			manual = append(manual, light)
 		}
 	}
 	if len(previous) > 0 {
 		return fmt.Errorf("Источник не принадлежит встроенному освещению модели")
 	}
+	for i := range manual {
+		if manual[i].Anchor != nil {
+			manual[i].AreaID = ""
+		}
+	}
 	d.Lights = manual
 	return nil
+}
+
+func applyLightOverrides(light *Light) {
+	o := light.Overrides
+	if o == nil {
+		return
+	}
+	if o.Color != nil {
+		light.Color = *o.Color
+	}
+	if o.Height != nil {
+		light.Height = *o.Height
+	}
+	if o.Intensity != nil {
+		light.Intensity = *o.Intensity
+	}
+	if o.Radius != nil {
+		light.Radius = *o.Radius
+	}
+	if o.Flicker != nil {
+		light.Flicker = *o.Flicker
+	}
+	if o.ShowMarker != nil {
+		light.ShowMarker = *o.ShowMarker
+	}
+	if o.Shadows != nil {
+		light.Shadows = *o.Shadows
+	}
 }

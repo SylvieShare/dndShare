@@ -6,7 +6,7 @@
       placeholder="Найти игрока или существо…"
     />
     <template v-for="group in groups" :key="group.kind">
-      <SectionLabel :title="group.label" :count="group.items.length" />
+      <MapPanelHeading :title="group.label" :count="group.items.length" />
       <p v-if="!group.items.length" class="map-hint">{{ group.empty }}</p>
       <MapEntityRow
         v-for="item in group.items"
@@ -56,13 +56,10 @@
 </template>
 <script setup>
 import { computed, ref } from "vue";
-import {
-  ActionButton,
-  FormTextInput,
-  SectionLabel,
-} from "@sylvieshare/share-ui";
+import { ActionButton, FormTextInput } from "@sylvieshare/share-ui";
 import { Focus, Plus, MapPin } from "@lucide/vue";
 import SessionHpBar from "@/features/sessions/components/SessionHpBar.vue";
+import MapPanelHeading from "./MapPanelHeading.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 import { creatureKey, creatureToken } from "../lib/sessionCreatures";
 const props = defineProps({

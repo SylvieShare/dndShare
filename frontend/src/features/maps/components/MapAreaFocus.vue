@@ -105,6 +105,9 @@ const colours = [
 </script>
 <style scoped>
 .map-area-focus-heading {
+  margin-inline: calc(-1 * var(--map-panel-inset, 14px));
+  padding: 10px var(--map-panel-inset, 14px) 0;
+  border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 8px;

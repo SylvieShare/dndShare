@@ -80,7 +80,7 @@ export function lightPose(light, document, catalogue, context) {
 }
 export function lightArea(light, document) {
   return (
-    light.areaId ||
+    (!light.anchor && light.areaId) ||
     document.areas?.find((a) =>
       light.anchor?.kind === "tile"
         ? a.tileIds.includes(light.anchor.id)
@@ -110,6 +110,7 @@ export function syncLights(document, catalogue) {
   for (const light of document.lights) {
     if (light.areaId && !areas.has(light.areaId)) light.areaId = "";
     if (light.anchor) {
+      light.areaId = "";
       const pose = lightPose(light, document, catalogue, context);
       light.x = pose.x;
       light.y = pose.y;

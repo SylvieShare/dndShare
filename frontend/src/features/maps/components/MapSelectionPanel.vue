@@ -29,12 +29,11 @@
           >
         </div>
         <template v-if="entries.length === 1">
-          <MapSelectedEntity :entry="single" :editor="editor" />
-          <MapSelectionActions
-            :editor="editor"
-            :entry="single"
-            @area="emit('area', $event)"
-          />
+          <MapSelectedEntity :entry="single" :editor="editor">
+            <template v-if="single.kind === 'light'" #after-preview
+              ><MapLightActions :editor="editor" :light="single.item" primary
+            /></template>
+          </MapSelectedEntity>
           <MapLightFields
             v-if="single.kind === 'light'"
             :editor="editor"
@@ -42,7 +41,18 @@
             @bind="emit('bind', $event)"
             @focus="emit('focus', [$event])"
           />
+          <MapSelectionActions
+            v-if="single.kind === 'light'"
+            :editor="editor"
+            :entry="single"
+            @area="emit('area', $event)"
+          />
           <template v-else>
+            <MapSelectionActions
+              :editor="editor"
+              :entry="single"
+              @area="emit('area', $event)"
+            />
             <ToggleSwitch
               v-if="
                 single.kind === 'object' &&
@@ -67,7 +77,7 @@
           </template>
         </template>
         <template v-else>
-          <h3>Выбрано: {{ entries.length }}</h3>
+          <h3 class="map-multi-heading">Выбрано: {{ entries.length }}</h3>
           <div class="map-selection-list">
             <MapEntityRow
               v-for="group in groups"
@@ -94,6 +104,7 @@ import { groupMapEntities, selectedMapEntities } from "../lib/editorEntities";
 import MapAreaFocus from "./MapAreaFocus.vue";
 import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapEntityRow from "./MapEntityRow.vue";
+import MapLightActions from "./MapLightActions.vue";
 import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
 import MapModelTransitions from "./MapModelTransitions.vue";
@@ -122,7 +133,8 @@ const single = computed(() => entries.value[0]);
   user-select: text;
 }
 .map-selection-content {
-  padding: 14px;
+  --map-panel-inset: 14px;
+  padding: var(--map-panel-inset);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -130,6 +142,11 @@ const single = computed(() => entries.value[0]);
 .map-selection-panel h3 {
   margin: 0;
   font-size: 17px;
+}
+.map-multi-heading {
+  margin-inline: calc(-1 * var(--map-panel-inset, 14px));
+  padding: 10px var(--map-panel-inset, 14px) 0;
+  border-top: 1px solid var(--border);
 }
 .map-selection-summary {
   display: flex;

@@ -187,7 +187,7 @@ test("lighting mode restores fixed light and an unchecked marker keeps its sourc
   await panel.getByRole("button", { name: "Факел", exact: true }).click();
   await page
     .getByRole("complementary", { name: "Выбранные элементы" })
-    .getByRole("switch", { name: "Показывать сферу источника", exact: true })
+    .getByRole("button", { name: "Скрыть сферу источника", exact: true })
     .click();
   await expect
     .poll(() =>
@@ -247,7 +247,7 @@ test("copied lights paste repeatedly at the current cursor and cancel with Escap
   });
   expect(lights[1].x).toBeCloseTo(7.5, 5);
   expect(lights[1].y).toBeCloseTo(5.5, 5);
-  expect(lights[2].shadows).toBe(false);
+  expect(lights[2].shadows).toBe(true);
   expect(new Set(lights.map((l) => l.id)).size).toBe(3);
   for (const cancel of ["Escape", "right"]) {
     await page.keyboard.press("Control+v");

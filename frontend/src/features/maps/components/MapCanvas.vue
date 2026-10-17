@@ -13,7 +13,7 @@
       class="map-canvas-surface"
       tabindex="0"
       aria-label="Поле карты. Колесо — масштаб, Alt — перемещение, правая кнопка или Shift — вращение обзора."
-      @pointerdown="pointer.down"
+      @pointerdown="pointerDown"
       @pointermove="pointer.move"
       @pointerup="pointer.up"
       @pointercancel="pointer.cancel"
@@ -52,13 +52,7 @@
         @toggle-view="toggleView"
       />
     </div>
-    <ul
-      v-if="!readonly && hintLines.length"
-      class="map-controls-hint"
-      aria-label="Управление картой"
-    >
-      <li v-for="(line, index) in hintLines" :key="index">{{ line }}</li>
-    </ul>
+    <MapControlsHint v-if="!readonly && hintLines.length" :lines="hintLines" />
   </div>
 </template>
 <script setup>
@@ -66,6 +60,8 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
+import { useCameraFocus } from "../composables/useCameraFocus";
+import MapControlsHint from "./MapControlsHint.vue";
 import MapCanvasControls from "./MapCanvasControls.vue";
 import MapDownloadManager from "./MapDownloadManager.vue";
 import { useMapCanvasPointer } from "../composables/useMapCanvasPointer";
@@ -176,7 +172,16 @@ watch(
   },
   { deep: true },
 );
+const cameraFocus = useCameraFocus(() => renderer?.getView(), applyView);
+function pointerDown(event) {
+  cameraFocus.stop();
+  pointer.down(event);
+}
 function setView(view) {
+  cameraFocus.stop();
+  applyView(view);
+}
+function applyView(view) {
   renderer?.camera(view);
   topView.value = renderer?.getView().tilt === 90;
   emit("view", renderer?.getView());
@@ -256,10 +261,12 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   dead = true;
   cancelAnimationFrame(frame);
+  cameraFocus.stop();
   renderer?.destroy();
 });
 defineExpose({
   panArrow,
+  focusAt: cameraFocus.focusAt,
   releaseArrow: keyboardPan.up,
   stopCamera: keyboardPan.stop,
   fit,
@@ -319,21 +326,6 @@ defineExpose({
 .map-canvas-surface :deep(canvas) {
   display: block;
 }
-.map-controls-hint {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  max-width: min(420px, calc(100% - 270px));
-  list-style: none;
-  margin: 0;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--text-muted);
-  font-size: 11px;
-  line-height: 1.5;
-  pointer-events: none;
-}
 .map-canvas-corner {
   position: absolute;
   right: 16px;
@@ -357,18 +349,5 @@ defineExpose({
   background: var(--surface);
   color: var(--text-1);
   border-radius: 12px;
-}
-</style>
-
-<style scoped>
-.map-controls-hint li {
-  white-space: nowrap;
-}
-@media (max-width: 760px) {
-  .map-controls-hint {
-    bottom: 76px;
-    max-width: calc(100% - 32px);
-    font-size: 10px;
-  }
 }
 </style>

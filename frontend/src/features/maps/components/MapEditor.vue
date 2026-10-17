@@ -119,6 +119,7 @@
   </main>
 </template>
 <script setup>
+import { mapEntity } from "../lib/editorEntities";
 import "../styles/maps.css";
 import { computed, reactive, ref, watch } from "vue";
 import {
@@ -208,6 +209,15 @@ const reference = ref(null),
   sidebar = ref(null);
 e.handle = handleGesture;
 const placement = useEditorPlacement(e, canvas);
+e.focusLight = (id) => {
+  const entry = mapEntity(e.draft.document, e.catalogue, "light", id);
+  if (!entry) return;
+  placement.cancel();
+  e.clearAreaFocus();
+  e.selectLight(id);
+  canvas.value?.focusAt(entry.position);
+  canvas.value?.focus();
+};
 function beginPlacement(method, id, event) {
   emit("selection");
   placement[method](id, event);
@@ -241,8 +251,10 @@ function beginBinding(id) {
 function focusEntries(entries) {
   placement.cancel();
   e.clearAreaFocus();
-  if (entries[0]?.kind === "light") e.selectLight(entries[0].id);
-  else {
+  if (entries[0]?.kind === "light") {
+    e.focusLight(entries[0].id);
+    return;
+  } else {
     e.selectedLight = "";
     e.setTileSelection(
       entries.filter((x) => x.kind === "tile").map((x) => x.id),

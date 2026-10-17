@@ -141,14 +141,13 @@ export function createMapLighting(scene, gpu, assets) {
       key = nextKey;
       gpu.shadowMap.needsUpdate = true;
     }
-    let shadows = 0;
     next.forEach((source, i) => {
       const light = slots[i];
       light.color.set(source.color);
       light.position.set(source.x, source.worldHeight, source.y);
       light.distance = source.radius;
       light.decay = 2;
-      light.castShadow = !!source.shadows && shadows++ < 2;
+      light.castShadow = !!source.shadows;
       light.shadow.camera.far = source.radius;
       light.shadow.camera.updateProjectionMatrix();
       light.intensity = source.intensity * source.opacity;

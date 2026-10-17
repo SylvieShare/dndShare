@@ -80,7 +80,7 @@ it("copies a detached snapshot and reuses it after editing the original, multipl
   expect(e.tool.value).toBe("select");
   expect(l.copiedLight.value.color).toBe("#3366ff");
 });
-it("keeps a copied source usable when both shadow slots are already occupied", () => {
+it("keeps the copied shadow setting when several sources already cast shadows", () => {
   const { e, lighting: l } = setup(
     [0, 1].map((i) => ({
       id: `light-${i}`,
@@ -93,7 +93,7 @@ it("keeps a copied source usable when both shadow slots are already occupied", (
   l.copyLight();
   l.driver.begin(l.copiedLight.value);
   l.driver.drop({ x: 4, y: 4, elevation: 0 });
-  expect(e.draft.value.document.lights[2].shadows).toBe(false);
+  expect(e.draft.value.document.lights[2].shadows).toBe(true);
 });
 it("binds after clicking a model, consumes the click and cancels picking with Escape", () => {
   const { e, lighting: l } = setup([
@@ -135,7 +135,7 @@ it("binds after clicking a model, consumes the click and cancels picking with Es
   expect(l.handle({ phase: "cancel" })).toBe(true);
   expect(l.bindingLight.value).toBe("");
 });
-it("enables a source from its icon even when its old shadow option exceeds the current budget", () => {
+it("enables a source without changing its shadows even when several sources already cast shadows", () => {
   const { e, lighting: l } = setup([
     { id: "a", enabled: true, shadows: true },
     { id: "b", enabled: true, shadows: true },
@@ -144,31 +144,41 @@ it("enables a source from its icon even when its old shadow option exceeds the c
   l.toggleLight("c");
   expect(e.draft.value.document.lights[2]).toMatchObject({
     enabled: true,
-    shadows: false,
+    shadows: true,
   });
 });
-it("toggles shadows independently from power and respects the shared shadow budget and builtin templates", () => {
+it("edits builtin lighting with explicit overrides while locking the name and attachment", () => {
   const { e, lighting: l } = setup([
     { id: "a", enabled: true, shadows: true },
     { id: "b", enabled: true, shadows: true },
     { id: "c", enabled: true, shadows: false },
-    { id: "builtin", builtinKey: "flame", enabled: true, shadows: false },
+    {
+      id: "builtin",
+      builtinKey: "flame",
+      name: "Факел",
+      anchor: { kind: "tile", id: "base" },
+      enabled: true,
+      shadows: false,
+    },
   ]);
-  expect(l.canToggleLightShadows("c")).toBe(false);
   l.toggleLightShadows("c");
-  expect(e.draft.value.document.lights[2].shadows).toBe(false);
-  l.toggleLightShadows("a");
-  expect(e.draft.value.document.lights[0]).toMatchObject({
-    enabled: true,
-    shadows: false,
-  });
-  expect(l.canToggleLightShadows("c")).toBe(true);
-  l.toggleLightShadows("c");
-  expect(e.draft.value.document.lights[2]).toMatchObject({
-    enabled: true,
-    shadows: true,
-  });
-  expect(l.canToggleLightShadows("builtin")).toBe(false);
+  expect(e.draft.value.document.lights[2].shadows).toBe(true);
   l.toggleLightShadows("builtin");
-  expect(e.draft.value.document.lights[3].shadows).toBe(false);
+  l.updateLight("builtin", "color", "#112233");
+  l.updateLight("builtin", "showMarker", true);
+  l.updateLight("builtin", "height", 2.4);
+  l.updateLight("builtin", "name", "Changed");
+  l.bindLight("builtin", null);
+  expect(e.draft.value.document.lights[3]).toMatchObject({
+    name: "Факел",
+    anchor: { kind: "tile", id: "base" },
+    shadows: true,
+    overrides: {
+      color: "#112233",
+      showMarker: true,
+      height: 2.4,
+      shadows: true,
+    },
+  });
+  l.finishLightEdit();
 });

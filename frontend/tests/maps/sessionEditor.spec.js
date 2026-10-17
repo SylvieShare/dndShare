@@ -112,7 +112,7 @@ test("players and creatures have HP and a shared right focus, and placement is d
     .toBe(true);
   await expect(
     focus.getByRole("table", { name: "Координаты выбранного элемента" }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await focus
     .getByRole("switch", { name: "Скрыть от игроков", exact: true })
     .click();

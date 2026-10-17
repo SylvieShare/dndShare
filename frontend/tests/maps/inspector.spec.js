@@ -8,7 +8,7 @@ async function ready(page, extra = "") {
 }
 const selection = (page) =>
   page.getByRole("complementary", { name: "Выбранные элементы", exact: true });
-test("category cells fill each row and single selection shows preview, identity and coordinates on the canvas", async ({
+test("category cells fill each row and single selection shows preview and identity without a coordinate table on the canvas", async ({
   page,
 }) => {
   await ready(page);
@@ -30,7 +30,7 @@ test("category cells fill each row and single selection shows preview, identity 
   await expect(panel.locator(".map-selected-heading small")).toContainText(
     "LC-007",
   );
-  await expect(panel.locator("table td")).toHaveText(["4", "4", "0", "0°"]);
+  await expect(panel.locator("table")).toHaveCount(0);
   const box = await panel.boundingBox(),
     canvas = await page.locator(".map-canvas").boundingBox();
   expect(box.height).toBeLessThan(canvas.height);
@@ -165,7 +165,7 @@ test("autosave only opens an error popup on failure and records the last success
   );
 });
 
-test("single inspector has framed preview actions, tabular XYZ, and navigates to its area", async ({
+test("single inspector has framed preview actions without coordinate fields, and navigates to its area", async ({
   page,
 }) => {
   await ready(page, "&areaExample");
@@ -179,12 +179,7 @@ test("single inspector has framed preview actions, tabular XYZ, and navigates to
   await expect(panel.locator(".map-selected-heading small")).toHaveText(
     /.+ · (LC-007|MA-DungeonChest)$/,
   );
-  await expect(panel.locator("table th")).toHaveText([
-    "X",
-    "Y",
-    "Z",
-    "Поворот",
-  ]);
+  await expect(panel.locator("table")).toHaveCount(0);
   await expect(
     panel.getByRole("button", { name: "Удалить элемент", exact: true }),
   ).toBeVisible();

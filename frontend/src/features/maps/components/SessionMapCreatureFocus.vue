@@ -4,8 +4,6 @@
     :editor="actions"
     :copyable="false"
     :removable="!!token"
-    :rotatable="false"
-    :position-visible="!!token"
   />
   <MapInspectorSection title="Здоровье">
     <SessionHpBar v-if="candidate.hp" :hp="candidate.hp" size="medium" />

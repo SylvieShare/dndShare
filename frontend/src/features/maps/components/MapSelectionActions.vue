@@ -1,6 +1,21 @@
 <template>
-  <MapInspectorSection v-if="!builtin || area" title="Область">
-    <div v-if="area" class="map-selection-area">
+  <MapInspectorSection v-if="boundLight || !builtin || area" title="Область">
+    <FormSelect
+      v-if="unboundLight && area"
+      :value="entry.item.areaId || ''"
+      aria-label="Область источника света"
+      @change="editor.updateLight(entry.id, 'areaId', $event)"
+    >
+      <option value="">Без области</option>
+      <option
+        v-for="candidate in editor.draft.document.areas"
+        :key="candidate.id"
+        :value="candidate.id"
+      >
+        {{ candidate.name }}
+      </option>
+    </FormSelect>
+    <div v-else-if="area" class="map-selection-area">
       <span>{{ area.name }}</span>
       <ActionButton
         icon-only
@@ -11,8 +26,12 @@
         ><template #icon><ArrowUpRight :size="18" /></template
       ></ActionButton>
     </div>
+    <p v-else-if="boundLight" class="map-hint">Без области</p>
     <div class="map-selection-actions">
-      <ActionMenu v-if="!builtin && !area" title="Добавить в область">
+      <ActionMenu
+        v-if="!boundLight && !builtin && !area"
+        title="Добавить в область"
+      >
         <template #trigger
           ><ActionButton variant="secondary"
             ><FolderPlus :size="18" />Добавить в область</ActionButton
@@ -56,11 +75,18 @@ import {
   ActionMenu,
   ActionMenuItem,
   RemoveButton,
+  FormSelect,
 } from "@sylvieshare/share-ui";
 import { lightArea } from "../lib/mapLighting";
 import MapInspectorSection from "./MapInspectorSection.vue";
 import { ArrowUpRight, FolderPlus, Plus } from "@lucide/vue";
 const props = defineProps({ editor: Object, entry: Object });
+const boundLight = computed(
+  () => props.entry?.kind === "light" && !!props.entry.item.anchor,
+);
+const unboundLight = computed(
+  () => props.entry?.kind === "light" && !props.entry.item.anchor,
+);
 const emit = defineEmits(["area"]);
 const area = computed(() => {
   const { entry, editor } = props;

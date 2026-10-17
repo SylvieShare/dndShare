@@ -1,5 +1,5 @@
 <template>
-  <DetailSection label="Дневное освещение">
+  <MapInspectorSection title="Дневное освещение">
     <ToggleSwitch
       :model-value="sun.enabled"
       label="Дневной свет"
@@ -30,16 +30,16 @@
         @update:model-value="emit('update', 'elevation', $event)"
         @change="emit('finish')"
     /></FormField>
-  </DetailSection>
+  </MapInspectorSection>
 </template>
 <script setup>
-import {
-  AppSlider,
-  DetailSection,
-  FormField,
-  ToggleSwitch,
-} from "@sylvieshare/share-ui";
+import MapInspectorSection from "./MapInspectorSection.vue";
+import { AppSlider, FormField, ToggleSwitch } from "@sylvieshare/share-ui";
 import { DEFAULT_SUN } from "../lib/mapLighting";
-defineProps({ enabled: Boolean, disabled: Boolean, sun: { type: Object, default: () => ({ ...DEFAULT_SUN }) } });
-const emit = defineEmits(['update', 'finish']);
+defineProps({
+  enabled: Boolean,
+  disabled: Boolean,
+  sun: { type: Object, default: () => ({ ...DEFAULT_SUN }) },
+});
+const emit = defineEmits(["update", "finish"]);
 </script>

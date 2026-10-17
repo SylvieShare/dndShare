@@ -14,25 +14,38 @@ type LightAnchor struct {
 	Kind string `json:"kind"`
 	ID   string `json:"id"`
 }
+
+// LightOverrides stores only instance edits; unset values still follow the model template.
+type LightOverrides struct {
+	Color      *string  `json:"color,omitempty"`
+	Height     *float64 `json:"height,omitempty"`
+	Intensity  *float64 `json:"intensity,omitempty"`
+	Radius     *float64 `json:"radius,omitempty"`
+	Flicker    *bool    `json:"flicker,omitempty"`
+	ShowMarker *bool    `json:"showMarker,omitempty"`
+	Shadows    *bool    `json:"shadows,omitempty"`
+}
+
 type Light struct {
-	ID         string       `json:"id"`
-	BuiltinKey string       `json:"builtinKey,omitempty"`
-	Name       string       `json:"name"`
-	Kind       string       `json:"kind"`
-	Color      string       `json:"color"`
-	X          float64      `json:"x"`
-	Y          float64      `json:"y"`
-	Elevation  float64      `json:"elevation"`
-	Height     float64      `json:"height"`
-	Intensity  float64      `json:"intensity"`
-	Radius     float64      `json:"radius"`
-	Enabled    bool         `json:"enabled"`
-	ShowMarker bool         `json:"showMarker"`
-	Shadows    bool         `json:"shadows"`
-	Flicker    bool         `json:"flicker"`
-	Offset     [2]float64   `json:"offset"`
-	Anchor     *LightAnchor `json:"anchor,omitempty"`
-	AreaID     string       `json:"areaId,omitempty"`
+	Overrides  *LightOverrides `json:"overrides,omitempty"`
+	ID         string          `json:"id"`
+	BuiltinKey string          `json:"builtinKey,omitempty"`
+	Name       string          `json:"name"`
+	Kind       string          `json:"kind"`
+	Color      string          `json:"color"`
+	X          float64         `json:"x"`
+	Y          float64         `json:"y"`
+	Elevation  float64         `json:"elevation"`
+	Height     float64         `json:"height"`
+	Intensity  float64         `json:"intensity"`
+	Radius     float64         `json:"radius"`
+	Enabled    bool            `json:"enabled"`
+	ShowMarker bool            `json:"showMarker"`
+	Shadows    bool            `json:"shadows"`
+	Flicker    bool            `json:"flicker"`
+	Offset     [2]float64      `json:"offset"`
+	Anchor     *LightAnchor    `json:"anchor,omitempty"`
+	AreaID     string          `json:"areaId,omitempty"`
 }
 
 func DefaultSun() *SunLight { return &SunLight{Enabled: true, Angle: 225, Elevation: 45} }
@@ -54,8 +67,10 @@ func validateLighting(d *Document, tiles, objects map[string]bool) error {
 		areas[area.ID] = true
 	}
 	ids := map[string]bool{}
-	shadows := 0
 	for _, light := range d.Lights {
+		if light.BuiltinKey == "" && light.Overrides != nil {
+			return fmt.Errorf("Параметры экземпляра допустимы только для встроенного света")
+		}
 		heightLimit := 16.0
 		margin := 0.0
 		if light.BuiltinKey != "" {
@@ -75,13 +90,7 @@ func validateLighting(d *Document, tiles, objects map[string]bool) error {
 		if light.Anchor != nil && !((light.Anchor.Kind == "tile" && tiles[light.Anchor.ID]) || (light.Anchor.Kind == "object" && objects[light.Anchor.ID])) {
 			return fmt.Errorf("Опора источника света отсутствует")
 		}
-		if light.Enabled && light.Shadows {
-			shadows++
-		}
 		ids[light.ID] = true
-	}
-	if shadows > 2 {
-		return fmt.Errorf("Тени могут создавать не более двух локальных источников")
 	}
 	if d.Lights == nil {
 		d.Lights = []Light{}

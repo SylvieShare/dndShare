@@ -50,3 +50,36 @@ func TestModelBehaviourValidation(t *testing.T) {
 		t.Fatal("duplicate edge accepted")
 	}
 }
+
+func TestBuiltinOverridesKeepIdentityAndFollowUnchangedTemplateDefaults(t *testing.T) {
+	model := ModelMetadata{ID: "m", DefinitionID: "lamp", Width: 1, Height: 1, SurfaceHeight: .4}
+	models := map[string]ModelMetadata{"m": model}
+	behaviours := map[string]ModelBehaviour{"lamp": {DefaultLights: []ModelLight{{Key: "flame", Name: "Факел", Kind: "torch", Color: "#ffc36a", Position: [3]float64{.5, .5, 1}, Intensity: 8, Radius: 4, Enabled: true, Flicker: true}}}}
+	d := Document{Width: 10, Height: 10, Tiles: []Tile{{ID: "tile", ModelID: "m", X: 2, Y: 2}}}
+	if err := SyncBuiltinLights(&d, models, behaviours); err != nil {
+		t.Fatal(err)
+	}
+	id := d.Lights[0].ID
+	intensity, height, color, yes, no := 18.0, 2.4, "#334455", true, false
+	d.Lights[0].Overrides = &LightOverrides{Intensity: &intensity, Height: &height, Color: &color, Shadows: &yes, ShowMarker: &yes, Flicker: &no}
+	d.Lights[0].Name = "Edited name"
+	if err := SyncBuiltinLights(&d, models, behaviours); err != nil {
+		t.Fatal(err)
+	}
+	l := d.Lights[0]
+	if l.ID != id || l.Name != "Факел" || l.Intensity != 18 || l.Height != 2.4 || l.Color != color || !l.Shadows || !l.ShowMarker || l.Flicker {
+		t.Fatalf("lost overrides or fixed identity: %+v", l)
+	}
+	b := behaviours["lamp"]
+	b.DefaultLights[0].Radius = 7
+	behaviours["lamp"] = b
+	if err := SyncBuiltinLights(&d, models, behaviours); err != nil {
+		t.Fatal(err)
+	}
+	if d.Lights[0].Radius != 7 || d.Lights[0].Intensity != 18 {
+		t.Fatal("template defaults or explicit override lost")
+	}
+	if err := validateLighting(&d, map[string]bool{"tile": true}, map[string]bool{}); err != nil {
+		t.Fatal(err)
+	}
+}

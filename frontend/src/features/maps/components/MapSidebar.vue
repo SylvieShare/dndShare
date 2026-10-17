@@ -70,7 +70,12 @@ onMounted(() => {
   observer.observe(element.value);
 });
 onBeforeUnmount(() => observer?.disconnect());
-defineExpose({ openTab, collapse: () => { collapsed.value = true } });
+defineExpose({
+  openTab,
+  collapse: () => {
+    collapsed.value = true;
+  },
+});
 </script>
 <style scoped>
 .map-sidebar {
@@ -105,6 +110,7 @@ defineExpose({ openTab, collapse: () => { collapsed.value = true } });
   width: 48px;
 }
 .map-sidebar-heading {
+  border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -114,6 +120,7 @@ defineExpose({ openTab, collapse: () => { collapsed.value = true } });
   padding-left: 6px;
 }
 .map-sidebar-content {
+  --map-panel-inset: 12px;
   display: flex;
   flex-direction: column;
   gap: 14px;

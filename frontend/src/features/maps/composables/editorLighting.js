@@ -32,7 +32,7 @@ export function editorLighting(e) {
       (l) => l.id === selectedLight.value,
     );
     if (!light) return false;
-    const { anchor, areaId, builtinKey, ...snapshot } = clone(light);
+    const { anchor, areaId, builtinKey, overrides, ...snapshot } = clone(light);
     copiedLight.value = { ...snapshot, offset: [0, 0] };
     return true;
   }
@@ -44,10 +44,23 @@ export function editorLighting(e) {
   }
   function updateLight(id, field, value) {
     const light = e.draft.value.document.lights.find((l) => l.id === id);
-    if (light && (!light.builtinKey || field === "enabled"))
-      patch(`${id}:${field}`, () => {
-        light[field] = value;
-      });
+    if (!light || (field === "areaId" && light.anchor)) return;
+    const editable = [
+      "color",
+      "height",
+      "intensity",
+      "radius",
+      "flicker",
+      "showMarker",
+      "shadows",
+    ];
+    if (light.builtinKey && field !== "enabled" && !editable.includes(field))
+      return;
+    patch(`${id}:${field}`, () => {
+      light[field] = value;
+      if (light.builtinKey && field !== "enabled")
+        light.overrides = { ...light.overrides, [field]: value };
+    });
   }
   function selectLight(id) {
     binding.cancelLightBinding();
@@ -73,6 +86,7 @@ export function editorLighting(e) {
     if (!light || light.builtinKey) return;
     e.change(() => {
       light.anchor = anchor;
+      light.areaId = "";
       light.offset = [0, 0];
       if (anchor) {
         const pose = lightPose(
@@ -89,39 +103,15 @@ export function editorLighting(e) {
     });
   }
   const binding = editorLightBinding(e, selectedLight, bindLight);
-  function toggleLight(id) {
+  function toggleLightOption(id, field) {
     const light = e.draft.value.document.lights.find((l) => l.id === id);
     if (!light) return;
-    e.change(() => {
-      if (
-        !light.enabled &&
-        light.shadows &&
-        e.draft.value.document.lights.filter((l) => l.enabled && l.shadows)
-          .length >= 2
-      )
-        light.shadows = false;
-      light.enabled = !light.enabled;
-    });
-  }
-  function canToggleLightShadows(id) {
-    const light = e.draft.value.document.lights.find((l) => l.id === id);
-    return (
-      !!light &&
-      !light.builtinKey &&
-      (light.shadows ||
-        e.draft.value.document.lights.filter(
-          (l) => l.id !== id && l.enabled && l.shadows,
-        ).length < 2)
-    );
-  }
-  function toggleLightShadows(id) {
-    if (!canToggleLightShadows(id)) return;
-    const light = e.draft.value.document.lights.find((l) => l.id === id);
     finishLightEdit();
-    e.change(() => {
-      light.shadows = !light.shadows;
-    });
+    updateLight(id, field, !light[field]);
+    finishLightEdit();
   }
+  const toggleLight = (id) => toggleLightOption(id, "enabled");
+  const toggleLightShadows = (id) => toggleLightOption(id, "shadows");
   function handle({ phase, point, hit, event }) {
     if (binding.handleBinding({ phase, point, hit, event })) return true;
     if (phase === "hover") {
@@ -243,10 +233,6 @@ export function editorLighting(e) {
       if (previewLight.value && manualLightCount(e.draft.value.document) < 32) {
         const { placing, ...light } = previewLight.value;
         light.id = uid();
-        light.shadows =
-          !!light.shadows &&
-          e.draft.value.document.lights.filter((l) => l.enabled && l.shadows)
-            .length < 2;
         e.change((m) => m.document.lights.push(light));
         selectedLight.value = light.id;
       }
@@ -266,8 +252,8 @@ export function editorLighting(e) {
     updateLightingMode,
     ...binding,
     toggleLight,
-    canToggleLightShadows,
     toggleLightShadows,
+    toggleLightOption,
     selectedLight,
     hoveredLight,
     previewLight,

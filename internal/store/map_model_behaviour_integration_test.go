@@ -78,6 +78,24 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	if d.Lights[0].ID != lightID || d.Lights[0].Enabled {
 		t.Fatal("read hydration lost instance state")
 	}
+	intensity, height, marker, flicker, shadows := 17.0, 2.4, true, false, true
+	d.Lights[0].Overrides = &battlemap.LightOverrides{Intensity: &intensity, Height: &height, ShowMarker: &marker, Flicker: &flicker, Shadows: &shadows}
+	persisted, err := s.SaveBattleMap(ctx, 1, BattleMap{Name: "builtin overrides", Document: d})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.DeleteBattleMap(ctx, 1, persisted.ID)
+	readback, err := s.GetBattleMap(ctx, 1, persisted.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.HydrateMapLights(ctx, &readback.Document); err != nil {
+		t.Fatal(err)
+	}
+	light := readback.Document.Lights[0]
+	if light.ID != lightID || light.Enabled || light.Intensity != intensity || light.Height != height || !light.ShowMarker || light.Flicker || !light.Shadows || light.Overrides == nil || light.Overrides.Flicker == nil || *light.Overrides.Flicker {
+		t.Fatal("JSONB read hydration lost explicit light overrides", light)
+	}
 	copyDoc := battlemap.Document{Width: 10, Height: 10, Tiles: d.Tiles}
 	if err := s.HydrateMapLights(ctx, &copyDoc); err != nil || copyDoc.Lights[0].ID != lightID {
 		t.Fatal("read source IDs are not deterministic", err)

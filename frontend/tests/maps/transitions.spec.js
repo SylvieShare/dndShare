@@ -29,13 +29,13 @@ test("embedded and attached lights are separate, toggle independently, and attac
   ).toBeVisible();
   await expect(
     lights.getByRole("button", {
-      name: "Отвязать Прикреплённая лампа",
+      name: /^Отвязать .*Прикреплённая лампа$/,
       exact: true,
     }),
   ).toBeVisible();
   await lights
     .getByRole("button", {
-      name: "Выключить свет: Встроенный факел",
+      name: /^Выключить свет: .*Встроенный факел$/,
       exact: true,
     })
     .click();
@@ -60,7 +60,10 @@ test("embedded and attached lights are separate, toggle independently, and attac
     )
     .toBe(true);
   await lights
-    .getByRole("button", { name: "Отвязать Прикреплённая лампа", exact: true })
+    .getByRole("button", {
+      name: /^Отвязать .*Прикреплённая лампа$/,
+      exact: true,
+    })
     .click();
   await expect
     .poll(() =>
@@ -82,7 +85,7 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
   await ready(page);
   await panel(page)
     .getByRole("button", {
-      name: "Выключить свет: Встроенный факел",
+      name: /^Выключить свет: .*Встроенный факел$/,
       exact: true,
     })
     .click();

@@ -17,7 +17,10 @@ export function builtinLightPose(light, document, catalogue, context) {
   );
   if (!template) return null;
   const c = context || structureContext(document, catalogue);
-  const [x, y, height] = template.position;
+  const [x, y] = template.position;
+  const height =
+    light.overrides?.height ??
+    template.position[2] * (kind === "object" ? item.scale || 1 : 1);
   if (kind === "tile") {
     const base = c.placements.get(id)?.elevation || 0;
     const pose = surfacePosition(
@@ -42,8 +45,8 @@ export function builtinLightPose(light, document, catalogue, context) {
     x: pose.x + ox * Math.cos(a) - oy * Math.sin(a),
     y: pose.y + ox * Math.sin(a) + oy * Math.cos(a),
     elevation: pose.elevation,
-    height: height * scale,
-    worldHeight: pose.elevation + height * scale,
+    height,
+    worldHeight: pose.elevation + height,
   };
 }
 
@@ -69,7 +72,8 @@ export function syncBuiltinLights(document, catalogue) {
           x: old?.x || 0,
           y: old?.y || 0,
           elevation: old?.elevation || 0,
-          height: template.position[2],
+          height:
+            template.position[2] * (kind === "object" ? item.scale || 1 : 1),
           intensity: template.intensity,
           radius: template.radius,
           enabled: old?.enabled ?? template.enabled,
@@ -78,6 +82,8 @@ export function syncBuiltinLights(document, catalogue) {
           shadows: false,
           offset: [0, 0],
           anchor: { kind, id: item.id },
+          overrides: old?.overrides && { ...old.overrides },
+          ...(old?.overrides || {}),
         });
       }
     }

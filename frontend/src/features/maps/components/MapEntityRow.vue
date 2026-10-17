@@ -11,24 +11,19 @@
     @click="selectable && !hasSelectedText() && emit('select', entry)"
     @keydown.enter.self.prevent="selectable && emit('select', entry)"
     @keydown.space.self.prevent="selectable && emit('select', entry)"
+    @dblclick.stop="entry.kind === 'light' && emit('focus', entry)"
   >
-    <ActionButton
+    <IconToggleButton
       v-if="entry.kind === 'light' && toggleLight"
-      variant="secondary"
-      icon-only
-      :style="{ color: entry.color }"
-      :aria-label="`${entry.enabled ? 'Выключить' : 'Включить'} свет: ${entry.name}`"
-      :title="`${entry.enabled ? 'Выключить' : 'Включить'} свет: ${entry.name}`"
-      :aria-pressed="!!entry.enabled"
-      @click.stop="emit('toggle', entry.id)"
+      :model-value="!!entry.enabled"
+      :color="entry.color"
+      :label="`${entry.enabled ? 'Выключить' : 'Включить'} свет: ${entry.name}`"
+      @update:model-value="emit('toggle', entry.id)"
+      @click.stop
+      @dblclick.stop
       @keydown.stop
-    >
-      <template #icon
-        ><Lightbulb v-if="entry.enabled" :size="26" /><LightbulbOff
-          v-else
-          :size="26"
-      /></template>
-    </ActionButton>
+      ><template #icon><Lightbulb :size="24" /></template
+    ></IconToggleButton>
     <span
       v-else
       class="map-entity-thumbnail"
@@ -71,30 +66,22 @@
     <strong v-if="entry.count" class="map-entity-count"
       >×{{ entry.count }}</strong
     >
-    <ActionButton
+    <IconToggleButton
       v-if="entry.kind === 'light' && toggleShadows"
-      variant="quiet"
-      icon-only
-      :aria-label="`${entry.item.shadows ? 'Выключить' : 'Включить'} тени: ${entry.name}`"
-      :aria-pressed="!!entry.item.shadows"
-      :title="
-        shadowsDisabled
-          ? entry.item.builtinKey
-            ? 'Тени встроенного источника задаются в справочнике'
-            : 'Тени доступны у двух локальных источников одновременно'
-          : `${entry.item.shadows ? 'Выключить' : 'Включить'} тени`
-      "
-      :disabled="shadowsDisabled"
-      @click.stop="emit('toggle-shadows', entry.id)"
+      :model-value="!!entry.item.shadows"
+      :color="entry.color"
+      :label="`${entry.item.shadows ? 'Выключить' : 'Включить'} тени: ${entry.name}`"
+      @update:model-value="emit('toggle-shadows', entry.id)"
+      @click.stop
+      @dblclick.stop
       @keydown.stop
-    >
-      <template #icon><MapShadowIcon :off="!entry.item.shadows" /></template>
-    </ActionButton>
+      ><template #icon><MapShadowIcon /></template
+    ></IconToggleButton>
     <slot name="actions" />
   </BaseTile>
 </template>
 <script setup>
-import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import { IconToggleButton, BaseTile } from "@sylvieshare/share-ui";
 import MapShadowIcon from "./MapShadowIcon.vue";
 import { hasSelectedText } from "../lib/textSelection";
 import { Box, Group, Lightbulb, LightbulbOff, UserRound } from "@lucide/vue";
@@ -103,10 +90,9 @@ defineProps({
   selected: Boolean,
   toggleLight: Boolean,
   toggleShadows: Boolean,
-  shadowsDisabled: Boolean,
   selectable: { type: Boolean, default: true },
 });
-const emit = defineEmits(["select", "toggle", "toggle-shadows"]);
+const emit = defineEmits(["select", "toggle", "toggle-shadows", "focus"]);
 </script>
 <style scoped>
 .map-entity-row {

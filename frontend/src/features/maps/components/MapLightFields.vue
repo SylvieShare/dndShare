@@ -1,38 +1,24 @@
 <template>
   <div class="map-light-fields">
-    <p v-if="light.builtinKey" class="map-hint">Встроенный источник модели.</p>
-    <FormField v-else label="Название" vertical
-      ><FormTextInput
-        :value="light.name"
+    <FormField label="Название" vertical>
+      <span v-if="anchor && !light.builtinKey" class="map-light-name-prefix">{{
+        anchor.name
+      }}</span>
+      <FormTextInput
+        :value="
+          light.builtinKey && anchor
+            ? `${anchor.name} · ${light.name}`
+            : light.name
+        "
+        :disabled="!!light.builtinKey"
         aria-label="Название источника света"
         :maxlength="100"
         @change="
           editor.updateLight(light.id, 'name', $event.trim() || light.name)
         "
-    /></FormField>
-    <ToggleSwitch
-      :model-value="light.enabled"
-      :disabled="!light.enabled && light.shadows && shadowCount >= 2"
-      label="Источник включён"
-      @update:model-value="editor.updateLight(light.id, 'enabled', $event)"
-    />
-    <template v-if="!light.builtinKey">
-      <ToggleSwitch
-          :model-value="light.showMarker"
-          label="Показывать сферу источника"
-          @update:model-value="
-            editor.updateLight(light.id, 'showMarker', $event)
-          "
       />
-      <FormField label="Цвет" vertical
-        ><ColorPresetPicker
-          :model-value="light.color"
-          :colors="colours"
-          allow-custom
-          aria-label="Цвет источника света"
-          custom-label="Свой цвет света"
-          @update:model-value="editor.updateLight(light.id, 'color', $event)"
-      /></FormField>
+    </FormField>
+    <MapInspectorSection title="Параметры света">
       <FormField
         v-for="field in fields"
         :key="field.key"
@@ -42,43 +28,38 @@
         <AppSlider
           :model-value="light[field.key]"
           :min="field.min"
-          :max="field.max"
+          :max="
+            field.key === 'height'
+              ? Math.max(field.max, light.height)
+              : field.max
+          "
           :step="field.step"
           :label="field.label"
           @update:model-value="editor.updateLight(light.id, field.key, $event)"
           @change="editor.finishLightEdit"
         />
       </FormField>
-      <ToggleSwitch
-        :model-value="light.flicker"
-        label="Мерцание"
-        @update:model-value="editor.updateLight(light.id, 'flicker', $event)"
-      />
-      <ToggleSwitch
-        :model-value="light.shadows"
-        :disabled="!light.shadows && shadowCount >= 2"
-        label="Создавать тени"
-        @update:model-value="editor.updateLight(light.id, 'shadows', $event)"
-      />
-      <p class="map-hint">
-        Тени доступны у двух локальных источников одновременно.
-      </p>
-      <FormField label="Область" vertical
-        ><FormSelect
-          :value="light.areaId || ''"
-          aria-label="Область источника света"
-          @change="editor.updateLight(light.id, 'areaId', $event)"
-          ><option value="">По привязке</option>
-          <option
-            v-for="area in editor.draft.document.areas"
-            :key="area.id"
-            :value="area.id"
-          >
-            {{ area.name }}
-          </option></FormSelect
-        ></FormField
+      <MapLightActions :editor="editor" :light="light" />
+    </MapInspectorSection>
+    <MapInspectorSection title="Привязка">
+      <MapEntityRow
+        v-if="anchor"
+        :entry="anchor"
+        @select="emit('focus', $event)"
       >
+        <template v-if="!light.builtinKey" #actions>
+          <ActionButton
+            icon-only
+            variant="quiet"
+            aria-label="Отвязать источник"
+            title="Отвязать источник"
+            @click.stop="editor.bindLight(light.id, null)"
+            ><template #icon><X :size="18" /></template
+          ></ActionButton>
+        </template>
+      </MapEntityRow>
       <ActionButton
+        :disabled="!!light.builtinKey"
         variant="secondary"
         @click="
           editor.bindingLight === light.id
@@ -86,26 +67,25 @@
             : emit('bind', light.id)
         "
       >
+        <template #icon
+          ><LockKeyhole v-if="light.builtinKey" :size="16" /><Link
+            v-else
+            :size="16"
+        /></template>
         {{
-          editor.bindingLight === light.id ? "Отменить привязку" : "Привязать"
+          light.builtinKey
+            ? "Привязка к модели фиксирована"
+            : editor.bindingLight === light.id
+              ? "Отменить привязку"
+              : light.anchor
+                ? "Изменить привязку"
+                : "Привязать"
         }}
       </ActionButton>
       <p v-if="editor.bindingLight === light.id" class="map-hint" role="status">
         Нажмите на плитку или объект на карте.
       </p>
-    </template>
-    <template v-if="anchor">
-      <p class="map-hint">
-        Привязан к {{ light.anchor.kind === "tile" ? "тайлу" : "объекту" }}.
-      </p>
-      <MapEntityRow :entry="anchor" @select="emit('focus', $event)" />
-    </template>
-    <ActionButton
-      v-if="light.anchor && !light.builtinKey"
-      variant="quiet"
-      @click="editor.bindLight(light.id, null)"
-      >Отвязать источник</ActionButton
-    >
+    </MapInspectorSection>
   </div>
 </template>
 <script setup>
@@ -113,37 +93,21 @@ import { computed } from "vue";
 import {
   ActionButton,
   AppSlider,
-  ColorPresetPicker,
   FormField,
-  FormSelect,
   FormTextInput,
-  ToggleSwitch,
 } from "@sylvieshare/share-ui";
+import { Link, LockKeyhole, X } from "@lucide/vue";
 import { mapEntity } from "../lib/editorEntities";
 import MapEntityRow from "./MapEntityRow.vue";
+import MapInspectorSection from "./MapInspectorSection.vue";
+import MapLightActions from "./MapLightActions.vue";
 const emit = defineEmits(["bind", "focus"]);
 const props = defineProps({ editor: Object, light: Object });
-const colours = [
-  "#ffc36a",
-  "#ffd899",
-  "#ff8c63",
-  "#a98aff",
-  "#68cfff",
-  "#75e6ac",
-  "#ffffff",
-  "#ff6f9f",
-];
 const fields = [
   { key: "intensity", label: "Яркость", min: 0, max: 50, step: 0.5 },
   { key: "radius", label: "Радиус света", min: 0.25, max: 32, step: 0.25 },
   { key: "height", label: "Высота источника", min: 0, max: 16, step: 0.1 },
 ];
-const shadowCount = computed(
-  () =>
-    props.editor.draft.document.lights.filter(
-      (l) => l.enabled && l.shadows && l.id !== props.light.id,
-    ).length,
-);
 const anchor = computed(
   () =>
     props.light.anchor &&
@@ -160,6 +124,10 @@ const anchor = computed(
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 0;
+}
+.map-light-name-prefix {
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
 }
 </style>

@@ -4,7 +4,21 @@
     <small v-if="entry.code">{{ entry.groupCode }} · {{ entry.code }}</small>
   </header>
   <div class="map-selected-visual">
-    <BaseTile class="map-selected-frame" framed>
+    <BaseTile
+      class="map-selected-frame"
+      framed
+      :role="entry.kind === 'light' ? 'button' : undefined"
+      :tabindex="entry.kind === 'light' ? 0 : undefined"
+      :aria-label="
+        entry.kind === 'light'
+          ? `Приблизить источник: ${entry.name}`
+          : undefined
+      "
+      @dblclick.stop="entry.kind === 'light' && editor.focusLight(entry.id)"
+      @keydown.enter.self.prevent="
+        entry.kind === 'light' && editor.focusLight(entry.id)
+      "
+    >
       <img
         v-if="entry.previewUrl"
         class="map-selection-preview"
@@ -48,30 +62,7 @@
       </ActionButton>
     </div>
   </div>
-  <table
-    v-if="positionVisible"
-    class="map-selection-coordinates"
-    aria-label="Координаты выбранного элемента"
-  >
-    <thead>
-      <tr>
-        <th>X</th>
-        <th>Y</th>
-        <th>Z</th>
-        <th v-if="rotatable && entry.kind !== 'light'">Поворот</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{{ number(entry.position.x) }}</td>
-        <td>{{ number(entry.position.y) }}</td>
-        <td>{{ number(entry.position.elevation) }}</td>
-        <td v-if="rotatable && entry.kind !== 'light'">
-          {{ entry.item.rotation }}°
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <slot name="after-preview" />
 </template>
 <script setup>
 import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
@@ -81,14 +72,13 @@ defineProps({
   editor: Object,
   copyable: { type: Boolean, default: true },
   removable: { type: Boolean, default: true },
-  rotatable: { type: Boolean, default: true },
-  positionVisible: { type: Boolean, default: true },
 });
-const format = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
-const number = (value) => format.format(value || 0);
 </script>
 <style scoped>
 .map-selected-heading {
+  margin-inline: calc(-1 * var(--map-panel-inset, 14px));
+  padding: 10px var(--map-panel-inset, 14px) 0;
+  border-top: 1px solid var(--border);
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -125,21 +115,5 @@ small {
   display: flex;
   flex-direction: column;
   gap: 6px;
-}
-.map-selection-coordinates {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 12px;
-  text-align: center;
-}
-th {
-  color: var(--text-muted);
-  font-weight: 500;
-}
-th,
-td {
-  padding: 6px 2px;
-  border-bottom: 1px solid var(--border);
 }
 </style>

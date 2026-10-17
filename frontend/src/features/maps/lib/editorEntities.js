@@ -15,11 +15,22 @@ export function mapEntity(document, catalogue, kind, id, context) {
   if (!item) return null;
   if (kind === "light") {
     const pose = lightPose(item, document, catalogue, context);
+    const owner =
+      item.anchor &&
+      (item.anchor.kind === "tile" ? document.tiles : document.objects).find(
+        (o) => o.id === item.anchor.id,
+      );
+    const ownerModel = catalogue.find((m) => m.id === owner?.modelId);
+    const prefix =
+      ownerModel?.name ||
+      (owner && OBJECTS.find((o) => o.id === owner.kind)?.name) ||
+      (owner ? (item.anchor.kind === "tile" ? "Плитка" : "Объект") : "");
     return {
       kind,
       id,
       item,
-      name: item.name,
+      name: prefix ? `${prefix} · ${item.name}` : item.name,
+      namePrefix: prefix,
       color: item.color,
       enabled: item.enabled,
       areaName: document.areas.find((a) => a.id === lightArea(item, document))
