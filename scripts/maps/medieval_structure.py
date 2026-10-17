@@ -45,6 +45,13 @@ def domain(p, part):
     if 'projection' in part:
         s = part['projection']; t = (p-np.array(s['originMM']))@np.array(s['axis'])
         mask &= (t>=s['rangeMM'][0])&(t<=s['rangeMM'][1])
+    if 'radialShell' in part:
+        shell = part['radialShell']; delta = p-np.array(shell['originMM'])
+        axis = np.array(shell['axis']); t = delta@axis
+        radius = np.linalg.norm(delta-t[:, None]*axis, axis=1)
+        outer = shell['radiusAtOriginMM']+shell['radiusSlope']*t
+        mask &= ((t>=shell['rangeMM'][0])&(t<=shell['rangeMM'][1])&
+                 (radius>=outer-shell['thicknessMM'])&(radius<=outer+shell['allowanceMM']))
     if part.get('includeParts'):
         included = np.zeros(len(p), bool)
         for child in part['includeParts']: included |= domain(p, child)

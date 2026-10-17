@@ -1,9 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureMetal, structureFlame, structureGlass, structureSurfacePigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureDomain, structureMetal, structureFlame, structureGlass, structureSurfacePigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
+
+test('a tapered hoop follows its tilted axis without painting an outer wooden support', () => {
+  const shell = { originMM:[3,4,5], axis:[.6,.8,0], rangeMM:[-2,2], radiusAtOriginMM:8, radiusSlope:.2, thicknessMM:1, allowanceMM:.04 };
+  const part = {minMM:[-20,-20,-20],maxMM:[20,20,20],radialShell:shell};
+  const point = (s,r) => [3+.6*s,4+.8*s,5+r];
+  assert.equal(structureDomain(point(-1,7.8),part),true);
+  assert.equal(structureDomain(point(1,8.2),part),true);
+  assert.equal(structureDomain(point(-1,8.2),part),false,'Support outside the narrow end stays wood');
+  assert.equal(structureDomain(point(1,7.1),part),false,'Lid inside the hoop stays wood');
+  assert.equal(structureDomain(point(2.1,8.3),part),false,'Wood beyond the band stays wood');
+  const rivet = {minMM:[2,3,13.6],maxMM:[4,5,14.2]};
+  const union = {minMM:part.minMM,maxMM:part.maxMM,includeParts:[part,rivet]};
+  assert.equal(structureDomain([3,4,14],union),true,'A separately measured protruding rivet stays included');
+  assert.equal(structureDomain([3,4,14.3],union),false);
+});
 
 test('market canopy keeps measured frame surfaces wooden and its fasteners metallic', () => {
   for (const position of [[15,13,64], [15,0,54], [16.4,0,51], [16.4,-8,68]]) {

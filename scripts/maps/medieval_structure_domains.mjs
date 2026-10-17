@@ -17,6 +17,13 @@ export function structureDomain(p, part) {
     const s = part.projection, t = p.reduce((sum,v,i) => sum+(v-s.originMM[i])*s.axis[i], 0);
     if (t<s.rangeMM[0] || t>s.rangeMM[1]) return false;
   }
+  if (part.radialShell) {
+    const shell = part.radialShell, delta = p.map((v,i) => v-shell.originMM[i]);
+    const t = delta.reduce((sum,v,i) => sum+v*shell.axis[i],0);
+    const radius = Math.hypot(...delta.map((v,i) => v-t*shell.axis[i]));
+    const outer = shell.radiusAtOriginMM+shell.radiusSlope*t;
+    if (t<shell.rangeMM[0] || t>shell.rangeMM[1] || radius<outer-shell.thicknessMM || radius>outer+shell.allowanceMM) return false;
+  }
   if (part.includeParts?.length && !part.includeParts.some(child => structureDomain(p,child))) return false;
   if ((part.excludeParts || []).some(excluded => structureDomain(p,excluded))) return false;
   if (part.awayFromSource && !awayFromSource(p,part.awayFromSource)) return false;

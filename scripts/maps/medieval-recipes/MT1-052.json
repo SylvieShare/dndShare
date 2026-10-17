@@ -1,0 +1,1325 @@
+{
+  "name": "Bar Angle Barrel",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 96000,
+  "lodTriangles": 32000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic",
+    "corner",
+    "shelves",
+    "barrel",
+    "iron",
+    "tap",
+    "jug"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west vertical counter planks and posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south vertical counter planks and posts",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          17.6,
+          -4.1,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "west horizontal shelf Y grain",
+        "minMM": [
+          -11.6,
+          -3.5,
+          32.0
+        ],
+        "maxMM": [
+          -5.2,
+          14.1,
+          34.82
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south horizontal shelf X grain",
+        "minMM": [
+          -3.5,
+          -11.1,
+          32.0
+        ],
+        "maxMM": [
+          14.1,
+          -5.6,
+          34.68
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west long countertop Y boards including underside bevel",
+        "minMM": [
+          -17.3,
+          -17.6,
+          37.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y",
+        "projection": {
+          "originMM": [
+            -7.710609700944689,
+            0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41277990093810774,
+            0,
+            -0.9108308039265723
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "south full outer countertop X board",
+        "minMM": [
+          -17.6,
+          -17.6,
+          37.8
+        ],
+        "maxMM": [
+          17.6,
+          -10.65,
+          43.6
+        ],
+        "axis": "x",
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "south short inner countertop X board",
+        "minMM": [
+          -10.75,
+          -10.8,
+          37.8
+        ],
+        "maxMM": [
+          17.6,
+          -4.1,
+          43.6
+        ],
+        "axis": "x",
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "barrel support runners X grain",
+        "minMM": [
+          -13.6,
+          -17.6,
+          43.25
+        ],
+        "maxMM": [
+          10.1,
+          0.2,
+          46.5
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.32,
+          0.16,
+          0.06
+        ],
+        "lightRGB": [
+          0.56,
+          0.33,
+          0.14
+        ],
+        "roughness": 0.88,
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        }
+      },
+      {
+        "name": "longitudinal barrel staves and end blocks",
+        "minMM": [
+          -11.8,
+          -18,
+          43.5
+        ],
+        "maxMM": [
+          10,
+          0.7,
+          61.4
+        ],
+        "axis": "log-x",
+        "capCentersMM": [
+          [
+            0,
+            -8.70850907034343,
+            52.42921291623975
+          ]
+        ],
+        "grainRadiusMM": 8.4,
+        "endRangesMM": [
+          [
+            -11.8,
+            -8.7
+          ],
+          [
+            6.65,
+            10
+          ]
+        ],
+        "endDarkRGB": [
+          0.46,
+          0.27,
+          0.09
+        ],
+        "endLightRGB": [
+          0.73,
+          0.5,
+          0.2
+        ],
+        "endRoughness": 0.9,
+        "darkRGB": [
+          0.4,
+          0.235,
+          0.075
+        ],
+        "lightRGB": [
+          0.7,
+          0.48,
+          0.18
+        ],
+        "roughness": 0.84,
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            -8.70850907034343,
+            52.42921291623975
+          ],
+          "radiiMM": [
+            100,
+            9.3,
+            9.3
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        }
+      },
+      {
+        "name": "negative X lid vertical boards",
+        "minMM": [
+          -12,
+          -16.5,
+          44
+        ],
+        "maxMM": [
+          10,
+          -0.8,
+          61
+        ],
+        "axis": "z",
+        "darkRGB": [
+          0.5,
+          0.29,
+          0.1
+        ],
+        "lightRGB": [
+          0.75,
+          0.53,
+          0.23
+        ],
+        "roughness": 0.88,
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            -8.70850907034343,
+            52.42921291623975
+          ],
+          "radiiMM": [
+            100,
+            6.6,
+            6.6
+          ]
+        },
+        "projection": {
+          "originMM": [
+            0.0,
+            -8.70850907034343,
+            52.42921291623975
+          ],
+          "axis": [
+            0.9997557471460942,
+            -0.017149999093334107,
+            0.013939999263036585
+          ],
+          "rangeMM": [
+            -9.6,
+            -8.6
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        }
+      },
+      {
+        "name": "positive X lid vertical boards",
+        "minMM": [
+          -12,
+          -16.5,
+          44
+        ],
+        "maxMM": [
+          10,
+          -0.8,
+          61
+        ],
+        "axis": "z",
+        "darkRGB": [
+          0.5,
+          0.29,
+          0.1
+        ],
+        "lightRGB": [
+          0.75,
+          0.53,
+          0.23
+        ],
+        "roughness": 0.88,
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            -8.70850907034343,
+            52.42921291623975
+          ],
+          "radiiMM": [
+            100,
+            6.6,
+            6.6
+          ]
+        },
+        "projection": {
+          "originMM": [
+            0.0,
+            -8.70850907034343,
+            52.42921291623975
+          ],
+          "axis": [
+            0.9997557471460942,
+            -0.017149999093334107,
+            0.013939999263036585
+          ],
+          "rangeMM": [
+            6.5,
+            7.8
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.039887428283691,
+          15.165392875671387,
+          43.324012756347656
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ],
+        "maxZMM": 43.37116363525391
+      },
+      {
+        "centerMM": [
+          -6.9386515617370605,
+          15.164381980895996,
+          43.31219482421875
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ],
+        "maxZMM": 43.353509216308595
+      },
+      {
+        "centerMM": [
+          -13.907696723937988,
+          -8.354660034179688,
+          43.33102798461914
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ],
+        "maxZMM": 43.407685546875
+      },
+      {
+        "centerMM": [
+          14.91459846496582,
+          -7.173850059509277,
+          43.43193054199219
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ],
+        "maxZMM": 43.46879318237305
+      },
+      {
+        "centerMM": [
+          15.168289184570312,
+          -14.128074645996094,
+          43.31306457519531
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ],
+        "maxZMM": 43.35225036621094
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "west shelf ochre goblet",
+        "kind": "ceramic",
+        "minMM": [
+          -10.2,
+          -0.35,
+          34.85
+        ],
+        "maxMM": [
+          -6.55,
+          5.0,
+          40.3
+        ],
+        "rgb": [
+          0.58,
+          0.33,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            -7.710609700944689,
+            0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41277990093810774,
+            0,
+            -0.9108308039265723
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "west shelf cream plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -10.6,
+          5.2,
+          34.85
+        ],
+        "maxMM": [
+          -5.65,
+          13.15,
+          39.6
+        ],
+        "rgb": [
+          0.76,
+          0.66,
+          0.41
+        ],
+        "roughness": 0.65,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            -7.710609700944689,
+            0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41277990093810774,
+            0,
+            -0.9108308039265723
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "south shelf ochre cup",
+        "kind": "ceramic",
+        "minMM": [
+          1.0,
+          -9.6,
+          34.75
+        ],
+        "maxMM": [
+          5.8,
+          -6.3,
+          40.0
+        ],
+        "rgb": [
+          0.65,
+          0.4,
+          0.16
+        ],
+        "roughness": 0.68,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "south shelf tilted cream bowl",
+        "kind": "ceramic",
+        "minMM": [
+          5.85,
+          -10.15,
+          34.75
+        ],
+        "maxMM": [
+          12.25,
+          -6.3,
+          39.8
+        ],
+        "rgb": [
+          0.72,
+          0.61,
+          0.37
+        ],
+        "roughness": 0.65,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "ochre pouring jug and open neck",
+        "kind": "ceramic",
+        "minMM": [
+          -16.15,
+          1.5,
+          43.3
+        ],
+        "maxMM": [
+          -8.35,
+          9.7,
+          54.3
+        ],
+        "rgb": [
+          0.6,
+          0.33,
+          0.12
+        ],
+        "roughness": 0.64,
+        "variation": 0.04,
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        }
+      },
+      {
+        "name": "left iron hoop",
+        "kind": "paint",
+        "minMM": [
+          -12,
+          -18,
+          43.5
+        ],
+        "maxMM": [
+          10,
+          0.7,
+          61.5
+        ],
+        "rgb": [
+          0.24,
+          0.21,
+          0.17
+        ],
+        "roughness": 0.57,
+        "metallic": 0.87,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -12,
+              -18,
+              43.5
+            ],
+            "maxMM": [
+              10,
+              0.7,
+              61.5
+            ],
+            "radialShell": {
+              "axis": [
+                0.9997557471460942,
+                -0.017149999093334107,
+                0.013939999263036585
+              ],
+              "originMM": [
+                0.0,
+                -8.70850907034343,
+                52.42921291623975
+              ],
+              "radiusAtOriginMM": 9.526621908351272,
+              "radiusSlope": 0.17455958249871067,
+              "rangeMM": [
+                -8.15,
+                -5.5
+              ],
+              "thicknessMM": 1.1,
+              "allowanceMM": 0.045
+            }
+          },
+          {
+            "minMM": [
+              -7.404700183868409,
+              -6.926650428771973,
+              60.18919906616211
+            ],
+            "maxMM": [
+              -6.306399917602539,
+              -5.811750507354736,
+              60.89650192260742
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -6.855550050735474,
+                -6.3692004680633545,
+                60.542850494384766
+              ],
+              "radiiMM": [
+                0.642844181060791,
+                0.6541319465637208,
+                0.37696594238281256
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -7.25860013961792,
+              -1.9825504064559936,
+              56.603799438476564
+            ],
+            "maxMM": [
+              -6.192100143432617,
+              -1.177250361442566,
+              57.55869903564453
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -6.7253501415252686,
+                -1.5799003839492798,
+                57.08124923706055
+              ],
+              "radiiMM": [
+                0.6212199974060059,
+                0.4436040306091309,
+                0.5453317260742188
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -7.574699783325196,
+              -16.50354995727539,
+              55.621202087402345
+            ],
+            "maxMM": [
+              -6.527299976348877,
+              -15.749449348449707,
+              56.630499267578124
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -7.050999879837036,
+                -16.12649965286255,
+                56.125850677490234
+              ],
+              "radiiMM": [
+                0.6082318687438965,
+                0.4087884140014648,
+                0.5823220825195313
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -7.539599800109864,
+              -12.40985050201416,
+              59.767800903320314
+            ],
+            "maxMM": [
+              -6.459099864959716,
+              -11.380850410461425,
+              60.54030075073242
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -6.99934983253479,
+                -11.895350456237793,
+                60.15405082702637
+              ],
+              "radiiMM": [
+                0.6307399559020996,
+                0.5957200622558594,
+                0.42129989624023445
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -7.065500164031983,
+              -0.3862504154443741,
+              51.499200439453126
+            ],
+            "maxMM": [
+              -6.203899955749511,
+              0.07494959384202957,
+              52.345602416992186
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -6.634700059890747,
+                -0.15565041080117226,
+                51.922401428222656
+              ],
+              "radiiMM": [
+                0.48188814163208016,
+                0.2096160063147545,
+                0.4715533447265625
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -7.311099910736084,
+              -16.997049713134764,
+              50.05890045166016
+            ],
+            "maxMM": [
+              -6.6608000755310055,
+              -16.5593505859375,
+              50.773600006103514
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -6.985949993133545,
+                -16.778200149536133,
+                50.416250228881836
+              ],
+              "radiiMM": [
+                0.3382038879394531,
+                0.19363540649414063,
+                0.3819956970214844
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "right iron hoop",
+        "kind": "paint",
+        "minMM": [
+          -12,
+          -18,
+          43.5
+        ],
+        "maxMM": [
+          10,
+          0.7,
+          61.5
+        ],
+        "rgb": [
+          0.24,
+          0.21,
+          0.17
+        ],
+        "roughness": 0.57,
+        "metallic": 0.87,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -12,
+              -18,
+              43.5
+            ],
+            "maxMM": [
+              10,
+              0.7,
+              61.5
+            ],
+            "radialShell": {
+              "axis": [
+                0.9997557471460942,
+                -0.017149999093334107,
+                0.013939999263036585
+              ],
+              "originMM": [
+                0.0,
+                -8.70850907034343,
+                52.42921291623975
+              ],
+              "radiusAtOriginMM": 9.29347826137029,
+              "radiusSlope": -0.1511726800443949,
+              "rangeMM": [
+                4.04,
+                6.66
+              ],
+              "thicknessMM": 1.1,
+              "allowanceMM": 0.045
+            }
+          },
+          {
+            "minMM": [
+              4.827499961853027,
+              -12.80215015411377,
+              59.98330078125
+            ],
+            "maxMM": [
+              5.842699909210205,
+              -11.829249954223632,
+              60.68089904785156
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                5.335099935531616,
+                -12.315700054168701,
+                60.33209991455078
+              ],
+              "radiiMM": [
+                0.5863359642028809,
+                0.557572135925293,
+                0.3703668212890625
+              ]
+            }
+          },
+          {
+            "minMM": [
+              5.2721000671386715,
+              -0.47405039668083193,
+              51.830499267578126
+            ],
+            "maxMM": [
+              6.093399906158448,
+              -0.027550405263900762,
+              52.63150253295898
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                5.68274998664856,
+                -0.25080040097236633,
+                52.231000900268555
+              ],
+              "radiiMM": [
+                0.4544838905334473,
+                0.1996199941635132,
+                0.4406822204589844
+              ]
+            }
+          },
+          {
+            "minMM": [
+              4.847499942779541,
+              -16.829250717163085,
+              55.76130065917969
+            ],
+            "maxMM": [
+              5.825000190734864,
+              -16.16515121459961,
+              56.719801330566405
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                5.336250066757202,
+                -16.497200965881348,
+                56.24055099487305
+              ],
+              "radiiMM": [
+                0.5607001686096191,
+                0.3475876617431641,
+                0.5477804565429688
+              ]
+            }
+          },
+          {
+            "minMM": [
+              4.673400020599365,
+              -6.847450637817383,
+              60.40530166625977
+            ],
+            "maxMM": [
+              5.816500091552735,
+              -5.7386504173278805,
+              61.15760269165039
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                5.24495005607605,
+                -6.293050527572632,
+                60.78145217895508
+              ],
+              "radiiMM": [
+                0.673308048248291,
+                0.6499841499328614,
+                0.40756469726562505
+              ]
+            }
+          },
+          {
+            "minMM": [
+              5.05359992980957,
+              -2.140650415420532,
+              57.00550231933594
+            ],
+            "maxMM": [
+              5.967100048065186,
+              -1.450050449371338,
+              57.833300018310545
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                5.510349988937378,
+                -1.795350432395935,
+                57.41940116882324
+              ],
+              "radiiMM": [
+                0.5171800804138184,
+                0.36560797691345215,
+                0.45890243530273445
+              ]
+            }
+          },
+          {
+            "minMM": [
+              4.779399967193603,
+              -17.483650588989256,
+              49.81010208129883
+            ],
+            "maxMM": [
+              5.848100090026856,
+              -16.826551055908205,
+              50.86810150146484
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                5.3137500286102295,
+                -17.15510082244873,
+                50.339101791381836
+              ],
+              "radiiMM": [
+                0.6227160835266113,
+                0.3428276824951172,
+                0.6154396057128907
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "brass tap and valve",
+        "kind": "paint",
+        "minMM": [
+          -12.3,
+          -10.15,
+          47.6
+        ],
+        "maxMM": [
+          -8.8,
+          -5.15,
+          53.5
+        ],
+        "rgb": [
+          0.55,
+          0.37,
+          0.15
+        ],
+        "roughness": 0.55,
+        "metallic": 0.76,
+        "variation": 0.025,
+        "projection": {
+          "originMM": [
+            0.0,
+            -8.70850907034343,
+            52.42921291623975
+          ],
+          "axis": [
+            0.9997557471460942,
+            -0.017149999093334107,
+            0.013939999263036585
+          ],
+          "rangeMM": [
+            -12.6,
+            -9.12
+          ]
+        },
+        "ellipsoid": {
+          "centerMM": [
+            0,
+            -8.70850907034343,
+            52.42921291623975
+          ],
+          "radiiMM": [
+            100,
+            5.4,
+            5.4
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-050",
+          "sourceSHA256": "9c253044e872605fe61ee650acf08d2937817f9ebd75257882fe5f470becd07c",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-052",
+            "sourceSHA256": "712f5fc280ff858d42f7e99731a49b3745e82e99a3c2b6c99dbc9690cdf9867f"
+          }
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.2,
+      5.0
+    ],
+    "lodMiB": [
+      0.7,
+      1.8
+    ],
+    "shadowKiB": [
+      65,
+      175
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "A 35 mm corner bar with a large curved cask, two riveted iron hoops, separate boarded lids, brass tap, support runners, open ceramic jug and four original shelf pottery groups. Independent 96000/32000 triangle meshes with 1024/512 bakes preserve stave grooves, hoop edges, tap and jug opening. Compare compact maps and verify exposed original fasteners."
+  },
+  "reviewNotes": "PDF page8 and source front/back/top inspected. Source540000 triangles /27000084 bytes /height61.140301 mm. Free point[.75,.25] is clear, source floor25.519485 mm. The barrel/support reaches nativeY=-.17755, so the south blocker grows to0.50; west remains0.39. The cask axis is approximately[.99975575,-.01715,.01394]. Mid-body fit centreY=-8.708509,Z=52.429213; outer stave radius near8.4 mm. Longitudinal profiles and normal-aligned side faces place iron hoop boundaries at axis distances[-8.1125,-5.5375] and[4.0875,6.6625]; masks include .0275 mm edge allowance and radial limits7.3..9.2 mm. Body staves use longitudinal wrapped grain; inner lid boards use Z grain and end blocks keep cut-end variation. Source centre rays reach negative/positive lid faces nearX=-9.04/+6.97. The brass tap is isolated in front of the negative lid by projection and a bounded lower-face region, excluding the wooden outer rim. The jug bounds areX[-15.9782,-8.5355],Y[1.68825,9.53735],Z43.55..54.1340; its mouth stays open. All new parts compare with MT1-050 at .08 mm and project packed samples back to MT1-052. Original counter caps retain their measured upper bounds beneath supports. Check wood/iron boundaries around both hoops, rivets, support contacts, both lids, tap, empty jug mouth, original shelves, both tiers/candidates, metadata and shadow before publication. Coordinate correction: native +Y is editor north. The intended floor point is native[8.75,8.75], local[.75,.25]. The negative-Y counter/overhang occupies the southern local strip, not the northern strip. Native standPointsMM/blockersMM now drive conversion; the previous local[.75,.75] pointed onto the south counter. Final hoop mask follows independently fitted conical outer surfaces: left r=9.526622+.17455958*s, right r=9.293478-.15117268*s, thickness1.1 mm and outer allowance.045 mm. Protruding rivets above the support use separate measured ellipsoids. This excludes the wooden support outside the hoop radius. The positive band ends at s=6.66 mm, just inside its measured side plane, to exclude the stand contact in the simplified LOD.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.5,
+        17.5
+      ],
+      [
+        -3.8499999999999996,
+        17.5
+      ],
+      [
+        -3.8499999999999996,
+        -17.5
+      ],
+      [
+        -17.5,
+        -17.5
+      ]
+    ],
+    [
+      [
+        -17.5,
+        -0.0
+      ],
+      [
+        17.5,
+        -0.0
+      ],
+      [
+        17.5,
+        -17.5
+      ],
+      [
+        -17.5,
+        -17.5
+      ]
+    ]
+  ]
+}
