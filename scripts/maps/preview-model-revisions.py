@@ -9,6 +9,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from preview_alpha import transparent_preview
 
 
+def fit_camera(camera, bounds):
+    bpy.context.view_layer.update()
+    projected = [camera.matrix_world.inverted()@point for point in bounds]
+    camera.data.ortho_scale = max(max(p.x for p in projected)-min(p.x for p in projected),
+                                 max(p.y for p in projected)-min(p.y for p in projected), .1)*1.18
+
+
 def preview(report, size=256, front=False, review=False, inside=False, focus_max_z=None, tier='render', transparent=False, camera_shift_y=0, outside=False, west=False):
     directory = report.parent
     prefix = 'focus-' if focus_max_z is not None else ''
@@ -62,10 +69,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
     camera.location = centre+direction*distance
     camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
     camera.data.clip_end = distance*4
-    bpy.context.view_layer.update()
-    projected = [camera.matrix_world.inverted()@point for point in bounds]
-    camera.data.ortho_scale = max(max(p.x for p in projected)-min(p.x for p in projected),
-                                 max(p.y for p in projected)-min(p.y for p in projected), .1)*1.18
+    fit_camera(camera, bounds)
     scene.camera = camera
     scene.render.filepath = str(directory/(prefix+'preview.png'))
     bpy.ops.render.render(write_still=True)
@@ -73,6 +77,7 @@ def preview(report, size=256, front=False, review=False, inside=False, focus_max
         for name, position in [('reverse', (2, -2.85, 2.45)), ('top', (0, -.01, 5))]:
             camera.location = centre+Vector(position)
             camera.rotation_euler = (centre-camera.location).to_track_quat('-Z', 'Y').to_euler()
+            fit_camera(camera, bounds)
             scene.render.filepath = str(directory/(prefix+name+'.png'))
             bpy.ops.render.render(write_still=True)
     print('PREVIEW_REVISION', row['sourceCode'], flush=True)

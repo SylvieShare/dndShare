@@ -1,0 +1,348 @@
+{
+  "width": 1,
+  "height": 3,
+  "mountDepthMM": 0,
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 13.753899574279785,
+  "renderTriangles": 12000,
+  "lodTriangles": 5000,
+  "tileType": "object",
+  "hasDecor": false,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [],
+  "tags": [
+    "technical",
+    "border",
+    "ornate",
+    "stone",
+    "xl"
+  ],
+  "recipe": "majestic-lock-border-v1",
+  "groupCode": "MH-lock-border",
+  "baseSurface": "soil",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "renderColourSize": 1024,
+  "lodColourSize": 512,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.25,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "previewDirection": "outside",
+  "masonryReference": {
+    "code": "Lock Border",
+    "rotateZ": 0,
+    "translationMM": [
+      0,
+      0,
+      0
+    ],
+    "matchMM": 0.05,
+    "blendMM": 0.15
+  },
+  "masonryRGB": [
+    0.44,
+    0.335,
+    0.21
+  ],
+  "darkenJoints": true,
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": -0.1
+  },
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        -2.8,
+        -53,
+        -0.1
+      ],
+      "maxMM": [
+        8,
+        53,
+        15
+      ],
+      "featherMM": 0.15,
+      "rgb": [
+        0.44,
+        0.335,
+        0.21
+      ]
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      250000,
+      1200000
+    ],
+    "targetLODBytes": [
+      150000,
+      600000
+    ],
+    "targetShadowBytes": [
+      10000,
+      50000
+    ],
+    "targetPreviewBytes": [
+      10000,
+      40000
+    ],
+    "basis": "Own source49213a7144b63734cabee92a71da545ce17d3f336ea5bf09efce97344553c81d:164292tri8214684B. Own3neutralviews:105mm length,14.5505mm width,13.7539mm height; narrow1x3technicalornateborder with tabs, no actors/upperautomatic slots. Preserve full native body atdatum0. Authorpromo3 shows carved trim onterrainbase; technicalgrey back and warm stone carvedface chosen. Native dominant carved planes normal+X/+Z, centresX[-2.49,6.64],Z[5.85,13.28], sumXZ10.31..12.96; per-pixelwarmboxX>=-2.8 covers carving without bleeding onto backX-5.443/-7.275. AO in engravings, matte stone nonmetallic. Source self-reference leaves baseline grey; only measured shaderbox adds warm stone. Start12k/5k geometry beforeUV .55/.25; native+exactquant16UV .1mm all plannedres preflight. Colour1024/512,data1024/512, compare512R if quality permits. Reviewfull3views eachtier and3alternative with per-viewcamera fit (oldtopcroppedends). Verify native bars/tabs preserved, shading no blacktriangles, fullalpha512preview, separate shadow, GoManifest, ChromiumKTXLODsunpoint and freshMCP hashes/family before publication. FirstR1489260B containsnormal751906/ORM370600/colour167405B. Colour512-onlyR1379360B. Preserve normal1024 for braid relief; try colour512 plus ORM512 (roughnessconstant.94/metal0, AOlocal) to reduce redundant mapweight. Three matching whole views must be inspected against full1024maps before selection. Combinedcolour512+ORM512 producedR1127636B but actualview revealed warm seam streak on grey back; restorecolour1024 while keepingORM512 andnormal1024. Accept small target overrun for cleaner material boundary. NegativeX tab exists onlynearY-35; sourceY+35 isfemale/notmale so native ray expectations must follow owngeometry.",
+    "actualBytes": {
+      "lod": 510240,
+      "preview": 16654,
+      "render": 1237536,
+      "shadow": 18516,
+      "source": 8214684
+    },
+    "runtimeBytes": 1782946
+  },
+  "renderORMSize": 512,
+  "openingChecks": [
+    {
+      "name": "profile-0--35",
+      "originMM": [
+        0,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "profile-0-0",
+      "originMM": [
+        0,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "profile-0-35",
+      "originMM": [
+        0,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "profile--10--35",
+      "originMM": [
+        -10,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "profile--10-0",
+      "originMM": [
+        -10,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "profile--10-35",
+      "originMM": [
+        -10,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "profile-10--35",
+      "originMM": [
+        10,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "profile-10-0",
+      "originMM": [
+        10,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "profile-10-35",
+      "originMM": [
+        10,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "profile-0--54",
+      "originMM": [
+        0,
+        -54,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "profile-0-54",
+      "originMM": [
+        0,
+        54,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "male-tab",
+      "originMM": [
+        -6.5,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "outside-back",
+      "originMM": [
+        -6.5,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "female-notch",
+      "originMM": [
+        -4.5,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "back-body",
+      "originMM": [
+        -4.5,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    }
+  ]
+}
