@@ -1,71 +1,81 @@
 <template>
-  <header class="map-selected-heading">
-    <h3>{{ entry.name }}</h3>
-    <small v-if="entry.code">{{ entry.groupCode }} · {{ entry.code }}</small>
-  </header>
-  <div class="map-selected-visual">
-    <BaseTile
-      class="map-selected-frame"
-      framed
-      :role="entry.kind === 'light' ? 'button' : undefined"
-      :tabindex="entry.kind === 'light' ? 0 : undefined"
-      :aria-label="
-        entry.kind === 'light'
-          ? `Приблизить источник: ${entry.name}`
-          : undefined
-      "
-      @dblclick.stop="entry.kind === 'light' && editor.focusLight(entry.id)"
-      @keydown.enter.self.prevent="
-        entry.kind === 'light' && editor.focusLight(entry.id)
-      "
+  <MapFocusContent>
+    <template #heading
+      ><header class="map-selected-heading">
+        <h3>{{ entry.name }}</h3>
+        <small v-if="entry.code"
+          >{{ entry.groupCode }} · {{ entry.code }}</small
+        >
+      </header></template
     >
-      <img
-        v-if="entry.previewUrl"
-        class="map-selection-preview"
-        :src="entry.previewUrl"
-        alt=""
-        draggable="false"
-      />
-      <component
-        v-else
-        :is="
+    <div class="map-selected-visual">
+      <BaseTile
+        class="map-selected-frame"
+        framed
+        :role="entry.kind === 'light' ? 'button' : undefined"
+        :tabindex="entry.kind === 'light' ? 0 : undefined"
+        :aria-label="
           entry.kind === 'light'
-            ? Lightbulb
-            : ['player', 'creature', 'marker'].includes(entry.kind)
-              ? UserRound
-              : Box
+            ? `Приблизить источник: ${entry.name}`
+            : undefined
         "
-        :size="64"
-        :style="{ color: entry.color }"
-      />
-    </BaseTile>
-    <div class="map-selected-buttons">
-      <ActionButton
-        v-if="copyable"
-        icon-only
-        variant="quiet"
-        aria-label="Скопировать элемент"
-        title="Скопировать элемент"
-        @click="editor.copy()"
+        @dblclick.stop="entry.kind === 'light' && editor.focusLight(entry.id)"
+        @keydown.enter.self.prevent="
+          entry.kind === 'light' && editor.focusLight(entry.id)
+        "
       >
-        <template #icon><Copy :size="18" /></template>
-      </ActionButton>
-      <ActionButton
-        v-if="removable && !entry.item.builtinKey"
-        icon-only
-        variant="quiet"
-        aria-label="Удалить элемент"
-        title="Удалить элемент"
-        @click="editor.removeSelected()"
-      >
-        <template #icon><Trash2 :size="18" /></template>
-      </ActionButton>
+        <img
+          v-if="entry.previewUrl"
+          class="map-selection-preview"
+          :src="entry.previewUrl"
+          alt=""
+          draggable="false"
+        />
+        <component
+          v-else
+          :is="
+            entry.kind === 'light'
+              ? Lightbulb
+              : ['player', 'creature', 'marker'].includes(entry.kind)
+                ? UserRound
+                : Box
+          "
+          :size="64"
+          :style="{ color: entry.color }"
+        />
+      </BaseTile>
+      <div class="map-selected-buttons">
+        <ActionButton
+          v-if="copyable"
+          icon-only
+          variant="quiet"
+          aria-label="Скопировать элемент"
+          title="Скопировать элемент"
+          @click="editor.copy()"
+        >
+          <template #icon><Copy :size="18" /></template>
+        </ActionButton>
+        <ActionButton
+          v-if="removable && !entry.item.builtinKey"
+          icon-only
+          variant="quiet"
+          aria-label="Удалить элемент"
+          title="Удалить элемент"
+          @click="editor.removeSelected()"
+        >
+          <template #icon
+            ><Trash2 :size="18" :style="{ color: 'var(--danger)' }"
+          /></template>
+        </ActionButton>
+      </div>
     </div>
-  </div>
-  <slot name="after-preview" />
+    <slot name="after-preview" />
+    <slot />
+  </MapFocusContent>
 </template>
 <script setup>
 import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import MapFocusContent from "./MapFocusContent.vue";
 import { Box, Copy, Lightbulb, Trash2, UserRound } from "@lucide/vue";
 defineProps({
   entry: Object,
@@ -76,9 +86,6 @@ defineProps({
 </script>
 <style scoped>
 .map-selected-heading {
-  margin-inline: calc(-1 * var(--map-panel-inset, 14px));
-  padding: 10px var(--map-panel-inset, 14px) 0;
-  border-top: 1px solid var(--border);
   display: flex;
   align-items: baseline;
   gap: 8px;

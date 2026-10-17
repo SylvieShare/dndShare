@@ -170,7 +170,7 @@ test("builtin lights expose editable effects, retain model identity, inherit are
     .first();
   expect(
     await rightLine.evaluate((el) => getComputedStyle(el).borderTopWidth),
-  ).toBe("1px");
+  ).toBe("0px");
   expect(
     await rightLine.evaluate((el) => getComputedStyle(el).borderBottomWidth),
   ).toBe("0px");
@@ -255,15 +255,16 @@ test("unbinding an attached light uses a cross and slides the row out before und
     name: "Стена 1 · Прикреплённая лампа",
     exact: true,
   });
-  await row
+  const container = row.locator("..");
+  await container
     .getByRole("button", {
       name: "Отвязать Стена 1 · Прикреплённая лампа",
       exact: true,
     })
     .click();
-  await expect(row).toHaveClass(/map-attached-light-leave-active/);
+  await expect(container).toHaveClass(/map-attached-light-leave-active/);
   await expect
-    .poll(() => row.evaluate((el) => getComputedStyle(el).transform), {
+    .poll(() => container.evaluate((el) => getComputedStyle(el).transform), {
       intervals: [16, 32],
     })
     .not.toBe("none");

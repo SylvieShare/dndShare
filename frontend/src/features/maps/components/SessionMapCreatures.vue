@@ -5,40 +5,46 @@
       aria-label="Найти существо"
       placeholder="Найти игрока или существо…"
     />
-    <template v-for="group in groups" :key="group.kind">
+    <section
+      v-for="group in groups"
+      :key="group.kind"
+      class="map-creature-group"
+    >
       <MapPanelHeading :title="group.label" :count="group.items.length" />
-      <p v-if="!group.items.length" class="map-hint">{{ group.empty }}</p>
-      <MapEntityRow
-        v-for="item in group.items"
-        :key="creatureKey(item)"
-        :entry="item"
-        :selected="selected === creatureKey(item)"
-        @select="emit('focus', item)"
-      >
-        <template #details>
-          <SessionHpBar v-if="item.hp" :hp="item.hp" />
-          <small v-else class="map-hint">Хиты не указаны</small>
-        </template>
-        <template #actions>
-          <ActionButton
-            icon-only
-            variant="quiet"
-            :aria-label="
-              onMap(item)
-                ? `Найти на карте: ${item.name}`
-                : `Поставить на карту: ${item.name}`
-            "
-            @click.stop="
-              onMap(item) ? emit('focus', item) : emit('place', item)
-            "
-          >
-            <template #icon
-              ><Focus v-if="onMap(item)" :size="18" /><Plus v-else :size="18"
-            /></template>
-          </ActionButton>
-        </template>
-      </MapEntityRow>
-    </template>
+      <div class="map-creature-list">
+        <p v-if="!group.items.length" class="map-hint">{{ group.empty }}</p>
+        <MapEntityRow
+          v-for="item in group.items"
+          :key="creatureKey(item)"
+          :entry="item"
+          :selected="selected === creatureKey(item)"
+          @select="emit('focus', item)"
+        >
+          <template #details>
+            <SessionHpBar v-if="item.hp" :hp="item.hp" />
+            <small v-else class="map-hint">Хиты не указаны</small>
+          </template>
+          <template #actions>
+            <ActionButton
+              icon-only
+              variant="quiet"
+              :aria-label="
+                onMap(item)
+                  ? `Найти на карте: ${item.name}`
+                  : `Поставить на карту: ${item.name}`
+              "
+              @click.stop="
+                onMap(item) ? emit('focus', item) : emit('place', item)
+              "
+            >
+              <template #icon
+                ><Focus v-if="onMap(item)" :size="18" /><Plus v-else :size="18"
+              /></template>
+            </ActionButton>
+          </template>
+        </MapEntityRow>
+      </div>
+    </section>
     <ActionButton
       variant="quiet"
       @click="
@@ -106,6 +112,11 @@ const onMap = (c) => creatureToken(props.editor.draft, c);
 .map-creatures {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+}
+.map-creature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 </style>

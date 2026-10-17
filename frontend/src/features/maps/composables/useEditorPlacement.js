@@ -45,9 +45,9 @@ export function useEditorPlacement(editor, canvas) {
       editor.selectedLight = "";
       objects.place(id, event);
     },
-    placeLight(kind, event) {
+    placeLight(kind, event, options) {
       cancel();
-      lights.place(kind, event);
+      lights.place(kind, event, options);
     },
   };
 }

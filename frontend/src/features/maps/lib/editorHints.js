@@ -12,6 +12,7 @@ export function editorHints(tool, dragging) {
   if (tool === "paste")
     return [
       "ЛКМ — вставить участок",
+      "Cmd/Ctrl + клик — вставить и продолжить",
       "R — поворот группы",
       "ПКМ — отмена вставки",
       "Esc — отмена вставки",

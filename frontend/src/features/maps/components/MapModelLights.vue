@@ -16,29 +16,31 @@
           @after-leave="afterLeave"
           @leave-cancelled="afterLeave"
         >
-          <MapEntityRow
+          <div
             v-for="light in group.entries"
             :key="light.id"
             :data-light-id="light.id"
-            :entry="light"
-            toggle-light
-            toggle-shadows
-            @toggle-shadows="editor.toggleLightShadows"
-            @toggle="editor.toggleLight"
-            @select="editor.selectLight(light.id)"
-            @focus="editor.focusLight(light.id)"
+            class="model-light-row"
           >
-            <template v-if="!light.item.builtinKey" #actions>
-              <ActionButton
-                icon-only
-                variant="quiet"
-                :aria-label="`Отвязать ${light.name}`"
-                :title="`Отвязать ${light.name}`"
-                @click.stop="detach(light.id)"
-                ><template #icon><X :size="18" /></template
-              ></ActionButton>
-            </template>
-          </MapEntityRow>
+            <MapEntityRow
+              :entry="light"
+              toggle-light
+              toggle-shadows
+              @toggle-shadows="editor.toggleLightShadows"
+              @toggle="editor.toggleLight"
+              @select="editor.selectLight(light.id)"
+              @focus="editor.focusLight(light.id)"
+            />
+            <ActionButton
+              v-if="!light.item.builtinKey"
+              icon-only
+              variant="quiet"
+              :aria-label="`Отвязать ${light.name}`"
+              :title="`Отвязать ${light.name}`"
+              @click.stop="detach(light.id)"
+              ><template #icon><X :size="18" /></template
+            ></ActionButton>
+          </div>
         </TransitionGroup>
       </MapInspectorSection>
     </template>
@@ -93,11 +95,24 @@ function afterLeave(element) {
 }
 </script>
 <style scoped>
-.model-lights,
+.model-lights {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 .model-light-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+.model-light-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.model-light-row > :first-child {
+  flex: 1;
+  min-width: 0;
 }
 .model-light-list {
   overflow: hidden;

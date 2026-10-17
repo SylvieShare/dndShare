@@ -1,83 +1,85 @@
 <template>
   <MapSelectedEntity
+    :key="`${entry.kind}:${entry.id}`"
     :entry="entry"
     :editor="actions"
     :copyable="false"
     :removable="!!token"
-  />
-  <MapInspectorSection title="Здоровье">
-    <SessionHpBar v-if="candidate.hp" :hp="candidate.hp" size="medium" />
-    <span v-else class="map-hint">Хиты не указаны</span>
-    <span v-if="candidate.ac != null" class="map-hint"
-      >Класс доспеха: {{ candidate.ac }}</span
-    >
-    <ActionButton
-      v-if="candidate.combatant && encounter?.openHpCalc"
-      variant="quiet"
-      @click="encounter.openHpCalc(candidate.combatant)"
-      >Калькулятор HP</ActionButton
-    >
-    <ActionButton
-      v-if="candidate.participant"
-      variant="quiet"
-      @click="emit('participant', candidate.participant)"
-      >Открыть лист</ActionButton
-    >
-  </MapInspectorSection>
-  <MapInspectorSection title="Размещение">
-    <ActionButton v-if="!token" @click="tokens.place(candidate)"
-      ><template #icon><Plus :size="18" /></template>Поставить на
-      карту</ActionButton
-    >
-    <template v-else>
-      <FormTextInput
-        v-if="token.kind === 'marker'"
-        :value="token.name"
-        aria-label="Название метки"
-        :maxlength="100"
-        @change="
-          tokens.change((t) => {
-            t.name = $event;
-          })
-        "
-      />
-      <FormField label="Размер, клеток"
-        ><FormSelect
-          :value="token.size"
+  >
+    <MapInspectorSection title="Здоровье">
+      <SessionHpBar v-if="candidate.hp" :hp="candidate.hp" size="medium" />
+      <span v-else class="map-hint">Хиты не указаны</span>
+      <span v-if="candidate.ac != null" class="map-hint"
+        >Класс доспеха: {{ candidate.ac }}</span
+      >
+      <ActionButton
+        v-if="candidate.combatant && encounter?.openHpCalc"
+        variant="quiet"
+        @click="encounter.openHpCalc(candidate.combatant)"
+        >Калькулятор HP</ActionButton
+      >
+      <ActionButton
+        v-if="candidate.participant"
+        variant="quiet"
+        @click="emit('participant', candidate.participant)"
+        >Открыть лист</ActionButton
+      >
+    </MapInspectorSection>
+    <MapInspectorSection title="Размещение">
+      <ActionButton v-if="!token" @click="tokens.place(candidate)"
+        ><template #icon><Plus :size="18" /></template>Поставить на
+        карту</ActionButton
+      >
+      <template v-else>
+        <FormTextInput
+          v-if="token.kind === 'marker'"
+          :value="token.name"
+          aria-label="Название метки"
+          :maxlength="100"
           @change="
             tokens.change((t) => {
-              t.size = Number($event);
+              t.name = $event;
             })
           "
-          ><option
-            v-for="size in [0.5, 1, 2, 3, 4, 6, 8]"
-            :key="size"
-            :value="size"
-          >
-            {{ size }} × {{ size }}
-          </option></FormSelect
-        ></FormField
-      >
-      <ToggleSwitch
-        :model-value="token.hidden"
-        label="Скрыть от игроков"
-        @update:model-value="
-          tokens.change((t) => {
-            t.hidden = $event;
-          })
-        "
-      />
-      <ToggleSwitch
-        :model-value="token.physical"
-        label="Физическая миниатюра"
-        @update:model-value="
-          tokens.change((t) => {
-            t.physical = $event;
-          })
-        "
-      />
-    </template>
-  </MapInspectorSection>
+        />
+        <FormField label="Размер, клеток"
+          ><FormSelect
+            :value="token.size"
+            @change="
+              tokens.change((t) => {
+                t.size = Number($event);
+              })
+            "
+            ><option
+              v-for="size in [0.5, 1, 2, 3, 4, 6, 8]"
+              :key="size"
+              :value="size"
+            >
+              {{ size }} × {{ size }}
+            </option></FormSelect
+          ></FormField
+        >
+        <ToggleSwitch
+          :model-value="token.hidden"
+          label="Скрыть от игроков"
+          @update:model-value="
+            tokens.change((t) => {
+              t.hidden = $event;
+            })
+          "
+        />
+        <ToggleSwitch
+          :model-value="token.physical"
+          label="Физическая миниатюра"
+          @update:model-value="
+            tokens.change((t) => {
+              t.physical = $event;
+            })
+          "
+        />
+      </template>
+    </MapInspectorSection>
+  </MapSelectedEntity>
 </template>
 <script setup>
 import { computed } from "vue";

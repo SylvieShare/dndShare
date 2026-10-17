@@ -54,12 +54,12 @@
       />
     </span>
     <span class="map-entity-label">
-      <strong
-        >{{ entry.name
-        }}<template v-if="entry.areaName">
-          ({{ entry.areaName }})</template
-        ></strong
-      >
+      <strong>
+        <span v-if="entry.namePrefix" class="map-entity-prefix"
+          >{{ entry.namePrefix }} · </span
+        >{{ entry.namePrefix ? entry.item.name : entry.name
+        }}<template v-if="entry.areaName"> ({{ entry.areaName }})</template>
+      </strong>
       <small v-if="entry.code">{{ entry.code }}</small>
       <slot name="details" />
     </span>
@@ -129,6 +129,9 @@ const emit = defineEmits(["select", "toggle", "toggle-shadows", "focus"]);
 }
 .map-entity-label small {
   font: 11px var(--font-mono);
+  color: var(--text-muted);
+}
+.map-entity-prefix {
   color: var(--text-muted);
 }
 .map-entity-count {

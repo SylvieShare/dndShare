@@ -2,9 +2,7 @@
   <div class="map-panel-heading">
     <SectionLabel
       :title="title"
-      border
-      border-position="before"
-      inset="var(--map-panel-inset, 14px)"
+      :space-after="12"
       role="heading"
       :aria-level="level"
     >
@@ -20,8 +18,3 @@ defineProps({
   level: { type: Number, default: 4 },
 });
 </script>
-<style scoped>
-.map-panel-heading {
-  margin-inline: calc(-1 * var(--map-panel-inset, 14px));
-}
-</style>

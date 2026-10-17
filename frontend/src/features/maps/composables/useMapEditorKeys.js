@@ -37,6 +37,7 @@ export function useMapEditorKeys(editor, canvas, placement, blocked) {
         placement.placeLight(
           editor.copiedLight,
           placement.cursor.pointerEvent(),
+          { repeatOnCommand: true },
         );
       else if (editor.beginPaste())
         nextTick(() => {

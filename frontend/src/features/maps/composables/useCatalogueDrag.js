@@ -6,7 +6,9 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     pointerEvent = null,
     fillKey = false,
     keyboardPoint = null,
-    freePlacement = false;
+    freePlacement = false,
+    repeatOnCommand = false,
+    source;
   function keyboardAnchor(point) {
     if (!point) return null;
     if (driver.kind === "object" || driver.kind === "light") return point;
@@ -27,6 +29,8 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     fillKey = false;
     keyboardPoint = null;
     freePlacement = false;
+    repeatOnCommand = false;
+    source = null;
     window.removeEventListener("pointercancel", cancel);
     window.removeEventListener("keydown", key);
     window.removeEventListener("keyup", key);
@@ -114,10 +118,7 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     if (!freePlacement) return;
     if (event.key === "Enter") {
       event.preventDefault();
-      driver.drop(keyboardPoint || canvas.value?.pointAt(pointerEvent), {
-        fill: fillKey,
-      });
-      cleanup();
+      commit(keyboardPoint || canvas.value?.pointAt(pointerEvent), event);
     }
   }
   onBeforeUnmount(cancel);
@@ -152,11 +153,23 @@ export function useCatalogueDrag(editor, canvas, driver = editor.tileDrag) {
     if (!point) return;
     event.preventDefault();
     event.stopPropagation();
-    driver.drop(point, { fill: event.metaKey || event.ctrlKey });
-    cleanup();
+    pointerEvent = event;
+    commit(point, event);
   }
-  async function place(id, event = { type: "keydown" }) {
+  function commit(point, event) {
+    const repeat = repeatOnCommand && (event.metaKey || event.ctrlKey);
+    driver.drop(point, {
+      fill: !repeatOnCommand && !!(event.metaKey || event.ctrlKey),
+    });
+    if (repeat) {
+      driver.begin(source);
+      driver.move(point);
+    } else cleanup();
+  }
+  async function place(id, event = { type: "keydown" }, options = {}) {
     cancel();
+    source = id;
+    repeatOnCommand = !!options.repeatOnCommand;
     fillKey = event.metaKey || event.ctrlKey;
     driver.begin(id);
     freePlacement = true;

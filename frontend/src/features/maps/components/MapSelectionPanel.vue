@@ -13,8 +13,62 @@
         :area="area"
         @focus="emit('focus', $event)"
       />
-      <template v-else>
-        <div v-if="entries.length > 1" class="map-selection-summary">
+      <MapSelectedEntity
+        v-else-if="entries.length === 1"
+        :key="`${single.kind}:${single.id}`"
+        :entry="single"
+        :editor="editor"
+      >
+        <template v-if="single.kind === 'light'" #after-preview
+          ><MapLightActions :editor="editor" :light="single.item" primary
+        /></template>
+        <MapLightFields
+          v-if="single.kind === 'light'"
+          :editor="editor"
+          :light="single.item"
+          @bind="emit('bind', $event)"
+          @focus="emit('focus', [$event])"
+        />
+        <MapSelectionActions
+          v-if="single.kind === 'light'"
+          :editor="editor"
+          :entry="single"
+          @area="emit('area', $event)"
+        />
+        <template v-else>
+          <MapSelectionActions
+            :editor="editor"
+            :entry="single"
+            @area="emit('area', $event)"
+          />
+          <ToggleSwitch
+            v-if="
+              single.kind === 'object' &&
+              !single.item.modelId &&
+              interactive(single.item.kind)
+            "
+            :model-value="
+              editor.draft.state?.objects[single.id] ?? single.item.open
+            "
+            label="Открыто"
+            @update:model-value="
+              editor.change((m) => {
+                if (m.state) m.state.objects[single.id] = $event;
+                else
+                  m.document.objects.find((o) => o.id === single.id).open =
+                    $event;
+              })
+            "
+          />
+          <MapModelTransitions :editor="editor" :entry="single" />
+          <MapModelLights :editor="editor" :entry="single" />
+        </template>
+      </MapSelectedEntity>
+      <MapFocusContent v-else>
+        <template #heading
+          ><h3>Выбрано: {{ entries.length }}</h3></template
+        >
+        <div class="map-selection-summary">
           <span
             v-if="editor.selectedTiles.length"
             role="status"
@@ -28,71 +82,16 @@
             >Объектов: {{ editor.selectedObjects.length }}</span
           >
         </div>
-        <template v-if="entries.length === 1">
-          <MapSelectedEntity :entry="single" :editor="editor">
-            <template v-if="single.kind === 'light'" #after-preview
-              ><MapLightActions :editor="editor" :light="single.item" primary
-            /></template>
-          </MapSelectedEntity>
-          <MapLightFields
-            v-if="single.kind === 'light'"
-            :editor="editor"
-            :light="single.item"
-            @bind="emit('bind', $event)"
-            @focus="emit('focus', [$event])"
+        <div class="map-selection-list">
+          <MapEntityRow
+            v-for="group in groups"
+            :key="group.groupKey"
+            :entry="group"
+            @select="emit('focus', group.members)"
           />
-          <MapSelectionActions
-            v-if="single.kind === 'light'"
-            :editor="editor"
-            :entry="single"
-            @area="emit('area', $event)"
-          />
-          <template v-else>
-            <MapSelectionActions
-              :editor="editor"
-              :entry="single"
-              @area="emit('area', $event)"
-            />
-            <ToggleSwitch
-              v-if="
-                single.kind === 'object' &&
-                !single.item.modelId &&
-                interactive(single.item.kind)
-              "
-              :model-value="
-                editor.draft.state?.objects[single.id] ?? single.item.open
-              "
-              label="Открыто"
-              @update:model-value="
-                editor.change((m) => {
-                  if (m.state) m.state.objects[single.id] = $event;
-                  else
-                    m.document.objects.find((o) => o.id === single.id).open =
-                      $event;
-                })
-              "
-            />
-            <MapModelTransitions :editor="editor" :entry="single" />
-            <MapModelLights :editor="editor" :entry="single" />
-          </template>
-        </template>
-        <template v-else>
-          <h3 class="map-multi-heading">Выбрано: {{ entries.length }}</h3>
-          <div class="map-selection-list">
-            <MapEntityRow
-              v-for="group in groups"
-              :key="group.groupKey"
-              :entry="group"
-              @select="emit('focus', group.members)"
-            />
-          </div>
-        </template>
-        <MapSelectionActions
-          v-if="entries.length > 1"
-          :editor="editor"
-          @area="emit('area', $event)"
-        />
-      </template>
+        </div>
+        <MapSelectionActions :editor="editor" @area="emit('area', $event)" />
+      </MapFocusContent>
     </BaseTile>
   </aside>
 </template>
@@ -101,6 +100,7 @@ import { interactive } from "../lib/mapModel";
 import { computed } from "vue";
 import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { groupMapEntities, selectedMapEntities } from "../lib/editorEntities";
+import MapFocusContent from "./MapFocusContent.vue";
 import MapAreaFocus from "./MapAreaFocus.vue";
 import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapEntityRow from "./MapEntityRow.vue";
@@ -129,24 +129,22 @@ const single = computed(() => entries.value[0]);
   width: 300px;
   max-width: calc(100% - 24px);
   max-height: calc(100% - 100px);
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   user-select: text;
 }
 .map-selection-content {
   --map-panel-inset: 14px;
-  padding: var(--map-panel-inset);
+  padding: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  overflow: hidden;
 }
-.map-selection-panel h3 {
+h3 {
   margin: 0;
   font-size: 17px;
-}
-.map-multi-heading {
-  margin-inline: calc(-1 * var(--map-panel-inset, 14px));
-  padding: 10px var(--map-panel-inset, 14px) 0;
-  border-top: 1px solid var(--border);
 }
 .map-selection-summary {
   display: flex;
@@ -162,7 +160,6 @@ const single = computed(() => entries.value[0]);
 @media (max-width: 760px) {
   .map-selection-panel {
     width: 230px;
-    max-height: calc(100% - 100px);
   }
 }
 </style>

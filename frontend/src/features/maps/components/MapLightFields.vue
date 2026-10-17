@@ -123,7 +123,7 @@ const anchor = computed(
 .map-light-fields {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 }
 .map-light-name-prefix {
   font-size: 12px;

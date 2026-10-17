@@ -204,3 +204,26 @@ it("does not copy hidden area models when the selection rectangle crosses them",
   expect(e.previewTile.value.group).toHaveLength(1);
   expect(e.previewObject.value).toBeNull();
 });
+
+it("keeps the rotated paste active while stamping with a command modifier", () => {
+  const { e, clipboard } = setup();
+  clipboard.copy();
+  clipboard.begin({ x: 3.5, y: 3.5 });
+  clipboard.rotate();
+  clipboard.paste({ x: 3.5, y: 3.5 }, { repeat: true });
+  expect(e.tool.value).toBe("paste");
+  expect(e.previewTile.value.valid).toBe(false);
+  clipboard.preview({ x: 5.5, y: 4.5 });
+  expect(e.previewTile.value.valid).toBe(true);
+  clipboard.paste({ x: 5.5, y: 4.5 });
+  expect(e.tool.value).toBe("select");
+  expect(
+    e.draft.value.document.tiles.slice(1).map((t) => [t.x, t.y, t.rotation]),
+  ).toEqual([
+    [3, 3, 90],
+    [5, 4, 90],
+  ]);
+  expect(new Set(e.draft.value.document.tiles.map((t) => t.id)).size).toBe(3);
+  expect(clipboard.begin({ x: 6.5, y: 6.5 })).toBe(true);
+  clipboard.cancel();
+});

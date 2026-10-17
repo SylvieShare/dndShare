@@ -185,7 +185,7 @@ export function editorClipboard(e) {
     preview(point);
     return true;
   }
-  function paste(point) {
+  function paste(point, { repeat = false } = {}) {
     preview(point);
     if (!targets?.valid) {
       e.error.value = "Участок нельзя вставить в эту позицию";
@@ -211,7 +211,8 @@ export function editorClipboard(e) {
     });
     e.setTileSelection(tiles.map((t) => t.id));
     e.setObjectSelection(objects.map((o) => o.id));
-    cancel();
+    if (repeat) preview(point);
+    else cancel();
   }
   function cancel() {
     if (e.tool.value !== "paste") return;

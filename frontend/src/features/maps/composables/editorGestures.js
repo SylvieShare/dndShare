@@ -68,7 +68,10 @@ export function editorGestures(e) {
       return;
     }
     if (tool === "paste") {
-      if (phase === "start") clipboard.paste(point);
+      if (phase === "start")
+        clipboard.paste(point, {
+          repeat: !!(event?.metaKey || event?.ctrlKey),
+        });
       return;
     }
     try {
