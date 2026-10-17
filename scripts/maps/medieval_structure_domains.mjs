@@ -50,7 +50,7 @@ export function structureMetal(p, settings) {
     metallic = part.metallic; roughness = part.roughness;
   }
   for (const h of settings.hardware || []) {
-    if (p[2]<h.minZMM) continue;
+    if (p[2]<h.minZMM || (h.maxZMM!==undefined && p[2]>h.maxZMM)) continue;
     const d = p.reduce((sum,v,c) => sum+((v-h.centerMM[c])/h.radiiMM[c])**2, 0);
     const w = Math.max(0, Math.min(1, (1-d)/.2));
     metallic = Math.max(metallic, w*.9); roughness = roughness*(1-w)+.55*w;

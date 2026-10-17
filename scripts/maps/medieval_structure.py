@@ -193,6 +193,8 @@ def paint(obj, recipe):
     for h in settings.get('hardware', []):
         d = ((p-np.array(h['centerMM']))/np.array(h['radiiMM']))**2
         weight = np.clip((1-d.sum(1))/.2, 0, 1)*(z>=h['minZMM'])
+        if 'maxZMM' in h:
+            weight *= z<=h['maxZMM']
         rgb = rgb*(1-weight[:, None])+np.array(h['rgb'])*weight[:, None]
         surface[:, 1] = surface[:, 1]*(1-weight)+.55*weight
         surface[:, 2] = np.maximum(surface[:, 2], weight*.9)

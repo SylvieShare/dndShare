@@ -42,6 +42,11 @@ if (!process.argv.includes('--publish-manifest')) {
     if (JSON.stringify(report.recipe)!==JSON.stringify(recipe)) throw new Error('Stale baked recipe; prepare both tiers again');
     const doc = await io.read(path.join(directory, 'model.glb'));
     const size = tier === 'render' ? (candidate ? 768 : 1024) : (candidate ? 384 : 512);
+    const requestedDataSize = recipe[tier+'DataSize'];
+    const dataSize = requestedDataSize===undefined ? size/2 : requestedDataSize*(candidate ? .75 : 1);
+    if (requestedDataSize!==undefined && (!Number.isInteger(requestedDataSize) || requestedDataSize<4 || requestedDataSize>report.recipe[tier+'BakeSize'] || !Number.isInteger(dataSize))) {
+      throw new Error('Data map size must be a positive integer within the source bake, including the compact scale');
+    }
     const bakedCoverage = rasterizeSurface(doc, report.recipe[tier+'BakeSize'], report.recipe[tier+'BakeSize'],
       uvSurfaceTracker(report.recipe[tier+'BakeSize'], report.recipe[tier+'BakeSize']));
     const packedCoverage = rasterizeSurface(doc, size, size, uvSurfaceTracker(size, size));
@@ -52,7 +57,7 @@ if (!process.argv.includes('--publish-manifest')) {
     const orm = new Set(materials.map(m => m.getMetallicRoughnessTexture()));
     const emissive = new Set(materials.map(m => m.getEmissiveTexture()));
     for (const texture of doc.getRoot().listTextures()) {
-      const pixels = colour.has(texture) || emissive.has(texture) ? size : size/2;
+      const pixels = colour.has(texture) || emissive.has(texture) ? size : dataSize;
       const slot = colour.has(texture) ? 'BaseColor' : normal.has(texture) ? 'Normal' : emissive.has(texture) ? 'Emissive' : 'MetallicRoughness';
       if (!colour.has(texture) && !normal.has(texture) && !orm.has(texture) && !emissive.has(texture)) throw new Error('Unexpected texture');
       const { data, info } = await sharp(Buffer.from(texture.getImage())).resize(pixels, pixels).removeAlpha().raw().toBuffer({ resolveWithObject: true });
@@ -157,7 +162,7 @@ if (!process.argv.includes('--publish-manifest')) {
     for (const side of ['min', 'max']) for (let i = 0; i < 3; i++) {
       if (Math.abs(before[side][i]-after[side][i])>.0002) throw new Error('Packaging changed bounds');
     }
-    tiers[tier] = { bytes: final.length, triangles: report.triangles, colourSize: size, normalORMSize: size/2,
+    tiers[tier] = { bytes: final.length, triangles: report.triangles, colourSize: size, normalORMSize: dataSize,
       ...(recipe.materials.torch?.flameReference || recipe.materials.surfaceParts?.some(p => p.kind==='flame') ? { emissiveSize: size, emissiveFormat: 'PNG sRGB' } : {}),
       blackSurfacePixels: 0, invalidNormalPixels: 0, bounds: after, quality: report.quality };
     console.log('MEDIEVAL_PACKAGED', code, tier, tiers[tier].triangles, final.length);

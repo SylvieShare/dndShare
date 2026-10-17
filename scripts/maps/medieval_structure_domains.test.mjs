@@ -98,3 +98,15 @@ test('solid paint and foam retain independent colours while later liquids take p
   assert.equal(structureSurfacePigment([0,0,1.5],settings),null);
   assert.equal(structureSurfacePigment([3,0,1],settings),null);
 });
+
+test('a measured upper bound keeps covered fastener metal off the spoon above it', () => {
+  const bar = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-050.json',import.meta.url))).materials;
+  const head = bar.hardware[0], centre = head.centerMM;
+  const above = [centre[0],centre[1],43.58];
+  const original = {...bar,hardware:[head]};
+  assert.ok(structureMetal(above,original).metallic>.8,'The old volume reaches the overlaid spoon');
+  const bounded = {...bar,hardware:[{...head,maxZMM:43.49}]};
+  assert.ok(structureMetal(centre,bounded).metallic>.8,'The actual cap remains metallic');
+  assert.equal(structureMetal(above,bounded).metallic,0,'The spoon keeps its own material');
+  assert.equal(structureMetal(above,bounded).roughness,.88);
+});
