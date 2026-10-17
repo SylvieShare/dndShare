@@ -26,44 +26,6 @@
   "hasDecor": true,
   "wallMode": "none",
   "wallMask": 0,
-  "blockers": [
-    [
-      [
-        0,
-        0
-      ],
-      [
-        0.39,
-        0
-      ],
-      [
-        0.39,
-        1
-      ],
-      [
-        0,
-        1
-      ]
-    ],
-    [
-      [
-        0,
-        0
-      ],
-      [
-        1,
-        0
-      ],
-      [
-        1,
-        0.39
-      ],
-      [
-        0,
-        0.39
-      ]
-    ]
-  ],
   "supportSlots": [],
   "tags": [
     "town",
@@ -559,18 +521,56 @@
     ],
     "basis": "A 35 mm L-shaped bar with two perpendicular countertop/shelf directions, four hidden pottery groups, five small fasteners and an exposed quarter of carved floor. Independent78000/26000 triangle meshes with1024/512 bakes preserve both shelf openings, plate lips and the rounded goblet/cup. Compare768/384 compact maps and inspect every fastening."
   },
-  "reviewNotes": "PDF page8 and native front/back/top plus direct+X/+Y shelf views inspected. Source439998 triangles /21999984 bytes /height43.439098 mm. Mount datum17 mm, one standard peg. Both bar arms occupy negativeX/negativeY: upper X[-17.1676,-3.9867] at positiveY and Y[-17.5054,-4.3242] at positiveX; two conservative0..0.39 blocker strips preserve the free corner. Native[0,0] ray reaches floor24.707764 mm. [7,7] lands on a steep seam with normalZ=.3584 and is rejected; [8.75,8.75] is clear through full height, floor25.520927 mm, normalZ=.99999994. Placement point[.75,.75] uses that flat board. Floor normal squares X=.380573,Y=.055268 confirmY grain. Five round top recesses, not the four-head layout of the straight bar, locate the fastener centres; their low annuli avoid the bias of tilted cap extrema. West/south shelves are34.733799/34.595268 mm. First-contact profiles separate a goblet and plate stack on the west shelf from a cup and tilted bowl on the south shelf; negative-parameter groups are the wooden inner corner posts. Countertop underside bevels fitted from source rays separate pottery from sloping wood: ceramic points lie in front of each plane by>.02 mm. The same planes retain horizontal plank grain on the wood above them. West boards runY; the south outer board and short inner board runX, preserving their measured butt joints. Inspect all four pottery groups, both shelf boundaries, five metal caps, L-shaped floor/blockers, peg profile, both tiers and texture candidates before publishing.",
+  "reviewNotes": "PDF page8 and native front/back/top plus direct+X/+Y shelf views inspected. Source439998 triangles /21999984 bytes /height43.439098 mm. Mount datum17 mm, one standard peg. Both bar arms occupy negativeX/negativeY: upper X[-17.1676,-3.9867] at positiveY and Y[-17.5054,-4.3242] at positiveX; two conservative0..0.39 blocker strips preserve the free corner. Native[0,0] ray reaches floor24.707764 mm. [7,7] lands on a steep seam with normalZ=.3584 and is rejected; [8.75,8.75] is clear through full height, floor25.520927 mm, normalZ=.99999994. Placement point[.75,.25] uses that flat board. Floor normal squares X=.380573,Y=.055268 confirmY grain. Five round top recesses, not the four-head layout of the straight bar, locate the fastener centres; their low annuli avoid the bias of tilted cap extrema. West/south shelves are34.733799/34.595268 mm. First-contact profiles separate a goblet and plate stack on the west shelf from a cup and tilted bowl on the south shelf; negative-parameter groups are the wooden inner corner posts. Countertop underside bevels fitted from source rays separate pottery from sloping wood: ceramic points lie in front of each plane by>.02 mm. The same planes retain horizontal plank grain on the wood above them. West boards runY; the south outer board and short inner board runX, preserving their measured butt joints. Inspect all four pottery groups, both shelf boundaries, five metal caps, L-shaped floor/blockers, peg profile, both tiers and texture candidates before publishing. Coordinate correction: native +Y is editor north. The intended floor point is native[8.75,8.75], local[.75,.25]. The negative-Y counter/overhang occupies the southern local strip, not the northern strip. Native standPointsMM/blockersMM now drive conversion; the previous local[.75,.75] pointed onto the south counter.",
   "uvIslandMargin": 0.0012,
   "plainMountCollarMM": 0.5,
-  "standPoints": [
-    [
-      0.75,
-      0.75
-    ]
-  ],
   "standRayTopMM": 100,
   "renderUVAngleLimitRad": 0.25,
   "renderUVIslandMargin": 0.0008,
   "lodUVAngleLimitRad": 0.25,
-  "lodUVIslandMargin": 0.0008
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.5,
+        17.5
+      ],
+      [
+        -3.8499999999999996,
+        17.5
+      ],
+      [
+        -3.8499999999999996,
+        -17.5
+      ],
+      [
+        -17.5,
+        -17.5
+      ]
+    ],
+    [
+      [
+        -17.5,
+        -3.8499999999999996
+      ],
+      [
+        17.5,
+        -3.8499999999999996
+      ],
+      [
+        17.5,
+        -17.5
+      ],
+      [
+        -17.5,
+        -17.5
+      ]
+    ]
+  ]
 }

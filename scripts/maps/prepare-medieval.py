@@ -15,16 +15,14 @@ sys.path.insert(0, str(Path(__file__).parent))
 from tile_mesh import activate, crop, shade
 import tile_bake
 from medieval_material import paint, material
+from medieval_placement import placement_samples, model_blockers
 
 
 def support_points(obj, recipe):
     tree = BVHTree.FromObject(obj, bpy.context.evaluated_depsgraph_get())
     points = []
-    locations = recipe.get('standPoints', [[x+.5, y+.5] for x, y in recipe['standCells']])
-    for x, y in locations:
-        center = recipe['mountCenterMM']
-        origin = (center[0]+(x-recipe['width']/2)*35,
-                  center[1]-(y-recipe['height']/2)*35, recipe.get('standRayTopMM', 1200))
+    for x, y, native_x, native_y in placement_samples(recipe):
+        origin = (native_x, native_y, recipe.get('standRayTopMM', 1200))
         p, normal, _, _ = tree.ray_cast(origin, (0, 0, -1))
         if p is None or normal.z<.5 or p.z<recipe['mountDepthMM']+.1:
             raise ValueError(f'Invalid stand cell {x},{y}')
@@ -150,7 +148,7 @@ def prepare(code, tier, force):
              'wallMask': recipe['wallMask'], 'width': recipe['width'], 'height': recipe['height'],
              'placementOffset': [0, 0], 'mountDepth': round(datum/35, 6),
              'surfaceHeight': round(recipe['surfaceHeightMM']/35, 6) if 'surfaceHeightMM' in recipe else max([p['elevation'] for p in points], default=datum/35), 'maxHeight': round(maximum, 6),
-             'blockers': recipe['blockers'], 'tags': recipe['tags'], 'supportSlots': recipe['supportSlots']}
+             'blockers': model_blockers(recipe), 'tags': recipe['tags'], 'supportSlots': recipe['supportSlots']}
     report = {'model': model, 'sourcePath': row['sourcePath'], 'sourceSHA256': row['sourceSHA256'],
               'sourceTriangles': row['triangles'], 'triangles': sum(len(o.data.polygons) for o in objects),
               'mountCollarTriangles': len(collar.data.polygons) if collar is not None else 0,
