@@ -8,7 +8,13 @@ export function createMapFog() {
   texture.generateMipmaps = false;
   const size = new Vector2(1, 1),
     master = { value: 1 };
+  const uniforms = {
+    mapVisibility: { value: texture },
+    mapSize: { value: size },
+    mapMaster: master,
+  };
   return {
+    uniforms,
     update(d, state, isMaster) {
       const scale = 8;
       canvas.width = Math.ceil(d.width * scale);
@@ -50,9 +56,7 @@ export function createMapFog() {
         programKey = material.customProgramCacheKey();
       material.onBeforeCompile = (shader, renderer) => {
         before.call(material, shader, renderer);
-        shader.uniforms.mapVisibility = { value: texture };
-        shader.uniforms.mapSize = { value: size };
-        shader.uniforms.mapMaster = master;
+        Object.assign(shader.uniforms, uniforms);
         shader.vertexShader = shader.vertexShader
           .replace(
             "#include <common>",

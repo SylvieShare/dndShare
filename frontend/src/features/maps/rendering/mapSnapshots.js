@@ -75,6 +75,7 @@ async function pump() {
         await renderer.update(document, null, {
           master: true,
           showAnchors: false,
+          animate: false,
           catalogue: job.catalogue,
         });
         renderer.camera({

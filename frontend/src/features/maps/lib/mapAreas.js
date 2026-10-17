@@ -31,6 +31,11 @@ export function areaAppearance(document, mode = "hide") {
       ...mist.objects,
     ]),
     foggedTiles: mist.tiles,
+    surfaceFoggedTiles: new Set(
+      (document.areas || [])
+        .filter((a) => a.fog && a.fogStyle !== "volume")
+        .flatMap((a) => a.tileIds),
+    ),
     tileOpacity: (id) => (mode === "ghost" && members.tiles.has(id) ? 0.12 : 1),
     objectOpacity: (id) =>
       mode === "ghost" && members.objects.has(id) ? 0.12 : 1,

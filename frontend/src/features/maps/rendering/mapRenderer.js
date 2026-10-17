@@ -1,3 +1,4 @@
+import { createVolumeFog } from "./volumeFogRenderer";
 import { pickMapScene } from "./mapScenePicking";
 import { createMapAreaPreview } from "./mapAreaPreview";
 import { createMapFramePreview } from "./mapFramePreview";
@@ -67,6 +68,7 @@ export async function createMapRenderer(
     lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
+    volumeFog = createVolumeFog(gpu, fog.uniforms),
     tokenPortraits = createTokenPortraits(render),
     tiles = createTileLayer(assets, fog),
     objectMotion = createObjectMotion(
@@ -80,7 +82,7 @@ export async function createMapRenderer(
         tier,
         [...appearance.hiddenTiles],
         appearance.tileOpacity,
-        appearance.foggedTiles,
+        appearance.surfaceFoggedTiles,
       );
       if (current)
         outline.update(
@@ -127,7 +129,9 @@ export async function createMapRenderer(
         tiles.advance(delta) |
         objectMotion.advance(delta, objects) |
         loadingPreview.advance(delta);
-      const mistMoving = tiles.advanceMist(elapsed);
+      const mistMoving =
+        options.animate !== false &&
+        tiles.advanceMist(elapsed) | volumeFog.advance(elapsed);
       const flickering = lighting.advance(
         Math.min(250, elapsed),
         (id) => preview.transform(id) || tiles.transform(id),
@@ -135,7 +139,7 @@ export async function createMapRenderer(
         objectPreview.root,
       );
       lastFrame = time;
-      gpu.render(scene, camera);
+      volumeFog.render(scene, camera);
       for (const object of objects.children) {
         object.userData.outlineType = "object";
         object.userData.outlineStyle =
@@ -221,9 +225,6 @@ export async function createMapRenderer(
     if (dead || id !== epoch) return;
     const placed = structure.update(d);
     placedTiles = placed;
-    view.document(d, { ...opts, sceneHeight: structure.top() });
-    tier = view.getView().cellPixels < 72 ? "lod" : "render";
-    assets.progressive(ids, tier, movingIds, d.lightingEnabled);
     let previewOptions = opts;
     if (opts.previewTile) {
       const group = structure.preview(
@@ -240,6 +241,18 @@ export async function createMapRenderer(
         },
       };
     }
+    volumeFog.update(
+      d,
+      placed,
+      assets.catalogue(),
+      previewOptions.previewTile?.group,
+    );
+    view.document(d, {
+      ...opts,
+      sceneHeight: Math.max(structure.top(), volumeFog.top()),
+    });
+    tier = view.getView().cellPixels < 72 ? "lod" : "render";
+    assets.progressive(ids, tier, movingIds, d.lightingEnabled);
     const nextFog = JSON.stringify([
       d.width,
       d.height,
@@ -259,7 +272,11 @@ export async function createMapRenderer(
       appearance.hiddenObjects.has(opts.previewObject.id)
     )
       previewOptions = { ...previewOptions, previewObject: null };
-    preview.update(previewOptions.previewTile, placed, appearance.foggedTiles);
+    preview.update(
+      previewOptions.previewTile,
+      placed,
+      appearance.surfaceFoggedTiles,
+    );
     const posedObjects = d.objects.map((o) =>
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
@@ -355,7 +372,7 @@ export async function createMapRenderer(
         tier,
         hiddenIds,
         appearance.tileOpacity,
-        appearance.foggedTiles,
+        appearance.surfaceFoggedTiles,
       );
     }
     outline.update(
@@ -483,7 +500,7 @@ export async function createMapRenderer(
         objects,
         objectPreview.root,
       );
-      gpu.render(scene, camera);
+      volumeFog.render(scene, camera);
       return new Promise((resolve, reject) =>
         gpu.domElement.toBlob(
           (blob) =>
@@ -551,6 +568,7 @@ export async function createMapRenderer(
       anchors.destroy();
       surfaceAnchors.destroy();
       outline.destroy();
+      volumeFog.destroy();
       fog.destroy();
       lighting.destroy();
       areaPreview.destroy();

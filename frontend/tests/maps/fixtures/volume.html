@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import {
+        ACESFilmicToneMapping,
+        BoxGeometry,
+        Color,
+        DirectionalLight,
+        HemisphereLight,
+        Mesh,
+        MeshStandardMaterial,
+        OrthographicCamera,
+        Scene,
+        Vector3,
+        WebGLRenderer,
+      } from "three";
+      import { createVolumeFog } from "../../../src/features/maps/rendering/volumeFogRenderer.js";
+      import { createMapFog } from "../../../src/features/maps/rendering/mapFog.js";
+      const gpu = new WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      gpu.setSize(640, 480);
+      gpu.toneMapping = ACESFilmicToneMapping;
+      document.body.append(gpu.domElement);
+      const scene = new Scene();
+      scene.background = new Color(0x161b23);
+      const camera = new OrthographicCamera(-3, 3, 2.25, -2.25, 0.1, 50);
+      camera.position.set(9, 8, 9);
+      camera.lookAt(0, 0.5, 0);
+      camera.updateMatrixWorld(true);
+      const fog = createMapFog(),
+        volume = createVolumeFog(gpu, fog.uniforms);
+      const doc = {
+        width: 10,
+        height: 10,
+        zones: [],
+        areas: [{ id: "a", fog: false, fogStyle: "volume", tileIds: ["a"] }],
+      };
+      fog.update(doc, null, true);
+      const material = fog.material(
+        new MeshStandardMaterial({ color: 0x8e8875, roughness: 1 }),
+      );
+      const floor = new Mesh(new BoxGeometry(2, 0.25, 1), material);
+      floor.position.y = 0.125;
+      const wall = new Mesh(
+        new BoxGeometry(0.9, 3, 0.6),
+        fog.material(new MeshStandardMaterial({ color: 0xa13f34 })),
+      );
+      wall.position.set(1.8, 1.5, 1.8);
+      const sun = new DirectionalLight(0xffffff, 3);
+      sun.position.set(-10, 20, 10);
+      scene.add(floor, wall, sun, new HemisphereLight(0xffffff, 0x625141, 1));
+      const tiles = [
+          { id: "a", modelId: "a", x: -1, y: -0.5, elevation: 0, rotation: 0 },
+        ],
+        models = [{ id: "a", width: 2, height: 1, maxHeight: 0.25 }];
+      function frame(enabled, occluder = false) {
+        doc.areas[0].fog = enabled;
+        wall.visible = occluder;
+        volume.update(doc, tiles, models);
+        volume.render(scene, camera);
+      }
+      function pixel(p) {
+        const q = new Vector3(...p).project(camera),
+          x = Math.round((q.x + 1) * 320),
+          y = Math.round((1 - q.y) * 240);
+        return { x, y };
+      }
+      frame(false);
+      window.volumeTest = {
+        frame,
+        pixel,
+        advance: () => {
+          for (let i = 0; i < 4; i++) volume.advance(250);
+          volume.render(scene, camera);
+        },
+        textures: () => gpu.info.memory.textures,
+        destroy: () => {
+          volume.destroy();
+          fog.destroy();
+          gpu.dispose();
+        },
+        ready: true,
+      };
+    </script>
+  </body>
+</html>

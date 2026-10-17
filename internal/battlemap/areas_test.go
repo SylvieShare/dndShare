@@ -17,6 +17,7 @@ func TestMapAreasReferenceExistingModelsOnce(t *testing.T) {
 		func(d *Document) { d.Areas[0].ObjectIDs = []string{"missing"} },
 		func(d *Document) { d.Areas[0].Name = " " },
 		func(d *Document) { d.Areas[0].Color = "red" },
+		func(d *Document) { d.Areas[0].FogStyle = "unsupported" },
 		func(d *Document) { d.Areas[0].Color = "#12345g" },
 		func(d *Document) { d.Areas = append(d.Areas, d.Areas[0]) },
 		func(d *Document) {
@@ -52,7 +53,7 @@ func TestAreaColorsDefaultAndSurviveRoundTrip(t *testing.T) {
 }
 
 func TestAreaFogRoundTripAndPublicTokens(t *testing.T) {
-	d := Document{Areas: []Area{{ID: "room", Name: "Fog", Fog: true, TileIDs: []string{"floor"}}}}
+	d := Document{Areas: []Area{{ID: "room", Name: "Fog", Fog: true, FogStyle: "volume", TileIDs: []string{"floor"}}}}
 	data, err := json.Marshal(d)
 	if err != nil {
 		t.Fatal(err)
@@ -61,7 +62,7 @@ func TestAreaFogRoundTripAndPublicTokens(t *testing.T) {
 	if err := json.Unmarshal(data, &decoded); err != nil {
 		t.Fatal(err)
 	}
-	if !decoded.Areas[0].Fog {
+	if !decoded.Areas[0].Fog || decoded.Areas[0].FogStyle != "volume" {
 		t.Fatal("fog lost")
 	}
 	state := State{Tokens: []Token{{ID: "hidden", Placement: &PlacementAnchor{TileID: "floor"}}, {ID: "visible"}}}

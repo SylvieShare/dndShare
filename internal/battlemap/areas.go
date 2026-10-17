@@ -17,6 +17,9 @@ func validateAreas(d *Document, tiles, objects map[string]bool) error {
 		if a.Color == "" {
 			a.Color = DefaultAreaColor
 		}
+		if a.FogStyle != "" && a.FogStyle != "surface" && a.FogStyle != "volume" {
+			return fmt.Errorf("Некорректный вариант тумана области")
+		}
 		if !color.MatchString(a.Color) {
 			return fmt.Errorf("Некорректный цвет области")
 		}

@@ -91,6 +91,7 @@ export function editorAreas(e) {
         name: `Область ${m.document.areas.length + 1}`,
         hidden: false,
         fog: false,
+        fogStyle: "surface",
         color: DEFAULT_AREA_COLOR,
         tileIds: [],
         objectIds: [],
@@ -172,6 +173,18 @@ export function editorAreas(e) {
         }),
       );
     return true;
+  }
+  function setAreaFogStyle(id, style) {
+    const area = e.draft.value.document.areas.find((a) => a.id === id);
+    if (
+      !area ||
+      !["surface", "volume"].includes(style) ||
+      (area.fogStyle || "surface") === style
+    )
+      return;
+    e.change(() => {
+      area.fogStyle = style;
+    });
   }
   function setAreaFog(id, fog) {
     const area = e.draft.value.document.areas.find((a) => a.id === id);
@@ -255,6 +268,7 @@ export function editorAreas(e) {
     ),
     handleMembership,
     setAreaFog,
+    setAreaFogStyle,
     clearAreaFocus,
     setAreaColor,
     removeAreaMember,

@@ -59,6 +59,16 @@
         ><template #icon><CloudFog /></template
       ></IconToggleButton>
     </div>
+    <FormField v-if="area.fog" label="Вариант тумана" vertical>
+      <FormSelect
+        :value="area.fogStyle || 'surface'"
+        aria-label="Вариант тумана"
+        @update:value="editor.setAreaFogStyle(area.id, $event)"
+      >
+        <option value="surface">V1 · покрытие плиток</option>
+        <option value="volume">V2 · объёмный туман</option>
+      </FormSelect>
+    </FormField>
     <MapInspectorSection :title="`Элементы области (${entries.length})`">
       <div class="map-area-members">
         <MapEntityRow
@@ -93,6 +103,7 @@ import {
   ActionButton,
   ColorPresetPicker,
   FormField,
+  FormSelect,
   FormTextInput,
   IconToggleButton,
 } from "@sylvieshare/share-ui";

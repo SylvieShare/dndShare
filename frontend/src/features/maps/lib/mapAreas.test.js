@@ -105,3 +105,14 @@ it("fog keeps tile silhouettes, hides every area object including items on its t
     expect(light.enabled).toBe(true);
   }
 });
+
+it("keeps V1 surface shading separate from V2 while both retain the same concealment rules", () => {
+  const d = document();
+  Object.assign(d.areas[0], { fog: true, fogStyle: "volume", hidden: false });
+  const v2 = areaAppearance(d);
+  expect(v2.foggedTiles.has("a")).toBe(true);
+  expect(v2.surfaceFoggedTiles.has("a")).toBe(false);
+  expect(v2.hiddenObjects.has("chest")).toBe(true);
+  d.areas[0].fogStyle = "surface";
+  expect(areaAppearance(d).surfaceFoggedTiles.has("a")).toBe(true);
+});

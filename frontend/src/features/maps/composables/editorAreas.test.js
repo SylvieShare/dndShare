@@ -175,3 +175,19 @@ it("Cmd-click toggles standalone light membership and treats an attached marker 
   expect(e.selectedTiles.value).toEqual(["a", "b"]);
   expect(areas.focusedArea.value).toBe("room");
 });
+
+it("switches between the retained V1 and V2 without changing the fog switch or area members", () => {
+  const { e, areas } = setup();
+  areas.setAreaFog("room", true);
+  areas.setAreaFogStyle("room", "volume");
+  const area = e.draft.value.document.areas[0];
+  expect(area).toMatchObject({ fog: true, fogStyle: "volume", tileIds: ["a"] });
+  areas.setAreaFog("room", false);
+  expect(area.fogStyle).toBe("volume");
+  areas.setAreaFogStyle("room", "surface");
+  expect(area).toMatchObject({ fog: false, fogStyle: "surface" });
+  const changes = e.change.mock.calls.length;
+  areas.setAreaFogStyle("room", "unsupported");
+  areas.setAreaFogStyle("room", "surface");
+  expect(e.change).toHaveBeenCalledTimes(changes);
+});
