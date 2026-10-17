@@ -1,0 +1,1397 @@
+{
+  "name": "Tall Bar Angle Bottles",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 98000,
+  "lodTriangles": 34000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic",
+    "corner",
+    "shelves",
+    "frame",
+    "timber",
+    "bottles",
+    "jug",
+    "beer",
+    "tray"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west vertical counter planks and posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south vertical counter planks and posts",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          17.6,
+          -4.1,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "west horizontal shelf Y grain",
+        "minMM": [
+          -11.6,
+          -3.5,
+          32.0
+        ],
+        "maxMM": [
+          -5.2,
+          14.1,
+          34.82
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south horizontal shelf X grain",
+        "minMM": [
+          -3.5,
+          -11.1,
+          32.0
+        ],
+        "maxMM": [
+          14.1,
+          -5.6,
+          34.68
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west long countertop Y boards including underside bevel",
+        "minMM": [
+          -17.3,
+          -17.6,
+          37.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y",
+        "projection": {
+          "originMM": [
+            -7.708258310953776,
+            0.0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41278630220680324,
+            0.0,
+            -0.9108279029050622
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "south full outer countertop X board",
+        "minMM": [
+          -17.6,
+          -17.6,
+          37.8
+        ],
+        "maxMM": [
+          17.6,
+          -10.65,
+          43.6
+        ],
+        "axis": "x",
+        "projection": {
+          "originMM": [
+            0.0,
+            -7.216941833496094,
+            39.5
+          ],
+          "axis": [
+            0.0,
+            0.41275310469911913,
+            -0.9108429472533879
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "south short inner countertop X board",
+        "minMM": [
+          -10.75,
+          -10.8,
+          37.8
+        ],
+        "maxMM": [
+          17.6,
+          -4.1,
+          43.6
+        ],
+        "axis": "x",
+        "projection": {
+          "originMM": [
+            0.0,
+            -7.216941833496094,
+            39.5
+          ],
+          "axis": [
+            0.0,
+            0.41275310469911913,
+            -0.9108429472533879
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "west upper frame vertical timber",
+        "minMM": [
+          -13.9,
+          -13.9,
+          43.55
+        ],
+        "maxMM": [
+          -7.7,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south upper frame vertical timber",
+        "minMM": [
+          -13.9,
+          -13.9,
+          43.55
+        ],
+        "maxMM": [
+          17.3,
+          -7.7,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "west diagonal corner brace",
+        "minMM": [
+          -13,
+          -9.5,
+          54.5
+        ],
+        "maxMM": [
+          -8.5,
+          1.1,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          0.765996365864351,
+          0.6428449015762723
+        ]
+      },
+      {
+        "name": "west diagonal end brace",
+        "minMM": [
+          -13,
+          3.2,
+          54.5
+        ],
+        "maxMM": [
+          -8.5,
+          13.3,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.0,
+          -0.7659883203547939,
+          0.6428544882631229
+        ]
+      },
+      {
+        "name": "south diagonal corner brace",
+        "minMM": [
+          -9.5,
+          -13,
+          54.5
+        ],
+        "maxMM": [
+          1.1,
+          -8.5,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          0.7661037204848632,
+          0.0,
+          0.6427169590568237
+        ]
+      },
+      {
+        "name": "south diagonal end brace",
+        "minMM": [
+          3.2,
+          -13,
+          54.5
+        ],
+        "maxMM": [
+          13.3,
+          -8.5,
+          63.8
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.7660255785185841,
+          0.0,
+          0.6428100909718737
+        ]
+      },
+      {
+        "name": "west upper Y crossbeam",
+        "minMM": [
+          -13.1,
+          -9.3,
+          63.6
+        ],
+        "maxMM": [
+          -8.2,
+          13.3,
+          67.5
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south upper X crossbeam",
+        "minMM": [
+          -9.3,
+          -13.1,
+          63.6
+        ],
+        "maxMM": [
+          13.3,
+          -8.2,
+          67.5
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "continuous shared corner upright",
+        "minMM": [
+          -13.9,
+          -13.9,
+          43.55
+        ],
+        "maxMM": [
+          -7.7,
+          -7.7,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "continuous north upright",
+        "minMM": [
+          -13.9,
+          12.6,
+          43.55
+        ],
+        "maxMM": [
+          -7.7,
+          17.3,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "continuous east upright",
+        "minMM": [
+          12.6,
+          -13.9,
+          43.55
+        ],
+        "maxMM": [
+          17.3,
+          -7.7,
+          69
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "wooden serving tray across countertop",
+        "minMM": [
+          -17.5,
+          -4.5,
+          43.25
+        ],
+        "maxMM": [
+          -2.1,
+          11.8,
+          45
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.4,
+          0.22,
+          0.075
+        ],
+        "lightRGB": [
+          0.68,
+          0.45,
+          0.18
+        ],
+        "roughness": 0.87,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.078638076782227,
+          15.184746742248535,
+          43.323692321777344
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.956562519073486,
+          15.114531517028809,
+          43.312767028808594
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.906593322753906,
+          -8.362802505493164,
+          43.330692291259766
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.867121696472168,
+          -7.163636207580566,
+          43.431396484375
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          15.18936538696289,
+          -14.147619247436523,
+          43.31101608276367
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.527099609375,
+          -10.913799921671549,
+          65.61095640394423
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 64.66095640394423,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.36509895324707,
+          14.712124994822911,
+          45.14809703826904
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 44.19809703826904,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -7.8927998542785645,
+          15.12400621175766,
+          45.08688163757324
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 44.13688163757324,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.388099670410156,
+          14.844807147979736,
+          66.07842145647321
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.1284214564732,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -7.916999816894531,
+          15.034373634739927,
+          66.06248433966385
+        ],
+        "radiiMM": [
+          0.55,
+          0.78,
+          0.78
+        ],
+        "minZMM": 65.11248433966385,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -10.825061244349326,
+          -13.36400032043457,
+          44.91148770240046
+        ],
+        "radiiMM": [
+          0.78,
+          0.55,
+          0.78
+        ],
+        "minZMM": 43.961487702400454,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -10.89050006866455,
+          -7.829999923706055,
+          45.016492462158205
+        ],
+        "radiiMM": [
+          0.78,
+          0.55,
+          0.78
+        ],
+        "minZMM": 44.0664924621582,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -10.484159851074219,
+          -13.256500244140625,
+          65.19372043609619
+        ],
+        "radiiMM": [
+          0.78,
+          0.55,
+          0.78
+        ],
+        "minZMM": 64.24372043609618,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.995167591992546,
+          -13.440099716186523,
+          44.92159192702349
+        ],
+        "radiiMM": [
+          0.78,
+          0.55,
+          0.78
+        ],
+        "minZMM": 43.97159192702349,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.606350055107704,
+          -8.093299865722656,
+          44.82198143005371
+        ],
+        "radiiMM": [
+          0.78,
+          0.55,
+          0.78
+        ],
+        "minZMM": 43.87198143005371,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.914466667175294,
+          -13.461000442504883,
+          65.7831802368164
+        ],
+        "radiiMM": [
+          0.78,
+          0.55,
+          0.78
+        ],
+        "minZMM": 64.8331802368164,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.613662540912628,
+          -7.81820011138916,
+          65.84863805770874
+        ],
+        "radiiMM": [
+          0.78,
+          0.55,
+          0.78
+        ],
+        "minZMM": 64.89863805770874,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "west shelf ochre goblet",
+        "kind": "ceramic",
+        "minMM": [
+          -10.2,
+          -0.35,
+          34.85
+        ],
+        "maxMM": [
+          -6.55,
+          5.0,
+          40.3
+        ],
+        "rgb": [
+          0.58,
+          0.33,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            -7.708258310953776,
+            0.0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41278630220680324,
+            0.0,
+            -0.9108279029050622
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "west shelf cream plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -10.6,
+          5.2,
+          34.85
+        ],
+        "maxMM": [
+          -5.65,
+          13.15,
+          39.6
+        ],
+        "rgb": [
+          0.76,
+          0.66,
+          0.41
+        ],
+        "roughness": 0.65,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            -7.708258310953776,
+            0.0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41278630220680324,
+            0.0,
+            -0.9108279029050622
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "south shelf ochre cup",
+        "kind": "ceramic",
+        "minMM": [
+          1.0,
+          -9.6,
+          34.75
+        ],
+        "maxMM": [
+          5.8,
+          -6.3,
+          40.0
+        ],
+        "rgb": [
+          0.65,
+          0.4,
+          0.16
+        ],
+        "roughness": 0.68,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            0.0,
+            -7.216941833496094,
+            39.5
+          ],
+          "axis": [
+            0.0,
+            0.41275310469911913,
+            -0.9108429472533879
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "south shelf tilted cream bowl",
+        "kind": "ceramic",
+        "minMM": [
+          5.85,
+          -10.15,
+          34.75
+        ],
+        "maxMM": [
+          12.25,
+          -6.3,
+          39.8
+        ],
+        "rgb": [
+          0.72,
+          0.61,
+          0.37
+        ],
+        "roughness": 0.65,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            0.0,
+            -7.216941833496094,
+            39.5
+          ],
+          "axis": [
+            0.0,
+            0.41275310469911913,
+            -0.9108429472533879
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "two terracotta tankards on tray",
+        "kind": "ceramic",
+        "minMM": [
+          -14.2,
+          -4.6,
+          43.5
+        ],
+        "maxMM": [
+          -5.7,
+          11.5,
+          51
+        ],
+        "rgb": [
+          0.61,
+          0.32,
+          0.105
+        ],
+        "centersMM": [
+          [
+            -10.35,
+            0.73,
+            47
+          ],
+          [
+            -9.52,
+            6.89,
+            47
+          ]
+        ],
+        "colorsRGB": [
+          [
+            0.61,
+            0.32,
+            0.105
+          ],
+          [
+            0.5,
+            0.235,
+            0.075
+          ]
+        ],
+        "roughness": 0.71,
+        "variation": 0.035,
+        "includeParts": [
+          {
+            "minMM": [
+              -14.2,
+              -4.6,
+              44.7
+            ],
+            "maxMM": [
+              -5.7,
+              11.5,
+              51
+            ]
+          },
+          {
+            "minMM": [
+              -14.2,
+              -4.6,
+              43.5
+            ],
+            "maxMM": [
+              -5.7,
+              11.5,
+              44.7
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -10.35,
+                0.73,
+                44
+              ],
+              "radiiMM": [
+                3.15,
+                3.15,
+                100
+              ]
+            }
+          },
+          {
+            "minMM": [
+              -14.2,
+              -4.6,
+              43.5
+            ],
+            "maxMM": [
+              -5.7,
+              11.5,
+              44.7
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -9.52,
+                6.89,
+                44
+              ],
+              "radiiMM": [
+                3.15,
+                3.15,
+                100
+              ]
+            }
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "small green ceramic bottle",
+        "kind": "ceramic",
+        "minMM": [
+          -5.6,
+          -14.3,
+          43.35
+        ],
+        "maxMM": [
+          1.35,
+          -7.4,
+          51.6
+        ],
+        "rgb": [
+          0.4,
+          0.52,
+          0.15
+        ],
+        "roughness": 0.49,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "tall green ceramic bottle",
+        "kind": "ceramic",
+        "minMM": [
+          4.75,
+          -16.1,
+          43.35
+        ],
+        "maxMM": [
+          11.7,
+          -9.1,
+          54.2
+        ],
+        "rgb": [
+          0.48,
+          0.6,
+          0.17
+        ],
+        "roughness": 0.49,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "small unglazed bottle collar",
+        "kind": "ceramic",
+        "minMM": [
+          -3.9,
+          -12.58,
+          48.9
+        ],
+        "maxMM": [
+          -0.6999999999999997,
+          -9.38,
+          49.98
+        ],
+        "rgb": [
+          0.7,
+          0.59,
+          0.33
+        ],
+        "roughness": 0.68,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "small rounded cork stopper",
+        "kind": "paint",
+        "minMM": [
+          -3.5999999999999996,
+          -12.280000000000001,
+          49.98
+        ],
+        "maxMM": [
+          -0.9999999999999998,
+          -9.68,
+          51.6
+        ],
+        "rgb": [
+          0.43,
+          0.235,
+          0.075
+        ],
+        "roughness": 0.96,
+        "variation": 0.06,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "tall unglazed bottle collar",
+        "kind": "ceramic",
+        "minMM": [
+          6.550000000000001,
+          -14.24,
+          51.65
+        ],
+        "maxMM": [
+          9.75,
+          -11.040000000000001,
+          52.5
+        ],
+        "rgb": [
+          0.7,
+          0.59,
+          0.33
+        ],
+        "roughness": 0.68,
+        "variation": 0.025,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "tall rounded cork stopper",
+        "kind": "paint",
+        "minMM": [
+          6.8500000000000005,
+          -13.940000000000001,
+          52.5
+        ],
+        "maxMM": [
+          9.450000000000001,
+          -11.34,
+          54.2
+        ],
+        "rgb": [
+          0.43,
+          0.235,
+          0.075
+        ],
+        "roughness": 0.96,
+        "variation": 0.06,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "south amber beer",
+        "kind": "liquid",
+        "minMM": [
+          -12.402923583984375,
+          -1.228759765625,
+          49.59649078369141
+        ],
+        "maxMM": [
+          -8.65632438659668,
+          2.442155361175537,
+          50.187440948486326
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -10.529623985290527,
+            0.6066977977752686,
+            49.89196586608887
+          ],
+          "radiiMM": [
+            1.7732995986938476,
+            1.7354575634002685,
+            100
+          ]
+        },
+        "probeMM": [
+          -10.0,
+          0.0,
+          50.10744094848633
+        ],
+        "rgb": [
+          0.66,
+          0.38,
+          0.065
+        ],
+        "roughness": 0.31,
+        "variation": 0.018,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      },
+      {
+        "name": "north amber beer",
+        "kind": "liquid",
+        "minMM": [
+          -11.863692283630371,
+          4.949999809265137,
+          49.07113067626953
+        ],
+        "maxMM": [
+          -8.234285354614258,
+          8.606766700744629,
+          49.867635803222655
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -10.048988819122314,
+            6.778383255004883,
+            49.469383239746094
+          ],
+          "radiiMM": [
+            1.7147034645080566,
+            1.728383445739746,
+            100
+          ]
+        },
+        "probeMM": [
+          -9.5,
+          6.400000095367432,
+          49.787635803222656
+        ],
+        "rgb": [
+          0.66,
+          0.38,
+          0.065
+        ],
+        "roughness": 0.31,
+        "variation": 0.018,
+        "awayFromSource": {
+          "code": "MT1-053",
+          "sourceSHA256": "ef4794a5f79840642b07713a31009a879828af5f470e9c8194257892dc5a2bb0",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-054",
+            "sourceSHA256": "7bda2d7f53a069e9c40c8a0dd6a9889981ebc774ab3d23f4b3498708384ac69e"
+          }
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.3,
+      5.0
+    ],
+    "lodMiB": [
+      0.8,
+      1.9
+    ],
+    "shadowKiB": [
+      75,
+      180
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "A 35mm tall corner bar with two open tankards, round wooden serving tray, two green ceramic bottles with individual collars and cork stoppers, four lower shelf groups, two open timber frames and17 fasteners. Independent98000/34000 triangle meshes and1024/512 colour bakes with512px LOD data maps preserve rims, handles, necks and every small fastening. Compare compact maps."
+  },
+  "reviewNotes": "PDF page9 and native front/back, cup side views and overhead view with the upper frame hidden inspected. Source560034 triangles /28001784 bytes /height68.823898mm. The tray/tankard assembly is connected in STL; tankards are distinguished by measured centres near[-10.35,.73] and[-9.52,6.89]. Their sculpted fill surfaces retain separate amber pigment and.31 roughness, bounded by fitted local planes and radial lip probes. Bottle bodies: small X[-5.4091,1.1993],Y[-14.1555,-7.5851],Z43.55..51.455; tall X[4.9359,11.5506],Y[-15.9237,-9.2929],Z43.55..54.0136. Neck sections separate the unglazed collars from rounded brown corks atZ49.98/52.50. Source53 reference and projection onto54 restrict all added parts; tray is wood with X grain. Preserve base53 timber directions,17 exposed heads and shelf ceramics; native floor point[8.75,8.75] maps to local[.75,.25]. Tray reachesX=-2.204, so widen west blocker to nativeX=-2.1 (local.44); south blocker remains.61..1. Check fill pigments/geometry, tankard bases and handles, tray boundary, collars/corks, all17 heads, unobstructed frame rays away from new vessels, lower shelves, render/LOD/shadow and texture candidates. Final drink masks follow the full convex sculpted fill surfaces by32 radial slope probes per cup (normalZ>=.75), without the initial tangent-plane clip: inner radii approximately1.77/1.74 and1.71/1.73mm. Native source shape is preserved. Cork stoppers use solid physical pigment (kind paint, roughness.96) during packaging as well as source baking; this prevents cream collar interpolation from extending onto their lower surfaces.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.5,
+        17.5
+      ],
+      [
+        -2.1,
+        17.5
+      ],
+      [
+        -2.1,
+        -17.5
+      ],
+      [
+        -17.5,
+        -17.5
+      ]
+    ],
+    [
+      [
+        -17.5,
+        -3.8499999999999996
+      ],
+      [
+        17.5,
+        -3.8499999999999996
+      ],
+      [
+        17.5,
+        -17.5
+      ],
+      [
+        -17.5,
+        -17.5
+      ]
+    ]
+  ],
+  "lodDataSize": 512
+}
