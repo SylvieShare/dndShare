@@ -1,0 +1,576 @@
+{
+  "name": "Bar Angle Empty",
+  "groupCode": "MED-bar",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 78000,
+  "lodTriangles": 26000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0.39,
+        0
+      ],
+      [
+        0.39,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        0.39
+      ],
+      [
+        0,
+        0.39
+      ]
+    ]
+  ],
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "bar",
+    "wood",
+    "counter",
+    "ceramic",
+    "corner",
+    "shelves"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west vertical counter planks and posts",
+        "minMM": [
+          -17.3,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "south vertical counter planks and posts",
+        "minMM": [
+          -17.6,
+          -17.6,
+          26.1
+        ],
+        "maxMM": [
+          17.6,
+          -4.1,
+          43.6
+        ],
+        "axis": "z"
+      },
+      {
+        "name": "west horizontal shelf Y grain",
+        "minMM": [
+          -11.6,
+          -3.5,
+          32.0
+        ],
+        "maxMM": [
+          -5.2,
+          14.1,
+          34.82
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south horizontal shelf X grain",
+        "minMM": [
+          -3.5,
+          -11.1,
+          32.0
+        ],
+        "maxMM": [
+          14.1,
+          -5.6,
+          34.68
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "west long countertop Y boards including underside bevel",
+        "minMM": [
+          -17.3,
+          -17.6,
+          37.8
+        ],
+        "maxMM": [
+          -3.8,
+          17.6,
+          43.6
+        ],
+        "axis": "y",
+        "projection": {
+          "originMM": [
+            -7.710609700944689,
+            0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41277990093810774,
+            0,
+            -0.9108308039265723
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "south full outer countertop X board",
+        "minMM": [
+          -17.6,
+          -17.6,
+          37.8
+        ],
+        "maxMM": [
+          17.6,
+          -10.65,
+          43.6
+        ],
+        "axis": "x",
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      },
+      {
+        "name": "south short inner countertop X board",
+        "minMM": [
+          -10.75,
+          -10.8,
+          37.8
+        ],
+        "maxMM": [
+          17.6,
+          -4.1,
+          43.6
+        ],
+        "axis": "x",
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            -100,
+            0.02
+          ]
+        }
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [
+      {
+        "centerMM": [
+          -14.039887428283691,
+          15.165392875671387,
+          43.324012756347656
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -6.9386515617370605,
+          15.164381980895996,
+          43.31219482421875
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          -13.907696723937988,
+          -8.354660034179688,
+          43.33102798461914
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          14.91459846496582,
+          -7.173850059509277,
+          43.43193054199219
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      },
+      {
+        "centerMM": [
+          15.168289184570312,
+          -14.128074645996094,
+          43.31306457519531
+        ],
+        "radiiMM": [
+          0.82,
+          0.82,
+          0.45
+        ],
+        "minZMM": 42.7,
+        "rgb": [
+          0.205,
+          0.18,
+          0.135
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "west shelf ochre goblet",
+        "kind": "ceramic",
+        "minMM": [
+          -10.2,
+          -0.35,
+          34.85
+        ],
+        "maxMM": [
+          -6.55,
+          5.0,
+          40.3
+        ],
+        "rgb": [
+          0.58,
+          0.33,
+          0.12
+        ],
+        "roughness": 0.7,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            -7.710609700944689,
+            0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41277990093810774,
+            0,
+            -0.9108308039265723
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "west shelf cream plate stack",
+        "kind": "ceramic",
+        "minMM": [
+          -10.6,
+          5.2,
+          34.85
+        ],
+        "maxMM": [
+          -5.65,
+          13.15,
+          39.6
+        ],
+        "rgb": [
+          0.76,
+          0.66,
+          0.41
+        ],
+        "roughness": 0.65,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            -7.710609700944689,
+            0,
+            39.1000001695421
+          ],
+          "axis": [
+            0.41277990093810774,
+            0,
+            -0.9108308039265723
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "south shelf ochre cup",
+        "kind": "ceramic",
+        "minMM": [
+          1.0,
+          -9.6,
+          34.75
+        ],
+        "maxMM": [
+          5.8,
+          -6.3,
+          40.0
+        ],
+        "rgb": [
+          0.65,
+          0.4,
+          0.16
+        ],
+        "roughness": 0.68,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      },
+      {
+        "name": "south shelf tilted cream bowl",
+        "kind": "ceramic",
+        "minMM": [
+          5.85,
+          -10.15,
+          34.75
+        ],
+        "maxMM": [
+          12.25,
+          -6.3,
+          39.8
+        ],
+        "rgb": [
+          0.72,
+          0.61,
+          0.37
+        ],
+        "roughness": 0.65,
+        "variation": 0.035,
+        "projection": {
+          "originMM": [
+            0,
+            -7.219126224517822,
+            39.5
+          ],
+          "axis": [
+            0,
+            0.41264214146456796,
+            -0.9108932226597887
+          ],
+          "rangeMM": [
+            0.02,
+            100
+          ]
+        }
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.6,
+      4.0
+    ],
+    "lodMiB": [
+      0.5,
+      1.5
+    ],
+    "shadowKiB": [
+      50,
+      145
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "A 35 mm L-shaped bar with two perpendicular countertop/shelf directions, four hidden pottery groups, five small fasteners and an exposed quarter of carved floor. Independent78000/26000 triangle meshes with1024/512 bakes preserve both shelf openings, plate lips and the rounded goblet/cup. Compare768/384 compact maps and inspect every fastening."
+  },
+  "reviewNotes": "PDF page8 and native front/back/top plus direct+X/+Y shelf views inspected. Source439998 triangles /21999984 bytes /height43.439098 mm. Mount datum17 mm, one standard peg. Both bar arms occupy negativeX/negativeY: upper X[-17.1676,-3.9867] at positiveY and Y[-17.5054,-4.3242] at positiveX; two conservative0..0.39 blocker strips preserve the free corner. Native[0,0] ray reaches floor24.707764 mm. [7,7] lands on a steep seam with normalZ=.3584 and is rejected; [8.75,8.75] is clear through full height, floor25.520927 mm, normalZ=.99999994. Placement point[.75,.75] uses that flat board. Floor normal squares X=.380573,Y=.055268 confirmY grain. Five round top recesses, not the four-head layout of the straight bar, locate the fastener centres; their low annuli avoid the bias of tilted cap extrema. West/south shelves are34.733799/34.595268 mm. First-contact profiles separate a goblet and plate stack on the west shelf from a cup and tilted bowl on the south shelf; negative-parameter groups are the wooden inner corner posts. Countertop underside bevels fitted from source rays separate pottery from sloping wood: ceramic points lie in front of each plane by>.02 mm. The same planes retain horizontal plank grain on the wood above them. West boards runY; the south outer board and short inner board runX, preserving their measured butt joints. Inspect all four pottery groups, both shelf boundaries, five metal caps, L-shaped floor/blockers, peg profile, both tiers and texture candidates before publishing.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standPoints": [
+    [
+      0.75,
+      0.75
+    ]
+  ],
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008
+}
