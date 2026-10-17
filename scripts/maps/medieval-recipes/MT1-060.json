@@ -1,0 +1,710 @@
+{
+  "name": "Table Empty",
+  "groupCode": "MED-table",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 82000,
+  "lodTriangles": 28000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "floor",
+    "table",
+    "round",
+    "iron",
+    "pedestal"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "continuous meridian pedestal and four flared feet",
+        "minMM": [
+          -16.1,
+          -16.1,
+          26.65
+        ],
+        "maxMM": [
+          16.1,
+          16.1,
+          38.5
+        ],
+        "axis": "meridian",
+        "centerXYMM": [
+          0,
+          0
+        ],
+        "radiusMM": 5.5,
+        "darkRGB": [
+          0.31,
+          0.15,
+          0.05
+        ],
+        "lightRGB": [
+          0.58,
+          0.35,
+          0.14
+        ],
+        "roughness": 0.91
+      },
+      {
+        "name": "round tabletop X boards and end cuts",
+        "minMM": [
+          -16.1,
+          -16.1,
+          38.3
+        ],
+        "maxMM": [
+          16.1,
+          16.1,
+          42.8
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.39,
+          0.2,
+          0.07
+        ],
+        "lightRGB": [
+          0.68,
+          0.44,
+          0.19
+        ],
+        "roughness": 0.86,
+        "physicalPigment": true
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "iron tabletop head 1",
+        "kind": "paint",
+        "minMM": [
+          0.6235299921035766,
+          -14.717016258239747,
+          42.02129791259765
+        ],
+        "maxMM": [
+          2.2035299921035767,
+          -13.137016258239745,
+          42.61629791259766
+        ],
+        "radialShell": {
+          "originMM": [
+            1.4135299921035767,
+            -13.927016258239746,
+            42.416297912597656
+          ],
+          "axis": [
+            -0.06134098023176193,
+            0.03269995003938675,
+            0.9975811243057251
+          ],
+          "rangeMM": [
+            -0.19500000000000003,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.64,
+          "radiusSlope": 0,
+          "thicknessMM": 0.64,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 2",
+        "kind": "paint",
+        "minMM": [
+          8.01927276611328,
+          -12.031089820861817,
+          41.95801055908203
+        ],
+        "maxMM": [
+          9.599272766113282,
+          -10.451089820861815,
+          42.653010559082034
+        ],
+        "radialShell": {
+          "originMM": [
+            8.809272766113281,
+            -11.241089820861816,
+            42.45301055908203
+          ],
+          "axis": [
+            -0.07610256224870682,
+            -0.004352286458015442,
+            0.9970905780792236
+          ],
+          "rangeMM": [
+            -0.2950000000000001,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.64,
+          "radiusSlope": 0,
+          "thicknessMM": 0.64,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 3",
+        "kind": "paint",
+        "minMM": [
+          -9.865687065124511,
+          -11.803827934265136,
+          41.830378417968745
+        ],
+        "maxMM": [
+          -8.380687065124512,
+          -10.318827934265137,
+          42.65037841796875
+        ],
+        "radialShell": {
+          "originMM": [
+            -9.123187065124512,
+            -11.061327934265137,
+            42.45037841796875
+          ],
+          "axis": [
+            -0.14622487127780914,
+            0.039029110223054886,
+            0.9884811639785767
+          ],
+          "rangeMM": [
+            -0.42000000000000015,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.5925000000000001,
+          "radiusSlope": 0,
+          "thicknessMM": 0.5925000000000001,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 4",
+        "kind": "paint",
+        "minMM": [
+          12.656040534973144,
+          -5.145802154541016,
+          42.12705047607422
+        ],
+        "maxMM": [
+          14.186040534973145,
+          -3.6158021545410155,
+          42.74705047607422
+        ],
+        "radialShell": {
+          "originMM": [
+            13.421040534973145,
+            -4.380802154541016,
+            42.54705047607422
+          ],
+          "axis": [
+            -0.0673852488398552,
+            -0.037711892277002335,
+            0.997014045715332
+          ],
+          "rangeMM": [
+            -0.22000000000000006,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.6150000000000001,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6150000000000001,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 5",
+        "kind": "paint",
+        "minMM": [
+          -14.43030590057373,
+          -4.132243337631226,
+          41.933588104248045
+        ],
+        "maxMM": [
+          -12.800305900573731,
+          -2.5022433376312256,
+          42.55358810424805
+        ],
+        "radialShell": {
+          "originMM": [
+            -13.61530590057373,
+            -3.3172433376312256,
+            42.35358810424805
+          ],
+          "axis": [
+            0.03133659437298775,
+            0.09373416751623154,
+            0.9951039552688599
+          ],
+          "rangeMM": [
+            -0.22000000000000006,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.665,
+          "radiusSlope": 0,
+          "thicknessMM": 0.665,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 6",
+        "kind": "paint",
+        "minMM": [
+          12.895921096801757,
+          3.5614389038085936,
+          42.022647552490234
+        ],
+        "maxMM": [
+          14.425921096801758,
+          5.091438903808594,
+          42.79264755249024
+        ],
+        "radialShell": {
+          "originMM": [
+            13.660921096801758,
+            4.326438903808594,
+            42.592647552490234
+          ],
+          "axis": [
+            -0.058725398033857346,
+            -0.056823864579200745,
+            0.9966555833816528
+          ],
+          "rangeMM": [
+            -0.3700000000000001,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.6150000000000001,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6150000000000001,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 7",
+        "kind": "paint",
+        "minMM": [
+          -14.14225830078125,
+          3.692939624786377,
+          42.07897232055664
+        ],
+        "maxMM": [
+          -12.61225830078125,
+          5.2229396247863775,
+          42.67397232055664
+        ],
+        "radialShell": {
+          "originMM": [
+            -13.37725830078125,
+            4.457939624786377,
+            42.47397232055664
+          ],
+          "axis": [
+            0.03865224868059158,
+            0.052340809255838394,
+            0.9978809952735901
+          ],
+          "rangeMM": [
+            -0.19500000000000003,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.6150000000000001,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6150000000000001,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 8",
+        "kind": "paint",
+        "minMM": [
+          8.590801200866698,
+          9.97801586151123,
+          42.000472717285156
+        ],
+        "maxMM": [
+          10.1708012008667,
+          11.558015861511231,
+          42.77047271728516
+        ],
+        "radialShell": {
+          "originMM": [
+            9.3808012008667,
+            10.76801586151123,
+            42.570472717285156
+          ],
+          "axis": [
+            -0.05109558627009392,
+            -0.015584945678710938,
+            0.9985722303390503
+          ],
+          "rangeMM": [
+            -0.3700000000000001,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.64,
+          "radiusSlope": 0,
+          "thicknessMM": 0.64,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 9",
+        "kind": "paint",
+        "minMM": [
+          -9.172854270935058,
+          10.96306339263916,
+          42.01122283935547
+        ],
+        "maxMM": [
+          -7.742854270935058,
+          12.39306339263916,
+          42.71122283935547
+        ],
+        "radialShell": {
+          "originMM": [
+            -8.457854270935059,
+            11.67806339263916,
+            42.51122283935547
+          ],
+          "axis": [
+            0.03270940110087395,
+            0.07591532915830612,
+            0.9965776801109314
+          ],
+          "rangeMM": [
+            -0.3,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.5650000000000001,
+          "radiusSlope": 0,
+          "thicknessMM": 0.5650000000000001,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      },
+      {
+        "name": "iron tabletop head 10",
+        "kind": "paint",
+        "minMM": [
+          -0.45654042005538953,
+          13.232476577758788,
+          41.993768768310545
+        ],
+        "maxMM": [
+          1.0734595799446107,
+          14.76247657775879,
+          42.73876876831055
+        ],
+        "radialShell": {
+          "originMM": [
+            0.3084595799446106,
+            13.997476577758789,
+            42.53876876831055
+          ],
+          "axis": [
+            -0.041304368525743484,
+            -0.020051773637533188,
+            0.998945415019989
+          ],
+          "rangeMM": [
+            -0.3450000000000001,
+            0.04
+          ],
+          "radiusAtOriginMM": 0.6150000000000001,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6150000000000001,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.225,
+          0.235,
+          0.22
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.0,
+      4.8
+    ],
+    "lodMiB": [
+      0.7,
+      1.8
+    ],
+    "shadowKiB": [
+      70,
+      165
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "One35mm floor with a large deeply carved round tabletop, continuous turned pedestal/four flared toes and10 independent tilted iron caps.82000/28000 triangles with1024/512 colour maps and512px LOD normal/ORM preserve the cap heads and wood carving. Compare compact textures."
+  },
+  "reviewNotes": "PDFpage9 and source full/front-back, top and low pedestal views inspected. Source399990tri/19999584bytes/maxZ42.632004. Tabletop native boundsX[-15.89850,15.84980],Y[-15.88085,15.86205], maximum decor radius15.91338mm. Source normal squares confirm floorY(X\u00b2.24866,Y\u00b2.05009) and tabletopX(X\u00b2.00503,Y\u00b2.40223). Continuous carved pedestal with four flared toes uses meridian grain; upper X boards and end cuts are physically recoloured to protect wood at metal boundaries.10 source head positions/normals fitted independently, top radii.565..665mm; solid radialShell cylinders follow each tilted face and measured wall depth. LOD data512 retains small heads. Quarter points\u00b18.75 hit the table, often on steep grooves, so use only four verified native\u00b114 corners atfloor25.39355..25.68179mm. A conservative16-gon radius16.35 has apothem16.0358mm, enclosing allsource decor while leaving those floorcorners outside. Check all10 cap colours/metal pixels, carved top, stem/toes, under-table clearance, source/blocker containment, stand points, render/LOD/shadow and both texture candidates before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      -14,
+      -14
+    ],
+    [
+      -14,
+      14
+    ],
+    [
+      14,
+      -14
+    ],
+    [
+      14,
+      14
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        16.35,
+        0.0
+      ],
+      [
+        15.10543035655954,
+        6.256874119169218
+      ],
+      [
+        11.561195872400054,
+        11.561195872400052
+      ],
+      [
+        6.256874119169219,
+        15.10543035655954
+      ],
+      [
+        1.0011487583029613e-15,
+        16.35
+      ],
+      [
+        -6.256874119169217,
+        15.10543035655954
+      ],
+      [
+        -11.561195872400052,
+        11.561195872400054
+      ],
+      [
+        -15.10543035655954,
+        6.25687411916922
+      ],
+      [
+        -16.35,
+        2.0022975166059227e-15
+      ],
+      [
+        -15.105430356559541,
+        -6.2568741191692165
+      ],
+      [
+        -11.561195872400056,
+        -11.561195872400052
+      ],
+      [
+        -6.256874119169227,
+        -15.105430356559536
+      ],
+      [
+        -3.0034462749088836e-15,
+        -16.35
+      ],
+      [
+        6.256874119169222,
+        -15.105430356559538
+      ],
+      [
+        11.56119587240005,
+        -11.561195872400056
+      ],
+      [
+        15.105430356559536,
+        -6.256874119169228
+      ]
+    ]
+  ],
+  "lodDataSize": 512
+}
