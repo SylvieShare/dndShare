@@ -187,5 +187,6 @@
   "MH-911": "majestic-recipes/MH-911.json",
   "DB to XL Grid Adaptor": "majestic-recipes/DB to XL Grid Adaptor.json",
   "Lock Border": "majestic-recipes/Lock Border.json",
-  "Lock Border Angle": "majestic-recipes/Lock Border Angle.json"
+  "Lock Border Angle": "majestic-recipes/Lock Border Angle.json",
+  "XL Lock Grid": "majestic-recipes/XL Lock Grid.json"
 }

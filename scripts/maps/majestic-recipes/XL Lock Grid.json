@@ -1,0 +1,518 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 0,
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 13.753800392150879,
+  "renderTriangles": 336,
+  "lodTriangles": 336,
+  "tileType": "object",
+  "hasDecor": false,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [],
+  "tags": [
+    "technical",
+    "lock-grid",
+    "native",
+    "hollow",
+    "xl"
+  ],
+  "recipe": "majestic-xl-lock-grid-v1",
+  "groupCode": "MH-lock-grid",
+  "baseSurface": "soil",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "renderColourSize": 512,
+  "lodColourSize": 512,
+  "renderDataSize": 512,
+  "lodDataSize": 512,
+  "renderBakeSize": 512,
+  "lodBakeSize": 512,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.55,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "previewDirection": "front",
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      4000,
+      30000
+    ],
+    "targetLODBytes": [
+      4000,
+      30000
+    ],
+    "targetShadowBytes": [
+      2000,
+      12000
+    ],
+    "targetPreviewBytes": [
+      5000,
+      30000
+    ],
+    "basis": "Ownsource5167a970affa01a7fcd28caca4aabd8717d4f47b6b112e27ada20f766ddff6d9:336tris16884B. Own3neutralviews show a plain rectangulartechnicalframe with eight innerpads and externalmale/femaledovetailfeatures; no sculptedrelief. Nominal105mm3x3 body with externaltabs108.4628mm; fullbodyZ0..13.753800 preserved, mount0,noactorfloor/noautomaticupper slots (technicalobjects default). Keepall336trianglesbothtiers. Comparebaked512maps vsuniformPBR .3/.32/.34 sRGBrough.94metal0. Ifuniform retainsprofile/normals andquality at3matchingviews useMeshoptonly, noUV/color/tangent/maps in final. Native+exactquant16 UVpreflight beforebaselinebake, completeacceptedtrianglecorrespondencewithin.007mm, centralvoidandpad/bar/tabrays, sourceSHA, sixfinalviews/shadow/alpha/manifest/Chromiumactualmaterialsunpoint/freshMCPconfirmed beforecompletion. Ownthreepairedviews compared: baked51283068B vsuniform5156B; uniform preservesall336triangles/profile/pads/dovetails and removescolourmottling. SelectuniformPBR; retainnormals/removeunusedmapsUVtangentCOLOR; Meshoptonly. RenderLOD mayshareidenticalhash.",
+    "actualBytes": {
+      "lod": 5156,
+      "preview": 12918,
+      "render": 5156,
+      "shadow": 2580,
+      "source": 16884
+    },
+    "runtimeBytes": 20654
+  },
+  "uniformMaterial": {
+    "srgb": [
+      0.3,
+      0.32,
+      0.34
+    ],
+    "roughness": 0.94,
+    "metallic": 0
+  },
+  "openingChecks": [
+    {
+      "name": "open--35--35",
+      "originMM": [
+        -35,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open--35-0",
+      "originMM": [
+        -35,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open--35-35",
+      "originMM": [
+        -35,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-0--35",
+      "originMM": [
+        0,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-0-0",
+      "originMM": [
+        0,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-0-35",
+      "originMM": [
+        0,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-35--35",
+      "originMM": [
+        35,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-35-0",
+      "originMM": [
+        35,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "open-35-35",
+      "originMM": [
+        35,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "bar--50-0",
+      "originMM": [
+        -50,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bar-50-0",
+      "originMM": [
+        50,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bar-0--50",
+      "originMM": [
+        0,
+        -50,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bar-0-50",
+      "originMM": [
+        0,
+        50,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad--43--17.5",
+      "originMM": [
+        -43,
+        -17.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad--43-17.5",
+      "originMM": [
+        -43,
+        17.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad-43--17.5",
+      "originMM": [
+        43,
+        -17.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad-43-17.5",
+      "originMM": [
+        43,
+        17.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad--17.5--43",
+      "originMM": [
+        -17.5,
+        -43,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad-17.5--43",
+      "originMM": [
+        17.5,
+        -43,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad--17.5-43",
+      "originMM": [
+        -17.5,
+        43,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "pad-17.5-43",
+      "originMM": [
+        17.5,
+        43,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "connector--53.5--35",
+      "originMM": [
+        -53.5,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "connector--53.5-35",
+      "originMM": [
+        -53.5,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "connector-53.5--35",
+      "originMM": [
+        53.5,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "connector-53.5-35",
+      "originMM": [
+        53.5,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "connector--35--53.5",
+      "originMM": [
+        -35,
+        -53.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "connector-35--53.5",
+      "originMM": [
+        35,
+        -53.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "connector--35-53.5",
+      "originMM": [
+        -35,
+        53.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "connector-35-53.5",
+      "originMM": [
+        35,
+        53.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    }
+  ]
+}
