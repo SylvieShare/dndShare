@@ -46,7 +46,7 @@
 .map-properties {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 25px;
   max-width: 720px;
   margin: 0 auto;
 }

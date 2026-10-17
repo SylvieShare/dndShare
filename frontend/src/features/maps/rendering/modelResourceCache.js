@@ -1,3 +1,4 @@
+import { modelMemoryUsage } from "./modelMemoryUsage";
 import { modelDownloads } from "./modelDownloadManager";
 const cache = new Map();
 export const resourceKey = (url, loader) => `${loader.key}:${url}`;
@@ -58,7 +59,15 @@ export function acquire(url, loader, priority = 0, bytes = 0) {
             });
         });
         if (!parts.length) throw new Error("В модели нет геометрии");
-        return { parts };
+        entry.value = {
+          parts,
+          usage: modelMemoryUsage(parts),
+          fileBytes: Math.max(
+            entry.progress.loaded || 0,
+            entry.progress.total || 0,
+          ),
+        };
+        return entry.value;
       })
       .catch((error) => {
         if (error.name !== "AbortError") modelDownloads.failed(entry.progress);
@@ -82,3 +91,6 @@ export function prioritize(url, loader, priority) {
   const entry = cache.get(resourceKey(url, loader));
   if (entry) entry.priority = Math.max(entry.priority, priority);
 }
+
+export const cachedModel = (url, loader) =>
+  cache.get(resourceKey(url, loader))?.value;

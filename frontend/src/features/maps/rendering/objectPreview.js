@@ -1,3 +1,4 @@
+import { modelVisual, visualSignature } from "./modelVisual";
 import { Group } from "three";
 import { buildMapProp, disposeObjects } from "./sceneObjects";
 import { FLOOR } from "./annotations";
@@ -30,7 +31,7 @@ export function createObjectPreview(fog, assets) {
           o.scale,
           o.open,
           assets.metadata?.(o.modelId)?.renderUrl,
-          !!assets.model(o.modelId, "render"),
+          visualSignature(assets, new Set([o.modelId]), "render"),
         ]),
       );
     if (next !== key) {
@@ -38,7 +39,7 @@ export function createObjectPreview(fog, assets) {
       root.clear();
       key = next;
       for (const o of group)
-        root.add(buildMapProp(o, o.open, fog, assets, "render", true));
+        root.add(buildMapProp(o, o.open, fog, assets, "render"));
     }
     position ||= { x: object.x, y: object.y, lift: 0 };
   }

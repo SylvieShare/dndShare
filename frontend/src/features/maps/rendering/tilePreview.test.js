@@ -44,3 +44,40 @@ it("eases vertical snapping in the actual instance transform", () => {
   geometry.dispose();
   material.dispose();
 });
+it("uses the loaded LOD immediately and forgets motion when released before either mesh is ready", () => {
+  const geometry = new BoxGeometry(),
+    material = new MeshStandardMaterial(),
+    lod = { parts: [{ geometry, material, matrix: new Matrix4() }] };
+  let coarse = true,
+    full = false;
+  const assets = {
+    metadata: () => ({ width: 1, height: 1 }),
+    model: (_, tier) => ((tier === "render" ? full : coarse) ? lod : null),
+  };
+  const preview = createTilePreview(assets);
+  const tile = {
+    modelId: "tile",
+    x: 2,
+    y: 3,
+    rotation: 0,
+    level: 0,
+    elevation: 0,
+  };
+  preview.update(tile);
+  expect(preview.root.children).toHaveLength(1);
+  preview.update(null, []);
+  preview.advance(3000);
+  coarse = false;
+  preview.update(tile);
+  preview.update({ ...tile, x: 5 });
+  preview.update(null, [{ ...tile, id: "placed", x: 5 }]);
+  expect(preview.hiddenIds()).toEqual([]);
+  expect(preview.modelIds().size).toBe(0);
+  full = true;
+  preview.update(null, [{ ...tile, id: "placed", x: 5 }]);
+  expect(preview.root.children).toHaveLength(0);
+  expect(preview.advance(16)).toBe(false);
+  preview.destroy();
+  geometry.dispose();
+  material.dispose();
+});

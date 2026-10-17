@@ -142,3 +142,29 @@ test("catalogue ID is stable while uuid is an stable UUID and group code edits p
     "LC-ground-special",
   );
 });
+test("the primary group preview drags the tile it currently shows", async ({
+  page,
+}) => {
+  await ready(page);
+  const group = page.getByRole("button", {
+    name: "Группа LC-ground",
+    exact: true,
+  });
+  const image = group.locator(".map-group-primary");
+  await expect(image).toBeVisible();
+  const start = await image.boundingBox(),
+    point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(point.x, point.y, { steps: 12 });
+  await page.mouse.up();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          window.lastSaved?.document.tiles.find((t) => t.x === 4 && t.y === 4)
+            ?.modelId,
+      ),
+    )
+    .toBe("22222222-2222-4222-8222-222222222222");
+});

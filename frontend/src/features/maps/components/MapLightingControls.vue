@@ -35,7 +35,7 @@ const emit = defineEmits(["update:enabled", "update:sun", "finish"]);
 .map-lighting-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 .map-light-sources {
   display: flex;

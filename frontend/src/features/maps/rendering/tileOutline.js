@@ -1,3 +1,4 @@
+import { modelVisual } from "./modelVisual";
 import {
   Color,
   Group,
@@ -112,9 +113,7 @@ export function createTileOutline(gpu, assets) {
     }
     for (const entries of buckets.values()) {
       const [first, material] = entries[0],
-        model =
-          assets.visual?.(first.modelId, tier) ||
-          assets.model(first.modelId, tier),
+        model = modelVisual(assets, first.modelId, tier),
         metadata = assets.metadata(first.modelId);
       if (!model || !metadata) continue;
       for (const part of model.parts) {

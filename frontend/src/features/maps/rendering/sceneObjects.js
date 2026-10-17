@@ -18,9 +18,8 @@ function box(root, w, h, d, x, y, z, material) {
   root.add(mesh);
   return mesh;
 }
-export function buildMapProp(object, open, fog, assets, tier, strict = false) {
-  if (object.modelId)
-    return buildModelObject(object, assets, fog, tier, strict);
+export function buildMapProp(object, open, fog, assets, tier) {
+  if (object.modelId) return buildModelObject(object, assets, fog, tier);
   const root = new Group(),
     wood = fog.material(
       new MeshStandardMaterial({ color: 0x826343, roughness: 0.9 }),

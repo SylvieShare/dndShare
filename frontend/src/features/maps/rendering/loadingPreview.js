@@ -1,3 +1,4 @@
+import { modelVisual } from "./modelVisual";
 import {
   Group,
   Mesh,
@@ -45,7 +46,7 @@ export function createLoadingPreview(assets, onChange = () => {}) {
     root.clear();
   }
   function visual(id, tier) {
-    return assets.visual?.(id, tier) || assets.model(id, tier);
+    return modelVisual(assets, id, tier);
   }
 
   function update(options, catalogue = [], scene = {}) {
@@ -63,7 +64,7 @@ export function createLoadingPreview(assets, onChange = () => {}) {
       [objects, "object"],
     ])
       for (const item of items) {
-        if (assets.model(item.modelId, "render")) continue;
+        if (visual(item.modelId, "render")) continue;
         const model =
           metadata.get(item.modelId) || assets.metadata(item.modelId);
         if (!model) continue;

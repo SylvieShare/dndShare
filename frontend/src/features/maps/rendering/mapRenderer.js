@@ -18,7 +18,7 @@ import {
 import { modelAssets } from "./modelAssets";
 import { createMapFog } from "./mapFog";
 import { createTileLayer } from "./tileLayer";
-import { buildAnnotations, disposeAnnotations } from "./annotations";
+import { createMapAnnotations } from "./mapAnnotations";
 import { buildSceneObjects, disposeObjects } from "./sceneObjects";
 import { createTokenPortraits } from "./sceneTokens";
 import { mapCamera } from "./mapCamera";
@@ -52,15 +52,14 @@ export async function createMapRenderer(
     tileKey = "",
     objectKey = "",
     fogKey = "",
-    annotationKey = "",
     lastFrame = 0,
     frame = 0,
     flickerTimer = 0,
     placedTiles = [];
-  let annotations = new Group(),
-    objects = new Group();
+  let objects = new Group();
+  const annotations = createMapAnnotations(scene);
   let appearance = areaAppearance({ areas: [] });
-  scene.add(annotations, objects);
+  scene.add(objects);
   const assets = modelAssets(onError, gpu, assetsChanged, onDownloadProgress),
     lighting = createMapLighting(scene, gpu, assets),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
@@ -143,7 +142,7 @@ export async function createMapRenderer(
       outline.render(
         scene,
         camera,
-        annotations,
+        annotations.root,
         [
           preview.root,
           objectPreview.root,
@@ -179,6 +178,8 @@ export async function createMapRenderer(
     appearance = areaAppearance(d, opts.areaMode);
     structure.hideTiles(appearance.hiddenTiles);
     view.document(d, opts);
+    annotations.update(d, opts);
+    render();
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
     const ids = new Set([
       ...d.tiles.map((t) => t.modelId),
@@ -361,6 +362,15 @@ export async function createMapRenderer(
       opts.selectedToken,
       opts.previewObject?.id,
       renderObjects,
+      assets.signature(
+        new Set(
+          posedObjects
+            .filter((o) => renderObjects.includes(o.id))
+            .map((o) => o.modelId)
+            .filter(Boolean),
+        ),
+        "render",
+      ),
       d.areas,
       opts.areaMode,
     ]);
@@ -390,25 +400,6 @@ export async function createMapRenderer(
         tier,
       );
       scene.add(objects);
-    }
-    const nextAnnotations = JSON.stringify([
-      d.width,
-      d.height,
-      d.kind,
-      d.grid,
-      d.zones,
-      opts.master,
-      opts.showZones,
-      opts.selectedZone,
-      opts.selection,
-      nextTiles,
-    ]);
-    if (nextAnnotations !== annotationKey) {
-      annotationKey = nextAnnotations;
-      scene.remove(annotations);
-      disposeAnnotations(annotations);
-      annotations = buildAnnotations(d, opts);
-      scene.add(annotations);
     }
     lighting.update(
       d,
@@ -557,7 +548,7 @@ export async function createMapRenderer(
       observer.disconnect();
       cancelAnimationFrame(frame);
       clearTimeout(flickerTimer);
-      disposeAnnotations(annotations);
+      annotations.destroy();
       disposeObjects(objects);
       tokenPortraits.destroy();
       tiles.destroy();

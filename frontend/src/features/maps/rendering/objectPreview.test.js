@@ -28,3 +28,43 @@ it("preserves opaque materials and depth while dragging a model object", () => {
   geometry.dispose();
   material.dispose();
 });
+it("uses a coarse object while full detail is pending and replaces it without pointer movement", () => {
+  const lod = new BoxGeometry(1, 1, 1),
+    full = new BoxGeometry(1, 2, 1),
+    material = new MeshStandardMaterial();
+  let ready = false;
+  const assets = {
+    model: (_, tier) =>
+      tier === "render" && !ready
+        ? null
+        : {
+            parts: [
+              {
+                geometry: tier === "render" ? full : lod,
+                material,
+                matrix: new Matrix4(),
+              },
+            ],
+          },
+  };
+  const preview = createObjectPreview({ material: (m) => m }, assets);
+  const item = {
+    id: "chest",
+    modelId: "model",
+    x: 5,
+    y: 4,
+    rotation: 0,
+    scale: 1,
+  };
+  preview.update(item);
+  expect(preview.root.children[0].children[0].geometry).toBe(lod);
+  ready = true;
+  preview.update(item);
+  preview.advance(16);
+  expect(preview.root.children[0].children[0].geometry).toBe(full);
+  expect(preview.root.children[0].position.x).toBe(5);
+  preview.destroy();
+  lod.dispose();
+  full.dispose();
+  material.dispose();
+});

@@ -1,6 +1,21 @@
 export function modelDownloadsFixture(params, bodyFor) {
   const pending = new Map();
   let automatic = false;
+  const catalogueGate = params.has("slowCatalogue")
+    ? new Promise((resolve) => {
+        window.releaseCatalogue = resolve;
+      })
+    : Promise.resolve();
+  window.pauseModelTransfers = () => {
+    automatic = false;
+  };
+  window.finishModelTransfer = (suffix) => {
+    const matches = [...pending.entries()].filter(([url]) =>
+      url.includes(suffix),
+    );
+    for (const [, transfer] of matches) transfer.send(1);
+    return matches.length;
+  };
   window.modelTransfers = [];
   window.activeModelTransfers = 0;
   window.maxActiveModelTransfers = 0;
@@ -12,6 +27,12 @@ export function modelDownloadsFixture(params, bodyFor) {
     window.advanceModelTransfers();
   };
   return {
+    async catalogue(models) {
+      await catalogueGate;
+      return new Response(JSON.stringify(models), {
+        headers: { "Content-Type": "application/json" },
+      });
+    },
     sizes(id) {
       const size = bodyFor(id).byteLength;
       return { render: size, lod: size, shadow: size, preview: 0 };

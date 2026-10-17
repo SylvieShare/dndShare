@@ -29,7 +29,16 @@
       @keydown.space.prevent="focusVariants"
       @keydown.right.prevent="focusVariants"
     >
-      <div class="map-group-images">
+      <div
+        class="map-group-images"
+        @pointerdown="
+          draggable &&
+          $event.button === 0 &&
+          !$event.target.closest('.map-group-thumbnails') &&
+          drag(primary.id, $event)
+        "
+        @dragstart.prevent
+      >
         <img
           :src="primary.previewUrl"
           class="map-group-primary"
@@ -182,6 +191,7 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 .map-group-images {
+  touch-action: none;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 24px;
   gap: 4px;

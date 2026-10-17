@@ -25,7 +25,7 @@
       "
     />
     <div
-      v-for="group in progress.groups"
+      v-for="group in progress.groups.filter((g) => g.remaining > 0)"
       :key="group.kind"
       class="map-download-row"
       :aria-label="`${labels[group.kind]}: осталось ${group.remaining} из ${group.total}`"

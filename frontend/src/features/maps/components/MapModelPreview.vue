@@ -209,7 +209,10 @@ onMounted(async () => {
     renderer = createModelPreview(
       host.value,
       (frame) => {
-        if (!loading.value) snapshot.value = frame;
+        if (frame.ready) {
+          loading.value = false;
+          snapshot.value = frame;
+        }
       },
       (message) => {
         error.value = message;

@@ -53,6 +53,7 @@ export function createModelPreview(host, onFrame, onError) {
       const data = guides.descriptors(),
         project = (p) => ({ ...p, ...view.project(p.position) });
       onFrame({
+        ready: !!asset,
         labels: layoutPreviewLabels(
           data.labels.map(project),
           host.clientWidth,
@@ -106,19 +107,29 @@ export function createModelPreview(host, onFrame, onError) {
       asset = null;
       fitKey = "";
       assets.destroy();
-      assets = modelAssets(onError, gpu);
-      const owner = assets;
+      const owner = modelAssets(onError, gpu, () => populate());
+      assets = owner;
+      function populate() {
+        if (dead || id !== epoch) return;
+        const nextAsset = owner.visual(source.id, "render");
+        if (!nextAsset || nextAsset === asset) return;
+        asset = nextAsset;
+        root.clear();
+        for (const part of asset.parts) {
+          const mesh = new Mesh(part.geometry, part.material);
+          mesh.matrixAutoUpdate = false;
+          mesh.matrix.copy(part.matrix);
+          root.add(mesh);
+        }
+        update(current, options);
+      }
+      await owner.prepare(new Set([source.id]), { catalogue: [source] });
+      populate();
       await owner.ensure(new Set([source.id]), "render", {
         catalogue: [source],
       });
       if (dead || id !== epoch) return;
-      asset = owner.model(source.id, "render");
-      for (const part of asset.parts) {
-        const mesh = new Mesh(part.geometry, part.material);
-        mesh.matrixAutoUpdate = false;
-        mesh.matrix.copy(part.matrix);
-        root.add(mesh);
-      }
+      populate();
       update(current, options);
     },
     update,

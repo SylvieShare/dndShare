@@ -132,3 +132,63 @@ it("removes queued files when the scene changes and does not restart abandoned d
   expect(pending.size).toBe(3);
   expect(progress.mock.lastCall[0]).toMatchObject({ total: 0, remaining: 0 });
 });
+it("resets completed batch totals for newly requested files but retains cache memory statistics", async () => {
+  const { pending, make } = setup(),
+    seen = vi.fn(),
+    assets = make(seen);
+  const catalogue = ["a", "b"].map((id) => ({
+    id,
+    lodUrl: `/${id}-lod`,
+    renderUrl: `/${id}-full`,
+    assetBytes: { lod: 100, render: 900 },
+  }));
+  await assets.prepare(new Set(["a"]), { catalogue });
+  assets.progressive(new Set(["a"]), "render");
+  await flush();
+  pending.get("/a-lod").finish();
+  await flush();
+  pending.get("/a-full").finish();
+  await flush();
+  expect(seen.mock.lastCall[0]).toMatchObject({
+    total: 2,
+    remaining: 0,
+    memory: { files: 2, fileBytes: 1000 },
+  });
+  assets.progressive(new Set(["a", "b"]), "render");
+  await flush();
+  expect(seen.mock.lastCall[0]).toMatchObject({
+    session: 2,
+    total: 2,
+    ready: 0,
+    remaining: 2,
+    remainingBytes: 1000,
+    memory: { files: 2 },
+  });
+  pending.get("/b-lod").finish();
+  await flush();
+  pending.get("/b-full").finish();
+  await flush();
+});
+it("retains an already cached alternate tier from another owner without starting another transfer", async () => {
+  const { pending, disposed, make } = setup(),
+    a = make(vi.fn()),
+    b = make(vi.fn());
+  const catalogue = [
+    { id: "a", lodUrl: "/shared-coarse", renderUrl: "/new-full" },
+  ];
+  await a.prepare(new Set(["a"]), { catalogue });
+  await b.prepare(new Set(["a"]), { catalogue });
+  const wait = a.ensure(new Set(["a"]), "lod", { catalogue });
+  await flush();
+  pending.get("/shared-coarse").finish();
+  await wait;
+  expect(b.visual("a", "render")).toBe(a.model("a", "lod"));
+  await flush();
+  a.destroy();
+  await flush();
+  expect(disposed).toEqual([]);
+  expect(pending.size).toBe(1);
+  b.destroy();
+  await flush();
+  expect(disposed).toEqual(["/shared-coarse"]);
+});

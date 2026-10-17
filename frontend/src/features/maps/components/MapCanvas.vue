@@ -31,11 +31,6 @@
       }"
       aria-hidden="true"
     />
-    <LoadingState
-      v-if="loading"
-      class="map-canvas-message"
-      label="Подготавливаем карту…"
-    />
     <div v-if="error" class="map-canvas-message" role="alert">
       {{ error
       }}<ActionButton variant="secondary" @click="retry"
@@ -57,7 +52,7 @@
 </template>
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { ActionButton, LoadingState } from "@sylvieshare/share-ui";
+import { ActionButton } from "@sylvieshare/share-ui";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
 import { useCameraFocus } from "../composables/useCameraFocus";
@@ -110,9 +105,8 @@ const props = defineProps({
 const hintLines = computed(() =>
   Array.isArray(props.hint) ? props.hint : (props.hint || "").split(/\s*·\s*/),
 );
-const emit = defineEmits(["gesture", "view", "camera-move"]);
+const emit = defineEmits(["gesture", "view", "camera-move", "resources"]);
 const host = ref(null),
-  loading = ref(true),
   downloads = ref(null),
   error = ref(""),
   topView = ref(false);
@@ -243,6 +237,7 @@ onMounted(async () => {
       undefined,
       (progress) => {
         downloads.value = progress;
+        emit("resources", progress.memory);
       },
     );
     if (dead) {
@@ -254,8 +249,6 @@ onMounted(async () => {
     if (props.camera) r.camera(props.camera);
   } catch (cause) {
     error.value = `Не удалось запустить отрисовку WebGL: ${cause.message}`;
-  } finally {
-    loading.value = false;
   }
 });
 onBeforeUnmount(() => {

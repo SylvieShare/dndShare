@@ -98,7 +98,7 @@ function afterLeave(element) {
 .model-lights {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 .model-light-list {
   display: flex;

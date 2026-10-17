@@ -117,13 +117,14 @@ defineExpose({
   padding: 6px;
 }
 .map-sidebar-heading strong {
+  font-size: 16px;
   padding-left: 6px;
 }
 .map-sidebar-content {
   --map-panel-inset: 12px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
   min-height: 0;
   overflow: auto;
   padding: 8px 12px 18px;

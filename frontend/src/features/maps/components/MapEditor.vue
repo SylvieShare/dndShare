@@ -92,6 +92,7 @@
           :placement-object="e.tool === 'object' ? e.objectModel : ''"
           :placement-rotation="e.placementRotation"
           :placement-hint="e.placementHint"
+          @resources="e.modelMemory = $event"
           @gesture="handleGesture"
           @camera-move="placement.cursor.moved"
         />

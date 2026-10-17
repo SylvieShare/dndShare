@@ -68,3 +68,25 @@ it("batches missing scene cells and replaces only the models that have become vi
   expect(changed).toEqual([2, 1, 0]);
   loading.destroy();
 });
+it("keeps a dropped pending tile visible until any visual tier arrives", () => {
+  let lod = false;
+  const assets = {
+    metadata: () => ({ width: 1, height: 1 }),
+    model: (_, tier) => (tier === "lod" && lod ? {} : null),
+  };
+  const loading = createLoadingPreview(assets);
+  const tile = {
+    id: "placed",
+    modelId: "tile",
+    x: 5,
+    y: 3,
+    rotation: 0,
+    elevation: 0,
+  };
+  loading.update({}, [], { tiles: [tile], tier: "render" });
+  expect(loading.root.children[0].count).toBe(1);
+  lod = true;
+  loading.update({ previewTile: tile }, [], { tiles: [tile], tier: "render" });
+  expect(loading.root.children).toHaveLength(0);
+  loading.destroy();
+});

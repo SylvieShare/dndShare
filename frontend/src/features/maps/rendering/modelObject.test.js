@@ -42,3 +42,13 @@ it("releases cloned multi-material objects without disposing shared model geomet
   texture.dispose();
   materials.forEach((m) => m.dispose());
 });
+it('keeps a full mesh visible when the scene requests an unfinished LOD', () => {
+  const geometry = new BoxGeometry(), material = new MeshStandardMaterial();
+  const full = { parts: [{geometry, material, matrix:new Matrix4()}] };
+  const object = buildModelObject({id:'prop',modelId:'a',x:3,y:4,scale:1,rotation:0},
+    { model:(_,tier)=>tier==='render'?full:null },{material:m=>m},'lod');
+  expect(object.children).toHaveLength(1);
+  expect(object.children[0].geometry).toBe(geometry);
+  expect(object.position.x).toBe(3);
+  disposeObjects(object); geometry.dispose(); material.dispose();
+});

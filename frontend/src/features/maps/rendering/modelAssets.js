@@ -5,13 +5,12 @@ import {
   release,
   prioritize,
   resourceKey,
+  cachedModel,
 } from "./modelResourceCache";
 import { modelDownloads } from "./modelDownloadManager";
-import {
-  modelFile,
-  modelDownloadPlan,
-  modelDownloadProgress,
-} from "./modelDownloadProgress";
+import { modelFile, modelDownloadPlan } from "./modelDownloadProgress";
+import { createModelDownloadSession } from "./modelDownloadSession";
+import { residentModelUsage } from "./modelMemoryUsage";
 export function modelAssets(
   onError,
   renderer,
@@ -19,7 +18,8 @@ export function modelAssets(
   onProgress = () => {},
 ) {
   const loader = acquireModelLoader(renderer),
-    owned = new Map();
+    owned = new Map(),
+    sessionProgress = createModelDownloadSession();
   let catalogue = new Map(),
     catalogueKey = "",
     sourceCatalogue,
@@ -38,15 +38,18 @@ export function modelAssets(
           owned.get(file.fallbackUrl)?.value
         ),
     );
-    const snapshot = modelDownloadProgress(files, (url) => {
+    const snapshot = sessionProgress(files, (url) => {
       const state = modelDownloads.get(resourceKey(url, loader));
       const entry = owned.get(url);
-      return entry?.value
+      return entry?.value || cachedModel(url, loader)
         ? { ...state, status: "ready" }
         : entry?.error
           ? { ...state, status: "failed" }
-          : state;
+          : state?.status === "ready"
+            ? { ...state, status: "processing" }
+            : state;
     });
+    snapshot.memory = residentModelUsage(owned, catalogue);
     const key = JSON.stringify(snapshot);
     if (key !== lastProgress) {
       lastProgress = key;
@@ -126,8 +129,12 @@ export function modelAssets(
     return entry.promise;
   }
   function model(id, tier) {
-    const m = catalogue.get(id);
-    return m && owned.get(m[`${tier}Url`])?.value;
+    const m = catalogue.get(id),
+      url = m?.[`${tier}Url`];
+    if (!url) return null;
+    const value = owned.get(url)?.value || cachedModel(url, loader);
+    if (value && !owned.has(url)) request(id, tier).catch(report);
+    return value;
   }
   function visualTier(id, tier) {
     if (model(id, tier)) return tier;

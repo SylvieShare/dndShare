@@ -21,7 +21,7 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
   padding: 0 var(--map-panel-inset, 14px) var(--map-panel-inset, 14px);
 }
 .map-focus-body > :deep(*) {

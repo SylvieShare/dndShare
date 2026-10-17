@@ -22,7 +22,7 @@ test("focus scrolls inside its frame, retains the heading, and uses compact mute
     body = panel.locator(".map-focus-body");
   await expect(body).toHaveCSS("overflow-y", "auto");
   await expect(panel).toHaveCSS("overflow-y", "hidden");
-  await expect(body).toHaveCSS("gap", "20px");
+  await expect(body).toHaveCSS("gap", "25px");
   await expect(panel.locator(".map-selected-heading")).toHaveCSS(
     "border-top-width",
     "0px",

@@ -1,3 +1,4 @@
+import { modelVisual } from "./modelVisual";
 import { Group, InstancedMesh, Matrix4 } from "three";
 import { tilePose, tilePoseTransform } from "./tileTransform";
 import { createRotationMotion } from "./rotationMotion";
@@ -59,9 +60,7 @@ export function createTileLayer(assets, fog) {
       }
       for (const items of buckets.values()) {
         const metadata = assets.metadata(items[0].modelId),
-          model =
-            assets.visual?.(items[0].modelId, tier) ||
-            assets.model(items[0].modelId, tier);
+          model = modelVisual(assets, items[0].modelId, tier);
         if (!metadata || !model) continue;
         for (const part of model.parts) {
           const materials = (

@@ -1,92 +1,84 @@
 <template>
-  <div class="map-light-fields">
-    <FormField label="Название" vertical>
-      <span v-if="anchor && !light.builtinKey" class="map-light-name-prefix">{{
-        anchor.name
-      }}</span>
-      <FormTextInput
-        :value="
-          light.builtinKey && anchor
-            ? `${anchor.name} · ${light.name}`
-            : light.name
+  <FormField label="Название" vertical>
+    <span v-if="anchor && !light.builtinKey" class="map-light-name-prefix">{{
+      anchor.name
+    }}</span>
+    <FormTextInput
+      :value="
+        light.builtinKey && anchor
+          ? `${anchor.name} · ${light.name}`
+          : light.name
+      "
+      :disabled="!!light.builtinKey"
+      aria-label="Название источника света"
+      :maxlength="100"
+      @change="
+        editor.updateLight(light.id, 'name', $event.trim() || light.name)
+      "
+    />
+  </FormField>
+  <MapInspectorSection title="Параметры света">
+    <FormField
+      v-for="field in fields"
+      :key="field.key"
+      :label="`${field.label}: ${light[field.key]}`"
+      vertical
+    >
+      <AppSlider
+        :model-value="light[field.key]"
+        :min="field.min"
+        :max="
+          field.key === 'height' ? Math.max(field.max, light.height) : field.max
         "
-        :disabled="!!light.builtinKey"
-        aria-label="Название источника света"
-        :maxlength="100"
-        @change="
-          editor.updateLight(light.id, 'name', $event.trim() || light.name)
-        "
+        :step="field.step"
+        :label="field.label"
+        @update:model-value="editor.updateLight(light.id, field.key, $event)"
+        @change="editor.finishLightEdit"
       />
     </FormField>
-    <MapInspectorSection title="Параметры света">
-      <FormField
-        v-for="field in fields"
-        :key="field.key"
-        :label="`${field.label}: ${light[field.key]}`"
-        vertical
-      >
-        <AppSlider
-          :model-value="light[field.key]"
-          :min="field.min"
-          :max="
-            field.key === 'height'
-              ? Math.max(field.max, light.height)
-              : field.max
-          "
-          :step="field.step"
-          :label="field.label"
-          @update:model-value="editor.updateLight(light.id, field.key, $event)"
-          @change="editor.finishLightEdit"
-        />
-      </FormField>
-      <MapLightActions :editor="editor" :light="light" />
-    </MapInspectorSection>
-    <MapInspectorSection title="Привязка">
-      <MapEntityRow
-        v-if="anchor"
-        :entry="anchor"
-        @select="emit('focus', $event)"
-      >
-        <template v-if="!light.builtinKey" #actions>
-          <ActionButton
-            icon-only
-            variant="quiet"
-            aria-label="Отвязать источник"
-            title="Отвязать источник"
-            @click.stop="editor.bindLight(light.id, null)"
-            ><template #icon><X :size="18" /></template
-          ></ActionButton>
-        </template>
-      </MapEntityRow>
-      <ActionButton
-        :disabled="!!light.builtinKey"
-        variant="secondary"
-        @click="
-          editor.bindingLight === light.id
-            ? editor.cancelLightBinding()
-            : emit('bind', light.id)
-        "
-      >
-        <template #icon
-          ><LockKeyhole v-if="light.builtinKey" :size="16" /><Link
-            v-else
-            :size="16"
-        /></template>
-        {{
-          light.builtinKey
-            ? "Привязка к модели фиксирована"
-            : editor.bindingLight === light.id
-              ? "Отменить привязку"
-              : light.anchor
-                ? "Изменить привязку"
-                : "Привязать"
-        }}
-      </ActionButton>
-      <p v-if="editor.bindingLight === light.id" class="map-hint" role="status">
-        Нажмите на плитку или объект на карте.
-      </p>
-    </MapInspectorSection>
-  </div>
+    <MapLightActions :editor="editor" :light="light" />
+  </MapInspectorSection>
+  <MapInspectorSection title="Привязка">
+    <MapEntityRow v-if="anchor" :entry="anchor" @select="emit('focus', $event)">
+      <template v-if="!light.builtinKey" #actions>
+        <ActionButton
+          icon-only
+          variant="quiet"
+          aria-label="Отвязать источник"
+          title="Отвязать источник"
+          @click.stop="editor.bindLight(light.id, null)"
+          ><template #icon><X :size="18" /></template
+        ></ActionButton>
+      </template>
+    </MapEntityRow>
+    <ActionButton
+      :disabled="!!light.builtinKey"
+      variant="secondary"
+      @click="
+        editor.bindingLight === light.id
+          ? editor.cancelLightBinding()
+          : emit('bind', light.id)
+      "
+    >
+      <template #icon
+        ><LockKeyhole v-if="light.builtinKey" :size="16" /><Link
+          v-else
+          :size="16"
+      /></template>
+      {{
+        light.builtinKey
+          ? "Привязка к модели фиксирована"
+          : editor.bindingLight === light.id
+            ? "Отменить привязку"
+            : light.anchor
+              ? "Изменить привязку"
+              : "Привязать"
+      }}
+    </ActionButton>
+    <p v-if="editor.bindingLight === light.id" class="map-hint" role="status">
+      Нажмите на плитку или объект на карте.
+    </p>
+  </MapInspectorSection>
 </template>
 <script setup>
 import { computed } from "vue";
@@ -120,11 +112,6 @@ const anchor = computed(
 );
 </script>
 <style scoped>
-.map-light-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 .map-light-name-prefix {
   font-size: 12px;
   color: var(--text-muted);

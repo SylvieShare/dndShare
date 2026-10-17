@@ -417,9 +417,7 @@ window.fetch = async (url, options = {}) => {
     url === "/api/maps/models" ||
     url === "/api/public/sessions/ABC-123/map-models"
   )
-    return new Response(JSON.stringify(catalogue.map(modelDto)), {
-      headers: { "Content-Type": "application/json" },
-    });
+    return transfers.catalogue(catalogue.map(modelDto));
   let data = options.body ? JSON.parse(options.body) : null;
   if (data && /^\/api\/maps\/models\/[^/]+$/.test(url)) {
     const { id, uuid, ...fields } = data;

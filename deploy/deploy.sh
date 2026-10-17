@@ -60,57 +60,76 @@ ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" 'bash -s' <<'DISK_CHECK'
   fi
 DISK_CHECK
 
+DEPLOY_DIR="$(ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" 'mktemp -d "$HOME/dndshare-deploy.XXXXXX"')"
+case "$DEPLOY_DIR" in /*/dndshare-deploy.*) ;; *) echo "Некорректный staging deploy" >&2; exit 1 ;; esac
+cleanup_upload() {
+  ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "rm -rf -- '$DEPLOY_DIR'" >/dev/null 2>&1 || true
+}
+trap cleanup_upload EXIT
+BUILD_SHA256="$(shasum -a 256 build/dndshare | awk '{print $1}')"
 echo "==> Копирование основного бинаря + unit + run.sh на $VM_HOST"
 # .new + mv на VM — чтобы не ловить 'text file busy' при перезаписи работающего бинаря.
-scp -i "$SSH_KEY" build/frontend-assets.tar.gz "$VM_USER@$VM_HOST:~/dndshare-frontend-assets.new.tar.gz"
-scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:~/dndshare.new"
-scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:~/dndshare.service"
-scp -i "$SSH_KEY" deploy/nginx-dndshare.conf "$VM_USER@$VM_HOST:~/dndshare-nginx.conf"
-scp -i "$SSH_KEY" deploy/nginx-dndshare-http.conf "$VM_USER@$VM_HOST:~/dndshare-nginx-http.conf"
-scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:~/dndshare-run.sh"
-scp -i "$SSH_KEY" deploy/fetch-secrets.sh deploy/fetch-secrets.py "$VM_USER@$VM_HOST:~/"
-scp -i "$SSH_KEY" deploy/journald-storage.conf "$VM_USER@$VM_HOST:~/dndshare-journald-storage.conf"
-scp -i "$SSH_KEY" deploy/certbot-reload-nginx.sh "$VM_USER@$VM_HOST:~/dndshare-certbot-reload-nginx.sh"
+scp -i "$SSH_KEY" build/frontend-assets.tar.gz "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-frontend-assets.new.tar.gz"
+scp -i "$SSH_KEY" build/dndshare            "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare.new"
+scp -i "$SSH_KEY" deploy/dndshare.service   "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare.service"
+scp -i "$SSH_KEY" deploy/nginx-dndshare.conf "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-nginx.conf"
+scp -i "$SSH_KEY" deploy/nginx-dndshare-http.conf "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-nginx-http.conf"
+scp -i "$SSH_KEY" deploy/dndshare-run.sh    "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-run.sh"
+scp -i "$SSH_KEY" deploy/fetch-secrets.sh deploy/fetch-secrets.py "$VM_USER@$VM_HOST:$DEPLOY_DIR/"
+scp -i "$SSH_KEY" deploy/journald-storage.conf "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-journald-storage.conf"
+scp -i "$SSH_KEY" deploy/certbot-reload-nginx.sh "$VM_USER@$VM_HOST:$DEPLOY_DIR/dndshare-certbot-reload-nginx.sh"
 
 echo "==> Обновление unit + перезапуск сервиса (секреты подтянутся в run.sh)"
-ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT'" <<'REMOTE'
+# The remote installer owns cleanup now; a lost SSH channel must not remove its inputs.
+trap - EXIT
+ssh -i "$SSH_KEY" "$VM_USER@$VM_HOST" "bash -s -- '$BUILD_COMMIT' '$DEPLOY_DIR' '$BUILD_SHA256'" <<'REMOTE'
   set -euo pipefail
   expected_commit="$1"
-  chmod +x ~/dndshare.new ~/dndshare-run.sh ~/fetch-secrets.sh
+  deploy_dir="$2"
+  expected_sha256="$3"
+  asset_staging=''
+  cleanup() { [ -z "$asset_staging" ] || rm -rf "$asset_staging"; rm -rf "$deploy_dir"; }
+  trap cleanup EXIT
+  # Uploads may overlap; installation and readiness are serialized on the VM.
+  exec 9>"$HOME/.dndshare-deploy.lock"
+  flock -w 300 9
+  cd "$deploy_dir"
+  printf '%s  %s\n' "$expected_sha256" dndshare.new | sha256sum -c -
+  chmod +x ./dndshare.new ./dndshare-run.sh ./fetch-secrets.sh
   sudo install -d -m 755 /etc/letsencrypt/renewal-hooks/deploy
-  sudo install -m 750 ~/dndshare-certbot-reload-nginx.sh /etc/letsencrypt/renewal-hooks/deploy/dndshare-nginx
+  sudo install -m 750 ./dndshare-certbot-reload-nginx.sh /etc/letsencrypt/renewal-hooks/deploy/dndshare-nginx
   sudo install -d -m 755 /etc/systemd/journald.conf.d
-  if ! sudo cmp -s ~/dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf; then
-    sudo install -m 644 ~/dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf
+  if ! sudo cmp -s ./dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf; then
+    sudo install -m 644 ./dndshare-journald-storage.conf /etc/systemd/journald.conf.d/60-dndshare-storage.conf
     sudo systemctl restart systemd-journald
   fi
   while IFS= read -r unit_line; do
     case "$unit_line" in
       Environment=*) export "${unit_line#Environment=}" ;;
     esac
-  done < ~/dndshare.service
-  ~/fetch-secrets.sh ~/dndshare.env
-  asset_staging="$(mktemp -d /home/sylvieshare/dndshare-frontend-upload.XXXXXX)"
-  trap 'rm -rf "$asset_staging"' EXIT
-  tar -xzf ~/dndshare-frontend-assets.new.tar.gz -C "$asset_staging"
+  done < ./dndshare.service
+  ./fetch-secrets.sh ~/dndshare.env
+  asset_staging="$(mktemp -d "$HOME/dndshare-frontend-upload.XXXXXX")"
+  tar -xzf ./dndshare-frontend-assets.new.tar.gz -C "$asset_staging"
   mkdir -p ~/dndshare-frontend-assets/static
   # Hard links publish complete files atomically on the same filesystem.
   # Existing hashes remain immutable; a failed upload is safe to retry.
   cp -aln "$asset_staging/static/." ~/dndshare-frontend-assets/static/
   rm -rf "$asset_staging"
-  trap - EXIT
-  rm ~/dndshare-frontend-assets.new.tar.gz
+  rm ./dndshare-frontend-assets.new.tar.gz
   sudo systemctl stop dndshare || true
-  mv ~/dndshare.new ~/dndshare
-  sudo install -m 644 ~/dndshare.service /etc/systemd/system/dndshare.service
+  mv ./dndshare.new ~/dndshare
+  mv ./dndshare-run.sh ./fetch-secrets.sh ./fetch-secrets.py "$HOME/"
+  sudo install -m 644 ./dndshare.service /etc/systemd/system/dndshare.service
   if sudo test -s /etc/letsencrypt/live/dndshare.ru/fullchain.pem; then
-    sudo install -m 644 ~/dndshare-nginx.conf /etc/nginx/sites-available/dndshare
+    sudo install -m 644 ./dndshare-nginx.conf /etc/nginx/sites-available/dndshare
   else
-    sudo install -m 644 ~/dndshare-nginx-http.conf /etc/nginx/sites-available/dndshare
+    sudo install -m 644 ./dndshare-nginx-http.conf /etc/nginx/sites-available/dndshare
   fi
   sudo ln -sfn /etc/nginx/sites-available/dndshare /etc/nginx/sites-enabled/dndshare
   sudo nginx -t
   sudo systemctl reload nginx
+  mv ./dndshare.service ./dndshare-nginx.conf ./dndshare-nginx-http.conf ./dndshare-journald-storage.conf ./dndshare-certbot-reload-nginx.sh "$HOME/"
   sudo systemctl daemon-reload
   sudo systemctl restart dndshare
   ready=false

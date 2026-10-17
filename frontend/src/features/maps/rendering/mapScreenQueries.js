@@ -1,3 +1,4 @@
+import { modelVisual } from "./modelVisual";
 import { Vector3 } from "three";
 import { surfacePoints } from "../lib/surfacePlacement";
 import { tileBounds } from "./tileTransform";
@@ -13,7 +14,7 @@ export function mapScreenQueries(
   getHiddenTiles = () => new Set(),
 ) {
   function screenBounds(tile) {
-    const model = assets.model(tile.modelId, getTier()),
+    const model = modelVisual(assets, tile.modelId, getTier()),
       metadata = assets.metadata(tile.modelId);
     if (!model || !metadata) return null;
     const landing = preview.posed(tile.id);

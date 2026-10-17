@@ -1,3 +1,4 @@
+import { modelVisual, visualSignature } from "./modelVisual";
 import { Color, Group, InstancedMesh, Matrix4 } from "three";
 import { tilePose, tilePoseTransform } from "./tileTransform";
 import { createRotationMotion } from "./rotationMotion";
@@ -52,6 +53,22 @@ export function createTilePreview(assets, onSettled = () => {}) {
       target = next.target;
       hidden = next.hidden;
       active = false;
+      if (
+        !root.children.length ||
+        (next.target.group || [next.target]).some(
+          (t) => !modelVisual(assets, t.modelId, "render"),
+        )
+      ) {
+        target = null;
+        hidden = [];
+        landing = false;
+        position = null;
+        rotation.clear();
+        clear();
+        key = "";
+        root.visible = false;
+        return;
+      }
       landing = true;
       liftTarget = 0;
       opacityTarget = next.fade ? 0 : 1;
@@ -63,7 +80,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       group.map((t) => [
         t.modelId,
         assets.metadata(t.modelId)?.renderUrl,
-        !!assets.model(t.modelId, "render"),
+        visualSignature(assets, new Set([t.modelId]), "render"),
       ]),
     );
     if (key !== nextKey) {
@@ -76,7 +93,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       });
       for (const [id, indices] of buckets) {
         const metadata = assets.metadata(id),
-          model = assets.model(id, "render");
+          model = modelVisual(assets, id, "render");
         if (!metadata || !model) continue;
         for (const part of model.parts) {
           const materials = (

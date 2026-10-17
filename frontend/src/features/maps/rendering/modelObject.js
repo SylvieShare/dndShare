@@ -1,15 +1,7 @@
+import { modelVisual } from "./modelVisual";
 import { Group, Mesh } from "three";
-export function buildModelObject(
-  object,
-  assets,
-  fog,
-  tier = "render",
-  strict = false,
-) {
-  const source = strict
-      ? assets?.model(object.modelId, tier)
-      : assets?.visual?.(object.modelId, tier) ||
-        assets?.model(object.modelId, tier),
+export function buildModelObject(object, assets, fog, tier = "render") {
+  const source = modelVisual(assets, object.modelId, tier),
     root = new Group();
   root.position.set(object.x, object.elevation || 0, object.y);
   root.scale.setScalar(object.scale);

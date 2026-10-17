@@ -410,8 +410,10 @@ opacity .4 основной иконки в выключенном состоя�
 MapSelectedEntity составляет заголовок `name / code · id`, превью в
 BaseTile и ActionButton копирования/удаления. Координатных таблиц нет.
 MapInspectorSection — доменная композиция секции: MapPanelHeading использует
-общий SectionLabel без border и с публичным spaceAfter=12, затем содержимое.
-Отступ между секциями 20px; заголовки левой и правой панели без разделителей. Ею оформлены область, переходы,
+общий SectionLabel без border, с size=medium (12px) и spaceAfter=12, затем содержимое.
+В правом фокусе имя 18px; MapLightFields возвращает фрагмент с полями/секциями,
+пользуясь единым gap прокручиваемого MapFocusContent.
+Отступ между секциями 25px; заголовки левой и правой панели без разделителей. Ею оформлены область, переходы,
 встроенный и прикреплённый свет. MapSelectionActions составляет выбор области
 из ActionMenu/ActionMenuItem либо её название и переход к карточке слева.
 MapModelTransitions добавляет в панель целевые строки с кнопкой действия через
@@ -468,7 +470,17 @@ Three.js-сферы для ray picking; это координаты 3D-сцен�
 `features/maps/MapDownloadManager` — компактная предметная панель на BaseTile
 с нативным progress и ActionButton повтора. Показывает очередь GLB, оставшиеся
 файлы/байты и подготовку render/LOD/shadow; общий URL учитывается один раз.
-MapCanvas располагает её одним стеком с MapCanvasControls справа снизу.
+MapCanvas располагает её одним стеком с MapCanvasControls справа снизу. Нулевые
+остатки категорий скрыты; createModelDownloadSession ведёт отдельную серию до её
+завершения, дополняя новыми файлами, и начинает свежую статистику следующей серии.
+MapModelMemory составляет раздел настроек из MapInspectorSection, BaseTile и dl;
+получает residentModelUsage через событие resources MapCanvas, не пишет это в карту.
+modelMemoryUsage измеряет общие buffers и оценивает texture residency.
+Единый modelVisual выбирает preferred, alternate или null для заглушки. При
+отпускании незагруженного тайла tilePreview освобождает hiddenIds без landing;
+статический loadingPreview остаётся до появления любого качества. Grid-аннотации
+обновляются через mapAnnotations до assets.prepare, без начального LoadingState.
+MapModelGroupCard начинает перенос primary из области основного изображения.
 Состояние поступает от modelAssets через общий modelDownloadManager, прямых
 HTTP-запросов и собственных загрузчиков в компоненте нет. Общего примитива
 прогресса в share-ui нет; нативный progress сохраняет семантику progressbar.

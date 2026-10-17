@@ -93,7 +93,7 @@ defineProps({
 }
 h3 {
   margin: 0;
-  font-size: 17px;
+  font-size: 18px;
 }
 small {
   font: 11px var(--font-mono);

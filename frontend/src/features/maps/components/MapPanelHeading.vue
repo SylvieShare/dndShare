@@ -3,6 +3,7 @@
     <SectionLabel
       :title="title"
       :space-after="12"
+      size="medium"
       role="heading"
       :aria-level="level"
     >

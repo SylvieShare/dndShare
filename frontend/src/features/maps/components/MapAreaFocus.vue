@@ -122,7 +122,7 @@ h3 {
   flex: 1;
   min-width: 0;
   margin: 0;
-  font-size: 17px;
+  font-size: 18px;
   overflow-wrap: anywhere;
 }
 .map-area-members {

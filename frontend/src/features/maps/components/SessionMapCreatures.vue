@@ -112,7 +112,7 @@ const onMap = (c) => creatureToken(props.editor.draft, c);
 .map-creatures {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 .map-creature-list {
   display: flex;
