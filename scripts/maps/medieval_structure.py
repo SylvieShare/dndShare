@@ -182,7 +182,14 @@ def paint(obj, recipe):
         print('MEDIEVAL_PRODUCE', part['name'], int(mask.sum()), len(centers), flush=True)
     for part in settings.get('surfaceParts', []):
         mask = domain(p, part)
-        if part.get('centersMM'):
+        if part.get('kind')=='flame' and part.get('gradientZMM') is not None:
+            heights = np.array(part['gradientZMM'], float); colours = np.array(part.get('gradientRGB'), float)
+            if heights.shape!=(2,) or not np.isfinite(heights).all() or heights[1]<=heights[0] or colours.shape!=(2, 3) or not np.isfinite(colours).all():
+                raise ValueError('Flame gradient requires increasing heights and two RGB colours')
+            lo, hi = heights
+            t = np.clip((z-lo)/(hi-lo), 0, 1)
+            finish = colours[0]*(1-t[:, None])+colours[1]*t[:, None]
+        elif part.get('centersMM'):
             centers = np.array(part['centersMM'])
             dimensions = part.get('centerDimensions', 2)
             if dimensions not in (2, 3): raise ValueError('Surface colour centres require 2 or 3 dimensions')

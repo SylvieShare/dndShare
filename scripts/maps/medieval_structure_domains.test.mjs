@@ -1,7 +1,48 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { structureDomain, structureMetal, structureFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureDomain, structureMetal, structureFlame, structureEmissionFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+
+test('optional emission inset keeps light inside the flame under packing displacement', () => {
+  const part={ name:'fire',kind:'flame',minMM:[-1,-1,0],maxMM:[1,1,6],rgb:[1,.5,.05],emissionInsetMM:.015 };
+  const settings={surfaceParts:[part]};
+  assert.equal(structureEmissionFlame([.99,0,3],settings),null);
+  assert.equal(structureEmissionFlame([.98,0,3],settings),part);
+  for(const dx of [-.01,0,.01])for(const dy of [-.01,0,.01])for(const dz of [-.01,0,.01])
+    assert.ok(structureFlame([.98+dx,dy,3+dz],settings));
+  assert.equal(structureEmissionFlame([.98,0,3],{surfaceParts:[part,{kind:'paint',minMM:[.99,-1,0],maxMM:[1,1,6]}]}),null);
+});
+
+test('emission without an inset preserves the established flame', () => {
+  const part={kind:'flame',minMM:[-1,-1,0],maxMM:[1,1,6],rgb:[1,.62,.075]};
+  assert.equal(structureEmissionFlame([.999,0,3],{surfaceParts:[part]}),part);
+  assert.throws(()=>structureEmissionFlame([0,0,3],{surfaceParts:[{...part,emissionInsetMM:.1}]}),/emission inset/);
+});
+
+test('flame height gradient clamps, interpolates and preserves its source recipe', () => {
+  const part = { name:'fire',kind:'flame',minMM:[-1,-1,0],maxMM:[1,1,6],rgb:[1,.5,.05],
+    gradientZMM:[2,4],gradientRGB:[[1,.8,.1],[1,.2,.02]] };
+  const settings = { surfaceParts:[part] };
+  assert.deepEqual(structureFlame([0,0,1],settings).rgb,[1,.8,.1]);
+  assert.deepEqual(structureFlame([0,0,3],settings).rgb,[1,.5,.060000000000000005]);
+  assert.deepEqual(structureFlame([0,0,5],settings).rgb,[1,.2,.02]);
+  assert.deepEqual(part.rgb,[1,.5,.05]);
+  assert.equal(structureFlame([2,0,3],settings),null);
+  assert.equal(structureFlame([0,0,3],{ surfaceParts:[part,{ kind:'paint',minMM:[-1,-1,2],maxMM:[1,1,4] }] }),null);
+});
+
+test('flames without a gradient preserve their existing colour and identity', () => {
+  const part = { kind:'flame',minMM:[-1,-1,0],maxMM:[1,1,6],rgb:[1,.62,.075] };
+  assert.equal(structureFlame([0,0,3],{ surfaceParts:[part] }),part);
+});
+
+test('flame gradients reject empty height ranges and malformed colours', () => {
+  const part = { kind:'flame',minMM:[-1,-1,0],maxMM:[1,1,6],rgb:[1,.5,.05],gradientZMM:[2,2],gradientRGB:[[1,.8,.1],[1,.2,.02]] };
+  assert.throws(() => structureFlame([0,0,3],{ surfaceParts:[part] }),/Flame gradient/);
+  assert.throws(() => structureFlame([0,0,3],{ surfaceParts:[{ ...part,gradientZMM:[2,4],gradientRGB:[[1,.8,.1]] }] }),/Flame gradient/);
+  assert.throws(() => structureFlame([0,0,3],{ surfaceParts:[{ ...part,gradientZMM:[2,3,4] }] }),/Flame gradient/);
+  assert.throws(() => structureFlame([0,0,3],{ surfaceParts:[{ ...part,gradientZMM:false }] }),/Flame gradient/);
+});
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
 

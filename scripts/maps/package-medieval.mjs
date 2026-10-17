@@ -8,7 +8,7 @@ import { prepareShadow } from './shadow_model.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
-import { structureMetal, structureLiquid, structureFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
+import { structureMetal, structureLiquid, structureFlame, structureEmissionFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
 import { medievalTextureSizes } from './medieval_texture_sizes.mjs';
 
@@ -128,11 +128,11 @@ if (!process.argv.includes('--publish-manifest')) {
       }
       if (emissive.has(texture) && recipe.materials.kind==='structure') {
         coverage = rasterizeSurface(doc,pixels,pixels,(i,p) => {
-          const flame = structureFlame(p,recipe.materials);
+          const flame = structureEmissionFlame(p,recipe.materials);
           for (let c=0;c<3;c++) data[i*3+c]=flame ? Math.round(flame.rgb[c]*255) : 0;
         },slot);
         coverage = seedSurfaceGutters(doc,pixels,pixels,coverage,(i,p) => {
-          const flame = structureFlame(p,recipe.materials);
+          const flame = structureEmissionFlame(p,recipe.materials);
           for (let c=0;c<3;c++) data[i*3+c]=flame ? Math.round(flame.rgb[c]*255) : 0;
         },1,slot);
       }

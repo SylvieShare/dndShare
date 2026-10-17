@@ -72,7 +72,30 @@ export function structureLiquid(p, settings) {
 
 export function structureFlame(p, settings) {
   const part = (settings.surfaceParts || []).findLast(part => structureDomain(p, part));
-  return part?.kind==='flame' ? part : null;
+  if (part?.kind!=='flame') return null;
+  if (part.gradientZMM===undefined || part.gradientZMM===null) return part;
+  if (!Array.isArray(part.gradientZMM) || part.gradientZMM.length!==2) {
+    throw new Error('Flame gradient requires increasing heights and two RGB colours');
+  }
+  const [lo,hi] = part.gradientZMM;
+  if (!Number.isFinite(lo) || !Number.isFinite(hi) || hi<=lo ||
+      !Array.isArray(part.gradientRGB) || part.gradientRGB.length!==2 || part.gradientRGB.some(c => !Array.isArray(c) || c.length!==3 || c.some(v => !Number.isFinite(v)))) {
+    throw new Error('Flame gradient requires increasing heights and two RGB colours');
+  }
+  const t = Math.max(0,Math.min(1,(p[2]-lo)/(hi-lo)));
+  return { ...part, rgb: part.gradientRGB[0].map((v,i) => v*(1-t)+part.gradientRGB[1][i]*t) };
+}
+
+export function structureEmissionFlame(p, settings) {
+  const flame = structureFlame(p, settings);
+  if (!flame) return null;
+  const inset = flame.emissionInsetMM ?? 0;
+  if (!Number.isFinite(inset) || inset<0 || inset>.05) throw new Error('Flame emission inset must be between 0 and 0.05 mm');
+  if (!inset) return flame;
+  for (const dx of [-inset,0,inset]) for (const dy of [-inset,0,inset]) for (const dz of [-inset,0,inset]) {
+    if (!structureFlame([p[0]+dx,p[1]+dy,p[2]+dz],settings)) return null;
+  }
+  return flame;
 }
 
 export function structureGlass(p, settings) {
