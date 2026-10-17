@@ -184,7 +184,9 @@ def paint(obj, recipe):
         mask = domain(p, part)
         if part.get('centersMM'):
             centers = np.array(part['centersMM'])
-            distance = ((p[:, None, :2]-centers[None, :, :2])**2).sum(2)
+            dimensions = part.get('centerDimensions', 2)
+            if dimensions not in (2, 3): raise ValueError('Surface colour centres require 2 or 3 dimensions')
+            distance = ((p[:, None, :dimensions]-centers[None, :, :dimensions])**2).sum(2)
             if part.get('centerRadiiMM'): distance /= np.array(part['centerRadiiMM'])[None, :]**2
             nearest = distance.argmin(1)
             finish = np.array(part['colorsRGB'])[nearest]

@@ -5,6 +5,14 @@ import { structureDomain, structureMetal, structureFlame, structureGlass, struct
 
 const recipe = JSON.parse(fs.readFileSync(new URL('./medieval-recipes/MT1-028.json', import.meta.url)));
 
+test('stacked surface colours can use height while existing planar centres keep their meaning', () => {
+  const part={name:'stacked fruit',kind:'paint',minMM:[-2,-2,0],maxMM:[2,2,8],centersMM:[[0,0,2],[0,0,6]],colorsRGB:[[.3,.6,.1],[.7,.75,.2]],variation:0,centerDimensions:3};
+  assert.deepEqual(structureSurfacePigment([0,0,2],{surfaceParts:[part]}),part.colorsRGB[0]);
+  assert.deepEqual(structureSurfacePigment([0,0,6],{surfaceParts:[part]}),part.colorsRGB[1]);
+  delete part.centerDimensions;
+  assert.deepEqual(structureSurfacePigment([0,0,6],{surfaceParts:[part]}),part.colorsRGB[0]);
+});
+
 test('physical wood pigment restores a frame while preserving upholstery and metal', () => {
   const timber={minMM:[-5,-5,-1],maxMM:[5,5,2],axis:'x',physicalPigment:true,darkRGB:[.3,.15,.05],lightRGB:[.55,.32,.12]};
   const settings={stoneStartMM:0,stoneBlendMM:1,woodParts:[timber],surfaceParts:[{name:'cushion',kind:'paint',minMM:[-2,-2,.8],maxMM:[2,2,2],rgb:[.65,.56,.145],roughness:.85}]};

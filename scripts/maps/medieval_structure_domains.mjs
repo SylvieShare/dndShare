@@ -85,9 +85,11 @@ export function structureSurfacePigment(p, settings) {
   if (!['ceramic','paint','foam'].includes(part?.kind)) return null;
   let rgb = part.rgb;
   if (part.centersMM) {
+    const dimensions=part.centerDimensions ?? 2;
+    if (![2,3].includes(dimensions)) throw new Error('Surface colour centres require 2 or 3 dimensions');
     let nearest = 0, best = Infinity;
     part.centersMM.forEach((centre,i) => {
-      const distance = ((p[0]-centre[0])**2+(p[1]-centre[1])**2)/(part.centerRadiiMM?.[i] ?? 1)**2;
+      const distance = p.slice(0,dimensions).reduce((sum,v,a) => sum+(v-centre[a])**2,0)/(part.centerRadiiMM?.[i] ?? 1)**2;
       if (distance<best) { best=distance; nearest=i; }
     });
     rgb = part.colorsRGB[nearest];
