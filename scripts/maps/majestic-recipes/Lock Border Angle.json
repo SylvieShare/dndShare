@@ -1,0 +1,547 @@
+{
+  "width": 3,
+  "height": 3,
+  "mountDepthMM": 0,
+  "preserveNativeMount": true,
+  "canStand": false,
+  "surfaceHeightMM": 13.753800392150879,
+  "renderTriangles": 24000,
+  "lodTriangles": 10000,
+  "tileType": "object",
+  "hasDecor": false,
+  "wallMode": "none",
+  "wallMask": 0,
+  "blockers": [],
+  "placementPointOffsetsMM": {},
+  "supportSlots": [],
+  "tags": [
+    "technical",
+    "border",
+    "angle",
+    "ornate",
+    "stone",
+    "xl"
+  ],
+  "recipe": "majestic-lock-border-angle-v1",
+  "groupCode": "MH-lock-border",
+  "baseSurface": "soil",
+  "soilTopRGB": [
+    0.3,
+    0.32,
+    0.34
+  ],
+  "soilTopStartMM": -1,
+  "soilTopFadeMM": 0.1,
+  "renderColourSize": 1024,
+  "lodColourSize": 512,
+  "renderDataSize": 1024,
+  "lodDataSize": 512,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.55,
+  "lodUVAngleLimitRad": 0.25,
+  "stripAuxiliaryColours": true,
+  "quantizeTexcoord": 16,
+  "previewDirection": "default",
+  "masonryReference": {
+    "code": "Lock Border Angle",
+    "rotateZ": 0,
+    "translationMM": [
+      0,
+      0,
+      0
+    ],
+    "matchMM": 0.05,
+    "blendMM": 0.15
+  },
+  "masonryRGB": [
+    0.44,
+    0.335,
+    0.21
+  ],
+  "darkenJoints": true,
+  "masonryRegion": {
+    "u": [
+      -100,
+      100
+    ],
+    "v": [
+      -100,
+      100
+    ],
+    "minZMM": -0.1
+  },
+  "masonrySurfaceBoxes": [
+    {
+      "minMM": [
+        48.86,
+        -60,
+        -0.1
+      ],
+      "maxMM": [
+        60,
+        60,
+        15
+      ],
+      "featherMM": 0.15,
+      "rgb": [
+        0.44,
+        0.335,
+        0.21
+      ]
+    },
+    {
+      "minMM": [
+        -60,
+        -60,
+        -0.1
+      ],
+      "maxMM": [
+        60,
+        -48.86,
+        15
+      ],
+      "featherMM": 0.15,
+      "rgb": [
+        0.44,
+        0.335,
+        0.21
+      ]
+    }
+  ],
+  "sizeAssessment": {
+    "targetRenderBytes": [
+      600000,
+      2200000
+    ],
+    "targetLODBytes": [
+      250000,
+      1000000
+    ],
+    "targetShadowBytes": [
+      20000,
+      80000
+    ],
+    "targetPreviewBytes": [
+      10000,
+      50000
+    ],
+    "basis": "Ownsourcebabc100e5640e2460d63bc1e69094457fe99cc16c15c139bd503c721b166e528:338016tri16900884B. Own3neutralviews inspected: L twoornatearms+sharedcorner, external117.8713square as3x3decorative overhang; body0..13.753800mm fullynative,mount0,noactors/noautomatic slots. Source3Dpattern matchesstraight butgeometry/connectorplacements measuredindividually. Innerbackplanes X46.218,Y-46.218 vsstraight-5.443 =>armtranslation51.661mm. Warmstone(.44/.335/.21) measuredmaskunion X>=48.86 orY<=-48.86, preservinginnergrey(.3/.32/.34); per-pixelboundaries. Start24k/10k sourcegeometrybeforeUV .55/.25 exactnative+quant16preflight .1mm allplannedres. Colour1024/512,normal1024/512,ORM512both reusevalidated mapbudget butmeasureactualweight+views; compare512colour andretainifclean. Allnativevertices bidirectionalsurfacedrift.15mm plusownCADsolid/hollow/tabrays,19colour/ORMphysicalcontrols, full6views+3alternative, separate shadowalpha,GoManifest/ChromiumKTXLODsunpoint andfreshMCP family required.",
+    "actualBytes": {
+      "lod": 580208,
+      "preview": 12144,
+      "render": 1367288,
+      "shadow": 35144,
+      "source": 16900884
+    },
+    "runtimeBytes": 1994784
+  },
+  "renderORMSize": 512,
+  "openingChecks": [
+    {
+      "name": "right-body-52.5--35",
+      "originMM": [
+        52.5,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "right-body-52.5-0",
+      "originMM": [
+        52.5,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "right-body-52.5-35",
+      "originMM": [
+        52.5,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bottom-body--35--52.5",
+      "originMM": [
+        -35,
+        -52.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bottom-body-0--52.5",
+      "originMM": [
+        0,
+        -52.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "bottom-body-35--52.5",
+      "originMM": [
+        35,
+        -52.5,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": false
+    },
+    {
+      "name": "inner-open--35--35",
+      "originMM": [
+        -35,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open--35-0",
+      "originMM": [
+        -35,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open--35-35",
+      "originMM": [
+        -35,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open-0--35",
+      "originMM": [
+        0,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open-0-0",
+      "originMM": [
+        0,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open-0-35",
+      "originMM": [
+        0,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open-35--35",
+      "originMM": [
+        35,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open-35-0",
+      "originMM": [
+        35,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "inner-open-35-35",
+      "originMM": [
+        35,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "outer-right-62--35",
+      "originMM": [
+        62,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "outer-right-62-0",
+      "originMM": [
+        62,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "outer-right-62-35",
+      "originMM": [
+        62,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "outer-bottom--35--62",
+      "originMM": [
+        -35,
+        -62,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "outer-bottom-0--62",
+      "originMM": [
+        0,
+        -62,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "outer-bottom-35--62",
+      "originMM": [
+        35,
+        -62,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "right-connector-45--35",
+      "originMM": [
+        45,
+        -35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "right-connector-45-0",
+      "originMM": [
+        45,
+        0,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "right-connector-45-35",
+      "originMM": [
+        45,
+        35,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "bottom-connector--35--45",
+      "originMM": [
+        -35,
+        -45,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "bottom-connector-0--45",
+      "originMM": [
+        0,
+        -45,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    },
+    {
+      "name": "bottom-connector-35--45",
+      "originMM": [
+        35,
+        -45,
+        30
+      ],
+      "direction": [
+        0,
+        0,
+        -1
+      ],
+      "distanceMM": 40,
+      "clear": true
+    }
+  ]
+}
