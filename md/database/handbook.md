@@ -242,9 +242,12 @@ startup section `27_background_equipment.sql` заменяет прежнее т
 инструментом. Каждая встроенная
 коллекция имеет растровую эмблему через
 `item_type.icon_image_id → storage_image`; строки типа `item_type_icon` указывают
-на прозрачные PNG, встроенные во frontend под `/static/handbook-types/`.
-Startup section `24_handbook_type_icons.sql` идемпотентно назначает эмблемы
-типам 1–13 и удаляет прежний runtime-контракт `item_type.svg_id`; тип 14
+на прозрачные lossless WebP в S3 под `system-item-media/v1/static/handbook-types/`.
+Migration 24 первоначально назначает эмблемы типам 1–13 и удаляет прежний
+runtime-контракт `item_type.svg_id`; migration 193 переносит прежние embedded
+эмблемы и изображения истощения/вдохновения в S3, сохраняя ID изображений,
+общие ссылки и признак удаления. Уже заменённые изображения не перезаписываются.
+Тип 14
 «Инструменты» наследует визуальную эмблему родительских «Вещей» при создании,
 а migration 69 копирует icon/cover базовой расы и класса новым типам 16/17.
 Независимая `item_type.cover_image_id → storage_image/S3` хранит типовую

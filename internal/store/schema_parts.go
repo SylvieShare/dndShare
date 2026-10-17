@@ -202,4 +202,5 @@ var schemaParts = []struct {
 	{"session-map-editor", schemaSessionMapEditorSQL},
 	{"majestic-db-mount-profiles", schemaMajesticDBMountProfilesSQL},
 	{"session-global-maps", schemaSessionGlobalMapsSQL},
+	{"static-media-s3", schemaStaticMediaS3SQL},
 }

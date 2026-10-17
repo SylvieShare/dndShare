@@ -156,8 +156,8 @@ wizard reuse `FeatListItem` and open the standard reference modal.
 - `ItemIcon.vue` prefers the item's `iconImageUrl`, then its SVG, and finally
   falls back to the item type's `iconImageUrl`. Raster item icons are PNG/WebP
   objects registered through `storage_image` and stored in S3; collection
-  emblems use the same projection contract but point to transparent PNG assets
-  embedded under `public/static/handbook-types`;
+  emblems use the same projection contract and point to transparent lossless
+  WebP objects in S3 under `system-item-media/v1/static/handbook-types/`;
   Handbook lists/pickers, the global header search, detail presentations and
   modal titles use the same rule instead of inferring art from localized names;
 - all handbook object rows share `ObjectListItem.vue`: a 64 px icon well is pinned to

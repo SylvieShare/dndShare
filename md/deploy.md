@@ -222,6 +222,20 @@ VM и не запускает. Новые и замещающие изображ
 обновляют `storage_image` с соответствующей ссылкой. Для вызова production MCP
 должны быть заданы `MCP_AUTH_TOKEN` и `MCP_WRITE_ENABLED=true`.
 
+Прежние 13 embedded эмблем коллекций и четыре изображения истощения/вдохновения
+хранятся в S3 как WebP под content-addressed
+`system-item-media/v1/static/`. Их оптимизированные исходники и SHA-256/размеры
+сохранены в `scripts/static-media/manifest.json` и соседнем каталоге assets.
+Перед первым deploy migration 193 объекты должны быть загружены вручную:
+`go run ./cmd/static-media-upload` проверяет локальный набор,
+`go run ./cmd/static-media-upload -apply` загружает его и сверяет полученные
+из S3 байты. Команда использует штатные storage env; credentials не печатаются.
+Штатный deploy не запускает её и не включает эти WebP в основной бинарь.
+Migration 193 обновляет только прежние embedded URL/key с сохранением image ID,
+поэтому все общие ссылки переключаются вместе, а более новые картинки остаются.
+Новые объекты `system-item-media/` получают
+`Cache-Control: public, max-age=31536000, immutable`.
+
 Перенос уже зарегистрированных картинок бестиария из компактной иконки в
 обложку выполняется без повторной загрузки через MCP
 `handbook_bestiary_migrate_icons_to_covers`. Сначала вызывается dry-run с

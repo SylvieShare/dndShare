@@ -4,9 +4,10 @@ The user supplied the D&D dragon wordmark and the Vampire: The Masquerade ankh.
 Both were processed with the built-in `image_gen` tool (not the CLI) to remove
 the background and recolor the foreground. Production copies retain alpha
 and are downsampled to a maximum edge of 144 px for the 36 px UI slot.
+They are stored as lossless WebP; decoded RGBA pixels match the former PNGs.
 
-- `dnd-logo.png`: shared by D&D 5e 2014 and 2024.
-- `vampire-ankh.png`: Vampire: The Masquerade.
+- `dnd-logo.webp`: shared by D&D 5e 2014 and 2024.
+- `vampire-ankh.webp`: Vampire: The Masquerade.
 - `generic.svg`: the application's neutral fallback for other systems.
 
 `GameContextEmblem.vue` uses the images as alpha masks, so the visible color

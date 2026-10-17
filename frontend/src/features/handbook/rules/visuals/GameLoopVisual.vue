@@ -70,10 +70,10 @@
 import { computed, ref } from 'vue'
 import { ArrowRight, ChevronLeft, ChevronRight, Dices, MessageSquareText, Sparkles, Target } from '@lucide/vue'
 import { BaseTile } from '@sylvieshare/share-ui'
-import actionImage from '@/features/handbook/rules/assets/game-loop-2-action.jpg'
-import consequencesImage from '@/features/handbook/rules/assets/game-loop-4-consequences.jpg'
-import resolutionImage from '@/features/handbook/rules/assets/game-loop-3-resolution.jpg'
-import situationImage from '@/features/handbook/rules/assets/game-loop-1-situation.jpg'
+import actionImage from '@/features/handbook/rules/assets/game-loop-2-action.webp'
+import consequencesImage from '@/features/handbook/rules/assets/game-loop-4-consequences.webp'
+import resolutionImage from '@/features/handbook/rules/assets/game-loop-3-resolution.webp'
+import situationImage from '@/features/handbook/rules/assets/game-loop-1-situation.webp'
 
 const steps = [
   {

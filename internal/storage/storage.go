@@ -278,13 +278,17 @@ func (s *Service) put(ctx context.Context, body io.Reader, size int64, key, cont
 		_ = temp.Close()
 		_ = os.Remove(tempName)
 	}()
-	_, err = s.client.PutObject(ctx, &s3.PutObjectInput{
+	input := &s3.PutObjectInput{
 		Bucket:        aws.String(s.cfg.Bucket),
 		Key:           aws.String(key),
 		Body:          temp,
 		ContentType:   aws.String(contentType),
 		ContentLength: aws.Int64(size),
-	})
+	}
+	if strings.HasPrefix(key, "system-item-media/") {
+		input.CacheControl = aws.String("public, max-age=31536000, immutable")
+	}
+	_, err = s.client.PutObject(ctx, input)
 	if err != nil {
 		return StoredObject{}, err
 	}

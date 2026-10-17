@@ -8,8 +8,8 @@
 defineProps({ kind: { type: String, default: 'generic' } })
 
 const emblems = {
-  dnd: '/static/game-context/dnd-logo.png',
-  vampire: '/static/game-context/vampire-ankh.png',
+  dnd: '/static/game-context/dnd-logo.webp',
+  vampire: '/static/game-context/vampire-ankh.webp',
   generic: '/static/game-context/generic.svg',
 }
 </script>

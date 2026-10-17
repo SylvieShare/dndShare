@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test'
+import { fileURLToPath } from 'node:url'
 
 const sources = [{ id: 1, name: 'dnd5e', countItems: 45, versions: [{ id: 1, version: '2014' }, { id: 2, version: '2024' }] }]
-const type = { id: 6, sourceId: 1, name: 'Бестиарий', iconImageUrl: '/static/handbook-types/6-bestiary.png', count: 45, countItems: 45, fields: [] }
+const type = { id: 6, sourceId: 1, name: 'Бестиарий', iconImageUrl: 'https://storage.example.test/bestiary.webp', count: 45, countItems: 45, fields: [] }
 const items = Array.from({ length: 45 }, (_, index) => ({
   id: index + 1,
   typeId: 6,
@@ -11,6 +12,10 @@ const items = Array.from({ length: 45 }, (_, index) => ({
 
 test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => { throw error })
+  await page.route(type.iconImageUrl, route => route.fulfill({
+    path: fileURLToPath(new URL('../../../scripts/static-media/assets/6-bestiary.webp', import.meta.url)),
+    contentType: 'image/webp',
+  }))
   await page.route(url => url.pathname.startsWith('/api/'), async route => {
     const url = new URL(route.request().url())
     let json = {}
