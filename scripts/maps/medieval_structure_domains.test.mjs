@@ -24,6 +24,8 @@ test('measured beam pigment agrees with straight grain on the same side face', (
   const expected=structureWoodPigment([-1.3,2.1,.7],[0,1,0],settings);
   timber.axis='beam';timber.direction=[1,0,0];
   assert.deepEqual(structureWoodPigment([-1.3,2.1,.7],[0,1,0],settings),expected);
+  timber.rotationZDeg=21;timber.centerMM=[0,0,0];
+  assert.deepEqual(structureWoodPigment([-1.3,2.1,.7],[0,1,0],settings),expected,'A rotated mask keeps the measured global beam direction');
 });
 
 test('a tapered hoop follows its tilted axis without painting an outer wooden support', () => {

@@ -1,0 +1,1264 @@
+{
+  "name": "Chair Horns",
+  "groupCode": "MED-seating",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 84000,
+  "lodTriangles": 28000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "floor",
+    "chair",
+    "seat",
+    "horn",
+    "rope",
+    "fur"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "rotated stool vertical timber",
+        "minMM": [
+          -6.2,
+          -6.2,
+          26.65
+        ],
+        "maxMM": [
+          6.3,
+          6.4,
+          34.1
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 0 -1",
+        "minMM": [
+          -4.7,
+          -5.7,
+          30.5
+        ],
+        "maxMM": [
+          4.7,
+          -3.45,
+          34.25
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.003081280229783322,
+          24.331022171371625
+        ],
+        "radiusMM": 8.696118491456225
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 0 1",
+        "minMM": [
+          -4.7,
+          3.45,
+          30.5
+        ],
+        "maxMM": [
+          4.7,
+          6.0,
+          34.25
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.07121654093094576,
+          23.551908535712116
+        ],
+        "radiusMM": 9.651645872125336
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 1 -1",
+        "minMM": [
+          -5.7,
+          -4.7,
+          30.5
+        ],
+        "maxMM": [
+          -3.45,
+          4.7,
+          34.25
+        ],
+        "axis": "arc-yz",
+        "centerYZMM": [
+          0.15287672950632783,
+          25.380770957463476
+        ],
+        "radiusMM": 7.7764269947743285
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 1 1",
+        "minMM": [
+          3.45,
+          -4.7,
+          30.5
+        ],
+        "maxMM": [
+          6.0,
+          4.7,
+          34.25
+        ],
+        "axis": "arc-yz",
+        "centerYZMM": [
+          -0.09837810442385377,
+          25.4591832189289
+        ],
+        "radiusMM": 7.785521320690622
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [-1, -1]",
+        "minMM": [
+          -5.729325735403215,
+          -5.51200797114868,
+          26.65
+        ],
+        "maxMM": [
+          -3.133353565611209,
+          -2.952989220792858,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [-1, 1]",
+        "minMM": [
+          -5.649889446414984,
+          3.673460812995521,
+          26.65
+        ],
+        "maxMM": [
+          -3.1813831088807034,
+          6.272397491316703,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [1, -1]",
+        "minMM": [
+          3.344319485863523,
+          -5.550013216428427,
+          26.65
+        ],
+        "maxMM": [
+          6.002729713436005,
+          -3.0124198116922787,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [1, 1]",
+        "minMM": [
+          3.167133394557452,
+          3.620671233177487,
+          26.65
+        ],
+        "maxMM": [
+          5.7556866200978885,
+          6.386562611674365,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.4,
+          0.2,
+          0.065
+        ],
+        "lightRGB": [
+          0.7,
+          0.43,
+          0.17
+        ],
+        "roughness": 0.87,
+        "name": "three hand-carved seat X planks",
+        "minMM": [
+          -6.1,
+          -6.1,
+          34.0
+        ],
+        "maxMM": [
+          6.1,
+          6.2,
+          36.1
+        ],
+        "axis": "x"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "lower curved backrest crossbeam",
+        "minMM": [
+          -3.8,
+          3.2467294226496284,
+          38.5
+        ],
+        "maxMM": [
+          3.85,
+          5.846729422649628,
+          41.0
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.0675438401328824,
+          27.197512999098663
+        ],
+        "radiusMM": 12.055030903938365
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "upper curved backrest crossbeam",
+        "minMM": [
+          -3.8,
+          3.815646730582791,
+          46.0
+        ],
+        "maxMM": [
+          3.85,
+          6.4156467305827904,
+          49.5
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          -0.19313680608602063,
+          41.178060015953136
+        ],
+        "radiusMM": 5.916618840215528
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous leaning back post -1",
+        "minMM": [
+          -6.2,
+          3.3,
+          33.8
+        ],
+        "maxMM": [
+          -3.1503827624413234,
+          6.8,
+          51.0
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.035555221526383726,
+          0.07031488542076601,
+          0.9968909885792299
+        ],
+        "physicalPigment": true,
+        "includeParts": [
+          {
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ],
+            "minMM": [
+              -5.525929095313138,
+              3.3,
+              33.8
+            ],
+            "maxMM": [
+              -3.1503827624413234,
+              6.8,
+              46.0
+            ]
+          },
+          {
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ],
+            "minMM": [
+              -6.2,
+              3.3,
+              46.0
+            ],
+            "maxMM": [
+              -3.1503827624413234,
+              6.8,
+              51.0
+            ]
+          }
+        ]
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous leaning back post 1",
+        "minMM": [
+          3.1523911704386967,
+          3.3,
+          33.8
+        ],
+        "maxMM": [
+          6.2,
+          6.8,
+          51.0
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.010697132708033814,
+          0.07357969937954968,
+          0.9972319685965957
+        ],
+        "physicalPigment": true,
+        "includeParts": [
+          {
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ],
+            "minMM": [
+              3.1523911704386967,
+              3.3,
+              33.8
+            ],
+            "maxMM": [
+              5.684852496520645,
+              6.8,
+              46.0
+            ]
+          },
+          {
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ],
+            "minMM": [
+              3.1523911704386967,
+              3.3,
+              46.0
+            ],
+            "maxMM": [
+              6.2,
+              6.8,
+              51.0
+            ]
+          }
+        ]
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "warm tawny fur seat cover",
+        "kind": "paint",
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "minMM": [
+          -5.5,
+          -5.7,
+          35.3
+        ],
+        "maxMM": [
+          5.85,
+          4.6,
+          38.3
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -5.5,
+              -5.7,
+              35.3
+            ],
+            "maxMM": [
+              5.85,
+              4.6,
+              38.3
+            ],
+            "awayFromSource": {
+              "code": "MT1-058",
+              "sourceSHA256": "d9725b9a53931e096534f1e01cee48103aa9b9dd672d8efaecf914f495c7b4b4",
+              "matchMM": 0.1,
+              "projectTo": {
+                "code": "MT1-059",
+                "sourceSHA256": "a4019006fad3d79f0d8e1b63bd57ab47aad7630002b7d24a928aa3130eeade4a"
+              }
+            },
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              -4.2,
+              -4.7,
+              35.8
+            ],
+            "maxMM": [
+              4.3,
+              3.3,
+              38.3
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          }
+        ],
+        "rgb": [
+          0.68,
+          0.5,
+          0.27
+        ],
+        "roughness": 0.98,
+        "variation": 0.04
+      },
+      {
+        "name": "ivory horn -1",
+        "kind": "paint",
+        "awayFromSource": {
+          "code": "MT1-058",
+          "sourceSHA256": "d9725b9a53931e096534f1e01cee48103aa9b9dd672d8efaecf914f495c7b4b4",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-059",
+            "sourceSHA256": "a4019006fad3d79f0d8e1b63bd57ab47aad7630002b7d24a928aa3130eeade4a"
+          }
+        },
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "minMM": [
+          -6.2,
+          3.5,
+          47.7
+        ],
+        "maxMM": [
+          -2.4,
+          6.8,
+          56
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -6.2,
+              3.5,
+              51.0
+            ],
+            "maxMM": [
+              -2.4,
+              6.8,
+              56
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              -6.2,
+              3.5,
+              47.7
+            ],
+            "maxMM": [
+              -2.4,
+              6.8,
+              51.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -4.78,
+                5.32,
+                49
+              ],
+              "radiiMM": [
+                0.94,
+                0.94,
+                100
+              ]
+            },
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          }
+        ],
+        "rgb": [
+          0.78,
+          0.69,
+          0.46
+        ],
+        "roughness": 0.66,
+        "variation": 0.025,
+        "excludeParts": [
+          {
+            "minMM": [
+              -6.2,
+              3.5,
+              47.7
+            ],
+            "maxMM": [
+              -5.4,
+              6.8,
+              50.2
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              -6.2,
+              5.98,
+              47.7
+            ],
+            "maxMM": [
+              -2.4,
+              6.8,
+              50.2
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "name": "hemp lashing -1",
+        "kind": "paint",
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "minMM": [
+          -6.25,
+          3.45,
+          45.55
+        ],
+        "maxMM": [
+          -2.7,
+          6.8,
+          49.35
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -5.75,
+              4.4,
+              48.15
+            ],
+            "maxMM": [
+              -3.25,
+              6.45,
+              49.5
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              -3.5,
+              4.05,
+              46.1
+            ],
+            "maxMM": [
+              3.5,
+              6.55,
+              49.5
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              -6.25,
+              3.45,
+              47.7
+            ],
+            "maxMM": [
+              -2.7,
+              6.8,
+              49.35
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                -4.78,
+                5.32,
+                49
+              ],
+              "radiiMM": [
+                0.96,
+                0.96,
+                100
+              ]
+            },
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-058",
+          "sourceSHA256": "d9725b9a53931e096534f1e01cee48103aa9b9dd672d8efaecf914f495c7b4b4",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-059",
+            "sourceSHA256": "a4019006fad3d79f0d8e1b63bd57ab47aad7630002b7d24a928aa3130eeade4a"
+          }
+        },
+        "rgb": [
+          0.47,
+          0.3,
+          0.12
+        ],
+        "roughness": 0.97,
+        "variation": 0.035
+      },
+      {
+        "name": "ivory horn 1",
+        "kind": "paint",
+        "awayFromSource": {
+          "code": "MT1-058",
+          "sourceSHA256": "d9725b9a53931e096534f1e01cee48103aa9b9dd672d8efaecf914f495c7b4b4",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-059",
+            "sourceSHA256": "a4019006fad3d79f0d8e1b63bd57ab47aad7630002b7d24a928aa3130eeade4a"
+          }
+        },
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "minMM": [
+          2.4,
+          3.5,
+          47.7
+        ],
+        "maxMM": [
+          6.2,
+          6.8,
+          56
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              2.4,
+              3.5,
+              51.0
+            ],
+            "maxMM": [
+              6.2,
+              6.8,
+              56
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              2.4,
+              3.5,
+              47.7
+            ],
+            "maxMM": [
+              6.2,
+              6.8,
+              51.1
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                4.78,
+                5.32,
+                49
+              ],
+              "radiiMM": [
+                0.94,
+                0.94,
+                100
+              ]
+            },
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          }
+        ],
+        "rgb": [
+          0.78,
+          0.69,
+          0.46
+        ],
+        "roughness": 0.66,
+        "variation": 0.025,
+        "excludeParts": [
+          {
+            "minMM": [
+              5.55,
+              3.5,
+              47.7
+            ],
+            "maxMM": [
+              6.2,
+              6.8,
+              50.2
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              2.4,
+              5.98,
+              47.7
+            ],
+            "maxMM": [
+              6.2,
+              6.8,
+              50.2
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "name": "hemp lashing 1",
+        "kind": "paint",
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "minMM": [
+          2.7,
+          3.45,
+          45.55
+        ],
+        "maxMM": [
+          6.25,
+          6.8,
+          49.35
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              3.2,
+              4.4,
+              48.15
+            ],
+            "maxMM": [
+              5.7,
+              6.45,
+              49.5
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              -3.5,
+              4.05,
+              46.1
+            ],
+            "maxMM": [
+              3.5,
+              6.55,
+              49.5
+            ],
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          },
+          {
+            "minMM": [
+              2.7,
+              3.45,
+              47.7
+            ],
+            "maxMM": [
+              6.25,
+              6.8,
+              49.35
+            ],
+            "ellipsoid": {
+              "centerMM": [
+                4.78,
+                5.32,
+                49
+              ],
+              "radiiMM": [
+                0.96,
+                0.96,
+                100
+              ]
+            },
+            "rotationZDeg": 21.244076360841746,
+            "centerMM": [
+              -9.531400322914124,
+              -10.0631502866745,
+              0
+            ]
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-058",
+          "sourceSHA256": "d9725b9a53931e096534f1e01cee48103aa9b9dd672d8efaecf914f495c7b4b4",
+          "matchMM": 0.1,
+          "projectTo": {
+            "code": "MT1-059",
+            "sourceSHA256": "a4019006fad3d79f0d8e1b63bd57ab47aad7630002b7d24a928aa3130eeade4a"
+          }
+        },
+        "rgb": [
+          0.47,
+          0.3,
+          0.12
+        ],
+        "roughness": 0.97,
+        "variation": 0.035
+      }
+    ]
+  },
+  "weightBudget": {
+    "renderMiB": [
+      2.0,
+      4.8
+    ],
+    "lodMiB": [
+      0.65,
+      1.6
+    ],
+    "shadowKiB": [
+      60,
+      160
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "A rotated timber chair with two curved horns inserted into split post tops, two rope lashings and a sculpted fur seat cover.84000/28000 independent triangles and1024/512 bakes preserve fur tufts, horn tips, binding gaps, carved wood and open chair frame; compare compact textures."
+  },
+  "reviewNotes": "PDFpage9 and native full/front-back plus horn/pelt close-ups inspected. Source320014tri/16000784bytes/maxZ55.777199. Decor boundsX[-17.1371,-2.0496],Y[-17.48445,-2.08935] fit southwest blocker. Three nativefreefloorNE/NW/SE use25.713135/25.712986/25.400532mm. Rotation21.244076deg. Lower arches were refitted fromsource59. Back-rung inner circles are lowerR12.055031 atlocalXZ[.067544,27.197513] and upperR5.916619 at[-.193137,41.178060], independently measured; upper geometry is not a rigid translation of58. Common wood samplemedian distance.004829/P95.11719mm is diagnostic, not assumed identity. Tawny pelt uses actual raised difference from58 plus a tight inner contact core; outer seat boards stay wood. Bone masks follow lower inner horn cores untilZ51 and full shafts above, preserving jagged wooden post tops. Two hemp lashing masks exclude wood/core volumes and the new curved crossbeam. All nested masks carry the same measured local frame explicitly. Reprobe source openings: fur covers old seat gaps and raises the bottom of the lower back window. Check front/back contacts, both horn tips, rope loops, fur tufts, three floorpoints, render/LOD/shadow and both texture candidates.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      8.75,
+      8.75
+    ],
+    [
+      -8.75,
+      8.75
+    ],
+    [
+      8.75,
+      -8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.25,
+        -2.05
+      ],
+      [
+        -1.8,
+        -2.05
+      ],
+      [
+        -1.8,
+        -17.5
+      ],
+      [
+        -17.25,
+        -17.5
+      ]
+    ]
+  ]
+}

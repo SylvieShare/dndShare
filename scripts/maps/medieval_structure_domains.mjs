@@ -103,7 +103,7 @@ export function structureWoodPigment(p, n, settings) {
   if (['stoneParts','fabricParts','produceParts','surfaceParts','ironParts'].some(key =>
       (settings[key] || []).some(part => structureDomain(p,part))) ||
       structureMetal(p,settings).metallic>.01) return null;
-  if (part.rotationZDeg!==undefined) throw new Error('Physical timber pigment requires native axes');
+  if (part.rotationZDeg!==undefined && part.axis!=='beam') throw new Error('Physical timber pigment requires native axes');
   let u, v;
   const dot = (a,b) => a.reduce((sum,x,i) => sum+x*b[i],0);
   const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
