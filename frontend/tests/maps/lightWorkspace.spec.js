@@ -9,26 +9,32 @@ async function ready(page, extra) {
 }
 async function blueAtCentre(page) {
   const png = await page.locator(".map-canvas canvas").screenshot();
-  return page.evaluate(async (base64) => {
-    const image = await createImageBitmap(
-      new Blob([Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))], {
-        type: "image/png",
-      }),
-    );
-    const c = new OffscreenCanvas(image.width, image.height).getContext("2d");
-    c.drawImage(image, 0, 0);
-    const pixels = c.getImageData(
-      Math.floor(image.width / 2) - 20,
-      Math.floor(image.height / 2) - 20,
-      40,
-      40,
-    ).data;
-    let count = 0;
-    for (let i = 0; i < pixels.length; i += 4)
-      if (pixels[i] < 140 && pixels[i + 1] > 170 && pixels[i + 2] > 220)
-        count++;
-    return count;
-  }, png.toString("base64"));
+  const canvasBox = await page.locator(".map-canvas canvas").boundingBox(),
+    panelBox = await focusPanel(page).boundingBox();
+  const focusX = (panelBox.x - canvasBox.x) / 2;
+  return page.evaluate(
+    async ({ base64, focusX }) => {
+      const image = await createImageBitmap(
+        new Blob([Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))], {
+          type: "image/png",
+        }),
+      );
+      const c = new OffscreenCanvas(image.width, image.height).getContext("2d");
+      c.drawImage(image, 0, 0);
+      const pixels = c.getImageData(
+        Math.floor(focusX) - 20,
+        Math.floor(image.height / 2) - 20,
+        40,
+        40,
+      ).data;
+      let count = 0;
+      for (let i = 0; i < pixels.length; i += 4)
+        if (pixels[i] < 140 && pixels[i + 1] > 170 && pixels[i + 2] > 220)
+          count++;
+      return count;
+    },
+    { base64: png.toString("base64"), focusX },
+  );
 }
 for (const mobile of [false, true])
   test(`shared icon buttons animate their slash and help collapses ${mobile ? "mobile" : "desktop"}`, async ({
@@ -76,20 +82,25 @@ for (const mobile of [false, true])
         exact: true,
       }),
     ).toHaveClass(/share-icon-toggle/);
+    const commands = page.getByRole("list", {
+      name: "Команды управления картой",
+    });
+    await expect(commands).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Управление картой", exact: true }),
+    ).toHaveCount(0);
+    await commands.click();
     const help = page.getByRole("button", {
       name: "Управление картой",
       exact: true,
     });
-    await expect(help).toHaveAttribute("aria-expanded", "true");
-    await help.click();
     await expect(help).toHaveAttribute("aria-expanded", "false");
-    await expect(
-      page.getByRole("list", { name: "Команды управления картой" }),
-    ).toHaveCount(0);
+    await expect(commands).toHaveCount(0);
     await help.click();
+    await expect(commands).toBeVisible();
     await expect(
-      page.getByRole("list", { name: "Команды управления картой" }),
-    ).toBeVisible();
+      page.getByRole("button", { name: "Управление картой", exact: true }),
+    ).toHaveCount(0);
   });
 test("builtin lights expose editable effects, retain model identity, inherit area and focus smoothly from both previews", async ({
   page,

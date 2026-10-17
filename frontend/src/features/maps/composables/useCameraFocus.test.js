@@ -67,3 +67,25 @@ it("respects reduced motion when focusing a light", () => {
   );
   expect(requestAnimationFrame).not.toHaveBeenCalled();
 });
+it("centres the source in the free viewport beside an inspector at different camera angles", () => {
+  const camera = new OrthographicCamera(-1, 1, 1, -1, 0.01, 2000);
+  const view = mapCamera(
+    camera,
+    { setSize() {}, domElement: {} },
+    { clientWidth: 1000, clientHeight: 800 },
+    () => {},
+  );
+  view.document({ width: 12, height: 10 }, {});
+  for (const [tilt, azimuth] of [
+    [35.2643897, 45],
+    [90, 0],
+    [55, 140],
+  ]) {
+    view.update({ tilt, azimuth });
+    const point = { x: 4, y: 8, elevation: 3 };
+    view.update(cameraFocusTarget(view.getView(), point, { x: -150, y: 80 }));
+    const pixel = view.project(new Vector3(point.x, point.elevation, point.y));
+    expect(pixel.x).toBeCloseTo(350);
+    expect(pixel.y).toBeCloseTo(480);
+  }
+});

@@ -24,8 +24,13 @@
           entry.kind === 'light' && editor.focusLight(entry.id)
         "
       >
+        <MapLightPreview
+          v-if="entry.kind === 'light'"
+          :entry="entry"
+          :editor="editor"
+        />
         <img
-          v-if="entry.previewUrl"
+          v-else-if="entry.previewUrl"
           class="map-selection-preview"
           :src="entry.previewUrl"
           alt=""
@@ -34,11 +39,9 @@
         <component
           v-else
           :is="
-            entry.kind === 'light'
-              ? Lightbulb
-              : ['player', 'creature', 'marker'].includes(entry.kind)
-                ? UserRound
-                : Box
+            ['player', 'creature', 'marker'].includes(entry.kind)
+              ? UserRound
+              : Box
           "
           :size="64"
           :style="{ color: entry.color }"
@@ -75,8 +78,9 @@
 </template>
 <script setup>
 import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import MapLightPreview from "./MapLightPreview.vue";
 import MapFocusContent from "./MapFocusContent.vue";
-import { Box, Copy, Lightbulb, Trash2, UserRound } from "@lucide/vue";
+import { Box, Copy, Trash2, UserRound } from "@lucide/vue";
 defineProps({
   entry: Object,
   editor: Object,

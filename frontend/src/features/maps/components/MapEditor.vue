@@ -97,6 +97,7 @@
           @camera-move="placement.cursor.moved"
         />
         <MapSelectionPanel
+          ref="selectionPanel"
           :editor="e"
           :custom-focus="customFocus"
           @focus="focusEntries"
@@ -122,7 +123,7 @@
 <script setup>
 import { mapEntity } from "../lib/editorEntities";
 import "../styles/maps.css";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, nextTick, reactive, ref, watch } from "vue";
 import {
   ActionButton,
   AppModalFrame,
@@ -207,16 +208,22 @@ const account = useAccountStore(),
 const reference = ref(null),
   referenceOpen = ref(false),
   canvas = ref(null),
+  selectionPanel = ref(null),
   sidebar = ref(null);
 e.handle = handleGesture;
 const placement = useEditorPlacement(e, canvas);
-e.focusLight = (id) => {
+e.observeLightFrame = (target, id, changed) =>
+  canvas.value?.observeLightFrame(target, id, changed);
+e.focusLight = async (id) => {
   const entry = mapEntity(e.draft.document, e.catalogue, "light", id);
   if (!entry) return;
+  emit("selection");
   placement.cancel();
   e.clearAreaFocus();
   e.selectLight(id);
-  canvas.value?.focusAt(entry.position);
+  await nextTick();
+  if (e.selectedLight !== id) return;
+  canvas.value?.focusAt(entry.position, selectionPanel.value?.bounds());
   canvas.value?.focus();
 };
 function beginPlacement(method, id, event) {

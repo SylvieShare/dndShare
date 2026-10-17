@@ -2,7 +2,6 @@
   <MapInspectorSection
     title="Переходы"
     v-if="transitions.length"
-    class="model-transitions"
     aria-label="Переходы модели"
   >
     <div v-for="transition in transitions" :key="transition.id">
@@ -53,14 +52,3 @@ const transitions = computed(() =>
   }),
 );
 </script>
-<style scoped>
-.model-transitions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-h4 {
-  margin: 0;
-  font-size: 14px;
-}
-</style>

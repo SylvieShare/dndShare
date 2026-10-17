@@ -55,7 +55,10 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
-import { useCameraFocus } from "../composables/useCameraFocus";
+import {
+  focusViewportOffset,
+  useCameraFocus,
+} from "../composables/useCameraFocus";
 import MapControlsHint from "./MapControlsHint.vue";
 import MapCanvasControls from "./MapCanvasControls.vue";
 import MapDownloadManager from "./MapDownloadManager.vue";
@@ -259,7 +262,15 @@ onBeforeUnmount(() => {
 });
 defineExpose({
   panArrow,
-  focusAt: cameraFocus.focusAt,
+  focusAt: (point, obstacle) => {
+    keyboardPan.stop();
+    cameraFocus.focusAt(
+      point,
+      focusViewportOffset(host.value?.getBoundingClientRect(), obstacle),
+    );
+  },
+  observeLightFrame: (target, id, changed) =>
+    renderer?.observeLightFrame(target, id, changed),
   releaseArrow: keyboardPan.up,
   stopCamera: keyboardPan.stop,
   fit,

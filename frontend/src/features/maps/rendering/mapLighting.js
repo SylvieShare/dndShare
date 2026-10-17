@@ -198,6 +198,12 @@ export function createMapLighting(scene, gpu, assets) {
     update,
     advance,
     pick: markers.hit,
+    position(id) {
+      const index = active.findIndex((light) => light.id === id);
+      if (index >= 0) return slots[index].position;
+      const source = sources.find((light) => light.id === id);
+      return source && new Vector3(source.x, source.worldHeight, source.y);
+    },
     excluded: [proxies.root, markers.root],
     invalidateShadows() {
       gpu.shadowMap.needsUpdate = true;

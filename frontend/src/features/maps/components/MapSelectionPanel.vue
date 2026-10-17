@@ -1,5 +1,6 @@
 <template>
   <aside
+    ref="element"
     v-if="customFocus || area || entries.length"
     class="map-selection-panel"
     aria-label="Выбранные элементы"
@@ -97,7 +98,7 @@
 </template>
 <script setup>
 import { interactive } from "../lib/mapModel";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { groupMapEntities, selectedMapEntities } from "../lib/editorEntities";
 import MapFocusContent from "./MapFocusContent.vue";
@@ -109,6 +110,8 @@ import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
 import MapModelTransitions from "./MapModelTransitions.vue";
 import MapModelLights from "./MapModelLights.vue";
+const element = ref(null);
+defineExpose({ bounds: () => element.value?.getBoundingClientRect() });
 const props = defineProps({ editor: Object, customFocus: Boolean });
 const emit = defineEmits(["focus", "bind", "area"]);
 const area = computed(() =>

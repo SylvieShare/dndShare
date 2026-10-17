@@ -1,3 +1,4 @@
+import { createMapFramePreview } from "./mapFramePreview";
 import { startModelRefresh } from "../lib/currentModelRefresh";
 import { getMapModels } from "@/shared/api/mapsApi";
 import { createMapLighting } from "./mapLighting";
@@ -160,6 +161,7 @@ export async function createMapRenderer(
         tiles.transform,
         lighting.excluded,
       );
+      framePreview.copy(gpu.domElement, lighting.position);
       if (moving) render();
       else if (flickering && !flickerTimer)
         flickerTimer = setTimeout(() => {
@@ -168,6 +170,7 @@ export async function createMapRenderer(
         }, 100);
     });
   }
+  const framePreview = createMapFramePreview(camera, render);
   const view = mapCamera(camera, gpu, host, render);
   const structure = structureView(assets, view);
   async function update(d, nextState, opts = {}) {
@@ -437,6 +440,7 @@ export async function createMapRenderer(
   );
   return {
     update,
+    observeLightFrame: framePreview.observe,
     retry() {
       assets.retryFailed();
       return update(current, state, options);
@@ -562,6 +566,7 @@ export async function createMapRenderer(
       fog.destroy();
       lighting.destroy();
       assets.destroy();
+      framePreview.destroy();
       gpu.dispose();
       gpu.domElement.remove();
     },
