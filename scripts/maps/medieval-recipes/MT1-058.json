@@ -1,0 +1,654 @@
+{
+  "name": "Chair",
+  "groupCode": "MED-seating",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 74000,
+  "lodTriangles": 25000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "floor",
+    "chair",
+    "seat",
+    "carved",
+    "backrest"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "rotated stool vertical timber",
+        "minMM": [
+          -6.2,
+          -6.2,
+          26.65
+        ],
+        "maxMM": [
+          6.3,
+          6.4,
+          34.1
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 0 -1",
+        "minMM": [
+          -4.7,
+          -5.7,
+          30.5
+        ],
+        "maxMM": [
+          4.7,
+          -3.45,
+          34.25
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          -0.0030822454443233337,
+          24.321895007763523
+        ],
+        "radiusMM": 8.706585298603072
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 0 1",
+        "minMM": [
+          -4.7,
+          3.45,
+          30.5
+        ],
+        "maxMM": [
+          4.7,
+          6.0,
+          34.25
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.0446420114401638,
+          23.3391663172657
+        ],
+        "radiusMM": 9.854025656802396
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 1 -1",
+        "minMM": [
+          -5.7,
+          -4.7,
+          30.5
+        ],
+        "maxMM": [
+          -3.45,
+          4.7,
+          34.25
+        ],
+        "axis": "arc-yz",
+        "centerYZMM": [
+          0.14888628494900594,
+          25.395384136735952
+        ],
+        "radiusMM": 7.763614486765881
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 1 1",
+        "minMM": [
+          3.45,
+          -4.7,
+          30.5
+        ],
+        "maxMM": [
+          6.0,
+          4.7,
+          34.25
+        ],
+        "axis": "arc-yz",
+        "centerYZMM": [
+          -0.12201030180259904,
+          25.49732744666625
+        ],
+        "radiusMM": 7.741079136882191
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [-1, -1]",
+        "minMM": [
+          -5.729325735403215,
+          -5.51200797114868,
+          26.65
+        ],
+        "maxMM": [
+          -3.133353565611209,
+          -2.952989220792858,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [-1, 1]",
+        "minMM": [
+          -5.649889446414984,
+          3.673460812995521,
+          26.65
+        ],
+        "maxMM": [
+          -3.1813831088807034,
+          6.272397491316703,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [1, -1]",
+        "minMM": [
+          3.344319485863523,
+          -5.550013216428427,
+          26.65
+        ],
+        "maxMM": [
+          6.002729713436005,
+          -3.0124198116922787,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [1, 1]",
+        "minMM": [
+          3.167133394557452,
+          3.620671233177487,
+          26.65
+        ],
+        "maxMM": [
+          5.7556866200978885,
+          6.386562611674365,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.4,
+          0.2,
+          0.065
+        ],
+        "lightRGB": [
+          0.7,
+          0.43,
+          0.17
+        ],
+        "roughness": 0.87,
+        "name": "three hand-carved seat X planks",
+        "minMM": [
+          -6.1,
+          -6.1,
+          34.0
+        ],
+        "maxMM": [
+          6.1,
+          6.2,
+          36.1
+        ],
+        "axis": "x"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "lower curved backrest crossbeam",
+        "minMM": [
+          -3.8,
+          3.3415497232039018,
+          38.4
+        ],
+        "maxMM": [
+          3.85,
+          5.791549723203902,
+          41.6
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.06336283011814005,
+          27.204377209359333
+        ],
+        "radiusMM": 12.049785324061467
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "upper curved backrest crossbeam",
+        "minMM": [
+          -3.8,
+          3.6767517269029035,
+          44.0
+        ],
+        "maxMM": [
+          3.85,
+          6.126751726902904,
+          47.15
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.06813338737946098,
+          32.71787682027053
+        ],
+        "radiusMM": 12.047381609286724
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous leaning back post -1",
+        "minMM": [
+          -5.470679225572444,
+          3.3898679554084863,
+          33.8
+        ],
+        "maxMM": [
+          -3.150045659252651,
+          6.414867748161605,
+          48.45
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.020769900575498167,
+          0.05307912150782216,
+          0.9983742875745759
+        ]
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous leaning back post 1",
+        "minMM": [
+          3.1510804075630188,
+          3.3843110099803626,
+          33.8
+        ],
+        "maxMM": [
+          5.6794693676458365,
+          6.416239794872068,
+          48.45
+        ],
+        "axis": "beam",
+        "direction": [
+          -0.0203630075583859,
+          0.053246048342959346,
+          0.9983737808351321
+        ]
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": []
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.8,
+      4.2
+    ],
+    "lodMiB": [
+      0.55,
+      1.4
+    ],
+    "shadowKiB": [
+      55,
+      145
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "A 35mm timber floor with rotated low chair, deeply carved three-board seat, four lower arched stretchers and added two-post/two-rung open backrest.74000/25000 independent triangles and1024/512 bakes preserve board slots, carved wood and both backrest openings. Compare compact textures."
+  },
+  "reviewNotes": "PDF page9, native front/back inspected. Source320012tri/16000684bytes/maxZ48.284897mm. Southwest chair boundsX[-16.8144,-2.0541],Y[-17.4895,-2.2802]; free quarter-floor pointsNE/NW/SE are25.714266/25.714077/25.400431mm. Seat/floor normal squares confirm local seatX and floorY. Stool57 provides the21.244076deg local frame, but lower arches and legs were remeasured in source58: old/new median distance.007479mm andP95.165859mm, so correspondence is not assumed at changed joints. Two backrest posts lean along measured global directions near[-.0206,.0532,.99837]. Lower/upper back-rung inner profiles fit radius12.049785/12.047382mm, residual<.00135mm, centred at localXZ[.06336,27.20438]/[.06813,32.71788]. Grain follows each local arc; posts continue with measured beam grain. No upholstery, metal or lights. Preserve three-board slots, lower arches, both backrest openings, source carved relief and southwest blocker. Verify all surfaces, placement, both tiers and candidates before publication.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      8.75,
+      8.75
+    ],
+    [
+      -8.75,
+      8.75
+    ],
+    [
+      8.75,
+      -8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.25,
+        -2.05
+      ],
+      [
+        -1.8,
+        -2.05
+      ],
+      [
+        -1.8,
+        -17.5
+      ],
+      [
+        -17.25,
+        -17.5
+      ]
+    ]
+  ]
+}
