@@ -1,0 +1,509 @@
+{
+  "name": "Stool",
+  "groupCode": "MED-seating",
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "renderTriangles": 68000,
+  "lodTriangles": 22000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 512,
+  "uvAngleLimitRad": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "tags": [
+    "town",
+    "wood",
+    "floor",
+    "stool",
+    "seat",
+    "carved"
+  ],
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "y"
+      },
+      {
+        "name": "south floor X rail",
+        "minMM": [
+          -17.6,
+          -17.6,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          -14.3,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "name": "north floor X rail",
+        "minMM": [
+          -17.6,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.6,
+          17.6,
+          26.65
+        ],
+        "axis": "x"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "rotated stool vertical timber",
+        "minMM": [
+          -6.2,
+          -6.2,
+          26.65
+        ],
+        "maxMM": [
+          6.3,
+          6.4,
+          34.1
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 0 -1",
+        "minMM": [
+          -4.7,
+          -5.7,
+          30.5
+        ],
+        "maxMM": [
+          4.7,
+          -3.45,
+          34.25
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.005377727194695461,
+          24.337953828693013
+        ],
+        "radiusMM": 8.688833923240173
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 0 1",
+        "minMM": [
+          -4.7,
+          3.45,
+          30.5
+        ],
+        "maxMM": [
+          4.7,
+          6.0,
+          34.25
+        ],
+        "axis": "arc-xz",
+        "centerXZMM": [
+          0.05854972247885322,
+          23.377857501819292
+        ],
+        "radiusMM": 9.816337036901029
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 1 -1",
+        "minMM": [
+          -5.7,
+          -4.7,
+          30.5
+        ],
+        "maxMM": [
+          -3.45,
+          4.7,
+          34.25
+        ],
+        "axis": "arc-yz",
+        "centerYZMM": [
+          0.1557921285779618,
+          25.376426270736996
+        ],
+        "radiusMM": 7.779720343920218
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.88,
+        "name": "curved stretcher 1 1",
+        "minMM": [
+          3.45,
+          -4.7,
+          30.5
+        ],
+        "maxMM": [
+          6.0,
+          4.7,
+          34.25
+        ],
+        "axis": "arc-yz",
+        "centerYZMM": [
+          -0.11715524677885306,
+          25.507943018436897
+        ],
+        "radiusMM": 7.730097834422247
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [-1, -1]",
+        "minMM": [
+          -5.716836255373423,
+          -5.515475893368157,
+          26.65
+        ],
+        "maxMM": [
+          -3.1233868483026264,
+          -2.9484539353402246,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [-1, 1]",
+        "minMM": [
+          -5.62848597197079,
+          3.6821608350702757,
+          26.65
+        ],
+        "maxMM": [
+          -3.1702943590291626,
+          6.288987597602354,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [1, -1]",
+        "minMM": [
+          3.346630715489216,
+          -5.537345752661067,
+          26.65
+        ],
+        "maxMM": [
+          6.0285545938435385,
+          -3.009141676629605,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.35,
+          0.15,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.34,
+          0.12
+        ],
+        "roughness": 0.9,
+        "name": "continuous upright [1, 1]",
+        "minMM": [
+          3.188241984776962,
+          3.613464034353066,
+          26.65
+        ],
+        "maxMM": [
+          5.767857832213337,
+          6.394129939859036,
+          34.15
+        ],
+        "axis": "z"
+      },
+      {
+        "rotationZDeg": 21.244076360841746,
+        "centerMM": [
+          -9.531400322914124,
+          -10.0631502866745,
+          0
+        ],
+        "darkRGB": [
+          0.4,
+          0.2,
+          0.065
+        ],
+        "lightRGB": [
+          0.7,
+          0.43,
+          0.17
+        ],
+        "roughness": 0.87,
+        "name": "three hand-carved seat X planks",
+        "minMM": [
+          -6.1,
+          -6.1,
+          34.0
+        ],
+        "maxMM": [
+          6.1,
+          6.2,
+          36.1
+        ],
+        "axis": "x"
+      }
+    ],
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "stoneParts": [],
+    "surfaceParts": []
+  },
+  "weightBudget": {
+    "renderMiB": [
+      1.6,
+      3.8
+    ],
+    "lodMiB": [
+      0.5,
+      1.2
+    ],
+    "shadowKiB": [
+      50,
+      130
+    ],
+    "previewKiB": [
+      10,
+      40
+    ],
+    "basis": "A 35mm timber floor with a rotated low stool: three deeply carved seat planks, four continuous uprights and four shallow arched stretchers.68000/22000 independent triangles with1024/512 bakes preserve wood grooves, board gaps, feet and all four openings; compare compact textures."
+  },
+  "reviewNotes": "PDF page9, native full/front-back and close front/back/top inspected. Source300008tri/15000484bytes/maxZ35.950996mm. Stool native boundsX[-17.0139,-2.0489],Y[-17.4785,-2.2843]; centre[-9.531400,-10.063150]. Seat side normals fit rotationZ21.244076deg, local seat about11.72x12.0mm. Floor normal squaresX.26155,Y.04233 confirmY boards; seat normal squaresX.07658,Y.39347 confirm its rotated X grain. Four arch inner profiles fitted independently: radii8.6888,9.8163,7.7797,7.7301mm, maximum residual.07725mm. Arc grain uses the rotated local coordinates, uprights remainZ, three seat boardsX. Native free-quarter floor pointsNE/NW/SE are25.711802/25.713469/25.399557mm; southwest point reaches the seat and is excluded. Conservative native blockerX[-17.25,-1.8],Y[-17.5,-2.05]. All wood; no cushion, invented fasteners or lights. Check every arch/board gap, local grain, original carved relief, floor-frame boundaries, all three placement points, render/LOD/shadow and both texture candidates.",
+  "uvIslandMargin": 0.0012,
+  "plainMountCollarMM": 0.5,
+  "standRayTopMM": 100,
+  "renderUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0008,
+  "lodUVAngleLimitRad": 0.25,
+  "lodUVIslandMargin": 0.0008,
+  "standPointsMM": [
+    [
+      8.75,
+      8.75
+    ],
+    [
+      -8.75,
+      8.75
+    ],
+    [
+      8.75,
+      -8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.25,
+        -2.05
+      ],
+      [
+        -1.8,
+        -2.05
+      ],
+      [
+        -1.8,
+        -17.5
+      ],
+      [
+        -17.25,
+        -17.5
+      ]
+    ]
+  ]
+}

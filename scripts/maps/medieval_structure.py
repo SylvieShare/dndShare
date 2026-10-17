@@ -112,7 +112,7 @@ def paint(obj, recipe):
             v = np.where(np.abs(normals@transverse)>np.abs(normals@other), p@other, p@transverse)
         elif axis in ('arc-xz', 'arc-yz'):
             centre = part['centerXZMM'] if axis=='arc-xz' else part['centerYZMM']
-            dx, dz = (x if axis=='arc-xz' else y)-centre[0], z-centre[1]
+            dx, dz = q[:, 0 if axis=='arc-xz' else 1]-centre[0], q[:, 2]-centre[1]
             u, v = np.arctan2(dz, dx)*part['radiusMM'], np.hypot(dx, dz)
         elif axis=='crate':
             a = np.deg2rad(part['rotationZDeg'])
