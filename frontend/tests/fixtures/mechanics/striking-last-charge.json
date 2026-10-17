@@ -1,0 +1,5 @@
+{
+  "dice": "d20",
+  "failure_max": 1,
+  "consequence": "lose_magic"
+}

@@ -45,7 +45,7 @@ func TestGlobalMapsPostgres(t *testing.T) {
  INSERT INTO dndshare.session_participant VALUES(10,41),(20,42);
  INSERT INTO dndshare.session_chapter VALUES(10,101),(20,201);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(schemaSessionGlobalMapsSQL)
+	exec(testSchemaTables(t, "session_global_map"))
 	s := &Store{pool: pool}
 	first, err := s.CreateGlobalMap(t.Context(), 10, 1, 1, "Мир")
 	if err != nil || !first.Current {

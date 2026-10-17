@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { magicWeaponAdditions, magicWeaponResources } from '../../../../tests/fixtures/mechanics.js'
 import { expect, it } from 'vitest'
 import { collectCharacterResources, setCharacterResourceAvailable, restoreCharacterResources } from './characterResources'
 import { collectCharacterFeatureActions } from './characterFeatureActions'
@@ -7,9 +7,7 @@ import { bindDamageResources, spendDamageResources } from './weaponDamageResourc
 import { restoreDawnResources } from './dawnResources'
 import { weaponDamageActionFormula } from '@/shared/lib/weaponDamageOptions'
 
-const sql = readFileSync(new URL('../../../../../internal/store/schema/99_magic_weapon_refresh.sql', import.meta.url), 'utf8')
-const section = tag => JSON.parse(sql.split(`$${tag}$`)[1])
-const resources = section('resources'), additions = section('additions')
+const resources = magicWeaponResources, additions = magicWeaponAdditions
 function fixture(id, magic = {}) {
   const row = resources.find(r => r.id === id) || additions.find(r => r.id === id)
   const item = { id, typeId: 19, name: row.name, data: { weapon: { base_item_id: 37 }, activation: 'equipped', attunement: 'required',

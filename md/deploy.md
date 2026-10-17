@@ -161,7 +161,8 @@ discover -s deploy -p 'test_*.py' -v`. Проверяются подпись/cla
 `go run ./cmd/system-music-upload -source-dir /path/to/tracks`. Команда сверяет
 размер и SHA-256 каждого файла с `internal/systemmusic`, после чего записывает
 объекты под стабильными ключами `system-music/v1/`. В Git и Go-бинарь аудио не
-включается; startup-схема хранит эти ключи в `music_track`.
+включается; `music_track` хранит эти ключи как отдельно подготовленные данные
+каталога, без startup seed.
 
 Системные изображения сессий входят только в служебный бинарь
 `cmd/system-image-sync`. Он остаётся ручным legacy/bootstrap-инструментом:
@@ -222,19 +223,15 @@ VM и не запускает. Новые и замещающие изображ
 обновляют `storage_image` с соответствующей ссылкой. Для вызова production MCP
 должны быть заданы `MCP_AUTH_TOKEN` и `MCP_WRITE_ENABLED=true`.
 
-Прежние 13 embedded эмблем коллекций и четыре изображения истощения/вдохновения
-хранятся в S3 как WebP под content-addressed
-`system-item-media/v1/static/`. Их оптимизированные исходники и SHA-256/размеры
-сохранены в `scripts/static-media/manifest.json` и соседнем каталоге assets.
-Перед первым deploy migration 193 объекты должны быть загружены вручную:
-`go run ./cmd/static-media-upload` проверяет локальный набор,
-`go run ./cmd/static-media-upload -apply` загружает его и сверяет полученные
-из S3 байты. Команда использует штатные storage env; credentials не печатаются.
+Прежние embedded эмблемы коллекций и изображения истощения/вдохновения
+хранятся в S3 как WebP под `system-item-media/v1/static/`. Их оптимизированные
+исходники и SHA-256/размеры сохранены в `scripts/static-media/manifest.json`.
+`go run ./cmd/static-media-upload` проверяет локальный набор, а запуск с
+`-apply` явно восстанавливает файлы в S3 и сверяет полученные байты. Команда
+не меняет БД, использует штатные storage env и не печатает credentials.
 Штатный deploy не запускает её и не включает эти WebP в основной бинарь.
-Migration 193 обновляет только прежние embedded URL/key с сохранением image ID,
-поэтому все общие ссылки переключаются вместе, а более новые картинки остаются.
-Новые объекты `system-item-media/` получают
-`Cache-Control: public, max-age=31536000, immutable`.
+Ссылки и общие image ID сохраняются в данных БД, миграции их не переносят.
+Объекты `system-item-media/` получают годовой immutable cache-control.
 
 Перенос уже зарегистрированных картинок бестиария из компактной иконки в
 обложку выполняется без повторной загрузки через MCP

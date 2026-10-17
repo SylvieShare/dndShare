@@ -12,7 +12,7 @@ import (
 )
 
 // Opt-in: point DNDSHARE_JOURNAL_TEST_DSN at an empty local disposable database.
-func TestPersonalJournalMigrationAndSources(t *testing.T) {
+func TestPersonalJournalSourcesAndLifecycle(t *testing.T) {
 	dsn := os.Getenv("DNDSHARE_JOURNAL_TEST_DSN")
 	if dsn == "" {
 		t.Skip("set DNDSHARE_JOURNAL_TEST_DSN to run PostgreSQL journal regression tests")
@@ -48,50 +48,21 @@ func TestPersonalJournalMigrationAndSources(t *testing.T) {
 		UPDATE dndshare."char" SET uuid='cc503ec7-8250-4c00-a9a4-b830f39cdaf1' WHERE id=1;
 		INSERT INTO dndshare."session" (id,owner_user_id,name,deleted) VALUES (1,1,'Кампания',false), (2,1,'Удалённая',true);
 		INSERT INTO dndshare.session_participant VALUES (1,1,1), (2,25,1);`)
-	exec(schemaJournalsSQL)
-	exec(`INSERT INTO dndshare.journal (uuid,owner_user_id,name) VALUES
-		('95cba40e-807d-463d-9f80-9e43b8c0a0b4',1,'Полный дневник'),
-		('690207c5-4770-4e09-b9b2-1f2d08be59ef',1,'Копия персонажа'),
-		(gen_random_uuid(),2,'Другой владелец');
+	exec(testSchemaTables(t, "journal", "journal_section", "journal_entry", "journal_node", "journal_link", "character_journal", "session_occurrence"))
+	exec(`INSERT INTO dndshare.journal (uuid,owner_user_id,personal_char_id,name) VALUES
+		('95cba40e-807d-463d-9f80-9e43b8c0a0b4',1,1,'Полный дневник'),
+		('690207c5-4770-4e09-b9b2-1f2d08be59ef',1,25,'Копия персонажа'),
+		(gen_random_uuid(),2,2,'Другой владелец');
 		INSERT INTO dndshare.journal (session_id,name) VALUES (1,'Общий'),(2,'Удалённый');
-		INSERT INTO dndshare.character_journal (char_id,journal_id) VALUES (1,2),(25,2),(2,3);
+		INSERT INTO dndshare.character_journal (char_id,journal_id) VALUES (1,1),(25,2),(2,3);
 		INSERT INTO dndshare.journal_section (journal_id,position,title) VALUES (1,1,'Сессия 7'),(1,2,'Сессия 8'),(2,1,'Сессия 7'),(2,2,'Сессия 8');
 		INSERT INTO dndshare.journal_entry (section_id,position,entry_type,title) SELECT 1,i,'event','Запись ' || i FROM generate_series(1,4) i;
 		INSERT INTO dndshare.journal_entry (section_id,position,entry_type,title) SELECT 2,i,'event','Запись ' || i FROM generate_series(1,3) i;
 		INSERT INTO dndshare.journal_entry (section_id,position,entry_type,title) SELECT 3,i,'event','Запись ' || i FROM generate_series(1,4) i;`)
-	contentHash := func() string {
-		t.Helper()
-		var hash string
-		if err := pool.QueryRow(ctx, `SELECT md5(jsonb_agg(to_jsonb(e) ORDER BY id)::text) FROM dndshare.journal_entry e`).Scan(&hash); err != nil {
-			t.Fatal(err)
-		}
-		return hash
-	}
-	before := contentHash()
-	exec(schemaPersonalCharacterJournalSQL)
-	exec(schemaJournalEditingSQL)
-	if contentHash() != before {
-		t.Fatal("ownership migration must not change or delete any entries")
-	}
-	exec(schemaJournalEntryAuditSQL)
-	beforeGraph := contentHash()
-	exec(schemaJournalGraphSQL)
-	exec(schemaJournalQuestsSQL)
-	exec(schemaJournalHeadersSQL)
-	if contentHash() != beforeGraph {
-		t.Fatal("graph migration must preserve all entry content and audit")
-	}
-	exec(`INSERT INTO dndshare.journal_section(journal_id,position,title,event_date) VALUES
-		(4,1,'Начало','2026-09-01'),(4,3,'Хаммер','3-й день Хаммера'),(4,4,'Финал','03.10.2026'),(4,5,'Неточная дата','2025-02-29');
-		INSERT INTO dndshare.journal_entry(section_id,position,entry_type,title)
-		SELECT id,1,'event','Сохрани меня' FROM dndshare.journal_section WHERE journal_id=4`)
-	beforeOccurrences := contentHash()
-	exec(schemaSessionOccurrencesSQL)
-	if contentHash() != beforeOccurrences {
-		t.Fatal("occurrence migration changed diary entries")
-	}
+	exec(`INSERT INTO dndshare.journal_link(journal_id,from_id,to_id) VALUES(1,1,2),(1,2,3),(1,3,4),(1,5,6),(1,6,7),(2,8,9),(2,9,10),(2,10,11)`)
 	s := &Store{pool: pool}
-	t.Run("meeting migration and lifecycle", func(t *testing.T) { testSessionOccurrences(t, s) })
+	seedSessionOccurrencesForTest(t, s, 1)
+	t.Run("meeting lifecycle", func(t *testing.T) { testSessionOccurrences(t, s) })
 	original, err := s.GetCharacterJournal(ctx, 1)
 	if err != nil || original == nil || original.ID != 1 || len(original.Sections) != 2 || len(original.Sections[1].Entries) != 3 {
 		t.Fatalf("complete journal was not restored: %+v, %v", original, err)

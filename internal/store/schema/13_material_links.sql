@@ -1,3 +1,0 @@
--- Material context links are migrated into the universal relation table by
--- 14_session_entities.sql, after that table exists. This schema part remains
--- intentionally empty to preserve startup ordering for existing databases.

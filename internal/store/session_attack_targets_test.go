@@ -49,14 +49,11 @@ func testSessionAttackTargets(t *testing.T, s *Store, pool *pgxpool.Pool) {
 	if err != nil || len(targets) < 2 {
 		t.Fatalf("targets: %v", err)
 	}
-	event, err := s.CreateSessionEvent(ctx, 1, 1, nil, nil, nil, "dice_roll", "Атака: Посох", json.RawMessage(`{"result":{"total":18,"parts":[{"kind":"dice","sides":20,"rolls":[18]}]}}`), "public", nil)
+	event, err := s.CreateSessionEvent(ctx, 1, 1, nil, nil, nil, "dice_roll", "Атака: Посох", json.RawMessage(`{"attackRoll":true,"result":{"total":18,"parts":[{"kind":"dice","sides":20,"rolls":[18]}]}}`), "public", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer pool.Exec(ctx, `DELETE FROM dndshare.session_event WHERE id=$1`, event.ID)
-	if _, err = pool.Exec(ctx, schemaSessionAttackTargetsSQL); err != nil {
-		t.Fatal(err)
-	}
 	if _, err = s.SetSessionAttackTargets(ctx, 1, 1, event.ID, targets[:1]); err == nil {
 		t.Fatal("player changed targets")
 	}

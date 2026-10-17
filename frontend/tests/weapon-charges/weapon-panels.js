@@ -1,3 +1,4 @@
+import { lightningThrow } from '../fixtures/mechanics.js'
 import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
 import { createApp, h, reactive } from 'vue'
@@ -9,8 +10,7 @@ import { availableWeaponUses, startWeaponUse } from '../../src/features/characte
 import { itemsApi } from '../../src/shared/api/itemsApi'
 import { useItemTypesStore } from '../../src/stores/itemTypes'
 import { useSuggestStore } from '../../src/stores/suggest'
-import sql from '../../../internal/store/schema/102_weapon_uses.sql?raw'
-const rule = JSON.parse(sql.split('$lightning_throw$')[1])
+const rule = lightningThrow
 const base = { id: 1448, name: 'Метательное копьё', typeId: 1, data: { notes: '<p>Просто описание копья.</p>', range_min: 30, range_max: 120 } }
 const javelin = { id: 284, name: 'Метательное копьё молнии', typeId: 19, data: { weapon: { base_item_id: 1448 }, attunement: 'none', max_use: 1, desc: '<p>Общее описание магического оружия.</p>', weapon_uses: [rule] } }
 const mace = { id: 273, name: 'Булава ужаса', typeId: 19, data: { weapon: { base_item_id: 1448 }, attunement: 'required', max_use: 3,

@@ -1,12 +1,10 @@
-import { readFileSync } from 'node:fs'
+import { infernalReaction, infernalResource } from '../../../../tests/fixtures/mechanics.js'
 import { describe, expect, it } from 'vitest'
 import { collectCharacterFeatureActions, featureActionResourceKeys, groupCharacterFeatureActions } from './characterFeatureActions'
 import { collectCharacterResources, restoreCharacterResources, setCharacterResourceAvailable } from './characterResources'
 
-const sql = readFileSync(new URL('../../../../../internal/store/schema/111_infernal_legacy_reaction.sql', import.meta.url), 'utf8')
-const featureActions = JSON.parse(sql.split('$reaction$')[1])
-const resourceSql = readFileSync(new URL('../../../../../internal/store/schema/35_ability_resource_catalog_audit.sql', import.meta.url), 'utf8')
-const resourceRules = JSON.parse(resourceSql.match(/'Дьявольское наследие', '([^']+)'::jsonb/)[1])
+const featureActions = infernalReaction
+const resourceRules = infernalResource
 const items = new Map([['1443', {
   id: 1443,
   name: 'Дьявольское наследие',

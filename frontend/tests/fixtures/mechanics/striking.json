@@ -1,0 +1,13 @@
+{
+  "key": "striking",
+  "label": "Усилить удар",
+  "dice": "d6",
+  "dice_count": 1,
+  "damage_type": 12,
+  "weapon_kind": "melee",
+  "uses_resource": true,
+  "resource_cost": 1,
+  "resource_units_max": 3,
+  "double_on_critical": true,
+  "condition": "При попадании рукопашной атакой этим посохом. Каждая выбранная ячейка добавляет 1к6 силовым полем и расходует 1 заряд."
+}

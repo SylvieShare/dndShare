@@ -23,10 +23,9 @@ than localized display strings:
 - optional `vehicle_stats {ac, hp, damage_threshold}` are reserved for sources
   that actually provide vehicle combat rules.
 
-Unknown crew, passenger and combat values stay absent. The startup migration
-converts former localized `speed` and `carrying_capacity` values and links all
-eight PHB mounts to their bestiary entries. UI code consumes only the current
-contract.
+Unknown crew, passenger and combat values stay absent. Catalogue data contains explicit bestiary links for PHB mounts. UI code
+consumes only the current contract; preparation of older data runs separately
+from structural migrations.
 
 ## Presentation
 

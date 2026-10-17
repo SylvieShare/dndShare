@@ -1,0 +1,49 @@
+package store
+
+import (
+	"context"
+	"os"
+	"strings"
+	"testing"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+func TestAbilityRuleReferences(t *testing.T) {
+	dsn := os.Getenv("DNDSHARE_ABILITY_LINK_TEST_DSN")
+	if dsn == "" {
+		t.Skip("set DNDSHARE_ABILITY_LINK_TEST_DSN to an empty local dndshare_test_* database")
+	}
+	cfg, err := pgxpool.ParseConfig(dsn)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasPrefix(cfg.ConnConfig.Database, "dndshare_test_") || (cfg.ConnConfig.Host != "localhost" && cfg.ConnConfig.Host != "127.0.0.1") {
+		t.Fatal("requires a disposable local database")
+	}
+	ctx := context.Background()
+	pool, err := pgxpool.NewWithConfig(ctx, cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer pool.Close()
+	exec := func(sql string, args ...any) {
+		t.Helper()
+		if _, err := pool.Exec(ctx, sql, args...); err != nil {
+			t.Fatal(err)
+		}
+	}
+	exec(`CREATE SCHEMA dndshare;
+ CREATE TABLE dndshare.item_type(id bigint PRIMARY KEY, fields jsonb);
+ CREATE TABLE dndshare.item(id bigint PRIMARY KEY, user_id bigint, type_id bigint, name text, data jsonb);
+ INSERT INTO dndshare.item VALUES
+ (1,NULL,4,'Скрытая атака','{"class_ids":[{"id":4015}],"weapon_damage":[{"key":"damage_1_2","label":"Первая","dice":"d6"},{"key":"damage_1","label":"Вторая","dice":"d8"},{"key":"damage_1_3","label":"Третья","dice":"d4"}],"sheet_widgets":[{"value_source":"weapon_damage"}]}'),
+ (2,7,18,'Личное','{"weapon_damage":[{"key":"custom","dice":"d6"}],"sheet_widgets":[]}'),
+ (3,7,4,'Пустое','{"weapon_damage":null,"class_ids":{}}'),
+ (4,7,4,'Явное','{"level_source":"character","class_ids":[{"id":4015}],"weapon_damage":[{"key":"a"},{"key":"b"}],"sheet_widgets":[{"value_source":"weapon_damage","weapon_damage_key":"b"}]}');`)
+	defer exec(`DROP SCHEMA dndshare CASCADE`)
+	refs, err := (&Store{pool: pool}).FindItemRuleReferences(ctx, nil, 1, 0, "weapon_damage", "Вторая", 40, 0)
+	if err != nil || len(refs) != 1 || refs[0].Key != "damage_1" {
+		t.Fatalf("typed damage reference: %+v, %v", refs, err)
+	}
+}

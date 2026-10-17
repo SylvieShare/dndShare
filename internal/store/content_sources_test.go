@@ -42,39 +42,3 @@ func TestAppendContentScopeSQLAllCompatibleSources(t *testing.T) {
 		t.Fatalf("legacy filter must be disabled: %s", where[0])
 	}
 }
-
-func TestHandbookSchemaBackfillsBestiaryContentSources(t *testing.T) {
-	for _, fragment := range []string{
-		"i.data #>> '{identity,source}'",
-		"INSERT INTO dndshare.content_source",
-		"INSERT INTO dndshare.item_content_source",
-		"WHERE i.type_id = 6",
-		"upper(btrim(code))",
-		"WHEN 'PHB' THEN 'Книга игрока'",
-		"WHEN 'MM' THEN 'Бестиарий'",
-		"WHEN 'DMF5E' THEN 'Углублённая магия для 5 редакции'",
-	} {
-		if !strings.Contains(schemaHandbookSQL, fragment) {
-			t.Fatalf("bestiary source migration is missing %q", fragment)
-		}
-	}
-}
-
-func TestHandbookSchemaNormalizesContentSourceCategories(t *testing.T) {
-	for _, fragment := range []string{
-		"CREATE OR REPLACE FUNCTION dndshare.classify_content_source_kind(raw_code text)",
-		"('PHB', 'MM', 'DMG')",
-		"LIKE 'UA%'",
-		"'setting'",
-		"'adventure'",
-		"'playtest'",
-		"'third_party'",
-		"ELSE 'supplement'",
-		"SET kind = dndshare.classify_content_source_kind(code)",
-		"CHECK (kind IN ('core', 'supplement', 'setting', 'adventure', 'playtest', 'third_party'))",
-	} {
-		if !strings.Contains(schemaHandbookSQL, fragment) {
-			t.Fatalf("content source category migration is missing %q", fragment)
-		}
-	}
-}

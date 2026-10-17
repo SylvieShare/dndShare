@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { lightningThrow } from '../../../../tests/fixtures/mechanics.js'
 import { createPinia, setActivePinia } from 'pinia'
 import { reactive, ref } from 'vue'
 import { beforeEach, expect, it, vi } from 'vitest'
@@ -9,8 +9,7 @@ import { useWeaponUseSteps } from '../blocks/dnd/composables/useWeaponUseSteps'
 import { useDiceStore } from '@/stores/dice'
 import { useSuggestStore } from '@/stores/suggest'
 
-const sql = readFileSync(new URL('../../../../../internal/store/schema/102_weapon_uses.sql', import.meta.url), 'utf8')
-const rule = JSON.parse(sql.split('$lightning_throw$')[1])
+const rule = lightningThrow
 const types = [{ id: 9, value: 'Молния', color: '#ff0' }]
 const base = { expression: '1d6{Колющий}+3{Колющий}', critical_expression: '2d6{Колющий}+3{Колющий}' }
 function fixture(remaining = 1) {

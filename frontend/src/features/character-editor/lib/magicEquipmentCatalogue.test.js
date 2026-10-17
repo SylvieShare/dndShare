@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { magicEquipment } from '../../../../tests/fixtures/mechanics.js'
 import { expect, it } from 'vitest'
 import { collectCharacterCombatEffects, matchingWeaponDamageActions } from './characterCombatEffects'
 import { collectCharacterDefenses } from './characterDefenses'
@@ -6,15 +6,14 @@ import { collectCharacterResources, setCharacterResourceAvailable, restoreCharac
 import { collectCharacterFeatureActions } from './characterFeatureActions'
 import { selectedDamageActions, weaponDamageActionFormula } from '@/shared/lib/weaponDamageOptions'
 
-const sql = readFileSync(new URL('../../../../../internal/store/schema/94_magic_equipment_mechanics.sql', import.meta.url), 'utf8')
-const patches = JSON.parse(sql.split('$mechanics$')[1])
+const patches = magicEquipment
 function item(id, kind = 'weapon') {
   const row = patches.find(row => row.id === id)
   return { id, name: row.name, typeId: 19, data: { activation: 'equipped', attunement: 'required', [kind]: { base_item_id: 49 }, ...row.patch } }
 }
 const entry = (id, uid, magic = {}) => ({ item_id: 49, magic_item_id: id, uid, params: { magic: { attuned: true, ...magic } } })
 const catalogue = (...items) => new Map(items.map(row => [String(row.id), row]))
-it('uses the seeded mace dice on its own instance, doubles hit dice on critical, and gates attunement', () => {
+it('uses the fixture mace dice on its own instance, doubles hit dice on critical, and gates attunement', () => {
   const items = catalogue(item(190)), values = { weapon: [entry(190, 'mace')], lvl: { level: 7 } }
   const effects = collectCharacterCombatEffects(values, items)
   const rows = matchingWeaponDamageActions(effects, { weaponUid: 'mace', melee: true })
@@ -30,7 +29,7 @@ it('keeps natural-20 damage from doubling again, with a dependent construct incr
   const selected = selectedDamageActions(actions, actions.map(row => row.key))
   expect(selected.map(row => weaponDamageActionFormula(row, true))).toEqual(['2d6', '2d6'])
 })
-it('binds seeded charges to exactly one instance and does not restore dawn powers on a rest', () => {
+it('binds fixture charges to exactly one instance and does not restore dawn powers on a rest', () => {
   const items = catalogue(item(273)), values = { lvl: { level: 7 }, weapon: [entry(273, 'first'), entry(273, 'second')] }
   const resources = collectCharacterResources(values, items)
   const actions = collectCharacterFeatureActions(values, items, resources)

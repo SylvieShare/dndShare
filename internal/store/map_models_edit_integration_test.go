@@ -38,77 +38,11 @@ func TestCurrentMapModelPersistence(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	exec(`CREATE SCHEMA dndshare; CREATE TABLE dndshare.users(id bigint PRIMARY KEY); CREATE TABLE dndshare.session(id bigint PRIMARY KEY); CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY);`)
+	exec(`CREATE SCHEMA dndshare; CREATE TABLE dndshare.users(id bigint PRIMARY KEY); CREATE TABLE dndshare.session(id bigint PRIMARY KEY); CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY); INSERT INTO dndshare.users VALUES(1);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(schemaBattleMapsSQL)
-	exec(schema3DMapsSQL)
-	exec(schemaModelSupportSlotsSQL)
-	exec(schemaModelMountDepthSQL)
-	exec(schemaModelBaseFootprintsSQL)
-	exec(schemaModelTextureDetailSQL)
-	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
-SELECT '00000000-0000-4000-8000-000000000099','migration-test','CUSTOM','Custom wall','Custom wall',1,'wall','cave','arched-door',geometry,assets
-FROM dndshare.map_model LIMIT 1`)
-	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,version,tile_type,terrain_type,wall_layout,geometry,assets)
-SELECT item.id::uuid,'shape-reference',item.code,item.name,item.name,1,'wall','dungeon','custom',model.geometry,model.assets
-FROM (VALUES
- ('00000000-0000-4000-8000-000000000096','UD-096','Wall Corner'),
- ('00000000-0000-4000-8000-000000000097','UD-097','Wall Diagonal'),
- ('00000000-0000-4000-8000-000000000014','UD-014','Angle')
-) AS item(id,code,name) CROSS JOIN LATERAL (SELECT geometry,assets FROM dndshare.map_model LIMIT 1) model`)
-	exec(schemaModelTileCategoriesSQL)
-	exec(schemaModelWallShapesSQL)
-	exec(schemaModelSurfacesObjectsSQL)
-	exec(schemaMeasuredPlacementPointsSQL)
-	exec(schemaModelShadowAssetsSQL)
-	exec(schemaModelBehaviourSQL)
-	exec(schemaModelGroupCodesSQL)
-	testCurrentModelMigration(t, ctx, pool)
-	exec(schemaMapPreviewsSQL)
+	exec(testSchemaTables(t, "battle_map", "battle_map_model", "battle_map_preview", "map_model", "map_model_definition", "map_model_transition", "session_map", "session_map_model", "session_map_display"))
 	s := &Store{pool: pool}
-	exec(`INSERT INTO dndshare.map_model(id,collection,source_code,source_name,name,tile_type,geometry,assets)
-SELECT item.id::uuid,item.collection,item.code,item.name,item.name,'floor',
- model.geometry || '{"hasDecor":false,"canStand":true,"placementPoints":[{"x":0.5,"y":0.5,"elevation":0.4}]}'::jsonb,model.assets
-FROM (VALUES
- ('00000000-0000-4000-8000-000000000131','ultimate-dungeon','UD-031','Ground Table Full'),
- ('00000000-0000-4000-8000-000000000168','lost-cave','LC-068','Well Ground Empty'),
- ('00000000-0000-4000-8000-000000000149','ultimate-dungeon','UD-049','Ground Symbol Pentacle')
-) AS item(id,collection,code,name) CROSS JOIN LATERAL (SELECT geometry,assets FROM dndshare.map_model LIMIT 1) model`)
-	beforeContent := map[string]battlemap.Model{}
-	for _, id := range []string{"00000000-0000-4000-8000-000000000131", "00000000-0000-4000-8000-000000000168", "00000000-0000-4000-8000-000000000149"} {
-		beforeContent[id], err = s.GetMapModel(ctx, id)
-		if err != nil {
-			t.Fatal(err)
-		}
-	}
-	exec(schemaModelFurnishingsSQL)
-	for id, expected := range beforeContent {
-		expected.HasDecor = expected.SourceCode != "UD-049"
-		after, err := s.GetMapModel(ctx, id)
-		if err != nil || !reflect.DeepEqual(after, expected) {
-			t.Fatalf("furnishings correction changed placement or assets: %+v %v", after, err)
-		}
-	}
-	for _, expected := range battlemap.InitialCatalogue() {
-		migrated, err := s.GetMapModel(ctx, expected.ID)
-		if err != nil || migrated.TileType != expected.TileType || !reflect.DeepEqual(migrated.Assets, expected.Assets) {
-			t.Fatalf("migration changed identity/assets or lost category for %s: %+v %v", expected.SourceCode, migrated, err)
-		}
-	}
-	custom, err := s.GetMapModel(ctx, "00000000-0000-4000-8000-000000000099")
-	if err != nil || custom.TileType != "wall-straight" {
-		t.Fatalf("unknown wall shape lost during migration: %+v %v", custom, err)
-	}
-	for id, category := range map[string]string{
-		"00000000-0000-4000-8000-000000000096": "wall-corner",
-		"00000000-0000-4000-8000-000000000097": "wall-diagonal",
-		"00000000-0000-4000-8000-000000000014": "wall-angle",
-	} {
-		model, err := s.GetMapModel(ctx, id)
-		if err != nil || model.TileType != category {
-			t.Fatalf("wall shape reference classified incorrectly: %+v %v", model, err)
-		}
-	}
+	seedMapModelsForTest(t, s)
 	testMapModelBehaviours(t, ctx, s)
 	testMapModelPreviewRevision(t, ctx, s)
 	testModelGroupCodeRules(t, ctx, s)

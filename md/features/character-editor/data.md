@@ -105,9 +105,9 @@ avoids spending a slot, and `cast_level` fixes a rules-defined cast level.
 Removing an automatic source removes only its grant; an independently learned
 copy in a tab remains. Creation, level-up, live sheet and print use this model.
 
-`internal/store/schema/61_spellbook_tabs.sql` migrates existing rows before HTTP
-start and removes the shared-list/source-settings shape. Components neither
-recognize nor write previous spellbook fields.
+Spellbooks are stored in the current tabs-based contract. Components neither
+recognize nor write previous shared-list/source-setting fields. Preparation
+of older data is an explicit operation outside structural migrations.
 
 ## Семантические accessors
 

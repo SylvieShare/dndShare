@@ -12,7 +12,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func TestRulesEditionsMigration(t *testing.T) {
+func TestRulesEditionsPersistenceAndValidation(t *testing.T) {
 	dsn := os.Getenv("DNDSHARE_EDITIONS_TEST_DSN")
 	if dsn == "" {
 		t.Skip("requires disposable local dndshare_test_* database")
@@ -39,16 +39,18 @@ func TestRulesEditionsMigration(t *testing.T) {
 	}
 	exec(`DROP SCHEMA IF EXISTS dndshare CASCADE`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	for _, sql := range []string{schemaFoundationSQL, schemaHandbookSQL, schemaCharactersSQL, schemaSessionsSQL, schemaItemAutomationSQL, schemaHiddenItemsSQL} {
-		exec(sql)
+	if err := applySchema(ctx, pool); err != nil {
+		t.Fatal(err)
 	}
-	exec(`INSERT INTO dndshare.users(id,login,password) VALUES(101,'edition-test','test'),(102,'other-test','test');
- INSERT INTO dndshare.item_type(id,name,source_id) SELECT 999,'Edition test',id FROM dndshare.source WHERE name='DND5e';
+	exec(`INSERT INTO dndshare.source(id,name) OVERRIDING SYSTEM VALUE VALUES(1,'DND5e'),(2,'VTM');
+ INSERT INTO dndshare.source_version(id,source_id,version) OVERRIDING SYSTEM VALUE VALUES(1,1,'2014'),(2,1,'2024'),(3,2,'V20');
+ INSERT INTO dndshare.char_template(name) VALUES('DND5');
+ INSERT INTO dndshare.content_source(source_id,name,code,kind,native_source_version_id) VALUES(1,'Players Handbook','PHB2024','core',2);
+ INSERT INTO dndshare.users(id,login,password) VALUES(101,'edition-test','test'),(102,'other-test','test');
+ INSERT INTO dndshare.item_type(id,name,source_id,fields) OVERRIDING SYSTEM VALUE VALUES(999,'Edition test',1,'[]');
  INSERT INTO dndshare.custom_item_source(id,user_id,name,is_default) VALUES(9101,101,'Own',false),(9102,102,'Other',false);
- INSERT INTO dndshare.item(id,name,type_id,data,user_id,custom_source_id) VALUES(9001,'Shared',999,'{}',NULL,NULL),(9002,'Changed',999,'{}',NULL,NULL),(9003,'Personal',999,'{}',101,9101),(9004,'Foreign',999,'{}',102,9102);`)
-	for _, sql := range []string{schemaRulesEditionsSQL, schemaCharacterEditionValidationSQL, schemaSessionRulesEditionSQL, schemaOriginRulesFieldsSQL} {
-		exec(sql)
-	}
+ INSERT INTO dndshare.item(id,name,type_id,data,user_id,custom_source_id) VALUES(9001,'Shared',999,'{}',NULL,NULL),(9002,'Changed',999,'{}',NULL,NULL),(9003,'Personal',999,'{}',101,9101),(9004,'Foreign',999,'{}',102,9102);
+ INSERT INTO dndshare.item_version_compatibility(item_id,source_version_id,status) SELECT id,1,'native' FROM dndshare.item;`)
 	s := &Store{pool: pool}
 	var v14, v24 int64
 	if err = pool.QueryRow(ctx, `SELECT id FROM dndshare.source_version WHERE version='2014'`).Scan(&v14); err != nil {
@@ -145,10 +147,6 @@ func TestRulesEditionsMigration(t *testing.T) {
 			t.Fatalf("invalid new reference %d accepted", id)
 		}
 	}
-	if _, err = pool.Exec(ctx, `UPDATE dndshare."char" SET source_version_id=$2 WHERE id=$1`, charID, v14); err == nil {
-		t.Fatal("silent conversion accepted")
-	}
-	exec(schemaCharacterEditionChangeSQL)
 	var uuid string
 	if err = pool.QueryRow(ctx, `SELECT uuid::text FROM dndshare."char" WHERE id=$1`, charID).Scan(&uuid); err != nil {
 		t.Fatal(err)

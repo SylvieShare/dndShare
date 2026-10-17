@@ -40,46 +40,9 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	}
 	exec(`CREATE SCHEMA dndshare; CREATE TABLE dndshare.users(id bigint PRIMARY KEY); CREATE TABLE dndshare.session(id bigint PRIMARY KEY); CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY); INSERT INTO dndshare.users VALUES(1),(2); INSERT INTO dndshare.session VALUES(10),(20);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(schemaBattleMapsSQL)
-	exec(schema3DMapsSQL)
-	exec(schemaModelSupportSlotsSQL)
-	exec(schemaModelMountDepthSQL)
-	exec(schemaModelBaseFootprintsSQL)
-	exec(schemaModelTextureDetailSQL)
-	exec(schemaModelTileCategoriesSQL)
-	exec(schemaModelWallShapesSQL)
-	exec(schemaModelSurfacesObjectsSQL)
-	exec(schemaMeasuredPlacementPointsSQL)
-	exec(schemaModelShadowAssetsSQL)
-	exec(schemaModelFurnishingsSQL)
-	exec(schemaModelBehaviourSQL)
-	exec(schemaModelGroupCodesSQL)
-	exec(schemaCurrentMapModelsSQL)
-	exec(schemaMapPreviewsSQL)
-	testSessionMapEditorMigration(t, ctx, pool)
-	exec(schemaMapAreasSQL)
-	exec(schemaMapLightingSQL)
-	exec(schemaMapLightingModeSQL)
-	exec(`INSERT INTO dndshare.battle_map(owner_user_id,name,document) VALUES
-(1,'legacy image','{"kind":"image","version":2}'),
-(1,'legacy grid','{"kind":"image-grid","version":2}'),
-(1,'kept 3d','{"kind":"tiles","version":2,"tags":["лес"],"grid":{"visible":true,"offsetX":0,"offsetY":0},"background":{},"credit":{}}');
-INSERT INTO dndshare.session_map(session_id,name,document,state) VALUES
-(10,'legacy session','{"kind":"image-grid","version":2}','{}'),
-(20,'kept session','{"kind":"tiles","version":2,"tags":null,"grid":{"visible":true},"background":{}}','{}');
-INSERT INTO dndshare.session_map_display(session_id,map_id,visible)
-SELECT 10,id,true FROM dndshare.session_map WHERE name='legacy session';`)
-	exec(schema3DMapTagsSQL)
-	var remaining, active, tags int
-	if err := pool.QueryRow(ctx, `SELECT (SELECT count(*) FROM dndshare.battle_map),(SELECT count(*) FROM dndshare.session_map_display WHERE visible OR map_id IS NOT NULL),jsonb_array_length(document->'tags') FROM dndshare.session_map WHERE name='kept session'`).Scan(&remaining, &active, &tags); err != nil || remaining != 1 || active != 0 || tags != 0 {
-		t.Fatal("3d-only cleanup damaged data or retained images", err, remaining, active, tags)
-	}
-	var clean bool
-	if err := pool.QueryRow(ctx, `SELECT document->'tags'='["лес"]'::jsonb AND NOT document ? 'background' AND NOT document ? 'credit' AND NOT (document->'grid') ? 'offsetX' FROM dndshare.battle_map WHERE name='kept 3d'`).Scan(&clean); err != nil || !clean {
-		t.Fatal("3d metadata was not migrated", err)
-	}
-	exec("DELETE FROM dndshare.battle_map WHERE name='kept 3d'; DELETE FROM dndshare.session_map WHERE name='kept session'; DELETE FROM dndshare.session_map_display WHERE session_id=10")
+	exec(testSchemaTables(t, "battle_map", "battle_map_model", "battle_map_preview", "map_model", "map_model_definition", "map_model_transition", "session_map", "session_map_model", "session_map_display"))
 	s := &Store{pool: pool}
+	seedMapModelsForTest(t, s)
 	preset := battlemap.Presets()[0]
 	preset.Document.Areas = []battlemap.Area{{ID: "room", Name: "Вход", Color: "#22c55e", Hidden: true, TileIDs: []string{preset.Document.Tiles[0].ID}, ObjectIDs: []string{}}}
 	preset.Document.Tags = []string{"подземелье", "лес"}
@@ -110,34 +73,6 @@ SELECT 10,id,true FROM dndshare.session_map WHERE name='legacy session';`)
 	}
 	if !b.Document.LightingEnabled || !b.Document.Lights[0].ShowMarker || b.Document.Sun.Enabled || b.Document.Sun.Angle != 90 || len(b.Document.Lights) != 1 || b.Document.Lights[0].Anchor.ID != preset.Document.Tiles[0].ID {
 		t.Fatal("lighting metadata was not copied into session")
-	}
-	exec("UPDATE dndshare.battle_map SET document = jsonb_set(document, '{areas,0}', (document->'areas'->0) - 'color')")
-	exec("UPDATE dndshare.session_map SET document = jsonb_set(document, '{areas,0}', (document->'areas'->0) - 'color') WHERE session_id=10")
-	exec(schemaMapAreaColorsSQL)
-	legacyMap, err := s.GetBattleMap(ctx, 1, m.ID)
-	if err != nil || legacyMap.Document.Areas[0].Color != battlemap.DefaultAreaColor || legacyMap.Document.Areas[0].Name != "Вход" || legacyMap.Revision != m.Revision {
-		t.Fatal("area color migration damaged template", err)
-	}
-	legacySession, err := s.GetSessionMap(ctx, 10, a.ID)
-	if err != nil || legacySession.Document.Areas[0].Color != battlemap.DefaultAreaColor || !legacySession.Document.Areas[0].Hidden {
-		t.Fatal("area color migration damaged session", err)
-	}
-	coloredSession, err := s.GetSessionMap(ctx, 20, b.ID)
-	if err != nil || coloredSession.Document.Areas[0].Color != "#22c55e" {
-		t.Fatal("migration replaced custom area color", err)
-	}
-	// Migrate existing template and session documents without losing light settings.
-	for _, table := range []string{"battle_map", "session_map"} {
-		exec("UPDATE dndshare." + table + " SET document = (document - 'lightingEnabled') || jsonb_build_object('lights', (SELECT jsonb_agg(light - 'showMarker') FROM jsonb_array_elements(document->'lights') light))")
-	}
-	exec(schemaMapLightingModeSQL)
-	migrated, err := s.GetBattleMap(ctx, 1, m.ID)
-	if err != nil || migrated.Document.LightingEnabled || !migrated.Document.Lights[0].ShowMarker || migrated.Document.Lights[0].Color != "#ffc36a" || migrated.Document.Sun.Angle != 90 {
-		t.Fatal("template lighting migration lost metadata", err)
-	}
-	migratedSession, err := s.GetSessionMap(ctx, 10, a.ID)
-	if err != nil || migratedSession.Document.LightingEnabled || !migratedSession.Document.Lights[0].ShowMarker || migratedSession.Document.Lights[0].AreaID != "room" {
-		t.Fatal("session lighting migration lost metadata", err)
 	}
 	m.Document.Tiles[0].Rotation = 90
 	if _, err := s.SaveBattleMap(ctx, 1, m); err != nil {
@@ -174,7 +109,7 @@ SELECT 10,id,true FROM dndshare.session_map WHERE name='legacy session';`)
 	if winners != 1 {
 		t.Fatalf("concurrent saves succeeded %d times", winners)
 	}
-	testSessionSceneEdits(t, ctx, s, a.ID, m)
+
 	display, err := s.SaveMapDisplay(ctx, 10, MapDisplay{MapID: &a.ID, Visible: true, Camera: battlemap.Camera{CellPixels: 72}})
 	if err != nil {
 		t.Fatal(err)

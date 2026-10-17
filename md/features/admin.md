@@ -39,15 +39,14 @@ cancellation.
   регистрируется как системная растровая иконка item, отдельно от rules JSON.
 
 Одноразовых jobs по преобразованию форматов персонажа, bindings или spell
-classes нет. Такие изменения выполняются идемпотентно в
-соответствующем `internal/store/schema/*.sql`, после чего старый формат
-удаляется.
+classes нет. Такие изменения выполняются через MCP или явно запускаемые
+операции с данными. `internal/store/schema/*.sql` содержит только DDL.
 
 Чтобы добавить регулярную job:
 
 1. реализовать handler с `context.Context` и progress reporter;
 2. зарегистрировать его в `init()` через `registerJob`;
-3. не дублировать migration, которую должен выполнять startup schema;
+3. не добавлять startup-преобразования данных; структурный DDL принадлежит migrator;
 4. проверить cancellation и отображение result/error в `AdminJobs.vue`.
 
 ## Связанные страницы

@@ -1,3 +1,4 @@
+import { lightningThrow, weaponUseField } from '../fixtures/mechanics.js'
 import { blessingEffects } from '../tutorials/fixtures/blessing'
 import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
@@ -15,8 +16,7 @@ import { useWeaponUses } from '../../src/features/character-editor/blocks/dnd/co
 import { useDiceStore } from '../../src/stores/dice'
 import { useSuggestStore } from '../../src/stores/suggest'
 import { itemFieldEditorKey } from '../../src/features/character-editor/components/useItemFieldEditor'
-import sql from '../../../internal/store/schema/102_weapon_uses.sql?raw'
-const rule = JSON.parse(sql.split('$lightning_throw$')[1]), field = JSON.parse(sql.split('$weapon_use_field$')[1])
+const rule = lightningThrow, field = weaponUseField
 const pinia = createPinia(), dice = useDiceStore(pinia), suggest = useSuggestStore(pinia)
 suggest.set(12, [{ id: 9, value: 'Молния', color: '#ff0' }]); suggest.set(16, [{ id: 2, value: 'Ловкость' }])
 window.damageRolls = []; window.attacks = 0; window.natural = 10

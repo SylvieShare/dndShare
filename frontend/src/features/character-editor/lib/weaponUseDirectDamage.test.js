@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { lightningThrow } from '../../../../tests/fixtures/mechanics.js'
 import { beforeEach, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { reactive } from 'vue'
@@ -10,8 +10,7 @@ import { weaponUseDamageActions } from './weaponUseDamage'
 import { weaponUseState } from './weaponUses'
 import { MAGIC_VALUE_ID } from './characterMagicItems'
 
-const sql = readFileSync(new URL('../../../../../internal/store/schema/102_weapon_uses.sql', import.meta.url), 'utf8')
-const rule = JSON.parse(sql.split('$lightning_throw$')[1])
+const rule = lightningThrow
 beforeEach(() => setActivePinia(createPinia()))
 function fixture(extras = []) {
   const item = { id: 284, typeId: 19, name: 'Копьё', data: { attunement: 'none', max_use: 1, weapon_uses: [rule] } }

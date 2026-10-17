@@ -1,12 +1,11 @@
+import { throwerDamage } from '../../../tests/fixtures/mechanics.js'
 import { describe, expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
 import { damageActionDisabled, damageAttackMode, selectedDamageActions, toggleDamageAction, weaponDamageDependencyError, weaponDamageMenuOptions } from './weaponDamageOptions'
 import { selectedWeaponDamageExpression } from '@/features/character-editor/blocks/dnd/lib/weaponDamageAction'
 import { collectCharacterCombatEffects, matchingWeaponDamageActions } from '@/features/character-editor/lib/characterCombatEffects'
 import { renameWeaponDamageKey } from '@/features/items/editor/actionEditorModel'
 
-const migration = readFileSync(new URL('../../../../internal/store/schema/90_conditional_weapon_damage.sql', import.meta.url), 'utf8')
-const rules = JSON.parse(migration.match(/'\{weapon_damage\}', '(\[[\s\S]*?\])'::jsonb/)[1])
+const rules = throwerDamage
 
 describe('Dwarven Thrower conditional damage', () => {
   it.each([

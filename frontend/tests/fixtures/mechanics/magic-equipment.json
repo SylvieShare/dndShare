@@ -1,0 +1,217 @@
+[
+  {
+    "id": 114,
+    "name": "Доспех из драконьей чешуи",
+    "patch": {
+      "choices": [
+        {
+          "key": "dragon_scale",
+          "text": "Выберите вид дракона, из чешуи которого сделан доспех (определяет мастер).",
+          "count": 1,
+          "source": "inline",
+          "options": [
+            {
+              "value": "black",
+              "label": "Чёрный — кислота"
+            },
+            {
+              "value": "blue",
+              "label": "Синий — молния"
+            },
+            {
+              "value": "brass",
+              "label": "Латунный — огонь"
+            },
+            {
+              "value": "bronze",
+              "label": "Бронзовый — молния"
+            },
+            {
+              "value": "copper",
+              "label": "Медный — кислота"
+            },
+            {
+              "value": "gold",
+              "label": "Золотой — огонь"
+            },
+            {
+              "value": "green",
+              "label": "Зелёный — яд"
+            },
+            {
+              "value": "red",
+              "label": "Красный — огонь"
+            },
+            {
+              "value": "silver",
+              "label": "Серебряный — холод"
+            },
+            {
+              "value": "white",
+              "label": "Белый — холод"
+            }
+          ]
+        }
+      ],
+      "choice_defenses": [
+        {
+          "source_item_id": 114,
+          "choice_key": "dragon_scale",
+          "options": [
+            {
+              "value": "black",
+              "damage_type": 8,
+              "kind": "resistance"
+            },
+            {
+              "value": "blue",
+              "damage_type": 9,
+              "kind": "resistance"
+            },
+            {
+              "value": "brass",
+              "damage_type": 5,
+              "kind": "resistance"
+            },
+            {
+              "value": "bronze",
+              "damage_type": 9,
+              "kind": "resistance"
+            },
+            {
+              "value": "copper",
+              "damage_type": 8,
+              "kind": "resistance"
+            },
+            {
+              "value": "gold",
+              "damage_type": 5,
+              "kind": "resistance"
+            },
+            {
+              "value": "green",
+              "damage_type": 4,
+              "kind": "resistance"
+            },
+            {
+              "value": "red",
+              "damage_type": 5,
+              "kind": "resistance"
+            },
+            {
+              "value": "silver",
+              "damage_type": 13,
+              "kind": "resistance"
+            },
+            {
+              "value": "white",
+              "damage_type": 13,
+              "kind": "resistance"
+            }
+          ]
+        }
+      ],
+      "max_use": 1,
+      "recharge_note": "На рассвете восстанавливается поиск дракона. Восстановление отмечается вручную; отдых не заменяет это событие.",
+      "feature_actions": [
+        {
+          "key": "detect_dragon",
+          "title": "Найти дракона",
+          "action_type": "action",
+          "description": "<p>Определите направление и расстояние до ближайшего дракона выбранного вида в пределах 30 миль. Поиск расходует использование доспеха.</p>",
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ],
+      "passive_effects": [
+        {
+          "title": "Защита от драконов",
+          "description": "<p>Преимущество спасбросков против Ужасающего присутствия и дыхания драконов. Выберите преимущество при соответствующем броске.</p>"
+        }
+      ]
+    }
+  },
+  {
+    "id": 137,
+    "name": "Булава сокрушения",
+    "patch": {
+      "weapon_damage": [
+        {
+          "key": "smiting",
+          "label": "Натуральная 20",
+          "dice": "d6",
+          "dice_count": 2,
+          "condition": "На к20 атаки выпало 20: дополнительный дробящий урон.",
+          "double_on_critical": false
+        },
+        {
+          "key": "smiting_construct",
+          "label": "Цель — конструкт",
+          "dice": "d6",
+          "dice_count": 2,
+          "condition": "При натуральной 20 по конструкту добавьте ещё 2к6: всего 4к6 дробящего урона.",
+          "double_on_critical": false,
+          "requires_damage_key": "smiting"
+        }
+      ]
+    }
+  },
+  {
+    "id": 190,
+    "name": "Булава разрушения",
+    "patch": {
+      "weapon_damage": [
+        {
+          "key": "disruption",
+          "label": "Исчадие или нежить",
+          "dice": "d6",
+          "dice_count": 2,
+          "condition": "Попадание по исчадию или нежити: дополнительный урон излучением. При остатке хитов не более 25 примените спасбросок из описания.",
+          "double_on_critical": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 273,
+    "name": "Булава ужаса",
+    "patch": {
+      "max_use": 3,
+      "recharge_note": "На рассвете восстанавливаются 1к3 израсходованных заряда, максимум 3. Восстановление отмечается вручную; отдых не заменяет это событие.",
+      "feature_actions": [
+        {
+          "key": "terror",
+          "title": "Волна ужаса",
+          "action_type": "action",
+          "description": "<p>Выбранные существа в пределах 30 футов совершают спасбросок Мудрости Сл 15 или испуганы на 1 минуту. Они удаляются от вас, не реагируют; ограничения действий и повторный спасбросок в конце каждого хода — по описанию булавы.</p>",
+          "uses_resource": true,
+          "resource_cost": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": 289,
+    "name": "Латы эфирности",
+    "patch": {
+      "max_use": 1,
+      "recharge_note": "На рассвете восстанавливается использование эфирности. Восстановление отмечается вручную; отдых не заменяет это событие.",
+      "feature_actions": [
+        {
+          "key": "etherealness",
+          "title": "Стать эфирным",
+          "action_type": "action",
+          "description": "<p>Произнесите командное слово и получите эффект «Эфирность» на 10 минут. Эффект заканчивается при снятии лат или повторном произнесении слова действием.</p>",
+          "uses_resource": true,
+          "resource_cost": 1
+        },
+        {
+          "key": "end_etherealness",
+          "title": "Завершить эфирность",
+          "action_type": "action",
+          "description": "<p>Повторите командное слово, чтобы досрочно прекратить эфирность. Не расходует новое использование.</p>"
+        }
+      ]
+    }
+  }
+]

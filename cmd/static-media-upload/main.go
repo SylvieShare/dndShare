@@ -1,4 +1,4 @@
-// Upload the former embedded handbook artwork before migration 193 is deployed.
+// Restore the content-addressed handbook WebP objects listed in the manifest.
 // This manual bootstrap command is not part of the application or regular deploy.
 package main
 
@@ -86,7 +86,7 @@ func run(ctx context.Context, directory string, apply bool) error {
 		return err
 	}
 	if strings.TrimRight(cfg.Storage.PublicURL, "/") != "https://storage.yandexcloud.net/dndshare" {
-		return fmt.Errorf("storage public URL must match migration 193")
+		return fmt.Errorf("storage public URL must match the manifest")
 	}
 	objects := storage.New(cfg.Storage)
 	for i, row := range rows {

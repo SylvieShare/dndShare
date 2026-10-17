@@ -1,5 +1,10 @@
 # БД: сессии и игровые события
 
+Текущие startup-миграции содержат только DDL. Упоминания прежних
+нумерованных этапов ниже описывают происхождение уже сохранённых данных;
+эти SQL-файлы и преобразования больше не поставляются и не выполняются.
+Изменения содержимого выполняются отдельно. [Правила migrator](../database.md).
+
 Сюжет, участники, журнал, передачи, сообщения, инвентарь и результаты применения.
 
 ← [База данных и миграции](../database.md)
@@ -21,8 +26,7 @@
 музыки находятся в одной схеме. Participant brief читает аватар по
 каноническому D&D пути; полей template path map нет.
 `session.status` хранит `active`, `stopped` или `completed`, с SQL CHECK и
-значением по умолчанию `stopped`. Миграция 116 добавляет поле существующим
-сессиям как `stopped`. Статусы глав и ссылка `current_chapter_id` («Сейчас здесь»)
+значением по умолчанию `stopped`. Startup не назначает статусы существующим сессиям. Статусы глав и ссылка `current_chapter_id` («Сейчас здесь»)
 независимы от статуса сессии; смена статуса не меняет состав участников,
 encounter, музыку или таймеры.
 `session_participant.color` хранит необязательный `#RRGGBB`-цвет участника в
@@ -201,11 +205,11 @@ JSON. Пустые старые массивы также удаляются; ru
   Любой материал доступен для добавления и ручного показа во всей сессии.
   Сценарии, где он уже размещён как material/image block, вычисляются по
   `session_scene_item.material_id`. Связей материала со сценариями и главами в
-  актуальной модели нет; startup migration удаляет старые таблицы и
+  актуальной модели нет; runtime не читает прежние
   `scope/chapter_id/scene_id`.
 - `session.display_code` — постоянный уникальный код трансляции `ABC-123`:
   шесть заглавных ASCII-букв/цифр и дефис посередине. CHECK фиксирует формат,
-  UNIQUE исключает совпадения. Миграция 114 назначает коды существующим сессиям;
+  UNIQUE исключает совпадения. Код назначается при создании новой сессии;
   генератор использует случайный UUID, создание сессии повторяет вставку при
   коллизии кода. Поиск нормализует регистр. UUID сессии и invite_code независимы.
 - `session_presentation_state` — единственное live-состояние экрана игроков на
@@ -229,8 +233,8 @@ Startup SQL создаёт существующим сессиям первую 
 сеточную начальную раскладку; дальнейшие координаты сохраняются явно. После
 этого прежняя колонка `session_scene_item.order` удаляется: порядок блоков
 задаётся только их положением и связями.
-Существующие пары встречных рёбер на любом из трёх холстов startup migration
-сводит в одну двустороннюю связь, сохраняя первую непустую подпись.
+Двусторонняя связь хранится одним ребром с соответствующим признаком.
+Подготовка прежних пар встречных рёбер выполняется отдельно от DDL.
 
 MCP bulk import does not add a persistence format or staging tables. Its
 portable string keys are resolved to the same session, arc, chapter, scene,
@@ -239,8 +243,8 @@ leaves no partially created session.
 
 Encounter combatant хранит ссылку `itemId`, пользовательский `override` и
 уникальную для NPC латинскую метку `markerLetter` (`A`–`Z`).
-Старые embedded `itemRaw` и денормализованные name/ac/hp поля переносятся в
-startup migration и не обрабатываются во frontend.
+Embedded `itemRaw` и денормализованные name/ac/hp не являются текущим
+контрактом; frontend их не обрабатывает, startup данные не переписывает.
 Верхнеуровневый encounter JSON может содержать текущее групповое испытание
 `challenge: {ability,savingThrow,results}`; `results` сопоставляет UID участника
 с его `{roll,bonus,total,rolls?,dropped?,revision?}` и удаляется целиком при
@@ -314,7 +318,7 @@ startup migration и не обрабатываются во frontend.
 (кости к броску, множитель скорости, минимум характеристики). Наполнение
 справочника выполняется отдельно через `scripts/potion-rules/apply.py` и MCP.
 
-Миграция 121 (`application_targets`): у `item_transfer` nullable `recipient_char_id` означает адресацию мастеру только для применения; источник `spells` разрешён для эффектов заклинаний. `resolved_target` хранит выбранного игрока или NPC. Новые поля схемы эффектов описывают урон по ходам, цель-оружие, связанный урон и завершение. В JSON боя `effectInstances` содержат экземпляры NPC, `applicationRevision` защищает серверное применение от устаревшего сохранения.
+В текущем контракте применения у `item_transfer` nullable `recipient_char_id` означает адресацию мастеру только для применения; источник `spells` разрешён для эффектов заклинаний. `resolved_target` хранит выбранного игрока или NPC. Новые поля схемы эффектов описывают урон по ходам, цель-оружие, связанный урон и завершение. В JSON боя `effectInstances` содержат экземпляры NPC, `applicationRevision` защищает серверное применение от устаревшего сохранения.
 
 ## Настройки сессии
 
@@ -356,7 +360,7 @@ Runtime и ответы API используют дробный баланс с 
 
 `session_inventory` хранит UUID экземпляра, `session_id`, `source` (`items`,
 `weapon`), полный `entry`, `item_name`, `available`, nullable
-`client_action_id`, `created_at` и `slot` (миграция 155, индекс ячейки от нуля).
+`client_action_id`, `created_at` и `slot` (индекс ячейки от нуля).
 Доступные строки индексированы по сессии; частичный уникальный индекс
 `(session_id,slot) WHERE available` запрещает занятие одной ячейки дважды.
 Миграция назначает позиции в прежнем порядке создания. Добавление, возврат
@@ -376,12 +380,12 @@ Runtime и ответы API используют дробный баланс с 
 Блокировки идут в порядке персонажей, затем запроса/экземпляра; ограничения
 удаления участников с незавершёнными передачами продолжают действовать.
 
-Миграция 126 добавляет `character_concentration` (singleton по char_id, уникальный cast_id,
+`character_concentration` хранит состояние (singleton по char_id, уникальный cast_id,
 spell_id, spell_name, started_at) и `concentration_effect` (cast_id, effect_uid,
 effect_id, target_char_id либо encounter_id + npc_uid, снимок идентичности target).
 Ссылки каскадно удаляются вместе с концентрацией или целью. Само снятие эффектов
 выполняется транзакционной операцией приложения, а не удалением строк ссылок.
-Миграция 127 добавляет `settings.autoAccept` с независимыми boolean items/potions/spells,
+`settings.autoAccept` хранит настройки с независимыми boolean items/potions/spells,
 по умолчанию false, сохраняя прочие настройки сессии.
 
 `settings.interactions.items`, `.potions`, `.spells` разрешают соответствующие
@@ -415,20 +419,20 @@ receipt. Запись обеспечивает идемпотентность и
 
 `session_encounter.data.sheetInitiativeCursor` stores the acknowledged event id for sheet initiative preparation. It starts at zero for encounters without marked rolls. `combatants[].initiative` is also the prepared value while position is reserve; no separate stat or duplicated column is needed. Projection is driven by session_event JSON `sheetInitiative: true` and participant membership; event payload and cursor survive closing the DM page.
 
-Миграция 132 (`spell-presentation`) заменяет текстовые `item.data.time/range`
+Текущий контракт `item.data.time/range` использует
 у заклинаний типа 5 структурированными объектами и обновляет `item_type.fields`.
 Условия реакций выделяются в `time.condition`, неоднозначные/альтернативные
 значения сохраняются целиком как `kind: custom, text`. Дальность и размер области
 сохраняют единицы (feet/miles). Старые строки runtime больше не читает. Схемы
 feature_actions получают тип timed и объект time; существующие действия не меняются.
 
-Миграция 134 (`spell-damage-type-choices`) добавляет `type_choices` в поля
+Метаданные поддерживают `type_choices` в поля
 `damage` и `rolls` схемы заклинаний (тип 5). Значение — массив ID типов урона
 из словаря 12. Выбор заполняет только нефиксированные составляющие формулы;
 записи справочника миграция не меняет. Настройка конкретных заклинаний проводится
 через MCP, сверка хранится в отчёте об автоматизации заклинаний.
 
-Миграция 135 (`spell-roll-sequences`) добавляет редактор таблиц определения
+Метаданные заклинаний поддерживают таблицы определения
 типа и условий продолжения атаки в схему заклинаний. Состояние одного
 сотворения хранится в `session_event.data.sequence`; `hits[]` содержит
 отдельные атаки, результаты, цели и `impacts`. Применение урона принимает
@@ -436,11 +440,11 @@ feature_actions получают тип timed и объект time; сущест
 результат внутри этого попадания. Запросы повторного применения учитываются
 на корневом событии вместе с индексом попадания.
 
-Порядок миграций вынесен в `internal/store/schema_parts.go`; runner и
-проверка checksum остаются в `schema.go`. Состав и порядок существующих
-миграций при разделении не изменены.
+Структурные SQL-файлы загружаются автоматически по имени из
+`internal/store/schema/`; runner и checksum находятся в `schema.go`. Наполнение
+таблиц и преобразования JSON не входят в startup migrator.
 
-Миграция 192 добавляет `session_global_map` с FK изображения, JSONB маршрутами, revision и уникальной текущей картой на сессию. Транзакции и жизненный цикл описаны в [глобальных картах](../features/global-maps.md#данные-и-реализация).
+`session_global_map` хранит карту мира с FK изображения, JSONB маршрутами, revision и уникальной текущей картой на сессию. Транзакции и жизненный цикл описаны в [глобальных картах](../features/global-maps.md#данные-и-реализация).
 
 ## Связанные страницы
 

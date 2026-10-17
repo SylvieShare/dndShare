@@ -1,3 +1,4 @@
+import { effectSourceFields } from '../fixtures/mechanics.js'
 import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
 import { createApp, h, ref } from 'vue'
@@ -6,8 +7,7 @@ import ItemEditModal from '../../src/features/character-editor/components/ItemEd
 import StatusEffectDetailContent from '../../src/features/items/detail-components/StatusEffectDetailContent.vue'
 import { useItemTypesStore } from '../../src/stores/itemTypes'
 import { itemsApi } from '../../src/shared/api/itemsApi'
-import schema from '../../../internal/store/schema/129_effect_sources.sql?raw'
-const fields = JSON.parse(schema.match(/fields=fields\|\|'([\s\S]*?)'::jsonb/)[1])
+const fields = effectSourceFields
 const pinia = createPinia()
 const types = [{ id: 15, name: 'Эффекты', fields }, { id: 5, name: 'Заклинания', fields: [] }]
 useItemTypesStore(pinia).types = types

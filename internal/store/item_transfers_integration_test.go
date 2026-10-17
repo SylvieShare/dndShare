@@ -63,59 +63,28 @@ func TestItemTransfersPostgres(t *testing.T) {
  (2,2,'{"values":{"name":"Торин","hp":{"current":10}}}'),(3,3,'{"values":{"name":"Чужой"}}');
  INSERT INTO dndshare.session_participant VALUES(1,1,1),(1,2,2),(2,3,3);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(schemaItemTransfersSQL)
-	exec(schemaSessionInteractionsSQL)
-	t.Run("rps invitation migration", func(t *testing.T) { testRPSInvitationMigration(t, pool) })
-	exec(schemaPotionUseRequestsSQL)
-	exec(schemaPotionApplicationsSQL)
-	exec(schemaApplicationTargetsSQL)
-	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(10,'[{"key":"consumption"},{"key":"status_effects"}]'),(2,'[{"key":"desc"}]');
- INSERT INTO dndshare.item(id,name,type_id,data) VALUES(90010,'Миграция зелья',10,'{"consumption":{"healing":"2d4+2","choices":[{"key":"first"}]},"status_effects":[{"key":"effect","effect":{"id":30}}]}');`)
-	exec(schemaUsableItemsSQL)
-	var migrated bool
-	if err := pool.QueryRow(ctx, `SELECT data#>>'{usable,healing}'='2d4+2' AND data#>>'{usable,status_effects,0,key}'='effect' AND NOT data ? 'consumption' AND NOT data ? 'status_effects' FROM dndshare.item WHERE id=90010`).Scan(&migrated); err != nil || !migrated {
-		t.Fatalf("usable migration lost application fields: %v %v", migrated, err)
+	exec(testSchemaTables(t, "item_transfer", "session_interaction", "item_application", "character_concentration", "concentration_effect", "spell_cast_receipt", "session_karmic_scale", "session_d20_roll", "session_inventory"))
+	exec(testSchemaTriggers(t, "guard_pending_item_transfers"))
+	if _, err := pool.Exec(ctx, `UPDATE dndshare.session SET settings=$1::jsonb`, testSessionSettingsJSON(t)); err != nil {
+		t.Fatal(err)
 	}
-	if err := pool.QueryRow(ctx, `SELECT count(*)=2 FROM dndshare.item_type WHERE id IN (2,10) AND fields @> '[{"key":"usable"}]'`).Scan(&migrated); err != nil || !migrated {
-		t.Fatalf("usable editor schemas: %v %v", migrated, err)
+	t.Run("rps constraints", func(t *testing.T) { testRPSInvitationConstraints(t, pool) })
+	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(10,'[]'),(2,'[]'),(5,'[]'),(15,'[]');
+ INSERT INTO dndshare.item(id,name,type_id,data) VALUES(90010,'Зелье',10,'{"usable":{"healing":"2d4+2","choices":[{"key":"first"}],"status_effects":[{"key":"effect","effect":{"id":30}}]}}');`)
+	for _, typeID := range []int{2, 5, 10, 15} {
+		fields := testItemFields(t, typeID)
+		if _, err := pool.Exec(ctx, `UPDATE dndshare.item_type SET fields=$2::jsonb WHERE id=$1`, typeID, fields); err != nil {
+			t.Fatal(err)
+		}
 	}
-	exec(schemaSpellConcentrationSQL)
-	exec(schemaSpellCastsSQL)
-	exec(`INSERT INTO dndshare.item_type(id,fields) VALUES(5,'[{"key":"damage","fields":[]},{"key":"heal","fields":[]},{"key":"application_targets","fields":[]},{"key":"status_effects","fields":[{"key":"parameter_bindings","fields":[{"key":"source","options":[]}]}]}]'),(15,'[{"key":"derived_effects","fields":[{"key":"kind","options":[]}]}]')`)
-	exec(schemaSpellApplicationOptionsSQL)
-	exec(schemaSpellItemCreationSQL)
-	exec(`UPDATE dndshare.item SET data=jsonb_set(data,'{usable,status_effects,0,effect}','30') WHERE id=90010`)
-	exec(schemaApplicationReferenceShapesSQL)
-	exec(schemaArmorMinimumSQL)
-	exec(schemaEffectApplicationContextSQL)
-	exec(schemaSpellFixedSaveDCSQL)
-	exec(schemaStatusRepeatSaveSQL)
-	exec(schemaSpellChainLimitsSQL)
-	exec(schemaCreatedItemExpirySQL)
-	exec(schemaSpellProjectileTargetsSQL)
-	exec(schemaSpellTemporaryHPSQL)
-	if err := pool.QueryRow(ctx, `SELECT data#>>'{usable,status_effects,0,effect,id}'='30' FROM dndshare.item WHERE id=90010`).Scan(&migrated); err != nil || !migrated {
-		t.Fatalf("application reference shape: %v %v", migrated, err)
-	}
-	var editorFields int
-	if err := pool.QueryRow(ctx, `SELECT jsonb_array_length(fields->0->'fields') FROM dndshare.item_type WHERE id=15`).Scan(&editorFields); err != nil || editorFields != 7 {
-		t.Fatalf("effect editor fields %d %v", editorFields, err)
-	}
-	if err := pool.QueryRow(ctx, `SELECT jsonb_array_length(fields#>'{3,fields,0,fields,0,options}') FROM dndshare.item_type WHERE id=5`).Scan(&editorFields); err != nil || editorFields != 3 {
-		t.Fatalf("spell binding sources %d %v", editorFields, err)
-	}
-	exec(schemaSessionAutoAcceptSQL)
-	exec(schemaSessionKarmicDiceSQL)
-	exec(schemaFractionalKarmicDiceSQL)
-	exec(schemaSessionInventorySQL)
-	exec(schemaInventoryGridSQL)
 	exec(`INSERT INTO dndshare.storage_image(id,url) VALUES(1,'/sender.png'),(2,'/recipient.png');
  UPDATE dndshare."char" SET icon_image_id=id WHERE id IN (1,2);`)
 	s := &Store{pool: pool}
-	t.Run("potions inventory migration", func(t *testing.T) { testPotionsInventoryMigration(t, s, pool, exec) })
+
 	t.Run("session impacts", func(t *testing.T) { testSessionImpacts(t, s, pool) })
 	t.Run("session saves", func(t *testing.T) { testSessionSaves(t, s, pool) })
 	t.Run("session attack targets", func(t *testing.T) { testSessionAttackTargets(t, s, pool) })
+
 	t.Run("application targets", func(t *testing.T) { testApplicationTargets(t, s, pool) })
 	current := func(id int64) transferCharacter {
 		t.Helper()
@@ -326,7 +295,5 @@ func TestItemTransfersPostgres(t *testing.T) {
 	t.Run("prepared initiative", func(t *testing.T) { testPreparedInitiative(t, s, pool) })
 	t.Run("chronicle targets", func(t *testing.T) { testChronicleTargets(t, s, pool) })
 	t.Run("roll sequences", func(t *testing.T) { testSessionSequences(t, s, pool) })
-	t.Run("spell presentation", func(t *testing.T) { testSpellPresentation(t, pool) })
-	t.Run("spell roll saves", func(t *testing.T) { testSpellRollSaves(t, pool) })
-	t.Run("spell damage choices", func(t *testing.T) { testSpellDamageTypeChoices(t, pool) })
+
 }

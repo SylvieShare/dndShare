@@ -1,0 +1,122 @@
+[
+  {
+    "id": 108,
+    "name": "Посох лечения",
+    "patch": {
+      "max_use": 10,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d6+4"
+      }
+    }
+  },
+  {
+    "id": 131,
+    "name": "Посох огня",
+    "patch": {
+      "max_use": 10,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d6+4"
+      }
+    }
+  },
+  {
+    "id": 132,
+    "name": "Посох очарования",
+    "patch": {
+      "max_use": 10,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d8+2"
+      }
+    }
+  },
+  {
+    "id": 164,
+    "name": "Посох силы",
+    "patch": {
+      "max_use": 20,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "2d8+4"
+      }
+    }
+  },
+  {
+    "id": 168,
+    "name": "Посох лесов",
+    "patch": {
+      "max_use": 10,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d6+4"
+      }
+    }
+  },
+  {
+    "id": 176,
+    "name": "Посох роя насекомых",
+    "patch": {
+      "max_use": 10,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d6+4"
+      }
+    }
+  },
+  {
+    "id": 189,
+    "name": "Посох ударов",
+    "patch": {
+      "max_use": 10,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d6+4"
+      }
+    }
+  },
+  {
+    "id": 197,
+    "name": "Молот громовых ударов",
+    "patch": {
+      "max_use": 5,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d4+1"
+      }
+    }
+  },
+  {
+    "id": 249,
+    "name": "Посох магов",
+    "patch": {
+      "max_use": 50,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "4d6+2"
+      }
+    }
+  },
+  {
+    "id": 284,
+    "name": "Метательное копьё молнии",
+    "patch": {
+      "max_use": 1,
+      "dawn_recovery": {
+        "mode": "full"
+      }
+    }
+  },
+  {
+    "id": 297,
+    "name": "Посох мороза",
+    "patch": {
+      "max_use": 10,
+      "dawn_recovery": {
+        "mode": "roll",
+        "formula": "1d6+4"
+      }
+    }
+  }
+]

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { striking } from '../../../tests/fixtures/mechanics.js'
 import { expect, it } from 'vitest'
 import { damageAmountActions } from './weaponDamageAmounts'
 import { weaponDamageActionFormula, weaponDamageMenuOptions } from './weaponDamageOptions'
@@ -6,8 +6,7 @@ import { collectCharacterCombatEffects } from '@/features/character-editor/lib/c
 import { collectCharacterResources } from '@/features/character-editor/lib/characterResources'
 import { bindDamageResources, spendDamageResources } from '@/features/character-editor/lib/weaponDamageResources'
 
-const sql = readFileSync(new URL('../../../../internal/store/schema/100_weapon_damage_units.sql', import.meta.url), 'utf8')
-const rule = JSON.parse(sql.split('$striking$')[1])
+const rule = striking
 function fixture(remaining = 10) {
   const items = new Map([['189', { id: 189, name: 'Посох ударов', typeId: 19, data: { weapon: { base_item_id: 37 }, max_use: 10, activation: 'equipped', attunement: 'required', weapon_damage: [rule] } }]])
   const entry = uid => ({ uid, item_id: 37, magic_item_id: 189, params: { magic: { attuned: true, remaining } } })

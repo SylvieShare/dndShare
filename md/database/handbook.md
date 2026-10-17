@@ -1,5 +1,10 @@
 # БД: справочник
 
+Текущие startup-миграции содержат только DDL. Упоминания прежних
+нумерованных этапов ниже описывают происхождение уже сохранённых данных;
+эти SQL-файлы и преобразования больше не поставляются и не выполняются.
+Изменения содержимого выполняются отдельно. [Правила migrator](../database.md).
+
 Каталоги, схемы полей, источники, связи, медиа и оценки автоматизации.
 
 ← [База данных и миграции](../database.md)
@@ -13,8 +18,8 @@
 
 ## Видимость записей справочника
 
-Миграция `122_hidden_items.sql` добавляет `item.hidden boolean NOT NULL DEFAULT false`
-и первоначально скрывает базовые классы Магус и Шаман (type 9). Флаг независим от
+`item.hidden boolean NOT NULL DEFAULT false` управляет видимостью записи.
+Значение задаётся при редактировании данных, а не по названию класса. Флаг независим от
 владельца, источников и автоматизации. Списки фильтруют его до LIMIT/OFFSET,
 получение по ID сохраняет обычные правила доступа. Счётчики в API вычисляются
 по нескрытым записям, чтобы переключение видимости сразу меняло число элементов.
@@ -26,7 +31,7 @@
 пороги `scaling_levels[].level`. `bonus` — постоянная часть формулы; `add_mod`
 добавляет заклинательную характеристику один раз. `rolls[]` хранит отдельные
 эффекты (`label`, `kind`: damage/heal/effect) с такими же правилами роста.
-Миграция 113 расширяет схему этих полей; исправления содержимого выполняются
+Метаданные этих полей хранятся в `item_type.fields`; исправления содержимого выполняются
 через MCP. Подробности — [аудит заклинаний](../spell-rules-audit.md).
 
 `source` — игровая система, `source_version` — редакция правил.
@@ -36,8 +41,8 @@
 выводится из её фактически размеченных публичных записей.
 `content_source.kind` хранит одну каталоговую категорию: `core`, `supplement`,
 `setting`, `adventure`, `playtest` или `third_party`. Постоянная SQL-функция
-`classify_content_source_kind(code)` является единым правилом для startup-
-нормализации и импорта новых источников; неизвестный код получает
+`classify_content_source_kind(code)` является единым правилом для
+импорта новых источников; неизвестный код получает
 `supplement`, пока не будет классифицирован явно.
 `item_version_compatibility` хранит явное решение для каждой пары item/редакция.
 Отсутствие решения не разрешает новый выбор. Подробнее —
@@ -53,9 +58,7 @@
 `subrace.data.race` ↔ `race.data.subraces[]` и
 `subclass.data.class` ↔ `class.data.subclasses[]`; вариант без базовой записи
 не проходит trigger-валидацию.
-Startup migration `69_origin_catalogs.sql` сохраняет id существующих вариантов,
-переносит их из типов 8/9 в 16/17 и ставит trigger, поддерживающие обе стороны
-связи при последующих изменениях. Материализованный обратный массив содержит
+Триггеры поддерживают обе стороны связи при последующих изменениях. Материализованный обратный массив содержит
 только item того же владельца, чтобы общая базовая запись не раскрывала id
 чужих личных вариантов; read-проекция дополняет его публичными и собственными
 вариантами текущего пользователя.
@@ -68,9 +71,7 @@ Startup migration `69_origin_catalogs.sql` сохраняет id существ�
 независимых счётчиков одной способности с собственными названиями, порогами
 уровня и правилами отдыха. `rollback_short_rest_level` включает восстановление
 на коротком отдыхе с указанного уровня, а пара `short_rest_recovery` /
-`short_rest_recovery_level` описывает частичное восстановление. Startup section
-`32_ability_resources.sql` и последующие дополнения идемпотентно поддерживают эти
-поля в schema `item_type`; вычисленный максимум в JSON персонажа не дублируется.
+`short_rest_recovery_level` описывает частичное восстановление. Метаданные ресурсов хранятся в `item_type.fields` и изменяются отдельно от DDL; вычисленный максимум в JSON персонажа не дублируется.
 Class/subclass items use `caster_progression` (`full`, `half`, `halfup`,
 `third`, `pact`) as the canonical spell-slot contribution. Nested
 `spellcasting` data may additionally contain `list_class`,
@@ -90,30 +91,29 @@ the owning class level.
 `weapon_damage` describes optional damage rolls contributed by abilities, race
 traits or feats: eligible weapon kind, damage die, fixed or level-scaled count,
 critical multiplication and menu labels. Section
-`47_weapon_damage_actions.sql` publishes Sneak Attack through this contract;
+Catalogue data describes Sneak Attack through this contract;
 the sheet derives its current d6 count from the owning Rogue level.
 `sheet_widgets` publishes prominent ability-owned panels without class or item-id
 checks. Widget definitions select metric/toggle/note presentation, a value source,
 resource binding, tone and shared panel key. Section
-`48_feature_sheet_widgets.sql` adds the contract and configures Sneak Attack and
+The current catalogue configures Sneak Attack and
 Rage as its first consumers. A toggle may bind to `status_effect_key`; that
 effect id, regardless of the instance source, rather than `widget_states`, is
 the canonical active state.
-`49_roll_adjustments.sql` adds source-owned automatic d20 adjustments to race,
+Catalogue metadata supports source-owned automatic d20 adjustments to race,
 class ability and feat schemas. Reliable Talent declares a level-11
 `minimum_natural` adjustment for ability checks with at least full proficiency;
 runtime matching uses the structured scope and proficiency rank rather than the
 feature title or item id.
-`50_feature_actions.sql` adds the generic `feature_actions` object-array field
+Catalogue metadata supports the generic `feature_actions` object-array field
 to class abilities, racial abilities and feats. Each row describes action
 economy, display text, read-only requirements, level and priority, and may bind
 the action to the source ability resource or reference standard combat actions
-by their stable suggest type-24 codes. The startup catalog configuration
-locates the initial Rogue consumers by stable English identity; runtime only
+by their stable suggest type-24 codes. Catalogue consumers store explicit action/resource rules; runtime only
 reads the structured rows. Cunning Action omits an own-turn requirement because
 that is already the default presentation for bonus actions. Character-created actions are stored separately in
 `char.values.actions` and remain editable.
-`51_status_effects.sql` creates item type 15 (`Эффекты`) and the generic
+Item type 15 (`Эффекты`) defines the generic
 `status_effects` link array on abilities, racial abilities, feats and spells.
 Catalogue items keep polarity, stacking, duration, concentration, derived
 bonuses and defenses. Character `values.states` contains source-owned runtime
@@ -127,96 +127,96 @@ custom end conditions, or manual/until_rest/permanent without extra fields.
 The source override or catalogue default is copied when the instance is created;
 editing its duration does not modify other instances or catalogue data. This
 additive instance metadata stays in character JSON and requires no SQL migration.
-`110_effect_source_filter.sql` adds read-only filter metadata `effect_source`
-for type 15. No category is stored on the effect: basic membership uses standard
+Read-only filter metadata `effect_source` belongs to type 15. No category is stored on the effect: basic membership uses standard
 effect codes, while spell and magic-item membership follows current visible
 `status_effects` links, including after source edits or deletion.
-`52_status_effect_levels.sql` adds optional `level` presentation metadata to
+Effects support optional `level` presentation metadata for
 effect catalogue items. The live exhaustion value stays in its rules-owned
 character field, but the sheet presents it through the same level-aware effect
 cell without duplicating rest or exhaustion mechanics.
-`53_activity_restrictions.sql` adds the generic `activity_block` derived effect
-and configures the active Rage status to block `spellcasting`, allowing sheet
+Derived effects support the generic `activity_block` rule
+and the active Rage status is configured to block `spellcasting`, allowing sheet
 consumers to combine several restriction sources without feature-name checks;
 its `concentration` scope ends an active concentration status when applied.
-`54_status_effect_catalog.sql` adds the multiline `data.thesis` field, seeds
-«Истощение» and «Вдохновение» as system effect items, and attaches their embedded
-item icons and covers through `storage_image`. Existing effect descriptions are
-converted into a phrase of at most 48 characters as an upgrade fallback and
-remain independently editable afterwards. Standard system effects replace that
-fallback with concise mechanical bullet points rendered beside the icon.
-`55_remove_status_suggest.sql` migrates NPC encounter state ids to effect item
-ids, removes the temporary `legacy_suggest_id` metadata, and deletes suggest
-type 9 together with its rows. Character and encounter states now resolve only
-through item type 15; the old condition suggest catalogue is not retained.
-`56_frenzy_action.sql` extends source-owned sheet actions with active-effect
+The effect catalogue stores multiline `data.thesis` and explicit definitions of
+«Истощение» and «Вдохновение» as system effect items. Their icons and covers
+reference S3 through `storage_image`. Descriptions and concise mechanical bullet
+points are edited as catalogue data; startup does not generate summaries or
+rewrite effect descriptions.
+NPC encounter states reference effect items of type 15 directly. The former
+condition suggest catalogue is not a runtime contract; startup does not
+replace saved state IDs or delete dictionary records.
+
+Source-owned sheet actions support active-effect
 requirements and typed row-menu consequences. `required_status_codes` controls
 visibility from the effect catalogue, while `menu_effects` can adjust a bounded
 character counter without runtime checks for a feature name or id. Frenzy uses
 the contract to expose its bonus-action melee attack only while Rage is active;
 its manual consequence adds one exhaustion level, with the rules text preserving
 the actual timing: exhaustion is gained when the frenzied Rage ends.
-`57_class_action_automation.sql` lets a feature action point to a resource owned
+A feature action can point to a resource owned
 by another feature through `resource_item_id`. Fixed action costs can then be
 spent from the row menu, while variable pools stay visible and manually
 adjustable. The catalogue publishes unambiguous actions and reactions for the
 other classes through this contract, including Bardic Inspiration, Second Wind,
 Wild Shape, cleric Channel Divinity options, ki techniques and sorcery-point
 features. Complex spell, form, companion and target-transfer systems remain
-outside this migration and are tracked in [class-automation-audit](../class-automation-audit.md).
-`60_shared_channel_divinity.sql` adds class-owned shared resource pools and
+outside this implementation and are tracked in [class-automation-audit](../class-automation-audit.md).
+Class catalogue data defines shared resource pools and
 `feature_actions[].resource_pool_key`. Cleric and paladin Channel Divinity use
 one `channel_divinity` counter: paladin levels unlock effects but do not add a
-charge, while cleric levels 6 and 18 raise the shared maximum. The migration
-preserves an existing cleric counter in `class_resource_counts` before retiring
-the former feature-owned resource fields.
-Section `34_ability_resource_catalog_fixes.sql` задаёт структурированные правила
+charge, while cleric levels 6 and 18 raise the shared maximum. Character JSON stores the current shared class-resource counts.
+Данные способностей задают структурированные правила
 Харизмы для «Вдохновения барда» и Мудрости для «Гнева бури», удаляет прежний
 ручной максимум вдохновения и переводит его полные старые character entries на
 живой максимум без искусственной траты новых зарядов.
-Section `35_ability_resource_catalog_audit.sql` канонизирует все ограниченные
+Данные способностей явно описывают ограниченные
 отдыхом расовые и классовые способности и черты PHB в каталоге. Он добавляет
 уровневые формулы, независимые заклинательные ресурсы и поздние правила
 восстановления, а старые character entries переводит на формат с
 `resource_version: 1`, сохраняя реально потраченные заряды. Ограничения «раз в
 ход» и способности с особыми календарными откатами ресурсами отдыха не являются.
-Section `36_ability_resource_colors.sql` задаёт тематический `resource_color`
+Данные ресурсов содержат тематический `resource_color`
 каждой системной способности и отдельным счётчикам внутри `use_resources`.
 Поле доступно в schema типов 3, 4, 7 и 18; пользовательские способности без цвета
 получают стабильный цвет из клиентской палитры.
-Section `37_ability_spell_grants.sql` добавляет типам 3, 4 и 7 массив
+Типы 3, 4 и 7 поддерживают массив
 `granted_spells` с заклинанием, уровнем открытия, заклинательной характеристикой
 и флагом применения без ячейки. Он заполняет фиксированные расовые и классовые
 источники из PHB; лист сохраняет каждое такое заклинание отдельной записью в
 `spells.grants` и использует переопределённую характеристику только для него.
-`61_spellbook_tabs.sql` переносит прежний общий список и настройки источников
-во вкладки, неоднозначные обычные записи — во вкладку «Без источника», а
-внешние дары — в `grants`, после чего runtime старый формат не читает.
-`63_spellbook_grant_cleanup.sql` удаляет из вкладок дубли старых feat-даров и
-уточняет источник прежних классовых даров после уже применённой миграции 61.
-Section `38_equipped_armor.sql` удаляет прежний снимок базового КД и щита из
+`values.spells` stores tabs with `class_item_id`, `casting_ability`,
+`preparationMode`, known spell references and independent grants. Creation and
+level-up save this format directly; conversion of other representations is a
+separate data operation, not a startup migration.
+
+Дарованные заклинания сохраняют явные источники и собственные ключи.
+Изменение источника обновляет только связанные с ним дары; startup не
+удаляет дубли и не меняет происхождение сохранённых записей.
+
+Доспехи и щиты хранятся ссылками на предметы вместо снимков в
 JSON персонажа, сохраняя только ручные `armor.bonuses`. Правила КД и ограничения
 берутся из записей типа 12 в `items.equipped`; для магического экземпляра
 доспеха или щита тип 12 предоставляет `params.magic_bonus`.
-Section `39_character_defenses_and_racial_grants.sql` добавляет общий массив
+Данные способностей поддерживают общий массив
 `defenses`, подключает безусловные расовые сопротивления и переносит одноразовые
 языки/навыки/владения в данные рас. Она также исправляет недостающие связи
 тифлинга, полуорка и гномьих подрас и мигрирует уже созданных персонажей.
-Section `40_ability_spell_cast_level.sql` расширяет дарованные заклинания
+Дарованные заклинания поддерживают
 фиксированным `cast_level`; в частности, «Адское возмездие» из «Дьявольского
 наследия» сотворяется 2-м уровнем без хардкода в карточке заклинания.
-Section `111_infernal_legacy_reaction.sql` добавляет системному «Дьявольскому
+Данные системного «Дьявольскому
 наследию» реакцию «Адское возмездие» с 3-го уровня через `feature_actions`.
 Она использует существующий ресурс `hellish_rebuke`, не меняя сохранённые
 заряды персонажей и отдельный ресурс «Тьмы».
-Section `41_ability_choices.sql` переводит типы 3 и 4 на тот же массив
+Типы 3 и 4 используют тот же массив
 `choices`, который используют черты: стабильный ключ, количество и источник
 вариантов (`inline`, `suggest` или другой тип item). Старые одиночные `choice`
 переносятся в `choices[{key:'choice'}]`, а сохранённые `feature_choices`
 копируются в `choices` конкретной записи способности персонажа. Плоская карта
 остаётся как индекс совместимости для зависимых от выбранного варианта
 заклинаний; новым источником истины является запись способности.
-Section `42_racial_automation.sql` добавляет типам 3, 4 и 7 декларативные
+Типы 3, 4 и 7 поддерживают декларативные
 `hp_bonuses`, `passive_effects`, `roll_triggers`, `critical_damage` и
 `choice_defenses`, переводит числовой максимум хитов персонажа в
 `{base,bonuses}` и заполняет механические расовые правила PHB. «Везучий»
@@ -224,32 +224,20 @@ Section `42_racial_automation.sql` добавляет типам 3, 4 и 7 де�
 рукопашного оружия на критическом уроне, «Дварфская стойкость» — бонус хитов за
 уровень. Заговор высшего эльфа выбирается из заговоров волшебника и получает
 Интеллект, а единый выбор драконьего наследия определяет сопротивление урону.
-Три прежние псевдоспособности создания удаляются после миграции их грантов в
-данные рас.
+
 `item_content_source` связывает item с публикациями. Каждая встроенная
 предыстория (тип 11) хранит владения инструментами в `tool_items`, а физически
 выдаваемое стартовое снаряжение — в `equipment_items`; оба массива содержат
 `item_id`, монеты лежат в `starting_coins`.
-startup section `27_background_equipment.sql` заменяет прежнее текстовое поле
-`equipment`, создаёт справочные карточки для сюжетных предметов и связывает их
-с PHB 2014. Механический выбор хранится в массиве `item_choices`: стабильный
-`key`, подпись, `option_item_ids`, признаки выдачи владения/инструмента/предмета
-и идентификаторы заменяемых общих грантов. Поэтому один формат обслуживает
-игровые наборы, музыкальные и ремесленные инструменты, священные символы и
-прочие варианты, а конкретный выбор сохраняется на персонаже, не размножая
-справочные записи предысторий. Признак владения и выдача предмета независимы:
+Предыстории ссылаются на отдельно подготовленные карточки предметов справочника. Признак владения и выдача предмета независимы:
 одна опция может дать только владение либо владение вместе с физическим
 инструментом. Каждая встроенная
 коллекция имеет растровую эмблему через
 `item_type.icon_image_id → storage_image`; строки типа `item_type_icon` указывают
 на прозрачные lossless WebP в S3 под `system-item-media/v1/static/handbook-types/`.
-Migration 24 первоначально назначает эмблемы типам 1–13 и удаляет прежний
-runtime-контракт `item_type.svg_id`; migration 193 переносит прежние embedded
-эмблемы и изображения истощения/вдохновения в S3, сохраняя ID изображений,
-общие ссылки и признак удаления. Уже заменённые изображения не перезаписываются.
-Тип 14
-«Инструменты» наследует визуальную эмблему родительских «Вещей» при создании,
-а migration 69 копирует icon/cover базовой расы и класса новым типам 16/17.
+Общие изображения назначаются через сохранённые image ID. Типы 14, 16 и 17
+могут использовать те же записи, что и связанные коллекции; смена изображения
+является явной операцией с данными, а не действием startup.
 Независимая `item_type.cover_image_id → storage_image/S3` хранит типовую
 обложку-заглушку коллекции. Item-level `cover_image_id` имеет приоритет, поэтому
 типовой визуал не копируется в каждую строку item и автоматически обслуживает
@@ -261,7 +249,7 @@ runtime-контракт `item_type.svg_id`; migration 193 переносит п
 `cover_image_id → storage_image/S3` и поэтому может сосуществовать с любым
 форматом иконки. Ограничение `item_single_icon_check` обложку намеренно не
 включает; FK использует `ON DELETE SET NULL`.
-`item_icon_preset` (migration 156) stores `item_type_id → item_type`, stable
+`item_icon_preset` stores `item_type_id → item_type`, stable
 `code`, `name`, `purpose` (`item`/`empty_cell`), `sort_order` and
 `image_id → storage_image`. `(item_type_id, code)` is unique; each type has at
 most one empty-cell preset. Images are system assets and remain protected from
@@ -270,7 +258,7 @@ nullable `icon_preset_id` beside `item_id`, outside `params` and `override`.
 The reference is preserved in transfers and resolved by the public preset API.
 
 Фильтры справочника задаются metadata `filter` в `item_type.fields`. Для
-бестиария startup schema поддерживает фильтры по типу, размеру, среде,
+бестиария metadata содержит фильтры по типу, размеру, среде,
 легендарности, именованному NPC и CR; точные варианты CR лежат в
 `filter_values`, поэтому UI может показать фильтр без дополнительного словаря.
 Новые системные изображения, установленные через MCP, используют
@@ -290,12 +278,10 @@ URL хранится в системной строке `storage_image`, а не
 строки `storage_image(type='item_cover')` с ключами
 `system-race-images/v1/*` назначаются item типа 8 через `cover_image_id`.
 Компактные прозрачные WebP используют отдельные ключи
-`system-race-icons/v1/*` и `icon_image_id`. Startup seed идемпотентно переносит
-старую ссылку из иконки в обложку, не затирая уже назначенную новую иконку, а
+`system-race-icons/v1/*` и `icon_image_id`. Явный ручной bootstrap сохраняет
+отдельную новую иконку, а
 ручной legacy-sync проверяет и загружает фактические файлы в S3; frontend-дублей нет.
-Startup schema переименовывает прежний `item.svg_id` в `icon_svg_id` без
-runtime alias. Sections `schema/06_item_icons.sql` и
-`schema/07_feature_icons.sql` идемпотентно создают SVG для базового оружия,
+Каталог хранит явные SVG-ссылки для базового оружия,
 обычного снаряжения, черт, расовых и классовых способностей PHB 2014. Черты и
 расовые способности получают собственные рисунки, родственные классовые
 способности используют общие семантические символы. Назначение выполняется
@@ -304,89 +290,54 @@ runtime alias. Sections `schema/06_item_icons.sql` и
 
 Обычные готовые наборы снаряжения типа 2 имеют
 `data.equipment_category='pack'` и структурированный `data.contents` — массив
-`{item_id,count,params}` со ссылками на другие базовые вещи типа 2. Startup schema
-восстанавливает все семь составов PHB 2014 идемпотентно; строковые копии состава
+`{item_id,count,params}` со ссылками на другие базовые вещи типа 2. Составы PHB 2014 хранятся в данных каталога; строковые копии состава
 и runtime fallback не используются.
 
 Инструменты являются самостоятельным типом 14 с категориями `artisan`,
-`gaming`, `musical` и `kit`. Startup section `30_item_type_hierarchy.sql`
-идемпотентно переносит прежние вещи с `equipment_category='tool'` в этот тип и
-возвращает экземпляры из временного `values.tools` в первую секцию обычного
-инвентаря. Владение при этом остаётся независимым значением в
+`gaming`, `musical` и `kit`. Ссылки на инструменты хранятся в обычном инвентаре. Владение при этом остаётся независимым значением в
 `values.proficiencies['Инструменты']`: наличие предмета его не добавляет и не
 удаляет. Поле item `required_tool_proficiencies` содержит ссылки на suggest-тип
 5 с семантикой `match='any'`. Для конкретных ремесленных, игровых и музыкальных
 инструментов массив включает точное владение и общее владение категории, для
-особых наборов — точное владение. Startup section
-`31_tool_proficiency_catalog.sql` дополняет словарь конкретными владениями и
-связывает с ними все встроенные инструменты. Реквизит шарлатана для выбранной
+особых наборов — точное владение. Конкретные владения и ссылки инструментов задаются данными каталога. Реквизит шарлатана для выбранной
 мошеннической схемы остаётся обычной вещью: отдельного владения этим реквизитом
 в правилах нет.
 
 Классы типа 9 могут хранить выбор владений инструментами в
-`tool_prof_choice {count,from}`, где `from` содержит suggest-ID типа 5. Startup
-section `33_class_tool_choices.sql` заменяет у барда статическое общее владение
-`Музыкальные инструменты` обязательным выбором трёх конкретных музыкальных
-инструментов.
+`tool_prof_choice {count,from}`, где `from` содержит suggest-ID типа 5. Данные барда задают обязательный выбор трёх конкретных музыкальных инструментов.
 
 `item_type.instance_fields` описывает типизированные параметры конкретного
 экземпляра, которые хранятся на ссылке владения, а не в `item.data`. Инвентарь
 (включая инструменты) и зелья используют `{uid,item_id,count,params,override}`, оружие —
-`item_id` и тот же `params` рядом со своими боевыми настройками. Startup section
-`28_item_instance_params.sql` переводит прежние `id` и `magic_up`, добавляет
-явные пустые параметры остальным экземплярам и назначает существующим верёвкам
-`length_ft=50`. Справочные пеньковая и шёлковая верёвки не содержат длину в
+`item_id` и тот же `params` рядом со своими боевыми настройками. Параметры экземпляров записываются явно, включая `length_ft` верёвок. Подготовка прежних форматов выполняется отдельно от DDL. Справочные пеньковая и шёлковая верёвки не содержат длину в
 названии; их `measurement`, `unit_cost_copper` и `unit_weight` задают только
 правила измерения и расчёта экземпляра.
 
-Startup section `29_item_catalog_fixes.sql` исправляет прежнюю повторную
-нормализацию: ID 423 остаётся пеньковой верёвкой, а единственной справочной
-шёлковой верёвкой становится ID 424; ссылки со старого дубля ID 1428 переносятся
-на неё до удаления дубля. Магические `Rope of Climbing` и
-`Rope of Entanglement` относятся к DMG 2014, а PHB-предмет `Climber's Kit`
-хранится под каноническим русским названием «Комплект для лазания».
+Канонические ссылки на предметы, названия и источники принадлежат данным
+каталога. Их корректируют через MCP, без автоматической переклассификации
+или замены ссылок при старте.
 
 Системный suggest type 24 «Действия в бою» содержит короткий переиспользуемый
 перечень действий редакции 2014. Канонический порядок задаётся стабильными
-`suggest.code`; startup seed идемпотентно добавляет или актуализирует только
-базовые строки. Полные статьи правил, формулы и примеры в БД не хранятся.
+`suggest.code`; базовые строки поддерживаются отдельно через MCP. Полные статьи правил, формулы и примеры в БД не хранятся.
 
-Rich descriptions остаются HTML-строками внутри соответствующего единственного
-поля item data. Встроенные предметные ссылки используют только атомарный
-`span[data-rich-node][data-rich-payload]`; payload — JSON object, закодированный
-для HTML attribute. После SQL-схемы атомарная startup migration рекурсивно
-обходит строковые значения `item.data` и переводит импортированные
-`dice-roller` и `detail-tooltip` в текущий контракт. Ссылки на заклинания,
-существ и вещи разрешаются через базовые `item.name_en`; состояния разрешаются
-через effect items типа 15, а навыки, свойства оружия и типы урона — через
-базовые suggest. Перед удалением прежнего suggest type 9 отдельная миграция
-рекурсивно заменяет его rich nodes во всех `item.data` на item nodes эффектов,
-сохраняя подпись ссылки. Неизвестные
-внутренние ссылки становятся абсолютными нативными ссылками на исходный
-справочник; внешний текст и неизвестная HTML-разметка сохраняются. Повторный
-запуск не меняет уже мигрированные документы.
+Rich descriptions остаются HTML-строками в единственном соответствующем поле
+`item.data`. Атомарные узлы используют `span[data-rich-node][data-rich-payload]`;
+payload — JSON object, закодированный для HTML attribute. Поддерживаются
+`dice`, `stat`, `item` и `suggest`. Ссылки сохраняют явные ID и type ID,
+не выводятся из названий при чтении. Импорт сразу подготавливает текущий формат;
+startup не обходит строки, не переводит legacy tags и не исправляет описания.
 
-Versioned section `70_item_rich_descriptions.sql` заменяет пустые и шаблонные
-`data.desc` всех проаудированных базовых вещей типа 2 собственными русскими
-описаниями и исправляет таблицу результата «Бутылки ифрита». Сразу после SQL в
-той же schema-транзакции Go migration однократно нормализует описания всех
-публичных вещей типа 2: буквальные `\\n` становятся абзацами, Markdown-таблицы —
-семантическим HTML, формулы кубиков — узлами `dice`, КД/хиты — узлами `stat`, а
-однозначно найденные заклинания, существа, состояния и другие вещи — внутренними
-узлами `item`. Неразрешённые относительные и внешние `a` разворачиваются в
-обычный текст, поэтому описание не сохраняет сломанные или уходящие с сайта
-ссылки. Личные записи пользователей migration не изменяет.
+Описания вещей типа 2 поддерживаются как данные: формулы кубиков сохраняются
+узлами `dice`, КД/хиты — `stat`, предметные ссылки — `item`/`suggest`, таблицы —
+семантическим HTML. Редактирование и подготовка импортов выполняются явно
+через MCP или редактор, без SQL seed и Go-конвертеров при старте.
 
-Следующая versioned section `71_potion_rich_descriptions.sql` тем же контрактом
-актуализирует 26 публичных записей типа 10: лечебные формулы и упоминания хитов
-становятся интерактивными узлами, таблицы силы великана и сопротивления —
-семантическим HTML, а названия существующих заклинаний и состояний — локальными
-ссылками справочника. Seed привязан к id и ожидаемому имени записи, поэтому не
-затрагивает пользовательские зелья и не применяет текст к случайно заменённому
-объекту.
+Описания зелий типа 10 используют тот же rich-content контракт. Лечебные
+формулы, хиты и ссылки сохраняются в данных конкретной записи; миграции
+структуры не заменяют тексты публичных или пользовательских зелий.
 
-Для девяти базовых рас startup seed поддерживает два самостоятельных текстовых
-поля: `data.short_description` — короткий атмосферный текст карточки без игровой
+У базовых рас есть два самостоятельных текстовых поля: `data.short_description` — короткий атмосферный текст карточки без игровой
 механики, `data.description` — авторская статья из трёх HTML-абзацев для раскрытого
 шага выбора. Механические бонусы остаются в структурированных полях race item и
 не дублируются в этих текстах.
@@ -401,24 +352,20 @@ Versioned section `70_item_rich_descriptions.sql` заменяет пустые 
 `storage_image(type='item_icon')` и назначает через `item.icon_image_id` с тем
 же разделением base/subrace.
 
-Пятнадцать встроенных базовых классов используют параллельный namespace
-`system-class-images/v1/*`. Startup seed создаёт системные
-`storage_image(type='item_icon')` и назначает их только системным item типа 9,
-у которых иконка отсутствует или всё ещё указывает в этот legacy-
-namespace; MCP-иконки `system-item-media/v1/*` startup и ручной sync не
-перезаписывают. Подклассы типа 17 не затрагиваются. Ручной legacy-синхронизатор
-сверяет размер и SHA-256 встроенных JPEG перед загрузкой в S3.
+Иллюстрации базовых классов могут использовать `system-class-images/v1/*`.
+Ручной bootstrap сверяет размер и SHA-256 JPEG и назначает изображения явно.
+Отдельные MCP-иконки `system-item-media/v1/*` не перезаписываются. Startup
+не создаёт storage rows и не меняет назначения; подклассы имеют свои ссылки.
 
-Для тех же классов startup seed поддерживает `data.short_description` как
+Классы хранят `data.short_description` как
 короткий атмосферный текст карточки и `data.description` как отдельную авторскую
 статью из трёх HTML-абзацев под выбранной карточкой. Игровые параметры остаются в
 структурированных полях class item и в эти тексты не дублируются.
 
 Кубики не являются словарём: поля схемы используют `type:"dice"`, а сохранённое
 значение — строка `"d4"`, `"d6"`, `"d8"`, `"d10"`, `"d12"`, `"d20"` или
-`"d100"`. Startup-схема переводит поля бывшего suggest type 11 на системный тип,
-конвертирует его последовательные id `1..7` в эти строки и удаляет строки
-устаревшего справочника.
+`"d100"`. Изменения метаданных кубиков и удаление устаревших записей выполняются
+отдельными операциями с данными, без startup-преобразований.
 
 Персональное происхождение контента хранится отдельно от этих двух понятий:
 `custom_item_source` принадлежит пользователю и описывает его набор собственных
@@ -428,26 +375,22 @@ namespace; MCP-иконки `system-item-media/v1/*` startup и ручной syn
 `(custom_source_id,user_id)` запрещает привязать item к источнику другого
 пользователя. У базовых item оба поля равны `NULL`.
 
-Startup migration идемпотентно создаёт default source существующим пользователям,
-проставляет его всем сохранённым пользовательским item и удаляет прежние
-`customSourceId`/`custom_source_id` из JSON. Новые item получают default source
-атомарно при `INSERT`; runtime не читает JSON fallback. При make-base сервер
-одновременно очищает `user_id` и `custom_source_id`, а у связанной растровой
-иконки также очищает `storage_image.user_id`.
+Trigger регистрации пользователя создаёт его default custom source. Новые
+item получают текущий source атомарно при INSERT; JSON fallback не читается.
+При make-base сервер очищает `user_id` и `custom_source_id`, а у связанной
+растровой иконки также очищает `storage_image.user_id`. Существующие записи
+не исправляются при запуске migrator.
 
-Старая пользовательская копия классовой способности «Ликвидация» не становится
-вторым системным item: startup migration переводит сохранённые ссылки на
-канонический системный `Assassinate`, сохраняет данные экземпляра способности и
-удаляет дубликат. Каноническая карточка использует русское название
-«Ликвидация»; runtime-автоматика по-прежнему опирается на структурированные
-поля, а английское имя используется только для поиска цели миграции каталога.
+Канонические ссылки способностей задаются данными справочника. Runtime
+опирается на структурированные поля, без автоматического объединения
+дубликатов или поиска цели исправления по русскому/английскому названию.
 
 Новые `suggest.id` выдаёт общая sequence, поэтому конкурентные вставки разных
 пользователей не пересекаются и не используют `MAX(id)+1`. Существующий API
 по-прежнему идентифицирует suggest парой `(type_id,id)`, так что явные id базовых
 suggest остаются валидны; составной primary key обеспечивает этот контракт.
 
-Миграция `159_suggest_images.sql` добавляет nullable FK
+`suggest` хранит nullable FK
 `suggest.icon_image_id → storage_image.id` и индекс связи. Саджест не хранит
 URL или байты картинки: сервер получает URL из активного `storage_image`
 через JOIN. Установка системного изображения блокирует ровно базовую пару
@@ -466,30 +409,30 @@ URL или байты картинки: сервер получает URL из �
   точная цена, только диапазон или оба. Например,
   `{value:250,min:101,max:500,suggest_id:3}`. Обе границы задаются вместе,
   числа неотрицательные, `min <= max`; покупка использует только `value`.
-  Миграция 157 добавляет `allow_range` в схемы всех записей со стоимостью.
+  Метаданные поля стоимости поддерживают `allow_range`.
 - `weapon_notes` у типов 1/19 хранит отдельные памятки экземпляра:
   `{key,title,kind,when,description,requirements?,resource_key?}`. `kind` — `rule` или `curse`,
   `when` — `active`, `attuned` или `always`. Это представление правил;
   спасброски и принуждение текст не исполняет.
 
-При старте `schema/02_handbook.sql` переносит старые одинарные bindings, spell
-class ids, ключи черт и source metadata, затем удаляет исходные поля. Отдельных
-`migrate-ability-binding`, `migrate-spell-classes` и подобных admin jobs нет.
+Данные справочника записываются в текущем формате. Обновления bindings,
+ссылок классов, ключей черт и source metadata выполняются отдельно через MCP
+или явную подготовку данных. Startup не меняет item rows; одноразовых
+admin jobs для скрытого переноса форматов нет.
 
 ## Оценка поддержки механик предметов
 
-`108_item_automation.sql` добавляет к `item` колонки `automation_status`
+`item` содержит колонки `automation_status`
 (`text` с CHECK пяти значений, default `unreviewed`), `automation_note`
 (до 1000 символов) и `requires_player_interaction` (default false).
-Это общие метаданные вне JSON `data`; миграция не выставляет оценок по наличию
-зависимостей. [Контракт и критерии](../features/item-automation.md).
+Это общие метаданные вне JSON `data`; оценки задаются явным решением, отдельно от структурного DDL. [Контракт и критерии](../features/item-automation.md).
 
-`109_magic_item_automation_audit.sql` заполняет оценки всех 244 публичных
-магических предметов с проверкой ID/названия/типа/владельца, MD5 проверенных
-данных и отсутствия авторской оценки. Игровые данные не меняются.
+Оценки автоматизации принадлежат данным конкретных записей и не назначаются
+при старте. Исторический аудит 244 публичных магических предметов фиксирует
+срез проверки; последующие изменения вносятся отдельно через MCP.
 [Полный реестр и критерии](../magic-item-automation-audit.md).
 
-`112_selected_class_abilities.sql` adds `ability_selection`,
+Class metadata supports `ability_selection`,
 `selection_parent_id`, `selection_requirements` to type 4 and `spell_modifiers`
 to types 3/4/7. It changes item-type fields only. Invocation item records are
 published through MCP; chosen references remain in `values.abilities_class`.
@@ -497,7 +440,7 @@ published through MCP; chosen references remain in `values.abilities_class`.
 ## Источники эффектов (129)
 
 `item.data.application_sources` у типа 15 — массив `{item: {id}, key, target, condition}`;
-редактор также допускает числовую ссылку `item`. Миграция один раз переносит текущие
+редактор также допускает числовую ссылку `item`. Отдельная подготовка данных переносит
 `status_effects`, варианты зелий, связанные эффекты заклинаний и `on_end_effect`.
 Дальнейшая поддержка ручная. Обратный поиск и фильтры эффектов используют этот
 список и индекс первичного ключа источников. При чтении приватные и удалённые
@@ -510,7 +453,7 @@ published through MCP; chosen references remain in `values.abilities_class`.
 новой таблицы. Обновление исходного события блокируется транзакцией; одна цель
 имеет один результат в событии. Такие события включены в mutable `updates`.
 
-Миграция 130 добавляет редакторские поля `heal.apply` и
+Редакторские метаданные поддерживают поля `heal.apply` и
 `application_targets.self_only` для заклинаний.
 Поля производных эффектов также дополнены настройкой навыков и формулы КД,
 чтобы новые заклинательные эффекты редактировались теми же средствами, что способности.

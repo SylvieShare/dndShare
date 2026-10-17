@@ -50,12 +50,6 @@ func TestEffectSourceFilter(t *testing.T) {
  (14,19,NULL,'{"status_effects":{}}'),
  (15,19,NULL,'{"status_effects":[null,17,"str",{"effect":"bad"}]}');`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(schemaEffectSourceFilterSQL)
-	exec(schemaEffectSourceFilterSQL)
-	var count int
-	if err := pool.QueryRow(ctx, `SELECT jsonb_array_length(fields) FROM dndshare.item_type WHERE id=15`).Scan(&count); err != nil || count != 1 {
-		t.Fatalf("filter metadata must be added once: count=%d err=%v", count, err)
-	}
 	check := func(userID *int64, values []any, expected []int64) {
 		t.Helper()
 		args := []any{}

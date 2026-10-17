@@ -2,101 +2,82 @@ package store
 
 import (
 	"os"
-	"path/filepath"
-	"regexp"
 	"sort"
 	"strings"
 	"testing"
 )
 
-func TestEverySchemaFileIsEmbeddedAndRegistered(t *testing.T) {
-	entries, err := os.ReadDir("schema")
+func TestSchemaFilesAreStructuralAndOrdered(t *testing.T) {
+	files, err := os.ReadDir("schema")
 	if err != nil {
 		t.Fatal(err)
 	}
-	var files []string
-	for _, entry := range entries {
-		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".sql") {
-			files = append(files, entry.Name())
-		}
-	}
-	sort.Strings(files)
-
-	sources, err := filepath.Glob("schema*.go")
-	if err != nil {
-		t.Fatal(err)
-	}
-	pattern := regexp.MustCompile(`//go:embed schema/([^\s]+\.sql)`)
-	var embedded []string
-	for _, name := range sources {
-		if strings.HasSuffix(name, "_test.go") {
-			continue
-		}
-		source, err := os.ReadFile(name)
-		if err != nil {
-			t.Fatal(err)
-		}
-		for _, match := range pattern.FindAllStringSubmatch(string(source), -1) {
-			embedded = append(embedded, match[1])
-		}
-	}
-	sort.Strings(embedded)
-
-	if strings.Join(files, "\n") != strings.Join(embedded, "\n") {
-		t.Fatalf("schema files and go:embed declarations differ\nfiles: %v\nembedded: %v", files, embedded)
-	}
-	if len(schemaParts) != len(embedded) {
-		t.Fatalf("schemaParts has %d entries, but %d schema files are embedded", len(schemaParts), len(embedded))
-	}
+	var names []string
 	for _, file := range files {
-		data, err := os.ReadFile("schema/" + file)
-		if err != nil {
-			t.Fatal(err)
-		}
-		matches := 0
-		for _, part := range schemaParts {
-			if part.sql == string(data) {
-				matches++
-			}
-		}
-		if matches != 1 {
-			t.Fatalf("schema file %s must appear exactly once in schemaParts, got %d", file, matches)
+		if !file.IsDir() && strings.HasSuffix(file.Name(), ".sql") {
+			names = append(names, strings.TrimSuffix(file.Name(), ".sql"))
 		}
 	}
-	seen := make(map[string]bool, len(schemaParts))
-	for _, part := range schemaParts {
-		if strings.TrimSpace(part.name) == "" || strings.TrimSpace(part.sql) == "" {
-			t.Fatalf("schema part must have a non-empty name and SQL: %#v", part)
+	sort.Strings(names)
+	if len(names) != len(schemaParts) {
+		t.Fatalf("migration registry has %d entries for %d SQL files", len(schemaParts), len(names))
+	}
+	for i, part := range schemaParts {
+		if part.name != names[i] {
+			t.Fatalf("migration order: got %s, want %s", part.name, names[i])
 		}
-		if seen[part.name] {
-			t.Fatalf("duplicate schema part name %q", part.name)
+		if err := validateSchemaDDL(part.sql); err != nil {
+			t.Fatalf("%s contains a nonstructural operation: %v", part.name, err)
 		}
-		seen[part.name] = true
+	}
+	if err := validateStructuralBaseline(); err != nil {
+		t.Fatal(err)
 	}
 }
 
-func TestVersionedMigrationsRunAfterClassActionAutomation(t *testing.T) {
-	want := []string{
-		legacySchemaBootstrapLast, "half-caster-spellcasting", "session-security",
-		"shared-channel-divinity", "spellbook-tabs", "sacred-weapon-effect",
-		"spellbook-grant-cleanup", "session-npc-bestiary", "session-scene-location",
-		"session-scene-visual-source", "session-event-actor-item", "journals",
-		"origin-catalogs", "item-rich-descriptions", "potion-rich-descriptions",
-		"story-abilities", "personal-character-journal", "journal-editing", "journal-entry-audit",
+func TestSchemaDDLGuard(t *testing.T) {
+	allowed := []string{
+		`CREATE TABLE t(id bigint GENERATED ALWAYS AS IDENTITY, label text DEFAULT '; INSERT INTO x VALUES(1)');`,
+		`/* nested /* INSERT x */ comment */ ALTER TABLE t ADD COLUMN "AS" text; -- DELETE x`,
+		`CREATE FUNCTION f() RETURNS TABLE(id bigint) LANGUAGE sql AS $$ SELECT id FROM t; $$;`,
+		`CREATE OR REPLACE FUNCTION f() RETURNS trigger LANGUAGE plpgsql AS $body$ BEGIN INSERT INTO t VALUES(NEW.id); RETURN NEW; END; $body$;`,
+		`CREATE FUNCTION f() RETURNS text LANGUAGE sql AS 'SELECT ''UPDATE; DELETE''';`,
+		`CREATE VIEW v AS SELECT id FROM t; COMMENT ON VIEW v IS 'seed; UPDATE';`,
+		`CREATE MATERIALIZED VIEW v AS SELECT id FROM t WITH NO DATA;`,
+		`ALTER SEQUENCE seq OWNED BY t.id; CREATE INDEX i ON t(id);`,
+		`-- comment only`,
 	}
-	baseline := -1
-	for i, part := range schemaParts {
-		if part.name == legacySchemaBootstrapLast {
-			baseline = i
-			break
+	for _, sql := range allowed {
+		if err := validateSchemaDDL(sql); err != nil {
+			t.Errorf("structural DDL rejected: %s: %v", sql, err)
 		}
 	}
-	if baseline < 0 || len(schemaParts) < baseline+len(want) {
-		t.Fatal("schema manifest is incomplete")
+	rejected := []string{
+		`INSERT INTO t VALUES(1);`,
+		"-- migration\nUPDATE t SET id=1;",
+		`DELETE FROM t;`,
+		`TRUNCATE t;`,
+		`COPY t FROM STDIN;`,
+		`MERGE INTO t USING s ON t.id=s.id WHEN MATCHED THEN DELETE;`,
+		`WITH removed AS (DELETE FROM t RETURNING *) SELECT * FROM removed;`,
+		`DO $$ BEGIN UPDATE t SET id=1; END; $$;`,
+		`CALL backfill();`,
+		`SELECT seed_catalogue();`,
+		`CREATE TABLE t AS SELECT 1 AS id;`,
+		`CREATE UNLOGGED TABLE t(id) AS SELECT 1;`,
+		`CREATE SCHEMA s CREATE TABLE t AS SELECT 1;`,
+		`CREATE MATERIALIZED VIEW v AS SELECT 1;`,
+		`ALTER SEQUENCE seq RESTART WITH 1;`,
+		`CREATE TABLE t(label text DEFAULT 'UPDATE;'); DELETE FROM t;`,
+		`CREATE TABLE t(label text DEFAULT E'it\'s; INSERT'); UPDATE t SET label='changed';`,
+		`CREATE FUNCTION f() RETURNS void AS $$ SELECT 1; $$ LANGUAGE sql; INSERT INTO t VALUES(1);`,
+		`CREATE TABLE t(id int); /* unfinished`,
+		`CREATE TABLE t(label text DEFAULT 'unfinished);`,
+		`CREATE FUNCTION f() RETURNS void AS $tag$ unfinished;`,
 	}
-	for i, name := range want {
-		if got := schemaParts[baseline+i].name; got != name {
-			t.Fatalf("migration after baseline at offset %d: want %s, got %s", i, name, got)
+	for _, sql := range rejected {
+		if err := validateSchemaDDL(sql); err == nil {
+			t.Errorf("nonstructural or malformed SQL accepted: %s", sql)
 		}
 	}
 }

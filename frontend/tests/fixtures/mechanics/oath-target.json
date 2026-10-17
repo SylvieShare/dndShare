@@ -1,0 +1,16 @@
+{
+  "title": "Заклятый враг",
+  "condition": "Объявите цель при дальней атаке этим луком, произнеся командную фразу. Одновременно — один противник.",
+  "duration_dawns": 7,
+  "cooldown_dawns": 1,
+  "ranged_only": true,
+  "attack_advantage": true,
+  "other_weapons_disadvantage": true,
+  "ignore_partial_cover": true,
+  "ignore_long_range": true,
+  "damage": {
+    "dice": "d6",
+    "dice_count": 3,
+    "damage_type": 1
+  }
+}

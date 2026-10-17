@@ -43,11 +43,11 @@ func testHiddenItemVisibility(t *testing.T, s *Store) {
 	if err != nil || count != 1 {
 		t.Fatalf("hidden rows counted: %d, %v", count, err)
 	}
-	// Migration hides the two incomplete classes, but stable ID reads survive.
+	// Hidden fixture classes remain available through stable ID reads.
 	for _, name := range []string{"Magus", "Shaman"} {
 		item, err := s.FindBaseByTypeAndNameEn(ctx, 9, name)
 		if err != nil || !item.Hidden {
-			t.Fatalf("migration did not hide %s: %+v, %v", name, item, err)
+			t.Fatalf("fixture visibility lost for %s: %+v, %v", name, item, err)
 		}
 		rows, err := s.GetByIds(ctx, []int64{item.ID}, nil)
 		if err != nil || len(rows) != 1 || !rows[0].Hidden {

@@ -1,15 +1,14 @@
+import { bardProgression } from '../../../../../../tests/fixtures/mechanics.js'
 import { describe, expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
 import { levelUpSpellBudget, levelUpSpellEligibility } from './levelUpSpellPlan'
 import { spellcastingRulesAt } from './spellcastingRules'
 
-const sql = readFileSync(new URL('../../../../../../../internal/store/schema/104_bard_spell_progression.sql', import.meta.url), 'utf8')
-const progression = JSON.parse(sql.match(/'known_progression', '(\[[\s\S]*?\])'/)[1])
+const progression = bardProgression
 const bard = { data: { spellcasting: { ability: 6, known_progression: progression } } }
 const refs = (cantrips, spells) => [...Array.from({ length: cantrips }, () => ({ level: 0 })), ...Array.from({ length: spells }, () => ({ level: 1 }))]
 
 describe('level-up spell budgets', () => {
-  it.each([[2, 2, 4, 0, 1], [4, 2, 6, 1, 1], [10, 3, 12, 1, 2], [12, 4, 15, 0, 0], [20, 4, 22, 0, 0]])('reads bard level %i limits from the shipped catalogue', (level, cantrips, spells, newCantrips, newSpells) => {
+  it.each([[2, 2, 4, 0, 1], [4, 2, 6, 1, 1], [10, 3, 12, 1, 2], [12, 4, 15, 0, 0], [20, 4, 22, 0, 0]])('reads bard level %i limits from explicit catalogue fixtures', (level, cantrips, spells, newCantrips, newSpells) => {
     const rules = spellcastingRulesAt(bard, level)
     expect(levelUpSpellBudget({ rules }, refs(cantrips, spells))).toMatchObject({ cantrips: newCantrips, spells: newSpells, replacements: 1 })
   })

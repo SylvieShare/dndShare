@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
+func TestSessionDisplayCodesAndLookup(t *testing.T) {
 	dsn := os.Getenv("DNDSHARE_DISPLAY_TEST_DSN")
 	if dsn == "" {
 		t.Skip("set DNDSHARE_DISPLAY_TEST_DSN to a disposable local dndshare_test_* database")
@@ -45,18 +45,16 @@ func TestSessionDisplayCodesMigrationAndLookup(t *testing.T) {
 	  created_at timestamptz DEFAULT now(), changed_at timestamptz DEFAULT now(), deleted bool DEFAULT false
 	);
 	CREATE TABLE dndshare.session_arc (session_id bigint, "order" int, name text);
-	CREATE TABLE dndshare.session_presentation_state (session_id bigint);
-	INSERT INTO dndshare.session (name) SELECT 'Existing ' || i FROM generate_series(1, 500) i;`)
+	CREATE TABLE dndshare.session_presentation_state (session_id bigint);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(schemaSessionDisplayCodesSQL)
-	exec(schemaSessionLifecycleSQL)
-	exec(schemaSessionPlayerVisibilitySQL)
-	exec(`UPDATE dndshare.session SET players_see_class = false, players_see_hp = true WHERE id = 1`)
-	exec(schemaSessionSettingsJSONSQL)
-	exec(schemaSessionAutoAcceptSQL)
-	exec(schemaSessionKarmicDiceSQL)
+	exec(testSchemaFunctions(t))
+	exec(testSchemaColumns(t, "session", "display_code", "status", "settings"))
+	exec(testSchemaChecks(t, "session", "session_display_code_format", "session_status_check", "session_settings_object"))
+	exec(`CREATE UNIQUE INDEX fixture_session_code ON dndshare.session(display_code);
+ INSERT INTO dndshare.session(name) SELECT 'Existing ' || i FROM generate_series(1,500) i;
+ UPDATE dndshare.session SET settings=jsonb_set(jsonb_set(settings,'{players,seeClass}','false'),'{players,seeHp}','true') WHERE id=1;`)
+	exec(testSchemaTables(t, "session_karmic_scale", "session_d20_roll"))
 	exec(`INSERT INTO dndshare.session_karmic_scale VALUES(1,'shared','Общая шкала',3)`)
-	exec(schemaFractionalKarmicDiceSQL)
 	var preservedBalance float64
 	if err := pool.QueryRow(ctx, `SELECT balance FROM dndshare.session_karmic_scale WHERE session_id=1`).Scan(&preservedBalance); err != nil || preservedBalance != 3 {
 		t.Fatalf("fractional migration lost balance: %v %v", preservedBalance, err)

@@ -1,0 +1,158 @@
+[
+  {
+    "id": 88,
+    "name": "Посох грома и молнии",
+    "patch": {
+      "use_resources": [
+        {
+          "key": "lightning",
+          "title": "Молния",
+          "max_use": 1,
+          "dawn_recovery": {
+            "mode": "full"
+          }
+        },
+        {
+          "key": "thunder",
+          "title": "Гром",
+          "max_use": 1,
+          "dawn_recovery": {
+            "mode": "full"
+          }
+        },
+        {
+          "key": "lightning_strike",
+          "title": "Удар молнии",
+          "max_use": 1,
+          "dawn_recovery": {
+            "mode": "full"
+          }
+        },
+        {
+          "key": "thunderclap",
+          "title": "Раскат грома",
+          "max_use": 1,
+          "dawn_recovery": {
+            "mode": "full"
+          }
+        },
+        {
+          "key": "thunder_lightning",
+          "title": "Гром и молния",
+          "max_use": 1,
+          "dawn_recovery": {
+            "mode": "full"
+          }
+        }
+      ],
+      "feature_actions": [
+        {
+          "key": "thunder",
+          "title": "Гром при попадании",
+          "action_type": "special",
+          "description": "<p>Посох издаёт гром, слышимый в пределах 300 футов. При провале спасброска Телосложения Сл 17 поражённая цель ошеломлена до конца вашего следующего хода.</p>",
+          "requirements": [
+            "При попадании рукопашной атакой этим посохом."
+          ],
+          "uses_resource": true,
+          "resource_key": "thunder",
+          "resource_cost": 1
+        },
+        {
+          "key": "lightning_strike",
+          "title": "Удар молнии",
+          "action_type": "action",
+          "description": "<p>Из посоха вырывается молния: <span data-rich-node=\"dice\" data-rich-payload=\"%7B%22formula%22%3A%229d6%22%7D\" contenteditable=\"false\">9d6</span> урона молнией.</p>",
+          "requirements": [
+            "Линия длиной 120 и шириной 5 футов.",
+            "Все существа в линии: спасбросок Ловкости Сл 17, половина урона при успехе."
+          ],
+          "uses_resource": true,
+          "resource_key": "lightning_strike",
+          "resource_cost": 1
+        },
+        {
+          "key": "thunderclap",
+          "title": "Раскат грома",
+          "action_type": "action",
+          "description": "<p>Посох издаёт гром: <span data-rich-node=\"dice\" data-rich-payload=\"%7B%22formula%22%3A%222d6%22%7D\" contenteditable=\"false\">2d6</span> урона звуком. При провале спасброска цель также теряет слух на 1 минуту.</p>",
+          "requirements": [
+            "Все существа в пределах 60 футов, кроме вас.",
+            "Спасбросок Телосложения Сл 17: половина урона и без глухоты при успехе.",
+            "Звук слышен в пределах 600 футов."
+          ],
+          "uses_resource": true,
+          "resource_key": "thunderclap",
+          "resource_cost": 1
+        },
+        {
+          "key": "thunder_lightning",
+          "title": "Гром и молния",
+          "action_type": "action",
+          "description": "<p>Одновременно примените «Удар молнии» (<span data-rich-node=\"dice\" data-rich-payload=\"%7B%22formula%22%3A%229d6%22%7D\" contenteditable=\"false\">9d6</span> молнией) и «Раскат грома» (<span data-rich-node=\"dice\" data-rich-payload=\"%7B%22formula%22%3A%222d6%22%7D\" contenteditable=\"false\">2d6</span> звуком).</p>",
+          "requirements": [
+            "Молния: линия 120 × 5 футов, спасбросок Ловкости Сл 17.",
+            "Гром: радиус 60 футов, кроме вас; спасбросок Телосложения Сл 17, глухота на 1 минуту при провале.",
+            "Каждый успешный спасбросок уменьшает соответствующий урон вдвое.",
+            "Не расходует отдельные использования «Удара молнии» и «Раската грома»."
+          ],
+          "uses_resource": true,
+          "resource_key": "thunder_lightning",
+          "resource_cost": 1
+        }
+      ],
+      "weapon_damage": [
+        {
+          "key": "lightning",
+          "label": "Молния",
+          "dice": "d6",
+          "dice_count": 2,
+          "damage_type": 9,
+          "weapon_kind": "melee",
+          "uses_resource": true,
+          "resource_key": "lightning",
+          "resource_cost": 1,
+          "double_on_critical": true,
+          "condition": "При попадании рукопашной атакой этим посохом."
+        }
+      ]
+    }
+  },
+  {
+    "id": 164,
+    "name": "Посох силы",
+    "patch": {
+      "weapon_damage": [
+        {
+          "key": "power_strike",
+          "label": "Мощный удар",
+          "dice": "d6",
+          "dice_count": 1,
+          "damage_type": 12,
+          "weapon_kind": "melee",
+          "uses_resource": true,
+          "resource_cost": 1,
+          "double_on_critical": true,
+          "condition": "При попадании рукопашной атакой этим посохом."
+        }
+      ]
+    }
+  },
+  {
+    "id": 149,
+    "name": "Кинжал яда",
+    "patch": {
+      "weapon_damage": [
+        {
+          "key": "venom",
+          "label": "Яд кинжала",
+          "dice": "d10",
+          "dice_count": 2,
+          "damage_type": 4,
+          "double_on_critical": false,
+          "condition": "Первое попадание после покрытия кинжала ядом, пока не прошла 1 минута; цель провалила спасбросок Телосложения Сл 15. Не включайте при следующих попаданиях. Ресурс уже потрачен на покрытие клинка."
+        }
+      ]
+    }
+  }
+]

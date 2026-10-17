@@ -35,7 +35,7 @@ func TestInventoryIconPresetsPostgres(t *testing.T) {
         CREATE TABLE dndshare.item_type(id bigint PRIMARY KEY); INSERT INTO dndshare.item_type VALUES(2);
         CREATE TABLE dndshare.storage_image(id bigserial PRIMARY KEY,user_id bigint,key text UNIQUE,url text,type text,deleted boolean DEFAULT false,file_name text,mime_type text,file_size bigint);
         CREATE UNIQUE INDEX idx_system_image ON dndshare.storage_image(key) WHERE user_id IS NULL AND key LIKE 'system-item-media/%';`)
-	exec(schemaInventoryIconPresetsSQL)
+	exec(testSchemaTables(t, "item_icon_preset"))
 	s := &Store{pool: pool}
 	p := InventoryIconPreset{ItemTypeID: 2, Code: "key", Name: "Ключ", Purpose: "item"}
 	p, old, err := s.SetInventoryIconPresetImage(t.Context(), p, "system-item-media/key.webp", "/key.webp", "key.webp", "image/webp", 100)

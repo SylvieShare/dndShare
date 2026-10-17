@@ -1,7 +1,7 @@
+import { luckBlade } from '../../../../tests/fixtures/mechanics.js'
 import { afterEach, expect, it, vi } from 'vitest'
 import { computed, effectScope, ref } from 'vue'
 import { createPinia, setActivePinia } from 'pinia'
-import { readFileSync } from 'node:fs'
 import { initializeItemCharges, initialChargeStocks } from '@/shared/lib/itemInitialCharges'
 import { createWeaponInstance, intrinsicWeaponBonus } from './magicWeapons'
 import { collectCharacterResources, restoreCharacterResources } from './characterResources'
@@ -10,8 +10,7 @@ import { confirmItemUse, confirmedItemUses } from './confirmedItemUses'
 import { restoreDawnResources } from './dawnResources'
 import { useCharacterCombatEffects } from '../composables/useCharacterCombatEffects'
 import { useDiceStore } from '@/stores/dice'
-const sql = readFileSync(new URL('../../../../../internal/store/schema/107_luck_blade_rules.sql', import.meta.url), 'utf8')
-const data = Object.fromEntries(['use_resources', 'confirmed_uses', 'derived_effects', 'roll_triggers'].map(key => [key, JSON.parse(sql.split(`$${key}$`)[1])]))
+const data = luckBlade
 const item = { id: 171, typeId: 19, name: 'Клинок удачи', data: { ...data, weapon: { base_item_id: 49, magic_bonus: 1 }, activation: 'carried', attunement: 'required' } }
 const items = new Map([['171', item]])
 function make(wishes = 3) { return { lvl: { level: 5 }, weapon: ['one','two'].map(uid => createWeaponInstance(item, { uid, item_id: 171, count: 1, params: initializeItemCharges({ magic: { attuned: true } }, wishes, 'wishes') })) } }

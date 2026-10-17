@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { striking, strikingLastCharge } from '../../../../tests/fixtures/mechanics.js'
 import { createPinia, setActivePinia } from 'pinia'
 import { reactive, ref } from 'vue'
 import { beforeEach, expect, it, vi } from 'vitest'
@@ -12,10 +12,8 @@ import { lastChargeRuleError, resolveLastCharge, undoLastCharge } from './itemLa
 import { useLastChargeCheck } from '../blocks/dnd/composables/useLastChargeCheck'
 import { useDiceStore } from '@/stores/dice'
 
-const sql = readFileSync(new URL('../../../../../internal/store/schema/101_item_last_charge.sql', import.meta.url), 'utf8')
-const lastCharge = JSON.parse(sql.split('$striking_last_charge$')[1])
-const damageSql = readFileSync(new URL('../../../../../internal/store/schema/100_weapon_damage_units.sql', import.meta.url), 'utf8')
-const damageRule = JSON.parse(damageSql.split('$striking$')[1])
+const lastCharge = strikingLastCharge
+const damageRule = striking
 function fixture(remaining = 3) {
   const item = { id: 189, name: 'Посох ударов', typeId: 19, data: { attunement: 'required', activation: 'equipped', max_use: 10, weapon: { magic_bonus: 3, base_item_id: 37 },
     dawn_recovery: { mode: 'roll', formula: '1d6+4' }, weapon_damage: [damageRule], last_charge: lastCharge } }

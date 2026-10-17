@@ -1,3 +1,4 @@
+import { oathTarget, targetField } from '../fixtures/mechanics.js'
 import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
 import { createApp, h, reactive, computed, ref } from 'vue'
@@ -15,8 +16,7 @@ import { resolveRollMode } from '../../src/features/character-editor/blocks/dnd/
 import { itemFieldEditorKey } from '../../src/features/character-editor/components/useItemFieldEditor'
 import { useDiceStore } from '../../src/stores/dice'
 import { useSuggestStore } from '../../src/stores/suggest'
-import sql from '../../../internal/store/schema/105_selected_target.sql?raw'
-const rule = JSON.parse(sql.split('$oath_target$')[1]), field = JSON.parse(sql.split('$target_field$')[1])
+const rule = oathTarget, field = targetField
 const item = { id: 202, typeId: 19, name: 'Лук клятвы', data: { weapon: { base_item_id: 61 }, is_long_range: true, selected_target: rule, attunement: 'required' } }
 const ctx = reactive({ ownerMode: true,
  values: JSON.parse(sessionStorage.getItem('selected-target') || 'null') || { lvl: { level: 5 }, weapon: [{ uid: 'bow', item_id: 61, magic_item_id: 202, params: { magic: { attuned: true } } }] },

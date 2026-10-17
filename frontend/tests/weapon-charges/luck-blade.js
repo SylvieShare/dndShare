@@ -1,3 +1,4 @@
+import { luckBlade } from '../fixtures/mechanics.js'
 import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
 import { createApp, h, reactive, ref, computed } from 'vue'
@@ -14,9 +15,8 @@ import { useCharacterCombatEffects } from '../../src/features/character-editor/c
 import { itemFieldEditorKey } from '../../src/features/character-editor/components/useItemFieldEditor'
 import { useDiceStore } from '../../src/stores/dice'
 import { itemsApi } from '../../src/shared/api/itemsApi'
-import sql from '../../../internal/store/schema/107_luck_blade_rules.sql?raw'
 import fields from '../../../resources/items/item_19_shema.json'
-const data = Object.fromEntries(['use_resources', 'confirmed_uses', 'derived_effects', 'roll_triggers'].map(key => [key, JSON.parse(sql.split(`$${key}$`)[1])]))
+const data = luckBlade
 const item = { id: 171, typeId: 19, name: 'Клинок удачи', data: { ...data, weapon: { base_item_id: 49, magic_bonus: 1 }, activation: 'carried', attunement: 'required' } }
 const items = new Map([['171', item], ['49', { id: 49, typeId: 1, name: 'Длинный меч', data: {} }]])
 itemsApi.byIds = async () => ({ items: [items.get('49')] })

@@ -1,3 +1,4 @@
+import { nineLivesUse } from '../fixtures/mechanics.js'
 import '@sylvieshare/share-ui/styles.css'
 import '../../src/app/theme.css'
 import { createApp, h, reactive, ref } from 'vue'
@@ -11,11 +12,10 @@ import { collectCharacterResources } from '../../src/features/character-editor/l
 import { itemFieldEditorKey } from '../../src/features/character-editor/components/useItemFieldEditor'
 import { useDiceStore } from '../../src/stores/dice'
 import { itemsApi } from '../../src/shared/api/itemsApi'
-import sql from '../../../internal/store/schema/106_initial_item_charges.sql?raw'
 import fields from '../../../resources/items/item_19_shema.json'
 import { RESOURCE_KEYS } from '../../src/features/items/editor/abilityEditorProfile'
 const mode = new URLSearchParams(location.search)
-const item = { id: 134, typeId: 19, name: 'Похититель девяти жизней', data: { weapon: { base_item_id: 49 }, attunement: 'required', initial_charges: { mode: 'roll', formula: '1к8+1' }, confirmed_uses: [JSON.parse(sql.split('$use$')[1])] } }
+const item = { id: 134, typeId: 19, name: 'Похититель девяти жизней', data: { weapon: { base_item_id: 49 }, attunement: 'required', initial_charges: { mode: 'roll', formula: '1к8+1' }, confirmed_uses: [nineLivesUse] } }
 if (mode.has('fixed')) item.data.initial_charges = { mode: 'fixed', value: 4 }
 if (mode.has('plain')) delete item.data.initial_charges
 if (mode.has('no-base')) delete item.data.weapon

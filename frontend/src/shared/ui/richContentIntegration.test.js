@@ -11,7 +11,6 @@ const themeSource = readFileSync(fileURLToPath(new URL('../../app/theme.css', im
 const enemySource = readFileSync(fileURLToPath(new URL('../../features/items/detail-components/EnemyDetailContent.vue', import.meta.url)), 'utf8')
 const itemModalSource = readFileSync(fileURLToPath(new URL('../../features/handbook/components/ItemViewModal.vue', import.meta.url)), 'utf8')
 const itemDetailSource = readFileSync(fileURLToPath(new URL('../../features/handbook/components/HandbookItemDetail.vue', import.meta.url)), 'utf8')
-const migrationSource = readFileSync(fileURLToPath(new URL('../../../../internal/store/schema/15_rich_content.sql', import.meta.url)), 'utf8')
 
 describe('DnD rich content integration', () => {
   it('uses an application-owned payload instead of legacy custom elements', () => {
@@ -85,10 +84,4 @@ describe('DnD rich content integration', () => {
     expect(themeSource).toContain('overflow-x: auto')
   })
 
-  it('migrates only the approved kobold example', () => {
-    expect(migrationSource).toContain('WHERE id = 1635')
-    expect(migrationSource).toContain('data-rich-node="dice"')
-    expect(migrationSource).toContain('data-rich-node="suggest"')
-    expect(migrationSource).not.toMatch(/UPDATE dndshare\.item\s*;/)
-  })
 })

@@ -1,0 +1,75 @@
+{
+  "use_resources": [
+    {
+      "key": "luck",
+      "title": "Удача",
+      "max_use": 1,
+      "dawn_recovery": {
+        "mode": "full"
+      },
+      "activation": "carried"
+    },
+    {
+      "key": "wishes",
+      "title": "Желания",
+      "initial_charges": {
+        "mode": "roll",
+        "formula": "1к4−1"
+      },
+      "activation": "carried"
+    }
+  ],
+  "confirmed_uses": [
+    {
+      "key": "luck",
+      "title": "Удача",
+      "description": "<p>Перебросьте один бросок атаки, проверку характеристики или спасбросок. Используйте второй результат. Действие не требуется.</p>",
+      "requirements": [
+        "Меч при персонаже",
+        "Один раз до следующего рассвета"
+      ],
+      "confirm_label": "Отметить переброс вне приложения",
+      "resource_key": "luck",
+      "resource_cost": 1,
+      "activation": "carried",
+      "show_resource": true
+    },
+    {
+      "key": "wish",
+      "title": "Желание",
+      "description": "<p>Действием сотворите заклинание «Желание». Потраченные заряды не восстанавливаются.</p>",
+      "requirements": [
+        "Держите меч в руке",
+        "Не чаще одного раза до следующего рассвета"
+      ],
+      "confirm_label": "Сотворить желание",
+      "resource_key": "wishes",
+      "resource_cost": 1,
+      "cooldown_dawns": 1,
+      "activation": "equipped",
+      "show_resource": true
+    }
+  ],
+  "derived_effects": [
+    {
+      "kind": "save_bonus",
+      "value": 1,
+      "activation": "carried"
+    }
+  ],
+  "roll_triggers": [
+    {
+      "event": "any",
+      "action": "reroll",
+      "scopes": [
+        "attack",
+        "ability_check",
+        "saving_throw",
+        "initiative"
+      ],
+      "label": "Удача — Клинок удачи",
+      "use_key": "luck",
+      "activation": "carried"
+    }
+  ]
+}

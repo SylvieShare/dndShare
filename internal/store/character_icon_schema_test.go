@@ -5,18 +5,6 @@ import (
 	"testing"
 )
 
-func TestCharacterIconUsesStorageImageReference(t *testing.T) {
-	for _, fragment := range []string{
-		"icon_image_id   int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL",
-		"ADD COLUMN IF NOT EXISTS icon_image_id int8 NULL REFERENCES dndshare.storage_image(id) ON DELETE SET NULL",
-		"idx_char_icon_image_id",
-	} {
-		if !strings.Contains(schemaCharactersSQL, fragment) {
-			t.Fatalf("character schema must contain %q", fragment)
-		}
-	}
-}
-
 func TestCharacterIconProtectsReferencedStorageObject(t *testing.T) {
 	if !strings.Contains(markStorageImageDeletedIfUnreferencedSQL, `dndshare."char" character WHERE character.icon_image_id = img.id`) {
 		t.Fatal("character icon must keep its storage image active while referenced")

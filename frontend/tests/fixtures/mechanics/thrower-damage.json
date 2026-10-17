@@ -1,0 +1,20 @@
+[
+  {
+    "key": "throw",
+    "label": "Бросок",
+    "condition": "При попадании брошенным молотом.",
+    "attack_mode": "thrown",
+    "dice": "d8",
+    "dice_count": 1,
+    "double_on_critical": true
+  },
+  {
+    "key": "giant",
+    "label": "Цель — великан",
+    "condition": "При броске по великану: ещё 1к8, всего +2к8.",
+    "requires_damage_key": "throw",
+    "dice": "d8",
+    "dice_count": 1,
+    "double_on_critical": true
+  }
+]

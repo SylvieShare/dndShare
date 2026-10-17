@@ -38,7 +38,7 @@ func TestSuggestImagesPostgres(t *testing.T) {
         CREATE TABLE dndshare.svg_storage(id bigint PRIMARY KEY,data text);
         CREATE TABLE dndshare.suggest(type_id bigint,id bigint,user_id bigint,value text,code text,color text,"desc" text,svg_id bigint,PRIMARY KEY(type_id,id));
         INSERT INTO dndshare.suggest(type_id,id,value,user_id) VALUES(17,1,'мм',NULL),(18,1,'other',NULL),(17,2,'custom',10);`)
-	exec(schemaSuggestImagesSQL)
+	exec(testSchemaColumns(t, "suggest", "icon_image_id"))
 	s := &Store{pool: pool}
 	install := func(typeID, id int64, suffix string) (int64, *int64, error) {
 		return s.SetSystemSuggestImage(t.Context(), typeID, id, "system-item-media/"+suffix+".webp", "/"+suffix+".webp", suffix+".webp", "image/webp", 100)

@@ -66,7 +66,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 	if len(behaviours[target.DefinitionID].Transitions) != 0 {
 		t.Fatal("implicitly created reverse transition")
 	}
-	d := battlemap.Document{Width: 10, Height: 10, Tiles: []battlemap.Tile{{ID: "torch", ModelID: saved.ID, X: 2, Y: 2}}}
+	d := battlemap.Document{Kind: "tiles", Version: battlemap.DocumentVersion, Width: 10, Height: 10, Tiles: []battlemap.Tile{{ID: "torch", ModelID: saved.ID, X: 2, Y: 2}}}
 	if err := s.HydrateMapLights(ctx, &d); err != nil {
 		t.Fatal(err)
 	}

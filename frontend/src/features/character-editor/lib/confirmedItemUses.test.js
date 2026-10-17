@@ -1,13 +1,12 @@
+import { nineLivesUse } from '../../../../tests/fixtures/mechanics.js'
 import { expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
 import { confirmedItemUses, confirmItemUse } from './confirmedItemUses'
 import { initializeItemCharges } from '@/shared/lib/itemInitialCharges'
 import { collectCharacterResources, restoreCharacterResources } from './characterResources'
 import { restoreDawnResources } from './dawnResources'
 import { createWeaponInstance, intrinsicWeaponBonus } from './magicWeapons'
 import { fillMissingMagicBases } from './magicItemSettings'
-const sql = readFileSync(new URL('../../../../../internal/store/schema/106_initial_item_charges.sql', import.meta.url), 'utf8')
-const item = { id: 134, typeId: 19, name: 'Похититель девяти жизней', data: { weapon: { base_item_id: 49, magic_bonus: 2 }, attunement: 'required', initial_charges: { mode: 'roll', formula: '1к8+1' }, confirmed_uses: [JSON.parse(sql.split('$use$')[1])] } }
+const item = { id: 134, typeId: 19, name: 'Похититель девяти жизней', data: { weapon: { base_item_id: 49, magic_bonus: 2 }, attunement: 'required', initial_charges: { mode: 'roll', formula: '1к8+1' }, confirmed_uses: [nineLivesUse] } }
 const items = new Map([['134', item]])
 const make = () => ({ lvl: { level: 5 }, weapon: ['one', 'two'].map(uid => createWeaponInstance(item, { uid, item_id: 134, count: 1, params: initializeItemCharges({ magic: { attuned: true } }, 2) })) })
 it('spends only after explicit confirmation on the right instance, stops at zero and retains +2', () => {

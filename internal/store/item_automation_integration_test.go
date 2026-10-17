@@ -43,15 +43,16 @@ func TestItemAutomationPersistence(t *testing.T) {
  CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY, url text, deleted boolean);
  INSERT INTO dndshare.item(name,type_id,data) VALUES('Старая запись',2,'{"desc":"keep"}');`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(schemaItemAutomationSQL)
-	exec(schemaItemAutomationSQL)
+	exec(testSchemaColumns(t, "item", "automation_status", "automation_note", "requires_player_interaction"))
+	exec(testSchemaChecks(t, "item", "item_automation_status_check", "item_automation_note_check"))
 	exec(`INSERT INTO dndshare.item(name,name_en,type_id,data) VALUES ('Магус','Magus',9,'{}'),('Шаман','Shaman',9,'{}');
  ALTER TABLE dndshare.item ADD COLUMN derived_from_item_id bigint, ADD COLUMN derivation_kind text;
  CREATE TABLE dndshare.source_version(id bigint,version text);
  CREATE TABLE dndshare.item_version_compatibility(item_id bigint,source_version_id bigint,status text,replaced_by_item_id bigint,adapter_code text,note text);
  CREATE TABLE dndshare.content_source(id bigint PRIMARY KEY, name text, code text);
  CREATE TABLE dndshare.item_content_source(item_id bigint,content_source_id bigint,primary_source boolean);`)
-	exec(schemaHiddenItemsSQL)
+	exec(testSchemaColumns(t, "item", "hidden"))
+	exec(`UPDATE dndshare.item SET hidden=true WHERE name_en IN ('Magus','Shaman')`)
 	s := &Store{pool: pool}
 	read := func(id int64) Item {
 		t.Helper()

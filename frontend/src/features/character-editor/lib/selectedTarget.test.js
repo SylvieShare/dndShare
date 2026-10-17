@@ -1,5 +1,5 @@
+import { oathTarget } from '../../../../tests/fixtures/mechanics.js'
 import { expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
 import { changeSelectedTarget, selectedTargets, selectedTargetRuleError } from './selectedTarget'
 import { restoreDawnResources } from './dawnResources'
 import { restoreCharacterResources } from './characterResources'
@@ -8,8 +8,7 @@ import { collectCharacterCombatEffects, matchingWeaponDamageActions } from './ch
 import { weaponDamageMenuOptions } from '@/shared/lib/weaponDamageOptions'
 import { selectedWeaponDamageExpression } from '../blocks/dnd/lib/weaponDamageAction'
 import { resolveRollMode } from '../blocks/dnd/lib/rollMode'
-const sql = readFileSync(new URL('../../../../../internal/store/schema/105_selected_target.sql', import.meta.url), 'utf8')
-const rule = JSON.parse(sql.split('$oath_target$')[1])
+const rule = oathTarget
 function fixture() {
  const item = { id: 202, typeId: 19, name: 'Лук клятвы', data: { weapon: { magic_bonus: 0 }, selected_target: structuredClone(rule), attunement: 'required' } }
  const items = new Map([['202', item]])

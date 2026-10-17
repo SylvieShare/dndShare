@@ -69,8 +69,8 @@ Canonical examples:
 suggest catalogue.
 
 Feature code does not try alternative keys such as weapon `add_attacks`, spell
-`dice_suggest_id`, feat `desc` or spell `classIds`. Startup migrations fix item
-rows before they can be read.
+`dice_suggest_id`, feat `desc` or spell `classIds`. Data imports must supply the current contract; startup migrations only define
+database structure and never repair item rows.
 
 Character-added weapon attack rows use `{count,dice_id,type_suggest_id}`. The
 weapon calculation composable adapts those rows explicitly when combining them
@@ -145,12 +145,11 @@ wizard reuse `FeatListItem` and open the standard reference modal.
 - descriptions render through `RichContent`; embedded `dice` nodes may store an
   optional manually entered numeric `average`, rendered inside the roll chip
   before the formula and retained when the node is edited;
-- startup migration recursively replaces imported dice widgets and legacy
-  tooltips in every item description: resolvable handbook entities become
-  `item`/`suggest` nodes, while unresolved source references remain usable as
-  native links;
+- rich-content producers save current `dice`, `item` and `suggest` nodes;
+  catalogue corrections run explicitly through MCP or separate data operations,
+  without startup rewrites;
 - base PHB weapons, ordinary equipment, feats and race/class abilities receive
-  idempotent `item.svg` icons from startup schema; related class mechanics may
+  explicit `item.svg` icons in catalogue data; related class mechanics may
   share semantic artwork, while every item still has an explicit
   `icon_svg_id`;
 - `ItemIcon.vue` prefers the item's `iconImageUrl`, then its SVG, and finally

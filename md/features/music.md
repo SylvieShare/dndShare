@@ -15,7 +15,8 @@ albums and tags. Albums and tracks with `isSystem=true` have no owner and are
 available to every authenticated user. Their files and metadata are read-only,
 but every user may link a system track to their own albums and tags. Those
 links are returned only to their owner.
-Stable internal `system_key` values make their startup seed idempotent. System album
+Stable internal `system_key` values identify the catalogue tracks. Their
+metadata is imported separately; structural migrations do not populate music. System album
 metadata includes the author, source page, and public-domain dedication.
 Album-track links store explicit order. Session music state stores current/next
 track, playback position, playing flag, volume, loop and crossfade settings.

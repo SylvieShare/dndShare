@@ -9,7 +9,6 @@ require (
 	github.com/aws/smithy-go v1.28.1
 	github.com/jackc/pgx/v5 v5.11.0
 	golang.org/x/image v0.46.0
-	golang.org/x/net v0.59.0
 )
 
 require (

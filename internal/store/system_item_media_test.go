@@ -36,16 +36,3 @@ func TestSystemItemMediaQueriesPreserveOwnershipAndSlots(t *testing.T) {
 		t.Fatalf("item type cover update is incomplete: %s", setSystemItemTypeCoverSQL)
 	}
 }
-
-func TestSystemItemMediaSchemaHasScopedUniqueKey(t *testing.T) {
-	for _, fragment := range []string{
-		"idx_storage_image_system_item_media_key",
-		"UNIQUE INDEX",
-		"user_id IS NULL",
-		`"key" LIKE 'system-item-media/%'`,
-	} {
-		if !strings.Contains(schemaSystemItemMediaSQL, fragment) {
-			t.Fatalf("system item media schema must contain %q", fragment)
-		}
-	}
-}

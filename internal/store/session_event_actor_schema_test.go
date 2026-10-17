@@ -1,23 +1,22 @@
 package store
 
 import (
-	"os"
 	"strings"
 	"testing"
 )
 
 func TestSessionEventActorItemSchema(t *testing.T) {
-	schema, err := os.ReadFile("schema/67_session_event_actor_item.sql")
-	if err != nil {
-		t.Fatal(err)
+	var schema strings.Builder
+	for _, part := range schemaParts {
+		schema.WriteString(part.sql)
 	}
 	for _, fragment := range []string{
-		"ADD COLUMN IF NOT EXISTS actor_item_id",
-		"REFERENCES dndshare.item(id) ON DELETE SET NULL",
+		"actor_item_id bigint",
+		"FOREIGN KEY (actor_item_id) REFERENCES dndshare.item(id) ON DELETE SET NULL",
 		"idx_session_event_actor_item",
 	} {
-		if !strings.Contains(string(schema), fragment) {
-			t.Fatalf("session event actor migration must contain %q", fragment)
+		if !strings.Contains(schema.String(), fragment) {
+			t.Fatalf("current session event structure must contain %q", fragment)
 		}
 	}
 }

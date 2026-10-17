@@ -1,0 +1,60 @@
+[
+  {
+    "key": "application_sources",
+    "name": "Источники применения",
+    "type": "object_array",
+    "fields": [
+      {
+        "key": "item",
+        "name": "Источник",
+        "type": "item",
+        "item_type": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
+      },
+      {
+        "key": "key",
+        "name": "Ключ зависимости",
+        "type": "text"
+      },
+      {
+        "key": "target",
+        "name": "На кого",
+        "type": "select",
+        "default": "self",
+        "options": [
+          {
+            "value": "self",
+            "label": "На владельца"
+          },
+          {
+            "value": "other",
+            "label": "На цель"
+          }
+        ]
+      },
+      {
+        "key": "condition",
+        "name": "Условие применения",
+        "type": "text"
+      }
+    ]
+  }
+]

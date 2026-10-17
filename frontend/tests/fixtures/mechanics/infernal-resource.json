@@ -1,0 +1,18 @@
+{
+  "use_resources": [
+    {
+      "key": "hellish_rebuke",
+      "title": "Адское возмездие",
+      "level": 3,
+      "max_use": 1,
+      "rollback_long_rest": true
+    },
+    {
+      "key": "darkness",
+      "title": "Тьма",
+      "level": 5,
+      "max_use": 1,
+      "rollback_long_rest": true
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "key": "lightning_throw",
+  "title": "Метнуть молнией",
+  "attack_mode": "thrown",
+  "range_ft": 120,
+  "resource_cost": 1,
+  "steps": [
+    {
+      "key": "line",
+      "title": "Урон по линии",
+      "kind": "damage",
+      "dice": "d6",
+      "dice_count": 4,
+      "damage_type": 9,
+      "requirements": [
+        "Все существа на линии, кроме владельца копья и конечной цели.",
+        "Действует независимо от попадания по конечной цели."
+      ],
+      "save": {
+        "ability": 2,
+        "dc": 13,
+        "half": true
+      },
+      "area": {
+        "shape": "line",
+        "width_ft": 5
+      }
+    },
+    {
+      "key": "target",
+      "title": "Урон по цели",
+      "kind": "weapon_damage",
+      "dice": "d6",
+      "dice_count": 4,
+      "damage_type": 9,
+      "requirements": [
+        "При попадании по конечной цели."
+      ]
+    }
+  ]
+}

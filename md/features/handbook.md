@@ -76,11 +76,9 @@ served through `cover_image_id`; the compact icon slot is reserved for explicit
 portrait marks such as the shared kobold-family icon. External CDN URLs are
 never served by the application and artwork is never stored in `item.data`.
 The importer also resolves the upstream book code/name to `content_source` and
-replaces the creature's `item_content_source` link on every import. Startup SQL
-backfills the same relation for creatures imported before this contract, so the
-handbook publication filter is server-backed for bestiary entries as well.
+replaces the creature's `item_content_source` link on every import. Startup SQL defines structure only; catalogue corrections are explicit data operations.
 Publication identity is the trimmed, uppercase code within one game system and
-edition. Startup SQL merges case-only duplicates, preserves their item links and
+edition. Явная подготовка данных объединяет регистровые дубли, сохраняет ссылки и
 normalizes the D&D 5e spell/bestiary catalogue to one Russian display name per
 known code; `DMG` and `DMF5E` remain separate because they identify different
 books. Repeated bestiary imports refresh the display name from upstream metadata.
@@ -89,7 +87,7 @@ bestiary rows without an object key, so later runs are no-ops. If
 an upstream file is already unavailable, its dead URL and item association are
 removed and the item falls back to the type cover.
 
-Saved user items are backfilled to that source during startup. Personal source
+Existing items retain their saved source; startup does not backfill catalogue rows. Personal source
 ids are never stored or read in `item.data`, and item/suggest id reads expose
 only base rows plus the current user's own rows.
 
@@ -124,8 +122,7 @@ evaluates publication availability from explicit item decisions for a target edi
   `RichContent` adapter, which resolves dice/item/suggest inline nodes;
 - parent/child identity uses item ids, not suggest ids.
 
-Startup SQL converts former single bindings, spell suggest ids, alternate feat
-keys, scalar costs and ability `choice` objects before serving traffic. A small
+Imports must supply current bindings and metadata; startup does not convert rows. A small
 read adapter still accepts singular `choice` on externally imported item data,
 but all editors and writes use `choices`; there are no admin migration jobs.
 
@@ -320,7 +317,7 @@ visual contracts.
 доступен и для пустого справочника, поэтому первую запись можно создать с листа.
 
 Типы 3, 4 и 18 имеют строго одинаковый `fields`, включая расовые и классовые
-привязки. Миграция 72 объединяет полный контракт и устанавливает trigger,
+привязки. Общий контракт поддерживается метаданными и trigger,
 синхронизирующий изменения `fields` между всеми тремя типами. Контент существующих
 способностей не переписывается. Копии JSON-схем и SQL-снимок сверяются тестом.
 
@@ -367,9 +364,9 @@ visual contracts.
 ## Schemas
 
 Human-readable item-type schemas live in `resources/items/item_N_shema.json`.
-`internal/store/schema/02_handbook.sql` seeds/extends the corresponding DB
-fields idempotently. When changing a field, update both representations and
-migrate stored `item.data` before deleting the old key.
+Corresponding DB fields are catalogue metadata, maintained separately from DDL.
+When changing a field, update both representations and explicitly convert
+stored `item.data` before switching consumers and deleting an old key.
 
 Important types include weapons (1), items (2), race/class abilities (3/4),
 spells (5), bestiary (6), feats (7), races/classes (8/9), potions (10),
