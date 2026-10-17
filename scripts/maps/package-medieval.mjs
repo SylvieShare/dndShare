@@ -10,6 +10,7 @@ import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
 import { structureMetal, structureLiquid, structureFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
+import { medievalTextureSizes } from './medieval_texture_sizes.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -41,12 +42,7 @@ if (!process.argv.includes('--publish-manifest')) {
     const report = reports[tier] = JSON.parse(await fs.readFile(path.join(directory, 'report.json'), 'utf8'));
     if (JSON.stringify(report.recipe)!==JSON.stringify(recipe)) throw new Error('Stale baked recipe; prepare both tiers again');
     const doc = await io.read(path.join(directory, 'model.glb'));
-    const size = tier === 'render' ? (candidate ? 768 : 1024) : (candidate ? 384 : 512);
-    const requestedDataSize = recipe[tier+'DataSize'];
-    const dataSize = requestedDataSize===undefined ? size/2 : requestedDataSize*(candidate ? .75 : 1);
-    if (requestedDataSize!==undefined && (!Number.isInteger(requestedDataSize) || requestedDataSize<4 || requestedDataSize>report.recipe[tier+'BakeSize'] || !Number.isInteger(dataSize))) {
-      throw new Error('Data map size must be a positive integer within the source bake, including the compact scale');
-    }
+    const { colourSize: size, dataSize } = medievalTextureSizes(recipe, tier, candidate);
     const bakedCoverage = rasterizeSurface(doc, report.recipe[tier+'BakeSize'], report.recipe[tier+'BakeSize'],
       uvSurfaceTracker(report.recipe[tier+'BakeSize'], report.recipe[tier+'BakeSize']));
     const packedCoverage = rasterizeSurface(doc, size, size, uvSurfaceTracker(size, size));
