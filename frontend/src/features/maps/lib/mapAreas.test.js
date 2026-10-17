@@ -1,5 +1,6 @@
 import { expect, it } from "vitest";
 import { areaAppearance, assignArea, pruneAreas } from "./mapAreas";
+import { lightOpacity } from "./mapLighting";
 import { createTileLayer } from "../rendering/tileLayer";
 import { BoxGeometry, Matrix4, MeshStandardMaterial } from "three";
 const document = () => ({
@@ -77,4 +78,30 @@ it("separates opaque and ghost instances of the same model without changing cach
   layer.destroy();
   geometry.dispose();
   material.dispose();
+});
+
+it("fog keeps tile silhouettes, hides every area object including items on its tiles and silences attached/manual lights in every view", () => {
+  const d = document();
+  d.areas[0].hidden = false;
+  d.areas[0].fog = true;
+  d.objects.push({ id: "on-floor", placement: { tileId: "a" } });
+  d.areas[1].objectIds.push("on-floor");
+  const lights = [
+    { enabled: true, anchor: { kind: "tile", id: "a" } },
+    { enabled: true, anchor: { kind: "object", id: "on-floor" } },
+    { enabled: true, areaId: "room" },
+  ];
+  for (const mode of ["hide", "ghost"]) {
+    const look = areaAppearance(d, mode);
+    expect([...look.foggedTiles]).toEqual(["a"]);
+    expect(look.hiddenTiles.size).toBe(0);
+    expect([...look.hiddenObjects]).toEqual(["chest", "on-floor"]);
+    for (const light of lights) expect(lightOpacity(light, d, mode)).toBe(0);
+  }
+  d.areas[0].fog = false;
+  expect(areaAppearance(d).hiddenObjects.size).toBe(0);
+  for (const light of lights) {
+    expect(lightOpacity(light, d, "hide")).toBe(1);
+    expect(light.enabled).toBe(true);
+  }
 });

@@ -26,6 +26,7 @@
         ><template #icon><Eye /></template
       ></IconToggleButton>
       <ColorPresetPicker
+        variant="button"
         :model-value="light.color"
         :colors="colours"
         allow-custom

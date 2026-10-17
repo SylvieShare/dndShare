@@ -81,7 +81,7 @@ for (const mobile of [false, true])
         name: "Выключить тени: Факел",
         exact: true,
       }),
-    ).toHaveClass(/share-icon-toggle/);
+    ).toHaveCount(0);
     const commands = page.getByRole("list", {
       name: "Команды управления картой",
     });

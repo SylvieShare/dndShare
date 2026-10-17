@@ -13,15 +13,13 @@
         id: area.id,
         name: area.name,
         color: area.color || DEFAULT_AREA_COLOR,
+        hidden: area.hidden,
         count: area.tileIds.length + area.objectIds.length,
       }"
       :selected="editor.focusedArea === area.id"
       @select="emit('focus', area.id)"
-    >
-      <template #actions
-        ><EyeOff v-if="area.hidden" :size="16" aria-label="Область скрыта"
-      /></template>
-    </MapEntityRow>
+      @visibility="editor.setAreaHidden(area.id, $event)"
+    />
     <p v-if="!editor.draft.document.areas.length" class="map-hint">
       Областей пока нет.
     </p>
@@ -29,7 +27,6 @@
 </template>
 <script setup>
 import { AddButton } from "@sylvieshare/share-ui";
-import { EyeOff } from "@lucide/vue";
 import { DEFAULT_AREA_COLOR } from "../lib/mapAreas";
 import MapEntityRow from "./MapEntityRow.vue";
 const props = defineProps({ editor: Object });

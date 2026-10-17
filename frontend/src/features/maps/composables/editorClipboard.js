@@ -163,7 +163,11 @@ export function editorClipboard(e) {
       : null;
     if (e.previewObject)
       e.previewObject.value = targets.objects.length
-        ? { ...targets.objects[0], group: targets.objects }
+        ? {
+            ...targets.objects[0],
+            group: targets.objects,
+            valid: targets.valid,
+          }
         : null;
   }
   function begin(point) {
@@ -187,10 +191,7 @@ export function editorClipboard(e) {
   }
   function paste(point, { repeat = false } = {}) {
     preview(point);
-    if (!targets?.valid) {
-      e.error.value = "Участок нельзя вставить в эту позицию";
-      return;
-    }
+    if (!targets?.valid) return;
     const mapping = new Map(targets.tiles.map((t) => [t.id, uid()]));
     const tiles = targets.tiles.map(({ originalId, ...t }) => ({
         ...t,
@@ -217,8 +218,6 @@ export function editorClipboard(e) {
   function cancel() {
     if (e.tool.value !== "paste") return;
     e.tool.value = "select";
-    if (e.error.value === "Участок нельзя вставить в эту позицию")
-      e.error.value = "";
     payload = targets = lastPoint = null;
     e.placementHint.value = null;
     e.previewTile.value = null;

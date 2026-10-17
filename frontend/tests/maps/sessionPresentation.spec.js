@@ -72,10 +72,13 @@ for (const mobile of [false, true]) {
       name: "Выбранные элементы",
     });
     await expect(
-      focus.getByRole("switch", { name: "Скрыть область «Зал»", exact: true }),
-    ).toBeChecked();
+      focus.getByRole("button", {
+        name: "Показать область «Зал»",
+        exact: true,
+      }),
+    ).toHaveAttribute("aria-pressed", "false");
     await focus
-      .getByRole("switch", { name: "Скрыть область «Зал»", exact: true })
+      .getByRole("button", { name: "Показать область «Зал»", exact: true })
       .click();
     await expect
       .poll(() =>
@@ -91,8 +94,8 @@ for (const mobile of [false, true]) {
     await expect(page.locator(".map-sidebar")).toHaveClass(/collapsed/);
     await page.getByRole("button", { name: "Области", exact: true }).click();
     await expect(
-      focus.getByRole("switch", { name: "Скрыть область «Зал»", exact: true }),
-    ).not.toBeChecked();
+      focus.getByRole("button", { name: "Скрыть область «Зал»", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
   });
   test(`session solar edits are durable scene changes ${mobile ? "mobile" : "desktop"}`, async ({
     page,

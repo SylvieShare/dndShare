@@ -13,6 +13,10 @@ export function createObjectPreview(fog, assets) {
     position = null;
   function update(object) {
     target = object;
+    root.userData.outlineStyle =
+      object?.valid === false || object?.invalidSurface
+        ? "invalid"
+        : "selected";
     root.visible = !!object;
     if (!object) {
       disposeObjects(root);

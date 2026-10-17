@@ -29,6 +29,7 @@ test("light presets place onto the map and sunlight sliders persist with undo", 
   await expect
     .poll(() => page.evaluate(() => window.lastSaved?.document.sun.enabled))
     .toBe(false);
+  await expect(panel.getByRole("slider")).toHaveCount(0);
   await panel
     .getByRole("switch", { name: "Дневной свет", exact: true })
     .click();
@@ -156,7 +157,8 @@ test("a source binds to a selected tile, follows it and belongs to its hidden ar
     .getByRole("button", { name: "Создать область", exact: true })
     .click();
   await page
-    .getByRole("switch", { name: "Скрыть область «Область 1»", exact: true })
+    .getByRole("complementary", { name: "Выбранные элементы", exact: true })
+    .getByRole("button", { name: "Скрыть область «Область 1»", exact: true })
     .click();
   await expect
     .poll(() =>

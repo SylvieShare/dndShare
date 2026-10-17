@@ -50,3 +50,27 @@ func TestAreaColorsDefaultAndSurviveRoundTrip(t *testing.T) {
 		t.Fatalf("colors lost: %+v", roundTrip.Areas)
 	}
 }
+
+func TestAreaFogRoundTripAndPublicTokens(t *testing.T) {
+	d := Document{Areas: []Area{{ID: "room", Name: "Fog", Fog: true, TileIDs: []string{"floor"}}}}
+	data, err := json.Marshal(d)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var decoded Document
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if !decoded.Areas[0].Fog {
+		t.Fatal("fog lost")
+	}
+	state := State{Tokens: []Token{{ID: "hidden", Placement: &PlacementAnchor{TileID: "floor"}}, {ID: "visible"}}}
+	public := PublicState(decoded, state)
+	if len(public.Tokens) != 1 || public.Tokens[0].ID != "visible" {
+		t.Fatalf("fog leaked tokens: %+v", public.Tokens)
+	}
+	decoded.Areas[0].Fog = false
+	if len(PublicState(decoded, state).Tokens) != 2 {
+		t.Fatal("tokens not restored")
+	}
+}

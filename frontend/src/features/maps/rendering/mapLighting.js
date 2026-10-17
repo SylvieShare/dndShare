@@ -1,3 +1,4 @@
+import { fogAreaMembers } from "../lib/mapAreas";
 import {
   DirectionalLight,
   HemisphereLight,
@@ -94,12 +95,13 @@ export function createMapLighting(scene, gpu, assets) {
         gpu.shadowMap.needsUpdate = true;
       }
     }
+    const mist = fogAreaMembers(d);
     const all = [
       ...(d.lights || []).filter((l) => l.id !== options.previewLight?.id),
       ...(options.previewLight ? [options.previewLight] : []),
     ].map((l) => ({
       ...lightPose(l, d, assets.catalogue(), context),
-      opacity: lightOpacity(l, d, options.areaMode),
+      opacity: lightOpacity(l, d, options.areaMode, mist),
     }));
     for (const light of all) if (light.moving) light.worldHeight += 0.22;
     sources = all;

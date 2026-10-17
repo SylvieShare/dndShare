@@ -63,7 +63,7 @@ test("the compact area list opens a focus with every model and light, and edits 
     panel.getByRole("heading", { name: "Зелёный зал", exact: true }),
   ).toBeVisible();
   await panel
-    .getByRole("switch", { name: "Скрыть область «Зелёный зал»", exact: true })
+    .getByRole("button", { name: "Скрыть область «Зелёный зал»", exact: true })
     .click();
   await expect(
     panel.getByRole("heading", { name: "Зелёный зал", exact: true }),
@@ -72,7 +72,10 @@ test("the compact area list opens a focus with every model and light, and edits 
     6,
   );
   await panel
-    .getByRole("switch", { name: "Скрыть область «Зелёный зал»", exact: true })
+    .getByRole("button", {
+      name: "Показать область «Зелёный зал»",
+      exact: true,
+    })
     .click();
   await panel
     .getByRole("button", { name: "Убрать Пол 1 из области", exact: true })

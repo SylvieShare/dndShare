@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 for (const mobile of [false, true])
-  test(`light rows have a framed power button and an independent shadow icon ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`light rows expose only power; shadow controls stay in the inspector ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     await page.setViewportSize(
@@ -43,11 +43,13 @@ for (const mobile of [false, true])
     await panel
       .getByRole("button", { name: "Включить свет: Факел", exact: true })
       .click();
-    const shadows = panel.getByRole("button", {
-      name: "Выключить тени: Факел",
+    await expect(panel.getByRole("button", { name: /тени:/ })).toHaveCount(0);
+    await panel.getByRole("button", { name: "Факел", exact: true }).click();
+    await expect(inspector).toBeVisible();
+    const shadows = inspector.getByRole("button", {
+      name: "Выключить тени",
       exact: true,
     });
-    await expect(shadows).toHaveAttribute("aria-pressed", "true");
     await shadows.click();
     await expect
       .poll(() =>
@@ -57,18 +59,12 @@ for (const mobile of [false, true])
     expect(
       await page.evaluate(() => window.lastSaved.document.lights[0].enabled),
     ).toBe(true);
-    await expect(
-      panel.getByRole("button", { name: "Включить тени: Факел", exact: true }),
-    ).toHaveAttribute("aria-pressed", "false");
-    await expect(inspector).toHaveCount(0);
-    await panel
-      .getByRole("button", { name: "Включить тени: Факел", exact: true })
-      .press("Space");
+    await inspector
+      .getByRole("button", { name: "Включить тени", exact: true })
+      .click();
     await expect
       .poll(() =>
         page.evaluate(() => window.lastSaved?.document.lights[0].shadows),
       )
       .toBe(true);
-    await panel.getByRole("button", { name: "Факел", exact: true }).click();
-    await expect(inspector).toBeVisible();
   });

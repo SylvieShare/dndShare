@@ -24,6 +24,17 @@
       @keydown.stop
       ><template #icon><Lightbulb :size="24" /></template
     ></IconToggleButton>
+    <IconToggleButton
+      v-else-if="entry.kind === 'area'"
+      :model-value="!entry.hidden"
+      :color="entry.color"
+      :label="`${entry.hidden ? 'Показать' : 'Скрыть'} область «${entry.name}»`"
+      @update:model-value="emit('visibility', !$event)"
+      @click.stop
+      @dblclick.stop
+      @keydown.stop
+      ><template #icon><Eye :size="24" /></template
+    ></IconToggleButton>
     <span
       v-else
       class="map-entity-thumbnail"
@@ -66,33 +77,27 @@
     <strong v-if="entry.count" class="map-entity-count"
       >×{{ entry.count }}</strong
     >
-    <IconToggleButton
-      v-if="entry.kind === 'light' && toggleShadows"
-      :model-value="!!entry.item.shadows"
-      :color="entry.color"
-      :label="`${entry.item.shadows ? 'Выключить' : 'Включить'} тени: ${entry.name}`"
-      @update:model-value="emit('toggle-shadows', entry.id)"
-      @click.stop
-      @dblclick.stop
-      @keydown.stop
-      ><template #icon><MapShadowIcon /></template
-    ></IconToggleButton>
     <slot name="actions" />
   </BaseTile>
 </template>
 <script setup>
 import { IconToggleButton, BaseTile } from "@sylvieshare/share-ui";
-import MapShadowIcon from "./MapShadowIcon.vue";
 import { hasSelectedText } from "../lib/textSelection";
-import { Box, Group, Lightbulb, LightbulbOff, UserRound } from "@lucide/vue";
+import {
+  Box,
+  Eye,
+  Group,
+  Lightbulb,
+  LightbulbOff,
+  UserRound,
+} from "@lucide/vue";
 defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,
   toggleLight: Boolean,
-  toggleShadows: Boolean,
   selectable: { type: Boolean, default: true },
 });
-const emit = defineEmits(["select", "toggle", "toggle-shadows", "focus"]);
+const emit = defineEmits(["select", "toggle", "visibility", "focus"]);
 </script>
 <style scoped>
 .map-entity-row {

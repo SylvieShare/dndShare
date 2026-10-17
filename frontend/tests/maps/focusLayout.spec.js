@@ -95,7 +95,7 @@ test("focus scrolls inside its frame, retains the heading, and uses compact mute
     exact: true,
   });
   await detach.scrollIntoViewIfNeeded();
-  expect(await tile.locator("button").count()).toBe(2);
+  expect(await tile.locator("button").count()).toBe(1);
   const tileBox = await tile.boundingBox(),
     detachBox = await detach.boundingBox();
   expect(detachBox.x).toBeGreaterThanOrEqual(tileBox.x + tileBox.width);

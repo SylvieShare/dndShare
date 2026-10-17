@@ -37,6 +37,7 @@ export function createTileOutline(gpu, assets) {
     polygonOffsetFactor: -1,
     polygonOffsetUnits: -1,
   });
+  const invalid = new MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
   const objectHover = hover.clone();
   objectHover.color.setRGB(0, 0, 0.55);
   const objectSelected = selected.clone();
@@ -47,6 +48,9 @@ export function createTileOutline(gpu, assets) {
     depthWrite: false,
     toneMapped: false,
     uniforms: {
+      selectionColour: { value: new Color(TILE_ACCENT) },
+      hasSelectionColour: { value: false },
+      invalidColour: { value: new Color(0xff4f58) },
       mask: { value: target.texture },
       texel: { value: new Vector2(1, 1) },
       tileColour: { value: new Color(TILE_ACCENT) },
@@ -54,13 +58,16 @@ export function createTileOutline(gpu, assets) {
     },
     vertexShader: `varying vec2 vUv;
       void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`,
-    fragmentShader: `uniform sampler2D mask; uniform vec2 texel; uniform vec3 tileColour; uniform vec3 objectColour;
+    fragmentShader: `uniform sampler2D mask; uniform vec2 texel; uniform vec3 tileColour; uniform vec3 objectColour; uniform vec3 selectionColour; uniform vec3 invalidColour; uniform bool hasSelectionColour;
       varying vec2 vUv;
       void main() {
         vec3 center = texture2D(mask, vUv).rgb;
         vec3 edge = vec3(0.0);
+        float invalidEdge = 0.0;
         for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) {
           vec2 offset = vec2(float(x), float(y)) * texel;
+          vec3 sampleMask = texture2D(mask, vUv + offset * 2.0).rgb;
+          invalidEdge = max(invalidEdge, min(sampleMask.r, min(sampleMask.g, sampleMask.b)));
           edge.r = max(edge.r, texture2D(mask, vUv + offset).r);
           edge.g = max(edge.g, texture2D(mask, vUv + offset * 2.0).g);
           edge.b = max(edge.b, texture2D(mask, vUv + offset).b);
@@ -68,7 +75,10 @@ export function createTileOutline(gpu, assets) {
           edge.b = max(edge.b, outerObject * step(0.75, outerObject));
         }
         edge = max(edge - center, vec3(0.0));
-        gl_FragColor = vec4(edge.b > 0.0 ? objectColour : tileColour, max(max(edge.r * 0.55, edge.g), edge.b));
+        vec3 colour = edge.b > 0.0 ? objectColour : tileColour;
+        if (hasSelectionColour && (edge.g > 0.0 || edge.b > 0.75)) colour = selectionColour;
+        if (invalidEdge - min(center.r, min(center.g, center.b)) > 0.0) colour = invalidColour;
+        gl_FragColor = vec4(colour, max(max(edge.r * 0.55, edge.g), edge.b));
         #include <colorspace_fragment>
       }`,
   });
@@ -85,6 +95,9 @@ export function createTileOutline(gpu, assets) {
     root.clear();
   }
   function update(document, options, tier) {
+    shader.uniforms.hasSelectionColour.value = !!options.selectionColor;
+    if (options.selectionColor)
+      shader.uniforms.selectionColour.value.set(options.selectionColor);
     const selection = new Set(options.selectedTiles || [options.selectedTile]);
     const hidden = new Set(options.previewTile?.tileIds || []);
     const tiles = document.tiles
@@ -144,13 +157,15 @@ export function createTileOutline(gpu, assets) {
             source.push({
               mesh,
               material:
-                preview.userData.outlineType === "object"
-                  ? preview.userData.outlineStyle === "hover"
-                    ? objectHover
-                    : objectSelected
-                  : preview.userData.outlineStyle === "hover"
-                    ? hover
-                    : selected,
+                preview.userData.outlineStyle === "invalid"
+                  ? invalid
+                  : preview.userData.outlineType === "object"
+                    ? preview.userData.outlineStyle === "hover"
+                      ? objectHover
+                      : objectSelected
+                    : preview.userData.outlineStyle === "hover"
+                      ? hover
+                      : selected,
             });
         });
       }
@@ -254,6 +269,7 @@ export function createTileOutline(gpu, assets) {
     motion.clear();
     target.dispose();
     depth.dispose();
+    invalid.dispose();
     hover.dispose();
     selected.dispose();
     objectHover.dispose();

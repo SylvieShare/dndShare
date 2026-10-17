@@ -24,6 +24,7 @@ type Area struct {
 	ID        string   `json:"id"`
 	Name      string   `json:"name"`
 	Hidden    bool     `json:"hidden"`
+	Fog       bool     `json:"fog"`
 	TileIDs   []string `json:"tileIds"`
 	ObjectIDs []string `json:"objectIds"`
 }

@@ -62,6 +62,7 @@
           :document="e.draft.document"
           :state="canvasState || e.draft.state"
           :area-mode="sessionMode ? (playerPreview ? 'hide' : 'ghost') : 'hide'"
+          :selection-color="e.areaSelectionColor"
           :selected-token="selectedToken"
           :surface-placement="surfacePlacement"
           :master="!playerPreview"
@@ -211,7 +212,17 @@ const reference = ref(null),
   selectionPanel = ref(null),
   sidebar = ref(null);
 e.handle = handleGesture;
+e.dismissFocus = () => {
+  e.clearAreaFocus(true);
+  e.setTileSelection([]);
+  e.setObjectSelection([]);
+  e.selectedLight = "";
+  e.selection = null;
+  emit("selection");
+};
 const placement = useEditorPlacement(e, canvas);
+e.observeAreaFrame = (target, id, changed) =>
+  canvas.value?.observeAreaFrame(target, id, changed);
 e.observeLightFrame = (target, id, changed) =>
   canvas.value?.observeLightFrame(target, id, changed);
 e.focusLight = async (id) => {
@@ -234,11 +245,8 @@ useMapEditorKeys(
   e,
   canvas,
   placement,
-  () =>
-    !props.active ||
-    confirmClose.value ||
-    referenceOpen.value ||
-    props.playerPreview,
+  () => !props.active || confirmClose.value || referenceOpen.value,
+  () => props.playerPreview,
 );
 function openReference() {
   if (!isAdmin.value) return;

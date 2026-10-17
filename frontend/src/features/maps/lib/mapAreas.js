@@ -9,11 +9,28 @@ export function hiddenAreaMembers(document) {
     }
   return { tiles, objects };
 }
+export function fogAreaMembers(document) {
+  const tiles = new Set(),
+    objects = new Set();
+  for (const area of document.areas || [])
+    if (area.fog) {
+      area.tileIds.forEach((id) => tiles.add(id));
+      area.objectIds.forEach((id) => objects.add(id));
+    }
+  for (const object of document.objects || [])
+    if (tiles.has(object.placement?.tileId)) objects.add(object.id);
+  return { tiles, objects };
+}
 export function areaAppearance(document, mode = "hide") {
-  const members = hiddenAreaMembers(document);
+  const members = hiddenAreaMembers(document),
+    mist = fogAreaMembers(document);
   return {
     hiddenTiles: mode === "hide" ? members.tiles : new Set(),
-    hiddenObjects: mode === "hide" ? members.objects : new Set(),
+    hiddenObjects: new Set([
+      ...(mode === "hide" ? members.objects : []),
+      ...mist.objects,
+    ]),
+    foggedTiles: mist.tiles,
     tileOpacity: (id) => (mode === "ghost" && members.tiles.has(id) ? 0.12 : 1),
     objectOpacity: (id) =>
       mode === "ghost" && members.objects.has(id) ? 0.12 : 1,

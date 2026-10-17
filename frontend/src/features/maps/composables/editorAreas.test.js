@@ -111,3 +111,67 @@ it("membership changes restore the whole focused selection without creating sele
   expect(e.selectedTiles.value).toEqual([]);
   expect(e.selectedObjects.value).toEqual([]);
 });
+
+it("Cmd-click transfers or removes membership without losing area focus, and consumes the rest of that gesture", async () => {
+  const { e, areas } = setup();
+  areas.selectArea("room");
+  expect(
+    areas.handleMembership({
+      phase: "start",
+      hit: { tileId: "b" },
+      event: { metaKey: true },
+    }),
+  ).toBe(true);
+  expect(e.draft.value.document.areas[1].tileIds).toEqual([]);
+  expect(e.selectedTiles.value).toEqual(["a", "b"]);
+  expect(areas.handleMembership({ phase: "move" })).toBe(true);
+  expect(areas.handleMembership({ phase: "end" })).toBe(true);
+  await nextTick();
+  expect(areas.focusedArea.value).toBe("room");
+  areas.handleMembership({
+    phase: "start",
+    hit: { objectId: "one" },
+    event: { ctrlKey: true },
+  });
+  areas.handleMembership({ phase: "end" });
+  await nextTick();
+  expect(e.selectedObjects.value).toEqual([]);
+  expect(e.draft.value.document.objects).toHaveLength(2);
+  expect(areas.focusedArea.value).toBe("room");
+  expect(
+    areas.handleMembership({ phase: "start", hit: { tileId: "a" }, event: {} }),
+  ).toBe(false);
+});
+it("area fog is undoable document state, not a rewrite of light preferences or object membership", () => {
+  const { e, areas } = setup();
+  areas.setAreaFog("room", true);
+  expect(e.change).toHaveBeenCalledOnce();
+  expect(e.draft.value.document.areas[0].fog).toBe(true);
+  areas.setAreaFog("room", true);
+  expect(e.change).toHaveBeenCalledOnce();
+  expect(e.draft.value.document.areas[0].tileIds).toEqual(["a"]);
+});
+
+it("Cmd-click toggles standalone light membership and treats an attached marker as its model", () => {
+  const { e, areas } = setup();
+  e.draft.value.document.lights = [
+    { id: "manual", areaId: "other" },
+    { id: "bound", anchor: { kind: "tile", id: "b" } },
+  ];
+  areas.selectArea("room");
+  const click = (lightId) => {
+    areas.handleMembership({
+      phase: "start",
+      hit: { lightId },
+      event: { metaKey: true },
+    });
+    areas.handleMembership({ phase: "end" });
+  };
+  click("manual");
+  expect(e.draft.value.document.lights[0].areaId).toBe("room");
+  click("manual");
+  expect(e.draft.value.document.lights[0].areaId).toBe("");
+  click("bound");
+  expect(e.selectedTiles.value).toEqual(["a", "b"]);
+  expect(areas.focusedArea.value).toBe("room");
+});

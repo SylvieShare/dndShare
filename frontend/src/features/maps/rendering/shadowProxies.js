@@ -9,7 +9,7 @@ import {
   DynamicDrawUsage,
 } from "three";
 import { tileTransform } from "./tileTransform";
-import { hiddenAreaMembers } from "../lib/mapAreas";
+import { hiddenAreaMembers, fogAreaMembers } from "../lib/mapAreas";
 
 // The shadow asset shares the visible model's local coordinate system. Never
 // extrude gameplay blocker polygons: they fill stairs, bowls and door openings.
@@ -39,6 +39,7 @@ export function createShadowProxies(assets) {
     objectPreview,
   ) {
     const hidden = hiddenAreaMembers(document),
+      mist = fogAreaMembers(document),
       ignored = new Set(options.previewTile?.tileIds || []);
     const tiles = [
       ...placed.filter((t) => !ignored.has(t.id)),
@@ -58,7 +59,7 @@ export function createShadowProxies(assets) {
     const props = [
       ...objects.filter((o) => !previewIds.has(o.id)),
       ...previews,
-    ].filter((o) => !hidden.objects.has(o.id));
+    ].filter((o) => !hidden.objects.has(o.id) && !mist.objects.has(o.id));
     const buckets = new Map();
     for (const item of [
       ...tiles.map((tile) => ({ tile, model: assets.metadata(tile.modelId) })),

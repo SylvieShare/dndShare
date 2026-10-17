@@ -90,6 +90,7 @@ export function editorAreas(e) {
         id,
         name: `Область ${m.document.areas.length + 1}`,
         hidden: false,
+        fog: false,
         color: DEFAULT_AREA_COLOR,
         tileIds: [],
         objectIds: [],
@@ -129,6 +130,55 @@ export function editorAreas(e) {
     e.change(() => {
       area[key] = area[key].filter((item) => item !== memberId);
     });
+  }
+  let membershipClick = false;
+  function handleMembership({ phase, hit, event }) {
+    if (phase === "cancel") {
+      membershipClick = false;
+      return false;
+    }
+    if (membershipClick && phase !== "hover") {
+      if (phase === "end") membershipClick = false;
+      return true;
+    }
+    const area = focused.value;
+    if (phase !== "start" || !area || !(event?.metaKey || event?.ctrlKey))
+      return false;
+    const light =
+      hit?.lightId &&
+      e.draft.value.document.lights?.find((l) => l.id === hit.lightId);
+    if (light && !light.anchor) {
+      membershipClick = true;
+      e.change(() => {
+        light.areaId = light.areaId === area.id ? "" : area.id;
+      });
+      return true;
+    }
+    if (light?.anchor)
+      hit = {
+        [light.anchor.kind === "tile" ? "tileId" : "objectId"]: light.anchor.id,
+      };
+    const kind = hit?.objectId ? "object" : hit?.tileId ? "tile" : "";
+    if (!kind) return false;
+    const id = kind === "tile" ? hit.tileId : hit.objectId;
+    const key = kind === "tile" ? "tileIds" : "objectIds";
+    membershipClick = true;
+    if (area[key].includes(id)) removeAreaMember(area.id, kind, id);
+    else
+      e.change((m) =>
+        assignArea(m.document, area.id, {
+          tiles: kind === "tile" ? [id] : [],
+          objects: kind === "object" ? [id] : [],
+        }),
+      );
+    return true;
+  }
+  function setAreaFog(id, fog) {
+    const area = e.draft.value.document.areas.find((a) => a.id === id);
+    if (area && !!area.fog !== fog)
+      e.change(() => {
+        area.fog = fog;
+      });
   }
   function setAreaHidden(id, hidden) {
     const area = e.draft.value.document.areas.find((a) => a.id === id);
@@ -200,6 +250,11 @@ export function editorAreas(e) {
   }
   return {
     focusedArea,
+    areaSelectionColor: computed(() =>
+      focused.value ? focused.value.color || DEFAULT_AREA_COLOR : "",
+    ),
+    handleMembership,
+    setAreaFog,
     clearAreaFocus,
     setAreaColor,
     removeAreaMember,

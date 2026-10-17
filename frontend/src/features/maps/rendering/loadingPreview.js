@@ -17,13 +17,17 @@ export function createLoadingPreview(assets, onChange = () => {}) {
     side: DoubleSide,
     transparent: true,
     depthWrite: false,
-    uniforms: { time: { value: 0 }, opacity: { value: 0.95 } },
+    uniforms: {
+      time: { value: 0 },
+      opacity: { value: 0.95 },
+      invalid: { value: 0 },
+    },
     vertexShader: `varying vec2 vUv; void main(){ vUv=uv;vec4 p=vec4(position,1.0);
         #ifdef USE_INSTANCING
         p=instanceMatrix*p;
         #endif
         gl_Position=projectionMatrix*modelViewMatrix*p; }`,
-    fragmentShader: `varying vec2 vUv; uniform float time; uniform float opacity;
+    fragmentShader: `varying vec2 vUv; uniform float time; uniform float opacity; uniform float invalid;
       void main(){
         vec2 p=vUv-0.5; float radius=length(p);
         float checker=mod(floor(vUv.x*8.0)+floor(vUv.y*8.0),2.0);
@@ -32,7 +36,7 @@ export function createLoadingPreview(assets, onChange = () => {}) {
         float angle=mod(atan(p.y,p.x)-time*3.0+6.283185,6.283185)/6.283185;
         colour=mix(colour,vec3(0.9,0.77,1.0),ring*(0.15+0.85*angle));
         float border=step(0.46,max(abs(p.x),abs(p.y)));
-        gl_FragColor=vec4(mix(colour,vec3(0.67,0.43,0.96),border),opacity);
+        gl_FragColor=vec4(mix(colour,mix(vec3(0.67,0.43,0.96),vec3(1.0,0.2,0.26),invalid),border),opacity);
         #include <colorspace_fragment>
       }`,
   });
@@ -68,7 +72,12 @@ export function createLoadingPreview(assets, onChange = () => {}) {
         const model =
           metadata.get(item.modelId) || assets.metadata(item.modelId);
         if (!model) continue;
-        const mesh = new Mesh(geometry, material),
+        const invalid =
+          (type === "tile" ? options.previewTile : options.previewObject)
+            ?.valid === false || item.invalidSurface;
+        const previewMaterial = invalid ? material.clone() : material;
+        if (invalid) previewMaterial.uniforms.invalid.value = 1;
+        const mesh = new Mesh(geometry, previewMaterial),
           size =
             type === "tile"
               ? tileSize(item, model)

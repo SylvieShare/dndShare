@@ -1,6 +1,12 @@
 import { nextTick, onMounted, onBeforeUnmount } from "vue";
 import { hasSelectedText } from "../lib/textSelection";
-export function useMapEditorKeys(editor, canvas, placement, blocked) {
+export function useMapEditorKeys(
+  editor,
+  canvas,
+  placement,
+  blocked,
+  readonly = () => false,
+) {
   function keydown(event) {
     if (
       event.defaultPrevented ||
@@ -8,14 +14,21 @@ export function useMapEditorKeys(editor, canvas, placement, blocked) {
       document.querySelector('[role="dialog"]')
     )
       return;
-    if (event.target.closest("input,textarea,select,[contenteditable]")) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      placement.cancel();
+      editor.handle({ phase: "cancel" });
+      editor.dismissFocus();
+      return;
+    }
+    if (
+      readonly() ||
+      event.target.closest("input,textarea,select,[contenteditable]")
+    )
+      return;
     if (event.key.startsWith("Arrow")) {
       event.preventDefault();
       canvas.value?.panArrow(event.key);
-    }
-    if (event.key === "Escape") {
-      placement.cancel();
-      editor.handle({ phase: "cancel" });
     }
     const command = event.metaKey || event.ctrlKey;
     if (command && event.code === "KeyZ") {

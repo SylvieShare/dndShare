@@ -56,7 +56,7 @@ test("light preview copies a centred framebuffer, freezes off-screen, and resume
     timeout: 10000,
   });
   await page.keyboard.up("ArrowRight");
-  await expect(preview).toContainText("Последний кадр");
+  await expect(preview).toContainText("Последний полный кадр");
   const frozen = await hash(output);
   await page.getByRole("button", { name: "Увеличить", exact: true }).click();
   await page.evaluate(

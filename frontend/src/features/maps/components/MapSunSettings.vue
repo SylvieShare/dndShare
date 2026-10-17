@@ -6,7 +6,10 @@
       :disabled="disabled || !enabled"
       @update:model-value="emit('update', 'enabled', $event)"
     />
-    <FormField :label="`Направление: ${Math.round(sun.angle)}°`" vertical
+    <FormField
+      v-if="enabled && sun.enabled"
+      :label="`Направление: ${Math.round(sun.angle)}°`"
+      vertical
       ><AppSlider
         :model-value="sun.angle"
         :min="0"
@@ -18,6 +21,7 @@
         @change="emit('finish')"
     /></FormField>
     <FormField
+      v-if="enabled && sun.enabled"
       :label="`Высота над горизонтом: ${Math.round(sun.elevation)}°`"
       vertical
       ><AppSlider

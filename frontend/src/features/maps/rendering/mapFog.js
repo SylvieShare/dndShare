@@ -46,7 +46,10 @@ export function createMapFog() {
       texture.needsUpdate = true;
     },
     material(material) {
-      material.onBeforeCompile = (shader) => {
+      const before = material.onBeforeCompile,
+        programKey = material.customProgramCacheKey();
+      material.onBeforeCompile = (shader, renderer) => {
+        before.call(material, shader, renderer);
         shader.uniforms.mapVisibility = { value: texture };
         shader.uniforms.mapSize = { value: size };
         shader.uniforms.mapMaster = master;
@@ -84,7 +87,7 @@ outgoingLight*=mapShade;
 #include <opaque_fragment>`,
           );
       };
-      material.customProgramCacheKey = () => "map-visibility-v2";
+      material.customProgramCacheKey = () => `${programKey}:map-visibility-v2`;
       return material;
     },
     destroy() {

@@ -30,12 +30,10 @@
       :key="light.id"
       :entry="light"
       toggle-light
-      toggle-shadows
       :selected="editor.selectedLight === light.id"
       @select="editor.selectLight(light.id)"
       @focus="editor.focusLight(light.id)"
       @toggle="editor.toggleLight"
-      @toggle-shadows="editor.toggleLightShadows"
     />
   </MapLightingControls>
 </template>

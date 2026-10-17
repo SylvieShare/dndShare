@@ -1,3 +1,5 @@
+import { pickMapScene } from "./mapScenePicking";
+import { createMapAreaPreview } from "./mapAreaPreview";
 import { createMapFramePreview } from "./mapFramePreview";
 import { startModelRefresh } from "../lib/currentModelRefresh";
 import { getMapModels } from "@/shared/api/mapsApi";
@@ -78,6 +80,7 @@ export async function createMapRenderer(
         tier,
         [...appearance.hiddenTiles],
         appearance.tileOpacity,
+        appearance.foggedTiles,
       );
       if (current)
         outline.update(
@@ -124,6 +127,7 @@ export async function createMapRenderer(
         tiles.advance(delta) |
         objectMotion.advance(delta, objects) |
         loadingPreview.advance(delta);
+      const mistMoving = tiles.advanceMist(elapsed);
       const flickering = lighting.advance(
         Math.min(250, elapsed),
         (id) => preview.transform(id) || tiles.transform(id),
@@ -163,7 +167,7 @@ export async function createMapRenderer(
       );
       framePreview.copy(gpu.domElement, lighting.position);
       if (moving) render();
-      else if (flickering && !flickerTimer)
+      else if ((flickering || mistMoving) && !flickerTimer)
         flickerTimer = setTimeout(() => {
           flickerTimer = 0;
           render();
@@ -171,6 +175,7 @@ export async function createMapRenderer(
     });
   }
   const framePreview = createMapFramePreview(camera, render);
+  const areaPreview = createMapAreaPreview(gpu, assets, render);
   const view = mapCamera(camera, gpu, host, render);
   const structure = structureView(assets, view);
   async function update(d, nextState, opts = {}) {
@@ -249,13 +254,20 @@ export async function createMapRenderer(
       fogKey = nextFog;
       fog.update(d, nextState, opts.master);
     }
-    preview.update(previewOptions.previewTile, placed);
+    if (
+      opts.previewObject &&
+      appearance.hiddenObjects.has(opts.previewObject.id)
+    )
+      previewOptions = { ...previewOptions, previewObject: null };
+    preview.update(previewOptions.previewTile, placed, appearance.foggedTiles);
     const posedObjects = d.objects.map((o) =>
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
     const posedTokens = (nextState?.tokens || [])
       .filter(
-        (t) => opts.master || !appearance.hiddenTiles.has(t.placement?.tileId),
+        (t) =>
+          !appearance.foggedTiles.has(t.placement?.tileId) &&
+          (opts.master || !appearance.hiddenTiles.has(t.placement?.tileId)),
       )
       .map((t) =>
         resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
@@ -273,6 +285,7 @@ export async function createMapRenderer(
     );
     objectPreview.update(
       opts.previewObject &&
+        !appearance.hiddenObjects.has(opts.previewObject.id) &&
         resolvedSurfacePosition(
           opts.previewObject,
           d,
@@ -280,6 +293,7 @@ export async function createMapRenderer(
           structure.context(),
         ),
     );
+    areaPreview.update(d, placed, posedObjects);
     surfaceAnchors.update(
       d,
       assets.catalogue(),
@@ -336,7 +350,13 @@ export async function createMapRenderer(
     ]);
     if (nextTiles !== tileKey) {
       tileKey = nextTiles;
-      tiles.rebuild(placed, tier, hiddenIds, appearance.tileOpacity);
+      tiles.rebuild(
+        placed,
+        tier,
+        hiddenIds,
+        appearance.tileOpacity,
+        appearance.foggedTiles,
+      );
     }
     outline.update(
       { ...d, tiles: placed.filter((t) => !appearance.hiddenTiles.has(t.id)) },
@@ -441,6 +461,7 @@ export async function createMapRenderer(
   return {
     update,
     observeLightFrame: framePreview.observe,
+    observeAreaFrame: areaPreview.observe,
     retry() {
       assets.retryFailed();
       return update(current, state, options);
@@ -500,50 +521,17 @@ export async function createMapRenderer(
         ? { x: hit.point.x, y: hit.point.z, elevation: hit.point.y }
         : { ...view.world(event, 0), elevation: 0 };
     },
-    pick(event) {
-      const ray = view.ray(event),
-        hits = ray.intersectObject(objects, true),
-        fixed = tiles.hit(ray),
-        pending = loadingPreview.hit(ray),
-        moving = preview.hit(ray),
-        resolvedTile =
-          moving && (!fixed || moving.distance < fixed.distance)
-            ? moving
-            : fixed;
-      const tile =
-        pending?.tileId &&
-        (!resolvedTile || pending.distance < resolvedTile.distance)
-          ? pending
-          : resolvedTile;
-      if (
-        pending?.objectId &&
-        (!tile || pending.distance < tile.distance) &&
-        (!hits[0] || pending.distance < hits[0].distance)
-      )
-        return pending;
-      const lamp = lighting.pick(ray);
-      if (lamp) return lamp;
-      const surfaceAnchor = surfaceAnchors.hit(ray);
-      if (surfaceAnchor) return surfaceAnchor;
-      const anchor = anchors.hit(ray);
-      if (
-        anchor &&
-        (!tile || anchor.distance < tile.distance) &&
-        (!hits[0] || anchor.distance < hits[0].distance)
-      )
-        return anchor;
-      for (const hit of hits) {
-        if (tile && tile.distance < hit.distance) return tile;
-        let node = hit.object;
-        while (node) {
-          if (node.userData.objectId)
-            return { objectId: node.userData.objectId };
-          if (node.userData.tokenId) return { tokenId: node.userData.tokenId };
-          node = node.parent;
-        }
-      }
-      return tile;
-    },
+    pick: (event) =>
+      pickMapScene(event, {
+        view,
+        tiles,
+        loadingPreview,
+        preview,
+        lighting,
+        surfaceAnchors,
+        anchors,
+        objects,
+      }),
     destroy() {
       cancelAnimationFrame(assetFrame);
       stopModelRefresh();
@@ -565,6 +553,7 @@ export async function createMapRenderer(
       outline.destroy();
       fog.destroy();
       lighting.destroy();
+      areaPreview.destroy();
       assets.destroy();
       framePreview.destroy();
       gpu.dispose();

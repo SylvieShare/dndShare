@@ -1,3 +1,4 @@
+import { fogAreaMembers } from "./mapAreas";
 import { structureContext } from "./tileStructure";
 import { tileSize } from "./tilePlacement";
 import { resolvedSurfacePosition } from "./surfacePlacement";
@@ -79,22 +80,33 @@ export function lightPose(light, document, catalogue, context) {
   return { ...light, x, y, elevation, worldHeight: elevation + light.height };
 }
 export function lightArea(light, document) {
-  return (
-    (!light.anchor && light.areaId) ||
-    document.areas?.find((a) =>
-      light.anchor?.kind === "tile"
-        ? a.tileIds.includes(light.anchor.id)
-        : light.anchor?.kind === "object" &&
-          a.objectIds.includes(light.anchor.id),
-    )?.id ||
-    ""
+  if (!light.anchor) return light.areaId || "";
+  const { kind, id } = light.anchor;
+  const own = document.areas?.find((a) =>
+    (kind === "tile" ? a.tileIds : a.objectIds).includes(id),
   );
+  if (own) return own.id;
+  const parent =
+    kind === "object" &&
+    document.objects?.find((o) => o.id === id)?.placement?.tileId;
+  return document.areas?.find((a) => a.tileIds.includes(parent))?.id || "";
 }
-export function lightOpacity(light, document, mode) {
-  const hidden = document.areas?.some(
-    (a) => a.id === lightArea(light, document) && a.hidden,
-  );
-  return hidden ? (mode === "ghost" ? 0.12 : 0) : 1;
+export function lightOpacity(
+  light,
+  document,
+  mode,
+  mist = fogAreaMembers(document),
+) {
+  if (
+    light.anchor &&
+    (light.anchor.kind === "tile" ? mist.tiles : mist.objects).has(
+      light.anchor.id,
+    )
+  )
+    return 0;
+  const area = document.areas?.find((a) => a.id === lightArea(light, document));
+  if (area?.fog) return 0;
+  return area?.hidden ? (mode === "ghost" ? 0.12 : 0) : 1;
 }
 export function syncLights(document, catalogue) {
   syncBuiltinLights(document, catalogue);

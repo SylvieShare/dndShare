@@ -1,12 +1,12 @@
 <template>
   <section class="map-lighting-panel" aria-label="Освещение карты">
-    <slot name="summary" />
     <ToggleSwitch
       :model-value="enabled"
       label="Освещение"
       :disabled="disabled"
       @update:model-value="emit('update:enabled', $event)"
     />
+    <slot name="summary" />
     <MapSunSettings
       :sun="sun"
       :enabled="enabled"

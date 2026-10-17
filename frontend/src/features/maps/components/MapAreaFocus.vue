@@ -10,6 +10,14 @@
         <ActionButton
           icon-only
           variant="quiet"
+          :aria-label="`Удалить область «${area.name}»`"
+          @click="editor.removeArea(area.id)"
+          ><template #icon
+            ><Trash2 :size="18" :style="{ color: 'var(--danger)' }" /></template
+        ></ActionButton>
+        <ActionButton
+          icon-only
+          variant="quiet"
           aria-label="Снять фокус области"
           @click="editor.clearAreaFocus(true)"
           ><template #icon><X :size="18" /></template
@@ -25,8 +33,10 @@
         @enter="rename"
       />
     </FormField>
-    <FormField label="Цвет области" vertical>
+    <MapAreaPreview :editor="editor" :area="area" />
+    <div class="map-area-actions" role="group" aria-label="Отображение области">
       <ColorPresetPicker
+        variant="button"
         :model-value="area.color || DEFAULT_AREA_COLOR"
         :colors="colours"
         allow-custom
@@ -34,12 +44,21 @@
         custom-label="Свой цвет области"
         @update:model-value="editor.setAreaColor(area.id, $event)"
       />
-    </FormField>
-    <ToggleSwitch
-      :model-value="area.hidden"
-      :label="`Скрыть область «${area.name}»`"
-      @update:model-value="editor.setAreaHidden(area.id, $event)"
-    />
+      <IconToggleButton
+        :model-value="!area.hidden"
+        :color="area.color"
+        :label="`${area.hidden ? 'Показать' : 'Скрыть'} область «${area.name}»`"
+        @update:model-value="editor.setAreaHidden(area.id, !$event)"
+        ><template #icon><Eye /></template
+      ></IconToggleButton>
+      <IconToggleButton
+        :model-value="!!area.fog"
+        :color="area.color"
+        :label="`${area.fog ? 'Убрать туман с области' : 'Покрыть туманом область'} «${area.name}»`"
+        @update:model-value="editor.setAreaFog(area.id, $event)"
+        ><template #icon><CloudFog /></template
+      ></IconToggleButton>
+    </div>
     <MapInspectorSection :title="`Элементы области (${entries.length})`">
       <div class="map-area-members">
         <MapEntityRow
@@ -66,11 +85,6 @@
         </p>
       </div>
     </MapInspectorSection>
-    <RemoveButton
-      icon="trash"
-      :label="`Удалить область «${area.name}»`"
-      @click="editor.removeArea(area.id)"
-    />
   </MapFocusContent>
 </template>
 <script setup>
@@ -80,12 +94,12 @@ import {
   ColorPresetPicker,
   FormField,
   FormTextInput,
-  RemoveButton,
-  ToggleSwitch,
+  IconToggleButton,
 } from "@sylvieshare/share-ui";
-import { Group, Minus, X } from "@lucide/vue";
+import { CloudFog, Eye, Group, Minus, Trash2, X } from "@lucide/vue";
 import { DEFAULT_AREA_COLOR } from "../lib/mapAreas";
 import { areaMapEntities } from "../lib/editorEntities";
+import MapAreaPreview from "./MapAreaPreview.vue";
 import MapFocusContent from "./MapFocusContent.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 import MapInspectorSection from "./MapInspectorSection.vue";
@@ -124,6 +138,12 @@ h3 {
   margin: 0;
   font-size: 18px;
   overflow-wrap: anywhere;
+}
+.map-area-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .map-area-members {
   display: flex;

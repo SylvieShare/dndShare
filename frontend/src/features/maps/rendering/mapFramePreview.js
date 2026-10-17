@@ -28,36 +28,41 @@ export function createMapFramePreview(camera, invalidate) {
             const ratio = Math.min(globalThis.devicePixelRatio || 1, 1.5);
             const width = Math.max(1, Math.round(target.clientWidth * ratio)),
               height = Math.max(1, Math.round(target.clientHeight * ratio));
-            if (width !== target.width || height !== target.height) {
-              target.width = width;
-              target.height = height;
-            }
             const cropWidth = width * 1.6,
               cropHeight = height * 1.6;
             const x = ((projected.x + 1) * source.width) / 2 - cropWidth / 2,
               y = ((1 - projected.y) * source.height) / 2 - cropHeight / 2;
-            const left = Math.max(0, x),
-              top = Math.max(0, y),
-              right = Math.min(source.width, x + cropWidth),
-              bottom = Math.min(source.height, y + cropHeight);
-            try {
-              const ctx = target.getContext("2d");
-              ctx.clearRect(0, 0, width, height);
-              if (right > left && bottom > top)
+            // Never clear/resize the last complete frame for a partial crop.
+            if (
+              x < 0 ||
+              y < 0 ||
+              x + cropWidth > source.width ||
+              y + cropHeight > source.height
+            )
+              state = "outside";
+            else {
+              try {
+                if (width !== target.width || height !== target.height) {
+                  target.width = width;
+                  target.height = height;
+                }
+                const ctx = target.getContext("2d");
+                ctx.clearRect(0, 0, width, height);
                 ctx.drawImage(
                   source,
-                  left,
-                  top,
-                  right - left,
-                  bottom - top,
-                  ((left - x) * width) / cropWidth,
-                  ((top - y) * height) / cropHeight,
-                  ((right - left) * width) / cropWidth,
-                  ((bottom - top) * height) / cropHeight,
+                  x,
+                  y,
+                  cropWidth,
+                  cropHeight,
+                  0,
+                  0,
+                  width,
+                  height,
                 );
-              item.captured = true;
-            } catch {
-              state = "unavailable";
+                item.captured = true;
+              } catch {
+                state = "unavailable";
+              }
             }
           }
         }

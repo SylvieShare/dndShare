@@ -25,8 +25,6 @@
             <MapEntityRow
               :entry="light"
               toggle-light
-              toggle-shadows
-              @toggle-shadows="editor.toggleLightShadows"
               @toggle="editor.toggleLight"
               @select="editor.selectLight(light.id)"
               @focus="editor.focusLight(light.id)"

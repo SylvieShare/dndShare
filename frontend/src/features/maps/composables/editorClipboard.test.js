@@ -53,7 +53,10 @@ it("preserves the buffer after a blocked paste", () => {
   const { e, clipboard } = setup();
   clipboard.copy();
   clipboard.begin({ x: 1.5, y: 1.5 });
+  expect(e.previewTile.value.valid).toBe(false);
   clipboard.paste({ x: 1.5, y: 1.5 });
+  expect(e.error.value).toBe("");
+  expect(e.tool.value).toBe("paste");
   expect(e.draft.value.document.tiles).toHaveLength(1);
   clipboard.begin({ x: 4.5, y: 4.5 });
   clipboard.paste({ x: 4.5, y: 4.5 });

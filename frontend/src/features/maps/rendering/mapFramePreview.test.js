@@ -49,11 +49,21 @@ it("copies the current framebuffer around the projected source and freezes that 
   expect(ctx.drawImage).toHaveBeenCalledOnce();
   preview.destroy();
 });
-it("keeps the source at the centre even when its crop extends beyond the canvas edge", () => {
-  const { preview, source, ctx } = setup();
+it("retains the last complete pixels and dimensions as soon as any crop edge leaves the viewport", () => {
+  const { preview, source, target, ctx, changed } = setup();
+  preview.copy(source, () => new Vector3());
+  target.clientWidth = 220;
   preview.copy(source, () => new Vector3(4.9, 0, 0));
-  const [, sx, , sw, , dx, , dw] = ctx.drawImage.mock.lastCall;
-  expect(((990 - sx) * dw) / sw + dx).toBeCloseTo(100);
+  expect(ctx.drawImage).toHaveBeenCalledOnce();
+  expect(ctx.clearRect).toHaveBeenCalledOnce();
+  expect(target.width).toBe(200);
+  expect(changed.mock.lastCall[0]).toEqual({
+    state: "outside",
+    captured: true,
+  });
+  preview.copy(source, () => new Vector3());
+  expect(ctx.drawImage).toHaveBeenCalledTimes(2);
+  expect(target.width).toBe(220);
   preview.destroy();
 });
 it("does not invent an image for a source that has never been visible and isolates capture errors", () => {

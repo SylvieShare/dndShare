@@ -82,6 +82,7 @@ const props = defineProps({
   placementLight: Boolean,
   editLights: Boolean,
   selectedToken: String,
+  selectionColor: String,
   selectedTile: String,
   selectedTiles: Array,
   screenSelection: Object,
@@ -269,6 +270,8 @@ defineExpose({
       focusViewportOffset(host.value?.getBoundingClientRect(), obstacle),
     );
   },
+  observeAreaFrame: (target, id, changed) =>
+    renderer?.observeAreaFrame(target, id, changed),
   observeLightFrame: (target, id, changed) =>
     renderer?.observeLightFrame(target, id, changed),
   releaseArrow: keyboardPan.up,

@@ -361,6 +361,7 @@ export function useMapEditor(source, onSaved, options = {}) {
       if (gestures.copy()) lighting.copiedLight.value = null;
     },
     handle(event) {
+      if (areas.handleMembership(event)) return;
       if (event.phase === "start" || event.phase === "cancel")
         areas.clearAreaFocus(event.phase === "cancel");
       if (lighting.handle(event)) return;
