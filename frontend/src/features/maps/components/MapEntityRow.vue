@@ -12,7 +12,25 @@
     @keydown.enter.self.prevent="selectable && emit('select', entry)"
     @keydown.space.self.prevent="selectable && emit('select', entry)"
   >
+    <ActionButton
+      v-if="entry.kind === 'light' && toggleLight"
+      variant="secondary"
+      icon-only
+      :style="{ color: entry.color }"
+      :aria-label="`${entry.enabled ? 'Выключить' : 'Включить'} свет: ${entry.name}`"
+      :title="`${entry.enabled ? 'Выключить' : 'Включить'} свет: ${entry.name}`"
+      :aria-pressed="!!entry.enabled"
+      @click.stop="emit('toggle', entry.id)"
+      @keydown.stop
+    >
+      <template #icon
+        ><Lightbulb v-if="entry.enabled" :size="26" /><LightbulbOff
+          v-else
+          :size="26"
+      /></template>
+    </ActionButton>
     <span
+      v-else
       class="map-entity-thumbnail"
       :style="{ color: entry.color }"
       aria-hidden="true"
@@ -53,30 +71,42 @@
     <strong v-if="entry.count" class="map-entity-count"
       >×{{ entry.count }}</strong
     >
-    <ToggleSwitch
-      v-if="entry.kind === 'light' && toggleLight"
-      :model-value="entry.enabled"
-      :aria-label="entry.name"
-      :disabled="toggleDisabled"
-      @click.stop
+    <ActionButton
+      v-if="entry.kind === 'light' && toggleShadows"
+      variant="quiet"
+      icon-only
+      :aria-label="`${entry.item.shadows ? 'Выключить' : 'Включить'} тени: ${entry.name}`"
+      :aria-pressed="!!entry.item.shadows"
+      :title="
+        shadowsDisabled
+          ? entry.item.builtinKey
+            ? 'Тени встроенного источника задаются в справочнике'
+            : 'Тени доступны у двух локальных источников одновременно'
+          : `${entry.item.shadows ? 'Выключить' : 'Включить'} тени`
+      "
+      :disabled="shadowsDisabled"
+      @click.stop="emit('toggle-shadows', entry.id)"
       @keydown.stop
-      @update:model-value="emit('toggle', entry.id)"
-    />
+    >
+      <template #icon><MapShadowIcon :off="!entry.item.shadows" /></template>
+    </ActionButton>
     <slot name="actions" />
   </BaseTile>
 </template>
 <script setup>
-import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
+import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import MapShadowIcon from "./MapShadowIcon.vue";
 import { hasSelectedText } from "../lib/textSelection";
 import { Box, Group, Lightbulb, LightbulbOff, UserRound } from "@lucide/vue";
 defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,
   toggleLight: Boolean,
-  toggleDisabled: Boolean,
+  toggleShadows: Boolean,
+  shadowsDisabled: Boolean,
   selectable: { type: Boolean, default: true },
 });
-const emit = defineEmits(["select", "toggle"]);
+const emit = defineEmits(["select", "toggle", "toggle-shadows"]);
 </script>
 <style scoped>
 .map-entity-row {

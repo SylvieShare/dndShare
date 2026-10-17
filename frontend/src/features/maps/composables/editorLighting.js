@@ -103,6 +103,25 @@ export function editorLighting(e) {
       light.enabled = !light.enabled;
     });
   }
+  function canToggleLightShadows(id) {
+    const light = e.draft.value.document.lights.find((l) => l.id === id);
+    return (
+      !!light &&
+      !light.builtinKey &&
+      (light.shadows ||
+        e.draft.value.document.lights.filter(
+          (l) => l.id !== id && l.enabled && l.shadows,
+        ).length < 2)
+    );
+  }
+  function toggleLightShadows(id) {
+    if (!canToggleLightShadows(id)) return;
+    const light = e.draft.value.document.lights.find((l) => l.id === id);
+    finishLightEdit();
+    e.change(() => {
+      light.shadows = !light.shadows;
+    });
+  }
   function handle({ phase, point, hit, event }) {
     if (binding.handleBinding({ phase, point, hit, event })) return true;
     if (phase === "hover") {
@@ -247,6 +266,8 @@ export function editorLighting(e) {
     updateLightingMode,
     ...binding,
     toggleLight,
+    canToggleLightShadows,
+    toggleLightShadows,
     selectedLight,
     hoveredLight,
     previewLight,

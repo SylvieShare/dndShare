@@ -147,3 +147,28 @@ it("enables a source from its icon even when its old shadow option exceeds the c
     shadows: false,
   });
 });
+it("toggles shadows independently from power and respects the shared shadow budget and builtin templates", () => {
+  const { e, lighting: l } = setup([
+    { id: "a", enabled: true, shadows: true },
+    { id: "b", enabled: true, shadows: true },
+    { id: "c", enabled: true, shadows: false },
+    { id: "builtin", builtinKey: "flame", enabled: true, shadows: false },
+  ]);
+  expect(l.canToggleLightShadows("c")).toBe(false);
+  l.toggleLightShadows("c");
+  expect(e.draft.value.document.lights[2].shadows).toBe(false);
+  l.toggleLightShadows("a");
+  expect(e.draft.value.document.lights[0]).toMatchObject({
+    enabled: true,
+    shadows: false,
+  });
+  expect(l.canToggleLightShadows("c")).toBe(true);
+  l.toggleLightShadows("c");
+  expect(e.draft.value.document.lights[2]).toMatchObject({
+    enabled: true,
+    shadows: true,
+  });
+  expect(l.canToggleLightShadows("builtin")).toBe(false);
+  l.toggleLightShadows("builtin");
+  expect(e.draft.value.document.lights[3].shadows).toBe(false);
+});

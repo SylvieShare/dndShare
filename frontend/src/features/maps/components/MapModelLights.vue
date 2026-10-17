@@ -11,6 +11,9 @@
           :key="light.id"
           :entry="light"
           toggle-light
+          toggle-shadows
+          :shadows-disabled="!editor.canToggleLightShadows(light.id)"
+          @toggle-shadows="editor.toggleLightShadows"
           @toggle="editor.toggleLight"
           @select="editor.selectLight(light.id)"
         >

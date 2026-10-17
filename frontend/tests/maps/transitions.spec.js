@@ -34,8 +34,11 @@ test("embedded and attached lights are separate, toggle independently, and attac
     }),
   ).toBeVisible();
   await lights
-    .getByRole("switch", { name: "Встроенный факел", exact: true })
-    .uncheck();
+    .getByRole("button", {
+      name: "Выключить свет: Встроенный факел",
+      exact: true,
+    })
+    .click();
   await expect
     .poll(() =>
       page.evaluate(
@@ -78,8 +81,11 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
 }) => {
   await ready(page);
   await panel(page)
-    .getByRole("switch", { name: "Встроенный факел", exact: true })
-    .uncheck();
+    .getByRole("button", {
+      name: "Выключить свет: Встроенный факел",
+      exact: true,
+    })
+    .click();
   await expect
     .poll(() =>
       page.evaluate(
@@ -107,7 +113,8 @@ test("transition deletes both kinds of bound lights, keeps placement and area, a
     rotation: 0,
   });
   expect(changed.areas[0].tileIds).toEqual(["torch-tile"]);
-  await page.getByRole("button", { name: "Отменить", exact: true }).click();
+  await page.locator(".map-canvas-surface").focus();
+  await page.keyboard.press("ControlOrMeta+z");
   await expect(
     panel(page).getByRole("heading", { name: "Стена 1", exact: true }),
   ).toBeVisible();

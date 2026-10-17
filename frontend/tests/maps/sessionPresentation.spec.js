@@ -35,14 +35,14 @@ for (const mobile of [false, true]) {
         }),
       ).toBeVisible();
       styles.push(
-        await page
-          .locator(".map-sidebar")
-          .evaluate((el) => ({
-            width: getComputedStyle(el).width,
-            shadow: getComputedStyle(el).boxShadow,
-          })),
+        await page.locator(".map-sidebar").evaluate((el) => ({
+          width: getComputedStyle(el).width,
+          shadow: getComputedStyle(el).boxShadow,
+        })),
       );
-      await panel.getByRole("switch", { name: "Факел", exact: true }).click();
+      await panel
+        .getByRole("button", { name: "Выключить свет: Факел", exact: true })
+        .click();
       await expect
         .poll(() =>
           page.evaluate(

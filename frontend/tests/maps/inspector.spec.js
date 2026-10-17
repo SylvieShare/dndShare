@@ -74,7 +74,7 @@ test("area focus lists individual models and opening a row switches to the eleme
     .click();
   await expect(panel.locator(".map-entity-row")).toHaveCount(4);
 });
-test("light rows toggle by switch, show their area, and anchor picking focuses the linked model", async ({
+test("light rows toggle by their bulb button, show their area, and anchor picking focuses the linked model", async ({
   page,
 }) => {
   await ready(page, "&lightExample&shaped&lit");
@@ -90,16 +90,20 @@ test("light rows toggle by switch, show their area, and anchor picking focuses t
   await lights.getByRole("button", { name: "Факел", exact: true }).click();
   const panel = selection(page);
   await expect(panel.getByLabel("Название источника света")).toBeVisible();
-  await lights.getByRole("switch", { name: "Факел", exact: true }).click();
+  await lights
+    .getByRole("button", { name: "Выключить свет: Факел", exact: true })
+    .click();
   await expect
     .poll(() =>
       page.evaluate(() => window.lastSaved?.document.lights[0].enabled),
     )
     .toBe(false);
   await expect(
-    lights.getByRole("switch", { name: "Факел", exact: true }),
+    lights.getByRole("button", { name: "Включить свет: Факел", exact: true }),
   ).toBeVisible();
-  await lights.getByRole("switch", { name: "Факел", exact: true }).click();
+  await lights
+    .getByRole("button", { name: "Включить свет: Факел", exact: true })
+    .click();
   await panel
     .getByRole("button", { name: "Добавить в область", exact: true })
     .click();

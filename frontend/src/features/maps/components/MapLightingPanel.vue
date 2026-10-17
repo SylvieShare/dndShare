@@ -3,8 +3,9 @@
     @update:enabled="editor.updateLightingMode" @update:sun="editor.updateSun" @finish="editor.finishLightEdit">
     <MapLightPresetMenu :disabled="manualLightCount(editor.draft.document) >= 32"
       @place-light="(kind, event) => emit('place-light', kind, event)" />
-    <MapEntityRow v-for="light in lights" :key="light.id" :entry="light" toggle-light
-      :selected="editor.selectedLight === light.id" @select="editor.selectLight(light.id)" @toggle="editor.toggleLight" />
+    <MapEntityRow v-for="light in lights" :key="light.id" :entry="light" toggle-light toggle-shadows
+      :shadows-disabled="!editor.canToggleLightShadows(light.id)"
+      :selected="editor.selectedLight === light.id" @select="editor.selectLight(light.id)" @toggle="editor.toggleLight" @toggle-shadows="editor.toggleLightShadows" />
   </MapLightingControls>
 </template>
 <script setup>
