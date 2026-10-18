@@ -150,7 +150,7 @@ export async function createMapRenderer(
       applySceneAreaAppearance(objects, appearance);
       loadingPreview.applyAppearance(appearance);
       const fireDelay = assets.advanceFire(
-        time, options.animate !== false, undefined, scene,
+        time, options.animate !== false, scene,
       );
       volumeFog.render(scene, camera);
       presentFrame(objects, options, appearance);

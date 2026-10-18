@@ -1,6 +1,10 @@
 {
   "name": "Light On",
   "groupCode": "MED-light",
+  "shadowReference": {
+    "code": "MT1-017",
+    "sourceSHA256": "eac5b39fc648ca2a6f25fc2ece870df2055b4e95e9efa11f61094c58932661ab"
+  },
   "tileType": "floor",
   "width": 1,
   "height": 1,

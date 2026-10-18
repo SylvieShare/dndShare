@@ -1,4 +1,4 @@
-import { hasModelFire, modelFireFPS } from "../lib/modelFire";
+import { hasModelFire, MODEL_FIRE_FPS } from "../lib/modelFire";
 import { reducedMapMotion } from "./scalarMotion";
 import { modelFireShader } from "./modelFireShader";
 
@@ -31,7 +31,7 @@ export function createModelFireAnimation(metadata) {
         if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
         const top = mesh.geometry.boundingBox.clone().applyMatrix4(frame).max.y;
         const uniforms = modelFireShader(material, frame, top, phase(mesh));
-        const entry = { mesh, material, uniforms, id };
+        const entry = { mesh, material, uniforms };
         const release = () => {
           entries.delete(entry);
           material.removeEventListener("dispose", release);
@@ -43,14 +43,14 @@ export function createModelFireAnimation(metadata) {
     },
     // Quantize flame time only. Camera/placement and the light keep their own
     // clocks. Wake one refresh before the deadline: the caller still waits for
-    // requestAnimationFrame, including at 60 FPS on an otherwise idle map.
-    advance(time, animate = true, override, scene) {
+    // requestAnimationFrame. Flame poses always advance at 12 FPS.
+    advance(time, animate = true, scene) {
       const enabled = animate && !reducedMapMotion();
       let delay = Infinity;
-      for (const { mesh, material, uniforms, id } of entries) {
+      for (const { mesh, material, uniforms } of entries) {
         uniforms.modelFireMotion.value = enabled ? 1 : 0;
         if (!visible(mesh, scene) || material.opacity <= 0.001) continue;
-        const fps = modelFireFPS(override || metadata(id)),
+        const fps = MODEL_FIRE_FPS,
           tick = Math.floor((time * fps) / 1000);
         uniforms.modelFireTime.value = enabled ? tick / fps : 0;
         if (enabled) delay = Math.min(delay, ((tick + 1) * 1000) / fps - time);

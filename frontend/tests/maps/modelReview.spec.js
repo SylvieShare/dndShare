@@ -39,17 +39,16 @@ test("decodes both reviewed tiers and preserves dedicated shadows under sun and 
     expect(result.shadowTriangles).toBe(
       report.resourceMetrics.shadow.triangles,
     );
-    if (tier === "lod") expect(result.drift).toBeLessThan(0.0002);
-    else {
-      const a = report.resourceMetrics.render.bounds,
-        b = report.resourceMetrics.lod.bounds;
-      const acceptedDrift = Math.max(
-        ...["min", "max"].flatMap((side) =>
-          a[side].map((v, i) => Math.abs(v - b[side][i])),
-        ),
-      );
-      expect(result.drift).toBeLessThan(acceptedDrift + 0.0002);
-    }
+    // Opaque shadows can intentionally exclude a visible flame. Compare with
+    // the reviewed shadow bounds rather than assuming they equal the LOD.
+    const a = report.resourceMetrics[tier].bounds,
+      b = report.resourceMetrics.shadow.bounds;
+    const acceptedDrift = Math.max(
+      ...["min", "max"].flatMap((side) =>
+        a[side].map((v, i) => Math.abs(v - b[side][i])),
+      ),
+    );
+    expect(result.drift).toBeLessThan(acceptedDrift + 0.0002);
     expect(result.rendered).toBeGreaterThan(0);
     if (report.tiers[tier].textureCount === 0) {
       expect(result.textures).toEqual([]);

@@ -54,7 +54,7 @@ source asset. Read API выбирает новую визуальную верс
 `map_model_definition.id` — постоянный ключ `sourceCode` с суффиксом
 для дополнительных одноимённых вариантов; `map_model.definition_id` — FK всех
 версий. Trigger назначает ключ каждому пути регистрации. Определение хранит
-revision, default_lights JSONB и необязательный animation_fps integer (1–60).
+revision и default_lights JSONB.
 `map_model_transition` хранит направленные
 переходы между определениями и enum действий, уникальные по источнику/цели/действию.
 Метаданные новой версии и поведение записываются атомарно с проверкой обеих

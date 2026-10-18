@@ -2,19 +2,6 @@ package battlemap
 
 import "testing"
 
-func TestModelAnimationFPSValidation(t *testing.T) {
-	for _, fps := range []int{1, 12, 60} {
-		if err := ValidateModelBehaviour(ModelBehaviour{Revision: 1, AnimationFPS: &fps}); err != nil {
-			t.Fatalf("valid FPS %d: %v", fps, err)
-		}
-	}
-	for _, fps := range []int{-1, 0, 61} {
-		if ValidateModelBehaviour(ModelBehaviour{Revision: 1, AnimationFPS: &fps}) == nil {
-			t.Fatalf("invalid FPS %d accepted", fps)
-		}
-	}
-}
-
 func TestBuiltinLightInstances(t *testing.T) {
 	model := ModelMetadata{ID: "model", DefinitionID: "torch", Width: 1, Height: 1, MountDepth: .2, SurfaceHeight: .4}
 	frame := ModelMetadata{ID: "frame", Width: 1, Height: 1, MountDepth: .1, SupportSlots: []SupportSlot{{Width: 1, Height: 1, Elevation: 1.1}}}

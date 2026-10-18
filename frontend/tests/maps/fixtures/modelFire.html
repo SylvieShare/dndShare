@@ -22,7 +22,7 @@
         if (n.isMesh) parts.push({ geometry: n.geometry, material: n.material, matrix: n.matrixWorld.clone() });
       });
       const model = { id: "torch", definitionId: "MT1-016", width: 1, height: 1,
-        maxHeight: 2.427057, mountDepth: 0.485714, behaviour: { animationFps: 12 } },
+        maxHeight: 2.427057, mountDepth: 0.485714 },
         scene = new Scene(), fire = createModelFireAnimation(() => model),
         assets = { model: () => ({ parts }), metadata: () => model, prepareFire: fire.prepare },
         fog = createMapFog(), tiles = createTileLayer(assets, fog), objects = new Group();
@@ -51,18 +51,17 @@
         return [Math.min(...points.map((p) => p[0])), Math.min(...points.map((p) => p[1])),
           Math.max(...points.map((p) => p[0])), Math.max(...points.map((p) => p[1]))];
       });
-      function frame(time, fps = 12, opacity = 1, animate = true) {
-        model.behaviour.animationFps = fps;
+      function frame(time, opacity = 1, animate = true) {
         tiles.applyAppearance({ tileOpacity: () => opacity, tileFlash: () => 1 });
         applyAreaOpacity(objects, opacity);
-        fire.advance(time, animate, undefined, scene);
+        fire.advance(time, animate, scene);
         renderAreaSurfaces(gpu, scene, camera);
         return pixels();
       }
       window.modelFire = {
         frame,
-        compare(a, b, fps = 12, opacity = 1, animate = true) {
-          const first = frame(a, fps, opacity, animate), second = frame(b, fps, opacity, animate);
+        compare(a, b, opacity = 1, animate = true) {
+          const first = frame(a, opacity, animate), second = frame(b, opacity, animate);
           let changed = 0, outside = 0;
           for (let i = 0; i < first.length; i += 4) {
             if (Math.max(...[0, 1, 2].map((c) => Math.abs(first[i+c] - second[i+c]))) <= 3) continue;

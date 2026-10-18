@@ -4,7 +4,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { currentModel } from './current_model.mjs';
-import { prepareShadow } from './shadow_model.mjs';
+import { prepareMedievalShadow } from './medieval_shadow.mjs';
 import { rasterizeSurface, seedSurfaceGutters, extendUvGutters } from './uv_surface.mjs';
 import { uvSurfaceTracker } from './uv_surface_overlap.mjs';
 import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
@@ -165,8 +165,9 @@ if (!process.argv.includes('--publish-manifest')) {
       blackSurfacePixels: 0, invalidNormalPixels: 0, bounds: after, quality: report.quality };
     console.log('MEDIEVAL_PACKAGED', code, tier, tiers[tier].triangles, final.length);
   }
-  const shadow = await prepareShadow(path.join(review, 'lod.glb'), path.join(review, 'shadow.glb'));
-  tiers.shadow = { bytes: shadow.asset.size, triangles: shadow.triangles, bounds: shadow.bounds };
+  const shadow = await prepareMedievalShadow(base, review, recipe, reports.render.model);
+  tiers.shadow = { bytes: shadow.asset.size, triangles: shadow.triangles, bounds: shadow.bounds,
+    ...(shadow.reference ? { reference: shadow.reference } : {}) };
   const report = { ...reports.render, model: { ...reports.render.model, ...(previous.model?.id ? { id: previous.model.id } : {}) },
     tiers, lodStandDeviationsMM: reports.lod.standDeviationsMM,
     optimization: { candidate: candidate || 'balanced', selection: 'pending visual comparison' },

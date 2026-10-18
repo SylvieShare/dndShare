@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <body style="margin: 0">
+    <script type="module">
+      import { ACESFilmicToneMapping, BoxGeometry, Group, Mesh, MeshStandardMaterial,
+        OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
+      import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
+      import { createMapLighting } from "/src/features/maps/rendering/mapLighting.js";
+      import { createTileLayer } from "/src/features/maps/rendering/tileLayer.js";
+      const gpu = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      gpu.setSize(640, 480);
+      gpu.toneMapping = ACESFilmicToneMapping;
+      document.body.append(gpu.domElement);
+      const loader = acquireModelLoader(gpu);
+      async function load(name) {
+        const gltf = await loader.load(`/torch-shadow/${name}`), parts = [];
+        gltf.scene.updateMatrixWorld(true);
+        gltf.scene.traverse((n) => {
+          if (n.isMesh) parts.push({ geometry: n.geometry, material: n.material, matrix: n.matrixWorld.clone() });
+        });
+        return { parts };
+      }
+      const [render, old, fixed] = await Promise.all([load("render"), load("old"), load("fixed")]);
+      const model = { id: "torch", definitionId: "MT1-016", width: 1, height: 1,
+        mountDepth: 0.485714, maxHeight: 2.427057 },
+        scene = new Scene(), objects = new Group(),
+        tile = { id: "tile", modelId: "torch", x: 1, y: 1, rotation: 0, elevation: 0 };
+      let selected = fixed;
+      const assets = { metadata: () => model, catalogue: () => [model],
+        model: (_, tier) => tier === "shadow" ? selected : render },
+        tiles = createTileLayer(assets, { material: (m) => m });
+      tiles.rebuild([tile], "render", []);
+      scene.add(tiles.root, objects);
+      const lightX = 1.182857, lightZ = 1.198571,
+        material = new MeshStandardMaterial({ color: 0xcccccc, roughness: 1 }),
+        east = new Mesh(new BoxGeometry(0.02, 0.6, 0.6), material),
+        north = new Mesh(new BoxGeometry(0.6, 0.6, 0.02), material),
+        blocker = new Mesh(new BoxGeometry(0.45, 0.6, 0.16), material);
+      east.position.set(2.7, 1.8, lightZ);
+      north.position.set(lightX, 1.8, -0.3);
+      blocker.position.set(lightX, 1.8, 0.45);
+      east.receiveShadow = north.receiveShadow = true;
+      blocker.castShadow = true;
+      scene.add(east, north, blocker);
+      const d = { width: 4, height: 4, tiles: [tile], objects: [], areas: [],
+        lightingEnabled: true, sun: { enabled: false, angle: 0, elevation: 60 },
+        lights: [{ id: "torch-light", kind: "torch", color: "#ffb04a", x: lightX,
+          y: lightZ, elevation: 0, height: 1.8, intensity: 8, radius: 3.5,
+          enabled: true, shadows: true, flicker: false, offset: [0, 0] }] },
+        lighting = createMapLighting(scene, gpu, assets),
+        camera = new OrthographicCamera(-1.8, 1.8, 1.35, -1.35, 0.1, 30);
+      camera.position.set(-1, 5, 5);
+      camera.lookAt(1.5, 1.3, 1);
+      camera.updateMatrixWorld(true);
+      function sample(point) {
+        const p = point.clone().project(camera), gl = gpu.getContext(), pixels = new Uint8Array(9 * 9 * 4);
+        gl.readPixels(Math.round((p.x + 1) * 320) - 4, Math.round((p.y + 1) * 240) - 4,
+          9, 9, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        let sum = 0;
+        for (let i = 0; i < pixels.length; i += 4)
+          sum += pixels[i] * 0.2126 + pixels[i + 1] * 0.7152 + pixels[i + 2] * 0.0722;
+        return sum / 81;
+      }
+      window.torchShadow = (mode = "fixed", blocked = false, shadows = true) => {
+        selected = mode === "old" ? old : fixed;
+        blocker.visible = blocked;
+        d.lights[0].shadows = shadows;
+        lighting.update(d, { animate: false }, null, [tile], [], { x: 1.5, y: 1.5 }, objects);
+        lighting.advance(0, tiles.transform, objects);
+        gpu.shadowMap.needsUpdate = true;
+        gpu.render(scene, camera);
+        return { east: sample(new Vector3(2.689, 1.8, lightZ)),
+          north: sample(new Vector3(lightX, 1.8, -0.289)) };
+      };
+      window.torchShadow();
+    </script>
+  </body>
+</html>

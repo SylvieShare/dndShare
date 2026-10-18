@@ -25,7 +25,6 @@ type ModelTransition struct {
 
 type ModelBehaviour struct {
 	Revision      int               `json:"revision"`
-	AnimationFPS  *int              `json:"animationFps,omitempty"`
 	DefaultLights []ModelLight      `json:"defaultLights"`
 	Transitions   []ModelTransition `json:"transitions"`
 }
@@ -39,9 +38,6 @@ func ValidTransitionAction(action string) bool {
 }
 
 func ValidateModelBehaviour(b ModelBehaviour) error {
-	if b.AnimationFPS != nil && (*b.AnimationFPS < 1 || *b.AnimationFPS > 60) {
-		return fmt.Errorf("Частота анимации должна быть от 1 до 60 кадров в секунду")
-	}
 	if b.Revision < 1 || len(b.DefaultLights) > 8 || len(b.Transitions) > 32 {
 		return fmt.Errorf("Некорректное число источников или переходов модели")
 	}

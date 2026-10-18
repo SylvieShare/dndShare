@@ -38,7 +38,6 @@ export function createModelPreview(host, onFrame, onError) {
   let frame = 0,
     timer = 0,
     labelsDirty = true,
-    sourceBehaviour,
     dead = false,
     epoch = 0,
     current = null,
@@ -63,11 +62,7 @@ export function createModelPreview(host, onFrame, onError) {
     frame = requestAnimationFrame((time) => {
       frame = 0;
       if (dead) return;
-      const delay = assets.advanceFire(
-        time, true,
-        { ...current, behaviour: options.behaviour || sourceBehaviour },
-        scene,
-      );
+      const delay = assets.advanceFire(time, true, scene);
       gpu.render(scene, view.camera);
       if (Number.isFinite(delay))
         timer = setTimeout(() => render(true), Math.max(1, delay));
@@ -126,7 +121,6 @@ export function createModelPreview(host, onFrame, onError) {
       const id = ++epoch;
       current = model;
       options = next || {};
-      sourceBehaviour = source.behaviour;
       clearTimeout(timer);
       clearRoot();
       asset = null;

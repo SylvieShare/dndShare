@@ -40,8 +40,6 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal("same-code variants were merged")
 	}
 	b := battlemap.ModelBehaviour{Revision: 1, DefaultLights: []battlemap.ModelLight{{Key: "flame", Name: "Факел", Kind: "torch", Color: "#ffc36a", Position: [3]float64{.5, .5, 1}, Intensity: 8, Radius: 4, Enabled: true}}, Transitions: []battlemap.ModelTransition{{ID: "00000000-0000-4000-8000-000000000025", ToDefinitionID: target.DefinitionID, Action: "open"}}}
-	fps := 12
-	b.AnimationFPS = &fps
 	edit := source
 	edit.Code = "BEH-door"
 	edit.ID = "00000000-0000-4000-8000-000000000022"
@@ -62,9 +60,6 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal(err)
 	}
 	loaded := behaviours[source.DefinitionID]
-	if loaded.AnimationFPS == nil || *loaded.AnimationFPS != fps {
-		t.Fatal("animation FPS readback", loaded)
-	}
 	if loaded.Revision != 2 || len(loaded.DefaultLights) != 1 || len(loaded.Transitions) != 1 || loaded.Transitions[0].ToDefinitionID != target.DefinitionID {
 		t.Fatal("behaviour readback", loaded)
 	}
@@ -122,15 +117,9 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal(err)
 	}
 	current.DefaultLights[0].Intensity = 12
-	updatedFPS := 24
-	current.AnimationFPS = &updatedFPS
 	updated, err := s.UpdateMapModelBehaviour(ctx, source.DefinitionID, current)
 	if err != nil || updated.Revision != 3 || len(updated.Transitions) != 1 {
 		t.Fatal("standalone behaviour update", updated, err)
-	}
-	persistedBehaviour, err := s.GetMapModelBehaviour(ctx, source.DefinitionID)
-	if err != nil || persistedBehaviour.AnimationFPS == nil || *persistedBehaviour.AnimationFPS != updatedFPS {
-		t.Fatal("standalone animation FPS update", persistedBehaviour, err)
 	}
 	unchanged, err := s.GetMapModel(ctx, saved.ID)
 	if err != nil || unchanged.ID != saved.ID || unchanged.Assets["render"] != saved.Assets["render"] {
