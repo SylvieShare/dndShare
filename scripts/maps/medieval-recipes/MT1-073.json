@@ -1,0 +1,1011 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.2,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Bath Empty",
+  "groupCode": "MED-bath",
+  "hasDecor": true,
+  "renderTriangles": 90000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 60,
+  "standPointsMM": [
+    [
+      1.20865,
+      1.8333
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        10.70865,
+        1.8333
+      ],
+      [
+        16.193133861662442,
+        1.8333
+      ],
+      [
+        15.459741019953633,
+        6.463760165190834
+      ],
+      [
+        10.243686904803958,
+        4.768961446562001
+      ]
+    ],
+    [
+      [
+        10.243686904803958,
+        4.768961446562001
+      ],
+      [
+        15.459741019953633,
+        6.463760165190834
+      ],
+      [
+        13.331352096022057,
+        10.640958627099751
+      ],
+      [
+        8.894311446562002,
+        7.417259896778495
+      ]
+    ],
+    [
+      [
+        8.894311446562002,
+        7.417259896778495
+      ],
+      [
+        13.331352096022057,
+        10.640958627099751
+      ],
+      [
+        10.016308627099752,
+        13.956002096022056
+      ],
+      [
+        6.792609896778496,
+        9.518961446562
+      ]
+    ],
+    [
+      [
+        6.792609896778496,
+        9.518961446562
+      ],
+      [
+        10.016308627099752,
+        13.956002096022056
+      ],
+      [
+        5.839110165190835,
+        16.08439101995363
+      ],
+      [
+        4.144311446562001,
+        10.868336904803957
+      ]
+    ],
+    [
+      [
+        4.144311446562001,
+        10.868336904803957
+      ],
+      [
+        5.839110165190835,
+        16.08439101995363
+      ],
+      [
+        1.208650000000001,
+        16.817783861662445
+      ],
+      [
+        1.2086500000000007,
+        11.3333
+      ]
+    ],
+    [
+      [
+        1.2086500000000007,
+        11.3333
+      ],
+      [
+        1.208650000000001,
+        16.817783861662445
+      ],
+      [
+        -3.421810165190833,
+        16.084391019953635
+      ],
+      [
+        -1.727011446562,
+        10.868336904803959
+      ]
+    ],
+    [
+      [
+        -1.727011446562,
+        10.868336904803959
+      ],
+      [
+        -3.421810165190833,
+        16.084391019953635
+      ],
+      [
+        -7.5990086270997494,
+        13.956002096022056
+      ],
+      [
+        -4.375309896778493,
+        9.518961446562
+      ]
+    ],
+    [
+      [
+        -4.375309896778493,
+        9.518961446562
+      ],
+      [
+        -7.5990086270997494,
+        13.956002096022056
+      ],
+      [
+        -10.914052096022054,
+        10.640958627099753
+      ],
+      [
+        -6.477011446561999,
+        7.417259896778496
+      ]
+    ],
+    [
+      [
+        -6.477011446561999,
+        7.417259896778496
+      ],
+      [
+        -10.914052096022054,
+        10.640958627099753
+      ],
+      [
+        -13.042441019953632,
+        6.463760165190836
+      ],
+      [
+        -7.826386904803957,
+        4.768961446562001
+      ]
+    ],
+    [
+      [
+        -7.826386904803957,
+        4.768961446562001
+      ],
+      [
+        -13.042441019953632,
+        6.463760165190836
+      ],
+      [
+        -13.775833861662443,
+        1.8333000000000017
+      ],
+      [
+        -8.29135,
+        1.833300000000001
+      ]
+    ],
+    [
+      [
+        -8.29135,
+        1.833300000000001
+      ],
+      [
+        -13.775833861662443,
+        1.8333000000000017
+      ],
+      [
+        -13.042441019953635,
+        -2.7971601651908258
+      ],
+      [
+        -7.826386904803961,
+        -1.1023614465619955
+      ]
+    ],
+    [
+      [
+        -7.826386904803961,
+        -1.1023614465619955
+      ],
+      [
+        -13.042441019953635,
+        -2.7971601651908258
+      ],
+      [
+        -10.914052096022056,
+        -6.97435862709975
+      ],
+      [
+        -6.477011446562001,
+        -3.7506598967784934
+      ]
+    ],
+    [
+      [
+        -6.477011446562001,
+        -3.7506598967784934
+      ],
+      [
+        -10.914052096022056,
+        -6.97435862709975
+      ],
+      [
+        -7.599008627099753,
+        -10.289402096022055
+      ],
+      [
+        -4.3753098967784965,
+        -5.852361446562
+      ]
+    ],
+    [
+      [
+        -4.3753098967784965,
+        -5.852361446562
+      ],
+      [
+        -7.599008627099753,
+        -10.289402096022055
+      ],
+      [
+        -3.4218101651908355,
+        -12.417791019953633
+      ],
+      [
+        -1.7270114465620017,
+        -7.201736904803958
+      ]
+    ],
+    [
+      [
+        -1.7270114465620017,
+        -7.201736904803958
+      ],
+      [
+        -3.4218101651908355,
+        -12.417791019953633
+      ],
+      [
+        1.2086499999999973,
+        -13.151183861662444
+      ],
+      [
+        1.2086499999999982,
+        -7.6667000000000005
+      ]
+    ],
+    [
+      [
+        1.2086499999999982,
+        -7.6667000000000005
+      ],
+      [
+        1.2086499999999973,
+        -13.151183861662444
+      ],
+      [
+        5.8391101651908315,
+        -12.417791019953635
+      ],
+      [
+        4.144311446561998,
+        -7.20173690480396
+      ]
+    ],
+    [
+      [
+        4.144311446561998,
+        -7.20173690480396
+      ],
+      [
+        5.8391101651908315,
+        -12.417791019953635
+      ],
+      [
+        10.016308627099749,
+        -10.289402096022059
+      ],
+      [
+        6.792609896778492,
+        -5.852361446562002
+      ]
+    ],
+    [
+      [
+        6.792609896778492,
+        -5.852361446562002
+      ],
+      [
+        10.016308627099749,
+        -10.289402096022059
+      ],
+      [
+        13.331352096022055,
+        -6.974358627099756
+      ],
+      [
+        8.894311446562,
+        -3.750659896778497
+      ]
+    ],
+    [
+      [
+        8.894311446562,
+        -3.750659896778497
+      ],
+      [
+        13.331352096022055,
+        -6.974358627099756
+      ],
+      [
+        15.459741019953633,
+        -2.7971601651908373
+      ],
+      [
+        10.243686904803958,
+        -1.102361446562003
+      ]
+    ],
+    [
+      [
+        10.243686904803958,
+        -1.102361446562003
+      ],
+      [
+        15.459741019953633,
+        -2.7971601651908373
+      ],
+      [
+        16.193133861662442,
+        1.8332999999999962
+      ],
+      [
+        10.70865,
+        1.8332999999999977
+      ]
+    ],
+    [
+      [
+        -16.3,
+        -16.6
+      ],
+      [
+        -5.7,
+        -16.6
+      ],
+      [
+        -5.7,
+        -5.95
+      ],
+      [
+        -16.3,
+        -5.95
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "bath",
+    "empty",
+    "basin",
+    "pewter",
+    "jug",
+    "iron",
+    "hoop"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      2,
+      5
+    ],
+    "lodMiB": [
+      1,
+      3
+    ],
+    "shadowKiB": [
+      70,
+      180
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "35mm empty wooden basin with20-ish vertical staves,diagonal innerfloor,two conical iron hoops and separate ribbed pewter vessel with open neck.90000/60000triangles(35000LODlostupperstaverim),1024bakes/renderdata,LOD768colour/data;comparecompactforhoopwoodboundaries,spoutandbasinvoids."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "floor Y planks and east west fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north X border and fascia",
+        "minMM": [
+          -17.7,
+          14.1,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south X border and fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          -14.1,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "vertical basin staves",
+        "minMM": [
+          -14,
+          -13.5,
+          25.65
+        ],
+        "maxMM": [
+          16.5,
+          17.1,
+          38.1
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            25.65
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            12.450000000000003
+          ],
+          "radiusAtOriginMM": 12.05,
+          "radiusSlope": 0.197,
+          "thicknessMM": 3.0,
+          "allowanceMM": 0.03
+        }
+      },
+      {
+        "name": "diagonal basin floor",
+        "minMM": [
+          -10,
+          -9.5,
+          25.8
+        ],
+        "maxMM": [
+          12,
+          12.5,
+          26.56
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.7071067811865476,
+          0.7071067811865476,
+          0
+        ],
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            25.8
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.759999999999998
+          ],
+          "radiusAtOriginMM": 10.4,
+          "radiusSlope": 0,
+          "thicknessMM": 10.4,
+          "allowanceMM": 0.03
+        }
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "lower conical iron hoop",
+        "minMM": [
+          -13,
+          -12.5,
+          25.65
+        ],
+        "maxMM": [
+          15,
+          16,
+          27.708
+        ],
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            25.65
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            2.058
+          ],
+          "radiusAtOriginMM": 12.69,
+          "radiusSlope": 0.209,
+          "thicknessMM": 1.35,
+          "allowanceMM": 0.03
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "upper conical iron hoop",
+        "minMM": [
+          -13.6,
+          -13,
+          33.175
+        ],
+        "maxMM": [
+          16,
+          16.7,
+          35.225
+        ],
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            33.175
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            2.0500000000000043
+          ],
+          "radiusAtOriginMM": 14.25,
+          "radiusSlope": 0.209,
+          "thicknessMM": 1.55,
+          "allowanceMM": 0.03
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "ribbed pewter water vessel",
+        "kind": "paint",
+        "minMM": [
+          -16.2,
+          -16.5,
+          26.45
+        ],
+        "maxMM": [
+          -5.7,
+          -5.95,
+          36.55
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -17,
+              -17,
+              26.45
+            ],
+            "maxMM": [
+              -5.7,
+              -5.95,
+              29.3
+            ],
+            "radialShell": {
+              "originMM": [
+                -11.25,
+                -11.4,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                2.8500000000000014
+              ],
+              "radiusAtOriginMM": 5.65,
+              "radiusSlope": 0,
+              "thicknessMM": 5.65,
+              "allowanceMM": 0.03
+            }
+          },
+          {
+            "minMM": [
+              -16.2,
+              -16.5,
+              29
+            ],
+            "maxMM": [
+              -6.5,
+              -6.5,
+              36.55
+            ]
+          }
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              17
+            ],
+            "maxMM": [
+              100,
+              100,
+              50
+            ],
+            "radialShell": {
+              "originMM": [
+                1.20865,
+                1.8333,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                10.150000000000002
+              ],
+              "radiusAtOriginMM": 12.145,
+              "radiusSlope": 0.197,
+              "thicknessMM": 30,
+              "allowanceMM": 0.03
+            }
+          }
+        ],
+        "rgb": [
+          0.28,
+          0.3,
+          0.305
+        ],
+        "metallic": 0.75,
+        "roughness": 0.56,
+        "variation": 0.02
+      },
+      {
+        "name": "pewter vessel bottom band",
+        "kind": "paint",
+        "minMM": [
+          -16.2,
+          -16.5,
+          26.45
+        ],
+        "maxMM": [
+          -5.7,
+          -5.95,
+          28.12
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -17,
+              -17,
+              26.45
+            ],
+            "maxMM": [
+              -5.7,
+              -5.95,
+              29.3
+            ],
+            "radialShell": {
+              "originMM": [
+                -11.25,
+                -11.4,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                2.8500000000000014
+              ],
+              "radiusAtOriginMM": 5.65,
+              "radiusSlope": 0,
+              "thicknessMM": 5.65,
+              "allowanceMM": 0.03
+            }
+          },
+          {
+            "minMM": [
+              -16.2,
+              -16.5,
+              29
+            ],
+            "maxMM": [
+              -6.5,
+              -6.5,
+              36.55
+            ]
+          }
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              17
+            ],
+            "maxMM": [
+              100,
+              100,
+              50
+            ],
+            "radialShell": {
+              "originMM": [
+                1.20865,
+                1.8333,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                10.150000000000002
+              ],
+              "radiusAtOriginMM": 12.145,
+              "radiusSlope": 0.197,
+              "thicknessMM": 30,
+              "allowanceMM": 0.03
+            }
+          }
+        ],
+        "rgb": [
+          0.235,
+          0.255,
+          0.26
+        ],
+        "metallic": 0.85,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "pewter vessel mouth rim",
+        "kind": "paint",
+        "minMM": [
+          -16.2,
+          -16.5,
+          35.95
+        ],
+        "maxMM": [
+          -5.7,
+          -5.95,
+          36.55
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -17,
+              -17,
+              26.45
+            ],
+            "maxMM": [
+              -5.7,
+              -5.95,
+              29.3
+            ],
+            "radialShell": {
+              "originMM": [
+                -11.25,
+                -11.4,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                2.8500000000000014
+              ],
+              "radiusAtOriginMM": 5.65,
+              "radiusSlope": 0,
+              "thicknessMM": 5.65,
+              "allowanceMM": 0.03
+            }
+          },
+          {
+            "minMM": [
+              -16.2,
+              -16.5,
+              29
+            ],
+            "maxMM": [
+              -6.5,
+              -6.5,
+              36.55
+            ]
+          }
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              17
+            ],
+            "maxMM": [
+              100,
+              100,
+              50
+            ],
+            "radialShell": {
+              "originMM": [
+                1.20865,
+                1.8333,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                10.150000000000002
+              ],
+              "radiusAtOriginMM": 12.145,
+              "radiusSlope": 0.197,
+              "thicknessMM": 30,
+              "allowanceMM": 0.03
+            }
+          }
+        ],
+        "rgb": [
+          0.34,
+          0.36,
+          0.365
+        ],
+        "metallic": 0.8,
+        "roughness": 0.47,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage11/full/top/bath/vessel inspected. Source600000tri/30000084bytes/SHA292f83b599bbdc9d326a1df9192d6a519d02ae5c7b89176f99fba29e77446303/maxZ37.9742966. Basincentre[1.20865,1.8333];nativefloorY,frameX/Y,stavesZ,basinfloorgrain+X+Ymeasuredbytopimageprobes[5.88,4.92]and[-4.83,-4.83]. UpperironhoopZ33.175..35.225/R14.25+0.209t;lowerZ25.65..27.708/R12.69+0.209t. Independent7directionnativeBVHraysverifyhoops;woodconeexcludedfromjugmask. PewtervesselSWnativeboundsX-15.6..-6.9/Y-16..-6.7/Z26.45..36.449,openneck+ribs,slightlydarkerbottom/lightermouthrim;graypalettefromPDF. Emptybasinallowsonecentralfloorstand(nativecentre),20annularconvexblockersprotectwallandonejugblocker;no false top-rimstand. Checkcentreclearance/230orappropriategeometry/materialprobes/spoutandbasinvoids/staveedges/hoopwoodcontacts,alltiersandcompact. Native17mmpreparationrequiresUD016standardize-selectedbeforepublication;future074waterpaironlyafterbothregistered."
+}
