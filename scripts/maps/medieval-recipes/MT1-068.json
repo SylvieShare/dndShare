@@ -1,0 +1,2033 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Buffet",
+  "groupCode": "MED-buffet",
+  "renderTriangles": 110000,
+  "lodTriangles": 40000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "standRayTopMM": 100,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "cupboard",
+    "buffet",
+    "lattice",
+    "ceramic",
+    "bowl",
+    "mug",
+    "brass",
+    "iron"
+  ],
+  "standPointsMM": [
+    [
+      8.75,
+      -8.75
+    ],
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [
+    [
+      [
+        -17.65,
+        -17.65
+      ],
+      [
+        2.4,
+        -17.65
+      ],
+      [
+        2.4,
+        17.65
+      ],
+      [
+        -17.65,
+        17.65
+      ]
+    ]
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      3,
+      6.5
+    ],
+    "lodMiB": [
+      1.3,
+      3.6
+    ],
+    "shadowKiB": [
+      95,
+      220
+    ],
+    "previewKiB": [
+      12,
+      55
+    ],
+    "basis": "75mm wooden hutch on35mm floor: four doors, two diagonal lattices and recessed warm backing, four tiny brass knobs, eight vertical iron hinges, three stacked bowls and two deep empty mugs with handles. Independent110000/40000 triangles,1024bakes,768LOD colour/data; compare compact maps without losing diagonal laths, ceramic hollows or fittings."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "floor X boards and north south rails",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "x",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "floor Y edge rail -17.7",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "floor Y edge rail 14.3",
+        "minMM": [
+          14.3,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "darkRGB": [
+          0.34,
+          0.165,
+          0.055
+        ],
+        "lightRGB": [
+          0.59,
+          0.35,
+          0.145
+        ],
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "lower cabinet vertical body and side feet",
+        "minMM": [
+          -17.7,
+          -17.7,
+          26.65
+        ],
+        "maxMM": [
+          2.4,
+          17.7,
+          49.6
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.26,
+          0.105,
+          0.038
+        ],
+        "lightRGB": [
+          0.48,
+          0.25,
+          0.085
+        ]
+      },
+      {
+        "name": "rear broad horizontal planks",
+        "minMM": [
+          -17.7,
+          -17.7,
+          26.65
+        ],
+        "maxMM": [
+          -10.3,
+          17.7,
+          49.6
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.3,
+          0.135,
+          0.045
+        ],
+        "lightRGB": [
+          0.53,
+          0.295,
+          0.105
+        ]
+      },
+      {
+        "name": "rear upright -17.7",
+        "minMM": [
+          -17.7,
+          -17.7,
+          26.65
+        ],
+        "maxMM": [
+          -10.2,
+          -14.0,
+          50
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "rear upright 14",
+        "minMM": [
+          -17.7,
+          14,
+          26.65
+        ],
+        "maxMM": [
+          -10.2,
+          17.7,
+          50
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "upper cupboard vertical panels and corner posts",
+        "minMM": [
+          -13.7,
+          -15.5,
+          49.5
+        ],
+        "maxMM": [
+          -2.4,
+          15.5,
+          72
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.265,
+          0.105,
+          0.035
+        ],
+        "lightRGB": [
+          0.49,
+          0.24,
+          0.075
+        ]
+      },
+      {
+        "name": "lower plinth",
+        "minMM": [
+          -10.3,
+          -12.2,
+          26.65
+        ],
+        "maxMM": [
+          1,
+          12.2,
+          29.55
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "shelf and moulded nose",
+        "minMM": [
+          -10.8,
+          -15,
+          42.5
+        ],
+        "maxMM": [
+          1,
+          15,
+          45.69
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "upper sill",
+        "minMM": [
+          -13.8,
+          -14.5,
+          51.45
+        ],
+        "maxMM": [
+          -2.8,
+          14.5,
+          55.5
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "upper door lintel",
+        "minMM": [
+          -13.8,
+          -14.8,
+          69.4
+        ],
+        "maxMM": [
+          -2.8,
+          14.8,
+          71.5
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "top cornice cap",
+        "minMM": [
+          -13.8,
+          -15.6,
+          71.4
+        ],
+        "maxMM": [
+          -2,
+          15.6,
+          75.2
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "rear upper lower rail",
+        "minMM": [
+          -13.7,
+          -14.8,
+          50.5
+        ],
+        "maxMM": [
+          -11.6,
+          14.8,
+          54.9
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88
+      },
+      {
+        "name": "inset lower door -10.4",
+        "minMM": [
+          -1.65,
+          -10.4,
+          29.3
+        ],
+        "maxMM": [
+          -0.7,
+          -0.2,
+          42.65
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.39,
+          0.2,
+          0.06
+        ],
+        "lightRGB": [
+          0.63,
+          0.38,
+          0.13
+        ]
+      },
+      {
+        "name": "lower door horizontal rail [-10.4, 29.3]",
+        "minMM": [
+          -1.5,
+          -10.4,
+          29.3
+        ],
+        "maxMM": [
+          -0.65,
+          -0.2,
+          30.15
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.26,
+          0.105,
+          0.038
+        ],
+        "lightRGB": [
+          0.48,
+          0.25,
+          0.085
+        ]
+      },
+      {
+        "name": "lower door horizontal rail [-10.4, 41.7]",
+        "minMM": [
+          -1.5,
+          -10.4,
+          41.7
+        ],
+        "maxMM": [
+          -0.65,
+          -0.2,
+          42.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.26,
+          0.105,
+          0.038
+        ],
+        "lightRGB": [
+          0.48,
+          0.25,
+          0.085
+        ]
+      },
+      {
+        "name": "inset lower door 0.05",
+        "minMM": [
+          -1.65,
+          0.05,
+          29.3
+        ],
+        "maxMM": [
+          -0.7,
+          10.4,
+          42.65
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.39,
+          0.2,
+          0.06
+        ],
+        "lightRGB": [
+          0.63,
+          0.38,
+          0.13
+        ]
+      },
+      {
+        "name": "lower door horizontal rail [0.05, 29.3]",
+        "minMM": [
+          -1.5,
+          0.05,
+          29.3
+        ],
+        "maxMM": [
+          -0.65,
+          10.4,
+          30.15
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.26,
+          0.105,
+          0.038
+        ],
+        "lightRGB": [
+          0.48,
+          0.25,
+          0.085
+        ]
+      },
+      {
+        "name": "lower door horizontal rail [0.05, 41.7]",
+        "minMM": [
+          -1.5,
+          0.05,
+          41.7
+        ],
+        "maxMM": [
+          -0.65,
+          10.4,
+          42.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.26,
+          0.105,
+          0.038
+        ],
+        "lightRGB": [
+          0.48,
+          0.25,
+          0.085
+        ]
+      },
+      {
+        "name": "recessed golden cupboard backing -9.45",
+        "minMM": [
+          -6.2,
+          -9.45,
+          55.55
+        ],
+        "maxMM": [
+          -5.74,
+          -1.35,
+          69.6
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.37,
+          0.25,
+          0.07
+        ],
+        "lightRGB": [
+          0.58,
+          0.43,
+          0.16
+        ]
+      },
+      {
+        "name": "recessed golden cupboard backing 0.95",
+        "minMM": [
+          -6.2,
+          0.95,
+          55.55
+        ],
+        "maxMM": [
+          -5.74,
+          9.35,
+          69.6
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "darkRGB": [
+          0.37,
+          0.25,
+          0.07
+        ],
+        "lightRGB": [
+          0.58,
+          0.43,
+          0.16
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, -1, -70.2]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -70.2,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, -1, -65.7]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -65.7,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, -1, -61.1]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -61.1,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, -1, -56.5]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -56.5,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, 1, 45.3]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            45.3,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, 1, 49.9]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            49.9,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, 1, 54.5]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            54.5,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [-9.45, 1, 59.1]",
+        "minMM": [
+          -5.83,
+          -9.45,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          -1.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            59.1,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, -1, -64]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -64,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, -1, -59.6]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -59.6,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, -1, -55.1]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -55.1,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, -1, -50.5]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -50.5,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, -1, -45.9]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          0.95,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            -45.9,
+            0
+          ],
+          "axis": [
+            0,
+            0.7249994335944138,
+            -0.688749461914693
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, 1, 55.7]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            55.7,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, 1, 60.3]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            60.3,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, 1, 64.9]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            64.9,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      },
+      {
+        "name": "diagonal lattice [0.95, 1, 69.5]",
+        "minMM": [
+          -5.83,
+          0.95,
+          55.45
+        ],
+        "maxMM": [
+          -5.15,
+          9.35,
+          69.65
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.88,
+        "direction": [
+          0,
+          -0.955,
+          1
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            69.5,
+            0
+          ],
+          "axis": [
+            0,
+            0.7231913397140647,
+            0.6906477294269318
+          ],
+          "rangeMM": [
+            -0.57,
+            0.57
+          ]
+        },
+        "darkRGB": [
+          0.23,
+          0.09,
+          0.028
+        ],
+        "lightRGB": [
+          0.44,
+          0.22,
+          0.065
+        ]
+      }
+    ],
+    "stoneParts": [],
+    "surfaceParts": [
+      {
+        "name": "brass knob lower left",
+        "kind": "paint",
+        "minMM": [
+          -1.23,
+          -1.6,
+          33.42
+        ],
+        "maxMM": [
+          -0.32999999999999996,
+          -0.05999999999999994,
+          34.980000000000004
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.73,
+            -0.83,
+            34.2
+          ],
+          "radiiMM": [
+            0.5,
+            0.6,
+            0.66
+          ]
+        },
+        "projection": {
+          "originMM": [
+            -0.79,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "rangeMM": [
+            0,
+            1
+          ]
+        },
+        "rgb": [
+          0.57,
+          0.39,
+          0.13
+        ],
+        "roughness": 0.43,
+        "metallic": 0.82,
+        "variation": 0.025
+      },
+      {
+        "name": "brass knob lower right",
+        "kind": "paint",
+        "minMM": [
+          -1.23,
+          -0.16000000000000003,
+          33.42
+        ],
+        "maxMM": [
+          -0.32999999999999996,
+          1.38,
+          34.980000000000004
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.73,
+            0.61,
+            34.2
+          ],
+          "radiiMM": [
+            0.5,
+            0.6,
+            0.66
+          ]
+        },
+        "projection": {
+          "originMM": [
+            -0.79,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "rangeMM": [
+            0,
+            1
+          ]
+        },
+        "rgb": [
+          0.57,
+          0.39,
+          0.13
+        ],
+        "roughness": 0.43,
+        "metallic": 0.82,
+        "variation": 0.025
+      },
+      {
+        "name": "brass knob upper left",
+        "kind": "paint",
+        "minMM": [
+          -5.35,
+          -1.6400000000000001,
+          60.82
+        ],
+        "maxMM": [
+          -4.449999999999999,
+          -0.09999999999999998,
+          62.38
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -4.85,
+            -0.87,
+            61.6
+          ],
+          "radiiMM": [
+            0.5,
+            0.6,
+            0.66
+          ]
+        },
+        "projection": {
+          "originMM": [
+            -4.94,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "rangeMM": [
+            0,
+            1
+          ]
+        },
+        "rgb": [
+          0.57,
+          0.39,
+          0.13
+        ],
+        "roughness": 0.43,
+        "metallic": 0.82,
+        "variation": 0.025
+      },
+      {
+        "name": "brass knob upper right",
+        "kind": "paint",
+        "minMM": [
+          -5.35,
+          -0.13,
+          60.82
+        ],
+        "maxMM": [
+          -4.449999999999999,
+          1.4100000000000001,
+          62.38
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -4.85,
+            0.64,
+            61.6
+          ],
+          "radiiMM": [
+            0.5,
+            0.6,
+            0.66
+          ]
+        },
+        "projection": {
+          "originMM": [
+            -4.94,
+            0,
+            0
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "rangeMM": [
+            0,
+            1
+          ]
+        },
+        "rgb": [
+          0.57,
+          0.39,
+          0.13
+        ],
+        "roughness": 0.43,
+        "metallic": 0.82,
+        "variation": 0.025
+      },
+      {
+        "name": "iron hinge lower southwest",
+        "kind": "paint",
+        "minMM": [
+          -1.157707067951763,
+          -10.366387968449855,
+          29.5
+        ],
+        "maxMM": [
+          -0.5472417498352031,
+          -9.755922650333295,
+          33.7
+        ],
+        "radialShell": {
+          "originMM": [
+            -0.852474408893483,
+            -10.061155309391575,
+            29.5
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.200000000000003
+          ],
+          "radiusAtOriginMM": 0.3052326590582799,
+          "radiusSlope": 0,
+          "thicknessMM": 0.3052326590582799,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge lower northwest",
+        "kind": "paint",
+        "minMM": [
+          -1.157361751586413,
+          -10.363670813631499,
+          38.0
+        ],
+        "maxMM": [
+          -0.5446384989322992,
+          -9.750947560977385,
+          42.2
+        ],
+        "radialShell": {
+          "originMM": [
+            -0.8510001252593561,
+            -10.057309187304442,
+            38.0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.200000000000003
+          ],
+          "radiusAtOriginMM": 0.3063616263270569,
+          "radiusSlope": 0,
+          "thicknessMM": 0.3063616263270569,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge lower southeast",
+        "kind": "paint",
+        "minMM": [
+          -1.1488374293879664,
+          9.499912415956711,
+          29.7
+        ],
+        "maxMM": [
+          -0.5382067867731969,
+          10.11054305857148,
+          33.8
+        ],
+        "radialShell": {
+          "originMM": [
+            -0.8435221080805817,
+            9.805227737264095,
+            29.7
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.099999999999998
+          ],
+          "radiusAtOriginMM": 0.3053153213073848,
+          "radiusSlope": 0,
+          "thicknessMM": 0.3053153213073848,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge lower northeast",
+        "kind": "paint",
+        "minMM": [
+          -1.1453850675781716,
+          9.504378158674367,
+          38.2
+        ],
+        "maxMM": [
+          -0.5362527709280661,
+          10.113510455324473,
+          42.4
+        ],
+        "radialShell": {
+          "originMM": [
+            -0.8408189192531188,
+            9.80894430699942,
+            38.2
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.199999999999996
+          ],
+          "radiusAtOriginMM": 0.3045661483250527,
+          "radiusSlope": 0,
+          "thicknessMM": 0.3045661483250527,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge upper southwest",
+        "kind": "paint",
+        "minMM": [
+          -5.139851363382209,
+          -10.535807154721693,
+          55.5
+        ],
+        "maxMM": [
+          -4.527667749901561,
+          -9.923623541241048,
+          59.6
+        ],
+        "radialShell": {
+          "originMM": [
+            -4.833759556641885,
+            -10.22971534798137,
+            55.5
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.100000000000001
+          ],
+          "radiusAtOriginMM": 0.30609180674032355,
+          "radiusSlope": 0,
+          "thicknessMM": 0.30609180674032355,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge upper northwest",
+        "kind": "paint",
+        "minMM": [
+          -5.13754798051128,
+          -10.531646813552086,
+          63.4
+        ],
+        "maxMM": [
+          -4.525872971940877,
+          -9.919971804981685,
+          67.5
+        ],
+        "radialShell": {
+          "originMM": [
+            -4.831710476226078,
+            -10.225809309266886,
+            63.4
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.100000000000001
+          ],
+          "radiusAtOriginMM": 0.3058375042852013,
+          "radiusSlope": 0,
+          "thicknessMM": 0.3058375042852013,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge upper southeast",
+        "kind": "paint",
+        "minMM": [
+          -5.132311173397113,
+          9.75007729147178,
+          55.7
+        ],
+        "maxMM": [
+          -4.519452284874925,
+          10.36293617999397,
+          59.7
+        ],
+        "radialShell": {
+          "originMM": [
+            -4.825881729136019,
+            10.056506735732874,
+            55.7
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.0
+          ],
+          "radiusAtOriginMM": 0.30642944426109464,
+          "radiusSlope": 0,
+          "thicknessMM": 0.30642944426109464,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge upper northeast",
+        "kind": "paint",
+        "minMM": [
+          -5.12731124940129,
+          9.754538135362392,
+          63.6
+        ],
+        "maxMM": [
+          -4.516544333510986,
+          10.365305051252694,
+          67.7
+        ],
+        "radialShell": {
+          "originMM": [
+            -4.821927791456138,
+            10.059921593307543,
+            63.6
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.100000000000001
+          ],
+          "radiusAtOriginMM": 0.30538345794515187,
+          "radiusSlope": 0,
+          "thicknessMM": 0.30538345794515187,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.24,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "three stacked stoneware bowls",
+        "kind": "ceramic",
+        "minMM": [
+          -8.9,
+          -11.05,
+          45.85
+        ],
+        "maxMM": [
+          -0.4,
+          -3.75,
+          51.85
+        ],
+        "rgb": [
+          0.53,
+          0.52,
+          0.395
+        ],
+        "roughness": 0.49,
+        "metallic": 0,
+        "variation": 0.025
+      },
+      {
+        "name": "upright ochre empty mug",
+        "kind": "ceramic",
+        "minMM": [
+          -6.25,
+          -3.55,
+          45.85
+        ],
+        "maxMM": [
+          -1.25,
+          2.96,
+          51.72
+        ],
+        "rgb": [
+          0.64,
+          0.37,
+          0.12
+        ],
+        "roughness": 0.41,
+        "metallic": 0,
+        "variation": 0.025
+      },
+      {
+        "name": "fallen terracotta empty mug",
+        "kind": "ceramic",
+        "minMM": [
+          -7.95,
+          3.55,
+          45.85
+        ],
+        "maxMM": [
+          -1.3,
+          10.6,
+          50.96
+        ],
+        "rgb": [
+          0.55,
+          0.265,
+          0.095
+        ],
+        "roughness": 0.43,
+        "metallic": 0,
+        "variation": 0.025
+      }
+    ],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage10/nativefull/front-back/+X/ware/lattice inspected. Source519966tri/25998384bytes/SHA913200aab1b863094cee473111bd6f52cfd32a0deac0fefaf2d2eb42f67dc187/maxZ75.078400. FloorX withYedge rails, rearY planks/uprightZ posts, cabinetZ panels/Y cornices and rails. Source diagonal lattices have slopesY/Z ±.95/.955 and protrudeX≈-5.5 versus opaque recessed backingX≈-5.95; gold backing as PDF, no synthetic glass. Four separately bounded brass knobs, eight vertical iron hinge barrels, each cylinder fitted independently to native ray cross-sections(radius.2696..2714mm,residual≤.00244mm). Three gray-olive bowls, uprightochre mug and fallen terracotta mug; both empty. Upright probe[-4.3,-.5]hits46.54964 below51.6rim, fallen+Xprobe[-.2,7.6,47.4]hitsX-4.44860. Preserve sculpted depths/handles. DecorXmax2.03925 fits conservative western blockerX≤2.4,Y±17.65. NativefrontquarterpointsX8.75,Y±8.75 hit25.70559/25.69637,nZ>.999; midline atY0 has loweredgroove24.6989, omitunnecessarybadstandpoint. No light/emission inherited. Validate both independently simplifiedtiers, source geometry/holes, actualpackedcolour/ORM/hardware/woodcontacts, source/packedfootprint, compactcomparison andfreshMCP."
+}
