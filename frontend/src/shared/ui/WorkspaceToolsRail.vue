@@ -18,8 +18,9 @@
   border-radius: 14px;
   background-color: color-mix(in srgb, var(--surface) 52%, transparent);
   background-image: linear-gradient(150deg, color-mix(in srgb, var(--text-on-accent) 6%, transparent), transparent 60%);
-  backdrop-filter: blur(24px) saturate(1.2);
+  /* Keep the standard property last so minification preserves it for Chromium. */
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  backdrop-filter: blur(24px) saturate(1.2);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--bg) 28%, transparent), inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   transition: background-color .18s ease, border-color .18s ease;
   animation: workspace-tools-enter .18s ease backwards;
