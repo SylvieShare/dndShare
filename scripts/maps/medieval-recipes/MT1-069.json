@@ -1,0 +1,1698 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "hasDecor": true,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Chandelier On",
+  "groupCode": "MED-chandelier",
+  "renderTriangles": 140000,
+  "lodTriangles": 50000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.4,
+  "lodUVAngleLimitRad": 0.4,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0015,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 100,
+  "decorStartMM": 27,
+  "standPointsMM": [
+    [
+      -14,
+      -14
+    ],
+    [
+      -14,
+      14
+    ],
+    [
+      14,
+      -14
+    ],
+    [
+      14,
+      14
+    ]
+  ],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "chandelier",
+    "candle",
+    "wax",
+    "flame",
+    "light",
+    "brass",
+    "iron"
+  ],
+  "blockersMM": [
+    [
+      [
+        17.65,
+        4.394025567942233
+      ],
+      [
+        17.11396850701817,
+        7.088837861632955
+      ],
+      [
+        13.098464419307529,
+        13.098464419307527
+      ],
+      [
+        7.088837861632956,
+        17.11396850701817
+      ],
+      [
+        4.394025567942234,
+        17.65
+      ],
+      [
+        -4.394025567942232,
+        17.65
+      ],
+      [
+        -7.088837861632954,
+        17.11396850701817
+      ],
+      [
+        -13.098464419307527,
+        13.098464419307529
+      ],
+      [
+        -17.11396850701817,
+        7.088837861632958
+      ],
+      [
+        -17.65,
+        4.3940255679422355
+      ],
+      [
+        -17.65,
+        -4.394025567942231
+      ],
+      [
+        -17.11396850701817,
+        -7.088837861632953
+      ],
+      [
+        -13.09846441930753,
+        -13.098464419307527
+      ],
+      [
+        -7.088837861632966,
+        -17.113968507018164
+      ],
+      [
+        -4.394025567942219,
+        -17.65
+      ],
+      [
+        4.394025567942223,
+        -17.65
+      ],
+      [
+        7.0888378616329595,
+        -17.113968507018168
+      ],
+      [
+        13.098464419307525,
+        -13.09846441930753
+      ],
+      [
+        17.113968507018164,
+        -7.088837861632967
+      ],
+      [
+        17.65,
+        -4.394025567942217
+      ]
+    ]
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      4,
+      8
+    ],
+    "lodMiB": [
+      1.6,
+      4.2
+    ],
+    "shadowKiB": [
+      110,
+      260
+    ],
+    "previewKiB": [
+      14,
+      60
+    ],
+    "basis": "35mm floor,88.2mm tall carved post and six curved iron braces supporting annular brass frame/six radial spokes,seven candles with irregular wax runoff and individually bounded/graded emissive flames.140000/50000 independent triangles,1024bakes/data render,768LOD colour/data; compare compact while preserving tiny heads,wax rims,spoke gaps and flame bases."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "floor Y boards and side fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.85
+        ],
+        "axis": "y",
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "south X rail",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          -14.3,
+          26.85
+        ],
+        "axis": "x",
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "north X rail",
+        "minMM": [
+          -17.7,
+          14.3,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.85
+        ],
+        "axis": "x",
+        "roughness": 0.9,
+        "physicalPigment": true
+      },
+      {
+        "name": "vertical carved timber post and stepped foot",
+        "minMM": [
+          -6,
+          -6,
+          26.85
+        ],
+        "maxMM": [
+          6,
+          6,
+          76
+        ],
+        "axis": "z",
+        "roughness": 0.9,
+        "physicalPigment": true
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "six curved iron braces and lower fasteners",
+        "kind": "paint",
+        "minMM": [
+          -18.3,
+          -18.3,
+          59.7
+        ],
+        "maxMM": [
+          18.3,
+          18.3,
+          74.92
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -3.24,
+              -3.46,
+              59.7
+            ],
+            "maxMM": [
+              3.24,
+              3.44,
+              73.3
+            ],
+            "includeParts": [
+              {
+                "minMM": [
+                  -6,
+                  -6,
+                  59.7
+                ],
+                "maxMM": [
+                  6,
+                  6,
+                  73.3
+                ],
+                "projection": {
+                  "originMM": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "axis": [
+                    0.7071067811865476,
+                    0.7071067811865475,
+                    0
+                  ],
+                  "rangeMM": [
+                    -100,
+                    4.044902179171943
+                  ]
+                },
+                "includeParts": [
+                  {
+                    "minMM": [
+                      -6,
+                      -6,
+                      59.7
+                    ],
+                    "maxMM": [
+                      6,
+                      6,
+                      73.3
+                    ],
+                    "projection": {
+                      "originMM": [
+                        0,
+                        0,
+                        0
+                      ],
+                      "axis": [
+                        -0.7071067811865475,
+                        0.7071067811865476,
+                        0
+                      ],
+                      "rangeMM": [
+                        -100,
+                        3.9582106636446723
+                      ]
+                    },
+                    "includeParts": [
+                      {
+                        "minMM": [
+                          -6,
+                          -6,
+                          59.7
+                        ],
+                        "maxMM": [
+                          6,
+                          6,
+                          73.3
+                        ],
+                        "projection": {
+                          "originMM": [
+                            0,
+                            0,
+                            0
+                          ],
+                          "axis": [
+                            -0.7071067811865477,
+                            -0.7071067811865475,
+                            0
+                          ],
+                          "rangeMM": [
+                            -100,
+                            3.8905406951999453
+                          ]
+                        },
+                        "includeParts": [
+                          {
+                            "minMM": [
+                              -6,
+                              -6,
+                              59.7
+                            ],
+                            "maxMM": [
+                              6,
+                              6,
+                              73.3
+                            ],
+                            "projection": {
+                              "originMM": [
+                                0,
+                                0,
+                                0
+                              ],
+                              "axis": [
+                                0.7071067811865474,
+                                -0.7071067811865477,
+                                0
+                              ],
+                              "rangeMM": [
+                                -100,
+                                4.043699982465018
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rgb": [
+          0.235,
+          0.245,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "embedded lower iron strap 30",
+        "kind": "paint",
+        "minMM": [
+          3.55,
+          -1.64,
+          60.6
+        ],
+        "maxMM": [
+          5.4,
+          1.64,
+          64.0
+        ],
+        "rotationZDeg": 30,
+        "centerMM": [
+          0,
+          0,
+          0
+        ],
+        "rgb": [
+          0.235,
+          0.245,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "embedded lower iron strap 90",
+        "kind": "paint",
+        "minMM": [
+          3.55,
+          -1.64,
+          60.6
+        ],
+        "maxMM": [
+          5.4,
+          1.64,
+          64.0
+        ],
+        "rotationZDeg": 90,
+        "centerMM": [
+          0,
+          0,
+          0
+        ],
+        "rgb": [
+          0.235,
+          0.245,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "embedded lower iron strap 150",
+        "kind": "paint",
+        "minMM": [
+          3.55,
+          -1.64,
+          60.6
+        ],
+        "maxMM": [
+          5.4,
+          1.64,
+          64.0
+        ],
+        "rotationZDeg": 150,
+        "centerMM": [
+          0,
+          0,
+          0
+        ],
+        "rgb": [
+          0.235,
+          0.245,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "embedded lower iron strap 210",
+        "kind": "paint",
+        "minMM": [
+          3.55,
+          -1.64,
+          60.6
+        ],
+        "maxMM": [
+          5.4,
+          1.64,
+          64.0
+        ],
+        "rotationZDeg": 210,
+        "centerMM": [
+          0,
+          0,
+          0
+        ],
+        "rgb": [
+          0.235,
+          0.245,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "embedded lower iron strap 270",
+        "kind": "paint",
+        "minMM": [
+          3.55,
+          -1.64,
+          60.6
+        ],
+        "maxMM": [
+          5.4,
+          1.64,
+          64.0
+        ],
+        "rotationZDeg": 270,
+        "centerMM": [
+          0,
+          0,
+          0
+        ],
+        "rgb": [
+          0.235,
+          0.245,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "embedded lower iron strap 330",
+        "kind": "paint",
+        "minMM": [
+          3.55,
+          -1.64,
+          60.6
+        ],
+        "maxMM": [
+          5.4,
+          1.64,
+          64.0
+        ],
+        "rotationZDeg": 330,
+        "centerMM": [
+          0,
+          0,
+          0
+        ],
+        "rgb": [
+          0.235,
+          0.245,
+          0.225
+        ],
+        "metallic": 0.88,
+        "roughness": 0.57,
+        "variation": 0.02
+      },
+      {
+        "name": "brass annular frame",
+        "kind": "paint",
+        "minMM": [
+          -20,
+          -20,
+          71.8
+        ],
+        "maxMM": [
+          20,
+          20,
+          75.86
+        ],
+        "radialShell": {
+          "originMM": [
+            0,
+            0,
+            71.8
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            4.060000000000002
+          ],
+          "radiusAtOriginMM": 18.4,
+          "radiusSlope": 0,
+          "thicknessMM": 4.379999999999999,
+          "allowanceMM": 0
+        },
+        "rgb": [
+          0.52,
+          0.365,
+          0.13
+        ],
+        "metallic": 0.82,
+        "roughness": 0.47,
+        "variation": 0.02
+      },
+      {
+        "name": "six flat brass radial spokes and central collar",
+        "kind": "paint",
+        "minMM": [
+          -18.3,
+          -18.3,
+          74.76
+        ],
+        "maxMM": [
+          18.3,
+          18.3,
+          75.86
+        ],
+        "rgb": [
+          0.52,
+          0.365,
+          0.13
+        ],
+        "metallic": 0.82,
+        "roughness": 0.47,
+        "variation": 0.02
+      },
+      {
+        "name": "seven ivory candles and upper wax",
+        "kind": "ceramic",
+        "minMM": [
+          -18.3,
+          -18.3,
+          75.85
+        ],
+        "maxMM": [
+          18.3,
+          18.3,
+          89
+        ],
+        "rgb": [
+          0.82,
+          0.79,
+          0.57
+        ],
+        "metallic": 0,
+        "roughness": 0.73,
+        "variation": 0.02
+      },
+      {
+        "name": "wax runoff above recessed spokes",
+        "kind": "ceramic",
+        "minMM": [
+          -20,
+          -20,
+          74.91
+        ],
+        "maxMM": [
+          20,
+          20,
+          75.85
+        ],
+        "radialShell": {
+          "originMM": [
+            0,
+            0,
+            74.91
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.9399999999999977
+          ],
+          "radiusAtOriginMM": 14.02,
+          "radiusSlope": 0,
+          "thicknessMM": 14.02,
+          "allowanceMM": 0
+        },
+        "excludeParts": [
+          {
+            "minMM": [
+              -20,
+              -20,
+              74.9
+            ],
+            "maxMM": [
+              20,
+              20,
+              75.85
+            ],
+            "radialShell": {
+              "originMM": [
+                0,
+                0,
+                74.9
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                0.9499999999999886
+              ],
+              "radiusAtOriginMM": 5.65,
+              "radiusSlope": 0,
+              "thicknessMM": 2.3000000000000003,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "rgb": [
+          0.82,
+          0.79,
+          0.57
+        ],
+        "metallic": 0,
+        "roughness": 0.73,
+        "variation": 0.02
+      },
+      {
+        "name": "wax drips beyond outer band",
+        "kind": "ceramic",
+        "minMM": [
+          -20,
+          -20,
+          72.0
+        ],
+        "maxMM": [
+          20,
+          20,
+          75.85
+        ],
+        "radialShell": {
+          "originMM": [
+            0,
+            0,
+            72.0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            3.8499999999999943
+          ],
+          "radiusAtOriginMM": 17.49,
+          "radiusSlope": 0,
+          "thicknessMM": 0.0,
+          "allowanceMM": 1.1
+        },
+        "rgb": [
+          0.82,
+          0.79,
+          0.57
+        ],
+        "metallic": 0,
+        "roughness": 0.73,
+        "variation": 0.02
+      },
+      {
+        "name": "wax over upper outer chamfer",
+        "kind": "ceramic",
+        "minMM": [
+          -20,
+          -20,
+          75.0
+        ],
+        "maxMM": [
+          20,
+          20,
+          75.85
+        ],
+        "radialShell": {
+          "originMM": [
+            0,
+            0,
+            75.0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.8499999999999943
+          ],
+          "radiusAtOriginMM": 17.6,
+          "radiusSlope": -0.6,
+          "thicknessMM": 0.0,
+          "allowanceMM": 2
+        },
+        "rgb": [
+          0.82,
+          0.79,
+          0.57
+        ],
+        "metallic": 0,
+        "roughness": 0.73,
+        "variation": 0.02
+      },
+      {
+        "name": "fastener spoke top",
+        "kind": "paint",
+        "minMM": [
+          -0.6083271938562393,
+          -6.572327404022217,
+          74.88
+        ],
+        "maxMM": [
+          0.4516728061437607,
+          -5.5123274040222165,
+          75.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.07832719385623932,
+            -6.042327404022217,
+            74.96
+          ],
+          "radiiMM": [
+            0.49,
+            0.49,
+            0.52
+          ]
+        },
+        "rgb": [
+          0.27,
+          0.28,
+          0.25
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "fastener spoke upperright",
+        "kind": "paint",
+        "minMM": [
+          -5.900386123657227,
+          -3.674384622573853,
+          74.88
+        ],
+        "maxMM": [
+          -4.840386123657226,
+          -2.6143846225738523,
+          75.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -5.370386123657227,
+            -3.1443846225738525,
+            74.96
+          ],
+          "radiiMM": [
+            0.49,
+            0.49,
+            0.52
+          ]
+        },
+        "rgb": [
+          0.27,
+          0.28,
+          0.25
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "fastener spoke lowerright",
+        "kind": "paint",
+        "minMM": [
+          -5.900479583740235,
+          2.3735220146179197,
+          74.88
+        ],
+        "maxMM": [
+          -4.840479583740234,
+          3.43352201461792,
+          75.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -5.370479583740234,
+            2.90352201461792,
+            74.96
+          ],
+          "radiiMM": [
+            0.49,
+            0.49,
+            0.52
+          ]
+        },
+        "rgb": [
+          0.27,
+          0.28,
+          0.25
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "fastener spoke bottom",
+        "kind": "paint",
+        "minMM": [
+          -0.6083414393663407,
+          5.60765811920166,
+          74.88
+        ],
+        "maxMM": [
+          0.4516585606336594,
+          6.66765811920166,
+          75.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -0.07834143936634064,
+            6.13765811920166,
+            74.96
+          ],
+          "radiiMM": [
+            0.49,
+            0.49,
+            0.52
+          ]
+        },
+        "rgb": [
+          0.27,
+          0.28,
+          0.25
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "fastener spoke lowerleft",
+        "kind": "paint",
+        "minMM": [
+          4.599578590393066,
+          2.457577676773071,
+          74.88
+        ],
+        "maxMM": [
+          5.659578590393067,
+          3.5175776767730715,
+          75.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            5.129578590393066,
+            2.9875776767730713,
+            74.96
+          ],
+          "radiiMM": [
+            0.49,
+            0.49,
+            0.52
+          ]
+        },
+        "rgb": [
+          0.27,
+          0.28,
+          0.25
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "fastener spoke upperleft",
+        "kind": "paint",
+        "minMM": [
+          4.557569236755371,
+          -3.674432067871094,
+          74.88
+        ],
+        "maxMM": [
+          5.617569236755371,
+          -2.6144320678710935,
+          75.6
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            5.087569236755371,
+            -3.1444320678710938,
+            74.96
+          ],
+          "radiiMM": [
+            0.49,
+            0.49,
+            0.52
+          ]
+        },
+        "rgb": [
+          0.27,
+          0.28,
+          0.25
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "lower bolt 30",
+        "kind": "paint",
+        "minMM": [
+          3.535324478149414,
+          1.7875303268432616,
+          61.10000076293945
+        ],
+        "maxMM": [
+          4.735324478149414,
+          2.987530326843262,
+          62.300000762939455
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            4.135324478149414,
+            2.3875303268432617,
+            61.70000076293945
+          ],
+          "radiiMM": [
+            0.58,
+            0.58,
+            0.58
+          ]
+        },
+        "rgb": [
+          0.285,
+          0.295,
+          0.27
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "lower bolt 90",
+        "kind": "paint",
+        "minMM": [
+          -0.5999999999999998,
+          3.7354253768920898,
+          61.10000076293945
+        ],
+        "maxMM": [
+          0.6000000000000002,
+          4.9354253768920895,
+          62.300000762939455
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            2.6546817248249664e-16,
+            4.33542537689209,
+            61.70000076293945
+          ],
+          "radiiMM": [
+            0.58,
+            0.58,
+            0.58
+          ]
+        },
+        "rgb": [
+          0.285,
+          0.295,
+          0.27
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "lower bolt 150",
+        "kind": "paint",
+        "minMM": [
+          -4.469109153747558,
+          1.633830451965332,
+          61.10000076293945
+        ],
+        "maxMM": [
+          -3.2691091537475585,
+          2.833830451965332,
+          62.300000762939455
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -3.8691091537475586,
+            2.233830451965332,
+            61.70000076293945
+          ],
+          "radiiMM": [
+            0.58,
+            0.58,
+            0.58
+          ]
+        },
+        "rgb": [
+          0.285,
+          0.295,
+          0.27
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "lower bolt 210",
+        "kind": "paint",
+        "minMM": [
+          -4.606521224975586,
+          -2.9131656646728517,
+          61.10000076293945
+        ],
+        "maxMM": [
+          -3.406521224975586,
+          -1.7131656646728515,
+          62.300000762939455
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -4.006521224975586,
+            -2.3131656646728516,
+            61.70000076293945
+          ],
+          "radiiMM": [
+            0.58,
+            0.58,
+            0.58
+          ]
+        },
+        "rgb": [
+          0.285,
+          0.295,
+          0.27
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "lower bolt 270",
+        "kind": "paint",
+        "minMM": [
+          -0.6000000000000008,
+          -4.9214273452758786,
+          61.10000076293945
+        ],
+        "maxMM": [
+          0.5999999999999992,
+          -3.721427345275879,
+          62.300000762939455
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -7.938331371778627e-16,
+            -4.321427345275879,
+            61.70000076293945
+          ],
+          "radiiMM": [
+            0.58,
+            0.58,
+            0.58
+          ]
+        },
+        "rgb": [
+          0.285,
+          0.295,
+          0.27
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "lower bolt 330",
+        "kind": "paint",
+        "minMM": [
+          3.307064437866211,
+          -2.855743980407715,
+          61.10000076293945
+        ],
+        "maxMM": [
+          4.507064437866211,
+          -1.6557439804077148,
+          62.300000762939455
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            3.907064437866211,
+            -2.255743980407715,
+            61.70000076293945
+          ],
+          "radiiMM": [
+            0.58,
+            0.58,
+            0.58
+          ]
+        },
+        "rgb": [
+          0.285,
+          0.295,
+          0.27
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "candle flame 1",
+        "kind": "flame",
+        "minMM": [
+          -1.881499981880188,
+          -1.3202999591827393,
+          84.97539367675782
+        ],
+        "maxMM": [
+          0.7527000069618225,
+          1.2094000339508058,
+          88.29810485839843
+        ],
+        "awayFromSource": {
+          "code": "MT1-070",
+          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-069",
+            "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+          }
+        },
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "metallic": 0,
+        "roughness": 0.3,
+        "variation": 0.02,
+        "gradientZMM": [
+          85.19539367675782,
+          88.14810485839844
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.9,
+            0.34
+          ],
+          [
+            1,
+            0.32,
+            0.045
+          ]
+        ],
+        "emissionInsetMM": 0.015
+      },
+      {
+        "name": "candle flame 2",
+        "kind": "flame",
+        "minMM": [
+          -1.2999000310897828,
+          12.073001289367676,
+          83.14620056152344
+        ],
+        "maxMM": [
+          1.457100009918213,
+          14.794999694824218,
+          86.92330322265624
+        ],
+        "awayFromSource": {
+          "code": "MT1-070",
+          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-069",
+            "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+          }
+        },
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "metallic": 0,
+        "roughness": 0.3,
+        "variation": 0.02,
+        "gradientZMM": [
+          83.36620056152344,
+          86.77330322265625
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.9,
+            0.34
+          ],
+          [
+            1,
+            0.32,
+            0.045
+          ]
+        ],
+        "emissionInsetMM": 0.015
+      },
+      {
+        "name": "candle flame 3",
+        "kind": "flame",
+        "minMM": [
+          -1.3664999961853028,
+          -14.943400001525879,
+          83.87079467773438
+        ],
+        "maxMM": [
+          1.430199956893921,
+          -12.102698707580567,
+          87.9009033203125
+        ],
+        "awayFromSource": {
+          "code": "MT1-070",
+          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-069",
+            "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+          }
+        },
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "metallic": 0,
+        "roughness": 0.3,
+        "variation": 0.02,
+        "gradientZMM": [
+          84.09079467773438,
+          87.7509033203125
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.9,
+            0.34
+          ],
+          [
+            1,
+            0.32,
+            0.045
+          ]
+        ],
+        "emissionInsetMM": 0.015
+      },
+      {
+        "name": "candle flame 4",
+        "kind": "flame",
+        "minMM": [
+          10.21719970703125,
+          5.140699768066407,
+          81.73979797363282
+        ],
+        "maxMM": [
+          12.802800750732422,
+          7.905399417877197,
+          86.2446075439453
+        ],
+        "awayFromSource": {
+          "code": "MT1-070",
+          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-069",
+            "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+          }
+        },
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "metallic": 0,
+        "roughness": 0.3,
+        "variation": 0.02,
+        "gradientZMM": [
+          81.95979797363282,
+          86.09460754394532
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.9,
+            0.34
+          ],
+          [
+            1,
+            0.32,
+            0.045
+          ]
+        ],
+        "emissionInsetMM": 0.015
+      },
+      {
+        "name": "candle flame 5",
+        "kind": "flame",
+        "minMM": [
+          10.101299667358399,
+          -7.553100204467773,
+          82.56200256347657
+        ],
+        "maxMM": [
+          12.82379970550537,
+          -4.9423002243042,
+          86.67369995117187
+        ],
+        "awayFromSource": {
+          "code": "MT1-070",
+          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-069",
+            "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+          }
+        },
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "metallic": 0,
+        "roughness": 0.3,
+        "variation": 0.02,
+        "gradientZMM": [
+          82.78200256347657,
+          86.52369995117188
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.9,
+            0.34
+          ],
+          [
+            1,
+            0.32,
+            0.045
+          ]
+        ],
+        "emissionInsetMM": 0.015
+      },
+      {
+        "name": "candle flame 6",
+        "kind": "flame",
+        "minMM": [
+          -12.920400238037109,
+          -8.299799537658691,
+          81.84869995117188
+        ],
+        "maxMM": [
+          -10.276899719238282,
+          -5.414000415802002,
+          86.21720275878906
+        ],
+        "awayFromSource": {
+          "code": "MT1-070",
+          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-069",
+            "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+          }
+        },
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "metallic": 0,
+        "roughness": 0.3,
+        "variation": 0.02,
+        "gradientZMM": [
+          82.06869995117188,
+          86.06720275878907
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.9,
+            0.34
+          ],
+          [
+            1,
+            0.32,
+            0.045
+          ]
+        ],
+        "emissionInsetMM": 0.015
+      },
+      {
+        "name": "candle flame 7",
+        "kind": "flame",
+        "minMM": [
+          -13.178200340270996,
+          5.517899894714356,
+          80.777197265625
+        ],
+        "maxMM": [
+          -10.28599967956543,
+          8.097600078582763,
+          86.07019958496093
+        ],
+        "awayFromSource": {
+          "code": "MT1-070",
+          "sourceSHA256": "8269bca0e17dfc70823e450605d2b80c7dbcfe9f808f2be23d4c2e5360ee0e2d",
+          "matchMM": 0.08,
+          "projectTo": {
+            "code": "MT1-069",
+            "sourceSHA256": "fbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73"
+          }
+        },
+        "rgb": [
+          1,
+          0.65,
+          0.13
+        ],
+        "metallic": 0,
+        "roughness": 0.3,
+        "variation": 0.02,
+        "gradientZMM": [
+          80.997197265625,
+          85.92019958496094
+        ],
+        "gradientRGB": [
+          [
+            1,
+            0.9,
+            0.34
+          ],
+          [
+            1,
+            0.32,
+            0.045
+          ]
+        ],
+        "emissionInsetMM": 0.015
+      }
+    ],
+    "stoneParts": [],
+    "fabricParts": [],
+    "ironParts": [],
+    "hardware": [],
+    "emissionStrength": 1.2
+  },
+  "defaultLights": [
+    {
+      "key": "candle-1",
+      "name": "Свеча 1",
+      "kind": "torch",
+      "color": "#ffd078",
+      "position": [
+        0.483175,
+        0.499787,
+        1.993709
+      ],
+      "intensity": 1.3,
+      "radius": 2.4,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "candle-2",
+      "name": "Свеча 2",
+      "kind": "torch",
+      "color": "#ffd078",
+      "position": [
+        0.502087,
+        0.116426,
+        1.949779
+      ],
+      "intensity": 1.3,
+      "radius": 2.4,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "candle-3",
+      "name": "Свеча 3",
+      "kind": "torch",
+      "color": "#ffd078",
+      "position": [
+        0.49994,
+        0.887066,
+        1.972778
+      ],
+      "intensity": 1.3,
+      "radius": 2.4,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "candle-4",
+      "name": "Свеча 4",
+      "kind": "torch",
+      "color": "#ffd078",
+      "position": [
+        0.827171,
+        0.314145,
+        1.916384
+      ],
+      "intensity": 1.3,
+      "radius": 2.4,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "candle-5",
+      "name": "Свеча 5",
+      "kind": "torch",
+      "color": "#ffd078",
+      "position": [
+        0.825118,
+        0.679511,
+        1.934295
+      ],
+      "intensity": 1.3,
+      "radius": 2.4,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "candle-6",
+      "name": "Свеча 6",
+      "kind": "torch",
+      "color": "#ffd078",
+      "position": [
+        0.16723,
+        0.694029,
+        1.916612
+      ],
+      "intensity": 1.3,
+      "radius": 2.4,
+      "enabled": true,
+      "flicker": true
+    },
+    {
+      "key": "candle-7",
+      "name": "Свеча 7",
+      "kind": "torch",
+      "color": "#ffd078",
+      "position": [
+        0.167356,
+        0.306562,
+        1.891519
+      ],
+      "intensity": 1.3,
+      "radius": 2.4,
+      "enabled": true,
+      "flicker": true
+    }
+  ],
+  "reviewNotes": "PDFpage10/full/front-back/+X/candles/top/underside andtemporarycut75.85inspected. Source540012tri/27000684bytes/SHAfbc3185b5bbfa3dda17135900e06f2043cc460349988837251fab63ceb606a73/maxZ88.198105. FloorY confirmednativeboards,front/backXrails;postZ/steppedfoot. Sixcurvedironbracesand6lowerbolts;bronzeannularframe6spokes/centralcollar,6measuredspokeheads. Sevenivorycandles,runoffoverringandspokes. Baremetalspokeplane74.865,collartop75.758,ringtop75.823;profilemasks/chamferenvelopesguardwetareas,needsactualmatchingcloseQA. CommonOff70distancesfloor/post/ring.000138/.001162/.001310mm;samplecommonmax.0303mm. SevenflamesuseSHA-boundaway70.08/project69,currentoriginalprojectionbeforeclassification,individualbbox/heightgradient/inset.015. Light7warmflickeringtorchtemplatesintensity1.3/radius2.4locatednativeflamemeans,APIlimit8. Noaddedwaxorflamegeometry. Sourcefloorraisedrim26.7823requiresdecorcut27.0forcontainment;trueupperdecorRmax18.089629→16gonR18.524026028046134clippedto±17.65mmtohonorfootprintbounds,fourverifiednative±14cornersstandclear25.3919..25.681/nZ>.932. Innerrayshituppercandles/ring,arenotfloorstands. Validatewax/metalboundaries,all7flames/noglowoutside,12heads,woodcontacts,6spokegaps,source/packedfootprintandbothcandidates/tiersbeforepub."
+}
