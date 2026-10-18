@@ -169,12 +169,26 @@
 }
 
 .map-editor-workspace > .map-editor {
-  display: flex;
+  display: block;
+  position: relative;
 }
 .map-editor-workspace .map-editor-main {
-  flex: 1;
+  position: absolute;
+  inset: 0;
   gap: 0;
   padding: 0;
+}
+.map-editor-workspace .map-controls-hint {
+  left: calc(var(--map-overlay-left, 0px) + 16px);
+  max-width: min(
+    420px,
+    max(0px, calc(100% - var(--map-overlay-left, 0px) - 270px))
+  );
+}
+@media (max-width: 760px) {
+  .map-editor-workspace .map-controls-hint {
+    max-width: max(0px, calc(100% - var(--map-overlay-left, 0px) - 32px));
+  }
 }
 .map-editor-workspace .map-editor-main > .map-canvas {
   border-radius: 0;

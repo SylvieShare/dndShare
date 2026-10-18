@@ -3,6 +3,7 @@
     ref="sidebar"
     v-model:tab="tab"
     class="map-tile-sidebar"
+    overlay
     :tabs="tabs"
     aria-label="Каталог плиток"
     tabs-label="Боковые вкладки редактора"
@@ -69,6 +70,7 @@ function selectArea(id) {
   props.editor.selectArea(id);
 }
 defineExpose({
+  bounds: () => sidebar.value?.bounds(),
   openArea(id) {
     sidebar.value?.openTab("areas");
     props.editor.selectArea(id);

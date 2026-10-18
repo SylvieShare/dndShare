@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint } from "./editorHelpers";
+import {
+  canvasFrame,
+  dragTile,
+  mapPoint,
+  uncoverMapPoint,
+} from "./editorHelpers";
 
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -10,6 +15,7 @@ async function ready(page) {
 }
 async function clickPoint(page, x, y, command = false) {
   const point = await mapPoint(page, x, y);
+  await uncoverMapPoint(page, point);
   if (command) await page.keyboard.down("Meta");
   await page.mouse.click(point.x, point.y);
   if (command) await page.keyboard.up("Meta");
@@ -144,19 +150,19 @@ test("arrow keys move the camera and leave text field navigation alone", async (
   page,
 }) => {
   await ready(page);
-  const canvas = page.locator(".map-canvas canvas");
-  const before = await canvas.screenshot({ animations: "disabled" });
+  const before = await canvasFrame(page);
   await page.keyboard.press("ArrowRight");
-  expect((await canvas.screenshot()).equals(before)).toBe(false);
+  await expect
+    .poll(async () => (await canvasFrame(page)).equals(before))
+    .toBe(false);
+  await page.waitForTimeout(500);
   await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await page.getByRole("button", { name: "Плитки", exact: true }).click();
-  const after = await canvas.screenshot({ animations: "disabled" });
+  const after = await canvasFrame(page);
   await page.getByRole("button", { name: "Настройки", exact: true }).click();
   await page.getByLabel("Название карты", { exact: true }).focus();
   await page.keyboard.press("ArrowLeft");
   await page.getByRole("button", { name: "Плитки", exact: true }).click();
-  expect(
-    (await canvas.screenshot({ animations: "disabled" })).equals(after),
-  ).toBe(true);
+  expect((await canvasFrame(page)).equals(after)).toBe(true);
   expect(await page.evaluate(() => window.requests)).toEqual([]);
 });

@@ -101,6 +101,7 @@ const props = defineProps({
   publicCode: String,
   tabletop: Boolean,
   areaMode: { type: String, default: "hide" },
+  occlusions: Function,
   hint: {
     type: [String, Array],
     default: "Колесо: масштаб · Alt: перемещение · ПКМ/Shift: вращение",
@@ -267,7 +268,10 @@ defineExpose({
     keyboardPan.stop();
     cameraFocus.focusAt(
       point,
-      focusViewportOffset(host.value?.getBoundingClientRect(), obstacle),
+      focusViewportOffset(
+        host.value?.getBoundingClientRect(),
+        obstacle ?? props.occlusions?.(),
+      ),
     );
   },
   observeAreaFrame: (target, id, changed) =>
@@ -279,13 +283,20 @@ defineExpose({
   fit,
   getView: () => renderer?.getView(),
   setView,
-  pointAt: pointer.pointAt,
+  pointAt: (event) => {
+    const target =
+      event && document.elementFromPoint(event.clientX, event.clientY);
+    return target && host.value?.contains(target)
+      ? pointer.pointAt(event)
+      : null;
+  },
   centerPoint: () => {
     const view = renderer?.getView();
     if (!view) return null;
     const bounds = host.value.getBoundingClientRect();
+    const offset = focusViewportOffset(bounds, props.occlusions?.());
     return pointer.pointAt({
-      clientX: bounds.x + bounds.width / 2,
+      clientX: bounds.x + bounds.width / 2 + offset.x,
       clientY: bounds.y + bounds.height / 2,
     });
   },

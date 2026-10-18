@@ -9,6 +9,7 @@
     :class="{
       'map-sidebar--collapsed': collapsed,
       'map-sidebar--opening': opening,
+      'map-sidebar--overlay': overlay,
     }"
   >
     <nav ref="navigation" class="map-sidebar-tabs" :aria-label="tabsLabel">
@@ -40,6 +41,7 @@
     </nav>
     <div
       class="map-sidebar-panel"
+      :class="{ 'map-glass-panel': overlay }"
       :inert="collapsed"
       :aria-hidden="collapsed || undefined"
     >
@@ -91,6 +93,7 @@ const props = defineProps({
   tab: { type: String, required: true },
   tabsLabel: { type: String, default: "Вкладки карты" },
   collapseAt: { type: Number, default: 760 },
+  overlay: Boolean,
 });
 const emit = defineEmits(["update:tab", "select", "resize"]);
 const element = ref(null);
@@ -213,6 +216,7 @@ onBeforeUnmount(() => {
 defineExpose({
   openTab,
   collapse,
+  bounds: () => element.value?.getBoundingClientRect(),
 });
 </script>
 <style scoped>
@@ -239,6 +243,20 @@ defineExpose({
   padding: 6px 5px 6px 6px;
   border-right: 1px solid var(--border-strong);
   background: var(--surface);
+}
+.map-sidebar--overlay {
+  position: absolute;
+  z-index: 20;
+  inset: 0 auto 0 0;
+  background: transparent;
+  pointer-events: none;
+}
+.map-sidebar--overlay > .map-sidebar-tabs,
+.map-sidebar--overlay > .map-sidebar-panel {
+  pointer-events: auto;
+}
+.map-sidebar--overlay.map-sidebar--collapsed > .map-sidebar-panel {
+  pointer-events: none;
 }
 .map-sidebar-indicator {
   position: absolute;

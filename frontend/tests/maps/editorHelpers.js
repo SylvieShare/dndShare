@@ -1,3 +1,31 @@
+export async function canvasFrame(page) {
+  const data = await page.locator(".map-canvas").evaluate(async (element) => {
+    const canvas = element.querySelector(".map-canvas-surface > canvas");
+    const controller = element.__vueParentComponent.exposed;
+    controller.setView(controller.getView());
+    return new Promise((resolve) =>
+      requestAnimationFrame(() => resolve(canvas.toDataURL("image/png"))),
+    );
+  });
+  return Buffer.from(data.split(",")[1], "base64");
+}
+export async function uncoverMapPoint(page, point) {
+  const covered = await page.evaluate(
+    (point) =>
+      !!document.elementFromPoint(point.x, point.y)?.closest(".map-sidebar"),
+    point,
+  );
+  if (!covered) return;
+  await page
+    .getByRole("button", { name: "Свернуть панель карты", exact: true })
+    .click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector(".map-sidebar").getBoundingClientRect().width ===
+      60,
+  );
+}
+
 export async function pickTile(page, name = "Пол 1") {
   const reference = page.getByRole("dialog", {
     name: "Справочник тайлов",
@@ -45,6 +73,7 @@ export async function dragTile(
   { name = "Пол 1", rotate = false } = {},
 ) {
   await pickTile(page, name);
+  await uncoverMapPoint(page, point);
   await page.mouse.move(point.x, point.y, { steps: 12 });
   if (rotate) await page.keyboard.press("r");
   await page.mouse.click(point.x, point.y);

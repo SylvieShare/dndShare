@@ -1,0 +1,22 @@
+.map-editor-workspace
+  :is(.map-sidebar-panel, .map-selection-panel).map-glass-panel {
+  background-color: color-mix(in srgb, var(--surface) 52%, transparent);
+  background-image: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--text-on-accent) 6%, transparent),
+    transparent 60%
+  );
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  backdrop-filter: blur(24px) saturate(1.2);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--border-strong) 70%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 8%, transparent);
+}
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .map-editor-workspace
+    :is(.map-sidebar-panel, .map-selection-panel).map-glass-panel {
+    background-color: color-mix(in srgb, var(--surface) 94%, transparent);
+  }
+}

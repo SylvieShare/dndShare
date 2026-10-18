@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint, pickTile } from "./editorHelpers";
+import { canvasFrame, dragTile, mapPoint, pickTile } from "./editorHelpers";
 
 async function ready(page, shaped = false) {
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -11,12 +11,7 @@ async function ready(page, shaped = false) {
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
 async function bluePixels(page) {
-  const style = await page.addStyleTag({
-    content:
-      ".map-canvas > :not(.map-canvas-surface) { visibility: hidden !important; }",
-  });
-  const png = await page.locator(".map-canvas canvas").screenshot();
-  await style.evaluate((node) => node.remove());
+  const png = await canvasFrame(page);
   return page.evaluate(async (base64) => {
     const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
     const bitmap = await createImageBitmap(
@@ -70,6 +65,14 @@ test("hover outlines actual geometry and selection strengthens it with actions i
     if (message.type() === "error") errors.push(message.text());
   });
   await ready(page, true);
+  await page
+    .getByRole("button", { name: "Свернуть панель карты", exact: true })
+    .click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector(".map-sidebar").getBoundingClientRect().width ===
+      60,
+  );
   await page.mouse.move(0, 0);
   const baseline = await bluePixels(page);
   const empty = await mapPoint(page, 1.8, 1.8),
@@ -197,16 +200,29 @@ test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
   await page.keyboard.up("ArrowLeft");
   await page.waitForTimeout(180);
   await page.keyboard.press("r");
+  const target = await page.locator(".map-canvas").evaluate((node) => ({
+    view: node.__vueParentComponent.exposed.getView(),
+    width: node.getBoundingClientRect().width,
+    left: document.querySelector(".map-sidebar").getBoundingClientRect().right,
+  }));
   await page.keyboard.press("Enter");
   await expect
     .poll(() =>
       page.evaluate(() =>
         window.lastSaved?.document.tiles.some(
-          (t) => t.x === 5 && t.y === 5 && t.rotation === 90,
+          (t) => t.modelId.startsWith("2222") && t.rotation === 90,
         ),
       ),
     )
     .toBe(true);
+  const tile = await page.evaluate(() =>
+    window.lastSaved.document.tiles.find((t) => t.modelId.startsWith("2222")),
+  );
+  const screenX =
+    target.width / 2 + (tile.x + 0.5 - target.view.x) * target.view.cellPixels;
+  expect(Math.abs(screenX - (target.left + target.width) / 2)).toBeLessThan(
+    target.view.cellPixels / 2 + 1,
+  );
 });
 
 test("sidebar tab rail keeps the native context menu, including during pending tile placement", async ({

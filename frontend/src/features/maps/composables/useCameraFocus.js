@@ -1,16 +1,22 @@
 import { FLOOR } from "../rendering/annotations";
 export function focusViewportOffset(bounds, obstacle) {
-  if (
-    !bounds ||
-    !obstacle ||
-    obstacle.left >= bounds.right ||
-    obstacle.right <= bounds.left ||
-    obstacle.bottom <= bounds.top ||
-    obstacle.top >= bounds.bottom
-  )
-    return { x: 0, y: 0 };
+  if (!bounds) return { x: 0, y: 0 };
+  let left = bounds.left,
+    right = bounds.right;
+  for (const panel of Array.isArray(obstacle) ? obstacle : [obstacle]) {
+    if (
+      !panel ||
+      panel.left >= bounds.right ||
+      panel.right <= bounds.left ||
+      panel.bottom <= bounds.top ||
+      panel.top >= bounds.bottom
+    )
+      continue;
+    if (panel.left <= bounds.left) left = Math.max(left, panel.right);
+    else right = Math.min(right, panel.left);
+  }
   return {
-    x: (Math.max(bounds.left, obstacle.left) - bounds.left - bounds.width) / 2,
+    x: right > left ? (left + right - bounds.left - bounds.right) / 2 : 0,
     y: 0,
   };
 }

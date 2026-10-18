@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { dragTile, mapPoint } from "./editorHelpers";
+import { canvasFrame, dragTile, mapPoint } from "./editorHelpers";
 async function ready(page, mode = "editor", extra = "") {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(`/tests/maps/fixtures/maps.html?mode=${mode}${extra}`);
@@ -217,18 +217,7 @@ test("creation captures an ordinary selection, an empty focus stays usable, and 
   await expect(panel).toHaveCount(0);
 });
 async function modelPixels(page) {
-  const style = await page.addStyleTag({
-    content:
-      '.map-canvas > :not(.map-canvas-surface), [aria-label="Действия карты"] { visibility: hidden !important; }',
-  });
-  await page.evaluate(
-    () =>
-      new Promise((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(resolve)),
-      ),
-  );
-  const png = await page.locator(".map-canvas canvas").screenshot();
-  await style.evaluate((node) => node.remove());
+  const png = await canvasFrame(page);
   return page.evaluate(async (base64) => {
     const bitmap = await createImageBitmap(
       new Blob([Uint8Array.from(atob(base64), (c) => c.charCodeAt(0))], {

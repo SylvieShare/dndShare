@@ -8,7 +8,7 @@
     <aside
       ref="element"
       v-if="customFocus || area || entries.length"
-      class="map-selection-panel"
+      class="map-selection-panel map-glass-panel"
       aria-label="Выбранные элементы"
     >
       <BaseTile class="map-selection-content">
@@ -200,12 +200,13 @@ onBeforeUnmount(() => {
   right: var(--map-focus-right, 12px);
   top: 12px;
   width: 300px;
-  max-width: calc(100% - 24px);
+  max-width: calc(100% - var(--map-overlay-left, 0px) - 24px);
   max-height: calc(100% - 100px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   user-select: text;
+  border-radius: var(--r-lg);
 }
 .map-selection-view {
   min-height: 0;
@@ -251,7 +252,9 @@ onBeforeUnmount(() => {
     transition: none;
   }
 }
-.map-selection-content {
+.map-selection-panel > .map-selection-content {
+  background: transparent;
+  box-shadow: none;
   --map-panel-inset: 14px;
   padding: 0;
   min-height: 0;

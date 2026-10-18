@@ -1,10 +1,27 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { OrthographicCamera, Vector3 } from "three";
-import { cameraFocusTarget, useCameraFocus } from "./useCameraFocus";
+import {
+  cameraFocusTarget,
+  focusViewportOffset,
+  useCameraFocus,
+} from "./useCameraFocus";
 import { mapCamera } from "../rendering/mapCamera";
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+});
+it("centres between overlaid left and right panels without changing the canvas bounds", () => {
+  const bounds = { left: 100, right: 1100, top: 50, bottom: 850, width: 1000 };
+  const left = { left: 100, right: 434, top: 50, bottom: 850 };
+  const right = { left: 788, right: 1088, top: 62, bottom: 700 };
+  expect(focusViewportOffset(bounds, [left, right])).toEqual({ x: 11, y: 0 });
+  expect(focusViewportOffset(bounds, [left])).toEqual({ x: 167, y: 0 });
+  expect(focusViewportOffset(bounds, [right])).toEqual({ x: -156, y: 0 });
+  expect(
+    focusViewportOffset(bounds, [
+      { left: 1200, right: 1400, top: 0, bottom: 900 },
+    ]),
+  ).toEqual({ x: 0, y: 0 });
 });
 it("centres an elevated light in the actual isometric projection", () => {
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0.01, 2000);

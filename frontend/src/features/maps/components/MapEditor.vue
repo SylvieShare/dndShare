@@ -2,6 +2,7 @@
   <main
     class="map-editor-workspace"
     :class="{ 'map-editor-workspace--embedded': embedded }"
+    :style="{ '--map-overlay-left': `${sidebarWidth}px` }"
   >
     <MapEditorHeader
       v-if="!embedded"
@@ -40,7 +41,7 @@
         :editor="e"
         :session-mode="sessionMode"
         :extra-tabs="extraTabs"
-        @resize="emit('sidebar-resize', $event)"
+        @resize="resizeSidebar"
         @collection="changeCollection"
         @model="(id, event) => beginPlacement('placeModel', id, event)"
         @drag-tile="(id, event) => beginPlacement('dragModel', id, event)"
@@ -59,6 +60,7 @@
         </div>
         <MapCanvas
           ref="canvas"
+          :occlusions="canvasOcclusions"
           :document="e.draft.document"
           :state="canvasState || e.draft.state"
           :area-mode="playerPreview ? 'hide' : 'ghost'"
@@ -125,6 +127,7 @@
 <script setup>
 import { mapEntity } from "../lib/editorEntities";
 import "../styles/maps.css";
+import "../styles/mapGlass.css";
 import { computed, nextTick, reactive, ref, watch } from "vue";
 import {
   ActionButton,
@@ -213,6 +216,16 @@ const reference = ref(null),
   canvas = ref(null),
   selectionPanel = ref(null),
   sidebar = ref(null);
+const sidebarWidth = ref(
+  window.matchMedia("(max-width: 760px)").matches ? 60 : 334,
+);
+function resizeSidebar(width) {
+  sidebarWidth.value = width;
+  emit("sidebar-resize", width);
+}
+function canvasOcclusions() {
+  return [sidebar.value?.bounds(), selectionPanel.value?.bounds()];
+}
 e.handle = handleGesture;
 e.dismissFocus = () => {
   e.clearAreaFocus(true);
@@ -236,7 +249,7 @@ e.focusLight = async (id) => {
   e.selectLight(id);
   await nextTick();
   if (e.selectedLight !== id) return;
-  canvas.value?.focusAt(entry.position, selectionPanel.value?.bounds());
+  canvas.value?.focusAt(entry.position);
   canvas.value?.focus();
 };
 function beginPlacement(method, id, event) {

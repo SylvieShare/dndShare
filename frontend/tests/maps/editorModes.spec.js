@@ -20,7 +20,7 @@ test("simple header, global collection and independent visibility settings", asy
   await expect(
     page.getByRole("toolbar", { name: "Действия карты" }),
   ).toHaveCount(0);
-  expect(canvas).toMatchObject({ x: 334, y: 64, width: 1106, height: 936 });
+  expect(canvas).toMatchObject({ x: 0, y: 64, width: 1440, height: 936 });
   await expect(page.locator(".map-inspector")).toHaveCount(0);
   await expect(page.getByRole("tab")).toHaveCount(0);
   await expect(
