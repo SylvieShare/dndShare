@@ -58,7 +58,7 @@
     /></MapInspectorSection>
     <ActionButton
       v-if="!entry.item.builtinKey"
-      variant="danger"
+      variant="secondary"
       @click="editor.removeComponent('flag', entry.id)"
       >Удалить флаг</ActionButton
     >
