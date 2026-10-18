@@ -41,7 +41,6 @@
     </nav>
     <div
       class="map-sidebar-panel"
-      :class="{ 'map-glass-panel': overlay }"
       :inert="collapsed"
       :aria-hidden="collapsed || undefined"
     >
@@ -304,6 +303,7 @@ defineExpose({
   margin: 4px 8px;
 }
 .map-sidebar-panel {
+  background: var(--surface);
   flex: none;
   width: var(--map-sidebar-panel-width, calc(var(--map-sidebar-width) - 61px));
   min-width: 0;

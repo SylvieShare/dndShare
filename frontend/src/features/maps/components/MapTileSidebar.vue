@@ -8,7 +8,7 @@
     aria-label="Каталог плиток"
     tabs-label="Боковые вкладки редактора"
     @select="emit('tab', $event)"
-    @resize="emit('resize', $event)"
+    @resize="(width, rail) => emit('resize', width, rail)"
   >
     <MapTilePalette
       v-if="tab === 'tiles'"

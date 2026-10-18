@@ -2,7 +2,10 @@
   <main
     class="map-editor-workspace"
     :class="{ 'map-editor-workspace--embedded': embedded }"
-    :style="{ '--map-overlay-left': `${sidebarWidth}px` }"
+    :style="{
+      '--map-overlay-left': `${Math.max(0, sidebarWidth - railWidth)}px`,
+      '--map-sidebar-rail': `${railWidth}px`,
+    }"
   >
     <MapEditorHeader
       v-if="!embedded"
@@ -127,7 +130,6 @@
 <script setup>
 import { mapEntity } from "../lib/editorEntities";
 import "../styles/maps.css";
-import "../styles/mapGlass.css";
 import { computed, nextTick, reactive, ref, watch } from "vue";
 import {
   ActionButton,
@@ -219,9 +221,11 @@ const reference = ref(null),
 const sidebarWidth = ref(
   window.matchMedia("(max-width: 760px)").matches ? 60 : 334,
 );
-function resizeSidebar(width) {
+const railWidth = ref(60);
+function resizeSidebar(width, navigationWidth) {
   sidebarWidth.value = width;
-  emit("sidebar-resize", width);
+  railWidth.value = navigationWidth;
+  emit("sidebar-resize", width, navigationWidth);
 }
 function canvasOcclusions() {
   return [sidebar.value?.bounds(), selectionPanel.value?.bounds()];

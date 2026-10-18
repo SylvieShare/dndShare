@@ -81,8 +81,11 @@ onBeforeUnmount(() => {
 .map-controls-hint {
   position: absolute;
   bottom: 16px;
-  left: 16px;
-  max-width: min(420px, calc(100% - 270px));
+  left: calc(var(--map-overlay-left, 0px) + 16px);
+  max-width: min(
+    420px,
+    max(0px, calc(100% - var(--map-overlay-left, 0px) - 270px))
+  );
   max-height: calc(100% - 32px);
   display: flex;
   flex-direction: column;
@@ -126,7 +129,7 @@ li {
   .map-controls-hint {
     bottom: 76px;
     max-height: calc(100% - 92px);
-    max-width: calc(100% - 32px);
+    max-width: max(0px, calc(100% - var(--map-overlay-left, 0px) - 32px));
   }
   ul {
     font-size: 10px;

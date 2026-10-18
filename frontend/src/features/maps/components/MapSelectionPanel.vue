@@ -8,7 +8,7 @@
     <aside
       ref="element"
       v-if="customFocus || area || entries.length"
-      class="map-selection-panel map-glass-panel"
+      class="map-selection-panel"
       aria-label="Выбранные элементы"
     >
       <BaseTile class="map-selection-content">
@@ -253,8 +253,6 @@ onBeforeUnmount(() => {
   }
 }
 .map-selection-panel > .map-selection-content {
-  background: transparent;
-  box-shadow: none;
   --map-panel-inset: 14px;
   padding: 0;
   min-height: 0;
