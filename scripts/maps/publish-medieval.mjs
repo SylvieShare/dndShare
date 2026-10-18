@@ -7,6 +7,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mapTool } from './mcp_maps_client.mjs';
 import { applyBehaviour } from './apply-medieval-behaviour.mjs';
+import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
 const run = promisify(execFile);
 const code = process.argv[2];
 if (!/^MT1-\d{3}$/.test(code || '')) throw new Error('One source code required');
@@ -19,10 +20,11 @@ const expected = manifest[0];
 const reportPath = path.join(base, 'review', code, 'report.json');
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 assert.deepEqual(report.model,expected,'Publication manifest differs from reviewed resources');
+const nativeQAHashes={};for(const tier of ['render','lod'])nativeQAHashes[tier]=await reviewedMountAssetHash(report,tier,path.join(base,'review',code),expected.assets[tier].sha256);
 const flames = report.recipe.materials.surfaceParts?.filter(p => p.kind==='flame') || [];
 if (flames.length) for (const tier of ['render','lod']) {
   const evidence = report.materialChannelReview?.[tier];
-  assert.equal(report.materialChannelAssets?.[tier],expected.assets[tier].sha256,'Flame QA differs from publication resources');
+  assert.equal(report.materialChannelAssets?.[tier],nativeQAHashes[tier],'Flame QA differs from publication resources');
   assert.equal(createHash('sha256').update(await fs.readFile(path.join(base,'review',code,tier+'.glb'))).digest('hex'),expected.assets[tier].sha256);
   assert.equal(evidence?.emissionOutsideFlame,0,'Unverified flame boundaries');
   assert.equal(evidence?.metalDomainMismatches,0);
@@ -33,12 +35,12 @@ const liquidCount = report.recipe.materials.surfaceParts?.filter(p => p.kind==='
 const glassCount = report.recipe.materials.surfaceParts?.filter(p => p.kind==='glass').length || 0;
 if (glassCount) for (const tier of ['render','lod']) {
   assert.equal(report.glassPixelReview?.[tier]?.length,glassCount*2,'Unverified glass surfaces');
-  assert.equal(report.glassPixelAssets?.[tier],expected.assets[tier].sha256,'Glass QA differs from publication resources');
+  assert.equal(report.glassPixelAssets?.[tier],nativeQAHashes[tier],'Glass QA differs from publication resources');
   for (const pane of report.glassPixelReview[tier]) assert.ok(pane.greenRatio>=1.1 && pane.deviationMM<=.15 && pane.normalFacing>=.5,'Glass pane lost colour or shape');
 }
 if (liquidCount) for (const tier of ['render','lod']) {
   assert.equal(report.liquidPixelReview?.[tier]?.length,liquidCount,'Unverified liquid surfaces');
-  assert.equal(report.liquidPixelAssets?.[tier],expected.assets[tier].sha256,'Liquid QA differs from publication resources');
+  assert.equal(report.liquidPixelAssets?.[tier],nativeQAHashes[tier],'Liquid QA differs from publication resources');
   for (const floor of report.liquidPixelReview[tier]) {
     assert.ok(floor.dominantRatio>=1.1 && floor.deviationMM<=.1 && floor.normalZ>=.5,'Liquid floor lost colour or geometry');
   }

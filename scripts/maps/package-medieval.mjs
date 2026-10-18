@@ -11,6 +11,7 @@ import { torchSurface, torchFlameDomain } from './medieval_torch_domains.mjs';
 import { structureMetal, structureLiquid, structureFlame, structureEmissionFlame, structureGlass, structureSurfacePigment, structureWoodPigment, structureFabricPigment, shouldRepairGreenSpill } from './medieval_structure_domains.mjs';
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
 import { medievalTextureSizes } from './medieval_texture_sizes.mjs';
+import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -177,6 +178,7 @@ if (!process.argv.includes('--publish-manifest')) {
   const report = previous;
   if (!report.model || !report.tiers?.shadow) throw new Error('Prepare geometry, textures and shadow first');
   if (JSON.stringify(report.recipe)!==JSON.stringify(recipe)) throw new Error('Stale publication recipe');
+  for(const tier of ['render','lod']){const bytes=await fs.readFile(path.join(review,tier+'.glb'));await reviewedMountAssetHash(report,tier,review,createHash('sha256').update(bytes).digest('hex'));}
   const input = path.join(review, 'preview.png');
   const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const alpha = [];
