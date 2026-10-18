@@ -103,6 +103,12 @@ test("Escape dismisses object and light focus even from text fields and a sessio
     .locator(".map-entity-row")
     .first()
     .click();
+  await focus(page)
+    .getByRole("button", {
+      name: "Изменить название источника света",
+      exact: true,
+    })
+    .click();
   await focus(page).getByRole("textbox").first().focus();
   await page.keyboard.press("Escape");
   await expect(focus(page)).toHaveCount(0);

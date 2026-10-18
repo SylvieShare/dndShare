@@ -1,5 +1,26 @@
 <template>
   <MapInspectorSection v-if="boundLight || !builtin || area" title="Область">
+    <BaseTile
+      v-if="area"
+      class="map-selection-area"
+      framed
+      interactive
+      role="button"
+      tabindex="0"
+      :aria-label="`Перейти к области «${area.name}»`"
+      :color="area.color"
+      @click="!hasSelectedText() && emit('area', area.id)"
+      @keydown.enter.self.prevent="emit('area', area.id)"
+      @keydown.space.self.prevent="emit('area', area.id)"
+    >
+      <Group
+        :size="20"
+        :style="{ color: area.color }"
+        aria-hidden="true"
+      /><strong>{{ area.name }}</strong
+      ><ArrowUpRight :size="18" aria-hidden="true" />
+    </BaseTile>
+    <p v-else-if="boundLight" class="map-hint">Без области</p>
     <FormSelect
       v-if="unboundLight && area"
       :value="entry.item.areaId || ''"
@@ -15,18 +36,6 @@
         {{ candidate.name }}
       </option>
     </FormSelect>
-    <div v-else-if="area" class="map-selection-area">
-      <span>{{ area.name }}</span>
-      <ActionButton
-        icon-only
-        variant="quiet"
-        :aria-label="`Перейти к области «${area.name}»`"
-        :title="`Перейти к области «${area.name}»`"
-        @click="emit('area', area.id)"
-        ><template #icon><ArrowUpRight :size="18" /></template
-      ></ActionButton>
-    </div>
-    <p v-else-if="boundLight" class="map-hint">Без области</p>
     <div class="map-selection-actions">
       <ActionMenu
         v-if="!boundLight && !builtin && !area"
@@ -34,14 +43,15 @@
       >
         <template #trigger
           ><ActionButton variant="secondary"
-            ><FolderPlus :size="18" />Добавить в область</ActionButton
+            ><template #icon><Group :size="20" /></template>Добавить в
+            область</ActionButton
           ></template
         >
         <template #default="{ close }">
           <ActionMenuItem
             v-for="area in editor.draft.document.areas"
             :key="area.id"
-            :icon="FolderPlus"
+            :icon="Group"
             @click="
               add(area.id);
               close();
@@ -72,14 +82,16 @@
 import { computed } from "vue";
 import {
   ActionButton,
+  BaseTile,
   ActionMenu,
   ActionMenuItem,
   RemoveButton,
   FormSelect,
 } from "@sylvieshare/share-ui";
+import { hasSelectedText } from "../lib/textSelection";
 import { lightArea } from "../lib/mapLighting";
 import MapInspectorSection from "./MapInspectorSection.vue";
-import { ArrowUpRight, FolderPlus, Plus } from "@lucide/vue";
+import { ArrowUpRight, Group, Plus } from "@lucide/vue";
 const props = defineProps({ editor: Object, entry: Object });
 const boundLight = computed(
   () => props.entry?.kind === "light" && !!props.entry.item.anchor,
@@ -118,8 +130,15 @@ function create() {
 .map-selection-area {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  padding: 10px;
+  cursor: pointer;
   gap: 8px;
+}
+.map-selection-area strong {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 13px;
 }
 .map-selection-actions {
   display: flex;

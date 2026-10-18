@@ -42,6 +42,9 @@ test("the compact area list opens a focus with every model and light, and edits 
     .poll(() => page.evaluate(() => window.lastSaved?.document.areas[0].color))
     .toBe("#22c55e");
   await panel
+    .getByRole("button", { name: "Изменить название области", exact: true })
+    .click();
+  await panel
     .getByLabel("Название области", { exact: true })
     .fill("Зелёный зал");
   await panel.getByLabel("Название области", { exact: true }).press("Enter");
@@ -135,6 +138,9 @@ test("creation captures an ordinary selection, an empty focus stays usable, and 
     .getByRole("button", { name: "Создать область", exact: true })
     .click();
   const panel = focus(page);
+  await panel
+    .getByRole("button", { name: "Изменить название области", exact: true })
+    .click();
   await panel.getByLabel("Название области", { exact: true }).fill("Вход");
   await panel.getByLabel("Название области", { exact: true }).press("Enter");
   await areas(page)

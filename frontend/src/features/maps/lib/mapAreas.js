@@ -21,9 +21,33 @@ export function fogAreaMembers(document) {
     if (tiles.has(object.placement?.tileId)) objects.add(object.id);
   return { tiles, objects };
 }
-export function areaAppearance(document, mode = "hide") {
+export function areaAppearance(document, mode = "hide", motion) {
   const members = hiddenAreaMembers(document),
     mist = fogAreaMembers(document);
+  const tileAreas = new Map(),
+    objectAreas = new Map(),
+    parents = new Map(
+      (document.objects || []).map((o) => [o.id, o.placement?.tileId]),
+    );
+  for (const area of document.areas || []) {
+    for (const id of area.tileIds) tileAreas.set(id, area);
+    for (const id of area.objectIds) objectAreas.set(id, area);
+  }
+  for (const object of document.objects || [])
+    if (members.tiles.has(object.placement?.tileId))
+      members.objects.add(object.id);
+  const visible = (area) =>
+    !area ? 1 : motion ? motion.visibility(area.id) : area.hidden ? 0 : 1;
+  const opacity = (area) =>
+    mode === "ghost" ? 0.12 + 0.88 * visible(area) : visible(area);
+  const fog = (area) =>
+    !area ? 0 : motion ? motion.fog(area.id) : area.fog ? 1 : 0;
+  const flash = (area) => (area && motion ? motion.flash(area.id) : 1);
+  const host = (id) => tileAreas.get(parents.get(id));
+  const objectFog = (id) => Math.max(fog(objectAreas.get(id)), fog(host(id)));
+  const objectOpacity = (id) =>
+    Math.min(opacity(objectAreas.get(id)), opacity(host(id))) *
+    (1 - objectFog(id));
   return {
     hiddenTiles: mode === "hide" ? members.tiles : new Set(),
     hiddenObjects: new Set([
@@ -31,14 +55,24 @@ export function areaAppearance(document, mode = "hide") {
       ...mist.objects,
     ]),
     foggedTiles: mist.tiles,
-    surfaceFoggedTiles: new Set(
-      (document.areas || [])
-        .filter((a) => a.fog && a.fogStyle !== "volume")
-        .flatMap((a) => a.tileIds),
-    ),
-    tileOpacity: (id) => (mode === "ghost" && members.tiles.has(id) ? 0.12 : 1),
-    objectOpacity: (id) =>
-      mode === "ghost" && members.objects.has(id) ? 0.12 : 1,
+    tileGroup: (id) => tileAreas.get(id)?.id || "",
+    tileOpacity: (id) => opacity(tileAreas.get(id)),
+    tileFlash: (id) => flash(tileAreas.get(id)),
+    objectOpacity,
+    objectFlash: (id) => Math.max(flash(objectAreas.get(id)), flash(host(id))),
+    tokenOpacity: (id) =>
+      opacity(tileAreas.get(id)) * (1 - fog(tileAreas.get(id))),
+    lightOpacity(light) {
+      if (light.anchor?.kind === "tile")
+        return (
+          opacity(tileAreas.get(light.anchor.id)) *
+          (1 - fog(tileAreas.get(light.anchor.id)))
+        );
+      if (light.anchor?.kind === "object")
+        return objectOpacity(light.anchor.id);
+      const area = document.areas.find((a) => a.id === light.areaId);
+      return opacity(area) * (1 - fog(area));
+    },
   };
 }
 export function pruneAreas(document) {

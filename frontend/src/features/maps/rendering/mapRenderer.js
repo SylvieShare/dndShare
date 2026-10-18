@@ -1,5 +1,8 @@
+import { createAreaTransitions } from "./areaTransitions";
+import { applySceneAreaAppearance } from "./areaOpacity";
+import { createMapFramePresentation } from "./mapFramePresentation";
 import { createVolumeFog } from "./volumeFogRenderer";
-import { pickMapScene } from "./mapScenePicking";
+import { pickMapScene, visibleSceneHits } from "./mapScenePicking";
 import { createMapAreaPreview } from "./mapAreaPreview";
 import { createMapFramePreview } from "./mapFramePreview";
 import { startModelRefresh } from "../lib/currentModelRefresh";
@@ -65,10 +68,11 @@ export async function createMapRenderer(
   let appearance = areaAppearance({ areas: [] });
   scene.add(objects);
   const assets = modelAssets(onError, gpu, assetsChanged, onDownloadProgress),
-    lighting = createMapLighting(scene, gpu, assets),
+    lighting = createMapLighting(scene, gpu, assets, assetsChanged),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
-    volumeFog = createVolumeFog(gpu, fog.uniforms),
+    transitions = createAreaTransitions(assetsChanged),
+    volumeFog = createVolumeFog(gpu, fog.uniforms, transitions),
     tokenPortraits = createTokenPortraits(render),
     tiles = createTileLayer(assets, fog),
     objectMotion = createObjectMotion(
@@ -80,9 +84,9 @@ export async function createMapRenderer(
       tiles.rebuild(
         placedTiles,
         tier,
-        [...appearance.hiddenTiles],
+        [],
         appearance.tileOpacity,
-        appearance.surfaceFoggedTiles,
+        appearance.tileGroup,
       );
       if (current)
         outline.update(
@@ -124,53 +128,28 @@ export async function createMapRenderer(
       const elapsed = time - lastFrame || 16,
         delta = Math.min(32, elapsed);
       const moving =
+        transitions.advance(delta) |
         preview.advance(delta) |
         objectPreview.advance(delta) |
         tiles.advance(delta) |
         objectMotion.advance(delta, objects) |
         loadingPreview.advance(delta);
       const mistMoving =
-        options.animate !== false &&
-        tiles.advanceMist(elapsed) | volumeFog.advance(elapsed);
+        options.animate !== false && volumeFog.advance(delta, elapsed);
       const flickering = lighting.advance(
-        Math.min(250, elapsed),
+        delta,
         (id) => preview.transform(id) || tiles.transform(id),
         objects,
         objectPreview.root,
+        Math.min(250, elapsed),
       );
       lastFrame = time;
+      tiles.applyAppearance(appearance);
+      applySceneAreaAppearance(objects, appearance);
+      loadingPreview.applyAppearance(appearance);
       volumeFog.render(scene, camera);
-      for (const object of objects.children) {
-        object.userData.outlineType = "object";
-        object.userData.outlineStyle =
-          object.userData.objectId === options.selectedObject ||
-          options.selectedObjects?.includes(object.userData.objectId)
-            ? "selected"
-            : "hover";
-      }
-      outline.render(
-        scene,
-        camera,
-        annotations.root,
-        [
-          preview.root,
-          objectPreview.root,
-          ...objects.children.filter(
-            (o) =>
-              options.master &&
-              o.userData.objectId &&
-              [
-                ...(options.selectedObjects || []),
-                options.selectedObject,
-                options.hoveredObject,
-              ].includes(o.userData.objectId),
-          ),
-        ],
-        tiles.transform,
-        lighting.excluded,
-      );
-      framePreview.copy(gpu.domElement, lighting.position);
-      if (moving) render();
+      presentFrame(objects, options, appearance);
+      if (moving || lighting.isFading()) render();
       else if ((flickering || mistMoving) && !flickerTimer)
         flickerTimer = setTimeout(() => {
           flickerTimer = 0;
@@ -180,6 +159,18 @@ export async function createMapRenderer(
   }
   const framePreview = createMapFramePreview(camera, render);
   const areaPreview = createMapAreaPreview(gpu, assets, render);
+  const presentFrame = createMapFramePresentation({
+    outline,
+    scene,
+    camera,
+    annotations,
+    preview,
+    objectPreview,
+    tiles,
+    lighting,
+    framePreview,
+    canvas: gpu.domElement,
+  });
   const view = mapCamera(camera, gpu, host, render);
   const structure = structureView(assets, view);
   async function update(d, nextState, opts = {}) {
@@ -187,7 +178,8 @@ export async function createMapRenderer(
     current = d;
     state = nextState;
     options = opts;
-    appearance = areaAppearance(d, opts.areaMode);
+    transitions.sync(d, opts);
+    appearance = areaAppearance(d, opts.areaMode, transitions);
     structure.hideTiles(appearance.hiddenTiles);
     view.document(d, opts);
     annotations.update(d, opts);
@@ -249,7 +241,7 @@ export async function createMapRenderer(
     );
     view.document(d, {
       ...opts,
-      sceneHeight: Math.max(structure.top(), volumeFog.top()),
+      sceneHeight: structure.top(),
     });
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
     assets.progressive(ids, tier, movingIds, d.lightingEnabled);
@@ -272,23 +264,13 @@ export async function createMapRenderer(
       appearance.hiddenObjects.has(opts.previewObject.id)
     )
       previewOptions = { ...previewOptions, previewObject: null };
-    preview.update(
-      previewOptions.previewTile,
-      placed,
-      appearance.surfaceFoggedTiles,
-    );
+    preview.update(previewOptions.previewTile, placed);
     const posedObjects = d.objects.map((o) =>
       resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
     );
-    const posedTokens = (nextState?.tokens || [])
-      .filter(
-        (t) =>
-          !appearance.foggedTiles.has(t.placement?.tileId) &&
-          (opts.master || !appearance.hiddenTiles.has(t.placement?.tileId)),
-      )
-      .map((t) =>
-        resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
-      );
+    const posedTokens = (nextState?.tokens || []).map((t) =>
+      resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
+    );
     objectMotion.update(
       [
         ...posedObjects,
@@ -322,19 +304,12 @@ export async function createMapRenderer(
       appearance.hiddenTiles,
     );
     loadingPreview.update(previewOptions, assets.catalogue(), {
-      tiles: placed.filter(
-        (t) =>
-          !appearance.hiddenTiles.has(t.id) &&
-          !preview.hiddenIds().includes(t.id),
-      ),
-      objects: posedObjects.filter(
-        (o) =>
-          !appearance.hiddenObjects.has(o.id) &&
-          o.id !== opts.previewObject?.id,
-      ),
+      tiles: placed.filter((t) => !preview.hiddenIds().includes(t.id)),
+      objects: posedObjects.filter((o) => o.id !== opts.previewObject?.id),
       tier,
       tileOpacity: appearance.tileOpacity,
       objectOpacity: appearance.objectOpacity,
+      tileGroup: appearance.tileGroup,
     });
     const context = structure.context();
     anchors.update(
@@ -349,9 +324,8 @@ export async function createMapRenderer(
       },
       opts,
     );
-    const hiddenIds = [
-      ...new Set([...preview.hiddenIds(), ...appearance.hiddenTiles]),
-    ];
+    const hiddenIds = preview.hiddenIds();
+    const hiddenSelection = new Set([...hiddenIds, ...appearance.hiddenTiles]);
     const catalogueStamp = [...ids]
       .sort()
       .map((modelId) => assets.metadata(modelId));
@@ -372,7 +346,7 @@ export async function createMapRenderer(
         tier,
         hiddenIds,
         appearance.tileOpacity,
-        appearance.surfaceFoggedTiles,
+        appearance.tileGroup,
       );
     }
     outline.update(
@@ -380,12 +354,12 @@ export async function createMapRenderer(
       {
         ...previewOptions,
         selectedTiles: (opts.selectedTiles || []).filter(
-          (id) => !hiddenIds.includes(id),
+          (id) => !hiddenSelection.has(id),
         ),
-        selectedTile: hiddenIds.includes(opts.selectedTile)
+        selectedTile: hiddenSelection.has(opts.selectedTile)
           ? ""
           : opts.selectedTile,
-        hoveredTile: hiddenIds.includes(opts.hoveredTile)
+        hoveredTile: hiddenSelection.has(opts.hoveredTile)
           ? ""
           : opts.hoveredTile,
       },
@@ -421,11 +395,7 @@ export async function createMapRenderer(
       objects = buildSceneObjects(
         {
           ...d,
-          objects: posedObjects.filter(
-            (o) =>
-              o.id !== opts.previewObject?.id &&
-              !appearance.hiddenObjects.has(o.id),
-          ),
+          objects: posedObjects.filter((o) => o.id !== opts.previewObject?.id),
         },
         nextState && { ...nextState, tokens: posedTokens },
         {
@@ -433,7 +403,7 @@ export async function createMapRenderer(
           tokenPortraits,
           renderObjects,
           areaObjectOpacity: appearance.objectOpacity,
-          areaTileOpacity: appearance.tileOpacity,
+          areaTileOpacity: appearance.tokenOpacity,
         },
         fog,
         assets,
@@ -450,6 +420,7 @@ export async function createMapRenderer(
       view.getView(),
       objects,
       objectPreview.root,
+      appearance,
     );
     assets.prune();
     render();
@@ -529,10 +500,7 @@ export async function createMapRenderer(
     ),
     lightPoint(event) {
       const ray = view.ray(event),
-        hits = [
-          ...ray.intersectObject(tiles.root, true),
-          ...ray.intersectObject(objects, true),
-        ].sort((a, b) => a.distance - b.distance);
+        hits = visibleSceneHits(ray, [tiles.root, objects], appearance);
       const hit = hits[0];
       return hit
         ? { x: hit.point.x, y: hit.point.z, elevation: hit.point.y }
@@ -548,6 +516,7 @@ export async function createMapRenderer(
         surfaceAnchors,
         anchors,
         objects,
+        appearance,
       }),
     destroy() {
       cancelAnimationFrame(assetFrame);
@@ -568,6 +537,7 @@ export async function createMapRenderer(
       anchors.destroy();
       surfaceAnchors.destroy();
       outline.destroy();
+      transitions.destroy();
       volumeFog.destroy();
       fog.destroy();
       lighting.destroy();

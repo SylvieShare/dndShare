@@ -47,6 +47,11 @@ it("restores the previous fixed lighting, without point lights, shadows or flick
   expect(lighting.advance(100, () => {}, [])).toBe(true);
   d.lightingEnabled = false;
   update();
+  const fading = scene.children.find((n) => n.isPointLight);
+  lighting.advance(180, () => {}, []);
+  expect(fading.intensity).toBeGreaterThan(0);
+  expect(fading.intensity).toBeLessThan(8.5);
+  lighting.advance(500, () => {}, []);
   expect(scene.children.filter((n) => n.isPointLight)).toHaveLength(0);
   const hemi = scene.children.find((n) => n.isHemisphereLight),
     [main, fill] = scene.children.filter((n) => n.isDirectionalLight);
@@ -69,6 +74,7 @@ it("restores the previous fixed lighting, without point lights, shadows or flick
   d.lightingEnabled = true;
   update();
   expect(scene.children.filter((n) => n.isPointLight)).toHaveLength(1);
+  lighting.advance(500, () => {}, []);
   expect(main.visible).toBe(false);
   lighting.destroy();
 });

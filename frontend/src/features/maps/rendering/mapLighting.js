@@ -1,3 +1,4 @@
+import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
 import { fogAreaMembers } from "../lib/mapAreas";
 import {
   DirectionalLight,
@@ -10,7 +11,7 @@ import { DEFAULT_SUN, lightOpacity, lightPose } from "../lib/mapLighting";
 import { createAttachedLights } from "./attachedLights";
 import { createLightMarkers } from "./lightMarkers";
 import { createShadowProxies } from "./shadowProxies";
-export function createMapLighting(scene, gpu, assets) {
+export function createMapLighting(scene, gpu, assets, onSettled) {
   const ambient = new HemisphereLight(0xcbd5ee, 0x695641, 0.6),
     sun = new DirectionalLight(0xfff2df, 2.8),
     fill = new DirectionalLight(0xbdcfff, 0.18);
@@ -27,6 +28,27 @@ export function createMapLighting(scene, gpu, assets) {
   gpu.shadowMap.enabled = true;
   gpu.shadowMap.type = PCFShadowMap;
   gpu.shadowMap.autoUpdate = false;
+  const motion = createScalarMotion(() => {
+    if (lastUpdate) update(...lastUpdate);
+    onSettled?.();
+  });
+  let initialized = false,
+    visualAppearance,
+    lastUpdate;
+  const opacity = (source) =>
+    visualAppearance?.lightOpacity(source) ?? source.opacity;
+  function environment() {
+    ambient.intensity = motion.value("ambient");
+    sun.intensity = motion.value("sun");
+    fill.intensity = motion.value("fill");
+    sun.visible = sun.intensity > 0.001 || motion.target("sun") > 0;
+    fill.visible = fill.intensity > 0.001 || motion.target("fill") > 0;
+    sun.castShadow = enabled && sun.visible;
+    gpu.shadowMap.enabled =
+      enabled ||
+      active.some((l) => l.shadows && motion.value(`source:${l.id}`) > 0.001);
+    proxies.root.visible = gpu.shadowMap.enabled;
+  }
   let slots = [],
     key = "",
     proxyKey = "",
@@ -44,8 +66,23 @@ export function createMapLighting(scene, gpu, assets) {
     view,
     objectRoot,
     objectPreview,
+    appearance,
   ) {
+    lastUpdate = [
+      d,
+      options,
+      context,
+      placed,
+      objects,
+      view,
+      objectRoot,
+      objectPreview,
+      appearance,
+    ];
     enabled = !!d.lightingEnabled;
+    visualAppearance = appearance;
+    const immediate =
+      !initialized || options.animate === false || reducedMapMotion();
     gpu.shadowMap.enabled = enabled;
     proxies.root.visible = enabled;
     const settings = d.sun || DEFAULT_SUN,
@@ -56,15 +93,21 @@ export function createMapLighting(scene, gpu, assets) {
         d.height,
         options.sceneHeight,
       ]);
-    sun.visible = !enabled || settings.enabled;
-    sun.castShadow = enabled && settings.enabled;
-    sun.intensity = enabled ? 2.8 : 3;
-    fill.visible = !enabled || settings.enabled;
+    motion.set("sun", !enabled ? 3 : settings.enabled ? 2.8 : 0, {
+      immediate,
+      duration: 380,
+    });
+    motion.set("fill", !enabled ? 0.6 : settings.enabled ? 0.18 : 0, {
+      immediate,
+      duration: 380,
+    });
+    motion.set("ambient", enabled ? (settings.enabled ? 0.6 : 0.28) : 2, {
+      immediate,
+      duration: 380,
+    });
     fill.color.set(enabled ? 0xbdcfff : 0xe0e8ff);
-    fill.intensity = enabled ? 0.18 : 0.6;
     ambient.color.set(enabled ? 0xcbd5ee : 0xffffff);
     ambient.groundColor.set(enabled ? 0x695641 : 0x625141);
-    ambient.intensity = enabled ? (settings.enabled ? 0.6 : 0.28) : 2;
     if (sky !== sunKey) {
       sunKey = sky;
       if (!enabled) {
@@ -105,15 +148,36 @@ export function createMapLighting(scene, gpu, assets) {
     }));
     for (const light of all) if (light.moving) light.worldHeight += 0.22;
     sources = all;
+    const keys = new Set(["sun", "ambient", "fill"]);
+    for (const source of all) {
+      const id = `source:${source.id}`,
+        target = enabled && source.enabled ? 1 : 0;
+      keys.add(id);
+      motion.set(id, target, {
+        immediate,
+        duration: 360,
+        initial: initialized ? 0 : target,
+      });
+    }
+    motion.retain(keys);
+    initialized = true;
+    environment();
     attachments.update(all, placed, objects, assets.catalogue());
     markers.update(
-      all.filter((l) => l.opacity > 0),
+      all.filter((l) => l.opacity > 0 || opacity(l) > 0.001),
       options,
     );
     const next = all
-      .filter((l) => enabled && l.enabled && l.opacity > 0)
+      .filter(
+        (l) =>
+          (motion.target(`source:${l.id}`) > 0 ||
+            motion.value(`source:${l.id}`) > 0.001) &&
+          (l.opacity > 0 || opacity(l) > 0.001),
+      )
       .sort(
         (a, b) =>
+          Number(motion.target(`source:${b.id}`) > 0 && b.opacity > 0) -
+            Number(motion.target(`source:${a.id}`) > 0 && a.opacity > 0) ||
           Number(b.id === options.selectedLight) -
             Number(a.id === options.selectedLight) ||
           Number(b.shadows) - Number(a.shadows) ||
@@ -152,10 +216,14 @@ export function createMapLighting(scene, gpu, assets) {
       light.castShadow = !!source.shadows;
       light.shadow.camera.far = source.radius;
       light.shadow.camera.updateProjectionMatrix();
-      light.intensity = source.intensity * source.opacity;
+      light.intensity =
+        source.intensity *
+        opacity(source) *
+        motion.value(`source:${source.id}`);
     });
     active = next;
-    const nextProxy = enabled
+    markers.applyAppearance(all, opacity, (id) => motion.value(`source:${id}`));
+    const nextProxy = gpu.shadowMap.enabled
       ? proxies.update(d, placed, objects, options, objectRoot, objectPreview)
       : "";
     if (proxyKey !== nextProxy) {
@@ -163,7 +231,12 @@ export function createMapLighting(scene, gpu, assets) {
       gpu.shadowMap.needsUpdate = true;
     }
   }
-  function advance(delta, tileMatrix, objects, objectPreview) {
+  function advance(delta, tileMatrix, objects, objectPreview, elapsed = delta) {
+    const fading = motion.advance(delta, reducedMapMotion());
+    environment();
+    markers.applyAppearance(sources, opacity, (id) =>
+      motion.value(`source:${id}`),
+    );
     const slotsById = new Map(active.map((l, i) => [l.id, slots[i]]));
     for (const source of sources) {
       const position = attachments.position(
@@ -180,25 +253,32 @@ export function createMapLighting(scene, gpu, assets) {
         gpu.shadowMap.needsUpdate = true;
       }
     }
-    if (!enabled) return false;
-    clock += delta / 1000;
+    clock += elapsed / 1000;
     if (proxies.advance(tileMatrix, objects, objectPreview))
       gpu.shadowMap.needsUpdate = true;
-    let moving = false;
+    let moving = fading;
     active.forEach((source, i) => {
       const flicker = source.flicker
         ? 1 +
           0.035 * Math.sin(clock * 8.2 + i * 2) +
           0.025 * Math.sin(clock * 13.7 + i)
         : 1;
-      slots[i].intensity = source.intensity * source.opacity * flicker;
-      moving ||= source.flicker;
+      slots[i].intensity =
+        source.intensity *
+        opacity(source) *
+        motion.value(`source:${source.id}`) *
+        flicker;
+      moving ||=
+        source.flicker &&
+        motion.value(`source:${source.id}`) > 0.001 &&
+        opacity(source) > 0.001;
     });
     return moving;
   }
   return {
     update,
     advance,
+    isFading: motion.isMoving,
     pick: markers.hit,
     position(id) {
       const index = active.findIndex((light) => light.id === id);
@@ -211,6 +291,7 @@ export function createMapLighting(scene, gpu, assets) {
       gpu.shadowMap.needsUpdate = true;
     },
     destroy() {
+      motion.clear();
       proxies.destroy();
       markers.destroy();
       slots.forEach((l) => {

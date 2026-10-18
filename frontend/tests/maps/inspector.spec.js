@@ -89,7 +89,16 @@ test("light rows toggle by their bulb button, show their area, and anchor pickin
   await expect(lights.getByLabel("Название источника света")).toHaveCount(0);
   await lights.getByRole("button", { name: "Факел", exact: true }).click();
   const panel = selection(page);
+  await panel
+    .getByRole("button", {
+      name: "Изменить название источника света",
+      exact: true,
+    })
+    .click();
   await expect(panel.getByLabel("Название источника света")).toBeVisible();
+  await panel
+    .getByRole("button", { name: "Отменить изменение названия", exact: true })
+    .click();
   await lights
     .getByRole("button", { name: "Выключить свет: Факел", exact: true })
     .click();
@@ -196,7 +205,10 @@ test("single inspector has framed preview actions without coordinate fields, and
     })
     .click();
   await expect(
-    panel.getByLabel("Название области", { exact: true }),
+    panel.getByRole("button", {
+      name: "Изменить название области",
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(
     panel.getByRole("heading", { name: "Зал", exact: true }),

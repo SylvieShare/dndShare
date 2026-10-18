@@ -1,39 +1,8 @@
 <template>
-  <MapFocusContent>
-    <template #heading
-      ><header class="map-area-focus-heading">
-        <Group
-          :size="24"
-          :style="{ color: area.color || DEFAULT_AREA_COLOR }"
-        />
-        <h3>{{ area.name }}</h3>
-        <ActionButton
-          icon-only
-          variant="quiet"
-          :aria-label="`Удалить область «${area.name}»`"
-          @click="editor.removeArea(area.id)"
-          ><template #icon
-            ><Trash2 :size="18" :style="{ color: 'var(--danger)' }" /></template
-        ></ActionButton>
-        <ActionButton
-          icon-only
-          variant="quiet"
-          aria-label="Снять фокус области"
-          @click="editor.clearAreaFocus(true)"
-          ><template #icon><X :size="18" /></template
-        ></ActionButton></header
-    ></template>
-    <FormField label="Название области" vertical>
-      <FormTextInput
-        v-model:value="name"
-        aria-label="Название области"
-        :maxlength="100"
-        required
-        @change="rename"
-        @enter="rename"
-      />
-    </FormField>
-    <MapAreaPreview :editor="editor" :area="area" />
+  <MapSelectedEntity :entry="areaEntry" :editor="editor" :copyable="false">
+    <template #preview
+      ><MapAreaPreview :editor="editor" :area="area"
+    /></template>
     <div class="map-area-actions" role="group" aria-label="Отображение области">
       <ColorPresetPicker
         variant="button"
@@ -59,16 +28,6 @@
         ><template #icon><CloudFog /></template
       ></IconToggleButton>
     </div>
-    <FormField v-if="area.fog" label="Вариант тумана" vertical>
-      <FormSelect
-        :value="area.fogStyle || 'surface'"
-        aria-label="Вариант тумана"
-        @update:value="editor.setAreaFogStyle(area.id, $event)"
-      >
-        <option value="surface">V1 · покрытие плиток</option>
-        <option value="volume">V2 · объёмный туман</option>
-      </FormSelect>
-    </FormField>
     <MapInspectorSection :title="`Элементы области (${entries.length})`">
       <div class="map-area-members">
         <MapEntityRow
@@ -95,38 +54,31 @@
         </p>
       </div>
     </MapInspectorSection>
-  </MapFocusContent>
+  </MapSelectedEntity>
 </template>
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import {
   ActionButton,
   ColorPresetPicker,
-  FormField,
-  FormSelect,
-  FormTextInput,
   IconToggleButton,
 } from "@sylvieshare/share-ui";
-import { CloudFog, Eye, Group, Minus, Trash2, X } from "@lucide/vue";
+import { CloudFog, Eye, Minus } from "@lucide/vue";
 import { DEFAULT_AREA_COLOR } from "../lib/mapAreas";
 import { areaMapEntities } from "../lib/editorEntities";
 import MapAreaPreview from "./MapAreaPreview.vue";
-import MapFocusContent from "./MapFocusContent.vue";
+import MapSelectedEntity from "./MapSelectedEntity.vue";
 import MapEntityRow from "./MapEntityRow.vue";
 import MapInspectorSection from "./MapInspectorSection.vue";
 const props = defineProps({ editor: Object, area: Object });
 const emit = defineEmits(["focus"]);
-const name = ref(props.area.name);
-watch(
-  () => props.area.name,
-  (value) => {
-    name.value = value;
-  },
-);
-function rename() {
-  props.editor.renameArea(props.area.id, name.value);
-  name.value = props.area.name;
-}
+const areaEntry = computed(() => ({
+  kind: "area",
+  id: props.area.id,
+  name: props.area.name,
+  color: props.area.color || DEFAULT_AREA_COLOR,
+  item: props.area,
+}));
 const entries = computed(() => areaMapEntities(props.editor, props.area));
 const colours = [
   "#8b5cf6",
@@ -138,18 +90,6 @@ const colours = [
 ];
 </script>
 <style scoped>
-.map-area-focus-heading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-h3 {
-  flex: 1;
-  min-width: 0;
-  margin: 0;
-  font-size: 18px;
-  overflow-wrap: anywhere;
-}
 .map-area-actions {
   display: flex;
   align-items: center;

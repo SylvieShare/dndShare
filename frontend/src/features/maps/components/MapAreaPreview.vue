@@ -41,13 +41,10 @@ onBeforeUnmount(() => stop?.());
 .map-area-preview {
   position: relative;
   width: 100%;
-  aspect-ratio: 4/3;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  height: 100%;
   overflow: hidden;
   display: grid;
   place-items: center;
-  background: var(--bg);
 }
 canvas {
   position: absolute;

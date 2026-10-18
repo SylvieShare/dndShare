@@ -1,22 +1,4 @@
 <template>
-  <FormField label="Название" vertical>
-    <span v-if="anchor && !light.builtinKey" class="map-light-name-prefix">{{
-      anchor.name
-    }}</span>
-    <FormTextInput
-      :value="
-        light.builtinKey && anchor
-          ? `${anchor.name} · ${light.name}`
-          : light.name
-      "
-      :disabled="!!light.builtinKey"
-      aria-label="Название источника света"
-      :maxlength="100"
-      @change="
-        editor.updateLight(light.id, 'name', $event.trim() || light.name)
-      "
-    />
-  </FormField>
   <MapInspectorSection title="Параметры света">
     <FormField
       v-for="field in fields"
@@ -82,12 +64,7 @@
 </template>
 <script setup>
 import { computed } from "vue";
-import {
-  ActionButton,
-  AppSlider,
-  FormField,
-  FormTextInput,
-} from "@sylvieshare/share-ui";
+import { ActionButton, AppSlider, FormField } from "@sylvieshare/share-ui";
 import { Link, LockKeyhole, X } from "@lucide/vue";
 import { mapEntity } from "../lib/editorEntities";
 import MapEntityRow from "./MapEntityRow.vue";
@@ -111,10 +88,3 @@ const anchor = computed(
     ),
 );
 </script>
-<style scoped>
-.map-light-name-prefix {
-  font-size: 12px;
-  color: var(--text-muted);
-  overflow-wrap: anywhere;
-}
-</style>

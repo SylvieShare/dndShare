@@ -17,30 +17,6 @@ async function focusArea(page) {
     .getByRole("button", { name: "Зал", exact: true })
     .click();
 }
-async function sampleArea(page) {
-  const png = await page.locator(".map-canvas canvas").screenshot();
-  const canvas = await page.locator(".map-canvas-surface").boundingBox(),
-    point = await mapPoint(page, 4.5, 4.5);
-  return page.evaluate(
-    async ({ data, x, y }) => {
-      const bitmap = await createImageBitmap(
-        new Blob([Uint8Array.from(atob(data), (c) => c.charCodeAt(0))], {
-          type: "image/png",
-        }),
-      );
-      const out = new OffscreenCanvas(bitmap.width, bitmap.height),
-        ctx = out.getContext("2d");
-      ctx.drawImage(bitmap, 0, 0);
-      bitmap.close();
-      return [...ctx.getImageData(Math.round(x), Math.round(y), 1, 1).data];
-    },
-    {
-      data: png.toString("base64"),
-      x: point.x - canvas.x,
-      y: point.y - canvas.y,
-    },
-  );
-}
 test("area focus has an isolated cached preview, icon controls and Cmd membership; Esc also closes it from an input", async ({
   page,
 }) => {
@@ -62,13 +38,14 @@ test("area focus has an isolated cached preview, icon controls and Cmd membershi
     focus.getByRole("button", { name: "Цвет области", exact: true }),
   ).toHaveClass(/cpp-button/);
 
-  const buttons = await focus.locator(".map-area-focus-heading button").all();
-  expect(await buttons[0].getAttribute("aria-label")).toBe(
-    "Удалить область «Зал»",
-  );
-  expect(await buttons[1].getAttribute("aria-label")).toBe(
-    "Снять фокус области",
-  );
+  await expect(
+    focus.getByRole("button", { name: "Снять фокус области", exact: true }),
+  ).toHaveCount(0);
+  const frame = await focus.locator(".map-selected-frame").boundingBox(),
+    trash = await focus
+      .getByRole("button", { name: "Удалить область «Зал»", exact: true })
+      .boundingBox();
+  expect(trash.x).toBeGreaterThanOrEqual(frame.x + frame.width);
   const before = await focus
     .locator(".map-area-preview canvas")
     .evaluate((el) => el.toDataURL());
@@ -98,6 +75,9 @@ test("area focus has an isolated cached preview, icon controls and Cmd membershi
         .evaluate((el) => el.toDataURL()),
     )
     .not.toBe(before);
+  await focus
+    .getByRole("button", { name: "Изменить название области", exact: true })
+    .click();
   await focus
     .getByRole("textbox", { name: "Название области", exact: true })
     .focus();
@@ -130,12 +110,6 @@ for (const mode of ["editor", "board"])
           () => (window.lastSaved || window.latestBoard)?.document.areas[0].fog,
         ),
       )
-      .toBe(true);
-    await expect
-      .poll(async () => {
-        const pixel = await sampleArea(page);
-        return pixel[2] > pixel[0] + 2 && pixel[0] > 30;
-      })
       .toBe(true);
     await expect(focus.locator(".map-area-preview")).toHaveAttribute(
       "data-preview-state",

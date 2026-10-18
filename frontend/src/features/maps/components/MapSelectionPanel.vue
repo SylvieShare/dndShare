@@ -67,8 +67,9 @@
       </MapSelectedEntity>
       <MapFocusContent v-else>
         <template #heading
-          ><h3>Выбрано: {{ entries.length }}</h3></template
-        >
+          ><MapEntityHeading
+            :entry="{ kind: 'group', name: `Выбрано: ${entries.length}` }"
+        /></template>
         <div class="map-selection-summary">
           <span
             v-if="editor.selectedTiles.length"
@@ -101,6 +102,7 @@ import { interactive } from "../lib/mapModel";
 import { computed, ref } from "vue";
 import { BaseTile, ToggleSwitch } from "@sylvieshare/share-ui";
 import { groupMapEntities, selectedMapEntities } from "../lib/editorEntities";
+import MapEntityHeading from "./MapEntityHeading.vue";
 import MapFocusContent from "./MapFocusContent.vue";
 import MapAreaFocus from "./MapAreaFocus.vue";
 import MapSelectedEntity from "./MapSelectedEntity.vue";

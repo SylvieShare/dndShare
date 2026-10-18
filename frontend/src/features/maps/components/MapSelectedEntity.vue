@@ -1,13 +1,15 @@
 <template>
   <MapFocusContent>
     <template #heading
-      ><header class="map-selected-heading">
-        <h3>{{ entry.name }}</h3>
-        <small v-if="entry.code"
-          >{{ entry.groupCode }} · {{ entry.code }}</small
-        >
-      </header></template
-    >
+      ><MapEntityHeading
+        :entry="entry"
+        :editable="
+          entry.kind === 'area' ||
+          (entry.kind === 'light' && !entry.item.builtinKey)
+        "
+        @rename="rename"
+        @keydown.esc.capture="escape"
+    /></template>
     <div class="map-selected-visual">
       <BaseTile
         class="map-selected-frame"
@@ -24,28 +26,30 @@
           entry.kind === 'light' && editor.focusLight(entry.id)
         "
       >
-        <MapLightPreview
-          v-if="entry.kind === 'light'"
-          :entry="entry"
-          :editor="editor"
-        />
-        <img
-          v-else-if="entry.previewUrl"
-          class="map-selection-preview"
-          :src="entry.previewUrl"
-          alt=""
-          draggable="false"
-        />
-        <component
-          v-else
-          :is="
-            ['player', 'creature', 'marker'].includes(entry.kind)
-              ? UserRound
-              : Box
-          "
-          :size="64"
-          :style="{ color: entry.color }"
-        />
+        <slot name="preview"
+          ><MapLightPreview
+            v-if="entry.kind === 'light'"
+            :entry="entry"
+            :editor="editor"
+          />
+          <img
+            v-else-if="entry.previewUrl"
+            class="map-selection-preview"
+            :src="entry.previewUrl"
+            alt=""
+            draggable="false"
+          />
+          <component
+            v-else
+            :is="
+              ['player', 'creature', 'marker'].includes(entry.kind)
+                ? UserRound
+                : Box
+            "
+            :size="64"
+            :style="{ color: entry.color }"
+          />
+        </slot>
       </BaseTile>
       <div class="map-selected-buttons">
         <ActionButton
@@ -62,8 +66,16 @@
           v-if="removable && !entry.item.builtinKey"
           icon-only
           variant="quiet"
-          aria-label="Удалить элемент"
-          title="Удалить элемент"
+          :aria-label="
+            entry.kind === 'area'
+              ? `Удалить область «${entry.name}»`
+              : 'Удалить элемент'
+          "
+          :title="
+            entry.kind === 'area'
+              ? `Удалить область «${entry.name}»`
+              : 'Удалить элемент'
+          "
           @click="editor.removeSelected()"
         >
           <template #icon
@@ -78,32 +90,34 @@
 </template>
 <script setup>
 import { ActionButton, BaseTile } from "@sylvieshare/share-ui";
+import MapEntityHeading from "./MapEntityHeading.vue";
 import MapLightPreview from "./MapLightPreview.vue";
 import MapFocusContent from "./MapFocusContent.vue";
 import { Box, Copy, Trash2, UserRound } from "@lucide/vue";
-defineProps({
+const props = defineProps({
   entry: Object,
   editor: Object,
   copyable: { type: Boolean, default: true },
   removable: { type: Boolean, default: true },
 });
+function rename(value) {
+  const { entry, editor } = props;
+  if (!value) return;
+  if (entry.kind === "area") editor.renameArea(entry.id, value);
+  else {
+    editor.finishLightEdit();
+    editor.updateLight(entry.id, "name", value);
+    editor.finishLightEdit();
+  }
+}
+function escape(event) {
+  if (!props.editor.dismissFocus) return;
+  event.preventDefault();
+  event.stopPropagation();
+  props.editor.dismissFocus();
+}
 </script>
 <style scoped>
-.map-selected-heading {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-h3 {
-  margin: 0;
-  font-size: 18px;
-}
-small {
-  font: 11px var(--font-mono);
-  color: var(--text-muted);
-  overflow-wrap: anywhere;
-}
 .map-selected-visual {
   display: flex;
   gap: 8px;

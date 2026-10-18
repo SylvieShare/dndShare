@@ -1,0 +1,60 @@
+import { test, expect } from "@playwright/test";
+test("visibility fades with a flash, fog restores objects and lights, and light power reverses without snapping", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => {
+    if (m.type() === "error" && /WebGL|Shader|GL_INVALID/.test(m.text()))
+      errors.push(m.text());
+  });
+  await page.goto("/tests/maps/fixtures/transitions.html");
+  await page.waitForFunction(() => window.transitions?.ready);
+  const state = () => page.evaluate(() => window.transitions.state());
+  const start = await state();
+  expect(start.tile).toBe(1);
+  expect(start.light).toBe(8);
+  await page.evaluate(() => window.transitions.hidden(true));
+  expect((await state()).tile).toBe(1);
+  await page.evaluate(() => window.transitions.step(240));
+  let middle = await state();
+  expect(middle.tile).toBeCloseTo(0.5);
+  expect(middle.prop).toBeCloseTo(0.5);
+  expect(middle.brightness).toBeGreaterThan(1);
+  expect(middle.light).toBeCloseTo(4);
+  await page.evaluate(() => window.transitions.hidden(false));
+  expect((await state()).tile).toBeCloseTo(0.5);
+  await page.evaluate(() => window.transitions.step(500));
+  expect((await state()).tile).toBe(1);
+  expect((await state()).brightness).toBe(1);
+  await page.evaluate(() => window.transitions.fog(true));
+  expect((await state()).prop).toBe(1);
+  await page.evaluate(() => window.transitions.step(340));
+  middle = await state();
+  expect(middle.fog).toBeCloseTo(0.5);
+  expect(middle.prop).toBeCloseTo(0.5);
+  expect(middle.light).toBeCloseTo(4);
+  await page.evaluate(() => window.transitions.step(400));
+  expect((await state()).prop).toBe(0);
+  expect((await state()).light).toBe(0);
+  await page.evaluate(() => window.transitions.fog(false));
+  await page.evaluate(() => window.transitions.step(340));
+  expect((await state()).prop).toBeCloseTo(0.5);
+  await page.evaluate(() => window.transitions.step(400));
+  expect((await state()).prop).toBe(1);
+  expect((await state()).textures).toBe(start.textures);
+  expect((await state()).enabled).toBe(true);
+  await page.evaluate(() => window.transitions.power(false));
+  expect((await state()).light).toBe(8);
+  await page.evaluate(() => window.transitions.step(180));
+  expect((await state()).light).toBeCloseTo(4);
+  await page.evaluate(() => window.transitions.power(true));
+  expect((await state()).light).toBeCloseTo(4);
+  await page.evaluate(() => window.transitions.step(500));
+  expect((await state()).light).toBe(8);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.evaluate(() => window.transitions.hidden(true));
+  expect((await state()).tile).toBe(0);
+  expect((await state()).brightness).toBe(1);
+  expect(errors).toEqual([]);
+});

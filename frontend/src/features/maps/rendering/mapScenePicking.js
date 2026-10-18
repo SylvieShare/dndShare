@@ -1,3 +1,29 @@
+export function visibleSceneHits(ray, roots, appearance) {
+  return roots
+    .flatMap((root) => ray.intersectObject(root, true))
+    .filter((hit) => {
+      let node = hit.object;
+      const tile = node.userData.tiles?.[hit.instanceId];
+      if (tile && appearance.hiddenTiles.has(tile.id)) return false;
+      while (node) {
+        if (
+          !node.visible ||
+          (node.userData.objectId &&
+            appearance.hiddenObjects.has(node.userData.objectId))
+        )
+          return false;
+        if (
+          node.userData.tokenId &&
+          (appearance.hiddenTiles.has(node.userData.placementTileId) ||
+            appearance.foggedTiles.has(node.userData.placementTileId))
+        )
+          return false;
+        node = node.parent;
+      }
+      return true;
+    })
+    .sort((a, b) => a.distance - b.distance);
+}
 // Resolve editor hits in visible depth order, including loading placeholders.
 export function pickMapScene(
   event,
@@ -10,12 +36,21 @@ export function pickMapScene(
     surfaceAnchors,
     anchors,
     objects,
+    appearance = {
+      hiddenTiles: new Set(),
+      hiddenObjects: new Set(),
+      foggedTiles: new Set(),
+    },
   },
 ) {
   const ray = view.ray(event),
-    hits = ray.intersectObject(objects, true),
-    fixed = tiles.hit(ray),
-    pending = loadingPreview.hit(ray),
+    hits = visibleSceneHits(ray, [objects], appearance),
+    fixed = tiles.hit(ray, appearance.hiddenTiles),
+    pending = loadingPreview.hit(ray, (kind, id) =>
+      (kind === "tile" ? appearance.hiddenTiles : appearance.hiddenObjects).has(
+        id,
+      ),
+    ),
     moving = preview.hit(ray),
     resolvedTile =
       moving && (!fixed || moving.distance < fixed.distance) ? moving : fixed;

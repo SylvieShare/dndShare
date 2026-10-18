@@ -1,3 +1,4 @@
+import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
 import {
   Color,
   DepthTexture,
@@ -14,7 +15,11 @@ import {
   Vector3,
   WebGLRenderTarget,
 } from "three";
-import { buildVolumeFogField, volumeFogColumns } from "./volumeFogField";
+import {
+  buildVolumeFogField,
+  volumeFogColumns,
+  applyVolumeFogWeights,
+} from "./volumeFogField";
 import { fogDataTexture, fogNoiseTexture } from "./volumeFogTextures";
 import {
   fogVertex,
@@ -22,12 +27,13 @@ import {
   fogCompositeFragment,
 } from "./volumeFogShaders";
 
-export function createVolumeFog(gpu, visibility) {
+export function createVolumeFog(gpu, visibility, motion) {
   const quadGeometry = new PlaneGeometry(2, 2),
     camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const fogScene = new Scene(),
     compositeScene = new Scene(),
     size = new Vector2();
+  const skyMotion = createScalarMotion();
   const fogUniforms = {
     ...visibility,
     sceneDepth: { value: null },
@@ -71,7 +77,10 @@ export function createVolumeFog(gpu, visibility) {
     key = "",
     sceneTarget,
     fogTarget,
-    noise;
+    noise,
+    areaSettings = new Map(),
+    weightsKey = "",
+    targetActive = false;
   function releaseTargets() {
     sceneTarget?.dispose();
     fogTarget?.dispose();
@@ -100,12 +109,54 @@ export function createVolumeFog(gpu, visibility) {
     compositeUniforms.fogColour.value = fogTarget.texture;
     compositeUniforms.fogSize.value.set(fogTarget.width, fogTarget.height);
   }
+  function releaseField() {
+    fogUniforms.densityField.value?.dispose();
+    fogUniforms.densityField.value = null;
+    field = null;
+    releaseTargets();
+    noise?.dispose();
+    noise = null;
+    weightsKey = "";
+  }
+  function updateWeights() {
+    if (!field) return;
+    const weights = new Map(
+      [...field.masks.keys()].map((id) => {
+        const area = areaSettings.get(id);
+        const amount = motion
+          ? motion.fog(id) * motion.visibility(id)
+          : area?.fog && !area.hidden
+            ? 1
+            : 0;
+        return [id, Math.round(amount * 255) / 255];
+      }),
+    );
+    const next = JSON.stringify([...weights]);
+    if (!targetActive && [...weights.values()].every((n) => n === 0)) {
+      releaseField();
+      key = "";
+      return;
+    }
+    if (next === weightsKey) return;
+    weightsKey = next;
+    applyVolumeFogWeights(field, (id) => weights.get(id) || 0);
+    fogUniforms.densityField.value.needsUpdate = true;
+  }
   return {
     update(document, placed, catalogue, previews) {
-      const columns = volumeFogColumns(document, placed, catalogue, previews),
+      areaSettings = new Map(document.areas.map((a) => [a.id || "", a]));
+      targetActive = document.areas.some((a) => a.fog && !a.hidden);
+      const columns = volumeFogColumns(
+          document,
+          placed,
+          catalogue,
+          previews,
+          motion,
+        ),
         next = JSON.stringify(columns);
-      if (next !== key) {
+      if (next !== key || (!field && columns.length)) {
         key = next;
+        weightsKey = "";
         fogUniforms.densityField.value?.dispose();
         field = buildVolumeFogField(columns);
         fogUniforms.densityField.value = field
@@ -122,9 +173,14 @@ export function createVolumeFog(gpu, visibility) {
           noise = null;
         }
       }
+      updateWeights();
       const sun = document.sun;
-      fogUniforms.skyLight.value =
-        !document.lightingEnabled || sun?.enabled ? 1 : 0.28;
+      skyMotion.set(
+        "sky",
+        !document.lightingEnabled || sun?.enabled ? 1 : 0.28,
+        { immediate: !motion || motion.instant(), duration: 380 },
+      );
+      fogUniforms.skyLight.value = skyMotion.value("sky");
       if (document.lightingEnabled && sun?.enabled) {
         const angle = (sun.angle * Math.PI) / 180,
           elevation = (sun.elevation * Math.PI) / 180;
@@ -136,10 +192,13 @@ export function createVolumeFog(gpu, visibility) {
       } else fogUniforms.sunDirection.value.set(-0.4, 0.8, -0.5).normalize();
     },
     top: () => field?.max[1] || 0,
-    advance(delta) {
+    advance(delta, elapsed = delta) {
+      skyMotion.advance(delta, reducedMapMotion());
+      fogUniforms.skyLight.value = skyMotion.value("sky");
+      updateWeights();
       if (!field) return false;
       fogUniforms.clock.value =
-        (fogUniforms.clock.value + Math.min(delta, 250) / 1000) % 10000;
+        (fogUniforms.clock.value + Math.min(elapsed, 250) / 1000) % 10000;
       return true;
     },
     render(scene, viewCamera) {
@@ -170,6 +229,7 @@ export function createVolumeFog(gpu, visibility) {
       }
     },
     destroy() {
+      skyMotion.clear();
       releaseTargets();
       noise?.dispose();
       fogUniforms.densityField.value?.dispose();

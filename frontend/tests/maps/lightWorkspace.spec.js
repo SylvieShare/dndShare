@@ -116,11 +116,17 @@ test("builtin lights expose editable effects, retain model identity, inherit are
   await row.click();
   const panel = focusPanel(page);
   await expect(
-    panel.getByLabel("Название источника света", { exact: true }),
-  ).toBeDisabled();
+    panel.getByRole("button", {
+      name: "Изменить название источника света",
+      exact: true,
+    }),
+  ).toHaveCount(0);
   await expect(
-    panel.getByLabel("Название источника света", { exact: true }),
-  ).toHaveValue("Стена 1 · Встроенный факел");
+    panel.getByRole("heading", {
+      name: "Стена 1 · Встроенный факел",
+      exact: true,
+    }),
+  ).toBeVisible();
   await expect(
     panel.getByRole("button", {
       name: "Привязка к модели фиксирована",

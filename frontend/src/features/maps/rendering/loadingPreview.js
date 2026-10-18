@@ -103,7 +103,9 @@ export function createLoadingPreview(assets, onChange = () => {}) {
           metadata.get(item.modelId) || assets.metadata(item.modelId);
         if (!model) continue;
         const alpha = opacity?.(item.id) ?? 1;
-        const key = `${kind}:${alpha}`;
+        const owner =
+          kind === "tile" ? scene.tileGroup?.(item.id) || "" : item.id;
+        const key = `${kind}:${owner}`;
         if (!batches.has(key)) batches.set(key, { kind, alpha, items: [] });
         batches.get(key).items.push({ item, model });
         pendingCount++;
@@ -146,15 +148,36 @@ export function createLoadingPreview(assets, onChange = () => {}) {
   return {
     root,
     update,
+    applyAppearance(appearance) {
+      for (const node of root.children) {
+        if (!node.userData.items) continue;
+        const id = node.userData.items[0].id;
+        const alpha =
+          node.userData.kind === "tile"
+            ? appearance.tileOpacity(id)
+            : appearance.objectOpacity(id);
+        node.material.uniforms.opacity.value = 0.95 * alpha;
+        node.visible = alpha > 0.001;
+      }
+    },
     advance(delta) {
       time += delta / 1000;
       material.uniforms.time.value = time;
       for (const node of root.children)
         node.material.uniforms.time.value = time;
-      return root.visible;
+      return root.children.some((n) => n.visible);
     },
-    hit(ray) {
-      const hit = ray.intersectObjects(root.children, false)[0];
+    hit(ray, ignored = () => false) {
+      const hit = ray
+        .intersectObjects(
+          root.children.filter((n) => n.visible),
+          false,
+        )
+        .find((h) => {
+          const item =
+            h.object.userData.items?.[h.instanceId] || h.object.userData.item;
+          return !ignored(h.object.userData.kind, item?.id);
+        });
       if (!hit) return null;
       const item =
         hit.object.userData.items?.[hit.instanceId] || hit.object.userData.item;

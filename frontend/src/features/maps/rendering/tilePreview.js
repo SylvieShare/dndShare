@@ -1,4 +1,3 @@
-import { createAreaMist } from "./areaMist";
 import { modelVisual, visualSignature } from "./modelVisual";
 import { Group, InstancedMesh, Matrix4 } from "three";
 import { tilePose, tilePoseTransform } from "./tileTransform";
@@ -8,8 +7,7 @@ import { landingTarget } from "./tileLanding";
 export function createTilePreview(assets, onSettled = () => {}) {
   const root = new Group(),
     matrix = new Matrix4();
-  const rotation = createRotationMotion(),
-    mist = createAreaMist();
+  const rotation = createRotationMotion();
   let key = "",
     target = null,
     position = null,
@@ -30,7 +28,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
     }
     root.clear();
   }
-  function update(tile, placed = [], fogged = new Set()) {
+  function update(tile, placed = []) {
     if (tile) {
       if (!active && (!tile.id || tile.id !== target?.id)) {
         position = null;
@@ -85,7 +83,6 @@ export function createTilePreview(assets, onSettled = () => {}) {
     const nextKey = JSON.stringify(
       group.map((t) => [
         t.modelId,
-        fogged.has(t.id),
         assets.metadata(t.modelId)?.renderUrl,
         visualSignature(assets, new Set([t.modelId]), "render"),
       ]),
@@ -95,7 +92,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
       key = nextKey;
       const buckets = new Map();
       group.forEach((tile, index) => {
-        const bucket = `${tile.modelId}:${fogged.has(tile.id)}`;
+        const bucket = tile.modelId;
         if (!buckets.has(bucket)) buckets.set(bucket, []);
         buckets.get(bucket).push(index);
       });
@@ -108,9 +105,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
           const materials = (
             Array.isArray(part.material) ? part.material : [part.material]
           ).map((m) => {
-            const copy = fogged.has(group[indices[0]].id)
-              ? mist.material()
-              : m.clone();
+            const copy = m.clone();
             copy.userData.baseOpacity = copy.opacity;
             copy.userData.baseTransparent = copy.transparent;
             copy.userData.baseDepthWrite = copy.depthWrite;
@@ -137,7 +132,6 @@ export function createTilePreview(assets, onSettled = () => {}) {
   }
   function advance(delta) {
     if (!target || !root.children.length) return false;
-    mist.advance(delta);
     const amount = 1 - Math.exp(-delta / 45);
     const vertical = 1 - Math.exp(-delta / 80);
     position.x += (target.x - position.x) * amount;

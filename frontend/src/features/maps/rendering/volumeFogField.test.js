@@ -3,6 +3,7 @@ import {
   buildVolumeFogField,
   volumeFogColumns,
   FOG_FIELD_LIMIT,
+  applyVolumeFogWeights,
 } from "./volumeFogField";
 function sample(field, p) {
   const [x, y, z] = p.map((n, a) =>
@@ -19,12 +20,12 @@ function sample(field, p) {
 it("builds an actual volume above rotated multi-cell tiles and retains their raised floor without fog below it", () => {
   const d = {
     areas: [
-      { fog: true, fogStyle: "volume", tileIds: ["bridge"] },
-      { fog: true, tileIds: ["v1"] },
-      { fog: true, fogStyle: "volume", hidden: true, tileIds: ["hidden"] },
+      { fog: true, tileIds: ["bridge"] },
+      { fog: false, tileIds: ["disabled"] },
+      { fog: true, hidden: true, tileIds: ["hidden"] },
     ],
   };
-  const tiles = ["bridge", "v1", "hidden"].map((id) => ({
+  const tiles = ["bridge", "disabled", "hidden"].map((id) => ({
     id,
     modelId: "bridge",
     x: 2,
@@ -59,7 +60,7 @@ it("merges adjacent columns without seams while leaving disconnected gaps empty 
 
 it("follows the pending tile position and height before a drag is committed", () => {
   const document = {
-    areas: [{ fog: true, fogStyle: "volume", tileIds: ["a"] }],
+    areas: [{ fog: true, tileIds: ["a"] }],
   };
   const tile = {
     id: "a",
@@ -79,4 +80,17 @@ it("follows the pending tile position and height before a drag is committed", ()
   expect(columns[0].min[2]).toBe(3);
   expect(columns[0].min[1]).toBeCloseTo(1.86);
   expect(tile).toMatchObject({ x: 0, y: 0, elevation: 0 });
+});
+
+it("fades adjacent areas independently with reusable sparse density masks", () => {
+  const field = buildVolumeFogField([
+    { areaId: "a", min: [0, 0, 0], max: [1, 2, 1] },
+    { areaId: "b", min: [1, 0, 0], max: [2, 2, 1] },
+  ]);
+  applyVolumeFogWeights(field, (id) => (id === "a" ? 0.5 : 1));
+  expect(sample(field, [0.25, 0.8, 0.5])).toBeCloseTo(128, 0);
+  expect(sample(field, [1.75, 0.8, 0.5])).toBe(255);
+  applyVolumeFogWeights(field, (id) => (id === "a" ? 0 : 1));
+  expect(sample(field, [0.25, 0.8, 0.5])).toBe(0);
+  expect(sample(field, [1.75, 0.8, 0.5])).toBe(255);
 });

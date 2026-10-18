@@ -1,4 +1,3 @@
-import { createAreaMist } from "./areaMist";
 import { modelVisual } from "./modelVisual";
 import { Group, InstancedMesh, Matrix4 } from "three";
 import { tilePose, tilePoseTransform } from "./tileTransform";
@@ -6,7 +5,6 @@ import { createRotationMotion } from "./rotationMotion";
 import { applyAreaOpacity } from "./areaOpacity";
 
 export function createTileLayer(assets, fog) {
-  const mist = createAreaMist();
   const root = new Group(),
     temp = new Matrix4();
   const motion = createRotationMotion();
@@ -42,11 +40,8 @@ export function createTileLayer(assets, fog) {
   }
   return {
     root,
-    rebuild(tiles, tier, hiddenIds, opacity = () => 1, fogged = new Set()) {
+    rebuild(tiles, tier, hiddenIds, opacity = () => 1, group = () => "") {
       clear();
-      mist.setActive(
-        tiles.some((t) => fogged.has(t.id) && !hiddenIds?.includes(t.id)),
-      );
       allTiles = new Map(tiles.map((t) => [t.id, t]));
       motion.retain(new Set(allTiles.keys()));
       for (const tile of tiles) {
@@ -59,7 +54,7 @@ export function createTileLayer(assets, fog) {
       const buckets = new Map();
       for (const tile of tiles) {
         if (hidden.has(tile.id)) continue;
-        const key = `${tile.modelId}:${Math.floor(tile.x / 12)},${Math.floor(tile.y / 12)}:${opacity(tile.id)}:${fogged.has(tile.id)}`;
+        const key = `${tile.modelId}:${Math.floor(tile.x / 12)},${Math.floor(tile.y / 12)}:${group(tile.id)}:${opacity(tile.id)}`;
         if (!buckets.has(key)) buckets.set(key, []);
         buckets.get(key).push(tile);
       }
@@ -70,9 +65,7 @@ export function createTileLayer(assets, fog) {
         for (const part of model.parts) {
           const materials = (
             Array.isArray(part.material) ? part.material : [part.material]
-          ).map((m) =>
-            fog.material(fogged.has(items[0].id) ? mist.material() : m.clone()),
-          );
+          ).map((m) => fog.material(m.clone()));
           const mesh = new InstancedMesh(
             part.geometry,
             Array.isArray(part.material) ? materials : materials[0],
@@ -96,15 +89,29 @@ export function createTileLayer(assets, fog) {
       root.updateMatrixWorld(true);
     },
     transform,
-    advanceMist: mist.advance,
+    applyAppearance(appearance) {
+      for (const mesh of root.children) {
+        const id = mesh.userData.tiles[0].id;
+        applyAreaOpacity(
+          mesh,
+          appearance.tileOpacity(id),
+          appearance.tileFlash(id),
+        );
+      }
+    },
     advance(delta) {
       if (!motion.isMoving()) return false;
       const moving = motion.advance(delta);
       apply();
       return moving;
     },
-    hit(ray) {
-      const hit = ray.intersectObjects(root.children, false)[0];
+    hit(ray, hidden = new Set()) {
+      const hit = ray
+        .intersectObjects(
+          root.children.filter((n) => n.visible),
+          false,
+        )
+        .find((h) => !hidden.has(h.object.userData.tiles[h.instanceId].id));
       return hit
         ? {
             tileId: hit.object.userData.tiles[hit.instanceId].id,
