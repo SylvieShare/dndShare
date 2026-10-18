@@ -15,6 +15,7 @@ import { modelPreviewCamera } from "./modelPreviewCamera";
 import { modelPreviewGuides } from "./modelPreviewGuides";
 import { createMapEffects } from "./mapEffects";
 import { createMapFog } from "./mapFog";
+import { createModelWaterAnimation, modelWaterMaterial } from "./modelWater";
 import {
   layoutPreviewLabels,
   previewGeometry,
@@ -49,7 +50,8 @@ export function createModelPreview(host, onFrame, onError) {
     bounds = new Box3();
   let assets = modelAssets(onError, gpu),
     options = {};
-  const fog = createMapFog(),
+  const water = createModelWaterAnimation(),
+    fog = createMapFog(),
     effects = createMapEffects(
       scene,
       fog,
@@ -64,6 +66,7 @@ export function createModelPreview(host, onFrame, onError) {
         : [mesh.material])
         material.dispose();
     root.clear();
+    water.update([root]);
   }
   function render(animationOnly = false) {
     if (!animationOnly) labelsDirty = true;
@@ -79,7 +82,10 @@ export function createModelPreview(host, onFrame, onError) {
           () => root.matrix,
           root,
         ),
-        delay = effectFrame.delay;
+        delay = Math.min(
+          effectFrame.delay,
+          water.advance(time, options.animate !== false),
+        );
       lastEffectFrame = time;
       gpu.render(scene, view.camera);
       if (effectFrame.moving) render(true);
@@ -131,6 +137,14 @@ export function createModelPreview(host, onFrame, onError) {
     assets.replaceCatalogue([
       { ...assets.metadata(model.id), ...model, behaviour },
     ]);
+    for (const mesh of root.children) {
+      const part = mesh.userData.modelPart;
+      for (const material of Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material])
+        modelWaterMaterial(material, part, behaviour.waterAnimation);
+    }
+    water.update([root]);
     effects.update(previewDocument, {}, null, previewDocument.tiles, []);
     const g = previewGeometry(model),
       safe = {
@@ -195,6 +209,7 @@ export function createModelPreview(host, onFrame, onError) {
             Array.isArray(part.material) ? materials : materials[0],
           );
           mesh.matrixAutoUpdate = false;
+          mesh.userData.modelPart = part;
           mesh.matrix.copy(part.matrix);
           root.add(mesh);
         }

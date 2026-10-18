@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Store) MapModelBehaviours(ctx context.Context) (map[string]battlemap.ModelBehaviour, error) {
-	rows, err := s.pool.Query(ctx, `SELECT d.id::text,d.revision,d.default_lights,
+	rows, err := s.pool.Query(ctx, `SELECT d.id::text,d.revision,d.default_lights,coalesce(d.water_animation,'null'::jsonb),
         coalesce((SELECT jsonb_agg(jsonb_build_object('id',t.id,'toDefinitionId',t.to_model_id,'action',t.action) ORDER BY t.action,t.id)
         FROM dndshare.map_model_transition t WHERE t.from_model_id=d.id),'[]'::jsonb)
         FROM dndshare.map_model_definition d`)
@@ -21,14 +21,17 @@ func (s *Store) MapModelBehaviours(ctx context.Context) (map[string]battlemap.Mo
 	for rows.Next() {
 		var id string
 		var b battlemap.ModelBehaviour
-		var lights, transitions []byte
-		if err = rows.Scan(&id, &b.Revision, &lights, &transitions); err != nil {
+		var lights, water, transitions []byte
+		if err = rows.Scan(&id, &b.Revision, &lights, &water, &transitions); err != nil {
 			return nil, err
 		}
 		if err = json.Unmarshal(lights, &b.DefaultLights); err != nil {
 			return nil, err
 		}
 		if err = json.Unmarshal(transitions, &b.Transitions); err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(water, &b.WaterAnimation); err != nil {
 			return nil, err
 		}
 		result[id] = b
@@ -59,7 +62,11 @@ func saveModelBehaviour(ctx context.Context, tx pgx.Tx, id string, b battlemap.M
 	if err != nil {
 		return err
 	}
-	result, err := tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET revision=revision+1,default_lights=CAST($3 AS jsonb) WHERE id=$1 AND revision=$2`, id, b.Revision, json.RawMessage(data))
+	water, err := json.Marshal(b.WaterAnimation)
+	if err != nil {
+		return err
+	}
+	result, err := tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET revision=revision+1,default_lights=CAST($3 AS jsonb),water_animation=CAST($4 AS jsonb) WHERE id=$1 AND revision=$2`, id, b.Revision, json.RawMessage(data), json.RawMessage(water))
 	if err != nil {
 		return err
 	}

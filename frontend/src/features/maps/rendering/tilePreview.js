@@ -3,6 +3,7 @@ import { Group, InstancedMesh, Matrix4 } from "three";
 import { tilePose, tilePoseTransform } from "./tileTransform";
 import { createRotationMotion } from "./rotationMotion";
 import { landingTarget } from "./tileLanding";
+import { modelWaterMaterial } from "./modelWater";
 
 export function createTilePreview(assets, onSettled = () => {}) {
   const root = new Group(),
@@ -85,6 +86,7 @@ export function createTilePreview(assets, onSettled = () => {}) {
         t.modelId,
         assets.metadata(t.modelId)?.renderUrl,
         visualSignature(assets, new Set([t.modelId]), "render"),
+        assets.metadata(t.modelId)?.behaviour?.waterAnimation,
       ]),
     );
     if (key !== nextKey) {
@@ -109,7 +111,11 @@ export function createTilePreview(assets, onSettled = () => {}) {
             copy.userData.baseOpacity = copy.opacity;
             copy.userData.baseTransparent = copy.transparent;
             copy.userData.baseDepthWrite = copy.depthWrite;
-            return copy;
+            return modelWaterMaterial(
+              copy,
+              part,
+              metadata.behaviour?.waterAnimation,
+            );
           });
           const mesh = new InstancedMesh(
             part.geometry,

@@ -36,6 +36,7 @@ export function createObjectPreview(fog, assets) {
           o.open,
           assets.metadata?.(o.modelId)?.renderUrl,
           visualSignature(assets, new Set([o.modelId]), "render"),
+          assets.metadata?.(o.modelId)?.behaviour?.waterAnimation,
         ]),
       );
     if (next !== key) {

@@ -10,6 +10,7 @@ import { startModelRefresh } from "../lib/currentModelRefresh";
 import { getMapModels } from "@/shared/api/mapsApi";
 import { createMapLighting } from "./mapLighting";
 import { createMapEffects } from "./mapEffects";
+import { createModelWaterAnimation } from "./modelWater";
 import { areaAppearance } from "../lib/mapAreas";
 import { mapScreenQueries } from "./mapScreenQueries";
 import { createLoadingPreview } from "./loadingPreview";
@@ -73,6 +74,7 @@ export async function createMapRenderer(
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
     effects = createMapEffects(scene, fog, assets, render),
+    water = createModelWaterAnimation(),
     transitions = createAreaTransitions(assetsChanged),
     volumeFog = createVolumeFog(gpu, fog.uniforms, transitions),
     tokenPortraits = createTokenPortraits(render),
@@ -149,6 +151,7 @@ export async function createMapRenderer(
     volumeFog,
     lighting,
     effects,
+    water,
     scene,
     camera,
     presentFrame,
@@ -429,6 +432,7 @@ export async function createMapRenderer(
       appearance,
     );
     assets.prune();
+    water.update([tiles.root, preview.root, objects, objectPreview.root]);
     profiler.updateEnd(updateStarted);
     render();
   }
@@ -485,6 +489,7 @@ export async function createMapRenderer(
         objects,
         objectPreview.root,
       );
+      water.advance(0, false);
       volumeFog.render(scene, camera);
       return new Promise((resolve, reject) =>
         gpu.domElement.toBlob(

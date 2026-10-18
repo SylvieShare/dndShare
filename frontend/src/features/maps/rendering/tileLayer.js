@@ -3,6 +3,7 @@ import { Group, InstancedMesh, Matrix4 } from "three";
 import { tilePose, tilePoseTransform } from "./tileTransform";
 import { createRotationMotion } from "./rotationMotion";
 import { applyAreaOpacity } from "./areaOpacity";
+import { modelWaterMaterial } from "./modelWater";
 
 export function createTileLayer(assets, fog) {
   const root = new Group(),
@@ -65,7 +66,13 @@ export function createTileLayer(assets, fog) {
         for (const part of model.parts) {
           const materials = (
             Array.isArray(part.material) ? part.material : [part.material]
-          ).map((m) => fog.material(m.clone()));
+          ).map((m) =>
+            modelWaterMaterial(
+              fog.material(m.clone()),
+              part,
+              metadata.behaviour?.waterAnimation,
+            ),
+          );
           const mesh = new InstancedMesh(
             part.geometry,
             Array.isArray(part.material) ? materials : materials[0],

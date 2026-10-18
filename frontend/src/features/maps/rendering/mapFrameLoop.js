@@ -10,6 +10,7 @@ export function createMapFrameLoop({
   volumeFog,
   lighting,
   effects,
+  water,
   scene,
   camera,
   presentFrame,
@@ -67,7 +68,10 @@ export function createMapFrameLoop({
             objects,
             objectPreview.root,
           ),
-          fireDelay = effectFrame.delay;
+          fireDelay = Math.min(
+            effectFrame.delay,
+            water.advance(time, options.animate !== false),
+          );
         profiler.mark("draw");
         volumeFog.render(scene, camera);
         profiler.mark("overlays");

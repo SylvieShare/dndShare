@@ -40,6 +40,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal("same-code variants were merged")
 	}
 	b := battlemap.ModelBehaviour{Revision: 1, DefaultLights: []battlemap.ModelLight{{Key: "flame", Name: "Факел", Kind: "torch", Color: "#ffc36a", Position: [3]float64{.5, .5, 1}, Intensity: 8, Radius: 4, Enabled: true}}, Transitions: []battlemap.ModelTransition{{ID: "00000000-0000-4000-8000-000000000025", ToDefinitionID: target.DefinitionID, Action: "open"}}}
+	b.WaterAnimation = &battlemap.WaterAnimation{Enabled: true, Speed: 1, Strength: .7}
 	edit := source
 	edit.Code = "BEH-door"
 	edit.ID = "00000000-0000-4000-8000-000000000022"
@@ -60,6 +61,9 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal(err)
 	}
 	loaded := behaviours[source.DefinitionID]
+	if loaded.WaterAnimation == nil || *loaded.WaterAnimation != *b.WaterAnimation {
+		t.Fatal("water settings lost on metadata save", loaded)
+	}
 	if loaded.Revision != 2 || len(loaded.DefaultLights) != 1 || len(loaded.Transitions) != 1 || loaded.Transitions[0].ToDefinitionID != target.DefinitionID {
 		t.Fatal("behaviour readback", loaded)
 	}
@@ -117,6 +121,7 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal(err)
 	}
 	current.DefaultLights[0].Intensity = 12
+	current.WaterAnimation.Speed = 1.5
 	updated, err := s.UpdateMapModelBehaviour(ctx, source.DefinitionID, current)
 	if err != nil || updated.Revision != 3 || len(updated.Transitions) != 1 {
 		t.Fatal("standalone behaviour update", updated, err)
@@ -134,6 +139,9 @@ func testMapModelBehaviours(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal("invalid standalone transition accepted", err)
 	}
 	after, err := s.GetMapModelBehaviour(ctx, source.DefinitionID)
+	if err == nil && (after.WaterAnimation == nil || after.WaterAnimation.Speed != 1.5) {
+		t.Fatal("water settings lost on behaviour update", after)
+	}
 	if err != nil || after.Revision != 3 || after.DefaultLights[0].Intensity != 12 || after.Transitions[0].ToDefinitionID != target.DefinitionID {
 		t.Fatal("rollback lost previous behaviour", after, err)
 	}

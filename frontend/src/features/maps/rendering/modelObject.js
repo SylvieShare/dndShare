@@ -1,5 +1,6 @@
 import { modelVisual } from "./modelVisual";
 import { Group, Mesh } from "three";
+import { modelWaterMaterial } from "./modelWater";
 export function buildModelObject(object, assets, fog, tier = "render") {
   const source = modelVisual(assets, object.modelId, tier),
     root = new Group();
@@ -13,7 +14,11 @@ export function buildModelObject(object, assets, fog, tier = "render") {
     ).map((m) => {
       const copy = fog.material(m.clone());
       copy.userData.borrowedTextures = true;
-      return copy;
+      return modelWaterMaterial(
+        copy,
+        part,
+        assets.metadata?.(object.modelId)?.behaviour?.waterAnimation,
+      );
     });
     const mesh = new Mesh(
       part.geometry,

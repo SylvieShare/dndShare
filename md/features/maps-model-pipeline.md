@@ -669,6 +669,11 @@ render/LOD всегда содержат корпус без огня; аним�
 
 ## Публикация через MCP
 
+Измеренные водные поверхности могут содержать `_WATER` для процедурного
+движения материала без изменения геометрии. Подготовка и проверка принятого
+фонтана описаны в [анимации воды](maps-water-animation.md).
+
+
 ```bash
 model_assets_dir=models/collections/majestic-highlands/optimized-upload/MH-001
 go run ./cmd/map-model-upload -assets "$model_assets_dir" -workers 1

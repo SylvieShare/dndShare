@@ -1,4 +1,8 @@
 <template>
+  <MapModelWaterFields
+    v-if="behaviour.waterAnimation"
+    :water="behaviour.waterAnimation"
+  />
   <DetailSection
     :label="`Переходы (${behaviour.transitions.length})`"
     collapsible
@@ -89,6 +93,7 @@ import { visibleModels } from "../lib/visibleModels";
 import { TRANSITION_ACTIONS } from "../lib/modelTransitions";
 import { uid } from "../lib/mapModel";
 import MapModelLightTemplate from "./MapModelLightTemplate.vue";
+import MapModelWaterFields from "./MapModelWaterFields.vue";
 const props = defineProps({
   model: Object,
   behaviour: Object,

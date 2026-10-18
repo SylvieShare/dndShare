@@ -7,7 +7,11 @@ import { isDeepStrictEqual } from "node:util";
 import { mapTool } from "./mcp_maps_client.mjs";
 
 export async function applyBehaviour(definitionId, recipe) {
-  if (!Array.isArray(recipe.defaultLights) && !recipe.transitions?.length)
+  if (
+    !Array.isArray(recipe.defaultLights) &&
+    !recipe.transitions?.length &&
+    !recipe.waterAnimation
+  )
     return null;
   if (recipe.retiredInto) {
     const models = await mapTool("map_tile_models_list", {
@@ -30,6 +34,7 @@ export async function applyBehaviour(definitionId, recipe) {
       ...(recipe.defaultLights || []),
     ];
     const transitions = [...current.transitions];
+    const waterAnimation = current.waterAnimation || recipe.waterAnimation;
     for (const desired of recipe.transitions || []) {
       if (
         !transitions.some(
@@ -46,7 +51,8 @@ export async function applyBehaviour(definitionId, recipe) {
     );
     if (
       !isDeepStrictEqual(lights, current.defaultLights) ||
-      !isDeepStrictEqual(transitions, current.transitions)
+      !isDeepStrictEqual(transitions, current.transitions) ||
+      !isDeepStrictEqual(waterAnimation, current.waterAnimation)
     ) {
       try {
         await mapTool("map_tile_model_behaviour_update", {
@@ -55,6 +61,7 @@ export async function applyBehaviour(definitionId, recipe) {
             ...current,
             defaultLights: lights,
             transitions,
+            ...(waterAnimation ? { waterAnimation } : {}),
           },
         });
       } catch (error) {
@@ -68,6 +75,7 @@ export async function applyBehaviour(definitionId, recipe) {
     ).behaviour;
     assert.deepEqual(verified.defaultLights, lights);
     assert.deepEqual(verified.transitions, transitions);
+    assert.deepEqual(verified.waterAnimation, waterAnimation);
     return { confirmedAt: new Date().toISOString(), definitionId, ...verified };
   }
   throw new Error("Concurrent behaviour edit prevented verification");

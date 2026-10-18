@@ -14,6 +14,7 @@ import { medievalTextureSizes } from './medieval_texture_sizes.mjs';
 import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
 import { stripSculptedFlames } from './model_flame_geometry.mjs';
 import { addLightEffectPreview } from './light_effect_preview.mjs';
+import { addModelWaterMask } from './model_water_mask.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -157,6 +158,7 @@ if (!process.argv.includes('--publish-manifest')) {
       for (const semantic of p.listSemantics()) if (semantic.startsWith('COLOR_')) p.setAttribute(semantic, null);
     }
     const before = getBounds(doc.getRoot().listScenes()[0]);
+    if (recipe.waterAnimation) addModelWaterMask(doc, recipe.materials);
     const previewDoc = recipe.proceduralFire ? cloneDocument(doc) : doc;
     if (recipe.proceduralFire) addLightEffectPreview(previewDoc, report.model, recipe.defaultLights || []);
     await io.write(path.join(review, tier==='render' ? 'preview-model.glb' : 'lod-preview-model.glb'), previewDoc);

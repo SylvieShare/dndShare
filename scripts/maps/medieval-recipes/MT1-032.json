@@ -4,6 +4,11 @@
   "tileType": "floor",
   "width": 2,
   "height": 2,
+  "waterAnimation": {
+    "enabled": true,
+    "speed": 1,
+    "strength": 0.7
+  },
   "mountCenterMM": [
     0,
     0
@@ -149,6 +154,8 @@
       {
         "name": "middle bowl water and four falling sheets",
         "kind": "liquid",
+        "flowBelowMM": 65,
+        "flowBlendMM": 2,
         "minMM": [
           -20,
           -20,

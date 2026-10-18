@@ -10,6 +10,7 @@ import {
 import { readGlb } from "./glb_textures.mjs";
 import { createRequire } from "node:module";
 import { initializeStructureReferences } from "./medieval_source_reference.mjs";
+import { addModelWaterMask } from "./model_water_mask.mjs";
 import {
   stripSculptedFlames,
   triangleFingerprint,
@@ -37,6 +38,55 @@ export async function reviewedMountAssetHash(report, tier, dir, expectedHash) {
   }
   await validateStandardMount(after, report.model);
   let mountedBody = after;
+  if (report.waterAnimation) {
+    mountedBody = await fs.readFile(
+      path.resolve(
+        dir,
+        "../../water-animation",
+        report.model.sourceCode,
+        "before",
+        tier + ".glb",
+      ),
+    );
+    assert.equal(hash(mountedBody), report.waterAnimation.before[tier].sha256);
+    assert.equal(expectedHash, report.waterAnimation.tiers[tier].sha256);
+    const require = createRequire(
+        "/private/tmp/dndshare-model-tools/package.json",
+      ),
+      { NodeIO } = require("@gltf-transform/core"),
+      { ALL_EXTENSIONS } = require("@gltf-transform/extensions"),
+      { MeshoptDecoder } = require("meshoptimizer");
+    await MeshoptDecoder.ready;
+    const io = new NodeIO()
+        .registerExtensions(ALL_EXTENSIONS)
+        .registerDependencies({ "meshopt.decoder": MeshoptDecoder }),
+      original = await io.readBinary(mountedBody),
+      actual = await io.readBinary(after);
+    await initializeStructureReferences(
+      report.recipe.materials,
+      path.resolve(dir, "../../inventory.json"),
+    );
+    addModelWaterMask(
+      original,
+      report.recipe.materials,
+      report.recipe.mountDepthMM - report.model.mountDepth * 35,
+    );
+    assert.equal(
+      triangleFingerprint(actual),
+      triangleFingerprint(original),
+      "Model changed beyond measured water mask",
+    );
+    assert.deepEqual(
+      materialImages(actual),
+      materialImages(original),
+      "Water annotation changed painting",
+    );
+    assert.equal(
+      report.model.assets.shadow.sha256,
+      report.waterAnimation.before.shadow.sha256,
+      "Static geometry requires unchanged shadows",
+    );
+  }
   if (report.proceduralFire) {
     const baseline = path.resolve(
       dir,

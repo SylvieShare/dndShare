@@ -145,6 +145,8 @@ rollback; apply требует точный token и включённые MCP wr
   размещения, света или переходов. Префикс пака сохраняется. Чужая правка
   expectedCode отклоняется; повтор уже установленного code идемпотентен.
 - `map_tile_model_behaviour_get`: definitionId → текущее поведение и revision.
+  Необязательный waterAnimation содержит enabled, speed (0–3), strength (0–2)
+  для подготовленных водных поверхностей render/LOD.
 - `map_tile_model_behaviour_update`: definitionId и полный behaviour с ожидаемой
   revision; меняет встроенные источники с effect и направленные переходы атомарно, без
   новых версий GLB или изменений S3. Перед записью прочитать актуальное поведение

@@ -25,9 +25,10 @@ type ModelTransition struct {
 }
 
 type ModelBehaviour struct {
-	Revision      int               `json:"revision"`
-	DefaultLights []ModelLight      `json:"defaultLights"`
-	Transitions   []ModelTransition `json:"transitions"`
+	WaterAnimation *WaterAnimation   `json:"waterAnimation,omitempty"`
+	Revision       int               `json:"revision"`
+	DefaultLights  []ModelLight      `json:"defaultLights"`
+	Transitions    []ModelTransition `json:"transitions"`
 }
 
 func ValidTransitionAction(action string) bool {
@@ -39,6 +40,9 @@ func ValidTransitionAction(action string) bool {
 }
 
 func ValidateModelBehaviour(b ModelBehaviour) error {
+	if w := b.WaterAnimation; w != nil && (!bounded(w.Speed, 0, 3) || !bounded(w.Strength, 0, 2)) {
+		return fmt.Errorf("Некорректные параметры анимации воды")
+	}
 	if b.Revision < 1 || len(b.DefaultLights) > 8 || len(b.Transitions) > 32 {
 		return fmt.Errorf("Некорректное число источников или переходов модели")
 	}

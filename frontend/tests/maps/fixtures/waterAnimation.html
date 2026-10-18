@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <body>
+    <div id="controls"></div>
+    <script type="module">
+      import { createApp, reactive } from "vue";
+      import {
+        WebGLRenderer,
+        Scene,
+        OrthographicCamera,
+        HemisphereLight,
+        DirectionalLight,
+        PointLight,
+        Box3,
+        Vector3,
+        MeshBasicMaterial,
+      } from "three";
+      import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
+      import { createTileLayer } from "/src/features/maps/rendering/tileLayer.js";
+      import { buildModelObject } from "/src/features/maps/rendering/modelObject.js";
+      import { createModelWaterAnimation } from "/src/features/maps/rendering/modelWater.js";
+      import { createMapFog } from "/src/features/maps/rendering/mapFog.js";
+      import MapModelWaterFields from "/src/features/maps/components/MapModelWaterFields.vue";
+      const settings = reactive({ enabled: true, speed: 1, strength: 0.7 });
+      createApp(MapModelWaterFields, { water: settings }).mount("#controls");
+      const gpu = new WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      gpu.setSize(640, 640);
+      gpu.shadowMap.enabled = true;
+      document.body.append(gpu.domElement);
+      const loader = acquireModelLoader(gpu),
+        water = createModelWaterAnimation();
+      const pixels = () => {
+        const gl = gpu.getContext(),
+          p = new Uint8Array(640 * 640 * 4);
+        gl.readPixels(0, 0, 640, 640, gl.RGBA, gl.UNSIGNED_BYTE, p);
+        return p;
+      };
+      window.reviewWater = async (tier, model, instanced) => {
+        const gltf = await loader.load("/model-review/" + tier + ".glb");
+        gltf.scene.updateMatrixWorld(true);
+        const parts = [];
+        gltf.scene.traverse((n) => {
+          if (n.isMesh)
+            parts.push({
+              geometry: n.geometry,
+              material: n.material,
+              matrix: n.matrixWorld.clone(),
+            });
+        });
+        const metadata = { ...model, behaviour: { waterAnimation: settings } };
+        const assets = { metadata: () => metadata, visual: () => ({ parts }) },
+          fog = createMapFog();
+        fog.update({ width: 100, height: 100, zones: [] }, null, true);
+        const scene = new Scene(),
+          tileLayer = createTileLayer(assets, fog);
+        let root;
+        if (instanced) {
+          tileLayer.rebuild(
+            [{ id: "f", modelId: model.id, x: 0, y: 0, rotation: 90 }],
+            tier,
+            [],
+          );
+          tileLayer.advance(1000);
+          root = tileLayer.root;
+        } else
+          root = buildModelObject(
+            { id: "f", modelId: model.id, x: 0, y: 0, rotation: 0, scale: 1 },
+            assets,
+            fog,
+            tier,
+          );
+        scene.add(root, new HemisphereLight(0xffffff, 0x625141, 2));
+        const sun = new DirectionalLight(0xfff2df, 3);
+        sun.position.set(-3, 6, 4);
+        sun.castShadow = true;
+        scene.add(sun);
+        const point = new PointLight(0xfff2df, 3, 20);
+        point.position.set(0, 4, 1);
+        point.castShadow = true;
+        scene.add(point);
+        const bounds = new Box3().setFromObject(root),
+          center = bounds.getCenter(new Vector3()),
+          camera = new OrthographicCamera(-1.8, 1.8, 1.8, -1.8, 0.01, 100);
+        camera.position.copy(center).add(new Vector3(4, 5, 6));
+        camera.lookAt(center);
+        water.update([root]);
+        const render = (time) => {
+          water.advance(time);
+          gpu.render(scene, camera);
+          return pixels();
+        };
+        const a = render(0),
+          same = render(60),
+          b = render(350);
+        const saved = [];
+        root.traverse((n) => {
+          if (!n.isMesh) return;
+          saved.push([n, n.material]);
+          const m = new MeshBasicMaterial();
+          m.toneMapped = false;
+          m.onBeforeCompile = (s) => {
+            s.vertexShader = s.vertexShader
+              .replace(
+                "#include <common>",
+                "#include <common>\nattribute vec2 _water;varying float mask;",
+              )
+              .replace(
+                "#include <begin_vertex>",
+                "#include <begin_vertex>\nmask=_water.x;",
+              );
+            s.fragmentShader = s.fragmentShader
+              .replace(
+                "#include <common>",
+                "#include <common>\nvarying float mask;",
+              )
+              .replace(
+                "#include <color_fragment>",
+                "#include <color_fragment>\ndiffuseColor.rgb=vec3(step(0.01,mask));",
+              );
+          };
+          n.material = m;
+        });
+        gpu.render(scene, camera);
+        const mask = pixels();
+        let animated = 0,
+          stoneChanged = 0,
+          sameChanged = 0;
+        for (let i = 0; i < a.length; i += 4) {
+          const delta = Math.max(
+            ...[0, 1, 2].map((c) => Math.abs(a[i + c] - b[i + c])),
+          );
+          if (delta > 3) {
+            if (mask[i] > 250) animated++;
+            else if (mask[i] < 2) stoneChanged++;
+          }
+          if (
+            a[i] !== same[i] ||
+            a[i + 1] !== same[i + 1] ||
+            a[i + 2] !== same[i + 2]
+          )
+            sameChanged++;
+        }
+        saved.forEach(([n, m]) => {
+          n.material.dispose();
+          n.material = m;
+        });
+        settings.enabled = false;
+        const offA = render(500),
+          offB = render(1000);
+        settings.enabled = true;
+        const frozen = offA.every((v, i) => v === offB[i]);
+        render(350);
+        return {
+          animated,
+          stoneChanged,
+          sameChanged,
+          frozen,
+          triangles: gpu.info.render.triangles,
+          waterParts: parts.filter((p) => p.geometry.hasAttribute("_water"))
+            .length,
+        };
+      };
+      window.waterSettings = settings;
+    </script>
+  </body>
+</html>

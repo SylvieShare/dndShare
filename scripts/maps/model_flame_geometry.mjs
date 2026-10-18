@@ -22,7 +22,7 @@ export function materialImages(document) {
     );
 }
 
-export function triangleFingerprint(document) {
+export function triangleFingerprint(document, exclude = []) {
   const digest = createHash("sha256");
   for (const node of document.getRoot().listNodes()) {
     if (!node.getMesh()) continue;
@@ -30,7 +30,10 @@ export function triangleFingerprint(document) {
       JSON.stringify(node.getWorldMatrix().map((v) => Number(v.toFixed(12)))),
     );
     for (const primitive of node.getMesh().listPrimitives()) {
-      const semantics = primitive.listSemantics().sort(),
+      const semantics = primitive
+          .listSemantics()
+          .filter((s) => !exclude.includes(s))
+          .sort(),
         positions = primitive.getAttribute("POSITION"),
         indices = primitive.getIndices();
       const vertices = Array.from({ length: positions.getCount() }, (_, i) => {
