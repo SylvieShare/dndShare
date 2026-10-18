@@ -30,6 +30,54 @@ for (const mobile of [false, true])
       name: "Выбранные элементы",
     });
     await expect(
+      focus.getByText(
+        "Цвет и включение — от источника света. Анимация: 12 FPS.",
+        { exact: true },
+      ),
+    ).toHaveCount(0);
+    await expect(
+      focus.getByRole("slider", {
+        name: "Смещение пламени по высоте",
+        exact: true,
+      }),
+    ).toHaveCount(0);
+    await expect(
+      focus.getByRole("button", { name: "Выключить мерцание", exact: true }),
+    ).toHaveCount(0);
+    await focus
+      .getByRole("slider", { name: "Смещение источника света", exact: true })
+      .fill("0.8");
+    await expect
+      .poll(() =>
+        page.evaluate(() => window.lastSaved?.document.lights[0].height),
+      )
+      .toBeCloseTo(1.4);
+    expect(
+      await page.evaluate(
+        () =>
+          window.lastSaved.document.lights[0].height +
+          window.lastSaved.document.lights[0].effect.offset[2],
+      ),
+    ).toBeCloseTo(0.6);
+    await focus
+      .getByRole("slider", { name: "Высота", exact: true })
+      .fill("1.2");
+    await expect
+      .poll(() =>
+        page.evaluate(() => window.lastSaved?.document.lights[0].height),
+      )
+      .toBe(2);
+    await focus
+      .getByRole("slider", { name: "Колебания", exact: true })
+      .fill("0");
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () => window.lastSaved?.document.lights[0].effect.strength,
+        ),
+      )
+      .toBe(0);
+    await expect(
       focus.getByRole("switch", { name: "Показывать пламя", exact: true }),
     ).toBeChecked();
     await focus

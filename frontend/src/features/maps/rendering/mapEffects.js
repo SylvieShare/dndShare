@@ -5,10 +5,8 @@ import { applyAreaOpacity } from "./areaOpacity";
 import { fireEffectGeometry, fireEffectMaterial } from "./fireEffectGeometry";
 import { lightEffectPose } from "../lib/lightEffect";
 import { lightPose, lightOpacity } from "../lib/mapLighting";
-
-export const FIRE_FPS = 12;
-const seed = (id) =>
-  [...id].reduce((n, c) => (n * 31 + c.charCodeAt(0)) | 0, 0) % 1000;
+import { FIRE_FPS, fireClock, fireSeed } from "./fireMotion";
+export { FIRE_FPS } from "./fireMotion";
 
 export function createMapEffects(scene, fog, assets, changed = () => {}) {
   const root = new Group(),
@@ -63,7 +61,7 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
               }),
             ),
             mesh = new Mesh(geometry, material),
-            uniforms = fireEffectMaterial(material, seed(source.id));
+            uniforms = fireEffectMaterial(material, fireSeed(source.id));
           mesh.userData.lightId = source.id;
           mesh.frustumCulled = false;
           root.add(mesh);
@@ -99,10 +97,9 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
             motion.value(source.id);
         if (position) mesh.position.copy(position);
         applyAreaOpacity(mesh, opacity);
-        uniforms.effectClock.value = immediate
-          ? 0
-          : Math.floor((time * FIRE_FPS) / 1000) / FIRE_FPS;
-        if (opacity > 0.001 && !immediate)
+        uniforms.effectClock.value =
+          immediate || !source.strength ? 0 : fireClock(time);
+        if (opacity > 0.001 && !immediate && source.strength > 0)
           delay = Math.min(
             delay,
             ((Math.floor((time * FIRE_FPS) / 1000) + 1) * 1000) / FIRE_FPS -

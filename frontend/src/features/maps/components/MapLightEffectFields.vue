@@ -7,9 +7,6 @@
     />
     <Transition name="light-effect">
       <div v-if="effect?.kind === 'fire'" class="light-effect-fields">
-        <p class="map-hint">
-          Цвет и включение — от источника света. Анимация: 12 FPS.
-        </p>
         <FormField
           v-for="field in fields"
           :key="field.key"
@@ -28,6 +25,17 @@
         </FormField>
       </div>
     </Transition>
+    <FormField v-if="effect" label="Колебания" vertical>
+      <AppSlider
+        :model-value="effect.strength"
+        :min="0"
+        :max="2"
+        :step="0.05"
+        label="Колебания"
+        @update:model-value="patch({ key: 'strength' }, $event)"
+        @change="emit('finish')"
+      />
+    </FormField>
   </MapInspectorSection>
 </template>
 <script setup>
@@ -52,15 +60,6 @@ const fields = [
     min: 0.02,
     max: 16,
     step: 0.02,
-  },
-  { key: "strength", label: "Сила колебаний", min: 0, max: 2, step: 0.05 },
-  {
-    key: "offset",
-    index: 2,
-    label: "Смещение пламени по высоте",
-    min: -32,
-    max: 32,
-    step: 0.05,
   },
 ];
 const value = (f) =>

@@ -3,18 +3,44 @@
     <FormField
       v-for="field in fields"
       :key="field.key"
-      :label="`${field.label}: ${light[field.key]}`"
+      :label="`${field.label}: ${displayValue(field)}`"
       vertical
     >
       <AppSlider
-        :model-value="light[field.key]"
-        :min="field.min"
+        :model-value="displayValue(field)"
+        :min="
+          field.key === 'height'
+            ? Math.max(0, -lightSourceOffset(light))
+            : field.min
+        "
         :max="
-          field.key === 'height' ? Math.max(field.max, light.height) : field.max
+          field.key === 'height'
+            ? Math.min(
+                Math.max(field.max, lightBaseHeight(light)),
+                (light.builtinKey ? 256 : 16) - lightSourceOffset(light),
+              )
+            : field.max
         "
         :step="field.step"
         :label="field.label"
-        @update:model-value="editor.updateLight(light.id, field.key, $event)"
+        @update:model-value="
+          field.key === 'height'
+            ? editor.updateLightHeight(light.id, $event)
+            : editor.updateLight(light.id, field.key, $event)
+        "
+        @change="editor.finishLightEdit"
+      />
+    </FormField>
+    <FormField v-if="light.effect" label="Смещение источника света" vertical>
+      <AppSlider
+        :model-value="lightSourceOffset(light)"
+        :min="Math.max(-32, -lightBaseHeight(light))"
+        :max="
+          Math.min(32, (light.builtinKey ? 256 : 16) - lightBaseHeight(light))
+        "
+        :step="0.05"
+        label="Смещение источника света"
+        @update:model-value="editor.updateLightSourceOffset(light.id, $event)"
         @change="editor.finishLightEdit"
       />
     </FormField>
@@ -72,6 +98,7 @@ import { computed } from "vue";
 import { ActionButton, AppSlider, FormField } from "@sylvieshare/share-ui";
 import { Link, LockKeyhole, X } from "@lucide/vue";
 import { mapEntity } from "../lib/editorEntities";
+import { lightBaseHeight, lightSourceOffset } from "../lib/lightEffect";
 import MapEntityRow from "./MapEntityRow.vue";
 import MapInspectorSection from "./MapInspectorSection.vue";
 import MapLightEffectFields from "./MapLightEffectFields.vue";
@@ -81,8 +108,12 @@ const props = defineProps({ editor: Object, light: Object });
 const fields = [
   { key: "intensity", label: "Яркость", min: 0, max: 50, step: 0.5 },
   { key: "radius", label: "Радиус света", min: 0.25, max: 32, step: 0.25 },
-  { key: "height", label: "Высота источника", min: 0, max: 16, step: 0.1 },
+  { key: "height", label: "Высота", min: 0, max: 16, step: 0.1 },
 ];
+const displayValue = (field) =>
+  field.key === "height"
+    ? lightBaseHeight(props.light)
+    : props.light[field.key];
 const anchor = computed(
   () =>
     props.light.anchor &&

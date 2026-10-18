@@ -29,6 +29,33 @@ function setup(lights = []) {
   };
   return { e, lighting: editorLighting(e) };
 }
+it("updates source offset and height in one undo group while preserving the flame base", () => {
+  const { e, lighting: l } = setup([
+    {
+      id: "fire",
+      builtinKey: "flame",
+      height: 1.8,
+      effect: {
+        kind: "fire",
+        size: [0.22, 0.35],
+        strength: 0.7,
+        offset: [0, 0, -0.2],
+      },
+    },
+  ]);
+  l.updateLightSourceOffset("fire", 0.6);
+  l.updateLightSourceOffset("fire", 0.8);
+  const light = e.draft.value.document.lights[0];
+  expect(e.checkpoint).toHaveBeenCalledTimes(1);
+  expect(light.height + light.effect.offset[2]).toBeCloseTo(1.6);
+  expect(light.overrides.height).toBeCloseTo(2.4);
+  expect(light.overrides.effect.offset[2]).toBe(-0.8);
+  l.finishLightEdit();
+  l.updateLightHeight("fire", 2);
+  expect(e.checkpoint).toHaveBeenCalledTimes(2);
+  expect(light.height).toBeCloseTo(2.8);
+  l.finishLightEdit();
+});
 it("copies a detached snapshot and reuses it after editing the original, multiple drops and cancellation", () => {
   const source = {
     id: "lamp",

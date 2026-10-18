@@ -3,6 +3,7 @@ import { editorLightBinding } from "./editorLightBinding";
 import { clone, inside, uid } from "../lib/mapModel";
 import { DEFAULT_SUN, LIGHT_PRESETS, lightPose } from "../lib/mapLighting";
 import { manualLightCount } from "../lib/builtinLights";
+import { sourceHeightAtBase, withLightSourceOffset } from "../lib/lightEffect";
 export function editorLighting(e) {
   const selectedLight = ref(""),
     hoveredLight = ref(""),
@@ -43,8 +44,11 @@ export function editorLighting(e) {
     });
   }
   function updateLight(id, field, value) {
+    updateLightFields(id, { [field]: value }, field);
+  }
+  function updateLightFields(id, values, key) {
     const light = e.draft.value.document.lights.find((l) => l.id === id);
-    if (!light || (field === "areaId" && light.anchor)) return;
+    if (!light || ("areaId" in values && light.anchor)) return;
     const editable = [
       "color",
       "height",
@@ -55,13 +59,41 @@ export function editorLighting(e) {
       "shadows",
       "effect",
     ];
-    if (light.builtinKey && field !== "enabled" && !editable.includes(field))
+    if (
+      light.builtinKey &&
+      Object.keys(values).some(
+        (field) => field !== "enabled" && !editable.includes(field),
+      )
+    )
       return;
-    patch(`${id}:${field}`, () => {
-      light[field] = value;
-      if (light.builtinKey && field !== "enabled")
-        light.overrides = { ...light.overrides, [field]: value };
+    patch(`${id}:${key}`, () => {
+      Object.assign(light, values);
+      if (light.builtinKey) {
+        const overrides = Object.fromEntries(
+          Object.entries(values).filter(([field]) => field !== "enabled"),
+        );
+        if (Object.keys(overrides).length)
+          light.overrides = { ...light.overrides, ...overrides };
+      }
     });
+  }
+  function updateLightHeight(id, height) {
+    const light = e.draft.value.document.lights.find((l) => l.id === id);
+    if (light)
+      updateLightFields(
+        id,
+        { height: sourceHeightAtBase(light, height) },
+        "base-height",
+      );
+  }
+  function updateLightSourceOffset(id, offset) {
+    const light = e.draft.value.document.lights.find((l) => l.id === id);
+    if (light?.effect)
+      updateLightFields(
+        id,
+        withLightSourceOffset(light, offset),
+        "source-offset",
+      );
   }
   function selectLight(id) {
     binding.cancelLightBinding();
@@ -260,6 +292,8 @@ export function editorLighting(e) {
     previewLight,
     updateSun,
     updateLight,
+    updateLightHeight,
+    updateLightSourceOffset,
     finishLightEdit,
     selectLight,
     removeLight,

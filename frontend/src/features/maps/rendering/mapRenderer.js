@@ -146,6 +146,7 @@ export async function createMapRenderer(
         objects,
         objectPreview.root,
         Math.min(250, elapsed),
+        time,
       );
       lastFrame = time;
       tiles.applyAppearance(appearance);

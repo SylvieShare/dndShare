@@ -76,7 +76,7 @@ transformed.y += weight * 0.12 * sin(effectClock * 9.1 + phase);`,
       .replace(
         "#include <color_fragment>",
         `#include <color_fragment>
-float heat = 0.86 + 0.14 * sin(fireHeight * 19.0 - effectClock * 11.0 + effectSeed);
+float heat = 1.0 - 0.14 * effectStrength + 0.14 * effectStrength * sin(fireHeight * 19.0 - effectClock * 11.0 + effectSeed);
 diffuseColor.rgb = mix(mix(diffuseColor.rgb, vec3(1.0), 0.45), diffuseColor.rgb,
   smoothstep(0.0, 0.65, fireHeight)) * heat;`,
       );

@@ -25,13 +25,20 @@
     >
       <FormTextInput
         type="number"
-        :value="light.position[coordinate]"
+        :value="
+          coordinate === 2 ? lightBaseHeight(light) : light.position[coordinate]
+        "
         :aria-label="`Встроенный источник ${index + 1}: ${label}`"
-        :min="coordinate === 2 ? 0 : -8"
-        :max="coordinate === 2 ? 32 : 8"
+        :min="coordinate === 2 ? Math.max(0, -lightSourceOffset(light)) : -8"
+        :max="coordinate === 2 ? 32 - lightSourceOffset(light) : 8"
         step="any"
         required
-        @update:value="light.position[coordinate] = Number($event)"
+        @update:value="
+          light.position[coordinate] =
+            coordinate === 2
+              ? sourceHeightAtBase(light, Number($event))
+              : Number($event)
+        "
       />
     </FormField>
     <FormField
@@ -59,7 +66,22 @@
         :aria-label="`Встроенный источник ${index + 1}: цвет`"
     /></FormField>
     <ToggleSwitch v-model="light.enabled" label="Включён по умолчанию" />
-    <ToggleSwitch v-model="light.flicker" label="Мерцание" />
+    <ToggleSwitch
+      v-if="!light.effect"
+      v-model="light.flicker"
+      label="Мерцание"
+    />
+    <FormField v-if="light.effect" label="Смещение источника света" vertical>
+      <FormTextInput
+        type="number"
+        :value="lightSourceOffset(light)"
+        :min="Math.max(-32, -lightBaseHeight(light))"
+        :max="32 - lightBaseHeight(light)"
+        step="any"
+        :aria-label="`Встроенный источник ${index + 1}: смещение источника света`"
+        @update:value="changeSourceOffset(Number($event))"
+      />
+    </FormField>
     <MapLightEffectFields
       :effect="light.effect"
       @update="light.effect = $event"
@@ -82,7 +104,18 @@ import {
   RemoveButton,
 } from "@sylvieshare/share-ui";
 import MapLightEffectFields from "./MapLightEffectFields.vue";
-defineProps({ light: Object, index: Number });
+import {
+  lightBaseHeight,
+  lightSourceOffset,
+  sourceHeightAtBase,
+  withLightSourceOffset,
+} from "../lib/lightEffect";
+const props = defineProps({ light: Object, index: Number });
+function changeSourceOffset(offset) {
+  const next = withLightSourceOffset(props.light, offset);
+  props.light.position[2] = next.height;
+  props.light.effect = next.effect;
+}
 const emit = defineEmits(["remove"]);
 const fields = [
   { key: "intensity", label: "Яркость", min: 0, max: 50 },

@@ -37,6 +37,7 @@
     </template>
     <template v-else>
       <IconToggleButton
+        v-if="!light.effect"
         :model-value="light.flicker"
         :color="light.color"
         :label="light.flicker ? 'Выключить мерцание' : 'Включить мерцание'"

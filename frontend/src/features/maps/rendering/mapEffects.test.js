@@ -93,3 +93,11 @@ it("shares the light colour and power, and a removed visual stops animation", ()
   expect(advance(700).delay).toBe(Infinity);
   effects.destroy();
 });
+it("stops scheduling fire animation at zero oscillation", () => {
+  const { effects, d, advance, uniforms } = fixture();
+  d.lights[0].effect.strength = 0;
+  effects.update(d, {}, null, [], []);
+  expect(advance(500).delay).toBe(Infinity);
+  expect(uniforms.effectClock.value).toBe(0);
+  effects.destroy();
+});

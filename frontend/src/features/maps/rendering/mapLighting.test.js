@@ -2,6 +2,7 @@ import { expect, it, vi } from "vitest";
 import { Scene, Group, Raycaster, Vector3, Matrix4 } from "three";
 import { createMapLighting } from "./mapLighting";
 import { createLightMarkers } from "./lightMarkers";
+import { fireMotion } from "./fireMotion";
 vi.mock("./shadowProxies", () => ({
   createShadowProxies: () => ({
     root: new Group(),
@@ -10,6 +11,75 @@ vi.mock("./shadowProxies", () => ({
     destroy() {},
   }),
 }));
+it("moves the actual light with the flame waves without accumulating offsets, and stops at zero", () => {
+  const scene = new Scene(),
+    gpu = { shadowMap: {} },
+    lighting = createMapLighting(scene, gpu, { catalogue: () => [] }),
+    objects = new Group();
+  const light = {
+    id: "fire",
+    kind: "torch",
+    height: 2.2,
+    x: 2,
+    y: 3,
+    elevation: 0,
+    enabled: true,
+    showMarker: true,
+    shadows: true,
+    intensity: 8,
+    radius: 4,
+    color: "#ffb04a",
+    flicker: false,
+    effect: {
+      kind: "fire",
+      size: [0.22, 0.35],
+      strength: 0.7,
+      offset: [0, 0, -0.6],
+    },
+  };
+  const d = {
+    width: 8,
+    height: 8,
+    lightingEnabled: true,
+    sun: { enabled: false, angle: 90, elevation: 30 },
+    tiles: [],
+    objects: [],
+    areas: [],
+    lights: [light],
+  };
+  const update = (animate = true) =>
+    lighting.update(
+      d,
+      { editLights: true, animate },
+      {},
+      [],
+      [],
+      { x: 4, y: 4 },
+      objects,
+    );
+  update();
+  const point = scene.children.find((n) => n.isPointLight);
+  lighting.advance(16, () => null, objects, null, 16, 110);
+  const expected = fireMotion(light, 110),
+    first = point.position.clone();
+  expect(first.y).toBeCloseTo(2.2 + expected.offset[1]);
+  expect(point.intensity).toBeCloseTo(8 * expected.gain);
+  expect(gpu.shadowMap.needsUpdate).toBe(true);
+  lighting.advance(16, () => null, objects, null, 16, 140);
+  expect(point.position.toArray()).toEqual(first.toArray());
+  lighting.advance(16, () => null, objects, null, 16, 170);
+  expect(point.position.toArray()).not.toEqual(first.toArray());
+  light.effect.strength = 0;
+  update();
+  expect(lighting.advance(16, () => null, objects, null, 16, 500)).toBe(false);
+  expect(point.position.toArray()).toEqual([2, 2.2, 3]);
+  expect(point.intensity).toBe(8);
+  light.effect.strength = 0.7;
+  update(false);
+  expect(lighting.advance(16, () => null, objects, null, 16, 600)).toBe(false);
+  expect(point.position.toArray()).toEqual([2, 2.2, 3]);
+  lighting.destroy();
+});
 it("restores the previous fixed lighting, without point lights, shadows or flicker, and keeps the configured sources", () => {
   const scene = new Scene(),
     gpu = { shadowMap: {} },

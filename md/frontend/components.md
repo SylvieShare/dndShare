@@ -509,7 +509,7 @@ MapLightingControls, MapSunSettings и MapLightingPanel общие для обе
 
 MapEntityRow переиспользуется в обоих списках источников. MapLightActions
 компонует IconToggleButton и ColorPresetPicker variant="button" (80×40, палитра/цвет): питание/сфера/цвет под превью,
-мерцание/тени в параметрах. MapLightFields использует AppSlider и поля имени,
+тени в параметрах, мерцание отдельно только без настройки пламени. MapLightFields использует AppSlider и поля имени,
 показывает префикс опоры, фиксирует имя/привязку встроенного света. Привязка идёт
 над областью; для закреплённого света область только читается. Двойной клик по
 строке или превью света вызывает useCameraFocus с плавным центрированием в 3D;
@@ -595,6 +595,8 @@ picking; snapshot и reduced motion отключают переходы. mapFram
 
 MapLightEffectFields составляет настройки пламени из ToggleSwitch, FormField
 и AppSlider, используется в фокусе света и внутри MapModelLightTemplate.
-Цвет и включение редактируются существующими MapLightActions. Общие параметры
+Цвет и включение редактируются существующими MapLightActions. MapLightFields
+и MapModelLightTemplate используют общие преобразования высоты основания и
+смещения света из lightEffect; парная правка записывается одним шагом Undo. Общие параметры
 экземпляра проходят через editorLighting; отдельной сущности эффекта нет.
 Контракт — [пламя источника](../features/maps-light-effects.md).
