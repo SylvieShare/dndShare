@@ -8,6 +8,13 @@ import {
   verifyStandardMountBody,
 } from "./standard_mount.mjs";
 import { readGlb } from "./glb_textures.mjs";
+import { createRequire } from "node:module";
+import { initializeStructureReferences } from "./medieval_source_reference.mjs";
+import {
+  stripSculptedFlames,
+  triangleFingerprint,
+  materialImages,
+} from "./model_flame_geometry.mjs";
 // Native-space pixel QA stays bound to its original bytes. A separate exact body proof
 // links those bytes to the final translated model without relabelling old QA hashes.
 export async function reviewedMountAssetHash(report, tier, dir, expectedHash) {
@@ -29,6 +36,65 @@ export async function reviewedMountAssetHash(report, tier, dir, expectedHash) {
     return expectedHash;
   }
   await validateStandardMount(after, report.model);
+  let mountedBody = after;
+  if (report.proceduralFire) {
+    const baseline = path.resolve(
+      dir,
+      "../../light-effects",
+      report.model.sourceCode,
+      "before",
+      tier + ".glb",
+    );
+    mountedBody = await fs.readFile(baseline);
+    assert.equal(
+      hash(mountedBody),
+      report.proceduralFire.before[tier].sha256,
+      "Flame-removal baseline changed",
+    );
+    assert.equal(expectedHash, report.proceduralFire.tiers[tier].sha256);
+    const require = createRequire(
+        "/private/tmp/dndshare-model-tools/package.json",
+      ),
+      { NodeIO } = require("@gltf-transform/core"),
+      { ALL_EXTENSIONS } = require("@gltf-transform/extensions"),
+      { MeshoptDecoder } = require("meshoptimizer");
+    await MeshoptDecoder.ready;
+    const io = new NodeIO()
+        .registerExtensions(ALL_EXTENSIONS)
+        .registerDependencies({ "meshopt.decoder": MeshoptDecoder }),
+      original = await io.readBinary(mountedBody),
+      actual = await io.readBinary(after),
+      images = materialImages(original);
+    await initializeStructureReferences(
+      report.recipe.materials,
+      path.resolve(dir, "../../inventory.json"),
+    );
+    stripSculptedFlames(
+      original,
+      report.recipe.materials,
+      report.recipe.mountDepthMM - report.model.mountDepth * 35,
+    );
+    assert.equal(
+      triangleFingerprint(actual),
+      triangleFingerprint(original),
+      "Body changed outside measured flame removal",
+    );
+    assert.deepEqual(
+      materialImages(actual),
+      images,
+      "Body textures changed during flame removal",
+    );
+    assert.ok(
+      actual
+        .getRoot()
+        .listMaterials()
+        .every(
+          (m) =>
+            !m.getEmissiveTexture() &&
+            m.getEmissiveFactor().every((v) => v === 0),
+        ),
+    );
+  }
   let originalModel, input, inputHash;
   if (report.mountStandard?.profile === STANDARD_MOUNT.name) {
     originalModel = report.mountStandard.originalModel;
@@ -49,6 +115,11 @@ export async function reviewedMountAssetHash(report, tier, dir, expectedHash) {
     );
   const before = await fs.readFile(input);
   assert.equal(hash(before), inputHash);
-  await verifyStandardMountBody(before, after, originalModel, report.model);
+  await verifyStandardMountBody(
+    before,
+    mountedBody,
+    originalModel,
+    report.model,
+  );
   return inputHash;
 }

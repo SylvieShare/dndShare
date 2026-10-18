@@ -56,7 +56,10 @@ for (const tier of ['render', 'lod']) {
   assert.equal(roughnessMismatches, 0, 'Packing changed per-material roughness');
   let flameSamples = 0, outsideFlame = 0;
   const flamePartSamples = Object.fromEntries((settings.surfaceParts || []).filter(p => p.kind==='flame').map(p => [p.name,0]));
-  if (settings.kind==='torch' && settings.torch.flameReference || settings.surfaceParts?.some(p => p.kind==='flame')) {
+  if (report.recipe.proceduralFire) {
+    assert.equal(material.getEmissiveTexture(), null, 'Procedural fire must not remain in the solid body');
+    assert.deepEqual(material.getEmissiveFactor(), [0,0,0]);
+  } else if (settings.kind==='torch' && settings.torch.flameReference || settings.surfaceParts?.some(p => p.kind==='flame')) {
     assert.ok(material.getEmissiveTexture());
     const { data, info: e } = await sharp(Buffer.from(material.getEmissiveTexture().getImage())).removeAlpha().raw().toBuffer({ resolveWithObject: true });
     rasterizeSurface(doc, e.width, e.height, (i,p) => {

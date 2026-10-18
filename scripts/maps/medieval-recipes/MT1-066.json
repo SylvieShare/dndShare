@@ -1254,7 +1254,7 @@
     ],
     "basis": "82mmstonefireplaceon35mmwoodfloor,tallchimney,mantel/pillars,tiltedwoodplaque,pigsculptwitheyes/earcups/nosecavities,2mainlogs/sidefuelandlargegradedemissiveflame.125000/46000independenttris,1024/1024colourbakes,LODdata512preservessmallfacepigments.Comparecompactmaps."
   },
-  "reviewNotes": "PDFpage10,full/front-back,+X/top,pighead/fireboxclose inspected. Source599850tri/29992584bytes/maxZ82.146202. Floor1276raysnx\u00b2.001779/ny\u00b2.135088confirmsXgrain;edgeYrails,rearYboards/Zposts. PlaquetiltmeasuredprojectionX+.23Z:inner16.27/rim15.05;headprojection\u226516.5hasnativeboundsX[-.5155,10.8714],Y[-8.5724,8.5111],Z[59.3919,74.4012],preservingwoodplaqueupperpointatZ78.Headskin,inner-earmembranes(skin,notmetal),2smalleyeholes,nostrilsandmouthseparate.NostrilnativepointsX8.84/8.95arebehindnosefront10.28soholddeepcolouratX\u22649.55,keepnaserimpink.Sourcelogcutplanesmeasured;charredbeamshafts/tanproceduralgrowthringsandseparatesidefuel. CommonSTL67distanceslogs.0003..0015/stone.0003..0021versusknownflames.905..4.205mm;SHA-boundawayreference.10/projectTo66isolatesfireandprotectscommonwood/stone,sidefuelexplicitlyexcluded. PlaquetopshapeZ+.44absY\u226479.85excludesstoneaboveit;charredlogouterradii3.2withinnercutrings2.85/2.75andminZ27.8;sidecutphysicalpigmentprotectssmallfragment. WoodplaquepeakmeasuredZ79.4208(maskmax79.65);largerlogdomainsandfuelbedprotectallcutfaces;UVangle.4/gaps.0012reduceemissivebleed,emissioninset.015protectsagainstquantisation;flameheight29.9..44.1excludeshearth/roof. Flamehighestthin-tipprobe[-1.1074,-.3416,43.7148];continuousheightgradient30..43.9yellow\u2192orangeandemission1.2,onewarmdefaulttorchlightnative[2,0,35.5]heightabove17mount. Standraysmuststart110above82mmchimney;3nativefrontpointsX14/Y-8.75,0,8.75free25.736931/24.778160/25.735420.Nativesource/packeddecorboundedwestrectangleX\u226411.2,Y\u00b117.65,frontpointsoutside. Verifyeye/nostril/ear/plaque/log/stoneboundaries,flamereferenceedges/gradient/emissionmask,fireboxvoids,actualsourceprobegeometryandcolour,bothcandidates,defaultlightandallmetadatafreshbeforepublication.",
+  "reviewNotes": "PDFpage10,full/front-back,+X/top,pighead/fireboxclose inspected. Source599850tri/29992584bytes/maxZ82.146202. Floor1276raysnx².001779/ny².135088confirmsXgrain;edgeYrails,rearYboards/Zposts. PlaquetiltmeasuredprojectionX+.23Z:inner16.27/rim15.05;headprojection≥16.5hasnativeboundsX[-.5155,10.8714],Y[-8.5724,8.5111],Z[59.3919,74.4012],preservingwoodplaqueupperpointatZ78.Headskin,inner-earmembranes(skin,notmetal),2smalleyeholes,nostrilsandmouthseparate.NostrilnativepointsX8.84/8.95arebehindnosefront10.28soholddeepcolouratX≤9.55,keepnaserimpink.Sourcelogcutplanesmeasured;charredbeamshafts/tanproceduralgrowthringsandseparatesidefuel. CommonSTL67distanceslogs.0003..0015/stone.0003..0021versusknownflames.905..4.205mm;SHA-boundawayreference.10/projectTo66isolatesfireandprotectscommonwood/stone,sidefuelexplicitlyexcluded. PlaquetopshapeZ+.44absY≤79.85excludesstoneaboveit;charredlogouterradii3.2withinnercutrings2.85/2.75andminZ27.8;sidecutphysicalpigmentprotectssmallfragment. WoodplaquepeakmeasuredZ79.4208(maskmax79.65);largerlogdomainsandfuelbedprotectallcutfaces;UVangle.4/gaps.0012reduceemissivebleed,emissioninset.015protectsagainstquantisation;flameheight29.9..44.1excludeshearth/roof. Flamehighestthin-tipprobe[-1.1074,-.3416,43.7148];continuousheightgradient30..43.9yellow→orangeandemission1.2,onewarmdefaulttorchlightnative[2,0,35.5]heightabove17mount. Standraysmuststart110above82mmchimney;3nativefrontpointsX14/Y-8.75,0,8.75free25.736931/24.778160/25.735420.Nativesource/packeddecorboundedwestrectangleX≤11.2,Y±17.65,frontpointsoutside. Verifyeye/nostril/ear/plaque/log/stoneboundaries,flamereferenceedges/gradient/emissionmask,fireboxvoids,actualsourceprobegeometryandcolour,bothcandidates,defaultlightandallmetadatafreshbeforepublication.",
   "uvIslandMargin": 0.0012,
   "plainMountCollarMM": 0.5,
   "standRayTopMM": 110,
@@ -1301,7 +1301,7 @@
   "defaultLights": [
     {
       "key": "fireplace-fire",
-      "name": "\u041e\u0433\u043e\u043d\u044c \u043a\u0430\u043c\u0438\u043d\u0430",
+      "name": "Огонь камина",
       "kind": "torch",
       "color": "#ffb45a",
       "position": [
@@ -1312,7 +1312,21 @@
       "intensity": 5,
       "radius": 4,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.46,
+          0.37
+        ],
+        "strength": 0.7,
+        "offset": [
+          -0.108572,
+          0,
+          -0.157142
+        ]
+      }
     }
-  ]
+  ],
+  "proceduralFire": true
 }

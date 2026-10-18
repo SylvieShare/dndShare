@@ -12,6 +12,8 @@ import { structureMetal, structureLiquid, structureFlame, structureEmissionFlame
 import { initializeStructureReferences } from './medieval_source_reference.mjs';
 import { medievalTextureSizes } from './medieval_texture_sizes.mjs';
 import { reviewedMountAssetHash } from './reviewed_mount_asset.mjs';
+import { stripSculptedFlames } from './model_flame_geometry.mjs';
+import { addLightEffectPreview } from './light_effect_preview.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const base = path.join(root, 'models/collections/medieval-town-vol1');
@@ -27,7 +29,7 @@ const require = createRequire('/private/tmp/dndshare-model-tools/package.json');
 const sharp = require('sharp');
 const { NodeIO } = require('@gltf-transform/core');
 const { ALL_EXTENSIONS } = require('@gltf-transform/extensions');
-const { meshopt, getBounds } = require('@gltf-transform/functions');
+const { meshopt, getBounds, prune, cloneDocument } = require('@gltf-transform/functions');
 const { MeshoptEncoder, MeshoptDecoder } = require('meshoptimizer');
 await Promise.all([MeshoptEncoder.ready, MeshoptDecoder.ready]);
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({
@@ -147,11 +149,17 @@ if (!process.argv.includes('--publish-manifest')) {
       }
       texture.setImage(bytes).setMimeType(colour.has(texture) ? 'image/jpeg' : 'image/png');
     }
+    if (recipe.proceduralFire) {
+      stripSculptedFlames(doc, recipe.materials);
+      await doc.transform(prune({ keepAttributes: true }));
+    }
     for (const mesh of doc.getRoot().listMeshes()) for (const p of mesh.listPrimitives()) {
       for (const semantic of p.listSemantics()) if (semantic.startsWith('COLOR_')) p.setAttribute(semantic, null);
     }
     const before = getBounds(doc.getRoot().listScenes()[0]);
-    await io.write(path.join(review, tier==='render' ? 'preview-model.glb' : 'lod-preview-model.glb'), doc);
+    const previewDoc = recipe.proceduralFire ? cloneDocument(doc) : doc;
+    if (recipe.proceduralFire) addLightEffectPreview(previewDoc, report.model, recipe.defaultLights || []);
+    await io.write(path.join(review, tier==='render' ? 'preview-model.glb' : 'lod-preview-model.glb'), previewDoc);
     await doc.transform(meshopt({ encoder: MeshoptEncoder, level: 'medium', quantizePosition: 16,
       ...(['torch','structure'].includes(recipe.materials.kind) ? { quantizeTexcoord: 16 } : {}) }));
     const final = await io.writeBinary(doc);

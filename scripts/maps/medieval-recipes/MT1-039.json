@@ -416,7 +416,20 @@
       "intensity": 3,
       "radius": 2.5,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.1,
+          0.09
+        ],
+        "strength": 0.7,
+        "offset": [
+          0,
+          0,
+          -0.048451
+        ]
+      }
     },
     {
       "key": "wall-candle-2",
@@ -431,7 +444,21 @@
       "intensity": 3,
       "radius": 2.5,
       "enabled": true,
-      "flicker": true
+      "flicker": true,
+      "effect": {
+        "kind": "fire",
+        "size": [
+          0.1,
+          0.083
+        ],
+        "strength": 0.7,
+        "offset": [
+          0,
+          0,
+          -0.043899
+        ]
+      }
     }
-  ]
+  ],
+  "proceduralFire": true
 }

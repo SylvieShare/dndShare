@@ -22,7 +22,7 @@ const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 assert.deepEqual(report.model,expected,'Publication manifest differs from reviewed resources');
 const nativeQAHashes={};for(const tier of ['render','lod'])nativeQAHashes[tier]=await reviewedMountAssetHash(report,tier,path.join(base,'review',code),expected.assets[tier].sha256);
 const flames = report.recipe.materials.surfaceParts?.filter(p => p.kind==='flame') || [];
-if (flames.length) for (const tier of ['render','lod']) {
+if (flames.length && !report.recipe.proceduralFire) for (const tier of ['render','lod']) {
   const evidence = report.materialChannelReview?.[tier];
   assert.equal(report.materialChannelAssets?.[tier],nativeQAHashes[tier],'Flame QA differs from publication resources');
   assert.equal(createHash('sha256').update(await fs.readFile(path.join(base,'review',code,tier+'.glb'))).digest('hex'),expected.assets[tier].sha256);
