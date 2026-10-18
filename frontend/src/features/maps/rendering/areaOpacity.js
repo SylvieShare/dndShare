@@ -1,4 +1,10 @@
 const bases = new WeakMap();
+
+export function isFadingAreaSurface(material) {
+  const base = bases.get(material);
+  return !!base && !base.transparent && base.depthWrite && material.transparent;
+}
+
 export function applyAreaOpacity(root, opacity, brightness = 1) {
   root.visible = opacity > 0.001;
   const used = new Set();

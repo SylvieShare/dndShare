@@ -1,4 +1,5 @@
 import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
+import { renderAreaSurfaces } from "./areaSurfaceRenderer";
 import {
   Color,
   DepthTexture,
@@ -203,7 +204,7 @@ export function createVolumeFog(gpu, visibility, motion) {
     },
     render(scene, viewCamera) {
       if (!field) {
-        gpu.render(scene, viewCamera);
+        renderAreaSurfaces(gpu, scene, viewCamera);
         return;
       }
       targets();
@@ -218,7 +219,7 @@ export function createVolumeFog(gpu, visibility, motion) {
         if (scene.background?.isColor)
           compositeUniforms.backgroundColour.value.copy(scene.background);
         gpu.setRenderTarget(sceneTarget);
-        gpu.render(scene, viewCamera);
+        renderAreaSurfaces(gpu, scene, viewCamera);
         // Complete the scene colour/depth pass before integrating the volume.
         gpu.setRenderTarget(fogTarget);
         gpu.render(fogScene, camera);

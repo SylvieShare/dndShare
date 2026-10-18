@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <body style="margin: 0">
+    <script type="module">
+      import {
+        AmbientLight,
+        DirectionalLight,
+        Group,
+        OrthographicCamera,
+        Scene,
+        WebGLRenderer,
+      } from "three";
+      import { acquireModelLoader } from "../../../src/features/maps/rendering/modelLoader.js";
+      import { createTileLayer } from "../../../src/features/maps/rendering/tileLayer.js";
+      import { buildModelObject } from "../../../src/features/maps/rendering/modelObject.js";
+      import { applyAreaOpacity } from "../../../src/features/maps/rendering/areaOpacity.js";
+      import { renderAreaSurfaces } from "../../../src/features/maps/rendering/areaSurfaceRenderer.js";
+      import { createMapFog } from "../../../src/features/maps/rendering/mapFog.js";
+      const gpu = new WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true,
+      });
+      gpu.setSize(640, 480);
+      document.body.append(gpu.domElement);
+      const loader = acquireModelLoader(gpu),
+        gltf = await loader.load("/test-model.glb");
+      gltf.scene.updateMatrixWorld(true);
+      const parts = [];
+      gltf.scene.traverse((node) => {
+        if (node.isMesh)
+          parts.push({
+            geometry: node.geometry,
+            material: node.material,
+            matrix: node.matrixWorld.clone(),
+          });
+      });
+      const metadata = {
+        id: "real",
+        width: 1,
+        height: 1,
+        mountDepth: 0.485714,
+        maxHeight: 1.423643,
+      };
+      const assets = { metadata: () => metadata, model: () => ({ parts }) },
+        fog = createMapFog();
+      fog.update({ width: 4, height: 4, zones: [] }, null, true);
+      const scene = new Scene(),
+        camera = new OrthographicCamera(-2, 2, 1.5, -1.5, 0.1, 30);
+      const tiles = createTileLayer(assets, fog),
+        props = new Group(),
+        sun = new DirectionalLight(0xffffff, 2);
+      sun.position.set(3, 6, 4);
+      scene.add(tiles.root, props, new AmbientLight(0xffffff, 2), sun);
+      const placements = [0, 1].map((x) => ({
+        id: `tile-${x}`,
+        modelId: "real",
+        x,
+        y: 0,
+        rotation: 0,
+      }));
+      function frame(opacity, angle = 45, legacy = false) {
+        tiles.rebuild(placements, "render", [], () => opacity);
+        props.clear();
+        const prop = buildModelObject(
+          {
+            id: "prop",
+            modelId: "real",
+            x: 1,
+            y: 1.5,
+            elevation: -metadata.mountDepth,
+            scale: 1,
+            rotation: 90,
+          },
+          assets,
+          fog,
+        );
+        applyAreaOpacity(prop, opacity);
+        props.add(prop);
+        camera.position.set(
+          1 + Math.sin((angle * Math.PI) / 180) * 5,
+          6,
+          0.7 + Math.cos((angle * Math.PI) / 180) * 5,
+        );
+        camera.lookAt(1, 0.2, 0.7);
+        camera.updateMatrixWorld(true);
+        if (legacy) gpu.render(scene, camera);
+        else renderAreaSurfaces(gpu, scene, camera);
+      }
+      function pixels() {
+        const gl = gpu.getContext(),
+          bytes = new Uint8Array(640 * 480 * 4);
+        gl.readPixels(0, 0, 640, 480, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
+        return bytes;
+      }
+      window.realSurfaces = {
+        frame,
+        compare(opacity, angle, legacy = false) {
+          frame(1, angle);
+          const solid = pixels();
+          frame(opacity, angle, legacy);
+          const faded = pixels();
+          let changed = 0,
+            maximum = 0;
+          for (let i = 0; i < solid.length; i += 4) {
+            const delta = Math.max(
+              ...[0, 1, 2].map((n) =>
+                Math.abs(faded[i + n] - solid[i + n] * opacity),
+              ),
+            );
+            if (delta > 3) changed++;
+            maximum = Math.max(maximum, delta);
+          }
+          return { changed, maximum };
+        },
+        ready: true,
+      };
+      frame(0.5);
+    </script>
+  </body>
+</html>
