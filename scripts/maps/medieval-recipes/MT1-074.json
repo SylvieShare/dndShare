@@ -1,0 +1,778 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.2,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Bath Water",
+  "groupCode": "MED-bath",
+  "hasDecor": true,
+  "renderTriangles": 90000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 60,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [
+        16.193133861662442,
+        1.8333
+      ],
+      [
+        15.459741019953633,
+        6.463760165190834
+      ],
+      [
+        13.331352096022057,
+        10.640958627099751
+      ],
+      [
+        10.016308627099752,
+        13.956002096022056
+      ],
+      [
+        5.839110165190835,
+        16.08439101995363
+      ],
+      [
+        1.208650000000001,
+        16.817783861662445
+      ],
+      [
+        -3.421810165190833,
+        16.084391019953635
+      ],
+      [
+        -7.5990086270997494,
+        13.956002096022056
+      ],
+      [
+        -10.914052096022054,
+        10.640958627099753
+      ],
+      [
+        -13.042441019953632,
+        6.463760165190836
+      ],
+      [
+        -13.775833861662443,
+        1.8333000000000017
+      ],
+      [
+        -13.042441019953635,
+        -2.7971601651908258
+      ],
+      [
+        -10.914052096022056,
+        -6.97435862709975
+      ],
+      [
+        -7.599008627099753,
+        -10.289402096022055
+      ],
+      [
+        -3.4218101651908355,
+        -12.417791019953633
+      ],
+      [
+        1.2086499999999973,
+        -13.151183861662444
+      ],
+      [
+        5.8391101651908315,
+        -12.417791019953635
+      ],
+      [
+        10.016308627099749,
+        -10.289402096022059
+      ],
+      [
+        13.331352096022055,
+        -6.974358627099756
+      ],
+      [
+        15.459741019953633,
+        -2.7971601651908373
+      ]
+    ],
+    [
+      [
+        -16.3,
+        -16.6
+      ],
+      [
+        -5.7,
+        -16.6
+      ],
+      [
+        -5.7,
+        -5.95
+      ],
+      [
+        -16.3,
+        -5.95
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "bath",
+    "water",
+    "basin",
+    "pewter",
+    "jug",
+    "iron",
+    "hoop",
+    "ripples"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      3,
+      6
+    ],
+    "lodMiB": [
+      1.8,
+      4
+    ],
+    "shadowKiB": [
+      130,
+      260
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "Same measured90000/60000basin,jugandhoopgeometryas073plusnativewaterripples32.544..32.936mm.1024bakes/renderdata,768LODcolour/data;comparecompactagainstwaterwoodcontactsandpewtershading."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "floor Y planks and east west fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north X border and fascia",
+        "minMM": [
+          -17.7,
+          14.1,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south X border and fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          -14.1,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "vertical basin staves",
+        "minMM": [
+          -14,
+          -13.5,
+          25.65
+        ],
+        "maxMM": [
+          16.5,
+          17.1,
+          38.1
+        ],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            25.65
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            12.450000000000003
+          ],
+          "radiusAtOriginMM": 12.05,
+          "radiusSlope": 0.197,
+          "thicknessMM": 3.0,
+          "allowanceMM": 0.03
+        }
+      },
+      {
+        "name": "diagonal basin floor",
+        "minMM": [
+          -10,
+          -9.5,
+          25.8
+        ],
+        "maxMM": [
+          12,
+          12.5,
+          26.56
+        ],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "direction": [
+          0.7071067811865476,
+          0.7071067811865476,
+          0
+        ],
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            25.8
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.759999999999998
+          ],
+          "radiusAtOriginMM": 10.4,
+          "radiusSlope": 0,
+          "thicknessMM": 10.4,
+          "allowanceMM": 0.03
+        }
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "lower conical iron hoop",
+        "minMM": [
+          -13,
+          -12.5,
+          25.65
+        ],
+        "maxMM": [
+          15,
+          16,
+          27.708
+        ],
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            25.65
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            2.058
+          ],
+          "radiusAtOriginMM": 12.69,
+          "radiusSlope": 0.209,
+          "thicknessMM": 1.35,
+          "allowanceMM": 0.03
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "upper conical iron hoop",
+        "minMM": [
+          -13.6,
+          -13,
+          33.175
+        ],
+        "maxMM": [
+          16,
+          16.7,
+          35.225
+        ],
+        "radialShell": {
+          "originMM": [
+            1.20865,
+            1.8333,
+            33.175
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            2.0500000000000043
+          ],
+          "radiusAtOriginMM": 14.25,
+          "radiusSlope": 0.209,
+          "thicknessMM": 1.55,
+          "allowanceMM": 0.03
+        },
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.58,
+        "variation": 0.02
+      },
+      {
+        "name": "ribbed pewter water vessel",
+        "kind": "paint",
+        "minMM": [
+          -16.2,
+          -16.5,
+          26.45
+        ],
+        "maxMM": [
+          -5.7,
+          -5.95,
+          36.55
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -17,
+              -17,
+              26.45
+            ],
+            "maxMM": [
+              -5.7,
+              -5.95,
+              29.3
+            ],
+            "radialShell": {
+              "originMM": [
+                -11.25,
+                -11.4,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                2.8500000000000014
+              ],
+              "radiusAtOriginMM": 5.65,
+              "radiusSlope": 0,
+              "thicknessMM": 5.65,
+              "allowanceMM": 0.03
+            }
+          },
+          {
+            "minMM": [
+              -16.2,
+              -16.5,
+              29
+            ],
+            "maxMM": [
+              -6.5,
+              -6.5,
+              36.55
+            ]
+          }
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              17
+            ],
+            "maxMM": [
+              100,
+              100,
+              50
+            ],
+            "radialShell": {
+              "originMM": [
+                1.20865,
+                1.8333,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                10.150000000000002
+              ],
+              "radiusAtOriginMM": 12.145,
+              "radiusSlope": 0.197,
+              "thicknessMM": 30,
+              "allowanceMM": 0.03
+            }
+          }
+        ],
+        "rgb": [
+          0.28,
+          0.3,
+          0.305
+        ],
+        "metallic": 0.75,
+        "roughness": 0.56,
+        "variation": 0.02
+      },
+      {
+        "name": "pewter vessel bottom band",
+        "kind": "paint",
+        "minMM": [
+          -16.2,
+          -16.5,
+          26.45
+        ],
+        "maxMM": [
+          -5.7,
+          -5.95,
+          28.12
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -17,
+              -17,
+              26.45
+            ],
+            "maxMM": [
+              -5.7,
+              -5.95,
+              29.3
+            ],
+            "radialShell": {
+              "originMM": [
+                -11.25,
+                -11.4,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                2.8500000000000014
+              ],
+              "radiusAtOriginMM": 5.65,
+              "radiusSlope": 0,
+              "thicknessMM": 5.65,
+              "allowanceMM": 0.03
+            }
+          },
+          {
+            "minMM": [
+              -16.2,
+              -16.5,
+              29
+            ],
+            "maxMM": [
+              -6.5,
+              -6.5,
+              36.55
+            ]
+          }
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              17
+            ],
+            "maxMM": [
+              100,
+              100,
+              50
+            ],
+            "radialShell": {
+              "originMM": [
+                1.20865,
+                1.8333,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                10.150000000000002
+              ],
+              "radiusAtOriginMM": 12.145,
+              "radiusSlope": 0.197,
+              "thicknessMM": 30,
+              "allowanceMM": 0.03
+            }
+          }
+        ],
+        "rgb": [
+          0.235,
+          0.255,
+          0.26
+        ],
+        "metallic": 0.85,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "pewter vessel mouth rim",
+        "kind": "paint",
+        "minMM": [
+          -16.2,
+          -16.5,
+          35.95
+        ],
+        "maxMM": [
+          -5.7,
+          -5.95,
+          36.55
+        ],
+        "includeParts": [
+          {
+            "minMM": [
+              -17,
+              -17,
+              26.45
+            ],
+            "maxMM": [
+              -5.7,
+              -5.95,
+              29.3
+            ],
+            "radialShell": {
+              "originMM": [
+                -11.25,
+                -11.4,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                2.8500000000000014
+              ],
+              "radiusAtOriginMM": 5.65,
+              "radiusSlope": 0,
+              "thicknessMM": 5.65,
+              "allowanceMM": 0.03
+            }
+          },
+          {
+            "minMM": [
+              -16.2,
+              -16.5,
+              29
+            ],
+            "maxMM": [
+              -6.5,
+              -6.5,
+              36.55
+            ]
+          }
+        ],
+        "excludeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              17
+            ],
+            "maxMM": [
+              100,
+              100,
+              50
+            ],
+            "radialShell": {
+              "originMM": [
+                1.20865,
+                1.8333,
+                26.45
+              ],
+              "axis": [
+                0,
+                0,
+                1
+              ],
+              "rangeMM": [
+                0,
+                10.150000000000002
+              ],
+              "radiusAtOriginMM": 12.145,
+              "radiusSlope": 0.197,
+              "thicknessMM": 30,
+              "allowanceMM": 0.03
+            }
+          }
+        ],
+        "rgb": [
+          0.34,
+          0.36,
+          0.365
+        ],
+        "metallic": 0.8,
+        "roughness": 0.47,
+        "variation": 0.02
+      },
+      {
+        "name": "blue bath water and native ripples",
+        "kind": "liquid",
+        "minMM": [
+          -10.79135,
+          -10.1667,
+          32.5
+        ],
+        "maxMM": [
+          13.20865,
+          13.8333,
+          33.0
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            1.20865,
+            1.8333,
+            32.75
+          ],
+          "radiiMM": [
+            11.7,
+            11.7,
+            100
+          ]
+        },
+        "awayFromSource": {
+          "code": "MT1-073",
+          "sourceSHA256": "292f83b599bbdc9d326a1df9192d6a519d02ae5c7b89176f99fba29e77446303",
+          "matchMM": 0.04,
+          "projectTo": {
+            "code": "MT1-074",
+            "sourceSHA256": "f0b48324fa81eb301a481156d43da85b97506627a2d3320752d478178b3e1a60"
+          }
+        },
+        "probeMM": [
+          0,
+          0,
+          32.575111389160156
+        ],
+        "rgb": [
+          0.3,
+          0.52,
+          0.67
+        ],
+        "roughness": 0.28,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage11/full/top/bath source views inspected. Source579922tri/28996184bytes/SHAf0b48324fa81eb301a481156d43da85b97506627a2d3320752d478178b3e1a60/maxZ37.973999. Common073wood/staves/diagonalfloor/2conicalironhoops/pewtervessel masks reused onlyafterindependentnative74inspection;sourcewatercomparedtoempty073byBVH. WaternewverticesZ32.5439..32.9356,radialextent11.5011mm;chosenmaskZ32.5..33.0/R11.7/away073>.04mm withprojectTo74forpackedphysicalsurfaces protectswoodcontact. BluegrayRGB.30/.52/.67,roughness.28,normalpreservesnativecircularripples;noemission/lights. No standingpoint on water;filledbasin20gonplusjugblocker,measuredbasefloor26.3771. Checkwaterheight/normal/colouratcentreandradialgrid,woodsidecontacts,bothhoops/pewterneck/baseedge,mouthclearance,allsource/packedblockercontainmentanddetailtiers. Useactualpackedliquidpixelvalidator beforecandidatechoice,UD016stagebeforemanifest. Add073fill074/074empty073onlyafter074freshpublication;preservebothUUID/assets.",
+  "surfaceHeightMM": 26.377147674560547,
+  "transitions": [
+    {
+      "toDefinitionId": "MT1-073",
+      "action": "empty"
+    }
+  ]
+}

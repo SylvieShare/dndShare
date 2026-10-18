@@ -1007,5 +1007,11 @@
     "fabricParts": [],
     "hardware": []
   },
-  "reviewNotes": "PDFpage11/full/top/bath/vessel inspected. Source600000tri/30000084bytes/SHA292f83b599bbdc9d326a1df9192d6a519d02ae5c7b89176f99fba29e77446303/maxZ37.9742966. Basincentre[1.20865,1.8333];nativefloorY,frameX/Y,stavesZ,basinfloorgrain+X+Ymeasuredbytopimageprobes[5.88,4.92]and[-4.83,-4.83]. UpperironhoopZ33.175..35.225/R14.25+0.209t;lowerZ25.65..27.708/R12.69+0.209t. Independent7directionnativeBVHraysverifyhoops;woodconeexcludedfromjugmask. PewtervesselSWnativeboundsX-15.6..-6.9/Y-16..-6.7/Z26.45..36.449,openneck+ribs,slightlydarkerbottom/lightermouthrim;graypalettefromPDF. Emptybasinallowsonecentralfloorstand(nativecentre),20annularconvexblockersprotectwallandonejugblocker;no false top-rimstand. Checkcentreclearance/230orappropriategeometry/materialprobes/spoutandbasinvoids/staveedges/hoopwoodcontacts,alltiersandcompact. Native17mmpreparationrequiresUD016standardize-selectedbeforepublication;future074waterpaironlyafterbothregistered."
+  "reviewNotes": "PDFpage11/full/top/bath/vessel inspected. Source600000tri/30000084bytes/SHA292f83b599bbdc9d326a1df9192d6a519d02ae5c7b89176f99fba29e77446303/maxZ37.9742966. Basincentre[1.20865,1.8333];nativefloorY,frameX/Y,stavesZ,basinfloorgrain+X+Ymeasuredbytopimageprobes[5.88,4.92]and[-4.83,-4.83]. UpperironhoopZ33.175..35.225/R14.25+0.209t;lowerZ25.65..27.708/R12.69+0.209t. Independent7directionnativeBVHraysverifyhoops;woodconeexcludedfromjugmask. PewtervesselSWnativeboundsX-15.6..-6.9/Y-16..-6.7/Z26.45..36.449,openneck+ribs,slightlydarkerbottom/lightermouthrim;graypalettefromPDF. Emptybasinallowsonecentralfloorstand(nativecentre),20annularconvexblockersprotectwallandonejugblocker;no false top-rimstand. Checkcentreclearance/230orappropriategeometry/materialprobes/spoutandbasinvoids/staveedges/hoopwoodcontacts,alltiersandcompact. Native17mmpreparationrequiresUD016standardize-selectedbeforepublication;future074waterpaironlyafterbothregistered.",
+  "transitions": [
+    {
+      "toDefinitionId": "MT1-074",
+      "action": "fill"
+    }
+  ]
 }
