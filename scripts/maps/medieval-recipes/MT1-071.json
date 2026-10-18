@@ -756,5 +756,11 @@
     "fabricParts": [],
     "hardware": []
   },
-  "reviewNotes": "PDFpage11/full/front-back/top/+X/doorcloseandnativehardwarecomponentsinspected. Source599994tri/29999784bytes/SHA4509840e875cb8fbf4ca19f2d3c019caee504bcc27150d626d43f2670212fbac/maxZ30.754501. Nativepreparationdatum17mm;publicationrequiresstandardize-medieval-selectedUD016(.153517cells)aftercandidateQA,notlegacy17mmmount. FloorX/Ysidefascia,lidX/jambsY/twoWOODbattensY;6ironstudsindependentlyfitfromcomponentsabove29.18,4hingecapsboundindividually. Hinge2leaves/barrel/endflangesandringleveronmountingplateiron. Ringholeleft/rightprobes[1.4,7.6367,27.5411]/[-1.6,7.6352,27.5126]hitlidwoodwellbelow29.3..30.75metal;preserveclearancesandbridge. Fournative\u00b18.75quarterpointsstandonlid27.5798..27.6288,nZ\u2265.927,awayhandle/hinge;closedfunctionalhatchhasDecortruebutcanStandtrue/blockers[]becausewalkablecover.Noemission/defaultlights[].Check10headcolours/metal,ringholedepth,woodmetalcontacts,geometry/ringtip,source/packedfloorstandheights,renderLOD/shadow,bothcandidates. GroupMED-trapwith072openedlater,thenaddopen/closetransitionsafterbothpublished."
+  "reviewNotes": "PDFpage11/full/front-back/top/+X/doorcloseandnativehardwarecomponentsinspected. Source599994tri/29999784bytes/SHA4509840e875cb8fbf4ca19f2d3c019caee504bcc27150d626d43f2670212fbac/maxZ30.754501. Nativepreparationdatum17mm;publicationrequiresstandardize-medieval-selectedUD016(.153517cells)aftercandidateQA,notlegacy17mmmount. FloorX/Ysidefascia,lidX/jambsY/twoWOODbattensY;6ironstudsindependentlyfitfromcomponentsabove29.18,4hingecapsboundindividually. Hinge2leaves/barrel/endflangesandringleveronmountingplateiron. Ringholeleft/rightprobes[1.4,7.6367,27.5411]/[-1.6,7.6352,27.5126]hitlidwoodwellbelow29.3..30.75metal;preserveclearancesandbridge. Fournative\u00b18.75quarterpointsstandonlid27.5798..27.6288,nZ\u2265.927,awayhandle/hinge;closedfunctionalhatchhasDecortruebutcanStandtrue/blockers[]becausewalkablecover.Noemission/defaultlights[].Check10headcolours/metal,ringholedepth,woodmetalcontacts,geometry/ringtip,source/packedfloorstandheights,renderLOD/shadow,bothcandidates. GroupMED-trapwith072openedlater,thenaddopen/closetransitionsafterbothpublished.",
+  "transitions": [
+    {
+      "toDefinitionId": "MT1-072",
+      "action": "open"
+    }
+  ]
 }

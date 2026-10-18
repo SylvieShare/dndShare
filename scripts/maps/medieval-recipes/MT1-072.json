@@ -1,0 +1,1365 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [],
+  "standToleranceMM": 0.35,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Trap Opened",
+  "groupCode": "MED-trap",
+  "hasDecor": true,
+  "renderTriangles": 100000,
+  "lodTriangles": 60000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 60,
+  "standPointsMM": [],
+  "blockersMM": [
+    [
+      [
+        -15,
+        -15.65
+      ],
+      [
+        15,
+        -15.65
+      ],
+      [
+        15,
+        15.35
+      ],
+      [
+        -15,
+        15.35
+      ]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "trap",
+    "hatch",
+    "opened",
+    "iron",
+    "hinge",
+    "handle",
+    "cavity"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      3,
+      6
+    ],
+    "lodMiB": [
+      1.5,
+      4
+    ],
+    "shadowKiB": [
+      100,
+      250
+    ],
+    "previewKiB": [
+      12,
+      45
+    ],
+    "basis": "35mm open hatch439756source triangles:inclined40degree lid,six studs,four hinge heads,ringhandle and cavity.100000/60000independenttriangles,1024bakes/renderdata,768LODcolour/data;comparecompactwithactualhead/wood/iron/cavityraychecks."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "base planks, cavity walls and lid X grain",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          47
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y fascia and cavity side",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          -10.7,
+          17.7,
+          29.35
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y fascia and cavity side",
+        "minMM": [
+          10.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          29.35
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west fixed Y jamb",
+        "minMM": [
+          -14.9,
+          -15.7,
+          26.2
+        ],
+        "maxMM": [
+          -11.8,
+          15.4,
+          29.4
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east fixed Y jamb",
+        "minMM": [
+          11.8,
+          -15.7,
+          26.2
+        ],
+        "maxMM": [
+          14.9,
+          15.4,
+          29.4
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east inclined wooden batten",
+        "minMM": [
+          3.25,
+          -13.111005666351003,
+          28.684979666890893
+        ],
+        "maxMM": [
+          8.3,
+          7.555228929506974,
+          46.46577179209548
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            29.6,
+            31.54
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                9.35,
+                34.7
+              ]
+            }
+          }
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          0.766044443118978,
+          0.6427876096865393
+        ],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [
+          0.31,
+          0.13,
+          0.04
+        ],
+        "lightRGB": [
+          0.57,
+          0.31,
+          0.105
+        ]
+      },
+      {
+        "name": "west inclined wooden batten",
+        "minMM": [
+          -8.5,
+          -13.111005666351003,
+          28.684979666890893
+        ],
+        "maxMM": [
+          -3.5,
+          7.555228929506974,
+          46.46577179209548
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            29.6,
+            31.54
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                9.35,
+                34.7
+              ]
+            }
+          }
+        ],
+        "axis": "beam",
+        "direction": [
+          0,
+          0.766044443118978,
+          0.6427876096865393
+        ],
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [
+          0.31,
+          0.13,
+          0.04
+        ],
+        "lightRGB": [
+          0.57,
+          0.31,
+          0.105
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "fixed horizontal hinge leaf",
+        "minMM": [
+          -2.3,
+          -15.2,
+          28.9
+        ],
+        "maxMM": [
+          2.1,
+          -13.15,
+          30.0
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "moving inclined hinge leaf",
+        "minMM": [
+          -2.25,
+          -13.155205695753331,
+          29.31630374640094
+        ],
+        "maxMM": [
+          1.97,
+          -8.261401495606952,
+          33.62217285107459
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            30.55,
+            31.43
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                9.2,
+                14.85
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "hinge barrel and end flanges",
+        "minMM": [
+          -2.9,
+          -13.379386255867892,
+          29.18158338279201
+        ],
+        "maxMM": [
+          2.9,
+          -11.86797321993777,
+          30.699159260393753
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            30.5,
+            31.6
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                9.05,
+                10.1
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "ring pull and mounting plate",
+        "minMM": [
+          -3.2,
+          -0.9069757074574731,
+          40.28464567748049
+        ],
+        "maxMM": [
+          3.0,
+          7.195532902507754,
+          47.8201728536565
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            30.1,
+            33.35
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                26.8,
+                34.65
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "inclined batten iron head 1",
+        "minMM": [
+          5.149949855804444,
+          -9.7364370097719,
+          33.28630069418364
+        ],
+        "maxMM": [
+          6.509949855804443,
+          -8.341083381802495,
+          34.58181628707277
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.53,
+            32.08
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                14.208300323486327,
+                15.568300323486326
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            5.829949855804443,
+            -8.861993603123398,
+            33.723396268770486
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.55
+          ],
+          "radiusAtOriginMM": 0.68,
+          "radiusSlope": 0,
+          "thicknessMM": 0.68,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "inclined batten iron head 2",
+        "minMM": [
+          5.142750091552735,
+          -4.118382224545364,
+          38.00040839240098
+        ],
+        "maxMM": [
+          6.502750091552734,
+          -2.7230285965759577,
+          39.2959239852901
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.53,
+            32.08
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                21.542149991989135,
+                22.902149991989134
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            5.822750091552734,
+            -3.243938817896865,
+            38.43750396698782
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.55
+          ],
+          "radiusAtOriginMM": 0.68,
+          "radiusSlope": 0,
+          "thicknessMM": 0.68,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "inclined batten iron head 3",
+        "minMM": [
+          -6.77155011177063,
+          -9.739846153595346,
+          33.28344008285875
+        ],
+        "maxMM": [
+          -5.41155011177063,
+          -8.344492525625942,
+          34.57895567574788
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.53,
+            32.08
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                14.203850002288817,
+                15.563850002288817
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -6.09155011177063,
+            -8.865402746946845,
+            33.7205356574456
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.55
+          ],
+          "radiusAtOriginMM": 0.68,
+          "radiusSlope": 0,
+          "thicknessMM": 0.68,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "inclined batten iron head 4",
+        "minMM": [
+          5.136550254821778,
+          1.5293569143522738,
+          42.739424220835474
+        ],
+        "maxMM": [
+          6.496550254821777,
+          2.92471054232168,
+          44.034939813724606
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.53,
+            32.08
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                28.91474983215332,
+                30.27474983215332
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            5.816550254821777,
+            2.4038003210007766,
+            43.17651979542232
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.55
+          ],
+          "radiusAtOriginMM": 0.68,
+          "radiusSlope": 0,
+          "thicknessMM": 0.68,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "inclined batten iron head 5",
+        "minMM": [
+          -6.7854000854492185,
+          1.528284456807473,
+          42.73852432210518
+        ],
+        "maxMM": [
+          -5.425400085449219,
+          2.9236380847768757,
+          44.0340399149943
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.53,
+            32.08
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                28.913349838256835,
+                30.273349838256834
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -6.105400085449219,
+            2.402727863455972,
+            43.17561989669203
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.55
+          ],
+          "radiusAtOriginMM": 0.68,
+          "radiusSlope": 0,
+          "thicknessMM": 0.68,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "inclined batten iron head 6",
+        "minMM": [
+          -6.785949878692627,
+          -4.118880144739766,
+          37.9999905877495
+        ],
+        "maxMM": [
+          -5.425949878692627,
+          -2.7235265167703595,
+          39.295506180638625
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.53,
+            32.08
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                21.54150000333786,
+                22.90150000333786
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -6.105949878692627,
+            -3.244436738091263,
+            38.43708616233634
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.55
+          ],
+          "radiusAtOriginMM": 0.68,
+          "radiusSlope": 0,
+          "thicknessMM": 0.68,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "moving hinge head 1",
+        "minMM": [
+          -1.67,
+          -9.55109910809116,
+          32.76269269507133
+        ],
+        "maxMM": [
+          -0.93,
+          -8.73996692850223,
+          33.52945241462458
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.08,
+            31.46
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                13.930000000000001,
+                14.67
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -1.3,
+            -9.023403372456253,
+            33.00052411065535
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.38
+          ],
+          "radiusAtOriginMM": 0.37,
+          "radiusSlope": 0,
+          "thicknessMM": 0.37,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "moving hinge head 2",
+        "minMM": [
+          0.8799999999999999,
+          -9.627703552403059,
+          32.698413934102675
+        ],
+        "maxMM": [
+          1.52,
+          -8.893175817126027,
+          33.400894892687276
+        ],
+        "projection": {
+          "originMM": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            31.08,
+            31.46
+          ]
+        },
+        "includeParts": [
+          {
+            "minMM": [
+              -100,
+              -100,
+              -100
+            ],
+            "maxMM": [
+              100,
+              100,
+              100
+            ],
+            "projection": {
+              "originMM": [
+                0,
+                0,
+                0
+              ],
+              "axis": [
+                0,
+                0.766044443118978,
+                0.6427876096865393
+              ],
+              "rangeMM": [
+                13.83,
+                14.47
+              ]
+            }
+          }
+        ],
+        "kind": "paint",
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            1.2,
+            -9.138310038924098,
+            32.90410596920236
+          ],
+          "axis": [
+            0,
+            -0.6427876096865393,
+            0.766044443118978
+          ],
+          "rangeMM": [
+            0,
+            0.38
+          ],
+          "radiusAtOriginMM": 0.32,
+          "radiusSlope": 0,
+          "thicknessMM": 0.32,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "fixed hinge head 1",
+        "minMM": [
+          -1.63,
+          -14.360000000000001,
+          29.53
+        ],
+        "maxMM": [
+          -0.87,
+          -13.6,
+          30.05
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            -1.25,
+            -13.98,
+            29.72
+          ],
+          "radiiMM": [
+            0.38,
+            0.38,
+            0.48
+          ]
+        },
+        "kind": "paint",
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      },
+      {
+        "name": "fixed hinge head 2",
+        "minMM": [
+          0.82,
+          -14.35,
+          29.53
+        ],
+        "maxMM": [
+          1.62,
+          -13.549999999999999,
+          30.05
+        ],
+        "ellipsoid": {
+          "centerMM": [
+            1.22,
+            -13.95,
+            29.8
+          ],
+          "radiiMM": [
+            0.4,
+            0.4,
+            0.48
+          ]
+        },
+        "kind": "paint",
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage11 and full/back/top/+X/lid/inside source views inspected. Source439756tri/21987884bytes/SHA63551cdc87606dcd2ba0ce480f180748bc0f08f7ebd8236effd1bfeea224620f/maxZ46.5223007. Cover normal[0,-sin40,cos40],along[0,cos40,sin40];measured six raised components atlocalN31.55 andflatheadsN32.012;individuallybounded. Batten U offsets22.15 matchclosedsourcebutmoving/fixedhingeleaves/caps measuredindependently;ring hole floors atx-1.6/1.4,U29.3..29.8,N29.98..30.04mustremainwood. Xplanks,along-lidgrainwoodbattens,Ysidefascia/jambs;underside/cavitywood. No standpoints on inclinedcover or cavity;blocker enclosesraiseddecor. Check10heads/ring/cavityandunderlidrays,actualPBR/strictmetal/renderLODshadowandstandcontract. Native17mm preparation;finalordinarymountmustbeUD016via standardize-medieval-selected beforemanifest. Addopen/closepairwithpublished071onlyafter072registration.",
+  "surfaceHeightMM": 26.377147674560547,
+  "transitions": [
+    {
+      "toDefinitionId": "MT1-071",
+      "action": "close"
+    }
+  ]
+}
