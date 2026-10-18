@@ -122,6 +122,8 @@ export async function createMapRenderer(
   }
   function render() {
     if (frame || dead) return;
+    clearTimeout(flickerTimer);
+    flickerTimer = 0;
     frame = requestAnimationFrame((time) => {
       frame = 0;
       if (dead) return;
@@ -147,14 +149,21 @@ export async function createMapRenderer(
       tiles.applyAppearance(appearance);
       applySceneAreaAppearance(objects, appearance);
       loadingPreview.applyAppearance(appearance);
+      const fireDelay = assets.advanceFire(
+        time, options.animate !== false, undefined, scene,
+      );
       volumeFog.render(scene, camera);
       presentFrame(objects, options, appearance);
       if (moving || lighting.isFading()) render();
-      else if ((flickering || mistMoving) && !flickerTimer)
+      else if (
+        (flickering || mistMoving || Number.isFinite(fireDelay)) && !flickerTimer
+      )
         flickerTimer = setTimeout(() => {
           flickerTimer = 0;
           render();
-        }, 100);
+        }, Math.max(1, Math.min(
+          flickering || mistMoving ? 100 : Infinity, fireDelay,
+        )));
     });
   }
   const framePreview = createMapFramePreview(camera, render);
@@ -471,6 +480,7 @@ export async function createMapRenderer(
         objects,
         objectPreview.root,
       );
+      assets.advanceFire(0, false);
       volumeFog.render(scene, camera);
       return new Promise((resolve, reject) =>
         gpu.domElement.toBlob(

@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Store) MapModelBehaviours(ctx context.Context) (map[string]battlemap.ModelBehaviour, error) {
-	rows, err := s.pool.Query(ctx, `SELECT d.id::text,d.revision,d.default_lights,
+	rows, err := s.pool.Query(ctx, `SELECT d.id::text,d.revision,d.animation_fps,d.default_lights,
         coalesce((SELECT jsonb_agg(jsonb_build_object('id',t.id,'toDefinitionId',t.to_model_id,'action',t.action) ORDER BY t.action,t.id)
         FROM dndshare.map_model_transition t WHERE t.from_model_id=d.id),'[]'::jsonb)
         FROM dndshare.map_model_definition d`)
@@ -22,7 +22,7 @@ func (s *Store) MapModelBehaviours(ctx context.Context) (map[string]battlemap.Mo
 		var id string
 		var b battlemap.ModelBehaviour
 		var lights, transitions []byte
-		if err = rows.Scan(&id, &b.Revision, &lights, &transitions); err != nil {
+		if err = rows.Scan(&id, &b.Revision, &b.AnimationFPS, &lights, &transitions); err != nil {
 			return nil, err
 		}
 		if err = json.Unmarshal(lights, &b.DefaultLights); err != nil {
@@ -59,7 +59,7 @@ func saveModelBehaviour(ctx context.Context, tx pgx.Tx, id string, b battlemap.M
 	if err != nil {
 		return err
 	}
-	result, err := tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET revision=revision+1,default_lights=CAST($3 AS jsonb) WHERE id=$1 AND revision=$2`, id, b.Revision, json.RawMessage(data))
+	result, err := tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET revision=revision+1,default_lights=CAST($3 AS jsonb),animation_fps=$4 WHERE id=$1 AND revision=$2`, id, b.Revision, json.RawMessage(data), b.AnimationFPS)
 	if err != nil {
 		return err
 	}

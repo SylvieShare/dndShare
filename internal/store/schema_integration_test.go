@@ -96,7 +96,7 @@ func TestSchemaCreatesOnlyEmptyStructurePostgres(t *testing.T) {
 			}
 		}
 		var count int
-		if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != structuralBaselineCount {
+		if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != len(schemaParts) {
 			t.Fatalf("migration ledger: count=%d err=%v", count, err)
 		}
 	}
@@ -104,9 +104,14 @@ func TestSchemaCreatesOnlyEmptyStructurePostgres(t *testing.T) {
 
 func TestSchemaAdoptsExistingStructureWithoutDataChangesPostgres(t *testing.T) {
 	pool := schemaTestPool(t)
+	original := schemaParts
+	t.Cleanup(func() { schemaParts = original })
+	// Reproduce the pre-baseline structure, without applying later migrations.
+	schemaParts = original[:structuralBaselineCount]
 	if err := applySchema(t.Context(), pool); err != nil {
 		t.Fatal(err)
 	}
+	schemaParts = original
 	schemaTestExec(t, pool, `INSERT INTO dndshare.source(id,name) VALUES(1,'DND5e');
  INSERT INTO dndshare.source_version(id,source_id,version) VALUES(1,1,'2014');
  INSERT INTO dndshare.users(id,login,password) VALUES(1,'canary','test');
@@ -126,7 +131,7 @@ func TestSchemaAdoptsExistingStructureWithoutDataChangesPostgres(t *testing.T) {
 			t.Fatal("adopting or reopening the baseline changed business data")
 		}
 		var count int
-		if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != structuralBaselineCount+2 {
+		if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != len(schemaParts)+2 {
 			t.Fatalf("history must be preserved: count=%d err=%v", count, err)
 		}
 	}
@@ -151,7 +156,7 @@ func TestSchemaAppendsStructuralChangePostgres(t *testing.T) {
 	schemaTestExec(t, pool, `INSERT INTO dndshare.source(id,name) VALUES(1,'Keep source')`)
 	original := schemaParts
 	t.Cleanup(func() { schemaParts = original })
-	schemaParts = append(append([]schemaPart{}, original...), schemaPart{"001_feature", `CREATE TABLE dndshare.feature_fixture(id bigint PRIMARY KEY)`})
+	schemaParts = append(append([]schemaPart{}, original...), schemaPart{"999_feature", `CREATE TABLE dndshare.feature_fixture(id bigint PRIMARY KEY)`})
 	for range 2 {
 		if err := applySchema(t.Context(), pool); err != nil {
 			t.Fatal(err)
@@ -196,7 +201,7 @@ func TestSchemaConcurrentStartsPostgres(t *testing.T) {
 	}
 	wg.Wait()
 	var count int
-	if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != structuralBaselineCount {
+	if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != len(schemaParts) {
 		t.Fatalf("concurrent migration registry: %d %v", count, err)
 	}
 }
@@ -209,13 +214,13 @@ func TestSchemaRejectsDataMigrationBeforeExecutionPostgres(t *testing.T) {
 	original := schemaParts
 	t.Cleanup(func() { schemaParts = original })
 	for i, sql := range []string{"INSERT INTO dndshare.source(name) VALUES('unexpected')", "DELETE FROM dndshare.source", "UPDATE dndshare.source SET name='changed'"} {
-		schemaParts = append(append([]schemaPart{}, original...), schemaPart{fmt.Sprintf("001_forbidden_%d", i), sql})
+		schemaParts = append(append([]schemaPart{}, original...), schemaPart{fmt.Sprintf("999_forbidden_%d", i), sql})
 		if err := applySchema(t.Context(), pool); err == nil {
 			t.Fatal("data migration reached execution")
 		}
 	}
 	var count int
-	if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != structuralBaselineCount {
+	if err := pool.QueryRow(t.Context(), `SELECT count(*) FROM dndshare.schema_migration`).Scan(&count); err != nil || count != len(original) {
 		t.Fatal("rejected data migration changed the ledger", count, err)
 	}
 }

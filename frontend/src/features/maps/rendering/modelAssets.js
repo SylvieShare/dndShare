@@ -11,6 +11,7 @@ import { modelDownloads } from "./modelDownloadManager";
 import { modelFile, modelDownloadPlan } from "./modelDownloadProgress";
 import { createModelDownloadSession } from "./modelDownloadSession";
 import { residentModelUsage } from "./modelMemoryUsage";
+import { createModelFireAnimation } from "./modelFireAnimation";
 export function modelAssets(
   onError,
   renderer,
@@ -27,6 +28,7 @@ export function modelAssets(
     dead = false,
     plan = new Map(),
     lastProgress = "";
+  const fire = createModelFireAnimation((id) => catalogue.get(id));
   function progress() {
     if (dead) return;
     const files = [...plan.values()].filter(
@@ -184,6 +186,8 @@ export function modelAssets(
         request(id, "shadow", -1).catch(report);
   }
   return {
+    prepareFire: fire.prepare,
+    advanceFire: fire.advance,
     prepare,
     progressive,
     async ensure(ids, tier, options = {}) {
@@ -233,6 +237,7 @@ export function modelAssets(
       if (dead) return;
       dead = true;
       unsubscribe();
+      fire.destroy();
       owned.forEach((_, url) => release(url, loader));
       owned.clear();
       loader.release();

@@ -36,6 +36,9 @@ export function createModelPreview(host, onFrame, onError) {
   }
   host.appendChild(gpu.domElement);
   let frame = 0,
+    timer = 0,
+    labelsDirty = true,
+    sourceBehaviour,
     dead = false,
     epoch = 0,
     current = null,
@@ -44,12 +47,32 @@ export function createModelPreview(host, onFrame, onError) {
     bounds = new Box3();
   let assets = modelAssets(onError, gpu),
     options = {};
-  function render() {
+  function clearRoot() {
+    for (const mesh of root.children)
+      for (const material of Array.isArray(mesh.material)
+        ? mesh.material
+        : [mesh.material])
+        material.dispose();
+    root.clear();
+  }
+  function render(animationOnly = false) {
+    if (!animationOnly) labelsDirty = true;
     if (frame || dead) return;
-    frame = requestAnimationFrame(() => {
+    clearTimeout(timer);
+    timer = 0;
+    frame = requestAnimationFrame((time) => {
       frame = 0;
       if (dead) return;
+      const delay = assets.advanceFire(
+        time, true,
+        { ...current, behaviour: options.behaviour || sourceBehaviour },
+        scene,
+      );
       gpu.render(scene, view.camera);
+      if (Number.isFinite(delay))
+        timer = setTimeout(() => render(true), Math.max(1, delay));
+      if (!labelsDirty) return;
+      labelsDirty = false;
       const data = guides.descriptors(),
         project = (p) => ({ ...p, ...view.project(p.position) });
       onFrame({
@@ -102,8 +125,10 @@ export function createModelPreview(host, onFrame, onError) {
     async load(source, model, next) {
       const id = ++epoch;
       current = model;
-      options = next;
-      root.clear();
+      options = next || {};
+      sourceBehaviour = source.behaviour;
+      clearTimeout(timer);
+      clearRoot();
       asset = null;
       fitKey = "";
       assets.destroy();
@@ -114,11 +139,15 @@ export function createModelPreview(host, onFrame, onError) {
         const nextAsset = owner.visual(source.id, "render");
         if (!nextAsset || nextAsset === asset) return;
         asset = nextAsset;
-        root.clear();
+        clearRoot();
         for (const part of asset.parts) {
-          const mesh = new Mesh(part.geometry, part.material);
+          const materials = (Array.isArray(part.material)
+            ? part.material : [part.material]).map((m) => m.clone());
+          const mesh = new Mesh(part.geometry,
+            Array.isArray(part.material) ? materials : materials[0]);
           mesh.matrixAutoUpdate = false;
           mesh.matrix.copy(part.matrix);
+          owner.prepareFire(mesh, source.id, part.matrix);
           root.add(mesh);
         }
         update(current, options);
@@ -155,7 +184,8 @@ export function createModelPreview(host, onFrame, onError) {
       dead = true;
       epoch++;
       cancelAnimationFrame(frame);
-      root.clear();
+      clearTimeout(timer);
+      clearRoot();
       guides.destroy();
       assets.destroy();
       gpu.dispose();

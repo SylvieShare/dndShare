@@ -34,7 +34,7 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки |
+| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions и необязательный animationFps 1–60), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки |
 | `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/uuid, редактируемый code и необязательный behaviour → обновление текущей модели с прежним UUID во всех картах; поведение сохраняется в той же транзакции; устаревшая behaviour.revision получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | Авторизованный пользователь: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |

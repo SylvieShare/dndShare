@@ -21,7 +21,7 @@ async function save(page) {
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
   await expect(
-    page.getByText("Параметры сохранены · версия 2", { exact: true }),
+    page.getByText("Параметры сохранены", { exact: true }),
   ).toBeVisible();
   return page.evaluate(() => window.lastModelSaved);
 }

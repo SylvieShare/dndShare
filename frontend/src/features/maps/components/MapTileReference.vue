@@ -73,6 +73,7 @@
             <MapModelPreview
               :model="reference.draft"
               :source="selected"
+              :behaviour="reference.behaviour"
               :active-field="activeField"
               :selected-slot="selectedSlot"
               :selected-point="selectedPoint"
@@ -84,6 +85,10 @@
             <MapModelGeometryFields
               :model="reference.draft"
               @active="activeField = $event"
+            />
+            <MapModelFireAnimation
+              :model="reference.draft"
+              :behaviour="reference.behaviour"
             />
             <p class="map-hint">
               Монтажная часть — ниже плоскости 0. Высоты поверхности и модели
@@ -176,6 +181,7 @@ import MapObjectPalette from "./MapObjectPalette.vue";
 import MapModelFields from "./MapModelFields.vue";
 import MapModelBehaviourFields from "./MapModelBehaviourFields.vue";
 import MapModelPreview from "./MapModelPreview.vue";
+import MapModelFireAnimation from "./MapModelFireAnimation.vue";
 import MapModelPlacementPoints from "./MapModelPlacementPoints.vue";
 import MapModelSize from "./MapModelSize.vue";
 import MapModelGeometryFields from "./MapModelGeometryFields.vue";

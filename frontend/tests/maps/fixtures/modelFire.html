@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <body style="margin: 0">
+    <script type="module">
+      import { ACESFilmicToneMapping, AmbientLight, DirectionalLight, Group,
+        OrthographicCamera, Scene, Vector3, WebGLRenderer } from "three";
+      import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
+      import { createTileLayer } from "/src/features/maps/rendering/tileLayer.js";
+      import { buildModelObject } from "/src/features/maps/rendering/modelObject.js";
+      import { createModelFireAnimation } from "/src/features/maps/rendering/modelFireAnimation.js";
+      import { createMapFog } from "/src/features/maps/rendering/mapFog.js";
+      import { applyAreaOpacity } from "/src/features/maps/rendering/areaOpacity.js";
+      import { renderAreaSurfaces } from "/src/features/maps/rendering/areaSurfaceRenderer.js";
+      const gpu = new WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      gpu.setSize(800, 600);
+      gpu.toneMapping = ACESFilmicToneMapping;
+      document.body.append(gpu.domElement);
+      const loader = acquireModelLoader(gpu),
+        gltf = await loader.load("/fire-model.glb"), parts = [];
+      gltf.scene.updateMatrixWorld(true);
+      gltf.scene.traverse((n) => {
+        if (n.isMesh) parts.push({ geometry: n.geometry, material: n.material, matrix: n.matrixWorld.clone() });
+      });
+      const model = { id: "torch", definitionId: "MT1-016", width: 1, height: 1,
+        maxHeight: 2.427057, mountDepth: 0.485714, behaviour: { animationFps: 12 } },
+        scene = new Scene(), fire = createModelFireAnimation(() => model),
+        assets = { model: () => ({ parts }), metadata: () => model, prepareFire: fire.prepare },
+        fog = createMapFog(), tiles = createTileLayer(assets, fog), objects = new Group();
+      fog.update({ width: 4, height: 4, zones: [] }, null, true);
+      tiles.rebuild([0, 1].map((x) => ({ id: `torch-${x}`, modelId: "torch", x, y: 0, rotation: 0 })), "render", []);
+      objects.add(buildModelObject({ id: "object", modelId: "torch", x: 2.5, y: 0.5,
+        elevation: -model.mountDepth, rotation: 0, scale: 1 }, assets, fog));
+      const sun = new DirectionalLight(0xffffff, 2);
+      sun.position.set(3, 6, 4);
+      scene.add(tiles.root, objects, new AmbientLight(0xffffff, 1.5), sun);
+      const camera = new OrthographicCamera(-1.8, 1.8, 1.35, -1.35, 0.1, 30);
+      camera.position.set(3.2, 3.3, 6);
+      camera.lookAt(1.25, 0.9, 0.4);
+      camera.updateMatrixWorld(true);
+      function pixels() {
+        const gl = gpu.getContext(), bytes = new Uint8Array(800 * 600 * 4);
+        gl.readPixels(0, 0, 800, 600, gl.RGBA, gl.UNSIGNED_BYTE, bytes);
+        return bytes;
+      }
+      const boxes = [0, 1, 2].map((x) => {
+        const points = [];
+        for (const a of [-0.06, 0.42]) for (const b of [1.65, 2.1]) for (const c of [-0.04, 0.45]) {
+          const p = new Vector3(x + a, b, c).project(camera);
+          points.push([(p.x + 1) * 400, (p.y + 1) * 300]);
+        }
+        return [Math.min(...points.map((p) => p[0])), Math.min(...points.map((p) => p[1])),
+          Math.max(...points.map((p) => p[0])), Math.max(...points.map((p) => p[1]))];
+      });
+      function frame(time, fps = 12, opacity = 1, animate = true) {
+        model.behaviour.animationFps = fps;
+        tiles.applyAppearance({ tileOpacity: () => opacity, tileFlash: () => 1 });
+        applyAreaOpacity(objects, opacity);
+        fire.advance(time, animate, undefined, scene);
+        renderAreaSurfaces(gpu, scene, camera);
+        return pixels();
+      }
+      window.modelFire = {
+        frame,
+        compare(a, b, fps = 12, opacity = 1, animate = true) {
+          const first = frame(a, fps, opacity, animate), second = frame(b, fps, opacity, animate);
+          let changed = 0, outside = 0;
+          for (let i = 0; i < first.length; i += 4) {
+            if (Math.max(...[0, 1, 2].map((c) => Math.abs(first[i+c] - second[i+c]))) <= 3) continue;
+            changed++;
+            const x = (i / 4) % 800, y = Math.floor(i / 4 / 800);
+            if (!boxes.some(([l, bottom, r, top]) => x >= l && x <= r && y >= bottom && y <= top)) {
+              outside++;
+            }
+          }
+          return { changed, outside };
+        },
+      };
+      frame(0);
+    </script>
+  </body>
+</html>

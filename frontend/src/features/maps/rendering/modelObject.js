@@ -23,6 +23,7 @@ export function buildModelObject(object, assets, fog, tier = "render") {
     mesh.receiveShadow = true;
     mesh.matrix.copy(part.matrix);
     mesh.userData.borrowedGeometry = true;
+    assets.prepareFire?.(mesh, object.modelId, part.matrix);
     root.add(mesh);
   }
   return root;

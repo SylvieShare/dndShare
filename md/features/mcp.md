@@ -146,9 +146,10 @@ rollback; apply требует точный token и включённые MCP wr
   expectedCode отклоняется; повтор уже установленного code идемпотентен.
 - `map_tile_model_behaviour_get`: definitionId → текущее поведение и revision.
 - `map_tile_model_behaviour_update`: definitionId и полный behaviour с ожидаемой
-  revision; меняет встроенные источники и направленные переходы атомарно, без
+  revision; меняет встроенные источники, частоту анимации animationFps (1–60,
+  необязательное поле) и направленные переходы атомарно, без
   новых версий GLB или изменений S3. Перед записью прочитать актуальное поведение
-  и сохранить остальные шаблоны/связи. Устаревшая revision отклоняется.
+  и сохранить остальные шаблоны, частоту анимации и связи. Устаревшая revision отклоняется.
 
 - `map_tile_asset_prepare_upload`: kind, fileName, SHA-256 и size; возвращает
   временный S3 uploadKey, подписанный PUT URL на 15 минут и необходимые headers.

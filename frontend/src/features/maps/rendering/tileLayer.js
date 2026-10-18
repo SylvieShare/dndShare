@@ -83,6 +83,7 @@ export function createTileLayer(assets, fog) {
           );
           mesh.instanceMatrix.needsUpdate = true;
           mesh.computeBoundingSphere();
+          assets.prepareFire?.(mesh, items[0].modelId, part.matrix);
           root.add(mesh);
         }
       }
