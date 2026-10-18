@@ -16,15 +16,19 @@
   padding: 8px 6px;
   border: 1px solid color-mix(in srgb, var(--border-strong) 70%, transparent);
   border-radius: 14px;
-  background: color-mix(in srgb, var(--surface) 78%, transparent);
-  backdrop-filter: blur(14px) saturate(1.08);
-  -webkit-backdrop-filter: blur(14px) saturate(1.08);
-  box-shadow: var(--shadow-sm);
+  background-color: color-mix(in srgb, var(--surface) 52%, transparent);
+  background-image: linear-gradient(150deg, color-mix(in srgb, var(--text-on-accent) 6%, transparent), transparent 60%);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 color-mix(in srgb, var(--text-on-accent) 8%, transparent);
   transition: background-color .18s ease, border-color .18s ease;
-  animation: workspace-tools-enter .18s ease both;
+  animation: workspace-tools-enter .18s ease backwards;
   max-height: calc(100% - 28px);
   overflow-y: auto;
   scrollbar-width: thin;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .workspace-tools-rail { background-color: color-mix(in srgb, var(--surface) 94%, transparent); }
 }
 @keyframes workspace-tools-enter {
   from { opacity: 0; transform: translateY(-4px); }
