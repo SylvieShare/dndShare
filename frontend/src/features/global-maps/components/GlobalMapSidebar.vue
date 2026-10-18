@@ -1,8 +1,9 @@
 <template>
-  <MapSidebar ref="sidebar" v-model:tab="tab" class="global-map-sidebar" :tabs="tabs" aria-label="Глобальные карты и маршруты">
+  <MapSidebar ref="sidebar" v-model:tab="tab" class="global-map-sidebar" :tabs="tabs" aria-label="Карты мира и маршруты"
+    @resize="(_, width) => { if (width > 0) emit('navigation-width', width) }">
     <template v-if="tab === 'maps'">
       <AddButton block label="Загрузить карту" :disabled="controller.busy || controller.maps.length >= 32" @click="file?.click()" />
-      <input ref="file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Изображение глобальной карты" hidden @change="upload" />
+      <input ref="file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Изображение карты мира" hidden @change="upload" />
       <p class="map-hint">PNG, JPG или WebP до 15 МБ. У каждой карты свои маршруты.</p>
       <LoadingState v-if="controller.busy" label="Обрабатываем карту…" compact />
       <div v-for="map in controller.maps" :key="map.id" class="global-map-list-entry">
@@ -13,7 +14,7 @@
       </div>
       <template v-if="controller.selected">
         <FormField label="Название карты" vertical><FormTextInput :value="controller.selected.name" :maxlength="160" :disabled="locked"
-          aria-label="Название глобальной карты" @update:value="controller.change(map => { map.name = $event })" /></FormField>
+          aria-label="Название карты мира" @update:value="controller.change(map => { map.name = $event })" /></FormField>
         <ActionButton v-if="!controller.selected.current" variant="secondary" :disabled="controller.busy" @click="controller.activate(controller.selected.id)">
           <template #icon><Check :size="16" /></template>Сделать текущей
         </ActionButton>
@@ -51,7 +52,7 @@ import { Check, Images, Route, StickyNote, Trash2 } from '@lucide/vue'
 import MapSidebar from '@/features/maps/components/MapSidebar.vue'
 import GlobalMapRouteSettings from './GlobalMapRouteSettings.vue'
 const props = defineProps({ controller: Object, selectedRoute: String, selectedPoint: String, participants: Array, chapters: Array })
-const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'route-change', 'select-point', 'add-mode'])
+const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'route-change', 'select-point', 'add-mode', 'navigation-width'])
 const sidebar = ref(null), file = ref(null), tab = ref('maps')
 const tabs = [{ key: 'maps', label: 'Карты мира', icon: Images }, { key: 'routes', label: 'Маршруты', icon: Route }]
 const route = computed(() => props.controller.selected?.routes.find(route => route.id === props.selectedRoute))

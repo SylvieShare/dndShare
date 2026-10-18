@@ -291,8 +291,11 @@ viewBox по реальной ширине, 20 столбцов, линия/за
 
 `shared/ui/WorkspaceHeader.vue` объединяет шапки сессии и редактора карт:
 слоты identity/navigation/actions, высота 64px и ResizeObserver для dock-layout.
-`WorkspaceToolsRail.vue` размещает доменные действия плавающей колонкой справа
-над рабочей областью. Это композиции layout DnD Share; они не заменяют кнопки,
+`WorkspaceToolsRail.vue` объединяет доменные действия справа в полупрозрачном
+блоке с рамкой и backdrop blur. Ширина и отступ задаются CSS-переменными;
+SessionTabWorkspace резервирует эту область для вкладки «Мир», исключая
+перекрытие карты. MapSidebar передаёт вторым аргументом resize измеренную
+ширину полосы вкладок; мобильный холст «Мира» использует её для левого отступа. У блока есть плавные переходы и поддержка reduced motion. Это композиции layout DnD Share; они не заменяют кнопки,
 формы или tabs библиотеки share-ui. Управление и данные остаются в адаптерах
 SessionToolsRail, ChapterGraphToolbar и MapEditorHeader.
 Режимы редактора карт показывают иконки с небольшими подписями в icon-slot SlidingTabs;

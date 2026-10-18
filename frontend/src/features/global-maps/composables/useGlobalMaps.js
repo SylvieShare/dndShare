@@ -70,14 +70,14 @@ export function useGlobalMaps(uuid) {
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 15 * 1024 * 1024) {
       error.value = 'Выберите PNG, JPG или WebP до 15 МБ'; return
     }
-    if (maps.value.length >= 32) { error.value = 'В сессии может быть до 32 глобальных карт'; return }
+    if (maps.value.length >= 32) { error.value = 'В сессии может быть до 32 карт мира'; return }
     busy.value = true; error.value = ''
     try {
       const form = new FormData(); form.append('file', file)
       const response = await fetch('/api/storage/images', { method: 'POST', body: form })
       if (!response.ok) throw new Error('Не удалось загрузить изображение')
       const asset = await response.json()
-      const map = await createGlobalMap(uuid, { name: file.name.replace(/\.[^.]+$/, '').slice(0, 160) || 'Глобальная карта', imageId: asset.upload_id })
+      const map = await createGlobalMap(uuid, { name: file.name.replace(/\.[^.]+$/, '').slice(0, 160) || 'Карта мира', imageId: asset.upload_id })
       maps.value.forEach(item => { item.current = false })
       maps.value.push(map); selectedId.value = map.id
     } catch (cause) { error.value = cause.message }

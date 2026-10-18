@@ -12,7 +12,6 @@
     />
     <SessionTimerControl v-if="timers" :timers="timers" />
     <SessionDiceControl ref="dice" :show-shortcut-hints="showShortcutHints" />
-    <SessionTreasureControl />
     <SessionInventoryControl :session-uuid="sessionUuid" />
   </WorkspaceToolsRail>
 </template>
@@ -22,7 +21,6 @@ import WorkspaceToolsRail from "@/shared/ui/WorkspaceToolsRail.vue";
 import SessionPresentationControl from "./SessionPresentationControl.vue";
 import SessionTimerControl from "./SessionTimerControl.vue";
 import SessionDiceControl from "./SessionDiceControl.vue";
-import SessionTreasureControl from "./SessionTreasureControl.vue";
 import SessionInventoryControl from "./SessionInventoryControl.vue";
 defineProps({
   sessionUuid: { type: String, required: true },

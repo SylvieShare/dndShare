@@ -141,7 +141,7 @@ function openTab(key) {
 onMounted(() => {
   updateIndicator();
   observer = new ResizeObserver(() => {
-    emit("resize", element.value.getBoundingClientRect().width);
+    emit("resize", element.value.getBoundingClientRect().width, navigation.value.getBoundingClientRect().width);
     updateIndicator();
   });
   observer.observe(element.value);

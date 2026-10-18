@@ -56,12 +56,12 @@ async function setup(page) {
 }
 async function open(page) {
   await page.goto('/tests/tutorials/fixtures/tutorials.html?page=/sessions/test')
-  await page.getByRole('button', { name: 'Глобальная карта', exact: true }).click()
+  await page.getByRole('button', { name: 'Мир', exact: true }).click()
   await expect(page.locator('.global-map-workspace')).toBeVisible()
 }
 async function upload(page, name) {
   await page.getByRole('button', { name: 'Карты мира', exact: true }).click()
-  await page.getByLabel('Изображение глобальной карты', { exact: true }).setInputFiles({ name: `${name}.png`, mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jF9sAAAAASUVORK5CYII=', 'base64') })
+  await page.getByLabel('Изображение карты мира', { exact: true }).setInputFiles({ name: `${name}.png`, mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jF9sAAAAASUVORK5CYII=', 'base64') })
   await expect(page.locator('.global-map-identity')).toContainText(name)
   await expect(page.getByText('Загружаем изображение…', { exact: true })).toHaveCount(0)
 }
@@ -70,8 +70,18 @@ for (const mobile of [false, true]) test(`world maps, curved routes and annotati
   const state = await setup(page)
   await open(page)
   await upload(page, 'Мир')
+  const tools = page.locator('[data-tutorial="session-tools"]')
+  await expect(tools.getByRole('button', { name: 'Сокровища', exact: true })).toHaveCount(0)
+  const rail = await tools.boundingBox()
+  const canvasBounds = await page.locator('.global-map-canvas').boundingBox()
+  expect(canvasBounds.x + canvasBounds.width).toBeLessThanOrEqual(rail.x - 10)
+  expect(await tools.evaluate(element => getComputedStyle(element).backdropFilter)).toContain('blur(')
   await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
   await page.getByRole('button', { name: 'Добавить маршрут', exact: true }).click()
+  if (mobile) {
+    const navigation = await page.locator('.global-map-sidebar .map-sidebar-tabs').boundingBox()
+    await expect.poll(async () => (await page.locator('.global-map-sidebar').boundingBox()).width).toBeLessThanOrEqual(navigation.width + 1)
+  }
   const image = await page.locator('.global-map-image').boundingBox()
   for (const [x, y] of [[.15, .18], [.45, .4], [.75, .22]]) await page.mouse.click(image.x + image.width * x, image.y + image.height * y)
   await expect(page.locator('.global-map-point')).toHaveCount(3)

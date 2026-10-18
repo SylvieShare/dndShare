@@ -97,7 +97,7 @@ describe('ViewSession participant rail', () => {
     expect(styles).toContain('position: absolute;')
     expect(styles).toContain('--chapter-safe-left: calc(var(--participant-rail-width) + 42px);')
     expect(styles).not.toContain('.campaign-workspace--right-dock')
-    expect(styles).toContain('--chapter-safe-right: 86px;')
+    expect(styles).toContain('--chapter-safe-right: var(--workspace-tools-clearance);')
     expect(source).not.toContain('campaign-workspace--hotkeys')
     expect(styles).not.toContain('.campaign-workspace--hotkeys .workspace-dock--left')
     expect(source).not.toContain('<SlidingTabs')
@@ -199,7 +199,7 @@ describe('ViewSession participant rail', () => {
     expect(source).not.toContain('campaign-workspace--right-dock')
     expect(source).not.toContain('workspace-dock workspace-dock--right')
     expect(styles).not.toContain('.workspace-dock--right')
-    expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*86px;/s)
+    expect(styles).toMatch(/\.campaign-graph\s*\{[^}]*--chapter-safe-right:\s*var\(--workspace-tools-clearance\);/s)
   })
 
   it('renders the chronicle as a central session workspace', () => {

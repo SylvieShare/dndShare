@@ -1,10 +1,10 @@
 <template>
   <div ref="host" class="global-map-canvas" :class="{ 'global-map-canvas--adding': addMode && !readonly }"
-    tabindex="0" aria-label="Глобальная карта. Колесо — масштаб, Обзор — перемещение, точки можно перетаскивать."
+    tabindex="0" aria-label="Мир. Колесо — масштаб, Обзор — перемещение, точки можно перетаскивать."
     @pointerdown="v.down" @pointermove="v.move" @pointerup="v.end($event)" @pointercancel="v.end($event, true)"
     @lostpointercapture="v.end($event, true)" @wheel.prevent="v.zoom(Math.exp(-$event.deltaY * .001), $event)" @keydown.stop="key">
     <div class="global-map-world" :style="v.style">
-      <img :key="imageGeneration" class="global-map-image" :src="imageUrl" alt="Глобальная карта" draggable="false" @load="v.load" @error="v.imageError = true" />
+      <img :key="imageGeneration" class="global-map-image" :src="imageUrl" alt="Карта мира" draggable="false" @load="v.load" @error="v.imageError = true" />
       <svg class="global-map-paths" :viewBox="`0 0 ${v.image.width} ${v.image.height}`" aria-hidden="true">
         <path v-for="route in routes" :key="route.id" :d="routePath(route.points, v.image.width, v.image.height)"
           :stroke="route.color" fill="none" stroke-width="3" stroke-dasharray="5 9" stroke-linecap="round" vector-effect="non-scaling-stroke"

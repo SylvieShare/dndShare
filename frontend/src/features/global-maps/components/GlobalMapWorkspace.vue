@@ -1,10 +1,10 @@
 <template>
-  <section class="global-map-workspace" data-tutorial="session-global-map">
+  <section class="global-map-workspace" :style="{ '--world-navigation-width': `${navigationWidth}px` }" data-tutorial="session-global-map">
     <GlobalMapSidebar ref="sidebar" :controller="c" :selected-route="routeId" :selected-point="pointId" :participants="participants" :chapters="chapters"
       @add-route="addRoute" @select-route="selectRoute" @select-point="selectPoint" @route-change="changeRoute"
-      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }" @add-mode="startAdding" />
+      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }" @add-mode="startAdding" @navigation-width="navigationWidth = $event" />
     <div class="global-map-main">
-      <LoadingState v-if="c.loading" label="Открываем глобальные карты…" fill />
+      <LoadingState v-if="c.loading" label="Открываем мир…" fill />
       <template v-else-if="c.selected">
         <GlobalMapCanvas :key="c.selected.id" ref="canvas" :image-url="c.selected.imageUrl" :routes="c.selected.routes"
           :chapters="chapters" :participants="participants" :selected-route="routeId" :selected-point="pointId"
@@ -17,9 +17,9 @@
             <ActionButton :variant="addMode ? 'primary' : 'secondary'" :disabled="c.conflict || !route" @click="startAdding"><template #icon><MapPinPlus :size="16" /></template>Точки</ActionButton>
             <ActionButton :variant="!addMode ? 'primary' : 'secondary'" @click="addMode = false"><template #icon><Hand :size="16" /></template>Обзор</ActionButton>
             <ToggleSwitch v-model="labels" label="Подписи" />
-            <ActionButton variant="quiet" icon-only aria-label="Уменьшить глобальную карту" @click="canvas?.zoom(.8)"><template #icon><Minus :size="16" /></template></ActionButton>
-            <ActionButton variant="quiet" icon-only aria-label="Вписать глобальную карту" @click="canvas?.fit()"><template #icon><Scan :size="16" /></template></ActionButton>
-            <ActionButton variant="quiet" icon-only aria-label="Увеличить глобальную карту" @click="canvas?.zoom(1.25)"><template #icon><Plus :size="16" /></template></ActionButton>
+            <ActionButton variant="quiet" icon-only aria-label="Уменьшить карту мира" @click="canvas?.zoom(.8)"><template #icon><Minus :size="16" /></template></ActionButton>
+            <ActionButton variant="quiet" icon-only aria-label="Вписать карту мира" @click="canvas?.fit()"><template #icon><Scan :size="16" /></template></ActionButton>
+            <ActionButton variant="quiet" icon-only aria-label="Увеличить карту мира" @click="canvas?.zoom(1.25)"><template #icon><Plus :size="16" /></template></ActionButton>
           </div>
           <span class="global-map-status" role="status">{{ c.saving ? 'Сохраняем…' : c.hasPending() ? 'Есть несохранённые изменения' : 'Сохранено' }}</span>
         </header>
@@ -32,7 +32,7 @@
         <ActionButton variant="quiet" :disabled="c.saving || c.busy" @click="c.conflict ? reloadConfirm = true : retry()">{{ c.conflict ? 'Загрузить с сервера' : 'Повторить' }}</ActionButton>
       </div>
     </div>
-    <ConfirmDialog v-if="pending" :title="pending.kind === 'map' ? 'Удалить глобальную карту?' : pending.kind === 'route' ? 'Удалить маршрут?' : 'Удалить точку?'"
+    <ConfirmDialog v-if="pending" :title="pending.kind === 'map' ? 'Удалить карту мира?' : pending.kind === 'route' ? 'Удалить маршрут?' : 'Удалить точку?'"
       :message="pending.kind === 'map' ? 'Из сессии удалятся карта, её маршруты, точки и заметки.' : pending.kind === 'route' ? 'Маршрут будет удалён вместе с его точками и заметками.' : 'Точка и её заметка будут удалены, линия соединит соседние точки.'"
       confirm-label="Удалить" :loading="c.busy" @cancel="pending = null" @confirm="remove" />
     <ConfirmDialog v-if="reloadConfirm" title="Загрузить состояние с сервера?" message="Локальные несохранённые изменения будут отменены." confirm-label="Загрузить" @cancel="reloadConfirm = false" @confirm="reload" />
@@ -52,6 +52,7 @@ const props = defineProps({ sessionUuid: { type: String, required: true }, parti
 const emit = defineEmits(['open-chapter'])
 const c = reactive(useGlobalMaps(props.sessionUuid))
 const sidebar = ref(null), canvas = ref(null), routeId = ref(''), pointId = ref(''), addMode = ref(false), labels = ref(true)
+const navigationWidth = ref(48)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
 const route = computed(() => c.selected?.routes.find(route => route.id === routeId.value))
 const point = computed(() => route.value?.points.find(point => point.id === pointId.value))

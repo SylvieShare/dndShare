@@ -52,7 +52,7 @@
         </button>
         <button v-if="isDm" type="button" class="chapter-primary-tab" data-tutorial="session-global-navigation"
           :class="{ 'chapter-primary-tab--active': primaryView === 'globalMaps' }" :aria-current="primaryView === 'globalMaps' ? 'page' : undefined"
-          @click="emit('select-view', 'globalMaps')"><Globe :size="24" /><span>Глобальная карта</span></button>
+          @click="emit('select-view', 'globalMaps')"><Globe :size="24" /><span>Мир</span></button>
 
         <span v-if="visibleLibraryViews.length" class="chapter-primary-divider" role="separator" aria-orientation="vertical" />
 

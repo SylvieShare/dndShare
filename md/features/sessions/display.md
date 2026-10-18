@@ -215,7 +215,7 @@ loading and diagnostics remain active in this standalone workspace.
 The session page is a campaign workspace rather than a stack of independent
 content pages. Its semantic header groups `Сюжет`, `Бой`, `Карта`, `Локации`, `NPC`,
 `Задания`, `Материалы`, `Дневник`, `Хроника` and `Настройки` in the center.
-Presentation, timer, dice and treasure controls form a vertical tool rail on the right. All these buttons use unframed
+Presentation, timer, dice and inventory controls form a vertical tool rail on the right. All these buttons use unframed
 24px icons with small labels underneath and no backing surface. `Музыка` keeps
 its compact horizontal player at the far right. The session name stays on the
 left with the arc below it in every workspace; the status icon sits beside both
@@ -264,8 +264,9 @@ or material. The four tool controls stay in the right rail across every tab.
 Кнопка кубиков в правой колонке открывает `DicePanel` в `BasePopover`, по той
 же модели, что экран показа и таймеры. `useSessionDice` живёт в постоянно смонтированном контроллере, поэтому
 горячие клавиши бросков работают и при закрытом popover. Выбранный режим броска сохраняется при закрытии поповера.
-Кнопка сокровищ открывает [генератор](../master-tools.md) с фильтрами, броском монет,
-просмотром предметов и копированием результата.
+Правая панель объединяет экран, таймеры, кубики и инвентарь в полупрозрачном
+блоке с размытием фона. Кнопка сокровищ удалена. Для вкладки «Мир» область
+панели резервируется в SessionTabWorkspace, поэтому инструменты не перекрывают холст.
 Отдельная master-only кнопка `Таймеры` открывает компактную форму с описанием,
 минутами/секундами и быстрыми пресетами. Каждый запущенный таймер появляется
 как отдельное плавающее стеклянное окно поверх рабочего пространства. Окно
@@ -434,9 +435,9 @@ production JS; компоненты монтируются при открыти
 
 ## Инструменты мастера и рабочая область
 
-`features/master-tools` содержит генератор сокровищ для правой панели сессии. Отдельная страница инструментов, ночлег и странствие удалены. Чистая генерация находится в `lib`, состояние — в `useTreasureGenerator`, форма — в `components`. `SessionToolsRail` сохраняется на всех вкладках; `SessionTreasureControl` держит состояние вне поповера и модальный просмотр предмета. Настройки сессии — отдельная вкладка на общих `BaseTile`, `FormField` и `ToggleSwitch`, центрированная внутри `SessionTabWorkspace` с максимальной шириной 760px. `useSessionSettings` читает разделы `players` и `combat` из сессии и сохраняет отдельные пути через API; браузерного хранения настроек нет. Запуск и копирование используют публичный `share-ui/ActionButton` (0.19.0). Контракт — [инструменты мастера](../master-tools.md).
+`features/master-tools` содержит сохранённые компоненты и логику генератора сокровищ; кнопка запуска в панели сессии удалена. Отдельная страница инструментов, ночлег и странствие удалены. Чистая генерация находится в `lib`, состояние — в `useTreasureGenerator`, форма — в `components`. `SessionToolsRail` сохраняется на всех вкладках; Компонент `SessionTreasureControl` больше не монтируется в правой панели. Настройки сессии — отдельная вкладка на общих `BaseTile`, `FormField` и `ToggleSwitch`, центрированная внутри `SessionTabWorkspace` с максимальной шириной 760px. `useSessionSettings` читает разделы `players` и `combat` из сессии и сохраняет отдельные пути через API; браузерного хранения настроек нет. Запуск и копирование используют публичный `share-ui/ActionButton` (0.19.0). Контракт — [инструменты мастера](../master-tools.md).
 
-Вкладка «Глобальная карта» — отдельное полноэкранное рабочее место мастера после «Карты». Колонка игроков скрывается только внутри этого рабочего места; бой и тактическая карта сохраняют свои композиции. [Контракт](../global-maps.md).
+Вкладка «Мир» — отдельное полноэкранное рабочее место мастера после «Карты». Колонка игроков скрывается только внутри этого рабочего места; бой и тактическая карта сохраняют свои композиции. [Контракт](../global-maps.md).
 
 ## Связанные страницы
 
