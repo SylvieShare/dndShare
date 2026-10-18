@@ -28,10 +28,10 @@
       <p v-if="!controller.selected" class="map-hint">Сначала загрузите карту.</p>
       <template v-else>
         <AddButton block label="Добавить маршрут" :disabled="locked || controller.selected.routes.length >= 64" @click="emit('add-route')" />
-        <p v-if="!controller.selected.routes.length" class="map-hint">Создайте маршрут и ставьте точки на изображении. Их порядок задаёт направление пути.</p>
+        <p v-if="!controller.selected.routes.length" class="map-hint">Создайте маршрут и ставьте точки на изображении. Их порядок задаёт направление пути. Cmd/Ctrl показывает продолжение от последней точки; можно выбрать уже существующую точку.</p>
         <ActionButton v-for="(route, index) in controller.selected.routes" :key="route.id" :variant="route.id === selectedRoute ? 'primary' : 'quiet'"
           @click="emit('select-route', route.id)">
-          <template #icon><Route :size="18" :style="{ color: route.color }" /></template>{{ route.name || `Маршрут ${index + 1}` }} · {{ route.points.length }}
+          <template #icon><Route :size="18" :style="{ color: route.color }" /></template>{{ route.name || `Маршрут ${index + 1}` }} · {{ waypointEntries(route).length }}
         </ActionButton>
         <GlobalMapRouteSettings v-if="route" :route="route" :participants="participants" :disabled="locked"
           @change="emit('route-change', $event)" @delete="emit('delete-route', route)" />
@@ -41,9 +41,15 @@
         </div>
         <DetailSection v-if="route" label="Точки маршрута">
           <div class="global-map-points-list">
+            <p class="map-hint">Флажок отмечает конец пути. Cmd/Ctrl — продолжить маршрут, Esc — отменить превью. Потяните линию, чтобы создать узел изгиба.</p>
             <AddButton block label="Добавить точки на карту" :disabled="locked" @click="emit('add-mode')" />
-            <ActionButton v-for="(point, index) in route.points" :key="point.id" :variant="point.id === selectedPoint ? 'primary' : 'quiet'"
-              @click="emit('select-point', point.id)">{{ index + 1 }}. {{ point.name || chapters.find(chapter => chapter.id === point.chapterId)?.name || 'Точка маршрута' }}<StickyNote v-if="point.note" :size="14" /></ActionButton>
+            <FormField label="Добавить существующую точку" vertical>
+              <FormSelect :value="reuseId" :disabled="locked || !choices.length" aria-label="Добавить существующую точку" @change="reuse">
+                <option value="">Выберите точку…</option><option v-for="point in choices" :key="point.sourceId" :value="point.sourceId">{{ point.name || `Точка ${point.number}` }} · {{ point.routeName }}</option>
+              </FormSelect>
+            </FormField>
+            <ActionButton v-for="(point, index) in visits" :key="point.id" :variant="point.id === selectedPoint ? 'primary' : 'quiet'"
+              @click="emit('select-point', point.id)">{{ index + 1 }}. {{ point.name || chapters.find(chapter => chapter.id === point.chapterId)?.name || 'Точка маршрута' }}<Link2 v-if="point.sourceId !== point.id" :size="14" aria-label="Повторное посещение" /><StickyNote v-if="point.note" :size="14" /><FlagTriangleRight v-if="index === visits.length - 1" :size="15" aria-label="Последняя точка маршрута" /></ActionButton>
           </div>
         </DetailSection>
       </template>
@@ -51,16 +57,23 @@
   </MapSidebar>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
-import { AddButton, ActionButton, DetailSection, FormField, FormTextInput, LoadingState } from '@sylvieshare/share-ui'
-import { Check, Hand, Images, MapPinPlus, Route, StickyNote, Trash2 } from '@lucide/vue'
+import { computed, nextTick, ref } from 'vue'
+import { AddButton, ActionButton, DetailSection, FormField, FormSelect, FormTextInput, LoadingState } from '@sylvieshare/share-ui'
+import { Check, FlagTriangleRight, Hand, Images, Link2, MapPinPlus, Route, StickyNote, Trash2 } from '@lucide/vue'
 import MapSidebar from '@/features/maps/components/MapSidebar.vue'
+import { lastWaypoint, mapMarkers, routeVisits, waypointEntries } from '../lib/routePoints'
 import GlobalMapRouteSettings from './GlobalMapRouteSettings.vue'
 const props = defineProps({ controller: Object, addMode: Boolean, selectedRoute: String, selectedPoint: String, participants: Array, chapters: Array })
-const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'route-change', 'select-point', 'add-mode', 'navigation-width', 'browse'])
-const sidebar = ref(null), file = ref(null), tab = ref('maps')
+const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'route-change', 'select-point', 'add-mode', 'navigation-width', 'browse', 'reuse-point'])
+const sidebar = ref(null), file = ref(null), tab = ref('maps'), reuseId = ref('')
 const tabs = [{ key: 'maps', label: 'Карты мира', icon: Images }, { key: 'routes', label: 'Маршруты', icon: Route }]
 const route = computed(() => props.controller.selected?.routes.find(route => route.id === props.selectedRoute))
+const visits = computed(() => route.value ? routeVisits(route.value, props.controller.selected.routes) : [])
+const choices = computed(() => {
+  const tail = lastWaypoint(route.value)
+  return mapMarkers(props.controller.selected?.routes || [], props.selectedRoute, props.selectedPoint).filter(point => !point.control && point.sourceId !== (tail?.refId || tail?.id))
+})
+function reuse(id) { if (!id) return; reuseId.value = id; emit('reuse-point', id); nextTick(() => { reuseId.value = '' }) }
 const locked = computed(() => props.controller.conflict || props.controller.busy)
 function upload(event) { props.controller.upload(event.target.files?.[0]); event.target.value = '' }
 defineExpose({ openRoutes: () => sidebar.value?.openTab('routes'), collapse: () => sidebar.value?.collapse() })

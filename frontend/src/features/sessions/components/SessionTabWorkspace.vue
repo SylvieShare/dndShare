@@ -1,5 +1,5 @@
 <template>
-  <div class="session-tab-workspace" :class="[`session-tab-workspace--${mode}`, { 'session-tab-workspace--tools': reserveTools }]">
+  <div class="session-tab-workspace" :class="`session-tab-workspace--${mode}`">
     <div class="session-tab-workspace-content">
       <slot />
     </div>
@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-defineProps({ mode: { type: String, default: 'column', validator: value => ['full', 'column'].includes(value) }, reserveTools: Boolean })
+defineProps({ mode: { type: String, default: 'column', validator: value => ['full', 'column'].includes(value) } })
 </script>
 
 <style scoped>
@@ -36,7 +36,6 @@ defineProps({ mode: { type: String, default: 'column', validator: value => ['ful
 
 .session-tab-workspace--full { padding: 0; background: transparent; }
 .session-tab-workspace--full .session-tab-workspace-content { max-width: none; }
-.session-tab-workspace--full.session-tab-workspace--tools { right: var(--workspace-tools-clearance, 106px); }
 
 @media (max-width: 760px) {
   .session-tab-workspace--column { padding: 16px calc(var(--chapter-safe-right, 0px) + 12px) 16px 16px; }

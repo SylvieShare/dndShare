@@ -3,8 +3,6 @@
 .global-map-canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
 .global-map-world { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
 .global-map-image { width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; border-radius: 5px; box-shadow: var(--shadow-lg); }
-.global-map-paths { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.global-map-route-outline { stroke: var(--map-screen-void); }
 .global-map-anchor { position: absolute; width: 30px; height: 30px; transform-origin: 0 0; z-index: 2; }
 .global-map-anchor:has(.global-map-point--selected) { z-index: 4; }
 .global-map-point { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 3px solid var(--route-color); border-radius: 50%; background: var(--map-screen-void); color: var(--text-on-accent); font: 800 11px/1 var(--font-ui); cursor: move; box-shadow: 0 0 0 2px var(--map-screen-void), 0 2px 6px color-mix(in srgb, var(--bg) 65%, transparent); transition: box-shadow .15s ease; }
@@ -18,3 +16,10 @@
 .global-map-message { position: absolute; inset: 35% 10%; display: grid; place-items: center; color: var(--text-muted); padding: 16px; background: var(--surface); border-radius: 12px; cursor: auto; }
 
 @media (prefers-reduced-motion: reduce) { .global-map-point { transition: none; } }
+
+.global-map-endpoint { position: absolute; top: -10px; left: -10px; width: 20px; height: 20px; display: grid; place-items: center; border: 1px solid var(--route-color); border-radius: 50%; background: var(--map-screen-void); color: var(--text-on-accent); pointer-events: none; }
+.global-map-anchor--control { width: 14px; height: 14px; }
+.global-map-control { width: 14px; height: 14px; padding: 0; border: 2px solid var(--route-color); background: var(--map-screen-void); border-radius: 3px; box-shadow: 0 0 0 2px var(--map-screen-void); transform: rotate(45deg); cursor: move; }
+.global-map-control.global-map-point--selected, .global-map-control:focus-visible { outline: 2px solid var(--text-on-accent); outline-offset: 3px; }
+.global-map-ghost { opacity: .75; pointer-events: none; z-index: 5; }
+.global-map-canvas:has(.global-map-route-preview) { cursor: crosshair; }

@@ -5,6 +5,7 @@
         <header class="global-map-point-heading"><MapPin :size="20" :style="{ color: route.color }" /><h3>{{ point.name || `Точка ${index + 1}` }}</h3><ActionButton icon-only variant="quiet" aria-label="Закрыть настройки точки" @click="emit('close')"><template #icon><X :size="18" /></template></ActionButton></header>
       </template>
       <p class="global-map-point-context">{{ route.name }} · точка {{ index + 1 }} из {{ route.points.length }}</p>
+      <small v-if="point.visitCount > 1">Общая точка: изменения отразятся во всех посещениях ({{ point.visitCount }}).</small>
     <FormField label="Название" vertical><FormTextInput :value="point.name" :maxlength="100" :disabled="disabled" aria-label="Название точки" @update:value="emit('change', { name: $event })" /></FormField>
     <FormField label="Глава" vertical><FormSelect :value="point.chapterId || ''" :disabled="disabled" aria-label="Привязать точку к главе" @change="emit('change', { chapterId: Number($event) || null })">
       <option value="">Без привязки</option><option v-for="chapter in chapters" :key="chapter.id" :value="chapter.id">{{ chapter.number }}. {{ chapter.name }}</option>

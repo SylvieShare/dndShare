@@ -63,10 +63,13 @@ func TestGlobalMapsPostgres(t *testing.T) {
 		t.Fatal("foreign image accepted", err)
 	}
 	chapter := int64(101)
-	first.Routes = []globalmap.Route{{ID: "route", Name: "Путь", Color: "#d4ae69", PlayerIDs: []int64{41}, Points: []globalmap.Point{{ID: "point", X: .2, Y: .3, Note: "Привал", ChapterID: &chapter}}}}
+	first.Routes = []globalmap.Route{{ID: "route", Name: "Путь", Color: "#d4ae69", PlayerIDs: []int64{41}, Points: []globalmap.Point{{ID: "point", X: .2, Y: .3, Note: "Привал", ChapterID: &chapter}, {ID: "bend", X: .4, Y: .6, Control: true}, {ID: "again", RefID: "point"}}}}
 	saved, err := s.SaveGlobalMap(t.Context(), 10, first)
 	if err != nil || saved.Revision != 2 || saved.Current {
 		t.Fatal(saved, err)
+	}
+	if len(saved.Routes[0].Points) != 3 || !saved.Routes[0].Points[1].Control || saved.Routes[0].Points[2].RefID != "point" {
+		t.Fatal("shared points and bends did not survive JSONB storage", saved)
 	}
 	if _, err = s.SaveGlobalMap(t.Context(), 10, first); !errors.Is(err, ErrMapConflict) {
 		t.Fatal("stale version accepted", err)

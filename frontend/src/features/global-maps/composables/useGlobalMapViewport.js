@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { clamp } from '../lib/routes'
+import { clamp, uid } from '../lib/routes'
+import { pointIndex, resolvePoint } from '../lib/routePoints'
 
 export function useGlobalMapViewport(host, props, emit) {
   const image = reactive({ width: 1200, height: 800 }), view = reactive({ x: 0, y: 0, scale: 1 })
@@ -36,11 +37,22 @@ export function useGlobalMapViewport(host, props, emit) {
   function down(event) {
     if (drag || !loaded.value || ![0, 1].includes(event.button) || event.target.closest('[data-map-callout]')) return
     host.value.focus({ preventScroll: true })
-    const id = event.target.closest('[data-point-id]')?.dataset.pointId
-    const route = props.routes.find(route => route.points.some(point => point.id === id))
-    const selected = route?.points.find(point => point.id === id)
+    const marker = !event.altKey && event.button === 0 && event.target.closest('[data-point-id]')
+    const id = marker?.dataset.pointId
+    const route = props.routes.find(route => route.id === marker?.dataset.routeId) || props.routes.find(route => route.points.some(point => point.id === id))
+    const entry = route?.points.find(point => point.id === id)
+    const selected = resolvePoint(entry, pointIndex(props.routes))
+    if (selected && props.addMode && !selected.control && !props.readonly) {
+      emit('add', { x: selected.x, y: selected.y }, selected.id)
+      event.preventDefault()
+      return
+    }
+    const segment = !id && !event.altKey && event.button === 0 && event.target.closest('[data-segment-index]')
     if (selected) emit('select', route.id, id)
-    drag = { pointerId: event.pointerId, id, routeId: route?.id, before: selected && { x: selected.x, y: selected.y }, x: event.clientX, y: event.clientY, viewX: view.x, viewY: view.y, moved: false, pan: !id && (!props.addMode || event.altKey || event.button === 1) }
+    drag = { pointerId: event.pointerId, id, routeId: route?.id || segment?.dataset.routeId,
+      segment: segment ? Number(segment.dataset.segmentIndex) : null, created: false,
+      before: selected && { x: selected.x, y: selected.y }, x: event.clientX, y: event.clientY,
+      viewX: view.x, viewY: view.y, moved: false, pan: !id && !segment && (!props.addMode || event.altKey || event.button === 1) }
     host.value.setPointerCapture(event.pointerId)
     if (id && !props.readonly) emit('drag-start')
     event.preventDefault()
@@ -48,15 +60,21 @@ export function useGlobalMapViewport(host, props, emit) {
   function move(event) {
     if (!drag || drag.pointerId !== event.pointerId) return
     drag.moved ||= Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 4
+    if (drag.segment !== null && drag.moved && !props.readonly && !drag.created) {
+      drag.id = uid(); drag.created = true
+      emit('drag-start')
+      emit('insert-control', drag.routeId, drag.segment, { id: drag.id, ...point(event), control: true, name: '', note: '', chapterId: null })
+    }
     if (drag.id && !props.readonly && drag.moved) emit('move', drag.routeId, drag.id, point(event))
     else if (drag.pan) { view.x = drag.viewX + event.clientX - drag.x; view.y = drag.viewY + event.clientY - drag.y }
   }
   function end(event, cancel = false) {
     if (!drag || drag.pointerId !== event.pointerId) return
     if (drag.id && !props.readonly) {
-      if (cancel) emit('move', drag.routeId, drag.id, drag.before)
+      if (cancel && drag.created) emit('cancel-control', drag.routeId, drag.id)
+      else if (cancel) emit('move', drag.routeId, drag.id, drag.before)
       emit('drag-end', !cancel && drag.moved)
-    } else if (!cancel && !drag.moved && !drag.pan && !props.readonly) {
+    } else if (!cancel && !drag.moved && !drag.pan && drag.segment === null && !props.readonly) {
       const p = point(event, false)
       if (p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1) emit('add', p)
     }
@@ -64,6 +82,7 @@ export function useGlobalMapViewport(host, props, emit) {
     drag = null
     if (host.value.hasPointerCapture(id)) host.value.releasePointerCapture(id)
   }
+  function cancelDrag() { if (drag) end({ pointerId: drag.pointerId }, true) }
   function focusPoint(p) {
     const rect = host.value.getBoundingClientRect()
     view.x = rect.width / 2 - p.x * image.width * view.scale
@@ -80,5 +99,5 @@ export function useGlobalMapViewport(host, props, emit) {
     observer.observe(host.value)
   })
   onBeforeUnmount(() => observer?.disconnect())
-  return { image, view, style, loaded, imageError, fit, load, point, zoom, down, move, end, focusPoint }
+  return { image, view, style, loaded, imageError, fit, load, point, zoom, down, move, end, cancelDrag, focusPoint }
 }

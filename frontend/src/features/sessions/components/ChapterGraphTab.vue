@@ -63,7 +63,7 @@
         @send-block-to-combat="$emit('send-block-to-combat', $event)"
         @workspace-context-change="$emit('workspace-context-change', $event)"
       />
-      <SessionTabWorkspace mode="full" :reserve-tools="fullWorkspace" v-show="mapBackground || fullWorkspace">
+      <SessionTabWorkspace mode="full" v-show="mapBackground || fullWorkspace">
         <slot name="full-workspace" />
       </SessionTabWorkspace>
       <SessionTabWorkspace mode="column" v-show="primaryView !== 'story' && primaryView !== 'maps' && primaryView !== 'globalMaps'">

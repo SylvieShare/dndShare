@@ -54,7 +54,7 @@ describe('session world workspaces', () => {
     expect(toolbar).toContain("{ key: 'events', label: 'Хроника'")
     expect(graphTab).toContain('v-show="primaryView === \'story\' && !mapBackground"')
     expect(graphTab).toMatch(/<SessionTabWorkspace mode="column" v-show="primaryView !== 'story' && primaryView !== 'maps' && primaryView !== 'globalMaps'">\s*<slot name="primary-workspace" \/>\s*<\/SessionTabWorkspace>/)
-    expect(graphTab).toMatch(/<SessionTabWorkspace mode="full" :reserve-tools="fullWorkspace" v-show="mapBackground \|\| fullWorkspace">\s*<slot name="full-workspace" \/>\s*<\/SessionTabWorkspace>/)
+    expect(graphTab).toMatch(/<SessionTabWorkspace mode="full" v-show="mapBackground \|\| fullWorkspace">\s*<slot name="full-workspace" \/>\s*<\/SessionTabWorkspace>/)
     expect(sessionView).toContain('v-if="mapVisited && isDm"')
     expect(sessionView).toContain(':map-background="mapVisible"')
     expect(toolbar.indexOf('<span>Бой</span>')).toBeLessThan(toolbar.indexOf('<span>Карта</span>'))
