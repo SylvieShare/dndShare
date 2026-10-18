@@ -10,8 +10,10 @@ async function ready(page, extra) {
 async function blueAtCentre(page) {
   const png = await page.locator(".map-canvas canvas").screenshot();
   const canvasBox = await page.locator(".map-canvas canvas").boundingBox(),
-    panelBox = await focusPanel(page).boundingBox();
-  const focusX = (panelBox.x - canvasBox.x) / 2;
+    panelBox = await focusPanel(page).boundingBox(),
+    sidebarBox = await page.locator(".map-sidebar").boundingBox();
+  const left = Math.max(canvasBox.x, sidebarBox.x + sidebarBox.width);
+  const focusX = (left + panelBox.x) / 2 - canvasBox.x;
   return page.evaluate(
     async ({ base64, focusX }) => {
       const image = await createImageBitmap(
@@ -139,7 +141,7 @@ test("builtin lights expose editable effects, retain model identity, inherit are
       .getByRole("combobox"),
   ).toHaveCount(0);
   await panel
-    .getByRole("slider", { name: "Высота источника", exact: true })
+    .getByRole("slider", { name: "Высота", exact: true })
     .fill("2.4");
   await panel
     .getByRole("button", { name: "Показать сферу источника", exact: true })

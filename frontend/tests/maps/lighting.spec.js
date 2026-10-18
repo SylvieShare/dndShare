@@ -56,7 +56,7 @@ test("light presets place onto the map and sunlight sliders persist with undo", 
   ).toMatchObject({ kind: "torch", enabled: true, shadows: true });
   await page
     .getByRole("complementary", { name: "Выбранные элементы" })
-    .getByRole("slider", { name: "Высота источника", exact: true })
+    .getByRole("slider", { name: "Высота", exact: true })
     .fill("1.5");
   await expect
     .poll(() =>
