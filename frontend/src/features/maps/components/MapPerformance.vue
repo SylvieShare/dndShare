@@ -54,10 +54,6 @@
       GPU-таймер недоступен в этом браузере. Показаны замеры CPU.
     </p>
     <p v-else-if="!stats.gpu" class="map-hint">Ожидание GPU-замера…</p>
-    <p v-else-if="shownMetric === 'gpu'" class="map-hint">
-      Расчёт света в шейдерах входит в плитки и объекты. Тени измеряются
-      отдельно.
-    </p>
     <dl class="map-performance-details">
       <div>
         <dt>Вызовы отрисовки</dt>
@@ -72,11 +68,6 @@
         <dd>{{ ms(stats?.updateMs) }}</dd>
       </div>
     </dl>
-    <small class="map-hint"
-      >Среднее время кадра, без ожидания следующего обновления. В покое карта не
-      перерисовывается; низкая частота обновлений не означает перегрузку. Замеры
-      работают, пока открыт этот раздел.</small
-    >
   </MapInspectorSection>
 </template>
 <script setup>

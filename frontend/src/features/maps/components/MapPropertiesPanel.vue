@@ -51,8 +51,8 @@
         })
       "
     />
-    <MapPerformance :editor="editor" />
     <MapModelMemory :usage="editor.modelMemory" />
+    <MapPerformance :editor="editor" />
     <ConfirmDialog
       v-if="pendingSize"
       title="Уменьшить карту?"

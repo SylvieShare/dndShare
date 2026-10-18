@@ -38,9 +38,6 @@
       >
       <strong>{{ formatBytes(group.fileBytes) }}</strong>
     </div>
-    <small class="map-hint"
-      >Общие файлы учитываются один раз. Объём текстур приблизительный.</small
-    >
   </MapInspectorSection>
 </template>
 <script setup>
