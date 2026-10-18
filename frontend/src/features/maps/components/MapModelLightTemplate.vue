@@ -59,6 +59,17 @@
         :aria-label="`Встроенный источник ${index + 1}: цвет`"
     /></FormField>
     <ToggleSwitch v-model="light.enabled" label="Включён по умолчанию" />
+    <FormField label="Управляющий флаг" vertical
+      ><FormSelect
+        :value="light.flagKey || ''"
+        :aria-label="`Встроенный источник ${index + 1}: флаг`"
+        @update:value="light.flagKey = $event"
+        ><option value="">Без флага</option>
+        <option v-for="flag in flags" :key="flag.key" :value="flag.key">
+          {{ flag.name }}
+        </option></FormSelect
+      ></FormField
+    >
     <ToggleSwitch v-model="light.flicker" label="Мерцание" />
     <RemoveButton
       icon="trash"
@@ -77,7 +88,11 @@ import {
   ToggleSwitch,
   RemoveButton,
 } from "@sylvieshare/share-ui";
-defineProps({ light: Object, index: Number });
+defineProps({
+  light: Object,
+  index: Number,
+  flags: { type: Array, default: () => [] },
+});
 const emit = defineEmits(["remove"]);
 const fields = [
   { key: "intensity", label: "Яркость", min: 0, max: 50 },

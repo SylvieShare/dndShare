@@ -13,6 +13,8 @@ import { modelAssets } from "./modelAssets";
 import { tileBounds, tileTransform } from "./tileTransform";
 import { modelPreviewCamera } from "./modelPreviewCamera";
 import { modelPreviewGuides } from "./modelPreviewGuides";
+import { createMapEffects } from "./mapEffects";
+import { createMapFog } from "./mapFog";
 import {
   layoutPreviewLabels,
   previewGeometry,
@@ -38,6 +40,7 @@ export function createModelPreview(host, onFrame, onError) {
   let frame = 0,
     timer = 0,
     labelsDirty = true,
+    lastEffectFrame = 0,
     dead = false,
     epoch = 0,
     current = null,
@@ -46,6 +49,14 @@ export function createModelPreview(host, onFrame, onError) {
     bounds = new Box3();
   let assets = modelAssets(onError, gpu),
     options = {};
+  const fog = createMapFog(),
+    effects = createMapEffects(
+      scene,
+      fog,
+      { catalogue: () => assets.catalogue() },
+      render,
+    );
+  fog.update({ width: 160, height: 160, zones: [] }, null, true);
   function clearRoot() {
     for (const mesh of root.children)
       for (const material of Array.isArray(mesh.material)
@@ -62,9 +73,17 @@ export function createModelPreview(host, onFrame, onError) {
     frame = requestAnimationFrame((time) => {
       frame = 0;
       if (dead) return;
-      const delay = assets.advanceFire(time, true, scene);
+      const effectFrame = effects.advance(
+          time,
+          Math.min(40, time - lastEffectFrame || 16),
+          () => root.matrix,
+          root,
+        ),
+        delay = effectFrame.delay;
+      lastEffectFrame = time;
       gpu.render(scene, view.camera);
-      if (Number.isFinite(delay))
+      if (effectFrame.moving) render(true);
+      else if (Number.isFinite(delay))
         timer = setTimeout(() => render(true), Math.max(1, delay));
       if (!labelsDirty) return;
       labelsDirty = false;
@@ -88,6 +107,36 @@ export function createModelPreview(host, onFrame, onError) {
     current = model;
     options = next;
     if (!asset) return;
+    const behaviour =
+        options.behaviour || assets.metadata(model.id)?.behaviour || {},
+      anchor = { kind: "tile", id: "preview-tile" },
+      previewDocument = {
+        width: model.width,
+        height: model.height,
+        areas: [],
+        zones: [],
+        objects: [],
+        tiles: [{ id: anchor.id, modelId: model.id, x: 0, y: 0, rotation: 0 }],
+        flags: (behaviour.defaultFlags || []).map((f) => ({
+          ...f,
+          id: `flag-${f.key}`,
+        })),
+        effects: (behaviour.defaultEffects || []).map((e) => ({
+          ...e,
+          id: `effect-${e.key}`,
+          builtinKey: e.key,
+          flagId: e.flagKey ? `flag-${e.flagKey}` : "",
+          anchor,
+          x: 0,
+          y: 0,
+          elevation: 0,
+          height: 0,
+        })),
+      };
+    assets.replaceCatalogue([
+      { ...assets.metadata(model.id), ...model, behaviour },
+    ]);
+    effects.update(previewDocument, {}, null, previewDocument.tiles, []);
     const g = previewGeometry(model),
       safe = {
         ...model,
@@ -103,6 +152,7 @@ export function createModelPreview(host, onFrame, onError) {
     bounds = tileBounds(tile, safe, asset);
     const annotations = guides.update(model, bounds, options);
     const fit = bounds.clone();
+    fit.union(new Box3().setFromObject(effects.root));
     fit.expandByPoint(new Vector3(0, g.bottom, 0));
     fit.expandByPoint(
       new Vector3(g.width + 1.1, Math.max(g.top, 0), g.height + 0.7),
@@ -126,6 +176,13 @@ export function createModelPreview(host, onFrame, onError) {
       asset = null;
       fitKey = "";
       assets.destroy();
+      effects.update(
+        { effects: [], tiles: [], objects: [], areas: [] },
+        {},
+        null,
+        [],
+        [],
+      );
       const owner = modelAssets(onError, gpu, () => populate());
       assets = owner;
       function populate() {
@@ -135,13 +192,15 @@ export function createModelPreview(host, onFrame, onError) {
         asset = nextAsset;
         clearRoot();
         for (const part of asset.parts) {
-          const materials = (Array.isArray(part.material)
-            ? part.material : [part.material]).map((m) => m.clone());
-          const mesh = new Mesh(part.geometry,
-            Array.isArray(part.material) ? materials : materials[0]);
+          const materials = (
+            Array.isArray(part.material) ? part.material : [part.material]
+          ).map((m) => m.clone());
+          const mesh = new Mesh(
+            part.geometry,
+            Array.isArray(part.material) ? materials : materials[0],
+          );
           mesh.matrixAutoUpdate = false;
           mesh.matrix.copy(part.matrix);
-          owner.prepareFire(mesh, source.id, part.matrix);
           root.add(mesh);
         }
         update(current, options);
@@ -181,6 +240,8 @@ export function createModelPreview(host, onFrame, onError) {
       clearTimeout(timer);
       clearRoot();
       guides.destroy();
+      effects.destroy();
+      fog.destroy();
       assets.destroy();
       gpu.dispose();
       gpu.domElement.remove();

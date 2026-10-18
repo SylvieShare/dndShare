@@ -69,6 +69,8 @@ type Document struct {
 	LightingEnabled bool      `json:"lightingEnabled"`
 	Sun             *SunLight `json:"sun"`
 	Lights          []Light   `json:"lights"`
+	Flags           []MapFlag `json:"flags"`
+	Effects         []Effect  `json:"effects"`
 }
 
 type Token struct {

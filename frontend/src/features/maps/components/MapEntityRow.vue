@@ -25,6 +25,15 @@
       ><template #icon><Lightbulb :size="24" /></template
     ></IconToggleButton>
     <IconToggleButton
+      v-else-if="entry.kind === 'flag' && toggleFlag"
+      :model-value="entry.enabled"
+      :label="`${entry.enabled ? 'Выключить' : 'Включить'} флаг: ${entry.name}`"
+      @update:model-value="emit('toggle', entry.id)"
+      @click.stop
+      @keydown.stop
+      ><template #icon><Flag :size="24" /></template
+    ></IconToggleButton>
+    <IconToggleButton
       v-else-if="entry.kind === 'area'"
       :model-value="!entry.hidden"
       :color="entry.color"
@@ -57,9 +66,13 @@
               : LightbulbOff
             : entry.kind === 'area'
               ? Group
-              : ['player', 'creature', 'marker'].includes(entry.kind)
-                ? UserRound
-                : Box
+              : entry.kind === 'flag'
+                ? Flag
+                : entry.kind === 'effect'
+                  ? Flame
+                  : ['player', 'creature', 'marker'].includes(entry.kind)
+                    ? UserRound
+                    : Box
         "
         :size="28"
       />
@@ -72,6 +85,7 @@
         }}<template v-if="entry.areaName"> ({{ entry.areaName }})</template>
       </strong>
       <small v-if="entry.code">{{ entry.code }}</small>
+      <small v-if="entry.controlledOff">Выключен флагом</small>
       <slot name="details" />
     </span>
     <strong v-if="entry.count" class="map-entity-count"
@@ -85,6 +99,8 @@ import { IconToggleButton, BaseTile } from "@sylvieshare/share-ui";
 import { hasSelectedText } from "../lib/textSelection";
 import {
   Box,
+  Flag,
+  Flame,
   Eye,
   Group,
   Lightbulb,
@@ -95,6 +111,7 @@ defineProps({
   entry: { type: Object, required: true },
   selected: Boolean,
   toggleLight: Boolean,
+  toggleFlag: Boolean,
   selectable: { type: Boolean, default: true },
 });
 const emit = defineEmits(["select", "toggle", "visibility", "focus"]);

@@ -117,6 +117,7 @@ import { createModelPreview } from "../rendering/modelPreviewRenderer";
 const props = defineProps({
   model: Object,
   source: Object,
+  behaviour: Object,
   activeField: String,
   selectedSlot: Number,
   selectedPoint: Number,
@@ -132,6 +133,7 @@ let renderer,
   drag = null,
   epoch = 0;
 const options = () => ({
+  behaviour: props.behaviour,
   activeField: props.activeField,
   selectedSlot: props.selectedSlot,
   selectedPoint: props.selectedPoint,
@@ -230,6 +232,7 @@ watch(() => [props.source?.id, props.source?.renderUrl], load);
 watch(
   () => [
     props.model,
+    props.behaviour,
     props.activeField,
     props.selectedSlot,
     props.selectedPoint,

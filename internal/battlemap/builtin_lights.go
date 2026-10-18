@@ -9,33 +9,12 @@ import (
 // Templates own identity, attachment and defaults. Explicit instance overrides
 // customize light settings; an unknown builtinKey can never create another source.
 func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours map[string]ModelBehaviour) error {
-	poses, err := ResolveTilePlacements(*d, models)
+	owners, err := modelComponentOwners(d, models)
 	if err != nil {
 		return err
 	}
-	type owner struct {
-		kind, id                    string
-		model                       ModelMetadata
-		x, y, base, rotation, scale float64
-	}
-	owners := []owner{}
-	for _, t := range d.Tiles {
-		owners = append(owners, owner{"tile", t.ID, models[t.ModelID], float64(t.X), float64(t.Y), poses[t.ID].Elevation, float64(t.Rotation), 1})
-	}
-	for _, o := range d.Objects {
-		base := .44
-		if o.Placement != nil {
-			for _, t := range d.Tiles {
-				if t.ID == o.Placement.TileID {
-					m := models[t.ModelID]
-					if o.Placement.Point < 0 || o.Placement.Point >= len(m.PlacementPoints) {
-						return fmt.Errorf("Точка размещения объекта отсутствует")
-					}
-					_, _, base = SurfacePosition(t, m, m.PlacementPoints[o.Placement.Point], poses[t.ID].Elevation)
-				}
-			}
-		}
-		owners = append(owners, owner{"object", o.ID, models[o.ModelID], o.X, o.Y, base, o.Rotation, o.Scale})
+	if err = syncBuiltinFlags(d, owners, behaviours); err != nil {
+		return err
 	}
 	previous := map[string]Light{}
 	manual := []Light{}
@@ -81,7 +60,7 @@ func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours 
 			}
 			light := Light{ID: id, BuiltinKey: template.Key, Name: template.Name, Kind: template.Kind, Color: template.Color,
 				X: x, Y: y, Elevation: o.base, Height: template.Position[2] * o.scale, Intensity: template.Intensity, Radius: template.Radius,
-				Enabled: enabled, Flicker: template.Flicker, Offset: [2]float64{}, Anchor: &anchor, Overrides: old.Overrides}
+				Enabled: enabled, Flicker: template.Flicker, Offset: [2]float64{}, Anchor: &anchor, Overrides: old.Overrides, FlagID: componentFlagID(d, anchor, template.FlagKey)}
 			applyLightOverrides(&light)
 			manual = append(manual, light)
 		}
@@ -95,13 +74,16 @@ func SyncBuiltinLights(d *Document, models map[string]ModelMetadata, behaviours 
 		}
 	}
 	d.Lights = manual
-	return nil
+	return syncBuiltinEffects(d, owners, behaviours)
 }
 
 func applyLightOverrides(light *Light) {
 	o := light.Overrides
 	if o == nil {
 		return
+	}
+	if o.FlagID != nil {
+		light.FlagID = *o.FlagID
 	}
 	if o.Color != nil {
 		light.Color = *o.Color

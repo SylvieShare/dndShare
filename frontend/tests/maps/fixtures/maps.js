@@ -1,4 +1,5 @@
 import { modelDownloadsFixture, downloadMapExample } from "./downloads";
+import { componentExample } from "./components";
 import { sessionFixture, sessionAPI, tokenPortraitExample } from "./session";
 import { previewFixture } from "./previews";
 import { attachmentExample } from "./attachments";
@@ -385,6 +386,7 @@ const modelBody = (id) => {
           : glb;
 };
 const transfers = modelDownloadsFixture(params, modelBody);
+if (params.has("componentsExample")) componentExample(catalogue, source, FLOOR);
 const nativeFetch = window.fetch.bind(window);
 const modelDto = ({ id, definitionId, ...model }) => ({
   ...model,

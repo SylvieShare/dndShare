@@ -12,6 +12,8 @@ import {
 } from "three";
 import { createTileLayer } from "./tileLayer";
 import { buildSceneObjects, disposeObjects } from "./sceneObjects";
+import { createMapEffects } from "./mapEffects";
+import { effectArea } from "../lib/mapComponents";
 
 // Only the focused area has an isolated scene. Geometry/textures and the GPU are
 // borrowed from the map; no extra context, loader, shadow pass or animation loop.
@@ -20,9 +22,10 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
   let current;
   function release(item) {
     item.tiles?.destroy();
+    item.effects?.destroy();
     if (item.objects) disposeObjects(item.objects);
     item.target?.dispose();
-    item.tiles = item.objects = item.target = null;
+    item.tiles = item.objects = item.target = item.effects = null;
   }
   function capture(item, d, placed, objects) {
     const tier = "lod",
@@ -31,7 +34,13 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
     const tileIds = new Set(area.tileIds),
       objectIds = new Set(area.objectIds);
     const selectedTiles = placed.filter((t) => tileIds.has(t.id));
-    const selectedObjects = objects.filter((o) => objectIds.has(o.id));
+    const selectedObjects = objects.filter(
+        (o) => objectIds.has(o.id) || tileIds.has(o.placement?.tileId),
+      ),
+      selectedEffects = (d.effects || []).filter(
+        (e) => effectArea(e, d) === area.id,
+      ),
+      effectFlags = new Set(selectedEffects.map((e) => e.flagId));
     const ids = new Set(
       [...selectedTiles, ...selectedObjects]
         .map((o) => o.modelId)
@@ -52,6 +61,8 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
     const key = JSON.stringify([
       selectedTiles,
       selectedObjects,
+      selectedEffects,
+      (d.flags || []).filter((f) => effectFlags.has(f.id)),
       [...ids].map((id) => assets.metadata(id)),
       assets.signature(ids, tier),
       width,
@@ -77,13 +88,32 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
       assets,
       tier,
     );
+    item.effects = createMapEffects(scene, fog, assets);
+    item.effects.update(
+      { ...d, areas: [], effects: selectedEffects },
+      { animate: false },
+      null,
+      selectedTiles,
+      selectedObjects,
+    );
+    item.effects.advance(0, 1000, item.tiles.transform, item.objects);
     const content = new Group();
-    content.add(item.tiles.root, item.objects);
+    content.add(item.tiles.root, item.objects, item.effects.root);
     scene.add(content);
     content.updateMatrixWorld(true);
-    const bounds = new Box3().setFromObject(content);
+    const bounds = new Box3();
+    content.traverseVisible((node) => {
+      if (!node.isMesh) return;
+      if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
+      bounds.union(
+        node.geometry.boundingBox.clone().applyMatrix4(node.matrixWorld),
+      );
+    });
     if (bounds.isEmpty()) {
-      item.changed("waiting");
+      item.canvas.width = width;
+      item.canvas.height = height;
+      item.canvas.getContext("2d").clearRect(0, 0, width, height);
+      item.changed(ids.size ? "waiting" : "ready");
       return;
     }
     const camera = new OrthographicCamera(-1, 1, 1, -1, 0.01, 2000),

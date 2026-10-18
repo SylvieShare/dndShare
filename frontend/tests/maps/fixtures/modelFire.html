@@ -7,7 +7,7 @@
       import { acquireModelLoader } from "/src/features/maps/rendering/modelLoader.js";
       import { createTileLayer } from "/src/features/maps/rendering/tileLayer.js";
       import { buildModelObject } from "/src/features/maps/rendering/modelObject.js";
-      import { createModelFireAnimation } from "/src/features/maps/rendering/modelFireAnimation.js";
+      import { createMapEffects } from "/src/features/maps/rendering/mapEffects.js";
       import { createMapFog } from "/src/features/maps/rendering/mapFog.js";
       import { applyAreaOpacity } from "/src/features/maps/rendering/areaOpacity.js";
       import { renderAreaSurfaces } from "/src/features/maps/rendering/areaSurfaceRenderer.js";
@@ -21,10 +21,10 @@
       gltf.scene.traverse((n) => {
         if (n.isMesh) parts.push({ geometry: n.geometry, material: n.material, matrix: n.matrixWorld.clone() });
       });
-      const model = { id: "torch", definitionId: "MT1-016", width: 1, height: 1,
-        maxHeight: 2.427057, mountDepth: 0.485714 },
-        scene = new Scene(), fire = createModelFireAnimation(() => model),
-        assets = { model: () => ({ parts }), metadata: () => model, prepareFire: fire.prepare },
+      const model = { id: "torch", definitionId: "MT1-017", width: 1, height: 1,
+        maxHeight: 1.858534, mountDepth: 0.153517 },
+        scene = new Scene(),
+        assets = { model: () => ({ parts }), metadata: () => model, catalogue: () => [model] },
         fog = createMapFog(), tiles = createTileLayer(assets, fog), objects = new Group();
       fog.update({ width: 4, height: 4, zones: [] }, null, true);
       tiles.rebuild([0, 1].map((x) => ({ id: `torch-${x}`, modelId: "torch", x, y: 0, rotation: 0 })), "render", []);
@@ -44,17 +44,23 @@
       }
       const boxes = [0, 1, 2].map((x) => {
         const points = [];
-        for (const a of [-0.06, 0.42]) for (const b of [1.65, 2.1]) for (const c of [-0.04, 0.45]) {
+        for (const a of [-0.06, 0.42]) for (const b of [1.5, 2.1]) for (const c of [-0.04, 0.45]) {
           const p = new Vector3(x + a, b, c).project(camera);
           points.push([(p.x + 1) * 400, (p.y + 1) * 300]);
         }
         return [Math.min(...points.map((p) => p[0])), Math.min(...points.map((p) => p[1])),
           Math.max(...points.map((p) => p[0])), Math.max(...points.map((p) => p[1]))];
       });
+      const effectDocument = { width: 4, height: 4, tiles: [], objects: [], areas: [], flags: [],
+        effects: [0, 1, 2].map((x) => ({ id: `fire-${x}`, name: "Огонь", kind: "fire", color: "#ffb04a",
+          size: [0.22, 0.35], strength: 0.7, enabled: true, x: x + 0.182857, y: 0.198571,
+          elevation: 0, height: 1.59, offset: [0, 0] })) },
+        fire = createMapEffects(scene, fog, assets);
       function frame(time, opacity = 1, animate = true) {
         tiles.applyAppearance({ tileOpacity: () => opacity, tileFlash: () => 1 });
         applyAreaOpacity(objects, opacity);
-        fire.advance(time, animate, scene);
+        fire.update(effectDocument, { animate }, null, [], [], { lightOpacity: () => opacity });
+        fire.advance(time, 1000, () => null, objects);
         renderAreaSurfaces(gpu, scene, camera);
         return pixels();
       }

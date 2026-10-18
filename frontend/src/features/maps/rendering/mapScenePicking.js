@@ -33,6 +33,7 @@ export function pickMapScene(
     loadingPreview,
     preview,
     lighting,
+    effects,
     surfaceAnchors,
     anchors,
     objects,
@@ -67,6 +68,13 @@ export function pickMapScene(
     return pending;
   const lamp = lighting.pick(ray);
   if (lamp) return lamp;
+  const effect = effects?.pick(ray);
+  if (
+    effect &&
+    (!tile || effect.distance < tile.distance) &&
+    (!hits[0] || effect.distance < hits[0].distance)
+  )
+    return effect;
   const surfaceAnchor = surfaceAnchors.hit(ray);
   if (surfaceAnchor) return surfaceAnchor;
   const anchor = anchors.hit(ray);

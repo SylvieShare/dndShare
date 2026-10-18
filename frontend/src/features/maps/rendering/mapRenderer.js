@@ -8,6 +8,7 @@ import { createMapFramePreview } from "./mapFramePreview";
 import { startModelRefresh } from "../lib/currentModelRefresh";
 import { getMapModels } from "@/shared/api/mapsApi";
 import { createMapLighting } from "./mapLighting";
+import { createMapEffects } from "./mapEffects";
 import { areaAppearance } from "../lib/mapAreas";
 import { mapScreenQueries } from "./mapScreenQueries";
 import { createLoadingPreview } from "./loadingPreview";
@@ -71,6 +72,7 @@ export async function createMapRenderer(
     lighting = createMapLighting(scene, gpu, assets, assetsChanged),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
+    effects = createMapEffects(scene, fog, assets, render),
     transitions = createAreaTransitions(assetsChanged),
     volumeFog = createVolumeFog(gpu, fog.uniforms, transitions),
     tokenPortraits = createTokenPortraits(render),
@@ -149,21 +151,31 @@ export async function createMapRenderer(
       tiles.applyAppearance(appearance);
       applySceneAreaAppearance(objects, appearance);
       loadingPreview.applyAppearance(appearance);
-      const fireDelay = assets.advanceFire(
-        time, options.animate !== false, scene,
-      );
+      const effectFrame = effects.advance(
+          time,
+          delta,
+          (id) => preview.transform(id) || tiles.transform(id),
+          objects,
+          objectPreview.root,
+        ),
+        fireDelay = effectFrame.delay;
       volumeFog.render(scene, camera);
       presentFrame(objects, options, appearance);
-      if (moving || lighting.isFading()) render();
+      if (moving || lighting.isFading() || effectFrame.moving) render();
       else if (
-        (flickering || mistMoving || Number.isFinite(fireDelay)) && !flickerTimer
+        (flickering || mistMoving || Number.isFinite(fireDelay)) &&
+        !flickerTimer
       )
-        flickerTimer = setTimeout(() => {
-          flickerTimer = 0;
-          render();
-        }, Math.max(1, Math.min(
-          flickering || mistMoving ? 100 : Infinity, fireDelay,
-        )));
+        flickerTimer = setTimeout(
+          () => {
+            flickerTimer = 0;
+            render();
+          },
+          Math.max(
+            1,
+            Math.min(flickering || mistMoving ? 100 : Infinity, fireDelay),
+          ),
+        );
     });
   }
   const framePreview = createMapFramePreview(camera, render);
@@ -431,6 +443,14 @@ export async function createMapRenderer(
       objectPreview.root,
       appearance,
     );
+    effects.update(
+      d,
+      previewOptions,
+      structure.context(),
+      placed,
+      posedObjects,
+      appearance,
+    );
     assets.prune();
     render();
   }
@@ -480,7 +500,13 @@ export async function createMapRenderer(
         objects,
         objectPreview.root,
       );
-      assets.advanceFire(0, false);
+      effects.advance(
+        0,
+        1000,
+        (id) => tiles.transform(id),
+        objects,
+        objectPreview.root,
+      );
       volumeFog.render(scene, camera);
       return new Promise((resolve, reject) =>
         gpu.domElement.toBlob(
@@ -523,6 +549,7 @@ export async function createMapRenderer(
         loadingPreview,
         preview,
         lighting,
+        effects,
         surfaceAnchors,
         anchors,
         objects,
@@ -551,6 +578,7 @@ export async function createMapRenderer(
       volumeFog.destroy();
       fog.destroy();
       lighting.destroy();
+      effects.destroy();
       areaPreview.destroy();
       assets.destroy();
       framePreview.destroy();

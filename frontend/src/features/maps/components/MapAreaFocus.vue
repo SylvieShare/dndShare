@@ -36,7 +36,7 @@
           :entry="entry"
           @select="emit('focus', [entry])"
         >
-          <template v-if="entry.kind !== 'light'" #actions>
+          <template v-if="!['light', 'effect'].includes(entry.kind)" #actions>
             <ActionButton
               icon-only
               variant="quiet"

@@ -1,5 +1,5 @@
 {
-  "name": "Light Off",
+  "name": "Факел",
   "groupCode": "MED-light",
   "tileType": "floor",
   "width": 1,
@@ -230,11 +230,50 @@
   "uvIslandMargin": 0.0015,
   "plainMountCollarMM": 0.5,
   "standRayTopMM": 30,
-  "defaultLights": [],
-  "transitions": [
+  "defaultLights": [
     {
-      "toDefinitionId": "MT1-016",
-      "action": "ignite"
+      "key": "torch-flame",
+      "name": "Свет",
+      "kind": "torch",
+      "color": "#ffb04a",
+      "position": [
+        0.182857,
+        0.198571,
+        1.8
+      ],
+      "intensity": 8,
+      "radius": 3.5,
+      "enabled": true,
+      "flicker": true,
+      "flagKey": "torch-burning"
+    }
+  ],
+  "transitions": [],
+  "defaultFlags": [
+    {
+      "key": "torch-burning",
+      "name": "Горит",
+      "enabled": true
+    }
+  ],
+  "defaultEffects": [
+    {
+      "key": "torch-fire",
+      "name": "Пламя",
+      "kind": "fire",
+      "color": "#ffb04a",
+      "size": [
+        0.22,
+        0.35
+      ],
+      "strength": 0.7,
+      "enabled": true,
+      "position": [
+        0.177571,
+        0.205571,
+        1.591343
+      ],
+      "flagKey": "torch-burning"
     }
   ]
 }

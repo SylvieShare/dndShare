@@ -1,4 +1,5 @@
 <template>
+  <MapModelComponentsFields :model="model" :behaviour="behaviour" />
   <DetailSection
     :label="`Переходы (${behaviour.transitions.length})`"
     collapsible
@@ -65,6 +66,7 @@
       :key="light.key"
       :light="light"
       :index="index"
+      :flags="behaviour.defaultFlags"
       @remove="behaviour.defaultLights.splice(index, 1)"
     />
     <ActionButton
@@ -89,6 +91,7 @@ import { visibleModels } from "../lib/visibleModels";
 import { TRANSITION_ACTIONS } from "../lib/modelTransitions";
 import { uid } from "../lib/mapModel";
 import MapModelLightTemplate from "./MapModelLightTemplate.vue";
+import MapModelComponentsFields from "./MapModelComponentsFields.vue";
 const props = defineProps({
   model: Object,
   behaviour: Object,

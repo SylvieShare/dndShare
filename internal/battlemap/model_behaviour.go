@@ -6,6 +6,7 @@ import (
 )
 
 type ModelLight struct {
+	FlagKey   string     `json:"flagKey,omitempty"`
 	Key       string     `json:"key"`
 	Name      string     `json:"name"`
 	Kind      string     `json:"kind"`
@@ -24,9 +25,11 @@ type ModelTransition struct {
 }
 
 type ModelBehaviour struct {
-	Revision      int               `json:"revision"`
-	DefaultLights []ModelLight      `json:"defaultLights"`
-	Transitions   []ModelTransition `json:"transitions"`
+	Revision       int               `json:"revision"`
+	DefaultFlags   []ModelFlag       `json:"defaultFlags"`
+	DefaultEffects []ModelEffect     `json:"defaultEffects"`
+	DefaultLights  []ModelLight      `json:"defaultLights"`
+	Transitions    []ModelTransition `json:"transitions"`
 }
 
 func ValidTransitionAction(action string) bool {
@@ -38,6 +41,9 @@ func ValidTransitionAction(action string) bool {
 }
 
 func ValidateModelBehaviour(b ModelBehaviour) error {
+	if err := validateModelComponents(b); err != nil {
+		return err
+	}
 	if b.Revision < 1 || len(b.DefaultLights) > 8 || len(b.Transitions) > 32 {
 		return fmt.Errorf("Некорректное число источников или переходов модели")
 	}

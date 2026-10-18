@@ -258,5 +258,6 @@
       "toDefinitionId": "MT1-017",
       "action": "extinguish"
     }
-  ]
+  ],
+  "retiredInto": "MT1-017"
 }

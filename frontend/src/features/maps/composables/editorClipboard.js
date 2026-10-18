@@ -41,6 +41,24 @@ export function editorClipboard(e) {
     };
     const level = tiles.length ? Math.min(...tiles.map((t) => t.level)) : 0;
     clipboard = {
+      flags: clone(
+        (d.flags || []).filter(
+          (f) =>
+            f.anchor &&
+            (f.anchor.kind === "tile" ? tiles : objects).some(
+              (x) => x.id === f.anchor.id,
+            ),
+        ),
+      ),
+      effects: clone(
+        (d.effects || []).filter(
+          (f) =>
+            f.anchor &&
+            (f.anchor.kind === "tile" ? tiles : objects).some(
+              (x) => x.id === f.anchor.id,
+            ),
+        ),
+      ),
       tiles: tiles.map((t) => ({
         ...clone(t),
         originalId: t.id,
@@ -51,6 +69,7 @@ export function editorClipboard(e) {
       })),
       objects: objects.map((o) => ({
         ...clone(o),
+        originalId: o.id,
         id: undefined,
         x: o.x - origin.x,
         y: o.y - origin.y,
@@ -197,18 +216,52 @@ export function editorClipboard(e) {
         ...t,
         id: mapping.get(t.id),
       })),
-      objects = targets.objects.map(({ placing, invalidSurface, ...o }) => ({
-        ...o,
-        placement:
-          o.placement && mapping.has(o.placement.tileId)
-            ? { ...o.placement, tileId: mapping.get(o.placement.tileId) }
-            : o.placement,
-        id: uid(),
-      }));
+      objects = targets.objects.map(
+        ({ originalId, placing, invalidSurface, ...o }) => ({
+          ...o,
+          placement:
+            o.placement && mapping.has(o.placement.tileId)
+              ? { ...o.placement, tileId: mapping.get(o.placement.tileId) }
+              : o.placement,
+          id: uid(),
+        }),
+      );
     e.error.value = "";
     e.change((m) => {
       m.document.tiles.push(...tiles);
       m.document.objects.push(...objects);
+      const owners = new Map([
+          ...targets.tiles.map((x, i) => [
+            `tile:${x.originalId}`,
+            { kind: "tile", id: tiles[i].id },
+          ]),
+          ...targets.objects.map((x, i) => [
+            `object:${x.originalId}`,
+            { kind: "object", id: objects[i].id },
+          ]),
+        ]),
+        flags = new Map();
+      for (const item of payload.flags || []) {
+        const anchor = owners.get(`${item.anchor.kind}:${item.anchor.id}`);
+        if (!anchor) continue;
+        const id = uid();
+        flags.set(item.id, id);
+        (m.document.flags ||= []).push({ ...clone(item), id, anchor });
+      }
+      for (const item of payload.effects || []) {
+        const anchor = owners.get(`${item.anchor.kind}:${item.anchor.id}`);
+        if (!anchor) continue;
+        const copy = {
+          ...clone(item),
+          id: uid(),
+          anchor,
+          flagId: flags.get(item.flagId) || item.flagId,
+        };
+        if (copy.overrides?.flagId)
+          copy.overrides.flagId =
+            flags.get(copy.overrides.flagId) || copy.overrides.flagId;
+        (m.document.effects ||= []).push(copy);
+      }
     });
     e.setTileSelection(tiles.map((t) => t.id));
     e.setObjectSelection(objects.map((o) => o.id));

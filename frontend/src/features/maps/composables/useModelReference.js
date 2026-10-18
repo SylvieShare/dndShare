@@ -39,6 +39,10 @@ export function useModelReference(editor) {
       ),
     );
     behaviour.value = JSON.parse(JSON.stringify(baseBehaviour.value));
+    baseBehaviour.value.defaultFlags ||= [];
+    baseBehaviour.value.defaultEffects ||= [];
+    behaviour.value.defaultFlags ||= [];
+    behaviour.value.defaultEffects ||= [];
     blockers.value = JSON.stringify(draft.value.blockers, null, 2);
     error.value = status.value = "";
   }

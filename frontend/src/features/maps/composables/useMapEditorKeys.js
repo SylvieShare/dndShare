@@ -46,7 +46,12 @@ export function useMapEditorKeys(
     }
     if (command && event.code === "KeyV") {
       event.preventDefault();
-      if (editor.copiedLight)
+      if (editor.copiedEffect)
+        placement.placeEffect(
+          editor.copiedEffect,
+          placement.cursor.pointerEvent(),
+        );
+      else if (editor.copiedLight)
         placement.placeLight(
           editor.copiedLight,
           placement.cursor.pointerEvent(),

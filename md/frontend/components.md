@@ -576,3 +576,13 @@ areaOpacity обновляет клонированные материалы с 
 интенсивности. Логические флаги меняются сразу и исключают скрытые модели из
 picking; snapshot и reduced motion отключают переходы. mapFramePresentation
 отделяет контуры/захват кадра от основной координации renderer.
+
+## Флаги и эффекты карты
+
+MapComponentsPanel составляет вкладки «Флаги»/«Эффекты», MapFlagFocus —
+переключатель и вычисляемый список зависимостей из MapEntityRow. MapFlagBinding
+использует FormSelect и ссылку-строку на флаг. MapEffectFocus переиспользует
+MapSelectedEntity, AppSlider, ColorPresetPicker и ToggleSwitch для огня.
+MapModelComponentsFields редактирует шаблоны флагов и эффектов в справочнике.
+Это предметные композиции поверх share-ui, новых базовых примитивов нет.
+Контракт — [флаги и эффекты](../features/maps-flags-effects.md).

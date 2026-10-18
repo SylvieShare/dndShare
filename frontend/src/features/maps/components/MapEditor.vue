@@ -49,6 +49,7 @@
         @drag-object="(id, event) => beginPlacement('dragObject', id, event)"
         @tab="placement.cancel"
         @place-light="(id, event) => beginPlacement('placeLight', id, event)"
+        @place-effect="(id, event) => beginPlacement('placeEffect', id, event)"
       >
         <template v-for="tab in extraTabs" :key="tab.key" #[tab.key]>
           <slot :name="tab.key" :editor="e" />
@@ -86,6 +87,9 @@
           :selected-light="e.selectedLight"
           :hovered-light="e.hoveredLight"
           :preview-light="e.previewLight"
+          :preview-effect="e.previewEffect"
+          :selected-effect="e.selectedEffect"
+          :placement-effect="e.tool === 'effect'"
           :placement-light="e.tool === 'light'"
           :hint="editorHints(e.tool, e.draggingTile)"
           :catalogue="e.catalogue"
@@ -232,6 +236,7 @@ e.dismissFocus = () => {
   e.setTileSelection([]);
   e.setObjectSelection([]);
   e.selectedLight = "";
+  e.clearComponentFocus();
   e.selection = null;
   emit("selection");
 };
@@ -279,9 +284,20 @@ function beginBinding(id) {
   placement.cancel();
   e.beginLightBinding(id);
 }
-function focusEntries(entries) {
+async function focusEntries(entries) {
   placement.cancel();
   e.clearAreaFocus();
+  if (["flag", "effect"].includes(entries[0]?.kind)) {
+    emit("selection");
+    e.selectComponent(entries[0].kind, entries[0].id);
+    if (entries[0].kind === "effect") {
+      await nextTick();
+      if (e.selectedEffect !== entries[0].id) return;
+      canvas.value?.focusAt(entries[0].position);
+      canvas.value?.focus();
+    }
+    return;
+  }
   if (entries[0]?.kind === "light") {
     e.focusLight(entries[0].id);
     return;

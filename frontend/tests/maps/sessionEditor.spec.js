@@ -37,6 +37,8 @@ test("session uses the full editor, writes its own scene and retains the templat
     "Существа",
     "Плитки",
     "Освещение",
+    "Эффекты",
+    "Флаги",
     "Объекты",
     "Области",
   ]);

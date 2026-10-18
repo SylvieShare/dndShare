@@ -119,7 +119,6 @@ export function createTilePreview(assets, onSettled = () => {}) {
           mesh.receiveShadow = true;
           mesh.frustumCulled = false;
           mesh.userData = { partMatrix: part.matrix, metadata, indices };
-          assets.prepareFire?.(mesh, id, part.matrix);
           root.add(mesh);
         }
       }

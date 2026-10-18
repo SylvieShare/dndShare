@@ -41,6 +41,8 @@ import {
   Group,
   Layers,
   Lightbulb,
+  Flag,
+  Flame,
   MapPin,
   Skull,
   UserRound,
@@ -53,6 +55,8 @@ const icon = computed(
       tile: Layers,
       object: Box,
       light: Lightbulb,
+      flag: Flag,
+      effect: Flame,
       area: Group,
       group: Layers,
       player: UserRound,
@@ -60,8 +64,13 @@ const icon = computed(
       marker: MapPin,
     })[props.entry.kind] || Box,
 );
-const nameLabel = computed(() =>
-  props.entry.kind === "area" ? "Название области" : "Название источника света",
+const nameLabel = computed(
+  () =>
+    ({
+      area: "Название области",
+      flag: "Название флага",
+      effect: "Название эффекта",
+    })[props.entry.kind] || "Название источника света",
 );
 </script>
 <style scoped>

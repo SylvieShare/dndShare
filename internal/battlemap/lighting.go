@@ -17,6 +17,7 @@ type LightAnchor struct {
 
 // LightOverrides stores only instance edits; unset values still follow the model template.
 type LightOverrides struct {
+	FlagID     *string  `json:"flagId,omitempty"`
 	Color      *string  `json:"color,omitempty"`
 	Height     *float64 `json:"height,omitempty"`
 	Intensity  *float64 `json:"intensity,omitempty"`
@@ -27,6 +28,7 @@ type LightOverrides struct {
 }
 
 type Light struct {
+	FlagID     string          `json:"flagId,omitempty"`
 	Overrides  *LightOverrides `json:"overrides,omitempty"`
 	ID         string          `json:"id"`
 	BuiltinKey string          `json:"builtinKey,omitempty"`

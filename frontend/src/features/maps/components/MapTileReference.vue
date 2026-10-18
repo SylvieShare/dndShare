@@ -73,6 +73,7 @@
             <MapModelPreview
               :model="reference.draft"
               :source="selected"
+              :behaviour="reference.behaviour"
               :active-field="activeField"
               :selected-slot="selectedSlot"
               :selected-point="selectedPoint"

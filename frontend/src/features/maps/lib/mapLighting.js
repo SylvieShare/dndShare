@@ -3,6 +3,7 @@ import { structureContext } from "./tileStructure";
 import { tileSize } from "./tilePlacement";
 import { resolvedSurfacePosition } from "./surfacePlacement";
 import { builtinLightPose, syncBuiltinLights } from "./builtinLights";
+import { pruneComponentLinks } from "./componentLinks";
 export const LIGHT_PRESETS = [
   {
     kind: "torch",
@@ -33,8 +34,20 @@ export const LIGHT_PRESETS = [
   },
 ];
 export const DEFAULT_SUN = { enabled: true, angle: 225, elevation: 45 };
-export function lightPose(light, document, catalogue, context) {
-  const builtin = builtinLightPose(light, document, catalogue, context);
+export function lightPose(
+  light,
+  document,
+  catalogue,
+  context,
+  templates = "defaultLights",
+) {
+  const builtin = builtinLightPose(
+    light,
+    document,
+    catalogue,
+    context,
+    templates,
+  );
   if (builtin) return builtin;
   let x = light.x,
     y = light.y,
@@ -110,6 +123,7 @@ export function lightOpacity(
 }
 export function syncLights(document, catalogue) {
   syncBuiltinLights(document, catalogue);
+  pruneComponentLinks(document);
   const context = structureContext(document, catalogue);
   const tiles = new Set(document.tiles.map((t) => t.id)),
     objects = new Set(document.objects.map((o) => o.id)),
@@ -127,6 +141,24 @@ export function syncLights(document, catalogue) {
       light.x = pose.x;
       light.y = pose.y;
       light.elevation = pose.elevation;
+    }
+  }
+  for (const effect of document.effects) {
+    if (effect.areaId && !areas.has(effect.areaId)) effect.areaId = "";
+    if (effect.anchor) {
+      effect.areaId = "";
+      const pose = lightPose(
+        effect,
+        document,
+        catalogue,
+        context,
+        "defaultEffects",
+      );
+      Object.assign(effect, {
+        x: pose.x,
+        y: pose.y,
+        elevation: pose.elevation,
+      });
     }
   }
 }

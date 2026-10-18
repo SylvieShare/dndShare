@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Store) MapModelBehaviours(ctx context.Context) (map[string]battlemap.ModelBehaviour, error) {
-	rows, err := s.pool.Query(ctx, `SELECT d.id::text,d.revision,d.default_lights,
+	rows, err := s.pool.Query(ctx, `SELECT d.id::text,d.revision,d.default_lights,d.default_flags,d.default_effects,
         coalesce((SELECT jsonb_agg(jsonb_build_object('id',t.id,'toDefinitionId',t.to_model_id,'action',t.action) ORDER BY t.action,t.id)
         FROM dndshare.map_model_transition t WHERE t.from_model_id=d.id),'[]'::jsonb)
         FROM dndshare.map_model_definition d`)
@@ -21,14 +21,20 @@ func (s *Store) MapModelBehaviours(ctx context.Context) (map[string]battlemap.Mo
 	for rows.Next() {
 		var id string
 		var b battlemap.ModelBehaviour
-		var lights, transitions []byte
-		if err = rows.Scan(&id, &b.Revision, &lights, &transitions); err != nil {
+		var lights, flags, effects, transitions []byte
+		if err = rows.Scan(&id, &b.Revision, &lights, &flags, &effects, &transitions); err != nil {
 			return nil, err
 		}
 		if err = json.Unmarshal(lights, &b.DefaultLights); err != nil {
 			return nil, err
 		}
 		if err = json.Unmarshal(transitions, &b.Transitions); err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(flags, &b.DefaultFlags); err != nil {
+			return nil, err
+		}
+		if err = json.Unmarshal(effects, &b.DefaultEffects); err != nil {
 			return nil, err
 		}
 		result[id] = b
@@ -59,7 +65,21 @@ func saveModelBehaviour(ctx context.Context, tx pgx.Tx, id string, b battlemap.M
 	if err != nil {
 		return err
 	}
-	result, err := tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET revision=revision+1,default_lights=CAST($3 AS jsonb) WHERE id=$1 AND revision=$2`, id, b.Revision, json.RawMessage(data))
+	if b.DefaultFlags == nil {
+		b.DefaultFlags = []battlemap.ModelFlag{}
+	}
+	if b.DefaultEffects == nil {
+		b.DefaultEffects = []battlemap.ModelEffect{}
+	}
+	flags, err := json.Marshal(b.DefaultFlags)
+	if err != nil {
+		return err
+	}
+	effects, err := json.Marshal(b.DefaultEffects)
+	if err != nil {
+		return err
+	}
+	result, err := tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET revision=revision+1,default_lights=CAST($3 AS jsonb),default_flags=CAST($4 AS jsonb),default_effects=CAST($5 AS jsonb) WHERE id=$1 AND revision=$2`, id, b.Revision, json.RawMessage(data), json.RawMessage(flags), json.RawMessage(effects))
 	if err != nil {
 		return err
 	}

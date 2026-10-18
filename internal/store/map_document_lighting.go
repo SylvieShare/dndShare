@@ -48,6 +48,7 @@ func (s *Store) HydrateMapCatalogue(ctx context.Context, documents ...*battlemap
 		return nil, nil, err
 	}
 	for _, d := range documents {
+		battlemap.PruneBuiltinComponents(d, models, behaviours)
 		expected := map[string]bool{}
 		add := func(kind, id, modelID string) {
 			for _, l := range behaviours[models[modelID].DefinitionID].DefaultLights {
@@ -69,6 +70,26 @@ func (s *Store) HydrateMapCatalogue(ctx context.Context, documents ...*battlemap
 		d.Lights = lights
 		if err = battlemap.SyncBuiltinLights(d, models, behaviours); err != nil {
 			return nil, nil, err
+		}
+		flags := map[string]bool{}
+		for _, f := range d.Flags {
+			flags[f.ID] = true
+		}
+		for i := range d.Lights {
+			if d.Lights[i].FlagID != "" && !flags[d.Lights[i].FlagID] {
+				d.Lights[i].FlagID = ""
+				if d.Lights[i].Overrides != nil {
+					d.Lights[i].Overrides.FlagID = nil
+				}
+			}
+		}
+		for i := range d.Effects {
+			if d.Effects[i].FlagID != "" && !flags[d.Effects[i].FlagID] {
+				d.Effects[i].FlagID = ""
+				if d.Effects[i].Overrides != nil {
+					d.Effects[i].Overrides.FlagID = nil
+				}
+			}
 		}
 	}
 	return catalogue, behaviours, nil

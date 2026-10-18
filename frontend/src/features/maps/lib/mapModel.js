@@ -25,6 +25,8 @@ export function newMap() {
       lightingEnabled: false,
       sun: { enabled: true, angle: 225, elevation: 45 },
       lights: [],
+      flags: [],
+      effects: [],
     },
     revision: 0,
   };
