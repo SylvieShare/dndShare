@@ -37,27 +37,12 @@
       :editor="editor"
       @place-light="(kind, event) => emit('place-light', kind, event)"
     />
-    <MapComponentsPanel
-      v-else-if="tab === 'flags' || tab === 'effects'"
-      :editor="editor"
-      :kind="tab === 'flags' ? 'flag' : 'effect'"
-      @place-effect="(kind, event) => emit('place-effect', kind, event)"
-    />
     <slot v-else :name="tab" :editor="editor" />
   </MapSidebar>
 </template>
 <script setup>
 import { computed, ref } from "vue";
-import {
-  Layers,
-  Box,
-  Group,
-  Lightbulb,
-  Settings,
-  Flag,
-  Flame,
-} from "@lucide/vue";
-import MapComponentsPanel from "./MapComponentsPanel.vue";
+import { Layers, Box, Group, Lightbulb, Settings } from "@lucide/vue";
 import MapSidebar from "./MapSidebar.vue";
 import MapPropertiesPanel from "./MapPropertiesPanel.vue";
 import MapLightingPanel from "./MapLightingPanel.vue";
@@ -77,7 +62,6 @@ const emit = defineEmits([
   "drag-object",
   "tab",
   "place-light",
-  "place-effect",
   "resize",
 ]);
 const sidebar = ref(null);
@@ -103,8 +87,6 @@ const tabs = computed(() => [
     dividerLabel: "Вкладки редактора",
   },
   { key: "lights", label: "Освещение", icon: Lightbulb },
-  { key: "effects", label: "Эффекты", icon: Flame },
-  { key: "flags", label: "Флаги", icon: Flag },
   { key: "objects", label: "Объекты", icon: Box },
   { key: "areas", label: "Области", icon: Group },
   ...(!props.sessionMode

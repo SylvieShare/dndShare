@@ -17,18 +17,18 @@ type LightAnchor struct {
 
 // LightOverrides stores only instance edits; unset values still follow the model template.
 type LightOverrides struct {
-	FlagID     *string  `json:"flagId,omitempty"`
-	Color      *string  `json:"color,omitempty"`
-	Height     *float64 `json:"height,omitempty"`
-	Intensity  *float64 `json:"intensity,omitempty"`
-	Radius     *float64 `json:"radius,omitempty"`
-	Flicker    *bool    `json:"flicker,omitempty"`
-	ShowMarker *bool    `json:"showMarker,omitempty"`
-	Shadows    *bool    `json:"shadows,omitempty"`
+	Effect     *LightEffect `json:"effect,omitempty"`
+	Color      *string      `json:"color,omitempty"`
+	Height     *float64     `json:"height,omitempty"`
+	Intensity  *float64     `json:"intensity,omitempty"`
+	Radius     *float64     `json:"radius,omitempty"`
+	Flicker    *bool        `json:"flicker,omitempty"`
+	ShowMarker *bool        `json:"showMarker,omitempty"`
+	Shadows    *bool        `json:"shadows,omitempty"`
 }
 
 type Light struct {
-	FlagID     string          `json:"flagId,omitempty"`
+	Effect     *LightEffect    `json:"effect,omitempty"`
 	Overrides  *LightOverrides `json:"overrides,omitempty"`
 	ID         string          `json:"id"`
 	BuiltinKey string          `json:"builtinKey,omitempty"`
@@ -88,6 +88,9 @@ func validateLighting(d *Document, tiles, objects map[string]bool) error {
 			!bounded(light.Height, 0, heightLimit) || !bounded(light.Intensity, 0, 50) || !bounded(light.Radius, .25, 32) ||
 			!bounded(light.Offset[0], -8, 8) || !bounded(light.Offset[1], -8, 8) || (light.AreaID != "" && !areas[light.AreaID]) {
 			return fmt.Errorf("Некорректный источник освещения")
+		}
+		if err := ValidateLightEffect(light.Effect); err != nil {
+			return err
 		}
 		if light.Anchor != nil && !((light.Anchor.Kind == "tile" && tiles[light.Anchor.ID]) || (light.Anchor.Kind == "object" && objects[light.Anchor.ID])) {
 			return fmt.Errorf("Опора источника света отсутствует")

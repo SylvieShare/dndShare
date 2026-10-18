@@ -1,29 +1,19 @@
+import { scaledLightEffect } from "./lightEffect";
 import { uid } from "./mapModel";
 import { surfacePosition, resolvedSurfacePosition } from "./surfacePlacement";
 import { structureContext } from "./tileStructure";
-import {
-  builtinFlagId,
-  syncBuiltinFlags,
-  syncBuiltinEffects,
-} from "./builtinComponents";
 
 export const manualLightCount = (document) =>
   (document.lights || []).filter((l) => !l.builtinKey).length;
 
-export function builtinLightPose(
-  light,
-  document,
-  catalogue,
-  context,
-  templates = "defaultLights",
-) {
+export function builtinLightPose(light, document, catalogue, context) {
   if (!light.builtinKey || !light.anchor) return null;
   const { kind, id } = light.anchor;
   const item = (kind === "tile" ? document.tiles : document.objects).find(
     (m) => m.id === id,
   );
   const model = catalogue.find((m) => m.id === item?.modelId);
-  const template = model?.behaviour?.[templates]?.find(
+  const template = model?.behaviour?.defaultLights?.find(
     (l) => l.key === light.builtinKey,
   );
   if (!template) return null;
@@ -62,7 +52,6 @@ export function builtinLightPose(
 }
 
 export function syncBuiltinLights(document, catalogue) {
-  syncBuiltinFlags(document, catalogue);
   const models = new Map(catalogue.map((m) => [m.id, m]));
   const previous = new Map(
     (document.lights || [])
@@ -80,6 +69,10 @@ export function syncBuiltinLights(document, catalogue) {
           builtinKey: template.key,
           name: template.name,
           kind: template.kind,
+          effect: scaledLightEffect(
+            template.effect,
+            kind === "object" ? item.scale || 1 : 1,
+          ),
           color: template.color,
           x: old?.x || 0,
           y: old?.y || 0,
@@ -94,11 +87,6 @@ export function syncBuiltinLights(document, catalogue) {
           shadows: false,
           offset: [0, 0],
           anchor: { kind, id: item.id },
-          flagId: builtinFlagId(
-            document,
-            { kind, id: item.id },
-            template.flagKey,
-          ),
           overrides: old?.overrides && { ...old.overrides },
           ...(old?.overrides || {}),
         });
@@ -106,5 +94,4 @@ export function syncBuiltinLights(document, catalogue) {
     }
   }
   document.lights = result;
-  syncBuiltinEffects(document, catalogue);
 }

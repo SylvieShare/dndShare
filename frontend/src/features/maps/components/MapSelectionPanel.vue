@@ -26,18 +26,6 @@
               :area="area"
               @focus="emit('focus', $event)"
             />
-            <MapFlagFocus
-              v-else-if="single?.kind === 'flag'"
-              :editor="editor"
-              :entry="single"
-              @focus="emit('focus', $event)"
-            />
-            <MapEffectFocus
-              v-else-if="single?.kind === 'effect'"
-              :editor="editor"
-              :entry="single"
-              @focus="emit('focus', $event)"
-            />
             <MapSelectedEntity
               v-else-if="entries.length === 1"
               :entry="single"
@@ -52,13 +40,6 @@
                 :light="single.item"
                 @bind="emit('bind', $event)"
                 @focus="emit('focus', [$event])"
-              />
-              <MapFlagBinding
-                v-if="single.kind === 'light'"
-                :editor="editor"
-                kind="light"
-                :item="single.item"
-                @focus="emit('focus', $event)"
               />
               <MapSelectionActions
                 v-if="single.kind === 'light'"
@@ -94,11 +75,6 @@
                 />
                 <MapModelTransitions :editor="editor" :entry="single" />
                 <MapModelLights :editor="editor" :entry="single" />
-                <MapModelComponents
-                  :editor="editor"
-                  :entry="single"
-                  @focus="emit('focus', $event)"
-                />
               </template>
             </MapSelectedEntity>
             <MapFocusContent v-else>
@@ -157,10 +133,6 @@ import MapLightFields from "./MapLightFields.vue";
 import MapSelectionActions from "./MapSelectionActions.vue";
 import MapModelTransitions from "./MapModelTransitions.vue";
 import MapModelLights from "./MapModelLights.vue";
-import MapModelComponents from "./MapModelComponents.vue";
-import MapFlagFocus from "./MapFlagFocus.vue";
-import MapEffectFocus from "./MapEffectFocus.vue";
-import MapFlagBinding from "./MapFlagBinding.vue";
 const element = ref(null);
 defineExpose({ bounds: () => element.value?.getBoundingClientRect() });
 const props = defineProps({

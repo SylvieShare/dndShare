@@ -9,7 +9,6 @@ import {
 } from "three";
 import { DEFAULT_SUN, lightOpacity, lightPose } from "../lib/mapLighting";
 import { createAttachedLights } from "./attachedLights";
-import { componentEnabled } from "../lib/mapComponents";
 import { createLightMarkers } from "./lightMarkers";
 import { createShadowProxies } from "./shadowProxies";
 export function createMapLighting(scene, gpu, assets, onSettled) {
@@ -145,7 +144,6 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
       ...(options.previewLight ? [options.previewLight] : []),
     ].map((l) => ({
       ...lightPose(l, d, assets.catalogue(), context),
-      enabled: componentEnabled(d, l),
       opacity: lightOpacity(l, d, options.areaMode, mist),
     }));
     for (const light of all) if (light.moving) light.worldHeight += 0.22;

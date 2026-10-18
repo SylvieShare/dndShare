@@ -44,7 +44,6 @@ func TestCurrentMapModelPersistence(t *testing.T) {
 	s := &Store{pool: pool}
 	seedMapModelsForTest(t, s)
 	testMapModelBehaviours(t, ctx, s)
-	testMapModelMerge(t, ctx, s)
 	testMapModelPreviewRevision(t, ctx, s)
 	testModelGroupCodeRules(t, ctx, s)
 	var oldColumns int

@@ -41,7 +41,6 @@
 import { computed } from "vue";
 import { mapEntity } from "../lib/editorEntities";
 import { manualLightCount } from "../lib/builtinLights";
-import { componentEnabled } from "../lib/mapComponents";
 import MapLightingControls from "./MapLightingControls.vue";
 import MapLightPresetMenu from "./MapLightPresetMenu.vue";
 import MapEntityRow from "./MapEntityRow.vue";
@@ -49,15 +48,11 @@ const props = defineProps({ editor: Object });
 const emit = defineEmits(["place-light"]);
 const shadowCount = computed(
   () =>
-    props.editor.draft.document.lights.filter(
-      (l) => componentEnabled(props.editor.draft.document, l) && l.shadows,
-    ).length,
+    props.editor.draft.document.lights.filter((l) => l.enabled && l.shadows)
+      .length,
 );
 const enabledCount = computed(
-  () =>
-    props.editor.draft.document.lights.filter((l) =>
-      componentEnabled(props.editor.draft.document, l),
-    ).length,
+  () => props.editor.draft.document.lights.filter((l) => l.enabled).length,
 );
 const lights = computed(() =>
   props.editor.draft.document.lights.map((light) =>

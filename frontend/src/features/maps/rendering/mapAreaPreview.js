@@ -13,7 +13,7 @@ import {
 import { createTileLayer } from "./tileLayer";
 import { buildSceneObjects, disposeObjects } from "./sceneObjects";
 import { createMapEffects } from "./mapEffects";
-import { effectArea } from "../lib/mapComponents";
+import { lightArea } from "../lib/mapLighting";
 
 // Only the focused area has an isolated scene. Geometry/textures and the GPU are
 // borrowed from the map; no extra context, loader, shadow pass or animation loop.
@@ -37,10 +37,9 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
     const selectedObjects = objects.filter(
         (o) => objectIds.has(o.id) || tileIds.has(o.placement?.tileId),
       ),
-      selectedEffects = (d.effects || []).filter(
-        (e) => effectArea(e, d) === area.id,
-      ),
-      effectFlags = new Set(selectedEffects.map((e) => e.flagId));
+      selectedLights = (d.lights || []).filter(
+        (l) => l.effect?.kind === "fire" && lightArea(l, d) === area.id,
+      );
     const ids = new Set(
       [...selectedTiles, ...selectedObjects]
         .map((o) => o.modelId)
@@ -61,8 +60,7 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
     const key = JSON.stringify([
       selectedTiles,
       selectedObjects,
-      selectedEffects,
-      (d.flags || []).filter((f) => effectFlags.has(f.id)),
+      selectedLights,
       [...ids].map((id) => assets.metadata(id)),
       assets.signature(ids, tier),
       width,
@@ -90,7 +88,7 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
     );
     item.effects = createMapEffects(scene, fog, assets);
     item.effects.update(
-      { ...d, areas: [], effects: selectedEffects },
+      { ...d, areas: [], lights: selectedLights },
       { animate: false },
       null,
       selectedTiles,

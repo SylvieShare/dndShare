@@ -3,41 +3,8 @@ import { structureContext } from "./tileStructure";
 import { resolvedSurfacePosition } from "./surfacePlacement";
 import { tileSize } from "./tilePlacement";
 import { OBJECTS } from "./mapModel";
-import { componentEnabled, effectPose, flagEnabled } from "./mapComponents";
 
 export function mapEntity(document, catalogue, kind, id, context) {
-  if (kind === "flag" || kind === "effect") {
-    const item = (kind === "flag" ? document.flags : document.effects)?.find(
-      (x) => x.id === id,
-    );
-    if (!item) return null;
-    const owner =
-        item.anchor &&
-        (item.anchor.kind === "tile" ? document.tiles : document.objects).find(
-          (x) => x.id === item.anchor.id,
-        ),
-      model = catalogue.find((m) => m.id === owner?.modelId),
-      pose =
-        kind === "effect"
-          ? effectPose(item, document, catalogue, context)
-          : null;
-    return {
-      kind,
-      id,
-      item,
-      name: model ? `${model.name} · ${item.name}` : item.name,
-      namePrefix: model?.name || "",
-      color: kind === "effect" ? item.color : "#f59e0b",
-      enabled:
-        kind === "flag" ? item.enabled : componentEnabled(document, item),
-      controlledOff:
-        kind === "effect" &&
-        !!item.flagId &&
-        !flagEnabled(document, item.flagId),
-      position: pose && { x: pose.x, y: pose.y, elevation: pose.worldHeight },
-      groupKey: `${kind}:${id}`,
-    };
-  }
   const list =
     kind === "tile"
       ? document.tiles
@@ -66,7 +33,6 @@ export function mapEntity(document, catalogue, kind, id, context) {
       namePrefix: prefix,
       color: item.color,
       enabled: item.enabled,
-      controlledOff: !!item.flagId && !flagEnabled(document, item.flagId),
       areaName: document.areas.find((a) => a.id === lightArea(item, document))
         ?.name,
       position: { x: pose.x, y: pose.y, elevation: pose.worldHeight },
@@ -108,12 +74,6 @@ export function selectedMapEntities(editor) {
   const d = editor.draft.document,
     c = structureContext(d, editor.catalogue);
   return [
-    ...(editor.selectedFlag
-      ? [mapEntity(d, editor.catalogue, "flag", editor.selectedFlag, c)]
-      : []),
-    ...(editor.selectedEffect
-      ? [mapEntity(d, editor.catalogue, "effect", editor.selectedEffect, c)]
-      : []),
     ...editor.selectedTiles.map((id) =>
       mapEntity(d, editor.catalogue, "tile", id, c),
     ),
@@ -124,18 +84,6 @@ export function selectedMapEntities(editor) {
       ? [mapEntity(d, editor.catalogue, "light", editor.selectedLight, c)]
       : []),
   ].filter(Boolean);
-}
-
-export function flagDependencies(editor, flagId) {
-  const d = editor.draft.document;
-  return [
-    ...d.lights
-      .filter((l) => l.flagId === flagId)
-      .map((l) => mapEntity(d, editor.catalogue, "light", l.id)),
-    ...(d.effects || [])
-      .filter((e) => e.flagId === flagId)
-      .map((e) => mapEntity(d, editor.catalogue, "effect", e.id)),
-  ];
 }
 export function groupMapEntities(entries) {
   const groups = new Map();
@@ -160,8 +108,5 @@ export function areaMapEntities(editor, area) {
     ...d.lights
       .filter((l) => lightArea(l, d) === area.id)
       .map((l) => mapEntity(d, editor.catalogue, "light", l.id, c)),
-    ...(d.effects || [])
-      .filter((e) => lightArea(e, d) === area.id)
-      .map((e) => mapEntity(d, editor.catalogue, "effect", e.id, c)),
   ].filter(Boolean);
 }

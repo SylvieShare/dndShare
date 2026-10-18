@@ -202,7 +202,7 @@ test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
   await page.keyboard.press("r");
   const target = await page.locator(".map-canvas").evaluate((node) => ({
     view: node.__vueParentComponent.exposed.getView(),
-    width: node.getBoundingClientRect().width,
+    bounds: node.getBoundingClientRect().toJSON(),
     left: document.querySelector(".map-sidebar").getBoundingClientRect().right,
   }));
   await page.keyboard.press("Enter");
@@ -219,10 +219,12 @@ test("keyboard placement uses arrows, R and Enter", async ({ page }) => {
     window.lastSaved.document.tiles.find((t) => t.modelId.startsWith("2222")),
   );
   const screenX =
-    target.width / 2 + (tile.x + 0.5 - target.view.x) * target.view.cellPixels;
-  expect(Math.abs(screenX - (target.left + target.width) / 2)).toBeLessThan(
-    target.view.cellPixels / 2 + 1,
-  );
+    target.bounds.x +
+    target.bounds.width / 2 +
+    (tile.x + 0.5 - target.view.x) * target.view.cellPixels;
+  expect(
+    Math.abs(screenX - (target.left + target.bounds.right) / 2),
+  ).toBeLessThan(target.view.cellPixels / 2 + 1);
 });
 
 test("sidebar tab rail keeps the native context menu, including during pending tile placement", async ({

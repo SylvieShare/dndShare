@@ -20,6 +20,11 @@
     </FormField>
     <MapLightActions :editor="editor" :light="light" />
   </MapInspectorSection>
+  <MapLightEffectFields
+    :effect="light.effect"
+    @update="editor.updateLight(light.id, 'effect', $event)"
+    @finish="editor.finishLightEdit"
+  />
   <MapInspectorSection title="Привязка">
     <MapEntityRow v-if="anchor" :entry="anchor" @select="emit('focus', $event)">
       <template v-if="!light.builtinKey" #actions>
@@ -69,6 +74,7 @@ import { Link, LockKeyhole, X } from "@lucide/vue";
 import { mapEntity } from "../lib/editorEntities";
 import MapEntityRow from "./MapEntityRow.vue";
 import MapInspectorSection from "./MapInspectorSection.vue";
+import MapLightEffectFields from "./MapLightEffectFields.vue";
 import MapLightActions from "./MapLightActions.vue";
 const emit = defineEmits(["bind", "focus"]);
 const props = defineProps({ editor: Object, light: Object });

@@ -59,18 +59,11 @@
         :aria-label="`Встроенный источник ${index + 1}: цвет`"
     /></FormField>
     <ToggleSwitch v-model="light.enabled" label="Включён по умолчанию" />
-    <FormField label="Управляющий флаг" vertical
-      ><FormSelect
-        :value="light.flagKey || ''"
-        :aria-label="`Встроенный источник ${index + 1}: флаг`"
-        @update:value="light.flagKey = $event"
-        ><option value="">Без флага</option>
-        <option v-for="flag in flags" :key="flag.key" :value="flag.key">
-          {{ flag.name }}
-        </option></FormSelect
-      ></FormField
-    >
     <ToggleSwitch v-model="light.flicker" label="Мерцание" />
+    <MapLightEffectFields
+      :effect="light.effect"
+      @update="light.effect = $event"
+    />
     <RemoveButton
       icon="trash"
       :label="`Удалить встроенный источник ${index + 1}`"
@@ -88,11 +81,8 @@ import {
   ToggleSwitch,
   RemoveButton,
 } from "@sylvieshare/share-ui";
-defineProps({
-  light: Object,
-  index: Number,
-  flags: { type: Array, default: () => [] },
-});
+import MapLightEffectFields from "./MapLightEffectFields.vue";
+defineProps({ light: Object, index: Number });
 const emit = defineEmits(["remove"]);
 const fields = [
   { key: "intensity", label: "Яркость", min: 0, max: 50 },

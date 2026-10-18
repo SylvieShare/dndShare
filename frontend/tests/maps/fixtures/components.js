@@ -2,7 +2,6 @@ export function componentExample(catalogue, source, floorId) {
   catalogue.find((m) => m.id === floorId).behaviour = {
     revision: 1,
     transitions: [],
-    defaultFlags: [{ key: "burning", name: "Горит", enabled: true }],
     defaultLights: [
       {
         key: "lamp",
@@ -14,20 +13,12 @@ export function componentExample(catalogue, source, floorId) {
         radius: 4,
         enabled: true,
         flicker: true,
-        flagKey: "burning",
-      },
-    ],
-    defaultEffects: [
-      {
-        key: "fire",
-        name: "Пламя",
-        kind: "fire",
-        color: "#ffb04a",
-        position: [0.5, 0.5, 0.6],
-        size: [0.22, 0.35],
-        strength: 0.7,
-        enabled: true,
-        flagKey: "burning",
+        effect: {
+          kind: "fire",
+          size: [0.22, 0.35],
+          strength: 0.7,
+          offset: [0, 0, -0.4],
+        },
       },
     ],
   };
@@ -37,8 +28,6 @@ export function componentExample(catalogue, source, floorId) {
   source.document.objects = [];
   source.document.zones = [];
   source.document.areas = [];
-  source.document.flags = [];
-  source.document.effects = [];
   source.document.lightingEnabled = true;
   source.document.sun = { enabled: false, angle: 225, elevation: 45 };
 }

@@ -5,9 +5,7 @@
         :entry="entry"
         :editable="
           entry.kind === 'area' ||
-          (['light', 'effect'].includes(entry.kind) &&
-            !entry.item.builtinKey) ||
-          entry.kind === 'flag'
+          (entry.kind === 'light' && !entry.item.builtinKey)
         "
         @rename="rename"
         @keydown.esc.capture="escape"
@@ -106,10 +104,7 @@ function rename(value) {
   const { entry, editor } = props;
   if (!value) return;
   if (entry.kind === "area") editor.renameArea(entry.id, value);
-  else if (entry.kind === "effect") {
-    editor.updateEffect(entry.id, "name", value);
-    editor.finishComponentEdit();
-  } else {
+  else {
     editor.finishLightEdit();
     editor.updateLight(entry.id, "name", value);
     editor.finishLightEdit();

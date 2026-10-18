@@ -7,12 +7,7 @@ import { isDeepStrictEqual } from "node:util";
 import { mapTool } from "./mcp_maps_client.mjs";
 
 export async function applyBehaviour(definitionId, recipe) {
-  if (
-    !Array.isArray(recipe.defaultLights) &&
-    !recipe.defaultFlags &&
-    !recipe.defaultEffects &&
-    !recipe.transitions?.length
-  )
+  if (!Array.isArray(recipe.defaultLights) && !recipe.transitions?.length)
     return null;
   if (recipe.retiredInto) {
     const models = await mapTool("map_tile_models_list", {
@@ -30,25 +25,6 @@ export async function applyBehaviour(definitionId, recipe) {
     const current = (
       await mapTool("map_tile_model_behaviour_get", { definitionId })
     ).behaviour;
-    if (
-      (recipe.defaultFlags || recipe.defaultEffects) &&
-      (!Array.isArray(current.defaultFlags) ||
-        !Array.isArray(current.defaultEffects))
-    )
-      throw new Error(
-        "Deploy the flags/effects contract before applying component templates",
-      );
-    const merge = (field) =>
-      recipe[field]
-        ? [
-            ...current[field].filter(
-              (item) => !recipe[field].some((t) => t.key === item.key),
-            ),
-            ...recipe[field],
-          ]
-        : current[field];
-    const defaultFlags = merge("defaultFlags"),
-      defaultEffects = merge("defaultEffects");
     const lights = [
       ...current.defaultLights.filter((l) => !managed.has(l.key)),
       ...(recipe.defaultLights || []),
@@ -70,9 +46,7 @@ export async function applyBehaviour(definitionId, recipe) {
     );
     if (
       !isDeepStrictEqual(lights, current.defaultLights) ||
-      !isDeepStrictEqual(transitions, current.transitions) ||
-      !isDeepStrictEqual(defaultFlags, current.defaultFlags) ||
-      !isDeepStrictEqual(defaultEffects, current.defaultEffects)
+      !isDeepStrictEqual(transitions, current.transitions)
     ) {
       try {
         await mapTool("map_tile_model_behaviour_update", {
@@ -81,8 +55,6 @@ export async function applyBehaviour(definitionId, recipe) {
             ...current,
             defaultLights: lights,
             transitions,
-            defaultFlags,
-            defaultEffects,
           },
         });
       } catch (error) {
@@ -96,9 +68,6 @@ export async function applyBehaviour(definitionId, recipe) {
     ).behaviour;
     assert.deepEqual(verified.defaultLights, lights);
     assert.deepEqual(verified.transitions, transitions);
-    if (defaultFlags) assert.deepEqual(verified.defaultFlags, defaultFlags);
-    if (defaultEffects)
-      assert.deepEqual(verified.defaultEffects, defaultEffects);
     return { confirmedAt: new Date().toISOString(), definitionId, ...verified };
   }
   throw new Error("Concurrent behaviour edit prevented verification");

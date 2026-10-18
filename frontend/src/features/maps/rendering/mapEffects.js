@@ -1,20 +1,10 @@
-import {
-  Group,
-  Mesh,
-  MeshBasicMaterial,
-  DoubleSide,
-  Vector3,
-  SphereGeometry,
-} from "three";
+import { Group, Mesh, MeshBasicMaterial, DoubleSide } from "three";
 import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
 import { createAttachedLights } from "./attachedLights";
 import { applyAreaOpacity } from "./areaOpacity";
 import { fireEffectGeometry, fireEffectMaterial } from "./fireEffectGeometry";
-import {
-  componentEnabled,
-  effectPose,
-  effectOpacity,
-} from "../lib/mapComponents";
+import { lightEffectPose } from "../lib/lightEffect";
+import { lightPose, lightOpacity } from "../lib/mapLighting";
 
 export const FIRE_FPS = 12;
 const seed = (id) =>
@@ -24,7 +14,6 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
   const root = new Group(),
     geometry = fireEffectGeometry(),
     entries = new Map(),
-    markerGeometry = new SphereGeometry(0.045, 12, 8),
     motion = createScalarMotion(),
     attachments = createAttachedLights();
   scene.add(root);
@@ -35,9 +24,7 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
     const entry = entries.get(id);
     if (!entry) return;
     root.remove(entry.mesh);
-    root.remove(entry.marker);
     entry.mesh.material.dispose();
-    entry.marker.material.dispose();
     entries.delete(id);
   }
   return {
@@ -47,15 +34,20 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
       animate = options.animate !== false;
       const catalogue = assets.catalogue?.() || [];
       sources = [
-        ...(document.effects || []).filter(
-          (e) => e.id !== options.previewEffect?.id,
+        ...(document.lights || []).filter(
+          (l) => l.id !== options.previewLight?.id,
         ),
-        ...(options.previewEffect ? [options.previewEffect] : []),
-      ].map((e) => ({
-        ...effectPose(e, document, catalogue, context),
-        enabled: componentEnabled(document, e),
-        opacity: effectOpacity(e, document, options.areaMode),
-      }));
+        ...(options.previewLight ? [options.previewLight] : []),
+      ]
+        .filter((l) => l.effect?.kind === "fire")
+        .map((l) => ({
+          ...lightEffectPose(
+            l,
+            document,
+            lightPose(l, document, catalogue, context),
+          ),
+          opacity: lightOpacity(l, document, options.areaMode),
+        }));
       const ids = new Set(sources.map((e) => e.id));
       for (const id of entries.keys()) if (!ids.has(id)) remove(id);
       motion.retain(ids);
@@ -71,30 +63,15 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
               }),
             ),
             mesh = new Mesh(geometry, material),
-            uniforms = fireEffectMaterial(material, seed(source.id)),
-            marker = new Mesh(
-              markerGeometry,
-              new MeshBasicMaterial({ color: 0x4f9cf9, toneMapped: false }),
-            );
-          mesh.userData.effectId = source.id;
-          marker.userData.effectId = source.id;
+            uniforms = fireEffectMaterial(material, seed(source.id));
+          mesh.userData.lightId = source.id;
           mesh.frustumCulled = false;
-          root.add(mesh, marker);
-          entry = { mesh, uniforms, marker };
+          root.add(mesh);
+          entry = { mesh, uniforms };
           entries.set(source.id, entry);
         }
         entry.mesh.material.color.set(source.color);
         entry.mesh.position.set(source.x, source.worldHeight, source.y);
-        entry.marker.position.set(
-          source.x,
-          source.worldHeight + source.size[1] / 2,
-          source.y,
-        );
-        entry.marker.visible =
-          !!options.master &&
-          !!options.editLights &&
-          options.selectedEffect === source.id &&
-          source.opacity > 0.001;
         entry.mesh.scale.set(source.size[0], source.size[1], source.size[0]);
         entry.uniforms.effectStrength.value = source.strength;
         motion.set(source.id, source.enabled ? 1 : 0, {
@@ -110,7 +87,7 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
         moving = motion.advance(delta, immediate);
       let delay = Infinity;
       for (const source of sources) {
-        const { mesh, uniforms, marker } = entries.get(source.id),
+        const { mesh, uniforms } = entries.get(source.id),
           position = attachments.position(
             source,
             tileMatrix,
@@ -121,8 +98,6 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
             (appearance?.lightOpacity(source) ?? source.opacity) *
             motion.value(source.id);
         if (position) mesh.position.copy(position);
-        marker.position.copy(mesh.position);
-        marker.position.y += source.size[1] / 2;
         applyAreaOpacity(mesh, opacity);
         uniforms.effectClock.value = immediate
           ? 0
@@ -138,26 +113,20 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
     },
     pick(ray) {
       const hit = ray.intersectObjects(
-        [...entries.values()]
-          .flatMap((e) => [e.mesh, e.marker])
-          .filter((m) => m.visible),
+        [...entries.values()].map((e) => e.mesh).filter((m) => m.visible),
         false,
       )[0];
       return (
         hit && {
-          effectId: hit.object.userData.effectId,
+          lightId: hit.object.userData.lightId,
           distance: hit.distance,
         }
       );
-    },
-    position(id) {
-      return entries.get(id)?.mesh.position.clone() || new Vector3();
     },
     destroy() {
       for (const id of [...entries.keys()]) remove(id);
       motion.clear();
       geometry.dispose();
-      markerGeometry.dispose();
       root.removeFromParent();
     },
   };

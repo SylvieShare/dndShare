@@ -29,11 +29,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       return null;
     if (
       props.placementLight ||
-      props.placementEffect ||
-      ((props.selectedLight || props.selectedEffect) &&
-        drag &&
-        !drag.pan &&
-        !drag.orbit)
+      (props.selectedLight && drag && !drag.pan && !drag.orbit)
     )
       return getRenderer().lightPoint(event);
     if (
@@ -104,9 +100,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
         props.placementObject ||
         props.surfacePlacement ||
         props.placementLight ||
-        props.placementEffect ||
-        hit?.lightId ||
-        hit?.effectId
+        hit?.lightId
           ? pointAt(event)
           : hit?.point || pointAt(event),
       view: getRenderer().getView(),
@@ -114,11 +108,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     };
     if (
       delayed &&
-      (hit?.tileId ||
-        hit?.objectId ||
-        hit?.lightId ||
-        hit?.effectId ||
-        hit?.tokenId)
+      (hit?.tileId || hit?.objectId || hit?.lightId || hit?.tokenId)
     ) {
       holdTimer = setTimeout(() => {
         if (!drag || drag.moved) return;
@@ -133,7 +123,6 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     if (!getRenderer() || props.readonly) return;
     const point =
       !props.selectedLight &&
-      !props.selectedEffect &&
       !props.surfacePlacement &&
       drag?.point?.elevation !== undefined &&
       (!props.placementModel || drag.pan || drag.orbit || drag.region)

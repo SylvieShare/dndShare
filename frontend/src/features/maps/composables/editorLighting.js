@@ -53,7 +53,7 @@ export function editorLighting(e) {
       "flicker",
       "showMarker",
       "shadows",
-      "flagId",
+      "effect",
     ];
     if (light.builtinKey && field !== "enabled" && !editable.includes(field))
       return;

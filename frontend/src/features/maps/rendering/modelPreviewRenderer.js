@@ -117,20 +117,15 @@ export function createModelPreview(host, onFrame, onError) {
         zones: [],
         objects: [],
         tiles: [{ id: anchor.id, modelId: model.id, x: 0, y: 0, rotation: 0 }],
-        flags: (behaviour.defaultFlags || []).map((f) => ({
-          ...f,
-          id: `flag-${f.key}`,
-        })),
-        effects: (behaviour.defaultEffects || []).map((e) => ({
-          ...e,
-          id: `effect-${e.key}`,
-          builtinKey: e.key,
-          flagId: e.flagKey ? `flag-${e.flagKey}` : "",
+        lights: (behaviour.defaultLights || []).map((l) => ({
+          ...l,
+          id: `light-${l.key}`,
+          builtinKey: l.key,
           anchor,
           x: 0,
           y: 0,
           elevation: 0,
-          height: 0,
+          height: l.position[2],
         })),
       };
     assets.replaceCatalogue([
@@ -177,7 +172,7 @@ export function createModelPreview(host, onFrame, onError) {
       fitKey = "";
       assets.destroy();
       effects.update(
-        { effects: [], tiles: [], objects: [], areas: [] },
+        { lights: [], tiles: [], objects: [], areas: [] },
         {},
         null,
         [],

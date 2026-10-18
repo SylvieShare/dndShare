@@ -51,9 +51,9 @@
         return [Math.min(...points.map((p) => p[0])), Math.min(...points.map((p) => p[1])),
           Math.max(...points.map((p) => p[0])), Math.max(...points.map((p) => p[1]))];
       });
-      const effectDocument = { width: 4, height: 4, tiles: [], objects: [], areas: [], flags: [],
-        effects: [0, 1, 2].map((x) => ({ id: `fire-${x}`, name: "Огонь", kind: "fire", color: "#ffb04a",
-          size: [0.22, 0.35], strength: 0.7, enabled: true, x: x + 0.182857, y: 0.198571,
+      const effectDocument = { width: 4, height: 4, tiles: [], objects: [], areas: [],
+        lights: [0, 1, 2].map((x) => ({ id: `fire-${x}`, name: "Огонь", kind: "fire", color: "#ffb04a",
+          effect: { kind: "fire", size: [0.22, 0.35], strength: 0.7, offset: [0,0,0] }, enabled: true, x: x + 0.182857, y: 0.198571,
           elevation: 0, height: 1.59, offset: [0, 0] })) },
         fire = createMapEffects(scene, fog, assets);
       function frame(time, opacity = 1, animate = true) {

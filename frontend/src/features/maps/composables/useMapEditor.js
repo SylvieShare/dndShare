@@ -3,7 +3,6 @@ import { syncSurfaceObjects } from "../lib/surfacePlacement";
 import { pruneAreas } from "../lib/mapAreas";
 import { editorAreas } from "./editorAreas";
 import { editorLighting } from "./editorLighting";
-import { editorComponents } from "./editorComponents";
 import { editorTransitions } from "./editorTransitions";
 import { syncLights } from "../lib/mapLighting";
 import {
@@ -54,8 +53,6 @@ export function useMapEditor(source, onSaved, options = {}) {
       source?.id && !source.system ? JSON.stringify(draft.value) : "",
     );
   const gesturing = ref(false);
-  draft.value.document.flags ||= [];
-  draft.value.document.effects ||= [];
   let timer,
     stopped = false;
   if (draft.value.system) {
@@ -238,33 +235,18 @@ export function useMapEditor(source, onSaved, options = {}) {
   const tileDrag = editorTileDrag(state);
   const gestures = editorGestures({ ...state, tileDrag });
   const lighting = editorLighting(state);
-  const components = editorComponents(state, lighting);
   const areas = editorAreas({
     ...state,
     selectedLight: lighting.selectedLight,
-  });
-  watch(
-    [components.selectedFlag, components.selectedEffect],
-    ([flag, effect]) => {
-      if (flag || effect) areas.clearAreaFocus(true);
-    },
-  );
-  watch(areas.focusedArea, (id) => {
-    if (id) components.clearComponentFocus();
   });
   watch(
     [selectedTiles, selectedObjects],
     () => {
       if (selectedTiles.value.length || selectedObjects.value.length)
         lighting.selectedLight.value = "";
-      if (selectedTiles.value.length || selectedObjects.value.length)
-        components.clearComponentFocus();
     },
     { deep: true },
   );
-  watch(lighting.selectedLight, (id) => {
-    if (id) components.clearComponentFocus();
-  });
   async function loadModels() {
     loadingModels.value = true;
     modelError.value = "";
@@ -324,7 +306,6 @@ export function useMapEditor(source, onSaved, options = {}) {
     clearTimeout(timer);
     window.removeEventListener("beforeunload", beforeUnload);
     lighting.finishLightEdit();
-    components.finishComponentEdit();
   });
   return {
     draft,
@@ -374,50 +355,27 @@ export function useMapEditor(source, onSaved, options = {}) {
     ...editorTransitions(state),
     ...gestures,
     ...lighting,
-    ...components,
     lightDrag: lighting.driver,
     copy() {
-      if (components.copyEffect()) {
-        lighting.copiedLight.value = null;
-        return;
-      }
-      if (lighting.copyLight()) {
-        components.copiedEffect.value = null;
-        return;
-      }
-      if (gestures.copy()) {
-        lighting.copiedLight.value = null;
-        components.copiedEffect.value = null;
-      }
+      if (lighting.copyLight()) return;
+      if (gestures.copy()) lighting.copiedLight.value = null;
     },
     handle(event) {
       if (areas.handleMembership(event)) return;
       if (event.phase === "start" || event.phase === "cancel")
         areas.clearAreaFocus(event.phase === "cancel");
-      if (components.handleComponent(event)) return;
       if (lighting.handle(event)) return;
-      if (event.phase === "start") {
-        lighting.selectedLight.value = "";
-        components.clearComponentFocus();
-      }
+      if (event.phase === "start") lighting.selectedLight.value = "";
       gestures.handle(event);
     },
     resetGesture() {
       lighting.reset();
       lighting.driver.cancel();
-      components.resetComponentGesture();
       gestures.resetGesture();
     },
     removeSelected() {
       if (areas.focusedArea.value) {
         areas.removeArea(areas.focusedArea.value);
-        return;
-      }
-      if (components.selectedFlag.value || components.selectedEffect.value) {
-        components.removeComponent(
-          components.selectedFlag.value ? "flag" : "effect",
-          components.selectedFlag.value || components.selectedEffect.value,
-        );
         return;
       }
       lighting.selectedLight.value

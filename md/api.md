@@ -34,7 +34,7 @@
 
 | Endpoint | Контракт |
 | --- | --- |
-| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/defaultFlags/defaultEffects/transitions), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки |
+| `GET /api/maps/models` | Авторизованный пользователь: каталог метаданных моделей, постоянный id, code/name, постоянный UUID uuid, behaviour (revision/defaultLights/transitions), textureDetail (basic/detailed) текущей модели и renderUrl/lodUrl/shadowUrl/previewUrl; assetBytes {render,lod,shadow,preview} — размеры файлов в байтах для плана загрузки |
 | `PUT /api/maps/models/{modelId}` | ADMIN: поля каталога с id/uuid, редактируемый code и необязательный behaviour → обновление текущей модели с прежним UUID во всех картах; поведение сохраняется в той же транзакции; устаревшая behaviour.revision получает 409 |
 | `GET /api/maps/models/{modelId}/{variant}` | Авторизованный пользователь: source/render/lod/shadow/preview из S3; ETag и immutable cache |
 | `GET /api/maps` | Свои и системные карты авторизованного пользователя |
@@ -114,6 +114,6 @@ stats и jobs.
 
 [Оглавление wiki](README.md) · [Музыка](features/music.md) · [Admin panel](features/admin.md)
 
-Флаги `document.flags`, эффекты `document.effects` и `light.flagId` входят в
-обычное сохранение карт и сессионных карт. Контракт, ограничения и шаблоны
-описаны в [флагах и эффектах](features/maps-flags-effects.md).
+Необязательное `light.effect` сохраняет параметры пламени вместе с источником
+в обычной и сессионной карте. Цвет и включение берутся из света. Контракт —
+[пламя источников света](features/maps-light-effects.md).

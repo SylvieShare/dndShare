@@ -43,12 +43,6 @@ func (s *Store) UpdateMapModelBehaviour(ctx context.Context, id string, b battle
 	if b.Transitions == nil {
 		b.Transitions = []battlemap.ModelTransition{}
 	}
-	if b.DefaultFlags == nil {
-		b.DefaultFlags = []battlemap.ModelFlag{}
-	}
-	if b.DefaultEffects == nil {
-		b.DefaultEffects = []battlemap.ModelEffect{}
-	}
 	if err = saveModelBehaviour(ctx, tx, id, b); err != nil {
 		return b, err
 	}

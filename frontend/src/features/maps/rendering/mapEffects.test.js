@@ -18,21 +18,23 @@ function fixture() {
       objects: [],
       areas: [],
       lightingEnabled: false,
-      flags: [{ id: "burning", name: "Горит", enabled: true }],
-      effects: [
+      lights: [
         {
-          id: "fire",
-          kind: "fire",
-          color: "#ffb04a",
-          size: [0.2, 0.35],
-          strength: 0.7,
+          id: "light",
+          kind: "torch",
+          color: "#68cfff",
           x: 1,
           y: 2,
           height: 0.5,
           elevation: 0,
           offset: [0, 0],
           enabled: true,
-          flagId: "burning",
+          effect: {
+            kind: "fire",
+            size: [0.2, 0.35],
+            strength: 0.7,
+            offset: [0, 0, -0.1],
+          },
         },
       ],
     };
@@ -68,21 +70,26 @@ it("renders independently of map lighting, stays at 12 FPS and never casts an op
   expect(effects.root.children).toHaveLength(0);
 });
 
-it("fades off with a flag and keeps an individually disabled effect off after the flag returns", () => {
+it("shares the light colour and power, and a removed visual stops animation", () => {
   const { effects, d, mesh, advance } = fixture();
+  expect(mesh.material.color.getHexString()).toBe("68cfff");
   advance(0);
-  d.flags[0].enabled = false;
+  d.lights[0].enabled = false;
   effects.update(d, {}, null, [], []);
   advance(100, 80);
   expect(mesh.material.opacity).toBeGreaterThan(0);
   expect(mesh.material.opacity).toBeLessThan(1);
   expect(advance(500, 1000).delay).toBe(Infinity);
   expect(mesh.visible).toBe(false);
-  expect(d.effects[0].enabled).toBe(true);
-  d.effects[0].enabled = false;
-  d.flags[0].enabled = true;
+  d.lights[0].enabled = true;
+  d.lights[0].color = "#75e6ac";
   effects.update(d, {}, null, [], []);
   advance(600, 1000);
-  expect(mesh.visible).toBe(false);
+  expect(mesh.visible).toBe(true);
+  expect(mesh.material.color.getHexString()).toBe("75e6ac");
+  d.lights[0].effect.kind = "none";
+  effects.update(d, {}, null, [], []);
+  expect(effects.root.children).toHaveLength(0);
+  expect(advance(700).delay).toBe(Infinity);
   effects.destroy();
 });

@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dragTile, mapPoint } from "./editorHelpers";
 
 async function ready(page, mode, mobile = false) {
@@ -12,7 +11,7 @@ async function ready(page, mode, mobile = false) {
 }
 for (const mode of ["editor", "board"])
   for (const mobile of [false, true]) {
-    test(`glass panels overlay a fixed WebGL canvas without resizing its buffers (${mode}, ${mobile})`, async ({
+    test(`opaque panels overlay a fixed WebGL canvas beside the tab rail (${mode}, ${mobile})`, async ({
       page,
     }) => {
       const errors = [];
@@ -27,7 +26,7 @@ for (const mode of ["editor", "board"])
         name: "Выбранные элементы",
       });
       await expect(focus).toBeVisible();
-      const glass = await page.evaluate(() => {
+      const layout = await page.evaluate(() => {
         const canvas = document.querySelector(".map-canvas-surface > canvas"),
           bounds = canvas.getBoundingClientRect(),
           workspace = document
@@ -40,7 +39,7 @@ for (const mode of ["editor", "board"])
           return context.getImageData(0, 0, 1, 1).data[3];
         };
         const panel = document.querySelector(".map-sidebar-panel"),
-          inspector = document.querySelector(".map-selection-panel"),
+          inspector = document.querySelector(".map-selection-content"),
           rail = document.querySelector(".map-sidebar-tabs");
         return {
           canvas: bounds.toJSON(),
@@ -48,20 +47,28 @@ for (const mode of ["editor", "board"])
           panel: alpha(panel),
           inspector: alpha(inspector),
           rail: alpha(rail),
+          railBounds: rail.getBoundingClientRect().toJSON(),
           blur: [panel, inspector, rail].map(
             (node) => getComputedStyle(node).backdropFilter,
           ),
         };
       });
-      expect(glass.canvas).toEqual(glass.workspace);
-      for (const alpha of [glass.panel, glass.inspector]) {
-        expect(alpha).toBeGreaterThan(0);
-        expect(alpha).toBeLessThan(255);
-      }
-      expect(glass.rail).toBe(255);
-      expect(glass.blur[0]).toContain("blur(24px)");
-      expect(glass.blur[1]).toContain("blur(24px)");
-      expect(glass.blur[2]).toBe("none");
+      expect(layout.canvas.x).toBe(layout.railBounds.right);
+      expect(layout.canvas.y).toBe(layout.workspace.y);
+      expect(layout.canvas.width).toBe(
+        layout.workspace.width - layout.railBounds.width,
+      );
+      expect(layout.canvas.height).toBe(layout.workspace.height);
+      expect([layout.panel, layout.inspector, layout.rail]).toEqual([
+        255, 255, 255,
+      ]);
+      expect(layout.blur).toEqual(["none", "none", "none"]);
+      const expectHintOutsidePanel = async () => {
+        const bounds = await page.locator(".map-controls-hint").boundingBox();
+        const sidebar = await page.locator(".map-sidebar").boundingBox();
+        expect(bounds.x).toBeGreaterThanOrEqual(sidebar.x + sidebar.width);
+      };
+      await expectHintOutsidePanel();
       await page.evaluate(() => {
         const canvas = document.querySelector(".map-canvas-surface > canvas");
         window.canvasTracking = {
@@ -69,7 +76,20 @@ for (const mode of ["editor", "board"])
           context: canvas.getContext("webgl2"),
           mutations: [],
           lost: false,
+          coveredHint: false,
         };
+        const trackHint = () => {
+          const hint = document
+            .querySelector(".map-controls-hint")
+            .getBoundingClientRect();
+          const rail = document
+            .querySelector(".map-sidebar-tabs")
+            .getBoundingClientRect();
+          if (hint.left < rail.right - 0.5)
+            window.canvasTracking.coveredHint = true;
+          window.hintFrame = requestAnimationFrame(trackHint);
+        };
+        trackHint();
         window.canvasObserver = new MutationObserver((entries) =>
           window.canvasTracking.mutations.push(
             ...entries.map((entry) => entry.attributeName),
@@ -93,6 +113,7 @@ for (const mode of ["editor", "board"])
               (await page.locator(".map-sidebar").boundingBox()).width,
           )
           .toBe(60);
+        await expectHintOutsidePanel();
         await page
           .getByRole("button", { name: "Области", exact: true })
           .click();
@@ -102,9 +123,11 @@ for (const mode of ["editor", "board"])
               (await page.locator(".map-sidebar").boundingBox()).width,
           )
           .toBe(mobile ? 330 : 334);
+        await expectHintOutsidePanel();
       }
       const stability = await page.evaluate(() => {
         window.canvasObserver.disconnect();
+        cancelAnimationFrame(window.hintFrame);
         const state = window.canvasTracking,
           canvas = document.querySelector(".map-canvas-surface > canvas");
         return {
@@ -112,6 +135,7 @@ for (const mode of ["editor", "board"])
           sameContext: canvas.getContext("webgl2") === state.context,
           mutations: state.mutations,
           lost: state.lost,
+          coveredHint: state.coveredHint,
           bounds: canvas.getBoundingClientRect().toJSON(),
         };
       });
@@ -119,7 +143,8 @@ for (const mode of ["editor", "board"])
       expect(stability.sameContext).toBe(true);
       expect(stability.mutations).toEqual([]);
       expect(stability.lost).toBe(false);
-      expect(stability.bounds).toEqual(glass.canvas);
+      expect(stability.coveredHint).toBe(false);
+      expect(stability.bounds).toEqual(layout.canvas);
       expect(errors).toEqual([]);
     });
   }
@@ -151,79 +176,4 @@ test("releasing a catalogue drag over either overlay never places a model behind
   await page.mouse.move(inspector.x + 30, inspector.y + 50, { steps: 10 });
   await page.mouse.up();
   expect(await count()).toBe(before + 1);
-});
-
-test("production glass blurs the scene behind both panels", async ({
-  page,
-}) => {
-  const assets = new URL("../../target/dist/static/", import.meta.url);
-  test.skip(!existsSync(assets), "Run the production build first");
-  const css = readdirSync(assets)
-    .filter((name) => name.endsWith(".css"))
-    .map((name) => readFileSync(new URL(name, assets), "utf8"))
-    .filter((source) => source.includes("map-glass-panel"))
-    .join("\n");
-  expect(css).toContain("map-glass-panel");
-  await ready(page, "editor");
-  await page.getByRole("button", { name: "Области", exact: true }).click();
-  await page.getByRole("button", { name: "Зал", exact: true }).click();
-  await page.evaluate(async (css) => {
-    for (const node of document.querySelectorAll(
-      'style[data-vite-dev-id*="mapGlass.css"]',
-    ))
-      node.remove();
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(css);
-    const style = document.createElement("style");
-    style.textContent = [...sheet.cssRules]
-      .filter((rule) => rule.cssText.includes("map-glass-panel"))
-      .map((rule) => rule.cssText)
-      .join("\n");
-    document.head.append(style);
-    const stripes = document.createElement("div");
-    stripes.style.cssText =
-      "position:absolute;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(90deg,white 0 4px,black 4px 8px)";
-    document.querySelector(".map-editor-main").append(stripes);
-    await Promise.all(
-      document.getAnimations().map((animation) => animation.finished),
-    );
-    for (const panel of document.querySelectorAll(".map-glass-panel"))
-      for (const child of panel.children) child.style.visibility = "hidden";
-  }, css);
-  const contrast = async (clip) => {
-    const frame = await page.screenshot({ clip });
-    return page.evaluate(async (base64) => {
-      const bytes = Uint8Array.from(atob(base64), (character) =>
-        character.charCodeAt(0),
-      );
-      const bitmap = await createImageBitmap(
-        new Blob([bytes], { type: "image/png" }),
-      );
-      const context = new OffscreenCanvas(
-        bitmap.width,
-        bitmap.height,
-      ).getContext("2d");
-      context.drawImage(bitmap, 0, 0);
-      const { data } = context.getImageData(0, 0, bitmap.width, bitmap.height);
-      let sum = 0;
-      for (let y = 0; y < bitmap.height; y++)
-        for (let x = 1; x < bitmap.width; x++) {
-          const index = (y * bitmap.width + x) * 4;
-          sum += Math.abs(data[index] - data[index - 4]);
-        }
-      return sum / ((bitmap.width - 1) * bitmap.height);
-    }, frame.toString("base64"));
-  };
-  for (const panel of [".map-sidebar-panel", ".map-selection-panel"]) {
-    const bounds = await page.locator(panel).boundingBox();
-    const clip = { x: bounds.x + 20, y: bounds.y + 40, width: 100, height: 40 };
-    const blurred = await contrast(clip);
-    await page.locator(panel).evaluate((element) => {
-      element.style.backdropFilter = "none";
-      element.style.webkitBackdropFilter = "none";
-    });
-    const sharp = await contrast(clip);
-    expect(sharp).toBeGreaterThan(5);
-    expect(blurred).toBeLessThan(sharp * 0.2);
-  }
 });

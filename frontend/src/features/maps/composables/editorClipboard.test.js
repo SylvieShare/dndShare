@@ -37,6 +37,18 @@ function setup() {
   };
   return { e, clipboard: editorClipboard(e) };
 }
+it("copies a model's disabled light and fire overrides with a fresh owner", () => {
+  const { e, clipboard } = setup();
+  const effect = { kind: "fire", size: [.4,.6], strength: .8, offset: [0,0,-.2] };
+  e.draft.value.document.lights = [{ id: "lamp", builtinKey: "torch", enabled: false, anchor: { kind: "tile", id: "old" }, effect, overrides: { effect } }];
+  clipboard.copy();
+  clipboard.begin({x:4.5,y:4.5});clipboard.paste({x:4.5,y:4.5});
+  const copy=e.draft.value.document.lights[1];
+  expect(copy.enabled).toBe(false);
+  expect(copy.overrides.effect.size).toEqual([.4,.6]);
+  expect(copy.id).not.toBe("lamp");
+  expect(copy.anchor.id).toBe(e.draft.value.document.tiles[1].id);
+});
 it("keeps a copied snapshot after multiple paste operations and does not paste on copy", () => {
   const { e, clipboard } = setup();
   clipboard.copy();

@@ -6,16 +6,16 @@ import (
 )
 
 type ModelLight struct {
-	FlagKey   string     `json:"flagKey,omitempty"`
-	Key       string     `json:"key"`
-	Name      string     `json:"name"`
-	Kind      string     `json:"kind"`
-	Color     string     `json:"color"`
-	Position  [3]float64 `json:"position"`
-	Intensity float64    `json:"intensity"`
-	Radius    float64    `json:"radius"`
-	Enabled   bool       `json:"enabled"`
-	Flicker   bool       `json:"flicker"`
+	Effect    *LightEffect `json:"effect,omitempty"`
+	Key       string       `json:"key"`
+	Name      string       `json:"name"`
+	Kind      string       `json:"kind"`
+	Color     string       `json:"color"`
+	Position  [3]float64   `json:"position"`
+	Intensity float64      `json:"intensity"`
+	Radius    float64      `json:"radius"`
+	Enabled   bool         `json:"enabled"`
+	Flicker   bool         `json:"flicker"`
 }
 
 type ModelTransition struct {
@@ -25,11 +25,9 @@ type ModelTransition struct {
 }
 
 type ModelBehaviour struct {
-	Revision       int               `json:"revision"`
-	DefaultFlags   []ModelFlag       `json:"defaultFlags"`
-	DefaultEffects []ModelEffect     `json:"defaultEffects"`
-	DefaultLights  []ModelLight      `json:"defaultLights"`
-	Transitions    []ModelTransition `json:"transitions"`
+	Revision      int               `json:"revision"`
+	DefaultLights []ModelLight      `json:"defaultLights"`
+	Transitions   []ModelTransition `json:"transitions"`
 }
 
 func ValidTransitionAction(action string) bool {
@@ -41,9 +39,6 @@ func ValidTransitionAction(action string) bool {
 }
 
 func ValidateModelBehaviour(b ModelBehaviour) error {
-	if err := validateModelComponents(b); err != nil {
-		return err
-	}
 	if b.Revision < 1 || len(b.DefaultLights) > 8 || len(b.Transitions) > 32 {
 		return fmt.Errorf("Некорректное число источников или переходов модели")
 	}
@@ -54,6 +49,9 @@ func ValidateModelBehaviour(b ModelBehaviour) error {
 			!bounded(l.Position[0], -8, 8) || !bounded(l.Position[1], -8, 8) || !bounded(l.Position[2], 0, 32) ||
 			!bounded(l.Intensity, 0, 50) || !bounded(l.Radius, .25, 32) {
 			return fmt.Errorf("Некорректный встроенный источник света")
+		}
+		if err := ValidateLightEffect(l.Effect); err != nil {
+			return err
 		}
 		keys[l.Key] = true
 	}
