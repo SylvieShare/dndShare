@@ -128,7 +128,7 @@ test("focus fades in and out, retains its frame during entity changes and disabl
     .evaluate(async (button) => {
       const panel = button.closest(".map-selection-panel"),
         before = panel.getBoundingClientRect();
-      const departing = panel.querySelector(".map-selection-view");
+      const departing = panel.querySelector(".workspace-focus-view");
       button.click();
       for (let i = 0; i < 3; i++) await new Promise(requestAnimationFrame);
       return {
@@ -176,7 +176,7 @@ for (const reduced of [false, true])
       .evaluate(async (button) => {
         button.click();
         for (let i = 0; i < 3; i++) await new Promise(requestAnimationFrame);
-        return !!document.querySelector(".map-focus-swap-leave-active[inert]");
+        return !!document.querySelector(".workspace-focus-swap-leave-active[inert]");
       });
     expect(animated).toBe(!reduced);
     await expect(

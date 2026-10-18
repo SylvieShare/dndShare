@@ -5,19 +5,20 @@
       <BookOpenText v-else :size="26" />
       <span><small>Глава {{ chapter.number }}</small><strong>{{ chapter.name }}</strong></span>
     </button>
-    <strong v-if="point.name" class="global-map-point-name">{{ point.name }}</strong>
+    <strong class="global-map-point-name">{{ point.name || `Точка ${index + 1}` }}</strong>
+    <small class="global-map-callout-route">{{ routeName }}</small>
     <p v-if="point.note" :title="point.note">{{ point.note }}</p>
   </aside>
 </template>
 <script setup>
 import { BookOpenText } from '@lucide/vue'
-defineProps({ point: Object, chapter: Object })
+defineProps({ point: Object, chapter: Object, routeName: String, index: Number })
 const emit = defineEmits(['chapter'])
 </script>
 <style scoped>
-.global-map-callout { position: absolute; left: 40px; bottom: 34px; width: 190px; padding: 10px; border: 1px solid color-mix(in srgb, var(--route-color) 45%, var(--border)); border-radius: 10px; background: color-mix(in srgb, var(--surface) 96%, transparent); box-shadow: var(--shadow-sm); color: var(--text-1); text-align: left; cursor: auto; }
-.global-map-callout::before { position: absolute; left: -30px; bottom: -17px; width: 34px; height: 1px; background: var(--route-color); content: ''; transform: rotate(-38deg); }
+.global-map-callout { width: 220px; max-width: calc(100vw - 32px); padding: 12px; box-sizing: border-box; color: var(--text-1); text-align: left; cursor: auto; }
 .global-map-callout p { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-2); }
+.global-map-callout-route { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 10px; }
 .global-map-point-name { display: block; margin-bottom: 4px; font-size: 12px; }
 .global-map-chapter { display: flex; align-items: center; gap: 8px; padding: 0; width: 100%; border: 0; background: none; color: inherit; text-align: left; font: inherit; cursor: pointer; margin-bottom: 7px; }
 .global-map-chapter img { width: 56px; height: 42px; border-radius: 6px; object-fit: cover; }

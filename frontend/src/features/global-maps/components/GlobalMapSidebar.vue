@@ -1,6 +1,7 @@
 <template>
   <MapSidebar ref="sidebar" v-model:tab="tab" class="global-map-sidebar" :tabs="tabs" aria-label="Карты мира и маршруты"
     @resize="(_, width) => { if (width > 0) emit('navigation-width', width) }">
+    <p v-if="controller.selected" class="global-map-save-status" role="status">{{ controller.saving ? 'Сохраняем…' : controller.hasPending() ? 'Есть несохранённые изменения' : 'Сохранено' }}</p>
     <template v-if="tab === 'maps'">
       <AddButton block label="Загрузить карту" :disabled="controller.busy || controller.maps.length >= 32" @click="file?.click()" />
       <input ref="file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Изображение карты мира" hidden @change="upload" />
@@ -34,6 +35,10 @@
         </ActionButton>
         <GlobalMapRouteSettings v-if="route" :route="route" :participants="participants" :disabled="locked"
           @change="emit('route-change', $event)" @delete="emit('delete-route', route)" />
+        <div v-if="route" class="global-map-mode" role="group" aria-label="Режим карты мира">
+          <ActionButton :variant="addMode ? 'primary' : 'secondary'" :disabled="locked" @click="emit('add-mode')"><template #icon><MapPinPlus :size="16" /></template>Точки</ActionButton>
+          <ActionButton :variant="!addMode ? 'primary' : 'secondary'" @click="emit('browse')"><template #icon><Hand :size="16" /></template>Обзор</ActionButton>
+        </div>
         <DetailSection v-if="route" label="Точки маршрута">
           <div class="global-map-points-list">
             <AddButton block label="Добавить точки на карту" :disabled="locked" @click="emit('add-mode')" />
@@ -48,11 +53,11 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { AddButton, ActionButton, DetailSection, FormField, FormTextInput, LoadingState } from '@sylvieshare/share-ui'
-import { Check, Images, Route, StickyNote, Trash2 } from '@lucide/vue'
+import { Check, Hand, Images, MapPinPlus, Route, StickyNote, Trash2 } from '@lucide/vue'
 import MapSidebar from '@/features/maps/components/MapSidebar.vue'
 import GlobalMapRouteSettings from './GlobalMapRouteSettings.vue'
-const props = defineProps({ controller: Object, selectedRoute: String, selectedPoint: String, participants: Array, chapters: Array })
-const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'route-change', 'select-point', 'add-mode', 'navigation-width'])
+const props = defineProps({ controller: Object, addMode: Boolean, selectedRoute: String, selectedPoint: String, participants: Array, chapters: Array })
+const emit = defineEmits(['delete-map', 'add-route', 'select-route', 'delete-route', 'route-change', 'select-point', 'add-mode', 'navigation-width', 'browse'])
 const sidebar = ref(null), file = ref(null), tab = ref('maps')
 const tabs = [{ key: 'maps', label: 'Карты мира', icon: Images }, { key: 'routes', label: 'Маршруты', icon: Route }]
 const route = computed(() => props.controller.selected?.routes.find(route => route.id === props.selectedRoute))
@@ -61,6 +66,8 @@ function upload(event) { props.controller.upload(event.target.files?.[0]); event
 defineExpose({ openRoutes: () => sidebar.value?.openTab('routes'), collapse: () => sidebar.value?.collapse() })
 </script>
 <style scoped>
+.global-map-save-status { font-size: 10px; color: var(--text-muted); margin: 0; }
+.global-map-mode { display: flex; flex-wrap: wrap; gap: 6px; }
 .global-map-thumbnail { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-raised); color: var(--text-1); font: inherit; text-align: left; cursor: pointer; }
 .global-map-thumbnail--selected { border-color: var(--accent); }
 .global-map-thumbnail img { width: 68px; height: 46px; object-fit: cover; border-radius: 5px; }

@@ -1,31 +1,21 @@
 <template>
   <section class="global-map-workspace" :style="{ '--world-navigation-width': `${navigationWidth}px` }" data-tutorial="session-global-map">
-    <GlobalMapSidebar ref="sidebar" :controller="c" :selected-route="routeId" :selected-point="pointId" :participants="participants" :chapters="chapters"
+    <GlobalMapSidebar ref="sidebar" :controller="c" :selected-route="routeId" :selected-point="pointId" :participants="participants" :chapters="chapters" :add-mode="addMode"
       @add-route="addRoute" @select-route="selectRoute" @select-point="selectPoint" @route-change="changeRoute"
-      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }" @add-mode="startAdding" @navigation-width="navigationWidth = $event" />
+      @delete-map="map => pending = { kind: 'map', item: map }" @delete-route="route => pending = { kind: 'route', item: route }" @add-mode="startAdding" @navigation-width="navigationWidth = $event" @browse="addMode = false" />
     <div class="global-map-main">
       <LoadingState v-if="c.loading" label="Открываем мир…" fill />
       <template v-else-if="c.selected">
         <GlobalMapCanvas :key="c.selected.id" ref="canvas" :image-url="c.selected.imageUrl" :routes="c.selected.routes"
           :chapters="chapters" :participants="participants" :selected-route="routeId" :selected-point="pointId"
-          :readonly="c.conflict || c.busy" :add-mode="addMode && !!route" :labels="labels"
+          :readonly="c.conflict || c.busy" :add-mode="addMode && !!route"
           @select="select" @add="addPoint" @move="move" @drag-start="c.editing = true" @drag-end="endDrag"
-          @remove-point="requestPointDelete" @chapter="emit('open-chapter', $event)" />
-        <header class="global-map-toolbar">
-          <div class="global-map-identity"><Globe :size="20" /><strong>{{ c.selected.name }}</strong><small v-if="c.selected.current">Текущая</small></div>
-          <div class="global-map-tools">
-            <ActionButton :variant="addMode ? 'primary' : 'secondary'" :disabled="c.conflict || !route" @click="startAdding"><template #icon><MapPinPlus :size="16" /></template>Точки</ActionButton>
-            <ActionButton :variant="!addMode ? 'primary' : 'secondary'" @click="addMode = false"><template #icon><Hand :size="16" /></template>Обзор</ActionButton>
-            <ToggleSwitch v-model="labels" label="Подписи" />
-            <ActionButton variant="quiet" icon-only aria-label="Уменьшить карту мира" @click="canvas?.zoom(.8)"><template #icon><Minus :size="16" /></template></ActionButton>
-            <ActionButton variant="quiet" icon-only aria-label="Вписать карту мира" @click="canvas?.fit()"><template #icon><Scan :size="16" /></template></ActionButton>
-            <ActionButton variant="quiet" icon-only aria-label="Увеличить карту мира" @click="canvas?.zoom(1.25)"><template #icon><Plus :size="16" /></template></ActionButton>
-          </div>
-          <span class="global-map-status" role="status">{{ c.saving ? 'Сохраняем…' : c.hasPending() ? 'Есть несохранённые изменения' : 'Сохранено' }}</span>
-        </header>
+          @remove-point="requestPointDelete" @chapter="emit('open-chapter', $event)" @cancel-add="addMode = false" />
+        <WorkspaceCanvasControls class="global-map-zoom" zoom-out-label="Уменьшить карту мира" fit-label="Вписать карту мира" zoom-in-label="Увеличить карту мира"
+          @zoom="canvas?.zoom($event)" @fit="canvas?.fit()" />
         <p v-if="addMode && route" class="global-map-instruction">{{ route.name }} · нажмите на изображение, чтобы добавить точку</p>
-        <GlobalMapPointInspector v-if="point && route && (!mobile || !addMode)" :point="point" :route="route" :index="route.points.indexOf(point)" :chapters="chapters"
-          :disabled="c.conflict || c.busy" @close="pointId = ''" @change="patchPoint" @reorder="reorder" @delete="requestPointDelete(route.id, point.id)" />
+        <GlobalMapPointInspector :visible="!mobile || !addMode" :point="point" :route="route" :index="route?.points.indexOf(point) ?? -1" :chapters="chapters"
+          :disabled="c.conflict || c.busy" @close="pointId = ''" @change="patchPoint" @reorder="reorder" @delete="requestPointDelete(route.id, point.id)" @chapter="emit('open-chapter', $event)" />
       </template>
       <div v-else class="global-map-empty"><Globe :size="56" :stroke-width="1.2" /><h2>Путь вашей истории</h2><p>Загрузите карту мира, региона или города слева.<br />Создавайте маршруты, отмечайте главы и оставляйте заметки прямо на карте.</p></div>
       <div v-if="c.error" class="global-map-error" role="alert">{{ c.error }}
@@ -41,17 +31,18 @@
 </template>
 <script setup>
 import { computed, reactive, ref, watch } from 'vue'
-import { ActionButton, ConfirmDialog, LoadingState, ToggleSwitch, useIsMobile } from '@sylvieshare/share-ui'
-import { Globe, Hand, MapPinPlus, Minus, Plus, Scan } from '@lucide/vue'
+import { ActionButton, ConfirmDialog, LoadingState, useIsMobile } from '@sylvieshare/share-ui'
+import { Globe } from '@lucide/vue'
 import { useGlobalMaps } from '../composables/useGlobalMaps'
 import { movePoint, ROUTE_COLORS, uid } from '../lib/routes'
 import GlobalMapSidebar from './GlobalMapSidebar.vue'
 import GlobalMapCanvas from './GlobalMapCanvas.vue'
 import GlobalMapPointInspector from './GlobalMapPointInspector.vue'
+import WorkspaceCanvasControls from '@/shared/ui/WorkspaceCanvasControls.vue'
 const props = defineProps({ sessionUuid: { type: String, required: true }, participants: { type: Array, default: () => [] }, chapters: { type: Array, default: () => [] } })
 const emit = defineEmits(['open-chapter'])
 const c = reactive(useGlobalMaps(props.sessionUuid))
-const sidebar = ref(null), canvas = ref(null), routeId = ref(''), pointId = ref(''), addMode = ref(false), labels = ref(true)
+const sidebar = ref(null), canvas = ref(null), routeId = ref(''), pointId = ref(''), addMode = ref(false)
 const navigationWidth = ref(48)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
 const route = computed(() => c.selected?.routes.find(route => route.id === routeId.value))

@@ -23,7 +23,7 @@
       @open-combat="openCombat"
     />
 
-    <div class="chapter-canvas-stage" data-tutorial="session-content">
+    <div class="chapter-canvas-stage share-app-canvas" data-tutorial="session-content">
       <SessionToolsRail v-if="isDm" ref="toolsRail" :session-uuid="sessionUuid"
         :presentation="presentation" :timers="timers" :show-shortcut-hints="showShortcutHints" />
       <div v-if="actionError" class="chapter-action-error" role="alert">{{ actionError }}</div>

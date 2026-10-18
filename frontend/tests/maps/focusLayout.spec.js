@@ -19,7 +19,7 @@ test("focus scrolls inside its frame, retains the heading, and uses compact mute
   });
   await row.click();
   const panel = panelOf(page),
-    body = panel.locator(".map-focus-body");
+    body = panel.locator(".inspector-body");
   await expect(body).toHaveCSS("overflow-y", "auto");
   await expect(panel).toHaveCSS("overflow-y", "hidden");
   await expect(body).toHaveCSS("gap", "25px");
@@ -38,7 +38,7 @@ test("focus scrolls inside its frame, retains the heading, and uses compact mute
   expect(await body.evaluate((el) => el.scrollHeight)).toBeGreaterThan(
     await body.evaluate((el) => el.clientHeight),
   );
-  const heading = panel.locator(".map-focus-heading"),
+  const heading = panel.locator(".inspector-heading"),
     before = await heading.boundingBox();
   await body.evaluate((el) => (el.scrollTop = el.scrollHeight));
   expect((await heading.boundingBox()).y).toBe(before.y);

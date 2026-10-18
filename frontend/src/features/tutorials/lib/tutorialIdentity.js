@@ -1,4 +1,4 @@
-export const TUTORIAL_REVISION = 31;
+export const TUTORIAL_REVISION = 32;
 export const TUTORIAL_NAMES = {
   character: "Лист персонажа",
   "session-player": "Сессия игрока",
