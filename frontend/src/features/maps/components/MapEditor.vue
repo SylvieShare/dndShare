@@ -61,7 +61,7 @@
           ref="canvas"
           :document="e.draft.document"
           :state="canvasState || e.draft.state"
-          :area-mode="sessionMode ? (playerPreview ? 'hide' : 'ghost') : 'hide'"
+          :area-mode="playerPreview ? 'hide' : 'ghost'"
           :selection-color="e.areaSelectionColor"
           :selected-token="selectedToken"
           :surface-placement="surfacePlacement"

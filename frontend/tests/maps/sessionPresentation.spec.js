@@ -34,6 +34,11 @@ for (const mobile of [false, true]) {
           exact: true,
         }),
       ).toBeVisible();
+      await expect
+        .poll(
+          async () => (await page.locator(".map-sidebar").boundingBox()).width,
+        )
+        .toBe(mobile ? 330 : 334);
       styles.push(
         await page.locator(".map-sidebar").evaluate((el) => ({
           width: getComputedStyle(el).width,

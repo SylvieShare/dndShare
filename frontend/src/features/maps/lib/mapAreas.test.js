@@ -23,7 +23,7 @@ const document = () => ({
     },
   ],
 });
-it("hides grouped models in the editor/screen and uses 12% opacity in the session", () => {
+it("hides grouped models on the player screen and uses 12% opacity in editing views", () => {
   const d = document(),
     hidden = areaAppearance(d),
     ghost = areaAppearance(d, "ghost");

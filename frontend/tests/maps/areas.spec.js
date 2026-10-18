@@ -254,7 +254,7 @@ async function modelPixels(page) {
   }, png.toString("base64"));
 }
 for (const mode of ["editor", "screen", "board"])
-  test(`hidden areas ${mode === "board" ? "remain faintly visible in session" : `disappear in ${mode}`}`, async ({
+  test(`hidden areas ${mode !== "screen" ? `remain faintly visible in ${mode}` : "disappear on screen"}`, async ({
     page,
   }) => {
     await ready(page, mode, "&areaExample");
@@ -262,8 +262,23 @@ for (const mode of ["editor", "screen", "board"])
     expect(normal).toBeGreaterThan(10000);
     await ready(page, mode, "&areaExample&hiddenArea");
     const hidden = await modelPixels(page);
-    if (mode === "board") {
+    if (mode !== "screen") {
       expect(hidden).toBeGreaterThan(normal * 0.02);
       expect(hidden).toBeLessThan(normal * 0.4);
     } else expect(hidden).toBeLessThan(normal * 0.01);
   });
+
+test("hidden models remain selectable for editing in the template editor", async ({
+  page,
+}) => {
+  await ready(page, "editor", "&areaExample&hiddenArea");
+  const point = await mapPoint(page, 4.5, 4.5);
+  await page.mouse.click(point.x, point.y);
+  const panel = focus(page);
+  await expect(
+    panel.getByRole("button", { name: "Скопировать элемент", exact: true }),
+  ).toBeVisible();
+  await expect(
+    panel.getByRole("button", { name: "Удалить элемент", exact: true }),
+  ).toBeVisible();
+});
