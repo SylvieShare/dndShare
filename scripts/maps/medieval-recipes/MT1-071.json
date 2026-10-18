@@ -1,0 +1,760 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [
+    0,
+    0
+  ],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [
+    [
+      0,
+      0
+    ]
+  ],
+  "standToleranceMM": 0.35,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Trap Closed",
+  "groupCode": "MED-trap",
+  "hasDecor": true,
+  "renderTriangles": 95000,
+  "lodTriangles": 95000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 60,
+  "standPointsMM": [
+    [
+      -8.75,
+      -8.75
+    ],
+    [
+      -8.75,
+      8.75
+    ],
+    [
+      8.75,
+      -8.75
+    ],
+    [
+      8.75,
+      8.75
+    ]
+  ],
+  "blockersMM": [],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "trap",
+    "hatch",
+    "closed",
+    "iron",
+    "hinge",
+    "handle"
+  ],
+  "weightBudget": {
+    "renderMiB": [
+      2,
+      5
+    ],
+    "lodMiB": [
+      0.8,
+      2.4
+    ],
+    "shadowKiB": [
+      60,
+      180
+    ],
+    "previewKiB": [
+      10,
+      45
+    ],
+    "basis": "35mm closed wooden hatch with two wooden battens,six raised iron heads,hinge with4smallheads and ring-pull assembly. Render/LOD95000tri preservejambcorner:LOD34000lost0.309mmand60000lost0.283mm. LODretainsgeometrybutuses768colour/dataagainst1024render;comparecompactwhilepreserving10heads,ringopening,platebevels,lidgrain andwalkablequarters."
+  },
+  "materials": {
+    "earthRGB": [
+      0.28,
+      0.17,
+      0.075
+    ],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "woodLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "stoneDarkRGB": [
+      0.34,
+      0.165,
+      0.055
+    ],
+    "stoneLightRGB": [
+      0.59,
+      0.35,
+      0.145
+    ],
+    "woodParts": [
+      {
+        "name": "floor X boards and north/south fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y fascia",
+        "minMM": [
+          -17.7,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          -14.3,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y fascia",
+        "minMM": [
+          14.3,
+          -17.7,
+          17.5
+        ],
+        "maxMM": [
+          17.7,
+          17.7,
+          26.65
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "closed lid X boards and horizontal frame",
+        "minMM": [
+          -14.8,
+          -15.5,
+          26.15
+        ],
+        "maxMM": [
+          14.8,
+          15.5,
+          28.25
+        ],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [
+          0.36,
+          0.165,
+          0.045
+        ],
+        "lightRGB": [
+          0.63,
+          0.365,
+          0.125
+        ]
+      },
+      {
+        "name": "east raised Y jamb",
+        "minMM": [
+          11.5,
+          -15.5,
+          26.15
+        ],
+        "maxMM": [
+          14.8,
+          15.5,
+          28.3
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west raised Y jamb",
+        "minMM": [
+          -14.8,
+          -15.5,
+          26.15
+        ],
+        "maxMM": [
+          -11.5,
+          15.5,
+          28.3
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east wooden lid batten",
+        "minMM": [
+          3.25,
+          -12.6,
+          27.35
+        ],
+        "maxMM": [
+          8.3,
+          12.5,
+          29.17
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [
+          0.31,
+          0.13,
+          0.04
+        ],
+        "lightRGB": [
+          0.57,
+          0.31,
+          0.105
+        ]
+      },
+      {
+        "name": "west wooden lid batten",
+        "minMM": [
+          -8.5,
+          -12.6,
+          27.35
+        ],
+        "maxMM": [
+          -3.5,
+          12.5,
+          29.17
+        ],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [
+          0.31,
+          0.13,
+          0.04
+        ],
+        "lightRGB": [
+          0.57,
+          0.31,
+          0.105
+        ]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "fixed hinge leaves",
+        "kind": "paint",
+        "minMM": [
+          -2.25,
+          -14.7,
+          27.7
+        ],
+        "maxMM": [
+          1.97,
+          -6.85,
+          29.18
+        ],
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "hinge barrel and end flanges",
+        "kind": "paint",
+        "minMM": [
+          -2.9,
+          -12.95,
+          28.1
+        ],
+        "maxMM": [
+          2.9,
+          -11.65,
+          29.45
+        ],
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -2.9,
+            -12.313,
+            28.95
+          ],
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "rangeMM": [
+            0,
+            5.8
+          ],
+          "radiusAtOriginMM": 0.63,
+          "radiusSlope": 0,
+          "thicknessMM": 0.63,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "ring pull and mounting plate",
+        "kind": "paint",
+        "minMM": [
+          -3.2,
+          4.65,
+          27.7
+        ],
+        "maxMM": [
+          3.0,
+          12.42,
+          30.9
+        ],
+        "rgb": [
+          0.19,
+          0.205,
+          0.19
+        ],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "batten iron head [5.83, -7.262]",
+        "kind": "paint",
+        "minMM": [
+          5.1856999015808105,
+          -7.905949630737305,
+          29.17
+        ],
+        "maxMM": [
+          6.474199810028076,
+          -6.617449722290039,
+          29.66
+        ],
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            5.829949855804443,
+            -7.261699676513672,
+            29.17
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.49
+          ],
+          "radiusAtOriginMM": 0.6442499542236328,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6442499542236328,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "batten iron head [5.823, 0.072]",
+        "kind": "paint",
+        "minMM": [
+          5.181200108528137,
+          -0.5693999910354615,
+          29.17
+        ],
+        "maxMM": [
+          6.464300074577332,
+          0.713699975013733,
+          29.66
+        ],
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            5.822750091552734,
+            0.07214999198913574,
+            29.17
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.49
+          ],
+          "radiusAtOriginMM": 0.6415499830245972,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6415499830245972,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "batten iron head [-6.092, -7.266]",
+        "kind": "paint",
+        "minMM": [
+          -6.734900035858154,
+          -7.909499921798706,
+          29.17
+        ],
+        "maxMM": [
+          -5.448200187683105,
+          -6.622800073623657,
+          29.66
+        ],
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -6.09155011177063,
+            -7.266149997711182,
+            29.17
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.49
+          ],
+          "radiusAtOriginMM": 0.6433499240875244,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6433499240875244,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "batten iron head [5.817, 7.445]",
+        "kind": "paint",
+        "minMM": [
+          5.180700263977051,
+          6.808899841308594,
+          29.17
+        ],
+        "maxMM": [
+          6.452400245666504,
+          8.080599822998046,
+          29.66
+        ],
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            5.816550254821777,
+            7.44474983215332,
+            29.17
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.49
+          ],
+          "radiusAtOriginMM": 0.6358499908447266,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6358499908447266,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "batten iron head [-6.105, 7.443]",
+        "kind": "paint",
+        "minMM": [
+          -6.73920015335083,
+          6.809549770355225,
+          29.17
+        ],
+        "maxMM": [
+          -5.471600017547607,
+          8.077149906158446,
+          29.66
+        ],
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -6.105400085449219,
+            7.443349838256836,
+            29.17
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.49
+          ],
+          "radiusAtOriginMM": 0.6338000679016114,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6338000679016114,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "batten iron head [-6.106, 0.072]",
+        "kind": "paint",
+        "minMM": [
+          -6.734200038909912,
+          -0.5567501568794251,
+          29.17
+        ],
+        "maxMM": [
+          -5.477699718475342,
+          0.6997501635551453,
+          29.66
+        ],
+        "rgb": [
+          0.235,
+          0.25,
+          0.23
+        ],
+        "metallic": 0.9,
+        "roughness": 0.53,
+        "variation": 0.02,
+        "radialShell": {
+          "originMM": [
+            -6.105949878692627,
+            0.07150000333786011,
+            29.17
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "rangeMM": [
+            0,
+            0.49
+          ],
+          "radiusAtOriginMM": 0.6282501602172852,
+          "radiusSlope": 0,
+          "thicknessMM": 0.6282501602172852,
+          "allowanceMM": 0
+        }
+      },
+      {
+        "name": "hinge iron head [1.163, -13.601]",
+        "kind": "paint",
+        "minMM": [
+          0.7695499098300934,
+          -13.993900146484375,
+          29.03
+        ],
+        "maxMM": [
+          1.5557501280307768,
+          -13.207699928283692,
+          29.45
+        ],
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02,
+        "ellipsoid": {
+          "centerMM": [
+            1.1626500189304352,
+            -13.600800037384033,
+            29.12
+          ],
+          "radiiMM": [
+            0.39310010910034177,
+            0.39310010910034177,
+            0.45
+          ]
+        }
+      },
+      {
+        "name": "hinge iron head [-1.297, -7.729]",
+        "kind": "paint",
+        "minMM": [
+          -1.6373999977111815,
+          -8.06995001077652,
+          29.03
+        ],
+        "maxMM": [
+          -0.9563999509811402,
+          -7.388949964046478,
+          29.45
+        ],
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02,
+        "ellipsoid": {
+          "centerMM": [
+            -1.2968999743461609,
+            -7.729449987411499,
+            29.12
+          ],
+          "radiiMM": [
+            0.3405000233650207,
+            0.3405000233650207,
+            0.45
+          ]
+        }
+      },
+      {
+        "name": "hinge iron head [-1.189, -13.592]",
+        "kind": "paint",
+        "minMM": [
+          -1.4997005128860472,
+          -13.902101364135742,
+          29.03
+        ],
+        "maxMM": [
+          -0.8785994386672974,
+          -13.281000289916992,
+          29.45
+        ],
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02,
+        "ellipsoid": {
+          "centerMM": [
+            -1.1891499757766724,
+            -13.591550827026367,
+            29.12
+          ],
+          "radiiMM": [
+            0.31055053710937497,
+            0.31055053710937497,
+            0.45
+          ]
+        }
+      },
+      {
+        "name": "hinge iron head [1.214, -7.769]",
+        "kind": "paint",
+        "minMM": [
+          0.9451500511169434,
+          -8.037700023651123,
+          29.03
+        ],
+        "maxMM": [
+          1.4825499916076659,
+          -7.5003000831604005,
+          29.45
+        ],
+        "rgb": [
+          0.255,
+          0.27,
+          0.245
+        ],
+        "metallic": 0.9,
+        "roughness": 0.5,
+        "variation": 0.02,
+        "ellipsoid": {
+          "centerMM": [
+            1.2138500213623047,
+            -7.769000053405762,
+            29.12
+          ],
+          "radiiMM": [
+            0.2686999702453613,
+            0.2686999702453613,
+            0.45
+          ]
+        }
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage11/full/front-back/top/+X/doorcloseandnativehardwarecomponentsinspected. Source599994tri/29999784bytes/SHA4509840e875cb8fbf4ca19f2d3c019caee504bcc27150d626d43f2670212fbac/maxZ30.754501. Nativepreparationdatum17mm;publicationrequiresstandardize-medieval-selectedUD016(.153517cells)aftercandidateQA,notlegacy17mmmount. FloorX/Ysidefascia,lidX/jambsY/twoWOODbattensY;6ironstudsindependentlyfitfromcomponentsabove29.18,4hingecapsboundindividually. Hinge2leaves/barrel/endflangesandringleveronmountingplateiron. Ringholeleft/rightprobes[1.4,7.6367,27.5411]/[-1.6,7.6352,27.5126]hitlidwoodwellbelow29.3..30.75metal;preserveclearancesandbridge. Fournative\u00b18.75quarterpointsstandonlid27.5798..27.6288,nZ\u2265.927,awayhandle/hinge;closedfunctionalhatchhasDecortruebutcanStandtrue/blockers[]becausewalkablecover.Noemission/defaultlights[].Check10headcolours/metal,ringholedepth,woodmetalcontacts,geometry/ringtip,source/packedfloorstandheights,renderLOD/shadow,bothcandidates. GroupMED-trapwith072openedlater,thenaddopen/closetransitionsafterbothpublished."
+}
