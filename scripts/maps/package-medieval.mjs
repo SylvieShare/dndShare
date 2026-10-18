@@ -181,6 +181,7 @@ if (!process.argv.includes('--publish-manifest')) {
     ...(shadow.reference ? { reference: shadow.reference } : {}) };
   const report = { ...reports.render, model: { ...reports.render.model, ...(previous.model?.id ? { id: previous.model.id } : {}) },
     tiers, lodStandDeviationsMM: reports.lod.standDeviationsMM,
+    ...(reports.lod.detailUVReview ? { lodDetailUVReview: reports.lod.detailUVReview } : {}),
     optimization: { candidate: candidate || 'balanced', selection: 'pending visual comparison' },
     publication: previous.publication || null };
   await fs.writeFile(path.join(review, 'report.json'), JSON.stringify(report, null, 2)+'\n');

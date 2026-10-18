@@ -93,10 +93,15 @@ def prepare(code, tier, force):
     modifier.ratio = min(1, budget/len(target.data.polygons)); modifier.use_collapse_triangulate = True
     bpy.ops.object.modifier_apply(modifier=modifier.name); shade(target)
     collar = plain_mount_collar(target, recipe)
-    bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.smart_project(angle_limit=recipe.get(tier+'UVAngleLimitRad', recipe.get('uvAngleLimitRad', .65)), island_margin=recipe.get(tier+'UVIslandMargin', recipe.get('uvIslandMargin', .002)),
-                             margin_method='FRACTION', area_weight=.8)
-    bpy.ops.object.mode_set(mode='OBJECT')
+    detail_uv = None
+    if recipe.get('uvDetailRegions'):
+        from medieval_detail_uv import unwrap_detail_regions
+        detail_uv = unwrap_detail_regions(target, recipe, tier)
+    else:
+        bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.uv.smart_project(angle_limit=recipe.get(tier+'UVAngleLimitRad', recipe.get('uvAngleLimitRad', .65)), island_margin=recipe.get(tier+'UVIslandMargin', recipe.get('uvIslandMargin', .002)),
+                                 margin_method='FRACTION', area_weight=.8)
+        bpy.ops.object.mode_set(mode='OBJECT')
     target.data.materials[0] = target.data.materials[0].copy()
     tile_bake.SIZE = recipe[tier+'BakeSize']
     print('MEDIEVAL_BAKE', code, tier, len(target.data.polygons), flush=True)
@@ -154,6 +159,8 @@ def prepare(code, tier, force):
               'mountCollarTriangles': len(collar.data.polygons) if collar is not None else 0,
               'weightBudget': recipe['weightBudget'], 'recipe': recipe, 'quality': quality,
               'standDeviationsMM': deviations, 'seconds': round(time.monotonic()-start, 2)}
+    if detail_uv is not None:
+        report['detailUVReview'] = detail_uv
     (out/'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')
     print('MEDIEVAL_PREPARED', code, tier, report['seconds'], quality, flush=True)
 
