@@ -40,6 +40,9 @@ func ValidateDocument(d *Document) error {
 			return fmt.Errorf("Некорректная плитка карты")
 		}
 		tileIDs[tile.ID] = true
+		if err := validateTileTransitions(tile.Transitions); err != nil {
+			return err
+		}
 	}
 	ids := map[string]bool{}
 	for _, object := range d.Objects {

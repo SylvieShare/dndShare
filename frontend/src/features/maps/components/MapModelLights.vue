@@ -26,8 +26,8 @@
               :entry="light"
               toggle-light
               @toggle="editor.toggleLight"
-              @select="editor.selectLight(light.id)"
-              @focus="editor.focusLight(light.id)"
+              @select="emit('focus', [light])"
+              @focus="emit('focus', [light])"
             />
             <ActionButton
               v-if="!light.item.builtinKey"
@@ -51,6 +51,7 @@ import { X } from "@lucide/vue";
 import { mapEntity } from "../lib/editorEntities";
 import MapInspectorSection from "./MapInspectorSection.vue";
 import MapEntityRow from "./MapEntityRow.vue";
+const emit = defineEmits(["focus"]);
 const props = defineProps({ editor: Object, entry: Object });
 const leaving = ref(new Set());
 watch(

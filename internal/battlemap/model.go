@@ -47,12 +47,23 @@ type PlacementAnchor struct {
 }
 
 type Tile struct {
-	ID       string `json:"id"`
-	ModelID  string `json:"modelId"`
-	X        int    `json:"x"`
-	Y        int    `json:"y"`
-	Rotation int    `json:"rotation"`
-	Level    int    `json:"level"`
+	ID          string           `json:"id"`
+	ModelID     string           `json:"modelId"`
+	X           int              `json:"x"`
+	Y           int              `json:"y"`
+	Rotation    int              `json:"rotation"`
+	Level       int              `json:"level"`
+	Transitions *TileTransitions `json:"transitions,omitempty"`
+}
+
+type TileTransitions struct {
+	OriginalModelID string           `json:"originalModelId"`
+	Targets         []TileTransition `json:"targets"`
+}
+
+type TileTransition struct {
+	ID      string `json:"id"`
+	ModelID string `json:"modelId,omitempty"`
 }
 
 type Document struct {

@@ -103,6 +103,9 @@ func TileFootprint(tile Tile, model ModelMetadata) (int, int) {
 }
 
 func ValidateTileModels(d Document, models map[string]ModelMetadata) error {
+	if err := validateTransitionModels(d, models); err != nil {
+		return err
+	}
 	_, err := ResolveTilePlacements(d, models)
 	if err != nil {
 		return err

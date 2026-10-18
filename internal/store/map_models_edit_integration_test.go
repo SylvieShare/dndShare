@@ -113,4 +113,5 @@ func TestCurrentMapModelPersistence(t *testing.T) {
 	if _, err = s.UpdateMapModelShadow(ctx, shadow.ID, strings.Repeat("a", 64), asset); !errors.Is(err, ErrMapModelConflict) {
 		t.Fatal("stale shadow geometry accepted", err)
 	}
+	testTileTransitionPersistence(t, ctx, s)
 }

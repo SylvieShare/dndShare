@@ -60,6 +60,7 @@ it("replaces an immutable model version, removes all its lights and preserves in
   expect(result.document.tiles[0]).toEqual({
     ...d.tiles[0],
     modelId: "off-v1",
+    transitions: { originalModelId: "on-v1", targets: [] },
   });
   expect(result.document.areas).toEqual(d.areas);
   expect(result.document.lights.map((l) => l.id)).toEqual(["unrelated"]);

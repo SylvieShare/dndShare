@@ -75,7 +75,7 @@ func syncMapModels(ctx context.Context, tx pgx.Tx, table, parent string, id stri
 	seen := map[string]bool{}
 	ids := []string{}
 	for _, tile := range d.Tiles {
-		ids = append(ids, tile.ModelID)
+		ids = append(ids, battlemap.TileModelReferences(tile)...)
 	}
 	for _, object := range d.Objects {
 		if object.ModelID != "" {

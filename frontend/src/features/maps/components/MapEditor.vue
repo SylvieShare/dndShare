@@ -107,9 +107,11 @@
           :editor="e"
           :custom-focus="customFocus"
           :custom-focus-key="customFocusKey"
-          @focus="focusEntries"
+          :back-entry="focusHistory.parent.value"
+          @back="focusHistory.back"
+          @focus="focusHistory.follow(() => focusEntries($event))"
           @bind="beginBinding"
-          @area="sidebar?.openArea($event)"
+          @area="focusHistory.follow(() => sidebar?.openArea($event))"
           ><template #focus><slot name="focus" :editor="e" /></template
         ></MapSelectionPanel>
       </div>
@@ -128,6 +130,7 @@
   </main>
 </template>
 <script setup>
+import { useMapFocusHistory } from "../composables/useMapFocusHistory";
 import { mapEntity } from "../lib/editorEntities";
 import "../styles/maps.css";
 import { computed, nextTick, reactive, ref, watch } from "vue";
@@ -318,6 +321,11 @@ function focusEntries(entries) {
     });
   canvas.value?.focus();
 }
+
+const focusHistory = useMapFocusHistory(e, {
+  focusEntries,
+  openArea: (id) => sidebar.value?.openArea(id),
+});
 
 let resolveLeave;
 async function prepareLeave() {

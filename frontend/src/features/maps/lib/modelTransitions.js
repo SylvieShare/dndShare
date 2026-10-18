@@ -3,6 +3,7 @@ import { visibleModels } from "./visibleModels";
 import { structureContext } from "./tileStructure";
 import { surfacePosition, syncSurfaceObjects } from "./surfacePlacement";
 import { syncLights } from "./mapLighting";
+import { instanceTransitions } from "./instanceTransitions";
 
 export const TRANSITION_ACTIONS = [
   { value: "open", label: "Открыть" },
@@ -19,15 +20,16 @@ export function transitionDocument(document, catalogue, kind, id, transition) {
   const list = kind === "tile" ? document.tiles : document.objects;
   const item = list.find((m) => m.id === id),
     source = catalogue.find((m) => m.id === item?.modelId);
-  const edge = source?.behaviour?.transitions?.find(
-    (t) =>
-      t.id === transition.id &&
-      t.action === transition.action &&
-      t.toDefinitionId === transition.toDefinitionId,
+  const edge = instanceTransitions(document, catalogue, kind, id).find((t) =>
+    transition.key
+      ? t.key === transition.key
+      : !t.custom &&
+        !t.return &&
+        t.id === transition.id &&
+        t.action === transition.action &&
+        t.toDefinitionId === transition.toDefinitionId,
   );
-  const target = visibleModels(catalogue).find(
-    (m) => m.definitionId === edge?.toDefinitionId,
-  );
+  const target = visibleModels(catalogue).find((m) => m.id === edge?.modelId);
   const fail = (reason) => ({ valid: false, reason, target });
   if (
     !edge ||
@@ -35,11 +37,14 @@ export function transitionDocument(document, catalogue, kind, id, transition) {
     (target.tileType === "object") !== (kind === "object")
   )
     return fail("Целевая модель недоступна");
+  if (source.id === target.id) return fail("Этот вариант уже выбран");
   const next = clone(document),
     changed = (kind === "tile" ? next.tiles : next.objects).find(
       (m) => m.id === id,
     );
   changed.modelId = target.id;
+  if (kind === "tile")
+    changed.transitions ||= { originalModelId: source.id, targets: [] };
   const context = structureContext(next, catalogue);
   if (!context.status.valid) return fail(context.status.message);
   if (kind === "tile") {

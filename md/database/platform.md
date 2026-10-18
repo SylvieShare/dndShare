@@ -240,3 +240,9 @@ key или DB-backed bytes, для `music_track` — системный приз
 ## Связанные страницы
 
 [Оглавление wiki](../README.md) · [База данных и миграции](../database.md)
+
+Кастомные переходы тайла хранятся внутри JSONB document заготовки/сессионной копии
+в tiles[].transitions: originalModelId и targets с id и необязательным modelId.
+Служебные battle_map_model и session_map_model удерживают ссылки на исходную
+модель и заполненные цели. Формат и UX описаны в
+[переходах моделей](../features/maps-model-behaviour.md).

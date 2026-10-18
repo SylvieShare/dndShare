@@ -59,7 +59,9 @@
               ? Group
               : ['player', 'creature', 'marker'].includes(entry.kind)
                 ? UserRound
-                : Box
+                : entry.kind === 'tile'
+                  ? Layers
+                  : Box
         "
         :size="28"
       />
@@ -89,6 +91,7 @@ import {
   Group,
   Lightbulb,
   LightbulbOff,
+  Layers,
   UserRound,
 } from "@lucide/vue";
 defineProps({

@@ -1,6 +1,14 @@
 <template>
-  <WorkspaceFocusPanel ref="panel" :open="!!(customFocus || area || entries.length)" :focus-key="focusKey"
-    class="map-selection-panel" aria-label="Выбранные элементы">
+  <WorkspaceFocusPanel
+    ref="panel"
+    :open="!!(customFocus || area || entries.length)"
+    :focus-key="focusKey"
+    class="map-selection-panel"
+    aria-label="Выбранные элементы"
+  >
+    <template #navigation
+      ><MapFocusBack :entry="backEntry" @back="emit('back')"
+    /></template>
     <slot v-if="customFocus" name="focus" />
     <MapAreaFocus
       v-else-if="area"
@@ -47,16 +55,19 @@
           label="Открыто"
           @update:model-value="
             editor.change((m) => {
-      if (m.state) m.state.objects[single.id] = $event;
-      else
-        m.document.objects.find(
-          (o) => o.id === single.id,
-        ).open = $event;
+              if (m.state) m.state.objects[single.id] = $event;
+              else
+                m.document.objects.find((o) => o.id === single.id).open =
+                  $event;
             })
           "
         />
         <MapModelTransitions :editor="editor" :entry="single" />
-        <MapModelLights :editor="editor" :entry="single" />
+        <MapModelLights
+          :editor="editor"
+          :entry="single"
+          @focus="emit('focus', $event)"
+        />
       </template>
     </MapSelectedEntity>
     <MapFocusContent v-else>
@@ -89,14 +100,12 @@
           @select="emit('focus', group.members)"
         />
       </div>
-      <MapSelectionActions
-        :editor="editor"
-        @area="emit('area', $event)"
-      />
+      <MapSelectionActions :editor="editor" @area="emit('area', $event)" />
     </MapFocusContent>
   </WorkspaceFocusPanel>
 </template>
 <script setup>
+import MapFocusBack from "./MapFocusBack.vue";
 import WorkspaceFocusPanel from "@/shared/ui/WorkspaceFocusPanel.vue";
 import { interactive } from "../lib/mapModel";
 import { computed, ref } from "vue";
@@ -116,10 +125,11 @@ const panel = ref(null);
 defineExpose({ bounds: () => panel.value?.bounds() });
 const props = defineProps({
   editor: Object,
+  backEntry: Object,
   customFocus: Boolean,
   customFocusKey: String,
 });
-const emit = defineEmits(["focus", "bind", "area"]);
+const emit = defineEmits(["focus", "bind", "area", "back"]);
 const area = computed(() =>
   props.editor.draft.document.areas.find(
     (a) => a.id === props.editor.focusedArea,
@@ -144,6 +154,15 @@ const focusKey = computed(() =>
   --workspace-focus-left: var(--map-overlay-left, 0px);
   --inspector-inset: 14px;
 }
-.map-selection-summary { display: flex; gap: 12px; font-size: 12px; color: var(--text-muted); }
-.map-selection-list { display: flex; flex-direction: column; gap: 6px; }
+.map-selection-summary {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.map-selection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 </style>
