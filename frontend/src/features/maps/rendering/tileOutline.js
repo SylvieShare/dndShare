@@ -20,6 +20,7 @@ export function createTileOutline(gpu, assets) {
   const maskScene = new Scene(),
     root = new Group(),
     motion = new Group();
+  maskScene.userData.renderCategory = "overlays";
   maskScene.add(root, motion);
   const target = new WebGLRenderTarget(1, 1, { samples: 4 });
   const depth = new MeshBasicMaterial({ colorWrite: false });
@@ -84,6 +85,7 @@ export function createTileOutline(gpu, assets) {
   });
   const overlay = new Scene(),
     quad = new Mesh(new PlaneGeometry(2, 2), shader);
+  overlay.userData.renderCategory = "overlays";
   overlay.add(quad);
   const flatCamera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const size = new Vector2(),

@@ -383,6 +383,16 @@ MapCollectionPicker размещён над левым каталогом и д�
 
 `GlobalMapWorkspace` переиспользует `MapSidebar`, `ActionButton`, `DetailSection`, `FormField`, `CompactCheckbox` и `ConfirmDialog`. SVG-маркеры и выноски — доменная композиция над загруженным изображением; геометрия и viewport вынесены отдельно. Подробности — [глобальные карты](../features/global-maps.md).
 
+## Нагрузка 3D-карт
+
+MapPerformance входит в MapPropertiesPanel и автоматически переиспользуется
+настройками сессионной карты. Контролы — ToggleSwitch/FormSelect, метрики —
+BaseTile, доли этапов — StatBar. MapPerformanceChart рисует составной временной
+график SVG; готовый SegmentDonutChart не выражает историю, поэтому для этого
+домена используется собственный SVG без библиотек графиков. Служебная связь
+наблюдения отделена в performanceBridge и переживает асинхронный запуск WebGL.
+Канонический контракт — [нагрузка карт](../features/maps-performance.md).
+
 ## Связанные страницы
 
 [Оглавление wiki](../README.md) · [Frontend: архитектура и разработка](../frontend.md) · [Сопровождение share-ui](share-ui.md) · [CSS variables](../css-variables.md)

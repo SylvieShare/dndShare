@@ -240,6 +240,8 @@ e.dismissFocus = () => {
   emit("selection");
 };
 const placement = useEditorPlacement(e, canvas);
+e.observePerformance = (changed) =>
+  props.active ? canvas.value?.observePerformance(changed) : undefined;
 e.observeAreaFrame = (target, id, changed) =>
   canvas.value?.observeAreaFrame(target, id, changed);
 e.observeLightFrame = (target, id, changed) =>

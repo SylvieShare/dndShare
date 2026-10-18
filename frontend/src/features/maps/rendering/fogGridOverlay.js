@@ -4,6 +4,7 @@ import { Scene, Vector2 } from "three";
 // renderer. Blending them into the linear fog target makes them much brighter.
 export function createFogGridOverlay(gpu) {
   const scene = new Scene();
+  scene.userData.renderCategory = "fog";
   const uniforms = {
     gridSceneDepth: { value: null },
     gridFog: { value: null },

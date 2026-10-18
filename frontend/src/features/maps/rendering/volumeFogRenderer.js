@@ -35,6 +35,8 @@ export function createVolumeFog(gpu, visibility, motion) {
   const fogScene = new Scene(),
     compositeScene = new Scene(),
     size = new Vector2();
+  fogScene.userData.renderCategory = compositeScene.userData.renderCategory =
+    "fog";
   const skyMotion = createScalarMotion();
   const gridOverlay = createFogGridOverlay(gpu);
   const fogUniforms = {

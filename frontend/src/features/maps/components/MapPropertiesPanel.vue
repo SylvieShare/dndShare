@@ -51,6 +51,7 @@
         })
       "
     />
+    <MapPerformance :editor="editor" />
     <MapModelMemory :usage="editor.modelMemory" />
     <ConfirmDialog
       v-if="pendingSize"
@@ -76,6 +77,7 @@ import {
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
 import MapModelMemory from "./MapModelMemory.vue";
+import MapPerformance from "./MapPerformance.vue";
 import MapTagsField from "./MapTagsField.vue";
 const props = defineProps({ editor: { type: Object, required: true } });
 const savedTime = computed(

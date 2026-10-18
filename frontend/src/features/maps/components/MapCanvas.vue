@@ -59,6 +59,7 @@ import {
   focusViewportOffset,
   useCameraFocus,
 } from "../composables/useCameraFocus";
+import { createPerformanceBridge } from "../lib/performanceBridge";
 import MapControlsHint from "./MapControlsHint.vue";
 import MapCanvasControls from "./MapCanvasControls.vue";
 import MapDownloadManager from "./MapDownloadManager.vue";
@@ -115,6 +116,7 @@ const host = ref(null),
   downloads = ref(null),
   error = ref(""),
   topView = ref(false);
+const performanceBridge = createPerformanceBridge();
 let renderer,
   dead = false,
   frame = 0;
@@ -250,6 +252,7 @@ onMounted(async () => {
       return;
     }
     renderer = r;
+    performanceBridge.attach(r);
     await r.update(props.document, props.state, props);
     if (props.camera) r.camera(props.camera);
   } catch (cause) {
@@ -260,9 +263,11 @@ onBeforeUnmount(() => {
   dead = true;
   cancelAnimationFrame(frame);
   cameraFocus.stop();
+  performanceBridge.destroy();
   renderer?.destroy();
 });
 defineExpose({
+  observePerformance: performanceBridge.observe,
   panArrow,
   focusAt: (point, obstacle) => {
     keyboardPan.stop();

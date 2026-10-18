@@ -1,5 +1,6 @@
 import { createAreaTransitions } from "./areaTransitions";
-import { applySceneAreaAppearance } from "./areaOpacity";
+import { createMapFrameLoop } from "./mapFrameLoop";
+import { createRenderProfiler } from "./renderProfiler";
 import { createMapFramePresentation } from "./mapFramePresentation";
 import { createVolumeFog } from "./volumeFogRenderer";
 import { pickMapScene, visibleSceneHits } from "./mapScenePicking";
@@ -60,11 +61,10 @@ export async function createMapRenderer(
     tileKey = "",
     objectKey = "",
     fogKey = "",
-    lastFrame = 0,
-    frame = 0,
-    flickerTimer = 0,
+    loop,
     placedTiles = [];
   let objects = new Group();
+  const profiler = createRenderProfiler(gpu, render);
   const annotations = createMapAnnotations(scene);
   let appearance = areaAppearance({ areas: [] });
   scene.add(objects);
@@ -123,61 +123,7 @@ export async function createMapRenderer(
     });
   }
   function render() {
-    if (frame || dead) return;
-    clearTimeout(flickerTimer);
-    flickerTimer = 0;
-    frame = requestAnimationFrame((time) => {
-      frame = 0;
-      if (dead) return;
-      const elapsed = time - lastFrame || 16,
-        delta = Math.min(32, elapsed);
-      const moving =
-        transitions.advance(delta) |
-        preview.advance(delta) |
-        objectPreview.advance(delta) |
-        tiles.advance(delta) |
-        objectMotion.advance(delta, objects) |
-        loadingPreview.advance(delta);
-      const mistMoving =
-        options.animate !== false && volumeFog.advance(delta, elapsed);
-      const flickering = lighting.advance(
-        delta,
-        (id) => preview.transform(id) || tiles.transform(id),
-        objects,
-        objectPreview.root,
-        Math.min(250, elapsed),
-        time,
-      );
-      lastFrame = time;
-      tiles.applyAppearance(appearance);
-      applySceneAreaAppearance(objects, appearance);
-      loadingPreview.applyAppearance(appearance);
-      const effectFrame = effects.advance(
-          time,
-          delta,
-          (id) => preview.transform(id) || tiles.transform(id),
-          objects,
-          objectPreview.root,
-        ),
-        fireDelay = effectFrame.delay;
-      volumeFog.render(scene, camera);
-      presentFrame(objects, options, appearance);
-      if (moving || lighting.isFading() || effectFrame.moving) render();
-      else if (
-        (flickering || mistMoving || Number.isFinite(fireDelay)) &&
-        !flickerTimer
-      )
-        flickerTimer = setTimeout(
-          () => {
-            flickerTimer = 0;
-            render();
-          },
-          Math.max(
-            1,
-            Math.min(flickering || mistMoving ? 100 : Infinity, fireDelay),
-          ),
-        );
-    });
+    loop?.request();
   }
   const framePreview = createMapFramePreview(camera, render);
   const areaPreview = createMapAreaPreview(gpu, assets, render);
@@ -193,6 +139,34 @@ export async function createMapRenderer(
     framePreview,
     canvas: gpu.domElement,
   });
+  loop = createMapFrameLoop({
+    transitions,
+    preview,
+    objectPreview,
+    tiles,
+    objectMotion,
+    loadingPreview,
+    volumeFog,
+    lighting,
+    effects,
+    scene,
+    camera,
+    presentFrame,
+    profiler,
+    getCurrent: () => ({ objects, options, appearance }),
+  });
+  for (const root of [tiles.root, preview.root]) profiler.tag(root, "tiles");
+  profiler.tag(objects, "objects");
+  profiler.tag(objectPreview.root, "objects");
+  profiler.tag(effects.root, "effects");
+  for (const root of [
+    annotations.root,
+    loadingPreview.root,
+    anchors.root,
+    surfaceAnchors.root,
+    ...lighting.excluded,
+  ])
+    profiler.tag(root, "overlays");
   const view = mapCamera(camera, gpu, host, render);
   const structure = structureView(assets, view);
   async function update(d, nextState, opts = {}) {
@@ -237,6 +211,7 @@ export async function createMapRenderer(
     const movingIds = new Set([...previewIds, ...objectIds]);
     await assets.prepare(new Set([...ids, ...movingIds]), opts);
     if (dead || id !== epoch) return;
+    const updateStarted = profiler.updateStart();
     const placed = structure.update(d);
     placedTiles = placed;
     let previewOptions = opts;
@@ -432,6 +407,7 @@ export async function createMapRenderer(
         tier,
       );
       scene.add(objects);
+      profiler.tag(objects, "objects");
     }
     lighting.update(
       d,
@@ -453,6 +429,7 @@ export async function createMapRenderer(
       appearance,
     );
     assets.prune();
+    profiler.updateEnd(updateStarted);
     render();
   }
   function changeCamera(next) {
@@ -520,6 +497,7 @@ export async function createMapRenderer(
         ),
       );
     },
+    observePerformance: profiler.observe,
     camera: changeCamera,
     getView: view.getView,
     world: view.world,
@@ -562,8 +540,8 @@ export async function createMapRenderer(
       dead = true;
       epoch++;
       observer.disconnect();
-      cancelAnimationFrame(frame);
-      clearTimeout(flickerTimer);
+      loop.destroy();
+      profiler.destroy();
       annotations.destroy();
       disposeObjects(objects);
       tokenPortraits.destroy();
