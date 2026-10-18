@@ -17,12 +17,14 @@
         ACESFilmicToneMapping,
         BoxGeometry,
         Color,
+        DataTexture,
         Group,
         Matrix4,
         Mesh,
         MeshStandardMaterial,
         OrthographicCamera,
         Scene,
+        Vector3,
         WebGLRenderer,
       } from "three";
       import { createAreaTransitions } from "../../../src/features/maps/rendering/areaTransitions.js";
@@ -45,6 +47,8 @@
       camera.position.set(5, 5, 5);
       camera.lookAt(0.5, 0.3, 0.5);
       camera.updateMatrixWorld(true);
+      const emissiveMap = new DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
+      emissiveMap.needsUpdate = true;
       const metadata = {
           id: "floor",
           width: 1,
@@ -53,7 +57,11 @@
           mountDepth: 0,
         },
         geometry = new BoxGeometry(1, 0.25, 1),
-        material = new MeshStandardMaterial({ color: 0x888877 }),
+        material = new MeshStandardMaterial({
+          color: 0x000000,
+          emissive: 0xffffff,
+          emissiveMap,
+        }),
         part = {
           geometry,
           material,
@@ -180,7 +188,20 @@
         step,
         state() {
           const tile = tiles.root.children[0];
+          const gl = gpu.getContext(),
+            pixel = new Uint8Array(4),
+            p = new Vector3(0.75, 0.25, 0.75).project(camera);
+          gl.readPixels(
+            Math.floor((p.x + 1) * 320),
+            Math.floor((p.y + 1) * 240),
+            1,
+            1,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            pixel,
+          );
           return {
+            tilePixel: [...pixel],
             tile: tile.material.opacity,
             prop: propMesh.material.opacity,
             colour: tile.material.color.toArray(),

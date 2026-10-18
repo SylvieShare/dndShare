@@ -59,7 +59,7 @@ func buildMapPreviewContext(d battlemap.Document, models []battlemap.Model, beha
 		Renderer string
 		Document battlemap.Document
 		Models   []mapModelView
-	}{"map-scene-volume-fog", scene, signatureModels})
+	}{"map-scene-fog-stable-grid", scene, signatureModels})
 	if err != nil {
 		return mapPreviewContext{}, err
 	}

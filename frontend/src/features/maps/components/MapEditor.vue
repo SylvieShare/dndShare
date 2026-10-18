@@ -101,6 +101,7 @@
           ref="selectionPanel"
           :editor="e"
           :custom-focus="customFocus"
+          :custom-focus-key="customFocusKey"
           @focus="focusEntries"
           @bind="beginBinding"
           @area="sidebar?.openArea($event)"
@@ -153,6 +154,7 @@ const props = defineProps({
     canvasState: Object,
     surfacePlacement: Boolean,
     customFocus: Boolean,
+    customFocusKey: String,
     playerPreview: Boolean,
     tokenGesture: Function,
     removeToken: Function,

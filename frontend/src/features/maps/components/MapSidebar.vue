@@ -4,7 +4,12 @@
     class="map-sidebar"
     :class="{ 'map-sidebar--collapsed': collapsed }"
   >
-    <nav class="map-sidebar-tabs" :aria-label="tabsLabel">
+    <nav ref="navigation" class="map-sidebar-tabs" :aria-label="tabsLabel">
+      <span
+        class="map-sidebar-indicator"
+        :style="indicatorStyle"
+        aria-hidden="true"
+      />
       <template v-for="item in tabs" :key="item.key">
         <span
           v-if="item.divider"
@@ -13,8 +18,10 @@
           :aria-label="item.dividerLabel || 'Группы вкладок'"
         />
         <ActionButton
+          :ref="(button) => setButton(item.key, button)"
+          class="map-sidebar-tab"
           icon-only
-          :variant="tab === item.key && !collapsed ? 'primary' : 'quiet'"
+          variant="quiet"
           :aria-label="item.label"
           :title="item.label"
           :aria-pressed="tab === item.key && !collapsed"
@@ -26,7 +33,11 @@
     </nav>
     <div v-show="!collapsed" class="map-sidebar-panel">
       <header class="map-sidebar-heading">
-        <strong>{{ tabs.find((item) => item.key === tab)?.label }}</strong>
+        <Transition name="map-sidebar-title" mode="out-in"
+          ><strong :key="tab">{{
+            tabs.find((item) => item.key === tab)?.label
+          }}</strong></Transition
+        >
         <ActionButton
           variant="quiet"
           icon-only
@@ -38,12 +49,30 @@
           <template #icon><PanelLeftClose :size="20" /></template>
         </ActionButton>
       </header>
-      <div class="map-sidebar-content"><slot /></div>
+      <div class="map-sidebar-viewport">
+        <Transition
+          name="map-sidebar-page"
+          mode="out-in"
+          @before-leave="leavePage"
+          @before-enter="enterPage"
+        >
+          <div :key="tab" class="map-sidebar-content" :data-tab="tab">
+            <slot />
+          </div>
+        </Transition>
+      </div>
     </div>
   </aside>
 </template>
 <script setup>
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { PanelLeftClose } from "@lucide/vue";
 const props = defineProps({
@@ -54,20 +83,69 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:tab", "select", "resize"]);
 const element = ref(null);
+const navigation = ref(null),
+  buttons = new Map(),
+  indicator = ref(null);
+const indicatorStyle = computed(() => ({
+  transform: `translateY(${indicator.value?.y || 0}px)`,
+  width: `${indicator.value?.width || 0}px`,
+  height: `${indicator.value?.height || 0}px`,
+  opacity: indicator.value && !collapsed.value ? 1 : 0,
+}));
 const collapsed = ref(
   window.matchMedia(`(max-width: ${props.collapseAt}px)`).matches,
 );
 let observer;
+let direction = 1;
+function setButton(key, button) {
+  if (button) buttons.set(key, button.$el);
+  else buttons.delete(key);
+}
+function updateIndicator() {
+  const button = buttons.get(props.tab);
+  indicator.value = button
+    ? {
+        y: button.offsetTop,
+        width: button.offsetWidth,
+        height: button.offsetHeight,
+      }
+    : null;
+}
+watch(
+  () => props.tab,
+  (next, previous) => {
+    direction =
+      props.tabs.findIndex((item) => item.key === next) >
+      props.tabs.findIndex((item) => item.key === previous)
+        ? 1
+        : -1;
+  },
+  { flush: "sync" },
+);
+watch([() => props.tab, () => props.tabs, collapsed], () =>
+  nextTick(updateIndicator),
+);
+function leavePage(node) {
+  node.inert = true;
+  node.setAttribute("aria-hidden", "true");
+  node.style.setProperty("--map-tab-offset", `${direction * 18}px`);
+}
+function enterPage(node) {
+  node.style.setProperty("--map-tab-offset", `${direction * 18}px`);
+}
 function openTab(key) {
   emit("update:tab", key);
   collapsed.value = false;
   emit("select", key);
 }
 onMounted(() => {
-  observer = new ResizeObserver(() =>
-    emit("resize", element.value.getBoundingClientRect().width),
-  );
+  updateIndicator();
+  observer = new ResizeObserver(() => {
+    emit("resize", element.value.getBoundingClientRect().width);
+    updateIndicator();
+  });
   observer.observe(element.value);
+  observer.observe(navigation.value);
 });
 onBeforeUnmount(() => observer?.disconnect());
 defineExpose({
@@ -87,6 +165,8 @@ defineExpose({
   background: var(--surface);
 }
 .map-sidebar-tabs {
+  position: relative;
+  isolation: isolate;
   width: 48px;
   flex: none;
   display: flex;
@@ -94,6 +174,23 @@ defineExpose({
   gap: 6px;
   padding-top: 6px;
   border-right: 1px solid var(--border-strong);
+}
+.map-sidebar-indicator {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  pointer-events: none;
+  transition:
+    transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 150ms ease;
+}
+.map-sidebar-tab[aria-pressed="true"],
+.map-sidebar-tab[aria-pressed="true"]:hover {
+  color: var(--text-on-accent);
+  background: transparent;
 }
 .map-sidebar-divider {
   border-top: 1px solid var(--border-strong);
@@ -120,7 +217,15 @@ defineExpose({
   font-size: 16px;
   padding-left: 6px;
 }
+.map-sidebar-viewport {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 .map-sidebar-content {
+  flex: 1;
   --map-panel-inset: 12px;
   display: flex;
   flex-direction: column;
@@ -128,6 +233,42 @@ defineExpose({
   min-height: 0;
   overflow: auto;
   padding: 8px 12px 18px;
+}
+.map-sidebar-page-enter-active {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 180ms ease;
+}
+.map-sidebar-page-leave-active {
+  pointer-events: none;
+  transition:
+    transform 130ms ease,
+    opacity 130ms ease;
+}
+.map-sidebar-page-enter-from {
+  opacity: 0;
+  transform: translateY(var(--map-tab-offset));
+}
+.map-sidebar-page-leave-to {
+  opacity: 0;
+  transform: translateY(calc(-1 * var(--map-tab-offset)));
+}
+.map-sidebar-title-enter-active,
+.map-sidebar-title-leave-active {
+  transition: opacity 130ms ease;
+}
+.map-sidebar-title-enter-from,
+.map-sidebar-title-leave-to {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-sidebar-indicator,
+  .map-sidebar-page-enter-active,
+  .map-sidebar-page-leave-active,
+  .map-sidebar-title-enter-active,
+  .map-sidebar-title-leave-active {
+    transition: none;
+  }
 }
 .map-sidebar-content :deep(hr) {
   width: 100%;

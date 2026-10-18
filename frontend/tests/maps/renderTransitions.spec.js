@@ -16,7 +16,10 @@ test("visibility fades with a flash, fog restores objects and lights, and light 
   expect(start.light).toBe(8);
   await page.evaluate(() => window.transitions.hidden(true));
   expect((await state()).tile).toBe(1);
-  await page.evaluate(() => window.transitions.step(240));
+  await page.evaluate(() => window.transitions.step(80));
+  // Even a dark surface masked out of its emissive texture must flash.
+  expect((await state()).tilePixel[0]).toBeGreaterThan(start.tilePixel[0] + 20);
+  await page.evaluate(() => window.transitions.step(160));
   let middle = await state();
   expect(middle.tile).toBeCloseTo(0.5);
   expect(middle.prop).toBeCloseTo(0.5);

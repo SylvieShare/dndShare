@@ -1,5 +1,6 @@
 import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
 import { renderAreaSurfaces } from "./areaSurfaceRenderer";
+import { createFogGridOverlay } from "./fogGridOverlay";
 import {
   Color,
   DepthTexture,
@@ -35,6 +36,7 @@ export function createVolumeFog(gpu, visibility, motion) {
     compositeScene = new Scene(),
     size = new Vector2();
   const skyMotion = createScalarMotion();
+  const gridOverlay = createFogGridOverlay(gpu);
   const fogUniforms = {
     ...visibility,
     sceneDepth: { value: null },
@@ -210,6 +212,12 @@ export function createVolumeFog(gpu, visibility, motion) {
       targets();
       const previous = gpu.getRenderTarget();
       try {
+        gridOverlay.prepare(
+          scene,
+          sceneTarget.depthTexture,
+          fogTarget.texture,
+          size,
+        );
         fogUniforms.inverseViewProjection.value.multiplyMatrices(
           viewCamera.matrixWorld,
           viewCamera.projectionMatrixInverse,
@@ -225,11 +233,14 @@ export function createVolumeFog(gpu, visibility, motion) {
         gpu.render(fogScene, camera);
         gpu.setRenderTarget(previous);
         gpu.render(compositeScene, camera);
+        gridOverlay.render(viewCamera);
       } finally {
+        gridOverlay.restore();
         gpu.setRenderTarget(previous);
       }
     },
     destroy() {
+      gridOverlay.destroy();
       skyMotion.clear();
       releaseTargets();
       noise?.dispose();

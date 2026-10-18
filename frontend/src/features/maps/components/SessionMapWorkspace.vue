@@ -21,6 +21,7 @@
       :active="active"
       :extra-tabs="tabs"
       :custom-focus="!!tokens.candidate"
+      :custom-focus-key="tokens.focused"
       :selected-token="tokens.selected"
       :surface-placement="tokens.surface"
       :canvas-state="tokens.canvasState"

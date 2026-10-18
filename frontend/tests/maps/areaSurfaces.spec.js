@@ -49,6 +49,27 @@ test("fading instanced tiles and multipart objects never expose their inner tria
   expect(errors).toEqual([]);
 });
 
+test("MT1-016 has a visible flash on its textured body while its own light fades", async ({
+  page,
+}) => {
+  const model = path.resolve(
+    import.meta.dirname,
+    "../../../models/collections/medieval-town-vol1/upload/MT1-016/4ff49b97ef1cc105973a539c41e1d38f737a2527b9356cb5d113b59628e2d22b.glb",
+  );
+  test.skip(!fs.existsSync(model), "Local model assets are excluded from Git");
+  await page.route("**/test-model.glb", (route) =>
+    route.fulfill({ path: model, contentType: "model/gltf-binary" }),
+  );
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/tests/maps/fixtures/areaSurfacesReal.html?night");
+  await page.waitForFunction(() => window.realSurfaces?.ready);
+  expect(
+    await page.evaluate(() => window.realSurfaces.flash()),
+  ).toBeGreaterThan(1000);
+  expect(errors).toEqual([]);
+});
+
 test("real MT1-037 fades only the visible surface instead of its dark mounting geometry", async ({
   page,
 }) => {

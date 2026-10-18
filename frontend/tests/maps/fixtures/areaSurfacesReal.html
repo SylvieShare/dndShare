@@ -3,10 +3,12 @@
   <body style="margin: 0">
     <script type="module">
       import {
+        ACESFilmicToneMapping,
         AmbientLight,
         DirectionalLight,
         Group,
         OrthographicCamera,
+        PointLight,
         Scene,
         WebGLRenderer,
       } from "three";
@@ -21,6 +23,7 @@
         preserveDrawingBuffer: true,
       });
       gpu.setSize(640, 480);
+      gpu.toneMapping = ACESFilmicToneMapping;
       document.body.append(gpu.domElement);
       const loader = acquireModelLoader(gpu),
         gltf = await loader.load("/test-model.glb");
@@ -50,7 +53,11 @@
         props = new Group(),
         sun = new DirectionalLight(0xffffff, 2);
       sun.position.set(3, 6, 4);
-      scene.add(tiles.root, props, new AmbientLight(0xffffff, 2), sun);
+      const ambient = new AmbientLight(0xffffff, 2),
+        lamp = new PointLight(0xffc36a, 8, 4);
+      lamp.position.set(0.2, 1.65, 0.2);
+      const night = new URLSearchParams(location.search).has("night");
+      scene.add(tiles.root, props, ambient, sun, lamp);
       const placements = [0, 1].map((x) => ({
         id: `tile-${x}`,
         modelId: "real",
@@ -58,8 +65,12 @@
         y: 0,
         rotation: 0,
       }));
-      function frame(opacity, angle = 45, legacy = false) {
+      function frame(opacity, angle = 45, legacy = false, brightness = 1) {
         tiles.rebuild(placements, "render", [], () => opacity);
+        tiles.applyAppearance({
+          tileOpacity: () => opacity,
+          tileFlash: () => brightness,
+        });
         props.clear();
         const prop = buildModelObject(
           {
@@ -74,7 +85,7 @@
           assets,
           fog,
         );
-        applyAreaOpacity(prop, opacity);
+        applyAreaOpacity(prop, opacity, brightness);
         props.add(prop);
         camera.position.set(
           1 + Math.sin((angle * Math.PI) / 180) * 5,
@@ -83,6 +94,9 @@
         );
         camera.lookAt(1, 0.2, 0.7);
         camera.updateMatrixWorld(true);
+        sun.intensity = night ? 0 : 2;
+        ambient.intensity = night ? 0.28 : 2;
+        lamp.intensity = night ? 8 * opacity : 0;
         if (legacy) gpu.render(scene, camera);
         else renderAreaSurfaces(gpu, scene, camera);
       }
@@ -111,6 +125,19 @@
             maximum = Math.max(maximum, delta);
           }
           return { changed, maximum };
+        },
+        flash() {
+          frame(1);
+          const before = pixels();
+          frame(0.925926, 45, false, 1.625);
+          const after = pixels();
+          let brighter = 0;
+          for (let i = 0; i < before.length; i += 4) {
+            // Check the unlit wood/stone, not the already bright emissive flame.
+            if (before[i] > 25 && before[i] < 150 && after[i] > before[i] + 12)
+              brighter++;
+          }
+          return brighter;
         },
         ready: true,
       };

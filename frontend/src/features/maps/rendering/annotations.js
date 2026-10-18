@@ -19,6 +19,7 @@ function lines(points, colour, opacity = 1, grid = false) {
   });
   const line = new LineSegments(g, material);
   line.renderOrder = grid ? -1 : 10;
+  line.userData.mapGrid = grid;
   return line;
 }
 function rect(points, x, y, w, h, z = FLOOR + 0.01) {

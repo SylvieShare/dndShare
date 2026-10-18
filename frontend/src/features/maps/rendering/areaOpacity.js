@@ -23,10 +23,28 @@ export function applyAreaOpacity(root, opacity, brightness = 1) {
           opacity: material.opacity,
           transparent: material.transparent,
           depthWrite: material.depthWrite,
-          color: material.color?.clone(),
-          emissive: material.emissive?.clone(),
+          flash: { value: 0 },
         };
         bases.set(material, base);
+        const before = material.onBeforeCompile,
+          programKey = material.customProgramCacheKey();
+        material.onBeforeCompile = (shader, renderer) => {
+          before.call(material, shader, renderer);
+          shader.uniforms.mapAreaFlash = base.flash;
+          shader.fragmentShader = shader.fragmentShader
+            .replace(
+              "#include <common>",
+              "#include <common>\nuniform float mapAreaFlash;",
+            )
+            .replace(
+              "#include <opaque_fragment>",
+              `
+outgoingLight = outgoingLight * (1.0 + mapAreaFlash) + vec3(mapAreaFlash * 0.35);
+#include <opaque_fragment>`,
+            );
+        };
+        material.customProgramCacheKey = () => `${programKey}:area-flash-v1`;
+        material.needsUpdate = true;
       }
       const transparent = base.transparent || opacity < 0.999;
       if (material.transparent !== transparent) {
@@ -35,17 +53,7 @@ export function applyAreaOpacity(root, opacity, brightness = 1) {
       }
       material.opacity = base.opacity * opacity;
       material.depthWrite = base.depthWrite && opacity >= 0.999;
-      if (base.color)
-        material.color.copy(base.color).multiplyScalar(brightness);
-      if (base.emissive) {
-        material.emissive.copy(base.emissive);
-        if (base.color) {
-          const boost = (brightness - 1) * 0.12;
-          material.emissive.r += base.color.r * boost;
-          material.emissive.g += base.color.g * boost;
-          material.emissive.b += base.color.b * boost;
-        }
-      }
+      base.flash.value = Math.max(0, brightness - 1);
     }
   });
 }

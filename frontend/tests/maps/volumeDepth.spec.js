@@ -12,7 +12,10 @@ async function pixel(page, point) {
         ctx = canvas.getContext("2d");
       ctx.drawImage(image, 0, 0);
       image.close();
-      return [...ctx.getImageData(point.x, point.y, 1, 1).data];
+      return [
+        ...ctx.getImageData(point.x, point.y, point.size || 1, point.size || 1)
+          .data,
+      ];
     },
     { data: png.toString("base64"), point },
   );
@@ -30,7 +33,19 @@ test("V2 fills empty space above a tile, respects foreground depth, preserves ba
   const p = await page.evaluate(() => window.volumeTest.pixel([0, 0.9, 0]));
   const empty = await pixel(page, p),
     background = await pixel(page, { x: 10, y: 10 });
+  const gridPoint = await page.evaluate(() =>
+    window.volumeTest.pixel([2, -0.003, 0.5]),
+  );
+  gridPoint.x -= 2;
+  gridPoint.y -= 2;
+  gridPoint.size = 5;
+  const grid = await pixel(page, gridPoint);
   const textures = await page.evaluate(() => window.volumeTest.textures());
+  await page.evaluate(() => window.volumeTest.frame(true, false, true));
+  const legacyGrid = await pixel(page, gridPoint);
+  const brightest = (patch) =>
+    Math.max(...patch.filter((_, index) => index % 4 === 0));
+  expect(brightest(legacyGrid)).toBeGreaterThan(brightest(grid) + 10);
   await page.evaluate(() => window.volumeTest.frame(true));
   const cloud = await pixel(page, p);
   expect(cloud[0]).toBeGreaterThan(empty[0] + 30);
@@ -40,6 +55,9 @@ test("V2 fills empty space above a tile, respects foreground depth, preserves ba
   const sameBackground = await pixel(page, { x: 10, y: 10 });
   for (let i = 0; i < 3; i++)
     expect(Math.abs(sameBackground[i] - background[i])).toBeLessThanOrEqual(1);
+  const sameGrid = await pixel(page, gridPoint);
+  for (let i = 0; i < grid.length; i++)
+    expect(Math.abs(sameGrid[i] - grid[i])).toBeLessThanOrEqual(2);
   await page.evaluate(() => window.volumeTest.frame(false, true));
   const wallPoint = await page.evaluate(() =>
       window.volumeTest.pixel([1.8, 2.2, 1.8]),
