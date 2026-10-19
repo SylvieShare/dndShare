@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
+import { selectSourceComponent } from './source_component_regions.mjs';
 
 const matchers = new WeakMap();
 
@@ -27,24 +28,31 @@ export async function initializeStructureReferences(settings, inventoryPath) {
   const inventory = JSON.parse(await fs.readFile(inventoryPath,'utf8'));
   const models = path.resolve(path.dirname(inventoryPath),'../..');
   const trees = new Map();
-  async function load(code, hash) {
+  async function load(code, hash, selection = {}) {
     const row = inventory.find(row => row.code===code);
     if (!row || row.sourceSHA256!==hash) throw new Error('Source reference identity changed');
-    if (trees.has(code)) return trees.get(code);
+    const key = `${code}:${selection.componentAboveMM ?? 'full'}:${selection.componentIndex ?? 0}`;
+    if (trees.has(key)) return trees.get(key);
     const bytes = await fs.readFile(path.join(models,row.sourcePath));
     if (createHash('sha256').update(bytes).digest('hex')!==hash) throw new Error('Source reference bytes changed');
     const count = bytes.readUInt32LE(80);
     if (bytes.length!==84+count*50) throw new Error('Binary STL reference required');
     const positions = new Float32Array(count*9);
     for (let t=0;t<count;t++) for (let c=0;c<9;c++) positions[t*9+c]=bytes.readFloatLE(84+t*50+12+c*4);
+    let selected = positions;
+    if (selection.componentAboveMM !== undefined) {
+      const component = selectSourceComponent(positions, selection.componentAboveMM, selection.componentIndex ?? 0);
+      selected = component.positions;
+      console.log('MEDIEVAL_SOURCE_COMPONENT', code, component.components, component.vertices, component.triangles);
+    }
     const geometry = new BufferGeometry();
-    geometry.setAttribute('position',new BufferAttribute(positions,3));
+    geometry.setAttribute('position',new BufferAttribute(selected,3));
     const tree = new MeshBVH(geometry);
-    trees.set(code,tree);
+    trees.set(key,tree);
     return tree;
   }
   for (const reference of references) {
-    const tree = await load(reference.code,reference.sourceSHA256);
+    const tree = await load(reference.code,reference.sourceSHA256,reference);
     const sculpt = reference.projectTo ? await load(reference.projectTo.code,reference.projectTo.sourceSHA256) : null;
     const point = new Vector3(), projected = {}, nearest = {};
     matchers.set(reference,p => {

@@ -1,0 +1,4186 @@
+{
+  "tileType": "floor",
+  "width": 2,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [[0, 0]],
+  "standToleranceMM": 0.2,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Bed",
+  "groupCode": "MED-bed",
+  "hasDecor": true,
+  "renderTriangles": 110000,
+  "lodTriangles": 50000,
+  "renderBakeSize": 2048,
+  "lodBakeSize": 2048,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 1024,
+  "lodDataSize": 768,
+  "standRayTopMM": 80,
+  "standPointsMM": [
+    [26.25, -8.75],
+    [26.25, 8.75]
+  ],
+  "blockersMM": [
+    [
+      [-35.1, -17.6],
+      [20.6, -17.6],
+      [20.6, 17.6],
+      [-35.1, 17.6]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "bed",
+    "linen",
+    "blanket",
+    "patches",
+    "stitches",
+    "pillow",
+    "plaster",
+    "wall"
+  ],
+  "weightBudget": {
+    "renderMiB": [4, 7],
+    "lodMiB": [2, 4],
+    "shadowKiB": [120, 250],
+    "previewKiB": [15, 45],
+    "basis": "Two-cell bed with two separate mounts, curved wood headboard, pillow roll, draped blanket, three patches, 21 broad stitches and six small fasteners. Start at110000/50000triangles,2048bakes,colour1536/1024 andnormalORM1024/768;comparecompactwithoutlosingstitchededges,blankethem,woodcontactsorfrontfloorpoints."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "floor X planks and long side fascia",
+        "minMM": [-35.2, -17.7, 17.5],
+        "maxMM": [35.2, 17.7, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border",
+        "minMM": [-35.2, -17.7, 17.5],
+        "maxMM": [-32, 17.7, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border",
+        "minMM": [32, -17.7, 17.5],
+        "maxMM": [35.2, 17.7, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "long X bed frame",
+        "minMM": [-31, -16.5, 26.1],
+        "maxMM": [20.6, 16.5, 39.8],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y footboard",
+        "minMM": [16.2, -12.5, 26.1],
+        "maxMM": [20.6, 12.5, 34.5],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "vertical headboard and rear wall timbers",
+        "minMM": [-35.2, -17.6, 26.1],
+        "maxMM": [-26.5, 17.6, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "curved Y headboard rail",
+        "minMM": [-30.2, -12.5, 42.4],
+        "maxMM": [-26.5, 12.5, 47],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south foot post",
+        "minMM": [16.4, -15.5, 26.1],
+        "maxMM": [20.6, -11.3, 39.8],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north foot post",
+        "minMM": [16.4, 11.3, 26.1],
+        "maxMM": [20.6, 15.5, 39.8],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south head post",
+        "minMM": [-35.2, -17.6, 26.1],
+        "maxMM": [-26.5, -13.6, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north head post",
+        "minMM": [-35.2, 13.6, 26.1],
+        "maxMM": [-26.5, 17.6, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "rear ochre plaster",
+        "minMM": [-35.2, -13.6, 26.6],
+        "maxMM": [-31.5, 13.6, 50],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065
+      },
+      {
+        "name": "main olive cloth patch",
+        "minMM": [-11.939999618530273, -4.589262523651123, 30],
+        "maxMM": [3.524001159667969, 10.274086990356444, 40.2],
+        "kind": "paint",
+        "rgb": [0.45, 0.51, 0.29],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "excludeParts": [
+          {
+            "name": "outside patch side 0",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-11.899999618530273, 5.584406852722168, 0],
+              "axis": [-0.9985385765764034, -0.05404360358793921, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 1",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-11.875999450683594, 5.140966892242432, 0],
+              "axis": [-0.9275921953898842, -0.37359432416964633, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 2",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-8.131999015808105, -4.1549601554870605, 0],
+              "axis": [-0.7384995501289714, -0.6742539688124253, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 3",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-7.771998882293701, -4.549262523651123, 0],
+              "axis": [0.17125612642323157, -0.9852265420513752, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 4",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-7.267998695373535, -4.461655139923096, 0],
+              "axis": [0.27583622818077, -0.9612046479408046, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 5",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [3.1960010528564453, -1.458808422088623, 0],
+              "axis": [0.698123532944311, -0.7159773269799495, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 6",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [3.4840011596679688, -1.1779899597167969, 0],
+              "axis": [0.990556617994962, 0.1371042907657626, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 7",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [3.4120006561279297, -0.6577978134155273, 0],
+              "axis": [0.9237043314983738, 0.38310613147160966, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 8",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-0.9560010433197021, 9.873858451843262, 0],
+              "axis": [0.7810622873988342, 0.6244531233033437, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 9",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-1.2440009117126465, 10.234086990356445, 0],
+              "axis": [-0.33059720590172553, 0.943771946738179, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 10",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-1.7480010986328125, 10.057538986206055, 0],
+              "axis": [-0.40321077054547416, 0.9151071382718665, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 1",
+        "minMM": [0.08000099182128906, -2.5357841300964354, 36.75980102539062],
+        "maxMM": [1.6080006408691405, -0.6666389656066894, 37.73093688964844],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              0.46400033950805664, -2.5357841300964354, 36.75980102539062
+            ],
+            "maxMM": [
+              1.6080006408691405, -1.2125369262695314, 37.73093688964844
+            ],
+            "radialShell": {
+              "originMM": [
+                1.2280006408691406, -2.1557841300964355, 37.139801025390625
+              ],
+              "axis": [
+                -0.5380868800807735, 0.7892596165867314, 0.29585768049909567
+              ],
+              "rangeMM": [-0.1, 0.8136399633149218],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              0.08000099182128906, -1.9725369262695311, 36.83510314941406
+            ],
+            "maxMM": [
+              1.2240003395080565, -0.6666389656066894, 37.73093688964844
+            ],
+            "radialShell": {
+              "originMM": [
+                0.8440003395080566, -1.5925369262695312, 37.35093688964844
+              ],
+              "axis": [
+                -0.5637845939311276, 0.8014827679634011, -0.19942994836192093
+              ],
+              "rangeMM": [-0.1, 0.7811100406437804],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 2",
+        "minMM": [-4.3839992332458495, -3.8837593841552733, 35.75264465332031],
+        "maxMM": [-3.3119989585876466, -1.8586226654052735, 36.87430847167969],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -4.227999095916748, -3.8837593841552733, 35.75264465332031
+            ],
+            "maxMM": [
+              -3.3119989585876466, -2.4808970642089845, 36.87430847167969
+            ],
+            "radialShell": {
+              "originMM": [
+                -3.6919989585876465, -3.5037593841552734, 36.13264465332031
+              ],
+              "axis": [
+                -0.20691625701275437, 0.8526829994848182, 0.47970549816882996
+              ],
+              "rangeMM": [-0.1, 0.8539288578929092],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -4.3839992332458495, -3.2408970642089843, 36.0642138671875
+            ],
+            "maxMM": [
+              -3.467999095916748, -1.8586226654052735, 36.87430847167969
+            ],
+            "radialShell": {
+              "originMM": [
+                -3.847999095916748, -2.8608970642089844, 36.49430847167969
+              ],
+              "axis": [
+                -0.24243069399556474, 0.9670402663774712, -0.07784909642005053
+              ],
+              "rangeMM": [-0.1, 0.7434834416303555],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 3",
+        "minMM": [-7.671998863220215, -4.909012203216553, 35.91335021972656],
+        "maxMM": [-6.071998710632324, -2.874279613494873, 37.26259887695313],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -7.251998786926269, -4.909012203216553, 35.91335021972656
+            ],
+            "maxMM": [
+              -6.071998710632324, -3.494772548675537, 37.26259887695313
+            ],
+            "radialShell": {
+              "originMM": [
+                -6.451998710632324, -4.529012203216553, 36.29335021972656
+              ],
+              "axis": [
+                -0.4305387153124223, 0.6706558314417917, 0.6040340804708357
+              ],
+              "rangeMM": [-0.1, 1.0755222035936314],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -7.671998863220215, -4.254772548675537, 36.416859741210935
+            ],
+            "maxMM": [-6.49199878692627, -2.874279613494873, 37.26259887695313],
+            "radialShell": {
+              "originMM": [
+                -6.8719987869262695, -3.874772548675537, 36.882598876953125
+              ],
+              "axis": [
+                -0.5569084379124641, 0.8227564011805991, -0.11368771304871952
+              ],
+              "rangeMM": [-0.1, 0.8541636069805099],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 4",
+        "minMM": [-10.119997863769532, -3.7633632469177245, 36.718800659179685],
+        "maxMM": [-8.279998893737792, -2.440046901702881, 37.804880981445315],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -9.579998855590821, -3.470714454650879, 36.93134033203125
+            ],
+            "maxMM": [
+              -8.279998893737792, -2.440046901702881, 37.804880981445315
+            ],
+            "radialShell": {
+              "originMM": [
+                -8.659998893737793, -2.820046901702881, 37.31134033203125
+              ],
+              "axis": [
+                -0.8785978472338134, -0.4403850854361354, 0.1847344022144123
+              ],
+              "rangeMM": [-0.1, 0.7146156214167481],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -10.119997863769532, -3.7633632469177245, 36.718800659179685
+            ],
+            "maxMM": [
+              -8.81999885559082, -2.710714454650879, 37.804880981445315
+            ],
+            "radialShell": {
+              "originMM": [
+                -9.19999885559082, -3.090714454650879, 37.42488098144531
+              ],
+              "axis": [
+                -0.7765385282431635, -0.42083977747571527, -0.46891555300302434
+              ],
+              "rangeMM": [-0.1, 0.7953924223185702],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 5",
+        "minMM": [-10.719998245239259, -1.3606766510009765, 37.19318115234375],
+        "maxMM": [-8.711999053955077, -0.4265338134765625, 38.24351013183594],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -10.095999603271485, -1.2620552825927733, 37.31184875488281
+            ],
+            "maxMM": [
+              -8.711999053955077, -0.4265338134765625, 38.24351013183594
+            ],
+            "radialShell": {
+              "originMM": [
+                -9.091999053955078, -0.8065338134765625, 37.69184875488281
+              ],
+              "axis": [
+                -0.9576827645519319, -0.11590632316825533, 0.2634567264842273
+              ],
+              "rangeMM": [-0.1, 0.7515733313926303],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -10.719998245239259, -1.3606766510009765, 37.19318115234375
+            ],
+            "maxMM": [
+              -9.335999603271484, -0.5020552825927734, 38.24351013183594
+            ],
+            "radialShell": {
+              "originMM": [
+                -9.715999603271484, -0.8820552825927734, 37.86351013183594
+              ],
+              "axis": [
+                -0.897499440640139, -0.14184746092139514, -0.4175811919624624
+              ],
+              "rangeMM": [-0.1, 0.7952635441451731],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 6",
+        "minMM": [-12.06400001525879, 2.523876304626465, 37.50772583007812],
+        "maxMM": [-10.055999870300292, 3.824336414337158, 38.613901977539065],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -11.439999465942384, 2.8055149269104005, 37.74371826171875
+            ],
+            "maxMM": [
+              -10.055999870300292, 3.824336414337158, 38.613901977539065
+            ],
+            "radialShell": {
+              "originMM": [
+                -10.435999870300293, 3.444336414337158, 38.12371826171875
+              ],
+              "axis": [
+                -0.9116484980025377, -0.3781320082757293, 0.16097577583935038
+              ],
+              "rangeMM": [-0.1, 0.7844738920859308],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [-12.06400001525879, 2.523876304626465, 37.50772583007812],
+            "maxMM": [
+              -10.679999465942382, 3.5655149269104003, 38.613901977539065
+            ],
+            "radialShell": {
+              "originMM": [
+                -11.059999465942383, 3.1855149269104004, 38.23390197753906
+              ],
+              "axis": [
+                -0.8133900440704797, -0.3671183489220311, -0.45124356404472415
+              ],
+              "rangeMM": [-0.1, 0.8671602988815745],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 7",
+        "minMM": [-11.104000930786134, 5.583241577148438, 37.407643432617185],
+        "maxMM": [-9.168000335693359, 6.931430225372314, 38.5563916015625],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [-10.51599967956543, 5.583241577148438, 37.65887939453125],
+            "maxMM": [-9.168000335693359, 6.650492076873779, 38.5563916015625],
+            "radialShell": {
+              "originMM": [
+                -9.54800033569336, 5.9632415771484375, 38.03887939453125
+              ],
+              "axis": [
+                -0.8678489591176675, 0.4534818433964696, 0.202959113784331
+              ],
+              "rangeMM": [-0.1, 0.777536497214772],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -11.104000930786134, 5.890492076873779, 37.407643432617185
+            ],
+            "maxMM": [-9.755999679565429, 6.931430225372314, 38.5563916015625],
+            "radialShell": {
+              "originMM": [
+                -10.13599967956543, 6.270492076873779, 38.1763916015625
+              ],
+              "axis": [
+                -0.7748963344842997, 0.370233806537614, -0.5123110376514102
+              ],
+              "rangeMM": [-0.1, 0.8588127921808058],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 8",
+        "minMM": [-7.840000514984131, 6.2606469345092775, 36.668690795898435],
+        "maxMM": [-6.648000354766846, 8.432400588989259, 37.68145263671875],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -7.624000434875488, 6.2606469345092775, 36.78896057128906
+            ],
+            "maxMM": [-6.648000354766846, 7.736154441833496, 37.68145263671875],
+            "radialShell": {
+              "originMM": [
+                -7.028000354766846, 6.640646934509277, 37.16896057128906
+              ],
+              "axis": [
+                -0.2845652845380021, 0.9426320458232376, 0.17454920516262376
+              ],
+              "rangeMM": [-0.1, 0.8590528143983668],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -7.840000514984131, 6.976154441833496, 36.668690795898435
+            ],
+            "maxMM": [-6.864000434875488, 8.432400588989259, 37.68145263671875],
+            "radialShell": {
+              "originMM": [
+                -7.244000434875488, 7.356154441833496, 37.30145263671875
+              ],
+              "axis": [
+                -0.2799527735037993, 0.902388739113208, -0.3275988524540414
+              ],
+              "rangeMM": [-0.1, 0.8715589933446798],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 9",
+        "minMM": [-4.86400068283081, 7.911036605834961, 35.952687377929685],
+        "maxMM": [-3.216000671386719, 9.814371948242188, 37.131724243164065],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -4.420000915527344, 7.911036605834961, 36.154774780273435
+            ],
+            "maxMM": [-3.216000671386719, 9.2586039352417, 37.131724243164065],
+            "radialShell": {
+              "originMM": [
+                -3.5960006713867188, 8.291036605834961, 36.53477478027344
+              ],
+              "axis": [
+                -0.5783142625377113, 0.7653116665618057, 0.282578602816729
+              ],
+              "rangeMM": [-0.1, 0.8677490819477622],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [-4.86400068283081, 8.498603935241698, 35.952687377929685],
+            "maxMM": [
+              -3.660000915527344, 9.814371948242188, 37.131724243164065
+            ],
+            "radialShell": {
+              "originMM": [
+                -4.040000915527344, 8.8786039352417, 36.75172424316406
+              ],
+              "axis": [
+                -0.5377941982742052, 0.6731733550070982, -0.5075579123716745
+              ],
+              "rangeMM": [-0.1, 0.9255941933331988],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 10",
+        "minMM": [-1.384000425338745, 7.019096965789795, 35.961415405273435],
+        "maxMM": [0.4079984474182129, 8.54122055053711, 37.34853637695313],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -0.8680003929138184, 7.416081066131592, 35.961415405273435
+            ],
+            "maxMM": [0.4079984474182129, 8.54122055053711, 37.34853637695313],
+            "radialShell": {
+              "originMM": [
+                0.02799844741821289, 8.16122055053711, 36.34141540527344
+              ],
+              "axis": [
+                -0.5794951763883702, -0.41007179354468576, 0.7042914628771644
+              ],
+              "rangeMM": [-0.1, 0.9904281888037932],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [-1.384000425338745, 7.019096965789795, 36.57875549316406],
+            "maxMM": [
+              -0.10800039291381835, 8.176081066131593, 37.34853637695313
+            ],
+            "radialShell": {
+              "originMM": [
+                -0.48800039291381836, 7.796081066131592, 36.968536376953125
+              ],
+              "axis": [
+                -0.7924892778783929, -0.609700820231724, -0.015021792720786997
+              ],
+              "rangeMM": [-0.1, 0.7511129510879095],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 11",
+        "minMM": [-0.08799970626831055, 3.4377900314331056, 36.35304748535156],
+        "maxMM": [1.8000000762939452, 4.812124137878418, 37.802561645507815],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              0.4760004234313965, 3.7589832496643067, 36.35304748535156
+            ],
+            "maxMM": [1.8000000762939452, 4.812124137878418, 37.73833740234375],
+            "radialShell": {
+              "originMM": [
+                1.4200000762939453, 4.432124137878418, 36.73304748535156
+              ],
+              "axis": [
+                -0.6325447647644616, -0.32876746153499825, 0.7012838774739553
+              ],
+              "rangeMM": [-0.1, 0.9916359509710958],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -0.08799970626831055, 3.4377900314331056, 36.97833740234375
+            ],
+            "maxMM": [
+              1.2360004234313964, 4.5189832496643065, 37.802561645507815
+            ],
+            "radialShell": {
+              "originMM": [
+                0.8560004234313965, 4.138983249664307, 37.35833740234375
+              ],
+              "axis": [
+                -0.864744117066396, -0.4924643298485372, 0.09847078666229178
+              ],
+              "rangeMM": [-0.1, 0.7522162088977848],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "main stitch 12",
+        "minMM": [0.9439994049072266, 1.2633281898498536, 36.755421752929685],
+        "maxMM": [2.8560003089904784, 2.30909574508667, 38.04789245605469],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              1.5199996185302735, 1.4170924377441407, 36.755421752929685
+            ],
+            "maxMM": [2.8560003089904784, 2.30909574508667, 37.999277954101565],
+            "radialShell": {
+              "originMM": [
+                2.4760003089904785, 1.92909574508667, 37.13542175292969
+              ],
+              "axis": [
+                -0.7541715266827503, -0.17283509807279576, 0.6335245356062988
+              ],
+              "rangeMM": [-0.1, 0.8637528998128107],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              0.9439994049072266, 1.2633281898498536, 37.23927795410156
+            ],
+            "maxMM": [
+              2.2799996185302733, 2.1770924377441405, 38.04789245605469
+            ],
+            "radialShell": {
+              "originMM": [
+                1.8999996185302734, 1.7970924377441406, 37.61927795410156
+              ],
+              "axis": [
+                -0.9629700001025366, -0.2570664980819437, 0.08127480831356487
+              ],
+              "rangeMM": [-0.1, 0.6981496968355344],
+              "radiusAtOriginMM": 0.38,
+              "radiusSlope": 0,
+              "thicknessMM": 0.38,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "foot olive cloth patch",
+        "minMM": [-0.4179973983764648, -16.642399826049804, 30],
+        "maxMM": [8.392003097534179, -11.943352661132813, 40.2],
+        "kind": "paint",
+        "rgb": [0.49, 0.54, 0.32],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "excludeParts": [
+          {
+            "name": "outside patch side 0",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-0.37799739837646484, -13.915769577026367, 0],
+              "axis": [-0.9849636654279752, -0.17276162127824524, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 1",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-0.32399749755859375, -14.223638534545898, 0],
+              "axis": [-0.7706868754913991, -0.6372140456277662, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 2",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [1.458003044128418, -16.378902435302734, 0],
+              "axis": [-0.5274468960363367, -0.8495880012462711, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 3",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [1.818002700805664, -16.602399826049805, 0],
+              "axis": [0.16642539975894796, -0.9860540483741621, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 4",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [8.02800178527832, -15.554281234741211, 0],
+              "axis": [0.752757913702069, -0.6582974429229604, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 5",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [8.35200309753418, -15.183788299560547, 0],
+              "axis": [1.0, -0.0, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 6",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [8.35200309753418, -14.817060470581055, 0],
+              "axis": [0.6969148387617162, 0.7171538938845211, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 7",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [5.436001777648926, -11.983352661132812, 0],
+              "axis": [-0.03321455207882497, 0.9994482445480622, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 8",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [5.148001670837402, -11.992923736572266, 0],
+              "axis": [-0.32863637560292497, 0.9444565276552295, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "foot stitch 1",
+        "minMM": [5.298002433776856, -16.563113021850587, 33.72127075195313],
+        "maxMM": [6.564002799987793, -15.460290145874023, 35.00602416992187],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              5.631002616882324, -16.563113021850587, 33.72127075195313
+            ],
+            "maxMM": [6.564002799987793, -15.70042152404785, 34.88926391601562],
+            "radialShell": {
+              "originMM": [
+                6.264002799987793, -16.263113021850586, 34.021270751953125
+              ],
+              "axis": [
+                -0.4697547456406639, 0.37057210173726757, 0.801253266053936
+              ],
+              "rangeMM": [-0.1, 0.8088809345636612],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              5.298002433776856, -16.300421524047852, 34.28926391601563
+            ],
+            "maxMM": [
+              6.231002616882324, -15.460290145874023, 35.00602416992187
+            ],
+            "radialShell": {
+              "originMM": [
+                5.931002616882324, -16.00042152404785, 34.589263916015625
+              ],
+              "axis": [
+                -0.7801677179498966, 0.5625905294433527, 0.2735511433891268
+              ],
+              "rangeMM": [-0.1, 0.5268315330715266],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "foot stitch 2",
+        "minMM": [0.11400265693664552, -16.72620849609375, 34.224169921875],
+        "maxMM": [1.4340029239654541, -15.649607849121093, 35.149777221679685],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [0.4740025520324707, -16.72620849609375, 34.424365234375],
+            "maxMM": [
+              1.4340029239654541, -15.876631927490234, 35.149777221679685
+            ],
+            "radialShell": {
+              "originMM": [
+                1.134002923965454, -16.42620849609375, 34.724365234375
+              ],
+              "axis": [-0.79008096833, 0.547737481314191, 0.275237561110972],
+              "rangeMM": [-0.1, 0.555649973057722],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              0.11400265693664552, -16.476631927490235, 34.224169921875
+            ],
+            "maxMM": [
+              1.0740025520324707, -15.649607849121093, 35.149777221679685
+            ],
+            "radialShell": {
+              "originMM": [
+                0.7740025520324707, -16.176631927490234, 34.84977722167969
+              ],
+              "axis": [
+                -0.6718006571527394, 0.42365269300227737, -0.6076201714566967
+              ],
+              "rangeMM": [-0.1, 0.6358730916126154],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "foot stitch 3",
+        "minMM": [0.2760018825531006, -13.993385124206544, 36.227664184570315],
+        "maxMM": [1.434002447128296, -12.611770820617675, 37.055172729492185],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              0.5550024032592773, -13.993385124206544, 36.411746215820315
+            ],
+            "maxMM": [
+              1.434002447128296, -12.999061775207519, 37.055172729492185
+            ],
+            "radialShell": {
+              "originMM": [
+                1.134002447128296, -13.693385124206543, 36.75517272949219
+              ],
+              "axis": [
+                -0.5752666387073481, 0.8130502934579725, -0.08954057570874929
+              ],
+              "rangeMM": [-0.1, 0.584992567091923],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              0.2760018825531006, -13.59906177520752, 36.227664184570315
+            ],
+            "maxMM": [
+              1.1550024032592774, -12.611770820617675, 37.01174621582031
+            ],
+            "radialShell": {
+              "originMM": [
+                0.8550024032592773, -13.29906177520752, 36.71174621582031
+              ],
+              "axis": [
+                -0.545362272730686, 0.7570375663405636, -0.3598251167319725
+              ],
+              "rangeMM": [-0.1, 0.6115874981765642],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "foot stitch 4",
+        "minMM": [4.506002140045166, -12.834502029418946, 36.8484375],
+        "maxMM": [5.178002166748047, -11.19300193786621, 37.55909423828125],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              4.506002140045166, -12.834502029418946, 36.924502563476565
+            ],
+            "maxMM": [
+              5.142001914978027, -11.710120391845702, 37.55909423828125
+            ],
+            "radialShell": {
+              "originMM": [
+                4.806002140045166, -12.534502029418945, 37.22450256347656
+              ],
+              "axis": [
+                0.06834280658785237, 0.9954982469119826, 0.0656696366889964
+              ],
+              "rangeMM": [-0.1, 0.6267529492893277],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [4.5420019149780275, -12.310120391845704, 36.8484375],
+            "maxMM": [5.178002166748047, -11.19300193786621, 37.55909423828125],
+            "radialShell": {
+              "originMM": [
+                4.842001914978027, -12.010120391845703, 37.25909423828125
+              ],
+              "axis": [
+                0.0679186654504381, 0.9756041568389802, -0.20876681738708933
+              ],
+              "rangeMM": [-0.1, 0.6300494574100515],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "foot stitch 5",
+        "minMM": [6.864002418518067, -14.147078323364259, 35.789614868164065],
+        "maxMM": [8.382002639770509, -13.102256965637206, 36.86489562988281],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [7.323002052307129, -13.9142635345459, 35.789614868164065],
+            "maxMM": [
+              8.382002639770509, -13.102256965637206, 36.835324096679685
+            ],
+            "radialShell": {
+              "originMM": [
+                8.082002639770508, -13.402256965637207, 36.08961486816406
+              ],
+              "axis": [
+                -0.6810029971059981, -0.31454667548654763, 0.6612830762033823
+              ],
+              "rangeMM": [-0.1, 0.7740067068925622],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              6.864002418518067, -14.147078323364259, 36.23532409667969
+            ],
+            "maxMM": [
+              7.923002052307129, -13.314263534545898, 36.86489562988281
+            ],
+            "radialShell": {
+              "originMM": [
+                7.623002052307129, -13.614263534545898, 36.53532409667969
+              ],
+              "axis": [
+                -0.890367452085661, -0.451614108309564, 0.05736285768897347
+              ],
+              "rangeMM": [-0.1, 0.6155170853492775],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "head olive cloth patch",
+        "minMM": [-21.047999420166015, 4.485681018829346, 30],
+        "maxMM": [-14.254000625610352, 12.693169631958007, 40.2],
+        "kind": "paint",
+        "rgb": [0.46, 0.51, 0.3],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "excludeParts": [
+          {
+            "name": "outside patch side 0",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-21.007999420166016, 6.025903224945068, 0],
+              "axis": [-0.9368053523453269, -0.34985101374320465, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 1",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-20.863998413085938, 5.640307903289795, 0],
+              "axis": [-0.5079890302436748, -0.8613635383228679, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 2",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-18.9739990234375, 4.525681018829346, 0],
+              "axis": [0.413104448265893, -0.9106836524408091, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 3",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-18.649999618530273, 4.672653675079346, 0],
+              "axis": [0.7706457284302248, -0.6372638082083809, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 4",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-15.157999992370605, 8.895543098449707, 0],
+              "axis": [0.8849587928011289, -0.46566934088897105, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 5",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-14.294000625610352, 10.53748893737793, 0],
+              "axis": [0.8985356690769447, 0.4389005028436939, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 6",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-14.456000328063965, 10.869141578674316, 0],
+              "axis": [0.40614372366966045, 0.9138092118838277, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 7",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-18.470001220703125, 12.653169631958008, 0],
+              "axis": [-0.5887483999837415, 0.8083163499005722, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 8",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-18.739999771118164, 12.456512451171875, 0],
+              "axis": [-0.8169289609531682, 0.5767383052615606, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "outside patch side 9",
+            "minMM": [-100, -100, -100],
+            "maxMM": [100, 100, 100],
+            "projection": {
+              "originMM": [-20.43199920654297, 10.059856414794922, 0],
+              "axis": [-0.9899590705676089, 0.14135430167107108, 0],
+              "rangeMM": [0.04, 1000]
+            }
+          },
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "head stitch 1",
+        "minMM": [-19.61599807739258, 4.189583969116211, 36.781314086914065],
+        "maxMM": [-18.6739990234375, 5.709266471862793, 38.11292724609375],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -19.44499855041504, 4.189583969116211, 36.781314086914065
+            ],
+            "maxMM": [-18.6739990234375, 5.260494518280029, 37.96851806640625],
+            "radialShell": {
+              "originMM": [
+                -18.9739990234375, 4.489583969116211, 37.08131408691406
+              ],
+              "axis": [
+                -0.22153504484018885, 0.6100788199164281, 0.7607404665173491
+              ],
+              "rangeMM": [-0.1, 0.8718847692964102],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -19.61599807739258, 4.6604945182800295, 37.36851806640625
+            ],
+            "maxMM": [-18.84499855041504, 5.709266471862793, 38.11292724609375],
+            "radialShell": {
+              "originMM": [
+                -19.14499855041504, 4.960494518280029, 37.66851806640625
+              ],
+              "axis": [
+                -0.34098367351740455, 0.8948791380243569, 0.2879608701253693
+              ],
+              "rangeMM": [-0.1, 0.6014888989070934],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "head stitch 2",
+        "minMM": [-16.699999618530274, 7.190436553955078, 36.60324401855469],
+        "maxMM": [-15.397999954223632, 8.66754608154297, 37.486935424804685],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -16.348999786376954, 7.190436553955078, 36.60324401855469
+            ],
+            "maxMM": [
+              -15.397999954223632, 8.237160015106202, 37.486935424804685
+            ],
+            "radialShell": {
+              "originMM": [
+                -15.697999954223633, 7.490436553955078, 36.90324401855469
+              ],
+              "axis": [
+                -0.5527429292426674, 0.7034853349167304, 0.4467478458026756
+              ],
+              "rangeMM": [-0.1, 0.7350146036860888],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -16.699999618530274, 7.637160015106201, 36.84385986328125
+            ],
+            "maxMM": [
+              -15.748999786376952, 8.66754608154297, 37.486935424804685
+            ],
+            "radialShell": {
+              "originMM": [
+                -16.048999786376953, 7.937160015106201, 37.18693542480469
+              ],
+              "axis": [
+                -0.6301211140712676, 0.7726366876022484, -0.07733001081475618
+              ],
+              "rangeMM": [-0.1, 0.6570355036756025],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "head stitch 3",
+        "minMM": [-14.918000030517579, 10.05821533203125, 36.647341918945315],
+        "maxMM": [-13.472000312805175, 10.785910415649415, 37.63851623535156],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -14.49499969482422, 10.05821533203125, 36.647341918945315
+            ],
+            "maxMM": [
+              -13.472000312805175, 10.728219795227051, 37.56605224609375
+            ],
+            "radialShell": {
+              "originMM": [
+                -13.772000312805176, 10.35821533203125, 36.94734191894531
+              ],
+              "axis": [
+                -0.791787532751022, 0.13103721554105602, 0.5965750171799822
+              ],
+              "rangeMM": [-0.1, 0.634233445870706],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -14.918000030517579, 10.12821979522705, 36.96605224609375
+            ],
+            "maxMM": [
+              -13.894999694824218, 10.785910415649415, 37.63851623535156
+            ],
+            "radialShell": {
+              "originMM": [
+                -14.194999694824219, 10.42821979522705, 37.26605224609375
+              ],
+              "axis": [
+                -0.9768552331202542, 0.1332277535174176, 0.16734461215789362
+              ],
+              "rangeMM": [-0.1, 0.5330225414693424],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "head stitch 4",
+        "minMM": [-19.147999572753907, 11.842805099487304, 36.02476806640625],
+        "maxMM": [-17.810000610351562, 13.222325134277344, 37.25458984375],
+        "kind": "paint",
+        "rgb": [0.23, 0.26, 0.13],
+        "metallic": 0,
+        "roughness": 0.98,
+        "variation": 0.02,
+        "includeParts": [
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -18.779000091552735, 11.842805099487304, 36.07850952148438
+            ],
+            "maxMM": [-17.810000610351562, 12.819506454467774, 37.25458984375],
+            "radialShell": {
+              "originMM": [
+                -18.110000610351562, 12.142805099487305, 36.95458984375
+              ],
+              "axis": [
+                -0.4724813457220911, 0.4823431256790119, -0.7376357414434599
+              ],
+              "rangeMM": [-0.1, 0.880982116102873],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "curved stitch segment",
+            "minMM": [
+              -19.147999572753907, 12.219506454467773, 36.02476806640625
+            ],
+            "maxMM": [
+              -18.179000091552734, 13.222325134277344, 36.67850952148437
+            ],
+            "radialShell": {
+              "originMM": [
+                -18.479000091552734, 12.519506454467773, 36.378509521484375
+              ],
+              "axis": [
+                -0.6722298509281076, 0.7338404384688457, -0.09790423070034612
+              ],
+              "rangeMM": [-0.1, 0.6489186186714504],
+              "radiusAtOriginMM": 0.3,
+              "radiusSlope": 0,
+              "thicknessMM": 0.3,
+              "allowanceMM": 0
+            }
+          }
+        ],
+        "excludeParts": [
+          {
+            "name": "ivory pillow roll",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "rgb": [0.78, 0.79, 0.7],
+            "excludeParts": [
+              {
+                "name": "south inner bed head post",
+                "minMM": [-31, -14, 26.1],
+                "maxMM": [-26.85, -11.3, 40.1]
+              },
+              {
+                "name": "north inner bed head post",
+                "minMM": [-31, 11.3, 26.1],
+                "maxMM": [-26.85, 14, 40.1]
+              }
+            ],
+            "awayFromSource": {
+              "code": "MT1-077",
+              "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+              "matchMM": 0.035,
+              "componentAboveMM": 40,
+              "componentIndex": 0,
+              "projectTo": {
+                "code": "MT1-077",
+                "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+              }
+            },
+            "includeParts": [
+              {
+                "name": "straight pillow centre",
+                "minMM": [-28, -11.5, 35],
+                "maxMM": [-20.6, 11.5, 42.2],
+                "radialShell": {
+                  "originMM": [-24.4, -11.5, 38.8],
+                  "axis": [0, 1, 0],
+                  "rangeMM": [0, 23],
+                  "radiusAtOriginMM": 3.8,
+                  "radiusSlope": 0,
+                  "thicknessMM": 3.8,
+                  "allowanceMM": 0
+                }
+              },
+              {
+                "name": "rounded pillow shoulder -1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, -11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              },
+              {
+                "name": "rounded pillow shoulder 1",
+                "minMM": [-28, -15.2, 35],
+                "maxMM": [-20.6, 15.2, 42.2],
+                "ellipsoid": {
+                  "centerMM": [-24.4, 11.5, 38.8],
+                  "radiiMM": [4, 3.8, 4]
+                }
+              }
+            ]
+          },
+          {
+            "name": "rolled pillow end -1",
+            "minMM": [-25.5, -15.7, 34.85],
+            "maxMM": [-23.5, -13.399999999999999, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, -15.7, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          },
+          {
+            "name": "rolled pillow end 1",
+            "minMM": [-25.5, 13.4, 34.85],
+            "maxMM": [-23.5, 15.7, 36.75],
+            "radialShell": {
+              "originMM": [-24.5, 13.4, 35.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 2.3],
+              "radiusAtOriginMM": 0.95,
+              "radiusSlope": 0,
+              "thicknessMM": 0.77,
+              "allowanceMM": 0.03
+            },
+            "rgb": [0.78, 0.79, 0.7]
+          }
+        ]
+      },
+      {
+        "name": "foot iron head 1",
+        "minMM": [18.54453203660813, -10.926668259530448, 31.571207969336076],
+        "maxMM": [18.89160435809526, -10.079909773229371, 32.41796645563715],
+        "ellipsoid": {
+          "centerMM": [
+            18.468225114944723, -10.50328901637991, 31.994587212486614
+          ],
+          "radiiMM": [0.423379243150538, 0.423379243150538, 0.423379243150538]
+        },
+        "kind": "paint",
+        "rgb": [0.22, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "foot iron head 2",
+        "minMM": [18.547360554594256, 10.418454603202917, 31.661624132034156],
+        "maxMM": [18.909538726663197, 11.265488625118802, 32.508658153950044],
+        "ellipsoid": {
+          "centerMM": [18.486021715705252, 10.84197161416086, 32.0851411429921],
+          "radiiMM": [
+            0.42351701095794325, 0.42351701095794325, 0.42351701095794325
+          ]
+        },
+        "kind": "paint",
+        "rgb": [0.22, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "foot iron head 3",
+        "minMM": [18.53835684357367, -11.022757757292261, 26.108063971786525],
+        "maxMM": [18.987583761010374, -10.177263646725805, 26.95355808235298],
+        "ellipsoid": {
+          "centerMM": [
+            18.564836705727146, -10.600010702009033, 26.530811027069753
+          ],
+          "radiiMM": [
+            0.4227470552832272, 0.4227470552832272, 0.4227470552832272
+          ]
+        },
+        "kind": "paint",
+        "rgb": [0.22, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "foot iron head 4",
+        "minMM": [18.537527937637414, 10.276790796502066, 26.238580070443085],
+        "maxMM": [19.08820304754406, 11.129388704953865, 27.091177978894883],
+        "ellipsoid": {
+          "centerMM": [
+            18.66190409331816, 10.703089750727965, 26.664879024668984
+          ],
+          "radiiMM": [
+            0.4262989542258987, 0.4262989542258987, 0.4262989542258987
+          ]
+        },
+        "kind": "paint",
+        "rgb": [0.22, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "headboard iron head 1",
+        "minMM": [-27.292340124106154, -12.912175744394267, 41.46706692655761],
+        "maxMM": [-26.864089697290723, -12.018311233418713, 42.36093143753317],
+        "ellipsoid": {
+          "centerMM": [
+            -27.3110219527785, -12.46524348890649, 41.91399918204539
+          ],
+          "radiiMM": [
+            0.4469322554877777, 0.4469322554877777, 0.4469322554877777
+          ]
+        },
+        "kind": "paint",
+        "rgb": [0.22, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "headboard iron head 2",
+        "minMM": [-27.257512538751904, 12.448718361418651, 41.61772932867528],
+        "maxMM": [-26.92276170681154, 13.335642645207697, 42.504653612464324],
+        "ellipsoid": {
+          "centerMM": [
+            -27.366223848706063, 12.892180503313174, 42.0611914705698
+          ],
+          "radiiMM": [
+            0.4434621418945237, 0.4434621418945237, 0.4434621418945237
+          ]
+        },
+        "kind": "paint",
+        "rgb": [0.22, 0.235, 0.22],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [
+      {
+        "name": "khaki draped blanket",
+        "minMM": [-27.5, -17.2, 26.65],
+        "maxMM": [17.2, 17.2, 40.2],
+        "rgb": [0.58, 0.61, 0.4],
+        "excludeParts": [
+          {
+            "name": "south foot post",
+            "minMM": [16.4, -15.5, 26.1],
+            "maxMM": [20.6, -11.3, 39.8],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north foot post",
+            "minMM": [16.4, 11.3, 26.1],
+            "maxMM": [20.6, 15.5, 39.8],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south head post",
+            "minMM": [-35.2, -17.6, 26.1],
+            "maxMM": [-26.5, -13.6, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north head post",
+            "minMM": [-35.2, 13.6, 26.1],
+            "maxMM": [-26.5, 17.6, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "south inner bed head post",
+            "minMM": [-31, -14, 26.1],
+            "maxMM": [-26.85, -11.3, 40.1]
+          },
+          {
+            "name": "north inner bed head post",
+            "minMM": [-31, 11.3, 26.1],
+            "maxMM": [-26.85, 14, 40.1]
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-077",
+          "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+          "matchMM": 0.035,
+          "componentAboveMM": 40,
+          "componentIndex": 0,
+          "projectTo": {
+            "code": "MT1-077",
+            "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+          }
+        }
+      },
+      {
+        "name": "ivory pillow roll",
+        "minMM": [-28, -15.2, 35],
+        "maxMM": [-20.6, 15.2, 42.2],
+        "rgb": [0.78, 0.79, 0.7],
+        "excludeParts": [
+          {
+            "name": "south inner bed head post",
+            "minMM": [-31, -14, 26.1],
+            "maxMM": [-26.85, -11.3, 40.1]
+          },
+          {
+            "name": "north inner bed head post",
+            "minMM": [-31, 11.3, 26.1],
+            "maxMM": [-26.85, 14, 40.1]
+          }
+        ],
+        "awayFromSource": {
+          "code": "MT1-077",
+          "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034",
+          "matchMM": 0.035,
+          "componentAboveMM": 40,
+          "componentIndex": 0,
+          "projectTo": {
+            "code": "MT1-077",
+            "sourceSHA256": "c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034"
+          }
+        },
+        "includeParts": [
+          {
+            "name": "straight pillow centre",
+            "minMM": [-28, -11.5, 35],
+            "maxMM": [-20.6, 11.5, 42.2],
+            "radialShell": {
+              "originMM": [-24.4, -11.5, 38.8],
+              "axis": [0, 1, 0],
+              "rangeMM": [0, 23],
+              "radiusAtOriginMM": 3.8,
+              "radiusSlope": 0,
+              "thicknessMM": 3.8,
+              "allowanceMM": 0
+            }
+          },
+          {
+            "name": "rounded pillow shoulder -1",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "ellipsoid": {
+              "centerMM": [-24.4, -11.5, 38.8],
+              "radiiMM": [4, 3.8, 4]
+            }
+          },
+          {
+            "name": "rounded pillow shoulder 1",
+            "minMM": [-28, -15.2, 35],
+            "maxMM": [-20.6, 15.2, 42.2],
+            "ellipsoid": {
+              "centerMM": [-24.4, 11.5, 38.8],
+              "radiiMM": [4, 3.8, 4]
+            }
+          }
+        ]
+      },
+      {
+        "name": "rolled pillow end -1",
+        "minMM": [-25.5, -15.7, 34.85],
+        "maxMM": [-23.5, -13.399999999999999, 36.75],
+        "radialShell": {
+          "originMM": [-24.5, -15.7, 35.8],
+          "axis": [0, 1, 0],
+          "rangeMM": [0, 2.3],
+          "radiusAtOriginMM": 0.95,
+          "radiusSlope": 0,
+          "thicknessMM": 0.77,
+          "allowanceMM": 0.03
+        },
+        "rgb": [0.78, 0.79, 0.7]
+      },
+      {
+        "name": "rolled pillow end 1",
+        "minMM": [-25.5, 13.4, 34.85],
+        "maxMM": [-23.5, 15.7, 36.75],
+        "radialShell": {
+          "originMM": [-24.5, 13.4, 35.8],
+          "axis": [0, 1, 0],
+          "rangeMM": [0, 2.3],
+          "radiusAtOriginMM": 0.95,
+          "radiusSlope": 0,
+          "thicknessMM": 0.77,
+          "allowanceMM": 0.03
+        },
+        "rgb": [0.78, 0.79, 0.7]
+      }
+    ],
+    "hardware": []
+  },
+  "reviewNotes": "Individually inspected PDF page11 and full/back/top/pillow/footboard/three patch source views. Source639996tri/31999884bytes/SHA c2ee10ab54ee37cd279f3f9a8c6f048732852280c3a26fc9f1f2a82cffc7b034,max49.829700mm. Below16.9mm the source has two disconnected mount components; use width2height1 and original35mmcell centres[-17.5,0]/[17.5,0], not a single wide peg. Native shoulder17mm. Floor points[26.25,\u00b18.75] are free; canopy/bed occupies the west part toX20.458,blockerto20.6. X floor/frame,Y end trim/footboard/headrail,Z posts/slats;rear ochre plaster. Khaki blanket,ivory pillow roll/tied ends,three olive patches and21 individually picked curved stitch segments. Six iron dome masks fitted after excluding nearby timber from the point samples. Keep cloth off the foot posts and the patch/stitch colour off the pillow. Verify all21stitchcaps,3patchcolours,6heads,blankethem,pillowends,curvedheadrail,wood/plastercontacts,seam/railclearances,source/render/LOD/shadow geometry and footprint,two free quarters,both candidates and all actual packed channels. Normalize BOTH ordinary pegs to UD-016 after selecting the reviewed native candidate, then regenerate shadow/transparentpreview/manifest and validate Go before publication. No emission or built-in lights.",
+  "pegCentersMM": [
+    [-17.5, 0],
+    [17.5, 0]
+  ],
+  "renderColourSize": 1536
+}

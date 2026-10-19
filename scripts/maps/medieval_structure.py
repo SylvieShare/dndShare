@@ -3,6 +3,9 @@ import numpy as np
 
 REFERENCE_TREES = {}
 
+def reference_key(ref):
+    return (ref['code'], ref.get('componentAboveMM'), ref.get('componentIndex', 0))
+
 def initialize_references(settings):
     import bpy, json, hashlib
     from pathlib import Path
@@ -11,7 +14,7 @@ def initialize_references(settings):
     inventory = json.loads((root/'models/collections/medieval-town-vol1/inventory.json').read_text())
     def visit(part):
         ref = part.get('awayFromSource')
-        if ref and ref['code'] not in REFERENCE_TREES:
+        if ref and reference_key(ref) not in REFERENCE_TREES:
             row = next(r for r in inventory if r['code']==ref['code'])
             filename = root/'models'/row['sourcePath']
             with filename.open('rb') as stream:
@@ -19,7 +22,13 @@ def initialize_references(settings):
                     raise ValueError('Source reference changed')
             bpy.ops.wm.stl_import(filepath=str(filename))
             other = bpy.context.object
-            REFERENCE_TREES[ref['code']] = BVHTree.FromObject(other,bpy.context.evaluated_depsgraph_get())
+            if 'componentAboveMM' in ref:
+                from source_component_regions import source_component_tree
+                tree, stats = source_component_tree(other, ref['componentAboveMM'], ref.get('componentIndex', 0))
+                print('MEDIEVAL_SOURCE_COMPONENT', ref['code'], stats, flush=True)
+            else:
+                tree = BVHTree.FromObject(other,bpy.context.evaluated_depsgraph_get())
+            REFERENCE_TREES[reference_key(ref)] = tree
             bpy.data.objects.remove(other,do_unlink=True)
         for child in part.get('includeParts', [])+part.get('excludeParts', []): visit(child)
     for key in ['woodParts','stoneParts','fabricParts','produceParts','surfaceParts','ironParts']:
@@ -59,7 +68,7 @@ def domain(p, part):
     for excluded in part.get('excludeParts', []):
         mask &= ~domain(p, excluded)
     if part.get('awayFromSource'):
-        ref = part['awayFromSource']; tree = REFERENCE_TREES[ref['code']]
+        ref = part['awayFromSource']; tree = REFERENCE_TREES[reference_key(ref)]
         candidates = np.flatnonzero(mask)
         for i in candidates:
             mask[i] = tree.find_nearest(tuple(p[i]),ref['matchMM'])[0] is None
