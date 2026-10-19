@@ -11,8 +11,9 @@ export function createMapFramePresentation({
   canvas,
   objectLayer,
   profiler,
+  effects,
 }) {
-  return (objects, options, appearance) => {
+  return (objects, options, appearance, frameDepth) => {
     for (const object of objects.children) {
       object.userData.outlineType = "object";
       object.userData.outlineStyle =
@@ -45,6 +46,8 @@ export function createMapFramePresentation({
       ],
       tiles.transform,
       lighting.excluded,
+      frameDepth,
+      effects.outlineOccluders(),
     );
     profiler?.mark("previews");
     framePreview.copy(canvas, lighting.position);

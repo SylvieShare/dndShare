@@ -59,10 +59,24 @@ function setup() {
   camera.lookAt(0, 0, 0);
   camera.updateMatrixWorld(true);
   const outline = createTileOutline(gpu, {});
+  const frameDepth = {
+    mask: vi.fn((mask, view) => {
+      gpu.render(mask, view);
+      return {};
+    }),
+  };
   const draw = () => {
     scene.updateMatrixWorld(true);
     gpu.render.mockClear();
-    outline.render(scene, camera, annotations, [object], null, [helpers]);
+    outline.render(
+      scene,
+      camera,
+      annotations,
+      [object],
+      null,
+      [helpers],
+      frameDepth,
+    );
     return gpu.render.mock.calls.length;
   };
   return {
@@ -88,7 +102,7 @@ function setup() {
 }
 it("reuses both depth/mask and the edge result when only lighting/material uniforms change", () => {
   const f = setup();
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   expect(f.draw()).toBe(1);
   f.scene.children.find((n) => n.isPointLight).position.x += 1;
   f.material.color.set("#ff0000");
@@ -105,30 +119,30 @@ it("reuses both depth/mask and the edge result when only lighting/material unifo
 });
 it("invalidates for camera, occluder movement/visibility, geometry, selection, size and context restoration", () => {
   const f = setup();
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.camera.position.x += 1;
   f.camera.updateMatrixWorld(true);
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   expect(f.draw()).toBe(1);
   f.occluder.position.x += 0.5;
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.occluder.visible = false;
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.object.position.x += 0.5;
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.object.userData.outlineStyle = "hover";
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.geometry.attributes.position.needsUpdate = true;
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.object.children[0].geometry = new BoxGeometry(0.5, 1, 0.5);
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   expect(f.draw()).toBe(1);
   f.resize();
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.pixelRatio();
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.element.dispatchEvent(new Event("webglcontextrestored"));
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   expect(f.draw()).toBe(1);
   f.outline.destroy();
 });
@@ -139,18 +153,18 @@ it("ignores instance upload-version churn for an unchanged placement preview, bu
   instances.setMatrixAt(0, new Matrix4());
   instances.setMatrixAt(1, new Matrix4().makeTranslation(1, 0, 0));
   f.object.add(instances);
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   instances.instanceMatrix.needsUpdate = true;
   expect(f.draw()).toBe(1);
   instances.setMatrixAt(1, new Matrix4().makeTranslation(1.5, 0, 0));
   instances.instanceMatrix.needsUpdate = true;
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   expect(f.draw()).toBe(1);
   f.outline.destroy();
 });
-it("does not composite a previous selection after clearing it and disposes both cached targets", () => {
+it("does not composite a previous selection after clearing it and disposes the cached edge target", () => {
   const f = setup();
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   const targets = [
     ...new Set(
       f.gpu.setRenderTarget.mock.calls
@@ -166,9 +180,9 @@ it("does not composite a previous selection after clearing it and disposes both 
   f.gpu.render.mockClear();
   f.outline.render(f.scene, f.camera, f.helpers, [], null, []);
   expect(f.gpu.render).not.toHaveBeenCalled();
-  expect(f.draw()).toBe(4);
+  expect(f.draw()).toBe(3);
   f.outline.destroy();
-  expect(targets).toHaveLength(2);
+  expect(targets).toHaveLength(1);
   expect(disposed.every((listener) => listener.mock.calls.length === 1)).toBe(
     true,
   );

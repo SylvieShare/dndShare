@@ -22,6 +22,7 @@ export function createTileOutline(gpu, assets) {
     polygonOffset: true,
     polygonOffsetFactor: -1,
     polygonOffsetUnits: -1,
+    depthWrite: false,
   });
   const selected = new MeshBasicMaterial({
     color: 0x00ff00,
@@ -29,8 +30,13 @@ export function createTileOutline(gpu, assets) {
     polygonOffset: true,
     polygonOffsetFactor: -1,
     polygonOffsetUnits: -1,
+    depthWrite: false,
   });
-  const invalid = new MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
+  const invalid = new MeshBasicMaterial({
+    color: 0xffffff,
+    toneMapped: false,
+    depthWrite: false,
+  });
   const objectHover = hover.clone();
   objectHover.color.setRGB(0, 0, 0.55);
   const objectSelected = selected.clone();
@@ -157,6 +163,8 @@ export function createTileOutline(gpu, assets) {
     previews,
     tileMatrix,
     excluded = [],
+    frameDepth,
+    animated = [],
   ) {
     const sources = sourcesFor(previews);
     if (!root.children.length && !sources.length) {
@@ -196,6 +204,8 @@ export function createTileOutline(gpu, assets) {
           }
         syncMotion(sources);
       },
+      frameDepth,
+      animated,
     );
   }
 

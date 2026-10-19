@@ -91,9 +91,9 @@ export function createMapFrameLoop({
         geometryWasMoving = !!(moving || effectFrame.moving);
         moving |= loading;
         profiler.mark("draw");
-        volumeFog.render(scene, camera);
+        const frameDepth = volumeFog.render(scene, camera);
         profiler.mark("overlays");
-        presentFrame(objects, options, appearance);
+        presentFrame(objects, options, appearance, frameDepth);
         if (moving || lighting.isFading() || effectFrame.moving) request();
         else if (
           (flickering || mistMoving || Number.isFinite(fireDelay)) &&

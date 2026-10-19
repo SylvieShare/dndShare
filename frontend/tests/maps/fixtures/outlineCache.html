@@ -11,6 +11,11 @@
         InstancedMesh,
         Matrix4,
         Mesh,
+        MeshBasicMaterial,
+        BufferGeometry,
+        Float32BufferAttribute,
+        LineBasicMaterial,
+        LineSegments,
         MeshStandardMaterial,
         OrthographicCamera,
         PointLight,
@@ -18,14 +23,15 @@
         SphereGeometry,
         WebGLRenderer,
       } from "three";
-      const reference = new URLSearchParams(location.search).has("reference");
-      const { createTileOutline } = await import(
-        reference
-          ? "/target/tileOutline-before-cache.js"
-          : "/src/features/maps/rendering/tileOutline.js"
+      import { createSceneFrame } from "/src/features/maps/rendering/sceneFrame.js";
+      import { createOutlineDepthReference } from "./outlineDepthReference.js";
+      import { createTileOutline } from "/src/features/maps/rendering/tileOutline.js";
+      const reference = new URLSearchParams(location.search).has(
+        "depthReference",
       );
       const gpu = new WebGLRenderer({
-        antialias: true,
+        antialias: reference,
+        depth: reference,
         preserveDrawingBuffer: true,
       });
       gpu.setSize(800, 600);
@@ -33,6 +39,7 @@
       gpu.toneMapping = ACESFilmicToneMapping;
       gpu.info.autoReset = false;
       document.body.append(gpu.domElement);
+      const sharedFrame = reference ? null : createSceneFrame(gpu);
       const scene = new Scene();
       scene.background = new Color("#263142");
       const camera = new OrthographicCamera(-4, 4, 3, -3, 0.1, 100);
@@ -72,12 +79,68 @@
       light.position.set(1, 4, 3);
       const markers = new Group(),
         annotations = new Group();
+      const glow = new Mesh(
+        new SphereGeometry(0.18, 16, 12),
+        new MeshBasicMaterial({ color: "#ff8c44", toneMapped: false }),
+      );
+      glow.position.set(-2.2, 0.5, 0);
+      scene.add(glow);
+      const gridGeometry = new BufferGeometry();
+      gridGeometry.setAttribute(
+        "position",
+        new Float32BufferAttribute(
+          [-3, -0.22, -3, 3, -0.22, 3, -3, -0.22, 3, 3, -0.22, -3],
+          3,
+        ),
+      );
+      annotations.add(
+        new LineSegments(
+          gridGeometry,
+          new LineBasicMaterial({
+            color: "#c8b695",
+            transparent: true,
+            opacity: 0.25,
+            depthWrite: false,
+          }),
+        ),
+      );
       scene.add(
         light,
         markers,
         annotations,
         new HemisphereLight(0xffffff, 0x665544, 2),
       );
+      const frameDepth =
+        sharedFrame ||
+        createOutlineDepthReference(gpu, scene, () => [
+          selected,
+          markers,
+          annotations,
+        ]);
+      const animated = [];
+      const bend = { value: 0 };
+      if (new URLSearchParams(location.search).has("animated")) {
+        const animatedMaterial = new MeshStandardMaterial({ color: "#68798a" });
+        animatedMaterial.onBeforeCompile = (shader) => {
+          shader.uniforms.bend = bend;
+          shader.vertexShader = shader.vertexShader
+            .replace(
+              "#include <common>",
+              "#include <common>\nuniform float bend;",
+            )
+            .replace(
+              "#include <begin_vertex>",
+              "#include <begin_vertex>\ntransformed.x+=bend*position.y;",
+            );
+        };
+        const mesh = new Mesh(new BoxGeometry(0.3, 1.8, 0.3), animatedMaterial);
+        mesh.position.set(-0.5, 0.9, 1);
+        mesh.userData.outlineClock = 0;
+        mesh.geometry.computeBoundingSphere();
+        mesh.geometry.boundingSphere.radius += 2;
+        animated.push(mesh);
+        scene.add(mesh);
+      }
       let outline = createTileOutline(gpu, {}),
         show = true,
         colour;
@@ -86,6 +149,7 @@
         outline = createTileOutline(gpu, {});
       }
       function draw() {
+        gpu.info.reset();
         outline.update(
           { tiles: [] },
           { master: true, selectionColor: colour },
@@ -94,7 +158,12 @@
         gpu.setRenderTarget(null);
         gpu.setClearColor("#263142", 1);
         gpu.autoClear = true;
-        gpu.render(scene, camera);
+        if (sharedFrame) {
+          gpu.setRenderTarget(sharedFrame.prepare());
+          gpu.render(scene, camera);
+          sharedFrame.present(null);
+        } else gpu.render(scene, camera);
+        const worldCounts = { ...gpu.info.render };
         gpu.info.reset();
         const start = performance.now();
         outline.render(
@@ -104,6 +173,8 @@
           show ? [selected] : [],
           null,
           [markers],
+          frameDepth,
+          animated,
         );
         const cpu = performance.now() - start,
           counts = { ...gpu.info.render },
@@ -126,6 +197,8 @@
           triangles: counts.triangles,
           pixels,
           textures: gpu.info.memory.textures,
+          totalCalls: worldCounts.calls + counts.calls,
+          totalTriangles: worldCounts.triangles + counts.triangles,
         };
       }
       window.outlineCache = {
@@ -134,6 +207,12 @@
             light.position.x += 0.2;
             light.intensity += 0.25;
           }
+          if (change === "shader") {
+            bend.value = bend.value ? 0 : 0.65;
+            animated[0].userData.outlineClock++;
+          }
+          if (change === "shaderFar") animated[0].position.x = 20;
+          if (change === "dpr") gpu.setPixelRatio(1);
           if (change === "move") {
             selected.position.x += 0.25;
           }
@@ -181,6 +260,8 @@
             calls: value.calls,
             triangles: value.triangles,
             textures: value.textures,
+            totalCalls: value.totalCalls,
+            totalTriangles: value.totalTriangles,
           };
         },
         compareFresh() {
@@ -202,6 +283,23 @@
           };
         },
         pixels: () => Array.from(window.outlinePixels),
+        restoreContext() {
+          const extension = gpu.getContext().getExtension("WEBGL_lose_context");
+          if (!extension) return false;
+          return new Promise((resolve) => {
+            gpu.domElement.addEventListener(
+              "webglcontextrestored",
+              () => resolve(true),
+              { once: true },
+            );
+            gpu.domElement.addEventListener(
+              "webglcontextlost",
+              () => setTimeout(() => extension.restoreContext(), 60),
+              { once: true },
+            );
+            extension.loseContext();
+          });
+        },
       };
     </script>
   </body>

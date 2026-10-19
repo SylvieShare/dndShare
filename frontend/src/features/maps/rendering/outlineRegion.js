@@ -1,9 +1,8 @@
-import { Box3, Matrix4, Vector3 } from "three";
+import { Box3, Vector3 } from "three";
 import { sceneBounds } from "./sceneBounds";
 
 const bounds = new Box3(),
-  point = new Vector3(),
-  crop = new Matrix4();
+  point = new Vector3();
 export function outlineRegion(scene, camera, width, height, ratio) {
   sceneBounds(scene, bounds);
   if (bounds.isEmpty()) return null;
@@ -26,16 +25,4 @@ export function outlineRegion(scene, camera, width, height, ratio) {
   const w = Math.min(width, Math.ceil(right + pad)) - x;
   const h = Math.min(height, Math.ceil(top + pad)) - y;
   return w > 0 && h > 0 ? { x, y, width: w, height: h } : null;
-}
-export function outlineCamera(view, region, width, height) {
-  const camera = view.clone();
-  camera.matrixAutoUpdate = false;
-  camera.matrixWorld.copy(view.matrixWorld);
-  camera.matrixWorldInverse.copy(view.matrixWorldInverse);
-  crop.makeScale(width / region.width, height / region.height, 1);
-  crop.elements[12] = (width - 2 * region.x - region.width) / region.width;
-  crop.elements[13] = (height - 2 * region.y - region.height) / region.height;
-  camera.projectionMatrix.premultiply(crop);
-  camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
-  return camera;
 }

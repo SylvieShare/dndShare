@@ -1,10 +1,8 @@
 import { expect, test } from "@playwright/test";
-import fs from "node:fs";
-import path from "node:path";
 
 async function open(page, reference = false) {
   await page.goto(
-    `/tests/maps/fixtures/outlineCache.html${reference ? "?reference" : ""}`,
+    `/tests/maps/fixtures/outlineCache.html${reference ? "?depthReference" : ""}`,
   );
   await page.waitForFunction(() => window.outlineCache);
 }
@@ -38,6 +36,7 @@ test("caches the mask and edge filter across light frames, invalidates all geome
     "hover",
     "invalid",
     "resize",
+    "dpr",
   ]) {
     expect(
       (
@@ -59,19 +58,43 @@ test("caches the mask and edge filter across light frames, invalidates all geome
   ).toBeGreaterThan(1);
   expect(errors).toEqual([]);
 });
+
+test("shader-deformed occluders update shared-depth contours only while overlapping the mask", async ({
+  page,
+}) => {
+  await page.goto("/tests/maps/fixtures/outlineCache.html?animated");
+  await page.waitForFunction(() => window.outlineCache);
+  await page.evaluate(() => window.outlineCache.frame());
+  expect(
+    (await page.evaluate(() => window.outlineCache.frame("shader"))).calls,
+  ).toBeGreaterThan(1);
+  expect(
+    await page.evaluate(() => window.outlineCache.compareFresh()),
+  ).toMatchObject({ changed: 0, max: 0 });
+  await page.evaluate(() => window.outlineCache.frame("shaderFar"));
+  expect(
+    (await page.evaluate(() => window.outlineCache.frame("shader"))).calls,
+  ).toBe(1);
+});
+
+test("shared MSAA depth is recreated after context loss", async ({ page }) => {
+  await open(page);
+  await page.evaluate(() => window.outlineCache.frame());
+  const restored = await page.evaluate(() =>
+    window.outlineCache.restoreContext(),
+  );
+  test.skip(!restored, "Context restoration unavailable");
+  expect(
+    (await page.evaluate(() => window.outlineCache.frame())).calls,
+  ).toBeGreaterThan(1);
+  expect(
+    await page.evaluate(() => window.outlineCache.compareFresh()),
+  ).toMatchObject({ changed: 0, max: 0 });
+});
 test("cached output preserves the previous outline colours and occlusion, and cuts repeated draw work", async ({
   page,
   browser,
 }) => {
-  test.skip(
-    !fs.existsSync(
-      path.resolve(
-        import.meta.dirname,
-        "../../target/tileOutline-before-cache.js",
-      ),
-    ),
-    "Local pre-change renderer used for comparison",
-  );
   const before = await browser.newPage();
   await open(before, true);
   await open(page);
@@ -93,11 +116,17 @@ test("cached output preserves the previous outline colours and occlusion, and cu
   }, oldPixels);
   const cached = await page.evaluate(() => window.outlineCache.frame("light"));
   expect(cached.calls).toBeLessThan(reference.calls / 20);
+  expect(first.calls).toBeLessThan(reference.calls / 3);
+  expect(first.totalCalls).toBeLessThan(reference.totalCalls);
+  expect(first.totalTriangles).toBeLessThan(reference.totalTriangles);
   console.log(
     JSON.stringify({
       outlineBenchmark: {
         referenceCalls: reference.calls,
         firstCachedFrameCalls: first.calls,
+        firstCachedFrameTriangles: first.triangles,
+        previousTotalCalls: reference.totalCalls,
+        sharedDepthTotalCalls: first.totalCalls,
         cachedCalls: cached.calls,
         referenceTriangles: reference.triangles,
         cachedTriangles: cached.triangles,

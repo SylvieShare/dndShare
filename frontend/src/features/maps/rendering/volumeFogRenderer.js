@@ -1,19 +1,16 @@
 import { renderPass } from "./renderPass";
+import { createSceneFrame } from "./sceneFrame";
 import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
 import { renderAreaSurfaces } from "./areaSurfaceRenderer";
 import { createFogGridOverlay } from "./fogGridOverlay";
 import {
   Color,
-  DepthTexture,
-  HalfFloatType,
   Matrix4,
   Mesh,
   OrthographicCamera,
   PlaneGeometry,
   Scene,
   ShaderMaterial,
-  UnsignedByteType,
-  UnsignedIntType,
   Vector2,
   Vector3,
   WebGLRenderTarget,
@@ -40,6 +37,7 @@ export function createVolumeFog(gpu, visibility, motion) {
     "fog";
   const skyMotion = createScalarMotion();
   const gridOverlay = createFogGridOverlay(gpu);
+  const frame = createSceneFrame(gpu);
   const fogUniforms = {
     ...visibility,
     sceneDepth: { value: null },
@@ -81,37 +79,31 @@ export function createVolumeFog(gpu, visibility, motion) {
   compositeScene.add(new Mesh(quadGeometry, compositeMaterial));
   let field = null,
     key = "",
-    sceneTarget,
     fogTarget,
     noise,
     areaSettings = new Map(),
     weightsKey = "",
     targetActive = false;
   function releaseTargets() {
-    sceneTarget?.dispose();
     fogTarget?.dispose();
-    sceneTarget = fogTarget = null;
+    fogTarget = null;
   }
-  function targets() {
+  function targets(sceneTarget) {
     gpu.getDrawingBufferSize(size);
-    if (sceneTarget?.width === size.x && sceneTarget?.height === size.y) return;
+    fogUniforms.sceneDepth.value = sceneTarget.depthTexture;
+    compositeUniforms.sceneColour.value = sceneTarget.texture;
+    compositeUniforms.sceneDepth.value = sceneTarget.depthTexture;
+    if (
+      fogTarget?.width === Math.ceil(size.x / 2) &&
+      fogTarget?.height === Math.ceil(size.y / 2)
+    )
+      return;
     releaseTargets();
-    sceneTarget = new WebGLRenderTarget(size.x, size.y, {
-      type: gpu.extensions.has("EXT_color_buffer_float")
-        ? HalfFloatType
-        : UnsignedByteType,
-      // Keep the extra colour/depth buffers bounded on Retina displays.
-      samples: 0,
-      depthTexture: new DepthTexture(size.x, size.y, UnsignedIntType),
-    });
     fogTarget = new WebGLRenderTarget(
       Math.max(1, Math.ceil(size.x / 2)),
       Math.max(1, Math.ceil(size.y / 2)),
       { depthBuffer: false },
     );
-    fogUniforms.sceneDepth.value = sceneTarget.depthTexture;
-    compositeUniforms.sceneColour.value = sceneTarget.texture;
-    compositeUniforms.sceneDepth.value = sceneTarget.depthTexture;
     compositeUniforms.fogColour.value = fogTarget.texture;
     compositeUniforms.fogSize.value.set(fogTarget.width, fogTarget.height);
   }
@@ -208,13 +200,17 @@ export function createVolumeFog(gpu, visibility, motion) {
       return true;
     },
     render(scene, viewCamera) {
-      if (!field) {
-        renderAreaSurfaces(gpu, scene, viewCamera);
-        return;
-      }
-      targets();
+      const sceneTarget = frame.prepare(!!field);
+      if (field) targets(sceneTarget);
       renderPass(gpu, scene, ({ target: previous }) => {
         try {
+          gpu.autoClear = true;
+          if (!field) {
+            gpu.setRenderTarget(sceneTarget);
+            renderAreaSurfaces(gpu, scene, viewCamera);
+            frame.present(previous);
+            return;
+          }
           gridOverlay.prepare(
             scene,
             sceneTarget.depthTexture,
@@ -241,9 +237,11 @@ export function createVolumeFog(gpu, visibility, motion) {
           gridOverlay.restore();
         }
       });
+      return frame;
     },
     destroy() {
       gridOverlay.destroy();
+      frame.destroy();
       skyMotion.clear();
       releaseTargets();
       noise?.dispose();

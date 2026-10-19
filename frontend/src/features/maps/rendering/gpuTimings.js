@@ -63,9 +63,13 @@ export function createGpuTimings(gpu, classify) {
     start() {
       if (!supported || restore) return;
       const render = gpu.render,
-        draw = gpu.renderBufferDirect;
-      let depth = 0;
+        draw = gpu.renderBufferDirect,
+        blit = gl.blitFramebuffer;
+      let depth = 0,
+        pass;
       const wrappedRender = function (...args) {
+        const previousPass = pass;
+        pass = args[0]?.userData?.renderCategory || "presentation";
         if (frame) {
           depth++;
           phase(args[0]?.userData?.renderCategory || "other");
@@ -74,6 +78,7 @@ export function createGpuTimings(gpu, classify) {
           return render.apply(this, args);
         } finally {
           if (frame && --depth === 0) close();
+          pass = previousPass;
         }
       };
       const wrappedDraw = function (...args) {
@@ -82,10 +87,20 @@ export function createGpuTimings(gpu, classify) {
       };
       gpu.render = wrappedRender;
       gpu.renderBufferDirect = wrappedDraw;
+      const wrappedBlit =
+        typeof blit === "function"
+          ? function (...args) {
+              if (frame) phase(pass || "presentation");
+              return blit.apply(gl, args);
+            }
+          : null;
+      if (wrappedBlit) gl.blitFramebuffer = wrappedBlit;
       restore = () => {
         if (gpu.render === wrappedRender) gpu.render = render;
         if (gpu.renderBufferDirect === wrappedDraw)
           gpu.renderBufferDirect = draw;
+        if (wrappedBlit && gl.blitFramebuffer === wrappedBlit)
+          gl.blitFramebuffer = blit;
       };
     },
     begin(accept) {

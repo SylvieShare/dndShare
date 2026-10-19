@@ -40,6 +40,7 @@ export function createMapEffects(
   }
   return {
     root,
+    outlineOccluders: () => [...entries.values()].map((entry) => entry.mesh),
     update(document, options, context, placed, objects, nextAppearance) {
       appearance = nextAppearance;
       animate = options.animate !== false;
@@ -110,6 +111,7 @@ export function createMapEffects(
         applyAreaOpacity(mesh, opacity);
         uniforms.effectClock.value =
           immediate || !source.strength ? 0 : fireClock(time);
+        mesh.userData.outlineClock = uniforms.effectClock.value;
         mesh.updateWorldMatrix(true, false);
         if (
           opacity > 0.001 &&

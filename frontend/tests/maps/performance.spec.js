@@ -31,7 +31,7 @@ test("GPU accounts for all six flames before and after toggling without leaving 
           .textContent()
       ).replace(/\s/g, ""),
     );
-  await expect.poll(calls).toBe(8);
+  await expect.poll(calls).toBe(9);
   await expect
     .poll(() => page.evaluate(() => window.gpuQueryFrames.length))
     .toBeGreaterThanOrEqual(3);
@@ -63,7 +63,7 @@ test("GPU accounts for all six flames before and after toggling without leaving 
   await expect(
     panel.locator(".map-performance-parts").getByText("Огонь", { exact: true }),
   ).toBeVisible();
-  await expect.poll(calls).toBe(8);
+  await expect.poll(calls).toBe(9);
   await expect
     .poll(() => page.evaluate(() => window.gpuQueryFrames.length))
     .toBeGreaterThanOrEqual(previousSamples + 3);

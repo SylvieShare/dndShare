@@ -49,7 +49,7 @@ export async function createMapRenderer(
   onPreviewLoading,
   onDownloadProgress,
 ) {
-  const gpu = new WebGLRenderer({ antialias: true });
+  const gpu = new WebGLRenderer({ antialias: false, depth: false });
   gpu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
   gpu.toneMapping = ACESFilmicToneMapping;
   gpu.toneMappingExposure = 1;
@@ -154,6 +154,7 @@ export async function createMapRenderer(
     canvas: gpu.domElement,
     objectLayer,
     profiler,
+    effects,
   });
   loop = createMapFrameLoop({
     transitions,

@@ -18,6 +18,7 @@ export const GPU_PARTS = [
   ["fog", "Туман", "var(--accent-soft)"],
   ["outline", "Обводка", "var(--success)"],
   ["overlays", "Метки и подсказки", "var(--info)"],
+  ["presentation", "Вывод кадра", "var(--text-muted)"],
   ["other", "Прочее", "var(--border-strong)"],
 ].map(([id, label, color]) => ({ id, label, color }));
 export const totalMs = (parts) =>
