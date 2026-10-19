@@ -9,6 +9,7 @@ export function createMapFramePresentation({
   lighting,
   framePreview,
   canvas,
+  objectLayer,
 }) {
   return (objects, options, appearance) => {
     for (const object of objects.children) {
@@ -26,17 +27,19 @@ export function createMapFramePresentation({
       [
         preview.root,
         objectPreview.root,
-        ...objects.children.filter(
-          (o) =>
-            options.master &&
-            o.visible &&
-            !appearance.hiddenObjects.has(o.userData.objectId) &&
-            o.userData.objectId &&
-            [
-              ...(options.selectedObjects || []),
-              options.selectedObject,
-              options.hoveredObject,
-            ].includes(o.userData.objectId),
+        ...objectLayer.outlineSources(
+          objects.children.filter(
+            (o) =>
+              options.master &&
+              o.visible &&
+              !appearance.hiddenObjects.has(o.userData.objectId) &&
+              o.userData.objectId &&
+              [
+                ...(options.selectedObjects || []),
+                options.selectedObject,
+                options.hoveredObject,
+              ].includes(o.userData.objectId),
+          ),
         ),
       ],
       tiles.transform,

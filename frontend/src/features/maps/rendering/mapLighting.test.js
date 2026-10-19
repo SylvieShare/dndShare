@@ -11,6 +11,71 @@ vi.mock("./shadowProxies", () => ({
     destroy() {},
   }),
 }));
+it("moving an unshadowed flame does not invalidate the sun or another source's shadow", () => {
+  const scene = new Scene(),
+    gpu = { shadowMap: {} },
+    objects = new Group();
+  const lighting = createMapLighting(scene, gpu, { catalogue: () => [] });
+  const common = {
+    kind: "torch",
+    x: 2,
+    y: 2,
+    elevation: 0,
+    height: 2,
+    radius: 8,
+    intensity: 8,
+    color: "#ff9900",
+    enabled: true,
+    flicker: false,
+    showMarker: false,
+  };
+  const sources = [
+    { ...common, id: "fixed", shadows: true },
+    {
+      ...common,
+      id: "fire",
+      x: 4,
+      shadows: false,
+      effect: {
+        kind: "fire",
+        size: [0.2, 0.4],
+        strength: 0.7,
+        offset: [0, 0, 0],
+      },
+    },
+  ];
+  const d = {
+    width: 8,
+    height: 8,
+    tiles: [],
+    objects: [],
+    areas: [],
+    lights: sources,
+    lightingEnabled: true,
+    sun: { enabled: true, angle: 225, elevation: 45 },
+  };
+  const update = () =>
+    lighting.update(d, {}, {}, [], [], { x: 4, y: 4 }, objects);
+  update();
+  const sun = scene.children.find((n) => n.isDirectionalLight && n.castShadow);
+  const fixed = scene.children.find((n) => n.userData.sourceId === "fixed");
+  const fire = scene.children.find((n) => n.userData.sourceId === "fire");
+  for (const node of [sun, fixed, fire]) node.shadow.needsUpdate = false;
+  gpu.shadowMap.needsUpdate = false;
+  lighting.advance(16, () => null, objects, null, 16, 170);
+  expect(gpu.shadowMap.needsUpdate).toBe(false);
+  expect(sun.shadow.needsUpdate).toBe(false);
+  expect(fixed.shadow.needsUpdate).toBe(false);
+  sources[1].shadows = true;
+  update();
+  expect(scene.children.find((n) => n.userData.sourceId === "fixed")).toBe(
+    fixed,
+  );
+  expect(fire.shadow.needsUpdate).toBe(true);
+  expect(sun.shadow.needsUpdate).toBe(false);
+  expect(fixed.shadow.needsUpdate).toBe(false);
+  lighting.destroy();
+});
 it("moves the actual light with the flame waves without accumulating offsets, and stops at zero", () => {
   const scene = new Scene(),
     gpu = { shadowMap: {} },

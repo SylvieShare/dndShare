@@ -1,49 +1,35 @@
-import { modelVisual } from "./modelVisual";
-import { Group, InstancedMesh, Matrix4 } from "three";
+import { Group } from "three";
+import { createModelBatches } from "./modelBatches";
 import { tilePose, tilePoseTransform } from "./tileTransform";
 import { createRotationMotion } from "./rotationMotion";
-import { applyAreaOpacity } from "./areaOpacity";
-import { modelWaterMaterial } from "./modelWater";
 
 export function createTileLayer(assets, fog) {
-  const root = new Group(),
-    temp = new Matrix4();
+  const root = new Group();
+  root.matrixAutoUpdate = false;
+  const batches = createModelBatches(root, assets, fog, "tiles");
   const motion = createRotationMotion();
+  const transforms = new Map();
   const transform = (id) => {
+    if (transforms.has(id)) return transforms.get(id);
     const pose = motion.pose(id),
       metadata = assets.metadata(allTiles.get(id)?.modelId);
-    return pose && metadata ? tilePoseTransform(pose, metadata) : null;
+    if (!pose || !metadata) return null;
+    const matrix = tilePoseTransform(pose, metadata);
+    transforms.set(id, matrix);
+    return matrix;
   };
   let allTiles = new Map();
-  function apply() {
-    for (const mesh of root.children) {
-      mesh.userData.tiles.forEach((tile, i) =>
-        mesh.setMatrixAt(
-          i,
-          temp.multiplyMatrices(transform(tile.id), mesh.userData.partMatrix),
-        ),
-      );
-      mesh.instanceMatrix.needsUpdate = true;
-      mesh.computeBoundingSphere();
-    }
-    root.updateMatrixWorld(true);
-  }
-  function clear() {
-    root.traverse((node) => {
-      if (!node.isMesh) return;
-      node.dispose?.();
-      for (const material of Array.isArray(node.material)
-        ? node.material
-        : [node.material])
-        material.dispose();
-    });
-    root.clear();
-  }
   return {
     root,
-    rebuild(tiles, tier, hiddenIds, opacity = () => 1, group = () => "") {
-      clear();
+    rebuild(
+      tiles,
+      tier,
+      hiddenIds,
+      opacity = () => 1,
+      group = (id) => opacity(id),
+    ) {
       allTiles = new Map(tiles.map((t) => [t.id, t]));
+      transforms.clear();
       motion.retain(new Set(allTiles.keys()));
       for (const tile of tiles) {
         const metadata = assets.metadata(tile.modelId);
@@ -55,61 +41,36 @@ export function createTileLayer(assets, fog) {
       const buckets = new Map();
       for (const tile of tiles) {
         if (hidden.has(tile.id)) continue;
-        const key = `${tile.modelId}:${Math.floor(tile.x / 12)},${Math.floor(tile.y / 12)}:${group(tile.id)}:${opacity(tile.id)}`;
+        const key = `${tile.modelId}:${Math.floor(tile.x / 12)},${Math.floor(tile.y / 12)}:${group(tile.id)}`;
         if (!buckets.has(key)) buckets.set(key, []);
         buckets.get(key).push(tile);
       }
-      for (const items of buckets.values()) {
-        const metadata = assets.metadata(items[0].modelId),
-          model = modelVisual(assets, items[0].modelId, tier);
-        if (!metadata || !model) continue;
-        for (const part of model.parts) {
-          const materials = (
-            Array.isArray(part.material) ? part.material : [part.material]
-          ).map((m) =>
-            modelWaterMaterial(
-              fog.material(m.clone()),
-              part,
-              metadata.behaviour?.waterAnimation,
-            ),
-          );
-          const mesh = new InstancedMesh(
-            part.geometry,
-            Array.isArray(part.material) ? materials : materials[0],
-            items.length,
-          );
-          mesh.userData.tiles = items;
-          mesh.receiveShadow = true;
-          mesh.userData.partMatrix = part.matrix;
-          applyAreaOpacity(mesh, opacity(items[0].id));
-          items.forEach((tile, i) =>
-            mesh.setMatrixAt(
-              i,
-              temp.multiplyMatrices(transform(tile.id), part.matrix),
-            ),
-          );
-          mesh.instanceMatrix.needsUpdate = true;
-          mesh.computeBoundingSphere();
-          root.add(mesh);
-        }
-      }
+      batches.sync(
+        new Map(
+          [...buckets].map(([key, items]) => [
+            key,
+            {
+              modelId: items[0].modelId,
+              tier,
+              items,
+              pose: (tile) => transform(tile.id),
+              opacity: opacity(items[0].id),
+            },
+          ]),
+        ),
+      );
       root.updateMatrixWorld(true);
     },
     transform,
     applyAppearance(appearance) {
-      for (const mesh of root.children) {
-        const id = mesh.userData.tiles[0].id;
-        applyAreaOpacity(
-          mesh,
-          appearance.tileOpacity(id),
-          appearance.tileFlash(id),
-        );
-      }
+      batches.applyAppearance(appearance.tileOpacity, appearance.tileFlash);
     },
     advance(delta) {
       if (!motion.isMoving()) return false;
       const moving = motion.advance(delta);
-      apply();
+      for (const id of motion.changed) transforms.delete(id);
+      batches.advance(motion.changed);
+      root.updateMatrixWorld(true);
       return moving;
     },
     hit(ray, hidden = new Set()) {
@@ -127,6 +88,11 @@ export function createTileLayer(assets, fog) {
           }
         : null;
     },
-    destroy: clear,
+    destroy() {
+      batches.destroy();
+      motion.clear();
+      allTiles.clear();
+      transforms.clear();
+    },
   };
 }

@@ -1,7 +1,9 @@
 // Animate visual poses only. Saved rotations and footprints stay on the grid.
-const turn = (from, to) => (((to - from) % 360 + 540) % 360) - 180;
+const turn = (from, to) => ((((to - from) % 360) + 540) % 360) - 180;
 export function createRotationMotion() {
-  const states = new Map();
+  const states = new Map(),
+    active = new Map(),
+    changed = new Set();
   function set(id, pose) {
     const state = states.get(id);
     if (!state) {
@@ -28,6 +30,7 @@ export function createRotationMotion() {
             ? { x: (a * dx - s * dy) / det, y: (s * dx + a * dy) / det }
             : null,
       });
+      active.set(id, state);
     } else {
       // Pointer translation and lift already have their own easing.
       const dx = pose.x - state.target.x,
@@ -49,9 +52,9 @@ export function createRotationMotion() {
     }
   }
   function advance(delta) {
-    let moving = false;
-    for (const state of states.values()) {
-      if (!state.start || state.elapsed >= 280) continue;
+    changed.clear();
+    for (const [id, state] of active) {
+      changed.add(id);
       state.elapsed = Math.min(280, state.elapsed + delta);
       const t = 1 - Math.pow(1 - state.elapsed / 280, 3),
         { start, target, pivot } = state;
@@ -68,19 +71,27 @@ export function createRotationMotion() {
         state.pose.y = start.y + (target.y - start.y) * t;
       }
       if (state.elapsed === 280) state.pose = { ...target };
-      moving ||= state.elapsed < 280;
+      if (state.elapsed === 280) active.delete(id);
     }
-    return moving;
+    return active.size > 0;
   }
   return {
     set,
     advance,
+    changed,
     pose: (id) => states.get(id)?.pose,
-    isMoving: () =>
-      [...states.values()].some((s) => s.start && s.elapsed < 280),
+    isMoving: () => active.size > 0,
     retain: (ids) => {
-      for (const id of states.keys()) if (!ids.has(id)) states.delete(id);
+      for (const id of states.keys())
+        if (!ids.has(id)) {
+          states.delete(id);
+          active.delete(id);
+        }
     },
-    clear: () => states.clear(),
+    clear() {
+      states.clear();
+      active.clear();
+      changed.clear();
+    },
   };
 }

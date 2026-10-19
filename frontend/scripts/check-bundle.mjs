@@ -27,13 +27,18 @@ const decoderFiles = ['js', 'wasm'].map(extension => {
   }
   return asset.file
 })
-const files = (await fs.readdir(dir, {recursive: true})).filter(file => /\.(js|css)$/.test(file) && !decoderFiles.includes(file))
+const allFiles = await fs.readdir(dir, {recursive: true})
+// The one BVH construction worker is CPU work, never a navigation/code-split chunk.
+const geometryWorkers = allFiles.filter(file => /^static\/modelPicking\.worker-[\w-]+\.js$/.test(file))
+if (geometryWorkers.length !== 1) throw new Error(`Expected one BVH worker, found ${geometryWorkers.length}`)
+const files = allFiles.filter(file => /\.(js|css)$/.test(file) && !decoderFiles.includes(file) && !geometryWorkers.includes(file))
 const sizes = await Promise.all(files.map(async file => ({file, gzip: gzipSync(await fs.readFile(path.join(dir, file))).length})))
 const decoderSizes = await Promise.all(decoderFiles.map(async file => gzipSync(await fs.readFile(path.join(dir, file))).length))
 const measured = {
   initialGzip: sizes.filter(row => initial.has(row.file)).reduce((sum, row) => sum + row.gzip, 0),
   totalGzip: sizes.reduce((sum, row) => sum + row.gzip, 0),
   textureDecoderGzip: decoderSizes.reduce((sum, bytes) => sum + bytes, 0),
+  geometryWorkerGzip: gzipSync(await fs.readFile(path.join(dir, geometryWorkers[0]))).length,
 }
 let failed = false
 for (const extension of ['js', 'css']) {

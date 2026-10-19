@@ -1,4 +1,5 @@
 const bases = new WeakMap();
+const roots = new WeakMap();
 
 export function isFadingAreaSurface(material) {
   const base = bases.get(material);
@@ -7,6 +8,24 @@ export function isFadingAreaSurface(material) {
 
 export function applyAreaOpacity(root, opacity, brightness = 1) {
   root.visible = opacity > 0.001;
+  const old = roots.get(root);
+  const child = root.children[0];
+  if (
+    old &&
+    old.opacity === opacity &&
+    old.brightness === brightness &&
+    old.material === root.material &&
+    old.child === child &&
+    old.count === root.children.length
+  )
+    return;
+  roots.set(root, {
+    opacity,
+    brightness,
+    material: root.material,
+    child,
+    count: root.children.length,
+  });
   const used = new Set();
   root.traverse((node) => {
     const materials = Array.isArray(node.material)

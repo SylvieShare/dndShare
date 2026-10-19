@@ -66,7 +66,8 @@ export function outlineState(
     }
     for (const child of node.children) visit(child);
   }
-  visit(scene);
+  if (scene.userData.outlineRevision === undefined) visit(scene);
+  else values.push(scene.userData.outlineRevision);
   values.push("selected");
   for (const source of sources) {
     values.push(source.material);

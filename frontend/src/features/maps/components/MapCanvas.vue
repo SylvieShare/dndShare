@@ -51,7 +51,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
 import { createMapRenderer } from "../rendering/mapRenderer";
 import { ISOMETRIC_AZIMUTH, ISOMETRIC_TILT } from "../rendering/mapCamera";
@@ -64,11 +64,13 @@ import MapControlsHint from "./MapControlsHint.vue";
 import MapCanvasControls from "./MapCanvasControls.vue";
 import MapDownloadManager from "./MapDownloadManager.vue";
 import { useMapCanvasPointer } from "../composables/useMapCanvasPointer";
+import { useCanvasUpdates } from "../composables/useCanvasUpdates";
 import { useCameraPan } from "../composables/useCameraPan";
 const props = defineProps({
   document: { type: Object, required: true },
   state: Object,
   master: Boolean,
+  active: { type: Boolean, default: true },
   readonly: Boolean,
   tool: { type: String, default: "pan" },
   camera: Object,
@@ -118,8 +120,7 @@ const host = ref(null),
   topView = ref(false);
 const performanceBridge = createPerformanceBridge();
 let renderer,
-  dead = false,
-  frame = 0;
+  dead = false;
 const pointer = useMapCanvasPointer(host, props, () => renderer, emit, setView);
 const keyboardPan = useCameraPan(
   () => renderer?.getView(),
@@ -127,51 +128,18 @@ const keyboardPan = useCameraPan(
   () => props.tabletop,
   () => emit("camera-move"),
 );
-function redraw() {
-  if (frame || !renderer) return;
-  frame = requestAnimationFrame(() => {
-    frame = 0;
-    renderer.update(props.document, props.state, props).catch((cause) => {
-      error.value = cause.message;
-    });
-  });
-}
-watch(
-  () => [
-    props.document,
-    props.state,
-    props.selectedZone,
-    props.showZones,
-    props.selection,
-    props.selectedObject,
-    props.selectedObjects,
-    props.selectedToken,
-    props.master,
-    props.selectedTile,
-    props.selectedTiles,
-    props.hoveredTile,
-    props.hoveredObject,
-    props.previewTile,
-    props.previewObject,
-    props.showAnchors,
-    props.catalogue,
-    props.placementObject,
-    props.surfacePlacement,
-    props.areaMode,
-    props.selectedLight,
-    props.hoveredLight,
-    props.previewLight,
-    props.editLights,
-  ],
-  redraw,
-  { deep: true },
-);
-watch(
-  () => props.camera,
-  (c) => {
-    if (c) renderer?.camera(c);
+const { syncActive } = useCanvasUpdates(
+  props,
+  () => renderer,
+  (message) => {
+    error.value = message;
   },
-  { deep: true },
+  (active) => {
+    if (!active) {
+      cameraFocus.stop();
+      keyboardPan.stop();
+    }
+  },
 );
 const cameraFocus = useCameraFocus(() => renderer?.getView(), applyView);
 function pointerDown(event) {
@@ -252,6 +220,7 @@ onMounted(async () => {
       return;
     }
     renderer = r;
+    syncActive(false);
     performanceBridge.attach(r);
     await r.update(props.document, props.state, props);
     if (props.camera) r.camera(props.camera);
@@ -261,7 +230,6 @@ onMounted(async () => {
 });
 onBeforeUnmount(() => {
   dead = true;
-  cancelAnimationFrame(frame);
   cameraFocus.stop();
   performanceBridge.destroy();
   renderer?.destroy();

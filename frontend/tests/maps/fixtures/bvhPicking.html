@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <body>
+    <script type="module">
+      import {
+        InstancedMesh,
+        Matrix4,
+        MeshBasicMaterial,
+        Raycaster,
+        SphereGeometry,
+        Vector3,
+      } from "three";
+      import {
+        prepareModelPicking,
+        modelRaycast,
+      } from "/src/features/maps/rendering/modelPicking.js";
+      try {
+        const geometry = new SphereGeometry(0.4, 64, 48),
+          material = new MeshBasicMaterial(),
+          mesh = new InstancedMesh(geometry, material, 36);
+        for (let i = 0; i < 36; i++)
+          mesh.setMatrixAt(
+            i,
+            new Matrix4().makeTranslation(i % 6, 0, Math.floor(i / 6)),
+          );
+        const ray = new Raycaster(new Vector3(), new Vector3(0, -1, 0)),
+          rays = Array.from(
+            { length: 300 },
+            (_, i) =>
+              new Vector3((i % 6) + 0.07, 3, (Math.floor(i / 6) % 6) + 0.03),
+          );
+        const start = performance.now(),
+          baseline = rays.map((point) => {
+            ray.ray.origin.copy(point);
+            return ray.intersectObject(mesh)[0];
+          });
+        const baselineMs = performance.now() - start,
+          positions = geometry.attributes.position.array,
+          indices = geometry.index.array;
+        await prepareModelPicking(geometry);
+        mesh.raycast = modelRaycast;
+        ray.firstHitOnly = true;
+        const at = performance.now(),
+          current = rays.map((point) => {
+            ray.ray.origin.copy(point);
+            return ray.intersectObject(mesh)[0];
+          }),
+          acceleratedMs = performance.now() - at;
+        window.bvhAudit = {
+          baselineMs,
+          acceleratedMs,
+          maximumDistanceError: Math.max(
+            ...current.map((hit, i) =>
+              Math.abs(hit.distance - baseline[i].distance),
+            ),
+          ),
+          wrongInstances: current.filter(
+            (hit, i) => hit.instanceId !== baseline[i].instanceId,
+          ).length,
+          sameBuffers:
+            positions === geometry.attributes.position.array &&
+            indices === geometry.index.array,
+          bytes: geometry.userData.bvhBytes,
+        };
+        mesh.dispose();
+        geometry.dispose();
+        material.dispose();
+      } catch (error) {
+        window.bvhError = error.message;
+      }
+    </script>
+  </body>
+</html>

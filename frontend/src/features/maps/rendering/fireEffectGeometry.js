@@ -42,6 +42,8 @@ export function fireEffectGeometry() {
   geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
   geometry.setIndex(indices);
   geometry.computeVertexNormals();
+  geometry.computeBoundingSphere();
+  geometry.boundingSphere.radius += 0.65;
   return geometry;
 }
 

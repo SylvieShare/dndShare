@@ -63,6 +63,7 @@
         </div>
         <MapCanvas
           ref="canvas"
+          :active="active"
           :occlusions="canvasOcclusions"
           :document="e.draft.document"
           :state="canvasState || e.draft.state"
@@ -176,14 +177,32 @@ const props = defineProps({
     "sidebar-resize",
   ]),
   confirmClose = ref(false);
-const e = reactive(
-  useMapEditor(props.map, (map) => emit("saved", map), {
-    save: props.save,
-    normalize: props.normalize,
-    session: props.sessionMode,
-    active: () => props.active,
-  }),
-);
+const core = useMapEditor(props.map, (map) => emit("saved", map), {
+  save: props.save,
+  normalize: props.normalize,
+  session: props.sessionMode,
+  active: () => props.active,
+});
+const e = reactive({
+  ...core,
+  handle: handleGesture,
+  removeSelected() {
+    if (!props.removeToken?.()) core.removeSelected();
+  },
+  dismissFocus,
+  focusLight,
+  tokenSelected: computed(
+    () =>
+      props.sessionMode &&
+      e.draft.state.tokens.some((t) => t.id === props.selectedToken),
+  ),
+  observePerformance: (changed) =>
+    props.active ? canvas.value?.observePerformance(changed) : undefined,
+  observeAreaFrame: (target, id, changed) =>
+    canvas.value?.observeAreaFrame(target, id, changed),
+  observeLightFrame: (target, id, changed) =>
+    canvas.value?.observeLightFrame(target, id, changed),
+});
 watch(
   () => props.map,
   (model) => e.receive(model),
@@ -199,20 +218,10 @@ watch(
     if (ids.some(Boolean)) emit("selection");
   },
 );
-const originalRemove = e.removeSelected;
-e.removeSelected = () => {
-  if (!props.removeToken?.()) originalRemove();
-};
-e.tokenSelected = computed(
-  () =>
-    props.sessionMode &&
-    e.draft.state.tokens.some((t) => t.id === props.selectedToken),
-);
-const originalHandle = e.handle;
 function handleGesture(event) {
   if (props.tokenGesture?.(event, e, canvas.value)) return;
   if (event.phase === "start") emit("selection");
-  originalHandle(event);
+  core.handle(event);
 }
 const account = useAccountStore(),
   isAdmin = computed(() => account.hasRole("ADMIN"));
@@ -233,23 +242,16 @@ function resizeSidebar(width, navigationWidth) {
 function canvasOcclusions() {
   return [sidebar.value?.bounds(), selectionPanel.value?.bounds()];
 }
-e.handle = handleGesture;
-e.dismissFocus = () => {
+function dismissFocus() {
   e.clearAreaFocus(true);
   e.setTileSelection([]);
   e.setObjectSelection([]);
   e.selectedLight = "";
   e.selection = null;
   emit("selection");
-};
+}
 const placement = useEditorPlacement(e, canvas);
-e.observePerformance = (changed) =>
-  props.active ? canvas.value?.observePerformance(changed) : undefined;
-e.observeAreaFrame = (target, id, changed) =>
-  canvas.value?.observeAreaFrame(target, id, changed);
-e.observeLightFrame = (target, id, changed) =>
-  canvas.value?.observeLightFrame(target, id, changed);
-e.focusLight = async (id) => {
+async function focusLight(id) {
   const entry = mapEntity(e.draft.document, e.catalogue, "light", id);
   if (!entry) return;
   emit("selection");
@@ -260,7 +262,7 @@ e.focusLight = async (id) => {
   if (e.selectedLight !== id) return;
   canvas.value?.focusAt(entry.position);
   canvas.value?.focus();
-};
+}
 function beginPlacement(method, id, event) {
   emit("selection");
   placement[method](id, event);

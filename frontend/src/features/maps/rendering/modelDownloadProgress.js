@@ -9,7 +9,14 @@ export function modelFile(model, kind) {
       }
     : null;
 }
-export function modelDownloadPlan(catalogue, ids, tier, details, shadows) {
+export function modelDownloadPlan(
+  catalogue,
+  ids,
+  tier,
+  details,
+  shadows,
+  shadowIds = ids,
+) {
   const plan = new Map();
   function add(id, kind) {
     const file = modelFile(catalogue.get(id), kind);
@@ -22,7 +29,7 @@ export function modelDownloadPlan(catalogue, ids, tier, details, shadows) {
   }
   for (const id of details) add(id, "render");
   if (shadows)
-    for (const id of new Set([...ids, ...details])) add(id, "shadow");
+    for (const id of new Set([...shadowIds, ...details])) add(id, "shadow");
   return plan;
 }
 const kinds = ["render", "lod", "shadow", "other"];

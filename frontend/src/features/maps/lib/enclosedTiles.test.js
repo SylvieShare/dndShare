@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { newMap, paint } from "./mapModel";
+import { newMap } from "./mapModel";
+import { paint } from "../../../../tests/maps/fixtures/mapBuilders";
 import { enclosedEmptyCells } from "./enclosedTiles";
 function room() {
   const d = newMap().document;

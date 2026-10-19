@@ -21,13 +21,16 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
   const token = computed(() =>
     creatureToken(getEditor()?.draft, candidate.value),
   );
-  const selected = computed(() =>
-    preview.value ? "preview-token" : token.value?.id || "",
-  );
+  const selected = computed(() => preview.value?.id || token.value?.id || "");
   const canvasState = computed(() => {
     const s = getEditor()?.draft.state;
     if (!s) return s;
-    const items = preview.value ? [...s.tokens, preview.value] : s.tokens;
+    const items =
+      dragging.value && preview.value
+        ? s.tokens.map((t) => (t.id === preview.value.id ? preview.value : t))
+        : preview.value
+          ? [...s.tokens, preview.value]
+          : s.tokens;
     return { ...s, tokens: withCreaturePortraits(items, candidates.value) };
   });
   function clear() {
@@ -88,10 +91,6 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       return false;
     }
     if (phase === "cancel") {
-      if (drag?.changed) {
-        e.draft = drag.before;
-        e.history.pop();
-      }
       drag = null;
       dragging.value = false;
       pending.value = preview.value = null;
@@ -132,7 +131,7 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
       if (!t) return false;
       clearMapSelection(e);
       focused.value = creatureKey(t);
-      drag = { id: t.id, before: clone(e.draft), changed: false };
+      drag = { id: t.id, source: clone(t), changed: false };
       dragging.value = true;
       e.pauseSave(true);
       return true;
@@ -141,19 +140,21 @@ export function sessionTokens(getEditor, candidates, getCanvas) {
     if (phase === "move") {
       const at = position(point);
       if (at) {
-        if (!drag.changed) {
-          e.history.push(drag.before);
-          if (e.history.length > 50) e.history.shift();
-          e.future = [];
-          drag.changed = true;
-        }
-        Object.assign(
-          e.draft.state.tokens.find((t) => t.id === drag.id),
-          at,
-        );
+        drag.changed = true;
+        preview.value = { ...drag.source, ...at };
       }
     }
     if (phase === "end") {
+      if (drag.changed && preview.value) {
+        const target = preview.value;
+        e.change((m) =>
+          Object.assign(
+            m.state.tokens.find((t) => t.id === drag.id),
+            target,
+          ),
+        );
+      }
+      preview.value = null;
       drag = null;
       dragging.value = false;
       e.pauseSave(false);

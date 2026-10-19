@@ -3,6 +3,11 @@ export function visibleSceneHits(ray, roots, appearance) {
     .flatMap((root) => ray.intersectObject(root, true))
     .filter((hit) => {
       let node = hit.object;
+      const object = node.userData.objects?.[hit.instanceId];
+      if (object) {
+        if (appearance.hiddenObjects.has(object.id)) return false;
+        hit.mapObjectId = object.id;
+      }
       const tile = node.userData.tiles?.[hit.instanceId];
       if (tile && appearance.hiddenTiles.has(tile.id)) return false;
       while (node) {
@@ -86,6 +91,7 @@ export function pickMapScene(
     return anchor;
   for (const hit of hits) {
     if (tile && tile.distance < hit.distance) return tile;
+    if (hit.mapObjectId) return { objectId: hit.mapObjectId };
     let node = hit.object;
     while (node) {
       if (node.userData.objectId) return { objectId: node.userData.objectId };

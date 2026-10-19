@@ -1,19 +1,32 @@
-import { Group, Mesh, MeshBasicMaterial, DoubleSide } from "three";
+import {
+  Group,
+  Mesh,
+  MeshBasicMaterial,
+  DoubleSide,
+  Frustum,
+  Matrix4,
+} from "three";
 import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
-import { createAttachedLights } from "./attachedLights";
+import { createLightSourceState } from "./lightSourceState";
 import { applyAreaOpacity } from "./areaOpacity";
 import { fireEffectGeometry, fireEffectMaterial } from "./fireEffectGeometry";
-import { lightEffectPose } from "../lib/lightEffect";
-import { lightPose, lightOpacity } from "../lib/mapLighting";
 import { FIRE_FPS, fireClock, fireSeed } from "./fireMotion";
 export { FIRE_FPS } from "./fireMotion";
 
-export function createMapEffects(scene, fog, assets, changed = () => {}) {
+export function createMapEffects(
+  scene,
+  fog,
+  assets,
+  changed = () => {},
+  sharedSources,
+) {
   const root = new Group(),
+    frustum = new Frustum(),
+    projection = new Matrix4(),
     geometry = fireEffectGeometry(),
     entries = new Map(),
     motion = createScalarMotion(),
-    attachments = createAttachedLights();
+    sourceState = sharedSources || createLightSourceState(assets);
   scene.add(root);
   let sources = [],
     appearance,
@@ -30,26 +43,12 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
     update(document, options, context, placed, objects, nextAppearance) {
       appearance = nextAppearance;
       animate = options.animate !== false;
-      const catalogue = assets.catalogue?.() || [];
-      sources = [
-        ...(document.lights || []).filter(
-          (l) => l.id !== options.previewLight?.id,
-        ),
-        ...(options.previewLight ? [options.previewLight] : []),
-      ]
-        .filter((l) => l.effect?.kind === "fire")
-        .map((l) => ({
-          ...lightEffectPose(
-            l,
-            document,
-            lightPose(l, document, catalogue, context),
-          ),
-          opacity: lightOpacity(l, document, options.areaMode),
-        }));
+      if (!sharedSources)
+        sourceState.update(document, options, context, placed, objects);
+      sources = sourceState.flames;
       const ids = new Set(sources.map((e) => e.id));
       for (const id of entries.keys()) if (!ids.has(id)) remove(id);
       motion.retain(ids);
-      attachments.update(sources, placed, objects, catalogue);
       for (const source of sources) {
         let entry = entries.get(source.id);
         if (!entry) {
@@ -63,7 +62,7 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
             mesh = new Mesh(geometry, material),
             uniforms = fireEffectMaterial(material, fireSeed(source.id));
           mesh.userData.lightId = source.id;
-          mesh.frustumCulled = false;
+          mesh.frustumCulled = true;
           root.add(mesh);
           entry = { mesh, uniforms };
           entries.set(source.id, entry);
@@ -80,14 +79,23 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
       }
       changed();
     },
-    advance(time, delta, tileMatrix, objects, objectPreview) {
+    advance(time, delta, tileMatrix, objects, objectPreview, camera) {
       const immediate = !animate || reducedMapMotion(),
         moving = motion.advance(delta, immediate);
       let delay = Infinity;
+      if (camera)
+        frustum.setFromProjectionMatrix(
+          projection.multiplyMatrices(
+            camera.projectionMatrix,
+            camera.matrixWorldInverse,
+          ),
+        );
       for (const source of sources) {
         const { mesh, uniforms } = entries.get(source.id),
-          position = attachments.position(
+          position = sourceState.position(
             source,
+            true,
+            time,
             tileMatrix,
             objects,
             objectPreview,
@@ -99,7 +107,13 @@ export function createMapEffects(scene, fog, assets, changed = () => {}) {
         applyAreaOpacity(mesh, opacity);
         uniforms.effectClock.value =
           immediate || !source.strength ? 0 : fireClock(time);
-        if (opacity > 0.001 && !immediate && source.strength > 0)
+        mesh.updateWorldMatrix(true, false);
+        if (
+          opacity > 0.001 &&
+          !immediate &&
+          source.strength > 0 &&
+          (!camera || frustum.intersectsObject(mesh))
+        )
           delay = Math.min(
             delay,
             ((Math.floor((time * FIRE_FPS) / 1000) + 1) * 1000) / FIRE_FPS -

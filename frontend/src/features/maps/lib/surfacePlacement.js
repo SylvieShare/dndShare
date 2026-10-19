@@ -18,8 +18,8 @@ export function surfacePoints(
   catalogue,
   ignoreObject = "",
   hiddenTiles = new Set(),
+  context = structureContext(document, catalogue),
 ) {
-  const context = structureContext(document, catalogue);
   const occupied = new Set(
     document.objects
       .filter((o) => o.id !== ignoreObject && o.placement)
@@ -47,11 +47,23 @@ export function surfacePoints(
     );
   });
 }
-export function resolvedSurfacePosition(entity, document, catalogue, context) {
+export function resolvedSurfacePosition(
+  entity,
+  document,
+  catalogue,
+  context,
+  index,
+) {
   if (!entity.placement)
     return { ...entity, elevation: entity.elevation ?? 0.44 };
-  const tile = document.tiles.find((t) => t.id === entity.placement.tileId),
-    models = new Map(catalogue.map((m) => [m.id, m]));
+  const tile =
+      index?.tiles.get(entity.placement.tileId) ||
+      context?.tilesById?.get(entity.placement.tileId) ||
+      document.tiles.find((t) => t.id === entity.placement.tileId),
+    models =
+      index?.models ||
+      context?.models ||
+      new Map(catalogue.map((m) => [m.id, m]));
   const model = models.get(tile?.modelId),
     point = model?.placementPoints?.[entity.placement.point];
   if (!tile || !point)
@@ -74,12 +86,19 @@ export function nearestSurface(point, document, catalogue, ignoreObject = "") {
     ignoreObject,
     hiddenAreaMembers(document).tiles,
   );
-  candidates.sort(
-    (a, b) =>
-      Math.hypot(a.x - point.x, a.y - point.y) -
-        Math.hypot(b.x - point.x, b.y - point.y) || b.elevation - a.elevation,
-  );
-  return candidates[0] || null;
+  let best = null,
+    distance = Infinity;
+  for (const candidate of candidates) {
+    const next = (candidate.x - point.x) ** 2 + (candidate.y - point.y) ** 2;
+    if (
+      next < distance ||
+      (next === distance && candidate.elevation > best.elevation)
+    ) {
+      best = candidate;
+      distance = next;
+    }
+  }
+  return best;
 }
 export function syncSurfaceObjects(document, catalogue) {
   document.objects = document.objects.filter(

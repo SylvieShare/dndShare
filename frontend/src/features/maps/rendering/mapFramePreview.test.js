@@ -84,3 +84,20 @@ it("does not invent an image for a source that has never been visible and isolat
   });
   preview.destroy();
 });
+it("keeps the CSS framing when the map pixel budget lowers its drawing-buffer ratio", () => {
+  const { preview, source, ctx } = setup();
+  source.clientWidth = 2000;
+  preview.copy(source, () => new Vector3());
+  expect(ctx.drawImage).toHaveBeenCalledWith(
+    source,
+    420,
+    340,
+    160,
+    120,
+    0,
+    0,
+    200,
+    150,
+  );
+  preview.destroy();
+});

@@ -47,8 +47,10 @@ export function editorAreas(e) {
     () => {
       const area = focused.value;
       if (!area) return;
-      const same = (a, b) =>
-        a.length === b.length && a.every((id) => b.includes(id));
+      const same = (a, b) => {
+        const ids = new Set(b);
+        return a.length === b.length && a.every((id) => ids.has(id));
+      };
       if (
         e.tool.value !== "select" ||
         e.selectedLight?.value ||
@@ -62,6 +64,8 @@ export function editorAreas(e) {
     const d = e.draft.value.document,
       r = e.selection.value;
     const hidden = hiddenAreaMembers(d);
+    const tiles = new Set(e.selectedTiles.value),
+      objects = new Set(e.selectedObjects.value);
     const inside = (o) =>
       r &&
       o.x >= r.x &&
@@ -69,14 +73,10 @@ export function editorAreas(e) {
       o.x < r.x + r.width &&
       o.y < r.y + r.height;
     return {
-      tiles: d.tiles
-        .filter((t) => e.selectedTiles.value.includes(t.id))
-        .map((t) => t.id),
+      tiles: d.tiles.filter((t) => tiles.has(t.id)).map((t) => t.id),
       objects: d.objects
         .filter(
-          (o) =>
-            e.selectedObjects.value.includes(o.id) ||
-            (!hidden.objects.has(o.id) && inside(o)),
+          (o) => objects.has(o.id) || (!hidden.objects.has(o.id) && inside(o)),
         )
         .map((o) => o.id),
     };

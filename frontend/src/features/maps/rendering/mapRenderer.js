@@ -1,5 +1,9 @@
+import { createSceneSynchronizer } from "./sceneSynchronizer";
 import { createAreaTransitions } from "./areaTransitions";
 import { createModelTransitions } from "./modelTransitions";
+import { createAssetView } from "./assetView";
+import { createSceneSelection } from "./sceneSelection";
+import { modelTier } from "./modelTier";
 import { modelVisual } from "./modelVisual";
 import { createMapFrameLoop } from "./mapFrameLoop";
 import { createRenderProfiler } from "./renderProfiler";
@@ -10,6 +14,7 @@ import { createMapAreaPreview } from "./mapAreaPreview";
 import { createMapFramePreview } from "./mapFramePreview";
 import { startModelRefresh } from "../lib/currentModelRefresh";
 import { getMapModels } from "@/shared/api/mapsApi";
+import { createLightSourceState } from "./lightSourceState";
 import { createMapLighting } from "./mapLighting";
 import { createMapEffects } from "./mapEffects";
 import { createModelWaterAnimation } from "./modelWater";
@@ -18,11 +23,9 @@ import { mapScreenQueries } from "./mapScreenQueries";
 import { createLoadingPreview } from "./loadingPreview";
 import { createObjectMotion } from "./objectMotion";
 import { objectPlacementAnchors } from "./objectPlacementAnchors";
-import { resolvedSurfacePosition } from "../lib/surfacePlacement";
 import {
   ACESFilmicToneMapping,
   Color,
-  Group,
   OrthographicCamera,
   Scene,
   WebGLRenderer,
@@ -31,7 +34,7 @@ import { modelAssets } from "./modelAssets";
 import { createMapFog } from "./mapFog";
 import { createTileLayer } from "./tileLayer";
 import { createMapAnnotations } from "./mapAnnotations";
-import { buildSceneObjects, disposeObjects } from "./sceneObjects";
+import { createSceneObjectLayer } from "./sceneObjectLayer";
 import { createTokenPortraits } from "./sceneTokens";
 import { mapCamera } from "./mapCamera";
 import { createTilePreview } from "./tilePreview";
@@ -51,65 +54,70 @@ export async function createMapRenderer(
   gpu.toneMapping = ACESFilmicToneMapping;
   gpu.toneMappingExposure = 1;
   const scene = new Scene();
+  scene.matrixAutoUpdate = false;
+  scene.userData.outlineRevision = 0;
   scene.background = new Color(0x161b23);
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0.01, 2000);
   host.appendChild(gpu.domElement);
   let dead = false,
-    epoch = 0,
+    active = true,
     assetFrame = 0,
-    current,
-    options = {},
-    state,
-    tier = "render",
-    tileKey = "",
-    objectKey = "",
-    fogKey = "",
-    loop,
-    placedTiles = [];
-  let objects = new Group();
+    loop;
+  const runtime = {
+    current: null,
+    options: {},
+    state: null,
+    tier: "render",
+    appearance: areaAppearance({ areas: [] }),
+    placedTiles: [],
+    posedObjects: [],
+    posedTokens: [],
+    renderObjects: [],
+    movingIds: new Set(),
+    modelIds: new Set(),
+    visibleScene: null,
+    scenePreviewOptions: {},
+    selectedToken: null,
+  };
   const profiler = createRenderProfiler(gpu, render);
   const annotations = createMapAnnotations(scene);
-  let appearance = areaAppearance({ areas: [] });
-  scene.add(objects);
   const assets = modelAssets(onError, gpu, assetsChanged, onDownloadProgress),
-    lighting = createMapLighting(scene, gpu, assets, assetsChanged),
+    lightSources = createLightSourceState(assets),
+    lighting = createMapLighting(
+      scene,
+      gpu,
+      assets,
+      assetsChanged,
+      lightSources,
+      camera,
+    ),
     loadingPreview = createLoadingPreview(assets, onPreviewLoading),
     fog = createMapFog(),
-    effects = createMapEffects(scene, fog, assets, render),
+    effects = createMapEffects(scene, fog, assets, render, lightSources),
     water = createModelWaterAnimation(),
     transitions = createAreaTransitions(assetsChanged),
     modelTransitions = createModelTransitions(assetsChanged),
     volumeFog = createVolumeFog(gpu, fog.uniforms, transitions),
     tokenPortraits = createTokenPortraits(render),
     tiles = createTileLayer(assets, fog),
+    objectLayer = createSceneObjectLayer(assets, fog, tokenPortraits),
+    objects = objectLayer.root,
     objectMotion = createObjectMotion(
       assets,
       (id) => preview.transform(id) || tiles.transform(id),
     ),
     preview = createTilePreview(assets, () => {
-      tileKey = "";
-      tiles.rebuild(
-        placedTiles,
-        tier,
-        [],
-        appearance.tileOpacity,
-        appearance.tileGroup,
-      );
-      if (current)
-        outline.update(
-          {
-            ...current,
-            tiles: placedTiles.filter((t) => !appearance.hiddenTiles.has(t.id)),
-          },
-          options,
-          tier,
-        );
+      if (runtime.current) {
+        refreshVisible();
+        selection.update(runtime.options, view.getView());
+      }
     }),
     outline = createTileOutline(gpu, assets),
     objectPreview = createObjectPreview(fog, assets),
     surfaceAnchors = objectPlacementAnchors(),
     anchors = createPlacementAnchors();
   scene.add(
+    objects,
     tiles.root,
     loadingPreview.root,
     preview.root,
@@ -118,13 +126,14 @@ export async function createMapRenderer(
     surfaceAnchors.root,
   );
   function assetsChanged() {
-    if (dead || assetFrame || !current) return;
+    if (dead || !active || assetFrame || !runtime.current) return;
     assetFrame = requestAnimationFrame(() => {
       assetFrame = 0;
-      if (!dead && current)
-        update(current, state, options).catch((error) =>
-          onError(error.message),
-        );
+      if (!dead && runtime.current)
+        update(runtime.current, runtime.state, {
+          ...runtime.options,
+          sceneChanges: ["assets"],
+        }).catch((error) => onError(error.message));
     });
   }
   function render() {
@@ -143,6 +152,7 @@ export async function createMapRenderer(
     lighting,
     framePreview,
     canvas: gpu.domElement,
+    objectLayer,
   });
   loop = createMapFrameLoop({
     transitions,
@@ -151,6 +161,7 @@ export async function createMapRenderer(
     objectPreview,
     tiles,
     objectMotion,
+    objectLayer,
     loadingPreview,
     volumeFog,
     lighting,
@@ -160,7 +171,11 @@ export async function createMapRenderer(
     camera,
     presentFrame,
     profiler,
-    getCurrent: () => ({ objects, options, appearance }),
+    getCurrent: () => ({
+      objects,
+      options: runtime.options,
+      appearance: runtime.appearance,
+    }),
   });
   for (const root of [tiles.root, preview.root]) profiler.tag(root, "tiles");
   profiler.tag(objects, "objects");
@@ -176,312 +191,187 @@ export async function createMapRenderer(
     profiler.tag(root, "overlays");
   const view = mapCamera(camera, gpu, host, render);
   const structure = structureView(assets, view);
-  async function update(d, nextState, opts = {}) {
-    const id = ++epoch;
-    current = d;
-    state = nextState;
-    options = opts;
-    modelTransitions.sync(d.tiles, opts);
-    transitions.sync(d, opts);
-    appearance = modelTransitions.appearance(
-      areaAppearance(d, opts.areaMode, transitions),
-    );
-    structure.hideTiles(appearance.hiddenTiles);
-    view.document(d, opts);
-    annotations.update(d, opts);
-    render();
-    tier = view.getView().cellPixels < 72 ? "lod" : "render";
-    const ids = new Set([
-      ...d.tiles.map((t) => t.modelId),
-      ...d.objects.map((o) => o.modelId).filter(Boolean),
-    ]);
-
-    const previewIds = preview.modelIds();
-    if (opts.previewTile)
-      for (const tile of opts.previewTile.group || [opts.previewTile])
-        previewIds.add(tile.modelId);
-    const objectIds = new Set(
-      (
-        opts.previewObject?.group ||
-        (opts.previewObject ? [opts.previewObject] : [])
+  const assetView = createAssetView(camera, assets);
+  const selection = createSceneSelection(
+    outline,
+    annotations,
+    lighting,
+    preview,
+  );
+  function updateSelection(opts = runtime.options) {
+    runtime.options = { ...opts };
+    if (runtime.current) {
+      const next = assetView.read(runtime.options);
+      if (
+        next.models.size !== runtime.visibleScene?.models.size ||
+        [...next.models].some((id) => !runtime.visibleScene.models.has(id)) ||
+        runtime.options.selectedToken !== runtime.selectedToken
       )
-        .map((o) => o.modelId)
-        .filter(Boolean),
-    );
-    const movingParents = new Set(
-      opts.previewTile?.tileIds || preview.hiddenIds(),
-    );
-    const renderObjects = d.objects
-      .filter((o) => movingParents.has(o.placement?.tileId))
-      .map((o) => o.id);
-    for (const object of d.objects)
-      if (renderObjects.includes(object.id) && object.modelId)
-        objectIds.add(object.modelId);
-    if (opts.placementObject) objectIds.add(opts.placementObject);
-    const movingIds = new Set([...previewIds, ...objectIds]);
-    await assets.prepare(new Set([...ids, ...movingIds]), opts);
-    if (dead || id !== epoch) return;
-    const updateStarted = profiler.updateStart();
-    const placed = structure.update(d);
-    placedTiles = placed;
-    let previewOptions = opts;
-    if (opts.previewTile) {
-      const group = structure.preview(
-        opts.previewTile.group || [opts.previewTile],
-      );
-      previewOptions = {
-        ...opts,
-        previewTile: {
-          ...opts.previewTile,
-          elevation: (
-            group.find((t) => t.id === opts.previewTile.tileId) || group[0]
-          ).elevation,
-          group,
-        },
-      };
+        refreshVisible();
     }
-    volumeFog.update(
-      d,
-      placed,
-      assets.catalogue(),
-      previewOptions.previewTile?.group,
-    );
-    view.document(d, {
-      ...opts,
-      sceneHeight: structure.top(),
-    });
-    tier = view.getView().cellPixels < 72 ? "lod" : "render";
-    assets.progressive(ids, tier, movingIds, d.lightingEnabled);
-    modelTransitions.ready((id) => !!modelVisual(assets, id, tier));
-    const nextFog = JSON.stringify([
-      d.width,
-      d.height,
-      d.zones,
-      d.grid,
-      nextState?.fog,
-      nextState?.defaultVisibility,
-      nextState?.zones,
-      opts.master,
-    ]);
-    if (nextFog !== fogKey) {
-      fogKey = nextFog;
-      fog.update(d, nextState, opts.master);
-    }
-    if (
-      opts.previewObject &&
-      appearance.hiddenObjects.has(opts.previewObject.id)
-    )
-      previewOptions = { ...previewOptions, previewObject: null };
-    preview.update(previewOptions.previewTile, placed);
-    const posedObjects = d.objects.map((o) =>
-      resolvedSurfacePosition(o, d, assets.catalogue(), structure.context()),
-    );
-    const posedTokens = (nextState?.tokens || []).map((t) =>
-      resolvedSurfacePosition(t, d, assets.catalogue(), structure.context()),
-    );
-    objectMotion.update(
-      [
-        ...posedObjects,
-        ...posedTokens.map((t) => ({
-          ...t,
-          rotation: 0,
-          elevation: t.elevation + 0.05,
-        })),
-      ],
-      d,
-    );
-    objectPreview.update(
-      opts.previewObject &&
-        !appearance.hiddenObjects.has(opts.previewObject.id) &&
-        resolvedSurfacePosition(
-          opts.previewObject,
-          d,
-          assets.catalogue(),
-          structure.context(),
-        ),
-    );
-    areaPreview.update(d, placed, posedObjects);
-    surfaceAnchors.update(
-      d,
-      assets.catalogue(),
-      opts.previewObject,
-      !!opts.placementObject ||
-        !!opts.surfacePlacement ||
-        (!!opts.previewObject?.modelId &&
-          (!!opts.previewObject?.placing || !!opts.previewObject?.moving)),
-      appearance.hiddenTiles,
-    );
-    loadingPreview.update(previewOptions, assets.catalogue(), {
-      tiles: placed.filter((t) => !preview.hiddenIds().includes(t.id)),
-      objects: posedObjects.filter((o) => o.id !== opts.previewObject?.id),
-      tier,
-      tileOpacity: appearance.tileOpacity,
-      objectOpacity: appearance.objectOpacity,
-      tileGroup: appearance.tileGroup,
-    });
-    const context = structure.context();
-    anchors.update(
-      d,
-      {
-        ...context,
-        sockets: new Map(
-          [...context.sockets].filter(
-            ([, slot]) => !appearance.hiddenTiles.has(slot.parent),
-          ),
-        ),
-      },
-      opts,
-    );
-    const hiddenIds = preview.hiddenIds();
-    const hiddenSelection = new Set([...hiddenIds, ...appearance.hiddenTiles]);
-    const catalogueStamp = [...ids]
-      .sort()
-      .map((modelId) => assets.metadata(modelId));
-    const visualStamp = assets.signature(ids, tier);
-    const nextTiles = JSON.stringify([
-      catalogueStamp,
-      visualStamp,
-      d.tiles,
-      tier,
-      hiddenIds,
-      d.areas,
-      opts.areaMode,
-      modelTransitions.groups(),
-    ]);
-    if (nextTiles !== tileKey) {
-      tileKey = nextTiles;
-      tiles.rebuild(
-        placed,
-        tier,
-        hiddenIds,
-        appearance.tileOpacity,
-        appearance.tileGroup,
-      );
-    }
-    outline.update(
-      { ...d, tiles: placed.filter((t) => !appearance.hiddenTiles.has(t.id)) },
-      {
-        ...previewOptions,
-        selectedTiles: (opts.selectedTiles || []).filter(
-          (id) => !hiddenSelection.has(id),
-        ),
-        selectedTile: hiddenSelection.has(opts.selectedTile)
-          ? ""
-          : opts.selectedTile,
-        hoveredTile: hiddenSelection.has(opts.hoveredTile)
-          ? ""
-          : opts.hoveredTile,
-      },
-      tier,
-    );
-    const nextObjects = JSON.stringify([
-      catalogueStamp,
-      visualStamp,
-      posedObjects,
-      nextState,
-      posedTokens,
-      tier,
-      opts.master,
-      opts.selectedToken,
-      opts.previewObject?.id,
-      renderObjects,
-      assets.signature(
-        new Set(
-          posedObjects
-            .filter((o) => renderObjects.includes(o.id))
-            .map((o) => o.modelId)
-            .filter(Boolean),
-        ),
-        "render",
-      ),
-      d.areas,
-      opts.areaMode,
-    ]);
-    if (nextObjects !== objectKey) {
-      objectKey = nextObjects;
-      scene.remove(objects);
-      disposeObjects(objects);
-      objects = buildSceneObjects(
-        {
-          ...d,
-          objects: posedObjects.filter((o) => o.id !== opts.previewObject?.id),
-        },
-        nextState && { ...nextState, tokens: posedTokens },
-        {
-          ...opts,
-          tokenPortraits,
-          renderObjects,
-          areaObjectOpacity: appearance.objectOpacity,
-          areaTileOpacity: appearance.tokenOpacity,
-        },
-        fog,
-        assets,
-        tier,
-      );
-      scene.add(objects);
-      profiler.tag(objects, "objects");
-    }
-    lighting.update(
-      d,
-      { ...previewOptions, sceneHeight: structure.top() },
-      structure.context(),
-      placed,
-      posedObjects,
-      view.getView(),
-      objects,
-      objectPreview.root,
-      appearance,
-    );
-    effects.update(
-      d,
-      previewOptions,
-      structure.context(),
-      placed,
-      posedObjects,
-      appearance,
-    );
-    assets.prune();
-    water.update([tiles.root, preview.root, objects, objectPreview.root]);
-    profiler.updateEnd(updateStarted);
+    selection.update(runtime.options, view.getView());
     render();
   }
+  function refreshVisible() {
+    if (!runtime.current) return;
+    scene.userData.outlineRevision++;
+    runtime.visibleScene = assetView.read(runtime.options);
+    runtime.selectedToken = runtime.options.selectedToken;
+    const placed = runtime.placedTiles.filter((tile) =>
+      runtime.visibleScene.tiles.has(tile.id),
+    );
+    const objectsInView = runtime.posedObjects.filter(
+      (object) =>
+        runtime.visibleScene.objects.has(object.id) ||
+        runtime.renderObjects.includes(object.id),
+    );
+    assets.progressive(
+      runtime.visibleScene.models,
+      runtime.tier,
+      runtime.movingIds,
+      runtime.current.lightingEnabled,
+      runtime.modelIds,
+    );
+    modelTransitions.ready((id) => !!modelVisual(assets, id, runtime.tier));
+    tiles.rebuild(
+      placed,
+      runtime.tier,
+      preview.hiddenIds(),
+      runtime.appearance.tileOpacity,
+      runtime.appearance.tileGroup,
+    );
+    objectLayer.update(
+      {
+        ...runtime.current,
+        objects: objectsInView.filter(
+          (o) => o.id !== runtime.scenePreviewOptions.previewObject?.id,
+        ),
+      },
+      runtime.state && { ...runtime.state, tokens: runtime.posedTokens },
+      { ...runtime.options, renderObjects: runtime.renderObjects },
+      runtime.tier,
+      runtime.appearance,
+    );
+    loadingPreview.update(runtime.scenePreviewOptions, assets.catalogue(), {
+      tiles: placed.filter((t) => !preview.hiddenIds().includes(t.id)),
+      objects: objectsInView.filter(
+        (o) => o.id !== runtime.scenePreviewOptions.previewObject?.id,
+      ),
+      tier: runtime.tier,
+      tileOpacity: runtime.appearance.tileOpacity,
+      objectOpacity: runtime.appearance.objectOpacity,
+      tileGroup: runtime.appearance.tileGroup,
+    });
+    water.update([tiles.root, preview.root, objects, objectPreview.root]);
+    assets.prune();
+  }
+  const queries = mapScreenQueries(
+    host,
+    view,
+    assets,
+    preview,
+    tiles,
+    structure,
+    () => runtime.current,
+    () => runtime.tier,
+    () => runtime.appearance.hiddenTiles,
+  );
+  const synchronizer = createSceneSynchronizer({
+    runtime,
+    modelTransitions,
+    transitions,
+    structure,
+    view,
+    assetView,
+    objects,
+    queries,
+    annotations,
+    assets,
+    profiler,
+    volumeFog,
+    fog,
+    preview,
+    objectMotion,
+    objectPreview,
+    areaPreview,
+    surfaceAnchors,
+    anchors,
+    lighting,
+    effects,
+    water,
+    selection,
+    lightSources,
+    refreshVisible,
+    render,
+    isDead: () => dead,
+  });
+  const update = synchronizer.update;
   function changeCamera(next) {
-    const old = tier;
+    const old = runtime.tier;
     view.update(next);
-    tier = view.getView().cellPixels < 72 ? "lod" : "render";
-    if (current && old !== tier)
-      update(current, state, options).catch((error) => onError(error.message));
+    runtime.tier = modelTier(view.getView().cellPixels, runtime.tier);
+    lighting.selection(runtime.options, view.getView());
+    if (
+      runtime.current &&
+      (old !== runtime.tier ||
+        assetView.read(runtime.options).key !== runtime.visibleScene?.key)
+    ) {
+      refreshVisible();
+      selection.document(
+        runtime.current,
+        runtime.placedTiles,
+        runtime.appearance,
+        runtime.tier,
+      );
+      selection.update(runtime.options, view.getView());
+    }
   }
   const observer = new ResizeObserver(() => {
     view.update();
-    if (current)
-      update(current, state, options).catch((error) => onError(error.message));
+    if (runtime.current)
+      update(runtime.current, runtime.state, runtime.options).catch((error) =>
+        onError(error.message),
+      );
   });
   observer.observe(host);
   const stopModelRefresh = startModelRefresh(
     () =>
-      current && !options.catalogue ? getMapModels(options.publicCode) : null,
+      active && runtime.current && !runtime.options.catalogue
+        ? getMapModels(runtime.options.publicCode)
+        : null,
     async (models) => {
       assets.replaceCatalogue(models);
-      await update(current, state, options);
+      await update(runtime.current, runtime.state, {
+        ...runtime.options,
+        sceneChanges: ["structure", "assets"],
+      });
     },
   );
   return {
     update,
+    updateSelection,
+    setActive(value) {
+      active = value;
+      loop.setActive(value);
+    },
     observeLightFrame: framePreview.observe,
     observeAreaFrame: areaPreview.observe,
     retry() {
       assets.retryFailed();
-      return update(current, state, options);
+      return update(runtime.current, runtime.state, runtime.options);
     },
     async snapshot() {
       const ids = new Set([
-        ...current.tiles.map((t) => t.modelId),
-        ...current.objects.map((o) => o.modelId).filter(Boolean),
+        ...runtime.current.tiles.map((t) => t.modelId),
+        ...runtime.current.objects.map((o) => o.modelId).filter(Boolean),
       ]);
-      await assets.ensure(ids, tier, options);
-      if (current.lightingEnabled) await assets.ensure(ids, "shadow", options);
-      await update(current, state, options);
+      await assets.ensure(ids, runtime.tier, runtime.options);
+      if (runtime.current.lightingEnabled)
+        await assets.ensure(ids, "shadow", runtime.options);
+      await update(runtime.current, runtime.state, {
+        ...runtime.options,
+        capture: true,
+      });
 
       tiles.advance(1000);
       objectMotion.advance(1000, objects);
@@ -516,20 +406,10 @@ export async function createMapRenderer(
     getView: view.getView,
     world: view.world,
     placementPoint: structure.point,
-    ...mapScreenQueries(
-      host,
-      view,
-      assets,
-      preview,
-      tiles,
-      structure,
-      () => current,
-      () => tier,
-      () => appearance.hiddenTiles,
-    ),
+    ...queries,
     lightPoint(event) {
       const ray = view.ray(event),
-        hits = visibleSceneHits(ray, [tiles.root, objects], appearance);
+        hits = visibleSceneHits(ray, [tiles.root, objects], runtime.appearance);
       const hit = hits[0];
       return hit
         ? { x: hit.point.x, y: hit.point.z, elevation: hit.point.y }
@@ -546,18 +426,18 @@ export async function createMapRenderer(
         surfaceAnchors,
         anchors,
         objects,
-        appearance,
+        appearance: runtime.appearance,
       }),
     destroy() {
       cancelAnimationFrame(assetFrame);
       stopModelRefresh();
       dead = true;
-      epoch++;
+      synchronizer.destroy();
       observer.disconnect();
       loop.destroy();
       profiler.destroy();
       annotations.destroy();
-      disposeObjects(objects);
+      objectLayer.destroy();
       tokenPortraits.destroy();
       tiles.destroy();
       preview.destroy();

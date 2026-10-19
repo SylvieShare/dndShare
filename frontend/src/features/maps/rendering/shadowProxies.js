@@ -17,6 +17,7 @@ export function createShadowProxies(assets) {
   const root = new Group(),
     material = new MeshBasicMaterial({ colorWrite: false, depthWrite: false });
   material.shadowSide = DoubleSide;
+  root.matrixAutoUpdate = false;
   const matrix = new Matrix4(),
     previous = new Matrix4();
   let key = "",
@@ -94,6 +95,7 @@ export function createShadowProxies(assets) {
       for (const [bucket, { source, items }] of buckets) {
         for (const part of source.parts) {
           const mesh = new InstancedMesh(part.geometry, material, items.length);
+          mesh.matrixAutoUpdate = false;
           mesh.castShadow = true;
           // WebGL invokes onBeforeShadow separately. Keep the invisible shadow
           // geometry out of the normal color pass without extra vertex work.

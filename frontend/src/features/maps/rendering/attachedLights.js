@@ -3,18 +3,20 @@ import { tileTransform } from "./tileTransform";
 
 // Resolve an anchor in its original frame once, then follow its animated frame.
 // This includes the preview lift, turning, upper floors and landing animation.
-export function createAttachedLights() {
+export function createAttachedLights(frames) {
   let bindings = new Map();
   const position = new Vector3();
   return {
     update(lights, tiles, objects, catalogue) {
       const models = new Map(catalogue.map((m) => [m.id, m]));
+      const tileIndex = new Map(tiles.map((t) => [t.id, t])),
+        objectIndex = new Map(objects.map((o) => [o.id, o]));
       bindings = new Map();
       for (const light of lights) {
         const anchor = light.anchor;
         if (!anchor) continue;
-        const item = (anchor.kind === "tile" ? tiles : objects).find(
-          (i) => i.id === anchor.id,
+        const item = (anchor.kind === "tile" ? tileIndex : objectIndex).get(
+          anchor.id,
         );
         if (!item) continue;
         const model = models.get(item.modelId);
@@ -38,7 +40,9 @@ export function createAttachedLights() {
       if (!binding) return null;
       const { anchor, local } = binding;
       let matrix;
-      if (anchor.kind === "tile") matrix = tileMatrix(anchor.id);
+      if (frames)
+        matrix = frames.matrix(anchor, tileMatrix, objectRoots, objectPreview);
+      else if (anchor.kind === "tile") matrix = tileMatrix(anchor.id);
       else {
         const visual = [
           ...objectRoots.children,

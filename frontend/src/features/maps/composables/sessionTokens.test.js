@@ -70,7 +70,9 @@ it("held-token motion is one undoable change and cancellation restores position"
     },
     editor,
   );
-  expect(editor.history).toHaveLength(1);
+  expect(editor.history).toHaveLength(0);
+  expect(editor.draft.state.tokens[0].x).toBe(1.5);
+  expect(tokens.canvasState.value.tokens[0].x).toBe(5.5);
   tokens.gesture({ phase: "cancel" }, editor);
   expect(editor.draft.state.tokens[0].x).toBe(1.5);
   expect(editor.history).toHaveLength(0);

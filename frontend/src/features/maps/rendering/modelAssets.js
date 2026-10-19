@@ -10,6 +10,7 @@ import {
 import { modelDownloads } from "./modelDownloadManager";
 import { modelFile, modelDownloadPlan } from "./modelDownloadProgress";
 import { createModelDownloadSession } from "./modelDownloadSession";
+import { pruneModelResidency } from "./modelResidency";
 import { residentModelUsage } from "./modelMemoryUsage";
 export function modelAssets(
   onError,
@@ -26,8 +27,21 @@ export function modelAssets(
     preparing,
     dead = false,
     plan = new Map(),
-    lastProgress = "";
+    lastProgress = "",
+    serial = 0,
+    memoryVersion = 0,
+    memoryAt = -1,
+    memory,
+    queuedProgress = false;
   function progress() {
+    if (dead || queuedProgress) return;
+    queuedProgress = true;
+    queueMicrotask(() => {
+      queuedProgress = false;
+      publish();
+    });
+  }
+  function publish() {
     if (dead) return;
     const files = [...plan.values()].filter(
       (file) =>
@@ -49,7 +63,11 @@ export function modelAssets(
             ? { ...state, status: "processing" }
             : state;
     });
-    snapshot.memory = residentModelUsage(owned, catalogue);
+    if (memoryAt !== memoryVersion) {
+      memory = residentModelUsage(owned, catalogue);
+      memoryAt = memoryVersion;
+    }
+    snapshot.memory = memory;
     const key = JSON.stringify(snapshot);
     if (key !== lastProgress) {
       lastProgress = key;
@@ -78,6 +96,7 @@ export function modelAssets(
           : await getMapModels(options.publicCode);
       if (dead || preparing !== task) return;
       catalogue = new Map(models.map((m) => [m.id, m]));
+      memoryVersion++;
       catalogueKey = key;
       sourceCatalogue = options.catalogue;
     })();
@@ -98,7 +117,7 @@ export function modelAssets(
     if (!plan.has(url)) plan.set(url, modelFile(metadata, tier));
     let entry = owned.get(url);
     if (!entry) {
-      entry = { value: null, error: null };
+      entry = { value: null, error: null, used: ++serial };
       owned.set(url, entry);
       entry.promise = acquire(
         url,
@@ -109,6 +128,7 @@ export function modelAssets(
         .then((value) => {
           if (!dead && owned.get(url) === entry) {
             entry.value = value;
+            memoryVersion++;
             progress();
             onChange();
           }
@@ -124,6 +144,7 @@ export function modelAssets(
         });
       entry.promise.catch(() => {});
     }
+    entry.used = ++serial;
     prioritize(url, loader, priority);
     progress();
     return entry.promise;
@@ -144,8 +165,14 @@ export function modelAssets(
   function report(error) {
     if (!dead && error.name !== "AbortError") onError(error.message);
   }
-  function progressive(ids, tier, details = new Set(), shadows = false) {
-    plan = modelDownloadPlan(catalogue, ids, tier, details, shadows);
+  function progressive(
+    ids,
+    tier,
+    details = new Set(),
+    shadows = false,
+    shadowIds = ids,
+  ) {
+    plan = modelDownloadPlan(catalogue, ids, tier, details, shadows, shadowIds);
     for (const [url, entry] of owned) {
       if (
         !plan.has(url) &&
@@ -180,7 +207,7 @@ export function modelAssets(
     }
     for (const id of details) request(id, "render", 2).catch(report);
     if (shadows)
-      for (const id of new Set([...ids, ...details]))
+      for (const id of new Set([...shadowIds, ...details]))
         request(id, "shadow", -1).catch(report);
   }
   return {
@@ -200,8 +227,14 @@ export function modelAssets(
     },
     replaceCatalogue(models) {
       catalogue = new Map(models.map((m) => [m.id, m]));
+      memoryVersion++;
     },
-    prune() {
+    prune(limits) {
+      const remove = (url) => {
+        owned.delete(url);
+        memoryVersion++;
+        release(url, loader);
+      };
       const urls = new Set(
         [...catalogue.values()].flatMap((m) => [
           m.renderUrl,
@@ -209,11 +242,9 @@ export function modelAssets(
           m.shadowUrl,
         ]),
       );
-      for (const url of owned.keys())
-        if (!urls.has(url)) {
-          owned.delete(url);
-          release(url, loader);
-        }
+      for (const url of owned.keys()) if (!urls.has(url)) remove(url);
+      pruneModelResidency(owned, plan, remove, limits);
+      progress();
     },
     metadata: (id) => catalogue.get(id),
     catalogue: () => [...catalogue.values()],

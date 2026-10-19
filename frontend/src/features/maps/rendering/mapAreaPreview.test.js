@@ -1,7 +1,7 @@
 import { expect, it, vi } from "vitest";
 import { BoxGeometry, Matrix4, MeshStandardMaterial } from "three";
 import { createMapAreaPreview } from "./mapAreaPreview";
-it("renders only area members from shared assets, reuses an unchanged image, flips GPU rows, and restores renderer state on errors", () => {
+it("renders only area members from shared assets, reuses an unchanged image, flips GPU rows, and restores renderer state on errors", async () => {
   vi.stubGlobal("devicePixelRatio", 1);
   const geometry = new BoxGeometry(),
     material = new MeshStandardMaterial();
@@ -15,10 +15,13 @@ it("renders only area members from shared assets, reuses an unchanged image, fli
   const previous = {},
     gpu = {
       shadowMap: { enabled: true },
+      getClearColor: (c) => c,
+      getClearAlpha: () => 1,
+      setClearColor() {},
       getRenderTarget: () => previous,
       setRenderTarget: vi.fn(),
       render: vi.fn(),
-      readRenderTargetPixels: vi.fn((_, x, y, w, h, pixels) => {
+      readRenderTargetPixelsAsync: vi.fn((_, x, y, w, h, pixels) => {
         pixels.fill(255);
         pixels[0] = 10;
         pixels[(h - 1) * w * 4] = 200;
@@ -41,6 +44,7 @@ it("renders only area members from shared assets, reuses an unchanged image, fli
   ];
   preview.update(d, tiles, [], "render");
   const stop = preview.observe(canvas, "a", changed);
+  await Promise.resolve();
   expect(changed).toHaveBeenLastCalledWith("ready");
   expect(assets.model.mock.calls.every(([id]) => id === "model")).toBe(true);
   expect(ctx.putImageData.mock.lastCall[0].data[0]).toBe(200);
@@ -48,10 +52,11 @@ it("renders only area members from shared assets, reuses an unchanged image, fli
   expect(gpu.shadowMap.enabled).toBe(true);
   preview.update(d, tiles, [], "render");
   expect(gpu.render).toHaveBeenCalledOnce();
-  gpu.readRenderTargetPixels.mockImplementation(() => {
+  gpu.readRenderTargetPixelsAsync.mockImplementation(() => {
     throw new Error("lost context");
   });
   preview.update(d, [{ ...tiles[0], x: 1 }], [], "render");
+  await Promise.resolve();
   expect(changed).toHaveBeenLastCalledWith("unavailable");
   expect(gpu.setRenderTarget).toHaveBeenLastCalledWith(previous);
   expect(gpu.shadowMap.enabled).toBe(true);

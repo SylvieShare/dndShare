@@ -12,6 +12,8 @@ import {
   WebGLRenderTarget,
 } from "three";
 import { TILE_ACCENT, OBJECT_ACCENT } from "./mapAccents";
+import { outlineRegion, outlineCamera } from "./outlineRegion";
+import { renderPass } from "./renderPass";
 import { outlineState, sameOutlineState } from "./outlineState";
 
 export function createOutlinePasses(gpu) {
@@ -65,13 +67,14 @@ void main(){
       toneMapped: false,
     }),
     camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1),
-    size = new Vector2(),
-    clearColour = new Color();
+    size = new Vector2();
   filterScene.userData.renderCategory = overlay.userData.renderCategory =
     "overlays";
   filterScene.add(new Mesh(geometry, shader));
-  overlay.add(new Mesh(geometry, image));
-  let previous = null;
+  const quad = new Mesh(geometry, image);
+  overlay.add(quad);
+  let previous = null,
+    region = null;
   const invalidate = () => {
     previous = null;
   };
@@ -112,48 +115,55 @@ void main(){
           colours,
         ),
         dirty = !sameOutlineState(previous, state),
-        oldTarget = gpu.getRenderTarget(),
-        autoClear = gpu.autoClear,
-        shadows = gpu.shadowMap.enabled,
-        background = scene.background,
-        override = scene.overrideMaterial,
-        hidden = [...ignored].map((node) => [node, node.visible]),
-        alpha = gpu.getClearAlpha();
-      gpu.getClearColor(clearColour);
-      try {
-        gpu.autoClear = false;
-        gpu.shadowMap.enabled = false;
-        if (dirty) {
-          prepare();
-          if (mask.width !== size.x || mask.height !== size.y) {
-            mask.setSize(size.x, size.y);
-            result.setSize(size.x, size.y);
+        hidden = [...ignored].map((node) => [node, node.visible]);
+      renderPass(gpu, scene, ({ target: oldTarget }) => {
+        try {
+          gpu.autoClear = false;
+          gpu.shadowMap.enabled = false;
+          if (dirty) {
+            prepare();
+            maskScene.updateMatrixWorld(true);
+            region = outlineRegion(maskScene, view, size.x, size.y, ratio);
+            if (!region) {
+              previous = state;
+              return;
+            }
+            if (mask.width !== region.width || mask.height !== region.height) {
+              mask.setSize(region.width, region.height);
+              result.setSize(region.width, region.height);
+            }
+            shader.uniforms.texel.value.set(
+              ratio / region.width,
+              ratio / region.height,
+            );
+            const croppedView = outlineCamera(view, region, size.x, size.y);
+            quad.scale.set(region.width / size.x, region.height / size.y, 1);
+            quad.position.set(
+              (2 * region.x + region.width) / size.x - 1,
+              (2 * region.y + region.height) / size.y - 1,
+              0,
+            );
+            gpu.setRenderTarget(mask);
+            gpu.setClearColor(0x000000, 0);
+            gpu.clear();
+            scene.background = null;
+            scene.overrideMaterial = depth;
+            for (const [node] of hidden) node.visible = false;
+            gpu.render(scene, croppedView);
+            gpu.render(maskScene, croppedView);
+            gpu.setRenderTarget(result);
+            gpu.clear();
+            gpu.render(filterScene, camera);
+            previous = state;
           }
-          shader.uniforms.texel.value.set(ratio / size.x, ratio / size.y);
-          gpu.setRenderTarget(mask);
-          gpu.setClearColor(0x000000, 0);
-          gpu.clear();
-          scene.background = null;
-          scene.overrideMaterial = depth;
-          for (const [node] of hidden) node.visible = false;
-          gpu.render(scene, view);
-          gpu.render(maskScene, view);
-          gpu.setRenderTarget(result);
-          gpu.clear();
-          gpu.render(filterScene, camera);
-          previous = state;
+          if (region) {
+            gpu.setRenderTarget(oldTarget);
+            gpu.render(overlay, camera);
+          }
+        } finally {
+          for (const [node, visible] of hidden) node.visible = visible;
         }
-        gpu.setRenderTarget(oldTarget);
-        gpu.render(overlay, camera);
-      } finally {
-        scene.background = background;
-        scene.overrideMaterial = override;
-        for (const [node, visible] of hidden) node.visible = visible;
-        gpu.shadowMap.enabled = shadows;
-        gpu.autoClear = autoClear;
-        gpu.setClearColor(clearColour, alpha);
-        gpu.setRenderTarget(oldTarget);
-      }
+      });
     },
     destroy() {
       gpu.domElement?.removeEventListener("webglcontextrestored", invalidate);

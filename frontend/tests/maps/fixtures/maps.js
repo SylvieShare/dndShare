@@ -1,3 +1,4 @@
+import { paint, lineCells } from "./mapBuilders";
 import { modelDownloadsFixture, downloadMapExample } from "./downloads";
 import { componentExample } from "./components";
 import { sessionFixture, sessionAPI, tokenPortraitExample } from "./session";
@@ -19,8 +20,6 @@ import {
   clone,
   newMap,
   initialState,
-  paint,
-  lineCells,
 } from "../../../src/features/maps/lib/mapModel";
 import "@sylvieshare/share-ui/styles.css";
 import "../../../src/app/theme.css";

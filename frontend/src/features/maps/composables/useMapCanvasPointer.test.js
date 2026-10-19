@@ -7,6 +7,8 @@ vi.mock("vue", () => ({
 }));
 beforeEach(() => {
   vi.useFakeTimers();
+  vi.stubGlobal("requestAnimationFrame", (fn) => setTimeout(fn, 16));
+  vi.stubGlobal("cancelAnimationFrame", clearTimeout);
   vi.stubGlobal("window", {
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),

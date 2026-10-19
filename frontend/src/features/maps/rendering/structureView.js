@@ -6,15 +6,19 @@ import { tileSize } from "../lib/tilePlacement";
 export function structureView(assets, cameraView) {
   let context = structureContext({ width: 2, height: 2, tiles: [] }, []),
     document,
+    placed = [],
     hiddenTiles = new Set();
-  function update(d) {
+  function update(d, rebuild = true) {
+    const changed = document !== d || rebuild;
     document = d;
+    if (!changed) return placed;
     context = structureContext(d, assets.catalogue());
     if (!context.status.valid) throw new Error(context.status.message);
-    return d.tiles.map((tile) => ({
+    placed = d.tiles.map((tile) => ({
       ...tile,
       elevation: context.placements.get(tile.id)?.elevation || 0,
     }));
+    return placed;
   }
   function posed(tile) {
     return {

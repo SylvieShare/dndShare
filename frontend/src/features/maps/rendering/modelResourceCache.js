@@ -1,5 +1,6 @@
 import { modelMemoryUsage } from "./modelMemoryUsage";
 import { modelDownloads } from "./modelDownloadManager";
+import { prepareModelPicking } from "./modelPicking";
 const cache = new Map();
 export const resourceKey = (url, loader) => `${loader.key}:${url}`;
 function dispose(model) {
@@ -17,7 +18,10 @@ function dispose(model) {
         if (value?.isTexture) textures.add(value);
     }
   }
-  geometries.forEach((v) => v.dispose());
+  geometries.forEach((v) => {
+    v.boundsTree = null;
+    v.dispose();
+  });
   materials.forEach((v) => v.dispose());
   textures.forEach((v) => {
     images.add(v.source?.data);
@@ -47,7 +51,7 @@ export function acquire(url, loader, priority = 0, bytes = 0) {
           ),
         (event) => modelDownloads.progress(entry.progress, event),
       )
-      .then((gltf) => {
+      .then(async (gltf) => {
         gltf.scene.updateMatrixWorld(true);
         const parts = [];
         gltf.scene.traverse((node) => {
@@ -59,6 +63,15 @@ export function acquire(url, loader, priority = 0, bytes = 0) {
             });
         });
         if (!parts.length) throw new Error("В модели нет геометрии");
+        try {
+          if (entry.refs)
+            await Promise.all(
+              parts.map((part) => prepareModelPicking(part.geometry)),
+            );
+        } catch (error) {
+          dispose({ parts });
+          throw error;
+        }
         entry.value = {
           parts,
           usage: modelMemoryUsage(parts),

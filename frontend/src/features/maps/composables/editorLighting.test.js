@@ -23,6 +23,7 @@ function setup(lights = []) {
     setObjectSelection: vi.fn(),
     pauseSave: vi.fn(),
     checkpoint: vi.fn(),
+    commitEdit: vi.fn(),
     change(fn) {
       fn(e.draft.value);
     },

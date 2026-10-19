@@ -39,7 +39,7 @@ for (const mode of ["editor", "board"])
           return context.getImageData(0, 0, 1, 1).data[3];
         };
         const panel = document.querySelector(".map-sidebar-panel"),
-          inspector = document.querySelector(".map-selection-content"),
+          inspector = document.querySelector(".workspace-focus-content"),
           rail = document.querySelector(".map-sidebar-tabs");
         return {
           canvas: bounds.toJSON(),

@@ -1,17 +1,24 @@
 import { lightArea, lightPose } from "./mapLighting";
-import { structureContext } from "./tileStructure";
 import { resolvedSurfacePosition } from "./surfacePlacement";
 import { tileSize } from "./tilePlacement";
 import { OBJECTS } from "./mapModel";
+import { documentIndex } from "./documentIndex";
 
-export function mapEntity(document, catalogue, kind, id, context) {
+export function mapEntity(
+  document,
+  catalogue,
+  kind,
+  id,
+  context,
+  index = documentIndex(document, catalogue, context),
+) {
   const list =
     kind === "tile"
-      ? document.tiles
+      ? index.tiles
       : kind === "object"
-        ? document.objects
-        : document.lights;
-  const item = list.find((entry) => entry.id === id);
+        ? index.objects
+        : index.lights;
+  const item = list.get(id);
   if (!item) return null;
   if (kind === "light") {
     const pose = lightPose(item, document, catalogue, context);
@@ -39,11 +46,11 @@ export function mapEntity(document, catalogue, kind, id, context) {
       groupKey: `light:${item.kind}:${item.color}`,
     };
   }
-  const model = catalogue.find((m) => m.id === item.modelId),
-    c = context || structureContext(document, catalogue),
+  const model = index.models.get(item.modelId),
+    c = context || index.structure,
     position =
       kind === "object"
-        ? resolvedSurfacePosition(item, document, catalogue, c)
+        ? resolvedSurfacePosition(item, document, catalogue, c, index)
         : {
             x: item.x,
             y: item.y,
@@ -72,16 +79,26 @@ export function mapEntity(document, catalogue, kind, id, context) {
 }
 export function selectedMapEntities(editor) {
   const d = editor.draft.document,
-    c = structureContext(d, editor.catalogue);
+    index = editor.documentIndex || documentIndex(d, editor.catalogue),
+    c = index.structure;
   return [
     ...editor.selectedTiles.map((id) =>
-      mapEntity(d, editor.catalogue, "tile", id, c),
+      mapEntity(d, editor.catalogue, "tile", id, c, index),
     ),
     ...editor.selectedObjects.map((id) =>
-      mapEntity(d, editor.catalogue, "object", id, c),
+      mapEntity(d, editor.catalogue, "object", id, c, index),
     ),
     ...(editor.selectedLight
-      ? [mapEntity(d, editor.catalogue, "light", editor.selectedLight, c)]
+      ? [
+          mapEntity(
+            d,
+            editor.catalogue,
+            "light",
+            editor.selectedLight,
+            c,
+            index,
+          ),
+        ]
       : []),
   ].filter(Boolean);
 }
@@ -99,14 +116,17 @@ export function groupMapEntities(entries) {
 
 export function areaMapEntities(editor, area) {
   const d = editor.draft.document,
-    c = structureContext(d, editor.catalogue);
+    index = editor.documentIndex || documentIndex(d, editor.catalogue),
+    c = index.structure;
   return [
-    ...area.tileIds.map((id) => mapEntity(d, editor.catalogue, "tile", id, c)),
+    ...area.tileIds.map((id) =>
+      mapEntity(d, editor.catalogue, "tile", id, c, index),
+    ),
     ...area.objectIds.map((id) =>
-      mapEntity(d, editor.catalogue, "object", id, c),
+      mapEntity(d, editor.catalogue, "object", id, c, index),
     ),
     ...d.lights
       .filter((l) => lightArea(l, d) === area.id)
-      .map((l) => mapEntity(d, editor.catalogue, "light", l.id, c)),
+      .map((l) => mapEntity(d, editor.catalogue, "light", l.id, c, index)),
   ].filter(Boolean);
 }

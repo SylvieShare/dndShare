@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mapPoint, pickTile } from "./editorHelpers";
+import { mapPoint, pickTile, uncoverMapPoint } from "./editorHelpers";
 async function ready(page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
@@ -41,6 +41,7 @@ test("unbounded command drops do not fill the map and camera controls stay at th
   await ready(page);
   const point = await mapPoint(page, 0.5, 0.5);
   await pickTile(page);
+  await uncoverMapPoint(page, point);
   await page.keyboard.down("Meta");
   await page.mouse.move(point.x, point.y, { steps: 8 });
   await page.mouse.click(point.x, point.y);

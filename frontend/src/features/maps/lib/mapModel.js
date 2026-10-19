@@ -1,9 +1,4 @@
 export const OBJECTS = [{ id: "chest", name: "Сундук" }];
-export const VISIBILITY = [
-  { value: "hidden", label: "Скрыта" },
-  { value: "explored", label: "Исследована" },
-  { value: "visible", label: "Открыта" },
-];
 export const clone = (value) => JSON.parse(JSON.stringify(value));
 export const uid = () => crypto.randomUUID();
 export const interactive = (kind) =>
@@ -100,93 +95,7 @@ export function rectangle(d, a, b, snapToGrid = true) {
     height: Math.max(0.05, bottom - y),
   };
 }
-export function lineCells(a, b) {
-  let x = Math.floor(a.x),
-    y = Math.floor(a.y);
-  const bx = Math.floor(b.x),
-    by = Math.floor(b.y),
-    dx = Math.abs(bx - x),
-    dy = -Math.abs(by - y);
-  const sx = x < bx ? 1 : -1,
-    sy = y < by ? 1 : -1,
-    result = [];
-  let error = dx + dy;
-  for (let n = 0; n < 1000; n++) {
-    result.push({ x, y });
-    if (x === bx && y === by) break;
-    const e = 2 * error;
-    if (e >= dy) {
-      error += dy;
-      x += sx;
-    }
-    if (e <= dx) {
-      error += dx;
-      y += sy;
-    }
-  }
-  return result;
-}
 export const MAX_TILES = 4096;
-export function tileAt(d, x, y, level = 0) {
-  return d.tiles.find(
-    (t) => t.x === Math.floor(x) && t.y === Math.floor(y) && t.level === level,
-  );
-}
-export function paint(d, points, modelId, radius = 1, rotation = 0, level = 0) {
-  const byCell = new Map(d.tiles.map((t) => [`${t.x},${t.y},${t.level}`, t]));
-  for (const p of points) {
-    for (let y = p.y; y < p.y + radius; y++) {
-      for (let x = p.x; x < p.x + radius; x++) {
-        if (!inside(d, x, y)) continue;
-        const key = `${x},${y},${level}`;
-        if (!modelId) byCell.delete(key);
-        else {
-          const old = byCell.get(key);
-          if (!old && byCell.size >= MAX_TILES)
-            throw new Error("На карте может быть до 4096 плиток");
-          byCell.set(key, {
-            id: old?.id || uid(),
-            modelId,
-            x,
-            y,
-            rotation,
-            level,
-          });
-        }
-      }
-    }
-  }
-  d.tiles = [...byCell.values()];
-}
-export function flood(d, point, modelId, rotation = 0, level = 0) {
-  const x = Math.floor(point.x),
-    y = Math.floor(point.y);
-  if (!inside(d, x, y)) return;
-  const original = tileAt(d, x, y, level)?.modelId || "";
-  if (original === modelId) return;
-  const queue = [{ x, y }],
-    visited = new Set(),
-    points = [];
-  while (queue.length) {
-    const p = queue.pop(),
-      key = `${p.x},${p.y}`;
-    if (
-      visited.has(key) ||
-      !inside(d, p.x, p.y) ||
-      (tileAt(d, p.x, p.y, level)?.modelId || "") !== original
-    )
-      continue;
-    visited.add(key);
-    points.push(p);
-    queue.push(
-      { x: p.x - 1, y: p.y },
-      { x: p.x + 1, y: p.y },
-      { x: p.x, y: p.y - 1 },
-      { x: p.x, y: p.y + 1 },
-    );
-  }
-  paint(d, points, modelId, 1, rotation, level);
-}
 export function resized(d, width, height) {
   const next = clone(d),
     oldWidth = Math.ceil(d.width);

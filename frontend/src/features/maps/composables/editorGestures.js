@@ -1,6 +1,6 @@
 import { nearestSurface } from "../lib/surfacePlacement";
-import { clone, inside, rectangle, snap, uid } from "../lib/mapModel";
-import { tileGroupStatus, tilePlacementStatus } from "../lib/tilePlacement";
+import { inside, rectangle, snap, uid } from "../lib/mapModel";
+import { tileGroupStatus } from "../lib/tilePlacement";
 import { dependentTiles } from "../lib/tileStructure";
 import { editorClipboard } from "./editorClipboard";
 import { visibleModels } from "../lib/visibleModels";
@@ -11,11 +11,6 @@ export function editorGestures(e) {
   const clipboard = editorClipboard(e);
   const rotateGroup = editorGroupRotation(e);
   const doc = () => e.draft.value.document;
-  function checkpoint() {
-    if (gesture.changed) return;
-    e.checkpoint();
-    gesture.changed = true;
-  }
   function resetGesture() {
     gesture = null;
     e.tileDrag.cancel();
@@ -27,10 +22,6 @@ export function editorGestures(e) {
     e.pauseSave(false);
   }
   function cancel() {
-    if (gesture?.changed) {
-      e.draft.value = gesture.before;
-      e.history.value.pop();
-    }
     resetGesture();
     e.selection.value = null;
   }
@@ -87,7 +78,6 @@ export function editorGestures(e) {
           start: point,
           tool,
           last: point,
-          before: clone(e.draft.value),
           screen: event && { x: event.clientX, y: event.clientY },
           additive: !!(event?.metaKey || event?.ctrlKey),
           selection: [...e.selectedTiles.value],
@@ -128,7 +118,6 @@ export function editorGestures(e) {
             e.error.value = "На карте нет доступных точек размещения";
             return;
           }
-          checkpoint();
           const o = {
             id: uid(),
             kind: e.objectKind.value,
@@ -138,11 +127,8 @@ export function editorGestures(e) {
             rotation: e.placementRotation.value,
             open: false,
           };
-          d.objects.push(o);
-          e.setObjectSelection([o.id]);
-          e.setTileSelection([]);
-          e.tool.value = "select";
-          if (e.previewObject) e.previewObject.value = null;
+          gesture.created = o;
+          e.previewObject.value = { ...o, placing: true };
         }
       }
       if (phase === "hold" && gesture) {
@@ -168,18 +154,17 @@ export function editorGestures(e) {
             e.tileDrag.begin(gesture.tile.modelId, gesture.start, gesture.tile);
           if (e.draggingTile.value) e.tileDrag.move(point);
         } else if (gesture.object && moved) {
-          checkpoint();
           const target = gesture.object.modelId
-            ? nearestSurface(point, d, e.catalogue.value, gesture.object.id)
+            ? point.invalidSurface
+              ? null
+              : point.placement
+                ? point
+                : nearestSurface(point, d, e.catalogue.value, gesture.object.id)
             : snap(d, point, gesture.object.scale);
-          if (target)
-            Object.assign(
-              d.objects.find((o) => o.id === gesture.object.id),
-              target,
-            );
-          if (e.previewObject)
+          if (target && e.previewObject)
             e.previewObject.value = {
-              ...d.objects.find((o) => o.id === gesture.object.id),
+              ...gesture.object,
+              ...target,
               moving: true,
             };
         } else if (!gesture.object) {
@@ -240,6 +225,20 @@ export function editorGestures(e) {
               e.setTileSelection([tile.id]);
             } else e.error.value = status.message;
           }
+        }
+        if (gesture.created) {
+          e.change((m) => m.document.objects.push(gesture.created));
+          e.setObjectSelection([gesture.created.id]);
+          e.setTileSelection([]);
+          e.tool.value = "select";
+        } else if (gesture.object && gesture.moved && e.previewObject.value) {
+          const { moving, ...object } = e.previewObject.value;
+          e.change((m) =>
+            Object.assign(
+              m.document.objects.find((o) => o.id === object.id),
+              object,
+            ),
+          );
         }
         if (e.draggingTile.value) e.tileDrag.drop(point);
         else if (gesture.tile && !gesture.moved)

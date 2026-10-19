@@ -1,3 +1,4 @@
+import { renderPass } from "./renderPass";
 import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
 import { renderAreaSurfaces } from "./areaSurfaceRenderer";
 import { createFogGridOverlay } from "./fogGridOverlay";
@@ -212,34 +213,34 @@ export function createVolumeFog(gpu, visibility, motion) {
         return;
       }
       targets();
-      const previous = gpu.getRenderTarget();
-      try {
-        gridOverlay.prepare(
-          scene,
-          sceneTarget.depthTexture,
-          fogTarget.texture,
-          size,
-        );
-        fogUniforms.inverseViewProjection.value.multiplyMatrices(
-          viewCamera.matrixWorld,
-          viewCamera.projectionMatrixInverse,
-        );
-        viewCamera.getWorldDirection(fogUniforms.rayDirection.value);
-        compositeUniforms.depthRange.value = viewCamera.far - viewCamera.near;
-        if (scene.background?.isColor)
-          compositeUniforms.backgroundColour.value.copy(scene.background);
-        gpu.setRenderTarget(sceneTarget);
-        renderAreaSurfaces(gpu, scene, viewCamera);
-        // Complete the scene colour/depth pass before integrating the volume.
-        gpu.setRenderTarget(fogTarget);
-        gpu.render(fogScene, camera);
-        gpu.setRenderTarget(previous);
-        gpu.render(compositeScene, camera);
-        gridOverlay.render(viewCamera);
-      } finally {
-        gridOverlay.restore();
-        gpu.setRenderTarget(previous);
-      }
+      renderPass(gpu, scene, ({ target: previous }) => {
+        try {
+          gridOverlay.prepare(
+            scene,
+            sceneTarget.depthTexture,
+            fogTarget.texture,
+            size,
+          );
+          fogUniforms.inverseViewProjection.value.multiplyMatrices(
+            viewCamera.matrixWorld,
+            viewCamera.projectionMatrixInverse,
+          );
+          viewCamera.getWorldDirection(fogUniforms.rayDirection.value);
+          compositeUniforms.depthRange.value = viewCamera.far - viewCamera.near;
+          if (scene.background?.isColor)
+            compositeUniforms.backgroundColour.value.copy(scene.background);
+          gpu.setRenderTarget(sceneTarget);
+          renderAreaSurfaces(gpu, scene, viewCamera);
+          // Complete the scene colour/depth pass before integrating the volume.
+          gpu.setRenderTarget(fogTarget);
+          gpu.render(fogScene, camera);
+          gpu.setRenderTarget(previous);
+          gpu.render(compositeScene, camera);
+          gridOverlay.render(viewCamera);
+        } finally {
+          gridOverlay.restore();
+        }
+      });
     },
     destroy() {
       gridOverlay.destroy();

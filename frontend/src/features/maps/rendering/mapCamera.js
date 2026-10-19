@@ -1,5 +1,6 @@
 import { Plane, Raycaster, Vector2, Vector3 } from "three";
 import { FLOOR } from "./annotations";
+import { renderPixelRatio } from "./renderQuality";
 
 export const ISOMETRIC_TILT = (Math.atan(1 / Math.sqrt(2)) * 180) / Math.PI;
 export const ISOMETRIC_AZIMUTH = 45;
@@ -22,6 +23,7 @@ export function mapCamera(camera, gpu, host, render) {
   const ray = new Raycaster(),
     point = new Vector3(),
     plane = new Plane(new Vector3(0, 1, 0), -FLOOR);
+  ray.firstHitOnly = true;
   function update(next = view) {
     view = { ...view, ...next };
     const width = host.clientWidth || 1,
@@ -45,7 +47,13 @@ export function mapCamera(camera, gpu, host, render) {
     }
     pixels = Math.max(0.5, pixels);
     view.cellPixels = pixels;
-    if (width !== sizedWidth || height !== sizedHeight) {
+    const ratio = renderPixelRatio(width, height);
+    if (
+      width !== sizedWidth ||
+      height !== sizedHeight ||
+      (gpu.getPixelRatio && gpu.getPixelRatio() !== ratio)
+    ) {
+      gpu.setPixelRatio?.(ratio);
       gpu.setSize(width, height);
       sizedWidth = width;
       sizedHeight = height;

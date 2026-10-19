@@ -2,23 +2,37 @@ import { Vector3 } from "three";
 import { createRotationMotion } from "./rotationMotion";
 export function createObjectMotion(assets, tileMatrix) {
   const motion = createRotationMotion(),
-    point = new Vector3();
+    point = new Vector3(),
+    changed = new Set();
   let objects = new Map(),
-    parents = new Map();
+    parents = new Map(),
+    dirty = true;
   return {
+    get needsUpdate() {
+      return dirty || motion.isMoving();
+    },
+    changed,
     update(items, document) {
+      dirty = true;
       objects = new Map(items.map((o) => [o.id, o]));
       parents = new Map(document.tiles.map((t) => [t.id, t]));
       motion.retain(new Set(objects.keys()));
       for (const object of items) motion.set(object.id, object);
     },
-    advance(delta, root) {
+    advance(delta, root, parentMoving = true) {
+      changed.clear();
+      if (!dirty && !parentMoving && !motion.isMoving()) return false;
+      dirty = false;
       const moving = motion.advance(delta);
       for (const child of root.children) {
         const object = objects.get(
           child.userData.objectId || child.userData.tokenId,
         );
         if (!object) continue;
+        const oldX = child.position.x,
+          oldY = child.position.y,
+          oldZ = child.position.z,
+          oldAngle = child.rotation.y;
         const pose = motion.pose(object.id);
         child.position.set(pose.x, pose.elevation, pose.y);
         child.rotation.y = (-pose.rotation * Math.PI) / 180;
@@ -41,8 +55,17 @@ export function createObjectMotion(assets, tileMatrix) {
           );
           if (child.userData.tokenId) child.position.y += 0.05;
         }
+        if (
+          oldX !== child.position.x ||
+          oldY !== child.position.y ||
+          oldZ !== child.position.z ||
+          oldAngle !== child.rotation.y
+        ) {
+          changed.add(object.id);
+          child.updateMatrix();
+          child.updateMatrixWorld(true);
+        }
       }
-      root.updateMatrixWorld(true);
       return moving;
     },
     destroy: motion.clear,

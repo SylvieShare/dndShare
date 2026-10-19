@@ -13,6 +13,8 @@ export function mapScreenQueries(
   getTier,
   getHiddenTiles = () => new Set(),
 ) {
+  let cachedContext;
+  const surfaces = new Map();
   function screenBounds(tile) {
     const model = modelVisual(assets, tile.modelId, getTier()),
       metadata = assets.metadata(tile.modelId);
@@ -37,15 +39,32 @@ export function mapScreenQueries(
     };
   }
   return {
+    invalidate() {
+      cachedContext = null;
+      surfaces.clear();
+    },
     surfacePoint(event, ignored = "") {
       const document = getDocument();
       if (!document) return null;
-      const points = surfacePoints(
-          document,
-          assets.catalogue(),
+      const context = structure.context();
+      if (context !== cachedContext) {
+        surfaces.clear();
+        cachedContext = context;
+      }
+      if (!surfaces.has(ignored)) {
+        surfaces.set(
           ignored,
-          getHiddenTiles(),
-        ),
+          surfacePoints(
+            document,
+            assets.catalogue(),
+            ignored,
+            getHiddenTiles(),
+            context,
+          ),
+        );
+        if (surfaces.size > 4) surfaces.delete(surfaces.keys().next().value);
+      }
+      const points = surfaces.get(ignored),
         rect = host.getBoundingClientRect();
       let best = null,
         distance = Infinity;

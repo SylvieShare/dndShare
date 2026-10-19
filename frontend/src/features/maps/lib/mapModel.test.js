@@ -1,15 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-  flood,
-  lineCells,
   newMap,
-  paint,
   resized,
   snap,
   visibilityAt,
   initialState,
   rectangle,
-  tileAt,
 } from "./mapModel";
 
 describe("map geometry and fog", () => {
@@ -22,15 +18,6 @@ describe("map geometry and fog", () => {
       height: 2,
     });
     expect(rectangle(d, { x: 0.1, y: 0.1 }, { x: 0.2, y: 0.2 }).x).toBe(0);
-  });
-  it("fills a bounded room without crossing its walls", () => {
-    const d = newMap().document;
-    d.width = d.height = 6;
-    paint(d, lineCells({ x: 3, y: 0 }, { x: 3, y: 5 }), "wall-stone");
-    flood(d, { x: 1, y: 1 }, "wood");
-    expect(tileAt(d, 2, 4).modelId).toBe("wood");
-    expect(tileAt(d, 3, 4).modelId).toBe("wall-stone");
-    expect(tileAt(d, 4, 4)).toBeUndefined();
   });
   it("remaps cell zones when resizing and clips objects and rectangles", () => {
     const d = newMap().document;

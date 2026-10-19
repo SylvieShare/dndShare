@@ -1,3 +1,5 @@
+import { renderPass } from "./renderPass";
+import { sceneBounds } from "./sceneBounds";
 import {
   Box3,
   Color,
@@ -18,16 +20,22 @@ import { lightArea } from "../lib/mapLighting";
 // Only the focused area has an isolated scene. Geometry/textures and the GPU are
 // borrowed from the map; no extra context, loader, shadow pass or animation loop.
 export function createMapAreaPreview(gpu, assets, invalidate) {
-  const observers = new Set();
+  const observers = new Set(),
+    pendingTargets = new Set();
   let current;
   function release(item) {
     item.tiles?.destroy();
     item.effects?.destroy();
     if (item.objects) disposeObjects(item.objects);
-    item.target?.dispose();
+    if (item.target && !pendingTargets.has(item.target)) item.target.dispose();
     item.tiles = item.objects = item.target = item.effects = null;
   }
-  function capture(item, d, placed, objects) {
+  async function capture(item, d, placed, objects) {
+    if (item.dead) return;
+    if (item.pending) {
+      item.queued = true;
+      return;
+    }
     const tier = "lod",
       area = d.areas.find((a) => a.id === item.id);
     if (!area) return;
@@ -99,14 +107,7 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
     content.add(item.tiles.root, item.objects, item.effects.root);
     scene.add(content);
     content.updateMatrixWorld(true);
-    const bounds = new Box3();
-    content.traverseVisible((node) => {
-      if (!node.isMesh) return;
-      if (!node.geometry.boundingBox) node.geometry.computeBoundingBox();
-      bounds.union(
-        node.geometry.boundingBox.clone().applyMatrix4(node.matrixWorld),
-      );
-    });
+    const bounds = sceneBounds(content);
     if (bounds.isEmpty()) {
       item.canvas.width = width;
       item.canvas.height = height;
@@ -139,15 +140,26 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
     camera.updateProjectionMatrix();
     item.target = new WebGLRenderTarget(width, height, { samples: 4 });
     item.target.texture.colorSpace = SRGBColorSpace;
-    const previous = gpu.getRenderTarget(),
-      shadows = gpu.shadowMap.enabled;
+    const target = item.target;
+    item.pending = true;
+    pendingTargets.add(target);
     try {
-      gpu.shadowMap.enabled = false;
-      gpu.setRenderTarget(item.target);
-      gpu.render(scene, camera);
-      gpu.setRenderTarget(previous);
       const pixels = new Uint8Array(width * height * 4);
-      gpu.readRenderTargetPixels(item.target, 0, 0, width, height, pixels);
+      const read = renderPass(gpu, scene, () => {
+        gpu.shadowMap.enabled = false;
+        gpu.setRenderTarget(target);
+        gpu.render(scene, camera);
+        return gpu.readRenderTargetPixelsAsync(
+          target,
+          0,
+          0,
+          width,
+          height,
+          pixels,
+        );
+      });
+      await read;
+      if (item.dead) return;
       const ctx = item.canvas.getContext("2d"),
         image = ctx.createImageData(width, height);
       for (let y = 0; y < height; y++)
@@ -164,10 +176,15 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
       item.changed("ready");
     } catch {
       item.key = "";
-      item.changed("unavailable");
+      if (!item.dead) item.changed("unavailable");
     } finally {
-      gpu.setRenderTarget(previous);
-      gpu.shadowMap.enabled = shadows;
+      pendingTargets.delete(target);
+      item.pending = false;
+      if (item.target !== target) target.dispose();
+      if (item.queued && !item.dead && current) {
+        item.queued = false;
+        capture(item, ...current);
+      }
     }
   }
   return {
@@ -178,6 +195,7 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
       invalidate();
       return () => {
         observers.delete(item);
+        item.dead = true;
         release(item);
       };
     },
@@ -186,7 +204,10 @@ export function createMapAreaPreview(gpu, assets, invalidate) {
       for (const item of observers) capture(item, ...current);
     },
     destroy() {
-      observers.forEach(release);
+      observers.forEach((item) => {
+        item.dead = true;
+        release(item);
+      });
       observers.clear();
     },
   };

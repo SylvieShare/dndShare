@@ -1,11 +1,15 @@
 // Geometry buffers are measured; texture residency is an estimate, not browser heap usage.
 export function modelMemoryUsage(parts) {
   const buffers = new Set(),
+    geometries = new Set(),
     textures = new Set();
   let geometryBytes = 0,
     textureBytes = 0,
     triangles = 0;
   for (const { geometry, material } of parts) {
+    if (!geometries.has(geometry))
+      geometryBytes += geometry.userData?.bvhBytes || 0;
+    geometries.add(geometry);
     const attrs = [
       ...Object.values(geometry.attributes || {}),
       geometry.index,

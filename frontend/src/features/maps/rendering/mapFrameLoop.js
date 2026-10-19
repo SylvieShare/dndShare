@@ -7,6 +7,7 @@ export function createMapFrameLoop({
   objectPreview,
   tiles,
   objectMotion,
+  objectLayer,
   loadingPreview,
   volumeFog,
   lighting,
@@ -21,14 +22,16 @@ export function createMapFrameLoop({
   let frame = 0,
     timer = 0,
     lastFrame = 0,
-    dead = false;
+    dead = false,
+    active = true,
+    geometryWasMoving = false;
   function request() {
-    if (frame || dead) return;
+    if (frame || dead || !active) return;
     clearTimeout(timer);
     timer = 0;
     frame = requestAnimationFrame((time) => {
       frame = 0;
-      if (dead) return;
+      if (dead || !active) return;
       const { objects, options, appearance } = getCurrent(),
         elapsed = time - lastFrame || 16,
         delta = Math.min(32, elapsed);
@@ -38,13 +41,16 @@ export function createMapFrameLoop({
         let moving =
           transitions.advance(delta) | modelTransitions.advance(delta);
         profiler.mark("tiles");
-        moving |=
-          preview.advance(delta) |
-          tiles.advance(delta) |
-          loadingPreview.advance(delta);
+        moving |= preview.advance(delta) | tiles.advance(delta);
+        const loading = loadingPreview.advance(delta);
         profiler.mark("objects");
+        const parentMoving = !!moving || geometryWasMoving;
+        const objectDirty = objectMotion.needsUpdate || parentMoving;
         moving |=
-          objectPreview.advance(delta) | objectMotion.advance(delta, objects);
+          objectPreview.advance(delta) |
+          objectMotion.advance(delta, objects, parentMoving);
+        if (objectDirty || geometryWasMoving)
+          objectLayer.advance(objectMotion.changed);
         profiler.mark("fog");
         const mistMoving =
           options.animate !== false && volumeFog.advance(delta, elapsed);
@@ -56,11 +62,13 @@ export function createMapFrameLoop({
           objectPreview.root,
           Math.min(250, elapsed),
           time,
+          !!moving || geometryWasMoving || !!objectDirty,
         );
         lastFrame = time;
         profiler.mark("areas");
         tiles.applyAppearance(appearance);
         applySceneAreaAppearance(objects, appearance);
+        objectLayer.applyAppearance();
         loadingPreview.applyAppearance(appearance);
         profiler.mark("effects");
         const effectFrame = effects.advance(
@@ -69,11 +77,19 @@ export function createMapFrameLoop({
             (id) => preview.transform(id) || tiles.transform(id),
             objects,
             objectPreview.root,
+            camera,
           ),
           fireDelay = Math.min(
             effectFrame.delay,
             water.advance(time, options.animate !== false, camera),
           );
+        if (
+          (moving || effectFrame.moving || geometryWasMoving) &&
+          scene.userData.outlineRevision !== undefined
+        )
+          scene.userData.outlineRevision++;
+        geometryWasMoving = !!(moving || effectFrame.moving);
+        moving |= loading;
         profiler.mark("draw");
         volumeFog.render(scene, camera);
         profiler.mark("overlays");
@@ -100,6 +116,14 @@ export function createMapFrameLoop({
   }
   return {
     request,
+    setActive(value) {
+      if (active === value) return;
+      active = value;
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+      frame = timer = lastFrame = 0;
+      if (active) request();
+    },
     destroy() {
       dead = true;
       cancelAnimationFrame(frame);

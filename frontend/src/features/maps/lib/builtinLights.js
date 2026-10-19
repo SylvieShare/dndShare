@@ -2,6 +2,7 @@ import { scaledLightEffect } from "./lightEffect";
 import { uid } from "./mapModel";
 import { surfacePosition, resolvedSurfacePosition } from "./surfacePlacement";
 import { structureContext } from "./tileStructure";
+import { sameMapValue } from "./sameMapValue";
 
 export const manualLightCount = (document) =>
   (document.lights || []).filter((l) => !l.builtinKey).length;
@@ -9,10 +10,14 @@ export const manualLightCount = (document) =>
 export function builtinLightPose(light, document, catalogue, context) {
   if (!light.builtinKey || !light.anchor) return null;
   const { kind, id } = light.anchor;
-  const item = (kind === "tile" ? document.tiles : document.objects).find(
-    (m) => m.id === id,
-  );
-  const model = catalogue.find((m) => m.id === item?.modelId);
+  const item =
+    (kind === "tile" ? context?.tilesById : context?.objectsById)?.get(id) ||
+    (kind === "tile" ? document.tiles : document.objects).find(
+      (m) => m.id === id,
+    );
+  const model =
+    context?.models?.get(item?.modelId) ||
+    catalogue.find((m) => m.id === item?.modelId);
   const template = model?.behaviour?.defaultLights?.find(
     (l) => l.key === light.builtinKey,
   );
@@ -93,5 +98,15 @@ export function syncBuiltinLights(document, catalogue) {
       }
     }
   }
-  document.lights = result;
+  const old = new Map(
+    (document.lights || []).map((light) => [light.id, light]),
+  );
+  const next = result.map((light) =>
+    sameMapValue(light, old.get(light.id)) ? old.get(light.id) : light,
+  );
+  if (
+    next.length !== document.lights?.length ||
+    next.some((light, i) => light !== document.lights[i])
+  )
+    document.lights = next;
 }

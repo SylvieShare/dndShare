@@ -59,6 +59,8 @@ export function areaAppearance(document, mode = "hide", motion) {
     tileOpacity: (id) => opacity(tileAreas.get(id)),
     tileFlash: (id) => flash(tileAreas.get(id)),
     objectOpacity,
+    objectGroup: (id) =>
+      `${objectAreas.get(id)?.id || ""}:${host(id)?.id || ""}`,
     objectFlash: (id) => Math.max(flash(objectAreas.get(id)), flash(host(id))),
     tokenOpacity: (id) =>
       opacity(tileAreas.get(id)) * (1 - fog(tileAreas.get(id))),

@@ -2,7 +2,16 @@ import { onMounted, onBeforeUnmount } from "vue";
 
 export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
   let drag = null,
-    holdTimer;
+    holdTimer,
+    moveFrame = 0,
+    pendingMove;
+  function flushMove() {
+    cancelAnimationFrame(moveFrame);
+    moveFrame = 0;
+    const event = pendingMove;
+    pendingMove = null;
+    if (event) applyMove(event);
+  }
   function clearHold() {
     clearTimeout(holdTimer);
     holdTimer = null;
@@ -36,7 +45,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       props.placementObject ||
       props.surfacePlacement ||
       (props.previewObject?.modelId &&
-        props.previewObject?.placing &&
+        (props.previewObject?.placing || props.previewObject?.moving) &&
         !props.previewTile)
     ) {
       return (
@@ -56,6 +65,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     );
   }
   function down(event) {
+    flushMove();
     if (props.readonly || !getRenderer() || drag) return;
     if (props.tool === "paste" && event.button === 2) {
       event.preventDefault();
@@ -120,10 +130,15 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
       start(event);
   }
   function move(event) {
+    pendingMove = event;
+    if (!moveFrame) moveFrame = requestAnimationFrame(flushMove);
+  }
+  function applyMove(event) {
     if (!getRenderer() || props.readonly) return;
     const point =
       !props.selectedLight &&
       !props.surfacePlacement &&
+      !(props.previewObject?.modelId && props.previewObject.moving) &&
       drag?.point?.elevation !== undefined &&
       (!props.placementModel || drag.pan || drag.orbit || drag.region)
         ? {
@@ -190,6 +205,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     }
   }
   function up(event) {
+    flushMove();
     if (!drag || event.pointerId !== drag.id) return;
     clearHold();
     if (drag.delayed && !drag.started && !drag.moved) start(event);
@@ -211,6 +227,9 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     host.value.releasePointerCapture(event.pointerId);
   }
   function cancel(event) {
+    cancelAnimationFrame(moveFrame);
+    pendingMove = null;
+    moveFrame = 0;
     clearHold();
     if (drag?.started && !drag.orbit)
       emit("gesture", { phase: "cancel", event });
@@ -229,6 +248,7 @@ export function useMapCanvasPointer(host, props, getRenderer, emit, setView) {
     window.addEventListener("keydown", key);
   });
   onBeforeUnmount(() => {
+    cancelAnimationFrame(moveFrame);
     clearHold();
     drag = null;
     window.removeEventListener("blur", cancel);

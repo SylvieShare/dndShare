@@ -1,6 +1,7 @@
 import { modelVisual } from "./modelVisual";
 import { Group, Mesh } from "three";
 import { modelWaterMaterial } from "./modelWater";
+import { modelRaycast } from "./modelPicking";
 export function buildModelObject(object, assets, fog, tier = "render") {
   const source = modelVisual(assets, object.modelId, tier),
     root = new Group();
@@ -25,6 +26,7 @@ export function buildModelObject(object, assets, fog, tier = "render") {
       Array.isArray(part.material) ? materials : materials[0],
     );
     mesh.matrixAutoUpdate = false;
+    mesh.raycast = modelRaycast;
     mesh.receiveShadow = true;
     mesh.matrix.copy(part.matrix);
     mesh.userData.borrowedGeometry = true;

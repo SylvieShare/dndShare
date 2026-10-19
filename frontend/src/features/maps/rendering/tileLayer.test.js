@@ -40,6 +40,25 @@ function setup() {
 }
 
 describe("tile geometry picking", () => {
+  it("updates one instance without disposing other chunk buffers or materials", () => {
+    const { layer, tile } = setup();
+    layer.rebuild([tile, { ...tile, id: "far", x: 25 }], "lod");
+    const chunks = [...layer.root.children],
+      versions = chunks.map((mesh) => mesh.instanceMatrix.version);
+    const dispose = chunks.map((mesh) => vi.spyOn(mesh, "dispose"));
+    layer.rebuild(
+      [
+        { ...tile, x: 2 },
+        { ...tile, id: "far", x: 25 },
+      ],
+      "lod",
+    );
+    expect(layer.root.children).toEqual(chunks);
+    expect(chunks[0].instanceMatrix.version).toBeGreaterThan(versions[0]);
+    expect(chunks[1].instanceMatrix.version).toBe(versions[1]);
+    expect(dispose.every((spy) => spy.mock.calls.length === 0)).toBe(true);
+    layer.destroy();
+  });
   it("hits the wall but leaves empty space in its footprint unselected", () => {
     const { layer, ray } = setup();
     expect(layer.hit(ray(1.1, 1.5))?.tileId).toBe("wall");

@@ -1,5 +1,9 @@
+import { useEditorSelection } from "./useEditorSelection";
+import { useMapPersistence } from "./useMapPersistence";
 import { startModelRefresh } from "../lib/currentModelRefresh";
-import { syncSurfaceObjects } from "../lib/surfacePlacement";
+import { useEditorJournal } from "./useEditorJournal";
+import { documentIndex } from "../lib/documentIndex";
+import { structureContext } from "../lib/tileStructure";
 import { pruneAreas } from "../lib/mapAreas";
 import { editorAreas } from "./editorAreas";
 import { editorLighting } from "./editorLighting";
@@ -13,7 +17,7 @@ import {
   shallowRef,
   watch,
 } from "vue";
-import { getMapModels, resetMapModels, saveMap } from "@/shared/api/mapsApi";
+import { getMapModels, resetMapModels } from "@/shared/api/mapsApi";
 import { clone, newMap, resized } from "../lib/mapModel";
 import { editorGestures } from "./editorGestures";
 import { editorTileDrag } from "./editorTileDrag";
@@ -25,8 +29,6 @@ export function useMapEditor(source, onSaved, options = {}) {
     placementRotation = ref(0),
     placementHint = ref(null),
     collection = ref("lost-cave"),
-    selectedTile = ref(""),
-    selectedTiles = ref([]),
     screenSelection = ref(null),
     hoveredTile = ref(""),
     hoveredObject = ref(""),
@@ -35,57 +37,67 @@ export function useMapEditor(source, onSaved, options = {}) {
     previewObject = ref(null),
     showAnchors = ref(true),
     catalogue = shallowRef([]),
+    modelMemory = shallowRef(null),
     loadingModels = ref(true),
     modelError = ref(""),
     objectKind = ref("chest"),
     objectModel = ref("");
-  const selectedObject = ref(""),
-    selectedObjects = ref([]),
-    selection = ref(null),
-    saving = ref(false),
-    error = ref(""),
-    saveError = ref(""),
-    lastSavedAt = ref(source?.system ? null : source?.changedAt || null),
-    conflict = ref(false);
-  const history = ref([]),
-    future = ref([]),
-    saved = ref(
-      source?.id && !source.system ? JSON.stringify(draft.value) : "",
-    );
-  const gesturing = ref(false);
-  let timer,
-    stopped = false;
+  const selection = ref(null),
+    gesturing = ref(false);
+  const {
+    selectedTile,
+    selectedTiles,
+    selectedObject,
+    selectedObjects,
+    setTileSelection,
+    setObjectSelection,
+  } = useEditorSelection();
   if (draft.value.system) {
     delete draft.value.id;
     draft.value.system = false;
     draft.value.name += " · копия";
     draft.value.revision = 0;
   }
-  const dirty = computed(() => JSON.stringify(draft.value) !== saved.value);
-  function setTileSelection(ids, primary = ids[0] || "") {
-    selectedTiles.value = [...new Set(ids)];
-    selectedTile.value = primary;
-  }
-  function checkpoint() {
-    history.value.push(clone(draft.value));
-    if (history.value.length > 50) history.value.shift();
-    future.value = [];
-  }
-  function setObjectSelection(ids) {
-    selectedObjects.value = [...new Set(ids)];
-    selectedObject.value = selectedObjects.value[0] || "";
-  }
+  const journal = useEditorJournal(draft, !!source?.id && !source.system);
+  const { history, future, dirty } = journal;
+  const checkpoint = journal.checkpoint;
+  const {
+    saving,
+    error,
+    saveError,
+    conflict,
+    lastSavedAt,
+    save,
+    receive,
+    pauseSave,
+  } = useMapPersistence({
+    draft,
+    journal,
+    catalogue,
+    loadingModels,
+    gesturing,
+    options,
+    onSaved,
+    source,
+    finishLightEdit: () => lighting.finishLightEdit(),
+  });
   function change(fn) {
+    lighting.finishLightEdit();
     checkpoint();
-    fn(draft.value);
-    pruneAreas(draft.value.document);
-    if (catalogue.value.length)
-      syncLights(draft.value.document, catalogue.value);
+    try {
+      fn(draft.value);
+      pruneAreas(draft.value.document);
+      if (catalogue.value.length)
+        syncLights(draft.value.document, catalogue.value);
+      journal.commit();
+    } catch (cause) {
+      journal.rollback();
+      throw cause;
+    }
   }
   function undo() {
-    if (!history.value.length) return;
-    future.value.push(clone(draft.value));
-    draft.value = history.value.pop();
+    lighting.finishLightEdit();
+    if (!journal.undo()) return;
     gestures.resetGesture();
     lighting.reset();
     lighting.driver.cancel();
@@ -102,9 +114,8 @@ export function useMapEditor(source, onSaved, options = {}) {
     );
   }
   function redo() {
-    if (!future.value.length) return;
-    history.value.push(clone(draft.value));
-    draft.value = future.value.pop();
+    lighting.finishLightEdit();
+    if (!journal.redo()) return;
     gestures.resetGesture();
     lighting.reset();
     lighting.driver.cancel();
@@ -120,87 +131,10 @@ export function useMapEditor(source, onSaved, options = {}) {
       ),
     );
   }
-  // Document history never rolls the server's compare-and-swap version back.
-  let record = { id: draft.value.id, revision: draft.value.revision };
-  async function save() {
-    clearTimeout(timer);
-    if (
-      saving.value ||
-      loadingModels.value ||
-      conflict.value ||
-      !dirty.value ||
-      !draft.value.name.trim()
-    )
-      return;
-    saving.value = true;
-    error.value = "";
-    saveError.value = "";
-    syncSurfaceObjects(draft.value.document, catalogue.value);
-    pruneAreas(draft.value.document);
-    syncLights(draft.value.document, catalogue.value);
-    options.normalize?.(draft.value, catalogue.value);
-    const snapshot = { ...clone(draft.value), ...record },
-      key = JSON.stringify(snapshot);
-    try {
-      const result = await (options.save || saveMap)(snapshot);
-      record = { id: result.id, revision: result.revision };
-      draft.value.id = result.id;
-      draft.value.revision = result.revision;
-      // Only acknowledge the exact payload, keeping edits made during the request dirty.
-      saved.value = JSON.stringify({
-        ...JSON.parse(key),
-        id: result.id,
-        revision: result.revision,
-      });
-      lastSavedAt.value = result.changedAt;
-      onSaved?.(result);
-      if (!options.session && !result.previewUrl)
-        import("../lib/mapStoredPreviews")
-          .then(({ ensureStoredMapPreview }) => ensureStoredMapPreview(result))
-          .catch(() => {
-            // Document saving succeeds independently; missing images retry in the library.
-          });
-    } catch (cause) {
-      error.value = cause.message;
-      saveError.value = cause.message;
-      conflict.value = cause.status === 409;
-    } finally {
-      saving.value = false;
-      if (dirty.value && !error.value && !stopped)
-        timer = setTimeout(save, 800);
-    }
-  }
-  watch(
-    draft,
-    () => {
-      clearTimeout(timer);
-      if (!gesturing.value && !conflict.value) timer = setTimeout(save, 1200);
-    },
-    { deep: true, immediate: true },
-  );
   function resize(width, height) {
     change((m) => {
       m.document = resized(m.document, width, height);
     });
-  }
-  function pauseSave(value) {
-    gesturing.value = value;
-    clearTimeout(timer);
-    if (!value && !conflict.value && !stopped) timer = setTimeout(save, 1200);
-  }
-  function receive(model) {
-    if (
-      !model ||
-      model.id !== draft.value.id ||
-      dirty.value ||
-      saving.value ||
-      gesturing.value
-    )
-      return;
-    draft.value = clone(model);
-    record = { id: model.id, revision: model.revision };
-    saved.value = JSON.stringify(draft.value);
-    lastSavedAt.value = model.changedAt;
   }
   const state = {
     draft,
@@ -227,6 +161,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     history,
     error,
     checkpoint,
+    commitEdit: journal.commit,
     change,
     pauseSave,
     catalogue,
@@ -267,10 +202,6 @@ export function useMapEditor(source, onSaved, options = {}) {
       modelError.value = cause.message;
     } finally {
       loadingModels.value = false;
-      if (dirty.value && !gesturing.value && !conflict.value && !stopped) {
-        clearTimeout(timer);
-        timer = setTimeout(save, 1200);
-      }
     }
   }
   function retryModels() {
@@ -293,22 +224,19 @@ export function useMapEditor(source, onSaved, options = {}) {
     if (catalogue.value.length)
       syncLights(draft.value.document, catalogue.value);
   });
-  function beforeUnload(e) {
-    if (dirty.value) {
-      e.preventDefault();
-      e.returnValue = "";
-    }
-  }
-  window.addEventListener("beforeunload", beforeUnload);
   onBeforeUnmount(() => {
-    stopped = true;
     stopModelRefresh?.();
-    clearTimeout(timer);
-    window.removeEventListener("beforeunload", beforeUnload);
     lighting.finishLightEdit();
   });
   return {
     draft,
+    documentIndex: computed(() =>
+      documentIndex(
+        draft.value.document,
+        catalogue.value,
+        structureContext(draft.value.document, catalogue.value),
+      ),
+    ),
     tool,
     selectedModel,
     placementRotation,
@@ -327,6 +255,7 @@ export function useMapEditor(source, onSaved, options = {}) {
     catalogue,
     collection,
     loadingModels,
+    modelMemory,
     modelError,
     retryModels,
     objectKind,

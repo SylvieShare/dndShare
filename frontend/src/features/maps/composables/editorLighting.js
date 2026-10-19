@@ -15,6 +15,7 @@ export function editorLighting(e) {
   function finishLightEdit() {
     editKey = "";
     clearTimeout(editTimer);
+    e.commitEdit();
   }
   function patch(key, fn) {
     if (editKey !== key) e.checkpoint();
@@ -162,7 +163,6 @@ export function editorLighting(e) {
       }
       selectLight(light.id);
       gesture = {
-        before: clone(e.draft.value),
         light: clone(light),
         screen: { x: event.clientX, y: event.clientY },
         changed: false,
@@ -186,30 +186,30 @@ export function editorLighting(e) {
         ) < 5
       )
         return true;
-      if (!gesture.changed) {
-        e.checkpoint();
-        gesture.changed = true;
-      }
-      const light = e.draft.value.document.lights.find(
-        (l) => l.id === gesture.light.id,
-      );
-      Object.assign(light, {
+      gesture.changed = true;
+      const light = {
+        ...gesture.light,
         x: point.x,
         y: point.y,
         elevation: point.elevation || 0,
         anchor: null,
         offset: [0, 0],
-      });
+      };
       previewLight.value = { ...light, moving: true };
     }
-    if (phase === "cancel") {
-      if (gesture.changed) {
-        e.draft.value = gesture.before;
-        e.history.value.pop();
+    if (phase === "cancel") reset();
+    if (phase === "end") {
+      if (gesture.changed && previewLight.value) {
+        const { moving, ...light } = previewLight.value;
+        e.change((m) =>
+          Object.assign(
+            m.document.lights.find((l) => l.id === light.id),
+            light,
+          ),
+        );
       }
       reset();
     }
-    if (phase === "end") reset();
     return true;
   }
   function reset() {

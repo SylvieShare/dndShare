@@ -1,22 +1,31 @@
 import { createScalarMotion, reducedMapMotion } from "./scalarMotion";
-import { fogAreaMembers } from "../lib/mapAreas";
 import {
   DirectionalLight,
   HemisphereLight,
-  PointLight,
   PCFShadowMap,
   Vector3,
+  Frustum,
+  Matrix4,
+  Sphere,
 } from "three";
-import { DEFAULT_SUN, lightOpacity, lightPose } from "../lib/mapLighting";
-import { createAttachedLights } from "./attachedLights";
+import { DEFAULT_SUN } from "../lib/mapLighting";
+import { createLightSourceState } from "./lightSourceState";
 import { createLightMarkers } from "./lightMarkers";
 import { createShadowProxies } from "./shadowProxies";
-import { fireMotion } from "./fireMotion";
-export function createMapLighting(scene, gpu, assets, onSettled) {
+import { createLightPool } from "./lightPool";
+export function createMapLighting(
+  scene,
+  gpu,
+  assets,
+  onSettled,
+  sharedSources,
+  camera,
+) {
   const ambient = new HemisphereLight(0xcbd5ee, 0x695641, 0.6),
     sun = new DirectionalLight(0xfff2df, 2.8),
     fill = new DirectionalLight(0xbdcfff, 0.18);
   sun.castShadow = true;
+  sun.shadow.autoUpdate = false;
   sun.shadow.mapSize.set(1024, 1024);
   sun.shadow.normalBias = 0.025;
   sun.shadow.bias = -0.0002;
@@ -24,7 +33,7 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
   scene.add(ambient, sun, sun.target, fill);
   const proxies = createShadowProxies(assets),
     markers = createLightMarkers(),
-    attachments = createAttachedLights();
+    sourceState = sharedSources || createLightSourceState(assets);
   scene.add(proxies.root, markers.root);
   gpu.shadowMap.enabled = true;
   gpu.shadowMap.type = PCFShadowMap;
@@ -33,6 +42,20 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
     if (lastUpdate) update(...lastUpdate);
     onSettled?.();
   });
+  const pool = createLightPool(scene, gpu);
+  const frustum = new Frustum(),
+    projection = new Matrix4(),
+    influence = new Sphere();
+  function visible(source) {
+    if (!camera) return true;
+    influence.center.set(source.x, source.worldHeight, source.y);
+    influence.radius = source.radius;
+    return frustum.intersectsSphere(influence);
+  }
+  const invalidateAll = () => {
+    if (sun.castShadow) pool.invalidate(sun);
+    for (const light of slots) if (light.castShadow) pool.invalidate(light);
+  };
   let initialized = false,
     visualAppearance,
     lastUpdate,
@@ -52,13 +75,13 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
     proxies.root.visible = gpu.shadowMap.enabled;
   }
   let slots = [],
-    key = "",
     proxyKey = "",
     active = [],
     clock = 0,
     sunKey = "",
     enabled = false,
-    sources = [];
+    sources = [],
+    proxyDirty = true;
   function update(
     d,
     options,
@@ -138,18 +161,12 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
         c.near = 0.1;
         c.far = distance * 3;
         c.updateProjectionMatrix();
-        gpu.shadowMap.needsUpdate = true;
+        pool.invalidate(sun);
       }
     }
-    const mist = fogAreaMembers(d);
-    const all = [
-      ...(d.lights || []).filter((l) => l.id !== options.previewLight?.id),
-      ...(options.previewLight ? [options.previewLight] : []),
-    ].map((l) => ({
-      ...lightPose(l, d, assets.catalogue(), context),
-      opacity: lightOpacity(l, d, options.areaMode, mist),
-    }));
-    for (const light of all) if (light.moving) light.worldHeight += 0.22;
+    if (!sharedSources)
+      sourceState.update(d, options, context, placed, objects);
+    const all = sourceState.lights;
     sources = all;
     const keys = new Set(["sun", "ambient", "fill"]);
     for (const source of all) {
@@ -165,17 +182,35 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
     motion.retain(keys);
     initialized = true;
     environment();
-    attachments.update(all, placed, objects, assets.catalogue());
+    select(options, view);
+    const nextProxy = gpu.shadowMap.enabled
+      ? proxies.update(d, placed, objects, options, objectRoot, objectPreview)
+      : "";
+    proxyDirty = true;
+    if (proxyKey !== nextProxy) {
+      proxyKey = nextProxy;
+      invalidateAll();
+    }
+  }
+  function select(options, view) {
+    if (camera)
+      frustum.setFromProjectionMatrix(
+        projection.multiplyMatrices(
+          camera.projectionMatrix,
+          camera.matrixWorldInverse,
+        ),
+      );
     markers.update(
-      all.filter((l) => l.opacity > 0 || opacity(l) > 0.001),
+      sources.filter((l) => l.opacity > 0 || opacity(l) > 0.001),
       options,
     );
-    const next = all
+    const next = sources
       .filter(
         (l) =>
           (motion.target(`source:${l.id}`) > 0 ||
             motion.value(`source:${l.id}`) > 0.001) &&
-          (l.opacity > 0 || opacity(l) > 0.001),
+          (l.opacity > 0 || opacity(l) > 0.001) &&
+          visible(l),
       )
       .sort(
         (a, b) =>
@@ -188,32 +223,16 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
             Math.hypot(b.x - view.x, b.y - view.y),
       )
       .slice(0, 8);
-    if (next.length !== slots.length) {
-      slots.forEach((light) => {
-        scene.remove(light);
-        light.shadow.map?.dispose();
-        light.dispose();
-      });
-      slots = [];
-      for (let i = 0; i < next.length; i++) {
-        const light = new PointLight();
-        light.shadow.mapSize.set(512, 512);
-        light.shadow.bias = -0.0002;
-        light.shadow.normalBias = 0.025;
-        light.shadow.camera.near = 0.05;
-        scene.add(light);
-        slots.push(light);
-      }
-    }
-    const nextKey = JSON.stringify(next);
-    if (nextKey !== key) {
-      key = nextKey;
-      gpu.shadowMap.needsUpdate = true;
-    }
+    slots = pool.sync(next);
     next.forEach((source, i) => {
       const light = slots[i];
       light.color.set(source.color);
-      light.position.set(source.x, source.worldHeight, source.y);
+      const pose = `${source.x}:${source.worldHeight}:${source.y}:${source.radius}:${!!source.shadows}`;
+      if (pose !== light.userData.pose) {
+        light.userData.pose = pose;
+        light.position.set(source.x, source.worldHeight, source.y);
+        if (source.shadows) pool.invalidate(light);
+      }
       light.distance = source.radius;
       light.decay = 2;
       light.castShadow = !!source.shadows;
@@ -225,14 +244,10 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
         motion.value(`source:${source.id}`);
     });
     active = next;
-    markers.applyAppearance(all, opacity, (id) => motion.value(`source:${id}`));
-    const nextProxy = gpu.shadowMap.enabled
-      ? proxies.update(d, placed, objects, options, objectRoot, objectPreview)
-      : "";
-    if (proxyKey !== nextProxy) {
-      proxyKey = nextProxy;
-      gpu.shadowMap.needsUpdate = true;
-    }
+    markers.applyAppearance(sources, opacity, (id) =>
+      motion.value(`source:${id}`),
+    );
+    environment();
   }
   function advance(
     delta,
@@ -241,6 +256,7 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
     objectPreview,
     elapsed = delta,
     time,
+    geometryMoving = true,
   ) {
     const fading = motion.advance(delta, reducedMapMotion());
     environment();
@@ -253,15 +269,21 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
       now = time ?? clock * 1000,
       position = new Vector3();
     for (const source of sources) {
-      const attached = attachments.position(
+      const attached = sourceState.position(
         source,
+        false,
+        now,
         tileMatrix,
         objects,
         objectPreview,
       );
       if (attached) position.copy(attached);
       else position.set(source.x, source.worldHeight, source.y);
-      const motion = fireMotion(source, now, stationary || !source.enabled);
+      const motion = sourceState.fire(
+        source,
+        now,
+        stationary || !source.enabled,
+      );
       position.x += motion.offset[0];
       position.y += motion.offset[1];
       position.z += motion.offset[2];
@@ -269,14 +291,18 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
       const light = slotsById.get(source.id);
       if (light && !light.position.equals(position)) {
         light.position.copy(position);
-        gpu.shadowMap.needsUpdate = true;
+        if (light.castShadow) pool.invalidate(light);
       }
     }
-    if (proxies.advance(tileMatrix, objects, objectPreview))
-      gpu.shadowMap.needsUpdate = true;
+    if (
+      (proxyDirty || geometryMoving) &&
+      proxies.advance(tileMatrix, objects, objectPreview)
+    )
+      invalidateAll();
+    proxyDirty = false;
     let moving = fading;
     active.forEach((source, i) => {
-      const fire = fireMotion(source, now, stationary),
+      const fire = sourceState.fire(source, now, stationary || !source.enabled),
         flicker = source.effect
           ? fire.gain
           : source.flicker && !stationary
@@ -298,6 +324,12 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
   }
   return {
     update,
+    selection(options, view) {
+      if (!lastUpdate) return;
+      lastUpdate[1] = { ...lastUpdate[1], ...options };
+      if (view) lastUpdate[5] = view;
+      select(lastUpdate[1], lastUpdate[5]);
+    },
     advance,
     isFading: motion.isMoving,
     pick: markers.hit,
@@ -309,17 +341,13 @@ export function createMapLighting(scene, gpu, assets, onSettled) {
     },
     excluded: [proxies.root, markers.root],
     invalidateShadows() {
-      gpu.shadowMap.needsUpdate = true;
+      invalidateAll();
     },
     destroy() {
       motion.clear();
       proxies.destroy();
       markers.destroy();
-      slots.forEach((l) => {
-        scene.remove(l);
-        l.shadow.map?.dispose();
-        l.dispose();
-      });
+      pool.destroy();
       sun.shadow.map?.dispose();
       sun.dispose();
       scene.remove(sun, sun.target, fill, ambient);

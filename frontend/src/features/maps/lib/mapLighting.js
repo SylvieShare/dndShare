@@ -3,6 +3,7 @@ import { structureContext } from "./tileStructure";
 import { tileSize } from "./tilePlacement";
 import { resolvedSurfacePosition } from "./surfacePlacement";
 import { builtinLightPose, syncBuiltinLights } from "./builtinLights";
+import { documentIndex } from "./documentIndex";
 export const LIGHT_PRESETS = [
   {
     kind: "torch",
@@ -42,8 +43,12 @@ export function lightPose(light, document, catalogue, context) {
     angle = 0;
   const anchor = light.anchor;
   if (anchor?.kind === "tile") {
-    const tile = document.tiles.find((t) => t.id === anchor.id),
-      model = catalogue.find((m) => m.id === tile?.modelId);
+    const tile =
+        context?.tilesById?.get(anchor.id) ||
+        document.tiles.find((t) => t.id === anchor.id),
+      model =
+        context?.models?.get(tile?.modelId) ||
+        catalogue.find((m) => m.id === tile?.modelId);
     if (tile && model) {
       const size = tileSize(tile, model),
         c = context || structureContext(document, catalogue);
@@ -56,7 +61,9 @@ export function lightPose(light, document, catalogue, context) {
         (model.mountDepth || 0);
     }
   } else if (anchor?.kind === "object") {
-    const object = document.objects.find((o) => o.id === anchor.id);
+    const object =
+      context?.objectsById?.get(anchor.id) ||
+      document.objects.find((o) => o.id === anchor.id);
     if (object) {
       const posed = resolvedSurfacePosition(
           object,
@@ -64,7 +71,9 @@ export function lightPose(light, document, catalogue, context) {
           catalogue,
           context,
         ),
-        model = catalogue.find((m) => m.id === object.modelId);
+        model =
+          context?.models?.get(object.modelId) ||
+          catalogue.find((m) => m.id === object.modelId);
       x = posed.x;
       y = posed.y;
       angle = object.rotation;
@@ -79,9 +88,18 @@ export function lightPose(light, document, catalogue, context) {
   }
   return { ...light, x, y, elevation, worldHeight: elevation + light.height };
 }
-export function lightArea(light, document) {
+export function lightArea(light, document, context) {
   if (!light.anchor) return light.areaId || "";
   const { kind, id } = light.anchor;
+  if (context?.tileAreas) {
+    const own = (kind === "tile" ? context.tileAreas : context.objectAreas).get(
+      id,
+    );
+    if (own) return own.id;
+    const parent =
+      kind === "object" && context.objectsById.get(id)?.placement?.tileId;
+    return context.tileAreas.get(parent)?.id || "";
+  }
   const own = document.areas?.find((a) =>
     (kind === "tile" ? a.tileIds : a.objectIds).includes(id),
   );
@@ -96,6 +114,7 @@ export function lightOpacity(
   document,
   mode,
   mist = fogAreaMembers(document),
+  context,
 ) {
   if (
     light.anchor &&
@@ -104,21 +123,29 @@ export function lightOpacity(
     )
   )
     return 0;
-  const area = document.areas?.find((a) => a.id === lightArea(light, document));
+  const areaId = lightArea(light, document, context);
+  const area = context?.areasById
+    ? context.areasById.get(areaId)
+    : document.areas?.find((a) => a.id === areaId);
   if (area?.fog) return 0;
   return area?.hidden ? (mode === "ghost" ? 0.12 : 0) : 1;
 }
 export function syncLights(document, catalogue) {
   syncBuiltinLights(document, catalogue);
-  const context = structureContext(document, catalogue);
+  const context = documentIndex(
+    document,
+    catalogue,
+    structureContext(document, catalogue),
+  ).structure;
   const tiles = new Set(document.tiles.map((t) => t.id)),
     objects = new Set(document.objects.map((o) => o.id)),
     areas = new Set(document.areas?.map((a) => a.id));
-  document.lights = (document.lights || []).filter(
+  const remaining = (document.lights || []).filter(
     (l) =>
       !l.anchor ||
       (l.anchor.kind === "tile" ? tiles : objects).has(l.anchor.id),
   );
+  if (remaining.length !== document.lights?.length) document.lights = remaining;
   for (const light of document.lights) {
     if (light.areaId && !areas.has(light.areaId)) light.areaId = "";
     if (light.anchor) {
