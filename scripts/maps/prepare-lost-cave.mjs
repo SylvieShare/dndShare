@@ -16,9 +16,16 @@ const review = reviewCollection("lost-cave"),
   )[0];
 if (!model || model.textureDetail === "detailed")
   throw new Error("Missing or already reviewed model");
-if (!spec.groupCode || model.code !== spec.groupCode)
+if (!Object.hasOwn(model, "variantCode"))
   throw new Error(
-    "Review the current logical model family code before preparing",
+    "Refresh the MCP registry with section and variant codes before preparing",
+  );
+if (
+  spec.variantCode !== undefined &&
+  (model.code !== spec.groupCode || model.variantCode !== spec.variantCode)
+)
+  throw new Error(
+    "Review both current section and variant codes before preparing",
   );
 const rows = JSON.parse(
     await fs.readFile(path.join(review.base, "manifest.json"), "utf8"),

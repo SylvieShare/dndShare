@@ -20,8 +20,12 @@ func editedMapModel(original battlemap.Model, input battlemap.ModelMetadata) (ba
 	}
 	input.Name = strings.TrimSpace(input.Name)
 	input.Code = strings.TrimSpace(input.Code)
+	input.VariantCode = strings.TrimSpace(input.VariantCode)
 	if !battlemap.ValidModelGroupCode(input.Code) {
 		return original, errors.New("Укажите код группы, например UD-door")
+	}
+	if !battlemap.ValidModelVariantCode(input.Code, input.VariantCode) {
+		return original, errors.New("Укажите код вариантов с префиксом группы или оставьте его пустым")
 	}
 	model := battlemap.Model{ModelMetadata: input, Assets: original.Assets}
 	if err := validateMapModel(model); err != nil {
@@ -38,14 +42,20 @@ func (s *Server) handleEditMapModel(w http.ResponseWriter, r *http.Request) {
 	}
 	var input struct {
 		battlemap.ModelMetadata
-		LogicalID string                    `json:"id"`
-		UUID      string                    `json:"uuid"`
-		Behaviour *battlemap.ModelBehaviour `json:"behaviour"`
+		LogicalID        string                    `json:"id"`
+		UUID             string                    `json:"uuid"`
+		VariantCodeValue *string                   `json:"variantCode"`
+		Behaviour        *battlemap.ModelBehaviour `json:"behaviour"`
 	}
 	if decodeJSON(r, &input) != nil {
 		badRequest(w, "Некорректные параметры тайла")
 		return
 	}
+	if input.VariantCodeValue == nil {
+		badRequest(w, "Обновите справочник: требуется поле кода вариантов")
+		return
+	}
+	input.ModelMetadata.VariantCode = *input.VariantCodeValue
 	input.ModelMetadata.ID, input.DefinitionID = input.UUID, input.LogicalID
 	original, err := s.store.GetMapModel(r.Context(), id)
 	if err != nil {

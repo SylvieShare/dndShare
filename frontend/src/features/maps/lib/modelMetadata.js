@@ -9,6 +9,7 @@ export const METADATA_KEYS = [
   "id",
   "definitionId",
   "code",
+  "variantCode",
   "collection",
   "collectionName",
   "sourceCode",
@@ -37,6 +38,7 @@ export function modelMetadata(model) {
   const result = Object.fromEntries(
     METADATA_KEYS.map((key) => [key, model[key]]),
   );
+  result.variantCode ??= "";
   result.wallMask ??= modelConnections(model);
   result.mountDepth ??= 0;
   result.mountProfile ??= "";

@@ -6,56 +6,56 @@ async function ready(page) {
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
-test("hover group card exposes all variants and permits dragging a concrete tile into the map", async ({
+async function open(page, name, label) {
+  await page.getByRole("button", { name, exact: true }).hover();
+  const panel = page.getByRole("group", {
+    name: `Варианты ${label}`,
+    exact: true,
+  });
+  await expect(panel).toHaveAttribute("aria-expanded", "true");
+  return panel;
+}
+test("one section keeps its variants and dragging a concrete expanded card places that model", async ({
   page,
 }) => {
   await ready(page);
-  const group = page.getByRole("button", {
-    name: "Группа Пол",
-    exact: true,
-  });
-  await expect(group).toBeVisible();
-  await expect(group.locator(".map-group-meta small")).toHaveCount(0);
-  await expect(group.locator(".map-group-thumbnails img")).toHaveCount(2);
-  await group.hover();
-  const popup = page.getByRole("region", {
-    name: "Варианты Пол",
-    exact: true,
-  });
-  await expect(popup).toBeVisible();
-  await expect(popup.getByText("LC-ground", { exact: true })).toHaveCount(0);
-  await expect(popup.getByText("LC-008", { exact: true })).toHaveCount(0);
   await expect(
-    popup.getByRole("button", { name: "Пол 2", exact: true }),
-  ).toHaveAttribute("title", "Пол 2");
-  const variant = popup.getByRole("button", { name: "Пол 2", exact: true });
+    page.getByRole("heading", { name: "Пол", level: 4, exact: true }),
+  ).toBeVisible();
+  const shell = page.locator(".map-model-group");
+  await expect(shell.locator(".map-variant-secondary img")).toHaveCount(1);
+  const panel = await open(page, "Пол 1", "Пол");
+  await expect(panel.getByText("LC-ground", { exact: true })).toHaveCount(0);
+  const variant = panel.getByRole("button", { name: "Пол 2", exact: true });
+  await expect(variant).toHaveAttribute("title", "Пол 2");
   await variant.hover();
-  await expect(popup).toBeVisible();
   const start = await variant.boundingBox(),
-    target = await mapPoint(page, 4.5, 4.5);
+    point = await mapPoint(page, 4.5, 4.5);
   await page.mouse.move(start.x + start.width / 2, start.y + 35);
   await page.mouse.down();
-  await page.mouse.move(target.x, target.y, { steps: 12 });
+  await page.mouse.move(point.x, point.y, { steps: 12 });
   await page.keyboard.press("r");
   await page.mouse.up();
   await expect
     .poll(() =>
       page.evaluate(
         () =>
-          window.lastSaved?.document.tiles.find((t) => t.x === 4 && t.y === 4)
-            ?.modelId,
+          window.lastSaved?.document.tiles.find(
+            (tile) => tile.x === 4 && tile.y === 4,
+          )?.modelId,
       ),
     )
     .toBe("80808080-8080-4080-8080-808080808080");
   expect(
     await page.evaluate(
       () =>
-        window.lastSaved.document.tiles.find((t) => t.x === 4 && t.y === 4)
-          .rotation,
+        window.lastSaved.document.tiles.find(
+          (tile) => tile.x === 4 && tile.y === 4,
+        ).rotation,
     ),
   ).toBe(90);
 });
-test("embedded light badge marks only lit variants and grouped objects place the selected variant", async ({
+test("light badges and grouped objects retain the selected model when expanding", async ({
   page,
 }) => {
   await ready(page);
@@ -63,11 +63,7 @@ test("embedded light badge marks only lit variants and grouped objects place the
     .getByRole("toolbar", { name: "Типы тайлов" })
     .getByRole("button", { name: "Прямые стены", exact: true })
     .click();
-  await page.getByRole("button", { name: "Группа Стена", exact: true }).hover();
-  const walls = page.getByRole("region", {
-    name: "Варианты Стена",
-    exact: true,
-  });
+  const walls = await open(page, "Стена 1", "Стена");
   await expect(
     walls
       .getByRole("button", { name: "Стена 1", exact: true })
@@ -83,22 +79,14 @@ test("embedded light badge marks only lit variants and grouped objects place the
     .getByRole("toolbar", { name: "Типы тайлов" })
     .getByRole("button", { name: "Пол", exact: true })
     .click();
-  await page.getByRole("button", { name: "Группа Пол", exact: true }).hover();
-  await page
-    .getByRole("region", { name: "Варианты Пол", exact: true })
-    .getByRole("button", { name: "Пол 1", exact: true })
-    .press("Enter");
+  await page.getByRole("button", { name: "Пол 1", exact: true }).press("Enter");
   const point = await mapPoint(page, 4.5, 4.5);
   await page.mouse.move(point.x, point.y);
   await page.mouse.click(point.x, point.y);
   await page.getByRole("button", { name: "Объекты", exact: true }).click();
   await page
-    .getByRole("button", { name: /^Группа .*сундук$/i, exact: true })
-    .hover();
-  const object = page
-    .getByRole("region", { name: /^Варианты .*сундук$/i, exact: true })
-    .getByRole("button", { name: "Открытый сундук", exact: true });
-  await object.press("Enter");
+    .getByRole("button", { name: "Открытый сундук", exact: true })
+    .press("Enter");
   await page.mouse.move(point.x, point.y);
   await page.mouse.click(point.x, point.y);
   await expect
@@ -112,7 +100,7 @@ test("embedded light badge marks only lit variants and grouped objects place the
     )
     .toBeTruthy();
 });
-test("catalogue ID is stable while uuid is an stable UUID and group code edits persist", async ({
+test("section and variant codes edit independently while model identity and resources stay stable", async ({
   page,
 }) => {
   await ready(page);
@@ -122,6 +110,7 @@ test("catalogue ID is stable while uuid is an stable UUID and group code edits p
   expect(models.find((m) => m.id === "LC-007")).toMatchObject({
     uuid: "22222222-2222-4222-8222-222222222222",
     code: "LC-ground",
+    variantCode: "LC-ground",
   });
   await page
     .getByRole("button", { name: "Справочник тайлов", exact: true })
@@ -131,42 +120,30 @@ test("catalogue ID is stable while uuid is an stable UUID and group code edits p
     exact: true,
   });
   await reference
-    .getByRole("button", { name: "Группа LC-ground", exact: true })
-    .hover();
-  const adminVariants = page.getByRole("region", {
-    name: "Варианты LC-ground",
-    exact: true,
-  });
-  await expect(
-    adminVariants.getByText("LC-007", { exact: true }),
-  ).toBeVisible();
-  await adminVariants
-    .getByRole("button", { name: "Пол 1", exact: true })
-    .click();
-  await reference
     .getByLabel("Код группы", { exact: true })
     .fill("LC-ground-special");
-  await reference.getByLabel("Код группы", { exact: true }).blur();
+  await reference
+    .getByLabel("Код вариантов", { exact: true })
+    .fill("LC-ground-skins");
+  await reference.getByLabel("Код вариантов", { exact: true }).blur();
   await reference
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
   await expect(
     reference.getByText("Параметры сохранены", { exact: true }),
   ).toBeVisible();
-  expect(await page.evaluate(() => window.lastModelSaved.code)).toBe(
-    "LC-ground-special",
-  );
+  expect(await page.evaluate(() => window.lastModelSaved)).toMatchObject({
+    code: "LC-ground-special",
+    variantCode: "LC-ground-skins",
+    id: "22222222-2222-4222-8222-222222222222",
+    definitionId: "LC-007",
+  });
 });
-test("the primary group preview drags the tile it currently shows", async ({
+test("dragging the primary image retains the model shown on that image", async ({
   page,
 }) => {
   await ready(page);
-  const group = page.getByRole("button", {
-    name: "Группа Пол",
-    exact: true,
-  });
-  const image = group.locator(".map-group-primary");
-  await expect(image).toBeVisible();
+  const image = page.locator(".map-variant-primary img");
   const start = await image.boundingBox(),
     point = await mapPoint(page, 4.5, 4.5);
   await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);
@@ -177,8 +154,9 @@ test("the primary group preview drags the tile it currently shows", async ({
     .poll(() =>
       page.evaluate(
         () =>
-          window.lastSaved?.document.tiles.find((t) => t.x === 4 && t.y === 4)
-            ?.modelId,
+          window.lastSaved?.document.tiles.find(
+            (tile) => tile.x === 4 && tile.y === 4,
+          )?.modelId,
       ),
     )
     .toBe("22222222-2222-4222-8222-222222222222");

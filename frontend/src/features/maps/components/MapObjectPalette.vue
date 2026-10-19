@@ -11,25 +11,21 @@
       }}
       R — поворот, Esc — отмена.
     </p>
-    <div class="map-object-grid">
-      <MapModelGroupCard
-        v-for="group in groups"
-        :key="group.key"
-        :group="group"
-        :selected-id="selectedId"
-        :draggable="draggable"
-        :show-identifiers="mode === 'inspect'"
-        @model="(id, event) => emit('object', id, event)"
-        @drag-tile="(id, event) => emit('drag-object', id, event)"
-      />
-    </div>
+    <MapModelCatalogue
+      :models="models"
+      :catalogue="models"
+      :selected-id="selectedId || editor.objectModel"
+      :draggable="draggable"
+      :show-identifiers="mode === 'inspect'"
+      @model="(id, event) => emit('object', id, event)"
+      @drag-tile="(id, event) => emit('drag-object', id, event)"
+    />
     <p v-if="!models.length" class="map-hint">Объекты ещё загружаются.</p>
   </section>
 </template>
 <script setup>
 import { computed } from "vue";
-import MapModelGroupCard from "./MapModelGroupCard.vue";
-import { modelGroups } from "../lib/modelGroups";
+import MapModelCatalogue from "./MapModelCatalogue.vue";
 import { visibleModels } from "../lib/visibleModels";
 const props = defineProps({
   editor: Object,
@@ -41,12 +37,4 @@ const emit = defineEmits(["object", "drag-object"]);
 const models = computed(() =>
   visibleModels(props.editor.catalogue).filter((m) => m.tileType === "object"),
 );
-const groups = computed(() => modelGroups(models.value));
 </script>
-<style scoped>
-.map-object-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 8px;
-}
-</style>

@@ -10,6 +10,7 @@ func TestCatalogueSeparatesLogicalIdentityFromUUID(t *testing.T) {
 	model := battlemap.InitialCatalogue()[0]
 	model.DefinitionID = "UD-010"
 	model.Code = "UD-door"
+	model.VariantCode = "UD-door-states"
 	model.Name = "Door"
 	data, err := json.Marshal(modelView(model, "/models"))
 	if err != nil {
@@ -19,7 +20,7 @@ func TestCatalogueSeparatesLogicalIdentityFromUUID(t *testing.T) {
 	if err = json.Unmarshal(data, &fields); err != nil {
 		t.Fatal(err)
 	}
-	if fields["id"] != "UD-010" || fields["uuid"] != model.ID || fields["code"] != "UD-door" || fields["name"] != "Door" {
+	if fields["id"] != "UD-010" || fields["uuid"] != model.ID || fields["code"] != "UD-door" || fields["name"] != "Door" || fields["variantCode"] != "UD-door-states" {
 		t.Fatal("wrong catalogue identity", fields)
 	}
 	if _, legacy := fields["version"]; legacy {

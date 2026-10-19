@@ -140,8 +140,8 @@ rollback; apply требует точный token и включённые MCP wr
 
 - `map_tile_models_list`: метаданные, постоянный definitionId и assets; опциональный фильтр collection.
 - `map_tile_model_get`: текущая модель по UUID.
-- `map_tile_model_group_update`: definitionId, текущий expectedCode и новый code;
-  меняет семейство элемента без новых ресурсов и без изменения
+- `map_tile_model_group_update`: definitionId, текущие expectedCode и expectedVariantCode, новый code;
+  меняет раздел элемента без новых ресурсов и без изменения
   размещения, света или переходов. Префикс пака сохраняется. Чужая правка
   expectedCode отклоняется; повтор уже установленного code идемпотентен.
 - `map_tile_model_behaviour_get`: definitionId → текущее поведение и revision.
@@ -245,3 +245,11 @@ render/lod/preview. Поле не влияет на площадь, стыки �
 ## Связанные страницы
 
 [Оглавление wiki](../README.md)
+
+map_tile_model_grouping_update принимает models (1–1000 записей): definitionId,
+expectedCode, expectedVariantCode, code, variantCode. Пустой вариант передаётся
+явно. Оба кода проверяются по свежему чтению, весь пакет записывается атомарно;
+повтор целевой пары безопасен. Геометрия, файлы S3, свет и переходы не записываются.
+map_tile_model_group_update теперь относится только к разделу code и сохраняет
+variantCode и требует его явного ожидаемого значения. Новые регистрации могут задать оба кода; повторные публикации
+сохраняют текущую классификацию независимо от переданного снимка ресурсов.

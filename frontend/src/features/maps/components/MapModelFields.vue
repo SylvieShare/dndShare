@@ -7,6 +7,13 @@
         :maxlength="160"
         required
     /></FormField>
+    <FormField label="Код вариантов" vertical
+      ><FormTextInput
+        v-model:value="model.variantCode"
+        aria-label="Код вариантов"
+        :maxlength="160"
+        placeholder="Пусто — отдельный тайл"
+    /></FormField>
     <FormField label="Название тайла" vertical
       ><FormTextInput
         v-model:value="model.name"

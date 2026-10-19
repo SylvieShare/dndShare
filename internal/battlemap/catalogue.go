@@ -13,6 +13,7 @@ type ModelMetadata struct {
 	ID              string           `json:"id"`
 	DefinitionID    string           `json:"definitionId"`
 	Code            string           `json:"code"`
+	VariantCode     string           `json:"variantCode"`
 	Collection      string           `json:"collection"`
 	CollectionName  string           `json:"collectionName"`
 	SourceCode      string           `json:"sourceCode"`

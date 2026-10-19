@@ -12,7 +12,7 @@ test("sidebar offers populated categories and drags tiles directly onto the map,
   await ready(page);
   const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
   await expect(
-    sidebar.getByRole("heading", { name: "Пол", exact: true }),
+    sidebar.getByRole("heading", { name: "Пол", level: 3, exact: true }),
   ).toBeVisible();
   await expect(sidebar.getByRole("button", { name: /^Пол \(/ })).toHaveCount(0);
   await expect(
@@ -389,6 +389,7 @@ test("available categories ignore historical and hidden models, and one content 
   });
   const categoryTitle = sidebar.getByRole("heading", {
     name: "Пол",
+    level: 3,
     exact: true,
   });
   expect((await categoryTitle.boundingBox()).y).toBeLessThan(

@@ -8,16 +8,24 @@ test("publishing new geometry retains current UUID and shared family", () => {
     sourceName: "Door",
     id: "stable",
     definitionId: "UD-010",
-    code: "UD-door",
+    code: "UD-passages",
+    variantCode: "UD-door",
     hidden: false,
   };
   const result = currentModel(
-    { ...current, id: "old-revision", version: 9 },
+    {
+      ...current,
+      id: "old-revision",
+      version: 9,
+      code: "UD-old",
+      variantCode: "UD-stale",
+    },
     [current],
     { render: { sha256: "new" } },
   );
   assert.equal(result.id, "stable");
-  assert.equal(result.code, "UD-door");
+  assert.equal(result.code, "UD-passages");
+  assert.equal(result.variantCode, "UD-door");
   assert.equal(result.version, undefined);
   assert.equal(result.assets.render.sha256, "new");
 });

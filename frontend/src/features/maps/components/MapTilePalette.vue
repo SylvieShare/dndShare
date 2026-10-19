@@ -39,18 +39,16 @@
                 : "Выберите плитку, затем нажмите на карте."
         }}
       </p>
-      <div class="map-model-grid">
-        <MapModelGroupCard
-          v-for="group in groups"
-          :key="group.key"
-          :group="group"
-          :selected-id="selectedId || editor.selectedModel"
-          :draggable="draggable"
-          :show-identifiers="mode === 'inspect'"
-          @model="(id, event) => emit('model', id, event)"
-          @drag-tile="(id, event) => emit('drag-tile', id, event)"
-        />
-      </div>
+      <MapModelCatalogue
+        :models="filtered"
+        :catalogue="models"
+        :compact="compact"
+        :selected-id="selectedId || editor.selectedModel"
+        :draggable="draggable"
+        :show-identifiers="mode === 'inspect'"
+        @model="(id, event) => emit('model', id, event)"
+        @drag-tile="(id, event) => emit('drag-tile', id, event)"
+      />
       <p v-if="!filtered.length" class="map-hint">
         В выбранном паке пока нет плиток.
       </p>
@@ -62,8 +60,7 @@ import { computed, ref, watch } from "vue";
 import { visibleModels } from "../lib/visibleModels";
 import { ActionButton, LoadingState, MultiToggle } from "@sylvieshare/share-ui";
 import MapCollectionPicker from "./MapCollectionPicker.vue";
-import MapModelGroupCard from "./MapModelGroupCard.vue";
-import { modelGroups } from "../lib/modelGroups";
+import MapModelCatalogue from "./MapModelCatalogue.vue";
 const props = defineProps({
   editor: { type: Object, required: true },
   compact: Boolean,
@@ -150,20 +147,11 @@ const filtered = computed(() =>
     (m) => !!m.hasDecor === (content.value === "furnished"),
   ),
 );
-const groups = computed(() => modelGroups(filtered.value));
 </script>
 <style scoped>
 .map-tile-palette {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-.map-model-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 8px;
-}
-.map-tile-palette--compact .map-model-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 </style>

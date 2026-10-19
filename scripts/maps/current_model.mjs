@@ -21,6 +21,7 @@ export function currentModel(model, registry, assets) {
       ? {
           definitionId: current.definitionId,
           code: current.code,
+          variantCode: current.variantCode,
           hidden: current.hidden,
         }
       : {}),

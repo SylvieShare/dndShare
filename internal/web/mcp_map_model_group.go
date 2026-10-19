@@ -28,12 +28,16 @@ func (s *Server) toolMapModelGroup(r *http.Request, args map[string]json.RawMess
 	if err != nil {
 		return nil, err
 	}
-	if !battlemap.ValidModelGroupCode(code) || !battlemap.ValidModelGroupCode(expected) {
-		return nil, errors.New("valid current and target group codes required")
-	}
-	code, err = s.store.UpdateMapModelGroup(r.Context(), id, expected, code)
+	variant, err := argString(args, "expectedVariantCode")
 	if err != nil {
 		return nil, err
 	}
-	return map[string]any{"definitionId": id, "code": code}, nil
+	if !battlemap.ValidModelGroupCode(code) || !battlemap.ValidModelGroupCode(expected) || !battlemap.ValidModelVariantCode(expected, variant) {
+		return nil, errors.New("valid current and target group codes required")
+	}
+	code, err = s.store.UpdateMapModelGroup(r.Context(), id, expected, variant, code)
+	if err != nil {
+		return nil, err
+	}
+	return map[string]any{"definitionId": id, "code": code, "variantCode": variant}, nil
 }

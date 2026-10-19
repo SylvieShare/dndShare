@@ -1,11 +1,18 @@
 package battlemap
 
-import "regexp"
+import (
+	"regexp"
+	"strings"
+)
 
 var modelGroupCode = regexp.MustCompile(`^[A-Z]{2,3}-[a-z0-9]+(?:-[a-z0-9]+)*$`)
 
 func ValidModelGroupCode(value string) bool {
 	return len(value) <= 160 && modelGroupCode.MatchString(value)
+}
+
+func ValidModelVariantCode(group, variant string) bool {
+	return variant == "" || (ValidModelGroupCode(variant) && strings.SplitN(group, "-", 2)[0] == strings.SplitN(variant, "-", 2)[0])
 }
 
 func ValidTileType(value string) bool {

@@ -36,7 +36,7 @@ func testMapModelGroupUpdate(t *testing.T, ctx context.Context, s *Store) {
 		t.Fatal(err)
 	}
 	code := "MH-campfire-group-test"
-	if got, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, m.Code, code); err != nil || got != code {
+	if got, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, m.Code, "", code); err != nil || got != code {
 		t.Fatal("group update", got, err)
 	}
 	for _, before := range []battlemap.Model{m} {
@@ -49,16 +49,16 @@ func testMapModelGroupUpdate(t *testing.T, ctx context.Context, s *Store) {
 	if got, err := s.GetMapModelBehaviour(ctx, m.DefinitionID); err != nil || !reflect.DeepEqual(got, b) {
 		t.Fatal("group update changed lights, transitions or behaviour revision", err)
 	}
-	if _, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, m.Code, code); err != nil {
+	if _, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, m.Code, "", code); err != nil {
 		t.Fatal("idempotent retry", err)
 	}
-	if _, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, m.Code, "MH-other"); !errors.Is(err, ErrMapModelConflict) {
+	if _, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, m.Code, "", "MH-other"); !errors.Is(err, ErrMapModelConflict) {
 		t.Fatal("accepted stale code", err)
 	}
-	if _, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, code, "UD-campfire"); err == nil {
+	if _, err := s.UpdateMapModelGroup(ctx, m.DefinitionID, code, "", "UD-campfire"); err == nil {
 		t.Fatal("accepted another pack prefix")
 	}
-	if _, err := s.UpdateMapModelGroup(ctx, "MH-MISSING", code, "MH-other"); !errors.Is(err, ErrNotFound) {
+	if _, err := s.UpdateMapModelGroup(ctx, "MH-MISSING", code, "", "MH-other"); !errors.Is(err, ErrNotFound) {
 		t.Fatal("missing definition", err)
 	}
 }

@@ -18,6 +18,7 @@ func TestMapModelGroupRejectsInvalidRequestsBeforeStorage(t *testing.T) {
 	s.cfg.MCPWriteEnabled = true
 	for _, input := range []string{
 		`{}`,
+		`{"definitionId":"MH-031","code":"MH-campfire","expectedCode":"MH-lit-campfire"}`,
 		`{"definitionId":" ","code":"MH-campfire","expectedCode":"MH-lit-campfire"}`,
 		`{"definitionId":"MH-031","code":"MH-campfire"}`,
 		`{"definitionId":"MH-031","code":"campfire","expectedCode":"MH-lit-campfire"}`,

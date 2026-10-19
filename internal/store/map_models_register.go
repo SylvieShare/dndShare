@@ -25,7 +25,7 @@ func (s *Store) RegisterMapModel(ctx context.Context, m battlemap.Model) (battle
 		if m.ID != old.ID {
 			return old, errors.New("existing model must retain its UUID")
 		}
-		m.DefinitionID, m.Code = old.DefinitionID, old.Code
+		m.DefinitionID, m.Code, m.VariantCode = old.DefinitionID, old.Code, old.VariantCode
 		m.Hidden = m.Hidden || old.Hidden
 	}
 	geometry, assets, err := marshalMapModel(m)
@@ -43,6 +43,18 @@ func (s *Store) RegisterMapModel(ctx context.Context, m battlemap.Model) (battle
 	saved, err := scanMapModel(tx.QueryRow(ctx, `SELECT `+mapModelColumns+` FROM dndshare.map_model WHERE id=$1::uuid`, m.ID))
 	if err != nil {
 		return m, err
+	}
+	if !exists && (m.Code != "" || m.VariantCode != "") {
+		if m.Code != "" {
+			saved.Code = m.Code
+		}
+		if !battlemap.ValidModelGroupCode(saved.Code) || !battlemap.ValidModelVariantCode(saved.Code, m.VariantCode) {
+			return m, errors.New("invalid group or variant code")
+		}
+		saved.VariantCode = m.VariantCode
+		if _, err = tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET code=$2,variant_code=$3 WHERE id=$1`, saved.DefinitionID, saved.Code, saved.VariantCode); err != nil {
+			return m, err
+		}
 	}
 	if err = tx.Commit(ctx); err != nil {
 		return m, err

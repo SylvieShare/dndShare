@@ -1,119 +1,72 @@
 <template>
-  <MapTileCard
-    v-if="group.models.length === 1"
-    :model="primary"
-    :selected="selectedId === primary.id"
-    :draggable="draggable"
-    :show-identifiers="showIdentifiers"
-    @model="(id, event) => emit('model', id, event)"
-    @drag-tile="(id, event) => emit('drag-tile', id, event)"
-  />
   <div
-    v-else
     ref="anchor"
     class="map-model-group"
-    @pointerenter="show"
-    @pointerleave="scheduleClose"
-    @focusin="show"
+    :data-variant-code="group.code"
+    :style="motion.placeholder.value"
+    @pointerenter="enter"
+    @pointerleave="motion.scheduleClose"
   >
-    <BaseTile
-      class="map-group-card"
-      interactive
-      :framed="selected"
-      :tint="selected"
-      role="button"
-      tabindex="0"
-      :aria-label="`Группа ${label}`"
-      :aria-expanded="open"
-      @click="show"
-      @keydown.enter.prevent="focusVariants"
-      @keydown.space.prevent="focusVariants"
-      @keydown.right.prevent="focusVariants"
-    >
-      <div
-        class="map-group-images"
-        @pointerdown="
-          draggable &&
-          $event.button === 0 &&
-          !$event.target.closest('.map-group-thumbnails') &&
-          drag(primary.id, $event)
-        "
-        @dragstart.prevent
+    <Teleport to="body" :disabled="!motion.active.value">
+      <BaseTile
+        ref="panel"
+        class="map-variants-panel"
+        :class="{ 'map-variants-panel--expanded': motion.expanded.value }"
+        :style="motion.fixed.value"
+        role="group"
+        :aria-label="`Варианты ${label}`"
+        :aria-expanded="motion.expanded.value"
+        @pointerenter="enter"
+        @pointerleave="motion.scheduleClose"
+        @focusin="enter"
+        @keydown.right.prevent="focusNext(1)"
+        @keydown.left.prevent="focusNext(-1)"
       >
-        <img
-          :src="primary.previewUrl"
-          class="map-group-primary"
-          alt=""
-          draggable="false"
+        <MapModelLightBadge
+          v-if="
+            !motion.expanded.value &&
+            !primary.behaviour?.defaultLights?.length &&
+            familyHasLight
+          "
+          class="map-family-light"
+          :count="1"
         />
-        <div class="map-group-thumbnails" aria-hidden="true">
-          <img
-            v-for="model in group.models"
-            :key="model.id"
-            :src="model.previewUrl"
-            :title="
-              showIdentifiers
-                ? `${model.definitionId} · ${model.name}`
-                : model.name
-            "
-            alt=""
-            draggable="false"
-          />
-        </div>
-      </div>
-      <strong class="map-group-name">{{
-        primary.name.replace(/\s+\d+$/, "")
-      }}</strong>
-      <div class="map-group-meta">
-        <small v-if="showIdentifiers">{{ group.code }}</small
-        ><span>×{{ group.models.length }}</span
-        ><MapModelLightBadge :count="lights" />
-      </div>
-    </BaseTile>
-    <BasePopover
-      v-model:open="open"
-      :anchor="anchor"
-      placement="right-start"
-      :offset="4"
-      :min-width="350"
-      :z-index="3400"
-      role="region"
-      :aria-label="`Варианты ${label}`"
-      related
-    >
-      <div
-        ref="variants"
-        class="map-group-variants"
-        @pointerenter="cancelClose"
-        @pointerleave="scheduleClose"
-        @focusin="cancelClose"
-        @keydown.esc.stop="close"
-      >
-        <header>
-          <strong>{{ label }}</strong
-          ><span>{{ group.models.length }} вариантов</span>
-        </header>
-        <div class="map-group-variant-grid">
+        <div class="map-variant-row">
           <MapTileCard
-            v-for="model in group.models"
-            :key="model.id"
-            :model="model"
-            :selected="selectedId === model.id"
+            :key="primary.id"
+            class="map-variant-primary"
+            :data-variant-id="primary.id"
+            :model="primary"
+            :selected="selectedId === primary.id"
             :draggable="draggable"
             :show-identifiers="showIdentifiers"
-            @model="(id, event) => choose(id, event)"
-            @drag-tile="(id, event) => drag(id, event)"
+            @model="choose"
+            @drag-tile="drag"
           />
+          <div class="map-variant-secondary">
+            <MapTileCard
+              v-for="model in secondary"
+              :key="model.id"
+              :data-variant-id="model.id"
+              :model="model"
+              :selected="selectedId === model.id"
+              :draggable="draggable"
+              :show-identifiers="showIdentifiers"
+              @model="choose"
+              @drag-tile="drag"
+            />
+          </div>
         </div>
-      </div>
-    </BasePopover>
+      </BaseTile>
+    </Teleport>
   </div>
 </template>
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref } from "vue";
-import { BaseTile, BasePopover } from "@sylvieshare/share-ui";
+import { computed, nextTick, ref, watch } from "vue";
+import { BaseTile } from "@sylvieshare/share-ui";
 import MapTileCard from "./MapTileCard.vue";
 import MapModelLightBadge from "./MapModelLightBadge.vue";
+import { useVariantExpansion } from "../composables/useVariantExpansion";
 const props = defineProps({
   group: Object,
   selectedId: String,
@@ -122,141 +75,137 @@ const props = defineProps({
 });
 const emit = defineEmits(["model", "drag-tile"]);
 const anchor = ref(null),
-  variants = ref(null),
-  open = ref(false);
-let timer,
-  dragging = false;
+  panel = ref(null),
+  frozen = ref("");
+const motion = useVariantExpansion(
+  anchor,
+  panel,
+  () => props.group.models.length,
+);
 const primary = computed(
   () =>
-    props.group.models.find((m) => m.id === props.selectedId) ||
-    props.group.models[0],
+    props.group.models.find(
+      (m) => m.id === (motion.active.value ? frozen.value : props.selectedId),
+    ) || props.group.models[0],
+);
+const familyHasLight = computed(() =>
+  props.group.models.some((model) => model.behaviour?.defaultLights?.length),
+);
+const secondary = computed(() =>
+  props.group.models.filter((m) => m.id !== primary.value.id),
 );
 const label = computed(() =>
   props.showIdentifiers
     ? props.group.code
     : primary.value.name.replace(/\s+\d+$/, ""),
 );
-const selected = computed(() =>
-  props.group.models.some((m) => m.id === props.selectedId),
-);
-const lights = computed(() =>
-  props.group.models.reduce(
-    (n, m) => n + (m.behaviour?.defaultLights?.length || 0),
-    0,
-  ),
-);
-function cancelClose() {
-  clearTimeout(timer);
-}
-function show() {
-  cancelClose();
-  open.value = true;
-}
-function scheduleClose() {
-  cancelClose();
-  if (!dragging) timer = setTimeout(close, 180);
-}
-function close() {
-  cancelClose();
-  open.value = false;
-}
-async function focusVariants() {
-  show();
-  await nextTick();
-  variants.value
-    ?.querySelector('[role="button"]')
-    ?.focus({ preventScroll: true });
+function enter(event) {
+  if (!motion.active.value) frozen.value = primary.value.id;
+  motion.enter(event);
 }
 function choose(id, event) {
+  motion.dismiss();
   emit("model", id, event);
-  close();
-}
-function finishDrag() {
-  dragging = false;
-  window.removeEventListener("pointerup", finishDrag);
-  window.removeEventListener("pointercancel", finishDrag);
-  scheduleClose();
 }
 function drag(id, event) {
-  dragging = true;
-  cancelClose();
-  window.addEventListener("pointerup", finishDrag);
-  window.addEventListener("pointercancel", finishDrag);
+  motion.drag();
   emit("drag-tile", id, event);
 }
-onBeforeUnmount(() => {
-  cancelClose();
-  window.removeEventListener("pointerup", finishDrag);
-  window.removeEventListener("pointercancel", finishDrag);
-});
+async function focusNext(step) {
+  if (!motion.active.value) frozen.value = primary.value.id;
+  motion.open();
+  await nextTick();
+  const buttons = [...panel.value.$el.querySelectorAll('[role="button"]')];
+  buttons[
+    (buttons.indexOf(document.activeElement) + step + buttons.length) %
+      buttons.length
+  ]?.focus();
+}
+watch(
+  () => motion.active.value,
+  (active) => {
+    if (!active) frozen.value = "";
+  },
+);
 </script>
 <style scoped>
+.map-family-light {
+  position: absolute;
+  top: 6px;
+  right: 34px;
+  z-index: 1;
+}
 .map-model-group {
   min-width: 0;
 }
-.map-group-card {
+.map-variants-panel {
   --surface: var(--map-model-preview-bg);
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 6px;
-  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: none;
 }
-.map-group-images {
-  touch-action: none;
+.map-variant-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 24px;
   gap: 4px;
-  height: 105px;
+  align-items: start;
 }
-.map-group-primary {
-  width: 100%;
-  height: 94px;
-  object-fit: contain;
-  pointer-events: none;
-}
-.map-group-thumbnails {
+.map-variant-secondary {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  overflow: auto;
+  gap: 3px;
+  max-height: 110px;
+  overflow: hidden;
 }
-.map-group-thumbnails img {
+.map-variants-panel:not(.map-variants-panel--expanded)
+  .map-variant-secondary
+  > :deep(.map-model-card) {
+  padding: 0;
   width: 22px;
   height: 22px;
-  object-fit: contain;
-  flex: none;
+  overflow: hidden;
+  border-radius: 4px;
 }
-.map-group-name {
-  font-size: 12px;
-  font-weight: 500;
+.map-variants-panel:not(.map-variants-panel--expanded)
+  .map-variant-secondary
+  :deep(img) {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
 }
-.map-group-meta {
+.map-variants-panel:not(.map-variants-panel--expanded)
+  .map-variant-secondary
+  :deep(.map-model-name),
+.map-variants-panel:not(.map-variants-panel--expanded)
+  .map-variant-secondary
+  :deep(small),
+.map-variants-panel:not(.map-variants-panel--expanded)
+  .map-variant-secondary
+  :deep(.map-card-light) {
+  display: none;
+}
+.map-variants-panel--expanded {
+  padding: 8px;
+  box-shadow:
+    0 12px 32px color-mix(in srgb, var(--bg) 65%, transparent),
+    inset 0 0 0 1px var(--border-strong);
+}
+.map-variants-panel--expanded .map-variant-row {
   display: flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 10px;
-  color: var(--text-muted);
-}
-.map-group-meta small {
-  overflow-wrap: anywhere;
-  flex: 1;
-}
-.map-group-variants {
-  max-height: min(70vh, 560px);
-  overflow: auto;
-  width: 350px;
-}
-.map-group-variants header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
-  font-size: 12px;
-}
-.map-group-variant-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  align-items: stretch;
+}
+.map-variants-panel--expanded .map-variant-secondary {
+  display: contents;
+}
+.map-variants-panel :deep(.map-model-card) {
+  transform-origin: top left;
+}
+.map-variants-panel--expanded :deep(.map-model-card) {
+  flex: 0 0 120px;
+  width: 120px;
+  transform-origin: top left;
 }
 </style>

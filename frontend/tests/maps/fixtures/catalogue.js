@@ -156,6 +156,10 @@ const catalogue = [
     .toLowerCase()
     .replace(/\s+\d+$/, "")
     .replace(/[^a-z0-9]+/g, "-")}`,
+  variantCode: `${m.collection === "ultimate-dungeon" ? "UD" : m.collection === "map-objects" ? "MA" : "LC"}-${m.sourceName
+    .toLowerCase()
+    .replace(/\s+\d+$/, "")
+    .replace(/[^a-z0-9]+/g, "-")}`,
   behaviour: { revision: 1, defaultLights: [], transitions: [] },
   hidden: false,
   hasDecor: !!m.hasDecor,

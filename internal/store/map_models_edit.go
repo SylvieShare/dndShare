@@ -29,7 +29,10 @@ func (s *Store) UpdateMapModelWithBehaviour(ctx context.Context, id string, edit
 	if !battlemap.ValidModelGroupCode(edited.Code) {
 		return edited, fmt.Errorf("%w: Некорректный код группы", ErrInvalidMapModels)
 	}
-	if _, err = tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET code=$2 WHERE id=$1`, old.DefinitionID, edited.Code); err != nil {
+	if !battlemap.ValidModelVariantCode(edited.Code, edited.VariantCode) {
+		return edited, fmt.Errorf("%w: Некорректный код вариантов", ErrInvalidMapModels)
+	}
+	if _, err = tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET code=$2,variant_code=$3 WHERE id=$1`, old.DefinitionID, edited.Code, edited.VariantCode); err != nil {
 		return edited, err
 	}
 	geometry, assets, err := marshalMapModel(edited)

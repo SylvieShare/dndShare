@@ -41,6 +41,27 @@ import {
 const source = newMap();
 const params = new URLSearchParams(location.search);
 if (params.has("groups")) groupExamples(catalogue);
+if (params.has("groupSections")) {
+  const floor = catalogue.find((m) => m.id === FLOOR);
+  catalogue.push({
+    ...floor,
+    id: "83838383-8383-4383-8383-838383838383",
+    definitionId: "TEST-CORNER",
+    sourceCode: "TEST-CORNER",
+    name: "Пол угловой",
+    variantCode: "LC-ground-corner",
+  });
+  catalogue.push({
+    ...floor,
+    id: "84848484-8484-4484-8484-848484848484",
+    definitionId: "TEST-WOOD",
+    sourceCode: "TEST-WOOD",
+    name: "Деревянный пол",
+    code: "LC-wood",
+    variantCode: "",
+  });
+}
+
 if (params.has("tileFilterExample")) {
   catalogue.find((m) => m.id === UD_WALL).hasDecor = true;
   catalogue.find((m) => m.sourceCode === "UD-096").hidden = true;

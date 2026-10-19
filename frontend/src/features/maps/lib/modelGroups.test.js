@@ -1,49 +1,73 @@
 import { it, expect } from "vitest";
 import { modelGroups, modelIdentity, hasModelLight } from "./modelGroups";
-it("groups distinct element and version IDs by code, sorts codes and retains all variants", () => {
-  const door = {
-    id: "version-1",
-    definitionId: "UD-010",
-    code: "UD-door",
-    name: "Door",
-    collection: "ud",
+it("separates list sections from variant families and keeps standalone tiles distinct", () => {
+  const straight = {
+    id: "one",
+    definitionId: "MED-008",
+    code: "MED-ground",
+    variantCode: "MED-ground-straight",
+    name: "Ground Straight 1",
+    collection: "medieval",
   };
-  const open = {
-    ...door,
-    id: "version-2",
-    definitionId: "UD-010-OPEN",
-    name: "Door open",
+  const another = {
+    ...straight,
+    id: "two",
+    definitionId: "MED-009",
+    name: "Ground Straight 2",
   };
-  const floor = {
-    ...door,
-    id: "floor",
-    definitionId: "UD-016",
-    code: "UD-ground",
-    name: "Ground 1",
+  const corner = {
+    ...straight,
+    id: "corner",
+    definitionId: "MED-010",
+    name: "Ground Corner",
+    variantCode: "MED-ground-corner",
   };
-  const groups = modelGroups([floor, open, door]);
-  expect(groups.map((g) => g.code)).toEqual(["UD-door", "UD-ground"]);
-  expect(groups[0].models.map((m) => m.definitionId)).toEqual([
-    "UD-010",
-    "UD-010-OPEN",
-  ]);
-  expect(modelIdentity(open)).toEqual({
-    id: "UD-010-OPEN",
-    code: "UD-door",
-    name: "Door open",
+  const loose = {
+    ...straight,
+    id: "loose",
+    definitionId: "MED-011",
+    name: "Ground Special",
+    variantCode: "",
+  };
+  const sections = modelGroups([straight, another, corner, loose]);
+  expect(sections).toHaveLength(1);
+  expect(sections[0].name).toBe("Ground");
+  expect(
+    sections[0].variants.map((family) => family.models.length).sort(),
+  ).toEqual([1, 1, 2]);
+  expect(
+    sections[0].variants
+      .find((family) => family.code === straight.variantCode)
+      .models.map((m) => m.id),
+  ).toEqual(["one", "two"]);
+  expect(modelIdentity(straight)).toEqual({
+    id: "MED-008",
+    code: "MED-ground",
+    variantCode: "MED-ground-straight",
+    name: straight.name,
   });
 });
-it("keeps pack scope and marks embedded sources even if switched off by default", () => {
-  const m = {
-    id: "v",
-    definitionId: "UD-037",
-    collection: "ud",
-    code: "UD-torch",
-    behaviour: { defaultLights: [{ enabled: false }] },
+it("derives a stable heading from the whole group while categories filter its visible members", () => {
+  const a = {
+    id: "a",
+    definitionId: "A",
+    code: "MED-bar",
+    variantCode: "MED-bar-straight",
+    name: "Bar Empty",
+    collection: "medieval",
   };
-  expect(hasModelLight(m)).toBe(true);
-  expect(hasModelLight({ ...m, behaviour: { defaultLights: [] } })).toBe(false);
+  const b = {
+    ...a,
+    id: "b",
+    definitionId: "B",
+    name: "Tall Bar Angle",
+    variantCode: "MED-tall-bar-angle",
+  };
+  expect(modelGroups([b], [a, b])[0].name).toBe("Bar");
   expect(
-    modelGroups([m, { ...m, id: "other", collection: "other" }]),
+    modelGroups([a, { ...a, id: "other", collection: "other" }]),
   ).toHaveLength(2);
+  expect(
+    hasModelLight({ ...a, behaviour: { defaultLights: [{ enabled: false }] } }),
+  ).toBe(true);
 });

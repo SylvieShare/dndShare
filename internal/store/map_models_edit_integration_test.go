@@ -114,4 +114,5 @@ func TestCurrentMapModelPersistence(t *testing.T) {
 		t.Fatal("stale shadow geometry accepted", err)
 	}
 	testTileTransitionPersistence(t, ctx, s)
+	testMapModelGrouping(t, ctx, s)
 }
