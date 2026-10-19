@@ -1,0 +1,303 @@
+{
+  "tileType": "floor",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [[0, 0]],
+  "standToleranceMM": 0.2,
+  "wallMode": "edge",
+  "wallMask": 64,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Wardrobe",
+  "groupCode": "MED-wardrobe",
+  "hasDecor": true,
+  "renderTriangles": 90000,
+  "lodTriangles": 30000,
+  "renderBakeSize": 1024,
+  "lodBakeSize": 1024,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 100,
+  "standPointsMM": [
+    [8.75, -8.75],
+    [8.75, 8.75]
+  ],
+  "blockersMM": [
+    [
+      [-17.6, -17.6],
+      [2.2, -17.6],
+      [2.2, 17.6],
+      [-17.6, 17.6]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": [
+    "town",
+    "floor",
+    "wood",
+    "wardrobe",
+    "cupboard",
+    "doors",
+    "brass",
+    "hinges",
+    "plaster",
+    "wall"
+  ],
+  "weightBudget": {
+    "renderMiB": [2.5, 5],
+    "lodMiB": [1.2, 3],
+    "shadowKiB": [70, 170],
+    "previewKiB": [12, 40],
+    "basis": "Tall 35mm wardrobe with curved cornice, two recessed doors, four hinge barrels and two brass knobs. Start with 90000/30000 triangles, 1024 bakes, colour 1024/768 and initially normal/ORM512; increase normal/ORM to1024/768 to reduce faceted brass reflections, then compare compact while preserving mouldings, hardware and the two free front floor points."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "floor X planks and north south fascia",
+        "minMM": [-17.7, -17.7, 17.5],
+        "maxMM": [17.7, 17.7, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "west Y floor border",
+        "minMM": [-17.7, -17.7, 17.5],
+        "maxMM": [-14.3, 17.7, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "east Y floor border",
+        "minMM": [14.3, -17.7, 17.5],
+        "maxMM": [17.7, 17.7, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "wardrobe vertical body and door stiles",
+        "minMM": [-17.6, -17.6, 26.4],
+        "maxMM": [2.2, 17.6, 82.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [0.32, 0.15, 0.045],
+        "lightRGB": [0.55, 0.31, 0.11]
+      },
+      {
+        "name": "curved Y cornice and upper door rails",
+        "minMM": [-17.6, -17.6, 75.5],
+        "maxMM": [2.2, 17.6, 82.2],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [0.36, 0.18, 0.06],
+        "lightRGB": [0.6, 0.35, 0.14]
+      },
+      {
+        "name": "Y base plinth and lower door rails",
+        "minMM": [-17.6, -17.6, 27],
+        "maxMM": [2.2, 17.6, 33.3],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [0.36, 0.18, 0.06],
+        "lightRGB": [0.6, 0.35, 0.14]
+      },
+      {
+        "name": "south rear wall post",
+        "minMM": [-17.6, -17.6, 26.1],
+        "maxMM": [-10.1, -13.6, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "north rear wall post",
+        "minMM": [-17.6, 13.6, 26.1],
+        "maxMM": [-10.1, 17.6, 50],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "south recessed door panel",
+        "minMM": [-0.7, -12.9, 32.8],
+        "maxMM": [0.02, -2.6, 78.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [0.25, 0.105, 0.028],
+        "lightRGB": [0.46, 0.235, 0.08]
+      },
+      {
+        "name": "north recessed door panel",
+        "minMM": [-0.7, 2.6, 32.8],
+        "maxMM": [0.02, 12.9, 78.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.86,
+        "darkRGB": [0.25, 0.105, 0.028],
+        "lightRGB": [0.46, 0.235, 0.08]
+      }
+    ],
+    "surfaceParts": [
+      {
+        "name": "rough ochre plaster behind wardrobe",
+        "minMM": [-17.6, -13.6, 26.6],
+        "maxMM": [-13.8, 13.6, 49.8],
+        "kind": "plaster",
+        "rgb": [0.74, 0.535, 0.275],
+        "roughness": 0.98,
+        "variation": 0.065,
+        "excludeParts": [
+          {
+            "name": "south rear wall post",
+            "minMM": [-17.6, -17.6, 26.1],
+            "maxMM": [-10.1, -13.6, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          },
+          {
+            "name": "north rear wall post",
+            "minMM": [-17.6, 13.6, 26.1],
+            "maxMM": [-10.1, 17.6, 50],
+            "axis": "z",
+            "physicalPigment": true,
+            "roughness": 0.9
+          }
+        ]
+      },
+      {
+        "name": "south brass door knob",
+        "minMM": [0.45, -2.6204998970031737, 51.51449890136719],
+        "maxMM": [1.44, -0.12039999365806575, 54.13390045166015],
+        "ellipsoid": {
+          "centerMM": [0.5, -1.3704499453306198, 52.82419967651367],
+          "radiiMM": [0.94, 1.250049951672554, 1.3097007751464844]
+        },
+        "kind": "paint",
+        "rgb": [0.62, 0.43, 0.14],
+        "metallic": 0.8,
+        "roughness": 0.45,
+        "variation": 0.02
+      },
+      {
+        "name": "north brass door knob",
+        "minMM": [0.45, 0.16760000288486476, 51.5052978515625],
+        "maxMM": [1.44, 2.685900020599365, 54.14299850463867],
+        "ellipsoid": {
+          "centerMM": [0.5, 1.426750011742115, 52.824148178100586],
+          "radiiMM": [0.94, 1.2591500088572503, 1.318850326538086]
+        },
+        "kind": "paint",
+        "rgb": [0.62, 0.43, 0.14],
+        "metallic": 0.8,
+        "roughness": 0.45,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge 14.208/37.818",
+        "minMM": [-0.2, 13.757950115203858, 37.81849975585938],
+        "maxMM": [0.72, 14.657950115203857, 42.89149932861328],
+        "radialShell": {
+          "originMM": [0.25, 14.207950115203857, 37.81849975585938],
+          "axis": [0, 0, 1],
+          "rangeMM": [0, 5.072999572753901],
+          "radiusAtOriginMM": 0.45,
+          "radiusSlope": 0,
+          "thicknessMM": 0.45,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.19, 0.205, 0.19],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge -14.032/56.208",
+        "minMM": [-0.2, -14.481500339508056, 56.208499145507815],
+        "maxMM": [0.72, -13.581500339508057, 61.278500366210935],
+        "radialShell": {
+          "originMM": [0.25, -14.031500339508057, 56.208499145507815],
+          "axis": [0, 0, 1],
+          "rangeMM": [0, 5.070001220703119],
+          "radiusAtOriginMM": 0.45,
+          "radiusSlope": 0,
+          "thicknessMM": 0.45,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.19, 0.205, 0.19],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge -14.027/37.819",
+        "minMM": [-0.2, -14.477400016784667, 37.818598937988284],
+        "maxMM": [0.72, -13.577400016784669, 42.89149932861328],
+        "radialShell": {
+          "originMM": [0.25, -14.027400016784668, 37.818598937988284],
+          "axis": [0, 0, 1],
+          "rangeMM": [0, 5.072900390624994],
+          "radiusAtOriginMM": 0.45,
+          "radiusSlope": 0,
+          "thicknessMM": 0.45,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.19, 0.205, 0.19],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      },
+      {
+        "name": "iron hinge 14.209/56.208",
+        "minMM": [-0.2, 13.758900451660157, 56.20790023803711],
+        "maxMM": [0.72, 14.658900451660156, 61.277897644042966],
+        "radialShell": {
+          "originMM": [0.25, 14.208900451660156, 56.20790023803711],
+          "axis": [0, 0, 1],
+          "rangeMM": [0, 5.069997406005854],
+          "radiusAtOriginMM": 0.45,
+          "radiusSlope": 0,
+          "thicknessMM": 0.45,
+          "allowanceMM": 0
+        },
+        "kind": "paint",
+        "rgb": [0.19, 0.205, 0.19],
+        "metallic": 0.9,
+        "roughness": 0.6,
+        "variation": 0.02
+      }
+    ],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDF page 11 and native full/back/front/cornice/knob views inspected. Source: 519998 triangles, 25999984 bytes, SHA b95aab50777591299d02dc76845a2911fbfa771aaa072d17c49bc1cde8cd5012, maximum Z82.062698 mm. Front faces +X; the wardrobe occupies the west half. Two free native floor points [8.75,-8.75] and [8.75,8.75] have Z25.737587/25.737709 and upward normals. Blocker extends to X2.2 to cover the plinth; rear wall is west edge64. Grain follows vertical panels/stiles/sides, Y cornice/plinth and X floor. Recessed faces are independently bounded by X depth (-0.361 mm), preserving the raised mouldings (+0.447 mm). Native X>0.5 components isolate two flattened brass knobs and four iron barrels at Z37.868..42.842 and56.258..61.229. Keep the wood next to all six fittings free of metal. Check knobs, hinges, door seam, mouldings, cornice silhouette, source/render/LOD/shadow placement and footprint, actual packed colour/ORM, both texture candidates and transparent preview. Native preparation datum is17 mm; normalize the selected assets to UD-016 before final preview and manifest. No emission or built-in lights."
+}
