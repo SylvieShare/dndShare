@@ -76,13 +76,13 @@ test("an object can be dragged from the rail, shows a loading footprint, rotates
   await page.mouse.down();
   await page.mouse.move(point.x, point.y, { steps: 8 });
   await expect(
-    page.getByText("Загружаем модель…", { exact: true }),
+    page.getByRole("region", { name: "Загрузка моделей", exact: true }),
   ).toBeVisible();
   expect(await pixels(page, "purple")).toBeGreaterThan(100);
   await page.keyboard.press("r");
   await page.evaluate(() => window.releaseModelLoads());
   await expect(
-    page.getByText("Загружаем модель…", { exact: true }),
+    page.getByRole("region", { name: "Загрузка моделей", exact: true }),
   ).toHaveCount(0);
   await page.mouse.up();
   await expect
@@ -122,13 +122,11 @@ test("a delayed tile follows the cursor as a loading footprint and cancels befor
   const point = await mapPoint(page, 4.5, 4.5);
   await page.mouse.move(point.x, point.y);
   await expect(
-    page.getByText("Загружаем модель…", { exact: true }),
+    page.getByRole("region", { name: "Загрузка моделей", exact: true }),
   ).toBeVisible();
   expect(await pixels(page, "purple")).toBeGreaterThan(100);
   await page.keyboard.press("Escape");
-  await expect(
-    page.getByText("Загружаем модель…", { exact: true }),
-  ).toHaveCount(0);
+  await expect.poll(() => pixels(page, "purple")).toBeLessThan(100);
   await page.evaluate(() => window.releaseModelLoads());
   expect(
     await page.evaluate(() =>
@@ -156,9 +154,7 @@ test("Escape and right click cancel object dragging without placing a copy", asy
     if (method === "escape") await page.keyboard.press("Escape");
     else await page.mouse.click(point.x, point.y, { button: "right" });
     await page.mouse.up();
-    await expect(
-      page.getByText("Загружаем модель…", { exact: true }),
-    ).toHaveCount(0);
+    await expect(page.locator(".map-canvas--placing")).toHaveCount(0);
   }
   await page.waitForTimeout(1400);
   expect(

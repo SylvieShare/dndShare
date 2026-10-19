@@ -1,0 +1,57 @@
+<!doctype html><html><body style="margin:0"><script type="module">
+import {ACESFilmicToneMapping,BoxGeometry,Color,Group,HemisphereLight,Mesh,MeshStandardMaterial,OrthographicCamera,PointLight,Scene,SphereGeometry,WebGLRenderer} from "three";
+const reference=new URLSearchParams(location.search).has("reference");
+const {createTileOutline}=await import(reference?"/target/tileOutline-before-cache.js":"/src/features/maps/rendering/tileOutline.js");
+const gpu=new WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+gpu.setSize(800,600);gpu.setPixelRatio(1.5);gpu.toneMapping=ACESFilmicToneMapping;
+gpu.info.autoReset=false;document.body.append(gpu.domElement);
+const scene=new Scene();scene.background=new Color("#263142");
+const camera=new OrthographicCamera(-4,4,3,-3,.1,100);
+camera.position.set(7,8,10);camera.lookAt(0,.5,0);camera.updateMatrixWorld(true);
+const geometry=new SphereGeometry(.22,24,16), material=new MeshStandardMaterial({color:"#a27c53"});
+for(let x=-5;x<=5;x++)for(let z=-4;z<=4;z++){
+ const mesh=new Mesh(geometry,material);mesh.position.set(x*.6,0,z*.6);scene.add(mesh);
+}
+const selected=new Group();selected.userData.outlineType="object";selected.userData.outlineStyle="selected";
+const body=new Mesh(new BoxGeometry(.8,1.7,.8),new MeshStandardMaterial({color:"#987452"}));
+body.position.y=.85;selected.add(body);scene.add(selected);
+const occluder=new Mesh(new BoxGeometry(1.2,1.8,.5),new MeshStandardMaterial({color:"#596a7f"}));
+occluder.position.set(.6,.8,1);scene.add(occluder);
+const light=new PointLight("#ffb04a",20,12);light.position.set(1,4,3);
+const markers=new Group(),annotations=new Group();scene.add(light,markers,annotations,new HemisphereLight(0xffffff,0x665544,2));
+let outline=createTileOutline(gpu,{}),show=true,colour;
+function rebuild(){outline.destroy();outline=createTileOutline(gpu,{});}
+function draw(){
+ outline.update({tiles:[]},{master:true,selectionColor:colour},"render");
+ gpu.setRenderTarget(null);gpu.setClearColor("#263142",1);gpu.autoClear=true;gpu.render(scene,camera);
+ gpu.info.reset();const start=performance.now();
+ outline.render(scene,camera,annotations,show?[selected]:[],null,[markers]);
+ const cpu=performance.now()-start,counts={...gpu.info.render},gl=gpu.getContext(),pixels=new Uint8Array(gpu.domElement.width*gpu.domElement.height*4);
+ gl.readPixels(0,0,gpu.domElement.width,gpu.domElement.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+ return {cpu,calls:counts.calls,triangles:counts.triangles,pixels,textures:gpu.info.memory.textures};
+}
+window.outlineCache={
+ frame(change){
+  if(change==="light"){light.position.x+=.2;light.intensity+=.25;}
+  if(change==="move"){selected.position.x+=.25;}
+  if(change==="occlude"){occluder.position.x-=.4;}
+  if(change==="hide"){occluder.visible=!occluder.visible;}
+  if(change==="camera"){camera.position.x+=1;camera.lookAt(0,.5,0);camera.updateMatrixWorld(true);}
+  if(change==="palette"){colour="#ff66aa";}
+  if(change==="geometry"){body.geometry=new BoxGeometry(.6,2,.6);}
+  if(change==="hover"){selected.userData.outlineStyle="hover";}
+  if(change==="invalid"){selected.userData.outlineStyle="invalid";}
+  if(change==="clear"){show=false;}
+  if(change==="restore"){show=true;}
+  if(change==="resize"){gpu.setSize(720,540);}
+  const value=draw();window.outlinePixels=value.pixels;
+  return {cpu:value.cpu,calls:value.calls,triangles:value.triangles,textures:value.textures};
+ },
+ compareFresh(){
+  const cached=draw();rebuild();const fresh=draw();let changed=0,max=0;
+  for(let i=0;i<cached.pixels.length;i++){const delta=Math.abs(cached.pixels[i]-fresh.pixels[i]);if(delta)changed++;max=Math.max(max,delta);}
+  return {changed,max,cachedCalls:cached.calls,freshCalls:fresh.calls};
+ },
+ pixels:()=>Array.from(window.outlinePixels),
+};
+</script></body></html>
