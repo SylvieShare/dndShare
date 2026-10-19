@@ -6,6 +6,42 @@ import (
 	"dndshare/internal/battlemap"
 )
 
+// Geometry JSON cannot override catalogue columns, even if an upload includes
+// unrelated metadata such as name or code.
+type mapModelGeometry struct {
+	Width           int                        `json:"width"`
+	Height          int                        `json:"height"`
+	MountDepth      float64                    `json:"mountDepth"`
+	MountProfile    string                     `json:"mountProfile,omitempty"`
+	SurfaceHeight   float64                    `json:"surfaceHeight"`
+	MaxHeight       float64                    `json:"maxHeight"`
+	Blockers        [][][2]float64             `json:"blockers"`
+	Tags            []string                   `json:"tags"`
+	HasDecor        bool                       `json:"hasDecor"`
+	CanStand        bool                       `json:"canStand"`
+	Hidden          bool                       `json:"hidden"`
+	PlacementPoints []battlemap.PlacementPoint `json:"placementPoints"`
+	CollectionName  string                     `json:"collectionName"`
+	WallMode        string                     `json:"wallMode"`
+	WallMask        int                        `json:"wallMask"`
+	SupportSlots    []battlemap.SupportSlot    `json:"supportSlots"`
+	PlacementOffset [2]float64                 `json:"placementOffset"`
+	TextureDetail   string                     `json:"textureDetail"`
+}
+
+func readMapModelGeometry(raw []byte, m *battlemap.ModelMetadata) error {
+	var g mapModelGeometry
+	if err := json.Unmarshal(raw, &g); err != nil {
+		return err
+	}
+	m.Width, m.Height, m.MountDepth, m.MountProfile = g.Width, g.Height, g.MountDepth, g.MountProfile
+	m.SurfaceHeight, m.MaxHeight, m.Blockers, m.Tags = g.SurfaceHeight, g.MaxHeight, g.Blockers, g.Tags
+	m.HasDecor, m.CanStand, m.Hidden, m.PlacementPoints = g.HasDecor, g.CanStand, g.Hidden, g.PlacementPoints
+	m.CollectionName, m.WallMode, m.WallMask = g.CollectionName, g.WallMode, g.WallMask
+	m.SupportSlots, m.PlacementOffset, m.TextureDetail = g.SupportSlots, g.PlacementOffset, g.TextureDetail
+	return nil
+}
+
 func marshalMapModel(m battlemap.Model) (json.RawMessage, json.RawMessage, error) {
 	points := m.PlacementPoints
 	if points == nil {

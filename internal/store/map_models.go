@@ -27,7 +27,7 @@ func scanMapModel(row pgx.Row) (battlemap.Model, error) {
 	if err != nil {
 		return m, err
 	}
-	if err = json.Unmarshal(geometry, &m.ModelMetadata); err != nil {
+	if err = readMapModelGeometry(geometry, &m.ModelMetadata); err != nil {
 		return m, err
 	}
 	err = json.Unmarshal(assets, &m.Assets)
