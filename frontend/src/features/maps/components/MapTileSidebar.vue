@@ -32,6 +32,7 @@
       @focus="selectArea"
     />
     <MapPropertiesPanel v-else-if="tab === 'settings'" :editor="editor" />
+    <MapPerformancePanel v-else-if="tab === 'performance'" :editor="editor" />
     <MapLightingPanel
       v-else-if="tab === 'lights'"
       :editor="editor"
@@ -42,9 +43,10 @@
 </template>
 <script setup>
 import { computed, ref } from "vue";
-import { Layers, Box, Group, Lightbulb, Settings } from "@lucide/vue";
+import { Layers, Box, Group, Lightbulb, Settings, Gauge } from "@lucide/vue";
 import MapSidebar from "./MapSidebar.vue";
 import MapPropertiesPanel from "./MapPropertiesPanel.vue";
+import MapPerformancePanel from "./MapPerformancePanel.vue";
 import MapLightingPanel from "./MapLightingPanel.vue";
 import MapAreasPanel from "./MapAreasPanel.vue";
 import MapObjectPalette from "./MapObjectPalette.vue";
@@ -92,5 +94,6 @@ const tabs = computed(() => [
   ...(!props.sessionMode
     ? [{ key: "settings", label: "Настройки", icon: Settings }]
     : []),
+  { key: "performance", label: "Производительность", icon: Gauge },
 ]);
 </script>

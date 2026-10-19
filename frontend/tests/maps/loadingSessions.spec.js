@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { mapPoint, pickTile } from "./editorHelpers";
+import { canvasFrame, mapPoint, pickTile } from "./editorHelpers";
 async function pixels(page, kind) {
-  const png = await page.locator(".map-canvas canvas").screenshot();
+  const png = await canvasFrame(page);
   return page.evaluate(
     async ({ base64, kind }) => {
       const bitmap = await createImageBitmap(
@@ -13,13 +13,7 @@ async function pixels(page, kind) {
         "2d",
       );
       ctx.drawImage(bitmap, 0, 0);
-      // Inspect the unobstructed scene; element screenshots also contain floating HTML panels.
-      const data = ctx.getImageData(
-        0,
-        0,
-        bitmap.width - 320,
-        bitmap.height - 260,
-      ).data;
+      const data = ctx.getImageData(0, 0, bitmap.width, bitmap.height).data;
       let count = 0;
       for (let i = 0; i < data.length; i += 4) {
         const r = data[i],
@@ -107,7 +101,9 @@ test("new download batches omit old completions, a dropped object stays visible,
   await expect.poll(() => pixels(page, "purple")).toBe(0);
   await expect(manager).toBeVisible();
   await expect(manager.getByText("LOD", { exact: true })).toHaveCount(0);
-  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Производительность", exact: true })
+    .click();
   const memory = page.getByRole("region", {
     name: "Кеш моделей карты",
     exact: true,

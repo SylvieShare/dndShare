@@ -1,10 +1,13 @@
 <template>
   <MapInspectorSection title="Пламя">
-    <ToggleSwitch
-      :model-value="effect?.kind === 'fire'"
-      label="Показывать пламя"
-      @update:model-value="toggle"
-    />
+    <template #actions>
+      <ToggleSwitch
+        :model-value="effect?.kind === 'fire'"
+        aria-label="Показывать пламя"
+        title="Показывать пламя"
+        @update:model-value="toggle"
+      />
+    </template>
     <Transition name="light-effect">
       <div v-if="effect?.kind === 'fire'" class="light-effect-fields">
         <FormField

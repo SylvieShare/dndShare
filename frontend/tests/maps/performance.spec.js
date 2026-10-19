@@ -41,7 +41,7 @@ async function drawCounter(page, disableGpu = false) {
   }, disableGpu);
 }
 for (const mobile of [false, true])
-  test(`settings show measured frame work without waking an idle map ${mobile ? "mobile" : "desktop"}`, async ({
+  test(`performance tab shows measured frame work without waking an idle map ${mobile ? "mobile" : "desktop"}`, async ({
     page,
   }) => {
     const errors = [];
@@ -57,7 +57,9 @@ for (const mobile of [false, true])
     await page.goto("/tests/maps/fixtures/maps.html?mode=editor");
     await expect(page.locator(".map-canvas canvas")).toBeVisible();
     expect(await page.evaluate(() => window.gpuQueries)).toBe(0);
-    await page.getByRole("button", { name: "Настройки", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Производительность", exact: true })
+      .click();
     const panel = page.getByRole("region", { name: "Нагрузка", exact: true });
     await expect(panel).toBeVisible();
     await expect(
@@ -86,7 +88,7 @@ for (const mobile of [false, true])
     await expect(panel.getByText("Пауза", { exact: true })).toBeVisible();
     expect(errors).toEqual([]);
   });
-test("session settings use the same profiler and GPU sampling ends when the section closes", async ({
+test("session performance tab uses the same profiler and GPU sampling ends when the section closes", async ({
   page,
 }) => {
   const errors = [];
@@ -97,7 +99,9 @@ test("session settings use the same profiler and GPU sampling ends when the sect
     "/tests/maps/fixtures/maps.html?mode=session&lightExample&lit",
   );
   await expect(page.locator(".map-canvas canvas")).toBeVisible();
-  await page.getByRole("button", { name: "Настройки", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Производительность", exact: true })
+    .click();
   const panel = page.getByRole("region", { name: "Нагрузка", exact: true });
   await expect(panel).toBeVisible();
   await expect

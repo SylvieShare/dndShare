@@ -385,13 +385,17 @@ MapCollectionPicker размещён над левым каталогом и д�
 
 ## Нагрузка 3D-карт
 
-MapPerformance входит в MapPropertiesPanel и автоматически переиспользуется
-настройками сессионной карты. Контролы — ToggleSwitch/FormSelect, метрики —
+MapPerformancePanel составляет вкладку «Производительность» из MapModelMemory
+и MapPerformance, общую для заготовок и сессионной карты. MapPropertiesPanel
+содержит только свойства карты. Переключатель измерений передаётся в actions-slot
+MapInspectorSection и стоит справа от заголовка. Контролы — ToggleSwitch/FormSelect, метрики —
 BaseTile, доли этапов — StatBar. MapPerformanceChart рисует составной временной
 график SVG; готовый SegmentDonutChart не выражает историю, поэтому для этого
 домена используется собственный SVG без библиотек графиков. Служебная связь
 наблюдения отделена в performanceBridge и переживает асинхронный запуск WebGL.
 Канонический контракт — [нагрузка карт](../features/maps-performance.md).
+На узком экране длинный заголовок вкладки сокращается многоточием, сохраняя
+место для кнопки сворачивания; полное имя доступно у иконки вкладки.
 
 ## Связанные страницы
 
@@ -457,6 +461,8 @@ MapSelectedEntity составляет заголовок с именем, пр�
 BaseTile и ActionButton копирования/удаления. Координатных таблиц нет.
 MapInspectorSection — доменная композиция секции: MapPanelHeading использует
 общий SectionLabel без border, с size=medium (12px) и spaceAfter=12, затем содержимое.
+Actions-slot секции передаётся через MapPanelHeading в SectionLabel; переключатели
+«Нагрузки» и «Пламени» используют его без отдельной подписи, с aria-label и title.
 В правом фокусе имя 18px; MapLightFields возвращает фрагмент с полями/секциями,
 пользуясь единым gap прокручиваемого MapFocusContent.
 Отступ между секциями 25px; заголовки левой и правой панели без разделителей. Ею оформлены область, переходы,
@@ -560,7 +566,7 @@ Three.js-сферы для ray picking; это координаты 3D-сцен�
 MapCanvas располагает её одним стеком с MapCanvasControls справа снизу. Нулевые
 остатки категорий скрыты; createModelDownloadSession ведёт отдельную серию до её
 завершения, дополняя новыми файлами, и начинает свежую статистику следующей серии.
-MapModelMemory составляет раздел настроек из MapInspectorSection, BaseTile и dl;
+MapModelMemory составляет первый раздел вкладки «Производительность» из MapInspectorSection, BaseTile и dl;
 получает residentModelUsage через событие resources MapCanvas, не пишет это в карту.
 modelMemoryUsage измеряет общие buffers и оценивает texture residency.
 Единый modelVisual выбирает preferred, alternate или null для заглушки. При

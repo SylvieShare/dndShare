@@ -1,6 +1,8 @@
 <template>
   <section class="map-inspector-section" :aria-label="title">
-    <MapPanelHeading :title="title" />
+    <MapPanelHeading :title="title">
+      <template v-if="$slots.actions" #actions><slot name="actions" /></template>
+    </MapPanelHeading>
     <div class="map-inspector-section-body"><slot /></div>
   </section>
 </template>

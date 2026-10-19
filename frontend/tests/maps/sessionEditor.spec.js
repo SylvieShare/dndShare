@@ -39,6 +39,7 @@ test("session uses the full editor, writes its own scene and retains the templat
     "Освещение",
     "Объекты",
     "Области",
+    "Производительность",
   ]);
   await expect(
     page.getByRole("button", { name: "Справочник тайлов", exact: true }),

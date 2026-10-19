@@ -331,6 +331,10 @@ defineExpose({
 .map-sidebar-heading strong {
   font-size: 16px;
   padding-left: 6px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .map-sidebar-viewport {
   flex: 1;

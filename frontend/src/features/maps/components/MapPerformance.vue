@@ -1,6 +1,12 @@
 <template>
   <MapInspectorSection title="Нагрузка">
-    <ToggleSwitch v-model="enabled" label="Измерять нагрузку" />
+    <template #actions>
+      <ToggleSwitch
+        v-model="enabled"
+        aria-label="Измерять нагрузку"
+        title="Измерять нагрузку"
+      />
+    </template>
     <BaseTile class="map-performance-summary" framed>
       <div>
         <span>Кадр CPU</span><strong>{{ ms(totalMs(stats?.cpu)) }}</strong>

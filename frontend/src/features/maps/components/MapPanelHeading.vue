@@ -7,7 +7,9 @@
       role="heading"
       :aria-level="level"
     >
-      <template v-if="count != null" #actions>{{ count }}</template>
+      <template v-if="$slots.actions || count != null" #actions>
+        <slot name="actions">{{ count }}</slot>
+      </template>
     </SectionLabel>
   </div>
 </template>
