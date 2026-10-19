@@ -1,0 +1,300 @@
+{
+  "tileType": "stairs",
+  "width": 1,
+  "height": 1,
+  "mountCenterMM": [0, 0],
+  "mountDepthMM": 17,
+  "pegBottomHalfMM": 11.375,
+  "pegTopHalfMM": 17.15,
+  "standCells": [[0, 0]],
+  "standToleranceMM": 0.15,
+  "wallMode": "none",
+  "wallMask": 0,
+  "supportSlots": [],
+  "plainMountCollarMM": 0.5,
+  "name": "Stair",
+  "groupCode": "MED-stair",
+  "hasDecor": true,
+  "renderTriangles": 95000,
+  "lodTriangles": 35000,
+  "renderBakeSize": 1536,
+  "lodBakeSize": 1536,
+  "renderUVAngleLimitRad": 0.25,
+  "lodUVAngleLimitRad": 0.25,
+  "renderUVIslandMargin": 0.0012,
+  "lodUVIslandMargin": 0.0012,
+  "renderDataSize": 1024,
+  "lodColourSize": 768,
+  "lodDataSize": 768,
+  "standRayTopMM": 90,
+  "standPointsMM": [
+    [-13.5, 0],
+    [-6.5, 0],
+    [0.5, 0],
+    [6.5, 0],
+    [13.5, 0]
+  ],
+  "blockersMM": [
+    [
+      [-17.65, -17.65],
+      [17.65, -17.65],
+      [17.65, 17.65],
+      [-17.65, 17.65]
+    ]
+  ],
+  "defaultLights": [],
+  "tags": ["town", "stairs", "wood", "steps", "handrail", "balusters"],
+  "weightBudget": {
+    "renderMiB": [3, 5.5],
+    "lodMiB": [1.2, 3],
+    "shadowKiB": [80, 180],
+    "previewKiB": [12, 40],
+    "basis": "One-cell all-wood stair: five distinct treads, ten vertical posts/balusters, eight open rail gaps and closed side/rear boards. Independent95000/35000 geometry with1536 bakes and1024/768 packed maps; compare compact while retaining every railing opening, worn tread edge and all five placement heights."
+  },
+  "materials": {
+    "earthRGB": [0.28, 0.17, 0.075],
+    "stoneStartMM": 17.5,
+    "stoneBlendMM": 0.65,
+    "jointDistanceMM": 0.65,
+    "kind": "structure",
+    "woodDarkRGB": [0.34, 0.165, 0.055],
+    "woodLightRGB": [0.59, 0.35, 0.145],
+    "stoneDarkRGB": [0.34, 0.165, 0.055],
+    "stoneLightRGB": [0.59, 0.35, 0.145],
+    "woodParts": [
+      {
+        "name": "X base planks and long fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "x",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y west end fascia",
+        "minMM": [-17.65, -17.65, 17.5],
+        "maxMM": [-14, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y east end fascia",
+        "minMM": [14, -17.65, 17.5],
+        "maxMM": [17.65, 17.65, 26.65],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.9
+      },
+      {
+        "name": "Y five treads and risers",
+        "minMM": [-17.65, -12.8, 26.5],
+        "maxMM": [17.65, 12.8, 50.2],
+        "axis": "y",
+        "physicalPigment": true,
+        "roughness": 0.87
+      },
+      {
+        "name": "Z rear vertical boarding",
+        "minMM": [-17.65, -13.5, 26.5],
+        "maxMM": [-16.8, 13.5, 50.2],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "darkRGB": [0.3, 0.14, 0.045],
+        "lightRGB": [0.52, 0.285, 0.1]
+      },
+      {
+        "name": "Z -1 side boarding",
+        "minMM": [-17.65, -17.65, 26.5],
+        "maxMM": [17.65, -12.0, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "darkRGB": [0.3, 0.14, 0.045],
+        "lightRGB": [0.52, 0.285, 0.1]
+      },
+      {
+        "name": "Z 1 side boarding",
+        "minMM": [-17.65, 12.0, 26.5],
+        "maxMM": [17.65, 17.65, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.94,
+        "darkRGB": [0.3, 0.14, 0.045],
+        "lightRGB": [0.52, 0.285, 0.1]
+      },
+      {
+        "name": "-1 upper handrail",
+        "minMM": [-17.65, -17.65, 26.5],
+        "maxMM": [17.65, -12.0, 72],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.812605841413614, 0.0, -0.5828136464604037],
+        "projection": {
+          "originMM": [0, 0, 58.77510343279159],
+          "axis": [0.5828136464604037, 0.0, 0.812605841413614],
+          "rangeMM": [-3.3, 0.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "-1 lower diagonal stringer",
+        "minMM": [-17.65, -17.65, 26.5],
+        "maxMM": [17.65, -12.0, 72],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.812605841413614, 0.0, -0.5828136464604037],
+        "projection": {
+          "originMM": [0, 0, 58.77510343279159],
+          "axis": [0.5828136464604037, 0.0, 0.812605841413614],
+          "rangeMM": [-18.1, -12.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "1 upper handrail",
+        "minMM": [-17.65, 12.0, 26.5],
+        "maxMM": [17.65, 17.65, 72],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.814391814462814, 0.0, -0.5803154078050707],
+        "projection": {
+          "originMM": [0, 0, 58.72620337350029],
+          "axis": [0.5803154078050707, 0.0, 0.814391814462814],
+          "rangeMM": [-3.3, 0.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "1 lower diagonal stringer",
+        "minMM": [-17.65, 12.0, 26.5],
+        "maxMM": [17.65, 17.65, 72],
+        "axis": "beam",
+        "physicalPigment": true,
+        "roughness": 0.89,
+        "direction": [0.814391814462814, 0.0, -0.5803154078050707],
+        "projection": {
+          "originMM": [0, 0, 58.72620337350029],
+          "axis": [0.5803154078050707, 0.0, 0.814391814462814],
+          "rangeMM": [-18.1, -12.5]
+        },
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 1",
+        "minMM": [14.148300018310547, -17.65, 26.5],
+        "maxMM": [17.607599411010742, -12, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 2",
+        "minMM": [5.417099800109863, -17.65, 26.5],
+        "maxMM": [9.392799530029297, -12, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 3",
+        "minMM": [-2.6260999774932863, -17.65, 26.5],
+        "maxMM": [1.429999861717224, -12, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 4",
+        "minMM": [-9.778598937988281, -17.65, 26.5],
+        "maxMM": [-5.802399482727051, -12, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 5",
+        "minMM": [-17.64040008544922, -17.65, 26.5],
+        "maxMM": [-14.18119987487793, -12, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 6",
+        "minMM": [14.150500144958496, 12.0, 26.5],
+        "maxMM": [17.60969940185547, 17.65, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 7",
+        "minMM": [5.418700065612793, 12.0, 26.5],
+        "maxMM": [9.394700202941895, 17.65, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 8",
+        "minMM": [-2.6232999897003175, 12.0, 26.5],
+        "maxMM": [1.4324000215530395, 17.65, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 9",
+        "minMM": [-9.774999771118164, 12.0, 26.5],
+        "maxMM": [-5.799400177001953, 17.65, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      },
+      {
+        "name": "vertical rail post 10",
+        "minMM": [-17.638300094604492, 12.0, 26.5],
+        "maxMM": [-14.17899974822998, 17.65, 72],
+        "axis": "z",
+        "physicalPigment": true,
+        "roughness": 0.9,
+        "darkRGB": [0.37, 0.14, 0.045],
+        "lightRGB": [0.66, 0.3, 0.1]
+      }
+    ],
+    "surfaceParts": [],
+    "stoneParts": [],
+    "ironParts": [],
+    "fabricParts": [],
+    "hardware": []
+  },
+  "reviewNotes": "PDFpage12 and actual source front/back/top inspected. Source540018tri/27000984bytes/SHAccbd9a793b8249cc50ac5d0016691d4bf072ecb5460a3b507c7220a441274b84,max71.151794mm. Five native step levels about29.801/34.805/39.829/44.769/49.790mm, independent placement atX13.5/6.5/.5/-6.5/-13.5,Y0. The rails are not generic diagonal accents: source top rays fit southaxis[.812606,0,-.582814] with maxresidual.000203mm; north has one worn chip with.15323mm OLSresidual retained in geometry. Ten separate upper-strip components confirm five vertical posts/balusters per side, four open gaps each. Y tread/riser boards, Z closed side/rear panels and posts, measured beam grain on both upper and lower rails, directional base fascia. Warm red-brown trim versus darker side boarding; all wood, no invented metal, plaster, cloth, emission or light. Check all five step heights, ten posts, eight gaps and body/source/render/LOD/shadow. Native17mm preparation and one ordinary peg; standardize toUD016 after reviewed candidate choice, then transparent preview, GoManifest before MCP and fresh registry verification. Fit full height in preview; source diagnostic target25 crops top railing.",
+  "renderColourSize": 1024
+}
