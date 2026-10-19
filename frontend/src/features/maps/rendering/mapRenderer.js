@@ -1,4 +1,6 @@
 import { createAreaTransitions } from "./areaTransitions";
+import { createModelTransitions } from "./modelTransitions";
+import { modelVisual } from "./modelVisual";
 import { createMapFrameLoop } from "./mapFrameLoop";
 import { createRenderProfiler } from "./renderProfiler";
 import { createMapFramePresentation } from "./mapFramePresentation";
@@ -76,6 +78,7 @@ export async function createMapRenderer(
     effects = createMapEffects(scene, fog, assets, render),
     water = createModelWaterAnimation(),
     transitions = createAreaTransitions(assetsChanged),
+    modelTransitions = createModelTransitions(assetsChanged),
     volumeFog = createVolumeFog(gpu, fog.uniforms, transitions),
     tokenPortraits = createTokenPortraits(render),
     tiles = createTileLayer(assets, fog),
@@ -143,6 +146,7 @@ export async function createMapRenderer(
   });
   loop = createMapFrameLoop({
     transitions,
+    modelTransitions,
     preview,
     objectPreview,
     tiles,
@@ -177,8 +181,11 @@ export async function createMapRenderer(
     current = d;
     state = nextState;
     options = opts;
+    modelTransitions.sync(d.tiles, opts);
     transitions.sync(d, opts);
-    appearance = areaAppearance(d, opts.areaMode, transitions);
+    appearance = modelTransitions.appearance(
+      areaAppearance(d, opts.areaMode, transitions),
+    );
     structure.hideTiles(appearance.hiddenTiles);
     view.document(d, opts);
     annotations.update(d, opts);
@@ -245,6 +252,7 @@ export async function createMapRenderer(
     });
     tier = view.getView().cellPixels < 72 ? "lod" : "render";
     assets.progressive(ids, tier, movingIds, d.lightingEnabled);
+    modelTransitions.ready((id) => !!modelVisual(assets, id, tier));
     const nextFog = JSON.stringify([
       d.width,
       d.height,
@@ -338,6 +346,7 @@ export async function createMapRenderer(
       hiddenIds,
       d.areas,
       opts.areaMode,
+      modelTransitions.groups(),
     ]);
     if (nextTiles !== tileKey) {
       tileKey = nextTiles;
@@ -559,6 +568,7 @@ export async function createMapRenderer(
       surfaceAnchors.destroy();
       outline.destroy();
       transitions.destroy();
+      modelTransitions.destroy();
       volumeFog.destroy();
       fog.destroy();
       lighting.destroy();

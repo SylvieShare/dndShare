@@ -2,6 +2,7 @@ import { applySceneAreaAppearance } from "./areaOpacity";
 
 export function createMapFrameLoop({
   transitions,
+  modelTransitions,
   preview,
   objectPreview,
   tiles,
@@ -34,7 +35,8 @@ export function createMapFrameLoop({
       profiler.begin();
       try {
         profiler.mark("areas");
-        let moving = transitions.advance(delta);
+        let moving =
+          transitions.advance(delta) | modelTransitions.advance(delta);
         profiler.mark("tiles");
         moving |=
           preview.advance(delta) |

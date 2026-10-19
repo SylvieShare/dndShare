@@ -33,29 +33,22 @@
               }}</em></span
             ></template
           >
+          <template v-if="transition.custom" #actions>
+            <ActionButton
+              icon-only
+              variant="quiet"
+              aria-label="Удалить кастомный переход"
+              title="Удалить кастомный переход"
+              aria-disabled="false"
+              @click.stop="editor.removeTransition(entry.id, transition.id)"
+              @keydown.stop
+            >
+              <template #icon
+                ><Trash2 :size="18" :style="{ color: 'var(--danger)' }"
+              /></template>
+            </ActionButton>
+          </template>
         </MapEntityRow>
-        <div v-if="transition.custom" class="map-transition-actions">
-          <ActionButton
-            v-if="transition.modelId"
-            icon-only
-            variant="quiet"
-            aria-label="Изменить цель перехода"
-            title="Изменить цель перехода"
-            @click="choosing = transition.id"
-            ><template #icon><Pencil :size="18" /></template
-          ></ActionButton>
-          <ActionButton
-            icon-only
-            variant="quiet"
-            aria-label="Удалить кастомный переход"
-            title="Удалить кастомный переход"
-            @click="editor.removeTransition(entry.id, transition.id)"
-            ><template #icon
-              ><Trash2
-                :size="18"
-                :style="{ color: 'var(--danger)' }" /></template
-          ></ActionButton>
-        </div>
         <p v-if="transition.reason" class="map-hint">{{ transition.reason }}</p>
       </div>
     </TransitionGroup>
@@ -80,7 +73,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { ActionButton } from "@sylvieshare/share-ui";
-import { ArrowRight, Pencil, Plus, Trash2 } from "@lucide/vue";
+import { ArrowRight, Plus, Trash2 } from "@lucide/vue";
 import { transitionDocument, transitionLabel } from "../lib/modelTransitions";
 import {
   displayedTransitions,
@@ -177,11 +170,6 @@ const transitions = computed(() =>
 }
 .map-transition-item > p {
   width: 100%;
-}
-.map-transition-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 .map-transition-action em {
   font-style: italic;

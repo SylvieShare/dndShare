@@ -246,10 +246,38 @@ for (const mode of ["editor", "board"])
     await expect(
       panel.getByRole("heading", { name: "Стена 1", exact: true }),
     ).toBeVisible();
+    await expect(
+      section.getByRole("button", {
+        name: "Изменить цель перехода",
+        exact: true,
+      }),
+    ).toHaveCount(0);
+    const remove = custom.getByRole("button", {
+      name: "Удалить кастомный переход",
+      exact: true,
+    });
+    const cardBounds = await custom.boundingBox(),
+      deleteBounds = await remove.boundingBox();
+    expect(deleteBounds.x).toBeGreaterThan(cardBounds.x);
+    expect(deleteBounds.x + deleteBounds.width).toBeLessThanOrEqual(
+      cardBounds.x + cardBounds.width,
+    );
+    await remove.click();
+    await expect(
+      section.getByRole("button", {
+        name: "Погасить свет: Потухший факел",
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      panel.getByRole("heading", { name: "Стена 1", exact: true }),
+    ).toBeVisible();
     await section
-      .getByRole("button", { name: "Изменить цель перехода", exact: true })
+      .getByRole("button", { name: "Создать переход", exact: true })
       .click();
-    await picker.getByRole("button", { name: "Пол", exact: true }).click();
+    await section
+      .getByRole("button", { name: "Выбрать тайл для перехода", exact: true })
+      .click();
     await picker.getByRole("button", { name: "Пол 1", exact: true }).click();
     await expect(section.locator(".map-transition-item")).toHaveCount(2);
     await section
