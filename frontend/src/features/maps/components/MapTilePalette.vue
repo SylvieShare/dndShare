@@ -16,17 +16,31 @@
         :model-value="editor.collection"
         @update:model-value="emit('collection', $event)"
       />
+      <FilterHeading
+        v-if="categories.length"
+        :title="categories.find((c) => c.value === category)?.label"
+        label="Фильтры плиток"
+        :active-count="Number(content !== 'all') + Number(lighting !== 'all')"
+      >
+        <FormField label="Наполнение" vertical
+          ><ValueSelect
+            v-model="content"
+            :options="CONTENT_OPTIONS"
+            aria-label="Наполнение плиток"
+        /></FormField>
+        <FormField label="Освещение" vertical
+          ><ValueSelect
+            v-model="lighting"
+            :options="LIGHT_OPTIONS"
+            aria-label="Освещение плиток"
+        /></FormField>
+      </FilterHeading>
       <MapTileCategoryPicker
         v-if="categories.length"
         v-model="category"
         :categories="categories"
         large
-      />
-      <MultiToggle
-        v-if="contentOptions.length === 2"
-        v-model="content"
-        :options="contentOptions"
-        aria-label="Наполнение плиток"
+        :show-title="false"
       />
       <p class="map-hint">
         {{
@@ -41,7 +55,7 @@
       </p>
       <MapModelCatalogue
         :models="filtered"
-        :catalogue="models"
+        :wall-subcategories="category === 'wall'"
         :compact="compact"
         :selected-id="selectedId || editor.selectedModel"
         :draggable="draggable"
@@ -50,17 +64,26 @@
         @drag-tile="(id, event) => emit('drag-tile', id, event)"
       />
       <p v-if="!filtered.length" class="map-hint">
-        В выбранном паке пока нет плиток.
+        Нет плиток с выбранными параметрами.
       </p>
     </template>
   </section>
 </template>
 <script setup>
 import { computed, ref, watch } from "vue";
+import {
+  ActionButton,
+  LoadingState,
+  FormField,
+  ValueSelect,
+} from "@sylvieshare/share-ui";
+import FilterHeading from "@/shared/ui/FilterHeading.vue";
 import { visibleModels } from "../lib/visibleModels";
-import { ActionButton, LoadingState, MultiToggle } from "@sylvieshare/share-ui";
+import { hasModelLight } from "../lib/modelGroups";
+import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
 import MapCollectionPicker from "./MapCollectionPicker.vue";
 import MapModelCatalogue from "./MapModelCatalogue.vue";
+import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 const props = defineProps({
   editor: { type: Object, required: true },
   compact: Boolean,
@@ -68,14 +91,19 @@ const props = defineProps({
   selectedId: String,
   mode: { type: String, default: "place" },
 });
-import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
-import { TILE_CATEGORIES, matchesTileCategory } from "../lib/tileCategories";
 const emit = defineEmits(["model", "drag-tile", "collection"]);
-const category = ref("floor");
-const preferredContent = ref("free");
+const category = ref("floor"),
+  content = ref("all"),
+  lighting = ref("all");
 const CONTENT_OPTIONS = [
+  { value: "all", label: "Любое наполнение" },
   { value: "free", label: "Свободные" },
   { value: "furnished", label: "С предметами" },
+];
+const LIGHT_OPTIONS = [
+  { value: "all", label: "Любое освещение" },
+  { value: "with", label: "Есть освещение" },
+  { value: "without", label: "Без освещения" },
 ];
 const models = computed(() =>
   visibleModels(props.editor.catalogue).filter(
@@ -87,34 +115,9 @@ const categories = computed(() =>
     models.value.some((m) => matchesTileCategory(m, c.value)),
   ),
 );
-const categoryModels = computed(() =>
-  models.value.filter((m) => matchesTileCategory(m, category.value)),
-);
-const contentOptions = computed(() =>
-  CONTENT_OPTIONS.filter((option) =>
-    categoryModels.value.some(
-      (m) => !!m.hasDecor === (option.value === "furnished"),
-    ),
-  ),
-);
-// Keep the last explicit choice while categories with only one variant show
-// that available variant automatically.
-const content = computed({
-  get: () =>
-    contentOptions.value.find((o) => o.value === preferredContent.value)
-      ?.value || contentOptions.value[0]?.value,
-  set: (value) => {
-    preferredContent.value = value;
-  },
-});
 function initialCategory() {
   const selected = models.value.find((m) => m.id === props.selectedId);
-  if (selected) {
-    category.value = selected.tileType;
-    preferredContent.value = selected.hasDecor ? "furnished" : "free";
-    return;
-  }
-  category.value = categories.value[0]?.value || "";
+  category.value = selected?.category || categories.value[0]?.value || "";
 }
 watch(() => props.editor.collection, initialCategory);
 watch(
@@ -125,26 +128,34 @@ watch(
   { immediate: true },
 );
 watch(
-  () => props.editor.loadingModels,
-  (loading) => {
-    if (!loading) initialCategory();
-  },
-  { immediate: true },
-);
-watch(
   () => props.selectedId,
   (id) => {
     const selected = models.value.find((m) => m.id === id);
-    if (selected)
-      preferredContent.value = selected.hasDecor ? "furnished" : "free";
-    if (selected && !matchesTileCategory(selected, category.value))
-      category.value = selected.tileType;
+    if (selected) {
+      category.value = selected.category;
+      // A target chosen elsewhere must remain visible without classifying it anew.
+      if (
+        content.value !== "all" &&
+        selected.hasDecor !== (content.value === "furnished")
+      )
+        content.value = "all";
+      if (
+        lighting.value !== "all" &&
+        hasModelLight(selected) !== (lighting.value === "with")
+      )
+        lighting.value = "all";
+    }
   },
   { immediate: true },
 );
 const filtered = computed(() =>
-  categoryModels.value.filter(
-    (m) => !!m.hasDecor === (content.value === "furnished"),
+  models.value.filter(
+    (m) =>
+      matchesTileCategory(m, category.value) &&
+      (content.value === "all" ||
+        !!m.hasDecor === (content.value === "furnished")) &&
+      (lighting.value === "all" ||
+        hasModelLight(m) === (lighting.value === "with")),
   ),
 );
 </script>

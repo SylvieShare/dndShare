@@ -14,10 +14,31 @@
         :maxlength="160"
         placeholder="Пусто — отдельный тайл"
     /></FormField>
-    <FormField label="Название тайла" vertical
+    <FormField label="Название (русский)" vertical
       ><FormTextInput
         v-model:value="model.name"
-        aria-label="Название тайла"
+        aria-label="Название (русский)"
+        :maxlength="160"
+        required
+    /></FormField>
+    <FormField label="Название (английский)" vertical
+      ><FormTextInput
+        v-model:value="model.nameEn"
+        aria-label="Название (английский)"
+        :maxlength="160"
+        required
+    /></FormField>
+    <FormField label="Группа (русский)" vertical
+      ><FormTextInput
+        v-model:value="model.groupName"
+        aria-label="Группа (русский)"
+        :maxlength="160"
+        required
+    /></FormField>
+    <FormField label="Группа (английский)" vertical
+      ><FormTextInput
+        v-model:value="model.groupNameEn"
+        aria-label="Группа (английский)"
         :maxlength="160"
         required
     /></FormField>
@@ -46,9 +67,19 @@
         "
     /></FormField>
   </div>
+  <FormField
+    v-if="model.tileType !== 'object'"
+    label="Категория"
+    vertical
+    class="model-category-field"
+    ><MapTileCategoryPicker v-model="model.category" label="Категория"
+  /></FormField>
   <div v-if="model.tileType !== 'object'" class="model-classification">
-    <FormField label="Тип тайла" vertical
-      ><MapTileCategoryPicker v-model="model.tileType" label="Тип тайла"
+    <FormField label="Форма тайла" vertical
+      ><MapTileCategoryPicker
+        v-model="model.tileType"
+        :categories="TILE_TYPES"
+        label="Форма тайла"
     /></FormField>
     <FormField label="Расположение стен" vertical
       ><MapWallModePicker :model="model"
@@ -69,7 +100,7 @@ import {
   FormTextInput,
   ToggleSwitch,
 } from "@sylvieshare/share-ui";
-import { TEXTURE_DETAILS } from "../lib/modelMetadata";
+import { TEXTURE_DETAILS, TILE_TYPES } from "../lib/modelMetadata";
 import MapTileCategoryPicker from "./MapTileCategoryPicker.vue";
 import MapWallModePicker from "./MapWallModePicker.vue";
 defineProps({ model: Object });
@@ -91,6 +122,9 @@ defineProps({ model: Object });
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 18px;
   margin: 18px 0;
+}
+.model-category-field {
+  margin-top: 18px;
 }
 @media (max-width: 1000px) {
   .model-core-fields {

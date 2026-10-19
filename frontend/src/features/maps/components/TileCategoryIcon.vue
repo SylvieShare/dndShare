@@ -1,6 +1,6 @@
 <template>
   <img
-    :src="icons[kind]"
+    :src="icons[kind === 'wall' ? 'wall-straight' : kind]"
     :width="size"
     :height="size"
     alt=""

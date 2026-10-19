@@ -42,6 +42,7 @@ func testMapModelGroupUpdate(t *testing.T, ctx context.Context, s *Store) {
 	for _, before := range []battlemap.Model{m} {
 		got, err := s.GetMapModel(ctx, before.ID)
 		before.Code = code
+		before.GroupName, before.GroupNameEn = "", ""
 		if err != nil || !reflect.DeepEqual(got, before) {
 			t.Fatal("group update changed immutable resources or placement", err)
 		}

@@ -6,28 +6,19 @@ async function ready(page) {
   await expect(page.getByText("Подготавливаем карту…")).toHaveCount(0);
   await page.getByTitle("Вид сверху", { exact: true }).click();
 }
-async function open(page, name, label) {
-  await page.getByRole("button", { name, exact: true }).hover();
-  const panel = page.getByRole("group", {
-    name: `Варианты ${label}`,
-    exact: true,
-  });
-  await expect(panel).toHaveAttribute("aria-expanded", "true");
-  return panel;
-}
-test("one section keeps its variants and dragging a concrete expanded card places that model", async ({
-  page,
-}) => {
+test("flat neighbouring variants drag the concrete model", async ({ page }) => {
   await ready(page);
   await expect(
-    page.getByRole("heading", { name: "Пол", level: 4, exact: true }),
+    page
+      .locator('[data-group-code="LC-ground"]')
+      .getByRole("heading", { name: "Пол", level: 4, exact: true }),
   ).toBeVisible();
-  const shell = page.locator(".map-model-group");
-  await expect(shell.locator(".map-variant-secondary img")).toHaveCount(1);
-  const panel = await open(page, "Пол 1", "Пол");
-  await expect(panel.getByText("LC-ground", { exact: true })).toHaveCount(0);
-  const variant = panel.getByRole("button", { name: "Пол 2", exact: true });
-  await expect(variant).toHaveAttribute("title", "Пол 2");
+  await expect(page.locator(".map-model-group")).toHaveCount(0);
+  const variant = page.getByRole("button", { name: "Пол 2", exact: true });
+  await expect(variant).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toBeVisible();
   await variant.hover();
   const start = await variant.boundingBox(),
     point = await mapPoint(page, 4.5, 4.5);
@@ -55,15 +46,15 @@ test("one section keeps its variants and dragging a concrete expanded card place
     ),
   ).toBe(90);
 });
-test("light badges and grouped objects retain the selected model when expanding", async ({
+test("flat tiles and objects keep individual light badges and placement", async ({
   page,
 }) => {
   await ready(page);
   await page
     .getByRole("toolbar", { name: "Типы тайлов" })
-    .getByRole("button", { name: "Прямые стены", exact: true })
+    .getByRole("button", { name: "Стены", exact: true })
     .click();
-  const walls = await open(page, "Стена 1", "Стена");
+  const walls = page.getByRole("complementary", { name: "Каталог плиток" });
   await expect(
     walls
       .getByRole("button", { name: "Стена 1", exact: true })
@@ -143,7 +134,9 @@ test("dragging the primary image retains the model shown on that image", async (
   page,
 }) => {
   await ready(page);
-  const image = page.locator(".map-variant-primary img");
+  const image = page
+    .getByRole("button", { name: "Пол 1", exact: true })
+    .locator("img");
   const start = await image.boundingBox(),
     point = await mapPoint(page, 4.5, 4.5);
   await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);

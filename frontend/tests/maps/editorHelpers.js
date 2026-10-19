@@ -40,11 +40,14 @@ export async function pickTile(page, name = "Пол 1") {
     async (name) =>
       (await (await fetch("/api/maps/models")).json()).find(
         (m) => m.name === name,
-      )?.tileType,
+      )?.category,
     name,
   );
   const labels = {
     floor: "Пол",
+    wall: "Стены",
+    water: "Вода и реки",
+    railway: "Железная дорога",
     "wall-straight": "Прямые стены",
     "wall-angle": "Внутренние углы (Angle)",
     "wall-tee": "Т-образные стены",

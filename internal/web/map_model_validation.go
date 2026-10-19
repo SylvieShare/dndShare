@@ -21,6 +21,14 @@ func validateMapModel(m battlemap.Model) error {
 	if !battlemap.ValidTileType(m.TileType) {
 		return errors.New("invalid tileType")
 	}
+	if !battlemap.ValidModelCategory(m.Category) || (m.TileType == "object") != (m.Category == "object") {
+		return errors.New("invalid catalogue category")
+	}
+	for _, name := range []string{m.NameEn, m.GroupName, m.GroupNameEn} {
+		if strings.TrimSpace(name) == "" || len([]rune(name)) > 160 {
+			return errors.New("Russian and English model/group names required")
+		}
+	}
 	if m.CollectionName == "" || len(m.CollectionName) > 160 || (m.WallMode != "center" && m.WallMode != "edge" && m.WallMode != "none") || m.WallMask < 0 || m.WallMask > 255 {
 		return errors.New("invalid collection label or wall controls")
 	}

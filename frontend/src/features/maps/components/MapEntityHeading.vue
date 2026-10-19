@@ -7,6 +7,15 @@
       :style="{ color: entry.color || 'var(--text-muted)' }"
       aria-hidden="true"
     />
+    <MapPackIcon
+      v-if="entry.model?.collection"
+      :pack="entry.model.collection"
+      :size="28"
+      aria-hidden="false"
+      role="img"
+      :aria-label="entry.model.collectionName"
+      :title="entry.model.collectionName"
+    />
     <h3 :aria-label="entry.name">
       <InlineEdit
         v-if="editable"
@@ -38,6 +47,7 @@
 <script setup>
 import { computed } from "vue";
 import { InlineEdit } from "@sylvieshare/share-ui";
+import MapPackIcon from "./MapPackIcon.vue";
 import {
   Box,
   Group,

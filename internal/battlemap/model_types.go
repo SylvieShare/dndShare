@@ -7,6 +7,14 @@ import (
 
 var modelGroupCode = regexp.MustCompile(`^[A-Z]{2,3}-[a-z0-9]+(?:-[a-z0-9]+)*$`)
 
+func ValidModelCategory(value string) bool {
+	switch value {
+	case "floor", "wall", "water", "railway", "stairs", "frame", "bridge", "passage", "column", "object":
+		return true
+	}
+	return false
+}
+
 func ValidModelGroupCode(value string) bool {
 	return len(value) <= 160 && modelGroupCode.MatchString(value)
 }

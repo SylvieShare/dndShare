@@ -26,48 +26,29 @@ test("sidebar offers populated categories and drags tiles directly onto the map,
   ).toHaveCount(0);
   await expect(sidebar.locator(".map-model-card button")).toHaveCount(0);
   const picker = sidebar.getByRole("toolbar", { name: "Типы тайлов" });
-  await expect(picker.getByRole("button")).toHaveCount(6);
-  for (const name of ["Все стены", "Сложные стены"])
+  await expect(picker.getByRole("button")).toHaveCount(2);
+  for (const name of [
+    "Все тайлы",
+    "Без стен",
+    "Прямые стены",
+    "Внутренние углы",
+  ])
     await expect(picker.getByRole("button", { name, exact: true })).toHaveCount(
       0,
     );
-  for (const name of ["Наружные углы (Corner)", "Диагональные стены"])
-    await expect(picker.getByRole("button", { name, exact: true })).toHaveCount(
-      0,
-    );
-  await expect(
-    picker.getByRole("button", {
-      name: "Выступы и окончания стен",
-      exact: true,
-    }),
-  ).toBeVisible();
-  await expect(
-    picker.getByRole("button", { name: "Все тайлы", exact: true }),
-  ).toHaveCount(0);
-  await expect(
-    picker.getByRole("button", { name: "Без стен", exact: true }),
-  ).toHaveCount(0);
-  await picker
-    .getByRole("button", { name: "Прямые стены", exact: true })
-    .click();
+  await picker.getByRole("button", { name: "Стены", exact: true }).click();
   await expect(
     sidebar.getByRole("button", { name: "Стена 1", exact: true }),
   ).toBeVisible();
-  await expect(
-    sidebar.getByRole("button", { name: "Пол 1", exact: true }),
-  ).toHaveCount(0);
-  await expect(
-    picker.getByRole("button", { name: "Прямые стены", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
-  await picker
-    .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
-    .click();
   await expect(
     sidebar.getByRole("button", { name: "Угол стены", exact: true }),
   ).toBeVisible();
   await expect(
-    sidebar.getByRole("button", { name: "Стена 1", exact: true }),
-  ).toHaveCount(0);
+    sidebar.getByRole("heading", { name: "Прямые стены", level: 5 }),
+  ).toBeVisible();
+  await expect(
+    sidebar.getByRole("heading", { name: "Внутренние углы", level: 5 }),
+  ).toBeVisible();
   for (const button of await picker.getByRole("button").all())
     await expect(button.locator("img")).toHaveCount(1);
   await picker.getByRole("button", { name: "Пол", exact: true }).click();
@@ -119,7 +100,7 @@ test("admin tile reference updates the current model while keeping placement IDs
   });
   await reference.getByRole("button", { name: "Пол 1", exact: true }).click();
   await page
-    .getByLabel("Название тайла", { exact: true })
+    .getByLabel("Название (русский)", { exact: true })
     .fill("Исправленный пол");
   await page.getByLabel("Ширина тайла в клетках", { exact: true }).fill("2");
   await expect(
@@ -167,7 +148,7 @@ test("reference is hidden from a non-admin and a conflict keeps the edit draft",
     .getByRole("button", { name: "Справочник тайлов", exact: true })
     .click();
   await page
-    .getByLabel("Название тайла", { exact: true })
+    .getByLabel("Название (русский)", { exact: true })
     .fill("Черновик правки");
   await page.evaluate(() => {
     window.failNextModelSave = true;
@@ -176,9 +157,9 @@ test("reference is hidden from a non-admin and a conflict keeps the edit draft",
     .getByRole("button", { name: "Сохранить параметры", exact: true })
     .click();
   await expect(page.getByRole("alert")).toContainText("уже изменены");
-  await expect(page.getByLabel("Название тайла", { exact: true })).toHaveValue(
-    "Черновик правки",
-  );
+  await expect(
+    page.getByLabel("Название (русский)", { exact: true }),
+  ).toHaveValue("Черновик правки");
   expect(await page.evaluate(() => window.lastModelSaved)).toBeUndefined();
 });
 
@@ -194,7 +175,7 @@ test("the reference modal protects unsaved parameters until saved or cancelled",
     exact: true,
   });
   await modal
-    .getByLabel("Название тайла", { exact: true })
+    .getByLabel("Название (русский)", { exact: true })
     .fill("Несохранённые параметры");
   await modal
     .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
@@ -203,9 +184,9 @@ test("the reference modal protects unsaved parameters until saved or cancelled",
   await expect(modal.getByRole("alert")).toContainText(
     "Сохраните или отмените",
   );
-  await expect(modal.getByLabel("Название тайла", { exact: true })).toHaveValue(
-    "Несохранённые параметры",
-  );
+  await expect(
+    modal.getByLabel("Название (русский)", { exact: true }),
+  ).toHaveValue("Несохранённые параметры");
   await modal
     .getByRole("button", { name: "Отменить изменения", exact: true })
     .click();
@@ -269,12 +250,12 @@ test("reference uses filter categories and preserves a draft when changing packs
   await expect(page.getByLabel("Форма стен", { exact: true })).toHaveCount(0);
   await expect(
     page
-      .getByRole("toolbar", { name: "Тип тайла", exact: true })
+      .getByRole("toolbar", { name: "Форма тайла", exact: true })
       .getByRole("button"),
   ).toHaveCount(13);
   await page
-    .getByRole("toolbar", { name: "Тип тайла", exact: true })
-    .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
+    .getByRole("toolbar", { name: "Форма тайла", exact: true })
+    .getByRole("button", { name: "Внутренние углы", exact: true })
     .click();
   await choosePack(page, "ultimate-dungeon");
   await expect(
@@ -288,8 +269,8 @@ test("reference uses filter categories and preserves a draft when changing packs
     .click();
   await expect(
     page
-      .getByRole("toolbar", { name: "Тип тайла", exact: true })
-      .getByRole("button", { name: "Внутренние углы (Angle)", exact: true }),
+      .getByRole("toolbar", { name: "Форма тайла", exact: true })
+      .getByRole("button", { name: "Внутренние углы", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(
     page
@@ -312,146 +293,106 @@ test("reference uses filter categories and preserves a draft when changing packs
     .getByRole("button", { name: "Закрыть справочник тайлов", exact: true })
     .click();
   const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
-  await sidebar
-    .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
-    .click();
+  await sidebar.getByRole("button", { name: "Пол", exact: true }).click();
   await expect(
     sidebar.getByRole("button", { name: "Пол 1", exact: true }),
   ).toBeVisible();
 });
 
-test("corner and diagonal have independent filters and use the same WebP icons across packs", async ({
+test("wall subcategories share common pack-independent WebP icons", async ({
   page,
 }) => {
   await ready(page);
-  const picker = page
-    .getByRole("complementary", { name: "Каталог плиток" })
-    .getByRole("toolbar", { name: "Типы тайлов" });
-  const commonTypes = ["Пол", "Прямые стены"];
-  const sources = await Promise.all(
-    commonTypes.map((name) =>
-      picker
-        .getByRole("button", { name, exact: true })
-        .locator("img")
-        .getAttribute("src"),
-    ),
-  );
-  for (const src of sources) expect(src).toMatch(/\.webp(?:\?|$)/);
+  const picker = page.getByRole("toolbar", {
+    name: "Типы тайлов",
+    exact: true,
+  });
+  const source = await picker
+    .getByRole("button", { name: "Стены", exact: true })
+    .locator("img")
+    .getAttribute("src");
   await choosePack(page, "ultimate-dungeon");
   expect(
-    await Promise.all(
-      commonTypes.map((name) =>
-        picker
-          .getByRole("button", { name, exact: true })
-          .locator("img")
-          .getAttribute("src"),
-      ),
-    ),
-  ).toEqual(sources);
-  await picker
-    .getByRole("button", { name: "Наружные углы (Corner)", exact: true })
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Наружный угол", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Диагональная стена", exact: true }),
-  ).toHaveCount(0);
-  await picker
-    .getByRole("button", { name: "Диагональные стены", exact: true })
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Диагональная стена", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Наружный угол", exact: true }),
-  ).toHaveCount(0);
-  expect(
     await picker
+      .getByRole("button", { name: "Стены", exact: true })
       .locator("img")
-      .evaluateAll((images) =>
-        images.every((img) => img.complete && img.naturalWidth === 192),
-      ),
-  ).toBe(true);
+      .getAttribute("src"),
+  ).toBe(source);
+  await picker.getByRole("button", { name: "Стены", exact: true }).click();
+  for (const name of ["Наружный угол", "Диагональная стена"])
+    await expect(page.getByRole("button", { name, exact: true })).toBeVisible();
+  for (const name of ["Наружные углы", "Диагональные стены"])
+    await expect(
+      page.getByRole("heading", { name, level: 5, exact: true }),
+    ).toBeVisible();
 });
 
-test("available categories ignore historical and hidden models, and one content variant is selected automatically", async ({
+test("optional occupancy and lighting filters default to all and retain one section", async ({
   page,
 }) => {
-  await ready(page, "&tileFilterExample");
+  await ready(page, "&catalogueFilters");
   const sidebar = page.getByRole("complementary", { name: "Каталог плиток" });
+  const section = sidebar.locator('[data-group-code="LC-ground"]');
+  await expect(
+    section.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toBeVisible();
+  await expect(
+    section.getByRole("button", { name: "Пол с декором", exact: true }),
+  ).toBeVisible();
+  await sidebar
+    .getByRole("button", { name: "Фильтры плиток", exact: true })
+    .click();
+  const filters = page.getByRole("dialog", {
+    name: "Фильтры плиток",
+    exact: true,
+  });
+  await expect(
+    filters.getByRole("combobox", { name: "Наполнение плиток" }),
+  ).toHaveText(/Любое наполнение/);
+  await filters.getByRole("combobox", { name: "Наполнение плиток" }).click();
+  await filters
+    .getByRole("option", { name: "С предметами", exact: true })
+    .click();
+  await expect(
+    section.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    section.getByRole("button", { name: "Пол с декором", exact: true }),
+  ).toBeVisible();
+  await filters.getByRole("combobox", { name: "Наполнение плиток" }).click();
+  await filters
+    .getByRole("option", { name: "Любое наполнение", exact: true })
+    .click();
+  await filters.getByRole("combobox", { name: "Освещение плиток" }).click();
+  await filters
+    .getByRole("option", { name: "Есть освещение", exact: true })
+    .click();
+  await expect(
+    section.getByRole("button", { name: "Пол 1", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    section.getByRole("button", { name: "Пол с декором", exact: true }),
+  ).toBeVisible();
+  await filters.getByRole("combobox", { name: "Освещение плиток" }).click();
+  await filters
+    .getByRole("option", { name: "Любое освещение", exact: true })
+    .click();
+  await page.keyboard.press("Escape");
   const picker = sidebar.getByRole("toolbar", {
     name: "Типы тайлов",
     exact: true,
   });
-  const content = sidebar.getByRole("radiogroup", {
-    name: "Наполнение плиток",
-  });
-  const categoryTitle = sidebar.getByRole("heading", {
-    name: "Пол",
-    level: 3,
-    exact: true,
-  });
-  expect((await categoryTitle.boundingBox()).y).toBeLessThan(
-    (await picker.boundingBox()).y,
-  );
-  await expect(
-    picker.getByRole("button", {
-      name: "Внутренние углы (Angle)",
-      exact: true,
-    }),
-  ).toHaveCount(0);
-  await expect(
-    picker.getByRole("button", { name: "Проходы и двери", exact: true }),
-  ).toBeVisible();
-  await content
-    .getByRole("radio", { name: "С предметами", exact: true })
-    .click();
-  await expect(
-    sidebar.getByRole("button", { name: "Пол с декором", exact: true }),
-  ).toBeVisible();
-  await picker
-    .getByRole("button", { name: "Прямые стены", exact: true })
-    .click();
-  await expect(content).toHaveCount(0);
-  await expect(
-    sidebar.getByRole("button", { name: "Стена 1", exact: true }),
-  ).toBeVisible();
-  await picker
-    .getByRole("button", { name: "Проходы и двери", exact: true })
-    .click();
-  await expect(content).toHaveCount(0);
-  await expect(
-    sidebar.getByRole("button", { name: "Проём с обстановкой", exact: true }),
-  ).toBeVisible();
-  await expect(
-    sidebar.getByText("В выбранном паке пока нет плиток."),
-  ).toHaveCount(0);
-  await picker.getByRole("button", { name: "Пол", exact: true }).click();
-  await expect(
-    content.getByRole("radio", { name: "С предметами", exact: true }),
-  ).toHaveAttribute("aria-checked", "true");
+  for (const [category, name] of [
+    ["Вода и реки", "Река"],
+    ["Железная дорога", "Рельсы"],
+  ]) {
+    await picker.getByRole("button", { name: category, exact: true }).click();
+    await expect(
+      sidebar.getByRole("button", { name, exact: true }),
+    ).toBeVisible();
+  }
   await choosePack(page, "ultimate-dungeon");
-  await expect(content).toHaveCount(0);
   await expect(
-    sidebar.getByRole("button", { name: "Каменный пол", exact: true }),
-  ).toBeVisible();
-  await expect(
-    picker.getByRole("button", { name: "Наружные углы (Corner)", exact: true }),
+    picker.getByRole("button", { name: "Железная дорога", exact: true }),
   ).toHaveCount(0);
-  await picker
-    .getByRole("button", { name: "Прямые стены", exact: true })
-    .click();
-  await expect(content).toHaveCount(0);
-  await expect(
-    sidebar.getByRole("button", { name: "Боковая стена", exact: true }),
-  ).toBeVisible();
-  await choosePack(page, "lost-cave");
-  await expect(
-    content.getByRole("radio", { name: "С предметами", exact: true }),
-  ).toHaveAttribute("aria-checked", "true");
-  await expect(
-    sidebar.getByRole("button", { name: "Пол с декором", exact: true }),
-  ).toBeVisible();
-  await expect(sidebar.getByRole("button", { name: /^Пол \(/ })).toHaveCount(0);
 });

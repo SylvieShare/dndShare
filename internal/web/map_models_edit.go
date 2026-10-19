@@ -19,6 +19,9 @@ func editedMapModel(original battlemap.Model, input battlemap.ModelMetadata) (ba
 		return original, errors.New("Исходный код, коллекция тайла не редактируются")
 	}
 	input.Name = strings.TrimSpace(input.Name)
+	input.NameEn = strings.TrimSpace(input.NameEn)
+	input.GroupName = strings.TrimSpace(input.GroupName)
+	input.GroupNameEn = strings.TrimSpace(input.GroupNameEn)
 	input.Code = strings.TrimSpace(input.Code)
 	input.VariantCode = strings.TrimSpace(input.VariantCode)
 	if !battlemap.ValidModelGroupCode(input.Code) {

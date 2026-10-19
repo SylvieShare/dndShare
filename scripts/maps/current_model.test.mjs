@@ -11,6 +11,11 @@ test("publishing new geometry retains current UUID and shared family", () => {
     code: "UD-passages",
     variantCode: "UD-door",
     hidden: false,
+    name: "Дверь",
+    nameEn: "Door",
+    category: "passage",
+    groupName: "Проходы",
+    groupNameEn: "Passages",
   };
   const result = currentModel(
     {
@@ -26,6 +31,10 @@ test("publishing new geometry retains current UUID and shared family", () => {
   assert.equal(result.id, "stable");
   assert.equal(result.code, "UD-passages");
   assert.equal(result.variantCode, "UD-door");
+  assert.equal(result.name, "Дверь");
+  assert.equal(result.nameEn, "Door");
+  assert.equal(result.category, "passage");
+  assert.equal(result.groupName, "Проходы");
   assert.equal(result.version, undefined);
   assert.equal(result.assets.render.sha256, "new");
 });

@@ -107,7 +107,7 @@ for (const mode of ["editor", "board"]) {
       });
       if (name === "Угол стены")
         await picker
-          .getByRole("button", { name: "Внутренние углы (Angle)", exact: true })
+          .getByRole("button", { name: "Стены", exact: true })
           .click();
       await picker.getByRole("button", { name, exact: true }).click();
       await expect(picker).toHaveCount(0);
@@ -215,9 +215,7 @@ for (const mode of ["editor", "board"])
       name: "Выбрать тайл для перехода",
       exact: true,
     });
-    await picker
-      .getByRole("button", { name: "Прямые стены", exact: true })
-      .click();
+    await picker.getByRole("button", { name: "Стены", exact: true }).click();
     await picker
       .getByRole("button", { name: "Потухший факел", exact: true })
       .click();

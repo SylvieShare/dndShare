@@ -9,7 +9,7 @@ from mathutils import Vector
 
 KINDS = ["floor", "wall-straight", "wall-angle", "wall-tee", "wall-cross",
          "wall-end", "wall-corner", "wall-diagonal", "stairs", "frame", "prop",
-         "wall-mode-none", "wall-mode-center", "wall-mode-edge", "bridge", "passage", "column"]
+         "wall-mode-none", "wall-mode-center", "wall-mode-edge", "bridge", "passage", "column", "water", "railway"]
 
 
 def material(name, color):
@@ -102,6 +102,18 @@ def tile(kind):
     }
     if kind in footprints:
         wall(footprints[kind])
+    if kind == "water":
+        water = material("River blue", (.025, .32, .48))
+        box("River", (0, 0, .24), (1.1, 1.94, .12), water, bevel=.08)
+        foam = material("Water highlights", (.35, .76, .86))
+        for y in [-.55, -.03, .49]:
+            box("Wave", (.03, y, .31), (.72, .035, .025), foam, rotation=.17)
+    if kind == "railway":
+        for y in [-.76, -.38, 0, .38, .76]:
+            box("Sleeper", (0, y, .29), (1.65, .18, .14), wood)
+        for x in [-.5, .5]:
+            box("Rail", (x, 0, .42), (.11, 1.9, .13), iron)
+            box("Rail highlight", (x, 0, .49), (.14, 1.9, .025), stone[4])
     if kind == "wall-mode-center":
         wall(footprints["wall-straight"])
         violet = material("Connection points", (.55, .32, .85))

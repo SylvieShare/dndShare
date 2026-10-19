@@ -122,7 +122,15 @@ export function useModelReference(editor) {
         blockers: contours,
       });
       editor.catalogue = editor.catalogue.map((m) =>
-        m.id === saved.id ? saved : m,
+        m.id === saved.id
+          ? saved
+          : m.collection === saved.collection && m.code === saved.code
+            ? {
+                ...m,
+                groupName: saved.groupName,
+                groupNameEn: saved.groupNameEn,
+              }
+            : m,
       );
       if (editor.selectedModel === base.value.id)
         editor.selectedModel = saved.id;

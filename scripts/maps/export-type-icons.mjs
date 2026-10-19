@@ -15,7 +15,11 @@ const source = path.join(root, "models/ui/tile-type-icons");
 const output = path.join(root, "frontend/src/assets/maps/tile-types");
 await fs.mkdir(output, { recursive: true });
 let bytes = 0;
-for (const { value } of TILE_TYPES) {
+const requested = process.argv.slice(2);
+const kinds = [...TILE_TYPES, { value: "water" }, { value: "railway" }].filter(
+  ({ value }) => !requested.length || requested.includes(value),
+);
+for (const { value } of kinds) {
   const file = path.join(output, `${value}.webp`);
   await sharp(path.join(source, `${value}.png`))
     .resize(192, 192)
@@ -26,13 +30,14 @@ for (const { value } of TILE_TYPES) {
     throw new Error(`Invalid tile icon: ${value}`);
   bytes += (await fs.stat(file)).size;
 }
-console.log(`Exported ${TILE_TYPES.length} shared tile icons: ${bytes} bytes`);
+console.log(`Exported ${kinds.length} shared tile icons: ${bytes} bytes`);
 const modeOutput = path.join(root, "frontend/src/assets/maps/wall-modes");
 await fs.mkdir(modeOutput, { recursive: true });
-for (const { value } of WALL_MODES) {
+for (const { value } of requested.length ? [] : WALL_MODES) {
   await sharp(path.join(source, `wall-mode-${value}.png`))
     .resize(192, 192)
     .webp({ quality: 92, effort: 6 })
     .toFile(path.join(modeOutput, `${value}.webp`));
 }
-console.log(`Exported ${WALL_MODES.length} shared wall placement icons`);
+if (!requested.length)
+  console.log(`Exported ${WALL_MODES.length} shared wall placement icons`);

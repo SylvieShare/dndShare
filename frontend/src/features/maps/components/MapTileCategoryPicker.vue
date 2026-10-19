@@ -1,5 +1,5 @@
 <template>
-  <h3 class="map-tile-category-title" aria-live="polite">
+  <h3 v-if="showTitle" class="map-tile-category-title" aria-live="polite">
     {{ categories.find((c) => c.value === modelValue)?.label }}
   </h3>
   <div
@@ -34,6 +34,7 @@ import { TILE_CATEGORIES } from "../lib/tileCategories";
 import TileCategoryIcon from "./TileCategoryIcon.vue";
 defineProps({
   large: Boolean,
+  showTitle: { type: Boolean, default: true },
   modelValue: { type: String, default: "floor" },
   label: { type: String, default: "Типы тайлов" },
   categories: { type: Array, default: () => TILE_CATEGORIES },

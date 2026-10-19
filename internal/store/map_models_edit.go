@@ -35,11 +35,14 @@ func (s *Store) UpdateMapModelWithBehaviour(ctx context.Context, id string, edit
 	if _, err = tx.Exec(ctx, `UPDATE dndshare.map_model_definition SET code=$2,variant_code=$3 WHERE id=$1`, old.DefinitionID, edited.Code, edited.VariantCode); err != nil {
 		return edited, err
 	}
+	if err = saveMapModelGroup(ctx, tx, edited, true); err != nil {
+		return edited, err
+	}
 	geometry, assets, err := marshalMapModel(edited)
 	if err != nil {
 		return edited, err
 	}
-	if _, err = tx.Exec(ctx, `UPDATE dndshare.map_model SET name=$2,tile_type=$3,geometry=CAST($4 AS jsonb),assets=CAST($5 AS jsonb) WHERE id=$1::uuid`, id, edited.Name, edited.TileType, geometry, assets); err != nil {
+	if _, err = tx.Exec(ctx, `UPDATE dndshare.map_model SET name=$2,tile_type=$3,geometry=CAST($4 AS jsonb),assets=CAST($5 AS jsonb),name_en=$6,category=$7 WHERE id=$1::uuid`, id, edited.Name, edited.TileType, geometry, assets, edited.NameEn, edited.Category); err != nil {
 		return edited, err
 	}
 	if behaviour != nil {

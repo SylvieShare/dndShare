@@ -57,10 +57,34 @@ if (params.has("groupSections")) {
     sourceCode: "TEST-WOOD",
     name: "Деревянный пол",
     code: "LC-wood",
+    groupName: "Деревянный пол",
+    groupNameEn: "Wooden ground",
     variantCode: "",
   });
 }
 
+if (params.has("catalogueFilters")) {
+  const floor = catalogue.find((m) => m.id === FLOOR);
+  const furnished = catalogue.find((m) => m.sourceCode === "TEST-DECOR");
+  furnished.code = floor.code;
+  furnished.behaviour.defaultLights = [{ key: "test", name: "Свет" }];
+  for (const [id, category, name] of [
+    ["85858585-8585-4585-8585-858585858585", "water", "Река"],
+    ["86868686-8686-4686-8686-868686868686", "railway", "Рельсы"],
+  ])
+    catalogue.push({
+      ...floor,
+      id,
+      definitionId: id,
+      sourceCode: id,
+      category,
+      name,
+      nameEn: category,
+      groupName: name,
+      groupNameEn: category,
+      code: `LC-${category}`,
+    });
+}
 if (params.has("tileFilterExample")) {
   catalogue.find((m) => m.id === UD_WALL).hasDecor = true;
   catalogue.find((m) => m.sourceCode === "UD-096").hidden = true;
@@ -68,6 +92,7 @@ if (params.has("tileFilterExample")) {
   Object.assign(angle, {
     name: "Проём с обстановкой",
     tileType: "passage",
+    category: "passage",
     hasDecor: true,
   });
 }

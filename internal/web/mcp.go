@@ -192,6 +192,8 @@ func (s *Server) dispatchTool(r *http.Request, name string, args map[string]json
 		return s.toolMapModelGroup(r, args)
 	case "map_tile_model_grouping_update":
 		return s.toolMapModelGrouping(r, args)
+	case "map_tile_model_catalogue_update":
+		return s.toolMapModelCatalogue(r, args)
 	case "map_tile_model_behaviour_get", "map_tile_model_behaviour_update":
 		return s.toolMapModelBehaviour(r, name, args)
 	case "map_tile_models_list", "map_tile_model_get", "map_tile_model_register", "map_tile_model_register_shadow", "map_tile_model_register_preview":

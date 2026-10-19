@@ -19,6 +19,10 @@ type ModelMetadata struct {
 	SourceCode      string           `json:"sourceCode"`
 	SourceName      string           `json:"sourceName"`
 	Name            string           `json:"name"`
+	NameEn          string           `json:"nameEn"`
+	GroupName       string           `json:"groupName"`
+	GroupNameEn     string           `json:"groupNameEn"`
+	Category        string           `json:"category"`
 	TextureDetail   string           `json:"textureDetail"`
 	TileType        string           `json:"tileType"`
 	HasDecor        bool             `json:"hasDecor"`

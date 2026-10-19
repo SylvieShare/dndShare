@@ -13,7 +13,6 @@
     </p>
     <MapModelCatalogue
       :models="models"
-      :catalogue="models"
       :selected-id="selectedId || editor.objectModel"
       :draggable="draggable"
       :show-identifiers="mode === 'inspect'"

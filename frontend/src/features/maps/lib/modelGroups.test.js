@@ -1,73 +1,60 @@
 import { it, expect } from "vitest";
 import { modelGroups, modelIdentity, hasModelLight } from "./modelGroups";
-it("separates list sections from variant families and keeps standalone tiles distinct", () => {
-  const straight = {
-    id: "one",
-    definitionId: "MED-008",
-    code: "MED-ground",
-    variantCode: "MED-ground-straight",
-    name: "Ground Straight 1",
-    collection: "medieval",
-  };
-  const another = {
-    ...straight,
+const base = {
+  id: "one",
+  definitionId: "MT1-001",
+  collection: "medieval",
+  code: "MED-bar",
+  variantCode: "MED-bar-straight",
+  name: "Пустая барная стойка",
+  groupName: "Барные стойки",
+  groupNameEn: "Bars",
+  tileType: "floor",
+  hasDecor: false,
+};
+it("keeps free and furnished variants together as flat neighbouring cards", () => {
+  const second = {
+    ...base,
     id: "two",
-    definitionId: "MED-009",
-    name: "Ground Straight 2",
+    definitionId: "MT1-002",
+    hasDecor: true,
+    name: "Барная стойка с тарелками",
   };
-  const corner = {
-    ...straight,
-    id: "corner",
-    definitionId: "MED-010",
-    name: "Ground Corner",
-    variantCode: "MED-ground-corner",
-  };
-  const loose = {
-    ...straight,
-    id: "loose",
-    definitionId: "MED-011",
-    name: "Ground Special",
-    variantCode: "",
-  };
-  const sections = modelGroups([straight, another, corner, loose]);
-  expect(sections).toHaveLength(1);
-  expect(sections[0].name).toBe("Ground");
-  expect(
-    sections[0].variants.map((family) => family.models.length).sort(),
-  ).toEqual([1, 1, 2]);
-  expect(
-    sections[0].variants
-      .find((family) => family.code === straight.variantCode)
-      .models.map((m) => m.id),
-  ).toEqual(["one", "two"]);
-  expect(modelIdentity(straight)).toEqual({
-    id: "MED-008",
-    code: "MED-ground",
-    variantCode: "MED-ground-straight",
-    name: straight.name,
+  const corner = { ...base, id: "corner", variantCode: "MED-bar-angle" };
+  const groups = modelGroups([base, second, corner]);
+  expect(groups).toHaveLength(1);
+  expect(groups[0].name).toBe("Барные стойки");
+  expect(groups[0].models.map((m) => m.id)).toEqual(["corner", "one", "two"]);
+  expect(groups[0].subsections[0].models).toHaveLength(3);
+  expect(groups[0]).not.toHaveProperty("variants");
+  expect(modelGroups([second])[0].name).toBe("Барные стойки");
+  expect(modelIdentity(base)).toEqual({
+    id: base.definitionId,
+    code: base.code,
+    variantCode: base.variantCode,
+    name: base.name,
   });
 });
-it("derives a stable heading from the whole group while categories filter its visible members", () => {
-  const a = {
-    id: "a",
-    definitionId: "A",
-    code: "MED-bar",
-    variantCode: "MED-bar-straight",
-    name: "Bar Empty",
-    collection: "medieval",
+it("subdivides walls by structural shape within their shared section", () => {
+  const wall = {
+    ...base,
+    code: "MED-wall",
+    groupName: "Стены",
+    tileType: "wall-straight",
   };
-  const b = {
-    ...a,
-    id: "b",
-    definitionId: "B",
-    name: "Tall Bar Angle",
-    variantCode: "MED-tall-bar-angle",
-  };
-  expect(modelGroups([b], [a, b])[0].name).toBe("Bar");
+  const angle = { ...wall, id: "angle", tileType: "wall-angle" };
+  const section = modelGroups([wall, angle], { wallSubcategories: true })[0];
+  expect(section.subsections.map((s) => s.name)).toEqual([
+    "Прямые стены",
+    "Внутренние углы",
+  ]);
   expect(
-    modelGroups([a, { ...a, id: "other", collection: "other" }]),
+    modelGroups([base, { ...base, id: "other", collection: "other" }]),
   ).toHaveLength(2);
   expect(
-    hasModelLight({ ...a, behaviour: { defaultLights: [{ enabled: false }] } }),
+    hasModelLight({
+      ...base,
+      behaviour: { defaultLights: [{ enabled: false }] },
+    }),
   ).toBe(true);
 });

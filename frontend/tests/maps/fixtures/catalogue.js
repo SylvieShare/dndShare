@@ -150,7 +150,20 @@ const catalogue = [
   collection: m.collection || "lost-cave",
   collectionName:
     m.collection === "ultimate-dungeon" ? "Ultimate Dungeon" : "Lost Cave",
-  version: 1,
+  nameEn: m.sourceName,
+  groupName: m.tileType.startsWith("wall-")
+    ? "Стены"
+    : m.tileType === "object"
+      ? "Сундуки"
+      : m.tileType === "floor"
+        ? "Пол"
+        : m.name,
+  groupNameEn: m.tileType.startsWith("wall-")
+    ? "Walls"
+    : m.tileType === "object"
+      ? "Chests"
+      : "Ground",
+  category: m.tileType.startsWith("wall-") ? "wall" : m.tileType,
   definitionId: m.sourceCode,
   code: `${m.collection === "ultimate-dungeon" ? "UD" : m.collection === "map-objects" ? "MA" : "LC"}-${m.sourceName
     .toLowerCase()

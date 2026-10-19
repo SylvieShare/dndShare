@@ -40,7 +40,7 @@ func TestBattleMapPersistenceAndIsolation(t *testing.T) {
 	}
 	exec(`CREATE SCHEMA dndshare; CREATE TABLE dndshare.users(id bigint PRIMARY KEY); CREATE TABLE dndshare.session(id bigint PRIMARY KEY); CREATE TABLE dndshare.storage_image(id bigint PRIMARY KEY); INSERT INTO dndshare.users VALUES(1),(2); INSERT INTO dndshare.session VALUES(10),(20);`)
 	defer exec(`DROP SCHEMA dndshare CASCADE`)
-	exec(testSchemaTables(t, "battle_map", "battle_map_model", "battle_map_preview", "map_model", "map_model_definition", "map_model_transition", "session_map", "session_map_model", "session_map_display"))
+	exec(testSchemaTables(t, "battle_map", "battle_map_model", "battle_map_preview", "map_model", "map_model_definition", "map_model_group", "map_model_transition", "session_map", "session_map_model", "session_map_display"))
 	s := &Store{pool: pool}
 	seedMapModelsForTest(t, s)
 	preset := battlemap.Presets()[0]

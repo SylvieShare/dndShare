@@ -10,7 +10,9 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-const mapModelColumns = `id::text,collection,source_code,source_name,name,tile_type,geometry,assets,definition_id::text,(SELECT code FROM dndshare.map_model_definition WHERE id=definition_id),(SELECT variant_code FROM dndshare.map_model_definition WHERE id=definition_id)`
+const mapModelColumns = `id::text,collection,source_code,source_name,name,tile_type,geometry,assets,definition_id::text,(SELECT code FROM dndshare.map_model_definition WHERE id=definition_id),(SELECT variant_code FROM dndshare.map_model_definition WHERE id=definition_id),name_en,category,
+COALESCE((SELECT g.name FROM dndshare.map_model_group g JOIN dndshare.map_model_definition d ON d.collection=g.collection AND d.code=g.code WHERE d.id=definition_id),''),
+COALESCE((SELECT g.name_en FROM dndshare.map_model_group g JOIN dndshare.map_model_definition d ON d.collection=g.collection AND d.code=g.code WHERE d.id=definition_id),'')`
 
 var ErrInvalidMapModels = errors.New("invalid map models")
 
@@ -18,7 +20,7 @@ func scanMapModel(row pgx.Row) (battlemap.Model, error) {
 	var m battlemap.Model
 	var geometry, assets []byte
 	err := row.Scan(&m.ID, &m.Collection, &m.SourceCode, &m.SourceName, &m.Name,
-		&m.TileType, &geometry, &assets, &m.DefinitionID, &m.Code, &m.VariantCode)
+		&m.TileType, &geometry, &assets, &m.DefinitionID, &m.Code, &m.VariantCode, &m.NameEn, &m.Category, &m.GroupName, &m.GroupNameEn)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return m, ErrNotFound
 	}

@@ -30,9 +30,7 @@ test("icon choices and preview point/side clicks edit the wall mask without rota
 }) => {
   await ready(page);
   const catalogue = page.locator(".map-reference-catalogue");
-  await catalogue
-    .getByRole("button", { name: "Прямые стены", exact: true })
-    .click();
+  await catalogue.getByRole("button", { name: "Стены", exact: true }).click();
   await catalogue.getByRole("button", { name: "Стена 1", exact: true }).click();
   await expect(page.locator("[data-preview-port]")).toHaveCount(8);
   const modes = page.getByRole("toolbar", {
@@ -40,7 +38,7 @@ test("icon choices and preview point/side clicks edit the wall mask without rota
     exact: true,
   });
   await expect(modes.locator("img")).toHaveCount(3);
-  const types = page.getByRole("toolbar", { name: "Тип тайла", exact: true });
+  const types = page.getByRole("toolbar", { name: "Форма тайла", exact: true });
   await expect(types.getByRole("button")).toHaveCount(13);
   await expect(page.locator("select[aria-label='Тип тайла']")).toHaveCount(0);
   const yaw = await page

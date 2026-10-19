@@ -42,6 +42,7 @@ func testMapModelGrouping(t *testing.T, ctx context.Context, s *Store) {
 	for _, m := range models {
 		got, err := s.GetMapModel(ctx, m.ID)
 		m.Code, m.VariantCode = "LC-ground", "LC-ground-straight"
+		m.GroupName, m.GroupNameEn = "Пол", "Ground"
 		if err != nil || !reflect.DeepEqual(got, m) {
 			t.Fatal("grouping changed model resources or placement", err)
 		}

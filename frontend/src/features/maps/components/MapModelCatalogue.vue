@@ -12,29 +12,26 @@
         <small v-if="showIdentifiers">{{ section.code }}</small>
       </header>
       <div
-        class="map-model-grid"
-        :class="{ 'map-model-grid--compact': compact }"
+        v-for="subsection in section.subsections"
+        :key="subsection.key"
+        class="map-model-subsection"
       >
-        <template v-for="family in section.variants" :key="family.key">
-          <MapModelGroupCard
-            v-if="family.models.length > 1"
-            :group="family"
-            :selected-id="selectedId"
-            :show-identifiers="showIdentifiers"
-            :draggable="draggable"
-            @model="(id, event) => emit('model', id, event)"
-            @drag-tile="(id, event) => emit('drag-tile', id, event)"
-          />
+        <h5 v-if="subsection.name">{{ subsection.name }}</h5>
+        <div
+          class="map-model-grid"
+          :class="{ 'map-model-grid--compact': compact }"
+        >
           <MapTileCard
-            v-else
-            :model="family.models[0]"
-            :selected="selectedId === family.models[0].id"
+            v-for="model in subsection.models"
+            :key="model.id"
+            :model="model"
+            :selected="selectedId === model.id"
             :show-identifiers="showIdentifiers"
             :draggable="draggable"
             @model="(id, event) => emit('model', id, event)"
             @drag-tile="(id, event) => emit('drag-tile', id, event)"
           />
-        </template>
+        </div>
       </div>
     </section>
   </TransitionGroup>
@@ -42,18 +39,19 @@
 <script setup>
 import { computed } from "vue";
 import { modelGroups } from "../lib/modelGroups";
-import MapModelGroupCard from "./MapModelGroupCard.vue";
 import MapTileCard from "./MapTileCard.vue";
 const props = defineProps({
   models: Array,
-  catalogue: Array,
+  wallSubcategories: Boolean,
   selectedId: String,
   compact: Boolean,
   draggable: Boolean,
   showIdentifiers: Boolean,
 });
 const emit = defineEmits(["model", "drag-tile"]);
-const sections = computed(() => modelGroups(props.models, props.catalogue));
+const sections = computed(() =>
+  modelGroups(props.models, { wallSubcategories: props.wallSubcategories }),
+);
 </script>
 <style scoped>
 .map-model-catalogue {
@@ -63,6 +61,15 @@ const sections = computed(() => modelGroups(props.models, props.catalogue));
 }
 .map-model-section {
   min-width: 0;
+}
+h5 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.map-model-subsection + .map-model-subsection {
+  margin-top: 16px;
 }
 header {
   display: flex;

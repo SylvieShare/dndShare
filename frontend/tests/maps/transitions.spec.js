@@ -164,14 +164,8 @@ test("model reference saves transition definitions and multiple light templates 
     exact: true,
   });
   const catalogue = reference.locator(".map-reference-catalogue");
-  await catalogue
-    .getByRole("button", { name: "Прямые стены", exact: true })
-    .click();
-  await catalogue.getByRole("button", { name: "Стена 1", exact: true }).hover();
-  await page
-    .getByRole("group", { name: "Варианты LC-wall", exact: true })
-    .getByRole("button", { name: "Стена 1", exact: true })
-    .click();
+  await catalogue.getByRole("button", { name: "Стены", exact: true }).click();
+  await catalogue.getByRole("button", { name: "Стена 1", exact: true }).click();
   await expect(
     reference.getByLabel("Переход 1: действие", { exact: true }),
   ).toHaveValue("extinguish");

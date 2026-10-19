@@ -22,6 +22,11 @@ export function currentModel(model, registry, assets) {
           definitionId: current.definitionId,
           code: current.code,
           variantCode: current.variantCode,
+          name: current.name,
+          nameEn: current.nameEn,
+          groupName: current.groupName,
+          groupNameEn: current.groupNameEn,
+          category: current.category,
           hidden: current.hidden,
         }
       : {}),
