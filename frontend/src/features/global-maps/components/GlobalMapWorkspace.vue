@@ -7,15 +7,15 @@
       <LoadingState v-if="c.loading" label="Открываем мир…" fill />
       <template v-else-if="c.selected">
         <GlobalMapCanvas :key="c.selected.id" ref="canvas" :image-url="c.selected.imageUrl" :routes="c.selected.routes"
-          :chapters="chapters" :participants="participants" :selected-route="routeId" :selected-point="pointId"
+          :chapters="chapters" :locations="locations" :participants="participants" :selected-route="routeId" :selected-point="pointId"
           :readonly="c.conflict || c.busy" :add-mode="addMode && !!route"
           @select="select" @add="addPoint" @move="move" @drag-start="c.editing = true" @drag-end="endDrag" @insert-control="insertControl" @cancel-control="cancelControl" @continuation-active="continuing = $event"
-          @remove-point="requestPointDelete" @chapter="emit('open-chapter', $event)" @cancel-add="addMode = false" />
+          @remove-point="requestPointDelete" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" @cancel-add="addMode = false" />
         <WorkspaceCanvasControls class="global-map-zoom" zoom-out-label="Уменьшить карту мира" fit-label="Вписать карту мира" zoom-in-label="Увеличить карту мира"
           @zoom="canvas?.zoom($event)" @fit="canvas?.fit()" />
         <p v-if="addMode && route" class="global-map-instruction">{{ route.name }} · нажмите на карту или существующую точку · Esc — обзор</p>
-        <GlobalMapPointInspector :visible="!addMode && !continuing" :point="point" :route="inspectorRoute" :index="index" :chapters="chapters"
-          :disabled="c.conflict || c.busy" @close="pointId = ''" @change="patchPoint" @reorder="reorder" @delete="requestPointDelete(route.id, point.id)" @chapter="emit('open-chapter', $event)" />
+        <GlobalMapPointInspector :visible="!addMode && !continuing" :point="point" :route="inspectorRoute" :index="index" :chapters="chapters" :locations="locations"
+          :disabled="c.conflict || c.busy" @close="pointId = ''" @change="patchPoint" @reorder="reorder" @delete="requestPointDelete(route.id, point.id)" @chapter="emit('open-chapter', $event)" @location="emit('open-location', $event)" />
       </template>
       <div v-else class="global-map-empty"><Globe :size="56" :stroke-width="1.2" /><h2>Путь вашей истории</h2><p>Загрузите карту мира, региона или города слева.<br />Создавайте маршруты, отмечайте главы и оставляйте заметки прямо на карте.</p></div>
       <div v-if="c.error" class="global-map-error" role="alert">{{ c.error }}
@@ -40,13 +40,13 @@ import GlobalMapSidebar from './GlobalMapSidebar.vue'
 import GlobalMapCanvas from './GlobalMapCanvas.vue'
 import GlobalMapPointInspector from './GlobalMapPointInspector.vue'
 import WorkspaceCanvasControls from '@/shared/ui/WorkspaceCanvasControls.vue'
-const props = defineProps({ sessionUuid: { type: String, required: true }, participants: { type: Array, default: () => [] }, chapters: { type: Array, default: () => [] } })
-const emit = defineEmits(['open-chapter'])
+const props = defineProps({ sessionUuid: { type: String, required: true }, participants: { type: Array, default: () => [] }, chapters: { type: Array, default: () => [] }, locations: { type: Array, default: () => [] }, currentChapterId: Number })
+const emit = defineEmits(['open-chapter', 'open-location'])
 const c = reactive(useGlobalMaps(props.sessionUuid))
 const sidebar = ref(null), canvas = ref(null), navigationWidth = ref(48), continuing = ref(false)
 const pending = ref(null), reloadConfirm = ref(false), leaveConfirm = ref(false), mobile = useIsMobile(760)
 const { routeId, pointId, addMode, route, point, inspectorRoute, index, select, selectRoute, selectPoint, startAdding, addRoute, addPoint, move,
-  insertControl, cancelControl, endDrag, patchPoint, reorder, deletePoint, deleteRoute } = useGlobalMapEditing(c, canvas, sidebar, mobile)
+  insertControl, cancelControl, endDrag, patchPoint, reorder, deletePoint, deleteRoute } = useGlobalMapEditing(c, canvas, sidebar, mobile, props)
 function changeRoute(patch) { c.change(() => Object.assign(route.value, patch)) }
 function requestPointDelete(routeId, pointId) {
   const entry = c.selected.routes.find(route => route.id === routeId)?.points.find(point => point.id === pointId)

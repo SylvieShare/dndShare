@@ -4,7 +4,7 @@ import { pointIndex, resolvePoint } from '../lib/routePoints'
 
 export function useGlobalMapViewport(host, props, emit) {
   const image = reactive({ width: 1200, height: 800 }), view = reactive({ x: 0, y: 0, scale: 1 })
-  const loaded = ref(false), imageError = ref(false)
+  const loaded = ref(false), imageError = ref(false), dragging = ref(false)
   let observer, drag = null, initialized = false, lastWidth = 0, lastHeight = 0
   const style = computed(() => ({ width: `${image.width}px`, height: `${image.height}px`, transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }))
   function fit() {
@@ -53,6 +53,7 @@ export function useGlobalMapViewport(host, props, emit) {
       segment: segment ? Number(segment.dataset.segmentIndex) : null, created: false,
       before: selected && { x: selected.x, y: selected.y }, x: event.clientX, y: event.clientY,
       viewX: view.x, viewY: view.y, moved: false, pan: !id && !segment && (!props.addMode || event.altKey || event.button === 1) }
+    dragging.value = true
     host.value.setPointerCapture(event.pointerId)
     if (id && !props.readonly) emit('drag-start')
     event.preventDefault()
@@ -80,6 +81,7 @@ export function useGlobalMapViewport(host, props, emit) {
     }
     const id = drag.pointerId
     drag = null
+    dragging.value = false
     if (host.value.hasPointerCapture(id)) host.value.releasePointerCapture(id)
   }
   function cancelDrag() { if (drag) end({ pointerId: drag.pointerId }, true) }
@@ -99,5 +101,5 @@ export function useGlobalMapViewport(host, props, emit) {
     observer.observe(host.value)
   })
   onBeforeUnmount(() => observer?.disconnect())
-  return { image, view, style, loaded, imageError, fit, load, point, zoom, down, move, end, cancelDrag, focusPoint }
+  return { image, view, style, loaded, imageError, dragging, fit, load, point, zoom, down, move, end, cancelDrag, focusPoint }
 }

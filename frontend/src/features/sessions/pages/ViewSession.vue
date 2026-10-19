@@ -89,7 +89,8 @@
         <template #full-workspace>
           <GlobalMapWorkspace v-if="globalMapsVisited" v-show="primaryView === 'globalMaps'" ref="globalMapWorkspace"
             :session-uuid="sessionUuid" :participants="participants" :chapters="chapterGraph.chapters.value"
-            @open-chapter="openGlobalChapter" />
+            :current-chapter-id="workspaceChapter?.id ?? chapterGraph.currentChapter.value?.id ?? null" :locations="sessionWorld.locations.value"
+            @open-chapter="openGlobalChapter" @open-location="selectLocation($event.id)" />
           <SessionMapWorkspace
             v-if="mapVisited && isDm"
             v-show="mapVisible"

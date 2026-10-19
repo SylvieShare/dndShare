@@ -8,20 +8,20 @@ import (
 )
 
 type Point struct {
-	ID        string  `json:"id"`
-	RefID     string  `json:"refId,omitempty"`
-	Control   bool    `json:"control,omitempty"`
-	X         float64 `json:"x"`
-	Y         float64 `json:"y"`
-	Name      string  `json:"name"`
-	Note      string  `json:"note"`
-	ChapterID *int64  `json:"chapterId,omitempty"`
+	ID                   string  `json:"id"`
+	RefID                string  `json:"refId,omitempty"`
+	Control              bool    `json:"control,omitempty"`
+	X                    float64 `json:"x"`
+	Y                    float64 `json:"y"`
+	Name                 string  `json:"name"`
+	Note                 string  `json:"note"`
+	ChapterID            *int64  `json:"chapterId,omitempty"`
+	AdditionalChapterIDs []int64 `json:"additionalChapterIds,omitempty"`
+	LocationIDs          []int64 `json:"locationIds,omitempty"`
 }
 
 type Route struct {
 	ID        string  `json:"id"`
-	RefID     string  `json:"refId,omitempty"`
-	Control   bool    `json:"control,omitempty"`
 	Name      string  `json:"name"`
 	Color     string  `json:"color"`
 	PlayerIDs []int64 `json:"playerIds"`
@@ -58,14 +58,17 @@ func Validate(name string, routes []Route) error {
 			if !identifier.MatchString(point.ID) || ids[point.ID] || !coordinate(point.X) || !coordinate(point.Y) || len([]rune(point.Name)) > 100 || len([]rune(point.Note)) > 2000 || (point.ChapterID != nil && *point.ChapterID <= 0) {
 				return fmt.Errorf("Некорректная точка: координаты от 0 до 1, название до 100 и заметка до 2000 символов")
 			}
+			if !validLinks(point) {
+				return fmt.Errorf("Некорректные привязки точки: до 64 уникальных глав и локаций")
+			}
 			if point.RefID != "" {
-				if !identifier.MatchString(point.RefID) || point.Control || point.X != 0 || point.Y != 0 || point.Name != "" || point.Note != "" || point.ChapterID != nil {
+				if !identifier.MatchString(point.RefID) || point.Control || point.X != 0 || point.Y != 0 || point.Name != "" || point.Note != "" || hasLinks(point) {
 					return fmt.Errorf("Ссылка на точку не должна содержать собственные координаты или описание")
 				}
 				references = append(references, point)
 			} else {
-				if point.Control && (point.Name != "" || point.Note != "" || point.ChapterID != nil) {
-					return fmt.Errorf("Узел изгиба не может иметь описание или главу")
+				if point.Control && (point.Name != "" || point.Note != "" || hasLinks(point)) {
+					return fmt.Errorf("Узел изгиба не может иметь описание или привязки")
 				}
 				definitions[point.ID] = point
 			}
@@ -87,8 +90,8 @@ func Validate(name string, routes []Route) error {
 
 func coordinate(v float64) bool { return !math.IsNaN(v) && !math.IsInf(v, 0) && v >= 0 && v <= 1 }
 
-// Detached chapters and former participants no longer appear as active links.
-func PruneReferences(routes []Route, players, chapters map[int64]bool) {
+// Detached session entities no longer appear as active links.
+func PruneReferences(routes []Route, players, chapters, locations map[int64]bool) {
 	for i := range routes {
 		kept := []int64{}
 		for _, id := range routes[i].PlayerIDs {
@@ -102,9 +105,14 @@ func PruneReferences(routes []Route, players, chapters map[int64]bool) {
 		}
 		for j := range routes[i].Points {
 			p := &routes[i].Points[j]
-			if p.ChapterID != nil && !chapters[*p.ChapterID] {
-				p.ChapterID = nil
+			ids := keepIDs(p.ChapterIDs(), chapters)
+			p.ChapterID = nil
+			p.AdditionalChapterIDs = nil
+			if len(ids) > 0 {
+				p.ChapterID = &ids[0]
+				p.AdditionalChapterIDs = ids[1:]
 			}
+			p.LocationIDs = keepIDs(p.LocationIDs, locations)
 		}
 	}
 }

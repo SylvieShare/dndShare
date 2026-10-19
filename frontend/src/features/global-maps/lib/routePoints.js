@@ -64,3 +64,12 @@ export function removeEntries(routes, remove) {
     }
   }
 }
+
+// A leg is identified by visits, so inserting a bend does not change its identity.
+export function routeLegKey(route, position) {
+  if (!route || position < 0 || position >= route.points.length - 1) return ''
+  let from = position, to = position + 1
+  while (from >= 0 && route.points[from].control) from--
+  while (to < route.points.length && route.points[to].control) to++
+  return from >= 0 && to < route.points.length ? `${route.id}:${route.points[from].id}:${route.points[to].id}` : ''
+}

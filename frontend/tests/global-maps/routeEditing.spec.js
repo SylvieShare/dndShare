@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
 import { open, setup } from './helpers'
 
-async function ready(page) {
-  await page.setViewportSize({ width: 1600, height: 1000 })
+async function ready(page, prepare = () => {}, mobile = false) {
+  await page.setViewportSize(mobile ? { width: 430, height: 932 } : { width: 1600, height: 1000 })
   const state = await setup(page)
   state.maps.push({ id: 'world', name: 'Мир', imageId: 1, imageUrl: '/test-global-world.svg', current: true, revision: 1, routes: [
     { id: 'route', name: 'Путь', color: '#b397df', playerIds: [], points: [
@@ -10,6 +10,7 @@ async function ready(page) {
       { id: 'b', x: .5, y: .45, name: 'Привал' }, { id: 'c', x: .8, y: .45, name: 'Конец' },
     ] },
   ] })
+  prepare(state.maps[0].routes)
   await open(page)
   await expect(page.locator('button.global-map-point')).toHaveCount(3)
   await expect(page.getByText('Загружаем изображение…', { exact: true })).toHaveCount(0)
@@ -120,4 +121,104 @@ test('a point shared with another route survives deletion of its original route'
   await page.reload()
   await expect(page.locator('button.global-map-point')).toHaveCount(1)
   await expect(page.locator('button[data-source-id="a"]')).toBeVisible()
+})
+
+test('bend handles appear only on the hovered leg, remain available during dragging and hide off the route', async ({ page }) => {
+  await ready(page, routes => {
+    routes[0].points.splice(1, 0, { id: 'x', x: .3, y: .45, control: true }, { id: 'y', x: .4, y: .45, control: true })
+    routes[0].points.splice(4, 0, { id: 'z', x: .65, y: .45, control: true })
+  })
+  const handles = page.locator('.global-map-control')
+  const first = page.locator('[data-point-id="x"]'), sibling = page.locator('[data-point-id="y"]'), other = page.locator('[data-point-id="z"]')
+  await expect(handles).toHaveCount(3)
+  for (const handle of await handles.all()) await expect(handle).toBeHidden()
+  const position = await page.locator('.global-map-route-hit').first().evaluate(path => {
+    const p = path.getPointAtLength(path.getTotalLength() / 2).matrixTransform(path.getScreenCTM())
+    return { x: p.x, y: p.y }
+  })
+  await page.mouse.move(position.x, position.y)
+  await expect(first).toBeVisible(); await expect(sibling).toBeVisible(); await expect(other).toBeHidden()
+  await first.hover()
+  await expect(sibling).toBeVisible()
+  const control = await center(first)
+  await page.mouse.down()
+  await page.mouse.move(control.x, control.y - 70, { steps: 5 })
+  await expect(first).toBeVisible(); await expect(sibling).toBeVisible()
+  await page.mouse.up()
+  const next = await page.locator('.global-map-route-hit').nth(3).evaluate(path => {
+    const p = path.getPointAtLength(path.getTotalLength() / 2).matrixTransform(path.getScreenCTM())
+    return { x: p.x, y: p.y }
+  })
+  await page.mouse.move(next.x, next.y)
+  await expect(first).toBeHidden(); await expect(sibling).toBeHidden(); await expect(other).toBeVisible()
+  await page.mouse.wheel(0, -100)
+  await expect(other).toBeHidden()
+  const blank = await atImage(page, .6, .8)
+  await page.mouse.move(blank.x, blank.y)
+  await expect(other).toBeHidden()
+})
+
+for (const mobile of [false, true]) test(`multiple chapter and location links persist with shared point identity ${mobile ? 'mobile' : 'desktop'}`, async ({ page }) => {
+  const state = await ready(page, undefined, mobile)
+  await page.locator('[data-source-id="a"]').click()
+  await page.getByRole('button', { name: 'Добавить главу', exact: true }).click()
+  const chapters = page.getByRole('dialog', { name: 'Добавить главу', exact: true })
+  await chapters.getByRole('button', { name: 'Добавить: Перевал', exact: true }).click()
+  await expect(chapters.getByRole('button', { name: 'Добавить: Перевал', exact: true })).toBeDisabled()
+  await chapters.getByRole('button', { name: 'Добавить: Долина', exact: true }).click()
+  await page.keyboard.press('Escape')
+  await expect.poll(() => state.maps[0].routes[0].points[0].additionalChapterIds).toEqual([12])
+  await page.getByRole('button', { name: 'Удалить связь: Перевал', exact: true }).click()
+  await expect.poll(() => state.maps[0].routes[0].points[0].chapterId).toBe(12)
+  await page.getByRole('button', { name: 'Добавить локацию', exact: true }).click()
+  const locations = page.getByRole('dialog', { name: 'Добавить локацию', exact: true })
+  await locations.getByRole('textbox', { name: 'Поиск: Локации', exact: true }).fill('башня')
+  await expect(locations.getByRole('button', { name: 'Добавить: Лесная тропа', exact: true })).toHaveCount(0)
+  await locations.getByRole('button', { name: 'Добавить: Северная башня', exact: true }).click()
+  await locations.getByRole('textbox', { name: 'Поиск: Локации', exact: true }).fill('')
+  await locations.getByRole('button', { name: 'Добавить: Лесная тропа', exact: true }).click()
+  await page.keyboard.press('Escape')
+  await expect.poll(() => state.maps[0].routes[0].points[0].locationIds).toEqual([21, 22])
+  await page.getByRole('button', { name: 'Удалить связь: Северная башня', exact: true }).click()
+  await expect.poll(() => state.maps[0].routes[0].points[0].locationIds).toEqual([22])
+  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  await page.locator('[data-source-id="a"]').hover()
+  await expect(page.locator('.global-map-callout')).toContainText('Долина')
+  await expect(page.locator('.global-map-callout')).toContainText('Лесная тропа')
+  await page.getByRole('button', { name: 'Вписать карту мира', exact: true }).hover()
+  await page.reload()
+  await page.locator('[data-source-id="a"]').click()
+  await expect(page.getByRole('button', { name: 'Удалить связь: Долина', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Удалить связь: Лесная тропа', exact: true })).toBeVisible()
+  if (mobile) return
+  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  await page.getByRole('button', { name: 'Маршруты', exact: true }).click()
+  await page.getByLabel('Добавить существующую точку', { exact: true }).selectOption('a')
+  await page.getByRole('button', { name: 'Удалить связь: Долина', exact: true }).click()
+  await expect.poll(() => state.maps[0].routes[0].points[0].chapterId).toBe(null)
+  expect(state.maps[0].routes[0].points.at(-1).refId).toBe('a')
+  expect(state.maps[0].routes[0].points.at(-1).locationIds).toBeUndefined()
+  await page.getByRole('button', { name: 'Открыть: Лесная тропа', exact: true }).click()
+  await expect(page.locator('.global-map-workspace')).toBeHidden()
+  await expect(page.locator('.entity-form-heading-name')).toContainText('Лесная тропа')
+  await expect(page).toHaveURL(/location=22/)
+})
+
+test('new points inherit the chapter selected in the story, shared visits keep their original links', async ({ page }) => {
+  const state = await ready(page)
+  await page.locator('[data-source-id="a"]').click()
+  await page.getByRole('button', { name: 'Добавить главу', exact: true }).click()
+  await page.getByRole('dialog', { name: 'Добавить главу', exact: true }).getByRole('button', { name: 'Добавить: Долина', exact: true }).click()
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: 'Открыть: Долина', exact: true }).click()
+  await expect(page.locator('.global-map-workspace')).toBeHidden()
+  await page.getByRole('button', { name: 'Мир', exact: true }).click()
+  await page.getByRole('button', { name: 'Закрыть настройки точки', exact: true }).click()
+  const next = await atImage(page, .6, .75)
+  await page.mouse.move(next.x, next.y)
+  await page.keyboard.down('Meta')
+  await page.mouse.click(next.x, next.y)
+  await page.keyboard.up('Meta')
+  await expect.poll(() => state.maps[0].routes[0].points.length).toBe(4)
+  expect(state.maps[0].routes[0].points.at(-1).chapterId).toBe(12)
 })

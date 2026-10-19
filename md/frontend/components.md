@@ -381,7 +381,7 @@ MapCollectionPicker размещён над левым каталогом и д�
 Жесты, фокус и редактирование областей/света общие; адаптер сессии задаёт сохранение и дополнительные вкладки. Это доменные композиции,
 общие базовые примитивы остаются в share-ui.
 
-`GlobalMapWorkspace` переиспользует `MapSidebar`, `ActionButton`, `DetailSection`, `FormField`, `CompactCheckbox` и `ConfirmDialog`. SVG-маркеры и выноски — доменная композиция над загруженным изображением; геометрия и viewport вынесены отдельно. Подробности — [глобальные карты](../features/global-maps.md).
+`GlobalMapWorkspace` переиспользует `MapSidebar`, `ActionButton`, `DetailSection`, `FormField`, `CompactCheckbox` и `ConfirmDialog`. `GlobalMapPointLinks` — единая доменная композиция для списков глав и локаций точки: `SectionLabel`, `AddButton`, `BasePopover` с поиском на `FormTextInput`, строки `BaseTile` и `RemoveButton icon="trash"`. `GlobalMapLinkPreview` объединяет миниатюру и подпись в инспекторе, picker и hover-превью; собственных базовых popover/input/button нет. Отдельный picker нужен для выбора нескольких связанных сущностей с миниатюрами без модального окна. SVG-маркеры и выноски — доменная композиция над загруженным изображением; геометрия и viewport вынесены отдельно. Подробности — [глобальные карты](../features/global-maps.md).
 
 ## Нагрузка 3D-карт
 

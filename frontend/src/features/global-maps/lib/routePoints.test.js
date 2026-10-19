@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { appendVisit, lastWaypoint, mapMarkers, removeEntries, routePoints, routeVisits } from './routePoints'
+import { appendVisit, lastWaypoint, mapMarkers, removeEntries, routePoints, routeVisits, routeLegKey } from './routePoints'
 import { movePoint } from './routes'
 
 const fixture = () => [{ id: 'route', name: 'Путь', color: '#ffffff', points: [
@@ -48,4 +48,15 @@ describe('shared world route points', () => {
     expect(mapMarkers(routes, 'other', '').find(point => point.sourceId === 'b').last).toBe(false)
   })
 
+})
+
+describe('world route legs', () => {
+  it('shares hover identity across all bends between the same two visits', () => {
+    const route = { id: 'route', points: [{ id: 'a' }, { id: 'x', control: true }, { id: 'y', control: true }, { id: 'b' }, { id: 'z', control: true }, { id: 'again', refId: 'a' }] }
+    expect([0, 1, 2].map(position => routeLegKey(route, position))).toEqual(['route:a:b', 'route:a:b', 'route:a:b'])
+    expect(routeLegKey(route, 4)).toBe('route:b:again')
+    route.points.splice(2, 0, { id: 'new', control: true })
+    expect(routeLegKey(route, 2)).toBe('route:a:b')
+    expect(routeLegKey(route, 6)).toBe('')
+  })
 })

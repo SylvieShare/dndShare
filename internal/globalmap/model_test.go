@@ -36,7 +36,7 @@ func TestRouteValidation(t *testing.T) {
 func TestPruneDetachedLinksKeepsPointsAndNotes(t *testing.T) {
 	chapter, removed := int64(1), int64(2)
 	routes := []Route{{PlayerIDs: []int64{10, 20}, Points: []Point{{ID: "one", Note: "Заметка", ChapterID: &chapter}, {ID: "two", ChapterID: &removed}}}}
-	PruneReferences(routes, map[int64]bool{10: true}, map[int64]bool{1: true})
+	PruneReferences(routes, map[int64]bool{10: true}, map[int64]bool{1: true}, nil)
 	if len(routes[0].PlayerIDs) != 1 || routes[0].PlayerIDs[0] != 10 || routes[0].Points[0].ChapterID == nil || routes[0].Points[1].ChapterID != nil || routes[0].Points[0].Note != "Заметка" {
 		t.Fatal(routes)
 	}

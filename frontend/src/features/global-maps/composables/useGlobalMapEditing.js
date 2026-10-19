@@ -2,7 +2,7 @@ import { computed, ref, watch } from 'vue'
 import { movePoint, ROUTE_COLORS, uid } from '../lib/routes'
 import { appendVisit, lastWaypoint, pointIndex, removeEntries, resolvePoint, routeVisits } from '../lib/routePoints'
 
-export function useGlobalMapEditing(c, canvas, sidebar, mobile) {
+export function useGlobalMapEditing(c, canvas, sidebar, mobile, props) {
   const routeId = ref(''), pointId = ref(''), addMode = ref(false)
   const route = computed(() => c.selected?.routes.find(route => route.id === routeId.value))
   const entry = computed(() => route.value?.points.find(point => point.id === pointId.value))
@@ -39,7 +39,7 @@ export function useGlobalMapEditing(c, canvas, sidebar, mobile) {
         const source = pointIndex(c.selected.routes).get(sourceId)
         if (source && !source.control) added = appendVisit(route.value, source)
       } else {
-        added = { id: uid(), ...position, name: '', note: '', chapterId: null }
+        added = { id: uid(), ...position, name: '', note: '', chapterId: props.chapters.some(chapter => chapter.id === props.currentChapterId) ? props.currentChapterId : null, additionalChapterIds: [], locationIds: [] }
         route.value.points.push(added)
       }
     })

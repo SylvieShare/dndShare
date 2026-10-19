@@ -1,19 +1,18 @@
 <template>
   <aside class="global-map-callout" data-map-callout @pointerdown.stop>
-    <button v-if="chapter" type="button" class="global-map-chapter" :title="`Открыть главу: ${chapter.name}`" @click="emit('chapter', chapter)">
-      <img v-if="chapter.imageUrl" :src="chapter.imageUrl" alt="" draggable="false" loading="lazy" decoding="async" />
-      <BookOpenText v-else :size="26" />
-      <span><small>Глава {{ chapter.number }}</small><strong>{{ chapter.name }}</strong></span>
-    </button>
+    <div class="global-map-callout-links">
+      <button v-for="chapter in chapters" :key="`chapter-${chapter.id}`" type="button" class="global-map-chapter" :aria-label="`Открыть главу: ${chapter.name}`" @click="emit('chapter', chapter)"><GlobalMapLinkPreview :item="chapter" kind="chapter" /></button>
+      <button v-for="location in locations" :key="`location-${location.id}`" type="button" class="global-map-chapter" :aria-label="`Открыть локацию: ${location.name}`" @click="emit('location', location)"><GlobalMapLinkPreview :item="location" kind="location" /></button>
+    </div>
     <strong class="global-map-point-name">{{ point.name || `Точка ${index + 1}` }}</strong>
     <small class="global-map-callout-route">{{ routeName }}</small>
     <p v-if="point.note" :title="point.note">{{ point.note }}</p>
   </aside>
 </template>
 <script setup>
-import { BookOpenText } from '@lucide/vue'
-defineProps({ point: Object, chapter: Object, routeName: String, index: Number })
-const emit = defineEmits(['chapter'])
+import GlobalMapLinkPreview from './GlobalMapLinkPreview.vue'
+defineProps({ point: Object, chapters: Array, locations: Array, routeName: String, index: Number })
+const emit = defineEmits(['chapter', 'location'])
 </script>
 <style scoped>
 .global-map-callout { width: 220px; max-width: calc(100vw - 32px); padding: 12px; box-sizing: border-box; color: var(--text-1); text-align: left; cursor: auto; }
@@ -21,8 +20,5 @@ const emit = defineEmits(['chapter'])
 .global-map-callout-route { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 10px; }
 .global-map-point-name { display: block; margin-bottom: 4px; font-size: 12px; }
 .global-map-chapter { display: flex; align-items: center; gap: 8px; padding: 0; width: 100%; border: 0; background: none; color: inherit; text-align: left; font: inherit; cursor: pointer; margin-bottom: 7px; }
-.global-map-chapter img { width: 56px; height: 42px; border-radius: 6px; object-fit: cover; }
-.global-map-chapter span { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.global-map-chapter small { color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
-.global-map-chapter strong { font-size: 12px; line-height: 1.3; }
+.global-map-callout-links { max-height: min(280px, 40dvh); overflow-y: auto; }
 </style>

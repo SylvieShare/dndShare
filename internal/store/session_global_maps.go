@@ -45,7 +45,7 @@ func (s *Store) ListGlobalMaps(ctx context.Context, sid int64) ([]GlobalMap, err
 		return nil, err
 	}
 	defer tx.Rollback(ctx)
-	players, chapters, err := globalMapReferences(ctx, tx, sid)
+	players, chapters, locations, err := globalMapReferences(ctx, tx, sid)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (s *Store) ListGlobalMaps(ctx context.Context, sid int64) ([]GlobalMap, err
 		if err != nil {
 			return nil, err
 		}
-		globalmap.PruneReferences(m.Routes, players, chapters)
+		globalmap.PruneReferences(m.Routes, players, chapters, locations)
 		result = append(result, m)
 	}
 	return result, rows.Err()
@@ -123,7 +123,7 @@ func (s *Store) SaveGlobalMap(ctx context.Context, sid int64, m GlobalMap) (Glob
 		return m, err
 	}
 	defer tx.Rollback(ctx)
-	players, chapters, err := globalMapReferences(ctx, tx, sid)
+	players, chapters, locations, err := globalMapReferences(ctx, tx, sid)
 	if err != nil {
 		return m, err
 	}
@@ -134,12 +134,19 @@ func (s *Store) SaveGlobalMap(ctx context.Context, sid int64, m GlobalMap) (Glob
 			}
 		}
 		for _, p := range route.Points {
-			if p.ChapterID != nil && !chapters[*p.ChapterID] {
-				return m, ErrInvalidWorldReference
+			for _, id := range p.ChapterIDs() {
+				if !chapters[id] {
+					return m, ErrInvalidWorldReference
+				}
+			}
+			for _, id := range p.LocationIDs {
+				if !locations[id] {
+					return m, ErrInvalidWorldReference
+				}
 			}
 		}
 	}
-	globalmap.PruneReferences(m.Routes, players, chapters)
+	globalmap.PruneReferences(m.Routes, players, chapters, locations)
 	raw, err := json.Marshal(m.Routes)
 	if err != nil {
 		return m, err

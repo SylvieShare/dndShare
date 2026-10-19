@@ -94,7 +94,7 @@ func (s *Server) handleSaveGlobalMap(w http.ResponseWriter, r *http.Request) {
 	saved, err := s.store.SaveGlobalMap(r.Context(), sid, m)
 	if err != nil {
 		if errors.Is(err, store.ErrInvalidWorldReference) {
-			conflict(w, "Состав игроков или главы сессии изменились. Загрузите актуальную карту и проверьте привязки.")
+			conflict(w, "Состав игроков, главы или локации сессии изменились. Загрузите актуальную карту и проверьте привязки.")
 			return
 		}
 		globalMapError(w, err)

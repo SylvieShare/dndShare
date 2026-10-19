@@ -56,9 +56,8 @@ export function useSessionPrimaryView({ sessionUuid, route, router }) {
   }
 
   function selectLocation(id) {
-    activeView.value = 'locations'
-    persistView('locations')
-	replaceQuery({ view: 'locations', location: id || null })
+    // Publish the target with the view so catalogue auto-selection cannot replace it.
+    return replaceQuery({ view: 'locations', location: id || null })
   }
 
   function selectNpc(id) {

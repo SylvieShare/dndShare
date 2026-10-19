@@ -3,6 +3,11 @@ import { expect } from '@playwright/test'
 export const copy = value => JSON.parse(JSON.stringify(value))
 export async function setup(page) {
   const maps = [], writes = []
+  const chapters = [
+    { id: 11, arcId: 1, number: '1', name: 'Перевал', status: 'planned', imageUrl: '/test-global-world.svg', positionX: 100, positionY: 100 },
+    { id: 12, arcId: 1, number: '2', name: 'Долина', status: 'planned', positionX: 300, positionY: 100 },
+  ]
+  const locations = [{ id: 21, name: 'Северная башня', imageUrl: '/test-global-world.svg', kind: 'building' }, { id: 22, name: 'Лесная тропа', kind: 'region' }]
   let nextId = 1, fail = 0
   const image = '/test-global-world.svg'
   page.on('pageerror', error => { throw error })
@@ -19,11 +24,12 @@ export async function setup(page) {
     let json = {}
     if (path === '/api/user/checkAuth') json = { auth: true, user: { id: 1, roles: [], login: 'Мастер' } }
     else if (path === '/api/sessions/test') json = {
-      session: { uuid: 'test', name: 'Путешествие', ownerUserId: 1, systemId: 1, status: 'stopped' }, myRole: 'gm',
+      session: { uuid: 'test', name: 'Путешествие', ownerUserId: 1, systemId: 1, status: 'stopped', currentChapterId: 11 }, myRole: 'gm',
       participants: [41, 42].map((id, index) => ({ charId: id, charUuid: `hero-${id}`, templateId: 1, iconImageUrl: image, data: { values: { name: ['Лира', 'Торин'][index], classes: [], hp: { current: 10, max: { base: 10, bonuses: [] } }, DEX: { value: 10 }, WIS: { value: 10 }, INT: { value: 10 }, armor: {} } } })),
     }
     else if (path === '/api/templates') json = { templates: [{ id: 1, name: 'DND5' }] }
-    else if (path.endsWith('/chapter-graph')) json = { arcs: [{ id: 1, order: 1, name: 'Путь' }], chapters: [{ id: 11, arcId: 1, number: '1', name: 'Перевал', status: 'planned', imageUrl: image, positionX: 100, positionY: 100 }], edges: [] }
+    else if (path.endsWith('/chapter-graph')) json = { arcs: [{ id: 1, order: 1, name: 'Путь' }], chapters, edges: [] }
+    else if (path === '/api/sessions/test/world') json = { locations, npcs: [], quests: [], materials: [], relations: [] }
     else if (path.endsWith('/encounter')) json = { active: false, round: 0, turnIndex: 0, combatants: [] }
     else if (path === '/api/account/tutorials') json = { tutorials: ['desktop', 'mobile'].map(device => ({ flowId: 'session-dm', sourceKey: 'source:1', device, status: 'completed', revision: 1 })) }
     else if (path === '/api/sources') json = { sources: [{ id: 1, name: 'DND5e', versions: [{ id: 1, version: '2014' }] }] }
@@ -53,7 +59,7 @@ export async function setup(page) {
     }
     await route.fulfill({ json })
   })
-  return { maps, writes, failNext: status => { fail = status } }
+  return { maps, writes, chapters, locations, failNext: status => { fail = status } }
 }
 export async function open(page) {
   await page.goto('/sessions/test')

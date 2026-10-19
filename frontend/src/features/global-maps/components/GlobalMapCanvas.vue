@@ -1,15 +1,16 @@
 <template>
   <div ref="host" class="global-map-canvas" :class="{ 'global-map-canvas--adding': addMode && !readonly }"
     tabindex="0" aria-label="Мир. Колесо — масштаб, перетаскивание — перемещение, точки можно перетаскивать."
-    @pointerdown="down" @pointermove="movePointer" @pointerenter="continuation.track" @pointerleave="continuation.leave" @contextmenu.prevent @pointerup="v.end($event)" @pointercancel="v.end($event, true)"
+    @pointerdown="down" @pointermove="movePointer" @pointerenter="continuation.track" @pointerleave="leavePointer" @contextmenu.prevent @pointerup="endPointer" @pointercancel="v.end($event, true)"
     @lostpointercapture="v.end($event, true)" @wheel.prevent="hidePreview(); v.zoom(Math.exp(-$event.deltaY * .001), $event)" @keydown.stop="key">
     <div class="global-map-world" :style="v.style">
       <img :key="imageGeneration" class="global-map-image" :src="imageUrl" alt="Карта мира" draggable="false" @load="v.load" @error="v.imageError = true" />
       <GlobalMapPaths :routes="routes" :width="v.image.width" :height="v.image.height" :unit="routeUnit" :selected-route="selectedRoute" :preview="continuation.preview.value" :readonly="readonly" />
-      <div v-for="marker in markers" :key="marker.sourceId" v-memo="[marker, v.view.scale, preview?.id, selectedPoint]" class="global-map-anchor"
-        :class="{ 'global-map-anchor--control': marker.control }" :style="anchor(marker, marker.color)">
+      <div v-for="marker in markers" :key="marker.sourceId" v-memo="[marker, v.view.scale, preview?.id, selectedPoint, hoveredLeg]" class="global-map-anchor"
+        :class="{ 'global-map-anchor--control': marker.control, 'global-map-anchor--hidden': marker.control && !controlVisible(marker) }" :style="anchor(marker, marker.color)">
         <button type="button" :class="[marker.control ? 'global-map-control' : 'global-map-point', { 'global-map-point--selected': marker.id === selectedPoint }]"
-          :data-point-id="marker.id" :data-route-id="marker.routeId" :data-source-id="marker.sourceId" :data-control="marker.control || undefined"
+          :data-point-id="marker.id" :data-route-id="marker.routeId" :data-source-id="marker.sourceId" :data-control="marker.control || undefined" :data-position="marker.position"
+          :tabindex="marker.control && !controlVisible(marker) ? -1 : 0" :aria-hidden="marker.control && !controlVisible(marker) || undefined"
           :aria-label="marker.control ? `Узел изгиба: ${marker.routeName}` : `${marker.routeName}, точка ${marker.numbers.join(', ')}${marker.name ? ': ' + marker.name : ''}`"
           :aria-pressed="marker.id === selectedPoint" :aria-haspopup="marker.control ? undefined : 'dialog'" :aria-expanded="preview?.id === marker.id"
           @pointerenter="showPreview($event, marker.routeId, marker)" @pointerleave="queueClose" @focus="showPreview($event, marker.routeId, marker)"
@@ -35,7 +36,7 @@
     </div>
     <BasePopover :open="!!previewData" :anchor="preview?.anchor" :placement="mobile ? 'bottom-start' : 'right-start'" :min-width="220" role="dialog" aria-label="Превью точки маршрута"
       transition-preset="action-menu" @update:open="!$event && hidePreview()">
-      <GlobalMapCallout v-if="previewData" :point="previewData.point" :chapter="previewData.chapter" :route-name="previewData.routeName" :index="previewData.index" @chapter="showChapter"
+      <GlobalMapCallout v-if="previewData" :point="previewData.point" :chapters="previewData.chapters" :locations="previewData.locations" :route-name="previewData.routeName" :index="previewData.index" @chapter="showChapter" @location="showLocation"
         @pointerenter="keepPreview" @pointerleave="queueClose" @focusin="keepPreview" @focusout="queueClose" />
     </BasePopover>
     <LoadingState v-if="!v.loaded && !v.imageError" class="global-map-message" label="Загружаем изображение…" />
@@ -53,10 +54,11 @@ import { clamp } from '../lib/routes'
 import { useGlobalMapViewport } from '../composables/useGlobalMapViewport'
 import GlobalMapCallout from './GlobalMapCallout.vue'
 import GlobalMapPaths from './GlobalMapPaths.vue'
-import { mapMarkers, routePoints, waypointEntries } from '../lib/routePoints'
+import { mapMarkers, routeLegKey, routePoints, waypointEntries } from '../lib/routePoints'
+import { linkedItems, pointChapterIds } from '../lib/pointLinks'
 import { useGlobalMapContinuation } from '../composables/useGlobalMapContinuation'
-const props = defineProps({ imageUrl: String, routes: Array, chapters: Array, participants: Array, selectedRoute: String, selectedPoint: String, addMode: Boolean, readonly: Boolean })
-const emit = defineEmits(['select', 'add', 'move', 'drag-start', 'drag-end', 'remove-point', 'chapter', 'cancel-add', 'insert-control', 'cancel-control', 'continuation-active'])
+const props = defineProps({ imageUrl: String, routes: Array, chapters: Array, locations: Array, participants: Array, selectedRoute: String, selectedPoint: String, addMode: Boolean, readonly: Boolean })
+const emit = defineEmits(['select', 'add', 'move', 'drag-start', 'drag-end', 'remove-point', 'chapter', 'location', 'cancel-add', 'insert-control', 'cancel-control', 'continuation-active'])
 const mobile = useIsMobile(760)
 const host = ref(null)
 const imageGeneration = ref(0)
@@ -66,14 +68,14 @@ watch(continuation.engaged, active => { emit('continuation-active', active); if 
 const markers = computed(() => mapMarkers(props.routes, props.selectedRoute, props.selectedPoint))
 const baseUnit = computed(() => Math.max(v.image.width, v.image.height) / 1200)
 const drawingScale = computed(() => Math.min(2.2, .4 + baseUnit.value * v.view.scale))
-const routeUnit = computed(() => .8 * drawingScale.value / v.view.scale)
-const anchor = (p, color) => ({ left: `${p.x * v.image.width}px`, top: `${p.y * v.image.height}px`, '--route-color': color, transform: `scale(${.8 * Math.max(1, drawingScale.value) / v.view.scale}) translate(-50%, -50%)` })
+const routeUnit = computed(() => .64 * drawingScale.value / v.view.scale)
+const anchor = (p, color) => ({ left: `${p.x * v.image.width}px`, top: `${p.y * v.image.height}px`, '--route-color': color, transform: `scale(${.64 * Math.max(1, drawingScale.value) / v.view.scale}) translate(-50%, -50%)` })
 const routePlayers = route => props.participants.filter(player => route.playerIds.includes(player.charId))
 const preview = shallowRef(null)
 const previewData = computed(() => {
   const route = props.routes.find(route => route.id === preview.value?.routeId)
   const point = route && routePoints(route, props.routes).find(point => point.id === preview.value?.id)
-  return point && !point.control ? { point, chapter: props.chapters.find(chapter => chapter.id === point.chapterId), routeName: route.name, index: waypointEntries(route).findIndex(entry => entry.id === point.id) } : null
+  return point && !point.control ? { point, chapters: linkedItems(props.chapters, pointChapterIds(point)), locations: linkedItems(props.locations, point.locationIds || []), routeName: route.name, index: waypointEntries(route).findIndex(entry => entry.id === point.id) } : null
 })
 let closeTimer
 function keepPreview() { clearTimeout(closeTimer) }
@@ -83,14 +85,15 @@ function showPreview(event, routeId, point) {
   keepPreview(); preview.value = { id: point.id, routeId, anchor: event.currentTarget }
 }
 function queueClose() { keepPreview(); closeTimer = setTimeout(hidePreview, 160) }
-watch(() => [v.view.x, v.view.y, v.view.scale, props.imageUrl], hidePreview)
+watch(() => [v.view.x, v.view.y, v.view.scale, props.imageUrl], () => { hidePreview(); if (!v.dragging) hoveredLeg.value = '' })
 let visibility
 onMounted(() => {
-  visibility = new IntersectionObserver(entries => { if (!entries[0].isIntersecting) { hidePreview(); continuation.leave() } })
+  visibility = new IntersectionObserver(entries => { if (!entries[0].isIntersecting) { hidePreview(); continuation.leave(); hoveredLeg.value = '' } })
   visibility.observe(host.value)
 })
 onBeforeUnmount(() => { keepPreview(); visibility?.disconnect(); emit('continuation-active', false) })
 function showChapter(chapter) { hidePreview(); emit('chapter', chapter) }
+function showLocation(location) { hidePreview(); emit('location', location) }
 function partyStyle(route) {
   const p = routePoints(route, props.routes).at(-1)
   return { ...anchor(p, route.color), transform: `scale(${1 / v.view.scale}) translate(28px, 28px)` }
@@ -105,11 +108,23 @@ function key(event) {
   if (event.key === '-') { event.preventDefault(); v.zoom(1 / 1.2) }
 }
 function down(event) {
-  hidePreview()
+  hidePreview(); hoverLeg(event.target)
   if (event.metaKey || event.ctrlKey) host.value.focus({ preventScroll: true })
   if (!continuation.commit(event)) v.down(event)
 }
-function movePointer(event) { continuation.track(event); v.move(event) }
+const hoveredLeg = ref('')
+function controlVisible(marker) { return hoveredLeg.value === routeLegKey(props.routes.find(route => route.id === marker.routeId), marker.position) }
+function hoverLeg(target) {
+  const hit = target?.closest?.('[data-segment-index], [data-control]')
+  const route = props.routes.find(route => route.id === hit?.dataset.routeId)
+  hoveredLeg.value = hit ? routeLegKey(route, Number(hit.dataset.segmentIndex ?? hit.dataset.position)) : ''
+}
+function movePointer(event) {
+  if (!v.dragging) hoverLeg(event.target)
+  continuation.track(event); v.move(event)
+}
+function endPointer(event) { v.end(event); hoverLeg(document.elementFromPoint(event.clientX, event.clientY)) }
+function leavePointer() { continuation.leave(); if (!v.dragging) hoveredLeg.value = '' }
 function clickMarker(event, marker) {
   if (event.metaKey || event.ctrlKey || props.addMode) return
   emit('select', marker.routeId, marker.id)
