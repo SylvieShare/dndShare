@@ -7,6 +7,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   ShaderLib,
+  OrthographicCamera,
 } from "three";
 import { createModelWaterAnimation, modelWaterMaterial } from "./modelWater";
 import { applyAreaOpacity } from "./areaOpacity";
@@ -23,7 +24,7 @@ function fountain(settings = { enabled: true, speed: 1, strength: 0.7 }) {
     ),
   );
   const material = modelWaterMaterial(
-      new MeshStandardMaterial(),
+      new MeshStandardMaterial({ roughness: 0.25 }),
       { geometry, matrix: new Matrix4() },
       settings,
     ),
@@ -95,4 +96,50 @@ it("preserves area fading hooks and leaves unmarked models alone", () => {
     { enabled: true, speed: 1, strength: 1 },
   );
   expect(plain.onBeforeCompile).toBe(hook);
+});
+
+it("uses the painted PBR mask without new geometry and updates movement settings live", () => {
+  const geometry = new BoxGeometry(),
+    settings = {
+      enabled: true,
+      speed: 1,
+      strength: 0.7,
+      pattern: "surface",
+      roughnessMax: 0.4,
+      center: [0.2, -0.1],
+    };
+  const material = modelWaterMaterial(
+    new MeshStandardMaterial({ roughness: 0.3 }),
+    { geometry, matrix: new Matrix4() },
+    settings,
+  );
+  const root = new Mesh(geometry, material),
+    animation = createModelWaterAnimation();
+  animation.update([root]);
+  const shader = {
+    uniforms: {},
+    vertexShader: ShaderLib.standard.vertexShader,
+    fragmentShader: ShaderLib.standard.fragmentShader,
+  };
+  material.onBeforeCompile(shader, {});
+  expect(shader.vertexShader).not.toContain("attribute vec2 _water");
+  expect(shader.uniforms.waterWorldSpace.value).toBe(1);
+  expect(shader.uniforms.waterRoughnessMax.value).toBe(0.4);
+  settings.pattern = "vortex";
+  animation.advance(100);
+  expect(shader.uniforms.waterWorldSpace.value).toBe(0);
+  expect(shader.uniforms.waterPattern.value).toBe(2);
+  expect(shader.uniforms.waterCenter.value.toArray()).toEqual([0.2, -0.1]);
+});
+
+it("stops requesting water frames outside the camera and resumes when it returns", () => {
+  const { root, animation } = fountain(),
+    camera = new OrthographicCamera(-2, 2, 2, -2, 0.01, 100);
+  camera.position.set(0, 5, 5);
+  camera.lookAt(0, 0, 0);
+  camera.updateProjectionMatrix();
+  root.position.x = 100;
+  expect(animation.advance(100, true, camera)).toBe(Infinity);
+  root.position.x = 0;
+  expect(animation.advance(100, true, camera)).toBeLessThan(84);
 });

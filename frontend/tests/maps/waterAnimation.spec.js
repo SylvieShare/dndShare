@@ -53,5 +53,11 @@ test("fountain water animates both tiers and instancing while stone stays still"
   await expect(
     page.getByRole("slider", { name: "Сила волн", exact: true }),
   ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Движение воды" })
+    .selectOption("vortex");
+  expect(await page.evaluate(() => window.waterSettings.pattern)).toBe(
+    "vortex",
+  );
   expect(errors).toEqual([]);
 });

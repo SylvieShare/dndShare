@@ -43,6 +43,12 @@ func ValidateModelBehaviour(b ModelBehaviour) error {
 	if w := b.WaterAnimation; w != nil && (!bounded(w.Speed, 0, 3) || !bounded(w.Strength, 0, 2)) {
 		return fmt.Errorf("Некорректные параметры анимации воды")
 	}
+	if w := b.WaterAnimation; w != nil {
+		if (w.Pattern != "" && w.Pattern != "pool" && w.Pattern != "surface" && w.Pattern != "vortex") ||
+			!bounded(w.RoughnessMax, 0, 1) || !bounded(w.Center[0], -32, 32) || !bounded(w.Center[1], -32, 32) {
+			return fmt.Errorf("Некорректный рисунок или маска воды")
+		}
+	}
 	if b.Revision < 1 || len(b.DefaultLights) > 8 || len(b.Transitions) > 32 {
 		return fmt.Errorf("Некорректное число источников или переходов модели")
 	}

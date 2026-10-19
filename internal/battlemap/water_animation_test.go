@@ -6,12 +6,12 @@ import (
 )
 
 func TestWaterAnimationValidation(t *testing.T) {
-	for _, w := range []WaterAnimation{{true, 0, 0}, {false, 3, 2}, {true, 1, .7}} {
+	for _, w := range []WaterAnimation{{Enabled: true, Speed: 0, Strength: 0}, {Enabled: false, Speed: 3, Strength: 2}, {Enabled: true, Speed: 1, Strength: .7}} {
 		if err := ValidateModelBehaviour(ModelBehaviour{Revision: 1, WaterAnimation: &w}); err != nil {
 			t.Fatal(err)
 		}
 	}
-	for _, w := range []WaterAnimation{{true, -1, .7}, {true, 3.01, .7}, {false, 1, -1}, {false, 1, 2.01}, {true, math.NaN(), .7}, {true, 1, math.Inf(1)}} {
+	for _, w := range []WaterAnimation{{Enabled: true, Speed: -1, Strength: .7}, {Enabled: true, Speed: 3.01, Strength: .7}, {Speed: 1, Strength: -1}, {Speed: 1, Strength: 2.01}, {Speed: math.NaN(), Strength: .7}, {Speed: 1, Strength: math.Inf(1)}, {Pattern: "lava"}, {RoughnessMax: 1.1}, {Center: [2]float64{0, math.NaN()}}} {
 		if ValidateModelBehaviour(ModelBehaviour{Revision: 1, WaterAnimation: &w}) == nil {
 			t.Fatalf("accepted invalid water animation: %+v", w)
 		}

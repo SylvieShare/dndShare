@@ -84,7 +84,7 @@ export function createModelPreview(host, onFrame, onError) {
         ),
         delay = Math.min(
           effectFrame.delay,
-          water.advance(time, options.animate !== false),
+          water.advance(time, options.animate !== false, view.camera),
         );
       lastEffectFrame = time;
       gpu.render(scene, view.camera);

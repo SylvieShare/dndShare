@@ -72,7 +72,7 @@ export function createMapFrameLoop({
           ),
           fireDelay = Math.min(
             effectFrame.delay,
-            water.advance(time, options.animate !== false),
+            water.advance(time, options.animate !== false, camera),
           );
         profiler.mark("draw");
         volumeFog.render(scene, camera);
